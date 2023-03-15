@@ -1,3 +1,12 @@
+### Important for FASTENG new Devs
+
+After clone this project, please run
+
+```bash
+# to enable husky verify in every commits, if you don't want the verify use --no-verify flag to your commit command
+yarn husky install
+```
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
