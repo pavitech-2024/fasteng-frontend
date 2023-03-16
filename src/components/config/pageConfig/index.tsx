@@ -1,17 +1,17 @@
-import GlobalStyle from './GlobalStyle'
+import GlobalStyle from './GlobalStyle';
 
 interface PageConfigProps {
-  title: string
-  description?: string
-  children: React.ReactNode
+  title?: string;
+  description?: string;
+  children: React.ReactNode;
 }
 
 const PageConfig = (props: PageConfigProps) => {
-  const { title, description, children } = props
+  const { title, description, children } = props;
   return (
     <>
       <header>
-        <title>{title}</title>
+        <title>{title ? title : 'FastEng'}</title>
         {description && <meta name="description" content={description} />}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="shortcut icon" href="../../../public/favicon.ico" type="image/x-icon" />
@@ -21,7 +21,7 @@ const PageConfig = (props: PageConfigProps) => {
         {children}
       </main>
     </>
-  )
-}
+  );
+};
 
-export default PageConfig
+export default PageConfig;

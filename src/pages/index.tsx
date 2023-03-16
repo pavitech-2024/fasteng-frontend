@@ -1,11 +1,15 @@
-import PageConfig from '@/components/config/pageConfig'
+import { NextPage } from 'next';
+import Head from 'next/head';
 
-const Login = () => {
+const Login: NextPage = () => {
   return (
-    <PageConfig title="Bem vindo ao FastEng">
+    <>
+      <Head>
+        <title>Login FastEng</title>
+      </Head>
       <div>Login</div>
-    </PageConfig>
-  )
-}
+    </>
+  );
+};
 
-export default Login
+export default Login;
