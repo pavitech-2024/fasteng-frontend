@@ -1,4 +1,4 @@
-import PageConfig from '@/components/common/pageConfig'
+import PageConfig from '@/components/config/pageConfig'
 
 const Login = () => {
   return (
