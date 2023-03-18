@@ -12,9 +12,8 @@ export default class Login extends Component {
     return AuthService.login('brenda@email.com', '12345678').then((data) => {
       if (data.IsAuthorized) {
         const { name, email, planName } = data;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
-        setUser({ ...data.user, name, email, planName });
+
+        if (name && email && planName && data.user) setUser({ ...data.user, name, email, planName });
       }
     });
   }
