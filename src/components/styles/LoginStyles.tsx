@@ -23,7 +23,6 @@ export const BlueLogin = styled.div`
 	padding: 15px 50px;
 	position: relative;
 	z-index: 1;
-  /* overflow-x: hidden; */
   ::before {
 		content: "";
 		display: flex;
@@ -85,7 +84,6 @@ export const HeaderLogin = styled.div`
     font-size: 16px;
   }
 `;
-
 export const ButtonArea = styled.div`
   display: grid;
   grid-template-columns: auto auto;

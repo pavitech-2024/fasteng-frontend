@@ -1,3 +1,4 @@
+import { ButtonLogoArea } from '@/components/atoms/buttons/orangeButton/orangeButtonStyle';
 import { BlueLogin, ButtonLogin, HeaderLogin, LoginActions, DoubleColumn, LoginInputsArea, WhiteLogin, PlanArea, ButtonArea } from '@/components/styles/LoginStyles';
 import { NextPage } from 'next';
 
@@ -22,8 +23,8 @@ const Login: NextPage<ILogin> = () => {
 					acompanha até a determinação do teor ótimo de ligante asfáltico.
 				</p>
         <ButtonArea>
-          <button>ASSINE</button>
-          <button>SAIBA MAIS</button>
+          <ButtonLogoArea buttonStyle={"normal"} >ASSINE</ButtonLogoArea>
+          <ButtonLogoArea buttonStyle={"ghost"}>SAIBA MAIS</ButtonLogoArea>
         </ButtonArea>
         </BlueLogin>
 
