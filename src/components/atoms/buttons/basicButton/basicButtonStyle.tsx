@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { IBasicButton, buttonType } from "./basicButton";
+import { IBasicButton, buttonAppearance } from "./basicButton";
 
 export const ButtonLogoArea = styled.button`
   display: inline-block;
@@ -23,7 +23,7 @@ export const ButtonLogoArea = styled.button`
   }
   `;
 
-const getButtonType = (buttonStyle: buttonType) => {
+const getButtonType = (buttonStyle: buttonAppearance) => {
   switch (buttonStyle) {
     case "normal": {
       return css`

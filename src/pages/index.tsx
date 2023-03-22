@@ -25,8 +25,8 @@ const Login: NextPage<ILogin> = () => {
 					acompanha até a determinação do teor ótimo de ligante asfáltico.
 				</p>
         <ButtonArea>
-          <BasicButton buttonStyle={"normal"} onClick={() => {''}} >ASSINE</BasicButton>
-          <BasicButton buttonStyle={"ghost"} onClick={() => {''}}>SAIBA MAIS</BasicButton>
+          <BasicButton buttonStyle="normal" type="submit" onClick={() => {''}} >ASSINE</BasicButton>
+          <BasicButton buttonStyle="ghost" type="submit" onClick={() => {''}}>SAIBA MAIS</BasicButton>
         </ButtonArea>
         </BlueLogin>
 
@@ -44,7 +44,7 @@ const Login: NextPage<ILogin> = () => {
               <BasicInput></BasicInput> 
 
             <LoginActions>
-              <BasicButton buttonStyle={'large'} onClick={() => {''}}>ENTRAR</BasicButton>
+              <BasicButton buttonStyle={'large'} type="submit" onClick={() => {''}}>ENTRAR</BasicButton>
               <a>Esqueceu a senha?</a>
             </LoginActions>
           </LoginInputsArea>
