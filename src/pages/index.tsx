@@ -1,6 +1,8 @@
-import { ButtonLogoArea } from '@/components/atoms/buttons/orangeButton/orangeButtonStyle';
-import { BlueLogin, ButtonLogin, HeaderLogin, LoginActions, DoubleColumn, LoginInputsArea, WhiteLogin, PlanArea, ButtonArea } from '@/components/styles/LoginStyles';
+import { BlueLogin, HeaderLogin, LoginActions, DoubleColumn, LoginInputsArea, WhiteLogin, ButtonArea } from '@/components/styles/LoginStyles';
 import { NextPage } from 'next';
+import BasicInput from '@/components/atoms/inputs/basicInput/basicInput';
+import Footer from '@/components/molecules/footer/footer';
+import BasicButton from '@/components/atoms/buttons/basicButton/basicButton';
 
 interface ILogin {
   email: string;
@@ -23,8 +25,8 @@ const Login: NextPage<ILogin> = () => {
 					acompanha até a determinação do teor ótimo de ligante asfáltico.
 				</p>
         <ButtonArea>
-          <ButtonLogoArea buttonStyle={"normal"} >ASSINE</ButtonLogoArea>
-          <ButtonLogoArea buttonStyle={"ghost"}>SAIBA MAIS</ButtonLogoArea>
+          <BasicButton buttonStyle={"normal"} onClick={() => {''}} >ASSINE</BasicButton>
+          <BasicButton buttonStyle={"ghost"} onClick={() => {''}}>SAIBA MAIS</BasicButton>
         </ButtonArea>
         </BlueLogin>
 
@@ -38,20 +40,16 @@ const Login: NextPage<ILogin> = () => {
           </HeaderLogin>
           
           <LoginInputsArea>
-            {/* <input></input>
-            <input></input> */}
+              <BasicInput></BasicInput>
+              <BasicInput></BasicInput> 
 
             <LoginActions>
-              <ButtonLogin></ButtonLogin>
+              <BasicButton buttonStyle={'large'} onClick={() => {''}}>ENTRAR</BasicButton>
               <a>Esqueceu a senha?</a>
             </LoginActions>
           </LoginInputsArea>
 
-          <PlanArea>
-            <p>
-              <small>© 2020 | Pavitech</small>
-            </p>
-				</PlanArea>
+          <Footer />
         </WhiteLogin>
       </DoubleColumn>
     </>

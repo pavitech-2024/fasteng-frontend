@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { point } from "../breakpoints";
+import { point } from "../config/breakpoints";
 
 export const DoubleColumn = styled.div`
   display: grid;
@@ -124,44 +124,5 @@ export const LoginActions = styled.div`
 			color: #f57e34;
       opacity: .8;
     }
-  }
-`;
-
-export const ButtonLogin = styled.button`
-  display: flex;
-  flex-direction: row;
-  border: 1px solid #f57e34;
-  background: #f57e34;
-  color: #ffffff;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  border-radius: 21px;
-  width: 100%;
-  height: 42px;
-  font-size: 14px;
-  font-weight: 400;
-  transition: all 0.3s ease-in-out;
-  font-family: "Work Sans", sans-serif;
-  cursor: pointer;
-  :hover {
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
-  }
-  :focus {
-    outline: none;
-  }
-`;
-
-export const PlanArea = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  flex-direction: column;
-
-  p {
-    color: #595b61;
-    margin-bottom: 10px;
-    font-size: 14px;
-    font-family: "Open Sans", sans-serif;
   }
 `;
