@@ -1,8 +1,9 @@
-import { BlueLogin, HeaderLogin, LoginActions, DoubleColumn, LoginInputsArea, WhiteLogin, ButtonArea } from '@/components/styles/LoginStyles';
+import { BlueLogin, HeaderLogin, LoginActions, LoginInputsArea, WhiteLogin, ButtonArea } from '@/components/styles/LoginStyles';
 import { NextPage } from 'next';
 import BasicInput from '@/components/atoms/inputs/basicInput/basicInput';
 import Footer from '@/components/molecules/footer/footer';
 import BasicButton from '@/components/atoms/buttons/basicButton/basicButton';
+import DoubleColumn from '@/components/atoms/doubleColumn/doubleColumn';
 
 interface ILogin {
   email: string;

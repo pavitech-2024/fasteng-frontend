@@ -1,17 +1,6 @@
 import styled from "styled-components";
 import { point } from "../config/breakpoints";
 
-export const DoubleColumn = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 10px;
-  align-items: center;
-
-  @media only screen and (${point.tablet}) {
-    grid-template-columns: 1fr;
-  }
-`;
-
 export const BlueLogin = styled.div`
   display: flex;
   justify-content: center;
