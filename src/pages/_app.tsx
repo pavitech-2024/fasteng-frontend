@@ -14,8 +14,8 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   // Refresh login logic
   /**@description caso não esteja autenticado mas tiver token e _id nos cookies, tentar realizar refresh login */
   if ((router.pathname === '/' || !isAuthenticated) && token && _id)
-    Api.post('auth/refresh-login', { token: JSON.parse(token), _id: JSON.parse(_id) }).then((response) =>
-      console.log(response)
+    Api.post('auth/refresh-login', { token: JSON.parse(token), _id: JSON.parse(_id) }).then(
+      (response) => console.log(response)
 
       //TODO: se o refresh login for bem sucedido, atualizar o token e _id nos cookies e redirecionar para a página de apps
     );

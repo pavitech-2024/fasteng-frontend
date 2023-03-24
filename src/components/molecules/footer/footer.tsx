@@ -1,4 +1,4 @@
-import { FooterArea } from "./footerStyle";
+import { FooterArea } from './footerStyle';
 
 const Footer: React.FC = () => {
   return (
@@ -6,8 +6,8 @@ const Footer: React.FC = () => {
       <p>
         <small>© 2020 | Pavitech</small>
       </p>
-		</FooterArea>
-  )
-}
+    </FooterArea>
+  );
+};
 
 export default Footer;

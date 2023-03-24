@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const FooterArea = styled.div`
   display: flex;
@@ -10,6 +10,6 @@ export const FooterArea = styled.div`
     color: #595b61;
     margin-bottom: 10px;
     font-size: 14px;
-    font-family: "Open Sans", sans-serif;
+    font-family: 'Open Sans', sans-serif;
   }
-  `
+`;

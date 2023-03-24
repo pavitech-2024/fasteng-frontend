@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { point } from "../config/breakpoints";
+import styled from 'styled-components';
+import { point } from '../config/breakpoints';
 
 export const BlueLogin = styled.div`
   display: flex;
@@ -9,28 +9,28 @@ export const BlueLogin = styled.div`
   text-align: center;
   background: url();
   background-size: cover;
-	padding: 15px 50px;
-	position: relative;
-	z-index: 1;
+  padding: 15px 50px;
+  position: relative;
+  z-index: 1;
   ::before {
-		content: "";
-		display: flex;
-		width: 100%;
-		height: 100%;
-		background: rgba(15, 62, 105, 0.8);
-		position: absolute;
-		top: 0;
-		left: 0;
-		z-index: -1;
-	}
+    content: '';
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 62, 105, 0.8);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
   svg {
     width: 310px;
-		height: 50px;
-		margin-top: 150px;
+    height: 50px;
+    margin-top: 150px;
   }
 
   & p {
-    font-family: "Open Sans", sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-size: 14px;
     margin-top: 15px;
     margin-bottom: 30px;
@@ -64,7 +64,7 @@ export const HeaderLogin = styled.div`
   align-items: center;
 
   h1 {
-    font-family: "Work Sans", sans-serif;
+    font-family: 'Work Sans', sans-serif;
     font-weight: normal;
     color: #a3a3a3;
     font-size: 14px;
@@ -104,14 +104,14 @@ export const LoginActions = styled.div`
 
   a {
     font-weight: bold;
-    font-family: "Open Sans", sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-size: 13px;
     color: #f57e34;
     line-height: 11px;
     border-bottom: 1px solid #f57e34;
     :hover {
-			color: #f57e34;
-      opacity: .8;
+      color: #f57e34;
+      opacity: 0.8;
     }
   }
 `;

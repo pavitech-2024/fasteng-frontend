@@ -1,4 +1,4 @@
-import { InputContainer, InputBasic, InputErrorMenssage } from "./basicInputStyle";
+import { InputContainer, InputBasic, InputErrorMenssage } from './basicInputStyle';
 
 export interface IBasicInput {
   inputStyle: inputType;
@@ -9,19 +9,19 @@ export interface IBasicInput {
   type: unknown;
   value: unknown;
 }
-export type inputType = 'invalid' | 'normal'
-export type labelType = 'absent' | 'present'
-export type activeColorType = 'invalid' | 'normal'
+export type inputType = 'invalid' | 'normal';
+export type labelType = 'absent' | 'present';
+export type activeColorType = 'invalid' | 'normal';
 
 const BasicInput: React.FC = () => {
   return (
     <InputContainer>
-      <InputBasic/>
+      <InputBasic />
       {/* {props.invalid && ( */}
-        <InputErrorMenssage>Campo obrigatório</InputErrorMenssage>
+      <InputErrorMenssage>Campo obrigatório</InputErrorMenssage>
       {/* )} */}
-  </InputContainer>
-  )
-}
+    </InputContainer>
+  );
+};
 
 export default BasicInput;

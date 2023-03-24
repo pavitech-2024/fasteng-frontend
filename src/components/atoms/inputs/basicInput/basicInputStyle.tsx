@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const InputContainer = styled.div`
   display: flex;
@@ -43,15 +43,15 @@ export const InputErrorMenssage = styled.label`
   font-size: 12px;
   margin-top: 1%;
   margin-left: 1%;
-  font-family: "Roboto", sans-serif;
+  font-family: 'Roboto', sans-serif;
 `;
 
 export const Label = styled.label`
-   color: #555555;
-   margin-left: 1px;
-   margin-bottom: 8px;
-   font-size: 14px;
-   font-family: "Roboto", sans-serif;
-   font-weight: 500;
-   line-height: 16px;
+  color: #555555;
+  margin-left: 1px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  line-height: 16px;
 `;

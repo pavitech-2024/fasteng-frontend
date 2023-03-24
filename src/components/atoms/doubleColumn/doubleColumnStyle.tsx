@@ -1,5 +1,5 @@
-import { point } from "@/components/config/breakpoints";
-import styled from "styled-components";
+import { point } from '@/components/config/breakpoints';
+import styled from 'styled-components';
 
 export const BiColumn = styled.div`
   display: grid;
