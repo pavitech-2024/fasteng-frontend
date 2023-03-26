@@ -23,7 +23,7 @@ const GlobalStyle = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     position: relative;
-}
+  }
 `;
 
 const PageConfig = (props: PageConfigProps) => {
