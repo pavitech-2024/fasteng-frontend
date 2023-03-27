@@ -20,7 +20,11 @@ import LogoSmall from '@/assets/fasteng/LogoSmall.svg';
 import { useState } from 'react';
 import { useLocalStorage } from '../../../hooks/useLocalStorage';
 
-const Topbar = () => {
+interface TopbarProps {
+  setOpenSidebar: (open) => void;
+}
+
+const Topbar = ({ setOpenSidebar }: TopbarProps) => {
   const { user, logout } = useAuth();
   const Router = useRouter();
 
@@ -43,7 +47,19 @@ const Topbar = () => {
       <AppBar position="static" color="secondary">
         <Container maxWidth="ultrawide">
           <Toolbar disableGutters>
-            <Box sx={{ position: 'absolute', left: 0, top: 15 }}>
+            <Box
+              sx={{
+                position: 'absolute',
+                left: 0,
+                top: 15,
+                ':hover': {
+                  tablet: {
+                    cursor: 'pointer',
+                  },
+                },
+              }}
+              onClick={() => setOpenSidebar((open) => !open)}
+            >
               <Image alt="Fasteng" src={LogoSmall} width={150} height={30} />
             </Box>
             <Typography

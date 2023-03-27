@@ -6,13 +6,10 @@ import useAuth from '@/contexts/auth';
 import LogoWhite from '@/assets/fasteng/LOGOWHITE.svg';
 
 //custom styles
-import { LoginContainer, LoginImage } from '@/components/styles/login';
+import { LoginImage } from '@/components/styles/login';
 
 //mui
-import { TextField, Button, Box } from '@mui/material';
-
-//atoms
-import DoubleColumn from '@/components/common/atoms/doubleColumn';
+import { TextField, Button, Box, Container } from '@mui/material';
 
 const Login: NextPage = () => {
   const { signIn } = useAuth();
@@ -25,8 +22,24 @@ const Login: NextPage = () => {
       <Head>
         <title>FastEng - Login</title>
       </Head>
-      <DoubleColumn props={{ width: '100vw', height: '100vh', columnsOnMobile: '1fr' }}>
-        <LoginContainer sx={{ bgcolor: 'secondary.main', display: 'flex' }}>
+      <Container
+        sx={{
+          width: '100vw',
+          height: '100vh',
+          display: 'grid',
+          gridTemplateColumns: { tablet: '1fr', notebook: '1fr 1fr', alignItems: 'center' },
+          padding: 0,
+        }}
+      >
+        <Container
+          sx={{
+            bgcolor: 'secondary.main',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: { notebook: '100vh', tablet: '50vh' },
+          }}
+        >
           <Box
             sx={{
               display: 'grid',
@@ -64,8 +77,17 @@ const Login: NextPage = () => {
               </Button>
             </Box>
           </Box>
-        </LoginContainer>
-        <LoginContainer sx={{ bgcolor: 'white.main', display: 'flex' }}>
+        </Container>
+        <Container
+          sx={{
+            bgcolor: 'white.main',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: { notebook: '100vh', tablet: '50vh' },
+          }}
+        >
           <Box
             sx={{
               display: 'grid',
@@ -85,6 +107,8 @@ const Login: NextPage = () => {
               fullWidth
               onChange={(e) => setEmail(e.target.value)}
               required
+              color="secondary"
+              focused
             />
             <TextField
               variant="outlined"
@@ -94,6 +118,8 @@ const Login: NextPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              color="secondary"
+              focused
             />
 
             <Box
@@ -120,8 +146,16 @@ const Login: NextPage = () => {
               </Button>
             </Box>
           </Box>
-        </LoginContainer>
-      </DoubleColumn>
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: 10,
+            }}
+          >
+            <p>© 2020 | Pavitech</p>
+          </Box>
+        </Container>
+      </Container>
     </>
   );
 };

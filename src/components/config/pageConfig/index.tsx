@@ -3,6 +3,9 @@ import { createGlobalStyle } from 'styled-components';
 import useAuth from '@/contexts/auth';
 import Topbar from './topbar';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import Navbar from './navbar';
+import { Box } from '@mui/material';
 
 interface PageConfigProps {
   title?: string;
@@ -30,25 +33,43 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const getComponent = (Router, user, children) => {
-  if (Router.pathname === '/') {
-    return children;
-  }
-
-  if (user && Router.pathname !== '/') {
-    return (
-      <>
-        <Topbar />
-        {children}
-      </>
-    );
-  }
-};
-
 const PageConfig = (props: PageConfigProps) => {
   const { title, description, children } = props;
   const Router = useRouter();
   const { user } = useAuth();
+
+  const GetComponent = () => {
+    const [OpenSidebar, setOpenSidebar] = useState<boolean>(false);
+
+    const navbar =
+      Router.pathname.includes('asphalt') || Router.pathname.includes('soils') || Router.pathname.includes('concrete');
+
+    if (Router.pathname === '/') {
+      return children;
+    }
+
+    if (user && Router.pathname !== '/') {
+      return (
+        <>
+          <Topbar setOpenSidebar={setOpenSidebar} />
+          {navbar && <Navbar open={OpenSidebar} type={Router.pathname.split('/')[1]} />}
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Box
+              sx={{
+                padding: { mobile: '1rem 2rem 1rem 2rem', notebook: '3rem 8rem 3rem 8rem' },
+                width: '100%',
+                background: 'red',
+              }}
+              maxWidth="ultrawide"
+            >
+              {children}
+            </Box>
+          </Box>
+        </>
+      );
+    }
+  };
+
   return (
     <>
       <Head>
@@ -59,7 +80,7 @@ const PageConfig = (props: PageConfigProps) => {
       </Head>
       <main>
         <GlobalStyle />
-        {getComponent(Router, user, children)}
+        {GetComponent()}
       </main>
     </>
   );
