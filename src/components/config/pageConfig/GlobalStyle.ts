@@ -1,22 +1,48 @@
-import { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
+  root: {
+    --darkest: #121212;
+    --darker: #212121;
+    --dark: #383838;
+    --background: #F2F2F2;
+    --white: #FCFCFC;
+    --border: #CFCFCF;
+    --gray: #838383;
+    --orange: #F29134;
+    --button: #00A3FF;
+    --disabledButton: #7CD0FF;
+    --green: #43D16B;
+    --red: #F23434;
+  }
+
 	* {
-		margin: 0;
-		padding: 0;
+    font-family: 'Roboto', sans-serif;
 	}
+
 	body {
-		background-color: #F4F5F7;
-		height: 100%;
-    overflow-x: hidden;
-    p, span, h1, h2, h3, h4, h5, h6, button, label, div, textarea, input{
-      font-family: 'Work Sans ', sans-serif;
+    margin: 0;
+		padding: 0;
+    box-sizing: border-box;
+		background-color: var(--background);
+
+    p, span, h1, h2, h3, h4, h5, h6, button, label, div, textarea, input {
+      font-family: 'Roboto', sans-serif;
     }
   }
+
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     position: relative;
-}
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  button {
+    cursor: pointer;
+  }
 `
 export default GlobalStyle
