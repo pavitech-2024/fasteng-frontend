@@ -16,7 +16,7 @@ const BiColumn = styled.div<IBiColumn>`
   ${({ width }) => width && `width: ${width};`}
   ${({ height }) => height && `height: ${height};`}
 
-  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.values.tablet}px) {
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.values.notebook}px) {
     ${({ columnsOnMobile }) => columnsOnMobile && `grid-template-columns: ${columnsOnMobile};`}
   }
 `;

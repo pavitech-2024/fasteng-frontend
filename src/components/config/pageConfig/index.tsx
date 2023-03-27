@@ -1,4 +1,8 @@
+import Head from 'next/head';
 import { createGlobalStyle } from 'styled-components';
+import useAuth from '@/contexts/auth';
+import Topbar from './topbar';
+import { useRouter } from 'next/router';
 
 interface PageConfigProps {
   title?: string;
@@ -26,19 +30,36 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+const getComponent = (Router, user, children) => {
+  if (Router.pathname === '/') {
+    return children;
+  }
+
+  if (user && Router.pathname !== '/') {
+    return (
+      <>
+        <Topbar />
+        {children}
+      </>
+    );
+  }
+};
+
 const PageConfig = (props: PageConfigProps) => {
   const { title, description, children } = props;
+  const Router = useRouter();
+  const { user } = useAuth();
   return (
     <>
-      <header>
+      <Head>
         <title>{title ? title : 'FastEng'}</title>
         {description && <meta name="description" content={description} />}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="shortcut icon" href="../../../public/favicon.ico" type="image/x-icon" />
-      </header>
+        <link rel="shortcut icon" href="@public/favicon.ico" type="image/x-icon" />
+      </Head>
       <main>
         <GlobalStyle />
-        {children}
+        {getComponent(Router, user, children)}
       </main>
     </>
   );

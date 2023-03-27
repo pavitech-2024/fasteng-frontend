@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { setCookie, parseCookies } from 'nookies';
-import Api from '../api';
+import { setCookie, parseCookies, destroyCookie } from 'nookies';
+import Api from '@/api';
 import { useRouter } from 'next/router';
 
 type User = {
@@ -18,6 +18,7 @@ export type AuthContent = {
   user: User | null;
   signIn: (email: string, password: string) => Promise<void>;
   refreshLogin: () => Promise<void>;
+  logout: () => Promise<void>;
 };
 
 export const AuthContext = createContext({} as AuthContent);
@@ -31,12 +32,14 @@ export function AuthProvider({ children }) {
   const Router = useRouter();
 
   useEffect(() => {
-    try {
-      if (user === null)
-        refreshLogin().then(() => {
-          if (user === null && Router.pathname !== '/') Router.push('/');
-        });
-    } catch (error) {}
+    async function loadUser() {
+      try {
+        if (user === null) {
+          await refreshLogin();
+        }
+      } catch (error) {}
+    }
+    loadUser();
   });
 
   async function signIn(email: string, password: string) {
@@ -52,8 +55,7 @@ export function AuthProvider({ children }) {
       Api.defaults.headers.Authorization = `Bearer ${token}`;
 
       setUser({ ...user, name, planName, email });
-
-      Router.push('/apps');
+      await Router.push('/home');
     } catch (error) {}
   }
 
@@ -72,14 +74,25 @@ export function AuthProvider({ children }) {
         Api.defaults.headers.Authorization = `Bearer ${response.data.token}`;
 
         setUser({ ...user, name, planName, email });
-
-        Router.push('/apps');
+        if (Router.pathname === '/') await Router.push('/home');
       }
-    } catch (error) {}
+    } catch (error) {
+      if (Router.pathname !== '/') await Router.push('/');
+    }
+  }
+
+  async function logout() {
+    destroyCookie(undefined, 'fasteng.token');
+    destroyCookie(undefined, 'fasteng._id');
+
+    await Router.push('/');
+    setUser(null);
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, signIn, refreshLogin }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ isAuthenticated, user, signIn, refreshLogin, logout }}>
+      {children}
+    </AuthContext.Provider>
   );
 }
 

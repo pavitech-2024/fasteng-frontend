@@ -7,15 +7,15 @@ import { theme } from '@/components/config/theme';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <PageConfig>
-      <AuthProvider>
-        <MuiTheme theme={theme}>
-          <StyledTheme theme={theme}>
+    <AuthProvider>
+      <MuiTheme theme={theme}>
+        <StyledTheme theme={theme}>
+          <PageConfig>
             <Component {...pageProps} />
-          </StyledTheme>
-        </MuiTheme>
-      </AuthProvider>
-    </PageConfig>
+          </PageConfig>
+        </StyledTheme>
+      </MuiTheme>
+    </AuthProvider>
   );
 };
 
