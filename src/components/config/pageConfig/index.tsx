@@ -56,11 +56,16 @@ const PageConfig = (props: PageConfigProps) => {
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Box
               sx={{
-                padding: { mobile: '1rem 2rem 1rem 2rem', notebook: '3rem 8rem 3rem 8rem' },
-                width: '100%',
-                background: 'red',
+                mt: { mobile: '2.2rem', notebook: '3rem' },
+                width: {
+                  mobile: '100%',
+                  tablet: '100%',
+                  notebook: 'calc(100% - 160px)',
+                  ultrawide: 'calc(100% - 160px)',
+                  2048: 'calc(100% - 160px)',
+                },
               }}
-              maxWidth="ultrawide"
+              maxWidth="calc(1920px - 32px)"
             >
               {children}
             </Box>
