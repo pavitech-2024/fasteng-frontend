@@ -1,31 +1,27 @@
 import { NextPage } from 'next';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Container, Box, Card, Typography } from '@mui/material';
-import LogoBlack from '@/assets/fasteng/LogoBlack.png';
-import { LoginImage } from '@/components/styles/login';
-import SoilsLogo from '@/assets/apps/soils.svg';
-import ConcreteLogo from '@/assets/apps/concrete.svg';
-import AsphaltLogo from '@/assets/apps/asphalt.svg';
+import { LogoBlack, AsphaltIcon, SoilsIcon, ConcreteIcon } from '@/assets';
+import { LoginImage } from '../components/styles/login';
 
 const Home: NextPage = () => {
   const Router = useRouter();
 
   const Aplications = [
     {
-      title: 'Pavimentação',
-      photo: AsphaltLogo,
-      path: '/asphalt',
+      name: 'Pavimentação',
+      icon: <AsphaltIcon width="100%" height="100%" />,
+      link: '/asphalt',
     },
     {
-      title: 'Mecânica dos Solos',
-      photo: SoilsLogo,
-      path: '/soils',
+      name: 'Mecânica dos Solos',
+      icon: <SoilsIcon width="100%" height="100%" />,
+      link: '/soils',
     },
     {
-      title: 'Cimento Portland',
-      photo: ConcreteLogo,
-      path: '/concrete',
+      name: 'Cimento Portland',
+      icon: <ConcreteIcon width="100%" height="100%" />,
+      link: '/concrete',
     },
   ];
 
@@ -47,7 +43,10 @@ const Home: NextPage = () => {
           alignItems: 'center',
         }}
       >
-        <Box component="p" sx={{ padding: '.3rem', fontSize: '15px', fontWeight: 700, color: '#6e6d6d' }}>
+        <Box
+          component="p"
+          sx={{ padding: '.3rem', fontSize: { notebook: '15px', mobile: '10px' }, fontWeight: 700, color: '#6e6d6d' }}
+        >
           BEM-VINDO AO
         </Box>
         <LoginImage alt="Fasteng" src={LogoBlack} />
@@ -62,7 +61,7 @@ const Home: NextPage = () => {
               ultrawide: '310px',
             },
             textAlign: 'center',
-            fontSize: '15px',
+            fontSize: { notebook: '15px', mobile: '8px' },
           }}
         >
           O CAMINHO MAIS RÁPIDO PARA A ENGENHARIA
@@ -71,7 +70,7 @@ const Home: NextPage = () => {
           component="p"
           sx={{
             padding: '.7rem',
-            fontSize: '15px',
+            fontSize: { notebook: '15px', mobile: '10px' },
             fontWeight: 700,
             color: 'secondary',
             textAlign: 'center',
@@ -89,11 +88,7 @@ const Home: NextPage = () => {
           display: 'grid',
           maxWidth: '100%',
           gridTemplateColumns: {
-            mobile: 'repeat(auto-fit, minmax(224px, 1fr))',
-            notebook: 'repeat(auto-fit, minmax(300px, 1fr))',
-          },
-          gridTemplateRows: {
-            mobile: 'repeat(auto-fit, minmax(200px, 1fr))',
+            mobile: '1fr',
             notebook: 'repeat(auto-fit, minmax(300px, 1fr))',
           },
           gap: '1rem',
@@ -104,32 +99,44 @@ const Home: NextPage = () => {
         {Aplications.map((element) => {
           return (
             <Card
-              onClick={() => Router.push(element.path)}
-              key={element.title}
+              onClick={() => Router.push(element.link)}
+              key={element.name}
               sx={{
                 display: 'flex',
-                flexDirection: 'column',
+                flexDirection: {
+                  mobile: 'row',
+                  notebook: 'column',
+                },
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: {
-                  mobile: '224px',
+                  mobile: 'calc(90vw - 2rem)',
                   notebook: '300px',
                 },
                 height: {
-                  mobile: '200px',
+                  mobile: '120px',
                   notebook: '300px',
                 },
                 bgcolor: 'primary.main',
-                borderRadius: '7%',
+                borderRadius: {
+                  mobile: '10px',
+                  notebook: '7%',
+                },
                 ':hover': {
                   cursor: 'pointer',
                 },
               }}
             >
               <Box
-                sx={{ width: '100%', height: '75%', bgcolor: 'secondary.main', display: 'grid', placeItems: 'center' }}
+                sx={{
+                  width: { mobile: '45%', notebook: '100%' },
+                  height: { mobile: '100%', notebook: '75%' },
+                  bgcolor: 'secondary.main',
+                  display: 'grid',
+                  placeItems: 'center',
+                }}
               >
-                <Image src={element.photo} alt={element.title} width={180} height={120} />
+                <Box sx={{ width: '60%', height: '60%' }}>{element.icon}</Box>
               </Box>
               <Typography
                 gutterBottom
@@ -142,10 +149,10 @@ const Home: NextPage = () => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   color: 'white',
-                  fontSize: '22px',
+                  fontSize: { notebook: '22px', mobile: '14px' },
                 }}
               >
-                {element.title}
+                {element.name}
               </Typography>
             </Card>
           );

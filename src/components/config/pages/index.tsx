@@ -6,8 +6,9 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Navbar from './navbar';
 import { Box } from '@mui/material';
+import 'react-toastify/dist/ReactToastify.css';
 
-interface PageConfigProps {
+interface PagesProps {
   title?: string;
   description?: string;
   children: React.ReactNode;
@@ -33,7 +34,7 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const PageConfig = (props: PageConfigProps) => {
+const Pages = (props: PagesProps) => {
   const { title, description, children } = props;
   const Router = useRouter();
   const { user } = useAuth();
@@ -44,25 +45,25 @@ const PageConfig = (props: PageConfigProps) => {
     const navbar =
       Router.pathname.includes('asphalt') || Router.pathname.includes('soils') || Router.pathname.includes('concrete');
 
-    if (Router.pathname === '/') {
-      return children;
-    }
+    if (Router.pathname === '/') return children;
 
-    if (user && Router.pathname !== '/') {
+    if (user && Router.pathname !== '/')
       return (
         <>
           <Topbar setOpenSidebar={setOpenSidebar} />
-          {navbar && <Navbar open={OpenSidebar} type={Router.pathname.split('/')[1]} />}
+          {navbar && <Navbar open={OpenSidebar} app={Router.pathname.split('/')[1]} />}
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Box
               sx={{
                 mt: { mobile: '2.2rem', notebook: '3rem' },
                 width: {
-                  mobile: '100%',
-                  tablet: '100%',
-                  notebook: 'calc(100% - 160px)',
-                  ultrawide: 'calc(100% - 160px)',
-                  2048: 'calc(100% - 160px)',
+                  mobile: 'calc(100% - 16px)',
+                  notebook: 'calc(100% - 96px)',
+                  containerMargin: '100% ',
+                },
+                ml: {
+                  notebook: '56px',
+                  containerMargin: 0,
                 },
               }}
               maxWidth="calc(1920px - 32px)"
@@ -72,7 +73,6 @@ const PageConfig = (props: PageConfigProps) => {
           </Box>
         </>
       );
-    }
   };
 
   return (
@@ -91,4 +91,4 @@ const PageConfig = (props: PageConfigProps) => {
   );
 };
 
-export default PageConfig;
+export default Pages;

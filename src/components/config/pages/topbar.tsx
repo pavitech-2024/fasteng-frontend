@@ -1,5 +1,9 @@
-import useAuth from '@/contexts/auth';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
+import Image from 'next/image';
+import useAuth from '@/contexts/auth';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 import {
   AppBar,
   Container,
@@ -13,11 +17,7 @@ import {
   MenuItem,
   Button,
 } from '@mui/material';
-import Head from 'next/head';
-import Image from 'next/image';
-import LogoSmall from '@/assets/fasteng/LogoSmall.svg';
-import { useState } from 'react';
-import { useLocalStorage } from '../../../hooks/useLocalStorage';
+import { LogoSmall } from '@/assets/';
 
 interface TopbarProps {
   setOpenSidebar: (open) => void;
@@ -44,22 +44,17 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
         <title>FastEng - {PageTitle}</title>
       </Head>
       <AppBar position="static" color="secondary">
-        <Container maxWidth="ultrawide">
+        <Container maxWidth="ultrawide" sx={{ pl: '1.8rem' }}>
           <Toolbar disableGutters>
             <Box
               sx={{
                 position: 'absolute',
                 left: 0,
                 top: 15,
-                ':hover': {
-                  tablet: {
-                    cursor: 'pointer',
-                  },
-                },
               }}
               onClick={() => setOpenSidebar((open) => !open)}
             >
-              <Image alt="Fasteng" src={LogoSmall} width={150} height={30} />
+              <Image alt="Fasteng" src={LogoSmall} width={200} height={28} style={{ transform: 'translateX(-18px)' }} />
             </Box>
             <Typography
               variant="h6"
@@ -67,7 +62,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
               sx={{
                 mr: 2,
                 ml: 5,
-                display: { mobile: 'none', tablet: 'flex', notebook: 'flex', desktop: 'flex', ultrawide: 'flex' },
+                display: { mobile: 'none', tablet: 'flex' },
                 fontFamily: 'monospace',
                 fontWeight: 700,
                 letterSpacing: '.2rem',
@@ -82,7 +77,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
               noWrap
               sx={{
                 mr: 2,
-                display: { mobile: 'none', tablet: 'none', notebook: 'flex', desktop: 'flex', ultrawide: 'flex' },
+                display: { mobile: 'none', notebook: 'flex' },
                 fontFamily: 'monospace',
                 fontWeight: 700,
                 letterSpacing: '.2rem',
@@ -101,7 +96,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                 noWrap
                 sx={{
                   mr: 2,
-                  display: { mobile: 'none', tablet: 'none', notebook: 'flex', desktop: 'flex', ultrawide: 'flex' },
+                  display: { mobile: 'none', notebook: 'flex' },
                   fontFamily: 'monospace',
                   fontWeight: 700,
                   letterSpacing: '.1rem',
@@ -131,7 +126,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                 open={Boolean(openSettings)}
                 onClose={() => setOpenSettings(false)}
               >
-                <MenuItem sx={{ ':hover': { bgColor: 'primary.main' } }}>
+                <MenuItem>
                   <Box onClick={() => logout()}>Sair</Box>
                 </MenuItem>
               </Menu>

@@ -8,6 +8,8 @@ export const theme = createTheme({
       notebook: 768,
       desktop: 1366,
       ultrawide: 1920,
+      containerMargin: 2016,
+      infinity: 2048,
     },
   },
 

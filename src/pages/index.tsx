@@ -2,20 +2,31 @@ import { NextPage } from 'next';
 import { useState } from 'react';
 import Head from 'next/head';
 // files
+import { toast } from 'react-toastify';
 import useAuth from '@/contexts/auth';
-import LogoWhite from '@/assets/fasteng/LOGOWHITE.svg';
+import { LogoWhite } from '@/assets';
 
 //custom styles
 import { LoginImage } from '@/components/styles/login';
 
 //mui
-import { TextField, Button, Box, Container } from '@mui/material';
+import { TextField, Button, Box, Container, Typography } from '@mui/material';
 
 const Login: NextPage = () => {
   const { signIn } = useAuth();
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+
+  const handleLogin = async () => {
+    try {
+      toast.promise(async () => await signIn(email, password), {
+        pending: 'Verificando usuário...',
+        success: 'Login efetuado com sucesso!',
+        error: 'Login inválido!',
+      });
+    } catch (error) {}
+  };
 
   return (
     <>
@@ -27,7 +38,7 @@ const Login: NextPage = () => {
           width: '100vw',
           height: '100vh',
           display: 'grid',
-          gridTemplateColumns: { tablet: '1fr', notebook: '1fr 1fr', alignItems: 'center' },
+          gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr', alignItems: 'center' },
           padding: 0,
         }}
       >
@@ -37,7 +48,7 @@ const Login: NextPage = () => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            height: { notebook: '100vh', tablet: '50vh' },
+            height: { notebook: '100vh', mobile: '50vh' },
           }}
         >
           <Box
@@ -52,7 +63,7 @@ const Login: NextPage = () => {
             }}
           >
             <LoginImage alt="Fasteng" src={LogoWhite} />
-            <Box sx={{ color: 'white', textAlign: 'center', fontSize: '14px' }}>
+            <Box sx={{ color: 'white', textAlign: 'center', fontSize: { notebook: '14px', mobile: '10px' } }}>
               Usar o FastEng é simples! Primeiramente, cadastre os materiais que serão usados no seu projeto de dosagem.
               Assim você pode criar um banco de dados para catologar seus materiais e suas informações. Calcule
               resultados de ensaios de caracterização que serão vinculados ao seus materiais e confira se estão
@@ -69,23 +80,28 @@ const Login: NextPage = () => {
                 gridTemplateColumns: '1fr 1fr',
               }}
             >
-              <Button variant="contained" color="primary" sx={{ width: '120px' }} href="https://fastengapp.com.br/">
-                <p>Assine</p>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ width: { notebook: '120px', mobile: '80px' } }}
+                href="https://fastengapp.com.br/"
+              >
+                <Typography sx={{ fontSize: { notebook: '15px', mobile: '8px' } }}>Assine</Typography>
               </Button>
-              <Button variant="outlined" color="primary" sx={{ width: '120px' }}>
-                <p>Saiba Mais</p>
+              <Button variant="outlined" color="primary" sx={{ width: { notebook: '120px', mobile: '80px' } }}>
+                <Typography sx={{ fontSize: { notebook: '15px', mobile: '8px' } }}>Saiba Mais</Typography>
               </Button>
             </Box>
           </Box>
         </Container>
         <Container
           sx={{
-            bgcolor: 'white.main',
+            bgcolor: 'white',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            height: { notebook: '100vh', tablet: '50vh' },
+            height: { notebook: '100vh', mobile: '50vh' },
           }}
         >
           <Box
@@ -107,8 +123,7 @@ const Login: NextPage = () => {
               fullWidth
               onChange={(e) => setEmail(e.target.value)}
               required
-              color="secondary"
-              focused
+              color="primary"
             />
             <TextField
               variant="outlined"
@@ -118,8 +133,7 @@ const Login: NextPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              color="secondary"
-              focused
+              color="primary"
             />
 
             <Box
@@ -137,7 +151,7 @@ const Login: NextPage = () => {
                 variant="contained"
                 disabled={password === '' || email === ''}
                 color="primary"
-                onClick={async () => await signIn(email, password)}
+                onClick={() => handleLogin()}
               >
                 Entrar
               </Button>
@@ -152,7 +166,7 @@ const Login: NextPage = () => {
               bottom: 10,
             }}
           >
-            <p>© 2020 | Pavitech</p>
+            <Typography sx={{ fontSize: { notebook: '15px', mobile: '8px' } }}>© 2020 | Pavitech</Typography>
           </Box>
         </Container>
       </Container>

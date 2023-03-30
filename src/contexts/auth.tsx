@@ -37,12 +37,14 @@ export function AuthProvider({ children }) {
         if (user === null) {
           await refreshLogin();
         }
-      } catch (error) {}
+      } catch (error) {
+        throw error;
+      }
     }
     loadUser();
   });
 
-  async function signIn(email: string, password: string) {
+  async function signIn(email: string, password: string): Promise<void> {
     try {
       const response = await Api.post('auth/login', { email, password });
 
@@ -54,9 +56,11 @@ export function AuthProvider({ children }) {
       // set token to axios headers
       Api.defaults.headers.Authorization = `Bearer ${token}`;
 
-      setUser({ ...user, name, planName, email });
-      await Router.push('/home');
-    } catch (error) {}
+      await setUser({ ...user, name, planName, email });
+      Router.push('/home');
+    } catch (error) {
+      throw error;
+    }
   }
 
   async function refreshLogin() {
@@ -78,12 +82,13 @@ export function AuthProvider({ children }) {
       }
     } catch (error) {
       if (Router.pathname !== '/') await Router.push('/');
+      else throw error;
     }
   }
 
   async function logout() {
-    destroyCookie(undefined, 'fasteng.token');
-    destroyCookie(undefined, 'fasteng._id');
+    await destroyCookie(undefined, 'fasteng.token');
+    await destroyCookie(undefined, 'fasteng._id');
 
     await Router.push('/');
     setUser(null);
