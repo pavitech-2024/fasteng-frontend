@@ -140,6 +140,7 @@ export default function Navbar({ open, app }: NavbarProps) {
     <Box
       sx={{
         position: 'absolute',
+        zIndex: 1,
         display: { mobile: `${open ? 'grid' : 'none'}`, tablet: `${open ? 'grid' : 'none'}`, notebook: 'grid' },
         gridTemplateRows: `repeat(${Items.length}, minmax(48px, max-content))`,
         alignItems: 'flex-start',
