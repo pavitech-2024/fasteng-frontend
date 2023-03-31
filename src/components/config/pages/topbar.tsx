@@ -51,6 +51,9 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                 position: 'absolute',
                 left: 0,
                 top: 15,
+                ':hover': {
+                  cursor: 'pointer',
+                },
               }}
               onClick={() => setOpenSidebar((open) => !open)}
             >

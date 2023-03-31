@@ -38,7 +38,7 @@ export function AuthProvider({ children }) {
           await refreshLogin();
         }
       } catch (error) {
-        throw error;
+        throw console.error(error);
       }
     }
     loadUser();
