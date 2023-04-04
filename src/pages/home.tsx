@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { Container, Box, Card, Typography } from '@mui/material';
 import { LogoBlack, AsphaltIcon, SoilsIcon, ConcreteIcon } from '@/assets';
-import { LoginImage } from '../components/styles/login';
+import { LoginImage } from '../components/styles/styleds/login';
 
 const Home: NextPage = () => {
   const Router = useRouter();
@@ -117,7 +117,7 @@ const Home: NextPage = () => {
                   mobile: '120px',
                   notebook: '300px',
                 },
-                bgcolor: 'primary.main',
+                bgcolor: 'primaryTons.darkerGray',
                 borderRadius: {
                   mobile: '10px',
                   notebook: '7%',

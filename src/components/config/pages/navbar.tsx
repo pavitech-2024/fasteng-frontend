@@ -199,8 +199,8 @@ export default function Navbar({ open, app }: NavbarProps) {
                     overflow: 'hidden',
                     position: 'relative',
                     borderRight: `${Router.pathname.includes(item.link) && '3px solid'}`,
-                    borderColor: 'primary.main',
-                    ':hover': { bgcolor: 'primary.main' },
+                    borderColor: 'primaryTons.darkerGray',
+                    ':hover': { bgcolor: 'primaryTons.darkerGray' },
                   }}
                 >
                   {item.icon}
@@ -241,8 +241,8 @@ export default function Navbar({ open, app }: NavbarProps) {
                           overflow: 'hidden',
                           position: 'relative',
                           borderRight: `${Router.pathname.includes(item.link) && '3px solid'}`,
-                          borderColor: 'primary.main',
-                          ':hover': { bgcolor: 'primary.main' },
+                          borderColor: 'primaryTons.darkerGray',
+                          ':hover': { bgcolor: 'primaryTons.darkerGray' },
                         }}
                       >
                         {subItem.icon}

@@ -145,7 +145,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                 onClick={() => setLanguage('ENG')}
                 sx={
                   language === 'ENG'
-                    ? { color: 'primary.main', width: 'fit-content' }
+                    ? { color: 'primaryTons.darkerGray', width: 'fit-content' }
                     : { color: 'secondary.main', width: 'fit-content' }
                 }
               >
@@ -156,7 +156,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                 onClick={() => setLanguage('BR')}
                 sx={
                   language === 'BR'
-                    ? { color: 'primary.main', width: 'fit-content' }
+                    ? { color: 'primaryTons.darkerGray', width: 'fit-content' }
                     : { color: 'secondary.main', width: 'fit-content' }
                 }
               >

@@ -20,11 +20,11 @@ const GlobalStyle = createGlobalStyle`
 		padding: 0;
 	}
 	body {
-		background-color: #F4F5F7;
+		background-color: #F2F2F2;
 		height: 100%;
     overflow-x: hidden;
     p, span, h1, h2, h3, h4, h5, h6, button, label, div, textarea, input{
-      font-family: 'Work Sans ', sans-serif;
+      font-family: 'Roboto', sans-serif;
     }
   }
   html {

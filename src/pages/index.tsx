@@ -4,13 +4,15 @@ import Head from 'next/head';
 // files
 import { toast } from 'react-toastify';
 import useAuth from '@/contexts/auth';
-import { LogoWhite } from '@/assets';
+import { LogoWhite, LoginPhoto } from '@/assets';
 
 //custom styles
-import { LoginImage } from '@/components/styles/login';
+import { LoginImage, LoginBackgroundPhoto } from '@/components/styles/styleds/login';
+import { AboutButton } from '@/components/styles/muis/login';
+import { MainButton } from '@/components/styles/global';
 
 //mui
-import { TextField, Button, Box, Container, Typography } from '@mui/material';
+import { TextField, Box, Container, Typography } from '@mui/material';
 
 const Login: NextPage = () => {
   const { signIn } = useAuth();
@@ -42,122 +44,145 @@ const Login: NextPage = () => {
           padding: 0,
         }}
       >
-        <Container
-          sx={{
-            bgcolor: 'secondary.main',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: { notebook: '100vh', mobile: '50vh' },
-          }}
-        >
-          <Box
+        <Box>
+          <LoginBackgroundPhoto alt='Background Image' src={LoginPhoto} />
+          <Container
             sx={{
-              display: 'grid',
-              gridTemplateColumns: '1fr',
-              gap: '1rem',
-              padding: '1rem',
-              borderRadius: '0.5rem',
-              width: 'calc(100% - 2rem)',
-              placeItems: 'center',
+              bgcolor: 'rgba(18, 18, 18, 0.85)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'absolute',
+              zIndex: '2',
+              top: '0',
+              height: { desktop: '100vh', mobile: '60vh' },
+              width: { desktop: '50vw', mobile: '100vw' },
+              padding: { desktop: '10vh 4vw', mobile: '5vh 2vw 10vh' }
             }}
           >
-            <LoginImage alt="Fasteng" src={LogoWhite} />
-            <Box sx={{ color: 'white', textAlign: 'center', fontSize: { notebook: '14px', mobile: '10px' } }}>
-              Usar o FastEng é simples! Primeiramente, cadastre os materiais que serão usados no seu projeto de dosagem.
-              Assim você pode criar um banco de dados para catologar seus materiais e suas informações. Calcule
-              resultados de ensaios de caracterização que serão vinculados ao seus materiais e confira se estão
-              adequados às especificações técnicas. Por fim, inicie seu projeto de dosagem. O FastEng te acompanha até a
-              determinação do teor ótimo de ligante asfáltico.
-            </Box>
             <Box
-              mt={2.5}
-              gap={2}
-              width="fit-content"
               sx={{
-                display: 'grid',
-                placeItems: 'center',
-                gridTemplateColumns: '1fr 1fr',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: { desktop: '22vh', tablet: '16vh' }
               }}
             >
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ width: { notebook: '120px', mobile: '80px' } }}
-                href="https://fastengapp.com.br/"
-              >
-                <Typography sx={{ fontSize: { notebook: '15px', mobile: '8px' } }}>Assine</Typography>
-              </Button>
-              <Button variant="outlined" color="primary" sx={{ width: { notebook: '120px', mobile: '80px' } }}>
-                <Typography sx={{ fontSize: { notebook: '15px', mobile: '8px' } }}>Saiba Mais</Typography>
-              </Button>
+              <LoginImage alt="Fasteng" src={LogoWhite} />
             </Box>
-          </Box>
-        </Container>
+            <Box sx={{
+              color: 'primaryTons.mainWhite',
+              display: 'flex',
+              alignItems: 'center',
+              textAlign: 'center',
+              fontSize: { ultrawide: '1rem', desktop: '0.85rem', notebook: '1rem', mobile: '0.75rem' },
+              height: '18vh',
+              padding: '0 1vw' }}>
+              Usar o FastEng é simples! Primeiramente, cadastre os materiais que serão usados no seu projeto de dosagem.
+                Assim você pode criar um banco de dados para catologar seus materiais e suas informações. Calcule
+                resultados de ensaios de caracterização que serão vinculados ao seus materiais e confira se estão
+                adequados às especificações técnicas. Por fim, inicie seu projeto de dosagem. O FastEng te acompanha até a
+                determinação do teor ótimo de ligante asfáltico.
+            </Box>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-around',
+                width: '100%',
+                padding: '2vh 0'
+              }}
+            >
+              <MainButton
+                text="Assine"
+                linkTo="https://fastengapp.com.br/"
+              />
+              <AboutButton />
+            </Box>
+          </Container>
+        </Box>
         <Container
           sx={{
-            bgcolor: 'white',
+            bgcolor: 'primaryTones.background',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            height: { notebook: '100vh', mobile: '50vh' },
+            position: { desktop: 'static', mobile: 'absolute' },
+            height: { desktop: '100vh', mobile: '40vh' },
+            width: { desktop: '50vw', mobile: '100vw' },
+            bottom: '0'
           }}
         >
           <Box
             sx={{
-              display: 'grid',
-              gridTemplateColumns: '1fr',
-              gap: '1rem',
-              padding: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '1vh 0vw',
               borderRadius: '0.5rem',
-              width: 'calc(100% - 2rem)',
-              maxWidth: '600px',
+              width: { desktop: '35vw', mobile: '80vw' },
+              height: { desktop: '20vw', mobile: '56vw' },
+              bgcolor: 'primaryTons.mainWhite',
+              position: { desktop: 'static', mobile: 'absolute' },
+              zIndex: { desktop: 'auto', mobile: '3' },
+              bottom: { desktop: 'auto', notebook: '5vh', mobile: '15vh' }
             }}
           >
-            <TextField
-              label="Email"
-              variant="outlined"
-              value={email}
-              placeholder="Digite seu email..."
-              fullWidth
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              color="primary"
-            />
-            <TextField
-              variant="outlined"
-              label="Password"
-              placeholder="Digite sua senha..."
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              color="primary"
-            />
-
             <Box
-              mt={2.5}
-              gap={2}
-              width="100%"
               sx={{
-                display: 'grid',
-                placeItems: 'center',
-                gridTemplateColumns: '1fr',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+                paddingTop: '2vh',
+                height: '75%'
               }}
             >
-              <Button
-                fullWidth
-                variant="contained"
+              <TextField
+                label="Email"
+                variant="outlined"
+                value={email}
+                placeholder="Digite seu email..."
+                sx={{
+                  width: { desktop: '30vw', mobile: '70vw' }
+                }}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <TextField
+                variant="outlined"
+                label="Password"
+                placeholder="Digite sua senha..."
+                type="password"
+                value={password}
+                sx={{
+                  width: { desktop: '30vw', mobile: '70vw' }
+                }}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </Box>
+
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '25%',
+                width: '100%',
+              }}
+            >
+              <MainButton
+                text='Entrar'
                 disabled={password === '' || email === ''}
-                color="primary"
-                onClick={() => handleLogin()}
-              >
-                Entrar
-              </Button>
-              <Button variant="text" color="primary" sx={{ width: 'fit-content' }}>
-                <p>Esqueceu sua senha?</p>
-              </Button>
+                handleClick={() => handleLogin()}
+              />
+              <Typography sx={{ color: 'secondaryTons.main', fontSize: { desktop: '1rem', mobile: '0.85rem' } }}>
+                Esqueceu sua senha?
+              </Typography>
             </Box>
           </Box>
           <Box
