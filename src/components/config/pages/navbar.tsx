@@ -83,7 +83,7 @@ export default function Navbar({ open, app }: NavbarProps) {
     //soils
     {
       name: 'Amostras',
-      link: '/soils/materials',
+      link: '/soils/samples',
       app: 'soils',
       icon: <MaterialsIcon sx={IconStyle} />,
       type: 'single',
