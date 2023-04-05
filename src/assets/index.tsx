@@ -1,5 +1,5 @@
 // materialui
-import { Home, Add, Search, Report, Task, VideoLibrary } from '@mui/icons-material';
+import { Home, Add, Search, Report, Task, VideoLibrary, Delete } from '@mui/icons-material';
 
 // fasteng paste
 import LogoBlack from './fasteng/LogoBlack.png';
@@ -65,6 +65,7 @@ export {
   Report as ReportIcon,
   Task as StandartsIcon,
   VideoLibrary as LibraryIcon,
+  Delete as DeleteIcon,
 
   // fasteng paste
   LogoBlack,

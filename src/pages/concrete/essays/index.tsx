@@ -4,7 +4,7 @@ import { EssaysTemplate } from '../../../components/templates/essays';
 import { Essay } from '@/interfaces/common';
 import { CoarseAggregateIcon, GranulometryIcon, SandIncreaseIcon, SpecifyMassIcon, UnitMassIcon } from '@/assets';
 
-const index: NextPage = () => {
+export const getStaticProps = async () => {
   const essays: Essay[] = [
     {
       title: 'Granulometria por Peneiramento',
@@ -32,6 +32,18 @@ const index: NextPage = () => {
       link: '/concrete/essays/coarse-aggregate',
     },
   ];
+
+  return {
+    props: {
+      essays,
+    },
+  };
+};
+
+interface ConcreteEssaysProps {
+  essays: Essay[];
+}
+const index: NextPage = ({ essays }: ConcreteEssaysProps) => {
   return <EssaysTemplate essays={essays} />;
 };
 

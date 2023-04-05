@@ -17,7 +17,8 @@ import {
 } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import Search from '@/components/atoms/inputs/search';
-import { AddIcon } from '@/assets';
+import { AddIcon, DeleteIcon } from '@/assets';
+import { formatDate } from '@/utils/format';
 
 interface MaterialsTemplateProps {
   materials: Sample[];
@@ -40,10 +41,10 @@ const MaterialsTemplate = ({ materials, types }: MaterialsTemplateProps) => {
   const [searchValue, setSearchValue] = useState<string>('');
 
   const columns: MaterialsColumn[] = [
-    { id: 'name', label: 'Nome', width: '20%' },
-    { id: 'type', label: 'Tipo', width: '20%' },
-    { id: 'registrationDate', label: 'Data de cadastro', width: '20%' },
-    { id: 'actions', label: 'Ações', width: '40%' },
+    { id: 'name', label: 'Nome', width: '25%' },
+    { id: 'type', label: 'Tipo', width: '25%' },
+    { id: 'registrationDate', label: 'Data de cadastro', width: '25%' },
+    { id: 'actions', label: 'Ações', width: '25%' },
   ];
 
   const translateType = (type: string) => {
@@ -70,7 +71,6 @@ const MaterialsTemplate = ({ materials, types }: MaterialsTemplateProps) => {
         })
       : materials;
 
-  console.log(filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage));
   return (
     <>
       <Header title="Amostras Cadastradas" />
@@ -168,6 +168,19 @@ const MaterialsTemplate = ({ materials, types }: MaterialsTemplateProps) => {
                       <TableCell key={column.id} align="center">
                         {column.id === 'name' && row.name}
                         {column.id === 'type' && translateType(row.type)}
+                        {column.id === 'registrationDate' && formatDate(row.registrationDate)}
+                        {column.id === 'actions' && (
+                          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Button variant="contained" color="info">
+                              <Typography variant="body2" color="white" sx={{ fontSize: '12px' }}>
+                                Visualizar
+                              </Typography>
+                            </Button>
+                            <Button variant="text" color="warning">
+                              <DeleteIcon color="error" sx={{ fontSize: '1.2rem' }} />
+                            </Button>
+                          </Box>
+                        )}
                       </TableCell>
                     ))}
                   </TableRow>

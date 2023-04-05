@@ -25,14 +25,7 @@ import {
   SpecifyMassIcon,
 } from '@/assets';
 
-const AsphaltEssays: NextPage = () => {
-  const filterOptions: FilterOption[] = [
-    { key: 'all', title: 'Todos', isSelected: true },
-    { key: 'aggregates', title: 'Agregados', isSelected: false },
-    { key: 'asphaltMix', title: 'Misturas Asfálticas', isSelected: false },
-    { key: 'asphaltBinder', title: 'Ligante Asfáltico', isSelected: false },
-  ];
-
+export const getStaticProps = async () => {
   const essays: Essay[] = [
     {
       title: 'Abrasão "Los Angeles"',
@@ -176,7 +169,28 @@ const AsphaltEssays: NextPage = () => {
     },
   ];
 
-  return <EssaysTemplate essays={essays} filterOptions={filterOptions} />;
+  const filterOptions: FilterOption[] = [
+    { key: 'all', title: 'Todos', isSelected: true },
+    { key: 'aggregates', title: 'Agregados', isSelected: false },
+    { key: 'asphaltMix', title: 'Misturas Asfálticas', isSelected: false },
+    { key: 'asphaltBinder', title: 'Ligante Asfáltico', isSelected: false },
+  ];
+
+  return {
+    props: {
+      essays,
+      filterOptions,
+    },
+  };
 };
+
+interface AsphaltEssaysProps {
+  essays: Essay[];
+  filterOptions: FilterOption[];
+}
+
+const AsphaltEssays: NextPage = ({ essays, filterOptions }: AsphaltEssaysProps) => (
+  <EssaysTemplate essays={essays} filterOptions={filterOptions} />
+);
 
 export default AsphaltEssays;
