@@ -45,7 +45,7 @@ const Login: NextPage = () => {
         }}
       >
         <Box>
-          <LoginBackgroundPhoto alt='Background Image' src={LoginPhoto} />
+          <LoginBackgroundPhoto alt="Background Image" src={LoginPhoto} />
           <Container
             sx={{
               bgcolor: 'rgba(18, 18, 18, 0.85)',
@@ -58,7 +58,7 @@ const Login: NextPage = () => {
               top: '0',
               height: { desktop: '100vh', mobile: '60vh' },
               width: { desktop: '50vw', mobile: '100vw' },
-              padding: { desktop: '10vh 4vw', mobile: '5vh 2vw 10vh' }
+              padding: { desktop: '10vh 4vw', mobile: '5vh 2vw 10vh' },
             }}
           >
             <Box
@@ -66,44 +66,45 @@ const Login: NextPage = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                height: { desktop: '22vh', tablet: '16vh' }
+                height: { desktop: '18vh', tablet: '16vh' },
+                marginTop: { desktop: '-5vh', mobile: '0'}
               }}
             >
               <LoginImage alt="Fasteng" src={LogoWhite} />
             </Box>
-            <Box sx={{
-              color: 'primaryTons.mainWhite',
-              display: 'flex',
-              alignItems: 'center',
-              textAlign: 'center',
-              fontSize: { ultrawide: '1rem', desktop: '0.85rem', notebook: '1rem', mobile: '0.75rem' },
-              height: '18vh',
-              padding: '0 1vw' }}>
+            <Box
+              sx={{
+                color: 'primaryTons.mainWhite',
+                display: 'flex',
+                alignItems: 'center',
+                textAlign: 'center',
+                fontSize: { ultrawide: '0.95rem', desktop: '0.85rem', notebook: '1rem', mobile: '0.75rem' },
+                height: { desktop: '16vh', mobile: '20vh'},
+                padding: '0 2vw',
+              }}
+            >
               Usar o FastEng é simples! Primeiramente, cadastre os materiais que serão usados no seu projeto de dosagem.
-                Assim você pode criar um banco de dados para catologar seus materiais e suas informações. Calcule
-                resultados de ensaios de caracterização que serão vinculados ao seus materiais e confira se estão
-                adequados às especificações técnicas. Por fim, inicie seu projeto de dosagem. O FastEng te acompanha até a
-                determinação do teor ótimo de ligante asfáltico.
+              Assim você pode criar um banco de dados para catologar seus materiais e suas informações. Calcule
+              resultados de ensaios de caracterização que serão vinculados ao seus materiais e confira se estão
+              adequados às especificações técnicas. Por fim, inicie seu projeto de dosagem. O FastEng te acompanha até a
+              determinação do teor ótimo de ligante asfáltico.
             </Box>
             <Box
               sx={{
                 display: 'flex',
                 justifyContent: 'space-around',
                 width: '100%',
-                padding: '2vh 0'
+                padding: '2vh 0',
               }}
             >
-              <MainButton
-                text="Assine"
-                linkTo="https://fastengapp.com.br/"
-              />
+              <MainButton text="Assine" linkTo="https://fastengapp.com.br/" />
               <AboutButton />
             </Box>
           </Container>
         </Box>
         <Container
           sx={{
-            bgcolor: 'primaryTones.background',
+            bgcolor: 'primaryTons.mainWhite',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -111,7 +112,7 @@ const Login: NextPage = () => {
             position: { desktop: 'static', mobile: 'absolute' },
             height: { desktop: '100vh', mobile: '40vh' },
             width: { desktop: '50vw', mobile: '100vw' },
-            bottom: '0'
+            bottom: '0',
           }}
         >
           <Box
@@ -122,12 +123,12 @@ const Login: NextPage = () => {
               justifyContent: 'space-between',
               padding: '1vh 0vw',
               borderRadius: '0.5rem',
-              width: { desktop: '35vw', mobile: '80vw' },
-              height: { desktop: '20vw', mobile: '56vw' },
-              bgcolor: 'primaryTons.mainWhite',
+              width: { desktop: '30vw', mobile: '80vw' },
+              height: { desktop: '30vh', mobile: '30vh' },
+              bgcolor: 'primaryTons.background',
               position: { desktop: 'static', mobile: 'absolute' },
               zIndex: { desktop: 'auto', mobile: '3' },
-              bottom: { desktop: 'auto', notebook: '5vh', mobile: '15vh' }
+              bottom: { desktop: 'auto', mobile: '15vh' },
             }}
           >
             <Box
@@ -137,7 +138,7 @@ const Login: NextPage = () => {
                 alignItems: 'center',
                 justifyContent: 'space-around',
                 paddingTop: '2vh',
-                height: '75%'
+                height: '70%',
               }}
             >
               <TextField
@@ -146,7 +147,7 @@ const Login: NextPage = () => {
                 value={email}
                 placeholder="Digite seu email..."
                 sx={{
-                  width: { desktop: '30vw', mobile: '70vw' }
+                  width: { desktop: '26vw', mobile: '70vw' }
                 }}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -158,7 +159,7 @@ const Login: NextPage = () => {
                 type="password"
                 value={password}
                 sx={{
-                  width: { desktop: '30vw', mobile: '70vw' }
+                  width: { desktop: '26vw', mobile: '70vw' },
                 }}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -169,17 +170,13 @@ const Login: NextPage = () => {
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'center',
+                justifyContent: 'space-around',
                 alignItems: 'center',
-                height: '25%',
+                height: '30%',
                 width: '100%',
               }}
             >
-              <MainButton
-                text='Entrar'
-                disabled={password === '' || email === ''}
-                handleClick={() => handleLogin()}
-              />
+              <MainButton text="Entrar" disabled={password === '' || email === ''} handleClick={() => handleLogin()} />
               <Typography sx={{ color: 'secondaryTons.main', fontSize: { desktop: '1rem', mobile: '0.85rem' } }}>
                 Esqueceu sua senha?
               </Typography>

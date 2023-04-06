@@ -1,23 +1,23 @@
 import { createTheme } from '@mui/material';
 
-declare module "@mui/material" {
+declare module '@mui/material' {
   export interface PaletteOptions {
     primaryTons: {
-      mainWhite: string,
-      background: string,
-      border: string,
-      mainGray: string,
-      darkGray: string,
-      darkerGray: string
-    },
+      mainWhite: string;
+      background: string;
+      border: string;
+      mainGray: string;
+      darkGray: string;
+      darkerGray: string;
+    };
     secondaryTons: {
-      main: string,
-      blue: string,
-      blueClick: string,
-      blueDisabled: string,
-      red: string,
-      green: string
-    }
+      main: string;
+      blue: string;
+      blueClick: string;
+      blueDisabled: string;
+      red: string;
+      green: string;
+    };
   }
 }
 
@@ -49,7 +49,7 @@ export const theme = createTheme({
       blueClick: '#008BDA',
       blueDisabled: '#7CD0FF',
       red: '#F23434',
-      green: '#43D16B'
+      green: '#43D16B',
     },
   },
 });
