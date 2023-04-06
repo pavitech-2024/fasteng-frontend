@@ -67,7 +67,7 @@ const Login: NextPage = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: { desktop: '18vh', tablet: '16vh' },
-                marginTop: { desktop: '-5vh', mobile: '0'}
+                marginTop: { desktop: '-5vh', mobile: '0' },
               }}
             >
               <LoginImage alt="Fasteng" src={LogoWhite} />
@@ -79,7 +79,7 @@ const Login: NextPage = () => {
                 alignItems: 'center',
                 textAlign: 'center',
                 fontSize: { ultrawide: '0.95rem', desktop: '0.85rem', notebook: '1rem', mobile: '0.75rem' },
-                height: { desktop: '16vh', mobile: '20vh'},
+                height: { desktop: '16vh', mobile: '20vh' },
                 padding: '0 2vw',
               }}
             >
@@ -147,7 +147,7 @@ const Login: NextPage = () => {
                 value={email}
                 placeholder="Digite seu email..."
                 sx={{
-                  width: { desktop: '26vw', mobile: '70vw' }
+                  width: { desktop: '26vw', mobile: '70vw' },
                 }}
                 onChange={(e) => setEmail(e.target.value)}
                 required
