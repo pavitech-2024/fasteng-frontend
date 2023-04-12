@@ -23,6 +23,10 @@ import { formatDate } from '@/utils/format';
 interface MaterialsTemplateProps {
   materials: Sample[];
   types: DropDownOption[];
+  handleOpenModal: (value: boolean) => void;
+  handleCloseModal: (value: boolean) => void;
+  openModal: boolean;
+  children: JSX.Element | React.ReactNode;
 }
 
 interface MaterialsColumn {
@@ -31,7 +35,7 @@ interface MaterialsColumn {
   width: string;
 }
 
-const MaterialsTemplate = ({ materials, types }: MaterialsTemplateProps) => {
+const MaterialsTemplate = ({ materials, types, handleOpenModal }: MaterialsTemplateProps) => {
   const app = useRouter().pathname.split('/')[1];
 
   const [page, setPage] = useState<number>(0);
@@ -126,6 +130,7 @@ const MaterialsTemplate = ({ materials, types }: MaterialsTemplateProps) => {
             )}
           </Box>
           <Button
+            onClick={() => handleOpenModal}
             variant="contained"
             color="primary"
             sx={{

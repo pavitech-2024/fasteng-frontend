@@ -2,6 +2,9 @@ import { NextPage } from 'next';
 import MaterialsTemplate from '@/components/templates/materials';
 import { Sample } from '@/interfaces/soils';
 import { DropDownOption } from '@/components/atoms/inputs/dropDown';
+import { useState } from 'react';
+import { ModalBase } from '@/components/templates/modals/modal';
+import { NewEssayModal } from '@/components/atoms/modals/newEssay';
 
 export const getStaticProps = async () => {
   const types: DropDownOption[] = [
@@ -23,6 +26,10 @@ interface SamplesProps {
 }
 
 const Samples: NextPage = ({ types }: SamplesProps) => {
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+
   const samples: Sample[] = [
     { _id: '1', name: 'Amostra 1', type: 'inorganicSoil', registrationDate: new Date() },
     { _id: '2', name: 'Amostra 2', type: 'organicSoil', registrationDate: new Date() },
@@ -38,7 +45,24 @@ const Samples: NextPage = ({ types }: SamplesProps) => {
     { _id: '12', name: 'Amostra 12', type: 'pavementLayer', registrationDate: new Date() },
   ];
 
-  return <MaterialsTemplate materials={samples} types={types} />;
+  return (
+      <MaterialsTemplate materials={samples} types={types} handleOpenModal={handleOpenModal} handleCloseModal={handleCloseModal} openModal={openModal}>
+            <ModalBase title={'Cadastramento'} leftButtonTitle={'Fechar'} rightButtonTitle={'Cadastrar'} size={'small'} handleOpenModal={handleOpenModal} handleCloseModal={handleCloseModal} open={true}>
+              <NewEssayModal />
+            </ModalBase>
+      </MaterialsTemplate>
+  )
 };
 
 export default Samples;
+
+//exemplo de toast para quando clicar em Cadastrar
+// const handleLogin = async () => {
+//   try {
+//     toast.promise(async () => await signIn(email, password), {
+//       pending: 'Verificando usuário...',
+//       success: 'Login efetuado com sucesso!',
+//       error: 'Login inválido!',
+//     });
+//   } catch (error) {}
+// };
