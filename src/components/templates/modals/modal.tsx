@@ -51,7 +51,7 @@ export const ModalBase = ({
             <Button
             onClick={() => handleCloseModal}
             variant="contained"
-            color="primary"
+            color="secondary"
             sx={{
               height: '40px',
               width: { mobile: '50%', notebook: '25%' },
