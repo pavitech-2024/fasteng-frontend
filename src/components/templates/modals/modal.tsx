@@ -9,26 +9,43 @@ interface IModalBase {
   children: JSX.Element | React.ReactNode;
   leftButtonTitle: string;
   rightButtonTitle: string;
-  handleOpenModal: (value: boolean) => void;
-  handleCloseModal: (value: boolean) => void;
+  handleOpenModal: () => void;
+  handleCloseModal: () => void;
   open: boolean;
   size: string;
+  onOk: () => void;
 }
 
 export type modalSize = "small" | "medium" | "large";
 
+// const getModalSize = (size: modalSize) => {
+//   switch (size) {
+//     case "small": {
+//       return '20%';
+//     }
+//     case "medium": {
+//       return '40%';
+//     }
+//     case "large": {
+//       return '60%';
+//     }
+//   }
+// };
+
 export const ModalBase = ({ 
+  open,
   title,
   children,
   leftButtonTitle,
   rightButtonTitle,
   handleCloseModal,
-  size 
+  size,
+  onOk 
 }: IModalBase) => {
   return (
     <div>
       <Modal
-        open
+        open={open}
         onClose={handleCloseModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -43,18 +60,18 @@ export const ModalBase = ({
           boxShadow: 24,
           p: 4,
         }}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography id="modal-modal-title" variant="h6" component="h1" sx={{ padding: '1rem', fontWeight: '700', fontSize: '30px',  marginBottom: '1rem' }}>
             {title}
           </Typography>
           {children}
-          <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingInline: '5'}}>
+          <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingTop: '1rem'}}>
             <Button
-            onClick={() => handleCloseModal}
+            onClick={handleCloseModal}
             variant="contained"
             color="secondary"
             sx={{
               height: '40px',
-              width: { mobile: '50%', notebook: '25%' },
+              width: { mobile: '40%', notebook: '25%' },
               maxWidth: '220px',
               gap: '5px',
             }}
@@ -64,12 +81,12 @@ export const ModalBase = ({
             </Typography>
           </Button>
           <Button
-            onClick={() => 'toast e salvar dados'}
+            onClick={onOk}
             variant="contained"
             color="primary"
             sx={{
               height: '40px',
-              width: { mobile: '50%', notebook: '25%' },
+              width: { mobile: '40%', notebook: '25%' },
               maxWidth: '220px',
               gap: '5px',
             }}

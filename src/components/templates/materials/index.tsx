@@ -23,10 +23,9 @@ import { formatDate } from '@/utils/format';
 interface MaterialsTemplateProps {
   materials: Sample[];
   types: DropDownOption[];
-  handleOpenModal: (value: boolean) => void;
-  handleCloseModal: (value: boolean) => void;
+  handleOpenModal: () => void;
+  handleCloseModal: () => void;
   openModal: boolean;
-  children: JSX.Element | React.ReactNode;
 }
 
 interface MaterialsColumn {
@@ -130,7 +129,7 @@ const MaterialsTemplate = ({ materials, types, handleOpenModal }: MaterialsTempl
             )}
           </Box>
           <Button
-            onClick={() => handleOpenModal}
+            onClick={handleOpenModal}
             variant="contained"
             color="primary"
             sx={{

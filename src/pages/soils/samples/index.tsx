@@ -4,7 +4,7 @@ import { Sample } from '@/interfaces/soils';
 import { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import { useState } from 'react';
 import { ModalBase } from '@/components/templates/modals/modal';
-import { NewEssayModal } from '@/components/atoms/modals/newEssay';
+import { NewEssayModal } from '@/components/molecules/modals/newEssay';
 
 export const getStaticProps = async () => {
   const types: DropDownOption[] = [
@@ -46,23 +46,31 @@ const Samples: NextPage = ({ types }: SamplesProps) => {
   ];
 
   return (
-      <MaterialsTemplate materials={samples} types={types} handleOpenModal={handleOpenModal} handleCloseModal={handleCloseModal} openModal={openModal}>
-            <ModalBase title={'Cadastramento'} leftButtonTitle={'Fechar'} rightButtonTitle={'Cadastrar'} size={'small'} handleOpenModal={handleOpenModal} handleCloseModal={handleCloseModal} open={true}>
-              <NewEssayModal />
-            </ModalBase>
-      </MaterialsTemplate>
-  )
+    <>
+      <ModalBase
+        title={'Cadastramento'}
+        leftButtonTitle={'Fechar'}
+        rightButtonTitle={'Cadastrar'}
+        size={'medium'}
+        handleOpenModal={handleOpenModal}
+        handleCloseModal={handleCloseModal}
+        open={openModal} onOk={() => handleSampleRegisterToast}
+      >
+        <NewEssayModal />
+      </ModalBase>
+      <MaterialsTemplate
+        materials={samples}
+        types={types}
+        handleOpenModal={handleOpenModal}
+        handleCloseModal={handleCloseModal}
+        openModal={openModal}
+      />
+    </>
+  );
 };
 
 export default Samples;
 
-//exemplo de toast para quando clicar em Cadastrar
-// const handleLogin = async () => {
-//   try {
-//     toast.promise(async () => await signIn(email, password), {
-//       pending: 'Verificando usuário...',
-//       success: 'Login efetuado com sucesso!',
-//       error: 'Login inválido!',
-//     });
-//   } catch (error) {}
-// };
+const handleSampleRegisterToast = () => {
+  console.log('Amostra cadastrada com sucesso!')
+}
