@@ -58,6 +58,9 @@ export const ModalBase = ({
           width: {size},
           bgcolor: 'white',
           boxShadow: 24,
+          maxHeight: '80%',
+          overflowY: 'scroll',
+          overflow: 'hidden',
           p: 4,
         }}>
           <Typography id="modal-modal-title" variant="h6" component="h1" sx={{ padding: '1rem', fontWeight: '700', fontSize: '30px',  marginBottom: '1rem' }}>
