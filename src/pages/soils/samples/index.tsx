@@ -2,9 +2,10 @@ import { NextPage } from 'next';
 import MaterialsTemplate from '@/components/templates/materials';
 import { Sample } from '@/interfaces/soils';
 import { DropDownOption } from '@/components/atoms/inputs/dropDown';
-import { useState } from 'react';
-import { ModalBase } from '@/components/templates/modals/modal';
-import { NewEssayModal } from '@/components/molecules/modals/newEssay';
+import { useEffect, useState } from 'react';
+import samplesService from '@/services/soils/samplesService';
+import useAuth from '@/contexts/auth';
+import NewSampleModal from '../../../components/templates/modals/newSample';
 
 export const getStaticProps = async () => {
   const types: DropDownOption[] = [
@@ -20,7 +21,6 @@ export const getStaticProps = async () => {
     revalidate: 60 * 60 * 24, // 24 hours
   };
 };
-
 interface SamplesProps {
   types: DropDownOption[];
 }
@@ -28,49 +28,70 @@ interface SamplesProps {
 const Samples: NextPage = ({ types }: SamplesProps) => {
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
 
-  const samples: Sample[] = [
-    { _id: '1', name: 'Amostra 1', type: 'inorganicSoil', registrationDate: new Date() },
-    { _id: '2', name: 'Amostra 2', type: 'organicSoil', registrationDate: new Date() },
-    { _id: '3', name: 'Amostra 3', type: 'pavementLayer', registrationDate: new Date() },
-    { _id: '4', name: 'Amostra 4', type: 'inorganicSoil', registrationDate: new Date() },
-    { _id: '5', name: 'Amostra 5', type: 'organicSoil', registrationDate: new Date() },
-    { _id: '6', name: 'Amostra 6', type: 'pavementLayer', registrationDate: new Date() },
-    { _id: '7', name: 'Amostra 7', type: 'inorganicSoil', registrationDate: new Date() },
-    { _id: '8', name: 'Amostra 8', type: 'organicSoil', registrationDate: new Date() },
-    { _id: '9', name: 'Amostra 9', type: 'pavementLayer', registrationDate: new Date() },
-    { _id: '10', name: 'Amostra 10', type: 'inorganicSoil', registrationDate: new Date() },
-    { _id: '11', name: 'Amostra 11', type: 'organicSoil', registrationDate: new Date() },
-    { _id: '12', name: 'Amostra 12', type: 'pavementLayer', registrationDate: new Date() },
-  ];
+  const { user } = useAuth();
+  const [samples, setSamples] = useState<Sample[]>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    console.log('renderizou');
+    samplesService
+      .getSamplesByUserId(user._id)
+      .then((response) => {
+        setSamples(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }, [user]);
+
+  const handleDeleteSample = async (id: string) => {
+    try {
+      await samplesService.deleteSample(id);
+      // deleta a amostra do estado
+      const updatedSamples = samples.filter((sample) => sample._id !== id);
+      setSamples(updatedSamples);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const addNewSample = () => {
+    setLoading(true);
+    samplesService
+      .getSamplesByUserId(user._id)
+      .then((response) => {
+        setSamples(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        throw error;
+      });
+  };
 
   return (
     <>
-      <ModalBase
-        title={'Cadastramento'}
-        leftButtonTitle={'Fechar'}
-        rightButtonTitle={'Cadastrar'}
-        size={'medium'}
-        handleOpenModal={handleOpenModal}
-        handleCloseModal={handleCloseModal}
-        open={openModal} onOk={() => handleSampleRegisterToast}
-      >
-        <NewEssayModal />
-      </ModalBase>
-      <MaterialsTemplate
-        materials={samples}
-        types={types}
-        handleOpenModal={handleOpenModal}
-        handleCloseModal={handleCloseModal}
-        openModal={openModal}
-      />
+      {loading ? (
+        <p>Carregando...</p>
+      ) : (
+        <MaterialsTemplate
+          materials={samples}
+          types={types}
+          title="Amostras Cadastradas"
+          handleOpenModal={handleOpenModal}
+          handleDeleteMaterial={handleDeleteSample}
+          modal={
+            <NewSampleModal
+              openModal={openModal}
+              handleCloseModal={() => setOpenModal(false)}
+              updateSamples={addNewSample}
+            />
+          }
+        />
+      )}
     </>
   );
 };
 
 export default Samples;
-
-const handleSampleRegisterToast = () => {
-  console.log('Amostra cadastrada com sucesso!')
-}

@@ -1,8 +1,33 @@
-export type Sample = {
+export type SampleData = {
+  name: string;
+  type: SampleTypes;
+  construction?: string;
+  snippet?: string;
+  provenance?: string;
+  stake?: string;
+  layer?: string;
+  depth?: number; //cm
+  exd?: string;
+  collectionDate: string;
+  description?: string;
+};
+export class Sample {
   _id: string;
   name: string;
-  type: string;
-  registrationDate: Date;
-};
+  type: SampleTypes;
+  createdAt: Date;
+  userId: string;
+  description: {
+    construction?: string;
+    snippet?: string;
+    provenance?: string;
+    stake?: string;
+    layer?: string;
+    depth?: number; //cm
+    exd?: string;
+    collectionDate: string;
+    observation?: string;
+  };
+}
 
-export type SampleTypes = 'Solo Inorgânico' | 'Solo Orgânico' | 'Camada de Pavimento';
+export type SampleTypes = 'inorganicSoil' | 'organicSoil' | 'pavementLayer';

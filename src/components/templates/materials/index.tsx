@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
+  Dialog,
   Pagination,
   Paper,
   Table,
@@ -14,27 +15,40 @@ import {
   TableHead,
   TableRow,
   Typography,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
 } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import Search from '@/components/atoms/inputs/search';
 import { AddIcon, DeleteIcon } from '@/assets';
 import { formatDate } from '@/utils/format';
+import { toast } from 'react-toastify';
 
 interface MaterialsTemplateProps {
   materials: Sample[];
   types: DropDownOption[];
+  title: 'Amostras Cadastradas' | 'Materiais Cadastrados';
+  //Modal
   handleOpenModal: () => void;
-  handleCloseModal: () => void;
-  openModal: boolean;
+  handleDeleteMaterial: (id: string) => void;
+  modal: JSX.Element;
 }
 
 interface MaterialsColumn {
-  id: 'name' | 'type' | 'registrationDate' | 'actions';
+  id: 'name' | 'type' | 'createdAt' | 'actions';
   label: string;
   width: string;
 }
 
-const MaterialsTemplate = ({ materials, types, handleOpenModal }: MaterialsTemplateProps) => {
+const MaterialsTemplate = ({
+  materials,
+  types,
+  title,
+  handleOpenModal,
+  handleDeleteMaterial,
+  modal,
+}: MaterialsTemplateProps) => {
   const app = useRouter().pathname.split('/')[1];
 
   const [page, setPage] = useState<number>(0);
@@ -43,10 +57,13 @@ const MaterialsTemplate = ({ materials, types, handleOpenModal }: MaterialsTempl
   const [searchBy, setSearchBy] = useState<string>('name');
   const [searchValue, setSearchValue] = useState<string>('');
 
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [RowToDelete, setRowToDelete] = useState<Sample>();
+
   const columns: MaterialsColumn[] = [
     { id: 'name', label: 'Nome', width: '25%' },
     { id: 'type', label: 'Tipo', width: '25%' },
-    { id: 'registrationDate', label: 'Data de cadastro', width: '25%' },
+    { id: 'createdAt', label: 'Data de cadastro', width: '25%' },
     { id: 'actions', label: 'Ações', width: '25%' },
   ];
 
@@ -76,7 +93,46 @@ const MaterialsTemplate = ({ materials, types, handleOpenModal }: MaterialsTempl
 
   return (
     <>
-      <Header title="Amostras Cadastradas" />
+      {/*Delete Modal */}
+      <Dialog open={openDeleteModal}>
+        <DialogTitle sx={{ fontSize: '1rem', textTransform: 'uppercase' }}>Atenção</DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ textTransform: 'uppercase', fontSize: '14px' }}>
+            Tem certeza que deseja deletar <span style={{ fontWeight: 700 }}>{RowToDelete?.name}</span>?
+          </DialogContentText>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: '1rem' }}>
+            <Button
+              color="secondary"
+              sx={{ fontWeight: 700, fontSize: '12px' }}
+              onClick={() => setOpenDeleteModal(false)}
+            >
+              Cancelar
+            </Button>
+            <Button
+              sx={{ fontWeight: 700, fontSize: '12px' }}
+              onClick={() => {
+                try {
+                  toast.promise(async () => await handleDeleteMaterial(RowToDelete?._id), {
+                    pending: 'Excluindo amostra...',
+                    success: 'Amostra excluída com sucesso!',
+                    error: 'Erro ao excluir amostra!',
+                  });
+                  setOpenDeleteModal(false);
+                } catch (error) {
+                  throw error;
+                }
+              }}
+            >
+              Deletar
+            </Button>
+          </Box>
+        </DialogContent>
+      </Dialog>
+      {/*Create new  Modal */}
+      {modal}
+
+      {/*Page */}
+      <Header title={`${title}`} />
       <Box sx={{ padding: { mobile: '0 .5rem', notebook: '0 2rem' } }}>
         <Box
           sx={{
@@ -167,27 +223,36 @@ const MaterialsTemplate = ({ materials, types, handleOpenModal }: MaterialsTempl
               </TableHead>
               <TableBody>
                 {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
-                    {columns.map((column) => (
-                      <TableCell key={column.id} align="center">
-                        {column.id === 'name' && row.name}
-                        {column.id === 'type' && translateType(row.type)}
-                        {column.id === 'registrationDate' && formatDate(row.registrationDate)}
-                        {column.id === 'actions' && (
-                          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Button variant="contained" color="info">
-                              <Typography variant="body2" color="white" sx={{ fontSize: '12px' }}>
-                                Visualizar
-                              </Typography>
-                            </Button>
-                            <Button variant="text" color="warning">
-                              <DeleteIcon color="error" sx={{ fontSize: '1.2rem' }} />
-                            </Button>
-                          </Box>
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
+                  <>
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
+                      {columns.map((column) => (
+                        <TableCell key={column.id} align="center">
+                          {column.id === 'name' && row.name}
+                          {column.id === 'type' && translateType(row.type)}
+                          {column.id === 'createdAt' && formatDate(row.createdAt)}
+                          {column.id === 'actions' && (
+                            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                              <Button variant="contained" color="info">
+                                <Typography variant="body2" color="white" sx={{ fontSize: '12px' }}>
+                                  Visualizar
+                                </Typography>
+                              </Button>
+                              <Button
+                                variant="text"
+                                color="warning"
+                                onClick={() => {
+                                  setRowToDelete(row);
+                                  setOpenDeleteModal(true);
+                                }}
+                              >
+                                <DeleteIcon color="error" sx={{ fontSize: '1.2rem' }} />
+                              </Button>
+                            </Box>
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </>
                 ))}
               </TableBody>
             </Table>

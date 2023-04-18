@@ -13,9 +13,10 @@ interface DropDownProps {
   helperText?: string;
   sx?: { [key: string]: string | number | { [key: string]: string | number } };
   size?: 'small' | 'medium';
+  variant?: 'standard' | 'outlined' | 'filled';
 }
 
-const DropDown = ({ label, options, defaultValue, helperText, callback, sx, size }: DropDownProps) => {
+const DropDown = ({ label, options, defaultValue, helperText, callback, sx, size, variant }: DropDownProps) => {
   return (
     <TextField
       select
@@ -25,6 +26,7 @@ const DropDown = ({ label, options, defaultValue, helperText, callback, sx, size
       sx={sx}
       size={size}
       color="secondary"
+      variant={variant}
     >
       {options.map((option) => (
         <MenuItem
