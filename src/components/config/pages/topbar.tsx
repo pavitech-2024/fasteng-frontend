@@ -6,7 +6,6 @@ import useAuth from '@/contexts/auth';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import {
   AppBar,
-  Container,
   Toolbar,
   Typography,
   Box,
@@ -14,10 +13,9 @@ import {
   Avatar,
   Tooltip,
   Menu,
-  MenuItem,
-  Button,
+  MenuItem
 } from '@mui/material';
-import { LogoSmall } from '@/assets/';
+import { LogoIcon } from '@/assets/';
 
 interface TopbarProps {
   setOpenSidebar: (open) => void;
@@ -28,7 +26,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
   const Router = useRouter();
 
   const [openSettings, setOpenSettings] = useState<boolean>(false);
-  const [language, setLanguage] = useLocalStorage('language', 'BR');
+  const [language, setLanguage] = useLocalStorage('language', 'PT');
 
   const pathname = Router.pathname.toUpperCase().split('/');
   pathname.length > 3 && pathname.splice(2, 1);
@@ -43,72 +41,87 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
       <Head>
         <title>FastEng - {PageTitle}</title>
       </Head>
-      <AppBar position="static" color="secondary">
-        <Container maxWidth="ultrawide" sx={{ pl: '1.8rem' }}>
-          <Toolbar disableGutters>
+      <AppBar
+        position="static"
+        sx={{
+          bgcolor: "primaryTons.darkerGray",
+          color: "primaryTons.mainWhite",
+          height: "7vh",
+          width: "100vw",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: 'center',
+          boxShadow: 'none',
+          padding: { mobile: '0 2vw', notebook: '0 1vw' }
+        }}
+      >
+        <Toolbar
+          disableGutters
+          style={{
+            width: '100%',
+            display: "flex",
+            justifyContent: 'space-between',
+            margin: '0'
+          }}
+        >
+          <Box
+            style={{
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
             <Box
-              sx={{
-                position: 'absolute',
-                left: 0,
-                top: 15,
-              }}
               onClick={() => setOpenSidebar((open) => !open)}
+              sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
             >
-              <Image alt="Fasteng" src={LogoSmall} width={200} height={28} style={{ transform: 'translateX(-18px)' }} />
+              <Image alt="Fasteng" src={LogoIcon} style={{ height: '5vh', width: 'auto' }}/>
             </Box>
             <Typography
-              variant="h6"
-              noWrap
               sx={{
-                mr: 2,
-                ml: 5,
                 display: { mobile: 'none', tablet: 'flex' },
-                fontFamily: 'monospace',
                 fontWeight: 700,
-                letterSpacing: '.2rem',
-                color: 'inherit',
                 textDecoration: 'none',
+                fontSize: '2.5vh',
+                pl: { mobile: '5vw', notebook: '2vw' }
               }}
             >
               {pathname[1]}
             </Typography>
             <Typography
-              variant="subtitle1"
-              noWrap
               sx={{
                 mr: 2,
                 display: { mobile: 'none', notebook: 'flex' },
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.2rem',
-                color: 'inherit',
+                fontWeight: 500,
                 textDecoration: 'none',
+                fontSize: '2.5vh'
               }}
             >
               {pathname.length > 2 ? '| ' + pathname[2] : ''}
             </Typography>
-            <Box
-              sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'absolute', right: 0 }}
-              onClick={() => setOpenSettings((prev) => !prev)}
-            >
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              cursor: 'pointer' }}
+          >
               <Typography
-                variant="subtitle1"
-                noWrap
                 sx={{
-                  mr: 2,
+                  margin: '0 1vw 0 0',
                   display: { mobile: 'none', notebook: 'flex' },
-                  fontFamily: 'monospace',
-                  fontWeight: 700,
-                  letterSpacing: '.1rem',
-                  color: 'inherit',
+                  fontWeight: 500,
+                  fontSize: '1.75vh',
+                  lineHeight: '1.75vh',
                   textDecoration: 'none',
                 }}
+                onClick={() => setOpenSettings(() => !openSettings)}
               >
                 {user?.name}
               </Typography>
-              <Tooltip title="Configurações">
+              <Tooltip title="Configurações" onClick={() => setOpenSettings(() => !openSettings)}>
                 <IconButton sx={{ p: 0 }}>
-                  <Avatar alt="user photo" src={user?.photo} />
+                  <Avatar alt="user photo" src={user?.photo} style={{ height: '40px', width: '40px' }} />
                 </IconButton>
               </Tooltip>
 
@@ -127,44 +140,20 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                 onClose={() => setOpenSettings(false)}
               >
                 <MenuItem>
+                  <Box
+                    onClick={() => language === 'PT'
+                      ? setLanguage('EN')
+                      : setLanguage('PT')}
+                  >
+                    Idioma: {language}
+                  </Box>
+                </MenuItem>
+                <MenuItem>
                   <Box onClick={() => logout()}>Sair</Box>
                 </MenuItem>
               </Menu>
-            </Box>
-            <Box
-              sx={{
-                position: 'absolute',
-                right: 0,
-                top: 60,
-                display: 'grid',
-                gridTemplateColumns: '60px 2px 60px',
-                placeItems: 'center',
-              }}
-            >
-              <Button
-                onClick={() => setLanguage('ENG')}
-                sx={
-                  language === 'ENG'
-                    ? { color: 'primaryTons.darkerGray', width: 'fit-content' }
-                    : { color: 'secondary.main', width: 'fit-content' }
-                }
-              >
-                ENG
-              </Button>
-              <Typography sx={{ width: 'fit-content', color: 'secondary.main' }}> | </Typography>
-              <Button
-                onClick={() => setLanguage('BR')}
-                sx={
-                  language === 'BR'
-                    ? { color: 'primaryTons.darkerGray', width: 'fit-content' }
-                    : { color: 'secondary.main', width: 'fit-content' }
-                }
-              >
-                PT-BR
-              </Button>
-            </Box>
-          </Toolbar>
-        </Container>
+          </Box>
+        </Toolbar>
       </AppBar>
     </>
   );

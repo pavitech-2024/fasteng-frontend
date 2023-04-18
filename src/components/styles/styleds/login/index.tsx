@@ -11,7 +11,7 @@ export const LoginImage = styled(Image)`
     height: 79px;
   }
 
-  @media only screen and (min-width: 1024px) {
+  @media only screen and (min-width: 1025px) {
     width: 400px;
     height: 55px;
   }
@@ -30,7 +30,7 @@ export const LoginBackgroundPhoto = styled(Image)`
   height: 60vh;
   width: 100vw;
 
-  @media only screen and (min-width: 1024px) {
+  @media only screen and (min-width: 1025px) {
     height: 100vh;
     width: 50vw;
   }

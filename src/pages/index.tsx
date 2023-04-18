@@ -1,6 +1,7 @@
 import { NextPage } from 'next';
 import { useState } from 'react';
 import Head from 'next/head';
+
 // files
 import { toast } from 'react-toastify';
 import useAuth from '@/contexts/auth';
@@ -9,7 +10,7 @@ import { LogoWhite, LoginPhoto } from '@/assets';
 //custom styles
 import { LoginImage, LoginBackgroundPhoto } from '@/components/styles/styleds/login';
 import { AboutButton } from '@/components/styles/muis/login';
-import { MainButton } from '@/components/styles/global';
+import { MainButton as Button } from '@/components/styles/global';
 
 //mui
 import { TextField, Box, Container, Typography } from '@mui/material';
@@ -97,7 +98,7 @@ const Login: NextPage = () => {
                 padding: '2vh 0',
               }}
             >
-              <MainButton text="Assine" linkTo="https://fastengapp.com.br/" />
+              <Button text="Assine" linkTo="https://fastengapp.com.br/" />
               <AboutButton />
             </Box>
           </Container>
@@ -176,7 +177,7 @@ const Login: NextPage = () => {
                 width: '100%',
               }}
             >
-              <MainButton text="Entrar" disabled={password === '' || email === ''} handleClick={() => handleLogin()} />
+              <Button text="Entrar" disabled={password === '' || email === ''} handleClick={() => handleLogin()} />
               <Typography sx={{ color: 'secondaryTons.main', fontSize: { desktop: '1rem', mobile: '0.85rem' } }}>
                 Esqueceu sua senha?
               </Typography>

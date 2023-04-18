@@ -10,6 +10,7 @@ declare module '@mui/material' {
       darkGray: string;
       darkerGray: string;
     };
+    
     secondaryTons: {
       main: string;
       blue: string;
@@ -27,7 +28,7 @@ export const theme = createTheme({
       mobile: 0,
       tablet: 360,
       notebook: 768,
-      desktop: 1024,
+      desktop: 1025,
       ultrawide: 1920,
       containerMargin: 2016,
       infinity: 2048,
@@ -43,6 +44,7 @@ export const theme = createTheme({
       darkGray: '#212121',
       darkerGray: '#121212',
     },
+
     secondaryTons: {
       main: '#F29134',
       blue: '#00A3FF',
