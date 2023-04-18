@@ -74,7 +74,7 @@ const Pages = (props: PagesProps) => {
               sx={{
                 width: '90vw',
                 height: '83vh',
-                padding: '5vh 5vw'
+                padding: '5vh 5vw',
               }}
             >
               {children}

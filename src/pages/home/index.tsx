@@ -41,7 +41,7 @@ const Home: NextPage = () => {
         alignItems: 'center',
         height: '100%',
         width: '100%',
-        padding: '0'
+        padding: '0',
       }}
     >
       <Box
@@ -50,18 +50,19 @@ const Home: NextPage = () => {
           flexDirection: 'column',
           justifyContent: 'space-around',
           alignItems: 'center',
-          height: { desktop: '20%', mobile: '15%' }
+          height: { desktop: '20%', mobile: '15%' },
         }}
       >
         <Typography
           sx={{
             fontSize: { desktop: '2.5vh', mobile: '1.65vh' },
             fontWeight: '700',
-            color: 'primaryTons.mainGray' }}
+            color: 'primaryTons.mainGray',
+          }}
         >
           BEM-VINDO AO
         </Typography>
-        
+
         <HomeImage alt="Fasteng" src={LogoBlack} />
 
         <Typography
@@ -69,7 +70,7 @@ const Home: NextPage = () => {
             fontSize: { desktop: '2.5vh', mobile: '1.65vh' },
             fontWeight: 700,
             color: 'primaryTons.mainGray',
-            textAlign: 'center'
+            textAlign: 'center',
           }}
         >
           O CAMINHO MAIS RÁPIDO PARA A ENGENHARIA
@@ -81,7 +82,7 @@ const Home: NextPage = () => {
           height: { desktop: '30%', mobile: '20%' },
           display: 'flex',
           alignItems: 'center',
-          padding: { mobile: '0 5vw', notebook: '0 10vw', ultrawide: '0 15vw' }
+          padding: { mobile: '0 5vw', notebook: '0 10vw', ultrawide: '0 15vw' },
         }}
       >
         <Typography
@@ -89,7 +90,7 @@ const Home: NextPage = () => {
             fontSize: { notebook: '1.75vh', mobile: '1.5vh' },
             fontWeight: 700,
             color: 'primaryTons.darkerGray',
-            textAlign: 'center'
+            textAlign: 'center',
           }}
         >
           O FASTENG é o seu auxiliar técnico em projetos de Engenharia Civil. Atualmente em nosso escopo contamos com
@@ -101,12 +102,12 @@ const Home: NextPage = () => {
       <Box
         sx={{
           display: 'flex',
-          alignItems: {mobile: 'center', notebook: 'start' },
+          alignItems: { mobile: 'center', notebook: 'start' },
           justifyContent: 'space-around',
           flexDirection: { notebook: 'row', mobile: 'column' },
           height: { notebook: '60%', mobile: '55%' },
           width: { mobile: '100%', desktop: '80%', ultrawide: '60%' },
-          paddingTop: { mobile: '0', notebook: '2vh'},
+          paddingTop: { mobile: '0', notebook: '2vh' },
         }}
       >
         <CardApp element={Applications[0]} onClick={() => Router.push(Applications[0].link)} />

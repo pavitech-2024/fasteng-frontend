@@ -10,7 +10,7 @@ declare module '@mui/material' {
       darkGray: string;
       darkerGray: string;
     };
-    
+
     secondaryTons: {
       main: string;
       blue: string;
