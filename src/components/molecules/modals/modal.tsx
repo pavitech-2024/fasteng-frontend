@@ -44,12 +44,7 @@ const ModalBase = ({
 
   return (
     <div>
-      <Modal
-        open={open}
-        onClose={onCancel}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <Modal open={open} onClose={onCancel} disableScrollLock={false} sx={{ overflowY: 'scroll' }}>
         <Box
           sx={{
             position: 'absolute' as const,
@@ -63,8 +58,10 @@ const ModalBase = ({
             bgcolor: 'white',
             boxShadow: 24,
             maxHeight: '80%',
-            overflowY: 'scroll',
-            overflow: 'hidden',
+            overflowY: {
+              mobile: 'scroll',
+              notebook: 'hidden',
+            },
             p: {
               mobile: '1rem',
               notebook: '2rem',

@@ -17,16 +17,31 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples }: N
   const [sample, setSample] = useState<SampleData>({
     name: '',
     type: 'inorganicSoil',
-    construction: null,
-    snippet: null,
-    provenance: null,
-    stake: null,
-    layer: null,
-    depth: null,
-    exd: null,
-    collectionDate: null,
-    description: null,
+    description: {
+      construction: null,
+      snippet: null,
+      provenance: null,
+      stake: null,
+      layer: null,
+      depth: null,
+      exd: null,
+      collectionDate: null,
+      observation: null,
+    },
   });
+
+  const inputs = [
+    { label: 'Nome', value: sample.name, key: 'name' },
+    { label: 'Tipo', value: sample.type, key: 'type' },
+    { label: 'Obra', value: sample.description.construction, key: 'construction' },
+    { label: 'Trecho', value: sample.description.snippet, key: 'snippet' },
+    { label: 'Lado E-X-D', value: sample.description.exd, key: 'exd' },
+    { label: 'Camada', value: sample.description.layer, key: 'layer' },
+    { label: 'Procedência', value: sample.description.provenance, key: 'provenance' },
+    { label: 'Estaca', value: sample.description.stake, key: 'stake' },
+    { label: 'Profundidade', value: sample.description.depth, key: 'depth' },
+    { label: 'Data da coleta', value: sample.description.collectionDate, key: 'collectionDate' },
+  ];
 
   const types: DropDownOption[] = [
     { label: 'Solo Inorgânico', value: 'inorganicSoil' },
@@ -35,7 +50,8 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples }: N
   ];
 
   const changeSample = (key: string, value: string) => {
-    setSample({ ...sample, [key]: value });
+    if (key === 'type' || key === 'name') setSample({ ...sample, [key]: value });
+    else setSample({ ...sample, description: { ...sample.description, [key]: value } });
   };
 
   const handleSubmitNewSample = async () => {
@@ -78,92 +94,56 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples }: N
               mobile: '1fr',
               notebook: '1fr 1fr',
             },
-            overflowY: {
-              mobile: 'scroll',
-              notebook: 'hidden',
-            },
             gap: {
               mobile: '.6rem .8rem',
               notebook: '1.2rem .8rem',
             },
           }}
         >
-          <TextField
-            label="Nome"
-            variant="standard"
-            value={sample.name}
-            required
-            onChange={(e) => changeSample('name', e.target.value)}
-          />
-          <DropDown
-            sx={{ minWidth: '120px', bgcolor: 'white' }}
-            defaultValue={types[0]}
-            label="Tipo"
-            variant="standard"
-            key={sample.type}
-            size="medium"
-            options={types}
-            callback={(value) => changeSample('type', value as string)}
-          />
-          <TextField
-            label="Obra"
-            variant="standard"
-            value={sample.construction}
-            onChange={(e) => changeSample('construction', e.target.value)}
-          />
-          <TextField
-            label="Trecho"
-            variant="standard"
-            value={sample.snippet}
-            onChange={(e) => changeSample('snippet', e.target.value)}
-          />
-          <TextField
-            label="Lado E-X-D"
-            variant="standard"
-            value={sample.exd}
-            onChange={(e) => changeSample('exd', e.target.value)}
-          />
-          <TextField
-            label="Camada"
-            variant="standard"
-            value={sample.layer}
-            onChange={(e) => changeSample('layer', e.target.value)}
-          />
-          <TextField
-            label="Procedência"
-            variant="standard"
-            value={sample.provenance}
-            onChange={(e) => changeSample('provenance', e.target.value)}
-          />
-          <TextField
-            label="Estaca"
-            variant="standard"
-            value={sample.stake}
-            onChange={(e) => changeSample('stake', e.target.value)}
-          />
-          <FormControl variant="standard">
-            <InputLabel htmlFor="outlined-adornment-depth">Profundidade</InputLabel>
-            <Input
-              id="outlined-adornment-depth"
-              endAdornment={<InputAdornment position="end">cm</InputAdornment>}
-              value={sample.depth}
-              onChange={(e) => changeSample('depth', e.target.value)}
-              type="number"
-            />
-          </FormControl>
-          <TextField
-            label="Data da coleta"
-            variant="standard"
-            value={sample.collectionDate}
-            onChange={(e) => changeSample('collectionDate', e.target.value)}
-          />
+          {inputs.map((input) => {
+            if (input.key === 'type')
+              return (
+                <DropDown
+                  sx={{ minWidth: '120px', bgcolor: 'white' }}
+                  defaultValue={types[0]}
+                  label="Tipo"
+                  variant="standard"
+                  size="medium"
+                  options={types}
+                  callback={(value: string) => changeSample('type', value)}
+                />
+              );
+            else if (input.key === 'depth')
+              return (
+                <FormControl variant="standard">
+                  <InputLabel htmlFor="outlined-adornment-depth">Profundidade</InputLabel>
+                  <Input
+                    id="outlined-adornment-depth"
+                    endAdornment={<InputAdornment position="end">cm</InputAdornment>}
+                    value={sample.description.depth}
+                    onChange={(e) => changeSample('depth', e.target.value)}
+                    type="number"
+                  />
+                </FormControl>
+              );
+            else
+              return (
+                <TextField
+                  label={input.label}
+                  variant="standard"
+                  value={input.value}
+                  required={input.key === 'name'}
+                  onChange={(e) => changeSample(input.key, e.target.value)}
+                />
+              );
+          })}
         </Box>
         <TextField
           sx={{ mt: '.8rem' }}
           label="Observação"
           variant="standard"
-          value={sample.description}
-          onChange={(e) => changeSample('description', e.target.value)}
+          value={sample.description.observation}
+          onChange={(e) => changeSample('observation', e.target.value)}
           fullWidth
         />
       </Box>
