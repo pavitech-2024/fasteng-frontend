@@ -232,7 +232,7 @@ const MaterialsTemplate = ({
                           {column.id === 'createdAt' && formatDate(row.createdAt)}
                           {column.id === 'actions' && (
                             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                              <Button variant="contained" color="info">
+                              <Button variant="contained" color="info" onClick={(e) => console.log(e)}>
                                 <Typography variant="body2" color="white" sx={{ fontSize: '12px' }}>
                                   Visualizar
                                 </Typography>

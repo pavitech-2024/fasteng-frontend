@@ -86,6 +86,7 @@ const Samples: NextPage = ({ types }: SamplesProps) => {
               openModal={openModal}
               handleCloseModal={() => setOpenModal(false)}
               updateSamples={addNewSample}
+              samples={samples}
             />
           }
         />

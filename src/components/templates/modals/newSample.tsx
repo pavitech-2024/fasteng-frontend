@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { FormControl, Input, InputAdornment, InputLabel, TextField } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
-import { SampleData } from '@/interfaces/soils';
+import { SampleData, Sample } from '@/interfaces/soils';
 import ModalBase from '../../molecules/modals/modal';
 import { toast } from 'react-toastify';
 import samplesService from '@/services/soils/samplesService';
@@ -11,24 +11,29 @@ interface NewSampleModalProps {
   openModal: boolean;
   handleCloseModal: () => void;
   updateSamples: () => void;
+  samples: Sample[];
 }
 
-export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples }: NewSampleModalProps) => {
+export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, samples }: NewSampleModalProps) => {
   const [sample, setSample] = useState<SampleData>({
     name: '',
-    type: 'inorganicSoil',
+    type: null,
     description: {
       construction: null,
       snippet: null,
       provenance: null,
       stake: null,
       layer: null,
-      depth: null,
+      depth: 0,
       exd: null,
       collectionDate: null,
       observation: null,
     },
   });
+
+  useEffect(() => {
+    if (!openModal) setSample({ ...sample, type: null });
+  }, [openModal, sample]);
 
   const inputs = [
     { label: 'Nome', value: sample.name, key: 'name' },
@@ -55,15 +60,32 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples }: N
   };
 
   const handleSubmitNewSample = async () => {
+    const createMaterialToast = toast.loading('Cadastrando amostra...', { autoClose: 5000 });
     try {
-      if (sample.name === '') throw new Error('Nome não pode ser vazio!');
+      if (sample.name === '') throw 'Nome não pode ser vazio!';
+      if (sample.type === null) throw 'Tipo não pode ser vazio!';
+      if (sample.description.depth < 0) throw 'Profundidade não pode ser negativa!';
+      if (samples.find((s) => s.name === sample.name)) throw 'Já existe uma amostra com esse nome!';
 
       await samplesService.createSample(sample);
 
       await updateSamples();
       handleCloseModal();
+      toast.update(createMaterialToast, {
+        render: 'Amostra cadastrada com sucesso!',
+        type: 'success',
+        isLoading: false,
+        autoClose: 5000,
+        closeButton: true,
+      });
     } catch (error) {
-      throw error;
+      toast.update(createMaterialToast, {
+        render: error,
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+        closeButton: true,
+      });
     }
   };
 
@@ -74,15 +96,7 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples }: N
       leftButtonTitle="Cancelar"
       rightButtonTitle="Cadastrar"
       size="medium"
-      onSubmit={() => {
-        try {
-          toast.promise(async () => await handleSubmitNewSample(), {
-            pending: 'Cadastrando amostra...',
-            success: 'Amostra cadastrada com sucesso!',
-            error: 'Erro ao cadastrar amostra!',
-          });
-        } catch (error) {}
-      }}
+      onSubmit={() => handleSubmitNewSample()}
       onCancel={handleCloseModal}
       disableSubmit={sample.name === ''}
     >
@@ -101,41 +115,44 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples }: N
           }}
         >
           {inputs.map((input) => {
-            if (input.key === 'type')
-              return (
-                <DropDown
-                  sx={{ minWidth: '120px', bgcolor: 'white' }}
-                  defaultValue={types[0]}
-                  label="Tipo"
-                  variant="standard"
-                  size="medium"
-                  options={types}
-                  callback={(value: string) => changeSample('type', value)}
-                />
-              );
-            else if (input.key === 'depth')
-              return (
-                <FormControl variant="standard">
-                  <InputLabel htmlFor="outlined-adornment-depth">Profundidade</InputLabel>
-                  <Input
-                    id="outlined-adornment-depth"
-                    endAdornment={<InputAdornment position="end">cm</InputAdornment>}
-                    value={sample.description.depth}
-                    onChange={(e) => changeSample('depth', e.target.value)}
-                    type="number"
+            return (
+              <>
+                {input.key === 'type' && (
+                  <DropDown
+                    key={input.key}
+                    sx={{ minWidth: '120px', bgcolor: 'white' }}
+                    label="Tipo"
+                    variant="standard"
+                    size="medium"
+                    options={types}
+                    callback={(value: string) => changeSample('type', value)}
                   />
-                </FormControl>
-              );
-            else
-              return (
-                <TextField
-                  label={input.label}
-                  variant="standard"
-                  value={input.value}
-                  required={input.key === 'name'}
-                  onChange={(e) => changeSample(input.key, e.target.value)}
-                />
-              );
+                )}
+                {input.key === 'depth' && (
+                  <FormControl variant="standard" key={input.key}>
+                    <InputLabel htmlFor="outlined-adornment-depth">Profundidade</InputLabel>
+                    <Input
+                      id="outlined-adornment-depth"
+                      endAdornment={<InputAdornment position="end">cm</InputAdornment>}
+                      value={sample.description.depth}
+                      onChange={(e) => changeSample('depth', e.target.value)}
+                      type="number"
+                      inputProps={{ min: 0 }}
+                    />
+                  </FormControl>
+                )}
+                {input.key !== 'depth' && input.key !== 'type' && (
+                  <TextField
+                    key={input.key}
+                    label={input.label}
+                    variant="standard"
+                    value={input.value}
+                    required={input.key === 'name'}
+                    onChange={(e) => changeSample(input.key, e.target.value)}
+                  />
+                )}
+              </>
+            );
           })}
         </Box>
         <TextField
