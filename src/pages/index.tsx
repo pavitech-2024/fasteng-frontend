@@ -1,5 +1,6 @@
 import { NextPage } from 'next';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Head from 'next/head';
 // files
 import { toast } from 'react-toastify';
@@ -13,6 +14,7 @@ import { LoginImage } from '@/components/styles/login';
 import { TextField, Button, Box, Container, Typography } from '@mui/material';
 
 const Login: NextPage = () => {
+  const { t } = useTranslation();
   const { signIn } = useAuth();
 
   const [email, setEmail] = useState<string>('');
@@ -21,9 +23,9 @@ const Login: NextPage = () => {
   const handleLogin = async () => {
     try {
       toast.promise(async () => await signIn(email, password), {
-        pending: 'Verificando usuário...',
-        success: 'Login efetuado com sucesso!',
-        error: 'Login inválido!',
+        pending: t('toast login loading'),
+        success: t('toast login success'),
+        error: t('toast login error'),
       });
     } catch (error) {}
   };
@@ -64,11 +66,7 @@ const Login: NextPage = () => {
           >
             <LoginImage alt="Fasteng" src={LogoWhite} />
             <Box sx={{ color: 'white', textAlign: 'center', fontSize: { notebook: '14px', mobile: '10px' } }}>
-              Usar o FastEng é simples! Primeiramente, cadastre os materiais que serão usados no seu projeto de dosagem.
-              Assim você pode criar um banco de dados para catologar seus materiais e suas informações. Calcule
-              resultados de ensaios de caracterização que serão vinculados ao seus materiais e confira se estão
-              adequados às especificações técnicas. Por fim, inicie seu projeto de dosagem. O FastEng te acompanha até a
-              determinação do teor ótimo de ligante asfáltico.
+              {t('fasteng description')}
             </Box>
             <Box
               mt={2.5}
@@ -86,10 +84,10 @@ const Login: NextPage = () => {
                 sx={{ width: { notebook: '120px', mobile: '80px' } }}
                 href="https://fastengapp.com.br/"
               >
-                <Typography sx={{ fontSize: { notebook: '15px', mobile: '8px' } }}>Assine</Typography>
+                <Typography sx={{ fontSize: { notebook: '13px', mobile: '8px' } }}>{t('sign it')}</Typography>
               </Button>
               <Button variant="outlined" color="primary" sx={{ width: { notebook: '120px', mobile: '80px' } }}>
-                <Typography sx={{ fontSize: { notebook: '15px', mobile: '8px' } }}>Saiba Mais</Typography>
+                <Typography sx={{ fontSize: { notebook: '13px', mobile: '8px' } }}>{t('learn more')}</Typography>
               </Button>
             </Box>
           </Box>
@@ -128,7 +126,7 @@ const Login: NextPage = () => {
             />
             <TextField
               variant="outlined"
-              label="Password"
+              label={t('password')}
               placeholder="Digite sua senha..."
               type="password"
               value={password}
@@ -155,10 +153,10 @@ const Login: NextPage = () => {
                 color="primary"
                 onClick={() => handleLogin()}
               >
-                Entrar
+                {t('enter')}
               </Button>
               <Button variant="text" color="primary" sx={{ width: 'fit-content' }}>
-                <p>Esqueceu sua senha?</p>
+                <p>{t('forget password')}</p>
               </Button>
             </Box>
           </Box>

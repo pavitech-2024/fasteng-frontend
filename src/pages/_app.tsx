@@ -5,6 +5,7 @@ import { ThemeProvider as MuiTheme } from '@mui/material';
 import { ThemeProvider as StyledTheme } from 'styled-components';
 import { theme } from '@/components/config/theme';
 import { ToastContainer } from 'react-toastify';
+import '../i18n';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
