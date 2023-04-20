@@ -1,7 +1,8 @@
 import { NextPage } from 'next';
+import WelcomeTemplate from '@/components/templates/welcome';
 
 const Asphalt: NextPage = () => {
-  return <div>Asphalt</div>;
+  return <WelcomeTemplate title="Pavimentação" />;
 };
 
 export default Asphalt;

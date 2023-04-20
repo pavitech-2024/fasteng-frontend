@@ -1,7 +1,8 @@
 import { NextPage } from 'next';
+import WelcomeTemplate from '@/components/templates/welcome';
 
 const Soils: NextPage = () => {
-  return <div>Soils</div>;
+  return <WelcomeTemplate title="Solos" />;
 };
 
 export default Soils;
