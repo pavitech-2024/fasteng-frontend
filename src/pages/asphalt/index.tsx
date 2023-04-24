@@ -1,8 +1,27 @@
 import { NextPage } from 'next';
-import WelcomeTemplate from '@/components/templates/welcome';
+import WelcomeTemplate, { ButtonData } from '@/components/templates/welcome';
+import { AsphaltIcon, MaterialsIcon } from '@/assets';
 
 const Asphalt: NextPage = () => {
-  return <WelcomeTemplate title="Pavimentação" />;
+  const buttonsData: ButtonData[] = [
+    {
+      name: 'Materiais',
+      icon: MaterialsIcon,
+      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.',
+    },
+    {
+      name: 'Materiais',
+      icon: MaterialsIcon,
+      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.',
+    },
+    {
+      name: 'Materiais',
+      icon: MaterialsIcon,
+      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.',
+    },
+  ];
+
+  return <WelcomeTemplate title="Pavimentação" buttonsData={buttonsData} icon={AsphaltIcon} app="asphalt" />;
 };
 
 export default Asphalt;
