@@ -5,7 +5,6 @@ import { initReactI18next } from 'react-i18next';
 // ptBR
 import loginPTBR from './translations/login/ptbr.json';
 import homePTBR from './translations/home/ptbr.json';
-
 //en
 import loginENG from './translations/login/en.json';
 import homeENG from './translations/home/en.json';

@@ -1,13 +1,13 @@
 {
   "translation": {
-    "fasteng description": "Using FastEng is simple! First, register the materials that will be used in your dosing project. So you can create a database to catalog your materials and information. calculate results of characterization tests that will be linked to your materials and check if they are suited to the technical specifications. Finally, start your dosing project. FastEng accompanies you to the determination of the optimal asphalt binder content.",
-    "sign it": "Sign it",
-    "learn more": "Learn more",
-    "password": "Password",
-    "enter": "Login",
-    "forget password": "Forgot your password?",
-    "toast login loading": "Veifying user...",
-    "toast login error": "Username or password is invalid!",
-    "toast login success": "Login successful!"
+    "login.fasteng description": "Using FastEng is simple! First, register the materials that will be used in your dosing project. So you can create a database to catalog your materials and information. calculate results of characterization tests that will be linked to your materials and check if they are suited to the technical specifications. Finally, start your dosing project. FastEng accompanies you to the determination of the optimal asphalt binder content.",
+    "login.sign it": "Sign it",
+    "login.learn more": "Learn more",
+    "login.password": "Password",
+    "login.enter": "Login",
+    "login.forget password": "Forgot your password?",
+    "login.toast loading": "Veifying user...",
+    "login.toast error": "Username or password is invalid!",
+    "login.toast success": "Login successful!"
   }
 }

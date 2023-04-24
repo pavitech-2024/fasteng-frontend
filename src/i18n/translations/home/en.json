@@ -1,1 +1,10 @@
-{}
+{
+  "translation": {
+    "home.description": "The FASTENG is your technical assistant in Civil Engineering projects. Currently in our scope we have applications in geotechnical projects of Asphaltic Paving, Soil Mechanics, and Conventional Concrete. Which app do you want to use now?",
+    "home.welcome to": "WELCOME TO",
+    "home.fast way to": "THE FASTEST PATH TO ENGINEERING",
+    "home.asphalt": "Asphalt",
+    "home.soils": "Soil Mechanics",
+    "home.concrete": "Portland Cement"
+  }
+}
