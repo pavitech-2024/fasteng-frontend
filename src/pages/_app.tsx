@@ -6,8 +6,14 @@ import { ThemeProvider as StyledTheme } from 'styled-components';
 import { theme } from '@/components/config/theme';
 import { ToastContainer } from 'react-toastify';
 import '../i18n';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
+  const { i18n } = useTranslation();
+  useEffect(() => {
+    // use effect to reload the page when the language is changed
+  }, [i18n.language]);
   return (
     <AuthProvider>
       <MuiTheme theme={theme}>

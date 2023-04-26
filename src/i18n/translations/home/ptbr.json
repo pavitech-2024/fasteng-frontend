@@ -1,7 +1,8 @@
 {
-  "translation": {
-    "home.description": "O FASTENG é o seu auxiliar técnico em projetos de Engenharia Civil. Atualmente em nosso escopo contamos com aplicações em projetos geotécnicos de Pavimentação Asfáltica, Mecânica dos Solos, e Concreto Convencional. Qual aplicação você deseja utilizar agora?",
-    "home.welcome to": "BEM-VINDO AO",
-    "home.fast way to": "O CAMINHO MAIS RÁPIDO PARA A ENGENHARIA"
-  }
+  "home.description": "O FASTENG é o seu auxiliar técnico em projetos de Engenharia Civil. Atualmente em nosso escopo contamos com aplicações em projetos geotécnicos de Pavimentação Asfáltica, Mecânica dos Solos, e Concreto Convencional. Qual aplicação você deseja utilizar agora?",
+  "home.welcome to": "BEM-VINDO AO",
+  "home.fast way to": "O CAMINHO MAIS RÁPIDO PARA A ENGENHARIA",
+  "home.asphalt": "Pavimentação Asfáltica",
+  "home.soils": "Mecânica dos Solos",
+  "home.concrete": "Cimento Portland"
 }

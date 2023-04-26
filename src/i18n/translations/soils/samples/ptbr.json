@@ -1,0 +1,22 @@
+{
+  "samples.title": "Amostras Cadastradas",
+  "samples.all": "Todos",
+  "samples.inorganicSoil": "Solo Inorgânico",
+  "samples.organicSoil": "Solo Orgânico",
+  "samples.pavementLayer": "Camada de Pavimento",
+
+  "samples.newSample": "Nova Amostra",
+  "samples.cancel": "Cancelar",
+  "samples.register": "Cadastrar",
+  "samples.name": "Nome",
+  "samples.type": "Tipo",
+  "samples.construction": "Obra",
+  "samples.snippet": "Trecho",
+  "samples.exd": "Lado E-X-D",
+  "samples.layer": "Camada",
+  "samples.provenance": "Procedência",
+  "samples.stake": "Estaca",
+  "samples.depth": "Profundidade",
+  "samples.collectionDate": "Data da coleta",
+  "samples.comments": "Observações"
+}

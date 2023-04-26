@@ -3,47 +3,41 @@ import React from 'react';
 import { EssaysTemplate } from '../../../components/templates/essays';
 import { Essay } from '@/interfaces/common';
 import { CoarseAggregateIcon, GranulometryIcon, SandIncreaseIcon, SpecifyMassIcon, UnitMassIcon } from '@/assets';
+import { t } from 'i18next';
 
-export const getStaticProps = async () => {
+const index: NextPage = () => {
   const essays: Essay[] = [
     {
-      title: 'Granulometria por Peneiramento',
+      title: t('concrete.essays.granulometryConcrete'),
       key: 'granulometry-concrete',
       icon: GranulometryIcon,
       link: '/concrete/essays/granulometry',
     },
     {
-      title: 'Massa Específica - Frasco de Chapman',
+      title: t('concrete.essays.chapman'),
       key: 'chapman',
       icon: SpecifyMassIcon,
       link: '/concrete/essays/chapman',
     },
-    { title: 'Massa Unitária', key: 'unitMass', icon: UnitMassIcon, link: '/concrete/essays/unit-mass' },
     {
-      title: 'Inchamento da Areia',
+      title: t('concrete.essays.unitMass'),
+      key: 'unitMass',
+      icon: UnitMassIcon,
+      link: '/concrete/essays/unit-mass',
+    },
+    {
+      title: t('concrete.essays.sandIncrease'),
       key: 'sandIncrease',
       icon: SandIncreaseIcon,
       link: '/concrete/essays/sand-increase',
     },
     {
-      title: 'Massa Específica de Agregado Graúdo',
-      key: '',
+      title: t('concrete.essays.coarseAggregate'),
+      key: 'coarseAggregate',
       icon: CoarseAggregateIcon,
       link: '/concrete/essays/coarse-aggregate',
     },
   ];
-
-  return {
-    props: {
-      essays,
-    },
-  };
-};
-
-interface ConcreteEssaysProps {
-  essays: Essay[];
-}
-const index: NextPage = ({ essays }: ConcreteEssaysProps) => {
   return <EssaysTemplate essays={essays} />;
 };
 

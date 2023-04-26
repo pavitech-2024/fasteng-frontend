@@ -12,6 +12,7 @@ import { LoginImage } from '@/components/styles/login';
 
 //mui
 import { TextField, Button, Box, Container, Typography } from '@mui/material';
+import Languages from '../components/molecules/buttons/languages';
 
 const Login: NextPage = () => {
   const { signIn } = useAuth();
@@ -101,6 +102,7 @@ const Login: NextPage = () => {
             height: { notebook: '100vh', mobile: '50vh' },
           }}
         >
+          <Languages right={10} top={10} />
           <Box
             sx={{
               display: 'grid',

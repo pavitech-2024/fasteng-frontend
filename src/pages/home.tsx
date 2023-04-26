@@ -8,21 +8,19 @@ import { t } from 'i18next';
 const Home: NextPage = () => {
   const Router = useRouter();
 
-  
   const Aplications = [
     {
-      //name: {t('home.asphalt')},
-      name: 'Asphalt',
+      name: t('home.asphalt'),
       icon: <AsphaltIcon width="100%" height="100%" />,
       link: '/asphalt',
     },
     {
-      name: 'Asphalt',
+      name: t('home.soils'),
       icon: <SoilsIcon width="100%" height="100%" />,
       link: '/soils',
     },
     {
-      name: 'Asphalt',
+      name: t('home.concrete'),
       icon: <ConcreteIcon width="100%" height="100%" />,
       link: '/concrete',
     },
@@ -32,7 +30,10 @@ const Home: NextPage = () => {
     <Container
       sx={{
         display: 'flex',
-        paddingTop: '3rem',
+        paddingTop: {
+          mobile: '1.5rem',
+          notebook: '3rem',
+        },
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
@@ -59,6 +60,7 @@ const Home: NextPage = () => {
             padding: '.6rem',
             fontWeight: 700,
             color: '#6e6d6d',
+            height: '1.8rem',
             maxWidth: {
               mobile: '224px',
               ultrawide: '310px',
@@ -79,6 +81,7 @@ const Home: NextPage = () => {
             textAlign: 'center',
             maxWidth: '930px',
             marginTop: '1rem',
+            height: '2.3rem',
           }}
         >
           {t('home.description')}
