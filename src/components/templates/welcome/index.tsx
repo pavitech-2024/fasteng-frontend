@@ -1,4 +1,4 @@
-import { Box, ImageListItem, ListItem, ListItemText, Typography } from '@mui/material';
+import { Box, Typography, Stepper, Step, StepLabel } from '@mui/material';
 import Link from 'next/link';
 
 export interface ButtonData {
@@ -6,6 +6,7 @@ export interface ButtonData {
   icon: JSX.Element;
   description: string;
 }
+
 interface WelcomeTemplateProps {
   app: string;
   title: string;
@@ -13,229 +14,146 @@ interface WelcomeTemplateProps {
   buttonsData: ButtonData[];
 }
 
-// const WelcomeTemplate = ({ title, icon, buttonsData }: WelcomeTemplateProps) => {
-//   console.log(buttonsData, icon);
+const WelcomeTemplate = ({ title, app, buttonsData}: WelcomeTemplateProps) => {
 
-//   const titleStyle = {
-//     fontWeight: '700',
-//     fontSize: '36px',
-//     textTransform: 'uppercase',
-//   };
-//   return (
-//     <Box
-//       sx={{
-//         display: 'flex',
-//         flexDirection: {
-//           mobile: 'column',
-//           notebook: 'row',
-//         },
-//         justifyContent: 'center',
-//         width: '100%',
-//       }}
-//     >
-//       <Box sx={{ width: '65%', bgcolor: 'yellow' }}>
-//         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-//           <Typography variant="h1" sx={titleStyle}>
-//             {`Bem vindo á página de `}
-//           </Typography>
-//           <Typography color="primary" sx={titleStyle}>
-//             {title}
-//           </Typography>
-//           {icon}
-//         </Box>
-//         <Box sx={{ display: 'grid', gap: '10px', gridTemplateRows: '1fr' }}>
-//           {buttonsData.map((buttonData) => {
-//             return (
-//               <Box key={buttonData.name}>
-//                 <Typography>{buttonData.name}</Typography>
-//                 {buttonData.icon}
-//                 <Typography>{buttonData.description}</Typography>
-//               </Box>
-//             );
-//           })}
-//         </Box>
-//       </Box>
+  const titleStyle = {
+    fontWeight: '700',
+    fontSize: '36px',
+    textTransform: 'uppercase',
+    };
 
-//       <Box sx={{ width: '35%', bgcolor: 'red' }}></Box>
-//     </Box>
-//   );
-// };
-
-const WelcomeTemplate = ({ title, app, buttonsData }: WelcomeTemplateProps) => {
   return (
     <Box /* div principal da pagina */
       sx={{
-        marginTop: '6rem',
-        display: 'grid',
-        gridTemplateColumns: '65% 35%',
-        gridColumnGap: '5%',
+        display: 'flex',
+        flexDirection: {
+          mobile: 'column',
+          notebook: 'row',
+        },
+        justifyContent: 'center',
         width: '100%',
+        paddingTop: {
+          mobile: '2rem',
+          notebook: '4rem'
+        }
       }}
     >
       <Box
         sx={{
-          /* div da coluna da esquerda*/ textAlign: 'center',
+          /* div da coluna da esquerda*/ width: '65%',
+          textAlign: 'center',
         }}
       >
-        <Box
-          /* div do titulo + imagem*/ sx={{
-            paddingBottom: '2rem',
-            width: '100%',
-          }}
+        <Box /* div do titulo + imagem*/ sx={{
+          display: 'flex',
+          width: '100%',
+          paddingBottom: '2rem'
+        }} 
         >
-          <Typography
-            variant="h3"
-            sx={{
-              fontWeight: '700',
-              fontSize: '36px',
-              textTransform: 'uppercase',
-            }}
-          >
-            Bem vindo á página de {title}
-          </Typography>
-          <ImageListItem></ImageListItem>
+        <Typography variant='h2' color='primary' sx={{...titleStyle, span: {color: '#000'}}}><span>Bem-vindo à página de </span>{title}</Typography>
         </Box>
         <Box
           /* div da tabela como funciona */ sx={{
             bgcolor: '#fff',
-            margin: '0 8rem',
             borderRadius: '10px',
+            width: '55%',
+            marginLeft: '5%',
+            paddingBottom: '2rem'
           }}
         >
           <Typography
             variant="h6"
             sx={{
               marginBottom: '1.5rem',
+              paddingTop: '1rem',
             }}
           >
             Como funciona?
           </Typography>
-          <Typography variant="h6">1----------------2-------------------3</Typography>
-          <ListItem
-            sx={{
-              display: 'block',
-            }}
-          >
-            <ListItemText
-              sx={{
-                marginTop: '5rem',
-              }}
-            >
-              <Typography
-                variant="h6"
+          <Stepper activeStep={0} alternativeLabel sx={{
+          }}>
+              <Step>
+                <StepLabel>Cadastre um material</StepLabel>
+              </Step>
+              <Step>
+                <StepLabel>Registe ensaios com o material um material</StepLabel>
+              </Step>
+              <Step>
+                <StepLabel>Gere relatórios sobre os ensaios um material</StepLabel>
+              </Step>
+          </Stepper>
+          <Box sx={{
+            textAlign: 'left',
+            marginLeft: '5%',
+            paddingTop: '10%',
+          }}>
+            {buttonsData.map((button: ButtonData) => (
+              <Typography 
+                color='primary' 
                 sx={{
-                  fontSize: '20px',
-                  marginBottom: '3rem',
-                }}
+                paddingBottom: '2rem', 
+                span: {color: '#000'}, 
+                fontSize: '20px'}}
+                key={button.name}
               >
-                Materiais: * Descrição sobre materiais *
+                {button.name}: 
+                <span>* {button.description} *</span>
               </Typography>
-            </ListItemText>
-            <ListItemText>
-              <Typography
-                variant="h6"
-                sx={{
-                  fontSize: '20px',
-                  marginBottom: '3rem',
-                }}
-              >
-                Ensaios: * Descrição sobre ensaios *
-              </Typography>
-            </ListItemText>
-            <ListItemText>
-              <Typography
-                variant="h6"
-                sx={{
-                  fontSize: '20px',
-                  marginBottom: '3rem',
-                }}
-              >
-                Dosagem Marshall: * Descrição sobre Marshall *
-              </Typography>
-            </ListItemText>
-            <ListItemText>
-              <Typography
-                variant="h6"
-                sx={{
-                  fontSize: '20px',
-                  marginBottom: '3rem',
-                }}
-              >
-                Dosagem Superpave: * Descrição sobre Superpave *
-              </Typography>
-            </ListItemText>
-            <ListItemText>
-              <Typography
-                variant="h6"
-                sx={{
-                  fontSize: '20px',
-                  marginBottom: '3rem',
-                }}
-              >
-                Normas: * Descrição sobre normas *
-              </Typography>
-            </ListItemText>
-            <ListItemText>
-              <Typography
-                variant="h6"
-                sx={{
-                  fontSize: '20px',
-                  marginBottom: '3rem',
-                }}
-              >
-                Biblioteca: * Descrição sobre biblioteca *
-              </Typography>
-            </ListItemText>
-          </ListItem>
+            ))}
+          </Box>
         </Box>
       </Box>
       <Box /* div da segunda coluna */>
-        <Link href={`/${app}/materiais`}>
-          <Box
-            sx={{
-              width: '450px',
-              height: '100px',
-              ':hover': {
-                cursor: 'pointer',
-              },
-            }}
-          >
+        {buttonsData.map((button: ButtonData) => (
+          <Link key={button.name} href={`/${app}/materiais`} 
+          style={{textDecoration: 'none'}}>
             <Box
               sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                height: '100%',
-                width: '100%',
+                width: '300px',
+                height: '80px',
+                paddingBottom: '2rem',
+                ':hover': {
+                  cursor: 'pointer',
+                },
               }}
             >
               <Box
-                /* div da imagem */ sx={{
-                  width: '30%',
-                  bgcolor: 'orange',
-                  borderRadius: '20px 0 0 20px',
-                  height: '100%',
-                }}
-              >
-                {buttonsData[0].icon}
-              </Box>
-              <Box
-                /* div do subtitulo */ sx={{
-                  width: '70%',
-                  height: '100%',
-                  borderRadius: '0 20px 20px 0',
-                  bgcolor: '#000',
-                  color: '#fff',
+                sx={{
                   display: 'flex',
+                  flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'center',
+                  height: '100%',
+                  width: '100%',
                 }}
               >
-                <Typography>Materiais</Typography>
+                <Box
+                  /* div da imagem */ sx={{
+                    width: '30%',
+                    bgcolor: 'orange',
+                    borderRadius: '20px 0 0 20px',
+                    height: '100%',
+                  }}
+                >
+                  {button.icon}
+                </Box>
+                <Box
+                  /* div do subtitulo */ sx={{
+                    width: '70%',
+                    height: '100%',
+                    borderRadius: '0 20px 20px 0',
+                    bgcolor: '#000',
+                    color: '#fff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Typography>{button.name}</Typography>
+                </Box>
               </Box>
             </Box>
-          </Box>
-        </Link>
+          </Link>
+        ))}
       </Box>
     </Box>
   );

@@ -7,17 +7,32 @@ const Asphalt: NextPage = () => {
     {
       name: 'Materiais',
       icon: MaterialsIcon,
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.',
+      description: 'Descrição sobre materiais',
     },
     {
-      name: 'Materiais',
+      name: 'Ensaios',
       icon: MaterialsIcon,
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.',
+      description: 'Descrição sobre ensaios',
     },
     {
-      name: 'Materiais',
+      name: 'Dosagem Marshall',
       icon: MaterialsIcon,
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.',
+      description: 'Descrição sobre Marshall',
+    },
+    {
+      name: 'Dosagem Superpave',
+      icon: MaterialsIcon,
+      description: 'Descrição sobre Superpave',
+    },
+    {
+      name: 'Dosagem Normas',
+      icon: MaterialsIcon,
+      description: 'Descrição sobre normas',
+    },
+    {
+      name: 'Biblioteca',
+      icon: MaterialsIcon,
+      description: 'Descrição sobre biblioteca',
     },
   ];
 
