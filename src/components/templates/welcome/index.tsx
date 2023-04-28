@@ -103,7 +103,9 @@ const WelcomeTemplate = ({ title, app, buttonsData}: WelcomeTemplateProps) => {
           </Box>
         </Box>
       </Box>
-      <Box /* div da segunda coluna */>
+      <Box /* div da segunda coluna */ sx={{
+        width: '35%'
+      }}>
         {buttonsData.map((button: ButtonData) => (
           <Link key={button.name} href={`/${app}/materiais`} 
           style={{textDecoration: 'none'}}>
