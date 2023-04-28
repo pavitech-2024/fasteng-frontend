@@ -62,6 +62,10 @@ import AbcpIcon from './concrete/dosages/abcp.svg';
 
 // standards
 import DurabilityIcon from './asphalt/standards/durabilityIcon.png'
+import CantabrianIcon from './asphalt/standards/CantabrianIcon.png'
+import FatigueIcon from './asphalt/standards/FatigueIcon.png'
+import MarshallIconPng from './asphalt/standards/MarshallIcon.png'
+import StorageStabilityIcon from './asphalt/standards/StorageStabilityIcon.png'
 
 // export all assets
 export {
@@ -116,6 +120,10 @@ export {
 
   // standards
   DurabilityIcon,
+  CantabrianIcon,
+  FatigueIcon,
+  MarshallIconPng,
+  StorageStabilityIcon,
 
   //dosages
   MarshallIcon,

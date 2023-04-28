@@ -14,4 +14,5 @@ export type Standard = {
   icon: StaticImageData;
   link: string;
   type?: string;
+  standard?: string;
 };

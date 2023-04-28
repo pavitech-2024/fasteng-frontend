@@ -63,7 +63,7 @@ export const Card = ({ data, type, hrefLink, target }: CardProps) => {
           },
         }}
       >
-        <Box sx={{ height: '60%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Box sx={{ height: '60%', width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
           <Image src={data.icon} alt={data.key} width={100} height={100} />
         </Box>
         <Box
@@ -71,11 +71,17 @@ export const Card = ({ data, type, hrefLink, target }: CardProps) => {
             height: '40%',
             width: '100%',
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
           <Typography sx={{ textAlign: 'center', fontWeight: '700', fontSize: '13.5px' }}>{data.title}</Typography>
+          {type === 'standard' && (
+            <Typography sx={{ textAlign: 'center', fontWeight: '400', fontSize: '12px' }}>
+              {type === 'standard' && 'standard' in data ? data.standard : null}
+            </Typography>
+          )}
         </Box>
       </Box>
     </Link>
