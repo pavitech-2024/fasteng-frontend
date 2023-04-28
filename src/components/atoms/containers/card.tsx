@@ -1,5 +1,5 @@
 import { Container, Box, Typography } from '@mui/material';
-import { Essay } from '@/interfaces/common';
+import { Essay, Standard } from '@/interfaces/common';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -26,13 +26,22 @@ export const CardContainer = ({ children }: CardContainerProps) => {
   );
 };
 
+// modifiquei essa interface para aceitar tanto os dados de essays quanto de standards(normas) para que esse componente se torne reaproveitável. Assim ele vai ler os dados do objeto de dados (função getStaticProps) correspondente a página em que o Card for chamado. Dessa forma é possível só adicionar mais types e datas quando novas telas semelhantes precisarem usar esses mesmos cards; A prop hrefLink precisou ser adicionada pois os cards têm comportamentos diferentes em cada página (essay redireciona o usuário ao link do card, standard abre o pdf do link em uma nova aba);
 interface CardProps {
-  essay: Essay;
+  data: Essay | Standard;
+  type: 'essay' | 'standard';
+  hrefLink: string;
+  target: string;
 }
 
-export const Card = ({ essay }: CardProps) => {
+export const Card = ({ data, type, hrefLink, target }: CardProps) => {
   return (
-    <Link href={`/asphalt/essays/${essay.key}`} passHref style={{ textDecoration: 'none' }}>
+    <Link 
+      href={hrefLink}
+      passHref 
+      style={{ textDecoration: 'none' }}
+      target={target}
+    >
       <Box
         sx={{
           width: 'calc(200px - 2rem)',
@@ -55,7 +64,7 @@ export const Card = ({ essay }: CardProps) => {
         }}
       >
         <Box sx={{ height: '60%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Image src={essay.icon} alt={essay.key} width={100} height={100} />
+          <Image src={data.icon} alt={data.key} width={100} height={100} />
         </Box>
         <Box
           sx={{
@@ -66,7 +75,7 @@ export const Card = ({ essay }: CardProps) => {
             justifyContent: 'center',
           }}
         >
-          <Typography sx={{ textAlign: 'center', fontWeight: '700', fontSize: '13.5px' }}>{essay.title}</Typography>
+          <Typography sx={{ textAlign: 'center', fontWeight: '700', fontSize: '13.5px' }}>{data.title}</Typography>
         </Box>
       </Box>
     </Link>

@@ -20,6 +20,9 @@ import SpecifyMassIcon from './common/essays/SpecifyMass.png';
 import MaterialsIcon from './common/materials.svg';
 import EssayIcon from './common/essay.svg';
 
+// standard paste
+import InducedMoistureDamageIcon from './asphalt/essays/InducedMoistureDamage.png'
+
 // asphalt paste
 import MarshallIcon from './asphalt/dosages/marshall.svg';
 import SuperpaveIcon from './asphalt/dosages/superpave.svg';
@@ -53,8 +56,12 @@ import SucsIcon from './soils/essays/Sucs.png';
 import CoarseAggregateIcon from './concrete/essays/CoarseAggregate.png';
 import SandIncreaseIcon from './concrete/essays/SandIncrease.png';
 import UnitMassIcon from './concrete/essays/UnitMass.png';
+
 //dosages
 import AbcpIcon from './concrete/dosages/abcp.svg';
+
+// standards
+import DurabilityIcon from './asphalt/standards/durabilityIcon.png'
 
 // export all assets
 export {
@@ -81,6 +88,7 @@ export {
   //essays
   SpecifyMassIcon,
   GranulometryIcon,
+  InducedMoistureDamageIcon,
   //others
   EssayIcon,
   MaterialsIcon,
@@ -105,6 +113,10 @@ export {
   SayboltFurolIcon,
   ShapeIndexIcon,
   SofteningPointIcon,
+
+  // standards
+  DurabilityIcon,
+
   //dosages
   MarshallIcon,
   SuperpaveIcon,

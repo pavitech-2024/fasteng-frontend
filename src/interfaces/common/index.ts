@@ -7,3 +7,11 @@ export type Essay = {
   link: string;
   type?: string;
 };
+
+export type Standard = {
+  key: string;
+  title: string;
+  icon: StaticImageData;
+  link: string;
+  type?: string;
+};

@@ -1,65 +1,63 @@
-import { NextPage } from 'next';
-import { EssaysTemplate } from '@/components/templates/essays';
-import { FilterOption } from '@/components/molecules/buttons/filter';
-import { Essay } from '@/interfaces/common';
-import {
-  AbrasionIcon,
-  AdhesivenessIcon,
-  AngularityIcon,
-  DduiIcon,
-  DuctilityIcon,
-  ElasticRecoveryIcon,
-  ElongatedParticlesIcon,
-  FlashPointIcon,
-  FwdIcon,
-  GranulometryIcon,
-  IggIcon,
-  PenetrationIcon,
-  RotationalIcon,
-  RtcdIcon,
-  RtfoIcon,
-  SandEquivalentIcon,
-  SayboltFurolIcon,
-  ShapeIndexIcon,
-  SofteningPointIcon,
-  SpecifyMassIcon,
-} from '@/assets';
+import { AbrasionIcon, AdhesivenessIcon, DuctilityIcon, AngularityIcon, PenetrationIcon, RtfoIcon, SandEquivalentIcon, GranulometryIcon, ShapeIndexIcon, SpecifyMassIcon, ElongatedParticlesIcon, SofteningPointIcon, FlashPointIcon, ElasticRecoveryIcon, RotationalIcon, SayboltFurolIcon, RtcdIcon, FwdIcon, DduiIcon, IggIcon, InducedMoistureDamageIcon, DurabilityIcon } from "@/assets";
+import { FilterOption } from "@/components/molecules/buttons/filter";
+import { StandardsTemplate } from "@/components/templates/standards";
+import { Standard } from "@/interfaces/common";
+import { NextPage } from "next";
+
+interface AsphaltStandardsProps {
+  standards: Standard[];
+  filterOptions: FilterOption[];
+}
 
 export const getStaticProps = async () => {
-  const essays: Essay[] = [
+  const standards: Standard[] = [
     {
       title: 'Abrasão "Los Angeles"',
       icon: AbrasionIcon,
       key: 'abrasion',
-      link: '/asphalt/standard/abrasion',
+      link: 'https://smartdoser.fastengapp.com.br/static/media/AbrasaoLosAngeles03598.0fb55fd3.pdf',
       type: 'aggregates',
     },
     {
       title: 'Adesividade',
       icon: AdhesivenessIcon,
       key: 'adhesiveness',
-      link: '/asphalt/essays/adhesiveness',
+      link: 'http://smartdoser.fastengapp.com.br/static/media/AdesividadeDnitme07894.b8c14e56.pdf',
+      type: 'aggregates',
+    },
+    {
+      title: 'Dano por Umidade Induzida',
+      icon: InducedMoistureDamageIcon,
+      key: 'inducedMoistureDamage',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_180_2018_me-1.pdf',
       type: 'aggregates',
     },
     {
       title: 'Ductilidade',
       icon: DuctilityIcon,
       key: 'ductility',
-      link: '/asphalt/essays/ductility',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_180_2018_me-1.pdf',
+      type: 'asphaltBinder',
+    },
+    {
+      title: 'Durabilidade',
+      icon: DurabilityIcon,
+      key: 'ductility',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_180_2018_me-1.pdf',
       type: 'asphaltBinder',
     },
     {
       title: 'Ensaio de Angularidade',
       icon: AngularityIcon,
       key: 'angularity',
-      link: '/asphalt/essays/angularity',
+      link: 'https://smartdoser.fastengapp.com.br/static/media/DuctilidadeDnerMe16398.a7e9de87.pdf',
       type: 'aggregates',
     },
     {
       title: 'Ensaio de Penetração',
       icon: PenetrationIcon,
       key: 'penetration',
-      link: '/asphalt/essays/penetration',
+      link: 'https://smartdoser.fastengapp.com.br/static/media/DuctilidadeDnerMe16398.a7e9de87.pdf',
       type: 'asphaltBinder',
     },
     {
@@ -178,19 +176,14 @@ export const getStaticProps = async () => {
 
   return {
     props: {
-      essays,
+      standards,
       filterOptions,
     },
   };
 };
 
-interface AsphaltEssaysProps {
-  essays: Essay[];
-  filterOptions: FilterOption[];
-}
-
-const AsphaltEssays: NextPage = ({ essays, filterOptions }: AsphaltEssaysProps) => (
-  <EssaysTemplate essays={essays} filterOptions={filterOptions} />
+const AsphaltStandards: NextPage = ({ standards, filterOptions }: AsphaltStandardsProps) => (
+  <StandardsTemplate standards={standards} filterOptions={filterOptions} />
 );
 
-export default AsphaltEssays;
+export default AsphaltStandards;
