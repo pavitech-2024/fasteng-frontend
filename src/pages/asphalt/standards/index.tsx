@@ -136,7 +136,7 @@ export const getStaticProps = async () => {
       icon: GranulometryIcon,
       key: 'granulometry-asphalt',
       standard: 'DNER - ME 083/98',
-      link: '/asphalt/essays/granulometry',
+      link: 'https://smartdoser.fastengapp.com.br/static/media/GranulometriaDnerMe08398.1ca0cbba.pdf',
       type: 'aggregates',
     },
     {
@@ -144,7 +144,7 @@ export const getStaticProps = async () => {
       icon: ShapeIndexIcon,
       key: 'shapeIndex',
       standard: 'DNIT 424/2020 - ME',
-      link: '/asphalt/essays/shape-index',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_424_2020_me.pdf',
       type: 'aggregates',
     },
     {
@@ -152,7 +152,7 @@ export const getStaticProps = async () => {
       icon: SpecifyMassIcon,
       key: 'specifyMassBigAggregates',
       standard: 'DNIT 413/2021 - ME',
-      link: '/asphalt/essays/specify-mass',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_413_2021_me.pdf',
       type: 'aggregates',
     },
     {
@@ -160,7 +160,7 @@ export const getStaticProps = async () => {
       icon: SpecifyMassIcon,
       key: 'specifyMassSmallAggregates',
       standard: 'DNIT 411/2021 - ME',
-      link: '/asphalt/essays/specify-mass',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_411_2021_me-1.pdf',
       type: 'aggregates',
     },
     {
@@ -168,7 +168,7 @@ export const getStaticProps = async () => {
       icon: ResiliencyModuleIcon,
       key: 'resilienceModule',
       standard: 'DNIT 135/2018',
-      link: '/asphalt/essays/specify-mass',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_135_2018_me-2.pdf',
       type: 'asphaltMix',
     },
     {
