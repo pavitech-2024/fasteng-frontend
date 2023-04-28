@@ -66,6 +66,9 @@ import CantabrianIcon from './asphalt/standards/CantabrianIcon.png'
 import FatigueIcon from './asphalt/standards/FatigueIcon.png'
 import MarshallIconPng from './asphalt/standards/MarshallIcon.png'
 import StorageStabilityIcon from './asphalt/standards/StorageStabilityIcon.png'
+import FlowNumberIcon from './asphalt/standards/FlowNumberIcon.png'
+import MSCRIcon from './asphalt/standards/MSCRIcon.png'
+import ResiliencyModuleIcon from './asphalt/standards/ResiliencyModuleIcon.png'
 
 // export all assets
 export {
@@ -124,6 +127,9 @@ export {
   FatigueIcon,
   MarshallIconPng,
   StorageStabilityIcon,
+  FlowNumberIcon,
+  MSCRIcon,
+  ResiliencyModuleIcon,
 
   //dosages
   MarshallIcon,

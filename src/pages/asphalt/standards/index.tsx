@@ -1,4 +1,4 @@
-import { AbrasionIcon, AdhesivenessIcon, DuctilityIcon, AngularityIcon, PenetrationIcon, RtfoIcon, SandEquivalentIcon, GranulometryIcon, ShapeIndexIcon, SpecifyMassIcon, ElongatedParticlesIcon, SofteningPointIcon, FlashPointIcon, ElasticRecoveryIcon, RotationalIcon, SayboltFurolIcon, RtcdIcon, FwdIcon, DduiIcon, IggIcon, InducedMoistureDamageIcon, DurabilityIcon, CantabrianIcon, FatigueIcon, MarshallIcon, MarshallIconPng, StorageStabilityIcon } from "@/assets";
+import { AbrasionIcon, AdhesivenessIcon, DuctilityIcon, AngularityIcon, PenetrationIcon, RtfoIcon, SandEquivalentIcon, GranulometryIcon, ShapeIndexIcon, SpecifyMassIcon, ElongatedParticlesIcon, SofteningPointIcon, FlashPointIcon, ElasticRecoveryIcon, RotationalIcon, SayboltFurolIcon, RtcdIcon, FwdIcon, DduiIcon, IggIcon, InducedMoistureDamageIcon, DurabilityIcon, CantabrianIcon, FatigueIcon, MarshallIcon, MarshallIconPng, StorageStabilityIcon, FlowNumberIcon, MSCRIcon, ResiliencyModuleIcon } from "@/assets";
 import { FilterOption } from "@/components/molecules/buttons/filter";
 import { StandardsTemplate } from "@/components/templates/standards";
 import { Standard } from "@/interfaces/common";
@@ -103,7 +103,7 @@ export const getStaticProps = async () => {
       title: 'Estabilidade à Estocagem',
       icon: StorageStabilityIcon,
       key: 'storageStability',
-      standard: 'DNER - ME 054/97',
+      standard: 'DNER - ME 384/99',
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_384_99.pdf',
       type: 'asphaltBinder',
     },
@@ -112,13 +112,30 @@ export const getStaticProps = async () => {
       icon: FwdIcon,
       key: 'fallingWeightDeflectometer',
       standard: 'DNER-PRO 273/96',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_184_2018_me-1.pdf',
+      type: 'asphaltMix',
+    },
+    {
+      title: 'Número de Fluxo',
+      icon: FlowNumberIcon,
+      key: 'flowNumber',
+      standard: 'DNIT 184/2018',
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/procedimento-pro/dner_pro_273_96.pdf',
+      type: 'asphaltMix',
+    },
+    {
+      title: 'Fluência e Recuperação Sob Tensões Múltiplas (MSCR)',
+      icon: MSCRIcon,
+      key: 'flowNumber',
+      standard: 'DNIT 423/2020 - ME',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_423_2020_me.pdf',
       type: 'asphaltMix',
     },
     {
       title: 'Granulometria por Peneiramento',
       icon: GranulometryIcon,
       key: 'granulometry-asphalt',
+      standard: 'DNER - ME 083/98',
       link: '/asphalt/essays/granulometry',
       type: 'aggregates',
     },
@@ -126,15 +143,33 @@ export const getStaticProps = async () => {
       title: 'Índice de Forma',
       icon: ShapeIndexIcon,
       key: 'shapeIndex',
+      standard: 'DNIT 424/2020 - ME',
       link: '/asphalt/essays/shape-index',
       type: 'aggregates',
     },
     {
-      title: 'Massa Específica',
+      title: 'Massa Específica - Agregado Graúdo',
       icon: SpecifyMassIcon,
-      key: 'specifyMass',
+      key: 'specifyMassBigAggregates',
+      standard: 'DNIT 413/2021 - ME',
       link: '/asphalt/essays/specify-mass',
       type: 'aggregates',
+    },
+    {
+      title: 'Massa Específica - Agregado Miúdo',
+      icon: SpecifyMassIcon,
+      key: 'specifyMassSmallAggregates',
+      standard: 'DNIT 411/2021 - ME',
+      link: '/asphalt/essays/specify-mass',
+      type: 'aggregates',
+    },
+    {
+      title: 'Módulo de Resiliência',
+      icon: ResiliencyModuleIcon,
+      key: 'resilienceModule',
+      standard: 'DNIT 135/2018',
+      link: '/asphalt/essays/specify-mass',
+      type: 'asphaltMix',
     },
     {
       title: 'Partículas Alongadas e Achatadas',

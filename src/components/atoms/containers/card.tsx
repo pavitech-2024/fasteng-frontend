@@ -73,13 +73,14 @@ export const Card = ({ data, type, hrefLink, target }: CardProps) => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'center', 
           }}
         >
           <Typography sx={{ textAlign: 'center', fontWeight: '700', fontSize: '13.5px' }}>{data.title}</Typography>
           {type === 'standard' && (
+            // Verifica se a prop standard existe em data;
             <Typography sx={{ textAlign: 'center', fontWeight: '400', fontSize: '12px' }}>
-              {type === 'standard' && 'standard' in data ? data.standard : null}
+              {'standard' in data ? data.standard : null}
             </Typography>
           )}
         </Box>
