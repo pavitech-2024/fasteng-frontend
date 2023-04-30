@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import WelcomeTemplate, { ButtonData } from '@/components/templates/welcome';
-import { AsphaltIcon, MaterialsIcon } from '@/assets';
+import { AsphaltIcon, EssayIcon, MarshallIcon, MaterialsIcon, SuperpaveIcon } from '@/assets';
 
 const Asphalt: NextPage = () => {
   const buttonsData: ButtonData[] = [
@@ -11,17 +11,17 @@ const Asphalt: NextPage = () => {
     },
     {
       name: 'Ensaios',
-      icon: MaterialsIcon,
+      icon: EssayIcon,
       description: 'Descrição sobre ensaios',
     },
     {
       name: 'Dosagem Marshall',
-      icon: MaterialsIcon,
+      icon: MarshallIcon,
       description: 'Descrição sobre Marshall',
     },
     {
       name: 'Dosagem Superpave',
-      icon: MaterialsIcon,
+      icon: SuperpaveIcon,
       description: 'Descrição sobre Superpave',
     },
     {

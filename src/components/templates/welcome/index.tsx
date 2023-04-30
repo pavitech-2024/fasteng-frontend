@@ -1,4 +1,4 @@
-import { Box, Typography, Stepper, Step, StepLabel } from '@mui/material';
+import { Box, Typography, Stepper, Step, StepLabel, SvgIcon } from '@mui/material';
 import Link from 'next/link';
 
 export interface ButtonData {
@@ -136,7 +136,9 @@ const WelcomeTemplate = ({ title, app, buttonsData}: WelcomeTemplateProps) => {
                     height: '100%',
                   }}
                 >
-                  {button.icon}
+                  <SvgIcon sx={{
+                    color: '#fff',
+                  }}>{button.icon}</SvgIcon>
                 </Box>
                 <Box
                   /* div do subtitulo */ sx={{
