@@ -123,6 +123,7 @@ const Login: NextPage = () => {
               fullWidth
               onChange={(e) => setEmail(e.target.value)}
               required
+              InputLabelProps={{ shrink: true }}
               color="primary"
             />
             <TextField
@@ -133,6 +134,7 @@ const Login: NextPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              InputLabelProps={{ shrink: true }}
               color="primary"
             />
 

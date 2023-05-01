@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 
 interface HeaderProps {
   title: string;
-  children: React.ReactNode | JSX.Element;
+  children?: React.ReactNode | JSX.Element;
 }
 
 export const Header = ({ title, children }: HeaderProps) => {
@@ -24,11 +24,12 @@ export const Header = ({ title, children }: HeaderProps) => {
         variant="h5"
         sx={{
           textTransform: 'uppercase',
-          fontSize: { notebook: '24px' },
+          fontSize: { mobile: '15px', notebook: '24px' },
           color: 'secondary.light',
           fontWeight: '600',
           whiteSpace: 'nowrap',
           letterSpacing: '0.1rem',
+          mt: { notebook: 0, mobile: '1rem' },
         }}
       >
         {title}

@@ -12,7 +12,6 @@ declare module '@mui/material/styles' {
     notebook: true;
     desktop: true;
     ultrawide: true;
-    infinity: true;
     containerMargin: true;
   }
 }
