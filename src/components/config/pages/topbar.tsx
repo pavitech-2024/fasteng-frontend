@@ -14,8 +14,10 @@ import {
   Tooltip,
   Menu,
   MenuItem,
+  ListItemIcon,
+  Divider,
 } from '@mui/material';
-import { LogoSmall } from '@/assets/';
+import { LogoSmall, SettingsIcon, LogoutIcon } from '@/assets/';
 import Languages from '../../molecules/buttons/languages';
 import { t } from 'i18next';
 
@@ -27,12 +29,13 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
   const { user, logout } = useAuth();
   const Router = useRouter();
 
-  const [openSettings, setOpenSettings] = useState<boolean>(false);
-
   const pathname = Router.pathname.toUpperCase().split('/');
   pathname.length > 3 && pathname.splice(2, 1);
 
   const PageTitle = (pathname.length > 2 ? pathname[2] : pathname[1]).toLowerCase();
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
 
   return (
     <>
@@ -86,83 +89,78 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
             >
               {pathname.length > 2 ? '| ' + t(`topbar.${pathname[2].toLowerCase()}`).toUpperCase() : ''}
             </Typography>
-            <Box
-              sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'absolute', right: 0 }}
-              onClick={() => setOpenSettings((prev) => !prev)}
-            >
-              <Typography
-                variant="subtitle1"
-                noWrap
+            <Tooltip title={t('settings')}>
+              <Box
                 sx={{
-                  mr: 2,
-                  display: { mobile: 'none', notebook: 'flex' },
-                  fontFamily: 'monospace',
-                  fontWeight: 700,
-                  letterSpacing: '.1rem',
-                  color: 'inherit',
-                  textDecoration: 'none',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  position: 'absolute',
+                  right: 0,
+                  transition: 'all .2s ease-in-out',
+                  ':hover': {
+                    cursor: 'pointer',
+                    opacity: 0.8,
+                  },
                 }}
+                onClick={(e) => setAnchorEl(e.currentTarget)}
               >
-                {user?.name}
-              </Typography>
-              <Tooltip title="Configurações">
+                <Typography
+                  variant="subtitle1"
+                  noWrap
+                  sx={{
+                    mr: 2,
+                    display: { mobile: 'none', notebook: 'flex' },
+                    fontFamily: 'monospace',
+                    fontWeight: 700,
+                    letterSpacing: '.1rem',
+                    color: 'inherit',
+                    textDecoration: 'none',
+                  }}
+                >
+                  {user?.name}
+                </Typography>
                 <IconButton sx={{ p: 0 }}>
                   <Avatar alt="user photo" src={user?.photo} />
                 </IconButton>
-              </Tooltip>
-
-              <Menu
-                sx={{ mt: '40px' }}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(openSettings)}
-                onClose={() => setOpenSettings(false)}
-              >
-                <MenuItem>
-                  <Box onClick={() => logout()}>Sair</Box>
-                </MenuItem>
-              </Menu>
-            </Box>
-            {/* <Box
-              sx={{
-                position: 'absolute',
-                right: 0,
-                top: 60,
-                display: 'grid',
-                gridTemplateColumns: '60px 2px 60px',
-                placeItems: 'center',
+              </Box>
+            </Tooltip>
+            <Menu
+              PaperProps={{
+                sx: {
+                  width: { mobile: '100%', tablet: '20rem' },
+                },
+              }}
+              anchorEl={anchorEl}
+              open={openMenu}
+              onClose={() => setAnchorEl(null)}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
               }}
             >
-              <Button
-                onClick={() => setLanguage('ENG')}
-                sx={
-                  language === 'ENG'
-                    ? { color: 'primary.main', width: 'fit-content' }
-                    : { color: 'secondary.main', width: 'fit-content' }
-                }
+              <MenuItem>
+                <Languages />
+              </MenuItem>
+              <Divider />
+              <MenuItem
+                onClick={() => {
+                  Router.push('/settings');
+                  setAnchorEl(null);
+                }}
               >
-                ENG
-              </Button>
-              <Typography sx={{ width: 'fit-content', color: 'secondary.main' }}> | </Typography>
-              <Button
-                onClick={() => setLanguage('BR')}
-                sx={
-                  language === 'BR'
-                    ? { color: 'primary.main', width: 'fit-content' }
-                    : { color: 'secondary.main', width: 'fit-content' }
-                }
-              >
-                PT-BR
-              </Button>
-            </Box> */}
-            <Languages right={10} top={65} />
+                <ListItemIcon>
+                  <SettingsIcon fontSize="small" />
+                </ListItemIcon>
+                {t('settings')}
+              </MenuItem>
+              <MenuItem onClick={() => logout()}>
+                <ListItemIcon>
+                  <LogoutIcon fontSize="small" />
+                </ListItemIcon>
+                {t('logout')}
+              </MenuItem>
+            </Menu>
           </Toolbar>
         </Container>
       </AppBar>
