@@ -4,5 +4,7 @@
   "topbar.soils": "Solos",
   "topbar.concrete": "Concreto",
   "topbar.samples": "Amostras",
-  "topbar.essays": "Ensaios"
+  "topbar.essays": "Ensaios",
+  "topbar.logout": "Sair",
+  "topbar.settings": "Configurações"
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import { FormControl, Input, InputAdornment, InputLabel, TextField } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
@@ -31,10 +31,6 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, sam
       observation: null,
     },
   });
-
-  useEffect(() => {
-    if (!openModal) setSample({ ...sample, type: null });
-  }, [openModal, sample]);
 
   const inputs = [
     { label: t('samples.name'), value: sample.name, key: 'name' },

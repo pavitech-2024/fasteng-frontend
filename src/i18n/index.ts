@@ -14,6 +14,9 @@ import topbarENG from './translations/topbar/en.json';
 //navbar
 import navbarPTBR from './translations/navbar/ptbr.json';
 import navbarENG from './translations/navbar/en.json';
+//settings
+import settingsPTBR from './translations/settings/ptbr.json';
+import settingsENG from './translations/settings/en.json';
 
 /** @templates */
 import materialsPTBR from './translations/templates/materials/ptbr.json';
@@ -47,6 +50,7 @@ i18n.use(initReactI18next).init({
         ...homePTBR,
         ...topbarPTBR,
         ...navbarPTBR,
+        ...settingsPTBR,
         /**@templates */
         ...materialsPTBR,
         /**@asphalt */
@@ -64,6 +68,7 @@ i18n.use(initReactI18next).init({
         ...homeENG,
         ...topbarENG,
         ...navbarENG,
+        ...settingsENG,
         /**@templates */
         ...materialsENG,
         /**@asphalt */
