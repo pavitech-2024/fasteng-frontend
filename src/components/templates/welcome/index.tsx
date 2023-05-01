@@ -30,7 +30,10 @@ const WelcomeTemplate = ({ title, app, buttonsData, stepperDescription }: Welcom
   return (
     <Box /* div principal da pagina */
       sx={{
-        display: 'flex',
+        display: {
+          mobile: 'block',
+          notebook: 'flex'
+        },
         flexDirection: {
           mobile: 'column',
           notebook: 'row',
@@ -46,8 +49,8 @@ const WelcomeTemplate = ({ title, app, buttonsData, stepperDescription }: Welcom
       <Box
         sx={{
           /* div da coluna da esquerda*/ width: {
-            notebook: '65%',
             mobile: '100%',
+            notebook: '65%',
           },
           textAlign: 'center',
         }}
@@ -127,7 +130,10 @@ const WelcomeTemplate = ({ title, app, buttonsData, stepperDescription }: Welcom
           <Link key={button.name} href={`/${app}/materiais`} style={{ textDecoration: 'none' }}>
             <Box
               sx={{
-                width: '300px',
+                width: {
+                  mobile: '90%',
+                  notebook: '300px',
+                },
                 height: '80px',
                 paddingBottom: '2rem',
                 ':hover': {
