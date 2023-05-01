@@ -171,7 +171,7 @@ export default function Navbar({ open, app }: NavbarProps) {
         alignItems: 'flex-start',
         pt: '2rem',
         width: `${open ? '225px' : '64px'}`,
-        bgcolor: 'secondary.light',
+        bgcolor: 'primaryTons.darkGray',
         height: 'calc(100vh - calc(2rem + 56px))',
         transition: 'width 0.5s',
         ':hover': {
@@ -225,8 +225,8 @@ export default function Navbar({ open, app }: NavbarProps) {
                     overflow: 'hidden',
                     position: 'relative',
                     borderRight: `${Router.pathname.includes(item.link) && '3px solid'}`,
-                    borderColor: 'primary.main',
-                    ':hover': { bgcolor: 'primary.main' },
+                    borderColor: 'primaryTons.darkerGray',
+                    ':hover': { bgcolor: 'secondaryTons.main' },
                   }}
                 >
                   {item.icon}
@@ -267,8 +267,8 @@ export default function Navbar({ open, app }: NavbarProps) {
                           overflow: 'hidden',
                           position: 'relative',
                           borderRight: `${Router.pathname.includes(item.link) && '3px solid'}`,
-                          borderColor: 'primary.main',
-                          ':hover': { bgcolor: 'primary.main' },
+                          borderColor: 'primaryTons.darkerGray',
+                          ':hover': { bgcolor: 'secondaryTons.main' },
                         }}
                       >
                         {subItem.icon}

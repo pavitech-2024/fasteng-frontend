@@ -2,16 +2,19 @@ import { NextPage } from 'next';
 import { useState } from 'react';
 import { t } from 'i18next';
 import Head from 'next/head';
+
 // files
 import { toast } from 'react-toastify';
 import useAuth from '@/contexts/auth';
-import { LogoWhite } from '@/assets';
+import { LogoWhite, LoginPhoto } from '@/assets';
 
 //custom styles
-import { LoginImage } from '@/components/styles/login';
+import { LoginImage, LoginBackgroundPhoto } from '@/components/styles/styleds/login';
+import { AboutButton } from '@/components/styles/muis/login';
+import { MainButton as Button } from '@/components/styles/global';
 
 //mui
-import { TextField, Button, Box, Container, Typography } from '@mui/material';
+import { TextField, Box, Container, Typography } from '@mui/material';
 import Languages from '../components/molecules/buttons/languages';
 
 const Login: NextPage = () => {
@@ -44,121 +47,139 @@ const Login: NextPage = () => {
           padding: 0,
         }}
       >
-        <Container
-          sx={{
-            bgcolor: 'secondary.main',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: { notebook: '100vh', mobile: '50vh' },
-          }}
-        >
-          <Box
+        <Box>
+          <LoginBackgroundPhoto alt="Background Image" src={LoginPhoto} />
+          <Container
             sx={{
-              display: 'grid',
-              gridTemplateColumns: '1fr',
-              gap: '1rem',
-              padding: '1rem',
-              borderRadius: '0.5rem',
-              width: 'calc(100% - 2rem)',
-              placeItems: 'center',
+              bgcolor: 'rgba(18, 18, 18, 0.85)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'absolute',
+              zIndex: '2',
+              top: '0',
+              height: { desktop: '100vh', mobile: '60vh' },
+              width: { desktop: '50vw', mobile: '100vw' },
+              padding: { desktop: '10vh 4vw', mobile: '5vh 2vw 10vh' },
             }}
           >
-            <LoginImage alt="Fasteng" src={LogoWhite} />
-            <Box sx={{ color: 'white', textAlign: 'center', fontSize: { notebook: '14px', mobile: '10px' } }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: { desktop: '18vh', tablet: '16vh' },
+                marginTop: { desktop: '-5vh', mobile: '0' },
+              }}
+            >
+              <Languages left={10} top={10} />
+              <LoginImage alt="Fasteng" src={LogoWhite} />
+            </Box>
+            <Box
+              sx={{
+                color: 'primaryTons.mainWhite',
+                display: 'flex',
+                alignItems: 'center',
+                textAlign: 'center',
+                fontSize: { ultrawide: '0.95rem', desktop: '0.85rem', notebook: '1rem', mobile: '0.75rem' },
+                height: { desktop: '16vh', mobile: '20vh' },
+                padding: '0 2vw',
+              }}
+            >
               {t('login.fasteng description')}
             </Box>
             <Box
-              mt={2.5}
-              gap={2}
-              width="fit-content"
               sx={{
-                display: 'grid',
-                placeItems: 'center',
-                gridTemplateColumns: '1fr 1fr',
+                display: 'flex',
+                justifyContent: 'space-around',
+                width: '100%',
+                padding: '2vh 0',
               }}
             >
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ width: { notebook: '120px', mobile: '80px' } }}
-                href="https://fastengapp.com.br/"
-              >
-                <Typography sx={{ fontSize: { notebook: '13px', mobile: '8px' } }}>{t('login.sign it')}</Typography>
-              </Button>
-              <Button variant="outlined" color="primary" sx={{ width: { notebook: '120px', mobile: '80px' } }}>
-                <Typography sx={{ fontSize: { notebook: '13px', mobile: '8px' } }}>{t('login.learn more')}</Typography>
-              </Button>
+              <Button text="Assine" linkTo="https://fastengapp.com.br/" />
+              <AboutButton />
             </Box>
-          </Box>
-        </Container>
+          </Container>
+        </Box>
         <Container
           sx={{
-            bgcolor: 'white',
+            bgcolor: 'primaryTons.mainWhite',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            height: { notebook: '100vh', mobile: '50vh' },
+            position: { desktop: 'static', mobile: 'absolute' },
+            height: { desktop: '100vh', mobile: '40vh' },
+            width: { desktop: '50vw', mobile: '100vw' },
+            bottom: '0',
           }}
         >
-          <Languages right={10} top={10} />
           <Box
             sx={{
-              display: 'grid',
-              gridTemplateColumns: '1fr',
-              gap: '1rem',
-              padding: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '1vh 0vw',
               borderRadius: '0.5rem',
-              width: 'calc(100% - 2rem)',
-              maxWidth: '600px',
+              width: { desktop: '30vw', mobile: '80vw' },
+              height: { desktop: '30vh', mobile: '30vh' },
+              bgcolor: 'primaryTons.background',
+              position: { desktop: 'static', mobile: 'absolute' },
+              zIndex: { desktop: 'auto', mobile: '3' },
+              bottom: { desktop: 'auto', mobile: '15vh' },
             }}
           >
-            <TextField
-              label="Email"
-              variant="outlined"
-              value={email}
-              placeholder="Digite seu email..."
-              fullWidth
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              InputLabelProps={{ shrink: true }}
-              color="primary"
-            />
-            <TextField
-              variant="outlined"
-              label={t('login.password')}
-              placeholder="Digite sua senha..."
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              InputLabelProps={{ shrink: true }}
-              color="primary"
-            />
-
             <Box
-              mt={2.5}
-              gap={2}
-              width="100%"
               sx={{
-                display: 'grid',
-                placeItems: 'center',
-                gridTemplateColumns: '1fr',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+                paddingTop: '2vh',
+                height: '70%',
               }}
             >
-              <Button
-                fullWidth
-                variant="contained"
-                disabled={password === '' || email === ''}
-                color="primary"
-                onClick={() => handleLogin()}
-              >
-                {t('login.enter')}
-              </Button>
-              <Button variant="text" color="primary" sx={{ width: 'fit-content' }}>
-                <p>{t('login.forget password')}</p>
-              </Button>
+              <TextField
+                label="Email"
+                variant="outlined"
+                value={email}
+                placeholder="Digite seu email..."
+                sx={{
+                  width: { desktop: '26vw', mobile: '70vw' },
+                }}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <TextField
+                variant="outlined"
+                label="Password"
+                placeholder="Digite sua senha..."
+                type="password"
+                value={password}
+                sx={{
+                  width: { desktop: '26vw', mobile: '70vw' },
+                }}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </Box>
+
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                height: '30%',
+                width: '100%',
+              }}
+            >
+              <Button text="Entrar" disabled={password === '' || email === ''} handleClick={() => handleLogin()} />
+              <Typography sx={{ color: 'secondaryTons.main', fontSize: { desktop: '1rem', mobile: '0.85rem' } }}>
+                Esqueceu sua senha?
+              </Typography>
             </Box>
           </Box>
           <Box
