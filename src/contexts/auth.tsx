@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { setCookie, parseCookies, destroyCookie } from 'nookies';
 import Api from '@/api';
 import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
 
 type User = {
   _id: string;
@@ -38,7 +38,7 @@ export function AuthProvider({ children }) {
           await refreshLogin();
         }
       } catch (error) {
-        throw error;
+        throw console.error(error);
       }
     }
     loadUser();
@@ -50,8 +50,8 @@ export function AuthProvider({ children }) {
 
       const { token, user, name, planName } = response.data;
 
-      setCookie(undefined, 'fasteng.token', token, { maxAge: 60 * 60 * 10 }); // 10 hours
-      setCookie(undefined, 'fasteng._id', user._id, { maxAge: 60 * 60 * 10 }); // 10 hours
+      Cookies.set('fasteng.token', token, { expires: 0.416 });
+      Cookies.set('fasteng._id', user._id, { expires: 0.416 });
 
       // set token to axios headers
       Api.defaults.headers.Authorization = `Bearer ${token}`;
@@ -65,14 +65,14 @@ export function AuthProvider({ children }) {
 
   async function refreshLogin() {
     try {
-      const { 'fasteng.token': token, 'fasteng._id': _id } = parseCookies();
+      const { 'fasteng.token': token, 'fasteng._id': _id } = Cookies.get();
 
       if (token && _id && !isAuthenticated) {
         const response = await Api.post('auth/refresh-login', { token, _id });
         const { user, name, planName, email } = response.data;
 
-        setCookie(undefined, 'fasteng.token', token, { maxAge: 60 * 60 * 10 }); // 10 hoursrs
-        setCookie(undefined, 'fasteng._id', user._id, { maxAge: 60 * 60 * 10 }); // 10 hours
+        Cookies.set('fasteng.token', token, { expires: 0.416 });
+        Cookies.set('fasteng._id', user._id, { expires: 0.416 });
 
         // set token to axios headers
         Api.defaults.headers.Authorization = `Bearer ${response.data.token}`;
@@ -87,11 +87,11 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
-    await destroyCookie(undefined, 'fasteng.token');
-    await destroyCookie(undefined, 'fasteng._id');
+    Cookies.remove('fasteng.token');
+    Cookies.remove('fasteng._id');
 
-    await Router.push('/');
-    setUser(null);
+    await setUser(null);
+    Router.push('/');
   }
 
   return (

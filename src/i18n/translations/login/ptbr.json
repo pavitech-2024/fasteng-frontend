@@ -1,0 +1,11 @@
+{
+  "login.fasteng description": "Usar o FastEng é simples! Primeiramente, cadastre os materiais que serão usados no seu projeto de dosagem. Assim você pode criar um banco de dados para catologar seus materiais e suas informações. Calcule resultados de ensaios de caracterização que serão vinculados ao seus materiais e confira se estão adequados às especificações técnicas. Por fim, inicie seu projeto de dosagem. O FastEng te acompanha até a determinação do teor ótimo de ligante asfáltico.",
+  "login.sign it": "Assine",
+  "login.learn more": "Saiba mais",
+  "login.password": "Senha",
+  "login.enter": "Entrar",
+  "login.forget password": "Esqueceu a senha?",
+  "login.toast loading": "Verificando usuário...",
+  "login.toast error": "Email ou senha inválidos!",
+  "login.toast success": "Login efetuado com sucesso!"
+}

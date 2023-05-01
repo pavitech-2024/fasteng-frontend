@@ -31,7 +31,6 @@ export const theme = createTheme({
       desktop: 1025,
       ultrawide: 1920,
       containerMargin: 2016,
-      infinity: 2048,
     },
   },
 

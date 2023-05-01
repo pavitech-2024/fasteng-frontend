@@ -1,5 +1,6 @@
 import { NextPage } from 'next';
 import { useState } from 'react';
+import { t } from 'i18next';
 import Head from 'next/head';
 
 // files
@@ -14,6 +15,7 @@ import { MainButton as Button } from '@/components/styles/global';
 
 //mui
 import { TextField, Box, Container, Typography } from '@mui/material';
+import Languages from '../components/molecules/buttons/languages';
 
 const Login: NextPage = () => {
   const { signIn } = useAuth();
@@ -24,9 +26,9 @@ const Login: NextPage = () => {
   const handleLogin = async () => {
     try {
       toast.promise(async () => await signIn(email, password), {
-        pending: 'Verificando usuário...',
-        success: 'Login efetuado com sucesso!',
-        error: 'Login inválido!',
+        pending: t('login.toast loading'),
+        success: t('login.toast success'),
+        error: t('login.toast error'),
       });
     } catch (error) {}
   };
@@ -71,6 +73,7 @@ const Login: NextPage = () => {
                 marginTop: { desktop: '-5vh', mobile: '0' },
               }}
             >
+              <Languages left={10} top={10} />
               <LoginImage alt="Fasteng" src={LogoWhite} />
             </Box>
             <Box
@@ -84,11 +87,7 @@ const Login: NextPage = () => {
                 padding: '0 2vw',
               }}
             >
-              Usar o FastEng é simples! Primeiramente, cadastre os materiais que serão usados no seu projeto de dosagem.
-              Assim você pode criar um banco de dados para catologar seus materiais e suas informações. Calcule
-              resultados de ensaios de caracterização que serão vinculados ao seus materiais e confira se estão
-              adequados às especificações técnicas. Por fim, inicie seu projeto de dosagem. O FastEng te acompanha até a
-              determinação do teor ótimo de ligante asfáltico.
+              {t('login.fasteng description')}
             </Box>
             <Box
               sx={{

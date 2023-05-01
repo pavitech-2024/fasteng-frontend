@@ -1,6 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { t } from 'i18next';
 import {
   HomeIcon,
   AddIcon,
@@ -34,47 +35,53 @@ export default function Navbar({ open, app }: NavbarProps) {
   const IconStyle = { color: 'white', fontSize: '1.5rem' };
 
   const Items: ItemProps[] = [
-    { name: 'Início', link: '/home', app: 'common', icon: <HomeIcon sx={IconStyle} />, type: 'single' },
+    { name: t('navbar.home'), link: '/home', app: 'common', icon: <HomeIcon sx={IconStyle} />, type: 'single' },
     //asphalt
     {
-      name: 'Materiais',
+      name: t('navbar.materials'),
       link: '/asphalt/materials',
       icon: <MaterialsIcon sx={IconStyle} />,
       app: 'asphalt',
       type: 'single',
     },
-    { name: 'Ensaios', link: '/asphalt/essays', app: 'asphalt', icon: <EssayIcon sx={IconStyle} />, type: 'single' },
     {
-      name: 'Dosagem Marshall',
+      name: t('navbar.essays'),
+      link: '/asphalt/essays',
+      app: 'asphalt',
+      icon: <EssayIcon sx={IconStyle} />,
+      type: 'single',
+    },
+    {
+      name: t('navbar.marshall'),
       link: '/asphalt/dosage/marshall',
       app: 'asphalt',
       icon: <MarshallIcon sx={IconStyle} />,
       type: 'double',
       sub: [
-        { name: 'Criar', link: '/dosage/marshall/new', icon: <AddIcon sx={IconStyle} /> },
-        { name: 'Consultar', link: '/dosage/marshall/search', icon: <SearchIcon sx={IconStyle} /> },
+        { name: t('navbar.new'), link: '/dosage/marshall/new', icon: <AddIcon sx={IconStyle} /> },
+        { name: t('navbar.consult'), link: '/dosage/marshall/consult', icon: <SearchIcon sx={IconStyle} /> },
       ],
     },
     {
-      name: 'Dosagem Superpave',
+      name: t('navbar.superpave'),
       link: '/asphalt/dosage/superpave',
       app: 'asphalt',
       icon: <SuperpaveIcon sx={IconStyle} />,
       type: 'double',
       sub: [
-        { name: 'Criar', link: '/dosage/superpave/new', icon: <AddIcon sx={IconStyle} /> },
-        { name: 'Consultar', link: '/dosage/superpave/search', icon: <SearchIcon sx={IconStyle} /> },
+        { name: t('navbar.new'), link: '/dosage/superpave/new', icon: <AddIcon sx={IconStyle} /> },
+        { name: t('navbar.consult'), link: '/dosage/superpave/consult', icon: <SearchIcon sx={IconStyle} /> },
       ],
     },
     {
-      name: 'Normas',
+      name: t('navbar.standards'),
       link: '/asphalt/standards',
       app: 'asphalt',
       icon: <StandartsIcon sx={IconStyle} />,
       type: 'single',
     },
     {
-      name: 'Biblioteca',
+      name: t('navbar.library'),
       link: '/asphalt/library',
       app: 'asphalt',
       icon: <LibraryIcon sx={IconStyle} />,
@@ -82,16 +89,28 @@ export default function Navbar({ open, app }: NavbarProps) {
     },
     //soils
     {
-      name: 'Amostras',
-      link: '/soils/materials',
+      name: t('navbar.samples'),
+      link: '/soils/samples',
       app: 'soils',
       icon: <MaterialsIcon sx={IconStyle} />,
       type: 'single',
     },
-    { name: 'Ensaios', link: '/soils/essays', app: 'soils', icon: <EssayIcon sx={IconStyle} />, type: 'single' },
-    { name: 'Normas', link: '/soils/standards', app: 'soils', icon: <StandartsIcon sx={IconStyle} />, type: 'single' },
     {
-      name: 'Biblioteca',
+      name: t('navbar.essays'),
+      link: '/soils/essays',
+      app: 'soils',
+      icon: <EssayIcon sx={IconStyle} />,
+      type: 'single',
+    },
+    {
+      name: t('navbar.standards'),
+      link: '/soils/standards',
+      app: 'soils',
+      icon: <StandartsIcon sx={IconStyle} />,
+      type: 'single',
+    },
+    {
+      name: t('navbar.library'),
       link: '/soils/library',
       app: 'soils',
       icon: <LibraryIcon sx={IconStyle} />,
@@ -100,46 +119,53 @@ export default function Navbar({ open, app }: NavbarProps) {
 
     //concrete
     {
-      name: 'Materiais',
+      name: t('navbar.materials'),
       link: '/concrete/materials',
       app: 'concrete',
       icon: <MaterialsIcon sx={IconStyle} />,
       type: 'single',
     },
-    { name: 'Ensaios', link: '/concrete/essays', app: 'concrete', icon: <EssayIcon sx={IconStyle} />, type: 'single' },
     {
-      name: 'Dosagem ABCP',
+      name: t('navbar.essays'),
+      link: '/concrete/essays',
+      app: 'concrete',
+      icon: <EssayIcon sx={IconStyle} />,
+      type: 'single',
+    },
+    {
+      name: t('navbar.abcp'),
       link: '/concrete/dosage/abcp',
       app: 'concrete',
       icon: <AbcpIcon sx={IconStyle} />,
       type: 'double',
       sub: [
-        { name: 'Criar', link: '/concrete/dosage/abcp/new', icon: <AddIcon sx={IconStyle} /> },
-        { name: 'Consultar', link: '/concrete/dosage/abcp/search', icon: <SearchIcon sx={IconStyle} /> },
+        { name: t('navbar.new'), link: '/concrete/dosage/abcp/new', icon: <AddIcon sx={IconStyle} /> },
+        { name: t('navbar.consult'), link: '/concrete/dosage/abcp/consult', icon: <SearchIcon sx={IconStyle} /> },
       ],
     },
     {
-      name: 'Normas',
+      name: t('navbar.standards'),
       link: '/concrete/standards',
       app: 'concrete',
       icon: <StandartsIcon sx={IconStyle} />,
       type: 'single',
     },
     {
-      name: 'Biblioteca',
+      name: t('navbar.library'),
       link: '/concrete/library',
       app: 'concrete',
       icon: <LibraryIcon sx={IconStyle} />,
       type: 'single',
     },
 
-    { name: 'Reportar', link: '/report', app: 'common', icon: <ReportIcon sx={IconStyle} />, type: 'single' },
+    { name: t('navbar.report'), link: '/report', app: 'common', icon: <ReportIcon sx={IconStyle} />, type: 'single' },
   ].filter((item) => item.app === Router.pathname.split('/')[1] || item.app === 'common');
 
   return (
     <Box
       sx={{
         position: 'absolute',
+        zIndex: 99,
         display: { mobile: `${open ? 'grid' : 'none'}`, tablet: `${open ? 'grid' : 'none'}`, notebook: 'grid' },
         gridTemplateRows: `repeat(${Items.length}, minmax(48px, max-content))`,
         alignItems: 'flex-start',
@@ -178,9 +204,9 @@ export default function Navbar({ open, app }: NavbarProps) {
                 href={item.link}
                 style={{
                   textDecoration: 'none',
-                  position: item.name === 'Reportar' ? 'absolute' : 'relative',
-                  bottom: item.name === 'Reportar' && '0',
-                  width: item.name === 'Reportar' && '100%',
+                  position: item.name === t('navbar.report') ? 'absolute' : 'relative',
+                  bottom: item.name === t('navbar.report') && '0',
+                  width: item.name === t('navbar.report') && '100%',
                 }}
               >
                 <Box
