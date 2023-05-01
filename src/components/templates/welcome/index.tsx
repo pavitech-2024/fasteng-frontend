@@ -64,55 +64,55 @@ const WelcomeTemplate = ({ title, app, buttonsData, stepperDescription }: Welcom
             {title}
           </Typography>
           <Box
-          /* div da tabela como funciona */ sx={{
-            bgcolor: '#fff',
-            borderRadius: '10px',
-            width: {
-              mobile: '90%',
-              notebook: '65%'
-            },
-            paddingBottom: '2rem',
-            margin: '1rem auto'
-          }}
-        >
-          <Typography
-            variant="h6"
-            sx={{
-              marginBottom: '1.5rem',
-              paddingTop: '1rem',
+            /* div da tabela como funciona */ sx={{
+              bgcolor: '#fff',
+              borderRadius: '10px',
+              width: {
+                mobile: '90%',
+                notebook: '65%',
+              },
+              paddingBottom: '2rem',
+              margin: '1rem auto',
             }}
           >
-            Como funciona?
-          </Typography>
-          <Stepper activeStep={0} alternativeLabel sx={{}}>
-            {stepperDescription.map((stepper: StepperDescriptions) => (
-              <Step key={stepper.name}>
-                <StepLabel>{stepper.description}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          <Box
-            sx={{
-              textAlign: 'left',
-              marginLeft: '5%',
-              paddingTop: '10%',
-            }}
-          >
-            {buttonsData.map((button: ButtonData) => (
-              <Typography
-                color="primary"
-                sx={{
-                  paddingBottom: '2rem',
-                  span: { color: '#000' },
-                  fontSize: '20px',
-                }}
-                key={button.name}
-              >
-                {button.name}:<span>* {button.description} *</span>
-              </Typography>
-            ))}
+            <Typography
+              variant="h6"
+              sx={{
+                marginBottom: '1.5rem',
+                paddingTop: '1rem',
+              }}
+            >
+              Como funciona?
+            </Typography>
+            <Stepper activeStep={0} alternativeLabel sx={{}}>
+              {stepperDescription.map((stepper: StepperDescriptions) => (
+                <Step key={stepper.name}>
+                  <StepLabel>{stepper.description}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            <Box
+              sx={{
+                textAlign: 'left',
+                marginLeft: '5%',
+                paddingTop: '10%',
+              }}
+            >
+              {buttonsData.map((button: ButtonData) => (
+                <Typography
+                  color="primary"
+                  sx={{
+                    paddingBottom: '2rem',
+                    span: { color: '#000' },
+                    fontSize: '20px',
+                  }}
+                  key={button.name}
+                >
+                  {button.name}:<span>* {button.description} *</span>
+                </Typography>
+              ))}
+            </Box>
           </Box>
-        </Box>
         </Box>
       </Box>
       <Box
@@ -134,8 +134,8 @@ const WelcomeTemplate = ({ title, app, buttonsData, stepperDescription }: Welcom
                   cursor: 'pointer',
                 },
                 margin: {
-                  mobile: '0 auto'
-                }
+                  mobile: '0 auto',
+                },
               }}
             >
               <Box

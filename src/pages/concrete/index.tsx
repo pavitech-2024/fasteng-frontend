@@ -39,19 +39,27 @@ const Concrete: NextPage = () => {
   const stepperDescription: StepperDescriptions[] = [
     {
       name: 'Cadastrar',
-      description: 'Cadastre um material'
+      description: 'Cadastre um material',
     },
     {
       name: 'Registrar',
-      description: 'Registre ensaios com o material'
+      description: 'Registre ensaios com o material',
     },
     {
       name: 'Relatorios',
-      description: 'Gere relatórios sobre os ensaios'
-    }
+      description: 'Gere relatórios sobre os ensaios',
+    },
   ];
 
-  return <WelcomeTemplate title="Concreto" stepperDescription={stepperDescription} buttonsData={buttonsData} icon={ConcreteIcon} app="concrete" />;
+  return (
+    <WelcomeTemplate
+      title="Concreto"
+      stepperDescription={stepperDescription}
+      buttonsData={buttonsData}
+      icon={ConcreteIcon}
+      app="concrete"
+    />
+  );
 };
 
 export default Concrete;

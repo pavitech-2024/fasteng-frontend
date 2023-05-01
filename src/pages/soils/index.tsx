@@ -39,19 +39,27 @@ const Soils: NextPage = () => {
   const stepperDescription: StepperDescriptions[] = [
     {
       name: 'Cadastrar',
-      description: 'Cadastre um material'
+      description: 'Cadastre um material',
     },
     {
       name: 'Registrar',
-      description: 'Registre ensaios com o material'
+      description: 'Registre ensaios com o material',
     },
     {
       name: 'Relatorios',
-      description: 'Gere relatórios sobre os ensaios'
-    }
+      description: 'Gere relatórios sobre os ensaios',
+    },
   ];
 
-  return <WelcomeTemplate title="Solos" stepperDescription={stepperDescription} buttonsData={buttonsData} icon={SoilsIcon} app="soils" />;
+  return (
+    <WelcomeTemplate
+      title="Solos"
+      stepperDescription={stepperDescription}
+      buttonsData={buttonsData}
+      icon={SoilsIcon}
+      app="soils"
+    />
+  );
 };
 
 export default Soils;
