@@ -1,0 +1,22 @@
+{
+  "samples.title": "Registered Samples",
+  "samples.all": "All",
+  "samples.inorganicSoil": "Inorganic Soil",
+  "samples.organicSoil": "Organic Soil",
+  "samples.pavementLayer": "Paviment Layer",
+
+  "samples.newSample": "New Sample",
+  "samples.cancel": "Cancel",
+  "samples.register": "Register",
+  "samples.name": "Name",
+  "samples.type": "Type",
+  "samples.construction": "Construction",
+  "samples.snippet": "Snippet",
+  "samples.exd": "E-X-D Side",
+  "samples.layer": "Layer",
+  "samples.provenance": "Provenance",
+  "samples.stake": "Stake",
+  "samples.depth": "Depth",
+  "samples.collectionDate": "Collection Date",
+  "samples.comments": "Comments"
+}

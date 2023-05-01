@@ -6,26 +6,16 @@ import { useEffect, useState } from 'react';
 import samplesService from '@/services/soils/samplesService';
 import useAuth from '@/contexts/auth';
 import NewSampleModal from '../../../components/templates/modals/newSample';
+import { t } from 'i18next';
 
-export const getStaticProps = async () => {
+const Samples: NextPage = () => {
   const types: DropDownOption[] = [
-    { label: 'Todos', value: '' },
-    { label: 'Solo Inorgânico', value: 'inorganicSoil' },
-    { label: 'Solo Orgânico', value: 'organicSoil' },
-    { label: 'Camada de Pavimento', value: 'pavementLayer' },
+    { label: t('samples.all'), value: '' },
+    { label: t('samples.inorganicSoil'), value: 'inorganicSoil' },
+    { label: t('samples.organicSoil'), value: 'organicSoil' },
+    { label: t('samples.pavementLayer'), value: 'pavementLayer' },
   ];
-  return {
-    props: {
-      types,
-    },
-    revalidate: 60 * 60 * 24, // 24 hours
-  };
-};
-interface SamplesProps {
-  types: DropDownOption[];
-}
 
-const Samples: NextPage = ({ types }: SamplesProps) => {
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
 
@@ -34,7 +24,6 @@ const Samples: NextPage = ({ types }: SamplesProps) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    console.log('renderizou');
     samplesService
       .getSamplesByUserId(user._id)
       .then((response) => {
@@ -78,7 +67,7 @@ const Samples: NextPage = ({ types }: SamplesProps) => {
         <MaterialsTemplate
           materials={samples}
           types={types}
-          title="Amostras Cadastradas"
+          title={t('samples.title')}
           handleOpenModal={handleOpenModal}
           handleDeleteMaterial={handleDeleteSample}
           modal={

@@ -6,6 +6,7 @@ import { SampleData, Sample } from '@/interfaces/soils';
 import ModalBase from '../../molecules/modals/modal';
 import { toast } from 'react-toastify';
 import samplesService from '@/services/soils/samplesService';
+import { t } from 'i18next';
 
 interface NewSampleModalProps {
   openModal: boolean;
@@ -36,22 +37,22 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, sam
   }, [openModal, sample]);
 
   const inputs = [
-    { label: 'Nome', value: sample.name, key: 'name' },
-    { label: 'Tipo', value: sample.type, key: 'type' },
-    { label: 'Obra', value: sample.description.construction, key: 'construction' },
-    { label: 'Trecho', value: sample.description.snippet, key: 'snippet' },
-    { label: 'Lado E-X-D', value: sample.description.exd, key: 'exd' },
-    { label: 'Camada', value: sample.description.layer, key: 'layer' },
-    { label: 'Procedência', value: sample.description.provenance, key: 'provenance' },
-    { label: 'Estaca', value: sample.description.stake, key: 'stake' },
-    { label: 'Profundidade', value: sample.description.depth, key: 'depth' },
-    { label: 'Data da coleta', value: sample.description.collectionDate, key: 'collectionDate' },
+    { label: t('samples.name'), value: sample.name, key: 'name' },
+    { label: t('samples.type'), value: sample.type, key: 'type' },
+    { label: t('samples.construction'), value: sample.description.construction, key: 'construction' },
+    { label: t('samples.snippet'), value: sample.description.snippet, key: 'snippet' },
+    { label: t('samples.exd'), value: sample.description.exd, key: 'exd' },
+    { label: t('samples.layer'), value: sample.description.layer, key: 'layer' },
+    { label: t('samples.provenance'), value: sample.description.provenance, key: 'provenance' },
+    { label: t('samples.stake'), value: sample.description.stake, key: 'stake' },
+    { label: t('samples.depth'), value: sample.description.depth, key: 'depth' },
+    { label: t('samples.collectionDate'), value: sample.description.collectionDate, key: 'collectionDate' },
   ];
 
   const types: DropDownOption[] = [
-    { label: 'Solo Inorgânico', value: 'inorganicSoil' },
-    { label: 'Solo Orgânico', value: 'organicSoil' },
-    { label: 'Camada de Pavimento', value: 'pavementLayer' },
+    { label: t('samples.inorganicSoil'), value: 'inorganicSoil' },
+    { label: t('samples.organicSoil'), value: 'organicSoil' },
+    { label: t('samples.pavementLayer'), value: 'pavementLayer' },
   ];
 
   const changeSample = (key: string, value: string) => {
@@ -91,10 +92,10 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, sam
 
   return (
     <ModalBase
-      title="Cadastramento"
+      title={t('samples.newSample')}
       open={openModal}
-      leftButtonTitle="Cancelar"
-      rightButtonTitle="Cadastrar"
+      leftButtonTitle={t('samples.cancel')}
+      rightButtonTitle={t('samples.register')}
       size="medium"
       onSubmit={() => handleSubmitNewSample()}
       onCancel={handleCloseModal}
@@ -121,7 +122,7 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, sam
                   <DropDown
                     key={input.key}
                     sx={{ minWidth: '120px', bgcolor: 'white' }}
-                    label="Tipo"
+                    label={t('samples.type')}
                     variant="standard"
                     size="medium"
                     options={types}
@@ -130,7 +131,7 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, sam
                 )}
                 {input.key === 'depth' && (
                   <FormControl variant="standard" key={input.key}>
-                    <InputLabel htmlFor="outlined-adornment-depth">Profundidade</InputLabel>
+                    <InputLabel htmlFor="outlined-adornment-depth">{t('samples.depth')}</InputLabel>
                     <Input
                       id="outlined-adornment-depth"
                       endAdornment={<InputAdornment position="end">cm</InputAdornment>}
@@ -157,7 +158,7 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, sam
         </Box>
         <TextField
           sx={{ mt: '.8rem' }}
-          label="Observação"
+          label={t('samples.comments')}
           variant="standard"
           value={sample.description.observation}
           onChange={(e) => changeSample('observation', e.target.value)}

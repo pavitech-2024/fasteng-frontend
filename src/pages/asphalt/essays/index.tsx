@@ -24,173 +24,159 @@ import {
   SofteningPointIcon,
   SpecifyMassIcon,
 } from '@/assets';
+import { t } from 'i18next';
 
-export const getStaticProps = async () => {
+const AsphaltEssays: NextPage = () => {
+  const filterOptions: FilterOption[] = [
+    { key: 'all', title: t('asphalt.essays.filter.all'), isSelected: true },
+    { key: 'aggregates', title: t('asphalt.essays.filter.aggregates'), isSelected: false },
+    { key: 'asphaltMix', title: t('asphalt.essays.filter.asphaltMix'), isSelected: false },
+    { key: 'asphaltBinder', title: t('asphalt.essays.filter.asphaltBinder'), isSelected: false },
+  ];
+
   const essays: Essay[] = [
     {
-      title: 'Abrasão "Los Angeles"',
+      title: t('asphalt.essays.abrasion'),
       icon: AbrasionIcon,
       key: 'abrasion',
       link: '/asphalt/essays/abrasion',
       type: 'aggregates',
     },
     {
-      title: 'Adesividade',
+      title: t('asphalt.essays.adhesiveness'),
       icon: AdhesivenessIcon,
       key: 'adhesiveness',
       link: '/asphalt/essays/adhesiveness',
       type: 'aggregates',
     },
     {
-      title: 'Ductilidade',
+      title: t('asphalt.essays.ductility'),
       icon: DuctilityIcon,
       key: 'ductility',
       link: '/asphalt/essays/ductility',
       type: 'asphaltBinder',
     },
     {
-      title: 'Ensaio de Angularidade',
+      title: t('asphalt.essays.angularity'),
       icon: AngularityIcon,
       key: 'angularity',
       link: '/asphalt/essays/angularity',
       type: 'aggregates',
     },
     {
-      title: 'Ensaio de Penetração',
+      title: t('asphalt.essays.penetration'),
       icon: PenetrationIcon,
       key: 'penetration',
       link: '/asphalt/essays/penetration',
       type: 'asphaltBinder',
     },
     {
-      title: 'Envelhecimento à Curto Prazo - RTFO',
+      title: t('asphalt.essays.rtfo'),
       icon: RtfoIcon,
       key: 'rtfo',
       link: '/asphalt/essays/rtfo',
       type: 'asphaltBinder',
     },
     {
-      title: 'Equivalente Areia',
+      title: t('asphalt.essays.sandEquivalent'),
       icon: SandEquivalentIcon,
       key: 'sandEquivalent',
       link: '/asphalt/essays/sand-equivalent',
       type: 'aggregates',
     },
     {
-      title: 'Granulometria por Peneiramento',
+      title: t('asphalt.essays.granulometryAsphalt'),
       icon: GranulometryIcon,
-      key: 'granulometry-asphalt',
+      key: 'granulometryAsphalt',
       link: '/asphalt/essays/granulometry',
       type: 'aggregates',
     },
     {
-      title: 'Índice de Forma',
+      title: t('asphalt.essays.shapeIndex'),
       icon: ShapeIndexIcon,
       key: 'shapeIndex',
       link: '/asphalt/essays/shape-index',
       type: 'aggregates',
     },
     {
-      title: 'Massa Específica',
+      title: t('asphalt.essays.specifyMass'),
       icon: SpecifyMassIcon,
       key: 'specifyMass',
       link: '/asphalt/essays/specify-mass',
       type: 'aggregates',
     },
     {
-      title: 'Partículas Alongadas e Achatadas',
+      title: t('asphalt.essays.elongatedParticles'),
       icon: ElongatedParticlesIcon,
       key: 'elongatedParticles',
       link: '/asphalt/essays/elongated-particles',
       type: 'aggregates',
     },
     {
-      title: 'Ponto de Amolecimento',
+      title: t('asphalt.essays.softeningPoint'),
       icon: SofteningPointIcon,
       key: 'softeningPoint',
       link: '/asphalt/essays/softening-point',
       type: 'asphaltBinder',
     },
     {
-      title: 'Ponto de Fulgor',
+      title: t('asphalt.essays.flashPoint'),
       icon: FlashPointIcon,
       key: 'flashPoint',
       link: '/asphalt/essays/flash-point',
       type: 'asphaltBinder',
     },
     {
-      title: 'Recuperação Elástica',
+      title: t('asphalt.essays.elasticRecovery'),
       icon: ElasticRecoveryIcon,
       key: 'elasticRecovery',
       link: '/asphalt/essays/elastic-recovery',
       type: 'asphaltBinder',
     },
     {
-      title: 'Viscosidade Rotacional',
+      title: t('asphalt.essays.rotational'),
       icon: RotationalIcon,
       key: 'rotational',
       link: '/asphalt/essays/rotational',
       type: 'asphaltBinder',
     },
     {
-      title: 'Viscosidade Saybolt-Furol',
+      title: t('asphalt.essays.saybolt'),
       icon: SayboltFurolIcon,
       key: 'saybolt',
       link: '/asphalt/essays/saybolt-furol',
       type: 'asphaltBinder',
     },
     {
-      title: 'Resistência à Tração por Compressão Diametral - RT',
+      title: t('asphalt.essays.rtcd'),
       icon: RtcdIcon,
       key: 'rtcd',
       link: '/asphalt/essays/rtcd',
       type: 'asphaltMix',
     },
     {
-      title: 'Falling Weight Deflectometer - FWD',
+      title: t('asphalt.essays.fwd'),
       icon: FwdIcon,
       key: 'fwd',
       link: '/asphalt/essays/fwd',
       type: 'asphaltMix',
     },
     {
-      title: 'Determinação do Dano por Umidade Induzida',
+      title: t('asphalt.essays.ddui'),
       icon: DduiIcon,
       key: 'ddui',
       link: '/asphalt/essays/ddui',
       type: 'asphaltMix',
     },
     {
-      title: 'IGG',
+      title: t('asphalt.essays.igg'),
       icon: IggIcon,
       key: 'igg',
       link: '/asphalt/essays/igg',
       type: 'asphaltMix',
     },
   ];
-
-  const filterOptions: FilterOption[] = [
-    { key: 'all', title: 'Todos', isSelected: true },
-    { key: 'aggregates', title: 'Agregados', isSelected: false },
-    { key: 'asphaltMix', title: 'Misturas Asfálticas', isSelected: false },
-    { key: 'asphaltBinder', title: 'Ligante Asfáltico', isSelected: false },
-  ];
-
-  return {
-    props: {
-      essays,
-      filterOptions,
-    },
-  };
+  return <EssaysTemplate essays={essays} filterOptions={filterOptions} />;
 };
-
-interface AsphaltEssaysProps {
-  essays: Essay[];
-  filterOptions: FilterOption[];
-}
-
-const AsphaltEssays: NextPage = ({ essays, filterOptions }: AsphaltEssaysProps) => (
-  <EssaysTemplate essays={essays} filterOptions={filterOptions} />
-);
 
 export default AsphaltEssays;

@@ -3,23 +3,24 @@ import { useRouter } from 'next/router';
 import { Container, Box, Card, Typography } from '@mui/material';
 import { LogoBlack, AsphaltIcon, SoilsIcon, ConcreteIcon } from '@/assets';
 import { LoginImage } from '../components/styles/login';
+import { t } from 'i18next';
 
 const Home: NextPage = () => {
   const Router = useRouter();
 
   const Aplications = [
     {
-      name: 'Pavimentação',
+      name: t('home.asphalt'),
       icon: <AsphaltIcon width="100%" height="100%" />,
       link: '/asphalt',
     },
     {
-      name: 'Mecânica dos Solos',
+      name: t('home.soils'),
       icon: <SoilsIcon width="100%" height="100%" />,
       link: '/soils',
     },
     {
-      name: 'Cimento Portland',
+      name: t('home.concrete'),
       icon: <ConcreteIcon width="100%" height="100%" />,
       link: '/concrete',
     },
@@ -29,7 +30,10 @@ const Home: NextPage = () => {
     <Container
       sx={{
         display: 'flex',
-        paddingTop: '3rem',
+        paddingTop: {
+          mobile: '1.5rem',
+          notebook: '3rem',
+        },
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
@@ -47,7 +51,7 @@ const Home: NextPage = () => {
           component="p"
           sx={{ padding: '.3rem', fontSize: { notebook: '15px', mobile: '10px' }, fontWeight: 700, color: '#6e6d6d' }}
         >
-          BEM-VINDO AO
+          {t('home.welcome to')}
         </Box>
         <LoginImage alt="Fasteng" src={LogoBlack} />
         <Box
@@ -56,6 +60,7 @@ const Home: NextPage = () => {
             padding: '.6rem',
             fontWeight: 700,
             color: '#6e6d6d',
+            height: '1.8rem',
             maxWidth: {
               mobile: '224px',
               ultrawide: '310px',
@@ -64,7 +69,7 @@ const Home: NextPage = () => {
             fontSize: { notebook: '15px', mobile: '8px' },
           }}
         >
-          O CAMINHO MAIS RÁPIDO PARA A ENGENHARIA
+          {t('home.fast way to')}
         </Box>
         <Box
           component="p"
@@ -76,11 +81,10 @@ const Home: NextPage = () => {
             textAlign: 'center',
             maxWidth: '930px',
             marginTop: '1rem',
+            height: '2.3rem',
           }}
         >
-          O FASTENG é o seu auxiliar técnico em projetos de Engenharia Civil. Atualmente em nosso escopo contamos com
-          aplicações em projetos geotécnicos de Pavimentação Asfáltica, Mecânica dos Solos, e Concreto Convencional.
-          Qual aplicação você deseja utilizar agora?
+          {t('home.description')}
         </Box>
       </Box>
       <Box

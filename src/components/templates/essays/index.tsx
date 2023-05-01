@@ -1,8 +1,9 @@
 import Header from '@/components/organisms/header';
 import { CardContainer, Card } from '@/components/atoms/containers/card';
 import Filter, { FilterOption } from '@/components/molecules/buttons/filter';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Essay } from '@/interfaces/common';
+import { useTranslation } from 'react-i18next';
 
 interface EssaysTemplateProps {
   essays: Essay[];
@@ -11,7 +12,13 @@ interface EssaysTemplateProps {
 
 export const EssaysTemplate = ({ essays, filterOptions }: EssaysTemplateProps) => {
   const [filters] = useState<string[]>(['all']);
-  const [essaysFiltered, setEssaysFiltered] = useState<Essay[]>(essays);
+  const [essaysFiltered, setEssaysFiltered] = useState<Essay[]>([]);
+
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    setEssaysFiltered(essays);
+  }, [essays, i18n.language]);
 
   // função que filtra os ensaios, atualiza os filtros e os ensaios filtrados
   const filterCallback = (key: string) => {
@@ -39,10 +46,11 @@ export const EssaysTemplate = ({ essays, filterOptions }: EssaysTemplateProps) =
 
     setEssaysFiltered(newEssays);
   };
-
   return (
     <>
-      <Header title="Ensaios">{filterOptions && <Filter options={filterOptions} callback={filterCallback} />}</Header>
+      <Header title={t('navbar.essays')}>
+        {filterOptions && <Filter options={filterOptions} callback={filterCallback} />}
+      </Header>
       <CardContainer>
         {essaysFiltered.map((essay) => {
           return <Card key={essay.key} essay={essay}></Card>;

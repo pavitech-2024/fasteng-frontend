@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Image from 'next/image';
 import useAuth from '@/contexts/auth';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
 import {
   AppBar,
   Container,
@@ -15,9 +14,10 @@ import {
   Tooltip,
   Menu,
   MenuItem,
-  Button,
 } from '@mui/material';
 import { LogoSmall } from '@/assets/';
+import Languages from '../../molecules/buttons/languages';
+import { t } from 'i18next';
 
 interface TopbarProps {
   setOpenSidebar: (open) => void;
@@ -28,20 +28,16 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
   const Router = useRouter();
 
   const [openSettings, setOpenSettings] = useState<boolean>(false);
-  const [language, setLanguage] = useLocalStorage('language', 'BR');
 
   const pathname = Router.pathname.toUpperCase().split('/');
   pathname.length > 3 && pathname.splice(2, 1);
 
-  const PageTitle =
-    pathname.length > 2
-      ? pathname[2].charAt(0) + pathname[2].slice(1).toLowerCase()
-      : pathname[1].charAt(0) + pathname[1].slice(1).toLowerCase();
+  const PageTitle = (pathname.length > 2 ? pathname[2] : pathname[1]).toLowerCase();
 
   return (
     <>
       <Head>
-        <title>FastEng - {PageTitle}</title>
+        <title>FastEng - {t(`topbar.${PageTitle}`)}</title>
       </Head>
       <AppBar position="static" color="secondary">
         <Container maxWidth="ultrawide" sx={{ pl: '1.8rem' }}>
@@ -73,7 +69,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                 textDecoration: 'none',
               }}
             >
-              {pathname[1]}
+              {t(`topbar.${pathname[1].toLowerCase()}`).toUpperCase()}
             </Typography>
             <Typography
               variant="subtitle1"
@@ -88,7 +84,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                 textDecoration: 'none',
               }}
             >
-              {pathname.length > 2 ? '| ' + pathname[2] : ''}
+              {pathname.length > 2 ? '| ' + t(`topbar.${pathname[2].toLowerCase()}`).toUpperCase() : ''}
             </Typography>
             <Box
               sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'absolute', right: 0 }}
@@ -134,7 +130,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                 </MenuItem>
               </Menu>
             </Box>
-            <Box
+            {/* <Box
               sx={{
                 position: 'absolute',
                 right: 0,
@@ -165,7 +161,8 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
               >
                 PT-BR
               </Button>
-            </Box>
+            </Box> */}
+            <Languages right={10} top={65} />
           </Toolbar>
         </Container>
       </AppBar>

@@ -24,6 +24,7 @@ import Search from '@/components/atoms/inputs/search';
 import { AddIcon, DeleteIcon } from '@/assets';
 import { formatDate } from '@/utils/format';
 import { toast } from 'react-toastify';
+import { t } from 'i18next';
 
 interface MaterialsTemplateProps {
   materials: Sample[];
@@ -54,27 +55,27 @@ const MaterialsTemplate = ({
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
 
-  const [searchBy, setSearchBy] = useState<string>('name');
+  const [searchBy, setSearchBy] = useState<string>(t('materials.template.name').toLowerCase());
   const [searchValue, setSearchValue] = useState<string>('');
 
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [RowToDelete, setRowToDelete] = useState<Sample>();
 
   const columns: MaterialsColumn[] = [
-    { id: 'name', label: 'Nome', width: '25%' },
-    { id: 'type', label: 'Tipo', width: '25%' },
-    { id: 'createdAt', label: 'Data de cadastro', width: '25%' },
-    { id: 'actions', label: 'Ações', width: '25%' },
+    { id: 'name', label: t('materials.template.name'), width: '25%' },
+    { id: 'type', label: t('materials.template.type'), width: '25%' },
+    { id: 'createdAt', label: t('materials.template.createdAt'), width: '25%' },
+    { id: 'actions', label: t('materials.template.actions'), width: '25%' },
   ];
 
   const translateType = (type: string) => {
     switch (type) {
       case 'inorganicSoil':
-        return 'Solo Inorgânico';
+        return t('samples.inorganicSoil');
       case 'organicSoil':
-        return 'Solo Orgânico';
+        return t('samples.organicSoil');
       case 'pavementLayer':
-        return 'Camada de Pavimento';
+        return t('samples.pavementLayer');
     }
   };
 
@@ -85,7 +86,7 @@ const MaterialsTemplate = ({
   const filteredData =
     searchValue.length > 0
       ? materials.filter((material) => {
-          return searchBy === 'name'
+          return searchBy === t('materials.template.name').toLowerCase()
             ? material[searchBy].toLowerCase().includes(searchValue.toLowerCase())
             : material[searchBy] === searchValue;
         })
@@ -95,10 +96,12 @@ const MaterialsTemplate = ({
     <>
       {/*Delete Modal */}
       <Dialog open={openDeleteModal}>
-        <DialogTitle sx={{ fontSize: '1rem', textTransform: 'uppercase' }}>Atenção</DialogTitle>
+        <DialogTitle sx={{ fontSize: '1rem', textTransform: 'uppercase' }}>
+          {t('materials.template.deleteTitle')}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText sx={{ textTransform: 'uppercase', fontSize: '14px' }}>
-            Tem certeza que deseja deletar <span style={{ fontWeight: 700 }}>{RowToDelete?.name}</span>?
+            {t('materials.template.deleteText')} <span style={{ fontWeight: 700 }}>{RowToDelete?.name}</span>?
           </DialogContentText>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: '1rem' }}>
             <Button
@@ -106,16 +109,16 @@ const MaterialsTemplate = ({
               sx={{ fontWeight: 700, fontSize: '12px' }}
               onClick={() => setOpenDeleteModal(false)}
             >
-              Cancelar
+              {t('materials.template.cancel')}
             </Button>
             <Button
               sx={{ fontWeight: 700, fontSize: '12px' }}
               onClick={() => {
                 try {
                   toast.promise(async () => await handleDeleteMaterial(RowToDelete?._id), {
-                    pending: 'Excluindo amostra...',
-                    success: 'Amostra excluída com sucesso!',
-                    error: 'Erro ao excluir amostra!',
+                    pending: t('materials.template.toast.delete.pending') + RowToDelete?.name + '...',
+                    success: RowToDelete?.name + t('materials.template.toast.delete.sucess'),
+                    error: t('materials.template.toast.delete.error') + RowToDelete?.name + '.',
                   });
                   setOpenDeleteModal(false);
                 } catch (error) {
@@ -123,7 +126,7 @@ const MaterialsTemplate = ({
                 }
               }}
             >
-              Deletar
+              {t('materials.template.delete')}
             </Button>
           </Box>
         </DialogContent>
@@ -153,15 +156,15 @@ const MaterialsTemplate = ({
             }}
           >
             <DropDown
-              label="Pesquisar por:"
+              label={t('materials.template.searchBy')}
               options={[
-                { label: 'Nome', value: 'name' },
-                { label: 'Tipo', value: 'type' },
+                { label: t('materials.template.name'), value: 'name' },
+                { label: t('materials.template.type'), value: 'type' },
               ]}
               callback={setSearchBy}
               size="small"
               sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
-              defaultValue={{ label: 'Nome', value: 'name' }}
+              defaultValue={{ label: t('materials.template.name'), value: 'name' }}
             />
             {searchBy === 'name' && (
               <Search
@@ -177,7 +180,10 @@ const MaterialsTemplate = ({
             {searchBy === 'type' && (
               <DropDown
                 sx={{ width: '50%', maxWidth: '350px', minWidth: '120px', bgcolor: 'white' }}
-                label={`Tipo de ${app === 'soils' ? 'amostra' : 'material'}`}
+                label={
+                  t('materials.template.dropDown.label') +
+                  ` ${app === 'soils' ? t('materials.template.sample') : t('materials.template.material')}.`
+                }
                 size="small"
                 callback={setSearchValue}
                 options={types}
@@ -197,7 +203,9 @@ const MaterialsTemplate = ({
           >
             <AddIcon sx={{ color: '#fff', fontSize: '1.2rem' }} />
             <Typography sx={{ fontSize: '.8rem', fontWeight: '700' }} color="white">
-              {`${app === 'soils' ? ' Nova amostra' : ' Novo material'}`}
+              {`${
+                app === 'soils' ? ` ${t('materials.template.newSample')}` : ` ${t('materials.template.newMaterial')}}`
+              }`}
             </Typography>
           </Button>
         </Box>
@@ -234,7 +242,7 @@ const MaterialsTemplate = ({
                             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                               <Button variant="contained" color="info" onClick={(e) => console.log(e)}>
                                 <Typography variant="body2" color="white" sx={{ fontSize: '12px' }}>
-                                  Visualizar
+                                  {t('materials.template.edit')}
                                 </Typography>
                               </Button>
                               <Button
@@ -245,7 +253,7 @@ const MaterialsTemplate = ({
                                   setOpenDeleteModal(true);
                                 }}
                               >
-                                <DeleteIcon color="error" sx={{ fontSize: '1.2rem' }} />
+                                <DeleteIcon color="error" sx={{ fontSize: '1.5rem' }} />
                               </Button>
                             </Box>
                           )}
