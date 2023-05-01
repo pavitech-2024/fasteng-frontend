@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
-import WelcomeTemplate, { ButtonData } from '@/components/templates/welcome';
-import { SoilsIcon, MaterialsIcon} from '@/assets';
+import WelcomeTemplate, { ButtonData, StepperDescriptions } from '@/components/templates/welcome';
+import { SoilsIcon, MaterialsIcon } from '@/assets';
 
 const Soils: NextPage = () => {
   const buttonsData: ButtonData[] = [
@@ -36,7 +36,22 @@ const Soils: NextPage = () => {
     },
   ];
 
-  return <WelcomeTemplate title="Solos" buttonsData={buttonsData} icon={SoilsIcon} app="soils" />;
+  const stepperDescription: StepperDescriptions[] = [
+    {
+      name: 'Cadastrar',
+      description: 'Cadastre um material'
+    },
+    {
+      name: 'Registrar',
+      description: 'Registre ensaios com o material'
+    },
+    {
+      name: 'Relatorios',
+      description: 'Gere relatórios sobre os ensaios'
+    }
+  ];
+
+  return <WelcomeTemplate title="Solos" stepperDescription={stepperDescription} buttonsData={buttonsData} icon={SoilsIcon} app="soils" />;
 };
 
 export default Soils;

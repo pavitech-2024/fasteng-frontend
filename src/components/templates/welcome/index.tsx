@@ -7,20 +7,25 @@ export interface ButtonData {
   description: string;
 }
 
+export interface StepperDescriptions {
+  name: string;
+  description: string;
+}
+
 interface WelcomeTemplateProps {
   app: string;
   title: string;
   icon: JSX.Element;
   buttonsData: ButtonData[];
+  stepperDescription: StepperDescriptions[];
 }
 
-const WelcomeTemplate = ({ title, app, buttonsData}: WelcomeTemplateProps) => {
-
+const WelcomeTemplate = ({ title, app, buttonsData, stepperDescription }: WelcomeTemplateProps) => {
   const titleStyle = {
     fontWeight: '700',
     fontSize: '36px',
     textTransform: 'uppercase',
-    };
+  };
 
   return (
     <Box /* div principal da pagina */
@@ -34,31 +39,40 @@ const WelcomeTemplate = ({ title, app, buttonsData}: WelcomeTemplateProps) => {
         width: '100%',
         paddingTop: {
           mobile: '2rem',
-          notebook: '4rem'
-        }
+          notebook: '4rem',
+        },
       }}
     >
       <Box
         sx={{
-          /* div da coluna da esquerda*/ width: '65%',
+          /* div da coluna da esquerda*/ width: {
+            notebook: '65%',
+            mobile: '100%',
+          },
           textAlign: 'center',
         }}
       >
-        <Box /* div do titulo + imagem*/ sx={{
-          display: 'flex',
-          width: '100%',
-          paddingBottom: '2rem'
-        }} 
-        >
-        <Typography variant='h2' color='primary' sx={{...titleStyle, span: {color: '#000'}}}><span>Bem-vindo à página de </span>{title}</Typography>
-        </Box>
         <Box
+          /* div do titulo + imagem*/ sx={{
+            display: 'block',
+            width: '100%',
+            paddingBottom: '2rem',
+          }}
+        >
+          <Typography variant="h2" color="primary" sx={{ ...titleStyle, span: { color: '#000' } }}>
+            <span>Bem-vindo à página de </span>
+            {title}
+          </Typography>
+          <Box
           /* div da tabela como funciona */ sx={{
             bgcolor: '#fff',
             borderRadius: '10px',
-            width: '55%',
-            marginLeft: '5%',
-            paddingBottom: '2rem'
+            width: {
+              mobile: '90%',
+              notebook: '65%'
+            },
+            paddingBottom: '2rem',
+            margin: '1rem auto'
           }}
         >
           <Typography
@@ -70,45 +84,47 @@ const WelcomeTemplate = ({ title, app, buttonsData}: WelcomeTemplateProps) => {
           >
             Como funciona?
           </Typography>
-          <Stepper activeStep={0} alternativeLabel sx={{
-          }}>
-              <Step>
-                <StepLabel>Cadastre um material</StepLabel>
+          <Stepper activeStep={0} alternativeLabel sx={{}}>
+            {stepperDescription.map((stepper: StepperDescriptions) => (
+              <Step key={stepper.name}>
+                <StepLabel>{stepper.description}</StepLabel>
               </Step>
-              <Step>
-                <StepLabel>Registe ensaios com o material um material</StepLabel>
-              </Step>
-              <Step>
-                <StepLabel>Gere relatórios sobre os ensaios um material</StepLabel>
-              </Step>
+            ))}
           </Stepper>
-          <Box sx={{
-            textAlign: 'left',
-            marginLeft: '5%',
-            paddingTop: '10%',
-          }}>
+          <Box
+            sx={{
+              textAlign: 'left',
+              marginLeft: '5%',
+              paddingTop: '10%',
+            }}
+          >
             {buttonsData.map((button: ButtonData) => (
-              <Typography 
-                color='primary' 
+              <Typography
+                color="primary"
                 sx={{
-                paddingBottom: '2rem', 
-                span: {color: '#000'}, 
-                fontSize: '20px'}}
+                  paddingBottom: '2rem',
+                  span: { color: '#000' },
+                  fontSize: '20px',
+                }}
                 key={button.name}
               >
-                {button.name}: 
-                <span>* {button.description} *</span>
+                {button.name}:<span>* {button.description} *</span>
               </Typography>
             ))}
           </Box>
         </Box>
+        </Box>
       </Box>
-      <Box /* div da segunda coluna */ sx={{
-        width: '35%'
-      }}>
+      <Box
+        /* div da coluna da direita */ sx={{
+          width: {
+            mobile: '100%',
+            notebook: '35%',
+          },
+        }}
+      >
         {buttonsData.map((button: ButtonData) => (
-          <Link key={button.name} href={`/${app}/materiais`} 
-          style={{textDecoration: 'none'}}>
+          <Link key={button.name} href={`/${app}/materiais`} style={{ textDecoration: 'none' }}>
             <Box
               sx={{
                 width: '300px',
@@ -117,6 +133,9 @@ const WelcomeTemplate = ({ title, app, buttonsData}: WelcomeTemplateProps) => {
                 ':hover': {
                   cursor: 'pointer',
                 },
+                margin: {
+                  mobile: '0 auto'
+                }
               }}
             >
               <Box
@@ -136,9 +155,13 @@ const WelcomeTemplate = ({ title, app, buttonsData}: WelcomeTemplateProps) => {
                     height: '100%',
                   }}
                 >
-                  <SvgIcon sx={{
-                    color: '#fff',
-                  }}>{button.icon}</SvgIcon>
+                  <SvgIcon
+                    sx={{
+                      color: '#fff',
+                    }}
+                  >
+                    {button.icon}
+                  </SvgIcon>
                 </Box>
                 <Box
                   /* div do subtitulo */ sx={{

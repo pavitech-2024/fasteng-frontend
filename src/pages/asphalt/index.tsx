@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import WelcomeTemplate, { ButtonData } from '@/components/templates/welcome';
+import WelcomeTemplate, { ButtonData, StepperDescriptions } from '@/components/templates/welcome';
 import { AsphaltIcon, EssayIcon, MarshallIcon, MaterialsIcon, SuperpaveIcon } from '@/assets';
 
 const Asphalt: NextPage = () => {
@@ -36,7 +36,22 @@ const Asphalt: NextPage = () => {
     },
   ];
 
-  return <WelcomeTemplate title="Pavimentação" buttonsData={buttonsData} icon={AsphaltIcon} app="asphalt" />;
+  const stepperDescription: StepperDescriptions[] = [
+    {
+      name: 'Cadastrar',
+      description: 'Cadastre um material'
+    },
+    {
+      name: 'Registrar',
+      description: 'Registre ensaios com o material'
+    },
+    {
+      name: 'Relatorios',
+      description: 'Gere relatórios sobre os ensaios'
+    }
+  ];
+
+  return <WelcomeTemplate title="Pavimentação" stepperDescription={stepperDescription} buttonsData={buttonsData} icon={AsphaltIcon} app="asphalt" />;
 };
 
 export default Asphalt;

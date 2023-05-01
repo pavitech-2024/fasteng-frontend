@@ -1,9 +1,8 @@
 import { NextPage } from 'next';
-import WelcomeTemplate, {ButtonData} from '@/components/templates/welcome';
-import { ConcreteIcon, MaterialsIcon} from '@/assets';
+import WelcomeTemplate, { ButtonData, StepperDescriptions } from '@/components/templates/welcome';
+import { ConcreteIcon, MaterialsIcon } from '@/assets';
 
 const Concrete: NextPage = () => {
-
   const buttonsData: ButtonData[] = [
     {
       name: 'Materiais',
@@ -37,7 +36,22 @@ const Concrete: NextPage = () => {
     },
   ];
 
-  return <WelcomeTemplate title="Concreto" buttonsData={buttonsData} icon={ConcreteIcon} app="concrete"/>;
+  const stepperDescription: StepperDescriptions[] = [
+    {
+      name: 'Cadastrar',
+      description: 'Cadastre um material'
+    },
+    {
+      name: 'Registrar',
+      description: 'Registre ensaios com o material'
+    },
+    {
+      name: 'Relatorios',
+      description: 'Gere relatórios sobre os ensaios'
+    }
+  ];
+
+  return <WelcomeTemplate title="Concreto" stepperDescription={stepperDescription} buttonsData={buttonsData} icon={ConcreteIcon} app="concrete" />;
 };
 
 export default Concrete;
