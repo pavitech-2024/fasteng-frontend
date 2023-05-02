@@ -26,7 +26,7 @@ const Filter = ({ options, callback }: FilterProps) => {
         <Button
           sx={{
             borderRadius: '0',
-            color: option.isSelected ? 'white' : 'secondary.main',
+            color: option.isSelected ? 'white' : 'secondaryTons.main',
             borderRight: '1px solid',
             borderColor: 'white',
             transition: 'all 0.3s ease-in-out',

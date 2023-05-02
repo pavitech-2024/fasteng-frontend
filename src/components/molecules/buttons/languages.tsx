@@ -41,7 +41,7 @@ const Languages = ({ right, top, left, bottom }: LanguagesProps) => {
         return (
           <React.Fragment key={lng.value}>
             <Button
-              sx={{ color: selected ? 'primary.main' : 'secondary.main' }}
+              sx={{ color: selected ? 'secondaryTons.main' : 'secondaryTons.main' }}
               onClick={() => i18n.changeLanguage(lng.value)}
             >
               {lng.name}

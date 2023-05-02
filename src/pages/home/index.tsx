@@ -1,32 +1,26 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-
-// SVGs
+import { Container, Box, Card, Typography } from '@mui/material';
 import { LogoBlack, AsphaltIcon, SoilsIcon, ConcreteIcon } from '@/assets';
-
-//MUIs
-import { Container, Box, Typography } from '@mui/material';
-import { CardApp } from '@/components/styles/muis/home';
-
-//Styleds
-import { HomeImage } from '@/components/styles/styleds/home';
+import { LoginImage } from '../../components/styles/login';
+import { t } from 'i18next';
 
 const Home: NextPage = () => {
   const Router = useRouter();
 
-  const Applications = [
+  const Aplications = [
     {
-      name: 'Pavimentação',
+      name: t('home.asphalt'),
       icon: <AsphaltIcon width="100%" height="100%" />,
       link: '/asphalt',
     },
     {
-      name: 'Mecânica dos Solos',
+      name: t('home.soils'),
       icon: <SoilsIcon width="100%" height="100%" />,
       link: '/soils',
     },
     {
-      name: 'Cimento Portland',
+      name: t('home.concrete'),
       icon: <ConcreteIcon width="100%" height="100%" />,
       link: '/concrete',
     },
@@ -36,83 +30,137 @@ const Home: NextPage = () => {
     <Container
       sx={{
         display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'start',
+        paddingTop: {
+          mobile: '1.5rem',
+          notebook: '3rem',
+        },
+        justifyContent: 'center',
         alignItems: 'center',
-        height: '100%',
-        width: '100%',
-        padding: '0',
+        flexDirection: 'column',
       }}
     >
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-around',
+          justifyContent: 'center',
           alignItems: 'center',
-          height: { desktop: '20%', mobile: '15%' },
         }}
       >
-        <Typography
-          sx={{
-            fontSize: { desktop: '2.5vh', mobile: '1.65vh' },
-            fontWeight: '700',
-            color: 'primaryTons.mainGray',
-          }}
+        <Box
+          component="p"
+          sx={{ padding: '.3rem', fontSize: { notebook: '15px', mobile: '10px' }, fontWeight: 700, color: '#6e6d6d' }}
         >
-          BEM-VINDO AO
-        </Typography>
-
-        <HomeImage alt="Fasteng" src={LogoBlack} />
-
-        <Typography
+          {t('home.welcome to')}
+        </Box>
+        <LoginImage alt="Fasteng" src={LogoBlack} />
+        <Box
+          component="p"
           sx={{
-            fontSize: { desktop: '2.5vh', mobile: '1.65vh' },
+            padding: '.6rem',
             fontWeight: 700,
-            color: 'primaryTons.mainGray',
+            color: '#6e6d6d',
+            height: '1.8rem',
+            maxWidth: {
+              mobile: '224px',
+              ultrawide: '310px',
+            },
             textAlign: 'center',
+            fontSize: { notebook: '15px', mobile: '8px' },
           }}
         >
-          O CAMINHO MAIS RÁPIDO PARA A ENGENHARIA
-        </Typography>
+          {t('home.fast way to')}
+        </Box>
+        <Box
+          component="p"
+          sx={{
+            padding: '.7rem',
+            fontSize: { notebook: '15px', mobile: '10px' },
+            fontWeight: 700,
+            color: 'secondary',
+            textAlign: 'center',
+            maxWidth: '930px',
+            marginTop: '1rem',
+            height: '2.3rem',
+          }}
+        >
+          {t('home.description')}
+        </Box>
       </Box>
-
       <Box
         sx={{
-          height: { desktop: '30%', mobile: '20%' },
-          display: 'flex',
-          alignItems: 'center',
-          padding: { mobile: '0 5vw', notebook: '0 10vw', ultrawide: '0 15vw' },
+          display: 'grid',
+          maxWidth: '100%',
+          gridTemplateColumns: {
+            mobile: '1fr',
+            notebook: 'repeat(auto-fit, minmax(300px, 1fr))',
+          },
+          gap: '1rem',
+          placeItems: 'center',
+          padding: '2rem',
         }}
       >
-        <Typography
-          sx={{
-            fontSize: { notebook: '1.75vh', mobile: '1.5vh' },
-            fontWeight: 700,
-            color: 'primaryTons.darkerGray',
-            textAlign: 'center',
-          }}
-        >
-          O FASTENG é o seu auxiliar técnico em projetos de Engenharia Civil. Atualmente em nosso escopo contamos com
-          aplicações em projetos geotécnicos de Pavimentação Asfáltica, Mecânica dos Solos, e Concreto Convencional.
-          Qual aplicação você deseja utilizar agora?
-        </Typography>
-      </Box>
-
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: { mobile: 'center', notebook: 'start' },
-          justifyContent: 'space-around',
-          flexDirection: { notebook: 'row', mobile: 'column' },
-          height: { notebook: '60%', mobile: '55%' },
-          width: { mobile: '100%', desktop: '80%', ultrawide: '60%' },
-          paddingTop: { mobile: '0', notebook: '2vh' },
-        }}
-      >
-        <CardApp element={Applications[0]} onClick={() => Router.push(Applications[0].link)} />
-        <CardApp element={Applications[1]} onClick={() => Router.push(Applications[1].link)} />
-        <CardApp element={Applications[2]} onClick={() => Router.push(Applications[2].link)} />
+        {Aplications.map((element) => {
+          return (
+            <Card
+              onClick={() => Router.push(element.link)}
+              key={element.name}
+              sx={{
+                display: 'flex',
+                flexDirection: {
+                  mobile: 'row',
+                  notebook: 'column',
+                },
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: {
+                  mobile: 'calc(90vw - 2rem)',
+                  notebook: '300px',
+                },
+                height: {
+                  mobile: '120px',
+                  notebook: '300px',
+                },
+                bgcolor: 'secondaryTons.main',
+                borderRadius: {
+                  mobile: '10px',
+                  notebook: '7%',
+                },
+                ':hover': {
+                  cursor: 'pointer',
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  width: { mobile: '45%', notebook: '100%' },
+                  height: { mobile: '100%', notebook: '75%' },
+                  bgcolor: 'primaryTons.darkerGray',
+                  display: 'grid',
+                  placeItems: 'center',
+                }}
+              >
+                <Box sx={{ width: '60%', height: '60%' }}>{element.icon}</Box>
+              </Box>
+              <Typography
+                gutterBottom
+                variant="h6"
+                component="div"
+                sx={{
+                  height: '25%',
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  color: 'white',
+                  fontSize: { notebook: '22px', mobile: '14px' },
+                }}
+              >
+                {element.name}
+              </Typography>
+            </Card>
+          );
+        })}
       </Box>
     </Container>
   );
