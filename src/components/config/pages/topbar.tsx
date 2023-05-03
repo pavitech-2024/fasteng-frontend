@@ -54,7 +54,12 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                   cursor: 'pointer',
                 },
               }}
-              onClick={() => setOpenSidebar((open) => !open)}
+              onClick={() => {
+                const welcome = Router.pathname.includes(`${Router.pathname.split('/')[1]}/`);
+
+                if (window.innerWidth < 968) return welcome ? setOpenSidebar((open) => !open) : Router.push(`/home`);
+                else return Router.push(`/home`);
+              }}
             >
               <Image alt="Fasteng" src={LogoSmall} width={200} height={28} style={{ transform: 'translateX(-18px)' }} />
             </Box>

@@ -6,5 +6,7 @@
   "welcome.how it works": "Como funciona?",
   "welcome.step.asphalt.1": "Cadastre um material",
   "welcome.step.asphalt.2": "Registre ensaios com o material",
-  "welcome.step.asphalt.3": "Gere relatórios sobre os ensaios"
+  "welcome.step.asphalt.3": "Gere relatórios sobre os ensaios",
+  "welcome.step.soils.1": "Cadastre uma amostra",
+  "welcome.step.soils.2": "Registre ensaios com a amostra"
 }
