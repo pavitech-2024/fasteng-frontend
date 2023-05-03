@@ -2,6 +2,7 @@ import { Container, Box, Typography } from '@mui/material';
 import { Essay } from '@/interfaces/common';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 interface CardContainerProps {
   children: JSX.Element | React.ReactNode;
@@ -31,8 +32,10 @@ interface CardProps {
 }
 
 export const Card = ({ essay }: CardProps) => {
+  const app = useRouter().pathname.split('/')[1];
+
   return (
-    <Link href={`/asphalt/essays/${essay.key}`} passHref style={{ textDecoration: 'none' }}>
+    <Link href={`/${app}/essays/${essay.key}`} passHref style={{ textDecoration: 'none' }}>
       <Box
         sx={{
           width: 'calc(200px - 2rem)',

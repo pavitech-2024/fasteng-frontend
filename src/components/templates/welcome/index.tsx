@@ -1,39 +1,35 @@
-import { Box, Typography, Stepper, Step, StepLabel, SvgIcon } from '@mui/material';
+import { Box, Typography, Stepper, Step, StepLabel } from '@mui/material';
+import { t } from 'i18next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { ReactNode } from 'react';
 
-export interface ButtonData {
+export interface WelcomeData {
   name: string;
-  icon: JSX.Element;
+  icon: ReactNode;
   description: string;
+  path: string;
 }
 
-export interface StepperDescriptions {
-  name: string;
+export interface StepData {
+  step: string;
   description: string;
 }
 
 interface WelcomeTemplateProps {
-  app: string;
-  title: string;
   icon: JSX.Element;
-  buttonsData: ButtonData[];
-  stepperDescription: StepperDescriptions[];
+  welcomeData: WelcomeData[];
+  stepperData: StepData[];
 }
 
-const WelcomeTemplate = ({ title, app, buttonsData, stepperDescription }: WelcomeTemplateProps) => {
-  const titleStyle = {
-    fontWeight: '700',
-    fontSize: '36px',
-    textTransform: 'uppercase',
-  };
+const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProps) => {
+  const app = useRouter().pathname.split('/')[1];
+  const title = t(`welcome.${app}`);
 
   return (
-    <Box /* div principal da pagina */
+    <Box
       sx={{
-        display: {
-          mobile: 'block',
-          notebook: 'flex'
-        },
+        display: 'flex',
         flexDirection: {
           mobile: 'column',
           notebook: 'row',
@@ -41,151 +37,162 @@ const WelcomeTemplate = ({ title, app, buttonsData, stepperDescription }: Welcom
         justifyContent: 'center',
         width: '100%',
         paddingTop: {
-          mobile: '2rem',
-          notebook: '4rem',
+          mobile: '0',
+          notebook: '2rem',
         },
+        gap: '1rem',
       }}
     >
       <Box
         sx={{
-          /* div da coluna da esquerda*/ width: {
+          width: {
             mobile: '100%',
-            notebook: '65%',
+            notebook: '50%',
           },
-          textAlign: 'center',
         }}
       >
         <Box
-          /* div do titulo + imagem*/ sx={{
-            display: 'block',
-            width: '100%',
-            paddingBottom: '2rem',
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          <Typography variant="h2" color="primary" sx={{ ...titleStyle, span: { color: '#000' } }}>
-            <span>Bem-vindo à página de </span>
-            {title}
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography
+              variant="h2"
+              color="primary"
+              sx={{
+                textTransform: 'uppercase',
+                fontWeight: 700,
+                fontSize: { mobile: '1.2rem', notebook: '2rem' },
+                span: { color: '#000' },
+                mr: '1rem',
+              }}
+            >
+              <span>{t('welcome.title')}</span>
+              {title}
+            </Typography>
+            {icon}
+          </Box>
           <Box
-            /* div da tabela como funciona */ sx={{
+            sx={{
               bgcolor: '#fff',
               borderRadius: '10px',
-              width: {
-                mobile: '90%',
-                notebook: '65%',
-              },
-              paddingBottom: '2rem',
+              padding: '2rem .5rem',
               margin: '1rem auto',
             }}
           >
-            <Typography
-              variant="h6"
-              sx={{
-                marginBottom: '1.5rem',
-                paddingTop: '1rem',
-              }}
-            >
-              Como funciona?
-            </Typography>
-            <Stepper activeStep={0} alternativeLabel sx={{}}>
-              {stepperDescription.map((stepper: StepperDescriptions) => (
-                <Step key={stepper.name}>
-                  <StepLabel>{stepper.description}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  margin: '1rem 0',
+                  fontWeight: 700,
+                }}
+              >
+                {t('welcome.how it works')}
+              </Typography>
+              <Stepper activeStep={stepperData.length} alternativeLabel>
+                {stepperData.map((step: StepData) => (
+                  <Step key={step.step}>
+                    <StepLabel>{step.description}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            </Box>
             <Box
               sx={{
-                textAlign: 'left',
-                marginLeft: '5%',
-                paddingTop: '10%',
+                display: 'grid',
+                gap: '20px',
+                width: 'calc(100% - 2.4rem)',
+                margin: '2rem 1.2rem',
               }}
             >
-              {buttonsData.map((button: ButtonData) => (
+              {welcomeData.map((element: WelcomeData) => (
                 <Typography
                   color="primary"
                   sx={{
-                    paddingBottom: '2rem',
-                    span: { color: '#000' },
-                    fontSize: '20px',
+                    fontWeight: 700,
+                    span: { color: '#000', fontWeight: 400 },
+                    fontSize: '16px',
                   }}
-                  key={button.name}
+                  key={element.name}
                 >
-                  {button.name}:<span>* {button.description} *</span>
+                  {element.name}:<span> {element.description}</span>
                 </Typography>
               ))}
             </Box>
           </Box>
         </Box>
       </Box>
+
       <Box
-        /* div da coluna da direita */ sx={{
-          width: {
-            mobile: '100%',
-            notebook: '35%',
+        sx={{
+          display: 'grid',
+          height: 'fit-content',
+          gap: '20px',
+          gridTemplateColumns: {
+            mobile: 'repeat(auto-fit, minmax(200px, 1fr))',
+            notebook: '1fr',
+          },
+          justifyItems: {
+            mobile: 'center',
+            notebook: 'start',
           },
         }}
       >
-        {buttonsData.map((button: ButtonData) => (
-          <Link key={button.name} href={`/${app}/materiais`} style={{ textDecoration: 'none' }}>
-            <Box
-              sx={{
-                width: {
-                  mobile: '90%',
-                  notebook: '300px',
-                },
-                height: '80px',
-                paddingBottom: '2rem',
-                ':hover': {
-                  cursor: 'pointer',
-                },
-                margin: {
-                  mobile: '0 auto',
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  height: '100%',
-                  width: '100%',
-                }}
-              >
+        {welcomeData.map((element: WelcomeData) => (
+          <Box
+            key={element.name}
+            sx={{
+              bgcolor: 'transparent',
+              width: {
+                mobile: '200px',
+                notebook: '350px',
+              },
+              height: '100px',
+              ':hover': { cursor: 'pointer' },
+            }}
+          >
+            <Link key={element.name} href={element.path} style={{ textDecoration: 'none' }}>
+              <Box sx={{ display: 'flex', height: '100%' }}>
                 <Box
-                  /* div da imagem */ sx={{
-                    width: '30%',
-                    bgcolor: 'orange',
+                  sx={{
+                    width: '100px',
+                    bgcolor: 'primary.main',
                     borderRadius: '20px 0 0 20px',
-                    height: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}
                 >
-                  <SvgIcon
-                    sx={{
-                      color: '#fff',
-                    }}
-                  >
-                    {button.icon}
-                  </SvgIcon>
+                  {element.icon}
                 </Box>
                 <Box
-                  /* div do subtitulo */ sx={{
-                    width: '70%',
-                    height: '100%',
+                  sx={{
+                    width: {
+                      mobile: '100px',
+                      notebook: '250px',
+                    },
+                    bgcolor: 'primaryTons.darkGray',
                     borderRadius: '0 20px 20px 0',
-                    bgcolor: '#000',
-                    color: '#fff',
                     display: 'flex',
-                    alignItems: 'center',
                     justifyContent: 'center',
+                    alignItems: 'center',
+                    transition: 'all .3s',
+                    ':hover': {
+                      bgcolor: 'primaryTons.mainGray',
+                    },
                   }}
                 >
-                  <Typography>{button.name}</Typography>
+                  <Typography variant="body1" color="primaryTons.mainWhite">
+                    {element.name}
+                  </Typography>
                 </Box>
               </Box>
-            </Box>
-          </Link>
+            </Link>
+          </Box>
         ))}
       </Box>
     </Box>

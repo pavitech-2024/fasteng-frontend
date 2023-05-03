@@ -7,5 +7,7 @@
   "login.forget password": "Esqueceu a senha?",
   "login.toast loading": "Verificando usuário...",
   "login.toast error": "Email ou senha inválidos!",
-  "login.toast success": "Login efetuado com sucesso!"
+  "login.toast success": "Login efetuado com sucesso!",
+  "login.password placeholder": "Digite sua senha...",
+  "login.email placeholder": "Digite seu email..."
 }

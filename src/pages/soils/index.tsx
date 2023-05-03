@@ -1,63 +1,56 @@
 import { NextPage } from 'next';
-import WelcomeTemplate, { ButtonData, StepperDescriptions } from '@/components/templates/welcome';
-import { SoilsIcon, MaterialsIcon } from '@/assets';
+import WelcomeTemplate, { StepData, WelcomeData } from '@/components/templates/welcome';
+import { EssayIcon, LibraryIcon, MaterialsIcon, SoilsIcon, StandartsIcon } from '@/assets';
+import { t } from 'i18next';
 
 const Soils: NextPage = () => {
-  const buttonsData: ButtonData[] = [
+  const welcomeData: WelcomeData[] = [
     {
-      name: 'Materiais',
-      icon: MaterialsIcon,
+      name: t('navbar.samples'),
+      icon: <MaterialsIcon width="40px" height="45px" />,
       description: 'Descrição sobre materiais',
+      path: '/soils/samples',
     },
     {
-      name: 'Ensaios',
-      icon: MaterialsIcon,
-      description: 'Descrição sobre ensaios',
+      name: t('navbar.essays'),
+      icon: <EssayIcon width="40px" height="45px" />,
+      description: 'Descrição sobre materiais',
+      path: '/soils/essays',
     },
     {
-      name: 'Dosagem Marshall',
-      icon: MaterialsIcon,
-      description: 'Descrição sobre Marshall',
+      name: t('navbar.standards'),
+      icon: <StandartsIcon style={{ color: 'white', fontSize: '40px' }} />,
+      description: 'Descrição sobre materiais',
+      path: '/soils/standards',
     },
     {
-      name: 'Dosagem Superpave',
-      icon: MaterialsIcon,
-      description: 'Descrição sobre Superpave',
-    },
-    {
-      name: 'Dosagem Normas',
-      icon: MaterialsIcon,
-      description: 'Descrição sobre normas',
-    },
-    {
-      name: 'Biblioteca',
-      icon: MaterialsIcon,
-      description: 'Descrição sobre biblioteca',
+      name: t('navbar.library'),
+      icon: <LibraryIcon style={{ color: 'white', fontSize: '40px' }} />,
+      description: 'Descrição sobre materiais',
+      path: '/soils/library',
     },
   ];
 
-  const stepperDescription: StepperDescriptions[] = [
+  const stepperData: StepData[] = [
     {
-      name: 'Cadastrar',
-      description: 'Cadastre um material',
+      step: '1',
+      description: t('welcome.step.soils.1'),
     },
     {
-      name: 'Registrar',
-      description: 'Registre ensaios com o material',
+      step: '2',
+      description: t('welcome.step.soils.2'),
     },
     {
-      name: 'Relatorios',
-      description: 'Gere relatórios sobre os ensaios',
+      step: '3',
+      description: t('welcome.step.asphalt.3'),
     },
   ];
 
   return (
     <WelcomeTemplate
-      title="Solos"
-      stepperDescription={stepperDescription}
-      buttonsData={buttonsData}
-      icon={SoilsIcon}
-      app="soils"
+      stepperData={stepperData}
+      welcomeData={welcomeData}
+      icon={<SoilsIcon width="50px" height="50px" />}
     />
   );
 };

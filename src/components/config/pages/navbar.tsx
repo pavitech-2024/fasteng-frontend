@@ -252,6 +252,7 @@ export default function Navbar({ open, app }: NavbarProps) {
                       <Box
                         sx={{
                           display: 'grid',
+                          bgcolor: 'primaryTons.mainGray',
                           gridTemplateColumns: '1.75rem minmax(0,1fr)',
                           gap: '15px',
                           justifyItems: 'flex-start',
@@ -261,7 +262,7 @@ export default function Navbar({ open, app }: NavbarProps) {
                               ? 'calc(100% - 1.3125rem - 3px)'
                               : 'calc(100% - 1.3125rem)'
                           }`,
-                          pl: '3.6125rem',
+                          pl: '2.6125rem',
                           height: '3rem',
                           transition: 'background .3s ease-in-out, border .1s',
                           overflow: 'hidden',

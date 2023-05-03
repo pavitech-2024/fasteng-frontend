@@ -1,63 +1,76 @@
 import { NextPage } from 'next';
-import WelcomeTemplate, { ButtonData, StepperDescriptions } from '@/components/templates/welcome';
-import { AsphaltIcon, EssayIcon, MarshallIcon, MaterialsIcon, SuperpaveIcon } from '@/assets';
+import WelcomeTemplate, { StepData, WelcomeData } from '@/components/templates/welcome';
+import {
+  AsphaltIcon,
+  EssayIcon,
+  LibraryIcon,
+  MarshallIcon,
+  MaterialsIcon,
+  StandartsIcon,
+  SuperpaveIcon,
+} from '@/assets';
+import { t } from 'i18next';
 
 const Asphalt: NextPage = () => {
-  const buttonsData: ButtonData[] = [
+  const welcomeData: WelcomeData[] = [
     {
-      name: 'Materiais',
-      icon: MaterialsIcon,
+      name: t('navbar.materials'),
+      icon: <MaterialsIcon width="40px" height="45px" />,
       description: 'Descrição sobre materiais',
+      path: '/asphalt/materials',
     },
     {
-      name: 'Ensaios',
-      icon: EssayIcon,
-      description: 'Descrição sobre ensaios',
+      name: t('navbar.essays'),
+      icon: <EssayIcon width="40px" height="45px" />,
+      description: 'Descrição sobre materiais',
+      path: '/asphalt/essays',
     },
     {
-      name: 'Dosagem Marshall',
-      icon: MarshallIcon,
-      description: 'Descrição sobre Marshall',
+      name: t('navbar.marshall'),
+      icon: <MarshallIcon width="40px" height="45px" />,
+      description: 'Descrição sobre materiais',
+      path: '/asphalt/marshall',
     },
     {
-      name: 'Dosagem Superpave',
-      icon: SuperpaveIcon,
-      description: 'Descrição sobre Superpave',
+      name: t('navbar.superpave'),
+      icon: <SuperpaveIcon width="40px" height="45px" />,
+      description: 'Descrição sobre materiais',
+      path: '/asphalt/superpave',
     },
     {
-      name: 'Dosagem Normas',
-      icon: MaterialsIcon,
-      description: 'Descrição sobre normas',
+      name: t('navbar.standards'),
+      icon: <StandartsIcon style={{ color: 'white', fontSize: '40px' }} />,
+      description: 'Descrição sobre materiais',
+      path: '/asphalt/standards',
     },
     {
-      name: 'Biblioteca',
-      icon: MaterialsIcon,
-      description: 'Descrição sobre biblioteca',
+      name: t('navbar.library'),
+      icon: <LibraryIcon style={{ color: 'white', fontSize: '40px' }} />,
+      description: 'Descrição sobre materiais',
+      path: '/asphalt/library',
     },
   ];
 
-  const stepperDescription: StepperDescriptions[] = [
+  const stepperData: StepData[] = [
     {
-      name: 'Cadastrar',
-      description: 'Cadastre um material',
+      step: '1',
+      description: t('welcome.step.asphalt.1'),
     },
     {
-      name: 'Registrar',
-      description: 'Registre ensaios com o material',
+      step: '2',
+      description: t('welcome.step.asphalt.2'),
     },
     {
-      name: 'Relatorios',
-      description: 'Gere relatórios sobre os ensaios',
+      step: '3',
+      description: t('welcome.step.asphalt.3'),
     },
   ];
 
   return (
     <WelcomeTemplate
-      title="Pavimentação"
-      stepperDescription={stepperDescription}
-      buttonsData={buttonsData}
-      icon={AsphaltIcon}
-      app="asphalt"
+      stepperData={stepperData}
+      welcomeData={welcomeData}
+      icon={<AsphaltIcon width="50px" height="50px" />}
     />
   );
 };

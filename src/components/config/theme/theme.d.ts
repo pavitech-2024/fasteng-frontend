@@ -15,3 +15,25 @@ declare module '@mui/material/styles' {
     containerMargin: true;
   }
 }
+
+declare module '@mui/material' {
+  export interface PaletteOptions {
+    primaryTons: {
+      mainWhite: string;
+      background: string;
+      border: string;
+      mainGray: string;
+      darkGray: string;
+      darkerGray: string;
+    };
+
+    secondaryTons: {
+      main: string;
+      blue: string;
+      blueClick: string;
+      blueDisabled: string;
+      red: string;
+      green: string;
+    };
+  }
+}

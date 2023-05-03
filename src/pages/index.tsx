@@ -73,7 +73,7 @@ const Login: NextPage = () => {
                 marginTop: { desktop: '-5vh', mobile: '0' },
               }}
             >
-              <Languages left={10} top={10} />
+              <Languages left={10} top={10} unSelectedColor="primaryTons.border" />
               <LoginImage alt="Fasteng" src={LogoWhite} />
             </Box>
             <Box
@@ -145,7 +145,7 @@ const Login: NextPage = () => {
                 label="Email"
                 variant="outlined"
                 value={email}
-                placeholder="Digite seu email..."
+                placeholder={t('login.email placeholder')}
                 sx={{
                   width: { desktop: '26vw', mobile: '70vw' },
                 }}
@@ -154,8 +154,8 @@ const Login: NextPage = () => {
               />
               <TextField
                 variant="outlined"
-                label="Password"
-                placeholder="Digite sua senha..."
+                label={t('login.password')}
+                placeholder={t('login.password placeholder')}
                 type="password"
                 value={password}
                 sx={{
@@ -176,9 +176,13 @@ const Login: NextPage = () => {
                 width: '100%',
               }}
             >
-              <Button text="Entrar" disabled={password === '' || email === ''} handleClick={() => handleLogin()} />
+              <Button
+                text={t('login.enter')}
+                disabled={password === '' || email === ''}
+                handleClick={() => handleLogin()}
+              />
               <Typography sx={{ color: 'secondaryTons.main', fontSize: { desktop: '1rem', mobile: '0.85rem' } }}>
-                Esqueceu sua senha?
+                {t('login.forget password')}
               </Typography>
             </Box>
           </Box>

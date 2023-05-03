@@ -60,7 +60,10 @@ const Pages = (props: PagesProps) => {
     const [OpenSidebar, setOpenSidebar] = useState<boolean>(false);
 
     const navbar =
-      Router.pathname.includes('asphalt') || Router.pathname.includes('soils') || Router.pathname.includes('concrete');
+      Router.pathname.includes('asphalt/') ||
+      Router.pathname.includes('soils/') ||
+      Router.pathname.includes('concrete/') ||
+      Router.pathname.includes('settings');
 
     if (Router.pathname === '/') return children;
 

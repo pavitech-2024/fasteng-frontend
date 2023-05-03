@@ -1,63 +1,62 @@
 import { NextPage } from 'next';
-import WelcomeTemplate, { ButtonData, StepperDescriptions } from '@/components/templates/welcome';
-import { ConcreteIcon, MaterialsIcon } from '@/assets';
+import WelcomeTemplate, { StepData, WelcomeData } from '@/components/templates/welcome';
+import { AbcpIcon, ConcreteIcon, EssayIcon, LibraryIcon, MaterialsIcon, StandartsIcon } from '@/assets';
+import { t } from 'i18next';
 
 const Concrete: NextPage = () => {
-  const buttonsData: ButtonData[] = [
+  const welcomeData: WelcomeData[] = [
     {
-      name: 'Materiais',
-      icon: MaterialsIcon,
+      name: t('navbar.materials'),
+      icon: <MaterialsIcon width="40px" height="45px" />,
       description: 'Descrição sobre materiais',
+      path: '/concrete/materials',
     },
     {
-      name: 'Ensaios',
-      icon: MaterialsIcon,
-      description: 'Descrição sobre ensaios',
+      name: t('navbar.essays'),
+      icon: <EssayIcon width="40px" height="45px" />,
+      description: 'Descrição sobre materiais',
+      path: '/concrete/essays',
     },
     {
-      name: 'Dosagem Marshall',
-      icon: MaterialsIcon,
-      description: 'Descrição sobre Marshall',
+      name: t('navbar.abcp'),
+      icon: <AbcpIcon width="40px" height="45px" />,
+      description: 'Descrição sobre materiais',
+      path: '/concrete/abcp',
     },
     {
-      name: 'Dosagem Superpave',
-      icon: MaterialsIcon,
-      description: 'Descrição sobre Superpave',
+      name: t('navbar.standards'),
+      icon: <StandartsIcon style={{ color: 'white', fontSize: '40px' }} />,
+      description: 'Descrição sobre materiais',
+      path: '/concrete/standards',
     },
     {
-      name: 'Dosagem Normas',
-      icon: MaterialsIcon,
-      description: 'Descrição sobre normas',
-    },
-    {
-      name: 'Biblioteca',
-      icon: MaterialsIcon,
-      description: 'Descrição sobre biblioteca',
+      name: t('navbar.library'),
+      icon: <LibraryIcon style={{ color: 'white', fontSize: '40px' }} />,
+      description: 'Descrição sobre materiais',
+      path: '/concrete/library',
     },
   ];
 
-  const stepperDescription: StepperDescriptions[] = [
+  const stepperData: StepData[] = [
     {
-      name: 'Cadastrar',
-      description: 'Cadastre um material',
+      step: '1',
+      description: t('welcome.step.asphalt.1'),
     },
     {
-      name: 'Registrar',
-      description: 'Registre ensaios com o material',
+      step: '2',
+      description: t('welcome.step.asphalt.2'),
     },
     {
-      name: 'Relatorios',
-      description: 'Gere relatórios sobre os ensaios',
+      step: '3',
+      description: t('welcome.step.asphalt.3'),
     },
   ];
 
   return (
     <WelcomeTemplate
-      title="Concreto"
-      stepperDescription={stepperDescription}
-      buttonsData={buttonsData}
-      icon={ConcreteIcon}
-      app="concrete"
+      stepperData={stepperData}
+      welcomeData={welcomeData}
+      icon={<ConcreteIcon width="50px" height="50px" />}
     />
   );
 };

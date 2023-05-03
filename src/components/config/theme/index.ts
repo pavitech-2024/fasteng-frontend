@@ -1,27 +1,5 @@
 import { createTheme } from '@mui/material';
 
-declare module '@mui/material' {
-  export interface PaletteOptions {
-    primaryTons: {
-      mainWhite: string;
-      background: string;
-      border: string;
-      mainGray: string;
-      darkGray: string;
-      darkerGray: string;
-    };
-
-    secondaryTons: {
-      main: string;
-      blue: string;
-      blueClick: string;
-      blueDisabled: string;
-      red: string;
-      green: string;
-    };
-  }
-}
-
 export const theme = createTheme({
   breakpoints: {
     values: {
@@ -35,6 +13,12 @@ export const theme = createTheme({
   },
 
   palette: {
+    primary: {
+      main: '#F29134', // orange
+    },
+    secondary: {
+      main: '#212121', // darker gray
+    },
     primaryTons: {
       mainWhite: '#FCFCFC',
       background: '#F2F2F2',
