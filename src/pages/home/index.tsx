@@ -12,17 +12,17 @@ const Home: NextPage = () => {
     {
       name: t('home.asphalt'),
       icon: <AsphaltIcon width="100%" height="100%" />,
-      link: '/asphalt',
+      path: '/asphalt',
     },
     {
       name: t('home.soils'),
       icon: <SoilsIcon width="100%" height="100%" />,
-      link: '/soils',
+      path: '/soils',
     },
     {
       name: t('home.concrete'),
       icon: <ConcreteIcon width="100%" height="100%" />,
-      link: '/concrete',
+      path: '/concrete',
     },
   ];
 
@@ -80,7 +80,7 @@ const Home: NextPage = () => {
             color: 'secondary',
             textAlign: 'center',
             maxWidth: '930px',
-            marginTop: '1rem',
+            margin: '1rem 0',
             height: '2.3rem',
           }}
         >
@@ -103,7 +103,7 @@ const Home: NextPage = () => {
         {Aplications.map((element) => {
           return (
             <Card
-              onClick={() => Router.push(element.link)}
+              onClick={() => Router.push(element.path)}
               key={element.name}
               sx={{
                 display: 'flex',
@@ -117,6 +117,7 @@ const Home: NextPage = () => {
                   mobile: 'calc(90vw - 2rem)',
                   notebook: '300px',
                 },
+                maxWidth: '300px',
                 height: {
                   mobile: '120px',
                   notebook: '300px',
@@ -155,6 +156,7 @@ const Home: NextPage = () => {
                   color: 'white',
                   fontSize: { notebook: '20px', mobile: '12px' },
                   textTransform: 'uppercase',
+                  textAlign: 'center',
                 }}
               >
                 {element.name}
