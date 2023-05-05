@@ -2,6 +2,7 @@ import { Container, Box, Typography } from '@mui/material';
 import { Essay, Standard } from '@/interfaces/common';
 import Image from 'next/image';
 import Link from 'next/link';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 interface CardContainerProps {
   children: JSX.Element | React.ReactNode;
@@ -51,10 +52,10 @@ export const Card = ({ data, type, hrefLink, target }: CardProps) => {
           color: 'secondary.light',
           bgcolor: 'white',
           border: '0.0625rem solid rgba(0, 0, 0, 0.125)',
-          borderRadius: '0.3125rem',
+          borderRadius: '20px',
           animation: '0.4s ease 0s 1 normal none running fadeUp',
           transition: 'all 0.6s ease 0s',
-          padding: '1rem',
+          paddingTop: '0.5rem',
           ':hover': {
             bgcolor: 'rgba(245, 126, 52, 0.15)',
             cursor: 'pointer',
@@ -63,26 +64,60 @@ export const Card = ({ data, type, hrefLink, target }: CardProps) => {
           },
         }}
       >
-        <Box sx={{ height: '60%', width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-          <Image src={data.icon} alt={data.key} width={100} height={100} />
+        <Box 
+          sx={{ 
+            height: '60%', 
+            width: '100%', 
+            display: 'flex', 
+            flexDirection: 'row', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            marginBottom: '10px'
+          }}
+        >
+          <Image src={data.icon} alt={data.key} width={100} height={100}/>
         </Box>
+      
         <Box
           sx={{
-            height: '40%',
+            height: '60%',
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center', 
+            backgroundColor: '#383838',
+            borderBottomLeftRadius: '20px',
+            borderBottomRightRadius: '20px',
+            color: '#FFFFFF'
           }}
         >
-          <Typography sx={{ textAlign: 'center', fontWeight: '700', fontSize: '13.5px' }}>{data.title}</Typography>
-          {type === 'standard' && (
-            // Verifica se a prop standard existe em data;
-            <Typography sx={{ textAlign: 'center', fontWeight: '400', fontSize: '12px' }}>
-              {'standard' in data ? data.standard : null}
-            </Typography>
-          )}
+          <Typography 
+            sx={{ 
+              textAlign: 'center', 
+              fontWeight: '700', 
+              fontSize: '13.5px' 
+            }}
+          >
+            {data.title}
+          </Typography>
+
+          <Box
+            sx={{ 
+              display: 'flex',
+              gap: 1
+            }}
+          >
+            {type === 'standard' && (
+              // Verifica se a prop standard existe em data;
+              <>
+                  <Typography sx={{ textAlign: 'center', fontWeight: '400', fontSize: '12px' }}>
+                    {'standard' in data ? data.standard : null}
+                  </Typography>
+                  <PictureAsPdfIcon sx={{ fontSize: 20, color: 'red' }}></PictureAsPdfIcon>
+              </>
+            )}
+          </Box>
         </Box>
       </Box>
     </Link>
