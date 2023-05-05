@@ -128,7 +128,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
             <Menu
               PaperProps={{
                 sx: {
-                  width: { mobile: '100%', tablet: '20rem' },
+                  width: { mobile: '70%', tablet: '20rem' },
                 },
               }}
               anchorEl={anchorEl}
