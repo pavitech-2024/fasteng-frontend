@@ -1,0 +1,14 @@
+{
+  "navbar.home": "Home",
+  "navbar.materials": "Materials",
+  "navbar.samples": "Samples",
+  "navbar.essays": "Essays",
+  "navbar.marshall": "Marshall Dosage",
+  "navbar.superpave": "Superpave Dosage",
+  "navbar.abcp": "ABCP Dosage",
+  "navbar.new": "Create New",
+  "navbar.consult": "Consult Dosage",
+  "navbar.standards": "Standarts",
+  "navbar.library": "Libary",
+  "navbar.report": "Report"
+}

@@ -1,0 +1,21 @@
+{
+  "materials.template.name": "Nome",
+  "materials.template.type": "Tipo",
+  "materials.template.createdAt": "Data de cadastro",
+  "materials.template.actions": "Ações",
+  "materials.template.deleteTitle": "Atenção",
+  "materials.template.deleteText": "Tem certeza que deseja deletar",
+  "materials.template.cancel": "Cancelar",
+  "materials.template.delete": "Deletar",
+  "materials.template.toast.delete.pending": "Excluindo ",
+  "materials.template.toast.delete.sucess": "Excluído com sucesso!",
+  "materials.template.toast.delete.error": "Erro ao excluir ",
+  "materials.template.searchBy": "Pesquisar por:",
+  "materials.template.dropDown.label": "Selecione o tipo de ",
+  "materials.template.sample": "amostra",
+  "materials.template.material": "material",
+  "materials.template.newMaterial": "Novo Material",
+  "materials.template.newSample": "Nova Amostra",
+  "materials.template.search.label": "Pesquisar...",
+  "materials.template.edit": "Visualizar"
+}
