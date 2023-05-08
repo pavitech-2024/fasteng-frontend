@@ -32,7 +32,7 @@ import ElasticRecoveryIcon from './asphalt/essays/ElasticRecovery.png';
 import ElongatedParticlesIcon from './asphalt/essays/ElongatedParticles.png';
 import FlashPointIcon from './asphalt/essays/FlashPoint.png';
 import FwdIcon from './asphalt/essays/FWD.png';
-import IggIcon from './asphalt/essays/igg.png';
+import IggIcon from './asphalt/essays/Igg.png';
 import PenetrationIcon from './asphalt/essays/Penetration.png';
 import RotationalIcon from './asphalt/essays/Rotational.png';
 import RtcdIcon from './asphalt/essays/Rtcd.png';
