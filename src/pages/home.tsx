@@ -8,7 +8,6 @@ import { t } from 'i18next';
 const Home: NextPage = () => {
   const Router = useRouter();
 
-  
   const Aplications = [
     {
       //name: {t('home.asphalt')},

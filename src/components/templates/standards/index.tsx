@@ -1,6 +1,6 @@
-import Header from "@/components/organisms/header";
-import { Standard } from "@/interfaces/common";
-import { useState } from "react";
+import Header from '@/components/organisms/header';
+import { Standard } from '@/interfaces/common';
+import { useState } from 'react';
 import Filter, { FilterOption } from '@/components/molecules/buttons/filter';
 import { CardContainer, Card } from '@/components/atoms/containers/card';
 
@@ -46,7 +46,9 @@ export const StandardsTemplate = ({ standards, filterOptions }: StandardsTemplat
       <CardContainer>
         {standardsFiltered?.map((standard) => {
           // aqui o componente Card axige novas props agora que ele se tornou adptável à página em que é chamado;
-          return <Card key={standard.key} data={standard} type={'standard'} hrefLink={standard.link} target="_blank"></Card>;
+          return (
+            <Card key={standard.key} data={standard} type={'standard'} hrefLink={standard.link} target="_blank"></Card>
+          );
         })}
       </CardContainer>
     </>

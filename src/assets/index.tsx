@@ -22,16 +22,16 @@ import MaterialsIcon from './common/materials.svg';
 import EssayIcon from './common/essay.svg';
 
 // standard paste
-import InducedMoistureDamageIcon from './asphalt/essays/InducedMoistureDamage.png'
-import DurabilityIcon from './asphalt/standards/durabilityIcon.png'
-import CantabrianIcon from './asphalt/standards/CantabrianIcon.png'
-import FatigueIcon from './asphalt/standards/FatigueIcon.png'
-import MarshallIconPng from './asphalt/standards/MarshallIcon.png'
-import StorageStabilityIcon from './asphalt/standards/StorageStabilityIcon.png'
-import FlowNumberIcon from './asphalt/standards/FlowNumberIcon.png'
-import MSCRIcon from './asphalt/standards/MSCRIcon.png'
-import ResiliencyModuleIcon from './asphalt/standards/ResiliencyModuleIcon.png'
-import RiceTestIcon from './asphalt/standards/RiceTestIcon.png'
+import InducedMoistureDamageIcon from './asphalt/essays/InducedMoistureDamage.png';
+import DurabilityIcon from './asphalt/standards/durabilityIcon.png';
+import CantabrianIcon from './asphalt/standards/CantabrianIcon.png';
+import FatigueIcon from './asphalt/standards/FatigueIcon.png';
+import MarshallIconPng from './asphalt/standards/MarshallIcon.png';
+import StorageStabilityIcon from './asphalt/standards/StorageStabilityIcon.png';
+import FlowNumberIcon from './asphalt/standards/FlowNumberIcon.png';
+import MSCRIcon from './asphalt/standards/MSCRIcon.png';
+import ResiliencyModuleIcon from './asphalt/standards/ResiliencyModuleIcon.png';
+import RiceTestIcon from './asphalt/standards/RiceTestIcon.png';
 
 // asphalt paste
 import MarshallIcon from './asphalt/dosages/marshall.svg';
