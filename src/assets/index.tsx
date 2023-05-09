@@ -1,5 +1,6 @@
 // materialui
 import { Home, Add, Search, Report, Task, VideoLibrary, Delete, Settings, Logout } from '@mui/icons-material';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 // fasteng paste
 import LogoBlack from './fasteng/LogoBlack.png';
@@ -19,6 +20,18 @@ import SpecifyMassIcon from './common/essays/SpecifyMass.png';
 //others
 import MaterialsIcon from './common/materials.svg';
 import EssayIcon from './common/essay.svg';
+
+// standard paste
+import InducedMoistureDamageIcon from './asphalt/essays/InducedMoistureDamage.png';
+import DurabilityIcon from './asphalt/standards/durabilityIcon.png';
+import CantabrianIcon from './asphalt/standards/CantabrianIcon.png';
+import FatigueIcon from './asphalt/standards/FatigueIcon.png';
+import MarshallIconPng from './asphalt/standards/MarshallIcon.png';
+import StorageStabilityIcon from './asphalt/standards/StorageStabilityIcon.png';
+import FlowNumberIcon from './asphalt/standards/FlowNumberIcon.png';
+import MSCRIcon from './asphalt/standards/MSCRIcon.png';
+import ResiliencyModuleIcon from './asphalt/standards/ResiliencyModuleIcon.png';
+import RiceTestIcon from './asphalt/standards/RiceTestIcon.png';
 
 // asphalt paste
 import MarshallIcon from './asphalt/dosages/marshall.svg';
@@ -53,6 +66,7 @@ import SucsIcon from './soils/essays/Sucs.png';
 import CoarseAggregateIcon from './concrete/essays/CoarseAggregate.png';
 import SandIncreaseIcon from './concrete/essays/SandIncrease.png';
 import UnitMassIcon from './concrete/essays/UnitMass.png';
+
 //dosages
 import AbcpIcon from './concrete/dosages/abcp.svg';
 
@@ -68,6 +82,7 @@ export {
   Delete as DeleteIcon,
   Settings as SettingsIcon,
   Logout as LogoutIcon,
+  PictureAsPdfIcon as PDFIcon,
 
   // fasteng paste
   LogoBlack,
@@ -83,6 +98,7 @@ export {
   //essays
   SpecifyMassIcon,
   GranulometryIcon,
+  InducedMoistureDamageIcon,
   //others
   EssayIcon,
   MaterialsIcon,
@@ -107,6 +123,18 @@ export {
   SayboltFurolIcon,
   ShapeIndexIcon,
   SofteningPointIcon,
+
+  // standards
+  DurabilityIcon,
+  CantabrianIcon,
+  FatigueIcon,
+  MarshallIconPng,
+  StorageStabilityIcon,
+  FlowNumberIcon,
+  MSCRIcon,
+  ResiliencyModuleIcon,
+  RiceTestIcon,
+
   //dosages
   MarshallIcon,
   SuperpaveIcon,

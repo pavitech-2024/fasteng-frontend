@@ -95,3 +95,11 @@ export type Sieve = {
 //     value: 0.075; // mm
 //   }
 // ];
+export type Standard = {
+  key: string;
+  title: string;
+  icon: StaticImageData;
+  link: string;
+  type?: string;
+  standard?: string;
+};

@@ -1,24 +1,17 @@
 import Header from '@/components/organisms/header';
-import { CardContainer, Card } from '@/components/atoms/containers/card';
+import { Standard } from '@/interfaces/common';
+import { useState } from 'react';
 import Filter, { FilterOption } from '@/components/molecules/buttons/filter';
-import { useEffect, useState } from 'react';
-import { Essay } from '@/interfaces/common';
-import { useTranslation } from 'react-i18next';
+import { CardContainer, Card } from '@/components/atoms/containers/card';
 
-interface EssaysTemplateProps {
-  essays: Essay[];
+interface StandardsTemplateProps {
+  standards: Standard[];
   filterOptions?: FilterOption[];
 }
 
-export const EssaysTemplate = ({ essays, filterOptions }: EssaysTemplateProps) => {
+export const StandardsTemplate = ({ standards, filterOptions }: StandardsTemplateProps) => {
   const [filters] = useState<string[]>(['all']);
-  const [essaysFiltered, setEssaysFiltered] = useState<Essay[]>([]);
-
-  const { t, i18n } = useTranslation();
-
-  useEffect(() => {
-    setEssaysFiltered(essays);
-  }, [essays, i18n.language]);
+  const [standardsFiltered, setStandardsFiltered] = useState<Standard[]>(standards);
 
   // função que filtra os ensaios, atualiza os filtros e os ensaios filtrados
   const filterCallback = (key: string) => {
@@ -40,20 +33,22 @@ export const EssaysTemplate = ({ essays, filterOptions }: EssaysTemplateProps) =
         : (filter.isSelected = false);
     });
 
-    const newEssays = filters.includes('all')
-      ? essays
-      : essays.filter((essay) => filters.some((filter) => filter === essay.type));
+    const newStandards = filters.includes('all')
+      ? standards
+      : standards.filter((standard) => filters.some((filter) => filter === standard.type));
 
-    setEssaysFiltered(newEssays);
+    setStandardsFiltered(newStandards);
   };
+
   return (
     <>
-      <Header title={t('navbar.essays')}>
-        {filterOptions && <Filter options={filterOptions} callback={filterCallback} />}
-      </Header>
+      <Header title="Normas">{filterOptions && <Filter options={filterOptions} callback={filterCallback} />}</Header>
       <CardContainer>
-        {essaysFiltered.map((essay) => {
-          return <Card key={essay.key} data={essay} type={'essay'} hrefLink={essay.key} target="standard"></Card>;
+        {standardsFiltered?.map((standard) => {
+          // aqui o componente Card axige novas props agora que ele se tornou adptável à página em que é chamado;
+          return (
+            <Card key={standard.key} data={standard} type={'standard'} hrefLink={standard.link} target="_blank"></Card>
+          );
         })}
       </CardContainer>
     </>
