@@ -1,11 +1,12 @@
 import Axios from 'axios';
 
-const isLocalHost = true;
+//.env
+const isLocalHost = process.env.NODE_ENV === 'development';
 
-const [localhost, production] = ['http://localhost:8080', ''];
+const [localhost, test] = ['http://localhost:8080', 'https://development-fasteng-backend.vercel.app'];
 
 const Api = Axios.create({
-  baseURL: isLocalHost ? localhost : production,
+  baseURL: isLocalHost ? localhost : test,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
