@@ -1,18 +1,42 @@
-import { AbrasionIcon, AdhesivenessIcon, DuctilityIcon, AngularityIcon, PenetrationIcon, SandEquivalentIcon, GranulometryIcon, ShapeIndexIcon, SpecifyMassIcon, ElongatedParticlesIcon, SofteningPointIcon, FlashPointIcon, ElasticRecoveryIcon, RotationalIcon, RtcdIcon, FwdIcon, InducedMoistureDamageIcon, DurabilityIcon, CantabrianIcon, FatigueIcon, MarshallIconPng, StorageStabilityIcon, FlowNumberIcon, MSCRIcon, ResiliencyModuleIcon, RiceTestIcon } from "@/assets";
-import { FilterOption } from "@/components/molecules/buttons/filter";
-import { StandardsTemplate } from "@/components/templates/standards";
-import { Standard } from "@/interfaces/common";
-import { NextPage } from "next";
+import {
+  AbrasionIcon,
+  AdhesivenessIcon,
+  DuctilityIcon,
+  AngularityIcon,
+  PenetrationIcon,
+  SandEquivalentIcon,
+  GranulometryIcon,
+  ShapeIndexIcon,
+  SpecifyMassIcon,
+  ElongatedParticlesIcon,
+  SofteningPointIcon,
+  FlashPointIcon,
+  ElasticRecoveryIcon,
+  RotationalIcon,
+  RtcdIcon,
+  FwdIcon,
+  InducedMoistureDamageIcon,
+  DurabilityIcon,
+  CantabrianIcon,
+  FatigueIcon,
+  MarshallIconPng,
+  StorageStabilityIcon,
+  FlowNumberIcon,
+  MSCRIcon,
+  ResiliencyModuleIcon,
+  RiceTestIcon,
+} from '@/assets';
+import { FilterOption } from '@/components/molecules/buttons/filter';
+import { StandardsTemplate } from '@/components/templates/standards';
+import { Standard } from '@/interfaces/common';
+import { t } from 'i18next';
+import { NextPage } from 'next';
 
-interface AsphaltStandardsProps {
-  standards: Standard[];
-  filterOptions: FilterOption[];
-}
-
-export const getStaticProps = async () => {
+const AsphaltStandards: NextPage = () => {
+  // retirando do getStaticProps pq como existe tradução, a info não é estática
   const standards: Standard[] = [
     {
-      title: 'Abrasão "Los Angeles"',
+      title: t('asphalt.essay.abrasion'),
       icon: AbrasionIcon,
       key: 'abrasion',
       standard: 'DNER - ME 035/98',
@@ -236,16 +260,7 @@ export const getStaticProps = async () => {
     { key: 'asphaltBinder', title: 'Ligante Asfáltico', isSelected: false },
   ];
 
-  return {
-    props: {
-      standards,
-      filterOptions,
-    },
-  };
+  return <StandardsTemplate standards={standards} filterOptions={filterOptions} />;
 };
-
-const AsphaltStandards: NextPage = ({ standards, filterOptions }: AsphaltStandardsProps) => (
-  <StandardsTemplate standards={standards} filterOptions={filterOptions} />
-);
 
 export default AsphaltStandards;
