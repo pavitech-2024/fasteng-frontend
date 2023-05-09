@@ -1,0 +1,19 @@
+{
+  "materials.title": "Registered Materials",
+  "asphalt.materials.newMaterial": "Register Material",
+  "asphalt.materials.type": "Type",
+  "asphalt.materials.source": "Source",
+  "asphalt.materials.responsible": "Responsible",
+  "asphalt.materials.classification_AMP": "Classification",
+  "asphalt.materials.recieveDate": "Recieve Date",
+  "asphalt.materials.aggregateNature": "Nature of the Aggregate",
+  "asphalt.materials.collectionDate": "Collection Date",
+  "asphalt.materials.boughtDate": "Bought Date",
+  "asphalt.materials.classification_CAP": "Classification",
+  "asphalt.materials.asphaltBinder": "Asphalt Binder",
+  "asphalt.materials.coarseAggregate": "Coarse Aggregate",
+  "asphalt.materials.fineAggregate": "Fine Aggregate",
+  "asphalt.materials.filler": "Filler",
+  "asphalt.materials.cap": "CAP",
+  "asphalt.materials.other": "Other"
+}
