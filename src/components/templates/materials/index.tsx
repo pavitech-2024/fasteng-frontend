@@ -25,9 +25,10 @@ import { AddIcon, DeleteIcon } from '@/assets';
 import { formatDate } from '@/utils/format';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
 
 interface MaterialsTemplateProps {
-  materials: Sample[];
+  materials: Sample[] | AsphaltMaterial[];
   types: DropDownOption[];
   title: 'Amostras Cadastradas' | 'Materiais Cadastrados';
   //Modal
@@ -40,6 +41,13 @@ interface MaterialsColumn {
   id: 'name' | 'type' | 'createdAt' | 'actions';
   label: string;
   width: string;
+}
+
+interface DataToFilter {
+  _id: string;
+  name: string;
+  type: string;
+  createdAt: Date;
 }
 
 const MaterialsTemplate = ({
@@ -55,11 +63,11 @@ const MaterialsTemplate = ({
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
 
-  const [searchBy, setSearchBy] = useState<string>(t('materials.template.name').toLowerCase());
+  const [searchBy, setSearchBy] = useState<string>('name');
   const [searchValue, setSearchValue] = useState<string>('');
 
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const [RowToDelete, setRowToDelete] = useState<Sample>();
+  const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
 
   const columns: MaterialsColumn[] = [
     { id: 'name', label: t('materials.template.name'), width: '25%' },
@@ -76,6 +84,18 @@ const MaterialsTemplate = ({
         return t('samples.organicSoil');
       case 'pavementLayer':
         return t('samples.pavementLayer');
+      case 'coarseAggregate':
+        return t('asphalt.materials.coarseAggregate');
+      case 'fineAggregate':
+        return t('asphalt.materials.fineAggregate');
+      case 'asphaltBinder':
+        return t('asphalt.materials.asphaltBinder');
+      case 'CAP':
+        return t('asphalt.materials.cap');
+      case 'filler':
+        return t('asphalt.materials.filler');
+      case 'other':
+        return t('asphalt.materials.other');
     }
   };
 
@@ -83,36 +103,53 @@ const MaterialsTemplate = ({
     setSearchValue('');
   }, [searchBy]);
 
-  const filteredData =
-    searchValue.length > 0
-      ? materials.filter((material) => {
-          return searchBy === t('materials.template.name').toLowerCase()
-            ? material[searchBy].toLowerCase().includes(searchValue.toLowerCase())
-            : material[searchBy] === searchValue;
-        })
-      : materials;
+  const filteredData = materials
+    .map(({ _id, name, type, createdAt }) => ({
+      _id,
+      name,
+      type,
+      createdAt,
+    }))
+    .filter((material) => {
+      return searchValue.length > 0
+        ? searchBy === 'name'
+          ? material[searchBy].toLowerCase().includes(searchValue.toLowerCase())
+          : material[searchBy] === searchValue
+        : true;
+    });
 
   return (
     <>
       {/*Delete Modal */}
       <Dialog open={openDeleteModal}>
-        <DialogTitle sx={{ fontSize: '1rem', textTransform: 'uppercase' }}>
+        <DialogTitle sx={{ fontSize: '1rem', textTransform: 'uppercase', fontWeight: 700 }} color="secondary">
           {t('materials.template.deleteTitle')}
         </DialogTitle>
         <DialogContent>
           <DialogContentText sx={{ textTransform: 'uppercase', fontSize: '14px' }}>
             {t('materials.template.deleteText')} <span style={{ fontWeight: 700 }}>{RowToDelete?.name}</span>?
           </DialogContentText>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: '1rem' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: '1.3rem' }}>
             <Button
+              variant="contained"
               color="secondary"
-              sx={{ fontWeight: 700, fontSize: '12px' }}
+              sx={{
+                fontWeight: 700,
+                fontSize: { mobile: '11px', notebook: '13px' },
+                width: '40%',
+              }}
               onClick={() => setOpenDeleteModal(false)}
             >
               {t('materials.template.cancel')}
             </Button>
             <Button
-              sx={{ fontWeight: 700, fontSize: '12px' }}
+              variant="contained"
+              sx={{
+                fontWeight: 700,
+                fontSize: { mobile: '11px', notebook: '13px' },
+                color: 'primaryTons.mainWhite',
+                width: '40%',
+              }}
               onClick={() => {
                 try {
                   toast.promise(async () => await handleDeleteMaterial(RowToDelete?._id), {
@@ -204,7 +241,7 @@ const MaterialsTemplate = ({
             <AddIcon sx={{ color: '#fff', fontSize: '1.2rem' }} />
             <Typography sx={{ fontSize: '.8rem', fontWeight: '700' }} color="white">
               {`${
-                app === 'soils' ? ` ${t('materials.template.newSample')}` : ` ${t('materials.template.newMaterial')}}`
+                app === 'soils' ? ` ${t('materials.template.newSample')}` : ` ${t('materials.template.newMaterial')}`
               }`}
             </Typography>
           </Button>

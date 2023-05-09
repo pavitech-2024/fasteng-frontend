@@ -53,7 +53,7 @@ export const EssaysTemplate = ({ essays, filterOptions }: EssaysTemplateProps) =
       </Header>
       <CardContainer>
         {essaysFiltered.map((essay) => {
-          return <Card key={essay.key} essay={essay}></Card>;
+          return <Card key={essay.key} data={essay} type={'essay'} hrefLink={essay.key} target="standard"></Card>;
         })}
       </CardContainer>
     </>

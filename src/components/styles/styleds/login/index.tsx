@@ -3,22 +3,17 @@ import Image from 'next/image';
 
 //Images
 export const LoginImage = styled(Image)`
-  width: 304px;
+  width: 250px;
   height: 42px;
 
+  @media only screen and (min-width: 0px) {
+    width: 200px;
+    height: 38px;
+  }
+
   @media only screen and (min-width: 768px) {
-    width: 576px;
-    height: 79px;
-  }
-
-  @media only screen and (min-width: 1025px) {
     width: 400px;
-    height: 55px;
-  }
-
-  @media only screen and (min-width: 1366px) {
-    width: 500px;
-    height: 68.6px;
+    height: 50px;
   }
 `;
 

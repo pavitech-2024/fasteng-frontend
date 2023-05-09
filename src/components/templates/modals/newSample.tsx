@@ -5,7 +5,7 @@ import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import { SampleData, Sample } from '@/interfaces/soils';
 import ModalBase from '../../molecules/modals/modal';
 import { toast } from 'react-toastify';
-import samplesService from '@/services/soils/samplesService';
+import samplesService from '@/services/soils/soils-samples.service';
 import { t } from 'i18next';
 
 interface NewSampleModalProps {
@@ -123,6 +123,7 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, sam
                     size="medium"
                     options={types}
                     callback={(value: string) => changeSample('type', value)}
+                    required
                   />
                 )}
                 {input.key === 'depth' && (

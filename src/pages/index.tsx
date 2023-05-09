@@ -151,6 +151,7 @@ const Login: NextPage = () => {
                 }}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                InputLabelProps={{ shrink: true }}
               />
               <TextField
                 variant="outlined"
@@ -162,6 +163,7 @@ const Login: NextPage = () => {
                   width: { desktop: '26vw', mobile: '70vw' },
                 }}
                 onChange={(e) => setPassword(e.target.value)}
+                InputLabelProps={{ shrink: true }}
                 required
               />
             </Box>
