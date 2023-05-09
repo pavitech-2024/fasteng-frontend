@@ -96,23 +96,34 @@ const MaterialsTemplate = ({
     <>
       {/*Delete Modal */}
       <Dialog open={openDeleteModal}>
-        <DialogTitle sx={{ fontSize: '1rem', textTransform: 'uppercase' }}>
+        <DialogTitle sx={{ fontSize: '1rem', textTransform: 'uppercase', fontWeight: 700 }} color="secondary">
           {t('materials.template.deleteTitle')}
         </DialogTitle>
         <DialogContent>
           <DialogContentText sx={{ textTransform: 'uppercase', fontSize: '14px' }}>
             {t('materials.template.deleteText')} <span style={{ fontWeight: 700 }}>{RowToDelete?.name}</span>?
           </DialogContentText>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: '1rem' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: '1.3rem' }}>
             <Button
+              variant="contained"
               color="secondary"
-              sx={{ fontWeight: 700, fontSize: '12px' }}
+              sx={{
+                fontWeight: 700,
+                fontSize: { mobile: '11px', notebook: '13px' },
+                width: '40%',
+              }}
               onClick={() => setOpenDeleteModal(false)}
             >
               {t('materials.template.cancel')}
             </Button>
             <Button
-              sx={{ fontWeight: 700, fontSize: '12px' }}
+              variant="contained"
+              sx={{
+                fontWeight: 700,
+                fontSize: { mobile: '11px', notebook: '13px' },
+                color: 'primaryTons.mainWhite',
+                width: '40%',
+              }}
               onClick={() => {
                 try {
                   toast.promise(async () => await handleDeleteMaterial(RowToDelete?._id), {

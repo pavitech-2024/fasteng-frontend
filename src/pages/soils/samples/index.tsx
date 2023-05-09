@@ -5,8 +5,9 @@ import { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import { useEffect, useState } from 'react';
 import samplesService from '@/services/soils/samplesService';
 import useAuth from '@/contexts/auth';
-import NewSampleModal from '../../../components/templates/modals/newSample';
+import NewSampleModal from '@/components/templates/modals/newSample';
 import { t } from 'i18next';
+import Loading from '@/components/molecules/loading';
 
 const Samples: NextPage = () => {
   const types: DropDownOption[] = [
@@ -62,7 +63,7 @@ const Samples: NextPage = () => {
   return (
     <>
       {loading ? (
-        <p>Carregando...</p>
+        <Loading />
       ) : (
         <MaterialsTemplate
           materials={samples}
