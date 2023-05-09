@@ -80,7 +80,6 @@ export const Card = ({ data, type, hrefLink, target }: CardProps) => {
             backgroundColor: '#383838',
             borderRadius: '0 0 10px 10px',
             color: '#FFFFFF',
-            padding: '0 5px',
           }}
         >
           <Typography
@@ -88,6 +87,7 @@ export const Card = ({ data, type, hrefLink, target }: CardProps) => {
               textAlign: 'center',
               fontWeight: '700',
               fontSize: '13.5px',
+              padding: '5px',
             }}
           >
             {data.title}
