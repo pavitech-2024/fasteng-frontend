@@ -10,7 +10,7 @@
   "materials.template.toast.delete.pending": "Excluindo ",
   "materials.template.toast.delete.sucess": "Excluído com sucesso!",
   "materials.template.toast.delete.error": "Erro ao excluir ",
-  "materials.template.searchBy": "Pesquisar por:",
+  "materials.template.searchBy": "Pesquisar por: ",
   "materials.template.dropDown.label": "Selecione o tipo de ",
   "materials.template.sample": "amostra",
   "materials.template.material": "material",
