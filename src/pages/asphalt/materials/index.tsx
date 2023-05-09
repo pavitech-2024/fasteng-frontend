@@ -25,7 +25,7 @@ const Materials = () => {
       .catch((error) => {
         console.error('Failed to load materials:', error);
       });
-  },[user]);
+  }, [user]);
 
   const types: DropDownOption[] = [{ label: t('samples.all'), value: '' }];
 
