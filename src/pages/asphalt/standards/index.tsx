@@ -1,4 +1,4 @@
-import { AbrasionIcon, AdhesivenessIcon, DuctilityIcon, AngularityIcon, PenetrationIcon, RtfoIcon, SandEquivalentIcon, GranulometryIcon, ShapeIndexIcon, SpecifyMassIcon, ElongatedParticlesIcon, SofteningPointIcon, FlashPointIcon, ElasticRecoveryIcon, RotationalIcon, RtcdIcon, FwdIcon, InducedMoistureDamageIcon, DurabilityIcon, CantabrianIcon, FatigueIcon, MarshallIconPng, StorageStabilityIcon, FlowNumberIcon, MSCRIcon, ResiliencyModuleIcon, RiceTestIcon } from "@/assets";
+import { AbrasionIcon, AdhesivenessIcon, DuctilityIcon, AngularityIcon, PenetrationIcon, SandEquivalentIcon, GranulometryIcon, ShapeIndexIcon, SpecifyMassIcon, ElongatedParticlesIcon, SofteningPointIcon, FlashPointIcon, ElasticRecoveryIcon, RotationalIcon, RtcdIcon, FwdIcon, InducedMoistureDamageIcon, DurabilityIcon, CantabrianIcon, FatigueIcon, MarshallIconPng, StorageStabilityIcon, FlowNumberIcon, MSCRIcon, ResiliencyModuleIcon, RiceTestIcon } from "@/assets";
 import { FilterOption } from "@/components/molecules/buttons/filter";
 import { StandardsTemplate } from "@/components/templates/standards";
 import { Standard } from "@/interfaces/common";
