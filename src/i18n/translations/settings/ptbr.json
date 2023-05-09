@@ -1,4 +1,19 @@
 {
   "settings": "Configurações",
-  "logout": "Sair"
+  "logout": "Sair",
+  "settings.changeAvatar": "Alterar avatar",
+  "settings.preferences": "Preferências",
+  "settings.account": "Conta",
+  "settings.upload": "Carregar imagem",
+  "settings.language.label": "Selecione o idioma",
+  "settings.language.en": "Inglês",
+  "settings.language.ptbr": "Português",
+  "settings.decimal.label": "Selecione a quantidade de casas decimais",
+  "settings.save": "Salvar alterações",
+  "settings.toast.input loading": "Carregando foto inserida...",
+  "settings.toast.input success": "Foto carregada com sucesso...",
+  "settings.toast.input error": "Erro ao carregar foto ...",
+  "settings.toast loading": "Salvando preferências...",
+  "settings.toast success": "Preferências salvas com sucesso!",
+  "settings.toast error": "Erro ao salvar preferências!"
 }

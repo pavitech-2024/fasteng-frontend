@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import Api from '@/api';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
+import i18next from 'i18next';
 
 type User = {
   _id: string;
@@ -11,6 +12,10 @@ type User = {
   name: string;
   email: string;
   planName: string;
+  preferences: {
+    language: string;
+    decimal: number;
+  };
 };
 
 export type AuthContent = {
@@ -19,6 +24,7 @@ export type AuthContent = {
   signIn: (email: string, password: string) => Promise<void>;
   refreshLogin: () => Promise<void>;
   logout: () => Promise<void>;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
 export const AuthContext = createContext({} as AuthContent);
@@ -37,9 +43,7 @@ export function AuthProvider({ children }) {
         if (user === null) {
           await refreshLogin();
         }
-      } catch (error) {
-        throw console.error(error);
-      }
+      } catch (error) {}
     }
     loadUser();
   });
@@ -47,7 +51,6 @@ export function AuthProvider({ children }) {
   async function signIn(email: string, password: string): Promise<void> {
     try {
       const response = await Api.post('auth/login', { email, password });
-
       const { token, user, name, planName } = response.data;
 
       Cookies.set('fasteng.token', token, { expires: 0.416 });
@@ -57,6 +60,9 @@ export function AuthProvider({ children }) {
       Api.defaults.headers.Authorization = `Bearer ${token}`;
 
       await setUser({ ...user, name, planName, email });
+
+      user.preferences.language !== null && i18next.changeLanguage(user.preferences.language);
+
       Router.push('/home');
     } catch (error) {
       throw error;
@@ -78,6 +84,9 @@ export function AuthProvider({ children }) {
         Api.defaults.headers.Authorization = `Bearer ${response.data.token}`;
 
         setUser({ ...user, name, planName, email });
+
+        user.preferences.language !== null && i18next.changeLanguage(user.preferences.language);
+
         if (Router.pathname === '/') await Router.push('/home');
       }
     } catch (error) {
@@ -95,7 +104,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, signIn, refreshLogin, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, signIn, refreshLogin, logout, setUser }}>
       {children}
     </AuthContext.Provider>
   );

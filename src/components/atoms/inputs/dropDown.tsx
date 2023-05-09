@@ -2,7 +2,7 @@ import { MenuItem, TextField } from '@mui/material';
 
 export interface DropDownOption {
   label: string;
-  value: string;
+  value: string | number;
 }
 
 interface DropDownProps {

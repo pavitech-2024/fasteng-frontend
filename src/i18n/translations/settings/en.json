@@ -1,4 +1,19 @@
 {
   "settings": "Settings",
-  "logout": "Logout"
+  "logout": "Logout",
+  "settings.changeAvatar": "Change avatar",
+  "settings.preferences": "Preferences",
+  "settings.account": "Account",
+  "settings.upload": "Upload your image",
+  "settings.language.label": "Select your language",
+  "settings.language.en": "English",
+  "settings.language.ptbr": "Portuguese",
+  "settings.decimal.label": "Select your decimal separator",
+  "settings.save": "Save preferences",
+  "settings.toast.input loading": "Loading image ...",
+  "settings.toast.input success": "Image loaded successfully!",
+  "settings.toast.input error": "Error loading image!",
+  "settings.toast loading": "Saving preferences ...",
+  "settings.toast success": "Preferences saved successfully!",
+  "settings.toast error": "Error saving preferences!"
 }
