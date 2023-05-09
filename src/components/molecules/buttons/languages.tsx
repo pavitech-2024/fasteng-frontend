@@ -7,9 +7,11 @@ interface LanguagesProps {
   top?: number;
   left?: number;
   bottom?: number;
+  selectedColor?: string;
+  unSelectedColor?: string;
 }
 
-const Languages = ({ right, top, left, bottom }: LanguagesProps) => {
+const Languages = ({ right, top, left, bottom, selectedColor, unSelectedColor }: LanguagesProps) => {
   const { i18n } = useTranslation();
   const lngOptions = [
     {
@@ -41,7 +43,15 @@ const Languages = ({ right, top, left, bottom }: LanguagesProps) => {
         return (
           <React.Fragment key={lng.value}>
             <Button
-              sx={{ color: selected ? 'primary.main' : 'secondary.main' }}
+              sx={{
+                color: selected
+                  ? selectedColor
+                    ? selectedColor
+                    : 'secondaryTons.main'
+                  : unSelectedColor
+                  ? unSelectedColor
+                  : 'primaryTons.mainGray',
+              }}
               onClick={() => i18n.changeLanguage(lng.value)}
             >
               {lng.name}

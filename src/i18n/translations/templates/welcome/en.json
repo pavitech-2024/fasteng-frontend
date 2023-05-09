@@ -1,0 +1,12 @@
+{
+  "welcome.asphalt": "Asphalt",
+  "welcome.soils": "Soils",
+  "welcome.concrete": "Concrete",
+  "welcome.title": "Welcome to the area of ",
+  "welcome.how it works": "How it works?",
+  "welcome.step.asphalt.1": "Register your material",
+  "welcome.step.asphalt.2": "Record tests with the material",
+  "welcome.step.asphalt.3": "Generate test reports",
+  "welcome.step.soils.1": "Register your sample",
+  "welcome.step.soils.2": "Record tests with the sample"
+}

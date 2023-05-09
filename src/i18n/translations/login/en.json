@@ -7,5 +7,7 @@
   "login.forget password": "Forgot your password?",
   "login.toast loading": "Veifying user...",
   "login.toast error": "Username or password is invalid!",
-  "login.toast success": "Login successful!"
+  "login.toast success": "Login successful!",
+  "login.password placeholder": "Enter your password...",
+  "login.email placeholder": "Enter your email..."
 }

@@ -5,7 +5,7 @@ import { Home, Add, Search, Report, Task, VideoLibrary, Delete, Settings, Logout
 import LogoBlack from './fasteng/LogoBlack.png';
 import LogoWhite from './fasteng/LogoWhite.png';
 import LogoSmall from './fasteng/LogoSmall.png';
-import LoginImage from './fasteng/LoginPhoto.jpg';
+import LoginPhoto from './fasteng/LoginPhoto.jpg';
 
 // apps paste
 import AsphaltIcon from './apps/asphalt.svg';
@@ -73,7 +73,7 @@ export {
   LogoBlack,
   LogoWhite,
   LogoSmall,
-  LoginImage,
+  LoginPhoto,
   // apps paste
   AsphaltIcon,
   SoilsIcon,

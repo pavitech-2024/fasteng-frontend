@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { Container, Box, Card, Typography } from '@mui/material';
 import { LogoBlack, AsphaltIcon, SoilsIcon, ConcreteIcon } from '@/assets';
-import { LoginImage } from '../components/styles/login';
+import { LoginImage } from '@/components/styles/styleds/login';
 import { t } from 'i18next';
 
 const Home: NextPage = () => {
@@ -121,7 +121,7 @@ const Home: NextPage = () => {
                   mobile: '120px',
                   notebook: '300px',
                 },
-                bgcolor: 'primary.main',
+                bgcolor: 'secondaryTons.main',
                 borderRadius: {
                   mobile: '10px',
                   notebook: '7%',
@@ -135,7 +135,7 @@ const Home: NextPage = () => {
                 sx={{
                   width: { mobile: '45%', notebook: '100%' },
                   height: { mobile: '100%', notebook: '75%' },
-                  bgcolor: 'secondary.main',
+                  bgcolor: 'primaryTons.darkGray',
                   display: 'grid',
                   placeItems: 'center',
                 }}
@@ -153,7 +153,8 @@ const Home: NextPage = () => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   color: 'white',
-                  fontSize: { notebook: '22px', mobile: '14px' },
+                  fontSize: { notebook: '20px', mobile: '12px' },
+                  textTransform: 'uppercase',
                 }}
               >
                 {element.name}

@@ -19,14 +19,31 @@ const GlobalStyle = createGlobalStyle`
 		margin: 0;
 		padding: 0;
 	}
+
 	body {
-		background-color: #F4F5F7;
+		background-color: #F2F2F2;
 		height: 100%;
     overflow-x: hidden;
+
     p, span, h1, h2, h3, h4, h5, h6, button, label, div, textarea, input{
-      font-family: 'Work Sans ', sans-serif;
+      font-family: 'Roboto', sans-serif;
     }
   }
+
+  body::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  body::-webkit-scrollbar-track {
+    background: #FCFCFC;
+  }
+
+  body::-webkit-scrollbar-thumb {
+    background-color: #121212;
+    border-radius: 20px;
+    border: 2px solid #F2F2F2;
+  }
+
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -43,7 +60,10 @@ const Pages = (props: PagesProps) => {
     const [OpenSidebar, setOpenSidebar] = useState<boolean>(false);
 
     const navbar =
-      Router.pathname.includes('asphalt') || Router.pathname.includes('soils') || Router.pathname.includes('concrete');
+      Router.pathname.includes('asphalt/') ||
+      Router.pathname.includes('soils/') ||
+      Router.pathname.includes('concrete/') ||
+      Router.pathname.includes('settings');
 
     if (Router.pathname === '/') return children;
 
@@ -55,18 +75,10 @@ const Pages = (props: PagesProps) => {
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Box
               sx={{
-                mt: { mobile: '2.2rem', notebook: '3rem' },
-                width: {
-                  mobile: 'calc(100% - 16px)',
-                  notebook: 'calc(100% - 96px)',
-                  containerMargin: '100% ',
-                },
-                ml: {
-                  notebook: '56px',
-                  containerMargin: 0,
-                },
+                width: '90vw',
+                height: '83vh',
+                padding: '5vh 5vw',
               }}
-              maxWidth="calc(1920px - 32px)"
             >
               {children}
             </Box>
