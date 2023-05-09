@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 //Images
 export const LoginImage = styled(Image)`
-  width: 304px;
+  width: 250px;
   height: 42px;
 
   @media only screen and (min-width: 768px) {
