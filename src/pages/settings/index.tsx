@@ -245,5 +245,5 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
       </Box>
     </>
   );
-
+};
 export default Settings;
