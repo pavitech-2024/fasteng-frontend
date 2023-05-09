@@ -3,7 +3,7 @@ import MaterialsTemplate from '@/components/templates/materials';
 import { Sample } from '@/interfaces/soils';
 import { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import { useEffect, useState } from 'react';
-import samplesService from '@/services/soils/samplesService';
+import samplesService from '@/services/soils/soils-samples.service';
 import useAuth from '@/contexts/auth';
 import NewSampleModal from '@/components/templates/modals/newSample';
 import { t } from 'i18next';
@@ -21,7 +21,7 @@ const Samples: NextPage = () => {
   const handleOpenModal = () => setOpenModal(true);
 
   const { user } = useAuth();
-  const [samples, setSamples] = useState<Sample[]>(null);
+  const [samples, setSamples] = useState<Sample[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const Samples: NextPage = () => {
         setLoading(false);
       })
       .catch((error) => {
-        throw error;
+        console.error('Failed to load samples:', error);
       });
   }, [user]);
 
@@ -43,7 +43,7 @@ const Samples: NextPage = () => {
       const updatedSamples = samples.filter((sample) => sample._id !== id);
       setSamples(updatedSamples);
     } catch (error) {
-      throw error;
+      console.error('Failed to delete sample:', error);
     }
   };
 
@@ -56,7 +56,7 @@ const Samples: NextPage = () => {
         setLoading(false);
       })
       .catch((error) => {
-        throw error;
+        console.error('Failed to load samples:', error);
       });
   };
 
