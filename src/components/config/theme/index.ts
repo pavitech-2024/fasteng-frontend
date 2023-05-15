@@ -14,12 +14,12 @@ export const theme = createTheme({
 
   palette: {
     primaryTons: {
-      mainWhite: '#FCFCFC',
+      white: '#FCFCFC',
       background: '#F2F2F2',
-      border: '#CFCFCF',
-      mainGray: '#383838',
-      darkGray: '#212121',
-      darkerGray: '#121212',
+      border: '#E3E3E3',
+      lightGray: '#383838',
+      mainGray: '#212121',
+      darkGray: '#121212',
     },
 
     secondaryTons: {
@@ -43,7 +43,7 @@ export const theme = createTheme({
 					margin: '0',
 					padding: '0',
 					boxSizing: 'border-box',
-					backgroundColor: '#FFFAF6',
+					backgroundColor: '#F2F2F2',
 					color: '#2F3559',
 					fontWeight: '400',
           overflowX: 'hidden'

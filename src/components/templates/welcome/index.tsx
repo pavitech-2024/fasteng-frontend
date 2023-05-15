@@ -9,8 +9,8 @@ import {
   stepConnectorClasses,
   Stack
 } from '@mui/material';
+import { CardMenuOptions as Card } from '@/components/styles/muis/welcome';
 import { t } from 'i18next';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
 
@@ -63,27 +63,31 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
     <Box
       sx={{
         display: 'flex',
-        flexDirection: {
-          mobile: 'column',
-          notebook: 'row',
-        },
-        justifyContent: 'center',
+        flexDirection: 'column',
+        justifyContent: 'start',
         alignItems: 'center',
-        height: 'calc(100vh - 52px)',
         width: '100vw',
         padding: 0,
         position: 'absolute',
         zIndex: 2,
         top: '52px',
         left: 0,
+        '@media only screen and (min-width: 1024px)': {
+          flexDirection: 'row',
+          justifyContent: 'center'
+        }
       }}
     >
       <Box
         sx={{
-          width: {
-            mobile: '100%',
-            notebook: '50%',
+          mobile: '100%',
+          pt: '3vh',
+          '@media only screen and (min-width: 1024px)': {
+            width: '60%'
           },
+          '@media only screen and (min-width: 1366px)': {
+            width: '40%'
+          }
         }}
       >
         <Box
@@ -93,70 +97,91 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
             alignItems: 'center',
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography
-              variant="h2"
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: "90%"
+            }}
+          >
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+              {icon}
+            </Box>
+            <Box
               color="secondaryTons.main"
               sx={{
                 textTransform: 'uppercase',
                 fontWeight: 700,
-                fontSize: { mobile: '1.2rem', notebook: '2rem' },
-                span: { color: '#000' },
-                mr: '1rem',
+                fontSize: { mobile: '1.3rem', notebook: '2rem' },
+                lineHeight: { mobile: '1.35rem', notebook: '2.05rem' },
+                textAlign: 'center',
+                pl: '15px',
+                color: 'secondaryTons.main',
+                div: { color: 'primaryTons.darkGray' }
               }}
             >
-              <span>{t('welcome.title')}</span>
+              <div>{t('welcome.title')}</div>
               {title}
-            </Typography>
-            {icon}
+            </Box>
           </Box>
           <Box
             sx={{
-              bgcolor: 'primaryTons.mainWhite',
+              bgcolor: 'primaryTons.white',
               borderRadius: '10px',
-              padding: '2rem .5rem',
-              margin: '1rem auto',
+              mt: '2vh',
+              padding: { mobile: '3vh 4vw', notebook: '25px' },
+              width: { mobile: '90vw', notebook: '500px', desktop: '550px' },
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
           >
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <Typography
-                variant="body1"
-                sx={{
-                  margin: '1rem 0',
-                  fontWeight: 700,
-                }}
-              >
-                {t('welcome.how it works')}
-              </Typography>
-              <Stack>
-                <Stepper activeStep={stepperData.length} alternativeLabel connector={<QontoConnector />}>
-                  {stepperData.map((step: StepData) => (
-                    <Step key={step.step} completed>
-                      <StepLabel>{step.description}</StepLabel>
-                    </Step>
-                  ))}
-                </Stepper>
-              </Stack>
-            </Box>
+            <Typography
+              sx={{
+                fontWeight: { mobile: 700, desktop: 500 },
+                fontSize: { mobile: '1.25rem', desktop: '1.5rem' },
+                color: 'primaryTons.mainGray',
+                mb: { mobile: '3vh', notebook: '25px' }
+              }}
+            >
+              {t('welcome.how it works')}
+            </Typography>
+            <Stack>
+              <Stepper activeStep={stepperData.length} alternativeLabel connector={<QontoConnector />}>
+                {stepperData.map((step: StepData) => (
+                  <Step key={step.step} completed>
+                    <StepLabel>{step.description}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            </Stack>
             <Box
               sx={{
-                display: 'grid',
-                gap: '20px',
-                width: 'calc(100% - 2.4rem)',
-                margin: '2rem 1.2rem',
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                mt: { mobile: '3vh', notebook: '25px' }
               }}
             >
               {welcomeData.map((element: WelcomeData) => (
                 <Typography
-                  color="primary"
+                  color="secondaryTons.main"
                   sx={{
                     fontWeight: 700,
-                    span: { color: '#000', fontWeight: 400 },
-                    fontSize: '16px',
+                    fontSize: '1rem',
+                    mb: '16px',
+                    span: {
+                      color: 'primaryTons.mainGray',
+                      fontWeight: 400
+                    },
                   }}
                   key={element.name}
                 >
-                  {element.name}:<span> {element.description}</span>
+                  • {element.name}:<span> {element.description}</span>
                 </Typography>
               ))}
             </Box>
@@ -167,69 +192,25 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
       <Box
         sx={{
           display: 'grid',
-          height: 'fit-content',
-          gap: '20px',
-          gridTemplateColumns: {
-            mobile: 'repeat(auto-fit, minmax(200px, 1fr))',
-            notebook: '1fr',
+          gap: '20px 0',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          width: '300px',
+          padding: '4vh 0',
+
+          '@media only screen and (min-width: 768px)': {
+            gridTemplateColumns: '1fr 1fr',
+            justifyItems: 'center',
+            width: '90%'
           },
-          justifyItems: {
-            mobile: 'center',
-            notebook: 'start',
-          },
+
+          '@media only screen and (min-width: 1024px)': {
+            gridTemplateColumns: '1fr',
+            width: '325px'
+          }
         }}
       >
-        {welcomeData.map((element: WelcomeData) => (
-          <Box
-            key={element.name}
-            sx={{
-              bgcolor: 'transparent',
-              width: {
-                mobile: '200px',
-                notebook: '350px',
-              },
-              height: '100px',
-              ':hover': { cursor: 'pointer' },
-            }}
-          >
-            <Link key={element.name} href={element.path} style={{ textDecoration: 'none' }}>
-              <Box sx={{ display: 'flex', height: '100%' }}>
-                <Box
-                  sx={{
-                    width: '100px',
-                    bgcolor: 'secondaryTons.main',
-                    borderRadius: '20px 0 0 20px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  {element.icon}
-                </Box>
-                <Box
-                  sx={{
-                    width: {
-                      mobile: '100px',
-                      notebook: '250px',
-                    },
-                    bgcolor: 'primaryTons.darkGray',
-                    borderRadius: '0 20px 20px 0',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    transition: 'all .3s',
-                    ':hover': {
-                      bgcolor: 'primaryTons.mainGray',
-                    },
-                  }}
-                >
-                  <Typography variant="body1" color="primaryTons.mainWhite">
-                    {element.name}
-                  </Typography>
-                </Box>
-              </Box>
-            </Link>
-          </Box>
+        {welcomeData.map((option: WelcomeData) => (
+          <Card key={option.name} {...option} />
         ))}
       </Box>
     </Box>

@@ -7,31 +7,31 @@ const Concrete: NextPage = () => {
   const welcomeData: WelcomeData[] = [
     {
       name: t('navbar.materials'),
-      icon: <MaterialsIcon width="40px" height="45px" />,
+      icon: <MaterialsIcon width="30px" height="35px" />,
       description: 'Descrição sobre materiais',
       path: '/concrete/materials',
     },
     {
       name: t('navbar.essays'),
-      icon: <EssayIcon width="40px" height="45px" />,
+      icon: <EssayIcon width="30px" height="35px" />,
       description: 'Descrição sobre materiais',
       path: '/concrete/essays',
     },
     {
       name: t('navbar.abcp'),
-      icon: <AbcpIcon width="40px" height="45px" />,
+      icon: <AbcpIcon width="35px" height="40px" />,
       description: 'Descrição sobre materiais',
       path: '/concrete/abcp',
     },
     {
       name: t('navbar.standards'),
-      icon: <StandartsIcon style={{ color: 'white', fontSize: '40px' }} />,
+      icon: <StandartsIcon style={{ color: 'white', fontSize: '30px' }} />,
       description: 'Descrição sobre materiais',
       path: '/concrete/standards',
     },
     {
       name: t('navbar.library'),
-      icon: <LibraryIcon style={{ color: 'white', fontSize: '40px' }} />,
+      icon: <LibraryIcon style={{ color: 'white', fontSize: '30px' }} />,
       description: 'Descrição sobre materiais',
       path: '/concrete/library',
     },

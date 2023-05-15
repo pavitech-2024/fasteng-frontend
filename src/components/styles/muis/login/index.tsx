@@ -5,25 +5,25 @@ export const AboutButton = () => (
     variant="contained"
     sx={{
       color: 'secondaryTons.main',
-      bgcolor: 'primaryTons.darkGray',
-      fontSize: '1rem',
-      lineHeight: '1rem',
+      bgcolor: 'primaryTons.mainGray',
+      fontSize: '.95rem',
+      lineHeight: '.95rem',
       fontWeight: '700',
       height: '28px',
-      width: '136px',
-      borderRadius: '10px',
+      width: '126px',
+      borderRadius: '20px',
       boxShadow: 'unset',
       border: '1px solid #F2A255',
 
       '&:hover': {
-        bgcolor: 'primaryTons.darkerGray',
+        bgcolor: 'primaryTons.darkGray',
         border: '1px solid secondaryTons.main',
         boxShadow: 'unset',
       },
 
       '@media screen and (max-width: 1024px)': {
-        fontSize: '0.85rem',
-        lineHeight: '0.85rem',
+        fontSize: '.85rem',
+        lineHeight: '.85rem',
         height: '24px',
         width: '112px',
       },

@@ -64,7 +64,7 @@ const Home: NextPage = () => {
           sx={{
             fontSize: { desktop: '1.5rem', notebook: '1.25rem', mobile: '.85rem' },
             fontWeight: '700',
-            color: 'primaryTons.mainGray',
+            color: 'primaryTons.lightGray',
             height: { desktop: '2.5rem', notebook: '1.75rem', mobile: '1.35rem' },
             margin: 0
           }}
@@ -79,7 +79,7 @@ const Home: NextPage = () => {
           sx={{
             fontSize: { desktop: '1.5rem', notebook: '1.25rem', mobile: '.85rem' },
             fontWeight: 700,
-            color: 'primaryTons.mainGray',
+            color: 'primaryTons.lightGray',
             textAlign: 'center',
             height: { desktop: '2.5rem', notebook: '1.75rem', mobile: '1.35rem' },
             margin: 0
@@ -100,7 +100,7 @@ const Home: NextPage = () => {
             sx={{
               fontSize: { notebook: '1rem', mobile: '.85rem' },
               fontWeight: 500,
-              color: 'primaryTons.darkerGray',
+              color: 'primaryTons.darkGray',
               textAlign: 'center',
             }}
           >

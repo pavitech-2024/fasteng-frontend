@@ -44,8 +44,8 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
       <AppBar
         position="absolute"
         sx={{
-          bgcolor: 'primaryTons.darkerGray',
-          color: 'primaryTons.mainWhite',
+          bgcolor: 'primaryTons.darkGray',
+          color: 'primaryTons.white',
           height: '52px',
           width: `window.innerHeight > 100vh ? calc(100vw - 12px) : 100vw`,
           display: 'flex',
@@ -100,7 +100,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                     display: { notebook: 'flex', mobile: 'none' },
                     width: '1.5px',
                     height: '20px',
-                    bgcolor: 'primaryTons.mainWhite',
+                    bgcolor: 'primaryTons.white',
                     margin: { desktop: '0 0.75vw', notebook: '0 2vw' }
                   }}
                 />

@@ -34,7 +34,7 @@ export const CardApp: NextPage<Props> = ({ element, onClick }) => (
   >
     <Box
       sx={{
-        backgroundColor: 'primaryTons.darkerGray',
+        backgroundColor: 'primaryTons.darkGray',
         height: { mobile: '100%', notebook: '75%' },
         width: { mobile: '90px', notebook: '100%' },
         display: 'flex',
@@ -73,7 +73,7 @@ export const CardApp: NextPage<Props> = ({ element, onClick }) => (
           containerMargin: '1.8rem',
         },
         fontWeight: '500',
-        color: 'primaryTons.mainWhite',
+        color: 'primaryTons.white',
         lineHeight: {
           mobile: 'auto',
           notebook: '1.35rem',

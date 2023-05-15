@@ -7,25 +7,25 @@ const Soils: NextPage = () => {
   const welcomeData: WelcomeData[] = [
     {
       name: t('navbar.samples'),
-      icon: <MaterialsIcon width="40px" height="45px" />,
+      icon: <MaterialsIcon width="30px" height="35px" />,
       description: 'Descrição sobre materiais',
       path: '/soils/samples',
     },
     {
       name: t('navbar.essays'),
-      icon: <EssayIcon width="40px" height="45px" />,
+      icon: <EssayIcon width="30px" height="35px" />,
       description: 'Descrição sobre materiais',
       path: '/soils/essays',
     },
     {
       name: t('navbar.standards'),
-      icon: <StandartsIcon style={{ color: 'white', fontSize: '40px' }} />,
+      icon: <StandartsIcon style={{ color: 'white', fontSize: '30px' }} />,
       description: 'Descrição sobre materiais',
       path: '/soils/standards',
     },
     {
       name: t('navbar.library'),
-      icon: <LibraryIcon style={{ color: 'white', fontSize: '40px' }} />,
+      icon: <LibraryIcon style={{ color: 'white', fontSize: '30px' }} />,
       description: 'Descrição sobre materiais',
       path: '/soils/library',
     },

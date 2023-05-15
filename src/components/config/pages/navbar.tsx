@@ -33,7 +33,7 @@ interface ItemProps {
 export default function Navbar({ open, app }: NavbarProps) {
   const Router = useRouter();
 
-  const IconStyle = { color: 'primaryTons.mainWhite', fontSize: '1.5rem' };
+  const IconStyle = { color: 'primaryTons.white', fontSize: '1.5rem' };
 
   const Items: ItemProps[] = [
     { name: t('navbar.home'), link: '/home', app: 'common', icon: <HomeIcon sx={IconStyle} />, type: 'single' },
@@ -172,7 +172,7 @@ export default function Navbar({ open, app }: NavbarProps) {
         alignItems: 'flex-start',
         width: `${open ? '225px' : '52px'}`,
         pt: { mobile: '52px', notebook: '0' },
-        bgcolor: 'primaryTons.darkGray',
+        bgcolor: 'primaryTons.mainGray',
         height: '100vh',
         transition: 'width 0.5s',
         ':hover': {
@@ -234,7 +234,7 @@ export default function Navbar({ open, app }: NavbarProps) {
                       fontWeight: 700,
                       lineHeight: '.9375rem',
                       whiteSpace: 'nowrap',
-                      color: 'primaryTons.mainWhite',
+                      color: 'primaryTons.white',
                       transition: 'color .5s ease-in-out',
                     }}
                   >
@@ -249,7 +249,7 @@ export default function Navbar({ open, app }: NavbarProps) {
                       <Box
                         sx={{
                           display: 'flex',
-                          bgcolor: 'primaryTons.mainGray',
+                          bgcolor: 'primaryTons.lightGray',
                           justifyItems: 'flex-start',
                           alignItems: 'center',
                           width: '100%',
@@ -258,7 +258,7 @@ export default function Navbar({ open, app }: NavbarProps) {
                           transition: 'background .3s ease-in-out, border .1s',
                           overflow: 'hidden',
                           borderRight: `${Router.pathname.includes(item.link) && '3px solid'}`,
-                          borderColor: 'primaryTons.darkerGray',
+                          borderColor: 'primaryTons.darkGray',
                           ':hover': { bgcolor: 'secondaryTons.main' },
                         }}
                       >
@@ -271,7 +271,7 @@ export default function Navbar({ open, app }: NavbarProps) {
                             fontWeight: 700,
                             lineHeight: '.9375rem',
                             whiteSpace: 'nowrap',
-                            color: 'primaryTons.mainWhite',
+                            color: 'primaryTons.white',
                             transition: 'color .5s ease-in-out',
                           }}
                         >

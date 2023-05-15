@@ -19,12 +19,12 @@ declare module '@mui/material/styles' {
 declare module '@mui/material' {
   export interface PaletteOptions {
     primaryTons: {
-      mainWhite: string;
+      white: string;
       background: string;
       border: string;
+      lightGray: string;
       mainGray: string;
       darkGray: string;
-      darkerGray: string;
     };
 
     secondaryTons: {

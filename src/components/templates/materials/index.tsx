@@ -147,7 +147,7 @@ const MaterialsTemplate = ({
               sx={{
                 fontWeight: 700,
                 fontSize: { mobile: '11px', notebook: '13px' },
-                color: 'primaryTons.mainWhite',
+                color: 'primaryTons.white',
                 width: '40%',
               }}
               onClick={() => {

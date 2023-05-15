@@ -14,13 +14,15 @@ export const MainButton = (props: ButtonProps) => (
     onClick={props.handleClick}
     disabled={props.disabled}
     sx={{
-      color: 'primaryTons.mainWhite',
+      color: 'primaryTons.white',
       bgcolor: 'secondaryTons.main',
-      fontSize: '1rem',
-      lineHeight: '1rem',
+      fontSize: '.95rem',
+      lineHeight: '.95rem',
       fontWeight: '700',
       height: '28px',
       width: '126px',
+      display: 'flex',
+      textAlign: 'center',
       borderRadius: '20px',
       boxShadow: 'unset',
 

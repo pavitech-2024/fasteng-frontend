@@ -79,7 +79,7 @@ const Login: NextPage = () => {
             </Box>
             <Box
               sx={{
-                color: 'primaryTons.mainWhite',
+                color: 'primaryTons.white',
                 display: 'flex',
                 alignItems: 'center',
                 textAlign: 'center',
@@ -105,7 +105,7 @@ const Login: NextPage = () => {
         </Box>
         <Container
           sx={{
-            bgcolor: 'primaryTons.mainWhite',
+            bgcolor: 'primaryTons.white',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
