@@ -8,6 +8,7 @@ import { ToastContainer } from 'react-toastify';
 import '../i18n';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import CssBaseline from '@mui/material/CssBaseline';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { i18n } = useTranslation();
@@ -21,6 +22,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           <Pages>
             <>
               <ToastContainer position="top-right" autoClose={5000} closeOnClick theme="colored" />
+              <CssBaseline />
               <Component {...pageProps} />
             </>
           </Pages>

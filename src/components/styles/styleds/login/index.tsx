@@ -4,16 +4,18 @@ import Image from 'next/image';
 //Images
 export const LoginImage = styled(Image)`
   width: 250px;
-  height: 42px;
-
-  @media only screen and (min-width: 0px) {
-    width: 200px;
-    height: 38px;
-  }
+  height: auto;
 
   @media only screen and (min-width: 768px) {
+    width: 480px;
+  }
+
+  @media only screen and (min-width: 1025px) {
     width: 400px;
-    height: 50px;
+  }
+
+  @media only screen and (min-width: 1366px) {
+    width: 500px;
   }
 `;
 

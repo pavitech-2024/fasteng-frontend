@@ -5,7 +5,7 @@ interface Props {
   element: {
     name: string;
     icon: JSX.Element;
-    link: string;
+    path: string;
   };
   onClick: () => Promise<boolean>;
 }
@@ -16,16 +16,14 @@ export const CardApp: NextPage<Props> = ({ element, onClick }) => (
     sx={{
       width: {
         mobile: '300px',
-        notebook: '220px',
-        desktop: '260px',
-        containerMargin: '300px',
-      },
-      height: {
-        mobile: '90px',
         notebook: '240px',
         desktop: '280px',
-        containerMargin: '320px',
-      },
+        containerMargin: '320px' },
+      height: {
+        mobile: '90px',
+        notebook: '220px',
+        desktop: '260px',
+        containerMargin: '300px' },
       borderRadius: '20px',
       boxShadow: 'none',
       display: 'flex',
@@ -62,7 +60,7 @@ export const CardApp: NextPage<Props> = ({ element, onClick }) => (
       sx={{
         backgroundColor: 'secondaryTons.main',
         height: { mobile: '100%', notebook: '25%' },
-        width: { mobile: 'calc(210px - 8vw)', notebook: 'calc(100% - 4vw)' },
+        width: { mobile: '210px', notebook: '100%' },
         display: 'flex',
         textAlign: { mobile: 'left', notebook: 'center' },
         justifyContent: { mobile: 'start', notebook: 'center' },
@@ -74,7 +72,7 @@ export const CardApp: NextPage<Props> = ({ element, onClick }) => (
           desktop: '1.45rem',
           containerMargin: '1.8rem',
         },
-        fontWeight: '700',
+        fontWeight: '500',
         color: 'primaryTons.mainWhite',
         lineHeight: {
           mobile: 'auto',

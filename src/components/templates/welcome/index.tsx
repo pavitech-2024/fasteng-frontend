@@ -1,4 +1,14 @@
-import { Box, Typography, Stepper, Step, StepLabel } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Stepper,
+  Step,
+  StepLabel,
+  styled,
+  StepConnector,
+  stepConnectorClasses,
+  Stack
+} from '@mui/material';
 import { t } from 'i18next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -22,6 +32,29 @@ interface WelcomeTemplateProps {
   stepperData: StepData[];
 }
 
+const QontoConnector = styled(StepConnector)(({ theme }) => ({
+  [`&.${stepConnectorClasses.alternativeLabel}`]: {
+    top: 10,
+    left: 'calc(-50% + 16px)',
+    right: 'calc(50% + 16px)',
+  },
+  [`&.${stepConnectorClasses.active}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      borderColor: theme.palette.secondaryTons.green,
+    },
+  },
+  [`&.${stepConnectorClasses.completed}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      borderColor: theme.palette.secondaryTons.green,
+    },
+  },
+  [`& .${stepConnectorClasses.line}`]: {
+    borderColor: theme.palette.secondaryTons.green,
+    borderTopWidth: 3,
+    borderRadius: 1,
+  },
+}));
+
 const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProps) => {
   const app = useRouter().pathname.split('/')[1];
   const title = t(`welcome.${app}`);
@@ -35,12 +68,14 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
           notebook: 'row',
         },
         justifyContent: 'center',
-        width: '100%',
-        paddingTop: {
-          mobile: '0',
-          notebook: '2rem',
-        },
-        gap: '1rem',
+        alignItems: 'center',
+        height: 'calc(100vh - 52px)',
+        width: '100vw',
+        padding: 0,
+        position: 'absolute',
+        zIndex: 2,
+        top: '52px',
+        left: 0,
       }}
     >
       <Box
@@ -61,7 +96,7 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography
               variant="h2"
-              color="primary"
+              color="secondaryTons.main"
               sx={{
                 textTransform: 'uppercase',
                 fontWeight: 700,
@@ -77,7 +112,7 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
           </Box>
           <Box
             sx={{
-              bgcolor: '#fff',
+              bgcolor: 'primaryTons.mainWhite',
               borderRadius: '10px',
               padding: '2rem .5rem',
               margin: '1rem auto',
@@ -93,13 +128,15 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
               >
                 {t('welcome.how it works')}
               </Typography>
-              <Stepper activeStep={stepperData.length} alternativeLabel>
-                {stepperData.map((step: StepData) => (
-                  <Step key={step.step}>
-                    <StepLabel>{step.description}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
+              <Stack>
+                <Stepper activeStep={stepperData.length} alternativeLabel connector={<QontoConnector />}>
+                  {stepperData.map((step: StepData) => (
+                    <Step key={step.step} completed>
+                      <StepLabel>{step.description}</StepLabel>
+                    </Step>
+                  ))}
+                </Stepper>
+              </Stack>
             </Box>
             <Box
               sx={{
@@ -160,7 +197,7 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
                 <Box
                   sx={{
                     width: '100px',
-                    bgcolor: 'primary.main',
+                    bgcolor: 'secondaryTons.main',
                     borderRadius: '20px 0 0 20px',
                     display: 'flex',
                     justifyContent: 'center',

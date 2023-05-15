@@ -5,7 +5,6 @@ import Image from 'next/image';
 import useAuth from '@/contexts/auth';
 import {
   AppBar,
-  Container,
   Toolbar,
   Typography,
   Box,
@@ -17,7 +16,7 @@ import {
   ListItemIcon,
   Divider,
 } from '@mui/material';
-import { LogoSmall, SettingsIcon, LogoutIcon } from '@/assets/';
+import { LogoIcon, SettingsIcon, LogoutIcon } from '@/assets/';
 import Languages from '../../molecules/buttons/languages';
 import { t } from 'i18next';
 
@@ -42,18 +41,38 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
       <Head>
         <title>FastEng - {t(`topbar.${PageTitle}`)}</title>
       </Head>
-      <AppBar position="static" color="secondary">
-        <Container maxWidth="ultrawide" sx={{ pl: '1.8rem' }}>
-          <Toolbar disableGutters>
+      <AppBar
+        position="absolute"
+        sx={{
+          bgcolor: 'primaryTons.darkerGray',
+          color: 'primaryTons.mainWhite',
+          height: '52px',
+          width: `window.innerHeight > 100vh ? calc(100vw - 12px) : 100vw`,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          boxShadow: 'none',
+          padding: { mobile: '0 2vw', notebook: '0 1vw' },
+          zIndex: '100'
+        }}
+      >
+        <Toolbar
+          disableGutters
+          style={{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'space-between',
+            margin: '0',
+          }}
+        >
+          <Box
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
             <Box
-              sx={{
-                position: 'absolute',
-                left: 0,
-                top: 15,
-                ':hover': {
-                  cursor: 'pointer',
-                },
-              }}
+              sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
               onClick={() => {
                 const welcome = Router.pathname.includes(`${Router.pathname.split('/')[1]}/`);
 
@@ -61,75 +80,83 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                 else return Router.push(`/home`);
               }}
             >
-              <Image alt="Fasteng" src={LogoSmall} width={200} height={28} style={{ transform: 'translateX(-18px)' }} />
+              <Image alt="Fasteng" src={LogoIcon} height={28} style={{ cursor: 'pointer' }} />
             </Box>
             <Typography
-              variant="h6"
-              noWrap
               sx={{
-                mr: 2,
-                ml: 5,
                 display: { mobile: 'none', tablet: 'flex' },
-                fontFamily: 'monospace',
                 fontWeight: 700,
-                letterSpacing: '.2rem',
-                color: 'inherit',
                 textDecoration: 'none',
+                fontSize: '1.25rem',
+                pl: { mobile: '5vw', notebook: '1.5vw' }
               }}
             >
               {t(`topbar.${pathname[1].toLowerCase()}`).toUpperCase()}
             </Typography>
-            <Typography
-              variant="subtitle1"
-              noWrap
-              sx={{
-                mr: 2,
-                display: { mobile: 'none', notebook: 'flex' },
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.2rem',
-                color: 'inherit',
-                textDecoration: 'none',
-              }}
-            >
-              {pathname.length > 2 ? '| ' + t(`topbar.${pathname[2].toLowerCase()}`).toUpperCase() : ''}
-            </Typography>
-            <Tooltip title={t('settings')}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  position: 'absolute',
-                  right: 0,
-                  transition: 'all .2s ease-in-out',
-                  ':hover': {
-                    cursor: 'pointer',
-                    opacity: 0.8,
-                  },
-                }}
-                onClick={(e) => setAnchorEl(e.currentTarget)}
-              >
-                <Typography
-                  variant="subtitle1"
-                  noWrap
+            {pathname.length > 2 ?
+              <>
+                <Box
                   sx={{
-                    mr: 2,
+                    display: { notebook: 'flex', mobile: 'none' },
+                    width: '1.5px',
+                    height: '20px',
+                    bgcolor: 'primaryTons.mainWhite',
+                    margin: { desktop: '0 0.75vw', notebook: '0 2vw' }
+                  }}
+                />
+                <Typography
+                  sx={{
                     display: { mobile: 'none', notebook: 'flex' },
-                    fontFamily: 'monospace',
-                    fontWeight: 700,
-                    letterSpacing: '.1rem',
-                    color: 'inherit',
+                    textAlign: 'center',
+                    fontWeight: 400,
+                    textDecoration: 'none',
+                    fontSize: '1rem',
+                    lineHeight: '1rem',
+                    marginBottom: '-1px'
+                  }}
+                >
+                  {t(`topbar.${pathname[2].toLowerCase()}`).toUpperCase()}
+                </Typography>
+              </>
+              :
+              ''
+            }
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              cursor: 'pointer',
+              transition: 'all .2s ease-in-out',
+
+              ':hover': {
+                cursor: 'pointer',
+                opacity: 0.9,
+              },
+            }}
+            onClick={(e) => setAnchorEl(e.currentTarget)}
+          >
+            <Tooltip title={t('settings')}>
+              <>
+                <Typography
+                  sx={{
+                    margin: '0 1vw 0 0',
+                    display: { mobile: 'none', notebook: 'flex' },
+                    fontWeight: 500,
+                    fontSize: '0.95rem',
+                    lineHeight: '0.95rem',
                     textDecoration: 'none',
                   }}
                 >
                   {user?.name}
                 </Typography>
                 <IconButton sx={{ p: 0 }}>
-                  <Avatar alt="user photo" src={user?.photo} />
+                  <Avatar alt="user photo" src={user?.photo} style={{ height: '40px', width: '40px' }} />
                 </IconButton>
-              </Box>
+              </>
             </Tooltip>
+          </Box>
             <Menu
               PaperProps={{
                 sx: {
@@ -166,8 +193,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                 {t('logout')}
               </MenuItem>
             </Menu>
-          </Toolbar>
-        </Container>
+        </Toolbar>
       </AppBar>
     </>
   );

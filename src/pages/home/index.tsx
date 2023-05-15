@@ -1,14 +1,22 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { Container, Box, Card, Typography } from '@mui/material';
-import { LogoBlack, AsphaltIcon, SoilsIcon, ConcreteIcon } from '@/assets';
-import { LoginImage } from '@/components/styles/styleds/login';
+
 import { t } from 'i18next';
+
+//SVGs
+import { LogoBlack, AsphaltIcon, SoilsIcon, ConcreteIcon } from '@/assets';
+
+//MUIs
+import { Container, Box, Typography } from '@mui/material';
+import { CardApp } from '@/components/styles/muis/home';
+
+//Styleds
+import { LoginImage } from '@/components/styles/styleds/login';
 
 const Home: NextPage = () => {
   const Router = useRouter();
 
-  const Aplications = [
+  const Applications = [
     {
       name: t('home.asphalt'),
       icon: <AsphaltIcon width="100%" height="100%" />,
@@ -30,43 +38,51 @@ const Home: NextPage = () => {
     <Container
       sx={{
         display: 'flex',
-        paddingTop: {
-          mobile: '1.5rem',
-          notebook: '3rem',
-        },
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        flexDirection: 'column',
+        height: 'calc(100vh - 52px)',
+        width: '100vw',
+        padding: 0,
+        position: 'absolute',
+        zIndex: 2,
+        top: '52px',
+        left: 0,
       }}
     >
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
+          justifyContent: 'space-around',
           alignItems: 'center',
+          height: { notebook: '30vh', mobile: '20vh' },
         }}
       >
         <Box
           component="p"
-          sx={{ padding: '.3rem', fontSize: { notebook: '15px', mobile: '10px' }, fontWeight: 700, color: '#6e6d6d' }}
+          sx={{
+            fontSize: { desktop: '1.5rem', notebook: '1.25rem', mobile: '.85rem' },
+            fontWeight: '700',
+            color: 'primaryTons.mainGray',
+            height: { desktop: '2.5rem', notebook: '1.75rem', mobile: '1.35rem' },
+            margin: 0
+          }}
         >
           {t('home.welcome to')}
         </Box>
+
         <LoginImage alt="Fasteng" src={LogoBlack} />
+
         <Box
           component="p"
           sx={{
-            padding: '.6rem',
+            fontSize: { desktop: '1.5rem', notebook: '1.25rem', mobile: '.85rem' },
             fontWeight: 700,
-            color: '#6e6d6d',
-            height: '1.8rem',
-            maxWidth: {
-              mobile: '224px',
-              ultrawide: '310px',
-            },
+            color: 'primaryTons.mainGray',
             textAlign: 'center',
-            fontSize: { notebook: '15px', mobile: '8px' },
+            height: { desktop: '2.5rem', notebook: '1.75rem', mobile: '1.35rem' },
+            margin: 0
           }}
         >
           {t('home.fast way to')}
@@ -74,96 +90,38 @@ const Home: NextPage = () => {
         <Box
           component="p"
           sx={{
-            padding: '.7rem',
-            fontSize: { notebook: '15px', mobile: '10px' },
-            fontWeight: 700,
-            color: 'secondary',
-            textAlign: 'center',
-            maxWidth: '930px',
-            margin: '1rem 0',
-            height: '2.3rem',
+            height: { desktop: '20vh', mobile: '10vh' },
+            display: 'flex',
+            alignItems: 'center',
+            padding: { mobile: '0 5vw', notebook: '0 10vw', ultrawide: '0 15vw' },
           }}
         >
-          {t('home.description')}
+          <Typography
+            sx={{
+              fontSize: { notebook: '1rem', mobile: '.85rem' },
+              fontWeight: 500,
+              color: 'primaryTons.darkerGray',
+              textAlign: 'center',
+            }}
+          >
+            {t('home.description')}
+          </Typography>
         </Box>
       </Box>
       <Box
         sx={{
-          display: 'grid',
-          maxWidth: '100%',
-          gridTemplateColumns: {
-            mobile: '1fr',
-            notebook: 'repeat(auto-fit, minmax(300px, 1fr))',
-          },
-          gap: '1rem',
-          placeItems: 'center',
-          padding: '2rem',
+          display: 'flex',
+          alignItems: { mobile: 'center', notebook: 'start' },
+          justifyContent: 'space-around',
+          flexDirection: { notebook: 'row', mobile: 'column' },
+          height: '50%',
+          width: { mobile: '100%', desktop: '70%', ultrawide: '60%' },
+          paddingTop: { mobile: '0', notebook: '2vh' },
         }}
       >
-        {Aplications.map((element) => {
-          return (
-            <Card
-              onClick={() => Router.push(element.path)}
-              key={element.name}
-              sx={{
-                display: 'flex',
-                flexDirection: {
-                  mobile: 'row',
-                  notebook: 'column',
-                },
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: {
-                  mobile: 'calc(90vw - 2rem)',
-                  notebook: '300px',
-                },
-                maxWidth: '300px',
-                height: {
-                  mobile: '120px',
-                  notebook: '300px',
-                },
-                bgcolor: 'secondaryTons.main',
-                borderRadius: {
-                  mobile: '10px',
-                  notebook: '7%',
-                },
-                ':hover': {
-                  cursor: 'pointer',
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  width: { mobile: '45%', notebook: '100%' },
-                  height: { mobile: '100%', notebook: '75%' },
-                  bgcolor: 'primaryTons.darkGray',
-                  display: 'grid',
-                  placeItems: 'center',
-                }}
-              >
-                <Box sx={{ width: '60%', height: '60%' }}>{element.icon}</Box>
-              </Box>
-              <Typography
-                gutterBottom
-                variant="h6"
-                component="div"
-                sx={{
-                  height: '25%',
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  color: 'white',
-                  fontSize: { notebook: '20px', mobile: '12px' },
-                  textTransform: 'uppercase',
-                  textAlign: 'center',
-                }}
-              >
-                {element.name}
-              </Typography>
-            </Card>
-          );
-        })}
+        <CardApp element={Applications[0]} onClick={() => Router.push(Applications[0].path)} />
+        <CardApp element={Applications[1]} onClick={() => Router.push(Applications[1].path)} />
+        <CardApp element={Applications[2]} onClick={() => Router.push(Applications[2].path)} />
       </Box>
     </Container>
   );

@@ -32,7 +32,8 @@ interface ItemProps {
 
 export default function Navbar({ open, app }: NavbarProps) {
   const Router = useRouter();
-  const IconStyle = { color: 'white', fontSize: '1.5rem' };
+
+  const IconStyle = { color: 'primaryTons.mainWhite', fontSize: '1.5rem' };
 
   const Items: ItemProps[] = [
     { name: t('navbar.home'), link: '/home', app: 'common', icon: <HomeIcon sx={IconStyle} />, type: 'single' },
@@ -164,22 +165,18 @@ export default function Navbar({ open, app }: NavbarProps) {
   return (
     <Box
       sx={{
-        position: 'absolute',
+        position: 'fixed',
         zIndex: 99,
-        display: { mobile: `${open ? 'grid' : 'none'}`, tablet: `${open ? 'grid' : 'none'}`, notebook: 'grid' },
-        gridTemplateRows: `repeat(${Items.length}, minmax(48px, max-content))`,
+        display: { mobile: `${open ? 'flex' : 'none'}`, notebook: 'flex' },
+        flexDirection: 'column',
         alignItems: 'flex-start',
-        pt: '2rem',
-        width: `${open ? '225px' : '64px'}`,
+        width: `${open ? '225px' : '52px'}`,
+        pt: { mobile: '52px', notebook: '0' },
         bgcolor: 'primaryTons.darkGray',
-        height: 'calc(100vh - calc(2rem + 56px))',
+        height: '100vh',
         transition: 'width 0.5s',
         ':hover': {
           width: '225px',
-        },
-        ':last-child': {
-          position: 'absolute',
-          bottom: 0,
         },
       }}
       component="nav"
@@ -192,11 +189,12 @@ export default function Navbar({ open, app }: NavbarProps) {
             <Box
               key={item.name}
               sx={{
-                height: { mobile: `calc( 48px + (48px * ${subLength.toString()}) )`, notebook: '48px' },
+                height: '52px',
+                width: 'inherit',
                 overflow: 'hidden',
                 transition: 'height .4s ease-in-out',
                 ':hover': {
-                  height: item.type === 'double' ? `calc( 48px + (48px * ${subLength.toString()}) )` : '48px',
+                  height: item.type === 'double' ? `calc(52px + (52px * ${subLength.toString()}))` : '52px',
                 },
               }}
             >
@@ -204,40 +202,39 @@ export default function Navbar({ open, app }: NavbarProps) {
                 href={item.link}
                 style={{
                   textDecoration: 'none',
-                  position: item.name === t('navbar.report') ? 'absolute' : 'relative',
+                  position: item.name === t('navbar.report') ? 'absolute' : 'static',
                   bottom: item.name === t('navbar.report') && '0',
-                  width: item.name === t('navbar.report') && '100%',
+                  width: '100%',
                 }}
               >
                 <Box
                   sx={{
-                    display: 'grid',
-                    gridTemplateColumns: '1.75rem minmax(0,1fr)',
-                    gap: '15px',
-                    justifyItems: 'flex-start',
+                    display: 'flex',
+                    justifyItems: 'start',
                     alignItems: 'center',
-                    width: `${
-                      Router.pathname.includes(item.link) ? 'calc(100% - 1.3125rem - 3px)' : 'calc(100% - 1.3125rem)'
-                    }`,
-                    pl: '1.3125rem',
-                    height: '3rem',
+                    width: '100%',
+                    height: '52px',
                     transition: 'background .3s ease-in-out, border .1s',
                     overflow: 'hidden',
-                    position: 'relative',
                     borderRight: `${Router.pathname.includes(item.link) && '3px solid'}`,
-                    borderColor: 'primaryTons.darkerGray',
+                    borderColor: 'secondaryTons.main',
                     ':hover': { bgcolor: 'secondaryTons.main' },
                   }}
                 >
-                  {item.icon}
+                  <Box sx={{ width: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {item.icon}
+                  </Box>
                   <Typography
                     sx={{
+                      width: 'calc(100% - 52px)',
+                      height: '52px',
+                      display: 'flex',
+                      alignItems: 'center',
                       fontSize: '.8125rem',
                       fontWeight: 700,
                       lineHeight: '.9375rem',
-                      letterSpacing: '.03em',
                       whiteSpace: 'nowrap',
-                      color: 'white',
+                      color: 'primaryTons.mainWhite',
                       transition: 'color .5s ease-in-out',
                     }}
                   >
@@ -251,36 +248,30 @@ export default function Navbar({ open, app }: NavbarProps) {
                     <Link key={subItem.name} href={subItem.link} style={{ textDecoration: 'none' }}>
                       <Box
                         sx={{
-                          display: 'grid',
+                          display: 'flex',
                           bgcolor: 'primaryTons.mainGray',
-                          gridTemplateColumns: '1.75rem minmax(0,1fr)',
-                          gap: '15px',
                           justifyItems: 'flex-start',
                           alignItems: 'center',
-                          width: `${
-                            Router.pathname.includes(item.link)
-                              ? 'calc(100% - 1.3125rem - 3px)'
-                              : 'calc(100% - 1.3125rem)'
-                          }`,
-                          pl: '2.6125rem',
-                          height: '3rem',
+                          width: '100%',
+                          pl: '15%',
+                          height: '52px',
                           transition: 'background .3s ease-in-out, border .1s',
                           overflow: 'hidden',
-                          position: 'relative',
                           borderRight: `${Router.pathname.includes(item.link) && '3px solid'}`,
                           borderColor: 'primaryTons.darkerGray',
                           ':hover': { bgcolor: 'secondaryTons.main' },
                         }}
                       >
-                        {subItem.icon}
+                        <Box sx={{ width: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          {subItem.icon}
+                        </Box>
                         <Typography
                           sx={{
                             fontSize: '.8125rem',
                             fontWeight: 700,
                             lineHeight: '.9375rem',
-                            letterSpacing: '.03em',
                             whiteSpace: 'nowrap',
-                            color: 'white',
+                            color: 'primaryTons.mainWhite',
                             transition: 'color .5s ease-in-out',
                           }}
                         >

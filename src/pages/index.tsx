@@ -6,6 +6,7 @@ import Head from 'next/head';
 // files
 import { toast } from 'react-toastify';
 import useAuth from '@/contexts/auth';
+import Languages from '../components/molecules/buttons/languages';
 import { LogoWhite, LoginPhoto } from '@/assets';
 
 //custom styles
@@ -15,7 +16,7 @@ import { MainButton as Button } from '@/components/styles/global';
 
 //mui
 import { TextField, Box, Container, Typography } from '@mui/material';
-import Languages from '../components/molecules/buttons/languages';
+
 
 const Login: NextPage = () => {
   const { signIn } = useAuth();
@@ -82,8 +83,8 @@ const Login: NextPage = () => {
                 display: 'flex',
                 alignItems: 'center',
                 textAlign: 'center',
-                fontSize: { ultrawide: '0.95rem', desktop: '0.85rem', notebook: '1rem', mobile: '0.75rem' },
-                height: { desktop: '16vh', mobile: '20vh' },
+                fontSize: { ultrawide: '0.95rem', desktop: '0.85rem', notebook: '0.9rem', mobile: '0.7rem' },
+                height: { ultrawide: '16vh', desktop: '24vh', mobile: '20vh' },
                 padding: '0 2vw',
               }}
             >
@@ -121,10 +122,10 @@ const Login: NextPage = () => {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '1vh 0vw',
+              padding: '1vh 0 0.5vh',
               borderRadius: '0.5rem',
               width: { desktop: '30vw', mobile: '80vw' },
-              height: { desktop: '30vh', mobile: '30vh' },
+              height: { ultrawide: '30vh', desktop: '34vh', notebook: '30vh', mobile: '32vh' },
               bgcolor: 'primaryTons.background',
               position: { desktop: 'static', mobile: 'absolute' },
               zIndex: { desktop: 'auto', mobile: '3' },
@@ -163,18 +164,17 @@ const Login: NextPage = () => {
                   width: { desktop: '26vw', mobile: '70vw' },
                 }}
                 onChange={(e) => setPassword(e.target.value)}
-                InputLabelProps={{ shrink: true }}
                 required
+                InputLabelProps={{ shrink: true }}
               />
             </Box>
-
             <Box
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-around',
                 alignItems: 'center',
-                height: '30%',
+                height: '28%',
                 width: '100%',
               }}
             >

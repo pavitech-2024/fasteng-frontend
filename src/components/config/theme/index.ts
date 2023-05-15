@@ -13,12 +13,6 @@ export const theme = createTheme({
   },
 
   palette: {
-    primary: {
-      main: '#F29134', // orange
-    },
-    secondary: {
-      main: '#212121', // darker gray
-    },
     primaryTons: {
       mainWhite: '#FCFCFC',
       background: '#F2F2F2',
@@ -37,4 +31,46 @@ export const theme = createTheme({
       green: '#43D16B',
     },
   },
+
+  typography: {
+    fontFamily: "'Roboto', sans-serif",
+  },
+
+  components: {
+		MuiCssBaseline: {
+			styleOverrides: {
+				body: {
+					margin: '0',
+					padding: '0',
+					boxSizing: 'border-box',
+					backgroundColor: '#FFFAF6',
+					color: '#2F3559',
+					fontWeight: '400',
+          overflowX: 'hidden'
+				},
+
+				button: {
+					cursor: 'pointer'
+				},
+
+				a: {
+					textDecoration: 'none'
+				},
+
+        'body::-webkit-scrollbar': {
+          width: '12px'
+        },
+
+        'body::-webkit-scrollbar-track': {
+          background: '#FCFCFC'
+        },
+
+        'body::-webkit-scrollbar-thumb': {
+          backgroundColor: '#121212',
+          borderRadius: '20px',
+          border: '2px solid #F2F2F2'
+        }
+			}
+		}
+  }
 });
