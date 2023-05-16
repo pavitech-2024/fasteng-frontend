@@ -39,11 +39,11 @@ const Home: NextPage = () => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
+        justifyContent: 'start',
         alignItems: 'center',
         height: 'calc(100vh - 52px)',
         width: '100vw',
-        padding: 0,
+        padding: '3vh 0',
         position: 'absolute',
         zIndex: 2,
         top: '52px',
@@ -54,52 +54,58 @@ const Home: NextPage = () => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-around',
+          justifyContent: 'center',
           alignItems: 'center',
-          height: { notebook: '30vh', mobile: '20vh' },
+          height: { mobile: '17.5%', notebook: '25%' }
         }}
       >
         <Box
           component="p"
           sx={{
-            fontSize: { desktop: '1.5rem', notebook: '1.25rem', mobile: '.85rem' },
+            fontSize: { notebook: '1.25rem', mobile: '.85rem' },
             fontWeight: '700',
             color: 'primaryTons.lightGray',
-            height: { desktop: '2.5rem', notebook: '1.75rem', mobile: '1.35rem' },
             margin: 0
           }}
         >
           {t('home.welcome to')}
         </Box>
 
-        <LoginImage alt="Fasteng" src={LogoBlack} />
+        <LoginImage alt="Fasteng" src={LogoBlack} style={{ margin: '1vh 0'}} />
 
         <Box
           component="p"
           sx={{
-            fontSize: { desktop: '1.5rem', notebook: '1.25rem', mobile: '.85rem' },
+            fontSize: { notebook: '1.25rem', mobile: '.85rem' },
             fontWeight: 700,
             color: 'primaryTons.lightGray',
             textAlign: 'center',
-            height: { desktop: '2.5rem', notebook: '1.75rem', mobile: '1.35rem' },
             margin: 0
           }}
         >
           {t('home.fast way to')}
         </Box>
+      </Box>
+      <Box
+        sx={{
+          height: { mobile: '22.5%', notebook: '17.5%' },
+          display: 'flex',
+          alignItems: 'center'
+        }}
+      >
         <Box
           component="p"
           sx={{
-            height: { desktop: '20vh', mobile: '10vh' },
             display: 'flex',
             alignItems: 'center',
-            padding: { mobile: '0 5vw', notebook: '0 10vw', ultrawide: '0 15vw' },
+            padding: { mobile: '0 5vw', notebook: '0 15vw', ultrawide: '0 20vw' },
+            margin: 0
           }}
         >
           <Typography
             sx={{
-              fontSize: { notebook: '1rem', mobile: '.85rem' },
-              fontWeight: 500,
+              fontSize: { desktop: '1.15rem', notebook: '1rem', mobile: '.85rem' },
+              fontWeight: 400,
               color: 'primaryTons.darkGray',
               textAlign: 'center',
             }}
@@ -110,13 +116,24 @@ const Home: NextPage = () => {
       </Box>
       <Box
         sx={{
-          display: 'flex',
-          alignItems: { mobile: 'center', notebook: 'start' },
-          justifyContent: 'space-around',
+          display: 'grid',
+          gridTemplateColumns: {
+            mobile: '1fr',
+            notebook: '1fr 1fr 1fr' 
+          },
+          gap: {
+            mobile: '20px 0',
+            notebook: '0 20px'
+          },
+          justifyItems: 'center',
           flexDirection: { notebook: 'row', mobile: 'column' },
-          height: '50%',
-          width: { mobile: '100%', desktop: '70%', ultrawide: '60%' },
+          width: { mobile: '100%', ultrawide: '60%' },
+          minWidth: 'fit-content',
           paddingTop: { mobile: '0', notebook: '2vh' },
+
+          '@media only screen and (min-width: 1024px)': {
+            width: '70%'
+          }
         }}
       >
         <CardApp element={Applications[0]} onClick={() => Router.push(Applications[0].path)} />

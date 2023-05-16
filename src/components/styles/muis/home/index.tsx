@@ -15,8 +15,8 @@ export const CardApp: NextPage<Props> = ({ element, onClick }) => (
     onClick={onClick}
     sx={{
       width: {
-        mobile: '300px',
-        notebook: '240px',
+        mobile: '320px',
+        notebook: '220px',
         desktop: '280px',
         containerMargin: '320px' },
       height: {
@@ -45,10 +45,9 @@ export const CardApp: NextPage<Props> = ({ element, onClick }) => (
       <Box
         sx={{
           height: {
-            mobile: '55px',
-            notebook: '120px',
-            desktop: '140px',
-            containerMargin: '160px',
+            mobile: '50px',
+            notebook: '110px',
+            desktop: '130px'
           },
           width: 'auto',
         }}

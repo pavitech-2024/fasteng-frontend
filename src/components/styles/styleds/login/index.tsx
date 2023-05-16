@@ -7,7 +7,7 @@ export const LoginImage = styled(Image)`
   height: auto;
 
   @media only screen and (min-width: 768px) {
-    width: 480px;
+    width: 440px;
   }
 
   @media only screen and (min-width: 1025px) {
