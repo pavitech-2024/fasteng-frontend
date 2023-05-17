@@ -127,12 +127,13 @@ const Home: NextPage = () => {
           },
           justifyItems: 'center',
           flexDirection: { notebook: 'row', mobile: 'column' },
-          width: { mobile: '100%', ultrawide: '60%' },
+          width: '100%',
           minWidth: 'fit-content',
+          maxWidth: '1400px',
           paddingTop: { mobile: '0', notebook: '2vh' },
 
           '@media only screen and (min-width: 1024px)': {
-            width: '70%'
+            width: '60%'
           }
         }}
       >

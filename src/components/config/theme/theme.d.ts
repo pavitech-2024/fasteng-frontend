@@ -28,7 +28,6 @@ declare module '@mui/material' {
     };
 
     secondaryTons: {
-      main: string;
       blue: string;
       blueClick: string;
       blueDisabled: string;

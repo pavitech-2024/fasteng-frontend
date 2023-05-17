@@ -1,5 +1,16 @@
 // materialui
-import { Home, Add, Search, Report, Task, VideoLibrary, Delete, Settings, Logout } from '@mui/icons-material';
+import {
+  Home,
+  Add,
+  Search,
+  Report,
+  Task,
+  VideoLibrary,
+  Delete,
+  Settings,
+  Logout,
+  ArrowForward
+} from '@mui/icons-material';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 // fasteng paste
@@ -84,6 +95,7 @@ export {
   Settings as SettingsIcon,
   Logout as LogoutIcon,
   PictureAsPdfIcon as PDFIcon,
+  ArrowForward as VisualizeIcon,
 
   // fasteng paste
   LogoBlack,

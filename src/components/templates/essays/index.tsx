@@ -4,6 +4,7 @@ import Filter, { FilterOption } from '@/components/molecules/buttons/filter';
 import { useEffect, useState } from 'react';
 import { Essay } from '@/interfaces/common';
 import { useTranslation } from 'react-i18next';
+import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
 
 interface EssaysTemplateProps {
   essays: Essay[];
@@ -47,7 +48,7 @@ export const EssaysTemplate = ({ essays, filterOptions }: EssaysTemplateProps) =
     setEssaysFiltered(newEssays);
   };
   return (
-    <>
+    <Container>
       <Header title={t('navbar.essays')}>
         {filterOptions && <Filter options={filterOptions} callback={filterCallback} />}
       </Header>
@@ -56,6 +57,6 @@ export const EssaysTemplate = ({ essays, filterOptions }: EssaysTemplateProps) =
           return <Card key={essay.key} data={essay} type={'essay'} hrefLink={essay.key} target="standard"></Card>;
         })}
       </CardContainer>
-    </>
+    </Container>
   );
 };

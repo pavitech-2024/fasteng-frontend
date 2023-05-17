@@ -3,6 +3,7 @@ import { Standard } from '@/interfaces/common';
 import { useState } from 'react';
 import Filter, { FilterOption } from '@/components/molecules/buttons/filter';
 import { CardContainer, Card } from '@/components/atoms/containers/card';
+import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
 
 interface StandardsTemplateProps {
   standards: Standard[];
@@ -41,8 +42,10 @@ export const StandardsTemplate = ({ standards, filterOptions }: StandardsTemplat
   };
 
   return (
-    <>
-      <Header title="Normas">{filterOptions && <Filter options={filterOptions} callback={filterCallback} />}</Header>
+    <Container>
+      <Header title="Normas">
+        {filterOptions && <Filter options={filterOptions} callback={filterCallback} />}
+      </Header>
       <CardContainer>
         {standardsFiltered?.map((standard) => {
           // aqui o componente Card axige novas props agora que ele se tornou adptável à página em que é chamado;
@@ -51,6 +54,6 @@ export const StandardsTemplate = ({ standards, filterOptions }: StandardsTemplat
           );
         })}
       </CardContainer>
-    </>
+    </Container>
   );
 };

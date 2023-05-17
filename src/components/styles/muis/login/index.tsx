@@ -4,7 +4,7 @@ export const AboutButton = () => (
   <Button
     variant="contained"
     sx={{
-      color: 'secondaryTons.main',
+      color: 'primary.main',
       bgcolor: 'primaryTons.mainGray',
       fontSize: '.95rem',
       lineHeight: '.95rem',
@@ -17,7 +17,7 @@ export const AboutButton = () => (
 
       '&:hover': {
         bgcolor: 'primaryTons.darkGray',
-        border: '1px solid secondaryTons.main',
+        border: '1px solid primary.main',
         boxShadow: 'unset',
       },
 

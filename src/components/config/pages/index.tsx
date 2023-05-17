@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import useAuth from '@/contexts/auth';
 
@@ -31,6 +31,10 @@ const Pages = (props: PagesProps) => {
       Router.pathname.includes('soils/') ||
       Router.pathname.includes('concrete/') ||
       Router.pathname.includes('settings');
+
+    useEffect(() => {
+      setOpenSidebar(false);
+    }, [Router.pathname]);
 
     if (Router.pathname === '/') return children;
 

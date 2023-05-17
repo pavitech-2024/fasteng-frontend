@@ -21,7 +21,7 @@ const Search = ({ sx, placeholder, value, setValue }: SearchProps) => {
         boxShadow: 'none',
         border: '1px solid rgba(0, 0, 0, 0.28)',
       }}
-      color="secondary"
+      color="primary"
     >
       <InputBase
         sx={{ ml: 1, flex: 1 }}

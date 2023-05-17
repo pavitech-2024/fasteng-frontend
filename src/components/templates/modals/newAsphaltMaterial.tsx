@@ -202,7 +202,7 @@ const NewAsphaltMaterialModal = ({
               return (
                 <DropDown
                   key={input.key}
-                  sx={{ minWidth: '120px', bgcolor: 'white' }}
+                  sx={{ minWidth: '120px', bgcolor: 'primaryTons.white' }}
                   label={t(`asphalt.materials.${input.key}`)}
                   variant="standard"
                   size="medium"

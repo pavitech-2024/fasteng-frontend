@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import React from 'react';
 
 export interface FilterOption {
@@ -17,36 +17,36 @@ const Filter = ({ options, callback }: FilterProps) => {
     <Box
       sx={{
         display: 'flex',
-        width: { mobile: 'calc(100% - 100px)', tablet: '100%' },
-        padding: { mobile: '0.5rem' },
         justifyContent: { mobile: 'center', notebook: 'end' },
       }}
     >
       {options.map((option) => (
         <Button
           sx={{
+            fontSize: { desktop: '.95rem', notebook: '.85rem', mobile: '.75rem' },
+            lineHeight: { desktop: 'normal', notebook: '.85rem', mobile: '.75rem' },
+            fontWeight: '700',
+            maxWidth: { mobile: '85px', notebook: '100px', desktop: 'none' },
             borderRadius: '0',
-            color: option.isSelected ? 'white' : 'secondaryTons.main',
+            color: option.isSelected ? 'primaryTons.white' : 'primary.main',
+            bgcolor: option.isSelected ? 'primary.main' : 'primaryTons.border',
             borderRight: '1px solid',
             borderColor: 'white',
             transition: 'all 0.3s ease-in-out',
             boxShadow: 'none',
+            ':hover': {
+              bgcolor: option.isSelected ? '#F2A255': 'primary.main',
+              color: 'primaryTons.white',
+              boxShadow: 'none'
+            },
             ':first-of-type': { borderRadius: '12px 0 0 12px' },
             ':last-child': { borderRadius: '0 12px 12px 0', borderRight: 'none' },
           }}
           key={option.key}
           variant="contained"
-          color={option.isSelected ? 'primary' : 'inherit'}
           onClick={() => callback(option.key)}
         >
-          <Typography
-            sx={{
-              fontSize: { desktop: '14px', notebook: '11px', tablet: '8px', mobile: '7px' },
-              fontWeight: '600',
-            }}
-          >
-            {option.title + '  '}
-          </Typography>
+          {option.title}
         </Button>
       ))}
     </Box>

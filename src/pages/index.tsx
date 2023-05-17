@@ -183,7 +183,7 @@ const Login: NextPage = () => {
                 disabled={password === '' || email === ''}
                 handleClick={() => handleLogin()}
               />
-              <Typography sx={{ color: 'secondaryTons.main', fontSize: { desktop: '1rem', mobile: '0.85rem' } }}>
+              <Typography sx={{ color: 'primary.main', fontSize: { desktop: '1rem', mobile: '0.85rem' } }}>
                 {t('login.forget password')}
               </Typography>
             </Box>

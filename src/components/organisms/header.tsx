@@ -2,49 +2,60 @@ import { Box, Typography } from '@mui/material';
 
 interface HeaderProps {
   title: string;
+  subTitle?: string;
+  icon?: JSX.Element;
   children?: React.ReactNode | JSX.Element;
-  subHeader?: boolean;
-  divider?: boolean;
 }
 
-export const Header = ({ title, children, subHeader, divider }: HeaderProps) => {
+export const Header = ({ title, subTitle, icon, children }: HeaderProps) => {
   return (
     <Box
       sx={{
-        width: { mobile: '100%', notebook: 'calc(100% - 12rem)' },
-        height: '2rem',
-        mb: '2rem',
+        width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: { mobile: 0, notebook: '0 6rem' },
-        flexDirection: { notebook: 'row', mobile: 'column' },
-        gap: '15px',
+        padding: { mobile: '4vh 2vw', notebook: '3vh 3vw' },
+        flexDirection: { notebook: 'row', mobile: 'column' }
       }}
     >
       <Box
         sx={{
-          width: '100%',
-          borderBottom: divider && '.5px solid #121212',
           display: 'flex',
-          justifyContent: { mobile: 'center', notebook: 'flex-start' },
+          alignItems: 'start',
+          mb: { mobile: '2vh', notebook: 0 }
         }}
       >
-        <Typography
-          variant="h5"
+        {icon}
+        <Box
           sx={{
-            textTransform: 'uppercase',
-            fontSize: { mobile: subHeader ? '12px' : '15px', notebook: subHeader ? '20px' : '24px' },
-            color: 'secondary.light',
-            fontWeight: '600',
-            whiteSpace: 'nowrap',
-            letterSpacing: '0.1rem',
-            mt: { notebook: 0, mobile: '1rem' },
+            display: 'flex',
+            flexDirection: 'column'
           }}
         >
-          {title}
-        </Typography>
+          <Typography
+            sx={{
+              textTransform: 'uppercase',
+              fontSize: { mobile: '1.65rem', notebook: '2rem' },
+              color: 'primaryTons.darkGray',
+              fontWeight: 700,
+            }}
+          >
+            {title}
+          </Typography>
+          <Typography
+            sx={{
+              textTransform: 'uppercase',
+              fontSize: { mobile: '1.15rem', notebook: '1.5rem' },
+              color: 'primaryTons.darkGray',
+              fontWeight: 500,
+            }}
+          >
+            {subTitle}
+          </Typography>
+        </Box>
       </Box>
+
       {children}
     </Box>
   );

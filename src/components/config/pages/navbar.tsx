@@ -217,8 +217,8 @@ export default function Navbar({ open, app }: NavbarProps) {
                     transition: 'background .3s ease-in-out, border .1s',
                     overflow: 'hidden',
                     borderRight: `${Router.pathname.includes(item.link) && '3px solid'}`,
-                    borderColor: 'secondaryTons.main',
-                    ':hover': { bgcolor: 'secondaryTons.main' },
+                    borderColor: 'primary.main',
+                    ':hover': { bgcolor: 'primary.main' },
                   }}
                 >
                   <Box sx={{ width: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -259,7 +259,7 @@ export default function Navbar({ open, app }: NavbarProps) {
                           overflow: 'hidden',
                           borderRight: `${Router.pathname.includes(item.link) && '3px solid'}`,
                           borderColor: 'primaryTons.darkGray',
-                          ':hover': { bgcolor: 'secondaryTons.main' },
+                          ':hover': { bgcolor: 'primary.main' },
                         }}
                       >
                         <Box sx={{ width: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

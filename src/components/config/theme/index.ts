@@ -13,6 +13,10 @@ export const theme = createTheme({
   },
 
   palette: {
+    primary: {
+      main: '#F29134'
+    },
+
     primaryTons: {
       white: '#FCFCFC',
       background: '#F2F2F2',
@@ -23,7 +27,6 @@ export const theme = createTheme({
     },
 
     secondaryTons: {
-      main: '#F29134',
       blue: '#00A3FF',
       blueClick: '#008BDA',
       blueDisabled: '#7CD0FF',

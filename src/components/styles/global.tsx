@@ -15,7 +15,7 @@ export const MainButton = (props: ButtonProps) => (
     disabled={props.disabled}
     sx={{
       color: 'primaryTons.white',
-      bgcolor: 'secondaryTons.main',
+      bgcolor: 'primary.main',
       fontSize: '.95rem',
       lineHeight: '.95rem',
       fontWeight: '700',

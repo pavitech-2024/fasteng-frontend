@@ -43,97 +43,97 @@ const ModalBase = ({
   };
 
   return (
-    <div>
-      <Modal open={open} onClose={onCancel} disableScrollLock={false} sx={{ overflowY: 'scroll' }}>
-        <Box
+    <Modal open={open} onClose={onCancel} disableScrollLock={false} sx={{ overflowY: 'scroll' }}>
+      <Box
+        sx={{
+          position: 'absolute' as const,
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: {
+            mobile: '80%',
+            notebook: getModalSize(size),
+          },
+          bgcolor: 'primaryTons.white',
+          boxShadow: 24,
+          borderRadius: '10px',
+          maxHeight: '80%',
+          overflowY: {
+            mobile: 'scroll',
+            notebook: 'hidden',
+          },
+          p: {
+            mobile: '1rem',
+            notebook: '2rem',
+          },
+        }}
+      >
+        {/* title */}
+        <Typography
+          color="primaryTons.darkGray"
           sx={{
-            position: 'absolute' as const,
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: {
-              mobile: '80%',
-              notebook: getModalSize(size),
-            },
-            bgcolor: 'white',
-            boxShadow: 24,
-            maxHeight: '80%',
-            overflowY: {
-              mobile: 'scroll',
-              notebook: 'hidden',
-            },
-            p: {
-              mobile: '1rem',
-              notebook: '2rem',
-            },
+            fontWeight: '700',
+            fontSize: { mobile: '1.25rem', notebook: '1.5rem' },
+            lineHeight: { mobile: '1.25rem', notebook: '1.5rem' },
+            marginBottom: '1rem'
           }}
         >
-          {/* title */}
-          <Typography
-            variant="h6"
-            color="secondary.light"
-            sx={{ fontWeight: '700', fontSize: '18px', marginBottom: '1rem' }}
-          >
-            {title.toUpperCase()}
-          </Typography>
-          {/* content */}
-          {children}
+          {title.toUpperCase()}
+        </Typography>
 
-          {/* buttons area */}
-          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingTop: '1rem' }}>
-            <Button
-              onClick={onCancel}
-              variant="contained"
-              color="secondary"
-              sx={{
-                height: '40px',
-                width: { mobile: '40%', notebook: '25%' },
-                maxWidth: '220px',
-                gap: '5px',
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: {
-                    mobile: '.65rem',
-                    notebook: '.8rem',
-                  },
-                  fontWeight: '700',
-                }}
-                color="white"
-              >
-                {leftButtonTitle}
-              </Typography>
-            </Button>
-            <Button
-              onClick={onSubmit}
-              variant="contained"
-              color="primary"
-              disabled={disableSubmit}
-              sx={{
-                height: '40px',
-                width: { mobile: '40%', notebook: '25%' },
-                maxWidth: '220px',
-                gap: '5px',
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: {
-                    mobile: '.65rem',
-                    notebook: '.8rem',
-                  },
-                  fontWeight: '700',
-                }}
-                color="white"
-              >
-                {rightButtonTitle}
-              </Typography>
-            </Button>
-          </Box>
+        {/* content */}
+        {children}
+
+        {/* buttons area */}
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingTop: '1rem' }}>
+          <Button
+            onClick={onCancel}
+            variant="contained"
+            sx={{
+              height: '33px',
+              width: '135px',
+              bgcolor: 'primary.main',
+              color: 'primaryTons.white',
+              boxShadow: 'none',
+              borderRadius: '20px',
+              fontSize: '.95rem',
+              lineHeight: '.95rem',
+              fontWeight: 700,
+
+              ':hover': {
+                boxShadow: 'unset',
+                bgcolor: '#F2A255'
+              }
+            }}
+          >
+            {leftButtonTitle}
+          </Button>
+          <Button
+            onClick={onSubmit}
+            variant="contained"
+            disabled={disableSubmit}
+            sx={{
+              height: '33px',
+              width: '135px',
+              bgcolor: 'primary.main',
+              color: 'primaryTons.white',
+              boxShadow: 'none',
+              borderRadius: '20px',
+              fontSize: '.95rem',
+              lineHeight: '.95rem',
+              fontWeight: 700,
+
+              ':hover': {
+                boxShadow: 'unset',
+                bgcolor: '#F2A255'
+              }
+            }}
+          >
+            {rightButtonTitle}
+          </Button>
         </Box>
-      </Modal>
-    </div>
+      </Box>
+    </Modal>
   );
 };
 

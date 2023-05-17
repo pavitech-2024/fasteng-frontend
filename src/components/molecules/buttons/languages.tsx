@@ -47,7 +47,7 @@ const Languages = ({ right, top, left, bottom, selectedColor, unSelectedColor }:
                 color: selected
                   ? selectedColor
                     ? selectedColor
-                    : 'secondaryTons.main'
+                    : 'primary.main'
                   : unSelectedColor
                   ? unSelectedColor
                   : 'primaryTons.lightGray',

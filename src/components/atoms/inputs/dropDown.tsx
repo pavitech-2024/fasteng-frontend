@@ -36,7 +36,7 @@ const DropDown = ({
       helperText={helperText ? helperText : null}
       sx={sx}
       size={size}
-      color="secondary"
+      color="primary"
       variant={variant}
       required={required}
     >

@@ -21,11 +21,12 @@ import {
 } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import Search from '@/components/atoms/inputs/search';
-import { AddIcon, DeleteIcon } from '@/assets';
+import { AddIcon, DeleteIcon, VisualizeIcon } from '@/assets';
 import { formatDate } from '@/utils/format';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
 
 interface MaterialsTemplateProps {
   materials: Sample[] | AsphaltMaterial[];
@@ -119,7 +120,7 @@ const MaterialsTemplate = ({
     });
 
   return (
-    <>
+    <Container>
       {/*Delete Modal */}
       <Dialog open={openDeleteModal}>
         <DialogTitle sx={{ fontSize: '1rem', textTransform: 'uppercase', fontWeight: 700 }} color="secondary">
@@ -173,7 +174,7 @@ const MaterialsTemplate = ({
 
       {/*Page */}
       <Header title={`${title}`} />
-      <Box sx={{ padding: { mobile: '0 .5rem', notebook: '0 2rem' } }}>
+      <Box sx={{ padding: { mobile: '0 2vw', notebook: '0 6vw' } }}>
         <Box
           sx={{
             display: 'flex',
@@ -181,7 +182,7 @@ const MaterialsTemplate = ({
             flexDirection: 'row',
             alignItems: { mobile: 'end', notebook: 'space-between' },
             width: '100%',
-            gap: '10px',
+            gap: '8px',
           }}
         >
           <Box
@@ -232,14 +233,30 @@ const MaterialsTemplate = ({
             variant="contained"
             color="primary"
             sx={{
-              height: '40px',
-              width: { mobile: '50%', notebook: '25%' },
-              maxWidth: '220px',
-              gap: '5px',
+              color: 'primaryTons.white',
+              bgcolor: 'primary.main',
+              height: '33px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '20px',
+              boxShadow: 'unset',
+              padding: '0 12px',
+
+              '&:hover': {
+                bgcolor: '#F2A255',
+                boxShadow: 'unset',
+              }
             }}
           >
-            <AddIcon sx={{ color: '#fff', fontSize: '1.2rem' }} />
-            <Typography sx={{ fontSize: '.8rem', fontWeight: '700' }} color="white">
+            <AddIcon sx={{ color: 'primaryTons.white', fontSize: '1.2rem' }} />
+            <Typography
+              sx={{
+                fontSize: { mobile: '.8rem', notebook:'.95rem' },
+                fontWeight: '700',
+                ml: '2px'
+              }}
+            >
               {`${
                 app === 'soils' ? ` ${t('materials.template.newSample')}` : ` ${t('materials.template.newMaterial')}`
               }`}
@@ -249,18 +266,26 @@ const MaterialsTemplate = ({
         <Paper
           sx={{
             width: '100%',
-            borderRadius: '12px',
+            borderRadius: '20px',
             border: '1px solid rgba(0,0,0,0.17)',
             marginTop: '1rem',
-            background: 'white',
+            background: 'primaryTons.white'
           }}
         >
-          <TableContainer sx={{ borderRadius: '12px' }}>
+          <TableContainer sx={{ borderRadius: '20px' }}>
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
                   {columns.map((column) => (
-                    <TableCell key={column.id} align="center" style={{ width: column.width, fontWeight: '700' }}>
+                    <TableCell
+                      key={column.id}
+                      align="center"
+                      style={{
+                        width: column.width,
+                        fontWeight: '700',
+                        fontSize: '1rem'
+                      }}
+                    >
                       {column.label}
                     </TableCell>
                   ))}
@@ -277,20 +302,43 @@ const MaterialsTemplate = ({
                           {column.id === 'createdAt' && formatDate(row.createdAt)}
                           {column.id === 'actions' && (
                             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                              <Button variant="contained" color="info" onClick={(e) => console.log(e)}>
-                                <Typography variant="body2" color="white" sx={{ fontSize: '12px' }}>
+                              <Button
+                                variant="contained"
+                                sx={{
+                                  height: '25px',
+                                  borderRadius: '20px',
+                                  boxShadow: 'unset',
+                                  padding: { mobile: '6px 6px', notebook: '6px 12px' },
+                                  minWidth: '20px',
+                                  bgcolor: 'secondaryTons.blue',
+                                  fontSize: '1rem',
+                                  lineHeight: '1rem',
+                                  color: 'primaryTons.white',
+
+                                  ':hover': {
+                                    bgcolor: '#45BCFF',
+                                    boxShadow: 'unset'
+                                  }
+                                }}
+                                onClick={(e) => console.log(e)}
+                              >
+                                <Typography sx={{ display: { mobile: 'none', notebook: 'flex' } }}>
                                   {t('materials.template.edit')}
                                 </Typography>
+                                <VisualizeIcon
+                                  sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1.25rem' }} />
+                                
                               </Button>
                               <Button
                                 variant="text"
-                                color="warning"
+                                color="error"
+                                sx={{ padding: 0, width: 'auto' }}
                                 onClick={() => {
                                   setRowToDelete(row);
                                   setOpenDeleteModal(true);
                                 }}
                               >
-                                <DeleteIcon color="error" sx={{ fontSize: '1.5rem' }} />
+                                <DeleteIcon color="error" sx={{ fontSize: '1.25rem' }} />
                               </Button>
                             </Box>
                           )}
@@ -312,7 +360,7 @@ const MaterialsTemplate = ({
           </Box>
         </Paper>
       </Box>
-    </>
+    </Container>
   );
 };
 

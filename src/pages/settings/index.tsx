@@ -143,7 +143,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           alignItems: 'center',
         }}
       >
-        <Header title={t('settings.account')} subHeader divider />
+        <Header title={t('settings.account')} />
         <Box
           sx={{
             display: 'flex',
@@ -197,7 +197,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             </Typography>
           </Box>
         </Box>
-        <Header title={t('settings.preferences')} subHeader divider />
+        <Header title={t('settings.preferences')} />
         <Box
           sx={{
             display: 'flex',

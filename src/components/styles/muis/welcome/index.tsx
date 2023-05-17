@@ -25,7 +25,7 @@ export const CardMenuOptions = ({path, icon, name}: WelcomeData, key: string) =>
         sx={{
           height: '100%',
           width: '75px',
-          bgcolor: 'secondaryTons.main',
+          bgcolor: 'primary.main',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center'
