@@ -64,7 +64,7 @@ export const CardApp: NextPage<Props> = ({ element, onClick }) => (
         textAlign: { mobile: 'left', notebook: 'center' },
         justifyContent: { mobile: 'start', notebook: 'center' },
         alignItems: 'center',
-        padding: { mobile: '0 4vw', notebook: '0 2vw' },
+        p: { mobile: '0 4vw', notebook: '0 2vw' },
         fontSize: {
           mobile: '1.25rem',
           notebook: '1.35rem',

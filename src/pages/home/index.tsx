@@ -62,13 +62,13 @@ const Home: NextPage = () => {
             fontSize: { notebook: '1.25rem', mobile: '.85rem' },
             fontWeight: '700',
             color: 'primaryTons.lightGray',
-            margin: 0
+            m: 0
           }}
         >
           {t('home.welcome to')}
         </Box>
 
-        <LoginImage alt="Fasteng" src={LogoBlack} style={{ margin: '1vh 0'}} />
+        <LoginImage alt="Fasteng" src={LogoBlack} style={{ margin: '1vh 0' }} />
 
         <Box
           component="p"
@@ -77,7 +77,7 @@ const Home: NextPage = () => {
             fontWeight: 700,
             color: 'primaryTons.lightGray',
             textAlign: 'center',
-            margin: 0
+            m: 0
           }}
         >
           {t('home.fast way to')}
@@ -95,8 +95,8 @@ const Home: NextPage = () => {
           sx={{
             display: 'flex',
             alignItems: 'center',
-            padding: { mobile: '0 5vw', notebook: '0 15vw', ultrawide: '0 20vw' },
-            margin: 0
+            p: { mobile: '0 5vw', notebook: '0 15vw', ultrawide: '0 20vw' },
+            m: 0
           }}
         >
           <Typography
@@ -127,7 +127,7 @@ const Home: NextPage = () => {
           width: '100%',
           minWidth: 'fit-content',
           maxWidth: '1400px',
-          paddingTop: '2vh',
+          pt: '2vh',
 
           '@media only screen and (min-width: 1024px)': {
             width: '60%'

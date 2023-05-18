@@ -173,7 +173,7 @@ const MaterialsTemplate = ({
 
       {/*Page */}
       <Header title={`${title}`} />
-      <Box sx={{ padding: { mobile: '0 2vw', notebook: '0 6vw' }, mb: '4vw', width: '100%' }}>
+      <Box sx={{ p: { mobile: '0 2vw', notebook: '0 6vw' }, mb: '4vw', width: '100%', maxWidth: '1800px', }}>
         <Box
           sx={{
             display: 'flex',
@@ -238,7 +238,7 @@ const MaterialsTemplate = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: '0 12px',
+              p: '0 12px',
 
               '&:hover': {
                 bgcolor: '#F2A255',
@@ -265,7 +265,7 @@ const MaterialsTemplate = ({
             width: '100%',
             borderRadius: '20px',
             border: '1px solid rgba(0,0,0,0.17)',
-            marginTop: '1rem',
+            mt: '1rem',
             background: 'primaryTons.white'
           }}
         >
@@ -304,7 +304,7 @@ const MaterialsTemplate = ({
                                 sx={{
                                   height: '25px',
                                   borderRadius: { mobile: '50%', notebook: '20px' },
-                                  padding: { mobile: 0, notebook: '6px 12px' },
+                                  p: { mobile: 0, notebook: '6px 12px' },
                                   minWidth: '25px',
                                   bgcolor: 'secondaryTons.blue',
                                   color: 'primaryTons.white',
@@ -325,7 +325,7 @@ const MaterialsTemplate = ({
                               <Button
                                 variant="text"
                                 color="error"
-                                sx={{ padding: 0, width: '30px', minWidth: '35px' }}
+                                sx={{ p: 0, width: '30px', minWidth: '35px' }}
                                 onClick={() => {
                                   setRowToDelete(row);
                                   setOpenDeleteModal(true);

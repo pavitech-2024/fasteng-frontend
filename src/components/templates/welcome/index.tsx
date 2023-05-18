@@ -101,7 +101,7 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
                 alignItems: 'center',
                 justifyContent: 'center',
                 width: "90%",
-                margin: { mobile: '2vh 0 4vh', desktop: '1vh 0 2vh' },
+                m: { mobile: '2vh 0 4vh', desktop: '1vh 0 2vh' },
               }}
             >
               <Box
@@ -130,7 +130,7 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
               sx={{
                 bgcolor: 'primaryTons.white',
                 borderRadius: '10px',
-                padding: { mobile: '3vh 4vw', notebook: '25px' },
+                p: { mobile: '3vh 4vw', notebook: '25px' },
                 width: { mobile: '90vw', notebook: '500px', desktop: '550px' },
                 display: 'flex',
                 flexDirection: 'column',
@@ -193,7 +193,7 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
             gap: '20px 0',
             gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
             width: '300px',
-            padding: { mobile: '4vh 0', desktop: 0 },
+            p: { mobile: '4vh 0', desktop: 0 },
 
             '@media only screen and (min-width: 768px)': {
               gridTemplateColumns: '1fr 1fr',

@@ -25,7 +25,7 @@ export const CardContainer = ({ children }: CardContainerProps) => {
         justifyContent: 'center',
         width: '100%',
         mb: '2vh',
-        padding: '0 2vw'
+        p: '0 2vw'
       }}
     >
       {children}
@@ -93,7 +93,7 @@ export const Card = ({ data, type, hrefLink, target }: CardProps) => {
               fontWeight: '500',
               fontSize: '.85rem',
               lineHeight: '.95rem',
-              padding: '5px',
+              p: '5px',
             }}
           >
             {data.title}
@@ -115,7 +115,7 @@ export const Card = ({ data, type, hrefLink, target }: CardProps) => {
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: '2px 4px',
+                  p: '2px 4px',
                   borderRadius: '5px 0 0 5px',
                   bgcolor: 'primary.main',
                   position: 'absolute',

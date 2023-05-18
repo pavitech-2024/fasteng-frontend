@@ -15,7 +15,7 @@ export const Header = ({ title, subTitle, icon, children }: HeaderProps) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: { mobile: '4vh 2vw', notebook: '3vh 3vw' },
+        p: { mobile: '4vh 2vw', notebook: '3vh 3vw' },
         flexDirection: { notebook: 'row', mobile: 'column' }
       }}
     >

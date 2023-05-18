@@ -7,6 +7,7 @@ import { t } from 'i18next';
 import useAuth from '@/contexts/auth';
 import MaterialsTemplate from '@/components/templates/materials';
 import NewAsphaltMaterialModal from '../../../components/templates/modals/newAsphaltMaterial';
+import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
 
 const Materials = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -54,7 +55,7 @@ const Materials = () => {
   };
 
   return (
-    <>
+    <Container>
       {loading ? (
         <div>Carregando...</div>
       ) : (
@@ -74,7 +75,7 @@ const Materials = () => {
           }
         />
       )}
-    </>
+    </Container>
   );
 };
 

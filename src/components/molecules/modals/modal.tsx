@@ -75,7 +75,7 @@ const ModalBase = ({
             fontWeight: '700',
             fontSize: { mobile: '1.25rem', notebook: '1.5rem' },
             lineHeight: { mobile: '1.25rem', notebook: '1.5rem' },
-            marginBottom: '1rem'
+            mb: '1rem'
           }}
         >
           {title.toUpperCase()}
@@ -85,7 +85,7 @@ const ModalBase = ({
         {children}
 
         {/* buttons area */}
-        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingTop: '1rem' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', pt: '1rem' }}>
           <Button
             onClick={onCancel}
             variant='outlined'

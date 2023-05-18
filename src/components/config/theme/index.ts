@@ -43,8 +43,8 @@ export const theme = createTheme({
 		MuiCssBaseline: {
 			styleOverrides: {
 				body: {
-					margin: '0',
-					padding: '0',
+					m: 0,
+					p: 0,
 					boxSizing: 'border-box',
 					backgroundColor: '#F2F2F2',
 					color: '#2F3559',

@@ -52,7 +52,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
           flexDirection: 'column',
           justifyContent: 'center',
           boxShadow: 'unset',
-          padding: { mobile: '0 2vw', notebook: '0 1vw' },
+          p: { mobile: '0 2vw', notebook: '0 1vw' },
           zIndex: '100'
         }}
       >
@@ -103,7 +103,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                     width: '1.5px',
                     height: '20px',
                     bgcolor: 'primaryTons.white',
-                    margin: { desktop: '0 0.75vw', notebook: '0 2vw' }
+                    m: { desktop: '0 0.75vw', notebook: '0 2vw' }
                   }}
                 />
                 <Typography
@@ -114,7 +114,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                     textDecoration: 'none',
                     fontSize: '1rem',
                     lineHeight: '1rem',
-                    marginBottom: '-1px'
+                    m: '-1px'
                   }}
                 >
                   {t(`topbar.${pathname[2].toLowerCase()}`).toUpperCase()}
@@ -143,7 +143,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
               <>
                 <Typography
                   sx={{
-                    margin: '0 1vw 0 0',
+                    m: '0 1vw 0 0',
                     display: { mobile: 'none', notebook: 'flex' },
                     fontWeight: 500,
                     fontSize: '0.95rem',

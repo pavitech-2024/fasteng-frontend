@@ -61,7 +61,7 @@ const Login: NextPage = () => {
               top: '0',
               height: { desktop: '100vh', mobile: '60vh' },
               width: { desktop: '50vw', mobile: '100vw' },
-              padding: { desktop: '10vh 4vw', mobile: '5vh 2vw 10vh' },
+              p: { desktop: '10vh 4vw', mobile: '5vh 2vw 10vh' },
             }}
           >
             <Box
@@ -70,7 +70,7 @@ const Login: NextPage = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: { desktop: '18vh', tablet: '16vh' },
-                marginTop: { desktop: '-5vh', mobile: '0' },
+                mt: { desktop: '-5vh', mobile: '0' },
               }}
             >
               <Languages left={10} top={10} unSelectedColor="primaryTons.border" />
@@ -84,7 +84,7 @@ const Login: NextPage = () => {
                 textAlign: 'center',
                 fontSize: { ultrawide: '0.95rem', desktop: '0.85rem', notebook: '0.9rem', mobile: '0.7rem' },
                 height: { ultrawide: '16vh', desktop: '24vh', mobile: '20vh' },
-                padding: '0 2vw',
+                p: '0 2vw',
               }}
             >
               {t('login.fasteng description')}
@@ -94,7 +94,7 @@ const Login: NextPage = () => {
                 display: 'flex',
                 justifyContent: 'space-around',
                 width: '100%',
-                padding: '2vh 0',
+                p: '2vh 0',
               }}
             >
               <Button text="Assine" linkTo="https://fastengapp.com.br/" />
@@ -121,7 +121,7 @@ const Login: NextPage = () => {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '1vh 0 0.5vh',
+              p: '1vh 0 0.5vh',
               borderRadius: '0.5rem',
               width: { desktop: '30vw', mobile: '80vw' },
               height: { ultrawide: '30vh', desktop: '34vh', notebook: '30vh', mobile: '32vh' },
@@ -137,7 +137,7 @@ const Login: NextPage = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'space-around',
-                paddingTop: '2vh',
+                pt: '2vh',
                 height: '70%',
               }}
             >
