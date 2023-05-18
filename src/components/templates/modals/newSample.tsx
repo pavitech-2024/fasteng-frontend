@@ -111,47 +111,45 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, sam
             },
           }}
         >
-          {inputs.map((input) => {
-            return (
-              <>
-                {input.key === 'type' && (
-                  <DropDown
-                    key={input.key}
-                    sx={{ minWidth: '120px', bgcolor: 'white' }}
-                    label={t('samples.type')}
-                    variant="standard"
-                    size="medium"
-                    options={types}
-                    callback={(value: string) => changeSample('type', value)}
-                    required
+          {inputs.map((input) => (
+            <Box key={input.key}>
+              {input.key === 'type' && (
+                <DropDown
+                  key={input.key}
+                  sx={{ minWidth: '120px', bgcolor: 'white' }}
+                  label={t('samples.type')}
+                  variant="standard"
+                  size="medium"
+                  options={types}
+                  callback={(value: string) => changeSample('type', value)}
+                  required
+                />
+              )}
+              {input.key === 'depth' && (
+                <FormControl variant="standard" key={input.key}>
+                  <InputLabel htmlFor="outlined-adornment-depth">{t('samples.depth')}</InputLabel>
+                  <Input
+                    id="outlined-adornment-depth"
+                    endAdornment={<InputAdornment position="end">cm</InputAdornment>}
+                    value={sample.description.depth}
+                    onChange={(e) => changeSample('depth', e.target.value)}
+                    type="number"
+                    inputProps={{ min: 0 }}
                   />
-                )}
-                {input.key === 'depth' && (
-                  <FormControl variant="standard" key={input.key}>
-                    <InputLabel htmlFor="outlined-adornment-depth">{t('samples.depth')}</InputLabel>
-                    <Input
-                      id="outlined-adornment-depth"
-                      endAdornment={<InputAdornment position="end">cm</InputAdornment>}
-                      value={sample.description.depth}
-                      onChange={(e) => changeSample('depth', e.target.value)}
-                      type="number"
-                      inputProps={{ min: 0 }}
-                    />
-                  </FormControl>
-                )}
-                {input.key !== 'depth' && input.key !== 'type' && (
-                  <TextField
-                    key={input.key}
-                    label={input.label}
-                    variant="standard"
-                    value={input.value}
-                    required={input.key === 'name'}
-                    onChange={(e) => changeSample(input.key, e.target.value)}
-                  />
-                )}
-              </>
-            );
-          })}
+                </FormControl>
+              )}
+              {input.key !== 'depth' && input.key !== 'type' && (
+                <TextField
+                  key={input.key}
+                  label={input.label}
+                  variant="standard"
+                  value={input.value}
+                  required={input.key === 'name'}
+                  onChange={(e) => changeSample(input.key, e.target.value)}
+                />
+              )}
+            </Box>
+          ))}
         </Box>
         <TextField
           sx={{ mt: '.8rem' }}

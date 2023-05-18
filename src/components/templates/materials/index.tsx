@@ -26,7 +26,6 @@ import { formatDate } from '@/utils/format';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
-import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
 
 interface MaterialsTemplateProps {
   materials: Sample[] | AsphaltMaterial[];
@@ -120,7 +119,7 @@ const MaterialsTemplate = ({
     });
 
   return (
-    <Container>
+    <>
       {/*Delete Modal */}
       <Dialog open={openDeleteModal}>
         <DialogTitle sx={{ fontSize: '1rem', textTransform: 'uppercase', fontWeight: 700 }} color="secondary">
@@ -174,7 +173,7 @@ const MaterialsTemplate = ({
 
       {/*Page */}
       <Header title={`${title}`} />
-      <Box sx={{ padding: { mobile: '0 2vw', notebook: '0 6vw' } }}>
+      <Box sx={{ padding: { mobile: '0 2vw', notebook: '0 6vw' }, mb: '4vw', width: '100%' }}>
         <Box
           sx={{
             display: 'flex',
@@ -190,7 +189,7 @@ const MaterialsTemplate = ({
               display: 'flex',
               gap: '10px',
               flexDirection: { mobile: 'column', notebook: 'row' },
-              width: '60%',
+              width: '55%',
             }}
           >
             <DropDown
@@ -235,17 +234,14 @@ const MaterialsTemplate = ({
             sx={{
               color: 'primaryTons.white',
               bgcolor: 'primary.main',
-              height: '33px',
+              height: '28px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              borderRadius: '20px',
-              boxShadow: 'unset',
               padding: '0 12px',
 
               '&:hover': {
                 bgcolor: '#F2A255',
-                boxShadow: 'unset',
               }
             }}
           >
@@ -253,6 +249,7 @@ const MaterialsTemplate = ({
             <Typography
               sx={{
                 fontSize: { mobile: '.8rem', notebook:'.95rem' },
+                lineHeight: { mobile: '.95rem', notebook:'1rem' },
                 fontWeight: '700',
                 ml: '2px'
               }}
@@ -306,23 +303,19 @@ const MaterialsTemplate = ({
                                 variant="contained"
                                 sx={{
                                   height: '25px',
-                                  borderRadius: '20px',
-                                  boxShadow: 'unset',
-                                  padding: { mobile: '6px 6px', notebook: '6px 12px' },
-                                  minWidth: '20px',
+                                  borderRadius: { mobile: '50%', notebook: '20px' },
+                                  padding: { mobile: 0, notebook: '6px 12px' },
+                                  minWidth: '25px',
                                   bgcolor: 'secondaryTons.blue',
-                                  fontSize: '1rem',
-                                  lineHeight: '1rem',
                                   color: 'primaryTons.white',
 
                                   ':hover': {
-                                    bgcolor: '#45BCFF',
-                                    boxShadow: 'unset'
+                                    bgcolor: 'primary.light'
                                   }
                                 }}
                                 onClick={(e) => console.log(e)}
                               >
-                                <Typography sx={{ display: { mobile: 'none', notebook: 'flex' } }}>
+                                <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
                                   {t('materials.template.edit')}
                                 </Typography>
                                 <VisualizeIcon
@@ -332,7 +325,7 @@ const MaterialsTemplate = ({
                               <Button
                                 variant="text"
                                 color="error"
-                                sx={{ padding: 0, width: 'auto' }}
+                                sx={{ padding: 0, width: '30px', minWidth: '35px' }}
                                 onClick={() => {
                                   setRowToDelete(row);
                                   setOpenDeleteModal(true);
@@ -360,7 +353,7 @@ const MaterialsTemplate = ({
           </Box>
         </Paper>
       </Box>
-    </Container>
+    </>
   );
 };
 

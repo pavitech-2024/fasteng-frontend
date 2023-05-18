@@ -31,13 +31,11 @@ const Filter = ({ options, callback }: FilterProps) => {
             color: option.isSelected ? 'primaryTons.white' : 'primary.main',
             bgcolor: option.isSelected ? 'primary.main' : 'primaryTons.border',
             borderRight: '1px solid',
-            borderColor: 'white',
+            borderColor: 'primaryTons.white',
             transition: 'all 0.3s ease-in-out',
-            boxShadow: 'none',
             ':hover': {
               bgcolor: option.isSelected ? '#F2A255': 'primary.main',
               color: 'primaryTons.white',
-              boxShadow: 'none'
             },
             ':first-of-type': { borderRadius: '12px 0 0 12px' },
             ':last-child': { borderRadius: '0 12px 12px 0', borderRight: 'none' },

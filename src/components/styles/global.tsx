@@ -23,12 +23,9 @@ export const MainButton = (props: ButtonProps) => (
       width: '126px',
       display: 'flex',
       textAlign: 'center',
-      borderRadius: '20px',
-      boxShadow: 'unset',
 
       '&:hover': {
         bgcolor: '#F2A255',
-        boxShadow: 'unset',
       },
 
       '@media screen and (max-width: 1024px)': {

@@ -11,14 +11,11 @@ export const AboutButton = () => (
       fontWeight: '700',
       height: '28px',
       width: '126px',
-      borderRadius: '20px',
-      boxShadow: 'unset',
       border: '1px solid #F2A255',
 
       '&:hover': {
         bgcolor: 'primaryTons.darkGray',
         border: '1px solid primary.main',
-        boxShadow: 'unset',
       },
 
       '@media screen and (max-width: 1024px)': {

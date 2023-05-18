@@ -51,7 +51,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          boxShadow: 'none',
+          boxShadow: 'unset',
           padding: { mobile: '0 2vw', notebook: '0 1vw' },
           zIndex: '100'
         }}
@@ -88,8 +88,10 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                 fontWeight: 700,
                 textDecoration: 'none',
                 fontSize: '1.25rem',
-                pl: { mobile: '5vw', notebook: '1.5vw' }
+                pl: { mobile: '5vw', notebook: '1.5vw' },
+                cursor: 'pointer'
               }}
+              onClick={() => Router.push(`/${pathname[1].toLowerCase()}`)}
             >
               {t(`topbar.${pathname[1].toLowerCase()}`).toUpperCase()}
             </Typography>

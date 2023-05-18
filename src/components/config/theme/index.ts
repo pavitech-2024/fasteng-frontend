@@ -52,10 +52,6 @@ export const theme = createTheme({
           overflowX: 'hidden'
 				},
 
-				button: {
-					cursor: 'pointer'
-				},
-
 				a: {
 					textDecoration: 'none'
 				},
@@ -81,6 +77,20 @@ export const theme = createTheme({
         root: {
           margin: 0,
           padding: 0
+        }
+      }
+    },
+
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: '20px',
+          cursor: 'pointer',
+          boxShadow: 'unset',
+
+          ':hover': {
+            boxShadow: 'unset'
+          }
         }
       }
     }

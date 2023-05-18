@@ -10,6 +10,8 @@ import { toBase64 } from '../../utils/format';
 import { toast } from 'react-toastify';
 import Api from '../../api';
 import { DeleteIcon } from '../../assets';
+import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
+import UploadIcon from '@mui/icons-material/Upload';
 
 export const getStaticProps = async () => {
   const avatares: string[] = [
@@ -69,7 +71,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
     }
   };
   return (
-    <>
+    <Container>
       <ModalBase
         open={open}
         title={t('settings.changeAvatar')}
@@ -80,18 +82,18 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           setOpen(false);
         }}
         onSubmit={() => setOpen(false)}
-        size="medium"
+        size="small"
       >
         <Box
           sx={{
             width: '99%',
-            height: '300px',
+            height: '200px',
             border: '1px solid #121212',
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, 100px)',
             gridTemplateRows: 'repeat(auto-fill, 100px)',
             gap: '1px',
-            padding: '1rem 0',
+            p: '1rem 0',
             overflow: 'auto',
             placeContent: 'start center',
           }}
@@ -118,7 +120,18 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             );
           })}
         </Box>
-        <Button component="label" sx={{ mt: '1rem' }}>
+        <Button
+          component="label"
+          sx={{ mt: '1rem', color: 'secondaryTons.red' }}
+          startIcon={<DeleteIcon />}
+          onClick={() => {
+            setOldPhoto(user?.photo);
+            onSubmitPhoto(null);
+          }}
+        >
+          Apagar foto atual
+        </Button>
+        <Button component="label" sx={{ mt: '1rem' }} startIcon={<UploadIcon />}>
           {t('settings.upload')}
           <input
             type="file"
@@ -137,19 +150,32 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
       <Header title={t('settings')} />
       <Box
         sx={{
-          width: '100%',
+          width: { mobile: '100%', notebook: '80%'},
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          justifyContent: 'center',
+          mb: '4vh'
         }}
       >
-        <Header title={t('settings.account')} />
+        <Typography
+          sx={{
+            width: { mobile: '85%', notebook: '100%' },
+            fontSize: { mobile: '1.25rem', notebook: '1.75rem' },
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            color: 'primaryTons.lightGray',
+            display: 'flex',
+            justifyContent: 'flex-start'
+          }}
+        >
+          {t('settings.account')}
+        </Typography>
         <Box
           sx={{
+            width: { mobile: '70%', notebook: '80%' },
             display: 'flex',
-            transform: 'translateX(25px)',
-            padding: '1rem 0',
-            mb: '1rem',
+            m: '2vh 0 4vh',
           }}
         >
           <Tooltip title={t('settings.changeAvatar')}>
@@ -169,27 +195,35 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
                 sx={{
                   height: '100px',
                   width: '100px',
-                  bgcolor: 'secondary.light',
-                  borderRadius: '50px',
+                  bgcolor: 'primary.main',
+                  borderRadius: '50%',
                   position: 'absolute',
                   zIndex: 2,
                 }}
               />
-            </IconButton>
+              </IconButton>
           </Tooltip>
           <Box
             sx={{
-              padding: '1rem 1.5rem 1rem 4.5rem',
+              p: '0 24px 0 64px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
-              bgcolor: 'secondary.light',
+              bgcolor: 'primaryTons.lightGray',
+              borderRadius: '10px',
               transform: 'translateX(-50px)',
               zIndex: 1,
               height: 'calc(100px - 2rem)',
+              minWidth: '220px'
             }}
           >
-            <Typography variant="h6" sx={{ color: 'white', fontSize: { mobile: '14px', notebook: '20px' } }}>
+            <Typography
+              variant="h6"
+              sx={{
+                color: 'white',
+                fontSize: { mobile: '14px', notebook: '20px' }
+              }}
+            >
               {user?.name}
             </Typography>
             <Typography variant="subtitle1" sx={{ color: 'white', fontSize: { mobile: '12px', notebook: '16px' } }}>
@@ -197,21 +231,34 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             </Typography>
           </Box>
         </Box>
-        <Header title={t('settings.preferences')} />
+        <Typography
+          sx={{
+            width: { mobile: '85%', notebook: '100%' },
+            fontSize: { mobile: '1.25rem', notebook: '1.75rem' },
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            color: 'primaryTons.lightGray',
+            display: 'flex',
+            justifyContent: 'flex-start'
+          }}
+        >
+          {t('settings.preferences')}
+        </Typography>
         <Box
           sx={{
             display: 'flex',
-            width: '70%',
+            width: { mobile: '70%', notebook: '80%' },
             flexDirection: 'column',
-            alignItems: 'center',
+            alignItems: 'flex-start',
             gap: '1rem',
+            m: '2vh 0 4vh'
           }}
         >
           <DropDown
             label={t('settings.language.label')}
             options={LanguageOptions}
             size="medium"
-            sx={{ minWidth: '150px', width: '30%' }}
+            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white' }}
             defaultValue={user?.preferences.language === 'en' ? LanguageOptions[0] : LanguageOptions[1]}
             callback={(value: string) => {
               i18next.changeLanguage(value);
@@ -222,7 +269,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             label={t('settings.decimal.label')}
             options={DecimalOptions}
             size="medium"
-            sx={{ minWidth: '150px', width: '30%' }}
+            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white' }}
             defaultValue={DecimalOptions[user?.preferences.decimal - 1]}
             callback={(value: number) => {
               setUser({ ...user, preferences: { ...user.preferences, decimal: value } });
@@ -231,7 +278,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
         </Box>
         <Button
           variant="contained"
-          sx={{ mt: '2rem', color: 'white' }}
+          sx={{ color: 'primaryTons.white' }}
           onClick={() =>
             toast.promise(async () => await onSavePreferences(), {
               pending: t('settings.toast loading'),
@@ -243,7 +290,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           {t('settings.save')}
         </Button>
       </Box>
-    </>
+    </Container>
   );
 };
 export default Settings;

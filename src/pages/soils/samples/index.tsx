@@ -8,6 +8,7 @@ import useAuth from '@/contexts/auth';
 import NewSampleModal from '@/components/templates/modals/newSample';
 import { t } from 'i18next';
 import Loading from '@/components/molecules/loading';
+import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
 
 const Samples: NextPage = () => {
   const types: DropDownOption[] = [
@@ -61,7 +62,7 @@ const Samples: NextPage = () => {
   };
 
   return (
-    <>
+    <Container>
       {loading ? (
         <Loading />
       ) : (
@@ -81,7 +82,7 @@ const Samples: NextPage = () => {
           }
         />
       )}
-    </>
+    </Container>
   );
 };
 

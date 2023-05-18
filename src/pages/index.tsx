@@ -44,8 +44,7 @@ const Login: NextPage = () => {
           width: '100vw',
           height: '100vh',
           display: 'grid',
-          gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr', alignItems: 'center' },
-          padding: 0,
+          gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr', alignItems: 'center' }
         }}
       >
         <Box>

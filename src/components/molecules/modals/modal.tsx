@@ -31,7 +31,7 @@ const ModalBase = ({
   const getModalSize = (size: modalSize) => {
     switch (size) {
       case 'small': {
-        return '20%';
+        return '25%';
       }
       case 'medium': {
         return '40%';
@@ -51,7 +51,7 @@ const ModalBase = ({
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: {
-            mobile: '80%',
+            mobile: '85%',
             notebook: getModalSize(size),
           },
           bgcolor: 'primaryTons.white',
@@ -88,21 +88,19 @@ const ModalBase = ({
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingTop: '1rem' }}>
           <Button
             onClick={onCancel}
-            variant="contained"
+            variant='outlined'
+            color='primary'
             sx={{
               height: '33px',
               width: '135px',
-              bgcolor: 'primary.main',
-              color: 'primaryTons.white',
-              boxShadow: 'none',
-              borderRadius: '20px',
+              color: 'primary.main',
               fontSize: '.95rem',
               lineHeight: '.95rem',
               fontWeight: 700,
 
               ':hover': {
-                boxShadow: 'unset',
-                bgcolor: '#F2A255'
+                bgcolor: '#F2A255',
+                color: 'primaryTons.white'
               }
             }}
           >
@@ -117,14 +115,11 @@ const ModalBase = ({
               width: '135px',
               bgcolor: 'primary.main',
               color: 'primaryTons.white',
-              boxShadow: 'none',
-              borderRadius: '20px',
               fontSize: '.95rem',
               lineHeight: '.95rem',
               fontWeight: 700,
 
               ':hover': {
-                boxShadow: 'unset',
                 bgcolor: '#F2A255'
               }
             }}
