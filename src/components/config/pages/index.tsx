@@ -12,6 +12,8 @@ import { Box } from '@mui/material';
 
 import 'react-toastify/dist/ReactToastify.css';
 
+import favicon from '../../../../public/favicon.ico';
+
 interface PagesProps {
   title?: string;
   description?: string;
@@ -43,16 +45,8 @@ const Pages = (props: PagesProps) => {
         <>
           <Topbar setOpenSidebar={setOpenSidebar} />
           {navbar && <Navbar open={OpenSidebar} app={Router.pathname.split('/')[1]} />}
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Box
-              sx={{
-                width: '90vw',
-                height: '83vh',
-                padding: '5vh 5vw',
-              }}
-            >
-              {children}
-            </Box>
+          <Box>
+            {children}
           </Box>
         </>
       );
@@ -64,10 +58,9 @@ const Pages = (props: PagesProps) => {
         <title>{title ? title : 'FastEng'}</title>
         {description && <meta name="description" content={description} />}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="shortcut icon" href="@public/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href={favicon.src} type="image/x-icon" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet" />
       </Head>
       <main>
         {GetComponent()}

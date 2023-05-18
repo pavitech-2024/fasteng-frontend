@@ -7,10 +7,8 @@ interface PageProps {
 export const PageGenericContainer = ({ children }: PageProps) => (
   <Container
     sx={{
-      position: 'absolute',
-      zIndex: 2,
-      top: '52px',
-      left: { mobile: 0, notebook: '52px' },
+      mt: '52px',
+      ml: { mobile: 0, notebook: '52px' },
       width: { mobile: '100vw', notebook: 'calc(100vw - 52px)' },
       padding: 0
     }}
@@ -22,12 +20,9 @@ export const PageGenericContainer = ({ children }: PageProps) => (
 export const PageWelcomeContainer = ({ children }: PageProps) => (
   <Container
     sx={{
-      position: 'absolute',
-      zIndex: 2,
-      top: '52px',
-      left: 0,
+      mt: '52px',
       width: '100vw',
-      padding: 0
+      padding: 0,
     }}
   >
     {children}

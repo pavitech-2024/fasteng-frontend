@@ -56,7 +56,7 @@ const Materials = () => {
   return (
     <>
       {loading ? (
-        <p>Carregando...</p>
+        <div>Carregando...</div>
       ) : (
         <MaterialsTemplate
           materials={materials}

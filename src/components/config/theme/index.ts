@@ -74,6 +74,15 @@ export const theme = createTheme({
           border: '2px solid #F2F2F2'
         }
 			}
-		}
+		},
+
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          margin: 0,
+          padding: 0
+        }
+      }
+    }
   }
 });

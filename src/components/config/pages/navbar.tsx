@@ -172,6 +172,7 @@ export default function Navbar({ open, app }: NavbarProps) {
         alignItems: 'flex-start',
         width: `${open ? '225px' : '52px'}`,
         pt: { mobile: '52px', notebook: '0' },
+        mt: '-52px',
         bgcolor: 'primaryTons.mainGray',
         height: '100vh',
         transition: 'width 0.5s',

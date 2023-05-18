@@ -43,11 +43,8 @@ const Home: NextPage = () => {
         alignItems: 'center',
         height: 'calc(100vh - 52px)',
         width: '100vw',
-        padding: '3vh 0',
-        position: 'absolute',
-        zIndex: 2,
-        top: '52px',
-        left: 0,
+        p: '3vh 0',
+        mt: '52px'
       }}
     >
       <Box
@@ -130,16 +127,16 @@ const Home: NextPage = () => {
           width: '100%',
           minWidth: 'fit-content',
           maxWidth: '1400px',
-          paddingTop: { mobile: '0', notebook: '2vh' },
+          paddingTop: '2vh',
 
           '@media only screen and (min-width: 1024px)': {
             width: '60%'
           }
         }}
       >
-        <CardApp element={Applications[0]} onClick={() => Router.push(Applications[0].path)} />
-        <CardApp element={Applications[1]} onClick={() => Router.push(Applications[1].path)} />
-        <CardApp element={Applications[2]} onClick={() => Router.push(Applications[2].path)} />
+        {Applications.map((app) => (
+          <CardApp key={app.name} element={app} onClick={() => Router.push(app.path)} />
+        ))}
       </Box>
     </Container>
   );
