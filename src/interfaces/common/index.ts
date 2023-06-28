@@ -1,5 +1,10 @@
 import { StaticImageData } from 'next/image';
 
+export interface StandardData {
+  name: string;
+  link: string;
+};
+
 export type Essay = {
   key: string;
   title: string;
@@ -95,6 +100,7 @@ export type Sieve = {
 //     value: 0.075; // mm
 //   }
 // ];
+
 export type Standard = {
   key: string;
   title: string;

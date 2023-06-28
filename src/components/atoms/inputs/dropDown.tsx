@@ -2,7 +2,7 @@ import { MenuItem, TextField } from '@mui/material';
 
 export interface DropDownOption {
   label: string;
-  value: string | number;
+  value: any;
 }
 
 interface DropDownProps {
@@ -40,9 +40,9 @@ const DropDown = ({
       variant={variant}
       required={required}
     >
-      {options.map((option) => (
+      {options.map((option, index) => (
         <MenuItem
-          key={option.value}
+          key={index}
           value={option.value}
           onClick={() => callback(option.value)}
           sx={{ fontSize: '14px' }}

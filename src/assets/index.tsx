@@ -9,7 +9,8 @@ import {
   Delete,
   Settings,
   Logout,
-  ArrowForward
+  ArrowForward,
+  ArrowBack,
 } from '@mui/icons-material';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
@@ -17,7 +18,6 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import LogoBlack from './fasteng/LogoBlack.png';
 import LogoWhite from './fasteng/LogoWhite.png';
 import LogoSmall from './fasteng/LogoSmall.png';
-import LogoIcon from './fasteng/LogoIcon.png';
 import LoginPhoto from './fasteng/LoginPhoto.jpg';
 
 // apps paste
@@ -95,13 +95,13 @@ export {
   Settings as SettingsIcon,
   Logout as LogoutIcon,
   PictureAsPdfIcon as PDFIcon,
-  ArrowForward as VisualizeIcon,
+  ArrowForward as NextIcon,
+  ArrowBack as PreviousIcon,
 
   // fasteng paste
   LogoBlack,
   LogoWhite,
   LogoSmall,
-  LogoIcon,
   LoginPhoto,
   // apps paste
   AsphaltIcon,
