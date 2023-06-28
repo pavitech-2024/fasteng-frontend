@@ -11,6 +11,10 @@ import {
   Logout,
   ArrowForward,
   ArrowBack,
+  InfoRounded,
+  Close,
+  Save,
+  KeyboardArrowDown,
 } from '@mui/icons-material';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
@@ -97,6 +101,10 @@ export {
   PictureAsPdfIcon as PDFIcon,
   ArrowForward as NextIcon,
   ArrowBack as PreviousIcon,
+  InfoRounded as InfoIcon,
+  Close as CloseIcon,
+  Save as SaveIcon,
+  KeyboardArrowDown as ArrowDownIcon,
 
   // fasteng paste
   LogoBlack,

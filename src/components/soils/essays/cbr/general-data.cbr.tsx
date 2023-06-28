@@ -1,6 +1,6 @@
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
-import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
+import DropDown from '@/components/atoms/inputs/dropDown';
 import CBR_SERVICE from '@/services/soils/essays/cbr/cbr.service';
 import Loading from '@/components/molecules/loading';
 import { Sample } from '@/interfaces/soils';
@@ -88,20 +88,35 @@ const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps 
                     onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
                   />
                 );
-              else if (['sample'].includes(input.key))
+              else if (['sample'].includes(input.key)) {
+                const defaultValue = {
+                  label: '',
+                  value: null,
+                };
+
+                // se existir uma sample no store, seta ela como default
+                const sample = samples.find((sample) => sample._id == input.value['_id']);
+
+                if (sample) {
+                  defaultValue.label = sample.name + ' | ' + t(`${'samples.' + sample.type}`);
+                  defaultValue.value = sample;
+                }
+
                 return (
                   <DropDown
                     key={input.key}
                     variant="standard"
                     label={input.label}
-                    options={samples.map((sample: Sample): DropDownOption => {
-                      return { label: sample.name + ' | ' + sample.type, value: sample };
+                    options={samples.map((sample: Sample) => {
+                      return { label: sample.name + ' | ' + t(`${'samples.' + sample.type}`), value: sample };
                     })}
+                    defaultValue={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
                     size="medium"
                     required={input.required}
                   />
                 );
+              }
             })}
           </Box>
           <TextField

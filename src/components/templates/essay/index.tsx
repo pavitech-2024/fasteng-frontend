@@ -4,10 +4,11 @@ import { Box, Button, Typography } from '@mui/material';
 import Image from 'next/image';
 import { t } from 'i18next';
 import { useRouter } from 'next/router';
-import { NextIcon, PreviousIcon } from '@/assets';
+import { NextIcon, PreviousIcon, SaveIcon } from '@/assets';
 import Link from 'next/link';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { toast } from 'react-toastify';
+import StepDescription from '../../atoms/titles/step-description';
 
 interface EssayTemplateProps {
   essayInfo: IEssayService['info'];
@@ -28,8 +29,9 @@ const EssayTemplate = ({
 }: EssayTemplateProps) => {
   const router = useRouter();
   const app = router.pathname.split('/')[1];
+  const essay = router.pathname.split('/')[3];
 
-  const [activeStep, setActiveStep] = React.useState(1);
+  const [activeStep, setActiveStep] = React.useState(0);
   const [nextDisabled, setNextDisabled] = React.useState(true);
 
   return (

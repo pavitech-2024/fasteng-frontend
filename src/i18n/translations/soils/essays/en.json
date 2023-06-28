@@ -2,5 +2,7 @@
   "soils.essays.cbr": "California Bearing Ratio - CBR",
   "soils.essays.hrb": "Road Classification - HRB",
   "soils.essays.sucs": "Unified Classification - SUCS",
-  "soils.essays.compression": "Compression Test"
+  "soils.essays.compression": "Compression Test",
+  "general data": "General Data",
+  "general data of essay": "Essay General Data"
 }
