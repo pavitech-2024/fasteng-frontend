@@ -69,7 +69,7 @@ export const CardApp: NextPage<Props> = ({ element, onClick }) => (
           mobile: '1.25rem',
           notebook: '1.35rem',
           desktop: '1.45rem',
-          ultrawide: '1.8rem',
+          ultrawide: '1.65rem',
         },
         fontWeight: '500',
         color: 'primaryTons.white',

@@ -114,7 +114,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                     textDecoration: 'none',
                     fontSize: '1rem',
                     lineHeight: '1rem',
-                    m: '-1px'
+                    mb: '-1px'
                   }}
                 >
                   {t(`topbar.${pathname[2].toLowerCase()}`).toUpperCase()}

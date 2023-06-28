@@ -53,7 +53,8 @@ const Home: NextPage = () => {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          height: { mobile: '17.5%', notebook: '25%' }
+          height: { mobile: '17.5%', notebook: '25%' },
+          maxHeight: '250px'
         }}
       >
         <Box
@@ -86,6 +87,7 @@ const Home: NextPage = () => {
       <Box
         sx={{
           height: { mobile: '22.5%', notebook: '17.5%' },
+          maxHeight: { mobile: 'none', ultrawide: '150px' },
           display: 'flex',
           alignItems: 'center'
         }}
@@ -104,6 +106,7 @@ const Home: NextPage = () => {
               fontWeight: 400,
               color: 'primaryTons.darkGray',
               textAlign: 'center',
+              maxWidth: '1395px'
             }}
           >
             {t('home.description')}

@@ -1,13 +1,17 @@
 import { Box, Typography } from '@mui/material';
+import Image, { StaticImageData } from 'next/image';
+import Link from 'next/link';
 
 interface HeaderProps {
   title: string;
   subTitle?: string;
+  link?: string;
   icon?: JSX.Element;
+  image?: StaticImageData;
   children?: React.ReactNode | JSX.Element;
 }
 
-export const Header = ({ title, subTitle, icon, children }: HeaderProps) => {
+export const Header = ({ title, subTitle, link, icon, image, children }: HeaderProps) => {
   return (
     <Box
       sx={{
@@ -22,10 +26,11 @@ export const Header = ({ title, subTitle, icon, children }: HeaderProps) => {
       <Box
         sx={{
           display: 'flex',
-          alignItems: 'start',
+          alignItems: 'center',
           mb: { mobile: '2vh', notebook: 0 }
         }}
       >
+        {image && <Image alt="essay icon" src={image} width={90} height={90} />}
         {icon}
         <Box
           sx={{
@@ -37,6 +42,7 @@ export const Header = ({ title, subTitle, icon, children }: HeaderProps) => {
             sx={{
               textTransform: 'uppercase',
               fontSize: { mobile: '1.65rem', notebook: '2rem' },
+              lineHeight: { mobile: '1.65rem', notebook: '2rem' },
               color: 'primaryTons.darkGray',
               fontWeight: 700,
             }}
@@ -47,11 +53,21 @@ export const Header = ({ title, subTitle, icon, children }: HeaderProps) => {
             sx={{
               textTransform: 'uppercase',
               fontSize: { mobile: '1.15rem', notebook: '1.5rem' },
-              color: 'primaryTons.darkGray',
+              lineHeight: { mobile: '1.15rem', notebook: '1.5rem' },
               fontWeight: 500,
+              cursor: 'pointer'
             }}
           >
-            {subTitle}
+            <Link
+              href={link}
+              target="standard"
+              style={{
+                textDecoration: 'none',
+                color: '#F29134' //primary.main
+              }}
+            >
+              {subTitle}
+            </Link>
           </Typography>
         </Box>
       </Box>

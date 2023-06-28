@@ -58,7 +58,7 @@ const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps 
   return (
     <>
       {loading ? (
-        <Loading height="100%" />
+        <Loading />
       ) : (
         <Box
           sx={{
@@ -94,8 +94,12 @@ const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps 
                   value: null,
                 };
 
+                let sample;
+
                 // se existir uma sample no store, seta ela como default
-                const sample = samples.find((sample) => sample._id == input.value['_id']);
+                if (input.value) {
+                  sample = samples.find((sample) => sample._id == input.value['_id']);
+                }
 
                 if (sample) {
                   defaultValue.label = sample.name + ' | ' + t(`${'samples.' + sample.type}`);

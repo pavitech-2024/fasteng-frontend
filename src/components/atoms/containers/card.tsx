@@ -36,12 +36,12 @@ interface CardProps {
   data: Essay | Standard;
   type: 'essay' | 'standard';
   hrefLink: string;
-  target: string;
+  target?: string;
 }
 
 export const Card = ({ data, type, hrefLink, target }: CardProps) => {
   return (
-    <Link href={hrefLink} passHref style={{ textDecoration: 'none' }} target={target}>
+    <Link href={hrefLink} passHref style={{ textDecoration: 'none' }} target={target ? target : ''}>
       <Box
         sx={{
           width: { mobile: '150px', notebook: '170px' },

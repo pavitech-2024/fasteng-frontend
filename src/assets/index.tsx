@@ -22,6 +22,7 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import LogoBlack from './fasteng/LogoBlack.png';
 import LogoWhite from './fasteng/LogoWhite.png';
 import LogoSmall from './fasteng/LogoSmall.png';
+import LogoIcon from './fasteng/LogoIcon.png';
 import LoginPhoto from './fasteng/LoginPhoto.jpg';
 
 // apps paste
@@ -110,6 +111,7 @@ export {
   LogoBlack,
   LogoWhite,
   LogoSmall,
+  LogoIcon,
   LoginPhoto,
   // apps paste
   AsphaltIcon,
