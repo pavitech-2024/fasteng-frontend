@@ -1,4 +1,4 @@
-import { Box, TextField, Typography } from '@mui/material';
+import { Box, Grid, TextField, Typography } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { t } from 'i18next';
@@ -33,21 +33,19 @@ interface ItemProps {
   sub?: { name: string; link: string; icon: JSX.Element }[];
 };
 
-// interface IReportErrorModalInputs {
-//   label: string,
-//   value: string,
-// };
-
 export default function Navbar({ open, app }: NavbarProps) {
   const Router = useRouter();
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailStatusMessage, setEmailStatusMessage] = useState('');
   const [openModal, setOpenModal] = useState(false);
-  const IconStyle = { color: 'primaryTons.white', fontSize: '1.5rem' };
   const [modalValues, setModalValues] = useState({
     subject: '',
     contact: '',
     body: '',
     sender: ''
   });
+
+  const IconStyle = { color: 'primaryTons.white', fontSize: '1.5rem' };
 
   const getModalInput = () => {
     const modalInputs = [
@@ -215,7 +213,6 @@ export default function Navbar({ open, app }: NavbarProps) {
   };
 
   const handleReportErrorChange = (event: ChangeEvent<HTMLTextAreaElement>, key: string) => {
-    console.log("🚀 ~ file: navbar.tsx:214 ~ handleReportErrorChange ~ key:", key)
     event.preventDefault();
     const input = event.target.value;
     setModalValues({...modalValues, [key]: input})
@@ -224,6 +221,8 @@ export default function Navbar({ open, app }: NavbarProps) {
   const handleSubmit = async () => {
     const cookies = Cookies.get();
     const token = cookies['fasteng.token'];
+
+    setEmailStatusMessage('Enviando...')
 
     try {
       const response = await fetch('/api/report-error', {
@@ -236,12 +235,21 @@ export default function Navbar({ open, app }: NavbarProps) {
       });
 
       if (response.status === 200) {
-        console.log('Email enviado com sucesso');
+        setEmailSent(true);
+        setEmailStatusMessage('Email enviado com sucesso')
+        setModalValues({
+          subject: '',
+          contact: '',
+          sender: '',
+          body: ''
+        });
+        setTimeout(() => setOpenModal(false), 3000);
+        setTimeout(() => setEmailStatusMessage(''));
       } else {
-        console.log('Ocorreu um erro ao enviar o email');
+        setEmailStatusMessage('Ocorreu um erro ao enviar o email');
       }
     } catch (error) {
-      console.log('Ocorreu um erro ao enviar o email:', error.message);
+      setEmailStatusMessage(`Ocorreu um erro ao enviar o email: ${error.message}`);
     };
   };
 
@@ -372,70 +380,90 @@ export default function Navbar({ open, app }: NavbarProps) {
       })}
 
       <ModalBase 
-        title={''} 
+        title={'Reportar Erro'}
         leftButtonTitle={'cancelar'} 
         rightButtonTitle={'enviar'} 
-        onCancel={() => setOpenModal(false) } 
+        onCancel={
+          () => {
+            setOpenModal(false);
+            setModalValues({
+              subject: '',
+              contact: '',
+              sender: '',
+              body: ''
+            });
+          }
+        } 
         open={openModal} 
-        size={'small'} 
+        size={'medium'}
         onSubmit={handleSubmit}
+        disableSubmit={
+          modalValues.contact === '' ||
+          modalValues.body === '' ||
+          modalValues.sender === '' ||
+          modalValues.subject === ''
+        }
       >
         <Box sx={{ mb: '1rem' }}>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column'
-            }}
-          >
-            <Box 
-              sx={{ 
-                display: 'flex',
-              }}
-            >
+          <Grid container spacing={2}>
+            <Grid container item spacing={2}>
               {getModalInput().map((input) => (
                 input.label !== 'texto' ? (
-                  <Box
-                    sx={{ flex: 1, padding: '10px' }} key={input.label}
-                  >
+                  <Grid item key={input.label} component="div" width={'inherit'}>
                     <TextField
                       label={input.label}
                       variant="standard"
                       value={input.value}
                       required
-                      onChange={(event: ChangeEvent<HTMLTextAreaElement>) => handleReportErrorChange(event, input.key)}
+                      onChange={(event: ChangeEvent<HTMLTextAreaElement>) => 
+                        handleReportErrorChange(event, input.key)
+                      }
+                      fullWidth
                     />
-                  </Box>
+                  </Grid>
                 ) : (
                   null
                 )
               ))}
-            </Box>
-            <Box
-              sx={{ display: 'flex', width: '-webkit-fill-available' }}
-            >
+            </Grid>
+            <Grid container item>
               {getModalInput().map((input) => (
                 input.label === 'texto' ? (
-                  <Box
-                    sx={{ padding: '10px' }}
-                    key={input.label}
-                  >
+                  <Grid item key={input.label} component="div" width={'inherit'}>
                     <TextField
                       label={input.label}
                       variant="standard"
                       value={input.value}
                       required
                       onChange={(event: ChangeEvent<HTMLTextAreaElement>) => handleReportErrorChange(event, input.key)}
-                      sx={{ width: '100%' }}
+                      fullWidth
                       multiline
                       rows={4}
                     />
-                  </Box>
+                  </Grid>
                 ) : (
                   null
                 )
               ))}
-            </Box>
-          </Box>
+            </Grid>
+          </Grid>
+
+          {emailStatusMessage.length > 0 && (
+            <Typography
+              sx={{
+                fontSize: '.9125rem',
+                fontWeight: 700,
+                lineHeight: '.9375rem',
+                letterSpacing: '.03em',
+                whiteSpace: 'nowrap',
+                color: 'black',
+                transition: 'color .5s ease-in-out',
+                marginY: '.9125rem'
+              }}
+            >
+              {emailStatusMessage}
+            </Typography>
+          )}
         </Box>
       </ModalBase>
     </Box>
