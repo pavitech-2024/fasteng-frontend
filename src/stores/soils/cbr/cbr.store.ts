@@ -9,11 +9,18 @@ interface GeneralData {
   operator?: string;
   cauculist?: string;
   description?: string;
-}
+};
+
+interface cbr_step2Data {
+  ringConstant: number;
+  cilinderHeight: number;
+};
 
 export type CbrData = {
   generalData: GeneralData;
+  step2Data: cbr_step2Data;
 };
+
 type Actions = {
   setData: ({ step, key, value }: setDataType) => void;
 };
@@ -33,6 +40,10 @@ const useCbrStore = create<CbrData & Actions>()(
           operator: null,
           cauculist: null,
           description: null,
+        },
+        step2Data: {
+          ringConstant: null,
+          cilinderHeight: null,
         },
 
         setData: ({ step, key, value }) =>

@@ -29,7 +29,7 @@ const EssayTemplate = ({
   const router = useRouter();
   const app = router.pathname.split('/')[1];
 
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = React.useState(1);
   const [nextDisabled, setNextDisabled] = React.useState(true);
 
   return (
@@ -45,7 +45,7 @@ const EssayTemplate = ({
         >
           <Box
             sx={{
-              width: { mobile: '100%', notebook: '57%' },
+              width: { mobile: '100%', notebook: '43%' },
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
