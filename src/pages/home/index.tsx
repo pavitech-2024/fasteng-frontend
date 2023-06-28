@@ -91,7 +91,6 @@ const Home: NextPage = () => {
         }}
       >
         <Box
-          component="p"
           sx={{
             display: 'flex',
             alignItems: 'center',

@@ -148,6 +148,7 @@ const Login: NextPage = () => {
                 placeholder={t('login.email placeholder')}
                 sx={{
                   width: { desktop: '26vw', mobile: '70vw' },
+                  bgcolor: 'primaryTons.white'
                 }}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -161,6 +162,7 @@ const Login: NextPage = () => {
                 value={password}
                 sx={{
                   width: { desktop: '26vw', mobile: '70vw' },
+                  bgcolor: 'primaryTons.white'
                 }}
                 onChange={(e) => setPassword(e.target.value)}
                 required

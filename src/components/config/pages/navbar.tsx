@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, TextField, Typography } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { t } from 'i18next';
@@ -15,11 +15,14 @@ import {
   LibraryIcon,
   AbcpIcon,
 } from '@/assets';
+import ModalBase from '@/components/molecules/modals/modal';
+import { ChangeEvent, useState } from 'react';
+import Cookies from 'js-cookie';
 
 interface NavbarProps {
   open: boolean;
   app: string;
-}
+};
 
 interface ItemProps {
   name: string;
@@ -28,12 +31,50 @@ interface ItemProps {
   icon: JSX.Element;
   type: string;
   sub?: { name: string; link: string; icon: JSX.Element }[];
-}
+};
+
+// interface IReportErrorModalInputs {
+//   label: string,
+//   value: string,
+// };
 
 export default function Navbar({ open, app }: NavbarProps) {
   const Router = useRouter();
-
+  const [openModal, setOpenModal] = useState(false);
   const IconStyle = { color: 'primaryTons.white', fontSize: '1.5rem' };
+  const [modalValues, setModalValues] = useState({
+    subject: '',
+    contact: '',
+    body: '',
+    sender: ''
+  });
+
+  const getModalInput = () => {
+    const modalInputs = [
+      {
+        label: 'Assunto',
+        key: 'subject',
+        value: modalValues.subject,
+      },
+      {
+        label: 'Contato',
+        key: 'contact',
+        value: modalValues.contact
+      },
+      {
+        label: 'Nome',
+        key: 'sender',
+        value: modalValues.sender
+      },
+      {
+        label: 'Texto',
+        key: 'body',
+        value: modalValues.body
+      },
+    ];
+
+    return modalInputs;
+  };
 
   const Items: ItemProps[] = [
     { name: t('navbar.home'), link: '/home', app: 'common', icon: <HomeIcon sx={IconStyle} />, type: 'single' },
@@ -159,8 +200,50 @@ export default function Navbar({ open, app }: NavbarProps) {
       type: 'single',
     },
 
-    { name: t('navbar.report'), link: '/report', app: 'common', icon: <ReportIcon sx={IconStyle} />, type: 'single' },
+    {
+      name: t('navbar.report'),
+      link: '/report',
+      app: 'common',
+      icon: <ReportIcon sx={IconStyle} />,
+      type: 'single'
+    },
   ].filter((item) => item.app === Router.pathname.split('/')[1] || item.app === 'common');
+
+  const handleModal = (e) => {
+    e.preventDefault()
+    setOpenModal(!openModal ? true : false)
+  };
+
+  const handleReportErrorChange = (event: ChangeEvent<HTMLTextAreaElement>, key: string) => {
+    console.log("🚀 ~ file: navbar.tsx:214 ~ handleReportErrorChange ~ key:", key)
+    event.preventDefault();
+    const input = event.target.value;
+    setModalValues({...modalValues, [key]: input})
+  };
+
+  const handleSubmit = async () => {
+    const cookies = Cookies.get();
+    const token = cookies['fasteng.token'];
+
+    try {
+      const response = await fetch('/api/report-error', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${token}`
+        },
+        body: JSON.stringify(modalValues)
+      });
+
+      if (response.status === 200) {
+        console.log('Email enviado com sucesso');
+      } else {
+        console.log('Ocorreu um erro ao enviar o email');
+      }
+    } catch (error) {
+      console.log('Ocorreu um erro ao enviar o email:', error.message);
+    };
+  };
 
   return (
     <Box
@@ -176,6 +259,7 @@ export default function Navbar({ open, app }: NavbarProps) {
         bgcolor: 'primaryTons.mainGray',
         height: '100vh',
         transition: 'width 0.5s',
+
         ':hover': {
           width: '225px',
         },
@@ -207,6 +291,7 @@ export default function Navbar({ open, app }: NavbarProps) {
                   bottom: item.name === t('navbar.report') && '0',
                   width: '100%',
                 }}
+                onClick={ item.name === t('navbar.report') ? handleModal : undefined }
               >
                 <Box
                   sx={{
@@ -285,6 +370,74 @@ export default function Navbar({ open, app }: NavbarProps) {
             </Box>
           );
       })}
+
+      <ModalBase 
+        title={''} 
+        leftButtonTitle={'cancelar'} 
+        rightButtonTitle={'enviar'} 
+        onCancel={() => setOpenModal(false) } 
+        open={openModal} 
+        size={'small'} 
+        onSubmit={handleSubmit}
+      >
+        <Box sx={{ mb: '1rem' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
+            <Box 
+              sx={{ 
+                display: 'flex',
+              }}
+            >
+              {getModalInput().map((input) => (
+                input.label !== 'texto' ? (
+                  <Box
+                    sx={{ flex: 1, padding: '10px' }} key={input.label}
+                  >
+                    <TextField
+                      label={input.label}
+                      variant="standard"
+                      value={input.value}
+                      required
+                      onChange={(event: ChangeEvent<HTMLTextAreaElement>) => handleReportErrorChange(event, input.key)}
+                    />
+                  </Box>
+                ) : (
+                  null
+                )
+              ))}
+            </Box>
+            <Box
+              sx={{ display: 'flex', width: '-webkit-fill-available' }}
+            >
+              {getModalInput().map((input) => (
+                input.label === 'texto' ? (
+                  <Box
+                    sx={{ padding: '10px' }}
+                    key={input.label}
+                  >
+                    <TextField
+                      label={input.label}
+                      variant="standard"
+                      value={input.value}
+                      required
+                      onChange={(event: ChangeEvent<HTMLTextAreaElement>) => handleReportErrorChange(event, input.key)}
+                      sx={{ width: '100%' }}
+                      multiline
+                      rows={4}
+                    />
+                  </Box>
+                ) : (
+                  null
+                )
+              ))}
+            </Box>
+          </Box>
+        </Box>
+      </ModalBase>
     </Box>
   );
 }
