@@ -1,0 +1,19 @@
+{
+  "materials.title": "Registered Materials",
+  "concrete.materials.newMaterial": "Register Material",
+  "concrete.materials.type": "Type",
+  "concrete.materials.source": "Source",
+  "concrete.materials.responsible": "Responsible",
+  "concrete.materials.classification_AMP": "Classification",
+  "concrete.materials.recieveDate": "Recieve Date",
+  "concrete.materials.aggregateNature": "Nature of the Aggregate",
+  "concrete.materials.collectionDate": "Collection Date",
+  "concrete.materials.boughtDate": "Bought Date",
+  "concrete.materials.classification_CAP": "Classification",
+  "concrete.materials.concreteBinder": "concrete Binder",
+  "concrete.materials.coarseAggregate": "Coarse Aggregate",
+  "concrete.materials.fineAggregate": "Fine Aggregate",
+  "concrete.materials.filler": "Filler",
+  "concrete.materials.cap": "CAP",
+  "concrete.materials.other": "Other"
+}

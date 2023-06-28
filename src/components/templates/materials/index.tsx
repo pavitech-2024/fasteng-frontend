@@ -21,14 +21,15 @@ import {
 } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import Search from '@/components/atoms/inputs/search';
-import { AddIcon, DeleteIcon, VisualizeIcon } from '@/assets';
+import { AddIcon, DeleteIcon, NextIcon } from '@/assets';
 import { formatDate } from '@/utils/format';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { ConcreteMaterial } from '@/interfaces/concrete';
 
 interface MaterialsTemplateProps {
-  materials: Sample[] | AsphaltMaterial[];
+  materials: Sample[] | AsphaltMaterial[] | ConcreteMaterial[];
   types: DropDownOption[];
   title: 'Amostras Cadastradas' | 'Materiais Cadastrados';
   //Modal
@@ -318,7 +319,7 @@ const MaterialsTemplate = ({
                                 <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
                                   {t('materials.template.edit')}
                                 </Typography>
-                                <VisualizeIcon
+                                <NextIcon
                                   sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1.25rem' }} />
                                 
                               </Button>
