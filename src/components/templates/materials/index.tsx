@@ -240,25 +240,20 @@ const MaterialsTemplate = ({
               alignItems: 'center',
               justifyContent: 'center',
               p: '0 12px',
+              fontSize: { mobile: '.8rem', notebook:'.95rem' },
+              lineHeight: { mobile: '.95rem', notebook:'1rem' },
+              fontWeight: '700',
+              ml: '2px',
 
               '&:hover': {
                 bgcolor: '#F2A255',
               }
             }}
+            startIcon={<AddIcon />}
           >
-            <AddIcon sx={{ color: 'primaryTons.white', fontSize: '1.2rem' }} />
-            <Typography
-              sx={{
-                fontSize: { mobile: '.8rem', notebook:'.95rem' },
-                lineHeight: { mobile: '.95rem', notebook:'1rem' },
-                fontWeight: '700',
-                ml: '2px'
-              }}
-            >
-              {`${
-                app === 'soils' ? ` ${t('materials.template.newSample')}` : ` ${t('materials.template.newMaterial')}`
-              }`}
-            </Typography>
+            {`${
+              app === 'soils' ? ` ${t('materials.template.newSample')}` : ` ${t('materials.template.newMaterial')}`
+            }`}
           </Button>
         </Box>
         <Paper
@@ -291,55 +286,53 @@ const MaterialsTemplate = ({
               </TableHead>
               <TableBody>
                 {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                  <>
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
-                      {columns.map((column) => (
-                        <TableCell key={column.id} align="center">
-                          {column.id === 'name' && row.name}
-                          {column.id === 'type' && translateType(row.type)}
-                          {column.id === 'createdAt' && formatDate(row.createdAt)}
-                          {column.id === 'actions' && (
-                            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                              <Button
-                                variant="contained"
-                                sx={{
-                                  height: '25px',
-                                  borderRadius: { mobile: '50%', notebook: '20px' },
-                                  p: { mobile: 0, notebook: '6px 12px' },
-                                  minWidth: '25px',
-                                  bgcolor: 'secondaryTons.blue',
-                                  color: 'primaryTons.white',
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
+                    {columns.map((column) => (
+                      <TableCell key={column.id} align="center">
+                        {column.id === 'name' && row.name}
+                        {column.id === 'type' && translateType(row.type)}
+                        {column.id === 'createdAt' && formatDate(row.createdAt)}
+                        {column.id === 'actions' && (
+                          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Button
+                              variant="contained"
+                              sx={{
+                                height: '25px',
+                                borderRadius: { mobile: '50%', notebook: '20px' },
+                                p: { mobile: 0, notebook: '6px 12px' },
+                                minWidth: '25px',
+                                bgcolor: 'secondaryTons.blue',
+                                color: 'primaryTons.white',
 
-                                  ':hover': {
-                                    bgcolor: 'primary.light'
-                                  }
-                                }}
-                                onClick={(e) => console.log(e)}
-                              >
-                                <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
-                                  {t('materials.template.edit')}
-                                </Typography>
-                                <NextIcon
-                                  sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1.25rem' }} />
-                                
-                              </Button>
-                              <Button
-                                variant="text"
-                                color="error"
-                                sx={{ p: 0, width: '30px', minWidth: '35px' }}
-                                onClick={() => {
-                                  setRowToDelete(row);
-                                  setOpenDeleteModal(true);
-                                }}
-                              >
-                                <DeleteIcon color="error" sx={{ fontSize: '1.25rem' }} />
-                              </Button>
-                            </Box>
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </>
+                                ':hover': {
+                                  bgcolor: 'primary.light'
+                                }
+                              }}
+                              onClick={(e) => console.log(e)}
+                            >
+                              <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
+                                {t('materials.template.edit')}
+                              </Typography>
+                              <NextIcon
+                                sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1.25rem' }}
+                              />
+                            </Button>
+                            <Button
+                              variant="text"
+                              color="error"
+                              sx={{ p: 0, width: '30px', minWidth: '35px' }}
+                              onClick={() => {
+                                setRowToDelete(row);
+                                setOpenDeleteModal(true);
+                              }}
+                            >
+                              <DeleteIcon color="error" sx={{ fontSize: '1.25rem' }} />
+                            </Button>
+                          </Box>
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
                 ))}
               </TableBody>
             </Table>

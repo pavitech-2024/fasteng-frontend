@@ -91,11 +91,11 @@ const ModalBase = ({
             variant='outlined'
             color='primary'
             sx={{
-              height: '33px',
+              height: '32px',
               width: '135px',
               color: 'primary.main',
               fontSize: '.95rem',
-              lineHeight: '.95rem',
+              lineHeight: '1rem',
               fontWeight: 700,
 
               ':hover': {
@@ -111,12 +111,12 @@ const ModalBase = ({
             variant="contained"
             disabled={disableSubmit}
             sx={{
-              height: '33px',
+              height: '32px',
               width: '135px',
               bgcolor: 'primary.main',
               color: 'primaryTons.white',
               fontSize: '.95rem',
-              lineHeight: '.95rem',
+              lineHeight: '1rem',
               fontWeight: 700,
 
               ':hover': {

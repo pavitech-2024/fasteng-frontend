@@ -73,7 +73,7 @@ const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps 
               display: 'grid',
               width: '100%',
               gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
-              gap: '5px',
+              gap: '5px 20px',
             }}
           >
             {inputs.map((input) => {
