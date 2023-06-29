@@ -7,42 +7,50 @@ interface FlexColumnBorderProps {
   hideBorder?: boolean;
   sx?: React.CSSProperties;
   sx_title?: { [key: string]: unknown };
+  open?: boolean;
+  generalData?: boolean;
 }
 
-const FlexColumnBorder = ({ children, title, flexDirection, hideBorder, sx, sx_title }: FlexColumnBorderProps) => {
+const FlexColumnBorder = ({
+  children,
+  title,
+  flexDirection,
+  hideBorder,
+  sx,
+  sx_title,
+  open,
+  generalData }: FlexColumnBorderProps) => {
   return (
     <Box
       sx={{
         ...sx,
         display: 'flex',
         flexDirection: flexDirection || 'column',
-        border: hideBorder ? 'none' : '1px solid',
-        borderColor: 'primaryTons.border',
+        border: hideBorder ? 'none' : '2px solid',
+        borderColor: 'primary.main',
         padding: '10px',
         zIndex: 2,
-        mt: '1.5rem',
+        mt: generalData? 0 : '2rem',
         borderRadius: '10px',
+        height: open ? 'fit-content' : { mobile: '42px', notebook: '65px' }
       }}
     >
       {title && (
         <Typography
           sx={{
             width: 'fit-content',
-            bgcolor: 'primaryTons.mainWhite',
-            ml: { mobile: '0', notebook: '6%' },
-            paddingInline: '10px',
+            bgcolor: 'primaryTons.white',
+            ml: { mobile: '0', notebook: '2%' },
+            paddingInline: { mobile: '5px', notebook: '10px' },
             transform: {
-              mobile: 'translateY(calc(-20px - 14.25px))',
-              notebook: 'translateY(calc(-20px - 7.5px))',
+              mobile: 'translateY(-44.25px)',
+              notebook: 'translateY(-32.5px)',
             },
             zIndex: 3,
-            textTransform: 'uppercase',
-            fontSize: { mobile: '12px', notebook: '20px' },
-            color: 'primaryTons.mainGray',
-            opacity: 0.8,
-            fontWeight: '600',
+            fontSize: { mobile: '1.25rem', notebook: '1.75rem' },
+            color: 'primaryTons.darkGray',
+            fontWeight: '700',
             whiteSpace: 'nowrap',
-            letterSpacing: '0.1rem',
             mt: { notebook: 0, mobile: '1rem' },
             ...sx_title,
           }}

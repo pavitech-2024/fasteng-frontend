@@ -19,7 +19,6 @@ export const EssaysTemplate = ({ essays, filterOptions }: EssaysTemplateProps) =
 
   useEffect(() => {
     setEssaysFiltered(essays);
-    console.log(essays)
   }, [essays, i18n.language]);
 
   // função que filtra os ensaios, atualiza os filtros e os ensaios filtrados

@@ -77,7 +77,7 @@ const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps 
             }}
           >
             {inputs.map((input) => {
-              if (['name', 'operator', 'cauculist'].includes(input.key))
+              if (['name', 'operator', 'cauculist'].includes(input.key)) {
                 return (
                   <TextField
                     variant="standard"
@@ -88,10 +88,10 @@ const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps 
                     onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
                   />
                 );
-              else if (['sample'].includes(input.key)) {
+              } else if (['sample'].includes(input.key)) {
                 const defaultValue = {
                   label: '',
-                  value: null,
+                  value: '',
                 };
 
                 let sample;

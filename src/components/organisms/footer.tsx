@@ -25,7 +25,7 @@ export const Footer = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        p: { mobile: '4vh 2vw', notebook: '3vh 6vw' }
+        p: { mobile: '4vh 4vw', notebook: '3vh 6vw' }
       }}
     >
       <Button
@@ -39,17 +39,16 @@ export const Footer = ({
           height: '32px',
           width: '140px',
           fontSize: '1rem',
+          alignItems: 'center',
 
           ':hover': {
             transition: 'all 0.1s ease-in-out',
-            bgcolor: 'secondaryTons.blueDisabled',
-            transform: 'scale(1.02)',
+            bgcolor: 'secondaryTons.blueDisabled'
           },
 
           ':active': {
             transition: 'all 0.1s ease-in-out',
-            bgcolor: 'secondaryTons.blueClick',
-            transform: 'scale(1.02)',
+            bgcolor: 'secondaryTons.blueClick'
           }
         }}
       >
@@ -70,14 +69,12 @@ export const Footer = ({
 
           ':hover': {
             transition: 'all 0.1s ease-in-out',
-            bgcolor: 'secondaryTons.blueDisabled',
-            transform: 'scale(1.02)',
+            bgcolor: 'secondaryTons.blueDisabled'
           },
 
           ':active': {
             transition: 'all 0.1s ease-in-out',
-            bgcolor: 'secondaryTons.blueClick',
-            transform: 'scale(1.02)',
+            bgcolor: 'secondaryTons.blueClick'
           }
         }}
       >

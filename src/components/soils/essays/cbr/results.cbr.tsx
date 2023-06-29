@@ -60,7 +60,7 @@ const CBR_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   return (
     <>
       <ExperimentResume data={experimentResumeData} />
-      <FlexColumnBorder title={t('results')}>
+      <FlexColumnBorder title={t('results')} open={true}>
         {[0, 1].map((item) => (
           <Result_CardContainer
             hideBorder

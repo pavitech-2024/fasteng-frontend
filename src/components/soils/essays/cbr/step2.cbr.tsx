@@ -81,16 +81,17 @@ const CBR_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
         }}
       >
         {inputs.map((input) => (
-          <InputEndAdornment
-            key={input.key}
-            label={input.label}
-            value={input.value}
-            required={input.required}
-            onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
-            adornment={input.adornment}
-            type="number"
-            inputProps={{ min: 0 }}
-          />
+          <Box key={input.key}>
+            <InputEndAdornment
+              label={input.label}
+              value={input.value}
+              required={input.required}
+              onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+              adornment={input.adornment}
+              type="number"
+              inputProps={{ min: 0 }}
+            />
+          </Box>
         ))}
       </Box>
 

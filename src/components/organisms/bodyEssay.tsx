@@ -16,7 +16,7 @@ export const BodyEssay = ({ children }: BodyEssayProps) => {
         display: 'flex',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        pt: { mobile: 0, notebook: '6vh' }
+        pt: { mobile: 0, notebook: '2vh' }
       }}
     >
       {children}

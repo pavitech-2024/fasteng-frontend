@@ -12,31 +12,37 @@ import dayjs from 'dayjs';
 const CBR_Expansion = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { expansionData: rows, setData } = useCbrStore();
 
+  const handleErase = () => {
+    try {
+      if (rows.length > 2) {
+        const newRows = [...rows];
+        newRows.pop();
+        setData({ step: 2, value: newRows });
+      } else throw t('cbr.error.minReads');
+    } catch (error) {
+      toast.error(error);
+    };
+  };
+
+  const handleAdd = () => {
+    const newRows = [...rows];
+    newRows.push({ id: rows.length, date: null, time: null, deflectometer_read: null });
+    setData({ step: 2, value: newRows });
+    setNextDisabled(true);
+  }
+
   const ExpansionToolbar = () => {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
         <Button
-          onClick={() => {
-            try {
-              if (rows.length > 2) {
-                const newRows = [...rows];
-                newRows.pop();
-                setData({ step: 2, value: newRows });
-              } else throw t('cbr.error.minReads');
-            } catch (error) {
-              toast.error(error);
-            }
-          }}
+          sx={{ color: 'secondaryTons.red' }}
+          onClick={handleErase}
         >
           {t('erase')}
         </Button>
         <Button
-          onClick={() => {
-            const newRows = [...rows];
-            newRows.push({ id: rows.length, date: null, time: null, deflectometer_read: null });
-            setData({ step: 2, value: newRows });
-            setNextDisabled(true);
-          }}
+          sx={{ color: 'secondaryTons.green' }}
+          onClick={handleAdd}
         >
           {t('add')}
         </Button>

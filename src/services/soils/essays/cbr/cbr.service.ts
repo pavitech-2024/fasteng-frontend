@@ -135,8 +135,6 @@ class CBR_SERVICE implements IEssayService {
   // calculate results
   calculateResults = async (store: CbrData): Promise<void> => {
     try {
-      console.log(store);
-
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
         step2Data: store.step2Data,

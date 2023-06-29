@@ -97,6 +97,7 @@ const EssayTemplate = ({
         <Box
           sx={{
             width: { mobile: '90%', notebook: '80%' },
+            maxWidth: '2200px',
             padding: '2rem',
             borderRadius: '20px',
             bgcolor: 'primaryTons.white',
