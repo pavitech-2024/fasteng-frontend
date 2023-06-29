@@ -70,6 +70,7 @@ const Login: NextPage = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: { desktop: '18vh', tablet: '16vh' },
+                maxHeight: '200px',
                 mt: { desktop: '-5vh', mobile: '0' },
               }}
             >
@@ -82,8 +83,15 @@ const Login: NextPage = () => {
                 display: 'flex',
                 alignItems: 'center',
                 textAlign: 'center',
-                fontSize: { ultrawide: '0.95rem', desktop: '0.85rem', notebook: '0.9rem', mobile: '0.7rem' },
+                fontSize: {
+                  ultrawide: '0.95rem',
+                  desktop: '0.85rem',
+                  notebook: '0.9rem',
+                  mobile: '0.7rem'
+                },
                 height: { ultrawide: '16vh', desktop: '24vh', mobile: '20vh' },
+                maxHeight: '220px',
+                maxWidth: '980px',
                 p: '0 2vw',
               }}
             >
@@ -94,6 +102,7 @@ const Login: NextPage = () => {
                 display: 'flex',
                 justifyContent: 'space-around',
                 width: '100%',
+                maxWidth: '980px',
                 p: '2vh 0',
               }}
             >
@@ -121,10 +130,12 @@ const Login: NextPage = () => {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'space-between',
-              p: '1vh 0 0.5vh',
+              p: { desktop: '2vh 0 1vh', notebook: '3vh 0 2vh', mobile: '2vh 0 1vh' },
               borderRadius: '0.5rem',
               width: { desktop: '30vw', mobile: '80vw' },
+              maxWidth: { desktop: '600px', notebook: '500px', mobile: '600px' },
               height: { ultrawide: '30vh', desktop: '34vh', notebook: '30vh', mobile: '32vh' },
+              maxHeight: { desktop: '280px', notebook: '410px', mobile: '280px' },
               bgcolor: 'primaryTons.background',
               position: { desktop: 'static', mobile: 'absolute' },
               zIndex: { desktop: 'auto', mobile: '3' },
@@ -137,8 +148,9 @@ const Login: NextPage = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'space-around',
-                pt: '2vh',
                 height: '70%',
+                width: '100%',
+                gap: '10px'
               }}
             >
               <TextField
@@ -147,7 +159,7 @@ const Login: NextPage = () => {
                 value={email}
                 placeholder={t('login.email placeholder')}
                 sx={{
-                  width: { desktop: '26vw', mobile: '70vw' },
+                  width: '85%',
                   bgcolor: 'primaryTons.white'
                 }}
                 onChange={(e) => setEmail(e.target.value)}
@@ -161,7 +173,7 @@ const Login: NextPage = () => {
                 type="password"
                 value={password}
                 sx={{
-                  width: { desktop: '26vw', mobile: '70vw' },
+                  width: '85%',
                   bgcolor: 'primaryTons.white'
                 }}
                 onChange={(e) => setPassword(e.target.value)}

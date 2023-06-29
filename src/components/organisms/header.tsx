@@ -49,26 +49,28 @@ export const Header = ({ title, subTitle, link, icon, image, children }: HeaderP
           >
             {title}
           </Typography>
-          <Typography
-            sx={{
-              textTransform: 'uppercase',
-              fontSize: { mobile: '1.15rem', notebook: '1.5rem' },
-              lineHeight: { mobile: '1.15rem', notebook: '1.5rem' },
-              fontWeight: 500,
-              cursor: 'pointer'
-            }}
-          >
-            <Link
-              href={link}
-              target="standard"
-              style={{
-                textDecoration: 'none',
-                color: '#F29134' //primary.main
+          {link &&
+            <Typography
+              sx={{
+                textTransform: 'uppercase',
+                fontSize: { mobile: '1.15rem', notebook: '1.5rem' },
+                lineHeight: { mobile: '1.15rem', notebook: '1.5rem' },
+                fontWeight: 500,
+                cursor: 'pointer'
               }}
             >
-              {subTitle}
-            </Link>
-          </Typography>
+              <Link
+                href={link}
+                target="standard"
+                style={{
+                  textDecoration: 'none',
+                  color: '#F29134' //primary.main
+                }}
+              >
+                {subTitle}
+              </Link>
+            </Typography>
+          }
         </Box>
       </Box>
 
