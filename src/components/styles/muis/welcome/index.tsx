@@ -26,6 +26,7 @@ export const CardMenuOptions = ({path, icon, name}: WelcomeData, key: string) =>
           height: '100%',
           width: '75px',
           bgcolor: 'primary.main',
+          border: 'none',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center'

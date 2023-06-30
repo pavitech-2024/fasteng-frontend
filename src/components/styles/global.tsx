@@ -1,4 +1,8 @@
-import { Button } from '@mui/material';
+import {
+  Button,
+  StepConnector,
+  stepConnectorClasses,
+  styled } from '@mui/material';
 
 interface ButtonProps {
   text: string;
@@ -39,3 +43,49 @@ export const MainButton = (props: ButtonProps) => (
     {props.text}
   </Button>
 );
+
+export const QontoConnector = styled(StepConnector)(({ theme }) => ({
+  [`&.${stepConnectorClasses.alternativeLabel}`]: {
+    top: 10,
+    left: 'calc(-50% + 16px)',
+    right: 'calc(50% + 16px)',
+  },
+  [`&.${stepConnectorClasses.active}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      borderColor: theme.palette.primary.main,
+    },
+  },
+  [`&.${stepConnectorClasses.completed}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      borderColor: theme.palette.secondaryTons.green,
+    },
+  },
+  [`& .${stepConnectorClasses.line}`]: {
+    borderColor: theme.palette.primaryTons.border,
+    borderTopWidth: 3,
+    borderRadius: 1,
+  },
+}));
+
+export const QontoWelcomeConnector = styled(StepConnector)(({ theme }) => ({
+  [`&.${stepConnectorClasses.alternativeLabel}`]: {
+    top: 10,
+    left: 'calc(-50% + 16px)',
+    right: 'calc(50% + 16px)',
+  },
+  [`&.${stepConnectorClasses.active}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      borderColor: theme.palette.secondaryTons.green,
+    },
+  },
+  [`&.${stepConnectorClasses.completed}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      borderColor: theme.palette.secondaryTons.green,
+    },
+  },
+  [`& .${stepConnectorClasses.line}`]: {
+    borderColor: theme.palette.secondaryTons.green,
+    borderTopWidth: 3,
+    borderRadius: 1,
+  },
+}));

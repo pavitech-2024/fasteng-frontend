@@ -1,5 +1,5 @@
 import React from 'react';
-import Stepper from '../../atoms/stepper';
+import { Stepper } from '../../atoms/stepper';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
 import { useRouter } from 'next/router';

@@ -174,7 +174,7 @@ const MaterialsTemplate = ({
 
       {/*Page */}
       <Header title={`${title}`} />
-      <Box sx={{ p: { mobile: '0 2vw', notebook: '0 6vw' }, mb: '4vw', width: '100%', maxWidth: '1800px', }}>
+      <Box sx={{ p: { mobile: '0 4vw', notebook: '0 6vw' }, mb: '4vw', width: '100%', maxWidth: '1800px', }}>
         <Box
           sx={{
             display: 'flex',
@@ -228,33 +228,47 @@ const MaterialsTemplate = ({
               />
             )}
           </Box>
-          <Button
+          <Box
             onClick={handleOpenModal}
-            variant="contained"
-            color="primary"
             sx={{
               color: 'primaryTons.white',
               bgcolor: 'primary.main',
-              height: '28px',
+              height: { mobile: '36px', notebook: '28px'},
+              width: { mobile: '36px', notebook: 'fit-content'},
+              borderRadius: '20px',
+              p: { mobile: 0, notebook: '0 12px' },
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              p: '0 12px',
-              fontSize: { mobile: '.8rem', notebook:'.95rem' },
-              lineHeight: { mobile: '.95rem', notebook:'1rem' },
               fontWeight: '700',
               ml: '2px',
+              cursor: 'pointer',
 
               '&:hover': {
-                bgcolor: '#F2A255',
+                bgcolor: 'primary.light',
+              },
+
+              '&:active': {
+                bgcolor: 'primary.dark'
               }
             }}
-            startIcon={<AddIcon />}
           >
-            {`${
-              app === 'soils' ? ` ${t('materials.template.newSample')}` : ` ${t('materials.template.newMaterial')}`
-            }`}
-          </Button>
+            <AddIcon sx={{ fontSize: '1.15rem', fontWeight: 700 }} />
+            <Typography
+              sx={{
+                display: { mobile: 'none', notebook: 'flex' },
+                fontSize: '1rem',
+                fontWeight: 700,
+                lineHeight: '1.1rem',
+                ml: '4px',
+                textTransform: 'uppercase'
+              }}
+            >
+              {`${
+                app === 'soils' ? ` ${t('materials.template.newSample')}` : ` ${t('materials.template.newMaterial')}`
+              }`}
+            </Typography>
+          </Box>
         </Box>
         <Paper
           sx={{
@@ -305,7 +319,11 @@ const MaterialsTemplate = ({
                                 color: 'primaryTons.white',
 
                                 ':hover': {
-                                  bgcolor: 'primary.light'
+                                  bgcolor: 'secondaryTons.blueDisabled'
+                                },
+
+                                ':active': {
+                                  bgcolor: 'secondaryTons.blueClick'
                                 }
                               }}
                               onClick={(e) => console.log(e)}
@@ -314,7 +332,7 @@ const MaterialsTemplate = ({
                                 {t('materials.template.edit')}
                               </Typography>
                               <NextIcon
-                                sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1.25rem' }}
+                                sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }}
                               />
                             </Button>
                             <Button

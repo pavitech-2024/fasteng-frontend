@@ -1,64 +1,34 @@
 import {
   Box,
   Typography,
-  Stepper,
-  Step,
-  StepLabel,
-  styled,
-  StepConnector,
-  stepConnectorClasses,
   Stack
 } from '@mui/material';
+import { StepperData, StepperWelcome as Stepper } from '@/components/atoms/stepper';
 import { CardMenuOptions as Card } from '@/components/styles/muis/welcome';
 import { t } from 'i18next';
 import { useRouter } from 'next/router';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { PageWelcomeContainer as Container } from '@/components/organisms/pageContainer';
+import { ArrowDownIcon } from '@/assets';
 
 export interface WelcomeData {
   name: string;
   icon: ReactNode;
   description: string;
   path: string;
-}
-
-export interface StepData {
-  step: string;
-  description: string;
-}
+};
 
 interface WelcomeTemplateProps {
   icon: JSX.Element;
   welcomeData: WelcomeData[];
-  stepperData: StepData[];
-}
-
-const QontoConnector = styled(StepConnector)(({ theme }) => ({
-  [`&.${stepConnectorClasses.alternativeLabel}`]: {
-    top: 10,
-    left: 'calc(-50% + 16px)',
-    right: 'calc(50% + 16px)',
-  },
-  [`&.${stepConnectorClasses.active}`]: {
-    [`& .${stepConnectorClasses.line}`]: {
-      borderColor: theme.palette.secondaryTons.green,
-    },
-  },
-  [`&.${stepConnectorClasses.completed}`]: {
-    [`& .${stepConnectorClasses.line}`]: {
-      borderColor: theme.palette.secondaryTons.green,
-    },
-  },
-  [`& .${stepConnectorClasses.line}`]: {
-    borderColor: theme.palette.secondaryTons.green,
-    borderTopWidth: 3,
-    borderRadius: 1,
-  },
-}));
+  stepperData: StepperData[];
+};
 
 const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProps) => {
   const app = useRouter().pathname.split('/')[1];
   const title = t(`welcome.${app}`);
+
+  const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <Container>
@@ -130,12 +100,16 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
               sx={{
                 bgcolor: 'primaryTons.white',
                 borderRadius: '10px',
-                p: { mobile: '3vh 4vw', notebook: '25px' },
+                p: modalOpen ? { mobile: '3vh 4vw', notebook: '25px' } : '2vh',
                 width: { mobile: '90vw', notebook: '500px', desktop: '550px' },
+                border: '1px solid',
+                borderColor: 'primaryTons.border',
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center'
+                alignItems: modalOpen ? 'center' : { mobile: 'flex-start', notebook: 'center' },
+                justifyContent: 'center',
+                position: 'relative',
+                transition: '0.5s ease-out'
               }}
             >
               <Typography
@@ -143,26 +117,40 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
                   fontWeight: { mobile: 700, desktop: 500 },
                   fontSize: { mobile: '1.25rem', desktop: '1.5rem' },
                   color: 'primaryTons.mainGray',
-                  mb: { mobile: '3vh', notebook: '25px' }
+                  mb: modalOpen ? { mobile: '3vh', notebook: '25px' } : { mobile: 0, notebook: '25px' },
+                  transition: '0.5s ease-out'
                 }}
               >
                 {t('welcome.how it works')}
               </Typography>
-              <Stack>
-                <Stepper activeStep={stepperData.length} alternativeLabel connector={<QontoConnector />}>
-                  {stepperData.map((step: StepData) => (
-                    <Step key={step.step} completed>
-                      <StepLabel>{step.description}</StepLabel>
-                    </Step>
-                  ))}
-                </Stepper>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '2vh',
+                  right: '2vh',
+                  transform: modalOpen ? 'rotate(0.5turn)' : 'none',
+                  transition: '0.5s ease-out',
+                  display: { mobile: 'flex', notebook: 'none' }
+                }}
+              >
+                <ArrowDownIcon onClick={() => setModalOpen((prev) => !prev)} />
+              </Box>
+                  
+              <Stack
+                sx={{
+                  display: modalOpen ? 'flex' : { mobile: 'none', notebook: 'flex' },
+                  transition: '0.5s ease-out'
+                }}
+              >
+                <Stepper stepperData={stepperData} variant="multicolor" />
               </Stack>
               <Box
                 sx={{
-                  display: 'flex',
+                  display: modalOpen ? 'flex' : { mobile: 'none', notebook: 'flex' },
                   flexDirection: 'column',
                   width: '100%',
-                  mt: { mobile: '3vh', notebook: '25px' }
+                  mt: { mobile: '3vh', notebook: '25px' },
+                  transition: '0.5s ease-out'
                 }}
               >
                 {welcomeData.map((element: WelcomeData) => (
@@ -174,7 +162,7 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
                       mb: '16px',
                       span: {
                         color: 'primaryTons.mainGray',
-                        fontWeight: 400
+                        fontWeight: 500
                       },
                     }}
                     key={element.name}

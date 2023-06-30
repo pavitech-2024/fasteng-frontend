@@ -73,9 +73,9 @@ const ModalBase = ({
           color="primaryTons.darkGray"
           sx={{
             fontWeight: '700',
-            fontSize: { mobile: '1.25rem', notebook: '1.5rem' },
-            lineHeight: { mobile: '1.25rem', notebook: '1.5rem' },
-            mb: '1rem'
+            fontSize: { mobile: '1.35rem', notebook: '1.5rem' },
+            lineHeight: { mobile: '1.35rem', notebook: '1.5rem' },
+            m: { mobile: '10px 0', notebook: '0 0 1rem'}
           }}
         >
           {title.toUpperCase()}
