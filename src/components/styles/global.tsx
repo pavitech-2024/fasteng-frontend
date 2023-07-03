@@ -39,7 +39,7 @@ export const MainButton = (props: ButtonProps) => (
   </Button>
 );
 
-export const QontoConnector = styled(StepConnector)(({ theme }) => ({
+export const QontoConnector = styled(StepConnector)(() => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
     top: 10,
     left: 'calc(-50% + 16px)',
@@ -47,22 +47,22 @@ export const QontoConnector = styled(StepConnector)(({ theme }) => ({
   },
   [`&.${stepConnectorClasses.active}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      borderColor: theme.palette.primary.main,
+      borderColor: '#F29134', // theme.palette.primary.main,
     },
   },
   [`&.${stepConnectorClasses.completed}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      borderColor: theme.palette.secondaryTons.green,
+      borderColor: '#43D16B', //theme.palette.secondaryTons.green,
     },
   },
   [`& .${stepConnectorClasses.line}`]: {
-    borderColor: theme.palette.primaryTons.border,
+    borderColor: '#E3E3E3', //theme.palette.primaryTons.border,
     borderTopWidth: 3,
     borderRadius: 1,
   },
 }));
 
-export const QontoWelcomeConnector = styled(StepConnector)(({ theme }) => ({
+export const QontoWelcomeConnector = styled(StepConnector)(() => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
     top: 10,
     left: 'calc(-50% + 16px)',
@@ -70,16 +70,16 @@ export const QontoWelcomeConnector = styled(StepConnector)(({ theme }) => ({
   },
   [`&.${stepConnectorClasses.active}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      borderColor: theme.palette.secondaryTons.green,
+      borderColor: '#43D16B', //theme.palette.secondaryTons.green,
     },
   },
   [`&.${stepConnectorClasses.completed}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      borderColor: theme.palette.secondaryTons.green,
+      borderColor: '#43D16B', //theme.palette.secondaryTons.green,
     },
   },
   [`& .${stepConnectorClasses.line}`]: {
-    borderColor: theme.palette.secondaryTons.green,
+    borderColor: '#43D16B', //theme.palette.secondaryTons.green
     borderTopWidth: 3,
     borderRadius: 1,
   },
