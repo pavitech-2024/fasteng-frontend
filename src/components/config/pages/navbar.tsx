@@ -21,7 +21,7 @@ import ReportError from '@/components/templates/modals/reportError';
 interface NavbarProps {
   open: boolean;
   app: string;
-};
+}
 
 interface ItemProps {
   name: string;
@@ -30,7 +30,7 @@ interface ItemProps {
   icon: JSX.Element;
   type: string;
   sub?: { name: string; link: string; icon: JSX.Element }[];
-};
+}
 
 export default function Navbar({ open, app }: NavbarProps) {
   const Router = useRouter();
@@ -167,14 +167,16 @@ export default function Navbar({ open, app }: NavbarProps) {
       link: '/report',
       app: 'common',
       icon: <ReportIcon sx={IconStyle} />,
-      type: 'single'
+      type: 'single',
     },
   ].filter((item) => item.app === Router.pathname.split('/')[1] || item.app === 'common');
 
-  const handleModal = (event: any) => {
-    event.preventDefault();
-    setOpenModal(!openModal ? true : false);
-  };
+  // when the user scroll the page, the navbar will be fixed on the top
+  window.addEventListener('scroll', () => {
+    if (window.innerWidth > 768)
+      if (window.scrollY === 0) document.getElementById('navbar').style.paddingTop = '52px';
+      else document.getElementById('navbar').style.paddingTop = '0';
+  });
 
   return (
     <Box
@@ -189,12 +191,12 @@ export default function Navbar({ open, app }: NavbarProps) {
         mt: '-52px',
         bgcolor: 'primaryTons.mainGray',
         height: '100vh',
-        transition: 'width 0.5s',
-
+        transition: 'width 0.5s, padding-top 0.2s',
         ':hover': {
           width: '225px',
         },
       }}
+      id="navbar"
       component="nav"
     >
       {Items.map((item) => {
@@ -222,7 +224,7 @@ export default function Navbar({ open, app }: NavbarProps) {
                   bottom: item.name === t('navbar.report') && '0',
                   width: '100%',
                 }}
-                onClick={ item.name === t('navbar.report') ? handleModal : undefined }
+                onClick={item.name === t('navbar.report') ? () => setOpenModal((prev) => !prev) : undefined}
               >
                 <Box
                   sx={{
@@ -302,10 +304,7 @@ export default function Navbar({ open, app }: NavbarProps) {
           );
       })}
 
-      <ReportError 
-        openModalProp={openModal} 
-        setOpenModalProp={handleModal}
-      />
+      <ReportError openModalProp={openModal} setOpenModalProp={() => setOpenModal((prev) => !prev)} />
     </Box>
   );
 }

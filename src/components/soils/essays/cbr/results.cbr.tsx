@@ -7,6 +7,7 @@ import ExperimentResume, { ExperimentResumeData } from '../../../molecules/boxes
 import Chart from 'react-google-charts';
 import Loading from '../../../molecules/loading';
 import { EssayPageProps } from '../../../templates/essay';
+import ResultSubTitle from '../../../atoms/titles/result-sub-title';
 
 const CBR_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
@@ -77,6 +78,7 @@ const CBR_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
                 ))}
           </Result_CardContainer>
         ))}
+        <ResultSubTitle title={t('cbr.graph')} sx={{ margin: '.65rem' }} />
         <Chart
           chartType="LineChart"
           width={'100%'}
@@ -84,7 +86,6 @@ const CBR_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
           loader={<Loading />}
           data={graphData}
           options={{
-            title: t('cbr.graph'),
             backgroundColor: 'transparent',
             hAxis: {
               title: t('cbr.penetration'),

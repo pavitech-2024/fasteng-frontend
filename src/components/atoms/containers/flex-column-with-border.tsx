@@ -19,7 +19,8 @@ const FlexColumnBorder = ({
   sx,
   sx_title,
   open,
-  generalData }: FlexColumnBorderProps) => {
+  generalData,
+}: FlexColumnBorderProps) => {
   return (
     <Box
       sx={{
@@ -30,9 +31,9 @@ const FlexColumnBorder = ({
         borderColor: 'primary.main',
         padding: '10px',
         zIndex: 2,
-        mt: generalData? 0 : '2rem',
+        mt: generalData ? 0 : '2rem',
         borderRadius: '10px',
-        height: open ? 'fit-content' : { mobile: '42px', notebook: '65px' }
+        height: open ? 'fit-content' : { mobile: '42px', notebook: '65px' },
       }}
     >
       {title && (

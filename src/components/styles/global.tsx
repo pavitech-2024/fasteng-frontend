@@ -1,9 +1,4 @@
-import {
-  Button,
-  StepConnector,
-  stepConnectorClasses,
-  styled } from '@mui/material';
-
+import { Button, StepConnector, stepConnectorClasses, styled } from '@mui/material';
 interface ButtonProps {
   text: string;
   disabled?: boolean;

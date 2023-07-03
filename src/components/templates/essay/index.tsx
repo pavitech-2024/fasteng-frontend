@@ -10,6 +10,7 @@ import { PageGenericContainer as Container } from '@/components/organisms/pageCo
 import Header from '@/components/organisms/header';
 import Footer from '@/components/organisms/footer';
 import BodyEssay from '@/components/organisms/bodyEssay';
+import { useSessionStorage } from '../../../utils/hooks/useSessionStorage';
 
 interface EssayTemplateProps {
   essayInfo: IEssayService['info'];
@@ -32,7 +33,10 @@ const EssayTemplate = ({
   const app = router.pathname.split('/')[1];
   const essay = router.pathname.split('/')[3];
 
-  const [activeStep, setActiveStep] = React.useState(0);
+  // persiste the active step in the sessionStorage, if the user reload the page, the active step will be the same  example: cbr-{step}
+  const step = parseInt(sessionStorage.getItem(essay + '-step')) || 0;
+  const [activeStep, setActiveStep] = useSessionStorage({ key: essay + '-step', initialValue: step });
+
   const [nextDisabled, setNextDisabled] = React.useState(true);
 
   async function handleNextClick() {
@@ -86,7 +90,7 @@ const EssayTemplate = ({
             margin: {
               mobile: '1rem 0',
               notebook: '0',
-            }
+            },
           }}
         >
           <Stepper activeStep={activeStep} stepperData={stepperData} variant="multicolor" />
@@ -102,7 +106,7 @@ const EssayTemplate = ({
             borderRadius: '20px',
             bgcolor: 'primaryTons.white',
             border: '1px solid',
-            borderColor: 'primaryTons.border'
+            borderColor: 'primaryTons.border',
           }}
         >
           {activeStep !== 0 && <StepDescription text={t(`${essay}.step-${activeStep + 1}-description`)} />}
@@ -126,9 +130,7 @@ const EssayTemplate = ({
                 }
               })
             ) : (
-              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                {'Page not found or not implemented yet.'}
-              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>{'Page not found or not implemented yet.'}</Box>
             )
           }
         </Box>

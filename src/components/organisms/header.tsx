@@ -20,14 +20,14 @@ export const Header = ({ title, subTitle, link, icon, image, children }: HeaderP
         alignItems: 'center',
         justifyContent: 'space-between',
         p: { mobile: '4vh 2vw', notebook: '3vh 3vw' },
-        flexDirection: { notebook: 'row', mobile: 'column' }
+        flexDirection: { notebook: 'row', mobile: 'column' },
       }}
     >
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
-          mb: { mobile: '2vh', notebook: 0 }
+          mb: { mobile: '2vh', notebook: 0 },
         }}
       >
         {image && <Image alt="essay icon" src={image} width={90} height={90} />}
@@ -35,7 +35,7 @@ export const Header = ({ title, subTitle, link, icon, image, children }: HeaderP
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
           }}
         >
           <Typography
@@ -49,14 +49,13 @@ export const Header = ({ title, subTitle, link, icon, image, children }: HeaderP
           >
             {title}
           </Typography>
-          {link &&
+          {link && (
             <Typography
               sx={{
                 textTransform: 'uppercase',
                 fontSize: { mobile: '1.15rem', notebook: '1.5rem' },
                 lineHeight: { mobile: '1.15rem', notebook: '1.5rem' },
                 fontWeight: 500,
-                cursor: 'pointer'
               }}
             >
               <Link
@@ -64,13 +63,13 @@ export const Header = ({ title, subTitle, link, icon, image, children }: HeaderP
                 target="standard"
                 style={{
                   textDecoration: 'none',
-                  color: '#F29134' //primary.main
+                  color: '#F29134', //primary.main
                 }}
               >
                 {subTitle}
               </Link>
             </Typography>
-          }
+          )}
         </Box>
       </Box>
 

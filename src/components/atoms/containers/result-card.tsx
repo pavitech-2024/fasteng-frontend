@@ -1,4 +1,5 @@
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container } from '@mui/material';
+import ResultSubTitle from '../titles/result-sub-title';
 
 interface Result_CardContainerProps {
   title?: string;
@@ -20,34 +21,7 @@ export const Result_CardContainer = ({ title, children, hideBorder, mt }: Result
         borderRadius: '10px',
       }}
     >
-      {title && (
-        <Typography
-          sx={{
-            width: 'fit-content',
-            bgcolor: 'primaryTons.lightGray',
-            mb: { mobile: '2vh', notebook: '2vh' },
-            paddingInline: '2vw 20vw',
-            transform: {
-              mobile: 'translate(-20px, -10px)',
-              notebook: 'translateX(-20px)',
-            },
-            zIndex: 3,
-            textTransform: 'uppercase',
-            fontSize: { mobile: '1.15rem', notebook: '1.3rem' },
-            lineHeight: { mobile: '2rem', notebook: '2.3rem' },
-            color: 'primaryTons.white',
-            fontWeight: '700',
-            whiteSpace: 'nowrap',
-            mt: { notebook: 0, mobile: '1rem' },
-            borderRadius: '0 10px 10px 0',
-            borderBottom: '3px solid',
-            borderColor: 'primary.main'
-          }}
-          variant="h6"
-        >
-          {title}
-        </Typography>
-      )}
+      {title && <ResultSubTitle title={title} />}
 
       <Box
         sx={{
