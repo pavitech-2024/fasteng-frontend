@@ -1,8 +1,8 @@
-import { WelcomeData } from "@/components/templates/welcome";
-import { Card, Box } from "@mui/material";
-import Link from "next/link";
+import { WelcomeData } from '@/components/templates/welcome';
+import { Card, Box } from '@mui/material';
+import Link from 'next/link';
 
-export const CardMenuOptions = ({path, icon, name}: WelcomeData, key: string) => (
+export const CardMenuOptions = ({ path, icon, name }: WelcomeData, key: string) => (
   <Card
     key={key}
     sx={{
@@ -16,8 +16,8 @@ export const CardMenuOptions = ({path, icon, name}: WelcomeData, key: string) =>
       cursor: 'pointer',
       transition: 'all .3s',
       ':hover': {
-        bgcolor: 'primaryTons.lightGray'
-      }
+        bgcolor: 'primaryTons.lightGray',
+      },
     }}
   >
     <Link href={path} style={{ textDecoration: 'none', display: 'flex', height: '100%', width: '100%' }}>
@@ -29,7 +29,7 @@ export const CardMenuOptions = ({path, icon, name}: WelcomeData, key: string) =>
           border: 'none',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
         }}
       >
         {icon}
@@ -44,11 +44,11 @@ export const CardMenuOptions = ({path, icon, name}: WelcomeData, key: string) =>
           justifyContent: 'start',
           fontSize: '1rem',
           fontWeight: '700',
-          ml: '15px'
+          ml: '15px',
         }}
       >
         {name}
       </Box>
     </Link>
   </Card>
-)
+);

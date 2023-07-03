@@ -1,11 +1,11 @@
-import DropDown, { DropDownOption } from "@/components/atoms/inputs/dropDown";
-import ModalBase from "@/components/molecules/modals/modal";
-import { ConcreteMaterial, ConcreteMaterialData } from "@/interfaces/concrete";
-import concreteMaterialService from "@/services/concrete/concrete-materials.service";
-import { Box, TextField } from "@mui/material";
-import { t } from "i18next";
-import { useState } from "react";
-import { toast } from "react-toastify";
+import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
+import ModalBase from '@/components/molecules/modals/modal';
+import { ConcreteMaterial, ConcreteMaterialData } from '@/interfaces/concrete';
+import concreteMaterialService from '@/services/concrete/concrete-materials.service';
+import { Box, TextField } from '@mui/material';
+import { t } from 'i18next';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface NewConcreteMaterialModalProps {
   openModal: boolean;
@@ -20,7 +20,6 @@ const NewConcreteMaterialModal = ({
   updateMaterials,
   materials,
 }: NewConcreteMaterialModalProps) => {
-
   const [material, setMaterial] = useState<ConcreteMaterialData>({
     name: '',
     type: null,
@@ -44,42 +43,42 @@ const NewConcreteMaterialModal = ({
       {
         label: t('samples.name'),
         value: material.name,
-        key: 'name'
+        key: 'name',
       },
       {
         label: t('concrete.materials.type'),
         value: material.type,
-        key: 'type'
+        key: 'type',
       },
       {
         label: t('concrete.materials.source'),
         value: material.description.source,
-        key: 'source'
+        key: 'source',
       },
       {
         label: t('concrete.materials.responsible'),
         value: material.description.responsible,
-        key: 'responsible'
+        key: 'responsible',
       },
       {
         label: t('concrete.materials.maxDiammeter'),
         value: material.description.maxDiammeter,
-        key: 'maxDiammeter'
+        key: 'maxDiammeter',
       },
       {
         label: t('concrete.materials.aggregateNature'),
         value: material.description.aggregateNature,
-        key: 'aggregateNature'
+        key: 'aggregateNature',
       },
-      { 
-        label: t('concrete.materials.boughtDate'), 
-        value: material.description.boughtDate, 
-        key: 'boughtDate' 
+      {
+        label: t('concrete.materials.boughtDate'),
+        value: material.description.boughtDate,
+        key: 'boughtDate',
       },
-      { 
-        label: t('concrete.materials.recieveDate'), 
-        value: material.description.recieveDate, 
-        key: 'recieveDate' 
+      {
+        label: t('concrete.materials.recieveDate'),
+        value: material.description.recieveDate,
+        key: 'recieveDate',
       },
       {
         label: t('concrete.materials.extractionDate'),
@@ -91,10 +90,10 @@ const NewConcreteMaterialModal = ({
         value: material.description.collectionDate,
         key: 'collectionDate',
       },
-      { 
+      {
         label: t('concrete.materials.observation'),
-        value: material.description.observation, 
-        key: 'observation' 
+        value: material.description.observation,
+        key: 'observation',
       },
     ];
 
@@ -165,7 +164,7 @@ const NewConcreteMaterialModal = ({
         closeButton: true,
       });
     }
-  }
+  };
 
   return (
     <ModalBase
@@ -176,7 +175,7 @@ const NewConcreteMaterialModal = ({
       size="medium"
       onSubmit={() => handleSubmitNewMaterial()}
       onCancel={handleCloseModal}
-      disableSubmit={material.name === '' || material.type === null}      
+      disableSubmit={material.name === '' || material.type === null}
     >
       <Box sx={{ mb: '1rem' }}>
         <Box
@@ -193,7 +192,7 @@ const NewConcreteMaterialModal = ({
           }}
         >
           {getInputs().map((input) => {
-            if(
+            if (
               input.key === 'type' ||
               input.key === 'maxDiameter' ||
               input.key === 'classification_CAP' ||
@@ -206,8 +205,8 @@ const NewConcreteMaterialModal = ({
                   size="medium"
                   sx={{ minWidth: '120px', bgcolor: 'white' }}
                   callback={(value: string) => changeMaterial(input.key, value)}
-                  required 
-                  label={t(`materials.template.${input.key}`)} 
+                  required
+                  label={t(`materials.template.${input.key}`)}
                   options={types}
                 />
               );
@@ -235,7 +234,7 @@ const NewConcreteMaterialModal = ({
         />
       </Box>
     </ModalBase>
-  )
-}
+  );
+};
 
-export default NewConcreteMaterialModal
+export default NewConcreteMaterialModal;

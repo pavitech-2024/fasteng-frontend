@@ -17,7 +17,6 @@ import { MainButton as Button } from '@/components/styles/global';
 //mui
 import { TextField, Box, Container, Typography } from '@mui/material';
 
-
 const Login: NextPage = () => {
   const { signIn } = useAuth();
 
@@ -44,7 +43,7 @@ const Login: NextPage = () => {
           width: '100vw',
           height: '100vh',
           display: 'grid',
-          gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr', alignItems: 'center' }
+          gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr', alignItems: 'center' },
         }}
       >
         <Box>
@@ -87,7 +86,7 @@ const Login: NextPage = () => {
                   ultrawide: '0.95rem',
                   desktop: '0.85rem',
                   notebook: '0.9rem',
-                  mobile: '0.7rem'
+                  mobile: '0.7rem',
                 },
                 height: { ultrawide: '16vh', desktop: '24vh', mobile: '20vh' },
                 maxHeight: '220px',
@@ -150,7 +149,7 @@ const Login: NextPage = () => {
                 justifyContent: 'space-around',
                 height: '70%',
                 width: '100%',
-                gap: '10px'
+                gap: '10px',
               }}
             >
               <TextField
@@ -160,7 +159,7 @@ const Login: NextPage = () => {
                 placeholder={t('login.email placeholder')}
                 sx={{
                   width: '85%',
-                  bgcolor: 'primaryTons.white'
+                  bgcolor: 'primaryTons.white',
                 }}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -174,7 +173,7 @@ const Login: NextPage = () => {
                 value={password}
                 sx={{
                   width: '85%',
-                  bgcolor: 'primaryTons.white'
+                  bgcolor: 'primaryTons.white',
                 }}
                 onChange={(e) => setPassword(e.target.value)}
                 required

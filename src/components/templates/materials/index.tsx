@@ -174,7 +174,7 @@ const MaterialsTemplate = ({
 
       {/*Page */}
       <Header title={`${title}`} />
-      <Box sx={{ p: { mobile: '0 4vw', notebook: '0 6vw' }, mb: '4vw', width: '100%', maxWidth: '1800px', }}>
+      <Box sx={{ p: { mobile: '0 4vw', notebook: '0 6vw' }, mb: '4vw', width: '100%', maxWidth: '1800px' }}>
         <Box
           sx={{
             display: 'flex',
@@ -233,8 +233,8 @@ const MaterialsTemplate = ({
             sx={{
               color: 'primaryTons.white',
               bgcolor: 'primary.main',
-              height: { mobile: '36px', notebook: '28px'},
-              width: { mobile: '36px', notebook: 'fit-content'},
+              height: { mobile: '36px', notebook: '28px' },
+              width: { mobile: '36px', notebook: 'fit-content' },
               borderRadius: '20px',
               p: { mobile: 0, notebook: '0 12px' },
               display: 'flex',
@@ -249,8 +249,8 @@ const MaterialsTemplate = ({
               },
 
               '&:active': {
-                bgcolor: 'primary.dark'
-              }
+                bgcolor: 'primary.dark',
+              },
             }}
           >
             <AddIcon sx={{ fontSize: '1.15rem', fontWeight: 700 }} />
@@ -261,7 +261,7 @@ const MaterialsTemplate = ({
                 fontWeight: 700,
                 lineHeight: '1.1rem',
                 ml: '4px',
-                textTransform: 'uppercase'
+                textTransform: 'uppercase',
               }}
             >
               {`${
@@ -276,7 +276,7 @@ const MaterialsTemplate = ({
             borderRadius: '20px',
             border: '1px solid rgba(0,0,0,0.17)',
             mt: '1rem',
-            background: 'primaryTons.white'
+            background: 'primaryTons.white',
           }}
         >
           <TableContainer sx={{ borderRadius: '20px' }}>
@@ -290,7 +290,7 @@ const MaterialsTemplate = ({
                       style={{
                         width: column.width,
                         fontWeight: '700',
-                        fontSize: '1rem'
+                        fontSize: '1rem',
                       }}
                     >
                       {column.label}
@@ -319,21 +319,19 @@ const MaterialsTemplate = ({
                                 color: 'primaryTons.white',
 
                                 ':hover': {
-                                  bgcolor: 'secondaryTons.blueDisabled'
+                                  bgcolor: 'secondaryTons.blueDisabled',
                                 },
 
                                 ':active': {
-                                  bgcolor: 'secondaryTons.blueClick'
-                                }
+                                  bgcolor: 'secondaryTons.blueClick',
+                                },
                               }}
                               onClick={(e) => console.log(e)}
                             >
                               <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
                                 {t('materials.template.edit')}
                               </Typography>
-                              <NextIcon
-                                sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }}
-                              />
+                              <NextIcon sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
                             </Button>
                             <Button
                               variant="text"

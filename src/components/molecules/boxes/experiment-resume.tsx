@@ -29,7 +29,7 @@ const ExperimentResume = ({ data }: ExperimentResumeProps) => {
         display: 'flex',
         flexWrap: 'no-wrap',
         fontSize: { mobile: '.85rem', notebook: '1rem' },
-        color: 'primaryTons.mainGray'
+        color: 'primaryTons.mainGray',
       }}
     >
       {children}
@@ -53,18 +53,14 @@ const ExperimentResume = ({ data }: ExperimentResumeProps) => {
       value: t(`${app === 'soils' ? 'samples' : 'materials'}.${item.type}`),
     });
   });
-  
+
   return (
-    <FlexColumnBorder
-      title={t('general data of essay')}
-      open={open}
-      generalData={true}
-    >
+    <FlexColumnBorder title={t('general data of essay')} open={open} generalData={true}>
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'end',
-          transform: { mobile: 'translate(10px, -60px)', notebook: 'translateY(-45px)' }
+          transform: { mobile: 'translate(10px, -60px)', notebook: 'translateY(-45px)' },
         }}
       >
         <IconButton>
@@ -86,7 +82,7 @@ const ExperimentResume = ({ data }: ExperimentResumeProps) => {
             transform: { mobile: 'translateY(-70px)', notebook: 'translateY(-60px)' },
             alignItems: 'flex-start',
             flexDirection: 'column',
-            gap: '10px'
+            gap: '10px',
           }}
         >
           {texts.map((item, index) => (

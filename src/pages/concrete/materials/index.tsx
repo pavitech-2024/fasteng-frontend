@@ -1,15 +1,13 @@
-import { DropDownOption } from "@/components/atoms/inputs/dropDown";
-import MaterialsTemplate from "@/components/templates/materials";
-import NewConcreteMaterialModal from "@/components/templates/modals/newConcreteMaterial";
-import useAuth from "@/contexts/auth";
-import { ConcreteMaterial } from "@/interfaces/concrete";
-import concreteMaterialService from "@/services/concrete/concrete-materials.service";
-import { t } from "i18next";
-import { useEffect, useState } from "react"
-
+import { DropDownOption } from '@/components/atoms/inputs/dropDown';
+import MaterialsTemplate from '@/components/templates/materials';
+import NewConcreteMaterialModal from '@/components/templates/modals/newConcreteMaterial';
+import useAuth from '@/contexts/auth';
+import { ConcreteMaterial } from '@/interfaces/concrete';
+import concreteMaterialService from '@/services/concrete/concrete-materials.service';
+import { t } from 'i18next';
+import { useEffect, useState } from 'react';
 
 const ConcreteMaterials = () => {
-
   const [openModal, setOpenModal] = useState(false);
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -29,13 +27,12 @@ const ConcreteMaterials = () => {
   }, [user]);
 
   const types: DropDownOption[] = [{ label: t('samples.all'), value: '' }];
-  
+
   const handleDeleteMaterial = async (id: string) => {
     try {
       await concreteMaterialService.deleteMaterial(id);
-      const updatedMaterials = materials.filter((material) =>
-        material._id !== id);
-        setMaterials(updatedMaterials);
+      const updatedMaterials = materials.filter((material) => material._id !== id);
+      setMaterials(updatedMaterials);
     } catch (error) {
       console.error('Failed to delete material:', error);
     }
@@ -76,7 +73,7 @@ const ConcreteMaterials = () => {
         />
       )}
     </>
-  )
-}
+  );
+};
 
-export default ConcreteMaterials
+export default ConcreteMaterials;

@@ -1,8 +1,8 @@
-import { Container } from "@mui/material";
+import { Container } from '@mui/material';
 
 interface PageProps {
   children?: React.ReactNode | JSX.Element;
-};
+}
 
 export const PageGenericContainer = ({ children }: PageProps) => (
   <Container
@@ -12,7 +12,7 @@ export const PageGenericContainer = ({ children }: PageProps) => (
       width: { mobile: '100vw', notebook: 'calc(100vw - 52px)' },
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center'
+      alignItems: 'center',
     }}
   >
     {children}
@@ -23,9 +23,9 @@ export const PageWelcomeContainer = ({ children }: PageProps) => (
   <Container
     sx={{
       mt: '52px',
-      width: '100vw'
+      width: '100vw',
     }}
   >
     {children}
   </Container>
-)
+);

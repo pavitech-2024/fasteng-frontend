@@ -51,7 +51,7 @@ const Languages = ({ right, top, left, bottom, selectedColor, unSelectedColor }:
                   : unSelectedColor
                   ? unSelectedColor
                   : 'primaryTons.lightGray',
-                borderRadius: 0
+                borderRadius: 0,
               }}
               onClick={() => i18n.changeLanguage(lng.value)}
             >

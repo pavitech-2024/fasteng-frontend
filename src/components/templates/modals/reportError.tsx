@@ -1,25 +1,22 @@
-import ModalBase from "@/components/molecules/modals/modal";
-import Cookies from "js-cookie";
-import { ChangeEvent, useEffect, useState } from "react";
+import ModalBase from '@/components/molecules/modals/modal';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { Box, Grid, TextField, Typography } from '@mui/material';
-import Api from "@/api";
+import Api from '@/api';
 
 export interface IReportErrorProps {
-  openModalProp: boolean,
+  openModalProp: boolean;
   setOpenModalProp: (e) => void;
 }
 
-export default function ReportError({openModalProp}: IReportErrorProps) {
-
+export default function ReportError({ openModalProp }: IReportErrorProps) {
   const [openModal, setOpenModal] = useState(openModalProp);
-  const [emailSent, setEmailSent] = useState(false);
   const [emailStatusMessage, setEmailStatusMessage] = useState('');
 
   const [modalValues, setModalValues] = useState({
     subject: '',
     contact: '',
     body: '',
-    sender: ''
+    sender: '',
   });
 
   const getModalInput = () => {
@@ -32,98 +29,82 @@ export default function ReportError({openModalProp}: IReportErrorProps) {
       {
         label: 'contato',
         key: 'contact',
-        value: modalValues.contact
+        value: modalValues.contact,
       },
       {
         label: 'nome',
         key: 'sender',
-        value: modalValues.sender
+        value: modalValues.sender,
       },
       {
         label: 'texto',
         key: 'body',
-        value: modalValues.body
+        value: modalValues.body,
       },
-    ]
-    return modalInputs
+    ];
+    return modalInputs;
   };
 
   useEffect(() => {
-    setOpenModal(openModalProp)
-  }, [openModalProp])
+    setOpenModal(openModalProp);
+  }, [openModalProp]);
 
   const handleReportErrorChange = (event: ChangeEvent<HTMLTextAreaElement>, key: string) => {
     event.preventDefault();
     const input = event.target.value;
-    setModalValues({...modalValues, [key]: input})
-  }
+    setModalValues({ ...modalValues, [key]: input });
+  };
 
   const handleSubmit = async () => {
-
-    const cookies: any = Cookies.get();
-    const token = cookies['fasteng.token'];
-
-    setEmailStatusMessage('Enviando...')
+    setEmailStatusMessage('Enviando...');
 
     try {
-
-      const response = await Api.post('/report-error', modalValues, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("🚀 ~ file: reportError.tsx:88 ~ handleSubmit ~ response:", response)
+      const response = await Api.post('/report-error', modalValues);
+      //console.log('🚀 ~ file: reportError.tsx:88 ~ handleSubmit ~ response:', response);
 
       if (response.status === 201) {
-        setEmailSent(true);
-        setEmailStatusMessage('Email enviado com sucesso')
+        setEmailStatusMessage('Email enviado com sucesso');
         setModalValues({
           subject: '',
           contact: '',
           sender: '',
-          body: ''
+          body: '',
         });
         setTimeout(() => setOpenModal(false), 3000);
-        setTimeout(() => setEmailStatusMessage(''))
+        setTimeout(() => setEmailStatusMessage(''));
       } else {
         setEmailStatusMessage('Ocorreu um erro ao enviar o email');
       }
     } catch (error) {
       setEmailStatusMessage(`Ocorreu um erro ao enviar o email: ${error.message}`);
     }
-  }
+  };
 
   return (
-    <ModalBase 
-      title={"Reportar Erro"} 
-      leftButtonTitle={"cancelar"} 
-      rightButtonTitle={"enviar"} 
-      onCancel={
-        () => {
-          setOpenModal(false);
-          setModalValues({
-            subject: '',
-            contact: '',
-            sender: '',
-            body: ''
-          })
-        } 
-      }
-      open={openModal} 
-      size={'medium'} 
+    <ModalBase
+      title={'Reportar Erro'}
+      leftButtonTitle={'cancelar'}
+      rightButtonTitle={'enviar'}
+      onCancel={() => {
+        setOpenModal(false);
+        setModalValues({
+          subject: '',
+          contact: '',
+          sender: '',
+          body: '',
+        });
+      }}
+      open={openModal}
+      size={'medium'}
       onSubmit={handleSubmit}
       disableSubmit={
-        modalValues.contact === '' ||
-        modalValues.body === '' ||
-        modalValues.sender === '' ||
-        modalValues.subject === ''
+        modalValues.contact === '' || modalValues.body === '' || modalValues.sender === '' || modalValues.subject === ''
       }
     >
       <Box sx={{ mb: '1rem' }}>
         <Grid container spacing={2}>
           <Grid container item spacing={2}>
-            {getModalInput().map((input) => (
+            {getModalInput().map((input) =>
               input.label !== 'texto' ? (
                 <Grid item key={input.label} component="div" width={'inherit'}>
                   <TextField
@@ -131,17 +112,15 @@ export default function ReportError({openModalProp}: IReportErrorProps) {
                     variant="standard"
                     value={input.value}
                     required
-                    onChange={(event: ChangeEvent<HTMLTextAreaElement>) => 
-                      handleReportErrorChange(event, input.key)
-                    }
+                    onChange={(event: ChangeEvent<HTMLTextAreaElement>) => handleReportErrorChange(event, input.key)}
                     fullWidth
                   />
                 </Grid>
               ) : null
-            ))}
+            )}
           </Grid>
           <Grid container item>
-            {getModalInput().map((input) => (
+            {getModalInput().map((input) =>
               input.label === 'texto' ? (
                 <Grid item key={input.label} component="div" width={'inherit'}>
                   <TextField
@@ -156,7 +135,7 @@ export default function ReportError({openModalProp}: IReportErrorProps) {
                   />
                 </Grid>
               ) : null
-            ))}
+            )}
           </Grid>
         </Grid>
 
@@ -170,14 +149,13 @@ export default function ReportError({openModalProp}: IReportErrorProps) {
               whiteSpace: 'nowrap',
               color: 'black',
               transition: 'color .5s ease-in-out',
-              marginY: '.9125rem'
+              marginY: '.9125rem',
             }}
           >
             {emailStatusMessage}
           </Typography>
         )}
-
       </Box>
     </ModalBase>
-  )
+  );
 }

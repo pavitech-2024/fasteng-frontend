@@ -15,17 +15,17 @@ export const CardContainer = ({ children }: CardContainerProps) => {
         display: 'grid',
         gridTemplateColumns: {
           mobile: 'repeat(auto-fill, 150px)',
-          notebook: 'repeat(auto-fill, 170px)'
+          notebook: 'repeat(auto-fill, 170px)',
         },
         gridTemplateRows: {
           mobile: 'repeat(auto-fill, 200px)',
-          notebook: 'repeat(auto-fill, 220px)'
+          notebook: 'repeat(auto-fill, 220px)',
         },
         gap: '10px',
         justifyContent: 'center',
         width: '100%',
         mb: '2vh',
-        p: '0 2vw'
+        p: '0 2vw',
       }}
     >
       {children}
@@ -84,7 +84,7 @@ export const Card = ({ data, type, hrefLink, target }: CardProps) => {
             justifyContent: 'center',
             backgroundColor: 'primaryTons.lightGray',
             color: 'primaryTons.white',
-            borderRadius: '0 0 15px 15px'
+            borderRadius: '0 0 15px 15px',
           }}
         >
           <Typography
@@ -106,7 +106,7 @@ export const Card = ({ data, type, hrefLink, target }: CardProps) => {
                   color: 'secondaryTons.red',
                   position: 'absolute',
                   right: 10,
-                  top: 10
+                  top: 10,
                 }}
               />
               <Box
@@ -120,10 +120,12 @@ export const Card = ({ data, type, hrefLink, target }: CardProps) => {
                   bgcolor: 'primary.main',
                   position: 'absolute',
                   right: 0,
-                  bottom: { mobile: '65px', notebook: '72px' }
+                  bottom: { mobile: '65px', notebook: '72px' },
                 }}
               >
-                <Typography sx={{ textAlign: 'center', fontWeight: '400', fontSize: '12px', color: 'primaryTons.white' }}>
+                <Typography
+                  sx={{ textAlign: 'center', fontWeight: '400', fontSize: '12px', color: 'primaryTons.white' }}
+                >
                   {'standard' in data ? data.standard : null}
                 </Typography>
               </Box>

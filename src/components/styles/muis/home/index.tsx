@@ -18,12 +18,14 @@ export const CardApp: NextPage<Props> = ({ element, onClick }) => (
         mobile: '320px',
         notebook: '220px',
         desktop: '280px',
-        ultrawide: '320px' },
+        ultrawide: '320px',
+      },
       height: {
         mobile: '90px',
         notebook: '220px',
         desktop: '260px',
-        ultrawide: '300px' },
+        ultrawide: '300px',
+      },
       borderRadius: '20px',
       boxShadow: 'unset',
       display: 'flex',
@@ -47,7 +49,7 @@ export const CardApp: NextPage<Props> = ({ element, onClick }) => (
           height: {
             mobile: '50px',
             notebook: '110px',
-            desktop: '130px'
+            desktop: '130px',
           },
           width: 'auto',
         }}

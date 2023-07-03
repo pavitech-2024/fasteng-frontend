@@ -1,5 +1,5 @@
-import Api from "@/api";
-import { ConcreteMaterialData } from "@/interfaces/concrete";
+import Api from '@/api';
+import { ConcreteMaterialData } from '@/interfaces/concrete';
 
 const concreteMaterialService = {
   createMaterial: (concreteMateriaData: ConcreteMaterialData) => Api.post('concrete/materials', concreteMateriaData),

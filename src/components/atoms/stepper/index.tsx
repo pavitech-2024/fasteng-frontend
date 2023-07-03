@@ -15,7 +15,7 @@ interface StepperProps {
   stepperData: StepperData[];
   width?: string;
   variant: 'multicolor' | 'standard';
-};
+}
 
 interface StepperWelcomeProps {
   stepperData: StepperData[];
@@ -26,12 +26,7 @@ interface StepperWelcomeProps {
 export const Stepper = ({ stepperData, activeStep, variant }: StepperProps) => {
   return (
     <>
-      <StepperMui
-        activeStep={activeStep}
-        alternativeLabel
-        sx={{ width: '100%' }}
-        connector={<QontoConnector />}
-      >
+      <StepperMui activeStep={activeStep} alternativeLabel sx={{ width: '100%' }} connector={<QontoConnector />}>
         {stepperData.map((step: StepperData, index: number) => (
           <Step
             key={index}
@@ -64,18 +59,13 @@ export const Stepper = ({ stepperData, activeStep, variant }: StepperProps) => {
 
 export const StepperWelcome = ({ stepperData, variant }: StepperWelcomeProps) => {
   return (
-    <StepperMui
-      activeStep={0}
-      alternativeLabel
-      sx={{ width: '100%' }}
-      connector={<QontoWelcomeConnector />}
-    >
+    <StepperMui activeStep={0} alternativeLabel sx={{ width: '100%' }} connector={<QontoWelcomeConnector />}>
       {stepperData.map((step: StepperData, index: number) => (
         <Step
           key={index}
           sx={{
             '& .MuiSvgIcon-root.MuiStepIcon-root': {
-              color: 'secondaryTons.green'
+              color: 'secondaryTons.green',
             },
             '& .MuiStepIcon-text': {
               fill: '#FCFCFC', // primaryTons.white
@@ -86,7 +76,7 @@ export const StepperWelcome = ({ stepperData, variant }: StepperWelcomeProps) =>
             },
             '& .MuiStepLabel-label.MuiStepLabel-label': {
               color: variant === 'multicolor' && 'primaryTons.mainGray',
-            }
+            },
           }}
         >
           <StepLabel>{step.description}</StepLabel>

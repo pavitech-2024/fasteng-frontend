@@ -1,5 +1,6 @@
 import { NextPage } from 'next';
-import WelcomeTemplate, { StepData, WelcomeData } from '@/components/templates/welcome';
+import WelcomeTemplate, { WelcomeData } from '@/components/templates/welcome';
+import { StepperData } from '@/components/atoms/stepper';
 import { EssayIcon, LibraryIcon, MaterialsIcon, SoilsIcon, StandartsIcon } from '@/assets';
 import { t } from 'i18next';
 
@@ -31,17 +32,17 @@ const Soils: NextPage = () => {
     },
   ];
 
-  const stepperData: StepData[] = [
+  const stepperData: StepperData[] = [
     {
-      step: '1',
+      step: 1,
       description: t('welcome.step.soils.1'),
     },
     {
-      step: '2',
+      step: 2,
       description: t('welcome.step.soils.2'),
     },
     {
-      step: '3',
+      step: 3,
       description: t('welcome.step.asphalt.3'),
     },
   ];

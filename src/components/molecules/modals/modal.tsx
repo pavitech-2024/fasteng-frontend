@@ -75,7 +75,7 @@ const ModalBase = ({
             fontWeight: '700',
             fontSize: { mobile: '1.35rem', notebook: '1.5rem' },
             lineHeight: { mobile: '1.35rem', notebook: '1.5rem' },
-            m: { mobile: '10px 0', notebook: '0 0 1rem'}
+            m: { mobile: '10px 0', notebook: '0 0 1rem' },
           }}
         >
           {title.toUpperCase()}
@@ -88,8 +88,8 @@ const ModalBase = ({
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', pt: '1rem' }}>
           <Button
             onClick={onCancel}
-            variant='outlined'
-            color='primary'
+            variant="outlined"
+            color="primary"
             sx={{
               height: '32px',
               width: '135px',
@@ -100,8 +100,8 @@ const ModalBase = ({
 
               ':hover': {
                 bgcolor: '#F2A255',
-                color: 'primaryTons.white'
-              }
+                color: 'primaryTons.white',
+              },
             }}
           >
             {leftButtonTitle}
@@ -120,8 +120,8 @@ const ModalBase = ({
               fontWeight: 700,
 
               ':hover': {
-                bgcolor: '#F2A255'
-              }
+                bgcolor: '#F2A255',
+              },
             }}
           >
             {rightButtonTitle}

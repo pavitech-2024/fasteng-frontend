@@ -2,6 +2,7 @@ import { MenuItem, TextField } from '@mui/material';
 
 export interface DropDownOption {
   label: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any;
 }
 
@@ -41,12 +42,7 @@ const DropDown = ({
       required={required}
     >
       {options.map((option, index) => (
-        <MenuItem
-          key={index}
-          value={option.value}
-          onClick={() => callback(option.value)}
-          sx={{ fontSize: '14px' }}
-        >
+        <MenuItem key={index} value={option.value} onClick={() => callback(option.value)} sx={{ fontSize: '14px' }}>
           {option.label}
         </MenuItem>
       ))}

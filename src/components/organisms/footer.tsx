@@ -3,12 +3,12 @@ import { PreviousIcon, NextIcon, SaveIcon } from '@/assets';
 import { t } from 'i18next';
 
 interface FooterProps {
-  previousText: string,
-  previousDisabled: boolean,
-  handlePreviousClick: () => void,
-  nextText: string,
-  nextDisabled: boolean,
-  handleNextClick: () => void
+  previousText: string;
+  previousDisabled: boolean;
+  handlePreviousClick: () => void;
+  nextText: string;
+  nextDisabled: boolean;
+  handleNextClick: () => void;
 }
 
 export const Footer = ({
@@ -17,7 +17,8 @@ export const Footer = ({
   handlePreviousClick,
   nextText,
   nextDisabled,
-  handleNextClick }: FooterProps) => {
+  handleNextClick,
+}: FooterProps) => {
   return (
     <Box
       sx={{
@@ -25,12 +26,12 @@ export const Footer = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        p: { mobile: '4vh 4vw', notebook: '3vh 6vw' }
+        p: { mobile: '4vh 4vw', notebook: '3vh 6vw' },
       }}
     >
       <Button
         startIcon={<PreviousIcon />}
-        variant='contained'
+        variant="contained"
         disabled={previousDisabled}
         onClick={handlePreviousClick}
         sx={{
@@ -43,13 +44,13 @@ export const Footer = ({
 
           ':hover': {
             transition: 'all 0.1s ease-in-out',
-            bgcolor: 'secondaryTons.blueDisabled'
+            bgcolor: 'secondaryTons.blueDisabled',
           },
 
           ':active': {
             transition: 'all 0.1s ease-in-out',
-            bgcolor: 'secondaryTons.blueClick'
-          }
+            bgcolor: 'secondaryTons.blueClick',
+          },
         }}
       >
         {previousText}
@@ -57,7 +58,7 @@ export const Footer = ({
 
       <Button
         endIcon={nextText === t('next') ? <NextIcon /> : <SaveIcon />}
-        variant='contained'
+        variant="contained"
         disabled={nextDisabled}
         onClick={handleNextClick}
         sx={{
@@ -69,13 +70,13 @@ export const Footer = ({
 
           ':hover': {
             transition: 'all 0.1s ease-in-out',
-            bgcolor: 'secondaryTons.blueDisabled'
+            bgcolor: 'secondaryTons.blueDisabled',
           },
 
           ':active': {
             transition: 'all 0.1s ease-in-out',
-            bgcolor: 'secondaryTons.blueClick'
-          }
+            bgcolor: 'secondaryTons.blueClick',
+          },
         }}
       >
         {nextText}

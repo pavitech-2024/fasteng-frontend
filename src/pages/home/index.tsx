@@ -44,7 +44,7 @@ const Home: NextPage = () => {
         height: 'calc(100vh - 52px)',
         width: '100vw',
         p: '3vh 0',
-        mt: '52px'
+        mt: '52px',
       }}
     >
       <Box
@@ -54,7 +54,7 @@ const Home: NextPage = () => {
           justifyContent: 'center',
           alignItems: 'center',
           height: { mobile: '17.5%', notebook: '25%' },
-          maxHeight: '250px'
+          maxHeight: '250px',
         }}
       >
         <Box
@@ -63,7 +63,7 @@ const Home: NextPage = () => {
             fontSize: { notebook: '1.25rem', mobile: '.85rem' },
             fontWeight: '700',
             color: 'primaryTons.lightGray',
-            m: 0
+            m: 0,
           }}
         >
           {t('home.welcome to')}
@@ -78,7 +78,7 @@ const Home: NextPage = () => {
             fontWeight: 700,
             color: 'primaryTons.lightGray',
             textAlign: 'center',
-            m: 0
+            m: 0,
           }}
         >
           {t('home.fast way to')}
@@ -89,7 +89,7 @@ const Home: NextPage = () => {
           height: { mobile: '22.5%', notebook: '17.5%' },
           maxHeight: { mobile: 'none', ultrawide: '150px' },
           display: 'flex',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
       >
         <Box
@@ -97,7 +97,7 @@ const Home: NextPage = () => {
             display: 'flex',
             alignItems: 'center',
             p: { mobile: '0 5vw', notebook: '0 15vw', ultrawide: '0 20vw' },
-            m: 0
+            m: 0,
           }}
         >
           <Typography
@@ -106,7 +106,7 @@ const Home: NextPage = () => {
               fontWeight: 400,
               color: 'primaryTons.darkGray',
               textAlign: 'center',
-              maxWidth: '1395px'
+              maxWidth: '1395px',
             }}
           >
             {t('home.description')}
@@ -118,11 +118,11 @@ const Home: NextPage = () => {
           display: 'grid',
           gridTemplateColumns: {
             mobile: '1fr',
-            notebook: '1fr 1fr 1fr' 
+            notebook: '1fr 1fr 1fr',
           },
           gap: {
             mobile: '20px 0',
-            notebook: '0 20px'
+            notebook: '0 20px',
           },
           justifyItems: 'center',
           flexDirection: { notebook: 'row', mobile: 'column' },
@@ -132,8 +132,8 @@ const Home: NextPage = () => {
           pt: '2vh',
 
           '@media only screen and (min-width: 1024px)': {
-            width: '60%'
-          }
+            width: '60%',
+          },
         }}
       >
         {Applications.map((app) => (

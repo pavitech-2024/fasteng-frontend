@@ -1,8 +1,4 @@
-import {
-  Box,
-  Typography,
-  Stack
-} from '@mui/material';
+import { Box, Typography, Stack } from '@mui/material';
 import { StepperData, StepperWelcome as Stepper } from '@/components/atoms/stepper';
 import { CardMenuOptions as Card } from '@/components/styles/muis/welcome';
 import { t } from 'i18next';
@@ -16,13 +12,13 @@ export interface WelcomeData {
   icon: ReactNode;
   description: string;
   path: string;
-};
+}
 
 interface WelcomeTemplateProps {
   icon: JSX.Element;
   welcomeData: WelcomeData[];
   stepperData: StepperData[];
-};
+}
 
 const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProps) => {
   const app = useRouter().pathname.split('/')[1];
@@ -41,8 +37,8 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
           pt: { mobile: 0, desktop: '4vh' },
           '@media only screen and (min-width: 1024px)': {
             flexDirection: 'row',
-            justifyContent: 'center'
-          }
+            justifyContent: 'center',
+          },
         }}
       >
         <Box
@@ -51,11 +47,11 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
             maxWidth: '900px',
             pt: { mobile: '2vh', desktop: '1vh' },
             '@media only screen and (min-width: 1024px)': {
-              width: '60%'
+              width: '60%',
             },
             '@media only screen and (min-width: 1366px)': {
-              width: '40%'
-            }
+              width: '40%',
+            },
           }}
         >
           <Box
@@ -70,15 +66,11 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: "90%",
+                width: '90%',
                 m: { mobile: '2vh 0 4vh', desktop: '1vh 0 2vh' },
               }}
             >
-              <Box
-                sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                {icon}
-              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{icon}</Box>
               <Box
                 color="primary"
                 sx={{
@@ -89,7 +81,7 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
                   textAlign: 'center',
                   pl: '15px',
                   color: 'primary.main',
-                  div: { color: 'primaryTons.darkGray' }
+                  div: { color: 'primaryTons.darkGray' },
                 }}
               >
                 <div>{t('welcome.title')}</div>
@@ -109,7 +101,7 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
                 alignItems: modalOpen ? 'center' : { mobile: 'flex-start', notebook: 'center' },
                 justifyContent: 'center',
                 position: 'relative',
-                transition: '0.5s ease-out'
+                transition: '0.5s ease-out',
               }}
             >
               <Typography
@@ -118,7 +110,7 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
                   fontSize: { mobile: '1.25rem', desktop: '1.5rem' },
                   color: 'primaryTons.mainGray',
                   mb: modalOpen ? { mobile: '3vh', notebook: '25px' } : { mobile: 0, notebook: '25px' },
-                  transition: '0.5s ease-out'
+                  transition: '0.5s ease-out',
                 }}
               >
                 {t('welcome.how it works')}
@@ -130,16 +122,16 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
                   right: '2vh',
                   transform: modalOpen ? 'rotate(0.5turn)' : 'none',
                   transition: '0.5s ease-out',
-                  display: { mobile: 'flex', notebook: 'none' }
+                  display: { mobile: 'flex', notebook: 'none' },
                 }}
               >
                 <ArrowDownIcon onClick={() => setModalOpen((prev) => !prev)} />
               </Box>
-                  
+
               <Stack
                 sx={{
                   display: modalOpen ? 'flex' : { mobile: 'none', notebook: 'flex' },
-                  transition: '0.5s ease-out'
+                  transition: '0.5s ease-out',
                 }}
               >
                 <Stepper stepperData={stepperData} variant="multicolor" />
@@ -150,7 +142,7 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
                   flexDirection: 'column',
                   width: '100%',
                   mt: { mobile: '3vh', notebook: '25px' },
-                  transition: '0.5s ease-out'
+                  transition: '0.5s ease-out',
                 }}
               >
                 {welcomeData.map((element: WelcomeData) => (
@@ -162,7 +154,7 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
                       mb: '16px',
                       span: {
                         color: 'primaryTons.mainGray',
-                        fontWeight: 500
+                        fontWeight: 500,
                       },
                     }}
                     key={element.name}
@@ -186,13 +178,13 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
             '@media only screen and (min-width: 768px)': {
               gridTemplateColumns: '1fr 1fr',
               justifyItems: 'center',
-              width: '90%'
+              width: '90%',
             },
 
             '@media only screen and (min-width: 1024px)': {
               gridTemplateColumns: '1fr',
-              width: '325px'
-            }
+              width: '325px',
+            },
           }}
         >
           {welcomeData.map((option: WelcomeData) => (

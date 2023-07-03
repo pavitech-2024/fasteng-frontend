@@ -1,5 +1,4 @@
-import { Sieve } from "../common";
-
+import { Sieve } from '../common';
 
 export type ConcreteMaterialTypes = 'fineAggregate' | 'coarseAggregate' | 'cement';
 
@@ -40,4 +39,4 @@ export class ConcreteMaterial {
     classification_AMP?: 'AMP 50/65' | 'AMP 55/75' | 'AMP 60/85' | 'AMP 65/90'; // for AMP
     observation?: string;
   };
-};
+}

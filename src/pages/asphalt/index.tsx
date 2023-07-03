@@ -55,15 +55,15 @@ const Asphalt: NextPage = () => {
   const stepperData: StepperData[] = [
     {
       step: 1,
-      description: t('welcome.step.asphalt.1')
+      description: t('welcome.step.asphalt.1'),
     },
     {
       step: 2,
-      description: t('welcome.step.asphalt.2')
+      description: t('welcome.step.asphalt.2'),
     },
     {
       step: 3,
-      description: t('welcome.step.asphalt.3')
+      description: t('welcome.step.asphalt.3'),
     },
   ];
 

@@ -34,7 +34,7 @@ const Filter = ({ options, callback }: FilterProps) => {
             borderColor: 'primaryTons.white',
             transition: 'all 0.3s ease-in-out',
             ':hover': {
-              bgcolor: option.isSelected ? '#F2A255': 'primary.main',
+              bgcolor: option.isSelected ? '#F2A255' : 'primary.main',
               color: 'primaryTons.white',
             },
             ':first-of-type': { borderRadius: '12px 0 0 12px' },

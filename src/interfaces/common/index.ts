@@ -3,7 +3,7 @@ import { StaticImageData } from 'next/image';
 export interface StandardData {
   name: string;
   link: string;
-};
+}
 
 export type Essay = {
   key: string;

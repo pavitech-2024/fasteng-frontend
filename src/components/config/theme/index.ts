@@ -14,7 +14,7 @@ export const theme = createTheme({
 
   palette: {
     primary: {
-      main: '#F29134'
+      main: '#F29134',
     },
 
     primaryTons: {
@@ -40,45 +40,45 @@ export const theme = createTheme({
   },
 
   components: {
-		MuiCssBaseline: {
-			styleOverrides: {
-				body: {
-					m: 0,
-					p: 0,
-					boxSizing: 'border-box',
-					backgroundColor: '#F2F2F2',
-					color: '#2F3559',
-					fontWeight: '400',
-          overflowX: 'hidden'
-				},
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          m: 0,
+          p: 0,
+          boxSizing: 'border-box',
+          backgroundColor: '#F2F2F2',
+          color: '#2F3559',
+          fontWeight: '400',
+          overflowX: 'hidden',
+        },
 
-				a: {
-					textDecoration: 'none'
-				},
+        a: {
+          textDecoration: 'none',
+        },
 
         'body::-webkit-scrollbar': {
-          width: '12px'
+          width: '12px',
         },
 
         'body::-webkit-scrollbar-track': {
-          background: '#FCFCFC'
+          background: '#FCFCFC',
         },
 
         'body::-webkit-scrollbar-thumb': {
           backgroundColor: '#121212',
           borderRadius: '20px',
-          border: '2px solid #F2F2F2'
-        }
-			}
-		},
+          border: '2px solid #F2F2F2',
+        },
+      },
+    },
 
     MuiContainer: {
       styleOverrides: {
         root: {
           margin: 0,
-          padding: 0
-        }
-      }
+          padding: 0,
+        },
+      },
     },
 
     MuiButton: {
@@ -89,10 +89,10 @@ export const theme = createTheme({
           boxShadow: 'unset',
 
           ':hover': {
-            boxShadow: 'unset'
-          }
-        }
-      }
-    }
-  }
+            boxShadow: 'unset',
+          },
+        },
+      },
+    },
+  },
 });

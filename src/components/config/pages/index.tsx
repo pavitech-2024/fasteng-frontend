@@ -18,7 +18,7 @@ interface PagesProps {
   title?: string;
   description?: string;
   children: React.ReactNode;
-};
+}
 
 const Pages = (props: PagesProps) => {
   const { title, description, children } = props;
@@ -36,6 +36,7 @@ const Pages = (props: PagesProps) => {
 
     useEffect(() => {
       setOpenSidebar(false);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [Router.pathname]);
 
     if (Router.pathname === '/') return children;
@@ -45,9 +46,7 @@ const Pages = (props: PagesProps) => {
         <>
           <Topbar setOpenSidebar={setOpenSidebar} />
           {navbar && <Navbar open={OpenSidebar} app={Router.pathname.split('/')[1]} />}
-          <Box>
-            {children}
-          </Box>
+          <Box>{children}</Box>
         </>
       );
   };
@@ -62,9 +61,7 @@ const Pages = (props: PagesProps) => {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
       </Head>
-      <main>
-        {GetComponent()}
-      </main>
+      <main>{GetComponent()}</main>
     </>
   );
 };

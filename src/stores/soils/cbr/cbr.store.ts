@@ -9,7 +9,7 @@ interface GeneralData {
   operator?: string;
   cauculist?: string;
   description?: string;
-};
+}
 
 interface cbr_step2Data {
   ring_constant: number;
@@ -46,7 +46,7 @@ interface cbr_results {
   };
   cbr_graph: [number, number][];
   free_expansion: number;
-};
+}
 
 export type CbrData = {
   generalData: GeneralData;

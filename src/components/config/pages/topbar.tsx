@@ -53,7 +53,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
           justifyContent: 'center',
           boxShadow: 'unset',
           p: { mobile: '0 2vw', notebook: '0 1vw' },
-          zIndex: '100'
+          zIndex: '100',
         }}
       >
         <Toolbar
@@ -89,13 +89,13 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                 textDecoration: 'none',
                 fontSize: '1.25rem',
                 pl: { mobile: '5vw', notebook: '1.5vw' },
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
               onClick={() => Router.push(`/${pathname[1].toLowerCase()}`)}
             >
               {t(`topbar.${pathname[1].toLowerCase()}`).toUpperCase()}
             </Typography>
-            {pathname.length > 2 ?
+            {pathname.length > 2 ? (
               <>
                 <Box
                   sx={{
@@ -103,7 +103,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                     width: '1.5px',
                     height: '20px',
                     bgcolor: 'primaryTons.white',
-                    m: { desktop: '0 0.75vw', notebook: '0 2vw' }
+                    m: { desktop: '0 0.75vw', notebook: '0 2vw' },
                   }}
                 />
                 <Typography
@@ -114,15 +114,15 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                     textDecoration: 'none',
                     fontSize: '1rem',
                     lineHeight: '1rem',
-                    mb: '-1px'
+                    mb: '-1px',
                   }}
                 >
                   {t(`topbar.${pathname[2].toLowerCase()}`).toUpperCase()}
                 </Typography>
               </>
-              :
+            ) : (
               ''
-            }
+            )}
           </Box>
           <Box
             sx={{
@@ -159,42 +159,42 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
               </>
             </Tooltip>
           </Box>
-            <Menu
-              PaperProps={{
-                sx: {
-                  width: { mobile: '70%', tablet: '20rem' },
-                },
-              }}
-              anchorEl={anchorEl}
-              open={openMenu}
-              onClose={() => setAnchorEl(null)}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center',
+          <Menu
+            PaperProps={{
+              sx: {
+                width: { mobile: '70%', tablet: '20rem' },
+              },
+            }}
+            anchorEl={anchorEl}
+            open={openMenu}
+            onClose={() => setAnchorEl(null)}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+          >
+            <MenuItem>
+              <Languages />
+            </MenuItem>
+            <Divider />
+            <MenuItem
+              onClick={() => {
+                Router.push('/settings');
+                setAnchorEl(null);
               }}
             >
-              <MenuItem>
-                <Languages />
-              </MenuItem>
-              <Divider />
-              <MenuItem
-                onClick={() => {
-                  Router.push('/settings');
-                  setAnchorEl(null);
-                }}
-              >
-                <ListItemIcon>
-                  <SettingsIcon fontSize="small" />
-                </ListItemIcon>
-                {t('settings')}
-              </MenuItem>
-              <MenuItem onClick={() => logout()}>
-                <ListItemIcon>
-                  <LogoutIcon fontSize="small" />
-                </ListItemIcon>
-                {t('logout')}
-              </MenuItem>
-            </Menu>
+              <ListItemIcon>
+                <SettingsIcon fontSize="small" />
+              </ListItemIcon>
+              {t('settings')}
+            </MenuItem>
+            <MenuItem onClick={() => logout()}>
+              <ListItemIcon>
+                <LogoutIcon fontSize="small" />
+              </ListItemIcon>
+              {t('logout')}
+            </MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
     </>

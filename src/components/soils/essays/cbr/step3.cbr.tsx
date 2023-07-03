@@ -21,7 +21,7 @@ const CBR_Expansion = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
       } else throw t('cbr.error.minReads');
     } catch (error) {
       toast.error(error);
-    };
+    }
   };
 
   const handleAdd = () => {
@@ -29,21 +29,15 @@ const CBR_Expansion = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
     newRows.push({ id: rows.length, date: null, time: null, deflectometer_read: null });
     setData({ step: 2, value: newRows });
     setNextDisabled(true);
-  }
+  };
 
   const ExpansionToolbar = () => {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
-        <Button
-          sx={{ color: 'secondaryTons.red' }}
-          onClick={handleErase}
-        >
+        <Button sx={{ color: 'secondaryTons.red' }} onClick={handleErase}>
           {t('erase')}
         </Button>
-        <Button
-          sx={{ color: 'secondaryTons.green' }}
-          onClick={handleAdd}
-        >
+        <Button sx={{ color: 'secondaryTons.green' }} onClick={handleAdd}>
           {t('add')}
         </Button>
       </Box>

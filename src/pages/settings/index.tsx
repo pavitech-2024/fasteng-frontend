@@ -150,12 +150,12 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
       <Header title={t('settings')} />
       <Box
         sx={{
-          width: { mobile: '100%', notebook: '80%'},
+          width: { mobile: '100%', notebook: '80%' },
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          mb: '4vh'
+          mb: '4vh',
         }}
       >
         <Typography
@@ -166,7 +166,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             textTransform: 'uppercase',
             color: 'primaryTons.lightGray',
             display: 'flex',
-            justifyContent: 'flex-start'
+            justifyContent: 'flex-start',
           }}
         >
           {t('settings.account')}
@@ -201,7 +201,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
                   zIndex: 2,
                 }}
               />
-              </IconButton>
+            </IconButton>
           </Tooltip>
           <Box
             sx={{
@@ -214,14 +214,14 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
               transform: 'translateX(-50px)',
               zIndex: 1,
               height: 'calc(100px - 2rem)',
-              minWidth: '220px'
+              minWidth: '220px',
             }}
           >
             <Typography
               variant="h6"
               sx={{
                 color: 'white',
-                fontSize: { mobile: '14px', notebook: '20px' }
+                fontSize: { mobile: '14px', notebook: '20px' },
               }}
             >
               {user?.name}
@@ -239,7 +239,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             textTransform: 'uppercase',
             color: 'primaryTons.lightGray',
             display: 'flex',
-            justifyContent: 'flex-start'
+            justifyContent: 'flex-start',
           }}
         >
           {t('settings.preferences')}
@@ -251,7 +251,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             flexDirection: 'column',
             alignItems: 'flex-start',
             gap: '1rem',
-            m: '2vh 0 4vh'
+            m: '2vh 0 4vh',
           }}
         >
           <DropDown
