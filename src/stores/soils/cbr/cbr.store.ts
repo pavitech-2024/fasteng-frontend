@@ -7,7 +7,7 @@ interface GeneralData {
   name: string;
   sample: Sample;
   operator?: string;
-  cauculist?: string;
+  calculist?: string;
   description?: string;
 }
 
@@ -72,7 +72,7 @@ const useCbrStore = create<CbrData & CbrActions>()(
           name: null,
           sample: null,
           operator: null,
-          cauculist: null,
+          calculist: null,
           description: null,
         },
         step2Data: {

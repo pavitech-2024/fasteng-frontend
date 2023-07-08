@@ -1,0 +1,32 @@
+{
+    "sucs.experimentName": "Nome do Experimento",
+    "sucs.operator": "Operador",
+    "sucs.samples": "Amostra",
+    "sucs.calculist": "Calculista",
+    "experimentType": "Tipo de Experimento",
+    "sample": "Amostra",
+    "material": "Material",
+    "authorName": "Nome do Autor",
+    "graph": "Gráfico",
+
+    "sucs.step-2-description": "Por favor, preencha as informações abaixo.",
+    "sucs.initial_sample_mass": "Massa da Amostra Inicial (g)",
+    "sucs.seives": "Peneiras",
+    "sucs.passant_porcentage": "Passante (%)",
+    "loading.samples.pending": "Carregando amostras...",
+    "loading.samples.success": "Amostras carregadas!",
+    "loading.samples.error": "Erro ao carregar amostras!",
+    
+    "sucs.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
+    "results": "Resultados",
+    "sucs.classification": "Classificação",
+    
+    "loading.nextStep.pending": "Carregando...",
+    "loading.nextStep.success": "Sucesso!",
+    "loading.nextStep.error": "Erro!",
+    "loading.save.pending": "Salvando...",
+    "loading.save.success": "Salvo com sucesso!",
+    "loading.save.error": "Erro ao salvar!",
+    
+    "AlreadyExists": "Já cadastrado."
+}

@@ -1,25 +1,25 @@
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import DropDown from '@/components/atoms/inputs/dropDown';
-import CBR_SERVICE from '@/services/soils/essays/cbr/cbr.service';
+import SUCS_SERVICE from '@/services/soils/essays/sucs/sucs.service';
 import Loading from '@/components/molecules/loading';
 import { Sample } from '@/interfaces/soils';
 import { useEffect, useState } from 'react';
 import useAuth from '@/contexts/auth';
-import useCbrStore from '@/stores/soils/cbr/cbr.store';
+import useSucsStore from '@/stores/soils/sucs/sucs.store';
 import { toast } from 'react-toastify';
 import { EssayPageProps } from '@/components/templates/essay';
 
-const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps & { cbr: CBR_SERVICE }) => {
+const SUCS_GeneralData = ({ nextDisabled, setNextDisabled, sucs }: EssayPageProps & { sucs: SUCS_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [samples, setSamples] = useState<Sample[]>([]);
   const { user } = useAuth();
-  const { generalData, setData } = useCbrStore();
+  const { generalData, setData } = useSucsStore();
 
   useEffect(() => {
     toast.promise(
       async () => {
-        const samples = await cbr.getSamplesByUserId(user._id);
+        const samples = await sucs.getSamplesByUserId(user._id);
 
         setSamples(samples);
         setLoading(false);
@@ -35,10 +35,10 @@ const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps 
   }, []);
 
   const inputs = [
-    { label: t('cbr.experimentName'), value: generalData.name, key: 'name', required: true },
-    { label: t('cbr.samples'), value: generalData.sample, key: 'sample', required: true },
-    { label: t('cbr.operator'), value: generalData.operator, key: 'operator', required: false },
-    { label: t('cbr.calculist'), value: generalData.calculist, key: 'calculist', required: false },
+    { label: t('sucs.experimentName'), value: generalData.name, key: 'name', required: true },
+    { label: t('sucs.samples'), value: generalData.sample, key: 'sample', required: true },
+    { label: t('sucs.operator'), value: generalData.operator, key: 'operator', required: false },
+    { label: t('sucs.calculist'), value: generalData.calculist, key: 'calculist', required: false },
     { label: t('samples.comments'), value: generalData.description, key: 'description', required: false },
   ];
 
@@ -138,4 +138,4 @@ const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps 
   );
 };
 
-export default CBR_GeneralData;
+export default SUCS_GeneralData;
