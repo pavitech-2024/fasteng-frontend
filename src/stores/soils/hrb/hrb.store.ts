@@ -12,15 +12,34 @@ interface GeneralData {
   description?: string;
 }
 
+interface hrb_step2Data {
+  tableData: HRB_Step2TableData[];
+  liquidity_limit: number;
+  plasticity_limit: number;
+}
+
+interface hrb_results {
+  classification: string;
+  group_index: number;
+  plasticity_index: number;
+}
+
+export interface HRB_Step2TableData {
+  sieve: number;
+  percent_passant: number;
+}
+
 export type HrbData = {
   generalData: GeneralData;
+  step2Data: hrb_step2Data;
+  results: hrb_results;
 };
 
 export type HrbActions = {
   setData: ({ step, key, value }: setDataType) => void;
 };
 
-const stepVariant = { 0: 'generalData' };
+const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'results' };
 
 const useHrbStore = create<HrbData & HrbActions>()(
   devtools(
@@ -33,6 +52,32 @@ const useHrbStore = create<HrbData & HrbActions>()(
           operator: null,
           cauculist: null,
           description: null,
+        },
+
+        step2Data: {
+          liquidity_limit: null,
+          plasticity_limit: null,
+          tableData: [
+            {
+              sieve: 2,
+              percent_passant: null,
+            },
+
+            {
+              sieve: 0.43,
+              percent_passant: null,
+            },
+
+            {
+              sieve: 0.075,
+              percent_passant: null,
+            },
+          ],
+        },
+        results: {
+          classification: null,
+          group_index: null,
+          plasticity_index: null,
         },
 
         setData: ({ step, key, value }) =>

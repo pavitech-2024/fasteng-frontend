@@ -2,6 +2,9 @@ import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import HRB_SERVICE from '@/services/soils/essays/hrb/hrb.service';
 import useHrbStore, { HrbActions } from '@/stores/soils/hrb/hrb.store';
+import HRB_GeneralData from '../../../../components/soils/essays/hrb/general-data.hrb';
+import HBR_Step2 from '../../../../components/soils/essays/hrb/step2.hrb';
+import HRB_Results from '../../../../components/soils/essays/hrb/results.hrb';
 
 const Hrb = () => {
   // start an instance of the service
@@ -22,7 +25,11 @@ const Hrb = () => {
   hrb.store_actions = store as HrbActions;
 
   // inform the childrens with the step of the children and the part of the store that they will use
-  const childrens = [];
+  const childrens = [
+    { step: 0, children: <HRB_GeneralData hrb={hrb} />, data: store.generalData },
+    { step: 1, children: <HBR_Step2 />, data: store },
+    { step: 2, children: <HRB_Results />, data: store },
+  ];
 
   return <EssayTemplate essayInfo={hrb.info} nextCallback={hrb.handleNext} childrens={childrens} />;
 };
