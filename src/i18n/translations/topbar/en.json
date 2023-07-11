@@ -8,5 +8,6 @@
   "topbar.logout": "Logout",
   "topbar.settings": "Settings",
   "topbar.materials": "Materials",
-  "topbar.cbr": "California Bearing Ratio"
+  "topbar.cbr": "California Bearing Ratio",
+  "topbar.chapman": "Specific Mass - Chapman's Flask"
 }

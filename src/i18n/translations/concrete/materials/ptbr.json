@@ -14,5 +14,6 @@
   "concrete.materials.fineAggregate": "Agregado fino",
   "concrete.materials.cement": "Aglomerante (cimento)",
   "concrete.materials.cap": "CAP",
-  "concrete.materials.other": "Outro"
+  "concrete.materials.other": "Outro",
+  "materials.coarseAggregate": "Agregado graúdo"
 }

@@ -50,6 +50,9 @@ import concreteEssaysENG from './translations/concrete/essays/en.json';
 // materials
 import concreteMaterialsPTBR from './translations/concrete/materials/ptbr.json';
 import concreteMaterialsENG from './translations/concrete/materials/en.json';
+//chapman
+import chapmanPTBR from './translations/concrete/essays/chapman/ptbr.json';
+import chapmanENG from './translations/concrete/essays/chapman/en.json';
 
 i18n.use(initReactI18next).init({
   fallbackLng: 'ptBR',
@@ -77,6 +80,7 @@ i18n.use(initReactI18next).init({
         /**@concrete */
         ...concreteEssaysPTBR,
         ...concreteMaterialsPTBR,
+        ...chapmanPTBR,
       },
     },
     en: {
@@ -99,6 +103,7 @@ i18n.use(initReactI18next).init({
         /**@concrete */
         ...concreteEssaysENG,
         ...concreteMaterialsENG,
+        ...chapmanENG,
       },
     },
   },

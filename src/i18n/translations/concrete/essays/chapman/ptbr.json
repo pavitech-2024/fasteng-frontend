@@ -1,0 +1,8 @@
+{
+  "chapman.experimentName": "Nome do Experimento",
+  "chapman.material": "Material",
+  "chapman.specifyMass": "Massa Específica",
+  "chapman.displaced_volume": "Volume Deslocado",
+  "chapman.step-2-description": "Informe o volume deslocado em litros.",
+  "chapman.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde."
+}
