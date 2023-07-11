@@ -16,7 +16,7 @@ class COMPRESSION_SERVICE implements IEssayService {
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_164_2013_me.pdf',
     },
     stepperData: [
-      { step: 0, description: t('general data'), path: 'general-data' },
+      { step: 0, description: t('general data'), path: 'general-data' }, 
       { step: 1, description: t('hygroscopic humidity'), path: 'hygroscopic-humidity' }, // Umidade higroscópica
       { step: 2, description: t('humidity determination'), path: 'humidity-determination' }, // Determinação da umidade
       { step: 3, description: t('results'), path: 'results' },
