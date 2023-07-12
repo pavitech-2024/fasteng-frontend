@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CompressionIcon } from "@/assets";
 import { IEssayService } from "@/interfaces/common/essay/essay-service.interface";
+import { Sample } from "@/interfaces/soils";
 import { t } from "i18next";
+import Api from '@/api';
+import { CompressionActions, CompressionData } from "@/stores/soils/compression/compression.store";
 
 class COMPRESSION_SERVICE implements IEssayService {
   info = {
@@ -23,9 +26,59 @@ class COMPRESSION_SERVICE implements IEssayService {
     ],
   };
 
-  handleNext(step: number, data: unknown): void {
-    throw new Error("Method not implemented.");
-  }
+  store_actions: CompressionActions;
+  userId: string;
+
+  handleNext = async (step: number, data: unknown): Promise<void> => {
+    try {
+      switch (step) {
+         case 0:
+           await this.submitCompressionGeneralData(data as CompressionData['compressionGeneralData']);
+           break;
+      //  case 1:
+      //     await this.submitHygroscopicData(data as CompressionData['hygroscopicData']);
+      //     break;
+      //   case 2:
+      //     await this.submitHumidityDeterminationData(data as CompressionData['humidityDeterminationData']);
+      //     await this.calculateResults(data as CompressionData);
+      //     break;
+      //   case 3:
+      //     await this.saveEssay(data as CompressionData);
+      //     break;
+      //   default:
+      //     throw t('errors.invalid-step');
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getSamplesByUserId = async (userId: string): Promise<Sample[]> => {
+    try {
+      // get all samples from user from backend
+      const response = await Api.get(`soils/samples/all/${userId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  submitCompressionGeneralData = async (generalData: CompressionData['compressionGeneralData']): Promise<void> => {
+    try {
+      const { name, sample } = generalData;
+
+      if (!name) throw t('errors.empty-name');
+      if (!sample) throw t('errors.empty-sample');
+
+      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, sample });
+
+      const { success, error } = response.data;
+
+      if (success === false) throw error.name;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 export default COMPRESSION_SERVICE;

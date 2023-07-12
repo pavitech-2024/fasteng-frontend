@@ -8,7 +8,7 @@ interface compression_generalData {
   sample: Sample; // materialID
   operator?: string;
   description?: string; //  observation
-  reckoner: string;
+  cauculist: string;
 }
 
 interface hygroscopicData {
@@ -36,7 +36,7 @@ interface compression_results {
 export type CompressionData = {
   compressionGeneralData: compression_generalData;
   hygroscopicData: hygroscopicData;
-  HumidityDeterminationData: humidityDeterminationData;
+  humidityDeterminationData: humidityDeterminationData;
   results: compression_results;
 };
 
@@ -46,7 +46,7 @@ export type CompressionActions = {
 
 type setDataType = { step: number; key?: string; value: unknown };
 
-const stepVariant = { 0: 'generalData', 1: 'hygroscopicData', 2: 'HumidityDeterminationData', 3: 'results' };
+const stepVariant = { 0: 'generalData', 1: 'hygroscopicData', 2: 'humidityDeterminationData', 3: 'results' };
 
 const useCompressionStore = create<CompressionData & CompressionActions>()(
   devtools(
@@ -58,7 +58,7 @@ const useCompressionStore = create<CompressionData & CompressionActions>()(
           sample: null,
           operator: '',
           description: '',
-          reckoner: '',
+          cauculist: '',
         },
         hygroscopicData: {
           moldVolume: '',
@@ -69,7 +69,7 @@ const useCompressionStore = create<CompressionData & CompressionActions>()(
           strokesPerLayer: '',
           layers: '',
         },
-        HumidityDeterminationData: {
+        humidityDeterminationData: {
           capsules: [],
           wetGrossWeightsCapsule: [],
           dryGrossWeights: [],
