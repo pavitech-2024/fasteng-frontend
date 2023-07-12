@@ -8,7 +8,7 @@ import { CompressionActions, CompressionData } from "@/stores/soils/compression/
 
 class COMPRESSION_SERVICE implements IEssayService {
   info = {
-    key: 'cbr',
+    key: 'compression',
     icon: CompressionIcon,
     title: t('soils.essays.compression'),
     path: '/soils/essays/compression',
