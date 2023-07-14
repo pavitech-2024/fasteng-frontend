@@ -1,9 +1,10 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { EssayPageProps } from '@/components/templates/essay';
 import useCompressionStore from '@/stores/soils/compression/compression.store';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
 
-const Compression_Step2 = () => {
+const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { hygroscopicData: data, setData } = useCompressionStore();
   const inputs = [
     {
@@ -81,6 +82,21 @@ const Compression_Step2 = () => {
     },
   ];
 
+  if (nextDisabled) {
+    const hygroscopic_inputs_completed =
+      data.capsulesNumberHyg !== null &&
+      data.wetGrossWeightsCapsuleHyg !== null &&
+      data.dryGrossWeightsHyg !== null &&
+      data.capsulesWeightsHyg !== null &&
+      data.moldNumber !== null &&
+      data.moldVolume !== null &&
+      data.moldWeight !== null &&
+      data.socketWeight !== null &&
+      data.spaceDiscThickness !== null &&
+      data.strokesPerLayer !== null &&
+      data.layers !== null;
+    if (hygroscopic_inputs_completed) setNextDisabled(false);
+  }
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Box

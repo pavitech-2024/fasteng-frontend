@@ -55,6 +55,7 @@ const Compression_GeneralData = ({
   }) &&
     nextDisabled &&
     setNextDisabled(false);
+    
     return (
       <>
         {loading ? (
