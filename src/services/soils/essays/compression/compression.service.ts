@@ -35,13 +35,13 @@ class COMPRESSION_SERVICE implements IEssayService {
         case 0:
           await this.submitCompressionGeneralData(data as CompressionData['compressionGeneralData']);
           break;
-        //  case 1:
-        //     await this.submitHygroscopicData(data as CompressionData['hygroscopicData']);
-        //     break;
-        //   case 2:
-        //     await this.submitHumidityDeterminationData(data as CompressionData['humidityDeterminationData']);
-        //     await this.calculateResults(data as CompressionData);
-        //     break;
+         case 1:
+            await this.submitCompressionHygroscopicData(data as CompressionData['hygroscopicData']);
+             break;
+           case 2:
+             await this.submitCompressionHumidityDeterminationData(data as CompressionData['humidityDeterminationData']);
+              //await this.calculateResults(data as CompressionData);
+             break;
         //   case 3:
         //     await this.saveEssay(data as CompressionData);
         //     break;
@@ -55,7 +55,6 @@ class COMPRESSION_SERVICE implements IEssayService {
 
   getSamplesByUserId = async (userId: string): Promise<Sample[]> => {
     try {
-      // get all samples from user from backend
       const response = await Api.get(`soils/samples/all/${userId}`);
       return response.data;
     } catch (error) {
@@ -97,7 +96,7 @@ class COMPRESSION_SERVICE implements IEssayService {
       } = hygroscopicData;
 
       if (!capsulesNumberHyg) throw t('errors.empty-capsules-number-hyg');
-      if (!wetGrossWeightsCapsuleHyg) throw t('errors.empty-we-gross-weights-capsule-hyg');
+      if (!wetGrossWeightsCapsuleHyg) throw t('errors.empty-wet-gross-weights-capsule-hyg');
       if (!dryGrossWeightsHyg) throw t('errors.empty-dry-gross-weights-hyg');
       if (!capsulesWeightsHyg) throw t('errors.empty-capsules-weights-hyg');
       if (!moldNumber) throw t('errors.empty-mold-number');
@@ -121,6 +120,38 @@ class COMPRESSION_SERVICE implements IEssayService {
         strokesPerLayer,
         layers
       } );
+
+      const { success, error } = response.data;
+
+      if (success === false) throw error.name;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  submitCompressionHumidityDeterminationData = async (humidityDeterminationData: CompressionData['humidityDeterminationData']): Promise<void> => {
+    try {
+      const {
+        capsulesNumberHum,
+        wetGrossWeightsCapsuleHum,
+        wetWeightsCapsules,
+        dryWeightsCapsules,
+        capsulesWeightsHum
+      } = humidityDeterminationData;
+
+      if (!capsulesNumberHum) throw t('errors.empty-capsules-number-hum');
+      if (!wetGrossWeightsCapsuleHum) throw t('errors.empty-wet-gross-weights-capsule-hum');
+      if (!wetWeightsCapsules) throw t('errors.empty-wet-weights-capsules');
+      if (!dryWeightsCapsules) throw t('errors.empty-dry-weights-capsules');
+      if (!capsulesWeightsHum) throw t('errors.empty-capsules-weights-hum');
+
+      const response = await Api.post(`${this.info.backend_path}/verify-init`,  {
+        capsulesNumberHum,
+        wetGrossWeightsCapsuleHum,
+        wetWeightsCapsules,
+        dryWeightsCapsules,
+        capsulesWeightsHum
+      }  );
 
       const { success, error } = response.data;
 
