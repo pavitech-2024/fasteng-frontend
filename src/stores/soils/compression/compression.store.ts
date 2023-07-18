@@ -8,7 +8,7 @@ interface compression_generalData {
   sample: Sample; // materialID
   operator?: string;
   description?: string; //  observation
-  cauculist: string;
+  cauculist?: string;
 }
 
 interface hygroscopicData {
