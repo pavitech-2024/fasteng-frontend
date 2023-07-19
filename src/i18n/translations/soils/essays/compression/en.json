@@ -11,6 +11,10 @@
   "loading.samples.pending": "Loading samples...",
   "loading.samples.success": "Samples loaded!",
   "loading.samples.error": "Error on loading samples!",
+  "compression.general_data": "General data",
+  "compression.hygroscopic_humidity": "Hygroscopic humidity",
+  "compression.humidity_determination": "Humidity determination",
+  "compression.results": "Results",
 
   "compression.step-2-description": "Please, enter the information below.",
   "compression.error.minValue": "It's not possible to delete. Minimum achieved.",

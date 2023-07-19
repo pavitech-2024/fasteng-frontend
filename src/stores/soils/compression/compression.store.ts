@@ -33,6 +33,7 @@ interface hygroscopicData {
 
 interface humidityDeterminationData {
   humidityTable: {
+    id: number;
     capsulesNumberHum: number; // número de capsulas
     wetGrossWeightsCapsuleHum: number; // peso bruto úmido (g)
     wetWeightsCapsules: number; // peso úmido da amostra + cápsula (g)
@@ -65,12 +66,12 @@ const useCompressionStore = create<CompressionData & CompressionActions>()(
     persist(
       (set) => ({
         compressionGeneralData: {
-          userId: '',
-          name: '',
+          userId: null,
+          name: null,
           sample: null,
-          operator: '',
-          description: '',
-          cauculist: '',
+          operator: null,
+          description: null,
+          cauculist: null,
         },
         hygroscopicData: {
           hygroscopicTable: [
@@ -82,17 +83,18 @@ const useCompressionStore = create<CompressionData & CompressionActions>()(
               capsulesWeightsHyg: null,
             },
           ],
-          moldNumber: 0,
-          moldVolume: 0,
-          moldWeight: 0,
-          socketWeight: 0,
-          spaceDiscThickness: 0,
-          strokesPerLayer: 0,
-          layers: 0,
+          moldNumber: null,
+          moldVolume: null,
+          moldWeight: null,
+          socketWeight: null,
+          spaceDiscThickness: null,
+          strokesPerLayer: null,
+          layers: null,
         },
         humidityDeterminationData: {
           humidityTable: [
             {
+              id: null,
               capsulesNumberHum: null,
               wetGrossWeightsCapsuleHum: null,
               wetWeightsCapsules: null,
@@ -102,7 +104,7 @@ const useCompressionStore = create<CompressionData & CompressionActions>()(
           ],
         },
         results: {
-          result: '',
+          result: null,
         },
 
         setData: ({ step, key, value }) =>

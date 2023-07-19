@@ -1,80 +1,185 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import useCompressionStore from '@/stores/soils/compression/compression.store';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { t } from 'i18next';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { toast } from 'react-toastify';
 
 const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { humidityDeterminationData: data, setData } = useCompressionStore();
-  const inputs = [
+  const rows = data.humidityTable;
+
+  const handleErase = () => {
+    try {
+      if (rows.length > 1) { 
+        const newRows = [...rows];
+        newRows.pop();
+        setData({ step: 2, value: newRows });
+      } else throw t('compression.error.minValue'); 
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
+  const handleAdd = () => {
+    const newRows = [...rows];
+    newRows.push({
+      id: rows.length,
+      capsulesNumberHum: null,
+      wetGrossWeightsCapsuleHum: null,
+      wetWeightsCapsules: null,
+      dryWeightsCapsules: null,
+      capsulesWeightsHum: null,
+    });
+    setData({ step: 2, value: newRows });
+    setNextDisabled(true);
+  };
+
+  const ExpansionToolbar = () => {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
+        <Button sx={{ color: 'secondaryTons.red' }} onClick={handleErase}>
+          {t('erase')}
+        </Button>
+        <Button sx={{ color: 'secondaryTons.green' }} onClick={handleAdd}>
+          {t('add')}
+        </Button>
+      </Box>
+    );
+  };
+
+  const columns: GridColDef[] = [
     {
-      label: t('compression.capsules_number'),
-      value: data.capsulesNumberHum,
-      key: 'capsulesNumberHum',
-      required: true,
+      field: 'capsulesNumberHum',
+      headerName: t('compression.capsules_number'),
+      renderCell: ({ row }) => (
+        <InputEndAdornment
+          fullWidth
+          label={t('compression.capsules_number')}
+          type="number"
+          inputProps={{ min: 0 }}
+          value={row.capsulesNumberHum}
+          onChange={(e) => {
+            const newRows = [...rows];
+            const index = rows.findIndex((r) => r.id === row.id);
+            newRows[index].capsulesNumberHum = Number(e.target.value);
+            setData({ step: 2, value: newRows });
+          }}
+          adornment={''}
+        />
+      ),
     },
     {
-      label: t('compression.wet_gross_weights_capsule'),
-      value: data.wetGrossWeightsCapsuleHum,
-      key: 'wetGrossWeightsCapsuleHum',
-      required: true,
-      adornment: 'g',
+      field: 'wetGrossWeightsCapsuleHum',
+      headerName: t('compression.wet_gross_weights_capsule'),
+      renderCell: ({ row }) => (
+        <InputEndAdornment
+          fullWidth
+          label={t('compression.wet_gross_weights_capsule')}
+          type="number"
+          inputProps={{ min: 0 }}
+          value={row.wetGrossWeightsCapsuleHum}
+          onChange={(e) => {
+            const newRows = [...rows];
+            const index = rows.findIndex((r) => r.id === row.id);
+            newRows[index].wetGrossWeightsCapsuleHum = Number(e.target.value);
+            setData({ step: 2, value: newRows });
+          }}
+          adornment={''}
+        />
+      ),
     },
     {
-      label: t('compression.wet_weights_capsules'),
-      value: data.wetWeightsCapsules,
-      key: 'wetWeightsCapsules',
-      required: true,
-      adornment: 'g',
+      field: 'wetWeightsCapsules',
+      headerName: t('compression.wet_weights_capsules'),
+      renderCell: ({ row }) => (
+        <InputEndAdornment
+          fullWidth
+          label={t('compression.wet_weights_capsules')}
+          type="number"
+          inputProps={{ min: 0 }}
+          value={row.wetWeightsCapsules}
+          onChange={(e) => {
+            const newRows = [...rows];
+            const index = rows.findIndex((r) => r.id === row.id);
+            newRows[index].wetWeightsCapsules = Number(e.target.value);
+            setData({ step: 2, value: newRows });
+          }}
+          adornment={''}
+        />
+      ),
     },
     {
-      label: t('compression.dry_weights_capsules'),
-      value: data.dryWeightsCapsules,
-      key: 'dryWeightsCapsules',
-      required: true,
-      adornment: 'g',
+      field: 'dryWeightsCapsules',
+      headerName: t('compression.dry_weights_capsules'),
+      renderCell: ({ row }) => (
+        <InputEndAdornment
+          fullWidth
+          label={t('compression.dry_weights_capsules')}
+          type="number"
+          inputProps={{ min: 0 }}
+          value={row.dryWeightsCapsules}
+          onChange={(e) => {
+            const newRows = [...rows];
+            const index = rows.findIndex((r) => r.id === row.id);
+            newRows[index].dryWeightsCapsules = Number(e.target.value);
+            setData({ step: 2, value: newRows });
+          }}
+          adornment={''}
+        />
+      ),
     },
     {
-      label: t('compression.capsules_weights'),
-      value: data.capsulesWeightsHum,
-      key: 'capsulesWeightsHum',
-      required: true,
+      field: 'capsulesWeightsHum',
+      headerName: t('compression.capsules_weights'),
+      renderCell: ({ row }) => (
+        <InputEndAdornment
+          fullWidth
+          label={t('compression.capsules_weights')}
+          type="number"
+          inputProps={{ min: 0 }}
+          value={row.capsulesWeightsHum}
+          onChange={(e) => {
+            const newRows = [...rows];
+            const index = rows.findIndex((r) => r.id === row.id);
+            newRows[index].capsulesWeightsHum = Number(e.target.value);
+            setData({ step: 2, value: newRows });
+          }}
+          adornment={''}
+        />
+      ),
     },
   ];
 
   if (nextDisabled) {
-    const humidity_determination_inputs_completed =
-      data.capsulesNumberHum !== null &&
-      data.wetGrossWeightsCapsuleHum !== null &&
-      data.wetWeightsCapsules !== null &&
-      data.dryWeightsCapsules !== null &&
-      data.capsulesWeightsHum !== null;
-    if (humidity_determination_inputs_completed) setNextDisabled(false);
+    // verifica se todos os campos da tabela estão preenchidos
+    rows.every((row) => {
+      const { capsulesNumberHum, wetGrossWeightsCapsuleHum, wetWeightsCapsules, dryWeightsCapsules, capsulesWeightsHum } = row;
+      return capsulesNumberHum && wetGrossWeightsCapsuleHum && wetWeightsCapsules && dryWeightsCapsules && capsulesWeightsHum >= 0;
+    }) &&
+      // verificar se precisa de mais validações antes de deixar ir para o próximo step
+      setNextDisabled(false);
   }
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Box
-        sx={{
-          display: 'flex',
-          gap: '15px',
-          justifyContent: { mobile: 'center', notebook: 'flex-start' },
-          flexWrap: 'wrap',
-        }}
-      >
-        {inputs.map((input) => (
-          <Box key={input.key}>
-            <InputEndAdornment
-              label={input.label}
-              value={input.value}
-              required={input.required}
-              onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
-              adornment={input.adornment}
-              type="number"
-              inputProps={{ min: 0 }}
-            />
-          </Box>
-        ))}
-      </Box>
+     <DataGrid
+        sx={{ mt: '1rem', borderRadius: '10px' }}
+        density="compact"
+        showCellVerticalBorder
+        showColumnVerticalBorder
+        slots={{ footer: ExpansionToolbar }}
+        rows={rows.map((row, index) => ({ ...row, id: index }))}
+        columns={columns.map((column) => ({
+          ...column,
+          sortable: false,
+          disableColumnMenu: true,
+          align: 'center',
+          headerAlign: 'center',
+          minWidth: 200,
+          flex: 1,
+        }))}
+      />
     </Box>
   );
 };
