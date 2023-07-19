@@ -23,8 +23,8 @@ const Compression = () => {
   const childrens = [
     { step: 0, children: <Compression_GeneralData compression={compression} />, data: store.compressionGeneralData },
      { step: 1, children: <Compression_Step2 />, data: store.hygroscopicData },
-     { step: 2, children: <Compression_Step3 />, data: store.humidityDeterminationData },
-     { step: 3, children: <Compression_Results />, data: store.results },
+     { step: 2, children: <Compression_Step3 />, data: store },
+     { step: 3, children: <Compression_Results />, data: store },
   ];
 
   return <EssayTemplate essayInfo={compression.info} nextCallback={compression.handleNext} childrens={childrens} />;

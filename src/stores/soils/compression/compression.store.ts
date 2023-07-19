@@ -50,7 +50,7 @@ export type CompressionActions = {
 
 type setDataType = { step: number; key?: string; value: unknown };
 
-const stepVariant = { 0: 'generalData', 1: 'hygroscopicData', 2: 'humidityDeterminationData', 3: 'results' };
+const stepVariant = { 0: 'compressionGeneralData', 1: 'hygroscopicData', 2: 'humidityDeterminationData', 3: 'results' };
 
 const useCompressionStore = create<CompressionData & CompressionActions>()(
   devtools(

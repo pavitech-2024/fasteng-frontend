@@ -98,10 +98,11 @@ const Compression_GeneralData = ({
   
                   let sample;
   
+                  // se existir uma sample no store, seta ela como default
                   if (input.value) {
                     sample = samples.find((sample) => sample._id == input.value['_id']);
                   }
-  
+   
                   if (sample) {
                     defaultValue.label = sample.name + ' | ' + t(`${'samples.' + sample.type}`);
                     defaultValue.value = sample;

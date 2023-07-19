@@ -5,6 +5,7 @@ import { Sample } from '@/interfaces/soils';
 import { t } from 'i18next';
 import Api from '@/api';
 import { CompressionActions, CompressionData } from '@/stores/soils/compression/compression.store';
+import { Step } from '@mui/material';
 
 class COMPRESSION_SERVICE implements IEssayService {
   info = {
@@ -35,13 +36,13 @@ class COMPRESSION_SERVICE implements IEssayService {
         case 0:
           await this.submitCompressionGeneralData(data as CompressionData['compressionGeneralData']);
           break;
-         case 1:
-            await this.submitCompressionHygroscopicData(data as CompressionData['hygroscopicData']);
-             break;
-           case 2:
-             await this.submitCompressionHumidityDeterminationData(data as CompressionData['humidityDeterminationData']);
-              //await this.calculateResults(data as CompressionData);
-             break;
+        case 1:
+          await this.submitCompressionHygroscopicData(data as CompressionData['hygroscopicData']);
+          break;
+        case 2:
+          await this.submitCompressionHumidityDeterminationData(data as CompressionData['humidityDeterminationData']);
+          //await this.calculateResults(data as CompressionData);
+          break;
         //   case 3:
         //     await this.saveEssay(data as CompressionData);
         //     break;
@@ -81,45 +82,15 @@ class COMPRESSION_SERVICE implements IEssayService {
 
   submitCompressionHygroscopicData = async (hygroscopicData: CompressionData['hygroscopicData']): Promise<void> => {
     try {
-      const {
-        capsulesNumberHyg,
-        wetGrossWeightsCapsuleHyg,
-        dryGrossWeightsHyg,
-        capsulesWeightsHyg,
-        moldNumber,
-        moldVolume,
-        moldWeight,
-        socketWeight,
-        spaceDiscThickness,
-        strokesPerLayer,
-        layers
-      } = hygroscopicData;
+      Object.entries(hygroscopicData).forEach((array) => {
+        const [key, value] = array;
+        if (!value) console.log(`errors.empty-${key}`);
+        // ver se precisa de mais alguma validação fora ver se esta vazio
+      });
 
-      if (!capsulesNumberHyg) throw t('errors.empty-capsules-number-hyg');
-      if (!wetGrossWeightsCapsuleHyg) throw t('errors.empty-wet-gross-weights-capsule-hyg');
-      if (!dryGrossWeightsHyg) throw t('errors.empty-dry-gross-weights-hyg');
-      if (!capsulesWeightsHyg) throw t('errors.empty-capsules-weights-hyg');
-      if (!moldNumber) throw t('errors.empty-mold-number');
-      if (!moldVolume) throw t('errors.empty-mold-volume');
-      if (!moldWeight) throw t('errors.empty-mold-weight');
-      if (!socketWeight) throw t('errors.empty-socket-weight');
-      if (!spaceDiscThickness) throw t('errors.empty-space-disc-thickness');
-      if (!strokesPerLayer) throw t('errors.empty-strokes-per-layer');
-      if (!layers) throw t('errors.empty-layers');
-
-      const response = await Api.post(`${this.info.backend_path}/verify-init`,  {
-        capsulesNumberHyg,
-        wetGrossWeightsCapsuleHyg,
-        dryGrossWeightsHyg,
-        capsulesWeightsHyg,
-        moldNumber,
-        moldVolume,
-        moldWeight,
-        socketWeight,
-        spaceDiscThickness,
-        strokesPerLayer,
-        layers
-      } );
+      const response = await Api.post(`${this.info.backend_path}/verify-init`, {
+        hygroscopicData,
+      });
 
       const { success, error } = response.data;
 
@@ -129,29 +100,19 @@ class COMPRESSION_SERVICE implements IEssayService {
     }
   };
 
-  submitCompressionHumidityDeterminationData = async (humidityDeterminationData: CompressionData['humidityDeterminationData']): Promise<void> => {
+  submitCompressionHumidityDeterminationData = async (
+    humidityDeterminationData: CompressionData['humidityDeterminationData']
+  ): Promise<void> => {
     try {
-      const {
-        capsulesNumberHum,
-        wetGrossWeightsCapsuleHum,
-        wetWeightsCapsules,
-        dryWeightsCapsules,
-        capsulesWeightsHum
-      } = humidityDeterminationData;
+      Object.entries(humidityDeterminationData).forEach((array) => {
+        const [key, value] = array;
+        if (!value) console.log(`errors.empty-${key}`);
+        // ver se precisa de mais alguma validação fora ver se esta vazio
+      });
 
-      if (!capsulesNumberHum) throw t('errors.empty-capsules-number-hum');
-      if (!wetGrossWeightsCapsuleHum) throw t('errors.empty-wet-gross-weights-capsule-hum');
-      if (!wetWeightsCapsules) throw t('errors.empty-wet-weights-capsules');
-      if (!dryWeightsCapsules) throw t('errors.empty-dry-weights-capsules');
-      if (!capsulesWeightsHum) throw t('errors.empty-capsules-weights-hum');
-
-      const response = await Api.post(`${this.info.backend_path}/verify-init`,  {
-        capsulesNumberHum,
-        wetGrossWeightsCapsuleHum,
-        wetWeightsCapsules,
-        dryWeightsCapsules,
-        capsulesWeightsHum
-      }  );
+      const response = await Api.post(`${this.info.backend_path}/verify-init`, {
+        humidityDeterminationData,
+      });
 
       const { success, error } = response.data;
 
