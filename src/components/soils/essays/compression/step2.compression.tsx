@@ -7,75 +7,77 @@ import { t } from 'i18next';
 const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { hygroscopicData: data, setData } = useCompressionStore();
   const inputs = [
+    //tabela
+    // {
+    //   label: t('compression.capsules_number_hyg'),
+    //   value: data.capsulesNumberHyg,
+    //   key: 'capsulesNumberHyg',
+    //   required: true,
+    // },
+    // {
+    //   label: t('compression.wet_gross_weights_capsule_hyg'),
+    //   value: data.wetGrossWeightsCapsuleHyg,
+    //   key: 'wetGrossWeightsCapsuleHyg',
+    //   required: true,
+    //   adornment: 'g',
+    // },
+    // {
+    //   label: t('compression.dry_gross_weight_hyg'),
+    //   value: data.dryGrossWeightsHyg,
+    //   key: 'dryGrossWeightsHyg',
+    //   required: true,
+    //   adornment: 'g',
+    // },
+    // {
+    //   label: t('compression.capsules_weights_hyg'),
+    //   value: data.capsulesWeightsHyg,
+    //   key: 'capsulesWeightsHyg',
+    //   required: true,
+    //   adornment: 'g',
+    // },
+    //
     {
-      label: t('Número de cápsulas'),
-      value: data.capsulesNumberHyg,
-      key: 'capsule_number_hyg',
-      required: true,
-    },
-    {
-      label: t('Peso bruto úmido'),
-      value: data.wetGrossWeightsCapsuleHyg,
-      key: 'wet-gross-weights-capsule-hyg',
-      required: true,
-      adornment: 'g',
-    },
-    {
-      label: t('Peso bruto seco'),
-      value: data.dryGrossWeightsHyg,
-      key: 'dry-gross-weights-hyg',
-      required: true,
-      adornment: 'g',
-    },
-    {
-      label: t('Peso da cápsula'),
-      value: data.capsulesWeightsHyg,
-      key: 'capsules-weights',
-      required: true,
-      adornment: 'g',
-    },
-    {
-      label: t('Número de molde'),
+      label: t('compression.mold_number'),
       value: data.moldNumber,
-      key: 'mold-number',
+      key: 'moldNumber',
       required: true,
     },
     {
-      label: t('Volume do molde'),
+      label: t('compression.mold_volume'),
       value: data.moldVolume,
-      key: 'mold-volume',
+      key: 'moldVolume',
       required: true,
       adornment: 'cm³',
     },
     {
-      label: t('Peso do molde'),
+      label: t('compression.mold_weight'),
       value: data.moldWeight,
-      key: 'mold-weight',
+      key: 'moldWeight',
       required: true,
       adornment: 'g',
     },
     {
-      label: t('Peso do soquete'),
+      label: t('compression.socket_weight'),
       value: data.socketWeight,
-      key: 'socket-weight',
+      key: 'socketWeight',
       required: true,
       adornment: 'g',
     },
     {
-      label: t('Espessura do disco espaçador'),
+      label: t('compression.space_disc_thickness'),
       value: data.spaceDiscThickness,
-      key: 'space-disc-thickness',
+      key: 'spaceDiscThickness',
       required: true,
       adornment: 'cm',
     },
     {
-      label: t('Golpes/camada'),
+      label: t('compression.strokes_per_layer'),
       value: data.strokesPerLayer,
-      key: 'strokes-per-layer',
+      key: 'strokesPerLayer',
       required: true,
     },
     {
-      label: t('Número de camadas'),
+      label: t('compression.layers'),
       value: data.layers,
       key: 'layers',
       required: true,
@@ -84,10 +86,10 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
 
   if (nextDisabled) {
     const hygroscopic_inputs_completed =
-      data.capsulesNumberHyg !== null &&
-      data.wetGrossWeightsCapsuleHyg !== null &&
-      data.dryGrossWeightsHyg !== null &&
-      data.capsulesWeightsHyg !== null &&
+      // data.capsulesNumberHyg !== null &&
+      // data.wetGrossWeightsCapsuleHyg !== null &&
+      // data.dryGrossWeightsHyg !== null &&
+      // data.capsulesWeightsHyg !== null &&
       data.moldNumber !== null &&
       data.moldVolume !== null &&
       data.moldWeight !== null &&

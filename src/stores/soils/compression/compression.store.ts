@@ -12,10 +12,13 @@ interface compression_generalData {
 }
 
 interface hygroscopicData {
-  capsulesNumberHyg: number[]; // número de cápsulas
-  wetGrossWeightsCapsuleHyg: number[]; // peso bruto úmido (g)
-  dryGrossWeightsHyg: number[]; // peso bruto seco (g)
-  capsulesWeightsHyg: number[]; // peso da cápsula (g)
+  // tabela
+  hygroscopicTable: [
+    { capsulesNumberHyg: number[] }, // número de cápsulas
+    { wetGrossWeightsCapsuleHyg: number[] }, // peso bruto úmido (g)
+    { dryGrossWeightsHyg: number[] }, // peso bruto seco (g)
+    { capsulesWeightsHyg: number[] } // peso da cápsula (g)
+  ];
   moldNumber: number; // número de molde
   moldVolume: number; // volume do molde (cm³)
   moldWeight: number; // peso do molde (g)
@@ -26,11 +29,13 @@ interface hygroscopicData {
 }
 
 interface humidityDeterminationData {
-  capsulesNumberHum: number[]; // número de capsulas
-  wetGrossWeightsCapsuleHum: number[]; // peso bruto úmido (g)
-  wetWeightsCapsules: number[]; // peso úmido da amostra + cápsula (g)
-  dryWeightsCapsules: number[]; // peso seco da amostra + capsula (g)
-  capsulesWeightsHum: number[]; // peso da cápsula (g)
+  humidityTable: [
+    { capsulesNumberHum: number[] }, // número de capsulas
+    { wetGrossWeightsCapsuleHum: number[] }, // peso bruto úmido (g)
+    { wetWeightsCapsules: number[] }, // peso úmido da amostra + cápsula (g)
+    { dryWeightsCapsules: number[] }, // peso seco da amostra + capsula (g)
+    { capsulesWeightsHum: number[] } // peso da cápsula (g)
+  ];
 }
 
 interface compression_results {
@@ -65,24 +70,28 @@ const useCompressionStore = create<CompressionData & CompressionActions>()(
           cauculist: '',
         },
         hygroscopicData: {
-          capsulesNumberHyg: [0, 0], 
-          wetGrossWeightsCapsuleHyg: [0, 0], 
-          dryGrossWeightsHyg: [0, 0], 
-          capsulesWeightsHyg: [0, 0], 
-          moldNumber: 0, 
+          hygroscopicTable: [
+            { capsulesNumberHyg: [0, 0] },
+            { wetGrossWeightsCapsuleHyg: [0, 0] },
+            { dryGrossWeightsHyg: [0, 0] },
+            { capsulesWeightsHyg: [0, 0] },
+          ],
+          moldNumber: 0,
           moldVolume: 0,
-          moldWeight: 0, 
+          moldWeight: 0,
           socketWeight: 0,
           spaceDiscThickness: 0,
-          strokesPerLayer: 0, 
-          layers: 0, 
+          strokesPerLayer: 0,
+          layers: 0,
         },
         humidityDeterminationData: {
-          capsulesNumberHum: [0, 0], 
-          wetGrossWeightsCapsuleHum: [0, 0], 
-          wetWeightsCapsules: [0, 0], 
-          dryWeightsCapsules: [0, 0], 
-          capsulesWeightsHum: [0, 0], 
+          humidityTable: [
+            { capsulesNumberHum: [0, 0] },
+            { wetGrossWeightsCapsuleHum: [0, 0] },
+            { wetWeightsCapsules: [0, 0] },
+            { dryWeightsCapsules: [0, 0] },
+            { capsulesWeightsHum: [0, 0] },
+          ],
         },
         results: {
           result: '',
