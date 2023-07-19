@@ -8,13 +8,13 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
   const { humidityDeterminationData: data, setData } = useCompressionStore();
   const inputs = [
     {
-      label: t('compression.capsule_number_hum'),
+      label: t('compression.capsules_number'),
       value: data.capsulesNumberHum,
       key: 'capsulesNumberHum',
       required: true,
     },
     {
-      label: t('compression.wet_gross_weights_capsule_hum'),
+      label: t('compression.wet_gross_weights_capsule'),
       value: data.wetGrossWeightsCapsuleHum,
       key: 'wetGrossWeightsCapsuleHum',
       required: true,
@@ -35,7 +35,7 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
       adornment: 'g',
     },
     {
-      label: t('compression.capsules_weights_hum'),
+      label: t('compression.capsules_weights'),
       value: data.capsulesWeightsHum,
       key: 'capsulesWeightsHum',
       required: true,

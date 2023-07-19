@@ -1,0 +1,32 @@
+{
+  "compression.experimentName": "Experiment name",
+  "compression.operator": "Operator",
+  "compression.samples": "Samples",
+  "compression.cauculist": "Cauculist",
+  "compression.observation": "Observation",
+  "sample": "Sample",
+  "material": "Material",
+  "graph": "Graph",
+  "authorName": "Author name",
+  "loading.samples.pending": "Loading samples...",
+  "loading.samples.success": "Samples loaded!",
+  "loading.samples.error": "Error on loading samples!",
+
+  "compression.step-2-description": "Please, enter the information below.",
+  "compression.error.minValue": "It's not possible to delete. Minimum achieved.",
+  "compression.mold_number": "Mold number",
+  "compression.mold_volume": "Mold volume",
+  "compression.mold_weight": "Mold weight",
+  "compression.socket_weight": "Socket weight",
+  "compression.space_disc_thickness": "Space disk thickness",
+  "compression.strokes_per_layer": "Strokes per layer",
+  "compression.layers": "Layers",
+  "compression.capsules_number": "Capsules quantity",
+  "compression.wet_gross_weights_capsule": "Wet gross weights",
+  "compression.dry_gross_weights": "Dry gross weight",
+  "compression.capsules_weights": "Capsules weights",
+
+  "compression.step-3-description": "Please, enter the information below.",
+  "compression.wet_weights_capsules": "Wet weights",
+  "compression.dry_weights_capsules": "Dry weights"
+}

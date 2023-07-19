@@ -5,6 +5,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
 import { t } from 'i18next';
 import { toast } from 'react-toastify';
+import { useEffect } from 'react';
 
 const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { hygroscopicData: data, setData } = useCompressionStore();
@@ -13,11 +14,11 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
   // Remover mais uma linha de determinado valor
   const handleErase = () => {
     try {
-      if (rows.length > 2) {
+      if (rows.length > 1) { // O mínimo é um valor de cada
         const newRows = [...rows];
         newRows.pop();
         setData({ step: 2, value: newRows });
-      } else throw t('compression.error.?'); // qual erro?
+      } else throw t('compression.error.minValue'); 
     } catch (error) {
       toast.error(error);
     }
@@ -102,11 +103,11 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
   const columns: GridColDef[] = [
     {
       field: 'capsulesNumberHyg',
-      headerName: t('compression.capsules_number_hyg'),
+      headerName: t('compression.capsules_number'),
       renderCell: ({ row }) => (
         <InputEndAdornment
           fullWidth
-          label={t('compression.capsules_number_hyg')}
+          label={t('compression.capsules_number')}
           type="number"
           inputProps={{ min: 0 }}
           value={row.capsulesNumberHyg}
@@ -122,11 +123,11 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
     },
     {
       field: 'wetGrossWeightsCapsuleHyg',
-      headerName: t('compression.wet_gross_weights_capsule_hyg'),
+      headerName: t('compression.wet_gross_weights_capsule'),
       renderCell: ({ row }) => (
         <InputEndAdornment
           fullWidth
-          label={t('compression.wet_gross_weights_capsule_hyg')}
+          label={t('compression.wet_gross_weights_capsule')}
           type="number"
           inputProps={{ min: 0 }}
           value={row.wetGrossWeightsCapsuleHyg}
@@ -142,11 +143,11 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
     },
     {
       field: 'dryGrossWeightsHyg',
-      headerName: t('compression.dry_gross_weights_hyg'),
+      headerName: t('compression.dry_gross_weights'),
       renderCell: ({ row }) => (
         <InputEndAdornment
           fullWidth
-          label={t('compression.dry_gross_weights_hyg')}
+          label={t('compression.dry_gross_weights')}
           type="number"
           inputProps={{ min: 0 }}
           value={row.dryGrossWeightsHyg}
@@ -162,11 +163,11 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
     },
     {
       field: 'capsulesWeightsHyg',
-      headerName: t('compression.capsules_weights_hyg'),
+      headerName: t('compression.capsules_weights'),
       renderCell: ({ row }) => (
         <InputEndAdornment
           fullWidth
-          label={t('compression.capsules_weights_hyg')}
+          label={t('compression.capsules_weights')}
           type="number"
           inputProps={{ min: 0 }}
           value={row.capsulesWeightsHyg}
@@ -183,34 +184,31 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
   ];
 
   if (nextDisabled) {
-    const hygroscopic_inputs_completed =
-      // verifica se todos os campos da tabela estão preenchidos
-      // rows.every((row) => {
-      //   const { capsulesNumberHyg, wetGrossWeightsCapsuleHyg, dryGrossWeightsHyg, capsulesWeightsHyg } = row;
-      //   return capsulesNumberHyg && wetGrossWeightsCapsuleHyg && dryGrossWeightsHyg && capsulesWeightsHyg >= 0;
-      // }) &&
-      data.moldNumber !== null &&
-      data.moldVolume !== null &&
-      data.moldWeight !== null &&
-      data.socketWeight !== null &&
-      data.spaceDiscThickness !== null &&
-      data.strokesPerLayer !== null &&
-      data.layers !== null;
-    if (hygroscopic_inputs_completed) setNextDisabled(false);
+    // verifica se todos os campos da tabela estão preenchidos
+    rows.every((row) => {
+      const { capsulesNumberHyg, wetGrossWeightsCapsuleHyg, dryGrossWeightsHyg, capsulesWeightsHyg } = row;
+      return capsulesNumberHyg && wetGrossWeightsCapsuleHyg && dryGrossWeightsHyg && capsulesWeightsHyg >= 0;
+    }) &&
+      data !== null &&
+      // verificar se precisa de mais validações antes de deixar ir para o próximo step
+      setNextDisabled(false);
   }
+
+  useEffect(() => console.log(data, rows), [data, rows])
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Box
         sx={{
           display: 'flex',
           gap: '15px',
-          justifyContent: { mobile: 'center', notebook: 'flex-start' },
+          justifyContent: { mobile: 'center', notebook: 'center' },
           flexWrap: 'wrap',
         }}
       >
         {inputs.map((input) => (
           <Box key={input.key}>
             <InputEndAdornment
+              fullWidth
               label={input.label}
               value={input.value}
               required={input.required}

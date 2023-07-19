@@ -37,11 +37,11 @@ const Compression_GeneralData = ({
   }, []);
 
   const inputs = [
-    { label: t('Nome do Experimento'), value: compressionGeneralData.name, key: 'name', required: true },
-    { label: t('Amostras'), value: compressionGeneralData.sample, key: 'sample', required: true },
-    { label: t('Operador'), value: compressionGeneralData.operator, key: 'operator', required: false },
-    { label: t('Calculista'), value: compressionGeneralData.cauculist, key: 'cauculist', required: false },
-    { label: t('Observações'), value: compressionGeneralData.description, key: 'description', required: false },
+    { label: t('compression.experimentName'), value: compressionGeneralData.name, key: 'name', required: true },
+    { label: t('compression.samples'), value: compressionGeneralData.sample, key: 'sample', required: true },
+    { label: t('compression.operator'), value: compressionGeneralData.operator, key: 'operator', required: false },
+    { label: t('compression.cauculist'), value: compressionGeneralData.cauculist, key: 'cauculist', required: false },
+    { label: t('compression.observation'), value: compressionGeneralData.description, key: 'description', required: false },
   ];
 
   inputs.every(({ required, value }) => {
