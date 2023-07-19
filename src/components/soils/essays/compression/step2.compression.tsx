@@ -1,41 +1,56 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import useCompressionStore from '@/stores/soils/compression/compression.store';
-import { Box } from '@mui/material';
+import useCompressionStore, { hygTable } from '@/stores/soils/compression/compression.store';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Box, Button } from '@mui/material';
 import { t } from 'i18next';
+import { toast } from 'react-toastify';
 
 const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { hygroscopicData: data, setData } = useCompressionStore();
+  const rows = data.hygroscopicTable as hygTable[];
+
+  // Remover mais uma linha de determinado valor
+  const handleErase = () => {
+    try {
+      if (rows.length > 2) {
+        const newRows = [...rows];
+        newRows.pop();
+        setData({ step: 2, value: newRows });
+      } else throw t('compression.error.?'); // qual erro?
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
+  // Adicionar mais uma linha de determinado valor
+  const handleAdd = () => {
+    const newRows = [...rows];
+    newRows.push({
+      id: rows.length,
+      capsulesNumberHyg: null,
+      wetGrossWeightsCapsuleHyg: null,
+      dryGrossWeightsHyg: null,
+      capsulesWeightsHyg: null,
+    });
+    setData({ step: 2, value: newRows });
+    setNextDisabled(true);
+  };
+
+  const ExpansionToolbar = () => {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
+        <Button sx={{ color: 'secondaryTons.red' }} onClick={handleErase}>
+          {t('erase')}
+        </Button>
+        <Button sx={{ color: 'secondaryTons.green' }} onClick={handleAdd}>
+          {t('add')}
+        </Button>
+      </Box>
+    );
+  };
+
   const inputs = [
-    //tabela
-    // {
-    //   label: t('compression.capsules_number_hyg'),
-    //   value: data.capsulesNumberHyg,
-    //   key: 'capsulesNumberHyg',
-    //   required: true,
-    // },
-    // {
-    //   label: t('compression.wet_gross_weights_capsule_hyg'),
-    //   value: data.wetGrossWeightsCapsuleHyg,
-    //   key: 'wetGrossWeightsCapsuleHyg',
-    //   required: true,
-    //   adornment: 'g',
-    // },
-    // {
-    //   label: t('compression.dry_gross_weight_hyg'),
-    //   value: data.dryGrossWeightsHyg,
-    //   key: 'dryGrossWeightsHyg',
-    //   required: true,
-    //   adornment: 'g',
-    // },
-    // {
-    //   label: t('compression.capsules_weights_hyg'),
-    //   value: data.capsulesWeightsHyg,
-    //   key: 'capsulesWeightsHyg',
-    //   required: true,
-    //   adornment: 'g',
-    // },
-    //
     {
       label: t('compression.mold_number'),
       value: data.moldNumber,
@@ -84,12 +99,96 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
     },
   ];
 
+  const columns: GridColDef[] = [
+    {
+      field: 'capsulesNumberHyg',
+      headerName: t('compression.capsules_number_hyg'),
+      renderCell: ({ row }) => (
+        <InputEndAdornment
+          fullWidth
+          label={t('compression.capsules_number_hyg')}
+          type="number"
+          inputProps={{ min: 0 }}
+          value={row.capsulesNumberHyg}
+          onChange={(e) => {
+            const newRows = [...rows];
+            const index = rows.findIndex((r) => r.id === row.id);
+            newRows[index].capsulesNumberHyg = Number(e.target.value);
+            setData({ step: 2, value: newRows });
+          }}
+          adornment={''}
+        />
+      ),
+    },
+    {
+      field: 'wetGrossWeightsCapsuleHyg',
+      headerName: t('compression.wet_gross_weights_capsule_hyg'),
+      renderCell: ({ row }) => (
+        <InputEndAdornment
+          fullWidth
+          label={t('compression.wet_gross_weights_capsule_hyg')}
+          type="number"
+          inputProps={{ min: 0 }}
+          value={row.wetGrossWeightsCapsuleHyg}
+          onChange={(e) => {
+            const newRows = [...rows];
+            const index = rows.findIndex((r) => r.id === row.id);
+            newRows[index].wetGrossWeightsCapsuleHyg = Number(e.target.value);
+            setData({ step: 2, value: newRows });
+          }}
+          adornment={''}
+        />
+      ),
+    },
+    {
+      field: 'dryGrossWeightsHyg',
+      headerName: t('compression.dry_gross_weights_hyg'),
+      renderCell: ({ row }) => (
+        <InputEndAdornment
+          fullWidth
+          label={t('compression.dry_gross_weights_hyg')}
+          type="number"
+          inputProps={{ min: 0 }}
+          value={row.dryGrossWeightsHyg}
+          onChange={(e) => {
+            const newRows = [...rows];
+            const index = rows.findIndex((r) => r.id === row.id);
+            newRows[index].dryGrossWeightsHyg = Number(e.target.value);
+            setData({ step: 2, value: newRows });
+          }}
+          adornment={''}
+        />
+      ),
+    },
+    {
+      field: 'capsulesWeightsHyg',
+      headerName: t('compression.capsules_weights_hyg'),
+      renderCell: ({ row }) => (
+        <InputEndAdornment
+          fullWidth
+          label={t('compression.capsules_weights_hyg')}
+          type="number"
+          inputProps={{ min: 0 }}
+          value={row.capsulesWeightsHyg}
+          onChange={(e) => {
+            const newRows = [...rows];
+            const index = rows.findIndex((r) => r.id === row.id);
+            newRows[index].capsulesWeightsHyg = Number(e.target.value);
+            setData({ step: 2, value: newRows });
+          }}
+          adornment={''}
+        />
+      ),
+    },
+  ];
+
   if (nextDisabled) {
     const hygroscopic_inputs_completed =
-      // data.capsulesNumberHyg !== null &&
-      // data.wetGrossWeightsCapsuleHyg !== null &&
-      // data.dryGrossWeightsHyg !== null &&
-      // data.capsulesWeightsHyg !== null &&
+      // verifica se todos os campos da tabela estão preenchidos
+      // rows.every((row) => {
+      //   const { capsulesNumberHyg, wetGrossWeightsCapsuleHyg, dryGrossWeightsHyg, capsulesWeightsHyg } = row;
+      //   return capsulesNumberHyg && wetGrossWeightsCapsuleHyg && dryGrossWeightsHyg && capsulesWeightsHyg >= 0;
+      // }) &&
       data.moldNumber !== null &&
       data.moldVolume !== null &&
       data.moldWeight !== null &&
@@ -123,6 +222,23 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           </Box>
         ))}
       </Box>
+      <DataGrid
+        sx={{ mt: '1rem', borderRadius: '10px' }}
+        density="compact"
+        showCellVerticalBorder
+        showColumnVerticalBorder
+        slots={{ footer: ExpansionToolbar }}
+        rows={rows.map((row, index) => ({ ...row, id: index }))}
+        columns={columns.map((column) => ({
+          ...column,
+          sortable: false,
+          disableColumnMenu: true,
+          align: 'center',
+          headerAlign: 'center',
+          minWidth: 200,
+          flex: 1,
+        }))}
+      />
     </Box>
   );
 };
