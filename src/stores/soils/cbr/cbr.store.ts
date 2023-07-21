@@ -61,7 +61,7 @@ export type CbrActions = {
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'expansionData', 3: 'results' };
 
-type setDataType = { step: number; key?: string; value: unknown };
+export type setDataType = { step: number; key?: string; value: unknown };
 
 const useCbrStore = create<CbrData & CbrActions>()(
   devtools(
