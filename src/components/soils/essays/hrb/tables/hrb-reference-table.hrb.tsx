@@ -4,7 +4,7 @@ import { t } from 'i18next';
 
 const HRB_StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   [`& .${gridClasses.row}.selected-by-hrb-classification`]: {
-    backgroundColor: theme.palette.secondaryTons.blueDisabled,
+    backgroundColor: theme.palette.secondary,
     fontWeight: 'bold',
     opacity: 0.8,
   },

@@ -1,32 +1,32 @@
 {
-    "sucs.experimentName": "Experiment Name",
-    "sucs.operator": "Operator",
-    "sucs.samples": "Sample",
-    "sucs.calculist": "Calculist",
-    "experimentType": "Experiment Type",
-    "sample": "Sample",
-    "material": "Material",
-    "authorName": "Author Name",
-    "graph": "Graphic",
+  "sucs.experimentName": "Experiment Name",
+  "sucs.operator": "Operator",
+  "sucs.samples": "Sample",
+  "sucs.calculist": "Calculist",
+  "experimentType": "Experiment Type",
+  "sample": "Sample",
+  "material": "Material",
+  "authorName": "Author Name",
+  "graph": "Graphic",
 
-    "sucs.step-2-description": "Please enter the iformation below.",
-    "sucs.initial_sample_mass": "Initial Sample Mass (g)",
-    "sucs.seives": "Seives",
-    "sucs.passant_porcentage": "Passant (%)",
-    "loading.samples.pending": "Loading samples...",
-    "loading.samples.success": "Samples loaded!",
-    "loading.samples.error": "Error on loading samples!",
-    
-    "sucs.step-3-description": "These are the results of your experiment. Remember to save the experiment so you can access it later.",
-    "results": "Results",
-    "sucs.classification": "Classification",
-    
-    "loading.nextStep.pending": "Loading...",
-    "loading.nextStep.success": "Success!",
-    "loading.nextStep.error": "Error!",
-    "loading.save.pending": "Saving...",
-    "loading.save.success": "Saved successfully!",
-    "loading.save.error": "Error on saving!",
-    
-    "AlreadyExists": "Already exists."
+  "sucs.step-2-description": "Please enter the iformation below.",
+  "sucs.initial_sample_mass": "Initial Sample Mass (g)",
+  "sucs.seives": "Seives",
+  "sucs.passant_porcentage": "Passant (%)",
+  "loading.samples.pending": "Loading samples...",
+  "loading.samples.success": "Samples loaded!",
+  "loading.samples.error": "Error on loading samples!",
+
+  "sucs.step-3-description": "These are the results of your experiment. Remember to save the experiment so you can access it later.",
+  "results": "Results",
+  "sucs.classification": "Classification",
+
+  "loading.nextStep.pending": "Loading...",
+  "loading.nextStep.success": "Success!",
+  "loading.nextStep.error": "Error!",
+  "loading.save.pending": "Saving...",
+  "loading.save.success": "Saved successfully!",
+  "loading.save.error": "Error on saving!",
+
+  "AlreadyExists": "Already exists."
 }
