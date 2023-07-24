@@ -88,7 +88,42 @@ class COMPRESSION_SERVICE implements IEssayService {
         // ver se precisa de mais alguma validação fora ver se esta vazio
       });
 
-      const response = await Api.post(`${this.info.backend_path}/verify-init`, {
+      const { hygroscopicTable, moldNumber, moldVolume, moldWeight, socketWeight, spaceDiscThickness, strokesPerLayer, layers } = hygroscopicData;
+
+      if (!hygroscopicTable) throw t('errors.empty-hygroscopic-table');
+      if (!moldNumber) throw t('errors.empty-mold-number');
+      if (!moldVolume) throw t('errors.empty-mold-volume');
+      if (!moldWeight) throw t('errors.empty-mold-weight');
+      if (!socketWeight) throw t('errors.empty-socket-weight');
+      if (!spaceDiscThickness) throw t('errors.empty-space-disc-thickness');
+      if (!strokesPerLayer) throw t('errors.empty-strokes-per-layer');
+      if (!layers) throw t('errors.empty-layers');
+
+      for (let i = 0; i < hygroscopicTable.length; i++) {
+        const { 
+          wetGrossWeightsCapsuleHyg, 
+          dryGrossWeightsHyg, 
+          capsulesWeightsHyg 
+        } = hygroscopicTable[i];
+  
+        if (!capsulesWeightsHyg || capsulesWeightsHyg >= dryGrossWeightsHyg) {
+          if (hygroscopicTable[i].capsulesNumberHyg) {
+            throw t('errors.invalid-capsules-number-hyg') + ` [ ${hygroscopicTable[i].capsulesNumberHyg} ]`;
+          } else {
+            throw t('errors.invalid-capsules-number-hyg') + ` [ ponto: ${i + 1} ]`;
+          }
+        }
+  
+        if (dryGrossWeightsHyg >= wetGrossWeightsCapsuleHyg) {
+          if (hygroscopicTable[i].capsulesNumberHyg) {
+            throw t('errors.invalid-capsules-number-hyg') + ` [ ${hygroscopicTable[i].capsulesNumberHyg} ]`;
+          } else {
+            throw t('errors.invalid-capsules-number-hyg') + ` [ ponto: ${i + 1} ]`;
+          }
+        }
+      }
+
+      const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         hygroscopicData,
       });
 
@@ -110,7 +145,7 @@ class COMPRESSION_SERVICE implements IEssayService {
         // ver se precisa de mais alguma validação fora ver se esta vazio
       });
 
-      const response = await Api.post(`${this.info.backend_path}/verify-init`, {
+      const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         humidityDeterminationData,
       });
 

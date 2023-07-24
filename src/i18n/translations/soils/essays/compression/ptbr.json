@@ -32,5 +32,14 @@
 
   "compression.step-3-description": "Por favor, preencha todas as informações abaixo.",
   "compression.wet_weights_capsules": "Peso úmido da amostra + cápsula",
-  "compression.dry_weights_capsules": "Peso seco da amostra + capsula "
+  "compression.dry_weights_capsules": "Peso seco da amostra + capsula ",
+  "errors.invalid-capsules-number-hyg": "Tara da cápsula é maior ou igual do que o peso bruto seco",
+  "errors.empty-hygroscopic-table": "",
+  "errors.empty-mold-number": "Informe o número do molde.",
+  "errors.empty-mold-volume": "Informe o colume do molde.",
+  "errors.empty-mold-weight": "Informe o peso do molde",
+  "errors.empty-socket-weight": "Informe o peso do soquete",
+  "errors.empty-space-disc-thickness": "Informe a espessura do disco espaçador.",
+  "errors.empty-strokes-per-layer": "Informe o número de golpes por camada.",
+  "errors.empty-layers": "Informe o número de camadas."
 }
