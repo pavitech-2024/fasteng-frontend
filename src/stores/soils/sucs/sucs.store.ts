@@ -1,4 +1,5 @@
 import { Sample } from '@/interfaces/soils';
+import { getSieveName } from '@/utils/sieves';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
@@ -11,11 +12,11 @@ interface GeneralData {
   description?: string;
 }
 
-interface EssayGeneralData {
-  initial_sample_mass: number;
-  ll_porcentage: number;
-  lp_porcentage: number;
-  seives: [{ number: 'Nº 4'; mm: '4.80'; passant: number }, { number: 'Nº 200'; mm: '0.075'; passant: number }];
+interface sucs_step2Data {
+  ll_percentage: number;
+  lp_percentage: number;
+  sieves: { sieve: string; passant: number }[];
+  organic_matter: boolean;
 }
 
 interface sucs_results {
@@ -27,7 +28,7 @@ interface sucs_results {
 
 export type SucsData = {
   generalData: GeneralData;
-  essayGeneralData: EssayGeneralData;
+  step2Data: sucs_step2Data;
   results: sucs_results;
 };
 
@@ -35,7 +36,7 @@ export type SucsActions = {
   setData: ({ step, key, value }: setDataType) => void;
 };
 
-const stepVariant = { 0: 'generalData', 1: 'essayGeneralData', 2: 'results' };
+const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'results' };
 
 type setDataType = { step: number; key?: string; value: unknown };
 
@@ -51,14 +52,14 @@ const useSucsStore = create<SucsData & SucsActions>()(
           calculist: null,
           description: null,
         },
-        essayGeneralData: {
-          initial_sample_mass: 0,
-          ll_porcentage: 0,
-          lp_porcentage: 0,
-          seives: [
-            { number: 'Nº 4', mm: '4.80', passant: null },
-            { number: 'Nº 200', mm: '0.075', passant: null },
+        step2Data: {
+          ll_percentage: null,
+          lp_percentage: null,
+          sieves: [
+            { sieve: getSieveName(4.8), passant: null },
+            { sieve: getSieveName(0.075), passant: null },
           ],
+          organic_matter: null
         },
         results: {
           cc: null,

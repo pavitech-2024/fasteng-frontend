@@ -15,11 +15,11 @@ class SUCS_SERVICE implements IEssayService {
     steps: 3,
     standard: {
       name: 'DNIT 172/2016 - ME',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/CBRDnit1722016me1.7e341c51.pdf',
+      link: 'https://smartdoser.fastengapp.com.br/static/media/SUCSDnit1722016me1.7e341c51.pdf',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
-      { step: 1, description: 'SUCS', path: 'essay-general-data' },
+      { step: 1, description: 'SUCS', path: 'essay-data' },
       { step: 2, description: t('results'), path: 'results' },
     ],
   };
@@ -34,6 +34,16 @@ class SUCS_SERVICE implements IEssayService {
         case 0:
           await this.submitGeneralData(data as SucsData['generalData']);
           break;
+        case 1:
+          const { step2Data } = data as SucsData;
+          await this.submitStep2Data(step2Data);
+          await this.calculateResults(data as SucsData);
+          break;
+        case 2:
+          await this.saveEssay(data as SucsData);
+          break;
+        default:
+          throw t('errors.invalid-step');
       }
     } catch (error) {
       throw error;
@@ -53,7 +63,7 @@ class SUCS_SERVICE implements IEssayService {
     }
   };
 
-  // send general data to backend to verify if there is already a CBR essay with same name for the sample
+  // send general data to backend to verify if there is already a SUCS essay with same name for the sample
   submitGeneralData = async (generalData: SucsData['generalData']): Promise<void> => {
     try {
       const { name, sample } = generalData;
@@ -62,51 +72,48 @@ class SUCS_SERVICE implements IEssayService {
       if (!name) throw t('errors.empty-name');
       if (!sample) throw t('errors.empty-sample');
 
-      // verify if there is already a CBR essay with same name for the sample
+      // verify if there is already a SUCS essay with same name for the sample
       const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, sample });
 
       const { success, error } = response.data;
 
-      // if there is already a CBR essay with same name for the sample, throw error
+      // if there is already a SUCS essay with same name for the sample, throw error
       if (success === false) throw error.name;
     } catch (error) {
       throw error;
     }
   };
 
-  /** @CBR Methods for CBR page (step === 1, page 2) */
+  /** @SUCS Methods for SUCS page (step === 1, page 2) */
 
-  // verify inputs from CBR page (step === 1, page 2)
-  submitEssayGeneralData = (essayGeneralData: SucsData['essayGeneralData']): void => {
+  // verify inputs from SUCS page (step === 1, page 2)
+  submitStep2Data = async (step2Data: SucsData['step2Data']): Promise<void> => {
     try {
-      // verify if the initial sample mass is not empty or negative
-      if (!essayGeneralData.initial_sample_mass) throw t('errors.empty-initial-sample-mass');
-      if (essayGeneralData.initial_sample_mass < 0) throw t('errors.negative-initial-sample-mass');
 
       // verify if LL is not empty or negative
-      if (!essayGeneralData.ll_porcentage) throw t('errors.empty-ll-porcentage');
-      if (essayGeneralData.ll_porcentage < 0) throw t('errors.negative-ll-porcentage');
+      if (!step2Data.ll_percentage) throw t('errors.empty-ll-percentage');
+      if (step2Data.ll_percentage < 0) throw t('errors.negative-ll-percentage');
 
       // verify if LP is not empty or negative
-      if (!essayGeneralData.lp_porcentage) throw t('errors.empty-lp-porcentage');
-      if (essayGeneralData.lp_porcentage < 0) throw t('errors.negative-lp-porcentage');
+      if (!step2Data.lp_percentage) throw t('errors.empty-lp-percentage');
+      if (step2Data.lp_percentage < 0) throw t('errors.negative-lp-percentage');
 
-      // verify if the seives are not empty or nagative
-      if (!essayGeneralData.seives[0].passant) throw t('errors.empty-seive') + ' [ Nº 4 ]';
-      if (essayGeneralData.seives[0].passant < 0) throw t('errors.negative-seive') + ' [ Nº 4 ]';
-      if (!essayGeneralData.seives[1].passant) throw t('errors.empty-seive') + ' [ Nº 200 ]';
-      if (essayGeneralData.seives[1].passant < 0) throw t('errors.negative-seive') + ' [ Nº 200 ]';
+      // verify if all the sieves are not empty or negative
+      step2Data.sieves.forEach((row) => {
+        if (!row.passant) throw t('errors.empty-sieve') + row.sieve;
+        if (row.passant < 0) throw t('errors.negative-sieve') + row.sieve;
+      });
     } catch (error) {
       throw error;
     }
   };
 
-  // calculate results
+  // calculate results from sucs essay
   calculateResults = async (store: SucsData): Promise<void> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
-        essayGeneralData: store.essayGeneralData,
+        step2Data: store.step2Data,
       });
 
       const { success, error, result } = response.data;
@@ -129,15 +136,14 @@ class SUCS_SERVICE implements IEssayService {
           ...store.generalData,
           userId: this.userId,
         },
-        essayGeneralData: store.essayGeneralData,
+        step2Data: store.step2Data,
         results: store.results,
       });
 
       const { success, error } = response.data;
 
-      console.log(error);
-
-      if (success === false) throw error.name;
+      if (success === false) throw error.name; 
+      // else 
     } catch (error) {
       throw error;
     }

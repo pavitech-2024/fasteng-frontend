@@ -11,6 +11,9 @@ import homeENG from './translations/home/en.json';
 // topbar
 import topbarPTBR from './translations/topbar/ptbr.json';
 import topbarENG from './translations/topbar/en.json';
+//footer
+import footerPTBR from './translations/footer/ptbr.json';
+import footerENG from './translations/footer/en.json';
 //navbar
 import navbarPTBR from './translations/navbar/ptbr.json';
 import navbarENG from './translations/navbar/en.json';
@@ -46,6 +49,9 @@ import cbrENG from './translations/soils/essays/cbr/en.json';
 // hrb
 import hrbPTBR from './translations/soils/essays/hrb/ptbr.json';
 import hrbENG from './translations/soils/essays/hrb/en.json';
+// sucs
+import sucsPTBR from './translations/soils/essays/sucs/ptbr.json';
+import sucsENG from './translations/soils/essays/sucs/en.json';
 
 /**@concrete */
 import concreteEssaysPTBR from './translations/concrete/essays/ptbr.json';
@@ -67,6 +73,7 @@ i18n.use(initReactI18next).init({
         ...topbarPTBR,
         ...navbarPTBR,
         ...settingsPTBR,
+        ...footerPTBR,
         /**@templates */
         ...materialsPTBR,
         ...welcomePTBR,
@@ -78,6 +85,7 @@ i18n.use(initReactI18next).init({
         ...soilsEssaysPTBR,
         ...cbrPTBR,
         ...hrbPTBR,
+        ...sucsPTBR,
         /**@concrete */
         ...concreteEssaysPTBR,
         ...concreteMaterialsPTBR,
@@ -90,6 +98,7 @@ i18n.use(initReactI18next).init({
         ...topbarENG,
         ...navbarENG,
         ...settingsENG,
+        ...footerENG,
         /**@templates */
         ...materialsENG,
         ...welcomeENG,
@@ -101,6 +110,7 @@ i18n.use(initReactI18next).init({
         ...soilsEssaysENG,
         ...cbrENG,
         ...hrbENG,
+        ...sucsENG,
         /**@concrete */
         ...concreteEssaysENG,
         ...concreteMaterialsENG,

@@ -1,32 +1,19 @@
 {
-  "sucs.experimentName": "Nome do Experimento",
-  "sucs.operator": "Operador",
-  "sucs.samples": "Amostra",
-  "sucs.calculist": "Calculista",
-  "experimentType": "Tipo de Experimento",
-  "sample": "Amostra",
-  "material": "Material",
-  "authorName": "Nome do Autor",
-  "graph": "Gráfico",
-
-  "sucs.step-2-description": "Por favor, preencha as informações abaixo.",
-  "sucs.initial_sample_mass": "Massa da Amostra Inicial (g)",
-  "sucs.seives": "Peneiras",
-  "sucs.passant_porcentage": "Passante (%)",
-  "loading.samples.pending": "Carregando amostras...",
-  "loading.samples.success": "Amostras carregadas!",
-  "loading.samples.error": "Erro ao carregar amostras!",
-
+  "sucs_essay_data" : "Dados do Ensaio",
+  "sucs.step-2-description": "Preencha todos os campos abaixo.",
   "sucs.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
-  "results": "Resultados",
+  "sucs.sieves": "Peneiras",
+  "sucs.passant": "Passante",
   "sucs.classification": "Classificação",
-
-  "loading.nextStep.pending": "Carregando...",
-  "loading.nextStep.success": "Sucesso!",
-  "loading.nextStep.error": "Erro!",
-  "loading.save.pending": "Salvando...",
-  "loading.save.success": "Salvo com sucesso!",
-  "loading.save.error": "Erro ao salvar!",
-
-  "AlreadyExists": "Já cadastrado."
+  "sucs.liquidity_limit": "Limite de Liquidez (%)",
+  "sucs.plasticity_limit": "Limite de Plasticidade (%)",
+  "sucs.plasticity_index": "Índice de Plasticidade (%)",
+  "sucs.other-data": "Outros Dados",
+  "sucs.text-GW||SW" : "Esses grupos compreendem solos bem graduados, com cascalho, arenosos e sem muitos finos (menos de 5% passando na peneira 200). A presença de material fino não alterna sensivelmente as características da fração grossa, e não interfere também nas características de drenagem. Se o solos contiver menos de 5% de finos com plasticidade, ele deverá ser submetido à identificação de laboratório. Nas regiões sujeitas a congelamento, o material não deve conter mais de 3% de solo com diâmetro menor que 0,02 mm.",
+  "sucs.text-GP||SP" : "Solos mal graduados contendo cascalho e areia, sem muitos finos (menos de 5% passando na peneira normal nº 200). Esses materiais podem ser classificados como cascalhos uniformes (também chamados macadames), areias uniformes, ou misturas não-uniformes de material muito grosso, e areia muito fina, faltando partículas com tamanho intermediário. O último subgrupo se obtém com frequência em cavas de empréstimos onde se misturam cascalho e areia proviniente de camadas diferentes. Se a fração finada for plástica, sua plasticidade deverá ser medida, e o solo será classificado de acordo com a identificação de laboratório.",
+  "sucs.text-GM||SM" : "Compreendem cascalhos ou areias com maior quantidade de finos (mais de 12% passando na peneira 200). Os solos contendo entre 5% e 12% de finos passando na peneira 200 são considerados como limítrofes; são descritos em outros parágrafos mais adiante. O IP e o LL da fração desses solos que passa na peneira nº 40 devem identificar, no gráfico de plasticidade, mais adiante descrito, um ponto abaixo da linha 'A'. Alguns cascalhos e areias desses grupos podem conter um cimento natural de boa liga, sendo insignificantes as propriedades de expansão e contração do material. A resistência desses materiais secos decorre de pequena quantidade de solo aglutinante, de cimentação de material calcário ou de óxido de ferro. Em outros materiais desses grupos GM e SM, a fração fina pode ser silte ou pó-de-pedra quase sem plasticidade, e a mistura seca não tem resistência.",
+  "sucs.text-GC||SC" : "Solos com cascalho, ou arenosos, com finos (mais de 12% passando na peneira 200) cuja plasticidade pode ser baixa ou alta. O IP e o LL devem identificar pontos acima da linha 'A' no gráfico de plasticidade. Não importa se o material é bem ou mal graduado. A plasticidade da fração aglomerante influi mais no comportamento de solo do que sua composição granulométrica. Os finos são argilosos.",
+  "sucs.text-ML||MH" : "O símbolo M (de mó, limo) serve para indicar solos com predominância de silte o limo, solos micáceos e solos diatomáceos. Os símbolos L (de low, baixo) e H (de high, alto) representam LL baixo ou alto, sendo esses dois grupos separados por uma linha divisória arbitrária no LL=50. Esses solos são siltes arenosos ou argilosos, sem matéria orgânica, com plasticidade relativamente baixa. Incluem solos do tipo loess e o pó-de-pedra. Os solos micáceos e diatomáceos, em geral, no grupo MH, podem estender-se até o ML. O mesmo acontece com certas argilas caoliníticas ou ilíticas de plasticidade relativamente baixa.",
+  "sucs.text-CL||CH" : "O símbolo C (de clay) significa argila, e os símbolos L (de low) e H (de high) significam, respectivamente, baixo e alto LL. São essencialmente argilas sem matéria orgânica. As de baixa plasticidade (CL) são geral magras, arenosas ou siltosas. As com plasticidade média ou alta (CH) incluem argilas gordas, gumbos, massapês, algumas argilas vulcânicas e a betonita. As argilas do norte dos Estados Unidos também são classificadas nesses dois grupos.",
+  "sucs.text-OL||OH" : "São caracterizados pela presença de matéria orgânica indicada pelo símbolo O. Os siltes e as argilas orgânicas fazem parte desses dois grupos. A faixa de plasticidade desses grupos corresponde à dos grupos ML e MH."
 }

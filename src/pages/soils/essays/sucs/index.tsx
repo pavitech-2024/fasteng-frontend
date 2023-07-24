@@ -1,11 +1,10 @@
-import React from 'react';
 import EssayTemplate from '@/components/templates/essay';
-import useSucsStore, { SucsActions } from '@/stores/soils/sucs/sucs.store';
-import SUCS_SERVICE from '@/services/soils/essays/sucs/sucs.service';
-import SUCS_GeneralData from '@/components/soils/essays/sucs/general-data.sucs';
-// import SUCS_EssayGeneralData from '@/components/soils/essays/sucs/essay-general-data.sucs';
-// import SUCS_Results from '@/components/soils/essays/sucs/results.sucs';
 import useAuth from '@/contexts/auth';
+import SUCS_SERVICE from '@/services/soils/essays/sucs/sucs.service';
+import useSucsStore, { SucsActions } from '@/stores/soils/sucs/sucs.store';
+import SUCS_GeneralData from '@/components/soils/essays/sucs/general-data.sucs';
+import SUCS_Step2 from '@/components/soils/essays/sucs/step2.sucs';
+import SUCS_Results from '@/components/soils/essays/sucs/results.sucs';
 
 const Sucs = () => {
   // start an instance of the service
@@ -28,8 +27,8 @@ const Sucs = () => {
   // inform the childrens with the step of the children and the part of the store that they will use
   const childrens = [
     { step: 0, children: <SUCS_GeneralData sucs={sucs} />, data: store.generalData },
-    //   { step: 1, children: <SUCS_EssayGeneralData />, data: store.essayGeneralData },
-    //   { step: 2, children: <SUCS_Results />, data: store },
+    { step: 1, children: <SUCS_Step2 />, data: store },
+    { step: 2, children: <SUCS_Results />, data: store },
   ];
 
   return <EssayTemplate essayInfo={sucs.info} nextCallback={sucs.handleNext} childrens={childrens} />;

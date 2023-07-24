@@ -8,7 +8,7 @@ interface GeneralData {
   name: string;
   sample: Sample;
   operator?: string;
-  cauculist?: string;
+  calculist?: string;
   description?: string;
 }
 
@@ -50,7 +50,7 @@ const useHrbStore = create<HrbData & HrbActions>()(
           name: null,
           sample: null,
           operator: null,
-          cauculist: null,
+          calculist: null,
           description: null,
         },
 

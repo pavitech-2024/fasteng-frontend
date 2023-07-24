@@ -1,4 +1,4 @@
-import { Box, TextField } from '@mui/material';
+import { Box, Dialog, TextField } from '@mui/material';
 import { t } from 'i18next';
 import DropDown from '@/components/atoms/inputs/dropDown';
 import SUCS_SERVICE from '@/services/soils/essays/sucs/sucs.service';
@@ -9,9 +9,12 @@ import useAuth from '@/contexts/auth';
 import useSucsStore from '@/stores/soils/sucs/sucs.store';
 import { toast } from 'react-toastify';
 import { EssayPageProps } from '@/components/templates/essay';
+import Image from 'next/image';
+import { SucsTableImage } from '../../../../assets';
 
 const SUCS_GeneralData = ({ nextDisabled, setNextDisabled, sucs }: EssayPageProps & { sucs: SUCS_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(false);
   const [samples, setSamples] = useState<Sample[]>([]);
   const { user } = useAuth();
   const { generalData, setData } = useSucsStore();
@@ -35,10 +38,10 @@ const SUCS_GeneralData = ({ nextDisabled, setNextDisabled, sucs }: EssayPageProp
   }, []);
 
   const inputs = [
-    { label: t('sucs.experimentName'), value: generalData.name, key: 'name', required: true },
-    { label: t('sucs.samples'), value: generalData.sample, key: 'sample', required: true },
-    { label: t('sucs.operator'), value: generalData.operator, key: 'operator', required: false },
-    { label: t('sucs.calculist'), value: generalData.calculist, key: 'calculist', required: false },
+    { label: t('cbr.experimentName'), value: generalData.name, key: 'name', required: true },
+    { label: t('cbr.samples'), value: generalData.sample, key: 'sample', required: true },
+    { label: t('cbr.operator'), value: generalData.operator, key: 'operator', required: false },
+    { label: t('cbr.calculist'), value: generalData.calculist, key: 'calculist', required: false },
     { label: t('samples.comments'), value: generalData.description, key: 'description', required: false },
   ];
 
@@ -132,6 +135,26 @@ const SUCS_GeneralData = ({ nextDisabled, setNextDisabled, sucs }: EssayPageProp
             required={inputs[inputs.length - 1].required}
             onChange={(e) => setData({ step: 0, key: inputs[inputs.length - 1].key, value: e.target.value })}
           />
+
+          <Image
+            src={SucsTableImage}
+            alt="hrb-table"
+            width={0}
+            height={0}
+            sizes="100vw"
+            style={{ width: '100%', height: 'auto', marginTop: '20px' }}
+            onClick={() => setOpen(true)}
+          />
+          <Dialog open={open} onClose={() => setOpen(false)}>
+            <Image
+              src={SucsTableImage}
+              alt="hrb-table"
+              width={0}
+              height={0}
+              sizes="100vw"
+              style={{ width: '100%', height: 'auto', marginTop: '20px' }}
+            />
+          </Dialog>
         </Box>
       )}
     </>
