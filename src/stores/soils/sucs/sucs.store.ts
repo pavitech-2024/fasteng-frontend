@@ -59,7 +59,7 @@ const useSucsStore = create<SucsData & SucsActions>()(
             { sieve: getSieveName(4.8), passant: null },
             { sieve: getSieveName(0.075), passant: null },
           ],
-          organic_matter: null
+          organic_matter: null,
         },
         results: {
           cc: null,

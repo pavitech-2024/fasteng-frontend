@@ -89,7 +89,6 @@ class SUCS_SERVICE implements IEssayService {
   // verify inputs from SUCS page (step === 1, page 2)
   submitStep2Data = async (step2Data: SucsData['step2Data']): Promise<void> => {
     try {
-
       // verify if LL is not empty or negative
       if (!step2Data.ll_percentage) throw t('errors.empty-ll-percentage');
       if (step2Data.ll_percentage < 0) throw t('errors.negative-ll-percentage');
@@ -142,8 +141,8 @@ class SUCS_SERVICE implements IEssayService {
 
       const { success, error } = response.data;
 
-      if (success === false) throw error.name; 
-      // else 
+      if (success === false) throw error.name;
+      // else
     } catch (error) {
       throw error;
     }
