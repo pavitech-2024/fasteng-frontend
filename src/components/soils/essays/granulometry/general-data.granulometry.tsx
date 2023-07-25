@@ -10,7 +10,11 @@ import useGranulometryStore from '@/stores/soils/granulometry/granulometry.store
 import { toast } from 'react-toastify';
 import { EssayPageProps } from '@/components/templates/essay';
 
-const Granulometry_GeneralData = ({ nextDisabled, setNextDisabled, granulometry }: EssayPageProps & { granulometry: Granulometry_SERVICE }) => {
+const Granulometry_GeneralData = ({
+  nextDisabled,
+  setNextDisabled,
+  granulometry,
+}: EssayPageProps & { granulometry: Granulometry_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [samples, setSamples] = useState<Sample[]>([]);
   const { user } = useAuth();

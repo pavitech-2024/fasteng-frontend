@@ -1,9 +1,9 @@
 {
-    "granulometry.granulometry": "Granulometria",
-    "granulometry.step-2-description": "Preencha todos os campos abaixo.",
-    "granulometry.sieves": "Peneiras",
-    "granulometry.passant": "Passante",
-    "granulometry.retained": "Retido",
-    "granulometry.sample_mass": "Massa da Amostra",
-    "granulometry.bottom": "Fundos"
+  "granulometry.granulometry": "Granulometria",
+  "granulometry.step-2-description": "Preencha todos os campos abaixo.",
+  "granulometry.sieves": "Peneiras",
+  "granulometry.passant": "Passante",
+  "granulometry.retained": "Retido",
+  "granulometry.sample_mass": "Massa da Amostra",
+  "granulometry.bottom": "Fundos"
 }

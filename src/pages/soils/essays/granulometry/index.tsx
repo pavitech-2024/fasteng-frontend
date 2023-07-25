@@ -7,7 +7,7 @@ import Granulometry_Step2 from '@/components/soils/essays/granulometry/step2.gra
 // import Granulometry_Results from '@/components/soils/essays/granulometry/results.granulometry';
 
 const Granulometry = () => {
-    // start an instance of the service
+  // start an instance of the service
   const granulometry = new Granulometry_SERVICE();
 
   // get the userId
@@ -32,6 +32,6 @@ const Granulometry = () => {
   ];
 
   return <EssayTemplate essayInfo={granulometry.info} nextCallback={granulometry.handleNext} childrens={childrens} />;
-}
+};
 
 export default Granulometry;
