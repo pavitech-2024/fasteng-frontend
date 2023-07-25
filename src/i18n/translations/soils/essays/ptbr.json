@@ -3,6 +3,9 @@
   "soils.essays.hrb": "Classificação Rodoviária - HRB",
   "soils.essays.sucs": "Classificação Unificada - SUCS",
   "soils.essays.compression": "Ensaio de Compactação",
+  "soils.essays.granulometry": "Granulometria por Peneiramento",
+  "granulometry": "Granulometria",
   "general data": "Dados Gerais",
-  "general data of essay": "Dados Gerais do Ensaio"
+  "general data of essay": "Dados Gerais do Ensaio",
+  "results": "Resultados"
 }

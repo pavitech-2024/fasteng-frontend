@@ -52,6 +52,9 @@ import hrbENG from './translations/soils/essays/hrb/en.json';
 // sucs
 import sucsPTBR from './translations/soils/essays/sucs/ptbr.json';
 import sucsENG from './translations/soils/essays/sucs/en.json';
+// granulometry
+import granulometryPTBR from './translations/soils/essays/granulometry/ptbr.json';
+import granulometryENG from './translations/soils/essays/granulometry/en.json';
 
 /**@concrete */
 import concreteEssaysPTBR from './translations/concrete/essays/ptbr.json';
@@ -86,6 +89,7 @@ i18n.use(initReactI18next).init({
         ...cbrPTBR,
         ...hrbPTBR,
         ...sucsPTBR,
+        ...granulometryPTBR,
         /**@concrete */
         ...concreteEssaysPTBR,
         ...concreteMaterialsPTBR,
@@ -111,6 +115,7 @@ i18n.use(initReactI18next).init({
         ...cbrENG,
         ...hrbENG,
         ...sucsENG,
+        ...granulometryENG,
         /**@concrete */
         ...concreteEssaysENG,
         ...concreteMaterialsENG,

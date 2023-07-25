@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import { EssaysTemplate } from '@/components/templates/essays';
 import { Essay } from '@/interfaces/common';
-import { CompressionIcon, HrbIcon, SucsIcon } from '@/assets';
+import { CompressionIcon, GranulometryIcon, HrbIcon, SucsIcon } from '@/assets';
 import { t } from 'i18next';
 import CBR_SERVICE from '@/services/soils/essays/cbr/cbr.service';
 
@@ -9,6 +9,12 @@ const SoilsEssays: NextPage = () => {
   const cbr = new CBR_SERVICE();
 
   const essays: Essay[] = [
+    {
+      title: t('soils.essays.granulometrySoils'),
+      icon: GranulometryIcon,
+      key: 'granulometry-soils',
+      link: '/soils/essays/granulometry',
+    },
     { ...cbr.info, link: cbr.info.path } as Essay,
     {
       title: t('soils.essays.hrb'),
