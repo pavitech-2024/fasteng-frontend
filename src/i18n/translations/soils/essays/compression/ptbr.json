@@ -10,7 +10,7 @@
   "authorName": "Nome do Autor",
   "loading.samples.pending": "Carregando amostras...",
   "loading.samples.success": "Amostras carregadas!",
-  "loading.samples.error": "Erro ao carregar amostras!",  
+  "loading.samples.error": "Erro ao carregar amostras!",
   "compression.general_data": "Dados gerais",
   "compression.hygroscopic_humidity": "Umidade higroscópica",
   "compression.humidity_determination": "Determinação da umidade",
@@ -41,5 +41,8 @@
   "errors.empty-socket-weight": "Informe o peso do soquete",
   "errors.empty-space-disc-thickness": "Informe a espessura do disco espaçador.",
   "errors.empty-strokes-per-layer": "Informe o número de golpes por camada.",
-  "errors.empty-layers": "Informe o número de camadas."
+  "errors.empty-layers": "Informe o número de camadas.",
+  "errors-empty-capsules-weights-hum": "Informe o peso da cápsula.",
+  "errors.invalid-capsules-number-hum": "A tara da cápsula é maiorou igual do que o peso bruto seco.",
+  "errors.invalid-dry-weights-capsule-hum": "Peso bruto da cápsula é maior ou igual do que o peso bruto úmido."
 }

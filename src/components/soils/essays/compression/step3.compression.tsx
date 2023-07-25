@@ -12,11 +12,11 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
 
   const handleErase = () => {
     try {
-      if (rows.length > 1) { 
+      if (rows.length > 1) {
         const newRows = [...rows];
         newRows.pop();
         setData({ step: 2, value: newRows });
-      } else throw t('compression.error.minValue'); 
+      } else throw t('compression.error.minValue');
     } catch (error) {
       toast.error(error);
     }
@@ -155,15 +155,27 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
   if (nextDisabled) {
     // verifica se todos os campos da tabela estão preenchidos
     rows.every((row) => {
-      const { capsulesNumberHum, wetGrossWeightsCapsuleHum, wetWeightsCapsules, dryWeightsCapsules, capsulesWeightsHum } = row;
-      return capsulesNumberHum && wetGrossWeightsCapsuleHum && wetWeightsCapsules && dryWeightsCapsules && capsulesWeightsHum >= 0;
+      const {
+        capsulesNumberHum,
+        wetGrossWeightsCapsuleHum,
+        wetWeightsCapsules,
+        dryWeightsCapsules,
+        capsulesWeightsHum,
+      } = row;
+      return (
+        capsulesNumberHum &&
+        wetGrossWeightsCapsuleHum &&
+        wetWeightsCapsules &&
+        dryWeightsCapsules &&
+        capsulesWeightsHum >= 0
+      );
     }) &&
       // verificar se precisa de mais validações antes de deixar ir para o próximo step
       setNextDisabled(false);
   }
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-     <DataGrid
+      <DataGrid
         sx={{ mt: '1rem', borderRadius: '10px' }}
         density="compact"
         showCellVerticalBorder

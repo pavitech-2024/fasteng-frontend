@@ -41,7 +41,12 @@ const Compression_GeneralData = ({
     { label: t('compression.samples'), value: compressionGeneralData.sample, key: 'sample', required: true },
     { label: t('compression.operator'), value: compressionGeneralData.operator, key: 'operator', required: false },
     { label: t('compression.cauculist'), value: compressionGeneralData.cauculist, key: 'cauculist', required: false },
-    { label: t('compression.observation'), value: compressionGeneralData.description, key: 'description', required: false },
+    {
+      label: t('compression.observation'),
+      value: compressionGeneralData.description,
+      key: 'description',
+      required: false,
+    },
   ];
 
   inputs.every(({ required, value }) => {
@@ -55,89 +60,89 @@ const Compression_GeneralData = ({
   }) &&
     nextDisabled &&
     setNextDisabled(false);
-    
-    useEffect(() => console.log(compressionGeneralData), [compressionGeneralData])
-    return (
-      <>
-        {loading ? (
-          <Loading />
-        ) : (
+
+  useEffect(() => console.log(compressionGeneralData), [compressionGeneralData]);
+  return (
+    <>
+      {loading ? (
+        <Loading />
+      ) : (
+        <Box
+          sx={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
           <Box
             sx={{
+              display: 'grid',
               width: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
+              gap: '5px 20px',
             }}
           >
-            <Box
-              sx={{
-                display: 'grid',
-                width: '100%',
-                gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
-                gap: '5px 20px',
-              }}
-            >
-              {inputs.map((input) => {
-                if (['name', 'operator', 'cauculist'].includes(input.key)) {
-                  return (
-                    <TextField
-                      variant="standard"
-                      key={input.key}
-                      label={input.label}
-                      value={input.value}
-                      required={input.required}
-                      onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
-                    />
-                  );
-                } else if (['sample'].includes(input.key)) {
-                  const defaultValue = {
-                    label: '',
-                    value: '',
-                  };
-  
-                  let sample;
-  
-                  // se existir uma sample no store, seta ela como default
-                  if (input.value) {
-                    sample = samples.find((sample) => sample._id == input.value['_id']);
-                  }
-   
-                  if (sample) {
-                    defaultValue.label = sample.name + ' | ' + t(`${'samples.' + sample.type}`);
-                    defaultValue.value = sample;
-                  }
-  
-                  return (
-                    <DropDown
-                      key={input.key}
-                      variant="standard"
-                      label={input.label}
-                      options={samples.map((sample: Sample) => {
-                        return { label: sample.name + ' | ' + t(`${'samples.' + sample.type}`), value: sample };
-                      })}
-                      defaultValue={defaultValue}
-                      callback={(value) => setData({ step: 0, key: input.key, value })}
-                      size="medium"
-                      required={input.required}
-                    />
-                  );
+            {inputs.map((input) => {
+              if (['name', 'operator', 'cauculist'].includes(input.key)) {
+                return (
+                  <TextField
+                    variant="standard"
+                    key={input.key}
+                    label={input.label}
+                    value={input.value}
+                    required={input.required}
+                    onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  />
+                );
+              } else if (['sample'].includes(input.key)) {
+                const defaultValue = {
+                  label: '',
+                  value: '',
+                };
+
+                let sample;
+
+                // se existir uma sample no store, seta ela como default
+                if (input.value) {
+                  sample = samples.find((sample) => sample._id == input.value['_id']);
                 }
-              })}
-            </Box>
-            <TextField
-              variant="standard"
-              fullWidth
-              key={inputs[inputs.length - 1].key}
-              label={inputs[inputs.length - 1].label}
-              value={inputs[inputs.length - 1].value}
-              required={inputs[inputs.length - 1].required}
-              onChange={(e) => setData({ step: 0, key: inputs[inputs.length - 1].key, value: e.target.value })}
-            />
+
+                if (sample) {
+                  defaultValue.label = sample.name + ' | ' + t(`${'samples.' + sample.type}`);
+                  defaultValue.value = sample;
+                }
+
+                return (
+                  <DropDown
+                    key={input.key}
+                    variant="standard"
+                    label={input.label}
+                    options={samples.map((sample: Sample) => {
+                      return { label: sample.name + ' | ' + t(`${'samples.' + sample.type}`), value: sample };
+                    })}
+                    defaultValue={defaultValue}
+                    callback={(value) => setData({ step: 0, key: input.key, value })}
+                    size="medium"
+                    required={input.required}
+                  />
+                );
+              }
+            })}
           </Box>
-        )}
-      </>
-    );
+          <TextField
+            variant="standard"
+            fullWidth
+            key={inputs[inputs.length - 1].key}
+            label={inputs[inputs.length - 1].label}
+            value={inputs[inputs.length - 1].value}
+            required={inputs[inputs.length - 1].required}
+            onChange={(e) => setData({ step: 0, key: inputs[inputs.length - 1].key, value: e.target.value })}
+          />
+        </Box>
+      )}
+    </>
+  );
 };
 
 export default Compression_GeneralData;

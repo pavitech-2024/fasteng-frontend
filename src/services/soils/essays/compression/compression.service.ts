@@ -88,7 +88,16 @@ class COMPRESSION_SERVICE implements IEssayService {
         // ver se precisa de mais alguma validação fora ver se esta vazio
       });
 
-      const { hygroscopicTable, moldNumber, moldVolume, moldWeight, socketWeight, spaceDiscThickness, strokesPerLayer, layers } = hygroscopicData;
+      const {
+        hygroscopicTable,
+        moldNumber,
+        moldVolume,
+        moldWeight,
+        socketWeight,
+        spaceDiscThickness,
+        strokesPerLayer,
+        layers,
+      } = hygroscopicData;
 
       if (!hygroscopicTable) throw t('errors.empty-hygroscopic-table');
       if (!moldNumber) throw t('errors.empty-mold-number');
@@ -105,7 +114,7 @@ class COMPRESSION_SERVICE implements IEssayService {
           dryGrossWeightsHyg, 
           capsulesWeightsHyg 
         } = hygroscopicTable[i];
-  
+
         if (!capsulesWeightsHyg || capsulesWeightsHyg >= dryGrossWeightsHyg) {
           if (hygroscopicTable[i].capsulesNumberHyg) {
             throw t('errors.invalid-capsules-number-hyg') + ` [ ${hygroscopicTable[i].capsulesNumberHyg} ]`;
@@ -113,7 +122,7 @@ class COMPRESSION_SERVICE implements IEssayService {
             throw t('errors.invalid-capsules-number-hyg') + ` [ ponto: ${i + 1} ]`;
           }
         }
-  
+
         if (dryGrossWeightsHyg >= wetGrossWeightsCapsuleHyg) {
           if (hygroscopicTable[i].capsulesNumberHyg) {
             throw t('errors.invalid-capsules-number-hyg') + ` [ ${hygroscopicTable[i].capsulesNumberHyg} ]`;
@@ -144,6 +153,38 @@ class COMPRESSION_SERVICE implements IEssayService {
         if (!value) console.log(`errors.empty-${key}`);
         // ver se precisa de mais alguma validação fora ver se esta vazio
       });
+
+      const { humidityTable } = humidityDeterminationData;
+
+      if (!humidityTable) throw t('errors.empty-humidity-table');
+
+      for (let i = 0; i < humidityTable.length; i++) {
+        const { 
+          capsulesWeightsHum, 
+          dryWeightsCapsules, 
+          wetGrossWeightsCapsuleHum 
+        } = humidityTable[i];
+
+        if (!capsulesWeightsHum) {
+          throw t('errors-empty-capsules-weights-hum') + ` [ ponto: ${i + 1}]`;
+        }
+
+        if (capsulesWeightsHum >= dryWeightsCapsules) {
+          if (humidityTable[i].capsulesNumberHum) {
+            throw t('errors.invalid-capsules-number-hum') + ` [ ${humidityTable[i].capsulesNumberHum} ]`;
+          } else {
+            throw t('errors.invalid-capsules-number-hum') + ` [ ponto: ${i + 1} ]`;
+          }
+        }
+
+        if (dryWeightsCapsules >= wetGrossWeightsCapsuleHum) {
+          if (humidityTable[i].capsulesNumberHum) {
+            throw t('errors.invalid-dry-weights-capsule-hum') + ` [ ${humidityTable[i].capsulesNumberHum} ]`;
+          } else {
+            throw t('errors.invalid-dry-weights-capsule-hum') + ` [ ponto: ${i + 1} ]`;
+          }
+        }
+      }
 
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         humidityDeterminationData,

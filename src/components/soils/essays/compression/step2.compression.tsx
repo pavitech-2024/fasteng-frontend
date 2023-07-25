@@ -14,11 +14,12 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
   // Remover mais uma linha de determinado valor
   const handleErase = () => {
     try {
-      if (rows.length > 1) { // O mínimo é um valor de cada
+      if (rows.length > 1) {
+        // O mínimo é um valor de cada
         const newRows = [...rows];
         newRows.pop();
         setData({ step: 2, value: newRows });
-      } else throw t('compression.error.minValue'); 
+      } else throw t('compression.error.minValue');
     } catch (error) {
       toast.error(error);
     }
@@ -194,7 +195,7 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
       setNextDisabled(false);
   }
 
-  useEffect(() => console.log(data, rows), [data, rows])
+  useEffect(() => console.log(data, rows), [data, rows]);
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Box
