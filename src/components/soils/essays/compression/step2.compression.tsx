@@ -163,7 +163,7 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
       ),
     },
     {
-      field: 'capsulesWeightsHyg',
+      field: 'capsuleTare',
       headerName: t('compression.capsules_weights'),
       renderCell: ({ row }) => (
         <InputEndAdornment
@@ -171,7 +171,7 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           label={t('compression.capsules_weights')}
           type="number"
           inputProps={{ min: 0 }}
-          value={row.capsulesWeightsHyg}
+          value={row.capsuleTare}
           onChange={(e) => {
             const newRows = [...rows];
             const index = rows.findIndex((r) => r.id === row.id);
