@@ -13,10 +13,10 @@ interface compression_generalData {
 
 export type hygTable = {
   id: number;
-  capsulesNumberHyg: number; // número de cápsulas
-  wetGrossWeightsCapsuleHyg: number; // peso bruto úmido (g)
-  dryGrossWeightsHyg: number; // peso bruto seco (g)
-  capsulesWeightsHyg: number; // peso da cápsula (g)
+  capsule: number; // número de cápsulas
+  wetGrossWeightCapsule: number; // peso bruto úmido (g)
+  dryGrossWeight: number; // peso bruto seco (g)
+  capsuleTare: number; // peso da cápsula (g)
 };
 
 interface hygroscopicData {
@@ -34,11 +34,11 @@ interface hygroscopicData {
 interface humidityDeterminationData {
   humidityTable: {
     id: number;
-    capsulesNumberHum: number; // número de capsulas
-    wetGrossWeightsCapsuleHum: number; // peso bruto úmido (g)
-    wetWeightsCapsules: number; // peso úmido da amostra + cápsula (g)
-    dryWeightsCapsules: number; // peso seco da amostra + capsula (g)
-    capsulesWeightsHum: number; // peso da cápsula (g)
+    capsules: number; // número de capsulas
+    wetGrossWeightsCapsule: number; // peso bruto úmido (g)
+    wetGrossWeights: number; // peso úmido da amostra + cápsula (g)
+    dryGrossWeights: number; // peso seco da amostra + capsula (g)
+    capsulesTare: number; // peso da cápsula (g)
   }[];
 }
 
@@ -77,10 +77,10 @@ const useCompressionStore = create<CompressionData & CompressionActions>()(
           hygroscopicTable: [
             {
               id: null,
-              capsulesNumberHyg: null,
-              wetGrossWeightsCapsuleHyg: null,
-              dryGrossWeightsHyg: null,
-              capsulesWeightsHyg: null,
+              capsule: null,
+              wetGrossWeightCapsule: null,
+              dryGrossWeight: null,
+              capsuleTare: null,
             },
           ],
           moldNumber: null,
@@ -95,11 +95,11 @@ const useCompressionStore = create<CompressionData & CompressionActions>()(
           humidityTable: [
             {
               id: null,
-              capsulesNumberHum: null,
-              wetGrossWeightsCapsuleHum: null,
-              wetWeightsCapsules: null,
-              dryWeightsCapsules: null,
-              capsulesWeightsHum: null,
+              capsules: null,
+              wetGrossWeightsCapsule: null,
+              wetGrossWeights: null,
+              dryGrossWeights: null,
+              capsulesTare: null,
             },
           ],
         },

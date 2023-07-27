@@ -109,23 +109,19 @@ class COMPRESSION_SERVICE implements IEssayService {
       if (!layers) throw t('errors.empty-layers');
 
       for (let i = 0; i < hygroscopicTable.length; i++) {
-        const { 
-          wetGrossWeightsCapsuleHyg, 
-          dryGrossWeightsHyg, 
-          capsulesWeightsHyg 
-        } = hygroscopicTable[i];
+        const { wetGrossWeightCapsule, dryGrossWeight, capsuleTare } = hygroscopicTable[i];
 
-        if (!capsulesWeightsHyg || capsulesWeightsHyg >= dryGrossWeightsHyg) {
-          if (hygroscopicTable[i].capsulesNumberHyg) {
-            throw t('errors.invalid-capsules-number-hyg') + ` [ ${hygroscopicTable[i].capsulesNumberHyg} ]`;
+        if (!capsuleTare || capsuleTare >= dryGrossWeight) {
+          if (hygroscopicTable[i].capsule) {
+            throw t('errors.invalid-capsules-number-hyg') + ` [ ${hygroscopicTable[i].capsule} ]`;
           } else {
             throw t('errors.invalid-capsules-number-hyg') + ` [ ponto: ${i + 1} ]`;
           }
         }
 
-        if (dryGrossWeightsHyg >= wetGrossWeightsCapsuleHyg) {
-          if (hygroscopicTable[i].capsulesNumberHyg) {
-            throw t('errors.invalid-capsules-number-hyg') + ` [ ${hygroscopicTable[i].capsulesNumberHyg} ]`;
+        if (dryGrossWeight >= wetGrossWeightCapsule) {
+          if (hygroscopicTable[i].capsule) {
+            throw t('errors.invalid-capsules-number-hyg') + ` [ ${hygroscopicTable[i].capsule} ]`;
           } else {
             throw t('errors.invalid-capsules-number-hyg') + ` [ ponto: ${i + 1} ]`;
           }
@@ -159,27 +155,23 @@ class COMPRESSION_SERVICE implements IEssayService {
       if (!humidityTable) throw t('errors.empty-humidity-table');
 
       for (let i = 0; i < humidityTable.length; i++) {
-        const { 
-          capsulesWeightsHum, 
-          dryWeightsCapsules, 
-          wetGrossWeightsCapsuleHum 
-        } = humidityTable[i];
+        const { capsules, dryGrossWeights, wetGrossWeightsCapsule, capsulesTare } = humidityTable[i];
 
-        if (!capsulesWeightsHum) {
+        if (!capsulesTare) {
           throw t('errors-empty-capsules-weights-hum') + ` [ ponto: ${i + 1}]`;
         }
 
-        if (capsulesWeightsHum >= dryWeightsCapsules) {
-          if (humidityTable[i].capsulesNumberHum) {
-            throw t('errors.invalid-capsules-number-hum') + ` [ ${humidityTable[i].capsulesNumberHum} ]`;
+        if (capsulesTare >= dryGrossWeights) {
+          if (humidityTable[i].capsules) {
+            throw t('errors.invalid-capsules-number-hum') + ` [ ${humidityTable[i].capsules} ]`;
           } else {
             throw t('errors.invalid-capsules-number-hum') + ` [ ponto: ${i + 1} ]`;
           }
         }
 
-        if (dryWeightsCapsules >= wetGrossWeightsCapsuleHum) {
-          if (humidityTable[i].capsulesNumberHum) {
-            throw t('errors.invalid-dry-weights-capsule-hum') + ` [ ${humidityTable[i].capsulesNumberHum} ]`;
+        if (dryGrossWeights >= dryGrossWeights) {
+          if (humidityTable[i].capsules) {
+            throw t('errors.invalid-dry-weights-capsule-hum') + ` [ ${humidityTable[i].capsules} ]`;
           } else {
             throw t('errors.invalid-dry-weights-capsule-hum') + ` [ ponto: ${i + 1} ]`;
           }

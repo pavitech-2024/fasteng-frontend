@@ -30,10 +30,10 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
     const newRows = [...rows];
     newRows.push({
       id: rows.length,
-      capsulesNumberHyg: null,
-      wetGrossWeightsCapsuleHyg: null,
-      dryGrossWeightsHyg: null,
-      capsulesWeightsHyg: null,
+      capsule: null,
+      wetGrossWeightCapsule: null,
+      dryGrossWeight: null,
+      capsuleTare: null,
     });
     setData({ step: 2, value: newRows });
     setNextDisabled(true);
@@ -103,7 +103,7 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
 
   const columns: GridColDef[] = [
     {
-      field: 'capsulesNumberHyg',
+      field: 'capsule',
       headerName: t('compression.capsules_number'),
       renderCell: ({ row }) => (
         <InputEndAdornment
@@ -111,11 +111,11 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           label={t('compression.capsules_number')}
           type="number"
           inputProps={{ min: 0 }}
-          value={row.capsulesNumberHyg}
+          value={row.capsule}
           onChange={(e) => {
             const newRows = [...rows];
             const index = rows.findIndex((r) => r.id === row.id);
-            newRows[index].capsulesNumberHyg = Number(e.target.value);
+            newRows[index].capsule = Number(e.target.value);
             setData({ step: 2, value: newRows });
           }}
           adornment={''}
@@ -123,7 +123,7 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
       ),
     },
     {
-      field: 'wetGrossWeightsCapsuleHyg',
+      field: 'wetGrossWeightCapsule',
       headerName: t('compression.wet_gross_weights_capsule'),
       renderCell: ({ row }) => (
         <InputEndAdornment
@@ -131,11 +131,11 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           label={t('compression.wet_gross_weights_capsule')}
           type="number"
           inputProps={{ min: 0 }}
-          value={row.wetGrossWeightsCapsuleHyg}
+          value={row.wetGrossWeightCapsule}
           onChange={(e) => {
             const newRows = [...rows];
             const index = rows.findIndex((r) => r.id === row.id);
-            newRows[index].wetGrossWeightsCapsuleHyg = Number(e.target.value);
+            newRows[index].wetGrossWeightCapsule = Number(e.target.value);
             setData({ step: 2, value: newRows });
           }}
           adornment={''}
@@ -143,7 +143,7 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
       ),
     },
     {
-      field: 'dryGrossWeightsHyg',
+      field: 'dryGrossWeight',
       headerName: t('compression.dry_gross_weights'),
       renderCell: ({ row }) => (
         <InputEndAdornment
@@ -151,11 +151,11 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           label={t('compression.dry_gross_weights')}
           type="number"
           inputProps={{ min: 0 }}
-          value={row.dryGrossWeightsHyg}
+          value={row.dryGrossWeight}
           onChange={(e) => {
             const newRows = [...rows];
             const index = rows.findIndex((r) => r.id === row.id);
-            newRows[index].dryGrossWeightsHyg = Number(e.target.value);
+            newRows[index].dryGrossWeight = Number(e.target.value);
             setData({ step: 2, value: newRows });
           }}
           adornment={''}
@@ -175,7 +175,7 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           onChange={(e) => {
             const newRows = [...rows];
             const index = rows.findIndex((r) => r.id === row.id);
-            newRows[index].capsulesWeightsHyg = Number(e.target.value);
+            newRows[index].capsuleTare = Number(e.target.value);
             setData({ step: 2, value: newRows });
           }}
           adornment={''}
@@ -187,8 +187,8 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
   if (nextDisabled) {
     // verifica se todos os campos da tabela estão preenchidos
     rows.every((row) => {
-      const { capsulesNumberHyg, wetGrossWeightsCapsuleHyg, dryGrossWeightsHyg, capsulesWeightsHyg } = row;
-      return capsulesNumberHyg && wetGrossWeightsCapsuleHyg && dryGrossWeightsHyg && capsulesWeightsHyg >= 0;
+      const { capsule, wetGrossWeightCapsule, dryGrossWeight, capsuleTare } = row;
+      return capsule && wetGrossWeightCapsule && dryGrossWeight && capsuleTare >= 0;
     }) &&
       data !== null &&
       // verificar se precisa de mais validações antes de deixar ir para o próximo step
