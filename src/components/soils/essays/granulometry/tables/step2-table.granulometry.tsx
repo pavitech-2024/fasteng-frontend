@@ -24,7 +24,7 @@ const Granulometry_step2Table = ({ rows, columns }: step2GranulometryProps) => {
         minWidth: column.field === 'extended_read' ? 250 : 100,
         flex: 1,
       }))}
-      rows={ (rows !== null) ? rows.map((row, index) => ({ ...row, id: index })) : [] }
+      rows={rows !== null ? rows.map((row, index) => ({ ...row, id: index })) : []}
     />
   );
 };

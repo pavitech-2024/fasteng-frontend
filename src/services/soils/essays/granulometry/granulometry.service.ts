@@ -105,7 +105,8 @@ class Granulometry_SERVICE implements IEssayService {
         retained += row.retained;
       });
       const sum = retained + step2Data.bottom;
-      if (sum !== step2Data.sample_mass) throw t('errors.sieves-sum-not-equal-to-sample-mass') + (step2Data.sample_mass - sum) + 'g';
+      if (sum !== step2Data.sample_mass)
+        throw t('errors.sieves-sum-not-equal-to-sample-mass') + (step2Data.sample_mass - sum) + 'g';
     } catch (error) {
       throw error;
     }

@@ -12,21 +12,16 @@ import { getSieveSeries } from '@/utils/sieves';
 const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useGranulometryStore();
 
-  const sievesSeries = [
-    getSieveSeries(0),
-    getSieveSeries(1),
-    getSieveSeries(2),
-    getSieveSeries(3),
-  ];
+  const sievesSeries = [getSieveSeries(0), getSieveSeries(1), getSieveSeries(2), getSieveSeries(3)];
 
   if (data.sieve_series && data.table_data && data.table_data.length == 0) {
     const table_data = [];
     data.sieve_series.map((s) => {
       table_data.push({ sieve: s.label, passant: null, retained: null });
-    })
-    setData({step: 1, key: 'table_data', value: table_data});
+    });
+    setData({ step: 1, key: 'table_data', value: table_data });
   }
-  
+
   const rows = data.table_data;
 
   const columns: GridColDef[] = [
@@ -40,7 +35,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
       headerName: t('granulometry.passant'),
       renderCell: ({ row }) => {
         if (!rows) {
-          return
+          return;
         }
         const { sieve } = row;
         const sieve_index = rows.findIndex((r) => r.sieve === sieve);
@@ -54,14 +49,10 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
             value={rows[sieve_index].passant}
             required
             onChange={(e) => {
-              if (e.target.value === null) return
+              if (e.target.value === null) return;
               const newRows = [...rows];
               const passant = Number(e.target.value);
-              const retained = data.sample_mass !== 0
-                ?
-                ((100 - passant) / 100) * data.sample_mass
-                :
-                0;
+              const retained = data.sample_mass !== 0 ? ((100 - passant) / 100) * data.sample_mass : 0;
               newRows[sieve_index].passant = passant;
               newRows[sieve_index].retained = retained;
               setData({ step: 1, key: 'passant', value: newRows });
@@ -76,7 +67,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
       headerName: t('granulometry.retained'),
       renderCell: ({ row }) => {
         if (!rows) {
-          return
+          return;
         }
         const { sieve } = row;
         const sieve_index = rows.findIndex((r) => r.sieve === sieve);
@@ -90,14 +81,10 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
             value={rows[sieve_index].retained}
             required
             onChange={(e) => {
-              if (e.target.value === null) return
+              if (e.target.value === null) return;
               const newRows = [...rows];
               const retained = Number(e.target.value);
-              const passant = data.sample_mass !== 0
-                ?
-                100 * (data.sample_mass - retained) / data.sample_mass
-                :
-                0;
+              const passant = data.sample_mass !== 0 ? (100 * (data.sample_mass - retained)) / data.sample_mass : 0;
               newRows[sieve_index].retained = retained;
               newRows[sieve_index].passant = passant;
               setData({ step: 1, key: 'retained', value: newRows });
@@ -113,7 +100,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
     nextDisabled &&
     data.sample_mass != null &&
     data.bottom != null &&
-    data.table_data.every((row) => (row.passant !== null && row.retained !== null))
+    data.table_data.every((row) => row.passant !== null && row.retained !== null)
   )
     setNextDisabled(false);
 
@@ -138,7 +125,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
           inputProps={{ min: 0 }}
           required
         />
-        
+
         <DropDown
           key={'sieve_series'}
           variant="standard"
