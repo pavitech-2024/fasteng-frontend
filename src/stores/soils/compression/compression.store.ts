@@ -21,7 +21,13 @@ export type hygTable = {
 
 interface hygroscopicData {
   // tabela
-  hygroscopicTable: hygTable[];
+  hygroscopicTable: {
+    id: number;
+    capsule: number; // número de cápsulas
+    wetGrossWeightCapsule: number; // peso bruto úmido (g)
+    dryGrossWeight: number; // peso bruto seco (g)
+    capsuleTare: number; // peso da cápsula (g)
+  }[];
   moldNumber: number; // número de molde
   moldVolume: number; // volume do molde (cm³)
   moldWeight: number; // peso do molde (g)
@@ -76,7 +82,7 @@ const useCompressionStore = create<CompressionData & CompressionActions>()(
         hygroscopicData: {
           hygroscopicTable: [
             {
-              id: null,
+              id: 0,
               capsule: null,
               wetGrossWeightCapsule: null,
               dryGrossWeight: null,

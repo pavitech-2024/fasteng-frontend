@@ -1,6 +1,6 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import useCompressionStore, { hygTable } from '@/stores/soils/compression/compression.store';
+import useCompressionStore from '@/stores/soils/compression/compression.store';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
 import { t } from 'i18next';
@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 
 const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { hygroscopicData: data, setData } = useCompressionStore();
-  const rows = data.hygroscopicTable as hygTable[];
+  const rows = data.hygroscopicTable;
 
   // Remover mais uma linha de determinado valor
   const handleErase = () => {
@@ -35,7 +35,7 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
       dryGrossWeight: null,
       capsuleTare: null,
     });
-    setData({ step: 2, value: newRows });
+    setData({ step: 1, key: 'hygroscopicTable', value: newRows });
     setNextDisabled(true);
   };
 
@@ -105,7 +105,12 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
     {
       field: 'capsule',
       headerName: t('compression.capsules_number'),
-      renderCell: ({ row }) => (
+      renderCell: ({ row }) => {
+
+        const { id } = row;
+        const index = rows.findIndex((r) => r.id === id);
+
+        return (
         <InputEndAdornment
           fullWidth
           label={t('compression.capsules_number')}
@@ -114,18 +119,22 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           value={row.capsule}
           onChange={(e) => {
             const newRows = [...rows];
-            const index = rows.findIndex((r) => r.id === row.id);
-            newRows[index].capsule = Number(e.target.value);
-            setData({ step: 2, value: newRows });
+            rows[index].capsule = Number(e.target.value);
+            setData({ step: 1, key: 'capsule', value: newRows });
           }}
           adornment={''}
         />
-      ),
+      )},
     },
     {
       field: 'wetGrossWeightCapsule',
       headerName: t('compression.wet_gross_weights_capsule'),
-      renderCell: ({ row }) => (
+      renderCell: ({ row }) => {
+        
+        const { id } = row;
+        const index = rows.findIndex((r) => r.id === id);
+
+        return (
         <InputEndAdornment
           fullWidth
           label={t('compression.wet_gross_weights_capsule')}
@@ -134,18 +143,22 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           value={row.wetGrossWeightCapsule}
           onChange={(e) => {
             const newRows = [...rows];
-            const index = rows.findIndex((r) => r.id === row.id);
             newRows[index].wetGrossWeightCapsule = Number(e.target.value);
-            setData({ step: 2, value: newRows });
+            setData({ step: 1, key: 'wetGrossWeightCapsule', value: newRows });
           }}
           adornment={''}
         />
-      ),
+      )},
     },
     {
       field: 'dryGrossWeight',
       headerName: t('compression.dry_gross_weights'),
-      renderCell: ({ row }) => (
+      renderCell: ({ row }) => {
+        
+        const { id } = row;
+        const index = rows.findIndex((r) => r.id === id);
+
+        return (
         <InputEndAdornment
           fullWidth
           label={t('compression.dry_gross_weights')}
@@ -154,18 +167,22 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           value={row.dryGrossWeight}
           onChange={(e) => {
             const newRows = [...rows];
-            const index = rows.findIndex((r) => r.id === row.id);
             newRows[index].dryGrossWeight = Number(e.target.value);
-            setData({ step: 2, value: newRows });
+            setData({ step: 1, key: 'dryGrossWeight', value: newRows });
           }}
           adornment={''}
         />
-      ),
+      )},
     },
     {
       field: 'capsuleTare',
       headerName: t('compression.capsules_weights'),
-      renderCell: ({ row }) => (
+      renderCell: ({ row }) => {
+        
+        const { id } = row;
+        const index = rows.findIndex((r) => r.id === id);
+
+        return (
         <InputEndAdornment
           fullWidth
           label={t('compression.capsules_weights')}
@@ -174,13 +191,12 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           value={row.capsuleTare}
           onChange={(e) => {
             const newRows = [...rows];
-            const index = rows.findIndex((r) => r.id === row.id);
             newRows[index].capsuleTare = Number(e.target.value);
-            setData({ step: 2, value: newRows });
+            setData({ step: 1, key: 'capsuleTare', value: newRows });
           }}
           adornment={''}
         />
-      ),
+      )},
     },
   ];
 
