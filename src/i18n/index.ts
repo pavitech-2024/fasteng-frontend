@@ -20,6 +20,9 @@ import navbarENG from './translations/navbar/en.json';
 //settings
 import settingsPTBR from './translations/settings/ptbr.json';
 import settingsENG from './translations/settings/en.json';
+//errors
+import errorsPTBR from './translations/errors/ptbr.json';
+import errorsENG from './translations/errors/en.json';
 
 /** @templates */
 import materialsPTBR from './translations/templates/materials/ptbr.json';
@@ -77,6 +80,7 @@ i18n.use(initReactI18next).init({
         ...navbarPTBR,
         ...settingsPTBR,
         ...footerPTBR,
+        ...errorsPTBR,
         /**@templates */
         ...materialsPTBR,
         ...welcomePTBR,
@@ -103,6 +107,7 @@ i18n.use(initReactI18next).init({
         ...navbarENG,
         ...settingsENG,
         ...footerENG,
+        ...errorsENG,
         /**@templates */
         ...materialsENG,
         ...welcomeENG,

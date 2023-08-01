@@ -4,6 +4,12 @@
   "granulometry.sieves": "Peneiras",
   "granulometry.passant": "Passante",
   "granulometry.retained": "Retido",
-  "granulometry.sample_mass": "Massa da Amostra",
-  "granulometry.bottom": "Fundos"
+  "granulometry.sample_mass": "Massa da amostra",
+  "granulometry.bottom": "Fundos",
+  "granulometry.choose-series": "Escolha a série",
+  "granulometry.all-sieves": "Todas as séries",
+  "granulometry.normal-series-abnt-astm": "Série da ASTM",
+  "granulometry.normal-intermediate-series-abnt": "Série da ABNT",
+  "granulometry.normal-series-dnit": "Série do DNIT",
+  "granulometry.normal-series-dnit-2019": "Série do DNIT (2019)"
 }

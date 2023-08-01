@@ -90,14 +90,22 @@ class Granulometry_SERVICE implements IEssayService {
   submitStep2Data = async (step2Data: GranulometryData['step2Data']): Promise<void> => {
     try {
       // verify if the sample mass is not empty or negative
-      if (!step2Data.sample_mass) throw t('errors.empty-ll-percentage');
-      if (step2Data.sample_mass < 0) throw t('errors.negative-ll-percentage');
+      if (!step2Data.sample_mass) throw t('errors.empty-sample-mass');
+      if (step2Data.sample_mass < 0) throw t('errors.negative-sample-mass');
 
-      // verify if all the passant percentages are not empty or negative
-      step2Data.passant_percentages.forEach((row) => {
-        if (!row.passant) throw t('errors.empty-sieve') + row.sieve;
-        if (row.passant < 0) throw t('errors.negative-sieve') + row.sieve;
+      // verify if all the passant porcentages are not empty or negative
+      step2Data.table_data.forEach((row) => {
+        if (row.passant == null || row.retained == null) throw t('errors.empty-sieve') + row.sieve;
+        if (row.passant < 0 || row.passant < 0) throw t('errors.negative-sieve') + row.sieve;
       });
+
+      //verify if the sum of the masses (retained + bottom) equals the sample mass
+      let retained = 0.0;
+      step2Data.table_data.forEach((row) => {
+        retained += row.retained;
+      });
+      const sum = retained + step2Data.bottom;
+      if (sum !== step2Data.sample_mass) throw t('errors.sieves-sum-not-equal-to-sample-mass') + (step2Data.sample_mass - sum) + 'g';
     } catch (error) {
       throw error;
     }

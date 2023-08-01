@@ -1,5 +1,4 @@
 import { Sample } from '@/interfaces/soils';
-import { getSieveName } from '@/utils/sieves';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
@@ -14,13 +13,14 @@ interface GeneralData {
 
 interface granulometry_step2Data {
   sample_mass: number;
-  passant_percentages: { sieve: string; passant: number }[];
+  table_data: { sieve: string; passant: number; retained: number }[];
+  sieve_series: { label: string; value: number }[];
   bottom: number;
 }
 
 interface granulometry_results {
   total_retained: number;
-  retained_percentages: { sieve: string; retained: number }[];
+  retained_porcentages: { sieve: string; retained: number }[];
   retained_accumulated_list: { sieve: string; retained: number }[];
   passants_graph: [];
   diameters_graph: [];
@@ -53,27 +53,14 @@ const useGranulometryStore = create<GranulometryData & GranulometryActions>()(
           description: null,
         },
         step2Data: {
-          sample_mass: 0,
-          passant_percentages: [
-            { sieve: getSieveName(50), passant: 0 },
-            { sieve: getSieveName(37.5), passant: 0 },
-            { sieve: getSieveName(25), passant: 0 },
-            { sieve: getSieveName(19), passant: 0 },
-            { sieve: getSieveName(9.5), passant: 0 },
-            { sieve: getSieveName(4.8), passant: 0 },
-            { sieve: getSieveName(2.0), passant: 0 },
-            { sieve: getSieveName(1.2), passant: 0 },
-            { sieve: getSieveName(0.6), passant: 0 },
-            { sieve: getSieveName(0.43), passant: 0 },
-            { sieve: getSieveName(0.3), passant: 0 },
-            { sieve: getSieveName(0.15), passant: 0 },
-            { sieve: getSieveName(0.075), passant: 0 },
-          ],
-          bottom: 0,
+          sample_mass: null,
+          table_data: null,
+          sieve_series: null,
+          bottom: null,
         },
         results: {
           total_retained: null,
-          retained_percentages: [],
+          retained_porcentages: [],
           retained_accumulated_list: [],
           passants_graph: [],
           diameters_graph: [],

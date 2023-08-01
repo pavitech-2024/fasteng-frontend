@@ -14,15 +14,15 @@ const SUCS_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const inputs = [
     {
       label: 'LL',
-      value: data.ll_percentage,
-      key: 'll_percentage',
+      value: data.ll_porcentage,
+      key: 'll_porcentage',
       required: true,
       adornment: '%',
     },
     {
       label: 'LP',
-      value: data.lp_percentage,
-      key: 'lp_percentage',
+      value: data.lp_porcentage,
+      key: 'lp_porcentage',
       required: true,
       adornment: '%',
     },
@@ -64,8 +64,8 @@ const SUCS_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
 
   if (
     nextDisabled &&
-    data.ll_percentage != null &&
-    data.lp_percentage != null &&
+    data.ll_porcentage != null &&
+    data.lp_porcentage != null &&
     data.sieves.every((row) => row.passant !== null)
   )
     setNextDisabled(false);

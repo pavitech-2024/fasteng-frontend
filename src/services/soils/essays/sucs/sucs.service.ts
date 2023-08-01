@@ -90,12 +90,12 @@ class SUCS_SERVICE implements IEssayService {
   submitStep2Data = async (step2Data: SucsData['step2Data']): Promise<void> => {
     try {
       // verify if LL is not empty or negative
-      if (!step2Data.ll_percentage) throw t('errors.empty-ll-percentage');
-      if (step2Data.ll_percentage < 0) throw t('errors.negative-ll-percentage');
+      if (!step2Data.ll_porcentage) throw t('errors.empty-ll-porcentage');
+      if (step2Data.ll_porcentage < 0) throw t('errors.negative-ll-porcentage');
 
       // verify if LP is not empty or negative
-      if (!step2Data.lp_percentage) throw t('errors.empty-lp-percentage');
-      if (step2Data.lp_percentage < 0) throw t('errors.negative-lp-percentage');
+      if (!step2Data.lp_porcentage) throw t('errors.empty-lp-porcentage');
+      if (step2Data.lp_porcentage < 0) throw t('errors.negative-lp-porcentage');
 
       // verify if all the sieves are not empty or negative
       step2Data.sieves.forEach((row) => {
