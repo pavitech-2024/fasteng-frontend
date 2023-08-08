@@ -106,97 +106,97 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
       field: 'capsule',
       headerName: t('compression.capsules_number'),
       renderCell: ({ row }) => {
-
         const { id } = row;
         const index = rows.findIndex((r) => r.id === id);
 
         return (
-        <InputEndAdornment
-          fullWidth
-          label={t('compression.capsules_number')}
-          type="number"
-          inputProps={{ min: 0 }}
-          value={row.capsule}
-          onChange={(e) => {
-            const newRows = [...rows];
-            rows[index].capsule = Number(e.target.value);
-            setData({ step: 1, key: 'capsule', value: newRows });
-          }}
-          adornment={''}
-        />
-      )},
+          <InputEndAdornment
+            fullWidth
+            label={t('compression.capsules_number')}
+            type="number"
+            inputProps={{ min: 0 }}
+            value={row.capsule}
+            onChange={(e) => {
+              const newRows = [...rows];
+              rows[index].capsule = Number(e.target.value);
+              setData({ step: 1, key: 'capsule', value: newRows });
+            }}
+            adornment={''}
+          />
+        );
+      },
     },
     {
       field: 'wetGrossWeightCapsule',
       headerName: t('compression.wet_gross_weights_capsule'),
       renderCell: ({ row }) => {
-        
         const { id } = row;
         const index = rows.findIndex((r) => r.id === id);
 
         return (
-        <InputEndAdornment
-          fullWidth
-          label={t('compression.wet_gross_weights_capsule')}
-          type="number"
-          inputProps={{ min: 0 }}
-          value={row.wetGrossWeightCapsule}
-          onChange={(e) => {
-            const newRows = [...rows];
-            newRows[index].wetGrossWeightCapsule = Number(e.target.value);
-            setData({ step: 1, key: 'wetGrossWeightCapsule', value: newRows });
-          }}
-          adornment={''}
-        />
-      )},
+          <InputEndAdornment
+            fullWidth
+            label={t('compression.wet_gross_weights_capsule')}
+            type="number"
+            inputProps={{ min: 0 }}
+            value={row.wetGrossWeightCapsule}
+            onChange={(e) => {
+              const newRows = [...rows];
+              newRows[index].wetGrossWeightCapsule = Number(e.target.value);
+              setData({ step: 1, key: 'wetGrossWeightCapsule', value: newRows });
+            }}
+            adornment={''}
+          />
+        );
+      },
     },
     {
       field: 'dryGrossWeight',
       headerName: t('compression.dry_gross_weights'),
       renderCell: ({ row }) => {
-        
         const { id } = row;
         const index = rows.findIndex((r) => r.id === id);
 
         return (
-        <InputEndAdornment
-          fullWidth
-          label={t('compression.dry_gross_weights')}
-          type="number"
-          inputProps={{ min: 0 }}
-          value={row.dryGrossWeight}
-          onChange={(e) => {
-            const newRows = [...rows];
-            newRows[index].dryGrossWeight = Number(e.target.value);
-            setData({ step: 1, key: 'dryGrossWeight', value: newRows });
-          }}
-          adornment={''}
-        />
-      )},
+          <InputEndAdornment
+            fullWidth
+            label={t('compression.dry_gross_weights')}
+            type="number"
+            inputProps={{ min: 0 }}
+            value={row.dryGrossWeight}
+            onChange={(e) => {
+              const newRows = [...rows];
+              newRows[index].dryGrossWeight = Number(e.target.value);
+              setData({ step: 1, key: 'dryGrossWeight', value: newRows });
+            }}
+            adornment={''}
+          />
+        );
+      },
     },
     {
       field: 'capsuleTare',
       headerName: t('compression.capsules_weights'),
       renderCell: ({ row }) => {
-        
         const { id } = row;
         const index = rows.findIndex((r) => r.id === id);
 
         return (
-        <InputEndAdornment
-          fullWidth
-          label={t('compression.capsules_weights')}
-          type="number"
-          inputProps={{ min: 0 }}
-          value={row.capsuleTare}
-          onChange={(e) => {
-            const newRows = [...rows];
-            newRows[index].capsuleTare = Number(e.target.value);
-            setData({ step: 1, key: 'capsuleTare', value: newRows });
-          }}
-          adornment={''}
-        />
-      )},
+          <InputEndAdornment
+            fullWidth
+            label={t('compression.capsules_weights')}
+            type="number"
+            inputProps={{ min: 0 }}
+            value={row.capsuleTare}
+            onChange={(e) => {
+              const newRows = [...rows];
+              newRows[index].capsuleTare = Number(e.target.value);
+              setData({ step: 1, key: 'capsuleTare', value: newRows });
+            }}
+            adornment={''}
+          />
+        );
+      },
     },
   ];
 

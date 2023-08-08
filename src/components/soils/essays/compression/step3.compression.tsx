@@ -155,20 +155,8 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
   if (nextDisabled) {
     // verifica se todos os campos da tabela estão preenchidos
     rows.every((row) => {
-      const {
-        capsules,
-        wetGrossWeightsCapsule,
-        wetGrossWeights,
-        dryGrossWeights,
-        capsulesTare,
-      } = row;
-      return (
-        capsules &&
-        wetGrossWeightsCapsule &&
-        wetGrossWeights &&
-        dryGrossWeights &&
-        capsulesTare >= 0
-      );
+      const { capsules, wetGrossWeightsCapsule, wetGrossWeights, dryGrossWeights, capsulesTare } = row;
+      return capsules && wetGrossWeightsCapsule && wetGrossWeights && dryGrossWeights && capsulesTare >= 0;
     }) &&
       // verificar se precisa de mais validações antes de deixar ir para o próximo step
       setNextDisabled(false);
