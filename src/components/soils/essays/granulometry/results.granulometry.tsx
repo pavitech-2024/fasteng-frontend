@@ -43,11 +43,11 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
   const rows = [];
 
   step2Data.table_data.map((value, index) => {
-    rows.push({ 
-      sieve: value.sieve, 
-      passant_porcentage: value.passant, 
-      passant: granulometry_results.passant[index], 
-      retained_porcentage: granulometry_results.retained_porcentage[index], 
+    rows.push({
+      sieve: value.sieve,
+      passant_porcentage: value.passant,
+      passant: granulometry_results.passant[index],
+      retained_porcentage: granulometry_results.retained_porcentage[index],
       retained: value.retained,
       accumulated_retained: granulometry_results.accumulated_retained[index],
     });
@@ -84,7 +84,7 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
       headerName: t('granulometry.accumulated-retained') + ' (%)',
       valueFormatter: ({ value }) => `${value}`,
     },
-  ]
+  ];
 
   return (
     <>

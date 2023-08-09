@@ -2,14 +2,14 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 
 interface resultsGranulometryProps {
-  rows: { 
-    sieve: string; 
-    passant_porcentage: number; 
-    passant: number; 
-    retained_porcentage: number; 
-    retained: number; 
-    accumulated_retained: number 
-}[];
+  rows: {
+    sieve: string;
+    passant_porcentage: number;
+    passant: number;
+    retained_porcentage: number;
+    retained: number;
+    accumulated_retained: number;
+  }[];
   columns: GridColDef[];
 }
 
@@ -31,10 +31,14 @@ const Granulometry_resultsTable = ({ rows, columns }: resultsGranulometryProps) 
         minWidth: column.field === 'extended_read' ? 250 : 100,
         flex: 1,
       }))}
-      rows={rows !== null ? rows.map((row, index) => ({ 
-        ...row, 
-        id: index
-    })) : []}
+      rows={
+        rows !== null
+          ? rows.map((row, index) => ({
+              ...row,
+              id: index,
+            }))
+          : []
+      }
     />
   );
 };
