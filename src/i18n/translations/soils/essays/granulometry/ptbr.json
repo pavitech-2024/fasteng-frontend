@@ -7,6 +7,8 @@
   "granulometry.passant": "Passante",
   "granulometry.passant-porcentage": "Porcentagem de passante",
   "granulometry.retained": "Retido",
+  "granulometry.retained-porcentage": "Porcentagem de retido",
+  "granulometry.accumulated-retained": "Retido acumulado",
   "granulometry.sample_mass": "Massa da amostra",
   "granulometry.bottom": "Fundos",
   "granulometry.choose-series": "Escolha a série",

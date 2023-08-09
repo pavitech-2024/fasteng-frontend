@@ -8,10 +8,12 @@ import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-bor
 import Loading from '@/components/molecules/loading';
 import Chart from 'react-google-charts';
 import { Box } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
+import Granulometry_resultsTable from './tables/results-table.granulometry';
 
 const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
-  const { results: granulometry_results, generalData } = useGranulometryStore();
+  const { results: granulometry_results, step2Data, generalData } = useGranulometryStore();
 
   const data = {
     // container "Resultados"
@@ -37,6 +39,52 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
   };
 
   const graph_data = [[t('granulometry.passant'), t('granulometry.diameter')], ...granulometry_results.graph_data];
+
+  const rows = [];
+
+  step2Data.table_data.map((value, index) => {
+    rows.push({ 
+      sieve: value.sieve, 
+      passant_porcentage: value.passant, 
+      passant: granulometry_results.passant[index], 
+      retained_porcentage: granulometry_results.retained_porcentage[index], 
+      retained: value.retained,
+      accumulated_retained: granulometry_results.accumulated_retained[index],
+    });
+  });
+
+  const columns: GridColDef[] = [
+    {
+      field: 'sieve',
+      headerName: t('granulometry.sieves'),
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'passant_porcentage',
+      headerName: t('granulometry.passant-porcentage') + ' (%)',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'passant',
+      headerName: t('granulometry.passant') + ' (g)',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'retained_porcentage',
+      headerName: t('granulometry.retained-porcentage') + ' (%)',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'retained',
+      headerName: t('granulometry.retained') + ' (g)',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'accumulated_retained',
+      headerName: t('granulometry.accumulated-retained') + ' (%)',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+  ]
 
   return (
     <>
@@ -78,6 +126,7 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
             legend: 'none',
           }}
         />
+        <Granulometry_resultsTable rows={rows} columns={columns} />
       </FlexColumnBorder>
     </>
   );

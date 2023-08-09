@@ -20,8 +20,10 @@ interface granulometry_step2Data {
 
 interface granulometry_results {
   accumulated_retained: number[];
-  total_retained: number;
   graph_data: [number, number][];
+  passant: number[];
+  retained_porcentage: number[];
+  total_retained: number;
   nominal_size: number;
   nominal_diameter: number;
   fineness_module: number;
@@ -63,8 +65,10 @@ const useGranulometryStore = create<GranulometryData & GranulometryActions>()(
           bottom: null,
         },
         results: {
-          graph_data: [],
           accumulated_retained: [],
+          graph_data: [],
+          passant: [],
+          retained_porcentage: [],
           total_retained: null,
           nominal_size: null,
           nominal_diameter: null,
