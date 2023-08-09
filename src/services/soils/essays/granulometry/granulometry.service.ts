@@ -107,7 +107,13 @@ class Granulometry_SERVICE implements IEssayService {
       const sum = Math.round(100 * (retained + step2Data.bottom)) / 100;
 
       if (sum > step2Data.sample_mass) {
-        throw t('errors.sieves-sum-not-equal-to-sample-mass') + (step2Data.sample_mass - sum) + 'g.\n' + 'Retida + Fundos: ' + sum;
+        throw (
+          t('errors.sieves-sum-not-equal-to-sample-mass') +
+          (step2Data.sample_mass - sum) +
+          'g.\n' +
+          'Retida + Fundos: ' +
+          sum
+        );
       }
     } catch (error) {
       throw error;

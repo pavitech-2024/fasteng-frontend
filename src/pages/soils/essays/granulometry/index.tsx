@@ -4,7 +4,7 @@ import Granulometry_SERVICE from '@/services/soils/essays/granulometry/granulome
 import useGranulometryStore, { GranulometryActions } from '@/stores/soils/granulometry/granulometry.store';
 import Granulometry_GeneralData from '@/components/soils/essays/granulometry/general-data.granulometry';
 import Granulometry_Step2 from '@/components/soils/essays/granulometry/step2.granulometry';
-import Granulometry_Results from "@/components/soils/essays/granulometry/results.granulometry";
+import Granulometry_Results from '@/components/soils/essays/granulometry/results.granulometry';
 
 const Granulometry = () => {
   // start an instance of the service

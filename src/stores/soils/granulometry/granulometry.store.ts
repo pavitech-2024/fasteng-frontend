@@ -19,15 +19,15 @@ interface granulometry_step2Data {
 }
 
 interface granulometry_results {
-    accumulated_retained: number[];
-    total_retained: number;
-    graph_data: [number,number][]
-    nominal_size: number;
-    nominal_diameter: number;
-    fineness_module: number;
-    cc: number;
-    cnu: number;
-    error: number;
+  accumulated_retained: number[];
+  total_retained: number;
+  graph_data: [number, number][];
+  nominal_size: number;
+  nominal_diameter: number;
+  fineness_module: number;
+  cc: number;
+  cnu: number;
+  error: number;
 }
 
 export type GranulometryData = {
@@ -63,15 +63,15 @@ const useGranulometryStore = create<GranulometryData & GranulometryActions>()(
           bottom: null,
         },
         results: {
-            graph_data: [],
-            accumulated_retained: [],
-            total_retained: null,
-            nominal_size: null,
-            nominal_diameter: null,
-            fineness_module: null,
-            cc: null,
-            cnu: null,
-            error: null,
+          graph_data: [],
+          accumulated_retained: [],
+          total_retained: null,
+          nominal_size: null,
+          nominal_diameter: null,
+          fineness_module: null,
+          cc: null,
+          cnu: null,
+          error: null,
         },
 
         setData: ({ step, key, value }) =>

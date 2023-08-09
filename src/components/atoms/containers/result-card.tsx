@@ -72,7 +72,7 @@ const Result_Card = ({ label, value, unity }: Result_CardProps) => {
           fontWeight: '700',
           display: 'flex',
           justifyContent: 'center',
-            alignItems: 'center',
+          alignItems: 'center',
           textAlign: 'center',
           borderRadius: '10px 10px 0px 0px',
           color: 'primaryTons.white',
