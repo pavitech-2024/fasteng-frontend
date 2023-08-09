@@ -12,12 +12,12 @@ import { getSieveSeries } from '@/utils/sieves';
 const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useGranulometryStore();
 
-  const sievesSeries = [getSieveSeries(0), getSieveSeries(1), getSieveSeries(2), getSieveSeries(3)];
+  const sievesSeries = [getSieveSeries(0), getSieveSeries(1), getSieveSeries(2), getSieveSeries(3), getSieveSeries(4)];
 
   if (data.sieve_series && data.table_data && data.table_data.length == 0) {
     const table_data = [];
     data.sieve_series.map((s) => {
-      table_data.push({ sieve: s.label, passant: null, retained: null });
+      table_data.push({ sieve: s.label, passant: 100, retained: 0 });
     });
     setData({ step: 1, key: 'table_data', value: table_data });
   }
@@ -52,7 +52,13 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
               if (e.target.value === null) return;
               const newRows = [...rows];
               const passant = Number(e.target.value);
-              const retained = data.sample_mass !== 0 ? ((100 - passant) / 100) * data.sample_mass : 0;
+
+              const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
+              const initial_retained = 0;
+              const acumulative_retained = currentRows.reduce((accumulator: number, current_value) => accumulator + current_value.retained, initial_retained);
+
+              const retained = Math.round(100 * (data.sample_mass !== 0 ? (((100 - passant) / 100) * data.sample_mass) - acumulative_retained : 0)) / 100;
+
               newRows[sieve_index].passant = passant;
               newRows[sieve_index].retained = retained;
               setData({ step: 1, key: 'passant', value: newRows });
@@ -84,7 +90,12 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
               if (e.target.value === null) return;
               const newRows = [...rows];
               const retained = Number(e.target.value);
-              const passant = data.sample_mass !== 0 ? (100 * (data.sample_mass - retained)) / data.sample_mass : 0;
+
+              const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
+              const initial_retained = retained;
+              const acumulative_retained = currentRows.reduce((accumulator: number, current_value) => accumulator + current_value.retained, initial_retained);
+
+              const passant = Math.round(100 * (data.sample_mass !== 0 ? ((100 * (data.sample_mass - acumulative_retained)) / data.sample_mass) : 0)) / 100;
               newRows[sieve_index].retained = retained;
               newRows[sieve_index].passant = passant;
               setData({ step: 1, key: 'retained', value: newRows });
@@ -119,7 +130,29 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         <InputEndAdornment
           label={t('granulometry.sample_mass')}
           value={data.sample_mass}
-          onChange={(e) => setData({ step: 1, key: 'sample_mass', value: Number(e.target.value) })}
+          onChange={(e) => {
+            if (e.target.value === null) return;
+            const mass = Number(e.target.value);
+
+            setData({ step: 1, key: 'sample_mass', value: mass});
+
+            if (rows === null) return;
+
+            const newRows = [];
+
+            rows.map(function (item, index) {
+              const row = item;
+              
+              const currentRows = index > 0 ? newRows.slice(0, index) : [];
+              const initial_retained = 0;
+              const acumulative_retained = currentRows.reduce((accumulator: number, current_value) => accumulator + current_value.retained, initial_retained);
+
+              row.retained = Math.round(100 * (mass !== 0 ? (((100 - row.passant) / 100) * mass) - acumulative_retained : 0)) / 100;
+              
+              newRows.push({...row});
+            });
+            setData({ step: 1, key: 'table_data', value: newRows });
+          }}
           adornment={'g'}
           type="number"
           inputProps={{ min: 0 }}

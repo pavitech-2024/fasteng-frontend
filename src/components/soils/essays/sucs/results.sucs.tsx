@@ -23,7 +23,6 @@ const SUCS_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
       { label: 'CNU', value: sucs_results.cnu, unity: '' },
       { label: 'IP', value: sucs_results.ip, unity: '%' }
     );
-    console.log(sucs_results);
   }
 
   // criando o objeto que será passado para o componente ExperimentResume

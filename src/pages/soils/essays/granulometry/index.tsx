@@ -4,7 +4,7 @@ import Granulometry_SERVICE from '@/services/soils/essays/granulometry/granulome
 import useGranulometryStore, { GranulometryActions } from '@/stores/soils/granulometry/granulometry.store';
 import Granulometry_GeneralData from '@/components/soils/essays/granulometry/general-data.granulometry';
 import Granulometry_Step2 from '@/components/soils/essays/granulometry/step2.granulometry';
-// import Granulometry_Results from '@/components/soils/essays/granulometry/results.granulometry';
+import Granulometry_Results from "@/components/soils/essays/granulometry/results.granulometry";
 
 const Granulometry = () => {
   // start an instance of the service
@@ -28,7 +28,7 @@ const Granulometry = () => {
   const childrens = [
     { step: 0, children: <Granulometry_GeneralData granulometry={granulometry} />, data: store.generalData },
     { step: 1, children: <Granulometry_Step2 />, data: store },
-    // { step: 2, children: <Granulometry_Results />, data: store },
+    { step: 2, children: <Granulometry_Results />, data: store },
   ];
 
   return <EssayTemplate essayInfo={granulometry.info} nextCallback={granulometry.handleNext} childrens={childrens} />;

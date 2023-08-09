@@ -1,8 +1,11 @@
 {
   "granulometry.granulometry": "Granulometria",
   "granulometry.step-2-description": "Preencha todos os campos abaixo.",
+  "granulometry.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
   "granulometry.sieves": "Peneiras",
+  "granulometry.sieve-openness": "Abertura das peneiras",
   "granulometry.passant": "Passante",
+  "granulometry.passant-porcentage": "Porcentagem de passante",
   "granulometry.retained": "Retido",
   "granulometry.sample_mass": "Massa da amostra",
   "granulometry.bottom": "Fundos",
@@ -11,5 +14,13 @@
   "granulometry.normal-series-abnt-astm": "Série da ASTM",
   "granulometry.normal-intermediate-series-abnt": "Série da ABNT",
   "granulometry.normal-series-dnit": "Série do DNIT",
-  "granulometry.normal-series-dnit-2019": "Série do DNIT (2019)"
+  "granulometry.normal-series-dnit-2019": "Série do DNIT (2019)",
+  "granulometry.other-data": "Outros dados",
+  "granulometry.total-retained": "Total retido",
+  "granulometry.nominal-size": "Tamanho nominal",
+  "granulometry.nominal-diameter": "Diâmetro nominal",
+  "granulometry.fineness-module": "Módulo de finura",
+  "granulometry.cc": "CC",
+  "granulometry.cnu": "CNU",
+  "granulometry.error": "Erro"
 }
