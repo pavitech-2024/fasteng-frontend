@@ -12,7 +12,7 @@ const ResultSubTitle = ({ title, sx }: ResultSubTitleProps) => {
         width: 'fit-content',
         bgcolor: 'primaryTons.border',
         mb: { mobile: '2vh', notebook: '2vh' },
-        paddingInline: '2vw 20vw',
+        paddingInline: '2vw 10vw',
         transform: {
           mobile: 'translate(-20px, -10px)',
           notebook: 'translateX(-20px)',
@@ -30,7 +30,7 @@ const ResultSubTitle = ({ title, sx }: ResultSubTitleProps) => {
         borderColor: 'primary.main',
         ...sx,
       }}
-      variant="h6"
+      variant="h5"
     >
       {title}
     </Typography>

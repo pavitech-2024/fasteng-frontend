@@ -1,25 +1,29 @@
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import DropDown from '@/components/atoms/inputs/dropDown';
-import CBR_SERVICE from '@/services/soils/essays/cbr/cbr.service';
+import Granulometry_SERVICE from '@/services/soils/essays/granulometry/granulometry.service';
 import Loading from '@/components/molecules/loading';
 import { Sample } from '@/interfaces/soils';
 import { useEffect, useState } from 'react';
 import useAuth from '@/contexts/auth';
-import useCbrStore from '@/stores/soils/cbr/cbr.store';
+import useGranulometryStore from '@/stores/soils/granulometry/granulometry.store';
 import { toast } from 'react-toastify';
 import { EssayPageProps } from '@/components/templates/essay';
 
-const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps & { cbr: CBR_SERVICE }) => {
+const Granulometry_GeneralData = ({
+  nextDisabled,
+  setNextDisabled,
+  granulometry,
+}: EssayPageProps & { granulometry: Granulometry_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [samples, setSamples] = useState<Sample[]>([]);
   const { user } = useAuth();
-  const { generalData, setData } = useCbrStore();
+  const { generalData, setData } = useGranulometryStore();
 
   useEffect(() => {
     toast.promise(
       async () => {
-        const samples = await cbr.getSamplesByUserId(user._id);
+        const samples = await granulometry.getSamplesByUserId(user._id);
 
         setSamples(samples);
         setLoading(false);
@@ -138,4 +142,4 @@ const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps 
   );
 };
 
-export default CBR_GeneralData;
+export default Granulometry_GeneralData;

@@ -2,7 +2,7 @@
   "cbr.experimentName": "Nome do Experimento",
   "cbr.operator": "Operador",
   "cbr.samples": "Amostra",
-  "cbr.cauculist": "Cauculista",
+  "cbr.calculist": "Calculista",
   "experimentType": "Tipo de Experimento",
   "sample": "Amostra",
   "material": "Material",

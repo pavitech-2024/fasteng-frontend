@@ -1,7 +1,7 @@
 import { Sample } from '@/interfaces/soils';
+import { getSieveName } from '@/utils/sieves';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
-import { setDataType } from '../cbr/cbr.store';
 
 interface GeneralData {
   userId: string;
@@ -12,36 +12,35 @@ interface GeneralData {
   description?: string;
 }
 
-interface hrb_step2Data {
-  tableData: HRB_Step2TableData[];
-  liquidity_limit: number;
-  plasticity_limit: number;
+interface sucs_step2Data {
+  ll_porcentage: number;
+  lp_porcentage: number;
+  sieves: { sieve: string; passant: number }[];
+  organic_matter: boolean;
 }
 
-interface hrb_results {
+interface sucs_results {
+  cc: number;
+  cnu: number;
+  ip: number;
   classification: string;
-  group_index: number;
-  plasticity_index: number;
 }
 
-export interface HRB_Step2TableData {
-  sieve: number;
-  percent_passant: number;
-}
-
-export type HrbData = {
+export type SucsData = {
   generalData: GeneralData;
-  step2Data: hrb_step2Data;
-  results: hrb_results;
+  step2Data: sucs_step2Data;
+  results: sucs_results;
 };
 
-export type HrbActions = {
+export type SucsActions = {
   setData: ({ step, key, value }: setDataType) => void;
 };
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'results' };
 
-const useHrbStore = create<HrbData & HrbActions>()(
+type setDataType = { step: number; key?: string; value: unknown };
+
+const useSucsStore = create<SucsData & SucsActions>()(
   devtools(
     persist(
       (set) => ({
@@ -53,31 +52,20 @@ const useHrbStore = create<HrbData & HrbActions>()(
           calculist: null,
           description: null,
         },
-
         step2Data: {
-          liquidity_limit: null,
-          plasticity_limit: null,
-          tableData: [
-            {
-              sieve: 2,
-              percent_passant: null,
-            },
-
-            {
-              sieve: 0.43,
-              percent_passant: null,
-            },
-
-            {
-              sieve: 0.075,
-              percent_passant: null,
-            },
+          ll_porcentage: null,
+          lp_porcentage: null,
+          sieves: [
+            { sieve: getSieveName(4.8), passant: null },
+            { sieve: getSieveName(0.075), passant: null },
           ],
+          organic_matter: null,
         },
         results: {
+          cc: null,
+          cnu: null,
+          ip: null,
           classification: null,
-          group_index: null,
-          plasticity_index: null,
         },
 
         setData: ({ step, key, value }) =>
@@ -94,11 +82,12 @@ const useHrbStore = create<HrbData & HrbActions>()(
           }),
       }),
       {
-        name: 'hrb-store',
+        // name data store e config no session storage
+        name: 'sucs-store',
         storage: createJSONStorage(() => sessionStorage),
       }
     )
   )
 );
 
-export default useHrbStore;
+export default useSucsStore;

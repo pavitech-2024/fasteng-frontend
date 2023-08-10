@@ -137,10 +137,10 @@ const EssayTemplate = ({
       </BodyEssay>
 
       <Footer
-        previousText={t('previous')}
+        previousText={t('footer.previous')}
         previousDisabled={activeStep === 0}
         handlePreviousClick={() => setActiveStep(activeStep - 1)}
-        nextText={childrens.length - 1 === activeStep ? t('save') : t('next')}
+        nextText={childrens.length - 1 === activeStep ? t('footer.save') : t('footer.next')}
         nextDisabled={nextDisabled}
         handleNextClick={handleNextClick}
       />

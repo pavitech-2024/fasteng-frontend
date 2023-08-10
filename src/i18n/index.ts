@@ -11,12 +11,18 @@ import homeENG from './translations/home/en.json';
 // topbar
 import topbarPTBR from './translations/topbar/ptbr.json';
 import topbarENG from './translations/topbar/en.json';
+//footer
+import footerPTBR from './translations/footer/ptbr.json';
+import footerENG from './translations/footer/en.json';
 //navbar
 import navbarPTBR from './translations/navbar/ptbr.json';
 import navbarENG from './translations/navbar/en.json';
 //settings
 import settingsPTBR from './translations/settings/ptbr.json';
 import settingsENG from './translations/settings/en.json';
+//errors
+import errorsPTBR from './translations/errors/ptbr.json';
+import errorsENG from './translations/errors/en.json';
 
 /** @templates */
 import materialsPTBR from './translations/templates/materials/ptbr.json';
@@ -46,6 +52,12 @@ import cbrENG from './translations/soils/essays/cbr/en.json';
 // hrb
 import hrbPTBR from './translations/soils/essays/hrb/ptbr.json';
 import hrbENG from './translations/soils/essays/hrb/en.json';
+// sucs
+import sucsPTBR from './translations/soils/essays/sucs/ptbr.json';
+import sucsENG from './translations/soils/essays/sucs/en.json';
+// granulometry
+import granulometryPTBR from './translations/soils/essays/granulometry/ptbr.json';
+import granulometryENG from './translations/soils/essays/granulometry/en.json';
 
 /**@concrete */
 import concreteEssaysPTBR from './translations/concrete/essays/ptbr.json';
@@ -67,6 +79,8 @@ i18n.use(initReactI18next).init({
         ...topbarPTBR,
         ...navbarPTBR,
         ...settingsPTBR,
+        ...footerPTBR,
+        ...errorsPTBR,
         /**@templates */
         ...materialsPTBR,
         ...welcomePTBR,
@@ -78,6 +92,8 @@ i18n.use(initReactI18next).init({
         ...soilsEssaysPTBR,
         ...cbrPTBR,
         ...hrbPTBR,
+        ...sucsPTBR,
+        ...granulometryPTBR,
         /**@concrete */
         ...concreteEssaysPTBR,
         ...concreteMaterialsPTBR,
@@ -90,6 +106,8 @@ i18n.use(initReactI18next).init({
         ...topbarENG,
         ...navbarENG,
         ...settingsENG,
+        ...footerENG,
+        ...errorsENG,
         /**@templates */
         ...materialsENG,
         ...welcomeENG,
@@ -101,6 +119,8 @@ i18n.use(initReactI18next).init({
         ...soilsEssaysENG,
         ...cbrENG,
         ...hrbENG,
+        ...sucsENG,
+        ...granulometryENG,
         /**@concrete */
         ...concreteEssaysENG,
         ...concreteMaterialsENG,

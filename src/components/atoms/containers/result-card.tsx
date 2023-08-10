@@ -73,6 +73,7 @@ const Result_Card = ({ label, value, unity }: Result_CardProps) => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          textAlign: 'center',
           borderRadius: '10px 10px 0px 0px',
           color: 'primaryTons.white',
           fontSize: { mobile: '12px', notebook: '1rem' },

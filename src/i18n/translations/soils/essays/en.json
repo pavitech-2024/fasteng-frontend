@@ -3,6 +3,9 @@
   "soils.essays.hrb": "Road Classification - HRB",
   "soils.essays.sucs": "Unified Classification - SUCS",
   "soils.essays.compression": "Compression Test",
+  "soils.essays.granulometry": "Granulometry by Sieving",
+  "granulometry": "Granulometry",
   "general data": "General Data",
-  "general data of essay": "Essay General Data"
+  "general data of essay": "Essay General Data",
+  "results": "Results"
 }

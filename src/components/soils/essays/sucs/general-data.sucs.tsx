@@ -1,25 +1,28 @@
-import { Box, TextField } from '@mui/material';
+import { Box, Dialog, TextField } from '@mui/material';
 import { t } from 'i18next';
 import DropDown from '@/components/atoms/inputs/dropDown';
-import CBR_SERVICE from '@/services/soils/essays/cbr/cbr.service';
+import SUCS_SERVICE from '@/services/soils/essays/sucs/sucs.service';
 import Loading from '@/components/molecules/loading';
 import { Sample } from '@/interfaces/soils';
 import { useEffect, useState } from 'react';
 import useAuth from '@/contexts/auth';
-import useCbrStore from '@/stores/soils/cbr/cbr.store';
+import useSucsStore from '@/stores/soils/sucs/sucs.store';
 import { toast } from 'react-toastify';
 import { EssayPageProps } from '@/components/templates/essay';
+import Image from 'next/image';
+import { SucsTableImage } from '../../../../assets';
 
-const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps & { cbr: CBR_SERVICE }) => {
+const SUCS_GeneralData = ({ nextDisabled, setNextDisabled, sucs }: EssayPageProps & { sucs: SUCS_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(false);
   const [samples, setSamples] = useState<Sample[]>([]);
   const { user } = useAuth();
-  const { generalData, setData } = useCbrStore();
+  const { generalData, setData } = useSucsStore();
 
   useEffect(() => {
     toast.promise(
       async () => {
-        const samples = await cbr.getSamplesByUserId(user._id);
+        const samples = await sucs.getSamplesByUserId(user._id);
 
         setSamples(samples);
         setLoading(false);
@@ -132,10 +135,30 @@ const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps 
             required={inputs[inputs.length - 1].required}
             onChange={(e) => setData({ step: 0, key: inputs[inputs.length - 1].key, value: e.target.value })}
           />
+
+          <Image
+            src={SucsTableImage}
+            alt="hrb-table"
+            width={0}
+            height={0}
+            sizes="100vw"
+            style={{ width: '100%', height: 'auto', marginTop: '20px' }}
+            onClick={() => setOpen(true)}
+          />
+          <Dialog open={open} onClose={() => setOpen(false)}>
+            <Image
+              src={SucsTableImage}
+              alt="hrb-table"
+              width={0}
+              height={0}
+              sizes="100vw"
+              style={{ width: '100%', height: 'auto', marginTop: '20px' }}
+            />
+          </Dialog>
         </Box>
       )}
     </>
   );
 };
 
-export default CBR_GeneralData;
+export default SUCS_GeneralData;
