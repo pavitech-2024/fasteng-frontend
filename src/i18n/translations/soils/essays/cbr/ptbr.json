@@ -50,5 +50,6 @@
   "loading.save.success": "Salvo com sucesso!",
   "loading.save.error": "Erro ao salvar!",
 
-  "AlreadyExists": "Já cadastrado."
+  "AlreadyExists": "Já cadastrado.",
+  "NotFound": "Não encontrado."
 }

@@ -41,5 +41,6 @@
   "loading.save.success": "Saved successfully!",
   "loading.save.error": "Error on saving!",
 
-  "AlreadyExists": "Already exists!"
+  "AlreadyExists": "Already exists!",
+  "NotFound": "Not found!"
 }

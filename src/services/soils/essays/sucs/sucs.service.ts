@@ -78,7 +78,7 @@ class SUCS_SERVICE implements IEssayService {
       const { success, error } = response.data;
 
       // if there is already a SUCS essay with same name for the sample, throw error
-      if (success === false) throw error.name;
+      if (success === false) throw t(error.message);
     } catch (error) {
       throw error;
     }
