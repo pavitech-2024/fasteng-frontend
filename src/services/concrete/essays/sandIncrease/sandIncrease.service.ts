@@ -1,0 +1,93 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { CompressionIcon, SandIncreaseIcon } from '@/assets';
+import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
+import { Sample } from '@/interfaces/soils';
+import { t } from 'i18next';
+import Api from '@/api';
+import { CompressionActions, CompressionData } from '@/stores/soils/compression/compression.store';
+import { Step } from '@mui/material';
+import { SandIncreaseActions, SandIncreaseData } from '@/stores/concrete/sandIncrease/sandIncrease.store';
+import { ConcreteMaterial } from '@/interfaces/concrete';
+
+class SAND_INCREASE_SERVICE implements IEssayService {
+  info = {
+    key: 'sandIncrease',
+    icon: SandIncreaseIcon,
+    title: t('concrete.essays.sandIncrease'),
+    path: '/concrete/essays/sandIncrease',
+    steps: 4,
+    backend_path: 'concrete/essays/sandIncrease',
+    standard: {
+      name: 'Mudar norma do dnit',
+      link: 'link da norma',
+    },
+    stepperData: [
+      { step: 0, description: t('sandIncrease.general_data'), path: 'general-data' },
+      { step: 1, description: t('sandIncrease.results'), path: 'results' }
+    ],
+  };
+
+  store_actions: SandIncreaseActions;
+  userId: string;
+
+  handleNext = async (step: number, data: unknown): Promise<void> => {
+    try {
+      switch (step) {
+        case 0:
+          await this.submitSandIncreaseGeneralData(data as SandIncreaseData['sandIncreaseGeneralData']);
+          break;
+        case 1:
+          await this.calculateResults(data as SandIncreaseData);
+          break;
+          default:
+            throw t('errors.invalid-step');
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getMaterialsByUserId = async (userId: string): Promise<ConcreteMaterial[]> => {
+    try {
+      const response = await Api.get(`concrete/materials/all/${userId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  submitSandIncreaseGeneralData = async (generalData: SandIncreaseData['sandIncreaseGeneralData']): Promise<void> => {
+    try {
+      const { name, material } = generalData;
+
+      if (!name) throw t('errors.empty-name');
+      if (!material) throw t('errors.empty-material');
+
+      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, material });
+
+      const { success, error } = response.data;
+
+      if (success === false) throw error.name;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  calculateResults = async (store: SandIncreaseData): Promise<void> => {
+    try {
+      const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
+        sandIncreaseGeneralData: store.sandIncreaseGeneralData,
+      });
+
+      const { success, error, result } = response.data;
+
+      if (success === false) throw error.name;
+
+      this.store_actions.setData({ step: 3, value: result });
+    } catch (error) {
+      throw error;
+    }
+  };
+}
+
+export default SAND_INCREASE_SERVICE;
