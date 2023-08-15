@@ -23,7 +23,7 @@ class SAND_INCREASE_SERVICE implements IEssayService {
     },
     stepperData: [
       { step: 0, description: t('sandIncrease.general_data'), path: 'general-data' },
-      { step: 1, description: t('sandIncrease.results'), path: 'results' }
+      { step: 1, description: t('sandIncrease.results'), path: 'results' },
     ],
   };
 
@@ -39,8 +39,8 @@ class SAND_INCREASE_SERVICE implements IEssayService {
         case 1:
           await this.calculateResults(data as SandIncreaseData);
           break;
-          default:
-            throw t('errors.invalid-step');
+        default:
+          throw t('errors.invalid-step');
       }
     } catch (error) {
       throw error;

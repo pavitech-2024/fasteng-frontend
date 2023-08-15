@@ -109,11 +109,7 @@ class COMPRESSION_SERVICE implements IEssayService {
       if (!layers) throw t('errors.empty-layers');
 
       for (let i = 0; i < hygroscopicTable.length; i++) {
-        const { 
-          wetGrossWeightsCapsuleHyg, 
-          dryGrossWeightsHyg, 
-          capsulesWeightsHyg 
-        } = hygroscopicTable[i];
+        const { wetGrossWeightsCapsuleHyg, dryGrossWeightsHyg, capsulesWeightsHyg } = hygroscopicTable[i];
 
         if (!capsulesWeightsHyg || capsulesWeightsHyg >= dryGrossWeightsHyg) {
           if (hygroscopicTable[i].capsulesNumberHyg) {
@@ -159,11 +155,7 @@ class COMPRESSION_SERVICE implements IEssayService {
       if (!humidityTable) throw t('errors.empty-humidity-table');
 
       for (let i = 0; i < humidityTable.length; i++) {
-        const { 
-          capsulesWeightsHum, 
-          dryWeightsCapsules, 
-          wetGrossWeightsCapsuleHum 
-        } = humidityTable[i];
+        const { capsulesWeightsHum, dryWeightsCapsules, wetGrossWeightsCapsuleHum } = humidityTable[i];
 
         if (!capsulesWeightsHum) {
           throw t('errors-empty-capsules-weights-hum') + ` [ ponto: ${i + 1}]`;

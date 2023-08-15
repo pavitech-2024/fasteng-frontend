@@ -20,7 +20,7 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
 
   // if (sand_increase_results) {
   //   // data container 1
-    
+
   // }
 
   return <Box sx={{ display: 'flex', flexDirection: 'column' }}>teste</Box>;
