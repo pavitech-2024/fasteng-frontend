@@ -43,13 +43,27 @@ interface humidityDeterminationData {
     capsules: number; // número de capsulas
     wetGrossWeightsCapsule: number; // peso bruto úmido (g)
     wetGrossWeights: number; // peso úmido da amostra + cápsula (g)
-    dryGrossWeights: number; // peso seco da amostra + capsula (g)
+    dryGrossWeightsCapsule: number; // peso seco da amostra + capsula (g)
     capsulesTare: number; // peso da cápsula (g)
   }[];
 }
 
 interface compression_results {
-  result: string; // corrigir
+  waterWeight: number;
+  netWeightDrySoil: number;
+  hygroscopicMoisture: number;
+  wetSoilWeights: number;
+  wetSoilDensitys: number;
+  waterWeights: number;
+  netWeightsDrySoil: number;
+  moistures: number;
+  drySoilDensitys: number;
+  regression: number;
+  a_index: number;
+  b_index: number;
+  optimumMoisture: number;
+  optimumDensity: number;
+  graph: number;
 }
 
 export type CompressionData = {
@@ -100,17 +114,31 @@ const useCompressionStore = create<CompressionData & CompressionActions>()(
         humidityDeterminationData: {
           humidityTable: [
             {
-              id: null,
+              id: 0,
               capsules: null,
               wetGrossWeightsCapsule: null,
               wetGrossWeights: null,
-              dryGrossWeights: null,
+              dryGrossWeightsCapsule: null,
               capsulesTare: null,
             },
           ],
         },
         results: {
-          result: null,
+          waterWeight: null,
+          netWeightDrySoil: null,
+          hygroscopicMoisture: null,
+          wetSoilWeights: null,
+          wetSoilDensitys: null,
+          waterWeights: null,
+          netWeightsDrySoil: null,
+          moistures: null,
+          drySoilDensitys: null,
+          regression: null,
+          a_index: null,
+          b_index: null,
+          optimumMoisture: null,
+          optimumDensity: null,
+          graph: null,
         },
 
         setData: ({ step, key, value }) =>

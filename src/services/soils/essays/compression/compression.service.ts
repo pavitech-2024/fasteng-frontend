@@ -41,7 +41,7 @@ class COMPRESSION_SERVICE implements IEssayService {
           break;
         case 2:
           const { hygroscopicData, humidityDeterminationData } = data as CompressionData;
-          await this.submitCompressionHygroscopicData(hygroscopicData);
+          //await this.submitCompressionHygroscopicData(hygroscopicData);
           await this.submitCompressionHumidityDeterminationData(humidityDeterminationData);
           await this.calculateResults(data as CompressionData);
           break;
@@ -150,13 +150,13 @@ class COMPRESSION_SERVICE implements IEssayService {
       if (!humidityTable) throw t('errors.empty-humidity-table');
 
       for (let i = 0; i < humidityTable.length; i++) {
-        const { capsules, dryGrossWeights, wetGrossWeightsCapsule, capsulesTare } = humidityTable[i];
+        const { capsules, dryGrossWeightsCapsule, wetGrossWeightsCapsule, capsulesTare } = humidityTable[i];
 
         if (!capsulesTare) {
           throw t('errors-empty-capsules-weights-hum') + ` [ ponto: ${i + 1}]`;
         }
 
-        if (capsulesTare >= dryGrossWeights) {
+        if (capsulesTare >= dryGrossWeightsCapsule) {
           if (humidityTable[i].capsules) {
             throw t('errors.invalid-capsules-number-hum') + ` [ ${humidityTable[i].capsules} ]`;
           } else {
@@ -164,7 +164,7 @@ class COMPRESSION_SERVICE implements IEssayService {
           }
         }
 
-        if (dryGrossWeights >= dryGrossWeights) {
+        if (dryGrossWeightsCapsule >= wetGrossWeightsCapsule) {
           if (humidityTable[i].capsules) {
             throw t('errors.invalid-dry-weights-capsule-hum') + ` [ ${humidityTable[i].capsules} ]`;
           } else {
@@ -172,14 +172,6 @@ class COMPRESSION_SERVICE implements IEssayService {
           }
         }
       }
-
-      const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
-        humidityDeterminationData,
-      });
-
-      const { success, error } = response.data;
-
-      if (success === false) throw error.name;
     } catch (error) {
       throw error;
     }

@@ -29,7 +29,7 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
       capsules: null,
       wetGrossWeightsCapsule: null,
       wetGrossWeights: null,
-      dryGrossWeights: null,
+      dryGrossWeightsCapsule: null,
       capsulesTare: null,
     });
     setData({ step: 2, key: 'humidityTable', value: newRows });
@@ -75,7 +75,7 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
       },
     },
     {
-      field: 'wetGrossWeightsCapsule',
+      field: 'wetGrossWeights',
       headerName: t('compression.wet_gross_weights_capsule'),
       renderCell: ({ row }) => {
         const { id } = row;
@@ -85,29 +85,6 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           <InputEndAdornment
             fullWidth
             label={t('compression.wet_gross_weights_capsule')}
-            type="number"
-            inputProps={{ min: 0 }}
-            value={row.wetGrossWeightsCapsule}
-            onChange={(e) => {
-              const newRows = [...rows];
-              rows[index].wetGrossWeightsCapsule = Number(e.target.value);
-              setData({ step: 2, key: 'wetGrossWeightsCapsule', value: newRows });
-            }}
-            adornment={''}
-          />
-        );
-      },
-    },
-    {
-      field: 'wetGrossWeights',
-      headerName: t('compression.wet_weights_capsules'),
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = rows.findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            fullWidth
-            label={t('compression.wet_weights_capsules')}
             type="number"
             inputProps={{ min: 0 }}
             value={row.wetGrossWeights}
@@ -122,7 +99,30 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
       },
     },
     {
-      field: 'dryGrossWeights',
+      field: 'wetGrossWeightsCapsule',
+      headerName: t('compression.wet_weights_capsules'),
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = rows.findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            fullWidth
+            label={t('compression.wet_weights_capsules')}
+            type="number"
+            inputProps={{ min: 0 }}
+            value={row.wetGrossWeightsCapsule}
+            onChange={(e) => {
+              const newRows = [...rows];
+              rows[index].wetGrossWeightsCapsule = Number(e.target.value);
+              setData({ step: 2, key: 'wetGrossWeightsCapsule', value: newRows });
+            }}
+            adornment={''}
+          />
+        );
+      },
+    },
+    {
+      field: 'dryGrossWeightsCapsule',
       headerName: t('compression.dry_weights_capsules'),
       renderCell: ({ row }) => {
         const { id } = row;
@@ -133,11 +133,11 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
             label={t('compression.dry_weights_capsules')}
             type="number"
             inputProps={{ min: 0 }}
-            value={row.dryGrossWeights}
+            value={row.dryGrossWeightsCapsule}
             onChange={(e) => {
               const newRows = [...rows];
-              rows[index].dryGrossWeights = Number(e.target.value);
-              setData({ step: 2, key: 'dryGrossWeights', value: newRows });
+              rows[index].dryGrossWeightsCapsule = Number(e.target.value);
+              setData({ step: 2, key: 'dryGrossWeightsCapsule', value: newRows });
             }}
             adornment={''}
           />
@@ -172,8 +172,8 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
   if (nextDisabled) {
     // verifica se todos os campos da tabela estão preenchidos
     rows.every((row) => {
-      const { capsules, wetGrossWeightsCapsule, wetGrossWeights, dryGrossWeights, capsulesTare } = row;
-      return capsules && wetGrossWeightsCapsule && wetGrossWeights && dryGrossWeights && capsulesTare >= 0;
+      const { capsules, wetGrossWeightsCapsule, wetGrossWeights, dryGrossWeightsCapsule, capsulesTare } = row;
+      return capsules && wetGrossWeightsCapsule && wetGrossWeights && dryGrossWeightsCapsule && capsulesTare >= 0;
     }) &&
       // verificar se precisa de mais validações antes de deixar ir para o próximo step
       setNextDisabled(false);
