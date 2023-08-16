@@ -11,12 +11,18 @@ interface sandIncrease_generalData {
   cauculist?: string;
 }
 
+interface unitMassDeterminationData {
+  containerVolume: number;
+  containerWeight: number
+}
+
 interface sandIncrease_results {
   result: string; // corrigir
 }
 
 export type SandIncreaseData = {
   sandIncreaseGeneralData: sandIncrease_generalData;
+  unitMassDeterminationData: unitMassDeterminationData,
   results: sandIncrease_results;
 };
 
@@ -26,7 +32,7 @@ export type SandIncreaseActions = {
 
 type setDataType = { step: number; key?: string; value: unknown };
 
-const stepVariant = { 0: 'sandIncreaseGeneralData', 2: 'results' };
+const stepVariant = { 0: 'sandIncreaseGeneralData', 1: 'unitMassDetermination', 2: 'results' };
 
 const useSandIncreaseStore = create<SandIncreaseData & SandIncreaseActions>()(
   devtools(
@@ -39,6 +45,10 @@ const useSandIncreaseStore = create<SandIncreaseData & SandIncreaseActions>()(
           operator: null,
           description: null,
           cauculist: null,
+        },
+        unitMassDeterminationData: {
+          containerVolume: null,
+          containerWeight: null
         },
         results: {
           result: null,

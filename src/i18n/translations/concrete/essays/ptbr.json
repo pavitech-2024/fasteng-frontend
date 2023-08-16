@@ -3,5 +3,10 @@
   "concrete.essays.chapman": "Massa Específica - Frasco de Chapman",
   "concrete.essays.unitMass": "Massa Unitária",
   "concrete.essays.sandIncrease": "Inchamento da Areia",
-  "concrete.essays.coarseAggregate": "Massa Específica de Agregado Graúdo"
+  "concrete.essays.coarseAggregate": "Massa Específica de Agregado Graúdo",
+  "concrete.essays.sandIncrease.experimentName": "Nome do experimento",
+  "loading.materials.success": "Materiais carregados!",
+  "loading.materials.error": "Erro ao carregar os materiais!",
+  "loading.materials.pending": "Carregando os materiais...",
+  "sandIncrease.materials": "Materiais"
 }

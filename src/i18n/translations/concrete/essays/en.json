@@ -3,5 +3,7 @@
   "concrete.essays.chapman": "Specific Mass - Chapman's Flask",
   "concrete.essays.unitMass": "Unit Mass",
   "concrete.essays.sandIncrease": "Sand Increase",
-  "concrete.essays.coarseAggregate": "Specific Mass of Coarse Aggregate"
+  "concrete.essays.coarseAggregate": "Specific Mass of Coarse Aggregate",
+  "general data": "General Data",
+  "general data of essay": "Essay General Data"
 }

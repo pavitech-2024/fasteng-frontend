@@ -37,8 +37,18 @@ const SandIncrease_GeneralData = ({
   }, []);
 
   const inputs = [
-    { label: t('sandIncrease.experimentName'), value: sandIncreaseGeneralData.name, key: 'name', required: true },
-    { label: t('sandIncrease.materials'), value: sandIncreaseGeneralData.material, key: 'material', required: true },
+    { 
+      label: t('concrete.essays.sandIncrease.experimentName'), 
+      value: sandIncreaseGeneralData.name, 
+      key: 'name', 
+      required: true 
+    },
+    { 
+      label: t('sandIncrease.materials'), 
+      value: sandIncreaseGeneralData.material, 
+      key: 'material', 
+      required: true 
+    },
   ];
 
   inputs.every(({ required, value }) => {
@@ -122,7 +132,7 @@ const SandIncrease_GeneralData = ({
               }
             })}
           </Box>
-          <TextField
+          {/* <TextField
             variant="standard"
             fullWidth
             key={inputs[inputs.length - 1].key}
@@ -130,7 +140,7 @@ const SandIncrease_GeneralData = ({
             value={inputs[inputs.length - 1].value}
             required={inputs[inputs.length - 1].required}
             onChange={(e) => setData({ step: 0, key: inputs[inputs.length - 1].key, value: e.target.value })}
-          />
+          /> */}
         </Box>
       )}
     </>

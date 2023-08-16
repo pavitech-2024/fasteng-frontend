@@ -1,5 +1,6 @@
 import SandIncrease_GeneralData from '@/components/concrete/essays/sandIncrease/general-data.sand-increase';
 import Sand_Increase_Results from '@/components/concrete/essays/sandIncrease/results.sand-increase';
+import SandIncrease_Step2 from '@/components/concrete/essays/sandIncrease/step2.sandIncrease';
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import SAND_INCREASE_SERVICE from '@/services/concrete/essays/sandIncrease/sandIncrease.service';
@@ -24,7 +25,16 @@ const SandIncrease = () => {
       children: <SandIncrease_GeneralData sandIncrease={sandIncrease} />,
       data: store.sandIncreaseGeneralData,
     },
-    { step: 3, children: <Sand_Increase_Results />, data: store },
+    { 
+      step: 1, 
+      children: <SandIncrease_Step2 />, 
+      data: store.unitMassDeterminationData 
+    },
+    { 
+      step: 2, 
+      children: <Sand_Increase_Results />, 
+      data: store 
+    },
   ];
 
   return <EssayTemplate essayInfo={sandIncrease.info} nextCallback={sandIncrease.handleNext} childrens={childrens} />;

@@ -18,12 +18,13 @@ class SAND_INCREASE_SERVICE implements IEssayService {
     steps: 4,
     backend_path: 'concrete/essays/sandIncrease',
     standard: {
-      name: 'Mudar norma do dnit',
+      name: 'ABNT NBR 6467',
       link: 'link da norma',
     },
     stepperData: [
-      { step: 0, description: t('sandIncrease.general_data'), path: 'general-data' },
-      { step: 1, description: t('sandIncrease.results'), path: 'results' },
+      { step: 0, description: t('general data'), path: 'general-data' },
+      { step: 1, description: t('unit mass determination'), path: 'passo2' },
+      { step: 2, description: t('results'), path: 'results' },
     ],
   };
 
@@ -37,6 +38,9 @@ class SAND_INCREASE_SERVICE implements IEssayService {
           await this.submitSandIncreaseGeneralData(data as SandIncreaseData['sandIncreaseGeneralData']);
           break;
         case 1:
+            await this.submitUnitMassDeterminationData(data as SandIncreaseData['unitMassDeterminationData']);
+            break;
+        case 2:
           await this.calculateResults(data as SandIncreaseData);
           break;
         default:
@@ -68,6 +72,18 @@ class SAND_INCREASE_SERVICE implements IEssayService {
       const { success, error } = response.data;
 
       if (success === false) throw error.name;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  submitUnitMassDeterminationData = (unitMassDeterminationData: SandIncreaseData['unitMassDeterminationData']): void => {
+    try {
+      if (!unitMassDeterminationData.containerVolume) throw t('errors.empty-container-volume');
+      if (unitMassDeterminationData.containerVolume < 0) throw t('errors.negative-container-volume');
+
+      if (!unitMassDeterminationData.containerWeight) throw t('errors.empty-container-weight');
+      if (unitMassDeterminationData.containerWeight < 0) throw t('errors.negative-container-weight');
     } catch (error) {
       throw error;
     }
