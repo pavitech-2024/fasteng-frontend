@@ -38,8 +38,8 @@ class SAND_INCREASE_SERVICE implements IEssayService {
           await this.submitSandIncreaseGeneralData(data as SandIncreaseData['sandIncreaseGeneralData']);
           break;
         case 1:
-            await this.submitUnitMassDeterminationData(data as SandIncreaseData['unitMassDeterminationData']);
-            break;
+          await this.submitUnitMassDeterminationData(data as SandIncreaseData['unitMassDeterminationData']);
+          break;
         case 2:
           await this.calculateResults(data as SandIncreaseData);
           break;
@@ -77,7 +77,9 @@ class SAND_INCREASE_SERVICE implements IEssayService {
     }
   };
 
-  submitUnitMassDeterminationData = (unitMassDeterminationData: SandIncreaseData['unitMassDeterminationData']): void => {
+  submitUnitMassDeterminationData = (
+    unitMassDeterminationData: SandIncreaseData['unitMassDeterminationData']
+  ): void => {
     try {
       if (!unitMassDeterminationData.containerVolume) throw t('errors.empty-container-volume');
       if (unitMassDeterminationData.containerVolume < 0) throw t('errors.negative-container-volume');

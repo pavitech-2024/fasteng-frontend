@@ -1,16 +1,13 @@
-import { EssayPageProps } from "@/components/templates/essay"
-import useSandIncreaseStore from "@/stores/concrete/sandIncrease/sandIncrease.store"
-import { Box } from "@mui/material"
-import { t } from "i18next";
+import { EssayPageProps } from '@/components/templates/essay';
+import useSandIncreaseStore from '@/stores/concrete/sandIncrease/sandIncrease.store';
+import { Box } from '@mui/material';
+import { t } from 'i18next';
 
-
-const SandIncrease_Step2 = ({ 
-  // nextDisabled, 
-  // setNextDisabled 
-}: EssayPageProps) => {
-
+const SandIncrease_Step2 = ({}: // nextDisabled,
+// setNextDisabled
+EssayPageProps) => {
   const { unitMassDeterminationData: data, setData } = useSandIncreaseStore();
-  console.log("🚀 ~ file: step2.sandIncrease.tsx:13 ~ setData:", setData)
+  console.log('🚀 ~ file: step2.sandIncrease.tsx:13 ~ setData:', setData);
 
   const inputs = [
     {
@@ -25,8 +22,8 @@ const SandIncrease_Step2 = ({
       key: 'containerWeight',
       required: true,
     },
-  ]
-  console.log("🚀 ~ file: step2.sandIncrease.tsx:29 ~ inputs:", inputs)
+  ];
+  console.log('🚀 ~ file: step2.sandIncrease.tsx:29 ~ inputs:', inputs);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -37,11 +34,9 @@ const SandIncrease_Step2 = ({
           justifyContent: { mobile: 'center', notebook: 'center' },
           flexWrap: 'wrap',
         }}
-      >
-  
-      </Box>
+      ></Box>
     </Box>
-  )
-}
+  );
+};
 
-export default SandIncrease_Step2
+export default SandIncrease_Step2;

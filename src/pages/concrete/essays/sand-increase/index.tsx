@@ -25,15 +25,15 @@ const SandIncrease = () => {
       children: <SandIncrease_GeneralData sandIncrease={sandIncrease} />,
       data: store.sandIncreaseGeneralData,
     },
-    { 
-      step: 1, 
-      children: <SandIncrease_Step2 />, 
-      data: store.unitMassDeterminationData 
+    {
+      step: 1,
+      children: <SandIncrease_Step2 />,
+      data: store.unitMassDeterminationData,
     },
-    { 
-      step: 2, 
-      children: <Sand_Increase_Results />, 
-      data: store 
+    {
+      step: 2,
+      children: <Sand_Increase_Results />,
+      data: store,
     },
   ];
 

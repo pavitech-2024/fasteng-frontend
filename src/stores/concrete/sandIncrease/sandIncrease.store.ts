@@ -13,7 +13,7 @@ interface sandIncrease_generalData {
 
 interface unitMassDeterminationData {
   containerVolume: number;
-  containerWeight: number
+  containerWeight: number;
 }
 
 interface sandIncrease_results {
@@ -22,7 +22,7 @@ interface sandIncrease_results {
 
 export type SandIncreaseData = {
   sandIncreaseGeneralData: sandIncrease_generalData;
-  unitMassDeterminationData: unitMassDeterminationData,
+  unitMassDeterminationData: unitMassDeterminationData;
   results: sandIncrease_results;
 };
 
@@ -48,7 +48,7 @@ const useSandIncreaseStore = create<SandIncreaseData & SandIncreaseActions>()(
         },
         unitMassDeterminationData: {
           containerVolume: null,
-          containerWeight: null
+          containerWeight: null,
         },
         results: {
           result: null,
