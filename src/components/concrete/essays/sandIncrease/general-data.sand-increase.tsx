@@ -64,6 +64,7 @@ const SandIncrease_GeneralData = ({
     setNextDisabled(false);
 
   useEffect(() => console.log(sandIncreaseGeneralData), [sandIncreaseGeneralData]);
+  
   return (
     <>
       {loading ? (

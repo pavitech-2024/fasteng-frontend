@@ -8,5 +8,6 @@
   "loading.materials.success": "Materiais carregados!",
   "loading.materials.error": "Erro ao carregar os materiais!",
   "loading.materials.pending": "Carregando os materiais...",
-  "sandIncrease.materials": "Materiais"
+  "sandIncrease.materials": "Materiais",
+  "unit mass determination": "Determinação da Massa Unitária"
 }
