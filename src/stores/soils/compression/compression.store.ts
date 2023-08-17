@@ -49,21 +49,27 @@ interface humidityDeterminationData {
 }
 
 interface compression_results {
-  waterWeight: number;
-  netWeightDrySoil: number;
-  hygroscopicMoisture: number;
-  wetSoilWeights: number;
-  wetSoilDensitys: number;
-  waterWeights: number;
-  netWeightsDrySoil: number;
-  moistures: number;
-  drySoilDensitys: number;
+  hygroscopicHumidity: {
+    netWeightDrySoil: number, // Peso do solo seco (g)
+    waterWeight: number, // Peso da água (g)
+    hygroscopicMoisture: number, // Umidade Higroscópica (%)
+  },
+  humidityDetermination: {
+    wetSoilWeights: number, // Peso do solo úmido (g)
+    wetSoilDensitys: number, // Densidade do solo úmido (g/cm³)
+    netWeightsDrySoil: number, // Peso do solo seco (g)
+    moistures: number, // Umidade média (%)
+    drySoilDensitys: number, // Densidade do solo seco (%)
+    
+  },
+  // waterWeights: number; // tem dois? na tela antiga só mostra um peso da água
+  // Dados para o gráfico >> tá muito confuso essa parte << 
   regression: number;
   a_index: number;
   b_index: number;
   optimumMoisture: number;
   optimumDensity: number;
-  graph: number;
+  graph: [];
 }
 
 export type CompressionData = {
@@ -124,15 +130,18 @@ const useCompressionStore = create<CompressionData & CompressionActions>()(
           ],
         },
         results: {
-          waterWeight: null,
-          netWeightDrySoil: null,
-          hygroscopicMoisture: null,
-          wetSoilWeights: null,
-          wetSoilDensitys: null,
-          waterWeights: null,
-          netWeightsDrySoil: null,
-          moistures: null,
-          drySoilDensitys: null,
+          hygroscopicHumidity: {
+            netWeightDrySoil: null, // Peso do solo seco (g)
+            waterWeight: null, // Peso da água (g)
+            hygroscopicMoisture: null, // Umidade Higroscópica (%)
+          },
+          humidityDetermination: {
+            wetSoilWeights: null, // Peso do solo úmido (g)
+            wetSoilDensitys: null, // Densidade do solo úmido (g/cm³)
+            netWeightsDrySoil: null, // Peso do solo seco (g)
+            moistures: null, // Umidade média (%)
+            drySoilDensitys: null, // Densidade do solo seco (%) 
+          },
           regression: null,
           a_index: null,
           b_index: null,
