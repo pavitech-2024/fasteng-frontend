@@ -50,26 +50,24 @@ interface humidityDeterminationData {
 
 interface compression_results {
   hygroscopicHumidity: {
-    netWeightDrySoil: number, // Peso do solo seco (g)
-    waterWeight: number, // Peso da água (g)
-    hygroscopicMoisture: number, // Umidade Higroscópica (%)
-  },
+    netWeightDrySoil: number; // Peso do solo seco (g)
+    waterWeight: number; // Peso da água (g)
+    hygroscopicMoisture: number; // Umidade Higroscópica (%)
+  };
   humidityDetermination: {
-    wetSoilWeights: number, // Peso do solo úmido (g)
-    wetSoilDensitys: number, // Densidade do solo úmido (g/cm³)
-    netWeightsDrySoil: number, // Peso do solo seco (g)
-    moistures: number, // Umidade média (%)
-    drySoilDensitys: number, // Densidade do solo seco (%)
-    
-  },
-  // waterWeights: number; // tem dois? na tela antiga só mostra um peso da água
-  // Dados para o gráfico >> tá muito confuso essa parte << 
+    wetSoilWeights: number; // Peso do solo úmido (g)
+    wetSoilDensitys: number; // Densidade do solo úmido (g/cm³)
+    netWeightsDrySoil: number[]; // Peso do solo seco (g)
+    moistures: number[]; // Umidade média (%)
+    drySoilDensitys: number; // Densidade do solo seco (%)
+  };
+  // Dados para o gráfico >> tá muito confuso essa parte <<
   regression: number;
   a_index: number;
   b_index: number;
   optimumMoisture: number;
   optimumDensity: number;
-  graph: [];
+  graph: [number, number][]; // esse deveria ser o que vai ser usado pra fazer o grafico entao a gente teria que formatar isso aqui com os valores de hAxis e vAxis
 }
 
 export type CompressionData = {
@@ -140,7 +138,7 @@ const useCompressionStore = create<CompressionData & CompressionActions>()(
             wetSoilDensitys: null, // Densidade do solo úmido (g/cm³)
             netWeightsDrySoil: null, // Peso do solo seco (g)
             moistures: null, // Umidade média (%)
-            drySoilDensitys: null, // Densidade do solo seco (%) 
+            drySoilDensitys: null, // Densidade do solo seco (%)
           },
           regression: null,
           a_index: null,

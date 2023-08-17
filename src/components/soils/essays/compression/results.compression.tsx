@@ -53,7 +53,7 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
       },
       {
         label: 'Peso do solo seco',
-        value: String(compressionResults.humidityDetermination.netWeightsDrySoil),
+        value: String(compressionResults.humidityDetermination.netWeightsDrySoil[0]),
         unity: '(g)',
       },
       {
@@ -68,6 +68,8 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
       },
     ],
   };
+
+  const graphData = [[`${t('compression.drySoilDensitys')} g/cm³`, `${t('compression.moistures')} %`], ...compressionResults.graph]
 
   return (
     <>
@@ -89,7 +91,7 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
           width={'100%'}
           height={'400px'}
           loader={<Loading />}
-          data={''} // Não sei como a gente coloca aqui
+          data={graphData}
           options={{
             backgroundColor: 'transparent',
             hAxis: {
