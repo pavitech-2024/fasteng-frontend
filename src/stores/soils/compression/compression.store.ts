@@ -49,15 +49,15 @@ interface humidityDeterminationData {
 }
 
 interface compression_results {
-  netWeightDrySoil: number; // Peso do solo seco (g)
+  netWeightDrySoil: number[]; // Peso do solo seco (g)
   waterWeight: number; // Peso da água (g)
   hygroscopicMoisture: number; // Umidade Higroscópica (%)
 
   wetSoilWeights: number[]; // Peso do solo úmido (g)
   wetSoilDensitys: number[]; // Densidade do solo úmido (g/cm³)
-  netWeightsDrySoil: number; // Peso do solo seco (g)
+  netWeightsDrySoil: number[]; // Peso do solo seco (g)
   moistures: number[]; // Umidade média (%)
-  drySoilDensitys: number; // Densidade do solo seco (%)
+  drySoilDensitys: number[]; // Densidade do solo seco (%)
   // Dados para o gráfico >> tá muito confuso essa parte <<
   regression: number;
   a_index: number;

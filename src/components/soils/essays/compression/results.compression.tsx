@@ -27,51 +27,51 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
     container_hygroscopicHumidity: [
       {
         label: 'Peso do solo seco',
-        value: compressionResults?.netWeightDrySoil ?? 'N/A',
+        value: (Number(compressionResults?.netWeightDrySoil[0])).toFixed(2) ?? 'N/A',
         unity: '(g)',
       },
       {
         label: 'Peso da água',
-        value: compressionResults?.waterWeight ?? 'N/A',
+        value: (Number(compressionResults?.waterWeight)).toFixed(2) ?? 'N/A',
         unity: '(g)',
       },
       {
         label: 'Umidade Higroscópica',
-        value: compressionResults?.hygroscopicMoisture ?? 'N/A',
+        value: (Number(compressionResults?.hygroscopicMoisture)).toFixed(2) ?? 'N/A',
         unity: '(%)',
       },
     ],
     container_humidityDetermination: [
       {
         label: 'Peso do solo úmido', // ARRAY
-        value: compressionResults?.wetSoilWeights ?? 'N/A',
+        value: (Number(compressionResults?.wetSoilWeights[0])).toFixed(2) ?? 'N/A',
         unity: '(%)',
       },
       {
         label: 'Densidade do solo úmido', // ARRAY
-        value: compressionResults?.wetSoilDensitys ?? 'N/A',
+        value: (Number(compressionResults?.wetSoilDensitys[0])).toFixed(2) ?? 'N/A',
         unity: '(g/cm³)',
       },
       {
         label: 'Peso do solo seco',
-        value: compressionResults?.netWeightsDrySoil ?? 'N/A',
+        value: (Number(compressionResults?.netWeightsDrySoil[0])).toFixed(2) ?? 'N/A',
         unity: '(g)',
       },
       {
         label: 'Umidade média', // ARRAY
-        value: compressionResults?.moistures ?? 'N/A',
+        value: (Number(compressionResults?.moistures[0])).toFixed(2) ?? 'N/A',
         unity: '(%)',
       },
       {
         label: 'Densidade do solo seco', // ARRAY
-        value: compressionResults?.drySoilDensitys ?? 'N/A',
+        value: (Number(compressionResults?.drySoilDensitys[0])).toFixed(2) ?? 'N/A',
         unity: '(%)',
       },
     ],
   };
 
-  //data.container_hygroscopicHumidity.map((item) => (item.value = item.value.toFixed(2)));
-  //data.container_humidityDetermination.map((item) => (item.value = item.value.toFixed(2)));
+
+  useEffect(() => (console.log(compressionResults?.drySoilDensitys.map((item) => Number(item).toFixed(2)))), [compressionResults?.drySoilDensitys])
 
   const graphData = [
     [`${t('compression.drySoilDensitys')} g/cm³`, `${t('compression.moistures')} %`],
