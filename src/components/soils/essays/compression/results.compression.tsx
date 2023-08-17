@@ -10,6 +10,7 @@ import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import Result_Card, { Result_CardContainer } from '@/components/atoms/containers/result-card';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import { t } from 'i18next';
+import { useEffect } from 'react';
 
 const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
@@ -26,50 +27,58 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
     container_hygroscopicHumidity: [
       {
         label: 'Peso do solo seco',
-        value: String(compressionResults.hygroscopicHumidity.netWeightDrySoil),
+        value: compressionResults?.netWeightDrySoil ?? 'N/A',
         unity: '(g)',
       },
       {
         label: 'Peso da água',
-        value: String(compressionResults.hygroscopicHumidity.waterWeight),
+        value: compressionResults?.waterWeight ?? 'N/A',
         unity: '(g)',
       },
       {
         label: 'Umidade Higroscópica',
-        value: String(compressionResults.hygroscopicHumidity.hygroscopicMoisture),
+        value: compressionResults?.hygroscopicMoisture ?? 'N/A',
         unity: '(%)',
       },
     ],
     container_humidityDetermination: [
       {
-        label: 'Peso do solo úmido',
-        value: String(compressionResults.humidityDetermination.wetSoilWeights),
+        label: 'Peso do solo úmido', // ARRAY
+        value: compressionResults?.wetSoilWeights ?? 'N/A',
         unity: '(%)',
       },
       {
-        label: 'Densidade do solo úmido',
-        value: String(compressionResults.humidityDetermination.wetSoilDensitys),
+        label: 'Densidade do solo úmido', // ARRAY
+        value: compressionResults?.wetSoilDensitys ?? 'N/A',
         unity: '(g/cm³)',
       },
       {
         label: 'Peso do solo seco',
-        value: String(compressionResults.humidityDetermination.netWeightsDrySoil[0]),
+        value: compressionResults?.netWeightsDrySoil ?? 'N/A',
         unity: '(g)',
       },
       {
-        label: 'Umidade média',
-        value: String(compressionResults.humidityDetermination.moistures),
+        label: 'Umidade média', // ARRAY
+        value: compressionResults?.moistures ?? 'N/A',
         unity: '(%)',
       },
       {
-        label: 'Densidade do solo seco',
-        value: String(compressionResults.humidityDetermination.drySoilDensitys),
+        label: 'Densidade do solo seco', // ARRAY
+        value: compressionResults?.drySoilDensitys ?? 'N/A',
         unity: '(%)',
       },
     ],
   };
 
-  const graphData = [[`${t('compression.drySoilDensitys')} g/cm³`, `${t('compression.moistures')} %`], ...compressionResults.graph]
+  //data.container_hygroscopicHumidity.map((item) => (item.value = item.value.toFixed(2)));
+  //data.container_humidityDetermination.map((item) => (item.value = item.value.toFixed(2)));
+
+  const graphData = [
+    [`${t('compression.drySoilDensitys')} g/cm³`, `${t('compression.moistures')} %`],
+    ...compressionResults.graph,
+  ];
+
+  useEffect(() => console.log(compressionResults), [compressionResults]);
 
   return (
     <>
@@ -77,12 +86,12 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
       <FlexColumnBorder title={t('results')} open={true}>
         <Result_CardContainer hideBorder title={t('compression.hygroscopicHumidity')}>
           {data.container_hygroscopicHumidity.map((item, index) => (
-            <Result_Card key={index} label={item.label} value={item.value} unity={item.unity} />
+            <Result_Card key={index} label={item.label} value={String(item.value)} unity={item.unity} />
           ))}
         </Result_CardContainer>
         <Result_CardContainer hideBorder title={t('compression.humidityDetermination')}>
           {data.container_humidityDetermination.map((item, index) => (
-            <Result_Card key={index} label={item.label} value={item.value} unity={item.unity} />
+            <Result_Card key={index} label={item.label} value={String(item.value)} unity={item.unity} />
           ))}
         </Result_CardContainer>
         <ResultSubTitle title={t('compression.graph')} sx={{ margin: '.65rem' }} />
@@ -98,7 +107,7 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
               title: `${t('compression.moisture')} (%)`, // Umidade (%)
             },
             vAxis: {
-              title:`${t('compression.drySoilDensitys')} (g/cm³)`, // Densidade do solo seco - g/cm³
+              title: `${t('compression.drySoilDensitys')} (g/cm³)`, // Densidade do solo seco - g/cm³
             },
             explorer: {
               actions: ['dragToZoom', 'rightClickToReset'],
