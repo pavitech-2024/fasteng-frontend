@@ -14,18 +14,14 @@ import { t } from 'i18next';
 const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: compressionResults, compressionGeneralData } = useCompressionStore();
-  // não sei se vai ser utilizado isso:
-  // const { user } = useAuth();
-  // const {
-  //   preferences: { decimal: user_decimal },
-  // } = user;
 
   //Primeiro bloco com as informações gerais do ensaio
   const experimentResumeData: ExperimentResumeData = {
-    experimentName: Compression_GeneralData.name,
+    experimentName: compressionGeneralData.name,
     materials: [{ name: compressionGeneralData.sample.name, type: compressionGeneralData.sample.type }],
   };
 
+  // Segundo e terceiro bloco com resultados
   const data = {
     container_hygroscopicHumidity: [
       {
@@ -73,61 +69,34 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
     ],
   };
 
-  // const data = {
-  //   // Humidade Higroscópica
-  //   netWeightDrySoil: null, // Peso do solo seco (g)
-  //   waterWeight: null, // Peso da água (g)
-  //   hygroscopicMoisture: null, // Umidade Higroscópica (%)
-  //   // Determinação da Umidade
-  //   wetSoilWeights: null, // Peso do solo úmido (g)
-  //   wetSoilDensitys: null, // Densidade do solo úmido (g/cm³)
-  //   netWeightsDrySoil: null, // Peso do solo seco (g)
-  //   moistures: null, // Umidade média (%)
-  //   drySoilDensitys: null, // Densidade do solo seco (%)
-  //   // Gráfico
-  //   optimumDensity: null, // Peso específico máximo seco (g/cm³)
-  //   optimumMoisture: null, // Umidade ótima (%)
-  // };
-
   return (
     <>
       <ExperimentResume data={experimentResumeData} />
       <FlexColumnBorder title={t('results')} open={true}>
-        {data.container_hygroscopicHumidity.map((item) => (
-          <Result_CardContainer
-            hideBorder
-            key={item.value}
-            mt={item && 'none'}
-            title={t('compression.hygroscopicHumidity')}
-          >
-            <Result_Card key={item.value} label={item.label} value={item.value} unity={item.unity} />
-          </Result_CardContainer>
-        ))}
-        {data.container_humidityDetermination.map((item) => (
-          <Result_CardContainer
-            hideBorder
-            key={item.value}
-            mt={item && 'none'}
-            title={t('compression.humidityDetermination')}
-          >
-            <Result_Card key={item.value} label={item.label} value={item.value} unity={item.unity} />
-          </Result_CardContainer>
-        ))}
-
+        <Result_CardContainer hideBorder title={t('compression.hygroscopicHumidity')}>
+          {data.container_hygroscopicHumidity.map((item, index) => (
+            <Result_Card key={index} label={item.label} value={item.value} unity={item.unity} />
+          ))}
+        </Result_CardContainer>
+        <Result_CardContainer hideBorder title={t('compression.humidityDetermination')}>
+          {data.container_humidityDetermination.map((item, index) => (
+            <Result_Card key={index} label={item.label} value={item.value} unity={item.unity} />
+          ))}
+        </Result_CardContainer>
         <ResultSubTitle title={t('compression.graph')} sx={{ margin: '.65rem' }} />
         <Chart
           chartType="LineChart"
           width={'100%'}
           height={'400px'}
           loader={<Loading />}
-          data={''}
+          data={''} // Não sei como a gente coloca aqui
           options={{
             backgroundColor: 'transparent',
             hAxis: {
-              title: t('compression.moisture'), // Umidade (%)
+              title: `${t('compression.moisture')} (%)`, // Umidade (%)
             },
             vAxis: {
-              title: t('compression.drySoilDensitys'), // Densidade do solo seco - g/cm³
+              title:`${t('compression.drySoilDensitys')} (g/cm³)`, // Densidade do solo seco - g/cm³
             },
             explorer: {
               actions: ['dragToZoom', 'rightClickToReset'],
