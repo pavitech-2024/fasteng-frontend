@@ -23,7 +23,7 @@ const index: NextPage = () => {
       title: t('concrete.essays.unitMass'),
       key: 'unitMass',
       icon: UnitMassIcon,
-      link: '/concrete/essays/unit-mass',
+      link: '/concrete/essays/unitMass',
     },
     {
       title: t('concrete.essays.sandIncrease'),
