@@ -1,0 +1,11 @@
+{
+  "unitMass.aggregate": "Agregado sem diametro máximo",
+  "unitMass.method": "Método",
+  "unitMass.experimentName": "Nome do experimento",
+  
+  "unitMass.containerVolume": "Volume do container",
+  "unitMass.containerWeight": "Peso do container",
+  "unitMass.sampleContainerWeight": "Peso do container + amostra",
+  
+  "unitMass.result": "Resultado"
+}

@@ -1,0 +1,11 @@
+{
+  "unitMass.aggregate": "Aggregate without maximum diameter",
+  "unitMass.method": "Method",
+  "unitMass.experimentName": "Experiment name",
+  
+  "unitMass.containerVolume": "Container volume",
+  "unitMass.containerWeight": "Container weight",
+  "unitMass.sampleContainerWeight": "Container weight + sample",
+  
+  "unitMass.result": "Result"
+}
