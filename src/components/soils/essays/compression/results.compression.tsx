@@ -107,6 +107,7 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
             },
             vAxis: {
               title: `${t('compression.drySoilDensitys')} (g/cm³)`, // Densidade do solo seco - g/cm³
+              maxValue: '1.5',
             },
             explorer: {
               actions: ['dragToZoom', 'rightClickToReset'],
