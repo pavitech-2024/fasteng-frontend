@@ -2,30 +2,67 @@ import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import useSandIncreaseStore from '@/stores/concrete/sandIncrease/sandIncrease.store';
 import { Box } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
+import SandIncrease_step2Table from './tables/step2-table.sandIncrease';
 
 const SandIncrease_Step2 = ({}: // nextDisabled,
 // setNextDisabled
 EssayPageProps) => {
-  const { unitMassDeterminationData: data, setData } = useSandIncreaseStore();
-  // const rows = data.sandIncreaseSamples as sandIncreaseSamples[];
+  const { setData, unitMassDeterminationData: data } = useSandIncreaseStore();
 
-  const inputs = [
+  const { unitMassDeterminationData: teste } = useSandIncreaseStore();
+  console.log("🚀 ~ file: step2.sandIncrease.tsx:16 ~ teste:", teste)
+
+  const rows = data.tableData;
+
+  const columns: GridColDef[] = [
     {
-      label: t('sandIncrease.container_volume'),
-      value: data.containerVolume,
-      key: 'containerVolume',
-      required: true,
-      adornment: 'l',
+      field: 'sample',
+      headerName: t('sandIncrease.samples'),
     },
     {
-      label: t('sandIncrease.container_weight'),
-      value: data.containerWeight,
-      key: 'containerWeight',
-      required: true,
-      adornment: 'g',
+      field: 'moistureContent',
+      headerName: t('sandIncrease.moistureContent') + ' (%) ' + 'indicado em norma',
+      renderCell: ({ row }) => {
+        const { sample } = row;
+        const sample_index = rows.findIndex((r) => r.sample === sample);
+
+        return (
+          <InputEndAdornment 
+            fullWidth
+            adornment='%'
+            type='number'
+            label={`${t('sandIncrease.moistureContent')}`}
+            inputProps={{ min: 0, max: 100 }}
+            value={rows[sample_index].moistureContent} 
+            onChange={(e) => {
+              const newRows = [...rows];
+              newRows[sample_index].moistureContent = Number(e.target.value);
+              setData({ step: 1, key: 'tableData', value: newRows });
+            }}
+          />
+        );
+      },
     },
   ];
+
+  // const inputs = [
+  //   {
+  //     label: t('sandIncrease.container_volume'),
+  //     value: data.containerVolume,
+  //     key: 'containerVolume',
+  //     required: true,
+  //     adornment: 'l',
+  //   },
+  //   {
+  //     label: t('sandIncrease.container_weight'),
+  //     value: data.containerWeight,
+  //     key: 'containerWeight',
+  //     required: true,
+  //     adornment: 'g',
+  //   },
+  // ];
 
   // const columns: GridColDef[] = [
   //   {
@@ -54,46 +91,77 @@ EssayPageProps) => {
   // ]
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+    // <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+    //   <Box
+    //     sx={{
+    //       display: 'flex',
+    //       gap: '15px',
+    //       justifyContent: { mobile: 'center', notebook: 'center' },
+    //       flexWrap: 'wrap',
+    //     }}
+    //   >
+    //     {inputs.map((input) => (
+    //       <Box key={input.key}>
+    //         <InputEndAdornment
+    //           fullWidth
+    //           label={input.label}
+    //           value={input.value}
+    //           required={input.required}
+    //           onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+    //           adornment={input.adornment}
+    //           type="number"
+    //           inputProps={{ min: 0 }}
+    //         />
+    //       </Box>
+    //     ))}
+    //   </Box>
+    //   <DataGrid
+    //     sx={{ mt: '1rem', borderRadius: '10px' }}
+    //     density="compact"
+    //     showCellVerticalBorder
+    //     showColumnVerticalBorder
+    //     rows={rows.map((row, index) => ({ ...row, id: index }))}
+    //     columns={columns.map((column) => ({
+    //       ...column,
+    //       sortable: false,
+    //       disableColumnMenu: true,
+    //       align: 'center',
+    //       headerAlign: 'center',
+    //       minWidth: 200,
+    //       flex: 1,
+    //     }))}
+    //   />
+    // </Box>
+    <Box>
+      <SandIncrease_step2Table rows={rows} columns={columns} />
       <Box
         sx={{
-          display: 'flex',
-          gap: '15px',
-          justifyContent: { mobile: 'center', notebook: 'center' },
-          flexWrap: 'wrap',
+          width: '100%',
+          display: 'grid',
+          gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
+          gap: '10px',
+          mt: '20px',
         }}
       >
-        {inputs.map((input) => (
-          <Box key={input.key}>
-            <InputEndAdornment
-              fullWidth
-              label={input.label}
-              value={input.value}
-              required={input.required}
-              onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
-              adornment={input.adornment}
-              type="number"
-              inputProps={{ min: 0 }}
-            />
-          </Box>
-        ))}
+        <InputEndAdornment
+          value={data.containerVolume}
+          fullWidth
+          adornment="%"
+          type="number"
+          label={`${t('sandIncrease.containerVolume')} (%)`}
+          inputProps={{ min: 0, max: 100 }}
+          onChange={(e) => setData({ step: 1, key: 'containerVolume', value: Number(e.target.value) })}
+        />
+        <InputEndAdornment
+          value={data.containerWeight}
+          onChange={(e) => setData({ step: 1, key: 'containerWeight', value: Number(e.target.value) })}
+          fullWidth
+          adornment="%"
+          type="number"
+          label={`${t('sandIncrease.containerWeight')} (%)`}
+          inputProps={{ min: 0, max: 100 }}
+        />
       </Box>
-      {/* <DataGrid
-        sx={{ mt: '1rem', borderRadius: '10px' }}
-        density="compact"
-        showCellVerticalBorder
-        showColumnVerticalBorder
-        //rows={rows.map((row, index) => ({ ...row, id: index }))}
-        columns={columns.map((column) => ({
-          ...column,
-          sortable: false,
-          disableColumnMenu: true,
-          align: 'center',
-          headerAlign: 'center',
-          minWidth: 200,
-          flex: 1,
-        }))}
-      /> */}
     </Box>
   );
 };
