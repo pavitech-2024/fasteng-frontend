@@ -24,7 +24,8 @@ class SAND_INCREASE_SERVICE implements IEssayService {
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
       { step: 1, description: t('unit mass determination'), path: 'passo2' },
-      { step: 2, description: t('results'), path: 'results' },
+      { step: 2, description: t('humidity found'), path: 'passo3' },
+      { step: 3, description: t('results'), path: 'results' },
     ],
   };
 
@@ -41,8 +42,10 @@ class SAND_INCREASE_SERVICE implements IEssayService {
           await this.submitUnitMassDeterminationData(data as SandIncreaseData['unitMassDeterminationData']);
           break;
         case 2:
-          await this.calculateResults(data as SandIncreaseData);
+          await this.submitHumidityFoundData(data as SandIncreaseData ['humidityFoundData']);
           break;
+        case 3:
+          await this.calculateResults(data as SandIncreaseData);
         default:
           throw t('errors.invalid-step');
       }
@@ -88,6 +91,16 @@ class SAND_INCREASE_SERVICE implements IEssayService {
 
       if (!unitMassDeterminationData.containerWeight) throw t('errors.empty-container-weight');
       if (unitMassDeterminationData.containerWeight < 0) throw t('errors.negative-container-weight');
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  submitHumidityFoundData = (
+    humidityFoundData: SandIncreaseData['humidityFoundData']
+  ): void => {
+    try {
+      console.log(humidityFoundData)
     } catch (error) {
       throw error;
     }

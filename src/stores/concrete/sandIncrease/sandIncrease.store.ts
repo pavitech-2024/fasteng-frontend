@@ -12,19 +12,65 @@ interface sandIncrease_generalData {
 }
 
 export interface SandIncrease_Step2TableData {
-  sample: number,
+  sample: number;
   moistureContent: number;
   containerWeightSample: number;
 }
 
 interface unitMassDeterminationData {
-  tableData: SandIncrease_Step2TableData[];
   containerVolume: number;
   containerWeight: number;
+  tableData: [
+    {
+      sample: '1',
+      moistureContent: '0',
+      containerWeightSample: number,
+    },
+    {
+      sample: '2',
+      moistureContent: '0.5',
+      containerWeightSample: number,
+    },
+    {
+      sample: '3',
+      moistureContent: '1',
+      containerWeightSample: number,
+    },
+    {
+      sample: '4',
+      moistureContent: '2',
+      containerWeightSample: number,
+    },
+    {
+      sample: '5',
+      moistureContent: '4',
+      containerWeightSample: number,
+    },
+    {
+      sample: '6',
+      moistureContent: '5',
+      containerWeightSample: number,
+    },
+    {
+      sample: '7',
+      moistureContent: '7',
+      containerWeightSample: number,
+    },
+    {
+      sample: '8',
+      moistureContent: '9',
+      containerWeightSample: number,
+    },
+    {
+      sample: '9',
+      moistureContent: '12',
+      containerWeightSample: number,
+    },
+  ];
 }
 
-interface foundHumidityData {
-  teste: number
+interface humidityFoundData {
+  teste: number;
 }
 
 interface sandIncrease_results {
@@ -34,7 +80,7 @@ interface sandIncrease_results {
 export type SandIncreaseData = {
   sandIncreaseGeneralData: sandIncrease_generalData;
   unitMassDeterminationData: unitMassDeterminationData;
-  foundHumidityData: foundHumidityData;
+  humidityFoundData: humidityFoundData;
   results: sandIncrease_results;
 };
 
@@ -44,7 +90,7 @@ export type SandIncreaseActions = {
 
 type setDataType = { step: number; key?: string; value: unknown };
 
-const stepVariant = { 0: 'sandIncreaseGeneralData', 1: 'unitMassDetermination', 2: 'results' };
+const stepVariant = { 0: 'sandIncreaseGeneralData', 1: 'unitMassDeterminationData', 2: 'results' };
 
 const useSandIncreaseStore = create<SandIncreaseData & SandIncreaseActions>()(
   devtools(
@@ -63,54 +109,54 @@ const useSandIncreaseStore = create<SandIncreaseData & SandIncreaseActions>()(
           containerWeight: null,
           tableData: [
             {
-              sample: 1,
-              moistureContent: 0,
-              containerWeightSample: null
+              sample: '1',
+              moistureContent: '0',
+              containerWeightSample: null,
             },
             {
-              sample: 2,
-              moistureContent: 0.5,
-              containerWeightSample: null
+              sample: '2',
+              moistureContent: '0.5',
+              containerWeightSample: null,
             },
             {
-              sample: 3,
-              moistureContent: 1,
-              containerWeightSample: null
+              sample: '3',
+              moistureContent: '1',
+              containerWeightSample: null,
             },
             {
-              sample: 4,
-              moistureContent: 2,
-              containerWeightSample: null
+              sample: '4',
+              moistureContent: '2',
+              containerWeightSample: null,
             },
             {
-              sample: 5,
-              moistureContent: 4,
-              containerWeightSample: null
+              sample: '5',
+              moistureContent: '4',
+              containerWeightSample: null,
             },
             {
-              sample: 6,
-              moistureContent: 5,
-              containerWeightSample: null
+              sample: '6',
+              moistureContent: '5',
+              containerWeightSample: null,
             },
             {
-              sample: 7,
-              moistureContent: 7,
-              containerWeightSample: null
+              sample: '7',
+              moistureContent: '7',
+              containerWeightSample: null,
             },
             {
-              sample: 8,
-              moistureContent: 9,
-              containerWeightSample: null
+              sample: '8',
+              moistureContent: '9',
+              containerWeightSample: null,
             },
             {
-              sample: 9,
-              moistureContent: 12,
-              containerWeightSample: null
+              sample: '9',
+              moistureContent: '12',
+              containerWeightSample: null,
             },
-          ]
+          ],
         },
-        foundHumidityData: {
-          teste: null
+        humidityFoundData: {
+          teste: null,
         },
         results: {
           result: null,

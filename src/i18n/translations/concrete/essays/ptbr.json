@@ -9,8 +9,5 @@
   "loading.materials.error": "Erro ao carregar os materiais!",
   "loading.materials.pending": "Carregando os materiais...",
   "sandIncrease.materials": "Materiais",
-  "unit mass determination": "Determinação da Massa Unitária",
-  "sandIncrease.container_volume": "Volume do recipiente",
-  "sandIncrease.container_weight": "Peso do recipiente",
-  "sandIncrease.samples": "Amostras"
+  "unit mass determination": "Determinação da Massa Unitária"
 }

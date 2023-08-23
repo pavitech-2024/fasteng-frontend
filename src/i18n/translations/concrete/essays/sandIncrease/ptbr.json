@@ -2,5 +2,11 @@
   "concrete.essays.sandIncrease.experimentName": "Nome do Experimento",
   "general data": "Dados Gerais",
   "general data of essay": "Dados Gerais do Ensaio",
-  "results": "Resultados"
+  "results": "Resultados",
+  "sand-increase.step-2-description": "Preencha todos os campos abaixo.",
+  "sandIncrease.container_volume": "Volume do recipiente",
+  "sandIncrease.container_weight": "Peso do recipiente",
+  "sandIncrease.samples": "Amostras",
+  "sandIncrease.containerWeightSample": "Peso do recipiente + amostra",
+  "sandIncrease.moistureContent": "Teor da umidade"
 }

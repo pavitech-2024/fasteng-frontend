@@ -2,17 +2,28 @@ import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import useSandIncreaseStore from '@/stores/concrete/sandIncrease/sandIncrease.store';
 import { Box } from '@mui/material';
-import { GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import SandIncrease_step2Table from './tables/step2-table.sandIncrease';
 
-const SandIncrease_Step2 = ({}: // nextDisabled,
-// setNextDisabled
-EssayPageProps) => {
+const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { setData, unitMassDeterminationData: data } = useSandIncreaseStore();
 
-  const { unitMassDeterminationData: teste } = useSandIncreaseStore();
-  console.log("🚀 ~ file: step2.sandIncrease.tsx:16 ~ teste:", teste)
+  const inputs = [
+    {
+      label: t('sandIncrease.container_volume'),
+      value: data.containerVolume,
+      key: 'containerVolume',
+      required: true,
+      adornment: 'l',
+    },
+    {
+      label: t('sandIncrease.container_weight'),
+      value: data.containerWeight,
+      key: 'containerWeight',
+      required: true,
+      adornment: 'g',
+    },
+  ];
 
   const rows = data.tableData;
 
@@ -20,26 +31,32 @@ EssayPageProps) => {
     {
       field: 'sample',
       headerName: t('sandIncrease.samples'),
+      valueFormatter: ({ value }) => `Amostra ${value}`,
     },
     {
       field: 'moistureContent',
       headerName: t('sandIncrease.moistureContent') + ' (%) ' + 'indicado em norma',
+      valueFormatter: ({value}) => `${value}`
+    },
+    {
+      field: 'containerWeightSample',
+      headerName: t('sandIncrease.containerWeightSample'),
       renderCell: ({ row }) => {
         const { sample } = row;
-        const sample_index = rows.findIndex((r) => r.sample === sample);
+        const container_weight_sample_index = rows.findIndex((r) => r.sample === sample);
 
         return (
-          <InputEndAdornment 
+          <InputEndAdornment
             fullWidth
-            adornment='%'
-            type='number'
-            label={`${t('sandIncrease.moistureContent')}`}
+            adornment="g"
+            type="number"
+            //label={`${t('sandIncrease.moistureContent')}`}
             inputProps={{ min: 0, max: 100 }}
-            value={rows[sample_index].moistureContent} 
+            value={rows[container_weight_sample_index].containerWeightSample}
             onChange={(e) => {
               const newRows = [...rows];
-              newRows[sample_index].moistureContent = Number(e.target.value);
-              setData({ step: 1, key: 'tableData', value: newRows });
+              newRows[container_weight_sample_index].containerWeightSample = Number(e.target.value);
+              setData({ step: 1, key: 'containerWeightSample', value: newRows });
             }}
           />
         );
@@ -47,121 +64,57 @@ EssayPageProps) => {
     },
   ];
 
-  // const inputs = [
-  //   {
-  //     label: t('sandIncrease.container_volume'),
-  //     value: data.containerVolume,
-  //     key: 'containerVolume',
-  //     required: true,
-  //     adornment: 'l',
-  //   },
-  //   {
-  //     label: t('sandIncrease.container_weight'),
-  //     value: data.containerWeight,
-  //     key: 'containerWeight',
-  //     required: true,
-  //     adornment: 'g',
-  //   },
-  // ];
-
-  // const columns: GridColDef[] = [
-  //   {
-  //     field: 'samples',
-  //     headerName: t('sandIncrease.samples'),
-  //     renderCell: ({ row }) => (
-  //       // <InputEndAdornment
-  //       //   fullWidth
-  //       //   label={t('sandIncrease.samples')}
-  //       //   type="string"
-  //       //   inputProps={{ min: 0 }}
-  //       //   value={row.samples}
-  //       //   // onChange={(e) => {
-  //       //   //   const newRows = [...rows];
-  //       //   //   const index = rows.findIndex((r) => r.id === row.id);
-  //       //   //   newRows[index].capsulesNumberHyg = Number(e.target.value);
-  //       //   //   setData({ step: 2, value: newRows });
-  //       //   // }}
-  //       //   adornment={''} 
-  //       //   // onChange={function (e: ChangeEvent<HTMLInputElement>): void {
-  //       //   //   throw new Error('Function not implemented.');
-  //       //   // } }        
-  //       // />
-  //     ),
-  //   },
-  // ]
+  // Verifica se todos os campos da coluna extended_read estão preenchidos e também ring_constant e cilinder_height
+  if (nextDisabled) {
+    const containerWeightSample_completed = rows.every(row => Object.values(row).every(value => value !== null));
+    const container_volume_completed = data.containerVolume !== null;
+    const container_weight_completed = data.containerWeight !== null;
+    if (containerWeightSample_completed && container_volume_completed && container_weight_completed) setNextDisabled(false);
+  }
 
   return (
-    // <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-    //   <Box
-    //     sx={{
-    //       display: 'flex',
-    //       gap: '15px',
-    //       justifyContent: { mobile: 'center', notebook: 'center' },
-    //       flexWrap: 'wrap',
-    //     }}
-    //   >
-    //     {inputs.map((input) => (
-    //       <Box key={input.key}>
-    //         <InputEndAdornment
-    //           fullWidth
-    //           label={input.label}
-    //           value={input.value}
-    //           required={input.required}
-    //           onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
-    //           adornment={input.adornment}
-    //           type="number"
-    //           inputProps={{ min: 0 }}
-    //         />
-    //       </Box>
-    //     ))}
-    //   </Box>
-    //   <DataGrid
-    //     sx={{ mt: '1rem', borderRadius: '10px' }}
-    //     density="compact"
-    //     showCellVerticalBorder
-    //     showColumnVerticalBorder
-    //     rows={rows.map((row, index) => ({ ...row, id: index }))}
-    //     columns={columns.map((column) => ({
-    //       ...column,
-    //       sortable: false,
-    //       disableColumnMenu: true,
-    //       align: 'center',
-    //       headerAlign: 'center',
-    //       minWidth: 200,
-    //       flex: 1,
-    //     }))}
-    //   />
-    // </Box>
     <Box>
-      <SandIncrease_step2Table rows={rows} columns={columns} />
       <Box
         sx={{
-          width: '100%',
-          display: 'grid',
-          gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
-          gap: '10px',
-          mt: '20px',
+          display: 'flex',
+          gap: '15px',
+          justifyContent: { mobile: 'center', notebook: 'flex-start' },
+          flexWrap: 'wrap',
         }}
       >
-        <InputEndAdornment
-          value={data.containerVolume}
-          fullWidth
-          adornment="%"
-          type="number"
-          label={`${t('sandIncrease.containerVolume')} (%)`}
-          inputProps={{ min: 0, max: 100 }}
-          onChange={(e) => setData({ step: 1, key: 'containerVolume', value: Number(e.target.value) })}
-        />
-        <InputEndAdornment
-          value={data.containerWeight}
-          onChange={(e) => setData({ step: 1, key: 'containerWeight', value: Number(e.target.value) })}
-          fullWidth
-          adornment="%"
-          type="number"
-          label={`${t('sandIncrease.containerWeight')} (%)`}
-          inputProps={{ min: 0, max: 100 }}
-        />
+
+        {inputs.map((input) => (
+          <Box key={input.key}>
+            <InputEndAdornment 
+              label={input.label}
+              adornment={input.adornment} 
+              value={input.value} 
+              required={input.required}
+              type="number"
+              onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })} 
+              inputProps={{ min: 0 }}
+            />
+          </Box>
+        ))}
       </Box>
+
+      <DataGrid 
+        sx={{ mt:'1rem', borderRadius: '10px' }}
+        density='compact'
+        hideFooter
+        showCellVerticalBorder
+        showColumnVerticalBorder
+        columns={columns.map((column) => ({
+          ...column,
+          disableColumnMenu: true,
+          sortable: false,
+          align: 'center',
+          headerAlign: 'center',
+          minWidth: column.field === 'containerWeightSample' ? 250 : 100,
+          flex: 1,
+        }))} 
+        rows={rows.map((row, index) => ({ ...row, id: index }))}        
+      />
     </Box>
   );
 };
