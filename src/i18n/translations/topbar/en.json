@@ -9,5 +9,6 @@
   "topbar.settings": "Settings",
   "topbar.materials": "Materials",
   "topbar.cbr": "California Bearing Ratio",
-  "topbar.compression": "Compression"
+  "topbar.compression": "Compression",
+  "topbar.hrb": "Road Classification - HRB"
 }

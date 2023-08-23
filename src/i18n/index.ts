@@ -46,6 +46,9 @@ import cbrENG from './translations/soils/essays/cbr/en.json';
 // compression
 import compressionPTBR from './translations/soils/essays/compression/ptbr.json';
 import compressionENG from './translations/soils/essays/compression/en.json';
+// hrb
+import hrbPTBR from './translations/soils/essays/hrb/ptbr.json';
+import hrbENG from './translations/soils/essays/hrb/en.json';
 
 /**@concrete */
 import concreteEssaysPTBR from './translations/concrete/essays/ptbr.json';
@@ -78,6 +81,7 @@ i18n.use(initReactI18next).init({
         ...soilsEssaysPTBR,
         ...cbrPTBR,
         ...compressionPTBR,
+        ...hrbPTBR,
         /**@concrete */
         ...concreteEssaysPTBR,
         ...concreteMaterialsPTBR,
@@ -101,6 +105,7 @@ i18n.use(initReactI18next).init({
         ...soilsEssaysENG,
         ...cbrENG,
         ...compressionENG,
+        ...hrbENG,
         /**@concrete */
         ...concreteEssaysENG,
         ...concreteMaterialsENG,

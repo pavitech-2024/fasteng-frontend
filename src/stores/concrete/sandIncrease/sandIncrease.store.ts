@@ -11,10 +11,26 @@ interface sandIncrease_generalData {
   cauculist?: string;
 }
 
+export type sandIncreaseSamples = {
+  id: number;
+  sandIncreaseSamples: sandIncreaseSamples[];
+}
+
+export type sandIncreaseData = {
+  sandIncreaseGeneralData: sandIncrease_generalData;
+  unitMassDeterminationData: unitMassDeterminationData;
+  //foundHumidityData: foundHumidityData;
+}
+
 interface unitMassDeterminationData {
   containerVolume: number;
   containerWeight: number;
+  sandIncreaseSamples: number;
 }
+
+// interface foundHumidityData {
+
+// }
 
 interface sandIncrease_results {
   result: string; // corrigir
@@ -49,6 +65,7 @@ const useSandIncreaseStore = create<SandIncreaseData & SandIncreaseActions>()(
         unitMassDeterminationData: {
           containerVolume: null,
           containerWeight: null,
+          sandIncreaseSamples: null
         },
         results: {
           result: null,

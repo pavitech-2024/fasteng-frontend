@@ -14,9 +14,9 @@ class SAND_INCREASE_SERVICE implements IEssayService {
     key: 'sandIncrease',
     icon: SandIncreaseIcon,
     title: t('concrete.essays.sandIncrease'),
-    path: '/concrete/essays/sandIncrease',
+    path: '/concrete/essays/sand-increase',
     steps: 4,
-    backend_path: 'concrete/essays/sandIncrease',
+    backend_path: 'concrete/essays/sand-increase',
     standard: {
       name: 'ABNT NBR 6467',
       link: 'link da norma',
