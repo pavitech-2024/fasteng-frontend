@@ -75,7 +75,7 @@ const initialState = {
     cnu: null,
     error: null,
   },
-}
+};
 
 const useGranulometryStore = create<GranulometryData & GranulometryActions>()(
   devtools(
@@ -94,13 +94,13 @@ const useGranulometryStore = create<GranulometryData & GranulometryActions>()(
                 },
               };
             else return { ...state, [stepVariant[step]]: value };
-        }),
+          }),
 
         reset: ({ step }) => {
-          set(initialState)
+          set(initialState);
           return {
-            [stepVariant[step]] : null
-          }
+            [stepVariant[step]]: null,
+          };
         },
       }),
       {

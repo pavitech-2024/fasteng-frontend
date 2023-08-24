@@ -106,25 +106,20 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
               );
 
               const current_passant =
-                Math.round(
-                  100 *
-                    (mass !== 0 ? (100 * (mass - current_accumulative_retained)) / mass : 0)
-                ) / 100;
+                Math.round(100 * (mass !== 0 ? (100 * (mass - current_accumulative_retained)) / mass : 0)) / 100;
               newRows[sieve_index].retained = current_retained;
               newRows[sieve_index].passant = current_passant;
               setData({ step: 1, key: 'retained', value: newRows });
               setData({ step: 1, key: 'passant', value: newRows });
 
-              const nextRows = sieve_index > 0 ? newRows.slice(sieve_index + 1) : [...rows]
+              const nextRows = sieve_index > 0 ? newRows.slice(sieve_index + 1) : [...rows];
 
               nextRows.map(function (item, index) {
-
                 const row = item;
 
-                console.log(row)
-                
-                if (index > 0) {
+                console.log(row);
 
+                if (index > 0) {
                   const currentRows = nextRows.slice(0, index + 1);
 
                   const initial_retained = current_accumulative_retained;
@@ -133,28 +128,24 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
                     initial_retained
                   );
 
-                  // const retained = 
+                  // const retained =
                   // Math.round(
-                  //   100 * 
+                  //   100 *
                   //     (mass !== 0 ? ((100 - row.passant) / 100) * mass - accumulative_retained : 0)
                   // ) / 100;
 
                   const passant =
-                  Math.round(
-                    100 *
-                      (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)
-                  ) / 100;
-                  
-                  console.log(passant)
-                  console.log(item.retained)
+                    Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
+
+                  console.log(passant);
+                  console.log(item.retained);
 
                   newRows[sieve_index + index + 1].passant = passant;
                   // newRows[sieve_index + index].retained = retained;
                 }
               });
-              
+
               setData({ step: 1, key: 'table_data', value: newRows });
-              
             }}
           />
         );

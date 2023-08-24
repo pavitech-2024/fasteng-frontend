@@ -156,7 +156,7 @@ class Granulometry_SERVICE implements IEssayService {
       const { success, error } = response.data;
 
       if (success === false) throw error.name;
-      
+
       // this.store_actions.reset( { step: null, value: null });
     } catch (error) {
       throw error;

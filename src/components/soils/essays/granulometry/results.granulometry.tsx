@@ -101,12 +101,7 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
           }}
         >
           {data.container_other_data.map((item, index) => (
-            <Result_Card 
-              key={index} 
-              label={item.label} 
-              value={item.value} 
-              unity={item.unity}
-            />
+            <Result_Card key={index} label={item.label} value={item.value} unity={item.unity} />
           ))}
         </Box>
         <Chart

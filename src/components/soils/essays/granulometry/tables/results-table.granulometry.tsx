@@ -16,9 +16,9 @@ interface resultsGranulometryProps {
 const Granulometry_resultsTable = ({ rows, columns }: resultsGranulometryProps) => {
   return (
     <DataGrid
-      sx={{ 
-        mt: '1rem', 
-        borderRadius: '10px'
+      sx={{
+        mt: '1rem',
+        borderRadius: '10px',
       }}
       density="standard"
       hideFooter
