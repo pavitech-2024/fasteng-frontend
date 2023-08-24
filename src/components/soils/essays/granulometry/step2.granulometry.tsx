@@ -51,24 +51,70 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
             onChange={(e) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
-              const passant = Number(e.target.value);
+              const mass = data.sample_mass;
+              const current_passant = Number(e.target.value);
 
               const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
               const initial_retained = 0;
-              const acumulative_retained = currentRows.reduce(
+              const accumulative_retained = currentRows.reduce(
                 (accumulator: number, current_value) => accumulator + current_value.retained,
                 initial_retained
               );
 
-              const retained =
+              const current_retained =
                 Math.round(
-                  100 * (data.sample_mass !== 0 ? ((100 - passant) / 100) * data.sample_mass - acumulative_retained : 0)
+                  100 * (mass !== 0 ? ((100 - current_passant) / 100) * mass - accumulative_retained : 0)
                 ) / 100;
 
-              newRows[sieve_index].passant = passant;
-              newRows[sieve_index].retained = retained;
+              newRows[sieve_index].passant = current_passant;
+              newRows[sieve_index].retained = current_retained;
               setData({ step: 1, key: 'passant', value: newRows });
               setData({ step: 1, key: 'retained', value: newRows });
+
+              const nextRows = sieve_index > 0 ? newRows.slice(sieve_index) : [...rows];
+
+              const new_current_accumulative_retained = accumulative_retained;
+
+              console.log(new_current_accumulative_retained)
+
+              nextRows.map(function (item, index) {
+                const row = item;
+
+                console.log(row);
+
+                if (index > 0) {
+                  const currentRows = nextRows.slice(0, index + 1);
+
+                  const initial_retained = new_current_accumulative_retained;
+                  const accumulative_retained = currentRows.reduce(
+                    (accumulator: number, current_value) => accumulator + current_value.retained,
+                    initial_retained
+                  );
+
+                  console.log(accumulative_retained)
+
+                  const retained =
+                  Math.round(
+                    100 *
+                      (mass !== 0 ? ((100 - row.passant) / 100) * mass - accumulative_retained : 0)
+                  ) / 100;
+
+                  const passant =
+                    Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
+
+                  console.log(passant);
+                  console.log(retained);
+
+                  newRows.map((e) => {
+                    if (e.sieve === row.sieve) {
+                      e.passant = passant
+                    }
+                  });
+                  // newRows[sieve_index + index].retained = retained;
+                }
+              });
+
+              setData({ step: 1, key: 'table_data', value: newRows });
             }}
           />
         );
@@ -112,7 +158,11 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
               setData({ step: 1, key: 'retained', value: newRows });
               setData({ step: 1, key: 'passant', value: newRows });
 
-              const nextRows = sieve_index > 0 ? newRows.slice(sieve_index + 1) : [...rows];
+              const nextRows = sieve_index > 0 ? newRows.slice(sieve_index) : [...rows];
+
+              const new_current_accumulative_retained = current_accumulative_retained - current_retained;
+
+              console.log(new_current_accumulative_retained)
 
               nextRows.map(function (item, index) {
                 const row = item;
@@ -122,11 +172,13 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
                 if (index > 0) {
                   const currentRows = nextRows.slice(0, index + 1);
 
-                  const initial_retained = current_accumulative_retained;
+                  const initial_retained = new_current_accumulative_retained;
                   const accumulative_retained = currentRows.reduce(
                     (accumulator: number, current_value) => accumulator + current_value.retained,
                     initial_retained
                   );
+
+                  console.log(accumulative_retained)
 
                   // const retained =
                   // Math.round(
@@ -140,7 +192,11 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
                   console.log(passant);
                   console.log(item.retained);
 
-                  newRows[sieve_index + index + 1].passant = passant;
+                  newRows.map((e) => {
+                    if (e.sieve === row.sieve) {
+                      e.passant = passant
+                    }
+                  });
                   // newRows[sieve_index + index].retained = retained;
                 }
               });
