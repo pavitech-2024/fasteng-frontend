@@ -40,43 +40,48 @@ export type GranulometryData = {
 
 export type GranulometryActions = {
   setData: ({ step, key, value }: setDataType) => void;
+  reset: ({ step }: setDataType) => void;
 };
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'results' };
 
 type setDataType = { step: number; key?: string; value: unknown };
 
+const initialState = {
+  generalData: {
+    userId: null,
+    name: null,
+    sample: null,
+    operator: null,
+    calculist: null,
+    description: null,
+  },
+  step2Data: {
+    sample_mass: null,
+    table_data: null,
+    sieve_series: null,
+    bottom: null,
+  },
+  results: {
+    accumulated_retained: [],
+    graph_data: [],
+    passant: [],
+    retained_porcentage: [],
+    total_retained: null,
+    nominal_size: null,
+    nominal_diameter: null,
+    fineness_module: null,
+    cc: null,
+    cnu: null,
+    error: null,
+  },
+}
+
 const useGranulometryStore = create<GranulometryData & GranulometryActions>()(
   devtools(
     persist(
       (set) => ({
-        generalData: {
-          userId: null,
-          name: null,
-          sample: null,
-          operator: null,
-          calculist: null,
-          description: null,
-        },
-        step2Data: {
-          sample_mass: null,
-          table_data: null,
-          sieve_series: null,
-          bottom: null,
-        },
-        results: {
-          accumulated_retained: [],
-          graph_data: [],
-          passant: [],
-          retained_porcentage: [],
-          total_retained: null,
-          nominal_size: null,
-          nominal_diameter: null,
-          fineness_module: null,
-          cc: null,
-          cnu: null,
-          error: null,
-        },
+        ...initialState,
 
         setData: ({ step, key, value }) =>
           set((state) => {
@@ -89,7 +94,14 @@ const useGranulometryStore = create<GranulometryData & GranulometryActions>()(
                 },
               };
             else return { ...state, [stepVariant[step]]: value };
-          }),
+        }),
+
+        reset: ({ step }) => {
+          set(initialState)
+          return {
+            [stepVariant[step]] : null
+          }
+        },
       }),
       {
         // name data store e config no session storage

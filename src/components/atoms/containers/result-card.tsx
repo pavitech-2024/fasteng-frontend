@@ -67,6 +67,7 @@ const Result_Card = ({ label, value, unity }: Result_CardProps) => {
         sx={{
           width: '100%',
           height: '50%',
+          padding: '2px',
           bgcolor: 'primaryTons.lightGray',
           textTransform: 'uppercase',
           fontWeight: '700',
@@ -95,7 +96,7 @@ const Result_Card = ({ label, value, unity }: Result_CardProps) => {
         }}
       >
         {value}
-        <span style={{ fontWeight: '700' }}> {`${unity}`} </span>
+        {unity ? <span style={{ fontWeight: '700' }}> {`${unity}`}</span> : ''}
       </Box>
     </Box>
   );

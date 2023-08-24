@@ -26,8 +26,8 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
       { label: t('granulometry.nominal-size'), value: granulometry_results.nominal_size, unity: 'mm' },
       { label: t('granulometry.nominal-diameter'), value: granulometry_results.nominal_diameter, unity: 'mm' },
       { label: t('granulometry.fineness-module'), value: granulometry_results.fineness_module, unity: '%' },
-      { label: t('granulometry.cc'), value: granulometry_results.cc, unity: '' },
-      { label: t('granulometry.cnu'), value: granulometry_results.cnu, unity: '' },
+      { label: t('granulometry.cc'), value: granulometry_results.cc },
+      { label: t('granulometry.cnu'), value: granulometry_results.cnu },
       { label: t('granulometry.error'), value: granulometry_results.error, unity: '%' }
     );
   }
@@ -61,7 +61,7 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
     },
     {
       field: 'passant_porcentage',
-      headerName: t('granulometry.passant-porcentage') + ' (%)',
+      headerName: t('granulometry.passant') + ' (%)',
       valueFormatter: ({ value }) => `${value}`,
     },
     {
@@ -71,7 +71,7 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
     },
     {
       field: 'retained_porcentage',
-      headerName: t('granulometry.retained-porcentage') + ' (%)',
+      headerName: t('granulometry.retained') + ' (%)',
       valueFormatter: ({ value }) => `${value}`,
     },
     {
@@ -93,15 +93,20 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
         <ResultSubTitle title={t('soils.essays.granulometry')} sx={{ margin: '.65rem' }} />
         <Box
           sx={{
-            width: '80%',
+            width: '100%',
             display: 'flex',
-            gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
+            // gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
             gap: '10px',
             mt: '20px',
           }}
         >
           {data.container_other_data.map((item, index) => (
-            <Result_Card key={index} label={item.label} value={item.value} unity={item.unity} />
+            <Result_Card 
+              key={index} 
+              label={item.label} 
+              value={item.value} 
+              unity={item.unity}
+            />
           ))}
         </Box>
         <Chart
@@ -113,15 +118,16 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
           options={{
             title: t('granulometry.granulometry'),
             backgroundColor: 'transparent',
+            pointSize: '2',
             hAxis: {
               title: `${t('granulometry.sieve-openness') + ' (mm)'}`,
+              type: 'number',
+              scaleType: 'log',
             },
             vAxis: {
-              title: `${t('granulometry.passant-porcentage') + ' (%)'}`,
-            },
-            explorer: {
-              actions: ['dragToZoom', 'rightClickToReset'],
-              axis: 'vertical',
+              title: `${t('granulometry.passant') + ' (%)'}`,
+              minValue: '0',
+              maxValue: '105',
             },
             legend: 'none',
           }}

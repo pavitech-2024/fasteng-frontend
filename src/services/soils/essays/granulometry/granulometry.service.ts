@@ -4,6 +4,7 @@ import { IEssayService } from '@/interfaces/common/essay/essay-service.interface
 import Api from '@/api';
 import { Sample } from '@/interfaces/soils';
 import { GranulometryData, GranulometryActions } from '@/stores/soils/granulometry/granulometry.store';
+// import { persist } from 'zustand/middleware';
 
 class Granulometry_SERVICE implements IEssayService {
   info = {
@@ -155,7 +156,8 @@ class Granulometry_SERVICE implements IEssayService {
       const { success, error } = response.data;
 
       if (success === false) throw error.name;
-      // else
+      
+      // this.store_actions.reset( { step: null, value: null });
     } catch (error) {
       throw error;
     }

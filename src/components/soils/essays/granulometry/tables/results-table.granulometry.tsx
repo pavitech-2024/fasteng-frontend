@@ -16,20 +16,21 @@ interface resultsGranulometryProps {
 const Granulometry_resultsTable = ({ rows, columns }: resultsGranulometryProps) => {
   return (
     <DataGrid
-      sx={{ mt: '1rem', borderRadius: '10px' }}
-      density="compact"
+      sx={{ 
+        mt: '1rem', 
+        borderRadius: '10px'
+      }}
+      density="standard"
       hideFooter
       showCellVerticalBorder
       showColumnVerticalBorder
-      experimentalFeatures={{ columnGrouping: true }}
       columns={columns.map((column) => ({
         ...column,
         disableColumnMenu: true,
         sortable: false,
         align: 'center',
         headerAlign: 'center',
-        minWidth: column.field === 'extended_read' ? 250 : 100,
-        flex: 1,
+        minWidth: 200,
       }))}
       rows={
         rows !== null
