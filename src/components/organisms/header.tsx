@@ -36,6 +36,7 @@ export const Header = ({ title, subTitle, link, icon, image, children }: HeaderP
           sx={{
             display: 'flex',
             flexDirection: 'column',
+            marginRight: '2rem',
           }}
         >
           <Typography

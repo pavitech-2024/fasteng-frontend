@@ -25,6 +25,7 @@
     "eslint-config-next": "13.2.4",
     "i18next": "^22.4.14",
     "js-cookie": "^3.0.1",
+    "moment": "^2.29.4",
     "next": "13.2.4",
     "nookies": "^2.5.2",
     "react": "18.2.0",
