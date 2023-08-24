@@ -65,6 +65,9 @@ import concreteEssaysENG from './translations/concrete/essays/en.json';
 // materials
 import concreteMaterialsPTBR from './translations/concrete/materials/ptbr.json';
 import concreteMaterialsENG from './translations/concrete/materials/en.json';
+// unit mass
+import unitMassPTBR from './translations/concrete/essays/unitMass/ptbr.json';
+import unitMassENG from './translations/concrete/essays/unitMass/en.json';
 
 i18n.use(initReactI18next).init({
   fallbackLng: 'ptBR',
@@ -97,6 +100,7 @@ i18n.use(initReactI18next).init({
         /**@concrete */
         ...concreteEssaysPTBR,
         ...concreteMaterialsPTBR,
+        ...unitMassPTBR,
       },
     },
     en: {
@@ -124,6 +128,7 @@ i18n.use(initReactI18next).init({
         /**@concrete */
         ...concreteEssaysENG,
         ...concreteMaterialsENG,
+        ...unitMassENG,
       },
     },
   },

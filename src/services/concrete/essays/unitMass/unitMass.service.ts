@@ -6,7 +6,7 @@ import Api from '@/api';
 
 class UNITMASS_SERVICE implements IEssayService {
   info = {
-    key: 'cbr',
+    key: 'unitMass',
     icon: UnitMassIcon,
     title: t('concrete.essays.unitMass'),
     path: '/concrete/essays/unitMass',

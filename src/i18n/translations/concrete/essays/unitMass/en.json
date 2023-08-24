@@ -1,6 +1,11 @@
 {
+  "unitMass.generalData": "General Data",
   "unitMass.aggregate": "Aggregate without maximum diameter",
   "unitMass.method": "Method",
+  "unitMass.method.A": "Method A",
+  "unitMass.method.B": "Method B",
+  "unitMass.method.C": "Method C",
+
   "unitMass.experimentName": "Experiment name",
   
   "unitMass.containerVolume": "Container volume",

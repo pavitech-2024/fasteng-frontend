@@ -1,10 +1,11 @@
+import { ConcreteMaterial } from '@/interfaces/concrete';
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
 interface UnitMassGeneralData {
   userId: string;
   experimentName: string;
-  aggregate: unknown;
+  aggregate: ConcreteMaterial;
   method: 'A' | 'B' | 'C';
 }
 

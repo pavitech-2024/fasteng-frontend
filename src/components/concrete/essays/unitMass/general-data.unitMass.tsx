@@ -1,73 +1,130 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { EssayPageProps } from '@/components/templates/essay';
 import UNITMASS_SERVICE from '@/services/concrete/essays/unitMass/unitMass.service';
 import useUnitMassStore from '@/stores/concrete/unitMass/unitMass.store';
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import DropDown from '@/components/atoms/inputs/dropDown';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { ConcreteMaterial } from '@/interfaces/concrete';
+import concreteMaterialService from '@/services/concrete/concrete-materials.service';
+import { toast } from 'react-toastify';
+import useAuth from '@/contexts/auth';
+import Loading from '@/components/molecules/loading';
 
-const UnitMass_GeneralData = ({}: // nextDisabled,
-// setNextDisabled,
-// unitMass,
-EssayPageProps & { unitMass: UNITMASS_SERVICE }) => {
+const UnitMass_GeneralData = ({
+  nextDisabled,
+  setNextDisabled,
+  unitMass,
+}: EssayPageProps & { unitMass: UNITMASS_SERVICE }) => {
   const { generalData, setData } = useUnitMassStore();
+  const [loading, setLoading] = useState<boolean>(true);
+  const { user } = useAuth();
+  const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
+
+  useEffect(() => {
+    toast.promise(
+      async () => {
+        const materials = await concreteMaterialService.getMaterialsByUserId(user._id);
+
+        setMaterials(materials.data);
+        setLoading(false);
+      },
+      {
+        pending: t('loading.samples.pending'),
+        success: t('loading.samples.success'),
+        error: t('loading.samples.error'),
+      }
+    );
+  }, [user]);
 
   const methodOptions = [
     {
-      label: t('unitMass.method'),
+      label: t('unitMass.method.A'),
       value: 'A',
+      key: 'method',
     },
     {
-      label: t('unitMass.method'),
+      label: t('unitMass.method.B'),
       value: 'B',
+      key: 'method',
     },
     {
-      label: t('unitMass.method'),
+      label: t('unitMass.method.C'),
       value: 'C',
+      key: 'method',
     },
   ];
 
+  useEffect(() => {
+    if (generalData.experimentName !== null && generalData.method !== null && generalData.aggregate !== null)
+      nextDisabled && setNextDisabled(false);
+  }, [generalData, nextDisabled, setNextDisabled]);
+
   return (
     <>
-      <Box
-        sx={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
+      {loading ? (
+        <Loading />
+      ) : (
         <Box
           sx={{
-            display: 'grid',
             width: '100%',
-            gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
-            gap: '5px 20px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          {/** Agregado sem diametro máximo (m) */}
-          <TextField
-            variant="standard"
-            key="experimentName"
-            label={t('unitMass.experimentName')}
-            value={generalData.experimentName}
-            required
-            onChange={(e) => setData({ step: 0, key: 'experimentName', value: e.target.value })}
-          />
-          <DropDown
-            key={'method'}
-            variant="standard"
-            label={t('unitMass.method')}
-            options={methodOptions.map((method) => {
-              return { label: method.label, value: method.value };
-            })}
-            defaultValue={methodOptions[0]}
-            callback={(value: string) => setData({ step: 0, key: 'method', value })}
-            size="medium"
-            required
-          />
+          <Box
+            sx={{
+              display: 'grid',
+              width: '100%',
+              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
+              gap: '5px 20px',
+            }}
+          >
+             {/** Nome do experimento */}
+             <TextField
+              variant="standard"
+              key="experimentName"
+              label={t('unitMass.experimentName')}
+              value={generalData.experimentName}
+              required
+              onChange={(e) => setData({ step: 0, key: 'experimentName', value: e.target.value })}
+              size='medium'
+            />
+            {/** Agregado sem diametro máximo (m) */}
+            <DropDown
+              key={'aggregate'}
+              variant="standard"
+              label={t('unitMass.aggregate')}
+              options={materials.map((material: ConcreteMaterial) => {
+                return { label: material.name + ' | ' + t(`${'samples.' + material.type}`), value: material };
+              })}
+              defaultValue={{
+                label: materials[0].name + ' | ' + t(`${'samples.' + materials[0].type}`),
+                value: materials[0].name,
+              }}
+              callback={(value) => setData({ step: 0, key: 'aggregate', value })}
+              size="medium"
+              required
+            />
+            {/** Método escolhido */}
+            <DropDown
+              key={'method'}
+              variant="standard"
+              label={t('unitMass.method')}
+              options={methodOptions.map((method) => {
+                return { label: method.label, value: method.value };
+              })}
+              defaultValue={methodOptions[0]}
+              callback={(value: string) => setData({ step: 0, key: 'method', value })}
+              size="medium"
+              required
+            />
+            
+          </Box>
         </Box>
-      </Box>
+      )}
     </>
   );
 };
