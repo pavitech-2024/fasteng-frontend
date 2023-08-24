@@ -30,7 +30,7 @@ class COMPRESSION_SERVICE implements IEssayService {
   store_actions: CompressionActions;
   userId: string;
 
-  handleNext = async (step: number, data: unknown): Promise<void> => {    
+  handleNext = async (step: number, data: unknown): Promise<void> => {
     try {
       switch (step) {
         case 0:
@@ -66,7 +66,10 @@ class COMPRESSION_SERVICE implements IEssayService {
   };
 
   submitCompressionGeneralData = async (generalData: CompressionData['compressionGeneralData']): Promise<void> => {
-    console.log("🚀 ~ file: compression.service.ts:67 ~ COMPRESSION_SERVICE ~ submitCompressionGeneralData= ~ generalData:", generalData)
+    console.log(
+      '🚀 ~ file: compression.service.ts:67 ~ COMPRESSION_SERVICE ~ submitCompressionGeneralData= ~ generalData:',
+      generalData
+    );
     try {
       const { name, sample } = generalData;
 
@@ -245,7 +248,7 @@ class COMPRESSION_SERVICE implements IEssayService {
     } catch (error) {
       throw error;
     }
-  }
+  };
 }
 
 export default COMPRESSION_SERVICE;

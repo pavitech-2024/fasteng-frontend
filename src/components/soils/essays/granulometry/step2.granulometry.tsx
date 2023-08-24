@@ -62,9 +62,8 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
               );
 
               const current_retained =
-                Math.round(
-                  100 * (mass !== 0 ? ((100 - current_passant) / 100) * mass - accumulative_retained : 0)
-                ) / 100;
+                Math.round(100 * (mass !== 0 ? ((100 - current_passant) / 100) * mass - accumulative_retained : 0)) /
+                100;
 
               newRows[sieve_index].passant = current_passant;
               newRows[sieve_index].retained = current_retained;
@@ -75,7 +74,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
 
               const new_current_accumulative_retained = accumulative_retained;
 
-              console.log(new_current_accumulative_retained)
+              console.log(new_current_accumulative_retained);
 
               nextRows.map(function (item, index) {
                 const row = item;
@@ -91,13 +90,11 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
                     initial_retained
                   );
 
-                  console.log(accumulative_retained)
+                  console.log(accumulative_retained);
 
                   const retained =
-                  Math.round(
-                    100 *
-                      (mass !== 0 ? ((100 - row.passant) / 100) * mass - accumulative_retained : 0)
-                  ) / 100;
+                    Math.round(100 * (mass !== 0 ? ((100 - row.passant) / 100) * mass - accumulative_retained : 0)) /
+                    100;
 
                   const passant =
                     Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
@@ -107,7 +104,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
 
                   newRows.map((e) => {
                     if (e.sieve === row.sieve) {
-                      e.passant = passant
+                      e.passant = passant;
                     }
                   });
                   // newRows[sieve_index + index].retained = retained;
@@ -162,7 +159,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
 
               const new_current_accumulative_retained = current_accumulative_retained - current_retained;
 
-              console.log(new_current_accumulative_retained)
+              console.log(new_current_accumulative_retained);
 
               nextRows.map(function (item, index) {
                 const row = item;
@@ -178,7 +175,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
                     initial_retained
                   );
 
-                  console.log(accumulative_retained)
+                  console.log(accumulative_retained);
 
                   // const retained =
                   // Math.round(
@@ -194,7 +191,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
 
                   newRows.map((e) => {
                     if (e.sieve === row.sieve) {
-                      e.passant = passant
+                      e.passant = passant;
                     }
                   });
                   // newRows[sieve_index + index].retained = retained;

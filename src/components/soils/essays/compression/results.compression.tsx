@@ -7,7 +7,10 @@ import useAuth from '@/contexts/auth';
 import Loading from '@/components/molecules/loading';
 import Chart from 'react-google-charts';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
-import Result_Card, { Result_CardContainer, Result_Container_NoChildren } from '@/components/atoms/containers/result-card';
+import Result_Card, {
+  Result_CardContainer,
+  Result_Container_NoChildren,
+} from '@/components/atoms/containers/result-card';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import { t } from 'i18next';
 import { useEffect } from 'react';
@@ -86,12 +89,22 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
             <Result_Card key={index} label={item.label} value={String(item.value)} unity={item.unity} />
           ))}
         </Result_CardContainer>
-        <Result_Container_NoChildren hideBorder title={t('compression.humidityDetermination')}/>
-        <Result_CardContainer hideBorder title={t('compression.wetSoilWeights')}>{wetSoilWeights}</Result_CardContainer>
-        <Result_CardContainer hideBorder title={t('compression.wetSoilDensitys')}>{wetSoilDensitys}</Result_CardContainer>
-        <Result_CardContainer hideBorder title={t('compression.netWeightsDrySoil')}>{netWeightsDrySoil}</Result_CardContainer>
-        <Result_CardContainer hideBorder title={t('compression.hd.moistures')}>{moistures}</Result_CardContainer>
-        <Result_CardContainer hideBorder title={t('compression.hd.drySoilDensitys')}>{drySoilDensitys}</Result_CardContainer>
+        <Result_Container_NoChildren hideBorder title={t('compression.humidityDetermination')} />
+        <Result_CardContainer hideBorder title={t('compression.wetSoilWeights')}>
+          {wetSoilWeights}
+        </Result_CardContainer>
+        <Result_CardContainer hideBorder title={t('compression.wetSoilDensitys')}>
+          {wetSoilDensitys}
+        </Result_CardContainer>
+        <Result_CardContainer hideBorder title={t('compression.netWeightsDrySoil')}>
+          {netWeightsDrySoil}
+        </Result_CardContainer>
+        <Result_CardContainer hideBorder title={t('compression.hd.moistures')}>
+          {moistures}
+        </Result_CardContainer>
+        <Result_CardContainer hideBorder title={t('compression.hd.drySoilDensitys')}>
+          {drySoilDensitys}
+        </Result_CardContainer>
 
         <ResultSubTitle title={t('compression.graph')} sx={{ margin: '.65rem' }} />
         <Chart

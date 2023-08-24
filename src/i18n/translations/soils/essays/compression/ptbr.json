@@ -45,7 +45,7 @@
   "errors-empty-capsules-weights-hum": "Informe o peso da cápsula.",
   "errors.invalid-capsules-number-hum": "A tara da cápsula é maiorou igual do que o peso bruto seco.",
   "errors.invalid-dry-weights-capsule-hum": "Peso bruto da cápsula é maior ou igual do que o peso bruto úmido.",
-  
+
   "compression.step-4-description": "Resultados abaixo. Não esqueça de salvar!",
   "compression.hygroscopicHumidity": "Umidade Higroscópica",
   "compression.humidityDetermination": "Determinação da Umidade",
