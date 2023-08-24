@@ -42,7 +42,7 @@ class SAND_INCREASE_SERVICE implements IEssayService {
           await this.submitUnitMassDeterminationData(data as SandIncreaseData['unitMassDeterminationData']);
           break;
         case 2:
-          await this.submitHumidityFoundData(data as SandIncreaseData ['humidityFoundData']);
+          await this.submitHumidityFoundData(data as SandIncreaseData['humidityFoundData']);
           break;
         case 3:
           await this.calculateResults(data as SandIncreaseData);
@@ -82,6 +82,11 @@ class SAND_INCREASE_SERVICE implements IEssayService {
     }
   };
 
+  // Método caluculateUnitMassDetermination com as verificações;
+  // Colocar botão na tela que aciona este método;
+
+  
+
   submitUnitMassDeterminationData = (
     unitMassDeterminationData: SandIncreaseData['unitMassDeterminationData']
   ): void => {
@@ -91,16 +96,15 @@ class SAND_INCREASE_SERVICE implements IEssayService {
 
       if (!unitMassDeterminationData.containerWeight) throw t('errors.empty-container-weight');
       if (unitMassDeterminationData.containerWeight < 0) throw t('errors.negative-container-weight');
+
     } catch (error) {
       throw error;
     }
   };
 
-  submitHumidityFoundData = (
-    humidityFoundData: SandIncreaseData['humidityFoundData']
-  ): void => {
+  submitHumidityFoundData = (humidityFoundData: SandIncreaseData['humidityFoundData']): void => {
     try {
-      console.log(humidityFoundData)
+      console.log(humidityFoundData);
     } catch (error) {
       throw error;
     }

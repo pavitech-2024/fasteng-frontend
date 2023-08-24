@@ -89,7 +89,7 @@ i18n.use(initReactI18next).init({
         /**@concrete */
         ...concreteEssaysPTBR,
         ...concreteMaterialsPTBR,
-        ...sandIncreasePTBR
+        ...sandIncreasePTBR,
       },
     },
     en: {
@@ -114,7 +114,7 @@ i18n.use(initReactI18next).init({
         /**@concrete */
         ...concreteEssaysENG,
         ...concreteMaterialsENG,
-        ...sandIncreaseENG
+        ...sandIncreaseENG,
       },
     },
   },

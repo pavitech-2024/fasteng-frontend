@@ -22,50 +22,50 @@ interface unitMassDeterminationData {
   containerWeight: number;
   tableData: [
     {
-      sample: '1',
-      moistureContent: '0',
-      containerWeightSample: number,
+      sample: '1';
+      moistureContent: '0';
+      containerWeightSample: number;
     },
     {
-      sample: '2',
-      moistureContent: '0.5',
-      containerWeightSample: number,
+      sample: '2';
+      moistureContent: '0.5';
+      containerWeightSample: number;
     },
     {
-      sample: '3',
-      moistureContent: '1',
-      containerWeightSample: number,
+      sample: '3';
+      moistureContent: '1';
+      containerWeightSample: number;
     },
     {
-      sample: '4',
-      moistureContent: '2',
-      containerWeightSample: number,
+      sample: '4';
+      moistureContent: '2';
+      containerWeightSample: number;
     },
     {
-      sample: '5',
-      moistureContent: '4',
-      containerWeightSample: number,
+      sample: '5';
+      moistureContent: '4';
+      containerWeightSample: number;
     },
     {
-      sample: '6',
-      moistureContent: '5',
-      containerWeightSample: number,
+      sample: '6';
+      moistureContent: '5';
+      containerWeightSample: number;
     },
     {
-      sample: '7',
-      moistureContent: '7',
-      containerWeightSample: number,
+      sample: '7';
+      moistureContent: '7';
+      containerWeightSample: number;
     },
     {
-      sample: '8',
-      moistureContent: '9',
-      containerWeightSample: number,
+      sample: '8';
+      moistureContent: '9';
+      containerWeightSample: number;
     },
     {
-      sample: '9',
-      moistureContent: '12',
-      containerWeightSample: number,
-    },
+      sample: '9';
+      moistureContent: '12';
+      containerWeightSample: number;
+    }
   ];
 }
 
@@ -83,6 +83,12 @@ export type SandIncreaseData = {
   humidityFoundData: humidityFoundData;
   results: sandIncrease_results;
 };
+
+// export interface CalculateUnitMass {
+//   sample: string;
+//   moistureContent: string;
+//   containerWeightSample: number;
+// }[]
 
 export type SandIncreaseActions = {
   setData: ({ step, key, value }: setDataType) => void;

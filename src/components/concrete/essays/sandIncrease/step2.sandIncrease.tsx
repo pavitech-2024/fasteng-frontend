@@ -1,12 +1,18 @@
+import Api from '@/api';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import useSandIncreaseStore from '@/stores/concrete/sandIncrease/sandIncrease.store';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
+import { useState } from 'react';
 
 const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { setData, unitMassDeterminationData: data } = useSandIncreaseStore();
+
+  const [calcBtnDisable, setCalcBtnDisable] = useState(true);
+
+  const [unitMass, setUnitMass] = useState()
 
   const inputs = [
     {
@@ -36,7 +42,7 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
     {
       field: 'moistureContent',
       headerName: t('sandIncrease.moistureContent') + ' (%) ' + 'indicado em norma',
-      valueFormatter: ({value}) => `${value}`
+      valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'containerWeightSample',
@@ -65,11 +71,39 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
   ];
 
   // Verifica se todos os campos da coluna extended_read estão preenchidos e também ring_constant e cilinder_height
-  if (nextDisabled) {
-    const containerWeightSample_completed = rows.every(row => Object.values(row).every(value => value !== null));
+  // if (nextDisabled) {
+  //   const containerWeightSample_completed = rows.every((row) => Object.values(row).every((value) => value !== null));
+  //   const container_volume_completed = data.containerVolume !== null;
+  //   const container_weight_completed = data.containerWeight !== null;
+  //   if (containerWeightSample_completed && container_volume_completed && container_weight_completed)
+  //     setNextDisabled(false);
+  // }
+
+   const calculateUnitMass = async (calculateUnitMass: any)  => {
+    try {
+      if (!calculateUnitMass) throw t('errors.empty-table-data');
+      console.log("🚀 ~ file: step2.sandIncrease.tsx:87 ~ calculateUnitMass ~ calculateUnitMass:", calculateUnitMass);
+
+      const response = await Api.post(`concrete/essays/sand-increase/calculate-unit-mass`, {
+        unitMassData: calculateUnitMass
+      });
+
+      const { success, error, result } = response.data;
+
+      if (success === false) throw error.name
+
+      setUnitMass(result);
+    } catch (error) {
+      throw error
+    }
+  }
+
+  if (calcBtnDisable) {
+    const containerWeightSample_completed = rows.every((row) => Object.values(row).every((value) => value !== null));
     const container_volume_completed = data.containerVolume !== null;
     const container_weight_completed = data.containerWeight !== null;
-    if (containerWeightSample_completed && container_volume_completed && container_weight_completed) setNextDisabled(false);
+    if (containerWeightSample_completed && container_volume_completed && container_weight_completed)
+    setCalcBtnDisable(false);
   }
 
   return (
@@ -82,25 +116,24 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
           flexWrap: 'wrap',
         }}
       >
-
         {inputs.map((input) => (
           <Box key={input.key}>
-            <InputEndAdornment 
+            <InputEndAdornment
               label={input.label}
-              adornment={input.adornment} 
-              value={input.value} 
+              adornment={input.adornment}
+              value={input.value}
               required={input.required}
               type="number"
-              onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })} 
+              onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
               inputProps={{ min: 0 }}
             />
           </Box>
         ))}
       </Box>
 
-      <DataGrid 
-        sx={{ mt:'1rem', borderRadius: '10px' }}
-        density='compact'
+      <DataGrid
+        sx={{ mt: '1rem', borderRadius: '10px' }}
+        density="compact"
         hideFooter
         showCellVerticalBorder
         showColumnVerticalBorder
@@ -112,9 +145,19 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
           headerAlign: 'center',
           minWidth: column.field === 'containerWeightSample' ? 250 : 100,
           flex: 1,
-        }))} 
-        rows={rows.map((row, index) => ({ ...row, id: index }))}        
+        }))}
+        rows={rows.map((row, index) => ({ ...row, id: index }))}
       />
+      <Box textAlign="center" marginTop="10px">
+        <Button 
+          variant="contained" 
+          color="primary"
+          disabled={calcBtnDisable}
+          onClick={() => calculateUnitMass(data.tableData)}
+        >
+          Calcular
+        </Button>
+      </Box>
     </Box>
   );
 };
