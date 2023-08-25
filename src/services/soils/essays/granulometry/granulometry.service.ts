@@ -72,7 +72,7 @@ class Granulometry_SERVICE implements IEssayService {
     } catch (error) {
       throw error;
     }
-  }
+  };
 
   // send general data to backend to verify if there is already a Granulometry essay with same name for the sample
   submitGeneralData = async (generalData: GranulometryData['generalData']): Promise<void> => {

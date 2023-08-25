@@ -12,11 +12,7 @@ import { EssayPageProps } from '@/components/templates/essay';
 import Image from 'next/image';
 import { SucsTableImage } from '../../../../assets';
 
-const SUCS_GeneralData = ({ 
-  nextDisabled, 
-  setNextDisabled, 
-  sucs 
-}: EssayPageProps & { sucs: SUCS_SERVICE }) => {
+const SUCS_GeneralData = ({ nextDisabled, setNextDisabled, sucs }: EssayPageProps & { sucs: SUCS_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [open, setOpen] = useState<boolean>(false);
   const [samples, setSamples] = useState<Sample[]>([]);

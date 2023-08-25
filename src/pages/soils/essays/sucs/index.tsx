@@ -29,7 +29,7 @@ const Sucs = () => {
   // inform the childrens with the step of the children and the part of the store that they will use
   const childrens = [
     { step: 0, children: <SUCS_GeneralData sucs={sucs} />, data: store.generalData },
-    { step: 1, children: <SUCS_Step2 granulometry_serv={granulometry}/>, data: store },
+    { step: 1, children: <SUCS_Step2 granulometry_serv={granulometry} />, data: store },
     { step: 2, children: <SUCS_Results />, data: store },
   ];
 

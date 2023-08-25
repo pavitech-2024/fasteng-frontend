@@ -8,25 +8,22 @@ import Sucs_step2Table from './tables/step2-table.sucs';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Granulometry_SERVICE from '@/services/soils/essays/granulometry/granulometry.service';
-import { GranulometryData } from '@/stores/soils/granulometry/granulometry.store';
 import Loading from '@/components/molecules/loading';
 
-const SUCS_Step2 = ({ 
-  nextDisabled, 
-  setNextDisabled, 
-  granulometry_serv 
-}: EssayPageProps & { granulometry_serv : Granulometry_SERVICE }) => {
+const SUCS_Step2 = ({
+  nextDisabled,
+  setNextDisabled,
+  granulometry_serv,
+}: EssayPageProps & { granulometry_serv: Granulometry_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [granulometry, setGranulometry] = useState<GranulometryData>();
   const { generalData, step2Data: data, setData } = useSucsStore();
 
   useEffect(() => {
     toast.promise(
       async () => {
         const _id = generalData.sample._id;
-        const response = await granulometry_serv.getGranulometryBySampleId(_id);
+        const granulometry = await granulometry_serv.getGranulometryBySampleId(_id);
 
-        setGranulometry(response);
         setLoading(false);
 
         setData({ step: 1, key: 'cc', value: granulometry.results.cc });
@@ -37,7 +34,7 @@ const SUCS_Step2 = ({
         success: t('loading.granulometry.success'),
         error: t('loading.granulometry.error'),
       }
-    )
+    );
   }, []);
 
   data.organic_matter = generalData.sample.type == 'organicSoil';
