@@ -64,6 +64,16 @@ class Granulometry_SERVICE implements IEssayService {
     }
   };
 
+  // get essay from sample _id
+  getGranulometryBySampleId = async (sample_id: string): Promise<any> => {
+    try {
+      const response = await Api.get(`${this.info.backend_path}/get/${sample_id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   // send general data to backend to verify if there is already a Granulometry essay with same name for the sample
   submitGeneralData = async (generalData: GranulometryData['generalData']): Promise<void> => {
     try {

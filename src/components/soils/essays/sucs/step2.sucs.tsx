@@ -5,24 +5,52 @@ import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import Sucs_step2Table from './tables/step2-table.sucs';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import Granulometry_SERVICE from '@/services/soils/essays/granulometry/granulometry.service';
+import Loading from '@/components/molecules/loading';
 
-const SUCS_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
+const SUCS_Step2 = ({
+  nextDisabled,
+  setNextDisabled,
+  granulometry_serv,
+}: EssayPageProps & { granulometry_serv: Granulometry_SERVICE }) => {
+  const [loading, setLoading] = useState<boolean>(true);
   const { generalData, step2Data: data, setData } = useSucsStore();
+
+  useEffect(() => {
+    toast.promise(
+      async () => {
+        const _id = generalData.sample._id;
+        const granulometry = await granulometry_serv.getGranulometryBySampleId(_id);
+
+        setLoading(false);
+
+        setData({ step: 1, key: 'cc', value: granulometry.results.cc });
+        setData({ step: 1, key: 'cnu', value: granulometry.results.cnu });
+      },
+      {
+        pending: t('loading.granulometry.pending'),
+        success: t('loading.granulometry.success'),
+        error: t('loading.granulometry.error'),
+      }
+    );
+  }, []);
 
   data.organic_matter = generalData.sample.type == 'organicSoil';
 
   const inputs = [
     {
       label: 'LL',
-      value: data.ll_porcentage,
-      key: 'll_porcentage',
+      value: data.liquidity_limit,
+      key: 'liquidity_limit',
       required: true,
       adornment: '%',
     },
     {
       label: 'LP',
-      value: data.lp_porcentage,
-      key: 'lp_porcentage',
+      value: data.plasticity_limit,
+      key: 'plasticity_limit',
       required: true,
       adornment: '%',
     },
@@ -64,39 +92,45 @@ const SUCS_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
 
   if (
     nextDisabled &&
-    data.ll_porcentage != null &&
-    data.lp_porcentage != null &&
+    data.liquidity_limit != null &&
+    data.plasticity_limit != null &&
     data.sieves.every((row) => row.passant !== null)
   )
     setNextDisabled(false);
 
   return (
-    <Box>
-      <Sucs_step2Table rows={rows} columns={columns} />
-      <Box
-        sx={{
-          width: '100%',
-          display: 'grid',
-          gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
-          gap: '10px',
-          mt: '20px',
-        }}
-      >
-        {inputs.map((input) => (
-          <Box key={input.key}>
-            <InputEndAdornment
-              label={input.label}
-              value={input.value}
-              required={input.required}
-              onChange={(e) => setData({ step: 1, key: input.key, value: Number(e.target.value) })}
-              adornment={input.adornment}
-              type="number"
-              inputProps={{ min: 0 }}
-            />
+    <>
+      {loading ? (
+        <Loading />
+      ) : (
+        <Box>
+          <Sucs_step2Table rows={rows} columns={columns} />
+          <Box
+            sx={{
+              width: '100%',
+              display: 'grid',
+              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
+              gap: '10px',
+              mt: '20px',
+            }}
+          >
+            {inputs.map((input) => (
+              <Box key={input.key}>
+                <InputEndAdornment
+                  label={input.label}
+                  value={input.value}
+                  required={input.required}
+                  onChange={(e) => setData({ step: 1, key: input.key, value: Number(e.target.value) })}
+                  adornment={input.adornment}
+                  type="number"
+                  inputProps={{ min: 0 }}
+                />
+              </Box>
+            ))}
           </Box>
-        ))}
-      </Box>
-    </Box>
+        </Box>
+      )}
+    </>
   );
 };
 
