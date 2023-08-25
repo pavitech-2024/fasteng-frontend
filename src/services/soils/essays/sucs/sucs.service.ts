@@ -73,11 +73,14 @@ class SUCS_SERVICE implements IEssayService {
       if (!sample) throw t('errors.empty-sample');
 
       // verify if there is already a SUCS essay with same name for the sample
+      // or if there's any Granulometry essay associated with the sample _id
       const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, sample });
 
       const { success, error } = response.data;
 
-      // if there is already a SUCS essay with same name for the sample, throw error
+      // if there is already a SUCS essay with same name for the sample
+      // or there isn't a Granulometry essay associated with the sample _id,
+      // throw an error
       if (success === false) throw t(error.message);
     } catch (error) {
       throw error;
@@ -90,12 +93,12 @@ class SUCS_SERVICE implements IEssayService {
   submitStep2Data = async (step2Data: SucsData['step2Data']): Promise<void> => {
     try {
       // verify if LL is not empty or negative
-      if (!step2Data.ll_porcentage) throw t('errors.empty-ll-porcentage');
-      if (step2Data.ll_porcentage < 0) throw t('errors.negative-ll-porcentage');
+      if (!step2Data.liquidity_limit) throw t('errors.empty-ll-porcentage');
+      if (step2Data.liquidity_limit < 0) throw t('errors.negative-ll-porcentage');
 
       // verify if LP is not empty or negative
-      if (!step2Data.lp_porcentage) throw t('errors.empty-lp-porcentage');
-      if (step2Data.lp_porcentage < 0) throw t('errors.negative-lp-porcentage');
+      if (!step2Data.plasticity_limit) throw t('errors.empty-lp-porcentage');
+      if (step2Data.plasticity_limit < 0) throw t('errors.negative-lp-porcentage');
 
       // verify if all the sieves are not empty or negative
       step2Data.sieves.forEach((row) => {
