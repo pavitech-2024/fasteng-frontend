@@ -82,67 +82,67 @@ interface unitMassDeterminationData {
 interface humidityFoundData {
   tableData: [
     {
-      sample: '1',
-      capsuleWeight: number,
-      wetGrossWeight: number,
-      dryGrossWeight: number,
-      moistureContent: number
+      sample: '1';
+      capsuleWeight: number;
+      wetGrossWeight: number;
+      dryGrossWeight: number;
+      moistureContent: number;
     },
     {
-      sample: '2',
-      capsuleWeight: number,
-      wetGrossWeight: number,
-      dryGrossWeight: number,
-      moistureContent: number
+      sample: '2';
+      capsuleWeight: number;
+      wetGrossWeight: number;
+      dryGrossWeight: number;
+      moistureContent: number;
     },
     {
-      sample: '3',
-      capsuleWeight: number,
-      wetGrossWeight: number,
-      dryGrossWeight: number,
-      moistureContent: number
+      sample: '3';
+      capsuleWeight: number;
+      wetGrossWeight: number;
+      dryGrossWeight: number;
+      moistureContent: number;
     },
     {
-      sample: '4',
-      capsuleWeight: number,
-      wetGrossWeight: number,
-      dryGrossWeight: number,
-      moistureContent: number
+      sample: '4';
+      capsuleWeight: number;
+      wetGrossWeight: number;
+      dryGrossWeight: number;
+      moistureContent: number;
     },
     {
-      sample: '5',
-      capsuleWeight: number,
-      wetGrossWeight: number,
-      dryGrossWeight: number,
-      moistureContent: number
+      sample: '5';
+      capsuleWeight: number;
+      wetGrossWeight: number;
+      dryGrossWeight: number;
+      moistureContent: number;
     },
     {
-      sample: '6',
-      capsuleWeight: number,
-      wetGrossWeight: number,
-      dryGrossWeight: number,
-      moistureContent: number
+      sample: '6';
+      capsuleWeight: number;
+      wetGrossWeight: number;
+      dryGrossWeight: number;
+      moistureContent: number;
     },
     {
-      sample: '7',
-      capsuleWeight: number,
-      wetGrossWeight: number,
-      dryGrossWeight: number,
-      moistureContent: number
+      sample: '7';
+      capsuleWeight: number;
+      wetGrossWeight: number;
+      dryGrossWeight: number;
+      moistureContent: number;
     },
     {
-      sample: '8',
-      capsuleWeight: number,
-      wetGrossWeight: number,
-      dryGrossWeight: number,
-      moistureContent: number
+      sample: '8';
+      capsuleWeight: number;
+      wetGrossWeight: number;
+      dryGrossWeight: number;
+      moistureContent: number;
     },
     {
-      sample: '9',
-      capsuleWeight: number,
-      wetGrossWeight: number,
-      dryGrossWeight: number,
-      moistureContent: number
+      sample: '9';
+      capsuleWeight: number;
+      wetGrossWeight: number;
+      dryGrossWeight: number;
+      moistureContent: number;
     }
   ];
 }
@@ -170,7 +170,12 @@ export type SandIncreaseActions = {
 
 type setDataType = { step: number; key?: string; value: unknown };
 
-const stepVariant = { 0: 'sandIncreaseGeneralData', 1: 'unitMassDeterminationData', 2: 'humidityFoundData', 3: 'results' };
+const stepVariant = {
+  0: 'sandIncreaseGeneralData',
+  1: 'unitMassDeterminationData',
+  2: 'humidityFoundData',
+  3: 'results',
+};
 
 const useSandIncreaseStore = create<SandIncreaseData & SandIncreaseActions>()(
   devtools(
@@ -251,64 +256,64 @@ const useSandIncreaseStore = create<SandIncreaseData & SandIncreaseActions>()(
               capsuleWeight: null,
               wetGrossWeight: null,
               dryGrossWeight: null,
-              moistureContent: null
+              moistureContent: null,
             },
             {
               sample: '2',
               capsuleWeight: null,
               wetGrossWeight: null,
               dryGrossWeight: null,
-              moistureContent: null
+              moistureContent: null,
             },
             {
               sample: '3',
               capsuleWeight: null,
               wetGrossWeight: null,
               dryGrossWeight: null,
-              moistureContent: null
+              moistureContent: null,
             },
             {
               sample: '4',
               capsuleWeight: null,
               wetGrossWeight: null,
               dryGrossWeight: null,
-              moistureContent: null
+              moistureContent: null,
             },
             {
               sample: '5',
               capsuleWeight: null,
               wetGrossWeight: null,
               dryGrossWeight: null,
-              moistureContent: null
+              moistureContent: null,
             },
             {
               sample: '6',
               capsuleWeight: null,
               wetGrossWeight: null,
               dryGrossWeight: null,
-              moistureContent: null
+              moistureContent: null,
             },
             {
               sample: '7',
               capsuleWeight: null,
               wetGrossWeight: null,
               dryGrossWeight: null,
-              moistureContent: null
+              moistureContent: null,
             },
             {
               sample: '8',
               capsuleWeight: null,
               wetGrossWeight: null,
               dryGrossWeight: null,
-              moistureContent: null
+              moistureContent: null,
             },
             {
               sample: '9',
               capsuleWeight: null,
               wetGrossWeight: null,
               dryGrossWeight: null,
-              moistureContent: null
-            }
+              moistureContent: null,
+            },
           ],
         },
         results: {

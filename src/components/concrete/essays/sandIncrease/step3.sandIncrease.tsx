@@ -90,17 +90,17 @@ const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
       },
     },
     ...(data.tableData.every((row) => row.moistureContent !== null)
-    ? [
-        {
-          field: 'moistureContent',
-          headerName: t('sandIncrease.moistureContent'),
-          renderCell: ({ row }) => {
-            const { moistureContent } = row;
-            return moistureContent !== null ? `${moistureContent}` : '';
+      ? [
+          {
+            field: 'moistureContent',
+            headerName: t('sandIncrease.moistureContent'),
+            renderCell: ({ row }) => {
+              const { moistureContent } = row;
+              return moistureContent !== null ? `${moistureContent.toFixed(2)}` : '';
+            },
           },
-        },
-      ]
-    : []),
+        ]
+      : []),
   ];
 
   const calculateMoistureContent = async (calculateMoistureContent) => {
@@ -131,9 +131,8 @@ const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
   };
 
   useEffect(() => {
-    console.log("🚀 ~ file: step3.sandIncrease.tsx:140 ~ data:", data)
-  }, [data])
-  
+    console.log('🚀 ~ file: step3.sandIncrease.tsx:140 ~ data:', data);
+  }, [data]);
 
   if (nextDisabled) {
     const capsule_weight_completed = rows.every((value) => value.capsuleWeight !== null);
@@ -153,12 +152,7 @@ const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
     const capsule_weight_completed = rows.every((value) => value.capsuleWeight !== null);
     const wet_gross_weight_completed = rows.every((value) => value.wetGrossWeight !== null);
     const dry_gross_weight_completed = rows.every((value) => value.dryGrossWeight !== null);
-    if (
-      capsule_weight_completed &&
-      wet_gross_weight_completed &&
-      dry_gross_weight_completed
-    )
-      setCalcBtnDisable(false);
+    if (capsule_weight_completed && wet_gross_weight_completed && dry_gross_weight_completed) setCalcBtnDisable(false);
   }
 
   return (
@@ -181,7 +175,12 @@ const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         rows={rows.map((row, index) => ({ ...row, id: index }))}
       />
       <Box textAlign="center" marginTop="10px">
-        <Button variant="contained" color="primary" disabled={calcBtnDisable} onClick={() => calculateMoistureContent(data)}>
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={calcBtnDisable}
+          onClick={() => calculateMoistureContent(data)}
+        >
           Calcular
         </Button>
       </Box>

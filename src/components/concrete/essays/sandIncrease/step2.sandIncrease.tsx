@@ -72,7 +72,7 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
             headerName: t('sandIncrease.unitMass'),
             renderCell: ({ row }) => {
               const { unitMass } = row;
-              return unitMass !== null ? `${unitMass}` : '';
+              return unitMass !== null ? `${unitMass.toFixed(2)}` : '';
             },
           },
         ]
