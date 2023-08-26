@@ -9,5 +9,6 @@
   "loading.materials.error": "Erro ao carregar os materiais!",
   "loading.materials.pending": "Carregando os materiais...",
   "sandIncrease.materials": "Materiais",
-  "unit mass determination": "Determinação da Massa Unitária"
+  "unit mass determination": "Determinação da Massa Unitária",
+  "humidity found": "Umidade Encontrada"
 }

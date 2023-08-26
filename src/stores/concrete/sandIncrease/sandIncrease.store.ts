@@ -15,6 +15,7 @@ export interface SandIncrease_Step2TableData {
   sample: number;
   moistureContent: number;
   containerWeightSample: number;
+  unitMass: number
 }
 
 interface unitMassDeterminationData {
@@ -25,46 +26,55 @@ interface unitMassDeterminationData {
       sample: '1';
       moistureContent: '0';
       containerWeightSample: number;
+      unitMass: number
     },
     {
       sample: '2';
       moistureContent: '0.5';
       containerWeightSample: number;
+      unitMass: number
     },
     {
       sample: '3';
       moistureContent: '1';
       containerWeightSample: number;
+      unitMass: number
     },
     {
       sample: '4';
       moistureContent: '2';
       containerWeightSample: number;
+      unitMass: number
     },
     {
       sample: '5';
       moistureContent: '4';
       containerWeightSample: number;
+      unitMass: number
     },
     {
       sample: '6';
       moistureContent: '5';
       containerWeightSample: number;
+      unitMass: number
     },
     {
       sample: '7';
       moistureContent: '7';
       containerWeightSample: number;
+      unitMass: number
     },
     {
       sample: '8';
       moistureContent: '9';
       containerWeightSample: number;
+      unitMass: number
     },
     {
       sample: '9';
       moistureContent: '12';
       containerWeightSample: number;
+      unitMass: number
     }
   ];
 }
@@ -118,46 +128,55 @@ const useSandIncreaseStore = create<SandIncreaseData & SandIncreaseActions>()(
               sample: '1',
               moistureContent: '0',
               containerWeightSample: null,
+              unitMass: null
             },
             {
               sample: '2',
               moistureContent: '0.5',
               containerWeightSample: null,
+              unitMass: null
             },
             {
               sample: '3',
               moistureContent: '1',
               containerWeightSample: null,
+              unitMass: null
             },
             {
               sample: '4',
               moistureContent: '2',
               containerWeightSample: null,
+              unitMass: null
             },
             {
               sample: '5',
               moistureContent: '4',
               containerWeightSample: null,
+              unitMass: null
             },
             {
               sample: '6',
               moistureContent: '5',
               containerWeightSample: null,
+              unitMass: null
             },
             {
               sample: '7',
               moistureContent: '7',
               containerWeightSample: null,
+              unitMass: null
             },
             {
               sample: '8',
               moistureContent: '9',
               containerWeightSample: null,
+              unitMass: null
             },
             {
               sample: '9',
               moistureContent: '12',
               containerWeightSample: null,
+              unitMass: null
             },
           ],
         },

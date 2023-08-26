@@ -8,5 +8,8 @@
   "sandIncrease.container_weight": "Peso do recipiente",
   "sandIncrease.samples": "Amostras",
   "sandIncrease.containerWeightSample": "Peso do recipiente + amostra",
-  "sandIncrease.moistureContent": "Teor da umidade"
+  "sandIncrease.moistureContent": "Teor da umidade",
+  "sandIncrease.unitMass": "Massa Unitária",
+  "sand-increase.step-3-description": "Preencha todos os campos abaixo",
+  "humidity found": "Umidade Encontrada"
 }

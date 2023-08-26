@@ -12,8 +12,6 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
 
   const [calcBtnDisable, setCalcBtnDisable] = useState(true);
 
-  const [unitMass, setUnitMass] = useState()
-
   const inputs = [
     {
       label: t('sandIncrease.container_volume'),
@@ -56,7 +54,6 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
             fullWidth
             adornment="g"
             type="number"
-            //label={`${t('sandIncrease.moistureContent')}`}
             inputProps={{ min: 0, max: 100 }}
             value={rows[container_weight_sample_index].containerWeightSample}
             onChange={(e) => {
@@ -68,38 +65,64 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         );
       },
     },
+    ...(data.tableData.every((row) => row.unitMass !== null) 
+    ? [
+        {
+          field: 'unitMass',
+          headerName: t('sandIncrease.unitMass'),
+          renderCell: ({ row }) => {
+            const { unitMass } = row;
+            return unitMass !== null ? `${unitMass}` : '';
+          }
+        },
+      ]
+    : []),
   ];
 
-  // Verifica se todos os campos da coluna extended_read estão preenchidos e também ring_constant e cilinder_height
-  // if (nextDisabled) {
-  //   const containerWeightSample_completed = rows.every((row) => Object.values(row).every((value) => value !== null));
-  //   const container_volume_completed = data.containerVolume !== null;
-  //   const container_weight_completed = data.containerWeight !== null;
-  //   if (containerWeightSample_completed && container_volume_completed && container_weight_completed)
-  //     setNextDisabled(false);
-  // }
-
-   const calculateUnitMass = async (calculateUnitMass: any)  => {
+   const calculateUnitMass = async (calculateUnitMass)  => {
     try {
       if (!calculateUnitMass) throw t('errors.empty-table-data');
-      console.log("🚀 ~ file: step2.sandIncrease.tsx:87 ~ calculateUnitMass ~ calculateUnitMass:", calculateUnitMass);
 
       const response = await Api.post(`concrete/essays/sand-increase/calculate-unit-mass`, {
-        unitMassData: calculateUnitMass
+        calculateUnitMass
       });
 
       const { success, error, result } = response.data;
 
       if (success === false) throw error.name
 
-      setUnitMass(result);
+      const updatedTableData = data.tableData.map(
+        (row, index) => ({
+          ...row,
+          unitMass: result[index],
+        })
+      );
+
+      setData({
+        step: 1,
+        key: 'tableData',
+        value: updatedTableData,
+      });
     } catch (error) {
       throw error
     }
+  };
+
+  if (nextDisabled) {
+    const containerWeightSample_completed = rows.every((value) => value !== null);
+    const container_volume_completed = data.containerVolume !== null;
+    const container_weight_completed = data.containerWeight !== null;
+    const unit_mass_completed = rows.every((value) => value.unitMass !== null);
+    if (
+      containerWeightSample_completed && container_volume_completed && 
+      container_weight_completed &&
+      unit_mass_completed
+    )
+      setNextDisabled(false);
   }
 
   if (calcBtnDisable) {
-    const containerWeightSample_completed = rows.every((row) => Object.values(row).every((value) => value !== null));
+    const containerWeightSample_completed = rows.every((value) => value.containerWeightSample !== null);
     const container_volume_completed = data.containerVolume !== null;
     const container_weight_completed = data.containerWeight !== null;
     if (containerWeightSample_completed && container_volume_completed && container_weight_completed)
@@ -153,7 +176,7 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
           variant="contained" 
           color="primary"
           disabled={calcBtnDisable}
-          onClick={() => calculateUnitMass(data.tableData)}
+          onClick={() => calculateUnitMass(data)}
         >
           Calcular
         </Button>
