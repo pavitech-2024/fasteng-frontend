@@ -1,6 +1,7 @@
 import SandIncrease_GeneralData from '@/components/concrete/essays/sandIncrease/general-data.sand-increase';
 import Sand_Increase_Results from '@/components/concrete/essays/sandIncrease/results.sand-increase';
 import SandIncrease_Step2 from '@/components/concrete/essays/sandIncrease/step2.sandIncrease';
+import SandIncrease_Step3 from '@/components/concrete/essays/sandIncrease/step3.sandIncrease';
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import SAND_INCREASE_SERVICE from '@/services/concrete/essays/sandIncrease/sandIncrease.service';
@@ -32,6 +33,11 @@ const SandIncrease = () => {
     },
     {
       step: 2,
+      children: <SandIncrease_Step3 />,
+      data: store,
+    },
+    {
+      step: 3,
       children: <Sand_Increase_Results />,
       data: store,
     },

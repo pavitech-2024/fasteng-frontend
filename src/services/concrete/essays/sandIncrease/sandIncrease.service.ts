@@ -85,8 +85,6 @@ class SAND_INCREASE_SERVICE implements IEssayService {
   // Método caluculateUnitMassDetermination com as verificações;
   // Colocar botão na tela que aciona este método;
 
-  
-
   submitUnitMassDeterminationData = (
     unitMassDeterminationData: SandIncreaseData['unitMassDeterminationData']
   ): void => {
@@ -96,7 +94,6 @@ class SAND_INCREASE_SERVICE implements IEssayService {
 
       if (!unitMassDeterminationData.containerWeight) throw t('errors.empty-container-weight');
       if (unitMassDeterminationData.containerWeight < 0) throw t('errors.negative-container-weight');
-
     } catch (error) {
       throw error;
     }

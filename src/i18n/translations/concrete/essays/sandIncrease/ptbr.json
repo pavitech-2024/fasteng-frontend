@@ -11,5 +11,8 @@
   "sandIncrease.moistureContent": "Teor da umidade",
   "sandIncrease.unitMass": "Massa Unitária",
   "sand-increase.step-3-description": "Preencha todos os campos abaixo",
-  "humidity found": "Umidade Encontrada"
+  "humidity found": "Umidade Encontrada",
+  "sandIncrease.wetGrossWeight": "Peso da amostra úmida + cápsula",
+  "sandIncrease.capsuleWeight": "Peso da cápsula",
+  "sandIncrease.dryGrossWeight": "Peso pós secagem + capsula"
 }

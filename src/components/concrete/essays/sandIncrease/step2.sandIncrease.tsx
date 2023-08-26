@@ -65,38 +65,36 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         );
       },
     },
-    ...(data.tableData.every((row) => row.unitMass !== null) 
-    ? [
-        {
-          field: 'unitMass',
-          headerName: t('sandIncrease.unitMass'),
-          renderCell: ({ row }) => {
-            const { unitMass } = row;
-            return unitMass !== null ? `${unitMass}` : '';
-          }
-        },
-      ]
-    : []),
+    ...(data.tableData.every((row) => row.unitMass !== null)
+      ? [
+          {
+            field: 'unitMass',
+            headerName: t('sandIncrease.unitMass'),
+            renderCell: ({ row }) => {
+              const { unitMass } = row;
+              return unitMass !== null ? `${unitMass}` : '';
+            },
+          },
+        ]
+      : []),
   ];
 
-   const calculateUnitMass = async (calculateUnitMass)  => {
+  const calculateUnitMass = async (calculateUnitMass) => {
     try {
       if (!calculateUnitMass) throw t('errors.empty-table-data');
 
       const response = await Api.post(`concrete/essays/sand-increase/calculate-unit-mass`, {
-        calculateUnitMass
+        calculateUnitMass,
       });
 
       const { success, error, result } = response.data;
 
-      if (success === false) throw error.name
+      if (success === false) throw error.name;
 
-      const updatedTableData = data.tableData.map(
-        (row, index) => ({
-          ...row,
-          unitMass: result[index],
-        })
-      );
+      const updatedTableData = data.tableData.map((row, index) => ({
+        ...row,
+        unitMass: result[index],
+      }));
 
       setData({
         step: 1,
@@ -104,7 +102,7 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         value: updatedTableData,
       });
     } catch (error) {
-      throw error
+      throw error;
     }
   };
 
@@ -114,7 +112,8 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
     const container_weight_completed = data.containerWeight !== null;
     const unit_mass_completed = rows.every((value) => value.unitMass !== null);
     if (
-      containerWeightSample_completed && container_volume_completed && 
+      containerWeightSample_completed &&
+      container_volume_completed &&
       container_weight_completed &&
       unit_mass_completed
     )
@@ -126,7 +125,7 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
     const container_volume_completed = data.containerVolume !== null;
     const container_weight_completed = data.containerWeight !== null;
     if (containerWeightSample_completed && container_volume_completed && container_weight_completed)
-    setCalcBtnDisable(false);
+      setCalcBtnDisable(false);
   }
 
   return (
@@ -172,12 +171,7 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         rows={rows.map((row, index) => ({ ...row, id: index }))}
       />
       <Box textAlign="center" marginTop="10px">
-        <Button 
-          variant="contained" 
-          color="primary"
-          disabled={calcBtnDisable}
-          onClick={() => calculateUnitMass(data)}
-        >
+        <Button variant="contained" color="primary" disabled={calcBtnDisable} onClick={() => calculateUnitMass(data)}>
           Calcular
         </Button>
       </Box>
