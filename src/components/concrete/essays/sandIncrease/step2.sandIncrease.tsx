@@ -80,11 +80,24 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
   ];
 
   const calculateUnitMass = async (calculateUnitMass) => {
+
+    const tableData = calculateUnitMass.tableData;
+    const containerVolume = calculateUnitMass.containerVolume;
+    const containerWeight = calculateUnitMass.containerWeight;
+
     try {
       if (!calculateUnitMass) throw t('errors.empty-table-data');
 
-      const response = await Api.post(`concrete/essays/sand-increase/calculate-unit-mass`, {
-        calculateUnitMass,
+      const unitMassDeterminationData = {
+        containerVolume,
+        containerWeight,
+        tableData,
+      }
+      console.log("🚀 ~ file: step2.sandIncrease.tsx:97 ~ calculateUnitMass ~ unitMassDeterminationData:", unitMassDeterminationData)
+
+      const response = await Api.post(`concrete/essays/sand-increase/calculate-results`, {
+        step: 1,
+        unitMassDeterminationData
       });
 
       const { success, error, result } = response.data;
