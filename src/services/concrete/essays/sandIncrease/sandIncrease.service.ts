@@ -43,9 +43,10 @@ class SAND_INCREASE_SERVICE implements IEssayService {
           break;
         case 2:
           await this.submitHumidityFoundData(data as SandIncreaseData['humidityFoundData']);
+          await this.calculateResults(data as SandIncreaseData);
           break;
         case 3:
-          await this.calculateResults(data as SandIncreaseData);
+          await this.saveEssay(data as SandIncreaseData)
         default:
           throw t('errors.invalid-step');
       }
@@ -110,6 +111,8 @@ class SAND_INCREASE_SERVICE implements IEssayService {
   calculateResults = async (store: SandIncreaseData): Promise<void> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
+        unitMassDeterminationData: store.unitMassDeterminationData,
+        humidityFoundData: store.humidityFoundData,
         sandIncreaseGeneralData: store.sandIncreaseGeneralData,
       });
 
@@ -118,6 +121,28 @@ class SAND_INCREASE_SERVICE implements IEssayService {
       if (success === false) throw error.name;
 
       this.store_actions.setData({ step: 3, value: result });
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  saveEssay = async (store: SandIncreaseData): Promise<void> => {
+    try {
+      const response = await Api.post(`${this.info.backend_path}/save-essay`, {
+        generalData: {
+          ...store.sandIncreaseGeneralData,
+          userId: this.userId,
+        },
+        unitMassDeterminationData: store.unitMassDeterminationData,
+        humidityFoundData: store.humidityFoundData,
+        results: store.results,
+      });
+
+      const { success, error } = response.data;
+
+      console.log(error);
+
+      if (success === false) throw error.name;
     } catch (error) {
       throw error;
     }

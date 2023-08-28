@@ -1,5 +1,5 @@
 import SandIncrease_GeneralData from '@/components/concrete/essays/sandIncrease/general-data.sand-increase';
-import Sand_Increase_Results from '@/components/concrete/essays/sandIncrease/results.sand-increase';
+import Sand_Increase_Results from '@/components/concrete/essays/sandIncrease/results.sandIncrease';
 import SandIncrease_Step2 from '@/components/concrete/essays/sandIncrease/step2.sandIncrease';
 import SandIncrease_Step3 from '@/components/concrete/essays/sandIncrease/step3.sandIncrease';
 import EssayTemplate from '@/components/templates/essay';

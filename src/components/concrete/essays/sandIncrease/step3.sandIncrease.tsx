@@ -107,7 +107,8 @@ const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
     try {
       if (!calculateMoistureContent) throw t('errors.empty-table-data');
 
-      const response = await Api.post(`concrete/essays/sand-increase/calculate-moisture-content`, {
+      const response = await Api.post(`concrete/essays/sand-increase/calculate-results`, {
+        step: 2,
         calculateMoistureContent,
       });
 
@@ -117,7 +118,7 @@ const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
 
       const updatedTableData = data.tableData.map((row, index) => ({
         ...row,
-        moistureContent: result[index],
+        moistureContent: result.moistureContent[index],
       }));
 
       setData({
@@ -129,10 +130,6 @@ const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
       throw error;
     }
   };
-
-  useEffect(() => {
-    console.log('🚀 ~ file: step3.sandIncrease.tsx:140 ~ data:', data);
-  }, [data]);
 
   if (nextDisabled) {
     const capsule_weight_completed = rows.every((value) => value.capsuleWeight !== null);

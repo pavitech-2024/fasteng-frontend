@@ -93,7 +93,6 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         containerWeight,
         tableData,
       }
-      console.log("🚀 ~ file: step2.sandIncrease.tsx:97 ~ calculateUnitMass ~ unitMassDeterminationData:", unitMassDeterminationData)
 
       const response = await Api.post(`concrete/essays/sand-increase/calculate-results`, {
         step: 1,
@@ -106,7 +105,7 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
 
       const updatedTableData = data.tableData.map((row, index) => ({
         ...row,
-        unitMass: result[index],
+        unitMass: result.unitMasses[index],
       }));
 
       setData({
