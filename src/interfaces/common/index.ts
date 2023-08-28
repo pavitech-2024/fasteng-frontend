@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { StaticImageData } from 'next/image';
 
 export interface StandardData {
@@ -98,6 +99,44 @@ export const AllSieves = [
   {
     label: 'Nº200 - 0,075mm',
     value: 0.075, // mm
+  },
+];
+
+export const normalSeriesAbntAstmIndexes = [0, 3, 6, 8, 10, 11, 13, 14, 16, 18];
+export const normalIntermediateSeriesAbntIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 16, 18];
+export const normalSeriesDnitIndexes = [2, 3, 5, 6, 7, 8, 10, 12, 15, 17, 19];
+export const normalSeriesDnit2019Indexes = [0, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+export const intermediateSeriesConcrete = [1, 2, 4, 5, 7, 9];
+
+export type SieveSeries = {
+  label: string;
+  sieves: Sieve[];
+};
+
+export const AllSieveSeries = [
+  {
+    label: t('granulometry.all-sieves'),
+    sieves: AllSieves,
+  },
+  {
+    label: t('granulometry.normal-series-abnt-astm'),
+    sieves: normalSeriesAbntAstmIndexes.map((index) => AllSieves[index]),
+  },
+  {
+    label: t('granulometry.normal-intermediate-series-abnt'),
+    sieves: normalIntermediateSeriesAbntIndexes.map((index) => AllSieves[index]),
+  },
+  {
+    label: t('granulometry.normal-series-dnit'),
+    sieves: normalSeriesDnitIndexes.map((index) => AllSieves[index]),
+  },
+  {
+    label: t('granulometry.normal-series-dnit-2019'),
+    sieves: normalSeriesDnit2019Indexes.map((index) => AllSieves[index]),
+  },
+  {
+    label: t('granulometry.intermediate-series-concrete'),
+    sieves: intermediateSeriesConcrete.map((index) => AllSieves[index]),
   },
 ];
 

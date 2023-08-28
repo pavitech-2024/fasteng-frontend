@@ -1,0 +1,14 @@
+{
+  "errors.empty-sample-mass": "Massa inicial vazia!",
+  "errors.negative-sample-mass": "Massa inicial negativa!",
+  "errors.empty-sieve": "Peneira vazia - ",
+  "errors.negative-sieve": "Peneira com valor negativo - ",
+  "errors.sieves-sum-not-equal-to-sample-mass": "Soma das massas Retidas + Fundos difere da Massa da Amostra em ",
+
+  "name-already-exists": "Nome do Experimento já cadastrado!",
+
+  "sample-sucs-not-found": "Amostra não encontrada para SUCS!",
+  "sample-GRANULOMETRY-not-found": "Amostra não encontrada para Granulometria!",
+
+  "essay-granulometry-not-found": "Ensaio de Granulometria não encontrado!"
+}

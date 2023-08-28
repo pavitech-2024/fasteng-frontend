@@ -1,4 +1,4 @@
-import { AllSieves, Sieve } from '../interfaces/common';
+import { AllSieves, Sieve, AllSieveSeries, SieveSeries } from '../interfaces/common';
 
 /* Example:
     value: 2 // em mm
@@ -7,3 +7,5 @@ import { AllSieves, Sieve } from '../interfaces/common';
 
 */
 export const getSieveName = (value: number): string => AllSieves.find((sieve: Sieve) => sieve.value === value).label;
+
+export const getSieveSeries = (index: number): SieveSeries => AllSieveSeries[index];
