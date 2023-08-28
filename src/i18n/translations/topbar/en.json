@@ -8,5 +8,9 @@
   "topbar.logout": "Logout",
   "topbar.settings": "Settings",
   "topbar.materials": "Materials",
-  "topbar.cbr": "California Bearing Ratio"
+  "topbar.cbr": "California Bearing Ratio",
+  "topbar.hrb": "Road Classification - HRB",
+  "topbar.sucs": "Unified Classification - SUCS",
+  "topbar.granulometry": "Granulometry",
+  "topbar.compression": "Compression"
 }

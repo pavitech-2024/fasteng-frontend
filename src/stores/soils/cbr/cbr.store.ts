@@ -7,7 +7,7 @@ interface GeneralData {
   name: string;
   sample: Sample;
   operator?: string;
-  cauculist?: string;
+  calculist?: string;
   description?: string;
 }
 
@@ -61,7 +61,7 @@ export type CbrActions = {
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'expansionData', 3: 'results' };
 
-type setDataType = { step: number; key?: string; value: unknown };
+export type setDataType = { step: number; key?: string; value: unknown };
 
 const useCbrStore = create<CbrData & CbrActions>()(
   devtools(
@@ -72,7 +72,7 @@ const useCbrStore = create<CbrData & CbrActions>()(
           name: null,
           sample: null,
           operator: null,
-          cauculist: null,
+          calculist: null,
           description: null,
         },
         step2Data: {

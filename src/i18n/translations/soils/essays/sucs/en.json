@@ -1,0 +1,22 @@
+{
+  "sucs_essay_data": "Essay Data",
+  "sucs.step-2-description": "Fill in all fields below.",
+  "sucs.step-3-description": "These are your essay results. Remember to save them so you can access it later.",
+  "sucs.sieves": "Sieves",
+  "sucs.passant": "Passant",
+  "sucs.classification": "Classification",
+  "sucs.liquidity_limit": "Liquidity Limit (%)",
+  "sucs.plasticity_limit": "Plasticity Limit (%)",
+  "sucs.plasticity_index": "Plasticity Index (%)",
+  "sucs.other-data": "Other Data",
+  "sucs.text-GW||SW": "These groups comprise well-graded, gravelly, sandy soils without many fines (less than 5% passing the 200 sieve). The presence of fine material does not appreciably change the characteristics of the coarse fraction, nor does it interfere with the drainage characteristics. If the soil contains less than 5% plastic fines, it must be submitted to laboratory identification. In regions subject to freezing, the material should not contain more than 3% soil with a diameter of less than 0.02 mm.",
+  "sucs.text-GP||SP": "Poorly graded soils containing gravel and sand, without many fines (less than 5% passing the normal No. 200 sieve). These materials can be classified as uniform gravels (also called macadams), uniform sands, or non-uniform mixtures of very coarse material and very fine sand, lacking particles of intermediate size. The last subgroup is frequently obtained in borrow pits where gravel and sand from different layers are mixed. If the fine fraction is plastic, its plasticity should be measured, and the soil classified according to the laboratory identification.",
+  "sucs.text-GM||SM": "They comprise gravel or sand with a higher amount of fines (more than 12% passing the 200 sieve). Soils containing between 5% and 12% of fines passing the 200 sieve are considered borderline; are described in other paragraphs later. The IP and LL of the fraction of these soils that pass through the No. 40 sieve must identify, in the plasticity graph, described later, a point below the 'A' line. Some gravels and sands in these groups may contain a well-alloyed natural cement, the expansion and contraction properties of the material being negligible. The resistance of these dry materials results from a small amount of binder soil, cementation of calcareous material or iron oxide. In other materials of these GM and SM groups, the fine fraction may be silt or rock dust with almost no plasticity, and the dry mix has no strength.",
+  "sucs.text-GC||SC": "Gravely or sandy soils with fines (more than 12% passing the 200 sieve) whose plasticity can be low or high. The IP and LL should identify points above the 'A' line on the plasticity graph. It doesn't matter if the material is well or badly graded. The plasticity of the binder fraction influences the behavior of the soil more than its granulometric composition. The fines are clayey.",
+  "sucs.text-ML||MH": "The symbol M (for millstone, silt) is used to indicate soils with a predominance of silt or silt, micaceous soils and diatomaceous soils. The symbols L (for low, low) and H (for high, high) represent low or high LL, these two groups being separated by an arbitrary dividing line at LL=50. These soils are sandy or clayey silts, without organic matter, with relatively low plasticity. They include loess-type soils and stone dust. The micaceous and diatomaceous soils, in general, in the MH group, can extend to the ML. The same happens with certain kaolinite or illitic clays of relatively low plasticity.",
+  "sucs.text-CL||CH": "The symbol C (for clay) means clay, and the symbols L (for low) and H (for high) mean respectively low and high LL. They are essentially clays without organic matter. Those with low plasticity (CL) are generally lean, sandy or silty. Those with medium or high plasticity (CH) include fatty clays, gumbos, massapes, some volcanic clays and bentonite. Clays from the northern United States are also classified into these two groups.",
+  "sucs.text-OL||OH": "They are characterized by the presence of organic matter indicated by the symbol O. Silts and organic clays are part of these two groups. The plasticity range of these groups corresponds to that of the ML and MH groups.",
+  "loading.granulometry.pending": "Loading data from the sample's Granulometry test...",
+  "loading.granulometry.success": "Data from the sample's Granulometry test successfully loaded!",
+  "loading.granulometry.error": "An error occurred while loading the data from the sample's Granulometry test!"
+}
