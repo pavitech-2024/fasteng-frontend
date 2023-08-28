@@ -9,13 +9,8 @@
   "topbar.settings": "Settings",
   "topbar.materials": "Materials",
   "topbar.cbr": "California Bearing Ratio",
-<<<<<<< HEAD
-  "topbar.compression": "Compression",
-  "topbar.hrb": "Road Classification - HRB"
-=======
   "topbar.hrb": "Road Classification - HRB",
   "topbar.sucs": "Unified Classification - SUCS",
   "topbar.granulometry": "Granulometry",
   "topbar.compression": "Compression"
->>>>>>> 22ce229a34250fbc63ff2b5b2b18db386b929a31
 }

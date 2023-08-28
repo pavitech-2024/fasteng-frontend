@@ -49,14 +49,6 @@ import soilsEssaysENG from './translations/soils/essays/en.json';
 // cbr
 import cbrPTBR from './translations/soils/essays/cbr/ptbr.json';
 import cbrENG from './translations/soils/essays/cbr/en.json';
-<<<<<<< HEAD
-// compression
-import compressionPTBR from './translations/soils/essays/compression/ptbr.json';
-import compressionENG from './translations/soils/essays/compression/en.json';
-// hrb
-import hrbPTBR from './translations/soils/essays/hrb/ptbr.json';
-import hrbENG from './translations/soils/essays/hrb/en.json';
-=======
 // hrb
 import hrbPTBR from './translations/soils/essays/hrb/ptbr.json';
 import hrbENG from './translations/soils/essays/hrb/en.json';
@@ -69,7 +61,6 @@ import granulometryENG from './translations/soils/essays/granulometry/en.json';
 // compression
 import compressionPTBR from './translations/soils/essays/compression/ptbr.json';
 import compressionENG from './translations/soils/essays/compression/en.json';
->>>>>>> 22ce229a34250fbc63ff2b5b2b18db386b929a31
 
 /**@concrete */
 // essays
@@ -107,15 +98,10 @@ i18n.use(initReactI18next).init({
         ...samplesPTBR,
         ...soilsEssaysPTBR,
         ...cbrPTBR,
-<<<<<<< HEAD
-        ...compressionPTBR,
-        ...hrbPTBR,
-=======
         ...hrbPTBR,
         ...sucsPTBR,
         ...granulometryPTBR,
         ...compressionPTBR,
->>>>>>> 22ce229a34250fbc63ff2b5b2b18db386b929a31
         /**@concrete */
         ...concreteEssaysPTBR,
         ...concreteMaterialsPTBR,
@@ -141,15 +127,10 @@ i18n.use(initReactI18next).init({
         ...samplesENG,
         ...soilsEssaysENG,
         ...cbrENG,
-<<<<<<< HEAD
-        ...compressionENG,
-        ...hrbENG,
-=======
         ...hrbENG,
         ...sucsENG,
         ...granulometryENG,
         ...compressionENG,
->>>>>>> 22ce229a34250fbc63ff2b5b2b18db386b929a31
         /**@concrete */
         ...concreteEssaysENG,
         ...concreteMaterialsENG,

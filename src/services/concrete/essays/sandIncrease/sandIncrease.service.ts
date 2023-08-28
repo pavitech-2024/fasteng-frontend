@@ -43,7 +43,7 @@ class SAND_INCREASE_SERVICE implements IEssayService {
           break;
         case 2:
           await this.submitHumidityFoundData(data as SandIncreaseData['humidityFoundData']);
-          await this.calculateResults(data as SandIncreaseData);
+          await this.calculateResults(data as any);
           break;
         case 3:
           await this.saveEssay(data as SandIncreaseData)
@@ -108,7 +108,7 @@ class SAND_INCREASE_SERVICE implements IEssayService {
     }
   };
 
-  calculateResults = async (store: SandIncreaseData): Promise<void> => {
+  calculateResults = async (store: any): Promise<void> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         unitMassDeterminationData: store.unitMassDeterminationData,
@@ -119,6 +119,8 @@ class SAND_INCREASE_SERVICE implements IEssayService {
       const { success, error, result } = response.data;
 
       if (success === false) throw error.name;
+
+      console.log("🚀 ~ file: sandIncrease.service.ts:120 ~ SAND_INCREASE_SERVICE ~ calculateResults= ~ result:", result)
 
       this.store_actions.setData({ step: 3, value: result });
     } catch (error) {

@@ -8,7 +8,12 @@ import { useEffect } from 'react';
 
 const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
-  const { results: sand_increase_results, sandIncreaseGeneralData } = useSandIncreaseStore();
+  const { 
+    results: sand_increase_results, 
+    sandIncreaseGeneralData,
+    unitMassDeterminationData 
+  } = useSandIncreaseStore();
+
   const { user } = useAuth();
 
   // pegando a quantidade de casas decimais do usuário
@@ -18,7 +23,7 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
   //const userId = user?._id;
 
   const data = {
-    unitMasses: [],
+    unitMasses: unitMassDeterminationData.tableData.map((item) => item.unitMass),
     moistureContent: [], 
     swellings: [], 
     curve: {}, 
@@ -31,13 +36,13 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
   };
 
   if (sand_increase_results) {
-    data.unitMasses.push(
-      { 
-        label: t('sandIncrease.unit-mass'), 
-        value: sand_increase_results.unitMasses,
-        unity: 'g'
-      }
-    );
+    // data.unitMasses.push(
+    //   { 
+    //     label: t('sandIncrease.unit-mass'), 
+    //     value: sand_increase_results.unitMasses,
+    //     unity: 'g'
+    //   }
+    // );
     data.moistureContent.push(
       { 
         label: t('sandIncrease.moisture-content'), 
@@ -55,7 +60,7 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
     data.averageCoefficient = sand_increase_results.averageCoefficient;
   };
 
-  const rows = data.unitMasses;
+  const rows = unitMassDeterminationData.tableData;
 
   const columns: GridColDef[] = [
     {
@@ -66,7 +71,7 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
     {
       field: 'unitMass',
       headerName: t('sandIncrease.unit-mass'),
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => `${value.toFixed(2)}`,
     },
     {
       field: 'moistureContent',
