@@ -6,9 +6,11 @@
   "errors.sieves-sum-not-equal-to-sample-mass": "Sum of Retained masses + Bottom differs from Initial mass in ",
 
   "name-already-exists": "Experiment name already exists!",
-
+  
   "sample-sucs-not-found": "Sample not found for SUCS!",
   "sample-GRANULOMETRY-not-found": "Sample not found for Granulometry!",
 
-  "essay-granulometry-not-found": "Granulometry essay not found!"
+  "essay-granulometry-not-found": "Granulometry essay not found!",
+
+  "errors.sampleContainerWeightValue": "The sum of the Container Volume and Container Weight values ​​cannot be less than the container weight + sample."
 }

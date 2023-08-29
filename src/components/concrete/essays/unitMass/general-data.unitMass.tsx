@@ -92,7 +92,7 @@ const UnitMass_GeneralData = ({
               onChange={(e) => setData({ step: 0, key: 'experimentName', value: e.target.value })}
               size='medium'
             />
-            {/** Agregado sem diametro máximo (m) */}
+            {/** Material escolhido */}
             <DropDown
               key={'aggregate'}
               variant="standard"

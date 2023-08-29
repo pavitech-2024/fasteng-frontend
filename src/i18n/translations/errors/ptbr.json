@@ -10,5 +10,8 @@
   "sample-sucs-not-found": "Amostra não encontrada para SUCS!",
   "sample-GRANULOMETRY-not-found": "Amostra não encontrada para Granulometria!",
 
-  "essay-granulometry-not-found": "Ensaio de Granulometria não encontrado!"
+  "essay-granulometry-not-found": "Ensaio de Granulometria não encontrado!",
+
+  "errors.sampleContainerWeightValue": "A soma dos valores do Volume do Container e o Peso do Container não pode ser menor do que o valor do Peso do Container + Amostra."
+
 }

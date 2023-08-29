@@ -18,7 +18,7 @@ class UNITMASS_SERVICE implements IEssayService {
     },
     stepperData: [
       { step: 0, description: t('unitMass.generalData'), path: 'general-data' },
-      { step: 1, description: 'step 2', path: 'step2' },
+      { step: 1, description: t('unitMass.repositoryAndSample'), path: 'step2' },
       { step: 2, description: t('unitMass.result'), path: 'result' },
     ],
   };
@@ -34,13 +34,11 @@ class UNITMASS_SERVICE implements IEssayService {
           await this.submitGeneralData(data as UnitMassData['generalData']);
           break;
         case 1:
-          //await this.submitStep2Data(data as UnitMassData['step2Data']);
+          await this.submitStep2Data(data as UnitMassData['step2Data']);
+          await this.calculateResults(data as UnitMassData);
           break;
         case 2:
-          //const { result } = data as UnitMassData;
-          break;
-        case 3:
-          //await this.saveEssay(data as UnitMassData);
+          await this.saveEssay(data as UnitMassData);
           break;
         default:
           throw t('errors.invalid-step');
@@ -68,6 +66,65 @@ class UNITMASS_SERVICE implements IEssayService {
       throw error;
     }
   }
+
+
+  submitStep2Data = async (generalData: UnitMassData['step2Data']): Promise<void> => {
+    try {
+      const { containerVolume, containerWeight, sampleContainerWeight } = generalData;
+
+      if (!containerVolume) throw t('errors.empty-containerVolume');
+      if (!containerWeight) throw t('errors.containerWeight');
+      if (!sampleContainerWeight) throw t('errors.sampleContainerWeight');
+      if ((containerVolume + containerWeight) < sampleContainerWeight) throw t('errors.sampleContainerWeightValue');
+
+      const response = await Api.post(`${this.info.backend_path}/step2-unitMass-data`, { containerVolume, containerWeight, sampleContainerWeight });
+      
+      const { success, error } = response.data;
+
+      if (success === false) throw error.name;
+    }
+    catch (error) {
+      throw error;
+    }
+  }
+
+  calculateResults = async (store: UnitMassData): Promise<void> => {
+    try {
+      const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
+        generalData: store.generalData,
+        step2Data: store.step2Data,
+      });
+
+      const { success, error, result } = response.data;
+
+      if (success === false) throw error.name;
+
+      this.store_actions.setData({ step: 2, value: result });
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  saveEssay = async (store: UnitMassData): Promise<void> => {
+    try {
+      const response = await Api.post(`${this.info.backend_path}/save-essay`, {
+        generalData: {
+          ...store.generalData,
+          userId: this.userId,
+        },
+        step2Data: store.step2Data,
+        result: store.result,
+      });
+
+      const { success, error } = response.data;
+
+      console.log(error);
+
+      if (success === false) throw error.name;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 export default UNITMASS_SERVICE;

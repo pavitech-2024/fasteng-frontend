@@ -1,15 +1,14 @@
 {
   "unitMass.generalData": "Dados gerais",
-  "unitMass.aggregate": "Agregado sem diametro máximo",
+  "unitMass.aggregate": "Material",
   "unitMass.method": "Método",
   "unitMass.method.A": "Método A",
   "unitMass.method.B": "Método B",
   "unitMass.method.C": "Método C",
   "unitMass.experimentName": "Nome do experimento",
-  
+  "unitMass.repositoryAndSample": "Dados do container e da amostra",
   "unitMass.containerVolume": "Volume do container",
   "unitMass.containerWeight": "Peso do container",
   "unitMass.sampleContainerWeight": "Peso do container + amostra",
-  
   "unitMass.result": "Resultado"
 }
