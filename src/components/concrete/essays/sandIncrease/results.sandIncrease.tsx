@@ -20,10 +20,9 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
   const {
     preferences: { decimal: user_decimal },
   } = user;
-  //const userId = user?._id;
 
   const data = {
-    unitMasses: unitMassDeterminationData.tableData.map((item) => item.unitMass),
+    unitMasses: [],
     moistureContent: [], 
     swellings: [], 
     curve: {}, 
@@ -36,13 +35,13 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
   };
 
   if (sand_increase_results) {
-    // data.unitMasses.push(
-    //   { 
-    //     label: t('sandIncrease.unit-mass'), 
-    //     value: sand_increase_results.unitMasses,
-    //     unity: 'g'
-    //   }
-    // );
+    data.unitMasses.push(
+      { 
+        label: t('sandIncrease.unit-mass'), 
+        value: sand_increase_results.unitMasses,
+        unity: 'g'
+      }
+    );
     data.moistureContent.push(
       { 
         label: t('sandIncrease.moisture-content'), 
