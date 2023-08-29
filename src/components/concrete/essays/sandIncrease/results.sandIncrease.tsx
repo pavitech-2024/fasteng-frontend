@@ -8,11 +8,7 @@ import { useEffect } from 'react';
 
 const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
-  const { 
-    results: sand_increase_results, 
-    sandIncreaseGeneralData,
-    unitMassDeterminationData 
-  } = useSandIncreaseStore();
+  const { results: sand_increase_results } = useSandIncreaseStore();
 
   const { user } = useAuth();
 
@@ -21,10 +17,13 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
     preferences: { decimal: user_decimal },
   } = user;
 
-  const data = {
+  const dataTable = {
     unitMasses: [],
     moistureContent: [], 
     swellings: [], 
+  };
+
+  const dataOther = {
     curve: {}, 
     retaR: {}, 
     retaS: {}, 
@@ -32,34 +31,48 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
     retaU: {}, 
     averageCoefficient: 0,
     criticalHumidity: 0,
-  };
+  }
 
-  if (sand_increase_results) {
-    data.unitMasses.push(
-      { 
-        label: t('sandIncrease.unit-mass'), 
-        value: sand_increase_results.unitMasses,
-        unity: 'g'
-      }
-    );
-    data.moistureContent.push(
-      { 
-        label: t('sandIncrease.moisture-content'), 
-        value: sand_increase_results.moistureContent,
-        unity: '%'
-      }
-    );
-    data.swellings.push(
-      { 
-        label: t('sandIncrease.swellings'), 
-        value: sand_increase_results.swellings,
-        unity: ''
-      }
-    );
-    data.averageCoefficient = sand_increase_results.averageCoefficient;
-  };
+  // if (sand_increase_results) {
+  //   data.unitMasses.push(
+  //     { 
+  //       label: t('sandIncrease.unit-mass'), 
+  //       value: sand_increase_results.unitMasses,
+  //       unity: 'g'
+  //     }
+  //   );
+  //   data.moistureContent.push(
+  //     { 
+  //       label: t('sandIncrease.moisture-content'), 
+  //       value: sand_increase_results.moistureContent,
+  //       unity: '%'
+  //     }
+  //   );
+  //   data.swellings.push(
+  //     { 
+  //       label: t('sandIncrease.swellings'), 
+  //       value: sand_increase_results.swellings,
+  //       unity: ''
+  //     }
+  //   );
+  // };
 
-  const rows = unitMassDeterminationData.tableData;
+  const newArray = [];
+
+  for (let i = 0; i < sand_increase_results.unitMasses.length; i++) {
+    const sampleNumber = (i + 1).toString(); // Incrementing index by 1 to get sample number
+
+    const newObj = {
+      sample: sampleNumber,
+      moistureContent: sand_increase_results.moistureContent[i].toFixed(2),
+      swellings: sand_increase_results.swellings[i].toFixed(2),
+      unitMass: sand_increase_results.unitMasses[i]
+    };
+
+    newArray.push(newObj);
+  }
+
+  const rows = newArray;
 
   const columns: GridColDef[] = [
     {
@@ -87,6 +100,10 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
   useEffect(() => {
     console.log("🚀 ~ file: results.sandIncrease.tsx:86 ~ sand_increase_results:", sand_increase_results)
   }, [sand_increase_results]);
+
+  useEffect(() => {
+    console.log("🚀 ~ file: results.sandIncrease.tsx:86 ~ rows:", rows)
+  }, [rows]);
 
   return (
     <Box>

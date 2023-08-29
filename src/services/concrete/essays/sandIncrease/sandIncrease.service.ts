@@ -111,6 +111,7 @@ class SAND_INCREASE_SERVICE implements IEssayService {
   calculateResults = async (store: any): Promise<void> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
+        step: 3,
         unitMassDeterminationData: store.unitMassDeterminationData,
         humidityFoundData: store.humidityFoundData,
         sandIncreaseGeneralData: store.sandIncreaseGeneralData,
@@ -119,8 +120,6 @@ class SAND_INCREASE_SERVICE implements IEssayService {
       const { success, error, result } = response.data;
 
       if (success === false) throw error.name;
-
-      console.log("🚀 ~ file: sandIncrease.service.ts:120 ~ SAND_INCREASE_SERVICE ~ calculateResults= ~ result:", result)
 
       this.store_actions.setData({ step: 3, value: result });
     } catch (error) {
