@@ -1,0 +1,11 @@
+{
+    "experiment-name": "Experiment Name",
+    "operator": "Operator",
+    "calculist": "Calculist",
+    "observations": "Observations",
+    "description": "Description",
+    "laboratory": "Laboratory",
+    "essays": "Essays",
+    "materials": "Materials",
+    "dosages": "Dosages"
+}

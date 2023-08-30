@@ -40,3 +40,11 @@ export class ConcreteMaterial {
     observation?: string;
   };
 }
+
+export class ABCP {
+  _id: string;
+  name: string;
+  createdAt: Date;
+  userId: string;
+  coarseAgregates: ConcreteMaterial[];
+}

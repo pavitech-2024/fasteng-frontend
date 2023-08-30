@@ -63,11 +63,21 @@ import compressionPTBR from './translations/soils/essays/compression/ptbr.json';
 import compressionENG from './translations/soils/essays/compression/en.json';
 
 /**@concrete */
+// essays
 import concreteEssaysPTBR from './translations/concrete/essays/ptbr.json';
 import concreteEssaysENG from './translations/concrete/essays/en.json';
 // materials
 import concreteMaterialsPTBR from './translations/concrete/materials/ptbr.json';
 import concreteMaterialsENG from './translations/concrete/materials/en.json';
+// abcp
+import concreteABCPPTBR from './translations/concrete/dosages/abcp/ptbr.json';
+import concreteABCPENG from './translations/concrete/dosages/abcp/en.json';
+
+/**@common */
+// essays
+import commonEssaysPTBR from './translations/common/essays/ptbr.json'
+import commonEssaysENG from './translations/common/essays/en.json'
+// materials
 
 i18n.use(initReactI18next).init({
   fallbackLng: 'ptBR',
@@ -101,6 +111,9 @@ i18n.use(initReactI18next).init({
         /**@concrete */
         ...concreteEssaysPTBR,
         ...concreteMaterialsPTBR,
+        ...concreteABCPPTBR,
+        /**@common */
+        ...commonEssaysPTBR,
       },
     },
     en: {
@@ -129,6 +142,9 @@ i18n.use(initReactI18next).init({
         /**@concrete */
         ...concreteEssaysENG,
         ...concreteMaterialsENG,
+        ...concreteABCPENG,
+        /**@common */
+        ...commonEssaysENG,
       },
     },
   },

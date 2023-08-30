@@ -88,6 +88,7 @@ import UnitMassIcon from './concrete/essays/UnitMass.png';
 
 //dosages
 import AbcpIcon from './concrete/dosages/abcp.svg';
+import AbcpLogo from './concrete/dosages/ABCP-Logo.png'
 
 // export all assets
 export {
@@ -178,6 +179,7 @@ export {
   CoarseAggregateIcon,
   SandIncreaseIcon,
   UnitMassIcon,
-  //doasges
+  //dosages
   AbcpIcon,
+  AbcpLogo,
 };
