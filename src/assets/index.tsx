@@ -88,7 +88,7 @@ import UnitMassIcon from './concrete/essays/UnitMass.png';
 
 //dosages
 import AbcpIcon from './concrete/dosages/abcp.svg';
-import AbcpLogo from './concrete/dosages/ABCP-Logo.png'
+import AbcpLogo from './concrete/dosages/ABCP-Logo.png';
 
 // export all assets
 export {

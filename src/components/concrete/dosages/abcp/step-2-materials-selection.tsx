@@ -22,4 +22,4 @@
 
 // export default ABCP_MaterialsSelection;
 
-export {}
+export {};

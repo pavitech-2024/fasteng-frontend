@@ -77,7 +77,6 @@ class ABCP_SERVICE implements IEssayService {
       throw error;
     }
   };
-
 }
 
 export default ABCP_SERVICE;

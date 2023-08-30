@@ -45,7 +45,7 @@ const initialState = {
     fineAggregates: [],
     binder: null,
   },
-}
+};
 
 const useABCPStore = create<ABCPData & ABCPActions>()(
   devtools(
@@ -65,7 +65,7 @@ const useABCPStore = create<ABCPData & ABCPActions>()(
               };
             else return { ...state, [stepVariant[step]]: value };
           }),
-          
+
         reset: ({ step }) => {
           set(initialState);
           return {

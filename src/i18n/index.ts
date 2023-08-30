@@ -75,8 +75,8 @@ import concreteABCPENG from './translations/concrete/dosages/abcp/en.json';
 
 /**@common */
 // essays
-import commonEssaysPTBR from './translations/common/essays/ptbr.json'
-import commonEssaysENG from './translations/common/essays/en.json'
+import commonEssaysPTBR from './translations/common/essays/ptbr.json';
+import commonEssaysENG from './translations/common/essays/en.json';
 // materials
 
 i18n.use(initReactI18next).init({
