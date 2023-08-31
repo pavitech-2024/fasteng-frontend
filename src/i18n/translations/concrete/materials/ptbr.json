@@ -4,15 +4,18 @@
   "concrete.materials.type": "Tipo",
   "concrete.materials.source": "Fonte",
   "concrete.materials.responsible": "Responsável",
-  "concrete.materials.classification_AMP": "Classificação",
+  "concrete.materials.classification_AMP": "Classificação AMP",
   "concrete.materials.recieveDate": "Data de recebimento",
   "concrete.materials.aggregateNature": "Natureza do agregado",
   "concrete.materials.collectionDate": "Data de coleta",
+  "concrete.materials.extractionDate": "Data de extração",
   "concrete.materials.boughtDate": "Data de extração",
-  "concrete.materials.classification_CAP": "Classificação",
+  "concrete.materials.classification_CAP": "Classificação CAP",
   "concrete.materials.coarseAggregate": "Agregado graúdo",
   "concrete.materials.fineAggregate": "Agregado fino",
   "concrete.materials.cement": "Aglomerante (cimento)",
   "concrete.materials.cap": "CAP",
-  "concrete.materials.other": "Outro"
+  "concrete.materials.other": "Outro",
+  "concrete.materials.maxDiammeter": "Diâmetro máximo",
+  "concrete.materials.resistance": "Resistência"
 }

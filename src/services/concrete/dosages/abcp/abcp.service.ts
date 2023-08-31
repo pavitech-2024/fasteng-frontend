@@ -11,8 +11,8 @@ class ABCP_SERVICE implements IEssayService {
     key: 'abcp',
     icon: AbcpLogo,
     title: t('concrete.essays.abcp'),
-    path: '/concrete/essays/abcp',
-    backend_path: 'concrete/essays/abcp',
+    path: '/concrete/dosages/abcp',
+    backend_path: 'concrete/dosages/abcp',
     steps: 3,
     standard: {
       name: '',
@@ -20,10 +20,10 @@ class ABCP_SERVICE implements IEssayService {
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
-      { step: 1, description: t('abcp-materials-selection'), path: 'materials-selection' },
-      { step: 2, description: t('abcp-essays-selection'), path: 'essays-selection' },
-      { step: 3, description: t('abcp-inserting-params'), path: 'inserting-params' },
-      { step: 4, description: t('abcp-dosage-resume'), path: 'dosage-resume' },
+      { step: 1, description: t('abcp.material-selection'), path: 'materials-selection' },
+      { step: 2, description: t('abcp.essay-selection'), path: 'essays-selection' },
+      { step: 3, description: t('abcp.inserting-params'), path: 'inserting-params' },
+      { step: 4, description: t('abcp.dosage-resume'), path: 'dosage-resume' },
     ],
   };
 
@@ -37,6 +37,9 @@ class ABCP_SERVICE implements IEssayService {
         case 0:
           await this.submitGeneralData(data as ABCPData['generalData']);
           break;
+        case 1:
+          await this.submitMaterialSelection(data as ABCPData['materialSelectionData']);
+          break;
         default:
           throw t('errors.invalid-step');
       }
@@ -44,9 +47,31 @@ class ABCP_SERVICE implements IEssayService {
       throw error;
     }
   };
-
+  
   /** @generalData Methods for general-data (step === 0, page 1) */
+  
+  // send general data to backend to verify if there is already a ABCP dosage with same name
+  submitGeneralData = async (generalData: ABCPData['generalData']): Promise<void> => {
+    try {
+      const { name } = generalData;
 
+      // verify if name and sample are not empty
+      if (!name) throw t('errors.empty-name');
+      
+      // verify if there is already a ABCP essay with same name for the sample
+      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name });
+      
+      const { success, error } = response.data;
+      
+      // if there is already a ABCP essay with same name for the sample, throw error
+      if (success === false) throw error.name;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /** @materialSelection Methods for material-selection-data (step === 1, page 2) */
+  
   // get all materials from user from backend
   getMaterialsByUserId = async (userId: string): Promise<ConcreteMaterial[]> => {
     try {
@@ -58,21 +83,28 @@ class ABCP_SERVICE implements IEssayService {
     }
   };
 
-  // send general data to backend to verify if there is already a ABCP dosage with same name
-  submitGeneralData = async (generalData: ABCPData['generalData']): Promise<void> => {
+  // send the selected materials to backend
+  submitMaterialSelection = async (materialSelection: ABCPData['materialSelectionData']): Promise<void> => {
     try {
-      const { name } = generalData;
+      const { coarseAggregates, fineAggregates, binder } = materialSelection;
+      
+      if (!coarseAggregates) throw t('errors.empty-coarseAggregates');
+      if (!fineAggregates) throw t('errors.empty-fineAggregates');
+      if (!binder) throw t('errors.empty-binder');
 
-      // verify if name and sample are not empty
-      if (!name) throw t('errors.empty-name');
 
-      // verify if there is already a ABCP essay with same name for the sample
-      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name });
+    } catch (error) {
+      throw error;
+    }
+  }
 
-      const { success, error } = response.data;
+  /** @essaySelection Methods for essay-selection-data (step === 2, page 3) */
 
-      // if there is already a ABCP essay with same name for the sample, throw error
-      if (success === false) throw error.name;
+  // get essay from material_id
+  getGranulometryByMaterialId = async (material_id: string): Promise<any> => {
+    try {
+      const response = await Api.get(`${this.info.backend_path}/get/${material_id}`);
+      return response.data;
     } catch (error) {
       throw error;
     }

@@ -19,7 +19,7 @@ interface ABCP_MaterialSelection {
 
 export type ABCPData = {
   generalData: GeneralData;
-  step2Data: ABCP_MaterialSelection;
+  materialSelectionData: ABCP_MaterialSelection;
 };
 
 export type ABCPActions = {
@@ -27,7 +27,7 @@ export type ABCPActions = {
   reset: ({ step }: setDataType) => void;
 };
 
-const stepVariant = { 0: 'generalData', 1: 'materialSelection' };
+const stepVariant = { 0: 'generalData', 1: 'materialSelectionData' };
 
 type setDataType = { step: number; key?: string; value: unknown };
 
@@ -40,7 +40,7 @@ const initialState = {
     calculist: null,
     description: null,
   },
-  step2Data: {
+  materialSelectionData: {
     coarseAggregates: [],
     fineAggregates: [],
     binder: null,

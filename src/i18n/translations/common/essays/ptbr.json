@@ -1,4 +1,6 @@
 {
+  "name": "Nome",
+  "type": "Tipo",
   "experiment-name": "Nome do Experimento",
   "operator": "Operador",
   "calculist": "Calculista",
@@ -7,5 +9,8 @@
   "laboratory": "Laboratório",
   "essays": "Ensaios",
   "materials": "Materiais",
-  "dosages": "Dosagens"
+  "dosages": "Dosagens",
+  "loading.samples.pending": "Carregando materiais",
+  "loading.samples.success": "Materiais carregados",
+  "loading.samples.error": "Erro ao carregar materiais"
 }
