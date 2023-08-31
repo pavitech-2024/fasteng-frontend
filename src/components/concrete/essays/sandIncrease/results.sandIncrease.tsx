@@ -82,7 +82,7 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
     },
     {
       field: 'unitMass',
-      headerName: t('sandIncrease.unit-mass'),
+      headerName: t('sandIncrease.unitMass'),
       valueFormatter: ({ value }) => `${value.toFixed(2)}`,
     },
     {
