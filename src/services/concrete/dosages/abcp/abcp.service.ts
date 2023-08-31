@@ -47,9 +47,9 @@ class ABCP_SERVICE implements IEssayService {
       throw error;
     }
   };
-  
+
   /** @generalData Methods for general-data (step === 0, page 1) */
-  
+
   // send general data to backend to verify if there is already a ABCP dosage with same name
   submitGeneralData = async (generalData: ABCPData['generalData']): Promise<void> => {
     try {
@@ -57,12 +57,12 @@ class ABCP_SERVICE implements IEssayService {
 
       // verify if name and sample are not empty
       if (!name) throw t('errors.empty-name');
-      
+
       // verify if there is already a ABCP essay with same name for the sample
       const response = await Api.post(`${this.info.backend_path}/verify-init`, { name });
-      
+
       const { success, error } = response.data;
-      
+
       // if there is already a ABCP essay with same name for the sample, throw error
       if (success === false) throw error.name;
     } catch (error) {
@@ -71,7 +71,7 @@ class ABCP_SERVICE implements IEssayService {
   };
 
   /** @materialSelection Methods for material-selection-data (step === 1, page 2) */
-  
+
   // get all materials from user from backend
   getMaterialsByUserId = async (userId: string): Promise<ConcreteMaterial[]> => {
     try {
@@ -87,16 +87,14 @@ class ABCP_SERVICE implements IEssayService {
   submitMaterialSelection = async (materialSelection: ABCPData['materialSelectionData']): Promise<void> => {
     try {
       const { coarseAggregates, fineAggregates, binder } = materialSelection;
-      
+
       if (!coarseAggregates) throw t('errors.empty-coarseAggregates');
       if (!fineAggregates) throw t('errors.empty-fineAggregates');
       if (!binder) throw t('errors.empty-binder');
-
-
     } catch (error) {
       throw error;
     }
-  }
+  };
 
   /** @essaySelection Methods for essay-selection-data (step === 2, page 3) */
 

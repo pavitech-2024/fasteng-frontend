@@ -84,7 +84,7 @@ const MaterialsTemplate = ({
       case 'organicSoil':
         return t('samples.organicSoil');
       case 'cement':
-          return t('concrete.materials.cement');
+        return t('concrete.materials.cement');
       case 'pavementLayer':
         return t('samples.pavementLayer');
       case 'coarseAggregate':

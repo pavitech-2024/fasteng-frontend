@@ -1,7 +1,7 @@
 {
-    "abcp.step-2-description": "Selecione os agregados e o aglomerante (cimento) que serão utilizados na dosagem. Somente os agregados que passaram por pelo menos um ensaio de granulometria e um ensaio de massa unitária estarão visíveis aqui.",
-    "abcp.material-selection": "Material Selection",
-    "abcp.essay-selection": "Essay Selection",
-    "abcp.inserting-params": "Inserting Parameters",
-    "abcp.dosage-resume": "Dosage Resume"
-  }
+  "abcp.step-2-description": "Selecione os agregados e o aglomerante (cimento) que serão utilizados na dosagem. Somente os agregados que passaram por pelo menos um ensaio de granulometria e um ensaio de massa unitária estarão visíveis aqui.",
+  "abcp.material-selection": "Material Selection",
+  "abcp.essay-selection": "Essay Selection",
+  "abcp.inserting-params": "Inserting Parameters",
+  "abcp.dosage-resume": "Dosage Resume"
+}
