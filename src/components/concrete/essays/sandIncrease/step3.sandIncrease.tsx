@@ -5,7 +5,7 @@ import useSandIncreaseStore from '@/stores/concrete/sandIncrease/sandIncrease.st
 import { Box, Button } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { setData, humidityFoundData: data } = useSandIncreaseStore();

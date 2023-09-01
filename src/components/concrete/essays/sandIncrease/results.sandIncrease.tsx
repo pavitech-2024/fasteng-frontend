@@ -1,66 +1,20 @@
 import useSandIncreaseStore from '@/stores/concrete/sandIncrease/sandIncrease.store';
 import { EssayPageProps } from '../../../templates/essay';
 import { Box } from '@mui/material';
-import useAuth from '@/contexts/auth';
 import { t } from 'i18next';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useEffect } from 'react';
+import Result_Card from '@/components/atoms/containers/result-card';
+import GraphSandIncrease from './graphSandIncrease';
 
 const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: sand_increase_results } = useSandIncreaseStore();
 
-  const { user } = useAuth();
-
-  // pegando a quantidade de casas decimais do usuário
-  const {
-    preferences: { decimal: user_decimal },
-  } = user;
-
-  const dataTable = {
-    unitMasses: [],
-    moistureContent: [], 
-    swellings: [], 
-  };
-
-  const dataOther = {
-    curve: {}, 
-    retaR: {}, 
-    retaS: {}, 
-    retaT: {}, 
-    retaU: {}, 
-    averageCoefficient: 0,
-    criticalHumidity: 0,
-  }
-
-  // if (sand_increase_results) {
-  //   data.unitMasses.push(
-  //     { 
-  //       label: t('sandIncrease.unit-mass'), 
-  //       value: sand_increase_results.unitMasses,
-  //       unity: 'g'
-  //     }
-  //   );
-  //   data.moistureContent.push(
-  //     { 
-  //       label: t('sandIncrease.moisture-content'), 
-  //       value: sand_increase_results.moistureContent,
-  //       unity: '%'
-  //     }
-  //   );
-  //   data.swellings.push(
-  //     { 
-  //       label: t('sandIncrease.swellings'), 
-  //       value: sand_increase_results.swellings,
-  //       unity: ''
-  //     }
-  //   );
-  // };
-
   const newArray = [];
 
   for (let i = 0; i < sand_increase_results.unitMasses.length; i++) {
-    const sampleNumber = (i + 1).toString(); // Incrementing index by 1 to get sample number
+    const sampleNumber = (i + 1).toString(); 
 
     const newObj = {
       sample: sampleNumber,
@@ -98,17 +52,14 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
   ];
 
   useEffect(() => {
-    console.log("🚀 ~ file: results.sandIncrease.tsx:86 ~ sand_increase_results:", sand_increase_results)
-  }, [sand_increase_results]);
-
-  useEffect(() => {
-    console.log("🚀 ~ file: results.sandIncrease.tsx:86 ~ rows:", rows)
-  }, [rows]);
+    console.log("🚀 ~ file: results.sandIncrease.tsx:87 ~ sand_increase_results:", sand_increase_results)
+  }, [sand_increase_results])
+  
 
   return (
     <Box>
       <DataGrid
-        sx={{ mt: '1rem', borderRadius: '10px' }}
+        sx={{ mt: '1rem', borderRadius: '10px', mb: '1rem'}}
         density="compact"
         hideFooter
         showCellVerticalBorder
@@ -120,10 +71,29 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
           align: 'center',
           headerAlign: 'center',
           minWidth: 100,
-          flex: 1,
+          flex: 1
         }))}
         rows={rows.map((row, index) => ({ ...row, id: index }))}
       />
+      <Box
+        sx={{display: 'flex', justifyContent: 'center', gap: '1rem'}}
+      >
+        <Result_Card 
+          label={`${t('sandIncrease.averageCoefficient')}`} 
+          value={sand_increase_results?.averageCoefficient.toFixed(3).toString()} 
+          unity={''} 
+        />
+        <Result_Card 
+          label={`${t('sandIncrease.criticalHumidity')}`} 
+          value={sand_increase_results?.criticalHumidity.toFixed(3).toString()} 
+          unity={''} 
+        />
+      </Box>
+
+      <GraphSandIncrease
+        results={sand_increase_results}
+      />
+      
     </Box>
   );
 };

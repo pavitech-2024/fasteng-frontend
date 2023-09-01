@@ -14,5 +14,8 @@
   "humidity found": "Umidade Encontrada",
   "sandIncrease.wetGrossWeight": "Peso da amostra úmida + cápsula",
   "sandIncrease.capsuleWeight": "Peso da cápsula",
-  "sandIncrease.dryGrossWeight": "Peso pós secagem + capsula"
+  "sandIncrease.dryGrossWeight": "Peso pós secagem + capsula",
+  "sandIncrease.averageCoefficient": "Coeficiente Médio",
+  "sandIncrease.criticalHumidity": "Umidade Crítica",
+  "sandIncrease.swellings": "Coeficiente de Inchamento"
 }
