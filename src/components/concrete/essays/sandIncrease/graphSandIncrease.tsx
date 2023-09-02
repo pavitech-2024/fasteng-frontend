@@ -70,13 +70,7 @@ const GraphSandIncrease = (props) => {
 
   return (
     <div style={{ width: '100%' }}>
-      <Chart
-        chartType="LineChart"
-        height="500px"
-        width="100%"
-        data={data}
-        options={options}
-      />
+      <Chart chartType="LineChart" height="500px" width="100%" data={data} options={options} />
     </div>
   );
 };

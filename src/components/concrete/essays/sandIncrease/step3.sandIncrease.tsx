@@ -8,11 +8,16 @@ import { t } from 'i18next';
 import { useState } from 'react';
 
 const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { setData, humidityFoundData: data } = useSandIncreaseStore();
+  const { 
+    setData, 
+    unitMassDeterminationData: unitMassDetermination,
+    humidityFoundData: humidityFound,
+    sandIncreaseGeneralData: generalData
+  } = useSandIncreaseStore();
 
   const [calcBtnDisable, setCalcBtnDisable] = useState(true);
 
-  const rows = data.tableData;
+  const rows = humidityFound.tableData;
 
   const columns: GridColDef[] = [
     {
@@ -89,7 +94,7 @@ const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         );
       },
     },
-    ...(data.tableData.every((row) => row.moistureContent !== null)
+    ...(humidityFound.tableData.every((row) => row.moistureContent !== null)
       ? [
           {
             field: 'moistureContent',
@@ -110,13 +115,15 @@ const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
       const response = await Api.post(`concrete/essays/sand-increase/calculate-results`, {
         step: 2,
         calculateMoistureContent,
+        unitMassDetermination,
+        generalData
       });
 
       const { success, error, result } = response.data;
 
       if (success === false) throw error.name;
 
-      const updatedTableData = data.tableData.map((row, index) => ({
+      const updatedTableData = humidityFound.tableData.map((row, index) => ({
         ...row,
         moistureContent: result.moistureContent[index],
       }));
@@ -176,7 +183,7 @@ const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
           variant="contained"
           color="primary"
           disabled={calcBtnDisable}
-          onClick={() => calculateMoistureContent(data)}
+          onClick={() => calculateMoistureContent(humidityFound)}
         >
           Calcular
         </Button>

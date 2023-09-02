@@ -148,16 +148,16 @@ interface humidityFoundData {
 }
 
 interface sandIncrease_results {
-  unitMasses: number[],
-  moistureContent: number[], 
-  swellings: number[], 
-  curve: [number, number][], 
-  retaR: [number, number][], 
-  retaS: [number, number][], 
-  retaT: [number, number][], 
-  retaU: [number, number][], 
-  averageCoefficient: number,
-  criticalHumidity: number,
+  unitMasses: number[];
+  moistureContent: number[];
+  swellings: number[];
+  curve: [number, number][];
+  retaR: [number, number][];
+  retaS: [number, number][];
+  retaT: [number, number][];
+  retaU: [number, number][];
+  averageCoefficient: number;
+  criticalHumidity: number;
 }
 
 export type SandIncreaseData = {
@@ -166,12 +166,6 @@ export type SandIncreaseData = {
   humidityFoundData: humidityFoundData;
   results: sandIncrease_results;
 };
-
-// export interface CalculateUnitMass {
-//   sample: string;
-//   moistureContent: string;
-//   containerWeightSample: number;
-// }[]
 
 export type SandIncreaseActions = {
   setData: ({ step, key, value }: setDataType) => void;
@@ -327,13 +321,13 @@ const useSandIncreaseStore = create<SandIncreaseData & SandIncreaseActions>()(
         },
         results: {
           unitMasses: null,
-          moistureContent: null, 
-          swellings: null, 
-          curve: null, 
-          retaR: null, 
-          retaS: null, 
-          retaT: null, 
-          retaU: null, 
+          moistureContent: null,
+          swellings: null,
+          curve: null,
+          retaR: null,
+          retaS: null,
+          retaT: null,
+          retaU: null,
           averageCoefficient: null,
           criticalHumidity: null,
         },

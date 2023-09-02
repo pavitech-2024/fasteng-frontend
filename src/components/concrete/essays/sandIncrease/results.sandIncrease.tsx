@@ -14,13 +14,13 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
   const newArray = [];
 
   for (let i = 0; i < sand_increase_results.unitMasses.length; i++) {
-    const sampleNumber = (i + 1).toString(); 
+    const sampleNumber = (i + 1).toString();
 
     const newObj = {
       sample: sampleNumber,
       moistureContent: sand_increase_results.moistureContent[i].toFixed(2),
       swellings: sand_increase_results.swellings[i].toFixed(2),
-      unitMass: sand_increase_results.unitMasses[i]
+      unitMass: sand_increase_results.unitMasses[i],
     };
 
     newArray.push(newObj);
@@ -52,14 +52,13 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
   ];
 
   useEffect(() => {
-    console.log("🚀 ~ file: results.sandIncrease.tsx:87 ~ sand_increase_results:", sand_increase_results)
-  }, [sand_increase_results])
-  
+    console.log('🚀 ~ file: results.sandIncrease.tsx:87 ~ sand_increase_results:', sand_increase_results);
+  }, [sand_increase_results]);
 
   return (
     <Box>
       <DataGrid
-        sx={{ mt: '1rem', borderRadius: '10px', mb: '1rem'}}
+        sx={{ mt: '1rem', borderRadius: '10px', mb: '1rem' }}
         density="compact"
         hideFooter
         showCellVerticalBorder
@@ -71,29 +70,24 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
           align: 'center',
           headerAlign: 'center',
           minWidth: 100,
-          flex: 1
+          flex: 1,
         }))}
         rows={rows.map((row, index) => ({ ...row, id: index }))}
       />
-      <Box
-        sx={{display: 'flex', justifyContent: 'center', gap: '1rem'}}
-      >
-        <Result_Card 
-          label={`${t('sandIncrease.averageCoefficient')}`} 
-          value={sand_increase_results?.averageCoefficient.toFixed(3).toString()} 
-          unity={''} 
+      <Box sx={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+        <Result_Card
+          label={`${t('sandIncrease.averageCoefficient')}`}
+          value={sand_increase_results?.averageCoefficient.toFixed(3).toString()}
+          unity={''}
         />
-        <Result_Card 
-          label={`${t('sandIncrease.criticalHumidity')}`} 
-          value={sand_increase_results?.criticalHumidity.toFixed(3).toString()} 
-          unity={''} 
+        <Result_Card
+          label={`${t('sandIncrease.criticalHumidity')}`}
+          value={sand_increase_results?.criticalHumidity.toFixed(3).toString()}
+          unity={''}
         />
       </Box>
 
-      <GraphSandIncrease
-        results={sand_increase_results}
-      />
-      
+      <GraphSandIncrease results={sand_increase_results} />
     </Box>
   );
 };

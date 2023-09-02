@@ -46,7 +46,7 @@ class SAND_INCREASE_SERVICE implements IEssayService {
           await this.calculateResults(data as SandIncreaseData);
           break;
         case 3:
-          await this.saveEssay(data as SandIncreaseData)
+          await this.saveEssay(data as SandIncreaseData);
         default:
           throw t('errors.invalid-step');
       }
@@ -109,12 +109,19 @@ class SAND_INCREASE_SERVICE implements IEssayService {
   };
 
   calculateResults = async (store: SandIncreaseData): Promise<void> => {
+    const resultsData = {
+      step: 3,
+      unitMassDeterminationData: store.unitMassDeterminationData,
+      humidityFoundData: store.humidityFoundData,
+      sandIncreaseGeneralData: store.sandIncreaseGeneralData,
+    };
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         step: 3,
         unitMassDeterminationData: store.unitMassDeterminationData,
         humidityFoundData: store.humidityFoundData,
         sandIncreaseGeneralData: store.sandIncreaseGeneralData,
+        resultsData
       });
 
       const { success, error, result } = response.data;

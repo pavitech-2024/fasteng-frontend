@@ -8,28 +8,33 @@ import { t } from 'i18next';
 import { useState } from 'react';
 
 const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { setData, unitMassDeterminationData: data } = useSandIncreaseStore();
+  const { 
+    setData, 
+    unitMassDeterminationData: unitMassDetermination,
+    humidityFoundData: humidityFound,
+    sandIncreaseGeneralData: generalData
+  } = useSandIncreaseStore();
 
   const [calcBtnDisable, setCalcBtnDisable] = useState(true);
 
   const inputs = [
     {
       label: t('sandIncrease.container_volume'),
-      value: data.containerVolume,
+      value: unitMassDetermination.containerVolume,
       key: 'containerVolume',
       required: true,
       adornment: 'l',
     },
     {
       label: t('sandIncrease.container_weight'),
-      value: data.containerWeight,
+      value: unitMassDetermination.containerWeight,
       key: 'containerWeight',
       required: true,
       adornment: 'g',
     },
   ];
 
-  const rows = data.tableData;
+  const rows = unitMassDetermination.tableData;
 
   const columns: GridColDef[] = [
     {
@@ -65,7 +70,7 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         );
       },
     },
-    ...(data.tableData.every((row) => row.unitMass !== null)
+    ...(unitMassDetermination.tableData.every((row) => row.unitMass !== null)
       ? [
           {
             field: 'unitMass',
@@ -80,30 +85,31 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
   ];
 
   const calculateUnitMass = async (calculateUnitMass) => {
-
     const tableData = calculateUnitMass.tableData;
     const containerVolume = calculateUnitMass.containerVolume;
     const containerWeight = calculateUnitMass.containerWeight;
 
     try {
-      if (!calculateUnitMass) throw t('errors.empty-table-data');
+      if (!calculateUnitMass) throw t('errors.empty-table-unitMassDetermination');
 
       const unitMassDeterminationData = {
         containerVolume,
         containerWeight,
         tableData,
-      }
+      };
 
       const response = await Api.post(`concrete/essays/sand-increase/calculate-results`, {
         step: 1,
-        unitMassDeterminationData
+        unitMassDeterminationData,
+        humidityFound,
+        generalData
       });
 
       const { success, error, result } = response.data;
 
       if (success === false) throw error.name;
 
-      const updatedTableData = data.tableData.map((row, index) => ({
+      const updatedTableData = unitMassDetermination.tableData.map((row, index) => ({
         ...row,
         unitMass: result.unitMasses[index],
       }));
@@ -120,8 +126,8 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
 
   if (nextDisabled) {
     const containerWeightSample_completed = rows.every((value) => value !== null);
-    const container_volume_completed = data.containerVolume !== null;
-    const container_weight_completed = data.containerWeight !== null;
+    const container_volume_completed = unitMassDetermination.containerVolume !== null;
+    const container_weight_completed = unitMassDetermination.containerWeight !== null;
     const unit_mass_completed = rows.every((value) => value.unitMass !== null);
     if (
       containerWeightSample_completed &&
@@ -134,8 +140,8 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
 
   if (calcBtnDisable) {
     const containerWeightSample_completed = rows.every((value) => value.containerWeightSample !== null);
-    const container_volume_completed = data.containerVolume !== null;
-    const container_weight_completed = data.containerWeight !== null;
+    const container_volume_completed = unitMassDetermination.containerVolume !== null;
+    const container_weight_completed = unitMassDetermination.containerWeight !== null;
     if (containerWeightSample_completed && container_volume_completed && container_weight_completed)
       setCalcBtnDisable(false);
   }
@@ -183,7 +189,7 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         rows={rows.map((row, index) => ({ ...row, id: index }))}
       />
       <Box textAlign="center" marginTop="10px">
-        <Button variant="contained" color="primary" disabled={calcBtnDisable} onClick={() => calculateUnitMass(data)}>
+        <Button variant="contained" color="primary" disabled={calcBtnDisable} onClick={() => calculateUnitMass(unitMassDetermination)}>
           Calcular
         </Button>
       </Box>
