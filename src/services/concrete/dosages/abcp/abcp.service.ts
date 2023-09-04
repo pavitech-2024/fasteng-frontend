@@ -72,12 +72,14 @@ class ABCP_SERVICE implements IEssayService {
 
   /** @materialSelection Methods for material-selection-data (step === 1, page 2) */
 
-  // get all materials from user from backend
+  // get all materials from user, that have the dosage essays
   getMaterialsByUserId = async (userId: string): Promise<ConcreteMaterial[]> => {
     try {
-      // get all materials from user from backend
-      const response = await Api.get(`concrete/materials/all/${userId}`);
-      return response.data;
+      const response = await Api.get(`${this.info.backend_path}/material-selection/${userId}`);
+
+      const { materials, success, error } = response.data;
+      if (success === false ) throw error.name;
+      else return materials;
     } catch (error) {
       throw error;
     }

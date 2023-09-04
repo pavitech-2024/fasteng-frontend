@@ -1,37 +1,14 @@
-import DropDown from '@/components/atoms/inputs/dropDown';
-import { Box } from '@mui/material';
+import { NoDataFound } from '@/components/util/tables';
+import { Box, Stack } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { t } from 'i18next';
-import React, { useEffect, useState } from 'react';
 
 interface MaterialSelectionProps {
   header?: string;
-  rows: { name?: string; type?: string; resistance?: number }[];
+  rows: { name?: string; type?: string; resistance?: string }[];
   columns: GridColDef[];
 }
 
 const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProps) => {
-  const [searchBy, setSearchBy] = useState<string>('name');
-  const [searchValue, setSearchValue] = useState<string>('');
-
-  useEffect(() => {
-    setSearchValue('');
-  }, [searchBy]);
-
-  const filteredData = rows
-    ? rows
-        .map(({ name, type }) => ({
-          name,
-          type,
-        }))
-        .filter((material) => {
-          return searchValue.length > 0
-            ? searchBy === 'name'
-              ? material[searchBy].toLowerCase().includes(searchValue.toLowerCase())
-              : material[searchBy] === searchValue
-            : true;
-        })
-    : null;
 
   return (
     <Box
@@ -51,25 +28,6 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
           m: 'auto',
         }}
       >
-        <DropDown
-          label={t('materials.template.searchBy')}
-          options={[
-            { label: t('materials.template.name'), value: 'name' },
-            { label: t('materials.template.type'), value: 'type' },
-          ]}
-          callback={setSearchBy}
-          size="small"
-          sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
-          defaultValue={{ label: t('materials.template.name'), value: 'name' }}
-        />
-        {/* <Search
-                    sx={{
-                        width: '100%',
-                        height: '39px',
-                    }}
-                    value={searchValue}
-                    setValue={setSearchValue}
-                /> */}
       </Box>
       <Box
         sx={{
@@ -79,6 +37,7 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
         <DataGrid
           sx={{
             borderRadius: '10px',
+            height: 300
           }}
           checkboxSelection
           disableRowSelectionOnClick
@@ -94,10 +53,18 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
             flex: 1,
           }))}
           rows={
-            filteredData !== null
-              ? filteredData.map((row, index) => ({ ...row, id: index }))
-              : [{ name: 'teste', type: 'teste' }]
+            rows !== null
+            ? rows.map((row, index) => ({ ...row, id: index }))
+            : []
           }
+          slots={{
+            noRowsOverlay: () => (
+              <NoDataFound message='Nenhum material encontrado' />
+            ),
+            noResultsOverlay: () => (
+              <NoDataFound message='Nenhum material encontrado' />
+            )
+          }}
         />
       </Box>
     </Box>

@@ -3,5 +3,8 @@
   "materials.binders": "Aglomerantes (cimento)",
   "materials.coarseAggregate": "Agregado graúdo",
   "materials.fineAggregate": "Agregado miúdo",
-  "materials.cement": "Aglomerante"
+  "materials.cement": "Aglomerante",
+  "loading.materials.pending": "Carregando materiais",
+  "loading.materials.success": "Materiais carregados",
+  "loading.materials.error": "Erro ao carregar os materiais"
 }

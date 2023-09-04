@@ -1,5 +1,5 @@
 import ABCP_GeneralData from '@/components/concrete/dosages/abcp/step-1-general-data';
-// import ABCP_MaterialsSelection from "@/components/concrete/dosages/abcp/step-2-materials-selection";
+import ABCP_MaterialsSelection from "@/components/concrete/dosages/abcp/step-2-materials-selection";
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
@@ -21,7 +21,7 @@ const DosageABCP: NextPage = () => {
 
   const childrens = [
     { step: 0, children: <ABCP_GeneralData />, data: store.generalData },
-    // { step: 1, children: <ABCP_MaterialsSelection abcp={abcp} />, data: store },
+    { step: 1, children: <ABCP_MaterialsSelection abcp={abcp} />, data: store },
     // { step: 2, children: <ABCP_Results />, data: store },
   ];
 
