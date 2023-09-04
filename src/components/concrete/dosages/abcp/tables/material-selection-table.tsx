@@ -9,7 +9,6 @@ interface MaterialSelectionProps {
 }
 
 const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProps) => {
-
   return (
     <Box
       sx={{
@@ -27,8 +26,7 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
           gap: '1rem',
           m: 'auto',
         }}
-      >
-      </Box>
+      ></Box>
       <Box
         sx={{
           mt: '1rem',
@@ -37,7 +35,7 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
         <DataGrid
           sx={{
             borderRadius: '10px',
-            height: 300
+            height: 300,
           }}
           checkboxSelection
           disableRowSelectionOnClick
@@ -52,18 +50,10 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
             maxWidth: 250,
             flex: 1,
           }))}
-          rows={
-            rows !== null
-            ? rows.map((row, index) => ({ ...row, id: index }))
-            : []
-          }
+          rows={rows !== null ? rows.map((row, index) => ({ ...row, id: index })) : []}
           slots={{
-            noRowsOverlay: () => (
-              <NoDataFound message='Nenhum material encontrado' />
-            ),
-            noResultsOverlay: () => (
-              <NoDataFound message='Nenhum material encontrado' />
-            )
+            noRowsOverlay: () => <NoDataFound message="Nenhum material encontrado" />,
+            noResultsOverlay: () => <NoDataFound message="Nenhum material encontrado" />,
           }}
         />
       </Box>

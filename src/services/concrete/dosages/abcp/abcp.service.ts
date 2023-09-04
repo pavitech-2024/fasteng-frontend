@@ -78,7 +78,7 @@ class ABCP_SERVICE implements IEssayService {
       const response = await Api.get(`${this.info.backend_path}/material-selection/${userId}`);
 
       const { materials, success, error } = response.data;
-      if (success === false ) throw error.name;
+      if (success === false) throw error.name;
       else return materials;
     } catch (error) {
       throw error;

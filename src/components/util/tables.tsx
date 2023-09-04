@@ -1,13 +1,13 @@
 import { Stack } from '@mui/material';
 
 type NoDataFoundProps = {
-    message?: string;
-}
+  message?: string;
+};
 
-export const NoDataFound = ( {message}: NoDataFoundProps ) => {
-    return (
-        <Stack height="100%" alignItems="center" justifyContent="center">
-            {message}
-        </Stack>
-    )
+export const NoDataFound = ({ message }: NoDataFoundProps) => {
+  return (
+    <Stack height="100%" alignItems="center" justifyContent="center">
+      {message}
+    </Stack>
+  );
 };
