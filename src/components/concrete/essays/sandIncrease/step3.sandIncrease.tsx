@@ -10,9 +10,7 @@ import { useState } from 'react';
 const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const {
     setData,
-    unitMassDeterminationData: unitMassDetermination,
     humidityFoundData: humidityFound,
-    sandIncreaseGeneralData: generalData,
   } = useSandIncreaseStore();
 
   const [calcBtnDisable, setCalcBtnDisable] = useState(true);
@@ -109,15 +107,13 @@ const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
   ];
 
   const calculateMoistureContent = async (calculateMoistureContent) => {
+    const moistureContentData = {
+      tableData: calculateMoistureContent.tableData
+    };
     try {
       if (!calculateMoistureContent) throw t('errors.empty-table-data');
 
-      const response = await Api.post(`concrete/essays/sand-increase/calculate-results`, {
-        step: 2,
-        calculateMoistureContent,
-        unitMassDetermination,
-        generalData,
-      });
+      const response = await Api.post(`concrete/essays/sand-increase/calculate-moisture-content`, moistureContentData);
 
       const { success, error, result } = response.data;
 
@@ -125,7 +121,7 @@ const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
 
       const updatedTableData = humidityFound.tableData.map((row, index) => ({
         ...row,
-        moistureContent: result.moistureContent[index],
+        moistureContent: result[index],
       }));
 
       setData({

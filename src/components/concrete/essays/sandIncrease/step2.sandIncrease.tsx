@@ -11,8 +11,6 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
   const {
     setData,
     unitMassDeterminationData: unitMassDetermination,
-    humidityFoundData: humidityFound,
-    sandIncreaseGeneralData: generalData,
   } = useSandIncreaseStore();
 
   const [calcBtnDisable, setCalcBtnDisable] = useState(true);
@@ -85,7 +83,6 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
   ];
 
   const calculateUnitMass = async (calculateUnitMass) => {
-    console.log('🚀 ~ file: step2.sandIncrease.tsx:126 ~ calculateUnitMass ~ calculateUnitMass:', calculateUnitMass);
 
     const tableData = calculateUnitMass.tableData;
     const containerVolume = calculateUnitMass.containerVolume;
@@ -100,12 +97,7 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         tableData,
       };
 
-      const response = await Api.post(`concrete/essays/sand-increase/calculate-results`, {
-        step: 1,
-        unitMassDeterminationData,
-        humidityFound,
-        generalData,
-      });
+      const response = await Api.post(`concrete/essays/sand-increase/calculate-unit-mass`, unitMassDeterminationData);
 
       const { success, error, result } = response.data;
 
@@ -113,7 +105,7 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
 
       const updatedTableData = unitMassDetermination.tableData.map((row, index) => ({
         ...row,
-        unitMass: result.unitMasses[index],
+        unitMass: result[index],
       }));
 
       setData({
