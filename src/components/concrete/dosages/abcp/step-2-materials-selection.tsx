@@ -11,12 +11,6 @@ import { toast } from 'react-toastify';
 import MaterialSelectionTable from './tables/material-selection-table';
 import { GridColDef } from '@mui/x-data-grid';
 
-// type MaterialSelection = {
-//   coarseAggregates: string[];
-//   fineAggregates: string[];
-//   cements: string[];
-// }
-
 const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);

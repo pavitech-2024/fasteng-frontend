@@ -115,7 +115,9 @@ class ABCP_SERVICE implements IEssayService {
         fineAggregates,
       });
 
-      return response.data;
+      const { essays, success, error } = response.data;
+      if (success === false) throw error.name;
+      else return essays;
     } catch (error) {
       throw error;
     }
