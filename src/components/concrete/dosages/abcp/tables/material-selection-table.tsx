@@ -6,12 +6,12 @@ import { useState } from 'react';
 
 interface MaterialSelectionProps {
   header?: string;
-  rows: { _id: string, name: string; type: string; resistance?: string }[];
+  rows: { _id: string; name: string; type: string; resistance?: string }[];
   columns: GridColDef[];
 }
 
 const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProps) => {
-  const [ rowSelectionModel, setRowSelectionModel ] = useState<GridRowSelectionModel>([]);
+  const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
   const { materialSelectionData, setData } = useABCPStore();
 
   // setRowSelectionModel(rows.map((element, index) => {
@@ -54,36 +54,34 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
           }}
           checkboxSelection
           onRowSelectionModelChange={(rowSelection) => {
-            setRowSelectionModel(rowSelection)
+            setRowSelectionModel(rowSelection);
             if (rows.some((element) => element.type === 'cement')) {
-              const cements = []
+              const cements = [];
 
               rowSelection.map((row, index) => {
-                const type = rows[index].type
+                const type = rows[index].type;
                 if (type === 'cement') {
-                  cements.push(rows[index]._id)
+                  cements.push(rows[index]._id);
                 }
               });
 
               setData({ step: 1, key: 'cements', value: cements });
-
             } else {
-              const coarseAggregates = []
-              const fineAggregates = []
+              const coarseAggregates = [];
+              const fineAggregates = [];
 
               rowSelection.map((row, index) => {
-                const type = rows[index].type
+                const type = rows[index].type;
                 if (type === 'coarseAggregate') {
-                  coarseAggregates.push(rows[index]._id)
+                  coarseAggregates.push(rows[index]._id);
                 }
                 if (type === 'fineAggregate') {
-                  fineAggregates.push(rows[index]._id)
+                  fineAggregates.push(rows[index]._id);
                 }
               });
 
               setData({ step: 1, key: 'fineAggregates', value: fineAggregates });
               setData({ step: 1, key: 'coarseAggregates', value: coarseAggregates });
-
             }
           }}
           rowSelectionModel={rowSelectionModel}

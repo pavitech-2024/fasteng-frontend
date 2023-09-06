@@ -90,13 +90,13 @@ class ABCP_SERVICE implements IEssayService {
     try {
       const { coarseAggregates, fineAggregates, cements } = materialSelection;
 
-      console.log(materialSelection)
+      console.log(materialSelection);
 
       if (!coarseAggregates) throw t('errors.empty-coarseAggregates');
       if (!fineAggregates) throw t('errors.empty-fineAggregates');
       if (!cements) throw t('errors.empty-binder');
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw error;
     }
   };
@@ -104,13 +104,16 @@ class ABCP_SERVICE implements IEssayService {
   /** @essaySelection Methods for essay-selection-data (step === 2, page 3) */
 
   // get essay from materials id
-  getEssaysByMaterialId = async (userId: string, { cements, coarseAggregates, fineAggregates }: ABCPData['materialSelectionData']): Promise<ABCPData['essaySelectionData']> => {
+  getEssaysByMaterialId = async (
+    userId: string,
+    { cements, coarseAggregates, fineAggregates }: ABCPData['materialSelectionData']
+  ): Promise<ABCPData['essaySelectionData']> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/essay-selection`, {
         cements,
         coarseAggregates,
-        fineAggregates
-      } );
+        fineAggregates,
+      });
 
       return response.data;
     } catch (error) {

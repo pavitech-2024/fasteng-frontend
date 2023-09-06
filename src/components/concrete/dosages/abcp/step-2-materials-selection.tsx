@@ -52,7 +52,7 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
       type,
     }))
     .filter(({ type }) => {
-      return type === "coarseAggregate" || type === "fineAggregate"
+      return type === 'coarseAggregate' || type === 'fineAggregate';
     });
 
   const aggregateColumns: GridColDef[] = [
@@ -100,11 +100,11 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
     },
   ];
 
-  materialSelectionData.cements.length != 0
-    && materialSelectionData.coarseAggregates.length != 0
-    && materialSelectionData.fineAggregates.length != 0
-    && nextDisabled
-    && setNextDisabled(false);
+  materialSelectionData.cements.length != 0 &&
+    materialSelectionData.coarseAggregates.length != 0 &&
+    materialSelectionData.fineAggregates.length != 0 &&
+    nextDisabled &&
+    setNextDisabled(false);
 
   return (
     <>
