@@ -17,12 +17,11 @@ interface ABCP_MaterialSelection {
 }
 
 interface ABCP_EssaySelection {
-  fineAggregates: { 
-    _id: string; 
+  fineAggregates: {
+    _id: string;
     name: string;
-    specific_mass: 
-    number; 
-    granulometry_id: string 
+    specific_mass: number;
+    granulometry_id: string;
   }[];
   coarseAggregates: {
     _id: string;
@@ -33,10 +32,10 @@ interface ABCP_EssaySelection {
     unit_mass_id: string;
     unit_mass_name: string;
   }[];
-  cements: { 
-    _id: string; 
+  cements: {
+    _id: string;
     name: string;
-    specific_mass: number 
+    specific_mass: number;
   }[];
 }
 

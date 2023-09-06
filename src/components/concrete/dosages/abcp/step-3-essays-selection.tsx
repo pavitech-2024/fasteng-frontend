@@ -21,7 +21,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
       async () => {
         try {
           const essays = await abcp.getEssaysByMaterialId(user._id, materialSelectionData);
-          console.log(essays)
+          console.log(essays);
           setEssays(essays);
           setLoading(false);
         } catch (error) {
@@ -50,14 +50,15 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
             display: 'grid',
             gap: '10px',
           }}
-        ><Box
-          sx={{
-            p: '1rem',
-            textAlign: 'center',
-            border: '1px solid lightgray',
-            borderRadius: '10px',
-          }}
         >
+          <Box
+            sx={{
+              p: '1rem',
+              textAlign: 'center',
+              border: '1px solid lightgray',
+              borderRadius: '10px',
+            }}
+          >
             {fineAggregate_Inputs.map((material) => {
               const { _id, name } = material;
               return (
@@ -69,16 +70,12 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                     gap: '1rem',
                   }}
                 >
-                  <TextField
-                    variant="standard"
-                    key={_id}
-                    label={t('specifc-mass')}
-                  />
+                  <TextField variant="standard" key={_id} label={t('specifc-mass')} />
                   <DropDown
                     key={`${name}-granulometry`}
                     variant="standard"
                     label={t('granulometry')}
-                    options={["teste 1", "teste 2"].map((granulometry) => {
+                    options={['teste 1', 'teste 2'].map((granulometry) => {
                       return { label: granulometry, value: '' };
                     })}
                     callback={(value) => {
@@ -89,7 +86,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                     required
                   />
                 </Box>
-              )
+              );
             })}
           </Box>
         </Box>
