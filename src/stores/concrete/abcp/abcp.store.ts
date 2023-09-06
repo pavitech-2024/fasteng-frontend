@@ -1,4 +1,3 @@
-import { ConcreteMaterial } from '@/interfaces/concrete';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
@@ -12,14 +11,21 @@ interface GeneralData {
 }
 
 interface ABCP_MaterialSelection {
-  coarseAggregates: ConcreteMaterial[];
-  fineAggregates: ConcreteMaterial[];
-  binder: ConcreteMaterial;
+  coarseAggregates: string[];
+  fineAggregates: string[];
+  cements: string[];
+}
+
+interface ABCP_EssaySelection {
+  fineAggregates: {_id: string, specific_mass: number, granulometry_id: string}[],
+  coarseAggregates: {_id: string, specific_mass: number, granulometry_id: string, granulometry_name: string, unit_mass_id: string, unit_mass_name: string}[],
+  cements: {_id: string, specific_mass: number}[],
 }
 
 export type ABCPData = {
   generalData: GeneralData;
   materialSelectionData: ABCP_MaterialSelection;
+  essaySelectionData: ABCP_EssaySelection;
 };
 
 export type ABCPActions = {
@@ -27,7 +33,7 @@ export type ABCPActions = {
   reset: ({ step }: setDataType) => void;
 };
 
-const stepVariant = { 0: 'generalData', 1: 'materialSelectionData' };
+const stepVariant = { 0: 'generalData', 1: 'materialSelectionData', 2: 'essaySelectionData' };
 
 type setDataType = { step: number; key?: string; value: unknown };
 
@@ -43,7 +49,12 @@ const initialState = {
   materialSelectionData: {
     coarseAggregates: [],
     fineAggregates: [],
-    binder: null,
+    cements: [],
+  },
+  essaySelectionData: {
+    fineAggregates: [],
+    coarseAggregates: [],
+    cements: [],
   },
 };
 

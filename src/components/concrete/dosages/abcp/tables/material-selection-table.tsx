@@ -1,14 +1,29 @@
 import { NoDataFound } from '@/components/util/tables';
+import useABCPStore from '@/stores/concrete/abcp/abcp.store';
 import { Box, Stack } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
+import { useState } from 'react';
 
 interface MaterialSelectionProps {
   header?: string;
-  rows: { name?: string; type?: string; resistance?: string }[];
+  rows: { _id: string, name: string; type: string; resistance?: string }[];
   columns: GridColDef[];
 }
 
 const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProps) => {
+  const [ rowSelectionModel, setRowSelectionModel ] = useState<GridRowSelectionModel>([]);
+  const { materialSelectionData, setData } = useABCPStore();
+
+  // setRowSelectionModel(rows.map((element, index) => {
+  //   const { _id, type } = element;
+  //   if (type === 'cement' && materialSelectionData.cements.includes(_id)) {
+  //     return index
+  //   }
+  //   if (type !== 'cement' && (materialSelectionData.coarseAggregates.includes(_id) || materialSelectionData.fineAggregates.includes(_id))) {
+  //     return index
+  //   }
+  // }))
+
   return (
     <Box
       sx={{
@@ -38,7 +53,40 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
             height: 300,
           }}
           checkboxSelection
-          disableRowSelectionOnClick
+          onRowSelectionModelChange={(rowSelection) => {
+            setRowSelectionModel(rowSelection)
+            if (rows.some((element) => element.type === 'cement')) {
+              const cements = []
+
+              rowSelection.map((row, index) => {
+                const type = rows[index].type
+                if (type === 'cement') {
+                  cements.push(rows[index]._id)
+                }
+              });
+
+              setData({ step: 1, key: 'cements', value: cements });
+
+            } else {
+              const coarseAggregates = []
+              const fineAggregates = []
+
+              rowSelection.map((row, index) => {
+                const type = rows[index].type
+                if (type === 'coarseAggregate') {
+                  coarseAggregates.push(rows[index]._id)
+                }
+                if (type === 'fineAggregate') {
+                  fineAggregates.push(rows[index]._id)
+                }
+              });
+
+              setData({ step: 1, key: 'fineAggregates', value: fineAggregates });
+              setData({ step: 1, key: 'coarseAggregates', value: coarseAggregates });
+
+            }
+          }}
+          rowSelectionModel={rowSelectionModel}
           disableColumnSelector
           columns={columns.map((column) => ({
             ...column,

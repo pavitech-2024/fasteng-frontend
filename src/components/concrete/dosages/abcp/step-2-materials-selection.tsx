@@ -3,7 +3,7 @@ import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
-import useABCPStore from '@/stores/concrete/abcp/abcp.store';
+import useABCPStore, { ABCPData } from '@/stores/concrete/abcp/abcp.store';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
@@ -11,10 +11,16 @@ import { toast } from 'react-toastify';
 import MaterialSelectionTable from './tables/material-selection-table';
 import { GridColDef } from '@mui/x-data-grid';
 
+// type MaterialSelection = {
+//   coarseAggregates: string[];
+//   fineAggregates: string[];
+//   cements: string[];
+// }
+
 const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
-  const { materialSelectionData, setData } = useABCPStore();
+  const { materialSelectionData } = useABCPStore();
 
   const { user } = useAuth();
 
@@ -40,13 +46,13 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
   }, []);
 
   const aggregateRows = materials
-    .map(({ name, type }) => ({
+    .map(({ _id, name, type }) => ({
+      _id,
       name,
       type,
     }))
     .filter(({ type }) => {
-      // return type === "coarseAggregate" || type === "fineAggregate"
-      return false;
+      return type === "coarseAggregate" || type === "fineAggregate"
     });
 
   const aggregateColumns: GridColDef[] = [
@@ -63,9 +69,10 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
   ];
 
   const binderRows = materials
-    .map(({ name, type, description }) => {
+    .map(({ _id, name, type, description }) => {
       const { resistance } = description;
       return {
+        _id,
         name,
         type,
         resistance,
@@ -92,6 +99,12 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
       valueFormatter: ({ value }) => `${value}`,
     },
   ];
+
+  materialSelectionData.cements.length != 0
+    && materialSelectionData.coarseAggregates.length != 0
+    && materialSelectionData.fineAggregates.length != 0
+    && nextDisabled
+    && setNextDisabled(false);
 
   return (
     <>
