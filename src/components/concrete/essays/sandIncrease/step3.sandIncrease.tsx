@@ -8,11 +8,11 @@ import { t } from 'i18next';
 import { useState } from 'react';
 
 const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { 
-    setData, 
+  const {
+    setData,
     unitMassDeterminationData: unitMassDetermination,
     humidityFoundData: humidityFound,
-    sandIncreaseGeneralData: generalData
+    sandIncreaseGeneralData: generalData,
   } = useSandIncreaseStore();
 
   const [calcBtnDisable, setCalcBtnDisable] = useState(true);
@@ -116,7 +116,7 @@ const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         step: 2,
         calculateMoistureContent,
         unitMassDetermination,
-        generalData
+        generalData,
       });
 
       const { success, error, result } = response.data;

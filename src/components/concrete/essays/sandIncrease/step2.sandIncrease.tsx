@@ -8,11 +8,11 @@ import { t } from 'i18next';
 import { useState } from 'react';
 
 const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { 
-    setData, 
+  const {
+    setData,
     unitMassDeterminationData: unitMassDetermination,
     humidityFoundData: humidityFound,
-    sandIncreaseGeneralData: generalData
+    sandIncreaseGeneralData: generalData,
   } = useSandIncreaseStore();
 
   const [calcBtnDisable, setCalcBtnDisable] = useState(true);
@@ -85,8 +85,7 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
   ];
 
   const calculateUnitMass = async (calculateUnitMass) => {
-
-    console.log("🚀 ~ file: step2.sandIncrease.tsx:126 ~ calculateUnitMass ~ calculateUnitMass:", calculateUnitMass)
+    console.log('🚀 ~ file: step2.sandIncrease.tsx:126 ~ calculateUnitMass ~ calculateUnitMass:', calculateUnitMass);
 
     const tableData = calculateUnitMass.tableData;
     const containerVolume = calculateUnitMass.containerVolume;
@@ -105,7 +104,7 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         step: 1,
         unitMassDeterminationData,
         humidityFound,
-        generalData
+        generalData,
       });
 
       const { success, error, result } = response.data;
@@ -192,7 +191,12 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         rows={rows.map((row, index) => ({ ...row, id: index }))}
       />
       <Box textAlign="center" marginTop="10px">
-        <Button variant="contained" color="primary" disabled={calcBtnDisable} onClick={() => calculateUnitMass(unitMassDetermination)}>
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={calcBtnDisable}
+          onClick={() => calculateUnitMass(unitMassDetermination)}
+        >
           Calcular
         </Button>
       </Box>

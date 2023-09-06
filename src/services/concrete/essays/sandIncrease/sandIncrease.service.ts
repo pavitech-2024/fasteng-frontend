@@ -114,13 +114,13 @@ class SAND_INCREASE_SERVICE implements IEssayService {
       humidityFoundData: store.humidityFoundData.tableData,
       sandIncreaseGeneralData: {
         name: store.sandIncreaseGeneralData.name,
-        material: store.sandIncreaseGeneralData.material
+        material: store.sandIncreaseGeneralData.material,
       },
     };
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         step: 3,
-        resultsData
+        resultsData,
       });
 
       const { success, error, result } = response.data;
