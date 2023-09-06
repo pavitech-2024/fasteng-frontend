@@ -122,7 +122,7 @@ const SandIncrease_GeneralData = ({
                     variant="standard"
                     label={input.label}
                     options={materials.map((material: ConcreteMaterial) => {
-                      return { label: material.name + ' | ' + t(`${'material.' + material.type}`), value: material };
+                      return { label: material.name + ' | ' + t(`${'concrete.materials.' + material.type}`), value: material };
                     })}
                     defaultValue={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
@@ -133,15 +133,6 @@ const SandIncrease_GeneralData = ({
               }
             })}
           </Box>
-          {/* <TextField
-            variant="standard"
-            fullWidth
-            key={inputs[inputs.length - 1].key}
-            label={inputs[inputs.length - 1].label}
-            value={inputs[inputs.length - 1].value}
-            required={inputs[inputs.length - 1].required}
-            onChange={(e) => setData({ step: 0, key: inputs[inputs.length - 1].key, value: e.target.value })}
-          /> */}
         </Box>
       )}
     </>

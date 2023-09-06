@@ -9,7 +9,7 @@ const GraphSandIncrease = (props) => {
 
     const ExtraPoints = [];
 
-    const newData = curve.map((elem) => {
+    const newData = curve?.map((elem) => {
       const Xcoords = elem[0];
       const currentData = [Xcoords, elem[1]];
 

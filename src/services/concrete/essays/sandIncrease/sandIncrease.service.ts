@@ -102,7 +102,7 @@ class SAND_INCREASE_SERVICE implements IEssayService {
 
   submitHumidityFoundData = (humidityFoundData: SandIncreaseData['humidityFoundData']): void => {
     try {
-      console.log(humidityFoundData);
+      //console.log(humidityFoundData);
     } catch (error) {
       throw error;
     }
@@ -110,17 +110,16 @@ class SAND_INCREASE_SERVICE implements IEssayService {
 
   calculateResults = async (store: SandIncreaseData): Promise<void> => {
     const resultsData = {
-      step: 3,
       unitMassDeterminationData: store.unitMassDeterminationData,
-      humidityFoundData: store.humidityFoundData,
-      sandIncreaseGeneralData: store.sandIncreaseGeneralData,
+      humidityFoundData: store.humidityFoundData.tableData,
+      sandIncreaseGeneralData: {
+        name: store.sandIncreaseGeneralData.name,
+        material: store.sandIncreaseGeneralData.material
+      },
     };
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         step: 3,
-        unitMassDeterminationData: store.unitMassDeterminationData,
-        humidityFoundData: store.humidityFoundData,
-        sandIncreaseGeneralData: store.sandIncreaseGeneralData,
         resultsData
       });
 

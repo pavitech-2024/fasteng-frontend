@@ -3,7 +3,6 @@ import { EssayPageProps } from '../../../templates/essay';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { useEffect } from 'react';
 import Result_Card from '@/components/atoms/containers/result-card';
 import GraphSandIncrease from './graphSandIncrease';
 
@@ -51,10 +50,6 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
     },
   ];
 
-  useEffect(() => {
-    console.log('🚀 ~ file: results.sandIncrease.tsx:87 ~ sand_increase_results:', sand_increase_results);
-  }, [sand_increase_results]);
-
   return (
     <Box>
       <DataGrid
@@ -77,12 +72,12 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
       <Box sx={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
         <Result_Card
           label={`${t('sandIncrease.averageCoefficient')}`}
-          value={sand_increase_results?.averageCoefficient.toFixed(3).toString()}
+          value={sand_increase_results?.averageCoefficient?.toFixed(3).toString()}
           unity={''}
         />
         <Result_Card
           label={`${t('sandIncrease.criticalHumidity')}`}
-          value={sand_increase_results?.criticalHumidity.toFixed(3).toString()}
+          value={sand_increase_results?.criticalHumidity?.toFixed(3).toString()}
           unity={''}
         />
       </Box>

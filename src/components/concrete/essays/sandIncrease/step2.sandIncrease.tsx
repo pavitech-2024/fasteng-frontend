@@ -85,6 +85,9 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
   ];
 
   const calculateUnitMass = async (calculateUnitMass) => {
+
+    console.log("🚀 ~ file: step2.sandIncrease.tsx:126 ~ calculateUnitMass ~ calculateUnitMass:", calculateUnitMass)
+
     const tableData = calculateUnitMass.tableData;
     const containerVolume = calculateUnitMass.containerVolume;
     const containerWeight = calculateUnitMass.containerWeight;
