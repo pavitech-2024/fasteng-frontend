@@ -25,7 +25,7 @@
   "compression.space_disc_thickness": "Espessura do disco espaçador",
   "compression.strokes_per_layer": "Golpes por camada",
   "compression.layers": "Número de camadas",
-  "compression.capsules_number": "Número de cápsulas",
+  "compression.capsules_number": "Número da cápsula",
   "compression.wet_gross_weights_capsule": "Peso bruto úmido",
   "compression.dry_gross_weights": "Peso bruto seco",
   "compression.capsules_weights": "Peso da cápsula",
@@ -44,5 +44,18 @@
   "errors.empty-layers": "Informe o número de camadas.",
   "errors-empty-capsules-weights-hum": "Informe o peso da cápsula.",
   "errors.invalid-capsules-number-hum": "A tara da cápsula é maiorou igual do que o peso bruto seco.",
-  "errors.invalid-dry-weights-capsule-hum": "Peso bruto da cápsula é maior ou igual do que o peso bruto úmido."
+  "errors.invalid-dry-weights-capsule-hum": "Peso bruto da cápsula é maior ou igual do que o peso bruto úmido.",
+
+  "compression.step-4-description": "Resultados abaixo. Não esqueça de salvar!",
+  "compression.hygroscopicHumidity": "Umidade Higroscópica",
+  "compression.humidityDetermination": "Determinação da Umidade",
+  "compression.wetSoilWeights": "↳ Peso do solo úmido",
+  "compression.wetSoilDensitys": "↳ Densidade do solo seco",
+  "compression.netWeightsDrySoil": "↳ Peso do solo seco",
+  "compression.hd.moistures": "↳ Umidade",
+  "compression.hd.drySoilDensitys": "↳ Densidade do solo seco",
+  "compression.graph": "Gráfico",
+  "compression.moisture": "Umidade",
+  "compression.moistures": "Umidade",
+  "compression.drySoilDensitys": "Densidade do solo seco"
 }

@@ -43,13 +43,28 @@ interface humidityDeterminationData {
     capsules: number; // número de capsulas
     wetGrossWeightsCapsule: number; // peso bruto úmido (g)
     wetGrossWeights: number; // peso úmido da amostra + cápsula (g)
-    dryGrossWeights: number; // peso seco da amostra + capsula (g)
+    dryGrossWeightsCapsule: number; // peso seco da amostra + capsula (g)
     capsulesTare: number; // peso da cápsula (g)
   }[];
 }
 
 interface compression_results {
-  result: string; // corrigir
+  netWeightDrySoil: number[]; // Peso do solo seco (g)
+  waterWeight: number; // Peso da água (g)
+  hygroscopicMoisture: number; // Umidade Higroscópica (%)
+
+  wetSoilWeights: number[]; // Peso do solo úmido (g)
+  wetSoilDensitys: number[]; // Densidade do solo úmido (g/cm³)
+  netWeightsDrySoil: number[]; // Peso do solo seco (g)
+  moistures: number[]; // Umidade média (%)
+  drySoilDensitys: number[]; // Densidade do solo seco (%)
+  // Dados para o gráfico >> tá muito confuso essa parte <<
+  regression: number;
+  a_index: number;
+  b_index: number;
+  optimumMoisture: number;
+  optimumDensity: number;
+  graph: [number, number][]; // esse deveria ser o que vai ser usado pra fazer o grafico entao a gente teria que formatar isso aqui com os valores de hAxis e vAxis
 }
 
 export type CompressionData = {
@@ -100,17 +115,32 @@ const useCompressionStore = create<CompressionData & CompressionActions>()(
         humidityDeterminationData: {
           humidityTable: [
             {
-              id: null,
+              id: 0,
               capsules: null,
               wetGrossWeightsCapsule: null,
               wetGrossWeights: null,
-              dryGrossWeights: null,
+              dryGrossWeightsCapsule: null,
               capsulesTare: null,
             },
           ],
         },
         results: {
-          result: null,
+          netWeightDrySoil: null, // Peso do solo seco (g)
+          waterWeight: null, // Peso da água (g)
+          hygroscopicMoisture: null, // Umidade Higroscópica (%)
+
+          wetSoilWeights: null, // Peso do solo úmido (g)
+          wetSoilDensitys: null, // Densidade do solo úmido (g/cm³)
+          netWeightsDrySoil: null, // Peso do solo seco (g)
+          moistures: null, // Umidade média (%)
+          drySoilDensitys: null, // Densidade do solo seco (%)
+
+          regression: null,
+          a_index: null,
+          b_index: null,
+          optimumMoisture: null,
+          optimumDensity: null,
+          graph: null,
         },
 
         setData: ({ step, key, value }) =>

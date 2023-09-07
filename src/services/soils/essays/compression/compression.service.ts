@@ -37,11 +37,13 @@ class COMPRESSION_SERVICE implements IEssayService {
           await this.submitCompressionGeneralData(data as CompressionData['compressionGeneralData']);
           break;
         case 1:
-          await this.submitCompressionHygroscopicData(data as CompressionData['hygroscopicData']);
+          await this.submitCompressionData(data as CompressionData['hygroscopicData']);
           break;
         case 2:
-          await this.submitCompressionHumidityDeterminationData(data as CompressionData['humidityDeterminationData']);
-          //await this.calculateResults(data as CompressionData);
+          const { hygroscopicData, humidityDeterminationData } = data as CompressionData;
+          //await this.submitCompressionHygroscopicData(hygroscopicData);
+          await this.submitCompressionHumidityDeterminationData(humidityDeterminationData);
+          await this.calculateResults(data as CompressionData);
           break;
         //   case 3:
         //     await this.saveEssay(data as CompressionData);
@@ -64,6 +66,10 @@ class COMPRESSION_SERVICE implements IEssayService {
   };
 
   submitCompressionGeneralData = async (generalData: CompressionData['compressionGeneralData']): Promise<void> => {
+    console.log(
+      '🚀 ~ file: compression.service.ts:67 ~ COMPRESSION_SERVICE ~ submitCompressionGeneralData= ~ generalData:',
+      generalData
+    );
     try {
       const { name, sample } = generalData;
 
@@ -115,26 +121,18 @@ class COMPRESSION_SERVICE implements IEssayService {
           if (hygroscopicTable[i].capsule) {
             throw t('errors.invalid-capsules-number-hyg') + ` [ ${hygroscopicTable[i].capsule} ]`;
           } else {
-            throw t('errors.invalid-capsules-number-hyg') + ` [ ponto: ${i + 1} ]`;
+            throw t('errors.invalid-capsules-number-hyg') + ` [ linha: ${i + 1} ]`;
           }
         }
 
         if (dryGrossWeight >= wetGrossWeightCapsule) {
           if (hygroscopicTable[i].capsule) {
-            throw t('errors.invalid-capsules-number-hyg') + ` [ ${hygroscopicTable[i].capsule} ]`;
+            throw t('errors.invalid-dry-weights-capsule-hyg') + ` [ ${hygroscopicTable[i].capsule} ]`;
           } else {
-            throw t('errors.invalid-capsules-number-hyg') + ` [ ponto: ${i + 1} ]`;
+            throw t('errors.invalid-dry-weights-capsule-hyg') + ` [ linha: ${i + 1} ]`;
           }
         }
       }
-
-      const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
-        hygroscopicData,
-      });
-
-      const { success, error } = response.data;
-
-      if (success === false) throw error.name;
     } catch (error) {
       throw error;
     }
@@ -155,13 +153,13 @@ class COMPRESSION_SERVICE implements IEssayService {
       if (!humidityTable) throw t('errors.empty-humidity-table');
 
       for (let i = 0; i < humidityTable.length; i++) {
-        const { capsules, dryGrossWeights, wetGrossWeightsCapsule, capsulesTare } = humidityTable[i];
+        const { capsules, dryGrossWeightsCapsule, wetGrossWeightsCapsule, capsulesTare } = humidityTable[i];
 
         if (!capsulesTare) {
           throw t('errors-empty-capsules-weights-hum') + ` [ ponto: ${i + 1}]`;
         }
 
-        if (capsulesTare >= dryGrossWeights) {
+        if (capsulesTare >= dryGrossWeightsCapsule) {
           if (humidityTable[i].capsules) {
             throw t('errors.invalid-capsules-number-hum') + ` [ ${humidityTable[i].capsules} ]`;
           } else {
@@ -169,7 +167,7 @@ class COMPRESSION_SERVICE implements IEssayService {
           }
         }
 
-        if (dryGrossWeights >= dryGrossWeights) {
+        if (dryGrossWeightsCapsule >= wetGrossWeightsCapsule) {
           if (humidityTable[i].capsules) {
             throw t('errors.invalid-dry-weights-capsule-hum') + ` [ ${humidityTable[i].capsules} ]`;
           } else {
@@ -177,14 +175,76 @@ class COMPRESSION_SERVICE implements IEssayService {
           }
         }
       }
+    } catch (error) {
+      throw error;
+    }
+  };
 
-      const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
-        humidityDeterminationData,
+  submitCompressionData = async (hygroscopicData: CompressionData['hygroscopicData']): Promise<void> => {
+    try {
+      Object.entries(hygroscopicData).forEach((array) => {
+        const [key, value] = array;
+        if (!value) console.log(`errors.empty-${key}`);
+        // ver se precisa de mais alguma validação fora ver se esta vazio
       });
 
-      const { success, error } = response.data;
+      const {
+        hygroscopicTable,
+        moldNumber,
+        moldVolume,
+        moldWeight,
+        socketWeight,
+        spaceDiscThickness,
+        strokesPerLayer,
+        layers,
+      } = hygroscopicData;
+
+      if (!hygroscopicTable) throw t('errors.empty-hygroscopic-table');
+      if (!moldNumber) throw t('errors.empty-mold-number');
+      if (!moldVolume) throw t('errors.empty-mold-volume');
+      if (!moldWeight) throw t('errors.empty-mold-weight');
+      if (!socketWeight) throw t('errors.empty-socket-weight');
+      if (!spaceDiscThickness) throw t('errors.empty-space-disc-thickness');
+      if (!strokesPerLayer) throw t('errors.empty-strokes-per-layer');
+      if (!layers) throw t('errors.empty-layers');
+
+      for (let i = 0; i < hygroscopicTable.length; i++) {
+        const { wetGrossWeightCapsule, dryGrossWeight, capsuleTare } = hygroscopicTable[i];
+
+        if (!capsuleTare || capsuleTare >= dryGrossWeight) {
+          if (hygroscopicTable[i].capsule) {
+            throw t('errors.invalid-capsules-number-hyg') + ` [ ${hygroscopicTable[i].capsule} ]`;
+          } else {
+            throw t('errors.invalid-capsules-number-hyg') + ` [ linha: ${i + 1} ]`;
+          }
+        }
+
+        if (dryGrossWeight >= wetGrossWeightCapsule) {
+          if (hygroscopicTable[i].capsule) {
+            throw t('errors.invalid-dry-weights-capsule-hyg') + ` [ ${hygroscopicTable[i].capsule} ]`;
+          } else {
+            throw t('errors.invalid-dry-weights-capsule-hyg') + ` [ linha: ${i + 1} ]`;
+          }
+        }
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  calculateResults = async (store: CompressionData): Promise<void> => {
+    try {
+      const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
+        generalData: store.compressionGeneralData,
+        hygroscopicData: store.hygroscopicData,
+        humidityDeterminationData: store.humidityDeterminationData,
+      });
+
+      const { success, error, result } = response.data;
 
       if (success === false) throw error.name;
+
+      this.store_actions.setData({ step: 3, value: result });
     } catch (error) {
       throw error;
     }

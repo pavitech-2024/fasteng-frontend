@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import useCompressionStore from '@/stores/soils/compression/compression.store';
@@ -18,7 +19,7 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
         // O mínimo é um valor de cada
         const newRows = [...rows];
         newRows.pop();
-        setData({ step: 2, value: newRows });
+        setData({ step: 1, key: 'hygroscopicTable', value: newRows });
       } else throw t('compression.error.minValue');
     } catch (error) {
       toast.error(error);
@@ -57,7 +58,7 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
       label: t('compression.mold_number'),
       value: data.moldNumber,
       key: 'moldNumber',
-      required: true,
+      required: false,
     },
     {
       label: t('compression.mold_volume'),
@@ -77,27 +78,27 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
       label: t('compression.socket_weight'),
       value: data.socketWeight,
       key: 'socketWeight',
-      required: true,
+      required: false,
       adornment: 'g',
     },
     {
       label: t('compression.space_disc_thickness'),
       value: data.spaceDiscThickness,
       key: 'spaceDiscThickness',
-      required: true,
+      required: false,
       adornment: 'cm',
     },
     {
       label: t('compression.strokes_per_layer'),
       value: data.strokesPerLayer,
       key: 'strokesPerLayer',
-      required: true,
+      required: false,
     },
     {
       label: t('compression.layers'),
       value: data.layers,
       key: 'layers',
-      required: true,
+      required: false,
     },
   ];
 
@@ -206,7 +207,8 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
       const { capsule, wetGrossWeightCapsule, dryGrossWeight, capsuleTare } = row;
       return capsule && wetGrossWeightCapsule && dryGrossWeight && capsuleTare >= 0;
     }) &&
-      data !== null &&
+      data.moldVolume !== null &&
+      data.moldWeight !== null &&
       // verificar se precisa de mais validações antes de deixar ir para o próximo step
       setNextDisabled(false);
   }
