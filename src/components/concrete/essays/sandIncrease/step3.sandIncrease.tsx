@@ -8,10 +8,7 @@ import { t } from 'i18next';
 import { useState } from 'react';
 
 const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const {
-    setData,
-    humidityFoundData: humidityFound,
-  } = useSandIncreaseStore();
+  const { setData, humidityFoundData: humidityFound } = useSandIncreaseStore();
 
   const [calcBtnDisable, setCalcBtnDisable] = useState(true);
 
@@ -108,7 +105,7 @@ const SandIncrease_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
 
   const calculateMoistureContent = async (calculateMoistureContent) => {
     const moistureContentData = {
-      tableData: calculateMoistureContent.tableData
+      tableData: calculateMoistureContent.tableData,
     };
     try {
       if (!calculateMoistureContent) throw t('errors.empty-table-data');

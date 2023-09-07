@@ -8,10 +8,7 @@ import { t } from 'i18next';
 import { useState } from 'react';
 
 const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const {
-    setData,
-    unitMassDeterminationData: unitMassDetermination,
-  } = useSandIncreaseStore();
+  const { setData, unitMassDeterminationData: unitMassDetermination } = useSandIncreaseStore();
 
   const [calcBtnDisable, setCalcBtnDisable] = useState(true);
 
@@ -83,7 +80,6 @@ const SandIncrease_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
   ];
 
   const calculateUnitMass = async (calculateUnitMass) => {
-
     const tableData = calculateUnitMass.tableData;
     const containerVolume = calculateUnitMass.containerVolume;
     const containerWeight = calculateUnitMass.containerWeight;
