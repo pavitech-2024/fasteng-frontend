@@ -249,24 +249,6 @@ class COMPRESSION_SERVICE implements IEssayService {
       throw error;
     }
   };
-
-  calculateResults = async (store: CompressionData): Promise<void> => {
-    try {
-      const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
-        generalData: store.compressionGeneralData,
-        hygroscopicData: store.hygroscopicData,
-        humidityDeterminationData: store.humidityDeterminationData,
-      });
-
-      const { success, error, result } = response.data;
-
-      if (success === false) throw error.name;
-
-      this.store_actions.setData({ step: 3, value: result });
-    } catch (error) {
-      throw error;
-    }
-  };
 }
 
 export default COMPRESSION_SERVICE;
