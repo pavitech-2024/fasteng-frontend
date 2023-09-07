@@ -47,7 +47,7 @@ class SAND_INCREASE_SERVICE implements IEssayService {
           break;
         case 3:
           await this.saveEssay(data as SandIncreaseData);
-          break
+          break;
         default:
           throw t('errors.invalid-step');
       }
@@ -142,7 +142,7 @@ class SAND_INCREASE_SERVICE implements IEssayService {
       const { success, error } = response.data;
 
       console.log(error);
-      console.log({response});
+      console.log({ response });
 
       if (success === false) throw t('errors.already-exist');
     } catch (error) {
