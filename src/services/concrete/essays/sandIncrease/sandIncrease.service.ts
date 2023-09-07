@@ -142,7 +142,7 @@ class SAND_INCREASE_SERVICE implements IEssayService {
 
       console.log(error);
 
-      if (success === false) throw error.name;
+      if (success === false) throw t('errors.already-exist');
     } catch (error) {
       throw error;
     }

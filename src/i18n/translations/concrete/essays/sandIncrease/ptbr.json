@@ -17,5 +17,6 @@
   "sandIncrease.dryGrossWeight": "Peso pós secagem + capsula",
   "sandIncrease.averageCoefficient": "Coeficiente Médio",
   "sandIncrease.criticalHumidity": "Umidade Crítica",
-  "sandIncrease.swellings": "Coeficiente de Inchamento"
+  "sandIncrease.swellings": "Coeficiente de Inchamento",
+  "errors.already-exist": "Já existe um ensaio criado com esse nome."
 }

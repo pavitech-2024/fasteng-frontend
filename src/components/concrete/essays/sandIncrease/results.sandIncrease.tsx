@@ -12,18 +12,18 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
 
   const newArray = [];
 
-  // for (let i = 0; i < sand_increase_results.unitMasses.length; i++) {
-  //   const sampleNumber = (i + 1).toString();
+  for (let i = 0; i < sand_increase_results.unitMasses.length; i++) {
+    const sampleNumber = (i + 1).toString();
 
-  //   const newObj = {
-  //     sample: sampleNumber,
-  //     moistureContent: sand_increase_results.moistureContent[i].toFixed(2),
-  //     swellings: sand_increase_results.swellings[i].toFixed(2),
-  //     unitMass: sand_increase_results.unitMasses[i],
-  //   };
+    const newObj = {
+      sample: sampleNumber,
+      moistureContent: sand_increase_results.moistureContent[i].toFixed(2),
+      swellings: sand_increase_results.swellings[i].toFixed(2),
+      unitMass: sand_increase_results.unitMasses[i],
+    };
 
-  //   newArray.push(newObj);
-  // }
+    newArray.push(newObj);
+  }
 
   const rows = newArray;
 
@@ -52,7 +52,7 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
 
   return (
     <Box>
-      {/* <DataGrid
+      <DataGrid
         sx={{ mt: '1rem', borderRadius: '10px', mb: '1rem' }}
         density="compact"
         hideFooter
@@ -82,7 +82,7 @@ const Sand_Increase_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps
         />
       </Box>
 
-      <GraphSandIncrease results={sand_increase_results} /> */}
+      <GraphSandIncrease results={sand_increase_results} />
     </Box>
   );
 };
