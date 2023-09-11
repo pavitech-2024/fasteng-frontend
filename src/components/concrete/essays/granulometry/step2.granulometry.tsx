@@ -1,6 +1,6 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import useGranulometryStore from '@/stores/soils/granulometry/granulometry.store';
+import useGranulometryStore from '@/stores/concrete/granulometry/granulometry.store';
 import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
@@ -9,7 +9,7 @@ import DropDown from '@/components/atoms/inputs/dropDown';
 import { SieveSeries } from '../../../../interfaces/common/index';
 import { getSieveSeries } from '@/utils/sieves';
 
-const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
+const ConcreteGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useGranulometryStore();
 
   const sievesSeries = [getSieveSeries(0), getSieveSeries(1), getSieveSeries(2), getSieveSeries(3), getSieveSeries(4)];
@@ -51,7 +51,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
             onChange={(e) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
-              const mass = data.sample_mass;
+              const mass = data.material_mass;
               const current_passant = Number(e.target.value);
 
               const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
@@ -138,7 +138,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
             onChange={(e) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
-              const mass = data.sample_mass;
+              const mass = data.material_mass;
               const current_retained = Number(e.target.value);
 
               const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
@@ -208,7 +208,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
 
   if (
     nextDisabled &&
-    data.sample_mass != null &&
+    data.material_mass != null &&
     data.bottom != null &&
     data.table_data.every((row) => row.passant !== null && row.retained !== null)
   )
@@ -227,13 +227,13 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         }}
       >
         <InputEndAdornment
-          label={t('granulometry.sample_mass')}
-          value={data.sample_mass}
+          label={t('granulometry.material_mass')}
+          value={data.material_mass}
           onChange={(e) => {
             if (e.target.value === null) return;
             const mass = Number(e.target.value);
 
-            setData({ step: 1, key: 'sample_mass', value: mass });
+            setData({ step: 1, key: 'material_mass', value: mass });
 
             if (rows === null) return;
 
@@ -303,4 +303,4 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
   );
 };
 
-export default Granulometry_Step2;
+export default ConcreteGranulometry_Step2;

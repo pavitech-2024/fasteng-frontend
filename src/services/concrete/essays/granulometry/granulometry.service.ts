@@ -2,20 +2,20 @@ import { GranulometryIcon } from '@/assets';
 import { t } from 'i18next';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import Api from '@/api';
-import { Sample } from '@/interfaces/soils';
-import { GranulometryData, GranulometryActions } from '@/stores/soils/granulometry/granulometry.store';
+import { ConcreteMaterial } from '@/interfaces/concrete';
+import { GranulometryData, GranulometryActions } from '@/stores/concrete/granulometry/granulometry.store';
 // import { persist } from 'zustand/middleware';
 
 class Granulometry_SERVICE implements IEssayService {
   info = {
     key: 'granulometry',
     icon: GranulometryIcon,
-    title: t('soils.essays.granulometry'),
-    path: '/soils/essays/granulometry',
-    backend_path: 'soils/essays/granulometry',
+    title: t('concrete.essays.granulometry'),
+    path: '/concrete/essays/granulometry',
+    backend_path: 'concrete/essays/granulometry',
     steps: 3,
     standard: {
-      name: 'NBR 7181/1984',
+      name: 'NBR 7217/1984',
       link: 'https://engenhariacivilfsp.files.wordpress.com/2015/03/nbr-7181.pdf',
     },
     stepperData: [
@@ -53,42 +53,42 @@ class Granulometry_SERVICE implements IEssayService {
 
   /** @generalData Methods for general-data (step === 0, page 1) */
 
-  // get all samples from user from backend
-  getSamplesByUserId = async (userId: string): Promise<Sample[]> => {
+  // get all materials from user from backend
+  getmaterialsByUserId = async (userId: string): Promise<ConcreteMaterial[]> => {
     try {
-      // get all samples from user from backend
-      const response = await Api.get(`soils/samples/all/${userId}`);
+      // get all materials from user from backend
+      const response = await Api.get(`concrete/materials/all/${userId}`);
       return response.data;
     } catch (error) {
       throw error;
     }
   };
 
-  // get essay from sample _id
-  getGranulometryBySampleId = async (sample_id: string): Promise<any> => {
+  // get essay from material _id
+  getGranulometryBymaterialId = async (material_id: string) => {
     try {
-      const response = await Api.get(`${this.info.backend_path}/get/${sample_id}`);
+      const response = await Api.get(`${this.info.backend_path}/get/${material_id}`);
       return response.data;
     } catch (error) {
       throw error;
     }
   };
 
-  // send general data to backend to verify if there is already a Granulometry essay with same name for the sample
+  // send general data to backend to verify if there is already a Granulometry essay with same name for the material
   submitGeneralData = async (generalData: GranulometryData['generalData']): Promise<void> => {
     try {
-      const { name, sample } = generalData;
+      const { name, material } = generalData;
 
-      // verify if name and sample are not empty
+      // verify if name and material are not empty
       if (!name) throw t('errors.empty-name');
-      if (!sample) throw t('errors.empty-sample');
+      if (!material) throw t('errors.empty-material');
 
-      // verify if there is already a Granulometry essay with same name for the sample
-      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, sample });
+      // verify if there is already a Granulometry essay with same name for the material
+      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, material });
 
       const { success, error } = response.data;
 
-      // if there is already a Granulometry essay with same name for the sample, throw error
+      // if there is already a Granulometry essay with same name for the material, throw error
       if (success === false) throw error.name;
     } catch (error) {
       throw error;
@@ -100,9 +100,9 @@ class Granulometry_SERVICE implements IEssayService {
   // verify inputs from Granulometry page (step === 1, page 2)
   submitStep2Data = async (step2Data: GranulometryData['step2Data']): Promise<void> => {
     try {
-      // verify if the sample mass is not empty or negative
-      if (!step2Data.sample_mass) throw t('errors.empty-sample-mass');
-      if (step2Data.sample_mass < 0) throw t('errors.negative-sample-mass');
+      // verify if the material mass is not empty or negative
+      if (!step2Data.material_mass) throw t('errors.empty-material-mass');
+      if (step2Data.material_mass < 0) throw t('errors.negative-material-mass');
 
       // verify if all the passant porcentages are not empty or negative
       step2Data.table_data.forEach((row) => {
@@ -110,17 +110,17 @@ class Granulometry_SERVICE implements IEssayService {
         if (row.passant < 0 || row.passant < 0) throw t('errors.negative-sieve') + row.sieve;
       });
 
-      //verify if the sum of the masses (retained + bottom) equals the sample mass
+      //verify if the sum of the masses (retained + bottom) equals the material mass
       let retained = 0.0;
       step2Data.table_data.forEach((row) => {
         retained += row.retained;
       });
       const sum = Math.round(100 * (retained + step2Data.bottom)) / 100;
 
-      if (sum > step2Data.sample_mass) {
+      if (sum > step2Data.material_mass) {
         throw (
-          t('errors.sieves-sum-not-equal-to-sample-mass') +
-          (step2Data.sample_mass - sum) +
+          t('errors.sieves-sum-not-equal-to-material-mass') +
+          (step2Data.material_mass - sum) +
           'g.\n' +
           'Retida + Fundos: ' +
           sum

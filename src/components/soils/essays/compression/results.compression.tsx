@@ -97,7 +97,7 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
             if (item.label === 'Peso da água') {
               return <Result_Card key={index} label={item.label} value={String(item.value)} unity={item.unity} />;
             }
-            return null; // Retornar null para os itens que não têm a label 'Peso da água'
+            return null;
           })}
         </Result_CardContainer>
         <Result_Container_NoChildren hideBorder title={t('compression.humidityDetermination')} />

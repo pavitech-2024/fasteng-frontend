@@ -1,18 +1,18 @@
-import { Sample } from '@/interfaces/soils';
+import { ConcreteMaterial } from '@/interfaces/concrete';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
 interface GeneralData {
   userId: string;
   name: string;
-  sample: Sample;
+  material: ConcreteMaterial;
   operator?: string;
   calculist?: string;
   description?: string;
 }
 
 interface granulometry_step2Data {
-  sample_mass: number;
+  material_mass: number;
   table_data: { sieve: string; passant: number; retained: number }[];
   sieve_series: { label: string; value: number }[];
   bottom: number;
@@ -51,13 +51,13 @@ const initialState = {
   generalData: {
     userId: null,
     name: null,
-    sample: null,
+    material: null,
     operator: null,
     calculist: null,
     description: null,
   },
   step2Data: {
-    sample_mass: null,
+    material_mass: null,
     table_data: null,
     sieve_series: null,
     bottom: null,
