@@ -84,9 +84,6 @@ class SAND_INCREASE_SERVICE implements IEssayService {
     }
   };
 
-  // Método caluculateUnitMassDetermination com as verificações;
-  // Colocar botão na tela que aciona este método;
-
   submitUnitMassDeterminationData = (
     unitMassDeterminationData: SandIncreaseData['unitMassDeterminationData']
   ): void => {
@@ -103,7 +100,6 @@ class SAND_INCREASE_SERVICE implements IEssayService {
 
   submitHumidityFoundData = (humidityFoundData: SandIncreaseData['humidityFoundData']): void => {
     try {
-      //console.log(humidityFoundData);
     } catch (error) {
       throw error;
     }
@@ -142,7 +138,6 @@ class SAND_INCREASE_SERVICE implements IEssayService {
       const { success, error } = response.data;
 
       console.log(error);
-      console.log({ response });
 
       if (success === false) throw t('errors.already-exist');
     } catch (error) {
