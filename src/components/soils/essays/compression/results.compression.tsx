@@ -16,7 +16,7 @@ import { useEffect } from 'react';
 const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: compressionResults, compressionGeneralData } = useCompressionStore();
-  console.log("🚀 ~ file: results.compression.tsx:21 ~ compressionResults:", compressionResults)
+  console.log('🚀 ~ file: results.compression.tsx:21 ~ compressionResults:', compressionResults);
 
   //Primeiro bloco com as informações gerais do ensaio
   const experimentResumeData: ExperimentResumeData = {
@@ -95,9 +95,7 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
         <Result_CardContainer hideBorder title={t('compression.waterWeights')}>
           {data.container_hygroscopicHumidity.map((item, index) => {
             if (item.label === 'Peso da água') {
-              return (
-                <Result_Card key={index} label={item.label} value={String(item.value)} unity={item.unity} />
-              );
+              return <Result_Card key={index} label={item.label} value={String(item.value)} unity={item.unity} />;
             }
             return null; // Retornar null para os itens que não têm a label 'Peso da água'
           })}
