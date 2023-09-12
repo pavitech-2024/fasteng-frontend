@@ -1,0 +1,22 @@
+{
+  "concrete.essays.sandIncrease.experimentName": "Nome do Experimento",
+  "general data": "Dados Gerais",
+  "general data of essay": "Dados Gerais do Ensaio",
+  "results": "Resultados",
+  "sand-increase.step-2-description": "Preencha todos os campos abaixo.",
+  "sandIncrease.container_volume": "Volume do recipiente",
+  "sandIncrease.container_weight": "Peso do recipiente",
+  "sandIncrease.samples": "Amostras",
+  "sandIncrease.containerWeightSample": "Peso do recipiente + amostra",
+  "sandIncrease.moistureContent": "Teor da umidade",
+  "sandIncrease.unitMass": "Massa Unitária",
+  "sand-increase.step-3-description": "Preencha todos os campos abaixo",
+  "humidity found": "Umidade Encontrada",
+  "sandIncrease.wetGrossWeight": "Peso da amostra úmida + cápsula",
+  "sandIncrease.capsuleWeight": "Peso da cápsula",
+  "sandIncrease.dryGrossWeight": "Peso pós secagem + capsula",
+  "sandIncrease.averageCoefficient": "Coeficiente Médio",
+  "sandIncrease.criticalHumidity": "Umidade Crítica",
+  "sandIncrease.swellings": "Coeficiente de Inchamento",
+  "errors.already-exist": "Já existe um ensaio criado com esse nome."
+}

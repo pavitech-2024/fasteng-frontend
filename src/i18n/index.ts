@@ -63,11 +63,15 @@ import compressionPTBR from './translations/soils/essays/compression/ptbr.json';
 import compressionENG from './translations/soils/essays/compression/en.json';
 
 /**@concrete */
+// essays
 import concreteEssaysPTBR from './translations/concrete/essays/ptbr.json';
 import concreteEssaysENG from './translations/concrete/essays/en.json';
 // materials
 import concreteMaterialsPTBR from './translations/concrete/materials/ptbr.json';
 import concreteMaterialsENG from './translations/concrete/materials/en.json';
+// sandIncrease
+import sandIncreasePTBR from './translations/concrete/essays/sandIncrease/ptbr.json';
+import sandIncreaseENG from './translations/concrete/essays/sandIncrease/en.json';
 
 i18n.use(initReactI18next).init({
   fallbackLng: 'ptBR',
@@ -101,6 +105,7 @@ i18n.use(initReactI18next).init({
         /**@concrete */
         ...concreteEssaysPTBR,
         ...concreteMaterialsPTBR,
+        ...sandIncreasePTBR,
       },
     },
     en: {
@@ -129,6 +134,7 @@ i18n.use(initReactI18next).init({
         /**@concrete */
         ...concreteEssaysENG,
         ...concreteMaterialsENG,
+        ...sandIncreaseENG,
       },
     },
   },
