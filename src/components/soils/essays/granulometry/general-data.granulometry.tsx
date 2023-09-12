@@ -1,24 +1,24 @@
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import DropDown from '@/components/atoms/inputs/dropDown';
-import Granulometry_SERVICE from '@/services/soils/essays/granulometry/granulometry.service';
+import SoilsGranulometry_SERVICE from '@/services/soils/essays/granulometry/granulometry.service';
 import Loading from '@/components/molecules/loading';
 import { Sample } from '@/interfaces/soils';
 import { useEffect, useState } from 'react';
 import useAuth from '@/contexts/auth';
-import useGranulometryStore from '@/stores/soils/granulometry/granulometry.store';
+import useSoilsGranulometryStore from '@/stores/soils/granulometry/granulometry.store';
 import { toast } from 'react-toastify';
 import { EssayPageProps } from '@/components/templates/essay';
 
-const Granulometry_GeneralData = ({
+const SoilsGranulometry_GeneralData = ({
   nextDisabled,
   setNextDisabled,
   granulometry,
-}: EssayPageProps & { granulometry: Granulometry_SERVICE }) => {
+}: EssayPageProps & { granulometry: SoilsGranulometry_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [samples, setSamples] = useState<Sample[]>([]);
   const { user } = useAuth();
-  const { generalData, setData } = useGranulometryStore();
+  const { generalData, setData } = useSoilsGranulometryStore();
 
   useEffect(() => {
     toast.promise(
@@ -142,4 +142,4 @@ const Granulometry_GeneralData = ({
   );
 };
 
-export default Granulometry_GeneralData;
+export default SoilsGranulometry_GeneralData;

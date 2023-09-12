@@ -6,7 +6,7 @@ interface step2GranulometryProps {
   columns: GridColDef[];
 }
 
-const Granulometry_step2Table = ({ rows, columns }: step2GranulometryProps) => {
+const ConcreteGranulometry_step2Table = ({ rows, columns }: step2GranulometryProps) => {
   return (
     <DataGrid
       sx={{ mt: '1rem', borderRadius: '10px' }}
@@ -29,4 +29,4 @@ const Granulometry_step2Table = ({ rows, columns }: step2GranulometryProps) => {
   );
 };
 
-export default Granulometry_step2Table;
+export default ConcreteGranulometry_step2Table;

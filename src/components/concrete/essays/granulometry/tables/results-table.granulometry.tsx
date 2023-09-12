@@ -13,7 +13,7 @@ interface resultsGranulometryProps {
   columns: GridColDef[];
 }
 
-const Granulometry_resultsTable = ({ rows, columns }: resultsGranulometryProps) => {
+const ConcreteGranulometry_resultsTable = ({ rows, columns }: resultsGranulometryProps) => {
   return (
     <DataGrid
       sx={{
@@ -44,4 +44,4 @@ const Granulometry_resultsTable = ({ rows, columns }: resultsGranulometryProps) 
   );
 };
 
-export default Granulometry_resultsTable;
+export default ConcreteGranulometry_resultsTable;

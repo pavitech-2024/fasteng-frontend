@@ -3,15 +3,15 @@ import { t } from 'i18next';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import Api from '@/api';
 import { ConcreteMaterial } from '@/interfaces/concrete';
-import { GranulometryData, GranulometryActions } from '@/stores/concrete/granulometry/granulometry.store';
+import { ConcreteGranulometryData, ConcreteGranulometryActions } from '@/stores/concrete/granulometry/granulometry.store';
 // import { persist } from 'zustand/middleware';
 
-class Granulometry_SERVICE implements IEssayService {
+class ConcreteGranulometry_SERVICE implements IEssayService {
   info = {
-    key: 'granulometry',
+    key: 'granulometry-concrete',
     icon: GranulometryIcon,
     title: t('concrete.essays.granulometry'),
-    path: '/concrete/essays/granulometry',
+    path: '/concrete/essays/granulometry-concrete',
     backend_path: 'concrete/essays/granulometry',
     steps: 3,
     standard: {
@@ -20,12 +20,12 @@ class Granulometry_SERVICE implements IEssayService {
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
-      { step: 1, description: t('granulometry'), path: 'essay-data' },
+      { step: 1, description: t('granulometry-concrete'), path: 'essay-data' },
       { step: 2, description: t('results'), path: 'results' },
     ],
   };
 
-  store_actions: GranulometryActions;
+  store_actions: ConcreteGranulometryActions;
   userId: string;
 
   /** @handleNext Receives the step and data from the form and calls the respective method */
@@ -33,15 +33,15 @@ class Granulometry_SERVICE implements IEssayService {
     try {
       switch (step) {
         case 0:
-          await this.submitGeneralData(data as GranulometryData['generalData']);
+          await this.submitGeneralData(data as ConcreteGranulometryData['generalData']);
           break;
         case 1:
-          const { step2Data } = data as GranulometryData;
+          const { step2Data } = data as ConcreteGranulometryData;
           await this.submitStep2Data(step2Data);
-          await this.calculateResults(data as GranulometryData);
+          await this.calculateResults(data as ConcreteGranulometryData);
           break;
         case 2:
-          await this.saveEssay(data as GranulometryData);
+          await this.saveEssay(data as ConcreteGranulometryData);
           break;
         default:
           throw t('errors.invalid-step');
@@ -75,7 +75,7 @@ class Granulometry_SERVICE implements IEssayService {
   };
 
   // send general data to backend to verify if there is already a Granulometry essay with same name for the material
-  submitGeneralData = async (generalData: GranulometryData['generalData']): Promise<void> => {
+  submitGeneralData = async (generalData: ConcreteGranulometryData['generalData']): Promise<void> => {
     try {
       const { name, material } = generalData;
 
@@ -98,7 +98,7 @@ class Granulometry_SERVICE implements IEssayService {
   /** @Granulometry Methods for Granulometry page (step === 1, page 2) */
 
   // verify inputs from Granulometry page (step === 1, page 2)
-  submitStep2Data = async (step2Data: GranulometryData['step2Data']): Promise<void> => {
+  submitStep2Data = async (step2Data: ConcreteGranulometryData['step2Data']): Promise<void> => {
     try {
       // verify if the material mass is not empty or negative
       if (!step2Data.material_mass) throw t('errors.empty-material-mass');
@@ -132,7 +132,7 @@ class Granulometry_SERVICE implements IEssayService {
   };
 
   // calculate results from granulometry essay
-  calculateResults = async (store: GranulometryData): Promise<void> => {
+  calculateResults = async (store: ConcreteGranulometryData): Promise<void> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
@@ -152,7 +152,7 @@ class Granulometry_SERVICE implements IEssayService {
   /** @Results Methods for Results page (step === 2, page 3) */
 
   // save essay
-  saveEssay = async (store: GranulometryData): Promise<void> => {
+  saveEssay = async (store: ConcreteGranulometryData): Promise<void> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/save-essay`, {
         generalData: {
@@ -174,4 +174,4 @@ class Granulometry_SERVICE implements IEssayService {
   };
 }
 
-export default Granulometry_SERVICE;
+export default ConcreteGranulometry_SERVICE;

@@ -5,6 +5,7 @@
   "concrete.essays.sandIncrease": "Inchamento da Areia",
   "concrete.essays.coarseAggregate": "Massa Específica de Agregado Graúdo",
   "concrete.essays.sandIncrease.experimentName": "Nome do experimento",
+  "granulometry-concrete": "Granulometria",
   "loading.materials.success": "Materiais carregados!",
   "loading.materials.error": "Erro ao carregar os materiais!",
   "loading.materials.pending": "Carregando os materiais...",

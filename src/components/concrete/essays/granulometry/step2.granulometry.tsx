@@ -1,16 +1,16 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import useGranulometryStore from '@/stores/concrete/granulometry/granulometry.store';
+import useConcreteGranulometryStore from '@/stores/concrete/granulometry/granulometry.store';
 import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import Granulometry_step2Table from './tables/step2-table.granulometry';
+import ConcreteGranulometry_step2Table from './tables/step2-table.granulometry';
 import DropDown from '@/components/atoms/inputs/dropDown';
 import { SieveSeries } from '../../../../interfaces/common/index';
 import { getSieveSeries } from '@/utils/sieves';
 
 const ConcreteGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { step2Data: data, setData } = useGranulometryStore();
+  const { step2Data: data, setData } = useConcreteGranulometryStore();
 
   const sievesSeries = [getSieveSeries(0), getSieveSeries(1), getSieveSeries(2), getSieveSeries(3), getSieveSeries(4)];
 
@@ -277,7 +277,7 @@ const ConcreteGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPage
           required
         />
       </Box>
-      <Granulometry_step2Table rows={rows} columns={columns} />
+      <ConcreteGranulometry_step2Table rows={rows} columns={columns} />
       <Box
         sx={{
           width: '100%',

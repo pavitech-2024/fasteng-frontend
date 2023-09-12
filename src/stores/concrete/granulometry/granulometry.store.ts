@@ -2,7 +2,7 @@ import { ConcreteMaterial } from '@/interfaces/concrete';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
-interface GeneralData {
+interface ConcreteGeneralData {
   userId: string;
   name: string;
   material: ConcreteMaterial;
@@ -11,14 +11,14 @@ interface GeneralData {
   description?: string;
 }
 
-interface granulometry_step2Data {
+interface ConcreteGranulometry_step2Data {
   material_mass: number;
   table_data: { sieve: string; passant: number; retained: number }[];
   sieve_series: { label: string; value: number }[];
   bottom: number;
 }
 
-interface granulometry_results {
+interface ConcreteGranulometry_results {
   accumulated_retained: number[];
   graph_data: [number, number][];
   passant: number[];
@@ -32,13 +32,13 @@ interface granulometry_results {
   error: number;
 }
 
-export type GranulometryData = {
-  generalData: GeneralData;
-  step2Data: granulometry_step2Data;
-  results: granulometry_results;
+export type ConcreteGranulometryData = {
+  generalData: ConcreteGeneralData;
+  step2Data: ConcreteGranulometry_step2Data;
+  results: ConcreteGranulometry_results;
 };
 
-export type GranulometryActions = {
+export type ConcreteGranulometryActions = {
   setData: ({ step, key, value }: setDataType) => void;
   reset: ({ step }: setDataType) => void;
 };
@@ -77,7 +77,7 @@ const initialState = {
   },
 };
 
-const useGranulometryStore = create<GranulometryData & GranulometryActions>()(
+const useConcreteGranulometryStore = create<ConcreteGranulometryData & ConcreteGranulometryActions>()(
   devtools(
     persist(
       (set) => ({
@@ -105,11 +105,11 @@ const useGranulometryStore = create<GranulometryData & GranulometryActions>()(
       }),
       {
         // name data store e config no session storage
-        name: 'granulometry-store',
+        name: 'concrete-granulometry-store',
         storage: createJSONStorage(() => sessionStorage),
       }
     )
   )
 );
 
-export default useGranulometryStore;
+export default useConcreteGranulometryStore;

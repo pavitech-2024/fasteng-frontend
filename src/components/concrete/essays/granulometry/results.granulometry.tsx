@@ -1,5 +1,5 @@
 import { EssayPageProps } from '@/components/templates/essay';
-import useGranulometryStore from '@/stores/soils/granulometry/granulometry.store';
+import useConcreteGranulometryStore from '@/stores/concrete/granulometry/granulometry.store';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 import { t } from 'i18next';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
@@ -9,11 +9,11 @@ import Loading from '@/components/molecules/loading';
 import Chart from 'react-google-charts';
 import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import Granulometry_resultsTable from './tables/results-table.granulometry';
+import ConcreteGranulometry_resultsTable from './tables/results-table.granulometry';
 
-const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
+const ConcreteGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
-  const { results: granulometry_results, step2Data, generalData } = useGranulometryStore();
+  const { results: granulometry_results, step2Data, generalData } = useConcreteGranulometryStore();
 
   const data = {
     // container "Resultados"
@@ -35,7 +35,7 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
   // criando o objeto que será passado para o componente ExperimentResume
   const experimentResumeData: ExperimentResumeData = {
     experimentName: generalData.name,
-    materials: [{ name: generalData.sample.name, type: generalData.sample.type }],
+    materials: [{ name: generalData.material.name, type: generalData.material.type }],
   };
 
   const graph_data = [[t('granulometry.passant'), t('granulometry.diameter')], ...granulometry_results.graph_data];
@@ -90,7 +90,7 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
     <>
       <ExperimentResume data={experimentResumeData} />
       <FlexColumnBorder title={t('results')} open={true}>
-        <ResultSubTitle title={t('soils.essays.granulometry')} sx={{ margin: '.65rem' }} />
+        <ResultSubTitle title={t('concrete.essays.granulometry')} sx={{ margin: '.65rem' }} />
         <Box
           sx={{
             width: '100%',
@@ -127,10 +127,10 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
             legend: 'none',
           }}
         />
-        <Granulometry_resultsTable rows={rows} columns={columns} />
+        <ConcreteGranulometry_resultsTable rows={rows} columns={columns} />
       </FlexColumnBorder>
     </>
   );
 };
 
-export default Granulometry_Results;
+export default ConcreteGranulometry_Results;

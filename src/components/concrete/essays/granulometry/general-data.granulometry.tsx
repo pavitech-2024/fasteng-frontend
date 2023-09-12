@@ -1,12 +1,12 @@
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import DropDown from '@/components/atoms/inputs/dropDown';
-import Granulometry_SERVICE from '@/services/concrete/essays/granulometry/granulometry.service';
+import ConcreteGranulometry_SERVICE from '@/services/concrete/essays/granulometry/granulometry.service';
 import Loading from '@/components/molecules/loading';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import { useEffect, useState } from 'react';
 import useAuth from '@/contexts/auth';
-import useGranulometryStore from '@/stores/concrete/granulometry/granulometry.store';
+import useConcreteGranulometryStore from '@/stores/concrete/granulometry/granulometry.store';
 import { toast } from 'react-toastify';
 import { EssayPageProps } from '@/components/templates/essay';
 
@@ -14,24 +14,24 @@ const ConcreteGranulometry_GeneralData = ({
   nextDisabled,
   setNextDisabled,
   granulometry,
-}: EssayPageProps & { granulometry: Granulometry_SERVICE }) => {
+}: EssayPageProps & { granulometry: ConcreteGranulometry_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [samples, setSamples] = useState<ConcreteMaterial[]>([]);
+  const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
   const { user } = useAuth();
-  const { generalData, setData } = useGranulometryStore();
+  const { generalData, setData } = useConcreteGranulometryStore();
 
   useEffect(() => {
     toast.promise(
       async () => {
-        const samples = await granulometry.getmaterialsByUserId(user._id);
+        const materials = await granulometry.getmaterialsByUserId(user._id);
 
-        setSamples(samples);
+        setMaterials(materials);
         setLoading(false);
       },
       {
-        pending: t('loading.samples.pending'),
-        success: t('loading.samples.success'),
-        error: t('loading.samples.error'),
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
       }
     );
     // se não deixar o array vazio ele vai ficar fazendo requisições infinitas
@@ -40,10 +40,10 @@ const ConcreteGranulometry_GeneralData = ({
 
   const inputs = [
     { label: t('cbr.experimentName'), value: generalData.name, key: 'name', required: true },
-    { label: t('cbr.samples'), value: generalData.material, key: 'sample', required: true },
+    { label: t('cbr.material'), value: generalData.material, key: 'material', required: true },
     { label: t('cbr.operator'), value: generalData.operator, key: 'operator', required: false },
     { label: t('cbr.calculist'), value: generalData.calculist, key: 'calculist', required: false },
-    { label: t('samples.comments'), value: generalData.description, key: 'description', required: false },
+    { label: t('materials.comments'), value: generalData.description, key: 'description', required: false },
   ];
 
   // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
@@ -92,22 +92,22 @@ const ConcreteGranulometry_GeneralData = ({
                     onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
                   />
                 );
-              } else if (['sample'].includes(input.key)) {
+              } else if (['material'].includes(input.key)) {
                 const defaultValue = {
                   label: '',
                   value: '',
                 };
 
-                let sample;
+                let material;
 
-                // se existir uma sample no store, seta ela como default
+                // se existir uma material no store, seta ela como default
                 if (input.value) {
-                  sample = samples.find((sample) => sample._id == input.value['_id']);
+                  material = materials.find((material) => material._id == input.value['_id']);
                 }
 
-                if (sample) {
-                  defaultValue.label = sample.name + ' | ' + t(`${'samples.' + sample.type}`);
-                  defaultValue.value = sample;
+                if (material) {
+                  defaultValue.label = material.name + ' | ' + t(`${'materials.' + material.type}`);
+                  defaultValue.value = material;
                 }
 
                 return (
@@ -115,8 +115,8 @@ const ConcreteGranulometry_GeneralData = ({
                     key={input.key}
                     variant="standard"
                     label={input.label}
-                    options={samples.map((sample: ConcreteMaterial) => {
-                      return { label: sample.name + ' | ' + t(`${'samples.' + sample.type}`), value: sample };
+                    options={materials.map((material: ConcreteMaterial) => {
+                      return { label: material.name + ' | ' + t(`${'materials.' + material.type}`), value: material };
                     })}
                     defaultValue={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}

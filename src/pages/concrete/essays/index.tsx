@@ -11,7 +11,7 @@ const index: NextPage = () => {
       title: t('concrete.essays.granulometryConcrete'),
       key: 'granulometry-concrete',
       icon: GranulometryIcon,
-      link: '/concrete/essays/granulometry',
+      link: '/concrete/essays/granulometry-concrete',
     },
     {
       title: t('concrete.essays.chapman'),
