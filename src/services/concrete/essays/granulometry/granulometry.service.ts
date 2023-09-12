@@ -3,7 +3,10 @@ import { t } from 'i18next';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import Api from '@/api';
 import { ConcreteMaterial } from '@/interfaces/concrete';
-import { ConcreteGranulometryData, ConcreteGranulometryActions } from '@/stores/concrete/granulometry/granulometry.store';
+import {
+  ConcreteGranulometryData,
+  ConcreteGranulometryActions,
+} from '@/stores/concrete/granulometry/granulometry.store';
 // import { persist } from 'zustand/middleware';
 
 class ConcreteGranulometry_SERVICE implements IEssayService {
