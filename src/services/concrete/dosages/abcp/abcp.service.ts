@@ -29,7 +29,7 @@ type EssaySelection_Results = {
     essay_id: string;
     essay_name: string;
   }[];
-}
+};
 
 class ABCP_SERVICE implements IEssayService {
   info = {
@@ -140,7 +140,7 @@ class ABCP_SERVICE implements IEssayService {
 
       const { essays, success, error } = response.data;
 
-      console.log(essays)
+      console.log(essays);
 
       if (success === false) throw error.name;
       else return essays;

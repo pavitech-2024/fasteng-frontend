@@ -68,7 +68,7 @@ const initialState = {
     fineAggregate: null,
     coarseAggregate: null,
     cement: null,
-  }
+  },
 };
 
 const useABCPStore = create<ABCPData & ABCPActions>()(

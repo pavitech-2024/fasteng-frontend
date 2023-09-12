@@ -93,24 +93,24 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
       valueFormatter: ({ value }) => `${value}`,
     },
   ];
-    
-    !materialSelectionData.cement &&
+
+  !materialSelectionData.cement &&
     !materialSelectionData.coarseAggregate &&
     !materialSelectionData.fineAggregate &&
     nextDisabled &&
     setNextDisabled(false);
-    
-    return (
-      <>
+
+  return (
+    <>
       {loading ? (
         <Loading />
-        ) : (
-          <Box
+      ) : (
+        <Box
           sx={{
             display: 'grid',
             gap: '10px',
           }}
-          >
+        >
           <MaterialSelectionTable rows={aggregateRows} columns={aggregateColumns} header={t('materials.aggregates')} />
           <MaterialSelectionTable rows={binderRows} columns={binderColumns} header={t('materials.binders')} />
         </Box>

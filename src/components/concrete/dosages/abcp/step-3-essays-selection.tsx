@@ -21,9 +21,10 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
       async () => {
         try {
           const essays = await abcp.getEssaysByMaterialId(user._id, materialSelectionData);
-          console.log(essays)
+          console.log(essays);
           setEssays(essays);
-          const { cement, fineAggregate_granulometrys, coarseAggregate_granulometrys, coarseAggregate_unit_masses } = essays
+          const { cement, fineAggregate_granulometrys, coarseAggregate_granulometrys, coarseAggregate_unit_masses } =
+            essays;
           setLoading(false);
         } catch (error) {
           setEssays(null);
@@ -49,14 +50,15 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
             display: 'grid',
             gap: '10px',
           }}
-        ><Box
-          sx={{
-            p: '1rem',
-            textAlign: 'center',
-            border: '1px solid lightgray',
-            borderRadius: '10px',
-          }}
         >
+          <Box
+            sx={{
+              p: '1rem',
+              textAlign: 'center',
+              border: '1px solid lightgray',
+              borderRadius: '10px',
+            }}
+          >
             {/* {fineAggregate_Inputs.map((material) => {
               const { _id, name, specific_mass, granulometrys } = material;
               return (

@@ -14,16 +14,16 @@ interface MaterialSelectionProps {
 const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProps) => {
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
   const [cement, setCement] = useState<number>(null);
-  const [coarseAggregate, setCoarseAggregate] = useState<string>("");
-  const [fineAggregate, setFineAggregate] = useState<string>("");
+  const [coarseAggregate, setCoarseAggregate] = useState<string>('');
+  const [fineAggregate, setFineAggregate] = useState<string>('');
   const { materialSelectionData, setData } = useABCPStore();
 
   const handleRowClick: GridEventListener<'rowClick'> = (
     params, // GridRowParams
     event, // MuiEvent<React.MouseEvent<HTMLElement>>
-    details, // GridCallbackDetails
+    details // GridCallbackDetails
   ) => {
-    console.log(params.row.name)
+    console.log(params.row.name);
   };
 
   return (
@@ -60,25 +60,25 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
           isRowSelectable={(params: GridRowParams) => {
             return rows.some((element, index) => {
               if (element.type === 'cement') {
-                console.log(`Row[${index}] selecionável: `, cement === null || (cement !== null && cement === index))
-                return cement === null || (cement !== null && cement === index)
+                console.log(`Row[${index}] selecionável: `, cement === null || (cement !== null && cement === index));
+                return cement === null || (cement !== null && cement === index);
               } else {
-                return true
+                return true;
               }
-            })
+            });
           }}
           onRowSelectionModelChange={(rowSelection) => {
             setRowSelectionModel(rowSelection);
-            console.log(rowSelection)
+            console.log(rowSelection);
             if (rows.some((element) => element.type === 'cement')) {
               // setCement(null)
               rowSelection.map((row, index) => {
                 const { _id } = rows[index];
                 setCement(index);
               });
-              console.log(cement)
+              console.log(cement);
               setData({ step: 1, key: 'cement', value: cement !== null ? rows[cement]._id : null });
-            } 
+            }
             // else {
             //   console.log(coarseAggregate)
             //   console.log(fineAggregate)
@@ -107,10 +107,14 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
             minWidth: 50,
             flex: 1,
           }))}
-          rows={rows !== null ? rows.map((row, index) => ({
-            ...row,
-            id: index,
-          })) : []}
+          rows={
+            rows !== null
+              ? rows.map((row, index) => ({
+                  ...row,
+                  id: index,
+                }))
+              : []
+          }
           slots={{
             noRowsOverlay: () => <NoDataFound message="Nenhum material encontrado" />,
             noResultsOverlay: () => <NoDataFound message="Nenhum material encontrado" />,
