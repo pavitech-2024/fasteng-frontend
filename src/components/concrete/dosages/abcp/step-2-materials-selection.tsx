@@ -9,7 +9,7 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import MaterialSelectionTable from './tables/material-selection-table';
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef, useGridApiContext, useGridApiRef } from '@mui/x-data-grid';
 
 const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -93,24 +93,24 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
       valueFormatter: ({ value }) => `${value}`,
     },
   ];
-
-  materialSelectionData.cements.length != 0 &&
-    materialSelectionData.coarseAggregates.length != 0 &&
-    materialSelectionData.fineAggregates.length != 0 &&
+    
+    !materialSelectionData.cement &&
+    !materialSelectionData.coarseAggregate &&
+    !materialSelectionData.fineAggregate &&
     nextDisabled &&
     setNextDisabled(false);
-
-  return (
-    <>
+    
+    return (
+      <>
       {loading ? (
         <Loading />
-      ) : (
-        <Box
+        ) : (
+          <Box
           sx={{
             display: 'grid',
             gap: '10px',
           }}
-        >
+          >
           <MaterialSelectionTable rows={aggregateRows} columns={aggregateColumns} header={t('materials.aggregates')} />
           <MaterialSelectionTable rows={binderRows} columns={binderColumns} header={t('materials.binders')} />
         </Box>

@@ -51,7 +51,7 @@ const ConcreteGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPage
             onChange={(e) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
-              const mass = data.sample_mass;
+              const mass = data.material_mass;
               const current_passant = Number(e.target.value);
 
               const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
@@ -138,7 +138,7 @@ const ConcreteGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPage
             onChange={(e) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
-              const mass = data.sample_mass;
+              const mass = data.material_mass;
               const current_retained = Number(e.target.value);
 
               const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
@@ -208,7 +208,7 @@ const ConcreteGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPage
 
   if (
     nextDisabled &&
-    data.sample_mass != null &&
+    data.material_mass != null &&
     data.bottom != null &&
     data.table_data.every((row) => row.passant !== null && row.retained !== null)
   )
@@ -227,13 +227,13 @@ const ConcreteGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPage
         }}
       >
         <InputEndAdornment
-          label={t('granulometry.sample_mass')}
-          value={data.sample_mass}
+          label={t('granulometry.material_mass')}
+          value={data.material_mass}
           onChange={(e) => {
             if (e.target.value === null) return;
             const mass = Number(e.target.value);
 
-            setData({ step: 1, key: 'sample_mass', value: mass });
+            setData({ step: 1, key: 'material_mass', value: mass });
 
             if (rows === null) return;
 

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
+import ABCP_EssaySelection from '../../../components/concrete/dosages/abcp/step-3-essays-selection';
 
 interface GeneralData {
   userId: string;
@@ -11,32 +12,27 @@ interface GeneralData {
 }
 
 interface ABCP_MaterialSelection {
-  coarseAggregates: string[];
-  fineAggregates: string[];
-  cements: string[];
+  coarseAggregate: string;
+  fineAggregate: string;
+  cement: string;
 }
 
 interface ABCP_EssaySelection {
-  fineAggregates: {
+  fineAggregate: {
     _id: string;
-    name: string;
     specific_mass: number;
     granulometry_id: string;
-  }[];
-  coarseAggregates: {
+  };
+  coarseAggregate: {
     _id: string;
-    name: string;
     specific_mass: number;
     granulometry_id: string;
-    granulometry_name: string;
     unit_mass_id: string;
-    unit_mass_name: string;
-  }[];
-  cements: {
+  };
+  cement: {
     _id: string;
-    name: string;
     specific_mass: number;
-  }[];
+  };
 }
 
 export type ABCPData = {
@@ -64,15 +60,15 @@ const initialState = {
     description: null,
   },
   materialSelectionData: {
-    coarseAggregates: [],
-    fineAggregates: [],
-    cements: [],
+    coarseAggregate: null,
+    fineAggregate: null,
+    cement: null,
   },
   essaySelectionData: {
-    fineAggregates: [],
-    coarseAggregates: [],
-    cements: [],
-  },
+    fineAggregate: null,
+    coarseAggregate: null,
+    cement: null,
+  }
 };
 
 const useABCPStore = create<ABCPData & ABCPActions>()(

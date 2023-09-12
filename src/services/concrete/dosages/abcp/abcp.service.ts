@@ -6,6 +6,31 @@ import { ConcreteMaterial } from '@/interfaces/concrete';
 import { AbcpLogo } from '@/assets';
 // import { persist } from 'zustand/middleware';
 
+type EssaySelection_Results = {
+  cement: {
+    _id: string;
+    name: string;
+  };
+  fineAggregate_granulometrys: {
+    material_id: string;
+    material_name: string;
+    essay_id: string;
+    essay_name: string;
+  }[];
+  coarseAggregate_granulometrys: {
+    material_id: string;
+    material_name: string;
+    essay_id: string;
+    essay_name: string;
+  }[];
+  coarseAggregate_unit_masses: {
+    material_id: string;
+    material_name: string;
+    essay_id: string;
+    essay_name: string;
+  }[];
+}
+
 class ABCP_SERVICE implements IEssayService {
   info = {
     key: 'abcp',
@@ -88,13 +113,11 @@ class ABCP_SERVICE implements IEssayService {
   // send the selected materials to backend
   submitMaterialSelection = async (materialSelection: ABCPData['materialSelectionData']): Promise<void> => {
     try {
-      const { coarseAggregates, fineAggregates, cements } = materialSelection;
+      const { coarseAggregate, fineAggregate, cement } = materialSelection;
 
-      console.log(materialSelection);
-
-      if (!coarseAggregates) throw t('errors.empty-coarseAggregates');
-      if (!fineAggregates) throw t('errors.empty-fineAggregates');
-      if (!cements) throw t('errors.empty-binder');
+      if (!coarseAggregate) throw t('errors.empty-coarseAggregates');
+      if (!fineAggregate) throw t('errors.empty-fineAggregates');
+      if (!cement) throw t('errors.empty-binder');
     } catch (error) {
       console.log(error);
       throw error;
@@ -106,16 +129,19 @@ class ABCP_SERVICE implements IEssayService {
   // get essay from materials id
   getEssaysByMaterialId = async (
     userId: string,
-    { cements, coarseAggregates, fineAggregates }: ABCPData['materialSelectionData']
-  ): Promise<ABCPData['essaySelectionData']> => {
+    { cement, coarseAggregate, fineAggregate }: ABCPData['materialSelectionData']
+  ): Promise<EssaySelection_Results> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/essay-selection`, {
-        cements,
-        coarseAggregates,
-        fineAggregates,
+        cement,
+        coarseAggregate,
+        fineAggregate,
       });
 
       const { essays, success, error } = response.data;
+
+      console.log(essays)
+
       if (success === false) throw error.name;
       else return essays;
     } catch (error) {
