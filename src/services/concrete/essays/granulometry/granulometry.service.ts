@@ -65,7 +65,7 @@ class Granulometry_SERVICE implements IEssayService {
   };
 
   // get essay from material _id
-  getGranulometryBymaterialId = async (material_id: string): Promise<any> => {
+  getGranulometryBymaterialId = async (material_id: string) => {
     try {
       const response = await Api.get(`${this.info.backend_path}/get/${material_id}`);
       return response.data;
