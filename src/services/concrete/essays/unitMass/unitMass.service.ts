@@ -27,14 +27,14 @@ class UNITMASS_SERVICE implements IEssayService {
   userId: string;
 
   /** @handleNext Receives the step and data from the form and calls the respective method */
-  handleNext = async (step: number, data: unknown): Promise<void> => {
+  handleNext = async (step: number, data: unknown, initData?: unknown): Promise<void> => {
     try {
       switch (step) {
         case 0:
           await this.submitGeneralData(data as UnitMassData['generalData']);
           break;
         case 1:
-          await this.submitStep2Data(data as UnitMassData['step2Data']);
+          await this.submitStep2Data(data as UnitMassData['step2Data'], initData as UnitMassData['generalData']);
           await this.calculateResults(data as UnitMassData);
           break;
         case 2:
