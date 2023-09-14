@@ -14,9 +14,16 @@ const UnitMass_Step2 = ({
   const { step2Data, setData } = useUnitMassStore();
 
   useEffect(() => {
-    if (step2Data.containerVolume !== null && step2Data.containerWeight !== null && step2Data.sampleContainerWeight !== null && ((step2Data.containerVolume + step2Data.containerWeight) >= step2Data.sampleContainerWeight))
+    console.log(step2Data);
+    if (
+      step2Data.containerVolume !== null &&
+      step2Data.containerWeight !== null &&
+      step2Data.sampleContainerWeight !== null
+    ) {
       nextDisabled && setNextDisabled(false);
+    }
   }, [step2Data, nextDisabled, setNextDisabled]);
+
   return (
     <Box
       sx={{
@@ -41,7 +48,7 @@ const UnitMass_Step2 = ({
           label={t('unitMass.containerVolume')}
           value={step2Data.containerVolume}
           required
-          onChange={(e) => setData({ step: 0, key: 'containerVolume', value: e.target.value })}
+          onChange={(e) => setData({ step: 1, key: 'containerVolume', value: e.target.value })}
           size="medium"
         />
 
@@ -52,7 +59,7 @@ const UnitMass_Step2 = ({
           label={t('unitMass.containerWeight')}
           value={step2Data.containerWeight}
           required
-          onChange={(e) => setData({ step: 0, key: 'containerWeight', value: e.target.value })}
+          onChange={(e) => setData({ step: 1, key: 'containerWeight', value: e.target.value })}
           size="medium"
         />
 
@@ -63,7 +70,7 @@ const UnitMass_Step2 = ({
           label={t('unitMass.sampleContainerWeight')}
           value={step2Data.sampleContainerWeight}
           required
-          onChange={(e) => setData({ step: 0, key: 'sampleContainerWeight', value: e.target.value })}
+          onChange={(e) => setData({ step: 1, key: 'sampleContainerWeight', value: e.target.value })}
           size="medium"
         />
       </Box>

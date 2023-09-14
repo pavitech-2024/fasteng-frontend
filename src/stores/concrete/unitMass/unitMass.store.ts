@@ -10,13 +10,13 @@ interface UnitMassGeneralData {
 }
 
 interface unitMass_step2Data {
-  containerVolume: string;
-  containerWeight: string;
-  sampleContainerWeight: string;
+  containerVolume: number;
+  containerWeight: number;
+  sampleContainerWeight: number;
 }
 
 interface unitMass_step3Result {
-  result: string;
+  result: number;
 }
 
 export type UnitMassData = {

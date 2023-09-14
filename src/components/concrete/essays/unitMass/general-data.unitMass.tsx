@@ -82,15 +82,15 @@ const UnitMass_GeneralData = ({
               gap: '5px 20px',
             }}
           >
-             {/** Nome do experimento */}
-             <TextField
+            {/** Nome do experimento */}
+            <TextField
               variant="standard"
               key="experimentName"
               label={t('unitMass.experimentName')}
               value={generalData.experimentName}
               required
               onChange={(e) => setData({ step: 0, key: 'experimentName', value: e.target.value })}
-              size='medium'
+              size="medium"
             />
             {/** Material escolhido */}
             <DropDown
@@ -121,7 +121,6 @@ const UnitMass_GeneralData = ({
               size="medium"
               required
             />
-            
           </Box>
         </Box>
       )}
