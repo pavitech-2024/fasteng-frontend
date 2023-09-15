@@ -5,7 +5,7 @@ import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 interface UnitMassGeneralData {
   userId: string;
   experimentName: string;
-  aggregate: ConcreteMaterial;
+  material: ConcreteMaterial;
   method: 'A' | 'B' | 'C';
 }
 
@@ -39,7 +39,7 @@ const useUnitMassStore = create<UnitMassData & UnitMassActions>()(
         generalData: {
           userId: null,
           experimentName: null,
-          aggregate: null,
+          material: null,
           method: null,
         },
         step2Data: {

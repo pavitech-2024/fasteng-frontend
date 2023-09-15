@@ -11,7 +11,7 @@ const UnitMass_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => 
 
   const experimentResumeData: ExperimentResumeData = {
     experimentName: generalData.experimentName,
-    materials: [{ name: generalData.aggregate.name, type: generalData.aggregate.type }],
+    materials: [{ name: generalData.material.name, type: generalData.material.type }],
   };
 
   const unitMassResult = (Number(result.result)).toFixed(2);

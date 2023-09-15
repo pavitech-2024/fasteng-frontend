@@ -56,10 +56,14 @@ import hrbENG from './translations/soils/essays/hrb/en.json';
 import sucsPTBR from './translations/soils/essays/sucs/ptbr.json';
 import sucsENG from './translations/soils/essays/sucs/en.json';
 // granulometry
-import granulometryPTBR from './translations/soils/essays/granulometry/ptbr.json';
-import granulometryENG from './translations/soils/essays/granulometry/en.json';
+import soilsGranulometryPTBR from './translations/soils/essays/granulometry/ptbr.json';
+import soilsGranulometryENG from './translations/soils/essays/granulometry/en.json';
+// compression
+import compressionPTBR from './translations/soils/essays/compression/ptbr.json';
+import compressionENG from './translations/soils/essays/compression/en.json';
 
 /**@concrete */
+// essays
 import concreteEssaysPTBR from './translations/concrete/essays/ptbr.json';
 import concreteEssaysENG from './translations/concrete/essays/en.json';
 // materials
@@ -68,6 +72,12 @@ import concreteMaterialsENG from './translations/concrete/materials/en.json';
 // unit mass
 import unitMassPTBR from './translations/concrete/essays/unitMass/ptbr.json';
 import unitMassENG from './translations/concrete/essays/unitMass/en.json';
+// sandIncrease
+import sandIncreasePTBR from './translations/concrete/essays/sandIncrease/ptbr.json';
+import sandIncreaseENG from './translations/concrete/essays/sandIncrease/en.json';
+// granulometry
+import concreteGranulometryPTBR from './translations/concrete/essays/granulometry/ptbr.json';
+import concreteGranulometryENG from './translations/concrete/essays/granulometry/en.json';
 
 i18n.use(initReactI18next).init({
   fallbackLng: 'ptBR',
@@ -96,11 +106,14 @@ i18n.use(initReactI18next).init({
         ...cbrPTBR,
         ...hrbPTBR,
         ...sucsPTBR,
-        ...granulometryPTBR,
+        ...soilsGranulometryPTBR,
+        ...compressionPTBR,
         /**@concrete */
         ...concreteEssaysPTBR,
         ...concreteMaterialsPTBR,
         ...unitMassPTBR,
+        ...sandIncreasePTBR,
+        ...concreteGranulometryPTBR,
       },
     },
     en: {
@@ -124,11 +137,14 @@ i18n.use(initReactI18next).init({
         ...cbrENG,
         ...hrbENG,
         ...sucsENG,
-        ...granulometryENG,
+        ...soilsGranulometryENG,
+        ...compressionENG,
         /**@concrete */
         ...concreteEssaysENG,
         ...concreteMaterialsENG,
         ...unitMassENG,
+        ...sandIncreaseENG,
+        ...concreteGranulometryENG,
       },
     },
   },

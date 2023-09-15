@@ -21,6 +21,7 @@ const UnitMass_GeneralData = ({
   const [loading, setLoading] = useState<boolean>(true);
   const { user } = useAuth();
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
+  const [materialsWithMaxD, setMaterialsWithMaxD] = useState([]);
 
   useEffect(() => {
     toast.promise(
@@ -37,6 +38,16 @@ const UnitMass_GeneralData = ({
       }
     );
   }, [user]);
+
+  useEffect(() => {
+    if (materials) {
+      const materialsWMaxD = materials.map((material: ConcreteMaterial) => {
+        if (material.description.maxDiammeter !== null) {
+          setMaterialsWithMaxD(materialsWMaxD);
+        }
+      });
+    }
+  }, [materials]);
 
   const methodOptions = [
     {
@@ -57,7 +68,8 @@ const UnitMass_GeneralData = ({
   ];
 
   useEffect(() => {
-    if (generalData.experimentName !== null && generalData.method !== null && generalData.aggregate !== null)
+    console.log(generalData.material);
+    if (generalData.experimentName !== null && generalData.method !== null && generalData.material !== null)
       nextDisabled && setNextDisabled(false);
   }, [generalData, nextDisabled, setNextDisabled]);
 
@@ -94,17 +106,17 @@ const UnitMass_GeneralData = ({
             />
             {/** Material escolhido */}
             <DropDown
-              key={'aggregate'}
+              key={'material'}
               variant="standard"
-              label={t('unitMass.aggregate')}
-              options={materials.map((material: ConcreteMaterial) => {
+              label={t('unitMass.material')}
+              options={materialsWithMaxD.map((material: ConcreteMaterial) => {
                 return { label: material.name + ' | ' + t(`${'samples.' + material.type}`), value: material };
               })}
               defaultValue={{
                 label: materials[0].name + ' | ' + t(`${'samples.' + materials[0].type}`),
                 value: materials[0].name,
               }}
-              callback={(value) => setData({ step: 0, key: 'aggregate', value })}
+              callback={(value) => setData({ step: 0, key: 'material', value })}
               size="medium"
               required
             />

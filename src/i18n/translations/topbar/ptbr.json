@@ -12,5 +12,6 @@
   "topbar.cbr": "California Bearing Ratio",
   "topbar.hrb": "Classificação Rodoviária - HRB",
   "topbar.sucs": "Classificação Unificada - SUCS",
-  "topbar.granulometry": "Granulometria"
+  "topbar.granulometry": "Granulometria",
+  "topbar.compression": "Compactação"
 }

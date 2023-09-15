@@ -50,6 +50,7 @@ const UnitMass_Step2 = ({
           required
           onChange={(e) => setData({ step: 1, key: 'containerVolume', value: e.target.value })}
           size="medium"
+          type='number'
         />
 
         {/** Peso do Container */}
@@ -61,6 +62,7 @@ const UnitMass_Step2 = ({
           required
           onChange={(e) => setData({ step: 1, key: 'containerWeight', value: e.target.value })}
           size="medium"
+          type='number'
         />
 
         {/** Peso do Container + Amostra */}
@@ -72,6 +74,7 @@ const UnitMass_Step2 = ({
           required
           onChange={(e) => setData({ step: 1, key: 'sampleContainerWeight', value: e.target.value })}
           size="medium"
+          type='number'
         />
       </Box>
     </Box>

@@ -13,8 +13,10 @@ interface GeneralData {
 }
 
 interface sucs_step2Data {
-  ll_porcentage: number;
-  lp_porcentage: number;
+  cc: number;
+  cnu: number;
+  liquidity_limit: number;
+  plasticity_limit: number;
   sieves: { sieve: string; passant: number }[];
   organic_matter: boolean;
 }
@@ -53,8 +55,10 @@ const useSucsStore = create<SucsData & SucsActions>()(
           description: null,
         },
         step2Data: {
-          ll_porcentage: null,
-          lp_porcentage: null,
+          cc: null,
+          cnu: null,
+          liquidity_limit: null,
+          plasticity_limit: null,
           sieves: [
             { sieve: getSieveName(4.8), passant: null },
             { sieve: getSieveName(0.075), passant: null },

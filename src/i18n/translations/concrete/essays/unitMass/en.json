@@ -1,6 +1,6 @@
 {
   "unitMass.generalData": "General Data",
-  "unitMass.aggregate": "Material",
+  "unitMass.material": "Material",
   "unitMass.method": "Method",
   "unitMass.method.A": "Method A",
   "unitMass.method.B": "Method B",

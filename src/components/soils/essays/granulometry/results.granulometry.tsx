@@ -1,5 +1,5 @@
 import { EssayPageProps } from '@/components/templates/essay';
-import useGranulometryStore from '@/stores/soils/granulometry/granulometry.store';
+import useSoilsGranulometryStore from '@/stores/soils/granulometry/granulometry.store';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 import { t } from 'i18next';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
@@ -9,11 +9,11 @@ import Loading from '@/components/molecules/loading';
 import Chart from 'react-google-charts';
 import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import Granulometry_resultsTable from './tables/results-table.granulometry';
+import SoilsGranulometry_resultsTable from './tables/results-table.granulometry';
 
 const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
-  const { results: granulometry_results, step2Data, generalData } = useGranulometryStore();
+  const { results: granulometry_results, step2Data, generalData } = useSoilsGranulometryStore();
 
   const data = {
     // container "Resultados"
@@ -26,8 +26,8 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
       { label: t('granulometry.nominal-size'), value: granulometry_results.nominal_size, unity: 'mm' },
       { label: t('granulometry.nominal-diameter'), value: granulometry_results.nominal_diameter, unity: 'mm' },
       { label: t('granulometry.fineness-module'), value: granulometry_results.fineness_module, unity: '%' },
-      { label: t('granulometry.cc'), value: granulometry_results.cc, unity: '' },
-      { label: t('granulometry.cnu'), value: granulometry_results.cnu, unity: '' },
+      { label: t('granulometry.cc'), value: granulometry_results.cc },
+      { label: t('granulometry.cnu'), value: granulometry_results.cnu },
       { label: t('granulometry.error'), value: granulometry_results.error, unity: '%' }
     );
   }
@@ -61,7 +61,7 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
     },
     {
       field: 'passant_porcentage',
-      headerName: t('granulometry.passant-porcentage') + ' (%)',
+      headerName: t('granulometry.passant') + ' (%)',
       valueFormatter: ({ value }) => `${value}`,
     },
     {
@@ -71,7 +71,7 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
     },
     {
       field: 'retained_porcentage',
-      headerName: t('granulometry.retained-porcentage') + ' (%)',
+      headerName: t('granulometry.retained') + ' (%)',
       valueFormatter: ({ value }) => `${value}`,
     },
     {
@@ -93,9 +93,9 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
         <ResultSubTitle title={t('soils.essays.granulometry')} sx={{ margin: '.65rem' }} />
         <Box
           sx={{
-            width: '80%',
+            width: '100%',
             display: 'flex',
-            gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
+            // gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
             gap: '10px',
             mt: '20px',
           }}
@@ -113,20 +113,21 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
           options={{
             title: t('granulometry.granulometry'),
             backgroundColor: 'transparent',
+            pointSize: '2',
             hAxis: {
               title: `${t('granulometry.sieve-openness') + ' (mm)'}`,
+              type: 'number',
+              scaleType: 'log',
             },
             vAxis: {
-              title: `${t('granulometry.passant-porcentage') + ' (%)'}`,
-            },
-            explorer: {
-              actions: ['dragToZoom', 'rightClickToReset'],
-              axis: 'vertical',
+              title: `${t('granulometry.passant') + ' (%)'}`,
+              minValue: '0',
+              maxValue: '105',
             },
             legend: 'none',
           }}
         />
-        <Granulometry_resultsTable rows={rows} columns={columns} />
+        <SoilsGranulometry_resultsTable rows={rows} columns={columns} />
       </FlexColumnBorder>
     </>
   );

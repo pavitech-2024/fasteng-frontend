@@ -1,16 +1,16 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import useGranulometryStore from '@/stores/soils/granulometry/granulometry.store';
+import useSoilsGranulometryStore from '@/stores/soils/granulometry/granulometry.store';
 import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import Granulometry_step2Table from './tables/step2-table.granulometry';
+import SoilsGranulometry_step2Table from './tables/step2-table.granulometry';
 import DropDown from '@/components/atoms/inputs/dropDown';
 import { SieveSeries } from '../../../../interfaces/common/index';
 import { getSieveSeries } from '@/utils/sieves';
 
 const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { step2Data: data, setData } = useGranulometryStore();
+  const { step2Data: data, setData } = useSoilsGranulometryStore();
 
   const sievesSeries = [getSieveSeries(0), getSieveSeries(1), getSieveSeries(2), getSieveSeries(3), getSieveSeries(4)];
 
@@ -51,24 +51,67 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
             onChange={(e) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
-              const passant = Number(e.target.value);
+              const mass = data.sample_mass;
+              const current_passant = Number(e.target.value);
 
               const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
               const initial_retained = 0;
-              const acumulative_retained = currentRows.reduce(
+              const accumulative_retained = currentRows.reduce(
                 (accumulator: number, current_value) => accumulator + current_value.retained,
                 initial_retained
               );
 
-              const retained =
-                Math.round(
-                  100 * (data.sample_mass !== 0 ? ((100 - passant) / 100) * data.sample_mass - acumulative_retained : 0)
-                ) / 100;
+              const current_retained =
+                Math.round(100 * (mass !== 0 ? ((100 - current_passant) / 100) * mass - accumulative_retained : 0)) /
+                100;
 
-              newRows[sieve_index].passant = passant;
-              newRows[sieve_index].retained = retained;
+              newRows[sieve_index].passant = current_passant;
+              newRows[sieve_index].retained = current_retained;
               setData({ step: 1, key: 'passant', value: newRows });
               setData({ step: 1, key: 'retained', value: newRows });
+
+              const nextRows = sieve_index > 0 ? newRows.slice(sieve_index) : [...rows];
+
+              const new_current_accumulative_retained = accumulative_retained;
+
+              console.log(new_current_accumulative_retained);
+
+              nextRows.map(function (item, index) {
+                const row = item;
+
+                console.log(row);
+
+                if (index > 0) {
+                  const currentRows = nextRows.slice(0, index + 1);
+
+                  const initial_retained = new_current_accumulative_retained;
+                  const accumulative_retained = currentRows.reduce(
+                    (accumulator: number, current_value) => accumulator + current_value.retained,
+                    initial_retained
+                  );
+
+                  console.log(accumulative_retained);
+
+                  const retained =
+                    Math.round(100 * (mass !== 0 ? ((100 - row.passant) / 100) * mass - accumulative_retained : 0)) /
+                    100;
+
+                  const passant =
+                    Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
+
+                  console.log(passant);
+                  console.log(retained);
+
+                  newRows.map((e) => {
+                    if (e.sieve === row.sieve) {
+                      e.passant = passant;
+                    }
+                  });
+                  // newRows[sieve_index + index].retained = retained;
+                }
+              });
+
+              setData({ step: 1, key: 'table_data', value: newRows });
             }}
           />
         );
@@ -95,24 +138,67 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
             onChange={(e) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
-              const retained = Number(e.target.value);
+              const mass = data.sample_mass;
+              const current_retained = Number(e.target.value);
 
               const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
-              const initial_retained = retained;
-              const acumulative_retained = currentRows.reduce(
+              const initial_retained = current_retained;
+              const current_accumulative_retained = currentRows.reduce(
                 (accumulator: number, current_value) => accumulator + current_value.retained,
                 initial_retained
               );
 
-              const passant =
-                Math.round(
-                  100 *
-                    (data.sample_mass !== 0 ? (100 * (data.sample_mass - acumulative_retained)) / data.sample_mass : 0)
-                ) / 100;
-              newRows[sieve_index].retained = retained;
-              newRows[sieve_index].passant = passant;
+              const current_passant =
+                Math.round(100 * (mass !== 0 ? (100 * (mass - current_accumulative_retained)) / mass : 0)) / 100;
+              newRows[sieve_index].retained = current_retained;
+              newRows[sieve_index].passant = current_passant;
               setData({ step: 1, key: 'retained', value: newRows });
               setData({ step: 1, key: 'passant', value: newRows });
+
+              const nextRows = sieve_index > 0 ? newRows.slice(sieve_index) : [...rows];
+
+              const new_current_accumulative_retained = current_accumulative_retained - current_retained;
+
+              console.log(new_current_accumulative_retained);
+
+              nextRows.map(function (item, index) {
+                const row = item;
+
+                console.log(row);
+
+                if (index > 0) {
+                  const currentRows = nextRows.slice(0, index + 1);
+
+                  const initial_retained = new_current_accumulative_retained;
+                  const accumulative_retained = currentRows.reduce(
+                    (accumulator: number, current_value) => accumulator + current_value.retained,
+                    initial_retained
+                  );
+
+                  console.log(accumulative_retained);
+
+                  // const retained =
+                  // Math.round(
+                  //   100 *
+                  //     (mass !== 0 ? ((100 - row.passant) / 100) * mass - accumulative_retained : 0)
+                  // ) / 100;
+
+                  const passant =
+                    Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
+
+                  console.log(passant);
+                  console.log(item.retained);
+
+                  newRows.map((e) => {
+                    if (e.sieve === row.sieve) {
+                      e.passant = passant;
+                    }
+                  });
+                  // newRows[sieve_index + index].retained = retained;
+                }
+              });
+
+              setData({ step: 1, key: 'table_data', value: newRows });
             }}
           />
         );
@@ -191,7 +277,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
           required
         />
       </Box>
-      <Granulometry_step2Table rows={rows} columns={columns} />
+      <SoilsGranulometry_step2Table rows={rows} columns={columns} />
       <Box
         sx={{
           width: '100%',

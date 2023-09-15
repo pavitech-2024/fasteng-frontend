@@ -50,22 +50,22 @@ class UNITMASS_SERVICE implements IEssayService {
 
   submitGeneralData = async (generalData: UnitMassData['generalData']): Promise<void> => {
     try {
-      const { experimentName, aggregate, method } = generalData;
+      const { experimentName, material, method } = generalData;
 
       if (!experimentName) throw t('errors.empty-experimentName');
-      if (!aggregate) throw t('errors.empty-aggregate');
+      if (!material) throw t('errors.empty-aggregate');
       if (!method) throw t('errors.empty-method');
 
       const payload = {
         experimentName,
-        material: aggregate,
+        material,
         method,
       };
 
       console.log(payload);
-      
+
       const response = await Api.post(`${this.info.backend_path}/verify-init`, payload);
-      
+
       const { success, error } = response.data;
 
       if (success === false) throw error.name;
@@ -74,20 +74,36 @@ class UNITMASS_SERVICE implements IEssayService {
     }
   };
 
-  submitStep2Data = async (generalData: UnitMassData['step2Data'], initData: UnitMassData['generalData']): Promise<void> => {
+  submitStep2Data = async (
+    generalData: UnitMassData['step2Data'],
+    initData: UnitMassData['generalData']
+  ): Promise<void> => {
     try {
       const { containerVolume, containerWeight, sampleContainerWeight } = generalData;
-      const { aggregate } = initData;
+      const { material } = initData;
 
       if (!containerVolume) throw t('errors.empty-containerVolume');
       if (!containerWeight) throw t('errors.containerWeight');
       if (!sampleContainerWeight) throw t('errors.sampleContainerWeight');
       if (containerVolume + containerWeight <= sampleContainerWeight) throw t('errors.sampleContainerWeightValue');
-      if (containerVolume === 0) throw t('errors.zero-containerVolume'); // Insira um volume válido
-      if (containerWeight >= sampleContainerWeight) throw t('errors.containerWeight-sampleContainerWeigth'); // Peso do recipiente + amostra tem que ser maior que o peso do recipiente
-      if (aggregate.description.maxDiammeter.value <= 37.5 && containerVolume < 10) throw t('errors.containerWeight-maxDiameter'); // Insira um volume do recipiente maior que 10 litros
-      if (aggregate.description.maxDiammeter.value > 37.5 && aggregate.description.maxDiammeter.value <= 50 && containerVolume <= 37.5 && containerVolume < 15) throw t('errors.containerWeight-maxDiameter'); // Insira um volume do recipiente maior que 15 litros
-      if (aggregate.description.maxDiammeter.value > 50 && aggregate.description.maxDiammeter.value <= 75 && containerVolume < 30 && containerVolume < 30) throw t('errors.containerWeight-maxDiameter'); // Insira um volume do recipiente maior que 30 litros
+      if (containerVolume === 0) throw t('errors.unitMass-containerVolume-0');
+      if (containerWeight >= sampleContainerWeight) throw t('errors.unitMass-containerWeight-sampleContainerWeigth');
+      if (material.description.maxDiammeter.value <= 37.5 && containerVolume < 10)
+        throw t('errors.unitMass-containerVolume-10-maxDiameter-37.5');
+      if (
+        material.description.maxDiammeter.value > 37.5 &&
+        material.description.maxDiammeter.value <= 50 &&
+        containerVolume <= 37.5 &&
+        containerVolume < 15
+      )
+        throw t('errors.unitMass-containerVolume-15-37.5maxDiameter-50');
+      if (
+        material.description.maxDiammeter.value > 50 &&
+        material.description.maxDiammeter.value <= 75 &&
+        containerVolume < 30 &&
+        containerVolume < 30
+      )
+        throw t('errors.unitMass-containerVolume-30-50-maxDiameter-75');
 
       const response = await Api.post(`${this.info.backend_path}/step2-unitMass-data`, {
         containerVolume,

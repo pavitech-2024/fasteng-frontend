@@ -1,6 +1,6 @@
 {
   "unitMass.generalData": "Dados gerais",
-  "unitMass.aggregate": "Material",
+  "unitMass.material": "Material",
   "unitMass.method": "Método",
   "unitMass.method.A": "Método A",
   "unitMass.method.B": "Método B",
@@ -11,4 +11,4 @@
   "unitMass.containerWeight": "Peso do container",
   "unitMass.sampleContainerWeight": "Peso do container + amostra",
   "unitMass.result": "Resultado"
-}
+ }
