@@ -1,8 +1,8 @@
-import { UnitMassIcon } from '@/assets';
-import { t } from 'i18next';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { UnitMassActions, UnitMassData } from '@/stores/concrete/unitMass/unitMass.store';
 import Api from '@/api';
+import { UnitMassIcon } from '@/assets';
+import { t } from 'i18next';
 
 class UNITMASS_SERVICE implements IEssayService {
   info = {
@@ -79,6 +79,7 @@ class UNITMASS_SERVICE implements IEssayService {
     initData: UnitMassData['generalData']
   ): Promise<void> => {
     try {
+      console.log(initData);
       const { containerVolume, containerWeight, sampleContainerWeight } = generalData;
       const { material } = initData;
 
