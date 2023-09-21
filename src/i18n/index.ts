@@ -11,12 +11,18 @@ import homeENG from './translations/home/en.json';
 // topbar
 import topbarPTBR from './translations/topbar/ptbr.json';
 import topbarENG from './translations/topbar/en.json';
+//footer
+import footerPTBR from './translations/footer/ptbr.json';
+import footerENG from './translations/footer/en.json';
 //navbar
 import navbarPTBR from './translations/navbar/ptbr.json';
 import navbarENG from './translations/navbar/en.json';
 //settings
 import settingsPTBR from './translations/settings/ptbr.json';
 import settingsENG from './translations/settings/en.json';
+//errors
+import errorsPTBR from './translations/errors/ptbr.json';
+import errorsENG from './translations/errors/en.json';
 
 /** @templates */
 import materialsPTBR from './translations/templates/materials/ptbr.json';
@@ -43,8 +49,21 @@ import soilsEssaysENG from './translations/soils/essays/en.json';
 // cbr
 import cbrPTBR from './translations/soils/essays/cbr/ptbr.json';
 import cbrENG from './translations/soils/essays/cbr/en.json';
+// hrb
+import hrbPTBR from './translations/soils/essays/hrb/ptbr.json';
+import hrbENG from './translations/soils/essays/hrb/en.json';
+// sucs
+import sucsPTBR from './translations/soils/essays/sucs/ptbr.json';
+import sucsENG from './translations/soils/essays/sucs/en.json';
+// granulometry
+import soilsGranulometryPTBR from './translations/soils/essays/granulometry/ptbr.json';
+import soilsGranulometryENG from './translations/soils/essays/granulometry/en.json';
+// compression
+import compressionPTBR from './translations/soils/essays/compression/ptbr.json';
+import compressionENG from './translations/soils/essays/compression/en.json';
 
 /**@concrete */
+// essays
 import concreteEssaysPTBR from './translations/concrete/essays/ptbr.json';
 import concreteEssaysENG from './translations/concrete/essays/en.json';
 // materials
@@ -53,6 +72,15 @@ import concreteMaterialsENG from './translations/concrete/materials/en.json';
 //chapman
 import chapmanPTBR from './translations/concrete/essays/chapman/ptbr.json';
 import chapmanENG from './translations/concrete/essays/chapman/en.json';
+// unit mass
+import unitMassPTBR from './translations/concrete/essays/unitMass/ptbr.json';
+import unitMassENG from './translations/concrete/essays/unitMass/en.json';
+// sandIncrease
+import sandIncreasePTBR from './translations/concrete/essays/sandIncrease/ptbr.json';
+import sandIncreaseENG from './translations/concrete/essays/sandIncrease/en.json';
+// granulometry
+import concreteGranulometryPTBR from './translations/concrete/essays/granulometry/ptbr.json';
+import concreteGranulometryENG from './translations/concrete/essays/granulometry/en.json';
 
 i18n.use(initReactI18next).init({
   fallbackLng: 'ptBR',
@@ -67,6 +95,8 @@ i18n.use(initReactI18next).init({
         ...topbarPTBR,
         ...navbarPTBR,
         ...settingsPTBR,
+        ...footerPTBR,
+        ...errorsPTBR,
         /**@templates */
         ...materialsPTBR,
         ...welcomePTBR,
@@ -77,10 +107,17 @@ i18n.use(initReactI18next).init({
         ...samplesPTBR,
         ...soilsEssaysPTBR,
         ...cbrPTBR,
+        ...hrbPTBR,
+        ...sucsPTBR,
+        ...soilsGranulometryPTBR,
+        ...compressionPTBR,
         /**@concrete */
         ...concreteEssaysPTBR,
         ...concreteMaterialsPTBR,
         ...chapmanPTBR,
+        ...unitMassPTBR,
+        ...sandIncreasePTBR,
+        ...concreteGranulometryPTBR,
       },
     },
     en: {
@@ -90,6 +127,8 @@ i18n.use(initReactI18next).init({
         ...topbarENG,
         ...navbarENG,
         ...settingsENG,
+        ...footerENG,
+        ...errorsENG,
         /**@templates */
         ...materialsENG,
         ...welcomeENG,
@@ -100,10 +139,17 @@ i18n.use(initReactI18next).init({
         ...samplesENG,
         ...soilsEssaysENG,
         ...cbrENG,
+        ...hrbENG,
+        ...sucsENG,
+        ...soilsGranulometryENG,
+        ...compressionENG,
         /**@concrete */
         ...concreteEssaysENG,
         ...concreteMaterialsENG,
         ...chapmanENG,
+        ...unitMassENG,
+        ...sandIncreaseENG,
+        ...concreteGranulometryENG,
       },
     },
   },

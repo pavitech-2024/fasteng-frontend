@@ -1,0 +1,21 @@
+{
+  "errors.empty-sample-mass": "Massa inicial vazia!",
+  "errors.negative-sample-mass": "Massa inicial negativa!",
+  "errors.empty-sieve": "Peneira vazia - ",
+  "errors.negative-sieve": "Peneira com valor negativo - ",
+  "errors.sieves-sum-not-equal-to-sample-mass": "Soma das massas Retidas + Fundos difere da Massa da Amostra em ",
+
+  "name-already-exists": "Nome do Experimento já cadastrado!",
+
+  "sample-sucs-not-found": "Amostra não encontrada para SUCS!",
+  "sample-GRANULOMETRY-not-found": "Amostra não encontrada para Granulometria!",
+
+  "essay-granulometry-not-found": "Ensaio de Granulometria não encontrado!",
+
+  "errors.sampleContainerWeightValue": "A soma dos valores do Volume do Container e o Peso do Container não pode ser menor do que o valor do Peso do Container + Amostra.",
+  "errors.unitMass-containerVolume-0": "Insira um volume válido",
+  "errors.unitMass-containerWeight-sampleContainerWeigth": "Peso do recipiente + amostra tem que ser maior que o peso do recipiente",
+  "errors.unitMass-containerVolume-10-maxDiameter-37.5": "Insira um volume do recipiente maior que 10 litros",
+  "errors.unitMass-containerVolume-15-37.5maxDiameter-50": "Insira um volume do recipiente maior que 15 litros",
+  "errors.unitMass-containerVolume-30-50-maxDiameter-75": "Insira um volume do recipiente maior que 30 litros"
+}

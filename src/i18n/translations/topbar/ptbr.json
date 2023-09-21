@@ -3,6 +3,7 @@
   "topbar.asphalt": "Asfalto",
   "topbar.soils": "Solos",
   "topbar.concrete": "Concreto",
+  "topbar.unitmass": "Massa Unitária",
   "topbar.samples": "Amostras",
   "topbar.essays": "Ensaios",
   "topbar.logout": "Sair",
@@ -10,4 +11,8 @@
   "topbar.materials": "Materiais",
   "topbar.cbr": "California Bearing Ratio",
   "topbar.chapman": "Massa Específica - Chapman"
+  "topbar.hrb": "Classificação Rodoviária - HRB",
+  "topbar.sucs": "Classificação Unificada - SUCS",
+  "topbar.granulometry": "Granulometria",
+  "topbar.compression": "Compactação"
 }

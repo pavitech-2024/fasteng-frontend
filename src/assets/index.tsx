@@ -75,8 +75,10 @@ import SofteningPointIcon from './asphalt/essays/SofteningPoint.png';
 // soils
 import CbrIcon from './soils/essays/Cbr.png';
 import CompressionIcon from './soils/essays/Compression.png';
-import HbrIcon from './soils/essays/Hrb.png';
+import HrbIcon from './soils/essays/Hrb.png';
 import SucsIcon from './soils/essays/Sucs.png';
+import HrbTableImage from './soils/tables/hrb_table_image.png';
+import SucsTableImage from './soils/tables/sucs_table_image.jpeg';
 
 // concrete
 //essays
@@ -166,8 +168,10 @@ export {
   // soils paste
   CbrIcon,
   CompressionIcon,
-  HbrIcon,
+  HrbIcon,
   SucsIcon,
+  HrbTableImage,
+  SucsTableImage,
 
   // concrete paste,
   //essays

@@ -67,12 +67,14 @@ const Result_Card = ({ label, value, unity }: Result_CardProps) => {
         sx={{
           width: '100%',
           height: '50%',
+          padding: '2px',
           bgcolor: 'primaryTons.lightGray',
           textTransform: 'uppercase',
           fontWeight: '700',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          textAlign: 'center',
           borderRadius: '10px 10px 0px 0px',
           color: 'primaryTons.white',
           fontSize: { mobile: '12px', notebook: '1rem' },
@@ -94,10 +96,34 @@ const Result_Card = ({ label, value, unity }: Result_CardProps) => {
         }}
       >
         {value}
-        <span style={{ fontWeight: '700' }}> {`${unity}`} </span>
+        {unity ? <span style={{ fontWeight: '700' }}> {`${unity}`}</span> : ''}
       </Box>
     </Box>
   );
 };
 
 export default Result_Card;
+
+interface Result_Container_NoChildren_Props {
+  title?: string;
+  hideBorder?: boolean;
+  mt?: string;
+}
+export const Result_Container_NoChildren = ({ title, hideBorder, mt }: Result_Container_NoChildren_Props) => {
+  return (
+    <Container
+      sx={{
+        border: hideBorder ? 'none' : '1px solid',
+        transform: { mobile: 'translateY(-35px)', notebook: 'translateY(-15px)' },
+        borderColor: 'primaryTons.border',
+        padding: '10px',
+        zIndex: 2,
+        mt: mt || '1.5rem',
+        borderRadius: '10px',
+        mb: '-1rem',
+      }}
+    >
+      {title && <ResultSubTitle title={title} />}
+    </Container>
+  );
+};

@@ -1,0 +1,21 @@
+{
+  "errors.empty-sample-mass": "Initial mass empty!",
+  "errors.negative-sample-mass": "Negative initial mass!",
+  "errors.empty-sieve": "Empty sieve - ",
+  "errors.negative-sieve": "Sieve with negative value - ",
+  "errors.sieves-sum-not-equal-to-sample-mass": "Sum of Retained masses + Bottom differs from Initial mass in ",
+
+  "name-already-exists": "Experiment name already exists!",
+  
+  "sample-sucs-not-found": "Sample not found for SUCS!",
+  "sample-GRANULOMETRY-not-found": "Sample not found for Granulometry!",
+
+  "essay-granulometry-not-found": "Granulometry essay not found!",
+
+  "errors.sampleContainerWeightValue": "The sum of the Container Volume and Container Weight values ​​cannot be less than the container weight + sample.",
+  "errors.unitMass-containerVolume-0": "Enter a valid volume",
+  "errors.unitMass-containerWeight-sampleContainerWeigth": "Weight of the container + sample must be greater than the weight of the container",
+  "errors.unitMass-containerVolume-10-maxDiameter-37.5": "Enter a container weight greater than 10 liters",
+  "errors.unitMass-containerVolume-15-37.5maxDiameter-50": "Enter a container volume greater than 15 liters",
+  "errors.unitMass-containerVolume-30-50-maxDiameter-75": "Enter a container volume greater than 30 liters"
+}

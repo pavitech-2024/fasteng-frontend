@@ -11,7 +11,7 @@ const index: NextPage = () => {
       title: t('concrete.essays.granulometryConcrete'),
       key: 'granulometry-concrete',
       icon: GranulometryIcon,
-      link: '/concrete/essays/granulometry',
+      link: '/concrete/essays/granulometry-concrete',
     },
     {
       title: t('concrete.essays.chapman'),
@@ -23,7 +23,7 @@ const index: NextPage = () => {
       title: t('concrete.essays.unitMass'),
       key: 'unitMass',
       icon: UnitMassIcon,
-      link: '/concrete/essays/unit-mass',
+      link: '/concrete/essays/unitMass',
     },
     {
       title: t('concrete.essays.sandIncrease'),

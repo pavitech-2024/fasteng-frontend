@@ -2,7 +2,7 @@
   "cbr.experimentName": "Nome do Experimento",
   "cbr.operator": "Operador",
   "cbr.samples": "Amostra",
-  "cbr.cauculist": "Cauculista",
+  "cbr.calculist": "Calculista",
   "experimentType": "Tipo de Experimento",
   "sample": "Amostra",
   "material": "Material",
@@ -50,5 +50,6 @@
   "loading.save.success": "Salvo com sucesso!",
   "loading.save.error": "Erro ao salvar!",
 
-  "AlreadyExists": "Já cadastrado."
+  "AlreadyExists": "Já cadastrado.",
+  "NotFound": "Não encontrado."
 }
