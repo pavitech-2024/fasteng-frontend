@@ -10,6 +10,7 @@
   "topbar.settings": "Settings",
   "topbar.materials": "Materials",
   "topbar.cbr": "California Bearing Ratio",
+  "topbar.chapman": "Specific Mass - Chapman's Flask"
   "topbar.hrb": "Road Classification - HRB",
   "topbar.sucs": "Unified Classification - SUCS",
   "topbar.granulometry": "Granulometry",

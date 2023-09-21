@@ -15,5 +15,6 @@
   "concrete.materials.fineAggregate": "Fine Aggregate",
   "concrete.materials.filler": "Filler",
   "concrete.materials.cap": "CAP",
-  "concrete.materials.other": "Other"
+  "concrete.materials.other": "Other",
+  "materials.coarseAggregate": "Coarse Aggregate"
 }
