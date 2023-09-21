@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { EssayPageProps } from '@/components/templates/essay';
-import Compression_GeneralData from './general-data.compression';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 import useCompressionStore from '@/stores/soils/compression/compression.store';
-import useAuth from '@/contexts/auth';
 import Loading from '@/components/molecules/loading';
 import Chart from 'react-google-charts';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
@@ -18,6 +16,7 @@ import { useEffect } from 'react';
 const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: compressionResults, compressionGeneralData } = useCompressionStore();
+  console.log('🚀 ~ file: results.compression.tsx:21 ~ compressionResults:', compressionResults);
 
   //Primeiro bloco com as informações gerais do ensaio
   const experimentResumeData: ExperimentResumeData = {
@@ -31,23 +30,27 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
       {
         label: 'Peso do solo seco',
         value: Number(compressionResults?.netWeightDrySoil[0]).toFixed(2) ?? 'N/A',
-        unity: '(g)',
-      },
-      {
-        label: 'Peso da água',
-        value: Number(compressionResults?.waterWeight).toFixed(2) ?? 'N/A',
-        unity: '(g)',
+        unity: 'g',
       },
       {
         label: 'Umidade Higroscópica',
         value: Number(compressionResults?.hygroscopicMoisture).toFixed(2) ?? 'N/A',
-        unity: '(%)',
+        unity: '%',
       },
     ],
   };
 
-  const wetSoilWeights = compressionResults?.drySoilDensitys.map((value, index) => (
-    <Result_Card key={index} label={'Peso do solo úmido'} value={String(Number(value).toFixed(2))} unity={'(%)'} />
+  // Adicionar objetos com a label 'Peso da água' para cada valor em waterWeight
+  compressionResults?.waterWeight.forEach((weight) => {
+    data.container_hygroscopicHumidity.push({
+      label: 'Peso da água',
+      value: Number(weight).toFixed(2),
+      unity: 'g',
+    });
+  });
+
+  const wetSoilWeights = compressionResults?.wetSoilWeights.map((value, index) => (
+    <Result_Card key={index} label={'Peso do solo úmido'} value={String(Number(value).toFixed(2))} unity={'g'} />
   ));
 
   const wetSoilDensitys = compressionResults?.wetSoilDensitys.map((value, index) => (
@@ -55,17 +58,17 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
       key={index}
       label={'Densidade do solo seco'}
       value={String(Number(value).toFixed(2))}
-      unity={'(g/cm³)'}
+      unity={'g/cm³'}
     />
   ));
   const netWeightsDrySoil = compressionResults?.netWeightsDrySoil.map((value, index) => (
-    <Result_Card key={index} label={'Peso do solo seco'} value={String(Number(value).toFixed(2))} unity={'(g)'} />
+    <Result_Card key={index} label={'Peso do solo seco'} value={String(Number(value).toFixed(2))} unity={'g'} />
   ));
   const moistures = compressionResults?.moistures.map((value, index) => (
-    <Result_Card key={index} label={'Umidade média'} value={String(Number(value).toFixed(2))} unity={'(%)'} />
+    <Result_Card key={index} label={'Umidade média'} value={String(Number(value).toFixed(2))} unity={'%'} />
   ));
   const drySoilDensitys = compressionResults?.drySoilDensitys.map((value, index) => (
-    <Result_Card key={index} label={'Densidade do solo seco'} value={String(Number(value).toFixed(2))} unity={'(%)'} />
+    <Result_Card key={index} label={'Densidade do solo seco'} value={String(Number(value).toFixed(2))} unity={'%'} />
   ));
 
   useEffect(
@@ -88,6 +91,14 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
           {data.container_hygroscopicHumidity.map((item, index) => (
             <Result_Card key={index} label={item.label} value={String(item.value)} unity={item.unity} />
           ))}
+        </Result_CardContainer>
+        <Result_CardContainer hideBorder title={t('compression.waterWeights')}>
+          {data.container_hygroscopicHumidity.map((item, index) => {
+            if (item.label === 'Peso da água') {
+              return <Result_Card key={index} label={item.label} value={String(item.value)} unity={item.unity} />;
+            }
+            return null;
+          })}
         </Result_CardContainer>
         <Result_Container_NoChildren hideBorder title={t('compression.humidityDetermination')} />
         <Result_CardContainer hideBorder title={t('compression.wetSoilWeights')}>
@@ -116,7 +127,7 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
           options={{
             backgroundColor: 'transparent',
             hAxis: {
-              title: `${t('compression.moisture')} (%)`, // Umidade (%)
+              title: `${t('compression.moisture')} %`, // Umidade %
             },
             vAxis: {
               title: `${t('compression.drySoilDensitys')} (g/cm³)`, // Densidade do solo seco - g/cm³

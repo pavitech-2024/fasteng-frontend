@@ -1,7 +1,7 @@
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import Granulometry_SERVICE from '@/services/soils/essays/granulometry/granulometry.service';
-import useGranulometryStore, { GranulometryActions } from '@/stores/soils/granulometry/granulometry.store';
+import useSoilsGranulometryStore, { SoilsGranulometryActions } from '@/stores/soils/granulometry/granulometry.store';
 import Granulometry_GeneralData from '@/components/soils/essays/granulometry/general-data.granulometry';
 import Granulometry_Step2 from '@/components/soils/essays/granulometry/step2.granulometry';
 import Granulometry_Results from '@/components/soils/essays/granulometry/results.granulometry';
@@ -16,13 +16,13 @@ const Granulometry = () => {
   } = useAuth();
 
   // get the store, could be empty or not ( in case of refresh page for example)
-  const store = useGranulometryStore();
+  const store = useSoilsGranulometryStore();
 
   // set the userId to the service
   granulometry.userId = userId;
 
   // set the store to the service
-  granulometry.store_actions = store as GranulometryActions;
+  granulometry.store_actions = store as SoilsGranulometryActions;
 
   // inform the childrens with the step of the children and the part of the store that they will use
   const childrens = [

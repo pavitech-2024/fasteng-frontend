@@ -50,7 +50,7 @@ interface humidityDeterminationData {
 
 interface compression_results {
   netWeightDrySoil: number[]; // Peso do solo seco (g)
-  waterWeight: number; // Peso da água (g)
+  waterWeight: number[]; // Peso da água (g)
   hygroscopicMoisture: number; // Umidade Higroscópica (%)
 
   wetSoilWeights: number[]; // Peso do solo úmido (g)

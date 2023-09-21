@@ -35,7 +35,7 @@ const SUCS_Step2 = ({
         error: t('loading.granulometry.error'),
       }
     );
-  }, []);
+  });
 
   data.organic_matter = generalData.sample.type == 'organicSoil';
 

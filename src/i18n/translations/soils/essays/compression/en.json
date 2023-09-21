@@ -46,6 +46,7 @@
   "errors.invalid-capsules-number-hum": "Capsule tare is greater than or equal to the gross dry weight",
   "errors.invalid-dry-weights-capsule-hum": "Gross capsule weight is greater than or equal to gross wet weight.",
   "compression.hygroscopicHumidity": "Hygroscopic Humidity",
+  "compression.waterWeights": "↳ Water Weights",
   "compression.humidityDetermination": "Humidity Determination",
   "compression.wetSoilWeights": "↳ Wet Soil Weights",
   "compression.wetSoilDensitys": "↳ Wet Soil Densitys",

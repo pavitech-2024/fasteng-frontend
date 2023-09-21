@@ -1,5 +1,5 @@
 import { EssayPageProps } from '@/components/templates/essay';
-import useGranulometryStore from '@/stores/soils/granulometry/granulometry.store';
+import useSoilsGranulometryStore from '@/stores/soils/granulometry/granulometry.store';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 import { t } from 'i18next';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
@@ -9,11 +9,11 @@ import Loading from '@/components/molecules/loading';
 import Chart from 'react-google-charts';
 import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import Granulometry_resultsTable from './tables/results-table.granulometry';
+import SoilsGranulometry_resultsTable from './tables/results-table.granulometry';
 
 const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
-  const { results: granulometry_results, step2Data, generalData } = useGranulometryStore();
+  const { results: granulometry_results, step2Data, generalData } = useSoilsGranulometryStore();
 
   const data = {
     // container "Resultados"
@@ -127,7 +127,7 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
             legend: 'none',
           }}
         />
-        <Granulometry_resultsTable rows={rows} columns={columns} />
+        <SoilsGranulometry_resultsTable rows={rows} columns={columns} />
       </FlexColumnBorder>
     </>
   );
