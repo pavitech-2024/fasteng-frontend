@@ -1,0 +1,8 @@
+{
+  "asphaltGranulometry.experimentName": "Nome do experimento",
+  "asphaltGranulometry.material": "Material",
+  "asphaltGranulometry.operator": "Operador",
+  "asphaltGranulometry.calculist": "Calculista",
+  "asphaltGranulometry.essays.granulometryAsphalt": "Granulometria por Peneiramento",
+  "granulometry-asphalt": "Granulometria"
+}

@@ -38,6 +38,9 @@ import asphaltMaterialsENG from './translations/asphalt/materials/en.json';
 // essays
 import asphaltEssaysPTBR from './translations/asphalt/essays/ptbr.json';
 import asphaltEssaysENG from './translations/asphalt/essays/en.json';
+// granulometry
+import asphaltGranulometryPTBR from './translations/asphalt/essays/granulometry/ptbr.json';
+import asphaltGranulometryENG from './translations/asphalt/essays/granulometry/en.json';
 
 /**@soils */
 // samples
@@ -103,6 +106,7 @@ i18n.use(initReactI18next).init({
         /**@asphalt */
         ...asphaltMaterialsPTBR,
         ...asphaltEssaysPTBR,
+        ...asphaltGranulometryPTBR,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
@@ -135,6 +139,7 @@ i18n.use(initReactI18next).init({
         /**@asphalt */
         ...asphaltMaterialsENG,
         ...asphaltEssaysENG,
+        ...asphaltGranulometryENG,
         /**@soils */
         ...samplesENG,
         ...soilsEssaysENG,
