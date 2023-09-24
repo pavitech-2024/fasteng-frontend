@@ -1,10 +1,10 @@
-import Penetration_GeneralData from "@/components/asphalt/essays/penetration/general-data.penetration";
-import Penetration_Calc from "@/components/asphalt/essays/penetration/penetration-calc.penetration";
-import Penetration_Results from "@/components/asphalt/essays/penetration/results.penetration";
-import EssayTemplate from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import Penetration_SERVICE from "@/services/asphalt/essays/penetration/penetration.service";
-import usePenetrationStore, { PenetrationActions } from "@/stores/asphalt/penetration/penetration.store";
+import Penetration_GeneralData from '@/components/asphalt/essays/penetration/general-data.penetration';
+import Penetration_Calc from '@/components/asphalt/essays/penetration/penetration-calc.penetration';
+import Penetration_Results from '@/components/asphalt/essays/penetration/results.penetration';
+import EssayTemplate from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import Penetration_SERVICE from '@/services/asphalt/essays/penetration/penetration.service';
+import usePenetrationStore, { PenetrationActions } from '@/stores/asphalt/penetration/penetration.store';
 
 const Penetration = () => {
   // start an instance of the service

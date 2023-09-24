@@ -1,4 +1,4 @@
-import { EssayPageProps } from "@/components/templates/essay";
+import { EssayPageProps } from '@/components/templates/essay';
 
 const Penetration_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);

@@ -1,8 +1,8 @@
-import { PenetrationIcon } from "@/assets";
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import { IEssayService } from "@/interfaces/common/essay/essay-service.interface";
-import { PenetrationActions, PenetrationData } from "@/stores/asphalt/penetration/penetration.store";
-import { t } from "i18next";
+import { PenetrationIcon } from '@/assets';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
+import { PenetrationActions, PenetrationData } from '@/stores/asphalt/penetration/penetration.store';
+import { t } from 'i18next';
 import Api from '@/api';
 
 class Penetration_SERVICE implements IEssayService {

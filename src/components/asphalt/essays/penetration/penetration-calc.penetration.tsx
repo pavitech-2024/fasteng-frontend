@@ -1,5 +1,5 @@
-import { EssayPageProps } from "@/components/templates/essay";
-import { Box } from "@mui/material";
+import { EssayPageProps } from '@/components/templates/essay';
+import { Box } from '@mui/material';
 
 const Penetration_Calc = ({}: // nextDisabled,
 // setNextDisabled

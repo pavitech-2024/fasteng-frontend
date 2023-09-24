@@ -1,14 +1,14 @@
-import DropDown from "@/components/atoms/inputs/dropDown";
-import Loading from "@/components/molecules/loading";
-import { EssayPageProps } from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import Penetration_SERVICE from "@/services/asphalt/essays/penetration/penetration.service";
-import usePenetrationStore from "@/stores/asphalt/penetration/penetration.store";
-import { Box, TextField } from "@mui/material";
-import { t } from "i18next";
-import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
+import DropDown from '@/components/atoms/inputs/dropDown';
+import Loading from '@/components/molecules/loading';
+import { EssayPageProps } from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import Penetration_SERVICE from '@/services/asphalt/essays/penetration/penetration.service';
+import usePenetrationStore from '@/stores/asphalt/penetration/penetration.store';
+import { Box, TextField } from '@mui/material';
+import { t } from 'i18next';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const Penetration_GeneralData = ({
   nextDisabled,
