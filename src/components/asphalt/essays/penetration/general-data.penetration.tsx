@@ -39,10 +39,10 @@ const Penetration_GeneralData = ({
   }, []);
 
   const inputs = [
-    { label: t('cbr.experimentName'), value: generalData.name, key: 'name', required: true },
-    { label: t('cbr.material'), value: generalData.material, key: 'material', required: true },
-    { label: t('cbr.operator'), value: generalData.operator, key: 'operator', required: false },
-    { label: t('cbr.calculist'), value: generalData.calculist, key: 'calculist', required: false },
+    { label: t('asphalt.experimentName'), value: generalData.name, key: 'name', required: true },
+    { label: t('asphalt.material'), value: generalData.material, key: 'material', required: true },
+    { label: t('asphalt.operator'), value: generalData.operator, key: 'operator', required: false },
+    { label: t('asphalt.calculist'), value: generalData.calculist, key: 'calculist', required: false },
     { label: t('materials.comments'), value: generalData.description, key: 'description', required: false },
   ];
 

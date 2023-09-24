@@ -89,7 +89,7 @@ const usePenetrationStore = create<PenetrationData & PenetrationActions>()(
       }),
       {
         // name data store e config no session storage
-        name: 'concrete-granulometry-store',
+        name: 'asphalt-penetration-store',
         storage: createJSONStorage(() => sessionStorage),
       }
     )
