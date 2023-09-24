@@ -1,14 +1,13 @@
-import DropDown from "@/components/atoms/inputs/dropDown";
-import InputEndAdornment from "@/components/atoms/inputs/input-endAdornment";
-import { EssayPageProps } from "@/components/templates/essay";
-import { SieveSeries } from "@/interfaces/common";
-import useAsphaltGranulometryStore from "@/stores/asphalt/granulometry/asphalt-granulometry.store";
-import { getSieveSeries } from "@/utils/sieves";
-import { Box } from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
-import { t } from "i18next";
-import AsphaltGranulometry_step2Table from "./tables/step2-table.granulometry";
-
+import DropDown from '@/components/atoms/inputs/dropDown';
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { EssayPageProps } from '@/components/templates/essay';
+import { SieveSeries } from '@/interfaces/common';
+import useAsphaltGranulometryStore from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
+import { getSieveSeries } from '@/utils/sieves';
+import { Box } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
+import { t } from 'i18next';
+import AsphaltGranulometry_step2Table from './tables/step2-table.granulometry';
 
 const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useAsphaltGranulometryStore();

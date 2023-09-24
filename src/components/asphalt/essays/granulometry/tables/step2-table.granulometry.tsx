@@ -1,4 +1,4 @@
-import { GridColDef, DataGrid } from "@mui/x-data-grid";
+import { GridColDef, DataGrid } from '@mui/x-data-grid';
 
 interface step2GranulometryProps {
   rows: { sieve: string; passant: number; retained: number }[];

@@ -1,6 +1,6 @@
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import { create } from "zustand";
-import { devtools, persist, createJSONStorage } from "zustand/middleware";
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { create } from 'zustand';
+import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
 interface AsphaltGeneralData {
   userId: string;

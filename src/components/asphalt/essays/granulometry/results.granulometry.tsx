@@ -1,16 +1,15 @@
-import FlexColumnBorder from "@/components/atoms/containers/flex-column-with-border";
-import Result_Card from "@/components/atoms/containers/result-card";
-import ResultSubTitle from "@/components/atoms/titles/result-sub-title";
-import ExperimentResume, { ExperimentResumeData } from "@/components/molecules/boxes/experiment-resume";
-import Loading from "@/components/molecules/loading";
-import { EssayPageProps } from "@/components/templates/essay";
-import useAsphaltGranulometryStore from "@/stores/asphalt/granulometry/asphalt-granulometry.store";
-import { Box } from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
-import { t } from "i18next";
-import Chart from "react-google-charts";
-import AsphaltGranulometry_resultsTable from "./tables/results-table.granulometry";
-
+import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import Result_Card from '@/components/atoms/containers/result-card';
+import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
+import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
+import Loading from '@/components/molecules/loading';
+import { EssayPageProps } from '@/components/templates/essay';
+import useAsphaltGranulometryStore from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
+import { Box } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
+import { t } from 'i18next';
+import Chart from 'react-google-charts';
+import AsphaltGranulometry_resultsTable from './tables/results-table.granulometry';
 
 const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);

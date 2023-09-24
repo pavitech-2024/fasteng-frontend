@@ -1,11 +1,12 @@
-import AsphaltGranulometry_GeneralData from "@/components/asphalt/essays/granulometry/general-data.granulometry";
-import AsphaltGranulometry_Results from "@/components/asphalt/essays/granulometry/results.granulometry";
-import AsphaltGranulometry_Step2 from "@/components/asphalt/essays/granulometry/step2.granulometry";
-import EssayTemplate from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import AsphaltGranulometry_SERVICE from "@/services/asphalt/granulometry/asphalt-granulometry.service";
-import useAsphaltGranulometryStore, { AsphaltGranulometryActions } from "@/stores/asphalt/granulometry/asphalt-granulometry.store";
-
+import AsphaltGranulometry_GeneralData from '@/components/asphalt/essays/granulometry/general-data.granulometry';
+import AsphaltGranulometry_Results from '@/components/asphalt/essays/granulometry/results.granulometry';
+import AsphaltGranulometry_Step2 from '@/components/asphalt/essays/granulometry/step2.granulometry';
+import EssayTemplate from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import AsphaltGranulometry_SERVICE from '@/services/asphalt/granulometry/asphalt-granulometry.service';
+import useAsphaltGranulometryStore, {
+  AsphaltGranulometryActions,
+} from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
 
 const AsphaltGranulometry = () => {
   // start an instance of the service

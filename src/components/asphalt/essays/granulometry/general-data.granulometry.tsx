@@ -1,15 +1,14 @@
-import DropDown from "@/components/atoms/inputs/dropDown";
-import Loading from "@/components/molecules/loading";
-import { EssayPageProps } from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import AsphaltGranulometry_SERVICE from "@/services/asphalt/granulometry/asphalt-granulometry.service";
-import useAsphaltGranulometryStore from "@/stores/asphalt/granulometry/asphalt-granulometry.store";
-import { Box, TextField } from "@mui/material";
-import { t } from "i18next";
-import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
-
+import DropDown from '@/components/atoms/inputs/dropDown';
+import Loading from '@/components/molecules/loading';
+import { EssayPageProps } from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import AsphaltGranulometry_SERVICE from '@/services/asphalt/granulometry/asphalt-granulometry.service';
+import useAsphaltGranulometryStore from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
+import { Box, TextField } from '@mui/material';
+import { t } from 'i18next';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const AsphaltGranulometry_GeneralData = ({
   nextDisabled,

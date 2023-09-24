@@ -1,4 +1,4 @@
-import { GridColDef, DataGrid } from "@mui/x-data-grid";
+import { GridColDef, DataGrid } from '@mui/x-data-grid';
 
 interface resultsGranulometryProps {
   rows: {
