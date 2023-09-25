@@ -1,69 +1,87 @@
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import usePenetrationStore from '@/stores/asphalt/penetration/penetration.store';
 import { Box, Button, TextField } from '@mui/material';
+import { t } from 'i18next';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const Penetration_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { penetrationCalc: data, setData } = usePenetrationStore();
 
-  // if (
-  //   nextDisabled &&
-  //   data.resultMode != null &&
-  //   data. != null &&
-  //   data.table_data.every((row) => row.passant !== null && row.retained !== null)
-  // )
-  //   setNextDisabled(false);
+  const [inputFields, setInputFields] = useState(data.points || []); // Inicialize com o valor existente ou vazio
 
-  const [inputFields, setInputFields] = useState([{ value: '' }]);
-
-  // Função para adicionar um novo campo de input
-  const handleAddInput = () => {
-    const newInputFields = [...inputFields, { value: '' }];
-    setInputFields(newInputFields);
+  const handleErase = () => {
+    try {
+      if (inputFields.length > 1) {
+        const newInputFields = [...inputFields];
+        newInputFields.pop();
+        setInputFields(newInputFields);
+        setData({ step: 1, key: 'points', value: newInputFields });
+      } else {
+        throw new Error(t('compression.error.minValue'));
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
-  // Função para remover o campo de input na posição especificada
-  const handleRemoveInput = (indexToRemove) => {
-    const newInputFields = inputFields.filter((_, index) => index !== indexToRemove);
+  const handleAdd = () => {
+    const newInputFields = [...inputFields, 0]; // Adicionar um novo input vazio
     setInputFields(newInputFields);
+    setData({ step: 1, key: 'points', value: newInputFields });
+    setNextDisabled(true);
   };
 
-  // Função para atualizar o valor do campo de input com base no índice
-  const handleInputChange = (index, event) => {
-    const newInputFields = [...inputFields];
-    newInputFields[index].value = event.target.value;
-    setInputFields(newInputFields);
+  if (nextDisabled) {
+    // Verifica se pelo menos um campo da tabela possui um valor maior do que zero
+    const hasValueGreaterThanZero = inputFields.some((value) => value > 0);
+  
+    if (
+      hasValueGreaterThanZero &&
+      data.points !== null
+      // Adicione aqui outras validações necessárias antes de permitir avançar para o próximo passo
+    ) {
+      setNextDisabled(false);
+    }
+  }
+
+  const ExpansionToolbar = () => {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
+        <Button sx={{ color: 'secondaryTons.red' }} onClick={handleErase}>
+          {t('erase')}
+        </Button>
+        <Button sx={{ color: 'secondaryTons.green' }} onClick={handleAdd}>
+          {t('add')}
+        </Button>
+      </Box>
+    );
   };
 
   return (
     <Box>
+
       {inputFields.map((input, index) => (
         <Box key={index} sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <TextField
+          <InputEndAdornment
             fullWidth
-            label={`Input ${index + 1}`}
-            variant="outlined"
-            value={input.value}
-            onChange={(event) => handleInputChange(index, event)}
+            value={input}
+            required={false}
+            onChange={(e) => {
+              const newInputFields = [...inputFields];
+              newInputFields[index] = Number(e.target.value);
+              setInputFields(newInputFields);
+              setData({ step: 1, key: 'points', value: newInputFields });
+            }}
+            adornment="ddmm"
+            type="number"
+            inputProps={{ min: 0 }}
           />
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => handleRemoveInput(index)}
-          >
-            Remover
-          </Button>
         </Box>
       ))}
 
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleAddInput}
-        sx={{ mt: '10px' }}
-      >
-        Adicionar
-      </Button>
+      <ExpansionToolbar />
     </Box>
   )
 };

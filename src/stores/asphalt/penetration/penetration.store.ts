@@ -14,7 +14,7 @@ interface PenetrationGeneralData {
 interface PenetrationCalc {
   resultMode: boolean;
   experimentDate: Date;
-  points: [number];
+  points: number[];
 }
 
 interface Penetration_results {

@@ -110,6 +110,7 @@ class Penetration_SERVICE implements IEssayService {
 
   // calculate results from penetration essay
   calculateResults = async (store: PenetrationData): Promise<void> => {
+    console.log("🚀 ~ file: penetration.service.ts:113 ~ Penetration_SERVICE ~ calculateResults= ~ store:", store)
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
@@ -120,7 +121,7 @@ class Penetration_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
 
-      this.store_actions.setData({ step: 2, value: result });
+      this.store_actions.setData({ step: 1, value: result });
     } catch (error) {
       throw error;
     }
