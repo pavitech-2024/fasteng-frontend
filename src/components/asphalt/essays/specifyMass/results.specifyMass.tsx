@@ -19,8 +19,12 @@ const SpecifyMass_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
   if (specifymass_results) {
     data.container_other_data.push(
       { label: t('specifyMass.bulk_specify_mass'), value: specifymass_results.bulk_specify_mass, unity: 'g/cm³' },
-      { label: t('specifyMass.apparent_specify_mass'), value: specifymass_results.apparent_specify_mass, unity: 'g/cm³' },
-      { label: t('specifyMass.absorption'), value: specifymass_results.absorption, unity: '%' },
+      {
+        label: t('specifyMass.apparent_specify_mass'),
+        value: specifymass_results.apparent_specify_mass,
+        unity: 'g/cm³',
+      },
+      { label: t('specifyMass.absorption'), value: specifymass_results.absorption, unity: '%' }
     );
   }
 

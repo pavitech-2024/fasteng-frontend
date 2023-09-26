@@ -1,91 +1,91 @@
-import { SpecifyMassIcon } from "@/assets";
-import { IEssayService } from "@/interfaces/common/essay/essay-service.interface";
-import { SpecifyMassActions, SpecifyMassData } from "@/stores/asphalt/specifyMass/specifyMass.store";
+import { SpecifyMassIcon } from '@/assets';
+import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
+import { SpecifyMassActions, SpecifyMassData } from '@/stores/asphalt/specifyMass/specifyMass.store';
 import Api from '@/api';
-import { t } from "i18next";
-import { AsphaltMaterial } from "@/interfaces/asphalt";
+import { t } from 'i18next';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
 
 class SPECIFYMASS_SERVICE implements IEssayService {
-    info = {
-        key: 'specifyMass',
-        icon: SpecifyMassIcon,
-        title: t('asphalt.essays.specifyMass'),
-        path: '/asphalt/essays/specifyMass',
-        steps: 3,
-        backend_path: 'asphalt/essays/specifyMass',
-        standard: {
-            name: 'NBR 9776',
-            link: 'https://smartdoser.fastengapp.com.br/static/media/MassaEspecificaAgregadoMiudoDNIT4112019.8b89a1d7.pdf',
-        },
-        stepperData: [
-            { step: 0, description: t('general data'), path: 'general-data' },
-            { step: 1, description: t('specifyMass'), path: 'essay-data' },
-            { step: 2, description: t('results'), path: 'results' },
-        ],
-    };
+  info = {
+    key: 'specifyMass',
+    icon: SpecifyMassIcon,
+    title: t('asphalt.essays.specifyMass'),
+    path: '/asphalt/essays/specifyMass',
+    steps: 3,
+    backend_path: 'asphalt/essays/specifyMass',
+    standard: {
+      name: 'NBR 9776',
+      link: 'https://smartdoser.fastengapp.com.br/static/media/MassaEspecificaAgregadoMiudoDNIT4112019.8b89a1d7.pdf',
+    },
+    stepperData: [
+      { step: 0, description: t('general data'), path: 'general-data' },
+      { step: 1, description: t('specifyMass'), path: 'essay-data' },
+      { step: 2, description: t('results'), path: 'results' },
+    ],
+  };
 
-    store_actions: SpecifyMassActions;
-    userId: string;
+  store_actions: SpecifyMassActions;
+  userId: string;
 
-    /** @handleNext Receives the step and data from the form and calls the respective method */
-    handleNext = async (step: number, data: unknown): Promise<void> => {
-        try {
-            console.log(data);
-            switch (step) {
-                case 0:
-                    await this.submitGeneralData(data as SpecifyMassData['generalData']);
-                    break;
-                case 1:
-                    const { step2Data } = data as SpecifyMassData;
-                    await this.submitStep2Data(step2Data);
-                    await this.calculateResults(data as SpecifyMassData)
-                    break;
-                case 2:
-                  await this.saveEssay(data as SpecifyMassData);
-                    break;
-                default:
-                    throw t('errors.invalid-step');
-            }
-        } catch (error) {
-            throw error;
-        }
-    };
+  /** @handleNext Receives the step and data from the form and calls the respective method */
+  handleNext = async (step: number, data: unknown): Promise<void> => {
+    try {
+      console.log(data);
+      switch (step) {
+        case 0:
+          await this.submitGeneralData(data as SpecifyMassData['generalData']);
+          break;
+        case 1:
+          const { step2Data } = data as SpecifyMassData;
+          await this.submitStep2Data(step2Data);
+          await this.calculateResults(data as SpecifyMassData);
+          break;
+        case 2:
+          await this.saveEssay(data as SpecifyMassData);
+          break;
+        default:
+          throw t('errors.invalid-step');
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
 
-    /** @generalData Methods for general-data (step === 0, page 1) */
+  /** @generalData Methods for general-data (step === 0, page 1) */
 
-    // get all materials from user from backend
-    getmaterialsByUserId = async (userId: string): Promise<AsphaltMaterial[]> => {
-        try {
-            // get all materials from user from backend
-            const response = await Api.get(`asphalt/materials/all/${userId}`);
-            return response.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+  // get all materials from user from backend
+  getmaterialsByUserId = async (userId: string): Promise<AsphaltMaterial[]> => {
+    try {
+      // get all materials from user from backend
+      const response = await Api.get(`asphalt/materials/all/${userId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
 
-    // send general data to backend to verify if there is already a Specify Mass essay with same name for the material
-    submitGeneralData = async (generalData: SpecifyMassData['generalData']): Promise<void> => {
-        try {
-            const { name, material } = generalData;
+  // send general data to backend to verify if there is already a Specify Mass essay with same name for the material
+  submitGeneralData = async (generalData: SpecifyMassData['generalData']): Promise<void> => {
+    try {
+      const { name, material } = generalData;
 
-            // verify if name and material are not empty
-            if (!name) throw t('errors.empty-name');
-            if (!material) throw t('errors.empty-material');
+      // verify if name and material are not empty
+      if (!name) throw t('errors.empty-name');
+      if (!material) throw t('errors.empty-material');
 
-            // verify if there is already a Specify Mass essay with same name for the material
-            const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, material });
+      // verify if there is already a Specify Mass essay with same name for the material
+      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, material });
 
-            const { success, error } = response.data;
+      const { success, error } = response.data;
 
-            // if there is already a Specify Mass essay with same name for the material, throw error
-            if (success === false) throw error.name;
-        } catch (error) {
-            throw error;
-        }
-    };
+      // if there is already a Specify Mass essay with same name for the material, throw error
+      if (success === false) throw error.name;
+    } catch (error) {
+      throw error;
+    }
+  };
 
-    /** @SpecifyMass Methods for SpecifyMass page (step === 1, page 2) */
+  /** @SpecifyMass Methods for SpecifyMass page (step === 1, page 2) */
 
   // verify inputs from SpecifyMass page (step === 1, page 2)
   submitStep2Data = async (step2Data: SpecifyMassData['step2Data']): Promise<void> => {
@@ -103,14 +103,10 @@ class SPECIFYMASS_SERVICE implements IEssayService {
       if (step2Data.surface_saturated_mass < 0) throw t('errors.negative-material-surface-saturated-mass');
 
       if (step2Data.surface_saturated_mass <= step2Data.dry_mass) {
-        throw (
-          t('errors.surface-saturated-mass-not-greater-than-dry-mass')
-        );
+        throw t('errors.surface-saturated-mass-not-greater-than-dry-mass');
       }
       if (step2Data.submerged_mass <= step2Data.dry_mass) {
-        throw (
-          t('errors.submerged-mass-not-greater-than-dry-mass')
-        );
+        throw t('errors.submerged-mass-not-greater-than-dry-mass');
       }
     } catch (error) {
       throw error;

@@ -39,8 +39,8 @@ import asphaltMaterialsENG from './translations/asphalt/materials/en.json';
 import asphaltEssaysPTBR from './translations/asphalt/essays/ptbr.json';
 import asphaltEssaysENG from './translations/asphalt/essays/en.json';
 // specifyMass
-import specifyMassPTBR from "./translations/asphalt/essays/specifyMass/ptbr.json";
-import specifyMassENG from "./translations/asphalt/essays/specifyMass/en.json";
+import specifyMassPTBR from './translations/asphalt/essays/specifyMass/ptbr.json';
+import specifyMassENG from './translations/asphalt/essays/specifyMass/en.json';
 
 /**@soils */
 // samples
