@@ -117,7 +117,7 @@ class Penetration_SERVICE implements IEssayService {
       });
 
       const { success, error, result } = response.data;
-      console.log("🚀 ~ file: penetration.service.ts:120 ~ Penetration_SERVICE ~ calculateResults= ~ result:", result)
+      console.log('🚀 ~ file: penetration.service.ts:120 ~ Penetration_SERVICE ~ calculateResults= ~ result:', result);
 
       if (success === false) throw error.name;
 

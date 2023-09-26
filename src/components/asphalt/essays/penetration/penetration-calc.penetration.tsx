@@ -35,11 +35,8 @@ const Penetration_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
 
   if (nextDisabled) {
     const hasValueGreaterThanZero = inputFields.some((value) => value > 0);
-  
-    if (
-      hasValueGreaterThanZero &&
-      data.points !== null
-    ) {
+
+    if (hasValueGreaterThanZero && data.points !== null) {
       setNextDisabled(false);
     }
   }
@@ -59,7 +56,6 @@ const Penetration_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
 
   return (
     <Box>
-
       {inputFields.map((input, index) => (
         <Box key={index} sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <InputEndAdornment
@@ -81,7 +77,7 @@ const Penetration_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
 
       <ExpansionToolbar />
     </Box>
-  )
+  );
 };
 
 export default Penetration_Calc;

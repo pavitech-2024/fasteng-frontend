@@ -12,7 +12,7 @@ const Penetration_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
 
   const data = {
     penetration: results.penetration.toString(),
-    alerts: results.alerts[0]
+    alerts: results.alerts[0],
   };
 
   // criando o objeto que será passado para o componente ExperimentResume
@@ -36,10 +36,8 @@ const Penetration_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
             mt: '20px',
           }}
         >
-          {data.alerts && (
-            <Alert severity="warning">{data.alerts}</Alert>
-          )}
-          <Result_Card label={t('asphalt.essays.penetration-asphalt')} value={data.penetration} unity={'mm'}/>
+          {data.alerts && <Alert severity="warning">{data.alerts}</Alert>}
+          <Result_Card label={t('asphalt.essays.penetration-asphalt')} value={data.penetration} unity={'mm'} />
         </Box>
       </FlexColumnBorder>
     </>
