@@ -7,10 +7,10 @@ import Api from '@/api';
 
 class Penetration_SERVICE implements IEssayService {
   info = {
-    key: 'penetration-asphalt',
+    key: 'penetration',
     icon: PenetrationIcon,
     title: t('asphalt.essays.penetration'),
-    path: '/asphalt/essays/penetration-asphalt',
+    path: '/asphalt/essays/penetration',
     backend_path: 'asphalt/essays/penetration',
     steps: 3,
     standard: {
@@ -19,7 +19,7 @@ class Penetration_SERVICE implements IEssayService {
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
-      { step: 1, description: t('penetration-asphalt'), path: 'essay-data' },
+      { step: 1, description: t('asphalt.essays.penetration-asphalt'), path: 'essay-data' },
       { step: 2, description: t('results'), path: 'results' },
     ],
   };
@@ -110,7 +110,6 @@ class Penetration_SERVICE implements IEssayService {
 
   // calculate results from penetration essay
   calculateResults = async (store: PenetrationData): Promise<void> => {
-    console.log("🚀 ~ file: penetration.service.ts:113 ~ Penetration_SERVICE ~ calculateResults= ~ store:", store)
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
@@ -118,10 +117,11 @@ class Penetration_SERVICE implements IEssayService {
       });
 
       const { success, error, result } = response.data;
+      console.log("🚀 ~ file: penetration.service.ts:120 ~ Penetration_SERVICE ~ calculateResults= ~ result:", result)
 
       if (success === false) throw error.name;
 
-      this.store_actions.setData({ step: 1, value: result });
+      this.store_actions.setData({ step: 2, value: result });
     } catch (error) {
       throw error;
     }

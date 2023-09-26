@@ -43,7 +43,7 @@ const Penetration_GeneralData = ({
     { label: t('asphalt.material'), value: generalData.material, key: 'material', required: true },
     { label: t('asphalt.operator'), value: generalData.operator, key: 'operator', required: false },
     { label: t('asphalt.calculist'), value: generalData.calculist, key: 'calculist', required: false },
-    { label: t('materials.comments'), value: generalData.description, key: 'description', required: false },
+    { label: t('asphalt.materials.comments'), value: generalData.description, key: 'description', required: false },
   ];
 
   // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
@@ -116,7 +116,7 @@ const Penetration_GeneralData = ({
                     variant="standard"
                     label={input.label}
                     options={materials.map((material: AsphaltMaterial) => {
-                      return { label: material.name + ' | ' + t(`${'materials.' + material.type}`), value: material };
+                      return { label: material.name + ' | ' + t(`${'asphalt.materials.' + material.type}`), value: material };
                     })}
                     defaultValue={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}

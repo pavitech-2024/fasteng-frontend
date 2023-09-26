@@ -15,5 +15,7 @@
   "asphalt.materials.fineAggregate": "Agregado Miúdo",
   "asphalt.materials.filler": "Fíler",
   "asphalt.materials.cap": "Cimento Asfáltico de Petróleo (CAP)",
-  "asphalt.materials.other": "Other"
+  "asphalt.materials.other": "Outro",
+  "asphalt.materials.comments": "Comentários"
+
 }

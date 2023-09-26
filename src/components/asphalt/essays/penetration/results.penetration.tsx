@@ -3,14 +3,17 @@ import Result_Card from '@/components/atoms/containers/result-card';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 import { EssayPageProps } from '@/components/templates/essay';
 import usePenetrationStore from '@/stores/asphalt/penetration/penetration.store';
-import { Box } from '@mui/material';
+import { Alert, Box } from '@mui/material';
 import { t } from 'i18next';
 
 const Penetration_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: results, generalData } = usePenetrationStore();
 
-  const data = results.penetration;
+  const data = {
+    penetration: results.penetration.toString(),
+    alerts: results.alerts[0]
+  };
 
   // criando o objeto que será passado para o componente ExperimentResume
   const experimentResumeData: ExperimentResumeData = {
@@ -26,12 +29,17 @@ const Penetration_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
           sx={{
             width: '100%',
             display: 'flex',
-            // gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
-            gap: '10px',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '30px',
             mt: '20px',
           }}
         >
-          <Result_Card label={t('penetration.penetration')} value={data.toString()} unity={'mm'}/>
+          {data.alerts && (
+            <Alert severity="warning">{data.alerts}</Alert>
+          )}
+          <Result_Card label={t('asphalt.essays.penetration-asphalt')} value={data.penetration} unity={'mm'}/>
         </Box>
       </FlexColumnBorder>
     </>

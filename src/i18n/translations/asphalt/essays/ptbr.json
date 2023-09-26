@@ -22,5 +22,10 @@
   "asphalt.essays.filter.all": "Todos",
   "asphalt.essays.filter.aggregates": "Agregados",
   "asphalt.essays.filter.asphaltMix": "Misturas Asfálticas",
-  "asphalt.essays.filter.asphaltBinder": "Ligante Asfáltico"
+  "asphalt.essays.filter.asphaltBinder": "Ligante Asfáltico",
+  "asphalt.experimentName": "Nome do experimento",
+  "asphalt.material": "Material",
+  "asphalt.operator": "Operador",
+  "asphalt.calculist": "Calculista",
+  "asphalt.essays.penetration-asphalt": "Penetração"
 }

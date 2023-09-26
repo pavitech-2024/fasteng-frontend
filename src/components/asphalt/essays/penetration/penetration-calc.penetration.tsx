@@ -1,7 +1,7 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import usePenetrationStore from '@/stores/asphalt/penetration/penetration.store';
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { t } from 'i18next';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -27,20 +27,18 @@ const Penetration_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
   };
 
   const handleAdd = () => {
-    const newInputFields = [...inputFields, 0]; // Adicionar um novo input vazio
+    const newInputFields = [...inputFields, 0];
     setInputFields(newInputFields);
     setData({ step: 1, key: 'points', value: newInputFields });
     setNextDisabled(true);
   };
 
   if (nextDisabled) {
-    // Verifica se pelo menos um campo da tabela possui um valor maior do que zero
     const hasValueGreaterThanZero = inputFields.some((value) => value > 0);
   
     if (
       hasValueGreaterThanZero &&
       data.points !== null
-      // Adicione aqui outras validações necessárias antes de permitir avançar para o próximo passo
     ) {
       setNextDisabled(false);
     }
@@ -74,7 +72,7 @@ const Penetration_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
               setInputFields(newInputFields);
               setData({ step: 1, key: 'points', value: newInputFields });
             }}
-            adornment="ddmm"
+            adornment="dmm"
             type="number"
             inputProps={{ min: 0 }}
           />
