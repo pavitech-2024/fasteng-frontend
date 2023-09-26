@@ -102,7 +102,7 @@ const AsphaltEssays: NextPage = () => {
       title: t('asphalt.essays.specifyMass'),
       icon: SpecifyMassIcon,
       key: 'specifyMass',
-      link: '/asphalt/essays/specify-mass',
+      link: '/asphalt/essays/specifyMass',
       type: 'aggregates',
     },
     {
