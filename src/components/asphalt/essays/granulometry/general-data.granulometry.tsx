@@ -3,7 +3,7 @@ import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
-import AsphaltGranulometry_SERVICE from '@/services/asphalt/granulometry/asphalt-granulometry.service';
+import AsphaltGranulometry_SERVICE from '@/services/asphalt/essays/granulometry/asphalt-granulometry.service';
 import useAsphaltGranulometryStore from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
@@ -116,7 +116,7 @@ const AsphaltGranulometry_GeneralData = ({
                     variant="standard"
                     label={input.label}
                     options={materials.map((material: AsphaltMaterial) => {
-                      return { label: material.name + ' | ' + t(`${'materials.' + material.type}`), value: material };
+                      return { label: material.name + ' | ' + t(`${'asphalt.materials.' + material.type}`), value: material };
                     })}
                     defaultValue={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}

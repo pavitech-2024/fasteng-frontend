@@ -10,9 +10,9 @@ import { t } from 'i18next';
 
 class AsphaltGranulometry_SERVICE implements IEssayService {
   info = {
-    key: 'granulometry-asphalt',
+    key: 'granulometry',
     icon: GranulometryIcon,
-    title: t('asphalt.essays.granulometryAsphalt'),
+    title: t('asphalt.essays.granulometry'),
     path: '/asphalt/essays/granulometry-asphalt',
     backend_path: 'asphalt/essays/granulometry',
     steps: 3,
