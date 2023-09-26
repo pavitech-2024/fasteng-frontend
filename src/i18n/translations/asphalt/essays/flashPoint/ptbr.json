@@ -1,7 +1,7 @@
 {
-    "flashPoint": "Ponto de Fulgor",
-    "flashPoint.step-2-description" : "Preencha todos os campos",
-    "flashPoint.step-3-description" : "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
-    "flashPoint.ignition_temperature" : "Temperatura de ocorrimento de ignição",
-    "flashPoint.temperature" : "Temperatura"
+  "flashPoint": "Ponto de Fulgor",
+  "flashPoint.step-2-description": "Preencha todos os campos",
+  "flashPoint.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
+  "flashPoint.ignition_temperature": "Temperatura de ocorrimento de ignição",
+  "flashPoint.temperature": "Temperatura"
 }

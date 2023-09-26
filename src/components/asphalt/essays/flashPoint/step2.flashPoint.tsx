@@ -7,8 +7,7 @@ import { t } from 'i18next';
 const FlashPoint_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useFlashPointStore();
 
-  if (nextDisabled && data.ignition_temperature)
-    setNextDisabled(false);
+  if (nextDisabled && data.ignition_temperature) setNextDisabled(false);
 
   return (
     <Box>

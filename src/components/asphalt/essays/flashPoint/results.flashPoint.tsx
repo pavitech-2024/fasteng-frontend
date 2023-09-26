@@ -17,9 +17,11 @@ const FlashPoint_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
   };
 
   if (flashpoint_results) {
-    data.container_other_data.push(
-      { label: t('flashPoint.temperature'), value: flashpoint_results.temperature, unity: '°C' },
-    );
+    data.container_other_data.push({
+      label: t('flashPoint.temperature'),
+      value: flashpoint_results.temperature,
+      unity: '°C',
+    });
   }
 
   // criando o objeto que será passado para o componente ExperimentResume
