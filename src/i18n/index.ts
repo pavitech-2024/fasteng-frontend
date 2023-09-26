@@ -41,6 +41,9 @@ import asphaltEssaysENG from './translations/asphalt/essays/en.json';
 // specifyMass
 import specifyMassPTBR from './translations/asphalt/essays/specifyMass/ptbr.json';
 import specifyMassENG from './translations/asphalt/essays/specifyMass/en.json';
+// flashPoint
+import flashPointPTBR from './translations/asphalt/essays/flashPoint/ptbr.json';
+import flashPointENG from './translations/asphalt/essays/flashPoint/en.json';
 
 /**@soils */
 // samples
@@ -107,6 +110,7 @@ i18n.use(initReactI18next).init({
         ...asphaltMaterialsPTBR,
         ...asphaltEssaysPTBR,
         ...specifyMassPTBR,
+        ...flashPointPTBR,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
@@ -140,6 +144,7 @@ i18n.use(initReactI18next).init({
         ...asphaltMaterialsENG,
         ...asphaltEssaysENG,
         ...specifyMassENG,
+        ...flashPointENG,
         /**@soils */
         ...samplesENG,
         ...soilsEssaysENG,

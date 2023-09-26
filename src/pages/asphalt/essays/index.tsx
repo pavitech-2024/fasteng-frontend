@@ -123,7 +123,7 @@ const AsphaltEssays: NextPage = () => {
       title: t('asphalt.essays.flashPoint'),
       icon: FlashPointIcon,
       key: 'flashPoint',
-      link: '/asphalt/essays/flash-point',
+      link: '/asphalt/essays/flashPoint',
       type: 'asphaltBinder',
     },
     {
