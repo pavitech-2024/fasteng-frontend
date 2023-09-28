@@ -1,10 +1,10 @@
-import Abrasion_Calc from "@/components/asphalt/essays/abrasion/abrasion-calc.abrasion";
-import Abrasion_GeneralData from "@/components/asphalt/essays/abrasion/general-data.abrasion";
-import Abrasion_Results from "@/components/asphalt/essays/abrasion/results.abrasion";
-import EssayTemplate from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import Abrasion_SERVICE from "@/services/asphalt/essays/abrasion/abrasion.service";
-import useAbrasionStore, { AbrasionActions } from "@/stores/asphalt/abrasion.store";
+import Abrasion_Calc from '@/components/asphalt/essays/abrasion/abrasion-calc.abrasion';
+import Abrasion_GeneralData from '@/components/asphalt/essays/abrasion/general-data.abrasion';
+import Abrasion_Results from '@/components/asphalt/essays/abrasion/results.abrasion';
+import EssayTemplate from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import Abrasion_SERVICE from '@/services/asphalt/essays/abrasion/abrasion.service';
+import useAbrasionStore, { AbrasionActions } from '@/stores/asphalt/abrasion.store';
 
 const Abrasion = () => {
   // start an instance of the service

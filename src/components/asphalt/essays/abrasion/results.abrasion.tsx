@@ -1,14 +1,14 @@
-import FlexColumnBorder from "@/components/atoms/containers/flex-column-with-border";
-import ExperimentResume, { ExperimentResumeData } from "@/components/molecules/boxes/experiment-resume";
-import { EssayPageProps } from "@/components/templates/essay";
-import useAbrasionStore from "@/stores/asphalt/abrasion.store";
-import { Box} from "@mui/material";
-import { t } from "i18next";
+import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
+import { EssayPageProps } from '@/components/templates/essay';
+import useAbrasionStore from '@/stores/asphalt/abrasion.store';
+import { Box } from '@mui/material';
+import { t } from 'i18next';
 
 const Abrasion_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: results, generalData } = useAbrasionStore();
-  console.log("🚀 ~ file: results.abrasion.tsx:11 ~ results:", results)
+  console.log('🚀 ~ file: results.abrasion.tsx:11 ~ results:', results);
 
   // const data = {
   //   abrasion: results.abrasion.toString(),
@@ -35,9 +35,7 @@ const Abrasion_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => 
             gap: '30px',
             mt: '20px',
           }}
-        >
-          
-        </Box>
+        ></Box>
       </FlexColumnBorder>
     </>
   );

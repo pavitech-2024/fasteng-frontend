@@ -1,10 +1,9 @@
-import { EssayPageProps } from "@/components/templates/essay";
-import { Box } from "@mui/material";
+import { EssayPageProps } from '@/components/templates/essay';
+import { Box } from '@mui/material';
 
-const Abrasion_Calc = ({ 
-  // nextDisabled, 
-  // setNextDisabled 
-}: EssayPageProps) => {
+const Abrasion_Calc = ({}: // nextDisabled,
+// setNextDisabled
+EssayPageProps) => {
   //const { abrasionCalc: data, setData } = useAbrasionStore();
 
   // const handleErase = () => {

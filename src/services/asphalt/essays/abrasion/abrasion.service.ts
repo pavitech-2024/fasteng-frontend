@@ -1,9 +1,9 @@
-import { AbrasionIcon } from "@/assets";
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import { IEssayService } from "@/interfaces/common/essay/essay-service.interface";
-import { t } from "i18next";
+import { AbrasionIcon } from '@/assets';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
+import { t } from 'i18next';
 import Api from '@/api';
-import { AbrasionActions, AbrasionData } from "@/stores/asphalt/abrasion.store";
+import { AbrasionActions, AbrasionData } from '@/stores/asphalt/abrasion.store';
 
 class Abrasion_SERVICE implements IEssayService {
   info = {
