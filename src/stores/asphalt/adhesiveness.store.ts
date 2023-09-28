@@ -1,7 +1,7 @@
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import { create } from "zustand";
-import { devtools, persist, createJSONStorage } from "zustand/middleware";
-import { setDataType } from "../soils/cbr/cbr.store";
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { create } from 'zustand';
+import { devtools, persist, createJSONStorage } from 'zustand/middleware';
+import { setDataType } from '../soils/cbr/cbr.store';
 
 interface GeneralData {
   userId: string;
@@ -17,7 +17,7 @@ export type AdhesivenessData = {
   generalData: GeneralData;
   adhesiveness: adhesiveness_step2Data;
   results: {
-    filmDisplacement: boolean
+    filmDisplacement: boolean;
   };
 };
 

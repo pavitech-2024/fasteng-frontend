@@ -1,11 +1,10 @@
-
-import ADHESIVENESS_GeneralData from "@/components/asphalt/essays/adhesiveness/general-data.adhesiveness";
-import ADHESIVENESS_Results from "@/components/asphalt/essays/adhesiveness/results.adhesiveness";
-import ADHESIVENESS_Step2 from "@/components/asphalt/essays/adhesiveness/step2.adhesiveness";
-import EssayTemplate from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import ADHESIVENESS_SERVICE from "@/services/asphalt/essays/adhesiveness/adhesiveness.service";
-import useAdhesivenessStore, { AdhesivenessActions } from "@/stores/asphalt/adhesiveness.store";
+import ADHESIVENESS_GeneralData from '@/components/asphalt/essays/adhesiveness/general-data.adhesiveness';
+import ADHESIVENESS_Results from '@/components/asphalt/essays/adhesiveness/results.adhesiveness';
+import ADHESIVENESS_Step2 from '@/components/asphalt/essays/adhesiveness/step2.adhesiveness';
+import EssayTemplate from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import ADHESIVENESS_SERVICE from '@/services/asphalt/essays/adhesiveness/adhesiveness.service';
+import useAdhesivenessStore, { AdhesivenessActions } from '@/stores/asphalt/adhesiveness.store';
 
 const Adhesiveness = () => {
   // start an instance of the service

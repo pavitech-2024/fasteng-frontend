@@ -1,9 +1,9 @@
-import { SpecifyMassIcon } from "@/assets";
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import { IEssayService } from "@/interfaces/common/essay/essay-service.interface";
-import { AdhesivenessActions, AdhesivenessData } from "@/stores/asphalt/adhesiveness.store";
+import { SpecifyMassIcon } from '@/assets';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
+import { AdhesivenessActions, AdhesivenessData } from '@/stores/asphalt/adhesiveness.store';
 import Api from '@/api';
-import { t } from "i18next";
+import { t } from 'i18next';
 
 class ADHESIVENESS_SERVICE implements IEssayService {
   info = {

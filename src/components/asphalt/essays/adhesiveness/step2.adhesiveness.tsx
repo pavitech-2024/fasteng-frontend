@@ -1,11 +1,11 @@
-import { EssayPageProps } from "@/components/templates/essay";
-import useAdhesivenessStore from "@/stores/asphalt/adhesiveness.store";
-import { Box } from "@mui/material";
-import { t } from "i18next";
+import { EssayPageProps } from '@/components/templates/essay';
+import useAdhesivenessStore from '@/stores/asphalt/adhesiveness.store';
+import { Box } from '@mui/material';
+import { t } from 'i18next';
 
 const ADHESIVENESS_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { adhesiveness: data, setData } = useAdhesivenessStore();
-  console.log("🚀 ~ file: step2.adhesiveness.tsx:8 ~ setData:", setData)
+  console.log('🚀 ~ file: step2.adhesiveness.tsx:8 ~ setData:', setData);
 
   const inputs = [
     {
@@ -37,9 +37,7 @@ const ADHESIVENESS_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         alignItems: 'center',
         justifyContent: 'center',
       }}
-    >
-      
-    </Box>
+    ></Box>
   );
 };
 
