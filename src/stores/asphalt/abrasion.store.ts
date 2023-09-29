@@ -12,14 +12,14 @@ interface AbrasionGeneralData {
 }
 
 interface AbrasionCalc {
-  initialMass: number
-  finalMass: number
-  graduation: string
+  initialMass: number;
+  finalMass: number;
+  graduation: string;
 }
 
 interface Abrasion_results {
-  losAngelesAbrasion: number,
-  alerts: string[],
+  losAngelesAbrasion: number;
+  alerts: string[];
 }
 
 export type AbrasionData = {
@@ -49,7 +49,7 @@ const initialState = {
   abrasionCalc: {
     initialMass: null,
     finalMass: null,
-    graduation: null
+    graduation: null,
   },
   results: {
     losAngelesAbrasion: null,

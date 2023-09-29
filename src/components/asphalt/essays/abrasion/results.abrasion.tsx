@@ -13,7 +13,7 @@ const Abrasion_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => 
 
   const data = {
     losAngelesAbrasion: results.losAngelesAbrasion.toFixed(2).toString(),
-    alerts: results.alerts[0]
+    alerts: results.alerts[0],
   };
 
   // criando o objeto que será passado para o componente ExperimentResume

@@ -5,7 +5,7 @@ import useAbrasionStore from '@/stores/asphalt/abrasion.store';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
 
-const Abrasion_Calc = ({ nextDisabled, setNextDisabled}: EssayPageProps) => {
+const Abrasion_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { abrasionCalc: data, setData } = useAbrasionStore();
 
   if (nextDisabled) {
@@ -19,17 +19,17 @@ const Abrasion_Calc = ({ nextDisabled, setNextDisabled}: EssayPageProps) => {
       key: 'initialMass',
       adornment: 'g',
       value: data.initialMass,
-      label: t('asphalt.essays.abrasion.initial-mass')
+      label: t('asphalt.essays.abrasion.initial-mass'),
     },
     {
       key: 'finalMass',
       adornment: 'g',
       value: data.finalMass,
-      label: t('asphalt.essays.abrasion.final-mass')
-    }
+      label: t('asphalt.essays.abrasion.final-mass'),
+    },
   ];
 
-  const graduations = ["A", "B", "C", "D", "E"];
+  const graduations = ['A', 'B', 'C', 'D', 'E'];
 
   return (
     <Box
@@ -40,27 +40,26 @@ const Abrasion_Calc = ({ nextDisabled, setNextDisabled}: EssayPageProps) => {
         alignItems: 'center',
         marginX: 'auto',
         marginY: '20px',
-        gap: '15px'
+        gap: '15px',
       }}
     >
-
-      <DropDown 
+      <DropDown
         sx={{
           width: '25%',
           display: 'flex',
         }}
-        variant='standard'
-        size='medium'
-        label={t('asphalt.essays.abrasion.graduation')} 
+        variant="standard"
+        size="medium"
+        label={t('asphalt.essays.abrasion.graduation')}
         options={graduations.map((grad) => ({ label: grad, value: grad }))}
         callback={(value) => {
-          setData({ step: 1, key: 'graduation', value })
+          setData({ step: 1, key: 'graduation', value });
         }}
-        required    
+        required
       />
 
       {inputs.map((item) => (
-        <Box 
+        <Box
           key={item.key}
           sx={{
             width: '50%',
@@ -69,19 +68,19 @@ const Abrasion_Calc = ({ nextDisabled, setNextDisabled}: EssayPageProps) => {
             alignItems: 'center',
             marginX: 'auto',
             marginY: '10px',
-            gap: '15px'
+            gap: '15px',
           }}
         >
-          <InputEndAdornment 
+          <InputEndAdornment
             fullWidth
             label={item.label}
-            type='number'
+            type="number"
             required
             inputProps={{ min: 0 }}
-            adornment={'g'} 
-            value={item.value} 
+            adornment={'g'}
+            value={item.value}
             onChange={(e) => {
-              setData({ step: 1, key: item.key, value: e.target.value})
+              setData({ step: 1, key: item.key, value: e.target.value });
             }}
           />
         </Box>

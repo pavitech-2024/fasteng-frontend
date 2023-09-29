@@ -99,14 +99,9 @@ class Abrasion_SERVICE implements IEssayService {
   // verify inputs from Abrasion page (step === 1, page 2)
   submitAbrasionCalcData = async (abrasionCalc: AbrasionData['abrasionCalc']): Promise<void> => {
     try {
+      const { finalMass, initialMass } = abrasionCalc;
 
-    const { 
-      finalMass,
-      initialMass
-    } = abrasionCalc;
-
-    if (Number(finalMass) > Number(initialMass)) throw t('errors.final-mass-lower-than-initial-mass');
-
+      if (Number(finalMass) > Number(initialMass)) throw t('errors.final-mass-lower-than-initial-mass');
     } catch (error) {
       throw error;
     }
