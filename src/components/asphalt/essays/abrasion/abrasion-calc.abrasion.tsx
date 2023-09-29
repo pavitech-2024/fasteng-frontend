@@ -1,76 +1,91 @@
+import DropDown from '@/components/atoms/inputs/dropDown';
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
+import useAbrasionStore from '@/stores/asphalt/abrasion.store';
 import { Box } from '@mui/material';
+import { t } from 'i18next';
 
-const Abrasion_Calc = ({}: // nextDisabled,
-// setNextDisabled
-EssayPageProps) => {
-  //const { abrasionCalc: data, setData } = useAbrasionStore();
+const Abrasion_Calc = ({ nextDisabled, setNextDisabled}: EssayPageProps) => {
+  const { abrasionCalc: data, setData } = useAbrasionStore();
 
-  // const handleErase = () => {
-  //   try {
-  //     if (inputFields.length > 1) {
-  //       const newInputFields = [...inputFields];
-  //       newInputFields.pop();
-  //       setInputFields(newInputFields);
-  //       setData({ step: 1, key: 'points', value: newInputFields });
-  //     } else {
-  //       throw new Error(t('compression.error.minValue'));
-  //     }
-  //   } catch (error) {
-  //     toast.error(error.message);
-  //   }
-  // };
+  if (nextDisabled) {
+    if (data.initialMass && data.finalMass !== null) {
+      setNextDisabled(false);
+    }
+  }
 
-  // const handleAdd = () => {
-  //   const newInputFields = [...inputFields, 0];
-  //   setInputFields(newInputFields);
-  //   setData({ step: 1, key: 'points', value: newInputFields });
-  //   setNextDisabled(true);
-  // };
+  const inputs = [
+    {
+      key: 'initialMass',
+      adornment: 'g',
+      value: data.initialMass,
+      label: t('asphalt.essays.abrasion.initial-mass')
+    },
+    {
+      key: 'finalMass',
+      adornment: 'g',
+      value: data.finalMass,
+      label: t('asphalt.essays.abrasion.final-mass')
+    }
+  ];
 
-  // if (nextDisabled) {
-  //   const hasValueGreaterThanZero = inputFields.some((value) => value > 0);
-
-  //   if (hasValueGreaterThanZero && data.points !== null) {
-  //     setNextDisabled(false);
-  //   }
-  // }
-
-  // const ExpansionToolbar = () => {
-  //   return (
-  //     <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
-  //       <Button sx={{ color: 'secondaryTons.red' }} onClick={handleErase}>
-  //         {t('erase')}
-  //       </Button>
-  //       <Button sx={{ color: 'secondaryTons.green' }} onClick={handleAdd}>
-  //         {t('add')}
-  //       </Button>
-  //     </Box>
-  //   );
-  // };
+  const graduations = ["A", "B", "C", "D", "E"];
 
   return (
-    <Box>
-      {/* {inputFields.map((input, index) => (
-        <Box key={index} sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <InputEndAdornment
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginX: 'auto',
+        marginY: '20px',
+        gap: '15px'
+      }}
+    >
+
+      <DropDown 
+        sx={{
+          width: '25%',
+          display: 'flex',
+        }}
+        variant='standard'
+        size='medium'
+        label={t('asphalt.essays.abrasion.graduation')} 
+        options={graduations.map((grad) => ({ label: grad, value: grad }))}
+        callback={(value) => {
+          setData({ step: 1, key: 'graduation', value })
+        }}
+        required    
+      />
+
+      {inputs.map((item) => (
+        <Box 
+          key={item.key}
+          sx={{
+            width: '50%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            marginX: 'auto',
+            marginY: '10px',
+            gap: '15px'
+          }}
+        >
+          <InputEndAdornment 
             fullWidth
-            value={input}
-            required={false}
-            onChange={(e) => {
-              const newInputFields = [...inputFields];
-              newInputFields[index] = Number(e.target.value);
-              setInputFields(newInputFields);
-              setData({ step: 1, key: 'points', value: newInputFields });
-            }}
-            adornment="dmm"
-            type="number"
+            label={item.label}
+            type='number'
+            required
             inputProps={{ min: 0 }}
+            adornment={'g'} 
+            value={item.value} 
+            onChange={(e) => {
+              setData({ step: 1, key: item.key, value: e.target.value})
+            }}
           />
         </Box>
       ))}
-
-      <ExpansionToolbar /> */}
     </Box>
   );
 };

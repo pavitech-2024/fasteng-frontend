@@ -1,8 +1,9 @@
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import Result_Card from '@/components/atoms/containers/result-card';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAbrasionStore from '@/stores/asphalt/abrasion.store';
-import { Box } from '@mui/material';
+import { Alert, Box } from '@mui/material';
 import { t } from 'i18next';
 
 const Abrasion_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
@@ -10,10 +11,10 @@ const Abrasion_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => 
   const { results: results, generalData } = useAbrasionStore();
   console.log('🚀 ~ file: results.abrasion.tsx:11 ~ results:', results);
 
-  // const data = {
-  //   abrasion: results.abrasion.toString(),
-  //   alerts: results.alerts[0],
-  // };
+  const data = {
+    losAngelesAbrasion: results.losAngelesAbrasion.toFixed(2).toString(),
+    alerts: results.alerts[0]
+  };
 
   // criando o objeto que será passado para o componente ExperimentResume
   const experimentResumeData: ExperimentResumeData = {
@@ -35,7 +36,10 @@ const Abrasion_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => 
             gap: '30px',
             mt: '20px',
           }}
-        ></Box>
+        >
+          {data.alerts && <Alert severity="warning">{data.alerts}</Alert>}
+          <Result_Card label={t('asphalt.essays.abrasion')} value={data.losAngelesAbrasion} unity={'%'} />
+        </Box>
       </FlexColumnBorder>
     </>
   );

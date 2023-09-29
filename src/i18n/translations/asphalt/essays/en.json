@@ -27,5 +27,8 @@
   "asphalt.material": "Material",
   "asphalt.operator": "Operator",
   "asphalt.calculist": "Calculist",
-  "asphalt.essays.penetration-asphalt": "Penetration"
+  "asphalt.essays.penetration-asphalt": "Penetration",
+  "asphalt.essays.abrasion.final-mass": "Sample mass after test",
+  "asphalt.essays.abrasion.graduation": "Choose the graduation",
+  "asphalt.essays.abrasion.initial-mass": "Initial mass"
 }

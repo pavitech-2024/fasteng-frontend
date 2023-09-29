@@ -19,7 +19,7 @@ class Abrasion_SERVICE implements IEssayService {
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
-      { step: 1, description: t('asphalt.essays.abrasion-asphalt'), path: 'essay-data' },
+      { step: 1, description: t('asphalt.essays.abrasion'), path: 'essay-data' },
       { step: 2, description: t('results'), path: 'results' },
     ],
   };
@@ -98,11 +98,15 @@ class Abrasion_SERVICE implements IEssayService {
 
   // verify inputs from Abrasion page (step === 1, page 2)
   submitAbrasionCalcData = async (abrasionCalc: AbrasionData['abrasionCalc']): Promise<void> => {
-    console.log(
-      '🚀 ~ file: abrasion.service.ts:101 ~ Abrasion_SERVICE ~ submitAbrasionCalcData= ~ abrasionCalc:',
-      abrasionCalc
-    );
     try {
+
+    const { 
+      finalMass,
+      initialMass
+    } = abrasionCalc;
+
+    if (Number(finalMass) > Number(initialMass)) throw t('errors.final-mass-lower-than-initial-mass');
+
     } catch (error) {
       throw error;
     }

@@ -39,7 +39,7 @@ const AsphaltEssays: NextPage = () => {
       title: t('asphalt.essays.abrasion'),
       icon: AbrasionIcon,
       key: 'abrasion',
-      link: '/asphalt/standard/abrasion',
+      link: '/asphalt/essays/abrasion',
       type: 'aggregates',
     },
     {

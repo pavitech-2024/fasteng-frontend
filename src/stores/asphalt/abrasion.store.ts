@@ -12,16 +12,14 @@ interface AbrasionGeneralData {
 }
 
 interface AbrasionCalc {
-  resultMode: boolean;
-  experimentDate: Date;
-  points: number[];
+  initialMass: number
+  finalMass: number
+  graduation: string
 }
 
 interface Abrasion_results {
-  abrasion: number;
-  cap: string;
-  alerts: string[];
-  indexOfSusceptibility: number;
+  losAngelesAbrasion: number,
+  alerts: string[],
 }
 
 export type AbrasionData = {
@@ -49,15 +47,13 @@ const initialState = {
     description: null,
   },
   abrasionCalc: {
-    resultMode: null,
-    experimentDate: null,
-    points: null,
+    initialMass: null,
+    finalMass: null,
+    graduation: null
   },
   results: {
-    abrasion: null,
-    cap: null,
+    losAngelesAbrasion: null,
     alerts: null,
-    indexOfSusceptibility: null,
   },
 };
 
