@@ -10,11 +10,10 @@ import { toast } from 'react-toastify';
 import Loading from '@/components/molecules/loading';
 import DropDown from '@/components/atoms/inputs/dropDown';
 
-
-const ADHESIVENESS_Step2 = ({ 
-  nextDisabled, 
+const ADHESIVENESS_Step2 = ({
+  nextDisabled,
   setNextDisabled,
-  adhesiveness 
+  adhesiveness,
 }: EssayPageProps & { adhesiveness: ADHESIVENESS_SERVICE }) => {
   const { adhesiveness: data, setData } = useAdhesivenessStore();
   const [binders, setBinders] = useState<AsphaltMaterial[]>([]);
@@ -87,7 +86,6 @@ const ADHESIVENESS_Step2 = ({
               callback={(value) => setData({ step: 0, key: input.key, value: value })}
             />
           ))}
-          
         </Box>
       )}
     </>
