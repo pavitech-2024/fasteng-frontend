@@ -62,6 +62,17 @@ class ADHESIVENESS_SERVICE implements IEssayService {
     }
   };
 
+  getBindersByUserId = async (userId: string): Promise<AsphaltMaterial[]> => {
+    try {
+      const { data } = await Api.get(`/asphalt/materials/binders/${userId}`);
+
+      //filtrando apenas os materiais de tipo "asphaltBinder"
+      return data.filter((material) => material.type === 'asphaltBinder');
+    } catch (error) {
+      throw error;
+    }
+  };
+
   // send general data to backend to verify if there is already a Adhesiveness essay with same name for the material
   submitGeneralData = async (generalData: AdhesivenessData['generalData']): Promise<void> => {
     try {

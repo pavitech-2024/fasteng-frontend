@@ -9,6 +9,7 @@ import useAdhesivenessStore, { AdhesivenessActions } from '@/stores/asphalt/adhe
 const Adhesiveness = () => {
   // start an instance of the service
   const adhesiveness = new ADHESIVENESS_SERVICE();
+  const binders = new ADHESIVENESS_SERVICE();
 
   // get the userId
   const {
@@ -26,7 +27,7 @@ const Adhesiveness = () => {
 
   const childrens = [
     { step: 0, children: <ADHESIVENESS_GeneralData adhesiveness={adhesiveness} />, data: store.generalData },
-    { step: 1, children: <ADHESIVENESS_Step2 />, data: store },
+    { step: 1, children: <ADHESIVENESS_Step2 adhesiveness={binders} />, data: store },
     { step: 2, children: <ADHESIVENESS_Results />, data: store },
   ];
 
