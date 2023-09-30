@@ -1,7 +1,7 @@
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import Result_Card from '@/components/atoms/containers/result-card';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 import { EssayPageProps } from '@/components/templates/essay';
-import useAuth from '@/contexts/auth';
 import useAdhesivenessStore from '@/stores/asphalt/adhesiveness.store';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
@@ -10,14 +10,7 @@ const ADHESIVENESS_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps)
   if (nextDisabled) setNextDisabled(false);
 
   const { results: adhesiveness_results, generalData } = useAdhesivenessStore();
-  console.log('🚀 ~ file: results.adhesiveness.tsx:13 ~ adhesiveness_results:', adhesiveness_results);
-  const { user } = useAuth();
-  console.log('🚀 ~ file: results.adhesiveness.tsx:15 ~ user:', user);
-
-  // // pegando a quantidade de casas decimais do usuário
-  // const {
-  //   preferences: { decimal: user_decimal },
-  // } = user;
+  const filmDisplacement = adhesiveness_results.filmDisplacement ? t('adhesiveness.filmDisplacement-true') : t('adhesiveness.filmDisplacement-false');
 
   const experimentResumeData: ExperimentResumeData = {
     experimentName: generalData.name,
@@ -35,7 +28,14 @@ const ADHESIVENESS_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps)
             alignItems: 'center',
             justifyContent: 'center',
           }}
-        ></Box>
+        >
+
+          <Result_Card 
+            label={t('adhesiveness.chosen-filmDisplacement')} 
+            value={filmDisplacement} 
+            unity={''}
+          />
+        </Box>
       </FlexColumnBorder>
     </>
   );

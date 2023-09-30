@@ -10,6 +10,7 @@ interface GeneralData {
 }
 
 interface adhesiveness_step2Data {
+  binder: string;
   filmDisplacement: boolean;
 }
 
@@ -37,6 +38,7 @@ const useAdhesivenessStore = create<AdhesivenessData & AdhesivenessActions>()(
           material: null,
         },
         adhesiveness: {
+          binder: null,
           filmDisplacement: null,
         },
         results: {

@@ -11,15 +11,15 @@ import Loading from '@/components/molecules/loading';
 import DropDown from '@/components/atoms/inputs/dropDown';
 
 const ADHESIVENESS_Step2 = ({
-  nextDisabled,
   setNextDisabled,
   adhesiveness,
 }: EssayPageProps & { adhesiveness: ADHESIVENESS_SERVICE }) => {
   const { adhesiveness: data, setData } = useAdhesivenessStore();
+  console.log("🚀 ~ file: step2.adhesiveness.tsx:19 ~ data:", data)
   const [binders, setBinders] = useState<AsphaltMaterial[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { user } = useAuth();
-
+  
   useEffect(() => {
     toast.promise(
       async () => {
@@ -30,7 +30,7 @@ const ADHESIVENESS_Step2 = ({
       },
       {
         pending: t('loading.binders.pending'),
-        success: t('loading.binders.success'),
+        success: t('adhesiveness.material.loading.binders.success'),
         error: t('loading.binders.error'),
       }
     );
@@ -38,26 +38,30 @@ const ADHESIVENESS_Step2 = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const inputs = [
+  const [inputs, setInputs] = useState([
     {
-      label: t('adhesiveness.filmDisplacement'),
-      adornment: 'L',
-      key: 'displaced_volume',
-      value: data.filmDisplacement,
+      label: t('adhesiveness.binders'),
+      key: 'binder',
+      value: null as null | string,
       required: true,
     },
-  ];
+    {
+      label: t('adhesiveness.filmDisplacement'),
+      key: 'filmDisplacement',
+      value: null as boolean | null,
+      required: true,
+    },
+  ]);
 
-  // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
-  inputs.every(({ required, value }) => {
-    if (!required) return true;
-
-    if (value === null) return false;
-
-    return true;
-  }) &&
-    nextDisabled &&
-    setNextDisabled(false);
+  useEffect(() => {
+    const allRequiredFilled = inputs.every(({ required, value }) => {
+      if (required) {
+        return value !== null;
+      }
+      return true;
+    });
+    setNextDisabled(!allRequiredFilled);
+  }, [inputs, setNextDisabled]);
 
   return (
     <>
@@ -70,22 +74,57 @@ const ADHESIVENESS_Step2 = ({
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
+            gap: '20px'
           }}
         >
-          {inputs.map((input) => (
-            <DropDown
+          {inputs.map((input, index) => (
+            <Box
               key={input.key}
-              variant="standard"
-              label={input.label}
-              options={binders.map((material) => {
-                return { label: material.name + ' | ' + t(`${'binders.' + material.type}`), value: material };
-              })}
-              required={input.required}
-              size="medium"
-              callback={(value) => setData({ step: 0, key: input.key, value: value })}
-            />
+              sx={{
+                display: 'flex',
+                width: '100%',
+                justifyContent: 'center',
+              }}
+            >
+              <DropDown
+                variant="standard"
+                sx={{
+                  width: '300px',
+                }}
+                label={input.label}
+                options={
+                  input.key === 'binder'
+                    ? binders.map((binder) => {
+                        return {
+                          label: binder.name + ' | ' + t(`${'asphalt.binders.' + binder.type}`),
+                          value: binder,
+                        };
+                      })
+                    : input.key === 'filmDisplacement'
+                    ? [
+                        {
+                          label: t('adhesiveness.filmDisplacement-true'),
+                          value: true,
+                        },
+                        {
+                          label: t('adhesiveness.filmDisplacement-false'),
+                          value: false,
+                        },
+                      ]
+                    : []
+                }
+                required={input.required}
+                size="medium"
+                callback={(value: string | boolean) => {
+                  setData({ step: 1, key: input.key, value: input.key === 'binder' ? value : value });
+                  const updatedInputs = [...inputs];
+                  updatedInputs[index].value = value;
+                  setInputs(updatedInputs);
+                }}
+              />
+            </Box>
           ))}
+
         </Box>
       )}
     </>
