@@ -97,7 +97,10 @@ class ADHESIVENESS_SERVICE implements IEssayService {
   /** @adhesivenessData Methods for adhesiveness-data (step === 1, page 2) */
   // calculate results
   calculateResults = async (adhesivenessData: AdhesivenessData): Promise<void> => {
-    console.log("🚀 ~ file: adhesiveness.service.ts:101 ~ ADHESIVENESS_SERVICE ~ calculateResults= ~ adhesivenessData:", adhesivenessData)
+    console.log(
+      '🚀 ~ file: adhesiveness.service.ts:101 ~ ADHESIVENESS_SERVICE ~ calculateResults= ~ adhesivenessData:',
+      adhesivenessData
+    );
     try {
       //verify if displaced_volume (only input) is blank
       if (!adhesivenessData.adhesiveness.filmDisplacement) throw t('errors.empty-displaced-volume');

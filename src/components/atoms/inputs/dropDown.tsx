@@ -41,11 +41,12 @@ const DropDown = ({
       variant={variant}
       required={required}
     >
-      {options && options.map((option, index) => (
-        <MenuItem key={index} value={option.value} onClick={() => callback(option.value)} sx={{ fontSize: '14px' }}>
-          {option.label}
-        </MenuItem>
-      ))}
+      {options &&
+        options.map((option, index) => (
+          <MenuItem key={index} value={option.value} onClick={() => callback(option.value)} sx={{ fontSize: '14px' }}>
+            {option.label}
+          </MenuItem>
+        ))}
     </TextField>
   );
 };

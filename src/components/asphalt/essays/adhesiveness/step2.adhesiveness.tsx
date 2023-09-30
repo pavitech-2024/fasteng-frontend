@@ -15,11 +15,11 @@ const ADHESIVENESS_Step2 = ({
   adhesiveness,
 }: EssayPageProps & { adhesiveness: ADHESIVENESS_SERVICE }) => {
   const { adhesiveness: data, setData } = useAdhesivenessStore();
-  console.log("🚀 ~ file: step2.adhesiveness.tsx:19 ~ data:", data)
+  console.log('🚀 ~ file: step2.adhesiveness.tsx:19 ~ data:', data);
   const [binders, setBinders] = useState<AsphaltMaterial[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { user } = useAuth();
-  
+
   useEffect(() => {
     toast.promise(
       async () => {
@@ -74,7 +74,7 @@ const ADHESIVENESS_Step2 = ({
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: '20px'
+            gap: '20px',
           }}
         >
           {inputs.map((input, index) => (
@@ -124,7 +124,6 @@ const ADHESIVENESS_Step2 = ({
               />
             </Box>
           ))}
-
         </Box>
       )}
     </>

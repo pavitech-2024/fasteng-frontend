@@ -10,7 +10,9 @@ const ADHESIVENESS_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps)
   if (nextDisabled) setNextDisabled(false);
 
   const { results: adhesiveness_results, generalData } = useAdhesivenessStore();
-  const filmDisplacement = adhesiveness_results.filmDisplacement ? t('adhesiveness.filmDisplacement-true') : t('adhesiveness.filmDisplacement-false');
+  const filmDisplacement = adhesiveness_results.filmDisplacement
+    ? t('adhesiveness.filmDisplacement-true')
+    : t('adhesiveness.filmDisplacement-false');
 
   const experimentResumeData: ExperimentResumeData = {
     experimentName: generalData.name,
@@ -29,12 +31,7 @@ const ADHESIVENESS_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps)
             justifyContent: 'center',
           }}
         >
-
-          <Result_Card 
-            label={t('adhesiveness.chosen-filmDisplacement')} 
-            value={filmDisplacement} 
-            unity={''}
-          />
+          <Result_Card label={t('adhesiveness.chosen-filmDisplacement')} value={filmDisplacement} unity={''} />
         </Box>
       </FlexColumnBorder>
     </>
