@@ -12,10 +12,10 @@ class ADHESIVENESS_SERVICE implements IEssayService {
     title: t('asphalt.essays.adhesiveness'),
     path: '/asphalt/essays/adhesiveness',
     steps: 3,
-    backend_path: 'asphalt/essays/adhesion',
+    backend_path: 'asphalt/essays/adhesiveness',
     standard: {
-      name: '',
-      link: '',
+      name: 'DNIT-ME 078/94',
+      link: 'https://smartdoser.fastengapp.com.br/static/media/AdesividadeDnitme07894.b8c14e56.pdf',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
@@ -72,6 +72,7 @@ class ADHESIVENESS_SERVICE implements IEssayService {
       throw error;
     }
   };
+  
 
   // send general data to backend to verify if there is already a Adhesiveness essay with same name for the material
   submitGeneralData = async (generalData: AdhesivenessData['generalData']): Promise<void> => {
