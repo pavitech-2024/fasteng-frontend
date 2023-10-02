@@ -72,7 +72,6 @@ class ADHESIVENESS_SERVICE implements IEssayService {
       throw error;
     }
   };
-  
 
   // send general data to backend to verify if there is already a Adhesiveness essay with same name for the material
   submitGeneralData = async (generalData: AdhesivenessData['generalData']): Promise<void> => {
