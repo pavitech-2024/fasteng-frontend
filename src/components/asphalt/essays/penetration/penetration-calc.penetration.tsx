@@ -58,13 +58,13 @@ const Penetration_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     <Box sx={{ width: '50%', marginX: 'auto' }}>
       {inputFields.map((input, index) => (
         <Box
-          key={index} 
-          sx={{ 
-            display: 'flex', 
+          key={index}
+          sx={{
+            display: 'flex',
             width: '50%',
             marginX: 'auto',
-            gap: '10px', 
-            alignItems: 'center' 
+            gap: '10px',
+            alignItems: 'center',
           }}
         >
           <InputEndAdornment
