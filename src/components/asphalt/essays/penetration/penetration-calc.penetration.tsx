@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 const Penetration_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { penetrationCalc: data, setData } = usePenetrationStore();
 
-  const [inputFields, setInputFields] = useState(data.points || []); // Inicialize com o valor existente ou vazio
+  const [inputFields, setInputFields] = useState(data.points || [0]); // Inicialize com o valor existente ou vazio
 
   const handleErase = () => {
     try {
@@ -55,9 +55,18 @@ const Penetration_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
   };
 
   return (
-    <Box>
+    <Box sx={{ width: '50%', marginX: 'auto' }}>
       {inputFields.map((input, index) => (
-        <Box key={index} sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <Box
+          key={index} 
+          sx={{ 
+            display: 'flex', 
+            width: '50%',
+            marginX: 'auto',
+            gap: '10px', 
+            alignItems: 'center' 
+          }}
+        >
           <InputEndAdornment
             fullWidth
             value={input}
