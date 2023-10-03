@@ -1,4 +1,4 @@
-import FlashPoint_GeneralData from '@/components/asphalt/essays/flashPoint/general-Data.flashPoint';
+import FlashPoint_GeneralData from '@/components/asphalt/essays/flashPoint/general-data.flashPoint';
 import FlashPoint_Step2 from '@/components/asphalt/essays/flashPoint/step2.flashPoint';
 import FlashPoint_Results from '@/components/asphalt/essays/flashPoint/results.flashPoint';
 import EssayTemplate from '@/components/templates/essay';

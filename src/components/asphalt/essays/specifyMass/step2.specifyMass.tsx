@@ -27,7 +27,7 @@ const SpecifyMass_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           value={data.dry_mass}
           onChange={(e) => {
             if (e.target.value === null) return;
-            setData({ step: 1, key: 'dry_mass', value: e.target.value });
+            setData({ step: 1, key: 'dry_mass', value: Number(e.target.value) });
           }}
           adornment={'g'}
           type="number"
@@ -39,7 +39,7 @@ const SpecifyMass_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           value={data.submerged_mass}
           onChange={(e) => {
             if (e.target.value === null) return;
-            setData({ step: 1, key: 'submerged_mass', value: e.target.value });
+            setData({ step: 1, key: 'submerged_mass', value: Number(e.target.value) });
           }}
           adornment={'g'}
           type="number"
@@ -51,7 +51,7 @@ const SpecifyMass_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           value={data.surface_saturated_mass}
           onChange={(e) => {
             if (e.target.value === null) return;
-            setData({ step: 1, key: 'surface_saturated_mass', value: e.target.value });
+            setData({ step: 1, key: 'surface_saturated_mass', value: Number(e.target.value) });
           }}
           adornment={'g'}
           type="number"

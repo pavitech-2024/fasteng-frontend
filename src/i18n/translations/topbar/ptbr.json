@@ -15,5 +15,7 @@
   "topbar.sucs": "Classificação Unificada - SUCS",
   "topbar.granulometry": "Granulometria",
   "topbar.compression": "Compactação",
-  "topbar.specifymass": "Massa Específica"
+  "topbar.specifymass": "Massa Específica",
+  "topbar.flashPoint": "Ponto de Fulgor",
+  "topbar.ductility": "Ductilidade"
 }

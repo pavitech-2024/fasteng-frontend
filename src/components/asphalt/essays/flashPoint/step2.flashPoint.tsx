@@ -26,7 +26,7 @@ const FlashPoint_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           value={data.ignition_temperature}
           onChange={(e) => {
             if (e.target.value === null) return;
-            setData({ step: 1, key: 'ignition_temperature', value: e.target.value });
+            setData({ step: 1, key: 'ignition_temperature', value: Number(e.target.value) });
           }}
           adornment={'°C'}
           type="number"
