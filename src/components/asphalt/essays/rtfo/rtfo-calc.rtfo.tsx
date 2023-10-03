@@ -1,9 +1,9 @@
-import { EssayPageProps } from "@/components/templates/essay";
-import useRtfoStore from "@/stores/asphalt/rtfo/rtfo.store";
-import { Box, Button } from "@mui/material";
-import { t } from "i18next";
-import { useState } from "react";
-import { toast } from "react-toastify";
+import { EssayPageProps } from '@/components/templates/essay';
+import useRtfoStore from '@/stores/asphalt/rtfo/rtfo.store';
+import { Box, Button } from '@mui/material';
+import { t } from 'i18next';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const Rtfo_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { rtfoCalc: data, setData } = useRtfoStore();

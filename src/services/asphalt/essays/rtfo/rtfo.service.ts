@@ -1,8 +1,8 @@
-import { RtfoIcon } from "@/assets";
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import { IEssayService } from "@/interfaces/common/essay/essay-service.interface";
-import { RtfoActions, RtfoData } from "@/stores/asphalt/rtfo/rtfo.store";
-import { t } from "i18next";
+import { RtfoIcon } from '@/assets';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
+import { RtfoActions, RtfoData } from '@/stores/asphalt/rtfo/rtfo.store';
+import { t } from 'i18next';
 import Api from '@/api';
 
 class Rtfo_SERVICE implements IEssayService {
@@ -98,10 +98,7 @@ class Rtfo_SERVICE implements IEssayService {
 
   // verify inputs from Rtfo page (step === 1, page 2)
   submitRtfoCalcData = async (rtfoCalc: RtfoData['rtfoCalc']): Promise<void> => {
-    console.log(
-      '🚀 ~ file: rtfo.service.ts:101 ~ Rtfo_SERVICE ~ submitRtfoCalcData= ~ rtfoCalc:',
-      rtfoCalc
-    );
+    console.log('🚀 ~ file: rtfo.service.ts:101 ~ Rtfo_SERVICE ~ submitRtfoCalcData= ~ rtfoCalc:', rtfoCalc);
     try {
     } catch (error) {
       throw error;

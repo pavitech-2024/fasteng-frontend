@@ -1,20 +1,16 @@
-import DropDown from "@/components/atoms/inputs/dropDown";
-import Loading from "@/components/molecules/loading";
-import { EssayPageProps } from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import Rtfo_SERVICE from "@/services/asphalt/essays/rtfo/rtfo.service";
-import useRtfoStore from "@/stores/asphalt/rtfo/rtfo.store";
-import { Box, TextField } from "@mui/material";
-import { t } from "i18next";
-import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
+import DropDown from '@/components/atoms/inputs/dropDown';
+import Loading from '@/components/molecules/loading';
+import { EssayPageProps } from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import Rtfo_SERVICE from '@/services/asphalt/essays/rtfo/rtfo.service';
+import useRtfoStore from '@/stores/asphalt/rtfo/rtfo.store';
+import { Box, TextField } from '@mui/material';
+import { t } from 'i18next';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-const Rtfo_GeneralData = ({
-  nextDisabled,
-  setNextDisabled,
-  rtfo,
-}: EssayPageProps & { rtfo: Rtfo_SERVICE }) => {
+const Rtfo_GeneralData = ({ nextDisabled, setNextDisabled, rtfo }: EssayPageProps & { rtfo: Rtfo_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
   const { user } = useAuth();
