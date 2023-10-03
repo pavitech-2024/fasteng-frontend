@@ -1,8 +1,8 @@
 {
-    "ductility": "Ductilidade",
-    "ductility.step-2-description": "Preencha todos os campos",
-    "ductility.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
-    "ductility.first_rupture_length": "Primeira ruptura",
-    "ductility.second_rupture_length": "Segunda ruptura",
-    "ductility.third_rupture_length": "Terceira ruptura"
+  "ductility": "Ductilidade",
+  "ductility.step-2-description": "Preencha todos os campos",
+  "ductility.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
+  "ductility.first_rupture_length": "Primeira ruptura",
+  "ductility.second_rupture_length": "Segunda ruptura",
+  "ductility.third_rupture_length": "Terceira ruptura"
 }
