@@ -33,6 +33,7 @@ declare module '@mui/material' {
       blueDisabled: string;
       red: string;
       green: string;
+      greenPM: string;
     };
   }
 }
