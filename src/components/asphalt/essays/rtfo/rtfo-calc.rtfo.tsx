@@ -23,7 +23,7 @@ const Rtfo_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
       label: 'Massa do frasco + amostra após envelhecimento',
       value: '',
       adornment: 'g',
-    }
+    },
   ];
 
   const handleErase = () => {
