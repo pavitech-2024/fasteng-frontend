@@ -1,3 +1,4 @@
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import useRtfoStore from '@/stores/asphalt/rtfo/rtfo.store';
 import { Box, Button } from '@mui/material';
@@ -8,7 +9,22 @@ import { toast } from 'react-toastify';
 const Rtfo_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { rtfoCalc: data, setData } = useRtfoStore();
 
-  const [inputFields, setInputFields] = useState(data.points || [0]); // Inicialize com o valor existente ou vazio
+  const [inputFields, setInputFields] = useState(data.points || [{}]);
+
+  const inputs = [
+    {
+      key: 'sampleWeight',
+      label: 'Massa do frasco + amostra',
+      value: '',
+      adornment: 'g',
+    },
+    {
+      key: 'finalSampleWeight',
+      label: 'Massa do frasco + amostra após envelhecimento',
+      value: '',
+      adornment: 'g',
+    }
+  ];
 
   const handleErase = () => {
     try {
@@ -16,7 +32,7 @@ const Rtfo_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
         const newInputFields = [...inputFields];
         newInputFields.pop();
         setInputFields(newInputFields);
-        setData({ step: 1, key: 'points', value: newInputFields });
+        setData({ step: 1, key: 'list', value: newInputFields });
       } else {
         throw new Error(t('compression.error.minValue'));
       }
@@ -26,10 +42,9 @@ const Rtfo_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   };
 
   const handleAdd = () => {
-    const newInputFields = [...inputFields, 0];
+    const newInputFields = [...inputFields, {}];
     setInputFields(newInputFields);
-    setData({ step: 1, key: 'points', value: newInputFields });
-    setNextDisabled(true);
+    setData({ step: 1, key: 'list', value: newInputFields });
   };
 
   if (nextDisabled) {
@@ -54,35 +69,38 @@ const Rtfo_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   };
 
   return (
-    <Box sx={{ width: '50%', marginX: 'auto' }}>
-      {/* {inputFields.map((input, index) => (
+    <Box sx={{ width: '100%', marginX: 'auto' }}>
+      {inputFields.map((inputField, index) => (
         <Box
           key={index}
           sx={{
             display: 'flex',
-            width: '50%',
+            flexDirection: 'row',
+            width: '100%',
             marginX: 'auto',
             gap: '10px',
             alignItems: 'center',
           }}
         >
-          <InputEndAdornment
-            fullWidth
-            value={input}
-            required={false}
-            onChange={(e) => {
-              const newInputFields = [...inputFields];
-              newInputFields[index] = Number(e.target.value);
-              setInputFields(newInputFields);
-              setData({ step: 1, key: 'points', value: newInputFields });
-            }}
-            adornment="dmm"
-            type="number"
-            inputProps={{ min: 0 }}
-          />
+          {inputs.map((input) => (
+            <InputEndAdornment
+              key={input.key}
+              label={input.label}
+              fullWidth
+              value={inputField[input.key] || ''}
+              required
+              onChange={(e) => {
+                const newInputFields = [...inputFields];
+                newInputFields[index][input.key] = e.target.value;
+                setInputFields(newInputFields);
+              }}
+              adornment={input.adornment}
+              type="number"
+              inputProps={{ min: 0 }}
+            />
+          ))}
         </Box>
-      ))} */}
-
+      ))}
       <ExpansionToolbar />
     </Box>
   );
