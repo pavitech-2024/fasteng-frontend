@@ -12,9 +12,10 @@ interface RtfoGeneralData {
 }
 
 interface RtfoCalc {
-  resultMode: boolean;
-  experimentDate: Date;
-  points: number[];
+  list: {
+    initialSetWeight: number,
+    weightLoss: number
+  }[];
 }
 
 interface Rtfo_results {
@@ -49,9 +50,10 @@ const initialState = {
     description: null,
   },
   rtfoCalc: {
-    resultMode: null,
-    experimentDate: null,
-    points: null,
+    list: [{
+      initialSetWeight: 0,
+      weightLoss: 0
+    }],
   },
   results: {
     rtfo: null,

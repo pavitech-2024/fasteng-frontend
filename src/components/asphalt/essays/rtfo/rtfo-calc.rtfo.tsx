@@ -3,13 +3,13 @@ import { EssayPageProps } from '@/components/templates/essay';
 import useRtfoStore from '@/stores/asphalt/rtfo/rtfo.store';
 import { Box, Button } from '@mui/material';
 import { t } from 'i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const Rtfo_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { rtfoCalc: data, setData } = useRtfoStore();
 
-  const [inputFields, setInputFields] = useState(data.points || [{}]);
+  const [inputFields, setInputFields] = useState(data.list || [{}]);
 
   const inputs = [
     {
@@ -47,13 +47,16 @@ const Rtfo_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
     setData({ step: 1, key: 'list', value: newInputFields });
   };
 
-  if (nextDisabled) {
-    const hasValueGreaterThanZero = inputFields.some((value) => value > 0);
-
-    if (hasValueGreaterThanZero && data.points !== null) {
-      setNextDisabled(false);
+  const hasEmptyValues = !data.list.every(item => {
+    return Object.values(item).every(value => value !== 0);
+  });
+  
+  useEffect(() => {
+    console.log("🚀 ~ file: rtfo-calc.rtfo.tsx:62 ~ nextDisabled:", hasEmptyValues);
+    if (nextDisabled) {
+      setNextDisabled(hasEmptyValues);
     }
-  }
+  }, [hasEmptyValues]);
 
   const ExpansionToolbar = () => {
     return (
@@ -78,21 +81,25 @@ const Rtfo_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
             flexDirection: 'row',
             width: '100%',
             marginX: 'auto',
-            gap: '10px',
+            gap: '40px',
             alignItems: 'center',
           }}
         >
           {inputs.map((input) => (
             <InputEndAdornment
               key={input.key}
+              sx={{
+                marginY: '10px'
+              }}
               label={input.label}
               fullWidth
-              value={inputField[input.key] || ''}
+              value={inputField[input.key] || 0}
               required
               onChange={(e) => {
                 const newInputFields = [...inputFields];
-                newInputFields[index][input.key] = e.target.value;
+                newInputFields[index][input.key] = Number(e.target.value);
                 setInputFields(newInputFields);
+                setData({ step: 1, key: 'list', value: newInputFields })
               }}
               adornment={input.adornment}
               type="number"

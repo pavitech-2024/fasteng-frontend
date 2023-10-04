@@ -107,11 +107,14 @@ class Rtfo_SERVICE implements IEssayService {
 
   // calculate results from rtfo essay
   calculateResults = async (store: RtfoData): Promise<void> => {
+    console.log("🚀 ~ file: rtfo.service.ts:110 ~ Rtfo_SERVICE ~ calculateResults= ~ store:", store);
+
+    const body = {
+      generalData: store.generalData,
+      rtfo: store.rtfoCalc
+    };
     try {
-      const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
-        generalData: store.generalData,
-        rtfoCalc: store.rtfoCalc,
-      });
+      const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);
 
       const { success, error, result } = response.data;
       console.log('🚀 ~ file: rtfo.service.ts:120 ~ Rtfo_SERVICE ~ calculateResults= ~ result:', result);
