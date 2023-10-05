@@ -14,14 +14,12 @@ const Rtfo_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const inputs = [
     {
       key: 'sampleWeight',
-      label: 'Massa do frasco + amostra',
-      value: '',
+      label: t('rtfo.sample-weight'),
       adornment: 'g',
     },
     {
       key: 'finalSampleWeight',
-      label: 'Massa do frasco + amostra após envelhecimento',
-      value: '',
+      label: t('rtfo.final-sample-weight'),
       adornment: 'g',
     },
   ];
@@ -48,11 +46,10 @@ const Rtfo_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   };
 
   const hasEmptyValues = !data.list.every(item => {
-    return Object.values(item).every(value => value !== 0);
+    return Object.values(item).every(value => value !== 0 && value !== null);
   });
   
   useEffect(() => {
-    console.log("🚀 ~ file: rtfo-calc.rtfo.tsx:62 ~ nextDisabled:", hasEmptyValues);
     if (nextDisabled) {
       setNextDisabled(hasEmptyValues);
     }
