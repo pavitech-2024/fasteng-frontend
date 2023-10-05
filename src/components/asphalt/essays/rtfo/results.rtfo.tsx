@@ -51,11 +51,11 @@ const Rtfo_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
             mt: '20px',
           }}
         >
-           {data.alerts && <Alert severity="warning">{data.alerts}</Alert>}
+          {data.alerts && <Alert severity="warning">{data.alerts}</Alert>}
 
           <Result_Card label={t('rtfo-weight-loss-average')} value={data.weightLossAverage} unity={'%'} />
 
-          <Rtfo_resultsTable rows={rows} columns={columns}/>
+          <Rtfo_resultsTable rows={rows} columns={columns} />
         </Box>
       </FlexColumnBorder>
     </>

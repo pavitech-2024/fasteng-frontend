@@ -45,10 +45,10 @@ const Rtfo_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
     setData({ step: 1, key: 'list', value: newInputFields });
   };
 
-  const hasEmptyValues = !data.list.every(item => {
-    return Object.values(item).every(value => value !== 0 && value !== null);
+  const hasEmptyValues = !data.list.every((item) => {
+    return Object.values(item).every((value) => value !== 0 && value !== null);
   });
-  
+
   useEffect(() => {
     if (nextDisabled) {
       setNextDisabled(hasEmptyValues);
@@ -86,7 +86,7 @@ const Rtfo_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
             <InputEndAdornment
               key={input.key}
               sx={{
-                marginY: '10px'
+                marginY: '10px',
               }}
               label={input.label}
               fullWidth
@@ -96,7 +96,7 @@ const Rtfo_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
                 const newInputFields = [...inputFields];
                 newInputFields[index][input.key] = Number(e.target.value);
                 setInputFields(newInputFields);
-                setData({ step: 1, key: 'list', value: newInputFields })
+                setData({ step: 1, key: 'list', value: newInputFields });
               }}
               adornment={input.adornment}
               type="number"

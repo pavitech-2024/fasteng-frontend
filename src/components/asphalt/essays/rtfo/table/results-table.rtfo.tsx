@@ -1,9 +1,9 @@
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 interface RtfoTableProps {
   rows: {
-      id: number;
-      weightLoss: string;
+    id: number;
+    weightLoss: string;
   }[];
   columns: GridColDef[];
 }

@@ -13,18 +13,18 @@ interface RtfoGeneralData {
 
 interface RtfoCalc {
   list: {
-    sampleWeight: number,
-    finalSampleWeight: number
+    sampleWeight: number;
+    finalSampleWeight: number;
   }[];
 }
 
 interface Rtfo_results {
   list: {
-    initialSetWeight: number,
-    weightLoss: number
-  }[],
-  weightLossAverage: number,
-  alerts: string[]
+    initialSetWeight: number;
+    weightLoss: number;
+  }[];
+  weightLossAverage: number;
+  alerts: string[];
 }
 
 export type RtfoData = {
@@ -52,20 +52,22 @@ const initialState = {
     description: null,
   },
   rtfoCalc: {
-    list: [{
-      sampleWeight: null,
-      finalSampleWeight: null
-    }],
+    list: [
+      {
+        sampleWeight: null,
+        finalSampleWeight: null,
+      },
+    ],
   },
   results: {
     list: [
       {
         initialSetWeight: null,
-        weightLoss: null
-      }
+        weightLoss: null,
+      },
     ],
     weightLossAverage: null,
-    alerts: null
+    alerts: null,
   },
 };
 

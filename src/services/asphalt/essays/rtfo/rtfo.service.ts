@@ -98,7 +98,7 @@ class Rtfo_SERVICE implements IEssayService {
 
   // verify inputs from Rtfo page (step === 1, page 2)
   submitRtfoCalcData = async (rtfoCalc: RtfoData['rtfoCalc']): Promise<void> => {
-    console.log("🚀 ~ file: rtfo.service.ts:101 ~ Rtfo_SERVICE ~ submitRtfoCalcData= ~ rtfoCalc:", rtfoCalc)
+    console.log('🚀 ~ file: rtfo.service.ts:101 ~ Rtfo_SERVICE ~ submitRtfoCalcData= ~ rtfoCalc:', rtfoCalc);
     try {
     } catch (error) {
       throw error;
@@ -109,7 +109,7 @@ class Rtfo_SERVICE implements IEssayService {
   calculateResults = async (store: RtfoData): Promise<void> => {
     const body = {
       generalData: store.generalData,
-      rtfo: store.rtfoCalc
+      rtfo: store.rtfoCalc,
     };
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);
