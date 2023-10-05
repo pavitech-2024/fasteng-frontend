@@ -35,7 +35,7 @@ const StepDescription = ({ text, warning = false }: StepDescriptionProps) => {
             width: '100%',
           }}
         >
-          { warning ? (
+          {warning ? (
             <WarningIcon sx={{ fontSize: '2rem', color: 'primaryTons.black' }} />
           ) : (
             <InfoIcon sx={{ fontSize: '2rem', color: 'primaryTons.white' }} />
