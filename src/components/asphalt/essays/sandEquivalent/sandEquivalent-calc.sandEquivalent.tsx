@@ -1,13 +1,10 @@
-import InputEndAdornment from "@/components/atoms/inputs/input-endAdornment";
-import { EssayPageProps } from "@/components/templates/essay";
-import useSandEquivalentStore from "@/stores/asphalt/sandEquivalent/sandEquivalent.store";
-import { Box } from "@mui/material";
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { EssayPageProps } from '@/components/templates/essay';
+import useSandEquivalentStore from '@/stores/asphalt/sandEquivalent/sandEquivalent.store';
+import { Box } from '@mui/material';
 import { t } from 'i18next';
 
-const SandEquivalent_Calc = ({ 
-  nextDisabled, 
-  setNextDisabled 
-}: EssayPageProps) => {
+const SandEquivalent_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { sandEquivalentCalc: data, setData } = useSandEquivalentStore();
 
   const inputs = [
@@ -15,19 +12,19 @@ const SandEquivalent_Calc = ({
       key: 'sandLevel',
       label: t('sandEquivalent.sand-level'),
       adornment: 'cm',
-      value: data.sandLevel
+      value: data.sandLevel,
     },
     {
       key: 'clayLevel',
       label: t('sandEquivalent.clay-level'),
       adornment: 'cm',
-      value: data.clayLevel
+      value: data.clayLevel,
     },
   ];
 
   if (nextDisabled) {
     const hasEmptyValues = data.sandLevel && data.clayLevel !== null;
-    if (hasEmptyValues) setNextDisabled(false)
+    if (hasEmptyValues) setNextDisabled(false);
   }
 
   return (
@@ -54,7 +51,7 @@ const SandEquivalent_Calc = ({
             value={input.value}
             required
             onChange={(e) => {
-              setData({ step: 1, key:`${[input.key]}`, value: e.target.value })
+              setData({ step: 1, key: `${[input.key]}`, value: e.target.value });
             }}
             adornment={input.adornment}
             type="number"

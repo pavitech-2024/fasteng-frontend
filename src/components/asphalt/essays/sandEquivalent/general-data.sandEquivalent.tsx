@@ -1,16 +1,20 @@
-import DropDown from "@/components/atoms/inputs/dropDown";
-import Loading from "@/components/molecules/loading";
-import { EssayPageProps } from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import SandEquivalent_SERVICE from "@/services/asphalt/essays/sandEquivalent/sandEquivalent.service";
-import useSandEquivalentStore from "@/stores/asphalt/sandEquivalent/sandEquivalent.store";
-import { Box, TextField } from "@mui/material";
-import { t } from "i18next";
-import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
+import DropDown from '@/components/atoms/inputs/dropDown';
+import Loading from '@/components/molecules/loading';
+import { EssayPageProps } from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import SandEquivalent_SERVICE from '@/services/asphalt/essays/sandEquivalent/sandEquivalent.service';
+import useSandEquivalentStore from '@/stores/asphalt/sandEquivalent/sandEquivalent.store';
+import { Box, TextField } from '@mui/material';
+import { t } from 'i18next';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-const SandEquivalent_GeneralData = ({ nextDisabled, setNextDisabled, sandEquivalent }: EssayPageProps & { sandEquivalent: SandEquivalent_SERVICE }) => {
+const SandEquivalent_GeneralData = ({
+  nextDisabled,
+  setNextDisabled,
+  sandEquivalent,
+}: EssayPageProps & { sandEquivalent: SandEquivalent_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
   const { user } = useAuth();

@@ -1,6 +1,6 @@
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import { create } from "zustand";
-import { devtools, persist, createJSONStorage } from "zustand/middleware";
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { create } from 'zustand';
+import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
 interface SandEquivalentGeneralData {
   userId: string;
@@ -17,8 +17,8 @@ interface SandEquivalentCalc {
 }
 
 interface SandEquivalent_results {
-  sandEquivalent: number
-  alerts: string[]
+  sandEquivalent: number;
+  alerts: string[];
 }
 
 export type SandEquivalentData = {
@@ -47,12 +47,12 @@ const initialState = {
   },
   sandEquivalentCalc: {
     sandLevel: null,
-    clayLevel: null
+    clayLevel: null,
   },
   results: {
     sandEquivalent: null,
     weightLossAverage: null,
-    alerts: null
+    alerts: null,
   },
 };
 

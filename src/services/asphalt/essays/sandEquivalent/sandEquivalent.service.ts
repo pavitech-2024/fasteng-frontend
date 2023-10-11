@@ -1,8 +1,8 @@
-import { SandEquivalentIcon } from "@/assets";
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import { IEssayService } from "@/interfaces/common/essay/essay-service.interface";
-import { SandEquivalentActions, SandEquivalentData } from "@/stores/asphalt/sandEquivalent/sandEquivalent.store";
-import { t } from "i18next";
+import { SandEquivalentIcon } from '@/assets';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
+import { SandEquivalentActions, SandEquivalentData } from '@/stores/asphalt/sandEquivalent/sandEquivalent.store';
+import { t } from 'i18next';
 import Api from '@/api';
 
 class SandEquivalent_SERVICE implements IEssayService {
@@ -97,8 +97,13 @@ class SandEquivalent_SERVICE implements IEssayService {
   /** @SandEquivalent Methods for SandEquivalent page (step === 1, page 2) */
 
   // verify inputs from SandEquivalent page (step === 1, page 2)
-  submitSandEquivalentCalcData = async (sandEquivalentCalc: SandEquivalentData['sandEquivalentCalc']): Promise<void> => {
-    console.log("🚀 ~ file: sandEquivalent.service.ts:101 ~ SandEquivalent_SERVICE ~ submitSandEquivalentCalcData= ~ sandEquivalentCalc:", sandEquivalentCalc)
+  submitSandEquivalentCalcData = async (
+    sandEquivalentCalc: SandEquivalentData['sandEquivalentCalc']
+  ): Promise<void> => {
+    console.log(
+      '🚀 ~ file: sandEquivalent.service.ts:101 ~ SandEquivalent_SERVICE ~ submitSandEquivalentCalcData= ~ sandEquivalentCalc:',
+      sandEquivalentCalc
+    );
     try {
     } catch (error) {
       throw error;
@@ -109,13 +114,16 @@ class SandEquivalent_SERVICE implements IEssayService {
   calculateResults = async (store: SandEquivalentData): Promise<void> => {
     const body = {
       generalData: store.generalData,
-      sandEquivalent: store.sandEquivalentCalc
+      sandEquivalent: store.sandEquivalentCalc,
     };
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);
 
       const { success, error, result } = response.data;
-      console.log('🚀 ~ file: sandEquivalent.service.ts:120 ~ SandEquivalent_SERVICE ~ calculateResults= ~ result:', result);
+      console.log(
+        '🚀 ~ file: sandEquivalent.service.ts:120 ~ SandEquivalent_SERVICE ~ calculateResults= ~ result:',
+        result
+      );
 
       if (success === false) throw error.name;
 

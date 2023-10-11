@@ -1,10 +1,10 @@
-import SandEquivalent_GeneralData from "@/components/asphalt/essays/sandEquivalent/general-data.sandEquivalent";
-import SandEquivalent_Results from "@/components/asphalt/essays/sandEquivalent/results.sandEquivalent";
-import SandEquivalent_Calc from "@/components/asphalt/essays/sandEquivalent/sandEquivalent-calc.sandEquivalent";
-import EssayTemplate from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import SandEquivalent_SERVICE from "@/services/asphalt/essays/sandEquivalent/sandEquivalent.service";
-import useSandEquivalentStore, { SandEquivalentActions } from "@/stores/asphalt/sandEquivalent/sandEquivalent.store";
+import SandEquivalent_GeneralData from '@/components/asphalt/essays/sandEquivalent/general-data.sandEquivalent';
+import SandEquivalent_Results from '@/components/asphalt/essays/sandEquivalent/results.sandEquivalent';
+import SandEquivalent_Calc from '@/components/asphalt/essays/sandEquivalent/sandEquivalent-calc.sandEquivalent';
+import EssayTemplate from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import SandEquivalent_SERVICE from '@/services/asphalt/essays/sandEquivalent/sandEquivalent.service';
+import useSandEquivalentStore, { SandEquivalentActions } from '@/stores/asphalt/sandEquivalent/sandEquivalent.store';
 
 const SandEquivalent = () => {
   // start an instance of the service
@@ -31,7 +31,9 @@ const SandEquivalent = () => {
     { step: 2, children: <SandEquivalent_Results />, data: store },
   ];
 
-  return <EssayTemplate essayInfo={sandEquivalent.info} childrens={childrens} nextCallback={sandEquivalent.handleNext} />;
+  return (
+    <EssayTemplate essayInfo={sandEquivalent.info} childrens={childrens} nextCallback={sandEquivalent.handleNext} />
+  );
 };
 
 export default SandEquivalent;
