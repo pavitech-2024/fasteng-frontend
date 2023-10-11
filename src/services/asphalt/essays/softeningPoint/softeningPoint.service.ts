@@ -1,13 +1,13 @@
-import { SofteningPointIcon } from "@/assets";
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import { IEssayService } from "@/interfaces/common/essay/essay-service.interface";
-import { SofteningPointActions, SofteningPointData } from "@/stores/asphalt/softeningPoint/softeningPoint.store";
+import { SofteningPointIcon } from '@/assets';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
+import { SofteningPointActions, SofteningPointData } from '@/stores/asphalt/softeningPoint/softeningPoint.store';
 import Api from '@/api';
-import { t } from "i18next";
+import { t } from 'i18next';
 
 class SofteningPoint_SERVICE implements IEssayService {
   info = {
-    key: 'siftening-point',
+    key: 'softening-point',
     icon: SofteningPointIcon,
     title: t('asphalt.essays.softeningPoint'),
     path: '/asphalt/essays/softening-point',

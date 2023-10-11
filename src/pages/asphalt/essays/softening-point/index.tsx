@@ -1,10 +1,10 @@
-import SofteningPoint_GeneralData from "@/components/asphalt/essays/softeningPoint/general-data.softeningPoint";
-import SofteningPoint_Results from "@/components/asphalt/essays/softeningPoint/results.softeningPoint";
-import SofteningPoint_Calc from "@/components/asphalt/essays/softeningPoint/softeningPoint-calc.softeningPoint";
-import EssayTemplate from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import SofteningPoint_SERVICE from "@/services/asphalt/essays/softeningPoint/softeningPoint.service";
-import useSofteningPointStore, { SofteningPointActions } from "@/stores/asphalt/softeningPoint/softeningPoint.store";
+import SofteningPoint_GeneralData from '@/components/asphalt/essays/softening-point/general-data.softeningPoint';
+import SofteningPoint_Results from '@/components/asphalt/essays/softening-point/results.softeningPoint';
+import SofteningPoint_Calc from '@/components/asphalt/essays/softening-point/softeningPoint-calc.softeningPoint';
+import EssayTemplate from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import SofteningPoint_SERVICE from '@/services/asphalt/essays/softeningPoint/softeningPoint.service';
+import useSofteningPointStore, { SofteningPointActions } from '@/stores/asphalt/softeningPoint/softeningPoint.store';
 
 const SofteningPoint = () => {
   // start an instance of the service

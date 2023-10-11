@@ -1,14 +1,14 @@
-import DropDown from "@/components/atoms/inputs/dropDown";
-import Loading from "@/components/molecules/loading";
-import { EssayPageProps } from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import SofteningPoint_SERVICE from "@/services/asphalt/essays/softeningPoint/softeningPoint.service";
-import useSofteningPointStore from "@/stores/asphalt/softeningPoint/softeningPoint.store";
-import { Box, TextField } from "@mui/material";
-import { t } from "i18next";
-import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
+import DropDown from '@/components/atoms/inputs/dropDown';
+import Loading from '@/components/molecules/loading';
+import { EssayPageProps } from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import SofteningPoint_SERVICE from '@/services/asphalt/essays/softeningPoint/softeningPoint.service';
+import useSofteningPointStore from '@/stores/asphalt/softeningPoint/softeningPoint.store';
+import { Box, TextField } from '@mui/material';
+import { t } from 'i18next';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const SofteningPoint_GeneralData = ({
   nextDisabled,

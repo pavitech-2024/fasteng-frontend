@@ -1,6 +1,6 @@
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import { create } from "zustand";
-import { devtools, persist, createJSONStorage } from "zustand/middleware";
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { create } from 'zustand';
+import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
 interface SofteningPointGeneralData {
   userId: string;
@@ -12,13 +12,13 @@ interface SofteningPointGeneralData {
 }
 
 interface SofteningPointCalc {
-  temperature1: number,
-  temperature2: number
+  temperature1: number;
+  temperature2: number;
 }
 
 interface SofteningPoint_results {
   softeningPoint: number;
-  indexOfSusceptibility: number
+  indexOfSusceptibility: number;
   alerts: string[];
 }
 
@@ -48,7 +48,7 @@ const initialState = {
   },
   softeningPointCalc: {
     temperature1: null,
-  temperature2: null
+    temperature2: null,
   },
   results: {
     softeningPoint: null,
