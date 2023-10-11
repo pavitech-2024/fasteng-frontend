@@ -4,7 +4,7 @@ import useSofteningPointStore from '@/stores/asphalt/softeningPoint/softeningPoi
 import { Box } from '@mui/material';
 import { t } from 'i18next';
 
-const SofteningPoint_Calc = ({ nextDisabled, setNextDisabled}: EssayPageProps) => {
+const SofteningPoint_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { softeningPointCalc: data, setData } = useSofteningPointStore();
 
   const inputs = [
