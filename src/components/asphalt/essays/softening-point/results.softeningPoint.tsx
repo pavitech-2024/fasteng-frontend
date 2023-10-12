@@ -36,13 +36,12 @@ const SofteningPoint_Results = ({ setNextDisabled, nextDisabled }: EssayPageProp
             mt: '20px',
           }}
         >
-          {data.alerts.length > 0 && data.alerts.map((alert, index) => (
-            <Alert 
-              key={index}
-              severity="warning">
+          {data.alerts.length > 0 &&
+            data.alerts.map((alert, index) => (
+              <Alert key={index} severity="warning">
                 {alert}
-            </Alert>
-          ))}
+              </Alert>
+            ))}
 
           <Result_Card label={t('softeningPoint-result')} value={data.softeningPoint} unity={'°C'} />
         </Box>

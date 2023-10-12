@@ -109,7 +109,6 @@ class SofteningPoint_SERVICE implements IEssayService {
 
       if (!temperature1) throw t('asphalt.essays.softening-point-error-empty-temperature1');
       if (!temperature2) throw t('asphalt.essays.softening-point-error-empty-temperature2');
-
     } catch (error) {
       throw error;
     }
