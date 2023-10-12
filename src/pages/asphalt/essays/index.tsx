@@ -113,7 +113,7 @@ const AsphaltEssays: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('asphalt.essays.softeningPoint'),
+      title: t('asphalt.essays.softening-point'),
       icon: SofteningPointIcon,
       key: 'softeningPoint',
       link: '/asphalt/essays/softening-point',

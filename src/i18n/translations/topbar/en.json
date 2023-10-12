@@ -14,5 +14,6 @@
   "topbar.hrb": "Road Classification - HRB",
   "topbar.sucs": "Unified Classification - SUCS",
   "topbar.granulometry": "Granulometry",
-  "topbar.compression": "Compression"
+  "topbar.compression": "Compression",
+  "topbar.softening-point": "Softening Point"
 }

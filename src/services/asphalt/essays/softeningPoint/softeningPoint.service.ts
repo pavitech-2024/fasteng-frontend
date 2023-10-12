@@ -14,8 +14,8 @@ class SofteningPoint_SERVICE implements IEssayService {
     backend_path: 'asphalt/essays/softeningPoint',
     steps: 3,
     standard: {
-      name: '',
-      link: '',
+      name: 'DNIT 131/2010 - ME',
+      link: 'https://smartdoser.fastengapp.com.br/static/media/PontoDeAmolecimentoDNITME1312010.90d3b6e9.pdf',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
@@ -105,6 +105,11 @@ class SofteningPoint_SERVICE implements IEssayService {
       softeningPointCalc
     );
     try {
+      const { temperature1, temperature2 } = softeningPointCalc;
+
+      if (!temperature1) throw t('asphalt.essays.softening-point-error-empty-temperature1');
+      if (!temperature2) throw t('asphalt.essays.softening-point-error-empty-temperature2');
+
     } catch (error) {
       throw error;
     }

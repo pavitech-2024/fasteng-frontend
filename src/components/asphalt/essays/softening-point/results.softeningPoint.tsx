@@ -12,7 +12,7 @@ const SofteningPoint_Results = ({ setNextDisabled, nextDisabled }: EssayPageProp
 
   const data = {
     softeningPoint: results.softeningPoint.toString(),
-    alerts: results.alerts[0],
+    alerts: results.alerts,
   };
 
   // criando o objeto que será passado para o componente ExperimentResume
@@ -36,9 +36,15 @@ const SofteningPoint_Results = ({ setNextDisabled, nextDisabled }: EssayPageProp
             mt: '20px',
           }}
         >
-          {data.alerts && <Alert severity="warning">{data.alerts}</Alert>}
+          {data.alerts.length > 0 && data.alerts.map((alert, index) => (
+            <Alert 
+              key={index}
+              severity="warning">
+                {alert}
+            </Alert>
+          ))}
 
-          <Result_Card label={t('softeningPoint-sand-equivalent')} value={data.softeningPoint} unity={'°C'} />
+          <Result_Card label={t('softeningPoint-result')} value={data.softeningPoint} unity={'°C'} />
         </Box>
       </FlexColumnBorder>
     </>

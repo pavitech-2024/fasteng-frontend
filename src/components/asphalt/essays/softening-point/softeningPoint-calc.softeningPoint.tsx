@@ -10,13 +10,13 @@ const SofteningPoint_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) 
   const inputs = [
     {
       key: 'temperature1',
-      label: t('softeningPoint.temperature1'),
+      label: t('asphalt.softeningPoint.temperature1'),
       adornment: '°C',
       value: data.temperature1,
     },
     {
       key: 'temperature2',
-      label: t('softeningPoint.temperature2'),
+      label: t('asphalt.softeningPoint.temperature2'),
       adornment: '°C',
       value: data.temperature2,
     },
@@ -51,7 +51,8 @@ const SofteningPoint_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) 
             value={input.value}
             required
             onChange={(e) => {
-              setData({ step: 1, key: `${[input.key]}`, value: e.target.value });
+              const value = parseFloat(e.target.value);
+              setData({ step: 1, key: `${[input.key]}`, value: value });
             }}
             adornment={input.adornment}
             type="number"
