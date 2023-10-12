@@ -1,17 +1,17 @@
-import InputEndAdornment from "@/components/atoms/inputs/input-endAdornment";
-import ResultSubTitle from "@/components/atoms/titles/result-sub-title";
-import { EssayPageProps } from "@/components/templates/essay";
-import useSayboltFurolStore from "@/stores/asphalt/sayboltFurol/sayboltFurol.store";
-import { Box, Button } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { t } from "i18next";
-import { toast } from "react-toastify";
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
+import { EssayPageProps } from '@/components/templates/essay';
+import useSayboltFurolStore from '@/stores/asphalt/sayboltFurol/sayboltFurol.store';
+import { Box, Button } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { t } from 'i18next';
+import { toast } from 'react-toastify';
 
 const SayboltFurol_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { sayboltFurolCalc: data, setData } = useSayboltFurolStore();
   const rows = data.dataPoints;
-  console.log("🚀 ~ file: sayboltFurol-calc.sayboltFurol.tsx:13 ~ data:", data)
-  console.log("🚀 ~ file: sayboltFurol-calc.sayboltFurol.tsx:13 ~ rows:", rows)
+  console.log('🚀 ~ file: sayboltFurol-calc.sayboltFurol.tsx:13 ~ data:', data);
+  console.log('🚀 ~ file: sayboltFurol-calc.sayboltFurol.tsx:13 ~ rows:', rows);
 
   // Remover mais uma linha de determinado valor
   const handleErase = () => {
@@ -33,7 +33,7 @@ const SayboltFurol_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
     newRows.push({
       id: rows.length,
       temperature: null,
-      viscosity: null
+      viscosity: null,
     });
     setData({ step: 1, key: 'dataPoints', value: newRows });
     setNextDisabled(true);
@@ -73,7 +73,7 @@ const SayboltFurol_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
                 rows[index].temperature = Number(e.target.value);
                 setData({ step: 1, key: 'temperature', value: newRows });
               } else {
-                console.log("error", id)
+                console.log('error', id);
               }
             }}
             adornment={'°C'}
@@ -104,7 +104,7 @@ const SayboltFurol_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           />
         );
       },
-    }
+    },
   ];
 
   if (nextDisabled) {
@@ -118,7 +118,6 @@ const SayboltFurol_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
     if (!hasNullValues) setNextDisabled(false);
   }
 
-
   // if (nextDisabled) {
   //   const hasEmptyValues = data.sandLevel && data.clayLevel !== null;
   //   if (hasEmptyValues) setNextDisabled(false);
@@ -126,7 +125,6 @@ const SayboltFurol_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-
       <ResultSubTitle title={t('saybolt-furol.calc')} sx={{ margin: '.65rem' }} />
 
       <DataGrid

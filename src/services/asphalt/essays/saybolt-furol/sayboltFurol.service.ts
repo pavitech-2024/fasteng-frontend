@@ -1,9 +1,9 @@
-import Api from "@/api";
-import { SayboltFurolIcon } from "@/assets";
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import { IEssayService } from "@/interfaces/common/essay/essay-service.interface";
-import { SayboltFurolActions, SayboltFurolData } from "@/stores/asphalt/sayboltFurol/sayboltFurol.store";
-import { t } from "i18next";
+import Api from '@/api';
+import { SayboltFurolIcon } from '@/assets';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
+import { SayboltFurolActions, SayboltFurolData } from '@/stores/asphalt/sayboltFurol/sayboltFurol.store';
+import { t } from 'i18next';
 
 class SayboltFurol_SERVICE implements IEssayService {
   info = {
@@ -97,9 +97,7 @@ class SayboltFurol_SERVICE implements IEssayService {
   /** @SayboltFurol Methods for SayboltFurol page (step === 1, page 2) */
 
   // verify inputs from SayboltFurol page (step === 1, page 2)
-  submitSayboltFurolCalcData = async (
-    sayboltFurolCalc: SayboltFurolData['sayboltFurolCalc']
-  ): Promise<void> => {
+  submitSayboltFurolCalcData = async (sayboltFurolCalc: SayboltFurolData['sayboltFurolCalc']): Promise<void> => {
     console.log(
       '🚀 ~ file: sayboltFurol.service.ts:101 ~ SayboltFurol_SERVICE ~ submitSayboltFurolCalcData= ~ sayboltFurolCalc:',
       sayboltFurolCalc

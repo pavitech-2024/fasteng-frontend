@@ -1,7 +1,7 @@
-import FlexColumnBorder from "@/components/atoms/containers/flex-column-with-border";
-import { EssayPageProps } from "@/components/templates/essay";
-import { Box } from "@mui/material";
-import { t } from "i18next";
+import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import { EssayPageProps } from '@/components/templates/essay';
+import { Box } from '@mui/material';
+import { t } from 'i18next';
 
 const SayboltFurol_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);

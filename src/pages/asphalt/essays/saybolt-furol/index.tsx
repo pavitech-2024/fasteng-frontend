@@ -1,10 +1,10 @@
-import SayboltFurol_GeneralData from "@/components/asphalt/essays/saybolt-furol/general-data.sayboltFurol";
-import SayboltFurol_Results from "@/components/asphalt/essays/saybolt-furol/results.sayboltFurol";
-import SayboltFurol_Calc from "@/components/asphalt/essays/saybolt-furol/sayboltFurol-calc.sayboltFurol";
-import EssayTemplate from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import SayboltFurol_SERVICE from "@/services/asphalt/essays/saybolt-furol/sayboltFurol.service";
-import useSayboltFurolStore, { SayboltFurolActions } from "@/stores/asphalt/sayboltFurol/sayboltFurol.store";
+import SayboltFurol_GeneralData from '@/components/asphalt/essays/saybolt-furol/general-data.sayboltFurol';
+import SayboltFurol_Results from '@/components/asphalt/essays/saybolt-furol/results.sayboltFurol';
+import SayboltFurol_Calc from '@/components/asphalt/essays/saybolt-furol/sayboltFurol-calc.sayboltFurol';
+import EssayTemplate from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import SayboltFurol_SERVICE from '@/services/asphalt/essays/saybolt-furol/sayboltFurol.service';
+import useSayboltFurolStore, { SayboltFurolActions } from '@/stores/asphalt/sayboltFurol/sayboltFurol.store';
 
 const SayboltFurol = () => {
   // start an instance of the service
@@ -31,9 +31,7 @@ const SayboltFurol = () => {
     { step: 2, children: <SayboltFurol_Results />, data: store },
   ];
 
-  return (
-    <EssayTemplate essayInfo={sayboltFurol.info} childrens={childrens} nextCallback={sayboltFurol.handleNext} />
-  );
+  return <EssayTemplate essayInfo={sayboltFurol.info} childrens={childrens} nextCallback={sayboltFurol.handleNext} />;
 };
 
 export default SayboltFurol;

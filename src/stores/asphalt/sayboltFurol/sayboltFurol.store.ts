@@ -1,6 +1,6 @@
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import { create } from "zustand";
-import { devtools, persist, createJSONStorage } from "zustand/middleware";
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { create } from 'zustand';
+import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
 interface SayboltFurolGeneralData {
   userId: string;
@@ -12,37 +12,37 @@ interface SayboltFurolGeneralData {
 }
 
 interface SayboltFurolCalc {
-  viscosityType: string,
-  modified: boolean,
+  viscosityType: string;
+  modified: boolean;
   dataPoints: {
-    id: number,
-    temperature: number,
-    viscosity: number
-  }[],
+    id: number;
+    temperature: number;
+    viscosity: number;
+  }[];
 }
 
 interface SayboltFurol_results {
-  graph: string,
+  graph: string;
   machiningTemperatureRange: {
-    higher: number,
-    lower: number,
-    average: number
-  },
+    higher: number;
+    lower: number;
+    average: number;
+  };
   compressionTemperatureRange: {
-    higher: number,
-    lower: number,
-    average: number
-  },
+    higher: number;
+    lower: number;
+    average: number;
+  };
   aggregateTemperatureRange: {
-    higher: number,
-    lower: number,
-    average: number
-  },
-  curvePoints: number[][],
+    higher: number;
+    lower: number;
+    average: number;
+  };
+  curvePoints: number[][];
   equation: {
-    aIndex: number,
-    bIndex: number
-  }
+    aIndex: number;
+    bIndex: number;
+  };
 }
 
 export type SayboltFurolData = {
@@ -70,23 +70,23 @@ const initialState = {
     description: null,
   },
   sayboltFurolCalc: {
-    viscosityType: "Saybolt Furol",
+    viscosityType: 'Saybolt Furol',
     modified: null,
     dataPoints: [
       {
         id: 0,
         temperature: 135,
-        viscosity: null
+        viscosity: null,
       },
       {
         id: 1,
         temperature: 150,
-        viscosity: null
+        viscosity: null,
       },
       {
         id: 2,
         temperature: 177,
-        viscosity: null
+        viscosity: null,
       },
     ],
   },
@@ -95,23 +95,23 @@ const initialState = {
     machiningTemperatureRange: {
       higher: null,
       lower: null,
-      average: null
+      average: null,
     },
     compressionTemperatureRange: {
       higher: null,
       lower: null,
-      average: null
+      average: null,
     },
     aggregateTemperatureRange: {
       higher: null,
       lower: null,
-      average: null
+      average: null,
     },
     curvePoints: [[], [], [], [], [], []],
     equation: {
       aIndex: 0,
-      bIndex: 0
-    }
+      bIndex: 0,
+    },
   },
 };
 
