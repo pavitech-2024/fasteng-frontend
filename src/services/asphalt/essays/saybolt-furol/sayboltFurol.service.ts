@@ -14,7 +14,7 @@ class SayboltFurol_SERVICE implements IEssayService {
     backend_path: 'asphalt/essays/sayboltFurol',
     steps: 3,
     standard: {
-      name: '',
+      name: 'DNIT-ME 004/94',
       link: '',
     },
     stepperData: [
