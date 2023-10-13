@@ -9,8 +9,8 @@ class SayboltFurol_SERVICE implements IEssayService {
   info = {
     key: 'saybolt-furol',
     icon: SayboltFurolIcon,
-    title: t('asphalt.essays.sayboltFurol'),
-    path: '/asphalt/essays/saybolt-furol',
+    title: t('asphalt.essays.saybolt'),
+    path: '/asphalt/essays/saybolt',
     backend_path: 'asphalt/essays/sayboltFurol',
     steps: 3,
     standard: {
@@ -19,7 +19,7 @@ class SayboltFurol_SERVICE implements IEssayService {
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
-      { step: 1, description: t('asphalt.essays.saybolt-furol'), path: 'essay-data' },
+      { step: 1, description: t('asphalt.essays.saybolt'), path: 'essay-data' },
       { step: 2, description: t('results'), path: 'results' },
     ],
   };

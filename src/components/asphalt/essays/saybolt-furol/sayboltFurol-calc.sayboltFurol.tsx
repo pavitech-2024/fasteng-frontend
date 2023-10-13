@@ -10,8 +10,6 @@ import { toast } from 'react-toastify';
 const SayboltFurol_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { sayboltFurolCalc: data, setData } = useSayboltFurolStore();
   const rows = data.dataPoints;
-  console.log('🚀 ~ file: sayboltFurol-calc.sayboltFurol.tsx:13 ~ data:', data);
-  console.log('🚀 ~ file: sayboltFurol-calc.sayboltFurol.tsx:13 ~ rows:', rows);
 
   // Remover mais uma linha de determinado valor
   const handleErase = () => {
@@ -63,7 +61,6 @@ const SayboltFurol_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
         return (
           <InputEndAdornment
             fullWidth
-            //label={t('saybolt-furol.temperature')}
             type="number"
             inputProps={{ min: 0 }}
             value={row.temperature}
@@ -108,20 +105,9 @@ const SayboltFurol_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
   ];
 
   if (nextDisabled) {
-    // verifica se todos os campos da tabela estão preenchidos
-    // rows.every((row) => {
-    //   const { temperature, viscosity } = row;
-    //   return temperature && viscosity >= 0;
-    // })
     const hasNullValues = rows.some((row) => Object.values(row).some((value) => value === null));
-    // verificar se precisa de mais validações antes de deixar ir para o próximo step
     if (!hasNullValues) setNextDisabled(false);
   }
-
-  // if (nextDisabled) {
-  //   const hasEmptyValues = data.sandLevel && data.clayLevel !== null;
-  //   if (hasEmptyValues) setNextDisabled(false);
-  // }
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>

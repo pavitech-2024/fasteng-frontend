@@ -22,5 +22,10 @@
   "asphalt.essays.filter.all": "All",
   "asphalt.essays.filter.aggregates": "Aggregates",
   "asphalt.essays.filter.asphaltMix": "Asphalt Mix",
-  "asphalt.essays.filter.asphaltBinder": "Asphalt Binder"
+  "asphalt.essays.filter.asphaltBinder": "Asphalt Binder",
+  "asphalt.experimentName": "Experiment name",
+  "asphalt.operator": "Operator",
+  "asphalt.materials.comments": "Comments",
+  "asphalt.calculist": "Calculist",
+  "asphalt.material": "Material"
 }
