@@ -1,0 +1,15 @@
+{
+  "shapeIndex": "Índice de Forma",
+  "shapeIndex.step-2-description": "Preencha todos os campos",
+  "shapeIndex.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
+  "shapeIndex.total_mass": "Massa total",
+  "shapeIndex.shape_index": "Índice de forma",
+  "shapeIndex.circular_sieve": "Crivo",
+  "shapeIndex.pachymeter": "Paquímetro",
+  "shapeIndex.choose-method": "Escolha o método",
+  "shapeIndex.choose-graduation": "Escolha a graduação",
+  "shapeIndex.circular_sieves": "Crivo circular (mm)",
+  "shapeIndex.sieve": "Peneira",
+  "shapeIndex.retained_mass": "Massa Retida",
+  "shapeIndex.grains_count": "Número de Grãos (Ni)"
+}

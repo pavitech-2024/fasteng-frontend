@@ -50,6 +50,9 @@ import ductilityENG from './translations/asphalt/essays/ductility/en.json';
 // angularity
 import angularityPTBR from './translations/asphalt/essays/angularity/ptbr.json';
 import angularityENG from './translations/asphalt/essays/angularity/en.json';
+// shapeIndex
+import shapeIndexPTBR from './translations/asphalt/essays/shapeIndex/ptbr.json';
+import shapeIndexENG from './translations/asphalt/essays/flashPoint/en.json';
 
 /**@soils */
 // samples
@@ -119,6 +122,7 @@ i18n.use(initReactI18next).init({
         ...flashPointPTBR,
         ...ductilityPTBR,
         ...angularityPTBR,
+        ...shapeIndexPTBR,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
@@ -155,6 +159,7 @@ i18n.use(initReactI18next).init({
         ...flashPointENG,
         ...ductilityENG,
         ...angularityENG,
+        ...shapeIndexENG,
         /**@soils */
         ...samplesENG,
         ...soilsEssaysENG,
