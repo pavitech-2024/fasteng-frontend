@@ -15,5 +15,6 @@
   "topbar.sucs": "Unified Classification - SUCS",
   "topbar.granulometry": "Granulometry",
   "topbar.compression": "Compression",
-  "topbar.softening-point": "Softening Point"
+  "topbar.softening-point": "Softening Point",
+  "topbar.penetration": "Penetration"
 }
