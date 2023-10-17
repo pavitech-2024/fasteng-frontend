@@ -22,5 +22,12 @@
   "asphalt.essays.filter.all": "All",
   "asphalt.essays.filter.aggregates": "Aggregates",
   "asphalt.essays.filter.asphaltMix": "Asphalt Mix",
-  "asphalt.essays.filter.asphaltBinder": "Asphalt Binder"
+  "asphalt.essays.filter.asphaltBinder": "Asphalt Binder",
+  "asphalt.essays.viscosity-rotational": "Viscosity Rotational",
+  "asphalt.essays.viscosityRotational": "Viscosity Data",
+  "asphalt.experimentName": "Experiment name",
+  "asphalt.operator": "Operator",
+  "asphalt.material": "Material",
+  "asphalt.calculist": "Calculist",
+  "asphalt.materials.comments": "Observations"
 }

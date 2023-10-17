@@ -22,5 +22,12 @@
   "asphalt.essays.filter.all": "Todos",
   "asphalt.essays.filter.aggregates": "Agregados",
   "asphalt.essays.filter.asphaltMix": "Misturas Asfálticas",
-  "asphalt.essays.filter.asphaltBinder": "Ligante Asfáltico"
+  "asphalt.essays.filter.asphaltBinder": "Ligante Asfáltico",
+  "asphalt.essays.viscosity-rotational": "Viscosidade Rotacional",
+  "asphalt.essays.viscosityRotational": "Dados de Viscosidade",
+  "asphalt.experimentName": "Nome do experimento",
+  "asphalt.operator": "Operador",
+  "asphalt.material": "Material",
+  "asphalt.calculist": "Cauculista",
+  "asphalt.materials.comments": "Observações"
 }

@@ -137,7 +137,7 @@ const AsphaltEssays: NextPage = () => {
       title: t('asphalt.essays.rotational'),
       icon: RotationalIcon,
       key: 'rotational',
-      link: '/asphalt/essays/rotational',
+      link: '/asphalt/essays/viscosityRotational',
       type: 'asphaltBinder',
     },
     {
