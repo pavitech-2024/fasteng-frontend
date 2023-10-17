@@ -40,6 +40,8 @@ import asphaltEssaysPTBR from './translations/asphalt/essays/ptbr.json';
 import asphaltEssaysENG from './translations/asphalt/essays/en.json';
 import softeningPointPTBR from './translations/asphalt/essays/softeningPoint/ptbr.json';
 import softeningPointENG from './translations/asphalt/essays/softeningPoint/en.json';
+import asphaltPenetrationPTBR from './translations/asphalt/essays/penetration/ptbr.json';
+import asphaltPenetrationENG from './translations/asphalt/essays/penetration/en.json';
 
 /**@soils */
 // samples
@@ -106,6 +108,7 @@ i18n.use(initReactI18next).init({
         ...asphaltMaterialsPTBR,
         ...asphaltEssaysPTBR,
         ...softeningPointPTBR,
+        ...asphaltPenetrationPTBR,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
@@ -139,6 +142,7 @@ i18n.use(initReactI18next).init({
         ...asphaltMaterialsENG,
         ...asphaltEssaysENG,
         ...softeningPointENG,
+        ...asphaltPenetrationENG,
         /**@soils */
         ...samplesENG,
         ...soilsEssaysENG,

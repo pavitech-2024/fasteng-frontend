@@ -8,5 +8,6 @@
   "asphalt.softeningPoint.temperature1": "Primeira temperatura",
   "asphalt.softeningPoint.temperature2": "Segunda temperatura",
   "softeningPoint-result": "Ponto de amolecimento",
-  "softening-point.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde."
+  "softening-point.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
+  "essay-not-found": "Não há um ensaio de penetração vinculado ao material selecionado. Por favor, realize um ensaio de penetração com esse material antes de prosseguir ou selecione outro material."
 }

@@ -87,8 +87,12 @@ class SofteningPoint_SERVICE implements IEssayService {
 
       const { success, error } = response.data;
 
-      // if there is already a SofteningPoint essay with same name for the material, throw error
-      if (success === false) throw error.name;
+      // if there is already a SofteningPoint essay with same name for the material
+      // or there isn't a Penetration essay associated with the sample _id,
+      // throw an error
+      console.log("🚀 ~ file: softeningPoint.service.ts:94 ~ SofteningPoint_SERVICE ~ submitGeneralData= ~ error.message:", error.message)
+
+      if (success === false) throw t(error.message);
     } catch (error) {
       throw error;
     }
