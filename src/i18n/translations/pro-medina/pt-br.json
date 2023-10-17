@@ -1,7 +1,16 @@
 {
   "home.pm": "Pro-Medina",
-  "home.pm.description": "",
+  "home.pm.description": "Breve texto introdutório do objetivo do pro-medina funciona, especificando as três áreas de abordagem abaixo. Qual aplicação você deseja utilizar agora?",
   "home.pm.granular": "Camadas Granulares",
   "home.pm.stabilized": "Camadas Estabilizadas",
-  "home.pm.asphalt": "Ligante e Concreto Asfálticos"
+  "home.pm.asphalt": "Ligante e Concreto Asfálticos",
+  "welcome.step.granular-layers.register.1": "Clique em Cadastro de novas amostras",
+  "welcome.step.granular-layers.register.2": "Registre dados obrigatórios do material",
+  "welcome.step.granular-layers.register.3": "Registre dados sobre o pavimento em que o material está inserido",
+  "welcome.step.granular-layers.view.1": "Clique em Amostras cadastradas",
+  "welcome.step.granular-layers.view.2": "Utilize filtros para especificar sua busca",
+  "pm.granular.works.register": "Caso você queira cadastrar uma nova amostra:",
+  "pm.granular.works.view": "Caso você queira visualizar amostras cadastradas:",
+  "pm.register": "Cadastrar nova amostra",
+  "pm.view": "Visualizar amostras cadastradas"
 }

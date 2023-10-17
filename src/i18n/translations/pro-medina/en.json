@@ -1,7 +1,16 @@
 {
   "home.pm": "Pro-Medina",
-  "home.pm.description": "",
+  "home.pm.description": "Brief introductory text of the objective of the pro-medina function, specifying the three areas of approach below. Which app do you want to use now?",
   "home.pm.granular": "Granular Layers",
   "home.pm.stabilized": "Stabilized Layers",
-  "home.pm.asphalt": "Asphalt Binder and Concrete"
+  "home.pm.asphalt": "Asphalt Binder and Concrete",
+  "welcome.step.granular-layers.register.1": "Click on Register new samples",
+  "welcome.step.granular-layers.register.2": "Register mandatory material data",
+  "welcome.step.granular-layers.register.3": "Record data about the pavement on which the material is inserted",
+  "welcome.step.granular-layers.view.1": "Click on Registered samples",
+  "welcome.step.granular-layers.view.2": "Use filters to specify your search",
+  "pm.granular.works.register": "If you want to register a new sample:",
+  "pm.granular.works.view": "If you want to view registered samples:",
+  "pm.register": "Register new sample",
+  "pm.view": "View registered samples"
 }

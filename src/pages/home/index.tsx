@@ -40,9 +40,9 @@ const Home: NextPage = () => {
     {
       name: 'Pro-Medina',
       icon: <PromedinaProvIcon />,
-      path: '/promedina'
-    }
-  ]
+      path: '/promedina',
+    },
+  ];
 
   return (
     <Container
@@ -133,9 +133,10 @@ const Home: NextPage = () => {
           },
           gap: {
             mobile: '20px 0',
-            notebook: '10px 20px',
+            notebook: '10px 15px',
           },
           justifyItems: 'center',
+          marginRight: { notebook: '55px', mobile: '0px' },
           flexDirection: { notebook: 'row', tablet: 'column', mobile: 'column' },
           width: '100%',
           minWidth: 'fit-content',
@@ -150,7 +151,7 @@ const Home: NextPage = () => {
         {Applications.map((app) => (
           <CardApp key={app.name} element={app} onClick={() => Router.push(app.path)} />
         ))}
-        <CardPromedina element={Promedina[0]} onClick={() => Router.push(Promedina[0].path)}/>
+        <CardPromedina element={Promedina[0]} onClick={() => Router.push(Promedina[0].path)} />
       </Box>
     </Container>
   );

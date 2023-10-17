@@ -23,6 +23,9 @@ import settingsENG from './translations/settings/en.json';
 //errors
 import errorsPTBR from './translations/errors/ptbr.json';
 import errorsENG from './translations/errors/en.json';
+// Pro-medina
+import promedinaPTBR from './translations/pro-medina/pt-br.json';
+import promedinaENG from './translations/pro-medina/en.json';
 
 /** @templates */
 import materialsPTBR from './translations/templates/materials/ptbr.json';
@@ -97,6 +100,7 @@ i18n.use(initReactI18next).init({
         ...settingsPTBR,
         ...footerPTBR,
         ...errorsPTBR,
+        ...promedinaPTBR,
         /**@templates */
         ...materialsPTBR,
         ...welcomePTBR,
@@ -129,6 +133,7 @@ i18n.use(initReactI18next).init({
         ...settingsENG,
         ...footerENG,
         ...errorsENG,
+        ...promedinaENG,
         /**@templates */
         ...materialsENG,
         ...welcomeENG,

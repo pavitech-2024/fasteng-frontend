@@ -1,6 +1,11 @@
-function ProvSoils2Icon() {
+interface IProvIcon2 {
+  width: string;
+  height: string;
+}
+
+function ProvSoils2Icon({ width, height }: IProvIcon2) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="178" height="150" fill="none" viewBox="0 0 178 150">
+    <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} fill="none" viewBox="0 0 178 150">
       <g clipPath="url(#clip0_127_9217)">
         <path
           fill="#8C5631"

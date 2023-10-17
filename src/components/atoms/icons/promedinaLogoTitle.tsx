@@ -24,4 +24,4 @@ function PromedinaLogoTitle() {
   );
 }
 
-export default <PromedinaLogoTitle></PromedinaLogoTitle>;
+export default PromedinaLogoTitle;
