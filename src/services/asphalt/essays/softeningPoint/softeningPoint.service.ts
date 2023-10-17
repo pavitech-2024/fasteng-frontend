@@ -91,7 +91,6 @@ class SofteningPoint_SERVICE implements IEssayService {
       // or there isn't a Penetration essay associated with the sample _id,
       // throw an error
       if (success === false) throw t(error.message);
-
     } catch (error) {
       throw error;
     }
