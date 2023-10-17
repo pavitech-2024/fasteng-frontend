@@ -12,5 +12,14 @@
   "pm.granular.works.register": "Caso você queira cadastrar uma nova amostra:",
   "pm.granular.works.view": "Caso você queira visualizar amostras cadastradas:",
   "pm.register": "Cadastrar nova amostra",
-  "pm.view": "Visualizar amostras cadastradas"
+  "pm.view": "Visualizar amostras cadastradas",
+  "pm.pavement.specific.data": "Dados específicos do pavimento",
+  "pm.granularLayer.name": "Nome",
+  "pm.granularLayer.zone": "Local",
+  "pm.granularLayer.layer": "Camada",
+  "pm.granularLayer.cityState": "Município/Estado",
+  "pm.granularLayer.observations": "Observações",
+  "pm.granular-layers-register": "Cadastro de amostras em Camadas Granulares",
+  "promedina.essays.granularLayers": "Cadastro de amostras em Camadas Granulares"
+
 }

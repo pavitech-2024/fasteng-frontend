@@ -12,5 +12,13 @@
   "pm.granular.works.register": "If you want to register a new sample:",
   "pm.granular.works.view": "If you want to view registered samples:",
   "pm.register": "Register new sample",
-  "pm.view": "View registered samples"
+  "pm.view": "View registered samples",
+  "pm.pavement.specific.data": "Pavement specific data",
+  "pm.granularLayer.name": "Name",
+  "pm.granularLayer.zone": "Zone",
+  "pm.granularLayer.layer": "Layer",
+  "pm.granularLayer.cityState": "City/State",
+  "pm.granularLayer.observations": "Observations",
+  "pm.granular-layers-register": "Sample Register in Granular Layers",
+  "promedina.essays.granularLayers": "Sample Register in Granular Layers"
 }
