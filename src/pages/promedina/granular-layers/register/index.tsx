@@ -26,8 +26,8 @@ const GranularLayers = () => {
 
   const childrens = [
     { step: 0, children: <GranularLayers_step1  />, data: store.generalData },
-    { step: 1, children: <GranularLayers_step2 granularLayers={granularLayers} />, data: store },
-    { step: 2, children: <GranularLayers_step3 granularLayers={granularLayers}/>, data: store },
+    { step: 1, children: <GranularLayers_step2  />, data: store.step2Data },
+    { step: 2, children: <GranularLayers_step3 />, data: store.step3Data },
   ];
 
   return <EssayTemplate essayInfo={granularLayers.info} nextCallback={granularLayers.handleNext} childrens={childrens} />;

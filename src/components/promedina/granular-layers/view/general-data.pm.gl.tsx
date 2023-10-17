@@ -2,11 +2,10 @@ import { EssayPageProps } from '../../../templates/essay';
 import { t } from 'i18next';
 import { Box, TextField } from '@mui/material';
 import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
+import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import { useEffect } from 'react';
 
-const GranularLayers_step1 = ({
-  nextDisabled,
-  setNextDisabled,
-}: EssayPageProps) => {
+const GranularLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { generalData, setData } = useGranularLayersStore();
 
   const inputs = [
@@ -14,10 +13,14 @@ const GranularLayers_step1 = ({
     { label: t('pm.granularLayer.zone'), value: generalData.zone, key: 'zone', required: true },
     { label: t('pm.granularLayer.layer'), value: generalData.layer, key: 'layer', required: true },
     { label: t('pm.granularLayer.cityState'), value: generalData.cityState, key: 'cityState', required: true },
-    { label: t('pm.granularLayer.observations'), value: generalData.observations, key: 'observations', required: false },
+    {
+      label: t('pm.granularLayer.observations'),
+      value: generalData.observations,
+      key: 'observations',
+      required: false,
+    },
   ];
 
-  // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
   inputs.every(({ required, value }) => {
     if (!required) return true;
 
@@ -30,38 +33,44 @@ const GranularLayers_step1 = ({
     nextDisabled &&
     setNextDisabled(false);
 
+    useEffect(() => nextDisabled && setNextDisabled(false), [nextDisabled, setNextDisabled]);
+
   return (
     <>
-      <Box
-        sx={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
+      <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
         <Box
           sx={{
-            display: 'grid',
             width: '100%',
-            gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
-            gap: '5px 20px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          {inputs.map((input) => {
-            return (
-              <TextField
-                key={input.key}
-                variant="standard"
-                label={input.label}
-                value={input.value}
-                required={input.required}
-                onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
-              />
-            );
-          })}
+          <Box
+            sx={{
+              display: 'grid',
+              width: '100%',
+              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
+              gap: '5px 20px',
+              marginBottom: '10px',
+              marginTop: '-20px'
+            }}
+          >
+            {inputs.map((input) => {
+              return (
+                <TextField
+                  key={input.key}
+                  variant="standard"
+                  label={input.label}
+                  value={input.value}
+                  required={input.required}
+                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                />
+              );
+            })}
+          </Box>
         </Box>
-      </Box>
+      </FlexColumnBorder>
     </>
   );
 };

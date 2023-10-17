@@ -9,6 +9,7 @@ interface FlexColumnBorderProps {
   sx_title?: { [key: string]: unknown };
   open?: boolean;
   generalData?: boolean;
+  theme?: string;
 }
 
 const FlexColumnBorder = ({
@@ -20,6 +21,7 @@ const FlexColumnBorder = ({
   sx_title,
   open,
   generalData,
+  theme
 }: FlexColumnBorderProps) => {
   return (
     <Box
@@ -28,7 +30,7 @@ const FlexColumnBorder = ({
         display: 'flex',
         flexDirection: flexDirection || 'column',
         border: hideBorder ? 'none' : '2px solid',
-        borderColor: 'primary.main',
+        borderColor: theme ? theme : 'primary.main',
         padding: '10px',
         zIndex: 2,
         mt: generalData ? 0 : '2rem',
