@@ -1,57 +1,30 @@
-import { ArrowDownIcon, MaterialsIcon, MarshallIcon } from '@/assets';
-import ProvSoils1Icon from '@/components/atoms/icons/provSoils1Icon';
-import { WelcomeData } from '@/components/templates/welcome';
-import { Container, Box, Typography, Stack } from '@mui/material';
+import { Box, Typography, Stack } from '@mui/material';
 import { StepperData, StepperWelcome as Stepper } from '@/components/atoms/stepper';
+import { CardMenuOptions as Card } from '@/components/styles/muis/welcome';
 import { t } from 'i18next';
-import { NextPage } from 'next';
-import { useState } from 'react';
-import { PMCardMenuOptions } from '@/components/atoms/cards/view-register-card';
+import { useRouter } from 'next/router';
+import { ReactNode, useState } from 'react';
+import { PageWelcomeContainer as Container } from '@/components/organisms/pageContainer';
+import { ArrowDownIcon } from '@/assets';
 
-const StabilizedLayers: NextPage = () => {
+export interface WelcomeData {
+  name: string;
+  icon: ReactNode;
+  description: string;
+  path: string;
+}
+
+interface WelcomeTemplateProps {
+  icon: JSX.Element;
+  welcomeData: WelcomeData[];
+  stepperData: StepperData[];
+}
+
+const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProps) => {
+  const app = useRouter().pathname.split('/')[1];
+  const title = t(`welcome.${app}`);
+
   const [modalOpen, setModalOpen] = useState(false);
-
-  const stepperDataView: StepperData[] = [
-    {
-      step: 1,
-      description: t('welcome.step.stabilized-layers.view.1'),
-    },
-    {
-      step: 2,
-      description: t('welcome.step.stabilized-layers.view.2'),
-    },
-
-  ];
-
-  const stepperDataRegister: StepperData[] = [
-    {
-      step: 1,
-      description: t('welcome.step.stabilized-layers.register.1'),
-    },
-    {
-      step: 2,
-      description: t('welcome.step.stabilized-layers.register.2'),
-    },
-    {
-      step: 2,
-      description: t('welcome.step.stabilized-layers.register.3'),
-    },
-  ];
-
-  const welcomeData: WelcomeData[] = [
-    {
-      name: t('pm.register'),
-      icon: <MaterialsIcon width="30px" height="35px" />,
-      description: t('pm.register'),
-      path: '/promedina/stabilized-layers/register',
-    },
-    {
-      name: t('pm.view'),
-      icon: <MarshallIcon width="30px" height="35px" />,
-      description: t('pm.view'),
-      path: '/promedina/stabilized-layers/view',
-    },
-  ];
 
   return (
     <Container>
@@ -61,7 +34,6 @@ const StabilizedLayers: NextPage = () => {
           flexDirection: 'column',
           justifyContent: 'start',
           alignItems: 'center',
-          marginTop: '3rem',
           pt: { mobile: 0, desktop: '4vh' },
           '@media only screen and (min-width: 1024px)': {
             flexDirection: 'row',
@@ -98,9 +70,7 @@ const StabilizedLayers: NextPage = () => {
                 m: { mobile: '2vh 0 4vh', desktop: '1vh 0 2vh' },
               }}
             >
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <ProvSoils1Icon width="5rem" height="5rem" />
-              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{icon}</Box>
               <Box
                 color="primary"
                 sx={{
@@ -110,12 +80,12 @@ const StabilizedLayers: NextPage = () => {
                   lineHeight: { mobile: '1.5rem', notebook: '2.05rem' },
                   textAlign: 'center',
                   pl: '15px',
-                  color: '#07B811',
+                  color: 'primary.main',
                   div: { color: 'primaryTons.darkGray' },
                 }}
               >
                 <div>{t('welcome.title')}</div>
-                {t('home.pm.stabilized')}
+                {title}
               </Box>
             </Box>
             <Box
@@ -145,7 +115,6 @@ const StabilizedLayers: NextPage = () => {
               >
                 {t('welcome.how it works')}
               </Typography>
-              <Typography sx={{ marginBottom: "1rem" }}>{t('pm.stabilized.works.register')}</Typography>
               <Box
                 sx={{
                   position: 'absolute',
@@ -165,34 +134,39 @@ const StabilizedLayers: NextPage = () => {
                   transition: '0.5s ease-out',
                 }}
               >
-                <Stepper stepperData={stepperDataRegister} variant="multicolor" />
+                <Stepper stepperData={stepperData} variant="multicolor" />
               </Stack>
-              <Typography sx={{ marginTop: '2rem', marginBottom: '1rem' }}>{t('pm.stabilized.works.view')}</Typography>
               <Box
                 sx={{
-                  position: 'absolute',
-                  top: '2vh',
-                  right: '2vh',
-                  transform: modalOpen ? 'rotate(0.5turn)' : 'none',
-                  transition: '0.5s ease-out',
-                  display: { mobile: 'flex', notebook: 'none' },
-                }}
-              >
-                <ArrowDownIcon onClick={() => setModalOpen((prev) => !prev)} />
-              </Box>
-
-              <Stack
-                sx={{
                   display: modalOpen ? 'flex' : { mobile: 'none', notebook: 'flex' },
+                  flexDirection: 'column',
+                  width: '100%',
+                  mt: { mobile: '3vh', notebook: '25px' },
                   transition: '0.5s ease-out',
-                  marginBottom: '1rem'
                 }}
               >
-                <Stepper stepperData={stepperDataView} variant="multicolor" />
-              </Stack>
+                {welcomeData.map((element: WelcomeData) => (
+                  <Typography
+                    color="primary"
+                    sx={{
+                      fontWeight: 700,
+                      fontSize: '1rem',
+                      mb: '16px',
+                      span: {
+                        color: 'primaryTons.mainGray',
+                        fontWeight: 500,
+                      },
+                    }}
+                    key={element.name}
+                  >
+                    • {element.name}:<span> {element.description}</span>
+                  </Typography>
+                ))}
+              </Box>
             </Box>
           </Box>
         </Box>
+
         <Box
           sx={{
             display: 'grid',
@@ -214,7 +188,7 @@ const StabilizedLayers: NextPage = () => {
           }}
         >
           {welcomeData.map((option: WelcomeData) => (
-            <PMCardMenuOptions key={option.name} {...option} />
+            <Card key={option.name} {...option} />
           ))}
         </Box>
       </Box>
@@ -222,4 +196,4 @@ const StabilizedLayers: NextPage = () => {
   );
 };
 
-export default StabilizedLayers;
+export default WelcomeTemplate;

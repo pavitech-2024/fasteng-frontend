@@ -74,6 +74,8 @@ const Promedina: NextPage = () => {
           maxHeight: { mobile: 'none', ultrawide: '150px' },
           display: 'flex',
           alignItems: 'center',
+          justifyItems: 'center',
+          justifyContent: 'center',
         }}
       >
         <Box
@@ -82,6 +84,8 @@ const Promedina: NextPage = () => {
             alignItems: 'center',
             p: { mobile: '0 5vw', notebook: '0 15vw', ultrawide: '0 20vw' },
             m: 0,
+            justifyItems: 'center',
+            justifyContent: 'center',
           }}
         >
           <Typography
@@ -100,15 +104,12 @@ const Promedina: NextPage = () => {
       <Box
         sx={{
           display: 'flex',
-          gridTemplateColumns: {
-            mobile: '1fr',
-            notebook: '1fr 1fr 1fr',
-          },
           gap: {
             mobile: '20px 0',
             notebook: '10px 20px',
           },
           justifyItems: 'center',
+          justifyContent: 'center',
           flexDirection: { notebook: 'row', tablet: 'column', mobile: 'column' },
           width: '100%',
           minWidth: 'fit-content',

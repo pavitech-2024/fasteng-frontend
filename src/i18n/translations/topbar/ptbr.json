@@ -17,5 +17,7 @@
   "topbar.compression": "Compactação",
   "topbar.promedina": "PRO-MEDINA",
   "topbar.granular-layers": "Camadas Granulares",
-  "topbar.view": "Cadastro de amostras"
+  "topbar.view": "Cadastro de amostras",
+  "topbar.stabilized-layers": "Camadas Estabilizadas",
+  "topbar.register": "Cadastro de novas amostras"
 }
