@@ -1,11 +1,11 @@
-import Ddui_Step2 from "@/components/asphalt/essays/ddui/ddui-step2.ddui";
-import Ddui_Step3 from "@/components/asphalt/essays/ddui/ddui-step3.ddui";
-import Ddui_GeneralData from "@/components/asphalt/essays/ddui/generalData.ddui";
-import Ddui_Results from "@/components/asphalt/essays/ddui/results.ddui";
-import EssayTemplate from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import Ddui_SERVICE from "@/services/asphalt/essays/ddui/ddui.service";
-import useDduiStore, { DduiActions } from "@/stores/asphalt/ddui.store";
+import Ddui_Step2 from '@/components/asphalt/essays/ddui/ddui-step2.ddui';
+import Ddui_Step3 from '@/components/asphalt/essays/ddui/ddui-step3.ddui';
+import Ddui_GeneralData from '@/components/asphalt/essays/ddui/generalData.ddui';
+import Ddui_Results from '@/components/asphalt/essays/ddui/results.ddui';
+import EssayTemplate from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import Ddui_SERVICE from '@/services/asphalt/essays/ddui/ddui.service';
+import useDduiStore, { DduiActions } from '@/stores/asphalt/ddui.store';
 
 const Ddui = () => {
   // start an instance of the service
@@ -29,13 +29,11 @@ const Ddui = () => {
   const childrens = [
     { step: 0, children: <Ddui_GeneralData ddui={ddui} />, data: store.generalData },
     { step: 1, children: <Ddui_Step2 />, data: store },
-    { step: 2, children: <Ddui_Step3 />, data: store},
+    { step: 2, children: <Ddui_Step3 />, data: store },
     { step: 2, children: <Ddui_Results />, data: store },
   ];
 
-  return (
-    <EssayTemplate essayInfo={ddui.info} childrens={childrens} nextCallback={ddui.handleNext} />
-  );
+  return <EssayTemplate essayInfo={ddui.info} childrens={childrens} nextCallback={ddui.handleNext} />;
 };
 
 export default Ddui;

@@ -1,6 +1,6 @@
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import { create } from "zustand";
-import { devtools, persist, createJSONStorage } from "zustand/middleware";
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { create } from 'zustand';
+import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
 interface DduiGeneralData {
   userId: string;
@@ -12,33 +12,36 @@ interface DduiGeneralData {
 }
 
 interface DduiStep2 {
-  dnitRange: string,
-  sampleVoidVolume: number,
-  pressConstant: number,
-  pressSpecification: string,
-  sampleOrigin: string,
+  dnitRange: string;
+  sampleVoidVolume: number;
+  pressConstant: number;
+  pressSpecification: string;
+  sampleOrigin: string;
 }
 
 interface DduiStep3 {
   data: {
-    sampleName: string,
-    condicionamento: string,
-    d1: number,
-    d2: number,
-    d3: number,
-    h1: number,
-    h2: number,
-    h3: number,
-    pressReading: number,
-  }[]
+    id: number;
+    sampleName: string;
+    condicionamento: boolean;
+    d1: number;
+    d2: number;
+    d3: number;
+    h1: number;
+    h2: number;
+    h3: number;
+    pressReading: number;
+    RT1: number;
+    RT2: number
+  }[];
 }
 
 interface Ddui_results {
-  everyRtsMpa: any[], 
-  everyRtsKgf: any[], 
-  conditionedAverage: number,
-  unconditionedAverage: number,
-  rrt: number
+  everyRtsMpa: any[];
+  everyRtsKgf: any[];
+  conditionedAverage: number;
+  unconditionedAverage: number;
+  rrt: number;
 }
 
 export type DduiData = {
@@ -74,24 +77,29 @@ const initialState = {
     sampleOrigin: null,
   },
   dduiStep3: {
-    data: [{
-      sampleName: null,
-      condicionamento: null,
-      d1: null,
-      d2: null,
-      d3: null,
-      h1: null,
-      h2: null,
-      h3: null,
-      pressReading: null,
-    }]
+    data: [
+      {
+        id: 0,
+        sampleName: null,
+        condicionamento: null,
+        d1: null,
+        d2: null,
+        d3: null,
+        h1: null,
+        h2: null,
+        h3: null,
+        pressReading: null,
+        RT1: null,
+        RT2: null
+      },
+    ],
   },
   results: {
-    everyRtsMpa: [], 
-    everyRtsKgf: [], 
+    everyRtsMpa: [],
+    everyRtsKgf: [],
     conditionedAverage: null,
     unconditionedAverage: null,
-    rrt: null
+    rrt: null,
   },
 };
 

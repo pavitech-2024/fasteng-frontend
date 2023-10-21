@@ -1,20 +1,16 @@
-import DropDown from "@/components/atoms/inputs/dropDown";
-import Loading from "@/components/molecules/loading";
-import { EssayPageProps } from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import Ddui_SERVICE from "@/services/asphalt/essays/ddui/ddui.service";
-import useDduiStore from "@/stores/asphalt/ddui.store";
-import { Box, TextField } from "@mui/material";
-import { t } from "i18next";
-import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
+import DropDown from '@/components/atoms/inputs/dropDown';
+import Loading from '@/components/molecules/loading';
+import { EssayPageProps } from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import Ddui_SERVICE from '@/services/asphalt/essays/ddui/ddui.service';
+import useDduiStore from '@/stores/asphalt/ddui.store';
+import { Box, TextField } from '@mui/material';
+import { t } from 'i18next';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-const Ddui_GeneralData = ({
-  nextDisabled,
-  setNextDisabled,
-  ddui,
-}: EssayPageProps & { ddui: Ddui_SERVICE }) => {
+const Ddui_GeneralData = ({ nextDisabled, setNextDisabled, ddui }: EssayPageProps & { ddui: Ddui_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
   const { user } = useAuth();

@@ -1,38 +1,43 @@
-import DropDown from "@/components/atoms/inputs/dropDown";
-import InputEndAdornment from "@/components/atoms/inputs/input-endAdornment";
-import { EssayPageProps } from "@/components/templates/essay";
-import useDduiStore from "@/stores/asphalt/ddui.store";
-import { Box } from "@mui/material";
-import { t } from "i18next";
+import DropDown from '@/components/atoms/inputs/dropDown';
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { EssayPageProps } from '@/components/templates/essay';
+import useDduiStore from '@/stores/asphalt/ddui.store';
+import { Box } from '@mui/material';
+import { t } from 'i18next';
 
 const Ddui_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { dduiStep2: data, setData } = useDduiStore();
 
   const inputs = [
     {
-      key: "sampleOrigin",
-      label: t("asphalt.ddui.sample-origin"),
+      key: 'sampleOrigin',
+      label: t('asphalt.ddui.sample-origin'),
       value: data.sampleOrigin,
     },
     {
-      key: "pressSpecification",
-      label: t("asphalt.ddui.press-specification"),
+      key: 'pressSpecification',
+      label: t('asphalt.ddui.press-specification'),
       value: data.pressSpecification,
     },
     {
-      key: "pressConstant",
-      label: t("asphalt.ddui.press-constant"),
+      key: 'pressConstant',
+      label: t('asphalt.ddui.press-constant'),
       value: data.pressConstant,
     },
     {
-      key: "sampleVoidVolume",
-      label: t("asphalt.ddui.sample-void-volume"),
+      key: 'sampleVoidVolume',
+      label: t('asphalt.ddui.sample-void-volume'),
       value: data.sampleVoidVolume,
     },
   ];
 
   if (nextDisabled) {
-    const hasEmptyValues = data.dnitRange && data.pressConstant && data.pressSpecification && data.sampleOrigin && data.sampleVoidVolume !== null;
+    const hasEmptyValues =
+      data.dnitRange &&
+      data.pressConstant &&
+      data.pressSpecification &&
+      data.sampleOrigin &&
+      data.sampleVoidVolume !== null;
     if (hasEmptyValues) setNextDisabled(false);
   }
 
@@ -57,34 +62,34 @@ const Ddui_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
             key={input.key}
             label={input.label}
             value={input.value}
-            onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })} 
-            adornment={input.key === 'sampleVoidVolume' ? "%" : ""}          
+            onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+            adornment={input.key === 'sampleVoidVolume' ? '%' : ''}
           />
         </Box>
       ))}
 
       <Box
         sx={{
-          width: "100%"
+          width: '100%',
         }}
       >
-        <DropDown 
-          label={"Faixa do DNIT"} 
+        <DropDown
+          label={'Faixa do DNIT'}
           variant="standard"
           size="medium"
           sx={{
             display: 'flex',
             marginX: 'auto',
-            width: "50%"
+            width: '50%',
           }}
           options={[
-            {value: "A", label: "A"},
-            {value: "B", label: "B"},
-            {value: "C", label: "C"},
-            {value: "D", label: "D"},
-            {value: "E", label: "E"},
-          ]} 
-          callback={(value) => setData({ step: 1, key: "dnitRange", value })}
+            { value: 'A', label: 'A' },
+            { value: 'B', label: 'B' },
+            { value: 'C', label: 'C' },
+            { value: 'D', label: 'D' },
+            { value: 'E', label: 'E' },
+          ]}
+          callback={(value) => setData({ step: 1, key: 'dnitRange', value })}
         />
       </Box>
     </Box>
