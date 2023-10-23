@@ -1,6 +1,8 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import useElongatedParticlesStore, { ElongatedParticlesDimensionsRow } from '@/stores/asphalt/elongatedParticles/elongatedParticles.store';
+import useElongatedParticlesStore, {
+  ElongatedParticlesDimensionsRow,
+} from '@/stores/asphalt/elongatedParticles/elongatedParticles.store';
 import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
@@ -87,12 +89,10 @@ const ElongatedParticles_Step2 = ({ nextDisabled, setNextDisabled }: EssayPagePr
     },
   ];
 
-  if (nextDisabled && data.dimensions_table_data.every((row) => (
-    row.sample_mass &&
-    row.sample_mass >= 0 &&
-    row.mass &&
-    row.mass >= 0
-  )))
+  if (
+    nextDisabled &&
+    data.dimensions_table_data.every((row) => row.sample_mass && row.sample_mass >= 0 && row.mass && row.mass >= 0)
+  )
     setNextDisabled(false);
 
   return (

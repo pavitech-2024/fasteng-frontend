@@ -4,7 +4,9 @@ import ElongatedParticles_Results from '@/components/asphalt/essays/elongatedPar
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import ELONGATEDPARTICLES_SERVICE from '@/services/asphalt/essays/elongatedParticles/elongatedParticles.service';
-import useElongatedParticlesStore, { ElongatedParticlesActions } from '@/stores/asphalt/elongatedParticles/elongatedParticles.store';
+import useElongatedParticlesStore, {
+  ElongatedParticlesActions,
+} from '@/stores/asphalt/elongatedParticles/elongatedParticles.store';
 
 const ElongatedParticles = () => {
   // start an instance of the service
@@ -26,12 +28,22 @@ const ElongatedParticles = () => {
 
   // inform the childrens with the step of the children and the part of the store that they will use
   const childrens = [
-    { step: 0, children: <ElongatedParticles_GeneralData elongatedParticles={elongatedParticles} />, data: store.generalData },
+    {
+      step: 0,
+      children: <ElongatedParticles_GeneralData elongatedParticles={elongatedParticles} />,
+      data: store.generalData,
+    },
     { step: 1, children: <ElongatedParticles_Step2 />, data: store },
     { step: 2, children: <ElongatedParticles_Results />, data: store },
   ];
 
-  return <EssayTemplate essayInfo={elongatedParticles.info} nextCallback={elongatedParticles.handleNext} childrens={childrens} />;
+  return (
+    <EssayTemplate
+      essayInfo={elongatedParticles.info}
+      nextCallback={elongatedParticles.handleNext}
+      childrens={childrens}
+    />
+  );
 };
 
 export default ElongatedParticles;

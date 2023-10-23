@@ -29,10 +29,10 @@ const ElongatedParticles_Results = ({ setNextDisabled, nextDisabled }: EssayPage
     },
     {
       field: 'particles_percentage',
-      headerName: t('elongatedParticles.particles-percentage') ,
+      headerName: t('elongatedParticles.particles-percentage'),
       valueFormatter: ({ value }) => `${value}%`,
     },
-  ]
+  ];
 
   return (
     <>

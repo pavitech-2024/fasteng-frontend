@@ -1,6 +1,9 @@
 import { ElongatedParticlesIcon } from '@/assets';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
-import { ElongatedParticlesActions, ElongatedParticlesData } from '@/stores/asphalt/elongatedParticles/elongatedParticles.store';
+import {
+  ElongatedParticlesActions,
+  ElongatedParticlesData,
+} from '@/stores/asphalt/elongatedParticles/elongatedParticles.store';
 import Api from '@/api';
 import { t } from 'i18next';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
@@ -90,19 +93,18 @@ class ELONGATEDPARTICLES_SERVICE implements IEssayService {
   // verify inputs from ElongatedParticles page (step === 1, page 2)
   submitStep2Data = async (step2Data: ElongatedParticlesData['step2Data']): Promise<void> => {
     try {
-      const { dimensions_table_data } =
-        step2Data;
+      const { dimensions_table_data } = step2Data;
 
-      if (!dimensions_table_data) throw t('elongatedParticles.error.null-dimensions-table-data')
+      if (!dimensions_table_data) throw t('elongatedParticles.error.null-dimensions-table-data');
       dimensions_table_data.forEach((row) => {
-        if (!row.sample_mass) throw (t('elongatedParticles.error.empty-sample-mass') + ' - ' + row.ratio)
-        if (row.sample_mass < 0) throw (t('elongatedParticles.error.negative-sample-mass') + ' - ' + row.ratio)
-        if (!row.mass) throw (t('elongatedParticles.error.empty-mass') + ' - ' + row.ratio)
-        if (row.mass < 0) throw (t('elongatedParticles.error.negative-mass') + ' - ' + row.ratio)
+        if (!row.sample_mass) throw t('elongatedParticles.error.empty-sample-mass') + ' - ' + row.ratio;
+        if (row.sample_mass < 0) throw t('elongatedParticles.error.negative-sample-mass') + ' - ' + row.ratio;
+        if (!row.mass) throw t('elongatedParticles.error.empty-mass') + ' - ' + row.ratio;
+        if (row.mass < 0) throw t('elongatedParticles.error.negative-mass') + ' - ' + row.ratio;
 
-        if (row.mass > row.sample_mass) throw (t('elongatedParticles.error.mass-greater-than-sample-mass') + ' - ' + row.ratio)
-      })
-        
+        if (row.mass > row.sample_mass)
+          throw t('elongatedParticles.error.mass-greater-than-sample-mass') + ' - ' + row.ratio;
+      });
     } catch (error) {
       throw error;
     }

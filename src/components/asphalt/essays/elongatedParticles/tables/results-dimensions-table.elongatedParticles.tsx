@@ -10,12 +10,12 @@ interface resultsElongatedParticlesProps {
 
 const useStyle = makeStyles({
   root: {
-    "& .MuiDataGrid-columnHeaderTitle": {
-      overflow: "visible",
-      lineHeight: "1.43rem",
-      whiteSpace: "normal",
-    }
-  }
+    '& .MuiDataGrid-columnHeaderTitle': {
+      overflow: 'visible',
+      lineHeight: '1.43rem',
+      whiteSpace: 'normal',
+    },
+  },
 });
 
 const ElongatedParticles_results_Dimensions_Table = ({ rows, columns }: resultsElongatedParticlesProps) => {

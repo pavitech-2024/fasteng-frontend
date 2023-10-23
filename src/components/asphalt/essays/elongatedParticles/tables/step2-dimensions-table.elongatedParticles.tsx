@@ -1,7 +1,7 @@
 import { ElongatedParticlesDimensionsRow } from '@/stores/asphalt/elongatedParticles/elongatedParticles.store';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core';
 
 interface step2ElongatedParticlesProps {
   rows: ElongatedParticlesDimensionsRow[];
@@ -10,12 +10,12 @@ interface step2ElongatedParticlesProps {
 
 const useStyle = makeStyles({
   root: {
-    "& .MuiDataGrid-columnHeaderTitle": {
-      overflow: "visible",
-      lineHeight: "1.43rem",
-      whiteSpace: "normal",
-    }
-  }
+    '& .MuiDataGrid-columnHeaderTitle': {
+      overflow: 'visible',
+      lineHeight: '1.43rem',
+      whiteSpace: 'normal',
+    },
+  },
 });
 
 const ElongatedParticles_step2_Dimensions_Table = ({ rows, columns }: step2ElongatedParticlesProps) => {
