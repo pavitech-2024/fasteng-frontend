@@ -109,7 +109,7 @@ const AsphaltEssays: NextPage = () => {
       title: t('asphalt.essays.elongatedParticles'),
       icon: ElongatedParticlesIcon,
       key: 'elongatedParticles',
-      link: '/asphalt/essays/elongated-particles',
+      link: '/asphalt/essays/elongatedParticles',
       type: 'aggregates',
     },
     {

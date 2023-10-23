@@ -1,0 +1,19 @@
+{
+  "elongatedParticles": "Elongated and Flattened Particles",
+  "elongatedParticles.elongatedParticles": "Elongated Particles",
+  "elongatedParticles.step-2-description": "Fill in all the fields bellow",
+  "elongatedParticles.step-3-description": "These are the results of your experiment. Remember to save it so you can access them later",
+  "elongatedParticles.ratio": "Ratio between the particle's smallest and biggest dimensions",
+  "elongatedParticles.sample_mass": "Sample mass (g) or number of particles in the sample",
+  "elongatedParticles.mass": "Mass (g) or number of passing particles in the smallest pachymeter proportional oppening",
+  "elongatedParticles.particles-percentage": "Elongated and flattened particles",
+
+  "elongatedParticles.error.null-dimensions-table-data": "IN=nvalid values in the dimensions table",
+  "elongatedParticles.error.empty-sample-mass": "Empty 'Sample mass'",
+  "elongatedParticles.error.negative-sample-mass": "Negative 'Sample mass'",
+  "elongatedParticles.error.empty-mass": "Empty 'Mass'",
+  "elongatedParticles.error.negative-mass": "Negative 'Mass'",
+  "elongatedParticles.error.mass-greater-than-sample-mass": "'Mass' is greater than 'Sample mass'",
+  
+  "elongatedParticles.warning.criterion-1_5-max-value": "In the 1:5 criterion, the elongated and flattened particles percentage should be a maximum of 10% for it to be used in asphalt mixtures"
+}

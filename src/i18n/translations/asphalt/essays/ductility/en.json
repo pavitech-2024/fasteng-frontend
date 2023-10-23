@@ -1,7 +1,7 @@
 {
   "ductility": "Ductility",
-  "ductility.step-2-description": "Preencha todos os campos",
-  "ductility.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
+  "ductility.step-2-description": "Fill in all the fields below",
+  "ductility.step-3-description": "These are the results of your experiment. Remember to save it so you can access them later",
   "ductility.first_rupture_length": "First rupture",
   "ductility.second_rupture_length": "Second rupture",
   "ductility.third_rupture_length": "Third rupture"

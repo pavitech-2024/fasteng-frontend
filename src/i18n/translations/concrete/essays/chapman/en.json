@@ -3,6 +3,6 @@
   "chapman.material": "Material",
   "chapman.specifyMass": "Specific Mass",
   "chapman.displaced_volume": "Displaced Volume",
-  "chapman.step-2-description": "Enter the volume displaced in liters.",
-  "chapman.step-3-description": "These are the results of your experiment. Remember to save the experiment so you can access it later."
+  "chapman.step-2-description": "Enter the volume displaced in liters",
+  "chapman.step-3-description": "These are the results of your experiment. Remember to save it so you can access them later"
 }

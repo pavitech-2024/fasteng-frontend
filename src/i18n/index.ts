@@ -52,7 +52,10 @@ import angularityPTBR from './translations/asphalt/essays/angularity/ptbr.json';
 import angularityENG from './translations/asphalt/essays/angularity/en.json';
 // shapeIndex
 import shapeIndexPTBR from './translations/asphalt/essays/shapeIndex/ptbr.json';
-import shapeIndexENG from './translations/asphalt/essays/flashPoint/en.json';
+import shapeIndexENG from './translations/asphalt/essays/shapeIndex/en.json';
+// elongatedParticles
+import elongatedParticlesPTBR from './translations/asphalt/essays/elongatedParticles/ptbr.json';
+import elongatedParticlesENG from './translations/asphalt/essays/elongatedParticles/en.json';
 
 /**@soils */
 // samples
@@ -123,6 +126,7 @@ i18n.use(initReactI18next).init({
         ...ductilityPTBR,
         ...angularityPTBR,
         ...shapeIndexPTBR,
+        ...elongatedParticlesPTBR,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
@@ -160,6 +164,7 @@ i18n.use(initReactI18next).init({
         ...ductilityENG,
         ...angularityENG,
         ...shapeIndexENG,
+        ...elongatedParticlesENG,
         /**@soils */
         ...samplesENG,
         ...soilsEssaysENG,

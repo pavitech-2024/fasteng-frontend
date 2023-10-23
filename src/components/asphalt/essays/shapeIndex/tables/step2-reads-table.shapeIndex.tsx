@@ -2,13 +2,13 @@ import { ShapeIndexReadRow } from '@/stores/asphalt/shapeIndex/shapeIndex.store'
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 
-interface step2GranulometryProps {
+interface step2ShapeIndexProps {
   rows: ShapeIndexReadRow[];
   columns: GridColDef[];
   footer: any;
 }
 
-const ShapeIndex_step2_Reads_Table = ({ rows, columns, footer }: step2GranulometryProps) => {
+const ShapeIndex_step2_Reads_Table = ({ rows, columns, footer }: step2ShapeIndexProps) => {
   return (
     <DataGrid
       sx={{ mt: '1rem', borderRadius: '10px' }}

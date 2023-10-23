@@ -2,12 +2,12 @@ import { ShapeIndexSieveRow } from '@/stores/asphalt/shapeIndex/shapeIndex.store
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 
-interface step2GranulometryProps {
+interface step2ShapeIndexProps {
   rows: ShapeIndexSieveRow[];
   columns: GridColDef[];
 }
 
-const ShapeIndex_step2_Sieve_Table = ({ rows, columns }: step2GranulometryProps) => {
+const ShapeIndex_step2_Sieve_Table = ({ rows, columns }: step2ShapeIndexProps) => {
   return (
     <DataGrid
       sx={{ mt: '1rem', borderRadius: '10px' }}

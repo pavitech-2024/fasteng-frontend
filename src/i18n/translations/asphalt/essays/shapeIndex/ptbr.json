@@ -32,5 +32,5 @@
   "shapeIndex.error.empty-sieve1": "Valor do Crivo 1 vazio",
   "shapeIndex.error.empty-sieve2": "Valor do Crivo 2 vazio",
 
-  "shapeIndex.alert.minimum_value": "De acordo com a especificação DNIT 031/2006, o agregado graúdo deve apresentar um valor de Índice de Forma mínimo de 0,5"
+  "shapeIndex.warning.minimum_value": "De acordo com a especificação DNIT 031/2006, o agregado graúdo deve apresentar um valor de Índice de Forma mínimo de 0,5"
 }

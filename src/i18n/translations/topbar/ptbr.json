@@ -16,7 +16,9 @@
   "topbar.granulometry": "Granulometria",
   "topbar.compression": "Compactação",
   "topbar.specifymass": "Massa Específica",
-  "topbar.flashPoint": "Ponto de Fulgor",
+  "topbar.flashpoint": "Ponto de Fulgor",
   "topbar.ductility": "Ductilidade",
-  "topbar.angularity": "Angularidade"
+  "topbar.angularity": "Angularidade",
+  "topbar.shapeindex": "Índice de Forma",
+  "topbar.elongatedparticles": "Partículas Alongadas"
 }
