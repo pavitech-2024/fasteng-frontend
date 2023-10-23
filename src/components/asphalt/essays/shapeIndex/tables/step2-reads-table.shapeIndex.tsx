@@ -1,19 +1,19 @@
-import { ShapeIndexSieveRow } from '@/stores/asphalt/shapeIndex/shapeIndex.store';
+import { ShapeIndexReadRow } from '@/stores/asphalt/shapeIndex/shapeIndex.store';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 
 interface step2GranulometryProps {
-  rows: ShapeIndexSieveRow[];
+  rows: ShapeIndexReadRow[];
   columns: GridColDef[];
+  footer: any;
 }
 
-const ShapeIndex_step2_Sieve_Table = ({ rows, columns }: step2GranulometryProps) => {
+const ShapeIndex_step2_Reads_Table = ({ rows, columns, footer }: step2GranulometryProps) => {
   return (
     <DataGrid
       sx={{ mt: '1rem', borderRadius: '10px' }}
       density="compact"
-      showCellVerticalBorder
-      showColumnVerticalBorder
+      slots={{ footer: footer }}
       experimentalFeatures={{ columnGrouping: true }}
       columns={columns.map((column) => ({
         ...column,
@@ -29,4 +29,4 @@ const ShapeIndex_step2_Sieve_Table = ({ rows, columns }: step2GranulometryProps)
   );
 };
 
-export default ShapeIndex_step2_Sieve_Table;
+export default ShapeIndex_step2_Reads_Table;

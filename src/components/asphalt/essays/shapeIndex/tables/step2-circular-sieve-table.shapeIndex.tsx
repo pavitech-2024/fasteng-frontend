@@ -12,7 +12,6 @@ const ShapeIndex_step2_Circular_Sieve_Table = ({ rows, columns }: step2Granulome
     <DataGrid
       sx={{ mt: '1rem', borderRadius: '10px' }}
       density="compact"
-      hideFooter
       showCellVerticalBorder
       showColumnVerticalBorder
       experimentalFeatures={{ columnGrouping: true }}

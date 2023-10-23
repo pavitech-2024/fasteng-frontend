@@ -1,5 +1,6 @@
 {
   "shapeIndex": "Índice de Forma",
+  "shapeIndex.shapeIndex": "Índice de Forma",
   "shapeIndex.step-2-description": "Preencha todos os campos",
   "shapeIndex.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
   "shapeIndex.total_mass": "Massa total",
@@ -11,5 +12,25 @@
   "shapeIndex.circular_sieves": "Crivo circular (mm)",
   "shapeIndex.sieve": "Peneira",
   "shapeIndex.retained_mass": "Massa Retida",
-  "shapeIndex.grains_count": "Número de Grãos (Ni)"
+  "shapeIndex.grains_count": "Número de Grãos (Ni)",
+  "shapeIndex.remaining_reads": "Leituras restantes",
+  "shapeIndex.choose-sieve": "Escolha a peneira",
+  "shapeIndex.reads": "Leituras",
+  "shapeIndex.read": "Leitura",
+  "shapeIndex.length": "Comprimento",
+  "shapeIndex.thickness": "Espessura",
+
+  "shapeIndex.error.grains-count-value": "Não há leituras para adicionar",
+  "shapeIndex.error.chose-method": "Escolha um Método válido",
+  "shapeIndex.error.empty-total-mass": "Massa total vazia",
+  "shapeIndex.error.negative-or-zero-total-mass": "Massa total zerada ou negativa",
+  "shapeIndex.error.null-sieve-table-data": "Tabela de peneiras com valores inválidos",
+  "shapeIndex.error.retained-mass-greater-than-total-mass": "Massa retida maior que a Massa total",
+  "shapeIndex.error.null-reads-table-data": "Tabela de leituras com valores inválidos",
+  "shapeIndex.error.empty-reads-table-data": "Tabela de leituras vazia",
+  "shapeIndex.error.chose-graduation": "Escolha uma Graduação válida",
+  "shapeIndex.error.empty-sieve1": "Valor do Crivo 1 vazio",
+  "shapeIndex.error.empty-sieve2": "Valor do Crivo 2 vazio",
+
+  "shapeIndex.alert.minimum_value": "De acordo com a especificação DNIT 031/2006, o agregado graúdo deve apresentar um valor de Índice de Forma mínimo de 0,5"
 }

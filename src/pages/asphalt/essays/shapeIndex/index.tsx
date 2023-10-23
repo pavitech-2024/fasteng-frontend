@@ -1,6 +1,6 @@
 import ShapeIndex_GeneralData from '@/components/asphalt/essays/shapeIndex/general-data.shapeIndex';
 import ShapeIndex_Step2 from '@/components/asphalt/essays/shapeIndex/step2.shapeIndex';
-// import ShapeIndex_Results from '@/components/asphalt/essays/shapeIndex/results.shapeIndex';
+import ShapeIndex_Results from '@/components/asphalt/essays/shapeIndex/results.shapeIndex';
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import SHAPEINDEX_SERVICE from '@/services/asphalt/essays/shapeIndex/shapeIndex.service';
@@ -28,7 +28,7 @@ const ShapeIndex = () => {
   const childrens = [
     { step: 0, children: <ShapeIndex_GeneralData shapeIndex={shapeIndex} />, data: store.generalData },
     { step: 1, children: <ShapeIndex_Step2 />, data: store },
-    // { step: 2, children: <ShapeIndex_Results />, data: store },
+    { step: 2, children: <ShapeIndex_Results />, data: store },
   ];
 
   return <EssayTemplate essayInfo={shapeIndex.info} nextCallback={shapeIndex.handleNext} childrens={childrens} />;
