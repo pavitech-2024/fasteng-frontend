@@ -90,10 +90,11 @@ class SHAPEINDEX_SERVICE implements IEssayService {
   // verify inputs from ShapeIndex page (step === 1, page 2)
   submitStep2Data = async (step2Data: ShapeIndexData['step2Data']): Promise<void> => {
     try {
-      const { method, total_mass, graduation, circular_sieves_table_data, sieves_table_data, reads_table_data } = step2Data;
+      const { method, total_mass, graduation, circular_sieves_table_data, sieves_table_data, reads_table_data } =
+        step2Data;
 
       // verify if the method was chosen
-      if (!method) throw t('shapeIndex.error.chose-method')
+      if (!method) throw t('shapeIndex.error.chose-method');
 
       // verify if the material total mass is not empty or negative
       if (!total_mass) throw t('shapeIndex.error.empty-total-mass');
@@ -101,26 +102,27 @@ class SHAPEINDEX_SERVICE implements IEssayService {
 
       // verify the input tables based on the method chosen
       if (method === 'pachymeter') {
-        if (!sieves_table_data) throw t('shapeIndex.error.null-sieve-table-data')
+        if (!sieves_table_data) throw t('shapeIndex.error.null-sieve-table-data');
         sieves_table_data.forEach((sieve) => {
-          if (sieve.retained_mass > total_mass) throw (t('shapeIndex.error.retained-mass-greater-than-total-mass') + ' - ' + sieve.label)
-        })
-        
-        if (!reads_table_data) throw t('shapeIndex.error.null-reads-table-data')
-        if (reads_table_data.length === 0) throw t('shapeIndex.error.empty-reads-table-data')
+          if (sieve.retained_mass > total_mass)
+            throw t('shapeIndex.error.retained-mass-greater-than-total-mass') + ' - ' + sieve.label;
+        });
+
+        if (!reads_table_data) throw t('shapeIndex.error.null-reads-table-data');
+        if (reads_table_data.length === 0) throw t('shapeIndex.error.empty-reads-table-data');
       } else if (method === 'sieve') {
-        if (!graduation) throw t('shapeIndex.error.chose-graduation')
+        if (!graduation) throw t('shapeIndex.error.chose-graduation');
 
-        if (!circular_sieves_table_data) throw t('shapeIndex.error.null-sieve-table-data')
+        if (!circular_sieves_table_data) throw t('shapeIndex.error.null-sieve-table-data');
         circular_sieves_table_data.forEach((sieve) => {
-          if (!sieve.sieve1) throw (t('shapeIndex.error.empty-sieve1') + ' - ' + sieve.label)
-          if (sieve.sieve1 < 0) throw (t('shapeIndex.error.negative-sieve1') + ' - ' + sieve.label)
+          if (!sieve.sieve1) throw t('shapeIndex.error.empty-sieve1') + ' - ' + sieve.label;
+          if (sieve.sieve1 < 0) throw t('shapeIndex.error.negative-sieve1') + ' - ' + sieve.label;
 
-          if (!sieve.sieve2) throw (t('shapeIndex.error.empty-sieve2') + ' - ' + sieve.label)
-          if (sieve.sieve2 < 0) throw (t('shapeIndex.error.negative-sieve2') + ' - ' + sieve.label)
-        })
+          if (!sieve.sieve2) throw t('shapeIndex.error.empty-sieve2') + ' - ' + sieve.label;
+          if (sieve.sieve2 < 0) throw t('shapeIndex.error.negative-sieve2') + ' - ' + sieve.label;
+        });
       } else {
-        throw t('shapeIndex.error.chose-method')
+        throw t('shapeIndex.error.chose-method');
       }
     } catch (error) {
       throw error;

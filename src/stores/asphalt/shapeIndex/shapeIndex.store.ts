@@ -28,7 +28,7 @@ export type ShapeIndexReadRow = {
   sieve: string;
   length: number;
   thickness: number;
-}
+};
 
 interface ShapeIndex_step2Data {
   method: 'sieve' | 'pachymeter';

@@ -28,7 +28,7 @@ const ShapeIndex_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
 
   const sieveOptions: DropDownOption[] = data.sieves_table_data.map((row) => {
     return { label: row.label, value: row.label };
-  })
+  });
 
   if (data.method && data.method == 'sieve' && data.graduation && data.circular_sieves_table_data.length == 0) {
     const table_data = [];
@@ -206,8 +206,9 @@ const ShapeIndex_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
               const mass = data.total_mass;
               const retained_mass = Number(e.target.value);
 
-              const grains_count =
-                Math.floor(mass !== 0 && retained_mass !== 0 ? (200 / ((retained_mass / mass) * 100)) : 0);
+              const grains_count = Math.floor(
+                mass !== 0 && retained_mass !== 0 ? 200 / ((retained_mass / mass) * 100) : 0
+              );
 
               newRows[label_index].retained_mass = retained_mass;
               newRows[label_index].grains_count = grains_count;
@@ -241,18 +242,18 @@ const ShapeIndex_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
             variant="standard"
             label={''}
             options={sieveOptions.filter((option) => {
-              const grains_count = data.sieves_table_data.find((sieve) => option.label === sieve.label).grains_count
+              const grains_count = data.sieves_table_data.find((sieve) => option.label === sieve.label).grains_count;
               if (grains_count > 0) return { label: option.label, value: option.value };
             })}
             callback={(value) => {
               const newRows = [...reads_rows];
               newRows[index].sieve = String(value);
-              setData({ step: 1, key: 'reads_table_data', value: newRows })
+              setData({ step: 1, key: 'reads_table_data', value: newRows });
             }}
             size="medium"
           />
-        )
-      }
+        );
+      },
     },
     {
       field: 'length',
@@ -276,8 +277,8 @@ const ShapeIndex_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
               setData({ step: 1, key: 'reads_table_data', value: newRows });
             }}
           />
-        )
-      }
+        );
+      },
     },
     {
       field: 'thickness',
@@ -301,20 +302,17 @@ const ShapeIndex_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
               setData({ step: 1, key: 'reads_table_data', value: newRows });
             }}
           />
-        )
-      }
+        );
+      },
     },
   ];
 
   const handleAdd = () => {
     try {
       const init_value = 0;
-      const total_grains_count: number = sieve_rows.reduce(
-        (accumulator: number, current_sieve) => {
-          return Number(accumulator + current_sieve.grains_count)
-        },
-        init_value
-      );
+      const total_grains_count: number = sieve_rows.reduce((accumulator: number, current_sieve) => {
+        return Number(accumulator + current_sieve.grains_count);
+      }, init_value);
       if (total_grains_count - reads_rows.length > 0) {
         const newRows = [...reads_rows];
         newRows.push({
@@ -352,12 +350,8 @@ const ShapeIndex_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     );
   };
 
-  if (
-    nextDisabled &&
-    data.method &&
-    data.total_mass &&
-    (data.method === 'sieve' ? data.graduation : true)
-  ) setNextDisabled(false);
+  if (nextDisabled && data.method && data.total_mass && (data.method === 'sieve' ? data.graduation : true))
+    setNextDisabled(false);
 
   return (
     <Box>
@@ -375,10 +369,7 @@ const ShapeIndex_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           key={'essay_method'}
           variant="standard"
           label={t('shapeIndex.choose-method')}
-          defaultValue={data.method
-            ? { label: data.method, value: data.method }
-            : null
-          }
+          defaultValue={data.method ? { label: data.method, value: data.method } : null}
           options={methodOptions.map((method) => {
             return { label: method.label, value: method.value };
           })}
@@ -401,17 +392,17 @@ const ShapeIndex_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
 
             setData({ step: 1, key: 'total_mass', value: mass });
 
-            const newRows = [...sieve_rows]
+            const newRows = [...sieve_rows];
             data.sieves_table_data.forEach((sieve, index) => {
               const retained_mass = sieve.retained_mass;
               if (retained_mass) {
-                const grains_count =
-                  Math.floor(mass !== 0 && retained_mass !== 0 ? (200 / ((retained_mass / mass) * 100)) : 0);
+                const grains_count = Math.floor(
+                  mass !== 0 && retained_mass !== 0 ? 200 / ((retained_mass / mass) * 100) : 0
+                );
                 newRows[index].grains_count = grains_count;
               }
             });
             setData({ step: 1, key: 'sieves_table_data', value: newRows });
-
           }}
           adornment={'g'}
           type="number"
@@ -423,10 +414,7 @@ const ShapeIndex_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
             key={'graduation'}
             variant="standard"
             label={t('shapeIndex.choose-graduation')}
-            defaultValue={data.graduation
-              ? { label: data.graduation, value: data.graduation }
-              : null
-            }
+            defaultValue={data.graduation ? { label: data.graduation, value: data.graduation } : null}
             options={graduationOptions.map((graduation) => {
               return { label: graduation.label, value: graduation.value };
             })}
@@ -456,15 +444,11 @@ const ShapeIndex_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
                 mt: '20px',
                 p: '1rem',
                 borderRadius: '10px',
-                border: '#e0e0e0 solid 1px'
+                border: '#e0e0e0 solid 1px',
               }}
             >
               <span style={{ fontWeight: '700', textAlign: 'center' }}>{t('shapeIndex.reads')}</span>
-              <ShapeIndex_step2_Reads_Table
-                rows={reads_rows}
-                columns={reads_columns}
-                footer={ExpansionToolbar}
-              />
+              <ShapeIndex_step2_Reads_Table rows={reads_rows} columns={reads_columns} footer={ExpansionToolbar} />
             </Box>
           </>
         )
