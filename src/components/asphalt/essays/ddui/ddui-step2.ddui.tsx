@@ -29,6 +29,11 @@ const Ddui_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
       label: t('asphalt.ddui.sample-void-volume'),
       value: data.sampleVoidVolume,
     },
+    {
+      key: 'minRrt',
+      label: t('asphalt.ddui.minRrt'),
+      value: data.minRrt,
+    },
   ];
 
   if (nextDisabled) {
@@ -37,6 +42,7 @@ const Ddui_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
       data.pressConstant &&
       data.pressSpecification &&
       data.sampleOrigin &&
+      data.minRrt &&
       data.sampleVoidVolume !== null;
     if (hasEmptyValues) setNextDisabled(false);
   }
@@ -62,7 +68,10 @@ const Ddui_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
             key={input.key}
             label={input.label}
             value={input.value}
-            onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+            onChange={(e) => {
+              const formattedValue = input.key !== 'sampleOrigin' ? Number(e.target.value) : e.target.value;
+              setData({ step: 1, key: input.key, value: formattedValue });
+            }}
             adornment={input.key === 'sampleVoidVolume' ? '%' : ''}
           />
         </Box>

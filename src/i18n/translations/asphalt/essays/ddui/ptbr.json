@@ -1,0 +1,9 @@
+{
+  "ddui.results.average-conditioned": "RT Média corpos de prova condicionados (RTc)",
+  "ddui.results.average-unconditioned": "RT Média corpos de prova não condicionados (RT)",
+  "ddui.results.rrt": "Resistência à Tração Retida (RRT)",
+  "ddui.results.minimun-rrt": "RRT mínima estabelecida em projeto",
+  "ddui.results.acceptance-condition": "Condição de aceitação",
+  "ddui.results.acceptance-condition-true": "RRT mínima atingida.",
+  "ddui.results.acceptance-condition-false": "RRT mínima não atingida."
+}

@@ -9,19 +9,18 @@ import { toast } from 'react-toastify';
 
 const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { dduiStep3: data, setData } = useDduiStore();
-  console.log("🚀 ~ file: ddui-step3.ddui.tsx:9 ~ data:", typeof data)
 
-  const rows = data.data; // Define the 'rows' variable
+  const rows = data.ddui_data;
   console.log("🚀 ~ file: ddui-step3.ddui.tsx:15 ~ rows:", rows)
 
   useEffect(() => {
     if (nextDisabled) {
-      const hasEmptyValues = data.data.some((item) =>
+      const hasEmptyValues = data.ddui_data.some((item) =>
         Object.values(item).some((value) => value === null)
       );
       if (!hasEmptyValues) setNextDisabled(false);
     }
-  }, [data.data, nextDisabled, setNextDisabled]);
+  }, [data.ddui_data, nextDisabled, setNextDisabled]);
 
   const handleAdd = () => {
     const newRows = [...rows];
@@ -35,11 +34,9 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
       h1: null,
       h2: null,
       h3: null,
-      pressReading: null,
-      RT1: null,
-      RT2: null,
+      pressReading: null
     });
-    setData({ step: 2, key: 'data', value: newRows });
+    setData({ step: 2, key: 'ddui_data', value: newRows });
     setNextDisabled(true);
   };
 
@@ -48,7 +45,7 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
       if (rows.length > 1) {
         const newRows = [...rows];
         newRows.pop();
-        setData({ step: 2, key: 'data', value: newRows });
+        setData({ step: 2, key: 'ddui_data', value: newRows });
       } else throw t('ddui.error.minReads');
     } catch (error) {
       toast.error(error);
@@ -68,11 +65,6 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
     );
   };
 
-  // if (nextDisabled) {
-  //   const hasEmptyValues = data.data.some((item) => Object.values(item).some(value => value === null));
-  //   if (!hasEmptyValues) setNextDisabled(false);
-  // }
-
   const columns: GridColDef[] = [
     {
       field: 'sampleName',
@@ -90,7 +82,7 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
               newRows[index].sampleName = e.target.value;
-              setData({ step: 2, key: 'data', value: newRows });
+              setData({ step: 2, key: 'ddui_data', value: newRows });
             }}
           />
         );
@@ -109,7 +101,7 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
             onChange={() => {
               const newRows = [...rows];
               rows[index].condicionamento = !rows[index].condicionamento;
-              setData({ step: 2, key: 'data', value: newRows });
+              setData({ step: 2, key: 'ddui_data', value: newRows });
             }}
           />
         );
@@ -132,7 +124,7 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
               newRows[index].h1 = Number(e.target.value);
-              setData({ step: 2, key: 'data', value: newRows });
+              setData({ step: 2, key: 'ddui_data', value: newRows });
             }}
           />
         );
@@ -155,7 +147,7 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
               newRows[index].h2 = Number(e.target.value);
-              setData({ step: 2, key: 'data', value: newRows });
+              setData({ step: 2, key: 'ddui_data', value: newRows });
             }}
           />
         );
@@ -178,7 +170,7 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
               newRows[index].h3 = Number(e.target.value);
-              setData({ step: 2, key: 'data', value: newRows });
+              setData({ step: 2, key: 'ddui_data', value: newRows });
             }}
           />
         );
@@ -201,7 +193,7 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
               newRows[index].d1 = Number(e.target.value);
-              setData({ step: 2, key: 'data', value: newRows });
+              setData({ step: 2, key: 'ddui_data', value: newRows });
             }}
           />
         );
@@ -224,7 +216,7 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
               newRows[index].d2 = Number(e.target.value);
-              setData({ step: 2, key: 'data', value: newRows });
+              setData({ step: 2, key: 'ddui_data', value: newRows });
             }}
           />
         );
@@ -247,7 +239,7 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
               newRows[index].d3 = Number(e.target.value);
-              setData({ step: 2, key: 'data', value: newRows });
+              setData({ step: 2, key: 'ddui_data', value: newRows });
             }}
           />
         );
@@ -270,58 +262,12 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
               newRows[index].pressReading = Number(e.target.value);
-              setData({ step: 2, key: 'data', value: newRows });
+              setData({ step: 2, key: 'ddui_data', value: newRows });
             }}
           />
         );
       },
-    },
-    {
-      field: 'RT1',
-      headerName: 'RT 1',
-      type: 'number',
-      width: 110,
-      renderCell: ({ row }) => {
-        const { RT1 } = row;
-        const index = rows.findIndex((r) => r.RT1 === RT1);
-        return (
-          <InputEndAdornment
-            adornment={''}
-            type="number"
-            value={rows[index].RT1}
-            onChange={(e) => {
-              if (e.target.value === null) return;
-              const newRows = [...rows];
-              newRows[index].RT1 = Number(e.target.value);
-              setData({ step: 2, key: 'data', value: newRows });
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'RT2',
-      headerName: 'RT 2',
-      type: 'number',
-      width: 110,
-      renderCell: ({ row }) => {
-        const { RT2 } = row;
-        const index = rows.findIndex((r) => r.RT2 === RT2);
-        return (
-          <InputEndAdornment
-            adornment={''}
-            type="number"
-            value={rows[index].RT2}
-            onChange={(e) => {
-              if (e.target.value === null) return;
-              const newRows = [...rows];
-              newRows[index].RT2 = Number(e.target.value);
-              setData({ step: 2, key: 'data', value: newRows });
-            }}
-          />
-        );
-      },
-    },
+    }
   ];
 
   return (
@@ -347,7 +293,7 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               groupId: 'results',
               headerName: 'Resultados',
               headerAlign: 'center',
-              children: [{ field: 'pressReading' }, { field: 'RT1' }, { field: 'RT2' }],
+              children: [{ field: 'pressReading' }],
             },
           ]}
           columns={columns.map((column) => ({

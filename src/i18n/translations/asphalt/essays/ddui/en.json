@@ -1,0 +1,9 @@
+{
+  "ddui.results.average-conditioned": "RT Average conditioned specimens",
+  "ddui.results.average-unconditioned": "RT Average unconditioned specimens (RT)",
+  "ddui.results.rrt": "Retained Tensile Strength (RRT)",
+  "ddui.results.minimun-rrt": "Minimum RRT established in the project",
+  "ddui.results.acceptance-condition": "Acceptance condition",
+  "ddui.results.acceptance-condition-true": "Minimum RRT achieved.",
+  "ddui.results.acceptance-condition-false": "Minimum RRT not reached."
+}

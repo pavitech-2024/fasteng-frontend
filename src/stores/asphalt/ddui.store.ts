@@ -17,10 +17,11 @@ interface DduiStep2 {
   pressConstant: number;
   pressSpecification: string;
   sampleOrigin: string;
+  minRrt: number;
 }
 
 interface DduiStep3 {
-  data: {
+  ddui_data: {
     id: number;
     sampleName: string;
     condicionamento: boolean;
@@ -31,8 +32,6 @@ interface DduiStep3 {
     h2: number;
     h3: number;
     pressReading: number;
-    RT1: number;
-    RT2: number;
   }[];
 }
 
@@ -75,9 +74,10 @@ const initialState = {
     pressConstant: null,
     pressSpecification: null,
     sampleOrigin: null,
+    minRrt: null
   },
   dduiStep3: {
-    data: [
+    ddui_data: [
       {
         id: 0,
         sampleName: null,
@@ -88,9 +88,7 @@ const initialState = {
         h1: null,
         h2: null,
         h3: null,
-        pressReading: null,
-        RT1: null,
-        RT2: null,
+        pressReading: null
       },
     ],
   },
