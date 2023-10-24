@@ -30,7 +30,7 @@ const Ddui = () => {
     { step: 0, children: <Ddui_GeneralData ddui={ddui} />, data: store.generalData },
     { step: 1, children: <Ddui_Step2 />, data: store },
     { step: 2, children: <Ddui_Step3 />, data: store },
-    { step: 2, children: <Ddui_Results />, data: store },
+    { step: 3, children: <Ddui_Results />, data: store },
   ];
 
   return <EssayTemplate essayInfo={ddui.info} childrens={childrens} nextCallback={ddui.handleNext} />;

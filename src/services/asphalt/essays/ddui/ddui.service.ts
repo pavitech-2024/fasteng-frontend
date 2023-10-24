@@ -19,8 +19,8 @@ class Ddui_SERVICE implements IEssayService {
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
-      { step: 1, description: t('asphalt.essays.dduiStep2'), path: 'essay-data' },
-      { step: 2, description: t('asphalt.essays.dduiStep3'), path: 'essay-data' },
+      { step: 1, description: t('asphalt.essays.dduiStep2'), path: 'essay-data-step2' },
+      { step: 2, description: t('asphalt.essays.dduiStep3'), path: 'essay-data-step3' },
       { step: 3, description: t('results'), path: 'results' },
     ],
   };
@@ -46,6 +46,7 @@ class Ddui_SERVICE implements IEssayService {
           break;
         case 3:
           await this.saveEssay(data as DduiData);
+          break;
         default:
           throw t('errors.invalid-step');
       }
@@ -122,9 +123,15 @@ class Ddui_SERVICE implements IEssayService {
   calculateResults = async (store: DduiData): Promise<void> => {
     const body = {
       generalData: store.generalData,
-      ddui: store.dduiStep2,
+      dduiStep2: store.dduiStep2,
+      dduiStep3: store.dduiStep3
     };
     try {
+      // Verifica se há valores true e false em data.condicionamento;
+      const hasConditionedData = store.dduiStep3.data.some((item1) => item1.condicionamento) && store.dduiStep3.data.some((item2) => !item2.condicionamento);
+
+      if (!hasConditionedData) throw t('ddui.error.invalid-conditioning')
+
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);
 
       const { success, error, result } = response.data;

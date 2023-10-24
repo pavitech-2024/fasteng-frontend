@@ -32,7 +32,7 @@ interface DduiStep3 {
     h3: number;
     pressReading: number;
     RT1: number;
-    RT2: number
+    RT2: number;
   }[];
 }
 
@@ -81,7 +81,7 @@ const initialState = {
       {
         id: 0,
         sampleName: null,
-        condicionamento: null,
+        condicionamento: false,
         d1: null,
         d2: null,
         d3: null,
@@ -90,7 +90,7 @@ const initialState = {
         h3: null,
         pressReading: null,
         RT1: null,
-        RT2: null
+        RT2: null,
       },
     ],
   },
