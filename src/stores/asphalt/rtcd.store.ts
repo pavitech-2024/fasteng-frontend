@@ -1,6 +1,6 @@
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { create } from 'zustand';
-import { devtools, persist, createJSONStorage } from 'zustand/middleware';
+import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
 interface RtcdGeneralData {
   userId: string;
@@ -20,7 +20,8 @@ interface RtcdStep2 {
 }
 
 interface RtcdStep3 {
-  data: {
+  rtcd_data: {
+    id: number;
     sampleName: string;
     d1: number;
     d2: number;
@@ -33,11 +34,9 @@ interface RtcdStep3 {
 }
 
 interface Rtcd_results {
-  everyRtcdsMpa: any[];
-  everyRtcdsKgf: any[];
-  conditionedAverage: number;
-  unconditionedAverage: number;
-  rrt: number;
+  everyRtsMpa: number[];
+  everyRtsKgf: number[];
+  average: number;
 }
 
 export type RtcdData = {
@@ -73,8 +72,9 @@ const initialState = {
     sampleOrigin: null,
   },
   rtcdStep3: {
-    data: [
+    rtcd_data: [
       {
+        id: 0,
         sampleName: null,
         d1: null,
         d2: null,
@@ -87,11 +87,9 @@ const initialState = {
     ],
   },
   results: {
-    everyRtcdsMpa: [],
-    everyRtcdsKgf: [],
-    conditionedAverage: null,
-    unconditionedAverage: null,
-    rrt: null,
+    everyRtsMpa: [],
+    everyRtsKgf: [],
+    average: null,
   },
 };
 

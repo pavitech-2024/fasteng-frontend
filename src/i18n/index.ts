@@ -38,7 +38,9 @@ import asphaltMaterialsENG from './translations/asphalt/materials/en.json';
 // essays
 import asphaltEssaysPTBR from './translations/asphalt/essays/ptbr.json';
 import asphaltEssaysENG from './translations/asphalt/essays/en.json';
-
+// rtcd
+import rtcdPTBR from './translations/asphalt/essays/rtcd/ptbr.json';
+import rtcdENG from './translations/asphalt/essays/rtcd/en.json'
 /**@soils */
 // samples
 import samplesPTBR from './translations/soils/samples/ptbr.json';
@@ -103,6 +105,7 @@ i18n.use(initReactI18next).init({
         /**@asphalt */
         ...asphaltMaterialsPTBR,
         ...asphaltEssaysPTBR,
+        ...rtcdPTBR,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
@@ -135,6 +138,7 @@ i18n.use(initReactI18next).init({
         /**@asphalt */
         ...asphaltMaterialsENG,
         ...asphaltEssaysENG,
+        ...rtcdENG,
         /**@soils */
         ...samplesENG,
         ...soilsEssaysENG,

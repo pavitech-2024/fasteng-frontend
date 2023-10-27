@@ -104,6 +104,8 @@ class Rtcd_SERVICE implements IEssayService {
   submitRtcdStep2Data = async (rtcdStep2: RtcdData['rtcdStep2']): Promise<void> => {
     console.log('🚀 ~ file: rtcd.service.ts:101 ~ Rtcd_SERVICE ~ submitRtcdCalcData= ~ rtcdStep2:', rtcdStep2);
     try {
+      // verify if press_constant is not empty
+      if (!rtcdStep2.pressConstant) throw t('errors.empty-press-constant');
     } catch (error) {
       throw error;
     }
@@ -113,6 +115,8 @@ class Rtcd_SERVICE implements IEssayService {
   submitRtcdStep3Data = async (rtcdStep3: RtcdData['rtcdStep3']): Promise<void> => {
     console.log('🚀 ~ file: rtcd.service.ts:101 ~ Rtcd_SERVICE ~ submitRtcdCalcData= ~ rtcdStep3:', rtcdStep3);
     try {
+      // verify if rtcd_data is not empty
+      if (!rtcdStep3.rtcd_data) throw t('errors.empty-rtcd_data');
     } catch (error) {
       throw error;
     }
@@ -122,7 +126,8 @@ class Rtcd_SERVICE implements IEssayService {
   calculateResults = async (store: RtcdData): Promise<void> => {
     const body = {
       generalData: store.generalData,
-      rtcd: store.rtcdStep2,
+      rtcdStep2: store.rtcdStep2,
+      rtcdStep3: store.rtcdStep3
     };
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);
@@ -132,7 +137,7 @@ class Rtcd_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
 
-      this.store_actions.setData({ step: 2, value: result });
+      this.store_actions.setData({ step: 3, value: result });
     } catch (error) {
       throw error;
     }
@@ -149,6 +154,7 @@ class Rtcd_SERVICE implements IEssayService {
           userId: this.userId,
         },
         rtcdStep2: store.rtcdStep2,
+        rtcdStep3: store.rtcdStep3,
         results: store.results,
       });
 
