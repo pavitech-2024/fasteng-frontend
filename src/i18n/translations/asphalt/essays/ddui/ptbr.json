@@ -5,5 +5,10 @@
   "ddui.results.minimun-rrt": "RRT mínima estabelecida em projeto",
   "ddui.results.acceptance-condition": "Condição de aceitação",
   "ddui.results.acceptance-condition-true": "RRT mínima atingida.",
-  "ddui.results.acceptance-condition-false": "RRT mínima não atingida."
+  "ddui.results.acceptance-condition-false": "RRT mínima não atingida.",
+  "asphalt.ddui.sample-origin": "Procedência dos corpos de prova",
+  "asphalt.ddui.press-specification": "Nome/especificação da prensa",
+  "asphalt.ddui.press-constant": "Constante da prensa",
+  "asphalt.ddui.sample-void-volume": "Volume de vazios dos corpos de prova (%)",
+  "asphalt.ddui.minRrt": "RRT mínima estabelecida em projeto"
 }

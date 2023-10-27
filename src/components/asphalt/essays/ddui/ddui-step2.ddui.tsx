@@ -57,7 +57,7 @@ const Ddui_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
             flexDirection: 'row',
             width: '50%',
             marginX: 'auto',
-            gap: '40px',
+            gap: '5px 20px',
             alignItems: 'center',
           }}
         >

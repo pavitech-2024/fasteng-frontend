@@ -12,7 +12,7 @@ const Ddui_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   const { results: results, generalData } = useDduiStore();
   const { dduiStep2: ddui_Step2 } = useDduiStore();
   const { dduiStep3: ddui_Step3 } = useDduiStore();
-  console.log("🚀 ~ file: results.ddui.tsx:9 ~ results:", results)
+  console.log('🚀 ~ file: results.ddui.tsx:9 ~ results:', results);
 
   const rows = ddui_Step3.ddui_data.map((item, index) => {
     const { pressReading } = item;
@@ -22,7 +22,7 @@ const Ddui_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
       RT1: results.everyRtsKgf[index].toFixed(2),
       RT2: results.everyRtsMpa[index].toFixed(2),
     };
-  })
+  });
 
   const columns: GridColDef[] = [
     {
@@ -36,7 +36,7 @@ const Ddui_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
     {
       field: 'RT2',
       headerName: 'RT (MPa)',
-    }
+    },
   ];
 
   // criando o objeto que será passado para o componente ExperimentResume
@@ -52,8 +52,8 @@ const Ddui_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
     unconditionedAverage: 0,
     rrt: 0,
     minRrt: 0,
-    acceptanceCondition: ''
-  }
+    acceptanceCondition: '',
+  };
 
   if (results) {
     data.everyRtsKgf = results.everyRtsKgf.map((element) => {
@@ -66,58 +66,72 @@ const Ddui_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
     data.unconditionedAverage = Number(results.unconditionedAverage.toFixed(2));
     data.rrt = Number(results.rrt.toFixed(2)) * 100;
     data.minRrt = ddui_Step2.minRrt;
-    data.acceptanceCondition = data.rrt > ddui_Step2.minRrt 
-      ? t('ddui.results.acceptance-condition-true') 
-      : t('ddui.results.acceptance-condition-false')
+    data.acceptanceCondition =
+      data.rrt > ddui_Step2.minRrt
+        ? t('ddui.results.acceptance-condition-true')
+        : t('ddui.results.acceptance-condition-false');
   }
 
   return (
     <>
       <ExperimentResume data={experimentResumeData} />
       <FlexColumnBorder title={t('results')} open={true}>
-        <Box sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '.65rem',
-          paddingX: '1.5rem'
-        }}>
-
-          <DataGrid 
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '.65rem',
+            paddingX: '1.5rem',
+            overflowX: 'auto'
+          }}
+        >
+          <DataGrid
             columns={columns.map((column) => ({
               ...column,
               sortable: false,
               disableColumnMenu: true,
               align: 'center',
               headerAlign: 'center',
-              flex: 1
-            }))} 
+            }))}
             sx={{
               width: 'fit-content',
-              marginBottom: '2rem'
+              marginBottom: '2rem',
             }}
             rows={rows}
             hideFooter
           />
 
-          <Box sx={{
-            display: 'flex',
-            gap: '.65rem'
-          }}>
-            <Result_Card label={t('ddui.results.average-conditioned')} value={data.conditionedAverage.toString()} unity={'MPa'}/>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: '.65rem',
+            }}
+          >
+            <Result_Card
+              label={t('ddui.results.average-conditioned')}
+              value={data.conditionedAverage.toString()}
+              unity={'MPa'}
+            />
 
-            <Result_Card label={t('ddui.results.average-unconditioned')} value={data.unconditionedAverage.toString()} unity={'MPa'}/>
+            <Result_Card
+              label={t('ddui.results.average-unconditioned')}
+              value={data.unconditionedAverage.toString()}
+              unity={'MPa'}
+            />
           </Box>
-          
-          <Box sx={{
-            display: 'flex',
-            gap: '.65rem'
-          }}>
-            <Result_Card label={t('ddui.results.rrt')} value={data.rrt.toString()} unity={'%'}/>
 
-            <Result_Card label={t('ddui.results.minimun-rrt')} value={data.minRrt.toString()} unity={'%'}/>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: '.65rem',
+            }}
+          >
+            <Result_Card label={t('ddui.results.rrt')} value={data.rrt.toString()} unity={'%'} />
+
+            <Result_Card label={t('ddui.results.minimun-rrt')} value={data.minRrt.toString()} unity={'%'} />
           </Box>
 
-          <Result_Card label={t('ddui.results.acceptance-condition')} value={data.acceptanceCondition} unity={''}/>
+          <Result_Card label={t('ddui.results.acceptance-condition')} value={data.acceptanceCondition} unity={''} />
         </Box>
       </FlexColumnBorder>
     </>

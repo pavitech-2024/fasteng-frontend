@@ -74,7 +74,7 @@ const initialState = {
     pressConstant: null,
     pressSpecification: null,
     sampleOrigin: null,
-    minRrt: null
+    minRrt: null,
   },
   dduiStep3: {
     ddui_data: [
@@ -88,7 +88,7 @@ const initialState = {
         h1: null,
         h2: null,
         h3: null,
-        pressReading: null
+        pressReading: null,
       },
     ],
   },

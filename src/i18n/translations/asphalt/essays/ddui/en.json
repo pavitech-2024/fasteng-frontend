@@ -5,5 +5,10 @@
   "ddui.results.minimun-rrt": "Minimum RRT established in the project",
   "ddui.results.acceptance-condition": "Acceptance condition",
   "ddui.results.acceptance-condition-true": "Minimum RRT achieved.",
-  "ddui.results.acceptance-condition-false": "Minimum RRT not reached."
+  "ddui.results.acceptance-condition-false": "Minimum RRT not reached.",
+  "asphalt.ddui.sample-origin": "Origin of the test specimens",
+  "asphalt.ddui.press-specification": "Press name/specification",
+  "asphalt.ddui.press-constant": "Press constant",
+  "asphalt.ddui.sample-void-volume": "Void volume of the test specimens (%)",
+  "asphalt.ddui.minRrt": "Minimum RRT established in the project"
 }

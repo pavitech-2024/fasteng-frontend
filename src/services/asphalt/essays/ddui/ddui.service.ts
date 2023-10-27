@@ -124,13 +124,15 @@ class Ddui_SERVICE implements IEssayService {
     const body = {
       generalData: store.generalData,
       dduiStep2: store.dduiStep2,
-      dduiStep3: store.dduiStep3
+      dduiStep3: store.dduiStep3,
     };
     try {
       // Verifica se há valores true e false em ddui_data.condicionamento;
-      const hasConditionedData = store.dduiStep3.ddui_data.some((item1) => item1.condicionamento) && store.dduiStep3.ddui_data.some((item2) => !item2.condicionamento);
+      const hasConditionedData =
+        store.dduiStep3.ddui_data.some((item1) => item1.condicionamento) &&
+        store.dduiStep3.ddui_data.some((item2) => !item2.condicionamento);
 
-      if (!hasConditionedData) throw t('ddui.error.invalid-conditioning')
+      if (!hasConditionedData) throw t('ddui.error.invalid-conditioning');
 
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);
 

@@ -11,13 +11,11 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { dduiStep3: data, setData } = useDduiStore();
 
   const rows = data.ddui_data;
-  console.log("🚀 ~ file: ddui-step3.ddui.tsx:15 ~ rows:", rows)
+  console.log('🚀 ~ file: ddui-step3.ddui.tsx:15 ~ rows:', rows);
 
   useEffect(() => {
     if (nextDisabled) {
-      const hasEmptyValues = data.ddui_data.some((item) =>
-        Object.values(item).some((value) => value === null)
-      );
+      const hasEmptyValues = data.ddui_data.some((item) => Object.values(item).some((value) => value === null));
       if (!hasEmptyValues) setNextDisabled(false);
     }
   }, [data.ddui_data, nextDisabled, setNextDisabled]);
@@ -34,7 +32,7 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
       h1: null,
       h2: null,
       h3: null,
-      pressReading: null
+      pressReading: null,
     });
     setData({ step: 2, key: 'ddui_data', value: newRows });
     setNextDisabled(true);
@@ -267,46 +265,46 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
           />
         );
       },
-    }
+    },
   ];
 
   return (
-        <DataGrid
-          experimentalFeatures={{ columnGrouping: true }}
-          showCellVerticalBorder
-          showColumnVerticalBorder
-          slots={{ footer: ExpansionToolbar }}
-          columnGroupingModel={[
-            {
-              groupId: 'Alturas',
-              headerName: 'Alturas',
-              headerAlign: 'center',
-              children: [{ field: 'h1' }, { field: 'h2' }, { field: 'h3' }],
-            },
-            {
-              groupId: 'Diametros',
-              headerName: 'Diametros',
-              headerAlign: 'center',
-              children: [{ field: 'd1' }, { field: 'd2' }, { field: 'd3' }],
-            },
-            {
-              groupId: 'results',
-              headerName: 'Resultados',
-              headerAlign: 'center',
-              children: [{ field: 'pressReading' }],
-            },
-          ]}
-          columns={columns.map((column) => ({
-            ...column,
-            sortable: false,
-            disableColumnMenu: true,
-            align: 'center',
-            headerAlign: 'center',
-            //minWidth: 200,
-            //flex: 1,
-          }))}
-          rows={rows}
-        />
+    <DataGrid
+      experimentalFeatures={{ columnGrouping: true }}
+      showCellVerticalBorder
+      showColumnVerticalBorder
+      slots={{ footer: ExpansionToolbar }}
+      columnGroupingModel={[
+        {
+          groupId: 'Alturas',
+          headerName: 'Alturas',
+          headerAlign: 'center',
+          children: [{ field: 'h1' }, { field: 'h2' }, { field: 'h3' }],
+        },
+        {
+          groupId: 'Diametros',
+          headerName: 'Diametros',
+          headerAlign: 'center',
+          children: [{ field: 'd1' }, { field: 'd2' }, { field: 'd3' }],
+        },
+        {
+          groupId: 'results',
+          headerName: 'Resultados',
+          headerAlign: 'center',
+          children: [{ field: 'pressReading' }],
+        },
+      ]}
+      columns={columns.map((column) => ({
+        ...column,
+        sortable: false,
+        disableColumnMenu: true,
+        align: 'center',
+        headerAlign: 'center',
+        //minWidth: 200,
+        //flex: 1,
+      }))}
+      rows={rows}
+    />
   );
 };
 
