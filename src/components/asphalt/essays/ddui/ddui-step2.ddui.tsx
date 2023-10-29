@@ -13,26 +13,31 @@ const Ddui_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
       key: 'sampleOrigin',
       label: t('asphalt.ddui.sample-origin'),
       value: data.sampleOrigin,
+      type: 'text'
     },
     {
       key: 'pressSpecification',
       label: t('asphalt.ddui.press-specification'),
       value: data.pressSpecification,
+      type: 'number'
     },
     {
       key: 'pressConstant',
       label: t('asphalt.ddui.press-constant'),
       value: data.pressConstant,
+      type: 'number'
     },
     {
       key: 'sampleVoidVolume',
       label: t('asphalt.ddui.sample-void-volume'),
       value: data.sampleVoidVolume,
+      type: 'number'
     },
     {
       key: 'minRrt',
       label: t('asphalt.ddui.minRrt'),
       value: data.minRrt,
+      type: 'number'
     },
   ];
 
@@ -55,7 +60,7 @@ const Ddui_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
           sx={{
             display: 'flex',
             flexDirection: 'row',
-            width: '50%',
+            width: { mobile: '100%', notebook: '50%' },
             marginX: 'auto',
             gap: '5px 20px',
             alignItems: 'center',
@@ -64,7 +69,7 @@ const Ddui_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
           <InputEndAdornment
             variant="standard"
             fullWidth
-            type="number"
+            type={input.type}
             key={input.key}
             label={input.label}
             value={input.value}
@@ -83,13 +88,13 @@ const Ddui_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
         }}
       >
         <DropDown
-          label={'Faixa do DNIT'}
+          label={t('asphalt.ddui.DNIT')}
           variant="standard"
           size="medium"
           sx={{
             display: 'flex',
             marginX: 'auto',
-            width: '50%',
+            width: { mobile: '100%', notebook: '50%' },
           }}
           options={[
             { value: 'A', label: 'A' },

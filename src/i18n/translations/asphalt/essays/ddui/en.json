@@ -10,5 +10,11 @@
   "asphalt.ddui.press-specification": "Press name/specification",
   "asphalt.ddui.press-constant": "Press constant",
   "asphalt.ddui.sample-void-volume": "Void volume of the test specimens (%)",
-  "asphalt.ddui.minRrt": "Minimum RRT established in the project"
+  "asphalt.ddui.minRrt": "Minimum RRT established in the project",
+  "asphalt.ddui.DNIT": "DNIT",
+  "asphalt.essays.ddui.dduiStep2": "Step 1",
+  "asphalt.essays.ddui.dduiStep3": "Step 2",
+  "ddui.step-2-description": "Please, fill in all the fields below.",
+  "ddui.step-3-description": "Please fill in the information below. Remember that it is necessary to inform at least one line with conditioning and one without conditioning for the test to be properly calculated.",
+  "ddui.step-4-description": "These are the results of your experiment. Remember to save the experiment so you can access it later."
 }

@@ -19,12 +19,11 @@ class Ddui_SERVICE implements IEssayService {
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
-      { step: 1, description: t('asphalt.essays.dduiStep2'), path: 'essay-data-step2' },
-      { step: 2, description: t('asphalt.essays.dduiStep3'), path: 'essay-data-step3' },
+      { step: 1, description: t('asphalt.essays.ddui.dduiStep2'), path: 'essay-data-step2' },
+      { step: 2, description: t('asphalt.essays.ddui.dduiStep3'), path: 'essay-data-step3' },
       { step: 3, description: t('results'), path: 'results' },
     ],
   };
-
   store_actions: DduiActions;
   userId: string;
 

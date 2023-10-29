@@ -2,10 +2,11 @@ import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import useDduiStore from '@/stores/asphalt/ddui.store';
 import { Box, Button, Switch } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import Ddui_Step3Table from './tables/ddui_step2Table';
 
 const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { dduiStep3: data, setData } = useDduiStore();
@@ -269,42 +270,7 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   ];
 
   return (
-    <DataGrid
-      experimentalFeatures={{ columnGrouping: true }}
-      showCellVerticalBorder
-      showColumnVerticalBorder
-      slots={{ footer: ExpansionToolbar }}
-      columnGroupingModel={[
-        {
-          groupId: 'Alturas',
-          headerName: 'Alturas',
-          headerAlign: 'center',
-          children: [{ field: 'h1' }, { field: 'h2' }, { field: 'h3' }],
-        },
-        {
-          groupId: 'Diametros',
-          headerName: 'Diametros',
-          headerAlign: 'center',
-          children: [{ field: 'd1' }, { field: 'd2' }, { field: 'd3' }],
-        },
-        {
-          groupId: 'results',
-          headerName: 'Resultados',
-          headerAlign: 'center',
-          children: [{ field: 'pressReading' }],
-        },
-      ]}
-      columns={columns.map((column) => ({
-        ...column,
-        sortable: false,
-        disableColumnMenu: true,
-        align: 'center',
-        headerAlign: 'center',
-        //minWidth: 200,
-        //flex: 1,
-      }))}
-      rows={rows}
-    />
+    <Ddui_Step3Table rows={rows} columns={columns} footer={ExpansionToolbar}/>
   );
 };
 

@@ -1,9 +1,10 @@
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import Result_Card from '@/components/atoms/containers/result-card';
+import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 import { EssayPageProps } from '@/components/templates/essay';
 import useDduiStore from '@/stores/asphalt/ddui.store';
-import { Box } from '@mui/material';
+import { Alert, AlertTitle, Box } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 
@@ -92,18 +93,23 @@ const Ddui_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
               disableColumnMenu: true,
               align: 'center',
               headerAlign: 'center',
+              flex: 1,
             }))}
             sx={{
-              width: 'fit-content',
+              width: '100%',
               marginBottom: '2rem',
+              overflow: 'scroll'
             }}
             rows={rows}
             hideFooter
           />
 
+          <ResultSubTitle title={'RT'}/>
+
           <Box
             sx={{
               display: 'flex',
+              flexDirection: { mobile: 'column', notebook: 'row' },
               gap: '.65rem',
             }}
           >
@@ -120,9 +126,12 @@ const Ddui_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
             />
           </Box>
 
+          <ResultSubTitle title={'RRT'}/>
+
           <Box
             sx={{
               display: 'flex',
+              flexDirection: { mobile: 'column', notebook: 'row' },
               gap: '.65rem',
             }}
           >
@@ -131,7 +140,10 @@ const Ddui_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
             <Result_Card label={t('ddui.results.minimun-rrt')} value={data.minRrt.toString()} unity={'%'} />
           </Box>
 
-          <Result_Card label={t('ddui.results.acceptance-condition')} value={data.acceptanceCondition} unity={''} />
+          <Alert severity="warning">
+            <AlertTitle>{t('ddui.results.acceptance-condition')}</AlertTitle>
+            {data.acceptanceCondition}
+          </Alert>
         </Box>
       </FlexColumnBorder>
     </>
