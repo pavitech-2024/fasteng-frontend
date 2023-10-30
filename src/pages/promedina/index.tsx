@@ -26,7 +26,7 @@ const Promedina: NextPage = () => {
     {
       name: t('home.pm.asphalt'),
       icon: <ProvSoils3Icon width="100%" height="100%" />,
-      path: '/promedina/asphalt-binder-and-concrete',
+      path: '/promedina/binder-asphalt-concrete',
     },
   ];
 
