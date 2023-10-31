@@ -38,6 +38,12 @@ import asphaltMaterialsENG from './translations/asphalt/materials/en.json';
 // essays
 import asphaltEssaysPTBR from './translations/asphalt/essays/ptbr.json';
 import asphaltEssaysENG from './translations/asphalt/essays/en.json';
+// rtfo
+import rtfoPTBR from './translations/asphalt/essays/rtfo/ptbr.json';
+import rtfoENG from './translations/asphalt/essays/rtfo/en.json';
+// adhesiveness
+import adhesivenessPTBR from './translations/asphalt/essays/adhesiveness/ptbr.json';
+import adhesivenessENG from './translations/asphalt/essays/adhesiveness/en.json';
 // specifyMass
 import specifyMassPTBR from './translations/asphalt/essays/specifyMass/ptbr.json';
 import specifyMassENG from './translations/asphalt/essays/specifyMass/en.json';
@@ -50,6 +56,12 @@ import ductilityENG from './translations/asphalt/essays/ductility/en.json';
 // angularity
 import angularityPTBR from './translations/asphalt/essays/angularity/ptbr.json';
 import angularityENG from './translations/asphalt/essays/angularity/en.json';
+// granulometry
+import asphaltGranulometryPTBR from './translations/asphalt/essays/granulometry/ptbr.json';
+import asphaltGranulometryENG from './translations/asphalt/essays/granulometry/en.json';
+// penetration
+import asphaltPenetrationPTBR from './translations/asphalt/essays/penetration/ptbr.json';
+import asphaltPenetrationENG from './translations/asphalt/essays/penetration/en.json';
 
 /**@soils */
 // samples
@@ -115,10 +127,14 @@ i18n.use(initReactI18next).init({
         /**@asphalt */
         ...asphaltMaterialsPTBR,
         ...asphaltEssaysPTBR,
+        ...rtfoPTBR,
+        ...adhesivenessPTBR,
         ...specifyMassPTBR,
         ...flashPointPTBR,
         ...ductilityPTBR,
         ...angularityPTBR,
+        ...asphaltGranulometryPTBR,
+        ...asphaltPenetrationPTBR,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
@@ -151,10 +167,14 @@ i18n.use(initReactI18next).init({
         /**@asphalt */
         ...asphaltMaterialsENG,
         ...asphaltEssaysENG,
+        ...rtfoENG,
+        ...adhesivenessENG,
         ...specifyMassENG,
         ...flashPointENG,
         ...ductilityENG,
         ...angularityENG,
+        ...asphaltGranulometryENG,
+        ...asphaltPenetrationENG,
         /**@soils */
         ...samplesENG,
         ...soilsEssaysENG,

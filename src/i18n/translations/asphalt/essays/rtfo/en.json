@@ -1,0 +1,8 @@
+{
+  "rtfo.step-2-description": "Fill in all the fields below.",
+  "rtfo.sample-weight": "Container mass + sample",
+  "rtfo.final-sample-weight": "Container mass + sample after aging",
+  "rtfo.weight-loss": "Weight loss (%)",
+  "rtfo-weight-loss-average": "Average mass loss",
+  "rtfo.step-3-description": "These are the results of your experiment. Remember to save the experiment so you can access it later."
+}
