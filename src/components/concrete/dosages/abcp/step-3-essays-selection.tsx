@@ -1,18 +1,17 @@
-import DropDown from '@/components/atoms/inputs/dropDown';
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
-import useABCPStore, { ABCPData } from '@/stores/concrete/abcp/abcp.store';
-import { Box, TextField, Typography } from '@mui/material';
+import useABCPStore from '@/stores/concrete/abcp/abcp.store';
+import { Box } from '@mui/material';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [essays, setEssays] = useState<any>();
-  const { materialSelectionData, essaySelectionData, setData } = useABCPStore();
+  const [setEssays] = useState<any>();
+  const { materialSelectionData } = useABCPStore();
 
   const { user } = useAuth();
 
@@ -23,8 +22,8 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
           const essays = await abcp.getEssaysByMaterialId(user._id, materialSelectionData);
           console.log(essays);
           setEssays(essays);
-          const { cement, fineAggregate_granulometrys, coarseAggregate_granulometrys, coarseAggregate_unit_masses } =
-            essays;
+          // const { cement, fineAggregate_granulometrys, coarseAggregate_granulometrys, coarseAggregate_unit_masses } =
+          //   essays;
           setLoading(false);
         } catch (error) {
           setEssays(null);
@@ -39,6 +38,8 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
       }
     );
   }, []);
+
+  nextDisabled && setNextDisabled(false);
 
   return (
     <>
