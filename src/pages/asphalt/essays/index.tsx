@@ -39,7 +39,7 @@ const AsphaltEssays: NextPage = () => {
       title: t('asphalt.essays.abrasion'),
       icon: AbrasionIcon,
       key: 'abrasion',
-      link: '/asphalt/standard/abrasion',
+      link: '/asphalt/essays/abrasion',
       type: 'aggregates',
     },
     {
@@ -102,7 +102,7 @@ const AsphaltEssays: NextPage = () => {
       title: t('asphalt.essays.specifyMass'),
       icon: SpecifyMassIcon,
       key: 'specifyMass',
-      link: '/asphalt/essays/specify-mass',
+      link: '/asphalt/essays/specifyMass',
       type: 'aggregates',
     },
     {
@@ -123,7 +123,7 @@ const AsphaltEssays: NextPage = () => {
       title: t('asphalt.essays.flashPoint'),
       icon: FlashPointIcon,
       key: 'flashPoint',
-      link: '/asphalt/essays/flash-point',
+      link: '/asphalt/essays/flashPoint',
       type: 'asphaltBinder',
     },
     {
