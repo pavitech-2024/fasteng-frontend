@@ -79,25 +79,25 @@ const BinderAsphaltConcrete_step3 = ({ nextDisabled, setNextDisabled }: EssayPag
       label: t('pm.binderAsphaltConcrete.observations'),
       value: step3Data.observations,
       key: 'observations',
-      required: true,
+      required: false,
     },
   ];
 
-  inputsPavimentData.every(({ required, value }) => {
+  inputsPavimentData.every(({ required }) => {
     if (!required) return true;
 
-    if (value === null) return false;
+   // if (value === null) return false;
 
-    if (typeof value === 'string' && value.trim() === '') return false;
+    //if (typeof value === 'string' && value.trim() === '') return false;
 
     return true;
   }) &&
-    inputsBrookfieldViscosity.every(({ required, value }) => {
+    inputsBrookfieldViscosity.every(({ required }) => {
       if (!required) return true;
 
-      if (value === null) return false;
+      //if (value === null) return false;
 
-      if (typeof value === 'string' && value.trim() === '') return false;
+      // if (typeof value === 'string' && value.trim() === '') return false;
 
       return true;
     }) &&
@@ -119,7 +119,7 @@ const BinderAsphaltConcrete_step3 = ({ nextDisabled, setNextDisabled }: EssayPag
             sx={{
               display: 'grid',
               width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
+              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
               gap: '10px 20px',
               paddingBottom: '20px',
             }}
@@ -153,7 +153,7 @@ const BinderAsphaltConcrete_step3 = ({ nextDisabled, setNextDisabled }: EssayPag
             sx={{
               display: 'grid',
               width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
+              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
               gap: '10px 20px',
               paddingBottom: '20px',
             }}

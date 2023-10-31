@@ -122,7 +122,7 @@ const BinderAsphaltConcrete_step4 = ({ nextDisabled, setNextDisabled }: EssayPag
             sx={{
               display: 'grid',
               width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
+              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
               gap: '10px 20px',
               paddingBottom: '20px',
             }}
