@@ -1,9 +1,9 @@
-import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
-import Result_Card, { Result_CardContainer } from '@/components/atoms/containers/result-card';
-import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
-import { EssayPageProps } from '@/components/templates/essay';
-import useUnitMassStore from '@/stores/concrete/unitMass/unitMass.store';
-import { t } from 'i18next';
+import FlexColumnBorder from "@/components/atoms/containers/flex-column-with-border";
+import Result_Card, { Result_CardContainer } from "@/components/atoms/containers/result-card";
+import ExperimentResume, { ExperimentResumeData } from "@/components/molecules/boxes/experiment-resume";
+import { EssayPageProps } from "@/components/templates/essay";
+import useUnitMassStore from "@/stores/concrete/unitMass/unitMass.store";
+import { t } from "i18next";
 
 const UnitMass_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
@@ -14,7 +14,7 @@ const UnitMass_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => 
     materials: [{ name: generalData.material.name, type: generalData.material.type }],
   };
 
-  const unitMassResult = Number(result.result).toFixed(2);
+  const unitMassResult = (Number(result.result)).toFixed(2);
 
   return (
     <>
