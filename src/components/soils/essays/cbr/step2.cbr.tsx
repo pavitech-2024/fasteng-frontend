@@ -18,9 +18,9 @@ const CBR_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
       adornment: 'kgf/mm',
     },
     {
-      label: t('cbr.cilinder_height'),
-      value: data.cilinder_height,
-      key: 'cilinder_height',
+      label: t('cbr.cylinder_height'),
+      value: data.cylinder_height,
+      key: 'cylinder_height',
       required: true,
       adornment: 'mm',
     },
@@ -62,12 +62,12 @@ const CBR_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
     },
   ];
 
-  // Verifica se todos os campos da coluna extended_read estão preenchidos e também ring_constant e cilinder_height
+  // Verifica se todos os campos da coluna extended_read estão preenchidos e também ring_constant e cylinder_height
   if (nextDisabled) {
     const extended_reads_completed = rows[3].extended_read !== null && rows[5].extended_read !== null;
     const ring_constant_completed = data.ring_constant !== null;
-    const cilinder_height_completed = data.cilinder_height !== null;
-    if (extended_reads_completed && ring_constant_completed && cilinder_height_completed) setNextDisabled(false);
+    const cylinder_height_completed = data.cylinder_height !== null;
+    if (extended_reads_completed && ring_constant_completed && cylinder_height_completed) setNextDisabled(false);
   }
 
   return (

@@ -15,5 +15,9 @@
   "topbar.sucs": "Unified Classification - SUCS",
   "topbar.granulometry": "Granulometry",
   "topbar.compression": "Compression",
-  "topbar.sand-equivalent": "Sand Equivalent"
+  "topbar.sandEquivalent": "Sand Equivalent",
+  "topbar.specifymass": "Specify Mass",
+  "topbar.flashPoint": "Falsh Point",
+  "topbar.ductility": "Ductility",
+  "topbar.angularity": "Angularity"
 }

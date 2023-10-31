@@ -13,7 +13,7 @@ interface GeneralData {
 
 interface cbr_step2Data {
   ring_constant: number;
-  cilinder_height: number;
+  cylinder_height: number;
   extended_reads: [
     { minimum_read: '0.5'; pol: '0.025'; mm: '0.63'; extended_read: number },
     { minimum_read: '1'; pol: '0.05'; mm: '1.27'; extended_read: number },
@@ -77,7 +77,7 @@ const useCbrStore = create<CbrData & CbrActions>()(
         },
         step2Data: {
           ring_constant: 0,
-          cilinder_height: 0,
+          cylinder_height: 0,
           extended_reads: [
             { minimum_read: '0.5', pol: '0.025', mm: '0.63', extended_read: null },
             { minimum_read: '1', pol: '0.05', mm: '1.27', extended_read: null },
