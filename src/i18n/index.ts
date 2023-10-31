@@ -38,6 +38,9 @@ import asphaltMaterialsENG from './translations/asphalt/materials/en.json';
 // essays
 import asphaltEssaysPTBR from './translations/asphalt/essays/ptbr.json';
 import asphaltEssaysENG from './translations/asphalt/essays/en.json';
+// adhesiveness
+import adhesivenessPTBR from './translations/asphalt/essays/adhesiveness/ptbr.json';
+import adhesivenessENG from './translations/asphalt/essays/adhesiveness/en.json';
 // specifyMass
 import specifyMassPTBR from './translations/asphalt/essays/specifyMass/ptbr.json';
 import specifyMassENG from './translations/asphalt/essays/specifyMass/en.json';
@@ -118,6 +121,7 @@ i18n.use(initReactI18next).init({
         /**@asphalt */
         ...asphaltMaterialsPTBR,
         ...asphaltEssaysPTBR,
+        ...adhesivenessPTBR,
         ...specifyMassPTBR,
         ...flashPointPTBR,
         ...ductilityPTBR,
@@ -155,6 +159,7 @@ i18n.use(initReactI18next).init({
         /**@asphalt */
         ...asphaltMaterialsENG,
         ...asphaltEssaysENG,
+        ...adhesivenessENG,
         ...specifyMassENG,
         ...flashPointENG,
         ...ductilityENG,
