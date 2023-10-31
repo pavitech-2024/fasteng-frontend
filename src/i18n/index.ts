@@ -41,6 +41,9 @@ import asphaltEssaysENG from './translations/asphalt/essays/en.json';
 // granulometry
 import asphaltGranulometryPTBR from './translations/asphalt/essays/granulometry/ptbr.json';
 import asphaltGranulometryENG from './translations/asphalt/essays/granulometry/en.json';
+// penetration
+import asphaltPenetrationPTBR from './translations/asphalt/essays/penetration/ptbr.json';
+import asphaltPenetrationENG from './translations/asphalt/essays/penetration/en.json';
 
 /**@soils */
 // samples
@@ -107,6 +110,7 @@ i18n.use(initReactI18next).init({
         ...asphaltMaterialsPTBR,
         ...asphaltEssaysPTBR,
         ...asphaltGranulometryPTBR,
+        ...asphaltPenetrationPTBR,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
@@ -140,6 +144,7 @@ i18n.use(initReactI18next).init({
         ...asphaltMaterialsENG,
         ...asphaltEssaysENG,
         ...asphaltGranulometryENG,
+        ...asphaltPenetrationENG,
         /**@soils */
         ...samplesENG,
         ...soilsEssaysENG,
