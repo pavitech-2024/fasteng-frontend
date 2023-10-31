@@ -17,5 +17,6 @@
   "topbar.compression": "Compression",
   "topbar.specifymass": "Specify Mass",
   "topbar.flashPoint": "Falsh Point",
-  "topbar.ductility": "Ductility"
+  "topbar.ductility": "Ductility",
+  "topbar.angularity": "Angularity"
 }

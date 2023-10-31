@@ -53,6 +53,9 @@ import flashPointENG from './translations/asphalt/essays/flashPoint/en.json';
 // ductility
 import ductilityPTBR from './translations/asphalt/essays/ductility/ptbr.json';
 import ductilityENG from './translations/asphalt/essays/ductility/en.json';
+// angularity
+import angularityPTBR from './translations/asphalt/essays/angularity/ptbr.json';
+import angularityENG from './translations/asphalt/essays/angularity/en.json';
 // granulometry
 import asphaltGranulometryPTBR from './translations/asphalt/essays/granulometry/ptbr.json';
 import asphaltGranulometryENG from './translations/asphalt/essays/granulometry/en.json';
@@ -129,6 +132,7 @@ i18n.use(initReactI18next).init({
         ...specifyMassPTBR,
         ...flashPointPTBR,
         ...ductilityPTBR,
+        ...angularityPTBR,
         ...asphaltGranulometryPTBR,
         ...asphaltPenetrationPTBR,
         /**@soils */
@@ -168,6 +172,7 @@ i18n.use(initReactI18next).init({
         ...specifyMassENG,
         ...flashPointENG,
         ...ductilityENG,
+        ...angularityENG,
         ...asphaltGranulometryENG,
         ...asphaltPenetrationENG,
         /**@soils */
