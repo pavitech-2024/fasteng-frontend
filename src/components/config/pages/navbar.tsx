@@ -57,24 +57,24 @@ export default function Navbar({ open, app }: NavbarProps) {
     },
     {
       name: t('navbar.marshall'),
-      link: '/asphalt/dosage/marshall',
+      link: '/asphalt/dosages/marshall',
       app: 'asphalt',
       icon: <MarshallIcon sx={IconStyle} />,
       type: 'double',
       sub: [
-        { name: t('navbar.new'), link: '/dosage/marshall/new', icon: <AddIcon sx={IconStyle} /> },
-        { name: t('navbar.consult'), link: '/dosage/marshall/consult', icon: <SearchIcon sx={IconStyle} /> },
+        { name: t('navbar.new'), link: '/dosages/marshall/new', icon: <AddIcon sx={IconStyle} /> },
+        { name: t('navbar.consult'), link: '/dosages/marshall/consult', icon: <SearchIcon sx={IconStyle} /> },
       ],
     },
     {
       name: t('navbar.superpave'),
-      link: '/asphalt/dosage/superpave',
+      link: '/asphalt/dosages/superpave',
       app: 'asphalt',
       icon: <SuperpaveIcon sx={IconStyle} />,
       type: 'double',
       sub: [
-        { name: t('navbar.new'), link: '/dosage/superpave/new', icon: <AddIcon sx={IconStyle} /> },
-        { name: t('navbar.consult'), link: '/dosage/superpave/consult', icon: <SearchIcon sx={IconStyle} /> },
+        { name: t('navbar.new'), link: '/dosages/superpave/new', icon: <AddIcon sx={IconStyle} /> },
+        { name: t('navbar.consult'), link: '/dosages/superpave/consult', icon: <SearchIcon sx={IconStyle} /> },
       ],
     },
     {
@@ -138,13 +138,13 @@ export default function Navbar({ open, app }: NavbarProps) {
     },
     {
       name: t('navbar.abcp'),
-      link: '/concrete/dosage/abcp',
+      link: '/concrete/dosages/abcp',
       app: 'concrete',
-      icon: <AbcpIcon sx={IconStyle} />,
+      icon: <AbcpIcon sx={IconStyle} width={'28px'} />,
       type: 'double',
       sub: [
-        { name: t('navbar.new'), link: '/concrete/dosage/abcp/new', icon: <AddIcon sx={IconStyle} /> },
-        { name: t('navbar.consult'), link: '/concrete/dosage/abcp/consult', icon: <SearchIcon sx={IconStyle} /> },
+        { name: t('navbar.new'), link: '/concrete/dosages/abcp/new', icon: <AddIcon sx={IconStyle} /> },
+        { name: t('navbar.consult'), link: '/concrete/dosages/abcp/consult', icon: <SearchIcon sx={IconStyle} /> },
       ],
     },
     {

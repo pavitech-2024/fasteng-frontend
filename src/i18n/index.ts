@@ -108,6 +108,10 @@ import sandIncreaseENG from './translations/concrete/essays/sandIncrease/en.json
 // granulometry
 import concreteGranulometryPTBR from './translations/concrete/essays/granulometry/ptbr.json';
 import concreteGranulometryENG from './translations/concrete/essays/granulometry/en.json';
+// dosages
+// abcp
+import concreteABCPPTBR from './translations/concrete/dosages/abcp/ptbr.json';
+import concreteABCPENG from './translations/concrete/dosages/abcp/en.json';
 
 i18n.use(initReactI18next).init({
   fallbackLng: 'ptBR',
@@ -154,6 +158,7 @@ i18n.use(initReactI18next).init({
         ...unitMassPTBR,
         ...sandIncreasePTBR,
         ...concreteGranulometryPTBR,
+        ...concreteABCPPTBR,
       },
     },
     en: {
@@ -195,6 +200,7 @@ i18n.use(initReactI18next).init({
         ...unitMassENG,
         ...sandIncreaseENG,
         ...concreteGranulometryENG,
+        ...concreteABCPENG,
       },
     },
   },
