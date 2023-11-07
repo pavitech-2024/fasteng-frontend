@@ -38,8 +38,36 @@ import asphaltMaterialsENG from './translations/asphalt/materials/en.json';
 // essays
 import asphaltEssaysPTBR from './translations/asphalt/essays/ptbr.json';
 import asphaltEssaysENG from './translations/asphalt/essays/en.json';
+// sayboltFurol
 import sayboltFurolPTBR from './translations/asphalt/essays/saybolt-furol/ptbr.json';
 import sayboltFurolENG from './translations/asphalt/essays/saybolt-furol/en.json';
+// sandEquivalent
+import sandEquivalentPTBR from './translations/asphalt/essays/sandEquivalent/ptbr.json';
+import sandEquivalentENG from './translations/asphalt/essays/sandEquivalent/en.json';
+// rtfo
+import rtfoPTBR from './translations/asphalt/essays/rtfo/ptbr.json';
+import rtfoENG from './translations/asphalt/essays/rtfo/en.json';
+// adhesiveness
+import adhesivenessPTBR from './translations/asphalt/essays/adhesiveness/ptbr.json';
+import adhesivenessENG from './translations/asphalt/essays/adhesiveness/en.json';
+// specifyMass
+import specifyMassPTBR from './translations/asphalt/essays/specifyMass/ptbr.json';
+import specifyMassENG from './translations/asphalt/essays/specifyMass/en.json';
+// flashPoint
+import flashPointPTBR from './translations/asphalt/essays/flashPoint/ptbr.json';
+import flashPointENG from './translations/asphalt/essays/flashPoint/en.json';
+// ductility
+import ductilityPTBR from './translations/asphalt/essays/ductility/ptbr.json';
+import ductilityENG from './translations/asphalt/essays/ductility/en.json';
+// angularity
+import angularityPTBR from './translations/asphalt/essays/angularity/ptbr.json';
+import angularityENG from './translations/asphalt/essays/angularity/en.json';
+// granulometry
+import asphaltGranulometryPTBR from './translations/asphalt/essays/granulometry/ptbr.json';
+import asphaltGranulometryENG from './translations/asphalt/essays/granulometry/en.json';
+// penetration
+import asphaltPenetrationPTBR from './translations/asphalt/essays/penetration/ptbr.json';
+import asphaltPenetrationENG from './translations/asphalt/essays/penetration/en.json';
 
 /**@soils */
 // samples
@@ -83,6 +111,13 @@ import sandIncreaseENG from './translations/concrete/essays/sandIncrease/en.json
 // granulometry
 import concreteGranulometryPTBR from './translations/concrete/essays/granulometry/ptbr.json';
 import concreteGranulometryENG from './translations/concrete/essays/granulometry/en.json';
+// coarse aggregate
+import coarseAggregatePTBR from './translations/concrete/essays/coarseAggregate/ptbr.json';
+import coarseAggregateENG from './translations/concrete/essays/coarseAggregate/en.json';
+// dosages
+// abcp
+import concreteABCPPTBR from './translations/concrete/dosages/abcp/ptbr.json';
+import concreteABCPENG from './translations/concrete/dosages/abcp/en.json';
 
 i18n.use(initReactI18next).init({
   fallbackLng: 'ptBR',
@@ -106,6 +141,15 @@ i18n.use(initReactI18next).init({
         ...asphaltMaterialsPTBR,
         ...asphaltEssaysPTBR,
         ...sayboltFurolPTBR,
+        ...sandEquivalentPTBR,
+        ...rtfoPTBR,
+        ...adhesivenessPTBR,
+        ...specifyMassPTBR,
+        ...flashPointPTBR,
+        ...ductilityPTBR,
+        ...angularityPTBR,
+        ...asphaltGranulometryPTBR,
+        ...asphaltPenetrationPTBR,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
@@ -121,6 +165,8 @@ i18n.use(initReactI18next).init({
         ...unitMassPTBR,
         ...sandIncreasePTBR,
         ...concreteGranulometryPTBR,
+        ...coarseAggregatePTBR,
+        ...concreteABCPPTBR,
       },
     },
     en: {
@@ -139,6 +185,15 @@ i18n.use(initReactI18next).init({
         ...asphaltMaterialsENG,
         ...asphaltEssaysENG,
         ...sayboltFurolENG,
+        ...sandEquivalentENG,
+        ...rtfoENG,
+        ...adhesivenessENG,
+        ...specifyMassENG,
+        ...flashPointENG,
+        ...ductilityENG,
+        ...angularityENG,
+        ...asphaltGranulometryENG,
+        ...asphaltPenetrationENG,
         /**@soils */
         ...samplesENG,
         ...soilsEssaysENG,
@@ -154,6 +209,8 @@ i18n.use(initReactI18next).init({
         ...unitMassENG,
         ...sandIncreaseENG,
         ...concreteGranulometryENG,
+        ...coarseAggregateENG,
+        ...concreteABCPENG,
       },
     },
   },
