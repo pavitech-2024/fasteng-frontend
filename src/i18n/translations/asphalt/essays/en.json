@@ -2,11 +2,11 @@
   "asphalt.essays.abrasion": "Abrasion 'Los Angeles'",
   "asphalt.essays.adhesiveness": "Adhesiveness",
   "asphalt.essays.ductility": "Ductility",
-  "asphalt.essays.angularity": "Angularity Test",
-  "asphalt.essays.penetration": "Penetration Test",
+  "asphalt.essays.angularity": "Angularity",
+  "asphalt.essays.penetration": "Penetration",
   "asphalt.essays.rtfo": "Short Term Aging - RTFO",
-  "asphalt.essays.sandEquivalent": "Sand Equivalent",
-  "asphalt.essays.granulometryAsphalt": "Granulometry by Sifting",
+  "asphalt.essays.sand-equivalent": "Sand Equivalent",
+  "asphalt.essays.granulometry-asphalt": "Granulometry by Sifting",
   "asphalt.essays.shapeIndex": "Shape Index",
   "asphalt.essays.specifyMass": "Especific Mass",
   "asphalt.essays.elongatedParticles": "Elongated and Flattened Particles",
@@ -27,5 +27,8 @@
   "asphalt.material": "Material",
   "asphalt.operator": "Operator",
   "asphalt.calculist": "Calculist",
-  "asphalt.essays.penetration-asphalt": "Penetration"
+  "asphalt.essays.penetration-asphalt": "Penetration",
+  "asphalt.essays.abrasion.final-mass": "Sample mass after test",
+  "asphalt.essays.abrasion.graduation": "Choose the graduation",
+  "asphalt.essays.abrasion.initial-mass": "Initial mass"
 }

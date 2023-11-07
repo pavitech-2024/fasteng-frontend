@@ -2,11 +2,11 @@
   "asphalt.essays.abrasion": "Abrasão 'Los Angeles'",
   "asphalt.essays.adhesiveness": "Adesividade",
   "asphalt.essays.ductility": "Ductilidade",
-  "asphalt.essays.angularity": "Ensaio de Angularidade",
-  "asphalt.essays.penetration": "Ensaio de Penetração",
+  "asphalt.essays.angularity": "Angularidade",
+  "asphalt.essays.penetration": "Penetração",
   "asphalt.essays.rtfo": "Envelhecimento à Curto Prazo - RTFO",
+  "asphalt.essays.granulometry-asphalt": "Granulometria por Peneiramento",
   "asphalt.essays.sandEquivalent": "Equivalente Areia",
-  "asphalt.essays.granulometryAsphalt": "Granulometria por Peneiramento",
   "asphalt.essays.shapeIndex": "Índice de Forma",
   "asphalt.essays.specifyMass": "Massa Específica",
   "asphalt.essays.elongatedParticles": "Partículas Alongadas e Achatadas",
@@ -27,5 +27,9 @@
   "asphalt.material": "Material",
   "asphalt.operator": "Operador",
   "asphalt.calculist": "Calculista",
-  "asphalt.essays.penetration-asphalt": "Penetração"
+  "asphalt.essays.penetration-asphalt": "Penetração",
+  "asphalt.essays.abrasion.initial-mass": "Massa inicial",
+  "asphalt.essays.abrasion.final-mass": "Massa da amostra após ensaio",
+  "asphalt.essays.abrasion.graduation": "Escolha a graduação",
+  "errors.final-mass-lower-than-initial-mass": "A massa final não pode ser maior do que a massa inicial."
 }

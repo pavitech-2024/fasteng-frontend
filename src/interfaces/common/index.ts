@@ -115,27 +115,27 @@ export type SieveSeries = {
 
 export const AllSieveSeries = [
   {
-    label: t('granulometry.all-sieves'),
+    label: t('granulometry-soils.all-sieves'),
     sieves: AllSieves,
   },
   {
-    label: t('granulometry.normal-series-abnt-astm'),
+    label: t('granulometry-soils.normal-series-abnt-astm'),
     sieves: normalSeriesAbntAstmIndexes.map((index) => AllSieves[index]),
   },
   {
-    label: t('granulometry.normal-intermediate-series-abnt'),
+    label: t('granulometry-soils.normal-intermediate-series-abnt'),
     sieves: normalIntermediateSeriesAbntIndexes.map((index) => AllSieves[index]),
   },
   {
-    label: t('granulometry.normal-series-dnit'),
+    label: t('granulometry-soils.normal-series-dnit'),
     sieves: normalSeriesDnitIndexes.map((index) => AllSieves[index]),
   },
   {
-    label: t('granulometry.normal-series-dnit-2019'),
+    label: t('granulometry-soils.normal-series-dnit-2019'),
     sieves: normalSeriesDnit2019Indexes.map((index) => AllSieves[index]),
   },
   {
-    label: t('granulometry.intermediate-series-concrete'),
+    label: t('granulometry-soils.intermediate-series-concrete'),
     sieves: intermediateSeriesConcrete.map((index) => AllSieves[index]),
   },
 ];

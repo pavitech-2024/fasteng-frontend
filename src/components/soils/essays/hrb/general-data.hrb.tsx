@@ -38,10 +38,10 @@ const HRB_GeneralData = ({ nextDisabled, setNextDisabled, hrb }: EssayPageProps 
   }, []);
 
   const inputs = [
-    { label: t('cbr.experimentName'), value: generalData.name, key: 'name', required: true },
-    { label: t('cbr.samples'), value: generalData.sample, key: 'sample', required: true },
-    { label: t('cbr.operator'), value: generalData.operator, key: 'operator', required: false },
-    { label: t('cbr.calculist'), value: generalData.calculist, key: 'calculist', required: false },
+    { label: t('soils.experimentName'), value: generalData.name, key: 'name', required: true },
+    { label: t('soils.samples'), value: generalData.sample, key: 'sample', required: true },
+    { label: t('soils.operator'), value: generalData.operator, key: 'operator', required: false },
+    { label: t('soils.calculist'), value: generalData.calculist, key: 'calculist', required: false },
     { label: t('samples.comments'), value: generalData.description, key: 'description', required: false },
   ];
 

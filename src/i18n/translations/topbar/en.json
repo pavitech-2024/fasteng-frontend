@@ -13,8 +13,16 @@
   "topbar.chapman": "Specific Mass - Chapman's Flask",
   "topbar.hrb": "Road Classification - HRB",
   "topbar.sucs": "Unified Classification - SUCS",
-  "topbar.granulometry": "Granulometry",
-  "topbar.compression": "Compression",
   "topbar.softening-point": "Softening Point",
-  "topbar.penetration": "Penetration"
+  "topbar.penetration": "Penetration",
+  "topbar.granulometry-asphalt": "Granulometry",
+  "topbar.granulometry-concrete": "Granulometry",
+  "topbar.granulometry-soils": "Granulometry",
+  "topbar.compression": "Compression",
+  "topbar.abcp": "ABCP Dosage",
+  "topbar.sandEquivalent": "Sand Equivalent",
+  "topbar.specifymass": "Specify Mass",
+  "topbar.flashPoint": "Falsh Point",
+  "topbar.ductility": "Ductility",
+  "topbar.angularity": "Angularity"
 }
