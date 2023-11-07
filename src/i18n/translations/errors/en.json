@@ -6,7 +6,7 @@
   "errors.sieves-sum-not-equal-to-sample-mass": "Sum of Retained masses + Bottom differs from Initial mass in ",
 
   "name-already-exists": "Experiment name already exists!",
-
+  
   "sample-sucs-not-found": "Sample not found for SUCS!",
   "sample-GRANULOMETRY-not-found": "Sample not found for Granulometry!",
 

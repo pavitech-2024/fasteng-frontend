@@ -1,7 +1,7 @@
 import { SpecifyMassIcon } from '@/assets';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { AdhesivenessActions, AdhesivenessData } from '@/stores/asphalt/adhesiveness/adhesiveness.store';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
-import { AdhesivenessActions, AdhesivenessData } from '@/stores/asphalt/adhesiveness.store';
 import Api from '@/api';
 import { t } from 'i18next';
 

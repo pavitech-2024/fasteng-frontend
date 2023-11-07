@@ -4,7 +4,7 @@ import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import ADHESIVENESS_SERVICE from '@/services/asphalt/essays/adhesiveness/adhesiveness.service';
-import useAdhesivenessStore from '@/stores/asphalt/adhesiveness.store';
+import useAdhesivenessStore from '@/stores/asphalt/adhesiveness/adhesiveness.store';
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import { useState, useEffect } from 'react';

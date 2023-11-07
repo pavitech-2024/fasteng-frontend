@@ -1,10 +1,10 @@
-import UnitMass_GeneralData from '@/components/concrete/essays/unitMass/general-data.unitMass';
-import UnitMass_Results from '@/components/concrete/essays/unitMass/result.unitMass';
-import UnitMass_Step2 from '@/components/concrete/essays/unitMass/step2.unitMass';
-import EssayTemplate from '@/components/templates/essay';
-import useAuth from '@/contexts/auth';
-import UNITMASS_SERVICE from '@/services/concrete/essays/unitMass/unitMass.service';
-import useUnitMassStore, { UnitMassActions } from '@/stores/concrete/unitMass/unitMass.store';
+import UnitMass_GeneralData from "@/components/concrete/essays/unitMass/general-data.unitMass";
+import UnitMass_Results from "@/components/concrete/essays/unitMass/result.unitMass";
+import UnitMass_Step2 from "@/components/concrete/essays/unitMass/step2.unitMass";
+import EssayTemplate from "@/components/templates/essay";
+import useAuth from "@/contexts/auth";
+import UNITMASS_SERVICE from "@/services/concrete/essays/unitMass/unitMass.service";
+import useUnitMassStore, { UnitMassActions } from "@/stores/concrete/unitMass/unitMass.store";
 
 const UnitMass = () => {
   const unitMass = new UNITMASS_SERVICE();
