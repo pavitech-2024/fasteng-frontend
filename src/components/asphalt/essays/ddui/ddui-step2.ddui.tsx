@@ -13,31 +13,31 @@ const Ddui_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
       key: 'sampleOrigin',
       label: t('asphalt.ddui.sample-origin'),
       value: data.sampleOrigin,
-      type: 'text'
+      type: 'text',
     },
     {
       key: 'pressSpecification',
       label: t('asphalt.ddui.press-specification'),
       value: data.pressSpecification,
-      type: 'number'
+      type: 'number',
     },
     {
       key: 'pressConstant',
       label: t('asphalt.ddui.press-constant'),
       value: data.pressConstant,
-      type: 'number'
+      type: 'number',
     },
     {
       key: 'sampleVoidVolume',
       label: t('asphalt.ddui.sample-void-volume'),
       value: data.sampleVoidVolume,
-      type: 'number'
+      type: 'number',
     },
     {
       key: 'minRrt',
       label: t('asphalt.ddui.minRrt'),
       value: data.minRrt,
-      type: 'number'
+      type: 'number',
     },
   ];
 

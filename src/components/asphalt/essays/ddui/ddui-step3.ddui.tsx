@@ -269,9 +269,7 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
     },
   ];
 
-  return (
-    <Ddui_Step3Table rows={rows} columns={columns} footer={ExpansionToolbar}/>
-  );
+  return <Ddui_Step3Table rows={rows} columns={columns} footer={ExpansionToolbar} />;
 };
 
 export default Ddui_Step3;

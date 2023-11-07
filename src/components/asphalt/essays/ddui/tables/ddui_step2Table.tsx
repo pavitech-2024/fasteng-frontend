@@ -1,4 +1,4 @@
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 interface Step3DduiTableProps {
   rows: {
@@ -14,21 +14,20 @@ interface Step3DduiTableProps {
     pressReading: number;
   }[];
   columns: GridColDef[];
-  footer: any
+  footer: any;
 }
 
-const Ddui_Step3Table = ({  rows, columns, footer }: Step3DduiTableProps) => {
-
+const Ddui_Step3Table = ({ rows, columns, footer }: Step3DduiTableProps) => {
   return (
     <DataGrid
       experimentalFeatures={{ columnGrouping: true }}
       sx={{
         maxWidth: 'fit-content',
-        marginX: 'auto'
+        marginX: 'auto',
       }}
       showCellVerticalBorder
       showColumnVerticalBorder
-      slots={{ footer: footer}}
+      slots={{ footer: footer }}
       columnGroupingModel={[
         {
           groupId: 'Alturas',
@@ -58,7 +57,7 @@ const Ddui_Step3Table = ({  rows, columns, footer }: Step3DduiTableProps) => {
       }))}
       rows={rows}
     />
-  )
-}
+  );
+};
 
 export default Ddui_Step3Table;

@@ -83,7 +83,7 @@ const Ddui_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
             flexDirection: 'column',
             gap: '.65rem',
             paddingX: '1.5rem',
-            overflowX: 'auto'
+            overflowX: 'auto',
           }}
         >
           <DataGrid
@@ -98,13 +98,13 @@ const Ddui_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
             sx={{
               width: '100%',
               marginBottom: '2rem',
-              overflow: 'scroll'
+              overflow: 'scroll',
             }}
             rows={rows}
             hideFooter
           />
 
-          <ResultSubTitle title={'RT'}/>
+          <ResultSubTitle title={'RT'} />
 
           <Box
             sx={{
@@ -126,7 +126,7 @@ const Ddui_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
             />
           </Box>
 
-          <ResultSubTitle title={'RRT'}/>
+          <ResultSubTitle title={'RRT'} />
 
           <Box
             sx={{
