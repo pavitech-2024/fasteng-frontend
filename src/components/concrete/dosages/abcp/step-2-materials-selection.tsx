@@ -111,7 +111,11 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
             gap: '10px',
           }}
         >
-          <MaterialSelectionTable rows={aggregateRows} columns={aggregateColumns} header={t('concrete.materials.aggregates')} />
+          <MaterialSelectionTable
+            rows={aggregateRows}
+            columns={aggregateColumns}
+            header={t('concrete.materials.aggregates')}
+          />
           <MaterialSelectionTable rows={binderRows} columns={binderColumns} header={t('concrete.materials.binders')} />
         </Box>
       )}

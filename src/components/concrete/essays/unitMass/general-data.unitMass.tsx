@@ -111,7 +111,10 @@ const UnitMass_GeneralData = ({
               variant="standard"
               label={t('unitMass.material')}
               options={materials.map((material: ConcreteMaterial) => {
-                return { label: material.name + ' | ' + t(`${'concrete.materials.' + material.type}`), value: material };
+                return {
+                  label: material.name + ' | ' + t(`${'concrete.materials.' + material.type}`),
+                  value: material,
+                };
               })}
               defaultValue={{
                 label: materials[0].name + ' | ' + t(`${'concrete.materials.' + materials[0].type}`),

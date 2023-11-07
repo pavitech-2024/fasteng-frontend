@@ -38,7 +38,10 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
     materials: [{ name: generalData.material.name, type: generalData.material.type }],
   };
 
-  const graph_data = [[t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')], ...granulometry_results.graph_data];
+  const graph_data = [
+    [t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')],
+    ...granulometry_results.graph_data,
+  ];
 
   const rows = [];
 

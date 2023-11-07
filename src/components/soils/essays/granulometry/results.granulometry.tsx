@@ -38,7 +38,10 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
     materials: [{ name: generalData.sample.name, type: generalData.sample.type }],
   };
 
-  const graph_data = [[t('granulometry-soils.passant'), t('granulometry-soils.diameter')], ...granulometry_results.graph_data];
+  const graph_data = [
+    [t('granulometry-soils.passant'), t('granulometry-soils.diameter')],
+    ...granulometry_results.graph_data,
+  ];
 
   const rows = [];
 

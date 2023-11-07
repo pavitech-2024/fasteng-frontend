@@ -50,7 +50,9 @@ const ExperimentResume = ({ data }: ExperimentResumeProps) => {
     texts.push({ label: t(`${app === 'soils' ? 'sample' : 'material'}`), value: item.name });
     texts.push({
       label: t('asphalt.materials.type'),
-      value: t(`${app === 'soils' ? 'samples' : app === 'asphalt' ? 'asphalt.materials' : 'concrete.materials'}.${item.type}`),
+      value: t(
+        `${app === 'soils' ? 'samples' : app === 'asphalt' ? 'asphalt.materials' : 'concrete.materials'}.${item.type}`
+      ),
     });
   });
 
