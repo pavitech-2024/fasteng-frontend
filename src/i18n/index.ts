@@ -38,6 +38,9 @@ import asphaltMaterialsENG from './translations/asphalt/materials/en.json';
 // essays
 import asphaltEssaysPTBR from './translations/asphalt/essays/ptbr.json';
 import asphaltEssaysENG from './translations/asphalt/essays/en.json';
+// sayboltFurol
+import sayboltFurolPTBR from './translations/asphalt/essays/saybolt-furol/ptbr.json';
+import sayboltFurolENG from './translations/asphalt/essays/saybolt-furol/en.json';
 // sandEquivalent
 import sandEquivalentPTBR from './translations/asphalt/essays/sandEquivalent/ptbr.json';
 import sandEquivalentENG from './translations/asphalt/essays/sandEquivalent/en.json';
@@ -137,6 +140,7 @@ i18n.use(initReactI18next).init({
         /**@asphalt */
         ...asphaltMaterialsPTBR,
         ...asphaltEssaysPTBR,
+        ...sayboltFurolPTBR,
         ...sandEquivalentPTBR,
         ...rtfoPTBR,
         ...adhesivenessPTBR,
@@ -180,6 +184,7 @@ i18n.use(initReactI18next).init({
         /**@asphalt */
         ...asphaltMaterialsENG,
         ...asphaltEssaysENG,
+        ...sayboltFurolENG,
         ...sandEquivalentENG,
         ...rtfoENG,
         ...adhesivenessENG,
