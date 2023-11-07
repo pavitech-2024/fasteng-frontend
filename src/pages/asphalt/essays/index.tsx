@@ -95,7 +95,7 @@ const AsphaltEssays: NextPage = () => {
       title: t('asphalt.essays.shapeIndex'),
       icon: ShapeIndexIcon,
       key: 'shapeIndex',
-      link: '/asphalt/essays/shape-index',
+      link: '/asphalt/essays/shapeIndex',
       type: 'aggregates',
     },
     {
@@ -109,7 +109,7 @@ const AsphaltEssays: NextPage = () => {
       title: t('asphalt.essays.elongatedParticles'),
       icon: ElongatedParticlesIcon,
       key: 'elongatedParticles',
-      link: '/asphalt/essays/elongated-particles',
+      link: '/asphalt/essays/elongatedParticles',
       type: 'aggregates',
     },
     {

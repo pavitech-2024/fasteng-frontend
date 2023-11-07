@@ -1,0 +1,19 @@
+{
+  "elongatedParticles": "Partículas Alongadas",
+  "elongatedParticles.elongatedParticles": "Partículas Alongadas",
+  "elongatedParticles.step-2-description": "Preencha todos os campos",
+  "elongatedParticles.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
+  "elongatedParticles.ratio": "Relação entre a menor dimensão e a maior dimensão da partícula",
+  "elongatedParticles.sample_mass": "Massa da amostra (g) ou número de partículas da amostra",
+  "elongatedParticles.mass": "Massa (g) ou número de partículas passantes na menor abertura do parquímetro proporcional",
+  "elongatedParticles.particles-percentage": "Partículas alongadas e achatadas",
+
+  "elongatedParticles.error.null-dimensions-table-data": "Valores inválidos na tabela de dimensões",
+  "elongatedParticles.error.empty-sample-mass": "'Massa da amostra' vazia",
+  "elongatedParticles.error.negative-sample-mass": "'Massa da amostra' negativa",
+  "elongatedParticles.error.empty-mass": "'Massa' vazia",
+  "elongatedParticles.error.negative-mass": "'Massa' negativa",
+  "elongatedParticles.error.mass-greater-than-sample-mass": "'Massa' maior que a 'Massa da amostra'",
+
+  "elongatedParticles.warning.criterion-1_5-max-value": "No critério 1:5, a porcentagem de partículas alongadas e achatadas deve ser no máximo 10% para uso em misturas asfálticas"
+}

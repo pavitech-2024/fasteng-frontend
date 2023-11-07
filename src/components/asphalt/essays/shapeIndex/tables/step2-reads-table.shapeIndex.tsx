@@ -1,20 +1,19 @@
-import { row_step2 } from '@/stores/asphalt/angularity/angularity.store';
+import { ShapeIndexReadRow } from '@/stores/asphalt/shapeIndex/shapeIndex.store';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 
-interface step2GranulometryProps {
-  rows: row_step2[];
+interface step2ShapeIndexProps {
+  rows: ShapeIndexReadRow[];
   columns: GridColDef[];
+  footer: any;
 }
 
-const Angularity_step2Table = ({ rows, columns }: step2GranulometryProps) => {
+const ShapeIndex_step2_Reads_Table = ({ rows, columns, footer }: step2ShapeIndexProps) => {
   return (
     <DataGrid
       sx={{ mt: '1rem', borderRadius: '10px' }}
       density="compact"
-      hideFooter
-      showCellVerticalBorder
-      showColumnVerticalBorder
+      slots={{ footer: footer }}
       experimentalFeatures={{ columnGrouping: true }}
       columns={columns.map((column) => ({
         ...column,
@@ -30,4 +29,4 @@ const Angularity_step2Table = ({ rows, columns }: step2GranulometryProps) => {
   );
 };
 
-export default Angularity_step2Table;
+export default ShapeIndex_step2_Reads_Table;

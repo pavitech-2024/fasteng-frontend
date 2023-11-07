@@ -68,6 +68,12 @@ import ductilityENG from './translations/asphalt/essays/ductility/en.json';
 // angularity
 import angularityPTBR from './translations/asphalt/essays/angularity/ptbr.json';
 import angularityENG from './translations/asphalt/essays/angularity/en.json';
+// shapeIndex
+import shapeIndexPTBR from './translations/asphalt/essays/shapeIndex/ptbr.json';
+import shapeIndexENG from './translations/asphalt/essays/shapeIndex/en.json';
+// elongatedParticles
+import elongatedParticlesPTBR from './translations/asphalt/essays/elongatedParticles/ptbr.json';
+import elongatedParticlesENG from './translations/asphalt/essays/elongatedParticles/en.json';
 // granulometry
 import asphaltGranulometryPTBR from './translations/asphalt/essays/granulometry/ptbr.json';
 import asphaltGranulometryENG from './translations/asphalt/essays/granulometry/en.json';
@@ -156,6 +162,8 @@ i18n.use(initReactI18next).init({
         ...flashPointPTBR,
         ...ductilityPTBR,
         ...angularityPTBR,
+        ...shapeIndexPTBR,
+        ...elongatedParticlesPTBR,
         ...asphaltGranulometryPTBR,
         ...asphaltPenetrationPTBR,
         /**@soils */
@@ -202,6 +210,8 @@ i18n.use(initReactI18next).init({
         ...flashPointENG,
         ...ductilityENG,
         ...angularityENG,
+        ...shapeIndexENG,
+        ...elongatedParticlesENG,
         ...asphaltGranulometryENG,
         ...asphaltPenetrationENG,
         /**@soils */
