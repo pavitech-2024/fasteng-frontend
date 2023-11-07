@@ -96,9 +96,9 @@ class CBR_SERVICE implements IEssayService {
       if (!cbrData.ring_constant) throw t('errors.empty-ring-constant');
       if (cbrData.ring_constant < 0) throw t('errors.negative-ring-constant');
 
-      // verify if cilinder_height is not empty or negative
-      if (!cbrData.cilinder_height) throw t('errors.empty-cilinder-height');
-      if (cbrData.cilinder_height < 0) throw t('errors.negative-cilinder-height');
+      // verify if cylinder_height is not empty or negative
+      if (!cbrData.cylinder_height) throw t('errors.empty-cylinder-height');
+      if (cbrData.cylinder_height < 0) throw t('errors.negative-cylinder-height');
 
       // verify if extended_reads that are required ( 2 min and 4 min ) are not empty or negative
       if (!cbrData.extended_reads[3].extended_read) throw t('errors.empty-extended-read') + ' [ 2 min ]';
