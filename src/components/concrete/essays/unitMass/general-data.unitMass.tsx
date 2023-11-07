@@ -45,7 +45,7 @@ const UnitMass_GeneralData = ({
         if (material.description.maxDiammeter !== null) {
           setMaterialsWithMaxD(materialsWMaxD);
         }
-        console.log(materialsWMaxD)
+        console.log(materialsWMaxD);
       });
     }
   }, [materials]);
