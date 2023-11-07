@@ -36,23 +36,24 @@ interface Step2Data {
 
 interface Step3Data {
   // Paviment Data
-  stabilizer: string;
-  tenor: string;
+  mctGroup: string;
+  mctCoefficientC: string;
+  mctIndexE: string;
   especificMass: string;
   compressionEnergy: string;
-  rtcd: string;
-  rtf: string;
-  rcs: string;
   granulometricRange: string;
   optimalHumidity: string;
+  abrasionLA: string;
   // Resilience module
-  rsInitial: string;
-  rsFinal: string;
-  constantA: string;
-  constantB: string;
-  // Material fatigue
+  k1: string;
+  k2: string;
+  k3: string;
+  k4: string;
+  // Permanent deformation
   k1psi1: string;
   k2psi2: string;
+  k3psi3: string;
+  k4psi4: string;
   observations: string;
 }
 
@@ -103,21 +104,22 @@ const useGranularLayersStore = create<GranularLayersData & GranularLayersActions
           thickness: null,
         },
         step3Data: {
-          stabilizer: null,
-          tenor: null,
+          mctGroup: null,
+          mctCoefficientC: null,
+          mctIndexE: null,
           especificMass: null,
           compressionEnergy: null,
-          rtcd: null,
-          rtf: null,
-          rcs: null,
           granulometricRange: null,
           optimalHumidity: null,
-          rsInitial: null,
-          rsFinal: null,
-          constantA: null,
-          constantB: null,
+          abrasionLA: null,
+          k1: null,
+          k2: null,
+          k3: null,
+          k4: null,
           k1psi1: null,
           k2psi2: null,
+          k3psi3: null,
+          k4psi4: null,
           observations: null,
         },
         setData: ({ step, key, value }) =>

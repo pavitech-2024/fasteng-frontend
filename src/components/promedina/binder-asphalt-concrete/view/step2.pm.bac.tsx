@@ -80,33 +80,33 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
     { label: t('pm.binderAsphaltConcrete.thickness'), value: step2Data.thickness, key: 'thickness', required: true },
   ];
 
-  // inputsPavimentData.every(({ required, value }) => {
-  //   if (!required) return true;
+   inputsPavimentData.every(({ required }) => {
+     if (!required) return true;
 
   //   if (value === null) return false;
 
   //   if (typeof value === 'string' && value.trim() === '') return false;
 
-  //   return true;
-  // }) &&
-  //   inputsPavimentPreparation.every(({ required, value }) => {
-  //     if (!required) return true;
+     return true;
+   }) &&
+    inputsPavimentPreparation.every(({ required }) => {
+       if (!required) return true;
 
   //     if (value === null) return false;
 
   //     if (typeof value === 'string' && value.trim() === '') return false;
 
-  //     return true;
-  //   }) &&
-  //   inputsStructuralComposition.every(({ required, value }) => {
-  //     if (!required) return true;
+      return true;
+     }) &&
+     inputsStructuralComposition.every(({ required }) => {
+       if (!required) return true;
 
   //     if (value === null) return false;
 
   //     if (typeof value === 'string' && value.trim() === '') return false;
 
-  //     return true;
-  //   }) &&
+       return true;
+     }) &&
   nextDisabled && setNextDisabled(false);
 
   return (

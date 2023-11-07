@@ -8,17 +8,32 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
   const { step3Data, setData } = useGranularLayersStore();
 
   const inputsPavimentData = [
-    { label: t('pm.granularLayer.stabilizer'), value: step3Data.stabilizer, key: 'stabilizer', required: true },
-    { label: t('pm.granularLayer.tenor'), value: step3Data.tenor, key: 'tenor', required: true },
+    { label: t('pm.granularLayer.mctGroup'), value: step3Data.mctGroup, key: 'mctGroup', required: true },
+    {
+      label: t('pm.granularLayer.mctCoefficientC'),
+      value: step3Data.mctCoefficientC,
+      key: 'mctCoefficientC',
+      required: true,
+    },
+    {
+      label: t('pm.granularLayer.mctIndexE'),
+      value: step3Data.mctIndexE,
+      key: 'mctIndexE',
+      required: true,
+    },
     {
       label: t('pm.granularLayer.especific.mass'),
       value: step3Data.especificMass,
       key: 'especificMass',
       required: true,
     },
-    { label: t('pm.granularLayer.rtcd'), value: step3Data.rtcd, key: 'rtcd', required: true },
-    { label: t('pm.granularLayer.rtf'), value: step3Data.rtf, key: 'rtf', required: true },
-    { label: t('pm.granularLayer.rcs'), value: step3Data.rcs, key: 'rcs', required: true },
+    {
+      label: t('pm.granularLayer.compressionEnergy'),
+      value: step3Data.compressionEnergy,
+      key: 'compressionEnergy',
+      required: true,
+    },
+    { label: t('pm.granularLayer.abrasionLA'), value: step3Data.abrasionLA, key: 'abrasionLA', required: true },
     {
       label: t('pm.granularLayer.granulometric.range'),
       value: step3Data.granulometricRange,
@@ -31,24 +46,26 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
       key: 'optimalHumidity',
       required: true,
     },
-  ];
-
-  const inputsResilienceModule = [
-    { label: t('pm.granularLayer.rs.initial'), value: step3Data.rsInitial, key: 'rsInitial', required: true },
-    { label: t('pm.granularLayer.rs.final'), value: step3Data.rsFinal, key: 'rsFinal', required: true },
-    { label: t('pm.granularLayer.constant.A'), value: step3Data.constantA, key: 'constantA', required: true },
-    { label: t('pm.granularLayer.constant.B'), value: step3Data.constantB, key: 'constantB', required: true },
-  ];
-
-  const inputsMaterialFatigue = [
-    { label: t('pm.granularLayer.k1.psi1'), value: step3Data.k1psi1, key: 'k1psi1', required: true },
-    { label: t('pm.granularLayer.k2.psi2'), value: step3Data.k2psi2, key: 'k2psi2', required: true },
     {
       label: t('pm.granularLayer.mf.observations'),
       value: step3Data.observations,
       key: 'observations',
       required: false,
     },
+  ];
+
+  const inputsResilienceModule = [
+    { label: t('pm.granularLayer.rs.k1'), value: step3Data.k1, key: 'k1', required: true },
+    { label: t('pm.granularLayer.rs.k2'), value: step3Data.k2, key: 'k2', required: true },
+    { label: t('pm.granularLayer.rs.k3'), value: step3Data.k3, key: 'k3', required: true },
+    { label: t('pm.granularLayer.rs.k4'), value: step3Data.k4, key: 'k4', required: true },
+  ];
+
+  const inputsPermanentDeformation = [
+    { label: t('pm.granularLayer.k1.psi1'), value: step3Data.k1psi1, key: 'k1psi1', required: true },
+    { label: t('pm.granularLayer.k2.psi2'), value: step3Data.k2psi2, key: 'k2psi2', required: true },
+    { label: t('pm.granularLayer.k3.psi3'), value: step3Data.k3psi3, key: 'k3psi3', required: true },
+    { label: t('pm.granularLayer.k4.psi4'), value: step3Data.k4psi4, key: 'k4psi4', required: true },
   ];
 
   inputsPavimentData.every(({ required, value }) => {
@@ -69,7 +86,7 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
 
       return true;
     }) &&
-    inputsMaterialFatigue.every(({ required, value }) => {
+    inputsPermanentDeformation.every(({ required, value }) => {
       if (!required) return true;
 
       if (value === null) return false;
@@ -80,7 +97,7 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     }) &&
     nextDisabled &&
     setNextDisabled(false);
-    
+
   return (
     <>
       <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'}>
@@ -130,7 +147,7 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
             sx={{
               display: 'grid',
               width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
+              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
               gap: '10px 20px',
               paddingBottom: '20px',
             }}
@@ -151,7 +168,7 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title={t('pm.material.fatigue')} open={true} theme={'#07B811'}>
+      <FlexColumnBorder title={t('pm.permanent.deformation')} open={true} theme={'#07B811'}>
         <Box
           sx={{
             width: '100%',
@@ -164,12 +181,12 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
             sx={{
               display: 'grid',
               width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
+              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
               gap: '10px 20px',
               paddingBottom: '20px',
             }}
           >
-            {inputsMaterialFatigue.map((input) => {
+            {inputsPermanentDeformation.map((input) => {
               return (
                 <TextField
                   key={input.key}
