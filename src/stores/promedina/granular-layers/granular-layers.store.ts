@@ -29,10 +29,20 @@ interface Step2Data {
   bondingPaint: string;
   priming: string;
   // Structural Composition
-  layer: string;
-  material: string;
-  thickness: string;
+  structuralComposition: {
+    id: number;
+    layer: unknown;
+    material: unknown;
+    thickness: unknown;
+  }[];
 }
+
+export type StructuralCompositionTable = {
+  id: number;
+  layer: unknown;
+  material: unknown;
+  thickness: unknown;
+};
 
 interface Step3Data {
   // Paviment Data
@@ -99,9 +109,14 @@ const useGranularLayersStore = create<GranularLayersData & GranularLayersActions
           sami: null,
           bondingPaint: null,
           priming: null,
-          layer: null,
-          material: null,
-          thickness: null,
+          structuralComposition: [
+            {
+              id: null,
+              layer: null,
+              material: null,
+              thickness: null,
+            },
+          ],
         },
         step3Data: {
           mctGroup: null,

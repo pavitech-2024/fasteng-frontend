@@ -1,11 +1,130 @@
 import { EssayPageProps } from '../../../templates/essay';
 import { t } from 'i18next';
-import { Box, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
+import { toast } from 'react-toastify';
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useStabilizedLayersStore();
+  const rows = step2Data.structuralComposition;
+
+  // Remover mais uma linha de determinado valor
+  const handleErase = () => {
+    try {
+      if (rows.length > 1) {
+        // O mínimo é um valor de cada
+        const newRows = [...rows];
+        newRows.pop();
+        setData({ step: 1, key: 'structuralComposition', value: newRows });
+      } else throw t('compression.error.minValue');
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
+  // Adicionar mais uma linha de determinado valor
+  const handleAdd = () => {
+    const newRows = [...rows];
+    newRows.push({
+      id: rows.length,
+      layer: null,
+      material: null,
+      thickness: null,
+    });
+    setData({ step: 1, key: 'structuralComposition', value: newRows });
+    setNextDisabled(true);
+  };
+
+  const ExpansionToolbar = () => {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
+        <Button sx={{ color: 'secondaryTons.red' }} onClick={handleErase}>
+          {t('erase')}
+        </Button>
+        <Button sx={{ color: 'secondaryTons.green' }} onClick={handleAdd}>
+          {t('add')}
+        </Button>
+      </Box>
+    );
+  };
+
+  const columns: GridColDef[] = [
+    {
+      field: 'layer',
+      headerName: t('pm.granularLayer.layer'),
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = rows.findIndex((r) => r.id === id);
+
+        return (
+          <InputEndAdornment
+            fullWidth
+            label={t('pm.granularLayer.layer')}
+            type="number"
+            inputProps={{ min: 0 }}
+            value={row.layer}
+            onChange={(e) => {
+              const newRows = [...rows];
+              rows[index].layer = Number(e.target.value);
+              setData({ step: 1, key: 'layer', value: newRows });
+            }}
+            adornment={''}
+          />
+        );
+      },
+    },
+    {
+      field: 'material',
+      headerName: t('pm.granularLayer.material'),
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = rows.findIndex((r) => r.id === id);
+
+        return (
+          <InputEndAdornment
+            fullWidth
+            label={t('pm.granularLayer.material')}
+            type="number"
+            inputProps={{ min: 0 }}
+            value={row.wetGrossWeightCapsule}
+            onChange={(e) => {
+              const newRows = [...rows];
+              newRows[index].material = Number(e.target.value);
+              setData({ step: 1, key: 'material', value: newRows });
+            }}
+            adornment={''}
+          />
+        );
+      },
+    },
+    {
+      field: 'thickness',
+      headerName: t('pm.granularLayer.thickness'),
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = rows.findIndex((r) => r.id === id);
+
+        return (
+          <InputEndAdornment
+            fullWidth
+            label={t('pm.granularLayer.thickness')}
+            type="number"
+            inputProps={{ min: 0 }}
+            value={row.thickness}
+            onChange={(e) => {
+              const newRows = [...rows];
+              newRows[index].thickness = Number(e.target.value);
+              setData({ step: 1, key: 'thickness', value: newRows });
+            }}
+            adornment={''}
+          />
+        );
+      },
+    },
+  ];
 
   const inputsPavimentData = [
     {
@@ -57,12 +176,6 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
       key: 'priming',
       required: true,
     },
-  ];
-
-  const inputsStructuralComposition = [
-    { label: t('pm.granularLayer.layer'), value: step2Data.layer, key: 'layer', required: true },
-    { label: t('pm.granularLayer.material'), value: step2Data.material, key: 'material', required: true },
-    { label: t('pm.granularLayer.thickness'), value: step2Data.thickness, key: 'thickness', required: true },
   ];
 
   // inputsPavimentData.every(({ required, value }) => {
@@ -164,37 +277,23 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
         </Box>
       </FlexColumnBorder>
       <FlexColumnBorder title={t('pm.structural.composition')} open={true} theme={'#07B811'}>
-        <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Box
-            sx={{
-              display: 'grid',
-              width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
-              gap: '5px 20px',
-              paddingBottom: '20px',
-            }}
-          >
-            {inputsStructuralComposition.map((input) => {
-              return (
-                <TextField
-                  key={input.key}
-                  variant="standard"
-                  label={input.label}
-                  value={input.value}
-                  required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
-                />
-              );
-            })}
-          </Box>
-        </Box>
+        <DataGrid
+          sx={{ mt: '1rem', borderRadius: '10px' }}
+          density="compact"
+          showCellVerticalBorder
+          showColumnVerticalBorder
+          slots={{ footer: ExpansionToolbar }}
+          rows={rows.map((row, index) => ({ ...row, id: index }))}
+          columns={columns.map((column) => ({
+            ...column,
+            sortable: false,
+            disableColumnMenu: true,
+            align: 'center',
+            headerAlign: 'center',
+            minWidth: 200,
+            flex: 1,
+          }))}
+        />
       </FlexColumnBorder>
     </>
   );
