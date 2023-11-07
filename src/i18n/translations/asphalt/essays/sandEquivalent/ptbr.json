@@ -1,0 +1,11 @@
+{
+  "asphalt.operator": "Operador",
+  "asphalt.experimentName": "Nome do experimento",
+  "asphalt.material": "Material",
+  "asphalt.calculist": "Calculista",
+  "sandEquivalent.sand-level": "Leitura no topo da areia",
+  "sandEquivalent.clay-level": "Leitura no topo da argila",
+  "sand-equivalent.step-2-description": "Preencha todos os campos abaixo.",
+  "sand-equivalent.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
+  "sandEquivalent-sand-equivalent": "Equivalente Areia"
+}

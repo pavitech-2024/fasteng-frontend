@@ -39,7 +39,7 @@ const AsphaltEssays: NextPage = () => {
       title: t('asphalt.essays.abrasion'),
       icon: AbrasionIcon,
       key: 'abrasion',
-      link: '/asphalt/standard/abrasion',
+      link: '/asphalt/essays/abrasion',
       type: 'aggregates',
     },
     {
@@ -85,10 +85,10 @@ const AsphaltEssays: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('asphalt.essays.granulometryAsphalt'),
+      title: t('asphalt.essays.granulometry-asphalt'),
       icon: GranulometryIcon,
       key: 'granulometryAsphalt',
-      link: '/asphalt/essays/granulometry',
+      link: '/asphalt/essays/granulometry-asphalt',
       type: 'aggregates',
     },
     {
@@ -113,7 +113,7 @@ const AsphaltEssays: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('asphalt.essays.softeningPoint'),
+      title: t('asphalt.essays.softening-point'),
       icon: SofteningPointIcon,
       key: 'softeningPoint',
       link: '/asphalt/essays/softening-point',
