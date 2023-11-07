@@ -38,6 +38,9 @@ import asphaltMaterialsENG from './translations/asphalt/materials/en.json';
 // essays
 import asphaltEssaysPTBR from './translations/asphalt/essays/ptbr.json';
 import asphaltEssaysENG from './translations/asphalt/essays/en.json';
+// ddui
+import asphaltDduiPTBR from './translations/asphalt/essays/ddui/ptbr.json';
+import asphaltDduiENG from './translations/asphalt/essays/ddui/en.json';
 // softeningPoint
 import softeningPointPTBR from './translations/asphalt/essays/softeningPoint/ptbr.json';
 import softeningPointENG from './translations/asphalt/essays/softeningPoint/en.json';
@@ -143,6 +146,7 @@ i18n.use(initReactI18next).init({
         /**@asphalt */
         ...asphaltMaterialsPTBR,
         ...asphaltEssaysPTBR,
+        ...asphaltDduiPTBR,
         ...softeningPointPTBR,
         ...sayboltFurolPTBR,
         ...sandEquivalentPTBR,
@@ -188,6 +192,7 @@ i18n.use(initReactI18next).init({
         /**@asphalt */
         ...asphaltMaterialsENG,
         ...asphaltEssaysENG,
+        ...asphaltDduiENG,
         ...softeningPointENG,
         ...sayboltFurolENG,
         ...sandEquivalentENG,
