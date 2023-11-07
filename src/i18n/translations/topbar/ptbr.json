@@ -13,7 +13,18 @@
   "topbar.chapman": "Massa Específica - Chapman",
   "topbar.hrb": "Classificação Rodoviária - HRB",
   "topbar.sucs": "Classificação Unificada - SUCS",
-  "topbar.granulometry": "Granulometria",
+  "topbar.ddui": "Determinação de Dano por Umidade Induzida",
+  "topbar.softening-point": "Ponto de amolecimento",
+  "topbar.penetration": "Penetração",
+  "topbar.saybolt-furol": "Viscosidade Saybolt-Furol",
+  "topbar.granulometry-asphalt": "Granulometria",
+  "topbar.granulometry-concrete": "Granulometria",
+  "topbar.granulometry-soils": "Granulometria",
   "topbar.compression": "Compactação",
-  "topbar.ddui": "Determinação de Dano por Umidade Induzida"
+  "topbar.abcp": "Dosagem ABCP",
+  "topbar.sandEquivalent": "Equivalente Areia",
+  "topbar.specifymass": "Massa Específica",
+  "topbar.flashPoint": "Ponto de Fulgor",
+  "topbar.ductility": "Ductilidade",
+  "topbar.angularity": "Angularidade"
 }

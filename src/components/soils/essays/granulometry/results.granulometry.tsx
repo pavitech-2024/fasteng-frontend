@@ -22,13 +22,13 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
 
   if (granulometry_results) {
     data.container_other_data.push(
-      { label: t('granulometry.total-retained'), value: granulometry_results.total_retained, unity: 'g' },
-      { label: t('granulometry.nominal-size'), value: granulometry_results.nominal_size, unity: 'mm' },
-      { label: t('granulometry.nominal-diameter'), value: granulometry_results.nominal_diameter, unity: 'mm' },
-      { label: t('granulometry.fineness-module'), value: granulometry_results.fineness_module, unity: '%' },
-      { label: t('granulometry.cc'), value: granulometry_results.cc },
-      { label: t('granulometry.cnu'), value: granulometry_results.cnu },
-      { label: t('granulometry.error'), value: granulometry_results.error, unity: '%' }
+      { label: t('granulometry-soils.total-retained'), value: granulometry_results.total_retained, unity: 'g' },
+      { label: t('granulometry-soils.nominal-size'), value: granulometry_results.nominal_size, unity: 'mm' },
+      { label: t('granulometry-soils.nominal-diameter'), value: granulometry_results.nominal_diameter, unity: 'mm' },
+      { label: t('granulometry-soils.fineness-module'), value: granulometry_results.fineness_module, unity: '%' },
+      { label: t('granulometry-soils.cc'), value: granulometry_results.cc },
+      { label: t('granulometry-soils.cnu'), value: granulometry_results.cnu },
+      { label: t('granulometry-soils.error'), value: granulometry_results.error, unity: '%' }
     );
   }
 
@@ -38,7 +38,10 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
     materials: [{ name: generalData.sample.name, type: generalData.sample.type }],
   };
 
-  const graph_data = [[t('granulometry.passant'), t('granulometry.diameter')], ...granulometry_results.graph_data];
+  const graph_data = [
+    [t('granulometry-soils.passant'), t('granulometry-soils.diameter')],
+    ...granulometry_results.graph_data,
+  ];
 
   const rows = [];
 
@@ -56,32 +59,32 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
   const columns: GridColDef[] = [
     {
       field: 'sieve',
-      headerName: t('granulometry.sieves'),
+      headerName: t('granulometry-soils.sieves'),
       valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'passant_porcentage',
-      headerName: t('granulometry.passant') + ' (%)',
+      headerName: t('granulometry-soils.passant') + ' (%)',
       valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'passant',
-      headerName: t('granulometry.passant') + ' (g)',
+      headerName: t('granulometry-soils.passant') + ' (g)',
       valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'retained_porcentage',
-      headerName: t('granulometry.retained') + ' (%)',
+      headerName: t('granulometry-soils.retained') + ' (%)',
       valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'retained',
-      headerName: t('granulometry.retained') + ' (g)',
+      headerName: t('granulometry-soils.retained') + ' (g)',
       valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'accumulated_retained',
-      headerName: t('granulometry.accumulated-retained') + ' (%)',
+      headerName: t('granulometry-soils.accumulated-retained') + ' (%)',
       valueFormatter: ({ value }) => `${value}`,
     },
   ];
@@ -90,7 +93,7 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
     <>
       <ExperimentResume data={experimentResumeData} />
       <FlexColumnBorder title={t('results')} open={true}>
-        <ResultSubTitle title={t('soils.essays.granulometry')} sx={{ margin: '.65rem' }} />
+        <ResultSubTitle title={t('soils.essays.granulometry-soils')} sx={{ margin: '.65rem' }} />
         <Box
           sx={{
             width: '100%',
@@ -111,16 +114,16 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
           loader={<Loading />}
           data={graph_data}
           options={{
-            title: t('granulometry.granulometry'),
+            title: t('granulometry-soils.granulometry'),
             backgroundColor: 'transparent',
             pointSize: '2',
             hAxis: {
-              title: `${t('granulometry.sieve-openness') + ' (mm)'}`,
+              title: `${t('granulometry-soils.sieve-openness') + ' (mm)'}`,
               type: 'number',
               scaleType: 'log',
             },
             vAxis: {
-              title: `${t('granulometry.passant') + ' (%)'}`,
+              title: `${t('granulometry-soils.passant') + ' (%)'}`,
               minValue: '0',
               maxValue: '105',
             },

@@ -16,6 +16,7 @@ export type ConcreteMaterialData = {
     collectionDate?: string;
     classification_CAP?: 'CAP 30/45' | 'CAP 50/70' | 'CAP 85/100' | 'CAP 150/200'; // for CAP
     classification_AMP?: 'AMP 50/65' | 'AMP 55/75' | 'AMP 60/85' | 'AMP 65/90'; // for AMP
+    resistance?: string;
     observation?: string;
   };
 };
@@ -37,6 +38,7 @@ export class ConcreteMaterial {
     collectionDate?: string;
     classification_CAP?: 'CAP 30/45' | 'CAP 50/70' | 'CAP 85/100' | 'CAP 150/200'; // for CAP
     classification_AMP?: 'AMP 50/65' | 'AMP 55/75' | 'AMP 60/85' | 'AMP 65/90'; // for AMP
+    resistance?: string;
     observation?: string;
   };
 }
