@@ -38,13 +38,13 @@ const SandIncrease_GeneralData = ({
 
   const inputs = [
     {
-      label: t('concrete.essays.sandIncrease.experimentName'),
+      label: t('concrete.experimentName'),
       value: sandIncreaseGeneralData.name,
       key: 'name',
       required: true,
     },
     {
-      label: t('sandIncrease.materials'),
+      label: t('concrete.material'),
       value: sandIncreaseGeneralData.material,
       key: 'material',
       required: true,
@@ -112,7 +112,7 @@ const SandIncrease_GeneralData = ({
                 }
 
                 if (material) {
-                  defaultValue.label = material.name + ' | ' + t(`${'materials.' + material.type}`);
+                  defaultValue.label = material.name + ' | ' + t(`${'concrete.materials.' + material.type}`);
                   defaultValue.value = material;
                 }
 

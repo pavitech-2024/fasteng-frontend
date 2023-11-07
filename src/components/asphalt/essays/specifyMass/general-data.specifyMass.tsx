@@ -39,11 +39,11 @@ const SpecifyMass_GeneralData = ({
   }, []);
 
   const inputs = [
-    { label: t('cbr.experimentName'), value: generalData.name, key: 'name', required: true },
-    { label: t('cbr.material'), value: generalData.material, key: 'material', required: true },
-    { label: t('cbr.operator'), value: generalData.operator, key: 'operator', required: false },
-    { label: t('cbr.calculist'), value: generalData.calculist, key: 'calculist', required: false },
-    { label: t('materials.comments'), value: generalData.description, key: 'description', required: false },
+    { label: t('aspahlt.experimentName'), value: generalData.name, key: 'name', required: true },
+    { label: t('aspahlt.material'), value: generalData.material, key: 'material', required: true },
+    { label: t('aspahlt.operator'), value: generalData.operator, key: 'operator', required: false },
+    { label: t('aspahlt.calculist'), value: generalData.calculist, key: 'calculist', required: false },
+    { label: t('aspahlt.comments'), value: generalData.description, key: 'description', required: false },
   ];
 
   // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
@@ -106,7 +106,7 @@ const SpecifyMass_GeneralData = ({
                 }
 
                 if (material) {
-                  defaultValue.label = material.name + ' | ' + t(`${'materials.' + material.type}`);
+                  defaultValue.label = material.name + ' | ' + t(`${'asphalt.materials.' + material.type}`);
                   defaultValue.value = material;
                 }
 
@@ -116,7 +116,7 @@ const SpecifyMass_GeneralData = ({
                     variant="standard"
                     label={input.label}
                     options={materials.map((material: AsphaltMaterial) => {
-                      return { label: material.name + ' | ' + t(`${'materials.' + material.type}`), value: material };
+                      return { label: material.name + ' | ' + t(`${'asphalt.materials.' + material.type}`), value: material };
                     })}
                     defaultValue={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}

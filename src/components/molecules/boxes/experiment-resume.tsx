@@ -43,14 +43,14 @@ const ExperimentResume = ({ data }: ExperimentResumeProps) => {
 
   const texts = [
     { label: t('authorName'), value: user.name },
-    { label: t('cbr.experimentName'), value: data.experimentName },
+    { label: t('asphalt.experimentName'), value: data.experimentName },
   ];
 
   data.materials.forEach((item) => {
     texts.push({ label: t(`${app === 'soils' ? 'sample' : 'material'}`), value: item.name });
     texts.push({
       label: t('asphalt.materials.type'),
-      value: t(`${app === 'soils' ? 'samples' : 'materials'}.${item.type}`),
+      value: t(`${app === 'soils' ? 'samples' : app === 'asphalt' ? 'asphalt.materials' : 'concrete.materials'}.${item.type}`),
     });
   });
 

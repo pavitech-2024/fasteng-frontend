@@ -58,7 +58,7 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
     {
       field: 'type',
       headerName: t('type'),
-      valueFormatter: ({ value }) => t(`materials.${value}`),
+      valueFormatter: ({ value }) => t(`concrete.materials.${value}`),
     },
   ];
 
@@ -85,7 +85,7 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
     {
       field: 'type',
       headerName: t('type'),
-      valueFormatter: ({ value }) => t(`materials.${value}`),
+      valueFormatter: ({ value }) => t(`concrete.materials.${value}`),
     },
     {
       field: 'resistance',
@@ -111,8 +111,8 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
             gap: '10px',
           }}
         >
-          <MaterialSelectionTable rows={aggregateRows} columns={aggregateColumns} header={t('materials.aggregates')} />
-          <MaterialSelectionTable rows={binderRows} columns={binderColumns} header={t('materials.binders')} />
+          <MaterialSelectionTable rows={aggregateRows} columns={aggregateColumns} header={t('concrete.materials.aggregates')} />
+          <MaterialSelectionTable rows={binderRows} columns={binderColumns} header={t('concrete.materials.binders')} />
         </Box>
       )}
     </>

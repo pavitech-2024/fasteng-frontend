@@ -1,8 +1,4 @@
 {
-  "cbr.experimentName": "Experiment Name",
-  "cbr.operator": "Operator",
-  "cbr.samples": "Samples",
-  "cbr.calculist": "Calculist",
   "experimentType": "Experiment Type",
   "sample": "Sample",
   "material": "Material",

@@ -1,5 +1,9 @@
 {
-  "concrete.essays.granulometryConcrete": "Granulometry by Sifting",
+  "concrete.experimentName": "Experiment name",
+  "concrete.material": "Material",
+  "concrete.operator": "Operator",
+  "concrete.calculist": "Calculist",
+  "concrete.essays.granulometry-concrete": "Granulometry by Sifting",
   "concrete.essays.chapman": "Specific Mass - Chapman's Flask",
   "concrete.essays.unitMass": "Unit Mass",
   "concrete.essays.sandIncrease": "Sand Increase",

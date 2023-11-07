@@ -12,7 +12,7 @@ class AsphaltGranulometry_SERVICE implements IEssayService {
   info = {
     key: 'granulometry',
     icon: GranulometryIcon,
-    title: t('asphalt.essays.granulometry'),
+    title: t('asphalt.essays.granulometry-asphalt'),
     path: '/asphalt/essays/granulometry-asphalt',
     backend_path: 'asphalt/essays/granulometry',
     steps: 3,

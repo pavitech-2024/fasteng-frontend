@@ -27,12 +27,12 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
   const columns: GridColDef[] = [
     {
       field: 'sieve',
-      headerName: t('granulometry.sieves'),
+      headerName: t('granulometry-asphalt.sieves'),
       valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'passant',
-      headerName: t('granulometry.passant'),
+      headerName: t('granulometry-asphalt.passant'),
       renderCell: ({ row }) => {
         if (!rows) {
           return;
@@ -119,7 +119,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
     },
     {
       field: 'retained',
-      headerName: t('granulometry.retained'),
+      headerName: t('granulometry-asphalt.retained'),
       renderCell: ({ row }) => {
         if (!rows) {
           return;
@@ -227,7 +227,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
         }}
       >
         <InputEndAdornment
-          label={t('granulometry.material_mass')}
+          label={t('granulometry-asphalt.material_mass')}
           value={data.material_mass}
           onChange={(e) => {
             if (e.target.value === null) return;
@@ -265,7 +265,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
         <DropDown
           key={'sieve_series'}
           variant="standard"
-          label={t('granulometry.choose-series')}
+          label={t('granulometry-asphalt.choose-series')}
           options={sievesSeries.map((sieveSeries: SieveSeries) => {
             return { label: sieveSeries.label, value: sieveSeries.sieves };
           })}
@@ -289,7 +289,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
       >
         <Box key={'bottom'}>
           <InputEndAdornment
-            label={t('granulometry.bottom')}
+            label={t('granulometry-asphalt.bottom')}
             value={data.bottom}
             onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
             adornment={'g'}

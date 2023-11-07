@@ -103,7 +103,7 @@ const ADHESIVENESS_GeneralData = ({
                 }
 
                 if (material) {
-                  defaultValue.label = material.name + ' | ' + t(`${'materials.' + material.type}`);
+                  defaultValue.label = material.name + ' | ' + t(`${'asphalt.materials.' + material.type}`);
                   defaultValue.value = material;
                 }
 
@@ -113,7 +113,7 @@ const ADHESIVENESS_GeneralData = ({
                     variant="standard"
                     label={input.label}
                     options={materials.map((material: AsphaltMaterial) => {
-                      return { label: material.name + ' | ' + t(`${'materials.' + material.type}`), value: material };
+                      return { label: material.name + ' | ' + t(`${'asphalt.materials.' + material.type}`), value: material };
                     })}
                     defaultValue={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
