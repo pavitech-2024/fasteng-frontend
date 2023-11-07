@@ -172,11 +172,14 @@ export default function Navbar({ open, app }: NavbarProps) {
   ].filter((item) => item.app === Router.pathname.split('/')[1] || item.app === 'common');
 
   // when the user scroll the page, the navbar will be fixed on the top
-  window.addEventListener('scroll', () => {
-    if (window.innerWidth > 768)
-      if (window.scrollY === 0) document.getElementById('navbar').style.paddingTop = '52px';
-      else document.getElementById('navbar').style.paddingTop = '0';
-  });
+
+  // ISSO TÁ BUGADO 
+  
+  // window.addEventListener('scroll', () => {
+  //   if (window.innerWidth > 768)
+  //     if (window.scrollY === 0) document.getElementById('navbar').style.paddingTop = '52px';
+  //     else document.getElementById('navbar').style.paddingTop = '0';
+  // });
 
   return (
     <Box
