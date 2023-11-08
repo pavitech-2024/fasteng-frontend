@@ -1,9 +1,9 @@
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
-import ConcreteGranulometry_SERVICE from '@/services/concrete/essays/granulometry/granulometry.service';
+import ConcreteGranulometry_SERVICE from '@/services/concrete/essays/granulometry-concrete/granulometry.service';
 import useConcreteGranulometryStore, {
   ConcreteGranulometryActions,
-} from '@/stores/concrete/granulometry/granulometry.store';
+} from '@/stores/concrete/granulometry-concrete/granulometry.store';
 import ConcreteGranulometry_GeneralData from '@/components/concrete/essays/granulometry/general-data.granulometry';
 import ConcreteGranulometry_Step2 from '@/components/concrete/essays/granulometry/step2.granulometry';
 import ConcreteGranulometry_Results from '@/components/concrete/essays/granulometry/results.granulometry';

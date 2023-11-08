@@ -6,7 +6,7 @@ import { ConcreteMaterial } from '@/interfaces/concrete';
 import {
   ConcreteGranulometryData,
   ConcreteGranulometryActions,
-} from '@/stores/concrete/granulometry/granulometry.store';
+} from '@/stores/concrete/granulometry-concrete/granulometry.store';
 // import { persist } from 'zustand/middleware';
 
 class ConcreteGranulometry_SERVICE implements IEssayService {

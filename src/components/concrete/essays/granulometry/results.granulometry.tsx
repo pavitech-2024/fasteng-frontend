@@ -1,5 +1,5 @@
 import { EssayPageProps } from '@/components/templates/essay';
-import useConcreteGranulometryStore from '@/stores/concrete/granulometry/granulometry.store';
+import useConcreteGranulometryStore from '@/stores/concrete/granulometry-concrete/granulometry.store';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 import { t } from 'i18next';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
