@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { EssayPageProps } from '../../../templates/essay';
 import { t } from 'i18next';
-import useChapmanStore from '@/stores/concrete/chapman.store';
+import useChapmanStore from '@/stores/concrete/chapman/chapman.store';
 import InputEndAdornment from '../../../atoms/inputs/input-endAdornment';
 
 const CHAPMAN_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
