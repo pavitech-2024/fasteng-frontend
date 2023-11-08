@@ -111,7 +111,7 @@ const useGranularLayersStore = create<GranularLayersData & GranularLayersActions
           priming: null,
           structuralComposition: [
             {
-              id: null,
+              id: 0,
               layer: null,
               material: null,
               thickness: null,
