@@ -140,7 +140,7 @@ export default function Navbar({ open, app }: NavbarProps) {
       name: t('navbar.abcp'),
       link: '/concrete/dosages/abcp',
       app: 'concrete',
-      icon: <AbcpIcon sx={IconStyle} width={'28px'} />,
+      icon: <AbcpIcon sx={IconStyle} width={'20px'} />,
       type: 'double',
       sub: [
         { name: t('navbar.new'), link: '/concrete/dosages/abcp/new', icon: <AddIcon sx={IconStyle} /> },

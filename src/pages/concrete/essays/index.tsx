@@ -29,13 +29,13 @@ const index: NextPage = () => {
       title: t('concrete.essays.sandIncrease'),
       key: 'sandIncrease',
       icon: SandIncreaseIcon,
-      link: '/concrete/essays/sand-increase',
+      link: '/concrete/essays/sandIncrease',
     },
     {
       title: t('concrete.essays.coarseAggregate'),
       key: 'coarseAggregate',
       icon: CoarseAggregateIcon,
-      link: '/concrete/essays/coarse-aggregate',
+      link: '/concrete/essays/coarseAggregate',
     },
   ];
   return <EssaysTemplate essays={essays} />;
