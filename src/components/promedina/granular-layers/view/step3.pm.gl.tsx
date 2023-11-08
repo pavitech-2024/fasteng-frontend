@@ -7,6 +7,11 @@ import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-bor
 const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step3Data, setData } = useGranularLayersStore();
 
+  const {step2Data, generalData} = useGranularLayersStore();
+  console.log("🚀 ~ file: step3.pm.gl.tsx:11 ~ generalData:", generalData)
+  console.log("🚀 ~ file: step3.pm.gl.tsx:11 ~ step2Data:", step2Data)
+  
+
   const inputsPavimentData = [
     { label: t('pm.granularLayer.mctGroup'), value: step3Data.mctGroup, key: 'mctGroup', required: true },
     {
@@ -68,34 +73,34 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     { label: t('pm.granularLayer.k4.psi4'), value: step3Data.k4psi4, key: 'k4psi4', required: true },
   ];
 
-  inputsPavimentData.every(({ required, value }) => {
-    if (!required) return true;
+  // inputsPavimentData.every(({ required, value }) => {
+  //   if (!required) return true;
 
-    if (value === null) return false;
+  //   if (value === null) return false;
 
-    if (typeof value === 'string' && value.trim() === '') return false;
+  //   if (typeof value === 'string' && value.trim() === '') return false;
 
-    return true;
-  }) &&
-    inputsResilienceModule.every(({ required, value }) => {
-      if (!required) return true;
+  //   return true;
+  // }) &&
+  //   inputsResilienceModule.every(({ required, value }) => {
+  //     if (!required) return true;
 
-      if (value === null) return false;
+  //     if (value === null) return false;
 
-      if (typeof value === 'string' && value.trim() === '') return false;
+  //     if (typeof value === 'string' && value.trim() === '') return false;
 
-      return true;
-    }) &&
-    inputsPermanentDeformation.every(({ required, value }) => {
-      if (!required) return true;
+  //     return true;
+  //   }) &&
+  //   inputsPermanentDeformation.every(({ required, value }) => {
+  //     if (!required) return true;
 
-      if (value === null) return false;
+  //     if (value === null) return false;
 
-      if (typeof value === 'string' && value.trim() === '') return false;
+  //     if (typeof value === 'string' && value.trim() === '') return false;
 
-      return true;
-    }) &&
-    nextDisabled &&
+  //     return true;
+  //   }) &&
+  //   nextDisabled &&
     setNextDisabled(false);
 
   return (
@@ -126,7 +131,7 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  onChange={(e) => setData({ step: 2, key: input.key, value: e.target.value })}
                 />
               );
             })}
@@ -160,7 +165,7 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  onChange={(e) => setData({ step: 2, key: input.key, value: e.target.value })}
                 />
               );
             })}
@@ -194,7 +199,7 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  onChange={(e) => setData({ step: 2, key: input.key, value: e.target.value })}
                 />
               );
             })}

@@ -235,7 +235,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
                 />
               );
             })}
@@ -269,7 +269,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
                 />
               );
             })}
