@@ -1,12 +1,12 @@
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import DropDown from '@/components/atoms/inputs/dropDown';
-import ConcreteGranulometry_SERVICE from '@/services/concrete/essays/granulometry-concrete/granulometry.service';
+import ConcreteGranulometry_SERVICE from '@/services/concrete/essays/granulometry/granulometry.service';
 import Loading from '@/components/molecules/loading';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import { useEffect, useState } from 'react';
 import useAuth from '@/contexts/auth';
-import useConcreteGranulometryStore from '@/stores/concrete/granulometry-concrete/granulometry.store';
+import useConcreteGranulometryStore from '@/stores/concrete/granulometry/granulometry.store';
 import { toast } from 'react-toastify';
 import { EssayPageProps } from '@/components/templates/essay';
 

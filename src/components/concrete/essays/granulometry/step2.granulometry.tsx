@@ -1,6 +1,6 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import useConcreteGranulometryStore from '@/stores/concrete/granulometry-concrete/granulometry.store';
+import useConcreteGranulometryStore from '@/stores/concrete/granulometry/granulometry.store';
 import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
