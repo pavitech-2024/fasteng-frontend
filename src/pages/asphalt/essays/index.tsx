@@ -85,10 +85,10 @@ const AsphaltEssays: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('asphalt.essays.granulometry-asphalt'),
+      title: t('asphalt.essays.granulometry'),
       icon: GranulometryIcon,
-      key: 'granulometryAsphalt',
-      link: '/asphalt/essays/granulometry-asphalt',
+      key: 'granulometry',
+      link: '/asphalt/essays/granulometry',
       type: 'aggregates',
     },
     {

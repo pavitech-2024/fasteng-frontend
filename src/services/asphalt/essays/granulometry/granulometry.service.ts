@@ -1,34 +1,33 @@
 import { GranulometryIcon } from '@/assets';
-import { t } from 'i18next';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
-import Api from '@/api';
-import { ConcreteMaterial } from '@/interfaces/concrete';
 import {
-  ConcreteGranulometryData,
-  ConcreteGranulometryActions,
-} from '@/stores/concrete/granulometry-concrete/granulometry.store';
-// import { persist } from 'zustand/middleware';
+  AsphaltGranulometryActions,
+  AsphaltGranulometryData,
+} from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
+import Api from '@/api';
+import { t } from 'i18next';
 
-class ConcreteGranulometry_SERVICE implements IEssayService {
+class AsphaltGranulometry_SERVICE implements IEssayService {
   info = {
-    key: 'granulometry-concrete',
+    key: 'granulometry',
     icon: GranulometryIcon,
-    title: t('concrete.essays.granulometry-concrete'),
-    path: '/concrete/essays/granulometry-concrete',
-    backend_path: 'concrete/essays/granulometry',
+    title: t('asphalt.essays.granulometry'),
+    path: '/asphalt/essays/granulometry',
+    backend_path: 'asphalt/essays/granulometry',
     steps: 3,
     standard: {
-      name: 'NBR 7217/1984',
-      link: 'https://engenhariacivilfsp.files.wordpress.com/2015/03/nbr-7181.pdf',
+      name: '',
+      link: '',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
-      { step: 1, description: t('granulometry-concrete'), path: 'essay-data' },
+      { step: 1, description: t('granulometry-asphalt'), path: 'essay-data' },
       { step: 2, description: t('results'), path: 'results' },
     ],
   };
 
-  store_actions: ConcreteGranulometryActions;
+  store_actions: AsphaltGranulometryActions;
   userId: string;
 
   /** @handleNext Receives the step and data from the form and calls the respective method */
@@ -36,15 +35,15 @@ class ConcreteGranulometry_SERVICE implements IEssayService {
     try {
       switch (step) {
         case 0:
-          await this.submitGeneralData(data as ConcreteGranulometryData['generalData']);
+          await this.submitGeneralData(data as AsphaltGranulometryData['generalData']);
           break;
         case 1:
-          const { step2Data } = data as ConcreteGranulometryData;
+          const { step2Data } = data as AsphaltGranulometryData;
           await this.submitStep2Data(step2Data);
-          await this.calculateResults(data as ConcreteGranulometryData);
+          await this.calculateResults(data as AsphaltGranulometryData);
           break;
         case 2:
-          await this.saveEssay(data as ConcreteGranulometryData);
+          await this.saveEssay(data as AsphaltGranulometryData);
           break;
         default:
           throw t('errors.invalid-step');
@@ -57,10 +56,10 @@ class ConcreteGranulometry_SERVICE implements IEssayService {
   /** @generalData Methods for general-data (step === 0, page 1) */
 
   // get all materials from user from backend
-  getmaterialsByUserId = async (userId: string): Promise<ConcreteMaterial[]> => {
+  getmaterialsByUserId = async (userId: string): Promise<AsphaltMaterial[]> => {
     try {
       // get all materials from user from backend
-      const response = await Api.get(`concrete/materials/all/${userId}`);
+      const response = await Api.get(`asphalt/materials/all/${userId}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -78,7 +77,7 @@ class ConcreteGranulometry_SERVICE implements IEssayService {
   };
 
   // send general data to backend to verify if there is already a Granulometry essay with same name for the material
-  submitGeneralData = async (generalData: ConcreteGranulometryData['generalData']): Promise<void> => {
+  submitGeneralData = async (generalData: AsphaltGranulometryData['generalData']): Promise<void> => {
     try {
       const { name, material } = generalData;
 
@@ -101,7 +100,7 @@ class ConcreteGranulometry_SERVICE implements IEssayService {
   /** @Granulometry Methods for Granulometry page (step === 1, page 2) */
 
   // verify inputs from Granulometry page (step === 1, page 2)
-  submitStep2Data = async (step2Data: ConcreteGranulometryData['step2Data']): Promise<void> => {
+  submitStep2Data = async (step2Data: AsphaltGranulometryData['step2Data']): Promise<void> => {
     try {
       // verify if the material mass is not empty or negative
       if (!step2Data.material_mass) throw t('errors.empty-material-mass');
@@ -135,7 +134,7 @@ class ConcreteGranulometry_SERVICE implements IEssayService {
   };
 
   // calculate results from granulometry essay
-  calculateResults = async (store: ConcreteGranulometryData): Promise<void> => {
+  calculateResults = async (store: AsphaltGranulometryData): Promise<void> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
@@ -155,7 +154,7 @@ class ConcreteGranulometry_SERVICE implements IEssayService {
   /** @Results Methods for Results page (step === 2, page 3) */
 
   // save essay
-  saveEssay = async (store: ConcreteGranulometryData): Promise<void> => {
+  saveEssay = async (store: AsphaltGranulometryData): Promise<void> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/save-essay`, {
         generalData: {
@@ -177,4 +176,4 @@ class ConcreteGranulometry_SERVICE implements IEssayService {
   };
 }
 
-export default ConcreteGranulometry_SERVICE;
+export default AsphaltGranulometry_SERVICE;
