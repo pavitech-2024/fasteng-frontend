@@ -59,7 +59,7 @@ const ConcreteMaterials = () => {
         <MaterialsTemplate
           materials={materials}
           types={types}
-          title={t('materials.title')}
+          title={t('concrete.materials.title')}
           handleOpenModal={() => setOpenModal(true)}
           handleDeleteMaterial={handleDeleteMaterial}
           modal={

@@ -1,0 +1,13 @@
+{
+  "adhesiveness.step2": "Adhesiveness",
+  "adhesiveness.experimentName": "Experiment name",
+  "adhesiveness.material": "Material",
+  "adhesiveness.material.loading.binders.success": "Binders load succesfully!",
+  "adhesiveness.step-2-description": "Fill in all fields below.",
+  "adhesiveness.step-3-description": "These are your essay results. Remember to save them so you can access it later.",
+  "adhesiveness.binders": "Choose a binder",
+  "adhesiveness.filmDisplacement": "Choose a film displacement",
+  "adhesiveness.chosen-filmDisplacement": "Film displacement",
+  "adhesiveness.filmDisplacement-true": "Occured",
+  "adhesiveness.filmDisplacement-false": "Not occurred"
+}

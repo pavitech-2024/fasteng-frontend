@@ -1,5 +1,5 @@
 {
-  "materials.title": "Materiais Cadastrados",
+  "asphalt.materials.title": "Materiais Cadastrados",
   "asphalt.materials.newMaterial": "Cadastrar Material",
   "asphalt.materials.type": "Tipo",
   "asphalt.materials.source": "Fonte",
@@ -15,5 +15,6 @@
   "asphalt.materials.fineAggregate": "Agregado Miúdo",
   "asphalt.materials.filler": "Fíler",
   "asphalt.materials.cap": "Cimento Asfáltico de Petróleo (CAP)",
-  "asphalt.materials.other": "Other"
+  "asphalt.materials.other": "Outro",
+  "asphalt.materials.comments": "Comentários"
 }

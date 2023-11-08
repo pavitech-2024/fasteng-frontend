@@ -1,0 +1,11 @@
+{
+  "asphalt.experimentName": "Experiment name",
+  "asphalt.operator": "Operator",
+  "asphalt.materials.comments": "Comments",
+  "asphalt.material": "Material",
+  "asphalt.calculist": "Calculist",
+  "softening-point.step-2-description": "Fill in all the inputs below.",
+  "asphalt.softeningPoint.temperature1": "First temperature",
+  "asphalt.softeningPoint.temperature2": "Second temperature",
+  "softening-point.step-3-description": "These are the results of your experiment. Remember to save the experiment so you can access it later."
+}

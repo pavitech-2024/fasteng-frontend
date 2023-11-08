@@ -45,7 +45,7 @@ const UnitMass_GeneralData = ({
         if (material.description.maxDiammeter !== null) {
           setMaterialsWithMaxD(materialsWMaxD);
         }
-        console.log(materialsWMaxD)
+        console.log(materialsWMaxD);
       });
     }
   }, [materials]);
@@ -111,10 +111,13 @@ const UnitMass_GeneralData = ({
               variant="standard"
               label={t('unitMass.material')}
               options={materials.map((material: ConcreteMaterial) => {
-                return { label: material.name + ' | ' + t(`${'samples.' + material.type}`), value: material };
+                return {
+                  label: material.name + ' | ' + t(`${'concrete.materials.' + material.type}`),
+                  value: material,
+                };
               })}
               defaultValue={{
-                label: materials[0].name + ' | ' + t(`${'samples.' + materials[0].type}`),
+                label: materials[0].name + ' | ' + t(`${'concrete.materials.' + materials[0].type}`),
                 value: materials[0].name,
               }}
               callback={(value) => setData({ step: 0, key: 'material', value })}
