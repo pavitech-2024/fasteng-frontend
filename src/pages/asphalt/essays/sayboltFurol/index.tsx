@@ -1,9 +1,9 @@
-import SayboltFurol_GeneralData from '@/components/asphalt/essays/saybolt-furol/general-data.sayboltFurol';
-import SayboltFurol_Results from '@/components/asphalt/essays/saybolt-furol/results.sayboltFurol';
-import SayboltFurol_Calc from '@/components/asphalt/essays/saybolt-furol/sayboltFurol-calc.sayboltFurol';
+import SayboltFurol_GeneralData from '@/components/asphalt/essays/sayboltFurol/general-data.sayboltFurol';
+import SayboltFurol_Results from '@/components/asphalt/essays/sayboltFurol/results.sayboltFurol';
+import SayboltFurol_Calc from '@/components/asphalt/essays/sayboltFurol/sayboltFurol-calc.sayboltFurol';
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
-import SayboltFurol_SERVICE from '@/services/asphalt/essays/saybolt-furol/sayboltFurol.service';
+import SayboltFurol_SERVICE from '@/services/asphalt/essays/sayboltFurol/sayboltFurol.service';
 import useSayboltFurolStore, { SayboltFurolActions } from '@/stores/asphalt/sayboltFurol/sayboltFurol.store';
 
 const SayboltFurol = () => {
