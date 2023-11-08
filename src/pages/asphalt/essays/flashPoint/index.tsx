@@ -1,10 +1,10 @@
+import FlashPoint_GeneralData from '@/components/asphalt/essays/flashPoint/general-data.flashPoint';
 import FlashPoint_Step2 from '@/components/asphalt/essays/flashPoint/step2.flashPoint';
 import FlashPoint_Results from '@/components/asphalt/essays/flashPoint/results.flashPoint';
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import FLASHPOINT_SERVICE from '@/services/asphalt/essays/flashPoint/flashPoint.service';
 import useFlashPointStore, { FlashPointActions } from '@/stores/asphalt/flashPoint/flashPoint.store';
-import FlashPoint_GeneralData from '@/components/asphalt/essays/flashPoint/gd.flashPoint';
 
 const FlashPoint = () => {
   // start an instance of the service
