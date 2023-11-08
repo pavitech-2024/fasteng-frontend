@@ -3,7 +3,7 @@ import SayboltFurol_Results from '@/components/asphalt/essays/sayboltFurol/resul
 import SayboltFurol_Calc from '@/components/asphalt/essays/sayboltFurol/sayboltFurol-calc.sayboltFurol';
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
-import SayboltFurol_SERVICE from '@/services/asphalt/essays/sayboltFurol/sayboltFurol.service';
+import SayboltFurol_SERVICE from '@/services/asphalt/essays/saybolt-furol/sayboltFurol.service';
 import useSayboltFurolStore, { SayboltFurolActions } from '@/stores/asphalt/sayboltFurol/sayboltFurol.store';
 
 const SayboltFurol = () => {
