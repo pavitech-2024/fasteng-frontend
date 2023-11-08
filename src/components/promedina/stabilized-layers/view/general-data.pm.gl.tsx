@@ -33,7 +33,7 @@ const StabilizedLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProp
     nextDisabled &&
     setNextDisabled(false);
 
-  useEffect(() => nextDisabled && setNextDisabled(false), [nextDisabled, setNextDisabled]);
+  // useEffect(() => nextDisabled && setNextDisabled(false), [nextDisabled, setNextDisabled]);
 
   return (
     <>
