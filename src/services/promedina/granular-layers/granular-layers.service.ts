@@ -32,17 +32,15 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
     try {
       switch (step) {
         case 0:
-          true
           await this.submitGeneralData(data as GranularLayersData['generalData']);
           break;
         case 1:
-          true
           await this.submitStep2Data(data as GranularLayersData['step2Data']);
           break;
         case 2:
-          true
+          const { generalData, step2Data, step3Data } = data as GranularLayersData;
           await this.submitStep3Data(data as GranularLayersData['step3Data']);
-          await this.saveSample(data as GranularLayersData);
+          await this.saveSample(generalData, step2Data, step3Data);
           break;
         default:
           throw t('errors.invalid-step');
@@ -54,9 +52,9 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
 
   submitGeneralData = async (generalData: GranularLayersData['generalData']): Promise<void> => {
     console.log("🚀 ~ file: granular-layers.service.ts:56 ~ GRANULARLAYERS_SERVICE ~ submitGeneralData= ~ generalData:", generalData)
-    if (generalData) {
-      true;
-    }
+    // if (generalData) {
+    //   true;
+    // }
 
     // try {
     // const { name, zone, layer, cityState, observations } = generalData;
@@ -84,9 +82,9 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
 
   submitStep2Data = async (step2Data: GranularLayersData['step2Data']): Promise<void> => {
     console.log("🚀 ~ file: granular-layers.service.ts:85 ~ GRANULARLAYERS_SERVICE ~ submitStep2Data= ~ step2Data:", step2Data)
-    if (step2Data) {
-      true;
-    }
+    // if (step2Data) {
+    //   true;
+    // }
     // try {
     //   const {
     //     identification,
@@ -142,9 +140,9 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
 
   submitStep3Data = async (step3Data: GranularLayersData['step3Data']): Promise<void> => {
     console.log("🚀 ~ file: granular-layers.service.ts:142 ~ GRANULARLAYERS_SERVICE ~ submitStep3Data= ~ step3Data:", step3Data)
-    if (step3Data) {
-      true;
-    }
+    // if (step3Data) {
+    //   true;
+    // }
     // try {
     // const {
     //   stabilizer,
@@ -195,17 +193,17 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
   };
 
   // save essay
-  saveSample = async (store: GranularLayersData): Promise<void> => {
-    console.log("🚀 ~ file: granular-layers.service.ts:196 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~ store:", store)
+  saveSample = async (
+    generalData: GranularLayersData['generalData'], 
+    step2Data: GranularLayersData['step2Data'], 
+    step3Data: GranularLayersData['step3Data']
+  ): Promise<void> => {
 
-    console.log("🚀 ~ file: granular-layers.service.ts:196 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~ store.step2Data:", store.step2Data)
-
-    console.log("🚀 ~ file: granular-layers.service.ts:196 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~ store.step3Data:", store.step3Data)
     try {
-      const response = await Api.post(`${this.info.backend_path}`, {
-        generalData: store.generalData,
-        step2Data: store.step2Data,
-        step3Data: store.step3Data,
+      const response = await Api.post(`${this.info.backend_path}/save`, {
+        generalData,
+        step2Data,
+        step3Data,
       });
 
       const { success, error } = response.data;
