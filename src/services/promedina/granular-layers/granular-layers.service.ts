@@ -38,9 +38,8 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
           await this.submitStep2Data(data as GranularLayersData['step2Data']);
           break;
         case 2:
-          const { generalData, step2Data, step3Data } = data as GranularLayersData;
           await this.submitStep3Data(data as GranularLayersData['step3Data']);
-          await this.saveSample(generalData, step2Data, step3Data);
+          await this.saveSample(data as GranularLayersData);
           break;
         default:
           throw t('errors.invalid-step');
@@ -193,11 +192,14 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
   };
 
   // save essay
-  saveSample = async (
-    generalData: GranularLayersData['generalData'], 
-    step2Data: GranularLayersData['step2Data'], 
-    step3Data: GranularLayersData['step3Data']
-  ): Promise<void> => {
+  saveSample = async (store: GranularLayersData): Promise<void> => {
+    console.log("🚀 ~ file: granular-layers.service.ts:196 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~  01:", store)
+
+    console.log("🚀 ~ file: granular-layers.service.ts:196 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~ store.step2Data: 02 ", store.step2Data)
+
+    console.log("🚀 ~ file: granular-layers.service.ts:196 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~ store.step3Data 03:", store.step3Data)
+
+    const { generalData, step2Data, step3Data } = store;
 
     try {
       const response = await Api.post(`${this.info.backend_path}/save`, {
