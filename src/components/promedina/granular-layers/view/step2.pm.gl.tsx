@@ -6,10 +6,19 @@ import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-bor
 import { toast } from 'react-toastify';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import UploadImages from '@/components/molecules/uploadImages';
+import { useEffect, useState } from 'react';
 
 const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useGranularLayersStore();
   const rows = step2Data.structuralComposition;
+  const [images, setImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (images !== null) {
+      setData({ step: 1, key: 'image', value: images });
+    }
+  }, [images, setData]);
 
   // Remover mais uma linha de determinado valor
   const handleErase = () => {
@@ -294,6 +303,26 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
             flex: 1,
           }))}
         />
+        <Box
+        id="upload-images"
+          sx={{
+            display: 'grid',
+            width: '100%',
+            gridTemplateColumns: '1fr',
+            paddingBottom: '20px',
+            alignItems: 'center',
+          }}
+        >
+          <UploadImages onImagesUpdate={(images: string[]) => setImages(images)} />
+          <TextField
+            variant="standard"
+            label={'Data da imagem'}
+            value={''}
+            style={{ display: 'block'}}
+            required={false}
+            onChange={(e) => setData({ step: 0, key: 'date', value: e.target.value })}
+          />
+        </Box>
       </FlexColumnBorder>
     </>
   );

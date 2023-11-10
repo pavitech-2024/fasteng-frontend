@@ -34,6 +34,7 @@ declare module '@mui/material' {
       red: string;
       green: string;
       greenPM: string;
+      yellowWarning: string;
     };
   }
 }

@@ -8,7 +8,7 @@ import { t } from 'i18next';
 const index: NextPage = () => {
   const essays: Essay[] = [
     {
-      title: t('concrete.essays.granulometryConcrete'),
+      title: t('concrete.essays.granulometry-concrete'),
       key: 'granulometry-concrete',
       icon: GranulometryIcon,
       link: '/concrete/essays/granulometry-concrete',

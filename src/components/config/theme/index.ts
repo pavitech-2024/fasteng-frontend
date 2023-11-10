@@ -33,6 +33,7 @@ export const theme = createTheme({
       red: '#F23434',
       green: '#43D16B',
       greenPM: '#07B811',
+      yellowWarning: '#f0cb67',
     },
   },
 

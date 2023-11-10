@@ -1,0 +1,5 @@
+{
+  "asphalt.essays.abrasion": "Abrasão",
+  "asphalt.essays.abrasion.initial-mass": "Massa inicial",
+  "errors.final-mass-lower-than-initial-mass": "A massa final não pode ser maior do que a massa inicial."
+}
