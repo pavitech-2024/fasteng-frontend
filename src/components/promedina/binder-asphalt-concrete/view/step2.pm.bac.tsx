@@ -242,7 +242,7 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
                 />
               );
             })}
@@ -276,7 +276,7 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
                 />
               );
             })}

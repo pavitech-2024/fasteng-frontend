@@ -67,8 +67,16 @@ const BinderAsphaltConcrete_step3 = ({ nextDisabled, setNextDisabled }: EssayPag
   ];
 
   const inputsBrookfieldViscosity = [
-    { label: t('pm.binderAsphaltConcrete.vb_sp21_20'), value: step3Data.vb_sp21_20, key: 'vb_sp21_20', required: true },
-    { label: t('pm.binderAsphaltConcrete.vb_sp21_50'), value: step3Data.vb_sp21_50, key: 'vb_sp21_50', required: true },
+    { 
+      label: t('pm.binderAsphaltConcrete.vb_sp21_20'), 
+      value: step3Data.vb_sp21_20, key: 'vb_sp21_20', 
+      required: true 
+    },
+    { 
+      label: t('pm.binderAsphaltConcrete.vb_sp21_50'), 
+      value: step3Data.vb_sp21_50, key: 'vb_sp21_50', 
+      required: true 
+    },
     {
       label: t('pm.binderAsphaltConcrete.vb_sp21_100'),
       value: step3Data.vb_sp21_100,
@@ -83,26 +91,26 @@ const BinderAsphaltConcrete_step3 = ({ nextDisabled, setNextDisabled }: EssayPag
     },
   ];
 
-  inputsPavimentData.every(({ required }) => {
-    if (!required) return true;
+  // inputsPavimentData.every(({ required }) => {
+  //   if (!required) return true;
 
-   // if (value === null) return false;
+  //  // if (value === null) return false;
 
-    //if (typeof value === 'string' && value.trim() === '') return false;
+  //   //if (typeof value === 'string' && value.trim() === '') return false;
 
-    return true;
-  }) &&
-    inputsBrookfieldViscosity.every(({ required }) => {
-      if (!required) return true;
+  //   return true;
+  // }) &&
+  //   inputsBrookfieldViscosity.every(({ required }) => {
+  //     if (!required) return true;
 
-      //if (value === null) return false;
+  //     //if (value === null) return false;
 
-      // if (typeof value === 'string' && value.trim() === '') return false;
+  //     // if (typeof value === 'string' && value.trim() === '') return false;
 
-      return true;
-    }) &&
-    nextDisabled &&
-    setNextDisabled(true);
+  //     return true;
+  //   }) &&
+  //   nextDisabled &&
+    setNextDisabled(false);
 
   return (
     <>
@@ -132,7 +140,7 @@ const BinderAsphaltConcrete_step3 = ({ nextDisabled, setNextDisabled }: EssayPag
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  onChange={(e) => setData({ step: 2, key: input.key, value: e.target.value })}
                 />
               );
             })}
@@ -166,7 +174,7 @@ const BinderAsphaltConcrete_step3 = ({ nextDisabled, setNextDisabled }: EssayPag
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  onChange={(e) => setData({ step: 2, key: input.key, value: e.target.value })}
                 />
               );
             })}

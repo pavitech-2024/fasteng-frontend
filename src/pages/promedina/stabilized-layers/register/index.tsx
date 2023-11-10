@@ -26,8 +26,8 @@ const StabilizedLayers = () => {
 
   const childrens = [
     { step: 0, children: <StabilizedLayers_step1  />, data: store.generalData },
-    { step: 1, children: <StabilizedLayers_step2  />, data: store.step2Data },
-    { step: 2, children: <StabilizedLayers_step3 />, data: store.step3Data },
+    { step: 1, children: <StabilizedLayers_step2  />, data: store },
+    { step: 2, children: <StabilizedLayers_step3 />, data: store },
   ];
 
   return <EssayTemplate essayInfo={stabilizedLayers.info} nextCallback={stabilizedLayers.handleNext} childrens={childrens} />;
