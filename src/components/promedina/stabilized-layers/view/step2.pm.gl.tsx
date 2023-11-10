@@ -6,10 +6,19 @@ import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabi
 import { toast } from 'react-toastify';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import UploadImages from '@/components/molecules/uploadImages';
+import { useState, useEffect } from 'react';
 
 const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useStabilizedLayersStore();
   const rows = step2Data.structuralComposition;
+  const [images, setImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (images !== null) {
+      setData({ step: 1, key: 'images', value: images });
+    }
+  }, [images, setData]);
 
   // Remover mais uma linha de determinado valor
   const handleErase = () => {
@@ -294,6 +303,26 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
             flex: 1,
           }))}
         />
+        <Box
+          id="upload-images"
+          sx={{
+            display: 'grid',
+            width: '100%',
+            gridTemplateColumns: '1fr',
+            paddingBottom: '20px',
+            alignItems: 'center',
+          }}
+        >
+          <UploadImages onImagesUpdate={(images: string[]) => setImages(images)} />
+          <TextField
+            variant="standard"
+            label={'Data da imagem'}
+            value={step2Data.imagesDate}
+            style={{ display: 'block' }}
+            required={false}
+            onChange={(e) => setData({ step: 0, key: 'date', value: e.target.value })}
+          />
+        </Box>
       </FlexColumnBorder>
     </>
   );

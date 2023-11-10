@@ -16,7 +16,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
 
   useEffect(() => {
     if (images !== null) {
-      setData({ step: 1, key: 'image', value: images });
+      setData({ step: 1, key: 'images', value: images });
     }
   }, [images, setData]);
 
@@ -317,7 +317,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
           <TextField
             variant="standard"
             label={'Data da imagem'}
-            value={''}
+            value={step2Data.imagesDate}
             style={{ display: 'block'}}
             required={false}
             onChange={(e) => setData({ step: 0, key: 'date', value: e.target.value })}
