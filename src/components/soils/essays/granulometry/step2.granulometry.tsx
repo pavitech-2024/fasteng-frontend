@@ -27,12 +27,12 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
   const columns: GridColDef[] = [
     {
       field: 'sieve',
-      headerName: t('granulometry.sieves'),
+      headerName: t('granulometry-soils.sieves'),
       valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'passant',
-      headerName: t('granulometry.passant'),
+      headerName: t('granulometry-soils.passant'),
       renderCell: ({ row }) => {
         if (!rows) {
           return;
@@ -119,7 +119,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
     },
     {
       field: 'retained',
-      headerName: t('granulometry.retained'),
+      headerName: t('granulometry-soils.retained'),
       renderCell: ({ row }) => {
         if (!rows) {
           return;
@@ -227,7 +227,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         }}
       >
         <InputEndAdornment
-          label={t('granulometry.sample_mass')}
+          label={t('granulometry-soils.sample_mass')}
           value={data.sample_mass}
           onChange={(e) => {
             if (e.target.value === null) return;
@@ -265,7 +265,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
         <DropDown
           key={'sieve_series'}
           variant="standard"
-          label={t('granulometry.choose-series')}
+          label={t('granulometry-soils.choose-series')}
           options={sievesSeries.map((sieveSeries: SieveSeries) => {
             return { label: sieveSeries.label, value: sieveSeries.sieves };
           })}
@@ -289,7 +289,7 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
       >
         <Box key={'bottom'}>
           <InputEndAdornment
-            label={t('granulometry.bottom')}
+            label={t('granulometry-soils.bottom')}
             value={data.bottom}
             onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
             adornment={'g'}

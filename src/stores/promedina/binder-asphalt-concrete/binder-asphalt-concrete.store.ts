@@ -28,6 +28,8 @@ interface Step2Data {
   sami: string;
   bondingPaint: string;
   priming: string;
+  images: string[];
+  imagesDate: string;
   // Structural Composition
   structuralComposition: {
     id: number;
@@ -118,6 +120,8 @@ const useBinderAsphaltConcreteStore = create<BinderAsphaltConcreteData & BinderA
           sami: null,
           bondingPaint: null,
           priming: null,
+          images: null,
+          imagesDate: null,
           structuralComposition: [
             {
               id: 0,

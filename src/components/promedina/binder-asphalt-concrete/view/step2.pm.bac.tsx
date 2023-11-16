@@ -6,10 +6,19 @@ import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-bor
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import { toast } from 'react-toastify';
+import UploadImages from '@/components/molecules/uploadImages';
+import { useState, useEffect } from 'react';
 
 const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useBinderAsphaltConcreteStore();
   const rows = step2Data.structuralComposition;
+  const [images, setImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (images !== null) {
+      setData({ step: 1, key: 'images', value: images });
+    }
+  }, [images, setData]);
 
   // Remover mais uma linha de determinado valor
   const handleErase = () => {
@@ -301,6 +310,26 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
             flex: 1,
           }))}
         />
+        <Box
+          id="upload-images"
+          sx={{
+            display: 'grid',
+            width: '100%',
+            gridTemplateColumns: '1fr',
+            paddingBottom: '20px',
+            alignItems: 'center',
+          }}
+        >
+          <UploadImages onImagesUpdate={(images: string[]) => setImages(images)} />
+          <TextField
+            variant="standard"
+            label={'Data da imagem'}
+            value={step2Data.imagesDate}
+            style={{ display: 'block' }}
+            required={false}
+            onChange={(e) => setData({ step: 0, key: 'date', value: e.target.value })}
+          />
+        </Box>
       </FlexColumnBorder>
     </>
   );

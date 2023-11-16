@@ -1,8 +1,4 @@
 {
-  "cbr.experimentName": "Experiment Name",
-  "cbr.operator": "Operator",
-  "cbr.samples": "Samples",
-  "cbr.calculist": "Calculist",
   "experimentType": "Experiment Type",
   "sample": "Sample",
   "material": "Material",
@@ -14,7 +10,7 @@
 
   "cbr.step-2-description": "Please enter the information below. Remember, the extended readings for 2 minutes and 4 minutes are a must.",
   "cbr.ring_constant": "Ring constant",
-  "cbr.cilinder_height": "Cilinder height",
+  "cbr.cylinder_height": "Cilinder height",
   "cbr.minimum_read": "Minimum read",
   "cbr.penetration": "Penetration",
   "cbr.pol": "Inches",
