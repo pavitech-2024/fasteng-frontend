@@ -1,13 +1,13 @@
 import { EssayPageProps } from '../../../templates/essay';
 import { t } from 'i18next';
 import { Box, Button, TextField } from '@mui/material';
-import useBinderAsphaltConcreteStore from '@/stores/promedina/granular-layers/granular-layers.store';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import { toast } from 'react-toastify';
 import UploadImages from '@/components/molecules/uploadImages';
 import { useState, useEffect } from 'react';
+import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
 
 const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useBinderAsphaltConcreteStore();
