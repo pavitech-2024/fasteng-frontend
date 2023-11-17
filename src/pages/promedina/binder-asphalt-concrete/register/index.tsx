@@ -3,10 +3,10 @@ import useAuth from '@/contexts/auth';
 import useBinderAsphaltConcreteStore, {
   BinderAsphaltConcreteActions,
 } from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
-import BinderAsphaltConcrete_step1 from '@/components/promedina/binder-asphalt-concrete/view/general-data.pm.bac';
-import BinderAsphaltConcrete_step2 from '@/components/promedina/binder-asphalt-concrete/view/step2.pm.bac';
-import BinderAsphaltConcrete_step3 from '@/components/promedina/binder-asphalt-concrete/view/step3.pm.bac';
-import BinderAsphaltConcrete_step4 from '@/components/promedina/binder-asphalt-concrete/view/step4.pm.bac';
+import BinderAsphaltConcrete_step1 from '@/components/promedina/binder-asphalt-concrete/register/general-data.pm.bac';
+import BinderAsphaltConcrete_step2 from '@/components/promedina/binder-asphalt-concrete/register/step2.pm.bac';
+import BinderAsphaltConcrete_step3 from '@/components/promedina/binder-asphalt-concrete/register/step3.pm.bac';
+import BinderAsphaltConcrete_step4 from '@/components/promedina/binder-asphalt-concrete/register/step4.pm.bac';
 import BINDER_ASPHALT_CONCRETE_SERVICE from '@/services/promedina/binder-asphalt-concrete/binder-asphalt-concrete.service';
 
 const BinderAsphaltConcrete = () => {

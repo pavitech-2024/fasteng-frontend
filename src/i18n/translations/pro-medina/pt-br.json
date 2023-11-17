@@ -130,5 +130,11 @@
   "pm.binderAsphaltConcrete.observations": "Observações",
   "pm.brookfield.viscosity": "Viscosidade Brookfield",
   "promedina.essays.binderAsphaltConcrete": "Ligante e concreto asfálticos",
-  "pm.diametral.compression.fatigue.curve": "Curva de Fadiga à compressão diametral"
+  "pm.diametral.compression.fatigue.curve": "Curva de Fadiga à compressão diametral",
+  "promedina.essays.granularLayersView": "Amostras cadastradas em Camadas Granulares",
+  "pm.sample.selection": "Seleção de amostra para visualização",
+  "pm.all.data.visualization": "Visualização dos dados",
+  "materials.template.state": "Estado",
+  "materials.template.layer": "Camada",
+  "materials.template.city": "Cidade"
 }
