@@ -130,5 +130,7 @@
   "pm.all.data.visualization": "Data visualization",
   "materials.template.state": "State",
   "materials.template.layer": "Layer",
-  "materials.template.city": "City"
+  "materials.template.city": "City",
+  "promedina.essays.stabilizedLayersView": "Registered samples in Stabilized Layers",
+  "promedina.essays.binderAsphaltConcreteView": "Registered samples in Binder Asphalt Concrete"
 }
