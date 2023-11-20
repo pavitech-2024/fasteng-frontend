@@ -187,34 +187,24 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
     },
   ];
 
-  // inputsPavimentData.every(({ required, value }) => {
-  //   if (!required) return true;
+  if (nextDisabled) {
+    const hasNullValues = rows.some((row) => Object.values(row).some((value) => value === null));
 
-  //   if (value === null) return false;
-
-  //   if (typeof value === 'string' && value.trim() === '') return false;
-
-  //   return true;
-  // }) &&
-  //   inputsPavimentPreparation.every(({ required, value }) => {
-  //     if (!required) return true;
-
-  //     if (value === null) return false;
-
-  //     if (typeof value === 'string' && value.trim() === '') return false;
-
-  //     return true;
-  //   }) &&
-  //   inputsStructuralComposition.every(({ required, value }) => {
-  //     if (!required) return true;
-
-  //     if (value === null) return false;
-
-  //     if (typeof value === 'string' && value.trim() === '') return false;
-
-  //     return true;
-  //   }) &&
-  nextDisabled && setNextDisabled(false);
+    inputsPavimentData.every(({ required, value }) => {
+      if (!required) return true;
+      if (value === null) return false;
+      if (typeof value === 'string' && value.trim() === '') return false;
+      return true;
+    }) &&
+    inputsPavimentPreparation.every(({ required, value }) => {
+      if (!required) return true;
+      if (value === null) return false;
+      if (typeof value === 'string' && value.trim() === '') return false;
+      return true;
+    }) &&
+    !hasNullValues && 
+    setNextDisabled(false)
+  }
 
   return (
     <>

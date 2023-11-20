@@ -69,21 +69,21 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     { label: t('pm.granularLayer.k4.psi4'), value: step3Data.k4psi4, key: 'k4psi4', required: true },
   ];
 
-    if (nextDisabled) {  
-      inputsPavimentData.every(({ required, value }) => {
-        if (!required) return true;
-        if (value === null) return false;
-        if (typeof value === 'string' && value.trim() === '') return false;
-        return true;
-      }) &&
-      inputsPermanentDeformation.every(({ required, value }) => {
-        if (!required) return true;
-        if (value === null) return false;
-        if (typeof value === 'string' && value.trim() === '') return false;
-        return true;
-      }) &&
-      setNextDisabled(false)
-    }
+  if (nextDisabled) {  
+    inputsPavimentData.every(({ required, value }) => {
+      if (!required) return true;
+      if (value === null) return false;
+      if (typeof value === 'string' && value.trim() === '') return false;
+      return true;
+    }) &&
+    inputsPermanentDeformation.every(({ required, value }) => {
+      if (!required) return true;
+      if (value === null) return false;
+      if (typeof value === 'string' && value.trim() === '') return false;
+      return true;
+    }) &&
+    setNextDisabled(false)
+  }
 
   return (
     <>

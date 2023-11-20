@@ -202,26 +202,24 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
     },
   ];
 
-  inputsPavimentData.every(({ required }) => {
-    if (!required) return true;
+  if (nextDisabled) {
+    const hasNullValues = rows.some((row) => Object.values(row).some((value) => value === null));
 
-    //   if (value === null) return false;
-
-    //   if (typeof value === 'string' && value.trim() === '') return false;
-
-    return true;
-  }) &&
-    inputsPavimentPreparation.every(({ required }) => {
+    inputsPavimentData.every(({ required, value }) => {
       if (!required) return true;
-
-      //     if (value === null) return false;
-
-      //     if (typeof value === 'string' && value.trim() === '') return false;
-
+      if (value === null) return false;
+      if (typeof value === 'string' && value.trim() === '') return false;
       return true;
     }) &&
-    nextDisabled &&
-    setNextDisabled(false);
+    inputsPavimentPreparation.every(({ required, value }) => {
+      if (!required) return true;
+      if (value === null) return false;
+      if (typeof value === 'string' && value.trim() === '') return false;
+      return true;
+    }) &&
+    !hasNullValues && 
+    setNextDisabled(false)
+  }
 
   return (
     <>

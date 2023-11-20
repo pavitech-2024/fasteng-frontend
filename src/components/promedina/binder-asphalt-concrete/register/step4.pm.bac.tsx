@@ -86,26 +86,21 @@ const BinderAsphaltConcrete_step4 = ({ nextDisabled, setNextDisabled }: EssayPag
     },
   ];
 
-  // inputsPavimentData.every(({ required, value }) => {
-  //   if (!required) return true;
-
-  //   if (value === null) return false;
-
-  //   if (typeof value === 'string' && value.trim() === '') return false;
-
-  //   return true;
-  // }) &&
-  //   inputsDiametralCompressionFatigueCurve.every(({ required, value }) => {
-  //     if (!required) return true;
-
-  //     if (value === null) return false;
-
-  //     if (typeof value === 'string' && value.trim() === '') return false;
-
-  //     return true;
-  //   }) &&
-  //   nextDisabled &&
-    setNextDisabled(false);
+  if (nextDisabled) {  
+    inputsPavimentData.every(({ required, value }) => {
+      if (!required) return true;
+      if (value === null) return false;
+      if (typeof value === 'string' && value.trim() === '') return false;
+      return true;
+    }) &&
+    inputsDiametralCompressionFatigueCurve.every(({ required, value }) => {
+      if (!required) return true;
+      if (value === null) return false;
+      if (typeof value === 'string' && value.trim() === '') return false;
+      return true;
+    }) &&
+    setNextDisabled(false)
+  }
 
   return (
     <>

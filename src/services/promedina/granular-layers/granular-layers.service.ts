@@ -203,8 +203,6 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
 
       const { success, error } = response.data;
 
-      console.log(error);
-
       if (!success) {
         if (error && error.name === 'SampleCreationError') {
           throw new Error(t('pm.granular-layers-register.already-exists-error'));
