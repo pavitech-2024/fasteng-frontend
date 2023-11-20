@@ -124,5 +124,13 @@
   "pm.binderAsphaltConcrete.fatigueCurve_r2": "R²",
   "pm.binderAsphaltConcrete.observations": "Observations",
   "promedina.essays.binderAsphaltConcrete": "Binder and concrete asphalt",
-  "pm.diametral.compression.fatigue.curve": "Fatigue curve to diametral compression"
+  "pm.diametral.compression.fatigue.curve": "Fatigue curve to diametral compression",
+  "promedina.essays.granularLayersView": "Registered samples in Granular Layers",
+  "pm.sample.selection": "Sample selection to visualization",
+  "pm.all.data.visualization": "Data visualization",
+  "materials.template.state": "State",
+  "materials.template.layer": "Layer",
+  "materials.template.city": "City",
+  "promedina.essays.stabilizedLayersView": "Registered samples in Stabilized Layers",
+  "promedina.essays.binderAsphaltConcreteView": "Registered samples in Binder Asphalt Concrete"
 }

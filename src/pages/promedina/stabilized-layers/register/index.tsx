@@ -1,8 +1,8 @@
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
-import StabilizedLayers_step1 from '@/components/promedina/stabilized-layers/view/general-data.pm.gl';
-import StabilizedLayers_step2 from '@/components/promedina/stabilized-layers/view/step2.pm.gl';
-import StabilizedLayers_step3 from '@/components/promedina/stabilized-layers/view/step3.pm.gl';
+import StabilizedLayers_step1 from '@/components/promedina/stabilized-layers/register/general-data.pm.gl';
+import StabilizedLayers_step2 from '@/components/promedina/stabilized-layers/register/step2.pm.gl';
+import StabilizedLayers_step3 from '@/components/promedina/stabilized-layers/register/step3.pm.gl';
 import useStabilizedLayersStore, {StabilizedLayersActions} from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 import STABILIZEDLAYERS_SERVICE from '@/services/promedina/stabilized-layers/stabilized-layers.service';
 
