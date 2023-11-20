@@ -1,7 +1,7 @@
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import CHAPMAN_SERVICE from '@/services/concrete/essays/chapman/chapman.service';
-import useChapmanStore, { ChapmanActions } from '@/stores/concrete/chapman.store';
+import useChapmanStore, { ChapmanActions } from '@/stores/concrete/chapman/chapman.store';
 import CHAPMAN_GeneralData from '../../../../components/concrete/essays/chapman/general-data.chapman';
 import CHAPMAN_Step2 from '../../../../components/concrete/essays/chapman/step2.chapman';
 import CHAPMAN_Results from '../../../../components/concrete/essays/chapman/results.chapman';

@@ -3,7 +3,7 @@ import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
-import AsphaltGranulometry_SERVICE from '@/services/asphalt/essays/granulometry/asphalt-granulometry.service';
+import AsphaltGranulometry_SERVICE from '@/services/asphalt/essays/granulometry/granulometry.service';
 import useAsphaltGranulometryStore from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';

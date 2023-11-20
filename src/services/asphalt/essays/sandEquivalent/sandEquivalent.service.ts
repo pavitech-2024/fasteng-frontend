@@ -10,7 +10,7 @@ class SandEquivalent_SERVICE implements IEssayService {
     key: 'sand-equivalent',
     icon: SandEquivalentIcon,
     title: t('asphalt.essays.sandEquivalent'),
-    path: '/asphalt/essays/sand-equivalent',
+    path: '/asphalt/essays/sandEquivalent',
     backend_path: 'asphalt/essays/sandEquivalent',
     steps: 3,
     standard: {

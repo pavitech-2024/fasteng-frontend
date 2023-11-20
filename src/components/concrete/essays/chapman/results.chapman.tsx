@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 import useAuth from '../../../../contexts/auth';
-import useChapmanStore from '../../../../stores/concrete/chapman.store';
+import useChapmanStore from '../../../../stores/concrete/chapman/chapman.store';
 import FlexColumnBorder from '../../../atoms/containers/flex-column-with-border';
 import ExperimentResume, { ExperimentResumeData } from '../../../molecules/boxes/experiment-resume';
 import { EssayPageProps } from '../../../templates/essay';

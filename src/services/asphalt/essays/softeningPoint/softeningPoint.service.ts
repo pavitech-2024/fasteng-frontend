@@ -10,7 +10,7 @@ class SofteningPoint_SERVICE implements IEssayService {
     key: 'softening-point',
     icon: SofteningPointIcon,
     title: t('asphalt.essays.softeningPoint'),
-    path: '/asphalt/essays/softening-point',
+    path: '/asphalt/essays/softeningPoint',
     backend_path: 'asphalt/essays/softeningPoint',
     steps: 3,
     standard: {

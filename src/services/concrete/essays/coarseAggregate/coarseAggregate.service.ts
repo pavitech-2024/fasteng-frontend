@@ -11,8 +11,8 @@ class COARSE_AGGREGATE_SERVICE implements IEssayService {
     key: 'coarseAggregate',
     icon: CoarseAggregateIcon,
     title: t('concrete.essays.coarseAggregate'),
-    path: '/concrete/essays/coarse-aggregate',
-    backend_path: 'concrete/essays/coarse-aggregate',
+    path: '/concrete/essays/coarseAggregate',
+    backend_path: 'concrete/essays/coarseAggregate',
     steps: 3,
     standard: {
       name: 'ABNT NM 53',
