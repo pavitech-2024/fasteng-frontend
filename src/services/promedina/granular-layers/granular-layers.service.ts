@@ -138,7 +138,6 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
   };
 
   submitStep3Data = async (step3Data: GranularLayersData['step3Data']): Promise<void> => {
-    console.log("🚀 ~ file: granular-layers.service.ts:142 ~ GRANULARLAYERS_SERVICE ~ submitStep3Data= ~ step3Data:", step3Data)
     // if (step3Data) {
     //   true;
     // }
@@ -193,12 +192,6 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
 
   // save essay
   saveSample = async (store: GranularLayersData): Promise<void> => {
-    console.log("🚀 ~ file: granular-layers.service.ts:196 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~  01:", store)
-
-    console.log("🚀 ~ file: granular-layers.service.ts:196 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~ store.step2Data: 02 ", store.step2Data)
-
-    console.log("🚀 ~ file: granular-layers.service.ts:196 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~ store.step3Data 03:", store.step3Data)
-
     const { generalData, step2Data, step3Data } = store;
 
     try {
@@ -212,7 +205,11 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
 
       console.log(error);
 
-      if (success === false) throw error.name;
+      if (!success) {
+        if (error && error.name === 'SampleCreationError') {
+          throw new Error(t('pm.granular-layers-register.already-exists-error'));
+        }
+      }
     } catch (error) {
       throw error;
     }

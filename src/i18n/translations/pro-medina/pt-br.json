@@ -130,5 +130,6 @@
   "pm.binderAsphaltConcrete.observations": "Observações",
   "pm.brookfield.viscosity": "Viscosidade Brookfield",
   "promedina.essays.binderAsphaltConcrete": "Ligante e concreto asfálticos",
-  "pm.diametral.compression.fatigue.curve": "Curva de Fadiga à compressão diametral"
+  "pm.diametral.compression.fatigue.curve": "Curva de Fadiga à compressão diametral",
+  "pm.granular-layers-register.already-exists-error": "Já existe uma amostra com o mesmo nome."
 }

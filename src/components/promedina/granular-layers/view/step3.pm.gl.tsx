@@ -5,12 +5,8 @@ import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 
 const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { step3Data, setData } = useGranularLayersStore();
 
-  const {step2Data, generalData} = useGranularLayersStore();
-  console.log("🚀 ~ file: step3.pm.gl.tsx:11 ~ generalData:", generalData)
-  console.log("🚀 ~ file: step3.pm.gl.tsx:11 ~ step2Data:", step2Data)
-  
+  const { step3Data, setData } = useGranularLayersStore();
 
   const inputsPavimentData = [
     { label: t('pm.granularLayer.mctGroup'), value: step3Data.mctGroup, key: 'mctGroup', required: true },
@@ -73,35 +69,21 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     { label: t('pm.granularLayer.k4.psi4'), value: step3Data.k4psi4, key: 'k4psi4', required: true },
   ];
 
-  // inputsPavimentData.every(({ required, value }) => {
-  //   if (!required) return true;
-
-  //   if (value === null) return false;
-
-  //   if (typeof value === 'string' && value.trim() === '') return false;
-
-  //   return true;
-  // }) &&
-  //   inputsResilienceModule.every(({ required, value }) => {
-  //     if (!required) return true;
-
-  //     if (value === null) return false;
-
-  //     if (typeof value === 'string' && value.trim() === '') return false;
-
-  //     return true;
-  //   }) &&
-  //   inputsPermanentDeformation.every(({ required, value }) => {
-  //     if (!required) return true;
-
-  //     if (value === null) return false;
-
-  //     if (typeof value === 'string' && value.trim() === '') return false;
-
-  //     return true;
-  //   }) &&
-  //   nextDisabled &&
-    setNextDisabled(false);
+    if (nextDisabled) {  
+      inputsPavimentData.every(({ required, value }) => {
+        if (!required) return true;
+        if (value === null) return false;
+        if (typeof value === 'string' && value.trim() === '') return false;
+        return true;
+      }) &&
+      inputsPermanentDeformation.every(({ required, value }) => {
+        if (!required) return true;
+        if (value === null) return false;
+        if (typeof value === 'string' && value.trim() === '') return false;
+        return true;
+      }) &&
+      setNextDisabled(false)
+    }
 
   return (
     <>
