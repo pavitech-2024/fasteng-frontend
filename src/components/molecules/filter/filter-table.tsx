@@ -16,9 +16,9 @@ import {
   DialogContent,
   DialogContentText,
   Tooltip,
+  InputBase,
 } from '@mui/material';
-import Search from '@/components/atoms/inputs/search';
-import { AddIcon, DeleteIcon, NextIcon } from '@/assets';
+import { AddIcon, DeleteIcon, NextIcon, SearchIcon } from '@/assets';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import { PromedinaDataFilter } from '@/interfaces/promedina';
@@ -33,7 +33,7 @@ interface PromedinaMaterialsTemplateProps {
 }
 
 interface MaterialsColumn {
-  id: 'name' | 'state' | 'layer' | 'city' | 'actions';
+  id: 'name' | 'layer' | 'cityState' | 'zone' | 'actions';
   label: string;
   width: string;
 }
@@ -41,12 +41,17 @@ interface MaterialsColumn {
 interface DataToFilter {
   _id: string;
   name: string;
-  state: string;
   layer: string;
-  city: string;
+  zone: string;
+  cityState: string;
 }
 
 const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: PromedinaMaterialsTemplateProps) => {
+  const [nameFilter, setNameFilter] = useState('');
+  const [layerFilter, setLayerFilter] = useState('');
+  const [cityStateFilter, setCityStateFilter] = useState('');
+  const [zoneFilter, setZoneFilter] = useState('');
+
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
 
@@ -58,9 +63,9 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
 
   const columns: MaterialsColumn[] = [
     { id: 'name', label: t('materials.template.name'), width: '25%' },
-    { id: 'city', label: t('materials.template.city'), width: '25%' },
-    { id: 'state', label: t('materials.template.state'), width: '25%' },
+    { id: 'cityState', label: t('materials.template.cityState'), width: '25%' },
     { id: 'layer', label: t('materials.template.layer'), width: '25%' },
+    { id: 'zone', label: t('materials.template.zone'), width: '25%' },
     { id: 'actions', label: t('materials.template.actions'), width: '25%' },
   ];
 
@@ -69,11 +74,11 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
   }, [searchBy]);
 
   const filteredData = materials
-    .map(({ _id, name, city, state, layer }) => ({
+    .map(({ _id, name, cityState, layer, zone }) => ({
       _id,
       name,
-      city,
-      state,
+      cityState,
+      zone,
       layer,
     }))
     .filter((material) => {
@@ -83,6 +88,34 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
           : material[searchBy] === searchValue
         : true;
     });
+
+  const getFilter = async (e: string) => {
+    const filter = [];
+
+    if (e == nameFilter) {
+      filter.push({ name: nameFilter });
+    }
+    if (e == layerFilter) {
+      filter.push({ layer: layerFilter });
+    }
+    if (e == cityStateFilter) {
+      filter.push({ cityState: cityStateFilter });
+    }
+    if (e == zoneFilter) {
+      filter.push({ zone: zoneFilter });
+    }
+
+    const encodedFilter = decodeURIComponent(JSON.stringify(filter));
+    const filteredSpecificData = await fetch(
+      `promedina/samples/filter/?page=${page}&limit=${rowsPerPage}&filter=${encodedFilter}`
+    )
+      .then((res) => res.json())
+      .catch(() => ({}));
+
+    return {
+      filteredSpecificData,
+    };
+  };
 
   return (
     <>
@@ -138,7 +171,7 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
       {/*Page */}
       <StepDescription
         text={
-          'Todas as vezes em que você selecionar uma categoria e digitar em "Pesquisar", a tabela será atualizada com os dados filtrados.'
+          'Todas as vezes em que você selecionar uma categoria e digitar em "Pesquisar", clique na lupa e a tabela será atualizada com os dados filtrados.'
         }
       />
       <Box sx={{ p: { mobile: '0 4vw', notebook: '0 2vw' }, mb: '4vw', width: '100%', maxWidth: '1800px' }}>
@@ -164,9 +197,9 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
               label={t('materials.template.searchBy')}
               options={[
                 { label: t('materials.template.name'), value: 'name' },
-                { label: t('materials.template.city'), value: 'city' },
-                { label: t('materials.template.state'), value: 'state' },
+                { label: t('materials.template.cityState'), value: 'cityState' },
                 { label: t('materials.template.layer'), value: 'layer' },
+                { label: t('materials.template.zone'), value: 'zone' },
               ]}
               callback={setSearchBy}
               size="small"
@@ -174,49 +207,154 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
               defaultValue={{ label: t('materials.template.name'), value: 'name' }}
             />
             {searchBy === 'name' && (
-              <Search
+              <Paper
+                component="div"
                 sx={{
-                  width: { mobile: '100%', notebook: '75%' },
-                  maxWidth: '450px',
-                  height: '39px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  boxShadow: 'none',
+                  border: '1px solid rgba(0, 0, 0, 0.28)',
                 }}
-                value={searchValue}
-                setValue={setSearchValue}
-              />
+                color="primary"
+              >
+                <InputBase
+                  sx={{ ml: 1, flex: 1 }}
+                  placeholder={'Pesquisar por nome'}
+                  value={nameFilter}
+                  onChange={(e) => setNameFilter(e.target.value)}
+                />
+                <Box
+                  sx={{
+                    backgroundColor: 'secondaryTons.blue',
+                    borderColor: 'secondaryTons.blue',
+                    borderTopRightRadius: '3px',
+                    borderBottomRightRadius: '3px',
+                    paddingTop: '0.2rem',
+                    paddingBottom: '0.1rem',
+                    paddingLeft: '0.5rem',
+                    alignItems: 'center',
+                  }}
+                >
+                  <SearchIcon
+                    sx={{ marginRight: '0.2rem', cursor: 'pointer', marginTop: '0.1rem', color: '#FFFFFF' }}
+                    onClick={() => getFilter(nameFilter)}
+                  />
+                </Box>
+              </Paper>
             )}
 
             {searchBy === 'layer' && (
-              <Search
+              <Paper
+                component="div"
                 sx={{
-                  width: { mobile: '100%', notebook: '75%' },
-                  maxWidth: '450px',
-                  height: '39px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  boxShadow: 'none',
+                  border: '1px solid rgba(0, 0, 0, 0.28)',
                 }}
-                value={searchValue}
-                setValue={setSearchValue}
-              />
+                color="primary"
+              >
+                <InputBase
+                  sx={{ ml: 1, flex: 1 }}
+                  placeholder={'Ex. Base'}
+                  value={layerFilter}
+                  onChange={(e) => setLayerFilter(e.target.value)}
+                />
+                <Box
+                  sx={{
+                    backgroundColor: 'secondaryTons.blue',
+                    borderColor: 'secondaryTons.blue',
+                    borderTopRightRadius: '3px',
+                    borderBottomRightRadius: '3px',
+                    paddingTop: '0.2rem',
+                    paddingBottom: '0.2rem',
+                    paddingLeft: '0.5rem',
+                    alignItems: 'center',
+                  }}
+                >
+                  <SearchIcon
+                    sx={{ marginRight: '0.3rem', cursor: 'pointer', color: '#FFFFFF' }}
+                    onClick={() => getFilter(layerFilter)}
+                  />
+                </Box>
+              </Paper>
             )}
-            {searchBy === 'city' && (
-              <Search
+            {searchBy === 'cityState' && (
+              <Paper
+                component="div"
                 sx={{
-                  width: { mobile: '100%', notebook: '75%' },
-                  maxWidth: '450px',
-                  height: '39px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  boxShadow: 'none',
+                  border: '1px solid rgba(0, 0, 0, 0.28)',
                 }}
-                value={searchValue}
-                setValue={setSearchValue}
-              />
+                color="primary"
+              >
+                <InputBase
+                  sx={{ ml: 1, flex: 1, minWidth: 'fit-content' }}
+                  placeholder={'Ex. Campina Grande/PB'}
+                  value={cityStateFilter}
+                  onChange={(e) => setCityStateFilter(e.target.value)}
+                  fullWidth
+                />
+                <Box
+                  sx={{
+                    backgroundColor: 'secondaryTons.blue',
+                    borderColor: 'secondaryTons.blue',
+                    borderTopRightRadius: '3px',
+                    borderBottomRightRadius: '3px',
+                    paddingTop: '0.2rem',
+                    paddingBottom: '0.2rem',
+                    paddingLeft: '0.5rem',
+                    alignItems: 'center',
+                  }}
+                >
+                  <SearchIcon
+                    sx={{ marginRight: '0.3rem', cursor: 'pointer', color: '#FFFFFF' }}
+                    onClick={() => getFilter(cityStateFilter)}
+                  />
+                </Box>
+              </Paper>
             )}
-            {searchBy === 'state' && (
-              <Search
+            {searchBy === 'zone' && (
+              <Paper
+                component="div"
                 sx={{
-                  width: { mobile: '100%', notebook: '75%' },
-                  maxWidth: '450px',
-                  height: '39px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  boxShadow: 'none',
+                  border: '1px solid rgba(0, 0, 0, 0.28)',
                 }}
-                value={searchValue}
-                setValue={setSearchValue}
-              />
+                color="primary"
+              >
+                <InputBase
+                  sx={{ ml: 1, flex: 1 }}
+                  placeholder={'Ex. BR-230'}
+                  value={zoneFilter}
+                  onChange={(e) => setZoneFilter(e.target.value)}
+                />
+                <Box
+                  sx={{
+                    backgroundColor: 'secondaryTons.blue',
+                    borderColor: 'secondaryTons.blue',
+                    borderTopRightRadius: '3px',
+                    borderBottomRightRadius: '3px',
+                    paddingTop: '0.2rem',
+                    paddingBottom: '0.1rem',
+                    paddingLeft: '0.5rem',
+                    alignItems: 'center',
+                  }}
+                >
+                  <SearchIcon
+                    sx={{ marginRight: '0.2rem', cursor: 'pointer', marginTop: '0.1rem', color: '#FFFFFF' }}
+                    onClick={() => getFilter(zoneFilter)}
+                  />
+                </Box>
+              </Paper>
             )}
           </Box>
 
@@ -291,8 +429,7 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                     {columns.map((column) => (
                       <TableCell key={column.id} align="center">
                         {column.id === 'name' && row.name}
-                        {column.id === 'city' && row.city}
-                        {column.id === 'state' && row.state}
+                        {column.id === 'cityState' && row.cityState}
                         {column.id === 'layer' && row.layer}
                         {column.id === 'actions' && (
                           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
