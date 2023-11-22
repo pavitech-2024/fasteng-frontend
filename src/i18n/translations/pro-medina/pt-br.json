@@ -137,7 +137,7 @@
   "materials.template.state": "Estado",
   "materials.template.layer": "Camada",
   "materials.template.zone": "Local",
-  "materials.template.cityState": "Cidade/Estado",
+  "materials.template.cityState": "Município/Estado",
   "promedina.essays.stabilizedLayersView": "Amostras cadastradas em Camadas estabilizadas",
   "promedina.essays.binderAsphaltConcreteView": "Amostras cadastradas em Ligante e Concreto asfálticos"
 }

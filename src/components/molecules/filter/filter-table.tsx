@@ -18,7 +18,7 @@ import {
   Tooltip,
   InputBase,
 } from '@mui/material';
-import { AddIcon, DeleteIcon, NextIcon, SearchIcon } from '@/assets';
+import { AddIcon, CloseIcon, DeleteIcon, NextIcon, SearchIcon } from '@/assets';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import { PromedinaDataFilter } from '@/interfaces/promedina';
@@ -170,9 +170,7 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
 
       {/*Page */}
       <StepDescription
-        text={
-          'Todas as vezes em que você selecionar uma categoria e digitar em "Pesquisar", clique na lupa e a tabela será atualizada com os dados filtrados.'
-        }
+        text={'Após selecionar os filtros, clique no botão com a lupa para atualizar a tabela com os dados filtrados.'}
       />
       <Box sx={{ p: { mobile: '0 4vw', notebook: '0 2vw' }, mb: '4vw', width: '100%', maxWidth: '1800px' }}>
         <Box
@@ -355,6 +353,222 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                   />
                 </Box>
               </Paper>
+            )}
+            {zoneFilter !== '' && (
+              <button
+                onClick={() => setZoneFilter('')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  border: '1px solid',
+                  borderColor: '#00A3FF',
+                  borderRadius: '15px',
+                  padding: '.1rem 1rem',
+                  backgroundColor: '#00A3FF',
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    borderRight: '1.5px solid',
+                    borderColor: 'primaryTons.white',
+                    pr: '1rem',
+                    width: '100%',
+                  }}
+                >
+                  <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
+                    Local
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    height: '100%',
+                    alignItems: {
+                      mobile: 'start',
+                      notebook: 'center',
+                    },
+                    justifyContent: {
+                      mobile: 'end',
+                      notebook: 'center',
+                    },
+                  }}
+                >
+                  <CloseIcon
+                    sx={{
+                      fontSize: '2rem',
+                      color: 'primaryTons.white',
+                      cursor: 'pointer',
+                      pl: '1rem',
+                    }}
+                  />
+                </Box>
+              </button>
+            )}
+            {nameFilter !== '' && (
+              <button
+                onClick={() => setNameFilter('')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  border: '1px solid',
+                  borderColor: '#00A3FF',
+                  borderRadius: '15px',
+                  padding: '.1rem 1rem',
+                  backgroundColor: '#00A3FF',
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    borderRight: '1.5px solid',
+                    borderColor: 'primaryTons.white',
+                    pr: '1rem',
+                    width: '100%',
+                  }}
+                >
+                  <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
+                    Nome
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    height: '100%',
+                    alignItems: {
+                      mobile: 'start',
+                      notebook: 'center',
+                    },
+                    justifyContent: {
+                      mobile: 'end',
+                      notebook: 'center',
+                    },
+                  }}
+                >
+                  <CloseIcon
+                    sx={{
+                      fontSize: '2rem',
+                      color: 'primaryTons.white',
+                      cursor: 'pointer',
+                      pl: '1rem',
+                    }}
+                  />
+                </Box>
+              </button>
+            )}
+            {cityStateFilter !== '' && (
+              <button
+                onClick={() => setCityStateFilter('')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  border: '1px solid',
+                  borderColor: '#00A3FF',
+                  borderRadius: '15px',
+                  padding: '.1rem 1rem',
+                  backgroundColor: '#00A3FF',
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    borderRight: '1.5px solid',
+                    borderColor: 'primaryTons.white',
+                    pr: '1rem',
+                    width: '100%',
+                  }}
+                >
+                  <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
+                    Município/Estado
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    height: '100%',
+                    alignItems: {
+                      mobile: 'start',
+                      notebook: 'center',
+                    },
+                    justifyContent: {
+                      mobile: 'end',
+                      notebook: 'center',
+                    },
+                  }}
+                >
+                  <CloseIcon
+                    sx={{
+                      fontSize: '2rem',
+                      color: 'primaryTons.white',
+                      cursor: 'pointer',
+                      pl: '1rem',
+                    }}
+                  />
+                </Box>
+              </button>
+            )}
+            {layerFilter !== '' && (
+              <button
+                onClick={() => setLayerFilter('')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  border: '1px solid',
+                  borderColor: '#00A3FF',
+                  borderRadius: '15px',
+                  padding: '.1rem 1rem',
+                  backgroundColor: '#00A3FF',
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    borderRight: '1.5px solid',
+                    borderColor: 'primaryTons.white',
+                    pr: '1rem',
+                    width: '100%',
+                  }}
+                >
+                  <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
+                    Camada
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    height: '100%',
+                    alignItems: {
+                      mobile: 'start',
+                      notebook: 'center',
+                    },
+                    justifyContent: {
+                      mobile: 'end',
+                      notebook: 'center',
+                    },
+                  }}
+                >
+                  <CloseIcon
+                    sx={{
+                      fontSize: '2rem',
+                      color: 'primaryTons.white',
+                      cursor: 'pointer',
+                      pl: '1rem',
+                    }}
+                  />
+                </Box>
+              </button>
             )}
           </Box>
 
