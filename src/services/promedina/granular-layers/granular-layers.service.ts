@@ -224,6 +224,7 @@ const samplesService = {
   createSample: (sampleData: SampleData) => Api.post('soils/samples', sampleData),
   deleteSample: (sampleId: string) => Api.delete(`soils/samples/${sampleId}`),
   getSamples: () => Api.get(`promedina/granular-layers/granular-layers-samples/all`),
+  getFilteredSamples: (params: any) => Api.get(`promedina/granular-layers/granular-layers-samples/filter/?filter=${params}`)
 };
 
 export default samplesService;

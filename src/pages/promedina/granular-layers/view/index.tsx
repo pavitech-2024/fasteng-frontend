@@ -18,7 +18,6 @@ const GranularLayers_view = () => {
   useEffect(() => {
     console.log("🚀 ~ file: index.tsx:26 ~ samples:", samples)
   }, [samples])
-  
 
   useEffect(() => {
     samplesService
