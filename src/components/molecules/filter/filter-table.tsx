@@ -173,187 +173,245 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
         text={'Após selecionar os filtros, clique no botão com a lupa para atualizar a tabela com os dados filtrados.'}
       />
       <Box sx={{ p: { mobile: '0 4vw', notebook: '0 2vw' }, mb: '4vw', width: '100%', maxWidth: '1800px' }}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-            alignItems: { mobile: 'end', notebook: 'space-between' },
-            width: '100%',
-            gap: '8px',
-          }}
-        >
+        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr' }}>
           <Box
             sx={{
               display: 'flex',
-              gap: '10px',
-              flexDirection: { mobile: 'column', notebook: 'row' },
-              width: '55%',
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              alignItems: { mobile: 'end', notebook: 'space-between' },
+              width: '100%',
+              gap: '8px',
             }}
           >
-            <DropDown
-              label={t('materials.template.searchBy')}
-              options={[
-                { label: t('materials.template.name'), value: 'name' },
-                { label: t('materials.template.cityState'), value: 'cityState' },
-                { label: t('materials.template.layer'), value: 'layer' },
-                { label: t('materials.template.zone'), value: 'zone' },
-              ]}
-              callback={setSearchBy}
-              size="small"
-              sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
-              defaultValue={{ label: t('materials.template.name'), value: 'name' }}
-            />
-            {searchBy === 'name' && (
-              <Paper
-                component="div"
+            <Box
+              sx={{
+                display: 'flex',
+                gap: '10px',
+                flexDirection: { mobile: 'column', notebook: 'row' },
+                width: '55%',
+              }}
+            >
+              <DropDown
+                label={t('materials.template.searchBy')}
+                options={[
+                  { label: t('materials.template.name'), value: 'name' },
+                  { label: t('materials.template.cityState'), value: 'cityState' },
+                  { label: t('materials.template.layer'), value: 'layer' },
+                  { label: t('materials.template.zone'), value: 'zone' },
+                ]}
+                callback={setSearchBy}
+                size="small"
                 sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  boxShadow: 'none',
-                  border: '1px solid rgba(0, 0, 0, 0.28)',
+                  width: { mobile: '50%', notebook: '35%' },
+                  minWidth: '120px',
+                  maxWidth: '150px',
+                  bgcolor: 'white',
                 }}
-                color="primary"
-              >
-                <InputBase
-                  sx={{ ml: 1, flex: 1 }}
-                  placeholder={'Pesquisar por nome'}
-                  value={nameFilter}
-                  onChange={(e) => setNameFilter(e.target.value)}
-                />
-                <Box
+                defaultValue={{ label: t('materials.template.name'), value: 'name' }}
+              />
+              {searchBy === 'name' && (
+                <Paper
+                  component="div"
                   sx={{
-                    backgroundColor: 'secondaryTons.blue',
-                    borderColor: 'secondaryTons.blue',
-                    borderTopRightRadius: '3px',
-                    borderBottomRightRadius: '3px',
-                    paddingTop: '0.2rem',
-                    paddingBottom: '0.1rem',
-                    paddingLeft: '0.5rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
                     alignItems: 'center',
+                    boxShadow: 'none',
+                    border: '1px solid rgba(0, 0, 0, 0.28)',
                   }}
+                  color="primary"
                 >
-                  <SearchIcon
-                    sx={{ marginRight: '0.2rem', cursor: 'pointer', marginTop: '0.1rem', color: '#FFFFFF' }}
-                    onClick={() => getFilter(nameFilter)}
+                  <InputBase
+                    sx={{ ml: 1, flex: 1 }}
+                    placeholder={'Pesquisar por nome'}
+                    value={nameFilter}
+                    onChange={(e) => setNameFilter(e.target.value)}
                   />
-                </Box>
-              </Paper>
-            )}
+                  <Box
+                    sx={{
+                      backgroundColor: 'secondaryTons.blue',
+                      borderColor: 'secondaryTons.blue',
+                      borderTopRightRadius: '3px',
+                      borderBottomRightRadius: '3px',
+                      paddingTop: '0.2rem',
+                      paddingBottom: '0.1rem',
+                      paddingLeft: '0.5rem',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <SearchIcon
+                      sx={{ marginRight: '0.2rem', cursor: 'pointer', marginTop: '0.1rem', color: '#FFFFFF' }}
+                      onClick={() => getFilter(nameFilter)}
+                    />
+                  </Box>
+                </Paper>
+              )}
 
-            {searchBy === 'layer' && (
-              <Paper
-                component="div"
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  boxShadow: 'none',
-                  border: '1px solid rgba(0, 0, 0, 0.28)',
-                }}
-                color="primary"
-              >
-                <InputBase
-                  sx={{ ml: 1, flex: 1 }}
-                  placeholder={'Ex. Base'}
-                  value={layerFilter}
-                  onChange={(e) => setLayerFilter(e.target.value)}
-                />
-                <Box
+              {searchBy === 'layer' && (
+                <Paper
+                  component="div"
                   sx={{
-                    backgroundColor: 'secondaryTons.blue',
-                    borderColor: 'secondaryTons.blue',
-                    borderTopRightRadius: '3px',
-                    borderBottomRightRadius: '3px',
-                    paddingTop: '0.2rem',
-                    paddingBottom: '0.2rem',
-                    paddingLeft: '0.5rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
                     alignItems: 'center',
+                    boxShadow: 'none',
+                    border: '1px solid rgba(0, 0, 0, 0.28)',
+                  }}
+                  color="primary"
+                >
+                  <InputBase
+                    sx={{ ml: 1, flex: 1 }}
+                    placeholder={'Ex. Base'}
+                    value={layerFilter}
+                    onChange={(e) => setLayerFilter(e.target.value)}
+                  />
+                  <Box
+                    sx={{
+                      backgroundColor: 'secondaryTons.blue',
+                      borderColor: 'secondaryTons.blue',
+                      borderTopRightRadius: '3px',
+                      borderBottomRightRadius: '3px',
+                      paddingTop: '0.2rem',
+                      paddingBottom: '0.2rem',
+                      paddingLeft: '0.5rem',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <SearchIcon
+                      sx={{ marginRight: '0.3rem', cursor: 'pointer', color: '#FFFFFF' }}
+                      onClick={() => getFilter(layerFilter)}
+                    />
+                  </Box>
+                </Paper>
+              )}
+              {searchBy === 'cityState' && (
+                <Paper
+                  component="div"
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    boxShadow: 'none',
+                    border: '1px solid rgba(0, 0, 0, 0.28)',
+                  }}
+                  color="primary"
+                >
+                  <InputBase
+                    sx={{ ml: 1, flex: 1, minWidth: 'fit-content' }}
+                    placeholder={'Ex. Campina Grande/PB'}
+                    value={cityStateFilter}
+                    onChange={(e) => setCityStateFilter(e.target.value)}
+                    fullWidth
+                  />
+                  <Box
+                    sx={{
+                      backgroundColor: 'secondaryTons.blue',
+                      borderColor: 'secondaryTons.blue',
+                      borderTopRightRadius: '3px',
+                      borderBottomRightRadius: '3px',
+                      paddingTop: '0.2rem',
+                      paddingBottom: '0.2rem',
+                      paddingLeft: '0.5rem',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <SearchIcon
+                      sx={{ marginRight: '0.3rem', cursor: 'pointer', color: '#FFFFFF' }}
+                      onClick={() => getFilter(cityStateFilter)}
+                    />
+                  </Box>
+                </Paper>
+              )}
+              {searchBy === 'zone' && (
+                <Paper
+                  component="div"
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    boxShadow: 'none',
+                    border: '1px solid rgba(0, 0, 0, 0.28)',
+                  }}
+                  color="primary"
+                >
+                  <InputBase
+                    sx={{ ml: 1, flex: 1 }}
+                    placeholder={'Ex. BR-230'}
+                    value={zoneFilter}
+                    onChange={(e) => setZoneFilter(e.target.value)}
+                  />
+                  <Box
+                    sx={{
+                      backgroundColor: 'secondaryTons.blue',
+                      borderColor: 'secondaryTons.blue',
+                      borderTopRightRadius: '3px',
+                      borderBottomRightRadius: '3px',
+                      paddingTop: '0.2rem',
+                      paddingBottom: '0.1rem',
+                      paddingLeft: '0.5rem',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <SearchIcon
+                      sx={{ marginRight: '0.2rem', cursor: 'pointer', marginTop: '0.1rem', color: '#FFFFFF' }}
+                      onClick={() => getFilter(zoneFilter)}
+                    />
+                  </Box>
+                </Paper>
+              )}
+            </Box>
+
+            <Link
+              href={`/promedina/${area}/register`}
+              style={{
+                color: '#FFFFFF',
+                backgroundColor: '#1DD010',
+                height: '28px',
+                width: 'fit-content',
+                borderRadius: '20px',
+                padding: '0 12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: '700',
+                marginLeft: '2px',
+                cursor: 'pointer',
+              }}
+            >
+              <Tooltip title="Cadastrar nova amostra em camadas granulares">
+                <AddIcon sx={{ fontSize: '1.15rem', fontWeight: 700 }} />
+              </Tooltip>
+
+              <Tooltip title="Cadastrar nova amostra em camadas granulares">
+                <Typography
+                  sx={{
+                    display: { mobile: 'none', notebook: 'flex' },
+                    fontSize: '1rem',
+                    fontWeight: 700,
+                    lineHeight: '1.1rem',
+                    ml: '4px',
+                    textTransform: 'uppercase',
                   }}
                 >
-                  <SearchIcon
-                    sx={{ marginRight: '0.3rem', cursor: 'pointer', color: '#FFFFFF' }}
-                    onClick={() => getFilter(layerFilter)}
-                  />
-                </Box>
-              </Paper>
-            )}
-            {searchBy === 'cityState' && (
-              <Paper
-                component="div"
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  boxShadow: 'none',
-                  border: '1px solid rgba(0, 0, 0, 0.28)',
-                }}
-                color="primary"
-              >
-                <InputBase
-                  sx={{ ml: 1, flex: 1, minWidth: 'fit-content' }}
-                  placeholder={'Ex. Campina Grande/PB'}
-                  value={cityStateFilter}
-                  onChange={(e) => setCityStateFilter(e.target.value)}
-                  fullWidth
-                />
-                <Box
-                  sx={{
-                    backgroundColor: 'secondaryTons.blue',
-                    borderColor: 'secondaryTons.blue',
-                    borderTopRightRadius: '3px',
-                    borderBottomRightRadius: '3px',
-                    paddingTop: '0.2rem',
-                    paddingBottom: '0.2rem',
-                    paddingLeft: '0.5rem',
-                    alignItems: 'center',
-                  }}
-                >
-                  <SearchIcon
-                    sx={{ marginRight: '0.3rem', cursor: 'pointer', color: '#FFFFFF' }}
-                    onClick={() => getFilter(cityStateFilter)}
-                  />
-                </Box>
-              </Paper>
-            )}
-            {searchBy === 'zone' && (
-              <Paper
-                component="div"
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  boxShadow: 'none',
-                  border: '1px solid rgba(0, 0, 0, 0.28)',
-                }}
-                color="primary"
-              >
-                <InputBase
-                  sx={{ ml: 1, flex: 1 }}
-                  placeholder={'Ex. BR-230'}
-                  value={zoneFilter}
-                  onChange={(e) => setZoneFilter(e.target.value)}
-                />
-                <Box
-                  sx={{
-                    backgroundColor: 'secondaryTons.blue',
-                    borderColor: 'secondaryTons.blue',
-                    borderTopRightRadius: '3px',
-                    borderBottomRightRadius: '3px',
-                    paddingTop: '0.2rem',
-                    paddingBottom: '0.1rem',
-                    paddingLeft: '0.5rem',
-                    alignItems: 'center',
-                  }}
-                >
-                  <SearchIcon
-                    sx={{ marginRight: '0.2rem', cursor: 'pointer', marginTop: '0.1rem', color: '#FFFFFF' }}
-                    onClick={() => getFilter(zoneFilter)}
-                  />
-                </Box>
-              </Paper>
-            )}
+                  Nova amostra
+                </Typography>
+              </Tooltip>
+            </Link>
+          </Box>
+
+          {/** TAGS */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              flexDirection: 'row',
+              alignItems: { mobile: 'end', notebook: 'start' },
+              width: '100%',
+              gap: '0.5rem',
+              marginTop: '1rem',
+            }}
+          >
             {zoneFilter !== '' && (
               <button
                 onClick={() => setZoneFilter('')}
@@ -433,9 +491,11 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                     width: '100%',
                   }}
                 >
-                  <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
-                    Nome
-                  </Typography>
+                  <Tooltip title="Você digitou um filtro por nome.">
+                    <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
+                      Nome
+                    </Typography>
+                  </Tooltip>
                 </Box>
                 <Box
                   sx={{
@@ -451,14 +511,16 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                     },
                   }}
                 >
-                  <CloseIcon
-                    sx={{
-                      fontSize: '2rem',
-                      color: 'primaryTons.white',
-                      cursor: 'pointer',
-                      pl: '1rem',
-                    }}
-                  />
+                  <Tooltip title="Deletar filtro por nome.">
+                    <CloseIcon
+                      sx={{
+                        fontSize: '2rem',
+                        color: 'primaryTons.white',
+                        cursor: 'pointer',
+                        pl: '1rem',
+                      }}
+                    />
+                  </Tooltip>
                 </Box>
               </button>
             )}
@@ -571,44 +633,8 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
               </button>
             )}
           </Box>
-
-          <Link
-            href={`/promedina/${area}/register`}
-            style={{
-              color: '#FFFFFF',
-              backgroundColor: '#1DD010',
-              height: '28px',
-              width: 'fit-content',
-              borderRadius: '20px',
-              padding: '0 12px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: '700',
-              marginLeft: '2px',
-              cursor: 'pointer',
-            }}
-          >
-            <Tooltip title="Cadastrar nova amostra em camadas granulares">
-              <AddIcon sx={{ fontSize: '1.15rem', fontWeight: 700 }} />
-            </Tooltip>
-
-            <Tooltip title="Cadastrar nova amostra em camadas granulares">
-              <Typography
-                sx={{
-                  display: { mobile: 'none', notebook: 'flex' },
-                  fontSize: '1rem',
-                  fontWeight: 700,
-                  lineHeight: '1.1rem',
-                  ml: '4px',
-                  textTransform: 'uppercase',
-                }}
-              >
-                Nova amostra
-              </Typography>
-            </Tooltip>
-          </Link>
         </Box>
+
         <Paper
           sx={{
             width: '100%',
