@@ -3,7 +3,7 @@ import PromedinaMaterialsTemplate from '@/components/molecules/filter/filter-tab
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
 import useAuth from '@/contexts/auth';
-import samplesService from '@/services/soils/soils-samples.service';
+import samplesService from '@/services/promedina/granular-layers/granular-layers.service';
 import { Box, Container } from '@mui/material';
 import { useState, useEffect } from 'react';
 
@@ -22,7 +22,7 @@ const GranularLayers_view = () => {
 
   useEffect(() => {
     samplesService
-      .getSamplesByUserId()
+      .getSamples()
       .then((response) => {
         setSamples(response.data);
         setLoading(false);

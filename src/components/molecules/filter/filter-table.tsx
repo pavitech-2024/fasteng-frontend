@@ -46,14 +46,6 @@ interface DataToFilter {
   cityState: string;
 }
 
-// const PromedinaMaterialsTemplate = ({
-//   materials,
-//   handleOpenModal,
-//   handleDeleteMaterial,
-//   modal,
-// }: PromedinaMaterialsTemplateProps) => {
-//   console.log("🚀 ~ file: filter-table.tsx:57 ~ materials:", materials)
-//   const app = useRouter().pathname.split('/')[1];
 const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: PromedinaMaterialsTemplateProps) => {
   const [nameFilter, setNameFilter] = useState('');
   const [layerFilter, setLayerFilter] = useState('');
@@ -81,14 +73,33 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
     setSearchValue('');
   }, [searchBy]);
 
+  // const filteredData = materials
+  //   .map(({ _id, name, cityState, layer, zone }) => ({
+  //     _id,
+  //     name,
+  //     cityState,
+  //     zone,
+  //     layer,
+  //   }))
+  //   .filter((material) => {
+  //     return searchValue.length > 0
+  //       ? searchBy === 'name'
+  //         ? material[searchBy].toLowerCase().includes(searchValue.toLowerCase())
+  //         : material[searchBy] === searchValue
+  //       : true;
+  //   });
+
   const filteredData = materials
-    .map(({ _id, name, cityState, layer, zone }) => ({
-      _id,
-      name,
-      cityState,
-      zone,
-      layer,
-    }))
+    .map(({ _id, generalData }) => {
+      const { name, cityState, zone, layer } = generalData;
+      return {
+        _id,
+        name,
+        cityState,
+        zone,
+        layer,
+      };
+    })
     .filter((material) => {
       return searchValue.length > 0
         ? searchBy === 'name'
@@ -96,6 +107,10 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
           : material[searchBy] === searchValue
         : true;
     });
+  
+  useEffect(() => {
+    console.log("🚀 ~ file: filter-table.tsx:83 ~ PromedinaMaterialsTemplate ~ filteredData:", filteredData)
+  }, [filteredData])
 
   const getFilter = async (e: string) => {
     const filter = [];
@@ -679,6 +694,7 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                         {column.id === 'name' && row.name}
                         {column.id === 'cityState' && row.cityState}
                         {column.id === 'layer' && row.layer}
+                        {column.id === 'zone' && row.zone}
                         {column.id === 'actions' && (
                           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Button
