@@ -54,6 +54,7 @@ const PromedinaMaterialsTemplate = ({
   handleDeleteMaterial,
   modal,
 }: PromedinaMaterialsTemplateProps) => {
+  console.log("🚀 ~ file: filter-table.tsx:57 ~ materials:", materials)
   const app = useRouter().pathname.split('/')[1];
 
   const [page, setPage] = useState<number>(0);

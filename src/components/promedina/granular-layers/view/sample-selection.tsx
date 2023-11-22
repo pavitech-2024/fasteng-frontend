@@ -14,18 +14,6 @@ const GranularLayers_view = () => {
   const [samples, setSamples] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    samplesService
-      .getSamplesByUserId(user._id)
-      .then((response) => {
-        setSamples(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Failed to load samples:', error);
-      });
-  }, [user]);
-
   const handleDeleteSample = async (id: string) => {
     try {
       await samplesService.deleteSample(id);
@@ -40,7 +28,7 @@ const GranularLayers_view = () => {
   const addNewSample = () => {
     setLoading(true);
     samplesService
-      .getSamplesByUserId(user._id)
+      .getSamplesByUserId()
       .then((response) => {
         setSamples(response.data);
         setLoading(false);
