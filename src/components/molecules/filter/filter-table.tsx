@@ -405,8 +405,8 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
             sx={{
               display: 'flex',
               justifyContent: 'flex-start',
-              flexDirection: 'row',
-              alignItems: { mobile: 'end', notebook: 'start' },
+              flexDirection: { mobile: 'column', notebook: 'row' },
+              alignItems:'start' ,
               width: '100%',
               gap: '0.5rem',
               marginTop: '1rem',
