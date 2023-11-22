@@ -41,8 +41,8 @@ const StabilizedLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProp
   ];
 
   const inputsMaterialFatigue = [
-    { label: t('pm.granularLayer.k1.psi1'), value: step3Data.k1psi1, key: 'k1psi1', required: true },
-    { label: t('pm.granularLayer.k2.psi2'), value: step3Data.k2psi2, key: 'k2psi2', required: true },
+    { label: t('pm.granularLayer.k1.psi1'), value: step3Data.fatiguek1psi1, key: 'k1psi1', required: true },
+    { label: t('pm.granularLayer.k2.psi2'), value: step3Data.fatiguek2psi2, key: 'k2psi2', required: true },
     {
       label: t('pm.granularLayer.mf.observations'),
       value: step3Data.observations,

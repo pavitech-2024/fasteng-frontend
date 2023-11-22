@@ -1,5 +1,5 @@
 import { UnitMassIcon } from '@/assets';
-import PromedinaMaterialsTemplate from '@/components/molecules/filter/filter-table';
+import FilterTable from '@/components/molecules/filter/filter-table';
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
 import useAuth from '@/contexts/auth';
@@ -7,22 +7,14 @@ import samplesService from '@/services/soils/soils-samples.service';
 import { Box, Container } from '@mui/material';
 import { useState, useEffect } from 'react';
 
-const GranularLayers_view = () => {
-  const [openModal, setOpenModal] = useState(false);
-  const handleOpenModal = () => setOpenModal(true);
-
+const StabilizedLayers_view = () => {
   const { user } = useAuth();
   const [samples, setSamples] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    console.log("🚀 ~ file: index.tsx:26 ~ samples:", samples)
-  }, [samples])
-  
-
-  useEffect(() => {
     samplesService
-      .getSamplesByUserId()
+      .getSamplesByUserId(user._id)
       .then((response) => {
         setSamples(response.data);
         setLoading(false);
@@ -51,7 +43,7 @@ const GranularLayers_view = () => {
       ) : (
         <Container>
           <Header
-            title={'Amostras cadastradas em Camadas Granulares'}
+            title={'Amostras cadastradas em Camadas Estabilizadas'}
             image={GranularLayersIcon}
             sx={{ marginTop: '3rem' }}
           />
@@ -77,11 +69,7 @@ const GranularLayers_view = () => {
                 marginBottom: '1rem',
               }}
             >
-              <PromedinaMaterialsTemplate
-                materials={samples}
-                handleDeleteMaterial={handleDeleteSample}
-                area={'granular-layers'}
-              />
+              <FilterTable materials={samples} handleDeleteMaterial={handleDeleteSample} area={'stabilized-layers'} />
             </Box>
           </Box>
         </Container>
@@ -90,4 +78,4 @@ const GranularLayers_view = () => {
   );
 };
 
-export default GranularLayers_view;
+export default StabilizedLayers_view;

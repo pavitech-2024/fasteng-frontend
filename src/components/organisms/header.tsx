@@ -9,11 +9,13 @@ interface HeaderProps {
   icon?: JSX.Element;
   image?: StaticImageData;
   children?: React.ReactNode | JSX.Element;
+  sx?: { [key: string]: string | number | { [key: string]: string | number } };
 }
 
-export const Header = ({ title, subTitle, link, icon, image, children }: HeaderProps) => {
+export const Header = ({ title, subTitle, link, icon, image, children, sx }: HeaderProps) => {
   return (
     <Box
+      style={sx}
       sx={{
         width: '100%',
         display: 'flex',

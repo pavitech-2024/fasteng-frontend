@@ -21,7 +21,7 @@ interface Step2Data {
   latitudeF: string;
   longitudeF: string;
   monitoringPhase: string;
-  observation: string;
+  observation?: string;
   // Paviment Preparation
   milling: string;
   interventionAtTheBase: string;
@@ -56,8 +56,8 @@ interface Step3Data {
   constantA: string;
   constantB: string;
   // Material fatigue
-  k1psi1: string;
-  k2psi2: string;
+  fatiguek1psi1: string;
+  fatiguek2psi2: string;
   observations: string;
 }
 
@@ -128,8 +128,8 @@ const useStabilizedLayersStore = create<StabilizedLayersData & StabilizedLayersA
           rsFinal: null,
           constantA: null,
           constantB: null,
-          k1psi1: null,
-          k2psi2: null,
+          fatiguek1psi1: null,
+          fatiguek2psi2: null,
           observations: null,
         },
         setData: ({ step, key, value }) =>

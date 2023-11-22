@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import {
   Box,
@@ -17,25 +16,24 @@ import {
   DialogContent,
   DialogContentText,
   Tooltip,
+  InputBase,
 } from '@mui/material';
-import Search from '@/components/atoms/inputs/search';
-import { AddIcon, DeleteIcon, NextIcon } from '@/assets';
+import { AddIcon, CloseIcon, DeleteIcon, NextIcon, SearchIcon } from '@/assets';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import { PromedinaDataFilter } from '@/interfaces/promedina';
 import DropDown from '@/components/atoms/inputs/dropDown';
 import StepDescription from '@/components/atoms/titles/step-description';
+import Link from 'next/link';
 
 interface PromedinaMaterialsTemplateProps {
   materials: PromedinaDataFilter[];
-  //Modal
-  handleOpenModal: () => void;
   handleDeleteMaterial: (id: string) => void;
-  modal: JSX.Element;
+  area: string;
 }
 
 interface MaterialsColumn {
-  id: 'name' | 'state' | 'layer' | 'city' | 'actions';
+  id: 'name' | 'layer' | 'cityState' | 'zone' | 'actions';
   label: string;
   width: string;
 }
@@ -43,19 +41,24 @@ interface MaterialsColumn {
 interface DataToFilter {
   _id: string;
   name: string;
-  state: string;
   layer: string;
-  city: string;
+  zone: string;
+  cityState: string;
 }
 
-const PromedinaMaterialsTemplate = ({
-  materials,
-  handleOpenModal,
-  handleDeleteMaterial,
-  modal,
-}: PromedinaMaterialsTemplateProps) => {
-  console.log("🚀 ~ file: filter-table.tsx:57 ~ materials:", materials)
-  const app = useRouter().pathname.split('/')[1];
+// const PromedinaMaterialsTemplate = ({
+//   materials,
+//   handleOpenModal,
+//   handleDeleteMaterial,
+//   modal,
+// }: PromedinaMaterialsTemplateProps) => {
+//   console.log("🚀 ~ file: filter-table.tsx:57 ~ materials:", materials)
+//   const app = useRouter().pathname.split('/')[1];
+const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: PromedinaMaterialsTemplateProps) => {
+  const [nameFilter, setNameFilter] = useState('');
+  const [layerFilter, setLayerFilter] = useState('');
+  const [cityStateFilter, setCityStateFilter] = useState('');
+  const [zoneFilter, setZoneFilter] = useState('');
 
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
@@ -68,9 +71,9 @@ const PromedinaMaterialsTemplate = ({
 
   const columns: MaterialsColumn[] = [
     { id: 'name', label: t('materials.template.name'), width: '25%' },
-    { id: 'city', label: t('materials.template.city'), width: '25%' },
-    { id: 'state', label: t('materials.template.state'), width: '25%' },
+    { id: 'cityState', label: t('materials.template.cityState'), width: '25%' },
     { id: 'layer', label: t('materials.template.layer'), width: '25%' },
+    { id: 'zone', label: t('materials.template.zone'), width: '25%' },
     { id: 'actions', label: t('materials.template.actions'), width: '25%' },
   ];
 
@@ -79,11 +82,11 @@ const PromedinaMaterialsTemplate = ({
   }, [searchBy]);
 
   const filteredData = materials
-    .map(({ _id, name, city, state, layer }) => ({
+    .map(({ _id, name, cityState, layer, zone }) => ({
       _id,
       name,
-      city,
-      state,
+      cityState,
+      zone,
       layer,
     }))
     .filter((material) => {
@@ -93,6 +96,34 @@ const PromedinaMaterialsTemplate = ({
           : material[searchBy] === searchValue
         : true;
     });
+
+  const getFilter = async (e: string) => {
+    const filter = [];
+
+    if (e == nameFilter) {
+      filter.push({ name: nameFilter });
+    }
+    if (e == layerFilter) {
+      filter.push({ layer: layerFilter });
+    }
+    if (e == cityStateFilter) {
+      filter.push({ cityState: cityStateFilter });
+    }
+    if (e == zoneFilter) {
+      filter.push({ zone: zoneFilter });
+    }
+
+    const encodedFilter = decodeURIComponent(JSON.stringify(filter));
+    const filteredSpecificData = await fetch(
+      `promedina/samples/filter/?page=${page}&limit=${rowsPerPage}&filter=${encodedFilter}`
+    )
+      .then((res) => res.json())
+      .catch(() => ({}));
+
+    return {
+      filteredSpecificData,
+    };
+  };
 
   return (
     <>
@@ -144,140 +175,474 @@ const PromedinaMaterialsTemplate = ({
           </Box>
         </DialogContent>
       </Dialog>
-      {/*Create new  Modal */}
-      {modal}
 
       {/*Page */}
       <StepDescription
-        text={
-          'Todas as vezes em que você selecionar uma categoria e digitar em "Pesquisar", a tabela será atualizada com os dados filtrados.'
-        }
+        text={'Após selecionar os filtros, clique no botão com a lupa para atualizar a tabela com os dados filtrados.'}
       />
       <Box sx={{ p: { mobile: '0 4vw', notebook: '0 2vw' }, mb: '4vw', width: '100%', maxWidth: '1800px' }}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-            alignItems: { mobile: 'end', notebook: 'space-between' },
-            width: '100%',
-            gap: '8px',
-          }}
-        >
+        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr' }}>
           <Box
             sx={{
               display: 'flex',
-              gap: '10px',
-              flexDirection: { mobile: 'column', notebook: 'row' },
-              width: '55%',
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              alignItems: { mobile: 'end', notebook: 'space-between' },
+              width: '100%',
+              gap: '8px',
             }}
           >
-            <DropDown
-              label={t('materials.template.searchBy')}
-              options={[
-                { label: t('materials.template.name'), value: 'name' },
-                { label: t('materials.template.city'), value: 'city' },
-                { label: t('materials.template.state'), value: 'state' },
-                { label: t('materials.template.layer'), value: 'layer' },
-              ]}
-              callback={setSearchBy}
-              size="small"
-              sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
-              defaultValue={{ label: t('materials.template.name'), value: 'name' }}
-            />
-            {searchBy === 'name' && (
-              <Search
+            <Box
+              sx={{
+                display: 'flex',
+                gap: '10px',
+                flexDirection: { mobile: 'column', notebook: 'row' },
+                width: '55%',
+              }}
+            >
+              <DropDown
+                label={t('materials.template.searchBy')}
+                options={[
+                  { label: t('materials.template.name'), value: 'name' },
+                  { label: t('materials.template.cityState'), value: 'cityState' },
+                  { label: t('materials.template.layer'), value: 'layer' },
+                  { label: t('materials.template.zone'), value: 'zone' },
+                ]}
+                callback={setSearchBy}
+                size="small"
                 sx={{
-                  width: { mobile: '100%', notebook: '75%' },
-                  maxWidth: '450px',
-                  height: '39px',
+                  width: { mobile: '50%', notebook: '35%' },
+                  minWidth: '120px',
+                  maxWidth: '150px',
+                  bgcolor: 'white',
                 }}
-                value={searchValue}
-                setValue={setSearchValue}
+                defaultValue={{ label: t('materials.template.name'), value: 'name' }}
               />
-            )}
+              {searchBy === 'name' && (
+                <Paper
+                  component="div"
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    boxShadow: 'none',
+                    border: '1px solid rgba(0, 0, 0, 0.28)',
+                  }}
+                  color="primary"
+                >
+                  <InputBase
+                    sx={{ ml: 1, flex: 1 }}
+                    placeholder={'Pesquisar por nome'}
+                    value={nameFilter}
+                    onChange={(e) => setNameFilter(e.target.value)}
+                  />
+                  <Box
+                    sx={{
+                      backgroundColor: 'secondaryTons.blue',
+                      borderColor: 'secondaryTons.blue',
+                      borderTopRightRadius: '3px',
+                      borderBottomRightRadius: '3px',
+                      paddingTop: '0.2rem',
+                      paddingBottom: '0.1rem',
+                      paddingLeft: '0.5rem',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <SearchIcon
+                      sx={{ marginRight: '0.2rem', cursor: 'pointer', marginTop: '0.1rem', color: '#FFFFFF' }}
+                      onClick={() => getFilter(nameFilter)}
+                    />
+                  </Box>
+                </Paper>
+              )}
 
-            {searchBy === 'layer' && (
-              <Search
-                sx={{
-                  width: { mobile: '100%', notebook: '75%' },
-                  maxWidth: '450px',
-                  height: '39px',
-                }}
-                value={searchValue}
-                setValue={setSearchValue}
-              />
-            )}
-            {searchBy === 'city' && (
-              <Search
-                sx={{
-                  width: { mobile: '100%', notebook: '75%' },
-                  maxWidth: '450px',
-                  height: '39px',
-                }}
-                value={searchValue}
-                setValue={setSearchValue}
-              />
-            )}
-            {searchBy === 'state' && (
-              <Search
-                sx={{
-                  width: { mobile: '100%', notebook: '75%' },
-                  maxWidth: '450px',
-                  height: '39px',
-                }}
-                value={searchValue}
-                setValue={setSearchValue}
-              />
-            )}
+              {searchBy === 'layer' && (
+                <Paper
+                  component="div"
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    boxShadow: 'none',
+                    border: '1px solid rgba(0, 0, 0, 0.28)',
+                  }}
+                  color="primary"
+                >
+                  <InputBase
+                    sx={{ ml: 1, flex: 1 }}
+                    placeholder={'Ex. Base'}
+                    value={layerFilter}
+                    onChange={(e) => setLayerFilter(e.target.value)}
+                  />
+                  <Box
+                    sx={{
+                      backgroundColor: 'secondaryTons.blue',
+                      borderColor: 'secondaryTons.blue',
+                      borderTopRightRadius: '3px',
+                      borderBottomRightRadius: '3px',
+                      paddingTop: '0.2rem',
+                      paddingBottom: '0.2rem',
+                      paddingLeft: '0.5rem',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <SearchIcon
+                      sx={{ marginRight: '0.3rem', cursor: 'pointer', color: '#FFFFFF' }}
+                      onClick={() => getFilter(layerFilter)}
+                    />
+                  </Box>
+                </Paper>
+              )}
+              {searchBy === 'cityState' && (
+                <Paper
+                  component="div"
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    boxShadow: 'none',
+                    border: '1px solid rgba(0, 0, 0, 0.28)',
+                  }}
+                  color="primary"
+                >
+                  <InputBase
+                    sx={{ ml: 1, flex: 1, minWidth: 'fit-content' }}
+                    placeholder={'Ex. Campina Grande/PB'}
+                    value={cityStateFilter}
+                    onChange={(e) => setCityStateFilter(e.target.value)}
+                    fullWidth
+                  />
+                  <Box
+                    sx={{
+                      backgroundColor: 'secondaryTons.blue',
+                      borderColor: 'secondaryTons.blue',
+                      borderTopRightRadius: '3px',
+                      borderBottomRightRadius: '3px',
+                      paddingTop: '0.2rem',
+                      paddingBottom: '0.2rem',
+                      paddingLeft: '0.5rem',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <SearchIcon
+                      sx={{ marginRight: '0.3rem', cursor: 'pointer', color: '#FFFFFF' }}
+                      onClick={() => getFilter(cityStateFilter)}
+                    />
+                  </Box>
+                </Paper>
+              )}
+              {searchBy === 'zone' && (
+                <Paper
+                  component="div"
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    boxShadow: 'none',
+                    border: '1px solid rgba(0, 0, 0, 0.28)',
+                  }}
+                  color="primary"
+                >
+                  <InputBase
+                    sx={{ ml: 1, flex: 1 }}
+                    placeholder={'Ex. BR-230'}
+                    value={zoneFilter}
+                    onChange={(e) => setZoneFilter(e.target.value)}
+                  />
+                  <Box
+                    sx={{
+                      backgroundColor: 'secondaryTons.blue',
+                      borderColor: 'secondaryTons.blue',
+                      borderTopRightRadius: '3px',
+                      borderBottomRightRadius: '3px',
+                      paddingTop: '0.2rem',
+                      paddingBottom: '0.1rem',
+                      paddingLeft: '0.5rem',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <SearchIcon
+                      sx={{ marginRight: '0.2rem', cursor: 'pointer', marginTop: '0.1rem', color: '#FFFFFF' }}
+                      onClick={() => getFilter(zoneFilter)}
+                    />
+                  </Box>
+                </Paper>
+              )}
+            </Box>
+
+            <Link
+              href={`/promedina/${area}/register`}
+              style={{
+                color: '#FFFFFF',
+                backgroundColor: '#1DD010',
+                height: '28px',
+                width: 'fit-content',
+                borderRadius: '20px',
+                padding: '0 12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: '700',
+                marginLeft: '2px',
+                cursor: 'pointer',
+              }}
+            >
+              <Tooltip title="Cadastrar nova amostra em camadas granulares">
+                <AddIcon sx={{ fontSize: '1.15rem', fontWeight: 700 }} />
+              </Tooltip>
+
+              <Tooltip title="Cadastrar nova amostra em camadas granulares">
+                <Typography
+                  sx={{
+                    display: { mobile: 'none', notebook: 'flex' },
+                    fontSize: '1rem',
+                    fontWeight: 700,
+                    lineHeight: '1.1rem',
+                    ml: '4px',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  Nova amostra
+                </Typography>
+              </Tooltip>
+            </Link>
           </Box>
+
+          {/** TAGS */}
           <Box
-            onClick={handleOpenModal}
             sx={{
-              color: 'primaryTons.white',
-              bgcolor: '#1DD010',
-              height: { mobile: '36px', notebook: '28px' },
-              width: { mobile: '36px', notebook: 'fit-content' },
-              borderRadius: '20px',
-              p: { mobile: 0, notebook: '0 12px' },
               display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: '700',
-              ml: '2px',
-              cursor: 'pointer',
-
-              '&:hover': {
-                bgcolor: '#7ff877',
-              },
-
-              '&:active': {
-                bgcolor: 'primary.dark',
-              },
+              justifyContent: 'flex-start',
+              flexDirection: 'row',
+              alignItems: { mobile: 'end', notebook: 'start' },
+              width: '100%',
+              gap: '0.5rem',
+              marginTop: '1rem',
             }}
           >
-            <Tooltip title="Cadastrar nova amostra em camadas granulares">
-              <AddIcon sx={{ fontSize: '1.15rem', fontWeight: 700 }} />
-            </Tooltip>
-
-            <Tooltip title="Cadastrar nova amostra em camadas granulares">
-              <Typography
-                sx={{
-                  display: { mobile: 'none', notebook: 'flex' },
-                  fontSize: '1rem',
-                  fontWeight: 700,
-                  lineHeight: '1.1rem',
-                  ml: '4px',
-                  textTransform: 'uppercase',
+            {zoneFilter !== '' && (
+              <button
+                onClick={() => setZoneFilter('')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  border: '1px solid',
+                  borderColor: '#00A3FF',
+                  borderRadius: '15px',
+                  padding: '.1rem 1rem',
+                  backgroundColor: '#00A3FF',
                 }}
               >
-                {`${
-                  app === 'soils' ? ` ${t('materials.template.newSample')}` : ` ${t('materials.template.newMaterial')}`
-                }`}
-              </Typography>
-            </Tooltip>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    borderRight: '1.5px solid',
+                    borderColor: 'primaryTons.white',
+                    pr: '1rem',
+                    width: '100%',
+                  }}
+                >
+                  <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
+                    Local
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    height: '100%',
+                    alignItems: {
+                      mobile: 'start',
+                      notebook: 'center',
+                    },
+                    justifyContent: {
+                      mobile: 'end',
+                      notebook: 'center',
+                    },
+                  }}
+                >
+                  <CloseIcon
+                    sx={{
+                      fontSize: '2rem',
+                      color: 'primaryTons.white',
+                      cursor: 'pointer',
+                      pl: '1rem',
+                    }}
+                  />
+                </Box>
+              </button>
+            )}
+            {nameFilter !== '' && (
+              <button
+                onClick={() => setNameFilter('')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  border: '1px solid',
+                  borderColor: '#00A3FF',
+                  borderRadius: '15px',
+                  padding: '.1rem 1rem',
+                  backgroundColor: '#00A3FF',
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    borderRight: '1.5px solid',
+                    borderColor: 'primaryTons.white',
+                    pr: '1rem',
+                    width: '100%',
+                  }}
+                >
+                  <Tooltip title="Você digitou um filtro por nome.">
+                    <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
+                      Nome
+                    </Typography>
+                  </Tooltip>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    height: '100%',
+                    alignItems: {
+                      mobile: 'start',
+                      notebook: 'center',
+                    },
+                    justifyContent: {
+                      mobile: 'end',
+                      notebook: 'center',
+                    },
+                  }}
+                >
+                  <Tooltip title="Deletar filtro por nome.">
+                    <CloseIcon
+                      sx={{
+                        fontSize: '2rem',
+                        color: 'primaryTons.white',
+                        cursor: 'pointer',
+                        pl: '1rem',
+                      }}
+                    />
+                  </Tooltip>
+                </Box>
+              </button>
+            )}
+            {cityStateFilter !== '' && (
+              <button
+                onClick={() => setCityStateFilter('')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  border: '1px solid',
+                  borderColor: '#00A3FF',
+                  borderRadius: '15px',
+                  padding: '.1rem 1rem',
+                  backgroundColor: '#00A3FF',
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    borderRight: '1.5px solid',
+                    borderColor: 'primaryTons.white',
+                    pr: '1rem',
+                    width: '100%',
+                  }}
+                >
+                  <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
+                    Município/Estado
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    height: '100%',
+                    alignItems: {
+                      mobile: 'start',
+                      notebook: 'center',
+                    },
+                    justifyContent: {
+                      mobile: 'end',
+                      notebook: 'center',
+                    },
+                  }}
+                >
+                  <CloseIcon
+                    sx={{
+                      fontSize: '2rem',
+                      color: 'primaryTons.white',
+                      cursor: 'pointer',
+                      pl: '1rem',
+                    }}
+                  />
+                </Box>
+              </button>
+            )}
+            {layerFilter !== '' && (
+              <button
+                onClick={() => setLayerFilter('')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  border: '1px solid',
+                  borderColor: '#00A3FF',
+                  borderRadius: '15px',
+                  padding: '.1rem 1rem',
+                  backgroundColor: '#00A3FF',
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    borderRight: '1.5px solid',
+                    borderColor: 'primaryTons.white',
+                    pr: '1rem',
+                    width: '100%',
+                  }}
+                >
+                  <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
+                    Camada
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    height: '100%',
+                    alignItems: {
+                      mobile: 'start',
+                      notebook: 'center',
+                    },
+                    justifyContent: {
+                      mobile: 'end',
+                      notebook: 'center',
+                    },
+                  }}
+                >
+                  <CloseIcon
+                    sx={{
+                      fontSize: '2rem',
+                      color: 'primaryTons.white',
+                      cursor: 'pointer',
+                      pl: '1rem',
+                    }}
+                  />
+                </Box>
+              </button>
+            )}
           </Box>
         </Box>
+
         <Paper
           sx={{
             width: '100%',
@@ -312,8 +677,7 @@ const PromedinaMaterialsTemplate = ({
                     {columns.map((column) => (
                       <TableCell key={column.id} align="center">
                         {column.id === 'name' && row.name}
-                        {column.id === 'city' && row.city}
-                        {column.id === 'state' && row.state}
+                        {column.id === 'cityState' && row.cityState}
                         {column.id === 'layer' && row.layer}
                         {column.id === 'actions' && (
                           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

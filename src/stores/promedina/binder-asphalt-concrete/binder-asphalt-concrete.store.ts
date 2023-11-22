@@ -47,6 +47,7 @@ interface Step3Data {
   invoiceNumber: string; // Número da nota fiscal
   dataInvoice: string; // Data da nota fiscal
   certificateDate: string; // Data do certificado
+  certificateNumber: string; // Número do certificado
   capType: string; // Tipo de CAP
   performanceGrade: string; // Performance grade (PG)
   penetration: string; // Penetração - 25°C (mm)
@@ -138,6 +139,7 @@ const useBinderAsphaltConcreteStore = create<BinderAsphaltConcreteData & BinderA
           invoiceNumber: null,
           dataInvoice: null,
           certificateDate: null,
+          certificateNumber: null,
           capType: null,
           performanceGrade: null,
           penetration: null,
