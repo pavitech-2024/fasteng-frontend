@@ -2,16 +2,12 @@ import { UnitMassIcon } from '@/assets';
 import FilterTable from '@/components/molecules/filter/filter-table';
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
-import NewSampleModal from '@/components/templates/modals/newSample';
 import useAuth from '@/contexts/auth';
 import samplesService from '@/services/soils/soils-samples.service';
 import { Box, Container } from '@mui/material';
 import { useState, useEffect } from 'react';
 
-const GranularLayers_view = () => {
-  const [openModal, setOpenModal] = useState(false);
-  const handleOpenModal = () => setOpenModal(true);
-
+const BinderAsphaltConcrete_view = () => {
   const { user } = useAuth();
   const [samples, setSamples] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -39,18 +35,6 @@ const GranularLayers_view = () => {
     }
   };
 
-  const addNewSample = () => {
-    setLoading(true);
-    samplesService
-      .getSamplesByUserId(user._id)
-      .then((response) => {
-        setSamples(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Failed to load samples:', error);
-      });
-  };
   const GranularLayersIcon = UnitMassIcon;
   return (
     <Container>
@@ -82,21 +66,13 @@ const GranularLayers_view = () => {
                 border: '1px solid',
                 borderColor: 'primaryTons.border',
                 height: '110vh',
-                marginBottom: '1rem'
+                marginBottom: '1rem',
               }}
             >
               <FilterTable
                 materials={samples}
-                handleOpenModal={handleOpenModal}
                 handleDeleteMaterial={handleDeleteSample}
-                modal={
-                  <NewSampleModal
-                    openModal={openModal}
-                    handleCloseModal={() => setOpenModal(false)}
-                    updateSamples={addNewSample}
-                    samples={samples}
-                  />
-                }
+                area={'binder-asphalt-concrete'}
               />
             </Box>
           </Box>
@@ -106,4 +82,4 @@ const GranularLayers_view = () => {
   );
 };
 
-export default GranularLayers_view;
+export default BinderAsphaltConcrete_view;

@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import {
   Box,
@@ -25,13 +24,12 @@ import { t } from 'i18next';
 import { PromedinaDataFilter } from '@/interfaces/promedina';
 import DropDown from '@/components/atoms/inputs/dropDown';
 import StepDescription from '@/components/atoms/titles/step-description';
+import Link from 'next/link';
 
 interface PromedinaMaterialsTemplateProps {
   materials: PromedinaDataFilter[];
-  //Modal
-  handleOpenModal: () => void;
   handleDeleteMaterial: (id: string) => void;
-  modal: JSX.Element;
+  area: string;
 }
 
 interface MaterialsColumn {
@@ -48,14 +46,7 @@ interface DataToFilter {
   city: string;
 }
 
-const PromedinaMaterialsTemplate = ({
-  materials,
-  handleOpenModal,
-  handleDeleteMaterial,
-  modal,
-}: PromedinaMaterialsTemplateProps) => {
-  const app = useRouter().pathname.split('/')[1];
-
+const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: PromedinaMaterialsTemplateProps) => {
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
 
@@ -143,8 +134,6 @@ const PromedinaMaterialsTemplate = ({
           </Box>
         </DialogContent>
       </Dialog>
-      {/*Create new  Modal */}
-      {modal}
 
       {/*Page */}
       <StepDescription
@@ -230,29 +219,22 @@ const PromedinaMaterialsTemplate = ({
               />
             )}
           </Box>
-          <Box
-            onClick={handleOpenModal}
-            sx={{
-              color: 'primaryTons.white',
-              bgcolor: '#1DD010',
-              height: { mobile: '36px', notebook: '28px' },
-              width: { mobile: '36px', notebook: 'fit-content' },
+
+          <Link
+            href={`/promedina/${area}/register`}
+            style={{
+              color: '#FFFFFF',
+              backgroundColor: '#1DD010',
+              height: '28px',
+              width: 'fit-content',
               borderRadius: '20px',
-              p: { mobile: 0, notebook: '0 12px' },
+              padding: '0 12px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontWeight: '700',
-              ml: '2px',
+              marginLeft: '2px',
               cursor: 'pointer',
-
-              '&:hover': {
-                bgcolor: '#7ff877',
-              },
-
-              '&:active': {
-                bgcolor: 'primary.dark',
-              },
             }}
           >
             <Tooltip title="Cadastrar nova amostra em camadas granulares">
@@ -270,12 +252,10 @@ const PromedinaMaterialsTemplate = ({
                   textTransform: 'uppercase',
                 }}
               >
-                {`${
-                  app === 'soils' ? ` ${t('materials.template.newSample')}` : ` ${t('materials.template.newMaterial')}`
-                }`}
+                Nova amostra
               </Typography>
             </Tooltip>
-          </Box>
+          </Link>
         </Box>
         <Paper
           sx={{

@@ -35,6 +35,12 @@ const BinderAsphaltConcrete_step3 = ({ nextDisabled, setNextDisabled }: EssayPag
       required: true,
     },
     {
+      label: t('pm.binderAsphaltConcrete.certificateNumber'),
+      value: step3Data.certificateNumber,
+      key: 'certificateNumber',
+      required: true,
+    },
+    {
       label: t('pm.binderAsphaltConcrete.capType'),
       value: step3Data.capType,
       key: 'capType',
