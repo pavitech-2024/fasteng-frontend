@@ -143,6 +143,11 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
     }
   };
 
+  const handleDeleteSample = (id: string) => {
+    console.log("🚀 ~ file: filter-table.tsx:147 ~ handleDeleteSample ~ id:", id)
+    
+  }
+
   return (
     <>
       {/*Delete Modal */}
@@ -183,6 +188,7 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                     error: t('materials.template.toast.delete.error') + RowToDelete?.name + '.',
                   });
                   setOpenDeleteModal(false);
+                  setMaterialsData(materialsData.filter((sample) => sample._id === RowToDelete?._id));
                 } catch (error) {
                   throw error;
                 }
