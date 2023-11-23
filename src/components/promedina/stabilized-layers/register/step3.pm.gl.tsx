@@ -50,36 +50,28 @@ const StabilizedLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProp
       required: false,
     },
   ];
-
-  inputsPavimentData.every(({ required, value }) => {
-    if (!required) return true;
-
-    if (value === null) return false;
-
-    if (typeof value === 'string' && value.trim() === '') return false;
-
-    return true;
-  }) &&
-    inputsResilienceModule.every(({ required, value }) => {
+  
+  if (nextDisabled) {  
+    inputsPavimentData.every(({ required, value }) => {
       if (!required) return true;
-
       if (value === null) return false;
-
       if (typeof value === 'string' && value.trim() === '') return false;
-
       return true;
     }) &&
     inputsMaterialFatigue.every(({ required, value }) => {
       if (!required) return true;
-
       if (value === null) return false;
-
       if (typeof value === 'string' && value.trim() === '') return false;
-
       return true;
     }) &&
-    nextDisabled &&
-    setNextDisabled(false);
+    inputsResilienceModule.every(({ required, value }) => {
+      if (!required) return true;
+      if (value === null) return false;
+      if (typeof value === 'string' && value.trim() === '') return false;
+      return true;
+    }) &&
+    setNextDisabled(false)
+  }
 
   return (
     <>
@@ -109,7 +101,7 @@ const StabilizedLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProp
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  onChange={(e) => setData({ step: 2, key: input.key, value: e.target.value })}
                 />
               );
             })}
@@ -143,7 +135,7 @@ const StabilizedLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProp
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  onChange={(e) => setData({ step: 2, key: input.key, value: e.target.value })}
                 />
               );
             })}
@@ -177,7 +169,7 @@ const StabilizedLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProp
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  onChange={(e) => setData({ step: 2, key: input.key, value: e.target.value })}
                 />
               );
             })}

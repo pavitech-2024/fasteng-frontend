@@ -13,8 +13,8 @@ class ConcreteGranulometry_SERVICE implements IEssayService {
   info = {
     key: 'granulometry-concrete',
     icon: GranulometryIcon,
-    title: t('concrete.essays.granulometry-concrete'),
-    path: '/concrete/essays/granulometry-concrete',
+    title: t('concrete.essays.granulometry'),
+    path: '/concrete/essays/granulometry',
     backend_path: 'concrete/essays/granulometry',
     steps: 3,
     standard: {

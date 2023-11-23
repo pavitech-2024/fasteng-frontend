@@ -11,7 +11,7 @@ class SoilsGranulometry_SERVICE implements IEssayService {
     key: 'granulometry-soils',
     icon: GranulometryIcon,
     title: t('soils.essays.granulometry'),
-    path: '/soils/essays/granulometry-soils',
+    path: '/soils/essays/granulometry',
     backend_path: 'soils/essays/granulometry',
     steps: 3,
     standard: {

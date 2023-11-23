@@ -29,9 +29,9 @@ const BinderAsphaltConcrete = () => {
 
   const childrens = [
     { step: 0, children: <BinderAsphaltConcrete_step1 />, data: store.generalData },
-    { step: 1, children: <BinderAsphaltConcrete_step2 />, data: store.step2Data },
-    { step: 2, children: <BinderAsphaltConcrete_step3 />, data: store.step3Data },
-    { step: 3, children: <BinderAsphaltConcrete_step4 />, data: store.step4Data },
+    { step: 1, children: <BinderAsphaltConcrete_step2 />, data: store },
+    { step: 2, children: <BinderAsphaltConcrete_step3 />, data: store },
+    { step: 3, children: <BinderAsphaltConcrete_step4 />, data: store },
   ];
 
   return (

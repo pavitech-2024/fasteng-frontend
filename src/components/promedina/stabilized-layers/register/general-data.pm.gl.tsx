@@ -2,7 +2,6 @@ import { EssayPageProps } from '../../../templates/essay';
 import { t } from 'i18next';
 import { Box, TextField } from '@mui/material';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
-import { useEffect } from 'react';
 import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 
 const StabilizedLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
@@ -33,7 +32,7 @@ const StabilizedLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProp
     nextDisabled &&
     setNextDisabled(false);
 
-  useEffect(() => nextDisabled && setNextDisabled(false), [nextDisabled, setNextDisabled]);
+  // useEffect(() => nextDisabled && setNextDisabled(false), [nextDisabled, setNextDisabled]);
 
   return (
     <>

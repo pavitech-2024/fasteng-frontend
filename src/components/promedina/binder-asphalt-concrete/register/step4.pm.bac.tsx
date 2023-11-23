@@ -86,26 +86,21 @@ const BinderAsphaltConcrete_step4 = ({ nextDisabled, setNextDisabled }: EssayPag
     },
   ];
 
-  inputsPavimentData.every(({ required, value }) => {
-    if (!required) return true;
-
-    if (value === null) return false;
-
-    if (typeof value === 'string' && value.trim() === '') return false;
-
-    return true;
-  }) &&
-    inputsDiametralCompressionFatigueCurve.every(({ required, value }) => {
+  if (nextDisabled) {  
+    inputsPavimentData.every(({ required, value }) => {
       if (!required) return true;
-
       if (value === null) return false;
-
       if (typeof value === 'string' && value.trim() === '') return false;
-
       return true;
     }) &&
-    nextDisabled &&
-    setNextDisabled(false);
+    inputsDiametralCompressionFatigueCurve.every(({ required, value }) => {
+      if (!required) return true;
+      if (value === null) return false;
+      if (typeof value === 'string' && value.trim() === '') return false;
+      return true;
+    }) &&
+    setNextDisabled(false)
+  }
 
   return (
     <>
@@ -135,7 +130,7 @@ const BinderAsphaltConcrete_step4 = ({ nextDisabled, setNextDisabled }: EssayPag
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  onChange={(e) => setData({ step: 3, key: input.key, value: e.target.value })}
                 />
               );
             })}
@@ -169,7 +164,7 @@ const BinderAsphaltConcrete_step4 = ({ nextDisabled, setNextDisabled }: EssayPag
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  onChange={(e) => setData({ step: 3, key: input.key, value: e.target.value })}
                 />
               );
             })}

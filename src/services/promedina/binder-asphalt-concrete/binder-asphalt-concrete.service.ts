@@ -14,7 +14,7 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
     title: t('pm.binder-asphalt-concrete-register'),
     path: '/promedina/binder-asphalt-concrete',
     steps: 4,
-    backend_path: '',
+    backend_path: 'promedina/binder-asphalt-concrete/binder-asphalt-concrete-samples',
     standard: {
       name: '',
       link: '',
@@ -32,25 +32,25 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
 
   /** @handleNext Receives the step and data from the form and calls the respective method */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  handleNext = async (step: number, _data: unknown): Promise<void> => {
+  handleNext = async (step: number, data: unknown): Promise<void> => {
     try {
       switch (step) {
         case 0:
           true;
-          //await this.submitGeneralData(data as BinderAsphaltConcreteData['generalData']);
+          await this.submitGeneralData(data as BinderAsphaltConcreteData['generalData']);
           break;
         case 1:
           true;
-          //await this.submitStep2Data(data as BinderAsphaltConcreteData['step2Data']);
+          await this.submitStep2Data(data as BinderAsphaltConcreteData['step2Data']);
           break;
         case 2:
           true;
-          //await this.submitStep3Data(data as BinderAsphaltConcreteData['step3Data']);
+          await this.submitStep3Data(data as BinderAsphaltConcreteData['step3Data']);
           break;
         case 3:
           true;
-          //await this.submitStep4Data(data as BinderAsphaltConcreteData['step4Data']);
-          //await this.saveEssay(data as BinderAsphaltConcreteData);
+          await this.submitStep4Data(data as BinderAsphaltConcreteData['step4Data']);
+          await this.saveEssay(data as BinderAsphaltConcreteData);
           break;
         default:
           throw t('errors.invalid-step');
@@ -61,9 +61,6 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: BinderAsphaltConcreteData['generalData']): Promise<void> => {
-    if (generalData) {
-      true;
-    }
 
     // try {
     // const { name, zone, layer, cityState, observations } = generalData;
@@ -90,9 +87,6 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   };
 
   submitStep2Data = async (step2Data: BinderAsphaltConcreteData['step2Data']): Promise<void> => {
-    if (step2Data) {
-      true;
-    }
     // try {
     //   const {
     //     identification,
@@ -147,9 +141,6 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   };
 
   submitStep3Data = async (step3Data: BinderAsphaltConcreteData['step3Data']): Promise<void> => {
-    if (step3Data) {
-      true;
-    }
     // try {
     // const {
     // refinery,
@@ -198,9 +189,7 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   };
 
   submitStep4Data = async (step4Data: BinderAsphaltConcreteData['step4Data']): Promise<void> => {
-    if (step4Data) {
-      true;
-    }
+
     // try {
     // const {
     // refinery,
@@ -251,11 +240,8 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   // save essay
   saveEssay = async (store: BinderAsphaltConcreteData): Promise<void> => {
     try {
-      const response = await Api.post(`${this.info.backend_path}/save-essay`, {
-        generalData: {
-          ...store.generalData,
-          userId: this.userId,
-        },
+      const response = await Api.post(`${this.info.backend_path}/save`, {
+        generalData: store.generalData,
         step2Data: store.step2Data,
         step3Data: store.step3Data,
         step4Data: store.step4Data,
@@ -263,9 +249,11 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
 
       const { success, error } = response.data;
 
-      console.log(error);
-
-      if (success === false) throw error.name;
+      if (!success) {
+        if (error && error.name === 'SampleCreationError') {
+          throw new Error(t('pm.binder-asphalt-concrete-register.already-exists-error'));
+        }
+      }
     } catch (error) {
       throw error;
     }

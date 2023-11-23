@@ -1,9 +1,8 @@
 import { EssayPageProps } from '../../../templates/essay';
 import { t } from 'i18next';
 import { Box, TextField } from '@mui/material';
-import useBinderAsphaltConcreteStore from '@/stores/promedina/granular-layers/granular-layers.store';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
-import { useEffect } from 'react';
+import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
 
 const BinderAsphaltConcrete_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { generalData, setData } = useBinderAsphaltConcreteStore();
@@ -33,7 +32,7 @@ const BinderAsphaltConcrete_step1 = ({ nextDisabled, setNextDisabled }: EssayPag
     nextDisabled &&
     setNextDisabled(false);
 
-  useEffect(() => nextDisabled && setNextDisabled(false), [nextDisabled, setNextDisabled]);
+  // useEffect(() => nextDisabled && setNextDisabled(false), [nextDisabled, setNextDisabled]);
 
   return (
     <>

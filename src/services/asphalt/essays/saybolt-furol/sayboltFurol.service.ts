@@ -9,8 +9,8 @@ class SayboltFurol_SERVICE implements IEssayService {
   info = {
     key: 'saybolt-furol',
     icon: SayboltFurolIcon,
-    title: t('asphalt.essays.saybolt'),
-    path: '/asphalt/essays/saybolt',
+    title: t('asphalt.essays.sayboltFurol'),
+    path: '/asphalt/essays/sayboltFurol',
     backend_path: 'asphalt/essays/sayboltFurol',
     steps: 3,
     standard: {

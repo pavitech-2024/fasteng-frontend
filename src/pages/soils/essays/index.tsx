@@ -10,10 +10,10 @@ const SoilsEssays: NextPage = () => {
 
   const essays: Essay[] = [
     {
-      title: t('soils.essays.granulometry-soils'),
+      title: t('soils.essays.granulometry'),
       icon: GranulometryIcon,
-      key: 'granulometry-soils',
-      link: '/soils/essays/granulometry-soils',
+      key: 'granulometry',
+      link: '/soils/essays/granulometry',
     },
     { ...cbr.info, link: cbr.info.path } as Essay,
     {

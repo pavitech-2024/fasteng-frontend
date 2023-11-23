@@ -1,13 +1,13 @@
 import { EssayPageProps } from '../../../templates/essay';
 import { t } from 'i18next';
 import { Box, Button, TextField } from '@mui/material';
-import useBinderAsphaltConcreteStore from '@/stores/promedina/granular-layers/granular-layers.store';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import { toast } from 'react-toastify';
 import UploadImages from '@/components/molecules/uploadImages';
 import { useState, useEffect } from 'react';
+import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
 
 const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useBinderAsphaltConcreteStore();
@@ -202,26 +202,24 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
     },
   ];
 
-  inputsPavimentData.every(({ required }) => {
-    if (!required) return true;
+  if (nextDisabled) {
+    const hasNullValues = rows.some((row) => Object.values(row).some((value) => value === null));
 
-    //   if (value === null) return false;
-
-    //   if (typeof value === 'string' && value.trim() === '') return false;
-
-    return true;
-  }) &&
-    inputsPavimentPreparation.every(({ required }) => {
+    inputsPavimentData.every(({ required, value }) => {
       if (!required) return true;
-
-      //     if (value === null) return false;
-
-      //     if (typeof value === 'string' && value.trim() === '') return false;
-
+      if (value === null) return false;
+      if (typeof value === 'string' && value.trim() === '') return false;
       return true;
     }) &&
-    nextDisabled &&
-    setNextDisabled(false);
+    inputsPavimentPreparation.every(({ required, value }) => {
+      if (!required) return true;
+      if (value === null) return false;
+      if (typeof value === 'string' && value.trim() === '') return false;
+      return true;
+    }) &&
+    !hasNullValues && 
+    setNextDisabled(false)
+  }
 
   return (
     <>
@@ -251,7 +249,7 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
                 />
               );
             })}
@@ -285,7 +283,7 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
                 />
               );
             })}

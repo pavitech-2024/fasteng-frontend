@@ -3,7 +3,6 @@ import { t } from 'i18next';
 import { Box, TextField } from '@mui/material';
 import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
-import { useEffect } from 'react';
 
 const GranularLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { generalData, setData } = useGranularLayersStore();
@@ -33,7 +32,7 @@ const GranularLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     nextDisabled &&
     setNextDisabled(false);
 
-    useEffect(() => nextDisabled && setNextDisabled(false), [nextDisabled, setNextDisabled]);
+    // useEffect(() => nextDisabled && setNextDisabled(false), [nextDisabled, setNextDisabled]);
 
   return (
     <>

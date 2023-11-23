@@ -3,7 +3,7 @@ import CHAPMAN_SERVICE from '../../../../services/concrete/essays/chapman/chapma
 import { EssayPageProps } from '../../../templates/essay';
 import { ConcreteMaterial } from '../../../../interfaces/concrete';
 import useAuth from '../../../../contexts/auth';
-import useChapmanStore from '../../../../stores/concrete/chapman.store';
+import useChapmanStore from '../../../../stores/concrete/chapman/chapman.store';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import Loading from '../../../molecules/loading';
