@@ -4,7 +4,7 @@ import PromedinaMaterialsTemplate from '@/components/molecules/filter/filter-tab
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
 import useAuth from '@/contexts/auth';
-import samplesService from '@/services/promedina/granular-layers/granular-layers.service';
+import samplesService from '@/services/promedina/granular-layers/granular-layers-view.service';
 import { Box, Button, Container } from '@mui/material';
 import { useState, useEffect } from 'react';
 

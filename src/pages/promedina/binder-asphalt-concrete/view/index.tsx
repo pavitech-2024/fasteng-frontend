@@ -1,10 +1,11 @@
-import { UnitMassIcon } from '@/assets';
-import FilterTable from '@/components/molecules/filter/filter-table';
+/* eslint-disable @next/next/no-html-link-for-pages */
+import { NextIcon, UnitMassIcon } from '@/assets';
+import PromedinaMaterialsTemplate from '@/components/molecules/filter/filter-table';
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
 import useAuth from '@/contexts/auth';
-import samplesService from '@/services/soils/soils-samples.service';
-import { Box, Container } from '@mui/material';
+import samplesService from '@/services/promedina/binder-asphalt-concrete/binder-asphalt-concrete-view.service';
+import { Box, Button, Container } from '@mui/material';
 import { useState, useEffect } from 'react';
 
 const BinderAsphaltConcrete_view = () => {
@@ -13,8 +14,12 @@ const BinderAsphaltConcrete_view = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    console.log("🚀 ~ file: index.tsx:26 ~ samples:", samples)
+  }, [samples])
+
+  useEffect(() => {
     samplesService
-      .getSamplesByUserId(user._id)
+      .getSamples()
       .then((response) => {
         setSamples(response.data);
         setLoading(false);
@@ -65,11 +70,10 @@ const BinderAsphaltConcrete_view = () => {
                 bgcolor: 'primaryTons.white',
                 border: '1px solid',
                 borderColor: 'primaryTons.border',
-                height: '110vh',
                 marginBottom: '1rem',
               }}
             >
-              <FilterTable
+              <PromedinaMaterialsTemplate
                 materials={samples}
                 handleDeleteMaterial={handleDeleteSample}
                 area={'binder-asphalt-concrete'}
@@ -78,6 +82,60 @@ const BinderAsphaltConcrete_view = () => {
           </Box>
         </Container>
       )}
+      <Box
+        sx={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          p: { mobile: '4vh 4vw', notebook: '3vh 6vw' },
+        }}
+      >
+        <a
+          href="/promedina/binder-asphalt-concrete"
+          style={{
+            backgroundColor: '#00A3FF',
+            color: '#FFFFFF',
+            height: '32px',
+            width: '140px',
+            fontSize: '1.2rem',
+            alignItems: 'center',
+            border: '#00A3FF',
+            borderRadius: '30px',
+            textAlign: 'center',
+            fontWeight: 'bold',
+            paddingTop: '0.2rem',
+          }}
+        >
+          VOLTAR
+        </a>
+
+        <Button
+          endIcon={<NextIcon />}
+          variant="contained"
+          disabled
+          sx={{
+            bgcolor: 'secondaryTons.blue',
+            color: 'primaryTons.white',
+            height: '32px',
+            width: '140px',
+            fontSize: '1rem',
+            display: 'none',
+
+            ':hover': {
+              transition: 'all 0.1s ease-in-out',
+              bgcolor: 'secondaryTons.blueDisabled',
+            },
+
+            ':active': {
+              transition: 'all 0.1s ease-in-out',
+              bgcolor: 'secondaryTons.blueClick',
+            },
+          }}
+        >
+          Próximo
+        </Button>
+      </Box>
     </Container>
   );
 };

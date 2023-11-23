@@ -5,5 +5,6 @@ export type PromedinaDataFilter = {
     layer: string;
     cityState: string;
     zone: string;
-  }
-}
+    highway: string;
+  };
+};

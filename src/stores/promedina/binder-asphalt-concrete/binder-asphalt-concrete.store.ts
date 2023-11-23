@@ -6,6 +6,7 @@ interface GeneralData {
   zone: string;
   layer: string;
   cityState: string;
+  highway: string;
   observations?: string;
 }
 
@@ -102,6 +103,7 @@ const useBinderAsphaltConcreteStore = create<BinderAsphaltConcreteData & BinderA
           zone: null,
           layer: null,
           cityState: null,
+          highway: null,
           observations: null,
         },
         step2Data: {

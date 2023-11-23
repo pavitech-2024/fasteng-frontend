@@ -124,7 +124,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
           <InputEndAdornment
             fullWidth
             label={t('pm.granularLayer.layer')}
-            type="number"
+            type="string"
             inputProps={{ min: 0 }}
             value={row.layer}
             onChange={(e) => {
@@ -148,7 +148,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
           <InputEndAdornment
             fullWidth
             label={t('pm.granularLayer.material')}
-            type="number"
+            type="string"
             inputProps={{ min: 0 }}
             value={row.wetGrossWeightCapsule}
             onChange={(e) => {
@@ -172,7 +172,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
           <InputEndAdornment
             fullWidth
             label={t('pm.granularLayer.thickness')}
-            type="number"
+            type="string"
             inputProps={{ min: 0 }}
             value={row.thickness}
             onChange={(e) => {

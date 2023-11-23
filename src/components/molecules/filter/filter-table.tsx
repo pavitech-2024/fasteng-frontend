@@ -25,7 +25,7 @@ import { PromedinaDataFilter } from '@/interfaces/promedina';
 import DropDown from '@/components/atoms/inputs/dropDown';
 import StepDescription from '@/components/atoms/titles/step-description';
 import Link from 'next/link';
-import samplesService from '@/services/promedina/granular-layers/granular-layers.service';
+import samplesService from '@/services/promedina/granular-layers/granular-layers-view.service';
 
 interface PromedinaMaterialsTemplateProps {
   materials: PromedinaDataFilter[];
@@ -34,7 +34,7 @@ interface PromedinaMaterialsTemplateProps {
 }
 
 interface MaterialsColumn {
-  id: 'name' | 'layer' | 'cityState' | 'zone' | 'actions';
+  id: 'name' | 'layer' | 'cityState' | 'zone' | 'actions' | 'highway';
   label: string;
   width: string;
 }
@@ -44,23 +44,25 @@ interface DataToFilter {
   name: string;
   layer: string;
   zone: string;
+  highway: string;
   cityState: string;
 }
 
 const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: PromedinaMaterialsTemplateProps) => {
   const [materialsData, setMaterialsData] = useState(materials);
-  console.log("🚀 ~ file: filter-table.tsx:54 ~ PromedinaMaterialsTemplate ~ materialsData:", materialsData)
+  console.log('🚀 ~ file: filter-table.tsx:54 ~ PromedinaMaterialsTemplate ~ materialsData:', materialsData);
 
   const [searchParams, setSearchParams] = useState({
     name: '',
     cityState: '',
     layer: '',
-    zone: ''
+    zone: '',
+    highway: '',
   });
 
   useEffect(() => {
-    console.log("🚀 ~ file: filter-table.tsx:69 ~ PromedinaMaterialsTemplate ~ searchParams:", searchParams)
-  }, [searchParams])
+    console.log('🚀 ~ file: filter-table.tsx:69 ~ PromedinaMaterialsTemplate ~ searchParams:', searchParams);
+  }, [searchParams]);
 
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
@@ -75,8 +77,9 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
   const columns: MaterialsColumn[] = [
     { id: 'name', label: t('materials.template.name'), width: '25%' },
     { id: 'cityState', label: t('materials.template.cityState'), width: '25%' },
+    { id: 'highway', label: t('materials.template.highway'), width: '15%' },
     { id: 'layer', label: t('materials.template.layer'), width: '25%' },
-    { id: 'zone', label: t('materials.template.zone'), width: '25%' },
+    { id: 'zone', label: t('materials.template.zone'), width: '30%' },
     { id: 'actions', label: t('materials.template.actions'), width: '25%' },
   ];
 
@@ -84,33 +87,39 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
     setSearchValue('');
   }, [searchBy]);
 
-  const [filteredData, setFilteredData] = useState([{
-    _id: '',
-    name: '',
-    cityState: '',
-    layer: '',
-    zone: ''
-  }]);
+  const [filteredData, setFilteredData] = useState([
+    {
+      _id: '',
+      name: '',
+      cityState: '',
+      layer: '',
+      zone: '',
+      highway: '',
+    },
+  ]);
 
   useEffect(() => {
-    setFilteredData(materialsData
-      .map(({ _id, generalData }) => {
-        const { name, cityState, zone, layer } = generalData;
-        return {
-          _id,
-          name,
-          cityState,
-          zone,
-          layer,
-        };
-      })
-      .filter((materialsData) => {
-        return searchValue.length > 0
-          ? searchBy === 'name'
-            ? materialsData[searchBy].toLowerCase().includes(searchValue.toLowerCase())
-            : materialsData[searchBy] === searchValue
-          : true;
-      }));
+    setFilteredData(
+      materialsData
+        .map(({ _id, generalData }) => {
+          const { name, cityState, zone, layer, highway } = generalData;
+          return {
+            _id,
+            name,
+            cityState,
+            zone,
+            layer,
+            highway,
+          };
+        })
+        .filter((materialsData) => {
+          return searchValue.length > 0
+            ? searchBy === 'name'
+              ? materialsData[searchBy].toLowerCase().includes(searchValue.toLowerCase())
+              : materialsData[searchBy] === searchValue
+            : true;
+        })
+    );
   }, [materialsData]);
 
   const getFilter = async (e: any) => {
@@ -128,23 +137,24 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
     const encodedFilter = encodeURIComponent(JSON.stringify(filter));
 
     try {
-      const filteredSpecificData = samplesService.getFilteredSamples(encodedFilter)
+      const filteredSpecificData = samplesService
+        .getFilteredSamples(encodedFilter)
         .then((response) => {
           setMaterialsData(response.data.docs);
-          setTotalPages(response.data.totalPages)
+          setTotalPages(response.data.totalPages);
         })
         .catch((error) => {
           console.error('Failed to load samples:', error);
-          console.log(filteredSpecificData)
+          console.log(filteredSpecificData);
         });
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   };
 
   // const handleDeleteSample = (id: string) => {
   //   console.log("🚀 ~ file: filter-table.tsx:147 ~ handleDeleteSample ~ id:", id)
-    
+
   // }
 
   return (
@@ -228,6 +238,7 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                 options={[
                   { label: t('materials.template.name'), value: 'name' },
                   { label: t('materials.template.cityState'), value: 'cityState' },
+                  { label: t('materials.template.highway'), value: 'highway' },
                   { label: t('materials.template.layer'), value: 'layer' },
                   { label: t('materials.template.zone'), value: 'zone' },
                 ]}
@@ -257,10 +268,12 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                     sx={{ ml: 1, flex: 1 }}
                     placeholder={'Pesquisar por nome'}
                     value={searchParams[searchBy]}
-                    onChange={(e) => setSearchParams((prevState) => ({
-                      ...prevState,
-                      [searchBy]: e.target.value,
-                    }))}
+                    onChange={(e) =>
+                      setSearchParams((prevState) => ({
+                        ...prevState,
+                        [searchBy]: e.target.value,
+                      }))
+                    }
                   />
                   <Box
                     sx={{
@@ -298,10 +311,12 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                     sx={{ ml: 1, flex: 1 }}
                     placeholder={'Ex. Base'}
                     value={searchParams[searchBy]}
-                    onChange={(e) => setSearchParams((prevState) => ({
-                      ...prevState,
-                      [searchBy]: e.target.value,
-                    }))}
+                    onChange={(e) =>
+                      setSearchParams((prevState) => ({
+                        ...prevState,
+                        [searchBy]: e.target.value,
+                      }))
+                    }
                   />
                   <Box
                     sx={{
@@ -338,10 +353,12 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                     sx={{ ml: 1, flex: 1, minWidth: 'fit-content' }}
                     placeholder={'Ex. Campina Grande/PB'}
                     value={searchParams[searchBy]}
-                    onChange={(e) => setSearchParams((prevState) => ({
-                      ...prevState,
-                      [searchBy]: e.target.value,
-                    }))}
+                    onChange={(e) =>
+                      setSearchParams((prevState) => ({
+                        ...prevState,
+                        [searchBy]: e.target.value,
+                      }))
+                    }
                     fullWidth
                   />
                   <Box
@@ -363,6 +380,48 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                   </Box>
                 </Paper>
               )}
+              {searchBy === 'highway' && (
+                <Paper
+                  component="div"
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    boxShadow: 'none',
+                    border: '1px solid rgba(0, 0, 0, 0.28)',
+                  }}
+                  color="primary"
+                >
+                  <InputBase
+                    sx={{ ml: 1, flex: 1 }}
+                    placeholder={'Pesquisar por rodovia'}
+                    value={searchParams[searchBy]}
+                    onChange={(e) =>
+                      setSearchParams((prevState) => ({
+                        ...prevState,
+                        [searchBy]: e.target.value,
+                      }))
+                    }
+                  />
+                  <Box
+                    sx={{
+                      backgroundColor: 'secondaryTons.blue',
+                      borderColor: 'secondaryTons.blue',
+                      borderTopRightRadius: '3px',
+                      borderBottomRightRadius: '3px',
+                      paddingTop: '0.2rem',
+                      paddingBottom: '0.1rem',
+                      paddingLeft: '0.5rem',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <SearchIcon
+                      sx={{ marginRight: '0.2rem', cursor: 'pointer', marginTop: '0.1rem', color: '#FFFFFF' }}
+                      onClick={() => getFilter(searchParams)}
+                    />
+                  </Box>
+                </Paper>
+              )}
               {searchBy === 'zone' && (
                 <Paper
                   component="div"
@@ -379,10 +438,12 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                     sx={{ ml: 1, flex: 1 }}
                     placeholder={'Ex. BR-230'}
                     value={searchParams[searchBy]}
-                    onChange={(e) => setSearchParams((prevState) => ({
-                      ...prevState,
-                      [searchBy]: e.target.value,
-                    }))}
+                    onChange={(e) =>
+                      setSearchParams((prevState) => ({
+                        ...prevState,
+                        [searchBy]: e.target.value,
+                      }))
+                    }
                   />
                   <Box
                     sx={{
@@ -725,6 +786,7 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                       <TableCell key={column.id} align="center">
                         {column.id === 'name' && row.name}
                         {column.id === 'cityState' && row.cityState}
+                        {column.id === 'highway' && row.highway}
                         {column.id === 'layer' && row.layer}
                         {column.id === 'zone' && row.zone}
                         {column.id === 'actions' && (

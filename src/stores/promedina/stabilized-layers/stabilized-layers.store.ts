@@ -5,6 +5,7 @@ interface GeneralData {
   name: string;
   zone: string;
   layer: string;
+  highway: string;
   cityState: string;
   observations?: string;
 }
@@ -82,6 +83,7 @@ const useStabilizedLayersStore = create<StabilizedLayersData & StabilizedLayersA
         generalData: {
           name: null,
           zone: null,
+          highway: null,
           layer: null,
           cityState: null,
           observations: null,

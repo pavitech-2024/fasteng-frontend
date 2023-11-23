@@ -10,6 +10,7 @@ const GranularLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
   const inputs = [
     { label: t('pm.granularLayer.name'), value: generalData.name, key: 'name', required: true },
     { label: t('pm.granularLayer.zone'), value: generalData.zone, key: 'zone', required: true },
+    { label: t('pm.granularLayer.highway'), value: generalData.highway, key: 'highway', required: true },
     { label: t('pm.granularLayer.layer'), value: generalData.layer, key: 'layer', required: true },
     { label: t('pm.granularLayer.cityState'), value: generalData.cityState, key: 'cityState', required: true },
     {

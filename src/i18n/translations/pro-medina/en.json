@@ -132,6 +132,9 @@
   "materials.template.layer": "Layer",
   "materials.template.cityState": "City/State",
   "materials.template.zone": "Zone",
+  "materials.template.highway": "Highway",
+  "pm.binderAsphaltConcrete.highway": "Highway",
+  "pm.granularLayer.highway": "Highway",
   "promedina.essays.stabilizedLayersView": "Registered samples in Stabilized Layers",
   "promedina.essays.binderAsphaltConcreteView": "Registered samples in Binder Asphalt Concrete"
 }

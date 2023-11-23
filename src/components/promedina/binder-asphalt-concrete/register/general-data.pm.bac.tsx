@@ -10,6 +10,7 @@ const BinderAsphaltConcrete_step1 = ({ nextDisabled, setNextDisabled }: EssayPag
   const inputs = [
     { label: t('pm.binderAsphaltConcrete.name'), value: generalData.name, key: 'name', required: true },
     { label: t('pm.binderAsphaltConcrete.zone'), value: generalData.zone, key: 'zone', required: true },
+    { label: t('pm.binderAsphaltConcrete.highway'), value: generalData.highway, key: 'highway', required: true },
     { label: t('pm.binderAsphaltConcrete.layer'), value: generalData.layer, key: 'layer', required: true },
     { label: t('pm.binderAsphaltConcrete.cityState'), value: generalData.cityState, key: 'cityState', required: true },
     {

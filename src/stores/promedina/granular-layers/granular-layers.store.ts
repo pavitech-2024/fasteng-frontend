@@ -6,6 +6,7 @@ interface GeneralData {
   zone: string;
   layer: string;
   cityState: string;
+  highway: string;
   observations?: string;
 }
 
@@ -88,6 +89,7 @@ const useGranularLayersStore = create<GranularLayersData & GranularLayersActions
     persist(
       (set) => ({
         generalData: {
+          highway: null,
           name: null,
           zone: null,
           layer: null,
