@@ -51,6 +51,7 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
   const [nameFilter, setNameFilter] = useState('');
 
   const [materialsData, setMaterialsData] = useState(materials);
+  console.log("🚀 ~ file: filter-table.tsx:54 ~ PromedinaMaterialsTemplate ~ materialsData:", materialsData)
 
   const [searchParams, setSearchParams] = useState({
     name: '',
@@ -59,12 +60,13 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
     zone: ''
   });
 
-  const [layerFilter, setLayerFilter] = useState('');
-  const [cityStateFilter, setCityStateFilter] = useState('');
-  const [zoneFilter, setZoneFilter] = useState('');
+  useEffect(() => {
+    console.log("🚀 ~ file: filter-table.tsx:69 ~ PromedinaMaterialsTemplate ~ searchParams:", searchParams)
+  }, [searchParams])
 
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
+  const [totalPages, setTotalPages] = useState(1);
 
   const [searchBy, setSearchBy] = useState<string>('name');
   const [searchValue, setSearchValue] = useState<string>('');
@@ -84,28 +86,36 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
     setSearchValue('');
   }, [searchBy]);
 
-  const filteredData = materialsData
-    .map(({ _id, generalData }) => {
-      const { name, cityState, zone, layer } = generalData;
-      return {
-        _id,
-        name,
-        cityState,
-        zone,
-        layer,
-      };
-    })
-    .filter((materialsData) => {
-      return searchValue.length > 0
-        ? searchBy === 'name'
-          ? materialsData[searchBy].toLowerCase().includes(searchValue.toLowerCase())
-          : materialsData[searchBy] === searchValue
-        : true;
-    });
+  const [filteredData, setFilteredData] = useState([{
+    _id: '',
+    name: '',
+    cityState: '',
+    layer: '',
+    zone: ''
+  }]);
+
+  useEffect(() => {
+    setFilteredData(materialsData
+      .map(({ _id, generalData }) => {
+        const { name, cityState, zone, layer } = generalData;
+        return {
+          _id,
+          name,
+          cityState,
+          zone,
+          layer,
+        };
+      })
+      .filter((materialsData) => {
+        return searchValue.length > 0
+          ? searchBy === 'name'
+            ? materialsData[searchBy].toLowerCase().includes(searchValue.toLowerCase())
+            : materialsData[searchBy] === searchValue
+          : true;
+      }));
+  }, [materialsData]);
 
   const getFilter = async (e: any) => {
-    console.log("🚀 ~ file: filter-table.tsx:126 ~ getFilter ~ e:", e)
-
     const filter = [];
 
     // Iterando sobre as propriedades de e
@@ -117,23 +127,17 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
       }
     }
 
-    console.log("🚀 ~ file: filter-table.tsx:112 ~ getFilter ~ filter:", filter)
-
-    const encodedFilter = decodeURIComponent(JSON.stringify(filter));
+    const encodedFilter = encodeURIComponent(JSON.stringify(filter));
 
     try {
-
-      const filteredSpecificData = samplesService.getFilteredSamples(filter)
+      const filteredSpecificData = samplesService.getFilteredSamples(encodedFilter)
         .then((response) => {
-          setMaterialsData(response.data);
-          //setLoading(false);
+          setMaterialsData(response.data.docs);
+          setTotalPages(response.data.totalPages)
         })
         .catch((error) => {
           console.error('Failed to load samples:', error);
         });
-
-      console.log("🚀 ~ file: filter-table.tsx:129 ~ getFilter ~ filteredSpecificData:", filteredSpecificData)
-
     } catch (error) {
       console.error(error)
     }
@@ -289,7 +293,6 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                     sx={{ ml: 1, flex: 1 }}
                     placeholder={'Ex. Base'}
                     value={searchParams[searchBy]}
-                    // onChange={(e) => setLayerFilter(e.target.value)}
                     onChange={(e) => setSearchParams((prevState) => ({
                       ...prevState,
                       [searchBy]: e.target.value,
@@ -330,7 +333,6 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                     sx={{ ml: 1, flex: 1, minWidth: 'fit-content' }}
                     placeholder={'Ex. Campina Grande/PB'}
                     value={searchParams[searchBy]}
-                    // onChange={(e) => setCityStateFilter(e.target.value)}
                     onChange={(e) => setSearchParams((prevState) => ({
                       ...prevState,
                       [searchBy]: e.target.value,
@@ -372,7 +374,6 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                     sx={{ ml: 1, flex: 1 }}
                     placeholder={'Ex. BR-230'}
                     value={searchParams[searchBy]}
-                    // onChange={(e) => setZoneFilter(e.target.value)}
                     onChange={(e) => setSearchParams((prevState) => ({
                       ...prevState,
                       [searchBy]: e.target.value,
@@ -449,9 +450,12 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
               marginTop: '1rem',
             }}
           >
-            {zoneFilter !== '' && (
+            {searchParams.zone !== '' && (
               <button
-                onClick={() => setZoneFilter('')}
+                onClick={() => setSearchParams({
+                  ...searchParams,
+                  zone: ''
+                })}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -503,9 +507,12 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                 </Box>
               </button>
             )}
-            {nameFilter !== '' && (
+            {searchParams.name !== '' && (
               <button
-                onClick={() => setNameFilter('')}
+                onClick={() => setSearchParams({
+                  ...searchParams,
+                  name: ''
+                })}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -561,9 +568,12 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                 </Box>
               </button>
             )}
-            {cityStateFilter !== '' && (
+            {searchParams.cityState !== '' && (
               <button
-                onClick={() => setCityStateFilter('')}
+              onClick={() => setSearchParams({
+                ...searchParams,
+                cityState: ''
+              })}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -615,9 +625,12 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                 </Box>
               </button>
             )}
-            {layerFilter !== '' && (
+            {searchParams.layer !== '' && (
               <button
-                onClick={() => setLayerFilter('')}
+              onClick={() => setSearchParams({
+                ...searchParams,
+                layer: ''
+              })}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -762,7 +775,8 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
           </TableContainer>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
             <Pagination
-              count={Math.ceil(filteredData.length / rowsPerPage)}
+              // count={Math.ceil(filteredData.length / rowsPerPage)}
+              count={totalPages}
               size="small"
               disabled={filteredData.length < rowsPerPage}
               onChange={(event, value) => setPage(value - 1)}
