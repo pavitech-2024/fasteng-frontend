@@ -31,6 +31,12 @@ const StabilizedLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProp
       key: 'optimalHumidity',
       required: true,
     },
+    {
+      label: t('pm.granularLayer.compression.energy'),
+      value: step3Data.compressionEnergy,
+      key: 'compressionEnergy',
+      required: true,
+    },
   ];
 
   const inputsResilienceModule = [
@@ -41,8 +47,8 @@ const StabilizedLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProp
   ];
 
   const inputsMaterialFatigue = [
-    { label: t('pm.granularLayer.k1.psi1'), value: step3Data.fatiguek1psi1, key: 'k1psi1', required: true },
-    { label: t('pm.granularLayer.k2.psi2'), value: step3Data.fatiguek2psi2, key: 'k2psi2', required: true },
+    { label: t('pm.granularLayer.k1.psi1'), value: step3Data.fatiguek1psi1, key: 'fatiguek1psi1', required: true },
+    { label: t('pm.granularLayer.k2.psi2'), value: step3Data.fatiguek2psi2, key: 'fatiguek2psi2', required: true },
     {
       label: t('pm.granularLayer.mf.observations'),
       value: step3Data.observations,

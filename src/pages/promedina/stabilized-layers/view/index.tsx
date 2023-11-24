@@ -12,22 +12,49 @@ const StabilizedLayers_view = () => {
   const { user } = useAuth();
   const [samples, setSamples] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [searchParams, setSearchParams] = useState({
+    _id: '',
+    name: '',
+    cityState: '',
+    zone: '',
+    layer: '',
+    highway: '',
+  })
+
+  const [totalPages, setTotalPages] = useState(1);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     console.log("🚀 ~ file: index.tsx:26 ~ samples:", samples)
   }, [samples])
 
   useEffect(() => {
+    const filter = [];
+
+    // Iterando sobre as propriedades de e
+    for (const key in searchParams) {
+      // Verificando se a propriedade tem um valor diferente de uma string vazia
+      if (searchParams[key] !== '') {
+        // Adicionando um objeto ao array filter com a propriedade e o valor
+        filter.push({ [key]: searchParams[key] });
+      }
+    }
+
+    const encodedFilter = encodeURIComponent(JSON.stringify(filter));
+
     samplesService
-      .getSamples()
+      .getFilteredSamples(encodedFilter)
       .then((response) => {
-        setSamples(response.data);
+        console.log("🚀 ~ file: index.tsx:26 ~ .then ~ response:", response.data)
+        setSamples(response.data.docs);
+        setTotalPages(response.data.totalPages);
+        setCount(response.data.count)
         setLoading(false);
       })
       .catch((error) => {
         console.error('Failed to load samples:', error);
       });
-  }, [user]);
+  }, [searchParams]);
 
   const handleDeleteSample = async (id: string) => {
     try {
@@ -37,6 +64,38 @@ const StabilizedLayers_view = () => {
       setSamples(updatedSamples);
     } catch (error) {
       console.error('Failed to delete sample:', error);
+    }
+  };
+
+  const getFilter = async (e: any) => {
+    console.log("🚀 ~ file: index.tsx:74 ~ getFilter ~ e:", e)
+
+    const filter = [];
+
+    // Iterando sobre as propriedades de e
+    for (const key in e) {
+      // Verificando se a propriedade tem um valor diferente de uma string vazia
+      if (e[key] !== '') {
+        // Adicionando um objeto ao array filter com a propriedade e o valor
+        filter.push({ [key]: e[key] });
+      }
+    }
+
+    const encodedFilter = encodeURIComponent(JSON.stringify(filter));
+
+    try {
+      const filteredSpecificData = samplesService
+        .getFilteredSamples(encodedFilter)
+        .then((response) => {
+          setSamples(response.data.docs);
+          setTotalPages(response.data.totalPages);
+        })
+        .catch((error) => {
+          console.error('Failed to load samples:', error);
+          console.log(filteredSpecificData);
+        });
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -76,7 +135,11 @@ const StabilizedLayers_view = () => {
               <PromedinaMaterialsTemplate
                 materials={samples}
                 handleDeleteMaterial={handleDeleteSample}
+                getFilter={getFilter}
                 area={'stabilized-layers'}
+                pages={totalPages}
+                count={count}
+                onSearchParamsChange={setSearchParams}
               />
             </Box>
           </Box>

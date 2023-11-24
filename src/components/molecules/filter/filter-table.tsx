@@ -18,7 +18,7 @@ import {
   Tooltip,
   InputBase,
 } from '@mui/material';
-import { AddIcon, DeleteIcon, NextIcon, SearchIcon } from '@/assets';
+import { AddIcon, CloseIcon, DeleteIcon, NextIcon, SearchIcon } from '@/assets';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import { PromedinaDataFilter } from '@/interfaces/promedina';
@@ -30,7 +30,11 @@ import samplesService from '@/services/promedina/granular-layers/granular-layers
 interface PromedinaMaterialsTemplateProps {
   materials: PromedinaDataFilter[];
   handleDeleteMaterial: (id: string) => void;
+  getFilter: (e: any) => void;
   area: string;
+  pages: number;
+  count: number;
+  onSearchParamsChange: (params: any) => void
 }
 
 interface MaterialsColumn {
@@ -48,9 +52,14 @@ interface DataToFilter {
   cityState: string;
 }
 
-const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: PromedinaMaterialsTemplateProps) => {
+const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, getFilter, area, pages, count, onSearchParamsChange }: PromedinaMaterialsTemplateProps) => {
   const [materialsData, setMaterialsData] = useState(materials);
   console.log('🚀 ~ file: filter-table.tsx:54 ~ PromedinaMaterialsTemplate ~ materialsData:', materialsData);
+
+  useEffect(() => {
+    setMaterialsData(materials)
+  }, [materials])
+  
 
   const [searchParams, setSearchParams] = useState({
     name: '',
@@ -61,12 +70,16 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
   });
 
   useEffect(() => {
+    onSearchParamsChange(searchParams)
+  }, [searchParams])
+  
+
+  useEffect(() => {
     console.log('🚀 ~ file: filter-table.tsx:69 ~ PromedinaMaterialsTemplate ~ searchParams:', searchParams);
   }, [searchParams]);
 
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
-  const [totalPages, setTotalPages] = useState(1);
 
   const [searchBy, setSearchBy] = useState<string>('name');
   const [searchValue, setSearchValue] = useState<string>('');
@@ -121,41 +134,6 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
         })
     );
   }, [materialsData]);
-
-  const getFilter = async (e: any) => {
-    const filter = [];
-
-    // Iterando sobre as propriedades de e
-    for (const key in e) {
-      // Verificando se a propriedade tem um valor diferente de uma string vazia
-      if (e[key] !== '') {
-        // Adicionando um objeto ao array filter com a propriedade e o valor
-        filter.push({ [key]: e[key] });
-      }
-    }
-
-    const encodedFilter = encodeURIComponent(JSON.stringify(filter));
-
-    try {
-      const filteredSpecificData = samplesService
-        .getFilteredSamples(encodedFilter)
-        .then((response) => {
-          setMaterialsData(response.data.docs);
-          setTotalPages(response.data.totalPages);
-        })
-        .catch((error) => {
-          console.error('Failed to load samples:', error);
-          console.log(filteredSpecificData);
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // const handleDeleteSample = (id: string) => {
-  //   console.log("🚀 ~ file: filter-table.tsx:147 ~ handleDeleteSample ~ id:", id)
-
-  // }
 
   return (
     <>
@@ -505,7 +483,7 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
           </Box>
 
           {/** TAGS */}
-          {/* <Box
+          <Box
             sx={{
               display: 'flex',
               justifyContent: 'flex-start',
@@ -748,7 +726,7 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
                 </Box>
               </button>
             )}
-          </Box> */}
+          </Box>
         </Box>
 
         <Paper
@@ -842,10 +820,10 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, area }: P
           </TableContainer>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
             <Pagination
-              // count={Math.ceil(filteredData.length / rowsPerPage)}
-              count={totalPages}
+              //count={Math.ceil(materialsData.length / rowsPerPage)}
+              count={pages}
               size="small"
-              disabled={filteredData.length < rowsPerPage}
+              //disabled={filteredData.length < rowsPerPage}
               onChange={(event, value) => setPage(value - 1)}
             />
           </Box>
