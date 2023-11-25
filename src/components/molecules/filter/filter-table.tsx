@@ -34,7 +34,8 @@ interface PromedinaMaterialsTemplateProps {
   area: string;
   pages: number;
   count: number;
-  onSearchParamsChange: (params: any) => void
+  onSearchParamsChange: (params: any) => void;
+  onPageChange: (page: number) => void
 }
 
 interface MaterialsColumn {
@@ -52,9 +53,18 @@ interface DataToFilter {
   cityState: string;
 }
 
-const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, getFilter, area, pages, count, onSearchParamsChange }: PromedinaMaterialsTemplateProps) => {
+const PromedinaMaterialsTemplate = ({ 
+  materials, 
+  handleDeleteMaterial, 
+  getFilter, 
+  area, 
+  pages, 
+  count, 
+  onSearchParamsChange ,
+  onPageChange
+}: PromedinaMaterialsTemplateProps) => {
+  
   const [materialsData, setMaterialsData] = useState(materials);
-  console.log('🚀 ~ file: filter-table.tsx:54 ~ PromedinaMaterialsTemplate ~ materialsData:', materialsData);
 
   useEffect(() => {
     setMaterialsData(materials)
@@ -78,7 +88,13 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, getFilter
     console.log('🚀 ~ file: filter-table.tsx:69 ~ PromedinaMaterialsTemplate ~ searchParams:', searchParams);
   }, [searchParams]);
 
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
+
+  useEffect(() => {
+    console.log("🚀 ~ file: filter-table.tsx:93 ~ page:", page)
+  }, [page])
+  
+
   const rowsPerPage = 10;
 
   const [searchBy, setSearchBy] = useState<string>('name');
@@ -99,6 +115,11 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, getFilter
   useEffect(() => {
     setSearchValue('');
   }, [searchBy]);
+
+  useEffect(() => {
+    onPageChange(page)
+  }, [page]);
+  
 
   const [filteredData, setFilteredData] = useState([
     {
@@ -134,6 +155,11 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, getFilter
         })
     );
   }, [materialsData]);
+
+  useEffect(() => {
+    console.log("🚀 ~ file: filter-table.tsx:166 ~ filteredData:", filteredData)
+  }, [filteredData])
+  
 
   return (
     <>
@@ -758,7 +784,8 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, getFilter
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                {/* {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => ( */}
+                {filteredData.map((row) => (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                     {columns.map((column) => (
                       <TableCell key={column.id} align="center">
@@ -824,7 +851,7 @@ const PromedinaMaterialsTemplate = ({ materials, handleDeleteMaterial, getFilter
               count={pages}
               size="small"
               //disabled={filteredData.length < rowsPerPage}
-              onChange={(event, value) => setPage(value - 1)}
+              onChange={(event, value) => setPage(value)}
             />
           </Box>
         </Paper>

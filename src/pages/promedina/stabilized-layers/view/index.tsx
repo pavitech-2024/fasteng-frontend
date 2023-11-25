@@ -3,15 +3,18 @@ import { NextIcon, UnitMassIcon } from '@/assets';
 import PromedinaMaterialsTemplate from '@/components/molecules/filter/filter-table';
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
-import useAuth from '@/contexts/auth';
 import samplesService from '@/services/promedina/stabilized-layers/stabilized-layers-view.service';
 import { Box, Button, Container } from '@mui/material';
 import { useState, useEffect } from 'react';
 
 const StabilizedLayers_view = () => {
-  const { user } = useAuth();
+
   const [samples, setSamples] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
+
   const [searchParams, setSearchParams] = useState({
     _id: '',
     name: '',
@@ -19,42 +22,55 @@ const StabilizedLayers_view = () => {
     zone: '',
     layer: '',
     highway: '',
-  })
+  });
 
-  const [totalPages, setTotalPages] = useState(1);
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    console.log("🚀 ~ file: index.tsx:26 ~ samples:", samples)
-  }, [samples])
-
-  useEffect(() => {
+  const fetchData = async () => {
     const filter = [];
 
-    // Iterando sobre as propriedades de e
     for (const key in searchParams) {
-      // Verificando se a propriedade tem um valor diferente de uma string vazia
       if (searchParams[key] !== '') {
-        // Adicionando um objeto ao array filter com a propriedade e o valor
         filter.push({ [key]: searchParams[key] });
       }
     }
 
     const encodedFilter = encodeURIComponent(JSON.stringify(filter));
 
-    samplesService
-      .getFilteredSamples(encodedFilter)
-      .then((response) => {
-        console.log("🚀 ~ file: index.tsx:26 ~ .then ~ response:", response.data)
-        setSamples(response.data.docs);
-        setTotalPages(response.data.totalPages);
-        setCount(response.data.count)
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Failed to load samples:', error);
-      });
-  }, [searchParams]);
+    try {
+      const response = await samplesService.getFilteredSamples(encodedFilter, page);
+      setSamples(response.data.docs);
+      setTotalPages(response.data.totalPages);
+      setCount(response.data.count);
+      setLoading(false);
+    } catch (error) {
+      console.error('Failed to load samples:', error);
+    }
+  };
+
+  useEffect(() => {
+    // const filter = [];
+
+    // for (const key in searchParams) {
+    //   if (searchParams[key] !== '') {
+    //     filter.push({ [key]: searchParams[key] });
+    //   }
+    // }
+
+    // const encodedFilter = encodeURIComponent(JSON.stringify(filter));
+
+    // samplesService
+    //   .getFilteredSamples(encodedFilter, page)
+    //   .then((response) => {
+    //     console.log("🚀 ~ file: index.tsx:26 ~ .then ~ response:", response.data)
+    //     setSamples(response.data.docs);
+    //     setTotalPages(response.data.totalPages);
+    //     setCount(response.data.count)
+    //     setLoading(false);
+    //   })
+    //   .catch((error) => {
+    //     console.error('Failed to load samples:', error);
+    //   });
+    fetchData();
+  }, [searchParams, page]);
 
   const handleDeleteSample = async (id: string) => {
     try {
@@ -67,36 +83,36 @@ const StabilizedLayers_view = () => {
     }
   };
 
-  const getFilter = async (e: any) => {
-    console.log("🚀 ~ file: index.tsx:74 ~ getFilter ~ e:", e)
+  const getFilter = async (param: any) => {
+    // const filter = [];
 
-    const filter = [];
+    // // Iterando sobre as propriedades de e
+    // for (const key in e) {
+    //   // Verificando se a propriedade tem um valor diferente de uma string vazia
+    //   if (e[key] !== '') {
+    //     // Adicionando um objeto ao array filter com a propriedade e o valor
+    //     filter.push({ [key]: e[key] });
+    //   }
+    // }
 
-    // Iterando sobre as propriedades de e
-    for (const key in e) {
-      // Verificando se a propriedade tem um valor diferente de uma string vazia
-      if (e[key] !== '') {
-        // Adicionando um objeto ao array filter com a propriedade e o valor
-        filter.push({ [key]: e[key] });
-      }
-    }
+    // const encodedFilter = encodeURIComponent(JSON.stringify(filter));
 
-    const encodedFilter = encodeURIComponent(JSON.stringify(filter));
-
-    try {
-      const filteredSpecificData = samplesService
-        .getFilteredSamples(encodedFilter)
-        .then((response) => {
-          setSamples(response.data.docs);
-          setTotalPages(response.data.totalPages);
-        })
-        .catch((error) => {
-          console.error('Failed to load samples:', error);
-          console.log(filteredSpecificData);
-        });
-    } catch (error) {
-      console.error(error);
-    }
+    // try {
+    //   const filteredSpecificData = samplesService
+    //     .getFilteredSamples(encodedFilter, page)
+    //     .then((response) => {
+    //       setSamples(response.data.docs);
+    //       setTotalPages(response.data.totalPages);
+    //     })
+    //     .catch((error) => {
+    //       console.error('Failed to load samples:', error);
+    //       console.log(filteredSpecificData);
+    //     });
+    // } catch (error) {
+    //   console.error(error);
+    // }
+    setSearchParams(param);
+    fetchData();
   };
 
   const GranularLayersIcon = UnitMassIcon;
@@ -140,6 +156,7 @@ const StabilizedLayers_view = () => {
                 pages={totalPages}
                 count={count}
                 onSearchParamsChange={setSearchParams}
+                onPageChange={setPage}
               />
             </Box>
           </Box>

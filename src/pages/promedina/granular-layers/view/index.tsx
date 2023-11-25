@@ -9,25 +9,47 @@ import { Box, Button, Container } from '@mui/material';
 import { useState, useEffect } from 'react';
 
 const GranularLayers_view = () => {
-  const { user } = useAuth();
+
   const [samples, setSamples] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
+
+  const [searchParams, setSearchParams] = useState({
+    _id: '',
+    name: '',
+    cityState: '',
+    zone: '',
+    layer: '',
+    highway: '',
+  });
+
+  const fetchData = async () => {
+    const filter = [];
+
+    for (const key in searchParams) {
+      if (searchParams[key] !== '') {
+        filter.push({ [key]: searchParams[key] });
+      }
+    }
+
+    const encodedFilter = encodeURIComponent(JSON.stringify(filter));
+
+    try {
+      const response = await samplesService.getFilteredSamples(encodedFilter, page);
+      setSamples(response.data.docs);
+      setTotalPages(response.data.totalPages);
+      setCount(response.data.count);
+      setLoading(false);
+    } catch (error) {
+      console.error('Failed to load samples:', error);
+    }
+  };
 
   useEffect(() => {
-    console.log("🚀 ~ file: index.tsx:26 ~ samples:", samples)
-  }, [samples])
-
-  useEffect(() => {
-    samplesService
-      .getSamples()
-      .then((response) => {
-        setSamples(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Failed to load samples:', error);
-      });
-  }, [user]);
+    fetchData();
+  }, [searchParams, page]);
 
   const handleDeleteSample = async (id: string) => {
     try {
@@ -38,6 +60,10 @@ const GranularLayers_view = () => {
     } catch (error) {
       console.error('Failed to delete sample:', error);
     }
+  };
+
+  const getFilter = async (param) => {
+    setSearchParams(param);
   };
 
   const GranularLayersIcon = UnitMassIcon;
@@ -76,6 +102,11 @@ const GranularLayers_view = () => {
               <PromedinaMaterialsTemplate
                 materials={samples}
                 handleDeleteMaterial={handleDeleteSample}
+                getFilter={getFilter}
+                pages={totalPages}
+                count={count}
+                onSearchParamsChange={setSearchParams}
+                onPageChange={setPage}
                 area={'granular-layers'}
               />
             </Box>
