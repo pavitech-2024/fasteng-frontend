@@ -65,17 +65,6 @@ const GranularLayers_view = () => {
     setSearchParams(param);
   };
 
-  const getSpecificSampleData = async (id: string) => {
-    try {
-      // pega os dados de uma amostra em específico que foi escolhida para visualizar
-      const response = await samplesService.getSample(id);
-      console.log('Dados de uma amostra específica:', response);
-      return <SampleDataVisualization specificData={response} />;
-    } catch (error) {
-      console.error('Failed to delete sample:', error);
-    }
-  };
-
   const GranularLayersIcon = UnitMassIcon;
   return (
     <Container>
@@ -118,7 +107,6 @@ const GranularLayers_view = () => {
                 onSearchParamsChange={setSearchParams}
                 onPageChange={setPage}
                 area={'granular-layers'}
-                getSpecificSampleData={getSpecificSampleData}
               />
             </Box>
           </Box>

@@ -36,7 +36,6 @@ interface PromedinaMaterialsTemplateProps {
   count: number;
   onSearchParamsChange: (params: any) => void;
   onPageChange: (page: number) => void;
-  getSpecificSampleData: (id: string) => void;
 }
 
 interface MaterialsColumn {
@@ -63,8 +62,8 @@ const PromedinaMaterialsTemplate = ({
   count,
   onSearchParamsChange,
   onPageChange,
-  getSpecificSampleData
 }: PromedinaMaterialsTemplateProps) => {
+
   const [materialsData, setMaterialsData] = useState(materials);
 
   useEffect(() => {
@@ -848,7 +847,7 @@ const PromedinaMaterialsTemplate = ({
                         {column.id === 'zone' && row.zone}
                         {column.id === 'actions' && (
                           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Link href={`/promedina/stabilized-layers/data-view/${row._id}`}>
+                            <Link href={`/promedina/${area}/view/data/${row._id}`}>
                               <Button
                                 variant="contained"
                                 sx={{
@@ -867,7 +866,6 @@ const PromedinaMaterialsTemplate = ({
                                     bgcolor: 'secondaryTons.blueClick',
                                   },
                                 }}
-                                onClick={(e) => getSpecificSampleData(row._id)}
                               >
                                 <Tooltip title="Visualizar dados desta amostra">
                                   <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>

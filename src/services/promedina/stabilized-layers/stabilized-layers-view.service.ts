@@ -9,6 +9,7 @@ const samplesService = {
     Api.get(
       `promedina/stabilized-layers/stabilized-layers-samples/filter/?filter=${params}&limit=2&need_count=true&page=${page}`
     ),
+  getSample: (sampleId: string) => Api.get(`promedina/stabilized-layers/stabilized-layers-samples/${sampleId}`),
 };
 
 export default samplesService;

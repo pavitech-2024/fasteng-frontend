@@ -1,9 +1,9 @@
-import samplesService from "@/services/promedina/granular-layers/granular-layers-view.service";
+import samplesService from "@/services/promedina/stabilized-layers/stabilized-layers-view.service";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 
-const SpecificSample_GranularLayers = () => {
+const SpecificSample_StabilizedLayers = () => {
 
   const [samples, setSamples] = useState()
   const [loading, setLoading] = useState(true)
@@ -37,4 +37,4 @@ const SpecificSample_GranularLayers = () => {
   )
 }
 
-export default SpecificSample_GranularLayers
+export default SpecificSample_StabilizedLayers

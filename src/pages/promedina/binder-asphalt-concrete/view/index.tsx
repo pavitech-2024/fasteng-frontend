@@ -3,7 +3,6 @@ import { NextIcon, UnitMassIcon } from '@/assets';
 import PromedinaMaterialsTemplate from '@/components/molecules/filter/filter-table';
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
-import useAuth from '@/contexts/auth';
 import samplesService from '@/services/promedina/binder-asphalt-concrete/binder-asphalt-concrete-view.service';
 import { Box, Button, Container } from '@mui/material';
 import { useState, useEffect } from 'react';
@@ -24,10 +23,6 @@ const BinderAsphaltConcrete_view = () => {
     layer: '',
     highway: '',
   });
-
-  useEffect(() => {
-    console.log("🚀 ~ file: index.tsx:26 ~ samples:", samples)
-  }, [samples])
 
   const fetchData = async () => {
     const filter = [];
@@ -50,6 +45,10 @@ const BinderAsphaltConcrete_view = () => {
       console.error('Failed to load samples:', error);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [searchParams, page]);
 
   const handleDeleteSample = async (id: string) => {
     try {
