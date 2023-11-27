@@ -3,13 +3,12 @@ import { NextIcon, UnitMassIcon } from '@/assets';
 import PromedinaMaterialsTemplate from '@/components/molecules/filter/filter-table';
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
-import useAuth from '@/contexts/auth';
+import SampleDataVisualization from '@/components/promedina/data-view/data-view';
 import samplesService from '@/services/promedina/granular-layers/granular-layers-view.service';
 import { Box, Button, Container } from '@mui/material';
 import { useState, useEffect } from 'react';
 
 const GranularLayers_view = () => {
-
   const [samples, setSamples] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState(1);
@@ -66,6 +65,17 @@ const GranularLayers_view = () => {
     setSearchParams(param);
   };
 
+  const getSpecificSampleData = async (id: string) => {
+    try {
+      // pega os dados de uma amostra em específico que foi escolhida para visualizar
+      const response = await samplesService.getSample(id);
+      console.log('Dados de uma amostra específica:', response);
+      return <SampleDataVisualization specificData={response} />;
+    } catch (error) {
+      console.error('Failed to delete sample:', error);
+    }
+  };
+
   const GranularLayersIcon = UnitMassIcon;
   return (
     <Container>
@@ -108,6 +118,7 @@ const GranularLayers_view = () => {
                 onSearchParamsChange={setSearchParams}
                 onPageChange={setPage}
                 area={'granular-layers'}
+                getSpecificSampleData={getSpecificSampleData}
               />
             </Box>
           </Box>

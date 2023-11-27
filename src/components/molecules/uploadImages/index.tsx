@@ -24,8 +24,8 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
 
   const handleAddImage = (event: any) => {
     const files = Array.from(event.target.files);
-    if (files.length + images.length > 20) {
-      alert('Você pode adicionar no máximo 20 imagens');
+    if (files.length + images.length > 3) {
+      alert('Você pode adicionar no máximo 3 imagens');
       return;
     }
 

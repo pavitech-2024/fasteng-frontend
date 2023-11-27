@@ -321,7 +321,7 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
           <UploadImages onImagesUpdate={(images: string[]) => setImages(images)} />
           <TextField
             variant="standard"
-            label={'Data da imagem'}
+            label={'__/__/____'}
             value={step2Data.imagesDate}
             style={{ display: 'block' }}
             required={false}
