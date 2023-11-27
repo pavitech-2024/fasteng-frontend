@@ -3,13 +3,11 @@ import { NextIcon, UnitMassIcon } from '@/assets';
 import PromedinaMaterialsTemplate from '@/components/molecules/filter/filter-table';
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
-import useAuth from '@/contexts/auth';
 import samplesService from '@/services/promedina/granular-layers/granular-layers-view.service';
 import { Box, Button, Container } from '@mui/material';
 import { useState, useEffect } from 'react';
 
 const GranularLayers_view = () => {
-
   const [samples, setSamples] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState(1);

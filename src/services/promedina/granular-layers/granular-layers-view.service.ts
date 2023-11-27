@@ -9,6 +9,8 @@ const samplesService = {
     Api.get(
       `promedina/granular-layers/granular-layers-samples/filter/?filter=${params}&limit=2&need_count=true&page=${page}`
     ),
+  getSample: (sampleId: string) => Api.get(`promedina/granular-layers/granular-layers-samples/${sampleId}`),
+
 };
 
 export default samplesService;

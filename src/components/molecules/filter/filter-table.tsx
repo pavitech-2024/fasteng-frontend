@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import SampleDataVisualization from '@/components/promedina/data-view/data-view';
 import {
   Box,
   Button,
@@ -35,7 +36,7 @@ interface PromedinaMaterialsTemplateProps {
   pages: number;
   count: number;
   onSearchParamsChange: (params: any) => void;
-  onPageChange: (page: number) => void
+  onPageChange: (page: number) => void;
 }
 
 interface MaterialsColumn {
@@ -53,23 +54,21 @@ interface DataToFilter {
   cityState: string;
 }
 
-const PromedinaMaterialsTemplate = ({ 
-  materials, 
-  handleDeleteMaterial, 
-  getFilter, 
-  area, 
-  pages, 
-  count, 
-  onSearchParamsChange ,
-  onPageChange
+const PromedinaMaterialsTemplate = ({
+  materials,
+  handleDeleteMaterial,
+  getFilter,
+  area,
+  pages,
+  count,
+  onSearchParamsChange,
+  onPageChange,
 }: PromedinaMaterialsTemplateProps) => {
-  
   const [materialsData, setMaterialsData] = useState(materials);
 
   useEffect(() => {
-    setMaterialsData(materials)
-  }, [materials])
-  
+    setMaterialsData(materials);
+  }, [materials]);
 
   const [searchParams, setSearchParams] = useState({
     name: '',
@@ -80,9 +79,8 @@ const PromedinaMaterialsTemplate = ({
   });
 
   useEffect(() => {
-    onSearchParamsChange(searchParams)
-  }, [searchParams])
-  
+    onSearchParamsChange(searchParams);
+  }, [searchParams]);
 
   useEffect(() => {
     console.log('🚀 ~ file: filter-table.tsx:69 ~ PromedinaMaterialsTemplate ~ searchParams:', searchParams);
@@ -91,9 +89,8 @@ const PromedinaMaterialsTemplate = ({
   const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
-    console.log("🚀 ~ file: filter-table.tsx:93 ~ page:", page)
-  }, [page])
-  
+    console.log('🚀 ~ file: filter-table.tsx:93 ~ page:', page);
+  }, [page]);
 
   const rowsPerPage = 10;
 
@@ -117,9 +114,8 @@ const PromedinaMaterialsTemplate = ({
   }, [searchBy]);
 
   useEffect(() => {
-    onPageChange(page)
+    onPageChange(page);
   }, [page]);
-  
 
   const [filteredData, setFilteredData] = useState([
     {
@@ -157,9 +153,19 @@ const PromedinaMaterialsTemplate = ({
   }, [materialsData]);
 
   useEffect(() => {
-    console.log("🚀 ~ file: filter-table.tsx:166 ~ filteredData:", filteredData)
-  }, [filteredData])
-  
+    console.log('🚀 ~ file: filter-table.tsx:166 ~ filteredData:', filteredData);
+  }, [filteredData]);
+
+  const getSpecificSampleData = async (id: string) => {
+    try {
+      // pega os dados de uma amostra em específico que foi escolhida para visualizar
+      const response = await samplesService.getSample(id);
+      console.log('Dados de uma amostra específica:', response);
+      return <SampleDataVisualization specificData={response} />;
+    } catch (error) {
+      console.error('Failed to delete sample:', error);
+    }
+  };
 
   return (
     <>
@@ -514,7 +520,7 @@ const PromedinaMaterialsTemplate = ({
               display: 'flex',
               justifyContent: 'flex-start',
               flexDirection: { mobile: 'column', notebook: 'row' },
-              alignItems:'start' ,
+              alignItems: 'start',
               width: '100%',
               gap: '0.5rem',
               marginTop: '1rem',
@@ -522,10 +528,12 @@ const PromedinaMaterialsTemplate = ({
           >
             {searchParams.zone !== '' && (
               <button
-                onClick={() => setSearchParams({
-                  ...searchParams,
-                  zone: ''
-                })}
+                onClick={() =>
+                  setSearchParams({
+                    ...searchParams,
+                    zone: '',
+                  })
+                }
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -579,10 +587,12 @@ const PromedinaMaterialsTemplate = ({
             )}
             {searchParams.name !== '' && (
               <button
-                onClick={() => setSearchParams({
-                  ...searchParams,
-                  name: ''
-                })}
+                onClick={() =>
+                  setSearchParams({
+                    ...searchParams,
+                    name: '',
+                  })
+                }
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -640,10 +650,12 @@ const PromedinaMaterialsTemplate = ({
             )}
             {searchParams.cityState !== '' && (
               <button
-              onClick={() => setSearchParams({
-                ...searchParams,
-                cityState: ''
-              })}
+                onClick={() =>
+                  setSearchParams({
+                    ...searchParams,
+                    cityState: '',
+                  })
+                }
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -697,10 +709,12 @@ const PromedinaMaterialsTemplate = ({
             )}
             {searchParams.layer !== '' && (
               <button
-              onClick={() => setSearchParams({
-                ...searchParams,
-                layer: ''
-              })}
+                onClick={() =>
+                  setSearchParams({
+                    ...searchParams,
+                    layer: '',
+                  })
+                }
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -755,10 +769,12 @@ const PromedinaMaterialsTemplate = ({
 
             {searchParams.highway !== '' && (
               <button
-              onClick={() => setSearchParams({
-                ...searchParams,
-                highway: ''
-              })}
+                onClick={() =>
+                  setSearchParams({
+                    ...searchParams,
+                    highway: '',
+                  })
+                }
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -872,7 +888,7 @@ const PromedinaMaterialsTemplate = ({
                                   bgcolor: 'secondaryTons.blueClick',
                                 },
                               }}
-                              onClick={(e) => console.log(e)}
+                              onClick={(e) => getSpecificSampleData(e.target)}
                             >
                               <Tooltip title="Visualizar dados desta amostra">
                                 <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
