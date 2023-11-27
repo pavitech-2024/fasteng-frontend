@@ -663,7 +663,7 @@ const SampleDataVisualization = ({
               )}
             </Result_CardContainer>
           )}
-          {structuralComposition}
+          {/* {structuralComposition} */}
           {images}
           {imagesDate}
         </Box>

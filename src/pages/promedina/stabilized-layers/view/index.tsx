@@ -70,7 +70,7 @@ const StabilizedLayers_view = () => {
     //     console.error('Failed to load samples:', error);
     //   });
     fetchData();
-  }, [page]);
+  }, [page, searchParams]);
 
   const handleDeleteSample = async (id: string) => {
     try {

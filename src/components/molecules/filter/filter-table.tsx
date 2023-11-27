@@ -25,7 +25,6 @@ import { PromedinaDataFilter } from '@/interfaces/promedina';
 import DropDown from '@/components/atoms/inputs/dropDown';
 import StepDescription from '@/components/atoms/titles/step-description';
 import Link from 'next/link';
-import samplesService from '@/services/promedina/granular-layers/granular-layers-view.service';
 
 interface PromedinaMaterialsTemplateProps {
   materials: PromedinaDataFilter[];
@@ -82,24 +81,10 @@ const PromedinaMaterialsTemplate = ({
   useEffect(() => {
     onSearchParamsChange(searchParams)
   }, [searchParams])
-  
-
-  useEffect(() => {
-    console.log('🚀 ~ file: filter-table.tsx:69 ~ PromedinaMaterialsTemplate ~ searchParams:', searchParams);
-  }, [searchParams]);
 
   const [page, setPage] = useState<number>(1);
-
-  useEffect(() => {
-    console.log("🚀 ~ file: filter-table.tsx:93 ~ page:", page)
-  }, [page])
-  
-
-  const rowsPerPage = 10;
-
   const [searchBy, setSearchBy] = useState<string>('name');
   const [searchValue, setSearchValue] = useState<string>('');
-
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
 
@@ -155,11 +140,6 @@ const PromedinaMaterialsTemplate = ({
         })
     );
   }, [materialsData]);
-
-  useEffect(() => {
-    console.log("🚀 ~ file: filter-table.tsx:166 ~ filteredData:", filteredData)
-  }, [filteredData])
-  
 
   return (
     <>
@@ -579,10 +559,12 @@ const PromedinaMaterialsTemplate = ({
             )}
             {searchParams.name !== '' && (
               <button
-                onClick={() => setSearchParams({
-                  ...searchParams,
-                  name: ''
-                })}
+                onClick={() => {
+                    setSearchParams({
+                    ...searchParams,
+                    name: ''
+                  });
+                } }
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -846,7 +828,7 @@ const PromedinaMaterialsTemplate = ({
                 {filteredData.map((row) => (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                     {columns.map((column) => (
-                      <TableCell key={column.id} align="center">
+                      <TableCell key={row._id} align="center">
                         {column.id === 'name' && row.name}
                         {column.id === 'cityState' && row.cityState}
                         {column.id === 'highway' && row.highway}
@@ -854,33 +836,35 @@ const PromedinaMaterialsTemplate = ({
                         {column.id === 'zone' && row.zone}
                         {column.id === 'actions' && (
                           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Button
-                              variant="contained"
-                              sx={{
-                                height: '25px',
-                                borderRadius: { mobile: '50%', notebook: '20px' },
-                                p: { mobile: 0, notebook: '6px 12px' },
-                                minWidth: '25px',
-                                bgcolor: 'secondaryTons.blue',
-                                color: 'primaryTons.white',
+                            <Link href={`/promedina/stabilized-layers/data-view/${row._id}`}>
+                              <Button
+                                variant="contained"
+                                sx={{
+                                  height: '25px',
+                                  borderRadius: { mobile: '50%', notebook: '20px' },
+                                  p: { mobile: 0, notebook: '6px 12px' },
+                                  minWidth: '25px',
+                                  bgcolor: 'secondaryTons.blue',
+                                  color: 'primaryTons.white',
 
-                                ':hover': {
-                                  bgcolor: 'secondaryTons.blueDisabled',
-                                },
+                                  ':hover': {
+                                    bgcolor: 'secondaryTons.blueDisabled',
+                                  },
 
-                                ':active': {
-                                  bgcolor: 'secondaryTons.blueClick',
-                                },
-                              }}
-                              onClick={(e) => console.log(e)}
-                            >
-                              <Tooltip title="Visualizar dados desta amostra">
-                                <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
-                                  {t('materials.template.edit')}
-                                </Typography>
-                              </Tooltip>
-                              <NextIcon sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
-                            </Button>
+                                  ':active': {
+                                    bgcolor: 'secondaryTons.blueClick',
+                                  },
+                                }}
+                                onClick={(e) => console.log(row._id)}
+                              >
+                                <Tooltip title="Visualizar dados desta amostra">
+                                  <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
+                                    {t('materials.template.edit')}
+                                  </Typography>
+                                </Tooltip>
+                                <NextIcon sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
+                              </Button>
+                            </Link>
                             <Button
                               variant="text"
                               color="error"
