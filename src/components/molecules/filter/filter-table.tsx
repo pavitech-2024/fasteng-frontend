@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import SampleDataVisualization from '@/components/promedina/data-view/data-view';
 import {
   Box,
   Button,
@@ -19,7 +18,7 @@ import {
   Tooltip,
   InputBase,
 } from '@mui/material';
-import { AddIcon, CloseIcon, DeleteIcon, NextIcon, SearchIcon } from '@/assets';
+import { AddIcon, CloseIcon, DeleteIcon, NextIcon } from '@/assets';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import { PromedinaDataFilter } from '@/interfaces/promedina';
@@ -56,14 +55,11 @@ interface DataToFilter {
 const PromedinaMaterialsTemplate = ({
   materials,
   handleDeleteMaterial,
-  getFilter,
   area,
   pages,
-  count,
   onSearchParamsChange,
   onPageChange,
 }: PromedinaMaterialsTemplateProps) => {
-
   const [materialsData, setMaterialsData] = useState(materials);
 
   useEffect(() => {
@@ -79,8 +75,8 @@ const PromedinaMaterialsTemplate = ({
   });
 
   useEffect(() => {
-    onSearchParamsChange(searchParams)
-  }, [searchParams])
+    onSearchParamsChange(searchParams);
+  }, [searchParams]);
 
   const [page, setPage] = useState<number>(1);
   const [searchBy, setSearchBy] = useState<string>('name');
@@ -131,7 +127,7 @@ const PromedinaMaterialsTemplate = ({
           };
         })
         .filter((materialsData) => {
-          return searchValue.length > 0
+          return searchValue?.length > 0
             ? searchBy === 'name'
               ? materialsData[searchBy].toLowerCase().includes(searchValue.toLowerCase())
               : materialsData[searchBy] === searchValue
@@ -262,23 +258,6 @@ const PromedinaMaterialsTemplate = ({
                       }))
                     }
                   />
-                  <Box
-                    sx={{
-                      backgroundColor: 'secondaryTons.blue',
-                      borderColor: 'secondaryTons.blue',
-                      borderTopRightRadius: '3px',
-                      borderBottomRightRadius: '3px',
-                      paddingTop: '0.2rem',
-                      paddingBottom: '0.1rem',
-                      paddingLeft: '0.5rem',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <SearchIcon
-                      sx={{ marginRight: '0.2rem', cursor: 'pointer', marginTop: '0.1rem', color: '#FFFFFF' }}
-                      onClick={() => getFilter(searchParams)}
-                    />
-                  </Box>
                 </Paper>
               )}
 
@@ -305,23 +284,6 @@ const PromedinaMaterialsTemplate = ({
                       }))
                     }
                   />
-                  <Box
-                    sx={{
-                      backgroundColor: 'secondaryTons.blue',
-                      borderColor: 'secondaryTons.blue',
-                      borderTopRightRadius: '3px',
-                      borderBottomRightRadius: '3px',
-                      paddingTop: '0.2rem',
-                      paddingBottom: '0.2rem',
-                      paddingLeft: '0.5rem',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <SearchIcon
-                      sx={{ marginRight: '0.3rem', cursor: 'pointer', color: '#FFFFFF' }}
-                      onClick={() => getFilter(searchParams)}
-                    />
-                  </Box>
                 </Paper>
               )}
               {searchBy === 'cityState' && (
@@ -348,23 +310,6 @@ const PromedinaMaterialsTemplate = ({
                     }
                     fullWidth
                   />
-                  <Box
-                    sx={{
-                      backgroundColor: 'secondaryTons.blue',
-                      borderColor: 'secondaryTons.blue',
-                      borderTopRightRadius: '3px',
-                      borderBottomRightRadius: '3px',
-                      paddingTop: '0.2rem',
-                      paddingBottom: '0.2rem',
-                      paddingLeft: '0.5rem',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <SearchIcon
-                      sx={{ marginRight: '0.3rem', cursor: 'pointer', color: '#FFFFFF' }}
-                      onClick={() => getFilter(searchParams)}
-                    />
-                  </Box>
                 </Paper>
               )}
               {searchBy === 'highway' && (
@@ -390,23 +335,6 @@ const PromedinaMaterialsTemplate = ({
                       }))
                     }
                   />
-                  <Box
-                    sx={{
-                      backgroundColor: 'secondaryTons.blue',
-                      borderColor: 'secondaryTons.blue',
-                      borderTopRightRadius: '3px',
-                      borderBottomRightRadius: '3px',
-                      paddingTop: '0.2rem',
-                      paddingBottom: '0.1rem',
-                      paddingLeft: '0.5rem',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <SearchIcon
-                      sx={{ marginRight: '0.2rem', cursor: 'pointer', marginTop: '0.1rem', color: '#FFFFFF' }}
-                      onClick={() => getFilter(searchParams)}
-                    />
-                  </Box>
                 </Paper>
               )}
               {searchBy === 'zone' && (
@@ -432,23 +360,6 @@ const PromedinaMaterialsTemplate = ({
                       }))
                     }
                   />
-                  <Box
-                    sx={{
-                      backgroundColor: 'secondaryTons.blue',
-                      borderColor: 'secondaryTons.blue',
-                      borderTopRightRadius: '3px',
-                      borderBottomRightRadius: '3px',
-                      paddingTop: '0.2rem',
-                      paddingBottom: '0.1rem',
-                      paddingLeft: '0.5rem',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <SearchIcon
-                      sx={{ marginRight: '0.2rem', cursor: 'pointer', marginTop: '0.1rem', color: '#FFFFFF' }}
-                      onClick={() => getFilter(searchParams)}
-                    />
-                  </Box>
                 </Paper>
               )}
             </Box>
@@ -868,7 +779,9 @@ const PromedinaMaterialsTemplate = ({
                                 }}
                               >
                                 <Tooltip title="Visualizar dados desta amostra">
-                                  <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
+                                  <Typography
+                                    sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}
+                                  >
                                     {t('materials.template.edit')}
                                   </Typography>
                                 </Tooltip>
@@ -899,10 +812,10 @@ const PromedinaMaterialsTemplate = ({
           </TableContainer>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
             <Pagination
-              //count={Math.ceil(materialsData.length / rowsPerPage)}
+              //count={Math.ceil(materialsData?.length / rowsPerPage)}
               count={pages}
               size="small"
-              //disabled={filteredData.length < rowsPerPage}
+              //disabled={filteredData?.length < rowsPerPage}
               onChange={(event, value) => setPage(value)}
             />
           </Box>

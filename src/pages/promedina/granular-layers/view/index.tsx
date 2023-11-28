@@ -3,7 +3,6 @@ import { NextIcon, UnitMassIcon } from '@/assets';
 import PromedinaMaterialsTemplate from '@/components/molecules/filter/filter-table';
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
-import SampleDataVisualization from '@/components/promedina/data-view/data-view';
 import samplesService from '@/services/promedina/granular-layers/granular-layers-view.service';
 import { Box, Button, Container } from '@mui/material';
 import { useState, useEffect } from 'react';
