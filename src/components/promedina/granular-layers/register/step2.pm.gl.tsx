@@ -44,7 +44,6 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
 
   // Adicionar mais uma linha de determinado valor
   const handleAdd = () => {
-    console.log("aqui")
     const newRows = [...rows];
     newRows.push({
       id: rows.length,

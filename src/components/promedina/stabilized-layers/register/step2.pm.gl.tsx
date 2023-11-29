@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useStabilizedLayersStore();
   const rows = step2Data.structuralComposition;
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<string>(step2Data.images ? step2Data.images : '');
 
   useEffect(() => {
     if (images !== null) {
@@ -79,7 +79,7 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
             value={row.layer}
             onChange={(e) => {
               const newRows = [...rows];
-              rows[index].layer = Number(e.target.value);
+              rows[index].layer = e.target.value;
               setData({ step: 1, key: 'layer', value: newRows });
             }}
             adornment={''}
@@ -103,7 +103,7 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
             value={row.wetGrossWeightCapsule}
             onChange={(e) => {
               const newRows = [...rows];
-              newRows[index].material = Number(e.target.value);
+              newRows[index].material = e.target.value;
               setData({ step: 1, key: 'material', value: newRows });
             }}
             adornment={''}
@@ -305,7 +305,10 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
             alignItems: 'center',
           }}
         >
-          <UploadImages onImagesUpdate={(images: string[]) => setImages(images)} />
+          <UploadImages 
+            onImagesUpdate={(images: string) => setImages(images)} 
+            editarImages={step2Data.images}
+          />
           <TextField
             variant="standard"
             label={'__/__/____'}

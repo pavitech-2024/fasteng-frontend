@@ -12,7 +12,7 @@ import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-con
 const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useBinderAsphaltConcreteStore();
   const rows = step2Data.structuralComposition;
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<string>(step2Data.images ? step2Data.images : '');
 
   useEffect(() => {
     if (images !== null) {
@@ -318,7 +318,7 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
             alignItems: 'center',
           }}
         >
-          <UploadImages onImagesUpdate={(images: string[]) => setImages(images)} />
+          <UploadImages onImagesUpdate={(images: string) => setImages(images)} />
           <TextField
             variant="standard"
             label={'__/__/____'}
