@@ -36,7 +36,9 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
 
   // Adicionar mais uma linha de determinado valor
   const handleAdd = () => {
+    console.log("aqui")
     const newRows = [...rows];
+    console.log("🚀 ~ file: step2.pm.gl.tsx:41 ~ handleAdd ~ newRows:", newRows)
     newRows.push({
       id: rows.length,
       layer: null,

@@ -176,6 +176,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
             inputProps={{ min: 0 }}
             value={row.thickness}
             onChange={(e) => {
+              console.log("🚀 ~ file: step2.pm.gl.tsx:169 ~ id:", id)
               const newRows = [...rows];
               newRows[index].thickness = Number(e.target.value);
               setData({ step: 1, key: 'thickness', value: newRows });
