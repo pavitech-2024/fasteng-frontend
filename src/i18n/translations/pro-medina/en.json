@@ -136,5 +136,15 @@
   "pm.binderAsphaltConcrete.highway": "Highway",
   "pm.granularLayer.highway": "Highway",
   "promedina.essays.stabilizedLayersView": "Registered samples in Stabilized Layers",
-  "promedina.essays.binderAsphaltConcreteView": "Registered samples in Binder Asphalt Concrete"
+  "promedina.essays.binderAsphaltConcreteView": "Registered samples in Binder Asphalt Concrete",
+  "pm.granularLayer.stabilizer": "Stabilizer",
+  "pm.granularLayer.tenor": "Tenor",
+  "pm.granularLayer.rcs": "RCS, 28 days (MPa)",
+  "pm.granularLayer.rtf": "RTF, 28 days (MPa)",
+  "pm.granularLayer.rtcd": "RTCD, 28 days (MPa)",
+  "pm.granularLayer.compression.energy": "Compression energy",
+  "pm.granularLayer.rs.inital": "Initial (Ei)",
+  "pm.granularLayer.rs.final": "Final (Ef)",
+  "pm.granularLayer.constant.A": "Constant A",
+  "pm.granularLayer.constant.B": "Constant B"
 }

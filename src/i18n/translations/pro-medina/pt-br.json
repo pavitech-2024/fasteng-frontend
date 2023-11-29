@@ -144,5 +144,15 @@
   "pm.granularLayer.highway": "Rodovia",
   "promedina.essays.stabilizedLayersView": "Amostras cadastradas em Camadas estabilizadas",
   "promedina.essays.binderAsphaltConcreteView": "Amostras cadastradas em Ligante e Concreto asfálticos",
-  "register.step-4-description": "Preencha todos os dados obrigatórios."
+  "register.step-4-description": "Preencha todos os dados obrigatórios.",
+  "pm.granularLayer.stabilizer": "Estabilizante",
+  "pm.granularLayer.tenor": "Teor",
+  "pm.granularLayer.rcs": "RCS, 28 dias (MPa)",
+  "pm.granularLayer.rtf": "RTF, 28 dias (MPa)",
+  "pm.granularLayer.rtcd": "RTCD, 28 dias (MPa)",
+  "pm.granularLayer.compression.energy": "Energia de compactação",
+  "pm.granularLayer.rs.inital": "Inicial (Ei)",
+  "pm.granularLayer.rs.final": "Final (Ef)",
+  "pm.granularLayer.constant.A": "Constante A",
+  "pm.granularLayer.constant.B": "Constante B"
 }
