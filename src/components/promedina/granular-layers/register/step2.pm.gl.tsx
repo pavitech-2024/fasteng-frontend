@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { EssayPageProps } from '../../../templates/essay';
 import { t } from 'i18next';
 import { Box, TextField, Button } from '@mui/material';
@@ -23,7 +24,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
 
   useEffect(() => {
     if (step2Data.images !== null) {
-      setImages(step2Data.images)
+      setImages(step2Data.images);
     }
   }, [step2Data.images])
 
@@ -183,7 +184,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
             inputProps={{ min: 0 }}
             value={row.thickness}
             onChange={(e) => {
-              console.log("🚀 ~ file: step2.pm.gl.tsx:169 ~ id:", id)
+              console.log('🚀 ~ file: step2.pm.gl.tsx:169 ~ id:', id);
               const newRows = [...rows];
               newRows[index].thickness = Number(e.target.value);
               setData({ step: 1, key: 'thickness', value: newRows });
@@ -204,14 +205,14 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
       if (typeof value === 'string' && value.trim() === '') return false;
       return true;
     }) &&
-    inputsPavimentPreparation.every(({ required, value }) => {
-      if (!required) return true;
-      if (value === null) return false;
-      if (typeof value === 'string' && value.trim() === '') return false;
-      return true;
-    }) &&
-    !hasNullValues && 
-    setNextDisabled(false)
+      inputsPavimentPreparation.every(({ required, value }) => {
+        if (!required) return true;
+        if (value === null) return false;
+        if (typeof value === 'string' && value.trim() === '') return false;
+        return true;
+      }) &&
+      !hasNullValues &&
+      setNextDisabled(false);
   }
 
   return (
@@ -302,7 +303,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
           }))}
         />
         <Box
-        id="upload-images"
+          id="upload-images"
           sx={{
             display: 'grid',
             width: '100%',
@@ -314,11 +315,11 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
           <UploadImages editarImages={step2Data.images} onImagesUpdate={(images: string) => setImages(images)} />
           <TextField
             variant="standard"
-            type='string'
+            type="string"
             label={'Data:'}
-            placeholder='_ _/_ _/_ _ _ _'
+            placeholder="_ _/_ _/_ _ _ _"
             value={dateFormatter(step2Data.imagesDate)}
-            style={{ display: 'block'}}
+            style={{ display: 'block' }}
             required={false}
             onChange={(e) => setData({ step: 1, key: 'imagesDate', value: e.target.value })}
           />

@@ -8,7 +8,7 @@ const samplesService = {
   getSamples: () => Api.get(`promedina/binder-asphalt-concrete/binder-asphalt-concrete-samples/all`),
   getFilteredSamples: (params: any, page: number) =>
     Api.get(
-      `promedina/binder-asphalt-concrete/binder-asphalt-concrete-samples/filter/?filter=${params}&limit=2&need_count=true&page=${page}`
+      `promedina/binder-asphalt-concrete/binder-asphalt-concrete-samples/filter/?filter=${params}&limit=5&need_count=true&page=${page}`
     ),
   getSample: (sampleId: string) => Api.get(`promedina/binder-asphalt-concrete/binder-asphalt-concrete-samples/${sampleId}`),
 };

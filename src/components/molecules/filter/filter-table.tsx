@@ -194,7 +194,7 @@ const PromedinaMaterialsTemplate = ({
 
       {/*Page */}
       <StepDescription
-        text={'Após selecionar os filtros, clique no botão com a lupa para atualizar a tabela com os dados filtrados.'}
+        text={'Após selecionar uma categoria de filtro e digitar o parâmetro, a tabela será atualizada automaticamente com os dados filtrados.'}
       />
       <Box sx={{ p: { mobile: '0 4vw', notebook: '0 2vw' }, mb: '4vw', width: '100%', maxWidth: '1800px' }}>
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr' }}>

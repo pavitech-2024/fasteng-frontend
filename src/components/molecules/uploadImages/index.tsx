@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
 import CameraIcon from '@/components/atoms/icons/cameraIcon';
 import TrashIcon from '@/components/atoms/icons/trashIcon';
 import { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 interface IImages {
   // editarImages?: string[];
@@ -53,25 +53,23 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
     if (files.length === 0) {
       return;
     }
-  
+
     if (files.length > 1 || images) {
       alert('Você só pode adicionar uma imagem');
       return;
     }
-  
+
     const file = files[0];
-  
+
     const reader = new FileReader();
     reader.onloadend = () => {
       setImages(reader.result);
     };
-  
-    reader.readAsDataURL(file);
-  };  
-  
 
-  const handleRemoveImage = (id: string) => {
-    // setImages(images.filter((image) => image.id !== id));
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
     setImages(null);
 
     const fileInput = document.getElementById('uploadImages') as HTMLInputElement;
@@ -89,27 +87,16 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
         <CameraIcon />
         <span style={{ fontFamily: 'roboto', fontSize: 'bold' }}>Adicionar Fotos</span>
       </label>
-      <div>{images}</div>
       <input
         type="file"
         accept=".jpg,.jpeg,.png,.webm"
         multiple={false}
-        // multiple
         onChange={handleAddImage}
         style={{ display: 'hidden' }}
         id="uploadImages"
+        title=' '
       />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '2rem' }}>
-        {/* {images.map((image, index) => (
-          <Image
-            key={image.id ? image.id : `${image}-${index}`}
-            id={image.id}
-            src={image.src}
-            index={index}
-            onRemove={handleRemoveImage}
-            alt={''}
-          />
-        ))} */}
         {images && (
           <Image
             key={images.id ? images.id : `${images}`}
@@ -142,10 +129,7 @@ const Image: React.FC<ImageProps> = ({ id, src, onRemove, alt }) => {
         width={'260px'}
         height={'100px'}
       />
-      <div
-        style={{ display: 'absolute', top: '0', right: '0', cursor: 'pointer' }}
-        onClick={() => onRemove(id)}
-      >
+      <div style={{ display: 'absolute', top: '0', right: '0', cursor: 'pointer' }} onClick={() => onRemove(id)}>
         <TrashIcon />
       </div>
     </div>

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 /* eslint-disable @next/next/no-html-link-for-pages */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-unescaped-entities */
@@ -108,10 +109,10 @@ const SpecificSample_GranularLayers = () => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 justifyItems: 'center',
-                gap: '0.5rem',
+                gap: '2rem',
               }}
             >
-              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                 {samples?.step2Data.sectionType && (
                   <>
                     <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Tipo de seção</Typography>
@@ -153,7 +154,7 @@ const SpecificSample_GranularLayers = () => {
                   </>
                 )}
               </Box>
-              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                 {samples?.step2Data.identification && (
                   <>
                     <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Identificação</Typography>
@@ -172,13 +173,13 @@ const SpecificSample_GranularLayers = () => {
                 )}
                 {samples?.step2Data.latitudeF && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Latitude inicial</Typography>
-                    <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.latitudeF}</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Latitude final</Typography>
+                    <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.step2Data.latitudeF}</Typography>
                   </>
                 )}
                 {samples?.step2Data.longitudeF && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Longitude inicial</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Longitude final</Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step2Data.longitudeF}
                     </Typography>
@@ -201,7 +202,7 @@ const SpecificSample_GranularLayers = () => {
                   </>
                 )}
               </Box>
-              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                 {samples?.step2Data.milling && (
                   <>
                     <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Fresagem</Typography>
@@ -237,7 +238,7 @@ const SpecificSample_GranularLayers = () => {
                   </>
                 )}{' '}
               </Box>
-              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                 {samples?.step3Data.mctGroup && (
                   <>
                     <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Grupo MCT</Typography>
@@ -279,7 +280,7 @@ const SpecificSample_GranularLayers = () => {
                   </>
                 )}
               </Box>
-              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                 {samples?.step3Data.compressionEnergy && (
                   <>
                     <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Energia de compactação</Typography>
@@ -343,7 +344,7 @@ const SpecificSample_GranularLayers = () => {
                   </>
                 )}
               </Box>
-              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                 {samples?.refinery && (
                   <>
                     <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Refinaria</Typography>
@@ -387,7 +388,7 @@ const SpecificSample_GranularLayers = () => {
                   </>
                 )}
               </Box>
-              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                 {samples?.capType && (
                   <>
                     <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Tipo do CAP</Typography>
@@ -474,6 +475,7 @@ const SpecificSample_GranularLayers = () => {
                   alignItems: 'center',
                   justifyContent: 'space-around',
                   marginBottom: '-1rem',
+                  gap: '2rem',
                 }}
               >
                 <Result_CardContainer hideBorder title={'Módulo de Resiliência (MPa)'}>
@@ -704,10 +706,11 @@ const SpecificSample_GranularLayers = () => {
                     alignItems: 'center',
                     justifyContent: 'space-around',
                     marginBottom: '-1rem',
+                    gap: '2rem',
                   }}
                 >
                   <Result_CardContainer hideBorder title={'Curva de Fadiga à Compressão Diametral'}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                       {samples?.samples?.fatigueCurve_n_cps && (
                         <>
                           <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>N° CPs</Typography>
@@ -717,7 +720,7 @@ const SpecificSample_GranularLayers = () => {
                         </>
                       )}
                     </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                       {samples?.fatigueCurve_k1 && (
                         <>
                           <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>k1</Typography>
@@ -727,7 +730,7 @@ const SpecificSample_GranularLayers = () => {
                         </>
                       )}
                     </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                       {samples?.fatigueCurve_k2 && (
                         <>
                           <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>k2</Typography>
@@ -737,7 +740,7 @@ const SpecificSample_GranularLayers = () => {
                         </>
                       )}
                     </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                       {samples?.fatigueCurve_r2 && (
                         <>
                           <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>R²</Typography>
@@ -791,9 +794,9 @@ const SpecificSample_GranularLayers = () => {
                   alignItems: 'center',
                 }}
               >
-                {samples?.images}
+                <img src={samples?.step2Data.images} alt="Imagem do Segmento Experimental" width={'250px'} height={'250px'} />
               </Box>
-              <Typography>{samples?.imagesDate}</Typography>
+              <Typography>Data da imagem: {samples?.step2Data.imagesDate}</Typography>
             </Box>
           </Box>
         </FlexColumnBorder>
