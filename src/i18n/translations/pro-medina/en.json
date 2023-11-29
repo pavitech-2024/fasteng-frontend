@@ -146,5 +146,7 @@
   "pm.granularLayer.rs.inital": "Initial (Ei)",
   "pm.granularLayer.rs.final": "Final (Ef)",
   "pm.granularLayer.constant.A": "Constant A",
-  "pm.granularLayer.constant.B": "Constant B"
+  "pm.granularLayer.constant.B": "Constant B",
+  "pm.granular-layers-register.already-exists-error": "A sample with the same name already exists.",
+  "pm.granular-layers-register.payload-too-large-error": "The selected image is too large. Please select a smaller image."
 }

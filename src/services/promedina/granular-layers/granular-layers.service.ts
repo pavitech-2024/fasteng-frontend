@@ -2,6 +2,7 @@ import Api from '@/api';
 import { UnitMassIcon } from '@/assets';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { GranularLayersActions, GranularLayersData } from '@/stores/promedina/granular-layers/granular-layers.store';
+import { Axios } from 'axios';
 import { t } from 'i18next';
 
 class GRANULARLAYERS_SERVICE implements IEssayService {
@@ -208,6 +209,8 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
         step3Data,
       });
 
+      console.log("🚀 ~ file: granular-layers.service.ts:207 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~ response:", response)
+
       const { success, error } = response.data;
 
       if (!success) {
@@ -216,6 +219,10 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
         }
       }
     } catch (error) {
+      if (error.response?.status === 413) {
+        throw new Error(t('pm.granular-layers-register.payload-too-large-error'));
+      }
+  
       throw error;
     }
   };
