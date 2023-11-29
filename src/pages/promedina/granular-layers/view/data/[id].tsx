@@ -52,6 +52,8 @@ const SpecificSample_GranularLayers = () => {
     thickness: item.thickness,
   }));
 
+  console.log("🚀 ~ file: [id].tsx:56 ~ samples?.step2Data.images:", samples?.step2Data.images)
+
   return (
     <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
       <Box
@@ -784,20 +786,22 @@ const SpecificSample_GranularLayers = () => {
                 )}
               </div>
             </Box>
-            <Box sx={{ marginBottom: '1rem' }}>
-              <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem' }}>Imagem do Segmento Experimental</Typography>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: { mobile: 'column', desktop: 'row' },
-                  gap: '1rem',
-                  alignItems: 'center',
-                }}
-              >
-                <img src={samples?.step2Data.images} alt="Imagem do Segmento Experimental" width={'250px'} height={'250px'} />
+            {samples?.step2Data.images || samples?.step2Data.images.length > 0 && (
+              <Box sx={{ marginBottom: '1rem' }}>
+                <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem' }}>Imagem do Segmento Experimental</Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: { mobile: 'column', desktop: 'row' },
+                    gap: '1rem',
+                    alignItems: 'center',
+                  }}
+                >
+                  <img src={samples?.step2Data.images} alt="Imagem do Segmento Experimental" width={'250px'} height={'250px'} />
+                </Box>
+                <Typography>Data da imagem: {samples?.step2Data.imagesDate}</Typography>
               </Box>
-              <Typography>Data da imagem: {samples?.step2Data.imagesDate}</Typography>
-            </Box>
+            )}
           </Box>
         </FlexColumnBorder>
       </Box>
