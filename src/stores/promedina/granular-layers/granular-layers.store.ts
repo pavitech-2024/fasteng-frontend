@@ -34,17 +34,17 @@ interface Step2Data {
   // Structural Composition
   structuralComposition: {
     id: number;
-    layer: unknown;
-    material: unknown;
-    thickness: unknown;
+    layer: string;
+    material: string;
+    thickness: number;
   }[];
 }
 
 export type StructuralCompositionTable = {
   id: number;
-  layer: unknown;
-  material: unknown;
-  thickness: unknown;
+  layer: string;
+  material: string;
+  thickness: number;
 };
 
 interface Step3Data {
