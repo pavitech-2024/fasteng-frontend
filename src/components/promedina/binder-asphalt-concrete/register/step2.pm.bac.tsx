@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import UploadImages from '@/components/molecules/uploadImages';
 import { useState, useEffect } from 'react';
 import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
+import { dateFormatter } from '@/utils/dateFormatter';
 
 const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useBinderAsphaltConcreteStore();
@@ -321,8 +322,9 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
           <UploadImages onImagesUpdate={(images: string) => setImages(images)} />
           <TextField
             variant="standard"
-            label={'__/__/____'}
-            value={step2Data.imagesDate}
+            label={'Data:'}
+            placeholder='_ _/_ _/_ _ _ _'
+            value={dateFormatter(step2Data.imagesDate)}
             style={{ display: 'block' }}
             required={false}
             onChange={(e) => setData({ step: 0, key: 'date', value: e.target.value })}

@@ -189,6 +189,20 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
     },
   ];
 
+  const dateFormatter = (input) => {
+    // Remove qualquer caractere não numérico
+    const numericInput = input.replace(/\D/g, '');
+  
+    // Adiciona as barras nos lugares certos
+    if (numericInput.length <= 2) {
+      return numericInput;
+    } else if (numericInput.length <= 4) {
+      return `${numericInput.slice(0, 2)}/${numericInput.slice(2)}`;
+    } else {
+      return `${numericInput.slice(0, 2)}/${numericInput.slice(2, 4)}/${numericInput.slice(4, 8)}`;
+    }
+  };
+
   if (nextDisabled) {
     const hasNullValues = rows.some((row) => Object.values(row).some((value) => value === null));
 
@@ -311,8 +325,9 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
           />
           <TextField
             variant="standard"
-            label={'__/__/____'}
-            value={step2Data.imagesDate}
+            label={'Data:'}
+            placeholder='_ _/_ _/_ _ _ _'
+            value={dateFormatter(step2Data.imagesDate)}
             style={{ display: 'block' }}
             required={false}
             onChange={(e) => setData({ step: 0, key: 'date', value: e.target.value })}

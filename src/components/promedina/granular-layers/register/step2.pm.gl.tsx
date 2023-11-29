@@ -8,11 +8,11 @@ import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import UploadImages from '@/components/molecules/uploadImages';
 import { useEffect, useState } from 'react';
+import { dateFormatter } from '@/utils/dateFormatter';
 
 const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useGranularLayersStore();
   const rows = step2Data.structuralComposition;
-  // const [images, setImages] = useState<string[]>([]);
   const [images, setImages] = useState<string>(step2Data.images ? step2Data.images : '');
 
   useEffect(() => {
@@ -26,7 +26,6 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
       setImages(step2Data.images)
     }
   }, [step2Data.images])
-  
 
   // Remover mais uma linha de determinado valor
   const handleErase = () => {
@@ -196,20 +195,6 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     },
   ];
 
-  const dateFormatter = (input) => {
-    // Remove qualquer caractere não numérico
-    const numericInput = input.replace(/\D/g, '');
-
-    // Adiciona as barras nos lugares certos
-    if (numericInput.length <= 2) {
-      return numericInput;
-    } else if (numericInput.length <= 4) {
-      return `${numericInput.slice(0, 2)}/${numericInput.slice(2)}`;
-    } else {
-      return `${numericInput.slice(0, 2)}/${numericInput.slice(2, 4)}/${numericInput.slice(4, 8)}`;
-    }
-  };
-
   if (nextDisabled) {
     const hasNullValues = rows.some((row) => Object.values(row).some((value) => value === null));
 
@@ -326,7 +311,6 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
             alignItems: 'center',
           }}
         >
-          {/* <UploadImages onImagesUpdate={(images: string[]) => setImages(images)} /> */}
           <UploadImages editarImages={step2Data.images} onImagesUpdate={(images: string) => setImages(images)} />
           <TextField
             variant="standard"
