@@ -139,12 +139,12 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
           <InputEndAdornment
             fullWidth
             label={t('pm.granularLayer.layer')}
-            type="number"
+            type="string"
             inputProps={{ min: 0 }}
             value={row.layer}
             onChange={(e) => {
               const newRows = [...rows];
-              rows[index].layer = Number(e.target.value);
+              rows[index].layer = (e.target.value);
               setData({ step: 1, key: 'layer', value: newRows });
             }}
             adornment={''}
@@ -163,12 +163,12 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
           <InputEndAdornment
             fullWidth
             label={t('pm.granularLayer.material')}
-            type="number"
+            type="string"
             inputProps={{ min: 0 }}
             value={row.wetGrossWeightCapsule}
             onChange={(e) => {
               const newRows = [...rows];
-              newRows[index].material = Number(e.target.value);
+              newRows[index].material = (e.target.value);
               setData({ step: 1, key: 'material', value: newRows });
             }}
             adornment={''}

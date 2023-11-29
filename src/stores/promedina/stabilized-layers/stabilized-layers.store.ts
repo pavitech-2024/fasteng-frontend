@@ -34,9 +34,9 @@ interface Step2Data {
   // Structural Composition
   structuralComposition: {
     id: number;
-    layer: unknown;
-    material: unknown;
-    thickness: unknown;
+    layer: string[];
+    material: string[];
+    thickness: number[];
   }[];
 }
 
