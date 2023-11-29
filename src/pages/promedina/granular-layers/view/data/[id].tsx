@@ -65,17 +65,17 @@ const SpecificSample_GranularLayers = () => {
     { field: 'thickness', headerName: 'Espessura', width: 130 },
   ];
 
-  const rows = samples?.structuralComposition.map((item) => [
-    { id: item.id, layer: item.layer },
-    { id: item.id, material: item.material },
-    { id: item.id, thickness: item.thickness },
+  const rows = samples?.step2Data?.structuralComposition?.map((item, idx) => [
+    { id: idx + 1, layer: item.layer },
+    { id: idx + 1, material: item.material },
+    { id: idx + 1, thickness: item.thickness },
   ]);
 
   return (
     <div>
       <FlexColumnBorder title={t('pm.generalData')} open={true} theme={'#07B811'}>
-        {GeneralData.map((item) => (
-          <Box key={item.value} sx={{ display: 'grid', gridColumn: '1fr 1fr 1fr', alignItems: 'center' }}>
+        {GeneralData?.map((item, idx) => (
+          <Box key={idx} sx={{ display: 'grid', gridColumn: '1fr 1fr 1fr', alignItems: 'center' }}>
             <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>{item.label}</Typography>
             <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{item.value}</Typography>
           </Box>
@@ -562,6 +562,9 @@ const SpecificSample_GranularLayers = () => {
           </FlexColumnBorder>
         </Box>
       </FlexColumnBorder>
+      <div style={{ height: 400, width: '100%' }}>
+                <DataGrid rows={rows} columns={columns} pageSizeOptions={[5, 10]} />
+              </div>
     </div>
   );
 };

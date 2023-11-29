@@ -65,7 +65,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
     { field: 'thickness', headerName: 'Espessura', width: 130 },
   ];
 
-  const rows = samples?.structuralComposition.map((item) => [
+  const rows = samples?.step2Data.structuralComposition.map((item) => [
     { id: item.id, layer: item.layer },
     { id: item.id, material: item.material },
     { id: item.id, thickness: item.thickness },
