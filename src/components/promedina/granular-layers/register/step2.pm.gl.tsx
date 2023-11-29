@@ -36,6 +36,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
 
   // Adicionar mais uma linha de determinado valor
   const handleAdd = () => {
+    console.log("aqui")
     const newRows = [...rows];
     newRows.push({
       id: rows.length,
@@ -129,7 +130,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
             value={row.layer}
             onChange={(e) => {
               const newRows = [...rows];
-              rows[index].layer = Number(e.target.value);
+              rows[index].layer = e.target.value;
               setData({ step: 1, key: 'layer', value: newRows });
             }}
             adornment={''}
@@ -153,7 +154,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
             value={row.wetGrossWeightCapsule}
             onChange={(e) => {
               const newRows = [...rows];
-              newRows[index].material = Number(e.target.value);
+              newRows[index].material = e.target.value;
               setData({ step: 1, key: 'material', value: newRows });
             }}
             adornment={''}
@@ -172,10 +173,11 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
           <InputEndAdornment
             fullWidth
             label={t('pm.granularLayer.thickness')}
-            type="string"
+            type="number"
             inputProps={{ min: 0 }}
             value={row.thickness}
             onChange={(e) => {
+              console.log("🚀 ~ file: step2.pm.gl.tsx:169 ~ id:", id)
               const newRows = [...rows];
               newRows[index].thickness = Number(e.target.value);
               setData({ step: 1, key: 'thickness', value: newRows });
