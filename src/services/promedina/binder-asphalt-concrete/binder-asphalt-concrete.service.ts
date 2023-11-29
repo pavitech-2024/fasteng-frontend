@@ -255,6 +255,10 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
         }
       }
     } catch (error) {
+      if (error.response?.status === 413) {
+        throw new Error(t('pm.register.payload-too-large-error'));
+      }
+  
       throw error;
     }
   };

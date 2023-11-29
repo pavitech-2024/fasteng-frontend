@@ -215,12 +215,12 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
 
       if (!success) {
         if (error && error.name === 'SampleCreationError') {
-          throw new Error(t('pm.granular-layers-register.already-exists-error'));
+          throw new Error(t('pm.register.already-exists-error'));
         }
       }
     } catch (error) {
       if (error.response?.status === 413) {
-        throw new Error(t('pm.granular-layers-register.payload-too-large-error'));
+        throw new Error(t('pm.register.payload-too-large-error'));
       }
   
       throw error;
