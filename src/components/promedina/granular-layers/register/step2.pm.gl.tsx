@@ -12,13 +12,21 @@ import { useEffect, useState } from 'react';
 const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useGranularLayersStore();
   const rows = step2Data.structuralComposition;
-  const [images, setImages] = useState<string[]>([]);
+  // const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<string>(step2Data.images ? step2Data.images : '');
 
   useEffect(() => {
     if (images !== null) {
       setData({ step: 1, key: 'images', value: images });
     }
   }, [images, setData]);
+
+  useEffect(() => {
+    if (step2Data.images !== null) {
+      setImages(step2Data.images)
+    }
+  }, [step2Data.images])
+  
 
   // Remover mais uma linha de determinado valor
   const handleErase = () => {
@@ -151,7 +159,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
             label={t('pm.granularLayer.material')}
             type="string"
             inputProps={{ min: 0 }}
-            value={row.wetGrossWeightCapsule}
+            value={row.material}
             onChange={(e) => {
               const newRows = [...rows];
               newRows[index].material = e.target.value;
@@ -188,6 +196,20 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
       },
     },
   ];
+
+  const dateFormatter = (input) => {
+    // Remove qualquer caractere não numérico
+    const numericInput = input.replace(/\D/g, '');
+
+    // Adiciona as barras nos lugares certos
+    if (numericInput.length <= 2) {
+      return numericInput;
+    } else if (numericInput.length <= 4) {
+      return `${numericInput.slice(0, 2)}/${numericInput.slice(2)}`;
+    } else {
+      return `${numericInput.slice(0, 2)}/${numericInput.slice(2, 4)}/${numericInput.slice(4, 8)}`;
+    }
+  };
 
   if (nextDisabled) {
     const hasNullValues = rows.some((row) => Object.values(row).some((value) => value === null));
@@ -305,14 +327,17 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
             alignItems: 'center',
           }}
         >
-          <UploadImages onImagesUpdate={(images: string[]) => setImages(images)} />
+          {/* <UploadImages onImagesUpdate={(images: string[]) => setImages(images)} /> */}
+          <UploadImages editarImages={step2Data.images} onImagesUpdate={(images: string) => setImages(images)} />
           <TextField
             variant="standard"
-            label={'__/__/____'}
-            value={step2Data.imagesDate}
+            type='string'
+            label={'Data:'}
+            placeholder='_ _/_ _/_ _ _ _'
+            value={dateFormatter(step2Data.imagesDate)}
             style={{ display: 'block'}}
             required={false}
-            onChange={(e) => setData({ step: 0, key: 'date', value: e.target.value })}
+            onChange={(e) => setData({ step: 1, key: 'imagesDate', value: e.target.value })}
           />
         </Box>
       </FlexColumnBorder>

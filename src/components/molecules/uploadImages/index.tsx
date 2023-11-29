@@ -1,45 +1,81 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
 import CameraIcon from '@/components/atoms/icons/cameraIcon';
 import TrashIcon from '@/components/atoms/icons/trashIcon';
 import { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 interface IImages {
-  editarImages?: string[];
-  onImagesUpdate: (updatedImages: string[]) => void;
+  // editarImages?: string[];
+  editarImages?: string;
+  // onImagesUpdate: (updatedImages: string[]) => void;
+  onImagesUpdate: (updatedImages: string) => void;
 }
 
 const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
-  const [images, setImages] = useState<any[]>(editarImages || []);
+  // const [images, setImages] = useState<any[]>(editarImages || []);
+  const [images, setImages] = useState<any>(editarImages || '');
 
   useEffect(() => {
-    onImagesUpdate(images.map((image) => image.src));
+    // onImagesUpdate(images.map((image) => image.src));
+    onImagesUpdate(images);
   }, [images, onImagesUpdate]);
 
   useEffect(() => {
     if (editarImages) {
-      setImages(editarImages.map((src) => ({ src, id: uuidv4() })));
+      // setImages(editarImages.map((src) => ({ src, id: uuidv4() })));
+      setImages(editarImages);
     }
   }, [editarImages]);
 
+  // const handleAddImage = (event: any) => {
+  //   const files = Array.from(event.target.files);
+  //   if (files.length + images.length > 3) {
+  //     alert('Você pode adicionar no máximo 3 imagens');
+  //     return;
+  //   }
+  //   const files = event.target.files;
+  //   if (files.length + images.length > 3) {
+  //     alert('Você pode adicionar no máximo 3 imagens');
+  //     return;
+  //   }
+
+  //   files.forEach((file: any) => {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setImages((prevImages) => [...prevImages, { src: reader.result, id: uuidv4() }]);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   });
+  // };
   const handleAddImage = (event: any) => {
-    const files = Array.from(event.target.files);
-    if (files.length + images.length > 1) {
-      alert('Você pode adicionar no máximo 1 imagem');
+    const files = event.target.files;
+
+    if (files.length === 0) {
       return;
     }
 
-    files.forEach((file: any) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImages((prevImages) => [...prevImages, { src: reader.result, id: uuidv4() }]);
-      };
-      reader.readAsDataURL(file);
-    });
+    if (files.length > 1 || images) {
+      alert('Você só pode adicionar uma imagem');
+      return;
+    }
+
+    const file = files[0];
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImages(reader.result);
+    };
+
+    reader.readAsDataURL(file);
   };
 
-  const handleRemoveImage = (id: string) => {
-    setImages(images.filter((image) => image.id !== id));
+  const handleRemoveImage = () => {
+    setImages(null);
+
+    const fileInput = document.getElementById('uploadImages') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
   };
 
   return (
@@ -51,16 +87,18 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
         <CameraIcon />
         <span style={{ fontFamily: 'roboto', fontSize: 'bold' }}>Adicionar Fotos</span>
       </label>
+      <div>{images}</div>
       <input
         type="file"
         accept=".jpg,.jpeg,.png,.webm"
-        multiple
+        multiple={false}
+        // multiple
         onChange={handleAddImage}
         style={{ display: 'hidden' }}
         id="uploadImages"
       />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '2rem' }}>
-        {images.map((image, index) => (
+        {/* {images.map((image, index) => (
           <Image
             key={image.id ? image.id : `${image}-${index}`}
             id={image.id}
@@ -69,7 +107,17 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
             onRemove={handleRemoveImage}
             alt={''}
           />
-        ))}
+        ))} */}
+        {images && (
+          <Image
+            key={images.id ? images.id : `${images}`}
+            id={images.id}
+            src={images}
+            index={0}
+            onRemove={handleRemoveImage}
+            alt={''}
+          />
+        )}
       </div>
     </div>
   );
@@ -92,10 +140,7 @@ const Image: React.FC<ImageProps> = ({ id, src, onRemove, alt }) => {
         width={'260px'}
         height={'100px'}
       />
-      <div
-        style={{ display: 'absolute', top: '0', right: '0', cursor: 'pointer' }}
-        onClick={() => onRemove(id)}
-      >
+      <div style={{ display: 'absolute', top: '0', right: '0', cursor: 'pointer' }} onClick={() => onRemove(id)}>
         <TrashIcon />
       </div>
     </div>
