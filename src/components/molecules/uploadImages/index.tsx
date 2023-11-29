@@ -87,27 +87,16 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
         <CameraIcon />
         <span style={{ fontFamily: 'roboto', fontSize: 'bold' }}>Adicionar Fotos</span>
       </label>
-      <div>{images}</div>
       <input
         type="file"
         accept=".jpg,.jpeg,.png,.webm"
         multiple={false}
-        // multiple
         onChange={handleAddImage}
         style={{ display: 'hidden' }}
         id="uploadImages"
+        title=' '
       />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '2rem' }}>
-        {/* {images.map((image, index) => (
-          <Image
-            key={image.id ? image.id : `${image}-${index}`}
-            id={image.id}
-            src={image.src}
-            index={index}
-            onRemove={handleRemoveImage}
-            alt={''}
-          />
-        ))} */}
         {images && (
           <Image
             key={images.id ? images.id : `${images}`}
