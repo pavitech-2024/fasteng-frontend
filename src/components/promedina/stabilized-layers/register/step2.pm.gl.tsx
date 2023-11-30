@@ -8,6 +8,7 @@ import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import UploadImages from '@/components/molecules/uploadImages';
 import { useState, useEffect } from 'react';
+import { dateFormatter } from '@/utils/dateFormatter';
 
 const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useStabilizedLayersStore();
@@ -188,20 +189,6 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
       required: true,
     },
   ];
-
-  const dateFormatter = (input) => {
-    // Remove qualquer caractere não numérico
-    const numericInput = input.replace(/\D/g, '');
-  
-    // Adiciona as barras nos lugares certos
-    if (numericInput.length <= 2) {
-      return numericInput;
-    } else if (numericInput.length <= 4) {
-      return `${numericInput.slice(0, 2)}/${numericInput.slice(2)}`;
-    } else {
-      return `${numericInput.slice(0, 2)}/${numericInput.slice(2, 4)}/${numericInput.slice(4, 8)}`;
-    }
-  };
 
   if (nextDisabled) {
     const hasNullValues = rows.some((row) => Object.values(row).some((value) => value === null));
