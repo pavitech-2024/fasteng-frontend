@@ -18,11 +18,6 @@ const SpecificSample_GranularLayers = () => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const query = router.query as any;
-  console.log('🚀 ~ file: [id].tsx:12 ~ SpecificSample ~ id:', query.id);
-
-  useEffect(() => {
-    console.log('🚀 ~ file: [id].tsx:17 ~ SpecificSample ~ samples:', samples);
-  }, [samples]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,7 +38,6 @@ const SpecificSample_GranularLayers = () => {
     { field: 'material', headerName: 'Material' },
     { field: 'thickness', headerName: 'Espessura' },
   ];
-  console.log('🚀 ~ file: [id].tsx:65 ~ columns:', columns);
 
   const rows = samples?.step2Data.structuralComposition.map((item, index) => ({
     id: index,
@@ -51,8 +45,6 @@ const SpecificSample_GranularLayers = () => {
     material: item.material,
     thickness: item.thickness,
   }));
-
-  console.log("🚀 ~ file: [id].tsx:56 ~ samples?.step2Data.images:", samples?.step2Data.images)
 
   return (
     <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
@@ -786,7 +778,7 @@ const SpecificSample_GranularLayers = () => {
                 )}
               </div>
             </Box>
-            {samples?.step2Data.images || samples?.step2Data.images.length > 0 && (
+            {samples?.step2Data.images && (
               <Box sx={{ marginBottom: '1rem' }}>
                 <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem' }}>Imagem do Segmento Experimental</Typography>
                 <Box
