@@ -1,5 +1,5 @@
 {
-  "materials.title": "Materiais cadastrados",
+  "concrete.materials.title": "Materiais cadastrados",
   "concrete.materials.newMaterial": "Cadastrar material",
   "concrete.materials.type": "Tipo",
   "concrete.materials.source": "Fonte",
@@ -10,10 +10,12 @@
   "concrete.materials.collectionDate": "Data de coleta",
   "concrete.materials.boughtDate": "Data de extração",
   "concrete.materials.classification_CAP": "Classificação",
+  "concrete.materials.concreteBinder": "Ligante de concreto",
   "concrete.materials.coarseAggregate": "Agregado graúdo",
   "concrete.materials.fineAggregate": "Agregado fino",
+  "concrete.materials.filler": "Filler",
   "concrete.materials.cement": "Aglomerante (cimento)",
   "concrete.materials.cap": "CAP",
   "concrete.materials.other": "Outro",
-  "materials.coarseAggregate": "Agregado graúdo"
+  "concrete.materials.comments": "Comentários"
 }

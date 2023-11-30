@@ -20,5 +20,20 @@
   "topbar.view": "Cadastro de amostras",
   "topbar.stabilized-layers": "Camadas Estabilizadas",
   "topbar.register": "Cadastro de novas amostras",
-  "topbar.binder-asphalt-concrete": "Ligante e concreto asfálticos"
+  "topbar.binder-asphalt-concrete": "Ligante e concreto asfálticos",
+  "topbar.ddui": "Determinação de Dano por Umidade Induzida",
+  "topbar.softening-point": "Ponto de amolecimento",
+  "topbar.penetration": "Penetração",
+  "topbar.saybolt-furol": "Viscosidade Saybolt-Furol",
+  "topbar.granulometry-asphalt": "Granulometria",
+  "topbar.granulometry-concrete": "Granulometria",
+  "topbar.granulometry-soils": "Granulometria",
+  "topbar.abcp": "Dosagem ABCP",
+  "topbar.sandEquivalent": "Equivalente Areia",
+  "topbar.specifymass": "Massa Específica",
+  "topbar.flashpoint": "Ponto de Fulgor",
+  "topbar.ductility": "Ductilidade",
+  "topbar.angularity": "Angularidade",
+  "topbar.shapeindex": "Índice de Forma",
+  "topbar.elongatedparticles": "Partículas Alongadas"
 }

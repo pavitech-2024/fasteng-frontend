@@ -1,0 +1,12 @@
+{
+  "saybolt-furol.temperature": "Temperatura",
+  "saybolt-furol.viscosity": "Viscosidade",
+  "saybolt-furol.calc": "Viscosidade Saybolt-Furol",
+  "saybolt-furol.step-2-description": "Por favor, preencha todas as informações abaixo.",
+  "saybolt-furol.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
+  "saybolt-furol.compression-temperature": "Temperatura de compactação",
+  "saybolt-furol.machining-temperature": "Temperatura de usinagem",
+  "saybolt-furol.higher": "Máxima",
+  "saybolt-furol.average": "Média",
+  "saybolt-furol.lower": "Mínima"
+}

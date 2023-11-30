@@ -12,6 +12,7 @@ import {
   ArrowForward,
   ArrowBack,
   InfoRounded,
+  WarningRounded,
   Close,
   Save,
   KeyboardArrowDown,
@@ -88,6 +89,7 @@ import UnitMassIcon from './concrete/essays/UnitMass.png';
 
 //dosages
 import AbcpIcon from './concrete/dosages/abcp.svg';
+import AbcpLogo from './concrete/dosages/ABCP-Logo.png';
 
 // export all assets
 export {
@@ -105,6 +107,7 @@ export {
   ArrowForward as NextIcon,
   ArrowBack as PreviousIcon,
   InfoRounded as InfoIcon,
+  WarningRounded as WarningIcon,
   Close as CloseIcon,
   Save as SaveIcon,
   KeyboardArrowDown as ArrowDownIcon,
@@ -180,4 +183,5 @@ export {
   UnitMassIcon,
   //doasges
   AbcpIcon,
+  AbcpLogo,
 };
