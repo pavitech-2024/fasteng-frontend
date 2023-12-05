@@ -75,7 +75,7 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
           <InputEndAdornment
             fullWidth
             label={t('pm.granularLayer.layer')}
-            type="number"
+            type="string"
             inputProps={{ min: 0 }}
             value={row.layer}
             onChange={(e) => {
@@ -99,7 +99,7 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
           <InputEndAdornment
             fullWidth
             label={t('pm.granularLayer.material')}
-            type="number"
+            type="string"
             inputProps={{ min: 0 }}
             value={row.wetGrossWeightCapsule}
             onChange={(e) => {
@@ -312,7 +312,7 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
           />
           <TextField
             variant="standard"
-            label={'Data:'}
+            label={t('pm-estructural-composition-image-date')}
             placeholder='_ _/_ _/_ _ _ _'
             value={dateFormatter(step2Data.imagesDate)}
             style={{ display: 'block' }}

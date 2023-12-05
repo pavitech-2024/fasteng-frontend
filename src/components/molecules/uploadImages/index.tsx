@@ -1,52 +1,30 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
 import CameraIcon from '@/components/atoms/icons/cameraIcon';
 import TrashIcon from '@/components/atoms/icons/trashIcon';
+import { t } from 'i18next';
 import { useState, useEffect } from 'react';
 
 interface IImages {
-  // editarImages?: string[];
   editarImages?: string;
-  // onImagesUpdate: (updatedImages: string[]) => void;
   onImagesUpdate: (updatedImages: string) => void;
 }
 
 const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
-  // const [images, setImages] = useState<any[]>(editarImages || []);
   const [images, setImages] = useState<any>(editarImages || '');
 
   useEffect(() => {
-    // onImagesUpdate(images.map((image) => image.src));
     onImagesUpdate(images);
   }, [images, onImagesUpdate]);
 
   useEffect(() => {
     if (editarImages) {
-      // setImages(editarImages.map((src) => ({ src, id: uuidv4() })));
       setImages(editarImages);
     }
   }, [editarImages]);
 
-  // const handleAddImage = (event: any) => {
-  //   const files = Array.from(event.target.files);
-  //   if (files.length + images.length > 3) {
-  //     alert('Você pode adicionar no máximo 3 imagens');
-  //     return;
-  //   }
-  //   const files = event.target.files;
-  //   if (files.length + images.length > 3) {
-  //     alert('Você pode adicionar no máximo 3 imagens');
-  //     return;
-  //   }
 
-  //   files.forEach((file: any) => {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setImages((prevImages) => [...prevImages, { src: reader.result, id: uuidv4() }]);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   });
-  // };
   const handleAddImage = (event: any) => {
     const files = event.target.files;
 
@@ -85,7 +63,7 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
         htmlFor="uploadImages"
       >
         <CameraIcon />
-        <span style={{ fontFamily: 'roboto', fontSize: 'bold' }}>Adicionar Fotos</span>
+        <span style={{ fontFamily: 'roboto', fontSize: 'bold' }}>{t('upload.images')}</span>
       </label>
       <input
         type="file"

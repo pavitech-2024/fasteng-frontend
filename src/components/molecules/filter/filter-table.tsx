@@ -193,9 +193,7 @@ const PromedinaMaterialsTemplate = ({
       </Dialog>
 
       {/*Page */}
-      <StepDescription
-        text={'Após selecionar uma categoria de filtro e digitar o parâmetro, a tabela será atualizada automaticamente com os dados filtrados.'}
-      />
+      <StepDescription text={t('pm.filter-table-description')} />
       <Box sx={{ p: { mobile: '0 4vw', notebook: '0 2vw' }, mb: '4vw', width: '100%', maxWidth: '1800px' }}>
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr' }}>
           <Box
@@ -249,7 +247,7 @@ const PromedinaMaterialsTemplate = ({
                 >
                   <InputBase
                     sx={{ ml: 1, flex: 1 }}
-                    placeholder={'Pesquisar por nome'}
+                    placeholder={t('pm.filter-table-search-by-name')}
                     value={searchParams[searchBy]}
                     onChange={(e) =>
                       setSearchParams((prevState) => ({
@@ -326,7 +324,7 @@ const PromedinaMaterialsTemplate = ({
                 >
                   <InputBase
                     sx={{ ml: 1, flex: 1 }}
-                    placeholder={'Pesquisar por rodovia'}
+                    placeholder={t('pm.filter-table-search-by-highway')}
                     value={searchParams[searchBy]}
                     onChange={(e) =>
                       setSearchParams((prevState) => ({
@@ -381,11 +379,11 @@ const PromedinaMaterialsTemplate = ({
                 cursor: 'pointer',
               }}
             >
-              <Tooltip title="Cadastrar nova amostra em camadas granulares">
+              <Tooltip title={t('pm.tooltip-register-new-sample')}>
                 <AddIcon sx={{ fontSize: '1.15rem', fontWeight: 700 }} />
               </Tooltip>
 
-              <Tooltip title="Cadastrar nova amostra em camadas granulares">
+              <Tooltip title={t('pm.tooltip-register-new-sample')}>
                 <Typography
                   sx={{
                     display: { mobile: 'none', notebook: 'flex' },
@@ -396,7 +394,7 @@ const PromedinaMaterialsTemplate = ({
                     textTransform: 'uppercase',
                   }}
                 >
-                  Nova amostra
+                  {t('pm-button-new-sample')}
                 </Typography>
               </Tooltip>
             </Link>
@@ -444,9 +442,11 @@ const PromedinaMaterialsTemplate = ({
                     width: '100%',
                   }}
                 >
-                  <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
-                    Local
-                  </Typography>
+                  <Tooltip title={t('pm-tooltip-filter-zone')}>
+                    <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
+                      {t('materials.template.zone')}
+                    </Typography>
+                  </Tooltip>
                 </Box>
                 <Box
                   sx={{
@@ -462,14 +462,16 @@ const PromedinaMaterialsTemplate = ({
                     },
                   }}
                 >
-                  <CloseIcon
-                    sx={{
-                      fontSize: '2rem',
-                      color: 'primaryTons.white',
-                      cursor: 'pointer',
-                      pl: '1rem',
-                    }}
-                  />
+                  <Tooltip title={t('pm-tooltip-del-filter')}>
+                    <CloseIcon
+                      sx={{
+                        fontSize: '2rem',
+                        color: 'primaryTons.white',
+                        cursor: 'pointer',
+                        pl: '1rem',
+                      }}
+                    />
+                  </Tooltip>
                 </Box>
               </button>
             )}
@@ -503,9 +505,9 @@ const PromedinaMaterialsTemplate = ({
                     width: '100%',
                   }}
                 >
-                  <Tooltip title="Você digitou um filtro por nome.">
+                  <Tooltip title={t('pm-tooltip-filter-name')}>
                     <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
-                      Nome
+                      {t('pm.binderAsphaltConcrete.name')}
                     </Typography>
                   </Tooltip>
                 </Box>
@@ -523,7 +525,7 @@ const PromedinaMaterialsTemplate = ({
                     },
                   }}
                 >
-                  <Tooltip title="Deletar filtro por nome.">
+                  <Tooltip title={t('pm-tooltip-del-filter')}>
                     <CloseIcon
                       sx={{
                         fontSize: '2rem',
@@ -566,9 +568,11 @@ const PromedinaMaterialsTemplate = ({
                     width: '100%',
                   }}
                 >
-                  <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
-                    Município/Estado
-                  </Typography>
+                  <Tooltip title={t('pm-tooltip-filter-cityState')}>
+                    <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
+                      {t('materials.template.cityState')}
+                    </Typography>
+                  </Tooltip>
                 </Box>
                 <Box
                   sx={{
@@ -584,14 +588,16 @@ const PromedinaMaterialsTemplate = ({
                     },
                   }}
                 >
-                  <CloseIcon
-                    sx={{
-                      fontSize: '2rem',
-                      color: 'primaryTons.white',
-                      cursor: 'pointer',
-                      pl: '1rem',
-                    }}
-                  />
+                  <Tooltip title={t('pm-tooltip-del-filter')}>
+                    <CloseIcon
+                      sx={{
+                        fontSize: '2rem',
+                        color: 'primaryTons.white',
+                        cursor: 'pointer',
+                        pl: '1rem',
+                      }}
+                    />
+                  </Tooltip>
                 </Box>
               </button>
             )}
@@ -625,9 +631,11 @@ const PromedinaMaterialsTemplate = ({
                     width: '100%',
                   }}
                 >
-                  <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
-                    Camada
-                  </Typography>
+                  <Tooltip title={t('pm-tooltip-filter-layer')}>
+                    <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
+                      {t('materials.template.layer')}
+                    </Typography>
+                  </Tooltip>
                 </Box>
                 <Box
                   sx={{
@@ -643,14 +651,16 @@ const PromedinaMaterialsTemplate = ({
                     },
                   }}
                 >
-                  <CloseIcon
-                    sx={{
-                      fontSize: '2rem',
-                      color: 'primaryTons.white',
-                      cursor: 'pointer',
-                      pl: '1rem',
-                    }}
-                  />
+                  <Tooltip title={t('pm-tooltip-del-filter')}>
+                    <CloseIcon
+                      sx={{
+                        fontSize: '2rem',
+                        color: 'primaryTons.white',
+                        cursor: 'pointer',
+                        pl: '1rem',
+                      }}
+                    />
+                  </Tooltip>
                 </Box>
               </button>
             )}
@@ -685,9 +695,11 @@ const PromedinaMaterialsTemplate = ({
                     width: '100%',
                   }}
                 >
-                  <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
-                    Rodovia
-                  </Typography>
+                  <Tooltip title={t('pm-tooltip-filter-highway')}>
+                    <Typography variant="body1" sx={{ textAlign: 'start', color: '#FCFCFC' }}>
+                      {t('materials.template.highway')}
+                    </Typography>
+                  </Tooltip>
                 </Box>
                 <Box
                   sx={{
@@ -703,14 +715,16 @@ const PromedinaMaterialsTemplate = ({
                     },
                   }}
                 >
-                  <CloseIcon
-                    sx={{
-                      fontSize: '2rem',
-                      color: 'primaryTons.white',
-                      cursor: 'pointer',
-                      pl: '1rem',
-                    }}
-                  />
+                  <Tooltip title={t('pm-tooltip-del-filter')}>
+                    <CloseIcon
+                      sx={{
+                        fontSize: '2rem',
+                        color: 'primaryTons.white',
+                        cursor: 'pointer',
+                        pl: '1rem',
+                      }}
+                    />
+                  </Tooltip>
                 </Box>
               </button>
             )}
@@ -797,7 +811,7 @@ const PromedinaMaterialsTemplate = ({
                                 setOpenDeleteModal(true);
                               }}
                             >
-                              <Tooltip title="Deletar amostra">
+                              <Tooltip title={t('pm-tooltip-del-sample')}>
                                 <DeleteIcon color="error" sx={{ fontSize: '1.25rem' }} />
                               </Tooltip>
                             </Button>

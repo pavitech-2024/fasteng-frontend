@@ -322,7 +322,7 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
           <UploadImages onImagesUpdate={(images: string) => setImages(images)} />
           <TextField
             variant="standard"
-            label={'Data:'}
+            label={t('pm-estructural-composition-image-date')}
             placeholder='_ _/_ _/_ _ _ _'
             value={dateFormatter(step2Data.imagesDate)}
             style={{ display: 'block' }}

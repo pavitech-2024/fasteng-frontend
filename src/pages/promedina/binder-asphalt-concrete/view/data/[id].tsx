@@ -37,9 +37,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
   }, [query.id]);
 
   const columns: GridColDef[] = [
-    { field: 'layer', headerName: 'Camada' },
-    { field: 'material', headerName: 'Material' },
-    { field: 'thickness', headerName: 'Espessura' },
+    { field: 'layer', headerName: t('materials.template.layer') },
+    { field: 'material', headerName: t('pm.binderAsphaltConcrete.material') },
+    { field: 'thickness', headerName: t('pm.binderAsphaltConcrete.thickness') },
   ];
   console.log('🚀 ~ file: [id].tsx:65 ~ columns:', columns);
 
@@ -65,7 +65,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
           marginTop: '1rem',
         }}
       >
-        <FlexColumnBorder title={t('Dados Gerais')} open={true} theme={'#07B811'}>
+        <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
           <Box
             sx={{
               display: 'flex',
@@ -75,30 +75,32 @@ const SpecificSample_BinderAsphaltConcrete = () => {
             }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Nome</Typography>
+              <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>{t('pm.granularLayer.name')}</Typography>
               <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.generalData.name}</Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Zona</Typography>
+              <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>{t('pm.granularLayer.zone')}</Typography>
               <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.generalData.zone}</Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Camada</Typography>
+              <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>{t('pm.granularLayer.layer')}</Typography>
               <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.generalData.layer}</Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Cidade/Estado</Typography>
+              <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>{t('pm.granularLayer.cityState')}</Typography>
               <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.generalData.cityState}</Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Observações</Typography>
+              <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                {t('pm.granularLayer.observations')}
+              </Typography>
               <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                 {samples?.generalData.observations}
               </Typography>
             </Box>
           </Box>
         </FlexColumnBorder>
-        <FlexColumnBorder title={t('Ficha Técnica')} open={true} theme={'#07B811'}>
+        <FlexColumnBorder title={t('pm-datasheet')} open={true} theme={'#07B811'}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Box
               sx={{
@@ -113,7 +115,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                 {samples?.step2Data.sectionType && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Tipo de seção</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>{t('pm-type-of-section')}</Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step2Data.sectionType}
                     </Typography>
@@ -121,7 +123,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.step2Data.extension && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Extensão</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.extension')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step2Data.extension}
                     </Typography>
@@ -129,7 +133,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.step2Data.initialStakeMeters && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Estaca/Metros inicial</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.initial.stake.meters')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step2Data.initialStakeMeters}
                     </Typography>
@@ -137,7 +143,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.step2Data.latitudeI && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Latitude inicial</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.latitudeI')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step2Data.latitudeI}
                     </Typography>
@@ -145,7 +153,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.step2Data.longitudeI && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Longitude inicial</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.longitudeI')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step2Data.longitudeI}
                     </Typography>
@@ -155,7 +165,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                 {samples?.step2Data.identification && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Identificação</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.identification')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step2Data.identification}
                     </Typography>
@@ -163,7 +175,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.step2Data.finalStakeMeters && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Estaca/Metros final</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.final.stake.meters')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step2Data.finalStakeMeters}
                     </Typography>
@@ -171,13 +185,19 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.step2Data.latitudeF && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Latitude final</Typography>
-                    <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.step2Data.latitudeF}</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.latitudeF')}
+                    </Typography>
+                    <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
+                      {samples?.step2Data.latitudeF}
+                    </Typography>
                   </>
                 )}
                 {samples?.step2Data.longitudeF && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Longitude final</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.longitudeF')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step2Data.longitudeF}
                     </Typography>
@@ -185,7 +205,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.step2Data.monitoringPhase && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Fase de monitoramento</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.monitoring.phase')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step2Data.monitoringPhase}
                     </Typography>
@@ -193,7 +215,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.step2Data.observation && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Observação</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.granularLayer.mf.observations')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step2Data.observation}
                     </Typography>
@@ -203,13 +227,17 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                 {samples?.step2Data.milling && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Fresagem</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.milling')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.step2Data.milling}</Typography>
                   </>
                 )}
                 {samples?.step2Data.interventionAtTheBase && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Intervenção na base</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.intervention.at.the.base')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step2Data.interventionAtTheBase}
                     </Typography>
@@ -223,7 +251,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.step2Data.bondingPaint && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Pintura de ligação</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.bonding.paint')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step2Data.bondingPaint}
                     </Typography>
@@ -231,7 +261,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.step2Data.priming && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Imprimação</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.priming')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.step2Data.priming}</Typography>
                   </>
                 )}{' '}
@@ -239,7 +271,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                 {samples?.step3Data.mctGroup && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Grupo MCT</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.granularLayer.mctGroup')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step3Data.mctGroup}
                     </Typography>
@@ -247,15 +281,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.step3Data.mctCoefficientC && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>MCT-Coeficiente c'</Typography>
-                    <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
-                      {samples?.step3Data.mctCoefficientC}
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.granularLayer.mctCoefficientC')}
                     </Typography>
-                  </>
-                )}
-                {samples?.step3Data.mctCoefficientC && (
-                  <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>MCT-Coeficiente c'</Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step3Data.mctCoefficientC}
                     </Typography>
@@ -263,7 +291,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.step3Data.mctIndexE && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>MCT-Índice e'</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.granularLayer.mctIndexE')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step3Data.mctIndexE}
                     </Typography>
@@ -271,7 +301,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.step3Data.especificMass && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Massa específica (g/cm³)</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.granularLayer.especific.mass')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step3Data.especificMass}
                     </Typography>
@@ -281,7 +313,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                 {samples?.step3Data.compressionEnergy && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Energia de compactação</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.granularLayer.compressionEnergy')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step3Data.compressionEnergy}
                     </Typography>
@@ -289,7 +323,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.step3Data.granulometricRange && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Faixa granulométrica</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.granularLayer.granulometric.range')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step3Data.granulometricRange}
                     </Typography>
@@ -297,7 +333,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.step3Data.optimalHumidity && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Umidade ótima (%)</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.granularLayer.optimal.humidity')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step3Data.optimalHumidity}
                     </Typography>
@@ -305,7 +343,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.step3Data.abrasionLA && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Abrasão Los Angeles (%)</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.granularLayer.abrasionLA')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                       {samples?.step3Data.abrasionLA}
                     </Typography>
@@ -313,31 +353,33 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.stabilizer && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Estabilizante</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.granularLayer.stabilizer')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.stabilizer}</Typography>
                   </>
                 )}
                 {samples?.tenor && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Teor (%)</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>{t('pm.granularLayer.tenor')}</Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.tenor}</Typography>
                   </>
                 )}
                 {samples?.rtcd && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>RTCD, 28 dias (MPa)</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>{t('pm.granularLayer.rtcd')}</Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.rtcd}</Typography>
                   </>
                 )}
                 {samples?.rtf && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>RTF, 28 dias (MPa)</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>{t('pm.granularLayer.rtf')}</Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.rtf}</Typography>
                   </>
                 )}
                 {samples?.rcs && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>RCS, 28 dias (MPa)</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>{t('pm.granularLayer.rcs')}</Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.rcs}</Typography>
                   </>
                 )}
@@ -345,43 +387,49 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                 {samples?.refinery && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Refinaria</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.refinery')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.refinery}</Typography>
                   </>
                 )}
                 {samples?.company && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Empresa</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.company')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.company}</Typography>
                   </>
                 )}
                 {samples?.collectionDate && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Data de carregamento</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.collectionDate')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.collectionDate}</Typography>
                   </>
                 )}
                 {samples?.certificateDate && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Data do certificado</Typography>
-                    <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.certificateDate}</Typography>
-                  </>
-                )}
-                {samples?.certificateDate && (
-                  <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Data do certificado</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.certificateDate')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.certificateDate}</Typography>
                   </>
                 )}
                 {samples?.invoiceNumber && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Nº da nota fiscal</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.invoiceNumber')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.invoiceNumber}</Typography>
                   </>
                 )}
                 {samples?.dataInvoice && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Data da nota fiscal</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.dataInvoice')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.ataInvoice}</Typography>
                   </>
                 )}
@@ -389,25 +437,33 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                 {samples?.capType && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Tipo do CAP</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.capType')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.capType}</Typography>
                   </>
                 )}
                 {samples?.performanceGrade && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Performace grade (PG)</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.performanceGrade')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.performanceGrade}</Typography>
                   </>
                 )}
                 {samples?.penetration && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Penetração, 25°C (mm)</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.penetration')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.penetration}</Typography>
                   </>
                 )}
                 {samples?.softeningPoint && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Ponto de amolecimento (°C)</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.softeningPoint')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.softeningPoint}</Typography>
                   </>
                 )}
@@ -433,13 +489,17 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 )}
                 {samples?.specificMass && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Massa específica (g/cm³)</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.asphaltTenor')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.specificMass}</Typography>
                   </>
                 )}
                 {samples?.volumeVoids && (
                   <>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Volume de vazios (%)</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                      {t('pm.binderAsphaltConcrete.volumeVoids')}
+                    </Typography>
                     <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.volumeVoids}</Typography>
                   </>
                 )}
@@ -476,7 +536,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                   gap: '2rem',
                 }}
               >
-                <Result_CardContainer hideBorder title={'Módulo de Resiliência (MPa)'}>
+                <Result_CardContainer hideBorder title={t('pm.resilience.module')}>
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     {samples?.step3Data.k1 && (
                       <>
@@ -527,11 +587,13 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                     marginBottom: '-1rem',
                   }}
                 >
-                  <Result_CardContainer hideBorder title={'Deformação Permanente'}>
+                  <Result_CardContainer hideBorder title={t('pm.permanent.deformation')}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       {samples?.step3Data.k1psi1 && (
                         <>
-                          <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>k1 ou psi1</Typography>
+                          <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                            {t('pm.granularLayer.k1.psi1')}
+                          </Typography>
                           <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                             {samples?.step3Data.k1psi1}
                           </Typography>
@@ -541,7 +603,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       {samples?.step3Data.k2psi2 && (
                         <>
-                          <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>k2 ou psi2</Typography>
+                          <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                            {t('pm.granularLayer.k2.psi2')}
+                          </Typography>
                           <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                             {samples?.step3Data.k2psi2}
                           </Typography>
@@ -551,7 +615,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       {samples?.step3Data.k3psi3 && (
                         <>
-                          <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>k3 ou psi3</Typography>
+                          <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                            {t('pm.granularLayer.k3.psi3')}
+                          </Typography>
                           <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                             {samples?.step3Data.k3psi3}
                           </Typography>
@@ -561,7 +627,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       {samples?.step3Data.k4psi4 && (
                         <>
-                          <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>k4 ou psi4</Typography>
+                          <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                            {t('pm.granularLayer.k4.psi4')}
+                          </Typography>
                           <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>
                             {samples?.step3Data.k4psi4}
                           </Typography>
@@ -583,11 +651,11 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                   marginBottom: '-1rem',
                 }}
               >
-                <Result_CardContainer hideBorder title={'Módulo de Resiliência, 28 dias (MPa)'}>
+                <Result_CardContainer hideBorder title={t('pm.resilience.module')}>
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     {samples?.rsInitial && (
                       <>
-                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Inicial (Ei)</Typography>
+                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>{t('pm.rm.initial')}</Typography>
                         <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.rsInitial}</Typography>
                       </>
                     )}
@@ -603,7 +671,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     {samples?.constantA && (
                       <>
-                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Constante A</Typography>
+                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                          {t('pm.granularLayer.constant.A')}
+                        </Typography>
                         <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.constantA}</Typography>
                       </>
                     )}
@@ -611,7 +681,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     {samples?.constantB && (
                       <>
-                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>Constante B</Typography>
+                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                          {t('pm.granularLayer.constant.B')}
+                        </Typography>
                         <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.constantB}</Typography>
                       </>
                     )}
@@ -631,11 +703,13 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                   marginBottom: '-1rem',
                 }}
               >
-                <Result_CardContainer hideBorder title={'Fadiga do Material, 28 dias'}>
+                <Result_CardContainer hideBorder title={t('pm.material-fadigue')}>
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     {samples?.fatiguek1psi1 && (
                       <>
-                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>k1 ou psi1</Typography>
+                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                          {t('pm.granularLayer.k1.psi1')}
+                        </Typography>
                         <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.fatiguek1psi1}</Typography>
                       </>
                     )}
@@ -643,7 +717,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     {samples?.fatiguek2psi2 && (
                       <>
-                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>k2 ou psi2</Typography>
+                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+                          {t('pm.granularLayer.k2.psi2')}
+                        </Typography>
                         <Typography sx={{ fontWeight: 'light', fontSize: '12px' }}>{samples?.fatiguek2psi2}</Typography>
                       </>
                     )}
@@ -663,7 +739,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                   marginBottom: '-1rem',
                 }}
               >
-                <Result_CardContainer hideBorder title={'Viscosidade Brookfield'}>
+                <Result_CardContainer hideBorder title={t('pm.brookfield.viscosity')}>
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     {samples?.vb_sp21_20 && (
                       <>
@@ -707,7 +783,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                     gap: '2rem',
                   }}
                 >
-                  <Result_CardContainer hideBorder title={'Curva de Fadiga à Compressão Diametral'}>
+                  <Result_CardContainer hideBorder title={t('pm.diametral.compression.fatigue.curve')}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                       {samples?.samples?.fatigueCurve_n_cps && (
                         <>
@@ -753,7 +829,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               )}
 
             {/** COMPOSIÇÃO ESTRUTURAL  */}
-            <Result_CardContainer hideBorder title={'Composição Estrutural'}>
+            <Result_CardContainer hideBorder title={t('pm.structural.composition')}>
               <Box />
             </Result_CardContainer>
             <Box
@@ -783,7 +859,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               </div>
             </Box>
             <Box sx={{ marginBottom: '1rem' }}>
-              <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem' }}>Imagem do Segmento Experimental</Typography>
+              <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem' }}>
+                {t('pm-image-structural-composition')}
+              </Typography>
               <Box
                 sx={{
                   display: 'flex',
@@ -792,9 +870,16 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                   alignItems: 'center',
                 }}
               >
-                <img src={samples?.step2Data.images} alt="Imagem do Segmento Experimental" width={'250px'} height={'250px'} />
+                <img
+                  src={samples?.step2Data.images}
+                  alt={t('pm-image-structural-composition')}
+                  width={'250px'}
+                  height={'250px'}
+                />
               </Box>
-              <Typography>Data da imagem: {samples?.step2Data.imagesDate}</Typography>
+              <Typography>
+                {t('pm-estructural-composition-image-date')} {samples?.step2Data.imagesDate}
+              </Typography>
             </Box>
           </Box>
         </FlexColumnBorder>
@@ -824,7 +909,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
             paddingTop: '0.2rem',
           }}
         >
-          VOLTAR
+          {t('button-previous')}
         </a>
 
         <Button
@@ -850,7 +935,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
             },
           }}
         >
-          Próximo
+          {t('button-next')}
         </Button>
       </Box>
     </Box>

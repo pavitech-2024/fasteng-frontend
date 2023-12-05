@@ -316,7 +316,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
           <TextField
             variant="standard"
             type="string"
-            label={'Data:'}
+            label={t('pm-estructural-composition-image-date')}
             placeholder="_ _/_ _/_ _ _ _"
             value={dateFormatter(step2Data.imagesDate)}
             style={{ display: 'block' }}
