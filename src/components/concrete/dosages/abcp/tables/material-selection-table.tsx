@@ -1,8 +1,8 @@
 import { NoDataFound } from '@/components/util/tables';
-// import useABCPStore from '@/stores/concrete/abcp/abcp.store';
-import { Box } from '@mui/material';
-import { DataGrid, GridColDef, GridEventListener, GridRowSelectionModel } from '@mui/x-data-grid';
-import { useState } from 'react';
+import useABCPStore from '@/stores/concrete/abcp/abcp.store';
+import { Box, Stack } from '@mui/material';
+import { DataGrid, GridColDef, GridEventListener, GridRowParams, GridRowSelectionModel } from '@mui/x-data-grid';
+import { MutableRefObject, useState } from 'react';
 
 interface MaterialSelectionProps {
   header?: string;
@@ -13,14 +13,14 @@ interface MaterialSelectionProps {
 const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProps) => {
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
   const [cement, setCement] = useState<number>(null);
-  // const [coarseAggregate, setCoarseAggregate] = useState<string>('');
-  // const [fineAggregate, setFineAggregate] = useState<string>('');
-  // const { materialSelectionData, setData } = useABCPStore();
+  const [coarseAggregate, setCoarseAggregate] = useState<string>('');
+  const [fineAggregate, setFineAggregate] = useState<string>('');
+  const { materialSelectionData, setData } = useABCPStore();
 
   const handleRowClick: GridEventListener<'rowClick'> = (
-    params // GridRowParams
-    // event, // MuiEvent<React.MouseEvent<HTMLElement>>
-    // details // GridCallbackDetails
+    params, // GridRowParams
+    event, // MuiEvent<React.MouseEvent<HTMLElement>>
+    details // GridCallbackDetails
   ) => {
     console.log(params.row.name);
   };
@@ -56,27 +56,27 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
           onRowClick={handleRowClick}
           checkboxSelection
           disableRowSelectionOnClick
-          // isRowSelectable={(params: GridRowParams) => {
-          //   return rows.some((element, index) => {
-          //     if (element.type === 'cement') {
-          //       console.log(`Row[${index}] selecionável: `, cement === null || (cement !== null && cement === index));
-          //       return cement === null || (cement !== null && cement === index);
-          //     } else {
-          //       return true;
-          //     }
-          //   });
-          // }}
+          isRowSelectable={(params: GridRowParams) => {
+            return rows.some((element, index) => {
+              if (element.type === 'cement') {
+                console.log(`Row[${index}] selecionável: `, cement === null || (cement !== null && cement === index));
+                return cement === null || (cement !== null && cement === index);
+              } else {
+                return true;
+              }
+            });
+          }}
           onRowSelectionModelChange={(rowSelection) => {
             setRowSelectionModel(rowSelection);
             console.log(rowSelection);
             if (rows.some((element) => element.type === 'cement')) {
               // setCement(null)
               rowSelection.map((row, index) => {
-                // const { _id } = rows[index];
+                const { _id } = rows[index];
                 setCement(index);
               });
               console.log(cement);
-              // setData({ step: 1, key: 'cement', value: cement !== null ? rows[cement]._id : null });
+              setData({ step: 1, key: 'cement', value: cement !== null ? rows[cement]._id : null });
             }
             // else {
             //   console.log(coarseAggregate)

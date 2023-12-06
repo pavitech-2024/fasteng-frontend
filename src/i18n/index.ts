@@ -140,6 +140,14 @@ import coarseAggregateENG from './translations/concrete/essays/coarseAggregate/e
 import concreteABCPPTBR from './translations/concrete/dosages/abcp/ptbr.json';
 import concreteABCPENG from './translations/concrete/dosages/abcp/en.json';
 
+/**@common */
+// essays
+import commonEssaysPTBR from './translations/common/essays/ptbr.json';
+import commonEssaysENG from './translations/common/essays/en.json';
+// materials
+import commonMaterialsPTBR from './translations/common/materials/ptbr.json';
+import commonMaterialsENG from './translations/common/materials/en.json';
+
 i18n.use(initReactI18next).init({
   fallbackLng: 'ptBR',
   interpolation: {
@@ -195,6 +203,10 @@ i18n.use(initReactI18next).init({
         ...concreteGranulometryPTBR,
         ...coarseAggregatePTBR,
         ...concreteABCPPTBR,
+        ...concreteABCPPTBR,
+        /**@common */
+        ...commonEssaysPTBR,
+        ...commonMaterialsPTBR,
       },
     },
     en: {
@@ -246,6 +258,10 @@ i18n.use(initReactI18next).init({
         ...concreteGranulometryENG,
         ...coarseAggregateENG,
         ...concreteABCPENG,
+        ...concreteABCPENG,
+        /**@common */
+        ...commonEssaysENG,
+        ...commonMaterialsENG,
       },
     },
   },
