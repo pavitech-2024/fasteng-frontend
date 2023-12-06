@@ -71,7 +71,7 @@ export const CardPromedinaApp: NextPage<Props> = ({ element, onClick }) => (
           mobile: '1.25rem',
           notebook: '1.35rem',
           desktop: '1.45rem',
-          ultrawide: '1.65rem',
+          ultrawide: '1.50rem',
         },
         fontWeight: '500',
         color: 'primaryTons.white',

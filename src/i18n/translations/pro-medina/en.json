@@ -135,6 +135,7 @@
   "materials.template.layer": "Layer",
   "materials.template.cityState": "City/State",
   "materials.template.zone": "Zone",
+  "pm.brookfield.viscosity": "Brookfield viscosity",
   "materials.template.highway": "Highway",
   "pm.binderAsphaltConcrete.highway": "Highway",
   "pm.granularLayer.highway": "Highway",
@@ -173,5 +174,6 @@
   "button-next": "NEXT",
   "upload.images": "Upload imaged",
   "erase": "Erase",
-  "add": "Add"
+  "add": "Add",
+  "pm.sample-data": "other technical data of the sample"
 }

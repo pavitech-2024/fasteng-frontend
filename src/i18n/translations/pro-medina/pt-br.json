@@ -147,6 +147,7 @@
   "pm.sample.selection": "Seleção de amostra para visualização",
   "pm.all.data.visualization": "Visualização dos dados",
   "materials.template.state": "Estado",
+  "pm.sample-data": "Outros dados técnicos da amostra",
   "materials.template.layer": "Camada",
   "materials.template.zone": "Local",
   "materials.template.cityState": "Município/Estado",
