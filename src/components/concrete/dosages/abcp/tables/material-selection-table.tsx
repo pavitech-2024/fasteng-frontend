@@ -2,7 +2,7 @@ import { NoDataFound } from '@/components/util/tables';
 import useABCPStore from '@/stores/concrete/abcp/abcp.store';
 import { Box, Stack } from '@mui/material';
 import { DataGrid, GridColDef, GridEventListener, GridRowParams, GridRowSelectionModel } from '@mui/x-data-grid';
-import { MutableRefObject, useState } from 'react';
+import { MutableRefObject, useEffect, useState } from 'react';
 
 interface MaterialSelectionProps {
   header?: string;
@@ -11,10 +11,11 @@ interface MaterialSelectionProps {
 }
 
 const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProps) => {
+  console.log("🚀 ~ file: material-selection-table.tsx:14 ~ MaterialSelectionTable ~ rows:", rows)
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
   const [cement, setCement] = useState<number>(null);
-  const [coarseAggregate, setCoarseAggregate] = useState<string>('');
-  const [fineAggregate, setFineAggregate] = useState<string>('');
+  // const [coarseAggregate, setCoarseAggregate] = useState<string>('');
+  // const [fineAggregate, setFineAggregate] = useState<string>('');
   const { materialSelectionData, setData } = useABCPStore();
 
   const handleRowClick: GridEventListener<'rowClick'> = (
@@ -22,7 +23,7 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
     event, // MuiEvent<React.MouseEvent<HTMLElement>>
     details // GridCallbackDetails
   ) => {
-    console.log(params.row.name);
+    // console.log(params.row.name);
   };
 
   return (
@@ -57,44 +58,53 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
           checkboxSelection
           disableRowSelectionOnClick
           isRowSelectable={(params: GridRowParams) => {
-            return rows.some((element, index) => {
-              if (element.type === 'cement') {
-                console.log(`Row[${index}] selecionável: `, cement === null || (cement !== null && cement === index));
-                return cement === null || (cement !== null && cement === index);
-              } else {
-                return true;
-              }
-            });
+            const selectedRowType = rows[params.id]?.type;
+            if (selectedRowType === 'cement') {
+              return rowSelectionModel.length === 0 || rowSelectionModel[0] === params.id
+            }
+            return true
           }}
           onRowSelectionModelChange={(rowSelection) => {
             setRowSelectionModel(rowSelection);
-            console.log(rowSelection);
-            if (rows.some((element) => element.type === 'cement')) {
-              // setCement(null)
-              rowSelection.map((row, index) => {
-                const { _id } = rows[index];
-                setCement(index);
-              });
-              console.log(cement);
-              setData({ step: 1, key: 'cement', value: cement !== null ? rows[cement]._id : null });
-            }
-            // else {
-            //   console.log(coarseAggregate)
-            //   console.log(fineAggregate)
-            //   rowSelection.map((row, index) => {
-            //     const { _id, type } = rows[index];
-            //     if (type === 'coarseAggregate') {
-            //       setCoarseAggregate(_id);
-            //     }
-            //     if (type === 'fineAggregate') {
-            //       setFineAggregate(_id);
-            //     }
-            //   });
-
-            //   setData({ step: 1, key: 'fineAggregate', value: fineAggregate });
-            //   setData({ step: 1, key: 'coarseAggregate', value: coarseAggregate });
-            // }
-          }}
+          
+            let updatedStates = {
+              fineAggregate: null,
+              coarseAggregate: null,
+              cement: null,
+            };
+          
+            rowSelection.forEach((selectedRow, index) => {
+              const { _id, type } = rows[selectedRow];
+          
+              if (type === 'cement') {
+                const rowIndex = rows.findIndex((row) => row._id === _id);
+                updatedStates = { ...updatedStates, cement: rowIndex };
+              } else if (type === 'coarseAggregate') {
+                updatedStates = { ...updatedStates, coarseAggregate: _id };
+              } else if (type === 'fineAggregate') {
+                updatedStates = { ...updatedStates, fineAggregate: _id };
+              }
+            });
+          
+            // Atualiza os dados armazenados
+            setData({
+              step: 1,
+              key: 'fineAggregate',
+              value: updatedStates.fineAggregate,
+            });
+          
+            setData({
+              step: 1,
+              key: 'coarseAggregate',
+              value: updatedStates.coarseAggregate,
+            });
+          
+            setData({
+              step: 1,
+              key: 'cement',
+              value: updatedStates.cement !== null ? rows[updatedStates.cement]._id : null,
+            });
+          }}          
           rowSelectionModel={rowSelectionModel}
           disableColumnSelector
           columns={columns.map((column) => ({

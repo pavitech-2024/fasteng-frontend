@@ -38,6 +38,7 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
       }
     );
   }, []);
+  
 
   const aggregateRows = materials
     .map(({ _id, name, type }) => ({
@@ -116,7 +117,11 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
             columns={aggregateColumns}
             header={t('concrete.materials.aggregates')}
           />
-          <MaterialSelectionTable rows={binderRows} columns={binderColumns} header={t('concrete.materials.binders')} />
+          <MaterialSelectionTable 
+            rows={binderRows} 
+            columns={binderColumns} 
+            header={t('concrete.materials.binders')} 
+          />
         </Box>
       )}
     </>
