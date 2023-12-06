@@ -14,7 +14,7 @@ interface ElasticRecoveryGeneralData {
 interface ElasticRecoveryCalc {
   lengths: {
     id: number,
-    stretching_lenght: number,
+    stretching_length: number,
     juxtaposition_length: number,
   }[]
 }
@@ -51,7 +51,7 @@ const initialState = {
     lengths: [
       {
         id: 0,
-        stretching_lenght: null,
+        stretching_length: null,
         juxtaposition_length: null,
       }
     ],

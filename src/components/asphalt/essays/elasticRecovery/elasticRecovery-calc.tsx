@@ -31,7 +31,7 @@ const ElasticRecovery_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     const newRows = [...rows];
     newRows.push({
       id: rows.length,
-      stretching_lenght: null,
+      stretching_length: null,
       juxtaposition_length: null,
     });
     setData({ step: 1, key: 'lengths', value: newRows });
@@ -53,7 +53,7 @@ const ElasticRecovery_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps)
 
   const columns: GridColDef[] = [
     {
-      field: 'stretching_lenght',
+      field: 'stretching_length',
       headerName: t('elasticRecovery.stretching_length'),
       renderCell: ({ row }) => {
         const { id } = row;
@@ -62,14 +62,14 @@ const ElasticRecovery_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps)
         return (
           <InputEndAdornment
             fullWidth
-            label={t('elasticRecovery.stretching_lenght')}
+            label={t('elasticRecovery.stretching_length')}
             type="number"
             inputProps={{ min: 0 }}
-            value={row.stretching_lenght}
+            value={row.stretching_length}
             onChange={(e) => {
               const newRows = [...rows];
-              rows[index].stretching_lenght = Number(e.target.value);
-              setData({ step: 1, key: 'stretching_lenght', value: newRows });
+              rows[index].stretching_length = Number(e.target.value);
+              setData({ step: 1, key: 'stretching_length', value: newRows });
             }}
             adornment={'cm'}
           />
@@ -105,8 +105,8 @@ const ElasticRecovery_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps)
   if (nextDisabled) {
     // verifica se todos os campos da tabela estão preenchidos
     rows.every((row) => {
-      const { stretching_lenght, juxtaposition_length } = row;
-      return stretching_lenght && juxtaposition_length >= 0;
+      const { stretching_length, juxtaposition_length } = row;
+      return stretching_length && juxtaposition_length >= 0;
     }) &&
       setNextDisabled(false);
   }
