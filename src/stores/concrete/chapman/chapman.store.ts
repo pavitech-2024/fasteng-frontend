@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { ConcreteMaterial } from '../../interfaces/concrete';
-import { setDataType } from '../soils/cbr/cbr.store';
+import { ConcreteMaterial } from '../../../interfaces/concrete';
+import { setDataType } from '../../soils/cbr/cbr.store';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
 interface GeneralData {

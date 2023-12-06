@@ -1,29 +1,29 @@
-import { useState, useEffect } from 'react';
-import CHAPMAN_SERVICE from '../../../../services/concrete/essays/chapman/chapman.service';
-import { EssayPageProps } from '../../../templates/essay';
-import { ConcreteMaterial } from '../../../../interfaces/concrete';
-import useAuth from '../../../../contexts/auth';
-import useChapmanStore from '../../../../stores/concrete/chapman/chapman.store';
-import { toast } from 'react-toastify';
-import { t } from 'i18next';
-import Loading from '../../../molecules/loading';
+import DropDown from '@/components/atoms/inputs/dropDown';
+import Loading from '@/components/molecules/loading';
+import { EssayPageProps } from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import ElasticRecovery_SERVICE from '@/services/asphalt/essays/elasticRecovery/elasticRecovery.service';
+import useElasticRecoveryStore from '@/stores/asphalt/elasticRecovery/elasticRecovery.store';
 import { Box, TextField } from '@mui/material';
-import DropDown from '../../../atoms/inputs/dropDown';
+import { t } from 'i18next';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-const CHAPMAN_GeneralData = ({
+const ElasticRecovery_GeneralData = ({
   nextDisabled,
   setNextDisabled,
-  chapman,
-}: EssayPageProps & { chapman: CHAPMAN_SERVICE }) => {
+  elasticRecovery,
+}: EssayPageProps & { elasticRecovery: ElasticRecovery_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
+  const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
   const { user } = useAuth();
-  const { generalData, setData } = useChapmanStore();
+  const { generalData, setData } = useElasticRecoveryStore();
 
   useEffect(() => {
     toast.promise(
       async () => {
-        const materials = await chapman.getMaterialsByUserId(user._id);
+        const materials = await elasticRecovery.getmaterialsByUserId(user._id);
 
         setMaterials(materials);
         setLoading(false);
@@ -39,8 +39,11 @@ const CHAPMAN_GeneralData = ({
   }, []);
 
   const inputs = [
-    { label: t('chapman.experimentName'), value: generalData.name, key: 'name', required: true },
-    { label: t('chapman.material'), value: generalData.material, key: 'material', required: true },
+    { label: t('asphalt.experimentName'), value: generalData.name, key: 'name', required: true },
+    { label: t('asphalt.material'), value: generalData.material, key: 'material', required: true },
+    { label: t('asphalt.operator'), value: generalData.operator, key: 'operator', required: false },
+    { label: t('asphalt.calculist'), value: generalData.calculist, key: 'calculist', required: false },
+    { label: t('asphalt.comments'), value: generalData.description, key: 'description', required: false },
   ];
 
   // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
@@ -78,18 +81,18 @@ const CHAPMAN_GeneralData = ({
             }}
           >
             {inputs.map((input) => {
-              if (input.key === 'name') {
+              if (['name', 'operator', 'calculist'].includes(input.key)) {
                 return (
                   <TextField
-                    key={input.key}
                     variant="standard"
+                    key={input.key}
                     label={input.label}
                     value={input.value}
                     required={input.required}
                     onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
                   />
                 );
-              } else if (input.key === 'material') {
+              } else if (['material'].includes(input.key)) {
                 const defaultValue = {
                   label: '',
                   value: '',
@@ -97,14 +100,13 @@ const CHAPMAN_GeneralData = ({
 
                 let material;
 
-                // se existir um material no store, seta ela como default
-
+                // se existir uma material no store, seta ela como default
                 if (input.value) {
-                  material = materials.find((material) => material._id === input.value);
+                  material = materials.find((material) => material._id == input.value['_id']);
                 }
 
                 if (material) {
-                  defaultValue.label = material.name + ' | ' + t(`${'concrete.materials.' + material.type}`);
+                  defaultValue.label = material.name + ' | ' + t(`${'asphalt.materials.' + material.type}`);
                   defaultValue.value = material;
                 }
 
@@ -113,25 +115,34 @@ const CHAPMAN_GeneralData = ({
                     key={input.key}
                     variant="standard"
                     label={input.label}
-                    options={materials.map((material) => {
+                    options={materials.map((material: AsphaltMaterial) => {
                       return {
-                        label: material.name + ' | ' + t(`${'concrete.materials.' + material.type}`),
+                        label: material.name + ' | ' + t(`${'asphalt.materials.' + material.type}`),
                         value: material,
                       };
                     })}
                     defaultValue={defaultValue}
-                    required={input.required}
+                    callback={(value) => setData({ step: 0, key: input.key, value })}
                     size="medium"
-                    callback={(value) => setData({ step: 0, key: input.key, value: value })}
+                    required={input.required}
                   />
                 );
               }
             })}
           </Box>
+          <TextField
+            variant="standard"
+            fullWidth
+            key={inputs[inputs.length - 1].key}
+            label={inputs[inputs.length - 1].label}
+            value={inputs[inputs.length - 1].value}
+            required={inputs[inputs.length - 1].required}
+            onChange={(e) => setData({ step: 0, key: inputs[inputs.length - 1].key, value: e.target.value })}
+          />
         </Box>
       )}
     </>
   );
 };
 
-export default CHAPMAN_GeneralData;
+export default ElasticRecovery_GeneralData;

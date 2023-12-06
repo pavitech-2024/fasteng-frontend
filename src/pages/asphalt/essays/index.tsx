@@ -81,14 +81,14 @@ const AsphaltEssays: NextPage = () => {
       title: t('asphalt.essays.sandEquivalent'),
       icon: SandEquivalentIcon,
       key: 'sandEquivalent',
-      link: '/asphalt/essays/sand-equivalent',
+      link: '/asphalt/essays/sandEquivalent',
       type: 'aggregates',
     },
     {
-      title: t('asphalt.essays.granulometry-asphalt'),
+      title: t('asphalt.essays.granulometry'),
       icon: GranulometryIcon,
-      key: 'granulometryAsphalt',
-      link: '/asphalt/essays/granulometry-asphalt',
+      key: 'granulometry',
+      link: '/asphalt/essays/granulometry',
       type: 'aggregates',
     },
     {
@@ -113,10 +113,10 @@ const AsphaltEssays: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('asphalt.essays.softening-point'),
+      title: t('asphalt.essays.softeningPoint'),
       icon: SofteningPointIcon,
       key: 'softeningPoint',
-      link: '/asphalt/essays/softening-point',
+      link: '/asphalt/essays/softeningPoint',
       type: 'asphaltBinder',
     },
     {
@@ -130,7 +130,7 @@ const AsphaltEssays: NextPage = () => {
       title: t('asphalt.essays.elasticRecovery'),
       icon: ElasticRecoveryIcon,
       key: 'elasticRecovery',
-      link: '/asphalt/essays/elastic-recovery',
+      link: '/asphalt/essays/elasticRecovery',
       type: 'asphaltBinder',
     },
     {
@@ -144,7 +144,7 @@ const AsphaltEssays: NextPage = () => {
       title: t('asphalt.essays.saybolt'),
       icon: SayboltFurolIcon,
       key: 'saybolt',
-      link: '/asphalt/essays/saybolt-furol',
+      link: '/asphalt/essays/sayboltFurol',
       type: 'asphaltBinder',
     },
     {

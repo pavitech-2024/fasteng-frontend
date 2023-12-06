@@ -3,7 +3,7 @@ import { SpecifyMassIcon } from '@/assets';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import Api from '@/api';
-import { ChapmanActions, ChapmanData } from '../../../../stores/concrete/chapman.store';
+import { ChapmanActions, ChapmanData } from '../../../../stores/concrete/chapman/chapman.store';
 
 class CHAPMAN_SERVICE implements IEssayService {
   info = {

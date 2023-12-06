@@ -4,7 +4,7 @@ import Abrasion_Results from '@/components/asphalt/essays/abrasion/results.abras
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import Abrasion_SERVICE from '@/services/asphalt/essays/abrasion/abrasion.service';
-import useAbrasionStore, { AbrasionActions } from '@/stores/asphalt/abrasion.store';
+import useAbrasionStore, { AbrasionActions } from '@/stores/asphalt/abrasion/abrasion.store';
 
 const Abrasion = () => {
   // start an instance of the service
