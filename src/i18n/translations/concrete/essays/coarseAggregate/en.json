@@ -1,0 +1,9 @@
+{
+  "concrete.essays.coarseAggregate.selectMaterial": "Select material",
+  "concrete.essays.coarseAggregate.essayProjectName": "Essay/Project name",
+  "concrete.essays.coarseAggregate.drySampleMass": "Dry sample mass (g)",
+  "concrete.essays.coarseAggregate.saturatedSampleMass": "Saturated sample mass (g)",
+  "concrete.essays.coarseAggregate.submergedMass": "Submerged mass (g)",
+  "result": "Result",
+  "coarseAggregate.specificData": "Specific data"
+}

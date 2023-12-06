@@ -3,7 +3,7 @@ import CHAPMAN_SERVICE from '../../../../services/concrete/essays/chapman/chapma
 import { EssayPageProps } from '../../../templates/essay';
 import { ConcreteMaterial } from '../../../../interfaces/concrete';
 import useAuth from '../../../../contexts/auth';
-import useChapmanStore from '../../../../stores/concrete/chapman.store';
+import useChapmanStore from '../../../../stores/concrete/chapman/chapman.store';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import Loading from '../../../molecules/loading';
@@ -104,7 +104,7 @@ const CHAPMAN_GeneralData = ({
                 }
 
                 if (material) {
-                  defaultValue.label = material.name + ' | ' + t(`${'materials.' + material.type}`);
+                  defaultValue.label = material.name + ' | ' + t(`${'concrete.materials.' + material.type}`);
                   defaultValue.value = material;
                 }
 
@@ -114,7 +114,10 @@ const CHAPMAN_GeneralData = ({
                     variant="standard"
                     label={input.label}
                     options={materials.map((material) => {
-                      return { label: material.name + ' | ' + t(`${'materials.' + material.type}`), value: material };
+                      return {
+                        label: material.name + ' | ' + t(`${'concrete.materials.' + material.type}`),
+                        value: material,
+                      };
                     })}
                     defaultValue={defaultValue}
                     required={input.required}

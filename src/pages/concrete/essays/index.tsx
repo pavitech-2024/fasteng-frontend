@@ -8,10 +8,10 @@ import { t } from 'i18next';
 const index: NextPage = () => {
   const essays: Essay[] = [
     {
-      title: t('concrete.essays.granulometryConcrete'),
-      key: 'granulometry-concrete',
+      title: t('concrete.essays.granulometry'),
+      key: 'granulometry',
       icon: GranulometryIcon,
-      link: '/concrete/essays/granulometry-concrete',
+      link: '/concrete/essays/granulometry',
     },
     {
       title: t('concrete.essays.chapman'),
@@ -29,13 +29,13 @@ const index: NextPage = () => {
       title: t('concrete.essays.sandIncrease'),
       key: 'sandIncrease',
       icon: SandIncreaseIcon,
-      link: '/concrete/essays/sand-increase',
+      link: '/concrete/essays/sandIncrease',
     },
     {
       title: t('concrete.essays.coarseAggregate'),
       key: 'coarseAggregate',
       icon: CoarseAggregateIcon,
-      link: '/concrete/essays/coarse-aggregate',
+      link: '/concrete/essays/coarseAggregate',
     },
   ];
   return <EssaysTemplate essays={essays} />;

@@ -1,33 +1,43 @@
+import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { create } from 'zustand';
-import { ConcreteMaterial } from '../../interfaces/concrete';
-import { setDataType } from '../soils/cbr/cbr.store';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
 interface GeneralData {
   userId: string;
   name: string;
-  material: ConcreteMaterial;
+  material: AsphaltMaterial;
+  operator?: string;
+  calculist?: string;
+  description?: string;
 }
 
-interface chapman_step2Data {
-  displaced_volume: number;
+interface SpecifyMass_step2Data {
+  dry_mass: number;
+  submerged_mass: number;
+  surface_saturated_mass: number;
 }
 
-export type ChapmanData = {
+interface SpecifyMass_results {
+  bulk_specify_mass: number;
+  apparent_specify_mass: number;
+  absorption: number;
+}
+
+export type SpecifyMassData = {
   generalData: GeneralData;
-  step2Data: chapman_step2Data;
-  results: {
-    m_e: number;
-  };
+  step2Data: SpecifyMass_step2Data;
+  results: SpecifyMass_results;
 };
 
-export type ChapmanActions = {
+export type SpecifyMassActions = {
   setData: ({ step, key, value }: setDataType) => void;
 };
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'results' };
 
-const useChapmanStore = create<ChapmanData & ChapmanActions>()(
+type setDataType = { step: number; key?: string; value: unknown };
+
+const useSpecifyMassStore = create<SpecifyMassData & SpecifyMassActions>()(
   devtools(
     persist(
       (set) => ({
@@ -35,12 +45,19 @@ const useChapmanStore = create<ChapmanData & ChapmanActions>()(
           userId: null,
           name: null,
           material: null,
+          operator: null,
+          calculist: null,
+          description: null,
         },
         step2Data: {
-          displaced_volume: null,
+          dry_mass: null,
+          submerged_mass: null,
+          surface_saturated_mass: null,
         },
         results: {
-          m_e: null,
+          bulk_specify_mass: null,
+          apparent_specify_mass: null,
+          absorption: null,
         },
 
         setData: ({ step, key, value }) =>
@@ -57,11 +74,11 @@ const useChapmanStore = create<ChapmanData & ChapmanActions>()(
           }),
       }),
       {
-        name: 'chapman-storage',
+        name: 'specifyMass-store',
         storage: createJSONStorage(() => sessionStorage),
       }
     )
   )
 );
 
-export default useChapmanStore;
+export default useSpecifyMassStore;
