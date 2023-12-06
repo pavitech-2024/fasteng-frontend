@@ -1,0 +1,22 @@
+{
+  "marshall.step-2-description": "Selecione os agregados e o ligante asfáltico que serão utilizados na dosagem",
+  "marshall.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica da mistura",
+
+  "asphalt.dosages.marshall.material_selection": "Seleção de Materiais",
+  "asphalt.dosages.marshall.granulometry_composition": "Composição Granulométrica",
+  "asphalt.dosages.marshall.initial_binder": "Teor de Ligante Inicial",
+  "asphalt.dosages.marshall.max_density": "Densidade Máxima da Mistura",
+  "asphalt.dosages.marshall.volumetric_parameters": "Parâmetros Volumétricos",
+  "asphalt.dosages.marshall.optimal_binder": "Teor de Ligante Ótimo",
+  "asphalt.dosages.marshall.confirm_compression": "Compactação de Confirmação",
+  "asphalt.dosages.marshall.dosage_resume": "Resumo da Dosagem",
+
+  "asphalt.project_name": "Nome do Projeto",
+  "asphalt.laboratory_name": "Nome do Laboratório",
+  "asphalt.choose_objective": "Escolha o Objetivo da Mistura",
+  "asphalt.choose_dnit_track": "Escolha a Faixa do DNIT",
+
+  "asphalt.dosages.marshall.bearing-layer": "Camada de Rolamento",
+  "asphalt.dosages.marshall.bonding-layer": "Camada de Ligação"
+  
+}

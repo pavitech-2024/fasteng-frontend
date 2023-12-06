@@ -30,13 +30,13 @@ const Asphalt: NextPage = () => {
       name: t('navbar.marshall'),
       icon: <MarshallIcon width="30px" height="35px" />,
       description: 'Descrição sobre materiais',
-      path: '/asphalt/marshall',
+      path: '/asphalt/dosages/marshall',
     },
     {
       name: t('navbar.superpave'),
       icon: <SuperpaveIcon width="30px" height="35px" />,
       description: 'Descrição sobre materiais',
-      path: '/asphalt/superpave',
+      path: '/asphalt/dosages/superpave',
     },
     {
       name: t('navbar.standards'),

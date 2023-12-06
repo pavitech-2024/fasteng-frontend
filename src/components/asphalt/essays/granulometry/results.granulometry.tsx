@@ -47,12 +47,12 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
 
   step2Data.table_data.map((value, index) => {
     rows.push({
-      sieve: value.sieve,
+      sieve: value.sieve_label,
       passant_porcentage: value.passant,
-      passant: granulometry_results.passant[index],
-      retained_porcentage: granulometry_results.retained_porcentage[index],
+      passant: granulometry_results.passant[index][1],
+      retained_porcentage: granulometry_results.retained_porcentage[index][1],
       retained: value.retained,
-      accumulated_retained: granulometry_results.accumulated_retained[index],
+      accumulated_retained: granulometry_results.accumulated_retained[index][1],
     });
   });
 
