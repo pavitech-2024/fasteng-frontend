@@ -1,8 +1,8 @@
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { create } from 'zustand';
-import { devtools, persist, createJSONStorage } from 'zustand/middleware';
+import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
-interface ElasticRecoveryGeneralData {
+interface RtcdGeneralData {
   userId: string;
   name: string;
   material: AsphaltMaterial;
@@ -11,32 +11,49 @@ interface ElasticRecoveryGeneralData {
   description?: string;
 }
 
-interface ElasticRecoveryCalc {
-  lengths: {
-    id: number,
-    stretching_length: number,
-    juxtaposition_length: number,
-  }[]
+interface RtcdStep2 {
+  dnitRange: string;
+  sampleVoidVolume: number;
+  pressConstant: number;
+  pressSpecification: string;
+  sampleOrigin: string;
 }
 
-interface ElasticRecovery_results {
-  elasticRecovery: number;
+interface RtcdStep3 {
+  rtcd_data: {
+    id: number;
+    sampleName: string;
+    d1: number;
+    d2: number;
+    d3: number;
+    h1: number;
+    h2: number;
+    h3: number;
+    pressReading: number;
+  }[];
 }
 
-export type ElasticRecoveryData = {
-  generalData: ElasticRecoveryGeneralData;
-  elasticRecoveryCalc: ElasticRecoveryCalc;
-  results: ElasticRecovery_results;
+interface Rtcd_results {
+  everyRtsMpa: number[];
+  everyRtsKgf: number[];
+  average: number;
+}
+
+export type RtcdData = {
+  generalData: RtcdGeneralData;
+  rtcdStep2: RtcdStep2;
+  rtcdStep3: RtcdStep3;
+  results: Rtcd_results;
 };
 
-export type ElasticRecoveryActions = {
+export type RtcdActions = {
   setData: ({ step, key, value }: setDataType) => void;
   reset: ({ step }: setDataType) => void;
 };
 
 type setDataType = { step: number; key?: string; value: unknown };
 
-const stepVariant = { 0: 'generalData', 1: 'elasticRecoveryCalc', 2: 'results' };
+const stepVariant = { 0: 'generalData', 1: 'rtcdStep2', 2: 'rtcdStep3', 3: 'results' };
 
 const initialState = {
   generalData: {
@@ -47,21 +64,36 @@ const initialState = {
     calculist: null,
     description: null,
   },
-  elasticRecoveryCalc: {
-    lengths: [
+  rtcdStep2: {
+    dnitRange: null,
+    sampleVoidVolume: null,
+    pressConstant: null,
+    pressSpecification: null,
+    sampleOrigin: null,
+  },
+  rtcdStep3: {
+    rtcd_data: [
       {
         id: 0,
-        stretching_length: null,
-        juxtaposition_length: null,
-      }
+        sampleName: null,
+        d1: null,
+        d2: null,
+        d3: null,
+        h1: null,
+        h2: null,
+        h3: null,
+        pressReading: null,
+      },
     ],
   },
   results: {
-    elasticRecovery: null,
+    everyRtsMpa: [],
+    everyRtsKgf: [],
+    average: null,
   },
 };
 
-const useElasticRecoveryStore = create<ElasticRecoveryData & ElasticRecoveryActions>()(
+const useRtcdStore = create<RtcdData & RtcdActions>()(
   devtools(
     persist(
       (set) => ({
@@ -89,11 +121,11 @@ const useElasticRecoveryStore = create<ElasticRecoveryData & ElasticRecoveryActi
       }),
       {
         // name data store e config no session storage
-        name: 'asphalt-elasticRecovery-store',
+        name: 'asphalt-rtcd-store',
         storage: createJSONStorage(() => sessionStorage),
       }
     )
   )
 );
 
-export default useElasticRecoveryStore;
+export default useRtcdStore;

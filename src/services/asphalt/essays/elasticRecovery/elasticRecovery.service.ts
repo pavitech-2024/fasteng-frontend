@@ -101,7 +101,7 @@ class ElasticRecovery_SERVICE implements IEssayService {
     try {
       const { lengths } = elasticRecoveryCalc;
       lengths.forEach((row) => {
-        if ( Number(row.stretching_lenght) < 0 ) throw t('errors.negative-stretching-length');
+        if ( Number(row.stretching_length) < 0 ) throw t('errors.negative-stretching-length');
         if ( Number(row.juxtaposition_length) < 0 ) throw t('errors.negative-juxtaposition-length');
       })
     } catch (error) {

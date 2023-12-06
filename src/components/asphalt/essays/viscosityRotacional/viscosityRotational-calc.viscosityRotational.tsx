@@ -1,40 +1,36 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import { EssayPageProps } from '@/components/templates/essay';
-import useElasticRecoveryStore from '@/stores/asphalt/elasticRecovery/elasticRecovery.store';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import useViscosityRotationalStore from '@/stores/asphalt/viscosityRotational/viscosityRotational.store';
 import { Box, Button } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { toast } from 'react-toastify';
-import { useEffect } from 'react';
 
-const ElasticRecovery_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { elasticRecoveryCalc: data, setData } = useElasticRecoveryStore();
-  const rows = data.lengths;
+const ViscosityRotational_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
+  const { viscosityRotationalCalc: data, setData } = useViscosityRotationalStore();
+  const rows = data.dataPoints;
 
-  // Remover mais uma linha de determinado valor
   const handleErase = () => {
     try {
       if (rows.length > 1) {
-        // O mínimo é um valor de cada
         const newRows = [...rows];
         newRows.pop();
-        setData({ step: 1, key: 'lengths', value: newRows });
-      } else throw t('elasticRecovery.error.minValue');
+        setData({ step: 1, key: 'dataPoints', value: newRows });
+      } else throw t('saybolt-furol.error.minValue');
     } catch (error) {
       toast.error(error);
     }
   };
 
-  // Adicionar mais uma linha de determinado valor
   const handleAdd = () => {
     const newRows = [...rows];
     newRows.push({
       id: rows.length,
-      stretching_length: null,
-      juxtaposition_length: null,
+      temperature: null,
+      viscosity: null,
     });
-    setData({ step: 1, key: 'lengths', value: newRows });
+    setData({ step: 1, key: 'dataPoints', value: newRows });
     setNextDisabled(true);
   };
 
@@ -53,8 +49,8 @@ const ElasticRecovery_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps)
 
   const columns: GridColDef[] = [
     {
-      field: 'stretching_length',
-      headerName: t('elasticRecovery.stretching_length'),
+      field: 'temperature',
+      headerName: t('saybolt-furol.temperature'),
       renderCell: ({ row }) => {
         const { id } = row;
         const index = rows.findIndex((r) => r.id === id);
@@ -62,23 +58,26 @@ const ElasticRecovery_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps)
         return (
           <InputEndAdornment
             fullWidth
-            label={t('elasticRecovery.stretching_length')}
             type="number"
             inputProps={{ min: 0 }}
-            value={row.stretching_length}
+            value={row.temperature}
             onChange={(e) => {
               const newRows = [...rows];
-              rows[index].stretching_length = Number(e.target.value);
-              setData({ step: 1, key: 'stretching_length', value: newRows });
+              if (index !== -1) {
+                rows[index].temperature = Number(e.target.value);
+                setData({ step: 1, key: 'temperature', value: newRows });
+              } else {
+                console.log('error', id);
+              }
             }}
-            adornment={'cm'}
+            adornment={'°C'}
           />
         );
       },
     },
     {
-      field: 'juxtaposition_length',
-      headerName: t('elasticRecovery.juxtaposition_length'),
+      field: 'viscosity',
+      headerName: t('saybolt-furol.viscosity'),
       renderCell: ({ row }) => {
         const { id } = row;
         const index = rows.findIndex((r) => r.id === id);
@@ -86,16 +85,16 @@ const ElasticRecovery_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps)
         return (
           <InputEndAdornment
             fullWidth
-            label={t('elasticRecovery.juxtaposition_length')}
+            label={t('saybolt-furol.viscosity')}
             type="number"
             inputProps={{ min: 0 }}
-            value={row.juxtaposition_length}
+            value={row.viscosity}
             onChange={(e) => {
               const newRows = [...rows];
-              newRows[index].juxtaposition_length = Number(e.target.value);
-              setData({ step: 1, key: 'juxtaposition_length', value: newRows });
+              newRows[index].viscosity = Number(e.target.value);
+              setData({ step: 1, key: 'viscosity', value: newRows });
             }}
-            adornment={'cm'}
+            adornment={'SSF'}
           />
         );
       },
@@ -103,26 +102,14 @@ const ElasticRecovery_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps)
   ];
 
   if (nextDisabled) {
-    // verifica se todos os campos da tabela estão preenchidos
-    rows.every((row) => {
-      const { stretching_length, juxtaposition_length } = row;
-      return stretching_length && juxtaposition_length >= 0;
-    }) &&
-      setNextDisabled(false);
+    const hasNullValues = rows.some((row) => Object.values(row).some((value) => value === null));
+    if (!hasNullValues) setNextDisabled(false);
   }
 
-  useEffect(() => console.log(data, rows), [data, rows]);
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Box
-        sx={{
-          display: 'flex',
-          gap: '15px',
-          justifyContent: { mobile: 'center', notebook: 'center' },
-          flexWrap: 'wrap',
-        }}
-      >
-      </Box>
+      <ResultSubTitle title={t('saybolt-furol.calc')} sx={{ margin: '.65rem' }} />
+
       <DataGrid
         sx={{ mt: '1rem', borderRadius: '10px' }}
         density="compact"
@@ -144,4 +131,4 @@ const ElasticRecovery_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps)
   );
 };
 
-export default ElasticRecovery_Calc;
+export default ViscosityRotational_Calc;
