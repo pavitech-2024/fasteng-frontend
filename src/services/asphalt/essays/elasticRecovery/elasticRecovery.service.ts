@@ -1,17 +1,17 @@
-import { AbrasionIcon } from '@/assets';
+import { ElasticRecoveryIcon } from '@/assets';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { t } from 'i18next';
 import Api from '@/api';
-import { AbrasionActions, AbrasionData } from '@/stores/asphalt/abrasion/abrasion.store';
+import { ElasticRecoveryActions, ElasticRecoveryData } from '@/stores/asphalt/elasticRecovery/elasticRecovery.store';
 
-class Abrasion_SERVICE implements IEssayService {
+class ElasticRecovery_SERVICE implements IEssayService {
   info = {
-    key: 'abrasion',
-    icon: AbrasionIcon,
-    title: t('asphalt.essays.abrasion'),
-    path: '/asphalt/essays/abrasion',
-    backend_path: 'asphalt/essays/abrasion',
+    key: 'elasticRecovery',
+    icon: ElasticRecoveryIcon,
+    title: t('asphalt.essays.elasticRecovery'),
+    path: '/asphalt/essays/elasticRecovery',
+    backend_path: 'asphalt/essays/elasticRecovery',
     steps: 3,
     standard: {
       name: '',
@@ -19,12 +19,12 @@ class Abrasion_SERVICE implements IEssayService {
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
-      { step: 1, description: t('asphalt.essays.abrasion'), path: 'essay-data' },
+      { step: 1, description: t('asphalt.essays.elasticRecovery'), path: 'essay-data' },
       { step: 2, description: t('results'), path: 'results' },
     ],
   };
 
-  store_actions: AbrasionActions;
+  store_actions: ElasticRecoveryActions;
   userId: string;
 
   /** @handleNext Receives the step and data from the form and calls the respective method */
@@ -32,15 +32,15 @@ class Abrasion_SERVICE implements IEssayService {
     try {
       switch (step) {
         case 0:
-          await this.submitGeneralData(data as AbrasionData['generalData']);
+          await this.submitGeneralData(data as ElasticRecoveryData['generalData']);
           break;
         case 1:
-          const { abrasionCalc } = data as AbrasionData;
-          await this.submitAbrasionCalcData(abrasionCalc);
-          await this.calculateResults(data as AbrasionData);
+          const { elasticRecoveryCalc } = data as ElasticRecoveryData;
+          await this.submitElasticRecoveryCalcData(elasticRecoveryCalc);
+          await this.calculateResults(data as ElasticRecoveryData);
           break;
         case 2:
-          await this.saveEssay(data as AbrasionData);
+          await this.saveEssay(data as ElasticRecoveryData);
           break;
         default:
           throw t('errors.invalid-step');
@@ -64,7 +64,7 @@ class Abrasion_SERVICE implements IEssayService {
   };
 
   // get essay from material _id
-  getAbrasionBymaterialId = async (material_id: string) => {
+  getElasticRecoveryBymaterialId = async (material_id: string) => {
     try {
       const response = await Api.get(`${this.info.backend_path}/get/${material_id}`);
       return response.data;
@@ -73,8 +73,8 @@ class Abrasion_SERVICE implements IEssayService {
     }
   };
 
-  // send general data to backend to verify if there is already a Abrasion essay with same name for the material
-  submitGeneralData = async (generalData: AbrasionData['generalData']): Promise<void> => {
+  // send general data to backend to verify if there is already a ElasticRecovery essay with same name for the material
+  submitGeneralData = async (generalData: ElasticRecoveryData['generalData']): Promise<void> => {
     try {
       const { name, material } = generalData;
 
@@ -82,41 +82,42 @@ class Abrasion_SERVICE implements IEssayService {
       if (!name) throw t('errors.empty-name');
       if (!material) throw t('errors.empty-material');
 
-      // verify if there is already a Abrasion essay with same name for the material
+      // verify if there is already a ElasticRecovery essay with same name for the material
       const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, material });
 
       const { success, error } = response.data;
 
-      // if there is already a Abrasion essay with same name for the material, throw error
+      // if there is already a ElasticRecovery essay with same name for the material, throw error
       if (success === false) throw error.name;
     } catch (error) {
       throw error;
     }
   };
 
-  /** @Abrasion Methods for Abrasion page (step === 1, page 2) */
+  /** @ElasticRecovery Methods for ElasticRecovery page (step === 1, page 2) */
 
-  // verify inputs from Abrasion page (step === 1, page 2)
-  submitAbrasionCalcData = async (abrasionCalc: AbrasionData['abrasionCalc']): Promise<void> => {
+  // verify inputs from ElasticRecovery page (step === 1, page 2)
+  submitElasticRecoveryCalcData = async (elasticRecoveryCalc: ElasticRecoveryData['elasticRecoveryCalc']): Promise<void> => {
     try {
-      const { finalMass, initialMass } = abrasionCalc;
-
-      if (Number(finalMass) > Number(initialMass)) throw t('errors.final-mass-lower-than-initial-mass');
+      const { lengths } = elasticRecoveryCalc;
+      lengths.forEach((row) => {
+        if ( Number(row.stretching_lenght) < 0 ) throw t('errors.negative-stretching-length');
+        if ( Number(row.juxtaposition_length) < 0 ) throw t('errors.negative-juxtaposition-length');
+      })
     } catch (error) {
       throw error;
     }
   };
 
-  // calculate results from abrasion essay
-  calculateResults = async (store: AbrasionData): Promise<void> => {
+  // calculate results from elasticRecovery essay
+  calculateResults = async (store: ElasticRecoveryData): Promise<void> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
-        abrasionCalc: store.abrasionCalc,
+        elasticRecoveryCalc: store.elasticRecoveryCalc,
       });
 
       const { success, error, result } = response.data;
-      console.log('🚀 ~ file: abrasion.service.ts:120 ~ Abrasion_SERVICE ~ calculateResults= ~ result:', result);
 
       if (success === false) throw error.name;
 
@@ -129,14 +130,14 @@ class Abrasion_SERVICE implements IEssayService {
   /** @Results Methods for Results page (step === 2, page 3) */
 
   // save essay
-  saveEssay = async (store: AbrasionData): Promise<void> => {
+  saveEssay = async (store: ElasticRecoveryData): Promise<void> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/save-essay`, {
         generalData: {
           ...store.generalData,
           userId: this.userId,
         },
-        abrasionCalc: store.abrasionCalc,
+        elasticRecoveryCalc: store.elasticRecoveryCalc,
         results: store.results,
       });
 
@@ -151,4 +152,4 @@ class Abrasion_SERVICE implements IEssayService {
   };
 }
 
-export default Abrasion_SERVICE;
+export default ElasticRecovery_SERVICE;

@@ -3,7 +3,7 @@ import Result_Card from '@/components/atoms/containers/result-card';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 import { EssayPageProps } from '@/components/templates/essay';
-import useDduiStore from '@/stores/asphalt/ddui.store';
+import useDduiStore from '@/stores/asphalt/ddui/ddui.store';
 import { Alert, AlertTitle, Box } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';

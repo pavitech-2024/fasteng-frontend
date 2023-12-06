@@ -1,7 +1,7 @@
 import DropDown from '@/components/atoms/inputs/dropDown';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import useDduiStore from '@/stores/asphalt/ddui.store';
+import useDduiStore from '@/stores/asphalt/ddui/ddui.store';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
 
