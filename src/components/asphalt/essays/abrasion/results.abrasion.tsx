@@ -2,7 +2,7 @@ import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-bor
 import Result_Card from '@/components/atoms/containers/result-card';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 import { EssayPageProps } from '@/components/templates/essay';
-import useAbrasionStore from '@/stores/asphalt/abrasion.store';
+import useAbrasionStore from '@/stores/asphalt/abrasion/abrasion.store';
 import { Alert, Box } from '@mui/material';
 import { t } from 'i18next';
 
