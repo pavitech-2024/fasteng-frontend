@@ -23,24 +23,17 @@
   "asphalt.essays.filter.aggregates": "Agregados",
   "asphalt.essays.filter.asphaltMix": "Misturas Asfálticas",
   "asphalt.essays.filter.asphaltBinder": "Ligante Asfáltico",
-<<<<<<< HEAD
   "asphalt.essays.viscosity-rotational": "Viscosidade Rotacional",
   "asphalt.essays.viscosityRotational": "Dados de Viscosidade",
   "asphalt.experimentName": "Nome do experimento",
   "asphalt.operator": "Operador",
   "asphalt.material": "Material",
   "asphalt.calculist": "Cauculista",
-  "asphalt.materials.comments": "Observações"
-=======
-  "asphalt.experimentName": "Nome do experimento",
-  "asphalt.material": "Material",
-  "asphalt.operator": "Operador",
-  "asphalt.calculist": "Calculista",
+  "asphalt.materials.comments": "Observações",
   "asphalt.comments": "Comentários",
   "asphalt.essays.penetration-asphalt": "Penetração",
   "asphalt.essays.abrasion.initial-mass": "Massa inicial",
   "asphalt.essays.abrasion.final-mass": "Massa da amostra após ensaio",
   "asphalt.essays.abrasion.graduation": "Escolha a graduação",
   "errors.final-mass-lower-than-initial-mass": "A massa final não pode ser maior do que a massa inicial."
->>>>>>> 6a58fafb5a0893e2303596da1369d0aa78027d53
 }
