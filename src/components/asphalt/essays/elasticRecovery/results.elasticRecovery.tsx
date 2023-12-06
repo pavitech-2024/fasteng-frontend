@@ -5,22 +5,22 @@ import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import Result_Card from '@/components/atoms/containers/result-card';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import { Box } from '@mui/material';
-import useFlashPointStore from '@/stores/asphalt/flashPoint/flashPoint.store';
+import useElasticRecoveryStore from '@/stores/asphalt/elasticRecovery/elasticRecovery.store';
 
-const FlashPoint_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
+const ElasticRecovery_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
-  const { results: flashPoint_results, generalData } = useFlashPointStore();
+  const { results: elasticRecovery_results, generalData } = useElasticRecoveryStore();
 
   const data = {
     // container "Resultados"
     container_other_data: [],
   };
 
-  if (flashPoint_results) {
+  if (elasticRecovery_results) {
     data.container_other_data.push({
-      label: t('flashPoint.temperature'),
-      value: flashPoint_results.temperature,
-      unity: '°C',
+      label: t('elasticRecovery.elasticRecovery'),
+      value: elasticRecovery_results.elasticRecovery,
+      unity: '%',
     });
   }
 
@@ -34,7 +34,7 @@ const FlashPoint_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
     <>
       <ExperimentResume data={experimentResumeData} />
       <FlexColumnBorder title={t('results')} open={true}>
-        <ResultSubTitle title={t('asphalt.essays.flashPoint')} sx={{ margin: '.65rem' }} />
+        <ResultSubTitle title={t('asphalt.essays.elasticRecovery')} sx={{ margin: '.65rem' }} />
         <Box
           sx={{
             width: '100%',
@@ -53,4 +53,4 @@ const FlashPoint_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
   );
 };
 
-export default FlashPoint_Results;
+export default ElasticRecovery_Results;

@@ -9,22 +9,22 @@ import useSpecifyMassStore from '@/stores/asphalt/specifyMass/specifyMass.store'
 
 const SpecifyMass_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
-  const { results: specifymass_results, generalData } = useSpecifyMassStore();
+  const { results: specifyMass_results, generalData } = useSpecifyMassStore();
 
   const data = {
     // container "Resultados"
     container_other_data: [],
   };
 
-  if (specifymass_results) {
+  if (specifyMass_results) {
     data.container_other_data.push(
-      { label: t('specifyMass.bulk_specify_mass'), value: specifymass_results.bulk_specify_mass, unity: 'g/cm³' },
+      { label: t('specifyMass.bulk_specify_mass'), value: specifyMass_results.bulk_specify_mass, unity: 'g/cm³' },
       {
         label: t('specifyMass.apparent_specify_mass'),
-        value: specifymass_results.apparent_specify_mass,
+        value: specifyMass_results.apparent_specify_mass,
         unity: 'g/cm³',
       },
-      { label: t('specifyMass.absorption'), value: specifymass_results.absorption, unity: '%' }
+      { label: t('specifyMass.absorption'), value: specifyMass_results.absorption, unity: '%' }
     );
   }
 

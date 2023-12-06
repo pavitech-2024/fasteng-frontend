@@ -1,30 +1,31 @@
-import { DduiIcon } from '@/assets';
+import { RtcdIcon } from '@/assets';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
-import { DduiActions, DduiData } from '@/stores/asphalt/ddui/ddui.store';
 import { t } from 'i18next';
 import Api from '@/api';
+import { RtcdActions, RtcdData } from '@/stores/asphalt/rtcd.store';
 
-class Ddui_SERVICE implements IEssayService {
+class Rtcd_SERVICE implements IEssayService {
   info = {
-    key: 'ddui',
-    icon: DduiIcon,
-    title: t('asphalt.essays.ddui'),
-    path: '/asphalt/essays/ddui',
-    backend_path: 'asphalt/essays/ddui',
+    key: 'rtcd',
+    icon: RtcdIcon,
+    title: t('asphalt.essays.rtcd'),
+    path: '/asphalt/essays/rtcd',
+    backend_path: 'asphalt/essays/rtcd',
     steps: 4,
     standard: {
       name: 'DNIT 136/2018 - ME',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_180_2018_me-1.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_136_2018_me-1.pdf',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
-      { step: 1, description: t('asphalt.essays.ddui.dduiStep2'), path: 'essay-data-step2' },
-      { step: 2, description: t('asphalt.essays.ddui.dduiStep3'), path: 'essay-data-step3' },
+      { step: 1, description: t('asphalt.essays.rtcdStep2'), path: 'essay-data' },
+      { step: 2, description: t('asphalt.essays.rtcdStep3'), path: 'essay-data' },
       { step: 3, description: t('results'), path: 'results' },
     ],
   };
-  store_actions: DduiActions;
+
+  store_actions: RtcdActions;
   userId: string;
 
   /** @handleNext Receives the step and data from the form and calls the respective method */
@@ -32,20 +33,19 @@ class Ddui_SERVICE implements IEssayService {
     try {
       switch (step) {
         case 0:
-          await this.submitGeneralData(data as DduiData['generalData']);
+          await this.submitGeneralData(data as RtcdData['generalData']);
           break;
         case 1:
-          const { dduiStep2 } = data as DduiData;
-          await this.submitDduiStep2Data(dduiStep2);
+          const { rtcdStep2 } = data as RtcdData;
+          await this.submitRtcdStep2Data(rtcdStep2);
           break;
         case 2:
-          const { dduiStep3 } = data as DduiData;
-          await this.submitDduiStep3Data(dduiStep3);
-          await this.calculateResults(data as DduiData);
+          const { rtcdStep3 } = data as RtcdData;
+          await this.submitRtcdStep3Data(rtcdStep3);
+          await this.calculateResults(data as RtcdData);
           break;
         case 3:
-          await this.saveEssay(data as DduiData);
-          break;
+          await this.saveEssay(data as RtcdData);
         default:
           throw t('errors.invalid-step');
       }
@@ -68,7 +68,7 @@ class Ddui_SERVICE implements IEssayService {
   };
 
   // get essay from material _id
-  getDduiBymaterialId = async (material_id: string) => {
+  getRtcdBymaterialId = async (material_id: string) => {
     try {
       const response = await Api.get(`${this.info.backend_path}/get/${material_id}`);
       return response.data;
@@ -77,8 +77,8 @@ class Ddui_SERVICE implements IEssayService {
     }
   };
 
-  // send general data to backend to verify if there is already a Ddui essay with same name for the material
-  submitGeneralData = async (generalData: DduiData['generalData']): Promise<void> => {
+  // send general data to backend to verify if there is already a Rtcd essay with same name for the material
+  submitGeneralData = async (generalData: RtcdData['generalData']): Promise<void> => {
     try {
       const { name, material } = generalData;
 
@@ -86,57 +86,54 @@ class Ddui_SERVICE implements IEssayService {
       if (!name) throw t('errors.empty-name');
       if (!material) throw t('errors.empty-material');
 
-      // verify if there is already a Ddui essay with same name for the material
+      // verify if there is already a Rtcd essay with same name for the material
       const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, material });
 
       const { success, error } = response.data;
 
-      // if there is already a Ddui essay with same name for the material, throw error
+      // if there is already a Rtcd essay with same name for the material, throw error
       if (success === false) throw error.name;
     } catch (error) {
       throw error;
     }
   };
 
-  /** @Ddui Methods for Ddui page (step === 1, page 2) */
+  /** @Rtcd Methods for Rtcd page (step === 1, page 2) */
 
-  // verify inputs from Ddui page (step === 1, page 2)
-  submitDduiStep2Data = async (dduiStep2: DduiData['dduiStep2']): Promise<void> => {
-    console.log('🚀 ~ file: ddui.service.ts:101 ~ Ddui_SERVICE ~ submitDduiCalcData= ~ dduiStep2:', dduiStep2);
+  // verify inputs from Rtcd page (step === 1, page 2)
+  submitRtcdStep2Data = async (rtcdStep2: RtcdData['rtcdStep2']): Promise<void> => {
+    console.log('🚀 ~ file: rtcd.service.ts:101 ~ Rtcd_SERVICE ~ submitRtcdCalcData= ~ rtcdStep2:', rtcdStep2);
     try {
+      // verify if press_constant is not empty
+      if (!rtcdStep2.pressConstant) throw t('errors.empty-press-constant');
     } catch (error) {
       throw error;
     }
   };
 
-  // verify inputs from Ddui page (step === 1, page 2)
-  submitDduiStep3Data = async (dduiStep3: DduiData['dduiStep3']): Promise<void> => {
-    console.log('🚀 ~ file: ddui.service.ts:101 ~ Ddui_SERVICE ~ submitDduiCalcData= ~ dduiStep3:', dduiStep3);
+  // verify inputs from Rtcd page (step === 1, page 2)
+  submitRtcdStep3Data = async (rtcdStep3: RtcdData['rtcdStep3']): Promise<void> => {
+    console.log('🚀 ~ file: rtcd.service.ts:101 ~ Rtcd_SERVICE ~ submitRtcdCalcData= ~ rtcdStep3:', rtcdStep3);
     try {
+      // verify if rtcd_data is not empty
+      if (!rtcdStep3.rtcd_data) throw t('errors.empty-rtcd_data');
     } catch (error) {
       throw error;
     }
   };
 
-  // calculate results from ddui essay
-  calculateResults = async (store: DduiData): Promise<void> => {
+  // calculate results from rtcd essay
+  calculateResults = async (store: RtcdData): Promise<void> => {
     const body = {
       generalData: store.generalData,
-      dduiStep2: store.dduiStep2,
-      dduiStep3: store.dduiStep3,
+      rtcdStep2: store.rtcdStep2,
+      rtcdStep3: store.rtcdStep3
     };
     try {
-      // Verifica se há valores true e false em ddui_data.condicionamento;
-      const hasConditionedData =
-        store.dduiStep3.ddui_data.some((item1) => item1.condicionamento) &&
-        store.dduiStep3.ddui_data.some((item2) => !item2.condicionamento);
-
-      if (!hasConditionedData) throw t('ddui.error.invalid-conditioning');
-
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);
 
       const { success, error, result } = response.data;
-      console.log('🚀 ~ file: ddui.service.ts:120 ~ Ddui_SERVICE ~ calculateResults= ~ result:', result);
+      console.log('🚀 ~ file: rtcd.service.ts:120 ~ Rtcd_SERVICE ~ calculateResults= ~ result:', result);
 
       if (success === false) throw error.name;
 
@@ -149,14 +146,15 @@ class Ddui_SERVICE implements IEssayService {
   /** @Results Methods for Results page (step === 2, page 3) */
 
   // save essay
-  saveEssay = async (store: DduiData): Promise<void> => {
+  saveEssay = async (store: RtcdData): Promise<void> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/save-essay`, {
         generalData: {
           ...store.generalData,
           userId: this.userId,
         },
-        dduiStep2: store.dduiStep2,
+        rtcdStep2: store.rtcdStep2,
+        rtcdStep3: store.rtcdStep3,
         results: store.results,
       });
 
@@ -171,4 +169,4 @@ class Ddui_SERVICE implements IEssayService {
   };
 }
 
-export default Ddui_SERVICE;
+export default Rtcd_SERVICE;

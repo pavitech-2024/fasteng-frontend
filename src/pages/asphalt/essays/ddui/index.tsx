@@ -5,7 +5,7 @@ import Ddui_Results from '@/components/asphalt/essays/ddui/results.ddui';
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import Ddui_SERVICE from '@/services/asphalt/essays/ddui/ddui.service';
-import useDduiStore, { DduiActions } from '@/stores/asphalt/ddui.store';
+import useDduiStore, { DduiActions } from '@/stores/asphalt/ddui/ddui.store';
 
 const Ddui = () => {
   // start an instance of the service

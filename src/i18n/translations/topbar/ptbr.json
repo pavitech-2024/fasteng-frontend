@@ -21,6 +21,7 @@
   "topbar.stabilized-layers": "Camadas Estabilizadas",
   "topbar.register": "Cadastro de novas amostras",
   "topbar.binder-asphalt-concrete": "Ligante e concreto asfálticos",
+  "topbar.viscosityrotational": "Viscosidade Rotacional",
   "topbar.ddui": "Determinação de Dano por Umidade Induzida",
   "topbar.softening-point": "Ponto de amolecimento",
   "topbar.penetration": "Penetração",
@@ -30,10 +31,10 @@
   "topbar.granulometry-soils": "Granulometria",
   "topbar.abcp": "Dosagem ABCP",
   "topbar.sandEquivalent": "Equivalente Areia",
-  "topbar.specifymass": "Massa Específica",
-  "topbar.flashpoint": "Ponto de Fulgor",
+  "topbar.specifyMass": "Massa Específica",
+  "topbar.flashPoint": "Ponto de Fulgor",
   "topbar.ductility": "Ductilidade",
   "topbar.angularity": "Angularidade",
-  "topbar.shapeindex": "Índice de Forma",
-  "topbar.elongatedparticles": "Partículas Alongadas"
+  "topbar.shapeIndex": "Índice de Forma",
+  "topbar.elongatedParticles": "Partículas Alongadas"
 }

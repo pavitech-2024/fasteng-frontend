@@ -3,7 +3,7 @@
   "concrete.material": "Material",
   "concrete.operator": "Operador",
   "concrete.calculist": "Calculista",
-  "concrete.essays.granulometry-concrete": "Granulometria por Peneiramento",
+  "concrete.essays.granulometry": "Granulometria por Peneiramento",
   "concrete.essays.chapman": "Massa Específica - Frasco de Chapman",
   "concrete.essays.unitMass": "Massa Unitária",
   "concrete.essays.sandIncrease": "Inchamento da Areia",

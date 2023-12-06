@@ -3,27 +3,28 @@ import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
-import Abrasion_SERVICE from '@/services/asphalt/essays/abrasion/abrasion.service';
-import useAbrasionStore from '@/stores/asphalt/abrasion/abrasion.store';
+import ViscosityRotational_SERVICE from '@/services/asphalt/viscosityRotational/viscosityRotational.service';
+import useViscosityRotationalStore from '@/stores/asphalt/viscosityRotational/viscosityRotational.store';
+
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
-const Abrasion_GeneralData = ({
+const ViscosityRotational_GeneralData = ({
   nextDisabled,
   setNextDisabled,
-  abrasion,
-}: EssayPageProps & { abrasion: Abrasion_SERVICE }) => {
+  viscosityRotational,
+}: EssayPageProps & { viscosityRotational: ViscosityRotational_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
   const { user } = useAuth();
-  const { generalData, setData } = useAbrasionStore();
+  const { generalData, setData } = useViscosityRotationalStore();
 
   useEffect(() => {
     toast.promise(
       async () => {
-        const materials = await abrasion.getmaterialsByUserId(user._id);
+        const materials = await viscosityRotational.getmaterialsByUserId(user._id);
 
         setMaterials(materials);
         setLoading(false);
@@ -34,7 +35,6 @@ const Abrasion_GeneralData = ({
         error: t('loading.materials.error'),
       }
     );
-    // se não deixar o array vazio ele vai ficar fazendo requisições infinitas
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -43,10 +43,9 @@ const Abrasion_GeneralData = ({
     { label: t('asphalt.material'), value: generalData.material, key: 'material', required: true },
     { label: t('asphalt.operator'), value: generalData.operator, key: 'operator', required: false },
     { label: t('asphalt.calculist'), value: generalData.calculist, key: 'calculist', required: false },
-    { label: t('asphalt.comments'), value: generalData.description, key: 'description', required: false },
+    { label: t('asphalt.materials.comments'), value: generalData.description, key: 'description', required: false },
   ];
 
-  // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
   inputs.every(({ required, value }) => {
     if (!required) return true;
 
@@ -100,13 +99,12 @@ const Abrasion_GeneralData = ({
 
                 let material;
 
-                // se existir uma material no store, seta ela como default
                 if (input.value) {
                   material = materials.find((material) => material._id == input.value['_id']);
                 }
 
                 if (material) {
-                  defaultValue.label = material.name + ' | ' + t(`${'asphalt.materials.' + material.type}`);
+                  defaultValue.label = material.name + ' | ' + t(`${'materials.' + material.type}`);
                   defaultValue.value = material;
                 }
 
@@ -145,4 +143,4 @@ const Abrasion_GeneralData = ({
   );
 };
 
-export default Abrasion_GeneralData;
+export default ViscosityRotational_GeneralData;

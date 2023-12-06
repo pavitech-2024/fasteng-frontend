@@ -41,6 +41,9 @@ import asphaltMaterialsENG from './translations/asphalt/materials/en.json';
 // essays
 import asphaltEssaysPTBR from './translations/asphalt/essays/ptbr.json';
 import asphaltEssaysENG from './translations/asphalt/essays/en.json';
+// rtcd
+import rtcdPTBR from './translations/asphalt/essays/rtcd/ptbr.json';
+import rtcdENG from './translations/asphalt/essays/rtcd/en.json'
 // ddui
 import asphaltDduiPTBR from './translations/asphalt/essays/ddui/ptbr.json';
 import asphaltDduiENG from './translations/asphalt/essays/ddui/en.json';
@@ -83,6 +86,9 @@ import asphaltGranulometryENG from './translations/asphalt/essays/granulometry/e
 // penetration
 import asphaltPenetrationPTBR from './translations/asphalt/essays/penetration/ptbr.json';
 import asphaltPenetrationENG from './translations/asphalt/essays/penetration/en.json';
+// elasticRecovery
+import asphaltElasticRecoveryPTBR from './translations/asphalt/essays/elasticRecovery/ptbr.json';
+import asphaltElasticRecoveryENG from './translations/asphalt/essays/elasticRecovery/en.json';
 
 /**@soils */
 // samples
@@ -156,6 +162,7 @@ i18n.use(initReactI18next).init({
         /**@asphalt */
         ...asphaltMaterialsPTBR,
         ...asphaltEssaysPTBR,
+        ...rtcdPTBR,
         ...asphaltDduiPTBR,
         ...softeningPointPTBR,
         ...sayboltFurolPTBR,
@@ -170,6 +177,7 @@ i18n.use(initReactI18next).init({
         ...elongatedParticlesPTBR,
         ...asphaltGranulometryPTBR,
         ...asphaltPenetrationPTBR,
+        ...asphaltElasticRecoveryPTBR,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
@@ -205,6 +213,7 @@ i18n.use(initReactI18next).init({
         /**@asphalt */
         ...asphaltMaterialsENG,
         ...asphaltEssaysENG,
+        ...rtcdENG,
         ...asphaltDduiENG,
         ...softeningPointENG,
         ...sayboltFurolENG,
@@ -219,6 +228,7 @@ i18n.use(initReactI18next).init({
         ...elongatedParticlesENG,
         ...asphaltGranulometryENG,
         ...asphaltPenetrationENG,
+        ...asphaltElasticRecoveryENG,
         /**@soils */
         ...samplesENG,
         ...soilsEssaysENG,

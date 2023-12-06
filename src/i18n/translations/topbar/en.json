@@ -20,6 +20,7 @@
   "topbar.view": "Sample Register",
   "topbar.stabilized-layers": "Stabilized Layers",
   "topbar.binder-asphalt-concrete": "Binder and Concrete Asphalt",
+  "topbar.viscosityrotational": "Viscosity Rotational",
   "topbar.ddui": "Determination of Induced Moisture Damage",
   "topbar.softening-point": "Softening Point",
   "topbar.penetration": "Penetration",
@@ -28,7 +29,7 @@
   "topbar.granulometry-soils": "Granulometry",
   "topbar.abcp": "ABCP Dosage",
   "topbar.sandEquivalent": "Sand Equivalent",
-  "topbar.specifymass": "Specify Mass",
+  "topbar.specifyMass": "Specify Mass",
   "topbar.flashPoint": "Falsh Point",
   "topbar.ductility": "Ductility",
   "topbar.angularity": "Angularity"

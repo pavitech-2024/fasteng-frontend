@@ -3,27 +3,27 @@ import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
-import Abrasion_SERVICE from '@/services/asphalt/essays/abrasion/abrasion.service';
-import useAbrasionStore from '@/stores/asphalt/abrasion/abrasion.store';
+import ElasticRecovery_SERVICE from '@/services/asphalt/essays/elasticRecovery/elasticRecovery.service';
+import useElasticRecoveryStore from '@/stores/asphalt/elasticRecovery/elasticRecovery.store';
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
-const Abrasion_GeneralData = ({
+const ElasticRecovery_GeneralData = ({
   nextDisabled,
   setNextDisabled,
-  abrasion,
-}: EssayPageProps & { abrasion: Abrasion_SERVICE }) => {
+  elasticRecovery,
+}: EssayPageProps & { elasticRecovery: ElasticRecovery_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
   const { user } = useAuth();
-  const { generalData, setData } = useAbrasionStore();
+  const { generalData, setData } = useElasticRecoveryStore();
 
   useEffect(() => {
     toast.promise(
       async () => {
-        const materials = await abrasion.getmaterialsByUserId(user._id);
+        const materials = await elasticRecovery.getmaterialsByUserId(user._id);
 
         setMaterials(materials);
         setLoading(false);
@@ -145,4 +145,4 @@ const Abrasion_GeneralData = ({
   );
 };
 
-export default Abrasion_GeneralData;
+export default ElasticRecovery_GeneralData;
