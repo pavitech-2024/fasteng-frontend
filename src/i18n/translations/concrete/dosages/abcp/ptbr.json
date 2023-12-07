@@ -1,5 +1,6 @@
 {
   "abcp.step-2-description": "Selecione os agregados e o aglomerante (cimento) que serão utilizados na dosagem. Somente os agregados que passaram por pelo menos um ensaio de granulometria e um ensaio de massa unitária estarão visíveis aqui.",
+  "abcp.step-3-description": "Selecione os experimentos previamente realizados para os agregados e aglomerantes. Você também pode cadastrar um novo resultado para eles. Para os Agregados Graúdos o diamêtro máximo deve estar entre 9.5mm e 37.5mm. Para os Agregados Miúdos o módulo de finura da granulometria deve estar entre 1.8 e 3.6.",
   "abcp.material-selection": "Seleção de Materiais",
   "abcp.essay-selection": "Seleção de Ensaios",
   "abcp.inserting-params": "Inserindo Parâmetros",

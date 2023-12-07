@@ -1,5 +1,6 @@
 {
   "abcp.step-2-description": "Selecione os agregados e o aglomerante (cimento) que serão utilizados na dosagem. Somente os agregados que passaram por pelo menos um ensaio de granulometria e um ensaio de massa unitária estarão visíveis aqui.",
+  "abcp.step-3-description": "Select experiments previously carried out for aggregates and binders. You can also register a new result for them. For Coarse Aggregates, the maximum diameter must be between 9.5mm and 37.5mm. For Fine Aggregates, the grain size fineness modulus must be between 1.8 and 3.6.",
   "abcp.material-selection": "Material Selection",
   "abcp.essay-selection": "Essay Selection",
   "abcp.inserting-params": "Inserting Parameters",

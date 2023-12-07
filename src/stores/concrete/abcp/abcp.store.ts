@@ -17,7 +17,7 @@ interface ABCP_MaterialSelection {
   cement: string;
 }
 
-interface ABCP_EssaySelection {
+interface ABCP_EssaySelectionData {
   fineAggregate: {
     _id: string;
     specific_mass: number;
@@ -38,7 +38,7 @@ interface ABCP_EssaySelection {
 export type ABCPData = {
   generalData: GeneralData;
   materialSelectionData: ABCP_MaterialSelection;
-  essaySelectionData: ABCP_EssaySelection;
+  essaySelectionData: ABCP_EssaySelectionData;
 };
 
 export type ABCPActions = {

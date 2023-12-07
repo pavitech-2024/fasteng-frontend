@@ -95,6 +95,13 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
     },
   ];
 
+  useEffect(() => {
+    if (!Object.values(materialSelectionData).some((data) => data === null)) {
+      setNextDisabled(false)
+    }
+  }, [materialSelectionData])
+  
+
   !materialSelectionData.cement &&
     !materialSelectionData.coarseAggregate &&
     !materialSelectionData.fineAggregate &&

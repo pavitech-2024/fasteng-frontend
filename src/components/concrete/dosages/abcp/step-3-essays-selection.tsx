@@ -40,6 +40,13 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
     );
   }, []);
 
+  const fineAggregate_Inputs = [];
+
+  if (essays) fineAggregate_Inputs.push(essays.fineAggregate)
+  console.log("🚀 ~ file: step-3-essays-selection.tsx:46 ~ essays:", essays)
+
+  console.log("🚀 ~ file: step-3-essays-selection.tsx:44 ~ fineAggregate_Inputs:", fineAggregate_Inputs)
+
   nextDisabled && setNextDisabled(false);
 
   return (
@@ -61,8 +68,8 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
               borderRadius: '10px',
             }}
           >
-            {/* {fineAggregate_Inputs.map((material) => {
-              const { _id, name, specific_mass, granulometrys } = material;
+            {fineAggregate_Inputs.map((material) => {
+              const { _id, name, specific_mass, granulometrys, unitMass } = material;
               return (
                 <Box>
                   <Typography>
@@ -85,11 +92,11 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                         setData({ step: 2, key: "fineAggregates.specific_mass", value: specific_mass });
                       }}
                     />
-                    <DropDown
+                    {/* <DropDown
                       variant="standard"
                       key={`granulometry_${_id}`}
                       label={t('granulometry')}
-                      options={granulometrys.map((essay) => {
+                      options={granulometrys?.map((essay) => {
                         const { _id, name } = essay
                         return { label: name, value: { _id, name } };
                       })}
@@ -97,10 +104,22 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                         setData({ step: 2, key: 'fineAggregates', value });
                       }}
                     />
+                    <DropDown
+                      variant="standard"
+                      key={`granulometry_${_id}`}
+                      label={t('unitMass')}
+                      options={unitMass?.map((essay) => {
+                        const { _id, name } = essay
+                        return { label: name, value: { _id, name } };
+                      })}
+                      callback={(value) => {
+                        setData({ step: 2, key: 'fineAggregates', value });
+                      }}
+                    /> */}
                   </Box>
                 </Box>
               )
-            })} */}
+            })}
           </Box>
         </Box>
       )}

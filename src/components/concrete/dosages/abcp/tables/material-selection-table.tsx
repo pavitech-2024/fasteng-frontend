@@ -13,7 +13,7 @@ interface MaterialSelectionProps {
 const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProps) => {
   console.log("🚀 ~ file: material-selection-table.tsx:14 ~ MaterialSelectionTable ~ rows:", rows)
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
-  const [cement, setCement] = useState<number>(null);
+  const [cement, setCement] = useState<number | null>(null);
   // const [coarseAggregate, setCoarseAggregate] = useState<string>('');
   // const [fineAggregate, setFineAggregate] = useState<string>('');
   const { materialSelectionData, setData } = useABCPStore();
@@ -66,45 +66,95 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
           }}
           onRowSelectionModelChange={(rowSelection) => {
             setRowSelectionModel(rowSelection);
-          
-            let updatedStates = {
+        
+            let updatedStates: {
+              fineAggregate: string | null;
+              coarseAggregate: string | null;
+              cement: number | null;
+            } = {
               fineAggregate: null,
               coarseAggregate: null,
               cement: null,
             };
-          
+        
+            // Salva os valores atuais de fineAggregate e coarseAggregate
+            const currentFineAggregate = materialSelectionData.fineAggregate;
+            const currentCoarseAggregate = materialSelectionData.coarseAggregate;
+        
             rowSelection.forEach((selectedRow, index) => {
               const { _id, type } = rows[selectedRow];
-          
+        
               if (type === 'cement') {
                 const rowIndex = rows.findIndex((row) => row._id === _id);
-                updatedStates = { ...updatedStates, cement: rowIndex };
+                updatedStates.cement = rowIndex;
               } else if (type === 'coarseAggregate') {
-                updatedStates = { ...updatedStates, coarseAggregate: _id };
+                updatedStates.coarseAggregate = _id;
               } else if (type === 'fineAggregate') {
-                updatedStates = { ...updatedStates, fineAggregate: _id };
+                updatedStates.fineAggregate = _id;
               }
             });
-          
+        
             // Atualiza os dados armazenados
             setData({
               step: 1,
               key: 'fineAggregate',
-              value: updatedStates.fineAggregate,
+              value: updatedStates.fineAggregate ?? currentFineAggregate,
             });
-          
+        
             setData({
               step: 1,
               key: 'coarseAggregate',
-              value: updatedStates.coarseAggregate,
+              value: updatedStates.coarseAggregate ?? currentCoarseAggregate,
             });
-          
+        
             setData({
               step: 1,
               key: 'cement',
               value: updatedStates.cement !== null ? rows[updatedStates.cement]._id : null,
             });
-          }}          
+          }}
+          
+          // onRowSelectionModelChange={(rowSelection) => {
+          //   setRowSelectionModel(rowSelection);
+          
+          //   let updatedStates = {
+          //     fineAggregate: null,
+          //     coarseAggregate: null,
+          //     cement: null,
+          //   };
+          
+          //   rowSelection.forEach((selectedRow, index) => {
+          //     const { _id, type } = rows[selectedRow];
+          
+          //     if (type === 'cement') {
+          //       const rowIndex = rows.findIndex((row) => row._id === _id);
+          //       updatedStates = { ...updatedStates, cement: rowIndex };
+          //     } else if (type === 'coarseAggregate') {
+          //       updatedStates = { ...updatedStates, coarseAggregate: _id };
+          //     } else if (type === 'fineAggregate') {
+          //       updatedStates = { ...updatedStates, fineAggregate: _id };
+          //     }
+          //   });
+          
+          //   // Atualiza os dados armazenados
+          //   setData({
+          //     step: 1,
+          //     key: 'fineAggregate',
+          //     value: updatedStates.fineAggregate,
+          //   });
+          
+          //   setData({
+          //     step: 1,
+          //     key: 'coarseAggregate',
+          //     value: updatedStates.coarseAggregate,
+          //   });
+          
+          //   setData({
+          //     step: 1,
+          //     key: 'cement',
+          //     value: updatedStates.cement !== null ? rows[updatedStates.cement]._id : null,
+          //   });
+          // }}          
           rowSelectionModel={rowSelectionModel}
           disableColumnSelector
           columns={columns.map((column) => ({

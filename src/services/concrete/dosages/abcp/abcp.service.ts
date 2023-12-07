@@ -38,7 +38,7 @@ class ABCP_SERVICE implements IEssayService {
     title: t('concrete.essays.abcp'),
     path: '/concrete/dosages/abcp',
     backend_path: 'concrete/dosages/abcp',
-    steps: 3,
+    steps: 5,
     standard: {
       name: '',
       link: 'https://abcp.org.br/wp-content/uploads/2020/07/Metodo_Dosagem_Concreto_ABCPonLINE_22.07.2020.pdf',
@@ -112,6 +112,7 @@ class ABCP_SERVICE implements IEssayService {
 
   // send the selected materials to backend
   submitMaterialSelection = async (materialSelection: ABCPData['materialSelectionData']): Promise<void> => {
+    console.log("🚀 ~ file: abcp.service.ts:115 ~ ABCP_SERVICE ~ submitMaterialSelection= ~ materialSelection:", materialSelection)
     try {
       const { coarseAggregate, fineAggregate, cement } = materialSelection;
 
@@ -131,11 +132,12 @@ class ABCP_SERVICE implements IEssayService {
     userId: string,
     { cement, coarseAggregate, fineAggregate }: ABCPData['materialSelectionData']
   ): Promise<EssaySelection_Results> => {
+    console.log("🚀 ~ file: abcp.service.ts:135 ~ ABCP_SERVICE ~ userId:", userId)
     try {
       const response = await Api.post(`${this.info.backend_path}/essay-selection`, {
-        cement,
-        coarseAggregate,
-        fineAggregate,
+        cement_id: cement,
+        coarseAggregate_id: coarseAggregate,
+        fineAggregate_id: fineAggregate,
       });
 
       const { essays, success, error } = response.data;
