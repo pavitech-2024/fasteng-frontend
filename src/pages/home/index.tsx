@@ -1,5 +1,9 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
+import Link from '@mui/material/Link';
+import lep from '../../assets/logos/lep.jpg';
+import jbr from '../../assets/logos/jbr.jpg';
 
 import { t } from 'i18next';
 
@@ -139,6 +143,59 @@ const Home: NextPage = () => {
         {Applications.map((app) => (
           <CardApp key={app.name} element={app} onClick={() => Router.push(app.path)} />
         ))}
+      </Box>
+      <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            width: '50%',
+            justifyContent: 'space-between',
+            alignItems: 'end',
+            height: 'fit-content',
+          }}
+        >
+          <Link
+            href="https://lepufcg.com.br/"
+            sx={{
+              padding: '1rem',
+              textAlign: 'start',
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+            }}
+          >
+            <Image
+              style={{
+                borderRadius: '100%',
+                width: '50px',
+                height: '50px',
+              }}
+              width={60}
+              height={60}
+              alt="LEP"
+              src={lep}
+            />
+          </Link>
+        </Box>
+        <Box>
+      <Link
+        href="https://www.jbr.eng.br/site/"
+        style={{ padding: '1rem', textAlign: 'end', position: 'absolute', bottom: 0, right: 0 }}
+      >
+        <Image
+          style={{
+            borderRadius: '100%',
+            width: '50px',
+            height: '50px',
+          }}
+          width={40}
+          height={40}
+          alt="JBR"
+          src={jbr}
+        />
+      </Link>
+    </Box>
       </Box>
     </Container>
   );
