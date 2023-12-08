@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [essays, setEssays] = useState<any>();
+  console.log("🚀 ~ file: step-3-essays-selection.tsx:15 ~ essays:", essays)
   const { materialSelectionData, essaySelectionData, setData } = useABCPStore();
 
   const { user } = useAuth();
@@ -103,8 +104,8 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                       callback={(value) => {
                         setData({ step: 2, key: 'fineAggregates', value });
                       }}
-                    />
-                    <DropDown
+                    /> */}
+                    {/* <DropDown
                       variant="standard"
                       key={`granulometry_${_id}`}
                       label={t('unitMass')}

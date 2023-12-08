@@ -142,7 +142,7 @@ class ABCP_SERVICE implements IEssayService {
 
       const { essays, success, error } = response.data;
 
-      console.log(essays);
+      console.log("aqui", essays);
 
       if (success === false) throw error.name;
       else return essays;
