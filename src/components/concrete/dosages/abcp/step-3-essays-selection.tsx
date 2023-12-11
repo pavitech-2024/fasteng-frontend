@@ -12,7 +12,6 @@ import { toast } from 'react-toastify';
 const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [essays, setEssays] = useState<any>();
-  console.log("🚀 ~ file: step-3-essays-selection.tsx:15 ~ essays:", essays)
   const { materialSelectionData, essaySelectionData, setData } = useABCPStore();
 
   const { user } = useAuth();
@@ -22,7 +21,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
       async () => {
         try {
           const essays = await abcp.getEssaysByMaterialId(user._id, materialSelectionData);
-          console.log(essays);
+          console.log("ensaios", essays);
           setEssays(essays);
           const { cement, fineAggregate_granulometrys, coarseAggregate_granulometrys, coarseAggregate_unit_masses } =
             essays;
@@ -44,9 +43,6 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
   const fineAggregate_Inputs = [];
 
   if (essays) fineAggregate_Inputs.push(essays.fineAggregate)
-  console.log("🚀 ~ file: step-3-essays-selection.tsx:46 ~ essays:", essays)
-
-  console.log("🚀 ~ file: step-3-essays-selection.tsx:44 ~ fineAggregate_Inputs:", fineAggregate_Inputs)
 
   nextDisabled && setNextDisabled(false);
 
