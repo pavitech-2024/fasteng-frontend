@@ -29,6 +29,7 @@ import {
 import { FilterOption } from '@/components/molecules/buttons/filter';
 import { StandardsTemplate } from '@/components/templates/standards';
 import { Standard } from '@/interfaces/common';
+import { t } from 'i18next';
 import { NextPage } from 'next';
 
 interface ConcreteStandardsProps {
@@ -39,7 +40,7 @@ interface ConcreteStandardsProps {
 export const getStaticProps = async () => {
   const standards: Standard[] = [
     {
-      title: 'Abrasão "Los Angeles"',
+      title: t('abrasion.los.angeles'),
       icon: AbrasionIcon,
       key: 'abrasion',
       standard: 'DNER - ME 035/98',
@@ -47,7 +48,7 @@ export const getStaticProps = async () => {
       type: 'aggregates',
     },
     {
-      title: 'Adesividade',
+      title: t('adhesiveness'),
       icon: AdhesivenessIcon,
       key: 'adhesiveness',
       standard: 'DNER- ME 078/94',
@@ -55,7 +56,7 @@ export const getStaticProps = async () => {
       type: 'aggregates',
     },
     {
-      title: 'Dano por Umidade Induzida',
+      title: t('induced.moisture.damage'),
       icon: InducedMoistureDamageIcon,
       key: 'inducedMoistureDamage',
       standard: 'DNIT 180/2018 - ME',
@@ -63,7 +64,7 @@ export const getStaticProps = async () => {
       type: 'aggregates',
     },
     {
-      title: 'Ductilidade',
+      title: t('ductility'),
       icon: DuctilityIcon,
       key: 'ductility',
       standard: 'DNER - ME 163/98',
@@ -71,7 +72,7 @@ export const getStaticProps = async () => {
       type: 'asphaltBinder',
     },
     {
-      title: 'Durabilidade',
+      title: t('durability'),
       icon: DurabilityIcon,
       key: 'durability',
       standard: 'DNER - ME 089/94',
@@ -79,7 +80,7 @@ export const getStaticProps = async () => {
       type: 'aggregates',
     },
     {
-      title: 'Ensaio Cântabro',
+      title: t('cantabro.essay'),
       icon: CantabrianIcon,
       key: 'cantabrian',
       standard: 'DNER - ME 383/99',
@@ -87,7 +88,7 @@ export const getStaticProps = async () => {
       type: 'aggregates',
     },
     {
-      title: 'Ensaio de Angularidade',
+      title: t('angularity.essay'),
       icon: AngularityIcon,
       key: 'angularity',
       standard: 'DNER - ME 415/2019',
@@ -95,7 +96,7 @@ export const getStaticProps = async () => {
       type: 'aggregates',
     },
     {
-      title: 'Ensaio de Fadiga',
+      title: t('fatigue.essay'),
       icon: FatigueIcon,
       key: 'fatigue',
       standard: 'DNIT - ME 183/2018',
@@ -103,7 +104,7 @@ export const getStaticProps = async () => {
       type: 'asphaltBinder',
     },
     {
-      title: 'Ensaio de Penetração',
+      title: t('penetration.essay'),
       icon: PenetrationIcon,
       key: 'penetration',
       standard: 'DNIT - ME 155/2010',
@@ -111,7 +112,7 @@ export const getStaticProps = async () => {
       type: 'asphaltBinder',
     },
     {
-      title: 'Ensaio Marshall',
+      title: t('marshall.essay'),
       icon: MarshallIconPng,
       key: 'marshall',
       standard: 'DNER - ME 043/95',
@@ -119,7 +120,7 @@ export const getStaticProps = async () => {
       type: 'asphaltMix',
     },
     {
-      title: 'Equivalente Areia',
+      title: t('sand.equivalent'),
       icon: SandEquivalentIcon,
       key: 'sandEquivalent',
       standard: 'DNER - ME 054/97',
@@ -127,7 +128,7 @@ export const getStaticProps = async () => {
       type: 'aggregates',
     },
     {
-      title: 'Estabilidade à Estocagem',
+      title: t('storage.stability'),
       icon: StorageStabilityIcon,
       key: 'storageStability',
       standard: 'DNER - ME 384/99',
@@ -135,7 +136,7 @@ export const getStaticProps = async () => {
       type: 'asphaltBinder',
     },
     {
-      title: 'Deflectômetro de Queda de Peso',
+      title: t('drop.weight.deflectometer'),
       icon: FwdIcon,
       key: 'fallingWeightDeflectometer',
       standard: 'DNER-PRO 273/96',
@@ -143,7 +144,7 @@ export const getStaticProps = async () => {
       type: 'asphaltMix',
     },
     {
-      title: 'Número de Fluxo',
+      title: t('flow.number'),
       icon: FlowNumberIcon,
       key: 'flowNumber',
       standard: 'DNIT 184/2018',
@@ -151,7 +152,7 @@ export const getStaticProps = async () => {
       type: 'asphaltMix',
     },
     {
-      title: 'Fluência e Recuperação Sob Tensões Múltiplas (MSCR)',
+      title: t('multiple.stress.creep.recovery'),
       icon: MSCRIcon,
       key: 'mscr',
       standard: 'DNIT 423/2020 - ME',
@@ -159,7 +160,7 @@ export const getStaticProps = async () => {
       type: 'asphaltMix',
     },
     {
-      title: 'Granulometria por Peneiramento',
+      title: t('sieving.granulometry'),
       icon: GranulometryIcon,
       key: 'granulometry-asphalt',
       standard: 'DNER - ME 083/98',
@@ -167,7 +168,7 @@ export const getStaticProps = async () => {
       type: 'aggregates',
     },
     {
-      title: 'Índice de Forma',
+      title: t('shape.index'),
       icon: ShapeIndexIcon,
       key: 'shapeIndex',
       standard: 'DNIT 424/2020 - ME',
@@ -175,7 +176,7 @@ export const getStaticProps = async () => {
       type: 'aggregates',
     },
     {
-      title: 'Massa Específica - Agregado Graúdo',
+      title: t('specific.mass-coarse.aggregate'),
       icon: SpecifyMassIcon,
       key: 'specifyMassBigAggregates',
       standard: 'DNIT 413/2021 - ME',
@@ -183,7 +184,7 @@ export const getStaticProps = async () => {
       type: 'aggregates',
     },
     {
-      title: 'Massa Específica - Agregado Miúdo',
+      title: t('specific.mass-fine.aggregate'),
       icon: SpecifyMassIcon,
       key: 'specifyMassSmallAggregates',
       standard: 'DNIT 411/2021 - ME',
@@ -191,7 +192,7 @@ export const getStaticProps = async () => {
       type: 'aggregates',
     },
     {
-      title: 'Módulo de Resiliência',
+      title: t('resilience.module'),
       icon: ResiliencyModuleIcon,
       key: 'resilienceModule',
       standard: 'DNIT 135/2018 - ME',
@@ -199,7 +200,7 @@ export const getStaticProps = async () => {
       type: 'asphaltMix',
     },
     {
-      title: 'Partículas Alongadas e Achatadas',
+      title: t('elongated.flattened.particles'),
       icon: ElongatedParticlesIcon,
       key: 'elongatedParticles',
       standard: 'DNIT 429/2020 - ME',
@@ -207,7 +208,7 @@ export const getStaticProps = async () => {
       type: 'aggregates',
     },
     {
-      title: 'Ponto de Amolecimento',
+      title: t('softening.point'),
       icon: SofteningPointIcon,
       key: 'softeningPoint',
       standard: 'DNIT 131/2010 - ME',
@@ -215,7 +216,7 @@ export const getStaticProps = async () => {
       type: 'asphaltBinder',
     },
     {
-      title: 'Ponto de Fulgor',
+      title: t('flash.point'),
       icon: FlashPointIcon,
       key: 'flashPoint',
       standard: 'DNER - ME 148/94',
@@ -223,7 +224,7 @@ export const getStaticProps = async () => {
       type: 'asphaltBinder',
     },
     {
-      title: 'Recuperação Elástica',
+      title: t('elastic.recovery'),
       icon: ElasticRecoveryIcon,
       key: 'elasticRecovery',
       standard: 'DNER 130/2010 - ME',
@@ -231,7 +232,7 @@ export const getStaticProps = async () => {
       type: 'asphaltBinder',
     },
     {
-      title: 'Resistência à Tração por Compressão Diametral - RT',
+      title: t('tensile.strength.by.diametral.compression-rt'),
       icon: RtcdIcon,
       key: 'rtcd',
       standard: 'DNIT 136/2018 - ME',
@@ -239,7 +240,7 @@ export const getStaticProps = async () => {
       type: 'asphaltMix',
     },
     {
-      title: 'Método Rice',
+      title: t('rice.method'),
       icon: RiceTestIcon,
       key: 'rice',
       standard: 'DNIT 136/2018 - ME',
@@ -247,7 +248,7 @@ export const getStaticProps = async () => {
       type: 'asphaltMix',
     },
     {
-      title: 'Viscosidade Rotacional',
+      title: t('rotational.viscosity'),
       icon: RotationalIcon,
       key: 'rotational',
       standard: 'DNIT 427/2020 - ME',
@@ -257,10 +258,10 @@ export const getStaticProps = async () => {
   ];
 
   const filterOptions: FilterOption[] = [
-    { key: 'all', title: 'Todos', isSelected: true },
-    { key: 'aggregates', title: 'Agregados', isSelected: false },
-    { key: 'asphaltMix', title: 'Misturas Asfálticas', isSelected: false },
-    { key: 'asphaltBinder', title: 'Ligante Asfáltico', isSelected: false },
+    { key: 'all', title: t('all'), isSelected: true },
+    { key: 'aggregates', title: t('aggregates'), isSelected: false },
+    { key: 'asphaltMix', title: t('asphalt.mixtures'), isSelected: false },
+    { key: 'asphaltBinder', title: t('asphalt.binder'), isSelected: false },
   ];
 
   return {

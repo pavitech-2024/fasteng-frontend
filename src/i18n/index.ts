@@ -40,7 +40,7 @@ import asphaltEssaysPTBR from './translations/asphalt/essays/ptbr.json';
 import asphaltEssaysENG from './translations/asphalt/essays/en.json';
 // rtcd
 import rtcdPTBR from './translations/asphalt/essays/rtcd/ptbr.json';
-import rtcdENG from './translations/asphalt/essays/rtcd/en.json'
+import rtcdENG from './translations/asphalt/essays/rtcd/en.json';
 // ddui
 import asphaltDduiPTBR from './translations/asphalt/essays/ddui/ptbr.json';
 import asphaltDduiENG from './translations/asphalt/essays/ddui/en.json';
@@ -94,6 +94,9 @@ import samplesENG from './translations/soils/samples/en.json';
 // essays
 import soilsEssaysPTBR from './translations/soils/essays/ptbr.json';
 import soilsEssaysENG from './translations/soils/essays/en.json';
+// standards
+import soilsStandardsPTBR from './translations/soils/standards/pt-br.json';
+import soilsStandardsENG from './translations/soils/standards/en.json';
 // cbr
 import cbrPTBR from './translations/soils/essays/cbr/ptbr.json';
 import cbrENG from './translations/soils/essays/cbr/en.json';
@@ -182,6 +185,7 @@ i18n.use(initReactI18next).init({
         ...sucsPTBR,
         ...soilsGranulometryPTBR,
         ...compressionPTBR,
+        ...soilsStandardsPTBR,
         /**@concrete */
         ...concreteEssaysPTBR,
         ...concreteMaterialsPTBR,
@@ -232,6 +236,7 @@ i18n.use(initReactI18next).init({
         ...sucsENG,
         ...soilsGranulometryENG,
         ...compressionENG,
+        ...soilsStandardsENG,
         /**@concrete */
         ...concreteEssaysENG,
         ...concreteMaterialsENG,
