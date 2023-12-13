@@ -4,6 +4,7 @@ import Api from '@/api';
 import { ABCPActions, ABCPData } from '@/stores/concrete/abcp/abcp.store';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import { AbcpLogo } from '@/assets';
+import { ConcreteGranulometryData } from '@/stores/concrete/granulometry/granulometry.store';
 // import { persist } from 'zustand/middleware';
 
 type EssaySelection_Results = {
@@ -11,24 +12,16 @@ type EssaySelection_Results = {
     _id: string;
     name: string;
   };
-  fineAggregate_granulometrys: {
-    material_id: string;
-    material_name: string;
-    essay_id: string;
-    essay_name: string;
-  }[];
-  coarseAggregate_granulometrys: {
-    material_id: string;
-    material_name: string;
-    essay_id: string;
-    essay_name: string;
-  }[];
-  coarseAggregate_unit_masses: {
-    material_id: string;
-    material_name: string;
-    essay_id: string;
-    essay_name: string;
-  }[];
+  fineAggregate: {
+    name: string;
+    _id: string;
+    granulometrys: ConcreteGranulometryData[]
+  };
+  coarseAggregate: {
+    name: string;
+    _id: string;
+    granulometrys: ConcreteGranulometryData[]
+  };
 };
 
 class ABCP_SERVICE implements IEssayService {
