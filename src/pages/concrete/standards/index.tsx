@@ -32,12 +32,7 @@ import { Standard } from '@/interfaces/common';
 import { t } from 'i18next';
 import { NextPage } from 'next';
 
-interface ConcreteStandardsProps {
-  standards: Standard[];
-  filterOptions: FilterOption[];
-}
-
-export const getStaticProps = async () => {
+const ConcreteStandards: NextPage = () => {
   const standards: Standard[] = [
     {
       title: t('abrasion.los.angeles'),
@@ -264,16 +259,6 @@ export const getStaticProps = async () => {
     { key: 'asphaltBinder', title: t('asphalt.binder'), isSelected: false },
   ];
 
-  return {
-    props: {
-      standards,
-      filterOptions,
-    },
-  };
+  return <StandardsTemplate standards={standards} filterOptions={filterOptions} />;
 };
-
-const ConcreteStandards: NextPage = ({ standards, filterOptions }: ConcreteStandardsProps) => (
-  <StandardsTemplate standards={standards} filterOptions={filterOptions} />
-);
-
 export default ConcreteStandards;

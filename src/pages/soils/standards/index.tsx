@@ -32,12 +32,7 @@ import { Standard } from '@/interfaces/common';
 import { t } from 'i18next';
 import { NextPage } from 'next';
 
-interface SoilsStandardsProps {
-  standards: Standard[];
-  filterOptions: FilterOption[];
-}
-
-export const getStaticProps = async () => {
+const SoilsStandards: NextPage = () => {
   const standards: Standard[] = [
     {
       title: t('abrasion.los.angeles'),
@@ -263,17 +258,7 @@ export const getStaticProps = async () => {
     { key: 'asphaltMix', title: t('asphalt.mixtures'), isSelected: false },
     { key: 'asphaltBinder', title: t('asphalt.binder'), isSelected: false },
   ];
-
-  return {
-    props: {
-      standards,
-      filterOptions,
-    },
-  };
+  return <StandardsTemplate standards={standards} filterOptions={filterOptions} />;
 };
-
-const SoilsStandards: NextPage = ({ standards, filterOptions }: SoilsStandardsProps) => (
-  <StandardsTemplate standards={standards} filterOptions={filterOptions} />
-);
 
 export default SoilsStandards;

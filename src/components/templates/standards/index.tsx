@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Filter, { FilterOption } from '@/components/molecules/buttons/filter';
 import { CardContainer, Card } from '@/components/atoms/containers/card';
 import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
+import { t } from 'i18next';
 
 interface StandardsTemplateProps {
   standards: Standard[];
@@ -43,7 +44,7 @@ export const StandardsTemplate = ({ standards, filterOptions }: StandardsTemplat
 
   return (
     <Container>
-      <Header title="Normas">{filterOptions && <Filter options={filterOptions} callback={filterCallback} />}</Header>
+      <Header title={t('standards')}>{filterOptions && <Filter options={filterOptions} callback={filterCallback} />}</Header>
       <CardContainer>
         {standardsFiltered?.map((standard) => {
           // aqui o componente Card axige novas props agora que ele se tornou adptável à página em que é chamado;

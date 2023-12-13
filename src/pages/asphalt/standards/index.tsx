@@ -33,10 +33,9 @@ import { t } from 'i18next';
 import { NextPage } from 'next';
 
 const AsphaltStandards: NextPage = () => {
-  // retirando do getStaticProps pq como existe tradução, a info não é estática
   const standards: Standard[] = [
     {
-      title: t('asphalt.essay.abrasion'),
+      title: t('abrasion.los.angeles'),
       icon: AbrasionIcon,
       key: 'abrasion',
       standard: 'DNER - ME 035/98',
