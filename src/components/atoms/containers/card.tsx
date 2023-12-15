@@ -1,5 +1,5 @@
 import { Container, Box, Typography } from '@mui/material';
-import { Essay, Standard } from '@/interfaces/common';
+import { Essay, Library, Standard } from '@/interfaces/common';
 import Image from 'next/image';
 import Link from 'next/link';
 import { PDFIcon } from '@/assets';
@@ -33,8 +33,8 @@ export const CardContainer = ({ children }: CardContainerProps) => {
   );
 };
 interface CardProps {
-  data: Essay | Standard;
-  type: 'essay' | 'standard';
+  data: Essay | Standard | Library;
+  type: 'essay' | 'standard' | 'library';
   hrefLink: string;
   target?: string;
 }
