@@ -3,8 +3,9 @@ import InputEndAdornment from "@/components/atoms/inputs/input-endAdornment";
 import { EssayPageProps } from "@/components/templates/essay"
 import ABCP_SERVICE from "@/services/concrete/dosages/abcp/abcp.service"
 import useABCPStore from "@/stores/concrete/abcp/abcp.store";
-import { Box, TextField } from "@mui/material";
+import { Box } from "@mui/material";
 import { useEffect } from "react";
+import { t } from 'i18next';
 
 const ABCP_InsertingParams = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
 
@@ -14,14 +15,14 @@ const ABCP_InsertingParams = ({ nextDisabled, setNextDisabled, abcp }: EssayPage
     {
       key: 'fck',
       value: insertParamsData.fck,
-      label: 'Selecione o FCK desejado',
+      label: t('abcp.step-4.fck'),
       type: 'number',
       adornment: '(Mpa)'
     },
     {
       key: 'reduction',
       value: insertParamsData.reduction,
-      label: 'Informe o abatimento desejado',
+      label: t('abcp.step-4.reduction'),
       type: 'number',
       adornment: '(mm)'
     },
@@ -31,17 +32,17 @@ const ABCP_InsertingParams = ({ nextDisabled, setNextDisabled, abcp }: EssayPage
     {
       key: 'a',
       value: 4,
-      label: 'Condição A - Sd = 4,0 Mpa',
+      label: t('abcp.step-4.condition-A'),
     },
     {
       key: 'b',
       value: 5.5,
-      label: 'Condição B - Sd = 5,5 Mpa',
+      label: t('abcp.step-4.condition-B'),
     },
     {
       key: 'c',
       value: 7,
-      label: 'Condição C - Sd = 7,0 Mpa',
+      label: t('abcp.step-4.condition-C'),
     },
   ];
 
@@ -69,7 +70,7 @@ const ABCP_InsertingParams = ({ nextDisabled, setNextDisabled, abcp }: EssayPage
         }}
       >
         <DropDown 
-          label={'Selecione a condição para a dosagem'} 
+          label={t('abcp.step-4.select-condition')} 
           sx={{ width: '100%', marginY: '20px' }}
           variant="standard"
           size="medium"

@@ -68,7 +68,7 @@ export type ABCPActions = {
   reset: ({ step }: setDataType) => void;
 };
 
-const stepVariant = { 0: 'generalData', 1: 'materialSelectionData', 2: 'essaySelectionData', 3: 'insertParamsData' };
+const stepVariant = { 0: 'generalData', 1: 'materialSelectionData', 2: 'essaySelectionData', 3: 'insertParamsData', 4: 'results' };
 
 type setDataType = { step: number; key?: string; value: unknown };
 

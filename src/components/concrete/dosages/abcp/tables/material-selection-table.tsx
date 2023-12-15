@@ -67,7 +67,7 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
           onRowSelectionModelChange={(rowSelection) => {
             setRowSelectionModel(rowSelection);
         
-            let updatedStates: {
+            const updatedStates: {
               fineAggregate: string | null;
               coarseAggregate: string | null;
               cement: number | null;

@@ -65,6 +65,11 @@ class ABCP_SERVICE implements IEssayService {
           break;
         case 3:
           await this.submitInsertParams(data as ABCPData['insertParamsData'])
+          await this.calculateResults(data as ABCPData)
+          break;
+        case 4:
+          await this.saveDosage(data as ABCPData);
+          break;
         default:
           throw t('errors.invalid-step');
       }
@@ -172,7 +177,7 @@ class ABCP_SERVICE implements IEssayService {
     { condition, fck, reduction }: ABCPData['insertParamsData']
   ): Promise<void> => {
     try {
-      
+      if (reduction < 40 || reduction > 100) throw t('errors.invalid-reduction');
     } catch (error) {
       throw error
     }
@@ -184,18 +189,46 @@ class ABCP_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: data.generalData,
         materialSelectionData: data.materialSelectionData,
-        essaySelectonData: data.essaySelectionData
+        essaySelectionData: data.essaySelectionData,
+        insertParamsData: data.insertParamsData
       });
 
       const { success, error, result } = response.data;
 
       if (success === false) throw error.name;
 
-      this.store_actions.setData({ step: 3, value: result });
+      this.store_actions.setData({ step: 4, value: result });
     } catch (error) {
       throw error;
     }
   };
+
+  /** @Results Methods for Results page (step === 4, page 5) */
+
+  // save dosage
+
+  saveDosage = async (data: ABCPData) => {
+    try {
+      const response = await Api.post(`${this.info.backend_path}/save-dosage`, {
+        generalData: {
+          ...data.generalData,
+          userId: this.userId,
+        },
+        materialSelectionData: data.materialSelectionData,
+        essaySelectionData: data.essaySelectionData,
+        insertParamsData: data.insertParamsData,
+        results: data.results,
+      });
+
+      const { success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+      // this.store_actions.reset( { step: null, value: null });
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default ABCP_SERVICE;
