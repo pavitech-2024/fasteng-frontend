@@ -58,6 +58,9 @@ class ABCP_SERVICE implements IEssayService {
         case 1:
           await this.submitMaterialSelection(data as ABCPData['materialSelectionData']);
           break;
+        case 2:
+          await this.submitEssaySelection(data as ABCPData['essaySelectionData'])
+          break;
         default:
           throw t('errors.invalid-step');
       }
@@ -119,6 +122,21 @@ class ABCP_SERVICE implements IEssayService {
   };
 
   /** @essaySelection Methods for essay-selection-data (step === 2, page 3) */
+
+  // send the selected essays to backend
+  submitEssaySelection = async (essaySelection: ABCPData['essaySelectionData']): Promise<void> => {
+    console.log("🚀 ~ file: abcp.service.ts:115 ~ ABCP_SERVICE ~ submitMaterialSelection= ~ essaySelection:", essaySelection)
+    try {
+      // const { coarseAggregate, fineAggregate, cement } = essaySelection;
+
+      // if (!coarseAggregate) throw t('errors.empty-coarseAggregates');
+      // if (!fineAggregate) throw t('errors.empty-fineAggregates');
+      // if (!cement) throw t('errors.empty-binder');
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
 
   // get essay from materials id
   getEssaysByMaterialId = async (
