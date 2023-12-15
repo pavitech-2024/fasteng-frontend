@@ -5,6 +5,8 @@ import { ABCPActions, ABCPData } from '@/stores/concrete/abcp/abcp.store';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import { AbcpLogo } from '@/assets';
 import { ConcreteGranulometryData } from '@/stores/concrete/granulometry/granulometry.store';
+import ABCP_Results from '@/components/concrete/dosages/abcp/step-5-dosage-resume';
+import MaterialSelectionTable from '@/components/concrete/dosages/abcp/tables/material-selection-table';
 // import { persist } from 'zustand/middleware';
 
 type EssaySelection_Results = {
@@ -61,6 +63,8 @@ class ABCP_SERVICE implements IEssayService {
         case 2:
           await this.submitEssaySelection(data as ABCPData['essaySelectionData'])
           break;
+        case 3:
+          await this.submitInsertParams(data as ABCPData['insertParamsData'])
         default:
           throw t('errors.invalid-step');
       }
@@ -157,6 +161,37 @@ class ABCP_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
       else return essays;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /** @insertParams Methods for insert-params-data (step === 3, page 4) */
+
+  submitInsertParams = async (
+    { condition, fck, reduction }: ABCPData['insertParamsData']
+  ): Promise<void> => {
+    try {
+      
+    } catch (error) {
+      throw error
+    }
+  }
+
+  // calculate results from abcp dosage
+  calculateResults = async (data: ABCPData): Promise<void> => {
+    try {
+      const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
+        generalData: data.generalData,
+        materialSelectionData: data.materialSelectionData,
+        essaySelectonData: data.essaySelectionData
+      });
+
+      const { success, error, result } = response.data;
+
+      if (success === false) throw error.name;
+
+      this.store_actions.setData({ step: 3, value: result });
     } catch (error) {
       throw error;
     }

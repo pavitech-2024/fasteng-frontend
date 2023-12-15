@@ -42,7 +42,17 @@ interface ABCP_InsertParamsData {
 }
 
 interface ABCP_Results {
-  
+  fcj: number;
+  ac: number;
+  ca: number; //  L/m³
+  cc: number;
+  cb: number;
+  careia: number;
+  //Graph
+  Xvalues: number[],
+  Yvalues: number[],
+  formula: string,
+  resistanceCurve: string,
 }
 
 export type ABCPData = {
@@ -98,6 +108,19 @@ const initialState = {
     fck: null,
     reduction: null,
   },
+  results: {
+    fcj: null,
+    ac: null,
+    ca: null, //  L/m³
+    cc: null,
+    cb: null,
+    careia: null,
+    //Graph
+    Xvalues: [],
+    Yvalues: [],
+    formula: null,
+    resistanceCurve: null,
+  }
 };
 
 const useABCPStore = create<ABCPData & ABCPActions>()(
