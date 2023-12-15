@@ -18,7 +18,8 @@ const Home: NextPage = () => {
 
   const Applications = [
     {
-      name: t('home.asphalt'),
+      name: 'teste',
+      // name: t('home.asphalt'),
       icon: <AsphaltIcon width="100%" height="100%" />,
       path: '/asphalt',
     },
