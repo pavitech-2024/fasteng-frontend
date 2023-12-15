@@ -111,14 +111,20 @@ interface Result_Container_NoChildren_Props {
   borderColor?: string;
   padding?: string;
 }
-export const Result_Container_NoChildren = ({ title, hideBorder, mt, borderColor, padding }: Result_Container_NoChildren_Props) => {
+export const Result_Container_NoChildren = ({
+  title,
+  hideBorder,
+  mt,
+  borderColor,
+  padding,
+}: Result_Container_NoChildren_Props) => {
   return (
     <Container
       sx={{
         border: hideBorder ? 'none' : '1px solid',
         transform: { mobile: 'translateY(-35px)', notebook: 'translateY(-15px)' },
         borderColor: borderColor ? borderColor : 'primaryTons.border',
-        padding: padding? padding : '10px',
+        padding: padding ? padding : '10px',
         zIndex: 2,
         mt: mt || '1.5rem',
         borderRadius: '10px',
@@ -129,4 +135,3 @@ export const Result_Container_NoChildren = ({ title, hideBorder, mt, borderColor
     </Container>
   );
 };
-

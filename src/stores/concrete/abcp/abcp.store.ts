@@ -27,7 +27,7 @@ interface ABCP_EssaySelectionData {
     _id: string;
     granulometry_id: string;
     specificMass: number;
-    unitMass_id: number
+    unitMass_id: number;
   };
   cement: {
     _id: string;
@@ -49,10 +49,10 @@ interface ABCP_Results {
   cb: number;
   careia: number;
   //Graph
-  Xvalues: number[],
-  Yvalues: number[],
-  formula: string,
-  resistanceCurve: string,
+  Xvalues: number[];
+  Yvalues: number[];
+  formula: string;
+  resistanceCurve: string;
 }
 
 export type ABCPData = {
@@ -60,7 +60,7 @@ export type ABCPData = {
   materialSelectionData: ABCP_MaterialSelection;
   essaySelectionData: ABCP_EssaySelectionData;
   insertParamsData: ABCP_InsertParamsData;
-  results: ABCP_Results
+  results: ABCP_Results;
 };
 
 export type ABCPActions = {
@@ -68,7 +68,13 @@ export type ABCPActions = {
   reset: ({ step }: setDataType) => void;
 };
 
-const stepVariant = { 0: 'generalData', 1: 'materialSelectionData', 2: 'essaySelectionData', 3: 'insertParamsData', 4: 'results' };
+const stepVariant = {
+  0: 'generalData',
+  1: 'materialSelectionData',
+  2: 'essaySelectionData',
+  3: 'insertParamsData',
+  4: 'results',
+};
 
 type setDataType = { step: number; key?: string; value: unknown };
 
@@ -96,11 +102,11 @@ const initialState = {
       _id: null,
       granulometry_id: null,
       specificMass: null,
-      unitMass_id: null
+      unitMass_id: null,
     },
     cement: {
       _id: null,
-      specificMass: null
+      specificMass: null,
     },
   },
   insertParamsData: {
@@ -120,7 +126,7 @@ const initialState = {
     Yvalues: [],
     formula: null,
     resistanceCurve: null,
-  }
+  },
 };
 
 const useABCPStore = create<ABCPData & ABCPActions>()(

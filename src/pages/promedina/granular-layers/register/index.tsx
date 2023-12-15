@@ -3,7 +3,9 @@ import useAuth from '@/contexts/auth';
 import GranularLayers_step1 from '@/components/promedina/granular-layers/view/general-data.pm.gl';
 import GranularLayers_step2 from '@/components/promedina/granular-layers/view/step2.pm.gl';
 import GranularLayers_step3 from '@/components/promedina/granular-layers/view/step3.pm.gl';
-import useGranularLayersStore, {GranularLayersActions} from '@/stores/promedina/granular-layers/granular-layers.store';
+import useGranularLayersStore, {
+  GranularLayersActions,
+} from '@/stores/promedina/granular-layers/granular-layers.store';
 import GRANULARLAYERS_SERVICE from '@/services/promedina/granular-layers/granular-layers.service';
 
 const GranularLayers = () => {
@@ -25,12 +27,14 @@ const GranularLayers = () => {
   granularLayers.store_actions = store as GranularLayersActions;
 
   const childrens = [
-    { step: 0, children: <GranularLayers_step1  />, data: store.generalData },
-    { step: 1, children: <GranularLayers_step2  />, data: store.step2Data },
+    { step: 0, children: <GranularLayers_step1 />, data: store.generalData },
+    { step: 1, children: <GranularLayers_step2 />, data: store.step2Data },
     { step: 2, children: <GranularLayers_step3 />, data: store.step3Data },
   ];
 
-  return <EssayTemplate essayInfo={granularLayers.info} nextCallback={granularLayers.handleNext} childrens={childrens} />;
+  return (
+    <EssayTemplate essayInfo={granularLayers.info} nextCallback={granularLayers.handleNext} childrens={childrens} />
+  );
 };
 
 export default GranularLayers;

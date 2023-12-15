@@ -92,8 +92,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
 
   //     return true;
   //   }) &&
-    nextDisabled &&
-    setNextDisabled(false);
+  nextDisabled && setNextDisabled(false);
 
   return (
     <>

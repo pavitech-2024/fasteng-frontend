@@ -17,12 +17,12 @@ type EssaySelection_Results = {
   fineAggregate: {
     name: string;
     _id: string;
-    granulometrys: ConcreteGranulometryData[]
+    granulometrys: ConcreteGranulometryData[];
   };
   coarseAggregate: {
     name: string;
     _id: string;
-    granulometrys: ConcreteGranulometryData[]
+    granulometrys: ConcreteGranulometryData[];
   };
 };
 
@@ -61,11 +61,11 @@ class ABCP_SERVICE implements IEssayService {
           await this.submitMaterialSelection(data as ABCPData['materialSelectionData']);
           break;
         case 2:
-          await this.submitEssaySelection(data as ABCPData['essaySelectionData'])
+          await this.submitEssaySelection(data as ABCPData['essaySelectionData']);
           break;
         case 3:
-          await this.submitInsertParams(data as ABCPData['insertParamsData'])
-          await this.calculateResults(data as ABCPData)
+          await this.submitInsertParams(data as ABCPData['insertParamsData']);
+          await this.calculateResults(data as ABCPData);
           break;
         case 4:
           await this.saveDosage(data as ABCPData);
@@ -117,7 +117,10 @@ class ABCP_SERVICE implements IEssayService {
 
   // send the selected materials to backend
   submitMaterialSelection = async (materialSelection: ABCPData['materialSelectionData']): Promise<void> => {
-    console.log("🚀 ~ file: abcp.service.ts:115 ~ ABCP_SERVICE ~ submitMaterialSelection= ~ materialSelection:", materialSelection)
+    console.log(
+      '🚀 ~ file: abcp.service.ts:115 ~ ABCP_SERVICE ~ submitMaterialSelection= ~ materialSelection:',
+      materialSelection
+    );
     try {
       const { coarseAggregate, fineAggregate, cement } = materialSelection;
 
@@ -134,10 +137,12 @@ class ABCP_SERVICE implements IEssayService {
 
   // send the selected essays to backend
   submitEssaySelection = async (essaySelection: ABCPData['essaySelectionData']): Promise<void> => {
-    console.log("🚀 ~ file: abcp.service.ts:115 ~ ABCP_SERVICE ~ submitMaterialSelection= ~ essaySelection:", essaySelection)
+    console.log(
+      '🚀 ~ file: abcp.service.ts:115 ~ ABCP_SERVICE ~ submitMaterialSelection= ~ essaySelection:',
+      essaySelection
+    );
     try {
       // const { coarseAggregate, fineAggregate, cement } = essaySelection;
-
       // if (!coarseAggregate) throw t('errors.empty-coarseAggregates');
       // if (!fineAggregate) throw t('errors.empty-fineAggregates');
       // if (!cement) throw t('errors.empty-binder');
@@ -152,7 +157,7 @@ class ABCP_SERVICE implements IEssayService {
     userId: string,
     { cement, coarseAggregate, fineAggregate }: ABCPData['materialSelectionData']
   ): Promise<EssaySelection_Results> => {
-    console.log("🚀 ~ file: abcp.service.ts:135 ~ ABCP_SERVICE ~ userId:", userId)
+    console.log('🚀 ~ file: abcp.service.ts:135 ~ ABCP_SERVICE ~ userId:', userId);
     try {
       const response = await Api.post(`${this.info.backend_path}/essay-selection`, {
         cement_id: cement,
@@ -162,7 +167,7 @@ class ABCP_SERVICE implements IEssayService {
 
       const { essays, success, error } = response.data;
 
-      console.log("aqui", essays);
+      console.log('aqui', essays);
 
       if (success === false) throw error.name;
       else return essays;
@@ -173,15 +178,13 @@ class ABCP_SERVICE implements IEssayService {
 
   /** @insertParams Methods for insert-params-data (step === 3, page 4) */
 
-  submitInsertParams = async (
-    { condition, fck, reduction }: ABCPData['insertParamsData']
-  ): Promise<void> => {
+  submitInsertParams = async ({ condition, fck, reduction }: ABCPData['insertParamsData']): Promise<void> => {
     try {
       if (reduction < 40 || reduction > 100) throw t('errors.invalid-reduction');
     } catch (error) {
-      throw error
+      throw error;
     }
-  }
+  };
 
   // calculate results from abcp dosage
   calculateResults = async (data: ABCPData): Promise<void> => {
@@ -190,7 +193,7 @@ class ABCP_SERVICE implements IEssayService {
         generalData: data.generalData,
         materialSelectionData: data.materialSelectionData,
         essaySelectionData: data.essaySelectionData,
-        insertParamsData: data.insertParamsData
+        insertParamsData: data.insertParamsData,
       });
 
       const { success, error, result } = response.data;
@@ -228,7 +231,7 @@ class ABCP_SERVICE implements IEssayService {
     } catch (error) {
       throw error;
     }
-  }
+  };
 }
 
 export default ABCP_SERVICE;

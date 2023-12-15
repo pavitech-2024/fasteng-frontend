@@ -121,9 +121,7 @@ class ConcreteGranulometry_SERVICE implements IEssayService {
       const sum = Math.round(100 * (retained + step2Data.bottom)) / 100;
 
       if (sum > step2Data.material_mass) {
-        throw (
-          `${t('errors.sieves-sum-not-equal-to-material-mass')}\nRetida + Fundos: ${sum}g.`
-        );
+        throw `${t('errors.sieves-sum-not-equal-to-material-mass')}\nRetida + Fundos: ${sum}g.`;
       }
     } catch (error) {
       throw error;

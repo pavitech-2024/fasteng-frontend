@@ -32,15 +32,15 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
     try {
       switch (step) {
         case 0:
-          true
+          true;
           //await this.submitGeneralData(data as GranularLayersData['generalData']);
           break;
         case 1:
-          true
+          true;
           //await this.submitStep2Data(data as GranularLayersData['step2Data']);
           break;
         case 2:
-          true
+          true;
           //await this.submitStep3Data(data as GranularLayersData['step3Data']);
           //await this.saveEssay(data as GranularLayersData);
           break;

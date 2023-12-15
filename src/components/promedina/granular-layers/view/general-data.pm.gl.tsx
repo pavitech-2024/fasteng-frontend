@@ -33,7 +33,7 @@ const GranularLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     nextDisabled &&
     setNextDisabled(false);
 
-    useEffect(() => nextDisabled && setNextDisabled(false), [nextDisabled, setNextDisabled]);
+  useEffect(() => nextDisabled && setNextDisabled(false), [nextDisabled, setNextDisabled]);
 
   return (
     <>
@@ -53,7 +53,7 @@ const GranularLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
               gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
               gap: '5px 20px',
               marginBottom: '10px',
-              marginTop: '-20px'
+              marginTop: '-20px',
             }}
           >
             {inputs.map((input) => {

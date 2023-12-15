@@ -79,7 +79,7 @@
   "home.pm.binderAsphaltConcrete": "Ligante e concreto asfálticos",
   "pm.binderAsphaltConcrete.name": "Nome",
   "pm.binderAsphaltConcrete.zone": "Local",
-  "pm.binderAsphaltConcrete.cityState" : "Município/Estado",
+  "pm.binderAsphaltConcrete.cityState": "Município/Estado",
   "pm.binderAsphaltConcrete.identification": "Identificação",
   "pm.binderAsphaltConcrete.initial.stake.meters": "Estaca/Metros Inicial",
   "pm.binderAsphaltConcrete.final.stake.meters": "Estaca/Metros Final",
@@ -129,5 +129,4 @@
   "pm.brookfield.viscosity": "Viscosidade Brookfield",
   "promedina.essays.binderAsphaltConcrete": "Ligante e concreto asfálticos",
   "pm.diametral.compression.fatigue.curve": "Curva de Fadiga à compressão diametral"
-
 }

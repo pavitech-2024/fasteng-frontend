@@ -21,7 +21,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
       async () => {
         try {
           const essays = await abcp.getEssaysByMaterialId(user._id, materialSelectionData);
-          console.log("ensaios", essays);
+          console.log('ensaios', essays);
           setEssays(essays);
           setLoading(false);
         } catch (error) {
@@ -42,9 +42,9 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
   const coarseAggregate_Inputs = [];
   const binder_Inputs = [];
 
-  if (essays) fineAggregate_Inputs.push(essays.fineAggregate)
-  if (essays) coarseAggregate_Inputs.push(essays.coarseAggregate)
-  if (essays) binder_Inputs.push(essays.cement)
+  if (essays) fineAggregate_Inputs.push(essays.fineAggregate);
+  if (essays) coarseAggregate_Inputs.push(essays.coarseAggregate);
+  if (essays) binder_Inputs.push(essays.cement);
 
   function hasNullValue(obj: any): boolean {
     for (const key in obj) {
@@ -59,9 +59,9 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
     }
     return false;
   }
-  
+
   const hasNull = hasNullValue(essaySelectionData);
-  
+
   // Se hasNull for false, setNextDisabled para false; caso contrário, setNextDisabled para true.
   setNextDisabled(hasNull);
 
@@ -70,7 +70,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
       {loading ? (
         <Loading />
       ) : (
-        <> 
+        <>
           <Box
             sx={{
               display: 'grid',
@@ -86,9 +86,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
               }}
             >
               <Box>
-                <Typography>
-                  {`${essays.fineAggregate.name} - ${t('abcp.step-3.fine-aggregate')}`}
-                </Typography>
+                <Typography>{`${essays.fineAggregate.name} - ${t('abcp.step-3.fine-aggregate')}`}</Typography>
                 <Box
                   sx={{
                     display: 'grid',
@@ -102,9 +100,13 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                     label={t('abcp.step-3.fine-specific-mass')}
                     value={essaySelectionData.fineAggregate.specificMass}
                     onChange={(e) => {
-                      const prevData = {...essaySelectionData.fineAggregate, specificMass: Number(e.target.value), _id: materialSelectionData.fineAggregate}
+                      const prevData = {
+                        ...essaySelectionData.fineAggregate,
+                        specificMass: Number(e.target.value),
+                        _id: materialSelectionData.fineAggregate,
+                      };
                       setData({ step: 2, key: `fineAggregate`, value: prevData });
-                    } } 
+                    }}
                   />
                   <DropDown
                     variant="standard"
@@ -114,13 +116,14 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                       const { generalData, results, _id } = essay;
                       return {
                         label: `${generalData.name} - (Diâmetro máximo: ${results.nominal_diameter}mm)`,
-                        value: _id
+                        value: _id,
                       };
                     })}
                     callback={(value) => {
-                      const prevData = {...essaySelectionData.fineAggregate, granulometry_id: value}
+                      const prevData = { ...essaySelectionData.fineAggregate, granulometry_id: value };
                       setData({ step: 2, key: 'fineAggregate', value: prevData });
-                    } } />
+                    }}
+                  />
                 </Box>
               </Box>
             </Box>
@@ -140,9 +143,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
               }}
             >
               <Box>
-                <Typography>
-                  {`${essays.coarseAggregate.name} - ${t('abcp.step-3.coarse-aggregate')}`}
-                </Typography>
+                <Typography>{`${essays.coarseAggregate.name} - ${t('abcp.step-3.coarse-aggregate')}`}</Typography>
                 <Box
                   sx={{
                     display: 'grid',
@@ -156,9 +157,13 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                     label={t('abcp.step-3.coarse-specific-mass')}
                     value={essaySelectionData.coarseAggregate.specificMass}
                     onChange={(e) => {
-                      const prevData = {...essaySelectionData.coarseAggregate, specificMass: Number(e.target.value), _id: materialSelectionData.coarseAggregate}
-                      setData({ step: 2, key: "coarseAggregate", value: prevData });
-                    } } 
+                      const prevData = {
+                        ...essaySelectionData.coarseAggregate,
+                        specificMass: Number(e.target.value),
+                        _id: materialSelectionData.coarseAggregate,
+                      };
+                      setData({ step: 2, key: 'coarseAggregate', value: prevData });
+                    }}
                   />
                   <DropDown
                     variant="standard"
@@ -168,13 +173,13 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                       const { generalData, results, _id } = essay;
                       return {
                         label: `${generalData.name} - (Diâmetro máximo: ${results.nominal_diameter}mm)`,
-                        value: _id
+                        value: _id,
                       };
                     })}
                     callback={(value) => {
-                      const prevData = {...essaySelectionData.coarseAggregate, granulometry_id: value}
+                      const prevData = { ...essaySelectionData.coarseAggregate, granulometry_id: value };
                       setData({ step: 2, key: 'coarseAggregate', value: prevData });
-                    } } 
+                    }}
                   />
                   <DropDown
                     variant="standard"
@@ -185,13 +190,13 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                       return {
                         key: _id,
                         label: `${generalData.experimentName} - (Diâmetro máximo: ${result?.result}mm)`,
-                        value: _id
+                        value: _id,
                       };
                     })}
                     callback={(value) => {
-                      const prevData = {...essaySelectionData.coarseAggregate, unitMass_id: value}
+                      const prevData = { ...essaySelectionData.coarseAggregate, unitMass_id: value };
                       setData({ step: 2, key: 'coarseAggregate', value: prevData });
-                    } } 
+                    }}
                   />
                 </Box>
               </Box>
@@ -211,9 +216,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                 }}
               >
                 <Box>
-                  <Typography>
-                    {`${essays.cement.name} - ${t('abcp.step-3.cement')}`}
-                  </Typography>
+                  <Typography>{`${essays.cement.name} - ${t('abcp.step-3.cement')}`}</Typography>
                   <Box
                     sx={{
                       display: 'grid',
@@ -227,9 +230,13 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                       label={t('abcp.step-3.cement-specific-mass')}
                       value={essaySelectionData.cement.specificMass}
                       onChange={(e) => {
-                        const prevData = {...essaySelectionData.cement, specificMass: Number(e.target.value), _id: essays.cement._id}
-                        setData({ step: 2, key: "cement", value: prevData });
-                      } } 
+                        const prevData = {
+                          ...essaySelectionData.cement,
+                          specificMass: Number(e.target.value),
+                          _id: essays.cement._id,
+                        };
+                        setData({ step: 2, key: 'cement', value: prevData });
+                      }}
                     />
                   </Box>
                 </Box>

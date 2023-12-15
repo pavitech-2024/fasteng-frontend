@@ -66,7 +66,6 @@ const Promedina: NextPage = () => {
         </Box>
 
         <LoginImage alt="Promedina" src={LogoBlack} style={{ margin: '1vh 0' }} />
-
       </Box>
       <Box
         sx={{

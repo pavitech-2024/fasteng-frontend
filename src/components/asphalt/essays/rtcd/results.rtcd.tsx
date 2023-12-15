@@ -35,7 +35,9 @@ const Rtcd_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
     });
     data.average = Number(Number(results.average).toFixed(2));
     data.acceptanceCondition =
-      data.average > minimumRtValue ? t('rtcd.results.acceptance-condition-true') : t('rtcd.results.acceptance-condition-false');
+      data.average > minimumRtValue
+        ? t('rtcd.results.acceptance-condition-true')
+        : t('rtcd.results.acceptance-condition-false');
   }
 
   const rows = data.everyRtsKgf.map((value, index) => ({
@@ -82,8 +84,16 @@ const Rtcd_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
               alignItems: 'center',
             }}
           >
-            <Result_Card label={t('rtcd.results.minimum-rt')} value={`${minimumRtValue.toString().replace('.', ',')}`} unity={'Mpa'} />
-            <Result_Card label={t('rtcd.results.average')} value={data.average.toString().replace('.', ',')} unity={'MPa'} />
+            <Result_Card
+              label={t('rtcd.results.minimum-rt')}
+              value={`${minimumRtValue.toString().replace('.', ',')}`}
+              unity={'Mpa'}
+            />
+            <Result_Card
+              label={t('rtcd.results.average')}
+              value={data.average.toString().replace('.', ',')}
+              unity={'MPa'}
+            />
             <Result_Card label={t('rtcd.results.acceptance-condition')} value={data.acceptanceCondition} unity={''} />
           </Box>
         </Box>

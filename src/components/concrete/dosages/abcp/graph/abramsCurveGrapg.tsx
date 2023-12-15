@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Chart } from 'react-google-charts';
 import Loading from '@/components/molecules/loading';
@@ -12,44 +11,46 @@ export default function AbramsCurvGraph({ result }) {
 
   const mountData = () => {
     const { Xvalues, Yvalues, ac } = result;
-    const data: (number | string | { type: string; role: string })[][] = [['Relação A/c', 'Fcj', { type: 'string', role: 'style' }, { type: 'string', role: 'tooltip' }]];
-  
+    const data: (number | string | { type: string; role: string })[][] = [
+      ['Relação A/c', 'Fcj', { type: 'string', role: 'style' }, { type: 'string', role: 'tooltip' }],
+    ];
+
     Xvalues.forEach((elem, index) => {
       const numericX = parseFloat(String(Xvalues[index]));
       const numericY = parseFloat(String(Yvalues[index]));
-  
+
       if (ac === Number(elem)) {
         data.push([
           numericX,
           numericY,
-          "point { size: 6; shape-type: circle; fill-color: #a52714; }",
+          'point { size: 6; shape-type: circle; fill-color: #a52714; }',
           `Ponto escolhido para achar A/c [ ${numericX}, ${numericY} ].`,
         ]);
       } else {
         data.push([numericX, numericY, null, null]);
       }
     });
-  
+
     return data;
   };
 
   const options = {
     title: `Equação de Referência: ${result.formula}`,
-    subtitle:`A/c: ${result.ac}  /  Fcj: ${result.fcj}`,
+    subtitle: `A/c: ${result.ac}  /  Fcj: ${result.fcj}`,
     legend: 'none',
     curveType: 'function',
     pointSize: 7,
     dataOpacity: 0.6,
     chartArea: { width: '80%', height: '80%' },
     crosshair: {
-        trigger: 'both',
+      trigger: 'both',
     },
 
     vAxis: {
-        title: "Fcj",
+      title: 'Fcj',
     },
     hAxis: {
-        title: "Relação Água/Cimento",
+      title: 'Relação Água/Cimento',
     },
   };
 

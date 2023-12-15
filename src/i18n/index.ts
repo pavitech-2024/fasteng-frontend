@@ -43,7 +43,7 @@ import asphaltEssaysPTBR from './translations/asphalt/essays/ptbr.json';
 import asphaltEssaysENG from './translations/asphalt/essays/en.json';
 // rtcd
 import rtcdPTBR from './translations/asphalt/essays/rtcd/ptbr.json';
-import rtcdENG from './translations/asphalt/essays/rtcd/en.json'
+import rtcdENG from './translations/asphalt/essays/rtcd/en.json';
 // ddui
 import asphaltDduiPTBR from './translations/asphalt/essays/ddui/ptbr.json';
 import asphaltDduiENG from './translations/asphalt/essays/ddui/en.json';

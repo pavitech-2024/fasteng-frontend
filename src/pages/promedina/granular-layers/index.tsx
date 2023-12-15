@@ -20,7 +20,6 @@ const GranularLayers: NextPage = () => {
       step: 2,
       description: t('welcome.step.granular-layers.view.2'),
     },
-
   ];
 
   const stepperDataRegister: StepperData[] = [
@@ -145,7 +144,7 @@ const GranularLayers: NextPage = () => {
               >
                 {t('welcome.how it works')}
               </Typography>
-              <Typography sx={{ marginBottom: "1rem" }}>{t('pm.granular.works.register')}</Typography>
+              <Typography sx={{ marginBottom: '1rem' }}>{t('pm.granular.works.register')}</Typography>
               <Box
                 sx={{
                   position: 'absolute',
@@ -185,7 +184,7 @@ const GranularLayers: NextPage = () => {
                 sx={{
                   display: modalOpen ? 'flex' : { mobile: 'none', notebook: 'flex' },
                   transition: '0.5s ease-out',
-                  marginBottom: '1rem'
+                  marginBottom: '1rem',
                 }}
               >
                 <Stepper stepperData={stepperDataView} variant="multicolor" />

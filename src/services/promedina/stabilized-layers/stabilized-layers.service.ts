@@ -1,7 +1,10 @@
 import { t } from 'i18next';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import Api from '@/api';
-import { StabilizedLayersActions, StabilizedLayersData } from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
+import {
+  StabilizedLayersActions,
+  StabilizedLayersData,
+} from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 import { UnitMassIcon } from '@/assets';
 
 class STABILIZEDLAYERS_SERVICE implements IEssayService {
@@ -32,15 +35,15 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
     try {
       switch (step) {
         case 0:
-          true
+          true;
           //await this.submitGeneralData(data as StabilizedLayersData['generalData']);
           break;
         case 1:
-          true
+          true;
           //await this.submitStep2Data(data as StabilizedLayersData['step2Data']);
           break;
         case 2:
-          true
+          true;
           //await this.submitStep3Data(data as StabilizedLayersData['step3Data']);
           //await this.saveEssay(data as StabilizedLayersData);
           break;

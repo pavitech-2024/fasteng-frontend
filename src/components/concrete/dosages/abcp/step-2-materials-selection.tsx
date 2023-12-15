@@ -38,7 +38,6 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
       }
     );
   }, []);
-  
 
   const aggregateRows = materials
     .map(({ _id, name, type }) => ({
@@ -97,10 +96,9 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
 
   useEffect(() => {
     if (!Object.values(materialSelectionData).some((data) => data === null)) {
-      setNextDisabled(false)
+      setNextDisabled(false);
     }
-  }, [materialSelectionData])
-  
+  }, [materialSelectionData]);
 
   // !materialSelectionData.cement &&
   // !materialSelectionData.coarseAggregate &&
@@ -121,10 +119,10 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
     }
     return false;
   }
-  
+
   const hasNull = hasNullValue(materialSelectionData);
-  console.log("🚀 ~ file: step-3-essays-selection.tsx:65 ~ hasNull:", hasNull);
-  
+  console.log('🚀 ~ file: step-3-essays-selection.tsx:65 ~ hasNull:', hasNull);
+
   // Se hasNull for false, setNextDisabled para false; caso contrário, setNextDisabled para true.
   setNextDisabled(hasNull);
 
@@ -144,11 +142,7 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
             columns={aggregateColumns}
             header={t('concrete.materials.aggregates')}
           />
-          <MaterialSelectionTable 
-            rows={binderRows} 
-            columns={binderColumns} 
-            header={t('concrete.materials.binders')} 
-          />
+          <MaterialSelectionTable rows={binderRows} columns={binderColumns} header={t('concrete.materials.binders')} />
         </Box>
       )}
     </>

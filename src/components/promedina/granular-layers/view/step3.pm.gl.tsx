@@ -80,7 +80,7 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     }) &&
     nextDisabled &&
     setNextDisabled(false);
-    
+
   return (
     <>
       <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'}>

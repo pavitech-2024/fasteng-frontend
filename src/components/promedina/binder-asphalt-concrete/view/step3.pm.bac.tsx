@@ -86,7 +86,7 @@ const BinderAsphaltConcrete_step3 = ({ nextDisabled, setNextDisabled }: EssayPag
   inputsPavimentData.every(({ required }) => {
     if (!required) return true;
 
-   // if (value === null) return false;
+    // if (value === null) return false;
 
     //if (typeof value === 'string' && value.trim() === '') return false;
 

@@ -1,14 +1,13 @@
-import DropDown from "@/components/atoms/inputs/dropDown";
-import InputEndAdornment from "@/components/atoms/inputs/input-endAdornment";
-import { EssayPageProps } from "@/components/templates/essay"
-import ABCP_SERVICE from "@/services/concrete/dosages/abcp/abcp.service"
-import useABCPStore from "@/stores/concrete/abcp/abcp.store";
-import { Box } from "@mui/material";
-import { useEffect } from "react";
+import DropDown from '@/components/atoms/inputs/dropDown';
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { EssayPageProps } from '@/components/templates/essay';
+import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
+import useABCPStore from '@/stores/concrete/abcp/abcp.store';
+import { Box } from '@mui/material';
+import { useEffect } from 'react';
 import { t } from 'i18next';
 
 const ABCP_InsertingParams = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
-
   const { insertParamsData, setData } = useABCPStore();
 
   const inputs = [
@@ -17,14 +16,14 @@ const ABCP_InsertingParams = ({ nextDisabled, setNextDisabled, abcp }: EssayPage
       value: insertParamsData.fck,
       label: t('abcp.step-4.fck'),
       type: 'number',
-      adornment: '(Mpa)'
+      adornment: '(Mpa)',
     },
     {
       key: 'reduction',
       value: insertParamsData.reduction,
       label: t('abcp.step-4.reduction'),
       type: 'number',
-      adornment: '(mm)'
+      adornment: '(mm)',
     },
   ];
 
@@ -47,10 +46,10 @@ const ABCP_InsertingParams = ({ nextDisabled, setNextDisabled, abcp }: EssayPage
   ];
 
   useEffect(() => {
-    if (Object.values(insertParamsData).some(value => value === null )) {
-      setNextDisabled(true)
+    if (Object.values(insertParamsData).some((value) => value === null)) {
+      setNextDisabled(true);
     } else {
-      setNextDisabled(false)
+      setNextDisabled(false);
     }
   }, [insertParamsData]);
 
@@ -69,8 +68,8 @@ const ABCP_InsertingParams = ({ nextDisabled, setNextDisabled, abcp }: EssayPage
           borderRadius: '10px',
         }}
       >
-        <DropDown 
-          label={t('abcp.step-4.select-condition')} 
+        <DropDown
+          label={t('abcp.step-4.select-condition')}
           sx={{ width: '100%', marginY: '20px' }}
           variant="standard"
           size="medium"
@@ -78,11 +77,11 @@ const ABCP_InsertingParams = ({ nextDisabled, setNextDisabled, abcp }: EssayPage
             const { value, label } = opt;
             return {
               label,
-              value
-            }
-          })} 
+              value,
+            };
+          })}
           callback={(value) => {
-            setData({ step: 3, key: 'condition', value})
+            setData({ step: 3, key: 'condition', value });
           }}
         />
 
@@ -103,7 +102,7 @@ const ABCP_InsertingParams = ({ nextDisabled, setNextDisabled, abcp }: EssayPage
         ))}
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default ABCP_InsertingParams
+export default ABCP_InsertingParams;
