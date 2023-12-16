@@ -10,10 +10,12 @@ const loadingAnimation = keyframes`
 
 const StyledParagraph = styled.p`
   color: gray;
-  font-family: 'Roboto, sans-serif';
-  font-size: 22px;
+  font-size: 20px;
   opacity: 1;
   font-weight: bold;
+  animation: ${loadingAnimation} 2s linear 0s infinite normal;
+`;
+const StyledImg = styled.p`
   animation: ${loadingAnimation} 2s linear 0s infinite normal;
 `;
 
@@ -21,4 +23,10 @@ export const LoadingText = ({ children }: { children: React.ReactNode }) => (
   <StyledParagraph>
     {children}
   </StyledParagraph>
+);
+
+export const LoadingImg = ({ children }: { children: React.ReactNode }) => (
+  <StyledImg>
+    {children}
+  </StyledImg>
 );

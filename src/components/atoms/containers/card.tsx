@@ -98,7 +98,7 @@ export const Card = ({ data, type, hrefLink, target }: CardProps) => {
           >
             {data.title}
           </Typography>
-          {type === 'standard' || 'library' && (
+          {type === 'standard' || type === 'library' && (
             <>
               <PDFIcon
                 sx={{

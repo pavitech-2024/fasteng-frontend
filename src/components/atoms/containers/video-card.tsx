@@ -14,7 +14,7 @@ interface VideoCardProps {
   poster: string;
 }
 
-export const CardContainer = ({ children }: CardContainerProps) => {
+export const VideoCardContainer = ({ children }: CardContainerProps) => {
   return (
     <Container
       sx={{
@@ -76,7 +76,7 @@ export const VideoCard = ({ data }: VideoCardProps) => {
           alignItems: 'center',
           justifyContent: 'center',
           position: 'relative',
-          padding: '5px',
+          padding: '7px',
           cursor: 'pointer',
         }}
       >

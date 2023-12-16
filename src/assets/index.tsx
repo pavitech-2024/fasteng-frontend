@@ -38,7 +38,6 @@ import SpecifyMassIcon from './common/essays/SpecifyMass.png';
 //others
 import MaterialsIcon from './common/materials.svg';
 import EssayIcon from './common/essay.svg';
-import NotFoundContentGif from './common/Maquininha.gif';
 
 // standard paste
 import InducedMoistureDamageIcon from './asphalt/essays/InducedMoistureDamage.png';
@@ -129,7 +128,6 @@ export {
   SpecifyMassIcon,
   GranulometryIcon,
   InducedMoistureDamageIcon,
-  NotFoundContentGif,
   
   //others
   EssayIcon,
