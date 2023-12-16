@@ -155,5 +155,6 @@ export type Library = {
   link: string;
   type?: string;
   icon?: StaticImageData;
+  thumb?: string;
 }
 //
