@@ -35,8 +35,12 @@ const Login: NextPage = () => {
     } catch (error) {}
   };
 
-  const navigateToCreators = () => {
-    Router.push('/creators');
+  const navigateToCreators = async () => {
+    try {
+      await Router.push('/creators');
+    } catch (error) {
+      console.error('Error navigating to /creators:', error);
+    }
   };
 
   return (
