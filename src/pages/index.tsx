@@ -16,8 +16,10 @@ import { MainButton as Button } from '@/components/styles/global';
 
 //mui
 import { TextField, Box, Container, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
 
 const Login: NextPage = () => {
+  const Router = useRouter();
   const { signIn } = useAuth();
 
   const [email, setEmail] = useState<string>('');
@@ -31,6 +33,10 @@ const Login: NextPage = () => {
         error: t('login.toast error'),
       });
     } catch (error) {}
+  };
+
+  const navigateToCreators = () => {
+    Router.push('/creators');
   };
 
   return (
@@ -106,7 +112,7 @@ const Login: NextPage = () => {
               }}
             >
               <Button text="Assine" linkTo="https://fastengapp.com.br/" />
-              <AboutButton />
+              <AboutButton text="Saiba mais" onClick={navigateToCreators} />
             </Box>
           </Container>
         </Box>

@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server';
 export async function middleware(request: NextRequest) {
   const token: string | undefined = request.cookies.get('fasteng.token')?.value;
 
-  if (request.nextUrl.pathname !== '/' && !token) {
+  if (request.nextUrl.pathname !== '/' && request.nextUrl.pathname !== '/creators' && !token) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 }

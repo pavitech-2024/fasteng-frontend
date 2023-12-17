@@ -1,6 +1,11 @@
 import { Button } from '@mui/material';
+import { NextPage } from 'next';
 
-export const AboutButton = () => (
+interface AboutButtonProps {
+  text: string;
+  onClick?: () => void;
+}
+export const AboutButton:NextPage<AboutButtonProps> = ({ text, onClick }: AboutButtonProps) => (
   <Button
     variant="contained"
     sx={{
@@ -25,7 +30,8 @@ export const AboutButton = () => (
         width: '112px',
       },
     }}
+    onClick={onClick}
   >
-    Saiba mais
+    {text}
   </Button>
 );
