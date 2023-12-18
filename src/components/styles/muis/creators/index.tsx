@@ -2,12 +2,14 @@ import { Button } from '@mui/material';
 interface ButtonProps {
   text: string;
   linkTo?: string;
+  target?: string;
 }
 
 export const CreatorsPageButton = (props: ButtonProps) => (
   <Button
     href={props.linkTo}
     variant="contained"
+    target={props.target}
     sx={{
       color: 'primaryTons.white',
       bgcolor: 'primary.main',

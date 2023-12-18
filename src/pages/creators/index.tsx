@@ -1,5 +1,5 @@
 import CreatorCard from "@/components/atoms/containers/creators-card";
-import { Container } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 
 
 const CreatorsPage = () => {
@@ -22,14 +22,14 @@ const CreatorsPage = () => {
 
   return (
     <Container>
-      <div style={{ padding: '5vh 0 0 3vw' }}>
-        <h1>Idealizadores</h1>
-      </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+      <Box style={{ padding: '8vh 0 0 3vw' }}>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: '10px', fontSize: '3vh' }}>Idealizadores</Typography>
+      </Box>
+      <Box style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', padding: '2vh 0' }}>
         {creatorData.map((creator) => (
           <CreatorCard key={creator.name} {...creator} />
         ))}
-      </div>
+      </Box>
     </Container>
   );
 };

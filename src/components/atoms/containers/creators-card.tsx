@@ -33,7 +33,7 @@ const CreatorCard = ({ imageSrc, name, description, lattesLink }) => {
             overflow: 'hidden',
             minWidth: '200px',
             borderRadius: '50%',
-            width: '20vw',
+            width: '15vw',
             margin: '0 auto',
         }}
       >
