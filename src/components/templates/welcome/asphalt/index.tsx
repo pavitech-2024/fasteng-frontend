@@ -21,7 +21,7 @@ interface WelcomeTemplateProps {
   stepperData: StepperData[];
 }
 
-const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProps) => {
+const WelcomeTemplateAsphalt = ({ welcomeData, stepperData, icon }: WelcomeTemplateProps) => {
   const app = useRouter().pathname.split('/')[1];
   const title = t(`welcome.${app}`);
 
@@ -249,4 +249,4 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
   );
 };
 
-export default WelcomeTemplate;
+export default WelcomeTemplateAsphalt;

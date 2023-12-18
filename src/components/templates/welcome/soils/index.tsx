@@ -21,19 +21,11 @@ interface WelcomeTemplateProps {
   stepperData: StepperData[];
 }
 
-const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProps) => {
+const WelcomeTemplateSoils = ({ welcomeData, stepperData, icon }: WelcomeTemplateProps) => {
   const app = useRouter().pathname.split('/')[1];
   const title = t(`welcome.${app}`);
 
   const descriptionData = [
-    {
-      name: t('navbar.marshall'),
-      description: t('description.marshall'),
-    },
-    {
-      name: t('navbar.superpave'),
-      description: t('description.superpave'),
-    },
     {
       name: t('navbar.standards'),
       description: t('description.standards'),
@@ -249,4 +241,4 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
   );
 };
 
-export default WelcomeTemplate;
+export default WelcomeTemplateSoils;
