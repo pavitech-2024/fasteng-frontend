@@ -12,8 +12,6 @@ import { CardApp } from '@/components/styles/muis/home';
 
 //Styleds
 import { LoginImage } from '@/components/styles/styleds/login';
-import { CardPromedina } from '@/components/atoms/containers/card-promedina';
-import PromedinaProvIcon from '@/components/atoms/icons/promedinaProvIcon';
 
 const Home: NextPage = () => {
   const Router = useRouter();
@@ -33,14 +31,6 @@ const Home: NextPage = () => {
       name: t('home.concrete'),
       icon: <ConcreteIcon width="100%" height="100%" />,
       path: '/concrete',
-    },
-  ];
-
-  const Promedina = [
-    {
-      name: 'Pro-Medina',
-      icon: <PromedinaProvIcon />,
-      path: '/promedina',
     },
   ];
 
@@ -151,7 +141,6 @@ const Home: NextPage = () => {
         {Applications.map((app) => (
           <CardApp key={app.name} element={app} onClick={() => Router.push(app.path)} />
         ))}
-        <CardPromedina element={Promedina[0]} onClick={() => Router.push(Promedina[0].path)} />
       </Box>
     </Container>
   );
