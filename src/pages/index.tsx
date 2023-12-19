@@ -16,10 +16,8 @@ import { MainButton as Button } from '@/components/styles/global';
 
 //mui
 import { TextField, Box, Container, Typography } from '@mui/material';
-import { useRouter } from 'next/router';
 
 const Login: NextPage = () => {
-  const Router = useRouter();
   const { signIn } = useAuth();
 
   const [email, setEmail] = useState<string>('');
@@ -33,14 +31,6 @@ const Login: NextPage = () => {
         error: t('login.toast error'),
       });
     } catch (error) {}
-  };
-
-  const navigateToCreators = async () => {
-    try {
-      await Router.push('/creators');
-    } catch (error) {
-      console.error('Error navigating to /creators:', error);
-    }
   };
 
   return (
@@ -116,7 +106,7 @@ const Login: NextPage = () => {
               }}
             >
               <Button text="Assine" linkTo="https://fastengapp.com.br/" />
-              <AboutButton text="Saiba mais" onClick={navigateToCreators} />
+              <AboutButton text="Saiba mais" href="/creators" />
             </Box>
           </Container>
         </Box>

@@ -1,13 +1,19 @@
 import { Button } from '@mui/material';
 import { NextPage } from 'next';
+import React from 'react';
 
 interface AboutButtonProps {
   text: string;
-  onClick?: () => void;
+  href?: string; 
 }
-export const AboutButton:NextPage<AboutButtonProps> = ({ text, onClick }: AboutButtonProps) => (
+
+export const AboutButton: NextPage<AboutButtonProps> = ({ text, href }: AboutButtonProps) => (
   <Button
     variant="contained"
+    component="a"
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
     sx={{
       color: 'primary.main',
       bgcolor: 'primaryTons.mainGray',
@@ -30,7 +36,6 @@ export const AboutButton:NextPage<AboutButtonProps> = ({ text, onClick }: AboutB
         width: '112px',
       },
     }}
-    onClick={onClick}
   >
     {text}
   </Button>
