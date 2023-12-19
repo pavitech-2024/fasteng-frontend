@@ -100,12 +100,6 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
     }
   }, [materialSelectionData]);
 
-  // !materialSelectionData.cement &&
-  // !materialSelectionData.coarseAggregate &&
-  // !materialSelectionData.fineAggregate &&
-  // nextDisabled &&
-  // setNextDisabled(false);
-
   function hasNullValue(obj: any): boolean {
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
@@ -121,9 +115,6 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
   }
 
   const hasNull = hasNullValue(materialSelectionData);
-  console.log('🚀 ~ file: step-3-essays-selection.tsx:65 ~ hasNull:', hasNull);
-
-  // Se hasNull for false, setNextDisabled para false; caso contrário, setNextDisabled para true.
   setNextDisabled(hasNull);
 
   return (
