@@ -22,8 +22,8 @@ const CreatorsPage = () => {
 
   return (
     <Container>
-      <Box style={{ padding: '8vh 0 0 3vw' }}>
-        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: '10px', fontSize: '3vh' }}>Idealizadores</Typography>
+      <Box style={{ padding: '4vh 0 0' }}>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: '10px', fontSize: '4vh', display: 'flex', justifyContent: 'center' }}>Idealizadores</Typography>
       </Box>
       <Box style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', padding: '2vh 0' }}>
         {creatorData.map((creator) => (

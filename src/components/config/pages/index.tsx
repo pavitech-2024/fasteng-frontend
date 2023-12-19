@@ -39,7 +39,7 @@ const Pages = (props: PagesProps) => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [Router.pathname]);
 
-    if (Router.pathname === '/') return children;
+    if (Router.pathname === '/' || Router.pathname === '/creators') return children;
 
     if (user && Router.pathname !== '/')
       return (
