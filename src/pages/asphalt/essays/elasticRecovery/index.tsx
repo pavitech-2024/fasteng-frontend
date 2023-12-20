@@ -4,7 +4,9 @@ import ElasticRecovery_Results from '@/components/asphalt/essays/elasticRecovery
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import ElasticRecovery_SERVICE from '@/services/asphalt/essays/elasticRecovery/elasticRecovery.service';
-import useElasticRecoveryStore, { ElasticRecoveryActions } from '@/stores/asphalt/elasticRecovery/elasticRecovery.store';
+import useElasticRecoveryStore, {
+  ElasticRecoveryActions,
+} from '@/stores/asphalt/elasticRecovery/elasticRecovery.store';
 
 const ElasticRecovery = () => {
   // start an instance of the service
@@ -31,7 +33,9 @@ const ElasticRecovery = () => {
     { step: 2, children: <ElasticRecovery_Results />, data: store },
   ];
 
-  return <EssayTemplate essayInfo={elasticRecovery.info} childrens={childrens} nextCallback={elasticRecovery.handleNext} />;
+  return (
+    <EssayTemplate essayInfo={elasticRecovery.info} childrens={childrens} nextCallback={elasticRecovery.handleNext} />
+  );
 };
 
 export default ElasticRecovery;

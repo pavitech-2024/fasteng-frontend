@@ -291,7 +291,7 @@ const Rtcd_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
           groupId: 'results',
           headerName: 'Resultados',
           headerAlign: 'center',
-          children: [{ field: 'pressReading' }, { field: 'rtMpa' }, { field: 'rtKgf' }, ],
+          children: [{ field: 'pressReading' }, { field: 'rtMpa' }, { field: 'rtKgf' }],
         },
       ]}
       columns={columns.map((column) => ({

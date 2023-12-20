@@ -1,0 +1,16 @@
+{
+  "name": "Name",
+  "type": "Type",
+  "experiment-name": "Experiment Name",
+  "operator": "Operator",
+  "calculist": "Calculist",
+  "observations": "Observations",
+  "description": "Description",
+  "laboratory": "Laboratory",
+  "essays": "Essays",
+  "materials": "Materials",
+  "dosages": "Dosages",
+  "loading.samples.pending": "Loading materials",
+  "loading.samples.success": "Materials loaded",
+  "loading.samples.error": "Error loading materials"
+}

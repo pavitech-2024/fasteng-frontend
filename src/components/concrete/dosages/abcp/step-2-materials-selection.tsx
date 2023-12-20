@@ -3,13 +3,13 @@ import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
-import useABCPStore from '@/stores/concrete/abcp/abcp.store';
+import useABCPStore, { ABCPData } from '@/stores/concrete/abcp/abcp.store';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import MaterialSelectionTable from './tables/material-selection-table';
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef, useGridApiContext, useGridApiRef } from '@mui/x-data-grid';
 
 const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -94,11 +94,28 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
     },
   ];
 
-  !materialSelectionData.cement &&
-    !materialSelectionData.coarseAggregate &&
-    !materialSelectionData.fineAggregate &&
-    nextDisabled &&
-    setNextDisabled(false);
+  useEffect(() => {
+    if (!Object.values(materialSelectionData).some((data) => data === null)) {
+      setNextDisabled(false);
+    }
+  }, [materialSelectionData]);
+
+  function hasNullValue(obj: any): boolean {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        if (obj[key] === null || obj[key] === undefined) {
+          return true;
+        }
+        if (typeof obj[key] === 'object' && hasNullValue(obj[key])) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  const hasNull = hasNullValue(materialSelectionData);
+  setNextDisabled(hasNull);
 
   return (
     <>

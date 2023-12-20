@@ -17,28 +17,50 @@ interface ABCP_MaterialSelection {
   cement: string;
 }
 
-interface ABCP_EssaySelection {
+interface ABCP_EssaySelectionData {
   fineAggregate: {
     _id: string;
-    specific_mass: number;
+    specificMass: number;
     granulometry_id: string;
   };
   coarseAggregate: {
     _id: string;
-    specific_mass: number;
     granulometry_id: string;
-    unit_mass_id: string;
+    specificMass: number;
+    unitMass_id: number;
   };
   cement: {
     _id: string;
-    specific_mass: number;
+    specificMass: number;
   };
+}
+
+interface ABCP_InsertParamsData {
+  condition: number;
+  fck: number;
+  reduction: number;
+}
+
+interface ABCP_Results {
+  fcj: number;
+  ac: number;
+  ca: number; //  L/m³
+  cc: number;
+  cb: number;
+  careia: number;
+  //Graph
+  Xvalues: number[];
+  Yvalues: number[];
+  formula: string;
+  resistanceCurve: string;
 }
 
 export type ABCPData = {
   generalData: GeneralData;
   materialSelectionData: ABCP_MaterialSelection;
-  essaySelectionData: ABCP_EssaySelection;
+  essaySelectionData: ABCP_EssaySelectionData;
+  insertParamsData: ABCP_InsertParamsData;
+  results: ABCP_Results;
 };
 
 export type ABCPActions = {
@@ -46,7 +68,13 @@ export type ABCPActions = {
   reset: ({ step }: setDataType) => void;
 };
 
-const stepVariant = { 0: 'generalData', 1: 'materialSelectionData', 2: 'essaySelectionData' };
+const stepVariant = {
+  0: 'generalData',
+  1: 'materialSelectionData',
+  2: 'essaySelectionData',
+  3: 'insertParamsData',
+  4: 'results',
+};
 
 type setDataType = { step: number; key?: string; value: unknown };
 
@@ -65,9 +93,39 @@ const initialState = {
     cement: null,
   },
   essaySelectionData: {
-    fineAggregate: null,
-    coarseAggregate: null,
-    cement: null,
+    fineAggregate: {
+      _id: null,
+      specificMass: null,
+      granulometry_id: null,
+    },
+    coarseAggregate: {
+      _id: null,
+      granulometry_id: null,
+      specificMass: null,
+      unitMass_id: null,
+    },
+    cement: {
+      _id: null,
+      specificMass: null,
+    },
+  },
+  insertParamsData: {
+    condition: null,
+    fck: null,
+    reduction: null,
+  },
+  results: {
+    fcj: null,
+    ac: null,
+    ca: null, //  L/m³
+    cc: null,
+    cb: null,
+    careia: null,
+    //Graph
+    Xvalues: [],
+    Yvalues: [],
+    formula: null,
+    resistanceCurve: null,
   },
 };
 

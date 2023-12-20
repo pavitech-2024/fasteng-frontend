@@ -227,7 +227,7 @@ const ConcreteGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPage
         }}
       >
         <InputEndAdornment
-          label={t('granulometry-concrete.material_mass')}
+          label={t('granulometry.material_mass')}
           value={data.material_mass}
           onChange={(e) => {
             if (e.target.value === null) return;
