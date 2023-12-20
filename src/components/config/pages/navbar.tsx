@@ -144,7 +144,7 @@ export default function Navbar({ open, app }: NavbarProps) {
       type: 'double',
       sub: [
         { name: t('navbar.new'), link: '/concrete/dosages/abcp', icon: <AddIcon sx={IconStyle} /> },
-        { name: t('navbar.consult'), link: '/concrete/dosages/abcp/consult', icon: <SearchIcon sx={IconStyle} /> },
+        { name: t('navbar.consult'), link: '/concrete/dosages/consult', icon: <SearchIcon sx={IconStyle} /> },
       ],
     },
     {
