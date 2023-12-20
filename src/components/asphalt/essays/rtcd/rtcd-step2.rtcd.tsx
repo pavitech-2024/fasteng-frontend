@@ -77,12 +77,12 @@ const Rtcd_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               onChange={(e) => {
                 const inputValue = e.target.value;
 
-                const isNumeric = !isNaN(parseFloat(inputValue)) && inputValue !== "";
+                const isNumeric = !isNaN(parseFloat(inputValue)) && inputValue !== '';
                 // Adicione exceções para 'sampleOrigin' e 'pressSpecification'
                 const isSpecialField = input.key === 'sampleOrigin' || input.key === 'pressSpecification';
-            
+
                 let formattedValue = inputValue;
-            
+
                 if (isNumeric) {
                   formattedValue = Number(inputValue).toString();
                 } else if (isSpecialField) {
@@ -92,7 +92,7 @@ const Rtcd_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
                   // Se não for numérico e não é um campo especial, defina o valor como vazio ('')
                   formattedValue = '';
                 }
-            
+
                 setData({ step: 1, key: input.key, value: formattedValue });
               }}
               adornment={input.key === 'sampleVoidVolume' ? '%' : ''}

@@ -14,6 +14,11 @@
   "topbar.hrb": "Road Classification - HRB",
   "topbar.sucs": "Unified Classification - SUCS",
   "topbar.granulometry": "Granulometry",
+  "topbar.compression": "Compression",
+  "topbar.granular-layers": "Granular Layers",
+  "topbar.view": "Sample Register",
+  "topbar.stabilized-layers": "Stabilized Layers",
+  "topbar.binder-asphalt-concrete": "Binder and Concrete Asphalt",
   "topbar.viscosityrotational": "Viscosity Rotational",
   "topbar.ddui": "Determination of Induced Moisture Damage",
   "topbar.softening-point": "Softening Point",
@@ -21,11 +26,11 @@
   "topbar.granulometry-asphalt": "Granulometry",
   "topbar.granulometry-concrete": "Granulometry",
   "topbar.granulometry-soils": "Granulometry",
-  "topbar.compression": "Compression",
   "topbar.abcp": "ABCP Dosage",
   "topbar.sandEquivalent": "Sand Equivalent",
   "topbar.specifyMass": "Specify Mass",
   "topbar.flashPoint": "Falsh Point",
   "topbar.ductility": "Ductility",
-  "topbar.angularity": "Angularity"
+  "topbar.angularity": "Angularity",
+  "topbar.standards": "Standards"
 }

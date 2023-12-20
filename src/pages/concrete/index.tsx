@@ -22,8 +22,8 @@ const Concrete: NextPage = () => {
     {
       name: t('navbar.abcp'),
       icon: <AbcpIcon width="35px" height="40px" />,
-      description: t('description.abcp'),
-      path: '/concrete/abcp',
+      description: 'Descrição sobre materiais',
+      path: '/concrete/dosages/abcp',
     },
     {
       name: t('navbar.standards'),

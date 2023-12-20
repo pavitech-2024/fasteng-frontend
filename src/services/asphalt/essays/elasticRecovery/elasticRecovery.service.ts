@@ -97,13 +97,15 @@ class ElasticRecovery_SERVICE implements IEssayService {
   /** @ElasticRecovery Methods for ElasticRecovery page (step === 1, page 2) */
 
   // verify inputs from ElasticRecovery page (step === 1, page 2)
-  submitElasticRecoveryCalcData = async (elasticRecoveryCalc: ElasticRecoveryData['elasticRecoveryCalc']): Promise<void> => {
+  submitElasticRecoveryCalcData = async (
+    elasticRecoveryCalc: ElasticRecoveryData['elasticRecoveryCalc']
+  ): Promise<void> => {
     try {
       const { lengths } = elasticRecoveryCalc;
       lengths.forEach((row) => {
-        if ( Number(row.stretching_length) < 0 ) throw t('errors.negative-stretching-length');
-        if ( Number(row.juxtaposition_length) < 0 ) throw t('errors.negative-juxtaposition-length');
-      })
+        if (Number(row.stretching_length) < 0) throw t('errors.negative-stretching-length');
+        if (Number(row.juxtaposition_length) < 0) throw t('errors.negative-juxtaposition-length');
+      });
     } catch (error) {
       throw error;
     }

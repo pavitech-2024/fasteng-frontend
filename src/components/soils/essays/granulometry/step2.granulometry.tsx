@@ -107,7 +107,6 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
                       e.passant = passant;
                     }
                   });
-                  // newRows[sieve_index + index].retained = retained;
                 }
               });
 
@@ -177,12 +176,6 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
 
                   console.log(accumulative_retained);
 
-                  // const retained =
-                  // Math.round(
-                  //   100 *
-                  //     (mass !== 0 ? ((100 - row.passant) / 100) * mass - accumulative_retained : 0)
-                  // ) / 100;
-
                   const passant =
                     Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
 
@@ -194,7 +187,6 @@ const Granulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =
                       e.passant = passant;
                     }
                   });
-                  // newRows[sieve_index + index].retained = retained;
                 }
               });
 

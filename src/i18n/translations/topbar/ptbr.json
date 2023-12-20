@@ -14,6 +14,12 @@
   "topbar.hrb": "Classificação Rodoviária - HRB",
   "topbar.sucs": "Classificação Unificada - SUCS",
   "topbar.granulometry": "Granulometria",
+  "topbar.compression": "Compactação",
+  "topbar.granular-layers": "Camadas Granulares",
+  "topbar.view": "Cadastro de amostras",
+  "topbar.stabilized-layers": "Camadas Estabilizadas",
+  "topbar.register": "Cadastro de novas amostras",
+  "topbar.binder-asphalt-concrete": "Ligante e concreto asfálticos",
   "topbar.viscosityrotational": "Viscosidade Rotacional",
   "topbar.ddui": "Determinação de Dano por Umidade Induzida",
   "topbar.softening-point": "Ponto de amolecimento",
@@ -22,7 +28,6 @@
   "topbar.granulometry-asphalt": "Granulometria",
   "topbar.granulometry-concrete": "Granulometria",
   "topbar.granulometry-soils": "Granulometria",
-  "topbar.compression": "Compactação",
   "topbar.abcp": "Dosagem ABCP",
   "topbar.sandEquivalent": "Equivalente Areia",
   "topbar.specifyMass": "Massa Específica",
@@ -30,5 +35,6 @@
   "topbar.ductility": "Ductilidade",
   "topbar.angularity": "Angularidade",
   "topbar.shapeIndex": "Índice de Forma",
-  "topbar.elongatedParticles": "Partículas Alongadas"
+  "topbar.elongatedParticles": "Partículas Alongadas",
+  "topbar.standards": "Normas"
 }
