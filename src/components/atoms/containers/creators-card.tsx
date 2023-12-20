@@ -55,7 +55,7 @@ const CreatorCard = ({ imageSrc, name, description, lattesLink }) => {
         <Typography variant="body2" sx={{ mb: '15px' }}>
           {description}
         </Typography>
-        <CreatorsPageButton text={'➜ Currículo Lattes'} linkTo={lattesLink} />
+        <CreatorsPageButton text={'➜ Currículo Lattes'} linkTo={lattesLink} target='_blank' />
       </Box>
     </Box>
   );
