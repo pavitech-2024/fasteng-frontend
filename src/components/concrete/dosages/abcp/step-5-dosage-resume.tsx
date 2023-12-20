@@ -14,7 +14,7 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & 
   console.log('🚀 ~ file: step-5-dosage-resume.tsx:13 ~ abcp_results:', abcp_results);
 
   const conditionValue = insertParamsData.condition;
-  const tolerance = 0.0001; // ou qualquer valor adequado à sua precisão
+  const tolerance = 0.0001;
 
   const conditionLabel =
     Math.abs(conditionValue - 4) < tolerance

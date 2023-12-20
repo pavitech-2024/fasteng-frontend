@@ -1,21 +1,24 @@
-import { AbcpIcon } from "@/assets";
-import Header from "@/components/organisms/header";
-import useAuth from "@/contexts/auth";
-import { AcpDosageData } from "@/interfaces/concrete/abcp";
-import abcpDosageService from "@/services/concrete/dosages/abcp/abcp-consult.service";
-import { Box, Container } from "@mui/material";
-import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import { AbcpIcon, AbcpLogo, DeleteIcon, NextIcon } from '@/assets';
+import Header from '@/components/organisms/header';
+import useAuth from '@/contexts/auth';
+import { AcpDosageData } from '@/interfaces/concrete/abcp';
+import abcpDosageService from '@/services/concrete/dosages/abcp/abcp-consult.service';
+import { Box, Container, IconButton } from '@mui/material';
+import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 const AbcpDosageConsult = () => {
   const [openModal, setOpenModal] = useState(false);
   const [dosages, setDosages] = useState<AcpDosageData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
 
   const { user } = useAuth();
 
   useEffect(() => {
-    console.log("🚀 ~ file: index.tsx:13 ~ AbcpDosageConsult ~ dosages:", dosages)
+    console.log('🚀 ~ file: index.tsx:13 ~ AbcpDosageConsult ~ dosages:', dosages);
   }, [dosages]);
 
   useEffect(() => {
@@ -53,59 +56,72 @@ const AbcpDosageConsult = () => {
       });
   };
 
+  const handleVisualizeDosage = (id: string) => {
+    router.push(`/concrete/dosages/consult/data/${id}`);
+  }
+
   const columns: GridColDef[] = [
     {
       field: 'name',
-      headerName: 'Nome'
+      headerName: 'Nome',
     },
-    // {
-    //   field: 'progress',
-    //   headerName: 'Progresso'
-    // },
+    {
+      field: 'progress',
+      headerName: 'Progresso'
+    },
     {
       field: 'start',
-      headerName: 'Início'
+      headerName: 'Início',
     },
     {
       field: 'finish',
-      headerName: 'Fim'
+      headerName: 'Fim',
+    },
+    {
+      field: 'options',
+      headerName: 'Opções',
+      renderCell: (params) => (
+        <>
+          <IconButton
+            aria-label="Excluir"
+            onClick={() => handleDeleteDosage(params.row.id)}
+          >
+            <DeleteIcon />
+          </IconButton>
+
+          <IconButton
+            aria-label="Visualizar"
+            onClick={() => handleVisualizeDosage(params.row.id)}
+          >
+            <NextIcon />
+          </IconButton>
+        </>
+      ),
     },
   ];
 
-  const rows = dosages;
+  const rows = dosages.map((row, index) => ({
+    name: row.generalData.name,
+    progress: '---',
+    start: '---',
+    finish: '---',
+    id: row._id,
+  }));
 
   useEffect(() => {
-    console.log("🚀 ~ file: index.tsx:13 ~ AbcpDosageConsult ~ rows:", rows)
-  }, [rows])
+    console.log('🚀 ~ file: index.tsx:13 ~ AbcpDosageConsult ~ rows:', rows);
+  }, [rows]);
 
   return (
     <Container>
       {loading ? (
         <p>Carregando...</p>
       ) : (
-        // <MaterialsTemplate
-        //   materials={materials}
-        //   types={types}
-        //   title={t('concrete.materials.title')}
-        //   handleOpenModal={() => setOpenModal(true)}
-        //   handleDeleteMaterial={handleDeleteMaterial}
-        //   modal={
-        //     <NewConcreteMaterialModal
-        //       openModal={openModal}
-        //       handleCloseModal={() => setOpenModal(false)}
-        //       updateMaterials={addNewMaterial}
-        //       materials={materials}
-        //     />
-        //   }
-        // />
         <Container>
-          <Box sx={{ marginTop: '3rem' }}>
-            <Header
-            title={'Dosagens ABCP'}
-            image={AbcpIcon}
-          />
+          <Box sx={{ margin: '3rem' }}>
+            <Header title={'Dosagens ABCP'} image={AbcpLogo} />
           </Box>
-          
+
           <Box
             sx={{
               width: '100%',
@@ -113,7 +129,6 @@ const AbcpDosageConsult = () => {
               alignItems: 'flex-start',
               justifyContent: 'center',
               pt: { mobile: 0, notebook: '0.5vh' },
-              marginTop: '3rem'
             }}
           >
             <Box
@@ -128,12 +143,8 @@ const AbcpDosageConsult = () => {
                 marginBottom: '1rem',
               }}
             >
-              <DataGrid 
-                rows={rows !== null ? rows.map((row, index) => (
-                  { 
-                    name: row.generalData.name, 
-                    id: index 
-                  })) : []} 
+              <DataGrid
+                rows={rows}
                 columns={columns.map((column) => ({
                   ...column,
                   disableColumnMenu: true,
