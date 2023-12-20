@@ -27,22 +27,14 @@ const WelcomeTemplateAsphalt = ({ welcomeData, stepperData, icon }: WelcomeTempl
 
   const descriptionData = [
     {
-      name: t('navbar.marshall'),
-      description: t('description.marshall'),
-    },
-    {
-      name: t('navbar.superpave'),
-      description: t('description.superpave'),
-    },
-    {
       name: t('navbar.standards'),
       description: t('description.standards'),
     },
     {
       name: t('navbar.library'),
       description: t('description.library'),
-    }
-  ]
+    },
+  ];
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -196,6 +188,38 @@ const WelcomeTemplateAsphalt = ({ welcomeData, stepperData, icon }: WelcomeTempl
                 >
                   • {t('navbar.essays')}:<span style={{ marginRight: '0.3rem' }}> {t('description.essays')}</span>
                   <DescriptionModal title={t('navbar.essays')} description={t('description.long.essays')} />
+                </Typography>
+                <Typography
+                  color="primary"
+                  sx={{
+                    fontWeight: 700,
+                    textAlign: 'justify',
+                    fontSize: '1rem',
+                    mb: '16px',
+                    span: {
+                      color: 'primaryTons.mainGray',
+                      fontWeight: 500,
+                    },
+                  }}
+                >
+                  • {t('navbar.marshall')}:<span style={{ marginRight: '0.3rem' }}> {t('description.marshall')}</span>
+                  <DescriptionModal title={t('navbar.marshall')} description={t('description.long.marshall')} />
+                </Typography>
+                <Typography
+                  color="primary"
+                  sx={{
+                    fontWeight: 700,
+                    textAlign: 'justify',
+                    fontSize: '1rem',
+                    mb: '16px',
+                    span: {
+                      color: 'primaryTons.mainGray',
+                      fontWeight: 500,
+                    },
+                  }}
+                >
+                  • {t('navbar.superpave')}:<span style={{ marginRight: '0.3rem' }}> {t('description.superpave')}</span>
+                  <DescriptionModal title={t('navbar.superpave')} description={t('description.long.superpave')} />
                 </Typography>
                 {descriptionData.map((element: any) => (
                   <Typography

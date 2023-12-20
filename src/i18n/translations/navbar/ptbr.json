@@ -12,14 +12,16 @@
   "navbar.library": "Biblioteca",
   "navbar.report": "Reportar",
   "description.read.more": "Ler mais",
-  "description.materials": "Organize os materiais que serão utilizados nos seus ensaios cadastrando todas as informações essenciais sobre cada um em um único local.",
+  "description.materials": "Organize os materiais que serão utilizados nos seus ensaios cadastrando-os aqui no Fasteng.",
   "description.essays": "Com os materiais cadastrados, selecione o tipo de ensaio desejado e registre os resultados na plataforma para uma geração automática de análises e resultados necessários.",
   "description.long.essays": "Com os materiais em mão, hora de realizar os ensaios! Escolha o ensaio realizado e deposite os resultados na plataforma para gerar seus resultados e análises necessárias automaticamente.",
-  "description.marshall": "O método de dosagem Marshall é o mais difundido e utilizado no mundo e visa obter os resultados para o teor de ligante ótimo da mistura asfáltica.",
-  "description.superpave": "Esse método avançado considera fatores como temperatura e tráfego, proporcionando resultados precisos para o teor ótimo de ligante na mistura asfáltica.",
+  "description.marshall": "Com parâmetros da dosagem, insira na plataforma pela metodologia Marshall para determinar o teor ótimo de ligante asfáltico.",
+  "description.long.marshall": "Com os parâmetros necessários para a dosagem em mãos, insira os dados na plataforma solicitados pela metodologia da dosagem Marshall, e obtenha os resultados para o teor de ligante ótimo da mistura asfáltica.",
+  "description.superpave": "Com dados da metodologia Superpave, insira na plataforma para determinar o teor ideal de ligante asfáltico da mistura asfáltica, considerando fatores como temperatura e tráfego.",
+  "description.long.superpave": "De posse dos dados necessários de acordo com a metodologia da dosagem  Superpave, insira as informações na plataforma. Esse método avançado considera fatores como temperatura e tráfego, proporcionando resultados precisos para o teor ótimo de ligante na mistura asfáltica.",
   "description.standards": "Verifique as normativas para cada ensaio e veja a forma correta de realizar os ensaios em laboratório e analisar os resultados obtidos.",
   "description.library": "Ficou com alguma dúvida? Veja na nossa biblioteca materiais complementares sobre os ensaios",
-  "description.long.materials": "Organize seus ensaios de forma eficiente! Registre os materiais que serão utilizados, armazenando todas as informações necessárias sobre cada item em um único local. Facilite seu trabalho, mantendo todos os detalhes importantes centralizados para uma gestão mais eficaz.",
-  "description.long.abcp": "Com posse dos dados necessários para a dosagem ABCP, insira os valores na plataforma para determinar as proporções ideais de materiais, como cimento,agregados, água e aditivos, na produção de concreto, na qual essa metodologia de dosagem visa garantir que a mistura atenda aos requisitos específicos de resistência, durabilidade e trabalhabilidade, resultando em um concreto de alta qualidade para diversas aplicações.",
-  "description.abcp": "Essa dosagem visa garantir que a mistura atenda aos requisitos específicos de resistência, durabilidade e trabalhabilidade."
+  "description.long.materials": "Organize seus ensaios de forma eficiente! Registre os materiais que serão utilizados, armazenando todas as informações necessárias  sobre cada item em um único local. Facilite seu trabalho, mantendo todos os  detalhes importantes centralizados para uma gestão mais eficaz.",
+  "description.long.abcp": "Com posse dos dados necessários para a dosagem ABCP, insira os valores na  plataforma para determinar as proporções ideais de materiais, como cimento, agregados, água e aditivos, na produção de concreto, na qual essa metodologia de dosagem visa garantir que a mistura atenda aos requisitos específicos de resistência, durabilidade e trabalhabilidade, resultando em um concreto de alta qualidade para diversas aplicações.",
+  "description.abcp": "Com dados da dosagem ABCP, insira na plataforma para determinar as proporções ideais de cimento, agregados, água e aditivos, garantindo qualidade e atendimento a requisitos específicos de concreto."
 }
