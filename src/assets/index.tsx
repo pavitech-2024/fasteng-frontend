@@ -91,6 +91,8 @@ import UnitMassIcon from './concrete/essays/UnitMass.png';
 import AbcpIcon from './concrete/dosages/abcp.svg';
 import AbcpLogo from './concrete/dosages/ABCP-Logo.png';
 
+// creators
+import Article from './creators/Article.png'
 // export all assets
 export {
   // materialui
@@ -185,4 +187,7 @@ export {
   //doasges
   AbcpIcon,
   AbcpLogo,
+
+  // creators
+  Article,
 };
