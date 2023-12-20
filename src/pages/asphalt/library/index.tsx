@@ -1,8 +1,8 @@
-import Article from '../../../assets/asphalt/library/article.png';
 import { Library } from '@/interfaces/common';
 import { FilterOption } from '@/components/molecules/buttons/filter';
 import { LibraryTemplate } from '@/components/templates/library';
 import { NextPage } from 'next';
+import { Article } from '@/assets';
 
 const AsphaltLibrary: NextPage = () => {
   const asphaltData: Library[] = [
