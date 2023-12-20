@@ -181,7 +181,7 @@ export {
   CoarseAggregateIcon,
   SandIncreaseIcon,
   UnitMassIcon,
-  //doasges
+  //dosages
   AbcpIcon,
   AbcpLogo,
 };

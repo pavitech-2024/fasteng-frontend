@@ -23,5 +23,6 @@
   "granulometry-concrete.fineness-module": "Módulo finura",
   "granulometry-concrete.cc": "CC",
   "granulometry-concrete.cnu": "CNU",
-  "granulometry-concrete.error": "Erro"
+  "granulometry-concrete.error": "Erro",
+  "granulometry-concrete.test": "Teste"
 }

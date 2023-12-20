@@ -14,7 +14,7 @@ const UnitMass_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => 
     materials: [{ name: generalData.material.name, type: generalData.material.type }],
   };
 
-  const unitMassResult = Number(result.result).toFixed(2);
+  const unitMassResult = Number(result.result).toFixed(1);
 
   return (
     <>

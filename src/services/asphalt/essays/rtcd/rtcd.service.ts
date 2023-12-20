@@ -127,7 +127,7 @@ class Rtcd_SERVICE implements IEssayService {
     const body = {
       generalData: store.generalData,
       rtcdStep2: store.rtcdStep2,
-      rtcdStep3: store.rtcdStep3
+      rtcdStep3: store.rtcdStep3,
     };
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);

@@ -93,7 +93,7 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
     <>
       <ExperimentResume data={experimentResumeData} />
       <FlexColumnBorder title={t('results')} open={true}>
-        <ResultSubTitle title={t('soils.essays.granulometry-soils')} sx={{ margin: '.65rem' }} />
+        <ResultSubTitle title={t('soils.essays.granulometry')} sx={{ margin: '.65rem' }} />
         <Box
           sx={{
             width: '100%',

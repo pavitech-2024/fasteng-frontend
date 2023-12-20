@@ -107,8 +107,7 @@ const ElasticRecovery_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     rows.every((row) => {
       const { stretching_length, juxtaposition_length } = row;
       return stretching_length && juxtaposition_length >= 0;
-    }) &&
-      setNextDisabled(false);
+    }) && setNextDisabled(false);
   }
 
   useEffect(() => console.log(data, rows), [data, rows]);
@@ -121,8 +120,7 @@ const ElasticRecovery_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps)
           justifyContent: { mobile: 'center', notebook: 'center' },
           flexWrap: 'wrap',
         }}
-      >
-      </Box>
+      ></Box>
       <DataGrid
         sx={{ mt: '1rem', borderRadius: '10px' }}
         density="compact"

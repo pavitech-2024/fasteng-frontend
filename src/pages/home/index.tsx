@@ -115,17 +115,19 @@ const Home: NextPage = () => {
       </Box>
       <Box
         sx={{
-          display: 'grid',
+          display: 'flex',
           gridTemplateColumns: {
             mobile: '1fr',
-            notebook: '1fr 1fr 1fr',
+            tablet: '1fr 1fr',
+            notebook: '1fr 1fr 1fr 1fr',
           },
           gap: {
             mobile: '20px 0',
-            notebook: '0 20px',
+            notebook: '10px 15px',
           },
           justifyItems: 'center',
-          flexDirection: { notebook: 'row', mobile: 'column' },
+          marginRight: { notebook: '55px', mobile: '0px' },
+          flexDirection: { notebook: 'row', tablet: 'column', mobile: 'column' },
           width: '100%',
           minWidth: 'fit-content',
           maxWidth: '1400px',
