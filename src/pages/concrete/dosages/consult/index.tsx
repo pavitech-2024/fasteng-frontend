@@ -58,7 +58,7 @@ const AbcpDosageConsult = () => {
 
   const handleVisualizeDosage = (id: string) => {
     router.push(`/concrete/dosages/consult/data/${id}`);
-  }
+  };
 
   const columns: GridColDef[] = [
     {
@@ -67,7 +67,7 @@ const AbcpDosageConsult = () => {
     },
     {
       field: 'progress',
-      headerName: 'Progresso'
+      headerName: 'Progresso',
     },
     {
       field: 'start',
@@ -82,17 +82,11 @@ const AbcpDosageConsult = () => {
       headerName: 'Opções',
       renderCell: (params) => (
         <>
-          <IconButton
-            aria-label="Excluir"
-            onClick={() => handleDeleteDosage(params.row.id)}
-          >
+          <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)}>
             <DeleteIcon />
           </IconButton>
 
-          <IconButton
-            aria-label="Visualizar"
-            onClick={() => handleVisualizeDosage(params.row.id)}
-          >
+          <IconButton aria-label="Visualizar" onClick={() => handleVisualizeDosage(params.row.id)}>
             <NextIcon />
           </IconButton>
         </>

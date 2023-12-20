@@ -1,17 +1,16 @@
-import { AbcpLogo } from "@/assets"
-import FlexColumnBorder from "@/components/atoms/containers/flex-column-with-border"
-import Result_Card from "@/components/atoms/containers/result-card"
-import ResultSubTitle from "@/components/atoms/titles/result-sub-title"
-import AbramsCurvGraph from "@/components/concrete/dosages/abcp/graph/abramsCurveGrapg"
-import Header from "@/components/organisms/header"
-import useAuth from "@/contexts/auth"
-import { AcpDosageData } from "@/interfaces/concrete/abcp"
-import abcpDosageService from "@/services/concrete/dosages/abcp/abcp-consult.service"
-import { Box, Container } from "@mui/material"
-import { t } from "i18next"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-
+import { AbcpLogo } from '@/assets';
+import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import Result_Card from '@/components/atoms/containers/result-card';
+import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
+import AbramsCurvGraph from '@/components/concrete/dosages/abcp/graph/abramsCurveGrapg';
+import Header from '@/components/organisms/header';
+import useAuth from '@/contexts/auth';
+import { AcpDosageData } from '@/interfaces/concrete/abcp';
+import abcpDosageService from '@/services/concrete/dosages/abcp/abcp-consult.service';
+import { Box, Container } from '@mui/material';
+import { t } from 'i18next';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 const SpecificAbcpDosage = () => {
   const [dosage, setDosage] = useState<AcpDosageData>();
@@ -59,9 +58,8 @@ const SpecificAbcpDosage = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-    console.log("🚀 ~ file: [id].tsx:29 ~ SpecificAbcpDosage ~ dosage:", dosage)
-  }, [dosage])
-  
+    console.log('🚀 ~ file: [id].tsx:29 ~ SpecificAbcpDosage ~ dosage:', dosage);
+  }, [dosage]);
 
   useEffect(() => {
     abcpDosageService
@@ -114,7 +112,11 @@ const SpecificAbcpDosage = () => {
     },
   ];
 
-  const coefficients = `${dosage.results.cc / dosage.results.cc} : ${(dosage.results.careia / dosage.results.cc).toFixed(3)} : ${(dosage.results.cb / dosage.results.cc).toFixed(3)} : ${(dosage.results.ca / dosage.results.cc).toFixed(3)}`;
+  const coefficients = `${dosage.results.cc / dosage.results.cc} : ${(
+    dosage.results.careia / dosage.results.cc
+  ).toFixed(3)} : ${(dosage.results.cb / dosage.results.cc).toFixed(3)} : ${(
+    dosage.results.ca / dosage.results.cc
+  ).toFixed(3)}`;
 
   return (
     <Container>
@@ -213,7 +215,7 @@ const SpecificAbcpDosage = () => {
         </Container>
       )}
     </Container>
-  )
-}
+  );
+};
 
-export default SpecificAbcpDosage
+export default SpecificAbcpDosage;
