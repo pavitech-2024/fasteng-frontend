@@ -107,7 +107,7 @@ const Login: NextPage = () => {
               }}
             >
               <Button text="Assine" linkTo="https://fastengapp.com.br/" />
-              <AboutButton />
+              <AboutButton text="Saiba mais" href="/creators" />
             </Box>
           </Container>
         </Box>
