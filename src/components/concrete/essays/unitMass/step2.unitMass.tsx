@@ -48,7 +48,7 @@ const UnitMass_Step2 = ({
           label={t('unitMass.containerVolume')}
           value={step2Data.containerVolume}
           required
-          onChange={(e) => setData({ step: 1, key: 'containerVolume', value: e.target.value })}
+          onChange={(e) => setData({ step: 1, key: 'containerVolume', value: Number(e.target.value) })}
           size="medium"
           type="number"
         />
@@ -60,7 +60,7 @@ const UnitMass_Step2 = ({
           label={t('unitMass.containerWeight')}
           value={step2Data.containerWeight}
           required
-          onChange={(e) => setData({ step: 1, key: 'containerWeight', value: e.target.value })}
+          onChange={(e) => setData({ step: 1, key: 'containerWeight', value: Number(e.target.value) })}
           size="medium"
           type="number"
         />
@@ -72,7 +72,7 @@ const UnitMass_Step2 = ({
           label={t('unitMass.sampleContainerWeight')}
           value={step2Data.sampleContainerWeight}
           required
-          onChange={(e) => setData({ step: 1, key: 'sampleContainerWeight', value: e.target.value })}
+          onChange={(e) => setData({ step: 1, key: 'sampleContainerWeight', value: Number(e.target.value) })}
           size="medium"
           type="number"
         />

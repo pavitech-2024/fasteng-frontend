@@ -6,11 +6,12 @@ import { useRouter } from 'next/router';
 import { ReactNode, useState } from 'react';
 import { PageWelcomeContainer as Container } from '@/components/organisms/pageContainer';
 import { ArrowDownIcon } from '@/assets';
+import DescriptionModal from '@/components/atoms/modals/description';
 
 export interface WelcomeData {
   name: string;
   icon: ReactNode;
-  description: string;
+  description?: any;
   path: string;
 }
 
@@ -23,6 +24,25 @@ interface WelcomeTemplateProps {
 const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProps) => {
   const app = useRouter().pathname.split('/')[1];
   const title = t(`welcome.${app}`);
+
+  const descriptionData = [
+    {
+      name: t('navbar.marshall'),
+      description: t('description.marshall'),
+    },
+    {
+      name: t('navbar.superpave'),
+      description: t('description.superpave'),
+    },
+    {
+      name: t('navbar.standards'),
+      description: t('description.standards'),
+    },
+    {
+      name: t('navbar.library'),
+      description: t('description.library'),
+    }
+  ]
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -145,13 +165,46 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
                   transition: '0.5s ease-out',
                 }}
               >
-                {welcomeData.map((element: WelcomeData) => (
+                <Typography
+                  color="primary"
+                  sx={{
+                    fontWeight: 700,
+                    textAlign: 'justify',
+                    fontSize: '1rem',
+                    mb: '16px',
+                    span: {
+                      color: 'primaryTons.mainGray',
+                      fontWeight: 500,
+                    },
+                  }}
+                >
+                  • {t('navbar.materials')}:<span style={{ marginRight: '0.3rem' }}> {t('description.materials')}</span>
+                  <DescriptionModal title={t('navbar.materials')} description={t('description.long.materials')} />
+                </Typography>
+                <Typography
+                  color="primary"
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: '1rem',
+                    mb: '16px',
+                    textAlign: 'justify',
+                    span: {
+                      color: 'primaryTons.mainGray',
+                      fontWeight: 500,
+                    },
+                  }}
+                >
+                  • {t('navbar.essays')}:<span style={{ marginRight: '0.3rem' }}> {t('description.essays')}</span>
+                  <DescriptionModal title={t('navbar.essays')} description={t('description.long.essays')} />
+                </Typography>
+                {descriptionData.map((element: any) => (
                   <Typography
                     color="primary"
                     sx={{
                       fontWeight: 700,
                       fontSize: '1rem',
                       mb: '16px',
+                      textAlign: 'justify',
                       span: {
                         color: 'primaryTons.mainGray',
                         fontWeight: 500,
@@ -159,7 +212,7 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
                     }}
                     key={element.name}
                   >
-                    • {element.name}:<span> {element.description}</span>
+                    • {element.name}:<span style={{ marginRight: '0.3rem' }}> {element.description}</span>
                   </Typography>
                 ))}
               </Box>

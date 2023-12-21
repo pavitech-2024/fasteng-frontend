@@ -148,3 +148,12 @@ export type Standard = {
   type?: string;
   standard?: string;
 };
+
+export type Library = {
+  key: string;
+  title: string;
+  link: string;
+  type?: string;
+  icon?: StaticImageData;
+  thumb?: string;
+}

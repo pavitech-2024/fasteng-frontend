@@ -6,6 +6,7 @@ import { ConcreteMaterial } from '@/interfaces/concrete';
 import concreteMaterialService from '@/services/concrete/concrete-materials.service';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
+import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
 
 const ConcreteMaterials = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -52,7 +53,7 @@ const ConcreteMaterials = () => {
   };
 
   return (
-    <>
+    <Container>
       {loading ? (
         <p>Carregando...</p>
       ) : (
@@ -72,7 +73,7 @@ const ConcreteMaterials = () => {
           }
         />
       )}
-    </>
+    </Container>
   );
 };
 
