@@ -4,6 +4,9 @@ import Api from '@/api';
 import { ABCPActions, ABCPData } from '@/stores/concrete/abcp/abcp.store';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import { AbcpLogo } from '@/assets';
+import { ConcreteGranulometryData } from '@/stores/concrete/granulometry/granulometry.store';
+import ABCP_Results from '@/components/concrete/dosages/abcp/step-5-dosage-resume';
+import MaterialSelectionTable from '@/components/concrete/dosages/abcp/tables/material-selection-table';
 // import { persist } from 'zustand/middleware';
 
 type EssaySelection_Results = {
@@ -11,24 +14,16 @@ type EssaySelection_Results = {
     _id: string;
     name: string;
   };
-  fineAggregate_granulometrys: {
-    material_id: string;
-    material_name: string;
-    essay_id: string;
-    essay_name: string;
-  }[];
-  coarseAggregate_granulometrys: {
-    material_id: string;
-    material_name: string;
-    essay_id: string;
-    essay_name: string;
-  }[];
-  coarseAggregate_unit_masses: {
-    material_id: string;
-    material_name: string;
-    essay_id: string;
-    essay_name: string;
-  }[];
+  fineAggregate: {
+    name: string;
+    _id: string;
+    granulometrys: ConcreteGranulometryData[];
+  };
+  coarseAggregate: {
+    name: string;
+    _id: string;
+    granulometrys: ConcreteGranulometryData[];
+  };
 };
 
 class ABCP_SERVICE implements IEssayService {
@@ -38,7 +33,7 @@ class ABCP_SERVICE implements IEssayService {
     title: t('concrete.essays.abcp'),
     path: '/concrete/dosages/abcp',
     backend_path: 'concrete/dosages/abcp',
-    steps: 3,
+    steps: 5,
     standard: {
       name: '',
       link: 'https://abcp.org.br/wp-content/uploads/2020/07/Metodo_Dosagem_Concreto_ABCPonLINE_22.07.2020.pdf',
@@ -64,6 +59,16 @@ class ABCP_SERVICE implements IEssayService {
           break;
         case 1:
           await this.submitMaterialSelection(data as ABCPData['materialSelectionData']);
+          break;
+        case 2:
+          await this.submitEssaySelection(data as ABCPData['essaySelectionData']);
+          break;
+        case 3:
+          await this.submitInsertParams(data as ABCPData['insertParamsData']);
+          await this.calculateResults(data as ABCPData);
+          break;
+        case 4:
+          await this.saveDosage(data as ABCPData);
           break;
         default:
           throw t('errors.invalid-step');
@@ -112,6 +117,10 @@ class ABCP_SERVICE implements IEssayService {
 
   // send the selected materials to backend
   submitMaterialSelection = async (materialSelection: ABCPData['materialSelectionData']): Promise<void> => {
+    console.log(
+      '🚀 ~ file: abcp.service.ts:115 ~ ABCP_SERVICE ~ submitMaterialSelection= ~ materialSelection:',
+      materialSelection
+    );
     try {
       const { coarseAggregate, fineAggregate, cement } = materialSelection;
 
@@ -126,24 +135,99 @@ class ABCP_SERVICE implements IEssayService {
 
   /** @essaySelection Methods for essay-selection-data (step === 2, page 3) */
 
+  // send the selected essays to backend
+  submitEssaySelection = async (essaySelection: ABCPData['essaySelectionData']): Promise<void> => {
+    console.log(
+      '🚀 ~ file: abcp.service.ts:115 ~ ABCP_SERVICE ~ submitMaterialSelection= ~ essaySelection:',
+      essaySelection
+    );
+    try {
+      // const { coarseAggregate, fineAggregate, cement } = essaySelection;
+      // if (!coarseAggregate) throw t('errors.empty-coarseAggregates');
+      // if (!fineAggregate) throw t('errors.empty-fineAggregates');
+      // if (!cement) throw t('errors.empty-binder');
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   // get essay from materials id
   getEssaysByMaterialId = async (
     userId: string,
     { cement, coarseAggregate, fineAggregate }: ABCPData['materialSelectionData']
   ): Promise<EssaySelection_Results> => {
+    console.log('🚀 ~ file: abcp.service.ts:135 ~ ABCP_SERVICE ~ userId:', userId);
     try {
       const response = await Api.post(`${this.info.backend_path}/essay-selection`, {
-        cement,
-        coarseAggregate,
-        fineAggregate,
+        cement_id: cement,
+        coarseAggregate_id: coarseAggregate,
+        fineAggregate_id: fineAggregate,
       });
 
       const { essays, success, error } = response.data;
 
-      console.log(essays);
+      console.log('aqui', essays);
 
       if (success === false) throw error.name;
       else return essays;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /** @insertParams Methods for insert-params-data (step === 3, page 4) */
+
+  submitInsertParams = async ({ condition, fck, reduction }: ABCPData['insertParamsData']): Promise<void> => {
+    try {
+      if (reduction < 40 || reduction > 100) throw t('errors.invalid-reduction');
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  // calculate results from abcp dosage
+  calculateResults = async (data: ABCPData): Promise<void> => {
+    try {
+      const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
+        generalData: data.generalData,
+        materialSelectionData: data.materialSelectionData,
+        essaySelectionData: data.essaySelectionData,
+        insertParamsData: data.insertParamsData,
+      });
+
+      const { success, error, result } = response.data;
+
+      if (success === false) throw error.name;
+
+      this.store_actions.setData({ step: 4, value: result });
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /** @Results Methods for Results page (step === 4, page 5) */
+
+  // save dosage
+
+  saveDosage = async (data: ABCPData) => {
+    try {
+      const response = await Api.post(`${this.info.backend_path}/save-dosage`, {
+        generalData: {
+          ...data.generalData,
+          userId: this.userId,
+        },
+        materialSelectionData: data.materialSelectionData,
+        essaySelectionData: data.essaySelectionData,
+        insertParamsData: data.insertParamsData,
+        results: data.results,
+      });
+
+      const { success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+      // this.store_actions.reset( { step: null, value: null });
     } catch (error) {
       throw error;
     }

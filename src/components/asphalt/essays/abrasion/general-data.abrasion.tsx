@@ -4,7 +4,7 @@ import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import Abrasion_SERVICE from '@/services/asphalt/essays/abrasion/abrasion.service';
-import useAbrasionStore from '@/stores/asphalt/abrasion.store';
+import useAbrasionStore from '@/stores/asphalt/abrasion/abrasion.store';
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import { useState, useEffect } from 'react';

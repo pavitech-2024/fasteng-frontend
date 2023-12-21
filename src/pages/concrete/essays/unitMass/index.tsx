@@ -21,8 +21,8 @@ const UnitMass = () => {
 
   const childrens = [
     { step: 0, children: <UnitMass_GeneralData unitMass={unitMass} />, data: store.generalData },
-    { step: 1, children: <UnitMass_Step2 unitMass={unitMass} />, data: store.step2Data, initData: store.generalData },
-    { step: 2, children: <UnitMass_Results />, data: store.result },
+    { step: 1, children: <UnitMass_Step2 unitMass={unitMass} />, data: store },
+    { step: 2, children: <UnitMass_Results />, data: store },
   ];
 
   return <EssayTemplate essayInfo={unitMass.info} nextCallback={unitMass.handleNext} childrens={childrens} />;

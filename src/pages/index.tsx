@@ -16,6 +16,7 @@ import { MainButton as Button } from '@/components/styles/global';
 
 //mui
 import { TextField, Box, Container, Typography } from '@mui/material';
+import { JbrAnchor, LepAnchor } from '@/components/atoms/anchor/loginAnchors';
 
 const Login: NextPage = () => {
   const { signIn } = useAuth();
@@ -106,7 +107,7 @@ const Login: NextPage = () => {
               }}
             >
               <Button text="Assine" linkTo="https://fastengapp.com.br/" />
-              <AboutButton />
+              <AboutButton text="Saiba mais" href="/creators" />
             </Box>
           </Container>
         </Box>
@@ -199,6 +200,19 @@ const Login: NextPage = () => {
                 {t('login.forget password')}
               </Typography>
             </Box>
+          </Box>
+           <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              width: '50%',
+              justifyContent: 'space-between',
+              alignItems: 'end',
+              height: 'fit-content',
+            }}
+          >
+            <LepAnchor />
+            <JbrAnchor />
           </Box>
           <Box
             sx={{

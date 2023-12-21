@@ -4,7 +4,7 @@ import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import Ddui_SERVICE from '@/services/asphalt/essays/ddui/ddui.service';
-import useDduiStore from '@/stores/asphalt/ddui.store';
+import useDduiStore from '@/stores/asphalt/ddui/ddui.store';
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import { useState, useEffect } from 'react';

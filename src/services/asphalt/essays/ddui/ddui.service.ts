@@ -1,7 +1,7 @@
 import { DduiIcon } from '@/assets';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
-import { DduiActions, DduiData } from '@/stores/asphalt/ddui.store';
+import { DduiActions, DduiData } from '@/stores/asphalt/ddui/ddui.store';
 import { t } from 'i18next';
 import Api from '@/api';
 

@@ -34,6 +34,7 @@ const NewConcreteMaterialModal = ({
       collectionDate: null,
       classification_CAP: null,
       classification_AMP: null,
+      resistance: null,
       observation: null,
     },
   });
@@ -44,56 +45,85 @@ const NewConcreteMaterialModal = ({
         label: t('samples.name'),
         value: material.name,
         key: 'name',
+        required: true,
       },
       {
         label: t('concrete.materials.type'),
         value: material.type,
         key: 'type',
+        required: true,
       },
       {
         label: t('concrete.materials.source'),
         value: material.description.source,
         key: 'source',
+        required: false,
       },
       {
         label: t('concrete.materials.responsible'),
         value: material.description.responsible,
         key: 'responsible',
+        required: false,
       },
       {
         label: t('concrete.materials.maxDiammeter'),
         value: material.description.maxDiammeter,
         key: 'maxDiammeter',
+        required: false,
       },
       {
         label: t('concrete.materials.aggregateNature'),
         value: material.description.aggregateNature,
         key: 'aggregateNature',
+        required: false,
+      },
+      {
+        label: t('concrete.materials.resistance'),
+        value: material.description.resistance,
+        key: 'resistance',
+        required: true,
+      },
+      {
+        label: t('concrete.materials.classification_CAP'),
+        value: material.description.classification_CAP,
+        key: 'classification_CAP',
+        required: true,
+      },
+      {
+        label: t('concrete.materials.classification_AMP'),
+        value: material.description.classification_AMP,
+        key: 'classification_AMP',
+        required: true,
       },
       {
         label: t('concrete.materials.boughtDate'),
         value: material.description.boughtDate,
         key: 'boughtDate',
+        required: false,
       },
       {
         label: t('concrete.materials.recieveDate'),
         value: material.description.recieveDate,
         key: 'recieveDate',
+        required: false,
       },
       {
         label: t('concrete.materials.extractionDate'),
         value: material.description.extractionDate,
         key: 'extractionDate',
+        required: false,
       },
       {
         label: t('concrete.materials.collectionDate'),
         value: material.description.collectionDate,
         key: 'collectionDate',
+        required: true,
       },
       {
         label: t('concrete.materials.observation'),
         value: material.description.observation,
         key: 'observation',
+        required: false,
       },
     ];
 
@@ -101,8 +131,15 @@ const NewConcreteMaterialModal = ({
 
     switch (material.type) {
       case 'coarseAggregate':
+        WhiteList.push('maxDiammeter', 'aggregateNature', 'extractionDate', 'collectionDate');
+        break;
       case 'fineAggregate':
-        WhiteList.push('maxDiameter', 'aggregateNature', 'extrationDate', 'collectionDate');
+        WhiteList.push('maxDiammeter', 'aggregateNature', 'extractionDate', 'collectionDate');
+        break;
+      case 'cement':
+        WhiteList.push('classification_AMP', 'classification_CAP', 'collectionDate', 'resistance');
+        break;
+      default:
         break;
     }
 
@@ -110,25 +147,47 @@ const NewConcreteMaterialModal = ({
   };
 
   const types: DropDownOption[] = [
+    { label: '', value: null },
     { label: t('concrete.materials.coarseAggregate'), value: 'coarseAggregate' },
     { label: t('concrete.materials.fineAggregate'), value: 'fineAggregate' },
     { label: t('concrete.materials.other'), value: 'other' },
     { label: t('concrete.materials.cement'), value: 'cement' },
   ];
 
-  // const classification_CAP_options: DropDownOption[] = [
-  //   { label: 'CAP 30/45', value: 'CAP 30/45' },
-  //   { label: 'CAP 50/70', value: 'CAP 50/70' },
-  //   { label: 'CAP 85/100', value: 'CAP 85/100' },
-  //   { label: 'CAP 150/200', value: 'CAP 150/200' },
-  // ];
+  const resistances: DropDownOption[] = [
+    { label: '', value: null },
+    { label: 'CP-29', value: 'CP-29' },
+    { label: 'CP-32', value: 'CP-32' },
+    { label: 'CP-35', value: 'CP-35' },
+    { label: 'CP-36', value: 'CP-36' },
+    { label: 'CP-41', value: 'CP-41' },
+    { label: 'CP-44', value: 'CP-44' },
+    { label: 'CP-47', value: 'CP-47' },
+    { label: 'CP-50', value: 'CP-50' },
+  ];
 
-  // const classification_AMP_options: DropDownOption[] = [
-  //   { label: 'AMP 50/65', value: 'AMP 50/65' },
-  //   { label: 'AMP 55/75', value: 'AMP 55/75' },
-  //   { label: 'AMP 60/85', value: 'AMP 60/85' },
-  //   { label: 'AMP 65/90', value: 'AMP 65/90' },
-  // ];
+  const classification_CAP_options: DropDownOption[] = [
+    { label: '', value: null },
+    { label: 'CAP 30/45', value: 'CAP 30/45' },
+    { label: 'CAP 50/70', value: 'CAP 50/70' },
+    { label: 'CAP 85/100', value: 'CAP 85/100' },
+    { label: 'CAP 150/200', value: 'CAP 150/200' },
+  ];
+
+  const classification_AMP_options: DropDownOption[] = [
+    { label: '', value: null },
+    { label: 'AMP 50/65', value: 'AMP 50/65' },
+    { label: 'AMP 55/75', value: 'AMP 55/75' },
+    { label: 'AMP 60/85', value: 'AMP 60/85' },
+    { label: 'AMP 65/90', value: 'AMP 65/90' },
+  ];
+
+  const dropDowns = {
+    type: types,
+    classification_CAP: classification_CAP_options,
+    classification_AMP: classification_AMP_options,
+    resistance: resistances,
+  };
 
   const changeMaterial = (key: string, value: string) => {
     if (key === 'type' || key === 'name') setMaterial({ ...material, [key]: value });
@@ -168,14 +227,22 @@ const NewConcreteMaterialModal = ({
 
   return (
     <ModalBase
-      title={t('concrete.materials.title')}
+      title={t('concrete.materials.newMaterial')}
       open={openModal}
       leftButtonTitle={t('samples.cancel')}
       rightButtonTitle={t('samples.register')}
       size="medium"
       onSubmit={() => handleSubmitNewMaterial()}
       onCancel={handleCloseModal}
-      disableSubmit={material.name === '' || material.type === null}
+      disableSubmit={
+        material.name === '' ||
+        material.type === null ||
+        material.description.collectionDate === null ||
+        (material.type === 'cement'
+          ? (material.description.classification_AMP === null && material.description.classification_CAP === null) ||
+            material.description.resistance === null
+          : false)
+      }
     >
       <Box sx={{ mb: '1rem' }}>
         <Box
@@ -194,9 +261,9 @@ const NewConcreteMaterialModal = ({
           {getInputs().map((input) => {
             if (
               input.key === 'type' ||
-              input.key === 'maxDiameter' ||
               input.key === 'classification_CAP' ||
-              input.key === 'classification_AMP'
+              input.key === 'classification_AMP' ||
+              input.key === 'resistance'
             ) {
               return (
                 <DropDown
@@ -205,9 +272,9 @@ const NewConcreteMaterialModal = ({
                   size="medium"
                   sx={{ minWidth: '120px', bgcolor: 'white' }}
                   callback={(value: string) => changeMaterial(input.key, value)}
-                  required
-                  label={t(`materials.template.${input.key}`)}
-                  options={types}
+                  required={input.required}
+                  label={t(`concrete.materials.${input.key}`)}
+                  options={dropDowns[input.key]}
                 />
               );
             } else {
@@ -217,7 +284,7 @@ const NewConcreteMaterialModal = ({
                   label={input.label}
                   variant="standard"
                   value={input.value}
-                  required={input.key === 'name'}
+                  required={input.required}
                   onChange={(e) => changeMaterial(input.key, e.target.value)}
                 />
               );

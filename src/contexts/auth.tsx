@@ -87,11 +87,16 @@ export function AuthProvider({ children }) {
 
         user.preferences.language !== null && i18next.changeLanguage(user.preferences.language);
 
-        if (Router.pathname === '/') await Router.push('/home');
+        if (Router.pathname !== '/' && Router.pathname !== '/creators') {
+          await Router.push('/home');
+        }
       }
     } catch (error) {
-      if (Router.pathname !== '/') await Router.push('/');
-      else throw error;
+      if (Router.pathname !== '/' && Router.pathname !== '/creators') {
+        await Router.push('/');
+      } else {
+        throw error;
+      }
     }
   }
 
