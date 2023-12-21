@@ -1,34 +1,43 @@
-import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
+import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import { EssayPageProps } from '../../../templates/essay/index';
 import { useState } from 'react';
 import useAuth from '@/contexts/auth';
-import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
+import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { t } from 'i18next';
 import Loading from '@/components/molecules/loading';
 import { Box, TextField } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
-const Marshall_GeneralData = ({
+
+const Superpave_Step1 = ({
   nextDisabled,
   setNextDisabled,
-  marshall,
-}: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+  superpave,
+}: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { user } = useAuth();
-  const { generalData, setData } = useMarshallStore();
+  const { generalData, setData } = useSuperpaveStore();
 
   const inputs = [
     { label: t('asphalt.project_name'), value: generalData.projectName, key: 'projectName', required: true },
     { label: t('asphalt.laboratory_name'), value: generalData.labName, key: 'labName', required: false },
     { label: t('asphalt.operator'), value: generalData.operator, key: 'operator', required: false },
     { label: t('asphalt.calculist'), value: generalData.calculist, key: 'calculist', required: false },
+    { label: t('asphalt.choose_traffic_volume'), value: generalData.trafficVolume, key: 'trafficVolume', required: true },
     { label: t('asphalt.choose_objective'), value: generalData.objective, key: 'objective', required: true },
     { label: t('asphalt.choose_dnit_track'), value: generalData.dnitBand, key: 'dnitBand', required: true },
     { label: t('asphalt.comments'), value: generalData.description, key: 'description', required: false },
   ];
 
+  const trafficVolumeOptions: DropDownOption[] = [
+    { label: t('asphalt.dosages.superpave.low-traffic'), value: 'low' },
+    { label: t('asphalt.dosages.superpave.medium-traffic'), value: 'medium' },
+    { label: t('asphalt.dosages.superpave.medium-high-traffic'), value: 'medium-high' },
+    { label: t('asphalt.dosages.superpave.high-traffic'), value: 'high' },
+  ]
+
   const objectiveOptions: DropDownOption[] = [
-    { label: t('asphalt.dosages.marshall.bearing-layer'), value: 'bearing' },
-    { label: t('asphalt.dosages.marshall.bonding-layer'), value: 'bonding' },
+    { label: t('asphalt.dosages.superpave.bearing-layer'), value: 'bearing' },
+    { label: t('asphalt.dosages.superpave.bonding-layer'), value: 'bonding' },
   ]
 
   // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
@@ -77,6 +86,19 @@ const Marshall_GeneralData = ({
                     onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
                   />
                 );
+              } else if (['trafficVolume'].includes(input.key)) {
+
+                return (
+                  <DropDown
+                    key={input.key}
+                    variant="standard"
+                    label={input.label}
+                    options={trafficVolumeOptions}
+                    callback={(value) => setData({ step: 0, key: input.key, value })}
+                    size="medium"
+                    required={input.required}
+                  />
+                );
               } else if (['objective'].includes(input.key)) {
 
                 return (
@@ -94,10 +116,10 @@ const Marshall_GeneralData = ({
 
                 if (generalData.objective) {
                   const trackOptions: DropDownOption[] = [];
-                  if (generalData.objective === "bearing") {
+                  if (generalData.objective === "bonding") {
                     trackOptions.push({ label: 'A', value: 'A' });
                     trackOptions.push({ label: 'B', value: 'B' });
-                  } else if (generalData.objective === "bonding") {
+                  } else if (generalData.objective === "bearing") {
                     trackOptions.push({ label: 'B', value: 'B' });
                     trackOptions.push({ label: 'C', value: 'C' });
                   }
@@ -131,4 +153,4 @@ const Marshall_GeneralData = ({
   );
 };
 
-export default Marshall_GeneralData;
+export default Superpave_Step1;

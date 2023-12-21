@@ -1,0 +1,30 @@
+{
+  "superpave.step-2-description": "Selecione os agregados e o ligante asfáltico que serão utilizados na dosagem",
+  "superpave.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica da mistura",
+
+  "asphalt.dosages.superpave.material_selection": "Seleção de Materiais",
+  "asphalt.dosages.superpave.granulometry_composition": "Composição Granulométrica",
+  "asphalt.dosages.superpave.initial_binder": "Teor de Ligante Inicial",
+  "asphalt.dosages.superpave.first_compression": "Primeira Compactação",
+  "asphalt.dosages.superpave.first_compression_parameters": "Parâmetros da Primeira Compactação",
+  "asphalt.dosages.superpave.chosen_curve_percentages": "Porcentagens da Curva Escolhida",
+  "asphalt.dosages.superpave.second_compression": "Segunda Compactação",
+  "asphalt.dosages.superpave.second_compression_parameters": "Porcentagens da Segunda Compacatação",
+  "asphalt.dosages.superpave.confirmation_compression": "Compactação de Confirmação",
+  "asphalt.dosages.superpave.dosage_resume": "Resumo da Dosagem",
+
+  "asphalt.project_name": "Nome do Projeto",
+  "asphalt.laboratory_name": "Nome do Laboratório",
+  "asphalt.choose_traffic_volume": "Escolha o Volume do Tráfego",
+  "asphalt.choose_objective": "Escolha o Objetivo da Mistura",
+  "asphalt.choose_dnit_track": "Escolha a Faixa do DNIT",
+
+  "asphalt.dosages.superpave.bearing-layer": "Camada de Rolamento",
+  "asphalt.dosages.superpave.bonding-layer": "Camada de Ligação",
+
+  "asphalt.dosages.superpave.low-traffic": "Muito leve (local)",
+  "asphalt.dosages.superpave.medium-traffic": "Médio (rodovias coletoras)",
+  "asphalt.dosages.superpave.medium-high-traffic": "Médio a alto (vias principais, rodovias rurais)",
+  "asphalt.dosages.superpave.high-traffic": "Alto (interestaduais, muito pesado)"
+  
+}

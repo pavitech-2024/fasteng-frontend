@@ -81,8 +81,12 @@ import asphaltGranulometryENG from './translations/asphalt/essays/granulometry/e
 import asphaltPenetrationPTBR from './translations/asphalt/essays/penetration/ptbr.json';
 import asphaltPenetrationENG from './translations/asphalt/essays/penetration/en.json';
 // dosages
+// marshall
 import marshallPTBR from './translations/asphalt/dosages/marshall/ptbr.json';
 import marshallENG from './translations/asphalt/dosages/marshall/en.json';
+// superpave
+import superpavePTBR from './translations/asphalt/dosages/superpave/ptbr.json';
+import superpaveENG from './translations/asphalt/dosages/superpave/en.json';
 
 /**@soils */
 // samples
@@ -170,6 +174,7 @@ i18n.use(initReactI18next).init({
         ...asphaltGranulometryPTBR,
         ...asphaltPenetrationPTBR,
         ...marshallPTBR,
+        ...superpavePTBR,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
@@ -219,6 +224,7 @@ i18n.use(initReactI18next).init({
         ...asphaltGranulometryENG,
         ...asphaltPenetrationENG,
         ...marshallENG,
+        ...superpaveENG,
         /**@soils */
         ...samplesENG,
         ...soilsEssaysENG,

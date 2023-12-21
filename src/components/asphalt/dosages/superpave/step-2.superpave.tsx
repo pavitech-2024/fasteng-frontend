@@ -2,19 +2,19 @@ import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
-import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
-import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
+import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
+import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import MaterialSelectionTable from './tables/material-selection-table';
+import MaterialSelectionTable from './tables/step-2-table';
 import { GridColDef } from '@mui/x-data-grid';
 
-const Marshall_MaterialsSelection = ({ nextDisabled, setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+const Superpave_Step2 = ({ nextDisabled, setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
-  const { materialSelectionData } = useMarshallStore();
+  const { materialSelectionData } = useSuperpaveStore();
 
   const { user } = useAuth();
 
@@ -22,7 +22,7 @@ const Marshall_MaterialsSelection = ({ nextDisabled, setNextDisabled, marshall }
     toast.promise(
       async () => {
         try {
-          const materials = await marshall.getMaterialsByUserId(user._id);
+          const materials = await superpave.getMaterialsByUserId(user._id);
           setMaterials(materials);
           setLoading(false);
         } catch (error) {
@@ -108,13 +108,13 @@ const Marshall_MaterialsSelection = ({ nextDisabled, setNextDisabled, marshall }
             rows={aggregateRows}
             columns={aggregateColumns}
             header={t('asphalt.materials.aggregates')}
-            marshall={marshall}
+            superpave={superpave}
           />
           <MaterialSelectionTable
             rows={binderRows}
             columns={binderColumns}
             header={t('asphalt.materials.binders')}
-            marshall={marshall}
+            superpave={superpave}
           />
         </Box>
       )}
@@ -122,4 +122,4 @@ const Marshall_MaterialsSelection = ({ nextDisabled, setNextDisabled, marshall }
   );
 };
 
-export default Marshall_MaterialsSelection;
+export default Superpave_Step2;

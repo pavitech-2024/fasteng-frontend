@@ -5,13 +5,13 @@ import { Box } from '@mui/material';
 import { DataGrid, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { useState } from 'react';
 
-interface MaterialSelectionProps {
+interface Step2Props {
   header?: string;
   rows: { _id: string; name: string; type: string; }[];
   columns: GridColDef[];
 }
 
-const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProps & { marshall: Marshall_SERVICE }) => {
+const Step2Table = ({ rows, columns, header }: Step2Props & { marshall: Marshall_SERVICE }) => {
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
   const { materialSelectionData, setData } = useMarshallStore();
 
@@ -53,7 +53,10 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
               const aggregates = []
 
               rowSelection.forEach((row, index) => {
-                aggregates.push(rows[rowSelection[index]]._id)
+                aggregates.push({
+                  _id: rows[rowSelection[index]]._id,
+                  name: rows[rowSelection[index]].name,
+                })
               })
 
               setData({ step: 1, key: 'aggregates', value: aggregates });
@@ -89,4 +92,4 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
   );
 };
 
-export default MaterialSelectionTable;
+export default Step2Table;

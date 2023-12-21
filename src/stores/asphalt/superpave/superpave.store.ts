@@ -2,23 +2,24 @@ import { GridColDef } from "@mui/x-data-grid";
 import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
 
-interface MarhsallGeneralData {
+interface SuperpaveGeneralData {
   userId: string;
   projectName: string;
   labName?: string;
   operator?: string;
   calculist?: string;
+  trafficVolume: "low" | "medium" | "medium-high" | "high"
   objective: "bearing" | "bonding";
   dnitBand: "A" | "B" | "C";
   description?: string;
 }
 
-interface MarshallMaterialSelectionData {
+interface SuperpaveMaterialSelectionData {
   aggregates: { _id: string, name: string }[]; // lista de ids dos agregados
   binder: string; // id do ligante
 }
 
-interface MarshallGranulometryCompositionData {
+interface SuperpaveGranulometryCompositionData {
   table_data: { table_rows: {
     sieve_label: string,
     [key: string] : string | {
@@ -32,17 +33,17 @@ interface MarshallGranulometryCompositionData {
   graphData: any[];
 }
 
-interface MarshallInitialBinderData {
+interface SuperpaveInitialBinderData {
 
 }
 
-export type MarshallData = {
-  generalData: MarhsallGeneralData;
-  materialSelectionData: MarshallMaterialSelectionData;
-  granulometryCompositionData: MarshallGranulometryCompositionData;
+export type SuperpaveData = {
+  generalData: SuperpaveGeneralData;
+  materialSelectionData: SuperpaveMaterialSelectionData;
+  granulometryCompositionData: SuperpaveGranulometryCompositionData;
 }
 
-export type MarshallActions = {
+export type SuperpaveActions = {
   setData: ({ step, key, value }: setDataType) => void;
   reset: ({ step }: setDataType) => void;
 }
@@ -58,6 +59,7 @@ const initialState = {
     labName: null,
     operator: null,
     calculist: null,
+    trafficVolume: null,
     objective: null,
     dnitBand: null,
     description: null,
@@ -74,7 +76,7 @@ const initialState = {
   }
 };
 
-const useMarshallStore = create<MarshallData & MarshallActions>()(
+const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(
   devtools(
     persist(
       (set) => ({
@@ -102,11 +104,11 @@ const useMarshallStore = create<MarshallData & MarshallActions>()(
       }),
       {
         // name data store e config no session storage
-        name: 'asphalt-marshall-store',
+        name: 'asphalt-superpave-store',
         storage: createJSONStorage(() => sessionStorage),
       }
     )
   )
 );
 
-export default useMarshallStore;
+export default useSuperpaveStore;

@@ -1,15 +1,14 @@
 import { NoDataFound } from "@/components/util/tables";
-import Marshall_SERVICE from "@/services/asphalt/dosages/marshall/marshall.service";
+import Superpave_SERVICE from "@/services/asphalt/dosages/superpave/superpave.service";
 import { Box } from "@mui/material";
 import { DataGrid, GridColDef, GridColumnGroupingModel } from "@mui/x-data-grid";
 
-interface GranulometryCompositionProps {
+interface Step4Props {
   rows: { _id: string; name: string; }[];
   columns: GridColDef[];
-  columnGrouping: GridColumnGroupingModel;
 }
 
-const GranulometryCompositionTable = ({ rows, columns, columnGrouping}: GranulometryCompositionProps & { marshall: Marshall_SERVICE }) => {
+const Step4Table = ({ rows, columns }: Step4Props & { superpave: Superpave_SERVICE }) => {
   return (
     <Box>
       <DataGrid
@@ -43,4 +42,4 @@ const GranulometryCompositionTable = ({ rows, columns, columnGrouping}: Granulom
   )
 }
 
-export default GranulometryCompositionTable;
+export default Step4Table;

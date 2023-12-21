@@ -6,6 +6,7 @@
   "granulometry-asphalt.sieves": "Peneiras",
   "granulometry-asphalt.sieve-openness": "Abertura das peneiras",
   "granulometry-asphalt.passant": "Passante",
+  "granulometry-asphalt.total_passant": "Passante Total",
   "granulometry-asphalt.retained": "Retido",
   "granulometry-asphalt.accumulated-retained": "Retido acumulado",
   "granulometry-asphalt.material_mass": "Massa do material",
