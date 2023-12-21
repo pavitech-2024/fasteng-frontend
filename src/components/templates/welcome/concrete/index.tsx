@@ -21,19 +21,11 @@ interface WelcomeTemplateProps {
   stepperData: StepperData[];
 }
 
-const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProps) => {
+const WelcomeTemplateConcrete = ({ welcomeData, stepperData, icon }: WelcomeTemplateProps) => {
   const app = useRouter().pathname.split('/')[1];
   const title = t(`welcome.${app}`);
 
   const descriptionData = [
-    {
-      name: t('navbar.marshall'),
-      description: t('description.marshall'),
-    },
-    {
-      name: t('navbar.superpave'),
-      description: t('description.superpave'),
-    },
     {
       name: t('navbar.standards'),
       description: t('description.standards'),
@@ -41,8 +33,8 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
     {
       name: t('navbar.library'),
       description: t('description.library'),
-    }
-  ]
+    },
+  ];
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -197,6 +189,22 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
                   • {t('navbar.essays')}:<span style={{ marginRight: '0.3rem' }}> {t('description.essays')}</span>
                   <DescriptionModal title={t('navbar.essays')} description={t('description.long.essays')} />
                 </Typography>
+                <Typography
+                  color="primary"
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: '1rem',
+                    mb: '16px',
+                    textAlign: 'justify',
+                    span: {
+                      color: 'primaryTons.mainGray',
+                      fontWeight: 500,
+                    },
+                  }}
+                >
+                  • {t('navbar.abcp')}:<span style={{ marginRight: '0.3rem' }}> {t('description.abcp')}</span>
+                  <DescriptionModal title={t('navbar.abcp')} description={t('description.long.abcp')} />
+                </Typography>
                 {descriptionData.map((element: any) => (
                   <Typography
                     color="primary"
@@ -249,4 +257,4 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
   );
 };
 
-export default WelcomeTemplate;
+export default WelcomeTemplateConcrete;

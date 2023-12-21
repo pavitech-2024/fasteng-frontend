@@ -1,21 +1,22 @@
 import { NextPage } from 'next';
-import WelcomeTemplate, { WelcomeData } from '@/components/templates/welcome';
+import { WelcomeData } from '@/components/templates/welcome';
 import { StepperData } from '@/components/atoms/stepper';
 import { AbcpIcon, ConcreteIcon, EssayIcon, LibraryIcon, MaterialsIcon, StandartsIcon } from '@/assets';
 import { t } from 'i18next';
+import WelcomeTemplateConcrete from '@/components/templates/welcome/concrete';
 
 const Concrete: NextPage = () => {
   const welcomeData: WelcomeData[] = [
     {
       name: t('navbar.materials'),
       icon: <MaterialsIcon width="30px" height="35px" />,
-      description: 'Descrição sobre materiais',
+      description: t('description.materials'),
       path: '/concrete/materials',
     },
     {
       name: t('navbar.essays'),
       icon: <EssayIcon width="30px" height="35px" />,
-      description: 'Descrição sobre materiais',
+      description: t('description.essays'),
       path: '/concrete/essays',
     },
     {
@@ -27,13 +28,13 @@ const Concrete: NextPage = () => {
     {
       name: t('navbar.standards'),
       icon: <StandartsIcon style={{ color: 'white', fontSize: '30px' }} />,
-      description: 'Descrição sobre materiais',
+      description: t('description.standards'),
       path: '/concrete/standards',
     },
     {
       name: t('navbar.library'),
       icon: <LibraryIcon style={{ color: 'white', fontSize: '30px' }} />,
-      description: 'Descrição sobre materiais',
+      description: t('description.library'),
       path: '/concrete/library',
     },
   ];
@@ -54,7 +55,7 @@ const Concrete: NextPage = () => {
   ];
 
   return (
-    <WelcomeTemplate
+    <WelcomeTemplateConcrete
       stepperData={stepperData}
       welcomeData={welcomeData}
       icon={<ConcreteIcon width="50px" height="50px" />}
