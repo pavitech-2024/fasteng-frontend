@@ -9,12 +9,12 @@ import useAuth from '@/contexts/auth';
 import Languages from '../components/molecules/buttons/languages';
 import { LogoWhite, LoginPhoto } from '@/assets';
 
-//custom styles
+// custom styles
 import { LoginImage, LoginBackgroundPhoto } from '@/components/styles/styleds/login';
 import { AboutButton } from '@/components/styles/muis/login';
 import { MainButton as Button } from '@/components/styles/global';
 
-//mui
+// mui
 import { TextField, Box, Container, Typography } from '@mui/material';
 
 const Login: NextPage = () => {
