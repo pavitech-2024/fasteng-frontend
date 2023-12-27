@@ -4,85 +4,74 @@ import useAuth from "@/contexts/auth";
 import Marshall_SERVICE from "@/services/asphalt/dosages/marshall/marshall.service";
 import useMarshallStore from "@/stores/asphalt/marshall/marshall.store";
 import { Box, Button } from "@mui/material";
-import { useEffect, useState } from "react";
-import GranulometryCompositionTable from "./tables/step-3-table";
+import { useState } from "react";
 import { GridColDef } from "@mui/x-data-grid";
-import { AllSieves } from "@/interfaces/common";
 import { t } from "i18next";
-import { toast } from "react-toastify";
 import InputEndAdornment from "@/components/atoms/inputs/input-endAdornment";
+import Step3Table from "./tables/step-3-table";
+import Step3InputTable from "./tables/step-3-input-table";
 
 const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { granulometryCompositionData: data, materialSelectionData, setData } = useMarshallStore();
 
-  // useEffect(() => {
-  //   toast.promise(
-  //     async () => {
-  //       if (data.table_rows && data.table_columns && data.table_rows.length == 0 && data.table_columns.length == 0) {
-  //         const table_rows = [];
-  //         const table_columns: GridColDef[] = []
+  // Tabela de inputs
+  // Definindo a row e as colunas para a tabela de inputs
+  const inputRows: { [key: string]: number }[] = data.percentageInputs;
 
-  //         table_columns.push({
-  //           field: 'sieve_label',
-  //           headerName: t('granulometry-asphalt.sieves'),
-  //           valueFormatter: ({ value }) => `${value}`,
-  //         })
+  if (data.percentageInputs && data.percentageInputs.length === 0) {
+    const table_data = [];
 
-  //         AllSieves.forEach((sieve) => {
+    const aggregates_percentages = {}
 
-  //           const contains = data.granulometry_data.some(aggregate => (sieve.label in aggregate.passants))
+    materialSelectionData.aggregates.forEach(aggregate => {
+      const { _id, name } = aggregate
+      aggregates_percentages['percentage_'.concat(_id)] = null
+    })
 
-  //           if (contains) {
-  //             const aggregates_data = {}
-  //             data.granulometry_data.forEach(aggregate => {
-  //               const { _id, passants } = aggregate
+    table_data.push({ ...aggregates_percentages })
 
-  //               aggregates_data['total_passant_' + _id] = passants[sieve.label]
-  //               aggregates_data['passant_' + _id] = null
+    setData({ step: 2, key: 'percentageInputs', value: table_data });
+  }
 
-  //               // adicionando as colunas à tabela
-  //               table_columns.push({
-  //                 field: 'total_passant_' + _id,
-  //                 headerName: t('granulometry-asphalt.total_passant'),
-  //                 valueFormatter: ({ value }) => `${value}`,
-  //               })
-  //               table_columns.push({
-  //                 field: 'passant_' + _id,
-  //                 headerName: t('granulometry-asphalt.passant'),
-  //                 valueFormatter: ({ value }) => `${value}`,
-  //               })
+  const inputColumns: GridColDef[] = []
 
-  //               // adicionando os agrupamentos das colunas na tabela pelo _id do material
-  //               // columnGroupingModel.push({
-  //               //   groupId: _id,
-  //               //   children: [{ field: 'total_passant_' + _id }, { field: 'passant_' + _id }],
-  //               //   headerAlign: 'center',
-  //               // })
-  //             })
-  //             table_rows.push({ sieve_label: sieve.label, ...aggregates_data })
-  //           }
-  //         })
-  //         setData({ step: 2, key: 'table_rows', value: table_rows });
-  //         setData({ step: 2, key: 'table_columns', value: table_columns });
+  materialSelectionData.aggregates.forEach(aggregate => {
+    const { _id, name } = aggregate
 
-  //         console.log(table_rows)
-  //         console.log(table_columns)
-  //       }
-  //       setLoading(false);
-  //     },
-  //     {
-  //       pending: t('loading.data.pending'),
-  //       success: t('loading.data.success'),
-  //       error: t('loading.data.error'),
-  //     }
-  //   );
-  // }, []);
+    inputColumns.push({
+      field: 'percentage_'.concat(_id),
+      headerName: name,
+      valueFormatter: ({ value }) => `${value}`,
+      renderCell: ({ row }) => {
+        if (!inputRows) {
+          return;
+        }
 
+        return (
+          <InputEndAdornment
+            adornment={'%'}
+            type="number"
+            value={inputRows[0]['percentage_'.concat(_id)]}
+            onChange={(e) => {
+              if (e.target.value === null) return;
+              const newRows = [...inputRows];
+              newRows[0]['percentage_'.concat(_id)] = Number(e.target.value);
+              setData({ step: 2, key: 'percentageInputs', value: newRows });
+            }}
+          />
+        );
+      }
+    })
+  })
+
+  // Tabela de dados  
+  // Definindo as rows para a tabela de dados
   const rows = data.table_data.table_rows;
 
+  // Definindo as colunas para tabela de dados
   const columnGrouping = [];
-  const columns = [];
+  const columns: GridColDef[] = [];
 
   data.table_data.table_column_headers.forEach(header => {
     if (header === 'sieve_label') {
@@ -96,7 +85,7 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
         columns.push({
           field: header,
           headerName: t('granulometry-asphalt.total_passant'),
-          valueFormatter: ({ value }) => `${value}`,
+          valueFormatter: ({ value }) => `${value}%`,
         })
       } else {
         const _id = header.replace("passant_", "")
@@ -104,28 +93,7 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
         columns.push({
           field: header,
           headerName: t('granulometry-asphalt.passant'),
-          valueFormatter: ({ value }) => `${value}`,
-          renderCell: ({ row }) => {
-            if (!rows) {
-              return;
-            }
-
-            const sieve_index = rows.findIndex((r) => r.sieve_label === row['sieve_label']);
-
-            return (
-              <InputEndAdornment
-                adornment={'%'}
-                type="number"
-                value={rows[sieve_index][header]}
-                onChange={(e) => {
-                  if (e.target.value === null) return;
-                  const newRows = [...rows];
-                  newRows[sieve_index][header] = e.target.value;
-                  setData({ step: 2, key: 'table_rows', value: newRows });
-                }}
-              />
-            );
-          }
+          valueFormatter: ({ value }) => value ? `${value}%` : '',
         })
         columnGrouping.push({
           groupId: name,
@@ -144,6 +112,25 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
 
   return (
     <>
+      {/* {loading ? (
+        <Loading />
+      ) : ( */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+        }}
+      >
+        <Step3InputTable rows={inputRows} columns={inputColumns} marshall={marshall} />
+        <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
+        <Button
+          sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
+          onClick={() => { }}
+        >
+          {t('calculate')}
+        </Button>
+      </Box>
       {loading ? (
         <Loading />
       ) : (
@@ -154,13 +141,7 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
             gap: '10px',
           }}
         >
-          <GranulometryCompositionTable rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
-          <Button
-            sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
-            onClick={() => {}}
-          >
-            {t('calculate')}
-          </Button>
+          <p>Teste</p>
         </Box>
       )}
     </>

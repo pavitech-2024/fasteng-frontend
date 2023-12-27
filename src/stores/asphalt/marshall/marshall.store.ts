@@ -27,6 +27,7 @@ interface MarshallGranulometryCompositionData {
       passant: string,
     }
   }[], table_column_headers: string [] };
+  percentageInputs: {[key: string] : number}[];
   project: number[];
   dnitBands: { higher: [string, number][], lower: [string, number][] };
   graphData: any[];
@@ -68,6 +69,7 @@ const initialState = {
   },
   granulometryCompositionData: {
     table_data: null,
+    percentageInputs: [],
     project: [],
     dnitBands: null,
     graphData: [],
