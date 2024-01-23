@@ -14,8 +14,10 @@ import { GridColDef } from '@mui/x-data-grid';
 const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
+  console.log("🚀 ~ materials:", materials)
   const { materialSelectionData } = useABCPStore();
-  const [searchValue, setSearchValue] = useState<string>('');
+  const [agglomerateSearchValue, setAgglomerateSearchValue] = useState<string>('');
+  const [binderSearchValue, setBinderSearchValue] = useState<string>('');
 
   const { user } = useAuth();
 
@@ -50,17 +52,22 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
   //   return type === 'coarseAggregate' || type === 'fineAggregate';
   // });
 
-  const handleInputSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAgglomerateInputSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setSearchValue(value);
+    setAgglomerateSearchValue(value);
+  }
+
+  const handleBinderInputSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setBinderSearchValue(value);
   }
 
   const filteredMaterials = materials
-    .filter(({ name, type }) => name.includes(searchValue) || type.includes(searchValue))
+    .filter(({ name, type }) => name.includes(agglomerateSearchValue) || type.includes(agglomerateSearchValue))
 
   const aggregateRows = [
     {
-      inputComponent: <TextField label="Pesquisar" variant="standard" onChange={handleInputSearch}/>,
+      inputComponent: <TextField label="Pesquisar" variant="standard" onChange={handleAgglomerateInputSearch}/>,
     },
     ...filteredMaterials.map(({ _id, name, type }) => ({
       _id,
@@ -82,7 +89,14 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
     },
   ];
 
-  const binderRows = materials
+  const filteredBinderMaterials = materials
+    .filter(({ name, type }) => name.includes(binderSearchValue) || type.includes(binderSearchValue))
+
+  const binderRows = [
+    {
+      inputComponent: <TextField label="Pesquisar" variant='standard'  onChange={handleBinderInputSearch}/>
+    },
+    ...filteredBinderMaterials
     .map(({ _id, name, type, description }) => {
       const { resistance } = description;
       return {
@@ -94,7 +108,8 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
     })
     .filter(({ type }) => {
       return type === 'cement';
-    });
+    })
+  ] 
 
   const binderColumns: GridColDef[] = [
     {
