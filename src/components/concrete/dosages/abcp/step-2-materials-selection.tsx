@@ -4,7 +4,7 @@ import useAuth from '@/contexts/auth';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
 import useABCPStore, { ABCPData } from '@/stores/concrete/abcp/abcp.store';
-import { Box } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -39,15 +39,26 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
     );
   }, []);
 
-  const aggregateRows = materials
-    .map(({ _id, name, type }) => ({
+  // const aggregateRows = materials.map(({ _id, name, type }) => ({
+  //   _id,
+  //   name,
+  //   type,
+  //   inputComponent: <TextField label="Seu Rótulo" variant="outlined" />,
+  // }))
+  // .filter(({ type }) => {
+  //   return type === 'coarseAggregate' || type === 'fineAggregate';
+  // });
+
+  const aggregateRows = [
+    {
+      inputComponent: <TextField label="Pesquisar" variant="standard" />,
+    },
+    ...materials.map(({ _id, name, type }) => ({
       _id,
       name,
       type,
-    }))
-    .filter(({ type }) => {
-      return type === 'coarseAggregate' || type === 'fineAggregate';
-    });
+    })).filter(({ type }) => type === 'coarseAggregate' || type === 'fineAggregate'),
+  ];
 
   const aggregateColumns: GridColDef[] = [
     {
