@@ -9,12 +9,13 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import MaterialSelectionTable from './tables/material-selection-table';
-import { GridColDef, useGridApiContext, useGridApiRef } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 
 const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
   const { materialSelectionData } = useABCPStore();
+  const [searchValue, setSearchValue] = useState<string>('');
 
   const { user } = useAuth();
 
@@ -49,11 +50,19 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
   //   return type === 'coarseAggregate' || type === 'fineAggregate';
   // });
 
+  const handleInputSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchValue(value);
+  }
+
+  const filteredMaterials = materials
+    .filter(({ name, type }) => name.includes(searchValue) || type.includes(searchValue))
+
   const aggregateRows = [
     {
-      inputComponent: <TextField label="Pesquisar" variant="standard" />,
+      inputComponent: <TextField label="Pesquisar" variant="standard" onChange={handleInputSearch}/>,
     },
-    ...materials.map(({ _id, name, type }) => ({
+    ...filteredMaterials.map(({ _id, name, type }) => ({
       _id,
       name,
       type,

@@ -17,12 +17,6 @@ interface MaterialWithInput {
 
 type RowsWithInput = (MaterialRow | MaterialWithInput)[];
 
-// interface MaterialSelectionProps {
-//   header?: string;
-//   rows: { _id: string; name: string; type: string; resistance?: string }[];
-//   columns: GridColDef[];
-// }
-
 interface MaterialSelectionProps {
   header?: string;
   rows: RowsWithInput;
@@ -40,7 +34,7 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
       return row.inputComponent;
     }
 
-    return params.value; // Renderizar outras colunas normalmente
+    return params.value;
   };
 
   return (
@@ -73,6 +67,7 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
           }}
           checkboxSelection
           disableRowSelectionOnClick
+          hideFooter
           isRowSelectable={(params: GridRowParams) => {
             const selectedRowType = rows[params.id]?.type;
             if (selectedRowType === 'cement') {
@@ -96,19 +91,6 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
             // Salva os valores atuais de fineAggregate e coarseAggregate
             const currentFineAggregate = materialSelectionData.fineAggregate;
             const currentCoarseAggregate = materialSelectionData.coarseAggregate;
-
-            // rowSelection.forEach((selectedRow, index) => {
-            //   const { _id, type } = rows[selectedRow];
-
-            //   if (type === 'cement') {
-            //     const rowIndex = rows.findIndex((row) => row._id === _id);
-            //     updatedStates.cement = rowIndex;
-            //   } else if (type === 'coarseAggregate') {
-            //     updatedStates.coarseAggregate = _id;
-            //   } else if (type === 'fineAggregate') {
-            //     updatedStates.fineAggregate = _id;
-            //   }
-            // });
 
             rowSelection.forEach((selectedRow, index) => {
               const row = rows[selectedRow];
@@ -155,15 +137,6 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
           }}
           rowSelectionModel={rowSelectionModel}
           disableColumnSelector
-          // columns={columns.map((column) => ({
-          //   ...column,
-          //   disableColumnMenu: true,
-          //   sortable: false,
-          //   align: 'center',
-          //   headerAlign: 'center',
-          //   minWidth: 50,
-          //   flex: 1,
-          // }))}
           columns={columns.map((column) => ({
             ...column,
             disableColumnMenu: true,
