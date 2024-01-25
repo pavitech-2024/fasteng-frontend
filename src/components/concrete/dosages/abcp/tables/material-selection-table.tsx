@@ -95,8 +95,8 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
             };
 
             // Salva os valores atuais de fineAggregate e coarseAggregate
-            const currentFineAggregate = materialSelectionData.fineAggregate;
-            const currentCoarseAggregate = materialSelectionData.coarseAggregate;
+            // const currentFineAggregate = materialSelectionData.fineAggregate;
+            // const currentCoarseAggregate = materialSelectionData.coarseAggregate;
 
             rowSelection.forEach((selectedRow, index) => {
               const row = rows[selectedRow];
@@ -110,7 +110,7 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
                 } else if (type === t("abcp.step-3.coarse-aggregate")) {
                     updatedStates.coarseAggregate = { id: _id, type: 'coarseAggregate' };
                 } else if (type === t("abcp.step-3.fine-aggregate")) {
-                    updatedStates.fineAggregate = { id: _id, type: 'fineAggregate' };
+                  updatedStates.fineAggregate = updatedStates.fineAggregate?.id === row._id ? null : { id: _id, type: 'fineAggregate' };
                 }
               }
             });
@@ -119,13 +119,17 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
             setData({
               step: 1,
               key: 'fineAggregate',
-              value: updatedStates.fineAggregate ?? currentFineAggregate,
+              value: updatedStates.fineAggregate !== null && updatedStates.fineAggregate.id !== materialSelectionData.fineAggregate?.id
+              ? updatedStates.fineAggregate
+              : null
             });
 
             setData({
               step: 1,
               key: 'coarseAggregate',
-              value: updatedStates.coarseAggregate ?? currentCoarseAggregate,
+              value: updatedStates.coarseAggregate !== null && updatedStates.coarseAggregate.id !== materialSelectionData.coarseAggregate?.id
+              ? updatedStates.coarseAggregate
+              : null
             });
 
             setData({
