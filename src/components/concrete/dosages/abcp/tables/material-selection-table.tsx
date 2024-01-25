@@ -3,6 +3,7 @@ import useABCPStore from '@/stores/concrete/abcp/abcp.store';
 import { Box } from '@mui/material';
 import { DataGrid, GridCellParams, GridColDef, GridRowParams, GridRowSelectionModel } from '@mui/x-data-grid';
 import { useState } from 'react';
+import { t } from 'i18next';
 
 interface MaterialRow {
   _id: string;
@@ -101,9 +102,9 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
                 if (type === 'cement') {
                   const rowIndex = rows.findIndex((r) => '_id' in r && r._id === _id);
                   updatedStates.cement = rowIndex;
-                } else if (type === 'coarseAggregate') {
+                } else if (type === t("abcp.step-3.coarse-aggregate")) {
                   updatedStates.coarseAggregate = _id;
-                } else if (type === 'fineAggregate') {
+                } else if (type === t("abcp.step-3.fine-aggregate")) {
                   updatedStates.fineAggregate = _id;
                 }
               }

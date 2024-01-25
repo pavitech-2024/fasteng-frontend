@@ -1,7 +1,7 @@
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
-import { ConcreteMaterial } from '@/interfaces/concrete';
+import { ConcreteMaterial, ConcreteMaterialTypes } from '@/interfaces/concrete';
 import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
 import useABCPStore, { ABCPData } from '@/stores/concrete/abcp/abcp.store';
 import { Box, TextField } from '@mui/material';
@@ -67,13 +67,23 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
 
   const aggregateRows = [
     {
-      inputComponent: <TextField label="Pesquisar" variant="standard" onChange={handleAgglomerateInputSearch}/>,
+      inputComponent: <TextField label={t("concrete.search")} variant="standard" onChange={handleAgglomerateInputSearch}/>,
     },
-    ...filteredMaterials.map(({ _id, name, type }) => ({
-      _id,
-      name,
-      type,
-    })).filter(({ type }) => type === 'coarseAggregate' || type === 'fineAggregate'),
+    ...filteredMaterials.map(({ _id, name, type }) => {
+      let translatedType = type;
+
+      if (type === 'fineAggregate') {
+        translatedType = t("abcp.step-3.fine-aggregate") as ConcreteMaterialTypes
+      } else if (type === 'coarseAggregate') {
+        translatedType = t("abcp.step-3.coarse-aggregate") as ConcreteMaterialTypes
+      }
+      
+      return {
+        _id,
+        name,
+        type: translatedType, // Use o novo valor de 'type'
+      };
+    }).filter(({ type }) => type === t("abcp.step-3.fine-aggregate") || type === t("abcp.step-3.coarse-aggregate")),
   ];
 
   const aggregateColumns: GridColDef[] = [
@@ -94,7 +104,7 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
 
   const binderRows = [
     {
-      inputComponent: <TextField label="Pesquisar" variant='standard'  onChange={handleBinderInputSearch}/>
+      inputComponent: <TextField label={t("concrete.search")} variant='standard'  onChange={handleBinderInputSearch}/>
     },
     ...filteredBinderMaterials
     .map(({ _id, name, type, description }) => {

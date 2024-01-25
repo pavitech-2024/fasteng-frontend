@@ -34,5 +34,6 @@
   "abcp.step-3.granulometry": "Selecione a granulometria",
   "abcp.step-3.unit_mass": "Selecione a massa unitária",
   "concrete.materials.aggregates": "Agregados",
-  "concrete.materials.binders": "Aglomerantes"
+  "concrete.materials.binders": "Aglomerantes",
+  "concrete.search": "Pesquisar"
 }

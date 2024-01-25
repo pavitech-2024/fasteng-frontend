@@ -34,5 +34,6 @@
   "abcp.step-3.granulometry": "Select granulometry",
   "abcp.step-3.unit_mass": "Select unit mass",
   "concrete.materials.aggregates": "Aggregates",
-  "concrete.materials.binders": "Binders"
+  "concrete.materials.binders": "Binders",
+  "concrete.search": "Search"
 }
