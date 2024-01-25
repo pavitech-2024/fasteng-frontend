@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [essays, setEssays] = useState<any>();
+  console.log("🚀 ~ essays:", essays)
   const { materialSelectionData, setData, essaySelectionData } = useABCPStore();
 
   const { user } = useAuth();
@@ -86,7 +87,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
               }}
             >
               <Box>
-                <Typography>{`${essays.fineAggregate.name} - ${t('abcp.step-3.fine-aggregate')}`}</Typography>
+                <Typography>{`${essays.fineAggregateData.name} - ${t('abcp.step-3.fine-aggregate')}`}</Typography>
                 <Box
                   sx={{
                     display: 'grid',
@@ -96,7 +97,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                 >
                   <TextField
                     variant="standard"
-                    key={`specificMass_${essays.fineAggregate._id}`}
+                    key={`specificMass_${essays.fineAggregateData._id}`}
                     label={t('abcp.step-3.fine-specific-mass')}
                     value={essaySelectionData.fineAggregate.specificMass}
                     onChange={(e) => {
@@ -110,9 +111,9 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                   />
                   <DropDown
                     variant="standard"
-                    key={`granulometry_${essays.fineAggregate._id}`}
+                    key={`granulometry_${essays.fineAggregateData._id}`}
                     label={t('abcp.step-3.granulometry')}
-                    options={essays.fineAggregate.granulometrys?.map((essay: any) => {
+                    options={essays.fineAggregateData.granulometrys?.map((essay: any) => {
                       const { generalData, results, _id } = essay;
                       return {
                         label: `${generalData.name} - (Diâmetro máximo: ${results.nominal_diameter}mm)`,
@@ -143,7 +144,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
               }}
             >
               <Box>
-                <Typography>{`${essays.coarseAggregate.name} - ${t('abcp.step-3.coarse-aggregate')}`}</Typography>
+                <Typography>{`${essays.coarseAggregateData.name} - ${t('abcp.step-3.coarse-aggregate')}`}</Typography>
                 <Box
                   sx={{
                     display: 'grid',
@@ -153,7 +154,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                 >
                   <TextField
                     variant="standard"
-                    key={`specific_mass_${essays.coarseAggregate._id}`}
+                    key={`specific_mass_${essays.coarseAggregateData._id}`}
                     label={t('abcp.step-3.coarse-specific-mass')}
                     value={essaySelectionData.coarseAggregate.specificMass}
                     onChange={(e) => {
@@ -167,9 +168,9 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                   />
                   <DropDown
                     variant="standard"
-                    key={`granulometry_${essays.coarseAggregate._id}`}
+                    key={`granulometry_${essays.coarseAggregateData._id}`}
                     label={t('abcp.step-3.granulometry')}
-                    options={essays.coarseAggregate.granulometrys?.map((essay: any) => {
+                    options={essays.coarseAggregateData.granulometrys?.map((essay: any) => {
                       const { generalData, results, _id } = essay;
                       return {
                         label: `${generalData.name} - (Diâmetro máximo: ${results.nominal_diameter}mm)`,
@@ -183,9 +184,9 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                   />
                   <DropDown
                     variant="standard"
-                    key={`unit_mass_${essays.coarseAggregate._id}`}
+                    key={`unit_mass_${essays.coarseAggregateData._id}`}
                     label={t('abcp.step-3.unit_mass')}
-                    options={essays.coarseAggregate.unit_masses?.map((essay: any) => {
+                    options={essays.coarseAggregateData.unit_masses?.map((essay: any) => {
                       const { generalData, result, _id } = essay;
                       return {
                         key: _id,
@@ -216,7 +217,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                 }}
               >
                 <Box>
-                  <Typography>{`${essays.cement.name} - ${t('abcp.step-3.cement')}`}</Typography>
+                  <Typography>{`${essays.cementData.name} - ${t('abcp.step-3.cement')}`}</Typography>
                   <Box
                     sx={{
                       display: 'grid',
@@ -233,7 +234,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                         const prevData = {
                           ...essaySelectionData.cement,
                           specificMass: Number(e.target.value),
-                          _id: essays.cement._id,
+                          _id: essays.cementData._id,
                         };
                         setData({ step: 2, key: 'cement', value: prevData });
                       }}

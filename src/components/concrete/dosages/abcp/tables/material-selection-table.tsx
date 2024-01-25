@@ -79,9 +79,14 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
           onRowSelectionModelChange={(rowSelection) => {
             setRowSelectionModel(rowSelection);
 
+            type AggregateObject = {
+              id: string,
+              type: string
+            }
+
             const updatedStates: {
-              fineAggregate: string | null;
-              coarseAggregate: string | null;
+              fineAggregate: AggregateObject | null;
+              coarseAggregate: AggregateObject | null;
               cement: number | null;
             } = {
               fineAggregate: null,
@@ -98,14 +103,14 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
             
               if ('_id' in row) {
                 const { _id, type } = row;
-            
+    
                 if (type === 'cement') {
-                  const rowIndex = rows.findIndex((r) => '_id' in r && r._id === _id);
-                  updatedStates.cement = rowIndex;
+                    const rowIndex = rows.findIndex((r) => '_id' in r && r._id === _id);
+                    updatedStates.cement = updatedStates.cement === rowIndex ? null : rowIndex;
                 } else if (type === t("abcp.step-3.coarse-aggregate")) {
-                  updatedStates.coarseAggregate = _id;
+                    updatedStates.coarseAggregate = { id: _id, type: 'coarseAggregate' };
                 } else if (type === t("abcp.step-3.fine-aggregate")) {
-                  updatedStates.fineAggregate = _id;
+                    updatedStates.fineAggregate = { id: _id, type: 'fineAggregate' };
                 }
               }
             });
@@ -123,11 +128,6 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
               value: updatedStates.coarseAggregate ?? currentCoarseAggregate,
             });
 
-            // setData({
-            //   step: 1,
-            //   key: 'cement',
-            //   value: updatedStates.cement !== null ? rows[updatedStates.cement]._id : null,
-            // });
             setData({
               step: 1,
               key: 'cement',

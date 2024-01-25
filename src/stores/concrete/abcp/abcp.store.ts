@@ -12,8 +12,14 @@ interface GeneralData {
 }
 
 interface ABCP_MaterialSelection {
-  coarseAggregate: string;
-  fineAggregate: string;
+  coarseAggregate: {
+    id: string,
+    type: string
+  };
+  fineAggregate: {
+    id: string,
+    type: string
+  };
   cement: string;
 }
 
@@ -88,8 +94,14 @@ const initialState = {
     description: null,
   },
   materialSelectionData: {
-    coarseAggregate: null,
-    fineAggregate: null,
+    coarseAggregate: {
+      id: null,
+      type: null
+    },
+    fineAggregate: {
+      id: null,
+      type: null
+    },
     cement: null,
   },
   essaySelectionData: {

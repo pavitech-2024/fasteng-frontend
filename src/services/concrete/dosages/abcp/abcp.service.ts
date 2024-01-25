@@ -160,9 +160,9 @@ class ABCP_SERVICE implements IEssayService {
     console.log('🚀 ~ file: abcp.service.ts:135 ~ ABCP_SERVICE ~ userId:', userId);
     try {
       const response = await Api.post(`${this.info.backend_path}/essay-selection`, {
-        cement_id: cement,
-        coarseAggregate_id: coarseAggregate,
-        fineAggregate_id: fineAggregate,
+        cement: cement,
+        coarseAggregate: coarseAggregate,
+        fineAggregate: fineAggregate,
       });
 
       const { essays, success, error } = response.data;

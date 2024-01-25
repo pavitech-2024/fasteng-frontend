@@ -145,22 +145,13 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
     }
   }, [materialSelectionData]);
 
-  function hasNullValue(obj: any): boolean {
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        if (obj[key] === null || obj[key] === undefined) {
-          return true;
-        }
-        if (typeof obj[key] === 'object' && hasNullValue(obj[key])) {
-          return true;
-        }
-      }
-    }
-    return false;
+  if (
+    materialSelectionData.cement !== null && 
+    materialSelectionData.coarseAggregate !== null && 
+    materialSelectionData.fineAggregate !== null
+  ) {
+    setNextDisabled(false)
   }
-
-  const hasNull = hasNullValue(materialSelectionData);
-  setNextDisabled(hasNull);
 
   return (
     <>
