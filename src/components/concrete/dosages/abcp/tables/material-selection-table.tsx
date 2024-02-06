@@ -30,7 +30,7 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
 
   const renderCell = (params: GridCellParams) => {
     const row = rows[params.id];
-    
+
     if ('inputComponent' in row) {
       return row.inputComponent;
     }
@@ -87,58 +87,58 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
             const updatedStates: {
               fineAggregate: AggregateObject | null;
               coarseAggregate: AggregateObject | null;
-              cement: number | null;
+              cement: AggregateObject | null;
             } = {
               fineAggregate: null,
               coarseAggregate: null,
               cement: null,
             };
 
-            // Salva os valores atuais de fineAggregate e coarseAggregate
-            // const currentFineAggregate = materialSelectionData.fineAggregate;
-            // const currentCoarseAggregate = materialSelectionData.coarseAggregate;
-
-            rowSelection.forEach((selectedRow, index) => {
+            rowSelection.forEach((selectedRow) => {
               const row = rows[selectedRow];
-            
+
               if ('_id' in row) {
                 const { _id, type } = row;
-    
+
                 if (type === 'cement') {
-                    const rowIndex = rows.findIndex((r) => '_id' in r && r._id === _id);
-                    updatedStates.cement = updatedStates.cement === rowIndex ? null : rowIndex;
+                  // const rowIndex = rows.findIndex((r) => '_id' in r && r._id === _id);
+                  // updatedStates.cement = updatedStates.cement === rowIndex ? null : rowIndex;
+                  // updatedStates.cement = rowIndex !== -1 ? rowIndex : null;
+                  updatedStates.cement = { id: _id, type: "cement"}
                 } else if (type === t("abcp.step-3.coarse-aggregate")) {
-                    updatedStates.coarseAggregate = { id: _id, type: 'coarseAggregate' };
+                  updatedStates.coarseAggregate = { id: _id, type: 'coarseAggregate' };
                 } else if (type === t("abcp.step-3.fine-aggregate")) {
                   updatedStates.fineAggregate = updatedStates.fineAggregate?.id === row._id ? null : { id: _id, type: 'fineAggregate' };
                 }
               }
             });
-
             // Atualiza os dados armazenados
             setData({
               step: 1,
               key: 'fineAggregate',
-              value: updatedStates.fineAggregate !== null && updatedStates.fineAggregate.id !== materialSelectionData.fineAggregate?.id
-              ? updatedStates.fineAggregate
-              : null
+              value: updatedStates.fineAggregate !== null
+                ? { ...(materialSelectionData.fineAggregate || {}), ...updatedStates.fineAggregate }
+                : null,
             });
 
             setData({
               step: 1,
               key: 'coarseAggregate',
-              value: updatedStates.coarseAggregate !== null && updatedStates.coarseAggregate.id !== materialSelectionData.coarseAggregate?.id
-              ? updatedStates.coarseAggregate
-              : null
+              value: updatedStates.coarseAggregate !== null
+                ? { ...(materialSelectionData.coarseAggregate || {}), ...updatedStates.coarseAggregate }
+                : null,
             });
 
             setData({
               step: 1,
               key: 'cement',
-              value: updatedStates.cement !== null && '_id' in rows[updatedStates.cement] 
-                ? (rows[updatedStates.cement] as MaterialRow)._id 
+              // value: updatedStates.cement !== null
+              //   ? (rows[updatedStates.cement] as MaterialRow)._id
+              //   : null,
+              value: updatedStates.cement !== null
+                ? { ...(materialSelectionData.cement || {}), ...updatedStates.cement }
                 : null,
-            });
+            })
           }}
           rowSelectionModel={rowSelectionModel}
           disableColumnSelector
@@ -155,9 +155,9 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
           rows={
             rows !== null
               ? rows.map((row, index) => ({
-                  ...row,
-                  id: index,
-                }))
+                ...row,
+                id: index,
+              }))
               : []
           }
           slots={{

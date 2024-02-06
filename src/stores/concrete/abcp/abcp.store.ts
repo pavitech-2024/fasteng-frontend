@@ -20,7 +20,10 @@ interface ABCP_MaterialSelection {
     id: string,
     type: string
   };
-  cement: string;
+  cement: {
+    id: string,
+    type: string
+  };
 }
 
 interface ABCP_EssaySelectionData {
@@ -102,7 +105,10 @@ const initialState = {
       id: null,
       type: null
     },
-    cement: null,
+    cement: {
+      id: null,
+      type: null
+    },
   },
   essaySelectionData: {
     fineAggregate: {

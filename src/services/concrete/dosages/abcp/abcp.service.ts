@@ -55,7 +55,7 @@ class ABCP_SERVICE implements IEssayService {
     try {
       switch (step) {
         case 0:
-          await this.submitGeneralData(data as ABCPData['generalData']);
+          await this.submitGeneralData(data as ABCPData['generalData'], this.userId);
           break;
         case 1:
           await this.submitMaterialSelection(data as ABCPData['materialSelectionData']);
@@ -81,7 +81,7 @@ class ABCP_SERVICE implements IEssayService {
   /** @generalData Methods for general-data (step === 0, page 1) */
 
   // send general data to backend to verify if there is already a ABCP dosage with same name
-  submitGeneralData = async (generalData: ABCPData['generalData']): Promise<void> => {
+  submitGeneralData = async (generalData: ABCPData['generalData'], userId: string): Promise<void> => {
     try {
       const { name } = generalData;
 
@@ -89,7 +89,7 @@ class ABCP_SERVICE implements IEssayService {
       if (!name) throw t('errors.empty-name');
 
       // verify if there is already a ABCP essay with same name for the sample
-      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name });
+      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, userId });
 
       const { success, error } = response.data;
 
@@ -117,16 +117,24 @@ class ABCP_SERVICE implements IEssayService {
 
   // send the selected materials to backend
   submitMaterialSelection = async (materialSelection: ABCPData['materialSelectionData']): Promise<void> => {
-    console.log(
-      '🚀 ~ file: abcp.service.ts:115 ~ ABCP_SERVICE ~ submitMaterialSelection= ~ materialSelection:',
-      materialSelection
-    );
     try {
       const { coarseAggregate, fineAggregate, cement } = materialSelection;
 
       if (!coarseAggregate) throw t('errors.empty-coarseAggregates');
       if (!fineAggregate) throw t('errors.empty-fineAggregates');
       if (!cement) throw t('errors.empty-binder');
+
+      const response = await Api.post(`${this.info.backend_path}/save-material-selection-step`, {
+        materialSelectionData: {
+          coarseAggregate,
+          fineAggregate,
+          cement
+        }
+      });
+
+      const { success, error } = response.data;
+
+      if (success === false) throw error.name;
     } catch (error) {
       console.log(error);
       throw error;
@@ -137,10 +145,6 @@ class ABCP_SERVICE implements IEssayService {
 
   // send the selected essays to backend
   submitEssaySelection = async (essaySelection: ABCPData['essaySelectionData']): Promise<void> => {
-    console.log(
-      '🚀 ~ file: abcp.service.ts:115 ~ ABCP_SERVICE ~ submitMaterialSelection= ~ essaySelection:',
-      essaySelection
-    );
     try {
       // const { coarseAggregate, fineAggregate, cement } = essaySelection;
       // if (!coarseAggregate) throw t('errors.empty-coarseAggregates');
@@ -166,8 +170,6 @@ class ABCP_SERVICE implements IEssayService {
       });
 
       const { essays, success, error } = response.data;
-
-      console.log('aqui', essays);
 
       if (success === false) throw error.name;
       else return essays;
