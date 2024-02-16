@@ -5,21 +5,19 @@ import { AcpDosageData } from '@/interfaces/concrete/abcp';
 import abcpDosageService from '@/services/concrete/dosages/abcp/abcp-consult.service';
 import { Box, Container, IconButton } from '@mui/material';
 import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { t } from 'i18next';
+import useABCPStore from '@/stores/concrete/abcp/abcp.store';
 
 const AbcpDosageConsult = () => {
   const [openModal, setOpenModal] = useState(false);
+  const { generalData, setData } = useABCPStore();
   const [dosages, setDosages] = useState<AcpDosageData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   const { user } = useAuth();
-
-  useEffect(() => {
-    console.log('🚀 ~ file: index.tsx:13 ~ AbcpDosageConsult ~ dosages:', dosages);
-  }, [dosages]);
 
   useEffect(() => {
     abcpDosageService
@@ -56,8 +54,20 @@ const AbcpDosageConsult = () => {
       });
   };
 
+  // const handleVisualizeDosage = (id: string) => {
+  //   router.push(`/concrete/dosages/consult/data/${id}`);
+  // };
+
   const handleVisualizeDosage = (id: string) => {
-    router.push(`/concrete/dosages/consult/data/${id}`);
+    const dosage = dosages.find((dosage) => dosage._id === id);
+    if (dosage) {
+      setData({ 
+        step: dosage.generalData.step,
+        key: 'state',
+        value: dosage
+      });
+    }
+    router.push(`/concrete/dosages/abcp`);
   };
 
   const columns: GridColDef[] = [
@@ -94,17 +104,21 @@ const AbcpDosageConsult = () => {
     },
   ];
 
+  const progressTextMap = {
+    1: t('general data'),
+    2: t('abcp.material-selection'),
+    3: t('abcp.essay-selection'),
+    4: t('abcp.inserting-params'),
+    5: t('abcp.dosage-resume'),
+  };
+
   const rows = dosages.map((row, index) => ({
     name: row.generalData.name,
-    progress: '---',
-    start: '---',
-    finish: '---',
+    progress: `(${row.generalData.step}/5) - ${progressTextMap[row.generalData.step]}`,
+    start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
+    finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
     id: row._id,
   }));
-
-  useEffect(() => {
-    console.log('🚀 ~ file: index.tsx:13 ~ AbcpDosageConsult ~ rows:', rows);
-  }, [rows]);
 
   return (
     <Container>

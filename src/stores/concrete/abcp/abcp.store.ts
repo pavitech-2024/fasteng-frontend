@@ -9,6 +9,7 @@ interface GeneralData {
   operator?: string;
   calculist?: string;
   description?: string;
+  step: number
 }
 
 interface ABCP_MaterialSelection {
@@ -71,6 +72,8 @@ export type ABCPData = {
   essaySelectionData: ABCP_EssaySelectionData;
   insertParamsData: ABCP_InsertParamsData;
   results: ABCP_Results;
+  createdAt: any
+  updatedAt: any
 };
 
 export type ABCPActions = {
@@ -96,6 +99,7 @@ const initialState = {
     operator: null,
     calculist: null,
     description: null,
+    step: 0
   },
   materialSelectionData: {
     name: null,
@@ -147,6 +151,8 @@ const initialState = {
     formula: null,
     resistanceCurve: null,
   },
+  createdAt: null,
+  updatedAt: null
 };
 
 const useABCPStore = create<ABCPData & ABCPActions>()(

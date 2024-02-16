@@ -16,9 +16,9 @@ const SpecificAbcpDosage = () => {
   const [dosage, setDosage] = useState<AcpDosageData>();
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
-  const dosageId = router.query?.id as string;
+  const dosageId = router?.query?.id as string;
 
-  const conditionValue = dosage.insertParamsData.condition;
+  const conditionValue = dosage?.insertParamsData.condition;
   const tolerance = 0.0001;
 
   const conditionLabel =
@@ -32,7 +32,7 @@ const SpecificAbcpDosage = () => {
     {
       key: 'resistanceCurve',
       label: t('abcp.results.resistance-curve'),
-      value: dosage.results.resistanceCurve,
+      value: dosage?.results.resistanceCurve,
       unity: 'MPa',
     },
     {
@@ -44,22 +44,18 @@ const SpecificAbcpDosage = () => {
     {
       key: 'wantedFck',
       label: t('abcp.results.fck'),
-      value: dosage.insertParamsData.fck,
+      value: dosage?.insertParamsData.fck,
       unity: 'MPa',
     },
     {
       key: 'reduction',
       label: t('abcp.results.reduction'),
-      value: dosage.insertParamsData.reduction,
+      value: dosage?.insertParamsData.reduction,
       unity: 'mm',
     },
   ];
 
   const { user } = useAuth();
-
-  useEffect(() => {
-    console.log('🚀 ~ file: [id].tsx:29 ~ SpecificAbcpDosage ~ dosage:', dosage);
-  }, [dosage]);
 
   useEffect(() => {
     abcpDosageService
@@ -77,45 +73,45 @@ const SpecificAbcpDosage = () => {
     {
       key: 'fcj',
       label: t('abcp.results.fcj'),
-      value: dosage.results.fcj,
+      value: dosage?.results.fcj,
       unity: 'MPa',
     },
     {
       key: 'waterCementRelation',
       label: t('abcp.results.water-cement'),
-      value: dosage.results.ac,
+      value: dosage?.results.ac,
       unity: '',
     },
     {
       key: 'waterConsume',
       label: t('abcp.results.water-consume'),
-      value: dosage.results.ca,
+      value: dosage?.results.ca,
       unity: 'Lm³',
     },
     {
       key: 'cementConsume',
       label: t('abcp.results.cement-consume'),
-      value: dosage.results.cc,
+      value: dosage?.results.cc,
       unity: 'Kg/m³',
     },
     {
       key: 'coarseAggregateConsume',
       label: t('abcp.results.coarse-aggregate-consume'),
-      value: dosage.results.cb,
+      value: dosage?.results.cb,
       unity: 'kg/m³',
     },
     {
       key: 'fineAggregateConsume',
       label: t('abcp.results.fine-aggregate-consume'),
-      value: dosage.results.careia,
+      value: dosage?.results.careia,
       unity: 'kg/m³',
     },
   ];
 
-  const coefficients = `${dosage.results.cc / dosage.results.cc} : ${(
-    dosage.results.careia / dosage.results.cc
-  ).toFixed(3)} : ${(dosage.results.cb / dosage.results.cc).toFixed(3)} : ${(
-    dosage.results.ca / dosage.results.cc
+  const coefficients = `${dosage?.results.cc / dosage?.results.cc} : ${(
+    dosage?.results.careia / dosage?.results.cc
+  ).toFixed(3)} : ${(dosage?.results.cb / dosage?.results.cc).toFixed(3)} : ${(
+    dosage?.results.ca / dosage?.results.cc
   ).toFixed(3)}`;
 
   return (
@@ -208,7 +204,7 @@ const SpecificAbcpDosage = () => {
                 </Box>
 
                 <ResultSubTitle title={t('abcp.result.graph')} sx={{ margin: '.65rem' }} />
-                <AbramsCurvGraph result={dosage.results} />
+                <AbramsCurvGraph result={dosage?.results} />
               </FlexColumnBorder>
             </Box>
           </Box>
