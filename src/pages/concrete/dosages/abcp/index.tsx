@@ -25,7 +25,7 @@ const DosageABCP: NextPage = () => {
   const childrens = [
     { step: 0, children: <ABCP_GeneralData />, data: store.generalData },
     { step: 1, children: <ABCP_MaterialsSelection abcp={abcp} />, data: store },
-    { step: 2, children: <ABCP_EssaySelection abcp={abcp} />, data: store.materialSelectionData },
+    { step: 2, children: <ABCP_EssaySelection abcp={abcp} />, data: store },
     { step: 3, children: <ABCP_InsertingParams abcp={abcp} />, data: store },
     { step: 4, children: <ABCP_Results abcp={abcp} />, data: store },
   ];

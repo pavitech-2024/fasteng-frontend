@@ -61,10 +61,10 @@ class ABCP_SERVICE implements IEssayService {
           await this.submitMaterialSelection(data as ABCPData, this.userId);
           break;
         case 2:
-          await this.submitEssaySelection(data as ABCPData['essaySelectionData']);
+          await this.submitEssaySelection(data as ABCPData, this.userId);
           break;
         case 3:
-          await this.submitInsertParams(data as ABCPData['insertParamsData']);
+          await this.submitInsertParams(data as ABCPData, this.userId);
           await this.calculateResults(data as ABCPData);
           break;
         case 4:
@@ -89,7 +89,7 @@ class ABCP_SERVICE implements IEssayService {
       if (!name) throw t('errors.empty-name');
 
       // verify if there is already a ABCP essay with same name for the sample
-      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, userId });
+      const response = await Api.post(`${this.info.backend_path}/verify-init/${userId}`, { generalData });
 
       const { success, error } = response.data;
 
@@ -110,6 +110,31 @@ class ABCP_SERVICE implements IEssayService {
       const { materials, success, error } = response.data;
       if (success === false) throw error.name;
       else return materials;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  // get essay from materials id
+  getEssaysByMaterialId = async (
+    data: ABCPData['materialSelectionData'],
+    data2: any
+  ): Promise<EssaySelection_Results> => {
+    try {
+      const response = await Api.post(`${this.info.backend_path}/essay-selection`, {
+        //cement: cement,
+        cement: {
+          id: "64f03f83bd4afb4bb13aea45",
+          type: "cement"
+        },
+        coarseAggregate: data2.coarseAggregate,
+        fineAggregate: data2.fineAggregate,
+      });
+
+      const { essays, success, error } = response.data;
+
+      if (success === false) throw error.name;
+      else return essays;
     } catch (error) {
       throw error;
     }
@@ -149,48 +174,57 @@ class ABCP_SERVICE implements IEssayService {
   /** @essaySelection Methods for essay-selection-data (step === 2, page 3) */
 
   // send the selected essays to backend
-  submitEssaySelection = async (essaySelection: ABCPData['essaySelectionData']): Promise<void> => {
+  submitEssaySelection = async (data: ABCPData, userId: string): Promise<void> => {
+    console.log("🚀 ~ ABCP_SERVICE ~ submitEssaySelection= ~ data:", data)
     try {
+      const { coarseAggregate, fineAggregate, cement } = data.essaySelectionData;
+      const { name } = data.generalData
+
       // const { coarseAggregate, fineAggregate, cement } = essaySelection;
       // if (!coarseAggregate) throw t('errors.empty-coarseAggregates');
       // if (!fineAggregate) throw t('errors.empty-fineAggregates');
       // if (!cement) throw t('errors.empty-binder');
+
+      const response = await Api.post(`${this.info.backend_path}/save-essay-selection-step/${userId}`, {
+        essaySelectionData: {
+          name,
+          fineAggregate,
+          coarseAggregate,
+          cement
+        }
+      });
+
+      const { success, error } = response.data;
+
+      if (success === false) throw error.name;
     } catch (error) {
       console.log(error);
       throw error;
     }
   };
 
-  // get essay from materials id
-  getEssaysByMaterialId = async (
-    data: ABCPData['materialSelectionData']
-  ): Promise<EssaySelection_Results> => {
-    console.log("🚀 ~ ABCP_SERVICE ~ data:", data)
-    try {
-      const response = await Api.post(`${this.info.backend_path}/essay-selection`, {
-        //cement: cement,
-        cement: {
-          id: "64f03f83bd4afb4bb13aea45",
-          type: "cement"
-        },
-        coarseAggregate: data.coarseAggregate,
-        fineAggregate: data.fineAggregate,
-      });
-
-      const { essays, success, error } = response.data;
-
-      if (success === false) throw error.name;
-      else return essays;
-    } catch (error) {
-      throw error;
-    }
-  };
-
   /** @insertParams Methods for insert-params-data (step === 3, page 4) */
 
-  submitInsertParams = async ({ condition, fck, reduction }: ABCPData['insertParamsData']): Promise<void> => {
+  submitInsertParams = async (data: ABCPData, userId: string): Promise<void> => {
+    console.log("🚀 ~ ABCP_SERVICE ~ submitInsertParams= ~ data:", data)
     try {
+      const { reduction, fck, condition } = data.insertParamsData;
+      const { name } = data.generalData;
+
       if (reduction < 40 || reduction > 100) throw t('errors.invalid-reduction');
+
+      const response = await Api.post(`${this.info.backend_path}/save-insert-params-step/${userId}`, {
+        insertParamsData: {
+          name,
+          reduction,
+          fck,
+          condition
+        }
+      });
+
+      const { success, error } = response.data;
+
+      if (success === false) throw error.name;
     } catch (error) {
       throw error;
     }
@@ -199,9 +233,17 @@ class ABCP_SERVICE implements IEssayService {
   // calculate results from abcp dosage
   calculateResults = async (data: ABCPData): Promise<void> => {
     try {
+      const newMaterialData = { ...data.materialSelectionData };
+      newMaterialData.cement = {
+        id: "64f03f83bd4afb4bb13aea45",
+        type: "cement"
+      }
+
+      console.log("🚀 ~ ABCP_SERVICE ~ calculateResults= ~ newMaterialData:", newMaterialData)
+
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: data.generalData,
-        materialSelectionData: data.materialSelectionData,
+        materialSelectionData: newMaterialData, //Teste
         essaySelectionData: data.essaySelectionData,
         insertParamsData: data.insertParamsData,
       });
