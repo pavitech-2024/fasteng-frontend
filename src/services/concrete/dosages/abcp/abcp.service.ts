@@ -58,7 +58,7 @@ class ABCP_SERVICE implements IEssayService {
           await this.submitGeneralData(data as ABCPData['generalData'], this.userId);
           break;
         case 1:
-          await this.submitMaterialSelection(data as ABCPData['materialSelectionData']);
+          await this.submitMaterialSelection(data as ABCPData, this.userId);
           break;
         case 2:
           await this.submitEssaySelection(data as ABCPData['essaySelectionData']);
@@ -116,19 +116,24 @@ class ABCP_SERVICE implements IEssayService {
   };
 
   // send the selected materials to backend
-  submitMaterialSelection = async (materialSelection: ABCPData['materialSelectionData']): Promise<void> => {
+  submitMaterialSelection = async (data: ABCPData, userId: string): Promise<void> => {
     try {
-      const { coarseAggregate, fineAggregate, cement } = materialSelection;
+      const { coarseAggregate, fineAggregate } = data.materialSelectionData;
+      const { name } = data.generalData
 
       if (!coarseAggregate) throw t('errors.empty-coarseAggregates');
       if (!fineAggregate) throw t('errors.empty-fineAggregates');
-      if (!cement) throw t('errors.empty-binder');
+      //if (!cement) throw t('errors.empty-binder');
 
-      const response = await Api.post(`${this.info.backend_path}/save-material-selection-step`, {
+      const response = await Api.post(`${this.info.backend_path}/save-material-selection-step/${userId}`, {
         materialSelectionData: {
+          name,
           coarseAggregate,
           fineAggregate,
-          cement
+          cement: {
+            id: "64f03f83bd4afb4bb13aea45",
+            type: "cement"
+          }
         }
       });
 
@@ -158,15 +163,18 @@ class ABCP_SERVICE implements IEssayService {
 
   // get essay from materials id
   getEssaysByMaterialId = async (
-    userId: string,
-    { cement, coarseAggregate, fineAggregate }: ABCPData['materialSelectionData']
+    data: ABCPData['materialSelectionData']
   ): Promise<EssaySelection_Results> => {
-    console.log('🚀 ~ file: abcp.service.ts:135 ~ ABCP_SERVICE ~ userId:', userId);
+    console.log("🚀 ~ ABCP_SERVICE ~ data:", data)
     try {
       const response = await Api.post(`${this.info.backend_path}/essay-selection`, {
-        cement: cement,
-        coarseAggregate: coarseAggregate,
-        fineAggregate: fineAggregate,
+        //cement: cement,
+        cement: {
+          id: "64f03f83bd4afb4bb13aea45",
+          type: "cement"
+        },
+        coarseAggregate: data.coarseAggregate,
+        fineAggregate: data.fineAggregate,
       });
 
       const { essays, success, error } = response.data;

@@ -12,6 +12,7 @@ import MaterialSelectionTable from './tables/material-selection-table';
 import { GridColDef } from '@mui/x-data-grid';
 
 const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
+  const { generalData, setData } = useABCPStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
   console.log("🚀 ~ materials:", materials)
@@ -41,16 +42,6 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
       }
     );
   }, []);
-
-  // const aggregateRows = materials.map(({ _id, name, type }) => ({
-  //   _id,
-  //   name,
-  //   type,
-  //   inputComponent: <TextField label="Seu Rótulo" variant="outlined" />,
-  // }))
-  // .filter(({ type }) => {
-  //   return type === 'coarseAggregate' || type === 'fineAggregate';
-  // });
 
   const handleAgglomerateInputSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -147,7 +138,7 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
 
   if (
     materialSelectionData.cement !== null && 
-    materialSelectionData.coarseAggregate !== null && 
+    //materialSelectionData.coarseAggregate !== null && 
     materialSelectionData.fineAggregate !== null
   ) {
     setNextDisabled(false)

@@ -12,6 +12,7 @@ interface GeneralData {
 }
 
 interface ABCP_MaterialSelection {
+  name: string,
   coarseAggregate: {
     id: string,
     type: string
@@ -97,6 +98,7 @@ const initialState = {
     description: null,
   },
   materialSelectionData: {
+    name: null,
     coarseAggregate: {
       id: null,
       type: null
