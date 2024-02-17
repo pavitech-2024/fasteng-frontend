@@ -2,16 +2,49 @@ import { t } from 'i18next';
 import { EssayPageProps } from '@/components/templates/essay';
 import { Box, TextField } from '@mui/material';
 import useABCPStore from '@/stores/concrete/abcp/abcp.store';
+import { useEffect } from 'react';
 
 const ABCP_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { generalData, setData } = useABCPStore();
+  const { generalData, storedData, setData } = useABCPStore();
+
+  useEffect(() => {
+    if (storedData?.generalData) {
+      // const { step, ...generalDataWithoutStep } = storedData.generalData;
+      const generalDataWithoutStep = { ...storedData?.generalData, step: 0}
+      setData({ step: 0, value: generalDataWithoutStep })
+    } 
+  },[storedData])
 
   const inputs = [
-    { label: t('experiment-name'), value: generalData.name, key: 'name', required: true },
-    { label: t('laboratory'), value: generalData.laboratory, key: 'laboratory', required: false },
-    { label: t('operator'), value: generalData.operator, key: 'operator', required: false },
-    { label: t('calculist'), value: generalData.calculist, key: 'calculist', required: false },
-    { label: t('samples.comments'), value: generalData.description, key: 'description', required: false },
+    { 
+      label: t('experiment-name'), 
+      value: generalData.name, 
+      key: 'name', 
+      required: true 
+    },
+    { 
+      label: t('laboratory'), 
+      value: generalData.laboratory, 
+      key: 'laboratory', 
+      required: false },
+    { 
+      label: t('operator'), 
+      value: generalData.operator, 
+      key: 'operator', 
+      required: false 
+    },
+    { 
+      label: t('calculist'), 
+      value: generalData.calculist, 
+      key: 'calculist', 
+      required: false 
+    },
+    { 
+      label: t('samples.comments'), 
+      value: generalData.description, 
+      key: 'description', 
+      required: false 
+    },
   ];
 
   inputs.every(({ required, value }) => {

@@ -9,10 +9,12 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { t } from 'i18next';
 import useABCPStore from '@/stores/concrete/abcp/abcp.store';
+import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
 
 const AbcpDosageConsult = () => {
   const [openModal, setOpenModal] = useState(false);
   const { generalData, setData } = useABCPStore();
+  const { handleNext } = new ABCP_SERVICE();
   const [dosages, setDosages] = useState<AcpDosageData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
@@ -62,8 +64,7 @@ const AbcpDosageConsult = () => {
     const dosage = dosages.find((dosage) => dosage._id === id);
     if (dosage) {
       setData({ 
-        step: dosage.generalData.step,
-        key: 'state',
+        step: 5,
         value: dosage
       });
     }

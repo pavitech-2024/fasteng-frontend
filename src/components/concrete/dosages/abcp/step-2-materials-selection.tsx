@@ -12,15 +12,17 @@ import MaterialSelectionTable from './tables/material-selection-table';
 import { GridColDef } from '@mui/x-data-grid';
 
 const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
-  const { generalData, setData } = useABCPStore();
+  const { storedData, setData } = useABCPStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
-  console.log("🚀 ~ materials:", materials)
   const { materialSelectionData } = useABCPStore();
   const [agglomerateSearchValue, setAgglomerateSearchValue] = useState<string>('');
   const [binderSearchValue, setBinderSearchValue] = useState<string>('');
-
   const { user } = useAuth();
+
+  useEffect(() => {
+    if (storedData?.materialSelectionData) setData({ step: 0, value: storedData.materialSelectionData })
+  }, [storedData])
 
   useEffect(() => {
     toast.promise(

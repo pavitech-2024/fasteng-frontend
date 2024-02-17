@@ -66,6 +66,8 @@ interface ABCP_Results {
   resistanceCurve: string;
 }
 
+export interface ABCPDataWithoutStoredData extends Omit<ABCPData, 'storedData'> {}
+
 export type ABCPData = {
   generalData: GeneralData;
   materialSelectionData: ABCP_MaterialSelection;
@@ -74,6 +76,7 @@ export type ABCPData = {
   results: ABCP_Results;
   createdAt: any
   updatedAt: any
+  storedData: ABCPDataWithoutStoredData
 };
 
 export type ABCPActions = {
@@ -87,6 +90,7 @@ const stepVariant = {
   2: 'essaySelectionData',
   3: 'insertParamsData',
   4: 'results',
+  5: 'storedData'
 };
 
 type setDataType = { step: number; key?: string; value: unknown };
@@ -152,7 +156,8 @@ const initialState = {
     resistanceCurve: null,
   },
   createdAt: null,
-  updatedAt: null
+  updatedAt: null,
+  storedData: null
 };
 
 const useABCPStore = create<ABCPData & ABCPActions>()(
