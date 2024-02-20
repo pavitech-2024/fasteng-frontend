@@ -61,13 +61,18 @@ const AbcpDosageConsult = () => {
   // };
 
   const handleVisualizeDosage = (id: string) => {
-    const dosage = dosages.find((dosage) => dosage._id === id);
+    const dosage = dosages.find((dosage) => {
+      return dosage._id === id
+    })
+    const step = dosage.generalData.step;
+    console.log("🚀 ~ handleVisualizeDosage ~ step:", step)
     if (dosage) {
       setData({ 
         step: 5,
         value: dosage
       });
     }
+    handleNext(step - 1, dosage, true)
     router.push(`/concrete/dosages/abcp`);
   };
 

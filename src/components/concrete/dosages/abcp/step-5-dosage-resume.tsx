@@ -10,8 +10,11 @@ import AbramsCurvGraph from './graph/abramsCurveGrapg';
 
 const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   nextDisabled && setNextDisabled(false);
-  const { results: abcp_results, insertParamsData } = useABCPStore();
-  console.log('🚀 ~ file: step-5-dosage-resume.tsx:13 ~ abcp_results:', abcp_results);
+  const { results: abcp_results, storedData, insertParamsData } = useABCPStore();
+
+  const resultsData = storedData?.results ? storedData?.results : abcp_results;
+  console.log("🚀 ~ resultsData:", resultsData)
+  const insertParamsData2 = storedData?.insertParamsData ? storedData?.insertParamsData : insertParamsData;
 
   const conditionValue = insertParamsData.condition;
   const tolerance = 0.0001;
@@ -27,7 +30,7 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & 
     {
       key: 'resistanceCurve',
       label: t('abcp.results.resistance-curve'),
-      value: abcp_results.resistanceCurve,
+      value: resultsData.resistanceCurve,
       unity: 'MPa',
     },
     {
@@ -39,13 +42,13 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & 
     {
       key: 'wantedFck',
       label: t('abcp.results.fck'),
-      value: insertParamsData.fck,
+      value: String(insertParamsData2.fck),
       unity: 'MPa',
     },
     {
       key: 'reduction',
       label: t('abcp.results.reduction'),
-      value: insertParamsData.reduction,
+      value: String(insertParamsData2.reduction),
       unity: 'mm',
     },
   ];
@@ -54,44 +57,44 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & 
     {
       key: 'fcj',
       label: t('abcp.results.fcj'),
-      value: abcp_results.fcj,
+      value: resultsData.fcj,
       unity: 'MPa',
     },
     {
       key: 'waterCementRelation',
       label: t('abcp.results.water-cement'),
-      value: abcp_results.ac,
+      value: resultsData.ac,
       unity: '',
     },
     {
       key: 'waterConsume',
       label: t('abcp.results.water-consume'),
-      value: abcp_results.ca,
+      value: resultsData.ca,
       unity: 'Lm³',
     },
     {
       key: 'cementConsume',
       label: t('abcp.results.cement-consume'),
-      value: abcp_results.cc,
+      value: resultsData.cc,
       unity: 'Kg/m³',
     },
     {
       key: 'coarseAggregateConsume',
       label: t('abcp.results.coarse-aggregate-consume'),
-      value: abcp_results.cb,
+      value: resultsData.cb,
       unity: 'kg/m³',
     },
     {
       key: 'fineAggregateConsume',
       label: t('abcp.results.fine-aggregate-consume'),
-      value: abcp_results.careia,
+      value: resultsData.careia,
       unity: 'kg/m³',
     },
   ];
 
-  const coefficients = `${abcp_results.cc / abcp_results.cc} : ${(abcp_results.careia / abcp_results.cc).toFixed(
+  const coefficients = `${resultsData.cc / resultsData.cc} : ${(resultsData.careia / resultsData.cc).toFixed(
     3
-  )} : ${(abcp_results.cb / abcp_results.cc).toFixed(3)} : ${(abcp_results.ca / abcp_results.cc).toFixed(3)}`;
+  )} : ${(resultsData.cb / resultsData.cc).toFixed(3)} : ${(resultsData.ca / resultsData.cc).toFixed(3)}`;
 
   return (
     <>
@@ -106,7 +109,7 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & 
             flexWrap: 'wrap',
           }}
         >
-          <ResultSubTitle title={t('general data')} sx={{ margin: '.65rem' }} />
+          <ResultSubTitle title={t('general resultsData')} sx={{ margin: '.65rem' }} />
           <Box
             sx={{
               width: '100%',
@@ -118,7 +121,7 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & 
             }}
           >
             {generalDataResults.map((item) => (
-              <Result_Card key={item.key} label={item.label} value={item.value.toString()} unity={item.unity} />
+              <Result_Card key={item.key} label={item.label} value={item.value} unity={item.unity} />
             ))}
           </Box>
 
@@ -154,7 +157,7 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & 
         </Box>
 
         <ResultSubTitle title={t('abcp.result.graph')} sx={{ margin: '.65rem' }} />
-        <AbramsCurvGraph result={abcp_results} />
+        <AbramsCurvGraph result={resultsData} />
       </FlexColumnBorder>
     </>
   );

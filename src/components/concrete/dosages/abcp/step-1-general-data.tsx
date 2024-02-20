@@ -7,6 +7,8 @@ import { useEffect } from 'react';
 const ABCP_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { generalData, storedData, setData } = useABCPStore();
 
+  const data = storedData?.generalData ? storedData?.generalData : generalData;
+
   useEffect(() => {
     if (storedData?.generalData) {
       // const { step, ...generalDataWithoutStep } = storedData.generalData;
@@ -18,30 +20,30 @@ const ABCP_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
   const inputs = [
     { 
       label: t('experiment-name'), 
-      value: generalData.name, 
+      value: data.name, 
       key: 'name', 
       required: true 
     },
     { 
       label: t('laboratory'), 
-      value: generalData.laboratory, 
+      value: data.laboratory, 
       key: 'laboratory', 
       required: false },
     { 
       label: t('operator'), 
-      value: generalData.operator, 
+      value: data.operator, 
       key: 'operator', 
       required: false 
     },
     { 
       label: t('calculist'), 
-      value: generalData.calculist, 
+      value: data.calculist, 
       key: 'calculist', 
       required: false 
     },
     { 
       label: t('samples.comments'), 
-      value: generalData.description, 
+      value: data.description, 
       key: 'description', 
       required: false 
     },

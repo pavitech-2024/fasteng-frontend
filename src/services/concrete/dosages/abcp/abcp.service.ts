@@ -1,12 +1,13 @@
 import { t } from 'i18next';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import Api from '@/api';
-import { ABCPActions, ABCPData } from '@/stores/concrete/abcp/abcp.store';
+import useABCPStore, { ABCPActions, ABCPData } from '@/stores/concrete/abcp/abcp.store';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import { AbcpLogo } from '@/assets';
 import { ConcreteGranulometryData } from '@/stores/concrete/granulometry/granulometry.store';
 import ABCP_Results from '@/components/concrete/dosages/abcp/step-5-dosage-resume';
 import MaterialSelectionTable from '@/components/concrete/dosages/abcp/tables/material-selection-table';
+import useAuth from '@/contexts/auth';
 // import { persist } from 'zustand/middleware';
 
 type EssaySelection_Results = {
@@ -50,13 +51,65 @@ class ABCP_SERVICE implements IEssayService {
   store_actions: ABCPActions;
   userId: string;
 
+
+  // /** @handleNext Receives the step and data from the form and calls the respective method */
+  // handleNext = async (step: number, data: unknown): Promise<void> => {
+  //   try {
+  //     switch (step) {
+  //       case 0:
+  //         await this.submitGeneralData(data as ABCPData['generalData'], this.userId);
+  //         break;
+  //       case 1:
+  //         await this.submitMaterialSelection(data as ABCPData, this.userId);
+  //         break;
+  //       case 2:
+  //         await this.submitEssaySelection(data as ABCPData, this.userId);
+  //         break;
+  //       case 3:
+  //         await this.submitInsertParams(data as ABCPData, this.userId);
+  //         await this.calculateResults(data as ABCPData);
+  //         break;
+  //       case 4:
+  //         await this.saveDosage(data as ABCPData);
+  //         break;
+  //       default:
+  //         throw t('errors.invalid-step');
+  //     }
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // };
   /** @handleNext Receives the step and data from the form and calls the respective method */
-  handleNext = async (step: number, data: unknown): Promise<void> => {
+  handleNext = async (targetStep: number, data: unknown, isConsult?: boolean): Promise<void> => {
     try {
-      switch (step) {
+      if (targetStep < 0 || targetStep > this.info.steps) {
+        throw new Error('Invalid target step');
+      }
+
+      let currentStep = Number(sessionStorage.getItem('abcp-step'));
+      const storedDataString = sessionStorage.getItem('abcp-store');
+      const parsedData = JSON.parse(storedDataString);
+      let consultData;
+
+      // Definindo isConsult como false se não for passado nenhum valor
+      // isConsult = isConsult ?? false;
+      isConsult = !parsedData.state.storedData._id ? false : true;
+
+      if (isConsult) {
+        currentStep = targetStep;
+        sessionStorage.setItem('abcp-step', currentStep.toString())
+        if (targetStep === 0 && isConsult) consultData = parsedData.state.storedData.generalData;
+        if (targetStep === 1 && isConsult) consultData = parsedData.state.storedData.materialSelectionData;
+        if (targetStep === 2 && isConsult) consultData = parsedData.state.storedData.essaySelectionData;
+        if (targetStep === 3 && isConsult) consultData = parsedData.state.storedData.insertParamsData;
+      } else {
+        consultData = data as ABCPData['generalData']
+      }
+
+      switch (currentStep) {
         case 0:
-          await this.submitGeneralData(data as ABCPData['generalData'], this.userId);
-          break;
+          await this.submitGeneralData(consultData, this.userId, isConsult);
+          break
         case 1:
           await this.submitMaterialSelection(data as ABCPData, this.userId);
           break;
@@ -68,8 +121,12 @@ class ABCP_SERVICE implements IEssayService {
           await this.calculateResults(data as ABCPData);
           break;
         case 4:
-          await this.saveDosage(data as ABCPData);
-          break;
+          if (isConsult) {
+            break
+          } else {
+            await this.saveDosage(data as ABCPData);
+            break;
+          }
         default:
           throw t('errors.invalid-step');
       }
@@ -81,21 +138,27 @@ class ABCP_SERVICE implements IEssayService {
   /** @generalData Methods for general-data (step === 0, page 1) */
 
   // send general data to backend to verify if there is already a ABCP dosage with same name
-  submitGeneralData = async (generalData: ABCPData['generalData'], userId: string): Promise<void> => {
+  submitGeneralData = async (data: ABCPData['generalData'] | any, userId: string, isConsult?: boolean): Promise<void> => {
+    const { name } = data;
+    console.log("🚀 ~ ABCP_SERVICE ~ submitGeneralData= ~ userId:", userId)
+    const userId2 = userId ? userId : data.userId;
+    // const isConsult2 = !userId ? true : false;
+    const isConsult2 = isConsult;
     try {
-      const { name } = generalData;
 
       // verify if name and sample are not empty
-      if (!name) throw t('errors.empty-name');
+      //if (!name) throw t('errors.empty-name');
 
       // verify if there is already a ABCP essay with same name for the sample
-      const response = await Api.post(`${this.info.backend_path}/verify-init/${userId}`, { generalData });
+      const response = await Api.post(`${this.info.backend_path}/verify-init/${userId2}`, { data, isConsult2 });
 
       const { success, error } = response.data;
 
       // if there is already a ABCP essay with same name for the sample, throw error
       if (success === false) throw error.name;
     } catch (error) {
+      console.log('aqui')
+      console.log("🚀 ~ ABCP_SERVICE ~ submitGeneralData= ~ userId:", userId)
       throw error;
     }
   };
