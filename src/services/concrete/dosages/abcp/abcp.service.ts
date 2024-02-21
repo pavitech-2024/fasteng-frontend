@@ -8,6 +8,7 @@ import { ConcreteGranulometryData } from '@/stores/concrete/granulometry/granulo
 import ABCP_Results from '@/components/concrete/dosages/abcp/step-5-dosage-resume';
 import MaterialSelectionTable from '@/components/concrete/dosages/abcp/tables/material-selection-table';
 import useAuth from '@/contexts/auth';
+import { useRouter } from 'next/router';
 // import { persist } from 'zustand/middleware';
 
 type EssaySelection_Results = {
@@ -100,7 +101,11 @@ class ABCP_SERVICE implements IEssayService {
         sessionStorage.setItem('abcp-step', currentStep.toString())
         if (targetStep === 0 && isConsult) consultData = parsedData.state.storedData.generalData;
         if (targetStep === 1 && isConsult) consultData = parsedData.state.storedData.materialSelectionData;
-        if (targetStep === 2 && isConsult) consultData = parsedData.state.storedData.essaySelectionData;
+        // if (targetStep === 2 && isConsult) consultData = { 
+        //   ...parsedData.state.storedData.essaySelectionData, 
+        //   name: parsedData.state.storedData.generalData.name
+        // };
+        if (targetStep === 2 && isConsult) consultData = parsedData.state.storedData;
         if (targetStep === 3 && isConsult) consultData = parsedData.state.storedData.insertParamsData;
       } else {
         consultData = data as ABCPData['generalData']
@@ -180,9 +185,10 @@ class ABCP_SERVICE implements IEssayService {
 
   // get essay from materials id
   getEssaysByMaterialId = async (
-    data: ABCPData['materialSelectionData'],
+    userId: string,
     data2: any
   ): Promise<EssaySelection_Results> => {
+    console.log("🚀 ~ ABCP_SERVICE ~ data2:", data2)
     try {
       const response = await Api.post(`${this.info.backend_path}/essay-selection`, {
         //cement: cement,
@@ -237,29 +243,45 @@ class ABCP_SERVICE implements IEssayService {
   /** @essaySelection Methods for essay-selection-data (step === 2, page 3) */
 
   // send the selected essays to backend
-  submitEssaySelection = async (data: ABCPData, userId: string): Promise<void> => {
+  submitEssaySelection = async (data: ABCPData | any, userId: string): Promise<void> => {
     console.log("🚀 ~ ABCP_SERVICE ~ submitEssaySelection= ~ data:", data)
+    let coarseAggregate;
+    let fineAggregate;
+    let cement;
+    let name;
+
+    // if (data.essaySelectionData) {
+    //   coarseAggregate = data.essaySelectionData.coarseAggregate;
+    //   fineAggregate = data.essaySelectionData.fineAggregate;
+    //   cement = data.essaySelectionData.cement;
+    //   name = data.essaySelectionData.name;
+    // } else {
+    //   coarseAggregate = data.coarseAggregate;
+    //   fineAggregate = data.fineAggregate;
+    //   cement = data.cement;
+    //   name = data.name;
+    // }
     try {
-      const { coarseAggregate, fineAggregate, cement } = data.essaySelectionData;
-      const { name } = data.generalData
+      // const { coarseAggregate, fineAggregate, cement } = data.essaySelectionData;
+      // const { name } = data.generalData
 
       // const { coarseAggregate, fineAggregate, cement } = essaySelection;
       // if (!coarseAggregate) throw t('errors.empty-coarseAggregates');
       // if (!fineAggregate) throw t('errors.empty-fineAggregates');
       // if (!cement) throw t('errors.empty-binder');
 
-      const response = await Api.post(`${this.info.backend_path}/save-essay-selection-step/${userId}`, {
-        essaySelectionData: {
-          name,
-          fineAggregate,
-          coarseAggregate,
-          cement
-        }
-      });
+      // const response = await Api.post(`${this.info.backend_path}/save-essay-selection-step/${userId}`, {
+      //   essaySelectionData: {
+      //     name,
+      //     fineAggregate,
+      //     coarseAggregate,
+      //     cement
+      //   }
+      // });
 
-      const { success, error } = response.data;
+      // const { success, error } = response.data;
 
-      if (success === false) throw error.name;
+      // if (success === false) throw error.name;
     } catch (error) {
       console.log(error);
       throw error;

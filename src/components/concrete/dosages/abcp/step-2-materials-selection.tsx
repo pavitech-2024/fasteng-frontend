@@ -139,7 +139,7 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
   }, [materialSelectionData]);
 
   if (
-    materialSelectionData.cement !== null && 
+    //materialSelectionData.cement !== null && 
     //materialSelectionData.coarseAggregate !== null && 
     materialSelectionData.fineAggregate !== null
   ) {

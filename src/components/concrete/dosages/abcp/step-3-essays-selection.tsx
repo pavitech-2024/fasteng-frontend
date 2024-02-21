@@ -12,8 +12,7 @@ import { toast } from 'react-toastify';
 const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [essays, setEssays] = useState<any>();
-  console.log("🚀 ~ essays:", essays)
-  const { materialSelectionData, setData, essaySelectionData } = useABCPStore();
+  const { materialSelectionData, setData, essaySelectionData, storedData } = useABCPStore();
 
   const { user } = useAuth();
 
