@@ -65,14 +65,14 @@ const AbcpDosageConsult = () => {
       return dosage._id === id
     })
     const step = dosage.generalData.step;
-    console.log("🚀 ~ handleVisualizeDosage ~ step:", step)
+    const userData = user._id;
     if (dosage) {
       setData({ 
         step: 5,
         value: dosage
       });
     }
-    handleNext(step - 1, dosage, true)
+    handleNext(step - 1, dosage, true, userData)
     router.push(`/concrete/dosages/abcp`);
   };
 

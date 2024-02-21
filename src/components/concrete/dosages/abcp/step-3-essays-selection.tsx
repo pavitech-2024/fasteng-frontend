@@ -17,6 +17,10 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
   const { user } = useAuth();
 
   useEffect(() => {
+    if (storedData?.materialSelectionData) setData({ step: 2, value: storedData.essaySelectionData })
+  }, [storedData]);
+
+  useEffect(() => {
     toast.promise(
       async () => {
         try {
@@ -98,7 +102,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                     variant="standard"
                     key={`specificMass_${essays.fineAggregateData._id}`}
                     label={t('abcp.step-3.fine-specific-mass')}
-                    value={essaySelectionData.fineAggregate.specificMass}
+                    value={essaySelectionData?.fineAggregate?.specificMass}
                     onChange={(e) => {
                       const prevData = {
                         ...essaySelectionData.fineAggregate,
