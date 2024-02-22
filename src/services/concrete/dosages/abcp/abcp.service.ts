@@ -81,57 +81,52 @@ class ABCP_SERVICE implements IEssayService {
   //   }
   // };
   /** @handleNext Receives the step and data from the form and calls the respective method */
-  handleNext = async (targetStep: number, data: unknown, isConsult?: boolean, user?: string): Promise<void> => {
+  handleNext = async (targetStep: number, data: unknown, isConsult?: boolean): Promise<void> => {
     try {
-      if (targetStep < 0 || targetStep > this.info.steps) {
-        throw new Error('Invalid target step');
-      }
+      // if (targetStep < 0 || targetStep > this.info.steps) {
+      //   throw new Error('Invalid target step');
+      // }
 
-      let currentStep = Number(sessionStorage.getItem('abcp-step'));
-      const storedDataString = sessionStorage.getItem('abcp-store');
-      const parsedData = JSON.parse(storedDataString);
-      let consultData;
+      // let currentStep = Number(sessionStorage.getItem('abcp-step'));
+      // const storedDataString = sessionStorage.getItem('abcp-store');
+      // const parsedData = JSON.parse(storedDataString);
+      // let consultData;
 
-      // Definindo isConsult como false se não for passado nenhum valor
-      // isConsult = isConsult ?? false;
-      isConsult = !parsedData.state.storedData._id ? false : true;
+      // // Definindo isConsult como false se não for passado nenhum valor
+      // isConsult = !parsedData.state.storedData._id ? false : true;
 
-      if (isConsult) {
-        currentStep = targetStep;
-        sessionStorage.setItem('abcp-step', currentStep.toString())
-        if (targetStep === 0 && isConsult) consultData = parsedData.state.storedData.generalData;
-        if (targetStep === 1 && isConsult) consultData = parsedData.state.storedData.materialSelectionData;
-        // if (targetStep === 2 && isConsult) consultData = { 
-        //   ...parsedData.state.storedData.essaySelectionData, 
-        //   name: parsedData.state.storedData.generalData.name
-        // };
-        if (targetStep === 2 && isConsult) consultData = parsedData.state.storedData.essaySelectionData;
-        if (targetStep === 3 && isConsult) consultData = parsedData.state.storedData.insertParamsData;
-      } else {
-        consultData = data as ABCPData['generalData'];
-      }
+      // if (isConsult) {
+      //   currentStep = targetStep;
+      //   sessionStorage.setItem('abcp-step', currentStep.toString())
+      //   if (targetStep === 0 && isConsult) consultData = parsedData.state.storedData.generalData;
+      //   if (targetStep === 1 && isConsult) consultData = parsedData.state.storedData.materialSelectionData;
+      //   // if (targetStep === 2 && isConsult) consultData = { 
+      //   //   ...parsedData.state.storedData.essaySelectionData, 
+      //   //   name: parsedData.state.storedData.generalData.name
+      //   // };
+      //   if (targetStep === 2 && isConsult) consultData = data;
+      //   if (targetStep === 3 && isConsult) consultData = parsedData.state.storedData.insertParamsData;
+      // } else {
+      //   consultData = data as ABCPData['generalData'];
+      // }
 
-      switch (currentStep) {
+      switch (targetStep) {
         case 0:
-          await this.submitGeneralData(consultData, this.userId, isConsult);
+          await this.submitGeneralData(data as ABCPData, this.userId, isConsult);
           break
         case 1:
-          await this.submitMaterialSelection(data as ABCPData, this.userId, user);
+          await this.submitMaterialSelection(data as ABCPData, this.userId);
           break;
         case 2:
-          await this.submitEssaySelection(consultData, this.userId);
+          await this.submitEssaySelection(data as ABCPData, this.userId);
           break;
         case 3:
           await this.submitInsertParams(data as ABCPData, this.userId);
           await this.calculateResults(data as ABCPData);
           break;
         case 4:
-          if (isConsult) {
-            break
-          } else {
-            await this.saveDosage(data as ABCPData);
-            break;
-          }
+          await this.saveDosage(data as ABCPData);
+          break;
         default:
           throw t('errors.invalid-step');
       }
@@ -210,8 +205,9 @@ class ABCP_SERVICE implements IEssayService {
 
   // send the selected materials to backend
   submitMaterialSelection = async (data: ABCPData, userId: string, user?: string): Promise<void> => {
+    console.log("🚀 ~ ABCP_SERVICE ~ submitMaterialSelection= ~ data:", data)
     try {
-      const { coarseAggregate, fineAggregate } = data.essaySelectionData;
+      const { coarseAggregate, fineAggregate } = data.materialSelectionData;
       const { name } = data.generalData;
       const userData = userId ? userId : user;
 
@@ -243,12 +239,20 @@ class ABCP_SERVICE implements IEssayService {
   /** @essaySelection Methods for essay-selection-data (step === 2, page 3) */
 
   // send the selected essays to backend
-  submitEssaySelection = async (data: ABCPData | any, userId: string): Promise<void> => {
+  submitEssaySelection = async (data: ABCPData, userId: string): Promise<void> => {
     console.log("🚀 ~ ABCP_SERVICE ~ submitEssaySelection= ~ data:", data)
-    let coarseAggregate = data.coarseAggregate;
-    let fineAggregate;
-    let cement;
-    let name;
+    // let coarseAggregate = data.coarseAggregate;
+    // let fineAggregate;
+    // let cement;
+    // let name;
+
+    const { 
+      coarseAggregate,
+      fineAggregate,
+      cement,
+    } = data.essaySelectionData;
+
+    const { name } = data.generalData;
 
     // if (data.essaySelectionData) {
     //   coarseAggregate = data.essaySelectionData.coarseAggregate;

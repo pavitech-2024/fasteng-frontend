@@ -72,7 +72,8 @@ const AbcpDosageConsult = () => {
         value: dosage
       });
     }
-    handleNext(step - 1, dosage, true, userData)
+    sessionStorage.setItem('abcp-step', (step - 1).toString())
+    handleNext(step - 1, dosage, true)
     router.push(`/concrete/dosages/abcp`);
   };
 

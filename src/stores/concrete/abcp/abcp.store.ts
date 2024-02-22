@@ -166,17 +166,35 @@ const useABCPStore = create<ABCPData & ABCPActions>()(
       (set) => ({
         ...initialState,
 
+        // setData: ({ step, key, value }) =>
+        //   set((state) => {
+        //     if (key)
+        //       return {
+        //         ...state,
+        //         [stepVariant[step]]: {
+        //           ...state[stepVariant[step]],
+        //           [key]: value,
+        //         },
+        //       };
+        //     else return { ...state, [stepVariant[step]]: value };
+        //   }),
         setData: ({ step, key, value }) =>
           set((state) => {
-            if (key)
-              return {
-                ...state,
-                [stepVariant[step]]: {
-                  ...state[stepVariant[step]],
-                  [key]: value,
-                },
-              };
-            else return { ...state, [stepVariant[step]]: value };
+            if (step === 5) {
+              return value; // Substitui o estado inteiro pelo novo valor
+            } else {
+              if (key) {
+                return {
+                  ...state,
+                  [stepVariant[step]]: {
+                    ...state[stepVariant[step]],
+                    [key]: value,
+                  },
+                };
+              } else {
+                return { ...state, [stepVariant[step]]: value };
+              }
+            }
           }),
 
         reset: ({ step }) => {

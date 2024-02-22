@@ -17,7 +17,9 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
   const { user } = useAuth();
 
   useEffect(() => {
-    if (storedData?.materialSelectionData) setData({ step: 2, value: storedData.essaySelectionData })
+    if (storedData?.essaySelectionData) {
+      setData({ step: 2, value: storedData.essaySelectionData })
+    } 
   }, [storedData]);
 
   useEffect(() => {
