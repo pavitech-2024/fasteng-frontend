@@ -52,7 +52,6 @@ class ABCP_SERVICE implements IEssayService {
   store_actions: ABCPActions;
   userId: string;
 
-
   // /** @handleNext Receives the step and data from the form and calls the respective method */
   // handleNext = async (step: number, data: unknown): Promise<void> => {
   //   try {
@@ -81,51 +80,29 @@ class ABCP_SERVICE implements IEssayService {
   //   }
   // };
   /** @handleNext Receives the step and data from the form and calls the respective method */
-  handleNext = async (targetStep: number, data: unknown, isConsult?: boolean): Promise<void> => {
+  handleNext = async (targetStep: number, data: unknown, isConsult?: boolean, store_actions?: ABCPActions): Promise<void> => {
+
+    // Verificar se isConsult é undefined e atribuir false caso seja
+    if (isConsult === undefined) isConsult = false;
+
     try {
-      // if (targetStep < 0 || targetStep > this.info.steps) {
-      //   throw new Error('Invalid target step');
-      // }
-
-      // let currentStep = Number(sessionStorage.getItem('abcp-step'));
-      // const storedDataString = sessionStorage.getItem('abcp-store');
-      // const parsedData = JSON.parse(storedDataString);
-      // let consultData;
-
-      // // Definindo isConsult como false se não for passado nenhum valor
-      // isConsult = !parsedData.state.storedData._id ? false : true;
-
-      // if (isConsult) {
-      //   currentStep = targetStep;
-      //   sessionStorage.setItem('abcp-step', currentStep.toString())
-      //   if (targetStep === 0 && isConsult) consultData = parsedData.state.storedData.generalData;
-      //   if (targetStep === 1 && isConsult) consultData = parsedData.state.storedData.materialSelectionData;
-      //   // if (targetStep === 2 && isConsult) consultData = { 
-      //   //   ...parsedData.state.storedData.essaySelectionData, 
-      //   //   name: parsedData.state.storedData.generalData.name
-      //   // };
-      //   if (targetStep === 2 && isConsult) consultData = data;
-      //   if (targetStep === 3 && isConsult) consultData = parsedData.state.storedData.insertParamsData;
-      // } else {
-      //   consultData = data as ABCPData['generalData'];
-      // }
-
       switch (targetStep) {
         case 0:
-          await this.submitGeneralData(data as ABCPData, this.userId, isConsult);
+          await this.submitGeneralData(data as ABCPData['generalData'], this.userId, isConsult);
           break
         case 1:
-          await this.submitMaterialSelection(data as ABCPData, this.userId);
+          await this.submitMaterialSelection(data as ABCPData, this.userId, null, isConsult);
           break;
         case 2:
-          await this.submitEssaySelection(data as ABCPData, this.userId);
+          await this.submitEssaySelection(data as ABCPData, this.userId, isConsult);
           break;
         case 3:
-          await this.submitInsertParams(data as ABCPData, this.userId);
-          await this.calculateResults(data as ABCPData);
+          await this.submitInsertParams(data as ABCPData, this.userId, isConsult);
+          await this.calculateResults(data as ABCPData, isConsult);
           break;
         case 4:
-          await this.saveDosage(data as ABCPData);
+          await this.calculateResults(data as ABCPData, false, store_actions);
+          await this.saveDosage(data as ABCPData, isConsult);
           break;
         default:
           throw t('errors.invalid-step');
@@ -138,27 +115,25 @@ class ABCP_SERVICE implements IEssayService {
   /** @generalData Methods for general-data (step === 0, page 1) */
 
   // send general data to backend to verify if there is already a ABCP dosage with same name
-  submitGeneralData = async (data: ABCPData['generalData'] | any, userId: string, isConsult?: boolean): Promise<void> => {
-    const { name } = data;
+  submitGeneralData = async (data: ABCPData['generalData'], userId: string, isConsult?: boolean): Promise<void> => {
+  console.log("🚀 ~ ABCP_SERVICE ~ submitGeneralData= ~ data:", data)
+
     const userId2 = userId ? userId : data.userId;
-    // const isConsult2 = !userId ? true : false;
-    const isConsult2 = isConsult;
-    try {
 
-      // verify if name and sample are not empty
-      //if (!name) throw t('errors.empty-name');
-
-      // verify if there is already a ABCP essay with same name for the sample
-      const response = await Api.post(`${this.info.backend_path}/verify-init/${userId2}`, { data, isConsult2 });
-
-      const { success, error } = response.data;
-
-      // if there is already a ABCP essay with same name for the sample, throw error
-      if (success === false) throw error.name;
-    } catch (error) {
-      console.log('aqui')
-      console.log("🚀 ~ ABCP_SERVICE ~ submitGeneralData= ~ userId:", userId)
-      throw error;
+    if (!isConsult) {
+      try {
+        // verify if there is already a ABCP essay with same name for the sample
+        const response = await Api.post(`${this.info.backend_path}/verify-init/${userId2}`, data);
+  
+        const { success, error } = response.data;
+  
+        // if there is already a ABCP essay with same name for the sample, throw error
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log('aqui')
+        console.log("🚀 ~ ABCP_SERVICE ~ submitGeneralData= ~ userId:", userId)
+        throw error;
+      }
     }
   };
 
@@ -204,146 +179,151 @@ class ABCP_SERVICE implements IEssayService {
   };
 
   // send the selected materials to backend
-  submitMaterialSelection = async (data: ABCPData, userId: string, user?: string): Promise<void> => {
-    console.log("🚀 ~ ABCP_SERVICE ~ submitMaterialSelection= ~ data:", data)
-    try {
-      const { coarseAggregate, fineAggregate } = data.materialSelectionData;
-      const { name } = data.generalData;
-      const userData = userId ? userId : user;
+  submitMaterialSelection = async (data: ABCPData, userId: string, user?: string, isConsult?: boolean): Promise<void> => {
+    if(!isConsult) {
+      try {
+        const { coarseAggregate, fineAggregate } = data.materialSelectionData;
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
 
-      if (!coarseAggregate) throw t('errors.empty-coarseAggregates');
-      if (!fineAggregate) throw t('errors.empty-fineAggregates');
-      //if (!cement) throw t('errors.empty-binder');
+        if (!coarseAggregate) throw t('errors.empty-coarseAggregates');
+        if (!fineAggregate) throw t('errors.empty-fineAggregates');
+        //if (!cement) throw t('errors.empty-binder');
 
-      const response = await Api.post(`${this.info.backend_path}/save-material-selection-step/${userData}`, {
-        materialSelectionData: {
+        const materialSelectionData = {
           name,
           coarseAggregate,
           fineAggregate,
           cement: {
             id: "64f03f83bd4afb4bb13aea45",
             type: "cement"
-          }
+          },
+          isConsult: null
         }
-      });
 
-      const { success, error } = response.data;
+        if (isConsult) materialSelectionData.isConsult = isConsult;
 
-      if (success === false) throw error.name;
-    } catch (error) {
-      console.log(error);
-      throw error;
+        const response = await Api.post(`${this.info.backend_path}/save-material-selection-step/${userData}`, {
+          materialSelectionData: {
+            name,
+            coarseAggregate,
+            fineAggregate,
+            cement: {
+              id: "64f03f83bd4afb4bb13aea45",
+              type: "cement"
+            }
+          }
+        });
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
     }
+    
   };
 
   /** @essaySelection Methods for essay-selection-data (step === 2, page 3) */
 
   // send the selected essays to backend
-  submitEssaySelection = async (data: ABCPData, userId: string): Promise<void> => {
+  submitEssaySelection = async (data: ABCPData, userId: string, isConsult?: boolean): Promise<void> => {
+    console.log("🚀 ~ ABCP_SERVICE ~ submitEssaySelection= ~ isConsult:", isConsult)
     console.log("🚀 ~ ABCP_SERVICE ~ submitEssaySelection= ~ data:", data)
-    // let coarseAggregate = data.coarseAggregate;
-    // let fineAggregate;
-    // let cement;
-    // let name;
 
-    const { 
-      coarseAggregate,
-      fineAggregate,
-      cement,
-    } = data.essaySelectionData;
-
-    const { name } = data.generalData;
-
-    // if (data.essaySelectionData) {
-    //   coarseAggregate = data.essaySelectionData.coarseAggregate;
-    //   fineAggregate = data.essaySelectionData.fineAggregate;
-    //   cement = data.essaySelectionData.cement;
-    //   name = data.essaySelectionData.name;
-    // } else {
-    //   coarseAggregate = data.coarseAggregate;
-    //   fineAggregate = data.fineAggregate;
-    //   cement = data.cement;
-    //   name = data.name;
-    // }
-    try {
-      // const { coarseAggregate, fineAggregate, cement } = data.essaySelectionData;
-      // const { name } = data.generalData
-
-      // const { coarseAggregate, fineAggregate, cement } = essaySelection;
-      // if (!coarseAggregate) throw t('errors.empty-coarseAggregates');
-      // if (!fineAggregate) throw t('errors.empty-fineAggregates');
-      // if (!cement) throw t('errors.empty-binder');
-
-      const response = await Api.post(`${this.info.backend_path}/save-essay-selection-step/${userId}`, {
-        essaySelectionData: {
-          name,
-          fineAggregate,
-          coarseAggregate,
-          cement
-        }
-      });
-
-      const { success, error } = response.data;
-
-      if (success === false) throw error.name;
-    } catch (error) {
-      console.log(error);
-      throw error;
+    if (!isConsult) {
+      const { 
+        coarseAggregate,
+        fineAggregate,
+        cement,
+      } = data.essaySelectionData;
+  
+      const { name } = data.generalData;
+  
+      try {
+        const response = await Api.post(`${this.info.backend_path}/save-essay-selection-step/${userId}`, {
+          essaySelectionData: {
+            name,
+            fineAggregate,
+            coarseAggregate,
+            cement
+          }
+        });
+  
+        const { success, error } = response.data;
+  
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
     }
   };
 
   /** @insertParams Methods for insert-params-data (step === 3, page 4) */
 
-  submitInsertParams = async (data: ABCPData, userId: string): Promise<void> => {
+  submitInsertParams = async (data: ABCPData, userId: string, isConsult?: boolean): Promise<void> => {
+    console.log("🚀 ~ ABCP_SERVICE ~ submitInsertParams= ~ isConsult:", isConsult)
     console.log("🚀 ~ ABCP_SERVICE ~ submitInsertParams= ~ data:", data)
-    try {
-      const { reduction, fck, condition } = data.insertParamsData;
-      const { name } = data.generalData;
 
-      if (reduction < 40 || reduction > 100) throw t('errors.invalid-reduction');
-
-      const response = await Api.post(`${this.info.backend_path}/save-insert-params-step/${userId}`, {
-        insertParamsData: {
-          name,
-          reduction,
-          fck,
-          condition
-        }
-      });
-
-      const { success, error } = response.data;
-
-      if (success === false) throw error.name;
-    } catch (error) {
-      throw error;
+    if (!isConsult) {
+      try {
+        const { reduction, fck, condition } = data.insertParamsData;
+        const { name } = data.generalData;
+  
+        if (reduction < 40 || reduction > 100) throw t('errors.invalid-reduction');
+  
+        const response = await Api.post(`${this.info.backend_path}/save-insert-params-step/${userId}`, {
+          insertParamsData: {
+            name,
+            reduction,
+            fck,
+            condition
+          }
+        });
+  
+        const { success, error } = response.data;
+  
+        if (success === false) throw error.name;
+      } catch (error) {
+        throw error;
+      }
     }
   };
 
   // calculate results from abcp dosage
-  calculateResults = async (data: ABCPData): Promise<void> => {
-    try {
-      const newMaterialData = { ...data.materialSelectionData };
-      newMaterialData.cement = {
-        id: "64f03f83bd4afb4bb13aea45",
-        type: "cement"
+  calculateResults = async (data: ABCPData, isConsult?:boolean, store_actions?: ABCPActions): Promise<void> => {
+    console.log("🚀 ~ ABCP_SERVICE ~ calculateResults= ~ store_actions:", store_actions)
+    console.log("🚀 ~ ABCP_SERVICE ~ calculateResults= ~ isConsult:", isConsult)
+    console.log("🚀 ~ ABCP_SERVICE ~ calculateResults= ~ data:", data)
+    if (!isConsult) {
+      try {
+        const newMaterialData = { ...data.materialSelectionData };
+        newMaterialData.cement = {
+          id: "64f03f83bd4afb4bb13aea45",
+          type: "cement"
+        }
+  
+        console.log("🚀 ~ ABCP_SERVICE ~ calculateResults= ~ this.store_actions.setData:", this.store_actions)
+
+  
+        const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
+          generalData: data.generalData,
+          materialSelectionData: newMaterialData, //Teste
+          essaySelectionData: data.essaySelectionData,
+          insertParamsData: data.insertParamsData,
+        });
+  
+        const { success, error, result } = response.data;
+  
+        if (success === false) throw error.name;
+  
+        this.store_actions.setData({ step: 4, value: result });
+      } catch (error) {
+        throw error;
       }
-
-      console.log("🚀 ~ ABCP_SERVICE ~ calculateResults= ~ newMaterialData:", newMaterialData)
-
-      const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
-        generalData: data.generalData,
-        materialSelectionData: newMaterialData, //Teste
-        essaySelectionData: data.essaySelectionData,
-        insertParamsData: data.insertParamsData,
-      });
-
-      const { success, error, result } = response.data;
-
-      if (success === false) throw error.name;
-
-      this.store_actions.setData({ step: 4, value: result });
-    } catch (error) {
-      throw error;
     }
   };
 
@@ -351,26 +331,29 @@ class ABCP_SERVICE implements IEssayService {
 
   // save dosage
 
-  saveDosage = async (data: ABCPData) => {
-    try {
-      const response = await Api.post(`${this.info.backend_path}/save-dosage`, {
-        generalData: {
-          ...data.generalData,
-          userId: this.userId,
-        },
-        materialSelectionData: data.materialSelectionData,
-        essaySelectionData: data.essaySelectionData,
-        insertParamsData: data.insertParamsData,
-        results: data.results,
-      });
-
-      const { success, error } = response.data;
-
-      if (success === false) throw error.name;
-
-      // this.store_actions.reset( { step: null, value: null });
-    } catch (error) {
-      throw error;
+  saveDosage = async (data: ABCPData, isConsult?: boolean) => {
+    console.log("🚀 ~ ABCP_SERVICE ~ saveDosage= ~ isConsult:", isConsult)
+    if (!isConsult) {
+      try {
+        const response = await Api.post(`${this.info.backend_path}/save-dosage`, {
+          generalData: {
+            ...data.generalData,
+            userId: this.userId,
+          },
+          materialSelectionData: data.materialSelectionData,
+          essaySelectionData: data.essaySelectionData,
+          insertParamsData: data.insertParamsData,
+          results: data.results,
+        });
+  
+        const { success, error } = response.data;
+  
+        if (success === false) throw error.name;
+  
+        // this.store_actions.reset( { step: null, value: null });
+      } catch (error) {
+        throw error;
+      }
     }
   };
 }

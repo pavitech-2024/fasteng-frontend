@@ -13,8 +13,9 @@ import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
 
 const AbcpDosageConsult = () => {
   const [openModal, setOpenModal] = useState(false);
-  const { generalData, setData } = useABCPStore();
-  const { handleNext } = new ABCP_SERVICE();
+  const { setData } = useABCPStore();
+  const { handleNext, store_actions } = new ABCP_SERVICE();
+  console.log("🚀 ~ AbcpDosageConsult ~ store_actions:", store_actions)
   const [dosages, setDosages] = useState<AcpDosageData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
@@ -72,8 +73,12 @@ const AbcpDosageConsult = () => {
         value: dosage
       });
     }
-    sessionStorage.setItem('abcp-step', (step - 1).toString())
-    handleNext(step - 1, dosage, true)
+    sessionStorage.setItem('abcp-step', (step).toString())
+    if (step === 4) {
+      handleNext(step, dosage, true, store_actions);
+      router.push(`/concrete/dosages/abcp`);
+    }
+    handleNext(step, dosage, true)
     router.push(`/concrete/dosages/abcp`);
   };
 
