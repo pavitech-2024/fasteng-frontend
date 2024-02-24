@@ -165,19 +165,6 @@ const useABCPStore = create<ABCPData & ABCPActions>()(
     persist(
       (set) => ({
         ...initialState,
-
-        // setData: ({ step, key, value }) =>
-        //   set((state) => {
-        //     if (key)
-        //       return {
-        //         ...state,
-        //         [stepVariant[step]]: {
-        //           ...state[stepVariant[step]],
-        //           [key]: value,
-        //         },
-        //       };
-        //     else return { ...state, [stepVariant[step]]: value };
-        //   }),
         setData: ({ step, key, value }) =>
           set((state) => {
             if (step === 5) {

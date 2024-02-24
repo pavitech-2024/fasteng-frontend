@@ -7,7 +7,7 @@ import { Box } from '@mui/material';
 import { useEffect } from 'react';
 import { t } from 'i18next';
 
-const ABCP_InsertingParams = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
+const ABCP_InsertingParams = ({ setNextDisabled }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   const { insertParamsData, setData, storedData } = useABCPStore();
 
   useEffect(() => {

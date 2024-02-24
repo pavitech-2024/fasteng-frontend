@@ -8,22 +8,34 @@ import { Box } from '@mui/material';
 import Result_Card from '@/components/atoms/containers/result-card';
 import AbramsCurvGraph from './graph/abramsCurveGrapg';
 import { useEffect } from 'react';
+import abcpDosageService from '@/services/concrete/dosages/abcp/abcp-consult.service';
+import { useRouter } from 'next/router';
 
 const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
 
   nextDisabled && setNextDisabled(false);
-  const { results: abcp_results, storedData, insertParamsData, setData } = useABCPStore();
-  console.log("🚀 ~ abcp_results:", abcp_results)
+  const { results: abcp_results, insertParamsData, setData,  } = useABCPStore();
+  const { calculateResults } = new ABCP_SERVICE();
+  const store = JSON.parse(sessionStorage.getItem('abcp-store'));
+  const dosageId = store.state._id;
+  const router = useRouter();
+  const isConsult = router.query.consult ? true : false;
 
   useEffect(() => {
-    if (storedData?.results) {
-      setData({ step: 4, value: storedData.results })
-    } 
-  }, [storedData]);
-
-  // const resultsData = storedData?.results ? storedData?.results : abcp_results;
-  // console.log("🚀 ~ resultsData:", resultsData)
-  // const insertParamsData2 = storedData?.insertParamsData ? storedData?.insertParamsData : insertParamsData;
+    if (isConsult) {
+      const resultData = async () => {
+        try {
+          const foundDosage = await abcpDosageService.getAbcpDosage(dosageId);
+          const calculateDosage = await calculateResults(foundDosage.data);
+          const dosageData = { ...foundDosage.data, results: calculateDosage}
+          setData({ step: 5, value: dosageData })
+        } catch (error) {
+          console.error('Failed to load dosage:', error);
+        }
+      }
+      resultData()
+    }
+  }, []);
 
   const conditionValue = insertParamsData.condition;
   const tolerance = 0.0001;

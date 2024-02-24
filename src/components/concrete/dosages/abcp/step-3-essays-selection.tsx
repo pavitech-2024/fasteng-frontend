@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
+
   const [loading, setLoading] = useState<boolean>(true);
   const [essays, setEssays] = useState<any>();
   const { materialSelectionData, setData, essaySelectionData, storedData } = useABCPStore();
@@ -26,7 +27,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
     toast.promise(
       async () => {
         try {
-          const essays = await abcp.getEssaysByMaterialId(user._id, materialSelectionData);
+          const essays = await abcp.getEssaysByMaterialId(materialSelectionData);
           console.log('ensaios', essays);
           setEssays(essays);
           setLoading(false);

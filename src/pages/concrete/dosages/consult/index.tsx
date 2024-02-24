@@ -12,14 +12,12 @@ import useABCPStore from '@/stores/concrete/abcp/abcp.store';
 import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
 
 const AbcpDosageConsult = () => {
-  const [openModal, setOpenModal] = useState(false);
+
   const { setData } = useABCPStore();
-  const { handleNext, store_actions } = new ABCP_SERVICE();
-  console.log("🚀 ~ AbcpDosageConsult ~ store_actions:", store_actions)
+  const { handleNext } = new ABCP_SERVICE();
   const [dosages, setDosages] = useState<AcpDosageData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
-
   const { user } = useAuth();
 
   useEffect(() => {
@@ -40,7 +38,7 @@ const AbcpDosageConsult = () => {
       const updatedDosages = dosages.filter((dosage) => dosage._id !== id);
       setDosages(updatedDosages);
     } catch (error) {
-      console.error('Failed to delete material:', error);
+      console.error('Failed to delete dosage:', error);
     }
   };
 
@@ -57,28 +55,20 @@ const AbcpDosageConsult = () => {
       });
   };
 
-  // const handleVisualizeDosage = (id: string) => {
-  //   router.push(`/concrete/dosages/consult/data/${id}`);
-  // };
-
   const handleVisualizeDosage = (id: string) => {
     const dosage = dosages.find((dosage) => {
       return dosage._id === id
     })
     const step = dosage.generalData.step;
-    const userData = user._id;
     if (dosage) {
       setData({ 
         step: 5,
         value: dosage
       });
     }
-    sessionStorage.setItem('abcp-step', (step).toString())
-    if (step === 4) {
-      handleNext(step, dosage, true, store_actions);
-      router.push(`/concrete/dosages/abcp`);
-    }
-    handleNext(step, dosage, true)
+    sessionStorage.setItem('abcp-step', (step).toString());
+    handleNext(step, dosage, true);
+    if (step === 4) router.push(`/concrete/dosages/abcp?consult=true`);
     router.push(`/concrete/dosages/abcp`);
   };
 
@@ -124,7 +114,7 @@ const AbcpDosageConsult = () => {
     5: t('abcp.dosage-resume'),
   };
 
-  const rows = dosages.map((row, index) => ({
+  const rows = dosages.map((row) => ({
     name: row.generalData.name,
     progress: `(${row.generalData.step}/5) - ${progressTextMap[row.generalData.step]}`,
     start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',

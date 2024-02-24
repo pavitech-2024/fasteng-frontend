@@ -5,13 +5,12 @@ import useABCPStore from '@/stores/concrete/abcp/abcp.store';
 import { useEffect } from 'react';
 
 const ABCP_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { generalData, storedData, setData } = useABCPStore();
 
+  const { generalData, storedData, setData } = useABCPStore();
   const data = storedData?.generalData ? storedData?.generalData : generalData;
 
   useEffect(() => {
     if (storedData?.generalData) {
-      // const { step, ...generalDataWithoutStep } = storedData.generalData;
       const generalDataWithoutStep = { ...storedData?.generalData, step: 0}
       setData({ step: 0, value: generalDataWithoutStep })
     } 
