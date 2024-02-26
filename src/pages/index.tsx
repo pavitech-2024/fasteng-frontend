@@ -75,7 +75,14 @@ const Login: NextPage = () => {
               }}
             >
               <Languages left={10} top={10} unSelectedColor="primaryTons.border" />
-              <LoginImage alt="Fasteng" src={LogoWhite} />
+              <Box
+                sx={{
+                  scale: { mobile: '0.7' },
+                  marginTop: { mobile: '1.5rem' },
+                }}
+              >
+                <LoginImage alt="Fasteng" src={LogoWhite} />
+              </Box>
             </Box>
             <Box
               sx={{
@@ -83,6 +90,7 @@ const Login: NextPage = () => {
                 display: 'flex',
                 alignItems: 'center',
                 textAlign: 'center',
+                marginTop: { mobile: '1.5rem' },
                 fontSize: {
                   ultrawide: '0.95rem',
                   desktop: '0.85rem',
@@ -104,6 +112,7 @@ const Login: NextPage = () => {
                 width: '100%',
                 maxWidth: '980px',
                 p: '2vh 0',
+                marginTop: { mobile: '0.5rem' },
               }}
             >
               <Button text="Assine" linkTo="https://fastengapp.com.br/" />
@@ -151,6 +160,7 @@ const Login: NextPage = () => {
                 height: '70%',
                 width: '100%',
                 gap: '10px',
+                padding: { mobile: '10px 0 0 0' },
               }}
             >
               <TextField
@@ -161,6 +171,9 @@ const Login: NextPage = () => {
                 sx={{
                   width: '85%',
                   bgcolor: 'primaryTons.white',
+                }}
+                inputProps={{
+                  style: { height: '7px' },
                 }}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -175,6 +188,9 @@ const Login: NextPage = () => {
                 sx={{
                   width: '85%',
                   bgcolor: 'primaryTons.white',
+                }}
+                inputProps={{
+                  style: { height: '7px' },
                 }}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -201,7 +217,7 @@ const Login: NextPage = () => {
               </Typography>
             </Box>
           </Box>
-           <Box
+          <Box
             sx={{
               display: 'flex',
               flexDirection: 'row',
