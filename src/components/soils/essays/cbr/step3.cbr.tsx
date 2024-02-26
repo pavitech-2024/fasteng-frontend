@@ -50,7 +50,10 @@ const CBR_Expansion = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
       headerName: t('cbr.date'),
       renderCell: ({ row }) => (
         <DatePicker
-          sx={{ width: '100%' }}
+          sx={{
+            width: '100%',
+            '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' },
+          }}
           value={dayjs(row.date)}
           onChange={(date) => {
             const newRows = [...rows];
@@ -68,7 +71,10 @@ const CBR_Expansion = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
       headerName: t('cbr.time'),
       renderCell: ({ row }) => (
         <TimePicker
-          sx={{ width: '100%' }}
+          sx={{
+            width: '100%',
+            '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' },
+          }}
           value={dayjs(row.time)}
           onChange={(time) => {
             const newRows = [...rows];
