@@ -1,9 +1,10 @@
 import { NoDataFound } from '@/components/util/tables';
 import useABCPStore from '@/stores/concrete/abcp/abcp.store';
 import { Box } from '@mui/material';
-import { DataGrid, GridCellParams, GridColDef, GridRowParams, GridRowSelectionModel } from '@mui/x-data-grid';
-import { useState } from 'react';
+import { DataGrid, GridCellParams, GridColDef, GridRowId, GridRowParams, GridRowSelectionModel } from '@mui/x-data-grid';
+import { useEffect, useState } from 'react';
 import { t } from 'i18next';
+import CoarseAggregate from '@/pages/concrete/essays/coarseAggregate';
 
 interface MaterialRow {
   _id: string;
@@ -25,8 +26,12 @@ interface MaterialSelectionProps {
 }
 
 const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProps) => {
-  const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
+  const [selectionModel, setSelectionModel] = useState<GridRowId[]>([]);
   const { materialSelectionData, setData } = useABCPStore();
+
+  useEffect(() => {
+    console.log("🚀 ~ MaterialSelectionTable ~ selectionModel:", selectionModel)
+  }, [selectionModel])
 
   const renderCell = (params: GridCellParams) => {
     const row = rows[params.id];
@@ -66,54 +71,85 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
             borderRadius: '10px',
             height: 300,
           }}
+          rowSelectionModel={selectionModel}
           checkboxSelection
           disableRowSelectionOnClick
           hideFooter
-          isRowSelectable={(params: GridRowParams) => {
-            // const selectedRowType = rows[params.id]?.type;
-            // if (selectedRowType === 'cement') {
-            //   return rowSelectionModel.length === 0 || rowSelectionModel[0] === params.id;
-            // }
-            return true;
-          }}
+          // isRowSelectable={(params: GridRowParams) => {
+          //   const selectedRowType = rows[params.id]?.type;
+          //   if (selectedRowType) {
+          //     return rowSelectionModel.length === 0 || rowSelectionModel[0] === params.id;
+          //   }
+          //   return true;
+          // }}
           onRowSelectionModelChange={(rowSelection) => {
-            setRowSelectionModel(rowSelection);
+            setSelectionModel(rowSelection)
 
             type AggregateObject = {
-              id: string,
-              type: string
+              id: string | null,
+              type: string | null
             }
 
             const updatedStates: {
-              fineAggregate: AggregateObject | null;
+              fineAggregate: AggregateObject;
               coarseAggregate: AggregateObject | null;
-              //cement: AggregateObject | null;
             } = {
-              fineAggregate: null,
+              fineAggregate: {
+                id: null,
+                type: null
+              },
               coarseAggregate: null,
-              //cement: null,
             };
 
             rowSelection.forEach((selectedRow) => {
               const row = rows[selectedRow];
+              console.log("🚀 ~ rowSelection.forEach ~ rows:", rows)
 
               if ('_id' in row) {
                 const { _id, type } = row;
 
-                // if (type === 'cement') {
-                //   updatedStates.cement = { id: _id, type: "cement"}
-                // } else if (type === t("abcp.step-3.coarse-aggregate")) {
-                //   updatedStates.coarseAggregate = { id: _id, type: 'coarseAggregate' };
-                // } else if (type === t("abcp.step-3.fine-aggregate")) {
-                //   updatedStates.fineAggregate = updatedStates.fineAggregate?.id === row._id ? null : { id: _id, type: 'fineAggregate' };
-                // }
-                if (type === t("abcp.step-3.coarse-aggregate")) {
-                  updatedStates.coarseAggregate = { id: _id, type: 'coarseAggregate' };
-                } else if (type === t("abcp.step-3.fine-aggregate")) {
-                  updatedStates.fineAggregate = updatedStates.fineAggregate?.id === row._id ? null : { id: _id, type: 'fineAggregate' };
+                if (
+                  type === t("abcp.step-3.coarse-aggregate")
+                  && updatedStates.coarseAggregate !== null 
+                  && updatedStates.coarseAggregate.id !== _id
+                ) {
+                  if (selectionModel.includes(selectedRow) || row.type === updatedStates.coarseAggregate.type) {
+                    selectionModel.filter(id => rows[id] === row)
+                    updatedStates.coarseAggregate = { id: null, type: null };
+                  } else {
+                    selectionModel.push(selectedRow);
+                    updatedStates.coarseAggregate = { id: _id, type }
+                  }
+                } else if (
+                  type === t("abcp.step-3.fine-aggregate")
+                  // && updatedStates.fineAggregate !== null 
+                  // && updatedStates.fineAggregate.id !== _id
+                ) {
+                  if (selectionModel.includes(selectedRow)) {
+                    selectionModel.filter(id => rows[id] === row)
+                    updatedStates.fineAggregate = { id: null, type: null };
+                  } else {
+                    updatedStates.fineAggregate = { id: _id, type }
+                    console.log("🚀 ~ rowSelection.forEach ~ updatedStates.fineAggregate.type !== null:", updatedStates.fineAggregate.type !== null)
+                    console.log("🚀 ~ rowSelection.forEach ~ updatedStates.fineAggregate:", updatedStates.fineAggregate)
+
+                    if (updatedStates.fineAggregate.type !== null) {
+
+                      console.log("🚀 ~ rowSelection.forEach ~ selectionModel:", selectionModel)
+
+                      console.log("🚀 ~ rowSelection.forEach ~ selectionModel.filter(id => Number(id) - 1 === rows[Number(id)]):", selectionModel.find((id: number) => id - 1 === rows[id]))
+
+
+                      selectionModel.filter(id => Number(id) - 1 === rows[Number(id)]);
+                    }
+                    
+                    selectionModel.push(selectedRow);
+                  }
+                  // updatedStates.fineAggregate = updatedStates.fineAggregate?.id === row._id ? null : { id: _id, type: 'fineAggregate' };
                 }
               }
             });
+            
             // Atualiza os dados armazenados
             setData({
               step: 1,
@@ -130,19 +166,7 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
                 ? { ...(materialSelectionData.coarseAggregate || {}), ...updatedStates.coarseAggregate }
                 : null,
             });
-
-            // setData({
-            //   step: 1,
-            //   key: 'cement',
-            //   // value: updatedStates.cement !== null
-            //   //   ? (rows[updatedStates.cement] as MaterialRow)._id
-            //   //   : null,
-            //   value: updatedStates.cement !== null
-            //     ? { ...(materialSelectionData.cement || {}), ...updatedStates.cement }
-            //     : null,
-            // })
           }}
-          rowSelectionModel={rowSelectionModel}
           disableColumnSelector
           columns={columns.map((column) => ({
             ...column,

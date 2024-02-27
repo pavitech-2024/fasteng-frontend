@@ -38,26 +38,6 @@ const BinderSelectionTable = ({ rows, columns, header }: MaterialSelectionProps)
     return params.value;
   };
 
-  // const handleSelectionChange = (selection: GridRowSelectionModel) => {
-  //   if (selection.length > 0) {
-  //     const selectedId = selection[0];
-  //     setSelectedRowIndex(typeof selectedId === 'string' ? parseInt(selectedId) : selectedId);
-  //   } else {
-  //     setSelectedRowIndex(null);
-  //   }
-  // };
-
-  const handleSelectionChange = (selection: GridRowSelectionModel) => {
-    if (selection.length > 1) {
-      const selectionSet = new Set(selectionModel);
-      const result = selection.filter((s) => !selectionSet.has(s));
-      console.log("🚀 ~ handleSelectionChange ~ result:", result)
-      setSelectionModel(result);
-    } else {
-      setSelectionModel(selection);
-    }
-  };
-
   return (
     <Box
       sx={{
@@ -91,36 +71,25 @@ const BinderSelectionTable = ({ rows, columns, header }: MaterialSelectionProps)
           disableRowSelectionOnClick
           hideFooter
           onRowSelectionModelChange={(selection) => {
-            console.log("🚀 ~ BinderSelectionTable ~ selection.length > 1:", selection.length > 1)
+
+            const selectionSet = new Set(selectionModel);
+            const result = selection.filter((s) => !selectionSet.has(s));
+            const selectedRow = rows[result[0]];
+            console.log("🚀 ~ BinderSelectionTable ~ selectedRow:", selectedRow)
 
             if (selection.length > 0) {
-              const selectionSet = new Set(selectionModel);
-              const result = selection.filter((s) => !selectionSet.has(s));
-              console.log("🚀 ~ BinderSelectionTable ~ result:", result)
+              const materialWithCement = { ...materialSelectionData, cement: { id: selectedRow._id, type: selectedRow.type }}
+
+              setData({ step: 1, value: materialWithCement })
     
               setSelectionModel(result);
-            } else {
+            } else if (selection[0] === result[0]) {
+              const materialWithCement = { ...materialSelectionData, cement: { id: null, type: null }}
+              setData({ step: 1, value: materialWithCement })
               setSelectionModel(selection);
             }
           }}
           disableColumnSelector
-          // onRowSelectionModelChange={(selectionModel: GridRowSelectionModel) => {
-          //   const selectedId = selectionModel.length > 0 ? selectionModel[0] : null;
-          //   setSelectedRowId(selectedId as string);
-          //   const selectedRow = rows[Number(selectedId)];
-          //   if (selectedRow && '_id' in selectedRow) {
-          //     let materialWithCement;
-          //     if (materialSelectionData.cement && materialSelectionData.cement.id === selectedRow._id) {
-          //       materialWithCement = { ...materialSelectionData, cement: { id: null, type: null } }
-          //     } else {
-          //       materialWithCement = { ...materialSelectionData, cement: { id: selectedRow._id, type: 'cement' }}
-          //     }
-          //     setData({
-          //       step: 1,
-          //       value: materialWithCement
-          //     });
-          //   }
-          // }}
           columns={columns.map((column) => ({
             ...column,
             disableColumnMenu: true,
