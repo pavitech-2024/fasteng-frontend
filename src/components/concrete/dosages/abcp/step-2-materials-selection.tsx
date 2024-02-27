@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import MaterialSelectionTable from './tables/material-selection-table';
 import { GridColDef } from '@mui/x-data-grid';
+import BinderSelectionTable from './tables/binder-selection-table';
 
 const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   
@@ -162,7 +163,7 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
             columns={aggregateColumns}
             header={t('concrete.materials.aggregates')}
           />
-          <MaterialSelectionTable rows={binderRows} columns={binderColumns} header={t('concrete.materials.binders')} />
+          <BinderSelectionTable rows={binderRows} columns={binderColumns} header={t('concrete.materials.binders')} />
         </Box>
       )}
     </>

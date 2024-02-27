@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
-import ABCP_EssaySelection from '../../../components/concrete/dosages/abcp/step-3-essays-selection';
 
 interface GeneralData {
   userId: string;
@@ -74,8 +73,8 @@ export type ABCPData = {
   essaySelectionData: ABCP_EssaySelectionData;
   insertParamsData: ABCP_InsertParamsData;
   results: ABCP_Results;
-  createdAt: any
-  updatedAt: any
+  createdAt: Date
+  updatedAt: Date
   storedData: ABCPDataWithoutStoredData
 };
 

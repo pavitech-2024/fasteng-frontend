@@ -70,10 +70,10 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
           disableRowSelectionOnClick
           hideFooter
           isRowSelectable={(params: GridRowParams) => {
-            const selectedRowType = rows[params.id]?.type;
-            if (selectedRowType === 'cement') {
-              return rowSelectionModel.length === 0 || rowSelectionModel[0] === params.id;
-            }
+            // const selectedRowType = rows[params.id]?.type;
+            // if (selectedRowType === 'cement') {
+            //   return rowSelectionModel.length === 0 || rowSelectionModel[0] === params.id;
+            // }
             return true;
           }}
           onRowSelectionModelChange={(rowSelection) => {
@@ -87,11 +87,11 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
             const updatedStates: {
               fineAggregate: AggregateObject | null;
               coarseAggregate: AggregateObject | null;
-              cement: AggregateObject | null;
+              //cement: AggregateObject | null;
             } = {
               fineAggregate: null,
               coarseAggregate: null,
-              cement: null,
+              //cement: null,
             };
 
             rowSelection.forEach((selectedRow) => {
@@ -100,12 +100,14 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
               if ('_id' in row) {
                 const { _id, type } = row;
 
-                if (type === 'cement') {
-                  // const rowIndex = rows.findIndex((r) => '_id' in r && r._id === _id);
-                  // updatedStates.cement = updatedStates.cement === rowIndex ? null : rowIndex;
-                  // updatedStates.cement = rowIndex !== -1 ? rowIndex : null;
-                  updatedStates.cement = { id: _id, type: "cement"}
-                } else if (type === t("abcp.step-3.coarse-aggregate")) {
+                // if (type === 'cement') {
+                //   updatedStates.cement = { id: _id, type: "cement"}
+                // } else if (type === t("abcp.step-3.coarse-aggregate")) {
+                //   updatedStates.coarseAggregate = { id: _id, type: 'coarseAggregate' };
+                // } else if (type === t("abcp.step-3.fine-aggregate")) {
+                //   updatedStates.fineAggregate = updatedStates.fineAggregate?.id === row._id ? null : { id: _id, type: 'fineAggregate' };
+                // }
+                if (type === t("abcp.step-3.coarse-aggregate")) {
                   updatedStates.coarseAggregate = { id: _id, type: 'coarseAggregate' };
                 } else if (type === t("abcp.step-3.fine-aggregate")) {
                   updatedStates.fineAggregate = updatedStates.fineAggregate?.id === row._id ? null : { id: _id, type: 'fineAggregate' };
@@ -129,16 +131,16 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
                 : null,
             });
 
-            setData({
-              step: 1,
-              key: 'cement',
-              // value: updatedStates.cement !== null
-              //   ? (rows[updatedStates.cement] as MaterialRow)._id
-              //   : null,
-              value: updatedStates.cement !== null
-                ? { ...(materialSelectionData.cement || {}), ...updatedStates.cement }
-                : null,
-            })
+            // setData({
+            //   step: 1,
+            //   key: 'cement',
+            //   // value: updatedStates.cement !== null
+            //   //   ? (rows[updatedStates.cement] as MaterialRow)._id
+            //   //   : null,
+            //   value: updatedStates.cement !== null
+            //     ? { ...(materialSelectionData.cement || {}), ...updatedStates.cement }
+            //     : null,
+            // })
           }}
           rowSelectionModel={rowSelectionModel}
           disableColumnSelector
