@@ -145,22 +145,19 @@ class ABCP_SERVICE implements IEssayService {
   submitMaterialSelection = async (data: ABCPData, userId: string, user?: string, isConsult?: boolean): Promise<void> => {
     if(!isConsult) {
       try {
-        const { coarseAggregate, fineAggregate } = data.materialSelectionData;
+        const { coarseAggregate, fineAggregate, cement } = data.materialSelectionData;
         const { name } = data.generalData;
         const userData = userId ? userId : user;
 
         if (!coarseAggregate) throw t('errors.empty-coarseAggregates');
         if (!fineAggregate) throw t('errors.empty-fineAggregates');
-        //if (!cement) throw t('errors.empty-binder');
+        if (!cement) throw t('errors.empty-binder');
 
         const materialSelectionData = {
           name,
           coarseAggregate,
           fineAggregate,
-          cement: {
-            id: "64f03f83bd4afb4bb13aea45",
-            type: "cement"
-          },
+          cement,
           isConsult: null
         }
 
