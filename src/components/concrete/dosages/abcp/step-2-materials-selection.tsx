@@ -129,7 +129,6 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
         return type === 'cement';
       })
   ]
-  console.log("🚀 ~ binderRows:", binderRows)
 
   const binderColumns: GridColDef[] = [
     {
@@ -149,19 +148,18 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
     },
   ];
 
-  // useEffect(() => {
-  //   if (!Object.values(materialSelectionData).some((data) => data === null)) {
-  //     setNextDisabled(false);
-  //   }
-  // }, [materialSelectionData]);
+  useEffect(() => {
+    console.log("🚀 ~ materialSelectionData:", materialSelectionData)
+  }, [materialSelectionData]);
 
-  // if (
-  //   materialSelectionData?.cement !== null && 
-  //   materialSelectionData?.coarseAggregate !== null && 
-  //   materialSelectionData?.fineAggregate !== null
-  // ) {
-  //   setNextDisabled(false)
-  // }
+  if (
+    materialSelectionData?.cement?.id !== null && 
+    materialSelectionData?.coarseAggregate?.id !== null && 
+    materialSelectionData?.fineAggregate?.id !== null
+  ) {
+    console.log("deu")
+    setNextDisabled(false)
+  }
 
   return (
     <>

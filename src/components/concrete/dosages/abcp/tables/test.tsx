@@ -4,7 +4,7 @@ import useABCPStore from '@/stores/concrete/abcp/abcp.store';
 import { Box } from '@mui/material';
 import { DataGrid, GridCellParams, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Step2Props {
   header?: string;
@@ -15,6 +15,7 @@ interface Step2Props {
 const Step2Table = ({ rows, columns, header }: Step2Props & { abcp: ABCP_SERVICE }) => {
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
   const { materialSelectionData, setData } = useABCPStore();
+  //to do: fazer carregar os dados já selecionados nos inputs ao abrir a página.
 
   const renderCell = (params: GridCellParams) => {
     const row = rows[params.id];
