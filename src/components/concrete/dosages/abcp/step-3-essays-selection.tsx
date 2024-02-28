@@ -1,15 +1,14 @@
 import DropDown from '@/components/atoms/inputs/dropDown';
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
-import useAuth from '@/contexts/auth';
 import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
-import useABCPStore from '@/stores/concrete/abcp/abcp.store';
+import useABCPStore, { ABCP_EssaySelectionData } from '@/stores/concrete/abcp/abcp.store';
 import { Box, TextField, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
+const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [essays, setEssays] = useState<any>();
@@ -58,7 +57,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
   if (essays) coarseAggregate_Inputs.push(essays.coarseAggregate);
   if (essays) binder_Inputs.push(essays.cement);
 
-  function hasNullValue(obj: any): boolean {
+  function hasNullValue(obj: ABCP_EssaySelectionData): boolean {
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
         if (obj[key] === null || obj[key] === undefined) {
@@ -74,7 +73,6 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
 
   const hasNull = hasNullValue(essaySelectionData);
 
-  // Se hasNull for false, setNextDisabled para false; caso contrário, setNextDisabled para true.
   setNextDisabled(hasNull);
 
   return (
@@ -130,7 +128,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                         value: essaySelectionData.fineAggregate.granulometry_id
                       }
                     }
-                    options={essays.fineAggregateData.granulometrys?.map((essay: any) => {
+                    options={essays.fineAggregateData.granulometrys?.map((essay) => {
                       const { generalData, results, _id } = essay;
                       return {
                         label: `${generalData.name} - (Diâmetro máximo: ${results.nominal_diameter}mm)`,
@@ -193,7 +191,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                         value: essaySelectionData.coarseAggregate.granulometry_id,
                       }
                     }
-                    options={essays.coarseAggregateData.granulometrys?.map((essay: any) => {
+                    options={essays.coarseAggregateData.granulometrys?.map((essay) => {
                       const { generalData, results, _id } = essay;
                       return {
                         label: `${generalData.name} - (Diâmetro máximo: ${results.nominal_diameter}mm)`,
@@ -215,7 +213,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                         value: essaySelectionData.coarseAggregate.unitMass_id,
                       }
                     }
-                    options={essays.coarseAggregateData.unit_masses?.map((essay: any) => {
+                    options={essays.coarseAggregateData.unit_masses?.map((essay) => {
                       const { generalData, result, _id } = essay;
                       return {
                         key: _id,

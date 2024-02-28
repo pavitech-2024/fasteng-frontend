@@ -2,7 +2,6 @@ import { t } from 'i18next';
 import { EssayPageProps } from '@/components/templates/essay';
 import { Box, TextField } from '@mui/material';
 import useABCPStore from '@/stores/concrete/abcp/abcp.store';
-import { useEffect } from 'react';
 
 const ABCP_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
 

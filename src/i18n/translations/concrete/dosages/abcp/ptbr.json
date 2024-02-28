@@ -19,6 +19,7 @@
   "abcp.results.fine-aggregate-consume": "Consumo de areia",
   "abcp.result.coefficients": "Coeficientes",
   "abcp.result.graph": "Gráfico",
+  "abcp.general-results": "Resultados Gerais",
   "abcp.step-4.select-condition": "Selecione a condição desejada",
   "abcp.step-4.fck": "Selecione o FCK desejado",
   "abcp.step-4.reduction": "Informe o abatimento desejado",
@@ -35,5 +36,12 @@
   "abcp.step-3.unit_mass": "Selecione a massa unitária",
   "concrete.materials.aggregates": "Agregados",
   "concrete.materials.binders": "Aglomerantes",
-  "concrete.search": "Pesquisar"
+  "concrete.search": "Pesquisar",
+  "abcp.dosage-consult.name": "Nome",
+  "abcp.dosage-consult.progress": "Progresso",
+  "abcp.dosage-consult.start": "Início",
+  "abcp.dosage-consult.finish": "Final",
+  "abcp.dosage-consult.options": "Opções",
+  "abcp.dosage-title": "Dosagem ABCP",
+  "errors.invalid-reduction": "O abatimento deve ser um valor entre 40 e 100."
 }

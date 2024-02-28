@@ -8,13 +8,7 @@ import { useEffect } from 'react';
 import { t } from 'i18next';
 
 const ABCP_InsertingParams = ({ setNextDisabled }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
-  const { insertParamsData, setData, storedData } = useABCPStore();
-
-  useEffect(() => {
-    if (storedData?.insertParamsData) {
-      setData({ step: 3, value: storedData.insertParamsData })
-    } 
-  }, [storedData]);
+  const { insertParamsData, setData } = useABCPStore();
 
   const inputs = [
     {

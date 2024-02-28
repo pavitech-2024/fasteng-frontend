@@ -14,20 +14,13 @@ interface Step2Props {
 }
 
 const ABCP_MaterialSelectionTable = ({ rows, columns, header, handleError }: Step2Props & { abcp: ABCP_SERVICE }) => {
-  console.log("🚀 ~ rows:", rows)
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
   const { materialSelectionData, setData } = useABCPStore();
   //to do: fazer carregar os dados já selecionados nos inputs ao abrir a página.
 
   useEffect(() => {
-    console.log("🚀 ~ rowSelectionModel:", rowSelectionModel)
-  }, [rowSelectionModel])
-
-
-  useEffect(() => {
     if (materialSelectionData.cement.id !== null) {
       const cementIndex = rows.findIndex((element) => element._id === materialSelectionData.cement.id) + 1;
-      console.log("🚀 ~ useEffect ~ cementIndex:", cementIndex)
       if (rowSelectionModel.includes(cementIndex)) {
         rowSelectionModel.filter(item => item !== cementIndex)
       } else {

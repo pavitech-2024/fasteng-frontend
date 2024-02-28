@@ -6,8 +6,6 @@ import { ConcreteMaterial } from '@/interfaces/concrete';
 import { AbcpLogo } from '@/assets';
 import { ConcreteGranulometryData } from '@/stores/concrete/granulometry/granulometry.store';
 
-// import { persist } from 'zustand/middleware';
-
 type EssaySelection_Results = {
   cement: {
     _id: string;
@@ -52,7 +50,7 @@ class ABCP_SERVICE implements IEssayService {
   /** @handleNext Receives the step and data from the form and calls the respective method */
   handleNext = async (targetStep: number, data: unknown, isConsult?: boolean): Promise<void> => {
 
-    // Verificar se isConsult é undefined e atribuir false caso seja
+    // Check if isConsult is undefined and assign false if so
     if (isConsult === undefined) isConsult = false;
 
     try {
@@ -86,15 +84,15 @@ class ABCP_SERVICE implements IEssayService {
 
   // send general data to backend to verify if there is already a ABCP dosage with same name
   submitGeneralData = async (data: ABCPData['generalData'], userId: string, isConsult?: boolean): Promise<void> => {
-    const userId2 = userId ? userId : data.userId;
+    const user = userId ? userId : data.userId;
     if (!isConsult) {
       try {
-        // verify if there is already a ABCP essay with same name for the sample
-        const response = await Api.post(`${this.info.backend_path}/verify-init/${userId2}`, data);
+        // verify if there is already a ABCP dosage with same name for the sample
+        const response = await Api.post(`${this.info.backend_path}/verify-init/${user}`, data);
   
         const { success, error } = response.data;
   
-        // if there is already a ABCP essay with same name for the sample, throw error
+        // if there is already a ABCP dosage with same name for the sample, throw error
         if (success === false) throw error.name;
       } catch (error) {
         throw error;
@@ -110,6 +108,7 @@ class ABCP_SERVICE implements IEssayService {
       const response = await Api.get(`${this.info.backend_path}/material-selection/${userId}`);
 
       const { materials, success, error } = response.data;
+
       if (success === false) throw error.name;
       else return materials;
     } catch (error) {
@@ -118,16 +117,10 @@ class ABCP_SERVICE implements IEssayService {
   };
 
   // get essay from materials id
-  getEssaysByMaterialId = async (
-    data: any
-  ): Promise<EssaySelection_Results> => {
+  getEssaysByMaterialId = async (data: ABCPData['essaySelectionData'] | ABCPData['materialSelectionData']): Promise<EssaySelection_Results> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/essay-selection`, {
-        //cement: cement,
-        cement: {
-          id: "64f03f83bd4afb4bb13aea45",
-          type: "cement"
-        },
+        cement: data.cement,
         coarseAggregate: data.coarseAggregate,
         fineAggregate: data.fineAggregate,
       });
@@ -168,10 +161,7 @@ class ABCP_SERVICE implements IEssayService {
             name,
             coarseAggregate,
             fineAggregate,
-            cement: {
-              id: "64f03f83bd4afb4bb13aea45",
-              type: "cement"
-            }
+            cement,
           }
         });
 
@@ -183,7 +173,6 @@ class ABCP_SERVICE implements IEssayService {
         throw error;
       }
     }
-    
   };
 
   /** @essaySelection Methods for essay-selection-data (step === 2, page 3) */
@@ -250,16 +239,10 @@ class ABCP_SERVICE implements IEssayService {
   // calculate results from abcp dosage
   calculateResults = async (data: ABCPData, isConsult?:boolean): Promise<void> => {
     if (!isConsult) {
-      try {
-        const newMaterialData = { ...data.materialSelectionData };
-        newMaterialData.cement = {
-          id: "64f03f83bd4afb4bb13aea45",
-          type: "cement"
-        }
-  
+      try {  
         const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
           generalData: data.generalData,
-          materialSelectionData: newMaterialData, //Teste
+          materialSelectionData: data.materialSelectionData,
           essaySelectionData: data.essaySelectionData,
           insertParamsData: data.insertParamsData,
         });

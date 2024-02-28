@@ -3,14 +3,12 @@ import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { ConcreteMaterial, ConcreteMaterialTypes } from '@/interfaces/concrete';
 import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
-import useABCPStore, { ABCPData } from '@/stores/concrete/abcp/abcp.store';
+import useABCPStore from '@/stores/concrete/abcp/abcp.store';
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
-import { toast, useToast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { GridColDef } from '@mui/x-data-grid';
-import BinderSelectionTable from './tables/binder-selection-table';
-import { Toast } from 'react-toastify/dist/components';
 import Step2Table from './tables/material-selection-table';
 
 const ABCP_MaterialsSelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
