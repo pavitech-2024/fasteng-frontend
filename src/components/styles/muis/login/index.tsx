@@ -4,7 +4,7 @@ import React from 'react';
 
 interface AboutButtonProps {
   text: string;
-  href?: string; 
+  href?: string;
 }
 
 export const AboutButton: NextPage<AboutButtonProps> = ({ text, href }: AboutButtonProps) => (

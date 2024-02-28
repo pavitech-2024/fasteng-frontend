@@ -22,20 +22,20 @@ const ABCP_MaterialSelectionTable = ({ rows, columns, header, handleError }: Ste
     if (materialSelectionData.cement.id !== null) {
       const cementIndex = rows.findIndex((element) => element._id === materialSelectionData.cement.id) + 1;
       if (rowSelectionModel.includes(cementIndex)) {
-        rowSelectionModel.filter(item => item !== cementIndex)
+        rowSelectionModel.filter((item) => item !== cementIndex);
       } else {
-        rowSelectionModel.push(cementIndex)
+        rowSelectionModel.push(cementIndex);
       }
     }
-  })
+  });
 
   useEffect(() => {
     if (rowSelectionModel.length > 2) {
-      handleError(true)
+      handleError(true);
     } else {
-      handleError(false)
+      handleError(false);
     }
-  }, [rowSelectionModel])
+  }, [rowSelectionModel]);
 
   const renderCell = (params: GridCellParams) => {
     const row = rows[params.id];
@@ -73,37 +73,36 @@ const ABCP_MaterialSelectionTable = ({ rows, columns, header, handleError }: Ste
               ...materialSelectionData,
               cement: {
                 id: null,
-                type: null
-              }
-            }
+                type: null,
+              },
+            };
             if (rows.some((element) => element.type === 'cement')) {
               if (rowSelection.length > 2) {
-                rowSelection = []
+                rowSelection = [];
               } else if (rowSelection.length > 1) {
                 rowSelection.shift();
               }
 
               if (rowSelection.length > 0) {
-                cementObject = { 
-                  ...materialSelectionData, 
-                  cement: { 
-                    id: rows[rowSelection[0]]._id, 
-                    type: 'cement' 
-                  }
-                }
+                cementObject = {
+                  ...materialSelectionData,
+                  cement: {
+                    id: rows[rowSelection[0]]._id,
+                    type: 'cement',
+                  },
+                };
               } else {
                 cementObject = {
                   ...materialSelectionData,
                   cement: {
                     id: null,
-                    type: null
-                  }
-                }
+                    type: null,
+                  },
+                };
               }
 
               setData({ step: 1, value: cementObject });
             } else {
-
               const aggregates = [];
               let coarseAggregate = materialSelectionData.coarseAggregate;
               let fineAggregate = materialSelectionData.fineAggregate;
@@ -111,40 +110,40 @@ const ABCP_MaterialSelectionTable = ({ rows, columns, header, handleError }: Ste
                 ...materialSelectionData,
                 coarseAggregate: {
                   id: null,
-                  type: null
+                  type: null,
                 },
                 fineAggregate: {
                   id: null,
-                  type: null
-                }
-              }
+                  type: null,
+                },
+              };
 
               rowSelection.forEach((row, index) => {
                 aggregates.push({
                   _id: rows[rowSelection[index]]._id,
                   name: rows[rowSelection[index]].name,
-                })
+                });
 
-                if (rows[rowSelection[index]].type === t("abcp.step-3.coarse-aggregate")) {
+                if (rows[rowSelection[index]].type === t('abcp.step-3.coarse-aggregate')) {
                   coarseAggregate = {
                     id: rows[rowSelection[index]]._id,
-                    type: rows[rowSelection[index]].type
-                  }
+                    type: rows[rowSelection[index]].type,
+                  };
                 }
 
-                if (rows[rowSelection[index]].type === t("abcp.step-3.fine-aggregate")) {
+                if (rows[rowSelection[index]].type === t('abcp.step-3.fine-aggregate')) {
                   fineAggregate = {
                     id: rows[rowSelection[index]]._id,
-                    type: rows[rowSelection[index]].type
-                  }
+                    type: rows[rowSelection[index]].type,
+                  };
                 }
 
                 aggregatesObject = {
                   ...materialSelectionData,
                   coarseAggregate,
-                  fineAggregate
-                }
-              })
+                  fineAggregate,
+                };
+              });
 
               setData({ step: 1, value: aggregatesObject });
             }
@@ -165,9 +164,9 @@ const ABCP_MaterialSelectionTable = ({ rows, columns, header, handleError }: Ste
           rows={
             rows !== null
               ? rows.map((row, index) => ({
-                ...row,
-                id: index,
-              }))
+                  ...row,
+                  id: index,
+                }))
               : []
           }
           slots={{

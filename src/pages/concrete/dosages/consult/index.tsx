@@ -14,7 +14,6 @@ import { toast } from 'react-toastify';
 import Loading from '@/components/molecules/loading';
 
 const AbcpDosageConsult = () => {
-
   const { setData } = useABCPStore();
   const { handleNext } = new ABCP_SERVICE();
   const [dosages, setDosages] = useState<AcpDosageData[]>([]);
@@ -23,7 +22,7 @@ const AbcpDosageConsult = () => {
   const { user } = useAuth();
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
-  const [ dosageArrays, setDosageArrays ] = useState([])
+  const [dosageArrays, setDosageArrays] = useState([]);
 
   const progressTextMap = {
     1: t('general data'),
@@ -45,42 +44,40 @@ const AbcpDosageConsult = () => {
     toast.promise(
       async () => {
         try {
-          abcpDosageService
-            .getAbcpDosagesByUserId(user._id)
-            .then((response) => {
-              setDosages(response.data);
-            })
-            if (rows.length > 0) {
-              const arraysMenores = dividirArrayEmArraysMenores(rows, rowsPerPage);
-              setDosageArrays(arraysMenores);
-              setLoading(false)
-            } else {
-              setDosageArrays([[]]); // Define um array vazio como padrão se rows ainda não foi definido
-            }
+          abcpDosageService.getAbcpDosagesByUserId(user._id).then((response) => {
+            setDosages(response.data);
+          });
+          if (rows.length > 0) {
+            const arraysMenores = dividirArrayEmArraysMenores(rows, rowsPerPage);
+            setDosageArrays(arraysMenores);
+            setLoading(false);
+          } else {
+            setDosageArrays([[]]); // Define um array vazio como padrão se rows ainda não foi definido
+          }
         } catch (error) {
           setDosages([]);
           setLoading(false);
           throw error;
         }
-      }, {
+      },
+      {
         pending: t('loading.abcp.pending'),
         success: t('loading.abcp.success'),
         error: t('loading.abcp.error'),
       }
-    )
+    );
   }, []);
 
   function dividirArrayEmArraysMenores(array, tamanho) {
     const arraysMenores = [];
-    
+
     for (let i = 0; i < array.length; i += tamanho) {
-      const arrayMenor = array.slice(i, i + tamanho).map(item => ({ ...item })); // Copia cada item para garantir que a propriedade `id` seja preservada
+      const arrayMenor = array.slice(i, i + tamanho).map((item) => ({ ...item })); // Copia cada item para garantir que a propriedade `id` seja preservada
       arraysMenores.push(arrayMenor);
     }
-    
+
     return arraysMenores;
   }
-  
 
   useEffect(() => {
     if (rows.length > 0) {
@@ -91,7 +88,7 @@ const AbcpDosageConsult = () => {
   }, []);
 
   const handleDeleteDosage = async (id: string) => {
-    console.log("🚀 ~ handleDeleteDosage ~ id:", id)
+    console.log('🚀 ~ handleDeleteDosage ~ id:', id);
     try {
       await abcpDosageService.deleteAbcpDosage(id);
       const updatedDosages = dosages.filter((dosage) => dosage._id !== id);
@@ -103,16 +100,16 @@ const AbcpDosageConsult = () => {
 
   const handleVisualizeDosage = (id: string) => {
     const dosage = dosages.find((dosage) => {
-      return dosage._id === id
-    })
+      return dosage._id === id;
+    });
     const step = dosage.generalData.step;
     if (dosage) {
       setData({
         step: 5,
-        value: dosage
+        value: dosage,
       });
     }
-    sessionStorage.setItem('abcp-step', (step).toString());
+    sessionStorage.setItem('abcp-step', step.toString());
     handleNext(step, dosage, true);
     if (step === 4) router.push(`/concrete/dosages/abcp?consult=true`);
     router.push(`/concrete/dosages/abcp`);
@@ -201,7 +198,7 @@ const AbcpDosageConsult = () => {
                         flex: 1,
                       }))}
                     />
-                  )}                  
+                  )}
                   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
                     <Pagination
                       count={dosageArrays.length}
@@ -215,7 +212,6 @@ const AbcpDosageConsult = () => {
           )}
         </Container>
       )}
-
     </>
   );
 };

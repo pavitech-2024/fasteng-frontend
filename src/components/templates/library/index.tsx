@@ -77,8 +77,8 @@ export const LibraryTemplate = ({ library, filterOptions }: LibraryTemplateProps
           <Typography>
             <LoadingImg>
               <img
-                src='https://cdn-icons-png.flaticon.com/512/270/270031.png'
-                style={{ width: '12rem'}}
+                src="https://cdn-icons-png.flaticon.com/512/270/270031.png"
+                style={{ width: '12rem' }}
                 alt="Rolo compressor PNG"
               />
             </LoadingImg>

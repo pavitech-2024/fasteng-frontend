@@ -49,7 +49,6 @@ class ABCP_SERVICE implements IEssayService {
 
   /** @handleNext Receives the step and data from the form and calls the respective method */
   handleNext = async (targetStep: number, data: unknown, isConsult?: boolean): Promise<void> => {
-
     // Check if isConsult is undefined and assign false if so
     if (isConsult === undefined) isConsult = false;
 
@@ -57,7 +56,7 @@ class ABCP_SERVICE implements IEssayService {
       switch (targetStep) {
         case 0:
           await this.submitGeneralData(data as ABCPData['generalData'], this.userId, isConsult);
-          break
+          break;
         case 1:
           await this.submitMaterialSelection(data as ABCPData, this.userId, null, isConsult);
           break;
@@ -89,9 +88,9 @@ class ABCP_SERVICE implements IEssayService {
       try {
         // verify if there is already a ABCP dosage with same name for the sample
         const response = await Api.post(`${this.info.backend_path}/verify-init/${user}`, data);
-  
+
         const { success, error } = response.data;
-  
+
         // if there is already a ABCP dosage with same name for the sample, throw error
         if (success === false) throw error.name;
       } catch (error) {
@@ -117,7 +116,9 @@ class ABCP_SERVICE implements IEssayService {
   };
 
   // get essay from materials id
-  getEssaysByMaterialId = async (data: ABCPData['essaySelectionData'] | ABCPData['materialSelectionData']): Promise<EssaySelection_Results> => {
+  getEssaysByMaterialId = async (
+    data: ABCPData['essaySelectionData'] | ABCPData['materialSelectionData']
+  ): Promise<EssaySelection_Results> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/essay-selection`, {
         cement: data.cement,
@@ -135,8 +136,13 @@ class ABCP_SERVICE implements IEssayService {
   };
 
   // send the selected materials to backend
-  submitMaterialSelection = async (data: ABCPData, userId: string, user?: string, isConsult?: boolean): Promise<void> => {
-    if(!isConsult) {
+  submitMaterialSelection = async (
+    data: ABCPData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
       try {
         const { coarseAggregate, fineAggregate, cement } = data.materialSelectionData;
         const { name } = data.generalData;
@@ -151,8 +157,8 @@ class ABCP_SERVICE implements IEssayService {
           coarseAggregate,
           fineAggregate,
           cement,
-          isConsult: null
-        }
+          isConsult: null,
+        };
 
         if (isConsult) materialSelectionData.isConsult = isConsult;
 
@@ -162,7 +168,7 @@ class ABCP_SERVICE implements IEssayService {
             coarseAggregate,
             fineAggregate,
             cement,
-          }
+          },
         });
 
         const { success, error } = response.data;
@@ -180,26 +186,22 @@ class ABCP_SERVICE implements IEssayService {
   // send the selected essays to backend
   submitEssaySelection = async (data: ABCPData, userId: string, isConsult?: boolean): Promise<void> => {
     if (!isConsult) {
-      const { 
-        coarseAggregate,
-        fineAggregate,
-        cement,
-      } = data.essaySelectionData;
-  
+      const { coarseAggregate, fineAggregate, cement } = data.essaySelectionData;
+
       const { name } = data.generalData;
-  
+
       try {
         const response = await Api.post(`${this.info.backend_path}/save-essay-selection-step/${userId}`, {
           essaySelectionData: {
             name,
             fineAggregate,
             coarseAggregate,
-            cement
-          }
+            cement,
+          },
         });
-  
+
         const { success, error } = response.data;
-  
+
         if (success === false) throw error.name;
       } catch (error) {
         console.log(error);
@@ -215,20 +217,20 @@ class ABCP_SERVICE implements IEssayService {
       try {
         const { reduction, fck, condition } = data.insertParamsData;
         const { name } = data.generalData;
-  
+
         if (reduction < 40 || reduction > 100) throw t('errors.invalid-reduction');
-  
+
         const response = await Api.post(`${this.info.backend_path}/save-insert-params-step/${userId}`, {
           insertParamsData: {
             name,
             reduction,
             fck,
-            condition
-          }
+            condition,
+          },
         });
-  
+
         const { success, error } = response.data;
-  
+
         if (success === false) throw error.name;
       } catch (error) {
         throw error;
@@ -237,23 +239,23 @@ class ABCP_SERVICE implements IEssayService {
   };
 
   // calculate results from abcp dosage
-  calculateResults = async (data: ABCPData, isConsult?:boolean): Promise<void> => {
+  calculateResults = async (data: ABCPData, isConsult?: boolean): Promise<void> => {
     if (!isConsult) {
-      try {  
+      try {
         const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
           generalData: data.generalData,
           materialSelectionData: data.materialSelectionData,
           essaySelectionData: data.essaySelectionData,
           insertParamsData: data.insertParamsData,
         });
-  
+
         const { success, error, result } = response.data;
-  
+
         if (success === false) throw error.name;
         else {
           this.store_actions.setData({ step: 4, value: result });
           return result;
-        } 
+        }
       } catch (error) {
         throw error;
       }
@@ -277,11 +279,11 @@ class ABCP_SERVICE implements IEssayService {
           insertParamsData: data.insertParamsData,
           results: data.results,
         });
-  
+
         const { success, error } = response.data;
-  
+
         if (success === false) throw error.name;
-  
+
         // this.store_actions.reset( { step: null, value: null });
       } catch (error) {
         throw error;

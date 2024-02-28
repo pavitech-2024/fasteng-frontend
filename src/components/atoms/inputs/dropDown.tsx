@@ -29,7 +29,6 @@ const DropDown = ({
   variant,
   required,
 }: DropDownProps) => {
-
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     callback(event.target.value);
   };

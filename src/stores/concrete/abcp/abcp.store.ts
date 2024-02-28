@@ -8,26 +8,26 @@ interface GeneralData {
   operator?: string;
   calculist?: string;
   description?: string;
-  step: number
+  step: number;
 }
 
 interface ABCP_MaterialSelection {
-  name: string,
+  name: string;
   coarseAggregate: {
-    id: string,
-    type: string
+    id: string;
+    type: string;
   };
   fineAggregate: {
-    id: string,
-    type: string
+    id: string;
+    type: string;
   };
   cement: {
-    id: string,
-    type: string
+    id: string;
+    type: string;
   };
 }
 
- export interface ABCP_EssaySelectionData {
+export interface ABCP_EssaySelectionData {
   fineAggregate: {
     _id: string;
     specificMass: number;
@@ -71,8 +71,8 @@ export type ABCPData = {
   essaySelectionData: ABCP_EssaySelectionData;
   insertParamsData: ABCP_InsertParamsData;
   results: ABCP_Results;
-  createdAt: Date
-  updatedAt: Date
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type ABCPActions = {
@@ -98,21 +98,21 @@ const initialState = {
     operator: null,
     calculist: null,
     description: null,
-    step: 0
+    step: 0,
   },
   materialSelectionData: {
     name: null,
     coarseAggregate: {
       id: null,
-      type: null
+      type: null,
     },
     fineAggregate: {
       id: null,
-      type: null
+      type: null,
     },
     cement: {
       id: null,
-      type: null
+      type: null,
     },
   },
   essaySelectionData: {

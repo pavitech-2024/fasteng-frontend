@@ -12,7 +12,6 @@ import { GridColDef } from '@mui/x-data-grid';
 import Step2Table from './tables/material-selection-table';
 
 const ABCP_MaterialsSelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
-
   const { materialSelectionData } = useABCPStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
@@ -22,7 +21,7 @@ const ABCP_MaterialsSelection = ({ setNextDisabled, abcp }: EssayPageProps & { a
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    if (error) toast.error('Você só pode escolher um agregado miúdo e um agregado graúdo por vez.')
+    if (error) toast.error('Você só pode escolher um agregado miúdo e um agregado graúdo por vez.');
   }, [error]);
 
   useEffect(() => {
@@ -49,36 +48,41 @@ const ABCP_MaterialsSelection = ({ setNextDisabled, abcp }: EssayPageProps & { a
   const handleAgglomerateInputSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setAgglomerateSearchValue(value);
-  }
+  };
 
   const handleBinderInputSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setBinderSearchValue(value);
-  }
+  };
 
-  const filteredMaterials = materials
-    .filter(({ name, type }) => name.includes(agglomerateSearchValue) || type.includes(agglomerateSearchValue))
+  const filteredMaterials = materials.filter(
+    ({ name, type }) => name.includes(agglomerateSearchValue) || type.includes(agglomerateSearchValue)
+  );
 
   const aggregateRows = [
     {
-      inputComponent: <TextField label={t("concrete.search")} variant="standard" onChange={handleAgglomerateInputSearch} />,
-      type: 'input'
+      inputComponent: (
+        <TextField label={t('concrete.search')} variant="standard" onChange={handleAgglomerateInputSearch} />
+      ),
+      type: 'input',
     },
-    ...filteredMaterials.map(({ _id, name, type }) => {
-      let translatedType = type;
+    ...filteredMaterials
+      .map(({ _id, name, type }) => {
+        let translatedType = type;
 
-      if (type === 'fineAggregate') {
-        translatedType = t("abcp.step-3.fine-aggregate") as ConcreteMaterialTypes
-      } else if (type === 'coarseAggregate') {
-        translatedType = t("abcp.step-3.coarse-aggregate") as ConcreteMaterialTypes
-      }
+        if (type === 'fineAggregate') {
+          translatedType = t('abcp.step-3.fine-aggregate') as ConcreteMaterialTypes;
+        } else if (type === 'coarseAggregate') {
+          translatedType = t('abcp.step-3.coarse-aggregate') as ConcreteMaterialTypes;
+        }
 
-      return {
-        _id,
-        name,
-        type: translatedType,
-      };
-    }).filter(({ type }) => type === t("abcp.step-3.fine-aggregate") || type === t("abcp.step-3.coarse-aggregate")),
+        return {
+          _id,
+          name,
+          type: translatedType,
+        };
+      })
+      .filter(({ type }) => type === t('abcp.step-3.fine-aggregate') || type === t('abcp.step-3.coarse-aggregate')),
   ];
 
   const aggregateColumns: GridColDef[] = [
@@ -94,12 +98,13 @@ const ABCP_MaterialsSelection = ({ setNextDisabled, abcp }: EssayPageProps & { a
     },
   ];
 
-  const filteredBinderMaterials = materials
-    .filter(({ name, type }) => name.includes(binderSearchValue) || type.includes(binderSearchValue))
+  const filteredBinderMaterials = materials.filter(
+    ({ name, type }) => name.includes(binderSearchValue) || type.includes(binderSearchValue)
+  );
 
   const binderRows = [
     {
-      inputComponent: <TextField label={t("concrete.search")} variant='standard' onChange={handleBinderInputSearch} />
+      inputComponent: <TextField label={t('concrete.search')} variant="standard" onChange={handleBinderInputSearch} />,
     },
     ...filteredBinderMaterials
       .map(({ _id, name, type, description }) => {
@@ -113,8 +118,8 @@ const ABCP_MaterialsSelection = ({ setNextDisabled, abcp }: EssayPageProps & { a
       })
       .filter(({ type }) => {
         return type === 'cement';
-      })
-  ]
+      }),
+  ];
 
   const binderColumns: GridColDef[] = [
     {
@@ -140,9 +145,9 @@ const ABCP_MaterialsSelection = ({ setNextDisabled, abcp }: EssayPageProps & { a
     materialSelectionData?.fineAggregate?.id !== null &&
     !error
   ) {
-    setNextDisabled(false)
+    setNextDisabled(false);
   } else {
-    setNextDisabled(true)
+    setNextDisabled(true);
   }
 
   return (
@@ -159,15 +164,15 @@ const ABCP_MaterialsSelection = ({ setNextDisabled, abcp }: EssayPageProps & { a
           <Step2Table
             rows={aggregateRows}
             columns={aggregateColumns}
-            abcp={new ABCP_SERVICE}
+            abcp={new ABCP_SERVICE()}
             handleError={(error: boolean) => setError(error)}
           />
 
           <Step2Table
             rows={binderRows}
             columns={binderColumns}
-            abcp={new ABCP_SERVICE} 
-            handleError={(error: boolean) => setError(error)} 
+            abcp={new ABCP_SERVICE()}
+            handleError={(error: boolean) => setError(error)}
           />
         </Box>
       )}

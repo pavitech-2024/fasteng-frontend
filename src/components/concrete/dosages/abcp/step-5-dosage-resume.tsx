@@ -12,9 +12,8 @@ import abcpDosageService from '@/services/concrete/dosages/abcp/abcp-consult.ser
 import { useRouter } from 'next/router';
 
 const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
-
   nextDisabled && setNextDisabled(false);
-  const { results: abcp_results, insertParamsData, setData,  } = useABCPStore();
+  const { results: abcp_results, insertParamsData, setData } = useABCPStore();
   const { calculateResults } = new ABCP_SERVICE();
   const store = JSON.parse(sessionStorage.getItem('abcp-store'));
   const dosageId = store.state._id;
@@ -27,13 +26,13 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
         try {
           const foundDosage = await abcpDosageService.getAbcpDosage(dosageId);
           const calculateDosage = await calculateResults(foundDosage.data);
-          const dosageData = { ...foundDosage.data, results: calculateDosage}
-          setData({ step: 5, value: dosageData })
+          const dosageData = { ...foundDosage.data, results: calculateDosage };
+          setData({ step: 5, value: dosageData });
         } catch (error) {
           console.error('Failed to load dosage:', error);
         }
-      }
-      resultData()
+      };
+      resultData();
     }
   }, []);
 
@@ -115,7 +114,9 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
 
   const cc = abcp_results.cc > 1 ? abcp_results.cc : 1;
   const ca = abcp_results.ca > 1 ? abcp_results.ca : 1;
-  const coefficients = `${cc / cc} : ${(abcp_results.careia / cc).toFixed(3)} : ${(abcp_results.cb / cc).toFixed(3)} : ${(ca / cc).toFixed(3)}`;
+  const coefficients = `${cc / cc} : ${(abcp_results.careia / cc).toFixed(3)} : ${(abcp_results.cb / cc).toFixed(
+    3
+  )} : ${(ca / cc).toFixed(3)}`;
 
   return (
     <>
@@ -158,11 +159,11 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
             }}
           >
             {results.map((item) => (
-              <Result_Card 
-                key={item.key} 
-                label={item.label} 
-                value={typeof item.value === 'number' ? item.value.toString() : item.value} 
-                unity={item.unity} 
+              <Result_Card
+                key={item.key}
+                label={item.label}
+                value={typeof item.value === 'number' ? item.value.toString() : item.value}
+                unity={item.unity}
               />
             ))}
           </Box>
