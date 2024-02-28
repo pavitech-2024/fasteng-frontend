@@ -45,7 +45,6 @@ const ABCP_InsertingParams = ({ setNextDisabled }: EssayPageProps & { abcp: ABCP
     },
   ];
 
-  
   useEffect(() => {
     if (Object.values(insertParamsData).some((value) => value === null)) {
       setNextDisabled(true);
