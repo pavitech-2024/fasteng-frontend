@@ -13,15 +13,20 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
 
   const [loading, setLoading] = useState<boolean>(true);
   const [essays, setEssays] = useState<any>();
-  const { materialSelectionData, setData, essaySelectionData, storedData } = useABCPStore();
+  console.log("🚀 ~ essays:", essays)
+  const { 
+    materialSelectionData, 
+    setData, 
+    essaySelectionData, 
+    generalData 
+  } = useABCPStore();
 
-  const { user } = useAuth();
+  const fineAggNominalDiameter = essays?.fineAggregateData.granulometrys.find((element) => element._id === essaySelectionData.fineAggregate.granulometry_id).results.nominal_diameter;
 
-  useEffect(() => {
-    if (storedData?.essaySelectionData) {
-      setData({ step: 2, value: storedData.essaySelectionData })
-    } 
-  }, [storedData]);
+  const coarseAggNominalDiameter = essays?.coarseAggregateData.granulometrys.find((element) => element._id === essaySelectionData.coarseAggregate.granulometry_id).results.nominal_diameter;
+  console.log("🚀 ~ nominalDiameter:", fineAggNominalDiameter)
+
+  const coarseAggMaximumDiameter = essays?.coarseAggregateData.unit_masses.find((element) => element._id === essaySelectionData.coarseAggregate.unitMass_id).result.result;
 
   useEffect(() => {
     toast.promise(
@@ -119,6 +124,12 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                     variant="standard"
                     key={`granulometry_${essays.fineAggregateData._id}`}
                     label={t('abcp.step-3.granulometry')}
+                    defaultValue={
+                      { 
+                        label: `${generalData.name} - (Diâmetro máximo: ${fineAggNominalDiameter}mm)`,
+                        value: essaySelectionData.fineAggregate.granulometry_id
+                      }
+                    }
                     options={essays.fineAggregateData.granulometrys?.map((essay: any) => {
                       const { generalData, results, _id } = essay;
                       return {
@@ -176,6 +187,12 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                     variant="standard"
                     key={`granulometry_${essays.coarseAggregateData._id}`}
                     label={t('abcp.step-3.granulometry')}
+                    defaultValue={
+                      {
+                        label: `${generalData.name} - (Diâmetro máximo: ${coarseAggNominalDiameter}mm)`,
+                        value: essaySelectionData.coarseAggregate.granulometry_id,
+                      }
+                    }
                     options={essays.coarseAggregateData.granulometrys?.map((essay: any) => {
                       const { generalData, results, _id } = essay;
                       return {
@@ -192,6 +209,12 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                     variant="standard"
                     key={`unit_mass_${essays.coarseAggregateData._id}`}
                     label={t('abcp.step-3.unit_mass')}
+                    defaultValue={
+                      {
+                        label: `${generalData.name} - (Diâmetro máximo: ${coarseAggMaximumDiameter}mm)`,
+                        value: essaySelectionData.coarseAggregate.unitMass_id,
+                      }
+                    }
                     options={essays.coarseAggregateData.unit_masses?.map((essay: any) => {
                       const { generalData, result, _id } = essay;
                       return {

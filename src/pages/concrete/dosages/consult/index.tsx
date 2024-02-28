@@ -3,36 +3,53 @@ import Header from '@/components/organisms/header';
 import useAuth from '@/contexts/auth';
 import { AcpDosageData } from '@/interfaces/concrete/abcp';
 import abcpDosageService from '@/services/concrete/dosages/abcp/abcp-consult.service';
-import { Box, Container, IconButton } from '@mui/material';
+import { Box, Container, IconButton, Pagination } from '@mui/material';
 import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { t } from 'i18next';
 import useABCPStore from '@/stores/concrete/abcp/abcp.store';
 import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
+import { toast } from 'react-toastify';
+import Loading from '@/components/molecules/loading';
 
 const AbcpDosageConsult = () => {
 
   const { setData } = useABCPStore();
   const { handleNext } = new ABCP_SERVICE();
   const [dosages, setDosages] = useState<AcpDosageData[]>([]);
+  console.log("🚀 ~ AbcpDosageConsult ~ dosages:", dosages)
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const { user } = useAuth();
+  const [page, setPage] = useState<number>(0);
+  const rowsPerPage = 10;
 
   useEffect(() => {
-    abcpDosageService
-      .getAbcpDosagesByUserId(user._id)
-      .then((response) => {
-        setDosages(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Failed to load dosages:', error);
-      });
-  }, [user]);
+    toast.promise(
+      async () => {
+        try {
+          abcpDosageService
+            .getAbcpDosagesByUserId(user._id)
+            .then((response) => {
+              setDosages(response.data);
+              setLoading(false);
+            })
+        } catch (error) {
+          setDosages([]);
+          setLoading(false);
+          throw error;
+        }
+      }, {
+      pending: t('loading.abcp.pending'),
+      success: t('loading.abcp.success'),
+      error: t('loading.abcp.error'),
+    }
+    )
+  }, []);
 
   const handleDeleteDosage = async (id: string) => {
+    console.log("🚀 ~ handleDeleteDosage ~ id:", id)
     try {
       await abcpDosageService.deleteAbcpDosage(id);
       const updatedDosages = dosages.filter((dosage) => dosage._id !== id);
@@ -61,7 +78,7 @@ const AbcpDosageConsult = () => {
     })
     const step = dosage.generalData.step;
     if (dosage) {
-      setData({ 
+      setData({
         step: 5,
         value: dosage
       });
@@ -71,6 +88,22 @@ const AbcpDosageConsult = () => {
     if (step === 4) router.push(`/concrete/dosages/abcp?consult=true`);
     router.push(`/concrete/dosages/abcp`);
   };
+
+  const progressTextMap = {
+    1: t('general data'),
+    2: t('abcp.material-selection'),
+    3: t('abcp.essay-selection'),
+    4: t('abcp.inserting-params'),
+    5: t('abcp.dosage-resume'),
+  };
+
+  const rows = dosages.map((row) => ({
+    name: row.generalData.name,
+    progress: `(${row.generalData.step}/5) - ${progressTextMap[row.generalData.step]}`,
+    start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
+    finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
+    id: row._id,
+  }));
 
   const columns: GridColDef[] = [
     {
@@ -106,70 +139,70 @@ const AbcpDosageConsult = () => {
     },
   ];
 
-  const progressTextMap = {
-    1: t('general data'),
-    2: t('abcp.material-selection'),
-    3: t('abcp.essay-selection'),
-    4: t('abcp.inserting-params'),
-    5: t('abcp.dosage-resume'),
-  };
-
-  const rows = dosages.map((row) => ({
-    name: row.generalData.name,
-    progress: `(${row.generalData.step}/5) - ${progressTextMap[row.generalData.step]}`,
-    start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
-    finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
-    id: row._id,
-  }));
-
   return (
-    <Container>
+    <>
       {loading ? (
-        <p>Carregando...</p>
+        <Loading />
       ) : (
         <Container>
-          <Box sx={{ margin: '3rem' }}>
-            <Header title={'Dosagens ABCP'} image={AbcpLogo} />
-          </Box>
+          {loading ? (
+            <p>Carregando...</p>
+          ) : (
+            <Container>
+              <Box sx={{ margin: '3rem' }}>
+                <Header title={'Dosagens ABCP'} image={AbcpLogo} />
+              </Box>
 
-          <Box
-            sx={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'flex-start',
-              justifyContent: 'center',
-              pt: { mobile: 0, notebook: '0.5vh' },
-            }}
-          >
-            <Box
-              sx={{
-                width: { mobile: '90%', notebook: '80%' },
-                maxWidth: '2200px',
-                padding: '2rem',
-                borderRadius: '20px',
-                bgcolor: 'primaryTons.white',
-                border: '1px solid',
-                borderColor: 'primaryTons.border',
-                marginBottom: '1rem',
-              }}
-            >
-              <DataGrid
-                rows={rows}
-                columns={columns.map((column) => ({
-                  ...column,
-                  disableColumnMenu: true,
-                  sortable: false,
-                  align: 'center',
-                  headerAlign: 'center',
-                  minWidth: 100,
-                  flex: 1,
-                }))}
-              />
-            </Box>
-          </Box>
+              <Box
+                sx={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  justifyContent: 'center',
+                  pt: { mobile: 0, notebook: '0.5vh' },
+                }}
+              >
+                <Box
+                  sx={{
+                    width: { mobile: '90%', notebook: '80%' },
+                    maxWidth: '2200px',
+                    padding: '2rem',
+                    borderRadius: '20px',
+                    bgcolor: 'primaryTons.white',
+                    border: '1px solid',
+                    borderColor: 'primaryTons.border',
+                    marginBottom: '1rem',
+                  }}
+                >
+                  <DataGrid
+                    rows={rows}
+                    pagination
+                    columns={columns.map((column) => ({
+                      ...column,
+                      disableColumnMenu: true,
+                      sortable: false,
+                      align: 'center',
+                      headerAlign: 'center',
+                      minWidth: 100,
+                      flex: 1,
+                    }))}
+                  />
+                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
+                    <Pagination
+                      count={Math.ceil(rows.length / rowsPerPage)}
+                      size="small"
+                      disabled={rows.length < rowsPerPage}
+                      onChange={(event, value) => setPage(value - 1)}
+                    />
+                  </Box>
+                </Box>
+              </Box>
+            </Container>
+          )}
         </Container>
       )}
-    </Container>
+
+    </>
   );
 };
 

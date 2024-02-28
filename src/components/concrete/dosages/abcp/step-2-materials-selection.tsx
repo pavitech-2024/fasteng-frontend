@@ -11,33 +11,21 @@ import { toast, useToast } from 'react-toastify';
 import { GridColDef } from '@mui/x-data-grid';
 import BinderSelectionTable from './tables/binder-selection-table';
 import { Toast } from 'react-toastify/dist/components';
-import Step2Table from './tables/test';
+import Step2Table from './tables/material-selection-table';
 
-const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
+const ABCP_MaterialsSelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
 
-  const { storedData, materialSelectionData, setData } = useABCPStore();
+  const { materialSelectionData } = useABCPStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
   const [agglomerateSearchValue, setAgglomerateSearchValue] = useState<string>('');
   const [binderSearchValue, setBinderSearchValue] = useState<string>('');
   const { user } = useAuth();
-
-  // const [ errors, setErrors] = useState<AggregateErrors>({
-  //   type: '',
-  //   error: ''
-  // })
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    if (storedData?.materialSelectionData) setData({ step: 1, value: storedData.materialSelectionData })
-  }, [storedData])
-
-  // useEffect(() => {
-  //   console.log("🚀 ~ errors:", errors)
-
-  //   if (errors.error && errors.type) {
-  //     toast.error(errors.error);
-  //   }
-  // },[errors])
+    if (error) toast.error('Você só pode escolher um agregado miúdo e um agregado graúdo por vez.')
+  }, [error]);
 
   useEffect(() => {
     toast.promise(
@@ -75,7 +63,7 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
 
   const aggregateRows = [
     {
-      inputComponent: <TextField label={t("concrete.search")} variant="standard" onChange={handleAgglomerateInputSearch}/>,
+      inputComponent: <TextField label={t("concrete.search")} variant="standard" onChange={handleAgglomerateInputSearch} />,
       type: 'input'
     },
     ...filteredMaterials.map(({ _id, name, type }) => {
@@ -148,17 +136,15 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
     },
   ];
 
-  useEffect(() => {
-    console.log("🚀 ~ materialSelectionData:", materialSelectionData)
-  }, [materialSelectionData]);
-
   if (
-    materialSelectionData?.cement?.id !== null && 
-    materialSelectionData?.coarseAggregate?.id !== null && 
-    materialSelectionData?.fineAggregate?.id !== null
+    materialSelectionData?.cement?.id !== null &&
+    materialSelectionData?.coarseAggregate?.id !== null &&
+    materialSelectionData?.fineAggregate?.id !== null &&
+    !error
   ) {
-    console.log("deu")
     setNextDisabled(false)
+  } else {
+    setNextDisabled(true)
   }
 
   return (
@@ -172,23 +158,18 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
             gap: '10px',
           }}
         >
-          {/* <MaterialSelectionTable
-            rows={aggregateRows}
-            columns={aggregateColumns}
-            header={t('concrete.materials.aggregates')}
-            handleErrors={(error: AggregateErrors) => setErrors(error)}
-          />
-          <BinderSelectionTable rows={binderRows} columns={binderColumns} header={t('concrete.materials.binders')} /> */}
           <Step2Table
             rows={aggregateRows}
             columns={aggregateColumns}
             abcp={new ABCP_SERVICE}
+            handleError={(error: boolean) => setError(error)}
           />
 
           <Step2Table
             rows={binderRows}
             columns={binderColumns}
-            abcp={new ABCP_SERVICE}
+            abcp={new ABCP_SERVICE} 
+            handleError={(error: boolean) => setError(error)} 
           />
         </Box>
       )}

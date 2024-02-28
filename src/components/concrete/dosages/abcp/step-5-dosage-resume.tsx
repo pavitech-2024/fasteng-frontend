@@ -15,6 +15,7 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & 
 
   nextDisabled && setNextDisabled(false);
   const { results: abcp_results, insertParamsData, setData,  } = useABCPStore();
+  console.log("🚀 ~ abcp_results:", abcp_results)
   const { calculateResults } = new ABCP_SERVICE();
   const store = JSON.parse(sessionStorage.getItem('abcp-store'));
   const dosageId = store.state._id;
@@ -113,10 +114,13 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & 
     },
   ];
 
-  const coefficients = `${abcp_results.cc / abcp_results.cc} : ${(abcp_results.careia / abcp_results.cc).toFixed(
-    3
-  )} : ${(abcp_results.cb / abcp_results.cc).toFixed(3)} : ${(abcp_results.ca / abcp_results.cc).toFixed(3)}`;
+  // const coefficients = `${abcp_results.cc / abcp_results.cc} : ${(abcp_results.careia / abcp_results.cc).toFixed(3)} : ${(abcp_results.cb / abcp_results.cc).toFixed(3)} : ${(abcp_results.ca / abcp_results.cc).toFixed(3)}`;
 
+  const cc = abcp_results.cc > 1 ? abcp_results.cc : 1;
+  const ca = abcp_results.ca > 1 ? abcp_results.ca : 1;
+  const coefficients = `${cc / cc} : ${(abcp_results.careia / cc).toFixed(3)} : ${(abcp_results.cb / cc).toFixed(3)} : ${(ca / cc).toFixed(3)}`;
+
+  console.log("🚀 ~ coefficients:", coefficients)
   return (
     <>
       <FlexColumnBorder title={t('results')} open={true}>
