@@ -94,6 +94,7 @@ const Home: NextPage = () => {
           maxHeight: { mobile: 'none', ultrawide: '150px' },
           display: 'flex',
           alignItems: 'center',
+          m: '1.5rem 0 0',
         }}
       >
         <Box
@@ -106,7 +107,7 @@ const Home: NextPage = () => {
         >
           <Typography
             sx={{
-              fontSize: { desktop: '1.15rem', notebook: '1rem', mobile: '.85rem' },
+              fontSize: { desktop: '1.15rem', notebook: '1rem', mobile: '.9rem' },
               fontWeight: 400,
               color: 'primaryTons.darkGray',
               textAlign: 'center',
@@ -126,13 +127,17 @@ const Home: NextPage = () => {
             notebook: '1fr 1fr 1fr 1fr',
           },
           gap: {
-            mobile: '20px 0',
+            mobile: '10px 0',
             notebook: '10px 15px',
           },
           justifyItems: 'center',
           marginRight: { notebook: '55px', mobile: '0px' },
+          marginLeft: { notebook: '55px', mobile: '0px' },
+          padding: { mobile: '0 0 40px' },
+          height: { mobile: '18rem' },
           flexDirection: { notebook: 'row', tablet: 'column', mobile: 'column' },
-          width: '100%',
+          justifyContent: 'center',
+          scale: { mobile: '0.85' },
           minWidth: 'fit-content',
           maxWidth: '1400px',
           pt: '2vh',
