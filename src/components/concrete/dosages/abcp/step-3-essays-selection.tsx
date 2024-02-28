@@ -16,16 +16,16 @@ const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp:
 
   const fineAggNominalDiameter = essays?.fineAggregateData.granulometrys.find(
     (element) => element._id === essaySelectionData.fineAggregate.granulometry_id
-  ).results.nominal_diameter;
+  )?.results?.nominal_diameter;
 
   const coarseAggNominalDiameter = essays?.coarseAggregateData.granulometrys.find(
     (element) => element._id === essaySelectionData.coarseAggregate.granulometry_id
-  ).results.nominal_diameter;
+  )?.results?.nominal_diameter;
   console.log('🚀 ~ nominalDiameter:', fineAggNominalDiameter);
 
   const coarseAggMaximumDiameter = essays?.coarseAggregateData.unit_masses.find(
     (element) => element._id === essaySelectionData.coarseAggregate.unitMass_id
-  ).result.result;
+  )?.results?.result;
 
   useEffect(() => {
     toast.promise(

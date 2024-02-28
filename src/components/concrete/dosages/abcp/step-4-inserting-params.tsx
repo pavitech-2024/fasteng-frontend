@@ -45,6 +45,7 @@ const ABCP_InsertingParams = ({ setNextDisabled }: EssayPageProps & { abcp: ABCP
     },
   ];
 
+  
   useEffect(() => {
     if (Object.values(insertParamsData).some((value) => value === null)) {
       setNextDisabled(true);
@@ -74,8 +75,8 @@ const ABCP_InsertingParams = ({ setNextDisabled }: EssayPageProps & { abcp: ABCP
           variant="standard"
           size="medium"
           defaultValue={{
-            label: conditionOption.find((element) => element.value === insertParamsData.condition).label,
-            value: conditionOption.find((element) => element.value === insertParamsData.condition).value,
+            label: conditionOption.find((element) => element.value === insertParamsData.condition)?.label,
+            value: conditionOption.find((element) => element.value === insertParamsData.condition)?.value,
           }}
           options={conditionOption.map((opt) => {
             const { value, label } = opt;
