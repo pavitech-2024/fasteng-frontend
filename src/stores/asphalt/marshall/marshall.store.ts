@@ -4,13 +4,14 @@ import { createJSONStorage, devtools, persist } from "zustand/middleware";
 
 interface MarhsallGeneralData {
   userId: string;
-  projectName: string;
-  labName?: string;
+  name: string;
+  laboratory?: string;
   operator?: string;
   calculist?: string;
   objective: "bearing" | "bonding";
   dnitBand: "A" | "B" | "C";
   description?: string;
+  step: number;
 }
 
 interface MarshallMaterialSelectionData {
@@ -41,6 +42,8 @@ export type MarshallData = {
   generalData: MarhsallGeneralData;
   materialSelectionData: MarshallMaterialSelectionData;
   granulometryCompositionData: MarshallGranulometryCompositionData;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type MarshallActions = {
@@ -55,13 +58,14 @@ const stepVariant = { 0: 'generalData', 1: 'materialSelectionData', 2: 'granulom
 const initialState = {
   generalData: {
     userId: null,
-    projectName: null,
-    labName: null,
+    name: null,
+    laboratory: null,
     operator: null,
     calculist: null,
     objective: null,
     dnitBand: null,
     description: null,
+    step: 0,
   },
   materialSelectionData: {
     aggregates: [],
@@ -73,7 +77,9 @@ const initialState = {
     project: [],
     dnitBands: null,
     graphData: [],
-  }
+  },
+  createdAt: null,
+  updatedAt: null
 };
 
 const useMarshallStore = create<MarshallData & MarshallActions>()(

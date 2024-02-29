@@ -88,7 +88,7 @@ const Marshall_Step2 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
   ];
 
   materialSelectionData.binder &&
-    materialSelectionData.aggregates.length > 0 &&
+    materialSelectionData.aggregates.length > 1 &&
     nextDisabled &&
     setNextDisabled(false);
 

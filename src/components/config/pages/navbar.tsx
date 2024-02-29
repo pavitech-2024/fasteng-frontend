@@ -62,7 +62,7 @@ export default function Navbar({ open, app }: NavbarProps) {
       icon: <MarshallIcon sx={IconStyle} />,
       type: 'double',
       sub: [
-        { name: t('navbar.new'), link: '/asphalt/dosages/marshall/new', icon: <AddIcon sx={IconStyle} /> },
+        { name: t('navbar.new'), link: '/asphalt/dosages/marshall/create', icon: <AddIcon sx={IconStyle} /> },
         { name: t('navbar.consult'), link: '/asphalt/dosages/marshall/consult', icon: <SearchIcon sx={IconStyle} /> },
       ],
     },

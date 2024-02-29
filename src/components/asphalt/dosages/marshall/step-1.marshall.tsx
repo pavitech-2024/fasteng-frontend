@@ -18,8 +18,8 @@ const Marshall_Step1 = ({
   const { generalData, setData } = useMarshallStore();
 
   const inputs = [
-    { label: t('asphalt.project_name'), value: generalData.projectName, key: 'projectName', required: true },
-    { label: t('asphalt.laboratory_name'), value: generalData.labName, key: 'labName', required: false },
+    { label: t('asphalt.project_name'), value: generalData.name, key: 'name', required: true },
+    { label: t('asphalt.laboratory_name'), value: generalData.laboratory, key: 'laboratory', required: false },
     { label: t('asphalt.operator'), value: generalData.operator, key: 'operator', required: false },
     { label: t('asphalt.calculist'), value: generalData.calculist, key: 'calculist', required: false },
     { label: t('asphalt.choose_objective'), value: generalData.objective, key: 'objective', required: true },
@@ -67,7 +67,7 @@ const Marshall_Step1 = ({
             }}
           >
             {inputs.map((input) => {
-              if (['projectName', 'labName', 'operator', 'calculist'].includes(input.key)) {
+              if (['name', 'laboratory', 'operator', 'calculist'].includes(input.key)) {
                 return (
                   <TextField
                     variant="standard"

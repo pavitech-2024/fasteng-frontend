@@ -13,6 +13,7 @@ import Step3InputTable from "./tables/step-3-input-table";
 
 const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const { calculateGranulometryComposition } = new Marshall_SERVICE()
   const { granulometryCompositionData: data, materialSelectionData, setData } = useMarshallStore();
 
   // Tabela de inputs
@@ -126,7 +127,7 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
         <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
         <Button
           sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
-          onClick={() => { }}
+          onClick={() => calculateGranulometryComposition}
         >
           {t('calculate')}
         </Button>
