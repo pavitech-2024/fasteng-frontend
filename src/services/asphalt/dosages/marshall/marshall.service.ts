@@ -189,7 +189,7 @@ class Marshall_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {
         dnitBands,
         percentageInputs,
-        table_data
+        table_rows: table_data[1]
       });
 
       const { data, success, error } = response.data;
