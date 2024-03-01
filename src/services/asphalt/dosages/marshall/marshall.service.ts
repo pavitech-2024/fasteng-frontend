@@ -3,6 +3,7 @@ import { MarshallIconPng } from "@/assets";
 import { AsphaltMaterial } from "@/interfaces/asphalt";
 import { IEssayService } from "@/interfaces/common/essay/essay-service.interface";
 import { MarshallActions, MarshallData } from "@/stores/asphalt/marshall/marshall.store";
+import { constants } from "buffer";
 import { t } from "i18next";
 
 class Marshall_SERVICE implements IEssayService {
@@ -177,16 +178,18 @@ class Marshall_SERVICE implements IEssayService {
     }
   }
 
-  calculateGranulometryComposition = async (calculateStep3Data: MarshallData): Promise<void> => {
+  calculateGranulometryComposition = async (calculateStep3Data: MarshallData['granulometryCompositionData']): Promise<void> => {
     try {
-      const { 
-        dnitBands, 
-        percentageInputs 
-      } = calculateStep3Data.granulometryCompositionData;
+      const {
+        dnitBands,
+        percentageInputs,
+        table_data
+      } = calculateStep3Data;
 
       const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {
         dnitBands,
-        percentageInputs
+        percentageInputs,
+        table_data
       });
 
       const { data, success, error } = response.data;

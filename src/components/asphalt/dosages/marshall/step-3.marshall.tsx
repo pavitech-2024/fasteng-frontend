@@ -4,7 +4,7 @@ import useAuth from "@/contexts/auth";
 import Marshall_SERVICE from "@/services/asphalt/dosages/marshall/marshall.service";
 import useMarshallStore from "@/stores/asphalt/marshall/marshall.store";
 import { Box, Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GridColDef } from "@mui/x-data-grid";
 import { t } from "i18next";
 import InputEndAdornment from "@/components/atoms/inputs/input-endAdornment";
@@ -13,12 +13,28 @@ import Step3InputTable from "./tables/step-3-input-table";
 
 const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { calculateGranulometryComposition } = new Marshall_SERVICE()
-  const { granulometryCompositionData: data, materialSelectionData, setData } = useMarshallStore();
+  const { calculateGranulometryComposition } = new Marshall_SERVICE();
+  const { 
+    granulometryCompositionData: data, 
+    materialSelectionData, 
+    setData,
+    generalData
+  } = useMarshallStore();
+
+  useEffect(() => {
+    if (generalData.dnitBand) {
+      const insertingDnitBand = {
+        ...data,
+        dnitBands: generalData.dnitBand
+      }
+      setData({ step: 2, value: insertingDnitBand })
+    } 
+  }, [generalData])
 
   // Tabela de inputs
   // Definindo a row e as colunas para a tabela de inputs
   const inputRows: { [key: string]: number }[] = data.percentageInputs;
+  console.log("🚀 ~ inputRows:", inputRows)
 
   if (data.percentageInputs && data.percentageInputs.length === 0) {
     const table_data = [];
@@ -127,7 +143,7 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
         <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
         <Button
           sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
-          onClick={() => calculateGranulometryComposition}
+          onClick={() => calculateGranulometryComposition(data)}
         >
           {t('calculate')}
         </Button>
