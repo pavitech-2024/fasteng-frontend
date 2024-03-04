@@ -19,6 +19,7 @@ interface MarshallMaterialSelectionData {
   binder: string; // id do ligante
 }
 
+
 interface MarshallGranulometryCompositionData {
   table_data: { table_rows: {
     sieve_label: string,

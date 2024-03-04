@@ -22,7 +22,6 @@ const MarshallDosageConsult = () => {
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
   const [dosageArrays, setDosageArrays] = useState([]);
-  console.log("🚀 ~ MarshallDosageConsult ~ dosageArrays:", dosageArrays)
 
   const progressTextMap = {
     1: t('general data'),
@@ -32,28 +31,28 @@ const MarshallDosageConsult = () => {
     5: t('marshall.dosage-resume'),
   };
 
-  const rows = dosages.map((row) => ({
-    name: row.generalData.name,
-    progress: `(${row.generalData.step}/5) - ${progressTextMap[row.generalData.step]}`,
-    start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
-    finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
-    id: row._id,
-  }));
-
   useEffect(() => {
     toast.promise(
       async () => {
         try {
           marshallDosageService.getMarshallDosagesByUserId(user._id).then((response) => {
-            setDosages(response.data);
-          });
-          if (rows.length > 0) {
+            const data = response.data
+            dosages.push(data);
+
+            const rows = dosages[0]?.map((row) => ({
+              name: row.generalData?.name,
+              progress: `(${row.generalData?.step}/5) - ${progressTextMap[row.generalData?.step]}`,
+              start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
+              finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
+              id: row._id,
+            }));
+
             const arraysMenores = dividirArrayEmArraysMenores(rows, rowsPerPage);
+
             setDosageArrays(arraysMenores);
+
             setLoading(false);
-          } else {
-            setDosageArrays([[]]);
-          }
+          });
         } catch (error) {
           setDosages([]);
           setLoading(false);
@@ -79,16 +78,7 @@ const MarshallDosageConsult = () => {
     return arraysMenores;
   }
 
-  useEffect(() => {
-    if (rows.length > 0) {
-      const arraysMenores = dividirArrayEmArraysMenores(rows, rowsPerPage);
-      setDosageArrays(arraysMenores);
-      setLoading(false);
-    }
-  }, []);
-
   const handleDeleteDosage = async (id: string) => {
-    console.log('🚀 ~ handleDeleteDosage ~ id:', id);
     try {
       await marshallDosageService.deleteMarshallDosage(id);
       const updatedDosages = dosages.filter((dosage) => dosage._id !== id);
@@ -99,7 +89,7 @@ const MarshallDosageConsult = () => {
   };
 
   const handleVisualizeDosage = (id: string) => {
-    const dosage = dosages.find((dosage) => {
+    const dosage = dosages[0]?.find((dosage) => {
       return dosage._id === id;
     });
     const step = dosage.generalData.step;

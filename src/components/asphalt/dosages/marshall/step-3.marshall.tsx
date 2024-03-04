@@ -14,13 +14,13 @@ import Step3InputTable from "./tables/step-3-input-table";
 const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { calculateGranulometryComposition } = new Marshall_SERVICE();
-  const { 
-    granulometryCompositionData: data, 
-    materialSelectionData, 
+  const {
+    granulometryCompositionData: data,
+    materialSelectionData,
     setData,
     generalData
   } = useMarshallStore();
-  
+
 
   useEffect(() => {
     if (generalData.dnitBand) {
@@ -29,13 +29,14 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
         dnitBands: generalData.dnitBand
       }
       setData({ step: 2, value: insertingDnitBand })
-    } 
+    }
   }, [generalData])
 
   // Tabela de inputs
   // Definindo a row e as colunas para a tabela de inputs
   const inputRows: { [key: string]: number }[] = data.percentageInputs;
-  console.log("🚀 ~ inputRows:", inputRows)
+  console.log("🚀 ~ data:", data)
+  console.log("🚀 ~ inputRows:", inputRows);
 
   if (data.percentageInputs && data.percentageInputs.length === 0) {
     const table_data = [];
@@ -130,25 +131,6 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
 
   return (
     <>
-      {/* {loading ? (
-        <Loading />
-      ) : ( */}
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '10px',
-        }}
-      >
-        <Step3InputTable rows={inputRows} columns={inputColumns} marshall={marshall} />
-        <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
-        <Button
-          sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
-          onClick={() => calculateGranulometryComposition(data)}
-        >
-          {t('calculate')}
-        </Button>
-      </Box>
       {loading ? (
         <Loading />
       ) : (
@@ -159,8 +141,27 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
             gap: '10px',
           }}
         >
-          <p>Teste</p>
+          <Step3InputTable rows={inputRows} columns={inputColumns} marshall={marshall} />
+          <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
+          <Button
+            sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
+            onClick={() => calculateGranulometryComposition(data)}
+          >
+            {t('calculate')}
+          </Button>
         </Box>
+      // {loading ? (
+      //   <Loading />
+      // ) : (
+      //   <Box
+      //     sx={{
+      //       display: 'flex',
+      //       flexDirection: 'column',
+      //       gap: '10px',
+      //     }}
+      //   >
+      //     <p>Teste</p>
+      //   </Box>
       )}
     </>
   );
