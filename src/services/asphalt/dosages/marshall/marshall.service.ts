@@ -185,7 +185,6 @@ class Marshall_SERVICE implements IEssayService {
         percentageInputs,
         table_data
       } = calculateStep3Data;
-        console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ table_data:", table_data)
 
       const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {
         dnitBands,
@@ -193,14 +192,23 @@ class Marshall_SERVICE implements IEssayService {
         tableRows: table_data.table_rows
       });
 
-      const { data, success, error } = response.data;
+      console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ response:", response)
+      
 
-      console.log(data)
+      const { data, success, error } = response.data;
+      console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ data:", data)
 
       if (success === false) throw error.name;
 
+      const { listPercentsToReturn, pointsOfCurve, sumOfPercents } = data;
 
-      //this.store_actions.setData({ step: 2, value:  });
+      const granulometricResults = {
+        listPercentsToReturn,
+        pointsOfCurve,
+        sumOfPercents
+      }
+
+      this.store_actions.setData({ step: 2, key: "table_data", value: granulometricResults });
     } catch (error) {
       //throw error;
     }

@@ -20,6 +20,7 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
     setData,
     generalData
   } = useMarshallStore();
+    console.log("🚀 ~ data:", data)
 
 
   useEffect(() => {
