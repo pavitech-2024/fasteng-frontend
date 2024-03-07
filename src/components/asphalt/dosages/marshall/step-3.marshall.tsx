@@ -36,8 +36,6 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
   // Tabela de inputs
   // Definindo a row e as colunas para a tabela de inputs
   const inputRows: { [key: string]: number }[] = data.percentageInputs;
-  console.log("🚀 ~ data:", data)
-  console.log("🚀 ~ inputRows:", inputRows);
 
   if (data.percentageInputs && data.percentageInputs.length === 0) {
     const table_data = [];
