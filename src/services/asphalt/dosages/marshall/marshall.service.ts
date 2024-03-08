@@ -192,23 +192,24 @@ class Marshall_SERVICE implements IEssayService {
         percentageInputs,
         tableRows: table_data.table_rows
       });
-
       
 
       const { data, success, error } = response.data;
-      console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ data:", data)
+      console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ data:", data);
 
       if (success === false) throw error.name;
 
-      const { listPercentsToReturn, pointsOfCurve, sumOfPercents } = data;
+      const { percentsOfMaterials, pointsOnCurve, sumOfPercents } = data;
 
       const granulometricResults = {
-        listPercentsToReturn,
-        pointsOfCurve,
+        percentsOfMaterials,
+        pointsOnCurve,
         sumOfPercents
       };
 
-      this.store_actions.setData({ step: 2, key: "table_data", value: granulometricResults });
+      console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ granulometricResults:", granulometricResults)
+
+      this.store_actions.setData({ step: 2, value: pointsOnCurve });
     } catch (error) {
       //throw error;
     }
