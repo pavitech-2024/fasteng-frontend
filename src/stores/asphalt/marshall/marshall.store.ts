@@ -30,9 +30,9 @@ interface MarshallGranulometryCompositionData {
     }
   }[], table_column_headers: string [] };
   percentageInputs: {[key: string] : number}[];
-  sumOfPercentages: number[];
+  sumOfPercents: number[];
   dnitBands: { higher: [string, number][], lower: [string, number][] };
-  pointsOnCurve: any[];
+  pointsOfCurve: any[];
 }
 
 interface MarshallInitialBinderData {
@@ -76,8 +76,8 @@ const initialState = {
     table_data: null,
     percentageInputs: [],
     dnitBands: null,
-    pointsOnCurve: [],
-    sumOfPercentages: []
+    pointsOfCurve: [],
+    sumOfPercents: []
   },
   createdAt: null,
   updatedAt: null

@@ -179,7 +179,7 @@ class Marshall_SERVICE implements IEssayService {
     }
   }
 
-  calculateGranulometryComposition = async (calculateStep3Data: MarshallData['granulometryCompositionData']): Promise<void> => {
+  calculateGranulometryComposition = async (calculateStep3Data: MarshallData['granulometryCompositionData']): Promise<any> => {
     try {
       const {
         dnitBands,
@@ -195,21 +195,27 @@ class Marshall_SERVICE implements IEssayService {
       
 
       const { data, success, error } = response.data;
+      console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ success:", success)
       console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ data:", data);
 
       if (success === false) throw error.name;
+      console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ success === false:", success === false);
 
-      const { percentsOfMaterials, pointsOnCurve, sumOfPercents } = data;
+      const { percentsOfMaterials, pointsOfCurve, sumOfPercents } = data;
 
       const granulometricResults = {
+        ...calculateStep3Data,
         percentsOfMaterials,
-        pointsOnCurve,
-        sumOfPercents
+        pointsOfCurve,
+        sumOfPercents,
       };
 
-      console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ granulometricResults:", granulometricResults)
 
-      this.store_actions.setData({ step: 2, value: pointsOnCurve });
+      console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ granulometricResults:", granulometricResults);
+
+      return granulometricResults;
+
+      // this.store_actions.setData({ step: 2, key: 'granulometryCompositionData', value: pointsOfCurve });
     } catch (error) {
       //throw error;
     }

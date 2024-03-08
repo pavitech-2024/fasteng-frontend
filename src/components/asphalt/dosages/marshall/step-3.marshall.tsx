@@ -81,7 +81,21 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
         );
       }
     })
-  })
+  });
+
+  const handleCalculateGranulometricComp = async () => {
+    const results = await calculateGranulometryComposition(data);
+    console.log("🚀 ~ handleCalculateGranulometricComp ~ results:", results)
+
+    const resultsData = {
+      ...data,
+      granulometricCompositionData: results
+    };
+
+    console.log("🚀 ~ handleCalculateGranulometricComp ~ resultsData:", resultsData)
+
+    setData({ step: 2, key: 'granulometryCompositionData', value: results});
+  }
 
   // Tabela de dados  
   // Definindo as rows para a tabela de dados
@@ -144,7 +158,7 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
           <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
           <Button
             sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
-            onClick={() => calculateGranulometryComposition(data)}
+            onClick={handleCalculateGranulometricComp}
           >
             {t('calculate')}
           </Button>
