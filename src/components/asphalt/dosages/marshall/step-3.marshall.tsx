@@ -20,8 +20,6 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
     setData,
     generalData
   } = useMarshallStore();
-    console.log("🚀 ~ data:", data)
-
 
   useEffect(() => {
     if (generalData.dnitBand) {
@@ -83,23 +81,56 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
     })
   });
 
+  // Tabela de dados  
+  // Definindo as rows para a tabela de dados
+  const rows = data?.table_data?.table_rows;
+  
+
   const handleCalculateGranulometricComp = async () => {
     const results = await calculateGranulometryComposition(data);
     console.log("🚀 ~ handleCalculateGranulometricComp ~ results:", results)
 
-    const resultsData = {
-      ...data,
-      granulometricCompositionData: results
-    };
+    setData({ step: 2, value: results });
 
-    console.log("🚀 ~ handleCalculateGranulometricComp ~ resultsData:", resultsData)
+    let materialId1 = null;
+    let materialId2 = null;
 
-    setData({ step: 2, key: 'granulometryCompositionData', value: results});
+    Object.keys(data.percentageInputs[0]).forEach(element => {
+      const stringIndex = element.indexOf('_');
+      const id = element.substring(stringIndex + 1);
+      if (materialId1 === null) {
+        materialId1 = id;
+      } else {
+        materialId2 = id
+      }
+    });
+
+    let newArray;
+
+    rows.forEach(element => {
+      Object.keys(element).forEach(keys => {
+        const stringIndex = keys.indexOf('_');
+        const label = keys.substring(0, stringIndex);
+        const id = keys.substring(stringIndex + 1);
+        const percentsOfMaterial: [[], []] = results.percentsOfMaterials;
+        newArray = percentsOfMaterial.map(innerArray =>
+          innerArray.filter(value => value !== null)
+        );
+        const index = rows.indexOf(element);
+        if (label === 'passant' && id === materialId1) {
+          keys = newArray[0][index]
+        } else if (label === 'passant' && id === materialId2) {
+          keys = newArray[1][index]
+        }
+      })
+    });
+
+    console.log("🚀 ~ handleCalculateGranulometricComp ~ rows:", rows)
   }
 
-  // Tabela de dados  
-  // Definindo as rows para a tabela de dados
-  const rows = data.table_data.table_rows;
+  useEffect(() => {
+    console.log("🚀 ~ rows:", rows)
+  }, [rows]);
 
   // Definindo as colunas para tabela de dados
   const columnGrouping = [];
@@ -163,18 +194,18 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
             {t('calculate')}
           </Button>
         </Box>
-      // {loading ? (
-      //   <Loading />
-      // ) : (
-      //   <Box
-      //     sx={{
-      //       display: 'flex',
-      //       flexDirection: 'column',
-      //       gap: '10px',
-      //     }}
-      //   >
-      //     <p>Teste</p>
-      //   </Box>
+        // {loading ? (
+        //   <Loading />
+        // ) : (
+        //   <Box
+        //     sx={{
+        //       display: 'flex',
+        //       flexDirection: 'column',
+        //       gap: '10px',
+        //     }}
+        //   >
+        //     <p>Teste</p>
+        //   </Box>
       )}
     </>
   );

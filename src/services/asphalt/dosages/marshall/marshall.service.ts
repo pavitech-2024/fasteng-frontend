@@ -186,20 +186,18 @@ class Marshall_SERVICE implements IEssayService {
         percentageInputs,
         table_data
       } = calculateStep3Data;
+      
 
       const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {
         dnitBands,
         percentageInputs,
         tableRows: table_data.table_rows
       });
-      
+
 
       const { data, success, error } = response.data;
-      console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ success:", success)
-      console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ data:", data);
 
       if (success === false) throw error.name;
-      console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ success === false:", success === false);
 
       const { percentsOfMaterials, pointsOfCurve, sumOfPercents } = data;
 
@@ -210,12 +208,7 @@ class Marshall_SERVICE implements IEssayService {
         sumOfPercents,
       };
 
-
-      console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ granulometricResults:", granulometricResults);
-
       return granulometricResults;
-
-      // this.store_actions.setData({ step: 2, key: 'granulometryCompositionData', value: pointsOfCurve });
     } catch (error) {
       //throw error;
     }
