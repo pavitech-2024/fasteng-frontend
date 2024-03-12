@@ -1,5 +1,6 @@
 import Api from "@/api";
 import { MarshallIconPng } from "@/assets";
+import MaterialSelectionTable from "@/components/concrete/dosages/abcp/tables/material-selection-table";
 import { AsphaltMaterial } from "@/interfaces/asphalt";
 import { IEssayService } from "@/interfaces/common/essay/essay-service.interface";
 import { MarshallActions, MarshallData } from "@/stores/asphalt/marshall/marshall.store";
@@ -184,7 +185,7 @@ class Marshall_SERVICE implements IEssayService {
       const {
         dnitBands,
         percentageInputs,
-        table_data
+        table_data,
       } = calculateStep3Data;
       
 
@@ -194,19 +195,27 @@ class Marshall_SERVICE implements IEssayService {
         tableRows: table_data.table_rows
       });
 
-
       const { data, success, error } = response.data;
 
       if (success === false) throw error.name;
 
-      const { percentsOfMaterials, pointsOfCurve, sumOfPercents } = data;
+      const { percentsOfMaterials, pointsOfCurve, sumOfPercents, table_data: tableData } = data;
+      console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ data:", data)
 
+      const tableData2 = {
+        table_rows: tableData,
+        table_column_headers: calculateStep3Data.table_data.table_column_headers
+      }
+      
       const granulometricResults = {
         ...calculateStep3Data,
         percentsOfMaterials,
         pointsOfCurve,
         sumOfPercents,
+        table_data: tableData2
       };
+
+      console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ granulometricResults:", granulometricResults)
 
       return granulometricResults;
     } catch (error) {

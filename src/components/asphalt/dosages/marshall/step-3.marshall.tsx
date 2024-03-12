@@ -10,6 +10,7 @@ import { t } from "i18next";
 import InputEndAdornment from "@/components/atoms/inputs/input-endAdornment";
 import Step3Table from "./tables/step-3-table";
 import Step3InputTable from "./tables/step-3-input-table";
+import Chart from "react-google-charts";
 
 const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -29,13 +30,13 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
       }
       setData({ step: 2, value: insertingDnitBand })
     }
-  }, [generalData])
+  }, [generalData]);
 
   // Tabela de inputs
   // Definindo a row e as colunas para a tabela de inputs
-  const inputRows: { [key: string]: number }[] = data.percentageInputs;
+  const inputRows: { [key: string]: number }[] = data?.percentageInputs;
 
-  if (data.percentageInputs && data.percentageInputs.length === 0) {
+  if (data?.percentageInputs && data?.percentageInputs.length === 0) {
     const table_data = [];
 
     const aggregates_percentages = {}
@@ -45,7 +46,7 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
       aggregates_percentages['percentage_'.concat(_id)] = null
     })
 
-    table_data.push({ ...aggregates_percentages })
+    table_data?.push({ ...aggregates_percentages })
 
     setData({ step: 2, key: 'percentageInputs', value: table_data });
   }
@@ -84,49 +85,17 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
   // Tabela de dados  
   // Definindo as rows para a tabela de dados
   const rows = data?.table_data?.table_rows;
-  
+
 
   const handleCalculateGranulometricComp = async () => {
-    const results = await calculateGranulometryComposition(data);
-    console.log("🚀 ~ handleCalculateGranulometricComp ~ results:", results)
 
-    setData({ step: 2, value: results });
+    if (!Object.values(data.percentageInputs).some((input) => input === null)) {
+      const results = await calculateGranulometryComposition(data);
+      console.log("🚀 ~ handleCalculateGranulometricComp ~ results:", results)
 
-    let materialId1 = null;
-    let materialId2 = null;
-
-    Object.keys(data.percentageInputs[0]).forEach(element => {
-      const stringIndex = element.indexOf('_');
-      const id = element.substring(stringIndex + 1);
-      if (materialId1 === null) {
-        materialId1 = id;
-      } else {
-        materialId2 = id
-      }
-    });
-
-    let newArray;
-
-    rows.forEach(element => {
-      Object.keys(element).forEach(keys => {
-        const stringIndex = keys.indexOf('_');
-        const label = keys.substring(0, stringIndex);
-        const id = keys.substring(stringIndex + 1);
-        const percentsOfMaterial: [[], []] = results.percentsOfMaterials;
-        newArray = percentsOfMaterial.map(innerArray =>
-          innerArray.filter(value => value !== null)
-        );
-        const index = rows.indexOf(element);
-        if (label === 'passant' && id === materialId1) {
-          keys = newArray[0][index]
-        } else if (label === 'passant' && id === materialId2) {
-          keys = newArray[1][index]
-        }
-      })
-    });
-
-    console.log("🚀 ~ handleCalculateGranulometricComp ~ rows:", rows)
-  }
+      setData({ step: 2, value: results });
+    }
+  };
 
   useEffect(() => {
     console.log("🚀 ~ rows:", rows)
@@ -136,7 +105,7 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
   const columnGrouping = [];
   const columns: GridColDef[] = [];
 
-  data.table_data.table_column_headers.forEach(header => {
+  data?.table_data?.table_column_headers.forEach(header => {
     if (header === 'sieve_label') {
       columns.push({
         field: 'sieve_label',
@@ -193,19 +162,30 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
           >
             {t('calculate')}
           </Button>
+          <Chart
+            chartType="LineChart"
+            width={'100%'}
+            height={'400px'}
+            loader={<Loading />}
+            data={[["age", "peso"], [2, 3], [5.8, 7], [3, 9]]}
+            options={{
+              title: t('granulometry-asphalt.granulometry'),
+              backgroundColor: 'transparent',
+              pointSize: '2',
+              hAxis: {
+                title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
+                type: 'number',
+                scaleType: 'log',
+              },
+              vAxis: {
+                title: `${t('granulometry-asphalt.passant') + ' (%)'}`,
+                minValue: '0',
+                maxValue: '105',
+              },
+              legend: 'none',
+            }}
+          />
         </Box>
-        // {loading ? (
-        //   <Loading />
-        // ) : (
-        //   <Box
-        //     sx={{
-        //       display: 'flex',
-        //       flexDirection: 'column',
-        //       gap: '10px',
-        //     }}
-        //   >
-        //     <p>Teste</p>
-        //   </Box>
       )}
     </>
   );

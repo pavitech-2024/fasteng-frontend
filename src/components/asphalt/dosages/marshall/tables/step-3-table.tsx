@@ -10,6 +10,24 @@ interface Step3Props {
 }
 
 const Step3Table = ({ rows, columns, columnGrouping }: Step3Props & { marshall: Marshall_SERVICE }) => {
+
+  const formattedRows = rows.reduce((accumulator, currentRow) => {
+    const formattedValues = {};
+
+    Object.keys(currentRow).forEach(key => {
+      const value = currentRow[key];
+  
+      if (typeof value === 'number') {
+        formattedValues[key] = value.toFixed(0);
+      } else {
+        formattedValues[key] = value;
+      }
+    });
+
+    accumulator.push(formattedValues);
+  return accumulator;
+  },[])
+
   return (
     <Box>
       <DataGrid
@@ -35,8 +53,8 @@ const Step3Table = ({ rows, columns, columnGrouping }: Step3Props & { marshall: 
             : []
         }
         rows={
-          rows !== null
-            ? rows.map((row, index) => ({
+          formattedRows !== null
+            ? formattedRows?.map((row, index) => ({
               ...row,
               id: index,
             }))
