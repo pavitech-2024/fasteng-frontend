@@ -47,9 +47,10 @@ class Marshall_SERVICE implements IEssayService {
           break;
         case 1:
           await this.submitMaterialSelection(data as MarshallData, this.userId, null, isConsult);
-          await this.getStep3Data(data as MarshallData);
+          await this.getStep3Data(data as MarshallData, this.userId, isConsult);
           break;
         case 2:
+          await this.submitGranulometryComposition(data as MarshallData, this.userId, null, isConsult)
           break;
         case 3:
           break;
@@ -153,30 +154,32 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  getStep3Data = async (dataStep3: MarshallData): Promise<void> => {
-    try {
+  getStep3Data = async (dataStep3: MarshallData, user: string, isConsult: boolean): Promise<void> => {
+    if (!isConsult) {
+      try {
 
-      const { dnitBand } = dataStep3.generalData;
+        const { dnitBand } = dataStep3.generalData;
 
-      const { aggregates } = dataStep3.materialSelectionData;
+        const { aggregates } = dataStep3.materialSelectionData;
 
-      const response = await Api.post(`${this.info.backend_path}/step-3-data`, {
-        dnitBand,
-        aggregates
-      });
+        const response = await Api.post(`${this.info.backend_path}/step-3-data`, {
+          dnitBand,
+          aggregates
+        });
 
-      const { data, success, error } = response.data;
+        const { data, success, error } = response.data;
 
-      console.log(data)
+        console.log(data)
 
-      if (success === false) throw error.name;
+        if (success === false) throw error.name;
 
-      const { table_data } = data;
-      console.log("🚀 ~ Marshall_SERVICE ~ getStep3Data= ~ table_data:", table_data)
+        const { table_data } = data;
+        console.log("🚀 ~ Marshall_SERVICE ~ getStep3Data= ~ table_data:", table_data)
 
-      this.store_actions.setData({ key: "table_data", step: 2, value: table_data });
-    } catch (error) {
-      throw error;
+        this.store_actions.setData({ key: "table_data", step: 2, value: table_data });
+      } catch (error) {
+        throw error;
+      }
     }
   }
 
@@ -187,7 +190,7 @@ class Marshall_SERVICE implements IEssayService {
         percentageInputs,
         table_data,
       } = calculateStep3Data;
-      
+
 
       const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {
         dnitBands,
@@ -200,13 +203,12 @@ class Marshall_SERVICE implements IEssayService {
       if (success === false) throw error.name;
 
       const { percentsOfMaterials, pointsOfCurve, sumOfPercents, table_data: tableData } = data;
-      console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ data:", data)
 
       const tableData2 = {
         table_rows: tableData,
         table_column_headers: calculateStep3Data.table_data.table_column_headers
       }
-      
+
       const granulometricResults = {
         ...calculateStep3Data,
         percentsOfMaterials,
@@ -222,6 +224,55 @@ class Marshall_SERVICE implements IEssayService {
       //throw error;
     }
   }
+
+  submitGranulometryComposition = async (
+    data: MarshallData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
+      try {
+        const { table_data, pointsOfCurve, sumOfPercents, percentageInputs, percentsOfMaterials } = data.granulometryCompositionData;
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
+
+        if (!table_data) throw t('errors.empty-aggregates');
+        if (pointsOfCurve.length === 0) throw t('errors.empty-second-aggregate')
+        if (sumOfPercents.length === 0) throw t('errors.empty-binder');
+        if (Object.values(percentageInputs[0]).some(value => value === null)) throw t('errors.empty-binder');
+        if (percentsOfMaterials.length === 0) throw t('errors.empty-binder');
+
+        const granulometryCompositionData = {
+          table_data,
+          pointsOfCurve,
+          sumOfPercents,
+          percentageInputs,
+          percentsOfMaterials,
+          isConsult: null,
+        };
+
+        if (isConsult) granulometryCompositionData.isConsult = isConsult;
+
+        const response = await Api.post(`${this.info.backend_path}/save-granulometry-composition-step/${userData}`, {
+          granulometryCompositionData: {
+            table_data,
+            pointsOfCurve,
+            sumOfPercents,
+            percentageInputs,
+            percentsOfMaterials,
+          },
+        });
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    }
+  };
 }
 
 export default Marshall_SERVICE;

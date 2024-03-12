@@ -95,13 +95,13 @@ const MarshallDosageConsult = () => {
     const step = dosage.generalData.step;
     if (dosage) {
       setData({
-        step: 5,
+        step: 10,
         value: dosage,
       });
     }
     sessionStorage.setItem('marshall-step', step.toString());
     handleNext(step, dosage, true);
-    if (step === 4) router.push(`/asphalt/dosages/marshall/create?consult=true`);
+    if (step === 9) router.push(`/asphalt/dosages/marshall/create?consult=true`);
     router.push(`/asphalt/dosages/marshall/create`);
   };
 

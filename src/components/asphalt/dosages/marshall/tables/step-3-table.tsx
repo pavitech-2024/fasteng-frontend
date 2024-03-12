@@ -10,23 +10,30 @@ interface Step3Props {
 }
 
 const Step3Table = ({ rows, columns, columnGrouping }: Step3Props & { marshall: Marshall_SERVICE }) => {
+console.log("🚀 ~ Step3Table ~ rows:", rows)
 
-  const formattedRows = rows.reduce((accumulator, currentRow) => {
-    const formattedValues = {};
+  // const formattedRows = rows.reduce((accumulator, currentRow) => {
+  //   const formattedValues = {};
 
-    Object.keys(currentRow).forEach(key => {
-      const value = currentRow[key];
+  //   Object.keys(currentRow).forEach(key => {
+  //     const value = currentRow[key];
   
-      if (typeof value === 'number') {
-        formattedValues[key] = value.toFixed(0);
-      } else {
-        formattedValues[key] = value;
-      }
-    });
+  //     if (typeof value === 'number') {
+  //       formattedValues[key] = value.toFixed(0);
+  //     } else {
+  //       formattedValues[key] = value;
+  //     }
+  //   });
 
-    accumulator.push(formattedValues);
-  return accumulator;
-  },[])
+  //   accumulator.push(formattedValues);
+  // return accumulator;
+  // },[])
+
+  const rowww = rows.map((r, idx) => ({
+    ...r,
+    id: idx
+  }))
+  console.log("🚀 ~ rowww ~ rowww:", rowww)
 
   return (
     <Box>
@@ -53,8 +60,8 @@ const Step3Table = ({ rows, columns, columnGrouping }: Step3Props & { marshall: 
             : []
         }
         rows={
-          formattedRows !== null
-            ? formattedRows?.map((row, index) => ({
+          rows !== null
+            ? rows?.map((row, index) => ({
               ...row,
               id: index,
             }))

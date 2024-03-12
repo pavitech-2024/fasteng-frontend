@@ -21,18 +21,22 @@ interface MarshallMaterialSelectionData {
 
 
 interface MarshallGranulometryCompositionData {
-  table_data: { table_rows: {
-    sieve_label: string,
-    [key: string] : string | {
-      _id: string,
-      total_passant: string,
-      passant: string,
-    }
-  }[], table_column_headers: string [] };
-  percentageInputs: {[key: string] : number}[];
+  table_data: {
+    table_rows: {
+      sieve_label: string,
+      [key: string]: string | {
+        _id: string,
+        total_passant: string,
+        passant: string,
+      }
+    }[], table_column_headers: string[]
+  };
+  percentageInputs: { [key: string]: number }[];
   sumOfPercents: number[];
   dnitBands: { higher: [string, number][], lower: [string, number][] };
   pointsOfCurve: any[];
+  percentsOfMaterials: any[];
+  graphData: any[]
 }
 
 interface MarshallInitialBinderData {
@@ -77,7 +81,9 @@ const initialState = {
     percentageInputs: [],
     dnitBands: null,
     pointsOfCurve: [],
-    sumOfPercents: []
+    sumOfPercents: [],
+    percentsOfMaterials: [],
+    graphData: []
   },
   createdAt: null,
   updatedAt: null
@@ -91,15 +97,21 @@ const useMarshallStore = create<MarshallData & MarshallActions>()(
 
         setData: ({ step, key, value }) =>
           set((state) => {
-            if (key)
-              return {
-                ...state,
-                [stepVariant[step]]: {
-                  ...state[stepVariant[step]],
-                  [key]: value,
-                },
-              };
-            else return { ...state, [stepVariant[step]]: value };
+            if (step === 10) {
+              return value; // Substitui o estado inteiro pelo novo valor
+            } else {
+              if (key) {
+                return {
+                  ...state,
+                  [stepVariant[step]]: {
+                    ...state[stepVariant[step]],
+                    [key]: value,
+                  },
+                };
+              } else {
+                return { ...state, [stepVariant[step]]: value };
+              }
+            }
           }),
 
         reset: ({ step }) => {

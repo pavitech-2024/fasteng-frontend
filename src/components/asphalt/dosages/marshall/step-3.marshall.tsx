@@ -11,6 +11,8 @@ import InputEndAdornment from "@/components/atoms/inputs/input-endAdornment";
 import Step3Table from "./tables/step-3-table";
 import Step3InputTable from "./tables/step-3-input-table";
 import Chart from "react-google-charts";
+import Graph from "@/services/asphalt/dosages/marshall/graph/graph";
+import { numberRepresentation } from "@/utils/numberRepresentation";
 
 const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -69,7 +71,7 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
           <InputEndAdornment
             adornment={'%'}
             type="number"
-            value={inputRows[0]['percentage_'.concat(_id)]}
+            value={inputRows[0] ? inputRows[0]['percentage_'.concat(_id)] : ''}
             onChange={(e) => {
               if (e.target.value === null) return;
               const newRows = [...inputRows];
@@ -86,20 +88,56 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
   // Definindo as rows para a tabela de dados
   const rows = data?.table_data?.table_rows;
 
+  const [specificationRows, setSpecificationRows] = useState([])
+  const [specificationColumns, setSpecificationColumns] = useState<GridColDef[]>([]);
+  const [specificationColumnsGroupings, setSpecificationColumnsGroupings] = useState([]);
+
+  useEffect(() => {
+    if (data?.sumOfPercents?.length > 0) {
+
+      setSpecificationColumns([{
+        field: 'projeto',
+        headerName: 'especificação',
+        valueFormatter: ({ value }) => `${value}`,
+      }])
+
+      setSpecificationColumnsGroupings([{
+        groupId: 'projeto',
+        children: [{ field: 'projeto' }],
+        headerAlign: 'center',
+      }])
+    }
+
+    setSpecificationRows([])
+
+    data.sumOfPercents.forEach((e) => {
+      if (e !== null) {
+        setSpecificationRows(prevState => [...prevState, { projeto: e.toFixed(2) }]);
+      }
+    });
+  }, [data.sumOfPercents])
 
   const handleCalculateGranulometricComp = async () => {
 
     if (!Object.values(data.percentageInputs).some((input) => input === null)) {
       const results = await calculateGranulometryComposition(data);
-      console.log("🚀 ~ handleCalculateGranulometricComp ~ results:", results)
 
-      setData({ step: 2, value: results });
+      //setData({ step: 2, value: results });
+
+      const graph = updateTableAndGraph(data.percentsOfMaterials, data.sumOfPercents, data.pointsOfCurve, data.table_data);
+
+      const newResults = {
+        ...results,
+        graphData: graph.newPointsOfCurve
+      }
+
+      setData({ step: 2, value: newResults })
     }
   };
 
-  useEffect(() => {
-    console.log("🚀 ~ rows:", rows)
-  }, [rows]);
+  // useEffect(() => {
+  //   console.log("🚀 ~ rows:", rows)
+  // }, [rows]);
 
   // Definindo as colunas para tabela de dados
   const columnGrouping = [];
@@ -135,7 +173,61 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
         })
       }
     }
-  })
+  });
+
+  const updateTableAndGraph = (
+    percentsOfMaterials,
+    sumOfPercentsToReturn,
+    pointsOfCurve,
+    arrayTable
+  ) => {
+    const newPointsOfCurve = [
+      [
+        "Peneira (mm)",
+        "Faixa do DNIT",
+        "Faixa de trabalho",
+        "Mistura de projeto",
+        "Faixa de trabalho",
+        "Faixa do DNIT"
+      ],
+      ...pointsOfCurve
+    ];
+
+    let tableData = [];
+    let arrayResultAux = arrayTable;
+    let second = 0;
+
+    percentsOfMaterials.forEach((item, i) => {
+      tableData = [];
+      second = 0;
+      item.forEach((value, j) => {
+        if (value !== null) {
+          tableData.push({
+            ...arrayResultAux[second],
+            ["key%" + i]: numberRepresentation(value)
+          });
+          second++;
+        }
+      });
+      arrayResultAux = tableData;
+    });
+
+    tableData = [];
+    second = 0;
+    sumOfPercentsToReturn.forEach((item, i) => {
+      if (item !== null) {
+        tableData.push({
+          ...arrayResultAux[second],
+          Projeto: numberRepresentation(item)
+        });
+        second++;
+      }
+    });
+
+    return { newPointsOfCurve }
+    //setData({ tableData, graphData: newPointsOfCurve, modal: false });
+  };
+
 
   const { user } = useAuth();
 
@@ -162,29 +254,12 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
           >
             {t('calculate')}
           </Button>
-          <Chart
-            chartType="LineChart"
-            width={'100%'}
-            height={'400px'}
-            loader={<Loading />}
-            data={[["age", "peso"], [2, 3], [5.8, 7], [3, 9]]}
-            options={{
-              title: t('granulometry-asphalt.granulometry'),
-              backgroundColor: 'transparent',
-              pointSize: '2',
-              hAxis: {
-                title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
-                type: 'number',
-                scaleType: 'log',
-              },
-              vAxis: {
-                title: `${t('granulometry-asphalt.passant') + ' (%)'}`,
-                minValue: '0',
-                maxValue: '105',
-              },
-              legend: 'none',
-            }}
-          />
+          {specificationRows.length > 0 && (
+            <Step3Table rows={specificationRows} columns={specificationColumns} columnGrouping={specificationColumnsGroupings} marshall={marshall} />
+          )}
+          {data?.graphData?.length > 0 && (
+            <Graph data={data?.graphData} />
+          )}
         </Box>
       )}
     </>
