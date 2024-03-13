@@ -202,7 +202,7 @@ class Marshall_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
 
-      const { percentsOfMaterials, pointsOfCurve, sumOfPercents, table_data: tableData } = data;
+      const { percentsOfMaterials, pointsOfCurve, sumOfPercents, table_data: tableData, projections } = data;
 
       const tableData2 = {
         table_rows: tableData,
@@ -214,7 +214,8 @@ class Marshall_SERVICE implements IEssayService {
         percentsOfMaterials,
         pointsOfCurve,
         sumOfPercents,
-        table_data: tableData2
+        table_data: tableData2,
+        projections
       };
 
       console.log("🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ granulometricResults:", granulometricResults)
@@ -233,7 +234,7 @@ class Marshall_SERVICE implements IEssayService {
   ): Promise<void> => {
     if (!isConsult) {
       try {
-        const { table_data, pointsOfCurve, sumOfPercents, percentageInputs, percentsOfMaterials } = data.granulometryCompositionData;
+        const { table_data, pointsOfCurve, sumOfPercents, percentageInputs, percentsOfMaterials, graphData, projections } = data.granulometryCompositionData;
         const { name } = data.generalData;
         const userData = userId ? userId : user;
 
@@ -249,6 +250,9 @@ class Marshall_SERVICE implements IEssayService {
           sumOfPercents,
           percentageInputs,
           percentsOfMaterials,
+          graphData,
+          projections,
+          name,
           isConsult: null,
         };
 
@@ -261,6 +265,9 @@ class Marshall_SERVICE implements IEssayService {
             sumOfPercents,
             percentageInputs,
             percentsOfMaterials,
+            graphData,
+            projections,
+            name
           },
         });
 

@@ -29,11 +29,10 @@ console.log("🚀 ~ Step3Table ~ rows:", rows)
   // return accumulator;
   // },[])
 
-  const rowww = rows.map((r, idx) => ({
-    ...r,
-    id: idx
-  }))
-  console.log("🚀 ~ rowww ~ rowww:", rowww)
+  // const rowww = rows.length > 0 ? rows.map((r, idx) => ({
+  //   ...r,
+  //   id: idx
+  // })) : null;
 
   return (
     <Box>

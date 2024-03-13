@@ -95,11 +95,17 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
   useEffect(() => {
     if (data?.sumOfPercents?.length > 0) {
 
-      setSpecificationColumns([{
-        field: 'projeto',
-        headerName: 'especificação',
-        valueFormatter: ({ value }) => `${value}`,
-      }])
+      setSpecificationColumns([
+        {
+          field: 'label',
+          headerName: 'peneira',
+          valueFormatter: ({ value }) => `${value}`,
+        },
+        {
+          field: 'value',
+          headerName: 'especificação',
+          valueFormatter: ({ value }) => `${value}`,
+        }])
 
       setSpecificationColumnsGroupings([{
         groupId: 'projeto',
@@ -159,7 +165,7 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
         })
       } else {
         const _id = header.replace("passant_", "")
-        const name = materialSelectionData.aggregates.find(aggregate => (aggregate._id === _id)).name
+        const name = materialSelectionData.aggregates.find(aggregate => (aggregate._id === _id))?.name
         columns.push({
           field: header,
           headerName: t('granulometry-asphalt.passant'),
@@ -254,8 +260,8 @@ const Marshall_Step3 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
           >
             {t('calculate')}
           </Button>
-          {specificationRows.length > 0 && (
-            <Step3Table rows={specificationRows} columns={specificationColumns} columnGrouping={specificationColumnsGroupings} marshall={marshall} />
+          {data.projections.length > 0 && (
+            <Step3Table rows={data.projections} columns={specificationColumns} columnGrouping={specificationColumnsGroupings} marshall={marshall} />
           )}
           {data?.graphData?.length > 0 && (
             <Graph data={data?.graphData} />

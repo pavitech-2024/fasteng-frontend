@@ -33,9 +33,9 @@ interface SuperpaveGranulometryCompositionData {
   graphData: any[];
 }
 
-interface SuperpaveInitialBinderData {
+// interface SuperpaveInitialBinderData {
 
-}
+// }
 
 export type SuperpaveData = {
   generalData: SuperpaveGeneralData;

@@ -32,7 +32,7 @@ const Step3InputTable = ({ rows, columns}: Step3Props & { marshall: Marshall_SER
         }
         rows={
           rows !== null
-            ? rows.map((row, index) => ({
+            ? rows?.map((row, index) => ({
               ...row,
               id: index,
             }))

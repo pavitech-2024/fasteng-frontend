@@ -1,5 +1,5 @@
 export const numberRepresentation = (value: string | number, digits = 2): string => {
-  let aux: number = typeof value === 'number' ? value : convertNumber(value);
+  const aux: number = typeof value === 'number' ? value : convertNumber(value);
   if (validateNumber(aux)) {
     const formato = { minimumFractionDigits: digits, maximumFractionDigits: digits }
     return aux.toLocaleString('pt-BR', formato);
@@ -26,7 +26,7 @@ export const convertNumber = (value) => {
 };
 
 export const validateNumber = (value) => {
-  let auxValue = convertNumber(value);
+  const auxValue = convertNumber(value);
   return !isNaN(auxValue) && typeof auxValue === 'number';
 };
 

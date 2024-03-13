@@ -36,12 +36,13 @@ interface MarshallGranulometryCompositionData {
   dnitBands: { higher: [string, number][], lower: [string, number][] };
   pointsOfCurve: any[];
   percentsOfMaterials: any[];
-  graphData: any[]
+  graphData: any[];
+  projections: any[]
 }
 
-interface MarshallInitialBinderData {
+// interface MarshallInitialBinderData {
 
-}
+// }
 
 export type MarshallData = {
   generalData: MarhsallGeneralData;
@@ -83,7 +84,8 @@ const initialState = {
     pointsOfCurve: [],
     sumOfPercents: [],
     percentsOfMaterials: [],
-    graphData: []
+    graphData: [],
+    projections: []
   },
   createdAt: null,
   updatedAt: null
