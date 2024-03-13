@@ -1,22 +1,41 @@
-import InputEndAdornment from "@/components/atoms/inputs/input-endAdornment";
-import Loading from "@/components/molecules/loading";
-import { EssayPageProps } from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import Marshall_SERVICE from "@/services/asphalt/dosages/marshall/marshall.service";
-import useMarshallStore from "@/stores/asphalt/marshall/marshall.store";
-import { Box } from "@mui/material";
-import { t } from "i18next";
-import { useState } from "react";
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import Loading from '@/components/molecules/loading';
+import { EssayPageProps } from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
+import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
+import { Box, Button } from '@mui/material';
+import { t } from 'i18next';
+import { useState } from 'react';
 
-const Marshall_Step4 = ({ nextDisabled, setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+const Marshall_Step4 = ({
+  nextDisabled,
+  setNextDisabled,
+  marshall,
+}: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { materialSelectionData: data } = useMarshallStore();
+  const { binderTrialData, granulometryCompositionData: data2, setData } = useMarshallStore();
+  const { submitBinderTrialData } = marshall;
 
   const { user } = useAuth();
 
-  nextDisabled &&
-    setNextDisabled(false);
-  
+  const handleCalculate = async () => {
+
+    const { trial } = binderTrialData;
+    const { percentsOfMaterials } = data2;
+
+    const data = {
+      trial,
+      percentsOfMaterials
+    }
+
+    const result = await submitBinderTrialData(data, user._id,);
+    console.log("🚀 ~ handleCalculate ~ result:", result)
+  }
+
+
+  nextDisabled && setNextDisabled(false);
+
   return (
     <>
       {loading ? (
@@ -30,16 +49,17 @@ const Marshall_Step4 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
           }}
         >
           <Box key={'initial_binder'}>
-          {/* <InputEndAdornment
+            <InputEndAdornment
             label={t('marshall.initial-binder')}
-            value={data.bottom}
-            onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
+            value={binderTrialData.trial}
+            onChange={(e) => setData({ step: 3, key: 'trial', value: Number(e.target.value) })}
             adornment={'g'}
             type="number"
             inputProps={{ min: 0 }}
             required
-          /> */}
-        </Box>
+          />
+          <Button onClick={handleCalculate}>Calcular</Button>
+          </Box>
         </Box>
       )}
     </>

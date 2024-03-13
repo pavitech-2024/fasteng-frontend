@@ -22,7 +22,12 @@ const Superpave_Step1 = ({
     { label: t('asphalt.laboratory_name'), value: generalData.labName, key: 'labName', required: false },
     { label: t('asphalt.operator'), value: generalData.operator, key: 'operator', required: false },
     { label: t('asphalt.calculist'), value: generalData.calculist, key: 'calculist', required: false },
-    { label: t('asphalt.choose_traffic_volume'), value: generalData.trafficVolume, key: 'trafficVolume', required: true },
+    {
+      label: t('asphalt.choose_traffic_volume'),
+      value: generalData.trafficVolume,
+      key: 'trafficVolume',
+      required: true,
+    },
     { label: t('asphalt.choose_objective'), value: generalData.objective, key: 'objective', required: true },
     { label: t('asphalt.choose_dnit_track'), value: generalData.dnitBand, key: 'dnitBand', required: true },
     { label: t('asphalt.comments'), value: generalData.description, key: 'description', required: false },
@@ -33,12 +38,12 @@ const Superpave_Step1 = ({
     { label: t('asphalt.dosages.superpave.medium-traffic'), value: 'medium' },
     { label: t('asphalt.dosages.superpave.medium-high-traffic'), value: 'medium-high' },
     { label: t('asphalt.dosages.superpave.high-traffic'), value: 'high' },
-  ]
+  ];
 
   const objectiveOptions: DropDownOption[] = [
     { label: t('asphalt.dosages.superpave.bearing-layer'), value: 'bearing' },
     { label: t('asphalt.dosages.superpave.bonding-layer'), value: 'bonding' },
-  ]
+  ];
 
   // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
   inputs.every(({ required, value }) => {
@@ -87,7 +92,6 @@ const Superpave_Step1 = ({
                   />
                 );
               } else if (['trafficVolume'].includes(input.key)) {
-
                 return (
                   <DropDown
                     key={input.key}
@@ -100,7 +104,6 @@ const Superpave_Step1 = ({
                   />
                 );
               } else if (['objective'].includes(input.key)) {
-
                 return (
                   <DropDown
                     key={input.key}
@@ -113,13 +116,12 @@ const Superpave_Step1 = ({
                   />
                 );
               } else if (['dnitBand'].includes(input.key)) {
-
                 if (generalData.objective) {
                   const trackOptions: DropDownOption[] = [];
-                  if (generalData.objective === "bonding") {
+                  if (generalData.objective === 'bonding') {
                     trackOptions.push({ label: 'A', value: 'A' });
                     trackOptions.push({ label: 'B', value: 'B' });
-                  } else if (generalData.objective === "bearing") {
+                  } else if (generalData.objective === 'bearing') {
                     trackOptions.push({ label: 'B', value: 'B' });
                     trackOptions.push({ label: 'C', value: 'C' });
                   }

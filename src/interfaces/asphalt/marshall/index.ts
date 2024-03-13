@@ -1,4 +1,4 @@
-import { MarshallData } from "@/stores/asphalt/marshall/marshall.store";
+import { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
 
 export interface MarshallDosageData extends MarshallData {
   _id: string;

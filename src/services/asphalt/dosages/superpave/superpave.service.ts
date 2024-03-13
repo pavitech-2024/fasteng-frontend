@@ -1,9 +1,9 @@
-import Api from "@/api";
-import { SuperpaveIcon } from "@/assets";
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import { IEssayService } from "@/interfaces/common/essay/essay-service.interface";
-import { SuperpaveActions, SuperpaveData } from "@/stores/asphalt/superpave/superpave.store";
-import { t } from "i18next";
+import Api from '@/api';
+import { SuperpaveIcon } from '@/assets';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
+import { SuperpaveActions, SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
+import { t } from 'i18next';
 
 class Superpave_SERVICE implements IEssayService {
   info = {
@@ -20,14 +20,30 @@ class Superpave_SERVICE implements IEssayService {
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
       { step: 1, description: t('asphalt.dosages.superpave.material_selection'), path: 'material-selection' },
-      { step: 2, description: t('asphalt.dosages.superpave.granulometry_composition'), path: 'granulometry-composition' },
+      {
+        step: 2,
+        description: t('asphalt.dosages.superpave.granulometry_composition'),
+        path: 'granulometry-composition',
+      },
       { step: 3, description: t('asphalt.dosages.superpave.initial_binder'), path: 'initial-binder' },
       { step: 4, description: t('asphalt.dosages.superpave.first_compression'), path: 'first-compression' },
-      { step: 5, description: t('asphalt.dosages.superpave.first_compression_parameters'), path: 'first-compression-parameters' },
-      { step: 6, description: t('asphalt.dosages.superpave.chosen_curve_percentages'), path: 'chosen-curve-percentages' },
+      {
+        step: 5,
+        description: t('asphalt.dosages.superpave.first_compression_parameters'),
+        path: 'first-compression-parameters',
+      },
+      {
+        step: 6,
+        description: t('asphalt.dosages.superpave.chosen_curve_percentages'),
+        path: 'chosen-curve-percentages',
+      },
       { step: 7, description: t('asphalt.dosages.superpave.second_compression'), path: 'second-compression' },
       { step: 8, description: t('asphalt.dosages.superpave.second_compression_parameters'), path: 'dosage-resume' },
-      { step: 9, description: t('asphalt.dosages.superpave.confirmation_compression'), path: 'confirmation-compression' },
+      {
+        step: 9,
+        description: t('asphalt.dosages.superpave.confirmation_compression'),
+        path: 'confirmation-compression',
+      },
       { step: 10, description: t('asphalt.dosages.superpave.dosage_resume'), path: 'dosage-resume' },
     ],
   };
@@ -68,7 +84,7 @@ class Superpave_SERVICE implements IEssayService {
     } catch (error) {
       throw error;
     }
-  }
+  };
 
   // send general data to backend to verify if there is already a Superpave dosage with same name for the material
   submitGeneralData = async (generalData: SuperpaveData['generalData']): Promise<void> => {
@@ -112,39 +128,39 @@ class Superpave_SERVICE implements IEssayService {
 
       if (!aggregates) throw t('errors.empty-aggregates');
       if (!binder) throw t('errors.empty-binder');
-
-
     } catch (error) {
       console.log(error);
       throw error;
     }
   };
 
-  getStep3Data = async (generalData: SuperpaveData['generalData'], materialSelectionData: SuperpaveData['materialSelectionData']): Promise<void> => {
+  getStep3Data = async (
+    generalData: SuperpaveData['generalData'],
+    materialSelectionData: SuperpaveData['materialSelectionData']
+  ): Promise<void> => {
     try {
-
       const { dnitBand } = generalData;
 
       const { aggregates } = materialSelectionData;
 
       const response = await Api.post(`${this.info.backend_path}/step-3-data`, {
         dnitBand: dnitBand,
-        aggregates: aggregates
+        aggregates: aggregates,
       });
 
       const { data, success, error } = response.data;
 
-      console.log(data)
+      console.log(data);
 
       if (success === false) throw error.name;
 
       const { table_data } = data;
 
-      this.store_actions.setData({ key: "table_data", step: 2, value: table_data });
+      this.store_actions.setData({ key: 'table_data', step: 2, value: table_data });
     } catch (error) {
       throw error;
     }
-  }
+  };
 }
 
 export default Superpave_SERVICE;

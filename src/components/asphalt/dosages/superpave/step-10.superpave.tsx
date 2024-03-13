@@ -1,20 +1,23 @@
-import Loading from "@/components/molecules/loading";
-import { EssayPageProps } from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import Superpave_SERVICE from "@/services/asphalt/dosages/superpave/superpave.service";
-import useSuperpaveStore from "@/stores/asphalt/superpave/superpave.store";
-import { Box } from "@mui/material";
-import { useState } from "react";
+import Loading from '@/components/molecules/loading';
+import { EssayPageProps } from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
+import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
+import { Box } from '@mui/material';
+import { useState } from 'react';
 
-const Superpave_Step10 = ({ nextDisabled, setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+const Superpave_Step10 = ({
+  nextDisabled,
+  setNextDisabled,
+  superpave,
+}: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData } = useSuperpaveStore();
 
   const { user } = useAuth();
-  
-  nextDisabled &&
-    setNextDisabled(false);
-  
+
+  nextDisabled && setNextDisabled(false);
+
   return (
     <>
       {loading ? (
@@ -26,9 +29,7 @@ const Superpave_Step10 = ({ nextDisabled, setNextDisabled, superpave }: EssayPag
             flexDirection: 'column',
             gap: '10px',
           }}
-        >
-
-        </Box>
+        ></Box>
       )}
     </>
   );

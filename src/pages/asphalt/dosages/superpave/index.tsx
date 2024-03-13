@@ -1,18 +1,18 @@
-import Superpave_Step1 from "@/components/asphalt/dosages/superpave/step-1.superpave";
-import Superpave_Step10 from "@/components/asphalt/dosages/superpave/step-10.superpave";
-import Superpave_Step11 from "@/components/asphalt/dosages/superpave/step-11.superpave";
-import Superpave_Step2 from "@/components/asphalt/dosages/superpave/step-2.superpave";
-import Superpave_Step3 from "@/components/asphalt/dosages/superpave/step-3.superpave";
-import Superpave_Step4 from "@/components/asphalt/dosages/superpave/step-4.superpave";
-import Superpave_Step5 from "@/components/asphalt/dosages/superpave/step-5.superpave";
-import Superpave_Step6 from "@/components/asphalt/dosages/superpave/step-6.superpave";
-import Superpave_Step7 from "@/components/asphalt/dosages/superpave/step-7.superpave";
-import Superpave_Step8 from "@/components/asphalt/dosages/superpave/step-8.superpave";
+import Superpave_Step1 from '@/components/asphalt/dosages/superpave/step-1.superpave';
+import Superpave_Step10 from '@/components/asphalt/dosages/superpave/step-10.superpave';
+import Superpave_Step11 from '@/components/asphalt/dosages/superpave/step-11.superpave';
+import Superpave_Step2 from '@/components/asphalt/dosages/superpave/step-2.superpave';
+import Superpave_Step3 from '@/components/asphalt/dosages/superpave/step-3.superpave';
+import Superpave_Step4 from '@/components/asphalt/dosages/superpave/step-4.superpave';
+import Superpave_Step5 from '@/components/asphalt/dosages/superpave/step-5.superpave';
+import Superpave_Step6 from '@/components/asphalt/dosages/superpave/step-6.superpave';
+import Superpave_Step7 from '@/components/asphalt/dosages/superpave/step-7.superpave';
+import Superpave_Step8 from '@/components/asphalt/dosages/superpave/step-8.superpave';
 import Superpave_Step9 from '@/components/asphalt/dosages/superpave/step-9.superpave';
-import EssayTemplate from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import Superpave_SERVICE from "@/services/asphalt/dosages/superpave/superpave.service"
-import useSuperpaveStore, { SuperpaveActions } from "@/stores/asphalt/superpave/superpave.store";
+import EssayTemplate from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
+import useSuperpaveStore, { SuperpaveActions } from '@/stores/asphalt/superpave/superpave.store';
 
 const Superpave = () => {
   // start an instance of the service

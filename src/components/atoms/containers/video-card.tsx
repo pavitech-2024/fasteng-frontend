@@ -63,7 +63,7 @@ export const VideoCard = ({ data }: VideoCardProps) => {
         ':hover': {
           borderColor: 'rgba(48, 48, 48, 0.15)',
           bgcolor: 'primaryTons.border',
-          scale: '1.005'
+          scale: '1.005',
         },
       }}
       onClick={toggleVideo}
@@ -80,13 +80,7 @@ export const VideoCard = ({ data }: VideoCardProps) => {
           cursor: 'pointer',
         }}
       >
-          <iframe
-            width="640vw"
-            height="420vh"
-            src={data.link}
-            title={data.title}
-            allowFullScreen
-          ></iframe>
+        <iframe width="640vw" height="420vh" src={data.link} title={data.title} allowFullScreen></iframe>
       </Box>
 
       <Box

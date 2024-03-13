@@ -1,16 +1,16 @@
-import { DeleteIcon, MarshallIcon, NextIcon } from "@/assets";
-import Loading from "@/components/molecules/loading";
-import Header from "@/components/organisms/header";
-import useAuth from "@/contexts/auth";
-import marshallDosageService from "@/services/asphalt/dosages/marshall/marshall.consult.service";
-import Marshall_SERVICE from "@/services/asphalt/dosages/marshall/marshall.service";
-import useMarshallStore from "@/stores/asphalt/marshall/marshall.store";
-import { IconButton, Container, Box, Pagination } from "@mui/material";
-import { GridColDef, DataGrid } from "@mui/x-data-grid";
-import { t } from "i18next";
-import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
+import { DeleteIcon, MarshallIcon, NextIcon } from '@/assets';
+import Loading from '@/components/molecules/loading';
+import Header from '@/components/organisms/header';
+import useAuth from '@/contexts/auth';
+import marshallDosageService from '@/services/asphalt/dosages/marshall/marshall.consult.service';
+import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
+import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
+import { IconButton, Container, Box, Pagination } from '@mui/material';
+import { GridColDef, DataGrid } from '@mui/x-data-grid';
+import { t } from 'i18next';
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const MarshallDosageConsult = () => {
   const { setData } = useMarshallStore();
@@ -36,7 +36,7 @@ const MarshallDosageConsult = () => {
       async () => {
         try {
           marshallDosageService.getMarshallDosagesByUserId(user._id).then((response) => {
-            const data = response.data
+            const data = response.data;
             dosages.push(data);
 
             const rows = dosages[0]?.map((row) => ({

@@ -1,13 +1,12 @@
 export const numberRepresentation = (value: string | number, digits = 2): string => {
   const aux: number = typeof value === 'number' ? value : convertNumber(value);
   if (validateNumber(aux)) {
-    const formato = { minimumFractionDigits: digits, maximumFractionDigits: digits }
+    const formato = { minimumFractionDigits: digits, maximumFractionDigits: digits };
     return aux.toLocaleString('pt-BR', formato);
   } else {
-    return "";
+    return '';
   }
 };
-
 
 export const convertSendNumber = (value) => {
   let aux = convertNumber(value);
@@ -19,8 +18,8 @@ export const convertSendNumber = (value) => {
 
 export const convertNumber = (value) => {
   let aux = value;
-  if (typeof aux !== 'number' && aux !== null && aux !== undefined && aux.includes(",")) {
-    aux = aux.replace(".", "").replace(",", ".");
+  if (typeof aux !== 'number' && aux !== null && aux !== undefined && aux.includes(',')) {
+    aux = aux.replace('.', '').replace(',', '.');
   }
   return parseFloat(aux);
 };

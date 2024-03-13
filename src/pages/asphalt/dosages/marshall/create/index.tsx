@@ -1,16 +1,16 @@
-import Marshall_Step1 from "@/components/asphalt/dosages/marshall/step-1.marshall";
-import Marshall_Step2 from "@/components/asphalt/dosages/marshall/step-2.marshall";
-import Marshall_Step3 from "@/components/asphalt/dosages/marshall/step-3.marshall";
-import Marshall_Step4 from "@/components/asphalt/dosages/marshall/step-4.marshall";
-import Marshall_Step5 from "@/components/asphalt/dosages/marshall/step-5.marshall";
-import Marshall_Step6 from "@/components/asphalt/dosages/marshall/step-6.marshall";
-import Marshall_Step7 from "@/components/asphalt/dosages/marshall/step-7.marshall";
-import Marshall_Step8 from "@/components/asphalt/dosages/marshall/step-8.marshall";
+import Marshall_Step1 from '@/components/asphalt/dosages/marshall/step-1.marshall';
+import Marshall_Step2 from '@/components/asphalt/dosages/marshall/step-2.marshall';
+import Marshall_Step3 from '@/components/asphalt/dosages/marshall/step-3.marshall';
+import Marshall_Step4 from '@/components/asphalt/dosages/marshall/step-4.marshall';
+import Marshall_Step5 from '@/components/asphalt/dosages/marshall/step-5.marshall';
+import Marshall_Step6 from '@/components/asphalt/dosages/marshall/step-6.marshall';
+import Marshall_Step7 from '@/components/asphalt/dosages/marshall/step-7.marshall';
+import Marshall_Step8 from '@/components/asphalt/dosages/marshall/step-8.marshall';
 import Marshall_Step9 from '@/components/asphalt/dosages/marshall/step-9.marshall';
-import EssayTemplate from "@/components/templates/essay";
-import useAuth from "@/contexts/auth";
-import Marshall_SERVICE from "@/services/asphalt/dosages/marshall/marshall.service"
-import useMarshallStore, { MarshallActions } from "@/stores/asphalt/marshall/marshall.store";
+import EssayTemplate from '@/components/templates/essay';
+import useAuth from '@/contexts/auth';
+import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
+import useMarshallStore, { MarshallActions } from '@/stores/asphalt/marshall/marshall.store';
 
 const Marshall = () => {
   // start an instance of the service

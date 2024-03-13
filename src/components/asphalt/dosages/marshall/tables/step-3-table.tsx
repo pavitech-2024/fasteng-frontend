@@ -1,7 +1,7 @@
-import { NoDataFound } from "@/components/util/tables";
-import Marshall_SERVICE from "@/services/asphalt/dosages/marshall/marshall.service";
-import { Box } from "@mui/material";
-import { DataGrid, GridColDef, GridColumnGroupingModel } from "@mui/x-data-grid";
+import { NoDataFound } from '@/components/util/tables';
+import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
+import { Box } from '@mui/material';
+import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 
 interface Step3Props {
   rows: any[];
@@ -10,14 +10,14 @@ interface Step3Props {
 }
 
 const Step3Table = ({ rows, columns, columnGrouping }: Step3Props & { marshall: Marshall_SERVICE }) => {
-console.log("🚀 ~ Step3Table ~ rows:", rows)
+  console.log('🚀 ~ Step3Table ~ rows:', rows);
 
   // const formattedRows = rows.reduce((accumulator, currentRow) => {
   //   const formattedValues = {};
 
   //   Object.keys(currentRow).forEach(key => {
   //     const value = currentRow[key];
-  
+
   //     if (typeof value === 'number') {
   //       formattedValues[key] = value.toFixed(0);
   //     } else {
@@ -48,22 +48,22 @@ console.log("🚀 ~ Step3Table ~ rows:", rows)
         columns={
           columns !== null
             ? columns.map((column) => ({
-              ...column,
-              disableColumnMenu: true,
-              sortable: false,
-              align: 'center',
-              headerAlign: 'center',
-              minWidth: 100,
-              flex: 1,
-            }))
+                ...column,
+                disableColumnMenu: true,
+                sortable: false,
+                align: 'center',
+                headerAlign: 'center',
+                minWidth: 100,
+                flex: 1,
+              }))
             : []
         }
         rows={
           rows !== null
             ? rows?.map((row, index) => ({
-              ...row,
-              id: index,
-            }))
+                ...row,
+                id: index,
+              }))
             : []
         }
         slots={{
@@ -72,7 +72,7 @@ console.log("🚀 ~ Step3Table ~ rows:", rows)
         }}
       />
     </Box>
-  )
-}
+  );
+};
 
 export default Step3Table;

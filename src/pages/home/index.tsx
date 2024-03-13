@@ -181,23 +181,23 @@ const Home: NextPage = () => {
           </Link>
         </Box>
         <Box>
-      <Link
-        href="https://www.jbr.eng.br/site/"
-        style={{ padding: '1rem', textAlign: 'end', position: 'absolute', bottom: 0, right: 0 }}
-      >
-        <Image
-          style={{
-            borderRadius: '100%',
-            width: '50px',
-            height: '50px',
-          }}
-          width={40}
-          height={40}
-          alt="JBR"
-          src={jbr}
-        />
-      </Link>
-    </Box>
+          <Link
+            href="https://www.jbr.eng.br/site/"
+            style={{ padding: '1rem', textAlign: 'end', position: 'absolute', bottom: 0, right: 0 }}
+          >
+            <Image
+              style={{
+                borderRadius: '100%',
+                width: '50px',
+                height: '50px',
+              }}
+              width={40}
+              height={40}
+              alt="JBR"
+              src={jbr}
+            />
+          </Link>
+        </Box>
       </Box>
     </Container>
   );

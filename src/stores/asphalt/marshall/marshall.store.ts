@@ -1,6 +1,6 @@
-import { GridColDef } from "@mui/x-data-grid";
-import { create } from "zustand";
-import { createJSONStorage, devtools, persist } from "zustand/middleware";
+import { GridColDef } from '@mui/x-data-grid';
+import { create } from 'zustand';
+import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
 interface MarhsallGeneralData {
   userId: string;
@@ -8,58 +8,62 @@ interface MarhsallGeneralData {
   laboratory?: string;
   operator?: string;
   calculist?: string;
-  objective: "bearing" | "bonding";
-  dnitBand: "A" | "B" | "C";
+  objective: 'bearing' | 'bonding';
+  dnitBand: 'A' | 'B' | 'C';
   description?: string;
   step: number;
 }
 
 interface MarshallMaterialSelectionData {
-  aggregates: { _id: string, name: string }[]; // lista de ids dos agregados
+  aggregates: { _id: string; name: string }[]; // lista de ids dos agregados
   binder: string; // id do ligante
 }
-
 
 interface MarshallGranulometryCompositionData {
   table_data: {
     table_rows: {
-      sieve_label: string,
-      [key: string]: string | {
-        _id: string,
-        total_passant: string,
-        passant: string,
-      }
-    }[], table_column_headers: string[]
+      sieve_label: string;
+      [key: string]:
+        | string
+        | {
+            _id: string;
+            total_passant: string;
+            passant: string;
+          };
+    }[];
+    table_column_headers: string[];
   };
   percentageInputs: { [key: string]: number }[];
   sumOfPercents: number[];
-  dnitBands: { higher: [string, number][], lower: [string, number][] };
+  dnitBands: { higher: [string, number][]; lower: [string, number][] };
   pointsOfCurve: any[];
   percentsOfMaterials: any[];
   graphData: any[];
-  projections: any[]
+  projections: any[];
 }
 
-// interface MarshallInitialBinderData {
-
-// }
+interface MarshallBinderTrialData {
+  trial: number
+}
 
 export type MarshallData = {
   generalData: MarhsallGeneralData;
   materialSelectionData: MarshallMaterialSelectionData;
   granulometryCompositionData: MarshallGranulometryCompositionData;
+  binderTrialData: MarshallBinderTrialData;
   createdAt: Date;
   updatedAt: Date;
-}
+};
+
 
 export type MarshallActions = {
   setData: ({ step, key, value }: setDataType) => void;
   reset: ({ step }: setDataType) => void;
-}
+};
 
 type setDataType = { step: number; key?: string; value: unknown };
 
-const stepVariant = { 0: 'generalData', 1: 'materialSelectionData', 2: 'granulometryCompositionData' };
+const stepVariant = { 0: 'generalData', 1: 'materialSelectionData', 2: 'granulometryCompositionData', 3: 'binderTrialData' };
 
 const initialState = {
   generalData: {
@@ -85,10 +89,13 @@ const initialState = {
     sumOfPercents: [],
     percentsOfMaterials: [],
     graphData: [],
-    projections: []
+    projections: [],
+  },
+  binderTrialData: {
+    trial: null
   },
   createdAt: null,
-  updatedAt: null
+  updatedAt: null,
 };
 
 const useMarshallStore = create<MarshallData & MarshallActions>()(

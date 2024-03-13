@@ -30,7 +30,7 @@ const Marshall_Step1 = ({
   const objectiveOptions: DropDownOption[] = [
     { label: t('asphalt.dosages.marshall.bearing-layer'), value: 'bearing' },
     { label: t('asphalt.dosages.marshall.bonding-layer'), value: 'bonding' },
-  ]
+  ];
 
   // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
   inputs.every(({ required, value }) => {
@@ -79,7 +79,6 @@ const Marshall_Step1 = ({
                   />
                 );
               } else if (['objective'].includes(input.key)) {
-
                 return (
                   <DropDown
                     key={input.key}
@@ -92,13 +91,12 @@ const Marshall_Step1 = ({
                   />
                 );
               } else if (['dnitBand'].includes(input.key)) {
-
                 if (generalData.objective) {
                   const trackOptions: DropDownOption[] = [];
-                  if (generalData.objective === "bonding") {
+                  if (generalData.objective === 'bonding') {
                     trackOptions.push({ label: 'A', value: 'A' });
                     trackOptions.push({ label: 'B', value: 'B' });
-                  } else if (generalData.objective === "bearing") {
+                  } else if (generalData.objective === 'bearing') {
                     trackOptions.push({ label: 'B', value: 'B' });
                     trackOptions.push({ label: 'C', value: 'C' });
                   }

@@ -11,7 +11,11 @@ import { toast } from 'react-toastify';
 import MaterialSelectionTable from './tables/step-2-table';
 import { GridColDef } from '@mui/x-data-grid';
 
-const Superpave_Step2 = ({ nextDisabled, setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+const Superpave_Step2 = ({
+  nextDisabled,
+  setNextDisabled,
+  superpave,
+}: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
   const { materialSelectionData } = useSuperpaveStore();
@@ -87,10 +91,7 @@ const Superpave_Step2 = ({ nextDisabled, setNextDisabled, superpave }: EssayPage
     },
   ];
 
-  materialSelectionData.binder &&
-    materialSelectionData.aggregates.length > 0 &&
-    nextDisabled &&
-    setNextDisabled(false);
+  materialSelectionData.binder && materialSelectionData.aggregates.length > 0 && nextDisabled && setNextDisabled(false);
 
   return (
     <>

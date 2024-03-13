@@ -11,7 +11,11 @@ import { toast } from 'react-toastify';
 import MaterialSelectionTable from './tables/step-2-table';
 import { GridColDef } from '@mui/x-data-grid';
 
-const Marshall_Step2 = ({ nextDisabled, setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+const Marshall_Step2 = ({
+  nextDisabled,
+  setNextDisabled,
+  marshall,
+}: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
   const { materialSelectionData } = useMarshallStore();
@@ -87,10 +91,7 @@ const Marshall_Step2 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
     },
   ];
 
-  materialSelectionData.binder &&
-    materialSelectionData.aggregates.length > 1 &&
-    nextDisabled &&
-    setNextDisabled(false);
+  materialSelectionData.binder && materialSelectionData.aggregates.length > 1 && nextDisabled && setNextDisabled(false);
 
   return (
     <>

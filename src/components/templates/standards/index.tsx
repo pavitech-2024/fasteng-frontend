@@ -44,7 +44,9 @@ export const StandardsTemplate = ({ standards, filterOptions }: StandardsTemplat
 
   return (
     <Container>
-      <Header title={t('standards')}>{filterOptions && <Filter options={filterOptions} callback={filterCallback} />}</Header>
+      <Header title={t('standards')}>
+        {filterOptions && <Filter options={filterOptions} callback={filterCallback} />}
+      </Header>
       <CardContainer>
         {standardsFiltered?.map((standard) => {
           // aqui o componente Card axige novas props agora que ele se tornou adptável à página em que é chamado;

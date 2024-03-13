@@ -201,7 +201,7 @@ const Login: NextPage = () => {
               </Typography>
             </Box>
           </Box>
-           <Box
+          <Box
             sx={{
               display: 'flex',
               flexDirection: 'row',
