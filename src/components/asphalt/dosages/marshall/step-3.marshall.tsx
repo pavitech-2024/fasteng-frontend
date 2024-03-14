@@ -134,7 +134,7 @@ const Marshall_Step3 = ({
         data.table_data
       );
 
-      console.log("🚀 ~ handleCalculateGranulometricComp ~ graph:", graph)
+      console.log('🚀 ~ handleCalculateGranulometricComp ~ graph:', graph);
 
       const newResults = {
         ...results,

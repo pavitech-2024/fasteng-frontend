@@ -43,25 +43,25 @@ interface MarshallGranulometryCompositionData {
 }
 
 interface MarshallBinderTrialData {
-  trial: number
+  trial: number;
   percentsOfDosage: any[];
   bandsOfTemperatures: {
     machiningTemperatureRange: {
-      higher: number,
-      average: number,
-      lower: number
-    },
+      higher: number;
+      average: number;
+      lower: number;
+    };
     compressionTemperatureRange: {
-      higher: number,
-      average: number,
-      lower: number
-    },
+      higher: number;
+      average: number;
+      lower: number;
+    };
     AggregateTemperatureRange: {
-      higher: number,
-      average: number,
-      lower: number
-    },
-  }
+      higher: number;
+      average: number;
+      lower: number;
+    };
+  };
 }
 
 export type MarshallData = {
@@ -73,7 +73,6 @@ export type MarshallData = {
   updatedAt: Date;
 };
 
-
 export type MarshallActions = {
   setData: ({ step, key, value }: setDataType) => void;
   reset: ({ step }: setDataType) => void;
@@ -81,7 +80,12 @@ export type MarshallActions = {
 
 type setDataType = { step: number; key?: string; value: unknown };
 
-const stepVariant = { 0: 'generalData', 1: 'materialSelectionData', 2: 'granulometryCompositionData', 3: 'binderTrialData' };
+const stepVariant = {
+  0: 'generalData',
+  1: 'materialSelectionData',
+  2: 'granulometryCompositionData',
+  3: 'binderTrialData',
+};
 
 const initialState = {
   generalData: {
@@ -116,19 +120,19 @@ const initialState = {
       machiningTemperatureRange: {
         higher: null,
         average: null,
-        lower: null
+        lower: null,
       },
       compressionTemperatureRange: {
         higher: null,
         average: null,
-        lower: null
+        lower: null,
       },
       AggregateTemperatureRange: {
         higher: null,
         average: null,
-        lower: null
+        lower: null,
       },
-    }
+    },
   },
   createdAt: null,
   updatedAt: null,
