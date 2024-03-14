@@ -20,17 +20,13 @@ const Marshall_Step4 = ({
 
   const { calculateBinderTrialData } = marshall;
 
-  const { user } = useAuth();
-
   const handleCalculate = async () => {
     if (binderTrialData.trial !== null) {
       const response = await calculateBinderTrialData(
-        binderTrialData, 
-        granulometryCompositionData, 
+        binderTrialData,
+        granulometryCompositionData,
         materialSelectionData
       );
-
-      console.log('🚀 ~ handleCalculate ~ response:', response);
 
       const newResult = {
         ...response,
@@ -43,6 +39,14 @@ const Marshall_Step4 = ({
 
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState([]);
+
+  const [machiningColumns, setMachiningColumns] = useState<GridColDef[]>([]);
+  const [machiningRows, setMachiningRows] = useState([]);
+  const [machiningColumnGroupings, setMachiningColumnGroupings] = useState([]);
+
+  const [compressionColumns, setCompressionColumns] = useState<GridColDef[]>([]);
+  const [compressionRows, setCompressionRows] = useState([]);
+  const [compressionColumnGroupings, setCompressionColumnGroupings] = useState([]);
 
   useEffect(() => {
     if (binderTrialData?.percentsOfDosage?.length > 0) {
@@ -73,6 +77,91 @@ const Marshall_Step4 = ({
 
       setColumns(columns);
       setRows(rows);
+
+      const machiningTemperatureColumns = [
+        {
+          field: 'lower',
+          headerName: 'mínima',
+          valueFormatter: ({ value }) => `${value}`,
+        },
+        {
+          field: 'average',
+          headerName: 'média',
+          valueFormatter: ({ value }) => `${value}`,
+        },
+        {
+          field: 'higher',
+          headerName: 'máxima',
+          valueFormatter: ({ value }) => `${value}`,
+        },
+      ];
+
+      const machiningColumnGroup = [
+        {
+          groupId: 'Temperatura de usinagem',
+          children: [{ field: 'lower' }, { field: 'average' }, { field: 'higher' }],
+          headerAlign: 'center',
+        },
+      ];
+      setMachiningColumnGroupings(machiningColumnGroup);
+
+      if (
+        binderTrialData.bandsOfTemperatures &&
+        binderTrialData.bandsOfTemperatures.machiningTemperatureRange.average !== null
+      ) {
+        const machiningTemperatureRows = [
+          {
+            id: 1,
+            lower: binderTrialData.bandsOfTemperatures.machiningTemperatureRange.lower.toFixed(2),
+            average: binderTrialData.bandsOfTemperatures.machiningTemperatureRange.average.toFixed(2),
+            higher: binderTrialData.bandsOfTemperatures.machiningTemperatureRange.higher.toFixed(2),
+          },
+        ];
+        setMachiningRows(machiningTemperatureRows);
+      }
+
+      setMachiningColumns(machiningTemperatureColumns);
+
+      const compressionTemperatureColumns = [
+        {
+          field: 'lower',
+          headerName: 'mínima',
+          valueFormatter: ({ value }) => `${value}`,
+        },
+        {
+          field: 'average',
+          headerName: 'média',
+          valueFormatter: ({ value }) => `${value}`,
+        },
+        {
+          field: 'higher',
+          headerName: 'máxima',
+          valueFormatter: ({ value }) => `${value}`,
+        },
+      ];
+
+      const compressionColumnGroup = [
+        {
+          groupId: 'Temperatura de compressão',
+          children: [{ field: 'lower' }, { field: 'average' }, { field: 'higher' }],
+          headerAlign: 'center',
+        },
+      ];
+      setCompressionColumnGroupings(compressionColumnGroup);
+
+      if (binderTrialData.bandsOfTemperatures && binderTrialData.bandsOfTemperatures.compressionTemperatureRange) {
+        const compressionTemperatureRows = [
+          {
+            id: 1,
+            lower: binderTrialData.bandsOfTemperatures.compressionTemperatureRange.lower.toFixed(2),
+            average: binderTrialData.bandsOfTemperatures.compressionTemperatureRange.average.toFixed(2),
+            higher: binderTrialData.bandsOfTemperatures.compressionTemperatureRange.higher.toFixed(2),
+          },
+        ];
+        setCompressionRows(compressionTemperatureRows);
+      }
+
+      setCompressionColumns(compressionTemperatureColumns);
     }
   }, [binderTrialData, materialSelectionData]);
 
@@ -91,9 +180,7 @@ const Marshall_Step4 = ({
             gap: '10px',
           }}
         >
-          <Box 
-            key={'initial_binder'}
-          >
+          <Box key={'initial_binder'} sx={{ display: 'flex', justifyContent: 'center' }}>
             <InputEndAdornment
               label={t('marshall.initial-binder')}
               value={binderTrialData.trial}
@@ -104,8 +191,34 @@ const Marshall_Step4 = ({
               required
             />
           </Box>
-          <Button onClick={handleCalculate}>Calcular</Button>
-          <DataGrid columns={columns} rows={rows} />
+          <Button
+            onClick={handleCalculate}
+            sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
+          >
+            Calcular
+          </Button>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <DataGrid columns={columns} rows={rows} hideFooter sx={{ marginX: 'auto', width: 'fit-content' }} />
+
+            {machiningColumns.length > 0 && (
+              <Box sx={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+                <DataGrid
+                  columns={machiningColumns}
+                  rows={machiningRows}
+                  experimentalFeatures={{ columnGrouping: true }}
+                  columnGroupingModel={machiningColumnGroupings}
+                  hideFooter
+                />
+                <DataGrid 
+                  columns={compressionColumns} 
+                  rows={compressionRows} 
+                  experimentalFeatures={{ columnGrouping: true }}
+                  columnGroupingModel={compressionColumnGroupings}
+                  hideFooter 
+                />
+              </Box>
+            )}
+          </Box>
         </Box>
       )}
     </>

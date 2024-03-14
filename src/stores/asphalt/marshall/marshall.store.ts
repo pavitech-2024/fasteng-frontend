@@ -44,7 +44,24 @@ interface MarshallGranulometryCompositionData {
 
 interface MarshallBinderTrialData {
   trial: number
-  percentsOfDosage: any[]
+  percentsOfDosage: any[];
+  bandsOfTemperatures: {
+    machiningTemperatureRange: {
+      higher: number,
+      average: number,
+      lower: number
+    },
+    compressionTemperatureRange: {
+      higher: number,
+      average: number,
+      lower: number
+    },
+    AggregateTemperatureRange: {
+      higher: number,
+      average: number,
+      lower: number
+    },
+  }
 }
 
 export type MarshallData = {
@@ -94,7 +111,24 @@ const initialState = {
   },
   binderTrialData: {
     trial: null,
-    percentsOfDosage: []
+    percentsOfDosage: [],
+    bandsOfTemperatures: {
+      machiningTemperatureRange: {
+        higher: null,
+        average: null,
+        lower: null
+      },
+      compressionTemperatureRange: {
+        higher: null,
+        average: null,
+        lower: null
+      },
+      AggregateTemperatureRange: {
+        higher: null,
+        average: null,
+        lower: null
+      },
+    }
   },
   createdAt: null,
   updatedAt: null,
