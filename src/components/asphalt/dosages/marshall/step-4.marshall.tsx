@@ -55,16 +55,19 @@ const Marshall_Step4 = ({
           field: 'binder',
           headerName: 'Teor de ligante asfaltico',
           valueFormatter: ({ value }) => `${value}`,
+          width: 200
         },
         {
           field: 'material_1',
           headerName: `${materialSelectionData?.aggregates[0]?.name}`,
           valueFormatter: ({ value }) => `${value}`,
+          width: 150
         },
         {
           field: 'material_2',
           headerName: `${materialSelectionData.aggregates[1].name}`,
           valueFormatter: ({ value }) => `${value}`,
+          width: 150
         },
       ];
 
@@ -83,16 +86,19 @@ const Marshall_Step4 = ({
           field: 'lower',
           headerName: 'mínima',
           valueFormatter: ({ value }) => `${value}`,
+          width: 150
         },
         {
           field: 'average',
           headerName: 'média',
           valueFormatter: ({ value }) => `${value}`,
+          width: 150
         },
         {
           field: 'higher',
           headerName: 'máxima',
           valueFormatter: ({ value }) => `${value}`,
+          width: 150
         },
       ];
 
@@ -127,16 +133,19 @@ const Marshall_Step4 = ({
           field: 'lower',
           headerName: 'mínima',
           valueFormatter: ({ value }) => `${value}`,
+          width: 150
         },
         {
           field: 'average',
           headerName: 'média',
           valueFormatter: ({ value }) => `${value}`,
+          width: 150
         },
         {
           field: 'higher',
           headerName: 'máxima',
           valueFormatter: ({ value }) => `${value}`,
+          width: 150
         },
       ];
 

@@ -57,7 +57,12 @@ class Marshall_SERVICE implements IEssayService {
           await this.submitGranulometryComposition(data as MarshallData, this.userId, null, isConsult);
           break;
         case 3:
-          this.calculateBinderTrialData(data as MarshallData['binderTrialData'], data as MarshallData['granulometryCompositionData'], data as MarshallData['materialSelectionData']);
+          this.calculateBinderTrialData(
+            data as MarshallData['binderTrialData'],
+            data as MarshallData['granulometryCompositionData'],
+            data as MarshallData['materialSelectionData']
+          );
+          await this.submitBinderTrialData(data as MarshallData, this.userId, null, isConsult)
           break;
         case 4:
           break;
@@ -300,12 +305,10 @@ class Marshall_SERVICE implements IEssayService {
   calculateBinderTrialData = async (
     step4Data: MarshallData['binderTrialData'],
     step3Data: MarshallData['granulometryCompositionData'],
-    step2Data: MarshallData['materialSelectionData'],
+    step2Data: MarshallData['materialSelectionData']
   ): Promise<any> => {
     try {
-      const {
-        trial,
-      } = step4Data;
+      const { trial } = step4Data;
 
       const { binder } = step2Data;
 
@@ -321,24 +324,66 @@ class Marshall_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
 
-      const {
-        bandsOfTemperatures,
-        percentsOfDosage,
-      } = data;
+      const { bandsOfTemperatures, percentsOfDosage } = data;
 
       const resultObj = {
         bandsOfTemperatures,
-        percentsOfDosage
-      }
+        percentsOfDosage,
+      };
 
       const result = {
         ...step4Data,
-        ...resultObj
-      }
+        ...resultObj,
+      };
 
       return result;
     } catch (error) {
       //throw error;
+    }
+  };
+
+  submitBinderTrialData = async (
+    data: MarshallData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
+      try {
+        const { trial, percentsOfDosage, bandsOfTemperatures } = data.binderTrialData;
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
+
+        if (!trial) throw t('errors.empty-trial');
+        if (percentsOfDosage.length === 0) throw t('errors.empty-percents-dosage');
+        //if (bandsOfTemperatures.length === 0) throw t('errors.empty-bands-temperatures');
+
+        const binderTrialData = {
+          trial,
+          percentsOfDosage,
+          bandsOfTemperatures,
+          name,
+          isConsult: null,
+        };
+
+        if (isConsult) binderTrialData.isConsult = isConsult;
+
+        const response = await Api.post(`${this.info.backend_path}/save-binder-trial-step/${userData}`, {
+          binderTrialData: {
+            trial,
+            percentsOfDosage,
+            bandsOfTemperatures,
+            name,
+          },
+        });
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log(error);
+        //throw error;
+      }
     }
   };
 }
