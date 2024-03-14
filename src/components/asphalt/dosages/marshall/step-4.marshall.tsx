@@ -24,7 +24,11 @@ const Marshall_Step4 = ({
 
   const handleCalculate = async () => {
     if (binderTrialData.trial !== null) {
-      const response = await calculateBinderTrialData(binderTrialData, granulometryCompositionData);
+      const response = await calculateBinderTrialData(
+        binderTrialData, 
+        granulometryCompositionData, 
+        materialSelectionData
+      );
 
       console.log('🚀 ~ handleCalculate ~ response:', response);
 
@@ -41,7 +45,7 @@ const Marshall_Step4 = ({
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    if (binderTrialData?.percentsOfDosage.length > 0) {
+    if (binderTrialData?.percentsOfDosage?.length > 0) {
       const columns = [
         {
           field: 'binder',
@@ -50,7 +54,7 @@ const Marshall_Step4 = ({
         },
         {
           field: 'material_1',
-          headerName: `${materialSelectionData.aggregates[0].name}`,
+          headerName: `${materialSelectionData?.aggregates[0]?.name}`,
           valueFormatter: ({ value }) => `${value}`,
         },
         {
@@ -82,11 +86,14 @@ const Marshall_Step4 = ({
         <Box
           sx={{
             display: 'flex',
+            justifyContent: 'center',
             flexDirection: 'column',
             gap: '10px',
           }}
         >
-          <Box key={'initial_binder'}>
+          <Box 
+            key={'initial_binder'}
+          >
             <InputEndAdornment
               label={t('marshall.initial-binder')}
               value={binderTrialData.trial}
@@ -96,10 +103,9 @@ const Marshall_Step4 = ({
               inputProps={{ min: 0 }}
               required
             />
-            <Button onClick={handleCalculate}>Calcular</Button>
-
-            <DataGrid columns={columns} rows={rows} />
           </Box>
+          <Button onClick={handleCalculate}>Calcular</Button>
+          <DataGrid columns={columns} rows={rows} />
         </Box>
       )}
     </>

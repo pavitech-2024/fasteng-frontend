@@ -322,10 +322,12 @@ class Marshall_SERVICE implements IEssayService {
       if (success === false) throw error.name;
 
       const {
+        bandsOfTemperatures,
         percentsOfDosage,
       } = data;
 
       const resultObj = {
+        bandsOfTemperatures,
         percentsOfDosage
       }
 
