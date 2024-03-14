@@ -57,7 +57,7 @@ class Marshall_SERVICE implements IEssayService {
           await this.submitGranulometryComposition(data as MarshallData, this.userId, null, isConsult);
           break;
         case 3:
-          this.submitBinderTrialData(data as MarshallData, this.userId, null, isConsult);
+          this.calculateBinderTrialData(data as MarshallData['binderTrialData'], data as MarshallData['granulometryCompositionData'], data as MarshallData['materialSelectionData']);
           break;
         case 4:
           break;
@@ -297,53 +297,46 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  submitBinderTrialData = async (
-    data: any,
-    userId: string,
-    user?: string,
-    isConsult?: boolean
-  ): Promise<void> => {
-    if (!isConsult) {
-      try {
-        const {
-          trial,
-        } = data.binderTrialData;
+  calculateBinderTrialData = async (
+    step4Data: MarshallData['binderTrialData'],
+    step3Data: MarshallData['granulometryCompositionData'],
+    step2Data: MarshallData['materialSelectionData'],
+  ): Promise<any> => {
+    try {
+      const {
+        trial,
+      } = step4Data;
 
-        const { name } = data.generalData;
+      const { binder } = step2Data;
 
-        const { percentsOfMaterials } = data.granulometryCompositionData;
+      const percentsOfDosages = step3Data.percentageInputs;
 
-        const userData = userId ? userId : user;
+      const response = await Api.post(`${this.info.backend_path}/calculate-step-4-data`, {
+        trial,
+        binder,
+        percentsOfDosages,
+      });
 
-        if (!trial) throw t('errors.empty-trial');
-        if (percentsOfMaterials.length === 0) throw t('errors.empty-percents-materials');
+      const { data, success, error } = response.data;
 
-        const binderTrialData = {
-          trial,
-          percentsOfMaterials,
-          name,
-          isConsult: null,
-        };
+      if (success === false) throw error.name;
 
-        if (isConsult) binderTrialData.isConsult = isConsult;
+      const {
+        percentsOfDosage,
+      } = data;
 
-        const response = await Api.post(`${this.info.backend_path}/calculate-step-4-data/${userData}`, {
-          binderTrialData: {
-            trial,
-            percentsOfMaterials,
-            name,
-          },
-        });
-
-        const { success, error } = response.data;
-
-        if (success === false) throw error.name;
-
-        return response.data
-      } catch (error) {
-        console.log(error);
-        //throw error;
+      const resultObj = {
+        percentsOfDosage
       }
+
+      const result = {
+        ...step4Data,
+        ...resultObj
+      }
+
+      return result;
+    } catch (error) {
+      //throw error;
     }
   };
 }

@@ -44,6 +44,7 @@ interface MarshallGranulometryCompositionData {
 
 interface MarshallBinderTrialData {
   trial: number
+  percentsOfDosage: any[]
 }
 
 export type MarshallData = {
@@ -92,7 +93,8 @@ const initialState = {
     projections: [],
   },
   binderTrialData: {
-    trial: null
+    trial: null,
+    percentsOfDosage: []
   },
   createdAt: null,
   updatedAt: null,

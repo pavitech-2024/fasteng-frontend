@@ -10,7 +10,6 @@ import { t } from 'i18next';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Step3Table from './tables/step-3-table';
 import Step3InputTable from './tables/step-3-input-table';
-import Chart from 'react-google-charts';
 import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
 import { numberRepresentation } from '@/utils/numberRepresentation';
 
@@ -128,8 +127,6 @@ const Marshall_Step3 = ({
     if (!Object.values(data.percentageInputs).some((input) => input === null)) {
       const results = await calculateGranulometryComposition(data);
 
-      //setData({ step: 2, value: results });
-
       const graph = updateTableAndGraph(
         data.percentsOfMaterials,
         data.sumOfPercents,
@@ -147,10 +144,6 @@ const Marshall_Step3 = ({
       setData({ step: 2, value: newResults });
     }
   };
-
-  // useEffect(() => {
-  //   console.log("🚀 ~ rows:", rows)
-  // }, [rows]);
 
   // Definindo as colunas para tabela de dados
   const columnGrouping = [];
