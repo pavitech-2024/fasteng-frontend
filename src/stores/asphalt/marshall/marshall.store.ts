@@ -64,11 +64,19 @@ interface MarshallBinderTrialData {
   };
 }
 
+interface MarshallMaximumMixtureDensityData {
+  dmt: {
+    material_1: number,
+    material_2: number
+  }
+}
+
 export type MarshallData = {
   generalData: MarhsallGeneralData;
   materialSelectionData: MarshallMaterialSelectionData;
   granulometryCompositionData: MarshallGranulometryCompositionData;
   binderTrialData: MarshallBinderTrialData;
+  maximumMixtureDensityData: MarshallMaximumMixtureDensityData
   createdAt: Date;
   updatedAt: Date;
 };
@@ -85,6 +93,7 @@ const stepVariant = {
   1: 'materialSelectionData',
   2: 'granulometryCompositionData',
   3: 'binderTrialData',
+  4: 'maximumMixtureDensity'
 };
 
 const initialState = {
@@ -133,6 +142,12 @@ const initialState = {
         lower: null,
       },
     },
+  },
+  maximumMixtureDensityData: {
+    dmt: {
+      material_1: null,
+      material_2: null
+    }
   },
   createdAt: null,
   updatedAt: null,

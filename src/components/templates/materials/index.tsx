@@ -64,6 +64,8 @@ const MaterialsTemplate = ({
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
 
+  const router = useRouter();
+
   const [searchBy, setSearchBy] = useState<string>('name');
   const [searchValue, setSearchValue] = useState<string>('');
 
@@ -328,7 +330,10 @@ const MaterialsTemplate = ({
                                   bgcolor: 'secondaryTons.blueClick',
                                 },
                               }}
-                              onClick={(e) => console.log(e)}
+                              onClick={(e) => {
+                                console.log(row._id)
+                                router.push(`/asphalt/materials/${row._id}`)
+                              } }
                             >
                               <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
                                 {t('materials.template.edit')}
