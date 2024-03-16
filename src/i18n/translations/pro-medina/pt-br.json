@@ -53,7 +53,7 @@
   "pm.granularLayer.mctIndexE": "MCT-Índice e'",
   "pm.granularLayer.especific.mass": "Massa específica (gm/cm³)",
   "pm.granularLayer.mctGroup": "Grupo MCT",
- "pm.granularLayer.rs.initial": "Inicial (EI)",
+  "pm.granularLayer.rs.initial": "Inicial (EI)",
   "pm.granularLayer.abrasionLA": "Abrasão Los Angeles (%)",
   "pm.granularLayer.granulometric.range": "Faixa granulométrica",
   "pm.granularLayer.optimal.humidity": "Umidade ótima (%)",
@@ -181,6 +181,4 @@
   "pm-tooltip-del-sample": "Deletar amostra",
   "pm-datasheet": "Ficha técnica",
   "pm-type-of-section": "Tipo de seção"
-
-
 }

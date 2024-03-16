@@ -21,7 +21,7 @@ const FlexColumnBorder = ({
   sx_title,
   open,
   generalData,
-  theme
+  theme,
 }: FlexColumnBorderProps) => {
   return (
     <Box

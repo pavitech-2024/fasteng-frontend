@@ -1,7 +1,6 @@
-
 export const dateFormatter = (input) => {
-  if (input === null){
-    return input
+  if (input === null) {
+    return input;
   } else {
     // Remove qualquer caractere não numérico
     const numericInput = input.replace(/\D/g, '');

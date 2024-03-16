@@ -6,7 +6,7 @@ import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabi
 
 const StabilizedLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { generalData, setData } = useStabilizedLayersStore();
-  
+
   const inputs = [
     { label: t('pm.granularLayer.name'), value: generalData.name, key: 'name', required: true },
     { label: t('pm.granularLayer.zone'), value: generalData.zone, key: 'zone', required: true },

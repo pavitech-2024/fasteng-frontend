@@ -50,7 +50,6 @@ const SpecificSample_BinderAsphaltConcrete = () => {
     thickness: item.thickness,
   }));
 
-
   const generalData = [
     {
       title: t('pm.granularLayer.name'),

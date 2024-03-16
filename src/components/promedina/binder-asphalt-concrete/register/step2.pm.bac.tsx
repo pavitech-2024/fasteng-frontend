@@ -145,7 +145,7 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
             value={row.layer}
             onChange={(e) => {
               const newRows = [...rows];
-              rows[index].layer = (e.target.value);
+              rows[index].layer = e.target.value;
               setData({ step: 1, key: 'layer', value: newRows });
             }}
             adornment={''}
@@ -169,7 +169,7 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
             value={row.wetGrossWeightCapsule}
             onChange={(e) => {
               const newRows = [...rows];
-              newRows[index].material = (e.target.value);
+              newRows[index].material = e.target.value;
               setData({ step: 1, key: 'material', value: newRows });
             }}
             adornment={''}
@@ -212,14 +212,14 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
       if (typeof value === 'string' && value.trim() === '') return false;
       return true;
     }) &&
-    inputsPavimentPreparation.every(({ required, value }) => {
-      if (!required) return true;
-      if (value === null) return false;
-      if (typeof value === 'string' && value.trim() === '') return false;
-      return true;
-    }) &&
-    !hasNullValues && 
-    setNextDisabled(false)
+      inputsPavimentPreparation.every(({ required, value }) => {
+        if (!required) return true;
+        if (value === null) return false;
+        if (typeof value === 'string' && value.trim() === '') return false;
+        return true;
+      }) &&
+      !hasNullValues &&
+      setNextDisabled(false);
   }
 
   return (
@@ -323,7 +323,7 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
           <TextField
             variant="standard"
             label={t('pm-estructural-composition-image-date')}
-            placeholder='_ _/_ _/_ _ _ _'
+            placeholder="_ _/_ _/_ _ _ _"
             value={dateFormatter(step2Data.imagesDate)}
             style={{ display: 'block' }}
             required={false}

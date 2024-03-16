@@ -26,7 +26,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     if (step2Data.images !== null) {
       setImages(step2Data.images);
     }
-  }, [step2Data.images])
+  }, [step2Data.images]);
 
   // Remover mais uma linha de determinado valor
   const handleErase = () => {

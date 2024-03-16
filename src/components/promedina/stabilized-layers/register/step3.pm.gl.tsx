@@ -56,27 +56,27 @@ const StabilizedLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProp
       required: false,
     },
   ];
-  
-  if (nextDisabled) {  
+
+  if (nextDisabled) {
     inputsPavimentData.every(({ required, value }) => {
       if (!required) return true;
       if (value === null) return false;
       if (typeof value === 'string' && value.trim() === '') return false;
       return true;
     }) &&
-    inputsMaterialFatigue.every(({ required, value }) => {
-      if (!required) return true;
-      if (value === null) return false;
-      if (typeof value === 'string' && value.trim() === '') return false;
-      return true;
-    }) &&
-    inputsResilienceModule.every(({ required, value }) => {
-      if (!required) return true;
-      if (value === null) return false;
-      if (typeof value === 'string' && value.trim() === '') return false;
-      return true;
-    }) &&
-    setNextDisabled(false)
+      inputsMaterialFatigue.every(({ required, value }) => {
+        if (!required) return true;
+        if (value === null) return false;
+        if (typeof value === 'string' && value.trim() === '') return false;
+        return true;
+      }) &&
+      inputsResilienceModule.every(({ required, value }) => {
+        if (!required) return true;
+        if (value === null) return false;
+        if (typeof value === 'string' && value.trim() === '') return false;
+        return true;
+      }) &&
+      setNextDisabled(false);
   }
 
   return (

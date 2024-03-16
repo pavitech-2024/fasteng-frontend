@@ -29,8 +29,8 @@ interface Step2Data {
   sami: string;
   bondingPaint: string;
   priming: string;
-  images: string,
-  imagesDate: string,
+  images: string;
+  imagesDate: string;
   // Structural Composition
   structuralComposition: {
     id: number;

@@ -61,15 +61,12 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: BinderAsphaltConcreteData['generalData']): Promise<void> => {
-
     // try {
     // const { name, zone, layer, cityState, observations } = generalData;
-
     // if (!name) throw t('errors.empty-name');
     // if (!zone) throw t('errors.empty-zone');
     // if (!layer) throw t('errors.empty-layer');
     // if (!cityState) throw t('errors.empty-cityState');
-
     //   const response = await Api.post(`${this.info.backend_path}/verify-init`, {
     //     name,
     //     zone,
@@ -77,9 +74,7 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
     //     cityState,
     //     observations,
     //   });
-
     //   const { success, error } = response.data;
-
     //   if (success === false) throw error.name;
     // } catch (error) {
     //   throw error;
@@ -108,7 +103,6 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
     //     material,
     //     thickness,
     //   } = step2Data;
-
     //   if (!identification) throw t('errors.empty-identification');
     //   if (!sectionType) throw t('errors.empty-sectionType');
     //   if (!extension) throw t('errors.empty-extension');
@@ -126,14 +120,11 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
     //   if (!priming) throw t('errors.empty-priming');
     //   if (!material) throw t('errors.empty-material');
     //   if (!thickness) throw t('errors.empty-thickness');
-
     //   const response = await Api.post(`${this.info.backend_path}/verify-init`, {
     //     step2Data,
     //     observation,
     //   });
-
     //   const { success, error } = response.data;
-
     //   if (success === false) throw error.name;
     // } catch (error) {
     //   throw error;
@@ -159,7 +150,6 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
     // vb_sp21_100,
     // observations,
     // } = step3Data;
-
     // if (!refinery) throw t('errors.empty-stabilizer');
     // if (!company) throw t('errors.empty-tenor');
     // if (!collectionDate) throw t('errors.empty-especificMass');
@@ -174,14 +164,11 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
     // if (!vb_sp21_20) throw t('errors.empty-constantA');
     // if (!vb_sp21_50) throw t('errors.empty-constantB');
     // if (!vb_sp21_100) throw t('errors.empty-k1psi1');
-
     //   const response = await Api.post(`${this.info.backend_path}/verify-init`, {
     //     step3Data,
     //     //observations,
     //   });
-
     //   const { success, error } = response.data;
-
     //   if (success === false) throw error.name;
     // } catch (error) {
     //   throw error;
@@ -189,7 +176,6 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   };
 
   submitStep4Data = async (step4Data: BinderAsphaltConcreteData['step4Data']): Promise<void> => {
-
     // try {
     // const {
     // refinery,
@@ -208,7 +194,6 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
     // vb_sp21_100,
     // observations,
     // } = step3Data;
-
     // if (!refinery) throw t('errors.empty-stabilizer');
     // if (!company) throw t('errors.empty-tenor');
     // if (!collectionDate) throw t('errors.empty-especificMass');
@@ -223,14 +208,11 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
     // if (!vb_sp21_20) throw t('errors.empty-constantA');
     // if (!vb_sp21_50) throw t('errors.empty-constantB');
     // if (!vb_sp21_100) throw t('errors.empty-k1psi1');
-
     //   const response = await Api.post(`${this.info.backend_path}/verify-init`, {
     //     step3Data,
     //     //observations,
     //   });
-
     //   const { success, error } = response.data;
-
     //   if (success === false) throw error.name;
     // } catch (error) {
     //   throw error;
@@ -258,7 +240,7 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
       if (error.response?.status === 413) {
         throw new Error(t('pm.register.payload-too-large-error'));
       }
-  
+
       throw error;
     }
   };

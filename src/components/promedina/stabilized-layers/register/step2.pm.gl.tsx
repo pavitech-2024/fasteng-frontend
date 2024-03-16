@@ -37,9 +37,9 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
 
   // Adicionar mais uma linha de determinado valor
   const handleAdd = () => {
-    console.log("aqui")
+    console.log('aqui');
     const newRows = [...rows];
-    console.log("🚀 ~ file: step2.pm.gl.tsx:41 ~ handleAdd ~ newRows:", newRows)
+    console.log('🚀 ~ file: step2.pm.gl.tsx:41 ~ handleAdd ~ newRows:', newRows);
     newRows.push({
       id: rows.length,
       layer: null,
@@ -199,14 +199,14 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
       if (typeof value === 'string' && value.trim() === '') return false;
       return true;
     }) &&
-    inputsPavimentPreparation.every(({ required, value }) => {
-      if (!required) return true;
-      if (value === null) return false;
-      if (typeof value === 'string' && value.trim() === '') return false;
-      return true;
-    }) &&
-    !hasNullValues && 
-    setNextDisabled(false)
+      inputsPavimentPreparation.every(({ required, value }) => {
+        if (!required) return true;
+        if (value === null) return false;
+        if (typeof value === 'string' && value.trim() === '') return false;
+        return true;
+      }) &&
+      !hasNullValues &&
+      setNextDisabled(false);
   }
 
   return (
@@ -306,14 +306,11 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
             alignItems: 'center',
           }}
         >
-          <UploadImages 
-            onImagesUpdate={(images: string) => setImages(images)} 
-            editarImages={step2Data.images}
-          />
+          <UploadImages onImagesUpdate={(images: string) => setImages(images)} editarImages={step2Data.images} />
           <TextField
             variant="standard"
             label={t('pm-estructural-composition-image-date')}
-            placeholder='_ _/_ _/_ _ _ _'
+            placeholder="_ _/_ _/_ _ _ _"
             value={dateFormatter(step2Data.imagesDate)}
             style={{ display: 'block' }}
             required={false}

@@ -187,9 +187,6 @@ interface ISampleData {
 // }: ISampleData
 
 const SampleDataVisualization = ({ specificSample }: any) => {
-
-  
-
   const GeneralData = [
     {
       label: 'Nome',

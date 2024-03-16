@@ -4,4 +4,4 @@ export type PromedinaDataFilter = {
   layer: string;
   state: string;
   city: string;
-}
+};

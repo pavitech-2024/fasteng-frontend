@@ -209,7 +209,10 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
         step3Data,
       });
 
-      console.log("🚀 ~ file: granular-layers.service.ts:207 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~ response:", response)
+      console.log(
+        '🚀 ~ file: granular-layers.service.ts:207 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~ response:',
+        response
+      );
 
       const { success, error } = response.data;
 
@@ -222,7 +225,7 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
       if (error.response?.status === 413) {
         throw new Error(t('pm.register.payload-too-large-error'));
       }
-  
+
       throw error;
     }
   };

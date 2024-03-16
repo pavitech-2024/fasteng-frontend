@@ -1,7 +1,10 @@
 import { t } from 'i18next';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import Api from '@/api';
-import { StabilizedLayersActions, StabilizedLayersData } from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
+import {
+  StabilizedLayersActions,
+  StabilizedLayersData,
+} from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 import { UnitMassIcon } from '@/assets';
 
 class STABILIZEDLAYERS_SERVICE implements IEssayService {
@@ -50,15 +53,12 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: StabilizedLayersData['generalData']): Promise<void> => {
-
     // try {
     // const { name, zone, layer, cityState, observations } = generalData;
-
     // if (!name) throw t('errors.empty-name');
     // if (!zone) throw t('errors.empty-zone');
     // if (!layer) throw t('errors.empty-layer');
     // if (!cityState) throw t('errors.empty-cityState');
-
     //   const response = await Api.post(`${this.info.backend_path}/verify-init`, {
     //     name,
     //     zone,
@@ -66,9 +66,7 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
     //     cityState,
     //     observations,
     //   });
-
     //   const { success, error } = response.data;
-
     //   if (success === false) throw error.name;
     // } catch (error) {
     //   throw error;
@@ -97,7 +95,6 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
     //     material,
     //     thickness,
     //   } = step2Data;
-
     //   if (!identification) throw t('errors.empty-identification');
     //   if (!sectionType) throw t('errors.empty-sectionType');
     //   if (!extension) throw t('errors.empty-extension');
@@ -115,14 +112,11 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
     //   if (!priming) throw t('errors.empty-priming');
     //   if (!material) throw t('errors.empty-material');
     //   if (!thickness) throw t('errors.empty-thickness');
-
     //   const response = await Api.post(`${this.info.backend_path}/verify-init`, {
     //     step2Data,
     //     observation,
     //   });
-
     //   const { success, error } = response.data;
-
     //   if (success === false) throw error.name;
     // } catch (error) {
     //   throw error;
@@ -149,7 +143,6 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
     //   k2psi2,
     //   observations,
     // } = step3Data;
-
     // if (!stabilizer) throw t('errors.empty-stabilizer');
     // if (!tenor) throw t('errors.empty-tenor');
     // if (!especificMass) throw t('errors.empty-especificMass');
@@ -165,14 +158,11 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
     // if (!constantB) throw t('errors.empty-constantB');
     // if (!k1psi1) throw t('errors.empty-k1psi1');
     // if (!k2psi2) throw t('errors.empty-k2psi2');
-
     //   const response = await Api.post(`${this.info.backend_path}/verify-init`, {
     //     step3Data,
     //     //observations,
     //   });
-
     //   const { success, error } = response.data;
-
     //   if (success === false) throw error.name;
     // } catch (error) {
     //   throw error;
@@ -199,7 +189,7 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
       if (error.response?.status === 413) {
         throw new Error(t('pm.register.payload-too-large-error'));
       }
-  
+
       throw error;
     }
   };

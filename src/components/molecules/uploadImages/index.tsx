@@ -24,7 +24,6 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
     }
   }, [editarImages]);
 
-
   const handleAddImage = (event: any) => {
     const files = event.target.files;
 
@@ -72,7 +71,7 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
         onChange={handleAddImage}
         style={{ display: 'hidden' }}
         id="uploadImages"
-        title=' '
+        title=" "
       />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '2rem' }}>
         {images && (

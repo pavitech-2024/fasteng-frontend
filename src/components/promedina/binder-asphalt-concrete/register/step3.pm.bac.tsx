@@ -73,15 +73,17 @@ const BinderAsphaltConcrete_step3 = ({ nextDisabled, setNextDisabled }: EssayPag
   ];
 
   const inputsBrookfieldViscosity = [
-    { 
-      label: t('pm.binderAsphaltConcrete.vb_sp21_20'), 
-      value: step3Data.vb_sp21_20, key: 'vb_sp21_20', 
-      required: true 
+    {
+      label: t('pm.binderAsphaltConcrete.vb_sp21_20'),
+      value: step3Data.vb_sp21_20,
+      key: 'vb_sp21_20',
+      required: true,
     },
-    { 
-      label: t('pm.binderAsphaltConcrete.vb_sp21_50'), 
-      value: step3Data.vb_sp21_50, key: 'vb_sp21_50', 
-      required: true 
+    {
+      label: t('pm.binderAsphaltConcrete.vb_sp21_50'),
+      value: step3Data.vb_sp21_50,
+      key: 'vb_sp21_50',
+      required: true,
     },
     {
       label: t('pm.binderAsphaltConcrete.vb_sp21_100'),
@@ -97,20 +99,20 @@ const BinderAsphaltConcrete_step3 = ({ nextDisabled, setNextDisabled }: EssayPag
     },
   ];
 
-  if (nextDisabled) {  
+  if (nextDisabled) {
     inputsPavimentData.every(({ required, value }) => {
       if (!required) return true;
       if (value === null) return false;
       if (typeof value === 'string' && value.trim() === '') return false;
       return true;
     }) &&
-    inputsBrookfieldViscosity.every(({ required, value }) => {
-      if (!required) return true;
-      if (value === null) return false;
-      if (typeof value === 'string' && value.trim() === '') return false;
-      return true;
-    }) &&
-    setNextDisabled(false)
+      inputsBrookfieldViscosity.every(({ required, value }) => {
+        if (!required) return true;
+        if (value === null) return false;
+        if (typeof value === 'string' && value.trim() === '') return false;
+        return true;
+      }) &&
+      setNextDisabled(false);
   }
 
   return (

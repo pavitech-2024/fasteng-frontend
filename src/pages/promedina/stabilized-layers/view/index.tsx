@@ -8,7 +8,6 @@ import { Box, Button, Container } from '@mui/material';
 import { useState, useEffect } from 'react';
 
 const StabilizedLayers_view = () => {
-
   const [samples, setSamples] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState(1);
