@@ -124,7 +124,7 @@ const useGranularLayersStore = create<GranularLayersData & GranularLayersActions
           priming: null,
           images: null,
           imagesDate: null,
-          trafficLiberation:null,
+          trafficLiberation: null,
           lastUpdate: null,
           averageAltitude: null,
           numberOfTracks: null,
