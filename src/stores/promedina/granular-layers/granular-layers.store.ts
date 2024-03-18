@@ -7,6 +7,7 @@ interface GeneralData {
   layer: string;
   cityState: string;
   highway: string;
+  guideLineSpeed: string;
   observations?: string;
 }
 
@@ -23,6 +24,11 @@ interface Step2Data {
   longitudeF: string;
   monitoringPhase: string;
   observation: string;
+  trafficLiberation: string;
+  averageAltitude: string;
+  numberOfTracks: string;
+  monitoredTrack: string;
+  trackWidth: string;
   // Paviment Preparation
   milling: string;
   interventionAtTheBase: string;
@@ -31,6 +37,8 @@ interface Step2Data {
   priming: string;
   images: string;
   imagesDate: string;
+  // Last Update
+  lastUpdate: string;
   // Structural Composition
   structuralComposition: {
     id: number;
@@ -94,6 +102,7 @@ const useGranularLayersStore = create<GranularLayersData & GranularLayersActions
           zone: null,
           layer: null,
           cityState: null,
+          guideLineSpeed: null,
           observations: null,
         },
         step2Data: {
@@ -115,6 +124,12 @@ const useGranularLayersStore = create<GranularLayersData & GranularLayersActions
           priming: null,
           images: null,
           imagesDate: null,
+          trafficLiberation:null,
+          lastUpdate: null,
+          averageAltitude: null,
+          numberOfTracks: null,
+          monitoredTrack: null,
+          trackWidth: null,
           structuralComposition: [
             {
               id: 0,

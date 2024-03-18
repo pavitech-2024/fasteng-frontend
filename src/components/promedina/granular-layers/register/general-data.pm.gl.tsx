@@ -3,6 +3,8 @@ import { t } from 'i18next';
 import { Box, TextField } from '@mui/material';
 import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import { useEffect } from 'react';
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 
 const GranularLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { generalData, setData } = useGranularLayersStore();
@@ -14,6 +16,12 @@ const GranularLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     { label: t('pm.granularLayer.layer'), value: generalData.layer, key: 'layer', required: true },
     { label: t('pm.granularLayer.cityState'), value: generalData.cityState, key: 'cityState', required: true },
     {
+      label: t('pm.granularLayer.guideLineSpeed'),
+      value: generalData.guideLineSpeed,
+      key: 'guideLineSpeed',
+      required: true,
+    },
+    {
       label: t('pm.granularLayer.observations'),
       value: generalData.observations,
       key: 'observations',
@@ -21,19 +29,23 @@ const GranularLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     },
   ];
 
-  inputs.every(({ required, value }) => {
+  const allFieldsValid = inputs.every(({ required, value }) => {
     if (!required) return true;
 
     if (value === null) return false;
 
+    if (value === '') return false;
+
     if (typeof value === 'string' && value.trim() === '') return false;
 
     return true;
-  }) &&
-    nextDisabled &&
-    setNextDisabled(false);
+  });
 
-  // useEffect(() => nextDisabled && setNextDisabled(false), [nextDisabled, setNextDisabled]);
+  useEffect(() => {
+    if (allFieldsValid) {
+      setNextDisabled(!allFieldsValid);
+    }
+  }, [allFieldsValid]);
 
   return (
     <>
@@ -57,16 +69,30 @@ const GranularLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
             }}
           >
             {inputs.map((input) => {
-              return (
-                <TextField
-                  key={input.key}
-                  variant="standard"
-                  label={input.label}
-                  value={input.value}
-                  required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
-                />
-              );
+              if (input.key === 'guideLineSpeed') {
+                return (
+                  <InputEndAdornment
+                    adornment={'Km/h'}
+                    type='number'
+                    key={input.key}
+                    value={generalData.guideLineSpeed?.toString()}
+                    label={input.label}
+                    required={input.required}
+                    onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  />
+                );
+              } else {
+                return (
+                  <TextField
+                    key={input.key}
+                    variant="standard"
+                    label={input.label}
+                    value={input.value}
+                    required={input.required}
+                    onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  />
+                );
+              }
             })}
           </Box>
         </Box>

@@ -53,6 +53,7 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: StabilizedLayersData['generalData']): Promise<void> => {
+    console.log("🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitGeneralData= ~ generalData:", generalData)
     // try {
     // const { name, zone, layer, cityState, observations } = generalData;
     // if (!name) throw t('errors.empty-name');
@@ -74,6 +75,7 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
   };
 
   submitStep2Data = async (step2Data: StabilizedLayersData['step2Data']): Promise<void> => {
+    console.log("🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitStep2Data= ~ step2Data:", step2Data)
     // try {
     //   const {
     //     identification,
@@ -124,6 +126,7 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
   };
 
   submitStep3Data = async (step3Data: StabilizedLayersData['step3Data']): Promise<void> => {
+    console.log("🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitStep3Data= ~ step3Data:", step3Data)
     // try {
     // const {
     //   stabilizer,

@@ -3,6 +3,7 @@ import { t } from 'i18next';
 import { Box, TextField } from '@mui/material';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 
 const BinderAsphaltConcrete_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { generalData, setData } = useBinderAsphaltConcreteStore();
@@ -14,12 +15,19 @@ const BinderAsphaltConcrete_step1 = ({ nextDisabled, setNextDisabled }: EssayPag
     { label: t('pm.binderAsphaltConcrete.layer'), value: generalData.layer, key: 'layer', required: true },
     { label: t('pm.binderAsphaltConcrete.cityState'), value: generalData.cityState, key: 'cityState', required: true },
     {
+      label: t('pm.granularLayer.guideLineSpeed'),
+      value: generalData.guideLineSpeed,
+      key: 'guideLineSpeed',
+      required: true,
+    },
+    {
       label: t('pm.binderAsphaltConcrete.observations'),
       value: generalData.observations,
       key: 'observations',
       required: false,
     },
   ];
+
 
   inputs.every(({ required, value }) => {
     if (!required) return true;
@@ -57,16 +65,30 @@ const BinderAsphaltConcrete_step1 = ({ nextDisabled, setNextDisabled }: EssayPag
             }}
           >
             {inputs.map((input) => {
-              return (
-                <TextField
-                  key={input.key}
-                  variant="standard"
-                  label={input.label}
-                  value={input.value}
-                  required={input.required}
-                  onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
-                />
-              );
+              if (input.key === 'guideLineSpeed') {
+                return (
+                  <InputEndAdornment
+                    adornment={'Km/h'}
+                    type='number'
+                    key={input.key}
+                    value={generalData.guideLineSpeed?.toString()}
+                    label={input.label}
+                    required={input.required}
+                    onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  />
+                );
+              } else {
+                return (
+                  <TextField
+                    key={input.key}
+                    variant="standard"
+                    label={input.label}
+                    value={input.value}
+                    required={input.required}
+                    onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  />
+                );
+              }
             })}
           </Box>
         </Box>

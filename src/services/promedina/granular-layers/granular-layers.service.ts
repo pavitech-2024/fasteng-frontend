@@ -2,7 +2,6 @@ import Api from '@/api';
 import { UnitMassIcon } from '@/assets';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { GranularLayersActions, GranularLayersData } from '@/stores/promedina/granular-layers/granular-layers.store';
-import { Axios } from 'axios';
 import { t } from 'i18next';
 
 class GRANULARLAYERS_SERVICE implements IEssayService {
@@ -51,10 +50,6 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: GranularLayersData['generalData']): Promise<void> => {
-    console.log(
-      '🚀 ~ file: granular-layers.service.ts:56 ~ GRANULARLAYERS_SERVICE ~ submitGeneralData= ~ generalData:',
-      generalData
-    );
     // if (generalData) {
     //   true;
     // }
@@ -84,10 +79,6 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
   };
 
   submitStep2Data = async (step2Data: GranularLayersData['step2Data']): Promise<void> => {
-    console.log(
-      '🚀 ~ file: granular-layers.service.ts:85 ~ GRANULARLAYERS_SERVICE ~ submitStep2Data= ~ step2Data:',
-      step2Data
-    );
     // if (step2Data) {
     //   true;
     // }
@@ -208,11 +199,6 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
         step2Data,
         step3Data,
       });
-
-      console.log(
-        '🚀 ~ file: granular-layers.service.ts:207 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~ response:',
-        response
-      );
 
       const { success, error } = response.data;
 

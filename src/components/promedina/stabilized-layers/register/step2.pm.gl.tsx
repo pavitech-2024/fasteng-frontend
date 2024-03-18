@@ -37,9 +37,7 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
 
   // Adicionar mais uma linha de determinado valor
   const handleAdd = () => {
-    console.log('aqui');
     const newRows = [...rows];
-    console.log('🚀 ~ file: step2.pm.gl.tsx:41 ~ handleAdd ~ newRows:', newRows);
     newRows.push({
       id: rows.length,
       layer: null,
@@ -131,7 +129,7 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
               newRows[index].thickness = Number(e.target.value);
               setData({ step: 1, key: 'thickness', value: newRows });
             }}
-            adornment={''}
+            adornment={'mm'}
           />
         );
       },
@@ -167,6 +165,36 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
       label: t('pm.granularLayer.monitoring.phase'),
       value: step2Data.monitoringPhase,
       key: 'monitoringPhase',
+      required: true,
+    },
+    {
+      label: t('pm.granularLayer.trafficLiberation'),
+      value: dateFormatter(step2Data.trafficLiberation),
+      key: 'trafficLiberation',
+      required: true,
+    },
+    {
+      label: t('pm.granularLayer.averageAltitude'),
+      value: step2Data.averageAltitude,
+      key: 'averageAltitude',
+      required: true,
+    },
+    {
+      label: t('pm.granularLayer.numberOfTracks'),
+      value: step2Data.numberOfTracks,
+      key: 'numberOfTracks',
+      required: true,
+    },
+    {
+      label: t('pm.granularLayer.monitoredTrack'),
+      value: step2Data.monitoredTrack,
+      key: 'monitoredTrack',
+      required: true,
+    },
+    {
+      label: t('pm.granularLayer.trackWidth'),
+      value: step2Data.trackWidth,
+      key: 'trackWidth',
       required: true,
     },
     { label: t('pm.granularLayer.observations'), value: step2Data.observation, key: 'observation', required: false },
@@ -230,16 +258,31 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
             }}
           >
             {inputsPavimentData.map((input) => {
-              return (
-                <TextField
-                  key={input.key}
-                  variant="standard"
-                  label={input.label}
-                  value={input.value}
-                  required={input.required}
-                  onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
-                />
-              );
+              if (input.key === 'extension' || input.key === 'averageAltitude' || input.key === 'trackWidth') {
+                return (
+                  <InputEndAdornment
+                    key={input.key}
+                    adornment={'m'}
+                    type="number"
+                    variant="standard"
+                    label={input.label}
+                    value={input.value?.toString()}
+                    required={input.required}
+                    onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+                  />
+                );
+              } else {
+                return (
+                  <TextField
+                    key={input.key}
+                    variant="standard"
+                    label={input.label}
+                    value={input.value}
+                    required={input.required}
+                    onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+                  />
+                );
+              }
             })}
           </Box>
         </Box>

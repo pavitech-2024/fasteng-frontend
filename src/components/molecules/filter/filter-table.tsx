@@ -136,10 +136,6 @@ const PromedinaMaterialsTemplate = ({
     );
   }, [materialsData]);
 
-  useEffect(() => {
-    console.log('🚀 ~ file: filter-table.tsx:166 ~ filteredData:', filteredData);
-  }, [filteredData]);
-
   return (
     <>
       {/*Delete Modal */}
@@ -176,7 +172,7 @@ const PromedinaMaterialsTemplate = ({
                 try {
                   toast.promise(async () => await handleDeleteMaterial(RowToDelete?._id), {
                     pending: t('materials.template.toast.delete.pending') + RowToDelete?.name + '...',
-                    success: RowToDelete?.name + t('materials.template.toast.delete.sucess'),
+                    success: `${RowToDelete?.name} ` + t('materials.template.toast.delete.sucess').toLowerCase(),
                     error: t('materials.template.toast.delete.error') + RowToDelete?.name + '.',
                   });
                   setOpenDeleteModal(false);

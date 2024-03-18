@@ -102,7 +102,6 @@ class Ddui_SERVICE implements IEssayService {
 
   // verify inputs from Ddui page (step === 1, page 2)
   submitDduiStep2Data = async (dduiStep2: DduiData['dduiStep2']): Promise<void> => {
-    console.log('🚀 ~ file: ddui.service.ts:101 ~ Ddui_SERVICE ~ submitDduiCalcData= ~ dduiStep2:', dduiStep2);
     try {
     } catch (error) {
       throw error;
@@ -111,7 +110,6 @@ class Ddui_SERVICE implements IEssayService {
 
   // verify inputs from Ddui page (step === 1, page 2)
   submitDduiStep3Data = async (dduiStep3: DduiData['dduiStep3']): Promise<void> => {
-    console.log('🚀 ~ file: ddui.service.ts:101 ~ Ddui_SERVICE ~ submitDduiCalcData= ~ dduiStep3:', dduiStep3);
     try {
     } catch (error) {
       throw error;
@@ -136,7 +134,6 @@ class Ddui_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);
 
       const { success, error, result } = response.data;
-      console.log('🚀 ~ file: ddui.service.ts:120 ~ Ddui_SERVICE ~ calculateResults= ~ result:', result);
 
       if (success === false) throw error.name;
 

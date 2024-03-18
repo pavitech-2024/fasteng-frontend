@@ -7,6 +7,7 @@ interface GeneralData {
   layer: string;
   highway: string;
   cityState: string;
+  guideLineSpeed: string;
   observations?: string;
 }
 
@@ -23,6 +24,11 @@ interface Step2Data {
   longitudeF: string;
   monitoringPhase: string;
   observation?: string;
+  trafficLiberation: string;
+  averageAltitude: string;
+  numberOfTracks: string;
+  monitoredTrack: string;
+  trackWidth: string;
   // Paviment Preparation
   milling: string;
   interventionAtTheBase: string;
@@ -86,6 +92,7 @@ const useStabilizedLayersStore = create<StabilizedLayersData & StabilizedLayersA
           highway: null,
           layer: null,
           cityState: null,
+          guideLineSpeed: null,
           observations: null,
         },
         step2Data: {
@@ -107,6 +114,12 @@ const useStabilizedLayersStore = create<StabilizedLayersData & StabilizedLayersA
           priming: null,
           images: null,
           imagesDate: null,
+          trafficLiberation:null,
+          lastUpdate: null,
+          averageAltitude: null,
+          numberOfTracks: null,
+          monitoredTrack: null,
+          trackWidth: null,
           structuralComposition: [
             {
               id: 0,

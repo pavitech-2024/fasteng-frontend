@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import UploadImages from '@/components/molecules/uploadImages';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { dateFormatter } from '@/utils/dateFormatter';
 
 const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
@@ -99,6 +99,36 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
       key: 'monitoringPhase',
       required: true,
     },
+    {
+      label: t('pm.granularLayer.trafficLiberation'),
+      value: dateFormatter(step2Data.trafficLiberation),
+      key: 'trafficLiberation',
+      required: true,
+    },
+    {
+      label: t('pm.granularLayer.averageAltitude'),
+      value: step2Data.averageAltitude,
+      key: 'averageAltitude',
+      required: true,
+    },
+    {
+      label: t('pm.granularLayer.numberOfTracks'),
+      value: step2Data.numberOfTracks,
+      key: 'numberOfTracks',
+      required: true,
+    },
+    {
+      label: t('pm.granularLayer.monitoredTrack'),
+      value: step2Data.monitoredTrack,
+      key: 'monitoredTrack',
+      required: true,
+    },
+    {
+      label: t('pm.granularLayer.trackWidth'),
+      value: step2Data.trackWidth,
+      key: 'trackWidth',
+      required: true,
+    },
     { label: t('pm.granularLayer.observations'), value: step2Data.observation, key: 'observation', required: false },
   ];
 
@@ -184,12 +214,11 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
             inputProps={{ min: 0 }}
             value={row.thickness}
             onChange={(e) => {
-              console.log('🚀 ~ file: step2.pm.gl.tsx:169 ~ id:', id);
               const newRows = [...rows];
               newRows[index].thickness = Number(e.target.value);
               setData({ step: 1, key: 'thickness', value: newRows });
             }}
-            adornment={''}
+            adornment={'mm'}
           />
         );
       },
@@ -236,16 +265,31 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
             }}
           >
             {inputsPavimentData.map((input) => {
-              return (
-                <TextField
-                  key={input.key}
-                  variant="standard"
-                  label={input.label}
-                  value={input.value}
-                  required={input.required}
-                  onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
-                />
-              );
+              if (input.key === 'extension' || input.key === 'averageAltitude' || input.key === 'trackWidth') {
+                return (
+                  <InputEndAdornment
+                    adornment={'m'}
+                    type="number"
+                    key={input.key}
+                    variant='standard'
+                    label={input.label}
+                    value={input.value?.toString()}
+                    required={input.required}
+                    onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+                  />
+                );
+              } else {
+                return (
+                  <TextField
+                    key={input.key}
+                    variant="standard"
+                    label={input.label}
+                    value={input.value}
+                    required={input.required}
+                    onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+                  />
+                );
+              }
             })}
           </Box>
         </Box>
@@ -284,6 +328,37 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
           </Box>
         </Box>
       </FlexColumnBorder>
+
+      <FlexColumnBorder title={t('pm.paviment.lastUpdate')} open={true} theme={'#07B811'}>
+        <Box
+          sx={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'grid',
+              width: '100%',
+              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
+              gap: '5px 20px',
+              paddingBottom: '20px',
+            }}
+          >
+            <TextField
+              key={'lastUpdate'}
+              variant="standard"
+              label={t('pm.paviment.lastUpdate')}
+              value={step2Data.lastUpdate}
+              required
+              onChange={(e) => setData({ step: 1, key: 'lastUpdate', value: e.target.value })}
+            />
+          </Box>
+        </Box>
+      </FlexColumnBorder>
+
       <FlexColumnBorder title={t('pm.structural.composition')} open={true} theme={'#07B811'}>
         <DataGrid
           sx={{ mt: '1rem', borderRadius: '10px' }}
