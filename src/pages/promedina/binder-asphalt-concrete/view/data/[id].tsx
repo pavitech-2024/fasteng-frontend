@@ -17,7 +17,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const query = router.query as any;
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {

@@ -3,6 +3,8 @@ import { t } from 'i18next';
 import { Box, TextField } from '@mui/material';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { ChangeEvent } from 'react';
 
 const BinderAsphaltConcrete_step4 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step4Data, setData } = useBinderAsphaltConcreteStore();
@@ -43,6 +45,12 @@ const BinderAsphaltConcrete_step4 = ({ nextDisabled, setNextDisabled }: EssayPag
       label: t('pm.binderAsphaltConcrete.flowNumber'),
       value: step4Data.flowNumber,
       key: 'flowNumber',
+      required: true,
+    },
+    {
+      label: t('pm.binderAsphaltConcrete.abrasionLA'),
+      value: step4Data.abrasionLA,
+      key: 'abrasionLA',
       required: true,
     },
     {
@@ -123,16 +131,30 @@ const BinderAsphaltConcrete_step4 = ({ nextDisabled, setNextDisabled }: EssayPag
             }}
           >
             {inputsPavimentData.map((input) => {
-              return (
-                <TextField
-                  key={input.key}
-                  variant="standard"
-                  label={input.label}
-                  value={input.value}
-                  required={input.required}
-                  onChange={(e) => setData({ step: 3, key: input.key, value: e.target.value })}
-                />
-              );
+              if (input.key === 'abrasionLA') {
+                return (
+                  <InputEndAdornment
+                    adornment={'%'}
+                    type="number"
+                    key={input.key}
+                    variant="standard"
+                    label={input.label}
+                    value={input.value.toString()}
+                    onChange={(e) => setData({ step: 3, key: input.key, value: e.target.value })}
+                  />
+                );
+              } else {
+                return (
+                  <TextField
+                    key={input.key}
+                    variant="standard"
+                    label={input.label}
+                    value={input.value}
+                    required={input.required}
+                    onChange={(e) => setData({ step: 3, key: input.key, value: e.target.value })}
+                  />
+                );
+              }
             })}
           </Box>
         </Box>
