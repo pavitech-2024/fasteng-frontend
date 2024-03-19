@@ -139,7 +139,7 @@ const BinderAsphaltConcrete_step4 = ({ nextDisabled, setNextDisabled }: EssayPag
                     key={input.key}
                     variant="standard"
                     label={input.label}
-                    value={input.value.toString()}
+                    value={input.value?.toString()}
                     onChange={(e) => setData({ step: 3, key: input.key, value: e.target.value })}
                   />
                 );

@@ -65,6 +65,7 @@
   "pm.granularLayer.abrasionLA": "Abrasão Los Angeles (%)",
   "pm.granularLayer.granulometric.range": "Faixa granulométrica",
   "pm.granularLayer.optimal.humidity": "Umidade ótima (%)",
+  "pm.granularLayer.optimal.granulometricRange": "Faixa granulométrica",
   "pm.granularLayer.compressionEnergy": "Energia de compactação",
   "pm.granularLayer.rs.k1": "k1",
   "pm.granularLayer.rs.k2": "k2",

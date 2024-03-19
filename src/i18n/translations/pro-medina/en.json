@@ -58,7 +58,7 @@
   "pm.granularLayer.mctIndexE": "MCT-Index e'",
   "pm.granularLayer.mctGroup": "MCT Group",
   "pm.granularLayer.abrasionLA": "Abrasion Los Angeles (%)",
-  "pm.granularLayer.granulometric.range": "Granulometric range",
+  "pm.granularLayer.granulometricRange": "Granulometric range",
   "pm.granularLayer.optimal.humidity": "Optimal humidity (%)",
   "pm.granularLayer.rs.k1": "k1",
   "pm.granularLayer.rs.k2": "k2",

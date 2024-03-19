@@ -569,31 +569,6 @@ const SpecificSample_StabilizedLayers = () => {
                 </FlexColumnBorder>
               )}
 
-            <FlexColumnBorder title={t('pm.paviment.lastUpdate')} open={true} theme={'#07B811'}>
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr 1fr' },
-                  justifyItems: 'center',
-                  alignItems: 'center',
-                  gap: '1rem',
-                  justifyContent: 'space-evenly',
-                  marginBottom: '0.5rem',
-                }}
-              >
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}>
-                  <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                    Ultima atualização
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                      {samples?.step2Data.lastUpdate}
-                    </Typography>
-                  </Box>
-                </Box>
-              </Box>
-            </FlexColumnBorder>
-
             {/**  PREPARO DO PAVIMENTO */}
             {samples?.step2Data?.milling &&
               samples?.step2Data?.interventionAtTheBase &&

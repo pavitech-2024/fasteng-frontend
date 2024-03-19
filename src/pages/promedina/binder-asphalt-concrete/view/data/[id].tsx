@@ -19,6 +19,10 @@ const SpecificSample_BinderAsphaltConcrete = () => {
   const query = router.query as any;
 
   useEffect(() => {
+    console.log("🚀 ~ samples:", samples)
+  },[samples])
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await samplesService.getSample(query.id);
@@ -299,40 +303,12 @@ const SpecificSample_BinderAsphaltConcrete = () => {
 
   const techData = [
     {
-      title: t('pm.granularLayer.mctGroup'),
-      value: samples?.step3Data?.mctGroup,
-    },
-    {
-      title: t('pm.granularLayer.mctCoefficientC'),
-      value: samples?.step3Data?.mctGroupmctCoefficientC,
-    },
-    {
-      title: t('pm.granularLayer.mctIndexE'),
-      value: samples?.step3Data?.mctIndexE,
-    },
-    {
-      title: t('pm.granularLayer.especific.mass'),
-      value: samples?.step3Data?.especificMass,
-    },
-    {
-      title: t('pm.granularLayer.compressionEnergy'),
-      value: samples?.step3Data?.compressionEnergy,
-    },
-    {
       title: t('pm.granularLayer.granulometric.range'),
-      value: samples?.step3Data?.granulometricRange,
-    },
-    {
-      title: t('pm.granularLayer.optimal.humidity'),
-      value: samples?.step3Data?.optimalHumidity,
+      value: samples?.step4Data?.granulometricRange,
     },
     {
       title: t('pm.granularLayer.abrasionLA'),
-      value: samples?.step3Data?.abrasionLA,
-    },
-    {
-      title: t('pm.granularLayer.mf.observations'),
-      value: samples?.step3Data?.observations,
+      value: samples?.step4Data?.abrasionLA,
     },
     {
       title: t('pm.binderAsphaltConcrete.tmn'),
@@ -362,46 +338,9 @@ const SpecificSample_BinderAsphaltConcrete = () => {
       title: t('pm.binderAsphaltConcrete.asphaltTenor'),
       value: samples?.step4Data?.asphaltTenor,
     },
-
     {
-      title: t('pm.binderAsphaltConcrete.stabilizer'),
-      value: samples?.step4Data?.asphaltTenor,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.tenor'),
-      value: samples?.step4Data?.asphaltTenor,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.rtcd'),
-      value: samples?.step4Data?.asphaltTenor,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.rtf'),
-      value: samples?.step4Data?.asphaltTenor,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.rcs'),
-      value: samples?.step4Data?.asphaltTenor,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.capType'),
-      value: samples?.step3Data?.capType,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.performanceGrade'),
-      value: samples?.step3Data?.performanceGrade,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.penetration'),
-      value: samples?.step3Data?.penetration,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.softeningPoint'),
-      value: samples?.step3Data?.softeningPoint,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.elasticRecovery'),
-      value: samples?.step3Data?.elasticRecovery,
+      title: t('pm.granularLayer.mf.observations'),
+      value: samples?.step3Data?.observations,
     },
   ];
 
@@ -586,31 +525,6 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 </FlexColumnBorder>
               )}
 
-            <FlexColumnBorder title={t('pm.paviment.lastUpdate')} open={true} theme={'#07B811'}>
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr 1fr' },
-                  justifyItems: 'center',
-                  alignItems: 'center',
-                  gap: '1rem',
-                  justifyContent: 'space-evenly',
-                  marginBottom: '0.5rem',
-                }}
-              >
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}>
-                  <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                    Ultima atualização
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                      {samples?.step2Data.lastUpdate}
-                    </Typography>
-                  </Box>
-                </Box>
-              </Box>
-            </FlexColumnBorder>
-
             {/** FADIGUA DO MATERIAL */}
             {samples?.step3Data?.fatiguek1psi1 && samples?.step3Data?.fatiguek2psi2 && (
               <FlexColumnBorder title={t('pm.material-fadigue')} open={true} theme={'#07B811'}>
@@ -649,92 +563,69 @@ const SpecificSample_BinderAsphaltConcrete = () => {
             )}
 
             {/** MÓDULO DE RESILIÊNCIA */}
-            {samples?.step3Data?.rsInitial &&
-              samples?.step3Data?.rsFinal &&
-              samples?.step3Data?.constantA &&
-              samples?.step3Data?.constantB && (
-                <FlexColumnBorder title={t('pm.resilience.module')} open={true} theme={'#07B811'}>
-                  <Box
-                    sx={{
-                      display: 'grid',
-                      gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
-                      justifyItems: 'center',
-                      alignItems: 'center',
-                      gap: '1rem',
-                      justifyContent: 'space-evenly',
-                      marginBottom: '0.5rem',
-                    }}
-                  >
-                    {resilienceModuleStabilized.map((item, idx) => (
-                      <Box
-                        sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
-                        key={idx}
-                      >
-                        {item.value && (
-                          <>
-                            <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                              {item.title}
-                            </Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                              <Typography
-                                sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
-                              >
-                                {item.value}
-                              </Typography>
-                            </Box>
-                          </>
-                        )}
-                      </Box>
-                    ))}
+            {/* <FlexColumnBorder title={t('pm.resilience.module')} open={true} theme={'#07B811'}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                  justifyItems: 'center',
+                  alignItems: 'center',
+                  gap: '1rem',
+                  justifyContent: 'space-evenly',
+                  marginBottom: '0.5rem',
+                }}
+              >
+                {resilienceModuleStabilized.map((item, idx) => (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }} key={idx}>
+                    {item.value && (
+                      <>
+                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                          {item.title}
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                          <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                            {item.value}
+                          </Typography>
+                        </Box>
+                      </>
+                    )}
                   </Box>
-                </FlexColumnBorder>
-              )}
+                ))}
+              </Box>
+            </FlexColumnBorder> */}
 
             {/** DADOS TÉCNICOS DA AMOSTRA */}
-            {samples?.step3Data?.mctGroup &&
-              samples?.step3Data?.mctGroupmctCoefficientC &&
-              samples?.step3Data?.mctIndexE &&
-              samples?.step3Data?.especificMass &&
-              samples?.step3Data?.compressionEnergy &&
-              samples?.step3Data?.granulometricRange &&
-              samples?.step3Data?.optimalHumidity &&
-              samples?.step3Data?.abrasionLA && (
-                <FlexColumnBorder title={t('pm.sample-data')} open={true} theme={'#07B811'}>
-                  <Box
-                    sx={{
-                      display: 'grid',
-                      gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
-                      justifyItems: 'center',
-                      alignItems: 'center',
-                      gap: '1rem',
-                      justifyContent: 'space-evenly',
-                      marginBottom: '0.5rem',
-                    }}
-                  >
-                    {techData.map((item, idx) => (
-                      <Box
-                        sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
-                        key={idx}
-                      >
-                        {item.value && (
-                          <>
-                            <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                              {item.title}
-                            </Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                              <Typography
-                                sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
-                              >
-                                {item.value}
-                              </Typography>
-                            </Box>
-                          </>
-                        )}
-                      </Box>
-                    ))}
+            <FlexColumnBorder title={t('pm.sample-data')} open={true} theme={'#07B811'}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                  justifyItems: 'center',
+                  alignItems: 'center',
+                  gap: '1rem',
+                  justifyContent: 'space-evenly',
+                  marginBottom: '0.5rem',
+                }}
+              >
+                {techData.map((item, idx) => (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }} key={idx}>
+                    {item.value && (
+                      <>
+                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                          {item.title}
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                          <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                            {item.value}
+                          </Typography>
+                        </Box>
+                      </>
+                    )}
                   </Box>
-                </FlexColumnBorder>
-              )}
+                ))}
+              </Box>
+            </FlexColumnBorder>
+
             {/** DEFORMAÇÃO PERMANENTE */}
             {samples?.step3Data?.k1psi1 &&
               samples?.step3Data?.k2psi2 &&
