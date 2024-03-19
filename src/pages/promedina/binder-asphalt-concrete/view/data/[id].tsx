@@ -17,7 +17,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const query = router.query as any;
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -61,6 +61,10 @@ const SpecificSample_BinderAsphaltConcrete = () => {
     {
       title: t('pm.granularLayer.cityState'),
       value: samples?.generalData.cityState,
+    },
+    {
+      title: t('pm.granularLayer.highway'),
+      value: `${samples?.generalData.highway}`,
     },
     {
       title: t('pm.granularLayer.guideLineSpeed'),
@@ -228,6 +232,26 @@ const SpecificSample_BinderAsphaltConcrete = () => {
     {
       title: t('pm.binderAsphaltConcrete.certificateNumber'),
       value: samples?.step3Data?.certificateNumber,
+    },
+    {
+      title: t('pm.binderAsphaltConcrete.capType'),
+      value: samples?.step3Data?.capType,
+    },
+    {
+      title: t('pm.binderAsphaltConcrete.performanceGrade'),
+      value: samples?.step3Data?.performanceGrade,
+    },
+    {
+      title: t('pm.binderAsphaltConcrete.penetration'),
+      value: samples?.step3Data?.penetration,
+    },
+    {
+      title: t('pm.binderAsphaltConcrete.softeningPoint'),
+      value: samples?.step3Data?.softeningPoint,
+    },
+    {
+      title: t('pm.binderAsphaltConcrete.elasticRecovery'),
+      value: samples?.step3Data?.elasticRecovery,
     },
   ];
 

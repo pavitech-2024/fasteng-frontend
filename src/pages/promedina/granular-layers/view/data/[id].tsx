@@ -21,10 +21,6 @@ const SpecificSample_GranularLayers = () => {
   const query = router.query as any;
 
   useEffect(() => {
-    console.log("🚀 ~ samples:", samples)
-  },[samples])
-
-  useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await samplesService.getSample(query.id);
@@ -586,14 +582,14 @@ const SpecificSample_GranularLayers = () => {
                 }}
               >
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}>
-                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                        Ultima atualização
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                          {samples?.step2Data.lastUpdate}
-                        </Typography>
-                      </Box>
+                  <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                    Ultima atualização
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                      {samples?.step2Data.lastUpdate}
+                    </Typography>
+                  </Box>
                 </Box>
               </Box>
             </FlexColumnBorder>

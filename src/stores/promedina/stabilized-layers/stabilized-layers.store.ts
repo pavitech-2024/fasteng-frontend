@@ -115,7 +115,7 @@ const useStabilizedLayersStore = create<StabilizedLayersData & StabilizedLayersA
           priming: null,
           images: null,
           imagesDate: null,
-          trafficLiberation:null,
+          trafficLiberation: null,
           lastUpdate: null,
           averageAltitude: null,
           numberOfTracks: null,

@@ -53,15 +53,12 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
     // if (generalData) {
     //   true;
     // }
-
     // try {
     // const { name, zone, layer, cityState, observations } = generalData;
-
     // if (!name) throw t('errors.empty-name');
     // if (!zone) throw t('errors.empty-zone');
     // if (!layer) throw t('errors.empty-layer');
     // if (!cityState) throw t('errors.empty-cityState');
-
     //   const response = await Api.post(`${this.info.backend_path}/verify-init`, {
     //     name,
     //     zone,
@@ -69,9 +66,7 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
     //     cityState,
     //     observations,
     //   });
-
     //   const { success, error } = response.data;
-
     //   if (success === false) throw error.name;
     // } catch (error) {
     //   throw error;
@@ -103,7 +98,6 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
     //     material,
     //     thickness,
     //   } = step2Data;
-
     //   if (!identification) throw t('errors.empty-identification');
     //   if (!sectionType) throw t('errors.empty-sectionType');
     //   if (!extension) throw t('errors.empty-extension');
@@ -121,14 +115,11 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
     //   if (!priming) throw t('errors.empty-priming');
     //   if (!material) throw t('errors.empty-material');
     //   if (!thickness) throw t('errors.empty-thickness');
-
     //   const response = await Api.post(`${this.info.backend_path}/verify-init`, {
     //     step2Data,
     //     observation,
     //   });
-
     //   const { success, error } = response.data;
-
     //   if (success === false) throw error.name;
     // } catch (error) {
     //   throw error;

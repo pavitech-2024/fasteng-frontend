@@ -28,6 +28,7 @@ interface Step2Data {
   averageAltitude: string;
   numberOfTracks: string;
   monitoredTrack: string;
+  lastUpdate: string;
   trackWidth: string;
   // Paviment Preparation
   milling: string;
@@ -132,7 +133,7 @@ const useBinderAsphaltConcreteStore = create<BinderAsphaltConcreteData & BinderA
           priming: null,
           images: null,
           imagesDate: null,
-          trafficLiberation:null,
+          trafficLiberation: null,
           lastUpdate: null,
           averageAltitude: null,
           numberOfTracks: null,

@@ -73,8 +73,8 @@ const GranularLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
                 return (
                   <InputEndAdornment
                     adornment={'Km/h'}
-                    type='number'
-                    variant='standard'
+                    type="number"
+                    variant="standard"
                     key={input.key}
                     value={generalData.guideLineSpeed?.toString()}
                     label={input.label}

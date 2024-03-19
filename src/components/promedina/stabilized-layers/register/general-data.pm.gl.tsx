@@ -67,8 +67,8 @@ const StabilizedLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProp
                   <InputEndAdornment
                     adornment={'Km/h'}
                     key={input.key}
-                    type='number'
-                    variant='standard'
+                    type="number"
+                    variant="standard"
                     value={generalData.guideLineSpeed?.toString()}
                     label={input.label}
                     required={input.required}

@@ -28,7 +28,6 @@ const BinderAsphaltConcrete_step1 = ({ nextDisabled, setNextDisabled }: EssayPag
     },
   ];
 
-
   inputs.every(({ required, value }) => {
     if (!required) return true;
 
@@ -69,7 +68,7 @@ const BinderAsphaltConcrete_step1 = ({ nextDisabled, setNextDisabled }: EssayPag
                 return (
                   <InputEndAdornment
                     adornment={'Km/h'}
-                    type='number'
+                    type="number"
                     key={input.key}
                     value={generalData.guideLineSpeed?.toString()}
                     label={input.label}

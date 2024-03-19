@@ -98,6 +98,36 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
       required: true,
     },
     {
+      label: t('pm.granularLayer.trafficLiberation'),
+      value: dateFormatter(step2Data.trafficLiberation),
+      key: 'trafficLiberation',
+      required: true,
+    },
+    {
+      label: t('pm.granularLayer.averageAltitude'),
+      value: step2Data.averageAltitude,
+      key: 'averageAltitude',
+      required: true,
+    },
+    {
+      label: t('pm.granularLayer.numberOfTracks'),
+      value: step2Data.numberOfTracks,
+      key: 'numberOfTracks',
+      required: true,
+    },
+    {
+      label: t('pm.granularLayer.monitoredTrack'),
+      value: step2Data.monitoredTrack,
+      key: 'monitoredTrack',
+      required: true,
+    },
+    {
+      label: t('pm.granularLayer.trackWidth'),
+      value: step2Data.trackWidth,
+      key: 'trackWidth',
+      required: true,
+    },
+    {
       label: t('pm.binderAsphaltConcrete.observations'),
       value: step2Data.observation,
       key: 'observation',
@@ -249,7 +279,7 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
                     adornment={'m'}
                     type="number"
                     key={input.key}
-                    variant='standard'
+                    variant="standard"
                     label={input.label}
                     value={input.value?.toString()}
                     required={input.required}
@@ -306,6 +336,37 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
           </Box>
         </Box>
       </FlexColumnBorder>
+
+      <FlexColumnBorder title={t('pm.paviment.lastUpdate')} open={true} theme={'#07B811'}>
+        <Box
+          sx={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'grid',
+              width: '100%',
+              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
+              gap: '5px 20px',
+              paddingBottom: '20px',
+            }}
+          >
+            <TextField
+              key={'lastUpdate'}
+              variant="standard"
+              label={t('pm.paviment.lastUpdate')}
+              value={dateFormatter(step2Data?.lastUpdate)}
+              required
+              onChange={(e) => setData({ step: 1, key: 'lastUpdate', value: e.target.value })}
+            />
+          </Box>
+        </Box>
+      </FlexColumnBorder>
+
       <FlexColumnBorder title={t('pm.structural.composition')} open={true} theme={'#07B811'}>
         <DataGrid
           sx={{ mt: '1rem', borderRadius: '10px' }}
@@ -342,7 +403,7 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
             value={dateFormatter(step2Data.imagesDate)}
             style={{ display: 'block' }}
             required={false}
-            onChange={(e) => setData({ step: 0, key: 'date', value: e.target.value })}
+            onChange={(e) => setData({ step: 1, key: 'imagesDate', value: e.target.value })}
           />
         </Box>
       </FlexColumnBorder>

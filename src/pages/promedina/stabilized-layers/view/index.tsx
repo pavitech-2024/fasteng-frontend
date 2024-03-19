@@ -46,28 +46,6 @@ const StabilizedLayers_view = () => {
   };
 
   useEffect(() => {
-    // const filter = [];
-
-    // for (const key in searchParams) {
-    //   if (searchParams[key] !== '') {
-    //     filter.push({ [key]: searchParams[key] });
-    //   }
-    // }
-
-    // const encodedFilter = encodeURIComponent(JSON.stringify(filter));
-
-    // samplesService
-    //   .getFilteredSamples(encodedFilter, page)
-    //   .then((response) => {
-    //     console.log("🚀 ~ file: index.tsx:26 ~ .then ~ response:", response.data)
-    //     setSamples(response.data.docs);
-    //     setTotalPages(response.data.totalPages);
-    //     setCount(response.data.count)
-    //     setLoading(false);
-    //   })
-    //   .catch((error) => {
-    //     console.error('Failed to load samples:', error);
-    //   });
     fetchData();
   }, [page, searchParams]);
 
