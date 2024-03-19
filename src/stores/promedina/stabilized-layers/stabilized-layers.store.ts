@@ -28,6 +28,7 @@ interface Step2Data {
   averageAltitude: string;
   numberOfTracks: string;
   monitoredTrack: string;
+  lastUpdate: string;
   trackWidth: string;
   // Paviment Preparation
   milling: string;

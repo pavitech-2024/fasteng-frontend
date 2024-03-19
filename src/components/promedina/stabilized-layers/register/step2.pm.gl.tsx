@@ -321,6 +321,37 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
           </Box>
         </Box>
       </FlexColumnBorder>
+
+      <FlexColumnBorder title={t('pm.paviment.lastUpdate')} open={true} theme={'#07B811'}>
+        <Box
+          sx={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'grid',
+              width: '100%',
+              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
+              gap: '5px 20px',
+              paddingBottom: '20px',
+            }}
+          >
+            <TextField
+              key={'lastUpdate'}
+              variant="standard"
+              label={t('pm.paviment.lastUpdate')}
+              value={dateFormatter(step2Data.lastUpdate)}
+              required
+              onChange={(e) => setData({ step: 1, key: 'lastUpdate', value: e.target.value })}
+            />
+          </Box>
+        </Box>
+      </FlexColumnBorder>
+
       <FlexColumnBorder title={t('pm.structural.composition')} open={true} theme={'#07B811'}>
         <DataGrid
           sx={{ mt: '1rem', borderRadius: '10px' }}
@@ -349,7 +380,7 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
             alignItems: 'center',
           }}
         >
-          <UploadImages onImagesUpdate={(images: string) => setImages(images)} editarImages={step2Data.images} />
+          <UploadImages editarImages={step2Data.images} onImagesUpdate={(images: string) => setImages(images)} />
           <TextField
             variant="standard"
             label={t('pm-estructural-composition-image-date')}
@@ -357,7 +388,7 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
             value={dateFormatter(step2Data.imagesDate)}
             style={{ display: 'block' }}
             required={false}
-            onChange={(e) => setData({ step: 0, key: 'date', value: e.target.value })}
+            onChange={(e) => setData({ step: 1, key: 'imagesDate', value: e.target.value })}
           />
         </Box>
       </FlexColumnBorder>

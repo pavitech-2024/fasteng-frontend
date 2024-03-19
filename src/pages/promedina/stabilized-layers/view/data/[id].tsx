@@ -21,6 +21,10 @@ const SpecificSample_StabilizedLayers = () => {
   const query = router.query as any;
 
   useEffect(() => {
+    console.log('🚀 ~ samples:', samples);
+  }, [samples]);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await samplesService.getSample(query.id);
@@ -395,6 +399,45 @@ const SpecificSample_StabilizedLayers = () => {
     },
   ];
 
+  const materialData = [
+    {
+      title: t('pm.granularLayer.mf.stabilizer'),
+      value: samples?.step3Data?.stabilizer,
+    },
+    {
+      title: t('pm.granularLayer.mf.tenor'),
+      value: samples?.step3Data?.tenor,
+    },
+    {
+      title: t('pm.granularLayer.mf.especificMass'),
+      value: samples?.step3Data?.especificMass,
+    },
+    {
+      title: t('pm.granularLayer.mf.rtcd'),
+      value: samples?.step3Data?.rtcd,
+    },
+    {
+      title: t('pm.granularLayer.mf.rtf'),
+      value: samples?.step3Data?.rtf,
+    },
+    {
+      title: t('pm.granularLayer.mf.rcs'),
+      value: samples?.step3Data?.rcs,
+    },
+    {
+      title: t('pm.granularLayer.mf.granulometricRange'),
+      value: samples?.step3Data?.granulometricRange,
+    },
+    {
+      title: t('pm.granularLayer.mf.optimalHumidity'),
+      value: samples?.step3Data?.optimalHumidity,
+    },
+    {
+      title: t('pm.granularLayer.mf.compressionEnergy'),
+      value: samples?.step3Data?.compressionEnergy,
+    },
+  ];
+
   const materialFatigue = [
     {
       title: t('pm.granularLayer.k1.psi1'),
@@ -533,6 +576,32 @@ const SpecificSample_StabilizedLayers = () => {
                   </Box>
                 </FlexColumnBorder>
               )}
+
+            <FlexColumnBorder title={t('pm.paviment.lastUpdate')} open={true} theme={'#07B811'}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr 1fr' },
+                  justifyItems: 'center',
+                  alignItems: 'center',
+                  gap: '1rem',
+                  justifyContent: 'space-evenly',
+                  marginBottom: '0.5rem',
+                }}
+              >
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}>
+                  <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                    Ultima atualização
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                      {samples?.step2Data.lastUpdate}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+            </FlexColumnBorder>
+
             {/**  PREPARO DO PAVIMENTO */}
             {samples?.step2Data?.milling &&
               samples?.step2Data?.interventionAtTheBase &&
@@ -576,9 +645,45 @@ const SpecificSample_StabilizedLayers = () => {
                 </FlexColumnBorder>
               )}
 
+                <FlexColumnBorder title={t('pm.material-data')} open={true} theme={'#07B811'}>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                      justifyItems: 'center',
+                      alignItems: 'center',
+                      gap: '1rem',
+                      justifyContent: 'space-evenly',
+                      marginBottom: '0.5rem',
+                    }}
+                  >
+                    {materialData.map((item, idx) => (
+                      <Box
+                        sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                        key={idx}
+                      >
+                        {item.value && (
+                          <>
+                            <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                              {item.title}
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                              <Typography
+                                sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
+                              >
+                                {item.value}
+                              </Typography>
+                            </Box>
+                          </>
+                        )}
+                      </Box>
+                    ))}
+                  </Box>
+                </FlexColumnBorder>
+
             {/** FADIGUA DO MATERIAL */}
             {samples?.step3Data?.fatiguek1psi1 && samples?.step3Data?.fatiguek2psi2 && (
-              <FlexColumnBorder title={t('pm.material-fadigue')} open={true} theme={'#07B811'}>
+              <FlexColumnBorder title={t('pm.material-permanentDeformation')} open={true} theme={'#07B811'}>
                 <Box
                   sx={{
                     display: 'grid',
@@ -741,6 +846,7 @@ const SpecificSample_StabilizedLayers = () => {
                   </Box>
                 </FlexColumnBorder>
               )}
+
             {/**  MÓDULO DE RESILIÊNCIA */}
             {samples?.step3Data?.k1 && samples?.step3Data?.k2 && samples?.step3Data?.k3 && samples?.step3Data?.k4 && (
               <FlexColumnBorder title={t('pm.resilience.module')} open={true} theme={'#07B811'}>
