@@ -586,6 +586,31 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 </FlexColumnBorder>
               )}
 
+            <FlexColumnBorder title={t('pm.paviment.lastUpdate')} open={true} theme={'#07B811'}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr 1fr' },
+                  justifyItems: 'center',
+                  alignItems: 'center',
+                  gap: '1rem',
+                  justifyContent: 'space-evenly',
+                  marginBottom: '0.5rem',
+                }}
+              >
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}>
+                  <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                    Ultima atualização
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                      {samples?.step2Data.lastUpdate}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+            </FlexColumnBorder>
+
             {/** FADIGUA DO MATERIAL */}
             {samples?.step3Data?.fatiguek1psi1 && samples?.step3Data?.fatiguek2psi2 && (
               <FlexColumnBorder title={t('pm.material-fadigue')} open={true} theme={'#07B811'}>
