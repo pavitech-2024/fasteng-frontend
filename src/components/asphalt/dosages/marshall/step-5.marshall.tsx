@@ -1,3 +1,4 @@
+import Api from '@/api';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
@@ -7,7 +8,9 @@ import useAuth from '@/contexts/auth';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { Box } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
+import { t } from 'i18next';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const Marshall_Step5 = ({
   nextDisabled,
@@ -15,7 +18,33 @@ const Marshall_Step5 = ({
   marshall,
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { materialSelectionData, maximumMixtureDensityData: data, setData } = useMarshallStore();
+  const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
+
+  useEffect(() => {
+    toast.promise(
+      async () => {
+        try {
+          const indexes = await marshall.getIndexesOfMissesSpecificGravity(materialSelectionData);
+          console.log("🚀 ~ indexes:", indexes)
+          const prevData = data;
+          const newData = {
+            ...prevData,
+            indexesOfMissesSpecificGravity: indexes
+          };
+          setData({ step: 4, value: newData });
+          setLoading(false);
+        } catch (error) {
+          setLoading(false);
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      }
+    );
+  }, []);
 
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
   const [GMMModalIsOpen, setGMMModalISOpen] = useState(false);
@@ -55,6 +84,34 @@ const Marshall_Step5 = ({
     { label: 'GMM - Densidade máxima medida', value: '' },
   ];
 
+  const materials = materialSelectionData.aggregates.map((item) => item.name);
+
+  const handleSubmitDmt = async () => {
+    toast.promise(
+      async () => {
+        try {
+          const result = await marshall.calculateMaximumMixtureDensityDMT(materialSelectionData, binderTrialData, data);
+          console.log("🚀 ~ result:", result)
+          const prevData = data;
+
+          const newData = {
+            ...prevData,
+            ...result
+          };
+
+          setData({ step: 4, value: newData });
+        } catch (error) {
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      }
+    );
+  }
+
   nextDisabled && setNextDisabled(false);
 
   return (
@@ -93,13 +150,23 @@ const Marshall_Step5 = ({
               <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
                 <InputEndAdornment
                   adornment={'g/cm³'}
-                  value={data?.dmt?.material_2}
-                  onChange={(e) => setData({ step: 5, key: 'dmtMaterial_1', value: e.target.value })}
+                  label={materials[0]}
+                  value={data?.dmt?.material_1}
+                  onChange={(e) => {
+                    const prevState = data;
+                    const newState = { ...prevState, material_1: e.target.value};
+                    setData({ step: 4, value: newState })
+                  }}
                 />
                 <InputEndAdornment
                   adornment={'g/cm³'}
-                  value={data?.dmt?.material_1}
-                  onChange={(e) => setData({ step: 5, key: 'dmtMaterial_2', value: e.target.value })}
+                  label={materials[1]}
+                  value={data?.dmt?.material_2}
+                  onChange={(e) => {
+                    const prevState = data;
+                    const newState = { ...prevState, material_2: e.target.value};
+                    setData({ step: 4, value: newState })
+                  }}
                 />
               </Box>
             }
@@ -108,7 +175,7 @@ const Marshall_Step5 = ({
             onCancel={() => setDMTModalISOpen(false)}
             open={DMTModalIsOpen}
             size={'large'}
-            onSubmit={() => console.log('')}
+            onSubmit={() => handleSubmitDmt()}
           />
         </Box>
       )}

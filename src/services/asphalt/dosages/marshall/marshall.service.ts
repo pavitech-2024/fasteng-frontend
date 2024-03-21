@@ -124,6 +124,26 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
+  getIndexesOfMissesSpecificGravity = async (materialData: MarshallData['materialSelectionData']) => {
+    const { aggregates } = materialData;
+    try {
+      const response = await Api.post(`${this.info.backend_path}/get-specific-mass-indexes`, aggregates);
+
+      console.log("🚀 ~ Marshall_SERVICE ~ getIndexesOfMissesSpecificGravity= ~ response:", response)
+
+      const { success, error } = response.data;
+      const { indexesOfMissesSpecificGravity } = response.data.data;
+      console.log("🚀 ~ Marshall_SERVICE ~ getIndexesOfMissesSpecificGravity= ~ success:", success)
+      console.log("🚀 ~ Marshall_SERVICE ~ getIndexesOfMissesSpecificGravity= ~ indexesOfMissesSpecificGravity:", indexesOfMissesSpecificGravity)
+
+      if (success === false) throw error.name; 
+
+      return indexesOfMissesSpecificGravity;
+    } catch (error) {
+      throw error
+    }
+  }
+
   // send the selected materials to backend
   submitMaterialSelection = async (
     data: MarshallData,
@@ -384,6 +404,43 @@ class Marshall_SERVICE implements IEssayService {
         console.log(error);
         //throw error;
       }
+    }
+  };
+
+  calculateMaximumMixtureDensityDMT = async (
+    step2Data: MarshallData['materialSelectionData'],
+    step4Data: MarshallData['binderTrialData'],
+    step5Data: MarshallData['maximumMixtureDensityData'],
+  ): Promise<any> => {
+    const { aggregates } = step2Data;
+    const { indexesOfMissesSpecificGravity, dmt } = step5Data;
+    const { percentsOfDosage } = step4Data;
+    try {
+
+      const response = await Api.post(`${this.info.backend_path}/calculate-step-5-dmt-data`, {
+        percentsOfDosage,
+        indexesOfMissesSpecificGravity
+      });
+
+      const { data, success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+      const { listOfSpecificGravities, maxSpecificGravity } = data;
+
+      const resultObj = {
+        listOfSpecificGravities,
+        maxSpecificGravity,
+      };
+
+      const result = {
+        ...step5Data,
+        ...resultObj,
+      };
+
+      return result;
+    } catch (error) {
+      //throw error;
     }
   };
 }

@@ -68,7 +68,8 @@ interface MarshallMaximumMixtureDensityData {
   dmt: {
     material_1: number,
     material_2: number
-  }
+  },
+  indexesOfMissesSpecificGravity: number[]
 }
 
 export type MarshallData = {
@@ -93,7 +94,7 @@ const stepVariant = {
   1: 'materialSelectionData',
   2: 'granulometryCompositionData',
   3: 'binderTrialData',
-  4: 'maximumMixtureDensity'
+  4: 'maximumMixtureDensityData'
 };
 
 const initialState = {
@@ -147,7 +148,8 @@ const initialState = {
     dmt: {
       material_1: null,
       material_2: null
-    }
+    },
+    indexesOfMissesSpecificGravity: []
   },
   createdAt: null,
   updatedAt: null,
