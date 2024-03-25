@@ -414,13 +414,17 @@ class Marshall_SERVICE implements IEssayService {
   ): Promise<any> => {
     const { aggregates } = step2Data;
     const { indexesOfMissesSpecificGravity, dmt } = step5Data;
-    const { percentsOfDosage } = step4Data;
+    const { percentsOfDosage, trial } = step4Data;
     try {
 
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-dmt-data`, {
+        aggregates,
         percentsOfDosage,
+        trial,
         indexesOfMissesSpecificGravity
       });
+
+      console.log("🚀 ~ Marshall_SERVICE ~ response:", response)
 
       const { data, success, error } = response.data;
 
@@ -432,11 +436,14 @@ class Marshall_SERVICE implements IEssayService {
         listOfSpecificGravities,
         maxSpecificGravity,
       };
+      console.log("🚀 ~ Marshall_SERVICE ~ resultObj:", resultObj)
 
       const result = {
         ...step5Data,
         ...resultObj,
       };
+
+      console.log("🚀 ~ Marshall_SERVICE ~ result:", result)
 
       return result;
     } catch (error) {

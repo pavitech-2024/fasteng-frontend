@@ -100,6 +100,7 @@ const Marshall_Step5 = ({
           };
 
           setData({ step: 4, value: newData });
+          setDMTModalISOpen(false);
         } catch (error) {
           throw error;
         }
@@ -154,7 +155,8 @@ const Marshall_Step5 = ({
                   value={data?.dmt?.material_1}
                   onChange={(e) => {
                     const prevState = data;
-                    const newState = { ...prevState, material_1: e.target.value};
+                    const prevDmt = data.dmt;
+                    const newState = { ...prevState, dmt: { ...prevDmt, material_1: e.target.value } };
                     setData({ step: 4, value: newState })
                   }}
                 />
@@ -164,7 +166,8 @@ const Marshall_Step5 = ({
                   value={data?.dmt?.material_2}
                   onChange={(e) => {
                     const prevState = data;
-                    const newState = { ...prevState, material_2: e.target.value};
+                    const prevDmt = data.dmt;
+                    const newState = { ...prevState, dmt: { ...prevDmt, material_2: e.target.value } };
                     setData({ step: 4, value: newState })
                   }}
                 />

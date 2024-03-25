@@ -65,7 +65,7 @@ const Marshall_Step4 = ({
         },
         {
           field: 'material_2',
-          headerName: `${materialSelectionData.aggregates[1].name}`,
+          headerName: `${materialSelectionData.aggregates[1]?.name}`,
           valueFormatter: ({ value }) => `${value}`,
           width: 150,
         },
