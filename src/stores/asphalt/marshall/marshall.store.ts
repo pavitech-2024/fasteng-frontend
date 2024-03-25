@@ -69,7 +69,21 @@ interface MarshallMaximumMixtureDensityData {
     material_1: number,
     material_2: number
   },
-  indexesOfMissesSpecificGravity: number[]
+  gmm: {
+    lessOne: number,
+    lessHalf: number,
+    normal: number,
+    plusHalf: number,
+    plusOne: number,
+  },
+  indexesOfMissesSpecificGravity: number[],
+  maxSpecificGravity: {
+    lessOne: number;
+    lessHalf: number;
+    normal: number;
+    plusHalf: number;
+    plusOne: number;
+  }
 }
 
 export type MarshallData = {
@@ -149,7 +163,21 @@ const initialState = {
       material_1: null,
       material_2: null
     },
-    indexesOfMissesSpecificGravity: []
+    gmm: {
+      lessOne: null,
+      lessHalf: null,
+      normal: null,
+      plusHalf: null,
+      plusOne: null,
+    },
+    indexesOfMissesSpecificGravity: [],
+    maxSpecificGravity: {
+      lessOne: null,
+      lessHalf: null,
+      normal: null,
+      plusHalf: null,
+      plusOne: null,
+    }
   },
   createdAt: null,
   updatedAt: null,

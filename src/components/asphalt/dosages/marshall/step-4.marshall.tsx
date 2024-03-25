@@ -73,9 +73,9 @@ const Marshall_Step4 = ({
 
       const rows = binderTrialData.percentsOfDosage[0].map((_, index) => ({
         id: index,
-        binder: binderTrialData.percentsOfDosage[0][index],
-        material_1: binderTrialData.percentsOfDosage[1][index],
-        material_2: binderTrialData.percentsOfDosage[2][index],
+        binder: binderTrialData.percentsOfDosage[2][index],
+        material_1: binderTrialData.percentsOfDosage[0][index],
+        material_2: binderTrialData.percentsOfDosage[1][index],
       }));
 
       setColumns(columns);
