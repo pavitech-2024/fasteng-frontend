@@ -22,6 +22,10 @@ const Marshall_Step5 = ({
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
   const [enableRiceTest, setEnableRiceTest] = useState(false);
+  const [GMMModalIsOpen, setGMMModalIsOpen] = useState(false);
+  const [gmmRows, setGmmRows] = useState([]);
+  console.log('🚀 ~ gmmRows:', gmmRows);
+  const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
 
   useEffect(() => {
     toast.promise(
@@ -141,81 +145,6 @@ const Marshall_Step5 = ({
     },
   ];
 
-  const gmmRows = [
-    {
-      id: 1,
-      GMM: data?.gmm?.lessOne,
-      Teor: binderTrialData.percentsOfDosage[2][0],
-    },
-    {
-      id: 2,
-      GMM: data?.gmm?.lessHalf,
-      Teor: binderTrialData.percentsOfDosage[2][1],
-    },
-    {
-      id: 3,
-      GMM: data?.gmm?.normal,
-      Teor: binderTrialData.percentsOfDosage[2][2],
-    },
-    {
-      id: 4,
-      GMM: data?.gmm?.plusHalf,
-      Teor: binderTrialData.percentsOfDosage[2][3],
-    },
-    {
-      id: 5,
-      GMM: data?.gmm?.plusOne,
-      Teor: binderTrialData.percentsOfDosage[2][4],
-    },
-  ];
-
-  const gmmColumns: GridColDef[] = [
-    {
-      field: 'Teor',
-      headerName: 'Teor',
-      valueFormatter: ({ value }) => `${value}`
-    },
-    {
-      field: 'GMM',
-      headerName: 'GMM',
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = gmmRows.findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={''}
-            type="text"
-            value={gmmRows[index].GMM}
-            onChange={(e) => {
-              if (e.target.value === null) return;
-              const newRows = [...gmmRows];
-              console.log("🚀 ~ newRows:", newRows)
-              newRows[index].GMM = Number(e.target.value);
-              let newData;
-              if(id === 1) {
-                newData = { ...data.gmm, lessOne: Number(e.target.value)}
-              }
-              if(id === 2) {
-                newData = { ...data.gmm, lessHalf: Number(e.target.value)}
-              }
-              if(id === 3) {
-                newData = { ...data.gmm, normal: Number(e.target.value)}
-              }
-              if(id === 4) {
-                newData = { ...data.gmm, plusHalf: Number(e.target.value)}
-              }
-              if(id === 5) {
-                newData = { ...data.gmm, plusOne: Number(e.target.value)}
-              }
-              //const newData = { ...data, gmm: newRows };
-              setData({ step: 4, value: { ...data, gmm: newData } });
-            }}
-          />
-        );
-      },
-    },
-  ];
-
   const dmtColumns: GridColDef[] = [
     {
       field: 'Teor',
@@ -230,7 +159,7 @@ const Marshall_Step5 = ({
   ];
 
   const [hasNull, setHasNull] = useState(true);
-  console.log("🚀 ~ hasNull:", hasNull)
+  console.log('🚀 ~ hasNull:', hasNull);
 
   useEffect(() => {
     function hasNullValue(obj) {
@@ -249,7 +178,7 @@ const Marshall_Step5 = ({
       async () => {
         try {
           const riceTest = await marshall.calculateRiceTest(data);
-          console.log("🚀 ~ riceTest:", riceTest)
+          console.log('🚀 ~ riceTest:', riceTest);
           const prevData = data;
           const newData = {
             ...prevData,
@@ -268,7 +197,73 @@ const Marshall_Step5 = ({
         error: t('loading.materials.error'),
       }
     );
-  }
+  };
+
+  const handleSelectGMM = () => {
+    setGMMModalIsOpen(false);
+    setGmmRows([
+      {
+        id: 1,
+        GMM: data?.gmm[0],
+        Teor: binderTrialData.percentsOfDosage[2][0],
+      },
+      {
+        id: 2,
+        GMM: data?.gmm[1],
+        Teor: binderTrialData.percentsOfDosage[2][1],
+      },
+      {
+        id: 3,
+        GMM: data?.gmm[2],
+        Teor: binderTrialData.percentsOfDosage[2][2],
+      },
+      {
+        id: 4,
+        GMM: data?.gmm[3],
+        Teor: binderTrialData.percentsOfDosage[2][3],
+      },
+      {
+        id: 5,
+        GMM: data?.gmm[4],
+        Teor: binderTrialData.percentsOfDosage[2][4],
+      },
+    ]);
+
+    setGmmColumns([
+      {
+        field: 'Teor',
+        headerName: 'Teor',
+        valueFormatter: ({ value }) => `${value}`,
+      },
+      {
+        field: 'GMM',
+        headerName: 'GMM',
+        renderCell: ({ row }) => {
+          const { id } = row;
+          const index = gmmRows.findIndex((r) => r.id === id);
+          return (
+            <InputEndAdornment
+              adornment={''}
+              type="text"
+              value={gmmRows[index]?.GMM?.value}
+              onChange={(e) => {
+                if (e.target.value === null) return;
+              
+                const newRows = [...gmmRows];
+                const index = newRows.findIndex((r) => r.id === id);
+              
+                if (index !== -1) {
+                  newRows[index].GMM = { id: index + 1, insert: true, value: Number(e.target.value) };
+                  setGmmRows(newRows);
+                  setData({ step: 4, value: { ...data, gmm: newRows } });
+                }
+              }}
+            />
+          );
+        },
+      },
+    ]);
+  };
 
   const calculateGmmData = () => {
     toast.promise(
@@ -293,7 +288,7 @@ const Marshall_Step5 = ({
         error: t('loading.materials.error'),
       }
     );
-  }
+  };
 
   nextDisabled && setNextDisabled(false);
 
@@ -318,6 +313,7 @@ const Marshall_Step5 = ({
               if (selectedOption === 'DMT - Densidade máxima teórica') {
                 setDMTModalISOpen(true);
               } else {
+                setGMMModalIsOpen(true);
                 setEnableRiceTest(true);
               }
             }}
@@ -331,8 +327,8 @@ const Marshall_Step5 = ({
             options={array}
             callback={(selectedValue) => {
               const prevData = data;
-              const newData = { ...prevData, temperatureOfWater: Number(selectedValue) }
-              setData({ step: 4, value: newData  })
+              const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
+              setData({ step: 4, value: newData });
             }}
             size="medium"
             sx={{ width: '75%', marginX: 'auto' }}
@@ -340,16 +336,18 @@ const Marshall_Step5 = ({
 
           {enableRiceTest && (
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography sx={{ display: 'flex', justifyContent: 'center' }}>Insira o Gmm e/ou calcule pelo Rice Test</Typography>
+              <Typography sx={{ display: 'flex', justifyContent: 'center' }}>
+                Insira o Gmm e/ou calcule pelo Rice Test
+              </Typography>
               <Button onClick={calculateRiceTest}>Rice Test</Button>
 
-              <DataGrid columns={gmmColumns} rows={gmmRows} hideFooter/>
+              <DataGrid columns={gmmColumns} rows={gmmRows} hideFooter />
 
               <Button onClick={calculateGmmData}>Confirmar</Button>
             </Box>
           )}
 
-          {hasNull && !enableRiceTest && <DataGrid columns={dmtColumns} rows={dmtRows} hideFooter/>}
+          {hasNull && !enableRiceTest && <DataGrid columns={dmtColumns} rows={dmtRows} hideFooter />}
 
           <ModalBase
             title={'Insira a massa específica real dos materiais abaixo'}
@@ -358,22 +356,22 @@ const Marshall_Step5 = ({
                 <InputEndAdornment
                   adornment={'g/cm³'}
                   label={materials[0]}
-                  value={data?.dmt?.material_1}
+                  value={data?.missingSpecificMass?.material_1}
                   onChange={(e) => {
                     const prevState = data;
-                    const prevDmt = data.dmt;
-                    const newState = { ...prevState, dmt: { ...prevDmt, material_1: e.target.value } };
+                    const prevDmt = data.missingSpecificMass;
+                    const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_1: e.target.value } };
                     setData({ step: 4, value: newState });
                   }}
                 />
                 <InputEndAdornment
                   adornment={'g/cm³'}
                   label={materials[1]}
-                  value={data?.dmt?.material_2}
+                  value={data?.missingSpecificMass?.material_2}
                   onChange={(e) => {
                     const prevState = data;
-                    const prevDmt = data.dmt;
-                    const newState = { ...prevState, dmt: { ...prevDmt, material_2: e.target.value } };
+                    const prevDmt = data.missingSpecificMass;
+                    const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
                     setData({ step: 4, value: newState });
                   }}
                 />
@@ -385,6 +383,42 @@ const Marshall_Step5 = ({
             open={DMTModalIsOpen}
             size={'large'}
             onSubmit={() => handleSubmitDmt()}
+          />
+
+          <ModalBase
+            title={'Insira a massa específica real dos materiais abaixo'}
+            children={
+              <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+                <InputEndAdornment
+                  adornment={'g/cm³'}
+                  label={materials[0]}
+                  value={data?.missingSpecificMass?.material_1}
+                  onChange={(e) => {
+                    const prevState = data;
+                    const prevDmt = data.missingSpecificMass;
+                    const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_1: e.target.value } };
+                    setData({ step: 4, value: newState });
+                  }}
+                />
+                <InputEndAdornment
+                  adornment={'g/cm³'}
+                  label={materials[1]}
+                  value={data?.missingSpecificMass?.material_2}
+                  onChange={(e) => {
+                    const prevState = data;
+                    const prevDmt = data.missingSpecificMass;
+                    const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
+                    setData({ step: 4, value: newState });
+                  }}
+                />
+              </Box>
+            }
+            leftButtonTitle={'cancelar'}
+            rightButtonTitle={'confirmar'}
+            onCancel={() => setGMMModalIsOpen(false)}
+            open={GMMModalIsOpen}
+            size={'large'}
+            onSubmit={() => handleSelectGMM()}
           />
         </Box>
       )}

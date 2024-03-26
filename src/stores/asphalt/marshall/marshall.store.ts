@@ -66,25 +66,27 @@ interface MarshallBinderTrialData {
 
 interface MarshallMaximumMixtureDensityData {
   dmt: {
-    material_1: number,
-    material_2: number
-  },
+    material_1: number;
+    material_2: number;
+  };
   gmm: {
-    lessOne: number,
-    lessHalf: number,
-    normal: number,
-    plusHalf: number,
-    plusOne: number,
-  },
-  indexesOfMissesSpecificGravity: number[],
-  temperatureOfWater: number,
+    id: number;
+    insert: boolean;
+    value: number;
+  }[];
+  indexesOfMissesSpecificGravity: number[];
+  temperatureOfWater: number;
+  missingSpecificMass: {
+    material_1: number;
+    material_2: number;
+  };
   maxSpecificGravity: {
     lessOne: number;
     lessHalf: number;
     normal: number;
     plusHalf: number;
     plusOne: number;
-  }
+  };
 }
 
 export type MarshallData = {
@@ -92,7 +94,7 @@ export type MarshallData = {
   materialSelectionData: MarshallMaterialSelectionData;
   granulometryCompositionData: MarshallGranulometryCompositionData;
   binderTrialData: MarshallBinderTrialData;
-  maximumMixtureDensityData: MarshallMaximumMixtureDensityData
+  maximumMixtureDensityData: MarshallMaximumMixtureDensityData;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -109,7 +111,7 @@ const stepVariant = {
   1: 'materialSelectionData',
   2: 'granulometryCompositionData',
   3: 'binderTrialData',
-  4: 'maximumMixtureDensityData'
+  4: 'maximumMixtureDensityData',
 };
 
 const initialState = {
@@ -162,14 +164,38 @@ const initialState = {
   maximumMixtureDensityData: {
     dmt: {
       material_1: null,
-      material_2: null
+      material_2: null,
     },
-    gmm: {
-      lessOne: null,
-      lessHalf: null,
-      normal: null,
-      plusHalf: null,
-      plusOne: null,
+    gmm: [
+      {
+        id: 1,
+        insert: null,
+        value: null,
+      },
+      {
+        id: 2,
+        insert: null,
+        value: null,
+      },
+      {
+        id: 3,
+        insert: null,
+        value: null,
+      },
+      {
+        id: 4,
+        insert: null,
+        value: null,
+      },
+      {
+        id: 5,
+        insert: null,
+        value: null,
+      }
+    ],
+    missingSpecificMass: {
+      material_1: null,
+      material_2: null,
     },
     indexesOfMissesSpecificGravity: [],
     temperatureOfWater: null,
@@ -179,7 +205,7 @@ const initialState = {
       normal: null,
       plusHalf: null,
       plusOne: null,
-    }
+    },
   },
   createdAt: null,
   updatedAt: null,
