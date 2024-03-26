@@ -450,6 +450,70 @@ class Marshall_SERVICE implements IEssayService {
       //throw error;
     }
   };
+
+  calculateRiceTest = async (
+    step5Data: MarshallData['maximumMixtureDensityData'],
+  ): Promise<any> => {
+    const { gmm } = step5Data;
+    try {
+
+      const response = await Api.post(`${this.info.backend_path}/calculate-step-5-rice-test`, {
+        gmm
+      });
+
+      console.log("🚀 ~ Marshall_SERVICE ~ response:", response)
+
+      const { data, success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+
+      const result = {
+        ...step5Data,
+        ...data,
+      };
+
+      console.log("🚀 ~ Marshall_SERVICE ~ result:", result)
+
+      return result;
+    } catch (error) {
+      //throw error;
+    }
+  };
+
+  calculateGmmData = async (
+    step2Data: MarshallData['materialSelectionData'],
+    step5Data: MarshallData['maximumMixtureDensityData'],
+  ): Promise<any> => {
+    const { gmm, temperatureOfWater } = step5Data;
+    const { aggregates } = step2Data;
+    try {
+
+      const response = await Api.post(`${this.info.backend_path}/calculate-step-5-gmm-data`, {
+        gmm,
+        temperatureOfWaterGmm: temperatureOfWater,
+        aggregates
+      });
+
+      console.log("🚀 ~ Marshall_SERVICE ~ response:", response)
+
+      const { data, success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+
+      const result = {
+        ...step5Data,
+        ...data,
+      };
+
+      console.log("🚀 ~ Marshall_SERVICE ~ result:", result)
+
+      return result;
+    } catch (error) {
+      //throw error;
+    }
+  };
 }
 
 export default Marshall_SERVICE;

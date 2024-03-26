@@ -50,9 +50,6 @@ const Marshall_Step5 = ({
   }, []);
 
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
-  const [GMMModalIsOpen, setGMMModalISOpen] = useState(false);
-
-  const { user } = useAuth();
 
   const list = {
     '15°C - 0.9991': 0.9991,
@@ -184,7 +181,6 @@ const Marshall_Step5 = ({
       renderCell: ({ row }) => {
         const { id } = row;
         const index = gmmRows.findIndex((r) => r.id === id);
-        console.log("🚀 ~ index:", index)
         return (
           <InputEndAdornment
             adornment={''}
@@ -193,10 +189,26 @@ const Marshall_Step5 = ({
             onChange={(e) => {
               if (e.target.value === null) return;
               const newRows = [...gmmRows];
+              console.log("🚀 ~ newRows:", newRows)
               newRows[index].GMM = Number(e.target.value);
-              const prevData = data;
-              const newData = { ...prevData, gmm: newRows }
-              setData({ step: 4, value: newData });
+              let newData;
+              if(id === 1) {
+                newData = { ...data.gmm, lessOne: Number(e.target.value)}
+              }
+              if(id === 2) {
+                newData = { ...data.gmm, lessHalf: Number(e.target.value)}
+              }
+              if(id === 3) {
+                newData = { ...data.gmm, normal: Number(e.target.value)}
+              }
+              if(id === 4) {
+                newData = { ...data.gmm, plusHalf: Number(e.target.value)}
+              }
+              if(id === 5) {
+                newData = { ...data.gmm, plusOne: Number(e.target.value)}
+              }
+              //const newData = { ...data, gmm: newRows };
+              setData({ step: 4, value: { ...data, gmm: newData } });
             }}
           />
         );
@@ -232,6 +244,57 @@ const Marshall_Step5 = ({
     hasNullValue(data.maxSpecificGravity);
   }, [data.maxSpecificGravity]);
 
+  const calculateRiceTest = () => {
+    toast.promise(
+      async () => {
+        try {
+          const riceTest = await marshall.calculateRiceTest(data);
+          console.log("🚀 ~ riceTest:", riceTest)
+          const prevData = data;
+          const newData = {
+            ...prevData,
+            ...riceTest,
+          };
+          setData({ step: 4, value: newData });
+          //setLoading(false);
+        } catch (error) {
+          //setLoading(false);
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      }
+    );
+  }
+
+  const calculateGmmData = () => {
+    toast.promise(
+      async () => {
+        try {
+          const gmm = await marshall.calculateGmmData(materialSelectionData, data);
+          const prevData = data;
+          const newData = {
+            ...prevData,
+            ...gmm,
+          };
+          setData({ step: 4, value: newData });
+          //setLoading(false);
+        } catch (error) {
+          //setLoading(false);
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      }
+    );
+  }
+
   nextDisabled && setNextDisabled(false);
 
   return (
@@ -266,21 +329,27 @@ const Marshall_Step5 = ({
             variant="standard"
             label={'Selecione o fator de correção para a temperatura da água'}
             options={array}
-            callback={() => console.log('clicou')}
+            callback={(selectedValue) => {
+              const prevData = data;
+              const newData = { ...prevData, temperatureOfWater: Number(selectedValue) }
+              setData({ step: 4, value: newData  })
+            }}
             size="medium"
             sx={{ width: '75%', marginX: 'auto' }}
           />
 
           {enableRiceTest && (
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography>Insira o Gmm e/ou calcule pelo Rice Test</Typography>
-              <Button>RiceTest</Button>
+              <Typography sx={{ display: 'flex', justifyContent: 'center' }}>Insira o Gmm e/ou calcule pelo Rice Test</Typography>
+              <Button onClick={calculateRiceTest}>Rice Test</Button>
 
-              <DataGrid columns={gmmColumns} rows={gmmRows} />
+              <DataGrid columns={gmmColumns} rows={gmmRows} hideFooter/>
+
+              <Button onClick={calculateGmmData}>Confirmar</Button>
             </Box>
           )}
 
-          {hasNull && !enableRiceTest && <DataGrid columns={dmtColumns} rows={dmtRows} />}
+          {hasNull && !enableRiceTest && <DataGrid columns={dmtColumns} rows={dmtRows} hideFooter/>}
 
           <ModalBase
             title={'Insira a massa específica real dos materiais abaixo'}
