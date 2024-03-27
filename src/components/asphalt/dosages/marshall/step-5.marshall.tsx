@@ -96,13 +96,16 @@ const Marshall_Step5 = ({
     toast.promise(
       async () => {
         try {
-          const result = await marshall.calculateMaximumMixtureDensityDMT(materialSelectionData, binderTrialData, data);
-          console.log('🚀 ~ result:', result);
+          const dmt = await marshall.calculateMaximumMixtureDensityDMT(materialSelectionData, binderTrialData, data);
+          console.log("🚀 ~ dmt:", dmt)
           const prevData = data;
 
           const newData = {
             ...prevData,
-            ...result,
+            maxSpecificGravity: {
+              result: dmt.maxSpecificGravity,
+              method: dmt.method
+            },
           };
 
           setData({ step: 4, value: newData });
@@ -119,30 +122,31 @@ const Marshall_Step5 = ({
     );
   };
 
+
   const dmtRows = [
     {
       id: 1,
-      DMT: data?.maxSpecificGravity?.lessOne?.toFixed(2),
+      DMT: data?.maxSpecificGravity?.result?.lessOne?.toFixed(2),
       Teor: binderTrialData.percentsOfDosage[2][0],
     },
     {
       id: 2,
-      DMT: data?.maxSpecificGravity?.lessHalf?.toFixed(2),
+      DMT: data?.maxSpecificGravity?.result?.lessHalf?.toFixed(2),
       Teor: binderTrialData.percentsOfDosage[2][1],
     },
     {
       id: 3,
-      DMT: data?.maxSpecificGravity?.normal?.toFixed(2),
+      DMT: data?.maxSpecificGravity?.result?.normal?.toFixed(2),
       Teor: binderTrialData.percentsOfDosage[2][2],
     },
     {
       id: 4,
-      DMT: data?.maxSpecificGravity?.plusHalf?.toFixed(2),
+      DMT: data?.maxSpecificGravity?.result?.plusHalf?.toFixed(2),
       Teor: binderTrialData.percentsOfDosage[2][3],
     },
     {
       id: 5,
-      DMT: data?.maxSpecificGravity?.plusOne?.toFixed(2),
+      DMT: data?.maxSpecificGravity?.result?.plusOne?.toFixed(2),
       Teor: binderTrialData.percentsOfDosage[2][4],
     },
   ];
@@ -317,10 +321,12 @@ const Marshall_Step5 = ({
           const prevData = data;
           const newData = {
             ...prevData,
-            maxSpecificGravity: gmm.maxSpecificGravity,
-            method: gmm.method,
+            maxSpecificGravity: {
+              results: gmm.maxSpecificGravity,
+              method: gmm.method
+            },
           };
-          setData({ step: 4, value: { ...data, maxSpecificGravity: gmm.maxSpecificGravity } });
+          setData({ step: 4, value: newData });
           const prevGmmRows = [...gmmRows];
           const newGmmRows = prevGmmRows.map((item) => {
             if (item.id === 1) {

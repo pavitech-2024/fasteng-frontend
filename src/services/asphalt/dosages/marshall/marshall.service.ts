@@ -65,6 +65,7 @@ class Marshall_SERVICE implements IEssayService {
           await this.submitBinderTrialData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 4:
+          await this.submitMaximumMixtureDensityData(data as MarshallData, this.userId, null, isConsult)
           break;
         case 5:
           break;
@@ -429,20 +430,14 @@ class Marshall_SERVICE implements IEssayService {
 
       const { listOfSpecificGravities, maxSpecificGravity } = data;
 
-      const resultObj = {
+      const result = {
         listOfSpecificGravities,
         maxSpecificGravity,
-      };
-      console.log("🚀 ~ Marshall_SERVICE ~ resultObj:", resultObj)
-
-      const result = {
-        ...step5Data,
-        ...resultObj,
       };
 
       console.log("🚀 ~ Marshall_SERVICE ~ result:", result)
 
-      return result;
+      return data;
     } catch (error) {
       //throw error;
     }
@@ -509,6 +504,50 @@ class Marshall_SERVICE implements IEssayService {
       return result;
     } catch (error) {
       //throw error;
+    }
+  };
+
+  submitMaximumMixtureDensityData = async (
+    data: MarshallData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
+      try {
+        const { dmt, gmm, maxSpecificGravity } = data.maximumMixtureDensityData;
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
+
+        // if (maxSpecificGravity.method === 'DMT') {
+        //   if(dmt.material_1 === null || dmt.material_2 === null) throw t('errors.empty-trial');
+        // }
+        // if (maxSpecificGravity.method === 'GMM') {
+        //   if(dmt.material_1 === null || dmt.material_2 === null) throw t('errors.empty-trial');
+        // } 
+
+        const maximumMixtureDensityData = {
+          maxSpecificGravity,
+          name,
+          isConsult: null,
+        };
+
+        if (isConsult) maximumMixtureDensityData.isConsult = isConsult;
+
+        const response = await Api.post(`${this.info.backend_path}/save-maximum-mixture-density-step/${userData}`, {
+          maximumMixtureDensityData: {
+            maxSpecificGravity,
+            name,
+          },
+        });
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log(error);
+        //throw error;
+      }
     }
   };
 }
