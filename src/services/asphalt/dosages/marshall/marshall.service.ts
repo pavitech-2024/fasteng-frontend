@@ -129,12 +129,9 @@ class Marshall_SERVICE implements IEssayService {
     try {
       const response = await Api.post(`${this.info.backend_path}/get-specific-mass-indexes`, aggregates);
 
-      console.log("🚀 ~ Marshall_SERVICE ~ getIndexesOfMissesSpecificGravity= ~ response:", response)
 
       const { success, error } = response.data;
       const { indexesOfMissesSpecificGravity } = response.data.data;
-      console.log("🚀 ~ Marshall_SERVICE ~ getIndexesOfMissesSpecificGravity= ~ success:", success)
-      console.log("🚀 ~ Marshall_SERVICE ~ getIndexesOfMissesSpecificGravity= ~ indexesOfMissesSpecificGravity:", indexesOfMissesSpecificGravity)
 
       if (success === false) throw error.name; 
 

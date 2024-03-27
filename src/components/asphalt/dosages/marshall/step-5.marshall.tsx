@@ -24,15 +24,15 @@ const Marshall_Step5 = ({
   const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [GMMModalIsOpen, setGMMModalIsOpen] = useState(false);
   const [gmmRows, setGmmRows] = useState([]);
-  console.log('🚀 ~ gmmRows:', gmmRows);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
+  const [methodGmm, setMethodGmm] = useState(false);
+  const [methodDmt, setMethodDmt] = useState(false);
 
   useEffect(() => {
     toast.promise(
       async () => {
         try {
           const indexes = await marshall.getIndexesOfMissesSpecificGravity(materialSelectionData);
-          console.log('🚀 ~ indexes:', indexes);
           const prevData = data;
           const newData = {
             ...prevData,
@@ -91,6 +91,8 @@ const Marshall_Step5 = ({
   const materials = materialSelectionData.aggregates.map((item) => item.name);
 
   const handleSubmitDmt = async () => {
+    setMethodDmt(true);
+    setMethodGmm(false);
     toast.promise(
       async () => {
         try {
@@ -159,7 +161,6 @@ const Marshall_Step5 = ({
   ];
 
   const [hasNull, setHasNull] = useState(true);
-  console.log('🚀 ~ hasNull:', hasNull);
 
   useEffect(() => {
     function hasNullValue(obj) {
@@ -199,84 +200,149 @@ const Marshall_Step5 = ({
     );
   };
 
+  useEffect(() => {
+    console.log('🚀 ~ gmmRows:', gmmRows);
+  }, [gmmRows]);
+
+  const handleGMM = (index, e) => {
+    if (e.target.value === null) return;
+
+    const newState = [...data.gmm];
+    const newValue = Number(e.target.value);
+
+    if (newState[index].value !== null) {
+      // If the input field already has a value, update it
+      newState[index] = { ...newState[index], value: newValue };
+    } else {
+      // If the input field is new, add it to the gmmRows array
+      newState.splice(index, 0, { id: index + 1, insert: true, value: newValue });
+    }
+
+    console.log('🚀 ~ handleGMM ~ newState:', newState);
+
+    // Update gmmRows directly
+    setGmmRows((prevRows) => {
+      const updatedRows = [...prevRows];
+      updatedRows[index] = { ...updatedRows[index], GMM: newValue };
+      return updatedRows;
+    });
+
+    console.log('🚀 ~ handleGMM ~ gmmRows:', gmmRows);
+
+    // Create a new copy of the state object with the updated gmmRows array
+    //setGmmRows([...gmmRows, gmmRows[index].GMM = newValue])
+    setData({ step: 4, value: { ...data, gmm: newState } });
+  };
+
+  useEffect(() => {
+    const newArrayOfObjects = gmmRows.map((item) => ({
+      id: item.id,
+      insert: item.GMM !== null,
+      value: item.GMM
+    }));
+
+    setData({ step: 4, value: {...data, gmm: newArrayOfObjects }})
+  },[gmmRows])
+
   const handleSelectGMM = () => {
     setGMMModalIsOpen(false);
-    setGmmRows([
-      {
-        id: 1,
-        GMM: data?.gmm[0],
-        Teor: binderTrialData.percentsOfDosage[2][0],
-      },
-      {
-        id: 2,
-        GMM: data?.gmm[1],
-        Teor: binderTrialData.percentsOfDosage[2][1],
-      },
-      {
-        id: 3,
-        GMM: data?.gmm[2],
-        Teor: binderTrialData.percentsOfDosage[2][2],
-      },
-      {
-        id: 4,
-        GMM: data?.gmm[3],
-        Teor: binderTrialData.percentsOfDosage[2][3],
-      },
-      {
-        id: 5,
-        GMM: data?.gmm[4],
-        Teor: binderTrialData.percentsOfDosage[2][4],
-      },
-    ]);
-
-    setGmmColumns([
-      {
-        field: 'Teor',
-        headerName: 'Teor',
-        valueFormatter: ({ value }) => `${value}`,
-      },
-      {
-        field: 'GMM',
-        headerName: 'GMM',
-        renderCell: ({ row }) => {
-          const { id } = row;
-          const index = gmmRows.findIndex((r) => r.id === id);
-          return (
-            <InputEndAdornment
-              adornment={''}
-              type="text"
-              value={gmmRows[index]?.GMM?.value}
-              onChange={(e) => {
-                if (e.target.value === null) return;
-              
-                const newRows = [...gmmRows];
-                const index = newRows.findIndex((r) => r.id === id);
-              
-                if (index !== -1) {
-                  newRows[index].GMM = { id: index + 1, insert: true, value: Number(e.target.value) };
-                  setGmmRows(newRows);
-                  setData({ step: 4, value: { ...data, gmm: newRows } });
-                }
-              }}
-            />
-          );
-        },
-      },
-    ]);
+    setMethodGmm(true);
+    setMethodDmt(false);
   };
+
+  useEffect(() => {
+    if (methodGmm) {
+      setGmmRows([
+        {
+          id: 1,
+          GMM: data?.gmm[0].value,
+          Teor: binderTrialData.percentsOfDosage[2][0],
+        },
+        {
+          id: 2,
+          GMM: data?.gmm[1].value,
+          Teor: binderTrialData.percentsOfDosage[2][1],
+        },
+        {
+          id: 3,
+          GMM: data?.gmm[2].value,
+          Teor: binderTrialData.percentsOfDosage[2][2],
+        },
+        {
+          id: 4,
+          GMM: data?.gmm[3].value,
+          Teor: binderTrialData.percentsOfDosage[2][3],
+        },
+        {
+          id: 5,
+          GMM: data?.gmm[4].value,
+          Teor: binderTrialData.percentsOfDosage[2][4],
+        },
+      ]);
+
+      setGmmColumns([
+        {
+          field: 'Teor',
+          headerName: 'Teor',
+          valueFormatter: ({ value }) => `${value}`,
+        },
+        {
+          field: 'GMM',
+          headerName: 'GMM',
+          renderCell: ({ row }) => {
+            const { id } = row;
+            const index = data?.gmm?.findIndex((r) => r.id === id);
+            return (
+              <InputEndAdornment
+                adornment={''}
+                type="text"
+                value={gmmRows[index]?.GMM}
+                onChange={(e) => {
+                  handleGMM(index, e);
+                }}
+              />
+            );
+          },
+        },
+      ]);
+    }
+  }, [methodGmm]);
 
   const calculateGmmData = () => {
     toast.promise(
       async () => {
         try {
           const gmm = await marshall.calculateGmmData(materialSelectionData, data);
+          console.log('🚀 ~ gmm:', gmm);
           const prevData = data;
           const newData = {
             ...prevData,
-            ...gmm,
+            maxSpecificGravity: gmm.maxSpecificGravity,
+            method: gmm.method,
           };
-          setData({ step: 4, value: newData });
-          //setLoading(false);
+          setData({ step: 4, value: { ...data, maxSpecificGravity: gmm.maxSpecificGravity } });
+          const prevGmmRows = [...gmmRows];
+          const newGmmRows = prevGmmRows.map((item) => {
+            if (item.id === 1) {
+              item.GMM = gmm.maxSpecificGravity.lessOne;
+            }
+            if (item.id === 2) {
+              item.GMM = gmm.maxSpecificGravity.lessHalf;
+            }
+            if (item.id === 3) {
+              item.GMM = gmm.maxSpecificGravity.normal;
+            }
+            if (item.id === 4) {
+              item.GMM = gmm.maxSpecificGravity.plusHalf;
+            }
+            if (item.id === 5) {
+              item.GMM = gmm.maxSpecificGravity.plusOne;
+            }
+            return item;
+          });
+          console.log('🚀 ~ newGmmRows ~ newGmmRows:', newGmmRows);
+
+          setGmmRows(newGmmRows);
         } catch (error) {
           //setLoading(false);
           throw error;
@@ -305,7 +371,7 @@ const Marshall_Step5 = ({
           }}
         >
           <DropDown
-            key={'dropdown'}
+            key={'density'}
             variant="standard"
             label={'Selecione o método de cálculo da densidade da mistura'}
             options={calcMethodOptions}
@@ -321,7 +387,7 @@ const Marshall_Step5 = ({
             sx={{ width: '75%', marginX: 'auto' }}
           />
           <DropDown
-            key={'dropdown'}
+            key={'water'}
             variant="standard"
             label={'Selecione o fator de correção para a temperatura da água'}
             options={array}
@@ -334,7 +400,7 @@ const Marshall_Step5 = ({
             sx={{ width: '75%', marginX: 'auto' }}
           />
 
-          {enableRiceTest && (
+          {methodGmm && (
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography sx={{ display: 'flex', justifyContent: 'center' }}>
                 Insira o Gmm e/ou calcule pelo Rice Test
@@ -347,7 +413,7 @@ const Marshall_Step5 = ({
             </Box>
           )}
 
-          {hasNull && !enableRiceTest && <DataGrid columns={dmtColumns} rows={dmtRows} hideFooter />}
+          {methodDmt && <DataGrid columns={dmtColumns} rows={dmtRows} hideFooter />}
 
           <ModalBase
             title={'Insira a massa específica real dos materiais abaixo'}

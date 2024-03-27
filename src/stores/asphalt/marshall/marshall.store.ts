@@ -169,28 +169,28 @@ const initialState = {
     gmm: [
       {
         id: 1,
-        insert: null,
-        value: null,
+        insert: true,
+        value: 5,
       },
       {
         id: 2,
-        insert: null,
-        value: null,
+        insert: true,
+        value: 5,
       },
       {
         id: 3,
-        insert: null,
-        value: null,
+        insert: true,
+        value: 5,
       },
       {
         id: 4,
-        insert: null,
-        value: null,
+        insert: true,
+        value: 5,
       },
       {
         id: 5,
-        insert: null,
-        value: null,
+        insert: true,
+        value: 5,
       }
     ],
     missingSpecificMass: {
