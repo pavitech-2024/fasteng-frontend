@@ -98,12 +98,71 @@ interface MarshallMaximumMixtureDensityData {
   }[]
 }
 
+interface VolumetricParametersData {
+  lessOne: {
+    id: number,
+    diammeter: number,
+    height: number,
+    dryMass: number,
+    submergedMass: number,
+    drySurfaceSaturatedMass: number,
+    stability: number,
+    fluency: number,
+    diametricalCompressionStrength: number
+  }[],
+  lessHalf: {
+    id: number,
+    diammeter: number,
+    height: number,
+    dryMass: number,
+    submergedMass: number,
+    drySurfaceSaturatedMass: number,
+    stability: number,
+    fluency: number,
+    diametricalCompressionStrength: number
+  }[],
+  normal: {
+    id: number,
+    diammeter: number,
+    height: number,
+    dryMass: number,
+    submergedMass: number,
+    drySurfaceSaturatedMass: number,
+    stability: number,
+    fluency: number,
+    diametricalCompressionStrength: number
+  }[],
+  plusHalf: {
+    id: number,
+    diammeter: number,
+    height: number,
+    dryMass: number,
+    submergedMass: number,
+    drySurfaceSaturatedMass: number,
+    stability: number,
+    fluency: number,
+    diametricalCompressionStrength: number
+  }[],
+  plusOne: {
+    id: number,
+    diammeter: number,
+    height: number,
+    dryMass: number,
+    submergedMass: number,
+    drySurfaceSaturatedMass: number,
+    stability: number,
+    fluency: number,
+    diametricalCompressionStrength: number
+  }[],
+}
+
 export type MarshallData = {
   generalData: MarhsallGeneralData;
   materialSelectionData: MarshallMaterialSelectionData;
   granulometryCompositionData: MarshallGranulometryCompositionData;
   binderTrialData: MarshallBinderTrialData;
   maximumMixtureDensityData: MarshallMaximumMixtureDensityData;
+  volumetricParametersData: VolumetricParametersData
   createdAt: Date;
   updatedAt: Date;
 };
@@ -121,6 +180,7 @@ const stepVariant = {
   2: 'granulometryCompositionData',
   3: 'binderTrialData',
   4: 'maximumMixtureDensityData',
+  5: 'volumetricParametersData'
 };
 
 const initialState = {
@@ -224,6 +284,63 @@ const initialState = {
       massOfContainerWaterSample: null,
       massOfContainerWater: null,
     }]
+  },
+  volumetricParametersData: {
+    lessOne: [{
+      id: 0,
+      diammeter: null,
+      height: null,
+      dryMass: null,
+      submergedMass: null,
+      drySurfaceSaturatedMass: null,
+      stability: null,
+      fluency: null,
+      diametricalCompressionStrength: null
+    }],
+    lessHalf: [{
+      id: 0,
+      diammeter: null,
+      height: null,
+      dryMass: null,
+      submergedMass: null,
+      drySurfaceSaturatedMass: null,
+      stability: null,
+      fluency: null,
+      diametricalCompressionStrength: null
+    }],
+    normal: [{
+      id: 0,
+      diammeter: null,
+      height: null,
+      dryMass: null,
+      submergedMass: null,
+      drySurfaceSaturatedMass: null,
+      stability: null,
+      fluency: null,
+      diametricalCompressionStrength: null
+    }],
+    plusHalf: [{
+      id: 0,
+      diammeter: null,
+      height: null,
+      dryMass: null,
+      submergedMass: null,
+      drySurfaceSaturatedMass: null,
+      stability: null,
+      fluency: null,
+      diametricalCompressionStrength: null
+    }],
+    plusOne: [{
+      id: 0,
+      diammeter: null,
+      height: null,
+      dryMass: null,
+      submergedMass: null,
+      drySurfaceSaturatedMass: null,
+      stability: null,
+      fluency: null,
+      diametricalCompressionStrength: null
+    }],
   },
   createdAt: null,
   updatedAt: null,

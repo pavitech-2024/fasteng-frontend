@@ -1,17 +1,14 @@
-import Api from '@/api';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
-import useAuth from '@/contexts/auth';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
-import { Label } from '@mui/icons-material';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 export type RiceTestRows = {
@@ -163,7 +160,6 @@ const Marshall_Step5 = ({
       async () => {
         try {
           const dmt = await marshall.calculateMaximumMixtureDensityDMT(materialSelectionData, binderTrialData, data);
-          console.log('🚀 ~ dmt:', dmt);
           const prevData = data;
 
           const newData = {
@@ -202,16 +198,12 @@ const Marshall_Step5 = ({
       newState.splice(index, 0, { id: index + 1, insert: true, value: newValue });
     }
 
-    console.log('🚀 ~ handleGmmOnChange ~ newState:', newState);
-
     // Update gmmRows directly
     setGmmRows((prevRows) => {
       const updatedRows = [...prevRows];
       updatedRows[index] = { ...updatedRows[index], GMM: newValue };
       return updatedRows;
     });
-
-    console.log('🚀 ~ handleGmmOnChange ~ gmmRows:', gmmRows);
 
     // Create a new copy of the state object with the updated gmmRows waterTemperatureList
     setData({ step: 4, value: { ...data, gmm: newState } });
@@ -226,7 +218,7 @@ const Marshall_Step5 = ({
 
   // Creates the gmm method rows and columns
   useEffect(() => {
-    if (methodGmm) {
+    if (methodGmm && data?.riceTest.length <= 1) {
       setGmmRows([
         {
           id: 1,
@@ -255,31 +247,55 @@ const Marshall_Step5 = ({
         },
       ]);
 
-      setGmmColumns([
-        {
-          field: 'Teor',
-          headerName: 'Teor',
-          valueFormatter: ({ value }) => `${value}`,
-        },
-        {
-          field: 'GMM',
-          headerName: 'GMM',
-          renderCell: ({ row }) => {
-            const { id } = row;
-            const index = data?.gmm?.findIndex((r) => r.id === id);
-            return (
-              <InputEndAdornment
-                adornment={''}
-                type="text"
-                value={gmmRows[index]?.GMM}
-                onChange={(e) => {
-                  handleGmmOnChange(index, e);
-                }}
-              />
-            );
+      if (data?.riceTest?.length <= 1) {
+        setGmmColumns([
+          {
+            field: 'Teor',
+            headerName: 'Teor',
+            valueFormatter: ({ value }) => `${value}`,
           },
-        },
-      ]);
+          {
+            field: 'GMM',
+            headerName: 'GMM',
+            renderCell: ({ row }) => {
+              const { id } = row;
+              const index = data?.gmm?.findIndex((r) => r.id === id);
+              return (
+                <InputEndAdornment
+                  adornment={''}
+                  type="text"
+                  value={gmmRows[index]?.GMM}
+                  onChange={(e) => {
+                    handleGmmOnChange(index, e);
+                  }}
+                />
+              );
+            },
+          },
+        ]);
+      } else {
+
+        const formattedGmm2 = Object.values(data?.maxSpecificGravity).map((item, idx) => {
+          return {
+            id: idx +1,
+            Teor: binderTrialData.percentsOfDosage[2][idx],
+            GMM: gmmRows[idx]?.GMM
+          }
+        })
+        setGmmColumns([
+          {
+            field: 'Teor',
+            headerName: 'Teor',
+            valueFormatter: ({ value }) => `${value}`,
+          },
+          {
+            field: 'GMM',
+            headerName: "GMM",
+            valueFormatter: ({ value }) => `${value}`
+          }
+        ])
+      }
+
     }
   }, [methodGmm]);
 
@@ -299,7 +315,6 @@ const Marshall_Step5 = ({
       async () => {
         try {
           const gmm = await marshall.calculateGmmData(materialSelectionData, data);
-          console.log('🚀 ~ gmm:', gmm);
           const prevData = data;
           const newData = {
             ...prevData,
@@ -328,7 +343,6 @@ const Marshall_Step5 = ({
             }
             return item;
           });
-          console.log('🚀 ~ newGmmRows ~ newGmmRows:', newGmmRows);
 
           setGmmRows(newGmmRows);
         } catch (error) {
@@ -350,15 +364,13 @@ const Marshall_Step5 = ({
     const newState = [...data.riceTest];
     const newValue = Number(e.target.value);
 
-    if (newState[index][prop] !== null) {
+    if (newState[index]?.[prop] !== null) {
       // If the input field already has a value, update it
       newState[index] = { ...newState[index], [prop]: newValue };
     } else {
       // If the input field is new, add it to the gmmRows waterTemperatureList
       newState.splice(index, 0, { ...newState[index], id: index + 1, [prop]: newValue });
     }
-
-    console.log("🚀 ~ handleRiceTestOnChange ~ newState:", newState)
 
     // Update gmmRows directly
     setRiceTestTableRows((prevRows) => {
@@ -374,32 +386,46 @@ const Marshall_Step5 = ({
   }
 
   const calculateRiceTest = () => {
-    setRiceTestModalIsOpen(true);
 
-    // toast.promise(
-    //   async () => {
-    //     try {
-    //       const riceTest = await marshall.calculateRiceTest(data);
-    //       console.log('🚀 ~ riceTest:', riceTest);
-    //       const prevData = data;
-    //       const newData = {
-    //         ...prevData,
-    //         ...riceTest,
-    //       };
-    //       setData({ step: 4, value: newData });
-    //       //setLoading(false);
-    //     } catch (error) {
-    //       //setLoading(false);
-    //       throw error;
-    //     }
-    //   },
-    //   {
-    //     pending: t('loading.materials.pending'),
-    //     success: t('loading.materials.success'),
-    //     error: t('loading.materials.error'),
-    //   }
-    // );
+    toast.promise(
+      async () => {
+        try {
+          const riceTest = await marshall.calculateRiceTest(data);
+          const prevData = data;
+          const newData = {
+            ...prevData,
+            ...riceTest,
+          };
+
+          setRiceTestModalIsOpen(false);
+
+          const formattedGmm = riceTest?.maxSpecificGravity.map((item) => {
+            return {
+              id: item.id,
+              Teor: item.Teor,
+              GMM: item.GMM
+            }
+          });
+
+          setGmmRows(formattedGmm)
+          setData({ step: 4, value: newData });
+          //setLoading(false);
+        } catch (error) {
+          //setLoading(false);
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      }
+    );
   };
+
+  useEffect(() => {
+    console.log("🚀 ~ gmmRows:", gmmRows)
+  },[gmmRows])
 
   useEffect(() => {
     if (riceTestModalIsOpen) {
@@ -560,7 +586,7 @@ const Marshall_Step5 = ({
               <Typography sx={{ display: 'flex', justifyContent: 'center' }}>
                 Insira o Gmm e/ou calcule pelo Rice Test
               </Typography>
-              <Button onClick={calculateRiceTest}>Rice Test</Button>
+              <Button onClick={() => setRiceTestModalIsOpen(true)}>Rice Test</Button>
 
               <DataGrid columns={gmmColumns} rows={gmmRows} hideFooter />
 
@@ -670,7 +696,6 @@ const Marshall_Step5 = ({
             size={'large'}
             onSubmit={() => {
               calculateRiceTest();
-              setRiceTestModalIsOpen(false);
             }}
           />
         </Box>

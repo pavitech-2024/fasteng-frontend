@@ -446,11 +446,12 @@ class Marshall_SERVICE implements IEssayService {
   calculateRiceTest = async (
     step5Data: MarshallData['maximumMixtureDensityData'],
   ): Promise<any> => {
-    const { gmm } = step5Data;
+    const { riceTest, temperatureOfWater } = step5Data;
     try {
 
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-rice-test`, {
-        gmm
+        riceTest,
+        temperatureOfWater
       });
 
       console.log("🚀 ~ Marshall_SERVICE ~ response:", response)
@@ -515,16 +516,9 @@ class Marshall_SERVICE implements IEssayService {
   ): Promise<void> => {
     if (!isConsult) {
       try {
-        const { dmt, gmm, maxSpecificGravity } = data.maximumMixtureDensityData;
+        const { maxSpecificGravity } = data.maximumMixtureDensityData;
         const { name } = data.generalData;
         const userData = userId ? userId : user;
-
-        // if (maxSpecificGravity.method === 'DMT') {
-        //   if(dmt.material_1 === null || dmt.material_2 === null) throw t('errors.empty-trial');
-        // }
-        // if (maxSpecificGravity.method === 'GMM') {
-        //   if(dmt.material_1 === null || dmt.material_2 === null) throw t('errors.empty-trial');
-        // } 
 
         const maximumMixtureDensityData = {
           maxSpecificGravity,
