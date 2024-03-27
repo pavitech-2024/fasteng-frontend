@@ -90,6 +90,12 @@ interface MarshallMaximumMixtureDensityData {
     },
     method: string
   };
+  riceTest: {
+    id: number,
+    massOfDrySample: number,
+    massOfContainerWaterSample: number,
+    massOfContainerWater: number,
+  }[]
 }
 
 export type MarshallData = {
@@ -211,7 +217,13 @@ const initialState = {
         plusOne: null,
       },
       method: null
-    }
+    },
+    riceTest: [{
+      id: null,
+      massOfDrySample: null,
+      massOfContainerWaterSample: null,
+      massOfContainerWater: null,
+    }]
   },
   createdAt: null,
   updatedAt: null,

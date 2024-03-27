@@ -14,6 +14,14 @@ import { t } from 'i18next';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+export type RiceTestRows = {
+  id: number,
+  Teor?: number,
+  massOfDrySample: number,
+  massOfContainerWaterSample: number,
+  massOfContainerWater: number,
+}
+
 const Marshall_Step5 = ({
   nextDisabled,
   setNextDisabled,
@@ -27,7 +35,14 @@ const Marshall_Step5 = ({
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [methodGmm, setMethodGmm] = useState(false);
   const [methodDmt, setMethodDmt] = useState(false);
+  const [riceTestTableRows, setRiceTestTableRows] = useState<RiceTestRows[]>([]);
+  const [riceTestTableColumns, setRiceTestTableColumns] = useState<GridColDef[]>([]);
+  const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
+  const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
+  const materials = materialSelectionData.aggregates.map((item) => item.name);
+  const [hasNull, setHasNull] = useState(true);
 
+  // Activated on page render to get the indexes of each material;
   useEffect(() => {
     toast.promise(
       async () => {
@@ -53,8 +68,7 @@ const Marshall_Step5 = ({
     );
   }, []);
 
-  const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
-
+  //Water temperature list;
   const list = {
     '15°C - 0.9991': 0.9991,
     '16°C - 0.9989': 0.9989,
@@ -74,54 +88,32 @@ const Marshall_Step5 = ({
     '30°C - 0.9956': 0.9956,
   };
 
-  const array = [];
+  const waterTemperatureList = [];
 
-  const teste = Object.keys(list).forEach((key) => {
-    array.push({
+  const formatedWaterTempList = Object.keys(list).forEach((key) => {
+    waterTemperatureList.push({
       label: key,
       value: list[key],
     });
   });
 
+  // Method option dropdown;
   const calcMethodOptions: DropDownOption[] = [
     { label: 'DMT - Densidade máxima teórica', value: 'DMT - Densidade máxima teórica' },
     { label: 'GMM - Densidade máxima medida', value: 'GMM - Densidade máxima medida' },
   ];
 
-  const materials = materialSelectionData.aggregates.map((item) => item.name);
-
-  const handleSubmitDmt = async () => {
-    setMethodDmt(true);
-    setMethodGmm(false);
-    toast.promise(
-      async () => {
-        try {
-          const dmt = await marshall.calculateMaximumMixtureDensityDMT(materialSelectionData, binderTrialData, data);
-          console.log("🚀 ~ dmt:", dmt)
-          const prevData = data;
-
-          const newData = {
-            ...prevData,
-            maxSpecificGravity: {
-              result: dmt.maxSpecificGravity,
-              method: dmt.method
-            },
-          };
-
-          setData({ step: 4, value: newData });
-          setDMTModalISOpen(false);
-        } catch (error) {
-          throw error;
+  useEffect(() => {
+    function hasNullValue(obj) {
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key) && obj[key] === null) {
+          setHasNull(false);
         }
-      },
-      {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
       }
-    );
-  };
-
+      setHasNull(true);
+    }
+    hasNullValue(data.maxSpecificGravity);
+  }, [data.maxSpecificGravity]);
 
   const dmtRows = [
     {
@@ -164,35 +156,27 @@ const Marshall_Step5 = ({
     },
   ];
 
-  const [hasNull, setHasNull] = useState(true);
-
-  useEffect(() => {
-    function hasNullValue(obj) {
-      for (let key in obj) {
-        if (obj.hasOwnProperty(key) && obj[key] === null) {
-          setHasNull(false);
-        }
-      }
-      setHasNull(true);
-    }
-    hasNullValue(data.maxSpecificGravity);
-  }, [data.maxSpecificGravity]);
-
-  const calculateRiceTest = () => {
+  const handleSubmitDmt = async () => {
+    setMethodDmt(true);
+    setMethodGmm(false);
     toast.promise(
       async () => {
         try {
-          const riceTest = await marshall.calculateRiceTest(data);
-          console.log('🚀 ~ riceTest:', riceTest);
+          const dmt = await marshall.calculateMaximumMixtureDensityDMT(materialSelectionData, binderTrialData, data);
+          console.log('🚀 ~ dmt:', dmt);
           const prevData = data;
+
           const newData = {
             ...prevData,
-            ...riceTest,
+            maxSpecificGravity: {
+              result: dmt.maxSpecificGravity,
+              method: dmt.method,
+            },
           };
+
           setData({ step: 4, value: newData });
-          //setLoading(false);
+          setDMTModalISOpen(false);
         } catch (error) {
-          //setLoading(false);
           throw error;
         }
       },
@@ -204,11 +188,7 @@ const Marshall_Step5 = ({
     );
   };
 
-  useEffect(() => {
-    console.log('🚀 ~ gmmRows:', gmmRows);
-  }, [gmmRows]);
-
-  const handleGMM = (index, e) => {
+  const handleGmmOnChange = (index, e) => {
     if (e.target.value === null) return;
 
     const newState = [...data.gmm];
@@ -218,11 +198,11 @@ const Marshall_Step5 = ({
       // If the input field already has a value, update it
       newState[index] = { ...newState[index], value: newValue };
     } else {
-      // If the input field is new, add it to the gmmRows array
+      // If the input field is new, add it to the gmmRows waterTemperatureList
       newState.splice(index, 0, { id: index + 1, insert: true, value: newValue });
     }
 
-    console.log('🚀 ~ handleGMM ~ newState:', newState);
+    console.log('🚀 ~ handleGmmOnChange ~ newState:', newState);
 
     // Update gmmRows directly
     setGmmRows((prevRows) => {
@@ -231,29 +211,20 @@ const Marshall_Step5 = ({
       return updatedRows;
     });
 
-    console.log('🚀 ~ handleGMM ~ gmmRows:', gmmRows);
+    console.log('🚀 ~ handleGmmOnChange ~ gmmRows:', gmmRows);
 
-    // Create a new copy of the state object with the updated gmmRows array
-    //setGmmRows([...gmmRows, gmmRows[index].GMM = newValue])
+    // Create a new copy of the state object with the updated gmmRows waterTemperatureList
     setData({ step: 4, value: { ...data, gmm: newState } });
   };
 
-  useEffect(() => {
-    const newArrayOfObjects = gmmRows.map((item) => ({
-      id: item.id,
-      insert: item.GMM !== null,
-      value: item.GMM
-    }));
-
-    setData({ step: 4, value: {...data, gmm: newArrayOfObjects }})
-  },[gmmRows])
-
+  //Activated when gmm method is selected
   const handleSelectGMM = () => {
     setGMMModalIsOpen(false);
     setMethodGmm(true);
     setMethodDmt(false);
   };
 
+  // Creates the gmm method rows and columns
   useEffect(() => {
     if (methodGmm) {
       setGmmRows([
@@ -302,7 +273,7 @@ const Marshall_Step5 = ({
                 type="text"
                 value={gmmRows[index]?.GMM}
                 onChange={(e) => {
-                  handleGMM(index, e);
+                  handleGmmOnChange(index, e);
                 }}
               />
             );
@@ -311,6 +282,17 @@ const Marshall_Step5 = ({
       ]);
     }
   }, [methodGmm]);
+
+  // Format the gmmRows for the store data structure
+  useEffect(() => {
+    const newArrayOfObjects = gmmRows.map((item) => ({
+      id: item.id,
+      insert: item.GMM !== null,
+      value: item.GMM,
+    }));
+
+    setData({ step: 4, value: { ...data, gmm: newArrayOfObjects } });
+  }, [gmmRows]);
 
   const calculateGmmData = () => {
     toast.promise(
@@ -323,7 +305,7 @@ const Marshall_Step5 = ({
             ...prevData,
             maxSpecificGravity: {
               results: gmm.maxSpecificGravity,
-              method: gmm.method
+              method: gmm.method,
             },
           };
           setData({ step: 4, value: newData });
@@ -362,6 +344,173 @@ const Marshall_Step5 = ({
     );
   };
 
+  const handleRiceTestOnChange = (index: number, e: any, prop: string) => {
+    if (e.target.value === null) return;
+
+    const newState = [...data.riceTest];
+    const newValue = Number(e.target.value);
+
+    if (newState[index][prop] !== null) {
+      // If the input field already has a value, update it
+      newState[index] = { ...newState[index], [prop]: newValue };
+    } else {
+      // If the input field is new, add it to the gmmRows waterTemperatureList
+      newState.splice(index, 0, { ...newState[index], id: index + 1, [prop]: newValue });
+    }
+
+    console.log("🚀 ~ handleRiceTestOnChange ~ newState:", newState)
+
+    // Update gmmRows directly
+    setRiceTestTableRows((prevRows) => {
+      const updatedRows = [...prevRows];
+      updatedRows[index] = { ...updatedRows[index], [prop]: newValue };
+      return updatedRows;
+    });
+
+    console.log("riceTestRows", data?.riceTest);
+
+    // // Create a new copy of the state object with the updated gmmRows waterTemperatureList
+    setData({ step: 4, value: { ...data, riceTest: newState } });
+  }
+
+  const calculateRiceTest = () => {
+    setRiceTestModalIsOpen(true);
+
+    // toast.promise(
+    //   async () => {
+    //     try {
+    //       const riceTest = await marshall.calculateRiceTest(data);
+    //       console.log('🚀 ~ riceTest:', riceTest);
+    //       const prevData = data;
+    //       const newData = {
+    //         ...prevData,
+    //         ...riceTest,
+    //       };
+    //       setData({ step: 4, value: newData });
+    //       //setLoading(false);
+    //     } catch (error) {
+    //       //setLoading(false);
+    //       throw error;
+    //     }
+    //   },
+    //   {
+    //     pending: t('loading.materials.pending'),
+    //     success: t('loading.materials.success'),
+    //     error: t('loading.materials.error'),
+    //   }
+    // );
+  };
+
+  useEffect(() => {
+    if (riceTestModalIsOpen) {
+      setRiceTestTableRows([
+        {
+          id: 1,
+          Teor: binderTrialData.percentsOfDosage[2][0],
+          massOfDrySample: data?.riceTest[0]?.massOfDrySample ?? null,
+          massOfContainerWaterSample: data?.riceTest[0]?.massOfContainerWaterSample ?? null,
+          massOfContainerWater: data?.riceTest[0]?.massOfContainerWater ?? null
+        },
+        {
+          id: 2,
+          Teor: binderTrialData.percentsOfDosage[2][1],
+          massOfDrySample: data?.riceTest[1]?.massOfDrySample ?? null,
+          massOfContainerWaterSample: data?.riceTest[1]?.massOfContainerWaterSample ?? null,
+          massOfContainerWater: data?.riceTest[1]?.massOfContainerWater ?? null
+        },
+        {
+          id: 3,
+          Teor: binderTrialData.percentsOfDosage[2][2],
+          massOfDrySample: data?.riceTest[2]?.massOfDrySample ?? null,
+          massOfContainerWaterSample: data?.riceTest[2]?.massOfContainerWaterSample ?? null,
+          massOfContainerWater: data?.riceTest[2]?.massOfContainerWater ?? null
+        },
+        {
+          id: 4,
+          Teor: binderTrialData.percentsOfDosage[2][3],
+          massOfDrySample: data?.riceTest[3]?.massOfDrySample ?? null,
+          massOfContainerWaterSample: data?.riceTest[3]?.massOfContainerWaterSample ?? null,
+          massOfContainerWater: data?.riceTest[3]?.massOfContainerWater ?? null
+        },
+        {
+          id: 5,
+          Teor: binderTrialData.percentsOfDosage[2][4],
+          massOfDrySample: data?.riceTest[4]?.massOfDrySample ?? null,
+          massOfContainerWaterSample: data?.riceTest[4]?.massOfContainerWaterSample ?? null,
+          massOfContainerWater: data?.riceTest[4]?.massOfContainerWater ?? null
+        },
+      ]);
+
+      setRiceTestTableColumns([
+        {
+          field: 'Teor',
+          headerName: 'Teor',
+          valueFormatter: ({ value }) => `${value}`,
+        },
+        {
+          field: 'massOfDrySample',
+          headerName: 'Massa da amostra seca em ar (g)',
+          renderCell: ({ row }) => {
+            const { id } = row;
+            const index = data?.riceTest?.findIndex((r) => r.id === id)
+            return (
+              <InputEndAdornment
+                adornment={'g'}
+                type="text"
+                value={riceTestTableRows[index]?.massOfDrySample}
+                onChange={(e) => {
+                  handleRiceTestOnChange(index, e, 'massOfDrySample');
+                }}
+              />
+            );
+          },
+        },
+        {
+          field: 'massOfContainerWaterSample',
+          headerName: 'Massa do recipiente + amostra + água (g)',
+          renderCell: ({ row }) => {
+            const { id } = row;
+            const index = data?.riceTest?.findIndex((r) => r.id === id)
+            return (
+              <InputEndAdornment
+                adornment={'g'}
+                type="text"
+                value={riceTestTableRows[index]?.massOfContainerWaterSample}
+                onChange={(e) => {
+                  handleRiceTestOnChange(index, e, 'massOfContainerWaterSample');
+                }}
+              />
+            );
+          },
+        },
+        {
+          field: 'massOfContainerWater',
+          headerName: 'Massa do recipiente + água (g)',
+          renderCell: ({ row }) => {
+            const { id } = row;
+            const index = data?.riceTest?.findIndex((r) => r.id === id)
+            return (
+              <InputEndAdornment
+                adornment={'g'}
+                type="text"
+                value={riceTestTableRows[index]?.massOfContainerWater}
+                onChange={(e) => {
+                  handleRiceTestOnChange(index, e, 'massOfContainerWater');
+                }}
+              />
+            );
+          },
+        },
+      ]);
+    }
+  }, [riceTestModalIsOpen]);
+
+  useEffect(() => {
+    if (riceTestTableRows.length > 1) {
+      setData({ step: 4, value: {...data, riceTest: riceTestTableRows} })
+    }
+  }, [riceTestTableRows])
+
   nextDisabled && setNextDisabled(false);
 
   return (
@@ -396,7 +545,7 @@ const Marshall_Step5 = ({
             key={'water'}
             variant="standard"
             label={'Selecione o fator de correção para a temperatura da água'}
-            options={array}
+            options={waterTemperatureList}
             callback={(selectedValue) => {
               const prevData = data;
               const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
@@ -491,6 +640,38 @@ const Marshall_Step5 = ({
             open={GMMModalIsOpen}
             size={'large'}
             onSubmit={() => handleSelectGMM()}
+          />
+
+          <ModalBase
+            title={'Dados do Rice Test'}
+            children={
+              <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
+                <DataGrid columns={riceTestTableColumns} rows={riceTestTableRows} hideFooter />
+
+                <DropDown
+                  key={'water'}
+                  variant="standard"
+                  label={'Selecione o fator de correção para a temperatura da água'}
+                  options={waterTemperatureList}
+                  callback={(selectedValue) => {
+                    const prevData = data;
+                    const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
+                    setData({ step: 4, value: newData });
+                  }}
+                  size="medium"
+                  sx={{ width: '75%', marginX: 'auto' }}
+                />
+              </Box>
+            }
+            leftButtonTitle={'cancelar'}
+            rightButtonTitle={'confirmar'}
+            onCancel={() => setRiceTestModalIsOpen(false)}
+            open={riceTestModalIsOpen}
+            size={'large'}
+            onSubmit={() => {
+              calculateRiceTest();
+              setRiceTestModalIsOpen(false);
+            }}
           />
         </Box>
       )}
