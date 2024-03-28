@@ -154,6 +154,11 @@ interface VolumetricParametersData {
     fluency: number,
     diametricalCompressionStrength: number
   }[],
+  volumetricParameters: {
+    pointsOfCurveDosageRBV: any[],
+    pointsOfCurveDosageVv: any[],
+    volumetricParameters: any[]
+  }
 }
 
 export type MarshallData = {
@@ -341,6 +346,11 @@ const initialState = {
       fluency: null,
       diametricalCompressionStrength: null
     }],
+    volumetricParameters: {
+      pointsOfCurveDosageRBV: [],
+      pointsOfCurveDosageVv: [],
+      volumetricParameters: []
+    }
   },
   createdAt: null,
   updatedAt: null,

@@ -17,7 +17,13 @@ const Marshall_Step6 = ({
   marshall,
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { materialSelectionData, volumetricParametersData: data, binderTrialData, setData } = useMarshallStore();
+  const { 
+    materialSelectionData, 
+    volumetricParametersData: data, 
+    binderTrialData, 
+    maximumMixtureDensityData,
+    setData 
+  } = useMarshallStore();
 
   const { user } = useAuth();
 
@@ -36,8 +42,6 @@ const Marshall_Step6 = ({
     plusHalf: true,
     plusOne: true,
   });
-
-
 
   const generateColumns = (tenor: string): GridColDef[] => [
     {
@@ -356,7 +360,7 @@ const Marshall_Step6 = ({
     toast.promise(
       async () => {
         try {
-          const volumetricParams = await marshall.setVolumetricParametersData(data);
+          const volumetricParams = await marshall.setVolumetricParametersData(data, binderTrialData, maximumMixtureDensityData);
           const prevData = data;
           const newData = {
             ...prevData,
@@ -364,7 +368,7 @@ const Marshall_Step6 = ({
           };
           console.log("🚀 ~ newData:", newData)
 
-          //setData({ step: 5, value: newData });
+          setData({ step: 5, value: newData });
           //setLoading(false);
         } catch (error) {
           //setLoading(false);

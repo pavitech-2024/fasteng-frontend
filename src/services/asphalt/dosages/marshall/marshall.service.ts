@@ -68,7 +68,12 @@ class Marshall_SERVICE implements IEssayService {
           await this.submitMaximumMixtureDensityData(data as MarshallData, this.userId, null, isConsult)
           break;
         case 5:
-          this.setVolumetricParametersData(data as MarshallData['volumetricParametersData'], this.userId, null, isConsult)
+          await this.setVolumetricParametersData(
+            data as MarshallData['volumetricParametersData'], 
+            data as MarshallData['binderTrialData'], 
+            data as MarshallData['maximumMixtureDensityData'],
+            isConsult)
+          await this.submitVolumetricParametersData(data as MarshallData, this.userId, null, isConsult)
           break;
         case 6:
           break;
@@ -517,7 +522,7 @@ class Marshall_SERVICE implements IEssayService {
   ): Promise<void> => {
     if (!isConsult) {
       try {
-        const { maxSpecificGravity } = data.maximumMixtureDensityData;
+        const { maxSpecificGravity, temperatureOfWater } = data.maximumMixtureDensityData;
         const { name } = data.generalData;
         const userData = userId ? userId : user;
 
@@ -532,6 +537,7 @@ class Marshall_SERVICE implements IEssayService {
         const response = await Api.post(`${this.info.backend_path}/save-maximum-mixture-density-step/${userData}`, {
           maximumMixtureDensityData: {
             maxSpecificGravity,
+            temperatureOfWater,
             name,
           },
         });
@@ -548,31 +554,72 @@ class Marshall_SERVICE implements IEssayService {
 
   setVolumetricParametersData = async (
     step6Data: MarshallData['volumetricParametersData'],
-    userId?: string,
-    user?: string,
+    step4Data: MarshallData['binderTrialData'],
+    step5Data: MarshallData['maximumMixtureDensityData'],
     isConsult?: boolean
   ): Promise<any> => {
+    const volumetricParametersData = step6Data;
+    const { percentsOfDosage, trial } = step4Data;
+    const { maxSpecificGravity, temperatureOfWater } = step5Data;
+
+    const { volumetricParameters, ...formattedVolumetricParameters } = volumetricParametersData
+
     if (!isConsult) {
       try {
   
-        const response = await Api.post(`${this.info.backend_path}/set-step-6-volumetric-parameters`, step6Data);
+        const response = await Api.post(`${this.info.backend_path}/set-step-6-volumetric-parameters`, {
+          volumetricParametersData: formattedVolumetricParameters,
+          maxSpecificGravity,
+          temperatureOfWater,
+          trial,
+          percentsOfDosage: percentsOfDosage[2]
+        });
   
         console.log("🚀 ~ Marshall_SERVICE ~ response:", response)
   
         const { data, success, error } = response.data;
   
         if (success === false) throw error.name;
-  
-  
-        const result = {
-          ...step6Data,
-          ...data,
-        };
-  
-        console.log("🚀 ~ Marshall_SERVICE ~ result:", result)
-  
-        return result;
+    
+        return data;
       } catch (error) {
+        //throw error;
+      }
+    }
+  };
+
+  submitVolumetricParametersData = async (
+    data: MarshallData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
+      try {
+        const { volumetricParameters } = data.volumetricParametersData;
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
+
+        const volumetricParametersData = {
+          volumetricParameters,
+          name,
+          isConsult: null,
+        };
+
+        if (isConsult) volumetricParametersData.isConsult = isConsult;
+
+        const response = await Api.post(`${this.info.backend_path}/save-volumetric-parameters-step/${userData}`, {
+          volumetricParametersData: {
+            volumetricParameters,
+            name,
+          },
+        });
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log(error);
         //throw error;
       }
     }
