@@ -3,7 +3,7 @@ import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
-import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
+import useMarshallStore, { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
 import { Box, Button } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 import { useState } from 'react';
@@ -11,19 +11,13 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 
-
 const Marshall_Step6 = ({
   nextDisabled,
   setNextDisabled,
   marshall,
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { 
-    materialSelectionData, 
-    volumetricParametersData: data, 
-    binderTrialData,
-    setData 
-  } = useMarshallStore();
+  const { materialSelectionData, volumetricParametersData: data, binderTrialData, setData } = useMarshallStore();
 
   const { user } = useAuth();
 
@@ -35,31 +29,33 @@ const Marshall_Step6 = ({
   const plusHalfRows = data?.plusHalf;
   const plusOneRows = data?.plusOne;
 
-  const [ tableIsDisabled, setTableIsDisabled ] = useState({
+  const [tableIsDisabled, setTableIsDisabled] = useState({
     lessOne: true,
     lessHalf: true,
     normal: true,
     plusHalf: true,
-    plusOne: true
+    plusOne: true,
   });
 
-  const columns: GridColDef[] = [
+
+
+  const generateColumns = (tenor: string): GridColDef[] => [
     {
       field: 'diammeter',
       headerName: 'Diâmetro (cm)',
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data?.lessOne.findIndex((r) => r.id === id)
+        const index = data[tenor]?.findIndex((r) => r.id === id);
         return (
-          <InputEndAdornment 
-            adornment={'cm'} 
-            value={data?.lessOne[index]?.diammeter} 
+          <InputEndAdornment
+            adornment={'cm'}
+            value={data[tenor][index]?.diammeter}
             onChange={(e) => {
               const value = Number(e.target.value);
-              const newState = [...data?.lessOne];
-              newState[index] = {...newState[index], diammeter: value}
-              setData({ step: 5, value: { ...data, lessOne: newState} })
-            }} 
+              const newState = [...data[tenor]];
+              newState[index] = { ...newState[index], diammeter: value };
+              setData({ step: 5, value: { ...data, [tenor]: newState } });
+            }}
           />
         );
       },
@@ -69,17 +65,17 @@ const Marshall_Step6 = ({
       headerName: 'Altura (cm)',
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data?.lessOne.findIndex((r) => r.id === id)
+        const index = data[tenor]?.findIndex((r) => r.id === id);
         return (
-          <InputEndAdornment 
-            adornment={'cm'} 
-            value={data?.lessOne[index]?.height} 
+          <InputEndAdornment
+            adornment={'cm'}
+            value={data[tenor][index]?.height}
             onChange={(e) => {
               const value = Number(e.target.value);
-              const newState = [...data?.lessOne];
-              newState[index] = {...newState[index], height: value}
-              setData({ step: 5, value: { ...data, lessOne: newState} })
-            }} 
+              const newState = [...data[tenor]];
+              newState[index] = { ...newState[index], height: value };
+              setData({ step: 5, value: { ...data, [tenor]: newState } });
+            }}
           />
         );
       },
@@ -89,17 +85,17 @@ const Marshall_Step6 = ({
       headerName: 'Massa seca (g)',
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data?.lessOne.findIndex((r) => r.id === id)
+        const index = data[tenor]?.findIndex((r) => r.id === id);
         return (
-          <InputEndAdornment 
-            adornment={'cm'} 
-            value={data?.lessOne[index]?.dryMass} 
+          <InputEndAdornment
+            adornment={'g'}
+            value={data[tenor][index]?.dryMass}
             onChange={(e) => {
               const value = Number(e.target.value);
-              const newState = [...data?.lessOne];
-              newState[index] = {...newState[index], dryMass: value}
-              setData({ step: 5, value: { ...data, lessOne: newState} })
-            }} 
+              const newState = [...data[tenor]];
+              newState[index] = { ...newState[index], dryMass: value };
+              setData({ step: 5, value: { ...data, [tenor]: newState } });
+            }}
           />
         );
       },
@@ -109,17 +105,17 @@ const Marshall_Step6 = ({
       headerName: 'Massa submersa (g)',
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data?.lessOne.findIndex((r) => r.id === id)
+        const index = data[tenor].findIndex((r) => r.id === id);
         return (
-          <InputEndAdornment 
-            adornment={'cm'} 
-            value={data?.lessOne[index]?.submergedMass} 
+          <InputEndAdornment
+            adornment={'g'}
+            value={data[tenor][index]?.submergedMass}
             onChange={(e) => {
               const value = Number(e.target.value);
-              const newState = [...data?.lessOne];
-              newState[index] = {...newState[index], submergedMass: value}
-              setData({ step: 5, value: { ...data, lessOne: newState} })
-            }} 
+              const newState = [...data[tenor]];
+              newState[index] = { ...newState[index], submergedMass: value };
+              setData({ step: 5, value: { ...data, [tenor]: newState } });
+            }}
           />
         );
       },
@@ -129,17 +125,17 @@ const Marshall_Step6 = ({
       headerName: 'Massa saturada com superfície seca (g)',
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data?.lessOne.findIndex((r) => r.id === id)
+        const index = data[tenor]?.findIndex((r) => r.id === id);
         return (
-          <InputEndAdornment 
-            adornment={'cm'} 
-            value={data?.lessOne[index]?.drySurfaceSaturatedMass} 
+          <InputEndAdornment
+            adornment={'g'}
+            value={data[tenor][index]?.drySurfaceSaturatedMass}
             onChange={(e) => {
               const value = Number(e.target.value);
-              const newState = [...data?.lessOne];
-              newState[index] = {...newState[index], drySurfaceSaturatedMass: value}
-              setData({ step: 5, value: { ...data, lessOne: newState} })
-            }} 
+              const newState = [...data[tenor]];
+              newState[index] = { ...newState[index], drySurfaceSaturatedMass: value };
+              setData({ step: 5, value: { ...data, [tenor]: newState } });
+            }}
           />
         );
       },
@@ -149,17 +145,17 @@ const Marshall_Step6 = ({
       headerName: 'Estabilidade (N)',
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data?.lessOne.findIndex((r) => r.id === id)
+        const index = data[tenor].findIndex((r) => r.id === id);
         return (
-          <InputEndAdornment 
-            adornment={'cm'} 
-            value={data?.lessOne[index]?.stability} 
+          <InputEndAdornment
+            adornment={'N'}
+            value={data[tenor][index]?.stability}
             onChange={(e) => {
               const value = Number(e.target.value);
-              const newState = [...data?.lessOne];
-              newState[index] = {...newState[index], stability: value}
-              setData({ step: 5, value: { ...data, lessOne: newState} })
-            }} 
+              const newState = [...data[tenor]];
+              newState[index] = { ...newState[index], stability: value };
+              setData({ step: 5, value: { ...data, [tenor]: newState } });
+            }}
           />
         );
       },
@@ -169,17 +165,17 @@ const Marshall_Step6 = ({
       headerName: 'Fluência (mm)',
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data?.lessOne.findIndex((r) => r.id === id)
+        const index = data[tenor].findIndex((r) => r.id === id);
         return (
-          <InputEndAdornment 
-            adornment={'cm'} 
-            value={data?.lessOne[index]?.fluency} 
+          <InputEndAdornment
+            adornment={'mm'}
+            value={data[tenor][index]?.fluency}
             onChange={(e) => {
               const value = Number(e.target.value);
-              const newState = [...data?.lessOne];
-              newState[index] = {...newState[index], fluency: value}
-              setData({ step: 5, value: { ...data, lessOne: newState} })
-            }} 
+              const newState = [...data[tenor]];
+              newState[index] = { ...newState[index], fluency: value };
+              setData({ step: 5, value: { ...data, [tenor]: newState } });
+            }}
           />
         );
       },
@@ -189,17 +185,17 @@ const Marshall_Step6 = ({
       headerName: 'Resistência à tração por compressão diametral (MPa)',
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data?.lessOne.findIndex((r) => r.id === id)
+        const index = data[tenor]?.findIndex((r) => r.id === id);
         return (
-          <InputEndAdornment 
-            adornment={'cm'} 
-            value={data?.lessOne[index]?.diametricalCompressionStrength} 
+          <InputEndAdornment
+            adornment={'cm'}
+            value={data[tenor][index]?.diametricalCompressionStrength}
             onChange={(e) => {
               const value = Number(e.target.value);
-              const newState = [...data?.lessOne];
-              newState[index] = {...newState[index], diametricalCompressionStrength: value}
-              setData({ step: 5, value: { ...data, lessOne: newState} })
-            }} 
+              const newState = [...data[tenor]];
+              newState[index] = { ...newState[index], diametricalCompressionStrength: value };
+              setData({ step: 5, value: { ...data, [tenor]: newState } });
+            }}
           />
         );
       },
@@ -224,9 +220,9 @@ const Marshall_Step6 = ({
         return (
           <div>
             {params.headerName}
-            <Button 
+            <Button
               startIcon={<LockOpenIcon />}
-              onClick={() => setTableIsDisabled({ ...tableIsDisabled, lessOne: !tableIsDisabled.lessOne})}
+              onClick={() => setTableIsDisabled({ ...tableIsDisabled, lessOne: !tableIsDisabled.lessOne })}
             >
               {tableIsDisabled.lessOne ? 'Liberar' : 'Não usar teor'}
             </Button>
@@ -254,7 +250,12 @@ const Marshall_Step6 = ({
         return (
           <div>
             {params.headerName}
-            <Button startIcon={<LockOpenIcon />}>Não usar teor</Button>
+            <Button
+              startIcon={<LockOpenIcon />}
+              onClick={() => setTableIsDisabled({ ...tableIsDisabled, lessHalf: !tableIsDisabled.lessHalf })}
+            >
+              {tableIsDisabled.lessHalf ? 'Liberar' : 'Não usar teor'}
+            </Button>{' '}
           </div>
         );
       },
@@ -279,7 +280,12 @@ const Marshall_Step6 = ({
         return (
           <div>
             {params.headerName}
-            <Button startIcon={<LockOpenIcon />}>Não usar teor</Button>
+            <Button
+              startIcon={<LockOpenIcon />}
+              onClick={() => setTableIsDisabled({ ...tableIsDisabled, normal: !tableIsDisabled.normal })}
+            >
+              {tableIsDisabled.normal ? 'Liberar' : 'Não usar teor'}
+            </Button>{' '}
           </div>
         );
       },
@@ -304,7 +310,12 @@ const Marshall_Step6 = ({
         return (
           <div>
             {params.headerName}
-            <Button startIcon={<LockOpenIcon />}>Não usar teor</Button>
+            <Button
+              startIcon={<LockOpenIcon />}
+              onClick={() => setTableIsDisabled({ ...tableIsDisabled, plusHalf: !tableIsDisabled.plusHalf })}
+            >
+              {tableIsDisabled.plusHalf ? 'Liberar' : 'Não usar teor'}
+            </Button>{' '}
           </div>
         );
       },
@@ -329,12 +340,44 @@ const Marshall_Step6 = ({
         return (
           <div>
             {params.headerName}
-            <Button startIcon={<LockOpenIcon />}>Não usar teor</Button>
+            <Button
+              startIcon={<LockOpenIcon />}
+              onClick={() => setTableIsDisabled({ ...tableIsDisabled, plusOne: !tableIsDisabled.plusOne })}
+            >
+              {tableIsDisabled.plusOne ? 'Liberar' : 'Não usar teor'}
+            </Button>
           </div>
         );
       },
     },
   ];
+
+  const setVolumetricParams = () => {
+    toast.promise(
+      async () => {
+        try {
+          const volumetricParams = await marshall.setVolumetricParametersData(data);
+          const prevData = data;
+          const newData = {
+            ...prevData,
+            ...volumetricParams,
+          };
+          console.log("🚀 ~ newData:", newData)
+
+          //setData({ step: 5, value: newData });
+          //setLoading(false);
+        } catch (error) {
+          //setLoading(false);
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      }
+    );
+  };
 
   const handleErase = (type: string) => {
     try {
@@ -349,7 +392,7 @@ const Marshall_Step6 = ({
   };
 
   const handleAdd = (type: string) => {
-    console.log("🚀 ~ handleAdd ~ type:", type)
+    console.log('🚀 ~ handleAdd ~ type:', type);
     const newRows = [...data[type]];
     newRows.push({
       id: data[type].length,
@@ -362,9 +405,9 @@ const Marshall_Step6 = ({
       fluency: null,
       diametricalCompressionStrength: null,
     });
-    setData({ step: 5, value: {...data, [type]: newRows }});
+    setData({ step: 5, value: { ...data, [type]: newRows } });
   };
-  
+
   const ExpansionToolbar = (type: string) => {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
@@ -392,12 +435,12 @@ const Marshall_Step6 = ({
         >
           <DataGrid
             key={'lessOne'}
-            columns={columns}
+            columns={generateColumns('lessOne')}
             rows={lessOneRows}
             columnGroupingModel={lessOneColumnsGroupings}
             experimentalFeatures={{ columnGrouping: true }}
-            sx={tableIsDisabled.lessOne ? { backgroundColor: 'grey'} : {}}
-            density='comfortable'
+            sx={tableIsDisabled.lessOne ? { backgroundColor: 'grey' } : {}}
+            density="comfortable"
             disableColumnMenu
             disableColumnSelector
             slots={{ footer: () => ExpansionToolbar('lessOne') }}
@@ -405,12 +448,12 @@ const Marshall_Step6 = ({
 
           <DataGrid
             key={'lessHalf'}
-            columns={columns}
+            columns={generateColumns('lessHalf')}
             rows={lessHalfRows}
             columnGroupingModel={lessHalfColumnsGroupings}
             experimentalFeatures={{ columnGrouping: true }}
-            sx={tableIsDisabled.lessHalf ? { backgroundColor: 'grey'} : {}}
-            density='comfortable'
+            sx={tableIsDisabled.lessHalf ? { backgroundColor: 'grey' } : {}}
+            density="comfortable"
             disableColumnMenu
             disableColumnSelector
             slots={{ footer: () => ExpansionToolbar('lessHalf') }}
@@ -418,12 +461,12 @@ const Marshall_Step6 = ({
 
           <DataGrid
             key={'normal'}
-            columns={columns}
+            columns={generateColumns('normal')}
             rows={normalRows}
             columnGroupingModel={normalColumnsGroupings}
             experimentalFeatures={{ columnGrouping: true }}
-            sx={tableIsDisabled.normal ? { backgroundColor: 'grey'} : {}}
-            density='comfortable'
+            sx={tableIsDisabled.normal ? { backgroundColor: 'grey' } : {}}
+            density="comfortable"
             disableColumnMenu
             disableColumnSelector
             slots={{ footer: () => ExpansionToolbar('normal') }}
@@ -431,12 +474,12 @@ const Marshall_Step6 = ({
 
           <DataGrid
             key={'plusHalf'}
-            columns={columns}
+            columns={generateColumns('plusHalf')}
             rows={plusHalfRows}
             columnGroupingModel={plusHalfColumnsGroupings}
             experimentalFeatures={{ columnGrouping: true }}
-            sx={tableIsDisabled.plusHalf ? { backgroundColor: 'grey'} : {}}
-            density='comfortable'
+            sx={tableIsDisabled.plusHalf ? { backgroundColor: 'grey' } : {}}
+            density="comfortable"
             disableColumnMenu
             disableColumnSelector
             slots={{ footer: () => ExpansionToolbar('plusHalf') }}
@@ -444,16 +487,18 @@ const Marshall_Step6 = ({
 
           <DataGrid
             key={'plusOne'}
-            columns={columns}
+            columns={generateColumns('plusOne')}
             rows={plusOneRows}
             columnGroupingModel={plusOneColumnsGroupings}
             experimentalFeatures={{ columnGrouping: true }}
-            sx={tableIsDisabled.plusOne ? { backgroundColor: 'grey'} : {}}
-            density='comfortable'
+            sx={tableIsDisabled.plusOne ? { backgroundColor: 'grey' } : {}}
+            density="comfortable"
             disableColumnMenu
             disableColumnSelector
             slots={{ footer: () => ExpansionToolbar('plusOne') }}
           />
+
+          <Button onClick={setVolumetricParams}>Confirmar</Button>
         </Box>
       )}
     </>

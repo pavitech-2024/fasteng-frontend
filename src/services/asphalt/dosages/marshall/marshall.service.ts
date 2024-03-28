@@ -68,6 +68,7 @@ class Marshall_SERVICE implements IEssayService {
           await this.submitMaximumMixtureDensityData(data as MarshallData, this.userId, null, isConsult)
           break;
         case 5:
+          this.setVolumetricParametersData(data as MarshallData['volumetricParametersData'], this.userId, null, isConsult)
           break;
         case 6:
           break;
@@ -544,6 +545,75 @@ class Marshall_SERVICE implements IEssayService {
       }
     }
   };
+
+  setVolumetricParametersData = async (
+    step6Data: MarshallData['volumetricParametersData'],
+    userId?: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<any> => {
+    if (!isConsult) {
+      try {
+  
+        const response = await Api.post(`${this.info.backend_path}/set-step-6-volumetric-parameters`, step6Data);
+  
+        console.log("🚀 ~ Marshall_SERVICE ~ response:", response)
+  
+        const { data, success, error } = response.data;
+  
+        if (success === false) throw error.name;
+  
+  
+        const result = {
+          ...step6Data,
+          ...data,
+        };
+  
+        console.log("🚀 ~ Marshall_SERVICE ~ result:", result)
+  
+        return result;
+      } catch (error) {
+        //throw error;
+      }
+    }
+  };
+
+  // submitVolumetricParametersData = async (
+  //   data: MarshallData,
+  //   userId: string,
+  //   user?: string,
+  //   isConsult?: boolean
+  // ): Promise<void> => {
+  //   if (!isConsult) {
+  //     try {
+  //       const { lessOne, lessHalf, normal, plusHalf, plusOne } = data.volumetricParametersData;
+  //       const { name } = data.generalData;
+  //       const userData = userId ? userId : user;
+
+  //       const maximumMixtureDensityData = {
+  //         maxSpecificGravity,
+  //         name,
+  //         isConsult: null,
+  //       };
+
+  //       if (isConsult) maximumMixtureDensityData.isConsult = isConsult;
+
+  //       const response = await Api.post(`${this.info.backend_path}/save-maximum-mixture-density-step/${userData}`, {
+  //         maximumMixtureDensityData: {
+  //           maxSpecificGravity,
+  //           name,
+  //         },
+  //       });
+
+  //       const { success, error } = response.data;
+
+  //       if (success === false) throw error.name;
+  //     } catch (error) {
+  //       console.log(error);
+  //       //throw error;
+  //     }
+  //   }
+  // };
 }
 
 export default Marshall_SERVICE;
