@@ -48,7 +48,7 @@ const GraficoPage7N = ({ data }) => {
 
   const getPercentDimensions = () => {
     const parent = document.getElementById("componentAux");
-    let width = parent.clientWidth * 0.9;
+    let width = parent?.clientWidth * 0.9;
     const windowSize = window.innerWidth;
     if (width > windowSize) {
       width = (windowSize * 0.98 - 16) * 0.9;

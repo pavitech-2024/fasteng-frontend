@@ -618,11 +618,44 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  setOptimumBinderContentData = async (step6Data: MarshallData['volumetricParametersData']): Promise<any> => {
-    const volumetricParametersData = step6Data.volumetricParameters;
+  plotDosageGraph = async (
+    dnitBand: string,
+    volumetricParameters: any,
+    trial: number,
+    percentsOfDosage: number[]
+  ) => {
+    try {
+      const response = await Api.post(`${this.info.backend_path}/step-7-plot-dosage-graph`, {
+        dnitBand,
+        volumetricParameters,
+        trial,
+        percentsOfDosage
+      });
+
+      const { data, success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+      return data
+    } catch (error) {
+      //throw error
+    }
+  }
+
+  setOptimumBinderContentData = async (
+      generalData: MarshallData['generalData'],
+      step6Data: MarshallData['volumetricParametersData'],
+      step4Data: MarshallData['binderTrialData']
+    ): Promise<any> => {
+
+    const { dnitBand } = generalData;
+    const { volumetricParameters } = step6Data;
+    const { trial, percentsOfDosage } = step4Data;
+    let result;
+
     try {
       const response = await Api.post(`${this.info.backend_path}/set-step-7-optimum-binder`, {
-        volumetricParametersData,
+        volumetricParametersData: volumetricParameters,
       });
 
       console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
@@ -631,7 +664,22 @@ class Marshall_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
 
-      return data;
+      result = {...data}
+
+      try {
+        const dosageGraph = await this.plotDosageGraph(dnitBand, volumetricParameters, trial, percentsOfDosage[2])
+        console.log("🚀 ~ Marshall_SERVICE ~ dosageGraph:", dosageGraph)
+  
+        const { data, success, error} = dosageGraph.data;
+
+        if (success === false) throw error.name;
+
+        result = { ...result, ...data}
+
+        return data;
+      } catch (error) {
+        //throw error;
+      }
     } catch (error) {
       //throw error;
     }

@@ -1,6 +1,5 @@
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
-import useAuth from '@/contexts/auth';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { Box } from '@mui/material';
@@ -17,20 +16,24 @@ const Marshall_Step7 = ({
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const {
-    materialSelectionData,
+    generalData,
     optimumBinderContentData: data,
+    binderTrialData,
     volumetricParametersData,
     maximumMixtureDensityData,
     setData,
   } = useMarshallStore();
 
-  const { user } = useAuth();
-
+  
   useEffect(() => {
     toast.promise(
       async () => {
         try {
-          const graphics = await marshall.setOptimumBinderContentData(volumetricParametersData);
+          const graphics = await marshall.setOptimumBinderContentData(
+            generalData,
+            volumetricParametersData,
+            binderTrialData
+          );
           console.log('🚀 ~ graphics:', graphics);
 
           const newData = {
