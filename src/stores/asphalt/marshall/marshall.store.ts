@@ -161,13 +161,25 @@ interface VolumetricParametersData {
   }
 }
 
+interface OptimumBinderContentData {
+  graphics: {
+    rbv: string[][],
+    vv: string[][],
+    sg: string[][],
+    gmb: string[][],
+    stability: string[][],
+    vam: string[][]
+  }
+}
+
 export type MarshallData = {
   generalData: MarhsallGeneralData;
   materialSelectionData: MarshallMaterialSelectionData;
   granulometryCompositionData: MarshallGranulometryCompositionData;
   binderTrialData: MarshallBinderTrialData;
   maximumMixtureDensityData: MarshallMaximumMixtureDensityData;
-  volumetricParametersData: VolumetricParametersData
+  volumetricParametersData: VolumetricParametersData;
+  optimumBinderContentData: OptimumBinderContentData
   createdAt: Date;
   updatedAt: Date;
 };
@@ -185,7 +197,8 @@ const stepVariant = {
   2: 'granulometryCompositionData',
   3: 'binderTrialData',
   4: 'maximumMixtureDensityData',
-  5: 'volumetricParametersData'
+  5: 'volumetricParametersData',
+  6: 'optimumBinderContentData'
 };
 
 const initialState = {
@@ -350,6 +363,16 @@ const initialState = {
       pointsOfCurveDosageRBV: [],
       pointsOfCurveDosageVv: [],
       volumetricParameters: []
+    }
+  },
+  optimumBinderContentData: {
+    graphics: {
+      rbv: [],
+      vv: [],
+      sg: [],
+      gmb: [],
+      stability: [],
+      vam: []
     }
   },
   createdAt: null,

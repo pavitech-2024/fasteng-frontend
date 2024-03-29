@@ -65,17 +65,19 @@ class Marshall_SERVICE implements IEssayService {
           await this.submitBinderTrialData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 4:
-          await this.submitMaximumMixtureDensityData(data as MarshallData, this.userId, null, isConsult)
+          await this.submitMaximumMixtureDensityData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 5:
           await this.setVolumetricParametersData(
-            data as MarshallData['volumetricParametersData'], 
-            data as MarshallData['binderTrialData'], 
+            data as MarshallData['volumetricParametersData'],
+            data as MarshallData['binderTrialData'],
             data as MarshallData['maximumMixtureDensityData'],
-            isConsult)
-          await this.submitVolumetricParametersData(data as MarshallData, this.userId, null, isConsult)
+            isConsult
+          );
+          await this.submitVolumetricParametersData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 6:
+          //await this.setOptimumBinderContentData(data as MarshallData['volumetricParametersData']);
           break;
         case 7:
           break;
@@ -136,17 +138,16 @@ class Marshall_SERVICE implements IEssayService {
     try {
       const response = await Api.post(`${this.info.backend_path}/get-specific-mass-indexes`, aggregates);
 
-
       const { success, error } = response.data;
       const { indexesOfMissesSpecificGravity } = response.data.data;
 
-      if (success === false) throw error.name; 
+      if (success === false) throw error.name;
 
       return indexesOfMissesSpecificGravity;
     } catch (error) {
-      throw error
+      throw error;
     }
-  }
+  };
 
   // send the selected materials to backend
   submitMaterialSelection = async (
@@ -414,21 +415,20 @@ class Marshall_SERVICE implements IEssayService {
   calculateMaximumMixtureDensityDMT = async (
     step2Data: MarshallData['materialSelectionData'],
     step4Data: MarshallData['binderTrialData'],
-    step5Data: MarshallData['maximumMixtureDensityData'],
+    step5Data: MarshallData['maximumMixtureDensityData']
   ): Promise<any> => {
     const { aggregates } = step2Data;
     const { indexesOfMissesSpecificGravity, dmt } = step5Data;
     const { percentsOfDosage, trial } = step4Data;
     try {
-
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-dmt-data`, {
         aggregates,
         percentsOfDosage,
         trial,
-        indexesOfMissesSpecificGravity
+        indexesOfMissesSpecificGravity,
       });
 
-      console.log("🚀 ~ Marshall_SERVICE ~ response:", response)
+      console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
 
       const { data, success, error } = response.data;
 
@@ -441,7 +441,7 @@ class Marshall_SERVICE implements IEssayService {
         maxSpecificGravity,
       };
 
-      console.log("🚀 ~ Marshall_SERVICE ~ result:", result)
+      console.log('🚀 ~ Marshall_SERVICE ~ result:', result);
 
       return data;
     } catch (error) {
@@ -449,30 +449,26 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  calculateRiceTest = async (
-    step5Data: MarshallData['maximumMixtureDensityData'],
-  ): Promise<any> => {
+  calculateRiceTest = async (step5Data: MarshallData['maximumMixtureDensityData']): Promise<any> => {
     const { riceTest, temperatureOfWater } = step5Data;
     try {
-
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-rice-test`, {
         riceTest,
-        temperatureOfWater
+        temperatureOfWater,
       });
 
-      console.log("🚀 ~ Marshall_SERVICE ~ response:", response)
+      console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
 
       const { data, success, error } = response.data;
 
       if (success === false) throw error.name;
-
 
       const result = {
         ...step5Data,
         ...data,
       };
 
-      console.log("🚀 ~ Marshall_SERVICE ~ result:", result)
+      console.log('🚀 ~ Marshall_SERVICE ~ result:', result);
 
       return result;
     } catch (error) {
@@ -482,31 +478,29 @@ class Marshall_SERVICE implements IEssayService {
 
   calculateGmmData = async (
     step2Data: MarshallData['materialSelectionData'],
-    step5Data: MarshallData['maximumMixtureDensityData'],
+    step5Data: MarshallData['maximumMixtureDensityData']
   ): Promise<any> => {
     const { gmm, temperatureOfWater } = step5Data;
     const { aggregates } = step2Data;
     try {
-
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-gmm-data`, {
         gmm,
         temperatureOfWaterGmm: temperatureOfWater,
-        aggregates
+        aggregates,
       });
 
-      console.log("🚀 ~ Marshall_SERVICE ~ response:", response)
+      console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
 
       const { data, success, error } = response.data;
 
       if (success === false) throw error.name;
-
 
       const result = {
         ...step5Data,
         ...data,
       };
 
-      console.log("🚀 ~ Marshall_SERVICE ~ result:", result)
+      console.log('🚀 ~ Marshall_SERVICE ~ result:', result);
 
       return result;
     } catch (error) {
@@ -562,25 +556,24 @@ class Marshall_SERVICE implements IEssayService {
     const { percentsOfDosage, trial } = step4Data;
     const { maxSpecificGravity, temperatureOfWater } = step5Data;
 
-    const { volumetricParameters, ...formattedVolumetricParameters } = volumetricParametersData
+    const { volumetricParameters, ...formattedVolumetricParameters } = volumetricParametersData;
 
     if (!isConsult) {
       try {
-  
         const response = await Api.post(`${this.info.backend_path}/set-step-6-volumetric-parameters`, {
           volumetricParametersData: formattedVolumetricParameters,
           maxSpecificGravity,
           temperatureOfWater,
           trial,
-          percentsOfDosage: percentsOfDosage[2]
+          percentsOfDosage: percentsOfDosage[2],
         });
-  
-        console.log("🚀 ~ Marshall_SERVICE ~ response:", response)
-  
+
+        console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
+
         const { data, success, error } = response.data;
-  
+
         if (success === false) throw error.name;
-    
+
         return data;
       } catch (error) {
         //throw error;
@@ -622,6 +615,25 @@ class Marshall_SERVICE implements IEssayService {
         console.log(error);
         //throw error;
       }
+    }
+  };
+
+  setOptimumBinderContentData = async (step6Data: MarshallData['volumetricParametersData']): Promise<any> => {
+    const volumetricParametersData = step6Data.volumetricParameters;
+    try {
+      const response = await Api.post(`${this.info.backend_path}/set-step-7-optimum-binder`, {
+        volumetricParametersData,
+      });
+
+      console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
+
+      const { data, success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+      return data;
+    } catch (error) {
+      //throw error;
     }
   };
 
