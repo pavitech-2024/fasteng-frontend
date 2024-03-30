@@ -1,7 +1,7 @@
 import * as XLSX from 'xlsx';
 import { dsvFormat } from 'd3-dsv';
 
-export const processFile = async (file: FileList | Blob) => {
+export const processFile = async (file: FileList | Blob, processEssayMethod) => {
   if ((file as FileList)[0]?.type === 'application/vnd.ms-excel') {
     const fileList = file as FileList;
     const processedFiles: any[] = [];
@@ -10,7 +10,7 @@ export const processFile = async (file: FileList | Blob) => {
       .forEach(async (file) => {
         const text = await (file as File).text();
         const lista = dsvFormat(';').parseRows(text);
-        processedFiles.push(processIggFile(lista));
+        processedFiles.push(lista);
       });
     return processedFiles;
   } else {
@@ -39,61 +39,7 @@ export const processFile = async (file: FileList | Blob) => {
     });
 
     return promise.then((d) => {
-      return processIggFile(d);
+      return processEssayMethod(d);
     });
   }
-};
-
-const processIggFile = (file: any) => {
-  const processedFile = [];
-  const header = [
-    'km',
-    'secao',
-    'fi',
-    'ttc',
-    'ttl',
-    'tlc',
-    'tll',
-    'trr',
-    'j',
-    'tb',
-    'je',
-    'tbe',
-    'alp',
-    'atp',
-    'alc',
-    'atc',
-    'o',
-    'p',
-    'e',
-    'ex',
-    'd',
-    'r',
-    'tri',
-    'ter',
-  ];
-  processedFile.push(header);
-
-  const fileWithoutUselessRows = file.slice(4, file.length);
-
-  fileWithoutUselessRows.forEach((item) => {
-    const arr = new Array(24).fill(null);
-    arr[0] = item['INVENTÁRIO DO ESTADO DA SUPERFÍCIE DO PAVIMENTO'];
-    arr[1] = item['__EMPTY'];
-
-    let keys = Object.keys(item);
-    keys = keys.slice(2, keys.length);
-    keys.forEach((key) => {
-      const column = parseInt(key.substring('__EMPTY_'.length));
-      if (column < 21) {
-        arr[column + 1] = true;
-      } else {
-        arr[column + 1] = item[key];
-      }
-    });
-
-    processedFile.push(arr);
-  });
-
-  return processedFile;
 };
