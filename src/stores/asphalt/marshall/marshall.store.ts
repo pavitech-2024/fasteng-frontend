@@ -95,7 +95,8 @@ interface MarshallMaximumMixtureDensityData {
     massOfDrySample: number,
     massOfContainerWaterSample: number,
     massOfContainerWater: number,
-  }[]
+  }[],
+  listOfSpecificGravities: any[]
 }
 
 interface VolumetricParametersData {
@@ -169,6 +170,10 @@ interface OptimumBinderContentData {
     gmb: string[][],
     stability: string[][],
     vam: string[][]
+  },
+  optimumBinder: {
+    optimumContent: number,
+    pointsOfCurveDosage: any[]
   }
 }
 
@@ -301,7 +306,8 @@ const initialState = {
       massOfDrySample: null,
       massOfContainerWaterSample: null,
       massOfContainerWater: null,
-    }]
+    }],
+    listOfSpecificGravities: []
   },
   volumetricParametersData: {
     lessOne: [{
@@ -373,6 +379,10 @@ const initialState = {
       gmb: [],
       stability: [],
       vam: []
+    },
+    optimumBinder: {
+      optimumContent: null,
+      pointsOfCurveDosage: []
     }
   },
   createdAt: null,

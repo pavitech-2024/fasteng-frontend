@@ -77,7 +77,11 @@ class Marshall_SERVICE implements IEssayService {
           await this.submitVolumetricParametersData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 6:
-          //await this.setOptimumBinderContentData(data as MarshallData['volumetricParametersData']);
+          // await this.setOptimumBinderExpectedParameters(
+          //   data as MarshallData['maximumMixtureDensityData'],
+          //   data as MarshallData['binderTrialData'],
+          //   data as MarshallData['optimumBinderContentData']
+          // );
           break;
         case 7:
           break;
@@ -618,36 +622,30 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  plotDosageGraph = async (
-    dnitBand: string,
-    volumetricParameters: any,
-    trial: number,
-    percentsOfDosage: number[]
-  ) => {
+  plotDosageGraph = async (dnitBand: string, volumetricParameters: any, trial: number, percentsOfDosage: number[]) => {
     try {
       const response = await Api.post(`${this.info.backend_path}/step-7-plot-dosage-graph`, {
         dnitBand,
         volumetricParameters,
         trial,
-        percentsOfDosage
+        percentsOfDosage,
       });
 
       const { data, success, error } = response.data;
 
       if (success === false) throw error.name;
 
-      return data
+      return data;
     } catch (error) {
       //throw error
     }
-  }
+  };
 
   setOptimumBinderContentData = async (
-      generalData: MarshallData['generalData'],
-      step6Data: MarshallData['volumetricParametersData'],
-      step4Data: MarshallData['binderTrialData']
-    ): Promise<any> => {
-
+    generalData: MarshallData['generalData'],
+    step6Data: MarshallData['volumetricParametersData'],
+    step4Data: MarshallData['binderTrialData']
+  ): Promise<any> => {
     const { dnitBand } = generalData;
     const { volumetricParameters } = step6Data;
     const { trial, percentsOfDosage } = step4Data;
@@ -658,25 +656,20 @@ class Marshall_SERVICE implements IEssayService {
         volumetricParametersData: volumetricParameters,
       });
 
-      console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
-
       const { data, success, error } = response.data;
 
       if (success === false) throw error.name;
 
-      result = {...data}
+      result = {
+        ...data,
+      };
 
       try {
-        const dosageGraph = await this.plotDosageGraph(dnitBand, volumetricParameters, trial, percentsOfDosage[2])
-        console.log("🚀 ~ Marshall_SERVICE ~ dosageGraph:", dosageGraph)
-  
-        const { data, success, error} = dosageGraph.data;
+        const dosageGraph = await this.plotDosageGraph(dnitBand, volumetricParameters, trial, percentsOfDosage[2]);
 
-        if (success === false) throw error.name;
+        result = { ...result, dosageGraph: dosageGraph.optimumBinderDosageGraph };
 
-        result = { ...result, ...data}
-
-        return data;
+        return result;
       } catch (error) {
         //throw error;
       }
@@ -685,42 +678,45 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  // submitVolumetricParametersData = async (
-  //   data: MarshallData,
-  //   userId: string,
-  //   user?: string,
-  //   isConsult?: boolean
-  // ): Promise<void> => {
-  //   if (!isConsult) {
-  //     try {
-  //       const { lessOne, lessHalf, normal, plusHalf, plusOne } = data.volumetricParametersData;
-  //       const { name } = data.generalData;
-  //       const userData = userId ? userId : user;
+  setOptimumBinderExpectedParameters = async (
+    step5Data: MarshallData['maximumMixtureDensityData'],
+    step4Data: MarshallData['binderTrialData'],
+    step7Data: MarshallData['optimumBinderContentData']
+  ): Promise<any> => {
+    const { maxSpecificGravity, listOfSpecificGravities } = step5Data;
+    const { trial, percentsOfDosage } = step4Data;
+    const { vv, rbv } = step7Data.graphics;
+    const { optimumContent } = step7Data.optimumBinder;
+    let result;
 
-  //       const maximumMixtureDensityData = {
-  //         maxSpecificGravity,
-  //         name,
-  //         isConsult: null,
-  //       };
+    try {
+      const response = await Api.post(`${this.info.backend_path}/step-7-get-expected-parameters`, {
+        maxSpecificGravity,
+        listOfSpecificGravities,
+        trial,
+        percentsOfDosage,
+        vv,
+        rbv,
+        optimumContent,
+      });
 
-  //       if (isConsult) maximumMixtureDensityData.isConsult = isConsult;
+      console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
 
-  //       const response = await Api.post(`${this.info.backend_path}/save-maximum-mixture-density-step/${userData}`, {
-  //         maximumMixtureDensityData: {
-  //           maxSpecificGravity,
-  //           name,
-  //         },
-  //       });
+      const { data, success, error } = response.data;
 
-  //       const { success, error } = response.data;
+      if (success === false) throw error.name;
 
-  //       if (success === false) throw error.name;
-  //     } catch (error) {
-  //       console.log(error);
-  //       //throw error;
-  //     }
-  //   }
-  // };
+      result = {
+        ...data,
+      };
+
+      console.log("🚀 ~ Marshall_SERVICE ~ result:", result)
+
+      return result;
+    } catch (error) {
+      //throw error;
+    }
+  };
 }
 
 export default Marshall_SERVICE;

@@ -23,27 +23,46 @@ const Marshall_Step7 = ({
     maximumMixtureDensityData,
     setData,
   } = useMarshallStore();
-
   
   useEffect(() => {
     toast.promise(
       async () => {
         try {
+          let newData;
           const graphics = await marshall.setOptimumBinderContentData(
             generalData,
             volumetricParametersData,
             binderTrialData
           );
-          console.log('🚀 ~ graphics:', graphics);
 
-          const newData = {
+          newData = {
             ...data,
             graphics: graphics.optimumBinder,
+            optimumBinder: graphics.dosageGraph
           };
 
-          setData({ step: 6, value: newData });
+          if (graphics) {
+            try {
+              const expectedParameters = await marshall.setOptimumBinderExpectedParameters(
+                maximumMixtureDensityData,
+                binderTrialData,
+                data
+              )
 
-          setLoading(false);
+              newData = {
+                ...newData,
+                expectedParameters
+              }
+
+              setData({ step: 6, value: newData });
+              setLoading(false);
+            } catch (error) {
+              setLoading(false);
+              throw error
+            }
+          } else {
+            console.error(`Não deu certo!`)
+          }
         } catch (error) {
           setLoading(false);
           throw error;
@@ -57,6 +76,7 @@ const Marshall_Step7 = ({
     );
   }, []);
 
+  
   nextDisabled && setNextDisabled(false);
 
   return (
@@ -72,7 +92,7 @@ const Marshall_Step7 = ({
           }}
         >
 
-          <GraficoPage7N data={undefined}/>
+          <GraficoPage7N data={data?.optimumBinder?.pointsOfCurveDosage}/>
 
           <Box
             sx={{
