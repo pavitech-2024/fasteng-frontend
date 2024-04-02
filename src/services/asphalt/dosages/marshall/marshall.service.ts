@@ -520,7 +520,7 @@ class Marshall_SERVICE implements IEssayService {
   ): Promise<void> => {
     if (!isConsult) {
       try {
-        const { maxSpecificGravity, temperatureOfWater } = data.maximumMixtureDensityData;
+        const { maxSpecificGravity, temperatureOfWater, listOfSpecificGravities } = data.maximumMixtureDensityData;
         const { name } = data.generalData;
         const userData = userId ? userId : user;
 
@@ -537,6 +537,7 @@ class Marshall_SERVICE implements IEssayService {
             maxSpecificGravity,
             temperatureOfWater,
             name,
+            listOfSpecificGravities
           },
         });
 
@@ -684,9 +685,9 @@ class Marshall_SERVICE implements IEssayService {
     step7Data: MarshallData['optimumBinderContentData']
   ): Promise<any> => {
     const { maxSpecificGravity, listOfSpecificGravities } = step5Data;
-    const { trial, percentsOfDosage } = step4Data;
+    const { trial } = step4Data;
     const { vv, rbv } = step7Data.graphics;
-    const { optimumContent } = step7Data.optimumBinder;
+    const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
     let result;
 
     try {
@@ -694,7 +695,7 @@ class Marshall_SERVICE implements IEssayService {
         maxSpecificGravity,
         listOfSpecificGravities,
         trial,
-        percentsOfDosage,
+        confirmedPercentsOfDosage,
         vv,
         rbv,
         optimumContent,

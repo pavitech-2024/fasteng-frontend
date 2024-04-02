@@ -8,6 +8,7 @@ import MiniGraphics from './graphs/miniGraph';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import GraficoPage7N from './graphs/page-7-graph';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 const Marshall_Step7 = ({
   nextDisabled,
@@ -23,7 +24,7 @@ const Marshall_Step7 = ({
     maximumMixtureDensityData,
     setData,
   } = useMarshallStore();
-  
+
   useEffect(() => {
     toast.promise(
       async () => {
@@ -32,13 +33,13 @@ const Marshall_Step7 = ({
           const graphics = await marshall.setOptimumBinderContentData(
             generalData,
             volumetricParametersData,
-            binderTrialData
+            binderTrialData,
           );
 
           newData = {
             ...data,
             graphics: graphics.optimumBinder,
-            optimumBinder: graphics.dosageGraph
+            optimumBinder: graphics.dosageGraph,
           };
 
           if (graphics) {
@@ -47,21 +48,22 @@ const Marshall_Step7 = ({
                 maximumMixtureDensityData,
                 binderTrialData,
                 data
-              )
+              );
+              
 
               newData = {
                 ...newData,
-                expectedParameters
-              }
+                expectedParameters,
+              };
 
               setData({ step: 6, value: newData });
               setLoading(false);
             } catch (error) {
               setLoading(false);
-              throw error
+              throw error;
             }
           } else {
-            console.error(`Não deu certo!`)
+            console.error(`Não deu certo!`);
           }
         } catch (error) {
           setLoading(false);
@@ -76,7 +78,46 @@ const Marshall_Step7 = ({
     );
   }, []);
 
+
+  // Preparando os dados points para o componente GraficoPage7N
+  const points = data?.optimumBinder?.pointsOfCurveDosage;
+  points.unshift(['', '', '']);
+
+  const expectedParametersColumns: GridColDef[] = [
+    {
+      field: 'vv',
+      headerName: 'Vv (%)',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'rbv',
+      headerName: 'Rbv (%)',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'vam',
+      headerName: 'Vam (%)',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'gmb',
+      headerName: 'Gmb (g/cm³)',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'dmt',
+      headerName: 'DMT (g/cm³)',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+  ];
   
+  // const expectedParametersRows = [
+  //   {
+  //     id: 1,
+  //     vv:,
+  //   },
+  // ]
+
   nextDisabled && setNextDisabled(false);
 
   return (
@@ -91,14 +132,16 @@ const Marshall_Step7 = ({
             gap: '10px',
           }}
         >
+          <GraficoPage7N data={points} />
 
-          <GraficoPage7N data={data?.optimumBinder?.pointsOfCurveDosage}/>
+          <DataGrid columns={expectedParametersColumns} rows={[]}/>
 
           <Box
             sx={{
               display: 'flex',
               flexDirection: 'row',
-              gap: '10px'
+              flexWrap: 'wrap',
+              gap: '10px',
             }}
           >
             <MiniGraphics data={data?.graphics?.gmb} type={'gmb'} nameEixoY={'Massa específica aparente (g/cm³)'} />
@@ -112,6 +155,12 @@ const Marshall_Step7 = ({
                   : 'Massa específica máxima medida (g/cm³)'
               }
             />
+
+            <MiniGraphics data={data?.graphics?.vv} type={'Vv'} nameEixoY={'Volume de vazios (%)'} />
+
+            <MiniGraphics data={data?.graphics?.rbv} type={'Rbv'} nameEixoY={'Relação betume/vazios (%)'} />
+
+            <MiniGraphics data={data?.graphics?.stability} type={'Estabilidade'} nameEixoY={'Estabilidade (N)'} />
           </Box>
         </Box>
       )}

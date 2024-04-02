@@ -173,7 +173,8 @@ interface OptimumBinderContentData {
   },
   optimumBinder: {
     optimumContent: number,
-    pointsOfCurveDosage: any[]
+    pointsOfCurveDosage: any[],
+    confirmedPercentsOfDosage: number[]
   }
 }
 
@@ -382,7 +383,8 @@ const initialState = {
     },
     optimumBinder: {
       optimumContent: null,
-      pointsOfCurveDosage: []
+      pointsOfCurveDosage: [],
+      confirmedPercentsOfDosage: []
     }
   },
   createdAt: null,

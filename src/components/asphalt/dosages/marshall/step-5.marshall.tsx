@@ -160,6 +160,7 @@ const Marshall_Step5 = ({
       async () => {
         try {
           const dmt = await marshall.calculateMaximumMixtureDensityDMT(materialSelectionData, binderTrialData, data);
+          console.log("🚀 ~ dmt:", dmt)
           const prevData = data;
 
           const newData = {
@@ -168,6 +169,7 @@ const Marshall_Step5 = ({
               result: dmt.maxSpecificGravity,
               method: dmt.method,
             },
+            listOfSpecificGravities: dmt.listOfSpecificGravities
           };
 
           setData({ step: 4, value: newData });
