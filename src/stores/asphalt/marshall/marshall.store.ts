@@ -1,4 +1,3 @@
-import { GridColDef } from '@mui/x-data-grid';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
@@ -45,6 +44,7 @@ interface MarshallGranulometryCompositionData {
 interface MarshallBinderTrialData {
   trial: number;
   percentsOfDosage: any[];
+  newPercentOfDosage: number[];
   bandsOfTemperatures: {
     machiningTemperatureRange: {
       higher: number;
@@ -163,6 +163,15 @@ interface VolumetricParametersData {
 }
 
 interface OptimumBinderContentData {
+  expectedParameters: {
+    expectedParameters: {
+      Gmb: number,
+      RBV: number,
+      Vam: number,
+      Vv: number,
+      newMaxSpecificGravity: number
+    }
+  },
   graphics: {
     rbv: string[][],
     vv: string[][],
@@ -174,7 +183,9 @@ interface OptimumBinderContentData {
   optimumBinder: {
     optimumContent: number,
     pointsOfCurveDosage: any[],
-    confirmedPercentsOfDosage: number[]
+    confirmedPercentsOfDosage: number[],
+    curveRBV: any[],
+    curveVv: any[]
   }
 }
 
@@ -236,6 +247,7 @@ const initialState = {
   binderTrialData: {
     trial: null,
     percentsOfDosage: [],
+    newPercentOfDosage: [],
     bandsOfTemperatures: {
       machiningTemperatureRange: {
         higher: null,
@@ -373,6 +385,15 @@ const initialState = {
     }
   },
   optimumBinderContentData: {
+    expectedParameters: {
+      expectedParameters: {
+        Gmb: null,
+        RBV: null,
+        Vam: null,
+        Vv: null,
+        newMaxSpecificGravity: null
+      }
+    },
     graphics: {
       rbv: [],
       vv: [],
@@ -384,7 +405,9 @@ const initialState = {
     optimumBinder: {
       optimumContent: null,
       pointsOfCurveDosage: [],
-      confirmedPercentsOfDosage: []
+      confirmedPercentsOfDosage: [],
+      curveRBV: [],
+      curveVv: []
     }
   },
   createdAt: null,

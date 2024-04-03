@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import GraficoPage7N from './graphs/page-7-graph';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import useAuth from '@/contexts/auth';
 
 const Marshall_Step7 = ({
   nextDisabled,
@@ -22,8 +23,11 @@ const Marshall_Step7 = ({
     binderTrialData,
     volumetricParametersData,
     maximumMixtureDensityData,
+    materialSelectionData,
     setData,
   } = useMarshallStore();
+
+  const { user } = useAuth();
 
   useEffect(() => {
     toast.promise(
@@ -33,7 +37,7 @@ const Marshall_Step7 = ({
           const graphics = await marshall.setOptimumBinderContentData(
             generalData,
             volumetricParametersData,
-            binderTrialData,
+            binderTrialData
           );
 
           newData = {
@@ -49,7 +53,6 @@ const Marshall_Step7 = ({
                 binderTrialData,
                 data
               );
-              
 
               newData = {
                 ...newData,
@@ -77,7 +80,6 @@ const Marshall_Step7 = ({
       }
     );
   }, []);
-
 
   // Preparando os dados points para o componente GraficoPage7N
   const points = data?.optimumBinder?.pointsOfCurveDosage;
@@ -110,13 +112,134 @@ const Marshall_Step7 = ({
       valueFormatter: ({ value }) => `${value}`,
     },
   ];
-  
-  // const expectedParametersRows = [
-  //   {
-  //     id: 1,
-  //     vv:,
-  //   },
-  // ]
+
+  const expectedParametersRows = [
+    {
+      id: 1,
+      vv: data?.expectedParameters?.expectedParameters.Vv?.toFixed(2),
+      rbv: data?.expectedParameters?.expectedParameters.RBV?.toFixed(2),
+      vam: data?.expectedParameters?.expectedParameters.Vam?.toFixed(2),
+      gmb: data?.expectedParameters?.expectedParameters.Gmb?.toFixed(2),
+      dmt: data?.expectedParameters?.expectedParameters.newMaxSpecificGravity?.toFixed(2),
+    },
+  ];
+
+  const material_1 = materialSelectionData?.aggregates[0].name;
+  const material_2 = materialSelectionData?.aggregates[1].name;
+  const binder = materialSelectionData?.binder;
+
+  const finalProportionCols: GridColDef[] = [
+    {
+      field: 'binder',
+      headerName: `${binder} (%)`,
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'material_1',
+      headerName: `${material_1} (%)`,
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'material_2',
+      headerName: `${material_2} (%)`,
+      valueFormatter: ({ value }) => `${value}`,
+    },
+  ];
+
+  const finalProportionsRows = [
+    {
+      id: 1,
+      binder: data?.optimumBinder.optimumContent?.toFixed(2),
+      material_1: data?.optimumBinder.confirmedPercentsOfDosage[0]?.toFixed(2),
+      material_2: data?.optimumBinder.confirmedPercentsOfDosage[1]?.toFixed(2),
+    },
+  ];
+
+  const percentsCols: GridColDef[] = [
+    {
+      field: 'binder',
+      headerName: `Porcentagem de ligante (%)`,
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'col1',
+      headerName: `${volumetricParametersData?.volumetricParameters?.volumetricParameters[0].asphaltContent} (%)`,
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'col2',
+      headerName: `${volumetricParametersData?.volumetricParameters?.volumetricParameters[1].asphaltContent} (%)`,
+      valueFormatter: ({ value }) => `${value}`,
+    },
+  ];
+
+  const percentRows = [
+    {
+      id: 1,
+      binder: 'Vv (%)',
+      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.volumeVoids.toFixed(2),
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.volumeVoids.toFixed(2),
+    },
+    {
+      id: 2,
+      binder: 'Gmb (g/cm³)',
+      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.apparentBulkSpecificGravity.toFixed(
+        2
+      ),
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.apparentBulkSpecificGravity.toFixed(2),
+    },
+    {
+      id: 3,
+      binder: 'Vcb (%)',
+      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.voidsFilledAsphalt.toFixed(
+        2
+      ),
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.voidsFilledAsphalt.toFixed(2),
+    },
+    {
+      id: 4,
+      binder: 'Vam (%)',
+      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.aggregateVolumeVoids.toFixed(
+        2
+      ),
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.aggregateVolumeVoids.toFixed(2),
+    },
+    {
+      id: 5,
+      binder: 'Rbv (%)',
+      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.ratioBitumenVoid.toFixed(2),
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.ratioBitumenVoid.toFixed(2),
+    },
+    
+    {
+      id: 6,
+      binder: 'Fluência (mm)',
+      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.fluency.toFixed(2),
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.fluency.toFixed(2),
+    },
+    {
+      id: 7,
+      binder: 'Estabilidade (N)',
+      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.stability.toFixed(2),
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.stability.toFixed(2),
+    },
+    {
+      id: 7,
+      binder: 'Resistência à tração por compressão diametral (MPa)',
+      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.diametricalCompressionStrength.toFixed(
+        2
+      ),
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.diametricalCompressionStrength.toFixed(2),
+    },
+    {
+      id: 8,
+      binder: 'DMT (g/cm³)',
+      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.maxSpecificGravity.toFixed(
+        2
+      ),
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.maxSpecificGravity.toFixed(2),
+    },
+  ];
 
   nextDisabled && setNextDisabled(false);
 
@@ -134,7 +257,15 @@ const Marshall_Step7 = ({
         >
           <GraficoPage7N data={points} />
 
-          <DataGrid columns={expectedParametersColumns} rows={[]}/>
+          {!Object.values(data?.expectedParameters?.expectedParameters).some((item) => item === null) && (
+            <DataGrid columns={expectedParametersColumns} rows={expectedParametersRows} hideFooter disableColumnMenu />
+          )}
+
+          <DataGrid columns={percentsCols} rows={percentRows} hideFooter disableColumnMenu />
+
+          {data?.optimumBinder.optimumContent !== null && (
+            <DataGrid columns={finalProportionCols} rows={finalProportionsRows} hideFooter disableColumnMenu />
+          )}
 
           <Box
             sx={{

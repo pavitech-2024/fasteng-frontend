@@ -77,11 +77,7 @@ class Marshall_SERVICE implements IEssayService {
           await this.submitVolumetricParametersData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 6:
-          // await this.setOptimumBinderExpectedParameters(
-          //   data as MarshallData['maximumMixtureDensityData'],
-          //   data as MarshallData['binderTrialData'],
-          //   data as MarshallData['optimumBinderContentData']
-          // );
+          await this.submitOptimumBinderContentData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 7:
           break;
@@ -353,11 +349,12 @@ class Marshall_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
 
-      const { bandsOfTemperatures, percentsOfDosage } = data;
+      const { bandsOfTemperatures, percentsOfDosage, newPercentOfDosage } = data;
 
       const resultObj = {
         bandsOfTemperatures,
         percentsOfDosage,
+        newPercentOfDosage
       };
 
       const result = {
@@ -379,7 +376,7 @@ class Marshall_SERVICE implements IEssayService {
   ): Promise<void> => {
     if (!isConsult) {
       try {
-        const { trial, percentsOfDosage, bandsOfTemperatures } = data.binderTrialData;
+        const { trial, percentsOfDosage, bandsOfTemperatures, newPercentOfDosage } = data.binderTrialData;
         const { name } = data.generalData;
         const userData = userId ? userId : user;
 
@@ -390,6 +387,7 @@ class Marshall_SERVICE implements IEssayService {
         const binderTrialData = {
           trial,
           percentsOfDosage,
+          newPercentOfDosage,
           bandsOfTemperatures,
           name,
           isConsult: null,
@@ -401,6 +399,7 @@ class Marshall_SERVICE implements IEssayService {
           binderTrialData: {
             trial,
             percentsOfDosage,
+            newPercentOfDosage,
             bandsOfTemperatures,
             name,
           },
@@ -623,7 +622,7 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  plotDosageGraph = async (dnitBand: string, volumetricParameters: any, trial: number, percentsOfDosage: number[]) => {
+  plotDosageGraph = async (dnitBand: string, volumetricParameters: any, trial: number, percentsOfDosage: any[]) => {
     try {
       const response = await Api.post(`${this.info.backend_path}/step-7-plot-dosage-graph`, {
         dnitBand,
@@ -649,7 +648,7 @@ class Marshall_SERVICE implements IEssayService {
   ): Promise<any> => {
     const { dnitBand } = generalData;
     const { volumetricParameters } = step6Data;
-    const { trial, percentsOfDosage } = step4Data;
+    const { trial } = step4Data;
     let result;
 
     try {
@@ -666,7 +665,8 @@ class Marshall_SERVICE implements IEssayService {
       };
 
       try {
-        const dosageGraph = await this.plotDosageGraph(dnitBand, volumetricParameters, trial, percentsOfDosage[2]);
+        const newPercentOfDosage = [40, 60];
+        const dosageGraph = await this.plotDosageGraph(dnitBand, volumetricParameters, trial, newPercentOfDosage);
 
         result = { ...result, dosageGraph: dosageGraph.optimumBinderDosageGraph };
 
@@ -686,7 +686,7 @@ class Marshall_SERVICE implements IEssayService {
   ): Promise<any> => {
     const { maxSpecificGravity, listOfSpecificGravities } = step5Data;
     const { trial } = step4Data;
-    const { vv, rbv } = step7Data.graphics;
+    const { curveVv, curveRBV } = step7Data.optimumBinder;
     const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
     let result;
 
@@ -696,8 +696,8 @@ class Marshall_SERVICE implements IEssayService {
         listOfSpecificGravities,
         trial,
         confirmedPercentsOfDosage,
-        vv,
-        rbv,
+        curveVv,
+        curveRBV,
         optimumContent,
       });
 
@@ -716,6 +716,47 @@ class Marshall_SERVICE implements IEssayService {
       return result;
     } catch (error) {
       //throw error;
+    }
+  };
+
+  submitOptimumBinderContentData = async (
+    data: MarshallData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
+      try {
+        const { optimumBinder, expectedParameters, graphics,  } = data.optimumBinderContentData;
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
+
+        const optimumBinderContentData = {
+          optimumBinder,
+          expectedParameters,
+          graphics,
+          name,
+          isConsult: null,
+        };
+
+        if (isConsult) optimumBinderContentData.isConsult = isConsult;
+
+        const response = await Api.post(`${this.info.backend_path}/save-optimum-binder-content-step/${userData}`, {
+          optimumBinderContentData: {
+            optimumBinder,
+            expectedParameters,
+            graphics,
+            name,
+          },
+        });
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log(error);
+        //throw error;
+      }
     }
   };
 }
