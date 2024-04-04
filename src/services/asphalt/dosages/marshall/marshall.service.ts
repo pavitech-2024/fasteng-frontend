@@ -759,6 +759,48 @@ class Marshall_SERVICE implements IEssayService {
       }
     }
   };
+
+  confirmSpecificGravity = async (
+    step5Data: MarshallData['maximumMixtureDensityData'],
+    step4Data: MarshallData['binderTrialData'],
+    step7Data: MarshallData['optimumBinderContentData'],
+    step8Data: MarshallData['confirmationCompressionData']
+  ): Promise<any> => {
+    const { listOfSpecificGravities } = step5Data;
+    const { method } = step5Data.maxSpecificGravity;
+    const { gmm, valuesOfSpecificGravity } = step8Data
+    const { percentsOfDosage } = step4Data;
+    const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
+    let result;
+
+    try {
+      const response = await Api.post(`${this.info.backend_path}/confirm-specific-gravity`, {
+        method,
+        listOfSpecificGravities, 
+        percentsOfDosage, 
+        confirmedPercentsOfDosage, 
+        optimumContent,
+        gmm,
+        valuesOfSpecificGravity
+      });
+
+      console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
+
+      const { data, success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+      result = {
+        ...data,
+      };
+
+      console.log("🚀 ~ Marshall_SERVICE ~ result:", result)
+
+      return result;
+    } catch (error) {
+      //throw error;
+    }
+  };
 }
 
 export default Marshall_SERVICE;

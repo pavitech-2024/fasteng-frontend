@@ -80,6 +80,7 @@ const Marshall_Step7 = ({
       }
     );
   }, []);
+  
 
   // Preparando os dados points para o componente GraficoPage7N
   const points = data?.optimumBinder?.pointsOfCurveDosage;

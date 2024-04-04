@@ -189,6 +189,27 @@ interface OptimumBinderContentData {
   }
 }
 
+interface ConfirmationCompressionData {
+  dmt: number,
+  gmm: number,
+  optimumBinder: {
+    id: number,
+    diammeter: number,
+    height: number,
+    dryMass: number,
+    submergedMass: number,
+    drySurfaceSaturatedMass: number,
+    stability: number,
+    fluency: number,
+    diametricalCompressionStrength: number
+  }[],
+  valuesOfSpecificGravity: {
+    massOfDrySample: number,
+    massOfContainerWaterSample: number,
+    massOfContainerWater: number
+  }
+}
+
 export type MarshallData = {
   generalData: MarhsallGeneralData;
   materialSelectionData: MarshallMaterialSelectionData;
@@ -196,7 +217,8 @@ export type MarshallData = {
   binderTrialData: MarshallBinderTrialData;
   maximumMixtureDensityData: MarshallMaximumMixtureDensityData;
   volumetricParametersData: VolumetricParametersData;
-  optimumBinderContentData: OptimumBinderContentData
+  optimumBinderContentData: OptimumBinderContentData;
+  confirmationCompressionData: ConfirmationCompressionData
   createdAt: Date;
   updatedAt: Date;
 };
@@ -215,7 +237,8 @@ const stepVariant = {
   3: 'binderTrialData',
   4: 'maximumMixtureDensityData',
   5: 'volumetricParametersData',
-  6: 'optimumBinderContentData'
+  6: 'optimumBinderContentData',
+  7: 'confirmationCompressionData'
 };
 
 const initialState = {
@@ -408,6 +431,26 @@ const initialState = {
       confirmedPercentsOfDosage: [],
       curveRBV: [],
       curveVv: []
+    }
+  },
+  confirmationCompressionData: {
+    dmt: null,
+    gmm: null,
+    optimumBinder: [{
+      id: 0,
+      diammeter: null,
+      height: null,
+      dryMass: null,
+      submergedMass: null,
+      drySurfaceSaturatedMass: null,
+      stability: null,
+      fluency: null,
+      diametricalCompressionStrength: null
+    }],
+    valuesOfSpecificGravity: {
+      massOfDrySample: null,
+      massOfContainerWaterSample: null,
+      massOfContainerWater: null
     }
   },
   createdAt: null,
