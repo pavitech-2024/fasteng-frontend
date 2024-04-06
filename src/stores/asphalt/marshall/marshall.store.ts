@@ -192,6 +192,10 @@ interface OptimumBinderContentData {
 interface ConfirmationCompressionData {
   dmt: number,
   gmm: number,
+  confirmedSpecificGravity: {
+    result: number,
+    type: string,
+  },
   optimumBinder: {
     id: number,
     diammeter: number,
@@ -203,10 +207,11 @@ interface ConfirmationCompressionData {
     fluency: number,
     diametricalCompressionStrength: number
   }[],
-  valuesOfSpecificGravity: {
+  riceTest: {
+    teor: string,
     massOfDrySample: number,
     massOfContainerWaterSample: number,
-    massOfContainerWater: number
+    massOfContainerWater: number,
   }
 }
 
@@ -436,6 +441,10 @@ const initialState = {
   confirmationCompressionData: {
     dmt: null,
     gmm: null,
+    confirmedSpecificGravity: {
+      result: null,
+      type: null,
+    },
     optimumBinder: [{
       id: 0,
       diammeter: null,
@@ -447,10 +456,12 @@ const initialState = {
       fluency: null,
       diametricalCompressionStrength: null
     }],
-    valuesOfSpecificGravity: {
+    riceTest: {
+      id: 0,
+      teor: null,
       massOfDrySample: null,
       massOfContainerWaterSample: null,
-      massOfContainerWater: null
+      massOfContainerWater: null,
     }
   },
   createdAt: null,

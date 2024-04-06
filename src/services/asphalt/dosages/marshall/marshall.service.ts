@@ -761,27 +761,34 @@ class Marshall_SERVICE implements IEssayService {
   };
 
   confirmSpecificGravity = async (
+    step3Data: MarshallData['granulometryCompositionData'],
     step5Data: MarshallData['maximumMixtureDensityData'],
-    step4Data: MarshallData['binderTrialData'],
     step7Data: MarshallData['optimumBinderContentData'],
-    step8Data: MarshallData['confirmationCompressionData']
+    step8Data: MarshallData['confirmationCompressionData'],
+    isRiceTest: boolean
   ): Promise<any> => {
+    const { percentageInputs } = step3Data;
     const { listOfSpecificGravities } = step5Data;
-    const { method } = step5Data.maxSpecificGravity;
-    const { gmm, valuesOfSpecificGravity } = step8Data
-    const { percentsOfDosage } = step4Data;
+    const { gmm, riceTest } = step8Data;
     const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
+    let method;
     let result;
+
+    if (isRiceTest) {
+      method = "GMM";
+    } else {
+      method = step5Data.maxSpecificGravity.method
+    }
 
     try {
       const response = await Api.post(`${this.info.backend_path}/confirm-specific-gravity`, {
         method,
         listOfSpecificGravities, 
-        percentsOfDosage, 
+        percentsOfDosage: percentageInputs, 
         confirmedPercentsOfDosage, 
         optimumContent,
         gmm,
-        valuesOfSpecificGravity
+        valuesOfSpecificGravity: riceTest
       });
 
       console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
@@ -799,6 +806,88 @@ class Marshall_SERVICE implements IEssayService {
       return result;
     } catch (error) {
       //throw error;
+    }
+  };
+
+  confirmVolumetricParameters = async (
+    step5Data: MarshallData['maximumMixtureDensityData'],
+    step7Data: MarshallData['optimumBinderContentData'],
+    step8Data: MarshallData['confirmationCompressionData'],
+  ): Promise<any> => {
+    const { temperatureOfWater } = step5Data;
+    const { optimumContent } = step7Data.optimumBinder;
+    const { optimumBinder } = step8Data;
+    let result;
+
+    try {
+      const response = await Api.post(`${this.info.backend_path}/confirm-volumetric-parameters`, {
+        asphaltContent: optimumContent,
+        sumOfDryMass: optimumBinder[0],
+        sumOfSubmergedMass: optimumBinder[0],
+        sumOfSaturatedMass: optimumBinder[0],
+        maxSpecificGravity: optimumBinder[0],
+        stabilityBar: optimumBinder[0],
+        fluencyBar: optimumBinder[0],
+        diametricalCompressionStrengthBar: optimumBinder[0],
+        temperatureOfWater,
+      });
+
+      console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
+
+      const { data, success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+      result = {
+        ...data,
+      };
+
+      console.log("🚀 ~ Marshall_SERVICE ~ result:", result)
+
+      return result;
+    } catch (error) {
+      //throw error;
+    }
+  };
+
+  submitConfirmationCompressionData = async (
+    data: MarshallData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
+      try {
+        const { confirmedSpecificGravity, optimumBinder, riceTest  } = data.confirmationCompressionData;
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
+
+        const confirmationCompressionData = {
+          optimumBinder,
+          confirmedSpecificGravity,
+          riceTest,
+          name,
+          isConsult: null,
+        };
+
+        if (isConsult) confirmationCompressionData.isConsult = isConsult;
+
+        const response = await Api.post(`${this.info.backend_path}/save-confirmation-compression-data-step/${userData}`, {
+          confirmationCompressionData: {
+            optimumBinder,
+            confirmedSpecificGravity,
+            riceTest,
+            name,
+          },
+        });
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log(error);
+        //throw error;
+      }
     }
   };
 }

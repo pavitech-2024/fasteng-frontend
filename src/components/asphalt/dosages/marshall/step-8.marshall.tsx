@@ -3,22 +3,19 @@ import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
-import useAuth from '@/contexts/auth';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
-import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
-import { Box, Button, TextField, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import useMarshallStore, { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
+import { Box, Button, Typography } from '@mui/material';
+import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { RiceTestRows } from './step-5.marshall';
 
 const Marshall_Step8 = ({
   nextDisabled,
   setNextDisabled,
   marshall,
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
-
   const [loading, setLoading] = useState<boolean>(false);
   const {
     materialSelectionData,
@@ -26,22 +23,16 @@ const Marshall_Step8 = ({
     maximumMixtureDensityData,
     optimumBinderContentData,
     binderTrialData,
+    granulometryCompositionData,
     setData,
   } = useMarshallStore();
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
-  const [GMMModalIsOpen, setGMMModalIsOpen] = useState(false);
   const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const materials = materialSelectionData.aggregates.map((item) => item.name);
   const [methodGmm, setMethodGmm] = useState(false);
   const [methodDmt, setMethodDmt] = useState(false);
-  const [gmmRows, setGmmRows] = useState([]);
-
-  const [riceTestTableRows, setRiceTestTableRows] = useState<RiceTestRows[]>([]);
-  const [riceTestTableColumns, setRiceTestTableColumns] = useState<GridColDef[]>([]);
-
   const optimumBinderRows = data?.optimumBinder;
-  console.log("🚀 ~ optimumBinderRows:", optimumBinderRows)
 
   useEffect(() => {
     toast.promise(
@@ -49,16 +40,17 @@ const Marshall_Step8 = ({
         try {
           let newData;
           const response = await marshall.confirmSpecificGravity(
+            granulometryCompositionData,
             maximumMixtureDensityData,
-            binderTrialData,
             optimumBinderContentData,
-            data
+            data,
+            false
           );
 
           newData = {
             ...data,
-            ...response
-          }
+            ...response,
+          };
 
           setData({ step: 7, value: newData });
         } catch (error) {
@@ -236,12 +228,93 @@ const Marshall_Step8 = ({
       },
     },
   ];
-  console.log("🚀 ~ generateColumns:", generateColumns.length)
+
+  const optimumBinderColumnGroup: GridColumnGroupingModel = [
+    {
+      groupId: 'binder',
+      headerAlign: 'center',
+      headerName: `${optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2)}%`,
+      children: [
+        { field: 'diammeter' },
+        { field: 'height' },
+        { field: 'dryMass' },
+        { field: 'submergedMass' },
+        { field: 'drySurfaceSaturatedMass' },
+        { field: 'stability' },
+        { field: 'fluency' },
+        { field: 'diametricalCompressionStrength' },
+      ],
+    },
+  ];
 
   // Method option dropdown;
   const calcMethodOptions: DropDownOption[] = [
     { label: 'DMT - Densidade máxima teórica', value: 'DMT - Densidade máxima teórica' },
     { label: 'GMM - Densidade máxima medida', value: 'GMM - Densidade máxima medida' },
+  ];
+
+  const riceTestRows = [data?.riceTest];
+
+  const riceTestColumns: GridColDef[] = [
+    {
+      field: 'Teor',
+      headerName: 'Teor',
+      valueFormatter: () => `${optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2)}%`,
+    },
+    {
+      field: 'massOfDrySample',
+      headerName: 'Massa da amostra seca em ar (g)',
+      renderCell: () => {
+        return (
+          <InputEndAdornment
+            adornment={'g'}
+            type="number"
+            value={data?.riceTest?.massOfDrySample}
+            onChange={(e) => {
+              const prevData = data.riceTest;
+              const newData = { ...prevData, massOfDrySample: e.target.value };
+              setData({ step: 7, value: { ...data, riceTest: newData } });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'massOfContainerWaterSample',
+      headerName: 'Massa do recipiente + amostra + água (g)',
+      renderCell: () => {
+        return (
+          <InputEndAdornment
+            adornment={'g'}
+            type="text"
+            value={data?.riceTest?.massOfContainerWaterSample}
+            onChange={(e) => {
+              const prevData = data.riceTest;
+              const newData = { ...prevData, massOfContainerWaterSample: e.target.value };
+              setData({ step: 7, value: { ...data, riceTest: newData } });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'massOfContainerWater',
+      headerName: 'Massa do recipiente + água (g)',
+      renderCell: () => {
+        return (
+          <InputEndAdornment
+            adornment={'g'}
+            type="text"
+            value={data?.riceTest?.massOfContainerWater}
+            onChange={(e) => {
+              const prevData = data.riceTest;
+              const newData = { ...prevData, massOfContainerWater: e.target.value };
+              setData({ step: 7, value: { ...data, riceTest: newData } });
+            }}
+          />
+        );
+      },
+    },
   ];
 
   const handleSubmitDmt = async () => {
@@ -250,8 +323,12 @@ const Marshall_Step8 = ({
     toast.promise(
       async () => {
         try {
-          const dmt = await marshall.calculateMaximumMixtureDensityDMT(materialSelectionData, binderTrialData, maximumMixtureDensityData);
-          console.log("🚀 ~ dmt:", dmt)
+          const dmt = await marshall.calculateMaximumMixtureDensityDMT(
+            materialSelectionData,
+            binderTrialData,
+            maximumMixtureDensityData
+          );
+          console.log('🚀 ~ dmt:', dmt);
           const prevData = data;
 
           const newData = {
@@ -260,7 +337,7 @@ const Marshall_Step8 = ({
               result: dmt.maxSpecificGravity,
               method: dmt.method,
             },
-            listOfSpecificGravities: dmt.listOfSpecificGravities
+            listOfSpecificGravities: dmt.listOfSpecificGravities,
           };
 
           setData({ step: 4, value: newData });
@@ -277,57 +354,27 @@ const Marshall_Step8 = ({
     );
   };
 
-  const handleRiceTestOnChange = (index: number, e: any, prop: string) => {
-    if (e.target.value === null) return;
-
-    const newState = [...maximumMixtureDensityData.riceTest];
-    const newValue = Number(e.target.value);
-
-    if (newState[index]?.[prop] !== null) {
-      // If the input field already has a value, update it
-      newState[index] = { ...newState[index], [prop]: newValue };
-    } else {
-      // If the input field is new, add it to the gmmRows waterTemperatureList
-      newState.splice(index, 0, { ...newState[index], id: index + 1, [prop]: newValue });
-    }
-
-    // Update gmmRows directly
-    setRiceTestTableRows((prevRows) => {
-      const updatedRows = [...prevRows];
-      updatedRows[index] = { ...updatedRows[index], [prop]: newValue };
-      return updatedRows;
-    });
-
-    console.log("riceTestRows", maximumMixtureDensityData?.riceTest);
-
-    // // Create a new copy of the state object with the updated gmmRows waterTemperatureList
-    setData({ step: 4, value: { ...maximumMixtureDensityData, riceTest: newState } });
-  }
-
   const calculateRiceTest = () => {
-
     toast.promise(
       async () => {
         try {
-          const riceTest = await marshall.calculateRiceTest(maximumMixtureDensityData);
-          const prevData = maximumMixtureDensityData;
-          const newData = {
-            ...prevData,
+          let newData;
+          const riceTest = await marshall.confirmSpecificGravity(
+            granulometryCompositionData,
+            maximumMixtureDensityData,
+            optimumBinderContentData,
+            data,
+            true
+          );
+
+          newData = {
+            ...data,
             ...riceTest,
           };
 
           setRiceTestModalIsOpen(false);
 
-          const formattedGmm = riceTest?.maxSpecificGravity.map((item) => {
-            return {
-              id: item.id,
-              Teor: item.Teor,
-              GMM: item.GMM
-            }
-          });
-
-          setGmmRows(formattedGmm)
-          setData({ step: 4, value: newData });
+          setData({ step: 7, value: newData });
           //setLoading(false);
         } catch (error) {
           //setLoading(false);
@@ -341,13 +388,37 @@ const Marshall_Step8 = ({
       }
     );
   };
-  
-  //Activated when gmm method is selected
-  const handleSelectGMM = () => {
-    setGMMModalIsOpen(false);
-    setMethodGmm(true);
-    setMethodDmt(false);
-  };
+
+  const handleConfirm = () => {
+    toast.promise(
+      async () => {
+        try {
+          let newData;
+          const confirmVP = await marshall.confirmVolumetricParameters(
+            maximumMixtureDensityData,
+            optimumBinderContentData,
+            data,
+          );
+
+          newData = {
+            ...data,
+            ...confirmVP,
+          };
+
+          setData({ step: 7, value: newData });
+          //setLoading(false);
+        } catch (error) {
+          //setLoading(false);
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      }
+    );
+  }
 
   const handleErase = () => {
     try {
@@ -416,7 +487,7 @@ const Marshall_Step8 = ({
               ) {
                 setDMTModalISOpen(true);
               } else {
-                setGMMModalIsOpen(true);
+                setMethodGmm(true);
                 setEnableRiceTest(true);
               }
             }}
@@ -424,17 +495,51 @@ const Marshall_Step8 = ({
             sx={{ width: '75%', marginX: 'auto' }}
           />
 
-          <Typography>{`DMT do teor de ligante ótimo:`}</Typography>
+          {maximumMixtureDensityData?.maxSpecificGravity?.method !== 'DMT' ? (
+            <Typography>{`DMT do teor de ligante ótimo: ${data?.confirmedSpecificGravity?.result?.toFixed(
+              2
+            )} g/cm³`}</Typography>
+          ) : (
+            <Box>
+              <Typography>{`Insira a Gmm ou calcule pelo Rice Test`}</Typography>
+              {data?.confirmedSpecificGravity?.type === 'GMM' ? (
+                <Typography>{`Gmm calculada pelo Rice Test: ${data?.confirmedSpecificGravity?.result.toFixed(
+                  2
+                )}`}</Typography>
+              ) : (
+                <InputEndAdornment
+                  adornment={'g/cm³'}
+                  label={'Gmm do teor de ligante asfáltico:'}
+                  value={data?.gmm}
+                  onChange={(e) => {
+                    const prevData: MarshallData['confirmationCompressionData'] = data;
+                    const newData = { ...prevData, gmm: e.target.value };
+                    setData({ step: 7, value: newData });
+                  }}
+                />
+              )}
+            </Box>
+          )}
+
+          {methodGmm && (
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Button onClick={() => setRiceTestModalIsOpen(true)}>Rice Test</Button>
+            </Box>
+          )}
 
           <DataGrid
             key={'optimumBinder'}
             columns={generateColumns}
             rows={optimumBinderRows}
+            experimentalFeatures={{ columnGrouping: true }}
+            columnGroupingModel={optimumBinderColumnGroup}
             density="comfortable"
             disableColumnMenu
             disableColumnSelector
             slots={{ footer: () => ExpansionToolbar() }}
           />
+
+          <Button onClick={handleConfirm}>Confirmar</Button>
 
           <ModalBase
             title={'Insira a massa específica real dos materiais abaixo'}
@@ -473,46 +578,10 @@ const Marshall_Step8 = ({
           />
 
           <ModalBase
-            title={'Insira a massa específica real dos materiais abaixo'}
-            children={
-              <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-                <InputEndAdornment
-                  adornment={'g/cm³'}
-                  label={materials[0]}
-                  value={maximumMixtureDensityData?.missingSpecificMass?.material_1}
-                  onChange={(e) => {
-                    const prevState = maximumMixtureDensityData;
-                    const prevDmt = maximumMixtureDensityData.missingSpecificMass;
-                    const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_1: e.target.value } };
-                    setData({ step: 4, value: newState });
-                  }}
-                />
-                <InputEndAdornment
-                  adornment={'g/cm³'}
-                  label={materials[1]}
-                  value={maximumMixtureDensityData?.missingSpecificMass?.material_2}
-                  onChange={(e) => {
-                    const prevState = maximumMixtureDensityData;
-                    const prevDmt = maximumMixtureDensityData.missingSpecificMass;
-                    const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
-                    setData({ step: 4, value: newState });
-                  }}
-                />
-              </Box>
-            }
-            leftButtonTitle={'cancelar'}
-            rightButtonTitle={'confirmar'}
-            onCancel={() => setGMMModalIsOpen(false)}
-            open={GMMModalIsOpen}
-            size={'large'}
-            onSubmit={() => handleSelectGMM()}
-          />
-
-          <ModalBase
             title={'Dados do Rice Test'}
             children={
               <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
-                <DataGrid columns={riceTestTableColumns} rows={riceTestTableRows} hideFooter />
+                <DataGrid columns={riceTestColumns} rows={riceTestRows} hideFooter />
               </Box>
             }
             leftButtonTitle={'cancelar'}

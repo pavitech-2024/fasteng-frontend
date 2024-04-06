@@ -36,6 +36,7 @@ const Marshall_Step5 = ({
   const [riceTestTableColumns, setRiceTestTableColumns] = useState<GridColDef[]>([]);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
+  console.log("🚀 ~ DMTModalIsOpen:", DMTModalIsOpen)
   const materials = materialSelectionData.aggregates.map((item) => item.name);
   const [hasNull, setHasNull] = useState(true);
 
@@ -45,11 +46,14 @@ const Marshall_Step5 = ({
       async () => {
         try {
           const indexes = await marshall.getIndexesOfMissesSpecificGravity(materialSelectionData);
+
           const prevData = data;
+          
           const newData = {
             ...prevData,
             indexesOfMissesSpecificGravity: indexes,
           };
+
           setData({ step: 4, value: newData });
           setLoading(false);
         } catch (error) {
@@ -540,6 +544,8 @@ const Marshall_Step5 = ({
   }, [riceTestTableRows])
 
   nextDisabled && setNextDisabled(false);
+
+  console.log("🚀 ~ calcMethodOptions:", calcMethodOptions)
 
   return (
     <>
