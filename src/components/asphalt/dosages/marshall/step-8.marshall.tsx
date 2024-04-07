@@ -495,18 +495,16 @@ const Marshall_Step8 = ({
             sx={{ width: '75%', marginX: 'auto' }}
           />
 
-          {maximumMixtureDensityData?.maxSpecificGravity?.method !== 'DMT' ? (
+          {maximumMixtureDensityData?.maxSpecificGravity?.method === 'DMT' ? (
             <Typography>{`DMT do teor de ligante ótimo: ${data?.confirmedSpecificGravity?.result?.toFixed(
               2
             )} g/cm³`}</Typography>
           ) : (
             <Box>
               <Typography>{`Insira a Gmm ou calcule pelo Rice Test`}</Typography>
-              {data?.confirmedSpecificGravity?.type === 'GMM' ? (
                 <Typography>{`Gmm calculada pelo Rice Test: ${data?.confirmedSpecificGravity?.result.toFixed(
                   2
                 )}`}</Typography>
-              ) : (
                 <InputEndAdornment
                   adornment={'g/cm³'}
                   label={'Gmm do teor de ligante asfáltico:'}
@@ -517,12 +515,7 @@ const Marshall_Step8 = ({
                     setData({ step: 7, value: newData });
                   }}
                 />
-              )}
-            </Box>
-          )}
 
-          {methodGmm && (
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Button onClick={() => setRiceTestModalIsOpen(true)}>Rice Test</Button>
             </Box>
           )}

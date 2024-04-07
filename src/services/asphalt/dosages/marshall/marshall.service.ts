@@ -815,21 +815,23 @@ class Marshall_SERVICE implements IEssayService {
     step7Data: MarshallData['optimumBinderContentData'],
     step8Data: MarshallData['confirmationCompressionData']
   ): Promise<any> => {
-    const { temperatureOfWater } = step5Data;
-    const { optimumContent } = step7Data.optimumBinder;
+    const { temperatureOfWater, listOfSpecificGravities } = step5Data;
+    const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
     const { optimumBinder } = step8Data;
     const { result: resultNumber } = step8Data.confirmedSpecificGravity;
     let result;
 
-    const sampleData = optimumBinder.map((e) => ({
-      ...e,
-      asphaltContent: optimumContent,
-      temperatureOfWater,
-      maxSpecificGravity: resultNumber,
-    }));
+    const confirmVolumetricParameters = {
+      valuesOfVolumetricParameters: optimumBinder,
+      confirmedSpecificGravity: resultNumber,
+      optimumContent,
+      confirmedPercentsOfDosage,
+      listOfSpecificGravities,
+      temperatureOfWater
+    }
 
     try {
-      const response = await Api.post(`${this.info.backend_path}/confirm-volumetric-parameters`, sampleData);
+      const response = await Api.post(`${this.info.backend_path}/confirm-volumetric-parameters`, confirmVolumetricParameters);
 
       console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
 

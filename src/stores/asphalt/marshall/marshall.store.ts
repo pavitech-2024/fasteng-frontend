@@ -212,6 +212,21 @@ interface ConfirmationCompressionData {
     massOfDrySample: number,
     massOfContainerWaterSample: number,
     massOfContainerWater: number,
+  },
+  confirmedVolumetricParameters: {
+    valuesOfVolumetricParameters: any,
+    asphaltContent: number,
+    quantitative: any,
+    values: {
+      volumeVoids: number,
+      apparentBulkSpecificGravity: number,
+      voidsFilledAsphalt: number,
+      aggregateVolumeVoids: number,
+      ratioBitumenVoid: number,
+      stability: number,
+      fluency: number,
+      indirectTensileStrength: number,
+    },
   }
 }
 
@@ -462,6 +477,21 @@ const initialState = {
       massOfDrySample: null,
       massOfContainerWaterSample: null,
       massOfContainerWater: null,
+    },
+    confirmedVolumetricParameters: {
+      valuesOfVolumetricParameters: null,
+      asphaltContent: null,
+      quantitative: null,
+      values: {
+        volumeVoids: null,
+        apparentBulkSpecificGravity: null,
+        voidsFilledAsphalt: null,
+        aggregateVolumeVoids: null,
+        ratioBitumenVoid: null,
+        stability: null,
+        fluency: null,
+        indirectTensileStrength: null,
+      },
     }
   },
   createdAt: null,

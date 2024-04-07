@@ -257,6 +257,7 @@ const Marshall_Step7 = ({
           }}
         >
           <GraficoPage7N data={points} />
+          
 
           {!Object.values(data?.expectedParameters?.expectedParameters).some((item) => item === null) && (
             <DataGrid columns={expectedParametersColumns} rows={expectedParametersRows} hideFooter disableColumnMenu />
