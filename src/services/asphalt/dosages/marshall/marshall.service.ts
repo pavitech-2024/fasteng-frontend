@@ -80,6 +80,7 @@ class Marshall_SERVICE implements IEssayService {
           await this.submitOptimumBinderContentData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 7:
+          await this.submitConfirmationCompressionData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 8:
           break;
@@ -354,7 +355,7 @@ class Marshall_SERVICE implements IEssayService {
       const resultObj = {
         bandsOfTemperatures,
         percentsOfDosage,
-        newPercentOfDosage
+        newPercentOfDosage,
       };
 
       const result = {
@@ -536,7 +537,7 @@ class Marshall_SERVICE implements IEssayService {
             maxSpecificGravity,
             temperatureOfWater,
             name,
-            listOfSpecificGravities
+            listOfSpecificGravities,
           },
         });
 
@@ -711,7 +712,7 @@ class Marshall_SERVICE implements IEssayService {
         ...data,
       };
 
-      console.log("🚀 ~ Marshall_SERVICE ~ result:", result)
+      console.log('🚀 ~ Marshall_SERVICE ~ result:', result);
 
       return result;
     } catch (error) {
@@ -727,7 +728,7 @@ class Marshall_SERVICE implements IEssayService {
   ): Promise<void> => {
     if (!isConsult) {
       try {
-        const { optimumBinder, expectedParameters, graphics,  } = data.optimumBinderContentData;
+        const { optimumBinder, expectedParameters, graphics } = data.optimumBinderContentData;
         const { name } = data.generalData;
         const userData = userId ? userId : user;
 
@@ -775,20 +776,20 @@ class Marshall_SERVICE implements IEssayService {
     let result;
 
     if (isRiceTest) {
-      method = "GMM";
+      method = 'GMM';
     } else {
-      method = step5Data.maxSpecificGravity.method
+      method = step5Data.maxSpecificGravity.method;
     }
 
     try {
       const response = await Api.post(`${this.info.backend_path}/confirm-specific-gravity`, {
         method,
-        listOfSpecificGravities, 
-        percentsOfDosage: percentageInputs, 
-        confirmedPercentsOfDosage, 
+        listOfSpecificGravities,
+        percentsOfDosage: percentageInputs,
+        confirmedPercentsOfDosage,
         optimumContent,
         gmm,
-        valuesOfSpecificGravity: riceTest
+        valuesOfSpecificGravity: riceTest,
       });
 
       console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
@@ -801,7 +802,7 @@ class Marshall_SERVICE implements IEssayService {
         ...data,
       };
 
-      console.log("🚀 ~ Marshall_SERVICE ~ result:", result)
+      console.log('🚀 ~ Marshall_SERVICE ~ result:', result);
 
       return result;
     } catch (error) {
@@ -812,25 +813,23 @@ class Marshall_SERVICE implements IEssayService {
   confirmVolumetricParameters = async (
     step5Data: MarshallData['maximumMixtureDensityData'],
     step7Data: MarshallData['optimumBinderContentData'],
-    step8Data: MarshallData['confirmationCompressionData'],
+    step8Data: MarshallData['confirmationCompressionData']
   ): Promise<any> => {
     const { temperatureOfWater } = step5Data;
     const { optimumContent } = step7Data.optimumBinder;
     const { optimumBinder } = step8Data;
+    const { result: resultNumber } = step8Data.confirmedSpecificGravity;
     let result;
 
+    const sampleData = optimumBinder.map((e) => ({
+      ...e,
+      asphaltContent: optimumContent,
+      temperatureOfWater,
+      maxSpecificGravity: resultNumber,
+    }));
+
     try {
-      const response = await Api.post(`${this.info.backend_path}/confirm-volumetric-parameters`, {
-        asphaltContent: optimumContent,
-        sumOfDryMass: optimumBinder[0],
-        sumOfSubmergedMass: optimumBinder[0],
-        sumOfSaturatedMass: optimumBinder[0],
-        maxSpecificGravity: optimumBinder[0],
-        stabilityBar: optimumBinder[0],
-        fluencyBar: optimumBinder[0],
-        diametricalCompressionStrengthBar: optimumBinder[0],
-        temperatureOfWater,
-      });
+      const response = await Api.post(`${this.info.backend_path}/confirm-volumetric-parameters`, sampleData);
 
       console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
 
@@ -842,7 +841,7 @@ class Marshall_SERVICE implements IEssayService {
         ...data,
       };
 
-      console.log("🚀 ~ Marshall_SERVICE ~ result:", result)
+      console.log('🚀 ~ Marshall_SERVICE ~ result:', result);
 
       return result;
     } catch (error) {
@@ -858,7 +857,7 @@ class Marshall_SERVICE implements IEssayService {
   ): Promise<void> => {
     if (!isConsult) {
       try {
-        const { confirmedSpecificGravity, optimumBinder, riceTest  } = data.confirmationCompressionData;
+        const { confirmedSpecificGravity, optimumBinder, riceTest } = data.confirmationCompressionData;
         const { name } = data.generalData;
         const userData = userId ? userId : user;
 
@@ -872,14 +871,17 @@ class Marshall_SERVICE implements IEssayService {
 
         if (isConsult) confirmationCompressionData.isConsult = isConsult;
 
-        const response = await Api.post(`${this.info.backend_path}/save-confirmation-compression-data-step/${userData}`, {
-          confirmationCompressionData: {
-            optimumBinder,
-            confirmedSpecificGravity,
-            riceTest,
-            name,
-          },
-        });
+        const response = await Api.post(
+          `${this.info.backend_path}/save-confirmation-compression-data-step/${userData}`,
+          {
+            confirmationCompressionData: {
+              optimumBinder,
+              confirmedSpecificGravity,
+              riceTest,
+              name,
+            },
+          }
+        );
 
         const { success, error } = response.data;
 
