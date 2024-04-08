@@ -1,0 +1,16 @@
+{
+  "topbar.igg": "IGG",
+  "asphalt.igg.work": "Work",
+  "asphalt.igg.section": "Section",
+  "asphalt.igg.initial-stake": "Initial Stake",
+  "asphalt.igg.initial-side": "Initial Side",
+  "asphalt.igg.final-stake": "Final Stake",
+  "asphalt.igg.final-side": "Final Side",
+  "asphalt.essays.igg.iggStep2": "Step 1",
+  "asphalt.essays.igg.iggStep3": "Step 2",
+  "asphalt.essays.igg.iggStep4": "Step 3",
+  "igg.step-2-description": "Please, fill in all the fields below.",
+  "igg.step-3-description": "Upload a spreadsheet containing the data, as shown in the template below.",
+  "igg.step-4-description": "Please, fill in all the fields below.",
+  "igg.step-5-description": "These are the results of your experiment. Remember to save the experiment so you can access it later."
+}
