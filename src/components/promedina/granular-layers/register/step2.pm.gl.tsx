@@ -75,6 +75,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
       key: 'identification',
       required: true,
     },
+    // refactor: '300 m'
     { label: t('pm.granularLayer.section.type'), value: step2Data.sectionType, key: 'sectionType', required: true },
     { label: t('pm.granularLayer.extension'), value: step2Data.extension, key: 'extension', required: true },
     {

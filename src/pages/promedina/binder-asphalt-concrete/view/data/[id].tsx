@@ -238,6 +238,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
       value: samples?.step3Data?.certificateNumber,
     },
     {
+      // refactor: 'revisar casing'
       title: t('pm.binderAsphaltConcrete.capType'),
       value: samples?.step3Data?.capType,
     },

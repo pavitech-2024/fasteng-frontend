@@ -297,6 +297,7 @@ const SpecificSample_GranularLayers = () => {
       value: samples?.step3Data?.mctIndexE,
     },
     {
+      // refactor: (g/cm³)
       title: t('pm.granularLayer.especific.mass'),
       value: samples?.step3Data?.especificMass,
     },
@@ -313,6 +314,7 @@ const SpecificSample_GranularLayers = () => {
       value: samples?.step3Data?.optimalHumidity,
     },
     {
+      // refactor: 'todo os inputs vazios precisam ficar com '-';
       title: t('pm.granularLayer.abrasionLA'),
       value: samples?.step3Data?.abrasionLA,
     },

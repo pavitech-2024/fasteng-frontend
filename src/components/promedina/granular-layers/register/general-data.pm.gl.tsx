@@ -16,6 +16,7 @@ const GranularLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     { label: t('pm.granularLayer.layer'), value: generalData.layer, key: 'layer', required: true },
     { label: t('pm.granularLayer.cityState'), value: generalData.cityState, key: 'cityState', required: true },
     {
+      // refactor: 'Km -> km'
       label: t('pm.granularLayer.guideLineSpeed'),
       value: generalData.guideLineSpeed,
       key: 'guideLineSpeed',
