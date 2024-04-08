@@ -83,6 +83,7 @@ class Marshall_SERVICE implements IEssayService {
           await this.submitConfirmationCompressionData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 8:
+          await this.submitMarshalDosageData(data as MarshallData, this.userId, null, isConsult);
           break;
         default:
           throw t('errors.invalid-step');
@@ -883,6 +884,37 @@ class Marshall_SERVICE implements IEssayService {
               name,
             },
           }
+        );
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log(error);
+        //throw error;
+      }
+    }
+  };
+
+  submitMarshalDosageData = async (
+    data: MarshallData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
+      try {
+        const userData = userId ? userId : user;
+
+        const marshallDosageData = {
+          ...data,
+          isConsult: null
+        };
+
+        if (isConsult) marshallDosageData.isConsult = isConsult;
+
+        const response = await Api.post(
+          `${this.info.backend_path}/save-marshall-dosage/${userData}`, marshallDosageData
         );
 
         const { success, error } = response.data;

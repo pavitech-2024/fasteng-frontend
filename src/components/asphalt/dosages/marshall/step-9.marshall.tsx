@@ -95,8 +95,23 @@ const Marshall_Step9 = ({
 
   const volumetricParamsCols: GridColDef[] = [
     {
-      field: 'volumetricParams',
-      headerName: 'Parametros volumétricos e mecanicos da mistura no teor ótimo de ligante asfáltico',
+      field: 'param',
+      headerName: 'Parametro',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'unity',
+      headerName: 'Unidade',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'bearingLayer',
+      headerName: 'Camada de rolamento',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'bondingLayer',
+      headerName: 'Camada de ligação',
       valueFormatter: ({ value }) => `${value}`,
     },
   ];
@@ -104,11 +119,72 @@ const Marshall_Step9 = ({
   const volumetricParamsRows = [
     {
       id: 0,
-      binder: data?.confirmedVolumetricParameters?.quantitative[0].toFixed(2),
-      material_1: data?.confirmedVolumetricParameters?.quantitative[1].toFixed(2),
-      material_2: data?.confirmedVolumetricParameters?.quantitative[2].toFixed(2),
+      param: 'Estabilidade',
+      unity: 'Kgf',
+      bearingLayer: '≥500',
+      bondingLayer: '≥500'
+    },
+    {
+      id: 1,
+      param: 'Relação betume  / vazios',
+      unity: '%',
+      bearingLayer: '75 - 82',
+      bondingLayer: '65 - 72'
+    },
+    {
+      id: 2,
+      param: 'Vazios na mistura',
+      unity: '%',
+      bearingLayer: '3 - 5',
+      bondingLayer: '4 - 6'
+    },
+    {
+      id: 3,
+      param: 'Resistência à tração por compressão diametral (25 °C)',
+      unity: 'MPa',
+      bearingLayer: '≥ 0,65',
+      bondingLayer: '≥ 0,65'
     },
   ];
+
+  const mineralAggregateVoidsCols: GridColDef[] = [
+    {
+      field: 'tmn',
+      headerName: 'TMN',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'vam',
+      headerName: 'Vam (%)',
+      valueFormatter: ({ value }) => `${value}`,
+    }
+  ];
+
+  const mineralAggregateVoidsRows = [
+    {
+      id: 0,
+      tmn: '9,5mm',
+      vam: '≥ 18'
+    },
+    {
+      id: 1,
+      tmn: '12,5mm',
+      vam: '≥ 16'
+    },
+    {
+      id: 3,
+      tmn: '19,1mm',
+      vam: '≥ 15'
+    },
+  ];
+
+  const mineralAggregateVoidsGroup = [
+    {
+      groupId: 'mineralAggregateVoids',
+      headerName: 'Vazios do agregado mineral (%)',
+      children: [{ field: 'tmn' }, { field: 'vam' }],
+    },
+  ]
 
   nextDisabled && setNextDisabled(false);
 
@@ -158,6 +234,7 @@ const Marshall_Step9 = ({
             sx={{
               width: '100%',
               display: 'flex',
+              flexWrap: 'wrap',
               gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
               gap: '10px',
               mt: '20px',
@@ -179,7 +256,6 @@ const Marshall_Step9 = ({
               />
             )}
 
-
             {data?.confirmedVolumetricParameters?.values?.apparentBulkSpecificGravity && (
               <Result_Card
                 label={'Massa específica aparente (Gmb)'}
@@ -187,7 +263,75 @@ const Marshall_Step9 = ({
                 unity={'g/cm³'}
               />
             )}
+
+            {data?.confirmedVolumetricParameters?.values?.aggregateVolumeVoids && (
+              <Result_Card
+                label={'Volume de vazios (Vv)'}
+                value={data?.confirmedVolumetricParameters?.values?.aggregateVolumeVoids.toFixed(2).toString()}
+                unity={'%'}
+              />
+            )}
+
+            {data?.confirmedVolumetricParameters?.values?.voidsFilledAsphalt && (
+              <Result_Card
+                label={'Vazios do agregado mineral (VAM)'}
+                value={data?.confirmedVolumetricParameters?.values?.voidsFilledAsphalt.toFixed(2).toString()}
+                unity={'%'}
+              />
+            )}
+
+            {data?.confirmedVolumetricParameters?.values?.ratioBitumenVoid && (
+              <Result_Card
+                label={'Relação betume-vazios (RBV)'}
+                value={data?.confirmedVolumetricParameters?.values?.ratioBitumenVoid.toFixed(2).toString()}
+                unity={'%'}
+              />
+            )}
+
+            {data?.confirmedVolumetricParameters?.values?.stability && (
+              <Result_Card
+                label={'Estabilidade Marshall'}
+                value={data?.confirmedVolumetricParameters?.values?.stability.toFixed(2).toString()}
+                unity={'N'}
+              />
+            )}
+
+            {data?.confirmedVolumetricParameters?.values?.fluency && (
+              <Result_Card
+                label={'Fluencia'}
+                value={data?.confirmedVolumetricParameters?.values?.fluency.toFixed(2).toString()}
+                unity={'mm'}
+              />
+            )}
+
+            {data?.confirmedVolumetricParameters?.values?.indirectTensileStrength && (
+              <Result_Card
+                label={'Resistência à tração por compressão diametral'}
+                value={data?.confirmedVolumetricParameters?.values?.indirectTensileStrength.toFixed(2).toString()}
+                unity={'MPa'}
+              />
+            )}
           </Box>
+
+          <DataGrid 
+            rows={volumetricParamsRows} 
+            columns={volumetricParamsCols} 
+            density="comfortable"
+            disableColumnMenu
+            disableColumnSelector
+            hideFooter
+          />
+
+          <DataGrid 
+            rows={mineralAggregateVoidsRows} 
+            columns={mineralAggregateVoidsCols}
+            columnGroupingModel={mineralAggregateVoidsGroup}
+            experimentalFeatures={{ columnGrouping: true }}
+            density="comfortable"
+            disableColumnMenu
+            disableColumnSelector
+            hideFooter
+          />
         </Box>
       )}
     </>

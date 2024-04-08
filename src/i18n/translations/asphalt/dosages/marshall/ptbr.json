@@ -1,7 +1,10 @@
 {
+  "marshall.dosage-title": "Dosagem Marshall",
+  
   "marshall.step-2-description": "Selecione os agregados e o ligante asfáltico que serão utilizados na dosagem",
   "marshall.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica da mistura",
 
+  "marshall.dosages.marshall.general-data": "Dados Gerais",
   "asphalt.dosages.marshall.material_selection": "Seleção de Materiais",
   "asphalt.dosages.marshall.granulometry_composition": "Composição Granulométrica",
   "asphalt.dosages.marshall.initial_binder": "Teor de Ligante Inicial",

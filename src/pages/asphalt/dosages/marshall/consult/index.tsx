@@ -16,6 +16,7 @@ const MarshallDosageConsult = () => {
   const { setData } = useMarshallStore();
   const { handleNext } = new Marshall_SERVICE();
   const [dosages, setDosages] = useState<any[]>([]);
+  console.log("🚀 ~ MarshallDosageConsult ~ dosages:", dosages)
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const { user } = useAuth();
@@ -24,11 +25,15 @@ const MarshallDosageConsult = () => {
   const [dosageArrays, setDosageArrays] = useState([]);
 
   const progressTextMap = {
-    1: t('general data'),
-    2: t('marshall.material-selection'),
-    3: t('marshall.essay-selection'),
-    4: t('marshall.inserting-params'),
-    5: t('marshall.dosage-resume'),
+    1: t('marshall.dosages.marshall.general-data'),
+    2: t('asphalt.dosages.marshall.material_selection'),
+    3: t('asphalt.dosages.marshall.granulometry_composition'),
+    4: t('asphalt.dosages.marshall.initial_binder'),
+    5: t('asphalt.dosages.marshall.max_density'),
+    6: t('asphalt.dosages.marshall.volumetric_parameters'),
+    7: t('asphalt.dosages.marshall.optimal_binder'),
+    8: t('asphalt.dosages.marshall.confirm_compression'),
+    9: t('asphalt.dosages.marshall.dosage_resume')
   };
 
   useEffect(() => {
@@ -87,6 +92,27 @@ const MarshallDosageConsult = () => {
       console.error('Failed to delete dosage:', error);
     }
   };
+
+  useEffect(() => {
+    console.log("🚀 ~ rows ~ dosages:", dosages)
+
+    const rows = dosages?.map((row) => ({
+      name: row.generalData?.name,
+      progress: `(${row.generalData?.step}/9) - ${progressTextMap[row.generalData?.step]}`,
+      start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
+      finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
+      id: row._id,
+    }));
+
+    console.log("🚀 ~ rows ~ rows:", rows)
+
+
+    const updatedDosageArrays = dividirArrayEmArraysMenores(rows, rowsPerPage);
+    
+    console.log("🚀 ~ useEffect ~ updatedDosageArrays:", updatedDosageArrays)
+    //setDosageArrays(updatedDosageArrays);
+    console.log("🚀 ~ MarshallDosageConsult ~ dosageArrays:", dosageArrays)
+  }, [dosages])
 
   const handleVisualizeDosage = (id: string) => {
     const dosage = dosages[0]?.find((dosage) => {

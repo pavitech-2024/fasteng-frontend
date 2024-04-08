@@ -1,1 +1,24 @@
-{}
+{
+  "marshall.dosage-title": "Marshall dosage",
+
+  "marshall.step-2-description": "Select the aggregates and asphalt binder that will be used in the dosage",
+  "marshall.step-3-description": "Enter the percentages of each aggregate in the granulometric composition of the mixture",
+
+  "marshall.dosages.marshall.general-data": "General Data",
+  "asphalt.dosages.marshall.material_selection": "Material Selection",
+  "asphalt.dosages.marshall.granulometry_composition": "Granulometric Composition",
+  "asphalt.dosages.marshall.initial_binder": "Initial Binder Content",
+  "asphalt.dosages.marshall.max_density": "Maximum Mixture Density",
+  "asphalt.dosages.marshall.volumetric_parameters": "Volumetric Parameters",
+  "asphalt.dosages.marshall.optimal_binder": "Optimal Binder Content",
+  "asphalt.dosages.marshall.confirm_compression": "Commit Compression",
+  "asphalt.dosages.marshall.dosage_resume": "Dosage Resume",
+
+  "asphalt.project_name": "Project Name",
+  "asphalt.laboratory_name": "Laboratory Name",
+  "asphalt.choose_objective": "Choose the Mixing Purpose",
+  "asphalt.choose_dnit_track": "Choose the DNIT Band",
+
+  "asphalt.dosages.marshall.bearing-layer": "Bearing Layer",
+  "asphalt.dosages.marshall.bonding-layer": "Connection Layer"
+}
