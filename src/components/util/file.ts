@@ -12,7 +12,6 @@ export const processFile = async (file: FileList | Blob, processEssayMethod) => 
         const lista = dsvFormat(';').parseRows(text);
         processedFiles.push(lista);
       });
-
     return processedFiles;
   } else {
     const blob = file as Blob;
@@ -30,6 +29,7 @@ export const processFile = async (file: FileList | Blob, processEssayMethod) => 
         const ws = wb.Sheets[wsname];
 
         const data = XLSX.utils.sheet_to_json(ws, { defval: null });
+
         resolve(data);
       };
 
