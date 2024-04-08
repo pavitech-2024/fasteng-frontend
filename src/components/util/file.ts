@@ -28,7 +28,7 @@ export const processFile = async (file: FileList | Blob, processEssayMethod) => 
 
         const ws = wb.Sheets[wsname];
 
-        const data = XLSX.utils.sheet_to_json(ws);
+        const data = XLSX.utils.sheet_to_json(ws, { defval: null });
 
         resolve(data);
       };
