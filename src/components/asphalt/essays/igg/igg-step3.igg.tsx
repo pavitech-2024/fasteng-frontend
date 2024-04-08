@@ -66,7 +66,6 @@ const Igg_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
 
       //Passa como parâmetro para o processFile o arquivo lido e o método de processamento específico do ensaio
       const processedData = await processFile(file, processIggFile);
-      console.log("ARQUIVO PROCESSADO >>>", processedData);
       setData({ step: 2, key: 'stakes', value: processedData });
       setNextDisabled(false);
     }
