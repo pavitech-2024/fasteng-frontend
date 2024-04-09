@@ -514,7 +514,6 @@ const Marshall_Step8 = ({
                     setData({ step: 7, value: newData });
                   }}
                 />
-
               <Button onClick={() => setRiceTestModalIsOpen(true)}>Rice Test</Button>
             </Box>
           )}
