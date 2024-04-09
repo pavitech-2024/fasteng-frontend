@@ -50,27 +50,22 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: GranularLayersData['generalData']): Promise<void> => {
-    // if (generalData) {
-    //   true;
-    // }
-    // try {
-    // const { name, zone, layer, cityState, observations } = generalData;
-    // if (!name) throw t('errors.empty-name');
-    // if (!zone) throw t('errors.empty-zone');
-    // if (!layer) throw t('errors.empty-layer');
-    // if (!cityState) throw t('errors.empty-cityState');
-    //   const response = await Api.post(`${this.info.backend_path}/verify-init`, {
-    //     name,
-    //     zone,
-    //     layer,
-    //     cityState,
-    //     observations,
-    //   });
-    //   const { success, error } = response.data;
-    //   if (success === false) throw error.name;
-    // } catch (error) {
-    //   throw error;
-    // }
+
+    function replaceNullValues(data: GranularLayersData['generalData']): GranularLayersData['generalData'] {
+      const newData: GranularLayersData['generalData'] = { ...data };
+    
+      for (const key in newData) {
+        if (newData[key] === null || newData[key] === undefined) {
+          newData[key] = '-';
+        }
+      }
+    
+      return newData;
+    }
+
+    const newData = replaceNullValues(generalData);
+
+    this.store_actions.setData({ step: 0, value: newData })
   };
 
   submitStep2Data = async (step2Data: GranularLayersData['step2Data']): Promise<void> => {

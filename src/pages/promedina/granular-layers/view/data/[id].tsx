@@ -297,7 +297,6 @@ const SpecificSample_GranularLayers = () => {
       value: samples?.step3Data?.mctIndexE,
     },
     {
-      // refactor: (g/cm³)
       title: t('pm.granularLayer.especific.mass'),
       value: samples?.step3Data?.especificMass,
     },

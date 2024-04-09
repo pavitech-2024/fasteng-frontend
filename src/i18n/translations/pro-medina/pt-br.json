@@ -59,7 +59,7 @@
   "pm.permanent.deformation": "Deformação Permanente",
   "pm.granularLayer.mctCoefficientC": "MCT-Coeficiente c'",
   "pm.granularLayer.mctIndexE": "MCT-Índice e'",
-  "pm.granularLayer.especific.mass": "Massa específica (gm/cm³)",
+  "pm.granularLayer.especific.mass": "Massa específica (g/cm³)",
   "pm.granularLayer.mctGroup": "Grupo MCT",
   "pm.granularLayer.rs.initial": "Inicial (EI)",
   "pm.granularLayer.abrasionLA": "Abrasão Los Angeles (%)",
