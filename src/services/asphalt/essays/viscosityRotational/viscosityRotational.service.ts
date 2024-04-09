@@ -90,10 +90,6 @@ class ViscosityRotational_SERVICE implements IEssayService {
   submitViscosityRotationalCalcData = async (
     viscosityRotationalCalc: ViscosityRotationalData['viscosityRotationalCalc']
   ): Promise<void> => {
-    console.log(
-      '🚀 ~ file: viscosityRotational.service.ts:101 ~ ViscosityRotational_SERVICE ~ submitViscosityRotationalCalcData= ~ viscosityRotationalCalc:',
-      viscosityRotationalCalc
-    );
     try {
     } catch (error) {
       throw error;

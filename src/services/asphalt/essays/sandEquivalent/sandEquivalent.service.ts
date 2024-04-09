@@ -100,10 +100,6 @@ class SandEquivalent_SERVICE implements IEssayService {
   submitSandEquivalentCalcData = async (
     sandEquivalentCalc: SandEquivalentData['sandEquivalentCalc']
   ): Promise<void> => {
-    console.log(
-      '🚀 ~ file: sandEquivalent.service.ts:101 ~ SandEquivalent_SERVICE ~ submitSandEquivalentCalcData= ~ sandEquivalentCalc:',
-      sandEquivalentCalc
-    );
     try {
     } catch (error) {
       throw error;
@@ -120,10 +116,6 @@ class SandEquivalent_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);
 
       const { success, error, result } = response.data;
-      console.log(
-        '🚀 ~ file: sandEquivalent.service.ts:120 ~ SandEquivalent_SERVICE ~ calculateResults= ~ result:',
-        result
-      );
 
       if (success === false) throw error.name;
 

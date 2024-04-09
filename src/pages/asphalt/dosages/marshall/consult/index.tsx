@@ -1,4 +1,4 @@
-import { DeleteIcon, MarshallIcon, NextIcon } from '@/assets';
+import { DeleteIcon, MarshallIcon, MarshallIconPng, NextIcon } from '@/assets';
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
 import useAuth from '@/contexts/auth';
@@ -16,7 +16,6 @@ const MarshallDosageConsult = () => {
   const { setData } = useMarshallStore();
   const { handleNext } = new Marshall_SERVICE();
   const [dosages, setDosages] = useState<any[]>([]);
-  console.log("🚀 ~ MarshallDosageConsult ~ dosages:", dosages)
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const { user } = useAuth();
@@ -86,33 +85,26 @@ const MarshallDosageConsult = () => {
   const handleDeleteDosage = async (id: string) => {
     try {
       await marshallDosageService.deleteMarshallDosage(id);
-      const updatedDosages = dosages.filter((dosage) => dosage._id !== id);
+      // Recarregar a lista de dosagens após a exclusão
+      const response = await marshallDosageService.getMarshallDosagesByUserId(user._id);
+      const updatedDosages = response.data.map((row) => ({
+        name: row.generalData?.name,
+        progress: `(${row.generalData?.step}/9) - ${progressTextMap[row.generalData?.step]}`,
+        start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
+        finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
+        id: row._id,
+      }));
+  
+      // Atualizar dosages e dosageArrays
       setDosages(updatedDosages);
+  
+      // Recalcular os arrays menores
+      const arraysMenores = dividirArrayEmArraysMenores(updatedDosages, rowsPerPage);
+      setDosageArrays(arraysMenores);
     } catch (error) {
       console.error('Failed to delete dosage:', error);
     }
   };
-
-  useEffect(() => {
-    console.log("🚀 ~ rows ~ dosages:", dosages)
-
-    const rows = dosages?.map((row) => ({
-      name: row.generalData?.name,
-      progress: `(${row.generalData?.step}/9) - ${progressTextMap[row.generalData?.step]}`,
-      start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
-      finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
-      id: row._id,
-    }));
-
-    console.log("🚀 ~ rows ~ rows:", rows)
-
-
-    const updatedDosageArrays = dividirArrayEmArraysMenores(rows, rowsPerPage);
-    
-    console.log("🚀 ~ useEffect ~ updatedDosageArrays:", updatedDosageArrays)
-    //setDosageArrays(updatedDosageArrays);
-    console.log("🚀 ~ MarshallDosageConsult ~ dosageArrays:", dosageArrays)
-  }, [dosages])
 
   const handleVisualizeDosage = (id: string) => {
     const dosage = dosages[0]?.find((dosage) => {
@@ -176,7 +168,7 @@ const MarshallDosageConsult = () => {
           ) : (
             <Container>
               <Box sx={{ margin: '3rem' }}>
-                <Header title={t('marshall.dosage-title')} image={MarshallIcon} />
+                <Header title={t('marshall.dosage-title')} image={MarshallIconPng} />
               </Box>
               <Box
                 sx={{

@@ -1,8 +1,10 @@
 {
   "marshall.dosage-title": "Dosagem Marshall",
   
-  "marshall.step-2-description": "Selecione os agregados e o ligante asfáltico que serão utilizados na dosagem",
-  "marshall.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica da mistura",
+  "marshall.step-2-description": "Selecione os agregados e o ligante asfáltico que serão utilizados na dosagem.",
+  "marshall.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica da mistura.",
+  "marshall.step-4-description": "Insira o teor inicial de ligante.",
+  "marshall.step-5-description": "Insira os dados de densidade máxima real ou teórica da mistura.",
 
   "marshall.dosages.marshall.general-data": "Dados Gerais",
   "asphalt.dosages.marshall.material_selection": "Seleção de Materiais",
@@ -13,6 +15,23 @@
   "asphalt.dosages.marshall.optimal_binder": "Teor de Ligante Ótimo",
   "asphalt.dosages.marshall.confirm_compression": "Compactação de Confirmação",
   "asphalt.dosages.marshall.dosage_resume": "Resumo da Dosagem",
+
+  "marshall.dosage-consult.name": "Nome",
+  "marshall.dosage-consult.progress": "Progresso",
+  "marshall.dosage-consult.start": "Início",
+  "marshall.dosage-consult.finish": "Finalizado",
+  "marshall.dosage-consult.options": "Opções",
+
+  "asphalt.dosages.marshall.calculate": "Calcular",
+  "asphalt.dosages.marshall.sieve": "Peneira",
+  "asphalt.dosages.marshall.specification": "Especificação",
+  "asphalt.dosages.marshall.sieve_mm": "Peneira (mm)",
+  "asphalt.dosages.marshall.dnit-track": "Faixa do DNIT",
+  "asphalt.dosages.marshall.initial-binder": "Teor de ligante inicial",
+  "asphalt.dosages.marshall.binder-trial": "Teor de ligante asfáltico",
+  "asphalt.dosages.marshall.lower": "mínima",
+  "asphalt.dosages.marshall.average": "média",
+  "asphalt.dosages.marshall.higher": "máxima",
 
   "asphalt.project_name": "Nome do Projeto",
   "asphalt.laboratory_name": "Nome do Laboratório",

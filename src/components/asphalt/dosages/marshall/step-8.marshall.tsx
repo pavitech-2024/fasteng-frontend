@@ -27,11 +27,12 @@ const Marshall_Step8 = ({
     setData,
   } = useMarshallStore();
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
-  const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const materials = materialSelectionData.aggregates.map((item) => item.name);
   const [methodGmm, setMethodGmm] = useState(false);
+  console.log("🚀 ~ methodGmm:", methodGmm)
   const [methodDmt, setMethodDmt] = useState(false);
+  console.log("🚀 ~ methodDmt:", methodDmt)
   const optimumBinderRows = data?.optimumBinder;
 
   useEffect(() => {
@@ -328,7 +329,6 @@ const Marshall_Step8 = ({
             binderTrialData,
             maximumMixtureDensityData
           );
-          console.log('🚀 ~ dmt:', dmt);
           const prevData = data;
 
           const newData = {
@@ -488,7 +488,6 @@ const Marshall_Step8 = ({
                 setDMTModalISOpen(true);
               } else {
                 setMethodGmm(true);
-                setEnableRiceTest(true);
               }
             }}
             size="medium"

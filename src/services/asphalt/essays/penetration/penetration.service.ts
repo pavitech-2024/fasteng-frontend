@@ -98,10 +98,6 @@ class Penetration_SERVICE implements IEssayService {
 
   // verify inputs from Penetration page (step === 1, page 2)
   submitPenetrationCalcData = async (penetrationCalc: PenetrationData['penetrationCalc']): Promise<void> => {
-    console.log(
-      '🚀 ~ file: penetration.service.ts:101 ~ Penetration_SERVICE ~ submitPenetrationCalcData= ~ penetrationCalc:',
-      penetrationCalc
-    );
     try {
     } catch (error) {
       throw error;
@@ -117,7 +113,6 @@ class Penetration_SERVICE implements IEssayService {
       });
 
       const { success, error, result } = response.data;
-      console.log('🚀 ~ file: penetration.service.ts:120 ~ Penetration_SERVICE ~ calculateResults= ~ result:', result);
 
       if (success === false) throw error.name;
 

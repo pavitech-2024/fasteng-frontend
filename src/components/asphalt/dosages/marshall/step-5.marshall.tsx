@@ -36,7 +36,6 @@ const Marshall_Step5 = ({
   const [riceTestTableColumns, setRiceTestTableColumns] = useState<GridColDef[]>([]);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
-  console.log("🚀 ~ DMTModalIsOpen:", DMTModalIsOpen)
   const materials = materialSelectionData.aggregates.map((item) => item.name);
   const [hasNull, setHasNull] = useState(true);
 
@@ -164,7 +163,6 @@ const Marshall_Step5 = ({
       async () => {
         try {
           const dmt = await marshall.calculateMaximumMixtureDensityDMT(materialSelectionData, binderTrialData, data);
-          console.log("🚀 ~ dmt:", dmt)
           const prevData = data;
 
           const newData = {
@@ -430,10 +428,6 @@ const Marshall_Step5 = ({
   };
 
   useEffect(() => {
-    console.log("🚀 ~ gmmRows:", gmmRows)
-  },[gmmRows])
-
-  useEffect(() => {
     if (riceTestModalIsOpen) {
       setRiceTestTableRows([
         {
@@ -543,9 +537,15 @@ const Marshall_Step5 = ({
     }
   }, [riceTestTableRows])
 
-  nextDisabled && setNextDisabled(false);
+  useEffect(() => {
+    if (methodDmt && data?.dmt?.material_1 !== null && data?.dmt?.material_2 !== null) {
+      setNextDisabled(false);
+    } else if (methodGmm && data?.gmm?.every((e) => e.value !== null)) {
+      setNextDisabled(false)
+    }
+  }, [methodDmt])
 
-  console.log("🚀 ~ calcMethodOptions:", calcMethodOptions)
+  nextDisabled && setNextDisabled(false);
 
   return (
     <>
@@ -555,6 +555,8 @@ const Marshall_Step5 = ({
         <Box
           sx={{
             display: 'flex',
+            marginX: 'auto',
+            width: '60%',
             flexDirection: 'column',
             gap: '10px',
           }}

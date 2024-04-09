@@ -42,7 +42,7 @@ const Marshall_Step3 = ({
     const aggregates_percentages = {};
 
     materialSelectionData.aggregates.forEach((aggregate) => {
-      const { _id, name } = aggregate;
+      const { _id } = aggregate;
       aggregates_percentages['percentage_'.concat(_id)] = null;
     });
 
@@ -95,12 +95,12 @@ const Marshall_Step3 = ({
       setSpecificationColumns([
         {
           field: 'label',
-          headerName: 'peneira',
+          headerName: t('asphalt.dosages.marshall.sieve'),
           valueFormatter: ({ value }) => `${value}`,
         },
         {
           field: 'value',
-          headerName: 'especificação',
+          headerName: t('asphalt.dosages.marshall.specification'),
           valueFormatter: ({ value }) => `${value}`,
         },
       ]);
@@ -134,8 +134,6 @@ const Marshall_Step3 = ({
         data.table_data
       );
 
-      console.log('🚀 ~ handleCalculateGranulometricComp ~ graph:', graph);
-
       const newResults = {
         ...results,
         graphData: graph.newPointsOfCurve,
@@ -161,7 +159,7 @@ const Marshall_Step3 = ({
         columns.push({
           field: header,
           headerName: t('granulometry-asphalt.total_passant'),
-          valueFormatter: ({ value }) => `${value}%`,
+          valueFormatter: ({ value }) => `${Number(value).toFixed(2)}%`,
         });
       } else {
         const _id = header.replace('passant_', '');
@@ -169,7 +167,7 @@ const Marshall_Step3 = ({
         columns.push({
           field: header,
           headerName: t('granulometry-asphalt.passant'),
-          valueFormatter: ({ value }) => (value ? `${value}%` : ''),
+          valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
         });
         columnGrouping.push({
           groupId: name,
@@ -183,8 +181,8 @@ const Marshall_Step3 = ({
   const updateTableAndGraph = (percentsOfMaterials, sumOfPercentsToReturn, pointsOfCurve, arrayTable) => {
     const newPointsOfCurve = [
       [
-        'Peneira (mm)',
-        'Faixa do DNIT',
+        t('asphalt.dosages.marshall.sieve_mm'),
+        t('asphalt.dosages.marshall.dnit-track'),
         'Faixa de trabalho',
         'Mistura de projeto',
         'Faixa de trabalho',
@@ -225,10 +223,7 @@ const Marshall_Step3 = ({
     });
 
     return { newPointsOfCurve };
-    //setData({ tableData, graphData: newPointsOfCurve, modal: false });
   };
-
-  const { user } = useAuth();
 
   nextDisabled && setNextDisabled(false);
 
@@ -250,7 +245,7 @@ const Marshall_Step3 = ({
             sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
             onClick={handleCalculateGranulometricComp}
           >
-            {t('calculate')}
+            {t('asphalt.dosages.marshall.calculate')}
           </Button>
           {data.projections?.length > 0 && (
             <Step3Table
@@ -260,7 +255,7 @@ const Marshall_Step3 = ({
               marshall={marshall}
             />
           )}
-          {data?.graphData?.length > 0 && <Graph data={data?.graphData} />}
+          {data?.graphData?.length > 1 && <Graph data={data?.graphData} />}
         </Box>
       )}
     </>

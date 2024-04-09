@@ -366,7 +366,6 @@ const Marshall_Step6 = ({
             ...prevData,
             ...volumetricParams,
           };
-          console.log("🚀 ~ newData:", newData)
 
           setData({ step: 5, value: newData });
           //setLoading(false);
@@ -396,7 +395,6 @@ const Marshall_Step6 = ({
   };
 
   const handleAdd = (type: string) => {
-    console.log('🚀 ~ handleAdd ~ type:', type);
     const newRows = [...data[type]];
     newRows.push({
       id: data[type].length,

@@ -10,29 +10,6 @@ interface Step3Props {
 }
 
 const Step3Table = ({ rows, columns, columnGrouping }: Step3Props & { marshall: Marshall_SERVICE }) => {
-  console.log('🚀 ~ Step3Table ~ rows:', rows);
-
-  // const formattedRows = rows.reduce((accumulator, currentRow) => {
-  //   const formattedValues = {};
-
-  //   Object.keys(currentRow).forEach(key => {
-  //     const value = currentRow[key];
-
-  //     if (typeof value === 'number') {
-  //       formattedValues[key] = value.toFixed(0);
-  //     } else {
-  //       formattedValues[key] = value;
-  //     }
-  //   });
-
-  //   accumulator.push(formattedValues);
-  // return accumulator;
-  // },[])
-
-  // const rowww = rows.length > 0 ? rows.map((r, idx) => ({
-  //   ...r,
-  //   id: idx
-  // })) : null;
 
   return (
     <Box>

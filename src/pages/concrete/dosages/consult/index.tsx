@@ -98,10 +98,6 @@ const AbcpDosageConsult = () => {
     id: row._id,
   }));
 
-  useEffect(() => {
-    console.log('🚀 ~ file: index.tsx:13 ~ AbcpDosageConsult ~ rows:', rows);
-  }, [rows]);
-
   return (
     <Container>
       {loading ? (

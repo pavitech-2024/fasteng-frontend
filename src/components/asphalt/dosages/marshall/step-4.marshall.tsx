@@ -9,11 +9,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 
-const Marshall_Step4 = ({
-  nextDisabled,
-  setNextDisabled,
-  marshall,
-}: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const { binderTrialData, granulometryCompositionData, materialSelectionData, setData } = useMarshallStore();
@@ -53,7 +49,7 @@ const Marshall_Step4 = ({
       const columns = [
         {
           field: 'binder',
-          headerName: 'Teor de ligante asfaltico',
+          headerName: t('asphalt.dosages.marshall.binder-trial'),
           valueFormatter: ({ value }) => `${value}`,
           width: 200,
         },
@@ -73,9 +69,9 @@ const Marshall_Step4 = ({
 
       const rows = binderTrialData.percentsOfDosage[0].map((_, index) => ({
         id: index,
-        binder: binderTrialData.percentsOfDosage[2][index],
-        material_1: binderTrialData.percentsOfDosage[0][index],
-        material_2: binderTrialData.percentsOfDosage[1][index],
+        binder: `${binderTrialData.percentsOfDosage[2][index]} %`,
+        material_1: `${binderTrialData.percentsOfDosage[0][index]} %`,
+        material_2: `${binderTrialData.percentsOfDosage[1][index]} %`,
       }));
 
       setColumns(columns);
@@ -84,23 +80,24 @@ const Marshall_Step4 = ({
       const machiningTemperatureColumns = [
         {
           field: 'lower',
-          headerName: 'mínima',
+          headerName: t('asphalt.dosages.marshall.lower'),
           valueFormatter: ({ value }) => `${value}`,
           width: 150,
         },
         {
           field: 'average',
-          headerName: 'média',
+          headerName: t('asphalt.dosages.marshall.average'),
           valueFormatter: ({ value }) => `${value}`,
           width: 150,
         },
         {
           field: 'higher',
-          headerName: 'máxima',
+          headerName: t('asphalt.dosages.marshall.higher'),
           valueFormatter: ({ value }) => `${value}`,
           width: 150,
         },
       ];
+
 
       const machiningColumnGroup = [
         {
@@ -131,19 +128,19 @@ const Marshall_Step4 = ({
       const compressionTemperatureColumns = [
         {
           field: 'lower',
-          headerName: 'mínima',
+          headerName: t('asphalt.dosages.marshall.lower'),
           valueFormatter: ({ value }) => `${value}`,
           width: 150,
         },
         {
           field: 'average',
-          headerName: 'média',
+          headerName: t('asphalt.dosages.marshall.average'),
           valueFormatter: ({ value }) => `${value}`,
           width: 150,
         },
         {
           field: 'higher',
-          headerName: 'máxima',
+          headerName: t('asphalt.dosages.marshall.higher'),
           valueFormatter: ({ value }) => `${value}`,
           width: 150,
         },
@@ -174,7 +171,13 @@ const Marshall_Step4 = ({
     }
   }, [binderTrialData, materialSelectionData]);
 
-  nextDisabled && setNextDisabled(false);
+  useEffect(() => {
+    if (binderTrialData.trial !== null && binderTrialData.trial > 0) {
+      setNextDisabled(false);
+    } else {
+      setNextDisabled(true);
+    }
+  }, [binderTrialData.trial]);
 
   return (
     <>
@@ -191,7 +194,7 @@ const Marshall_Step4 = ({
         >
           <Box key={'initial_binder'} sx={{ display: 'flex', justifyContent: 'center' }}>
             <InputEndAdornment
-              label={t('marshall.initial-binder')}
+              label={t('asphalt.dosages.marshall.initial-binder')}
               value={binderTrialData.trial}
               onChange={(e) => setData({ step: 3, key: 'trial', value: Number(e.target.value) })}
               adornment={'g'}
@@ -204,10 +207,18 @@ const Marshall_Step4 = ({
             onClick={handleCalculate}
             sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
           >
-            Calcular
+            {t('asphalt.dosages.marshall.calculate')}
           </Button>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <DataGrid columns={columns} rows={rows} hideFooter sx={{ marginX: 'auto', width: 'fit-content' }} />
+            {columns?.length > 0 && (
+              <DataGrid 
+                columns={columns} 
+                rows={rows} 
+                hideFooter 
+                sx={{ marginX: 'auto', width: 'fit-content' }} 
+                disableColumnMenu
+              />
+            )}
 
             {machiningColumns.length > 0 && (
               <Box sx={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
@@ -216,6 +227,7 @@ const Marshall_Step4 = ({
                   rows={machiningRows}
                   experimentalFeatures={{ columnGrouping: true }}
                   columnGroupingModel={machiningColumnGroupings}
+                  disableColumnMenu
                   hideFooter
                 />
                 <DataGrid
@@ -223,6 +235,7 @@ const Marshall_Step4 = ({
                   rows={compressionRows}
                   experimentalFeatures={{ columnGrouping: true }}
                   columnGroupingModel={compressionColumnGroupings}
+                  disableColumnMenu
                   hideFooter
                 />
               </Box>

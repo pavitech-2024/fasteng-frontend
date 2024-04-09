@@ -116,7 +116,6 @@ class Abrasion_SERVICE implements IEssayService {
       });
 
       const { success, error, result } = response.data;
-      console.log('🚀 ~ file: abrasion.service.ts:120 ~ Abrasion_SERVICE ~ calculateResults= ~ result:', result);
 
       if (success === false) throw error.name;
 

@@ -214,7 +214,6 @@ class Marshall_SERVICE implements IEssayService {
         if (success === false) throw error.name;
 
         const { table_data } = data;
-        console.log('🚀 ~ Marshall_SERVICE ~ getStep3Data= ~ table_data:', table_data);
 
         this.store_actions.setData({ key: 'table_data', step: 2, value: table_data });
       } catch (error) {
@@ -254,11 +253,6 @@ class Marshall_SERVICE implements IEssayService {
         table_data: tableData2,
         projections,
       };
-
-      console.log(
-        '🚀 ~ Marshall_SERVICE ~ calculateGranulometryComposition= ~ granulometricResults:',
-        granulometricResults
-      );
 
       return granulometricResults;
     } catch (error) {
@@ -433,7 +427,6 @@ class Marshall_SERVICE implements IEssayService {
         indexesOfMissesSpecificGravity,
       });
 
-      console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
 
       const { data, success, error } = response.data;
 
@@ -445,8 +438,6 @@ class Marshall_SERVICE implements IEssayService {
         listOfSpecificGravities,
         maxSpecificGravity,
       };
-
-      console.log('🚀 ~ Marshall_SERVICE ~ result:', result);
 
       return data;
     } catch (error) {
@@ -462,8 +453,6 @@ class Marshall_SERVICE implements IEssayService {
         temperatureOfWater,
       });
 
-      console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
-
       const { data, success, error } = response.data;
 
       if (success === false) throw error.name;
@@ -472,8 +461,6 @@ class Marshall_SERVICE implements IEssayService {
         ...step5Data,
         ...data,
       };
-
-      console.log('🚀 ~ Marshall_SERVICE ~ result:', result);
 
       return result;
     } catch (error) {
@@ -494,8 +481,6 @@ class Marshall_SERVICE implements IEssayService {
         aggregates,
       });
 
-      console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
-
       const { data, success, error } = response.data;
 
       if (success === false) throw error.name;
@@ -504,8 +489,6 @@ class Marshall_SERVICE implements IEssayService {
         ...step5Data,
         ...data,
       };
-
-      console.log('🚀 ~ Marshall_SERVICE ~ result:', result);
 
       return result;
     } catch (error) {
@@ -573,8 +556,6 @@ class Marshall_SERVICE implements IEssayService {
           trial,
           percentsOfDosage: percentsOfDosage[2],
         });
-
-        console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
 
         const { data, success, error } = response.data;
 
@@ -703,8 +684,6 @@ class Marshall_SERVICE implements IEssayService {
         optimumContent,
       });
 
-      console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
-
       const { data, success, error } = response.data;
 
       if (success === false) throw error.name;
@@ -712,8 +691,6 @@ class Marshall_SERVICE implements IEssayService {
       result = {
         ...data,
       };
-
-      console.log('🚀 ~ Marshall_SERVICE ~ result:', result);
 
       return result;
     } catch (error) {
@@ -793,8 +770,6 @@ class Marshall_SERVICE implements IEssayService {
         valuesOfSpecificGravity: riceTest,
       });
 
-      console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
-
       const { data, success, error } = response.data;
 
       if (success === false) throw error.name;
@@ -802,8 +777,6 @@ class Marshall_SERVICE implements IEssayService {
       result = {
         ...data,
       };
-
-      console.log('🚀 ~ Marshall_SERVICE ~ result:', result);
 
       return result;
     } catch (error) {
@@ -834,8 +807,6 @@ class Marshall_SERVICE implements IEssayService {
     try {
       const response = await Api.post(`${this.info.backend_path}/confirm-volumetric-parameters`, confirmVolumetricParameters);
 
-      console.log('🚀 ~ Marshall_SERVICE ~ response:', response);
-
       const { data, success, error } = response.data;
 
       if (success === false) throw error.name;
@@ -843,8 +814,6 @@ class Marshall_SERVICE implements IEssayService {
       result = {
         ...data,
       };
-
-      console.log('🚀 ~ Marshall_SERVICE ~ result:', result);
 
       return result;
     } catch (error) {

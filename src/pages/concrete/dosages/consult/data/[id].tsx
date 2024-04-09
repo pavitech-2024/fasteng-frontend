@@ -58,10 +58,6 @@ const SpecificAbcpDosage = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-    console.log('🚀 ~ file: [id].tsx:29 ~ SpecificAbcpDosage ~ dosage:', dosage);
-  }, [dosage]);
-
-  useEffect(() => {
     abcpDosageService
       .getAbcpDosage(dosageId.toString())
       .then((response) => {

@@ -81,6 +81,7 @@ const Step2Table = ({ rows, columns, header }: Step2Props & { marshall: Marshall
                 }))
               : []
           }
+          hideFooter
           slots={{
             noRowsOverlay: () => <NoDataFound message="Nenhum material encontrado" />,
             noResultsOverlay: () => <NoDataFound message="Nenhum material encontrado" />,
