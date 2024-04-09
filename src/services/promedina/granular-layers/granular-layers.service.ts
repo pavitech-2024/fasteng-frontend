@@ -50,22 +50,21 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: GranularLayersData['generalData']): Promise<void> => {
-
     function replaceNullValues(data: GranularLayersData['generalData']): GranularLayersData['generalData'] {
       const newData: GranularLayersData['generalData'] = { ...data };
-    
+
       for (const key in newData) {
         if (newData[key] === null || newData[key] === undefined) {
           newData[key] = '-';
         }
       }
-    
+
       return newData;
     }
 
     const newData = replaceNullValues(generalData);
 
-    this.store_actions.setData({ step: 0, value: newData })
+    this.store_actions.setData({ step: 0, value: newData });
   };
 
   submitStep2Data = async (step2Data: GranularLayersData['step2Data']): Promise<void> => {
