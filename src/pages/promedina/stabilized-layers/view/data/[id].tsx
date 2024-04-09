@@ -685,6 +685,7 @@ const SpecificSample_StabilizedLayers = () => {
               samples?.step3Data?.rsFinal &&
               samples?.step3Data?.constantA &&
               samples?.step3Data?.constantB && (
+                // refactor: (MPA) => (MPa)
                 <FlexColumnBorder title={t('pm.resilience.module')} open={true} theme={'#07B811'}>
                   <Box
                     sx={{
