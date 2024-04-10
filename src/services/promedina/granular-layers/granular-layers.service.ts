@@ -66,7 +66,7 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
     const replaceNullValues = (data: GranularLayersData): GranularLayersData => {
       const newData = { ...data };
 
-      // Função para percorrer recursivamente todas as propriedades do objeto
+      // Função para inserir '-' em todos os inputs que ficaram vazios;
       const recursiveReplaceNull = (obj: Record<string, any>) => {
         for (const key in obj) {
           if (obj[key] === null) {

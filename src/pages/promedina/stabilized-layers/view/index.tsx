@@ -61,33 +61,6 @@ const StabilizedLayers_view = () => {
   };
 
   const getFilter = async (param: any) => {
-    // const filter = [];
-
-    // // Iterando sobre as propriedades de e
-    // for (const key in e) {
-    //   // Verificando se a propriedade tem um valor diferente de uma string vazia
-    //   if (e[key] !== '') {
-    //     // Adicionando um objeto ao array filter com a propriedade e o valor
-    //     filter.push({ [key]: e[key] });
-    //   }
-    // }
-
-    // const encodedFilter = encodeURIComponent(JSON.stringify(filter));
-
-    // try {
-    //   const filteredSpecificData = samplesService
-    //     .getFilteredSamples(encodedFilter, page)
-    //     .then((response) => {
-    //       setSamples(response.data.docs);
-    //       setTotalPages(response.data.totalPages);
-    //     })
-    //     .catch((error) => {
-    //       console.error('Failed to load samples:', error);
-    //       console.log(filteredSpecificData);
-    //     });
-    // } catch (error) {
-    //   console.error(error);
-    // }
     setSearchParams(param);
     fetchData();
   };
@@ -117,7 +90,7 @@ const StabilizedLayers_view = () => {
               sx={{
                 width: { mobile: '90%', notebook: '80%' },
                 maxWidth: '2200px',
-                padding: '2rem',
+                padding: { mobile: '1rem', notebook: '2rem' } ,
                 borderRadius: '20px',
                 bgcolor: 'primaryTons.white',
                 border: '1px solid',

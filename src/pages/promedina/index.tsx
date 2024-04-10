@@ -121,7 +121,11 @@ const Promedina: NextPage = () => {
         }}
       >
         {Applications.map((app) => (
-          <CardPromedinaApp key={app.name} element={app} onClick={() => Router.push(app.path)} />
+          <CardPromedinaApp 
+            key={app.name} 
+            element={app} 
+            onClick={() => Router.push(app.path)} 
+          />
         ))}
       </Box>
     </Container>

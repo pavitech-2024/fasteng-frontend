@@ -90,7 +90,7 @@ const BinderAsphaltConcrete_view = () => {
               sx={{
                 width: { mobile: '90%', notebook: '80%' },
                 maxWidth: '2200px',
-                padding: '2rem',
+                padding: { mobile: '1rem', notebook: '2rem' } ,
                 borderRadius: '20px',
                 bgcolor: 'primaryTons.white',
                 border: '1px solid',

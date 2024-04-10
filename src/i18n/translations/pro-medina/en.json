@@ -94,7 +94,7 @@
   "pm.binderAsphaltConcrete.initial.stake.meters": "Initial stake/meters",
   "pm.binderAsphaltConcrete.final.stake.meters": "Final stake/meters",
   "pm.binderAsphaltConcrete.monitoring.phase": "Monitoring phase",
-  "pm.binderAsphaltConcrete.section.type": "Section type",
+  "pm.binderAsphaltConcrete.sectionType": "Section type",
   "pm.binderAsphaltConcrete.latitudeI": "initial latitude",
   "pm.binderAsphaltConcrete.latitudeF": "Final latitude",
   "pm.binderAsphaltConcrete.extension": "Extension",

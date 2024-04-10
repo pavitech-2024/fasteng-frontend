@@ -195,10 +195,11 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               marginTop: '1rem',
             }}
           >
-            <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
+            <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'} >
               <Box
                 sx={{
-                  display: 'grid',
+                  display: { mobile: 'flex', notebook: 'grid' },
+                  flexDirection: 'column',
                   gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
                   justifyItems: 'center',
                   alignItems: 'center',
@@ -214,7 +215,16 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                           {item.title}
                         </Typography>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                          <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                          <Typography
+                            sx={{
+                              display: 'flex',
+                              fontWeight: 'bold',
+                              fontSize: '14px',
+                              wordBreak: 'break-all',
+                              whiteSpace: 'pre-wrap',
+                              color: 'black',
+                            }}
+                          >
                             {item.value === null ? '-' : item.value}
                           </Typography>
                         </Box>
@@ -225,10 +235,16 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               </Box>
             </FlexColumnBorder>
             {/** DADOS DO PAVIMENTO NO QUAL O MATERIAL ESTÁ INSERIDO */}
-            <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'}>
+            <FlexColumnBorder
+              title={t('pm.paviment.data')}
+              open={true}
+              theme={'#07B811'}
+              sx_title={{ whiteSpace: 'wrap' }}
+            >
               <Box
                 sx={{
-                  display: 'grid',
+                  display: { mobile: 'flex', notebook: 'grid' },
+                  flexDirection: 'column',
                   gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr 1fr' },
                   justifyItems: 'center',
                   alignItems: 'center',
@@ -238,18 +254,16 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               >
                 {pavimentData.map((item, idx) => (
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }} key={idx}>
-                    {item.value && (
-                      <>
-                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                          {item.title}
+                    <>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                        {item.title}
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                          {item.value === undefined || item.value === null || item.value === 'null' ? '-' : item.value}
                         </Typography>
-                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                          <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                            {item.value === null ? '-' : item.value}
-                          </Typography>
-                        </Box>
-                      </>
-                    )}
+                      </Box>
+                    </>
                   </Box>
                 ))}
               </Box>
@@ -285,7 +299,12 @@ const SpecificSample_BinderAsphaltConcrete = () => {
             </FlexColumnBorder>
 
             {/** DADOS TÉCNICOS DA AMOSTRA */}
-            <FlexColumnBorder title={t('pm.sample-data')} open={true} theme={'#07B811'}>
+            <FlexColumnBorder
+              title={t('pm.sample-data')}
+              open={true}
+              theme={'#07B811'}
+              sx_title={{ whiteSpace: 'wrap' }}
+            >
               <Box
                 sx={{
                   display: 'grid',
@@ -315,7 +334,12 @@ const SpecificSample_BinderAsphaltConcrete = () => {
             </FlexColumnBorder>
 
             {/** CURVA DE FADIGA À COMPRESSÃO DIAMETRAL */}
-            <FlexColumnBorder title={t('pm.diametral.compression.fatigue.curve')} open={true} theme={'#07B811'}>
+            <FlexColumnBorder
+              title={t('pm.diametral.compression.fatigue.curve')}
+              open={true}
+              theme={'#07B811'}
+              sx_title={{ whiteSpace: 'wrap' }}
+            >
               <Box
                 sx={{
                   display: 'grid',
@@ -338,6 +362,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 ))}
               </Box>
             </FlexColumnBorder>
+
             {/** VISCOSIDADE BROOKFIELD */}
             <FlexColumnBorder title={t('pm.brookfield.viscosity')} open={true} theme={'#07B811'}>
               <Box
@@ -353,24 +378,28 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               >
                 {brookfield.map((item, idx) => (
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }} key={idx}>
-                    {item.value && (
-                      <>
-                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                          {item.title}
+                    <>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                        {item.title}
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                          {item.value === null || item.value === "" ? '-' : item.value}
                         </Typography>
-                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                          <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                            {item.value === null ? '-' : item.value}
-                          </Typography>
-                        </Box>
-                      </>
-                    )}
+                      </Box>
+                    </>
                   </Box>
                 ))}
               </Box>
             </FlexColumnBorder>
+
             {/** OUTRAS INFORMAÇÕES SOBRE O MATERIAL */}
-            <FlexColumnBorder title={t('pm.sample-data')} open={true} theme={'#07B811'}>
+            <FlexColumnBorder
+              title={t('pm.sample-data')}
+              open={true}
+              theme={'#07B811'}
+              sx_title={{ whiteSpace: 'wrap' }}
+            >
               <Box
                 sx={{
                   display: 'grid',
@@ -399,7 +428,12 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               </Box>
             </FlexColumnBorder>
             {/** COMPOSIÇÃO ESTRUTURAL  */}
-            <FlexColumnBorder title={t('pm.structural.composition')} open={true} theme={'#07B811'}>
+            <FlexColumnBorder
+              title={t('pm.structural.composition')}
+              open={true}
+              theme={'#07B811'}
+              sx_title={{ whiteSpace: 'wrap' }}
+            >
               <Box
                 sx={{
                   display: 'flex',

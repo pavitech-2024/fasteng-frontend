@@ -67,30 +67,46 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: StabilizedLayersData['generalData']): Promise<void> => {
-    const newData = replaceNullValues(generalData);
-
-    this.store_actions.setData({ step: 0, value: newData });
+    console.log('🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitGeneralData= ~ generalData:', generalData);
   };
 
   submitStep2Data = async (step2Data: StabilizedLayersData['step2Data']): Promise<void> => {
-    const newData = replaceNullValues(step2Data);
-
-    this.store_actions.setData({ step: 1, value: newData });
+    console.log('🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitStep2Data= ~ step2Data:', step2Data);
   };
 
   submitStep3Data = async (step3Data: StabilizedLayersData['step3Data']): Promise<void> => {
-    const newData = replaceNullValues(step3Data);
-
-    this.store_actions.setData({ step: 2, value: newData });
+    console.log('🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitStep3Data= ~ step3Data:', step3Data);
   };
 
   // save essay
   saveSample = async (store: StabilizedLayersData): Promise<void> => {
+    const replaceNullValues = (data: StabilizedLayersData): StabilizedLayersData => {
+      const newData = { ...data };
+
+      // Função para inserir '-' em todos os inputs que ficaram vazios;
+      const recursiveReplaceNull = (obj: Record<string, any>) => {
+        for (const key in obj) {
+          if (obj[key] === null) {
+            obj[key] = '-';
+          } else if (typeof obj[key] === 'object') {
+            recursiveReplaceNull(obj[key]);
+          }
+        }
+      };
+
+      recursiveReplaceNull(newData);
+      return newData;
+    };
+
+    const updatedData = replaceNullValues(store);
+
+    const { generalData, step2Data, step3Data } = updatedData;
+
     try {
       const response = await Api.post(`${this.info.backend_path}/save`, {
-        generalData: store.generalData,
-        step2Data: store.step2Data,
-        step3Data: store.step3Data,
+        generalData,
+        step2Data,
+        step3Data,
       });
 
       const { success, error } = response.data;
