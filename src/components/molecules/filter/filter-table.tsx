@@ -207,7 +207,7 @@ const PromedinaMaterialsTemplate = ({
                 display: 'flex',
                 gap: '10px',
                 flexDirection: { mobile: 'column', notebook: 'row' },
-                width: { mobile: 'fit-content', notebook: '55%' } ,
+                width: { mobile: 'fit-content', notebook: '55%' },
               }}
             >
               <DropDown

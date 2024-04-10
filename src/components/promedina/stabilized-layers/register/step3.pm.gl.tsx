@@ -95,7 +95,12 @@ const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title={t('pm.resilience.module')} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder
+        title={t('pm.resilience.module')}
+        open={true}
+        theme={'#07B811'}
+        sx_title={{ whiteSpace: 'wrap' }}
+      >
         <Box
           sx={{
             width: '100%',

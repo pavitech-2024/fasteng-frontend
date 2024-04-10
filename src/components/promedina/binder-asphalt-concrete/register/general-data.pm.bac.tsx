@@ -30,9 +30,9 @@ const BinderAsphaltConcrete_step1 = ({ setNextDisabled }: EssayPageProps) => {
   ];
 
   useEffect(() => {
-    if (generalData?.name !== null && generalData?.name !== "") setNextDisabled(false);
+    if (generalData?.name !== null && generalData?.name !== '') setNextDisabled(false);
     else setNextDisabled(true);
-  },[generalData?.name])
+  }, [generalData?.name]);
 
   return (
     <>

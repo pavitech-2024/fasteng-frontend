@@ -32,7 +32,7 @@ export const CardPromedinaApp: NextPage<Props> = ({ element, onClick }) => (
       flexDirection: { mobile: 'row', notebook: 'column' },
       cursor: 'pointer',
       backgroundColor: 'white',
-      marginX: { mobile: 'auto' } 
+      marginX: { mobile: 'auto' },
     }}
   >
     <Box

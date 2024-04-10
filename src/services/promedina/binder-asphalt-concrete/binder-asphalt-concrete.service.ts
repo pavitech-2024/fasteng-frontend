@@ -105,7 +105,7 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
         generalData,
         step2Data,
         step3Data,
-        step4Data
+        step4Data,
       });
 
       const { success, error } = response.data;

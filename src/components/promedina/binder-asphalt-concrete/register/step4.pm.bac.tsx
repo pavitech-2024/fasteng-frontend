@@ -145,7 +145,12 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title={t('pm.diametral.compression.fatigue.curve')} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder
+        title={t('pm.diametral.compression.fatigue.curve')}
+        open={true}
+        theme={'#07B811'}
+        sx_title={{ whiteSpace: 'wrap' }}
+      >
         <Box
           sx={{
             width: '100%',

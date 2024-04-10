@@ -128,7 +128,7 @@ const SpecificSample_GranularLayers = () => {
     title: field.title,
     value: samples?.step3Data?.[field.key],
   }));
-  console.log("🚀 ~ techData ~ techData:", techData)
+  console.log('🚀 ~ techData ~ techData:', techData);
 
   const fatigueFields = [
     { title: t('pm.granularLayer.k1.psi1'), key: 'fatiguek1psi1' },
@@ -222,7 +222,9 @@ const SpecificSample_GranularLayers = () => {
                         </Typography>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                           <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                            {item.value === undefined || item.value === null || item.value === 'null' ? '-' : item.value}
+                            {item.value === undefined || item.value === null || item.value === 'null'
+                              ? '-'
+                              : item.value}
                           </Typography>
                         </Box>
                       </>
@@ -262,7 +264,12 @@ const SpecificSample_GranularLayers = () => {
             </FlexColumnBorder>
 
             {/** DADOS TÉCNICOS DA AMOSTRA */}
-            <FlexColumnBorder title={t('pm.sample-data')} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder
+              title={t('pm.sample-data')}
+              open={true}
+              theme={'#07B811'}
+              sx_title={{ whiteSpace: 'wrap' }}
+            >
               <Box
                 sx={{
                   display: { mobile: 'flex', notebook: 'grid' },
@@ -322,7 +329,12 @@ const SpecificSample_GranularLayers = () => {
               </Box>
             </FlexColumnBorder>
             {/**  MÓDULO DE RESILIÊNCIA */}
-            <FlexColumnBorder title={t('pm.resilience.module')} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder
+              title={t('pm.resilience.module')}
+              open={true}
+              theme={'#07B811'}
+              sx_title={{ whiteSpace: 'wrap' }}
+            >
               <Box
                 sx={{
                   display: 'grid',

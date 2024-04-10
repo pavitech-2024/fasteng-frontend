@@ -196,7 +196,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               marginTop: '1rem',
             }}
           >
-            <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'} >
+            <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
               <Box
                 sx={{
                   display: { mobile: 'flex', notebook: 'grid' },
@@ -385,7 +385,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                       </Typography>
                       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                          {item.value === null || item.value === "" ? '-' : item.value}
+                          {item.value === null || item.value === '' ? '-' : item.value}
                         </Typography>
                       </Box>
                     </>

@@ -72,12 +72,7 @@ const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
 
   return (
     <>
-      <FlexColumnBorder 
-        title={t('pm.paviment.data')} 
-        open={true} 
-        theme={'#07B811'} 
-        sx_title={{ whiteSpace: 'wrap' }}
-      >
+      <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box
           sx={{
             width: '100%',
@@ -111,9 +106,9 @@ const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder 
-        title={t('pm.resilience.module')} 
-        open={true} 
+      <FlexColumnBorder
+        title={t('pm.resilience.module')}
+        open={true}
         theme={'#07B811'}
         sx_title={{ fontSize: { mobile: '1rem' }, whiteSpace: 'wrap' }}
       >
@@ -150,9 +145,9 @@ const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder 
-        title={t('pm.permanent.deformation')} 
-        open={true} 
+      <FlexColumnBorder
+        title={t('pm.permanent.deformation')}
+        open={true}
         theme={'#07B811'}
         sx_title={{ fontSize: { mobile: '1rem' }, whiteSpace: 'wrap' }}
       >

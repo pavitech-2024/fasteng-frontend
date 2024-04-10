@@ -30,9 +30,9 @@ const StabilizedLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProp
   ];
 
   useEffect(() => {
-    if (generalData?.name !== null && generalData?.name !== "") setNextDisabled(false);
+    if (generalData?.name !== null && generalData?.name !== '') setNextDisabled(false);
     else setNextDisabled(true);
-  },[generalData.name])
+  }, [generalData.name]);
 
   return (
     <>

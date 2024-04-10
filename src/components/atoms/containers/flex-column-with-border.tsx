@@ -58,7 +58,7 @@ const FlexColumnBorder = ({
             mt: { notebook: 0, mobile: '1rem' },
             ...sx_title,
           }}
-          variant={title === t('pm.resilience.module') ? "inherit" : "h6"}
+          variant={title === t('pm.resilience.module') ? 'inherit' : 'h6'}
         >
           {title}
         </Typography>
