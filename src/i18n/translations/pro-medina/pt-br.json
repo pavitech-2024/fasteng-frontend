@@ -58,6 +58,7 @@
   "pm.granularLayer.thickness": "Espessura",
   "pm.paviment.data": "Dados do pavimento no qual o material está inserido",
   "pm.paviment.preparation": "Preparo do pavimento",
+  "pm.granularLayer.tenor": "Teor",
   "pm.structural.composition": "Composição estrutural",
   "register.step-2-description": "Preencha todos os dados relacionados ao pavimento!",
   "pm.resilience.module": "Módulo de Resiliência - 28 dias (MPa)",

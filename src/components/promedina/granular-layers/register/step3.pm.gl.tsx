@@ -76,7 +76,7 @@ const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
         title={t('pm.paviment.data')} 
         open={true} 
         theme={'#07B811'} 
-        sx_title={{ fontSize: { mobile: '1rem' }, whiteSpace: 'wrap' }}
+        sx_title={{ whiteSpace: 'wrap' }}
       >
         <Box
           sx={{

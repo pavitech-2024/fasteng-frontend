@@ -7,16 +7,13 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { NextIcon } from '@/assets';
 import Loading from '@/components/molecules/loading';
+import Link from 'next/link';
 
 const SpecificSample_GranularLayers = () => {
   const [samples, setSamples] = useState<any>();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const query = router.query as any;
-
-  useEffect(() => {
-    console.log('🚀 ~ samples:', samples);
-  }, [samples]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -417,7 +414,7 @@ const SpecificSample_GranularLayers = () => {
               p: { mobile: '4vh 4vw', notebook: '3vh 6vw' },
             }}
           >
-            <a
+            <Link
               href="/promedina/granular-layers/view"
               style={{
                 backgroundColor: '#00A3FF',
@@ -434,7 +431,7 @@ const SpecificSample_GranularLayers = () => {
               }}
             >
               {t('button-previous')}
-            </a>
+            </Link>
 
             <Button
               endIcon={<NextIcon />}

@@ -5,6 +5,7 @@ import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
 import samplesService from '@/services/promedina/granular-layers/granular-layers-view.service';
 import { Box, Button, Container } from '@mui/material';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 const GranularLayers_view = () => {
@@ -120,7 +121,7 @@ const GranularLayers_view = () => {
           p: { mobile: '4vh 4vw', notebook: '3vh 6vw' },
         }}
       >
-        <a
+        <Link
           href="/promedina/granular-layers"
           style={{
             backgroundColor: '#00A3FF',
@@ -137,7 +138,7 @@ const GranularLayers_view = () => {
           }}
         >
           VOLTAR
-        </a>
+        </Link>
 
         <Button
           endIcon={<NextIcon />}

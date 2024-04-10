@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { NextIcon } from '@/assets';
 import Loading from '@/components/molecules/loading';
+import Link from 'next/link';
 
 const SpecificSample_BinderAsphaltConcrete = () => {
   const [samples, setSamples] = useState<any>();
@@ -495,7 +496,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               p: { mobile: '4vh 4vw', notebook: '3vh 6vw' },
             }}
           >
-            <a
+            <Link
               href="/promedina/granular-layers/view"
               style={{
                 backgroundColor: '#00A3FF',
@@ -512,7 +513,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               }}
             >
               {t('button-previous')}
-            </a>
+            </Link>
 
             <Button
               endIcon={<NextIcon />}
