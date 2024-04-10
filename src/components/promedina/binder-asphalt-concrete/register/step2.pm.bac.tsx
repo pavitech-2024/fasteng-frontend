@@ -10,10 +10,10 @@ import { useState, useEffect } from 'react';
 import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
 import { dateFormatter } from '@/utils/dateFormatter';
 
-const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
+const BinderAsphaltConcrete_step2 = ({ setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useBinderAsphaltConcreteStore();
-  const rows = step2Data.structuralComposition;
-  const [images, setImages] = useState<string>(step2Data.images ? step2Data.images : '');
+  const rows = step2Data?.structuralComposition;
+  const [images, setImages] = useState<string>(step2Data?.images ? step2Data?.images : '');
 
   useEffect(() => {
     if (images !== null) {
@@ -64,95 +64,105 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
   const inputsPavimentData = [
     {
       label: t('pm.binderAsphaltConcrete.identification'),
-      value: step2Data.identification,
+      value: step2Data?.identification,
       key: 'identification',
       required: true,
     },
     {
       label: t('pm.binderAsphaltConcrete.section.type'),
-      value: step2Data.sectionType,
+      value: step2Data?.sectionType,
       key: 'sectionType',
       required: true,
     },
-    { label: t('pm.binderAsphaltConcrete.extension'), value: step2Data.extension, key: 'extension', required: true },
+    { label: t('pm.binderAsphaltConcrete.extension'), value: step2Data?.extension, key: 'extension', required: true },
     {
-      label: t('pm.binderAsphaltConcrete.initial.stake.meters'),
-      value: step2Data.initialStakeMeters,
+      label: t('pm.binderAsphaltConcrete.initialStakeMeters'),
+      value: step2Data?.initialStakeMeters,
       key: 'initialStakeMeters',
       required: true,
     },
-    { label: t('pm.binderAsphaltConcrete.latitudeI'), value: step2Data.latitudeI, key: 'latitudeI', required: true },
-    { label: t('pm.binderAsphaltConcrete.longitudeI'), value: step2Data.longitudeI, key: 'longitudeI', required: true },
+    { label: t('pm.binderAsphaltConcrete.latitudeI'), value: step2Data?.latitudeI, key: 'latitudeI', required: true },
     {
-      label: t('pm.binderAsphaltConcrete.final.stake.meters'),
-      value: step2Data.finalStakeMeters,
+      label: t('pm.binderAsphaltConcrete.longitudeI'),
+      value: step2Data?.longitudeI,
+      key: 'longitudeI',
+      required: true,
+    },
+    {
+      label: t('pm.binderAsphaltConcrete.finalStakeMeters'),
+      value: step2Data?.finalStakeMeters,
       key: 'finalStakeMeters',
       required: true,
     },
-    { label: t('pm.binderAsphaltConcrete.latitudeF'), value: step2Data.latitudeF, key: 'latitudeF', required: true },
-    { label: t('pm.binderAsphaltConcrete.longitudeF'), value: step2Data.longitudeF, key: 'longitudeF', required: true },
+    { label: t('pm.binderAsphaltConcrete.latitudeF'), value: step2Data?.latitudeF, key: 'latitudeF', required: true },
+    {
+      label: t('pm.binderAsphaltConcrete.longitudeF'),
+      value: step2Data?.longitudeF,
+      key: 'longitudeF',
+      required: true,
+    },
     {
       label: t('pm.binderAsphaltConcrete.monitoring.phase'),
-      value: step2Data.monitoringPhase,
+      value: step2Data?.monitoringPhase,
       key: 'monitoringPhase',
       required: true,
     },
     {
       label: t('pm.granularLayer.trafficLiberation'),
-      value: dateFormatter(step2Data.trafficLiberation),
+      value: step2Data?.trafficLiberation !== undefined ? dateFormatter(step2Data?.trafficLiberation) : null,
       key: 'trafficLiberation',
       required: true,
     },
     {
       label: t('pm.granularLayer.averageAltitude'),
-      value: step2Data.averageAltitude,
+      value: step2Data?.averageAltitude,
       key: 'averageAltitude',
       required: true,
     },
     {
       label: t('pm.granularLayer.numberOfTracks'),
-      value: step2Data.numberOfTracks,
+      value: step2Data?.numberOfTracks,
       key: 'numberOfTracks',
       required: true,
     },
     {
       label: t('pm.granularLayer.monitoredTrack'),
-      value: step2Data.monitoredTrack,
+      value: step2Data?.monitoredTrack,
       key: 'monitoredTrack',
       required: true,
     },
     {
       label: t('pm.granularLayer.trackWidth'),
-      value: step2Data.trackWidth,
+      value: step2Data?.trackWidth,
       key: 'trackWidth',
       required: true,
     },
     {
       label: t('pm.binderAsphaltConcrete.observations'),
-      value: step2Data.observation,
+      value: step2Data?.observation,
       key: 'observation',
       required: false,
     },
   ];
 
   const inputsPavimentPreparation = [
-    { label: t('pm.binderAsphaltConcrete.milling'), value: step2Data.milling, key: 'milling', required: true },
+    { label: t('pm.binderAsphaltConcrete.milling'), value: step2Data?.milling, key: 'milling', required: true },
     {
       label: t('pm.binderAsphaltConcrete.intervention.at.the.base'),
-      value: step2Data.interventionAtTheBase,
+      value: step2Data?.interventionAtTheBase,
       key: 'interventionAtTheBase',
       required: true,
     },
-    { label: t('pm.binderAsphaltConcrete.sami'), value: step2Data.sami, key: 'sami', required: true },
+    { label: t('pm.binderAsphaltConcrete.sami'), value: step2Data?.sami, key: 'sami', required: true },
     {
       label: t('pm.binderAsphaltConcrete.bonding.paint'),
-      value: step2Data.bondingPaint,
+      value: step2Data?.bondingPaint,
       key: 'bondingPaint',
       required: true,
     },
     {
       label: t('pm.binderAsphaltConcrete.priming'),
-      value: step2Data.priming,
+      value: step2Data?.priming,
       key: 'priming',
       required: true,
     },
@@ -226,35 +236,18 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
               newRows[index].thickness = Number(e.target.value);
               setData({ step: 1, key: 'thickness', value: newRows });
             }}
-            adornment={''}
+            adornment={'mm'}
           />
         );
       },
     },
   ];
 
-  if (nextDisabled) {
-    const hasNullValues = rows.some((row) => Object.values(row).some((value) => value === null));
-
-    inputsPavimentData.every(({ required, value }) => {
-      if (!required) return true;
-      if (value === null) return false;
-      if (typeof value === 'string' && value.trim() === '') return false;
-      return true;
-    }) &&
-      inputsPavimentPreparation.every(({ required, value }) => {
-        if (!required) return true;
-        if (value === null) return false;
-        if (typeof value === 'string' && value.trim() === '') return false;
-        return true;
-      }) &&
-      !hasNullValues &&
-      setNextDisabled(false);
-  }
+  setNextDisabled(false);
 
   return (
     <>
-      <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'}>
+      <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box
           sx={{
             width: '100%',
@@ -272,33 +265,34 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
               paddingBottom: '20px',
             }}
           >
-            {inputsPavimentData.map((input) => {
-              if (input.key === 'extension' || input.key === 'averageAltitude' || input.key === 'trackWidth') {
-                return (
-                  <InputEndAdornment
-                    adornment={'m'}
-                    type="number"
-                    key={input.key}
-                    variant="standard"
-                    label={input.label}
-                    value={input.value?.toString()}
-                    required={input.required}
-                    onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
-                  />
-                );
-              } else {
-                return (
-                  <TextField
-                    key={input.key}
-                    variant="standard"
-                    label={input.label}
-                    value={input.value}
-                    required={input.required}
-                    onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
-                  />
-                );
-              }
-            })}
+            {inputsPavimentData.length > 0 &&
+              inputsPavimentData.map((input) => {
+                if (input.key === 'extension' || input.key === 'averageAltitude' || input.key === 'trackWidth') {
+                  return (
+                    <InputEndAdornment
+                      adornment={'m'}
+                      type="number"
+                      key={input.key}
+                      variant="standard"
+                      label={input.label}
+                      value={input.value?.toString()}
+                      required={input.required}
+                      onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+                    />
+                  );
+                } else {
+                  return (
+                    <TextField
+                      key={input.key}
+                      variant="standard"
+                      label={input.label}
+                      value={input.value}
+                      required={input.required}
+                      onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+                    />
+                  );
+                }
+              })}
           </Box>
         </Box>
       </FlexColumnBorder>
@@ -359,7 +353,7 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
               key={'lastUpdate'}
               variant="standard"
               label={t('pm.paviment.lastUpdate')}
-              value={dateFormatter(step2Data?.lastUpdate)}
+              value={step2Data?.lastUpdate !== undefined ? dateFormatter(step2Data?.lastUpdate) : null}
               required
               onChange={(e) => setData({ step: 1, key: 'lastUpdate', value: e.target.value })}
             />
@@ -368,23 +362,26 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
       </FlexColumnBorder>
 
       <FlexColumnBorder title={t('pm.structural.composition')} open={true} theme={'#07B811'}>
-        <DataGrid
-          sx={{ mt: '1rem', borderRadius: '10px' }}
-          density="compact"
-          showCellVerticalBorder
-          showColumnVerticalBorder
-          slots={{ footer: ExpansionToolbar }}
-          rows={rows.map((row, index) => ({ ...row, id: index }))}
-          columns={columns.map((column) => ({
-            ...column,
-            sortable: false,
-            disableColumnMenu: true,
-            align: 'center',
-            headerAlign: 'center',
-            minWidth: 200,
-            flex: 1,
-          }))}
-        />
+        {rows?.length > 0 && columns?.length > 0 && (
+          <DataGrid
+            sx={{ mt: '1rem', borderRadius: '10px' }}
+            density="compact"
+            showCellVerticalBorder
+            showColumnVerticalBorder
+            slots={{ footer: ExpansionToolbar }}
+            rows={rows?.map((row, index) => ({ ...row, id: index }))}
+            columns={columns?.map((column) => ({
+              ...column,
+              sortable: false,
+              disableColumnMenu: true,
+              align: 'center',
+              headerAlign: 'center',
+              minWidth: 200,
+              flex: 1,
+            }))}
+          />
+        )}
+
         <Box
           id="upload-images"
           sx={{
@@ -400,7 +397,7 @@ const BinderAsphaltConcrete_step2 = ({ nextDisabled, setNextDisabled }: EssayPag
             variant="standard"
             label={t('pm-estructural-composition-image-date')}
             placeholder="_ _/_ _/_ _ _ _"
-            value={dateFormatter(step2Data.imagesDate)}
+            value={step2Data?.imagesDate !== undefined ? dateFormatter(step2Data?.imagesDate) : null}
             style={{ display: 'block' }}
             required={false}
             onChange={(e) => setData({ step: 1, key: 'imagesDate', value: e.target.value })}

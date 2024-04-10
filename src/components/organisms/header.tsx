@@ -48,6 +48,7 @@ export const Header = ({ title, subTitle, link, icon, image, children, sx }: Hea
               lineHeight: { mobile: '1.65rem', notebook: '2rem' },
               color: 'primaryTons.darkGray',
               fontWeight: 700,
+              textAlign: { mobile: 'center' },
             }}
           >
             {title}

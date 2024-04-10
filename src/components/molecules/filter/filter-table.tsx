@@ -190,7 +190,7 @@ const PromedinaMaterialsTemplate = ({
 
       {/*Page */}
       <StepDescription text={t('pm.filter-table-description')} />
-      <Box sx={{ p: { mobile: '0 4vw', notebook: '0 2vw' }, mb: '4vw', width: '100%', maxWidth: '1800px' }}>
+      <Box sx={{ p: { mobile: '0 1vw', notebook: '0 2vw' }, mb: '4vw', width: '100%', maxWidth: '1800px' }}>
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr' }}>
           <Box
             sx={{
@@ -207,7 +207,7 @@ const PromedinaMaterialsTemplate = ({
                 display: 'flex',
                 gap: '10px',
                 flexDirection: { mobile: 'column', notebook: 'row' },
-                width: '55%',
+                width: { mobile: 'fit-content', notebook: '55%' },
               }}
             >
               <DropDown
@@ -366,7 +366,7 @@ const PromedinaMaterialsTemplate = ({
                 height: '28px',
                 width: 'fit-content',
                 borderRadius: '20px',
-                padding: '0 12px',
+                padding: '0 10px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -382,10 +382,10 @@ const PromedinaMaterialsTemplate = ({
               <Tooltip title={t('pm.tooltip-register-new-sample')}>
                 <Typography
                   sx={{
-                    display: { mobile: 'none', notebook: 'flex' },
-                    fontSize: '1rem',
-                    fontWeight: 700,
-                    lineHeight: '1.1rem',
+                    display: 'flex',
+                    fontSize: { mobile: '10px', notebook: '1rem' },
+                    fontWeight: { mobile: 500, notebook: 700 },
+                    lineHeight: { mobile: 'none', notebook: '1.1rem' },
                     ml: '4px',
                     textTransform: 'uppercase',
                   }}

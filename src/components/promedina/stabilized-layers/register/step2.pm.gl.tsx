@@ -10,7 +10,7 @@ import UploadImages from '@/components/molecules/uploadImages';
 import { useState, useEffect } from 'react';
 import { dateFormatter } from '@/utils/dateFormatter';
 
-const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
+const StabilizedLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useStabilizedLayersStore();
   const rows = step2Data.structuralComposition;
   const [images, setImages] = useState<string>(step2Data.images ? step2Data.images : '');
@@ -112,7 +112,6 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
     },
     {
       field: 'thickness',
-      // refactor: 'inserir 'mm' diretamente no input como default'
       headerName: t('pm.granularLayer.thickness'),
       renderCell: ({ row }) => {
         const { id } = row;
@@ -144,10 +143,10 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
       key: 'identification',
       required: true,
     },
-    { label: t('pm.granularLayer.section.type'), value: step2Data.sectionType, key: 'sectionType', required: true },
+    { label: t('pm.granularLayer.sectionType'), value: step2Data.sectionType, key: 'sectionType', required: true },
     { label: t('pm.granularLayer.extension'), value: step2Data.extension, key: 'extension', required: true },
     {
-      label: t('pm.granularLayer.initial.stake.meters'),
+      label: t('pm.granularLayer.initialStakeMeters'),
       value: step2Data.initialStakeMeters,
       key: 'initialStakeMeters',
       required: true,
@@ -155,7 +154,7 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
     { label: t('pm.granularLayer.latitudeI'), value: step2Data.latitudeI, key: 'latitudeI', required: true },
     { label: t('pm.granularLayer.longitudeI'), value: step2Data.longitudeI, key: 'longitudeI', required: true },
     {
-      label: t('pm.granularLayer.final.stake.meters'),
+      label: t('pm.granularLayer.finalStakeMeters'),
       value: step2Data.finalStakeMeters,
       key: 'finalStakeMeters',
       required: true,
@@ -163,7 +162,7 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
     { label: t('pm.granularLayer.latitudeF'), value: step2Data.latitudeF, key: 'latitudeF', required: true },
     { label: t('pm.granularLayer.longitudeF'), value: step2Data.longitudeF, key: 'longitudeF', required: true },
     {
-      label: t('pm.granularLayer.monitoring.phase'),
+      label: t('pm.granularLayer.monitoringPhase'),
       value: step2Data.monitoringPhase,
       key: 'monitoringPhase',
       required: true,
@@ -219,28 +218,11 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
     },
   ];
 
-  if (nextDisabled) {
-    const hasNullValues = rows.some((row) => Object.values(row).some((value) => value === null));
-
-    inputsPavimentData.every(({ required, value }) => {
-      if (!required) return true;
-      if (value === null) return false;
-      if (typeof value === 'string' && value.trim() === '') return false;
-      return true;
-    }) &&
-      inputsPavimentPreparation.every(({ required, value }) => {
-        if (!required) return true;
-        if (value === null) return false;
-        if (typeof value === 'string' && value.trim() === '') return false;
-        return true;
-      }) &&
-      !hasNullValues &&
-      setNextDisabled(false);
-  }
+  setNextDisabled(false);
 
   return (
     <>
-      <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'}>
+      <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box
           sx={{
             width: '100%',

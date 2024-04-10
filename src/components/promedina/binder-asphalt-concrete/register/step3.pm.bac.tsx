@@ -4,7 +4,7 @@ import { Box, TextField } from '@mui/material';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
 
-const BinderAsphaltConcrete_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
+const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
   const { step3Data, setData } = useBinderAsphaltConcreteStore();
 
   const inputsPavimentData = [
@@ -99,25 +99,11 @@ const BinderAsphaltConcrete_step3 = ({ nextDisabled, setNextDisabled }: EssayPag
     },
   ];
 
-  if (nextDisabled) {
-    inputsPavimentData.every(({ required, value }) => {
-      if (!required) return true;
-      if (value === null) return false;
-      if (typeof value === 'string' && value.trim() === '') return false;
-      return true;
-    }) &&
-      inputsBrookfieldViscosity.every(({ required, value }) => {
-        if (!required) return true;
-        if (value === null) return false;
-        if (typeof value === 'string' && value.trim() === '') return false;
-        return true;
-      }) &&
-      setNextDisabled(false);
-  }
+  setNextDisabled(false);
 
   return (
     <>
-      <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'}>
+      <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box
           sx={{
             width: '100%',

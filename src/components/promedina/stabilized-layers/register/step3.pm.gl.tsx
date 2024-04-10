@@ -4,14 +4,14 @@ import { Box, TextField } from '@mui/material';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 
-const StabilizedLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
+const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
   const { step3Data, setData } = useStabilizedLayersStore();
 
   const inputsPavimentData = [
     { label: t('pm.granularLayer.stabilizer'), value: step3Data.stabilizer, key: 'stabilizer', required: true },
     { label: t('pm.granularLayer.tenor'), value: step3Data.tenor, key: 'tenor', required: true },
     {
-      label: t('pm.granularLayer.especific.mass'),
+      label: t('pm.granularLayer.specificMass'),
       value: step3Data.especificMass,
       key: 'especificMass',
       required: true,
@@ -57,31 +57,11 @@ const StabilizedLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProp
     },
   ];
 
-  if (nextDisabled) {
-    inputsPavimentData.every(({ required, value }) => {
-      if (!required) return true;
-      if (value === null) return false;
-      if (typeof value === 'string' && value.trim() === '') return false;
-      return true;
-    }) &&
-      inputsMaterialFatigue.every(({ required, value }) => {
-        if (!required) return true;
-        if (value === null) return false;
-        if (typeof value === 'string' && value.trim() === '') return false;
-        return true;
-      }) &&
-      inputsResilienceModule.every(({ required, value }) => {
-        if (!required) return true;
-        if (value === null) return false;
-        if (typeof value === 'string' && value.trim() === '') return false;
-        return true;
-      }) &&
-      setNextDisabled(false);
-  }
+  setNextDisabled(false);
 
   return (
     <>
-      <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'}>
+      <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box
           sx={{
             width: '100%',
@@ -115,7 +95,12 @@ const StabilizedLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProp
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title={t('pm.resilience.module')} open={true} theme={'#07B811'}>
+      <FlexColumnBorder
+        title={t('pm.resilience.module')}
+        open={true}
+        theme={'#07B811'}
+        sx_title={{ whiteSpace: 'wrap' }}
+      >
         <Box
           sx={{
             width: '100%',

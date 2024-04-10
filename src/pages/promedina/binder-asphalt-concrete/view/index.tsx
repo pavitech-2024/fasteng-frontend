@@ -5,6 +5,7 @@ import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
 import samplesService from '@/services/promedina/binder-asphalt-concrete/binder-asphalt-concrete-view.service';
 import { Box, Button, Container } from '@mui/material';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 const BinderAsphaltConcrete_view = () => {
@@ -90,7 +91,7 @@ const BinderAsphaltConcrete_view = () => {
               sx={{
                 width: { mobile: '90%', notebook: '80%' },
                 maxWidth: '2200px',
-                padding: '2rem',
+                padding: { mobile: '1rem', notebook: '2rem' },
                 borderRadius: '20px',
                 bgcolor: 'primaryTons.white',
                 border: '1px solid',
@@ -121,7 +122,7 @@ const BinderAsphaltConcrete_view = () => {
           p: { mobile: '4vh 4vw', notebook: '3vh 6vw' },
         }}
       >
-        <a
+        <Link
           href="/promedina/binder-asphalt-concrete"
           style={{
             backgroundColor: '#00A3FF',
@@ -138,7 +139,7 @@ const BinderAsphaltConcrete_view = () => {
           }}
         >
           VOLTAR
-        </a>
+        </Link>
 
         <Button
           endIcon={<NextIcon />}

@@ -4,9 +4,8 @@ import { Box, TextField } from '@mui/material';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
-import { ChangeEvent } from 'react';
 
-const BinderAsphaltConcrete_step4 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
+const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
   const { step4Data, setData } = useBinderAsphaltConcreteStore();
 
   const inputsPavimentData = [
@@ -94,25 +93,11 @@ const BinderAsphaltConcrete_step4 = ({ nextDisabled, setNextDisabled }: EssayPag
     },
   ];
 
-  if (nextDisabled) {
-    inputsPavimentData.every(({ required, value }) => {
-      if (!required) return true;
-      if (value === null) return false;
-      if (typeof value === 'string' && value.trim() === '') return false;
-      return true;
-    }) &&
-      inputsDiametralCompressionFatigueCurve.every(({ required, value }) => {
-        if (!required) return true;
-        if (value === null) return false;
-        if (typeof value === 'string' && value.trim() === '') return false;
-        return true;
-      }) &&
-      setNextDisabled(false);
-  }
+  setNextDisabled(false);
 
   return (
     <>
-      <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'}>
+      <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box
           sx={{
             width: '100%',
@@ -160,7 +145,12 @@ const BinderAsphaltConcrete_step4 = ({ nextDisabled, setNextDisabled }: EssayPag
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title={t('pm.diametral.compression.fatigue.curve')} open={true} theme={'#07B811'}>
+      <FlexColumnBorder
+        title={t('pm.diametral.compression.fatigue.curve')}
+        open={true}
+        theme={'#07B811'}
+        sx_title={{ whiteSpace: 'wrap' }}
+      >
         <Box
           sx={{
             width: '100%',

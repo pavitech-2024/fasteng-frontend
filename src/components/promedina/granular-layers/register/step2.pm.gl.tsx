@@ -8,13 +8,13 @@ import { toast } from 'react-toastify';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import UploadImages from '@/components/molecules/uploadImages';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { dateFormatter } from '@/utils/dateFormatter';
 
-const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
+const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useGranularLayersStore();
-  const rows = step2Data.structuralComposition;
-  const [images, setImages] = useState<string>(step2Data.images ? step2Data.images : '');
+  const rows = step2Data?.structuralComposition;
+  const [images, setImages] = useState<string>(step2Data?.images ? step2Data?.images : '');
 
   useEffect(() => {
     if (images !== null) {
@@ -23,10 +23,10 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
   }, [images, setData]);
 
   useEffect(() => {
-    if (step2Data.images !== null) {
-      setImages(step2Data.images);
+    if (step2Data?.images !== null) {
+      setImages(step2Data?.images);
     }
-  }, [step2Data.images]);
+  }, [step2Data?.images]);
 
   // Remover mais uma linha de determinado valor
   const handleErase = () => {
@@ -71,81 +71,80 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
   const inputsPavimentData = [
     {
       label: t('pm.granularLayer.identification'),
-      value: step2Data.identification,
+      value: step2Data?.identification,
       key: 'identification',
       required: true,
     },
-    // refactor: '300 m'
-    { label: t('pm.granularLayer.section.type'), value: step2Data.sectionType, key: 'sectionType', required: true },
-    { label: t('pm.granularLayer.extension'), value: step2Data.extension, key: 'extension', required: true },
+    { label: t('pm.granularLayer.section.type'), value: step2Data?.sectionType, key: 'sectionType', required: true },
+    { label: t('pm.granularLayer.extension'), value: step2Data?.extension, key: 'extension', required: true },
     {
-      label: t('pm.granularLayer.initial.stake.meters'),
-      value: step2Data.initialStakeMeters,
+      label: t('pm.granularLayer.initialStakeMeters'),
+      value: step2Data?.initialStakeMeters,
       key: 'initialStakeMeters',
       required: true,
     },
-    { label: t('pm.granularLayer.latitudeI'), value: step2Data.latitudeI, key: 'latitudeI', required: true },
-    { label: t('pm.granularLayer.longitudeI'), value: step2Data.longitudeI, key: 'longitudeI', required: true },
+    { label: t('pm.granularLayer.latitudeI'), value: step2Data?.latitudeI, key: 'latitudeI', required: true },
+    { label: t('pm.granularLayer.longitudeI'), value: step2Data?.longitudeI, key: 'longitudeI', required: true },
     {
-      label: t('pm.granularLayer.final.stake.meters'),
-      value: step2Data.finalStakeMeters,
+      label: t('pm.granularLayer.finalStakeMeters'),
+      value: step2Data?.finalStakeMeters,
       key: 'finalStakeMeters',
       required: true,
     },
-    { label: t('pm.granularLayer.latitudeF'), value: step2Data.latitudeF, key: 'latitudeF', required: true },
-    { label: t('pm.granularLayer.longitudeF'), value: step2Data.longitudeF, key: 'longitudeF', required: true },
+    { label: t('pm.granularLayer.latitudeF'), value: step2Data?.latitudeF, key: 'latitudeF', required: true },
+    { label: t('pm.granularLayer.longitudeF'), value: step2Data?.longitudeF, key: 'longitudeF', required: true },
     {
-      label: t('pm.granularLayer.monitoring.phase'),
-      value: step2Data.monitoringPhase,
+      label: t('pm.granularLayer.monitoringPhase'),
+      value: step2Data?.monitoringPhase,
       key: 'monitoringPhase',
       required: true,
     },
     {
       label: t('pm.granularLayer.trafficLiberation'),
-      value: dateFormatter(step2Data.trafficLiberation),
+      value: dateFormatter(step2Data?.trafficLiberation),
       key: 'trafficLiberation',
       required: true,
     },
     {
       label: t('pm.granularLayer.averageAltitude'),
-      value: step2Data.averageAltitude,
+      value: step2Data?.averageAltitude,
       key: 'averageAltitude',
       required: true,
     },
     {
       label: t('pm.granularLayer.numberOfTracks'),
-      value: step2Data.numberOfTracks,
+      value: step2Data?.numberOfTracks,
       key: 'numberOfTracks',
       required: true,
     },
     {
       label: t('pm.granularLayer.monitoredTrack'),
-      value: step2Data.monitoredTrack,
+      value: step2Data?.monitoredTrack,
       key: 'monitoredTrack',
       required: true,
     },
     {
       label: t('pm.granularLayer.trackWidth'),
-      value: step2Data.trackWidth,
+      value: step2Data?.trackWidth,
       key: 'trackWidth',
       required: true,
     },
-    { label: t('pm.granularLayer.observations'), value: step2Data.observation, key: 'observation', required: false },
+    { label: t('pm.granularLayer.observations'), value: step2Data?.observation, key: 'observation', required: false },
   ];
 
   const inputsPavimentPreparation = [
-    { label: t('pm.granularLayer.milling'), value: step2Data.milling, key: 'milling', required: true },
+    { label: t('pm.granularLayer.milling'), value: step2Data?.milling, key: 'milling', required: true },
     {
       label: t('pm.granularLayer.intervention.at.the.base'),
-      value: step2Data.interventionAtTheBase,
+      value: step2Data?.interventionAtTheBase,
       key: 'interventionAtTheBase',
       required: true,
     },
-    { label: t('pm.granularLayer.sami'), value: step2Data.sami, key: 'sami', required: true },
-    { label: t('pm.granularLayer.bonding.paint'), value: step2Data.bondingPaint, key: 'bondingPaint', required: true },
+    { label: t('pm.granularLayer.sami'), value: step2Data?.sami, key: 'sami', required: true },
+    { label: t('pm.granularLayer.bonding.paint'), value: step2Data?.bondingPaint, key: 'bondingPaint', required: true },
     {
       label: t('pm.granularLayer.priming'),
-      value: step2Data.priming,
+      value: step2Data?.priming,
       key: 'priming',
       required: true,
     },
@@ -226,28 +225,11 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     },
   ];
 
-  if (nextDisabled) {
-    const hasNullValues = rows.some((row) => Object.values(row).some((value) => value === null));
-
-    inputsPavimentData.every(({ required, value }) => {
-      if (!required) return true;
-      if (value === null) return false;
-      if (typeof value === 'string' && value.trim() === '') return false;
-      return true;
-    }) &&
-      inputsPavimentPreparation.every(({ required, value }) => {
-        if (!required) return true;
-        if (value === null) return false;
-        if (typeof value === 'string' && value.trim() === '') return false;
-        return true;
-      }) &&
-      !hasNullValues &&
-      setNextDisabled(false);
-  }
+  setNextDisabled(false);
 
   return (
     <>
-      <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'}>
+      <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box
           sx={{
             width: '100%',
@@ -352,7 +334,7 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
               key={'lastUpdate'}
               variant="standard"
               label={t('pm.paviment.lastUpdate')}
-              value={step2Data.lastUpdate}
+              value={step2Data?.lastUpdate}
               required
               onChange={(e) => setData({ step: 1, key: 'lastUpdate', value: e.target.value })}
             />
@@ -361,23 +343,26 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
       </FlexColumnBorder>
 
       <FlexColumnBorder title={t('pm.structural.composition')} open={true} theme={'#07B811'}>
-        <DataGrid
-          sx={{ mt: '1rem', borderRadius: '10px' }}
-          density="compact"
-          showCellVerticalBorder
-          showColumnVerticalBorder
-          slots={{ footer: ExpansionToolbar }}
-          rows={rows.map((row, index) => ({ ...row, id: index }))}
-          columns={columns.map((column) => ({
-            ...column,
-            sortable: false,
-            disableColumnMenu: true,
-            align: 'center',
-            headerAlign: 'center',
-            minWidth: 200,
-            flex: 1,
-          }))}
-        />
+        {rows?.length > 0 && columns?.length > 0 && (
+          <DataGrid
+            sx={{ mt: '1rem', borderRadius: '10px' }}
+            density="compact"
+            showCellVerticalBorder
+            showColumnVerticalBorder
+            slots={{ footer: ExpansionToolbar }}
+            rows={rows?.map((row, index) => ({ ...row, id: index }))}
+            columns={columns?.map((column) => ({
+              ...column,
+              sortable: false,
+              disableColumnMenu: true,
+              align: 'center',
+              headerAlign: 'center',
+              minWidth: 200,
+              flex: 1,
+            }))}
+          />
+        )}
+
         <Box
           id="upload-images"
           sx={{
@@ -388,13 +373,13 @@ const GranularLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
             alignItems: 'center',
           }}
         >
-          <UploadImages editarImages={step2Data.images} onImagesUpdate={(images: string) => setImages(images)} />
+          <UploadImages editarImages={step2Data?.images} onImagesUpdate={(images: string) => setImages(images)} />
           <TextField
             variant="standard"
             type="string"
             label={t('pm-estructural-composition-image-date')}
             placeholder="_ _/_ _/_ _ _ _"
-            value={dateFormatter(step2Data.imagesDate)}
+            value={dateFormatter(step2Data?.imagesDate)}
             style={{ display: 'block' }}
             required={false}
             onChange={(e) => setData({ step: 1, key: 'imagesDate', value: e.target.value })}

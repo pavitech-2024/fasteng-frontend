@@ -4,43 +4,35 @@ import { Box, TextField } from '@mui/material';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { useEffect } from 'react';
 
-const BinderAsphaltConcrete_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
+const BinderAsphaltConcrete_step1 = ({ setNextDisabled }: EssayPageProps) => {
   const { generalData, setData } = useBinderAsphaltConcreteStore();
 
   const inputs = [
-    { label: t('pm.binderAsphaltConcrete.name'), value: generalData.name, key: 'name', required: true },
-    { label: t('pm.binderAsphaltConcrete.zone'), value: generalData.zone, key: 'zone', required: true },
-    { label: t('pm.binderAsphaltConcrete.highway'), value: generalData.highway, key: 'highway', required: true },
-    { label: t('pm.binderAsphaltConcrete.layer'), value: generalData.layer, key: 'layer', required: true },
-    { label: t('pm.binderAsphaltConcrete.cityState'), value: generalData.cityState, key: 'cityState', required: true },
+    { label: t('pm.binderAsphaltConcrete.name'), value: generalData?.name, key: 'name', required: true },
+    { label: t('pm.binderAsphaltConcrete.zone'), value: generalData?.zone, key: 'zone', required: true },
+    { label: t('pm.binderAsphaltConcrete.highway'), value: generalData?.highway, key: 'highway', required: true },
+    { label: t('pm.binderAsphaltConcrete.layer'), value: generalData?.layer, key: 'layer', required: true },
+    { label: t('pm.binderAsphaltConcrete.cityState'), value: generalData?.cityState, key: 'cityState', required: true },
     {
       label: t('pm.granularLayer.guideLineSpeed'),
-      value: generalData.guideLineSpeed,
+      value: generalData?.guideLineSpeed,
       key: 'guideLineSpeed',
       required: true,
     },
     {
       label: t('pm.binderAsphaltConcrete.observations'),
-      value: generalData.observations,
+      value: generalData?.observations,
       key: 'observations',
       required: false,
     },
   ];
 
-  inputs.every(({ required, value }) => {
-    if (!required) return true;
-
-    if (value === null) return false;
-
-    if (typeof value === 'string' && value.trim() === '') return false;
-
-    return true;
-  }) &&
-    nextDisabled &&
-    setNextDisabled(false);
-
-  // useEffect(() => nextDisabled && setNextDisabled(false), [nextDisabled, setNextDisabled]);
+  useEffect(() => {
+    if (generalData?.name !== null && generalData?.name !== '') setNextDisabled(false);
+    else setNextDisabled(true);
+  }, [generalData?.name]);
 
   return (
     <>
@@ -63,14 +55,14 @@ const BinderAsphaltConcrete_step1 = ({ nextDisabled, setNextDisabled }: EssayPag
               marginTop: '-20px',
             }}
           >
-            {inputs.map((input) => {
+            {inputs?.map((input) => {
               if (input.key === 'guideLineSpeed') {
                 return (
                   <InputEndAdornment
-                    adornment={'Km/h'}
+                    adornment={'km/h'}
                     type="number"
                     key={input.key}
-                    value={generalData.guideLineSpeed?.toString()}
+                    value={generalData?.guideLineSpeed?.toString()}
                     label={input.label}
                     required={input.required}
                     onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}

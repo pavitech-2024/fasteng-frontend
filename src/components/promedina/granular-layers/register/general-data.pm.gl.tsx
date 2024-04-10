@@ -3,10 +3,10 @@ import { t } from 'i18next';
 import { Box, TextField } from '@mui/material';
 import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
-import { useEffect } from 'react';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { useEffect } from 'react';
 
-const GranularLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
+const GranularLayers_step1 = ({ setNextDisabled }: EssayPageProps) => {
   const { generalData, setData } = useGranularLayersStore();
 
   const inputs = [
@@ -16,7 +16,6 @@ const GranularLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     { label: t('pm.granularLayer.layer'), value: generalData.layer, key: 'layer', required: true },
     { label: t('pm.granularLayer.cityState'), value: generalData.cityState, key: 'cityState', required: true },
     {
-      // refactor: 'Km -> km'
       label: t('pm.granularLayer.guideLineSpeed'),
       value: generalData.guideLineSpeed,
       key: 'guideLineSpeed',
@@ -30,23 +29,10 @@ const GranularLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     },
   ];
 
-  const allFieldsValid = inputs.every(({ required, value }) => {
-    if (!required) return true;
-
-    if (value === null) return false;
-
-    if (value === '') return false;
-
-    if (typeof value === 'string' && value.trim() === '') return false;
-
-    return true;
-  });
-
   useEffect(() => {
-    if (allFieldsValid) {
-      setNextDisabled(!allFieldsValid);
-    }
-  }, [allFieldsValid]);
+    if (generalData?.name !== null && generalData?.name !== '') setNextDisabled(false);
+    else setNextDisabled(true);
+  }, [generalData.name]);
 
   return (
     <>
@@ -73,7 +59,7 @@ const GranularLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
               if (input.key === 'guideLineSpeed') {
                 return (
                   <InputEndAdornment
-                    adornment={'Km/h'}
+                    adornment={'km/h'}
                     type="number"
                     variant="standard"
                     key={input.key}

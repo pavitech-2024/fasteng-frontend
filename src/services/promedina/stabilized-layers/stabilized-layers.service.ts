@@ -7,6 +7,20 @@ import {
 } from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 import { UnitMassIcon } from '@/assets';
 
+type DataIndex = keyof StabilizedLayersData;
+
+// Function that replaces all empty inputs for '-';
+function replaceNullValues<T extends DataIndex>(data: StabilizedLayersData[T]): StabilizedLayersData[T] {
+  const newData: StabilizedLayersData[T] = { ...data };
+
+  for (const key in newData) {
+    if (newData[key] === null || newData[key] === undefined) {
+      newData[key] = '-' as any;
+    }
+  }
+  return newData;
+}
+
 class STABILIZEDLAYERS_SERVICE implements IEssayService {
   info = {
     key: 'stabilizedLayers',
@@ -54,131 +68,45 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
 
   submitGeneralData = async (generalData: StabilizedLayersData['generalData']): Promise<void> => {
     console.log('🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitGeneralData= ~ generalData:', generalData);
-    // try {
-    // const { name, zone, layer, cityState, observations } = generalData;
-    // if (!name) throw t('errors.empty-name');
-    // if (!zone) throw t('errors.empty-zone');
-    // if (!layer) throw t('errors.empty-layer');
-    // if (!cityState) throw t('errors.empty-cityState');
-    //   const response = await Api.post(`${this.info.backend_path}/verify-init`, {
-    //     name,
-    //     zone,
-    //     layer,
-    //     cityState,
-    //     observations,
-    //   });
-    //   const { success, error } = response.data;
-    //   if (success === false) throw error.name;
-    // } catch (error) {
-    //   throw error;
-    // }
   };
 
   submitStep2Data = async (step2Data: StabilizedLayersData['step2Data']): Promise<void> => {
     console.log('🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitStep2Data= ~ step2Data:', step2Data);
-    // try {
-    //   const {
-    //     identification,
-    //     sectionType,
-    //     extension,
-    //     initialStakeMeters,
-    //     latitudeI,
-    //     longitudeI,
-    //     finalStakeMeters,
-    //     latitudeF,
-    //     longitudeF,
-    //     monitoringPhase,
-    //     observation,
-    //     milling,
-    //     interventionAtTheBase,
-    //     sami,
-    //     bondingPaint,
-    //     priming,
-    //     material,
-    //     thickness,
-    //   } = step2Data;
-    //   if (!identification) throw t('errors.empty-identification');
-    //   if (!sectionType) throw t('errors.empty-sectionType');
-    //   if (!extension) throw t('errors.empty-extension');
-    //   if (!initialStakeMeters) throw t('errors.empty-initialStakeMeters');
-    //   if (!latitudeI) throw t('errors.empty-latitudeI');
-    //   if (!longitudeI) throw t('errors.empty-longitudeI');
-    //   if (!finalStakeMeters) throw t('errors.empty-finalStakeMeters');
-    //   if (!latitudeF) throw t('errors.empty-latitudeF');
-    //   if (!longitudeF) throw t('errors.empty-longitudeF');
-    //   if (!monitoringPhase) throw t('errors.empty-monitoringPhase');
-    //   if (!milling) throw t('errors.empty-milling');
-    //   if (!interventionAtTheBase) throw t('errors.empty-interventionAtTheBase');
-    //   if (!bondingPaint) throw t('errors.empty-bondingPaint');
-    //   if (!sami) throw t('errors.empty-sami');
-    //   if (!priming) throw t('errors.empty-priming');
-    //   if (!material) throw t('errors.empty-material');
-    //   if (!thickness) throw t('errors.empty-thickness');
-    //   const response = await Api.post(`${this.info.backend_path}/verify-init`, {
-    //     step2Data,
-    //     observation,
-    //   });
-    //   const { success, error } = response.data;
-    //   if (success === false) throw error.name;
-    // } catch (error) {
-    //   throw error;
-    // }
   };
 
   submitStep3Data = async (step3Data: StabilizedLayersData['step3Data']): Promise<void> => {
     console.log('🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitStep3Data= ~ step3Data:', step3Data);
-    // try {
-    // const {
-    //   stabilizer,
-    //   tenor,
-    //   especificMass,
-    //   compressionEnergy,
-    //   rtcd,
-    //   rtf,
-    //   rcs,
-    //   granulometricRange,
-    //   optimalHumidity,
-    //   rsInitial,
-    //   rsFinal,
-    //   constantA,
-    //   constantB,
-    //   k1psi1,
-    //   k2psi2,
-    //   observations,
-    // } = step3Data;
-    // if (!stabilizer) throw t('errors.empty-stabilizer');
-    // if (!tenor) throw t('errors.empty-tenor');
-    // if (!especificMass) throw t('errors.empty-especificMass');
-    // if (!rtf) throw t('errors.empty-rtf');
-    // if (!rtcd) throw t('errors.empty-rtcd');
-    // if (!rcs) throw t('errors.empty-rcs');
-    // if (!compressionEnergy) throw t('errors.empty-compressionEnergy');
-    // if (!granulometricRange) throw t('errors.empty-granulometricRange');
-    // if (!rsInitial) throw t('errors.empty-rsInitial');
-    // if (!optimalHumidity) throw t('errors.empty-optimalHumidity');
-    // if (!rsFinal) throw t('errors.empty-rsFinal');
-    // if (!constantA) throw t('errors.empty-constantA');
-    // if (!constantB) throw t('errors.empty-constantB');
-    // if (!k1psi1) throw t('errors.empty-k1psi1');
-    // if (!k2psi2) throw t('errors.empty-k2psi2');
-    //   const response = await Api.post(`${this.info.backend_path}/verify-init`, {
-    //     step3Data,
-    //     //observations,
-    //   });
-    //   const { success, error } = response.data;
-    //   if (success === false) throw error.name;
-    // } catch (error) {
-    //   throw error;
-    // }
   };
 
   // save essay
   saveSample = async (store: StabilizedLayersData): Promise<void> => {
+    const replaceNullValues = (data: StabilizedLayersData): StabilizedLayersData => {
+      const newData = { ...data };
+
+      // Função para inserir '-' em todos os inputs que ficaram vazios;
+      const recursiveReplaceNull = (obj: Record<string, any>) => {
+        for (const key in obj) {
+          if (obj[key] === null) {
+            obj[key] = '-';
+          } else if (typeof obj[key] === 'object') {
+            recursiveReplaceNull(obj[key]);
+          }
+        }
+      };
+
+      recursiveReplaceNull(newData);
+      return newData;
+    };
+
+    const updatedData = replaceNullValues(store);
+
+    const { generalData, step2Data, step3Data } = updatedData;
+
     try {
       const response = await Api.post(`${this.info.backend_path}/save`, {
-        generalData: store.generalData,
-        step2Data: store.step2Data,
-        step3Data: store.step3Data,
+        generalData,
+        step2Data,
+        step3Data,
       });
 
       const { success, error } = response.data;

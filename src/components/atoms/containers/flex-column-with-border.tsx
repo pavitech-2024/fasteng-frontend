@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material';
+import { t } from 'i18next';
 
 interface FlexColumnBorderProps {
   children: React.ReactNode | JSX.Element;
@@ -57,7 +58,7 @@ const FlexColumnBorder = ({
             mt: { notebook: 0, mobile: '1rem' },
             ...sx_title,
           }}
-          variant="h6"
+          variant={title === t('pm.resilience.module') ? 'inherit' : 'h6'}
         >
           {title}
         </Typography>
