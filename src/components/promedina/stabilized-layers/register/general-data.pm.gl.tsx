@@ -4,6 +4,7 @@ import { Box, TextField } from '@mui/material';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { useEffect } from 'react';
 
 const StabilizedLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { generalData, setData } = useStabilizedLayersStore();
@@ -28,17 +29,10 @@ const StabilizedLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProp
     },
   ];
 
-  inputs.every(({ required, value }) => {
-    if (!required) return true;
-
-    if (value === null) return false;
-
-    if (typeof value === 'string' && value.trim() === '') return false;
-
-    return true;
-  }) &&
-    nextDisabled &&
-    setNextDisabled(false);
+  useEffect(() => {
+    if (generalData?.name !== null && generalData?.name !== "") setNextDisabled(false);
+    else setNextDisabled(true);
+  },[generalData.name])
 
   return (
     <>
@@ -65,7 +59,7 @@ const StabilizedLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProp
               if (input.key === 'guideLineSpeed') {
                 return (
                   <InputEndAdornment
-                    adornment={'Km/h'}
+                    adornment={'km/h'}
                     key={input.key}
                     type="number"
                     variant="standard"

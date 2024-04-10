@@ -112,7 +112,6 @@ const StabilizedLayers_step2 = ({ nextDisabled, setNextDisabled }: EssayPageProp
     },
     {
       field: 'thickness',
-      // refactor: 'inserir 'mm' diretamente no input como default'
       headerName: t('pm.granularLayer.thickness'),
       renderCell: ({ row }) => {
         const { id } = row;

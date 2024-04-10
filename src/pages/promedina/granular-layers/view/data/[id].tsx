@@ -1,9 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/jsx-no-undef */
-/* eslint-disable @next/next/no-html-link-for-pages */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/no-unescaped-entities */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import samplesService from '@/services/promedina/granular-layers/granular-layers-view.service';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import { Box, Button, Typography } from '@mui/material';
@@ -51,380 +45,167 @@ const SpecificSample_GranularLayers = () => {
     thickness: `${item.thickness} mm`,
   }));
 
-  const generalData = [
-    {
-      title: t('pm.granularLayer.name'),
-      value: samples?.generalData.name,
-    },
-    {
-      title: t('pm.granularLayer.zone'),
-      value: samples?.generalData.zone,
-    },
-    {
-      title: t('pm.granularLayer.layer'),
-      value: samples?.generalData.layer,
-    },
-    {
-      title: t('pm.granularLayer.cityState'),
-      value: samples?.generalData.cityState,
-    },
-    {
-      title: t('pm.granularLayer.highway'),
-      value: samples?.generalData.highway,
-    },
-    {
-      title: t('pm.granularLayer.guideLineSpeed'),
-      value: `${samples?.generalData.guideLineSpeed} Km/h`,
-    },
-    {
-      title: t('pm.granularLayer.observations'),
-      value: samples?.generalData.observations,
-    },
-  ];
+  const generalDataFieldKeys = ['name', 'zone', 'layer', 'cityState', 'highway', 'guideLineSpeed', 'observations'];
 
-  const pavimentData = [
-    {
-      title: t('pm-type-of-section'),
-      value: samples?.step2Data.sectionType,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.extension'),
-      value: samples?.step2Data.extension,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.identification'),
-      value: samples?.step2Data.identification,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.initial.stake.meters'),
-      value: samples?.step2Data.initialStakeMeters,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.final.stake.meters'),
-      value: samples?.step2Data.finalStakeMeters,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.latitudeI'),
-      value: samples?.step2Data.latitudeI,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.longitudeI'),
-      value: samples?.step2Data.longitudeI,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.latitudeF'),
-      value: samples?.step2Data.latitudeF,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.longitudeF'),
-      value: samples?.step2Data.longitudeF,
-    },
-    {
-      title: t('pm.granularLayer.averageAltitude'),
-      value: `${samples?.step2Data.averageAltitude} m`,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.monitoring.phase'),
-      value: samples?.step2Data.monitoringPhase,
-    },
-    {
-      title: t('pm.granularLayer.trackWidth'),
-      value: `${samples?.step2Data.trackWidth} m`,
-    },
-    {
-      title: t('pm.granularLayer.monitoredTrack'),
-      value: `${samples?.step2Data.monitoredTrack}`,
-    },
-    {
-      title: t('pm.granularLayer.numberOfTracks'),
-      value: `${samples?.step2Data.numberOfTracks}`,
-    },
-    {
-      title: t('pm.granularLayer.trafficLiberation'),
-      value: `${samples?.step2Data.trafficLiberation}`,
-    },
-    {
-      title: t('pm.granularLayer.mf.observations'),
-      value: samples?.step2Data.observation,
-    },
-  ];
+  const generalData = generalDataFieldKeys.map((key) => ({
+    title: t(`pm.granularLayer.${key}`),
+    value: key === 'guideLineSpeed' ? `${samples?.generalData[key]} km/h` : samples?.generalData[key],
+  }));
 
-  const fadigueCurveCD = [
-    {
-      title: 'N° CPs',
-      value: samples?.Step4Data?.fatigueCurve_n_cps,
-    },
-    {
-      title: 'k1',
-      value: samples?.Step4Data?.fatigueCurve_k1,
-    },
-    {
-      title: 'k2',
-      value: samples?.Step4Data?.fatigueCurve_k2,
-    },
-    {
-      title: 'R²',
-      value: samples?.Step4Data?.fatigueCurve_r2,
-    },
+  const pavimentDataFieldKeys = [
+    'sectionType',
+    'extension',
+    'identification',
+    'initialStakeMeters',
+    'finalStakeMeters',
+    'latitudeI',
+    'longitudeI',
+    'latitudeF',
+    'longitudeF',
+    'averageAltitude',
+    'monitoringPhase',
+    'trackWidth',
+    'monitoredTrack',
+    'numberOfTracks',
+    'trafficLiberation',
+    'observation',
   ];
+  
+  const pavimentData = pavimentDataFieldKeys.map(key => ({
+    title: t(`pm.granularLayer.${key}`),
+    value: key === 'averageAltitude' || key === 'trackWidth'
+      ? `${samples?.step2Data[key]} m`
+      : `${samples?.step2Data[key]}`,
+  }));
 
-  const pavimentPreparation = [
-    {
-      title: t('pm.binderAsphaltConcrete.milling'),
-      value: samples?.step2Data?.milling,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.intervention.at.the.base'),
-      value: samples?.step2Data?.interventionAtTheBase,
-    },
-    {
-      title: 'SAMI',
-      value: samples?.step2Data?.sami,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.bonding.paint'),
-      value: samples?.step2Data?.bondingPaint,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.priming'),
-      value: samples?.step2Data?.priming,
-    },
+  const fadigueCurveCDFieldKeys = ['fatigueCurve_n_cps', 'fatigueCurve_k1', 'fatigueCurve_k2', 'fatigueCurve_r2'];
+
+  const fadigueCurveCD = fadigueCurveCDFieldKeys.map(key => ({
+    title: key === 'fatigueCurve_n_cps' ? 'N° CPs' : key === 'fatigueCurve_k1' ? 'k1' : key === 'fatigueCurve_k2' ? 'k2' : 'R²',
+    value: samples?.Step4Data?.[key],
+  }));
+
+  const preparationFields = [
+    { title: t('pm.granularLayer.milling'), key: 'milling' },
+    { title: t('pm.granularLayer.intervention.at.the.base'), key: 'interventionAtTheBase' },
+    { title: 'SAMI', key: 'sami' },
+    { title: t('pm.granularLayer.bonding.paint'), key: 'bondingPaint' },
+    { title: t('pm.granularLayer.priming'), key: 'priming' },
   ];
+  
+  const pavimentPreparation = preparationFields.map(field => ({
+    title: field.title,
+    value: samples?.step2Data?.[field.key],
+  }));  
 
-  const brookfield = [
-    {
-      title: t('pm.binderAsphaltConcrete.vb_sp21_20'),
-      value: samples?.step3Data?.vb_sp21_20,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.vb_sp21_50'),
-      value: samples?.step3Data?.vb_sp21_50,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.vb_sp21_100'),
-      value: samples?.step3Data?.vb_sp21_100,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.observations'),
-      value: samples?.step3Data?.observations,
-    },
+  const brookfieldFields = [
+    { title: t('pm.granularLayer.vb_sp21_20'), key: 'vb_sp21_20' },
+    { title: t('pm.granularLayer.vb_sp21_50'), key: 'vb_sp21_50' },
+    { title: t('pm.granularLayer.vb_sp21_100'), key: 'vb_sp21_100' },
+    { title: t('pm.granularLayer.observations'), key: 'observations' },
   ];
-
-  const sampleData = [
-    {
-      title: t('pm.binderAsphaltConcrete.refinery'),
-      value: samples?.step3Data?.refinery,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.company'),
-      value: samples?.step3Data?.company,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.collectionDate'),
-      value: samples?.step3Data?.collectionDate,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.invoiceNumber'),
-      value: samples?.step3Data?.invoiceNumber,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.dataInvoice'),
-      value: samples?.step3Data?.dataInvoice,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.certificateDate'),
-      value: samples?.step3Data?.certificateDate,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.certificateNumber'),
-      value: samples?.step3Data?.certificateNumber,
-    },
+  
+  const brookfield = brookfieldFields.map(field => ({
+    title: field.title,
+    value: samples?.step3Data?.[field.key],
+  }));
+  
+  const sampleFields = [
+    { title: t('pm.granularLayer.refinery'), key: 'refinery' },
+    { title: t('pm.granularLayer.company'), key: 'company' },
+    { title: t('pm.granularLayer.collectionDate'), key: 'collectionDate' },
+    { title: t('pm.granularLayer.invoiceNumber'), key: 'invoiceNumber' },
+    { title: t('pm.granularLayer.dataInvoice'), key: 'dataInvoice' },
+    { title: t('pm.granularLayer.certificateDate'), key: 'certificateDate' },
+    { title: t('pm.granularLayer.certificateNumber'), key: 'certificateNumber' },
   ];
+  
+  const sampleData = sampleFields.map(field => ({
+    title: field.title,
+    value: samples?.step3Data?.[field.key],
+  }));  
 
-  const resilienceModule = [
-    {
-      title: 'k1',
-      value: samples?.step3Data?.k1,
-    },
-    {
-      title: 'k2',
-      value: samples?.step3Data?.k2,
-    },
-    {
-      title: 'k3',
-      value: samples?.step3Data?.k3,
-    },
-    {
-      title: 'k4',
-      value: samples?.step3Data?.k4,
-    },
+  const resilienceModuleFields = [
+    { title: 'k1', key: 'k1' },
+    { title: 'k2', key: 'k2' },
+    { title: 'k3', key: 'k3' },
+    { title: 'k4', key: 'k4' },
   ];
+  
+  const resilienceModule = resilienceModuleFields.map(field => ({
+    title: field.title,
+    value: samples?.step3Data?.[field.key],
+  }));  
 
-  const permanentDeformation = [
-    {
-      title: t('pm.granularLayer.k1.psi1'),
-      value: samples?.step3Data?.k1psi1,
-    },
-    {
-      title: t('pm.granularLayer.k2.psi2'),
-      value: samples?.step3Data?.k2psi2,
-    },
-    {
-      title: t('pm.granularLayer.k3.psi3'),
-      value: samples?.step3Data?.k3psi3,
-    },
-    {
-      title: t('pm.granularLayer.k4.psi4'),
-      value: samples?.step3Data?.k4psi4,
-    },
-    {
-      title: t('pm.granularLayer.mf.observations'),
-      value: samples?.step3Data?.observations,
-    },
+  const deformationFields = [
+    { title: t('pm.granularLayer.k1.psi1'), key: 'k1psi1' },
+    { title: t('pm.granularLayer.k2.psi2'), key: 'k2psi2' },
+    { title: t('pm.granularLayer.k3.psi3'), key: 'k3psi3' },
+    { title: t('pm.granularLayer.k4.psi4'), key: 'k4psi4' },
+    { title: t('pm.granularLayer.mf.observations'), key: 'observations' },
   ];
+  
+  const permanentDeformation = deformationFields.map(field => ({
+    title: field.title,
+    value: samples?.step3Data?.[field.key],
+  }));  
 
-  const techData = [
-    {
-      title: t('pm.granularLayer.mctGroup'),
-      value: samples?.step3Data?.mctGroup,
-    },
-    {
-      title: t('pm.granularLayer.mctCoefficientC'),
-      value: samples?.step3Data?.mctCoefficientC,
-    },
-    {
-      title: t('pm.granularLayer.mctIndexE'),
-      value: samples?.step3Data?.mctIndexE,
-    },
-    {
-      title: t('pm.granularLayer.especific.mass'),
-      value: samples?.step3Data?.especificMass,
-    },
-    {
-      title: t('pm.granularLayer.compressionEnergy'),
-      value: samples?.step3Data?.compressionEnergy,
-    },
-    {
-      title: t('pm.granularLayer.granulometric.range'),
-      value: samples?.step3Data?.granulometricRange,
-    },
-    {
-      title: t('pm.granularLayer.optimal.humidity'),
-      value: samples?.step3Data?.optimalHumidity,
-    },
-    {
-      // refactor: 'todo os inputs vazios precisam ficar com '-';
-      title: t('pm.granularLayer.abrasionLA'),
-      value: samples?.step3Data?.abrasionLA,
-    },
-    {
-      title: t('pm.granularLayer.mf.observations'),
-      value: samples?.step3Data?.observations,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.tmn'),
-      value: samples?.step4Data?.tmn,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.volumeVoids'),
-      value: samples?.step4Data?.volumeVoids,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.rt'),
-      value: samples?.step4Data?.rt,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.flowNumber'),
-      value: samples?.step4Data?.flowNumber,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.mr'),
-      value: samples?.step4Data?.mr,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.specificMass'),
-      value: samples?.step4Data?.specificMass,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.asphaltTenor'),
-      value: samples?.step4Data?.asphaltTenor,
-    },
-
-    {
-      title: t('pm.binderAsphaltConcrete.stabilizer'),
-      value: samples?.step4Data?.asphaltTenor,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.tenor'),
-      value: samples?.step4Data?.asphaltTenor,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.rtcd'),
-      value: samples?.step4Data?.asphaltTenor,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.rtf'),
-      value: samples?.step4Data?.asphaltTenor,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.rcs'),
-      value: samples?.step4Data?.asphaltTenor,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.capType'),
-      value: samples?.step3Data?.capType,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.performanceGrade'),
-      value: samples?.step3Data?.performanceGrade,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.penetration'),
-      value: samples?.step3Data?.penetration,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.softeningPoint'),
-      value: samples?.step3Data?.softeningPoint,
-    },
-    {
-      title: t('pm.binderAsphaltConcrete.elasticRecovery'),
-      value: samples?.step3Data?.elasticRecovery,
-    },
+  const techFields = [
+    { title: t('pm.granularLayer.mctGroup'), key: 'mctGroup' },
+    { title: t('pm.granularLayer.mctCoefficientC'), key: 'mctCoefficientC' },
+    { title: t('pm.granularLayer.mctIndexE'), key: 'mctIndexE' },
+    { title: t('pm.granularLayer.especific.mass'), key: 'especificMass' },
+    { title: t('pm.granularLayer.compressionEnergy'), key: 'compressionEnergy' },
+    { title: t('pm.granularLayer.granulometric.range'), key: 'granulometricRange' },
+    { title: t('pm.granularLayer.optimal.humidity'), key: 'optimalHumidity' },
+    { title: t('pm.granularLayer.abrasionLA'), key: 'abrasionLA' },
+    { title: t('pm.granularLayer.mf.observations'), key: 'observations' },
+    { title: t('pm.granularLayer.tmn'), key: 'tmn', source: 'step4Data' },
+    { title: t('pm.granularLayer.volumeVoids'), key: 'volumeVoids', source: 'step4Data' },
+    { title: t('pm.granularLayer.rt'), key: 'rt', source: 'step4Data' },
+    { title: t('pm.granularLayer.flowNumber'), key: 'flowNumber', source: 'step4Data' },
+    { title: t('pm.granularLayer.mr'), key: 'mr', source: 'step4Data' },
+    { title: t('pm.granularLayer.specificMass'), key: 'specificMass', source: 'step4Data' },
+    { title: t('pm.granularLayer.asphaltTenor'), key: 'asphaltTenor', source: 'step4Data' },
+    { title: t('pm.granularLayer.stabilizer'), key: 'stabilizer', source: 'step4Data' },
+    { title: t('pm.granularLayer.tenor'), key: 'tenor', source: 'step4Data' },
+    { title: t('pm.granularLayer.rtcd'), key: 'rtcd', source: 'step4Data' },
+    { title: t('pm.granularLayer.rtf'), key: 'rtf', source: 'step4Data' },
+    { title: t('pm.granularLayer.rcs'), key: 'rcs', source: 'step4Data' },
+    { title: t('pm.granularLayer.capType'), key: 'capType' },
+    { title: t('pm.granularLayer.performanceGrade'), key: 'performanceGrade' },
+    { title: t('pm.granularLayer.penetration'), key: 'penetration' },
+    { title: t('pm.granularLayer.softeningPoint'), key: 'softeningPoint' },
+    { title: t('pm.granularLayer.elasticRecovery'), key: 'elasticRecovery' },
   ];
+  
+  const techData = techFields.map(field => ({
+    title: field.title,
+    value: field.source ? samples?.[field.source]?.[field.key] : samples?.step3Data?.[field.key],
+  }));  
 
-  const materialFatigue = [
-    {
-      title: t('pm.granularLayer.k1.psi1'),
-      value: samples?.step3Data?.fatiguek1psi1,
-    },
-    {
-      title: t('pm.granularLayer.k2.psi2'),
-      value: samples?.step3Data?.fatiguek2psi2,
-    },
-    {
-      title: t('pm.granularLayer.mf.observations'),
-      value: samples?.step3Data?.observations,
-    },
+  const fatigueFields = [
+    { title: t('pm.granularLayer.k1.psi1'), key: 'fatiguek1psi1' },
+    { title: t('pm.granularLayer.k2.psi2'), key: 'fatiguek2psi2' },
+    { title: t('pm.granularLayer.mf.observations'), key: 'observations' },
   ];
+  
+  const materialFatigue = fatigueFields.map(field => ({
+    title: field.title,
+    value: samples?.step3Data?.[field.key],
+  }));  
 
-  const resilienceModuleStabilized = [
-    {
-      title: t('pm.granularLayer.rs.initial'),
-      value: samples?.step3Data?.rsInitial,
-    },
-    {
-      title: t('pm.granularLayer.rs.final'),
-      value: samples?.step3Data?.rsFinal,
-    },
-    {
-      title: t('pm.granularLayer.constant.A'),
-      value: samples?.step3Data?.constantA,
-    },
-    {
-      title: t('pm.granularLayer.constant.B'),
-      value: samples?.step3Data?.constantB,
-    },
+  const resilienceFields = [
+    { title: t('pm.granularLayer.rs.initial'), key: 'rsInitial' },
+    { title: t('pm.granularLayer.rs.final'), key: 'rsFinal' },
+    { title: t('pm.granularLayer.constant.A'), key: 'constantA' },
+    { title: t('pm.granularLayer.constant.B'), key: 'constantB' },
   ];
+  
+  const resilienceModuleStabilized = resilienceFields.map(field => ({
+    title: field.title,
+    value: samples?.step3Data?.[field.key],
+  }));  
 
   return (
     <>

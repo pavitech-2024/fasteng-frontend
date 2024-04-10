@@ -1,9 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable @next/next/no-html-link-for-pages */
-/* eslint-disable react/jsx-no-undef */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react/no-unescaped-entities */
 import samplesService from '@/services/promedina/stabilized-layers/stabilized-layers-view.service';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import { Box, Button, Typography } from '@mui/material';
@@ -47,40 +41,12 @@ const SpecificSample_StabilizedLayers = () => {
     thickness: `${item.thickness} mm`,
   }));
 
-  const generalData = [
-    {
-      title: t('pm.granularLayer.name'),
-      value: samples?.generalData.name,
-    },
-    {
-      title: t('pm.granularLayer.zone'),
-      value: samples?.generalData.zone,
-    },
-    {
-      title: t('pm.granularLayer.layer'),
-      value: samples?.generalData.layer,
-    },
-    {
-      title: t('pm.granularLayer.cityState'),
-      value: samples?.generalData.cityState,
-    },
-    {
-      title: t('pm.granularLayer.highway'),
-      value: samples?.generalData.highway,
-    },
-    {
-      title: t('pm.granularLayer.guideLineSpeed'),
-      value: `${samples?.generalData.guideLineSpeed} Km/h`,
-    },
-    {
-      title: t('pm.granularLayer.zone'),
-      value: samples?.generalData.zone,
-    },
-    {
-      title: t('pm.granularLayer.observations'),
-      value: samples?.generalData.observations,
-    },
-  ];
+  const fieldKeys = ['name', 'zone', 'layer', 'cityState', 'highway', 'guideLineSpeed', 'observations'];
+
+  const generalData = fieldKeys.map((key) => ({
+    title: t(`pm.granularLayer.${key}`),
+    value: key === 'guideLineSpeed' ? `${samples?.generalData[key]} km/h` : samples?.generalData[key],
+  }));
 
   const pavimentData = [
     {
@@ -685,7 +651,6 @@ const SpecificSample_StabilizedLayers = () => {
               samples?.step3Data?.rsFinal &&
               samples?.step3Data?.constantA &&
               samples?.step3Data?.constantB && (
-                // refactor: (MPA) => (MPa)
                 <FlexColumnBorder title={t('pm.resilience.module')} open={true} theme={'#07B811'}>
                   <Box
                     sx={{

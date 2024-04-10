@@ -4,7 +4,7 @@ import { Box, TextField } from '@mui/material';
 import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 
-const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
+const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
   const { step3Data, setData } = useGranularLayersStore();
 
   const inputsPavimentData = [
@@ -68,25 +68,16 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     { label: t('pm.granularLayer.k4.psi4'), value: step3Data.k4psi4, key: 'k4psi4', required: true },
   ];
 
-  if (nextDisabled) {
-    inputsPavimentData.every(({ required, value }) => {
-      if (!required) return true;
-      if (value === null) return false;
-      if (typeof value === 'string' && value.trim() === '') return false;
-      return true;
-    }) &&
-      inputsPermanentDeformation.every(({ required, value }) => {
-        if (!required) return true;
-        if (value === null) return false;
-        if (typeof value === 'string' && value.trim() === '') return false;
-        return true;
-      }) &&
-      setNextDisabled(false);
-  }
+  setNextDisabled(false);
 
   return (
     <>
-      <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'}>
+      <FlexColumnBorder 
+        title={t('pm.paviment.data')} 
+        open={true} 
+        theme={'#07B811'} 
+        sx_title={{ fontSize: { mobile: '1rem' }, whiteSpace: 'wrap' }}
+      >
         <Box
           sx={{
             width: '100%',
@@ -120,7 +111,12 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title={t('pm.resilience.module')} open={true} theme={'#07B811'}>
+      <FlexColumnBorder 
+        title={t('pm.resilience.module')} 
+        open={true} 
+        theme={'#07B811'}
+        sx_title={{ fontSize: { mobile: '1rem' }, whiteSpace: 'wrap' }}
+      >
         <Box
           sx={{
             width: '100%',
@@ -154,7 +150,12 @@ const GranularLayers_step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps)
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title={t('pm.permanent.deformation')} open={true} theme={'#07B811'}>
+      <FlexColumnBorder 
+        title={t('pm.permanent.deformation')} 
+        open={true} 
+        theme={'#07B811'}
+        sx_title={{ fontSize: { mobile: '1rem' }, whiteSpace: 'wrap' }}
+      >
         <Box
           sx={{
             width: '100%',
