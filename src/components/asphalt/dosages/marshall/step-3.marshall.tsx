@@ -100,7 +100,7 @@ const Marshall_Step3 = ({
         },
         {
           field: 'value',
-          headerName: t('asphalt.dosages.marshall.specification'),
+          headerName: t('asphalt.dosages.marshall.project'),
           valueFormatter: ({ value }) => `${value}`,
         },
       ]);
@@ -258,9 +258,9 @@ const Marshall_Step3 = ({
           >
             {t('asphalt.dosages.marshall.calculate')}
           </Button>
-          {data.projections?.length > 0 && (
+          {data?.projections?.length > 0 && (
             <Step3Table
-              rows={data.projections}
+              rows={data?.projections}
               columns={specificationColumns}
               columnGrouping={specificationColumnsGroupings}
               marshall={marshall}

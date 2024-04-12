@@ -99,7 +99,9 @@ class ViscosityRotational_SERVICE implements IEssayService {
   calculateResults = async (store: ViscosityRotationalData): Promise<void> => {
     const body = {
       generalData: store.generalData,
-      viscosityRotationalCalc: store.viscosityRotationalCalc,
+      viscosityRotational: {
+        dataPoints: store.viscosityRotationalCalc.dataPoints
+      }
     };
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);

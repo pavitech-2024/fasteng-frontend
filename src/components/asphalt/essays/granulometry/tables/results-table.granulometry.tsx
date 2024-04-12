@@ -29,7 +29,7 @@ const AsphaltGranulometry_resultsTable = ({ rows, columns }: resultsGranulometry
         sortable: false,
         align: 'center',
         headerAlign: 'center',
-        minWidth: 200,
+        minWidth: 159,
       }))}
       rows={
         rows !== null

@@ -214,6 +214,7 @@ class Marshall_SERVICE implements IEssayService {
         if (success === false) throw error.name;
 
         const { table_data } = data;
+        console.log("🚀 ~ Marshall_SERVICE ~ getStep3Data= ~ table_data:", table_data)
 
         this.store_actions.setData({ key: 'table_data', step: 2, value: table_data });
       } catch (error) {
