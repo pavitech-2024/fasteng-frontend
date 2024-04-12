@@ -126,17 +126,21 @@ const Marshall_Step3 = ({
   const handleCalculateGranulometricComp = async () => {
     if (!Object.values(data.percentageInputs).some((input) => input === null)) {
       const results = await calculateGranulometryComposition(data);
+      
+      const newPointsOfCurve = [...results.pointsOfCurve];
 
-      const graph = updateTableAndGraph(
-        data.percentsOfMaterials,
-        data.sumOfPercents,
-        data.pointsOfCurve,
-        data.table_data
-      );
+      newPointsOfCurve.unshift([
+        t('asphalt.dosages.marshall.sieve_mm'),
+        t('asphalt.dosages.marshall.dnit-track'),
+        'Faixa de trabalho',
+        'Mistura de projeto',
+        'Faixa de trabalho',
+        'Faixa do DNIT',
+      ]);
 
       const newResults = {
         ...results,
-        graphData: graph.newPointsOfCurve,
+        graphData: newPointsOfCurve,
       };
 
       setData({ step: 2, value: newResults });
@@ -178,52 +182,59 @@ const Marshall_Step3 = ({
     }
   });
 
-  const updateTableAndGraph = (percentsOfMaterials, sumOfPercentsToReturn, pointsOfCurve, arrayTable) => {
-    const newPointsOfCurve = [
-      [
-        t('asphalt.dosages.marshall.sieve_mm'),
-        t('asphalt.dosages.marshall.dnit-track'),
-        'Faixa de trabalho',
-        'Mistura de projeto',
-        'Faixa de trabalho',
-        'Faixa do DNIT',
-      ],
-      ...pointsOfCurve,
-    ];
+  // const updateTableAndGraph = (percentsOfMaterials, sumOfPercentsToReturn, pointsOfCurve, arrayTable) => {
+  //   console.log("🚀 ~ updateTableAndGraph ~ pointsOfCurve:", pointsOfCurve)
+  //   const newPointsOfCurve = [...pointsOfCurve];
+  //   console.log("🚀 ~ updateTableAndGraph ~ newPointsOfCurve 1:", newPointsOfCurve)
 
-    let tableData = [];
-    let arrayResultAux = arrayTable;
-    let second = 0;
+  //   newPointsOfCurve.unshift([
+  //     t('asphalt.dosages.marshall.sieve_mm'),
+  //     t('asphalt.dosages.marshall.dnit-track'),
+  //     'Faixa de trabalho',
+  //     'Mistura de projeto',
+  //     'Faixa de trabalho',
+  //     'Faixa do DNIT',
+  //   ]);
 
-    percentsOfMaterials.forEach((item, i) => {
-      tableData = [];
-      second = 0;
-      item.forEach((value, j) => {
-        if (value !== null) {
-          tableData.push({
-            ...arrayResultAux[second],
-            ['key%' + i]: numberRepresentation(value),
-          });
-          second++;
-        }
-      });
-      arrayResultAux = tableData;
-    });
+  //   console.log("🚀 ~ updateTableAndGraph ~ newPointsOfCurve 2:", newPointsOfCurve)
 
-    tableData = [];
-    second = 0;
-    sumOfPercentsToReturn.forEach((item, i) => {
-      if (item !== null) {
-        tableData.push({
-          ...arrayResultAux[second],
-          Projeto: numberRepresentation(item),
-        });
-        second++;
-      }
-    });
+  //   let tableData = [];
+  //   let arrayResultAux = arrayTable;
+  //   let second = 0;
 
-    return { newPointsOfCurve };
-  };
+  //   percentsOfMaterials.forEach((item, i) => {
+  //     tableData = [];
+  //     second = 0;
+  //     item.forEach((value, j) => {
+  //       if (value !== null) {
+  //         tableData.push({
+  //           ...arrayResultAux[second],
+  //           ['key%' + i]: numberRepresentation(value),
+  //         });
+  //         second++;
+  //       }
+  //     });
+  //     arrayResultAux = tableData;
+  //   });
+
+  //   tableData = [];
+  //   second = 0;
+  //   sumOfPercentsToReturn.forEach((item, i) => {
+  //     if (item !== null) {
+  //       tableData.push({
+  //         ...arrayResultAux[second],
+  //         Projeto: numberRepresentation(item),
+  //       });
+  //       second++;
+  //     }
+  //   });
+
+  //   return { newPointsOfCurve };
+  // };
+
+  useEffect(() => {
+    console.log('🚀 ~ useEffect ~ data?.graphData?.length > 1:', data?.graphData?.length > 1);
+  }, [data?.graphData]);
 
   nextDisabled && setNextDisabled(false);
 

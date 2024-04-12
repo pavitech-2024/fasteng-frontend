@@ -10,6 +10,7 @@ import { useState } from 'react';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
+import debounce from 'lodash/debounce';
 
 const Marshall_Step6 = ({
   nextDisabled,
@@ -43,6 +44,10 @@ const Marshall_Step6 = ({
     plusOne: true,
   });
 
+  const debouncedSetData = debounce((newData) => {
+    setData({ step: 5, value: newData });
+  }, 300);
+
   const generateColumns = (tenor: string): GridColDef[] => [
     {
       field: 'diammeter',
@@ -58,7 +63,8 @@ const Marshall_Step6 = ({
               const value = Number(e.target.value);
               const newState = [...data[tenor]];
               newState[index] = { ...newState[index], diammeter: value };
-              setData({ step: 5, value: { ...data, [tenor]: newState } });
+              // setData({ step: 5, value: { ...data, [tenor]: newState } });
+              debouncedSetData({ ...data, [tenor]: newState });
             }}
           />
         );
