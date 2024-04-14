@@ -80,7 +80,6 @@ const Marshall_Step7 = ({
       }
     );
   }, []);
-  
 
   // Preparando os dados points para o componente GraficoPage7N
   const points = data?.optimumBinder?.pointsOfCurveDosage;
@@ -187,7 +186,9 @@ const Marshall_Step7 = ({
       col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.apparentBulkSpecificGravity.toFixed(
         2
       ),
-      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.apparentBulkSpecificGravity.toFixed(2),
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.apparentBulkSpecificGravity.toFixed(
+        2
+      ),
     },
     {
       id: 3,
@@ -195,7 +196,9 @@ const Marshall_Step7 = ({
       col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.voidsFilledAsphalt.toFixed(
         2
       ),
-      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.voidsFilledAsphalt.toFixed(2),
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.voidsFilledAsphalt.toFixed(
+        2
+      ),
     },
     {
       id: 4,
@@ -203,7 +206,9 @@ const Marshall_Step7 = ({
       col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.aggregateVolumeVoids.toFixed(
         2
       ),
-      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.aggregateVolumeVoids.toFixed(2),
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.aggregateVolumeVoids.toFixed(
+        2
+      ),
     },
     {
       id: 5,
@@ -211,7 +216,7 @@ const Marshall_Step7 = ({
       col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.ratioBitumenVoid.toFixed(2),
       col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.ratioBitumenVoid.toFixed(2),
     },
-    
+
     {
       id: 6,
       binder: 'Fluência (mm)',
@@ -230,7 +235,9 @@ const Marshall_Step7 = ({
       col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.diametricalCompressionStrength.toFixed(
         2
       ),
-      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.diametricalCompressionStrength.toFixed(2),
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.diametricalCompressionStrength.toFixed(
+        2
+      ),
     },
     {
       id: 8,
@@ -238,7 +245,9 @@ const Marshall_Step7 = ({
       col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.maxSpecificGravity.toFixed(
         2
       ),
-      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.maxSpecificGravity.toFixed(2),
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.maxSpecificGravity.toFixed(
+        2
+      ),
     },
   ];
 
@@ -256,8 +265,7 @@ const Marshall_Step7 = ({
             gap: '10px',
           }}
         >
-          <GraficoPage7N data={points} />
-          
+          {points?.length > 0 && <GraficoPage7N data={points} />}
 
           {!Object.values(data?.expectedParameters?.expectedParameters).some((item) => item === null) && (
             <DataGrid columns={expectedParametersColumns} rows={expectedParametersRows} hideFooter disableColumnMenu />

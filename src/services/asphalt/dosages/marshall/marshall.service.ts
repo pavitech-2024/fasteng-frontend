@@ -418,14 +418,15 @@ class Marshall_SERVICE implements IEssayService {
     step5Data: MarshallData['maximumMixtureDensityData']
   ): Promise<any> => {
     const { aggregates } = step2Data;
-    const { indexesOfMissesSpecificGravity, dmt } = step5Data;
-    const { percentsOfDosage, trial } = step4Data;
+    const { indexesOfMissesSpecificGravity, missingSpecificMass } = step5Data;
+    const { newPercentOfDosage, trial } = step4Data;
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-dmt-data`, {
         aggregates,
-        percentsOfDosage,
+        percentsOfDosage: newPercentOfDosage,
         trial,
         indexesOfMissesSpecificGravity,
+        missingSpecificGravity: missingSpecificMass
       });
 
 

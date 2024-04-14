@@ -127,7 +127,7 @@ const Marshall_Step3 = ({
     if (!Object.values(data.percentageInputs).some((input) => input === null)) {
       const results = await calculateGranulometryComposition(data);
       
-      const newPointsOfCurve = [...results.pointsOfCurve];
+      const newPointsOfCurve = [...results?.pointsOfCurve];
 
       newPointsOfCurve.unshift([
         t('asphalt.dosages.marshall.sieve_mm'),
