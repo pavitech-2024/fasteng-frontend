@@ -607,7 +607,11 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  plotDosageGraph = async (dnitBand: string, volumetricParameters: any, trial: number, percentsOfDosage: any[]) => {
+  plotDosageGraph = async (
+    dnitBand: string, 
+    volumetricParameters: any, 
+    trial: number, 
+    percentsOfDosage: any[]) => {
     try {
       const response = await Api.post(`${this.info.backend_path}/step-7-plot-dosage-graph`, {
         dnitBand,
@@ -628,6 +632,7 @@ class Marshall_SERVICE implements IEssayService {
 
   setOptimumBinderContentData = async (
     generalData: MarshallData['generalData'],
+    step3Data: MarshallData['granulometryCompositionData'],
     step6Data: MarshallData['volumetricParametersData'],
     step4Data: MarshallData['binderTrialData']
   ): Promise<any> => {
@@ -650,8 +655,8 @@ class Marshall_SERVICE implements IEssayService {
       };
 
       try {
-        const newPercentOfDosage = [40, 60];
-        const dosageGraph = await this.plotDosageGraph(dnitBand, volumetricParameters, trial, newPercentOfDosage);
+        const {percentageInputs: percentsOfDosage} = step3Data;
+        const dosageGraph = await this.plotDosageGraph(dnitBand, volumetricParameters, trial, percentsOfDosage);
 
         result = { ...result, dosageGraph: dosageGraph.optimumBinderDosageGraph };
 
@@ -665,10 +670,12 @@ class Marshall_SERVICE implements IEssayService {
   };
 
   setOptimumBinderExpectedParameters = async (
+    step3Data: MarshallData['granulometryCompositionData'],
     step5Data: MarshallData['maximumMixtureDensityData'],
     step4Data: MarshallData['binderTrialData'],
     step7Data: MarshallData['optimumBinderContentData']
   ): Promise<any> => {
+    const { percentageInputs } = step3Data;
     const { maxSpecificGravity, listOfSpecificGravities } = step5Data;
     const { trial } = step4Data;
     const { curveVv, curveRBV } = step7Data.optimumBinder;
@@ -677,6 +684,7 @@ class Marshall_SERVICE implements IEssayService {
 
     try {
       const response = await Api.post(`${this.info.backend_path}/step-7-get-expected-parameters`, {
+        percentsOfDosage: percentageInputs,
         maxSpecificGravity,
         listOfSpecificGravities,
         trial,

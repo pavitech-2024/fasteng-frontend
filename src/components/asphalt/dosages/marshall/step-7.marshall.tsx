@@ -24,6 +24,7 @@ const Marshall_Step7 = ({
     volumetricParametersData,
     maximumMixtureDensityData,
     materialSelectionData,
+    granulometryCompositionData,
     setData,
   } = useMarshallStore();
 
@@ -36,6 +37,7 @@ const Marshall_Step7 = ({
           let newData;
           const graphics = await marshall.setOptimumBinderContentData(
             generalData,
+            granulometryCompositionData,
             volumetricParametersData,
             binderTrialData
           );
@@ -49,6 +51,7 @@ const Marshall_Step7 = ({
           if (graphics) {
             try {
               const expectedParameters = await marshall.setOptimumBinderExpectedParameters(
+                granulometryCompositionData,
                 maximumMixtureDensityData,
                 binderTrialData,
                 data
@@ -113,16 +116,32 @@ const Marshall_Step7 = ({
     },
   ];
 
+  const formatData = {
+    vv:
+      data?.expectedParameters?.expectedParameters.Vv !== undefined
+        ? data.expectedParameters.expectedParameters.Vv * 100
+        : undefined,
+    vam:
+      data?.expectedParameters?.expectedParameters.Vam !== undefined
+        ? data.expectedParameters.expectedParameters.Vam * 100
+        : undefined,
+    rbv:
+      data?.expectedParameters?.expectedParameters.RBV !== undefined
+        ? data.expectedParameters.expectedParameters.RBV * 100
+        : undefined,
+  };
+
   const expectedParametersRows = [
     {
       id: 1,
-      vv: data?.expectedParameters?.expectedParameters.Vv?.toFixed(2),
-      rbv: data?.expectedParameters?.expectedParameters.RBV?.toFixed(2),
-      vam: data?.expectedParameters?.expectedParameters.Vam?.toFixed(2),
+      vv: formatData.vv.toFixed(2),
+      rbv: formatData.rbv.toFixed(2),
+      vam: formatData.vam.toFixed(2),
       gmb: data?.expectedParameters?.expectedParameters.Gmb?.toFixed(2),
       dmt: data?.expectedParameters?.expectedParameters.newMaxSpecificGravity?.toFixed(2),
     },
   ];
+  console.log('🚀 ~ expectedParametersRows:', expectedParametersRows);
 
   const material_1 = materialSelectionData?.aggregates[0].name;
   const material_2 = materialSelectionData?.aggregates[1].name;
@@ -177,8 +196,14 @@ const Marshall_Step7 = ({
     {
       id: 1,
       binder: 'Vv (%)',
-      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.volumeVoids.toFixed(2),
-      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.volumeVoids.toFixed(2),
+      col1:
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.volumeVoids !== undefined
+          ? (volumetricParametersData.volumetricParameters.volumetricParameters[0].values.volumeVoids * 100).toFixed(2)
+          : undefined,
+      col2:
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.volumeVoids !== undefined
+          ? (volumetricParametersData.volumetricParameters.volumetricParameters[1].values.volumeVoids * 100).toFixed(2)
+          : undefined,
     },
     {
       id: 2,
@@ -193,30 +218,53 @@ const Marshall_Step7 = ({
     {
       id: 3,
       binder: 'Vcb (%)',
-      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.voidsFilledAsphalt.toFixed(
-        2
-      ),
-      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.voidsFilledAsphalt.toFixed(
-        2
-      ),
+      col1:
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.voidsFilledAsphalt !== undefined
+          ? (
+              volumetricParametersData.volumetricParameters.volumetricParameters[0].values.voidsFilledAsphalt * 100
+            ).toFixed(2)
+          : undefined,
+      col2:
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.voidsFilledAsphalt !== undefined
+          ? (
+              volumetricParametersData.volumetricParameters.volumetricParameters[1].values.voidsFilledAsphalt * 100
+            ).toFixed(2)
+          : undefined,
     },
     {
       id: 4,
       binder: 'Vam (%)',
-      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.aggregateVolumeVoids.toFixed(
-        2
-      ),
-      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.aggregateVolumeVoids.toFixed(
-        2
-      ),
+      col1:
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.aggregateVolumeVoids !==
+        undefined
+          ? (
+              volumetricParametersData.volumetricParameters.volumetricParameters[0].values.aggregateVolumeVoids * 100
+            ).toFixed(2)
+          : undefined,
+      col2:
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.aggregateVolumeVoids !==
+        undefined
+          ? (
+              volumetricParametersData.volumetricParameters.volumetricParameters[1].values.aggregateVolumeVoids * 100
+            ).toFixed(2)
+          : undefined,
     },
     {
       id: 5,
       binder: 'Rbv (%)',
-      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.ratioBitumenVoid.toFixed(2),
-      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.ratioBitumenVoid.toFixed(2),
+      col1:
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.ratioBitumenVoid !== undefined
+          ? (
+              volumetricParametersData.volumetricParameters.volumetricParameters[0].values.ratioBitumenVoid * 100
+            ).toFixed(2)
+          : undefined,
+      col2:
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.ratioBitumenVoid !== undefined
+          ? (
+              volumetricParametersData.volumetricParameters.volumetricParameters[1].values.ratioBitumenVoid * 100
+            ).toFixed(2)
+          : undefined,
     },
-
     {
       id: 6,
       binder: 'Fluência (mm)',
@@ -243,10 +291,10 @@ const Marshall_Step7 = ({
       id: 8,
       binder: 'DMT (g/cm³)',
       col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.maxSpecificGravity.toFixed(
-        2
+        3
       ),
       col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.maxSpecificGravity.toFixed(
-        2
+        3
       ),
     },
   ];
