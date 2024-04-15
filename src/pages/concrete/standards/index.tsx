@@ -21,7 +21,7 @@ const ConcreteStandards: NextPage = () => {
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_194_98.pdf',
     },
     {
-      title: t('coarse.aggregate'),
+      title: t('coarseAggregate'),
       icon: CoarseAggregateIcon,
       key: 'coarseAggregate',
       standard: 'DNER - ME 195/97',
@@ -35,14 +35,14 @@ const ConcreteStandards: NextPage = () => {
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_083_98.pdf',
     },
     {
-      title: t('sand.increase'),
+      title: t('sandIncrease'),
       icon: SandIncreaseIcon,
       key: 'sandIncrease',
       standard: 'DNER - ME 192/97',
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_192_97.pdf',
     },
     {
-      title: t('unit.mass'),
+      title: t('unitMass'),
       icon: UnitMassIcon,
       key: 'unitMass',
       standard: 'DNIT 437/2022 – ME',
