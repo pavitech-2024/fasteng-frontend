@@ -1,6 +1,4 @@
-import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
-import useAuth from '@/contexts/auth';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { Box, Button } from '@mui/material';
@@ -11,14 +9,12 @@ import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Step3Table from './tables/step-3-table';
 import Step3InputTable from './tables/step-3-input-table';
 import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
-import { numberRepresentation } from '@/utils/numberRepresentation';
 
 const Marshall_Step3 = ({
   nextDisabled,
   setNextDisabled,
   marshall,
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
-  const [loading, setLoading] = useState<boolean>(false);
   const { calculateGranulometryComposition } = new Marshall_SERVICE();
   const { granulometryCompositionData: data, materialSelectionData, setData, generalData } = useMarshallStore();
 
@@ -126,7 +122,7 @@ const Marshall_Step3 = ({
   const handleCalculateGranulometricComp = async () => {
     if (!Object.values(data.percentageInputs).some((input) => input === null)) {
       const results = await calculateGranulometryComposition(data);
-      
+
       const newPointsOfCurve = [...results?.pointsOfCurve];
 
       newPointsOfCurve.unshift([
@@ -182,93 +178,35 @@ const Marshall_Step3 = ({
     }
   });
 
-  // const updateTableAndGraph = (percentsOfMaterials, sumOfPercentsToReturn, pointsOfCurve, arrayTable) => {
-  //   console.log("🚀 ~ updateTableAndGraph ~ pointsOfCurve:", pointsOfCurve)
-  //   const newPointsOfCurve = [...pointsOfCurve];
-  //   console.log("🚀 ~ updateTableAndGraph ~ newPointsOfCurve 1:", newPointsOfCurve)
-
-  //   newPointsOfCurve.unshift([
-  //     t('asphalt.dosages.marshall.sieve_mm'),
-  //     t('asphalt.dosages.marshall.dnit-track'),
-  //     'Faixa de trabalho',
-  //     'Mistura de projeto',
-  //     'Faixa de trabalho',
-  //     'Faixa do DNIT',
-  //   ]);
-
-  //   console.log("🚀 ~ updateTableAndGraph ~ newPointsOfCurve 2:", newPointsOfCurve)
-
-  //   let tableData = [];
-  //   let arrayResultAux = arrayTable;
-  //   let second = 0;
-
-  //   percentsOfMaterials.forEach((item, i) => {
-  //     tableData = [];
-  //     second = 0;
-  //     item.forEach((value, j) => {
-  //       if (value !== null) {
-  //         tableData.push({
-  //           ...arrayResultAux[second],
-  //           ['key%' + i]: numberRepresentation(value),
-  //         });
-  //         second++;
-  //       }
-  //     });
-  //     arrayResultAux = tableData;
-  //   });
-
-  //   tableData = [];
-  //   second = 0;
-  //   sumOfPercentsToReturn.forEach((item, i) => {
-  //     if (item !== null) {
-  //       tableData.push({
-  //         ...arrayResultAux[second],
-  //         Projeto: numberRepresentation(item),
-  //       });
-  //       second++;
-  //     }
-  //   });
-
-  //   return { newPointsOfCurve };
-  // };
-
-  useEffect(() => {
-    console.log('🚀 ~ useEffect ~ data?.graphData?.length > 1:', data?.graphData?.length > 1);
-  }, [data?.graphData]);
-
   nextDisabled && setNextDisabled(false);
 
   return (
     <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '10px',
-          }}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+        }}
+      >
+        <Step3InputTable rows={inputRows} columns={inputColumns} marshall={marshall} />
+        <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
+        <Button
+          sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
+          onClick={handleCalculateGranulometricComp}
         >
-          <Step3InputTable rows={inputRows} columns={inputColumns} marshall={marshall} />
-          <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
-          <Button
-            sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
-            onClick={handleCalculateGranulometricComp}
-          >
-            {t('asphalt.dosages.marshall.calculate')}
-          </Button>
-          {data?.projections?.length > 0 && (
-            <Step3Table
-              rows={data?.projections}
-              columns={specificationColumns}
-              columnGrouping={specificationColumnsGroupings}
-              marshall={marshall}
-            />
-          )}
-          {data?.graphData?.length > 1 && <Graph data={data?.graphData} />}
-        </Box>
-      )}
+          {t('asphalt.dosages.marshall.calculate')}
+        </Button>
+        {data?.projections?.length > 0 && (
+          <Step3Table
+            rows={data?.projections}
+            columns={specificationColumns}
+            columnGrouping={specificationColumnsGroupings}
+            marshall={marshall}
+          />
+        )}
+        {data?.graphData?.length > 1 && <Graph data={data?.graphData} />}
+      </Box>
     </>
   );
 };

@@ -26,6 +26,7 @@ const Marshall_Step8 = ({
     granulometryCompositionData,
     setData,
   } = useMarshallStore();
+
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const materials = materialSelectionData.aggregates.map((item) => item.name);
@@ -39,7 +40,7 @@ const Marshall_Step8 = ({
     toast.promise(
       async () => {
         try {
-          let newData;
+          let newData = {};
           const response = await marshall.confirmSpecificGravity(
             granulometryCompositionData,
             maximumMixtureDensityData,
@@ -358,7 +359,7 @@ const Marshall_Step8 = ({
     toast.promise(
       async () => {
         try {
-          let newData;
+          let newData = {};
           const riceTest = await marshall.confirmSpecificGravity(
             granulometryCompositionData,
             maximumMixtureDensityData,
@@ -375,9 +376,7 @@ const Marshall_Step8 = ({
           setRiceTestModalIsOpen(false);
 
           setData({ step: 7, value: newData });
-          //setLoading(false);
         } catch (error) {
-          //setLoading(false);
           throw error;
         }
       },
@@ -393,7 +392,7 @@ const Marshall_Step8 = ({
     toast.promise(
       async () => {
         try {
-          let newData;
+          let newData = {};
           const confirmVP = await marshall.confirmVolumetricParameters(
             maximumMixtureDensityData,
             optimumBinderContentData,
@@ -406,9 +405,7 @@ const Marshall_Step8 = ({
           };
 
           setData({ step: 7, value: newData });
-          //setLoading(false);
         } catch (error) {
-          //setLoading(false);
           throw error;
         }
       },

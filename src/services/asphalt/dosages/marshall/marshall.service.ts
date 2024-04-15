@@ -214,7 +214,6 @@ class Marshall_SERVICE implements IEssayService {
         if (success === false) throw error.name;
 
         const { table_data } = data;
-        console.log("🚀 ~ Marshall_SERVICE ~ getStep3Data= ~ table_data:", table_data)
 
         this.store_actions.setData({ key: 'table_data', step: 2, value: table_data });
       } catch (error) {
@@ -257,7 +256,7 @@ class Marshall_SERVICE implements IEssayService {
 
       return granulometricResults;
     } catch (error) {
-      //throw error;
+      throw error;
     }
   };
 
@@ -361,7 +360,7 @@ class Marshall_SERVICE implements IEssayService {
 
       return result;
     } catch (error) {
-      //throw error;
+      throw error;
     }
   };
 
@@ -379,7 +378,6 @@ class Marshall_SERVICE implements IEssayService {
 
         if (!trial) throw t('errors.empty-trial');
         if (percentsOfDosage.length === 0) throw t('errors.empty-percents-dosage');
-        //if (bandsOfTemperatures.length === 0) throw t('errors.empty-bands-temperatures');
 
         const binderTrialData = {
           trial,
@@ -407,7 +405,7 @@ class Marshall_SERVICE implements IEssayService {
         if (success === false) throw error.name;
       } catch (error) {
         console.log(error);
-        //throw error;
+        throw error;
       }
     }
   };
@@ -436,14 +434,9 @@ class Marshall_SERVICE implements IEssayService {
 
       const { listOfSpecificGravities, maxSpecificGravity } = data;
 
-      const result = {
-        listOfSpecificGravities,
-        maxSpecificGravity,
-      };
-
       return data;
     } catch (error) {
-      //throw error;
+      throw error;
     }
   };
 
@@ -466,7 +459,7 @@ class Marshall_SERVICE implements IEssayService {
 
       return result;
     } catch (error) {
-      //throw error;
+      throw error;
     }
   };
 
@@ -494,7 +487,7 @@ class Marshall_SERVICE implements IEssayService {
 
       return result;
     } catch (error) {
-      //throw error;
+      throw error;
     }
   };
 
@@ -532,7 +525,7 @@ class Marshall_SERVICE implements IEssayService {
         if (success === false) throw error.name;
       } catch (error) {
         console.log(error);
-        //throw error;
+        throw error;
       }
     }
   };
@@ -565,7 +558,7 @@ class Marshall_SERVICE implements IEssayService {
 
         return data;
       } catch (error) {
-        //throw error;
+        throw error;
       }
     }
   };
@@ -602,7 +595,7 @@ class Marshall_SERVICE implements IEssayService {
         if (success === false) throw error.name;
       } catch (error) {
         console.log(error);
-        //throw error;
+        throw error;
       }
     }
   };
@@ -626,7 +619,7 @@ class Marshall_SERVICE implements IEssayService {
 
       return data;
     } catch (error) {
-      //throw error
+      throw error
     }
   };
 
@@ -662,10 +655,10 @@ class Marshall_SERVICE implements IEssayService {
 
         return result;
       } catch (error) {
-        //throw error;
+        throw error;
       }
     } catch (error) {
-      //throw error;
+      throw error;
     }
   };
 
@@ -704,7 +697,7 @@ class Marshall_SERVICE implements IEssayService {
 
       return result;
     } catch (error) {
-      //throw error;
+      throw error;
     }
   };
 
@@ -744,7 +737,7 @@ class Marshall_SERVICE implements IEssayService {
         if (success === false) throw error.name;
       } catch (error) {
         console.log(error);
-        //throw error;
+        throw error;
       }
     }
   };
@@ -790,7 +783,7 @@ class Marshall_SERVICE implements IEssayService {
 
       return result;
     } catch (error) {
-      //throw error;
+      throw error;
     }
   };
 
@@ -827,7 +820,7 @@ class Marshall_SERVICE implements IEssayService {
 
       return result;
     } catch (error) {
-      //throw error;
+      throw error;
     }
   };
 
@@ -870,7 +863,7 @@ class Marshall_SERVICE implements IEssayService {
         if (success === false) throw error.name;
       } catch (error) {
         console.log(error);
-        //throw error;
+        throw error;
       }
     }
   };
@@ -901,7 +894,7 @@ class Marshall_SERVICE implements IEssayService {
         if (success === false) throw error.name;
       } catch (error) {
         console.log(error);
-        //throw error;
+        throw error;
       }
     }
   };

@@ -9,7 +9,6 @@ import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import GraficoPage7N from './graphs/page-7-graph';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import useAuth from '@/contexts/auth';
 
 const Marshall_Step7 = ({
   nextDisabled,
@@ -27,8 +26,6 @@ const Marshall_Step7 = ({
     granulometryCompositionData,
     setData,
   } = useMarshallStore();
-
-  const { user } = useAuth();
 
   useEffect(() => {
     toast.promise(
@@ -141,7 +138,6 @@ const Marshall_Step7 = ({
       dmt: data?.expectedParameters?.expectedParameters.newMaxSpecificGravity?.toFixed(2),
     },
   ];
-  console.log('🚀 ~ expectedParametersRows:', expectedParametersRows);
 
   const material_1 = materialSelectionData?.aggregates[0].name;
   const material_2 = materialSelectionData?.aggregates[1].name;

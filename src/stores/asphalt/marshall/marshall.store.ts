@@ -14,8 +14,8 @@ interface MarhsallGeneralData {
 }
 
 interface MarshallMaterialSelectionData {
-  aggregates: { _id: string; name: string }[]; // lista de ids dos agregados
-  binder: string; // id do ligante
+  aggregates: { _id: string; name: string }[];
+  binder: string;
 }
 
 interface MarshallGranulometryCompositionData {

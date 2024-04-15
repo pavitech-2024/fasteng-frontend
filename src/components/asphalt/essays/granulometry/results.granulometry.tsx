@@ -14,10 +14,8 @@ import AsphaltGranulometry_resultsTable from './tables/results-table.granulometr
 const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: granulometry_results, step2Data, generalData } = useAsphaltGranulometryStore();
-  console.log("🚀 ~ granulometry_results:", granulometry_results)
 
   const data = {
-    // container "Resultados"
     container_other_data: [],
   };
 
@@ -100,7 +98,6 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
           sx={{
             width: '100%',
             display: 'flex',
-            // gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
             gap: '10px',
             mt: '20px',
           }}
