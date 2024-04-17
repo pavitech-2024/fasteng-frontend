@@ -233,7 +233,7 @@ const BinderAsphaltConcrete_step2 = ({ setNextDisabled }: EssayPageProps) => {
             value={row.thickness}
             onChange={(e) => {
               const newRows = [...rows];
-              newRows[index].thickness = Number(e.target.value);
+              newRows[index].thickness = e.target.value;
               setData({ step: 1, key: 'thickness', value: newRows });
             }}
             adornment={'mm'}

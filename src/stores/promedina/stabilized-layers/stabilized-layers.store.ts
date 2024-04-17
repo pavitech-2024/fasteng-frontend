@@ -43,7 +43,7 @@ interface Step2Data {
     id: number;
     layer: string;
     material: string;
-    thickness: number;
+    thickness: string;
   }[];
 }
 
