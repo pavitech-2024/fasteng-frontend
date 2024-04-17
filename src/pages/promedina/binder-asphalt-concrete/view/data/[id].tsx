@@ -78,7 +78,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
       field.key === 'averageAltitude' ||
       field.key === 'trackWidth' ||
       field.key === 'numberOfTracks' ||
-      field.key === 'trafficLiberation'  ||
+      field.key === 'trafficLiberation' ||
       field.key === 'extension'
         ? `${samples?.step2Data[field.key]} m`
         : `${samples?.step2Data[field.key]}`,
