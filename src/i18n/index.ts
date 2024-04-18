@@ -93,6 +93,12 @@ import marshallENG from './translations/asphalt/dosages/marshall/en.json';
 // superpave
 import superpavePTBR from './translations/asphalt/dosages/superpave/ptbr.json';
 import superpaveENG from './translations/asphalt/dosages/superpave/en.json';
+// igg
+import iggPTBR from './translations/asphalt/essays/igg/ptbr.json';
+import iggENG from './translations/asphalt/essays/igg/en.json';
+// fwd
+import fwdPTBR from './translations/asphalt/essays/fwd/ptbr.json';
+import fwdENG from './translations/asphalt/essays/fwd/en.json';
 
 /**@soils */
 // samples
@@ -194,6 +200,8 @@ i18n.use(initReactI18next).init({
         ...asphaltElasticRecoveryPTBR,
         ...marshallPTBR,
         ...superpavePTBR,
+        ...iggPTBR,
+        ...fwdPTBR,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
@@ -251,6 +259,8 @@ i18n.use(initReactI18next).init({
         ...asphaltElasticRecoveryENG,
         ...marshallENG,
         ...superpaveENG,
+        ...iggENG,
+        ...fwdENG,
         /**@soils */
         ...samplesENG,
         ...soilsEssaysENG,
