@@ -8,7 +8,7 @@ import Step4FwdTable from './tables/step4Table.fwd';
 const Fwd_Step4 = ({ setNextDisabled }: EssayPageProps) => {
   const { fwdStep3, results } = useFwdStore();
   const { spreadsheetData } = fwdStep3;
-  const tableData2 = results.processedData.map((row, index) => ({ 
+  const tableData2 = results.processedData.map((row, index) => ({
     id: index,
     ...row,
   }));

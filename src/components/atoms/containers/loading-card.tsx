@@ -20,13 +20,7 @@ const StyledImg = styled.p`
 `;
 
 export const LoadingText = ({ children }: { children: React.ReactNode }) => (
-  <StyledParagraph>
-    {children}
-  </StyledParagraph>
+  <StyledParagraph>{children}</StyledParagraph>
 );
 
-export const LoadingImg = ({ children }: { children: React.ReactNode }) => (
-  <StyledImg>
-    {children}
-  </StyledImg>
-);
+export const LoadingImg = ({ children }: { children: React.ReactNode }) => <StyledImg>{children}</StyledImg>;

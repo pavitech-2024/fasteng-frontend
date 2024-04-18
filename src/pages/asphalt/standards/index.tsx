@@ -67,7 +67,7 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltBinder',
     },
     {
-      title:  t('durability'),
+      title: t('durability'),
       icon: DurabilityIcon,
       key: 'durability',
       standard: 'DNER - ME 089/94',
@@ -99,7 +99,7 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltBinder',
     },
     {
-      title:  t('penetration.essay'),
+      title: t('penetration.essay'),
       icon: PenetrationIcon,
       key: 'penetration',
       standard: 'DNIT - ME 155/2010',

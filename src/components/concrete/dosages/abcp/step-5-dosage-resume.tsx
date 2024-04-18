@@ -11,8 +11,6 @@ import AbramsCurvGraph from './graph/abramsCurveGrapg';
 const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   nextDisabled && setNextDisabled(false);
   const { results: abcp_results, insertParamsData } = useABCPStore();
-  console.log('🚀 ~ file: step-5-dosage-resume.tsx:13 ~ abcp_results:', abcp_results);
-
   const conditionValue = insertParamsData.condition;
   const tolerance = 0.0001;
 

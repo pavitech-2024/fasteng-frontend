@@ -102,10 +102,6 @@ class SofteningPoint_SERVICE implements IEssayService {
   submitSofteningPointCalcData = async (
     softeningPointCalc: SofteningPointData['softeningPointCalc']
   ): Promise<void> => {
-    console.log(
-      '🚀 ~ file: softeningPoint.service.ts:101 ~ SofteningPoint_SERVICE ~ submitSofteningPointCalcData= ~ softeningPointCalc:',
-      softeningPointCalc
-    );
     try {
       const { temperature1, temperature2 } = softeningPointCalc;
 
@@ -126,10 +122,6 @@ class SofteningPoint_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);
 
       const { success, error, result } = response.data;
-      console.log(
-        '🚀 ~ file: softeningPoint.service.ts:120 ~ SofteningPoint_SERVICE ~ calculateResults= ~ result:',
-        result
-      );
 
       if (success === false) throw error.name;
 

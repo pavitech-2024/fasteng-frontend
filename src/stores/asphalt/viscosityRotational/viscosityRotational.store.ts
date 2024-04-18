@@ -13,7 +13,6 @@ interface ViscosityRotationalGeneralData {
 
 interface ViscosityRotationalCalc {
   viscosityType: string;
-  modified: boolean;
   dataPoints: {
     id: number;
     temperature: number;
@@ -71,7 +70,6 @@ const initialState = {
   },
   viscosityRotationalCalc: {
     viscosityType: 'Viscosity Rotational',
-    modified: null,
     dataPoints: [
       {
         id: 0,

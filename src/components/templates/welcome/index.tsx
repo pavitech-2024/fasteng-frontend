@@ -41,8 +41,8 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
     {
       name: t('navbar.library'),
       description: t('description.library'),
-    }
-  ]
+    },
+  ];
 
   const [modalOpen, setModalOpen] = useState(false);
 

@@ -86,6 +86,13 @@ import asphaltPenetrationENG from './translations/asphalt/essays/penetration/en.
 // elasticRecovery
 import asphaltElasticRecoveryPTBR from './translations/asphalt/essays/elasticRecovery/ptbr.json';
 import asphaltElasticRecoveryENG from './translations/asphalt/essays/elasticRecovery/en.json';
+// dosages
+// marshall
+import marshallPTBR from './translations/asphalt/dosages/marshall/ptbr.json';
+import marshallENG from './translations/asphalt/dosages/marshall/en.json';
+// superpave
+import superpavePTBR from './translations/asphalt/dosages/superpave/ptbr.json';
+import superpaveENG from './translations/asphalt/dosages/superpave/en.json';
 // igg
 import iggPTBR from './translations/asphalt/essays/igg/ptbr.json';
 import iggENG from './translations/asphalt/essays/igg/en.json';
@@ -191,6 +198,8 @@ i18n.use(initReactI18next).init({
         ...asphaltGranulometryPTBR,
         ...asphaltPenetrationPTBR,
         ...asphaltElasticRecoveryPTBR,
+        ...marshallPTBR,
+        ...superpavePTBR,
         ...iggPTBR,
         ...fwdPTBR,
         /**@soils */
@@ -248,6 +257,8 @@ i18n.use(initReactI18next).init({
         ...asphaltGranulometryENG,
         ...asphaltPenetrationENG,
         ...asphaltElasticRecoveryENG,
+        ...marshallENG,
+        ...superpaveENG,
         ...iggENG,
         ...fwdENG,
         /**@soils */

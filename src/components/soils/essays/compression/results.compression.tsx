@@ -16,7 +16,6 @@ import { useEffect } from 'react';
 const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: compressionResults, compressionGeneralData } = useCompressionStore();
-  console.log('🚀 ~ file: results.compression.tsx:21 ~ compressionResults:', compressionResults);
 
   //Primeiro bloco com as informações gerais do ensaio
   const experimentResumeData: ExperimentResumeData = {

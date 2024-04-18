@@ -7,7 +7,7 @@ const CreatorCard = ({ imageSrc, name, description, lattesLink }) => {
     <Box
       sx={{
         width: '100%',
-        maxWidth: '700px', 
+        maxWidth: '700px',
         display: 'flex',
         flexDirection: 'column',
         border: '1px solid #ddd',
@@ -25,16 +25,16 @@ const CreatorCard = ({ imageSrc, name, description, lattesLink }) => {
     >
       <Box
         sx={{
-            flex: '0 0 auto',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'relative',
-            overflow: 'hidden',
-            minWidth: '200px',
-            borderRadius: '50%',
-            width: '15vw',
-            margin: '0 auto',
+          flex: '0 0 auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
+          overflow: 'hidden',
+          minWidth: '200px',
+          borderRadius: '50%',
+          width: '15vw',
+          margin: '0 auto',
         }}
       >
         <img
@@ -55,7 +55,7 @@ const CreatorCard = ({ imageSrc, name, description, lattesLink }) => {
         <Typography variant="body2" sx={{ mb: '15px' }}>
           {description}
         </Typography>
-        <CreatorsPageButton text={'➜ Currículo Lattes'} linkTo={lattesLink} target='_blank' />
+        <CreatorsPageButton text={'➜ Currículo Lattes'} linkTo={lattesLink} target="_blank" />
       </Box>
     </Box>
   );
