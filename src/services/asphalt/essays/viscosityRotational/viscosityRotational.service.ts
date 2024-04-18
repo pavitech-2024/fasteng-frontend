@@ -90,10 +90,6 @@ class ViscosityRotational_SERVICE implements IEssayService {
   submitViscosityRotationalCalcData = async (
     viscosityRotationalCalc: ViscosityRotationalData['viscosityRotationalCalc']
   ): Promise<void> => {
-    console.log(
-      '🚀 ~ file: viscosityRotational.service.ts:101 ~ ViscosityRotational_SERVICE ~ submitViscosityRotationalCalcData= ~ viscosityRotationalCalc:',
-      viscosityRotationalCalc
-    );
     try {
     } catch (error) {
       throw error;
@@ -103,7 +99,9 @@ class ViscosityRotational_SERVICE implements IEssayService {
   calculateResults = async (store: ViscosityRotationalData): Promise<void> => {
     const body = {
       generalData: store.generalData,
-      viscosityRotationalCalc: store.viscosityRotationalCalc,
+      viscosityRotational: {
+        dataPoints: store.viscosityRotationalCalc.dataPoints,
+      },
     };
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);

@@ -6,16 +6,16 @@ import { NextPage } from 'next';
 const SoilLibrary: NextPage = () => {
   const soilData: Library[] = [
     {
-      title: "Deformação Permanente de Solos",
-      link: "https://www.youtube.com/embed/0nFu8P-2dZM",
+      title: 'Deformação Permanente de Solos',
+      link: 'https://www.youtube.com/embed/0nFu8P-2dZM',
       type: 'videos',
       key: 'soilDeformation',
     },
     {
-      title: "Ensaio de Compressão Triaxial",
-      link: "https://www.youtube.com/embed/GBrfPCJByp4",
+      title: 'Ensaio de Compressão Triaxial',
+      link: 'https://www.youtube.com/embed/GBrfPCJByp4',
       type: 'videos',
-      key: 'triaxialCompression'
+      key: 'triaxialCompression',
     },
   ];
 

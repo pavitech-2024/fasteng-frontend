@@ -102,7 +102,6 @@ class Rtcd_SERVICE implements IEssayService {
 
   // verify inputs from Rtcd page (step === 1, page 2)
   submitRtcdStep2Data = async (rtcdStep2: RtcdData['rtcdStep2']): Promise<void> => {
-    console.log('🚀 ~ file: rtcd.service.ts:101 ~ Rtcd_SERVICE ~ submitRtcdCalcData= ~ rtcdStep2:', rtcdStep2);
     try {
       // verify if press_constant is not empty
       if (!rtcdStep2.pressConstant) throw t('errors.empty-press-constant');
@@ -113,7 +112,6 @@ class Rtcd_SERVICE implements IEssayService {
 
   // verify inputs from Rtcd page (step === 1, page 2)
   submitRtcdStep3Data = async (rtcdStep3: RtcdData['rtcdStep3']): Promise<void> => {
-    console.log('🚀 ~ file: rtcd.service.ts:101 ~ Rtcd_SERVICE ~ submitRtcdCalcData= ~ rtcdStep3:', rtcdStep3);
     try {
       // verify if rtcd_data is not empty
       if (!rtcdStep3.rtcd_data) throw t('errors.empty-rtcd_data');
@@ -133,7 +131,6 @@ class Rtcd_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);
 
       const { success, error, result } = response.data;
-      console.log('🚀 ~ file: rtcd.service.ts:120 ~ Rtcd_SERVICE ~ calculateResults= ~ result:', result);
 
       if (success === false) throw error.name;
 

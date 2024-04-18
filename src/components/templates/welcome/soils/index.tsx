@@ -33,8 +33,8 @@ const WelcomeTemplateSoils = ({ welcomeData, stepperData, icon }: WelcomeTemplat
     {
       name: t('navbar.library'),
       description: t('description.library'),
-    }
-  ]
+    },
+  ];
 
   const [modalOpen, setModalOpen] = useState(false);
 

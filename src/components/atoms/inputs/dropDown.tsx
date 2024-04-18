@@ -1,4 +1,5 @@
 import { MenuItem, TextField } from '@mui/material';
+import { useState } from 'react';
 
 export interface DropDownOption {
   label: string;
@@ -29,6 +30,14 @@ const DropDown = ({
   variant,
   required,
 }: DropDownProps) => {
+  const [selectedValue, setSelectedValue] = useState(defaultValue?.value || '');
+
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const value = event.target.value as string;
+    setSelectedValue(value);
+    callback(value);
+  };
+
   return (
     <TextField
       select
