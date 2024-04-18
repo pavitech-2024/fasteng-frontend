@@ -36,14 +36,14 @@ const Igg_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
       'ter',
     ];
     processedFile.push(header);
-  
+
     const fileWithoutUselessRows = file.slice(4, file.length);
-  
+
     fileWithoutUselessRows.forEach((item) => {
       const arr = new Array(24).fill(null);
       arr[0] = item['INVENTÁRIO DO ESTADO DA SUPERFÍCIE DO PAVIMENTO'];
       arr[1] = item['__EMPTY'];
-  
+
       let keys = Object.keys(item);
       keys = keys.slice(2, keys.length);
       keys.forEach((key) => {
@@ -54,16 +54,14 @@ const Igg_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
           arr[column + 1] = item[key];
         }
       });
-  
+
       processedFile.push(arr);
     });
     return processedFile;
   };
-  
 
   const handleFileChange = async (file: File) => {
     if (nextDisabled && (file.name.includes('.xlsx') || file.name.includes('.csv'))) {
-
       //Passa como parâmetro para o processFile o arquivo lido e o método de processamento específico do ensaio
       const processedData = await processFile(file, processIggFile);
       setData({ step: 2, key: 'stakes', value: processedData });
