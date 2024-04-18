@@ -331,9 +331,9 @@ const MaterialsTemplate = ({
                                 },
                               }}
                               onClick={(e) => {
-                                console.log(row._id)
-                                router.push(`/asphalt/materials/${row._id}`)
-                              } }
+                                console.log(row._id);
+                                router.push(`/asphalt/materials/${row._id}`);
+                              }}
                             >
                               <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
                                 {t('materials.template.edit')}

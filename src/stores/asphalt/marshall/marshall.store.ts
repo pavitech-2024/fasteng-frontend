@@ -88,147 +88,147 @@ interface MarshallMaximumMixtureDensityData {
       normal: number;
       plusHalf: number;
       plusOne: number;
-    },
-    method: string
+    };
+    method: string;
   };
   riceTest: {
-    id: number,
-    massOfDrySample: number,
-    massOfContainerWaterSample: number,
-    massOfContainerWater: number,
-  }[],
-  listOfSpecificGravities: any[]
+    id: number;
+    massOfDrySample: number;
+    massOfContainerWaterSample: number;
+    massOfContainerWater: number;
+  }[];
+  listOfSpecificGravities: any[];
 }
 
 interface VolumetricParametersData {
   lessOne: {
-    id: number,
-    diammeter: number,
-    height: number,
-    dryMass: number,
-    submergedMass: number,
-    drySurfaceSaturatedMass: number,
-    stability: number,
-    fluency: number,
-    diametricalCompressionStrength: number
-  }[],
+    id: number;
+    diammeter: number;
+    height: number;
+    dryMass: number;
+    submergedMass: number;
+    drySurfaceSaturatedMass: number;
+    stability: number;
+    fluency: number;
+    diametricalCompressionStrength: number;
+  }[];
   lessHalf: {
-    id: number,
-    diammeter: number,
-    height: number,
-    dryMass: number,
-    submergedMass: number,
-    drySurfaceSaturatedMass: number,
-    stability: number,
-    fluency: number,
-    diametricalCompressionStrength: number
-  }[],
+    id: number;
+    diammeter: number;
+    height: number;
+    dryMass: number;
+    submergedMass: number;
+    drySurfaceSaturatedMass: number;
+    stability: number;
+    fluency: number;
+    diametricalCompressionStrength: number;
+  }[];
   normal: {
-    id: number,
-    diammeter: number,
-    height: number,
-    dryMass: number,
-    submergedMass: number,
-    drySurfaceSaturatedMass: number,
-    stability: number,
-    fluency: number,
-    diametricalCompressionStrength: number
-  }[],
+    id: number;
+    diammeter: number;
+    height: number;
+    dryMass: number;
+    submergedMass: number;
+    drySurfaceSaturatedMass: number;
+    stability: number;
+    fluency: number;
+    diametricalCompressionStrength: number;
+  }[];
   plusHalf: {
-    id: number,
-    diammeter: number,
-    height: number,
-    dryMass: number,
-    submergedMass: number,
-    drySurfaceSaturatedMass: number,
-    stability: number,
-    fluency: number,
-    diametricalCompressionStrength: number
-  }[],
+    id: number;
+    diammeter: number;
+    height: number;
+    dryMass: number;
+    submergedMass: number;
+    drySurfaceSaturatedMass: number;
+    stability: number;
+    fluency: number;
+    diametricalCompressionStrength: number;
+  }[];
   plusOne: {
-    id: number,
-    diammeter: number,
-    height: number,
-    dryMass: number,
-    submergedMass: number,
-    drySurfaceSaturatedMass: number,
-    stability: number,
-    fluency: number,
-    diametricalCompressionStrength: number
-  }[],
+    id: number;
+    diammeter: number;
+    height: number;
+    dryMass: number;
+    submergedMass: number;
+    drySurfaceSaturatedMass: number;
+    stability: number;
+    fluency: number;
+    diametricalCompressionStrength: number;
+  }[];
   volumetricParameters: {
-    pointsOfCurveDosageRBV: any[],
-    pointsOfCurveDosageVv: any[],
-    volumetricParameters: any[]
-  }
+    pointsOfCurveDosageRBV: any[];
+    pointsOfCurveDosageVv: any[];
+    volumetricParameters: any[];
+  };
 }
 
 interface OptimumBinderContentData {
   expectedParameters: {
     expectedParameters: {
-      Gmb: number,
-      RBV: number,
-      Vam: number,
-      Vv: number,
-      newMaxSpecificGravity: number
-    }
-  },
+      Gmb: number;
+      RBV: number;
+      Vam: number;
+      Vv: number;
+      newMaxSpecificGravity: number;
+    };
+  };
   graphics: {
-    rbv: string[][],
-    vv: string[][],
-    sg: string[][],
-    gmb: string[][],
-    stability: string[][],
-    vam: string[][]
-  },
+    rbv: string[][];
+    vv: string[][];
+    sg: string[][];
+    gmb: string[][];
+    stability: string[][];
+    vam: string[][];
+  };
   optimumBinder: {
-    optimumContent: number,
-    pointsOfCurveDosage: any[],
-    confirmedPercentsOfDosage: number[],
-    curveRBV: any[],
-    curveVv: any[]
-  }
+    optimumContent: number;
+    pointsOfCurveDosage: any[];
+    confirmedPercentsOfDosage: number[];
+    curveRBV: any[];
+    curveVv: any[];
+  };
 }
 
 interface ConfirmationCompressionData {
-  dmt: number,
-  gmm: number,
+  dmt: number;
+  gmm: number;
   confirmedSpecificGravity: {
-    result: number,
-    type: string,
-  },
+    result: number;
+    type: string;
+  };
   optimumBinder: {
-    id: number,
-    diammeter: number,
-    height: number,
-    dryMass: number,
-    submergedMass: number,
-    drySurfaceSaturatedMass: number,
-    stability: number,
-    fluency: number,
-    diametricalCompressionStrength: number
-  }[],
+    id: number;
+    diammeter: number;
+    height: number;
+    dryMass: number;
+    submergedMass: number;
+    drySurfaceSaturatedMass: number;
+    stability: number;
+    fluency: number;
+    diametricalCompressionStrength: number;
+  }[];
   riceTest: {
-    teor: string,
-    massOfDrySample: number,
-    massOfContainerWaterSample: number,
-    massOfContainerWater: number,
-  },
+    teor: string;
+    massOfDrySample: number;
+    massOfContainerWaterSample: number;
+    massOfContainerWater: number;
+  };
   confirmedVolumetricParameters: {
-    valuesOfVolumetricParameters: any,
-    asphaltContent: number,
-    quantitative: any,
+    valuesOfVolumetricParameters: any;
+    asphaltContent: number;
+    quantitative: any;
     values: {
-      volumeVoids: number,
-      apparentBulkSpecificGravity: number,
-      voidsFilledAsphalt: number,
-      aggregateVolumeVoids: number,
-      ratioBitumenVoid: number,
-      stability: number,
-      fluency: number,
-      indirectTensileStrength: number,
-    },
-  }
+      volumeVoids: number;
+      apparentBulkSpecificGravity: number;
+      voidsFilledAsphalt: number;
+      aggregateVolumeVoids: number;
+      ratioBitumenVoid: number;
+      stability: number;
+      fluency: number;
+      indirectTensileStrength: number;
+    };
+  };
 }
 
 export type MarshallData = {
@@ -239,7 +239,7 @@ export type MarshallData = {
   maximumMixtureDensityData: MarshallMaximumMixtureDensityData;
   volumetricParametersData: VolumetricParametersData;
   optimumBinderContentData: OptimumBinderContentData;
-  confirmationCompressionData: ConfirmationCompressionData
+  confirmationCompressionData: ConfirmationCompressionData;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -259,7 +259,7 @@ const stepVariant = {
   4: 'maximumMixtureDensityData',
   5: 'volumetricParametersData',
   6: 'optimumBinderContentData',
-  7: 'confirmationCompressionData'
+  7: 'confirmationCompressionData',
 };
 
 const initialState = {
@@ -282,9 +282,9 @@ const initialState = {
     table_data: null,
     percentageInputs: [],
     dnitBands: null,
-    dnitBand: { 
-      higherBand: null, 
-      lowerBand: null 
+    dnitBand: {
+      higherBand: null,
+      lowerBand: null,
     },
     pointsOfCurve: [],
     sumOfPercents: [],
@@ -344,7 +344,7 @@ const initialState = {
         id: 5,
         insert: true,
         value: 5,
-      }
+      },
     ],
     missingSpecificMass: {
       material_1: null,
@@ -360,77 +360,89 @@ const initialState = {
         plusHalf: null,
         plusOne: null,
       },
-      method: null
+      method: null,
     },
-    riceTest: [{
-      id: null,
-      massOfDrySample: null,
-      massOfContainerWaterSample: null,
-      massOfContainerWater: null,
-    }],
-    listOfSpecificGravities: []
+    riceTest: [
+      {
+        id: null,
+        massOfDrySample: null,
+        massOfContainerWaterSample: null,
+        massOfContainerWater: null,
+      },
+    ],
+    listOfSpecificGravities: [],
   },
   volumetricParametersData: {
-    lessOne: [{
-      id: 0,
-      diammeter: null,
-      height: null,
-      dryMass: null,
-      submergedMass: null,
-      drySurfaceSaturatedMass: null,
-      stability: null,
-      fluency: null,
-      diametricalCompressionStrength: null
-    }],
-    lessHalf: [{
-      id: 0,
-      diammeter: null,
-      height: null,
-      dryMass: null,
-      submergedMass: null,
-      drySurfaceSaturatedMass: null,
-      stability: null,
-      fluency: null,
-      diametricalCompressionStrength: null
-    }],
-    normal: [{
-      id: 0,
-      diammeter: null,
-      height: null,
-      dryMass: null,
-      submergedMass: null,
-      drySurfaceSaturatedMass: null,
-      stability: null,
-      fluency: null,
-      diametricalCompressionStrength: null
-    }],
-    plusHalf: [{
-      id: 0,
-      diammeter: null,
-      height: null,
-      dryMass: null,
-      submergedMass: null,
-      drySurfaceSaturatedMass: null,
-      stability: null,
-      fluency: null,
-      diametricalCompressionStrength: null
-    }],
-    plusOne: [{
-      id: 0,
-      diammeter: null,
-      height: null,
-      dryMass: null,
-      submergedMass: null,
-      drySurfaceSaturatedMass: null,
-      stability: null,
-      fluency: null,
-      diametricalCompressionStrength: null
-    }],
+    lessOne: [
+      {
+        id: 0,
+        diammeter: null,
+        height: null,
+        dryMass: null,
+        submergedMass: null,
+        drySurfaceSaturatedMass: null,
+        stability: null,
+        fluency: null,
+        diametricalCompressionStrength: null,
+      },
+    ],
+    lessHalf: [
+      {
+        id: 0,
+        diammeter: null,
+        height: null,
+        dryMass: null,
+        submergedMass: null,
+        drySurfaceSaturatedMass: null,
+        stability: null,
+        fluency: null,
+        diametricalCompressionStrength: null,
+      },
+    ],
+    normal: [
+      {
+        id: 0,
+        diammeter: null,
+        height: null,
+        dryMass: null,
+        submergedMass: null,
+        drySurfaceSaturatedMass: null,
+        stability: null,
+        fluency: null,
+        diametricalCompressionStrength: null,
+      },
+    ],
+    plusHalf: [
+      {
+        id: 0,
+        diammeter: null,
+        height: null,
+        dryMass: null,
+        submergedMass: null,
+        drySurfaceSaturatedMass: null,
+        stability: null,
+        fluency: null,
+        diametricalCompressionStrength: null,
+      },
+    ],
+    plusOne: [
+      {
+        id: 0,
+        diammeter: null,
+        height: null,
+        dryMass: null,
+        submergedMass: null,
+        drySurfaceSaturatedMass: null,
+        stability: null,
+        fluency: null,
+        diametricalCompressionStrength: null,
+      },
+    ],
     volumetricParameters: {
       pointsOfCurveDosageRBV: [],
       pointsOfCurveDosageVv: [],
-      volumetricParameters: []
-    }
+      volumetricParameters: [],
+    },
   },
   optimumBinderContentData: {
     expectedParameters: {
@@ -439,8 +451,8 @@ const initialState = {
         RBV: null,
         Vam: null,
         Vv: null,
-        newMaxSpecificGravity: null
-      }
+        newMaxSpecificGravity: null,
+      },
     },
     graphics: {
       rbv: [],
@@ -448,15 +460,15 @@ const initialState = {
       sg: [],
       gmb: [],
       stability: [],
-      vam: []
+      vam: [],
     },
     optimumBinder: {
       optimumContent: null,
       pointsOfCurveDosage: [],
       confirmedPercentsOfDosage: [],
       curveRBV: [],
-      curveVv: []
-    }
+      curveVv: [],
+    },
   },
   confirmationCompressionData: {
     dmt: null,
@@ -465,17 +477,19 @@ const initialState = {
       result: null,
       type: null,
     },
-    optimumBinder: [{
-      id: 0,
-      diammeter: null,
-      height: null,
-      dryMass: null,
-      submergedMass: null,
-      drySurfaceSaturatedMass: null,
-      stability: null,
-      fluency: null,
-      diametricalCompressionStrength: null
-    }],
+    optimumBinder: [
+      {
+        id: 0,
+        diammeter: null,
+        height: null,
+        dryMass: null,
+        submergedMass: null,
+        drySurfaceSaturatedMass: null,
+        stability: null,
+        fluency: null,
+        diametricalCompressionStrength: null,
+      },
+    ],
     riceTest: {
       id: 0,
       teor: null,
@@ -497,7 +511,7 @@ const initialState = {
         fluency: null,
         indirectTensileStrength: null,
       },
-    }
+    },
   },
   createdAt: null,
   updatedAt: null,

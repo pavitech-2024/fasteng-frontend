@@ -238,13 +238,13 @@ class Marshall_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
 
-      const { 
-        percentsOfMaterials, 
-        pointsOfCurve, 
-        sumOfPercents, 
-        table_data: tableData, 
+      const {
+        percentsOfMaterials,
+        pointsOfCurve,
+        sumOfPercents,
+        table_data: tableData,
         projections,
-        dnitBands: dnitBand
+        dnitBands: dnitBand,
       } = data;
 
       const tableData2 = {
@@ -259,7 +259,7 @@ class Marshall_SERVICE implements IEssayService {
         sumOfPercents,
         table_data: tableData2,
         projections,
-        dnitBand
+        dnitBand,
       };
 
       return granulometricResults;
@@ -432,9 +432,8 @@ class Marshall_SERVICE implements IEssayService {
         percentsOfDosage: newPercentOfDosage,
         trial,
         indexesOfMissesSpecificGravity,
-        missingSpecificGravity: missingSpecificMass
+        missingSpecificGravity: missingSpecificMass,
       });
-
 
       const { data, success, error } = response.data;
 
@@ -577,7 +576,7 @@ class Marshall_SERVICE implements IEssayService {
     user?: string,
     isConsult?: boolean
   ): Promise<void> => {
-    console.log("aqui")
+    console.log('aqui');
     if (!isConsult) {
       try {
         const volumetricParameters = data.volumetricParametersData;
@@ -609,11 +608,7 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  plotDosageGraph = async (
-    dnitBand: string, 
-    volumetricParameters: any, 
-    trial: number, 
-    percentsOfDosage: any[]) => {
+  plotDosageGraph = async (dnitBand: string, volumetricParameters: any, trial: number, percentsOfDosage: any[]) => {
     try {
       const response = await Api.post(`${this.info.backend_path}/step-7-plot-dosage-graph`, {
         dnitBand,
@@ -628,7 +623,7 @@ class Marshall_SERVICE implements IEssayService {
 
       return data;
     } catch (error) {
-      throw error
+      throw error;
     }
   };
 
@@ -657,7 +652,7 @@ class Marshall_SERVICE implements IEssayService {
       };
 
       try {
-        const {percentageInputs: percentsOfDosage} = step3Data;
+        const { percentageInputs: percentsOfDosage } = step3Data;
         const dosageGraph = await this.plotDosageGraph(dnitBand, volumetricParameters, trial, percentsOfDosage);
 
         result = { ...result, dosageGraph: dosageGraph.optimumBinderDosageGraph };
@@ -813,11 +808,14 @@ class Marshall_SERVICE implements IEssayService {
       optimumContent,
       confirmedPercentsOfDosage,
       listOfSpecificGravities,
-      temperatureOfWater
-    }
+      temperatureOfWater,
+    };
 
     try {
-      const response = await Api.post(`${this.info.backend_path}/confirm-volumetric-parameters`, confirmVolumetricParameters);
+      const response = await Api.post(
+        `${this.info.backend_path}/confirm-volumetric-parameters`,
+        confirmVolumetricParameters
+      );
 
       const { data, success, error } = response.data;
 
@@ -889,13 +887,14 @@ class Marshall_SERVICE implements IEssayService {
 
         const marshallDosageData = {
           ...data,
-          isConsult: null
+          isConsult: null,
         };
 
         if (isConsult) marshallDosageData.isConsult = isConsult;
 
         const response = await Api.post(
-          `${this.info.backend_path}/save-marshall-dosage/${userData}`, marshallDosageData
+          `${this.info.backend_path}/save-marshall-dosage/${userData}`,
+          marshallDosageData
         );
 
         const { success, error } = response.data;

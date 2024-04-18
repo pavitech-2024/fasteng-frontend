@@ -21,7 +21,11 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
 
   if (granulometry_results) {
     data.container_other_data.push(
-      { label: t('granulometry-asphalt.accumulated-retained'), value: granulometry_results.accumulated_retained, unity: '%' },
+      {
+        label: t('granulometry-asphalt.accumulated-retained'),
+        value: granulometry_results.accumulated_retained,
+        unity: '%',
+      },
       { label: t('granulometry-asphalt.total-retained'), value: granulometry_results.total_retained, unity: 'g' },
       { label: t('granulometry-asphalt.nominal-size'), value: granulometry_results.nominal_size, unity: 'mm' },
       { label: t('granulometry-asphalt.nominal-diameter'), value: granulometry_results.nominal_diameter, unity: 'mm' },

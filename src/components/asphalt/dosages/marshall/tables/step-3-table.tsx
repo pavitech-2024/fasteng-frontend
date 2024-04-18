@@ -10,7 +10,6 @@ interface Step3Props {
 }
 
 const Step3Table = ({ rows, columns, columnGrouping }: Step3Props & { marshall: Marshall_SERVICE }) => {
-
   return (
     <Box>
       <DataGrid

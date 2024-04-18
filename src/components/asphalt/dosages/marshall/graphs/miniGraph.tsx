@@ -1,5 +1,5 @@
-import CardMiniGrafico from "@/components/atoms/containers/miniGraphCard";
-import { Chart } from "react-google-charts";
+import CardMiniGrafico from '@/components/atoms/containers/miniGraphCard';
+import { Chart } from 'react-google-charts';
 
 const MiniGraphics = ({ data, type, nameEixoY }) => {
   return (
@@ -9,17 +9,17 @@ const MiniGraphics = ({ data, type, nameEixoY }) => {
         data={data}
         options={{
           title: `Teor de ligante asfáltico X ${type} `,
-          curveType: "function",
+          curveType: 'function',
           hAxis: {
-            title: "Teor de ligante asfáltico (%)",
-            titleTextStyle: { italic: false }
+            title: 'Teor de ligante asfáltico (%)',
+            titleTextStyle: { italic: false },
           },
-          chartArea: { width: "70%", height: "70%" },
+          chartArea: { width: '70%', height: '70%' },
           vAxis: {
             title: nameEixoY,
-            titleTextStyle: { italic: false }
+            titleTextStyle: { italic: false },
           },
-          legend: "none"
+          legend: 'none',
         }}
         width="100%"
         height="100%"

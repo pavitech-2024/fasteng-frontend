@@ -1,8 +1,8 @@
-import { CloseIcon } from "@/assets";
-import { Fullscreen } from "@mui/icons-material";
-import { Button, Modal } from "@mui/material";
-import { useEffect, useState } from "react";
-import Chart from "react-google-charts";
+import { CloseIcon } from '@/assets';
+import { Fullscreen } from '@mui/icons-material';
+import { Button, Modal } from '@mui/material';
+import { useEffect, useState } from 'react';
+import Chart from 'react-google-charts';
 
 const GraficoPage7N = ({ data }) => {
   const [fullScreen, setFullScreen] = useState(false);
@@ -11,25 +11,25 @@ const GraficoPage7N = ({ data }) => {
     result: {},
     optionsFullScreen: {},
     options: {
-      legend: { position: "none" },
+      legend: { position: 'none' },
       series: {
-        0: { axis: "Temps" },
-        1: { axis: "Daylight" }
+        0: { axis: 'Temps' },
+        1: { axis: 'Daylight' },
       },
       axes: {
         y: {
-          Temps: { label: "Volume de vazios (%)" },
-          Daylight: { label: "Relação betume/vazios (%)" }
+          Temps: { label: 'Volume de vazios (%)' },
+          Daylight: { label: 'Relação betume/vazios (%)' },
         },
-        x: { label: "vv x rbv" }
+        x: { label: 'vv x rbv' },
       },
       hAxis: {
-        title: "Teor de ligante asfáltico (%)",
-        titleTextStyle: { italic: false }
+        title: 'Teor de ligante asfáltico (%)',
+        titleTextStyle: { italic: false },
       },
-      chartArea: { width: "80%", height: "70%" }
+      chartArea: { width: '80%', height: '70%' },
     },
-    data
+    data,
   });
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const GraficoPage7N = ({ data }) => {
   }, [fullScreen]);
 
   const getPercentDimensions = () => {
-    const parent = document.getElementById("componentAux");
+    const parent = document.getElementById('componentAux');
     let width = parent?.clientWidth * 0.9;
     const windowSize = window.innerWidth;
     if (width > windowSize) {
@@ -62,44 +62,38 @@ const GraficoPage7N = ({ data }) => {
     if (graphContainer) {
       graphContainer = graphContainer.parentElement;
       graphContainer.style.width = `${width}px`;
-      height !== 0
-        ? (graphContainer.style.height = `${height}px`)
-        : (graphContainer.style.height = `${width / 2}px`);
+      height !== 0 ? (graphContainer.style.height = `${height}px`) : (graphContainer.style.height = `${width / 2}px`);
     }
   };
 
-  const updateWindowDimensions = fullScreen => {
+  const updateWindowDimensions = (fullScreen) => {
     if (fullScreen) {
       const { width, height } = getPercentDimensions();
-      updateStaticDivGoogle(
-        window.innerWidth * 0.84,
-        "reactgooglegraph-2",
-        window.innerHeight * 0.84
-      );
-      setOptions(prevState => ({
+      updateStaticDivGoogle(window.innerWidth * 0.84, 'reactgooglegraph-2', window.innerHeight * 0.84);
+      setOptions((prevState) => ({
         ...prevState,
         optionsFullScreen: {
           ...prevState.optionsFullScreen,
           width: window.innerWidth * 0.83,
-          height: window.innerHeight * 0.83
+          height: window.innerHeight * 0.83,
         },
         options: {
           ...prevState.options,
           width: width,
-          height: height
+          height: height,
         },
-        fullScreen: true
+        fullScreen: true,
       }));
     } else {
       const { width, height } = getPercentDimensions();
-      setOptions(prevState => ({
+      setOptions((prevState) => ({
         ...prevState,
         options: {
           ...prevState.options,
           width: width,
-          height: height
+          height: height,
         },
-        fullScreen: false
+        fullScreen: false,
       }));
     }
   };
@@ -115,11 +109,7 @@ const GraficoPage7N = ({ data }) => {
           >
             <CloseIcon fill="red" />
           </Button>
-          <Chart
-            chartType="Line"
-            data={data}
-            options={options.optionsFullScreen}
-          />
+          <Chart chartType="Line" data={data} options={options.optionsFullScreen} />
         </div>
       </Modal>
       <Button
@@ -130,12 +120,7 @@ const GraficoPage7N = ({ data }) => {
         Expandir gráfico
         <Fullscreen />
       </Button>
-      <Chart
-        chartType="Line"
-        loader={<i className="pi pi-spinner" />}
-        data={data}
-        options={options.options}
-      />
+      <Chart chartType="Line" loader={<i className="pi pi-spinner" />} data={data} options={options.options} />
     </div>
   );
 };

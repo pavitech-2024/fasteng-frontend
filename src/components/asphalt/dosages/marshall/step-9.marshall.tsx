@@ -8,11 +8,7 @@ import { Box } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 
 const Marshall_Step9 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
-  const { 
-    materialSelectionData, 
-    optimumBinderContentData, 
-    confirmationCompressionData: data 
-  } = useMarshallStore();
+  const { materialSelectionData, optimumBinderContentData, confirmationCompressionData: data } = useMarshallStore();
 
   const material_1 = materialSelectionData?.aggregates[0].name;
   const material_2 = materialSelectionData?.aggregates[1].name;

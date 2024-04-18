@@ -100,8 +100,8 @@ class ViscosityRotational_SERVICE implements IEssayService {
     const body = {
       generalData: store.generalData,
       viscosityRotational: {
-        dataPoints: store.viscosityRotationalCalc.dataPoints
-      }
+        dataPoints: store.viscosityRotationalCalc.dataPoints,
+      },
     };
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);

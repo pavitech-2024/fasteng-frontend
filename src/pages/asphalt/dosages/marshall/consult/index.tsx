@@ -32,7 +32,7 @@ const MarshallDosageConsult = () => {
     6: t('asphalt.dosages.marshall.volumetric_parameters'),
     7: t('asphalt.dosages.marshall.optimal_binder'),
     8: t('asphalt.dosages.marshall.confirm_compression'),
-    9: t('asphalt.dosages.marshall.dosage_resume')
+    9: t('asphalt.dosages.marshall.dosage_resume'),
   };
 
   useEffect(() => {
@@ -94,10 +94,10 @@ const MarshallDosageConsult = () => {
         finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
         id: row._id,
       }));
-  
+
       // Atualizar dosages e dosageArrays
       setDosages(updatedDosages);
-  
+
       // Recalcular os arrays menores
       const arraysMenores = dividirArrayEmArraysMenores(updatedDosages, rowsPerPage);
       setDosageArrays(arraysMenores);

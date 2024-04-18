@@ -123,11 +123,8 @@ const Marshall_Step3 = ({
             {
               groupId: `Banda ${data?.dnitBands}`,
               headerAlign: 'center',
-              children: [
-                { field: 'band_1' }, 
-                { field: 'band_2' }
-              ]
-            }
+              children: [{ field: 'band_1' }, { field: 'band_2' }],
+            },
           ],
           headerAlign: 'center',
         },
@@ -139,16 +136,16 @@ const Marshall_Step3 = ({
     if (data?.projections.length > 0) {
       const newArray = [];
 
-      for(let i = 0; i < data?.sumOfPercents.length; i++) {
+      for (let i = 0; i < data?.sumOfPercents.length; i++) {
         newArray.push({
           label: data.projections[i]?.label,
           value: data.projections[i]?.value,
           band_1: data.dnitBand.lowerBand[i] !== null ? data.dnitBand.lowerBand[i] : '',
-          band_2: data.dnitBand.higherBand[i] !== null ? data.dnitBand.higherBand[i] : ''
-        })
+          band_2: data.dnitBand.higherBand[i] !== null ? data.dnitBand.higherBand[i] : '',
+        });
       }
-  
-      setSpecificationRows([...newArray])
+
+      setSpecificationRows([...newArray]);
     }
   }, [data.sumOfPercents, data.dnitBand]);
 

@@ -98,7 +98,6 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
         },
       ];
 
-
       const machiningColumnGroup = [
         {
           groupId: 'Temperatura de usinagem',
@@ -171,7 +170,7 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
     }
   }, [binderTrialData, materialSelectionData]);
 
-  setNextDisabled(false)
+  setNextDisabled(false);
 
   return (
     <>
@@ -205,11 +204,11 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
           </Button>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {columns?.length > 0 && (
-              <DataGrid 
-                columns={columns} 
-                rows={rows} 
-                hideFooter 
-                sx={{ marginX: 'auto', width: 'fit-content' }} 
+              <DataGrid
+                columns={columns}
+                rows={rows}
+                hideFooter
+                sx={{ marginX: 'auto', width: 'fit-content' }}
                 disableColumnMenu
               />
             )}

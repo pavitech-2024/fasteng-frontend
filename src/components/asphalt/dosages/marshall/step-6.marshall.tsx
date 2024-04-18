@@ -18,12 +18,7 @@ const Marshall_Step6 = ({
   marshall,
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { 
-    volumetricParametersData: data, 
-    binderTrialData, 
-    maximumMixtureDensityData,
-    setData 
-  } = useMarshallStore();
+  const { volumetricParametersData: data, binderTrialData, maximumMixtureDensityData, setData } = useMarshallStore();
 
   nextDisabled && setNextDisabled(false);
 
@@ -363,7 +358,11 @@ const Marshall_Step6 = ({
     toast.promise(
       async () => {
         try {
-          const volumetricParams = await marshall.setVolumetricParametersData(data, binderTrialData, maximumMixtureDensityData);
+          const volumetricParams = await marshall.setVolumetricParametersData(
+            data,
+            binderTrialData,
+            maximumMixtureDensityData
+          );
           const prevData = data;
           const newData = {
             ...prevData,
