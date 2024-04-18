@@ -12,12 +12,12 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 export type RiceTestRows = {
-  id: number,
-  Teor?: number,
-  massOfDrySample: number,
-  massOfContainerWaterSample: number,
-  massOfContainerWater: number,
-}
+  id: number;
+  Teor?: number;
+  massOfDrySample: number;
+  massOfContainerWaterSample: number;
+  massOfContainerWater: number;
+};
 
 const Marshall_Step5 = ({
   nextDisabled,
@@ -47,7 +47,7 @@ const Marshall_Step5 = ({
           const indexes = await marshall.getIndexesOfMissesSpecificGravity(materialSelectionData);
 
           const prevData = data;
-          
+
           const newData = {
             ...prevData,
             indexesOfMissesSpecificGravity: indexes,
@@ -105,7 +105,7 @@ const Marshall_Step5 = ({
 
   useEffect(() => {
     function hasNullValue(obj) {
-      for (let key in obj) {
+      for (const key in obj) {
         if (obj.hasOwnProperty(key) && obj[key] === null) {
           setHasNull(false);
         }
@@ -171,7 +171,7 @@ const Marshall_Step5 = ({
               result: dmt.maxSpecificGravity,
               method: dmt.method,
             },
-            listOfSpecificGravities: dmt.listOfSpecificGravities
+            listOfSpecificGravities: dmt.listOfSpecificGravities,
           };
 
           setData({ step: 4, value: newData });
@@ -278,14 +278,13 @@ const Marshall_Step5 = ({
           },
         ]);
       } else {
-
         const formattedGmm2 = Object.values(data?.maxSpecificGravity).map((item, idx) => {
           return {
-            id: idx +1,
+            id: idx + 1,
             Teor: binderTrialData.percentsOfDosage[2][idx],
-            GMM: gmmRows[idx]?.GMM
-          }
-        })
+            GMM: gmmRows[idx]?.GMM,
+          };
+        });
         setGmmColumns([
           {
             field: 'Teor',
@@ -294,12 +293,11 @@ const Marshall_Step5 = ({
           },
           {
             field: 'GMM',
-            headerName: "GMM",
-            valueFormatter: ({ value }) => `${value}`
-          }
-        ])
+            headerName: 'GMM',
+            valueFormatter: ({ value }) => `${value}`,
+          },
+        ]);
       }
-
     }
   }, [methodGmm]);
 
@@ -383,14 +381,13 @@ const Marshall_Step5 = ({
       return updatedRows;
     });
 
-    console.log("riceTestRows", data?.riceTest);
+    console.log('riceTestRows', data?.riceTest);
 
     // // Create a new copy of the state object with the updated gmmRows waterTemperatureList
     setData({ step: 4, value: { ...data, riceTest: newState } });
-  }
+  };
 
   const calculateRiceTest = () => {
-
     toast.promise(
       async () => {
         try {
@@ -407,11 +404,11 @@ const Marshall_Step5 = ({
             return {
               id: item.id,
               Teor: item.Teor,
-              GMM: item.GMM
-            }
+              GMM: item.GMM,
+            };
           });
 
-          setGmmRows(formattedGmm)
+          setGmmRows(formattedGmm);
           setData({ step: 4, value: newData });
           //setLoading(false);
         } catch (error) {
@@ -435,35 +432,35 @@ const Marshall_Step5 = ({
           Teor: binderTrialData.percentsOfDosage[2][0],
           massOfDrySample: data?.riceTest[0]?.massOfDrySample ?? null,
           massOfContainerWaterSample: data?.riceTest[0]?.massOfContainerWaterSample ?? null,
-          massOfContainerWater: data?.riceTest[0]?.massOfContainerWater ?? null
+          massOfContainerWater: data?.riceTest[0]?.massOfContainerWater ?? null,
         },
         {
           id: 2,
           Teor: binderTrialData.percentsOfDosage[2][1],
           massOfDrySample: data?.riceTest[1]?.massOfDrySample ?? null,
           massOfContainerWaterSample: data?.riceTest[1]?.massOfContainerWaterSample ?? null,
-          massOfContainerWater: data?.riceTest[1]?.massOfContainerWater ?? null
+          massOfContainerWater: data?.riceTest[1]?.massOfContainerWater ?? null,
         },
         {
           id: 3,
           Teor: binderTrialData.percentsOfDosage[2][2],
           massOfDrySample: data?.riceTest[2]?.massOfDrySample ?? null,
           massOfContainerWaterSample: data?.riceTest[2]?.massOfContainerWaterSample ?? null,
-          massOfContainerWater: data?.riceTest[2]?.massOfContainerWater ?? null
+          massOfContainerWater: data?.riceTest[2]?.massOfContainerWater ?? null,
         },
         {
           id: 4,
           Teor: binderTrialData.percentsOfDosage[2][3],
           massOfDrySample: data?.riceTest[3]?.massOfDrySample ?? null,
           massOfContainerWaterSample: data?.riceTest[3]?.massOfContainerWaterSample ?? null,
-          massOfContainerWater: data?.riceTest[3]?.massOfContainerWater ?? null
+          massOfContainerWater: data?.riceTest[3]?.massOfContainerWater ?? null,
         },
         {
           id: 5,
           Teor: binderTrialData.percentsOfDosage[2][4],
           massOfDrySample: data?.riceTest[4]?.massOfDrySample ?? null,
           massOfContainerWaterSample: data?.riceTest[4]?.massOfContainerWaterSample ?? null,
-          massOfContainerWater: data?.riceTest[4]?.massOfContainerWater ?? null
+          massOfContainerWater: data?.riceTest[4]?.massOfContainerWater ?? null,
         },
       ]);
 
@@ -478,7 +475,7 @@ const Marshall_Step5 = ({
           headerName: 'Massa da amostra seca em ar (g)',
           renderCell: ({ row }) => {
             const { id } = row;
-            const index = data?.riceTest?.findIndex((r) => r.id === id)
+            const index = data?.riceTest?.findIndex((r) => r.id === id);
             return (
               <InputEndAdornment
                 adornment={'g'}
@@ -496,7 +493,7 @@ const Marshall_Step5 = ({
           headerName: 'Massa do recipiente + amostra + água (g)',
           renderCell: ({ row }) => {
             const { id } = row;
-            const index = data?.riceTest?.findIndex((r) => r.id === id)
+            const index = data?.riceTest?.findIndex((r) => r.id === id);
             return (
               <InputEndAdornment
                 adornment={'g'}
@@ -514,7 +511,7 @@ const Marshall_Step5 = ({
           headerName: 'Massa do recipiente + água (g)',
           renderCell: ({ row }) => {
             const { id } = row;
-            const index = data?.riceTest?.findIndex((r) => r.id === id)
+            const index = data?.riceTest?.findIndex((r) => r.id === id);
             return (
               <InputEndAdornment
                 adornment={'g'}
@@ -533,17 +530,17 @@ const Marshall_Step5 = ({
 
   useEffect(() => {
     if (riceTestTableRows.length > 1) {
-      setData({ step: 4, value: {...data, riceTest: riceTestTableRows} })
+      setData({ step: 4, value: { ...data, riceTest: riceTestTableRows } });
     }
-  }, [riceTestTableRows])
+  }, [riceTestTableRows]);
 
   useEffect(() => {
     if (methodDmt && data?.dmt?.material_1 !== null && data?.dmt?.material_2 !== null) {
       setNextDisabled(false);
     } else if (methodGmm && data?.gmm?.every((e) => e.value !== null)) {
-      setNextDisabled(false)
+      setNextDisabled(false);
     }
-  }, [methodDmt])
+  }, [methodDmt]);
 
   nextDisabled && setNextDisabled(false);
 
@@ -608,97 +605,76 @@ const Marshall_Step5 = ({
 
           <ModalBase
             title={'Insira a massa específica real dos materiais abaixo'}
-            children={
-              <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-                <InputEndAdornment
-                  adornment={'g/cm³'}
-                  label={materials[0]}
-                  value={data?.missingSpecificMass?.material_1}
-                  onChange={(e) => {
-                    const prevState = data;
-                    const prevDmt = data.missingSpecificMass;
-                    const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_1: e.target.value } };
-                    setData({ step: 4, value: newState });
-                  }}
-                />
-                <InputEndAdornment
-                  adornment={'g/cm³'}
-                  label={materials[1]}
-                  value={data?.missingSpecificMass?.material_2}
-                  onChange={(e) => {
-                    const prevState = data;
-                    const prevDmt = data.missingSpecificMass;
-                    const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
-                    setData({ step: 4, value: newState });
-                  }}
-                />
-              </Box>
-            }
             leftButtonTitle={'cancelar'}
             rightButtonTitle={'confirmar'}
             onCancel={() => setDMTModalISOpen(false)}
             open={DMTModalIsOpen}
             size={'large'}
             onSubmit={() => handleSubmitDmt()}
-          />
+          >
+            <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+              <InputEndAdornment
+                adornment={'g/cm³'}
+                label={materials[0]}
+                value={data?.missingSpecificMass?.material_1}
+                onChange={(e) => {
+                  const prevState = data;
+                  const prevDmt = data.missingSpecificMass;
+                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_1: e.target.value } };
+                  setData({ step: 4, value: newState });
+                }}
+              />
+              <InputEndAdornment
+                adornment={'g/cm³'}
+                label={materials[1]}
+                value={data?.missingSpecificMass?.material_2}
+                onChange={(e) => {
+                  const prevState = data;
+                  const prevDmt = data.missingSpecificMass;
+                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
+                  setData({ step: 4, value: newState });
+                }}
+              />
+            </Box>
+          </ModalBase>
 
           <ModalBase
             title={'Insira a massa específica real dos materiais abaixo'}
-            children={
-              <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-                <InputEndAdornment
-                  adornment={'g/cm³'}
-                  label={materials[0]}
-                  value={data?.missingSpecificMass?.material_1}
-                  onChange={(e) => {
-                    const prevState = data;
-                    const prevDmt = data.missingSpecificMass;
-                    const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_1: e.target.value } };
-                    setData({ step: 4, value: newState });
-                  }}
-                />
-                <InputEndAdornment
-                  adornment={'g/cm³'}
-                  label={materials[1]}
-                  value={data?.missingSpecificMass?.material_2}
-                  onChange={(e) => {
-                    const prevState = data;
-                    const prevDmt = data.missingSpecificMass;
-                    const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
-                    setData({ step: 4, value: newState });
-                  }}
-                />
-              </Box>
-            }
             leftButtonTitle={'cancelar'}
             rightButtonTitle={'confirmar'}
             onCancel={() => setGMMModalIsOpen(false)}
             open={GMMModalIsOpen}
             size={'large'}
             onSubmit={() => handleSelectGMM()}
-          />
+          >
+            <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+              <InputEndAdornment
+                adornment={'g/cm³'}
+                label={materials[0]}
+                value={data?.missingSpecificMass?.material_1}
+                onChange={(e) => {
+                  const prevState = data;
+                  const prevDmt = data.missingSpecificMass;
+                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_1: e.target.value } };
+                  setData({ step: 4, value: newState });
+                }}
+              />
+              <InputEndAdornment
+                adornment={'g/cm³'}
+                label={materials[1]}
+                value={data?.missingSpecificMass?.material_2}
+                onChange={(e) => {
+                  const prevState = data;
+                  const prevDmt = data.missingSpecificMass;
+                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
+                  setData({ step: 4, value: newState });
+                }}
+              />
+            </Box>
+          </ModalBase>
 
           <ModalBase
             title={'Dados do Rice Test'}
-            children={
-              <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
-                <DataGrid columns={riceTestTableColumns} rows={riceTestTableRows} hideFooter />
-
-                <DropDown
-                  key={'water'}
-                  variant="standard"
-                  label={'Selecione o fator de correção para a temperatura da água'}
-                  options={waterTemperatureList}
-                  callback={(selectedValue) => {
-                    const prevData = data;
-                    const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
-                    setData({ step: 4, value: newData });
-                  }}
-                  size="medium"
-                  sx={{ width: '75%', marginX: 'auto' }}
-                />
-              </Box>
-            }
             leftButtonTitle={'cancelar'}
             rightButtonTitle={'confirmar'}
             onCancel={() => setRiceTestModalIsOpen(false)}
@@ -707,7 +683,25 @@ const Marshall_Step5 = ({
             onSubmit={() => {
               calculateRiceTest();
             }}
-          />
+          >
+            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
+              <DataGrid columns={riceTestTableColumns} rows={riceTestTableRows} hideFooter />
+
+              <DropDown
+                key={'water'}
+                variant="standard"
+                label={'Selecione o fator de correção para a temperatura da água'}
+                options={waterTemperatureList}
+                callback={(selectedValue) => {
+                  const prevData = data;
+                  const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
+                  setData({ step: 4, value: newData });
+                }}
+                size="medium"
+                sx={{ width: '75%', marginX: 'auto' }}
+              />
+            </Box>
+          </ModalBase>
         </Box>
       )}
     </>

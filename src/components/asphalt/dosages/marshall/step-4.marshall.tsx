@@ -171,18 +171,6 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
     }
   }, [binderTrialData, materialSelectionData]);
 
-  // useEffect(() => {
-  //   if (
-  //     binderTrialData.trial !== null && 
-  //     binderTrialData.trial > 0 &&
-  //     machiningColumns.length > 0
-  //   ) {
-  //     setNextDisabled(false);
-  //   } else {
-  //     setNextDisabled(true);
-  //   }
-  // }, [binderTrialData.trial]);
-
   setNextDisabled(false)
 
   return (

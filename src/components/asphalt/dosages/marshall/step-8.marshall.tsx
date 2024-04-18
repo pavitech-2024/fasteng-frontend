@@ -31,9 +31,7 @@ const Marshall_Step8 = ({
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const materials = materialSelectionData.aggregates.map((item) => item.name);
   const [methodGmm, setMethodGmm] = useState(false);
-  console.log("🚀 ~ methodGmm:", methodGmm)
   const [methodDmt, setMethodDmt] = useState(false);
-  console.log("🚀 ~ methodDmt:", methodDmt)
   const optimumBinderRows = data?.optimumBinder;
 
   useEffect(() => {
@@ -396,7 +394,7 @@ const Marshall_Step8 = ({
           const confirmVP = await marshall.confirmVolumetricParameters(
             maximumMixtureDensityData,
             optimumBinderContentData,
-            data,
+            data
           );
 
           newData = {
@@ -415,7 +413,7 @@ const Marshall_Step8 = ({
         error: t('loading.materials.error'),
       }
     );
-  }
+  };
 
   const handleErase = () => {
     try {
@@ -498,19 +496,19 @@ const Marshall_Step8 = ({
           ) : (
             <Box>
               <Typography>{`Insira a Gmm ou calcule pelo Rice Test`}</Typography>
-                <Typography>{`Gmm calculada pelo Rice Test: ${data?.confirmedSpecificGravity?.result.toFixed(
-                  2
-                )}`}</Typography>
-                <InputEndAdornment
-                  adornment={'g/cm³'}
-                  label={'Gmm do teor de ligante asfáltico:'}
-                  value={data?.gmm}
-                  onChange={(e) => {
-                    const prevData: MarshallData['confirmationCompressionData'] = data;
-                    const newData = { ...prevData, gmm: e.target.value };
-                    setData({ step: 7, value: newData });
-                  }}
-                />
+              <Typography>{`Gmm calculada pelo Rice Test: ${data?.confirmedSpecificGravity?.result.toFixed(
+                2
+              )}`}</Typography>
+              <InputEndAdornment
+                adornment={'g/cm³'}
+                label={'Gmm do teor de ligante asfáltico:'}
+                value={data?.gmm}
+                onChange={(e) => {
+                  const prevData: MarshallData['confirmationCompressionData'] = data;
+                  const newData = { ...prevData, gmm: e.target.value };
+                  setData({ step: 7, value: newData });
+                }}
+              />
               <Button onClick={() => setRiceTestModalIsOpen(true)}>Rice Test</Button>
             </Box>
           )}
@@ -531,47 +529,41 @@ const Marshall_Step8 = ({
 
           <ModalBase
             title={'Insira a massa específica real dos materiais abaixo'}
-            children={
-              <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-                <InputEndAdornment
-                  adornment={'g/cm³'}
-                  label={materials[0]}
-                  value={maximumMixtureDensityData?.missingSpecificMass?.material_1}
-                  onChange={(e) => {
-                    const prevState = maximumMixtureDensityData;
-                    const prevDmt = maximumMixtureDensityData.missingSpecificMass;
-                    const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_1: e.target.value } };
-                    setData({ step: 4, value: newState });
-                  }}
-                />
-                <InputEndAdornment
-                  adornment={'g/cm³'}
-                  label={materials[1]}
-                  value={maximumMixtureDensityData?.missingSpecificMass?.material_2}
-                  onChange={(e) => {
-                    const prevState = maximumMixtureDensityData;
-                    const prevDmt = maximumMixtureDensityData.missingSpecificMass;
-                    const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
-                    setData({ step: 4, value: newState });
-                  }}
-                />
-              </Box>
-            }
             leftButtonTitle={'cancelar'}
             rightButtonTitle={'confirmar'}
             onCancel={() => setDMTModalISOpen(false)}
             open={DMTModalIsOpen}
             size={'large'}
             onSubmit={() => handleSubmitDmt()}
-          />
+          >
+            <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+              <InputEndAdornment
+                adornment={'g/cm³'}
+                label={materials[0]}
+                value={maximumMixtureDensityData?.missingSpecificMass?.material_1}
+                onChange={(e) => {
+                  const prevState = maximumMixtureDensityData;
+                  const prevDmt = maximumMixtureDensityData.missingSpecificMass;
+                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_1: e.target.value } };
+                  setData({ step: 4, value: newState });
+                }}
+              />
+              <InputEndAdornment
+                adornment={'g/cm³'}
+                label={materials[1]}
+                value={maximumMixtureDensityData?.missingSpecificMass?.material_2}
+                onChange={(e) => {
+                  const prevState = maximumMixtureDensityData;
+                  const prevDmt = maximumMixtureDensityData.missingSpecificMass;
+                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
+                  setData({ step: 4, value: newState });
+                }}
+              />
+            </Box>
+          </ModalBase>
 
           <ModalBase
             title={'Dados do Rice Test'}
-            children={
-              <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
-                <DataGrid columns={riceTestColumns} rows={riceTestRows} hideFooter />
-              </Box>
-            }
             leftButtonTitle={'cancelar'}
             rightButtonTitle={'confirmar'}
             onCancel={() => setRiceTestModalIsOpen(false)}
@@ -580,7 +572,11 @@ const Marshall_Step8 = ({
             onSubmit={() => {
               calculateRiceTest();
             }}
-          />
+          >
+            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
+              <DataGrid columns={riceTestColumns} rows={riceTestRows} hideFooter />
+            </Box>
+          </ModalBase>
         </Box>
       )}
     </>

@@ -99,6 +99,16 @@ const Marshall_Step3 = ({
           headerName: t('asphalt.dosages.marshall.project'),
           valueFormatter: ({ value }) => `${value}`,
         },
+        {
+          field: 'band_1',
+          headerName: '',
+          valueFormatter: ({ value }) => `${value}`,
+        },
+        {
+          field: 'band_2',
+          headerName: '',
+          valueFormatter: ({ value }) => `${value}`,
+        },
       ]);
 
       setSpecificationColumnsGroupings([
@@ -107,17 +117,40 @@ const Marshall_Step3 = ({
           children: [{ field: 'projeto' }],
           headerAlign: 'center',
         },
+        {
+          groupId: 'Especificação',
+          children: [
+            {
+              groupId: `Banda ${data?.dnitBands}`,
+              headerAlign: 'center',
+              children: [
+                { field: 'band_1' }, 
+                { field: 'band_2' }
+              ]
+            }
+          ],
+          headerAlign: 'center',
+        },
       ]);
     }
 
     setSpecificationRows([]);
 
-    data.sumOfPercents?.forEach((e) => {
-      if (e !== null) {
-        setSpecificationRows((prevState) => [...prevState, { projeto: e.toFixed(2) }]);
+    if (data?.projections.length > 0) {
+      const newArray = [];
+
+      for(let i = 0; i < data?.sumOfPercents.length; i++) {
+        newArray.push({
+          label: data.projections[i]?.label,
+          value: data.projections[i]?.value,
+          band_1: data.dnitBand.lowerBand[i] !== null ? data.dnitBand.lowerBand[i] : '',
+          band_2: data.dnitBand.higherBand[i] !== null ? data.dnitBand.higherBand[i] : ''
+        })
       }
-    });
-  }, [data.sumOfPercents]);
+  
+      setSpecificationRows([...newArray])
+    }
+  }, [data.sumOfPercents, data.dnitBand]);
 
   const handleCalculateGranulometricComp = async () => {
     if (!Object.values(data.percentageInputs).some((input) => input === null)) {
@@ -199,7 +232,7 @@ const Marshall_Step3 = ({
         </Button>
         {data?.projections?.length > 0 && (
           <Step3Table
-            rows={data?.projections}
+            rows={specificationRows}
             columns={specificationColumns}
             columnGrouping={specificationColumnsGroupings}
             marshall={marshall}

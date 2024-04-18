@@ -68,12 +68,12 @@ class Marshall_SERVICE implements IEssayService {
           await this.submitMaximumMixtureDensityData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 5:
-          await this.setVolumetricParametersData(
-            data as MarshallData['volumetricParametersData'],
-            data as MarshallData['binderTrialData'],
-            data as MarshallData['maximumMixtureDensityData'],
-            isConsult
-          );
+          // await this.setVolumetricParametersData(
+          //   data as MarshallData['volumetricParametersData'],
+          //   data as MarshallData['binderTrialData'],
+          //   data as MarshallData['maximumMixtureDensityData'],
+          //   isConsult
+          // );
           await this.submitVolumetricParametersData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 6:
@@ -89,7 +89,7 @@ class Marshall_SERVICE implements IEssayService {
           throw t('errors.invalid-step');
       }
     } catch (error) {
-      throw error;
+      //throw error;
     }
   };
 
@@ -238,7 +238,14 @@ class Marshall_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
 
-      const { percentsOfMaterials, pointsOfCurve, sumOfPercents, table_data: tableData, projections } = data;
+      const { 
+        percentsOfMaterials, 
+        pointsOfCurve, 
+        sumOfPercents, 
+        table_data: tableData, 
+        projections,
+        dnitBands: dnitBand
+      } = data;
 
       const tableData2 = {
         table_rows: tableData,
@@ -252,6 +259,7 @@ class Marshall_SERVICE implements IEssayService {
         sumOfPercents,
         table_data: tableData2,
         projections,
+        dnitBand
       };
 
       return granulometricResults;
@@ -569,14 +577,15 @@ class Marshall_SERVICE implements IEssayService {
     user?: string,
     isConsult?: boolean
   ): Promise<void> => {
+    console.log("aqui")
     if (!isConsult) {
       try {
-        const { volumetricParameters } = data.volumetricParametersData;
+        const volumetricParameters = data.volumetricParametersData;
         const { name } = data.generalData;
         const userData = userId ? userId : user;
 
         const volumetricParametersData = {
-          volumetricParameters,
+          ...volumetricParameters,
           name,
           isConsult: null,
         };
@@ -585,7 +594,7 @@ class Marshall_SERVICE implements IEssayService {
 
         const response = await Api.post(`${this.info.backend_path}/save-volumetric-parameters-step/${userData}`, {
           volumetricParametersData: {
-            volumetricParameters,
+            ...volumetricParameters,
             name,
           },
         });

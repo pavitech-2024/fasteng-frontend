@@ -19,14 +19,11 @@ const Marshall_Step6 = ({
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { 
-    materialSelectionData, 
     volumetricParametersData: data, 
     binderTrialData, 
     maximumMixtureDensityData,
     setData 
   } = useMarshallStore();
-
-  const { user } = useAuth();
 
   nextDisabled && setNextDisabled(false);
 
