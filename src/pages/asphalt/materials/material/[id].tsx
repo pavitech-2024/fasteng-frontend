@@ -25,6 +25,20 @@ import { AdhesivenessData } from '@/stores/asphalt/adhesiveness/adhesiveness.sto
 import AdhesivenessMaterialView from '@/components/asphalt/material/adhesivenessMaterialView';
 import { AbrasionData } from '@/stores/asphalt/abrasion/abrasion.store';
 import LosAngelesAbrasionMaterialView from '@/components/asphalt/material/abrasionMaterialView';
+import { SandEquivalentData } from '@/stores/asphalt/sandEquivalent/sandEquivalent.store';
+import SandEquivalentMaterialView from '@/components/asphalt/material/sandEquivalentMaterialView';
+import { AngularityData } from '@/stores/asphalt/angularity/angularity.store';
+import AngularityMaterialView from '@/components/asphalt/material/angularityMaterialView';
+import { ViscosityRotationalData } from '@/stores/asphalt/viscosityRotational/viscosityRotational.store';
+import ViscosityRotationalMaterialView from '@/components/asphalt/material/viscosityRotationalMaterialView';
+import { PenetrationData } from '@/stores/asphalt/penetration/penetration.store';
+import PenetrationMaterialView from '@/components/asphalt/material/penetrationMaterialView';
+import { SofteningPointData } from '@/stores/asphalt/softeningPoint/softeningPoint.store';
+import SofteningPointMaterialView from '@/components/asphalt/material/softeningPointMaterialView';
+import { FlashPointData } from '@/stores/asphalt/flashPoint/flashPoint.store';
+import FlashPointMaterialView from '@/components/asphalt/material/flashPointMaterialView';
+import { DuctilityData } from '@/stores/asphalt/ductility/ductility.store';
+import DuctilityMaterialView from '@/components/asphalt/material/ductilityMaterialView';
 
 interface TextBoxProps {
   children: JSX.Element | ReactNode;
@@ -36,7 +50,14 @@ export type EssaysData = {
   shapeIndexData: ShapeIndexData;
   elongatedParticlesData: ElongatedParticlesData;
   adhesivenessData: AdhesivenessData;
-  losAngelesAbrasionData: AbrasionData
+  losAngelesAbrasionData: AbrasionData;
+  sandEquivalentData: SandEquivalentData;
+  angularityData: AngularityData;
+  viscosityRotationalData: ViscosityRotationalData;
+  penetrationData: PenetrationData;
+  softeningPointData: SofteningPointData
+  flashPointData: FlashPointData;
+  ductilityData: DuctilityData
 };
 interface IEssaysData {
   essayName: string;
@@ -52,6 +73,19 @@ const Material = () => {
   console.log('🚀 ~ Material ~ material:', material);
 
   const [granulometryData, setGranulometryData] = useState<AsphaltGranulometryData>();
+  const [specificMassData, setSpecificMassData] = useState<SpecifyMassData>();
+  const [shapeIndexData, setShapeIndexData] = useState<ShapeIndexData>();
+  const [elongatedParticlesData, setElongatedParticlesData] = useState<ElongatedParticlesData>();
+  const [adhesivenessData, setAdhesivenessData] = useState<AdhesivenessData>();
+  const [losAngelesAbrasionData, setLosAngelesAbrasionData] = useState<AbrasionData>();
+  const [sandEquivalentData, setSandEquivalentData] = useState<SandEquivalentData>();
+  const [angularityData, setAngularityData] = useState<AngularityData>();
+  const [viscosityRotationalData, setViscosityRotationalData] = useState<ViscosityRotationalData>();
+  const [penetrationData, setPenetrationData] = useState<PenetrationData>();
+  const [softeningPointData, setSofteningPointData] = useState<SofteningPointData>();
+  const [flashPointData, setFlashPointData] = useState<FlashPointData>();
+  const [ductilityData, setDuctilityData] = useState<DuctilityData>();
+
 
   // To-do: remover material hardcoded;
 
@@ -71,63 +105,187 @@ const Material = () => {
   // COARSE AGGREGATE
 
   useEffect(() => {
-    if (material?.essays.some((essay) => essay.essayName === 'granulometry') 
-      && material?.material?.type === 'coarseAggregate') {
-        setGranulometryData(material.essays.find((essay) => essay.essayName === 'granulometry')
-        .data as unknown as EssaysData['asphaltGranulometryData'])
+    if (
+      material?.essays.some((essay) => essay.essayName === 'granulometry') &&
+      material?.material?.type === 'coarseAggregate'
+    ) {
+      setGranulometryData(
+        material.essays.find((essay) => essay.essayName === 'granulometry')
+          .data as unknown as EssaysData['asphaltGranulometryData']
+      );
     }
 
-    if (material?.essays.some(
-      (essay) => essay.essayName === 'granulometry'
-    ) && material?.material?.type === 'fineAggregate') {
-      setGranulometryData(material.essays.find((essay) => essay.essayName === 'granulometry')
-      .data as unknown as EssaysData['asphaltGranulometryData'])
+    if (
+      material?.essays.some((essay) => essay.essayName === 'specificMass') &&
+      material?.material?.type === 'coarseAggregate'
+    ) {
+      setSpecificMassData(
+        material.essays.find((essay) => essay.essayName === 'specificMass')
+          .data as unknown as EssaysData['specifyMassData']
+      );
     }
-  }, [material])
 
-  // const granulometryData: EssaysData['asphaltGranulometryData'] = material?.essays.some(
-  //   (essay) => essay.essayName === 'granulometry'
-  // ) && material?.material?.type === 'coarseAggregate'
-  //   ? (material.essays.find((essay) => essay.essayName === 'granulometry')
-  //       .data as unknown as EssaysData['asphaltGranulometryData'])
-  //   : undefined;
+    if (
+      material?.essays.some((essay) => essay.essayName === 'shapeIndex') &&
+      material?.material?.type === 'coarseAggregate'
+    ) {
+      setShapeIndexData(
+        material.essays.find((essay) => essay.essayName === 'shapeIndex')
+          .data as unknown as EssaysData['shapeIndexData']
+      );
+    }
 
-  const specificMassData: SpecifyMassData = material?.essays.some((essay) => essay.essayName === 'specificMass')
-    ? (material.essays.find((essay) => essay.essayName === 'specificMass')
-        .data as unknown as EssaysData['specifyMassData'])
-    : undefined;
+    if (
+      material?.essays.some((essay) => essay.essayName === 'elongatedParticles') &&
+      material?.material?.type === 'coarseAggregate'
+    ) {
+      setElongatedParticlesData(
+        material.essays.find((essay) => essay.essayName === 'elongatedParticles')
+          .data as unknown as EssaysData['elongatedParticlesData']
+      );
+    }
 
-  const shapeIndexData: ShapeIndexData = material?.essays.some((essay) => essay.essayName === 'shapeIndex')
-    ? (material.essays.find((essay) => essay.essayName === 'shapeIndex')
-        .data as unknown as EssaysData['shapeIndexData'])
-    : undefined;
+    if (
+      material?.essays.some((essay) => essay.essayName === 'adhesiveness') &&
+      material?.material?.type === 'coarseAggregate'
+    ) {
+      setAdhesivenessData(
+        material.essays.find((essay) => essay.essayName === 'adhesiveness')
+          .data as unknown as EssaysData['adhesivenessData']
+      );
+    }
 
-  const elongatedParticlesData: ElongatedParticlesData = material?.essays.some(
-    (essay) => essay.essayName === 'elongatedParticles'
-  )
-    ? (material.essays.find((essay) => essay.essayName === 'elongatedParticles')
-        .data as unknown as EssaysData['elongatedParticlesData'])
-    : undefined;
+    if (
+      material?.essays.some((essay) => essay.essayName === 'losAngelesAbrasion') &&
+      material?.material?.type === 'coarseAggregate'
+    ) {
+      setLosAngelesAbrasionData(
+        material.essays.find((essay) => essay.essayName === 'losAngelesAbrasion')
+          .data as unknown as EssaysData['losAngelesAbrasionData']
+      );
+    }
 
-  const adhesivenessData: AdhesivenessData = material?.essays.some((essay) => essay.essayName === 'adhesiveness')
-    ? (material.essays.find((essay) => essay.essayName === 'adhesiveness')
-        .data as unknown as EssaysData['adhesivenessData'])
-    : undefined;
+    if (
+      material?.essays.some((essay) => essay.essayName === 'granulometry') &&
+      material?.material?.type === 'fineAggregate'
+    ) {
+      setGranulometryData(
+        material.essays.find((essay) => essay.essayName === 'granulometry')
+          .data as unknown as EssaysData['asphaltGranulometryData']
+      );
+    }
 
-  const losAngelesAbrasionData: AbrasionData = material?.essays.some((essay) => essay.essayName === 'losAngelesAbrasion')
-    ? (material.essays.find((essay) => essay.essayName === 'losAngelesAbrasion')
-        .data as unknown as EssaysData['losAngelesAbrasionData'])
-    : undefined;
+    if (
+      material?.essays.some((essay) => essay.essayName === 'specificMass') &&
+      material?.material?.type === 'fineAggregate'
+    ) {
+      setSpecificMassData(
+        material.essays.find((essay) => essay.essayName === 'specificMass')
+          .data as unknown as EssaysData['specifyMassData']
+      );
+    }
 
+    if (
+      material?.essays.some((essay) => essay.essayName === 'sandEquivalent') &&
+      material?.material?.type === 'fineAggregate'
+    ) {
+      setSandEquivalentData(
+        material.essays.find((essay) => essay.essayName === 'sandEquivalent')
+          .data as unknown as EssaysData['sandEquivalentData']
+      );
+    }
 
-  // FINE AGGREGATE
-  // const fineAggregateGranulometryData: EssaysData['asphaltGranulometryData'] = material?.essays.some(
-  //   (essay) => essay.essayName === 'granulometry'
-  // ) && material?.material?.type === 'fineAggregate'
-  //   ? (material.essays.find((essay) => essay.essayName === 'granulometry')
-  //       .data as unknown as EssaysData['asphaltGranulometryData'])
-  //   : undefined;
-  
+    if (
+      material?.essays.some((essay) => essay.essayName === 'angularity') &&
+      material?.material?.type === 'fineAggregate'
+    ) {
+      setAngularityData(
+        material.essays.find((essay) => essay.essayName === 'angularity')
+          .data as unknown as EssaysData['angularityData']
+      );
+    }
+
+    if (
+      material?.essays.some((essay) => essay.essayName === 'granulometry') &&
+      material?.material?.type === 'filler'
+    ) {
+      setGranulometryData(
+        material.essays.find((essay) => essay.essayName === 'granulometry')
+          .data as unknown as EssaysData['asphaltGranulometryData']
+      );
+    }
+
+    if (
+      material?.essays.some((essay) => essay.essayName === 'specificMass') &&
+      material?.material?.type === 'filler'
+    ) {
+      setSpecificMassData(
+        material.essays.find((essay) => essay.essayName === 'specificMass')
+          .data as unknown as EssaysData['specifyMassData']
+      );
+    }
+
+    if (
+      material?.essays.some((essay) => essay.essayName === 'sandEquivalent') &&
+      material?.material?.type === 'filler'
+    ) {
+      setSandEquivalentData(
+        material.essays.find((essay) => essay.essayName === 'sandEquivalent')
+          .data as unknown as EssaysData['sandEquivalentData']
+      );
+    }
+
+    if (
+      material?.essays.some((essay) => essay.essayName === 'viscosityRotational') &&
+      material?.material?.type === 'asphaltBinder'
+    ) {
+      setViscosityRotationalData(
+        material.essays.find((essay) => essay.essayName === 'viscosityRotational')
+          .data as unknown as EssaysData['viscosityRotationalData']
+      );
+    }
+
+    if (
+      material?.essays.some((essay) => essay.essayName === 'penetration') &&
+      material?.material?.type === 'asphaltBinder'
+    ) {
+      setPenetrationData(
+        material.essays.find((essay) => essay.essayName === 'penetration')
+          .data as unknown as EssaysData['penetrationData']
+      );
+    }
+    
+    if (
+      material?.essays.some((essay) => essay.essayName === 'softeningPoint') &&
+      material?.material?.type === 'asphaltBinder'
+    ) {
+      setSofteningPointData(
+        material.essays.find((essay) => essay.essayName === 'softeningPoint')
+          .data as unknown as EssaysData['softeningPointData']
+      );
+    }
+
+    if (
+      material?.essays.some((essay) => essay.essayName === 'flashPoint') &&
+      material?.material?.type === 'asphaltBinder'
+    ) {
+      setFlashPointData(
+        material.essays.find((essay) => essay.essayName === 'flashPoint')
+          .data as unknown as EssaysData['flashPointData']
+      );
+    }
+
+    if (
+      material?.essays.some((essay) => essay.essayName === 'ductility') &&
+      material?.material?.type === 'asphaltBinder'
+    ) {
+      setDuctilityData(
+        material.essays.find((essay) => essay.essayName === 'ductility')
+          .data as unknown as EssaysData['ductilityData']
+      );
+    }
+  }, [material]);
+
   const TextBox = ({ children }: TextBoxProps) => (
     <Box
       sx={{
@@ -201,6 +359,21 @@ const Material = () => {
               {losAngelesAbrasionData?.results && (
                 <LosAngelesAbrasionMaterialView losAngelesAbrasionData={losAngelesAbrasionData} />
               )}
+
+              {sandEquivalentData?.results && <SandEquivalentMaterialView sandEquivalentData={sandEquivalentData} />}
+
+              {angularityData?.results && <AngularityMaterialView angularityData={angularityData} />}
+
+              {viscosityRotationalData?.results && <ViscosityRotationalMaterialView viscosityRotationalData={viscosityRotationalData} />}
+
+              {penetrationData?.results && <PenetrationMaterialView penetrationData={penetrationData} />}
+
+              {softeningPointData?.results && <SofteningPointMaterialView softeningPointData={softeningPointData} />}
+
+              {flashPointData?.results && <FlashPointMaterialView flashPointData={flashPointData} />}
+
+              {ductilityData?.results && <DuctilityMaterialView ductilityData={ductilityData} />}
+
             </Box>
           </BodyEssay>
         </>

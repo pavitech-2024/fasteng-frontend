@@ -11,6 +11,7 @@ export interface IGranulometryMateriaView {
 }
 
 const GranulometryMateriaView = ({ granulometryData }: IGranulometryMateriaView) => {
+console.log("🚀 ~ GranulometryMateriaView ~ granulometryData:", granulometryData)
 
   const rows = [];
   let graph_data;
@@ -48,10 +49,10 @@ const GranulometryMateriaView = ({ granulometryData }: IGranulometryMateriaView)
     },
   ];
 
-  if (granulometryData) {
+  if (granulometryData?.results.graph_data) {
     graph_data = [
       [t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')],
-      ...granulometryData.results.graph_data,
+      ...granulometryData?.results.graph_data,
     ];
 
     granulometryData.step2Data.table_data.map((value, index) => {
