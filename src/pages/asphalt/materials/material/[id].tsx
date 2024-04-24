@@ -1,5 +1,8 @@
 import ElongatedParticles_results_Dimensions_Table from '@/components/asphalt/essays/elongatedParticles/tables/results-dimensions-table.elongatedParticles';
 import AsphaltGranulometry_resultsTable from '@/components/asphalt/essays/granulometry/tables/results-table.granulometry';
+import GranulometryMateriaView from '@/components/asphalt/material/granulometryMaterialView';
+import ShapeIndexMaterialView from '@/components/asphalt/material/shapeIndexMaterialView';
+import SpecificMassMaterialView from '@/components/asphalt/material/specificMassMaterialView';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import Result_Card from '@/components/atoms/containers/result-card';
 import Loading from '@/components/molecules/loading';
@@ -16,6 +19,12 @@ import { t } from 'i18next';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import Chart from 'react-google-charts';
+import ElongatedParticles from '../../essays/elongatedParticles';
+import ElongatedParticlesMaterialView from '@/components/asphalt/material/elongatedParticesMaterialView';
+import { AdhesivenessData } from '@/stores/asphalt/adhesiveness/adhesiveness.store';
+import AdhesivenessMaterialView from '@/components/asphalt/material/adhesivenessMaterialView';
+import { AbrasionData } from '@/stores/asphalt/abrasion/abrasion.store';
+import LosAngelesAbrasionMaterialView from '@/components/asphalt/material/abrasionMaterialView';
 
 interface TextBoxProps {
   children: JSX.Element | ReactNode;
@@ -26,6 +35,8 @@ export type EssaysData = {
   specifyMassData: SpecifyMassData;
   shapeIndexData: ShapeIndexData;
   elongatedParticlesData: ElongatedParticlesData;
+  adhesivenessData: AdhesivenessData;
+  losAngelesAbrasionData: AbrasionData
 };
 interface IEssaysData {
   essayName: string;
@@ -39,12 +50,15 @@ const Material = () => {
   const [loading, setLoading] = useState(true);
   const [material, setMaterial] = useState<{ material: AsphaltMaterial; essays: IEssaysData[] }>();
   console.log('🚀 ~ Material ~ material:', material);
-  let graph_data;
+
+  const [granulometryData, setGranulometryData] = useState<AsphaltGranulometryData>();
+
+  // To-do: remover material hardcoded;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await materialsService.getMaterial('650de742205bb691362b7e7c');
+        const response = await materialsService.getMaterial(id);
         setMaterial(response.data);
         setLoading(false);
       } catch (error) {
@@ -54,14 +68,29 @@ const Material = () => {
     fetchData();
   }, [id]);
 
-  const rows = [];
+  // COARSE AGGREGATE
 
-  const granulometryData: EssaysData['asphaltGranulometryData'] = material?.essays.some(
-    (essay) => essay.essayName === 'granulometry'
-  )
-    ? (material.essays.find((essay) => essay.essayName === 'granulometry')
+  useEffect(() => {
+    if (material?.essays.some((essay) => essay.essayName === 'granulometry') 
+      && material?.material?.type === 'coarseAggregate') {
+        setGranulometryData(material.essays.find((essay) => essay.essayName === 'granulometry')
         .data as unknown as EssaysData['asphaltGranulometryData'])
-    : undefined;
+    }
+
+    if (material?.essays.some(
+      (essay) => essay.essayName === 'granulometry'
+    ) && material?.material?.type === 'fineAggregate') {
+      setGranulometryData(material.essays.find((essay) => essay.essayName === 'granulometry')
+      .data as unknown as EssaysData['asphaltGranulometryData'])
+    }
+  }, [material])
+
+  // const granulometryData: EssaysData['asphaltGranulometryData'] = material?.essays.some(
+  //   (essay) => essay.essayName === 'granulometry'
+  // ) && material?.material?.type === 'coarseAggregate'
+  //   ? (material.essays.find((essay) => essay.essayName === 'granulometry')
+  //       .data as unknown as EssaysData['asphaltGranulometryData'])
+  //   : undefined;
 
   const specificMassData: SpecifyMassData = material?.essays.some((essay) => essay.essayName === 'specificMass')
     ? (material.essays.find((essay) => essay.essayName === 'specificMass')
@@ -73,110 +102,32 @@ const Material = () => {
         .data as unknown as EssaysData['shapeIndexData'])
     : undefined;
 
-  const elongatedParticlesData: ElongatedParticlesData = material?.essays.some((essay) => essay.essayName ==='elongatedParticles')
+  const elongatedParticlesData: ElongatedParticlesData = material?.essays.some(
+    (essay) => essay.essayName === 'elongatedParticles'
+  )
     ? (material.essays.find((essay) => essay.essayName === 'elongatedParticles')
         .data as unknown as EssaysData['elongatedParticlesData'])
     : undefined;
 
-  if (granulometryData) {
-    graph_data = [
-      [t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')],
-      ...granulometryData.results.graph_data,
-    ];
+  const adhesivenessData: AdhesivenessData = material?.essays.some((essay) => essay.essayName === 'adhesiveness')
+    ? (material.essays.find((essay) => essay.essayName === 'adhesiveness')
+        .data as unknown as EssaysData['adhesivenessData'])
+    : undefined;
 
-    granulometryData.step2Data.table_data.map((value, index) => {
-      rows.push({
-        sieve: value.sieve_label,
-        passant_porcentage: value.passant,
-        passant: granulometryData.results.passant[index][1],
-        retained_porcentage: granulometryData.results.retained_porcentage[index][1],
-        retained: value.retained,
-        accumulated_retained: granulometryData.results.accumulated_retained[index][1],
-      });
-    });
-  }
+  const losAngelesAbrasionData: AbrasionData = material?.essays.some((essay) => essay.essayName === 'losAngelesAbrasion')
+    ? (material.essays.find((essay) => essay.essayName === 'losAngelesAbrasion')
+        .data as unknown as EssaysData['losAngelesAbrasionData'])
+    : undefined;
 
-  const data = {
-    specificMassContainer: [],
-    shapeIndexContainer: [],
-  };
 
-  if (specificMassData) {
-    data.specificMassContainer.push(
-      { label: t('specifyMass.bulk_specify_mass'), value: specificMassData.results.bulk_specify_mass, unity: 'g/cm³' },
-      {
-        label: t('specifyMass.apparent_specify_mass'),
-        value: specificMassData.results.apparent_specify_mass,
-        unity: 'g/cm³',
-      },
-      { label: t('specifyMass.absorption'), value: specificMassData.results.absorption, unity: '%' }
-    );
-  }
-
-  if (shapeIndexData) {
-    data.shapeIndexContainer.push({
-      label: t('shapeIndex.shapeIndex'),
-      value: shapeIndexData.results.shape_index,
-      unity: '',
-    });
-  }
-
-  let elongatedParticlesRows;
-
-  if (elongatedParticlesData) {
-    elongatedParticlesRows = elongatedParticlesData?.results.results_dimensions_table_data;
-  }
-
-  useEffect(() => {
-    console.log("🚀 ~ useEffect ~ elongatedParticlesData:", elongatedParticlesData)
-  },[material])
-
-  const columns: GridColDef[] = [
-    {
-      field: 'sieve',
-      headerName: t('granulometry-asphalt.sieves'),
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'passant_porcentage',
-      headerName: t('granulometry-asphalt.passant') + ' (%)',
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'passant',
-      headerName: t('granulometry-asphalt.passant') + ' (g)',
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'retained_porcentage',
-      headerName: t('granulometry-asphalt.retained') + ' (%)',
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'retained',
-      headerName: t('granulometry-asphalt.retained') + ' (g)',
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'accumulated_retained',
-      headerName: t('granulometry-asphalt.accumulated-retained') + ' (%)',
-      valueFormatter: ({ value }) => `${value}`,
-    },
-  ];
-
-  const elongatedParticlesColumns: GridColDef[] = [
-    {
-      field: 'ratio',
-      headerName: t('elongatedParticles.ratio'),
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'particles_percentage',
-      headerName: t('elongatedParticles.particles-percentage'),
-      valueFormatter: ({ value }) => `${value}%`,
-    },
-  ];
-
+  // FINE AGGREGATE
+  // const fineAggregateGranulometryData: EssaysData['asphaltGranulometryData'] = material?.essays.some(
+  //   (essay) => essay.essayName === 'granulometry'
+  // ) && material?.material?.type === 'fineAggregate'
+  //   ? (material.essays.find((essay) => essay.essayName === 'granulometry')
+  //       .data as unknown as EssaysData['asphaltGranulometryData'])
+  //   : undefined;
+  
   const TextBox = ({ children }: TextBoxProps) => (
     <Box
       sx={{
@@ -193,7 +144,7 @@ const Material = () => {
 
   return (
     <>
-      {material === undefined ? (
+      {loading ? (
         <Loading />
       ) : (
         <>
@@ -235,84 +186,21 @@ const Material = () => {
                 </Box>
               </FlexColumnBorder>
 
-              {granulometryData.results && (
-                <FlexColumnBorder title={t('asphalt.essays.granulometry')} open={true}>
-                  <AsphaltGranulometry_resultsTable rows={rows} columns={columns} />
-                  <Chart
-                    chartType="LineChart"
-                    width={'100%'}
-                    height={'400px'}
-                    loader={<Loading />}
-                    data={graph_data}
-                    options={{
-                      title: t('granulometry-asphalt.granulometry'),
-                      backgroundColor: 'transparent',
-                      pointSize: '2',
-                      hAxis: {
-                        title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
-                        type: 'number',
-                        scaleType: 'log',
-                      },
-                      vAxis: {
-                        title: `${t('granulometry-asphalt.passant') + ' (%)'}`,
-                        minValue: '0',
-                        maxValue: '105',
-                      },
-                      legend: 'none',
-                    }}
-                  />
-                </FlexColumnBorder>
+              {granulometryData?.results && <GranulometryMateriaView granulometryData={granulometryData} />}
+
+              {specificMassData?.results && <SpecificMassMaterialView specificMassData={specificMassData} />}
+
+              {shapeIndexData?.results && <ShapeIndexMaterialView shapeIndexData={shapeIndexData} />}
+
+              {elongatedParticlesData?.results && (
+                <ElongatedParticlesMaterialView elongatedParticlesData={elongatedParticlesData} />
               )}
 
-              {specificMassData?.results && (
-                <FlexColumnBorder title={t('asphalt.essays.specifyMass')} open={true}>
-                  <Box
-                    sx={{
-                      width: '100%',
-                      display: 'flex',
-                      gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
-                      gap: '10px',
-                      mt: '20px',
-                    }}
-                  >
-                    {data?.specificMassContainer?.map((item, index) => (
-                      <Result_Card key={index} label={item.label} value={item.value} unity={item.unity} />
-                    ))}
-                  </Box>
-                </FlexColumnBorder>
-              )}
+              {adhesivenessData?.results && <AdhesivenessMaterialView adhesivenessData={adhesivenessData} />}
 
-              {shapeIndexData?.results && (
-                <FlexColumnBorder title={t('asphalt.essays.shapeIndex')} open={true}>
-                  <Box
-                    sx={{
-                      width: '100%',
-                      display: 'flex',
-                      gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
-                      gap: '10px',
-                      mt: '20px',
-                    }}
-                  >
-                    {data.shapeIndexContainer.map((item, index) => (
-                      <Result_Card key={index} label={item.label} value={item.value} unity={item.unity} />
-                    ))}
-                  </Box>
-                </FlexColumnBorder>
+              {losAngelesAbrasionData?.results && (
+                <LosAngelesAbrasionMaterialView losAngelesAbrasionData={losAngelesAbrasionData} />
               )}
-
-                <FlexColumnBorder title={t('asphalt.essays.elongatedParticles')} open={true}>
-                  <Box
-                    sx={{
-                      width: '100%',
-                      display: 'flex',
-                      gridTemplateColumns: { mobile: '1fr', notebook: '1fr' },
-                      gap: '10px',
-                      mt: '20px',
-                    }}
-                  >
-                    <ElongatedParticles_results_Dimensions_Table rows={elongatedParticlesRows} columns={elongatedParticlesColumns} />
-                  </Box>
-                </FlexColumnBorder>
             </Box>
           </BodyEssay>
         </>
