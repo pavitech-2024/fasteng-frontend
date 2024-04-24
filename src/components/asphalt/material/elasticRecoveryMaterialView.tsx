@@ -4,26 +4,27 @@ import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
 
-export interface IDuctilityMaterialView {
-  ductilityData: EssaysData['ductilityData'];
+export interface IElasticRecoveryMaterialView {
+  elasticRecoveryData: EssaysData['elasticRecoveryData'];
 }
 
-const DuctilityMaterialView = ({ ductilityData }: IDuctilityMaterialView) => {
+const ElasticRecoveryMaterialView = ({ elasticRecoveryData }: IElasticRecoveryMaterialView) => {
 
   const data = {
+    // container "Resultados"
     container_other_data: [],
   };
 
-  if (ductilityData) {
+  if (elasticRecoveryData) {
     data.container_other_data.push({
-      label: t('asphalt.essays.ductility'),
-      value: ductilityData.results.ductility.toFixed(2),
-      unity: 'mm',
+      label: t('elasticRecovery.elasticRecovery'),
+      value: elasticRecoveryData.results.elasticRecovery,
+      unity: '%',
     });
   }
 
   return (
-    <FlexColumnBorder title={t('asphalt.essays.ductility')} open={true}>
+    <FlexColumnBorder title={t('asphalt.essays.elasticRecovery')} open={true}>
       <Box
         sx={{
           width: '100%',
@@ -41,4 +42,4 @@ const DuctilityMaterialView = ({ ductilityData }: IDuctilityMaterialView) => {
   );
 };
 
-export default DuctilityMaterialView;
+export default ElasticRecoveryMaterialView;
