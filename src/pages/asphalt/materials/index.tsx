@@ -27,6 +27,7 @@ const Materials = () => {
         console.error('Failed to load materials:', error);
       });
   }, [user]);
+  
 
   const types: DropDownOption[] = [{ label: t('samples.all'), value: '' }];
 
@@ -53,6 +54,7 @@ const Materials = () => {
         console.error('Failed to load materials:', error);
       });
   };
+
 
   return (
     <Container>
