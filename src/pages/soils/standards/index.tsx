@@ -39,15 +39,15 @@ const SoilsStandards: NextPage = () => {
       title: t('hrb'),
       icon: HrbIcon,
       key: 'hrb',
-      standard: '?',
-      link: 'https://fastengapp.com.br/',
+      standard: '',
+      link: 'src/assets/soils/tables/hrb_table_image.png',
     },
     {
       title: t('sucs'),
       icon: SucsIcon,
       key: 'sucs',
-      standard: '?',
-      link: 'https://fastengapp.com.br/',
+      standard: '',
+      link: 'src/assets/soils/tables/sucs_table_image.jpeg',
     },
   ];
 
