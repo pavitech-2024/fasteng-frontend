@@ -86,6 +86,7 @@ const Material = () => {
   const [ductilityData, setDuctilityData] = useState<DuctilityData>();
   const [rtfoData, setRtfoData] = useState<RtfoData>();
   const [elasticRecoveryData, setElasticRecoveryData] = useState<ElasticRecoveryData>();
+  const [type, setType] = useState('');
 
 
   // To-do: remover material hardcoded;
@@ -153,6 +154,22 @@ const Material = () => {
     </Box>
   );
 
+  useEffect(() => {
+    if (material?.material.type === 'CAP') {
+      setType(t('asphalt.materials.cap'))
+    } else if (material?.material.type === 'asphaltBinder') {
+      setType(t('asphalt.materials.asphaltBinder'))
+    } else if (material?.material.type === 'coarseAggregate') {
+      setType(t('asphalt.materials.coarseAggregate'))
+    } else if (material?.material.type === 'filler') {
+      setType(t('asphalt.materials.filler'))
+    } else if (material?.material.type === 'fineAggregate') {
+      setType(t('asphalt.materials.fineAggregate'))
+    } else if (material?.material.type === 'other') {
+      setType(t('asphalt.materials.other'))
+    }
+  },[material])
+
   return (
     <>
       {loading ? (
@@ -177,7 +194,7 @@ const Material = () => {
                   sx={{
                     display: 'flex',
                     padding: { mobile: '10px', notebook: '25px' },
-                    mb: { mobile: '-55px', notebook: '-45px' },
+                    mb: { mobile: '-55px', notebook: '-80px' },
                     transform: { mobile: 'translateY(-70px)', notebook: 'translateY(-60px)' },
                     alignItems: 'flex-start',
                     flexDirection: 'column',
@@ -186,12 +203,12 @@ const Material = () => {
                 >
                   <TextBox>
                     <Box sx={{ display: 'flex' }}>
-                      <span style={{ fontWeight: '700', marginRight: '5px' }}>{t('asphalt.matyerial.name')}:</span>
+                      <span style={{ fontWeight: '700', marginRight: '5px' }}>{t('asphalt.materials.name')}:</span>
                       <Typography>{material.material.name}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex' }}>
-                      <span style={{ fontWeight: '700', marginRight: '5px' }}>{t('asphalt.matyerial.type')}:</span>
-                      <Typography>{material.material.type}</Typography>
+                      <span style={{ fontWeight: '700', marginRight: '5px' }}>{t('asphalt.materials.type')}:</span>
+                      <Typography>{type}</Typography>
                     </Box>
                   </TextBox>
                 </Box>

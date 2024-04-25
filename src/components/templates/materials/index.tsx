@@ -33,6 +33,7 @@ interface MaterialsTemplateProps {
   materials: Sample[] | AsphaltMaterial[] | ConcreteMaterial[];
   types: DropDownOption[];
   title: 'Amostras Cadastradas' | 'Materiais Cadastrados';
+  path?: string;
   //Modal
   handleOpenModal: () => void;
   handleDeleteMaterial: (id: string) => void;
@@ -56,11 +57,13 @@ const MaterialsTemplate = ({
   materials,
   types,
   title,
+  path,
   handleOpenModal,
   handleDeleteMaterial,
   modal,
 }: MaterialsTemplateProps) => {
   const app = useRouter().pathname.split('/')[1];
+  let samplesOrMaterials: string;
 
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
@@ -72,6 +75,12 @@ const MaterialsTemplate = ({
 
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
+
+  if (path === 'soils') {
+    samplesOrMaterials = "sample"
+  } else {
+    samplesOrMaterials = "material"
+  }
 
   const columns: MaterialsColumn[] = [
     { id: 'name', label: t('materials.template.name'), width: '25%' },
@@ -313,7 +322,7 @@ const MaterialsTemplate = ({
                         {column.id === 'createdAt' && formatDate(row.createdAt)}
                         {column.id === 'actions' && (
                           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Link href={`/asphalt/materials/material/${row._id}`}>
+                            <Link href={`/${path}/${row._id}`}>
                               <Button
                                 variant="contained"
                                 sx={{

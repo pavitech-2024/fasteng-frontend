@@ -28,16 +28,16 @@ const ViscosityRotationalMaterialView = ({ viscosityRotationalData }: IViscosity
 
   return (
     <FlexColumnBorder title={t('asphalt.essays.viscosityRotational')} open={true}>
-      <Result_CardContainer hideBorder title={t('asphalt.essays.viscosityRotational.compression-temperature')}>
-        <Result_Card label={t('asphalt.essays.viscosityRotational.higher')} value={data.compressionTemperature.higher} unity={'°C'} />
-        <Result_Card label={t('asphalt.essays.viscosityRotational.average')} value={data.compressionTemperature.average} unity={'°C'} />
-        <Result_Card label={t('asphalt.essays.viscosityRotational.lower')} value={data.compressionTemperature.lower} unity={'°C'} />
+      <Result_CardContainer hideBorder title={t('saybolt-furol.compression-temperature')}>
+        <Result_Card label={t('saybolt-furol.higher')} value={data.compressionTemperature.higher} unity={'°C'} />
+        <Result_Card label={t('saybolt-furol.average')} value={data.compressionTemperature.average} unity={'°C'} />
+        <Result_Card label={t('saybolt-furol.lower')} value={data.compressionTemperature.lower} unity={'°C'} />
       </Result_CardContainer>
-      <Result_Container_NoChildren hideBorder title={t('asphalt.essays.viscosityRotational.machining-temperature')} />
+      <Result_Container_NoChildren hideBorder title={t('saybolt-furol.machining-temperature')} />
       <Result_CardContainer hideBorder>
-        <Result_Card label={t('asphalt.essays.viscosityRotational.higher')} value={data.machiningTemperature.higher} unity={'°C'} />
-        <Result_Card label={t('asphalt.essays.viscosityRotational.average')} value={data.machiningTemperature.average} unity={'°C'} />
-        <Result_Card label={t('asphalt.essays.viscosityRotational.lower')} value={data.machiningTemperature.lower} unity={'°C'} />
+        <Result_Card label={t('saybolt-furol.higher')} value={data.machiningTemperature.higher} unity={'°C'} />
+        <Result_Card label={t('saybolt-furol.average')} value={data.machiningTemperature.average} unity={'°C'} />
+        <Result_Card label={t('saybolt-furol.lower')} value={data.machiningTemperature.lower} unity={'°C'} />
       </Result_CardContainer>
 
       <ResultSubTitle title={t('asphalt.essays.viscosityRotational.graph')} sx={{ margin: '.65rem' }} />
