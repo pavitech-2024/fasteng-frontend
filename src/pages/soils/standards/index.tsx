@@ -1,9 +1,7 @@
 import {
   CbrIcon,
   CompressionIcon,
-  GranulometryIcon,
-  HrbIcon,
-  SucsIcon,
+  GranulometryIcon
 } from '@/assets';
 import { FilterOption } from '@/components/molecules/buttons/filter';
 import { StandardsTemplate } from '@/components/templates/standards';
@@ -34,21 +32,7 @@ const SoilsStandards: NextPage = () => {
       key: 'granulometry',
       standard: 'DNER - ME 083/98',
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_083_98.pdf',
-    },
-    {
-      title: t('hrb'),
-      icon: HrbIcon,
-      key: 'hrb',
-      standard: '',
-      link: 'src/assets/soils/tables/hrb_table_image.png',
-    },
-    {
-      title: t('sucs'),
-      icon: SucsIcon,
-      key: 'sucs',
-      standard: '',
-      link: 'src/assets/soils/tables/sucs_table_image.jpeg',
-    },
+    }
   ];
 
   const filterOptions: FilterOption[] = [
