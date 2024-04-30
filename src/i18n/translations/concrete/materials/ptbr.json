@@ -2,6 +2,7 @@
   "concrete.materials.title": "Materiais cadastrados",
   "concrete.materials.newMaterial": "Cadastrar material",
   "concrete.materials.type": "Tipo",
+  "concrete.materials.name": "Nome",
   "concrete.materials.source": "Fonte",
   "concrete.materials.responsible": "Responsável",
   "concrete.materials.classification_AMP": "Classificação AMP",
