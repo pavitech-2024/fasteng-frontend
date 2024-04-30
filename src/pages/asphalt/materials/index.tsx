@@ -65,6 +65,7 @@ const Materials = () => {
           title={t('asphalt.materials.title')}
           handleOpenModal={() => setOpenModal(true)}
           handleDeleteMaterial={handleDeleteMaterial}
+          path="asphalt/materials/material"
           modal={
             <NewAsphaltMaterialModal
               openModal={openModal}

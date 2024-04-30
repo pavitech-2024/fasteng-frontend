@@ -1,1 +1,5 @@
-{}
+{
+  "granulometry-asphalt.sieves": "Sieves",
+  "granulometry-asphalt.total_passant": "Total passant",
+  "granulometry-asphalt.passant": "Passant"
+}

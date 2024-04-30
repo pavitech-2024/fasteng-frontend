@@ -38,8 +38,8 @@ export default function DescriptionModal({ title, description }: IModal) {
       <Button variant="outlined" onClick={handleClickOpen}>
         {t('description.read.more')}
       </Button>
-      <BootstrapDialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} >
-        <DialogTitle sx={{ m: 0, p: 2, textAlign: 'center'}} id="customized-dialog-title">
+      <BootstrapDialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+        <DialogTitle sx={{ m: 0, p: 2, textAlign: 'center' }} id="customized-dialog-title">
           {title}
         </DialogTitle>
         <IconButton
@@ -55,7 +55,9 @@ export default function DescriptionModal({ title, description }: IModal) {
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
-          <Typography gutterBottom sx={{ textAlign: 'justify' }}>{description}</Typography>
+          <Typography gutterBottom sx={{ textAlign: 'justify' }}>
+            {description}
+          </Typography>
         </DialogContent>
       </BootstrapDialog>
     </React.Fragment>

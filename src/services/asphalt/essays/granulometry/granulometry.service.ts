@@ -108,8 +108,8 @@ class AsphaltGranulometry_SERVICE implements IEssayService {
 
       // verify if all the passant porcentages are not empty or negative
       step2Data.table_data.forEach((row) => {
-        if (row.passant == null || row.retained == null) throw t('errors.empty-sieve') + row.sieve;
-        if (row.passant < 0 || row.passant < 0) throw t('errors.negative-sieve') + row.sieve;
+        if (row.passant == null || row.retained == null) throw t('errors.empty-sieve') + row.sieve_label;
+        if (row.passant < 0 || row.passant < 0) throw t('errors.negative-sieve') + row.sieve_label;
       });
 
       //verify if the sum of the masses (retained + bottom) equals the material mass

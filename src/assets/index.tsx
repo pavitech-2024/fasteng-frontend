@@ -92,7 +92,7 @@ import AbcpIcon from './concrete/dosages/abcp.svg';
 import AbcpLogo from './concrete/dosages/ABCP-Logo.png';
 
 // creators
-import Article from './creators/Article.png'
+import Article from './creators/Article.png';
 // export all assets
 export {
   // materialui
@@ -130,7 +130,7 @@ export {
   SpecifyMassIcon,
   GranulometryIcon,
   InducedMoistureDamageIcon,
-  
+
   //others
   EssayIcon,
   MaterialsIcon,

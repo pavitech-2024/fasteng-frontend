@@ -23,7 +23,6 @@ const AsphaltLibrary: NextPage = () => {
       link: 'https://www.youtube.com/embed/Nnv-BmUBRyY',
       type: 'videos',
       key: 'rotational',
-      
     },
     {
       title: 'Fadiga de Misturas Asfálticas: Ensaio por Compressão Diametral Indireta',

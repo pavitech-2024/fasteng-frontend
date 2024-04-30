@@ -13,7 +13,6 @@ const Ddui_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   const { results: results, generalData } = useDduiStore();
   const { dduiStep2: ddui_Step2 } = useDduiStore();
   const { dduiStep3: ddui_Step3 } = useDduiStore();
-  console.log('🚀 ~ file: results.ddui.tsx:9 ~ results:', results);
 
   const rows = ddui_Step3.ddui_data.map((item, index) => {
     const { pressReading } = item;

@@ -101,7 +101,7 @@ class Abrasion_SERVICE implements IEssayService {
     try {
       const { finalMass, initialMass } = abrasionCalc;
 
-      if (Number(finalMass) > Number(initialMass)) throw t('errors.final-mass-lower-than-initial-mass');
+      // if (Number(finalMass) > Number(initialMass)) throw t('errors.final-mass-lower-than-initial-mass');
     } catch (error) {
       throw error;
     }
@@ -116,7 +116,6 @@ class Abrasion_SERVICE implements IEssayService {
       });
 
       const { success, error, result } = response.data;
-      console.log('🚀 ~ file: abrasion.service.ts:120 ~ Abrasion_SERVICE ~ calculateResults= ~ result:', result);
 
       if (success === false) throw error.name;
 

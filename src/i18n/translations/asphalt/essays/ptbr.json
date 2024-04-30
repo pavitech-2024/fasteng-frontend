@@ -19,6 +19,7 @@
   "asphalt.essays.fwd": "Falling Weight Deflectometer - FWD",
   "asphalt.essays.ddui": "Determinação do Dano por Umidade Induzida",
   "asphalt.essays.igg": "IGG",
+  "asphalt.essays.fwd": "FWD",
   "asphalt.essays.filter.all": "Todos",
   "asphalt.essays.filter.aggregates": "Agregados",
   "asphalt.essays.filter.asphaltMix": "Misturas Asfálticas",
@@ -35,5 +36,6 @@
   "asphalt.essays.abrasion.initial-mass": "Massa inicial",
   "asphalt.essays.abrasion.final-mass": "Massa da amostra após ensaio",
   "asphalt.essays.abrasion.graduation": "Escolha a graduação",
-  "errors.final-mass-lower-than-initial-mass": "A massa final não pode ser maior do que a massa inicial."
+  "errors.final-mass-lower-than-initial-mass": "A massa final não pode ser maior do que a massa inicial.",
+  "asphalt.essays.marshall": "Dosagem Marshall"
 }

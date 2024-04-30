@@ -9,7 +9,6 @@ import { toast } from 'react-toastify';
 
 const Rtcd_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { rtcdStep3: data, setData } = useRtcdStore();
-  console.log('🚀 ~ file: rtcd-step3.rtcd.tsx:9 ~ data:', data);
 
   const [localRows, setLocalRows] = useState(data.rtcd_data); // Define the 'localRows' variable
 

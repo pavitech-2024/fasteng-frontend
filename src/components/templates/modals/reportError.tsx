@@ -60,7 +60,6 @@ export default function ReportError({ openModalProp }: IReportErrorProps) {
 
     try {
       const response = await Api.post('/report-error', modalValues);
-      //console.log('🚀 ~ file: reportError.tsx:88 ~ handleSubmit ~ response:', response);
 
       if (response.status === 201) {
         setEmailStatusMessage('Email enviado com sucesso');

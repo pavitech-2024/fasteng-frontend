@@ -12,7 +12,7 @@ interface ExperimentResumeProps {
 
 export interface ExperimentResumeData {
   experimentName: string;
-  materials: {
+  materials?: {
     name: string;
     type: string;
   }[];
@@ -45,17 +45,17 @@ const ExperimentResume = ({ data }: ExperimentResumeProps) => {
     { label: t('authorName'), value: user.name },
     { label: t('asphalt.experimentName'), value: data.experimentName },
   ];
-
-  data.materials.forEach((item) => {
-    texts.push({ label: t(`${app === 'soils' ? 'sample' : 'material'}`), value: item.name });
-    texts.push({
-      label: t('asphalt.materials.type'),
-      value: t(
-        `${app === 'soils' ? 'samples' : app === 'asphalt' ? 'asphalt.materials' : 'concrete.materials'}.${item.type}`
-      ),
+  if (data.materials) {
+    data.materials.forEach((item) => {
+      texts.push({ label: t(`${app === 'soils' ? 'sample' : 'material'}`), value: item.name });
+      texts.push({
+        label: t('asphalt.materials.type'),
+        value: t(
+          `${app === 'soils' ? 'samples' : app === 'asphalt' ? 'asphalt.materials' : 'concrete.materials'}.${item.type}`
+        ),
+      });
     });
-  });
-
+  }
   return (
     <FlexColumnBorder title={t('general data of essay')} open={open} generalData={true}>
       <Box
