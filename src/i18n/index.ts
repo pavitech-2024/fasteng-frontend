@@ -164,7 +164,6 @@ import commonEssaysENG from './translations/common/essays/en.json';
 import commonMaterialsPTBR from './translations/common/materials/ptbr.json';
 import commonMaterialsENG from './translations/common/materials/en.json';
 
-
 i18n.use(initReactI18next).init({
   fallbackLng: 'ptBR',
   interpolation: {

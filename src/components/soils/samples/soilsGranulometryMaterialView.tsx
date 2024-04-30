@@ -14,7 +14,6 @@ export interface IGranulometrySampleView {
 }
 
 const GranulometrySampleView = ({ granulometryData }: IGranulometrySampleView) => {
-
   const data = {
     // container "Resultados"
     container_other_data: [],
@@ -24,7 +23,11 @@ const GranulometrySampleView = ({ granulometryData }: IGranulometrySampleView) =
     data.container_other_data.push(
       { label: t('granulometry-soils.total-retained'), value: granulometryData.results.total_retained, unity: 'g' },
       { label: t('granulometry-soils.nominal-size'), value: granulometryData.results.nominal_size, unity: 'mm' },
-      { label: t('granulometry-soils.nominal-diameter'), value: granulometryData.results.nominal_diameter, unity: 'mm' },
+      {
+        label: t('granulometry-soils.nominal-diameter'),
+        value: granulometryData.results.nominal_diameter,
+        unity: 'mm',
+      },
       { label: t('granulometry-soils.fineness-module'), value: granulometryData.results.fineness_module, unity: '%' },
       { label: t('granulometry-soils.cc'), value: granulometryData.results.cc },
       { label: t('granulometry-soils.cnu'), value: granulometryData.results.cnu },

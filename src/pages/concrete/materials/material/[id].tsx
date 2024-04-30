@@ -1,23 +1,23 @@
-import FlexColumnBorder from "@/components/atoms/containers/flex-column-with-border";
-import ChapmanMaterialView from "@/components/concrete/material/chapmanMaterialView";
-import CoarseAggregateSpecificMassMaterialView from "@/components/concrete/material/coarseAggregateMaterialView";
-import GranulometryMateriaView from "@/components/concrete/material/concreteGranulometryMaterialView";
-import SandIncreaseMaterialView from "@/components/concrete/material/sandIncreaseMaterialView";
-import UnitMassMaterialView from "@/components/concrete/material/unitMassMaterialView";
-import Loading from "@/components/molecules/loading";
-import BodyEssay from "@/components/organisms/bodyEssay";
-import { AsphaltMaterial } from "@/interfaces/asphalt";
-import { ConcreteMaterial } from "@/interfaces/concrete";
-import concreteMaterialService from "@/services/concrete/concrete-materials.service";
-import { ChapmanData } from "@/stores/concrete/chapman/chapman.store";
-import { CoarseAggregateData } from "@/stores/concrete/coarseAggregate/coarseAggregate.store";
-import { ConcreteGranulometryData } from "@/stores/concrete/granulometry/granulometry.store";
-import { SandIncreaseData } from "@/stores/concrete/sandIncrease/sandIncrease.store";
-import { UnitMassData } from "@/stores/concrete/unitMass/unitMass.store";
-import { Box, Typography } from "@mui/material";
-import { t } from "i18next";
-import { useRouter } from "next/router";
-import { ReactNode, useState, useEffect } from "react";
+import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import ChapmanMaterialView from '@/components/concrete/material/chapmanMaterialView';
+import CoarseAggregateSpecificMassMaterialView from '@/components/concrete/material/coarseAggregateMaterialView';
+import GranulometryMateriaView from '@/components/concrete/material/concreteGranulometryMaterialView';
+import SandIncreaseMaterialView from '@/components/concrete/material/sandIncreaseMaterialView';
+import UnitMassMaterialView from '@/components/concrete/material/unitMassMaterialView';
+import Loading from '@/components/molecules/loading';
+import BodyEssay from '@/components/organisms/bodyEssay';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { ConcreteMaterial } from '@/interfaces/concrete';
+import concreteMaterialService from '@/services/concrete/concrete-materials.service';
+import { ChapmanData } from '@/stores/concrete/chapman/chapman.store';
+import { CoarseAggregateData } from '@/stores/concrete/coarseAggregate/coarseAggregate.store';
+import { ConcreteGranulometryData } from '@/stores/concrete/granulometry/granulometry.store';
+import { SandIncreaseData } from '@/stores/concrete/sandIncrease/sandIncrease.store';
+import { UnitMassData } from '@/stores/concrete/unitMass/unitMass.store';
+import { Box, Typography } from '@mui/material';
+import { t } from 'i18next';
+import { useRouter } from 'next/router';
+import { ReactNode, useState, useEffect } from 'react';
 
 interface TextBoxProps {
   children: JSX.Element | ReactNode;
@@ -49,7 +49,6 @@ const Material = () => {
   const [chapmanData, setChapmanData] = useState<ChapmanData>();
   const [type, setType] = useState<string>('');
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -71,7 +70,7 @@ const Material = () => {
         setData(essay.data);
       }
     };
-  
+
     updateData('granulometry', 'coarseAggregate', setGranulometryData);
     updateData('granulometry', 'fineAggregate', setGranulometryData);
     updateData('granulometry', 'cement', setGranulometryData);
@@ -109,13 +108,13 @@ const Material = () => {
 
   useEffect(() => {
     if (material?.material.type === 'cement') {
-      setType(t('materials.cement'))
+      setType(t('materials.cement'));
     } else if (material?.material.type === 'coarseAggregate') {
-      setType(t('materials.coarseAggregate'))
+      setType(t('materials.coarseAggregate'));
     } else if (material?.material.type === 'fineAggregate') {
-      setType(t('materials.fineAggregate'))
+      setType(t('materials.fineAggregate'));
     }
-  },[material])
+  }, [material]);
 
   return (
     <>
@@ -170,7 +169,6 @@ const Material = () => {
               {sandIncreaseData?.results && <SandIncreaseMaterialView sandIncreaseData={sandIncreaseData} />}
 
               {unitMassData?.result && <UnitMassMaterialView unitMassData={unitMassData} />}
-
             </Box>
           </BodyEssay>
         </>

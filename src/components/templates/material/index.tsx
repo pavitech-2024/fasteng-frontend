@@ -11,22 +11,23 @@ import { AsphaltMaterial } from '@/interfaces/asphalt';
 
 export interface MaterialTemplateProps {
   materialInfo: IMaterialService['info'];
-  children: JSX.Element, 
-  data: AsphaltMaterial
+  children: JSX.Element;
+  data: AsphaltMaterial;
 }
 
-const MaterialTemplate = ({
-  materialInfo: { icon, key, standard },
-  children
-}: MaterialTemplateProps) => {
-
+const MaterialTemplate = ({ materialInfo: { icon, key, standard }, children }: MaterialTemplateProps) => {
   const router = useRouter();
   const app = router.pathname.split('/')[1];
   const material = router.pathname.split('/')[3];
 
   return (
     <Container>
-      <Header title={t(`${app}.materials.${key}`)} subTitle={standard?.name} image={icon} link={standard?.link}></Header>
+      <Header
+        title={t(`${app}.materials.${key}`)}
+        subTitle={standard?.name}
+        image={icon}
+        link={standard?.link}
+      ></Header>
 
       <BodyEssay>
         <Box
@@ -40,7 +41,6 @@ const MaterialTemplate = ({
             borderColor: 'primaryTons.border',
           }}
         >
-
           {children}
 
           {/* {activeStep !== 0 && <StepDescription text={t(`${material}.step-${activeStep + 1}-description`)} />}

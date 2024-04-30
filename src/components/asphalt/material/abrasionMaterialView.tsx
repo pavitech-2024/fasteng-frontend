@@ -9,7 +9,6 @@ export interface ILosAngelesAbrasionMaterialView {
 }
 
 const LosAngelesAbrasionMaterialView = ({ losAngelesAbrasionData }: ILosAngelesAbrasionMaterialView) => {
-
   const data = {
     losAngelesAbrasion: losAngelesAbrasionData.results.losAngelesAbrasion.toFixed(2).toString(),
     alerts: losAngelesAbrasionData.results.alerts[0],

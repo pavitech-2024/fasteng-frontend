@@ -10,7 +10,6 @@ export interface IChapmanMaterialView {
 }
 
 const ChapmanMaterialView = ({ chapmanData }: IChapmanMaterialView) => {
-
   const { user } = useAuth();
 
   const {

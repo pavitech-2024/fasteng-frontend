@@ -1,16 +1,15 @@
-import FlexColumnBorder from "@/components/atoms/containers/flex-column-with-border";
-import { Box } from "@mui/material";
-import { t } from "i18next";
-import ElongatedParticles_results_Dimensions_Table from "../essays/elongatedParticles/tables/results-dimensions-table.elongatedParticles";
-import { EssaysData } from "@/pages/asphalt/materials/material/[id]";
-import { GridColDef } from "@mui/x-data-grid";
+import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import { Box } from '@mui/material';
+import { t } from 'i18next';
+import ElongatedParticles_results_Dimensions_Table from '../essays/elongatedParticles/tables/results-dimensions-table.elongatedParticles';
+import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
+import { GridColDef } from '@mui/x-data-grid';
 
 export interface IElongatedParticlesMaterialView {
-  elongatedParticlesData: EssaysData['elongatedParticlesData']
+  elongatedParticlesData: EssaysData['elongatedParticlesData'];
 }
 
 const ElongatedParticlesMaterialView = ({ elongatedParticlesData }: IElongatedParticlesMaterialView) => {
-
   let elongatedParticlesRows;
 
   if (elongatedParticlesData) {

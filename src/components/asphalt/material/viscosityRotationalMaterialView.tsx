@@ -1,5 +1,8 @@
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
-import Result_Card, { Result_CardContainer, Result_Container_NoChildren } from '@/components/atoms/containers/result-card';
+import Result_Card, {
+  Result_CardContainer,
+  Result_Container_NoChildren,
+} from '@/components/atoms/containers/result-card';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import Loading from '@/components/molecules/loading';
 import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
@@ -11,7 +14,6 @@ export interface IViscosityRotationalMaterialView {
 }
 
 const ViscosityRotationalMaterialView = ({ viscosityRotationalData }: IViscosityRotationalMaterialView) => {
-
   const data = {
     compressionTemperature: {
       higher: viscosityRotationalData.results.compressionTemperatureRange.higher.toFixed(2).toString(),

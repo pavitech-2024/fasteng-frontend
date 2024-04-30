@@ -7,11 +7,11 @@ import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
 import { GridColDef } from '@mui/x-data-grid';
 
 export interface IGranulometryMateriaView {
-  granulometryData: EssaysData['asphaltGranulometryData']
+  granulometryData: EssaysData['asphaltGranulometryData'];
 }
 
 const GranulometryMateriaView = ({ granulometryData }: IGranulometryMateriaView) => {
-console.log("🚀 ~ GranulometryMateriaView ~ granulometryData:", granulometryData)
+  console.log('🚀 ~ GranulometryMateriaView ~ granulometryData:', granulometryData);
 
   const rows = [];
   let graph_data;

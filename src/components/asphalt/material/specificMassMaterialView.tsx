@@ -1,15 +1,14 @@
-import FlexColumnBorder from "@/components/atoms/containers/flex-column-with-border";
-import Result_Card from "@/components/atoms/containers/result-card";
-import { EssaysData } from "@/pages/asphalt/materials/material/[id]";
-import { Box } from "@mui/material";
-import { t } from "i18next";
+import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import Result_Card from '@/components/atoms/containers/result-card';
+import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
+import { Box } from '@mui/material';
+import { t } from 'i18next';
 
 export interface ISpecificMassMaterialView {
-  specificMassData: EssaysData['specifyMassData']
+  specificMassData: EssaysData['specifyMassData'];
 }
 
 const SpecificMassMaterialView = ({ specificMassData }: ISpecificMassMaterialView) => {
-
   const data = {
     specificMassContainer: [],
     shapeIndexContainer: [],

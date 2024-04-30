@@ -9,7 +9,6 @@ export interface IDuctilityMaterialView {
 }
 
 const DuctilityMaterialView = ({ ductilityData }: IDuctilityMaterialView) => {
-
   const data = {
     container_other_data: [],
   };

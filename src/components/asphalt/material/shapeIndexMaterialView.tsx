@@ -1,16 +1,15 @@
-import FlexColumnBorder from "@/components/atoms/containers/flex-column-with-border";
-import Result_Card from "@/components/atoms/containers/result-card";
-import { EssaysData } from "@/pages/asphalt/materials/material/[id]";
-import { Box } from "@mui/material";
-import exp from "constants";
-import { t } from "i18next";
+import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import Result_Card from '@/components/atoms/containers/result-card';
+import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
+import { Box } from '@mui/material';
+import exp from 'constants';
+import { t } from 'i18next';
 
 export interface IShapeIndexMaterialView {
-  shapeIndexData: EssaysData['shapeIndexData']
+  shapeIndexData: EssaysData['shapeIndexData'];
 }
 
 const ShapeIndexMaterialView = ({ shapeIndexData }: IShapeIndexMaterialView) => {
-
   const data = {
     shapeIndexContainer: [],
   };
@@ -42,4 +41,4 @@ const ShapeIndexMaterialView = ({ shapeIndexData }: IShapeIndexMaterialView) => 
   );
 };
 
-export default ShapeIndexMaterialView
+export default ShapeIndexMaterialView;

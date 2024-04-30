@@ -9,7 +9,6 @@ export interface IpenetrationMaterialView {
 }
 
 const PenetrationMaterialView = ({ penetrationData }: IpenetrationMaterialView) => {
-
   const data = {
     penetration: penetrationData.results.penetration.toString(),
     alerts: penetrationData.results.alerts[0],

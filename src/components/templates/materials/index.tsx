@@ -77,9 +77,9 @@ const MaterialsTemplate = ({
   const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
 
   if (path === 'soils') {
-    samplesOrMaterials = "sample"
+    samplesOrMaterials = 'sample';
   } else {
-    samplesOrMaterials = "material"
+    samplesOrMaterials = 'material';
   }
 
   const columns: MaterialsColumn[] = [
@@ -347,7 +347,7 @@ const MaterialsTemplate = ({
                                 </Typography>
                                 <NextIcon sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
                               </Button>
-                            </Link> 
+                            </Link>
                             <Button
                               variant="text"
                               color="error"

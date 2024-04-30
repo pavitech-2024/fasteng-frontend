@@ -9,7 +9,6 @@ export interface ISandEquivalentMaterialView {
 }
 
 const SandEquivalentMaterialView = ({ sandEquivalentData }: ISandEquivalentMaterialView) => {
-
   const data = {
     sandEquivalent: sandEquivalentData.results.sandEquivalent.toString(),
     alerts: sandEquivalentData.results.alerts[0],

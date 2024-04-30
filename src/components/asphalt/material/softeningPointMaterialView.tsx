@@ -9,7 +9,6 @@ export interface ISofteningPointMaterialView {
 }
 
 const SofteningPointMaterialView = ({ softeningPointData }: ISofteningPointMaterialView) => {
-
   const data = {
     softeningPoint: softeningPointData.results.softeningPoint.toString(),
     alerts: softeningPointData.results.alerts,

@@ -1,17 +1,16 @@
-import FlexColumnBorder from "@/components/atoms/containers/flex-column-with-border";
-import Result_Card from "@/components/atoms/containers/result-card";
-import { EssaysData } from "@/pages/concrete/materials/material/[id]";
-import { Box } from "@mui/material";
-import { GridColDef, DataGrid } from "@mui/x-data-grid";
-import { t } from "i18next";
-import GraphSandIncrease from "../essays/sandIncrease/graphSandIncrease";
+import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import Result_Card from '@/components/atoms/containers/result-card';
+import { EssaysData } from '@/pages/concrete/materials/material/[id]';
+import { Box } from '@mui/material';
+import { GridColDef, DataGrid } from '@mui/x-data-grid';
+import { t } from 'i18next';
+import GraphSandIncrease from '../essays/sandIncrease/graphSandIncrease';
 
 export interface ISandIncreaseMaterialView {
   sandIncreaseData: EssaysData['sandIncreaseData'];
 }
 
 const SandIncreaseMaterialView = ({ sandIncreaseData }: ISandIncreaseMaterialView) => {
-
   const newArray = [];
 
   for (let i = 0; i < sandIncreaseData.results.unitMasses.length; i++) {

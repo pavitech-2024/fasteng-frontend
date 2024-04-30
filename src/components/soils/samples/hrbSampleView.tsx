@@ -12,7 +12,6 @@ export interface IHrbSampleView {
 }
 
 const HrbSampleView = ({ hrbData }: IHrbSampleView) => {
-
   const { user } = useAuth();
 
   // pegando a quantidade de casas decimais do usuário
@@ -52,7 +51,10 @@ const HrbSampleView = ({ hrbData }: IHrbSampleView) => {
 
   return (
     <FlexColumnBorder title={t('soils.essays.hrb')} open={true}>
-      <ResultSubTitle title={t('hrb.classification') + ': ' + hrbData.results.classification} sx={{ margin: '.65rem' }} />
+      <ResultSubTitle
+        title={t('hrb.classification') + ': ' + hrbData.results.classification}
+        sx={{ margin: '.65rem' }}
+      />
       <Typography
         variant="body1"
         sx={{ margin: '.65rem', mb: '2rem', fontWeight: '500', textAlign: 'justify', lineHeight: '1.2rem' }}

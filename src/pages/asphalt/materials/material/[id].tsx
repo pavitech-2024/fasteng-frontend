@@ -53,11 +53,11 @@ export type EssaysData = {
   angularityData: AngularityData;
   viscosityRotationalData: ViscosityRotationalData;
   penetrationData: PenetrationData;
-  softeningPointData: SofteningPointData
+  softeningPointData: SofteningPointData;
   flashPointData: FlashPointData;
   ductilityData: DuctilityData;
   rtfoData: RtfoData;
-  elasticRecoveryData: ElasticRecoveryData
+  elasticRecoveryData: ElasticRecoveryData;
 };
 interface IEssaysData {
   essayName: string;
@@ -88,7 +88,6 @@ const Material = () => {
   const [elasticRecoveryData, setElasticRecoveryData] = useState<ElasticRecoveryData>();
   const [type, setType] = useState('');
 
-
   // To-do: remover material hardcoded;
 
   useEffect(() => {
@@ -111,7 +110,7 @@ const Material = () => {
         setData(essay.data);
       }
     };
-  
+
     updateData('granulometry', 'coarseAggregate', setGranulometryData);
     updateData('specificMass', 'coarseAggregate', setSpecificMassData);
     updateData('shapeIndex', 'coarseAggregate', setShapeIndexData);
@@ -156,19 +155,19 @@ const Material = () => {
 
   useEffect(() => {
     if (material?.material.type === 'CAP') {
-      setType(t('asphalt.materials.cap'))
+      setType(t('asphalt.materials.cap'));
     } else if (material?.material.type === 'asphaltBinder') {
-      setType(t('asphalt.materials.asphaltBinder'))
+      setType(t('asphalt.materials.asphaltBinder'));
     } else if (material?.material.type === 'coarseAggregate') {
-      setType(t('asphalt.materials.coarseAggregate'))
+      setType(t('asphalt.materials.coarseAggregate'));
     } else if (material?.material.type === 'filler') {
-      setType(t('asphalt.materials.filler'))
+      setType(t('asphalt.materials.filler'));
     } else if (material?.material.type === 'fineAggregate') {
-      setType(t('asphalt.materials.fineAggregate'))
+      setType(t('asphalt.materials.fineAggregate'));
     } else if (material?.material.type === 'other') {
-      setType(t('asphalt.materials.other'))
+      setType(t('asphalt.materials.other'));
     }
-  },[material])
+  }, [material]);
 
   return (
     <>
@@ -234,7 +233,9 @@ const Material = () => {
 
               {angularityData?.results && <AngularityMaterialView angularityData={angularityData} />}
 
-              {viscosityRotationalData?.results && <ViscosityRotationalMaterialView viscosityRotationalData={viscosityRotationalData} />}
+              {viscosityRotationalData?.results && (
+                <ViscosityRotationalMaterialView viscosityRotationalData={viscosityRotationalData} />
+              )}
 
               {penetrationData?.results && <PenetrationMaterialView penetrationData={penetrationData} />}
 
@@ -246,8 +247,9 @@ const Material = () => {
 
               {rtfoData?.results && <RtfoMaterialView rtfoData={rtfoData} />}
 
-              {elasticRecoveryData?.results && <ElasticRecoveryMaterialView elasticRecoveryData={elasticRecoveryData} />}
-
+              {elasticRecoveryData?.results && (
+                <ElasticRecoveryMaterialView elasticRecoveryData={elasticRecoveryData} />
+              )}
             </Box>
           </BodyEssay>
         </>

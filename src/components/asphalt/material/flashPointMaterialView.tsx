@@ -10,7 +10,6 @@ export interface IFlashPointMaterialView {
 }
 
 const FlashPointMaterialView = ({ flashPointData }: IFlashPointMaterialView) => {
-
   const data = {
     // container "Resultados"
     container_other_data: [],

@@ -11,7 +11,6 @@ export interface ISucsSampleView {
 }
 
 const SucsSampleView = ({ sucsData }: ISucsSampleView) => {
-
   const data = {
     // container "Resultados"
     container_other_data: [],
@@ -27,7 +26,10 @@ const SucsSampleView = ({ sucsData }: ISucsSampleView) => {
 
   return (
     <FlexColumnBorder title={t('results')} open={true}>
-      <ResultSubTitle title={t('sucs.classification') + ': ' + sucsData.results.classification} sx={{ margin: '.65rem' }} />
+      <ResultSubTitle
+        title={t('sucs.classification') + ': ' + sucsData.results.classification}
+        sx={{ margin: '.65rem' }}
+      />
       <Typography
         variant="body1"
         sx={{ margin: '.65rem', mb: '2rem', fontWeight: '500', textAlign: 'justify', lineHeight: '1.2rem' }}

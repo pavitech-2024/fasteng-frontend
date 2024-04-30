@@ -1,20 +1,19 @@
-import FlexColumnBorder from "@/components/atoms/containers/flex-column-with-border";
-import Result_Card from "@/components/atoms/containers/result-card";
-import ResultSubTitle from "@/components/atoms/titles/result-sub-title";
-import StepDescription from "@/components/atoms/titles/step-description";
-import { Box } from "@mui/material";
-import { t } from "i18next";
-import Angularity_resultsTable from "../essays/angularity/tables/results-table.angularity";
-import { EssaysData } from "@/pages/asphalt/materials/material/[id]";
-import { row_results } from "@/stores/asphalt/angularity/angularity.store";
-import { GridColDef } from "@mui/x-data-grid";
+import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import Result_Card from '@/components/atoms/containers/result-card';
+import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
+import StepDescription from '@/components/atoms/titles/step-description';
+import { Box } from '@mui/material';
+import { t } from 'i18next';
+import Angularity_resultsTable from '../essays/angularity/tables/results-table.angularity';
+import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
+import { row_results } from '@/stores/asphalt/angularity/angularity.store';
+import { GridColDef } from '@mui/x-data-grid';
 
 export interface IAngularityMaterialView {
-  angularityData: EssaysData['angularityData']
+  angularityData: EssaysData['angularityData'];
 }
 
 const AngularityMaterialView = ({ angularityData }: IAngularityMaterialView) => {
-
   const data = {
     // container "Resultados"
     container_other_data: [],

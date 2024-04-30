@@ -1,5 +1,5 @@
-import { StaticImageData } from "next/image";
-import { StandardData } from "..";
+import { StaticImageData } from 'next/image';
+import { StandardData } from '..';
 
 export interface IMaterialService {
   info: {

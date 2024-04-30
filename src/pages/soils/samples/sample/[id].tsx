@@ -1,22 +1,22 @@
-import FlexColumnBorder from "@/components/atoms/containers/flex-column-with-border";
-import Loading from "@/components/molecules/loading";
-import BodyEssay from "@/components/organisms/bodyEssay";
-import CbrSampleView from "@/components/soils/samples/cbrSampleView";
-import CompressionSampleView from "@/components/soils/samples/compressionSampleView";
-import HrbSampleView from "@/components/soils/samples/hrbSampleView";
-import GranulometrySampleView from "@/components/soils/samples/soilsGranulometryMaterialView";
-import SucsSampleView from "@/components/soils/samples/sucsSampleView";
-import { SampleData, SampleTypes } from "@/interfaces/soils";
-import samplesService from "@/services/soils/soils-samples.service";
-import { CbrData } from "@/stores/soils/cbr/cbr.store";
-import { CompressionData } from "@/stores/soils/compression/compression.store";
-import { SoilsGranulometryData } from "@/stores/soils/granulometry/granulometry.store";
-import { HrbData } from "@/stores/soils/hrb/hrb.store";
-import { SucsData } from "@/stores/soils/sucs/sucs.store";
-import { Box, Typography } from "@mui/material";
-import { t } from "i18next";
-import { useRouter } from "next/router";
-import { ReactNode, useState, useEffect } from "react";
+import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import Loading from '@/components/molecules/loading';
+import BodyEssay from '@/components/organisms/bodyEssay';
+import CbrSampleView from '@/components/soils/samples/cbrSampleView';
+import CompressionSampleView from '@/components/soils/samples/compressionSampleView';
+import HrbSampleView from '@/components/soils/samples/hrbSampleView';
+import GranulometrySampleView from '@/components/soils/samples/soilsGranulometryMaterialView';
+import SucsSampleView from '@/components/soils/samples/sucsSampleView';
+import { SampleData, SampleTypes } from '@/interfaces/soils';
+import samplesService from '@/services/soils/soils-samples.service';
+import { CbrData } from '@/stores/soils/cbr/cbr.store';
+import { CompressionData } from '@/stores/soils/compression/compression.store';
+import { SoilsGranulometryData } from '@/stores/soils/granulometry/granulometry.store';
+import { HrbData } from '@/stores/soils/hrb/hrb.store';
+import { SucsData } from '@/stores/soils/sucs/sucs.store';
+import { Box, Typography } from '@mui/material';
+import { t } from 'i18next';
+import { useRouter } from 'next/router';
+import { ReactNode, useState, useEffect } from 'react';
 
 interface TextBoxProps {
   children: JSX.Element | ReactNode;
@@ -47,7 +47,7 @@ const Sample = () => {
   const [sucsData, setSucsData] = useState<SucsData>();
   const [cbrData, setCbrData] = useState<CbrData>();
 
-  const [type, setType] = useState('')
+  const [type, setType] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,7 +70,7 @@ const Sample = () => {
         setData(essay.data);
       }
     };
-  
+
     updateData('granulometry', 'inorganicSoil', setGranulometryData);
     updateData('granulometry', 'organicSoil', setGranulometryData);
     updateData('granulometry', 'pavimentLayer', setGranulometryData);
@@ -108,13 +108,13 @@ const Sample = () => {
 
   useEffect(() => {
     if (sample?.sample.type === 'inorganicSoil') {
-      setType(t('samples.inorganicSoil'))
+      setType(t('samples.inorganicSoil'));
     } else if (sample?.sample.type === 'organicSoil') {
-      setType(t('samples.organicSoil'))
+      setType(t('samples.organicSoil'));
     } else if (sample?.sample.type === 'pavementLayer') {
-      setType(t('samples.pavementLayer'))
+      setType(t('samples.pavementLayer'));
     }
-  },[sample])
+  }, [sample]);
 
   return (
     <>
@@ -169,7 +169,6 @@ const Sample = () => {
               {sucsData?.results && <SucsSampleView sucsData={sucsData} />}
 
               {hrbData?.results && <HrbSampleView hrbData={hrbData} />}
-
             </Box>
           </BodyEssay>
         </>

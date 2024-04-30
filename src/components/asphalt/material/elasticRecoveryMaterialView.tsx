@@ -9,7 +9,6 @@ export interface IElasticRecoveryMaterialView {
 }
 
 const ElasticRecoveryMaterialView = ({ elasticRecoveryData }: IElasticRecoveryMaterialView) => {
-
   const data = {
     // container "Resultados"
     container_other_data: [],
