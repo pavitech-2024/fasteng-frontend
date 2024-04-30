@@ -27,6 +27,7 @@ const Materials = () => {
         console.error('Failed to load materials:', error);
       });
   }, [user]);
+  
 
   const types: DropDownOption[] = [{ label: t('samples.all'), value: '' }];
 
@@ -54,6 +55,7 @@ const Materials = () => {
       });
   };
 
+
   return (
     <Container>
       {loading ? (
@@ -65,6 +67,7 @@ const Materials = () => {
           title={t('asphalt.materials.title')}
           handleOpenModal={() => setOpenModal(true)}
           handleDeleteMaterial={handleDeleteMaterial}
+          path="asphalt/materials/material"
           modal={
             <NewAsphaltMaterialModal
               openModal={openModal}

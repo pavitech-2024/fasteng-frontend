@@ -50,6 +50,9 @@ import softeningPointENG from './translations/asphalt/essays/softeningPoint/en.j
 // sayboltFurol
 import sayboltFurolPTBR from './translations/asphalt/essays/saybolt-furol/ptbr.json';
 import sayboltFurolENG from './translations/asphalt/essays/saybolt-furol/en.json';
+// viscosityRotational
+import viscosityRotationalPTBR from './translations/asphalt/essays/viscosityRotational/ptbr.json';
+import viscosityRotationalENG from './translations/asphalt/essays/viscosityRotational/en.json';
 // sandEquivalent
 import sandEquivalentPTBR from './translations/asphalt/essays/sandEquivalent/ptbr.json';
 import sandEquivalentENG from './translations/asphalt/essays/sandEquivalent/en.json';
@@ -161,6 +164,7 @@ import commonEssaysENG from './translations/common/essays/en.json';
 import commonMaterialsPTBR from './translations/common/materials/ptbr.json';
 import commonMaterialsENG from './translations/common/materials/en.json';
 
+
 i18n.use(initReactI18next).init({
   fallbackLng: 'ptBR',
   interpolation: {
@@ -202,6 +206,7 @@ i18n.use(initReactI18next).init({
         ...superpavePTBR,
         ...iggPTBR,
         ...fwdPTBR,
+        ...viscosityRotationalPTBR,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
@@ -261,6 +266,7 @@ i18n.use(initReactI18next).init({
         ...superpaveENG,
         ...iggENG,
         ...fwdENG,
+        ...viscosityRotationalENG,
         /**@soils */
         ...samplesENG,
         ...soilsEssaysENG,
