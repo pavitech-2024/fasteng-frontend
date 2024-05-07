@@ -178,12 +178,12 @@ const Marshall_Step7 = ({
     },
     {
       field: 'col1',
-      headerName: `${volumetricParametersData?.volumetricParameters?.volumetricParameters[0].asphaltContent} (%)`,
+      headerName: `${volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.asphaltContent} (%)`,
       valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'col2',
-      headerName: `${volumetricParametersData?.volumetricParameters?.volumetricParameters[1].asphaltContent} (%)`,
+      headerName: `${volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.asphaltContent} (%)`,
       valueFormatter: ({ value }) => `${value}`,
     },
   ];
@@ -193,21 +193,21 @@ const Marshall_Step7 = ({
       id: 1,
       binder: 'Vv (%)',
       col1:
-        volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.volumeVoids !== undefined
-          ? (volumetricParametersData.volumetricParameters.volumetricParameters[0].values.volumeVoids * 100).toFixed(2)
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.volumeVoids !== undefined
+          ? (volumetricParametersData.volumetricParameters.volumetricParameters[0]?.values.volumeVoids * 100).toFixed(2)
           : undefined,
       col2:
-        volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.volumeVoids !== undefined
-          ? (volumetricParametersData.volumetricParameters.volumetricParameters[1].values.volumeVoids * 100).toFixed(2)
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.volumeVoids !== undefined
+          ? (volumetricParametersData.volumetricParameters.volumetricParameters[1]?.values.volumeVoids * 100).toFixed(2)
           : undefined,
     },
     {
       id: 2,
       binder: 'Gmb (g/cm³)',
-      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.apparentBulkSpecificGravity.toFixed(
+      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.apparentBulkSpecificGravity.toFixed(
         2
       ),
-      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.apparentBulkSpecificGravity.toFixed(
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.apparentBulkSpecificGravity.toFixed(
         2
       ),
     },
@@ -215,15 +215,15 @@ const Marshall_Step7 = ({
       id: 3,
       binder: 'Vcb (%)',
       col1:
-        volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.voidsFilledAsphalt !== undefined
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.voidsFilledAsphalt !== undefined
           ? (
-              volumetricParametersData.volumetricParameters.volumetricParameters[0].values.voidsFilledAsphalt * 100
+              volumetricParametersData.volumetricParameters.volumetricParameters[0]?.values.voidsFilledAsphalt * 100
             ).toFixed(2)
           : undefined,
       col2:
-        volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.voidsFilledAsphalt !== undefined
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.voidsFilledAsphalt !== undefined
           ? (
-              volumetricParametersData.volumetricParameters.volumetricParameters[1].values.voidsFilledAsphalt * 100
+              volumetricParametersData.volumetricParameters.volumetricParameters[1]?.values.voidsFilledAsphalt * 100
             ).toFixed(2)
           : undefined,
     },
@@ -231,17 +231,17 @@ const Marshall_Step7 = ({
       id: 4,
       binder: 'Vam (%)',
       col1:
-        volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.aggregateVolumeVoids !==
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.aggregateVolumeVoids !==
         undefined
           ? (
-              volumetricParametersData.volumetricParameters.volumetricParameters[0].values.aggregateVolumeVoids * 100
+              volumetricParametersData.volumetricParameters.volumetricParameters[0]?.values.aggregateVolumeVoids * 100
             ).toFixed(2)
           : undefined,
       col2:
-        volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.aggregateVolumeVoids !==
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.aggregateVolumeVoids !==
         undefined
           ? (
-              volumetricParametersData.volumetricParameters.volumetricParameters[1].values.aggregateVolumeVoids * 100
+              volumetricParametersData.volumetricParameters.volumetricParameters[1]?.values.aggregateVolumeVoids * 100
             ).toFixed(2)
           : undefined,
     },
@@ -249,47 +249,47 @@ const Marshall_Step7 = ({
       id: 5,
       binder: 'Rbv (%)',
       col1:
-        volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.ratioBitumenVoid !== undefined
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.ratioBitumenVoid !== undefined
           ? (
-              volumetricParametersData.volumetricParameters.volumetricParameters[0].values.ratioBitumenVoid * 100
+              volumetricParametersData.volumetricParameters.volumetricParameters[0]?.values.ratioBitumenVoid * 100
             ).toFixed(2)
           : undefined,
       col2:
-        volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.ratioBitumenVoid !== undefined
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.ratioBitumenVoid !== undefined
           ? (
-              volumetricParametersData.volumetricParameters.volumetricParameters[1].values.ratioBitumenVoid * 100
+              volumetricParametersData.volumetricParameters.volumetricParameters[1]?.values.ratioBitumenVoid * 100
             ).toFixed(2)
           : undefined,
     },
     {
       id: 6,
       binder: 'Fluência (mm)',
-      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.fluency.toFixed(2),
-      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.fluency.toFixed(2),
+      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.fluency.toFixed(2),
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.fluency.toFixed(2),
     },
     {
       id: 7,
       binder: 'Estabilidade (N)',
-      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.stability.toFixed(2),
-      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.stability.toFixed(2),
+      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.stability.toFixed(2),
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.stability.toFixed(2),
     },
     {
       id: 7,
       binder: 'Resistência à tração por compressão diametral (MPa)',
-      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.diametricalCompressionStrength.toFixed(
+      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.diametricalCompressionStrength.toFixed(
         2
       ),
-      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.diametricalCompressionStrength.toFixed(
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.diametricalCompressionStrength.toFixed(
         2
       ),
     },
     {
       id: 8,
       binder: 'DMT (g/cm³)',
-      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0].values.maxSpecificGravity.toFixed(
+      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.maxSpecificGravity.toFixed(
         3
       ),
-      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1].values.maxSpecificGravity.toFixed(
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.maxSpecificGravity.toFixed(
         3
       ),
     },
