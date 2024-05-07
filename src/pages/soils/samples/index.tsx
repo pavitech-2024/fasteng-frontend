@@ -70,6 +70,7 @@ const Samples: NextPage = () => {
           materials={samples}
           types={types}
           title={t('samples.title')}
+          path="soils/samples/sample"
           handleOpenModal={handleOpenModal}
           handleDeleteMaterial={handleDeleteSample}
           modal={
