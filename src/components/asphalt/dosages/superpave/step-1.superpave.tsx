@@ -46,16 +46,16 @@ const Superpave_Step1 = ({
   ];
 
   // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
-  inputs.every(({ required, value }) => {
-    if (!required) return true;
+  // inputs.every(({ required, value }) => {
+  //   if (!required) return true;
 
-    if (value === null) return false;
+  //   if (value === null) return false;
 
-    if (typeof value === 'string' && value.trim() === '') return false;
+  //   if (typeof value === 'string' && value.trim() === '') return false;
 
-    return true;
-  }) &&
-    nextDisabled &&
+  //   return true;
+  // }) &&
+  //   nextDisabled &&
     setNextDisabled(false);
 
   return (

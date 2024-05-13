@@ -12,7 +12,7 @@ class Superpave_SERVICE implements IEssayService {
     title: t('asphalt.dosages.superpave'),
     path: '/asphalt/dosages/superpave',
     backend_path: 'asphalt/dosages/superpave',
-    steps: 9,
+    steps: 11,
     standard: {
       name: '',
       link: '',
@@ -97,7 +97,7 @@ class Superpave_SERVICE implements IEssayService {
       // if there is already a Superpave dosage with same project name, throw error
       if (success === false) throw error.name;
     } catch (error) {
-      throw error;
+      // throw error;
     }
   };
 
