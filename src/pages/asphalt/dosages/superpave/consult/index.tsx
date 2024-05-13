@@ -27,14 +27,14 @@ const SuperpaveDosageConsult = () => {
     const progressTextMap = {
       1: t('general data'),
       2: t('superpave.material-selection'),
-      3: t('superpave.essay-selection'),
+      3: t('superpave.granulometric-composition'),
       4: t('superpave.inserting-params'),
       5: t('superpave.dosage-resume'),
     };
   
     const rows = dosages.map((row) => ({
       name: row.generalData.name,
-      progress: `(${row.generalData.step}/5) - ${progressTextMap[row.generalData.step]}`,
+      progress: `(${row.generalData.step}/11) - ${progressTextMap[row.generalData.step]}`,
       start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
       finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
       id: row._id,

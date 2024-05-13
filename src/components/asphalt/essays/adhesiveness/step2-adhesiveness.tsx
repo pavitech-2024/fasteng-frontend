@@ -15,7 +15,6 @@ const ADHESIVENESS_Step2 = ({
   adhesiveness,
 }: EssayPageProps & { adhesiveness: ADHESIVENESS_SERVICE }) => {
   const { adhesiveness: data, setData } = useAdhesivenessStore();
-  console.log('🚀 ~ file: step2.adhesiveness.tsx:19 ~ data:', data);
   const [binders, setBinders] = useState<AsphaltMaterial[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { user } = useAuth();

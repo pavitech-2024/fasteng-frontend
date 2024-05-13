@@ -3,7 +3,6 @@ import { SuperpaveIcon } from '@/assets';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { SuperpaveActions, SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
-import { table } from 'console';
 import { t } from 'i18next';
 
 class Superpave_SERVICE implements IEssayService {
@@ -26,6 +25,21 @@ class Superpave_SERVICE implements IEssayService {
         description: t('asphalt.dosages.superpave.granulometry_composition'),
         path: 'granulometry-composition',
       },
+      { step: 3, description: t('asphalt.dosages.superpave.initial_binder'), path: 'initial-binder' },
+      { step: 4, description: t('asphalt.dosages.superpave.first_compression'), path: 'first-compression' },
+      {
+        step: 6,
+        description: t('asphalt.dosages.superpave.chosen_curve_percentages'),
+        path: 'chosen-curve-percentages',
+      },
+      { step: 7, description: t('asphalt.dosages.superpave.second_compression'), path: 'second-compression' },
+      { step: 8, description: t('asphalt.dosages.superpave.second_compression_parameters'), path: 'dosage-resume' },
+      {
+        step: 9,
+        description: t('asphalt.dosages.superpave.confirmation_compression'),
+        path: 'confirmation-compression',
+      },
+      { step: 10, description: t('asphalt.dosages.superpave.dosage_resume'), path: 'dosage-resume' },
     ],
   };
 
@@ -34,17 +48,16 @@ class Superpave_SERVICE implements IEssayService {
 
   /** @handleNext Receives the step and data from the form and calls the respective method */
   handleNext = async (step: number, data: unknown, isConsult?: boolean): Promise<void> => {
-    // Check if isConsult is undefined and assign false if so
-    if (isConsult === undefined) isConsult = false;
     try {
       switch (step) {
         case 0:
           const { generalData: generalDataStep1 } = data as SuperpaveData;
-          await this.submitGeneralData(generalDataStep1, this.userId, isConsult);
+          await this.submitGeneralData(generalDataStep1);
           break;
         case 1:
-          await this.submitMaterialSelection(data as SuperpaveData, this.userId, null, isConsult);
-          await this.getStep3Data(data as SuperpaveData, this.userId, isConsult);
+          const { generalData: generalDataStep2, materialSelectionData } = data as SuperpaveData;
+          await this.submitMaterialSelection(materialSelectionData);
+          await this.getStep3Data(generalDataStep2, materialSelectionData);
           break;
         case 2:
           break;
@@ -69,32 +82,28 @@ class Superpave_SERVICE implements IEssayService {
   };
 
   // send general data to backend to verify if there is already a Superpave dosage with same name for the material
-  submitGeneralData = async (
-    generalData: SuperpaveData['generalData'],
-    userId: string,
-    isConsult?: boolean
-  ): Promise<void> => {
-    const user = userId ? userId : generalData.userId;
-    if (!isConsult) {
-      try {
-        const { name } = generalData;
+  submitGeneralData = async (generalData: SuperpaveData['generalData']): Promise<void> => {
+    try {
+      const { name } = generalData;
 
-        // verify if the project name is not empty
-        if (!name) throw t('errors.empty-project-name');
+      // verify if the project name is not empty
+      if (!name) throw t('errors.empty-project-name');
 
-        // verify if there is already a Superpave dosage with same name for the material
-        const response = await Api.post(`${this.info.backend_path}/verify-init/${user}`, generalData);
+      // verify if there is already a Superpave dosage with same name for the material
+      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name });
 
-        const { success, error } = response.data;
+      const { success, error } = response.data;
 
-        // if there is already a Superpave dosage with same project name, throw error
-        if (success === false) throw error.name;
-      } catch (error) {
-        throw error;
-      }
+      // if there is already a Superpave dosage with same project name, throw error
+      if (success === false) throw error.name;
+    } catch (error) {
+      throw error;
     }
   };
 
+  /** @materialSelection Methods for material-selection-data (step === 1, page 2) */
+
+  // get all materials from user, that have the dosage essays
   getMaterialsByUserId = async (userId: string): Promise<AsphaltMaterial[]> => {
     try {
       const response = await Api.get(`${this.info.backend_path}/material-selection/${userId}`);
@@ -108,106 +117,43 @@ class Superpave_SERVICE implements IEssayService {
   };
 
   // send the selected materials to backend
-  submitMaterialSelection = async (
-    data: SuperpaveData,
-    userId: string,
-    user?: string,
-    isConsult?: boolean
-  ): Promise<void> => {
-    if (!isConsult) {
-      try {
-        const { aggregates, binder } = data.materialSelectionData;
-        const { name } = data.generalData;
-        const userData = userId ? userId : user;
+  submitMaterialSelection = async (materialSelectionData: SuperpaveData['materialSelectionData']): Promise<void> => {
+    try {
+      const { aggregates, binder } = materialSelectionData;
 
-        if (!aggregates) throw t('errors.empty-aggregates');
-        if (aggregates.length > 2) throw t('errors.empty-second-aggregate');
-        if (!binder) throw t('errors.empty-binder');
-
-        const materialSelectionData = {
-          name,
-          aggregates,
-          binder,
-          isConsult: null,
-        };
-
-        if (isConsult) materialSelectionData.isConsult = isConsult;
-
-        const response = await Api.post(`${this.info.backend_path}/save-material-selection-step/${userData}`, {
-          materialSelectionData: {
-            name,
-            aggregates,
-            binder,
-          },
-        });
-
-        const { success, error } = response.data;
-
-        if (success === false) throw error.name;
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
+      if (!aggregates) throw t('errors.empty-aggregates');
+      if (!binder) throw t('errors.empty-binder');
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
   };
 
-  getStep3Data = async (dataStep3: SuperpaveData, user: string, isConsult: boolean): Promise<void> => {
-    if (!isConsult) {
-      try {
-        const { dnitBand } = dataStep3.generalData;
-
-        const { aggregates } = dataStep3.materialSelectionData;
-
-        const response = await Api.post(`${this.info.backend_path}/step-3-data`, {
-          dnitBand,
-          aggregates,
-        });
-
-        const { data, success, error } = response.data;
-
-        console.log(data);
-
-        if (success === false) throw error.name;
-
-        const { table_data } = data;
-
-        this.store_actions.setData({ key: 'table_data', step: 2, value: table_data });
-      } catch (error) {
-        throw error;
-      }
-    }
-  };
-
-
-  submitSuperpaveDosageData = async (
-    data: SuperpaveData,
-    userId: string,
-    user?: string,
-    isConsult?: boolean
+  getStep3Data = async (
+    generalData: SuperpaveData['generalData'],
+    materialSelectionData: SuperpaveData['materialSelectionData']
   ): Promise<void> => {
-    if (!isConsult) {
-      try {
-        const userData = userId ? userId : user;
+    try {
+      const { dnitBand } = generalData;
 
-        const superpaveDosageData = {
-          ...data,
-          isConsult: null,
-        };
+      const { aggregates } = materialSelectionData;
 
-        if (isConsult) superpaveDosageData.isConsult = isConsult;
+      const response = await Api.post(`${this.info.backend_path}/step-3-data`, {
+        dnitBand: dnitBand,
+        aggregates: aggregates,
+      });
 
-        const response = await Api.post(
-          `${this.info.backend_path}/save-superpave-dosage/${userData}`,
-          superpaveDosageData
-        );
+      const { data, success, error } = response.data;
 
-        const { success, error } = response.data;
+      console.log(data);
 
-        if (success === false) throw error.name;
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
+      if (success === false) throw error.name;
+
+      const { table_data } = data;
+
+      this.store_actions.setData({ key: 'table_data', step: 2, value: table_data });
+    } catch (error) {
+      throw error;
     }
   };
 }

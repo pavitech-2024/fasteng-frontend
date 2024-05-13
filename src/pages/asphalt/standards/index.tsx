@@ -39,7 +39,7 @@ const AsphaltStandards: NextPage = () => {
       icon: AbrasionIcon,
       key: 'abrasion',
       standard: 'DNER - ME 035/98',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/AbrasaoLosAngeles03598.0fb55fd3.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner-me035-98.pdf',
       type: 'aggregates',
     },
     {
@@ -47,7 +47,7 @@ const AsphaltStandards: NextPage = () => {
       icon: AdhesivenessIcon,
       key: 'adhesiveness',
       standard: 'DNER- ME 078/94',
-      link: 'http://smartdoser.fastengapp.com.br/static/media/AdesividadeDnitme07894.b8c14e56.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_078_94-1.pdf',
       type: 'aggregates',
     },
     {
@@ -63,11 +63,11 @@ const AsphaltStandards: NextPage = () => {
       icon: DuctilityIcon,
       key: 'ductility',
       standard: 'DNER - ME 163/98',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_180_2018_me-1.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_163_98.pdf',
       type: 'asphaltBinder',
     },
     {
-      title:  t('durability'),
+      title: t('durability'),
       icon: DurabilityIcon,
       key: 'durability',
       standard: 'DNER - ME 089/94',
@@ -99,11 +99,11 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltBinder',
     },
     {
-      title:  t('penetration.essay'),
+      title: t('penetration.essay'),
       icon: PenetrationIcon,
       key: 'penetration',
       standard: 'DNIT - ME 155/2010',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/DuctilidadeDnerMe16398.a7e9de87.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_155_2010_me.pdf',
       type: 'asphaltBinder',
     },
     {
@@ -119,7 +119,7 @@ const AsphaltStandards: NextPage = () => {
       icon: SandEquivalentIcon,
       key: 'sandEquivalent',
       standard: 'DNER - ME 054/97',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/EquivalenteAreiaDNERME05497.a8d7e948.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner-me054-97.pdf',
       type: 'aggregates',
     },
     {
@@ -135,7 +135,7 @@ const AsphaltStandards: NextPage = () => {
       icon: FwdIcon,
       key: 'fallingWeightDeflectometer',
       standard: 'DNER-PRO 273/96',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_184_2018_me-1.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/procedimento-pro/dner_pro_273_96.pdf',
       type: 'asphaltMix',
     },
     {
@@ -143,7 +143,7 @@ const AsphaltStandards: NextPage = () => {
       icon: FlowNumberIcon,
       key: 'flowNumber',
       standard: 'DNIT 184/2018',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/procedimento-pro/dner_pro_273_96.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_184_2018_me-1.pdf',
       type: 'asphaltMix',
     },
     {
@@ -159,7 +159,7 @@ const AsphaltStandards: NextPage = () => {
       icon: GranulometryIcon,
       key: 'granulometry-asphalt',
       standard: 'DNER - ME 083/98',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/GranulometriaDnerMe08398.1ca0cbba.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner-me083-98.pdf',
       type: 'aggregates',
     },
     {
@@ -199,7 +199,7 @@ const AsphaltStandards: NextPage = () => {
       icon: ElongatedParticlesIcon,
       key: 'elongatedParticles',
       standard: 'DNIT 429/2020 - ME',
-      link: '/https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_429_2020_me-3.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_429_2020_me-3.pdf',
       type: 'aggregates',
     },
     {
@@ -207,7 +207,7 @@ const AsphaltStandards: NextPage = () => {
       icon: SofteningPointIcon,
       key: 'softeningPoint',
       standard: 'DNIT 131/2010 - ME',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/PontoDeAmolecimentoDNITME1312010.90d3b6e9.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_131_2010_me.pdf',
       type: 'asphaltBinder',
     },
     {
@@ -223,7 +223,7 @@ const AsphaltStandards: NextPage = () => {
       icon: ElasticRecoveryIcon,
       key: 'elasticRecovery',
       standard: 'DNER 130/2010 - ME',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/RecuperacaoElasticasDnit1302010.592ab73d.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_130_2010_me.pdf',
       type: 'asphaltBinder',
     },
     {
@@ -247,7 +247,7 @@ const AsphaltStandards: NextPage = () => {
       icon: RotationalIcon,
       key: 'rotational',
       standard: 'DNIT 427/2020 - ME',
-      link: '',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_427_2020_me-2.pdf',
       type: 'asphaltBinder',
     },
   ];

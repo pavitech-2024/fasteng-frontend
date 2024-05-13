@@ -2,6 +2,7 @@
   "concrete.materials.title": "Registered materials",
   "concrete.materials.newMaterial": "Register material",
   "concrete.materials.type": "Type",
+  "concrete.materials.name": "Name",
   "concrete.materials.source": "Source",
   "concrete.materials.responsible": "Responsible",
   "concrete.materials.classification_AMP": "AMP Classification",

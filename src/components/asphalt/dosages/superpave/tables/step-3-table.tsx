@@ -36,15 +36,15 @@ const Step3Table = ({ rows, columns, columnGrouping }: Step3Props & { superpave:
         }
         rows={
           rows !== null
-            ? rows?.map((row, index) => ({
+            ? rows.map((row, index) => ({
                 ...row,
                 id: index,
               }))
             : []
         }
         slots={{
-          noRowsOverlay: () => <NoDataFound message="Nenhum dado encontrado" />,
-          noResultsOverlay: () => <NoDataFound message="Nenhum dado encontrado" />,
+          noRowsOverlay: () => <NoDataFound message="Nenhum material encontrado" />,
+          noResultsOverlay: () => <NoDataFound message="Nenhum material encontrado" />,
         }}
       />
     </Box>

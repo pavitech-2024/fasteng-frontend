@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 interface Step2Props {
   header?: string;
-  rows: { _id: string; name: string; type: string; }[];
+  rows: { _id: string; name: string; type: string }[];
   columns: GridColDef[];
 }
 
@@ -40,7 +40,7 @@ const Step2Table = ({ rows, columns, header }: Step2Props & { superpave: Superpa
           onRowSelectionModelChange={(rowSelection) => {
             if (rows.some((element) => element.type === 'CAP' || element.type === 'asphaltBinder')) {
               if (rowSelection.length > 2) {
-                rowSelection = []
+                rowSelection = [];
               } else if (rowSelection.length > 1) {
                 rowSelection.shift();
               }
@@ -49,15 +49,14 @@ const Step2Table = ({ rows, columns, header }: Step2Props & { superpave: Superpa
 
               setData({ step: 1, key: 'binder', value: binder });
             } else {
-
-              const aggregates = []
+              const aggregates = [];
 
               rowSelection.forEach((row, index) => {
                 aggregates.push({
                   _id: rows[rowSelection[index]]._id,
                   name: rows[rowSelection[index]].name,
-                })
-              })
+                });
+              });
 
               setData({ step: 1, key: 'aggregates', value: aggregates });
             }
@@ -77,9 +76,9 @@ const Step2Table = ({ rows, columns, header }: Step2Props & { superpave: Superpa
           rows={
             rows !== null
               ? rows.map((row, index) => ({
-                ...row,
-                id: index,
-              }))
+                  ...row,
+                  id: index,
+                }))
               : []
           }
           slots={{

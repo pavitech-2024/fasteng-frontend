@@ -3,7 +3,7 @@ import ViscosityRotational_Results from '@/components/asphalt/essays/viscosityRo
 import ViscosityRotational_Calc from '@/components/asphalt/essays/viscosityRotacional/viscosityRotational-calc.viscosityRotational';
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
-import ViscosityRotational_SERVICE from '@/services/asphalt/viscosityRotational/viscosityRotational.service';
+import ViscosityRotational_SERVICE from '@/services/asphalt/essays/viscosityRotational/viscosityRotational.service';
 import useViscosityRotationalStore, {
   ViscosityRotationalActions,
 } from '@/stores/asphalt/viscosityRotational/viscosityRotational.store';

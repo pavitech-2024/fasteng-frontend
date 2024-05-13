@@ -1,3 +1,4 @@
+import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
@@ -10,7 +11,12 @@ import { toast } from 'react-toastify';
 import MaterialSelectionTable from './tables/step-2-table';
 import { GridColDef } from '@mui/x-data-grid';
 
-const Superpave_Step2 = ({ nextDisabled, setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+const Superpave_Step2 = ({
+  nextDisabled,
+  setNextDisabled,
+  superpave,
+}: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+  const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
   const { materialSelectionData } = useSuperpaveStore();
 
@@ -22,8 +28,10 @@ const Superpave_Step2 = ({ nextDisabled, setNextDisabled, superpave }: EssayPage
         try {
           const materials = await superpave.getMaterialsByUserId(user._id);
           setMaterials(materials);
+          setLoading(false);
         } catch (error) {
           setMaterials([]);
+          setLoading(false);
           throw error;
         }
       },
@@ -83,13 +91,13 @@ const Superpave_Step2 = ({ nextDisabled, setNextDisabled, superpave }: EssayPage
     },
   ];
 
-  materialSelectionData.binder &&
-    materialSelectionData.aggregates.length > 1 &&
-    nextDisabled &&
-    setNextDisabled(false);
+  materialSelectionData.binder && materialSelectionData.aggregates.length > 0 && nextDisabled && setNextDisabled(false);
 
   return (
     <>
+      {loading ? (
+        <Loading />
+      ) : (
         <Box
           sx={{
             display: 'flex',
@@ -110,6 +118,7 @@ const Superpave_Step2 = ({ nextDisabled, setNextDisabled, superpave }: EssayPage
             superpave={superpave}
           />
         </Box>
+      )}
     </>
   );
 };

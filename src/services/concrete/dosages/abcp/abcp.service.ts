@@ -117,10 +117,6 @@ class ABCP_SERVICE implements IEssayService {
 
   // send the selected materials to backend
   submitMaterialSelection = async (materialSelection: ABCPData['materialSelectionData']): Promise<void> => {
-    console.log(
-      '🚀 ~ file: abcp.service.ts:115 ~ ABCP_SERVICE ~ submitMaterialSelection= ~ materialSelection:',
-      materialSelection
-    );
     try {
       const { coarseAggregate, fineAggregate, cement } = materialSelection;
 
@@ -137,10 +133,6 @@ class ABCP_SERVICE implements IEssayService {
 
   // send the selected essays to backend
   submitEssaySelection = async (essaySelection: ABCPData['essaySelectionData']): Promise<void> => {
-    console.log(
-      '🚀 ~ file: abcp.service.ts:115 ~ ABCP_SERVICE ~ submitMaterialSelection= ~ essaySelection:',
-      essaySelection
-    );
     try {
       // const { coarseAggregate, fineAggregate, cement } = essaySelection;
       // if (!coarseAggregate) throw t('errors.empty-coarseAggregates');
@@ -157,7 +149,6 @@ class ABCP_SERVICE implements IEssayService {
     userId: string,
     { cement, coarseAggregate, fineAggregate }: ABCPData['materialSelectionData']
   ): Promise<EssaySelection_Results> => {
-    console.log('🚀 ~ file: abcp.service.ts:135 ~ ABCP_SERVICE ~ userId:', userId);
     try {
       const response = await Api.post(`${this.info.backend_path}/essay-selection`, {
         cement_id: cement,

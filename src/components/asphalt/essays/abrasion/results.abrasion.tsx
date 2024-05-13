@@ -9,7 +9,6 @@ import { t } from 'i18next';
 const Abrasion_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: results, generalData } = useAbrasionStore();
-  console.log('🚀 ~ file: results.abrasion.tsx:11 ~ results:', results);
 
   const data = {
     losAngelesAbrasion: results.losAngelesAbrasion.toFixed(2).toString(),
