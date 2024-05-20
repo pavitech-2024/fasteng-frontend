@@ -18,8 +18,8 @@ const Superpave_Step1 = ({
   const { generalData, setData } = useSuperpaveStore();
 
   const inputs = [
-    { label: t('asphalt.project_name'), value: generalData.name, key: 'projectName', required: true },
-    { label: t('asphalt.laboratory_name'), value: generalData.laboratory, key: 'labName', required: false },
+    { label: t('asphalt.project_name'), value: generalData.name, key: 'name', required: true },
+    { label: t('asphalt.laboratory_name'), value: generalData.laboratory, key: 'laboratory', required: false },
     { label: t('asphalt.operator'), value: generalData.operator, key: 'operator', required: false },
     { label: t('asphalt.calculist'), value: generalData.calculist, key: 'calculist', required: false },
     {
@@ -80,7 +80,7 @@ const Superpave_Step1 = ({
             }}
           >
             {inputs.map((input) => {
-              if (['projectName', 'labName', 'operator', 'calculist'].includes(input.key)) {
+              if (['name', 'laboratory', 'operator', 'calculist'].includes(input.key)) {
                 return (
                   <TextField
                     variant="standard"
