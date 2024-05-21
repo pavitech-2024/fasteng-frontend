@@ -16,11 +16,7 @@ const Superpave_Step3 = ({
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { 
-    granulometryCompositionData: data, 
-    materialSelectionData,
-    setData
-  } = useSuperpaveStore();
+  const { granulometryCompositionData: data, materialSelectionData, setData } = useSuperpaveStore();
 
   const { user } = useAuth();
 

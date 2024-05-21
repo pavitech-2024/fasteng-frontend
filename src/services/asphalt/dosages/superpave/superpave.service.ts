@@ -90,15 +90,15 @@ class Superpave_SERVICE implements IEssayService {
     if (!isConsult) {
       try {
         const { name } = generalData;
-  
+
         // verify if the project name is not empty
         if (!name) throw t('errors.empty-project-name');
-  
+
         // verify if there is already a Superpave dosage with same name for the material
         const response = await Api.post(`${this.info.backend_path}/verify-init/${user}`, generalData);
-  
+
         const { success, error } = response.data;
-  
+
         // if there is already a Superpave dosage with same project name, throw error
         if (success === false) throw error.name;
       } catch (error) {
@@ -172,27 +172,29 @@ class Superpave_SERVICE implements IEssayService {
     user: string,
     isConsult: boolean
   ): Promise<void> => {
-    try {
-      const { dnitBand } = dataStep3.generalData;
-
-      const { aggregates } = dataStep3.materialSelectionData;
-
-      const response = await Api.post(`${this.info.backend_path}/step-3-data`, {
-        dnitBand: dnitBand,
-        aggregates: aggregates,
-      });
-
-      const { data, success, error } = response.data;
-
-      console.log(data);
-
-      if (success === false) throw error.name;
-
-      const { table_data } = data;
-
-      this.store_actions.setData({ key: 'table_data', step: 2, value: table_data });
-    } catch (error) {
-      throw error;
+    if (!isConsult) {
+      try {
+        const { dnitBand } = dataStep3.generalData;
+  
+        const { aggregates } = dataStep3.materialSelectionData;
+  
+        const response = await Api.post(`${this.info.backend_path}/step-3-data`, {
+          dnitBand: dnitBand,
+          aggregates: aggregates,
+        });
+  
+        const { data, success, error } = response.data;
+  
+        console.log(data);
+  
+        if (success === false) throw error.name;
+  
+        const { table_data } = data;
+  
+        this.store_actions.setData({ key: 'table_data', step: 2, value: table_data });
+      } catch (error) {
+        throw error;
+      }
     }
   };
 }

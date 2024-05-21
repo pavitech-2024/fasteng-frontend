@@ -56,7 +56,7 @@ const Superpave_Step1 = ({
   //   return true;
   // }) &&
   //   nextDisabled &&
-    setNextDisabled(false);
+  setNextDisabled(false);
 
   return (
     <>
