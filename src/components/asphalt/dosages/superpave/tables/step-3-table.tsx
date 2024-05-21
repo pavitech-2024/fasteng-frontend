@@ -36,7 +36,7 @@ const Step3Table = ({ rows, columns, columnGrouping }: Step3Props & { superpave:
         }
         rows={
           rows !== null
-            ? rows.map((row, index) => ({
+            ? rows?.map((row, index) => ({
                 ...row,
                 id: index,
               }))

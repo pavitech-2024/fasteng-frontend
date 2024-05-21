@@ -32,10 +32,24 @@ interface SuperpaveGranulometryCompositionData {
     }[];
     table_column_headers: string[];
   };
-  percentageInputs: { [key: string]: number }[];
+  // percentageInputs: { [key: string]: number }[];
+  percentageInputs: any[][];
   project: number[];
   dnitBands: { higher: [string, number][]; lower: [string, number][] };
   graphData: any[];
+  percentsToList: any[];
+  nominalSize: number;
+  pointsOfCurve: number[],
+  chosenCurves: {
+    lower: boolean,
+    average: boolean,
+    higher: boolean
+  },
+  bands: {
+    higher: any[],
+    lower: any[],
+    letter: string
+  }
 }
 
 // interface SuperpaveInitialBinderData {
@@ -79,6 +93,19 @@ const initialState = {
     dnitBands: null,
     graphData: [],
     percentageInputs: [],
+    percentsToList: [],
+    nominalSize: null,
+    pointsOfCurve: [],
+    chosenCurves: {
+      lower: null,
+      average: null,
+      higher: null
+    },
+    bands: {
+      higher: [],
+      lower: [],
+      letter: null
+    }
   },
 };
 

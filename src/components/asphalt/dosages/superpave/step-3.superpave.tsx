@@ -3,12 +3,16 @@ import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
-import { Box, Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/material';
-import { GridColDef } from '@mui/x-data-grid';
-import { useState } from 'react';
+import { Box, Button, Checkbox, FormControlLabel, FormGroup, Table, TableContainer, Typography } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { ChangeEvent, useState } from 'react';
 import Step3InputTable from './tables/step-3-input-table';
 import Step3Table from './tables/step-3-table';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { getSieveSeries } from '@/utils/sieves';
+import { AllSieveSeries } from '@/interfaces/common';
+import CurvesTable from './tables/curvesTable';
+import { toast } from 'react-toastify';
 
 const Superpave_Step3 = ({
   nextDisabled,
@@ -17,60 +21,327 @@ const Superpave_Step3 = ({
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { granulometryCompositionData: data, materialSelectionData, setData } = useSuperpaveStore();
+  console.log('🚀 ~ data:', data);
 
   const { user } = useAuth();
 
-  const inputRows: { [key: string]: number }[] = data?.percentageInputs;
+  const peneiras = AllSieveSeries.map((peneira) => {
+    return { peneira: peneira };
+  });
+
+  let arrayResponse = data?.percentsToList;
+  let bandsHigher = data?.bands?.higher;
+  let bandsLower = data?.bands?.lower;
+  let nominalSize;
+  let selectedMaterials = materialSelectionData?.aggregates;
+  const [inferior, setInferior] = useState(false);
+  const [intermediaria, setIntermediaria] = useState(false);
+  const [superior, setSuperior] = useState(false);
+
+  const setPercentsToListTotal = (peneiras, percentsToList) => {
+    let arrayAux = [];
+    let tableData = [];
+    let second = 0;
+    percentsToList.forEach((item, i) => {
+      arrayAux = [];
+      second = 0;
+      item.forEach((value, j) => {
+        if (value !== null) {
+          if (i > 0) {
+            arrayAux.push({
+              ...tableData[second],
+              ['keyTotal' + i]: numberRepresentation(value),
+            });
+            second++;
+          } else {
+            arrayAux.push({
+              ...peneiras[j],
+              ['keyTotal' + i]: numberRepresentation(value),
+            });
+          }
+        }
+      });
+      tableData = arrayAux;
+    });
+    return tableData;
+  };
+
+  let tableDataAux = setPercentsToListTotal(peneiras, arrayResponse);
+
+  const setBandsHigherLower = (tableData, bandsHigher, bandsLower, arrayResponse, peneiras) => {
+    let arrayAux = [];
+    let second = 0;
+    for (let i = 0; i < bandsHigher.length; i++) {
+      if (arrayResponse[0][i] !== null && tableData[second]?.peneira === peneiras[i].peneira) {
+        if (bandsHigher[i] === null && bandsLower[i] === null) {
+          arrayAux.push({
+            ...tableData[second],
+            bandsCol1: '',
+            bandsCol2: '',
+          });
+        } else {
+          arrayAux.push({
+            ...tableData[second],
+            bandsCol1: numberRepresentation(bandsHigher[i]),
+            bandsCol2: numberRepresentation(bandsLower[i]),
+          });
+        }
+        second++;
+      }
+    }
+    return arrayAux;
+  };
+
+  const tableData = setBandsHigherLower(tableDataAux, bandsHigher, bandsLower, arrayResponse, peneiras);
+
+  let tableDataLower = tableData;
+  let tableDataAverage = tableData;
+  let tableDataHigher = tableData;
+
+  let tableCompositionInputsLower = {};
+  let tableCompositionInputsAverage = {};
+  let tableCompositionInputsHigher = {};
+
+  selectedMaterials.forEach((item, i) => {
+    tableCompositionInputsLower['input' + (i * 2 + 1)] = '';
+    tableCompositionInputsAverage['input' + (i * 2 + 1)] = '';
+    tableCompositionInputsHigher['input' + (i * 2 + 1)] = '';
+  });
+
+  const numberRepresentation = (value, digits = 2) => {
+    let aux: any = convertNumber(value);
+    if (validateNumber(aux)) {
+      const formato = { minimumFractionDigits: digits, maximumFractionDigits: digits };
+      aux = aux.toLocaleString('pt-BR', formato);
+    } else {
+      aux = '';
+    }
+    return aux;
+  };
+
+  const convertNumber = (value) => {
+    let aux = value;
+    if (typeof aux !== 'number' && aux !== null && aux !== undefined && aux.includes(',')) {
+      aux = aux.replace('.', '').replace(',', '.');
+    }
+
+    return parseFloat(aux);
+  };
+
+  const validateNumber = (value) => {
+    let auxValue = convertNumber(value);
+    if (!isNaN(auxValue) && typeof auxValue === 'number') {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  // const inputRows: { [key: string]: number }[] = data?.percentageInputs;
   const inputColumns: GridColDef[] = [];
 
   // Tabela de dados
   const rows = data?.table_data?.table_rows;
   const columnGrouping = [];
-  const columns: GridColDef[] = [];
 
-  if (data?.percentageInputs && data?.percentageInputs?.length === 0) {
-    const table_data = [];
+  const onChangeInputsTables = (e, tableName, index) => {
+    [tableName] = {
+      ...[tableName],
+      ["input" + index]: e.target.value
+    }
+  };
 
-    const aggregates_percentages = {};
+  const convertToNumberPercentsToList = tableCompositionInputName => {
+    let keys = Object.keys([tableCompositionInputName]);
+    let arrayAux = [];
+    let inputAcess = "";
+    let sum = 0;
+    for (let i = 0; i < keys.length; i++) {
+      inputAcess = keys[i];
+      const value = convertNumber([tableCompositionInputName][inputAcess]);
+      if (validateNumber(value)) {
+        arrayAux.push(value);
+        sum = Math.round( (sum + value) * 1e2 ) / 1e2;
+      }
+    }
+    return { totalSum: sum, valuesInput: arrayAux, tableCompositionInputName };
+  };
 
-    materialSelectionData.aggregates.forEach((aggregate) => {
-      const { _id } = aggregate;
-      aggregates_percentages['percentage_'.concat(_id)] = null;
-    });
-
-    table_data?.push({ ...aggregates_percentages });
-
-    setData({ step: 2, key: 'percentageInputs', value: table_data });
-  }
-
-  materialSelectionData.aggregates.forEach((aggregate) => {
-    const { _id, name } = aggregate;
-
-    inputColumns.push({
-      field: 'percentage_'.concat(_id),
-      headerName: name,
-      valueFormatter: ({ value }) => `${value}`,
-      renderCell: ({ row }) => {
-        if (!inputRows) {
-          return;
+  const updateTable = (percentsOfMaterials, sumOfPercentsToReturn, arrayTable) => {
+    let tableData = [];
+    let arrayResultAux = arrayTable;
+    let second = 0;
+    percentsOfMaterials.forEach((item, i) => {
+      tableData = [];
+      second = 0;
+      item.forEach((value, j) => {
+        if (value !== null) {
+          tableData.push({
+            ...arrayResultAux[second],
+            ["key%" + i]: numberRepresentation(value)
+          });
+          second++;
         }
-
-        return (
-          <InputEndAdornment
-            adornment={'%'}
-            type="number"
-            value={inputRows[0] ? inputRows[0]['percentage_'.concat(_id)] : ''}
-            onChange={(e) => {
-              if (e.target.value === null) return;
-              const newRows = [...inputRows];
-              newRows[0]['percentage_'.concat(_id)] = Number(e.target.value);
-              setData({ step: 2, key: 'percentageInputs', value: newRows });
-            }}
-          />
-        );
-      },
+      });
+      arrayResultAux = tableData;
     });
-  });
+    tableData = [];
+    second = 0;
+    sumOfPercentsToReturn.forEach((item, i) => {
+      if (item !== null) {
+        tableData.push({
+          ...arrayResultAux[second],
+          Projeto: numberRepresentation(item)
+        });
+        second++;
+      }
+    });
+    return tableData;
+  };
+
+  const isString = (value) => {
+    return typeof value === "string" || value instanceof String;
+  };
+
+  const updateDataArray = (data) => {
+    let emptyTitles = [];
+    let result = data;
+    if (isString(data[0][0])) {
+      data[0].forEach(() => emptyTitles.push(""));
+      result.unshift(emptyTitles);
+    }
+    return result;
+  };
+
+  const updateGraph = (points) => {
+    let pointsOfCurve = updateDataArray(points);
+    const prevData = {...data}
+    const newData = {...prevData, graphData: pointsOfCurve}
+    setData({ step: 2, value: newData });
+  };
+
+  const calcular = async (tableDataName, tableCompositionInputName) => {
+    
+    const resultInputsLower = convertToNumberPercentsToList(
+      "tableCompositionInputsLower"
+    );
+    const resultInputsAverage = convertToNumberPercentsToList(
+      "tableCompositionInputsAverage"
+    );
+    const resultInputsHigher = convertToNumberPercentsToList(
+      "tableCompositionInputsHigher"
+    );
+
+    if (
+      (resultInputsLower.valuesInput.length === 0 &&
+        resultInputsLower.tableCompositionInputName ===
+          tableCompositionInputName) ||
+      (resultInputsAverage.valuesInput.length === 0 &&
+        resultInputsAverage.tableCompositionInputName ===
+          tableCompositionInputName) ||
+      (resultInputsHigher.valuesInput.length === 0 &&
+        resultInputsHigher.tableCompositionInputName ===
+          tableCompositionInputName)
+    ) {
+      toast.error('Todos os campos estão vazios')
+      // this.setState({ modal: false, disableNext: true });
+      // this.scrollTo(0);
+    } else {
+      if (
+        (resultInputsLower.totalSum === 100 &&
+          resultInputsLower.tableCompositionInputName ===
+            tableCompositionInputName) ||
+        (resultInputsAverage.totalSum === 100 &&
+          resultInputsAverage.tableCompositionInputName ===
+            tableCompositionInputName) ||
+        (resultInputsHigher.totalSum === 100 &&
+          resultInputsHigher.tableCompositionInputName ===
+            tableCompositionInputName)
+      ) {
+        let arraySend = [
+          resultInputsLower.totalSum === 100
+            ? resultInputsLower.valuesInput
+            : [],
+          resultInputsAverage.totalSum === 100
+            ? resultInputsAverage.valuesInput
+            : [],
+          resultInputsHigher.totalSum === 100
+            ? resultInputsHigher.valuesInput
+            : []
+        ];
+        
+        let chosenCurves = {
+          lower: inferior,
+          average: intermediaria,
+          higher: superior
+        }
+        
+        await superpave.calculateGranulometryComposition(data)
+        .then(res => {
+          const keys = [
+            "averageComposition",
+            "higherComposition",
+            "lowerComposition"
+          ];
+          let tablesNames = [
+            "tableDataAverage",
+            "tableDataHigher",
+            "tableDataLower"
+          ];
+          let response = res.data.message;
+          keys.forEach((key, i) => {
+            if (response[key].percentsOfMaterials !== undefined) {
+              let tableUpdate = updateTable(
+                response[key].percentsOfMaterials,
+                response[key].sumOfPercents,
+                tablesNames[i]
+              );
+              //Verificação por escolha de curvas
+              if (
+                (inferior && resultInputsLower.totalSum !== 100) ||
+                (intermediaria && resultInputsAverage.totalSum !== 100) ||
+                (superior && resultInputsHigher.totalSum !== 100)
+              ) {
+                tablesNames = tableUpdate
+              } else {
+                tablesNames = tableUpdate;
+                nominalSize: numberRepresentation(data?.nominalSize)
+              }
+            }
+          });
+
+          //Ajustar o gráfico para as curvas selecionadas
+          updateGraph(data?.pointsOfCurve);
+        });
+      } else if (
+        (resultInputsLower.valuesInput.length !== selectedMaterials.length &&
+          resultInputsLower.tableCompositionInputName ===
+            tableCompositionInputName) ||
+        (resultInputsAverage.valuesInput.length !== selectedMaterials.length &&
+          resultInputsAverage.tableCompositionInputName ===
+            tableCompositionInputName) ||
+        (resultInputsHigher.valuesInput.length !== selectedMaterials.length &&
+          resultInputsHigher.tableCompositionInputName ===
+            tableCompositionInputName)
+      ) {
+        toast.error('Algum campo está vazio!')
+      } else if (
+        (resultInputsLower.totalSum < 100 &&
+          resultInputsLower.tableCompositionInputName ===
+            tableCompositionInputName) ||
+        (resultInputsAverage.totalSum < 100 &&
+          resultInputsAverage.tableCompositionInputName ===
+            tableCompositionInputName) ||
+        (resultInputsHigher.totalSum < 100 &&
+          resultInputsHigher.tableCompositionInputName ===
+            tableCompositionInputName)
+      ) {        
+        toast.error("A soma das porcentagens de cada agregado deve ser 100%.")
+      } else {
+        toast.error("Soma > 100%")
+      }
+    }
+  };
 
   nextDisabled && setNextDisabled(false);
 
@@ -91,16 +362,51 @@ const Superpave_Step3 = ({
           </Typography>
 
           <FormGroup sx={{ display: 'flex', flexDirection: 'row' }}>
-            <FormControlLabel control={<Checkbox />} label="curva inferior" />
-            <FormControlLabel control={<Checkbox />} label="curva intermediária" />
-            <FormControlLabel control={<Checkbox />} label="curva superior" />
+            <FormControlLabel control={<Checkbox onChange={() => setInferior(!inferior)}/>} label="curva inferior" value={inferior}/>
+            <FormControlLabel control={<Checkbox onChange={() => setIntermediaria(!intermediaria)}/>} label="curva intermediária" value={intermediaria}/>
+            <FormControlLabel control={<Checkbox onChange={() => setSuperior(!superior)}/>} label="curva superior" value={superior}/>
           </FormGroup>
 
-          {data?.percentageInputs?.length > 0 && (
-            <Step3InputTable rows={inputRows} columns={inputColumns} superpave={superpave} />
-          )}
+						{inferior && (
+							<TableContainer>
+								<Box sx={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 100px',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom: '10px',
+                }}>
+									<Typography>Curva inferior</Typography>
+									<Button
+									>
+										Limpar tabela
+									</Button>
+								</Box>
+                <CurvesTable 
+                  materials={selectedMaterials} 
+                  dnitBandsLetter={data?.bands?.letter} 
+                  tableInputs={tableCompositionInputsLower} 
+                  tableName="tableCompositionInputsLower" 
+                  tableData={tableDataLower} 
+                  onChangeInputsTables={onChangeInputsTables}
+                />
+								<div style={{ marginTop: '1%' }}>
+									<Button
+										onClick={() => calcular('tableDataLower', 'tableCompositionInputsLower')}
+									>
+										Calcular curva inferior
+									</Button>
+								</div>
+							</TableContainer>
+						)}
 
-          <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} superpave={superpave} />
+          {/* <DataGrid rows={[]} columns={[]} /> */}
+
+          {/* {data?.percentageInputs?.length > 0 && (
+            <Step3InputTable rows={inputRows} columns={inputColumns} superpave={superpave} />
+          )} */}
+
+          {/* <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} superpave={superpave} /> */}
         </Box>
       )}
     </>
