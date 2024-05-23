@@ -22,7 +22,6 @@ const SuperpaveDosageConsult = () => {
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
   const [dosageArrays, setDosageArrays] = useState([]);
-  console.log('🚀 ~ SuperpaveDosageConsult ~ dosageArrays:', dosageArrays);
 
   const progressTextMap = {
     1: t('general data'),
@@ -88,7 +87,6 @@ const SuperpaveDosageConsult = () => {
   }, []);
 
   const handleDeleteDosage = async (id: string) => {
-    console.log('🚀 ~ handleDeleteDosage ~ id:', id);
     try {
       await superpaveDosageService.deleteSuperpaveDosage(id);
       const updatedDosages = dosages.filter((dosage) => dosage._id !== id);

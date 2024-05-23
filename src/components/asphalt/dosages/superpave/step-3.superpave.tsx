@@ -10,7 +10,7 @@ import Step3InputTable from './tables/step-3-input-table';
 import Step3Table from './tables/step-3-table';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { getSieveSeries } from '@/utils/sieves';
-import { AllSieveSeries } from '@/interfaces/common';
+import { AllSieves, AllSieveSeries } from '@/interfaces/common';
 import CurvesTable from './tables/curvesTable';
 import { toast } from 'react-toastify';
 
@@ -20,13 +20,13 @@ const Superpave_Step3 = ({
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { granulometryCompositionData: data, materialSelectionData, setData } = useSuperpaveStore();
-  console.log('🚀 ~ data:', data);
+  const { granulometryCompositionData: data, materialSelectionData, generalData, setData } = useSuperpaveStore();
+  console.log("🚀 ~ data:", data);
 
   const { user } = useAuth();
 
-  const peneiras = AllSieveSeries.map((peneira) => {
-    return { peneira: peneira };
+  const peneiras = AllSieves.map((peneira) => {
+    return { peneira: peneira.label };
   });
 
   let arrayResponse = data?.percentsToList;
@@ -38,11 +38,40 @@ const Superpave_Step3 = ({
   const [intermediaria, setIntermediaria] = useState(false);
   const [superior, setSuperior] = useState(false);
 
+  const convertNumber = (value) => {
+    let aux = value;
+    if (typeof aux !== 'number' && aux !== null && aux !== undefined && aux.includes(',')) {
+      aux = aux.replace('.', '').replace(',', '.');
+    }
+
+    return parseFloat(aux);
+  };
+
+  const validateNumber = (value) => {
+    let auxValue = convertNumber(value);
+    if (!isNaN(auxValue) && typeof auxValue === 'number') {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const numberRepresentation = (value, digits = 2) => {
+    let aux: any = convertNumber(value);
+    if (validateNumber(aux)) {
+      const formato = { minimumFractionDigits: digits, maximumFractionDigits: digits };
+      aux = aux.toLocaleString('pt-BR', formato);
+    } else {
+      aux = '';
+    }
+    return aux;
+  };
+
   const setPercentsToListTotal = (peneiras, percentsToList) => {
     let arrayAux = [];
     let tableData = [];
     let second = 0;
-    percentsToList.forEach((item, i) => {
+    percentsToList?.forEach((item, i) => {
       arrayAux = [];
       second = 0;
       item.forEach((value, j) => {
@@ -50,13 +79,13 @@ const Superpave_Step3 = ({
           if (i > 0) {
             arrayAux.push({
               ...tableData[second],
-              ['keyTotal' + i]: numberRepresentation(value),
+              ['keyTotal' + i]: numberRepresentation(value[1]),
             });
             second++;
           } else {
             arrayAux.push({
               ...peneiras[j],
-              ['keyTotal' + i]: numberRepresentation(value),
+              ['keyTotal' + i]: numberRepresentation(value[1]),
             });
           }
         }
@@ -71,8 +100,8 @@ const Superpave_Step3 = ({
   const setBandsHigherLower = (tableData, bandsHigher, bandsLower, arrayResponse, peneiras) => {
     let arrayAux = [];
     let second = 0;
-    for (let i = 0; i < bandsHigher.length; i++) {
-      if (arrayResponse[0][i] !== null && tableData[second]?.peneira === peneiras[i].peneira) {
+    for (let i = 0; i < bandsHigher?.length; i++) {
+      if (arrayResponse[0][i] !== null && tableData[second]?.peneira === peneiras[i]?.peneira) {
         if (bandsHigher[i] === null && bandsLower[i] === null) {
           arrayAux.push({
             ...tableData[second],
@@ -108,36 +137,6 @@ const Superpave_Step3 = ({
     tableCompositionInputsHigher['input' + (i * 2 + 1)] = '';
   });
 
-  const numberRepresentation = (value, digits = 2) => {
-    let aux: any = convertNumber(value);
-    if (validateNumber(aux)) {
-      const formato = { minimumFractionDigits: digits, maximumFractionDigits: digits };
-      aux = aux.toLocaleString('pt-BR', formato);
-    } else {
-      aux = '';
-    }
-    return aux;
-  };
-
-  const convertNumber = (value) => {
-    let aux = value;
-    if (typeof aux !== 'number' && aux !== null && aux !== undefined && aux.includes(',')) {
-      aux = aux.replace('.', '').replace(',', '.');
-    }
-
-    return parseFloat(aux);
-  };
-
-  const validateNumber = (value) => {
-    let auxValue = convertNumber(value);
-    if (!isNaN(auxValue) && typeof auxValue === 'number') {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  // const inputRows: { [key: string]: number }[] = data?.percentageInputs;
   const inputColumns: GridColDef[] = [];
 
   // Tabela de dados
@@ -276,7 +275,7 @@ const Superpave_Step3 = ({
           higher: superior
         }
         
-        await superpave.calculateGranulometryComposition(data)
+        await superpave.calculateGranulometryComposition(data, materialSelectionData, generalData)
         .then(res => {
           const keys = [
             "averageComposition",

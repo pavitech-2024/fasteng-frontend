@@ -41,11 +41,14 @@ const CurvesTable: React.FC<Props> = ({
   tableData,
   onChangeInputsTables,
 }) => {
+
   const [table, setTable] = useState<TableModel>({
     columnsHeaderTop: [{ header: 'Peneira', type: 'rowSpan' }],
     columnsHeader: [],
     columnsKeys: [],
   });
+
+  console.log("🚀 ~ table:", table)
 
   useEffect(() => {
     const newTable = createObjectTableModel(materials, dnitBandsLetter);
@@ -144,11 +147,23 @@ const CurvesTable: React.FC<Props> = ({
     );
   };
 
+  const renderRows = (tableData: any[], columnsKeys: string[]) => {
+    return tableData.map((row, rowIndex) => (
+      <TableRow key={rowIndex}>
+        {columnsKeys.map((key) => (
+          <TableCell key={key} sx={styleColumn}>
+            {row[key]}
+          </TableCell>
+        ))}
+      </TableRow>
+    ));
+  };
+
   return table.columnsKeys.length > 0 ? (
     <TableContainer>
       <Table>
         {headerGroup(table)}
-        <TableBody>{columnsValues(table.columnsKeys)}</TableBody>
+        <TableBody>{renderRows(tableData, table.columnsKeys)}</TableBody>
       </Table>
     </TableContainer>
   ) : null;

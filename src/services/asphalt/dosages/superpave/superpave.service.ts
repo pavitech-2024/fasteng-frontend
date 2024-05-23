@@ -183,14 +183,9 @@ class Superpave_SERVICE implements IEssayService {
 
         const { data, success, error } = response.data;
 
-        console.log(data);
-
         if (success === false) throw error.name;
 
-        const { table_data } = data;
-        console.log("🚀 ~ Superpave_SERVICE ~ table_data:", table_data)
-
-        this.store_actions.setData({ key: 'table_data', step: 2, value: table_data });
+        this.store_actions.setData({ step: 2, value: {...dataStep3.granulometryCompositionData, ...data}});
       } catch (error) {
         throw error;
       }
@@ -198,12 +193,14 @@ class Superpave_SERVICE implements IEssayService {
   };
 
   calculateGranulometryComposition = async (
-    calculateStep3Data: SuperpaveData
+    calculateStep3Data: SuperpaveData['granulometryCompositionData'],
+    step2Data: SuperpaveData['materialSelectionData'],
+    step1Data: SuperpaveData['generalData']
   ): Promise<any> => {
     try {
-      const { percentageInputs, chosenCurves, nominalSize } = calculateStep3Data.granulometryCompositionData;
-      const { dnitBand } = calculateStep3Data.generalData;
-      const { aggregates } = calculateStep3Data.materialSelectionData;
+      const { percentageInputs, chosenCurves, nominalSize } = calculateStep3Data;
+      const { dnitBand } = step1Data;
+      const { aggregates } = step2Data;
 
 
       const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {

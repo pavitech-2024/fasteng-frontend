@@ -94,7 +94,6 @@ class Igg_SERVICE implements IEssayService {
 
   // verify inputs from Igg page (step === 1, page 2)
   submitIggStep2Data = async (iggStep2: IggData['iggStep2']): Promise<void> => {
-    console.log('🚀 ~ file: igg.service.ts:101 ~ Igg_SERVICE ~ submitIggCalcData= ~ iggStep2:', iggStep2);
     try {
     } catch (error) {
       throw error;
@@ -103,7 +102,6 @@ class Igg_SERVICE implements IEssayService {
 
   // verify inputs from Igg page (step === 1, page 2)
   submitIggStep3Data = async (iggStep3: IggData['iggStep3']): Promise<void> => {
-    console.log('🚀 ~ file: igg.service.ts:101 ~ Igg_SERVICE ~ submitIggCalcData= ~ iggStep3:', iggStep3);
     try {
       if (!iggStep3.stakes) throw t('errors.empty-stakes');
     } catch (error) {
@@ -112,7 +110,6 @@ class Igg_SERVICE implements IEssayService {
   };
   // verify inputs from Igg page (step === 1, page 2)
   submitIggStep4Data = async (iggStep4: IggData['iggStep4']): Promise<void> => {
-    console.log('🚀 ~ file: igg.service.ts:101 ~ Igg_SERVICE ~ submitIggCalcData= ~ iggStep4:', iggStep4);
     try {
       if (!iggStep4.sections) throw t('errors.empty-sections');
     } catch (error) {
@@ -132,7 +129,6 @@ class Igg_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);
 
       const { success, error, result } = response.data;
-      console.log('🚀 ~ file: igg.service.ts:120 ~ Igg_SERVICE ~ calculateResults= ~ result:', result);
 
       if (success === false) throw error;
 
