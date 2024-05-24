@@ -192,7 +192,6 @@ class Superpave_SERVICE implements IEssayService {
         if (step !== 2) {
           this.store_actions?.setData({ step: 2, value: { ...dosageData.granulometryCompositionData, ...data } });
         } else {
-          console.log("aqui")
           return data;
         }
       } catch (error) {

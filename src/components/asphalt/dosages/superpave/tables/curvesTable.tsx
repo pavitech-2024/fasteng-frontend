@@ -1,6 +1,10 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import useSuperpaveStore, { SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
+import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 
 const TableInputContainer = styled('div')({
   display: 'flex',
@@ -19,12 +23,16 @@ const styleColumn = {
 };
 
 interface Props {
-  materials: { name: string }[];
+  materials: { name: string; _id: string }[];
   dnitBandsLetter: string;
   tableInputs: Record<string, string>;
   tableName: string;
   tableData: any[];
-  onChangeInputsTables: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, tableName: string, index: number) => void;
+  onChangeInputsTables: (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    tableName: string,
+    index: number
+  ) => void;
 }
 
 interface TableModel {
@@ -42,13 +50,19 @@ const CurvesTable: React.FC<Props> = ({
   onChangeInputsTables,
 }) => {
 
+  const { granulometryCompositionData: data, setData } = useSuperpaveStore();
+
+  const [project, setProject] = useState(data?.project?.length > 0 ? data.project : []);
+
+  const inputRows: { [key: string]: number }[] = data?.percentageInputs;
+
   const [table, setTable] = useState<TableModel>({
     columnsHeaderTop: [{ header: 'Peneira', type: 'rowSpan' }],
     columnsHeader: [],
     columnsKeys: [],
   });
 
-  console.log("🚀 ~ table:", table)
+  console.log('🚀 ~ table:', table);
 
   useEffect(() => {
     const newTable = createObjectTableModel(materials, dnitBandsLetter);
@@ -80,92 +94,132 @@ const CurvesTable: React.FC<Props> = ({
     return newTable;
   };
 
-  const getColumn = (header: string, type: string) => {
-    return (
-      <TableCell key={header} sx={styleColumn} colSpan={type === 'colsSpan' ? 2 : 1}>
-        {header}
-      </TableCell>
-    );
-  };
+  const columns: GridColDef[] = [
+    {
+      field: 'peneira',
+      headerName: 'Peneira',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'totalPassant_1',
+      headerName: 'Total passante (%)',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'material_1',
+      headerName: `${materials[0].name}`,
+      valueFormatter: ({ value }) => `${value}`,
+      renderCell: ({ row }) => {
+        if (row.material_1 === undefined) {
+          return;
+        }
 
-  const columnsValues = (columnsKeys: string[]) => {
-    return (
-      <TableRow>
-        {columnsKeys.map(col => (
-          <TableCell key={col} sx={styleColumn}>
-            {col}
-          </TableCell>
-        ))}
-      </TableRow>
-    );
-  };
+        return (
+          <InputEndAdornment
+            adornment={'%'}
+            type="number"
+            value={inputRows[0] ? inputRows[0]['percentage_'.concat(materials[0]._id)] : ''}
+            onChange={(e) => {
+              if (e.target.value === null) return;
+              const newRows = [...inputRows];
+              newRows[0]['percentage_'.concat(materials[0]._id)] = Number(e.target.value);
+              setData({ step: 2, key: 'percentageInputs', value: newRows });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'totalPassant_2',
+      headerName: 'Total passante (%)',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'material_2',
+      headerName: `${materials[1].name}`,
+      valueFormatter: ({ value }) => `${value}`,
+      renderCell: ({ row }) => {
+        if (row.material_2 !== undefined) {
+          return;
+        }
 
-  const headerGroup = ({ columnsHeaderTop, columnsHeader }: TableModel) => {
-    return (
-      <TableHead>
-        <TableRow>
-          {columnsHeaderTop.map((item, i) => getColumn(item.header, item.type))}
-        </TableRow>
-        <TableRow>
-          {columnsHeader.map((col, i) => {
-            if (col === '%') {
-              return (
-                <TableCell key={col} sx={styleColumn}>
-                  <TableInputContainer>
-                    <TextField
-                      variant="standard"
-                      inputProps={{
-                        style: {
-                          width: '100%',
-                          padding: '1px',
-                          textAlign: 'center',
-                        },
-                      }}
-                      value={tableInputs['input' + i]}
-                      onChange={(e) => onChangeInputsTables(e, tableName, i)}
-                    />
-                    <label>%</label>
-                  </TableInputContainer>
-                </TableCell>
-              );
-            } else if (col === 'Faixa A' || col === 'Faixa B' || col === 'Faixa C') {
-              return (
-                <TableCell key={col} sx={styleColumn} colSpan={2}>
-                  {col}
-                </TableCell>
-              );
-            } else {
-              return (
-                <TableCell key={col} sx={styleColumn}>
-                  {col}
-                </TableCell>
-              );
-            }
-          })}
-        </TableRow>
-      </TableHead>
-    );
-  };
+        return (
+          <InputEndAdornment
+            adornment={'%'}
+            type="number"
+            value={inputRows[1] ? inputRows[1]['percentage_'.concat(materials[1]._id)] : ''}
+            onChange={(e) => {
+              if (e.target.value === null) return;
+              const newRows = [...inputRows];
+              newRows[1]['percentage_'.concat(materials[1]._id)] = Number(e.target.value);
+              setData({ step: 2, key: 'percentageInputs', value: newRows });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'project',
+      headerName: 'Projeto',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'band1',
+      headerName: '',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'band2',
+      headerName: '',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+  ];
 
-  const renderRows = (tableData: any[], columnsKeys: string[]) => {
-    return tableData.map((row, rowIndex) => (
-      <TableRow key={rowIndex}>
-        {columnsKeys.map((key) => (
-          <TableCell key={key} sx={styleColumn}>
-            {row[key]}
-          </TableCell>
-        ))}
-      </TableRow>
-    ));
-  };
+  const rows = tableData.map((e, idx) => ({
+    id: idx,
+    peneira: e.peneira,
+    totalPassant_1: e.keyTotal0,
+    material_1: e.keyTotal0,
+    totalPassant_2: e.keyTotal1,
+    material_2: e.keyTotal1,
+    project: data?.project[idx] ? data?.project[idx] : '',
+    band1: e.bandsCol1,
+    band2: e.bandsCol2,
+  }));
+
+  const groupings: GridColumnGroupingModel = [
+    {
+      groupId: 'material_1',
+      children: [{ field: 'totalPassant_1' }, { field: 'material_1' }],
+      headerAlign: 'center',
+    },
+    {
+      groupId: 'material_2',
+      children: [{ field: 'totalPassant_2' }, { field: 'material_2' }],
+      headerAlign: 'center',
+    },
+    {
+      groupId: 'specification',
+      headerName: 'Especificação',
+      children: [
+        {
+          groupId: `Banda ${data?.bands?.letter}`,
+          headerAlign: 'center',
+          children: [{ field: 'band1' }, { field: 'band2' }],
+        },
+      ],
+      headerAlign: 'center',
+    },
+  ];
 
   return table.columnsKeys.length > 0 ? (
-    <TableContainer>
-      <Table>
-        {headerGroup(table)}
-        <TableBody>{renderRows(tableData, table.columnsKeys)}</TableBody>
-      </Table>
-    </TableContainer>
+    <DataGrid
+      rows={rows}
+      columns={columns}
+      hideFooter
+      experimentalFeatures={{ columnGrouping: true }}
+      columnGroupingModel={groupings}
+    />
   ) : null;
 };
 

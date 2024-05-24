@@ -33,8 +33,7 @@ interface SuperpaveGranulometryCompositionData {
     }[];
     table_column_headers: string[];
   };
-  // percentageInputs: { [key: string]: number }[];
-  percentageInputs: any[][];
+  percentageInputs: { [key: string]: number }[];
   project: number[];
   dnitBands: { higher: [string, number][]; lower: [string, number][] };
   graphData: any[];
