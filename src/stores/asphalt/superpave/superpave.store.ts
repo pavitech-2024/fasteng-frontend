@@ -11,6 +11,7 @@ interface SuperpaveGeneralData {
   objective: 'bearing' | 'bonding';
   dnitBand: 'A' | 'B' | 'C';
   description?: string;
+  step: number;
 }
 
 interface SuperpaveMaterialSelectionData {
@@ -69,7 +70,11 @@ export type SuperpaveActions = {
 
 type setDataType = { step: number; key?: string; value: unknown };
 
-const stepVariant = { 0: 'generalData', 1: 'materialSelectionData', 2: 'granulometryCompositionData' };
+const stepVariant = { 
+  0: 'generalData', 
+  1: 'materialSelectionData', 
+  2: 'granulometryCompositionData' 
+};
 
 const initialState = {
   generalData: {
@@ -82,6 +87,7 @@ const initialState = {
     objective: null,
     dnitBand: null,
     description: null,
+    step: 0
   },
   materialSelectionData: {
     aggregates: [],
@@ -109,6 +115,41 @@ const initialState = {
   },
 };
 
+// const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(
+//   devtools(
+//     persist(
+//       (set) => ({
+//         ...initialState,
+
+//         setData: ({ step, key, value }) =>
+//           set((state) => {
+//             if (key)
+//               return {
+//                 ...state,
+//                 [stepVariant[step]]: {
+//                   ...state[stepVariant[step]],
+//                   [key]: value,
+//                 },
+//               };
+//             else return { ...state, [stepVariant[step]]: value };
+//           }),
+
+//         reset: ({ step }) => {
+//           set(initialState);
+//           return {
+//             [stepVariant[step]]: null,
+//           };
+//         },
+//       }),
+//       {
+//         // name data store e config no session storage
+//         name: 'asphalt-superpave-store',
+//         storage: createJSONStorage(() => sessionStorage),
+//       }
+//     )
+//   )
+// );
+
 const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(
   devtools(
     persist(
@@ -117,15 +158,21 @@ const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(
 
         setData: ({ step, key, value }) =>
           set((state) => {
-            if (key)
-              return {
-                ...state,
-                [stepVariant[step]]: {
-                  ...state[stepVariant[step]],
-                  [key]: value,
-                },
-              };
-            else return { ...state, [stepVariant[step]]: value };
+            if (step === 12) {
+              return value; // Substitui o estado inteiro pelo novo valor
+            } else {
+              if (key) {
+                return {
+                  ...state,
+                  [stepVariant[step]]: {
+                    ...state[stepVariant[step]],
+                    [key]: value,
+                  },
+                };
+              } else {
+                return { ...state, [stepVariant[step]]: value };
+              }
+            }
           }),
 
         reset: ({ step }) => {

@@ -32,8 +32,8 @@ const SuperpaveDosageConsult = () => {
   };
 
   const rows = dosages.map((row) => ({
-    name: row.generalData.name,
-    progress: `(${row.generalData.step}/11) - ${progressTextMap[row.generalData.step]}`,
+    name: row.generalData?.name,
+    progress: `(${row.generalData?.step}/11) - ${progressTextMap[row.generalData?.step]}`,
     start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
     finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
     id: row._id,
@@ -44,15 +44,23 @@ const SuperpaveDosageConsult = () => {
       async () => {
         try {
           superpaveDosageService.getSuperpaveDosagesByUserId(user._id).then((response) => {
-            setDosages(response.data);
-          });
-          if (rows.length > 0) {
+            const data = response.data;
+            dosages.push(data);
+
+            const rows = dosages[0]?.map((row) => ({
+              name: row.generalData?.name,
+              progress: `(${row.generalData?.step}/9) - ${progressTextMap[row.generalData?.step]}`,
+              start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
+              finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
+              id: row._id,
+            }));
+
             const arraysMenores = dividirArrayEmArraysMenores(rows, rowsPerPage);
+
             setDosageArrays(arraysMenores);
+
             setLoading(false);
-          } else {
-            setDosageArrays([[]]);
-          }
+          });
         } catch (error) {
           setDosages([]);
           setLoading(false);
@@ -71,7 +79,7 @@ const SuperpaveDosageConsult = () => {
     const arraysMenores = [];
 
     for (let i = 0; i < array.length; i += tamanho) {
-      const arrayMenor = array.slice(i, i + tamanho).map((item) => ({ ...item })); // Copia cada item para garantir que a propriedade `id` seja preservada
+      const arrayMenor = array.slice(i, i + tamanho).map((item) => ({ ...item }));
       arraysMenores.push(arrayMenor);
     }
 
@@ -89,27 +97,42 @@ const SuperpaveDosageConsult = () => {
   const handleDeleteDosage = async (id: string) => {
     try {
       await superpaveDosageService.deleteSuperpaveDosage(id);
-      const updatedDosages = dosages.filter((dosage) => dosage._id !== id);
+      // Recarregar a lista de dosagens após a exclusão
+      const response = await superpaveDosageService.getSuperpaveDosagesByUserId(user._id);
+      const updatedDosages = response.data.map((row) => ({
+        name: row.generalData?.name,
+        progress: `(${row.generalData?.step}/9) - ${progressTextMap[row.generalData?.step]}`,
+        start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
+        finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
+        id: row._id,
+      }));
+
+      // Atualizar dosages e dosageArrays
       setDosages(updatedDosages);
+
+      // Recalcular os arrays menores
+      const arraysMenores = dividirArrayEmArraysMenores(updatedDosages, rowsPerPage);
+      setDosageArrays(arraysMenores);
     } catch (error) {
       console.error('Failed to delete dosage:', error);
     }
   };
 
   const handleVisualizeDosage = (id: string) => {
-    const dosage = dosages.find((dosage) => {
+    const dosage = dosages[0]?.find((dosage) => {
       return dosage._id === id;
     });
-    const step = dosage.generalData.step;
+    const step = dosage?.generalData.step;
+
     if (dosage) {
       setData({
-        step: 5,
+        step: 12,
         value: dosage,
       });
     }
-    sessionStorage.setItem('superpave-step', step.toString());
+    sessionStorage.setItem('superpave-step', step?.toString());
     handleNext(step, dosage, true);
-    if (step === 4) router.push(`/asphalt/dosages/superpave/create?consult=true`);
+    if (step === 5) router.push(`/asphalt/dosages/superpave/create?consult=true`);
     router.push(`/asphalt/dosages/superpave/create`);
   };
 

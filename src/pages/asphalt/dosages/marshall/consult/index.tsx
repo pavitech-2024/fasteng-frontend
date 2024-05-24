@@ -35,6 +35,14 @@ const MarshallDosageConsult = () => {
     9: t('asphalt.dosages.marshall.dosage_resume'),
   };
 
+  const rows = dosages.map((row) => ({
+    name: row.generalData?.name,
+    progress: `(${row.generalData?.step}/11) - ${progressTextMap[row.generalData?.step]}`,
+    start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
+    finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
+    id: row._id,
+  }));
+
   useEffect(() => {
     toast.promise(
       async () => {
@@ -75,12 +83,20 @@ const MarshallDosageConsult = () => {
     const arraysMenores = [];
 
     for (let i = 0; i < array.length; i += tamanho) {
-      const arrayMenor = array.slice(i, i + tamanho).map((item) => ({ ...item })); // Copia cada item para garantir que a propriedade `id` seja preservada
+      const arrayMenor = array.slice(i, i + tamanho).map((item) => ({ ...item }));
       arraysMenores.push(arrayMenor);
     }
 
     return arraysMenores;
   }
+
+  useEffect(() => {
+    if (rows.length > 0) {
+      const arraysMenores = dividirArrayEmArraysMenores(rows, rowsPerPage);
+      setDosageArrays(arraysMenores);
+      setLoading(false);
+    }
+  }, []);
 
   const handleDeleteDosage = async (id: string) => {
     try {

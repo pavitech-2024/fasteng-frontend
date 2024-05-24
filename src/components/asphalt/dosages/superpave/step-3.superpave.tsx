@@ -2,10 +2,10 @@ import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
-import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
+import useSuperpaveStore, { SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
 import { Box, Button, Checkbox, FormControlLabel, FormGroup, Table, TableContainer, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import Step3InputTable from './tables/step-3-input-table';
 import Step3Table from './tables/step-3-table';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
@@ -13,17 +13,51 @@ import { getSieveSeries } from '@/utils/sieves';
 import { AllSieves, AllSieveSeries } from '@/interfaces/common';
 import CurvesTable from './tables/curvesTable';
 import { toast } from 'react-toastify';
+import { t } from 'i18next';
+import { SuperpaveDosageData } from '@/interfaces/asphalt/superpave';
 
 const Superpave_Step3 = ({
   nextDisabled,
   setNextDisabled,
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const { granulometryCompositionData: data, materialSelectionData, generalData, setData } = useSuperpaveStore();
-  console.log("🚀 ~ data:", data);
 
   const { user } = useAuth();
+
+  useEffect(() => {
+    if (data.percentsToList.length > 0) {
+      setLoading(false)
+    } 
+    if (generalData.step === 2) {
+      toast.promise(async () => {
+        try {
+          const dosageData = sessionStorage.getItem('asphalt-superpave-store');
+          const sessionDataJson = JSON.parse(dosageData);
+          const dosageDataJson = sessionDataJson.state as SuperpaveData
+
+          const response = await superpave.getStep3Data(dosageDataJson, user._id)
+
+          setData({ 
+            step: 2, 
+            value: { 
+              ...dosageDataJson.granulometryCompositionData, 
+              ...response
+            }
+          });
+          setLoading(false);
+        } catch (error) {
+          setLoading(false);
+          throw error;
+        }
+      },{
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      });
+    }
+  }, []);
 
   const peneiras = AllSieves.map((peneira) => {
     return { peneira: peneira.label };
@@ -146,21 +180,21 @@ const Superpave_Step3 = ({
   const onChangeInputsTables = (e, tableName, index) => {
     [tableName] = {
       ...[tableName],
-      ["input" + index]: e.target.value
-    }
+      ['input' + index]: e.target.value,
+    };
   };
 
-  const convertToNumberPercentsToList = tableCompositionInputName => {
+  const convertToNumberPercentsToList = (tableCompositionInputName) => {
     let keys = Object.keys([tableCompositionInputName]);
     let arrayAux = [];
-    let inputAcess = "";
+    let inputAcess = '';
     let sum = 0;
     for (let i = 0; i < keys.length; i++) {
       inputAcess = keys[i];
       const value = convertNumber([tableCompositionInputName][inputAcess]);
       if (validateNumber(value)) {
         arrayAux.push(value);
-        sum = Math.round( (sum + value) * 1e2 ) / 1e2;
+        sum = Math.round((sum + value) * 1e2) / 1e2;
       }
     }
     return { totalSum: sum, valuesInput: arrayAux, tableCompositionInputName };
@@ -177,7 +211,7 @@ const Superpave_Step3 = ({
         if (value !== null) {
           tableData.push({
             ...arrayResultAux[second],
-            ["key%" + i]: numberRepresentation(value)
+            ['key%' + i]: numberRepresentation(value),
           });
           second++;
         }
@@ -190,7 +224,7 @@ const Superpave_Step3 = ({
       if (item !== null) {
         tableData.push({
           ...arrayResultAux[second],
-          Projeto: numberRepresentation(item)
+          Projeto: numberRepresentation(item),
         });
         second++;
       }
@@ -199,14 +233,14 @@ const Superpave_Step3 = ({
   };
 
   const isString = (value) => {
-    return typeof value === "string" || value instanceof String;
+    return typeof value === 'string' || value instanceof String;
   };
 
   const updateDataArray = (data) => {
     let emptyTitles = [];
     let result = data;
     if (isString(data[0][0])) {
-      data[0].forEach(() => emptyTitles.push(""));
+      data[0].forEach(() => emptyTitles.push(''));
       result.unshift(emptyTitles);
     }
     return result;
@@ -214,79 +248,51 @@ const Superpave_Step3 = ({
 
   const updateGraph = (points) => {
     let pointsOfCurve = updateDataArray(points);
-    const prevData = {...data}
-    const newData = {...prevData, graphData: pointsOfCurve}
+    const prevData = { ...data };
+    const newData = { ...prevData, graphData: pointsOfCurve };
     setData({ step: 2, value: newData });
   };
 
   const calcular = async (tableDataName, tableCompositionInputName) => {
-    
-    const resultInputsLower = convertToNumberPercentsToList(
-      "tableCompositionInputsLower"
-    );
-    const resultInputsAverage = convertToNumberPercentsToList(
-      "tableCompositionInputsAverage"
-    );
-    const resultInputsHigher = convertToNumberPercentsToList(
-      "tableCompositionInputsHigher"
-    );
+    const resultInputsLower = convertToNumberPercentsToList('tableCompositionInputsLower');
+    const resultInputsAverage = convertToNumberPercentsToList('tableCompositionInputsAverage');
+    const resultInputsHigher = convertToNumberPercentsToList('tableCompositionInputsHigher');
 
     if (
       (resultInputsLower.valuesInput.length === 0 &&
-        resultInputsLower.tableCompositionInputName ===
-          tableCompositionInputName) ||
+        resultInputsLower.tableCompositionInputName === tableCompositionInputName) ||
       (resultInputsAverage.valuesInput.length === 0 &&
-        resultInputsAverage.tableCompositionInputName ===
-          tableCompositionInputName) ||
+        resultInputsAverage.tableCompositionInputName === tableCompositionInputName) ||
       (resultInputsHigher.valuesInput.length === 0 &&
-        resultInputsHigher.tableCompositionInputName ===
-          tableCompositionInputName)
+        resultInputsHigher.tableCompositionInputName === tableCompositionInputName)
     ) {
-      toast.error('Todos os campos estão vazios')
+      toast.error('Todos os campos estão vazios');
       // this.setState({ modal: false, disableNext: true });
       // this.scrollTo(0);
     } else {
       if (
         (resultInputsLower.totalSum === 100 &&
-          resultInputsLower.tableCompositionInputName ===
-            tableCompositionInputName) ||
+          resultInputsLower.tableCompositionInputName === tableCompositionInputName) ||
         (resultInputsAverage.totalSum === 100 &&
-          resultInputsAverage.tableCompositionInputName ===
-            tableCompositionInputName) ||
+          resultInputsAverage.tableCompositionInputName === tableCompositionInputName) ||
         (resultInputsHigher.totalSum === 100 &&
-          resultInputsHigher.tableCompositionInputName ===
-            tableCompositionInputName)
+          resultInputsHigher.tableCompositionInputName === tableCompositionInputName)
       ) {
         let arraySend = [
-          resultInputsLower.totalSum === 100
-            ? resultInputsLower.valuesInput
-            : [],
-          resultInputsAverage.totalSum === 100
-            ? resultInputsAverage.valuesInput
-            : [],
-          resultInputsHigher.totalSum === 100
-            ? resultInputsHigher.valuesInput
-            : []
+          resultInputsLower.totalSum === 100 ? resultInputsLower.valuesInput : [],
+          resultInputsAverage.totalSum === 100 ? resultInputsAverage.valuesInput : [],
+          resultInputsHigher.totalSum === 100 ? resultInputsHigher.valuesInput : [],
         ];
-        
+
         let chosenCurves = {
           lower: inferior,
           average: intermediaria,
-          higher: superior
-        }
-        
-        await superpave.calculateGranulometryComposition(data, materialSelectionData, generalData)
-        .then(res => {
-          const keys = [
-            "averageComposition",
-            "higherComposition",
-            "lowerComposition"
-          ];
-          let tablesNames = [
-            "tableDataAverage",
-            "tableDataHigher",
-            "tableDataLower"
-          ];
+          higher: superior,
+        };
+
+        await superpave.calculateGranulometryComposition(data, materialSelectionData, generalData).then((res) => {
+          const keys = ['averageComposition', 'higherComposition', 'lowerComposition'];
+          let tablesNames = ['tableDataAverage', 'tableDataHigher', 'tableDataLower'];
           let response = res.data.message;
           keys.forEach((key, i) => {
             if (response[key].percentsOfMaterials !== undefined) {
@@ -301,10 +307,10 @@ const Superpave_Step3 = ({
                 (intermediaria && resultInputsAverage.totalSum !== 100) ||
                 (superior && resultInputsHigher.totalSum !== 100)
               ) {
-                tablesNames = tableUpdate
+                tablesNames = tableUpdate;
               } else {
                 tablesNames = tableUpdate;
-                nominalSize: numberRepresentation(data?.nominalSize)
+                nominalSize: numberRepresentation(data?.nominalSize);
               }
             }
           });
@@ -314,30 +320,24 @@ const Superpave_Step3 = ({
         });
       } else if (
         (resultInputsLower.valuesInput.length !== selectedMaterials.length &&
-          resultInputsLower.tableCompositionInputName ===
-            tableCompositionInputName) ||
+          resultInputsLower.tableCompositionInputName === tableCompositionInputName) ||
         (resultInputsAverage.valuesInput.length !== selectedMaterials.length &&
-          resultInputsAverage.tableCompositionInputName ===
-            tableCompositionInputName) ||
+          resultInputsAverage.tableCompositionInputName === tableCompositionInputName) ||
         (resultInputsHigher.valuesInput.length !== selectedMaterials.length &&
-          resultInputsHigher.tableCompositionInputName ===
-            tableCompositionInputName)
+          resultInputsHigher.tableCompositionInputName === tableCompositionInputName)
       ) {
-        toast.error('Algum campo está vazio!')
+        toast.error('Algum campo está vazio!');
       } else if (
         (resultInputsLower.totalSum < 100 &&
-          resultInputsLower.tableCompositionInputName ===
-            tableCompositionInputName) ||
+          resultInputsLower.tableCompositionInputName === tableCompositionInputName) ||
         (resultInputsAverage.totalSum < 100 &&
-          resultInputsAverage.tableCompositionInputName ===
-            tableCompositionInputName) ||
+          resultInputsAverage.tableCompositionInputName === tableCompositionInputName) ||
         (resultInputsHigher.totalSum < 100 &&
-          resultInputsHigher.tableCompositionInputName ===
-            tableCompositionInputName)
-      ) {        
-        toast.error("A soma das porcentagens de cada agregado deve ser 100%.")
+          resultInputsHigher.tableCompositionInputName === tableCompositionInputName)
+      ) {
+        toast.error('A soma das porcentagens de cada agregado deve ser 100%.');
       } else {
-        toast.error("Soma > 100%")
+        toast.error('Soma > 100%');
       }
     }
   };
@@ -361,43 +361,52 @@ const Superpave_Step3 = ({
           </Typography>
 
           <FormGroup sx={{ display: 'flex', flexDirection: 'row' }}>
-            <FormControlLabel control={<Checkbox onChange={() => setInferior(!inferior)}/>} label="curva inferior" value={inferior}/>
-            <FormControlLabel control={<Checkbox onChange={() => setIntermediaria(!intermediaria)}/>} label="curva intermediária" value={intermediaria}/>
-            <FormControlLabel control={<Checkbox onChange={() => setSuperior(!superior)}/>} label="curva superior" value={superior}/>
+            <FormControlLabel
+              control={<Checkbox onChange={() => setInferior(!inferior)} />}
+              label="curva inferior"
+              value={inferior}
+            />
+            <FormControlLabel
+              control={<Checkbox onChange={() => setIntermediaria(!intermediaria)} />}
+              label="curva intermediária"
+              value={intermediaria}
+            />
+            <FormControlLabel
+              control={<Checkbox onChange={() => setSuperior(!superior)} />}
+              label="curva superior"
+              value={superior}
+            />
           </FormGroup>
 
-						{inferior && (
-							<TableContainer>
-								<Box sx={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 100px',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginBottom: '10px',
-                }}>
-									<Typography>Curva inferior</Typography>
-									<Button
-									>
-										Limpar tabela
-									</Button>
-								</Box>
-                <CurvesTable 
-                  materials={selectedMaterials} 
-                  dnitBandsLetter={data?.bands?.letter} 
-                  tableInputs={tableCompositionInputsLower} 
-                  tableName="tableCompositionInputsLower" 
-                  tableData={tableDataLower} 
-                  onChangeInputsTables={onChangeInputsTables}
-                />
-								<div style={{ marginTop: '1%' }}>
-									<Button
-										onClick={() => calcular('tableDataLower', 'tableCompositionInputsLower')}
-									>
-										Calcular curva inferior
-									</Button>
-								</div>
-							</TableContainer>
-						)}
+          {inferior && (
+            <TableContainer>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 100px',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: '10px',
+                }}
+              >
+                <Typography>Curva inferior</Typography>
+                <Button>Limpar tabela</Button>
+              </Box>
+              <CurvesTable
+                materials={selectedMaterials}
+                dnitBandsLetter={data?.bands?.letter}
+                tableInputs={tableCompositionInputsLower}
+                tableName="tableCompositionInputsLower"
+                tableData={tableDataLower}
+                onChangeInputsTables={onChangeInputsTables}
+              />
+              <div style={{ marginTop: '1%' }}>
+                <Button onClick={() => calcular('tableDataLower', 'tableCompositionInputsLower')}>
+                  Calcular curva inferior
+                </Button>
+              </div>
+            </TableContainer>
+          )}
 
           {/* <DataGrid rows={[]} columns={[]} /> */}
 

@@ -59,6 +59,9 @@ class Superpave_SERVICE implements IEssayService {
           await this.getStep3Data(data as SuperpaveData, this.userId, isConsult);
           break;
         case 2:
+          if (isConsult) {
+            await this.getStep3Data(data as SuperpaveData, this.userId, isConsult);
+          }
           break;
         case 3:
           break;
@@ -166,26 +169,32 @@ class Superpave_SERVICE implements IEssayService {
   };
 
   getStep3Data = async (
-    dataStep3: SuperpaveData,
-    user: string,
-    isConsult: boolean
-  ): Promise<void> => {
-    if (!isConsult) {
+    dosageData: SuperpaveData, 
+    user: string, 
+    isConsult?: boolean
+  ): Promise<any> => {
+    const step = dosageData.generalData.step;
+    if (!isConsult || isConsult && step === 2) {
       try {
-        const { dnitBand } = dataStep3.generalData;
-
-        const { aggregates } = dataStep3.materialSelectionData;
-
+        const { dnitBand } = dosageData.generalData;
+  
+        const { aggregates } = dosageData.materialSelectionData;
+  
         const response = await Api.post(`${this.info.backend_path}/step-3-data`, {
           dnitBand: dnitBand,
           aggregates: aggregates,
         });
-
+  
         const { data, success, error } = response.data;
-
+  
         if (success === false) throw error.name;
-
-        this.store_actions.setData({ step: 2, value: {...dataStep3.granulometryCompositionData, ...data}});
+  
+        if (step !== 2) {
+          this.store_actions?.setData({ step: 2, value: { ...dosageData.granulometryCompositionData, ...data } });
+        } else {
+          console.log("aqui")
+          return data;
+        }
       } catch (error) {
         throw error;
       }
@@ -202,13 +211,12 @@ class Superpave_SERVICE implements IEssayService {
       const { dnitBand } = step1Data;
       const { aggregates } = step2Data;
 
-
       const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {
         chosenCurves,
         percentageInputs,
         dnitBand,
         materials: aggregates,
-        nominalSize
+        nominalSize,
       });
 
       const { data, success, error } = response.data;
@@ -217,10 +225,10 @@ class Superpave_SERVICE implements IEssayService {
 
       const newData = {
         ...calculateStep3Data,
-        ...data
-      }
+        ...data,
+      };
 
-      this.store_actions.setData({ step: 2, value: newData })
+      this.store_actions.setData({ step: 2, value: newData });
     } catch (error) {
       throw error;
     }
