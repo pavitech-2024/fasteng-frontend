@@ -95,18 +95,20 @@ const CurvesTable: React.FC<Props> = ({
     {
       field: 'peneira',
       headerName: 'Peneira',
+      width: 150,
       valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'totalPassant_1',
       headerName: 'Total passante (%)',
+      width: 150,
       valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'material_1',
       headerName: ``,
       valueFormatter: ({ value }) => `${value}`,
-      width: 200,
+      width: 100,
       renderHeader: () => (
         <InputEndAdornment
           adornment="%"
@@ -122,13 +124,14 @@ const CurvesTable: React.FC<Props> = ({
     {
       field: 'totalPassant_2',
       headerName: 'Total passante (%)',
+      width: 150,
       valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'material_2',
       headerName: ``,
       valueFormatter: ({ value }) => `${value}`,
-      width: 200,
+      width: 100,
       renderHeader: () => (
         <InputEndAdornment
           adornment="%"
@@ -158,17 +161,28 @@ const CurvesTable: React.FC<Props> = ({
     },
   ];
 
+  let newTableData;
+
+  if (data.lowerComposition.percentsOfMaterials?.length[0] > 0) {
+    newTableData = tableData.map((e, idx) => ({
+      ...e,
+      percentOfMaterial_1: data.lowerComposition.percentsOfMaterials[0][idx],
+      percentOfMaterial_2: data.lowerComposition.percentsOfMaterials[1][idx],
+    }))
+  }
+
   const rows = tableData.map((e, idx) => ({
     id: idx,
     peneira: e.peneira,
     totalPassant_1: e.keyTotal0,
-    material_1: data.percentageInputs[0].material_1,
+    material_1: data.lowerComposition.percentsOfMaterials !== null ? data.lowerComposition.percentsOfMaterials[0][idx] : '',
     totalPassant_2: e.keyTotal1,
-    material_2: data.percentageInputs[0].material_2,
-    project: data?.project[idx] ? data?.project[idx] : '',
+    material_2: data.lowerComposition.percentsOfMaterials !== null ? data.lowerComposition.percentsOfMaterials[1][idx] : '',
+    project: data?.lowerComposition.sumOfPercents !== null ? data?.lowerComposition.sumOfPercents[idx] : '',
     band1: e.bandsCol1,
     band2: e.bandsCol2,
   }));
+  console.log("🚀 ~ rows ~ rows:", rows)
 
   const groupings: GridColumnGroupingModel = [
     {
@@ -202,6 +216,8 @@ const CurvesTable: React.FC<Props> = ({
       rows={rows}
       columns={columns}
       hideFooter
+      disableColumnMenu
+      disableColumnFilter
       experimentalFeatures={{ columnGrouping: true }}
       columnGroupingModel={groupings}
     />

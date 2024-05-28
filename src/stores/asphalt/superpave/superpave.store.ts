@@ -41,6 +41,10 @@ interface SuperpaveGranulometryCompositionData {
   dnitBands: { higher: [string, number][]; lower: [string, number][] };
   graphData: any[];
   percentsToList: any[];
+  lowerComposition: {
+    percentsOfMaterials: [[],[]],
+    sumOfPercents: []
+  },
   nominalSize: {
     value: number
   };
@@ -102,6 +106,10 @@ const initialState = {
     project: [],
     dnitBands: null,
     graphData: [],
+    lowerComposition: {
+      percentsOfMaterials: null,
+      sumOfPercents: null,
+    },
     percentageInputs: [{
       material_1: null,
       material_2: null

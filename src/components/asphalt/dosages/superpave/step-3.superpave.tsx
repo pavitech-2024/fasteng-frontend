@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import { SuperpaveDosageData } from '@/interfaces/asphalt/superpave';
 import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
+import { Title } from '@mui/icons-material';
 
 const Superpave_Step3 = ({
   nextDisabled,
@@ -177,6 +178,7 @@ const Superpave_Step3 = ({
   const tableData = setBandsHigherLower(tableDataAux, bandsHigher, bandsLower, arrayResponse, peneiras);
 
   let tableDataLower = tableData;
+  console.log("🚀 ~ tableDataLower:", tableDataLower)
   let tableDataAverage = tableData;
   let tableDataHigher = tableData;
 
@@ -261,12 +263,11 @@ const Superpave_Step3 = ({
   };
 
   const updateDataArray = (data) => {
+    console.log("🚀 ~ updateDataArray ~ data:", data)
     let emptyTitles = [];
     let result = data;
-    if (isString(data[0][0])) {
-      data[0].forEach(() => emptyTitles.push(''));
-      result.unshift(emptyTitles);
-    }
+    data[0].forEach(() => emptyTitles.push(''));
+    result.unshift(emptyTitles);
     return result;
   };
 
@@ -366,6 +367,8 @@ const Superpave_Step3 = ({
     }
   };
 
+  console.log('gráfico', data.graphData);
+
   nextDisabled && setNextDisabled(false);
 
   return (
@@ -437,7 +440,12 @@ const Superpave_Step3 = ({
             </TableContainer>
           )}
 
-          {data.graphData.length > 0 && <Graph data={data.graphData} />}
+          {data.graphData.length > 0 && (
+            <>
+              <Typography>Tamanho nominal máximo: {data.nominalSize.value} mm</Typography>
+              <Graph data={data.graphData} />
+            </>
+          )}
         </Box>
       )}
     </>

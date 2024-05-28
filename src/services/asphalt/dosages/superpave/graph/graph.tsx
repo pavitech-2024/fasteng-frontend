@@ -1,44 +1,9 @@
-// // components/Graph/index.js
-// import React from 'react';
-// import { Chart } from 'react-google-charts';
-
-import { CloseIcon } from "@/assets";
-import { Title } from "@mui/icons-material";
-import { Box, Modal } from "@mui/material";
-import { useState, useRef, useEffect, useCallback } from "react";
-import Chart, { GoogleChartWrapper, ReactGoogleChartEvent } from "react-google-charts";
-
-// const Graph = ({ data }) => {
-//   return (
-//     <Chart
-//       width={'100%'}
-//       height={'400px'}
-//       chartType="LineChart"
-//       loader={<div>Loading Chart</div>}
-//       data={data}
-//       options={{
-//         title: '',
-//         hAxis: {
-//           title: 'Diâmetro (mm)',
-//           logScale: true,
-//           titleTextStyle: { italic: false },
-//         },
-//         chartArea: { width: '70%', height: '70%' },
-//         vAxis: { title: 'Passante (%)', titleTextStyle: { italic: false } },
-//         legend: { position: 'bottom' },
-//         series: {
-//           0: { color: 'blue', lineDashStyle: [15, 15], lineWidth: 3 },
-//           1: { color: 'gray', lineDashStyle: [2, 2] },
-//           2: { color: 'black' },
-//           3: { color: 'gray', lineDashStyle: [2, 2], visibleInLegend: false },
-//           4: { color: 'blue', lineDashStyle: [15, 15], lineWidth: 3, visibleInLegend: false },
-//         },
-//       }}
-//     />
-//   );
-// };
-
-// export default Graph;
+import { CloseIcon } from '@/assets';
+import FullScreenIcon from '@/assets/common/fullScreenIcon';
+import { Title } from '@mui/icons-material';
+import { Box, Button, Modal } from '@mui/material';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import Chart, { GoogleChartWrapper, ReactGoogleChartEvent } from 'react-google-charts';
 
 const Graph = ({ data, nominalSize }) => {
   const [fullScreen, setFullScreen] = useState(false);
@@ -178,9 +143,7 @@ const Graph = ({ data, nominalSize }) => {
     if (graphContainer) {
       graphContainer = graphContainer.parentElement;
       graphContainer.style.width = `${width}px`;
-      height !== 0
-        ? (graphContainer.style.height = `${height}px`)
-        : (graphContainer.style.height = `${width / 2}px`);
+      height !== 0 ? (graphContainer.style.height = `${height}px`) : (graphContainer.style.height = `${width / 2}px`);
     }
   };
 
@@ -224,12 +187,18 @@ const Graph = ({ data, nominalSize }) => {
         <Chart chartType="LineChart" data={data} options={optionsFullScreen.current} />
       </Modal> */}
       <Title>Tamanho nominal máximo: {nominalSize} mm</Title>
-      {/* <Actions>
-        <ExpandButton onClick={() => updateWindowDimensions(true)}>
+      <Box
+        sx={{
+          display: 'flex',
+          width: '100%',
+          justifyContent: 'flex-end',
+        }}
+      >
+        <Button onClick={() => updateWindowDimensions(true)}>
           Expandir gráfico
           <FullScreenIcon />
-        </ExpandButton>
-      </Actions> */}
+        </Button>
+      </Box>
       <Chart chartType="LineChart" data={data} options={options} />
     </Box>
   );
