@@ -15,6 +15,7 @@ import CurvesTable from './tables/curvesTable';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import { SuperpaveDosageData } from '@/interfaces/asphalt/superpave';
+import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
 
 const Superpave_Step3 = ({
   nextDisabled,
@@ -28,34 +29,37 @@ const Superpave_Step3 = ({
 
   useEffect(() => {
     if (data.percentsToList.length > 0) {
-      setLoading(false)
-    } 
+      setLoading(false);
+    }
     if (generalData.step === 2) {
-      toast.promise(async () => {
-        try {
-          const dosageData = sessionStorage.getItem('asphalt-superpave-store');
-          const sessionDataJson = JSON.parse(dosageData);
-          const dosageDataJson = sessionDataJson.state as SuperpaveData
+      toast.promise(
+        async () => {
+          try {
+            const dosageData = sessionStorage.getItem('asphalt-superpave-store');
+            const sessionDataJson = JSON.parse(dosageData);
+            const dosageDataJson = sessionDataJson.state as SuperpaveData;
 
-          const response = await superpave.getStep3Data(dosageDataJson, user._id)
+            const response = await superpave.getStep3Data(dosageDataJson, user._id);
 
-          setData({ 
-            step: 2, 
-            value: { 
-              ...dosageDataJson.granulometryCompositionData, 
-              ...response
-            }
-          });
-          setLoading(false);
-        } catch (error) {
-          setLoading(false);
-          throw error;
+            setData({
+              step: 2,
+              value: {
+                ...dosageDataJson.granulometryCompositionData,
+                ...response,
+              },
+            });
+            setLoading(false);
+          } catch (error) {
+            setLoading(false);
+            throw error;
+          }
+        },
+        {
+          pending: t('loading.materials.pending'),
+          success: t('loading.materials.success'),
+          error: t('loading.materials.error'),
         }
-      },{
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
-      });
+      );
     }
   }, []);
 
@@ -71,6 +75,21 @@ const Superpave_Step3 = ({
   const [inferior, setInferior] = useState(false);
   const [intermediaria, setIntermediaria] = useState(false);
   const [superior, setSuperior] = useState(false);
+
+  const handleCheckboxChange = (checked, setChecked) => {
+    if (checked) {
+      setInferior(false);
+      setIntermediaria(false);
+      setSuperior(false);
+      setChecked(true);
+    } else {
+      setChecked(false);
+    }
+  };
+
+  // useEffect(() => {
+  //   console.log("🚀 ~ inferior:", inferior)
+  // },[inferior])
 
   const convertNumber = (value) => {
     let aux = value;
@@ -185,16 +204,21 @@ const Superpave_Step3 = ({
   };
 
   const convertToNumberPercentsToList = (tableCompositionInputName) => {
-    let keys = Object.keys([tableCompositionInputName]);
+    let keys = Object.keys(data.percentageInputs);
     let arrayAux = [];
     let inputAcess = '';
     let sum = 0;
     for (let i = 0; i < keys.length; i++) {
       inputAcess = keys[i];
-      const value = convertNumber([tableCompositionInputName][inputAcess]);
-      if (validateNumber(value)) {
-        arrayAux.push(value);
-        sum = Math.round((sum + value) * 1e2) / 1e2;
+      const valueMaterial_1 = convertNumber(data.percentageInputs[inputAcess].material_1);
+      const valueMaterial_2 = convertNumber(data.percentageInputs[inputAcess].material_2);
+      if (validateNumber(valueMaterial_1)) {
+        arrayAux.push(valueMaterial_1);
+        sum = Math.round((sum + valueMaterial_1) * 1e2) / 1e2;
+      }
+      if (validateNumber(valueMaterial_2)) {
+        arrayAux.push(valueMaterial_2);
+        sum = Math.round((sum + valueMaterial_2) * 1e2) / 1e2;
       }
     }
     return { totalSum: sum, valuesInput: arrayAux, tableCompositionInputName };
@@ -267,8 +291,6 @@ const Superpave_Step3 = ({
         resultInputsHigher.tableCompositionInputName === tableCompositionInputName)
     ) {
       toast.error('Todos os campos estão vazios');
-      // this.setState({ modal: false, disableNext: true });
-      // this.scrollTo(0);
     } else {
       if (
         (resultInputsLower.totalSum === 100 &&
@@ -290,34 +312,36 @@ const Superpave_Step3 = ({
           higher: superior,
         };
 
-        await superpave.calculateGranulometryComposition(data, materialSelectionData, generalData).then((res) => {
-          const keys = ['averageComposition', 'higherComposition', 'lowerComposition'];
-          let tablesNames = ['tableDataAverage', 'tableDataHigher', 'tableDataLower'];
-          let response = res.data.message;
-          keys.forEach((key, i) => {
-            if (response[key].percentsOfMaterials !== undefined) {
-              let tableUpdate = updateTable(
-                response[key].percentsOfMaterials,
-                response[key].sumOfPercents,
-                tablesNames[i]
-              );
-              //Verificação por escolha de curvas
-              if (
-                (inferior && resultInputsLower.totalSum !== 100) ||
-                (intermediaria && resultInputsAverage.totalSum !== 100) ||
-                (superior && resultInputsHigher.totalSum !== 100)
-              ) {
-                tablesNames = tableUpdate;
-              } else {
-                tablesNames = tableUpdate;
-                nominalSize: numberRepresentation(data?.nominalSize);
+        await superpave
+          .calculateGranulometryComposition(data, materialSelectionData, generalData, chosenCurves)
+          .then((res) => {
+            const keys = ['averageComposition', 'higherComposition', 'lowerComposition'];
+            let tablesNames = ['tableDataAverage', 'tableDataHigher', 'tableDataLower'];
+            let response = res;
+            keys.forEach((key, i) => {
+              if (response[key].percentsOfMaterials !== undefined) {
+                let tableUpdate = updateTable(
+                  response[key].percentsOfMaterials,
+                  response[key].sumOfPercents,
+                  tablesNames[i]
+                );
+                //Verificação por escolha de curvas
+                if (
+                  (inferior && resultInputsLower.totalSum !== 100) ||
+                  (intermediaria && resultInputsAverage.totalSum !== 100) ||
+                  (superior && resultInputsHigher.totalSum !== 100)
+                ) {
+                  tablesNames = tableUpdate;
+                } else {
+                  tablesNames = tableUpdate;
+                  nominalSize: numberRepresentation(data?.nominalSize.value);
+                }
               }
-            }
-          });
+            });
 
-          //Ajustar o gráfico para as curvas selecionadas
-          updateGraph(data?.pointsOfCurve);
-        });
+            //Ajustar o gráfico para as curvas selecionadas
+            updateGraph(data?.pointsOfCurve);
+          });
       } else if (
         (resultInputsLower.valuesInput.length !== selectedMaterials.length &&
           resultInputsLower.tableCompositionInputName === tableCompositionInputName) ||
@@ -362,17 +386,22 @@ const Superpave_Step3 = ({
 
           <FormGroup sx={{ display: 'flex', flexDirection: 'row' }}>
             <FormControlLabel
-              control={<Checkbox onChange={() => setInferior(!inferior)} />}
+              control={<Checkbox checked={inferior} onChange={() => handleCheckboxChange(!inferior, setInferior)} />}
               label="curva inferior"
               value={inferior}
             />
             <FormControlLabel
-              control={<Checkbox onChange={() => setIntermediaria(!intermediaria)} />}
+              control={
+                <Checkbox
+                  checked={intermediaria}
+                  onChange={() => handleCheckboxChange(!intermediaria, setIntermediaria)}
+                />
+              }
               label="curva intermediária"
               value={intermediaria}
             />
             <FormControlLabel
-              control={<Checkbox onChange={() => setSuperior(!superior)} />}
+              control={<Checkbox checked={superior} onChange={() => handleCheckboxChange(!superior, setSuperior)} />}
               label="curva superior"
               value={superior}
             />
@@ -408,13 +437,7 @@ const Superpave_Step3 = ({
             </TableContainer>
           )}
 
-          {/* <DataGrid rows={[]} columns={[]} /> */}
-
-          {/* {data?.percentageInputs?.length > 0 && (
-            <Step3InputTable rows={inputRows} columns={inputColumns} superpave={superpave} />
-          )} */}
-
-          {/* <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} superpave={superpave} /> */}
+          {data.graphData.length > 0 && <Graph data={data.graphData} />}
         </Box>
       )}
     </>

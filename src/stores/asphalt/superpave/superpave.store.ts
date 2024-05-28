@@ -33,12 +33,17 @@ interface SuperpaveGranulometryCompositionData {
     }[];
     table_column_headers: string[];
   };
-  percentageInputs: { [key: string]: number }[];
+  percentageInputs: {
+    material_1: string,
+    material_2: string
+  }[];
   project: number[];
   dnitBands: { higher: [string, number][]; lower: [string, number][] };
   graphData: any[];
   percentsToList: any[];
-  nominalSize: number;
+  nominalSize: {
+    value: number
+  };
   pointsOfCurve: number[],
   chosenCurves: {
     lower: boolean,
@@ -97,9 +102,14 @@ const initialState = {
     project: [],
     dnitBands: null,
     graphData: [],
-    percentageInputs: [],
+    percentageInputs: [{
+      material_1: null,
+      material_2: null
+    }],
     percentsToList: [],
-    nominalSize: null,
+    nominalSize: {
+      value: null
+    },
     pointsOfCurve: [],
     chosenCurves: {
       lower: null,
@@ -113,41 +123,6 @@ const initialState = {
     }
   },
 };
-
-// const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(
-//   devtools(
-//     persist(
-//       (set) => ({
-//         ...initialState,
-
-//         setData: ({ step, key, value }) =>
-//           set((state) => {
-//             if (key)
-//               return {
-//                 ...state,
-//                 [stepVariant[step]]: {
-//                   ...state[stepVariant[step]],
-//                   [key]: value,
-//                 },
-//               };
-//             else return { ...state, [stepVariant[step]]: value };
-//           }),
-
-//         reset: ({ step }) => {
-//           set(initialState);
-//           return {
-//             [stepVariant[step]]: null,
-//           };
-//         },
-//       }),
-//       {
-//         // name data store e config no session storage
-//         name: 'asphalt-superpave-store',
-//         storage: createJSONStorage(() => sessionStorage),
-//       }
-//     )
-//   )
-// );
 
 const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(
   devtools(

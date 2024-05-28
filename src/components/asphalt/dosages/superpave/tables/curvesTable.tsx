@@ -49,20 +49,17 @@ const CurvesTable: React.FC<Props> = ({
   tableData,
   onChangeInputsTables,
 }) => {
-
   const { granulometryCompositionData: data, setData } = useSuperpaveStore();
 
   const [project, setProject] = useState(data?.project?.length > 0 ? data.project : []);
 
-  const inputRows: { [key: string]: number }[] = data?.percentageInputs;
+  //const inputRows: { [key: string]: number }[] = data?.percentageInputs;
 
   const [table, setTable] = useState<TableModel>({
     columnsHeaderTop: [{ header: 'Peneira', type: 'rowSpan' }],
     columnsHeader: [],
     columnsKeys: [],
   });
-
-  console.log('🚀 ~ table:', table);
 
   useEffect(() => {
     const newTable = createObjectTableModel(materials, dnitBandsLetter);
@@ -107,27 +104,20 @@ const CurvesTable: React.FC<Props> = ({
     },
     {
       field: 'material_1',
-      headerName: `${materials[0].name}`,
+      headerName: ``,
       valueFormatter: ({ value }) => `${value}`,
-      renderCell: ({ row }) => {
-        if (row.material_1 === undefined) {
-          return;
-        }
-
-        return (
-          <InputEndAdornment
-            adornment={'%'}
-            type="number"
-            value={inputRows[0] ? inputRows[0]['percentage_'.concat(materials[0]._id)] : ''}
-            onChange={(e) => {
-              if (e.target.value === null) return;
-              const newRows = [...inputRows];
-              newRows[0]['percentage_'.concat(materials[0]._id)] = Number(e.target.value);
-              setData({ step: 2, key: 'percentageInputs', value: newRows });
-            }}
-          />
-        );
-      },
+      width: 200,
+      renderHeader: () => (
+        <InputEndAdornment
+          adornment="%"
+          value={data?.percentageInputs[0].material_1 || ''}
+          onChange={(e) => {
+            const prevData = [...data?.percentageInputs];
+            const newData = {...prevData[0], material_1: e.target.value}
+            setData({ step: 2, value: {...data, percentageInputs: [newData]} });
+          }}
+        />
+      )
     },
     {
       field: 'totalPassant_2',
@@ -136,27 +126,20 @@ const CurvesTable: React.FC<Props> = ({
     },
     {
       field: 'material_2',
-      headerName: `${materials[1].name}`,
+      headerName: ``,
       valueFormatter: ({ value }) => `${value}`,
-      renderCell: ({ row }) => {
-        if (row.material_2 !== undefined) {
-          return;
-        }
-
-        return (
-          <InputEndAdornment
-            adornment={'%'}
-            type="number"
-            value={inputRows[1] ? inputRows[1]['percentage_'.concat(materials[1]._id)] : ''}
-            onChange={(e) => {
-              if (e.target.value === null) return;
-              const newRows = [...inputRows];
-              newRows[1]['percentage_'.concat(materials[1]._id)] = Number(e.target.value);
-              setData({ step: 2, key: 'percentageInputs', value: newRows });
-            }}
-          />
-        );
-      },
+      width: 200,
+      renderHeader: () => (
+        <InputEndAdornment
+          adornment="%"
+          value={data?.percentageInputs[0].material_2 || ''}
+          onChange={(e) => {
+            const prevData = [...data?.percentageInputs];
+            const newData = {...prevData[0], material_2: e.target.value}
+            setData({ step: 2, value: {...data, percentageInputs: [newData]} });
+          }}
+        />
+      )
     },
     {
       field: 'project',
@@ -179,9 +162,9 @@ const CurvesTable: React.FC<Props> = ({
     id: idx,
     peneira: e.peneira,
     totalPassant_1: e.keyTotal0,
-    material_1: e.keyTotal0,
+    material_1: data.percentageInputs[0].material_1,
     totalPassant_2: e.keyTotal1,
-    material_2: e.keyTotal1,
+    material_2: data.percentageInputs[0].material_2,
     project: data?.project[idx] ? data?.project[idx] : '',
     band1: e.bandsCol1,
     band2: e.bandsCol2,
@@ -190,11 +173,13 @@ const CurvesTable: React.FC<Props> = ({
   const groupings: GridColumnGroupingModel = [
     {
       groupId: 'material_1',
+      headerName: materials[0].name,
       children: [{ field: 'totalPassant_1' }, { field: 'material_1' }],
       headerAlign: 'center',
     },
     {
       groupId: 'material_2',
+      headerName: materials[1].name,
       children: [{ field: 'totalPassant_2' }, { field: 'material_2' }],
       headerAlign: 'center',
     },
