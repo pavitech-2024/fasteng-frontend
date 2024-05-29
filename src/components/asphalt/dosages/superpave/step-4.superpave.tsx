@@ -3,11 +3,15 @@ import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
+import { AsphaltMaterialData } from '@/interfaces/asphalt';
+import materialsService from '@/services/asphalt/asphalt-materials.service';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { Box, Typography } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { t } from 'i18next';
 import { ChangeEvent, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const Superpave_Step4 = ({
   nextDisabled,
@@ -22,6 +26,30 @@ const Superpave_Step4 = ({
 
   const { user } = useAuth();
 
+  const [binderData, setBinderData] = useState<AsphaltMaterialData>();
+
+  useEffect(() => {
+    toast.promise(
+      async () => {
+        try {
+          const response = await materialsService.getMaterial(materialSelectionData.binder);
+          
+          setBinderData(response.data.material);
+
+          // setLoading(false);
+        } catch (error) {
+          // setLoading(false);
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      }
+    );
+  }, []);
+
   const modalMaterial_1Inputs = [
     {
       key: 'realSpecificMass',
@@ -30,7 +58,7 @@ const Superpave_Step4 = ({
       value: data.material_1.realSpecificMass,
     },
     {
-      key: 'appSpecificMass',
+      key: 'apparentSpecificMass',
       placeHolder: 'Massa específica aparente',
       adornment: 'g/cm²',
       value: data.material_1.apparentSpecificMass,
@@ -51,7 +79,7 @@ const Superpave_Step4 = ({
       value: data.material_2.realSpecificMass,
     },
     {
-      key: 'appSpecificMass',
+      key: 'apparentSpecificMass',
       placeHolder: 'Massa específica aparente',
       adornment: 'g/cm²',
       value: data.material_2.apparentSpecificMass,
@@ -64,7 +92,49 @@ const Superpave_Step4 = ({
     },
   ];
 
-  const handleModalSubmit = () => {};
+  const handleModalSubmit = () => {
+    toast.promise(
+      async () => {
+        try {
+          await superpave.getStep4Data(materialSelectionData, data)
+          
+          setSpecificMassModalIsOpen(false)
+        } catch (error) {
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      }
+    );
+  };
+
+  const columns: GridColDef[] = [
+    {
+      field: 'granulometricComposition',
+      headerName: 'Composição Granulométrica',
+      valueFormatter: ({value}) => `${value}`
+    },
+    {
+      field: 'combinedGsb',
+      headerName: 'Gsb combinado (g/cm³)',
+      valueFormatter: ({value}) => `${value}`
+    },
+    {
+      field: 'combinedGsa',
+      headerName: 'Gsa combinado (g/cm³)',
+      valueFormatter: ({value}) => `${value}`
+    },
+    {
+      field: 'gse',
+      headerName: 'Gse (g/cm³)',
+      valueFormatter: ({value}) => `${value}`
+    },
+  ];
+
+  const rows = []
 
   nextDisabled && setNextDisabled(false);
 
@@ -80,7 +150,7 @@ const Superpave_Step4 = ({
             gap: '10px',
           }}
         >
-          <DataGrid columns={[]} rows={[]} />
+          <DataGrid columns={columns} rows={rows} />
         </Box>
       )}
 
@@ -111,11 +181,7 @@ const Superpave_Step4 = ({
                   placeholder={input.placeHolder}
                   fullWidth
                   onChange={(e) => {
-                    const newData = {
-                      ...data.material_1,
-                      [input.key]: Number(e.target.value),
-                    };
-                    console.log('🚀 ~ newData:', newData);
+                    setData({ step: 3, key: `material_1`, value: {...data.material_1, [input.key]: Number(e.target.value)}})
                   }}
                 />
               ))}
@@ -134,23 +200,22 @@ const Superpave_Step4 = ({
                   placeholder={input.placeHolder}
                   fullWidth
                   onChange={(e) => {
-                    const newData = {
-                      ...data.material_2,
-                      [input.key]: Number(e.target.value),
-                    };
-                    console.log('🚀 ~ newData:', newData);
+                    setData({ step: 3, key: `material_2`, value: {...data.material_2, [input.key]: Number(e.target.value)}})
                   }}
                 />
               ))}
             </Box>
           </Box>
 
+          <Typography>{binderData?.name}</Typography>
+
           <Box>
             <InputEndAdornment
               adornment={'g/cm²'}
+              placeholder="Massa especifica real"
               value={data.binderSpecificMass}
               onChange={(e) => {
-                setData({ step: 3, key: 'binderSpecificMass', value: Number(e.target.value)})
+                setData({ step: 3, key: 'binderSpecificMass', value: Number(e.target.value) });
               }}
             />
           </Box>

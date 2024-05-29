@@ -266,6 +266,30 @@ class Superpave_SERVICE implements IEssayService {
       }
     }
   };
+
+  getStep4Data = async (
+    step2Data: SuperpaveData['materialSelectionData'],
+    step4Data: SuperpaveData['initialBinderData'], 
+    isConsult?: boolean
+  ): Promise<any> => {
+    if (!isConsult) {
+      try {
+        const { aggregates } = step2Data;
+  
+        const response = await Api.post(`${this.info.backend_path}/step-4-data`, {
+          materials: aggregates,
+        });
+  
+        const { data, success, error } = response.data;
+  
+        if (success === false) throw error.name;
+  
+        this.store_actions?.setData({ step: 3, value: { ...step4Data, ...data } });
+      } catch (error) {
+        throw error;
+      }
+    }
+  };
 }
 
 export default Superpave_SERVICE;
