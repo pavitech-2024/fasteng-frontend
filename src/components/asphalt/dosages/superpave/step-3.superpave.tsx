@@ -44,10 +44,6 @@ const Superpave_Step3 = ({
   const [intermediaria, setIntermediaria] = useState(false);
   const [superior, setSuperior] = useState(false);
 
-  // useEffect(() => {
-  //   console.log("🚀 ~ tableData:", tableData)
-  // },[tableData])
-
   useEffect(() => {
     if (data.percentsToList.length > 0) {
       setLoading(false);
@@ -251,24 +247,24 @@ const Superpave_Step3 = ({
         second++;
       }
     });
-    
+
     return tableData;
   };
 
   const clearTable = () => {
-    let newInputs = data.percentageInputs;
-
-    newInputs.map((input) => ({
+    let newInputs = data.percentageInputs.map((input) => ({
       material_1: null,
-      material_2: null
+      material_2: null,
     }));
 
     setInferior(false);
     setIntermediaria(false);
     setSuperior(false);
 
+    const prevData = data;
+
     const newData = {
-      ...data,
+      ...prevData,
       graphData: [],
       percentageInputs: newInputs,
       lowerComposition: {
@@ -282,20 +278,21 @@ const Superpave_Step3 = ({
       higherComposition: {
         percentsOfMaterials: null,
         sumOfPercents: null,
-      }
-    }
-    
-    setData({ step: 2, value: newData })
+      },
+    };
+
+    setData({ step: 2, value: newData });
   };
 
   const updateDataArray = (data) => {
     let emptyTitles = [];
     let result = data;
     if (data.length > 0) {
-      data[0].forEach(() => emptyTitles.push(''));
-      result.unshift(emptyTitles);
+      if (data[0].some((value) => value !== '')) {
+        data[0].forEach(() => emptyTitles.push(''));
+        result.unshift(emptyTitles);
+      }
     }
-
     return result;
   };
 
@@ -306,101 +303,50 @@ const Superpave_Step3 = ({
     setData({ step: 2, value: newData });
   };
 
-  const calcular = async (tableDataName, tableCompositionInputName) => {
-    const resultInputsLower = convertToNumberPercentsToList('tableCompositionInputsLower');
-    const resultInputsAverage = convertToNumberPercentsToList('tableCompositionInputsAverage');
-    const resultInputsHigher = convertToNumberPercentsToList('tableCompositionInputsHigher');
+  const calcular = () => {
+    toast.promise(
+      async () => {
+        try {
+          let chosenCurves = {
+            lower: inferior,
+            average: intermediaria,
+            higher: superior,
+          };
 
-    if (
-      (resultInputsLower.valuesInput.length === 0 &&
-        resultInputsLower.tableCompositionInputName === tableCompositionInputName) ||
-      (resultInputsAverage.valuesInput.length === 0 &&
-        resultInputsAverage.tableCompositionInputName === tableCompositionInputName) ||
-      (resultInputsHigher.valuesInput.length === 0 &&
-        resultInputsHigher.tableCompositionInputName === tableCompositionInputName)
-    ) {
-      toast.error('Todos os campos estão vazios');
-    } else {
-      if (
-        (resultInputsLower.totalSum === 100 &&
-          resultInputsLower.tableCompositionInputName === tableCompositionInputName) ||
-        (resultInputsAverage.totalSum === 100 &&
-          resultInputsAverage.tableCompositionInputName === tableCompositionInputName) ||
-        (resultInputsHigher.totalSum === 100 &&
-          resultInputsHigher.tableCompositionInputName === tableCompositionInputName)
-      ) {
-        let arraySend = [
-          resultInputsLower.totalSum === 100 ? resultInputsLower.valuesInput : [],
-          resultInputsAverage.totalSum === 100 ? resultInputsAverage.valuesInput : [],
-          resultInputsHigher.totalSum === 100 ? resultInputsHigher.valuesInput : [],
-        ];
+          const composition = await superpave.calculateGranulometryComposition(
+            data,
+            materialSelectionData,
+            generalData,
+            chosenCurves
+          );
 
-        let chosenCurves = {
-          lower: inferior,
-          average: intermediaria,
-          higher: superior,
-        };
+          const prevData = data;
 
-        await superpave
-          .calculateGranulometryComposition(data, materialSelectionData, generalData, chosenCurves)
-          .then((res) => {
-            console.log("🚀 ~ .then ~ res:", res)
-            const keys = ['averageComposition', 'higherComposition', 'lowerComposition'];
-            let tablesNames = ['tableDataAverage', 'tableDataHigher', 'tableDataLower'];
-            let response = res;
-            let newData = response.newData
-            console.log("🚀 ~ .then ~ newData:", newData)
-            keys.forEach((key, i) => {
-              if (response[key].percentsOfMaterials !== undefined) {
-                let tableUpdate = updateTable(
-                  response[key].percentsOfMaterials,
-                  response[key].sumOfPercents,
-                  tablesNames[i]
-                );
+          const newData = {
+            ...prevData,
+            ...composition,
+          };
 
-                //Verificação por escolha de curvas
-                if (
-                  (inferior && resultInputsLower.totalSum !== 100) ||
-                  (intermediaria && resultInputsAverage.totalSum !== 100) ||
-                  (superior && resultInputsHigher.totalSum !== 100)
-                ) {
-                  tablesNames = tableUpdate;
-                } else {
-                  tablesNames = tableUpdate;
-                  nominalSize: numberRepresentation(data?.nominalSize.value);
-                }
-              }
-
-              setData({ step: 2, value: newData})
-            });
-
-            //Ajustar o gráfico para as curvas selecionadas
-            updateGraph(data?.pointsOfCurve);
-          });
-      } else if (
-        (resultInputsLower.valuesInput.length !== selectedMaterials.length &&
-          resultInputsLower.tableCompositionInputName === tableCompositionInputName) ||
-        (resultInputsAverage.valuesInput.length !== selectedMaterials.length &&
-          resultInputsAverage.tableCompositionInputName === tableCompositionInputName) ||
-        (resultInputsHigher.valuesInput.length !== selectedMaterials.length &&
-          resultInputsHigher.tableCompositionInputName === tableCompositionInputName)
-      ) {
-        toast.error('Algum campo está vazio!');
-      } else if (
-        (resultInputsLower.totalSum < 100 &&
-          resultInputsLower.tableCompositionInputName === tableCompositionInputName) ||
-        (resultInputsAverage.totalSum < 100 &&
-          resultInputsAverage.tableCompositionInputName === tableCompositionInputName) ||
-        (resultInputsHigher.totalSum < 100 &&
-          resultInputsHigher.tableCompositionInputName === tableCompositionInputName)
-      ) {
-        toast.error('A soma das porcentagens de cada agregado deve ser 100%.');
-      } else {
-        toast.error('Soma > 100%');
+          setData({ step: 2, value: newData });
+          //setLoading(false);
+        } catch (error) {
+          //setLoading(false);
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
       }
-    }
+    );
   };
 
+  useEffect(() => {
+    if (data.pointsOfCurve.length > 0) {
+      updateGraph(data.pointsOfCurve)
+    }
+  },[data.pointsOfCurve])
 
   nextDisabled && setNextDisabled(false);
 
@@ -466,7 +412,7 @@ const Superpave_Step3 = ({
                 onChangeInputsTables={onChangeInputsTables}
               />
               <div style={{ marginTop: '1%' }}>
-                <Button onClick={() => calcular('tableDataLower', 'tableCompositionInputsLower')}>
+                <Button onClick={() => calcular()}>
                   Calcular curva inferior
                 </Button>
               </div>
@@ -496,7 +442,7 @@ const Superpave_Step3 = ({
                 onChangeInputsTables={onChangeInputsTables}
               />
               <div style={{ marginTop: '1%' }}>
-                <Button onClick={() => calcular('tableDataAverage', 'tableCompositionInputsHigher')}>
+                <Button onClick={() => calcular()}>
                   Calcular curva intermediaria
                 </Button>
               </div>
@@ -526,7 +472,7 @@ const Superpave_Step3 = ({
                 onChangeInputsTables={onChangeInputsTables}
               />
               <div style={{ marginTop: '1%' }}>
-                <Button onClick={() => calcular('tableDataHigher', 'tableCompositionInputsHigher')}>
+                <Button onClick={() => calcular()}>
                   Calcular curva superior
                 </Button>
               </div>

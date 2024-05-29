@@ -49,7 +49,6 @@ const CurvesTable: React.FC<Props> = ({
   tableData,
   onChangeInputsTables,
 }) => {
-  console.log("🚀 ~ tableName:", tableName)
   const { granulometryCompositionData: data, setData } = useSuperpaveStore();
 
   const [table, setTable] = useState<TableModel>({
@@ -157,8 +156,6 @@ const CurvesTable: React.FC<Props> = ({
       valueFormatter: ({ value }) => `${value}`,
     },
   ];
-
-  console.log("🚀 ~ data[tableName]:", data[tableName])
 
   const rows = tableData.map((e, idx) => ({
     id: idx,

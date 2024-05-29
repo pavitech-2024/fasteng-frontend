@@ -20,25 +20,10 @@ interface SuperpaveMaterialSelectionData {
 }
 
 interface SuperpaveGranulometryCompositionData {
-  table_data: {
-    table_rows: {
-      sieve_label: string;
-      [key: string]:
-        | string
-        | {
-            _id: string;
-            total_passant: string;
-            passant: string;
-          };
-    }[];
-    table_column_headers: string[];
-  };
   percentageInputs: {
     material_1: string,
     material_2: string
   }[];
-  project: number[];
-  dnitBands: { higher: [string, number][]; lower: [string, number][] };
   graphData: any[];
   percentsToList: any[];
   lowerComposition: {
@@ -110,9 +95,6 @@ const initialState = {
     binder: null,
   },
   granulometryCompositionData: {
-    table_data: null,
-    project: [],
-    dnitBands: null,
     graphData: [],
     lowerComposition: {
       percentsOfMaterials: null,
