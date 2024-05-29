@@ -49,11 +49,8 @@ const CurvesTable: React.FC<Props> = ({
   tableData,
   onChangeInputsTables,
 }) => {
+  console.log("🚀 ~ tableName:", tableName)
   const { granulometryCompositionData: data, setData } = useSuperpaveStore();
-
-  const [project, setProject] = useState(data?.project?.length > 0 ? data.project : []);
-
-  //const inputRows: { [key: string]: number }[] = data?.percentageInputs;
 
   const [table, setTable] = useState<TableModel>({
     columnsHeaderTop: [{ header: 'Peneira', type: 'rowSpan' }],
@@ -161,28 +158,19 @@ const CurvesTable: React.FC<Props> = ({
     },
   ];
 
-  let newTableData;
-
-  if (data.lowerComposition.percentsOfMaterials?.length[0] > 0) {
-    newTableData = tableData.map((e, idx) => ({
-      ...e,
-      percentOfMaterial_1: data.lowerComposition.percentsOfMaterials[0][idx],
-      percentOfMaterial_2: data.lowerComposition.percentsOfMaterials[1][idx],
-    }))
-  }
+  console.log("🚀 ~ data[tableName]:", data[tableName])
 
   const rows = tableData.map((e, idx) => ({
     id: idx,
     peneira: e.peneira,
     totalPassant_1: e.keyTotal0,
-    material_1: data.lowerComposition.percentsOfMaterials !== null ? data.lowerComposition.percentsOfMaterials[0][idx] : '',
+    material_1: data[tableName].percentsOfMaterials !== null ? data[tableName].percentsOfMaterials[0][idx] : '',
     totalPassant_2: e.keyTotal1,
-    material_2: data.lowerComposition.percentsOfMaterials !== null ? data.lowerComposition.percentsOfMaterials[1][idx] : '',
-    project: data?.lowerComposition.sumOfPercents !== null ? data?.lowerComposition.sumOfPercents[idx] : '',
+    material_2: data[tableName].percentsOfMaterials !== null ? data[tableName].percentsOfMaterials[1][idx] : '',
+    project: data[tableName].sumOfPercents !== null ? data[tableName].sumOfPercents[idx] : '',
     band1: e.bandsCol1,
     band2: e.bandsCol2,
   }));
-  console.log("🚀 ~ rows ~ rows:", rows)
 
   const groupings: GridColumnGroupingModel = [
     {

@@ -4,19 +4,12 @@ import useAuth from '@/contexts/auth';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore, { SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
 import { Box, Button, Checkbox, FormControlLabel, FormGroup, Table, TableContainer, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { ChangeEvent, useEffect, useState } from 'react';
-import Step3InputTable from './tables/step-3-input-table';
-import Step3Table from './tables/step-3-table';
-import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
-import { getSieveSeries } from '@/utils/sieves';
-import { AllSieves, AllSieveSeries } from '@/interfaces/common';
+import { useEffect, useState } from 'react';
+import { AllSieves } from '@/interfaces/common';
 import CurvesTable from './tables/curvesTable';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
-import { SuperpaveDosageData } from '@/interfaces/asphalt/superpave';
 import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
-import { Title } from '@mui/icons-material';
 
 const Superpave_Step3 = ({
   nextDisabled,
@@ -27,6 +20,33 @@ const Superpave_Step3 = ({
   const { granulometryCompositionData: data, materialSelectionData, generalData, setData } = useSuperpaveStore();
 
   const { user } = useAuth();
+
+  const peneiras = AllSieves.map((peneira) => {
+    return { peneira: peneira.label };
+  });
+
+  let arrayResponse = data?.percentsToList;
+  let bandsHigher = data?.bands?.higher;
+  let bandsLower = data?.bands?.lower;
+  let tableDataAux;
+  let tableData;
+
+  let tableDataLower = tableData;
+  let tableDataAverage = tableData;
+  let tableDataHigher = tableData;
+
+  let tableCompositionInputsLower = {};
+  let tableCompositionInputsAverage = {};
+  let tableCompositionInputsHigher = {};
+
+  let selectedMaterials = materialSelectionData?.aggregates;
+  const [inferior, setInferior] = useState(false);
+  const [intermediaria, setIntermediaria] = useState(false);
+  const [superior, setSuperior] = useState(false);
+
+  // useEffect(() => {
+  //   console.log("🚀 ~ tableData:", tableData)
+  // },[tableData])
 
   useEffect(() => {
     if (data.percentsToList.length > 0) {
@@ -64,19 +84,6 @@ const Superpave_Step3 = ({
     }
   }, []);
 
-  const peneiras = AllSieves.map((peneira) => {
-    return { peneira: peneira.label };
-  });
-
-  let arrayResponse = data?.percentsToList;
-  let bandsHigher = data?.bands?.higher;
-  let bandsLower = data?.bands?.lower;
-  let nominalSize;
-  let selectedMaterials = materialSelectionData?.aggregates;
-  const [inferior, setInferior] = useState(false);
-  const [intermediaria, setIntermediaria] = useState(false);
-  const [superior, setSuperior] = useState(false);
-
   const handleCheckboxChange = (checked, setChecked) => {
     if (checked) {
       setInferior(false);
@@ -87,10 +94,6 @@ const Superpave_Step3 = ({
       setChecked(false);
     }
   };
-
-  // useEffect(() => {
-  //   console.log("🚀 ~ inferior:", inferior)
-  // },[inferior])
 
   const convertNumber = (value) => {
     let aux = value;
@@ -149,7 +152,7 @@ const Superpave_Step3 = ({
     return tableData;
   };
 
-  let tableDataAux = setPercentsToListTotal(peneiras, arrayResponse);
+  tableDataAux = setPercentsToListTotal(peneiras, arrayResponse);
 
   const setBandsHigherLower = (tableData, bandsHigher, bandsLower, arrayResponse, peneiras) => {
     let arrayAux = [];
@@ -175,28 +178,21 @@ const Superpave_Step3 = ({
     return arrayAux;
   };
 
-  const tableData = setBandsHigherLower(tableDataAux, bandsHigher, bandsLower, arrayResponse, peneiras);
+  tableData = setBandsHigherLower(tableDataAux, bandsHigher, bandsLower, arrayResponse, peneiras);
 
-  let tableDataLower = tableData;
-  console.log("🚀 ~ tableDataLower:", tableDataLower)
-  let tableDataAverage = tableData;
-  let tableDataHigher = tableData;
+  tableDataLower = tableData;
+  tableDataAverage = tableData;
+  tableDataHigher = tableData;
 
-  let tableCompositionInputsLower = {};
-  let tableCompositionInputsAverage = {};
-  let tableCompositionInputsHigher = {};
+  tableCompositionInputsLower = {};
+  tableCompositionInputsAverage = {};
+  tableCompositionInputsHigher = {};
 
   selectedMaterials.forEach((item, i) => {
     tableCompositionInputsLower['input' + (i * 2 + 1)] = '';
     tableCompositionInputsAverage['input' + (i * 2 + 1)] = '';
     tableCompositionInputsHigher['input' + (i * 2 + 1)] = '';
   });
-
-  const inputColumns: GridColDef[] = [];
-
-  // Tabela de dados
-  const rows = data?.table_data?.table_rows;
-  const columnGrouping = [];
 
   const onChangeInputsTables = (e, tableName, index) => {
     [tableName] = {
@@ -255,19 +251,51 @@ const Superpave_Step3 = ({
         second++;
       }
     });
+    
     return tableData;
   };
 
-  const isString = (value) => {
-    return typeof value === 'string' || value instanceof String;
+  const clearTable = () => {
+    let newInputs = data.percentageInputs;
+
+    newInputs.map((input) => ({
+      material_1: null,
+      material_2: null
+    }));
+
+    setInferior(false);
+    setIntermediaria(false);
+    setSuperior(false);
+
+    const newData = {
+      ...data,
+      graphData: [],
+      percentageInputs: newInputs,
+      lowerComposition: {
+        percentsOfMaterials: null,
+        sumOfPercents: null,
+      },
+      averageComposition: {
+        percentsOfMaterials: null,
+        sumOfPercents: null,
+      },
+      higherComposition: {
+        percentsOfMaterials: null,
+        sumOfPercents: null,
+      }
+    }
+    
+    setData({ step: 2, value: newData })
   };
 
   const updateDataArray = (data) => {
-    console.log("🚀 ~ updateDataArray ~ data:", data)
     let emptyTitles = [];
     let result = data;
-    data[0].forEach(() => emptyTitles.push(''));
-    result.unshift(emptyTitles);
+    if (data.length > 0) {
+      data[0].forEach(() => emptyTitles.push(''));
+      result.unshift(emptyTitles);
+    }
+
     return result;
   };
 
@@ -316,9 +344,12 @@ const Superpave_Step3 = ({
         await superpave
           .calculateGranulometryComposition(data, materialSelectionData, generalData, chosenCurves)
           .then((res) => {
+            console.log("🚀 ~ .then ~ res:", res)
             const keys = ['averageComposition', 'higherComposition', 'lowerComposition'];
             let tablesNames = ['tableDataAverage', 'tableDataHigher', 'tableDataLower'];
             let response = res;
+            let newData = response.newData
+            console.log("🚀 ~ .then ~ newData:", newData)
             keys.forEach((key, i) => {
               if (response[key].percentsOfMaterials !== undefined) {
                 let tableUpdate = updateTable(
@@ -326,6 +357,7 @@ const Superpave_Step3 = ({
                   response[key].sumOfPercents,
                   tablesNames[i]
                 );
+
                 //Verificação por escolha de curvas
                 if (
                   (inferior && resultInputsLower.totalSum !== 100) ||
@@ -338,6 +370,8 @@ const Superpave_Step3 = ({
                   nominalSize: numberRepresentation(data?.nominalSize.value);
                 }
               }
+
+              setData({ step: 2, value: newData})
             });
 
             //Ajustar o gráfico para as curvas selecionadas
@@ -367,7 +401,6 @@ const Superpave_Step3 = ({
     }
   };
 
-  console.log('gráfico', data.graphData);
 
   nextDisabled && setNextDisabled(false);
 
@@ -422,19 +455,79 @@ const Superpave_Step3 = ({
                 }}
               >
                 <Typography>Curva inferior</Typography>
-                <Button>Limpar tabela</Button>
+                <Button onClick={clearTable}>Limpar tabela</Button>
               </Box>
               <CurvesTable
                 materials={selectedMaterials}
                 dnitBandsLetter={data?.bands?.letter}
                 tableInputs={tableCompositionInputsLower}
-                tableName="tableCompositionInputsLower"
+                tableName="lowerComposition"
                 tableData={tableDataLower}
                 onChangeInputsTables={onChangeInputsTables}
               />
               <div style={{ marginTop: '1%' }}>
                 <Button onClick={() => calcular('tableDataLower', 'tableCompositionInputsLower')}>
                   Calcular curva inferior
+                </Button>
+              </div>
+            </TableContainer>
+          )}
+
+          {intermediaria && (
+            <TableContainer>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 100px',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: '10px',
+                }}
+              >
+                <Typography>Curva intermediária</Typography>
+                <Button onClick={clearTable}>Limpar tabela</Button>
+              </Box>
+              <CurvesTable
+                materials={selectedMaterials}
+                dnitBandsLetter={data?.bands?.letter}
+                tableInputs={tableCompositionInputsAverage}
+                tableName="averageComposition"
+                tableData={tableDataAverage}
+                onChangeInputsTables={onChangeInputsTables}
+              />
+              <div style={{ marginTop: '1%' }}>
+                <Button onClick={() => calcular('tableDataAverage', 'tableCompositionInputsHigher')}>
+                  Calcular curva intermediaria
+                </Button>
+              </div>
+            </TableContainer>
+          )}
+
+          {superior && (
+            <TableContainer>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 100px',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: '10px',
+                }}
+              >
+                <Typography>Curva superior</Typography>
+                <Button onClick={clearTable}>Limpar tabela</Button>
+              </Box>
+              <CurvesTable
+                materials={selectedMaterials}
+                dnitBandsLetter={data?.bands?.letter}
+                tableInputs={tableCompositionInputsHigher}
+                tableName="higherComposition"
+                tableData={tableDataHigher}
+                onChangeInputsTables={onChangeInputsTables}
+              />
+              <div style={{ marginTop: '1%' }}>
+                <Button onClick={() => calcular('tableDataHigher', 'tableCompositionInputsHigher')}>
+                  Calcular curva superior
                 </Button>
               </div>
             </TableContainer>

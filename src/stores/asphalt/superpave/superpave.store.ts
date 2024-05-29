@@ -45,6 +45,14 @@ interface SuperpaveGranulometryCompositionData {
     percentsOfMaterials: [[],[]],
     sumOfPercents: []
   },
+  averageComposition: {
+    percentsOfMaterials: [[],[]],
+    sumOfPercents: []
+  },
+  higherComposition: {
+    percentsOfMaterials: [[],[]],
+    sumOfPercents: []
+  },
   nominalSize: {
     value: number
   };
@@ -109,6 +117,14 @@ const initialState = {
     lowerComposition: {
       percentsOfMaterials: null,
       sumOfPercents: null,
+    },
+    averageComposition: {
+      percentsOfMaterials: null,
+      sumOfPercents: null
+    },
+    higherComposition: {
+      percentsOfMaterials: null,
+      sumOfPercents: null
     },
     percentageInputs: [{
       material_1: null,

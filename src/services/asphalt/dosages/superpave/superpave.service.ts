@@ -233,8 +233,8 @@ class Superpave_SERVICE implements IEssayService {
       console.log("🚀 ~ Superpave_SERVICE ~ newData:", newData)
 
 
-      this.store_actions.setData({ step: 2, value: newData });
-      return data
+      // this.store_actions.setData({ step: 2, value: newData });
+      return newData
     } catch (error) {
       throw error;
     }
