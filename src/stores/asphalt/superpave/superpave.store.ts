@@ -54,14 +54,25 @@ interface SuperpaveGranulometryCompositionData {
   }
 }
 
-// interface SuperpaveInitialBinderData {
-
-// }
+interface SuperpaveInitialBinderData {
+  material_1: {
+    realSpecificMass: number;
+    apparentSpecificMass: number;
+    absorption: number
+  },
+  material_2: {
+    realSpecificMass: number;
+    apparentSpecificMass: number;
+    absorption: number
+  },
+  binderSpecificMass: number
+}
 
 export type SuperpaveData = {
   generalData: SuperpaveGeneralData;
   materialSelectionData: SuperpaveMaterialSelectionData;
   granulometryCompositionData: SuperpaveGranulometryCompositionData;
+  initialBinderData: SuperpaveInitialBinderData;
 };
 
 export type SuperpaveActions = {
@@ -74,7 +85,8 @@ type setDataType = { step: number; key?: string; value: unknown };
 const stepVariant = { 
   0: 'generalData', 
   1: 'materialSelectionData', 
-  2: 'granulometryCompositionData' 
+  2: 'granulometryCompositionData' ,
+  3: 'initialBinderData'
 };
 
 const initialState = {
@@ -128,6 +140,19 @@ const initialState = {
       letter: null
     }
   },
+  initialBinderData: {
+    material_1: {
+      realSpecificMass: null,
+      apparentSpecificMass: null,
+      absorption: null
+    },
+    material_2: {
+      realSpecificMass: null,
+      apparentSpecificMass: null,
+      absorption: null
+    },
+    binderSpecificMass: null
+  }
 };
 
 const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(

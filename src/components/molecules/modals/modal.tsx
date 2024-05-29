@@ -10,11 +10,13 @@ interface IModalBase {
   children: JSX.Element | React.ReactNode;
   leftButtonTitle: string;
   rightButtonTitle: string;
+  singleButtonTitle?: string;
   onCancel: () => void;
   open: boolean;
   size: modalSize;
   onSubmit: () => void;
   disableSubmit?: boolean;
+  oneButton?: boolean;
 }
 
 const ModalBase = ({
@@ -27,6 +29,8 @@ const ModalBase = ({
   size,
   onSubmit,
   disableSubmit,
+  oneButton = false,
+  singleButtonTitle
 }: IModalBase) => {
   const getModalSize = (size: modalSize) => {
     switch (size) {
@@ -85,48 +89,73 @@ const ModalBase = ({
         {children}
 
         {/* buttons area */}
-        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', pt: '1rem' }}>
-          <Button
-            onClick={onCancel}
-            variant="outlined"
-            color="primary"
-            sx={{
-              height: '32px',
-              width: '135px',
-              color: 'primary.main',
-              fontSize: '.95rem',
-              lineHeight: '1rem',
-              fontWeight: 700,
+        {!oneButton ? (
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', pt: '1rem' }}>
+            <Button
+              onClick={onCancel}
+              variant="outlined"
+              color="primary"
+              sx={{
+                height: '32px',
+                width: '135px',
+                color: 'primary.main',
+                fontSize: '.95rem',
+                lineHeight: '1rem',
+                fontWeight: 700,
 
-              ':hover': {
-                bgcolor: '#F2A255',
+                ':hover': {
+                  bgcolor: '#F2A255',
+                  color: 'primaryTons.white',
+                },
+              }}
+            >
+              {leftButtonTitle}
+            </Button>
+            <Button
+              onClick={onSubmit}
+              variant="contained"
+              disabled={disableSubmit}
+              sx={{
+                height: '32px',
+                width: '135px',
+                bgcolor: 'primary.main',
                 color: 'primaryTons.white',
-              },
-            }}
-          >
-            {leftButtonTitle}
-          </Button>
-          <Button
-            onClick={onSubmit}
-            variant="contained"
-            disabled={disableSubmit}
-            sx={{
-              height: '32px',
-              width: '135px',
-              bgcolor: 'primary.main',
-              color: 'primaryTons.white',
-              fontSize: '.95rem',
-              lineHeight: '1rem',
-              fontWeight: 700,
+                fontSize: '.95rem',
+                lineHeight: '1rem',
+                fontWeight: 700,
 
-              ':hover': {
-                bgcolor: '#F2A255',
-              },
-            }}
-          >
-            {rightButtonTitle}
-          </Button>
-        </Box>
+                ':hover': {
+                  bgcolor: '#F2A255',
+                },
+              }}
+            >
+              {rightButtonTitle}
+            </Button>
+          </Box>
+        ) : (
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', pt: '1rem' }}>
+            <Button
+              onClick={onCancel}
+              variant="outlined"
+              color="primary"
+              sx={{
+                height: '32px',
+                width: '135px',
+                color: 'primary.main',
+                fontSize: '.95rem',
+                lineHeight: '1rem',
+                fontWeight: 700,
+
+                ':hover': {
+                  bgcolor: '#F2A255',
+                  color: 'primaryTons.white',
+                },
+              }}
+            >
+              {singleButtonTitle}
+            </Button>
+          </Box>
+        )}
       </Box>
     </Modal>
   );
