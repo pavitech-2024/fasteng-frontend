@@ -19,7 +19,13 @@ const Superpave_Step4 = ({
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { materialSelectionData, initialBinderData: data, setData } = useSuperpaveStore();
+  const {
+    materialSelectionData,
+    initialBinderData: data,
+    granulometryCompositionData,
+    generalData,
+    setData,
+  } = useSuperpaveStore();
 
   const [specificMassModalIsOpen, setSpecificMassModalIsOpen] = useState(true);
   const materials = materialSelectionData.aggregates.map((item) => item.name);
@@ -33,8 +39,13 @@ const Superpave_Step4 = ({
       async () => {
         try {
           const response = await materialsService.getMaterial(materialSelectionData.binder);
-          
+
           setBinderData(response.data.material);
+
+          const specificMasses = await superpave.getStep4SpecificMasses(materialSelectionData);
+          console.log('🚀 ~ specificMasses:', specificMasses);
+
+          // To-do: Fazer a lógica de inserção de dados quando o material já tem ensaio de massa especifica;
 
           // setLoading(false);
         } catch (error) {
@@ -96,9 +107,13 @@ const Superpave_Step4 = ({
     toast.promise(
       async () => {
         try {
-          await superpave.getStep4Data(materialSelectionData, data)
-          
-          setSpecificMassModalIsOpen(false)
+          const response = await superpave.getStep4Data(
+            generalData,
+            materialSelectionData,
+            granulometryCompositionData,
+            data
+          );
+          console.log('🚀 ~ response:', response);
         } catch (error) {
           throw error;
         }
@@ -115,26 +130,26 @@ const Superpave_Step4 = ({
     {
       field: 'granulometricComposition',
       headerName: 'Composição Granulométrica',
-      valueFormatter: ({value}) => `${value}`
+      valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'combinedGsb',
       headerName: 'Gsb combinado (g/cm³)',
-      valueFormatter: ({value}) => `${value}`
+      valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'combinedGsa',
       headerName: 'Gsa combinado (g/cm³)',
-      valueFormatter: ({value}) => `${value}`
+      valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'gse',
       headerName: 'Gse (g/cm³)',
-      valueFormatter: ({value}) => `${value}`
+      valueFormatter: ({ value }) => `${value}`,
     },
   ];
 
-  const rows = []
+  const rows = [];
 
   nextDisabled && setNextDisabled(false);
 
@@ -181,7 +196,11 @@ const Superpave_Step4 = ({
                   placeholder={input.placeHolder}
                   fullWidth
                   onChange={(e) => {
-                    setData({ step: 3, key: `material_1`, value: {...data.material_1, [input.key]: Number(e.target.value)}})
+                    setData({
+                      step: 3,
+                      key: `material_1`,
+                      value: { ...data.material_1, [input.key]: Number(e.target.value) },
+                    });
                   }}
                 />
               ))}
@@ -200,7 +219,11 @@ const Superpave_Step4 = ({
                   placeholder={input.placeHolder}
                   fullWidth
                   onChange={(e) => {
-                    setData({ step: 3, key: `material_2`, value: {...data.material_2, [input.key]: Number(e.target.value)}})
+                    setData({
+                      step: 3,
+                      key: `material_2`,
+                      value: { ...data.material_2, [input.key]: Number(e.target.value) },
+                    });
                   }}
                 />
               ))}

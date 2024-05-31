@@ -135,7 +135,7 @@ const ModalBase = ({
         ) : (
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', pt: '1rem' }}>
             <Button
-              onClick={onCancel}
+              onClick={onSubmit}
               variant="outlined"
               color="primary"
               sx={{

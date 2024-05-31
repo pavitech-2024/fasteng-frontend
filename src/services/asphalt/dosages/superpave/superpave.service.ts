@@ -65,6 +65,8 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitGranulometryComposition(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 3:
+          const { materialSelectionData, initialBinderData } = data as SuperpaveData;
+          await this.getStep4SpecificMasses(materialSelectionData, isConsult)
           break;
         case 4:
           break;
@@ -267,17 +269,54 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
+  getStep4SpecificMasses = async (step2Data: SuperpaveData['materialSelectionData'], isConsult?): Promise<any> => {
+    try {
+      const { aggregates, binder } = step2Data;
+
+      const response = await Api.post(`${this.info.backend_path}/step-4-specific-masses`, {
+        materials: aggregates,
+        binder
+      });
+
+      const { data, success, error } = response.data;
+      console.log("🚀 ~ Superpave_SERVICE ~ getStep4SpecificMasses= ~ data:", data)
+  
+      if (success === false) throw error.name;
+
+      return data;
+    } catch (error) {
+      
+    }
+  }
+
   getStep4Data = async (
+    step1Data: SuperpaveData['generalData'],
     step2Data: SuperpaveData['materialSelectionData'],
+    step3Data: SuperpaveData['granulometryCompositionData'],
     step4Data: SuperpaveData['initialBinderData'], 
     isConsult?: boolean
   ): Promise<any> => {
     if (!isConsult) {
       try {
+        const { trafficVolume } = step1Data;
         const { aggregates } = step2Data;
-  
+        const { percentageInputs, chosenCurves, lowerComposition, averageComposition, higherComposition, nominalSize } = step3Data;
+        const { material_1, material_2, binderSpecificMass } = step4Data;
+
+        let composition;
+
+        if (chosenCurves.lower) composition = lowerComposition;
+        if (chosenCurves.average) composition = averageComposition;
+        if (chosenCurves.higher) composition = higherComposition;
+        
         const response = await Api.post(`${this.info.backend_path}/step-4-data`, {
           materials: aggregates,
+          percentsOfDosage: percentageInputs,
+          materialsData: [material_1, material_2],
+          chosenCurves,
+          composition,
+          binderSpecificMass,
+          nominalSize
         });
   
         const { data, success, error } = response.data;

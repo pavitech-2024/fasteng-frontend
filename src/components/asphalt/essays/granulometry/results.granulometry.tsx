@@ -18,6 +18,7 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
   const data = {
     container_other_data: [],
   };
+  console.log('🚀 ~ data:', data);
 
   if (granulometry_results) {
     data.container_other_data.push(
@@ -106,9 +107,13 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
             mt: '20px',
           }}
         >
-          {data.container_other_data.map((item, index) => (
-            <Result_Card key={index} label={item.label} value={item.value} unity={item.unity} />
-          ))}
+          {data.container_other_data.map((item, index) => {
+            if (Array.isArray(item.value)) {
+              return null;
+            } else {
+              return <Result_Card key={index} label={item.label} value={item.value} unity={item.unity} />;
+            }
+          })}
         </Box>
         <Chart
           chartType="LineChart"
