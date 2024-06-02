@@ -65,7 +65,22 @@ interface SuperpaveInitialBinderData {
     apparentSpecificMass: number;
     absorption: number
   },
-  binderSpecificMass: number
+  binderSpecificMass: number;
+  combinedGsa: number;
+  combinedGsb: number;
+  gse: number;
+  percentsOfDosageWithBinder: number[],
+  pli: number;
+  binderInputs: {
+    curve: string,
+    value: number
+  }[],
+  turnNumber: {
+    initialN: number,
+    maxN: number,
+    projectN: number,
+    tex: string
+  }
 }
 
 export type SuperpaveData = {
@@ -151,7 +166,22 @@ const initialState = {
       apparentSpecificMass: null,
       absorption: null
     },
-    binderSpecificMass: null
+    binderSpecificMass: null,
+    combinedGsa: null,
+    combinedGsb: null,
+    gse: null,
+    percentsOfDosageWithBinder: [],
+    pli: null,
+    binderInputs: [{
+      curve: null,
+      value: null
+    }],
+    turnNumber: {
+      initialN: null,
+      maxN: null,
+      projectN: null,
+      tex: null
+    }
   }
 };
 
