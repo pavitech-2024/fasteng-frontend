@@ -21,66 +21,68 @@ interface SuperpaveMaterialSelectionData {
 
 interface SuperpaveGranulometryCompositionData {
   percentageInputs: {
-    material_1: string,
-    material_2: string
+    material_1: string;
+    material_2: string;
   }[];
   graphData: any[];
   percentsToList: any[];
   lowerComposition: {
-    percentsOfMaterials: [[],[]],
-    sumOfPercents: []
-  },
-  averageComposition: {
-    percentsOfMaterials: [[],[]],
-    sumOfPercents: []
-  },
-  higherComposition: {
-    percentsOfMaterials: [[],[]],
-    sumOfPercents: []
-  },
-  nominalSize: {
-    value: number
+    percentsOfMaterials: [[], []];
+    sumOfPercents: [];
   };
-  pointsOfCurve: number[],
+  averageComposition: {
+    percentsOfMaterials: [[], []];
+    sumOfPercents: [];
+  };
+  higherComposition: {
+    percentsOfMaterials: [[], []];
+    sumOfPercents: [];
+  };
+  nominalSize: {
+    value: number;
+  };
+  pointsOfCurve: number[];
   chosenCurves: {
-    lower: boolean,
-    average: boolean,
-    higher: boolean
-  },
+    lower: boolean;
+    average: boolean;
+    higher: boolean;
+  };
   bands: {
-    higher: any[],
-    lower: any[],
-    letter: string
-  }
+    higher: any[];
+    lower: any[];
+    letter: string;
+  };
 }
 
 interface SuperpaveInitialBinderData {
   material_1: {
     realSpecificMass: number;
     apparentSpecificMass: number;
-    absorption: number
-  },
+    absorption: number;
+  };
   material_2: {
     realSpecificMass: number;
     apparentSpecificMass: number;
-    absorption: number
-  },
+    absorption: number;
+  };
   binderSpecificMass: number;
-  combinedGsa: number;
-  combinedGsb: number;
-  gse: number;
-  percentsOfDosageWithBinder: number[],
+  initialBinderData: {
+    combinedGsa: number;
+    combinedGsb: number;
+    gse: number;
+  }[],
+  percentsOfDosageWithBinder: number[];
   pli: number;
   binderInputs: {
-    curve: string,
-    value: number
-  }[],
+    curve: string;
+    value: number;
+  }[];
   turnNumber: {
-    initialN: number,
-    maxN: number,
-    projectN: number,
-    tex: string
-  }
+    initialN: number;
+    maxN: number;
+    projectN: number;
+    tex: string;
+  };
 }
 
 export type SuperpaveData = {
@@ -97,11 +99,11 @@ export type SuperpaveActions = {
 
 type setDataType = { step: number; key?: string; value: unknown };
 
-const stepVariant = { 
-  0: 'generalData', 
-  1: 'materialSelectionData', 
-  2: 'granulometryCompositionData' ,
-  3: 'initialBinderData'
+const stepVariant = {
+  0: 'generalData',
+  1: 'materialSelectionData',
+  2: 'granulometryCompositionData',
+  3: 'initialBinderData',
 };
 
 const initialState = {
@@ -115,7 +117,7 @@ const initialState = {
     objective: null,
     dnitBand: null,
     description: null,
-    step: 0
+    step: 0,
   },
   materialSelectionData: {
     aggregates: [],
@@ -129,60 +131,86 @@ const initialState = {
     },
     averageComposition: {
       percentsOfMaterials: null,
-      sumOfPercents: null
+      sumOfPercents: null,
     },
     higherComposition: {
       percentsOfMaterials: null,
-      sumOfPercents: null
+      sumOfPercents: null,
     },
-    percentageInputs: [{
-      material_1: null,
-      material_2: null
-    }],
+    percentageInputs: [
+      {
+        material_1: null,
+        material_2: null,
+      },
+      {
+        material_1: null,
+        material_2: null,
+      },
+      {
+        material_1: null,
+        material_2: null,
+      },
+    ],
     percentsToList: [],
     nominalSize: {
-      value: null
+      value: null,
     },
     pointsOfCurve: [],
     chosenCurves: {
       lower: null,
       average: null,
-      higher: null
+      higher: null,
     },
     bands: {
       higher: [],
       lower: [],
-      letter: null
-    }
+      letter: null,
+    },
   },
   initialBinderData: {
     material_1: {
       realSpecificMass: null,
       apparentSpecificMass: null,
-      absorption: null
+      absorption: null,
     },
     material_2: {
       realSpecificMass: null,
       apparentSpecificMass: null,
-      absorption: null
+      absorption: null,
     },
     binderSpecificMass: null,
-    combinedGsa: null,
-    combinedGsb: null,
-    gse: null,
+    initialBinderData: [
+      {
+        combinedGsa: null,
+        combinedGsb: null,
+        gse: null,
+      },
+      {
+        combinedGsa: null,
+        combinedGsb: null,
+        gse: null,
+      },
+      {
+        combinedGsa: null,
+        combinedGsb: null,
+        gse: null,
+      }
+    ],
     percentsOfDosageWithBinder: [],
     pli: null,
-    binderInputs: [{
-      curve: null,
-      value: null
-    }],
+    binderInputs: [
+      {
+        curve: null,
+        value: null,
+      },
+    ],
     turnNumber: {
       initialN: null,
       maxN: null,
       projectN: null,
-      tex: null
-    }
-  }
+      tex: null,
+    },
+  },
 };
 
 const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(

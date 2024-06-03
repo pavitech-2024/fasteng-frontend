@@ -279,11 +279,10 @@ class Superpave_SERVICE implements IEssayService {
       });
 
       const { data, success, error } = response.data;
-      console.log("🚀 ~ Superpave_SERVICE ~ getStep4SpecificMasses= ~ data:", data)
   
       if (success === false) throw error.name;
 
-      return data;
+      return { data, success, error };
     } catch (error) {
       
     }

@@ -40,9 +40,9 @@ const Superpave_Step3 = ({
   let tableCompositionInputsHigher = {};
 
   let selectedMaterials = materialSelectionData?.aggregates;
-  const [inferior, setInferior] = useState(false);
-  const [intermediaria, setIntermediaria] = useState(false);
-  const [superior, setSuperior] = useState(false);
+  const [inferior, setInferior] = useState(data.chosenCurves.lower);
+  const [intermediaria, setIntermediaria] = useState(data.chosenCurves.average);
+  const [superior, setSuperior] = useState(data.chosenCurves.higher);
 
   useEffect(() => {
     if (data.percentsToList.length > 0) {
@@ -81,14 +81,15 @@ const Superpave_Step3 = ({
   }, []);
 
   const handleCheckboxChange = (checked, setChecked) => {
-    if (checked) {
-      setInferior(false);
-      setIntermediaria(false);
-      setSuperior(false);
-      setChecked(true);
-    } else {
-      setChecked(false);
-    }
+    // if (checked) {
+    //   setInferior(false);
+    //   setIntermediaria(false);
+    //   setSuperior(false);
+    //   setChecked(true);
+    // } else {
+    //   setChecked(false);
+    // }
+    setChecked(!checked);
   };
 
   const convertNumber = (value) => {
@@ -346,7 +347,7 @@ const Superpave_Step3 = ({
     if (data.pointsOfCurve.length > 0) {
       updateGraph(data.pointsOfCurve)
     }
-  },[data.pointsOfCurve])
+  },[data.pointsOfCurve]);
 
   nextDisabled && setNextDisabled(false);
 
@@ -368,7 +369,7 @@ const Superpave_Step3 = ({
 
           <FormGroup sx={{ display: 'flex', flexDirection: 'row' }}>
             <FormControlLabel
-              control={<Checkbox checked={inferior} onChange={() => handleCheckboxChange(!inferior, setInferior)} />}
+              control={<Checkbox checked={inferior} onChange={() => handleCheckboxChange(inferior, setInferior)} />}
               label="curva inferior"
               value={inferior}
             />
@@ -376,14 +377,14 @@ const Superpave_Step3 = ({
               control={
                 <Checkbox
                   checked={intermediaria}
-                  onChange={() => handleCheckboxChange(!intermediaria, setIntermediaria)}
+                  onChange={() => handleCheckboxChange(intermediaria, setIntermediaria)}
                 />
               }
               label="curva intermediária"
               value={intermediaria}
             />
             <FormControlLabel
-              control={<Checkbox checked={superior} onChange={() => handleCheckboxChange(!superior, setSuperior)} />}
+              control={<Checkbox checked={superior} onChange={() => handleCheckboxChange(superior, setSuperior)} />}
               label="curva superior"
               value={superior}
             />

@@ -30,7 +30,11 @@ const Superpave_Step4 = ({
   const [specificMassModalIsOpen, setSpecificMassModalIsOpen] = useState(true);
   const [newInitialBinderModalIsOpen, setNewInitialBinderModalIsOpen] = useState(false);
   const materials = materialSelectionData.aggregates.map((item) => item.name);
-  const [binderInput, setBinderInput] = useState(data.binderInputs?.find((e) => e.curve === 'inferior')?.value ? data.binderInputs.find((e) => e.curve === 'inferior').value : '')
+  const [binderInput, setBinderInput] = useState(
+    data.binderInputs?.find((e) => e.curve === 'inferior')?.value
+      ? data.binderInputs.find((e) => e.curve === 'inferior').value
+      : ''
+  );
 
   const { user } = useAuth();
 
@@ -41,13 +45,45 @@ const Superpave_Step4 = ({
       async () => {
         try {
           const response = await materialsService.getMaterial(materialSelectionData.binder);
+          console.log("🚀 ~ response:", response)
 
           setBinderData(response.data.material);
 
-          const specificMasses = await superpave.getStep4SpecificMasses(materialSelectionData);
-          console.log('🚀 ~ specificMasses:', specificMasses);
+          const { data: resData, success, error } = await superpave.getStep4SpecificMasses(materialSelectionData);
 
-          // To-do: Fazer a lógica de inserção de dados quando o material já tem ensaio de massa especifica;
+          if (success && resData.specificMasses.length > 0) {
+            console.log("aqui")
+            const newMaterial_1 = {
+              realSpecificMass: resData.specificMasses[0].results.bulk_specify_mass,
+              apparentSpecificMass: resData.specificMasses[0].results.apparent_specify_mass,
+              absorption: resData.specificMasses[0].results.absorption,
+            };
+
+            const newMaterial_2 = {
+              realSpecificMass: resData.specificMasses[1].results.bulk_specify_mass,
+              apparentSpecificMass: resData.specificMasses[1].results.apparent_specify_mass,
+              absorption: resData.specificMasses[1].results.absorption,
+            };
+
+            //const binderSpecificMass = data[3].results;
+
+            let prevData = {...data};
+            console.log("🚀 ~ prevData:", prevData)
+            prevData = {
+              ...prevData,
+              material_1: newMaterial_1,
+              material_2: newMaterial_2,
+            }
+
+            console.log("🚀 ~ prevData 2:", prevData)
+
+            setData({
+              step: 3,
+              value: prevData,
+            });
+          } else {
+            console.error(`${error}`)
+          }
 
           // setLoading(false);
         } catch (error) {
@@ -115,7 +151,6 @@ const Superpave_Step4 = ({
             granulometryCompositionData,
             data
           );
-          console.log('🚀 ~ response:', response);
           setSpecificMassModalIsOpen(false);
         } catch (error) {
           throw error;
@@ -134,64 +169,62 @@ const Superpave_Step4 = ({
       field: 'granulometricComposition',
       headerName: 'Composição Granulométrica',
       valueFormatter: ({ value }) => `${value}`,
-      width: 200
+      width: 200,
     },
     {
       field: 'combinedGsb',
       headerName: 'Gsb combinado (g/cm³)',
       valueFormatter: ({ value }) => `${value}`,
-      width: 200
+      width: 200,
     },
     {
       field: 'combinedGsa',
       headerName: 'Gsa combinado (g/cm³)',
       valueFormatter: ({ value }) => `${value}`,
-      width: 200
+      width: 200,
     },
     {
       field: 'gse',
       headerName: 'Gse (g/cm³)',
       valueFormatter: ({ value }) => `${value}`,
-      width: 200
+      width: 200,
     },
   ];
 
-  const rows = [
-    {
-      id: 0,
-      granulometricComposition: Object.keys(granulometryCompositionData.chosenCurves).find((e) => e === 'lower')
-        ? 'inferior'
-        : '',
-      combinedGsb: data.combinedGsb?.toFixed(2),
-      combinedGsa: data.combinedGsa?.toFixed(2),
-      gse: data.gse?.toFixed(2),
-    },
-  ];
+  const compositions = ['inferior', 'intermediaria', 'superior'];
+
+  const rows = data.initialBinderData?.map((e, i) => ({
+    id: i,
+    granulometricComposition: compositions[i],
+    combinedGsb: e[i]?.combinedGsb?.toFixed(2),
+    combinedGsa: e[i]?.combinedGsa?.toFixed(2),
+    gse: e[i]?.gse?.toFixed(2),
+  }));
 
   const estimatedPercentageCols: GridColDef[] = [
     {
       field: 'granulometricComposition',
       headerName: 'Composição Granulométrica',
       valueFormatter: ({ value }) => `${value}`,
-      width: 200
+      width: 200,
     },
     {
       field: 'initialBinder',
       headerName: 'Teor de ligante inicial',
       valueFormatter: ({ value }) => `${value}`,
-      width: 200
+      width: 200,
     },
     {
       field: 'material_1',
       headerName: materialSelectionData.aggregates[0].name,
       valueFormatter: ({ value }) => `${value}`,
-      width: 200
+      width: 200,
     },
     {
       field: 'material_2',
       headerName: materialSelectionData.aggregates[1].name,
       valueFormatter: ({ value }) => `${value}`,
-      width: 200
+      width: 200,
     },
   ];
 
@@ -226,25 +259,25 @@ const Superpave_Step4 = ({
       field: 'initialN',
       headerName: 'Ninicial',
       valueFormatter: ({ value }) => `${value}`,
-      width: 200
+      width: 200,
     },
     {
       field: 'projectN',
       headerName: 'Nprojeto',
       valueFormatter: ({ value }) => `${value}`,
-      width: 200
+      width: 200,
     },
     {
       field: 'maxN',
       headerName: 'Nmáximo',
       valueFormatter: ({ value }) => `${value}`,
-      width: 200
+      width: 200,
     },
     {
       field: 'tex',
       headerName: 'Tráfego',
       valueFormatter: ({ value }) => `${value}`,
-      width: 200
+      width: 200,
     },
   ];
 
@@ -254,7 +287,7 @@ const Superpave_Step4 = ({
       initialN: data.turnNumber.initialN,
       maxN: data.turnNumber.maxN,
       projectN: data.turnNumber.projectN,
-      tex: data.turnNumber.tex !== "" ? data.turnNumber.tex : generalData.trafficVolume,
+      tex: data.turnNumber.tex !== '' ? data.turnNumber.tex : generalData.trafficVolume,
     },
   ];
 
@@ -262,12 +295,7 @@ const Superpave_Step4 = ({
     {
       groupId: 'compressionParams',
       headerName: 'Parametros de comparação',
-      children: [
-        { field: 'initialN' },
-        { field: 'maxN' },
-        { field: 'projectN' },
-        { field: 'tex' },
-      ],
+      children: [{ field: 'initialN' }, { field: 'maxN' }, { field: 'projectN' }, { field: 'tex' }],
       headerAlign: 'center',
     },
   ];
@@ -307,7 +335,9 @@ const Superpave_Step4 = ({
             rows={estimatedPercentageRows}
           />
 
-          <Button sx={{ width: 'fit-content' }} onClick={() => setNewInitialBinderModalIsOpen(true)}>Alterar teor de ligante inicial</Button>
+          <Button sx={{ width: 'fit-content' }} onClick={() => setNewInitialBinderModalIsOpen(true)}>
+            Alterar teor de ligante inicial
+          </Button>
 
           <DataGrid
             hideFooter
@@ -413,18 +443,18 @@ const Superpave_Step4 = ({
       >
         {granulometryCompositionData.chosenCurves.lower && (
           <InputEndAdornment
-            adornment='%'
+            adornment="%"
             value={binderInput}
-            placeholder='Curva inferior'
+            placeholder="Curva inferior"
             fullWidth
             onChange={(e) => {
               let newData = [...data.binderInputs];
               const index = newData.findIndex((e) => e.curve === 'inferior');
-              newData[index] = { curve: 'inferior', value: Number(e.target.value)}
+              newData[index] = { curve: 'inferior', value: Number(e.target.value) };
               setData({
                 step: 3,
                 key: `binderInputs`,
-                value: {...data, binderInputs: newData},
+                value: { ...data, binderInputs: newData },
               });
             }}
           />

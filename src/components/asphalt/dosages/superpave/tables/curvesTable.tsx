@@ -51,6 +51,14 @@ const CurvesTable: React.FC<Props> = ({
 }) => {
   const { granulometryCompositionData: data, setData } = useSuperpaveStore();
 
+  const getMaterialIndex = () => {
+    if (tableName === 'lowerComposition') return 0;
+    if (tableName === 'averageComposition') return 1;
+    if (tableName === 'higherComposition') return 2;
+  };
+
+  const materialIndex = getMaterialIndex();
+
   const [table, setTable] = useState<TableModel>({
     columnsHeaderTop: [{ header: 'Peneira', type: 'rowSpan' }],
     columnsHeader: [],
@@ -108,11 +116,14 @@ const CurvesTable: React.FC<Props> = ({
       renderHeader: () => (
         <InputEndAdornment
           adornment="%"
-          value={data?.percentageInputs[0].material_1 || ''}
+          value={data?.percentageInputs[materialIndex].material_1 || ''}
           onChange={(e) => {
             const prevData = [...data?.percentageInputs];
-            const newData = {...prevData[0], material_1: e.target.value}
-            setData({ step: 2, value: {...data, percentageInputs: [newData]} });
+            const newData = {...prevData[materialIndex], material_1: e.target.value};
+            const updatedData = prevData.map((item, index) =>
+              index === materialIndex ? newData : item
+            );
+            setData({ step: 2, value: {...data, percentageInputs: updatedData} });
           }}
         />
       )
@@ -131,11 +142,14 @@ const CurvesTable: React.FC<Props> = ({
       renderHeader: () => (
         <InputEndAdornment
           adornment="%"
-          value={data?.percentageInputs[0].material_2 || ''}
+          value={data?.percentageInputs[materialIndex].material_2 || ''}
           onChange={(e) => {
             const prevData = [...data?.percentageInputs];
-            const newData = {...prevData[0], material_2: e.target.value}
-            setData({ step: 2, value: {...data, percentageInputs: [newData]} });
+            const newData = {...prevData[materialIndex], material_2: e.target.value};
+            const updatedData = prevData.map((item, index) =>
+              index === materialIndex ? newData : item
+            );
+            setData({ step: 2, value: {...data, percentageInputs: updatedData} });
           }}
         />
       )
@@ -161,9 +175,9 @@ const CurvesTable: React.FC<Props> = ({
     id: idx,
     peneira: e.peneira,
     totalPassant_1: e.keyTotal0,
-    material_1: data[tableName].percentsOfMaterials !== null ? data[tableName].percentsOfMaterials[0][idx] : '',
+    material_1: data[tableName].percentsOfMaterials !== null ? data[tableName].percentsOfMaterials[0][idx].toFixed(2) : '',
     totalPassant_2: e.keyTotal1,
-    material_2: data[tableName].percentsOfMaterials !== null ? data[tableName].percentsOfMaterials[1][idx] : '',
+    material_2: data[tableName].percentsOfMaterials !== null ? data[tableName].percentsOfMaterials[1][idx].toFixed(2) : '',
     project: data[tableName].sumOfPercents !== null ? data[tableName].sumOfPercents[idx] : '',
     band1: e.bandsCol1,
     band2: e.bandsCol2,
