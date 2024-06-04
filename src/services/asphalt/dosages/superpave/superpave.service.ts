@@ -65,8 +65,9 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitGranulometryComposition(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 3:
-          const { materialSelectionData, initialBinderData } = data as SuperpaveData;
-          await this.getStep4SpecificMasses(materialSelectionData, isConsult)
+          const { materialSelectionData } = data as SuperpaveData;
+          await this.getStep4SpecificMasses(materialSelectionData, isConsult);
+          await this.submitInitialBinder(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 4:
           break;
@@ -171,27 +172,23 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  getStep3Data = async (
-    dosageData: SuperpaveData, 
-    user: string, 
-    isConsult?: boolean
-  ): Promise<any> => {
+  getStep3Data = async (dosageData: SuperpaveData, user: string, isConsult?: boolean): Promise<any> => {
     const step = dosageData.generalData.step;
-    if (!isConsult || isConsult && step === 2) {
+    if (!isConsult || (isConsult && step === 2)) {
       try {
         const { dnitBand } = dosageData.generalData;
-  
+
         const { aggregates } = dosageData.materialSelectionData;
-  
+
         const response = await Api.post(`${this.info.backend_path}/step-3-data`, {
           dnitBand: dnitBand,
           aggregates: aggregates,
         });
-  
+
         const { data, success, error } = response.data;
-  
+
         if (success === false) throw error.name;
-  
+
         if (step !== 2) {
           this.store_actions?.setData({ step: 2, value: { ...dosageData.granulometryCompositionData, ...data } });
         } else {
@@ -227,7 +224,7 @@ class Superpave_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
 
-      return data
+      return data;
     } catch (error) {
       throw error;
     }
@@ -275,56 +272,88 @@ class Superpave_SERVICE implements IEssayService {
 
       const response = await Api.post(`${this.info.backend_path}/step-4-specific-masses`, {
         materials: aggregates,
-        binder
+        binder,
       });
 
       const { data, success, error } = response.data;
-  
+
       if (success === false) throw error.name;
 
       return { data, success, error };
-    } catch (error) {
-      
-    }
-  }
+    } catch (error) {}
+  };
 
   getStep4Data = async (
     step1Data: SuperpaveData['generalData'],
     step2Data: SuperpaveData['materialSelectionData'],
     step3Data: SuperpaveData['granulometryCompositionData'],
-    step4Data: SuperpaveData['initialBinderData'], 
-    isConsult?: boolean
+    step4Data: SuperpaveData['initialBinderData']
   ): Promise<any> => {
+    try {
+      const { trafficVolume } = step1Data;
+      const { aggregates } = step2Data;
+      const { percentageInputs, chosenCurves, lowerComposition, averageComposition, higherComposition, nominalSize } =
+        step3Data;
+      const { material_1, material_2, binderSpecificMass } = step4Data;
+
+      let composition;
+
+      if (chosenCurves.lower) composition = lowerComposition;
+      if (chosenCurves.average) composition = averageComposition;
+      if (chosenCurves.higher) composition = higherComposition;
+
+      const response = await Api.post(`${this.info.backend_path}/step-4-data`, {
+        materials: aggregates,
+        percentsOfDosage: percentageInputs,
+        specificMassesData: [material_1, material_2],
+        chosenCurves,
+        composition,
+        binderSpecificMass,
+        nominalSize,
+        trafficVolume,
+      });
+
+      const { data, success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+      this.store_actions?.setData({ step: 3, value: { ...step4Data, ...data } });
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  submitInitialBinder = async (
+    data: SuperpaveData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
     if (!isConsult) {
       try {
-        const { trafficVolume } = step1Data;
-        const { aggregates } = step2Data;
-        const { percentageInputs, chosenCurves, lowerComposition, averageComposition, higherComposition, nominalSize } = step3Data;
-        const { material_1, material_2, binderSpecificMass } = step4Data;
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
 
-        let composition;
+        const initialBinderData = {
+          ...data.initialBinderData,
+          name,
+          isConsult: null,
+        };
 
-        if (chosenCurves.lower) composition = lowerComposition;
-        if (chosenCurves.average) composition = averageComposition;
-        if (chosenCurves.higher) composition = higherComposition;
-        
-        const response = await Api.post(`${this.info.backend_path}/step-4-data`, {
-          materials: aggregates,
-          percentsOfDosage: percentageInputs,
-          specificMassesData: [material_1, material_2],
-          chosenCurves,
-          composition,
-          binderSpecificMass,
-          nominalSize,
-          trafficVolume
+        if (isConsult) initialBinderData.isConsult = isConsult;
+
+        const response = await Api.post(`${this.info.backend_path}/save-initial-binder-step/${userData}`, {
+          initialBinderData: {
+            ...data.initialBinderData,
+            name,
+          },
         });
-  
-        const { data, success, error } = response.data;
-  
+
+        const { success, error } = response.data;
+
         if (success === false) throw error.name;
-  
-        this.store_actions?.setData({ step: 3, value: { ...step4Data, ...data } });
       } catch (error) {
+        console.log(error);
         throw error;
       }
     }

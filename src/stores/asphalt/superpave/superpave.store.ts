@@ -82,11 +82,42 @@ interface SuperpaveInitialBinderData {
   };
 }
 
+interface FirstCompressionData {
+  inferiorRows: {
+    id: number,
+    diammeter: number,
+    dryMass: number,
+    submergedMass: number,
+    drySurfaceSaturatedMass: number,
+    waterTemperatureCorrection: number,
+    document: string
+  }[],
+  intermediariaRows: {
+    id: number,
+    diammeter: number,
+    dryMass: number,
+    submergedMass: number,
+    drySurfaceSaturatedMass: number,
+    waterTemperatureCorrection: number,
+    document: string
+  }[],
+  superiorRows: {
+    id: number,
+    diammeter: number,
+    dryMass: number,
+    submergedMass: number,
+    drySurfaceSaturatedMass: number,
+    waterTemperatureCorrection: number,
+    document: string
+  }[],
+}
+
 export type SuperpaveData = {
   generalData: SuperpaveGeneralData;
   materialSelectionData: SuperpaveMaterialSelectionData;
   granulometryCompositionData: SuperpaveGranulometryCompositionData;
   initialBinderData: SuperpaveInitialBinderData;
+  firstCompressionData: FirstCompressionData
 };
 
 export type SuperpaveActions = {
@@ -101,6 +132,7 @@ const stepVariant = {
   1: 'materialSelectionData',
   2: 'granulometryCompositionData',
   3: 'initialBinderData',
+  4: 'firstCompressionData'
 };
 
 const initialState = {
@@ -207,6 +239,35 @@ const initialState = {
       tex: null,
     },
   },
+  firstCompressionData: {
+    inferiorRows: [{
+      id: 0,
+      diammeter: null,
+      dryMass: null,
+      submergedMass: null,
+      drySurfaceSaturatedMass: null,
+      waterTemperatureCorrection: null,
+      document: null
+    }],
+    intermediariaRows: [{
+      id: 0,
+      diammeter: null,
+      dryMass: null,
+      submergedMass: null,
+      drySurfaceSaturatedMass: null,
+      waterTemperatureCorrection: null,
+      document: null
+    }],
+    superiorRows: [{
+      id: 0,
+      diammeter: null,
+      dryMass: null,
+      submergedMass: null,
+      drySurfaceSaturatedMass: null,
+      waterTemperatureCorrection: null,
+      document: null
+    }],
+  }
 };
 
 const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(

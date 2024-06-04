@@ -36,6 +36,7 @@ const Superpave_Step4 = ({
 
   const [binderData, setBinderData] = useState<AsphaltMaterialData>();
   const [rows, setRows] = useState([]);
+  console.log("🚀 ~ rows:", rows)
   const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
   const compositions = ['inferior', 'intermediaria', 'superior'];
 
@@ -44,7 +45,6 @@ const Superpave_Step4 = ({
       async () => {
         try {
           const response = await materialsService.getMaterial(materialSelectionData.binder);
-          console.log('🚀 ~ response:', response);
 
           setBinderData(response.data.material);
 
