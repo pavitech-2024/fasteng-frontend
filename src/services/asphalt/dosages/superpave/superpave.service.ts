@@ -311,11 +311,12 @@ class Superpave_SERVICE implements IEssayService {
         const response = await Api.post(`${this.info.backend_path}/step-4-data`, {
           materials: aggregates,
           percentsOfDosage: percentageInputs,
-          materialsData: [material_1, material_2],
+          specificMassesData: [material_1, material_2],
           chosenCurves,
           composition,
           binderSpecificMass,
-          nominalSize
+          nominalSize,
+          trafficVolume
         });
   
         const { data, success, error } = response.data;

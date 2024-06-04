@@ -66,17 +66,14 @@ interface SuperpaveInitialBinderData {
     absorption: number;
   };
   binderSpecificMass: number;
-  initialBinderData: {
+  granulometryComposition: {
     combinedGsa: number;
     combinedGsb: number;
     gse: number;
+    pli: number;
+    percentsOfDosageWithBinder: number[]
   }[],
-  percentsOfDosageWithBinder: number[];
-  pli: number;
-  binderInputs: {
-    curve: string;
-    value: number;
-  }[];
+  binderInput: number;
   turnNumber: {
     initialN: number;
     maxN: number;
@@ -179,31 +176,30 @@ const initialState = {
       absorption: null,
     },
     binderSpecificMass: null,
-    initialBinderData: [
+    granulometryComposition: [
       {
         combinedGsa: null,
         combinedGsb: null,
         gse: null,
+        pli: null,
+        percentsOfDosageWithBinder: []
       },
       {
         combinedGsa: null,
         combinedGsb: null,
         gse: null,
+        pli: null,
+        percentsOfDosageWithBinder: []
       },
       {
         combinedGsa: null,
         combinedGsb: null,
         gse: null,
+        pli: null,
+        percentsOfDosageWithBinder: []
       }
     ],
-    percentsOfDosageWithBinder: [],
-    pli: null,
-    binderInputs: [
-      {
-        curve: null,
-        value: null,
-      },
-    ],
+    binderInput: null,
     turnNumber: {
       initialN: null,
       maxN: null,
