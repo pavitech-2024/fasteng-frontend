@@ -358,6 +358,26 @@ class Superpave_SERVICE implements IEssayService {
       }
     }
   };
+
+  calculateRiceTest = async (
+    setp5Data: SuperpaveData['firstCompressionData'],
+  ): Promise<any> => {
+    try {
+      const { riceTest } = setp5Data;
+
+      const response = await Api.post(`${this.info.backend_path}/calculate-rice-test`, {
+        riceTest
+      });
+
+      const { data, success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 export default Superpave_SERVICE;

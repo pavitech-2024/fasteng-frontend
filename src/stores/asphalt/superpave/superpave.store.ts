@@ -110,6 +110,28 @@ interface FirstCompressionData {
     waterTemperatureCorrection: number,
     document: string
   }[],
+  spreadSheetTemplate: string,
+  maximumDensity: {
+    lower: {
+      gmm: number,
+      gmb: number
+    },
+    average: {
+      gmm: number,
+      gmb: number
+    },
+    higher: {
+      gmm: number,
+      gmb: number
+    }
+  },
+  riceTest: {
+    curve: string,
+    drySampleMass: number,
+    waterSampleMass: number,
+    waterSampleContainerMass: number,
+    gmm: number
+  }[]
 }
 
 export type SuperpaveData = {
@@ -267,6 +289,30 @@ const initialState = {
       waterTemperatureCorrection: null,
       document: null
     }],
+    spreadSheetTemplate: null,
+    maximumDensity: {
+      lower: {
+        gmm: null,
+        gmb: null
+      },
+      average: {
+        gmm: null,
+        gmb: null
+      },
+      higher: {
+        gmm: null,
+        gmb: null
+      }
+    },
+    riceTest: [
+      {
+        curve: null,
+        drySampleMass: null,
+        waterSampleMass: null,
+        waterSampleContainerMass: null,
+        gmm: null
+      }
+    ]
   }
 };
 
