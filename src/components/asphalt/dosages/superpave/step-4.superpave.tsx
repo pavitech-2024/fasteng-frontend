@@ -36,7 +36,6 @@ const Superpave_Step4 = ({
 
   const [binderData, setBinderData] = useState<AsphaltMaterialData>();
   const [rows, setRows] = useState([]);
-  console.log("🚀 ~ rows:", rows)
   const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
   const compositions = ['inferior', 'intermediaria', 'superior'];
 
@@ -65,7 +64,6 @@ const Superpave_Step4 = ({
             };
 
             let prevData = { ...data };
-            console.log('🚀 ~ prevData:', prevData);
             prevData = {
               ...prevData,
               material_1: newMaterial_1,

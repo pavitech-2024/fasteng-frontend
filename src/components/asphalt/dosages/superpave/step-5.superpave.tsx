@@ -1,3 +1,4 @@
+import DropDown from '@/components/atoms/inputs/dropDown';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
@@ -28,12 +29,39 @@ const Superpave_Step5 = ({
 
   const [stepStatus, setStepStatus] = useState('');
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
-
-  const documentName = {
-    inferior: data.inferiorRows[0].document,
-    intermediaria: data.intermediariaRows[0].document,
-    superior: data.superiorRows[0].document,
+  //Water temperature list;
+  const list = {
+    '15°C - 0.9991': 0.9991,
+    '16°C - 0.9989': 0.9989,
+    '17°C - 0.9988': 0.9988,
+    '18°C - 0.9986': 0.9986,
+    '19°C - 0.9984': 0.9984,
+    '20°C - 0.9982': 0.9982,
+    '21°C - 0.9980': 0.998,
+    '22°C - 0.9978': 0.9978,
+    '23°C - 0.9975': 0.9975,
+    '24°C - 0.9973': 0.9973,
+    '25°C - 0.9970': 0.997,
+    '26°C - 0.9968': 0.9968,
+    '27°C - 0.9965': 0.9965,
+    '28°C - 0.9962': 0.9962,
+    '29°C - 0.9959': 0.9959,
+    '30°C - 0.9956': 0.9956,
   };
+  const waterTemperatureList = [];
+
+  const formatedWaterTempList = Object.keys(list).forEach((key) => {
+    waterTemperatureList.push({
+      label: key,
+      value: list[key],
+    });
+  });
+
+  // const documentName = {
+  //   inferior: data.inferiorRows[0].document,
+  //   intermediaria: data.intermediariaRows[0].document,
+  //   superior: data.superiorRows[0].document,
+  // };
 
   const { user } = useAuth();
 
@@ -47,19 +75,25 @@ const Superpave_Step5 = ({
       key: 'drySampleMass',
       label: 'Massa da amostra seca em ar',
       adornment: 'g',
-      value: data.riceTest.find((obj) => obj.curve === curve) ? data.riceTest.find((obj) => obj.curve === curve).drySampleMass : null,
+      value: data.riceTest?.find((obj) => obj.curve === curve)
+        ? data.riceTest.find((obj) => obj.curve === curve).drySampleMass
+        : null,
     },
     {
       key: 'waterSampleContainerMass',
       label: 'Massa do recipiente + água',
       adornment: 'g',
-      value: data.riceTest.find((obj) => obj.curve === curve) ? data.riceTest.find((obj) => obj.curve === curve).waterSampleContainerMass : null,
+      value: data.riceTest.find((obj) => obj.curve === curve)
+        ? data.riceTest.find((obj) => obj.curve === curve).waterSampleContainerMass
+        : null,
     },
     {
       key: 'waterSampleMass',
       label: 'Massa do recipiente + amostra + água',
       adornment: 'g',
-      value: data.riceTest.find((obj) => obj.curve === curve) ? data.riceTest.find((obj) => obj.curve === curve).waterSampleMass : null,
+      value: data.riceTest.find((obj) => obj.curve === curve)
+        ? data.riceTest.find((obj) => obj.curve === curve).waterSampleMass
+        : null,
     },
   ];
 
@@ -75,35 +109,159 @@ const Superpave_Step5 = ({
     }
   }, [data]);
 
+  useEffect(() => {
+    let prevData = [...data.riceTest];
+
+    if (granulometryCompositionData.chosenCurves.lower) {
+      if (!prevData.some((obj) => obj.curve === 'lower')) {
+        if (prevData.some((obj) => obj.curve === null)) {
+          let index = prevData.findIndex((obj) => obj.curve === null);
+          prevData[index] = { ...prevData[index], curve: 'lower' };
+        } else {
+          const newData = { ...prevData[0], curve: 'lower' };
+          prevData.push(newData);
+        }
+        setData({ step: 4, value: { ...data, riceTest: prevData } });
+      }
+    }
+
+    if (granulometryCompositionData.chosenCurves.average) {
+      if (!prevData.some((obj) => obj.curve === 'average')) {
+        if (prevData.some((obj) => obj.curve === null)) {
+          let index = prevData.findIndex((obj) => obj.curve === null);
+          prevData[index] = { ...prevData[index], curve: 'average' };
+        } else {
+          const newData = { ...prevData[0], curve: 'average' };
+          prevData.push(newData);
+        }
+        setData({ step: 4, value: { ...data, riceTest: prevData } });
+      }
+    }
+
+    if (granulometryCompositionData.chosenCurves.higher) {
+      if (!prevData.some((obj) => obj.curve === 'higher')) {
+        if (prevData.some((obj) => obj.curve === null)) {
+          let index = prevData.findIndex((obj) => obj.curve === null);
+          prevData[index] = { ...prevData[index], curve: 'higher' };
+        } else {
+          const newData = { ...prevData[0], curve: 'higher' };
+          prevData.push(newData);
+        }
+        setData({ step: 4, value: { ...data, riceTest: prevData } });
+      }
+    }
+  }, [granulometryCompositionData.chosenCurves]);
+
   const generateColumns = (curve: string): GridColDef[] => [
     {
       field: 'diammeter',
-      headerName: 'Diâmetro (cm)',
-      valueFormatter: ({ value }) => (value ? `${value}` : ``),
+      headerName: 'Diâmetro',
+      width: 100,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data[curve].findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="text"
+            value={data[curve][index].diammeter}
+            onChange={(e) => {
+              let prevData = [...data[curve]];
+              prevData[index].diammeter = Number(e.target.value);
+              setData({ step: 4, value: { ...data, [curve]: prevData } });
+            }}
+          />
+        );
+      },
     },
     {
       field: 'dryMass',
       headerName: 'Massa seca (g)',
-      valueFormatter: ({ value }) => (value ? `${value}` : ''),
+      width: 150,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data[curve].findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="text"
+            value={data[curve][index].dryMass}
+            onChange={(e) => {
+              let prevData = [...data[curve]];
+              prevData[index].dryMass = Number(e.target.value);
+              setData({ step: 4, value: { ...data, [curve]: prevData } });
+            }}
+          />
+        );
+      },
     },
     {
       field: 'submergedMass',
       headerName: 'Massa submersa (g)',
-      valueFormatter: ({ value }) => (value ? `${value}` : ''),
+      width: 150,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data[curve].findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="text"
+            value={data[curve][index].submergedMass}
+            onChange={(e) => {
+              let prevData = [...data[curve]];
+              prevData[index].submergedMass = Number(e.target.value);
+              setData({ step: 4, value: { ...data, [curve]: prevData } });
+            }}
+          />
+        );
+      },
     },
     {
       field: 'drySurfaceSaturatedMass',
       headerName: 'Massa saturada com superfície seca (g)',
-      valueFormatter: ({ value }) => (value ? `${value}` : ''),
+      width: 210,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data[curve].findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="text"
+            value={data[curve][index].drySurfaceSaturatedMass}
+            onChange={(e) => {
+              let prevData = [...data[curve]];
+              prevData[index].drySurfaceSaturatedMass = Number(e.target.value);
+              setData({ step: 4, value: { ...data, [curve]: prevData } });
+            }}
+          />
+        );
+      },
     },
     {
       field: 'waterTemperatureCorrection',
       headerName: 'Fator de correção da temperatura da água (N)',
-      valueFormatter: ({ value }) => (value ? `${value}` : ''),
+      width: 210,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data[curve].findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="text"
+            value={data[curve][index].waterTemperatureCorrection}
+            onChange={(e) => {
+              let prevData = [...data[curve]];
+              prevData[index].waterTemperatureCorrection = Number(e.target.value);
+              setData({ step: 4, value: { ...data, [curve]: prevData } });
+            }}
+          />
+        );
+      },
     },
     {
       field: 'document',
       headerName: 'Planilha (.xlsx)',
+      width: 150,
       valueFormatter: ({ value }) => (value ? `${value}` : ''),
       renderCell: ({ row }) => {
         const { id } = row;
@@ -273,7 +431,6 @@ const Superpave_Step5 = ({
 
     promise.then((d: any[]) => {
       let arrayAux = data[tableName];
-      console.log('🚀 ~ promise.then ~ tableName:', tableName);
       if (initialBinderData.turnNumber) {
         if (initialBinderData.turnNumber.maxN == d.length) {
           arrayAux[index].planilha = d;
@@ -296,7 +453,6 @@ const Superpave_Step5 = ({
   };
 
   const addPlanilha = (tableName, index, e) => {
-    console.log('🚀 ~ addPlanilha ~ tableName:', tableName);
     const file = e.target.files;
 
     readExcel(file, tableName, index);
@@ -306,19 +462,32 @@ const Superpave_Step5 = ({
     toast.promise(
       async () => {
         try {
-          const { data: riceTest } = await superpave.calculateRiceTest(data);
-          const prevData = data;
-          const newData = {
-            ...prevData,
-            ...riceTest,
-          };
+          const response = await superpave.calculateGmm(data);
+          console.log("🚀 ~ response:", response)
+
+          if (response.lower !== 0) {
+            let index = data.riceTest.findIndex((e) => e.curve === 'lower');
+            let arr = [...data.riceTest];
+            arr[index].gmm = response.lower.gmm;
+            setData({ step: 4, value: {...data, riceTest: arr}})
+          }
+
+          if (response.average !== 0) {
+            let index = data.riceTest.findIndex((e) => e.curve === 'average');
+            let arr = [...data.riceTest];
+            arr[index].gmm = response.average.gmm;
+            setData({ step: 4, value: {...data, riceTest: arr}})
+          }
+
+          if (response.higher !== 0) {
+            let index = data.riceTest.findIndex((e) => e.curve === 'higher');
+            let arr = [...data.riceTest];
+            arr[index].gmm = response.higher.gmm;
+            setData({ step: 4, value: {...data, riceTest: arr}})
+          }
 
           setRiceTestModalIsOpen(false);
-
-          setData({ step: 4, value: newData });
-          //setLoading(false);
         } catch (error) {
-          //setLoading(false);
           throw error;
         }
       },
@@ -331,27 +500,18 @@ const Superpave_Step5 = ({
   };
 
   const showModal = (curve: string) => {
-
     let prevData = [...data.riceTest];
-    let index;
 
     if (!prevData.find((obj) => obj.curve === curve)) {
-
       if (prevData.some((obj) => obj.curve === null)) {
-        console.log("1")
-        index = prevData.findIndex((obj) => obj.curve === null);
-        const newData = {...prevData[index], curve: curve}
-        prevData[index] = newData;
-
-        setData({ step: 4, value: {...data, riceTest: prevData}})
+        let index = prevData.findIndex((obj) => obj.curve === null);
+        prevData[index] = { ...prevData[index], curve: curve };
       } else {
-        console.log("2")
-        index = prevData.length - 1;
-        const newData = {...prevData[index], curve: curve}
-        prevData[index] = newData;
-  
-        setData({ step: 4, value: {...data, riceTest: prevData}})
+        const newData = { ...prevData[0], curve: curve };
+        prevData.push(newData);
       }
+
+      setData({ step: 4, value: { ...data, riceTest: prevData } });
     }
 
     setActualCurve(curve);
@@ -464,7 +624,7 @@ const Superpave_Step5 = ({
                   }}
                 >
                   <Typography>Curva intermediaria</Typography>
-                  <Button onClick={() => showModal('averageGmm')} variant="outlined">
+                  <Button onClick={() => showModal('average')} variant="outlined">
                     Calcular denasidade máxima
                   </Button>
                 </Box>
@@ -481,7 +641,7 @@ const Superpave_Step5 = ({
                   }}
                 >
                   <Typography>Curva superior</Typography>
-                  <Button onClick={() => showModal('higherGmm')} variant="outlined">
+                  <Button onClick={() => showModal('higher')} variant="outlined">
                     Calcular denasidade máxima
                   </Button>
                 </Box>
@@ -500,11 +660,12 @@ const Superpave_Step5 = ({
               calculateRiceTest();
             }}
           >
-            <Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               <InputEndAdornment
                 adornment=""
-                label='Inserir Gmm'
-                value={data.riceTest?.find((obj) => obj.curve === actualCurve)}
+                label="Inserir Gmm"
+                sx={{ width: '20rem' }}
+                value={data.riceTest?.find((obj) => obj.curve === actualCurve)?.gmm}
                 onChange={(e) => {
                   const value = e.target.value;
                   let prevData = [...data.riceTest];
@@ -515,21 +676,40 @@ const Superpave_Step5 = ({
                 }}
               />
 
-              {generateRiceTestInputs(actualCurve).map((input) => (
-                <InputEndAdornment
-                  adornment={input.adornment}
-                  label={input.label}
-                  value={input.value}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    let prevData = [...data.riceTest];
-                    const index = prevData.findIndex((obj) => obj.curve === actualCurve);
-                    const newData = { ...prevData[index], [input.key]: Number(value) };
-                    prevData[index] = newData;
-                    setData({ step: 4, value: { ...data, riceTest: prevData } });
-                  }}
-                />
-              ))}
+              <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
+                {generateRiceTestInputs(actualCurve).map((input) => (
+                  <InputEndAdornment
+                    adornment={input.adornment}
+                    label={input.label}
+                    value={input.value}
+                    sx={{ width: '15rem' }}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      let prevData = [...data.riceTest];
+                      const index = prevData.findIndex((obj) => obj.curve === actualCurve);
+                      const newData = { ...prevData[index], [input.key]: Number(value) };
+                      prevData[index] = newData;
+                      setData({ step: 4, value: { ...data, riceTest: prevData } });
+                    }}
+                  />
+                ))}
+              </Box>
+
+              <DropDown
+                key={'water'}
+                variant="standard"
+                label={'Selecione o fator de correção para a temperatura da água'}
+                options={waterTemperatureList}
+                callback={(selectedValue) => {
+                  let prevData = [...data.riceTest];
+                  const index = prevData.findIndex((obj) => obj.curve === actualCurve);
+                  const newData = { ...prevData[index], temperatureOfWater: Number(selectedValue) };
+                  prevData[index] = newData;
+                  setData({ step: 4, value: { ...data, riceTest: prevData } });
+                }}
+                size="medium"
+                sx={{ width: '20rem' }}
+              />
             </Box>
           </ModalBase>
         </>

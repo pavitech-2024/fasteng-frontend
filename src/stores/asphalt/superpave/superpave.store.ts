@@ -130,7 +130,8 @@ interface FirstCompressionData {
     drySampleMass: number,
     waterSampleMass: number,
     waterSampleContainerMass: number,
-    gmm: number
+    gmm: number,
+    temperatureOfWater: number
   }[]
 }
 
@@ -310,7 +311,8 @@ const initialState = {
         drySampleMass: null,
         waterSampleMass: null,
         waterSampleContainerMass: null,
-        gmm: null
+        gmm: 0,
+        temperatureOfWater: null
       }
     ]
   }

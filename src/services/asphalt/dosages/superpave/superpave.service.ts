@@ -359,15 +359,22 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  calculateRiceTest = async (
+  calculateGmm = async (
     setp5Data: SuperpaveData['firstCompressionData'],
   ): Promise<any> => {
     try {
       const { riceTest } = setp5Data;
 
-      const response = await Api.post(`${this.info.backend_path}/calculate-rice-test`, {
-        riceTest
+      const riceTestData = riceTest.filter((e) => {
+        return !Object.values(e).some((value) => value === null);
       });
+      
+      const response = await Api.post(`${this.info.backend_path}/calculate-gmm`, {
+        riceTest: riceTestData
+      });
+
+      console.log("🚀 ~ Superpave_SERVICE ~ response:", response)
+
 
       const { data, success, error } = response.data;
 
