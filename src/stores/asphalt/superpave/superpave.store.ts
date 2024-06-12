@@ -55,16 +55,12 @@ interface SuperpaveGranulometryCompositionData {
 }
 
 interface SuperpaveInitialBinderData {
-  material_1: {
+  materials: {
+    name: string;
     realSpecificMass: number;
     apparentSpecificMass: number;
     absorption: number;
-  };
-  material_2: {
-    realSpecificMass: number;
-    apparentSpecificMass: number;
-    absorption: number;
-  };
+  }[];
   binderSpecificMass: number;
   granulometryComposition: {
     combinedGsa: number;
@@ -220,16 +216,12 @@ const initialState = {
     },
   },
   initialBinderData: {
-    material_1: {
+    materials: [{
+      name: null,
       realSpecificMass: null,
       apparentSpecificMass: null,
       absorption: null,
-    },
-    material_2: {
-      realSpecificMass: null,
-      apparentSpecificMass: null,
-      absorption: null,
-    },
+    }],
     binderSpecificMass: null,
     granulometryComposition: [
       {

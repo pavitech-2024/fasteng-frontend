@@ -8,7 +8,7 @@ import materialsService from '@/services/asphalt/asphalt-materials.service';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { Box, Button, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
+import { DataGrid, GridAlignment, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -29,7 +29,6 @@ const Superpave_Step4 = ({
 
   const [specificMassModalIsOpen, setSpecificMassModalIsOpen] = useState(true);
   const [newInitialBinderModalIsOpen, setNewInitialBinderModalIsOpen] = useState(false);
-  const materials = materialSelectionData.aggregates.map((item) => item.name);
   const [binderInput, setBinderInput] = useState();
 
   const { user } = useAuth();
@@ -43,6 +42,8 @@ const Superpave_Step4 = ({
     toast.promise(
       async () => {
         try {
+          let newMaterials = [];
+
           const response = await materialsService.getMaterial(materialSelectionData.binder);
 
           setBinderData(response.data.material);
@@ -50,24 +51,20 @@ const Superpave_Step4 = ({
           const { data: resData, success, error } = await superpave.getStep4SpecificMasses(materialSelectionData);
 
           if (success && resData.specificMasses.length > 0) {
-            console.log('aqui');
-            const newMaterial_1 = {
-              realSpecificMass: resData.specificMasses[0].results.bulk_specify_mass,
-              apparentSpecificMass: resData.specificMasses[0].results.apparent_specify_mass,
-              absorption: resData.specificMasses[0].results.absorption,
-            };
-
-            const newMaterial_2 = {
-              realSpecificMass: resData.specificMasses[1].results.bulk_specify_mass,
-              apparentSpecificMass: resData.specificMasses[1].results.apparent_specify_mass,
-              absorption: resData.specificMasses[1].results.absorption,
-            };
+            resData.specificMasses.forEach((e) => {
+              let obj = {
+                name: e.generalData.material.name,
+                realSpecificMass: e.results.bulk_specify_mass,
+                apparentSpecificMass: e.results.apparent_specify_mass,
+                absorption: e.results.absorption,
+              };
+              newMaterials.push(obj);
+            });
 
             let prevData = { ...data };
             prevData = {
               ...prevData,
-              material_1: newMaterial_1,
-              material_2: newMaterial_2,
+              materials: newMaterials,
             };
 
             setData({
@@ -89,56 +86,48 @@ const Superpave_Step4 = ({
     );
   }, []);
 
-  const modalMaterial_1Inputs = [
-    {
-      key: 'realSpecificMass',
-      placeHolder: 'Massa específica real',
-      adornment: 'g/cm²',
-      value: data.material_1.realSpecificMass,
-    },
-    {
-      key: 'apparentSpecificMass',
-      placeHolder: 'Massa específica aparente',
-      adornment: 'g/cm²',
-      value: data.material_1.apparentSpecificMass,
-    },
-    {
-      key: 'absorption',
-      placeHolder: 'Absorção',
-      adornment: '%',
-      value: data.material_1.absorption,
-    },
-  ];
+  const generateMaterialInputs = (materials) => {
+    return materials.map((material, index) => [
+      {
+        key: 'realSpecificMass',
+        label: 'Massa específica real',
+        placeHolder: 'Massa específica real',
+        adornment: 'g/cm²',
+        value: material.realSpecificMass,
+        materialIndex: index + 1,
+        name: material.name,
+      },
+      {
+        key: 'apparentSpecificMass',
+        label: 'Massa específica aparente',
+        placeHolder: 'Massa específica aparente',
+        adornment: 'g/cm²',
+        value: material.apparentSpecificMass,
+        materialIndex: index + 1,
+        name: material.name,
+      },
+      {
+        key: 'absorption',
+        label: 'Absorção',
+        placeHolder: 'Absorção',
+        adornment: '%',
+        value: material.absorption,
+        materialIndex: index + 1,
+        name: material.name,
+      },
+    ]);
+  };
 
-  const modalMaterial_2Inputs = [
-    {
-      key: 'realSpecificMass',
-      placeHolder: 'Massa específica real',
-      adornment: 'g/cm²',
-      value: data.material_2.realSpecificMass,
-    },
-    {
-      key: 'apparentSpecificMass',
-      placeHolder: 'Massa específica aparente',
-      adornment: 'g/cm²',
-      value: data.material_2.apparentSpecificMass,
-    },
-    {
-      key: 'absorption',
-      placeHolder: 'Absorção',
-      adornment: '%',
-      value: data.material_2.absorption,
-    },
-  ];
+  const modalMaterialInputs = generateMaterialInputs(data.materials);
 
   const updateRows = () => {
     if (data.granulometryComposition) {
       const updatedRows = data.granulometryComposition.map((e, i) => ({
         id: i,
         granulometricComposition: compositions[i],
-        combinedGsb: e.combinedGsb ? e.combinedGsb.toFixed(2) : '', // Verifique se o campo está presente antes de acessá-lo
-        combinedGsa: e.combinedGsa ? e.combinedGsa.toFixed(2) : '', // Verifique se o campo está presente antes de acessá-lo
-        gse: e.gse ? e.gse.toFixed(2) : '', // Verifique se o campo está presente antes de acessá-lo
+        combinedGsb: e.combinedGsb ? e.combinedGsb.toFixed(2) : '',
+        combinedGsa: e.combinedGsa ? e.combinedGsa.toFixed(2) : '',
+        gse: e.gse ? e.gse.toFixed(2) : '',
       }));
       return updatedRows;
     } else {
@@ -148,18 +137,26 @@ const Superpave_Step4 = ({
 
   const updatePercentageRows = () => {
     if (data.granulometryComposition) {
-      const updatedPercentageRows = data.granulometryComposition.map((e, i) => ({
-        id: i,
-        granulometricComposition: compositions[i],
-        initialBinder: e.pli?.toFixed(2),
-        material_1: e.percentsOfDosageWithBinder.length > 0 ? e.percentsOfDosageWithBinder[0]?.toFixed(2) : '',
-        material_2: e.percentsOfDosageWithBinder.length > 0 ? e.percentsOfDosageWithBinder[1]?.toFixed(2) : '',
-      }));
+      const updatedPercentageRows = data.granulometryComposition.map((e, i) => {
+        const row = {
+          id: i,
+          granulometricComposition: compositions[i],
+          initialBinder: e.pli?.toFixed(2),
+        };
+  
+        e.percentsOfDosageWithBinder.forEach((percent, index) => {
+          row[`material_${index + 1}`] = percent?.toFixed(2);
+        });
+  
+        return row;
+      });
+  
       return updatedPercentageRows;
     } else {
       return [];
     }
   };
+  
 
   const handleModalSubmit = () => {
     toast.promise(
@@ -196,7 +193,7 @@ const Superpave_Step4 = ({
     setRows(updatedRows);
 
     const updatedEstimatedPercentageRows = updatePercentageRows();
-    setRows(updatedEstimatedPercentageRows);
+    setEstimatedPercentageRows(updatedEstimatedPercentageRows);
   }, [data.granulometryComposition]);
 
   const columns: GridColDef[] = [
@@ -226,46 +223,55 @@ const Superpave_Step4 = ({
     },
   ];
 
-  const estimatedPercentageCols: GridColDef[] = [
-    {
-      field: 'granulometricComposition',
-      headerName: 'Composição Granulométrica',
+  const createEstimatedPercentageCols = () => {
+    const baseCols: GridColDef[] = [
+      {
+        field: 'granulometricComposition',
+        headerName: 'Composição Granulométrica',
+        valueFormatter: ({ value }) => `${value}`,
+        width: 200,
+      },
+      {
+        field: 'initialBinder',
+        headerName: 'Teor de ligante inicial',
+        valueFormatter: ({ value }) => `${value}`,
+        width: 200,
+      }
+    ];
+  
+    const materialCols = materialSelectionData.aggregates.map((aggregate, index) => ({
+      field: `material_${index + 1}`,
+      headerName: aggregate.name,
       valueFormatter: ({ value }) => `${value}`,
-      width: 200,
-    },
-    {
-      field: 'initialBinder',
-      headerName: 'Teor de ligante inicial',
-      valueFormatter: ({ value }) => `${value}`,
-      width: 200,
-    },
-    {
-      field: 'material_1',
-      headerName: materialSelectionData.aggregates[0].name,
-      valueFormatter: ({ value }) => `${value}`,
-      width: 200,
-    },
-    {
-      field: 'material_2',
-      headerName: materialSelectionData.aggregates[1].name,
-      valueFormatter: ({ value }) => `${value}`,
-      width: 200,
-    },
-  ];
+      width: 100,
+    }));
+  
+    return [...baseCols, ...materialCols];
+  };
+  
+  const estimatedPercentageCols = createEstimatedPercentageCols();
 
-  const estimatedPercentageGroupings: GridColumnGroupingModel = [
-    {
-      groupId: 'estimatedPercentage',
-      headerName: 'Porcentagem estimada de materiais',
-      children: [
-        { field: 'granulometricComposition' },
-        { field: 'initialBinder' },
-        { field: 'material_1' },
-        { field: 'material_2' },
-      ],
-      headerAlign: 'center',
-    },
-  ];
+  const createEstimatedPercentageGroupings = (): GridColumnGroupingModel => {
+    const baseChildren = [
+      { field: 'granulometricComposition' },
+      { field: 'initialBinder' },
+    ];
+  
+    const materialChildren = materialSelectionData.aggregates.map((_, index) => ({
+      field: `material_${index + 1}`,
+    }));
+  
+    return [
+      {
+        groupId: 'estimatedPercentage',
+        headerName: 'Porcentagem estimada de materiais',
+        children: [...baseChildren, ...materialChildren],
+        headerAlign: 'center' as GridAlignment,
+      },
+    ];
+  };
+  
+  const estimatedPercentageGroupings = createEstimatedPercentageGroupings();
 
   const compressionParamsCols: GridColDef[] = [
     {
@@ -329,14 +335,16 @@ const Superpave_Step4 = ({
             gap: '10px',
           }}
         >
-          <DataGrid
-            hideFooter
-            disableColumnMenu
-            disableColumnFilter
-            experimentalFeatures={{ columnGrouping: true }}
-            columns={columns}
-            rows={rows}
-          />
+          {rows.length > 0 && (
+            <DataGrid
+              hideFooter
+              disableColumnMenu
+              disableColumnFilter
+              experimentalFeatures={{ columnGrouping: true }}
+              columns={columns}
+              rows={rows}
+            />
+          )}
 
           <DataGrid
             hideFooter
@@ -346,9 +354,10 @@ const Superpave_Step4 = ({
             columnGroupingModel={estimatedPercentageGroupings}
             columns={estimatedPercentageCols}
             rows={estimatedPercentageRows}
+            sx={{ marginTop: '2rem' }}
           />
 
-          <Button sx={{ width: 'fit-content' }} onClick={() => setNewInitialBinderModalIsOpen(true)}>
+          <Button variant='outlined' sx={{ width: 'fit-content', marginTop: '2rem' }} onClick={() => setNewInitialBinderModalIsOpen(true)}>
             Alterar teor de ligante inicial
           </Button>
 
@@ -379,48 +388,42 @@ const Superpave_Step4 = ({
           oneButton={true}
           singleButtonTitle="Confirmar"
         >
-          <Typography>{materials[0]}</Typography>
-
           <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1rem', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', gap: '1rem', flexDirection: 'row', marginBottom: '2rem' }}>
-              {modalMaterial_1Inputs.map((input) => (
-                <InputEndAdornment
-                  key={input.key}
-                  adornment={input.adornment}
-                  value={input.value}
-                  placeholder={input.placeHolder}
-                  fullWidth
-                  onChange={(e) => {
-                    setData({
-                      step: 3,
-                      key: `material_1`,
-                      value: { ...data.material_1, [input.key]: Number(e.target.value) },
-                    });
-                  }}
-                />
-              ))}
-            </Box>
-          </Box>
+            <Box sx={{ display: 'flex', gap: '1rem', flexDirection: 'column', marginBottom: '2rem' }}>
+              {modalMaterialInputs.map((materialInputs, idx) => (
+                <>
+                  <Typography>{materialInputs[0].name}</Typography>
 
-          <Typography>{materials[1]}</Typography>
+                  <Box key={idx} sx={{ display: 'flex', gap: '1rem' }}>
+                    {materialInputs.map((input) => (
+                      <InputEndAdornment
+                        key={`${input.materialIndex}_${input.key}`}
+                        adornment={input.adornment}
+                        value={input.value}
+                        label={input.label}
+                        placeholder={input.placeHolder}
+                        fullWidth
+                        onChange={(e) => {
+                          const updatedMaterials = data.materials.map((material, index) => {
+                            if (index === input.materialIndex - 1) {
+                              return {
+                                ...material,
+                                [input.key]: e.target.value.replace(',', '.'),
+                              };
+                            }
+                            return material;
+                          });
 
-          <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1rem', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', gap: '1rem', flexDirection: 'row', marginBottom: '2rem' }}>
-              {modalMaterial_2Inputs.map((input) => (
-                <InputEndAdornment
-                  key={input.key}
-                  adornment={input.adornment}
-                  value={input.value}
-                  placeholder={input.placeHolder}
-                  fullWidth
-                  onChange={(e) => {
-                    setData({
-                      step: 3,
-                      key: `material_2`,
-                      value: { ...data.material_2, [input.key]: Number(e.target.value) },
-                    });
-                  }}
-                />
+                          setData({
+                            step: 3,
+                            key: `materials`,
+                            value: updatedMaterials,
+                          });
+                        }}
+                      />
+                    ))}
+                  </Box>
+                </>
               ))}
             </Box>
           </Box>
@@ -432,6 +435,7 @@ const Superpave_Step4 = ({
               adornment={'g/cm²'}
               placeholder="Massa especifica real"
               value={data.binderSpecificMass}
+              type="number"
               onChange={(e) => {
                 setData({ step: 3, key: 'binderSpecificMass', value: Number(e.target.value) });
               }}
@@ -442,24 +446,23 @@ const Superpave_Step4 = ({
 
       <ModalBase
         title={'Insira o teor de ligante inicial'}
-        leftButtonTitle={''}
-        rightButtonTitle={''}
+        leftButtonTitle={'Cancelar'}
+        rightButtonTitle={'Confirmar'}
         onCancel={() => {
-          setSpecificMassModalIsOpen(false);
+          setNewInitialBinderModalIsOpen(false);
           setLoading(false);
         }}
         open={newInitialBinderModalIsOpen}
         size={'medium'}
         onSubmit={handleModalSubmit}
-        oneButton={true}
-        singleButtonTitle="Confirmar"
+        oneButton={false}
       >
         <InputEndAdornment
           adornment="%"
           value={binderInput}
           placeholder="Curva inferior"
           fullWidth
-          onChange={(e) => {;
+          onChange={(e) => {
             setData({
               step: 3,
               key: `binderInput`,

@@ -18,7 +18,6 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
   const data = {
     container_other_data: [],
   };
-  console.log('🚀 ~ data:', data);
 
   if (granulometry_results) {
     data.container_other_data.push(

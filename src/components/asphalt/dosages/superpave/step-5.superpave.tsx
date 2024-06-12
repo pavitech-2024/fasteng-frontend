@@ -463,7 +463,6 @@ const Superpave_Step5 = ({
       async () => {
         try {
           const response = await superpave.calculateGmm(data);
-          console.log("🚀 ~ response:", response)
 
           if (response.lower !== 0) {
             let index = data.riceTest.findIndex((e) => e.curve === 'lower');

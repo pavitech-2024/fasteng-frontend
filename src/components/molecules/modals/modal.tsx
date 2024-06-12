@@ -64,7 +64,7 @@ const ModalBase = ({
           maxHeight: '80%',
           overflowY: {
             mobile: 'scroll',
-            notebook: 'hidden',
+            notebook: 'auto',
           },
           p: {
             mobile: '1rem',

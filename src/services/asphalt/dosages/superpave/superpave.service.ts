@@ -294,7 +294,7 @@ class Superpave_SERVICE implements IEssayService {
       const { aggregates } = step2Data;
       const { percentageInputs, chosenCurves, lowerComposition, averageComposition, higherComposition, nominalSize } =
         step3Data;
-      const { material_1, material_2, binderSpecificMass } = step4Data;
+      const { materials, binderSpecificMass } = step4Data;
 
       let composition;
 
@@ -305,7 +305,7 @@ class Superpave_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/step-4-data`, {
         materials: aggregates,
         percentsOfDosage: percentageInputs,
-        specificMassesData: [material_1, material_2],
+        specificMassesData: materials,
         chosenCurves,
         composition,
         binderSpecificMass,
