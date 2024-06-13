@@ -1,8 +1,4 @@
-import {
-  CbrIcon,
-  CompressionIcon,
-  GranulometryIcon
-} from '@/assets';
+import { CbrIcon, CompressionIcon, GranulometryIcon } from '@/assets';
 import { FilterOption } from '@/components/molecules/buttons/filter';
 import { StandardsTemplate } from '@/components/templates/standards';
 import { Standard } from '@/interfaces/common';
@@ -24,7 +20,6 @@ const SoilsStandards: NextPage = () => {
       key: 'compression',
       standard: 'DNER - ME 162/94',
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_162_94.pdf',
-      
     },
     {
       title: t('granulometry'),
@@ -32,12 +27,10 @@ const SoilsStandards: NextPage = () => {
       key: 'granulometry',
       standard: 'DNER - ME 083/98',
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_083_98.pdf',
-    }
+    },
   ];
 
-  const filterOptions: FilterOption[] = [
-    { key: 'all', title: t('all'), isSelected: true },
-  ];
+  const filterOptions: FilterOption[] = [{ key: 'all', title: t('all'), isSelected: true }];
   return <StandardsTemplate standards={standards} filterOptions={filterOptions} />;
 };
 

@@ -3,7 +3,7 @@ import {
   CoarseAggregateIcon,
   GranulometryIcon,
   SandIncreaseIcon,
-  UnitMassIcon
+  UnitMassIcon,
 } from '@/assets';
 import { FilterOption } from '@/components/molecules/buttons/filter';
 import { StandardsTemplate } from '@/components/templates/standards';
@@ -50,9 +50,7 @@ const ConcreteStandards: NextPage = () => {
     },
   ];
 
-  const filterOptions: FilterOption[] = [
-    { key: 'all', title: t('all'), isSelected: true },
-  ];
+  const filterOptions: FilterOption[] = [{ key: 'all', title: t('all'), isSelected: true }];
 
   return <StandardsTemplate standards={standards} filterOptions={filterOptions} />;
 };
