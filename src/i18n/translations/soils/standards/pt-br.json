@@ -1,7 +1,7 @@
-{ 
+{
   "cbr": "California Bearing Ratio - CBR",
   "hrb": "Classificação Rodoviária - HRB",
   "sucs": "Classificação Unificada - SUCS",
   "compression": "Ensaio de Compactação",
-  "granulometry": "Granulometria por Peneiramento"  
+  "granulometry": "Granulometria por Peneiramento"
 }
