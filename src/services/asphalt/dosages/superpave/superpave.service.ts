@@ -70,8 +70,11 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitInitialBinder(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 4:
+          await this.submitFirstCompression(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 5:
+          const { generalData, initialBinderData, granulometryCompositionData, firstCompressionData } = data as SuperpaveData;
+          await this.getStepFirstCurvePercentages(generalData, granulometryCompositionData, initialBinderData, firstCompressionData, isConsult);
           break;
         case 6:
           break;
@@ -384,6 +387,74 @@ class Superpave_SERVICE implements IEssayService {
     } catch (error) {
       throw error;
     }
+  };
+
+  submitFirstCompression = async (
+    data: SuperpaveData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
+      try {
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
+
+        const firstCompressionData = {
+          ...data.firstCompressionData,
+          name,
+          isConsult: null,
+        };
+
+        if (isConsult) firstCompressionData.isConsult = isConsult;
+
+        const response = await Api.post(`${this.info.backend_path}/save-first-compression-step/${userData}`, {
+          firstCompressionData: {
+            ...data.firstCompressionData,
+            name,
+          },
+        });
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    }
+  };
+
+  getStepFirstCurvePercentages = async (
+    generalData: SuperpaveData['generalData'],
+    step2Data: SuperpaveData['granulometryCompositionData'],
+    step3Data: SuperpaveData['initialBinderData'], 
+    step4Data: SuperpaveData['firstCompressionData'],
+    isConsult?
+  ): Promise<any> => {
+    try {
+      const { nominalSize, chosenCurves, porcentagesPassantsN200 } = step2Data;
+      const { granulometryComposition, turnNumber, binderSpecificMass } = step3Data;
+      const { riceTest } = step4Data;
+      const { trafficVolume } = generalData;
+
+      const response = await Api.post(`${this.info.backend_path}/step-5-parameters`, {
+        granulometryComposition,
+        trafficVolume,
+        nominalSize,
+        turnNumber,
+        chosenCurves,
+        binderSpecificMass,
+        porcentagesPassantsN200,
+        riceTest
+      });
+
+      const { data, success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+      return { data, success, error };
+    } catch (error) {}
   };
 }
 

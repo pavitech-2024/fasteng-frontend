@@ -167,7 +167,7 @@ const Superpave_Step5 = ({
             value={data[curve][index].diammeter}
             onChange={(e) => {
               let prevData = [...data[curve]];
-              prevData[index].diammeter = Number(e.target.value);
+              prevData[index].diammeter = parseFloat(e.target.value);
               setData({ step: 4, value: { ...data, [curve]: prevData } });
             }}
           />
@@ -184,11 +184,11 @@ const Superpave_Step5 = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
-            type="text"
+            type="number"
             value={data[curve][index].dryMass}
             onChange={(e) => {
               let prevData = [...data[curve]];
-              prevData[index].dryMass = Number(e.target.value);
+              prevData[index].dryMass = parseFloat(e.target.value);
               setData({ step: 4, value: { ...data, [curve]: prevData } });
             }}
           />
@@ -205,11 +205,11 @@ const Superpave_Step5 = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
-            type="text"
+            type="number"
             value={data[curve][index].submergedMass}
             onChange={(e) => {
               let prevData = [...data[curve]];
-              prevData[index].submergedMass = Number(e.target.value);
+              prevData[index].submergedMass = parseFloat(e.target.value);
               setData({ step: 4, value: { ...data, [curve]: prevData } });
             }}
           />
@@ -226,11 +226,11 @@ const Superpave_Step5 = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
-            type="text"
+            type="number"
             value={data[curve][index].drySurfaceSaturatedMass}
             onChange={(e) => {
               let prevData = [...data[curve]];
-              prevData[index].drySurfaceSaturatedMass = Number(e.target.value);
+              prevData[index].drySurfaceSaturatedMass = parseFloat(e.target.value);
               setData({ step: 4, value: { ...data, [curve]: prevData } });
             }}
           />
@@ -247,11 +247,11 @@ const Superpave_Step5 = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
-            type="text"
+            type="number"
             value={data[curve][index].waterTemperatureCorrection}
             onChange={(e) => {
               let prevData = [...data[curve]];
-              prevData[index].waterTemperatureCorrection = Number(e.target.value);
+              prevData[index].waterTemperatureCorrection = parseFloat(e.target.value);
               setData({ step: 4, value: { ...data, [curve]: prevData } });
             }}
           />
@@ -662,6 +662,7 @@ const Superpave_Step5 = ({
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               <InputEndAdornment
                 adornment=""
+                type='number'
                 label="Inserir Gmm"
                 sx={{ width: '20rem' }}
                 value={data.riceTest?.find((obj) => obj.curve === actualCurve)?.gmm}
@@ -669,7 +670,7 @@ const Superpave_Step5 = ({
                   const value = e.target.value;
                   let prevData = [...data.riceTest];
                   const index = prevData.findIndex((obj) => obj.curve === actualCurve);
-                  const newData = { ...prevData[index], gmm: Number(value) };
+                  const newData = { ...prevData[index], gmm: parseFloat(value) };
                   prevData[index] = newData;
                   setData({ step: 4, value: { ...data, riceTest: prevData } });
                 }}

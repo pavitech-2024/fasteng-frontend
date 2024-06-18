@@ -52,6 +52,7 @@ interface SuperpaveGranulometryCompositionData {
     lower: any[];
     letter: string;
   };
+  porcentagesPassantsN200: any
 }
 
 interface SuperpaveInitialBinderData {
@@ -131,12 +132,17 @@ interface FirstCompressionData {
   }[]
 }
 
+interface FirstCurvePercentageData {
+  
+}
+
 export type SuperpaveData = {
   generalData: SuperpaveGeneralData;
   materialSelectionData: SuperpaveMaterialSelectionData;
   granulometryCompositionData: SuperpaveGranulometryCompositionData;
   initialBinderData: SuperpaveInitialBinderData;
-  firstCompressionData: FirstCompressionData
+  firstCompressionData: FirstCompressionData;
+  firstCurvePercentageData: FirstCurvePercentageData
 };
 
 export type SuperpaveActions = {
@@ -151,7 +157,8 @@ const stepVariant = {
   1: 'materialSelectionData',
   2: 'granulometryCompositionData',
   3: 'initialBinderData',
-  4: 'firstCompressionData'
+  4: 'firstCompressionData',
+  5: 'firstCurvePercentageData'
 };
 
 const initialState = {
@@ -172,6 +179,7 @@ const initialState = {
     binder: null,
   },
   granulometryCompositionData: {
+    porcentagesPassantsN200: null,
     graphData: [],
     lowerComposition: {
       percentsOfMaterials: null,
@@ -307,6 +315,9 @@ const initialState = {
         temperatureOfWater: null
       }
     ]
+  },
+  firstCurvePercentageData: {
+
   }
 };
 
