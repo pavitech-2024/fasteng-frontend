@@ -51,7 +51,7 @@ const ViscosityRotational_Results = ({ setNextDisabled, nextDisabled }: EssayPag
           <Result_Card label={t('saybolt-furol.lower')} value={data.machiningTemperature.lower} unity={'°C'} />
         </Result_CardContainer>
 
-        <ResultSubTitle title={t('saybolt-furol.graph')} sx={{ margin: '.65rem' }} />
+        <ResultSubTitle title={t('asphalt.essays.viscosityRotational.graph')} sx={{ margin: '.65rem' }} />
         <Chart
           chartType="LineChart"
           width={'100%'}
@@ -61,10 +61,10 @@ const ViscosityRotational_Results = ({ setNextDisabled, nextDisabled }: EssayPag
           options={{
             backgroundColor: 'transparent',
             hAxis: {
-              title: `${t('saybolt-furol.temperature')} C`, // Umidade %
+              title: `${t('asphalt.essays.viscosityRotational.temperature')} C`, // Umidade %
             },
             vAxis: {
-              title: `${t('saybolt-furol.viscosity')} (SSF)`, // Densidade do solo seco - g/cm³
+              title: `${t('asphalt.essays.viscosityRotational.viscosity')} (SSF)`, // Densidade do solo seco - g/cm³
               maxValue: '1.5',
             },
             explorer: {
