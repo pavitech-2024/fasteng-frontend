@@ -434,19 +434,23 @@ class Superpave_SERVICE implements IEssayService {
   ): Promise<any> => {
     try {
       const { nominalSize, chosenCurves, porcentagesPassantsN200 } = step2Data;
-      const { granulometryComposition, turnNumber, binderSpecificMass } = step3Data;
-      const { riceTest } = step4Data;
+      const { turnNumber, binderSpecificMass } = step3Data;
+      const { riceTest, inferiorRows, intermediariaRows, superiorRows, maximumDensity } = step4Data;
       const { trafficVolume } = generalData;
 
+      let compositions = [inferiorRows, intermediariaRows, superiorRows];
+      let densities = [maximumDensity.lower, maximumDensity.average, maximumDensity.higher]
+
       const response = await Api.post(`${this.info.backend_path}/step-5-parameters`, {
-        granulometryComposition,
+        granulometryComposition: compositions,
         trafficVolume,
         nominalSize,
         turnNumber,
         chosenCurves,
         binderSpecificMass,
         porcentagesPassantsN200,
-        riceTest
+        riceTest,
+        maximumDensity: densities
       });
 
       const { data, success, error } = response.data;
