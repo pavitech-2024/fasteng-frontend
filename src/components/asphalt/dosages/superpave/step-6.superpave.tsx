@@ -14,9 +14,9 @@ const Superpave_Step6 = ({
   setNextDisabled,
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+
   const [loading, setLoading] = useState<boolean>(false);
   const { 
-    materialSelectionData,
     granulometryCompositionData,
     initialBinderData,
     generalData,

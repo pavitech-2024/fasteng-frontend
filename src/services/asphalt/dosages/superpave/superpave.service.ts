@@ -427,15 +427,15 @@ class Superpave_SERVICE implements IEssayService {
 
   getStepFirstCurvePercentages = async (
     generalData: SuperpaveData['generalData'],
-    step2Data: SuperpaveData['granulometryCompositionData'],
-    step3Data: SuperpaveData['initialBinderData'], 
-    step4Data: SuperpaveData['firstCompressionData'],
+    step3Data: SuperpaveData['granulometryCompositionData'],
+    step4Data: SuperpaveData['initialBinderData'], 
+    step5Data: SuperpaveData['firstCompressionData'],
     isConsult?
   ): Promise<any> => {
     try {
-      const { nominalSize, chosenCurves, porcentagesPassantsN200 } = step2Data;
-      const { turnNumber, binderSpecificMass } = step3Data;
-      const { riceTest, inferiorRows, intermediariaRows, superiorRows, maximumDensity } = step4Data;
+      const { nominalSize, chosenCurves, porcentagesPassantsN200, percentageInputs } = step3Data;
+      const { turnNumber, binderSpecificMass, granulometryComposition: binderCompositions } = step4Data;
+      const { riceTest, inferiorRows, intermediariaRows, superiorRows, maximumDensity } = step5Data;
       const { trafficVolume } = generalData;
 
       let compositions = [inferiorRows, intermediariaRows, superiorRows];
@@ -447,10 +447,12 @@ class Superpave_SERVICE implements IEssayService {
         nominalSize,
         turnNumber,
         chosenCurves,
-        binderSpecificMass,
+        binderSpecificGravity: binderSpecificMass,
         porcentagesPassantsN200,
         riceTest,
-        maximumDensity: densities
+        maximumDensity: densities,
+        binderCompositions,
+        percentageInputs
       });
 
       const { data, success, error } = response.data;
