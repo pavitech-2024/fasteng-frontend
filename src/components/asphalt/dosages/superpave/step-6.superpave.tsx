@@ -9,6 +9,7 @@ import { DataGrid, GridColumnGroupingModel } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import GraphStep6 from './graphs/step6Graph';
 
 const Superpave_Step6 = ({
   nextDisabled,
@@ -24,6 +25,16 @@ const Superpave_Step6 = ({
     firstCompressionData,
     setData,
   } = useSuperpaveStore();
+
+  const [renderTable3, setRenderTable3] = useState(false);
+
+  useEffect(() => {
+    const table3Arr = Object.values(data.table3);
+    console.log("🚀 ~ useEffect ~ table3Arr:", table3Arr)
+    if (table3Arr.some((e) => e !== null)) {
+      setRenderTable3(true)
+    }
+  },[data?.table3])
 
   const table2Arr = [data.table2.table2Lower, data.table2.table2Average, data.table2.table2Higher];
 
@@ -206,31 +217,31 @@ const Superpave_Step6 = ({
     {
       id: 0,
       mixture: 'Inferior',
-      expectedPli: data.table3.table3Lower.expectedPliLower.toFixed(2),
-      expectedPercentageGmmInitialN: data.table3.table3Lower.expectedPercentageGmmInitialNLower.toFixed(2),
-      expectedPercentageGmmMaxN: data.table3.table3Lower.expectedPercentageGmmMaxNLower.toFixed(2),
-      expectedRBV: data.table3.table3Lower.expectedRBVLower.toFixed(2),
-      expectedVam: data.table3.table3Lower.expectedVamLower.toFixed(2),
+      expectedPli: data.table3.table3Lower.expectedPliLower?.toFixed(2),
+      expectedPercentageGmmInitialN: data.table3.table3Lower.expectedPercentageGmmInitialNLower?.toFixed(2),
+      expectedPercentageGmmMaxN: data.table3.table3Lower.expectedPercentageGmmMaxNLower?.toFixed(2),
+      expectedRBV: data.table3.table3Lower.expectedRBVLower?.toFixed(2),
+      expectedVam: data.table3.table3Lower.expectedVamLower?.toFixed(2),
       expectedRatioDustAsphalt: data.table3.table3Lower.expectedRatioDustAsphaltLower,
     },
     {
       id: 1,
       mixture: 'Intermediária',
-      expectedPli: data.table3.table3Average.expectedPliAverage.toFixed(2),
-      expectedPercentageGmmInitialN: data.table3.table3Average.expectedPercentageGmmInitialNAverage.toFixed(2),
-      expectedPercentageGmmMaxN: data.table3.table3Average.expectedPercentageGmmMaxNAverage.toFixed(2),
-      expectedRBV: data.table3.table3Average.expectedRBVAverage.toFixed(2),
-      expectedVam: data.table3.table3Average.expectedVamAverage.toFixed(2),
+      expectedPli: data.table3.table3Average.expectedPliAverage?.toFixed(2),
+      expectedPercentageGmmInitialN: data.table3.table3Average.expectedPercentageGmmInitialNAverage?.toFixed(2),
+      expectedPercentageGmmMaxN: data.table3.table3Average.expectedPercentageGmmMaxNAverage?.toFixed(2),
+      expectedRBV: data.table3.table3Average.expectedRBVAverage?.toFixed(2),
+      expectedVam: data.table3.table3Average.expectedVamAverage?.toFixed(2),
       expectedRatioDustAsphalt: data.table3.table3Average.expectedRatioDustAsphaltAverage,
     },
     {
       id: 2,
       mixture: 'Superior',
-      expectedPli: data.table3.table3Higher.expectedPliHigher.toFixed(2),
-      expectedPercentageGmmInitialN: data.table3.table3Higher.expectedPercentageGmmInitialNHigher.toFixed(2),
-      expectedPercentageGmmMaxN: data.table3.table3Higher.expectedPercentageGmmMaxNHigher.toFixed(2),
-      expectedRBV: data.table3.table3Higher.expectedRBVHigher.toFixed(2),
-      expectedVam: data.table3.table3Higher.expectedVamHigher.toFixed(2),
+      expectedPli: data.table3.table3Higher.expectedPliHigher?.toFixed(2),
+      expectedPercentageGmmInitialN: data.table3.table3Higher.expectedPercentageGmmInitialNHigher?.toFixed(2),
+      expectedPercentageGmmMaxN: data.table3.table3Higher.expectedPercentageGmmMaxNHigher?.toFixed(2),
+      expectedRBV: data.table3.table3Higher.expectedRBVHigher?.toFixed(2),
+      expectedVam: data.table3.table3Higher.expectedVamHigher?.toFixed(2),
       expectedRatioDustAsphalt: data.table3.table3Higher.expectedRatioDustAsphaltHigher,
     },
   ];
@@ -325,8 +336,16 @@ const Superpave_Step6 = ({
           />
 
           <Typography>Gráficos Volumétricos</Typography>
-          <Graph data={data.table4.table4Lower.data} />
 
+          <Typography>Curva Inferior</Typography>
+          <GraphStep6 data={data.table4.table4Lower.data} />
+
+          <Typography>Curva Intermediária</Typography>
+          <GraphStep6 data={data.table4.table4Average.data} />
+
+          <Typography>Curva Superior</Typography>
+          <GraphStep6 data={data.table4.table4Higher.data} />
+          
           <DataGrid
             hideFooter
             disableColumnMenu

@@ -75,6 +75,7 @@ class Superpave_SERVICE implements IEssayService {
         case 5:
           const { generalData, initialBinderData, granulometryCompositionData, firstCompressionData } = data as SuperpaveData;
           await this.getStepFirstCurvePercentages(generalData, granulometryCompositionData, initialBinderData, firstCompressionData, isConsult);
+          await this.submitFirstCurvePercentages(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 6:
           break;
@@ -461,6 +462,42 @@ class Superpave_SERVICE implements IEssayService {
 
       return { data, success, error };
     } catch (error) {}
+  };
+
+  submitFirstCurvePercentages = async (
+    data: SuperpaveData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
+      try {
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
+
+        const firstCurvePercentagesData = {
+          ...data.firstCurvePercentageData,
+          name,
+          isConsult: null,
+        };
+
+        if (isConsult) firstCurvePercentagesData.isConsult = isConsult;
+
+        const response = await Api.post(`${this.info.backend_path}/save-first-curve-percentage-step/${userData}`, {
+          firstCurvePercentagesData: {
+            ...data.firstCurvePercentageData,
+            name,
+          },
+        });
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    }
   };
 }
 

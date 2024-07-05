@@ -204,6 +204,12 @@ interface FirstCurvePercentageData {
   table4: {
     table4Lower: {
       data: any[]
+    },
+    table4Average: {
+      data: any[]
+    },
+    table4Higher: {
+      data: any[]
     }
   }
 }
@@ -468,8 +474,14 @@ const initialState = {
     table4: {
       table4Lower: {
         data: []
-      }
-    }
+      },
+      table4Average: {
+        data: []
+      },
+      table4Higher: {
+        data: []
+      },
+    },
   },
 };
 
