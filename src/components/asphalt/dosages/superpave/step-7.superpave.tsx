@@ -29,7 +29,9 @@ const Superpave_Step7 = ({
             flexDirection: 'column',
             gap: '10px',
           }}
-        ></Box>
+        >
+          
+        </Box>
       )}
     </>
   );

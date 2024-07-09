@@ -10,6 +10,8 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import GraphStep6 from './graphs/step6Graph';
+import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
+import { Widgets } from '@mui/icons-material';
 
 const Superpave_Step6 = ({
   nextDisabled,
@@ -30,11 +32,11 @@ const Superpave_Step6 = ({
 
   useEffect(() => {
     const table3Arr = Object.values(data.table3);
-    console.log("🚀 ~ useEffect ~ table3Arr:", table3Arr)
+    console.log('🚀 ~ useEffect ~ table3Arr:', table3Arr);
     if (table3Arr.some((e) => e !== null)) {
-      setRenderTable3(true)
+      setRenderTable3(true);
     }
-  },[data?.table3])
+  }, [data?.table3]);
 
   const table2Arr = [data.table2.table2Lower, data.table2.table2Average, data.table2.table2Higher];
 
@@ -301,6 +303,12 @@ const Superpave_Step6 = ({
     },
   ];
 
+  const selectedCurveOptions: DropDownOption[] = [
+    { label: 'Inferior', value: 'lower' },
+    { label: 'Intermediária', value: 'average' },
+    { label: 'Superior', value: 'higher' },
+  ];
+
   nextDisabled && setNextDisabled(false);
 
   return (
@@ -345,7 +353,7 @@ const Superpave_Step6 = ({
 
           <Typography>Curva Superior</Typography>
           <GraphStep6 data={data.table4.table4Higher.data} />
-          
+
           <DataGrid
             hideFooter
             disableColumnMenu
@@ -355,6 +363,17 @@ const Superpave_Step6 = ({
             columns={expectedParamsCols}
             rows={expectedParamsRows}
           />
+
+          <Box sx={{ width: '100%' }}>
+            <Typography>Selecione a curva com a qual deseja continuar a dosagem:</Typography>
+            <DropDown 
+              label={''} 
+              options={selectedCurveOptions} 
+              callback={(value) => setData({ step: 5, key: 'selectedCurve', value })} 
+              size="medium"
+              variant="standard"
+            />
+          </Box>
         </Box>
       )}
     </>

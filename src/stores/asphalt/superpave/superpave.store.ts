@@ -211,7 +211,8 @@ interface FirstCurvePercentageData {
     table4Higher: {
       data: any[]
     }
-  }
+  },
+  selectedCurve: string
 }
 
 export type SuperpaveData = {
@@ -482,6 +483,7 @@ const initialState = {
         data: []
       },
     },
+    selectedCurve: null
   },
 };
 

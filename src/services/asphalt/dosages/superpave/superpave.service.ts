@@ -76,6 +76,8 @@ class Superpave_SERVICE implements IEssayService {
           const { generalData, initialBinderData, granulometryCompositionData, firstCompressionData } = data as SuperpaveData;
           await this.getStepFirstCurvePercentages(generalData, granulometryCompositionData, initialBinderData, firstCompressionData, isConsult);
           await this.submitFirstCurvePercentages(data as SuperpaveData, this.userId, null, isConsult);
+          const { firstCurvePercentageData } = data as SuperpaveData
+          await this.getChosenCurvePercentages(generalData, firstCurvePercentageData)
           break;
         case 6:
           break;
@@ -474,10 +476,12 @@ class Superpave_SERVICE implements IEssayService {
       try {
         const { name } = data.generalData;
         const userData = userId ? userId : user;
+        const { selectedCurve } = data.firstCurvePercentageData;
 
         const firstCurvePercentagesData = {
           ...data.firstCurvePercentageData,
           name,
+          selectedCurve,
           isConsult: null,
         };
 
@@ -486,6 +490,7 @@ class Superpave_SERVICE implements IEssayService {
         const response = await Api.post(`${this.info.backend_path}/save-first-curve-percentage-step/${userData}`, {
           firstCurvePercentagesData: {
             ...data.firstCurvePercentageData,
+            selectedCurve,
             name,
           },
         });
@@ -498,6 +503,37 @@ class Superpave_SERVICE implements IEssayService {
         throw error;
       }
     }
+  };
+
+  getChosenCurvePercentages = async (
+    generalData: SuperpaveData['generalData'],
+    step6Data: SuperpaveData['firstCurvePercentageData'],
+  ): Promise<any> => {
+    try {
+      const { 
+        selectedCurve, 
+        table3
+      } = step6Data;
+
+      const { trafficVolume } = generalData;
+
+      let curve;
+
+      if (selectedCurve === 'lower') curve = table3.table3Lower;
+      if (selectedCurve === 'average') curve = table3.table3Average;
+      if (selectedCurve === 'higher') curve = table3.table3Higher;
+
+      const response = await Api.post(`${this.info.backend_path}/step-7-parameters`, {
+        curve,
+        trafficVolume
+      });
+
+      const { data, success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+      return { data, success, error };
+    } catch (error) {}
   };
 }
 
