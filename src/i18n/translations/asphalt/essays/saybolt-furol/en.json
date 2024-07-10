@@ -1,12 +1,14 @@
 {
   "saybolt-furol.temperature": "Temperature",
-  "saybolt-furol.viscosity": "Viscosidade",
+  "saybolt-furol.viscosity": "Viscosity",
   "saybolt-furol.calc": "Saybolt-Furol Viscosity",
-  "saybolt-furol.step-2-description": "Please, enter the information below.",
+  "sayboltFurol.step-2-description": "Please, enter the information below.",
   "saybolt-furol.step-3-description": "These are the results of your experiment. Remember to save the experiment so you can access it later.",
   "saybolt-furol.compression-temperature": "Compression temperature",
   "saybolt-furol.machining-temperature": "Machining temperature",
   "saybolt-furol.higher": "Maximum",
   "saybolt-furol.average": "Average",
-  "saybolt-furol.lower": "Minimum"
+  "saybolt-furol.lower": "Minimum",
+  "asphalt.essays.saybolt-furol": "Saybolt-Furol Viscosity",
+  "saybolt-furol.graph": "Saybolt-Furol Graph"
 }
