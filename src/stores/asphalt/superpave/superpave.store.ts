@@ -214,6 +214,24 @@ interface FirstCurvePercentageData {
   },
   selectedCurve: string
 }
+interface ChosenCurvePercentageData {
+  listOfPlis: number[],
+  porcentageAggregate: number[][],
+  trafficVolume: string
+}
+
+interface SecondCompressionData {
+  tableData: {
+    id: number,
+    averageDiammeter: number,
+    averageHeight: number,
+    dryMass: number,
+    submergedMass: number,
+    drySurfaceSaturatedMass: number,
+    waterTemperatureCorrection: number,
+    diametralTractionResistance: number
+  }[]
+}
 
 export type SuperpaveData = {
   generalData: SuperpaveGeneralData;
@@ -222,6 +240,8 @@ export type SuperpaveData = {
   initialBinderData: SuperpaveInitialBinderData;
   firstCompressionData: FirstCompressionData;
   firstCurvePercentageData: FirstCurvePercentageData;
+  chosenCurvePercentageData: ChosenCurvePercentageData;
+  secondCompressionData: SecondCompressionData
 };
 
 export type SuperpaveActions = {
@@ -238,6 +258,8 @@ const stepVariant = {
   3: 'initialBinderData',
   4: 'firstCompressionData',
   5: 'firstCurvePercentageData',
+  6: 'chosenCurvePercentageData',
+  7: 'secondCompressionData'
 };
 
 const initialState = {
@@ -485,6 +507,23 @@ const initialState = {
     },
     selectedCurve: null
   },
+  chosenCurvePercentageData: {
+    listOfPlis: [],
+    porcentageAggregate: [[]],
+    trafficVolume: null
+  },
+  secondCompressionData: {
+    tableData: [{
+      id: 0,
+      averageDiammeter: null,
+      averageHeight: null,
+      dryMass: null,
+      submergedMass: null,
+      drySurfaceSaturatedMass: null,
+      waterTemperatureCorrection: null,
+      diametralTractionResistance: null
+    }]
+  }
 };
 
 const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(

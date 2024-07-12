@@ -57,12 +57,6 @@ const Superpave_Step5 = ({
     });
   });
 
-  // const documentName = {
-  //   inferior: data.inferiorRows[0].document,
-  //   intermediaria: data.intermediariaRows[0].document,
-  //   superior: data.superiorRows[0].document,
-  // };
-
   const { user } = useAuth();
 
   const [inferiorRows, setInferiorRows] = useState([]);

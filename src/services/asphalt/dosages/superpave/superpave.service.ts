@@ -77,9 +77,10 @@ class Superpave_SERVICE implements IEssayService {
           await this.getStepFirstCurvePercentages(generalData, granulometryCompositionData, initialBinderData, firstCompressionData, isConsult);
           await this.submitFirstCurvePercentages(data as SuperpaveData, this.userId, null, isConsult);
           const { firstCurvePercentageData } = data as SuperpaveData
-          await this.getChosenCurvePercentages(generalData, firstCurvePercentageData)
+          await this.getChosenCurvePercentages(generalData, granulometryCompositionData, firstCurvePercentageData)
           break;
         case 6:
+          await this.submitChosenCurvePercentages(data as SuperpaveData, this.userId, null, isConsult)
           break;
         case 7:
           break;
@@ -507,9 +508,12 @@ class Superpave_SERVICE implements IEssayService {
 
   getChosenCurvePercentages = async (
     generalData: SuperpaveData['generalData'],
+    step3Data: SuperpaveData['granulometryCompositionData'],
     step6Data: SuperpaveData['firstCurvePercentageData'],
   ): Promise<any> => {
     try {
+      const { percentageInputs } = step3Data;
+
       const { 
         selectedCurve, 
         table3
@@ -518,14 +522,25 @@ class Superpave_SERVICE implements IEssayService {
       const { trafficVolume } = generalData;
 
       let curve;
+      let percentsOfDosage;
 
-      if (selectedCurve === 'lower') curve = table3.table3Lower;
-      if (selectedCurve === 'average') curve = table3.table3Average;
-      if (selectedCurve === 'higher') curve = table3.table3Higher;
+      if (selectedCurve === 'lower') {
+        curve = table3.table3Lower;
+        percentsOfDosage = percentageInputs[0]
+      } 
+      if (selectedCurve === 'average') {
+        curve = table3.table3Average;
+        percentsOfDosage = percentageInputs[1]
+      } 
+      if (selectedCurve === 'higher') {
+        curve = table3.table3Higher;
+        percentsOfDosage = percentageInputs[2]
+      } 
 
       const response = await Api.post(`${this.info.backend_path}/step-7-parameters`, {
         curve,
-        trafficVolume
+        trafficVolume,
+        percentsOfDosage
       });
 
       const { data, success, error } = response.data;
@@ -534,6 +549,49 @@ class Superpave_SERVICE implements IEssayService {
 
       return { data, success, error };
     } catch (error) {}
+  };
+
+  submitChosenCurvePercentages = async (
+    data: SuperpaveData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
+      try {
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
+        const { porcentageAggregate, listOfPlis, trafficVolume } = data.chosenCurvePercentageData;
+
+        const chosenCurvePercentagesData = {
+          ...data.chosenCurvePercentageData,
+          name,
+          porcentageAggregate,
+          listOfPlis,
+          trafficVolume,
+          isConsult: null,
+        };
+
+        if (isConsult) chosenCurvePercentagesData.isConsult = isConsult;
+
+        const response = await Api.post(`${this.info.backend_path}/save-chosen-curve-percentage-step/${userData}`, {
+          chosenCurvePercentagesData: {
+            ...data.chosenCurvePercentageData,
+            porcentageAggregate,
+            listOfPlis,
+            trafficVolume,
+            name,
+          },
+        });
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    }
   };
 }
 

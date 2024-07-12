@@ -11,6 +11,7 @@ const Igg_Step4 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { iggStep4: data, setData } = useIggStore();
 
   const [localRows, setLocalRows] = useState(data.sections.map((row, index) => ({ ...row, id: index })));
+  
   useEffect(() => {
     if (nextDisabled) {
       const hasEmptyValues = localRows.some((item) => Object.values(item).some((value) => value === null));
