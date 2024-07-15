@@ -561,10 +561,10 @@ class Superpave_SERVICE implements IEssayService {
       try {
         const { name } = data.generalData;
         const userData = userId ? userId : user;
-        const { porcentageAggregate, listOfPlis, trafficVolume } = data.chosenCurvePercentageData;
+        const { porcentageAggregate, listOfPlis, trafficVolume } = data.chosenCurvePercentagesData;
 
         const chosenCurvePercentagesData = {
-          ...data.chosenCurvePercentageData,
+          ...data.chosenCurvePercentagesData,
           name,
           porcentageAggregate,
           listOfPlis,
@@ -576,7 +576,7 @@ class Superpave_SERVICE implements IEssayService {
 
         const response = await Api.post(`${this.info.backend_path}/save-chosen-curve-percentage-step/${userData}`, {
           chosenCurvePercentagesData: {
-            ...data.chosenCurvePercentageData,
+            ...data.chosenCurvePercentagesData,
             porcentageAggregate,
             listOfPlis,
             trafficVolume,

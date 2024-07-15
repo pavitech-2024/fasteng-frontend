@@ -22,7 +22,7 @@ const Superpave_Step7 = ({
     granulometryCompositionData, 
     firstCurvePercentageData, 
     firstCompressionData,
-    chosenCurvePercentageData: data
+    chosenCurvePercentagesData: data
   } = useSuperpaveStore();
 
   const [vv, setVv] = useState();

@@ -145,92 +145,129 @@ interface FirstCurvePercentageData {
   };
   table2: {
     table2Lower: {
-      percentWaterAbs: null,
-      percentageGmmInitialN: null,
-      percentageGmmMaxN: null,
-      percentageGmmProjectN: null,
-      porcentageVam: null,
-      porcentageVv: null,
-      ratioDustAsphalt: null,
-      specificMass: null,
-    },
+      percentWaterAbs: null;
+      percentageGmmInitialN: null;
+      percentageGmmMaxN: null;
+      percentageGmmProjectN: null;
+      porcentageVam: null;
+      porcentageVv: null;
+      ratioDustAsphalt: null;
+      specificMass: null;
+    };
     table2Average: {
-      percentWaterAbs: null,
-      percentageGmmInitialN: null,
-      percentageGmmMaxN: null,
-      percentageGmmProjectN: null,
-      porcentageVam: null,
-      porcentageVv: null,
-      ratioDustAsphalt: null,
-      specificMass: null,
-    },
+      percentWaterAbs: null;
+      percentageGmmInitialN: null;
+      percentageGmmMaxN: null;
+      percentageGmmProjectN: null;
+      porcentageVam: null;
+      porcentageVv: null;
+      ratioDustAsphalt: null;
+      specificMass: null;
+    };
     table2Higher: {
-      percentWaterAbs: null,
-      percentageGmmInitialN: null,
-      percentageGmmMaxN: null,
-      percentageGmmProjectN: null,
-      porcentageVam: null,
-      porcentageVv: null,
-      ratioDustAsphalt: null,
-      specificMass: null,
-    },
-  },
+      percentWaterAbs: null;
+      percentageGmmInitialN: null;
+      percentageGmmMaxN: null;
+      percentageGmmProjectN: null;
+      porcentageVam: null;
+      porcentageVv: null;
+      ratioDustAsphalt: null;
+      specificMass: null;
+    };
+  };
   table3: {
     table3Lower: {
-      expectedPercentageGmmInitialNLower: number,
-      expectedPercentageGmmMaxNLower: number,
-      expectedPliLower: number,
-      expectedVamLower: number,
-      expectedRBVLower: number,
-      expectedRatioDustAsphaltLower: number,
-    },
+      expectedPercentageGmmInitialNLower: number;
+      expectedPercentageGmmMaxNLower: number;
+      expectedPliLower: number;
+      expectedVamLower: number;
+      expectedRBVLower: number;
+      expectedRatioDustAsphaltLower: number;
+    };
     table3Average: {
-      expectedPercentageGmmInitialNAverage: number,
-      expectedPercentageGmmMaxNAverage: number,
-      expectedPliAverage: number,
-      expectedVamAverage: number,
-      expectedRBVAverage: number,
-      expectedRatioDustAsphaltAverage: number,
-    },
+      expectedPercentageGmmInitialNAverage: number;
+      expectedPercentageGmmMaxNAverage: number;
+      expectedPliAverage: number;
+      expectedVamAverage: number;
+      expectedRBVAverage: number;
+      expectedRatioDustAsphaltAverage: number;
+    };
     table3Higher: {
-      expectedPercentageGmmInitialNHigher: number,
-      expectedPercentageGmmMaxNHigher: number,
-      expectedPliHigher: number,
-      expectedVamHigher: number,
-      expectedRBVHigher: number,
-      expectedRatioDustAsphaltHigher: number,
-    },
-  },
+      expectedPercentageGmmInitialNHigher: number;
+      expectedPercentageGmmMaxNHigher: number;
+      expectedPliHigher: number;
+      expectedVamHigher: number;
+      expectedRBVHigher: number;
+      expectedRatioDustAsphaltHigher: number;
+    };
+  };
   table4: {
     table4Lower: {
-      data: any[]
-    },
+      data: any[];
+    };
     table4Average: {
-      data: any[]
-    },
+      data: any[];
+    };
     table4Higher: {
-      data: any[]
-    }
-  },
-  selectedCurve: string
+      data: any[];
+    };
+  };
+  selectedCurve: string;
 }
-interface ChosenCurvePercentageData {
-  listOfPlis: number[],
-  porcentageAggregate: number[][],
-  trafficVolume: string
+interface ChosenCurvePercentagesData {
+  listOfPlis: number[];
+  porcentageAggregate: number[][];
+  trafficVolume: string;
 }
 
 interface SecondCompressionData {
-  tableData: {
-    id: number,
-    averageDiammeter: number,
-    averageHeight: number,
-    dryMass: number,
-    submergedMass: number,
-    drySurfaceSaturatedMass: number,
-    waterTemperatureCorrection: number,
-    diametralTractionResistance: number
-  }[]
+  tableData_0: {
+    id: number;
+    averageDiammeter: number;
+    averageHeight: number;
+    dryMass: number;
+    submergedMass: number;
+    drySurfaceSaturatedMass: number;
+    waterTemperatureCorrection: number;
+    diametralTractionResistance: number;
+  }[];
+  tableData_1: {
+    id: number;
+    averageDiammeter: number;
+    averageHeight: number;
+    dryMass: number;
+    submergedMass: number;
+    drySurfaceSaturatedMass: number;
+    waterTemperatureCorrection: number;
+    diametralTractionResistance: number;
+  }[];
+  tableData_2: {
+    id: number;
+    averageDiammeter: number;
+    averageHeight: number;
+    dryMass: number;
+    submergedMass: number;
+    drySurfaceSaturatedMass: number;
+    waterTemperatureCorrection: number;
+    diametralTractionResistance: number;
+  }[];
+  tableData_3: {
+    id: number;
+    averageDiammeter: number;
+    averageHeight: number;
+    dryMass: number;
+    submergedMass: number;
+    drySurfaceSaturatedMass: number;
+    waterTemperatureCorrection: number;
+    diametralTractionResistance: number;
+  }[];
+  maximumDensities: {
+    gmm: number;
+    sampleAirDryMass: number;
+    containerMassWaterSample: number;
+    containerWaterMass: number;
+    waterTemperatureCorrection: number;
+  }[];
 }
 
 export type SuperpaveData = {
@@ -240,8 +277,8 @@ export type SuperpaveData = {
   initialBinderData: SuperpaveInitialBinderData;
   firstCompressionData: FirstCompressionData;
   firstCurvePercentageData: FirstCurvePercentageData;
-  chosenCurvePercentageData: ChosenCurvePercentageData;
-  secondCompressionData: SecondCompressionData
+  chosenCurvePercentagesData: ChosenCurvePercentagesData;
+  secondCompressionData: SecondCompressionData;
 };
 
 export type SuperpaveActions = {
@@ -258,8 +295,8 @@ const stepVariant = {
   3: 'initialBinderData',
   4: 'firstCompressionData',
   5: 'firstCurvePercentageData',
-  6: 'chosenCurvePercentageData',
-  7: 'secondCompressionData'
+  6: 'chosenCurvePercentagesData',
+  7: 'secondCompressionData',
 };
 
 const initialState = {
@@ -496,34 +533,81 @@ const initialState = {
     },
     table4: {
       table4Lower: {
-        data: []
+        data: [],
       },
       table4Average: {
-        data: []
+        data: [],
       },
       table4Higher: {
-        data: []
+        data: [],
       },
     },
-    selectedCurve: null
+    selectedCurve: null,
   },
-  chosenCurvePercentageData: {
+  chosenCurvePercentagesData: {
     listOfPlis: [],
     porcentageAggregate: [[]],
-    trafficVolume: null
+    trafficVolume: null,
   },
   secondCompressionData: {
-    tableData: [{
-      id: 0,
-      averageDiammeter: null,
-      averageHeight: null,
-      dryMass: null,
-      submergedMass: null,
-      drySurfaceSaturatedMass: null,
-      waterTemperatureCorrection: null,
-      diametralTractionResistance: null
-    }]
-  }
+    tableData_0: [
+      {
+        id: 0,
+        averageDiammeter: null,
+        averageHeight: null,
+        dryMass: null,
+        submergedMass: null,
+        drySurfaceSaturatedMass: null,
+        waterTemperatureCorrection: null,
+        diametralTractionResistance: null,
+      },
+    ],
+    tableData_1: [
+      {
+        id: 0,
+        averageDiammeter: null,
+        averageHeight: null,
+        dryMass: null,
+        submergedMass: null,
+        drySurfaceSaturatedMass: null,
+        waterTemperatureCorrection: null,
+        diametralTractionResistance: null,
+      },
+    ],
+    tableData_2: [
+      {
+        id: 0,
+        averageDiammeter: null,
+        averageHeight: null,
+        dryMass: null,
+        submergedMass: null,
+        drySurfaceSaturatedMass: null,
+        waterTemperatureCorrection: null,
+        diametralTractionResistance: null,
+      },
+    ],
+    tableData_3: [
+      {
+        id: 0,
+        averageDiammeter: null,
+        averageHeight: null,
+        dryMass: null,
+        submergedMass: null,
+        drySurfaceSaturatedMass: null,
+        waterTemperatureCorrection: null,
+        diametralTractionResistance: null,
+      },
+    ],
+    maximumDensities: [
+      {
+        gmm: null,
+        sampleAirDryMass: null,
+        containerMassWaterSample: null,
+        containerWaterMass: null,
+        waterTemperatureCorrection: null,
+      },
+    ],
+  },
 };
 
 const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(
