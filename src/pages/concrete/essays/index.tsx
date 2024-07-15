@@ -37,6 +37,12 @@ const index: NextPage = () => {
       icon: CoarseAggregateIcon,
       link: '/concrete/essays/coarseAggregate',
     },
+    {
+      title: t('concrete.essays.concreteRt'),
+      key: 'concreteRt',
+      icon: CoarseAggregateIcon,
+      link: '/concrete/essays/concreteRt',
+    },
   ];
   return <EssaysTemplate essays={essays} />;
 };
