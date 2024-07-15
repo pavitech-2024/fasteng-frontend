@@ -1,3 +1,4 @@
+import ConcreteRt_GeneralData from "@/components/concrete/essays/concreteRt/general-data.concreteRt";
 import EssayTemplate from "@/components/templates/essay";
 import useAuth from "@/contexts/auth";
 import CONCRETE_RT_SERVICE from "@/services/concrete/essays/concreteRt/concreteRt.service";
