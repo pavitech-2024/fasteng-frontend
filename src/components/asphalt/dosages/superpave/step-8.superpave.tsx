@@ -1,5 +1,6 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
+import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
@@ -22,6 +23,13 @@ const Superpave_Step8 = ({
     setData,
     chosenCurvePercentagesData,
   } = useSuperpaveStore();
+
+  const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState({
+    0: false,
+    1: false,
+    2: false,
+    3: false
+  })
 
   const [nProjectPercentsRows_0, setNProjectPercentsRows_0] = useState([]);
   const [nProjectPercentsRows_1, setNProjectPercentsRows_1] = useState([]);
@@ -232,8 +240,8 @@ const Superpave_Step8 = ({
         sampleAirDryMass: null,
         containerMassWaterSample: null,
         containerWaterMass: null,
-        waterTemperatureCorrection: null
-      }
+        waterTemperatureCorrection: null,
+      },
     },
     {
       id: 1,
@@ -244,8 +252,8 @@ const Superpave_Step8 = ({
         sampleAirDryMass: null,
         containerMassWaterSample: null,
         containerWaterMass: null,
-        waterTemperatureCorrection: null
-      }
+        waterTemperatureCorrection: null,
+      },
     },
     {
       id: 2,
@@ -256,8 +264,8 @@ const Superpave_Step8 = ({
         sampleAirDryMass: null,
         containerMassWaterSample: null,
         containerWaterMass: null,
-        waterTemperatureCorrection: null
-      }
+        waterTemperatureCorrection: null,
+      },
     },
     {
       id: 3,
@@ -268,8 +276,8 @@ const Superpave_Step8 = ({
         sampleAirDryMass: null,
         containerMassWaterSample: null,
         containerWaterMass: null,
-        waterTemperatureCorrection: null
-      }
+        waterTemperatureCorrection: null,
+      },
     },
   ];
 
@@ -344,7 +352,81 @@ const Superpave_Step8 = ({
           />
 
           <Typography>Densidade máxima medida</Typography>
-          <Box></Box>
+          <Box>
+            {maximumDensitiesContainers.map((item, idx) => (
+              <>
+                <Box>
+                  <Typography>
+                    {item.label} {item.value}
+                  </Typography>
+                  <Button>Calcular densidade máxima da mistura</Button>
+                </Box>
+                <ModalBase
+                  title={'Calcular por Rice Test'}
+                  leftButtonTitle={'cancelar'}
+                  rightButtonTitle={'confirmar'}
+                  onCancel={() => setRiceTestModalIsOpen({...riceTestModalIsOpen, [idx]: false})}
+                  open={riceTestModalIsOpen[idx]}
+                  size={'large'}
+                  onSubmit={() => {
+                    calculateRiceTest();
+                  }}
+                >
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                    <InputEndAdornment
+                      adornment=""
+                      type="number"
+                      label="Inserir Gmm"
+                      sx={{ width: '20rem' }}
+                      value={data.maximumDensities[idx].gmm}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        let prevData = [...data.maximumDensities];
+                        const newData = { ...prevData[idx], gmm: parseFloat(value) };
+                        prevData[idx] = newData;
+                        setData({ step: 7, value: { ...data, maximumDensities: prevData } });
+                      }}
+                    />
+
+                    <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
+                      {/* {generateRiceTestInputs(actualCurve).map((input) => ( */}
+                        <InputEndAdornment
+                          adornment={item.adornment}
+                          label={item.label}
+                          value={item.value}
+                          sx={{ width: '15rem' }}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            let prevData = [...data.riceTest];
+                            const index = prevData.findIndex((obj) => obj.curve === actualCurve);
+                            const newData = { ...prevData[index], [item.key]: Number(value) };
+                            prevData[index] = newData;
+                            setData({ step: 4, value: { ...data, riceTest: prevData } });
+                          }}
+                        />
+                      {/* ))} */}
+                    </Box>
+
+                    <DropDown
+                      key={'water'}
+                      variant="standard"
+                      label={'Selecione o fator de correção para a temperatura da água'}
+                      options={waterTemperatureList}
+                      callback={(selectedValue) => {
+                        let prevData = [...data.riceTest];
+                        const index = prevData.findIndex((obj) => obj.curve === actualCurve);
+                        const newData = { ...prevData[index], temperatureOfWater: Number(selectedValue) };
+                        prevData[index] = newData;
+                        setData({ step: 4, value: { ...data, riceTest: prevData } });
+                      }}
+                      size="medium"
+                      sx={{ width: '20rem' }}
+                    />
+                  </Box>
+                </ModalBase>
+              </>
+            ))}
+          </Box>
         </Box>
       )}
     </>
