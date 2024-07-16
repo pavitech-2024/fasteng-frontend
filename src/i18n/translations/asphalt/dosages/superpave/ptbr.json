@@ -1,6 +1,9 @@
 {
   "superpave.step-2-description": "Selecione os agregados e o ligante asfáltico que serão utilizados na dosagem",
   "superpave.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica da mistura",
+  
+  "asphalt.essays.superpave": "Dosagem Superpave",
+  "topbar.superpave": "Superpave",
 
   "asphalt.dosages.superpave.material_selection": "Seleção de Materiais",
   "asphalt.dosages.superpave.granulometry_composition": "Composição Granulométrica",
@@ -25,5 +28,17 @@
   "asphalt.dosages.superpave.low-traffic": "Muito leve (local)",
   "asphalt.dosages.superpave.medium-traffic": "Médio (rodovias coletoras)",
   "asphalt.dosages.superpave.medium-high-traffic": "Médio a alto (vias principais, rodovias rurais)",
-  "asphalt.dosages.superpave.high-traffic": "Alto (interestaduais, muito pesado)"
+  "asphalt.dosages.superpave.high-traffic": "Alto (interestaduais, muito pesado)",
+
+  "asphalt.dosages.superpave.lower-curve": "Curva inferior",
+  "asphalt.dosages.superpave.average-curve": "Curva intermediária",
+  "asphalt.dosages.superpave.higher-curve": "Curva superior",
+  "asphalt.dosages.superpave.clear-table": "Limpar tabela",
+  "asphalt.dosages.superpave.calculate-lower-curve": "Calcular curva inferior",
+  "asphalt.dosages.superpave.calculate-average-curve": "Calcular curva intermediária",
+  "asphalt.dosages.superpave.calculate-higher-curve": "Calcular curva superior",
+  "asphalt.dosages.superpave.maximum-nominal-size": "Tamanho nominal máximo",
+  "asphalt.dosages.superpave.sieve": "Peneira",
+  "asphalt.dosages.superpave.project": "Projeto",
+  "asphalt.dosages.superpave.total-passant": "Passante total (%)"
 }

@@ -45,18 +45,23 @@ const Superpave_Step1 = ({
     { label: t('asphalt.dosages.superpave.bonding-layer'), value: 'bonding' },
   ];
 
-  // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
-  // inputs.every(({ required, value }) => {
-  //   if (!required) return true;
+  // Função para verificar se todos os campos obrigatórios estão preenchidos
+  const allRequiredFieldsFilled = inputs.every(({ required, value }) => {
+    if (!required) return true;
 
-  //   if (value === null) return false;
+    if (value === null || (typeof value === 'string' && value.trim() === '')) {
+      return false;
+    }
 
-  //   if (typeof value === 'string' && value.trim() === '') return false;
+    return true;
+  });
 
-  //   return true;
-  // }) &&
-  //   nextDisabled &&
-  setNextDisabled(false);
+  // Atualizar o estado nextDisabled com base na verificação
+  if (allRequiredFieldsFilled && nextDisabled) {
+    setNextDisabled(false);
+  } else if (!allRequiredFieldsFilled && !nextDisabled) {
+    setNextDisabled(true);
+  }
 
   return (
     <>

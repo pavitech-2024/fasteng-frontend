@@ -593,6 +593,27 @@ class Superpave_SERVICE implements IEssayService {
       }
     }
   };
+
+  calculateRiceTest = async (step7Data: SuperpaveData['secondCompressionData'], idx: number): Promise<any> => {
+    const { maximumDensities } = step7Data;
+
+    const maximumDensity = maximumDensities[idx].riceTest;
+
+    try {
+      const response = await Api.post(`${this.info.backend_path}/calculate-step-7-rice-test`, 
+        maximumDensity
+      );
+
+      const { data, success, error } = response.data;
+      console.log("🚀 ~ Superpave_SERVICE ~ calculateRiceTest= ~ data:", data)
+
+      if (success === false) throw error.name;
+
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 export default Superpave_SERVICE;

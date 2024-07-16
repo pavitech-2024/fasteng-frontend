@@ -262,11 +262,13 @@ interface SecondCompressionData {
     diametralTractionResistance: number;
   }[];
   maximumDensities: {
-    gmm: number;
-    sampleAirDryMass: number;
-    containerMassWaterSample: number;
-    containerWaterMass: number;
-    waterTemperatureCorrection: number;
+    insertedGmm: number;
+    riceTest: {
+      sampleAirDryMass: number;
+      containerMassWaterSample: number;
+      containerWaterMass: number;
+      waterTemperatureCorrection: number | string;
+    };
   }[];
 }
 
@@ -600,11 +602,44 @@ const initialState = {
     ],
     maximumDensities: [
       {
-        gmm: null,
-        sampleAirDryMass: null,
-        containerMassWaterSample: null,
-        containerWaterMass: null,
-        waterTemperatureCorrection: null,
+        id: 0,
+        insertedGmm: null,
+        riceTest: {
+          sampleAirDryMass: null,
+          containerMassWaterSample: null,
+          containerWaterMass: null,
+          waterTemperatureCorrection: null,
+        },
+      },
+      {
+        id: 1,
+        insertedGmm: null,
+        riceTest: {
+          sampleAirDryMass: null,
+          containerMassWaterSample: null,
+          containerWaterMass: null,
+          waterTemperatureCorrection: null,
+        },
+      },
+      {
+        id: 2,
+        insertedGmm: null,
+        riceTest: {
+          sampleAirDryMass: null,
+          containerMassWaterSample: null,
+          containerWaterMass: null,
+          waterTemperatureCorrection: null,
+        },
+      },
+      {
+        id: 3,
+        insertedGmm: null,
+        riceTest: {
+          sampleAirDryMass: null,
+          containerMassWaterSample: null,
+          containerWaterMass: null,
+          waterTemperatureCorrection: null,
+        },
       },
     ],
   },

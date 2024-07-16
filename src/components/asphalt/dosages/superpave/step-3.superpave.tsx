@@ -345,9 +345,9 @@ const Superpave_Step3 = ({
 
   useEffect(() => {
     if (data.pointsOfCurve.length > 0) {
-      updateGraph(data.pointsOfCurve)
+      updateGraph(data.pointsOfCurve);
     }
-  },[data.pointsOfCurve]);
+  }, [data.pointsOfCurve]);
 
   nextDisabled && setNextDisabled(false);
 
@@ -363,14 +363,10 @@ const Superpave_Step3 = ({
             gap: '10px',
           }}
         >
-          <Typography>
-            Escolha as curvas desejadas e insira as porcentagens de cada agregado na composição da mistura.
-          </Typography>
-
-          <FormGroup sx={{ display: 'flex', flexDirection: 'row' }}>
+          <FormGroup sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
             <FormControlLabel
               control={<Checkbox checked={inferior} onChange={() => handleCheckboxChange(inferior, setInferior)} />}
-              label="curva inferior"
+              label={t('asphalt.dosages.superpave.lower-curve')}
               value={inferior}
             />
             <FormControlLabel
@@ -380,12 +376,12 @@ const Superpave_Step3 = ({
                   onChange={() => handleCheckboxChange(intermediaria, setIntermediaria)}
                 />
               }
-              label="curva intermediária"
+              label={t('asphalt.dosages.superpave.average-curve')}
               value={intermediaria}
             />
             <FormControlLabel
               control={<Checkbox checked={superior} onChange={() => handleCheckboxChange(superior, setSuperior)} />}
-              label="curva superior"
+              label={t('asphalt.dosages.superpave.higher-curve')}
               value={superior}
             />
           </FormGroup>
@@ -401,8 +397,10 @@ const Superpave_Step3 = ({
                   marginBottom: '10px',
                 }}
               >
-                <Typography>Curva inferior</Typography>
-                <Button onClick={clearTable}>Limpar tabela</Button>
+                <Typography>{t('asphalt.dosages.superpave.lower-curve')}</Typography>
+                <Button onClick={clearTable} variant="outlined">
+                  {t('asphalt.dosages.superpave.clear-table')}
+                </Button>
               </Box>
               <CurvesTable
                 materials={selectedMaterials}
@@ -413,8 +411,8 @@ const Superpave_Step3 = ({
                 onChangeInputsTables={onChangeInputsTables}
               />
               <div style={{ marginTop: '1%' }}>
-                <Button onClick={() => calcular()}>
-                  Calcular curva inferior
+                <Button onClick={() => calcular()} variant="outlined" sx={{ width: '100%' }}>
+                  {t('asphalt.dosages.superpave.calculate-lower-curve')}
                 </Button>
               </div>
             </TableContainer>
@@ -431,8 +429,8 @@ const Superpave_Step3 = ({
                   marginBottom: '10px',
                 }}
               >
-                <Typography>Curva intermediária</Typography>
-                <Button onClick={clearTable}>Limpar tabela</Button>
+                <Typography>{t('asphalt.dosages.superpave.average-curve')}</Typography>
+                <Button onClick={clearTable}>{t('asphalt.dosages.superpave.clear-table')}</Button>
               </Box>
               <CurvesTable
                 materials={selectedMaterials}
@@ -443,9 +441,7 @@ const Superpave_Step3 = ({
                 onChangeInputsTables={onChangeInputsTables}
               />
               <div style={{ marginTop: '1%' }}>
-                <Button onClick={() => calcular()}>
-                  Calcular curva intermediaria
-                </Button>
+                <Button onClick={() => calcular()} variant="outlined" sx={{ width: '100%' }}>{t('asphalt.dosages.superpave.calculate-average-curve')}</Button>
               </div>
             </TableContainer>
           )}
@@ -461,8 +457,8 @@ const Superpave_Step3 = ({
                   marginBottom: '10px',
                 }}
               >
-                <Typography>Curva superior</Typography>
-                <Button onClick={clearTable}>Limpar tabela</Button>
+                <Typography>{t('asphalt.dosages.superpave.higher-curve')}</Typography>
+                <Button onClick={clearTable}>{t('asphalt.dosages.superpave.clear-table')}</Button>
               </Box>
               <CurvesTable
                 materials={selectedMaterials}
@@ -473,16 +469,14 @@ const Superpave_Step3 = ({
                 onChangeInputsTables={onChangeInputsTables}
               />
               <div style={{ marginTop: '1%' }}>
-                <Button onClick={() => calcular()}>
-                  Calcular curva superior
-                </Button>
+                <Button onClick={() => calcular()}>{t('asphalt.dosages.superpave.calculate-higher-curve')}</Button>
               </div>
             </TableContainer>
           )}
 
           {data.graphData.length > 0 && (
             <>
-              <Typography>Tamanho nominal máximo: {data.nominalSize.value} mm</Typography>
+              <Typography>{t('asphalt.dosages.superpave.maximum-nominal-size')}: {data.nominalSize.value} mm</Typography>
               <Graph data={data.graphData} />
             </>
           )}

@@ -1,1 +1,41 @@
-{}
+{
+  "superpave.step-2-description": "Select the aggregates and asphalt binder that will be used in the dosage",
+  "superpave.step-3-description": "Enter the percentages of each aggregate in the granulometric composition of the mixture",
+  "asphalt.essays.superpave": "Superpave Dosage",
+  "topbar.superpave": "Superpave",
+
+  "asphalt.dosages.superpave.material_selection": "Materials selection",
+  "asphalt.dosages.superpave.granulometry_composition": "Granulometric composition",
+  "asphalt.dosages.superpave.initial_binder": "Initial Binder Content",
+  "asphalt.dosages.superpave.first_compression": "First Compression",
+  "asphalt.dosages.superpave.first_compression_parameters": "First Compression Parameters",
+  "asphalt.dosages.superpave.chosen_curve_percentages": "Chosen Curve Percentages",
+  "asphalt.dosages.superpave.second_compression": "Second Compression",
+  "asphalt.dosages.superpave.second_compression_parameters": "Second Compression Parameters",
+  "asphalt.dosages.superpave.confirmation_compression": "Commit Compression",
+  "asphalt.dosages.superpave.dosage_resume": "Dosagem Resume",
+
+  "asphalt.project_name": "Project Name",
+  "asphalt.laboratory_name": "Laboratory Name",
+  "asphalt.choose_traffic_volume": "Choose Traffic Volume",
+  "asphalt.choose_objective": "Choose the Mixing Purpose",
+  "asphalt.choose_dnit_track": "Choose the DNIT band",
+
+  "asphalt.dosages.superpave.bearing-layer": "Bearing Layer",
+  "asphalt.dosages.superpave.bonding-layer": "Connection Layer",
+
+  "asphalt.dosages.superpave.low-traffic": "Very light (local)",
+  "asphalt.dosages.superpave.medium-traffic": "Medium (collector roads)",
+  "asphalt.dosages.superpave.medium-high-traffic": "Medium to high (main roads, rural highways)",
+  "asphalt.dosages.superpave.high-traffic": "High (interstates, very heavy)",
+
+  "asphalt.dosages.superpave.lower-curve": "Lower curve",
+  "asphalt.dosages.superpave.average-curve": "average curve",
+  "asphalt.dosages.superpave.higher-curve": "Higher curve",
+  "asphalt.dosages.superpave.clear-table": "Clear table",
+  "asphalt.dosages.superpave.calculate-lower-curve": "Calculate lower curve",
+  "asphalt.dosages.superpave.maximum-nominal-size": "Maximum nominal size",
+  "asphalt.dosages.superpave.sieve": "Sieve",
+  "asphalt.dosages.superpave.project": "Project",
+  "asphalt.dosages.superpave.total-passant": "Total passant (%)"
+}
