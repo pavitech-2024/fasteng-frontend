@@ -40,5 +40,6 @@
   "asphalt.dosages.superpave.maximum-nominal-size": "Tamanho nominal máximo",
   "asphalt.dosages.superpave.sieve": "Peneira",
   "asphalt.dosages.superpave.project": "Projeto",
-  "asphalt.dosages.superpave.total-passant": "Passante total (%)"
+  "asphalt.dosages.superpave.total-passant": "Passante total (%)",
+  "asphalt.dosages.superpave.specification": "Especificação"
 }

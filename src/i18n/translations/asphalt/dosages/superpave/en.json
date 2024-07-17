@@ -34,8 +34,11 @@
   "asphalt.dosages.superpave.higher-curve": "Higher curve",
   "asphalt.dosages.superpave.clear-table": "Clear table",
   "asphalt.dosages.superpave.calculate-lower-curve": "Calculate lower curve",
+  "asphalt.dosages.superpave.calculate-average-curve": "Calculate average curve",
+  "asphalt.dosages.superpave.calculate-higher-curve": "Calculate higher curve",
   "asphalt.dosages.superpave.maximum-nominal-size": "Maximum nominal size",
   "asphalt.dosages.superpave.sieve": "Sieve",
   "asphalt.dosages.superpave.project": "Project",
-  "asphalt.dosages.superpave.total-passant": "Total passant (%)"
+  "asphalt.dosages.superpave.total-passant": "Total passant (%)",
+  "asphalt.dosages.superpave.specification": "Specification"
 }

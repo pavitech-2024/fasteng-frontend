@@ -68,7 +68,7 @@ export default function Navbar({ open, app }: NavbarProps) {
     },
     {
       name: t('navbar.superpave'),
-      link: '/asphalt/dosages/superpave',
+      link: '/asphalt/dosages/superpave/create',
       app: 'asphalt',
       icon: <SuperpaveIcon sx={IconStyle} />,
       type: 'double',

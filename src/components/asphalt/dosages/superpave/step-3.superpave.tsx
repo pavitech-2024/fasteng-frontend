@@ -349,7 +349,11 @@ const Superpave_Step3 = ({
     }
   }, [data.pointsOfCurve]);
 
-  nextDisabled && setNextDisabled(false);
+  if (data.percentageInputs.some((item) => item.material_1 === null || item.material_2 === null)) {
+    nextDisabled
+  } else {
+    setNextDisabled(false);
+  }
 
   return (
     <>
@@ -469,7 +473,7 @@ const Superpave_Step3 = ({
                 onChangeInputsTables={onChangeInputsTables}
               />
               <div style={{ marginTop: '1%' }}>
-                <Button onClick={() => calcular()}>{t('asphalt.dosages.superpave.calculate-higher-curve')}</Button>
+                <Button onClick={() => calcular()} variant="outlined" sx={{ width: '100%' }}>{t('asphalt.dosages.superpave.calculate-higher-curve')}</Button>
               </div>
             </TableContainer>
           )}

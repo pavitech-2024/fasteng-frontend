@@ -68,9 +68,9 @@ const CurvesTable: React.FC<Props> = ({
       newTable.columnsKeys.push('key%' + i);
     });
 
-    newTable.columnsHeaderTop.push({ header: 'Projeto', type: 'rowSpan' });
+    newTable.columnsHeaderTop.push({ header: t("asphalt.dosages.superpave.project"), type: 'rowSpan' });
     newTable.columnsKeys.push('Projeto');
-    newTable.columnsHeaderTop.push({ header: 'Especificação', type: 'colsSpan' });
+    newTable.columnsHeaderTop.push({ header: t("asphalt.dosages.superpave.specification"), type: 'colsSpan' });
     newTable.columnsHeader.push(`Faixa ${dnitBandsLetter}`);
     newTable.columnsKeys.push('bandsCol1');
     newTable.columnsKeys.push('bandsCol2');
