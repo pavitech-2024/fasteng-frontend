@@ -25,10 +25,13 @@ const SuperpaveDosageConsult = () => {
 
   const progressTextMap = {
     1: t('general data'),
-    2: t('superpave.material-selection'),
-    3: t('superpave.granulometric-composition'),
-    4: t('superpave.inserting-params'),
-    5: t('superpave.dosage-resume'),
+    2: t('asphalt.dosages.superpave.material_selection'),
+    3: t('asphalt.dosages.superpave.granulometry_composition'),
+    4: t('asphalt.dosages.superpave.initial_binder'),
+    5: t('asphalt.dosages.superpave.first_compression'),
+    6: t("asphalt.dosages.superpave.first_compression_parameters"),
+    7: t("asphalt.dosages.superpave.chosen_curve_percentages"),
+    8: t("asphalt.dosages.superpave.second_compression")
   };
 
   const rows = dosages.map((row) => ({
@@ -181,7 +184,7 @@ const SuperpaveDosageConsult = () => {
           ) : (
             <Container>
               <Box sx={{ margin: '3rem' }}>
-                <Header title={t('superpave.dosage-title')} image={SuperpaveIcon} />
+                <Header title={t('asphalt.essays.superpave')} image={SuperpaveIcon} />
               </Box>
               <Box
                 sx={{

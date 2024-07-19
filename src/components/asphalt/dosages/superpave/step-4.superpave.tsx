@@ -91,7 +91,7 @@ const Superpave_Step4 = ({
     return materials.map((material, index) => [
       {
         key: 'realSpecificMass',
-        label: 'Massa específica real',
+        label: t('asphalt.dosages.superpave.real-specific-mass'),
         placeHolder: 'Massa específica real',
         adornment: 'g/cm²',
         value: material.realSpecificMass,
@@ -100,7 +100,7 @@ const Superpave_Step4 = ({
       },
       {
         key: 'apparentSpecificMass',
-        label: 'Massa específica aparente',
+        label: t('asphalt.dosages.superpave.apparent-specific-mass'),
         placeHolder: 'Massa específica aparente',
         adornment: 'g/cm²',
         value: material.apparentSpecificMass,
@@ -109,7 +109,7 @@ const Superpave_Step4 = ({
       },
       {
         key: 'absorption',
-        label: 'Absorção',
+        label: t('asphalt.dosages.superpave.absorption'),
         placeHolder: 'Absorção',
         adornment: '%',
         value: material.absorption,
@@ -200,25 +200,25 @@ const Superpave_Step4 = ({
   const columns: GridColDef[] = [
     {
       field: 'granulometricComposition',
-      headerName: 'Composição Granulométrica',
+      headerName: t("asphalt.dosages.superpave.granulometric-composition"),
       valueFormatter: ({ value }) => `${value}`,
       width: 200,
     },
     {
       field: 'combinedGsb',
-      headerName: 'Gsb combinado (g/cm³)',
+      headerName: t("asphalt.dosages.superpave.combined-gsb"),
       valueFormatter: ({ value }) => `${value}`,
       width: 200,
     },
     {
       field: 'combinedGsa',
-      headerName: 'Gsa combinado (g/cm³)',
+      headerName: t("asphalt.dosages.superpave.combined-gsa"),
       valueFormatter: ({ value }) => `${value}`,
       width: 200,
     },
     {
       field: 'gse',
-      headerName: 'Gse (g/cm³)',
+      headerName: t("asphalt.dosages.superpave.gse"),
       valueFormatter: ({ value }) => `${value}`,
       width: 200,
     },
@@ -228,13 +228,13 @@ const Superpave_Step4 = ({
     const baseCols: GridColDef[] = [
       {
         field: 'granulometricComposition',
-        headerName: 'Composição Granulométrica',
+        headerName: t("asphalt.dosages.superpave.granulometric-composition"),
         valueFormatter: ({ value }) => `${value}`,
         width: 200,
       },
       {
         field: 'initialBinder',
-        headerName: 'Teor de ligante inicial',
+        headerName: t("asphalt.dosages.superpave.initial-binder"),
         valueFormatter: ({ value }) => `${value}`,
         width: 200,
       }
@@ -277,25 +277,25 @@ const Superpave_Step4 = ({
   const compressionParamsCols: GridColDef[] = [
     {
       field: 'initialN',
-      headerName: 'Ninicial',
+      headerName: t("asphalt.dosages.superpave.initial-n"),
       valueFormatter: ({ value }) => `${value}`,
       width: 200,
     },
     {
       field: 'projectN',
-      headerName: 'Nprojeto',
+      headerName: t("asphalt.dosages.superpave.project-n"),
       valueFormatter: ({ value }) => `${value}`,
       width: 200,
     },
     {
       field: 'maxN',
-      headerName: 'Nmáximo',
+      headerName: t("asphalt.dosages.superpave.max-n"),
       valueFormatter: ({ value }) => `${value}`,
       width: 200,
     },
     {
       field: 'tex',
-      headerName: 'Tráfego',
+      headerName: t("asphalt.dosages.superpave.traffic"),
       valueFormatter: ({ value }) => `${value}`,
       width: 200,
     },
@@ -314,7 +314,7 @@ const Superpave_Step4 = ({
   const compressionParamsGroupings: GridColumnGroupingModel = [
     {
       groupId: 'compressionParams',
-      headerName: 'Parametros de comparação',
+      headerName: t("asphalt.dosages.superpave.compression-params"),
       children: [{ field: 'initialN' }, { field: 'maxN' }, { field: 'projectN' }, { field: 'tex' }],
       headerAlign: 'center',
     },
@@ -359,7 +359,7 @@ const Superpave_Step4 = ({
           />
 
           <Button variant='outlined' sx={{ width: 'fit-content', marginTop: '2rem' }} onClick={() => setNewInitialBinderModalIsOpen(true)}>
-            Alterar teor de ligante inicial
+            {t("asphalt.dosages.superpave.change-initial-binder")}
           </Button>
 
           <DataGrid
@@ -376,7 +376,7 @@ const Superpave_Step4 = ({
 
       {specificMassModalIsOpen && (
         <ModalBase
-          title={'Insira as massas específicas dos materiais'}
+          title={t("asphalt.dosages.superpave.specific-mass-modal-title")}
           leftButtonTitle={''}
           rightButtonTitle={''}
           onCancel={() => {
@@ -434,7 +434,7 @@ const Superpave_Step4 = ({
           <Box>
             <InputEndAdornment
               adornment={'g/cm²'}
-              placeholder="Massa especifica real"
+              placeholder={t("asphalt.dosages.superpave.real-specific-mass")}
               value={data.binderSpecificMass}
               type="number"
               onChange={(e) => {
@@ -446,7 +446,7 @@ const Superpave_Step4 = ({
       )}
 
       <ModalBase
-        title={'Insira o teor de ligante inicial'}
+        title={t("asphalt.dosages.superpave.insert-initial-binder")}
         leftButtonTitle={'Cancelar'}
         rightButtonTitle={'Confirmar'}
         onCancel={() => {
@@ -461,7 +461,7 @@ const Superpave_Step4 = ({
         <InputEndAdornment
           adornment="%"
           value={binderInput}
-          placeholder="Curva inferior"
+          placeholder={t("asphalt.dosages.superpave.lower-curve")}
           fullWidth
           onChange={(e) => {
             setData({

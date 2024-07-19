@@ -40,5 +40,28 @@
   "asphalt.dosages.superpave.sieve": "Sieve",
   "asphalt.dosages.superpave.project": "Project",
   "asphalt.dosages.superpave.total-passant": "Total passant (%)",
-  "asphalt.dosages.superpave.specification": "Specification"
+  "asphalt.dosages.superpave.specification": "Specification",
+  "asphalt.dosages.superpave.specific-mass-modal-title": "Enter the specific masses of the materials",
+
+  "superpave.dosage-consult.name": "Name",
+  "superpave.dosage-consult.progress": "Progress",
+  "superpave.dosage-consult.start": "Start",
+  "superpave.dosage-consult.finish": "Finish",
+  "superpave.dosage-consult.options": "Options",
+
+  "asphalt.dosages.superpave.real-specific-mass": "Real specific mass",
+  "asphalt.dosages.superpave.apparent-specific-mass": "Apparent specific mass",
+  "asphalt.dosages.superpave.absorption": "Absorption",
+  "asphalt.dosages.superpave.granulometric-composition": "Granulometric composition",
+  "asphalt.dosages.superpave.combined-gsb": "Combined gsb (g/cm³)",
+  "asphalt.dosages.superpave.combined-gsa": "Combined gsa (g/cm³)",
+  "asphalt.dosages.superpave.gse": "Gse (g/cm³)",
+  "asphalt.dosages.superpave.initial-binder": "Initial binder content",
+
+  "asphalt.dosages.superpave.initial-n": "initialN",
+  "asphalt.dosages.superpave.project-n": "Nproject",
+  "asphalt.dosages.superpave.max-n": "maximumN",
+  "asphalt.dosages.superpave.compression-params": "Compression parameters",
+  "asphalt.dosages.superpave.change-initial-binder": "Change initial binder content",
+  "asphalt.dosages.superpave.insert-initial-binder": "Insert the initial binder content"
 }
