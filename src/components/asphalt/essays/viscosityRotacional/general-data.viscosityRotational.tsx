@@ -26,7 +26,9 @@ const ViscosityRotational_GeneralData = ({
       async () => {
         const materials = await viscosityRotational.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        const binders = materials.filter((e) => e.type === 'asphaltBinder' || e.type === 'CAP');
+
+        setMaterials(binders);
         setLoading(false);
       },
       {
