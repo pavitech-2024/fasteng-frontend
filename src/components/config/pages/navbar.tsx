@@ -57,7 +57,7 @@ export default function Navbar({ open, app }: NavbarProps) {
     },
     {
       name: t('navbar.marshall'),
-      link: '/asphalt/dosages/marshall',
+      link: '/asphalt/dosages/marshall/create',
       app: 'asphalt',
       icon: <MarshallIcon sx={IconStyle} />,
       type: 'double',
