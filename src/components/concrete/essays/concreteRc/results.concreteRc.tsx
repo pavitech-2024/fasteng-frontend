@@ -4,30 +4,29 @@ import ResultSubTitle from "@/components/atoms/titles/result-sub-title";
 import ExperimentResume, { ExperimentResumeData } from "@/components/molecules/boxes/experiment-resume";
 import Loading from "@/components/molecules/loading";
 import { EssayPageProps } from "@/components/templates/essay";
-import useConcreteRtStore from "@/stores/concrete/concreteRt/concreteRt.store";
 import { Box } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { t } from "i18next";
 import Chart from "react-google-charts";
 
-const ConcreteRt_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
+const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
     nextDisabled && setNextDisabled(false);
-    const { results: concreteRt_results, step2Data, generalData } = useConcreteRtStore();
+    const { results: concreteRc_results, step2Data, generalData } = useConcreteRcStore();
   
     const data = {
       // container "Resultados"
       container_other_data: [],
     };
   
-    if (concreteRt_results) {
+    if (concreteRc_results) {
       data.container_other_data.push(
-        { label: t('concreteRt-concrete.total-retained'), value: concreteRt_results.total_retained, unity: 'g' },
-        { label: t('concreteRt-concrete.nominal-size'), value: concreteRt_results.nominal_size, unity: 'mm' },
-        { label: t('concreteRt-concrete.nominal-diameter'), value: concreteRt_results.nominal_diameter, unity: 'mm' },
-        { label: t('concreteRt-concrete.fineness-module'), value: concreteRt_results.fineness_module, unity: '%' },
-        { label: t('concreteRt-concrete.cc'), value: concreteRt_results.cc },
-        { label: t('concreteRt-concrete.cnu'), value: concreteRt_results.cnu },
-        { label: t('concreteRt-concrete.error'), value: concreteRt_results.error, unity: '%' }
+        { label: t('concreteRc-concrete.total-retained'), value: concreteRc_results.total_retained, unity: 'g' },
+        { label: t('concreteRc-concrete.nominal-size'), value: concreteRc_results.nominal_size, unity: 'mm' },
+        { label: t('concreteRc-concrete.nominal-diameter'), value: concreteRc_results.nominal_diameter, unity: 'mm' },
+        { label: t('concreteRc-concrete.fineness-module'), value: concreteRc_results.fineness_module, unity: '%' },
+        { label: t('concreteRc-concrete.cc'), value: concreteRc_results.cc },
+        { label: t('concreteRc-concrete.cnu'), value: concreteRc_results.cnu },
+        { label: t('concreteRc-concrete.error'), value: concreteRc_results.error, unity: '%' }
       );
     }
   
@@ -38,8 +37,8 @@ const ConcreteRt_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
     };
   
     const graph_data = [
-      [t('concreteRt-concrete.passant'), t('concreteRt-concrete.diameter')],
-      ...concreteRt_results.graph_data,
+      [t('concreteRc-concrete.passant'), t('concreteRc-concrete.diameter')],
+      ...concreteRc_results.graph_data,
     ];
   
     const rows = [];
@@ -48,42 +47,42 @@ const ConcreteRt_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
       rows.push({
         sieve: value.sieve,
         passant_porcentage: value.passant,
-        passant: concreteRt_results.passant[index],
-        retained_porcentage: concreteRt_results.retained_porcentage[index],
+        passant: concreteRc_results.passant[index],
+        retained_porcentage: concreteRc_results.retained_porcentage[index],
         retained: value.retained,
-        accumulated_retained: concreteRt_results.accumulated_retained[index],
+        accumulated_retained: concreteRc_results.accumulated_retained[index],
       });
     });
   
     const columns: GridColDef[] = [
       {
         field: 'sieve',
-        headerName: t('concreteRt-concrete.sieves'),
+        headerName: t('concreteRc-concrete.sieves'),
         valueFormatter: ({ value }) => `${value}`,
       },
       {
         field: 'passant_porcentage',
-        headerName: t('concreteRt-concrete.passant') + ' (%)',
+        headerName: t('concreteRc-concrete.passant') + ' (%)',
         valueFormatter: ({ value }) => `${value}`,
       },
       {
         field: 'passant',
-        headerName: t('concreteRt-concrete.passant') + ' (g)',
+        headerName: t('concreteRc-concrete.passant') + ' (g)',
         valueFormatter: ({ value }) => `${value}`,
       },
       {
         field: 'retained_porcentage',
-        headerName: t('concreteRt-concrete.retained') + ' (%)',
+        headerName: t('concreteRc-concrete.retained') + ' (%)',
         valueFormatter: ({ value }) => `${value}`,
       },
       {
         field: 'retained',
-        headerName: t('concreteRt-concrete.retained') + ' (g)',
+        headerName: t('concreteRc-concrete.retained') + ' (g)',
         valueFormatter: ({ value }) => `${value}`,
       },
       {
         field: 'accumulated_retained',
-        headerName: t('concreteRt-concrete.accumulated-retained') + ' (%)',
+        headerName: t('concreteRc-concrete.accumulated-retained') + ' (%)',
         valueFormatter: ({ value }) => `${value}`,
       },
     ];
@@ -92,7 +91,7 @@ const ConcreteRt_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
       <>
         <ExperimentResume data={experimentResumeData} />
         <FlexColumnBorder title={t('results')} open={true}>
-          <ResultSubTitle title={t('concrete.essays.concreteRt')} sx={{ margin: '.65rem' }} />
+          <ResultSubTitle title={t('concrete.essays.concreteRc')} sx={{ margin: '.65rem' }} />
           <Box
             sx={{
               width: '100%',
@@ -113,31 +112,31 @@ const ConcreteRt_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
             loader={<Loading />}
             data={graph_data}
             options={{
-              title: t('concreteRt-concrete.concreteRt'),
+              title: t('concreteRc-concrete.concreteRc'),
               backgroundColor: 'transparent',
               pointSize: '2',
               hAxis: {
-                title: `${t('concreteRt-concrete.sieve-openness') + ' (mm)'}`,
+                title: `${t('concreteRc-concrete.sieve-openness') + ' (mm)'}`,
                 type: 'number',
                 scaleType: 'log',
               },
               vAxis: {
-                title: `${t('concreteRt-concrete.passant') + ' (%)'}`,
+                title: `${t('concreteRc-concrete.passant') + ' (%)'}`,
                 minValue: '0',
                 maxValue: '105',
               },
               legend: 'none',
             }}
           />
-          <ConcreteRt_resultsTable rows={rows} columns={columns} />
+          <ConcreteRc_resultsTable rows={rows} columns={columns} />
         </FlexColumnBorder>
       </>
     );
   };
   
-  export default ConcreteRt_Results;
+  export default ConcreteRc_Results;
 
-function usConcreteRteStore(): { results: any; step2Data: any; generalData: any; } {
+function useConcreteRcStore(): { results: any; step2Data: any; generalData: any; } {
     throw new Error("Function not implemented.");
 }
   

@@ -3,18 +3,16 @@ import Loading from "@/components/molecules/loading";
 import { EssayPageProps } from "@/components/templates/essay";
 import useAuth from "@/contexts/auth";
 import { ConcreteMaterial } from "@/interfaces/concrete";
-import CONCRETE_RT_SERVICE from "@/services/concrete/essays/concreteRt/concreteRt.service";
-import ConcreteConcreteRt_SERVICE from "@/services/concrete/essays/concreteRt/concreteRt.service";
 import { Box, TextField } from "@mui/material";
 import { t } from "i18next";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-const ConcreteRt_GeneralData = ({
+const ConcrereRc_GeneralData = ({
     nextDisabled,
     setNextDisabled,
     concreteRT,
-  }: EssayPageProps & { concreteRT: CONCRETE_RT_SERVICE }) => {
+  }: EssayPageProps & { concreteRT: CONCRETE_RC_SERVICE }) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
     const { user } = useAuth();
@@ -145,7 +143,7 @@ const ConcreteRt_GeneralData = ({
     );
   };
   
-  export default ConcreteRt_GeneralData;
+  export default ConcrereRc_GeneralData;
 
 function useConcreterStore(): { generalData: any; setData: any; } {
   throw new Error("Function not implemented.");
