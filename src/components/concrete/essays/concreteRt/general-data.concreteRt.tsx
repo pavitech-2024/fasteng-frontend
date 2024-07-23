@@ -5,6 +5,7 @@ import useAuth from "@/contexts/auth";
 import { ConcreteMaterial } from "@/interfaces/concrete";
 import CONCRETE_RT_SERVICE from "@/services/concrete/essays/concreteRt/concreteRt.service";
 import ConcreteConcreteRt_SERVICE from "@/services/concrete/essays/concreteRt/concreteRt.service";
+import useConcreteRtStore from "@/stores/concrete/concreteRt/concreteRt.store";
 import { Box, TextField } from "@mui/material";
 import { t } from "i18next";
 import { useState, useEffect } from "react";
@@ -18,7 +19,7 @@ const ConcreteRt_GeneralData = ({
     const [loading, setLoading] = useState<boolean>(true);
     const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
     const { user } = useAuth();
-    const { generalData, setData } = useConcreterStore();
+    const { generalData, setData } = useConcreteRtStore();
 
     useEffect(() => {
       toast.promise(
@@ -147,7 +148,3 @@ const ConcreteRt_GeneralData = ({
   
   export default ConcreteRt_GeneralData;
 
-function useConcreterStore(): { generalData: any; setData: any; } {
-  throw new Error("Function not implemented.");
-}
-  

@@ -1,4 +1,6 @@
 import ConcreteRt_GeneralData from "@/components/concrete/essays/concreteRt/general-data.concreteRt";
+import ConcreteRt_Results from "@/components/concrete/essays/concreteRt/results.concreteRt";
+import ConcreteRt_Step2 from "@/components/concrete/essays/concreteRt/step2.conceteRt";
 import EssayTemplate from "@/components/templates/essay";
 import useAuth from "@/contexts/auth";
 import CONCRETE_RT_SERVICE from "@/services/concrete/essays/concreteRt/concreteRt.service";
@@ -21,7 +23,7 @@ const ConcreteRt = () => {
     const childrens = [
       {
         step: 0,
-        children: <ConcreteRt_GeneralData concreteRt={concreteRt} />,
+        children: <ConcreteRt_GeneralData concreteRT={concreteRt} />,
         data: store.generalData,
       },
       {

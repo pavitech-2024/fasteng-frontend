@@ -2,13 +2,14 @@ import DropDown from "@/components/atoms/inputs/dropDown";
 import InputEndAdornment from "@/components/atoms/inputs/input-endAdornment";
 import { EssayPageProps } from "@/components/templates/essay";
 import { SieveSeries } from "@/interfaces/common";
+import useConcreteRtStore from "@/stores/concrete/concreteRt/concreteRt.store";
 import { getSieveSeries } from "@/utils/sieves";
 import { Box } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { t } from "i18next";
 
-const ConcreteConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-    const { step2Data: data, setData } = useConcreteConcreteRtStore();
+const ConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
+    const { step2Data: data, setData } = useConcreteRtStore();
   
     const sievesSeries = [getSieveSeries(0), getSieveSeries(1), getSieveSeries(2), getSieveSeries(3), getSieveSeries(4)];
   
@@ -275,7 +276,7 @@ const ConcreteConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPagePr
             required
           />
         </Box>
-        <ConcreteConcreteRt_step2Table rows={rows} columns={columns} />
+        {/* <ConcreteRt_step2Table rows={rows} columns={columns} /> */}
         <Box
           sx={{
             width: '100%',
@@ -301,5 +302,5 @@ const ConcreteConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPagePr
     );
   };
   
-  export default ConcreteConcreteRt_Step2;
+  export default ConcreteRt_Step2;
   

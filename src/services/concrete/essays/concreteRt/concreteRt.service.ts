@@ -1,4 +1,5 @@
 import Api from "@/api";
+import { CoarseAggregateIcon } from "@/assets";
 import { IEssayService } from "@/interfaces/common/essay/essay-service.interface";
 import { ConcreteMaterial } from "@/interfaces/concrete";
 import { ConcreteRtActions, ConcreteRtData } from "@/stores/concrete/concreteRt/concreteRt.store";
@@ -7,7 +8,7 @@ import { t } from "i18next";
 class CONCRETE_RT_SERVICE implements IEssayService {
     info = {
       key: 'ConcreteRt-concrete',
-      icon: ConcreteRtIcon,
+      icon: CoarseAggregateIcon,
       title: t('concrete.essays.ConcreteRt'),
       path: '/concrete/essays/ConcreteRt',
       backend_path: 'concrete/essays/ConcreteRt',
