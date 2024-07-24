@@ -3,7 +3,9 @@ import React from 'react';
 import logo from '../../../assets/fasteng/LogoBlack.png';
 import autoTable from 'jspdf-autotable';
 import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
+import html2canvas from 'html2canvas';
 import { t } from 'i18next';
+import { Button } from '@mui/material';
 
 export interface IGenratePDF {
   name: string;
@@ -232,7 +234,234 @@ const GeneratePDF = ({
   }
 
   //------------------------------------Text Format------------------------------------------------------
-  const addCenteredText = (doc: any, text: any, y: any, fontSize: number = 12) => {
+
+  const sections = [
+    {
+      condition: granulometryRows.length > 0,
+      title: t('asphalt.essays.granulometry'),
+      content: async (doc, currentY) => {
+        addTable(doc, granulometryRows, granulometryColumns, currentY);
+        const tableHeight = (doc as any).lastAutoTable.finalY - currentY;
+        currentY += tableHeight + 5;
+        const chart = document.getElementById('chart-div-granulometry');
+        if (chart) {
+          return addChart(chart, doc, currentY);
+        }
+        return currentY;
+      },
+    },
+    {
+      condition: dataSpecificMass.specificMassContainer.length > 0,
+      title: t('asphalt.essays.specifyMass'),
+      content: (doc, currentY) => {
+        dataSpecificMass.specificMassContainer.forEach((item) => {
+          addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
+          currentY += 5;
+        });
+        return currentY;
+      },
+    },
+    {
+      condition: dataShape.shapeIndexContainer.length > 0,
+      title: t('asphalt.essays.shapeIndex'),
+      content: (doc, currentY) => {
+        dataShape.shapeIndexContainer.forEach((item) => {
+          addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
+          currentY += 5;
+        });
+        return currentY;
+      },
+    },
+    {
+      condition: elongatedParticlesRows,
+      title: t('asphalt.essays.elongatedParticles'),
+      content: (doc, currentY) => {
+        addTable(doc, elongatedParticlesRows, elongatedParticlesColumns, currentY);
+        const tableHeight = (doc as any).lastAutoTable.finalY - currentY;
+        return currentY + tableHeight + 5;
+      },
+    },
+    {
+      condition: filmDisplacement,
+      title: t('adhesiveness.step2'),
+      content: (doc, currentY) => {
+        addTextToLeftMargin(doc, `${t('adhesiveness.chosen-filmDisplacement')}: ${filmDisplacement}`, 10, currentY);
+        return currentY + 5;
+      },
+    },
+    {
+      condition: dataLosAngeles,
+      title: t('asphalt.essays.abrasion'),
+      content: (doc, currentY) => {
+        addTextToLeftMargin(
+          doc,
+          `${t('asphalt.essays.abrasion')}: ${dataLosAngeles.losAngelesAbrasion}%`,
+          10,
+          currentY
+        );
+        return currentY + 5;
+      },
+    },
+    {
+      condition: dataSand,
+      title: t('asphalt.essays.sandEquivalent'),
+      content: (doc, currentY) => {
+        addTextToLeftMargin(doc, `${t('sandEquivalent-sand-equivalent')}: ${dataSand.sandEquivalent}%`, 10, currentY);
+        return currentY + 5;
+      },
+    },
+    {
+      condition: dataAngularity.container_other_data.length > 0,
+      title: t('asphalt.essays.angularity'),
+      content: (doc, currentY) => {
+        dataAngularity.container_other_data.forEach((item) => {
+          addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
+          currentY += 5;
+        });
+        if (angularityRows.length > 0) {
+          addTable(doc, angularityRows, angularityColumns, currentY);
+          const tableHeight = (doc as any).lastAutoTable.finalY - currentY;
+          currentY = tableHeight + 10;
+        }
+        return currentY + 10;
+      },
+    },
+    {
+      condition: dataViscosity,
+      title: t('asphalt.essays.viscosityRotational'),
+      content: async (doc, currentY) => {
+        addTextToLeftMargin(doc, `${t('saybolt-furol.compression-temperature')}`, 10, currentY);
+        addTextToLeftMargin(
+          doc,
+          `${t('saybolt-furol.higher')}: ${dataViscosity.compressionTemperature.higher}°C`,
+          10,
+          currentY
+        );
+        addTextToLeftMargin(
+          doc,
+          `${t('saybolt-furol.average')}: ${dataViscosity.compressionTemperature.average}°C`,
+          10,
+          currentY
+        );
+        addTextToLeftMargin(
+          doc,
+          `${t('saybolt-furol.lower')}: ${dataViscosity.compressionTemperature.lower}°C`,
+          10,
+          currentY
+        );
+        addTextToLeftMargin(doc, `${t('saybolt-furol.machining-temperature')}`, 10, currentY);
+        addTextToLeftMargin(
+          doc,
+          `${t('saybolt-furol.higher')}: ${dataViscosity.machiningTemperature.higher}°C`,
+          10,
+          currentY
+        );
+        addTextToLeftMargin(
+          doc,
+          `${t('saybolt-furol.average')}: ${dataViscosity.machiningTemperature.average}°C`,
+          10,
+          currentY
+        );
+        addTextToLeftMargin(
+          doc,
+          `${t('saybolt-furol.lower')}: ${dataViscosity.machiningTemperature.lower}°C`,
+          10,
+          currentY
+        );
+        const chart = document.getElementById('chart-div-viscosity');
+        if (chart) {
+          return addChart(chart, doc, currentY);
+        }
+        return currentY + 5;
+      },
+    },
+    {
+      condition: dataPenetration,
+      title: t('asphalt.essays.penetration-asphaltl'),
+      content: (doc, currentY) => {
+        addTextToLeftMargin(
+          doc,
+          `${t('asphalt.essays.penetration-asphalt')}: ${dataPenetration.penetration}mm`,
+          10,
+          currentY
+        );
+        return currentY + 5;
+      },
+    },
+    {
+      condition: dataSoftening,
+      title: t('asphalt.essays.softeningPoint'),
+      content: (doc, currentY) => {
+        addTextToLeftMargin(doc, `${t('softeningPoint-result')}: ${dataSoftening.softeningPoint}°C`, 10, currentY);
+        return currentY + 5;
+      },
+    },
+    {
+      condition: dataFlash.container_other_data.length > 0,
+      title: t('asphalt.essays.flashPoint'),
+      content: (doc, currentY) => {
+        dataFlash.container_other_data.forEach((item) => {
+          addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
+          currentY += 5;
+        });
+        return currentY + 5;
+      },
+    },
+    {
+      condition: dataDuctility.container_other_data.length > 0,
+      title: t('asphalt.essays.ductility'),
+      content: (doc, currentY) => {
+        dataDuctility.container_other_data.forEach((item) => {
+          addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
+          currentY += 5;
+        });
+        return currentY + 5;
+      },
+    },
+    {
+      condition: dataRtfo,
+      title: t('asphalt.essays.rtfo'),
+      content: (doc, currentY) => {
+        addTextToLeftMargin(doc, `${t('rtfo-weight-loss-average')}: ${dataRtfo.weightLossAverage} %`, 10, currentY);
+        if (rtfoRows) {
+          addTable(doc, rtfoRows, rtfoColumns, currentY);
+          const tableHeight = (doc as any).lastAutoTable.finalY - currentY;
+          return currentY + tableHeight + 5;
+        }
+        return currentY + 5;
+      },
+    },
+    {
+      condition: dataElastic.container_other_data.length > 0,
+      title: t('asphalt.essays.elasticRecovery'),
+      content: (doc, currentY) => {
+        dataElastic.container_other_data.forEach((item) => {
+          addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
+          currentY += 5;
+        });
+        return currentY + 5;
+      },
+    },
+  ];
+
+  const calculatePageNumber = (doc: any) => {
+    const totalPages = doc.internal.pages.length;
+    for (let pageNumber = 1; pageNumber < totalPages; pageNumber++) {
+      doc.setPage(pageNumber);
+      addPageNumber(doc, pageNumber);
+    }
+  };
+
+  const addPageNumber = (doc: any, pageNumber: number) => {
+    const pageHeight = doc.internal.pageSize.height;
+    const lineYPosition = pageHeight - 10;
+
+    doc.setLineWidth(0.5);
+    doc.line(10, lineYPosition, 200, lineYPosition);
+    addCenteredText(doc, `${pageNumber}`, lineYPosition + 5, 10);
+  };
+
+  const addCenteredText = (doc: any, text: any, y: any, fontSize: number = 24) => {
     const pageWidth = doc.internal.pageSize.getWidth();
     const textWidth = (doc.getStringUnitWidth(text) * fontSize) / doc.internal.scaleFactor;
     const x = (pageWidth - textWidth) / 2;
@@ -240,12 +469,39 @@ const GeneratePDF = ({
     doc.text(x, y, text);
   };
 
-  // const addTextToRightMargin = (doc: any, text: any, margin: any, y: any) => {
-  //   const pageWidth = doc.internal.pageSize.getWidth();
-  //   const textWidth = (doc.getStringUnitWidth(text) * doc.internal.getFontSize()) / doc.internal.scaleFactor;
-  //   const x = pageWidth - margin - textWidth;
-  //   doc.text(x, y, text);
-  // };
+  const addTextToRightMargin = (doc: any, text: string, blockWidth: number, y: number, padding: number = 5) => {
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const x = pageWidth - blockWidth;
+
+    let lines = [];
+    let currentLine = '';
+    const words = text.split(' ');
+
+    const addLine = (line: string) => {
+      if (line.trim()) {
+        lines.push(line);
+      }
+    };
+
+    words.forEach((word) => {
+      const testLine = `${currentLine} ${word}`.trim();
+      const testWidth = (doc.getStringUnitWidth(testLine) * doc.internal.getFontSize()) / doc.internal.scaleFactor;
+
+      if (testWidth > blockWidth - 2 * padding) {
+        addLine(currentLine);
+        currentLine = word;
+      } else {
+        currentLine = testLine;
+      }
+    });
+
+    addLine(currentLine);
+
+    lines.forEach((line, index) => {
+      const lineWidth = (doc.getStringUnitWidth(line) * doc.internal.getFontSize()) / doc.internal.scaleFactor;
+      doc.text(line, x + blockWidth - lineWidth - padding, y + index * 10);
+    });
+  };
 
   const addTextToLeftMargin = (doc: any, text: any, margin: any, y: any, fontSize: number = 12) => {
     const x = margin;
@@ -270,10 +526,85 @@ const GeneratePDF = ({
     });
   };
 
+  const addChart = async (chart: any, doc: any, currentY: number) => {
+    const canvas = await html2canvas(chart);
+    const imgData = canvas.toDataURL('image/png');
+    const imgProps = doc.getImageProperties(imgData);
+    const pdfWidth = doc.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    const xPosition = (doc.internal.pageSize.getWidth() - pdfWidth) / 2;
+    doc.addImage(imgData, 'PNG', xPosition, currentY, pdfWidth, pdfHeight);
+    return (currentY += pdfHeight + 5);
+  };
+
+  const getCurrentDateFormatted = (): string => {
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  };
+
+  const addSummary = async (doc: any, image: any) => {
+    let currentY = 55;
+
+    doc.addImage(image, 'png', 5, 5, 50, 8);
+    doc.addImage(image, 'png', 155, 5, 50, 8);
+
+    addCenteredText(doc, `${t('asphalt.essays.project.summary')}`, currentY, 16);
+    currentY += 20;
+
+    for (const section of sections) {
+      if (section.condition) {
+        addTextToLeftMargin(doc, section.title, 10, currentY, 14);
+        currentY += 10;
+      }
+    }
+
+    const pageHeight = doc.internal.pageSize.height;
+    const lineYPosition = pageHeight - 10;
+
+    doc.setLineWidth(0.5);
+    doc.line(10, lineYPosition, 200, lineYPosition);
+
+    calculatePageNumber(doc);
+  };
+
+  const addCapa = (doc: any, logo: any, nomeProjeto: string, nomeMaterial: string) => {
+    doc.addImage(logo, 'png', 5, 5, 50, 8);
+    doc.addImage(logo, 'png', 155, 5, 50, 8);
+
+    let currentY = 55;
+    addCenteredText(doc, `${t('asphalt.essays.project.title')}`, currentY, 16);
+    currentY += 20;
+    addCenteredText(doc, `${t('asphalt.essays.project.name')}: ${nomeProjeto}`, currentY, 16);
+    currentY += 30;
+    addTextToRightMargin(doc, `${t('asphalt.essays.project.description.text')} ${nomeMaterial}`, 100, currentY);
+
+    const pageHeight = doc.internal.pageSize.height;
+    const lineYPosition = pageHeight - 10;
+    const dateYPosition = lineYPosition - 5;
+
+    const formattedDate = getCurrentDateFormatted();
+
+    addCenteredText(doc, formattedDate, dateYPosition, 14);
+
+    doc.setLineWidth(0.5);
+    doc.line(10, lineYPosition, 200, lineYPosition);
+
+    addCenteredText(doc, '1', lineYPosition + 5, 10);
+  };
+
   const generate = async () => {
     const doc = new jsPDF();
-
     const image = (await addImageProcess(logo.src)) as HTMLImageElement;
+
+    addCapa(doc, image, name, type);
+    doc.addPage();
+
+    addSummary(doc, image);
+    doc.addPage();
 
     doc.addImage(image, 'png', 5, 5, 50, 8);
     doc.addImage(image, 'png', 155, 5, 50, 8);
@@ -283,193 +614,34 @@ const GeneratePDF = ({
     addTextToLeftMargin(doc, `${t('asphalt.materials.type')}: ${type}`, 10, 45);
 
     let currentY = 55;
-    if (granulometryRows.length > 0) {
-      addTextToLeftMargin(doc, `${t('asphalt.essays.granulometry')}`, 10, currentY, 14);
-      currentY += 5;
-      addTable(doc, granulometryRows, granulometryColumns, currentY);
-      currentY += (doc as any).lastAutoTable.finalY - 50;
-      //chart
-    }
-    if (dataSpecificMass.specificMassContainer.length > 0) {
-      addTextToLeftMargin(doc, `${t('asphalt.essays.specifyMass')}`, 10, currentY, 14);
-      currentY += 5;
-      dataSpecificMass.specificMassContainer.forEach((item, index) => {
-        addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
+
+    for (const section of sections) {
+      if (section.condition) {
         currentY += 5;
-      });
-      currentY += 10;
-    }
-
-    if (dataShape.shapeIndexContainer.length > 0) {
-      addTextToLeftMargin(doc, `${t('asphalt.essays.shapeIndex')}`, 10, currentY, 14);
-      currentY += 5;
-      dataShape.shapeIndexContainer.forEach((item, index) => {
-        addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
+        addTextToLeftMargin(doc, section.title, 10, currentY, 14);
         currentY += 5;
-      });
-      currentY += 10;
-    }
-
-    if (elongatedParticlesRows) {
-      addTextToLeftMargin(doc, `${t('asphalt.essays.elongatedParticles')}`, 10, currentY, 14);
-      currentY += 5;
-      addTable(doc, elongatedParticlesRows, elongatedParticlesColumns, currentY);
-      currentY += (doc as any).lastAutoTable.finalY - 50;
-    }
-
-    if (filmDisplacement) {
-      addTextToLeftMargin(doc, `${t('asphalt.essay.adhesiveness')}`, 10, currentY, 14);
-      currentY += 5;
-      addTextToLeftMargin(doc, `${t('adhesiveness.chosen-filmDisplacement')}: ${filmDisplacement}`, 10, currentY);
-      currentY += 10;
-    }
-
-    if (dataLosAngeles) {
-      addTextToLeftMargin(doc, `${t('asphalt.essays.abrasion')}`, 10, currentY, 14);
-      currentY += 5;
-      addTextToLeftMargin(doc, `${t('asphalt.essays.abrasion')}: ${dataLosAngeles.losAngelesAbrasion}%`, 10, currentY);
-      currentY += 10;
-    }
-
-    if (dataSand) {
-      addTextToLeftMargin(doc, `${t('asphalt.essays.sandEquivalent')}`, 10, currentY, 14);
-      currentY += 5;
-      addTextToLeftMargin(doc, `${t('sandEquivalent-sand-equivalent')}: ${dataSand.sandEquivalent}%`, 10, currentY);
-      currentY += 10;
-    }
-
-    if (dataAngularity.container_other_data.length > 0) {
-      addTextToLeftMargin(doc, `${t('asphalt.essays.angularity')}`, 10, currentY, 14);
-      currentY += 5;
-      dataAngularity.container_other_data.forEach((item, index) => {
-        addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
-        currentY += 5;
-      });
-      currentY += 5;
-      if (angularityRows.length > 0) {
-        addTable(doc, angularityRows, angularityColumns, currentY);
-        currentY += (doc as any).lastAutoTable.finalY - 50;
+        currentY = await section.content(doc, currentY);
       }
-      currentY += 10;
     }
 
-    if (dataViscosity) {
-      addTextToLeftMargin(doc, `${t('asphalt.essays.viscosityRotational')}`, 10, currentY, 14);
-      currentY += 5;
-      addTextToLeftMargin(doc, `${t('saybolt-furol.compression-temperature')}`, 10, currentY);
-      currentY += 5;
-      addTextToLeftMargin(
-        doc,
-        `${t('saybolt-furol.higher')}: ${dataViscosity.compressionTemperature.higher}°C`,
-        10,
-        currentY
-      );
-      currentY += 5;
-      addTextToLeftMargin(
-        doc,
-        `${t('aybolt-furol.average')}: ${dataViscosity.compressionTemperature.average}°C`,
-        10,
-        currentY
-      );
-      currentY += 5;
-      addTextToLeftMargin(
-        doc,
-        `${t('saybolt-furol.lower')}: ${dataViscosity.compressionTemperature.lower}°C`,
-        10,
-        currentY
-      );
-      currentY += 5;
-      addTextToLeftMargin(doc, `${t('saybolt-furol.machining-temperature')}`, 10, currentY);
-      currentY += 5;
-      addTextToLeftMargin(
-        doc,
-        `${t('saybolt-furol.higher')}: ${dataViscosity.machiningTemperature.higher}°C`,
-        10,
-        currentY
-      );
-      currentY += 5;
-      addTextToLeftMargin(
-        doc,
-        `${t('aybolt-furol.average')}: ${dataViscosity.machiningTemperature.average}°C`,
-        10,
-        currentY
-      );
-      currentY += 5;
-      addTextToLeftMargin(
-        doc,
-        `${t('saybolt-furol.lower')}: ${dataViscosity.machiningTemperature.lower}°C`,
-        10,
-        currentY
-      );
-      currentY += 10;
-      //chart
-    }
+    calculatePageNumber(doc);
 
-    if (dataPenetration) {
-      addTextToLeftMargin(doc, `${t('asphalt.essays.penetration-asphaltl')}`, 10, currentY, 14);
-      currentY += 5;
-      addTextToLeftMargin(
-        doc,
-        `${t('asphalt.essays.penetration-asphalt')}: ${dataPenetration.penetration}mm`,
-        10,
-        currentY
-      );
-      currentY += 10;
-    }
-
-    if (dataSoftening) {
-      addTextToLeftMargin(doc, `${t('asphalt.essays.softeningPoint')}`, 10, currentY, 14);
-      currentY += 5;
-      addTextToLeftMargin(doc, `${t('softeningPoint-result')}: ${dataSoftening.softeningPoint}°C`, 10, currentY);
-      currentY += 10;
-    }
-
-    if (dataFlash.container_other_data.length > 0) {
-      addTextToLeftMargin(doc, `${t('asphalt.essays.flashPoint')}`, 10, currentY, 14);
-      currentY += 5;
-      dataFlash.container_other_data.forEach((item, index) => {
-        addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
-        currentY += 5;
-      });
-      currentY += 10;
-    }
-
-    if (dataDuctility.container_other_data.length > 0) {
-      addTextToLeftMargin(doc, `${t('asphalt.essays.ductility')}`, 10, currentY, 14);
-      currentY += 5;
-      dataDuctility.container_other_data.forEach((item, index) => {
-        addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
-        currentY += 10;
-      });
-      currentY += 10;
-    }
-
-    if (dataRtfo) {
-      addTextToLeftMargin(doc, `${t('asphalt.essays.rtfo')}`, 10, currentY, 14);
-      currentY += 5;
-      addTextToLeftMargin(doc, `${t('rtfo-weight-loss-average')}: ${dataRtfo.weightLossAverage} %`, 10, currentY);
-      currentY += 5;
-      if (rtfoRows) {
-        addTable(doc, rtfoRows, rtfoColumns, currentY);
-        currentY = (doc as any).lastAutoTable.finalY - 50;
-      }
-      currentY += 10;
-    }
-
-    if (dataElastic.container_other_data.length > 0) {
-      addTextToLeftMargin(doc, `${t('asphalt.essays.elasticRecovery')}`, 10, currentY, 14);
-      dataElastic.container_other_data.forEach((item, index) => {
-        addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
-        currentY += 10;
-      });
-      currentY += 10;
-    }
     doc.save('material.pdf');
   };
 
   return (
     <div>
-      <button onClick={generate}>Download PDF</button>
+      <Button
+        sx={{
+          fontWeight: 700,
+          fontSize: { mobile: '11px', notebook: '13px' },
+          bgcolor: 'primaryTons.lightGray',
+          width: '100%',
+        }}
+        onClick={generate}
+      >
+        Download PDF
+      </Button>
     </div>
   );
 };
