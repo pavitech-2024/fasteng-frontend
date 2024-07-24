@@ -213,6 +213,25 @@ const Material = () => {
                       <Typography>{type}</Typography>
                     </Box>
                   </TextBox>
+                  <GeneratePDF
+                    name={material.material.name}
+                    type={type}
+                    granulometryData={granulometryData}
+                    specificMassData={specificMassData}
+                    shapeIndexData={shapeIndexData}
+                    elongatedParticlesData={elongatedParticlesData}
+                    adhesivenessData={adhesivenessData}
+                    losAngelesAbrasionData={losAngelesAbrasionData}
+                    sandEquivalentData={sandEquivalentData}
+                    angularityData={angularityData}
+                    viscosityRotationalData={viscosityRotationalData}
+                    penetrationData={penetrationData}
+                    softeningPointData={softeningPointData}
+                    flashPointData={flashPointData}
+                    ductilityData={ductilityData}
+                    rtfoData={rtfoData}
+                    elasticRecoveryData={elasticRecoveryData}
+                  />
                 </Box>
               </FlexColumnBorder>
 
@@ -253,25 +272,6 @@ const Material = () => {
               {elasticRecoveryData?.results && (
                 <ElasticRecoveryMaterialView elasticRecoveryData={elasticRecoveryData} />
               )}
-              <GeneratePDF
-                name={material.material.name}
-                type={type}
-                granulometryData={granulometryData}
-                specificMassData={specificMassData}
-                shapeIndexData={shapeIndexData}
-                elongatedParticlesData={elongatedParticlesData}
-                adhesivenessData={adhesivenessData}
-                losAngelesAbrasionData={losAngelesAbrasionData}
-                sandEquivalentData={sandEquivalentData}
-                angularityData={angularityData}
-                viscosityRotationalData={viscosityRotationalData}
-                penetrationData={penetrationData}
-                softeningPointData={softeningPointData}
-                flashPointData={flashPointData}
-                ductilityData={ductilityData}
-                rtfoData={rtfoData}
-                elasticRecoveryData={elasticRecoveryData}
-              />
             </Box>
           </BodyEssay>
         </>
