@@ -48,39 +48,38 @@ const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp:
   }, []);
 
   useEffect(() => {
-      toast.promise(
-        async () => {
-          try {
-            const dosageData = sessionStorage.getItem('abcp-store');
-            const sessionDataJson = JSON.parse(dosageData);
-            const dosageDataJson = sessionDataJson.state as any;
-  
-            const response = await abcp.getStep3Data(dosageDataJson, dosageDataJson._id.toString());
-            console.log("🚀 ~ response:", response);
+    toast.promise(
+      async () => {
+        try {
+          const dosageData = sessionStorage.getItem('abcp-store');
+          const sessionDataJson = JSON.parse(dosageData);
+          const dosageDataJson = sessionDataJson.state as any;
 
-            const prevData = {...dosageDataJson};
-            const newData = {...prevData.generalData, step: 2};
-            prevData.generalData = newData;
-            
-  
-            setData({
-              step: 5,
-              value: {
-                ...prevData,
-              },
-            });
-            setLoading(false);
-          } catch (error) {
-            setLoading(false);
-            throw error;
-          }
-        },
-        {
-          pending: t('loading.materials.pending'),
-          success: t('loading.materials.success'),
-          error: t('testeeeeeeee'),
+          const response = await abcp.getStep3Data(dosageDataJson, dosageDataJson._id.toString());
+          console.log('🚀 ~ response:', response);
+
+          const prevData = { ...dosageDataJson };
+          const newData = { ...prevData.generalData, step: 2 };
+          prevData.generalData = newData;
+
+          setData({
+            step: 5,
+            value: {
+              ...prevData,
+            },
+          });
+          setLoading(false);
+        } catch (error) {
+          setLoading(false);
+          throw error;
         }
-      );
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('testeeeeeeee'),
+      }
+    );
   }, [essays]);
 
   const fineAggregate_Inputs = [];
