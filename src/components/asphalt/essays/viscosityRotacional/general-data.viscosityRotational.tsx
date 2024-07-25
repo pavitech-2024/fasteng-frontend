@@ -3,7 +3,7 @@ import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
-import ViscosityRotational_SERVICE from '@/services/asphalt/viscosityRotational/viscosityRotational.service';
+import ViscosityRotational_SERVICE from '@/services/asphalt/essays/viscosityRotational/viscosityRotational.service';
 import useViscosityRotationalStore from '@/stores/asphalt/viscosityRotational/viscosityRotational.store';
 
 import { Box, TextField } from '@mui/material';
@@ -26,7 +26,9 @@ const ViscosityRotational_GeneralData = ({
       async () => {
         const materials = await viscosityRotational.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        const binders = materials.filter((e) => e.type === 'asphaltBinder' || e.type === 'CAP');
+
+        setMaterials(binders);
         setLoading(false);
       },
       {

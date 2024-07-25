@@ -17,7 +17,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
   if (data.sieve_series && data.table_data && data.table_data.length == 0) {
     const table_data = [];
     data.sieve_series.map((s) => {
-      table_data.push({ sieve: s.label, passant: 100, retained: 0 });
+      table_data.push({ sieve_label: s.label, sieve_value: s.value, passant: 100, retained: 0 });
     });
     setData({ step: 1, key: 'table_data', value: table_data });
   }
@@ -26,7 +26,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
 
   const columns: GridColDef[] = [
     {
-      field: 'sieve',
+      field: 'sieve_label',
       headerName: t('granulometry-asphalt.sieves'),
       valueFormatter: ({ value }) => `${value}`,
     },
@@ -37,8 +37,8 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
         if (!rows) {
           return;
         }
-        const { sieve } = row;
-        const sieve_index = rows.findIndex((r) => r.sieve === sieve);
+        const { sieve_label } = row;
+        const sieve_index = rows.findIndex((r) => r.sieve_label === sieve_label);
 
         return (
           <InputEndAdornment
@@ -74,12 +74,8 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
 
               const new_current_accumulative_retained = accumulative_retained;
 
-              console.log(new_current_accumulative_retained);
-
               nextRows.map(function (item, index) {
                 const row = item;
-
-                console.log(row);
 
                 if (index > 0) {
                   const currentRows = nextRows.slice(0, index + 1);
@@ -90,8 +86,6 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
                     initial_retained
                   );
 
-                  console.log(accumulative_retained);
-
                   const retained =
                     Math.round(100 * (mass !== 0 ? ((100 - row.passant) / 100) * mass - accumulative_retained : 0)) /
                     100;
@@ -99,15 +93,11 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
                   const passant =
                     Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
 
-                  console.log(passant);
-                  console.log(retained);
-
                   newRows.map((e) => {
-                    if (e.sieve === row.sieve) {
+                    if (e.sieve_label === row.sieve_label) {
                       e.passant = passant;
                     }
                   });
-                  // newRows[sieve_index + index].retained = retained;
                 }
               });
 
@@ -124,8 +114,8 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
         if (!rows) {
           return;
         }
-        const { sieve } = row;
-        const sieve_index = rows.findIndex((r) => r.sieve === sieve);
+        const { sieve_label } = row;
+        const sieve_index = rows.findIndex((r) => r.sieve_label === sieve_label);
 
         return (
           <InputEndAdornment
@@ -159,12 +149,8 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
 
               const new_current_accumulative_retained = current_accumulative_retained - current_retained;
 
-              console.log(new_current_accumulative_retained);
-
               nextRows.map(function (item, index) {
                 const row = item;
-
-                console.log(row);
 
                 if (index > 0) {
                   const currentRows = nextRows.slice(0, index + 1);
@@ -175,26 +161,14 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
                     initial_retained
                   );
 
-                  console.log(accumulative_retained);
-
-                  // const retained =
-                  // Math.round(
-                  //   100 *
-                  //     (mass !== 0 ? ((100 - row.passant) / 100) * mass - accumulative_retained : 0)
-                  // ) / 100;
-
                   const passant =
                     Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
 
-                  console.log(passant);
-                  console.log(item.retained);
-
                   newRows.map((e) => {
-                    if (e.sieve === row.sieve) {
+                    if (e.sieve_label === row.sieve_label) {
                       e.passant = passant;
                     }
                   });
-                  // newRows[sieve_index + index].retained = retained;
                 }
               });
 

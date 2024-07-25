@@ -120,11 +120,11 @@ const Home: NextPage = () => {
       </Box>
       <Box
         sx={{
-          display: 'flex',
+          display: 'grid',
           gridTemplateColumns: {
             mobile: '1fr',
-            tablet: '1fr 1fr',
-            notebook: '1fr 1fr 1fr 1fr',
+            tablet: '1fr',
+            notebook: '1fr 1fr 1fr',
           },
           gap: {
             mobile: '10px 0',
@@ -142,7 +142,7 @@ const Home: NextPage = () => {
           maxWidth: '1400px',
           pt: '2vh',
 
-          '@media only screen and (min-width: 1024px)': {
+          '@media only screen and (min-width: 768px)': {
             width: '60%',
           },
         }}

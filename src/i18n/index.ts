@@ -50,6 +50,9 @@ import softeningPointENG from './translations/asphalt/essays/softeningPoint/en.j
 // sayboltFurol
 import sayboltFurolPTBR from './translations/asphalt/essays/saybolt-furol/ptbr.json';
 import sayboltFurolENG from './translations/asphalt/essays/saybolt-furol/en.json';
+// viscosityRotational
+import viscosityRotationalPTBR from './translations/asphalt/essays/viscosityRotational/ptbr.json';
+import viscosityRotationalENG from './translations/asphalt/essays/viscosityRotational/en.json';
 // sandEquivalent
 import sandEquivalentPTBR from './translations/asphalt/essays/sandEquivalent/ptbr.json';
 import sandEquivalentENG from './translations/asphalt/essays/sandEquivalent/en.json';
@@ -86,6 +89,19 @@ import asphaltPenetrationENG from './translations/asphalt/essays/penetration/en.
 // elasticRecovery
 import asphaltElasticRecoveryPTBR from './translations/asphalt/essays/elasticRecovery/ptbr.json';
 import asphaltElasticRecoveryENG from './translations/asphalt/essays/elasticRecovery/en.json';
+// dosages
+// marshall
+import marshallPTBR from './translations/asphalt/dosages/marshall/ptbr.json';
+import marshallENG from './translations/asphalt/dosages/marshall/en.json';
+// superpave
+import superpavePTBR from './translations/asphalt/dosages/superpave/ptbr.json';
+import superpaveENG from './translations/asphalt/dosages/superpave/en.json';
+// igg
+import iggPTBR from './translations/asphalt/essays/igg/ptbr.json';
+import iggENG from './translations/asphalt/essays/igg/en.json';
+// fwd
+import fwdPTBR from './translations/asphalt/essays/fwd/ptbr.json';
+import fwdENG from './translations/asphalt/essays/fwd/en.json';
 
 /**@soils */
 // samples
@@ -120,6 +136,9 @@ import concreteEssaysENG from './translations/concrete/essays/en.json';
 // materials
 import concreteMaterialsPTBR from './translations/concrete/materials/ptbr.json';
 import concreteMaterialsENG from './translations/concrete/materials/en.json';
+// standards
+import concreteStandardsPTBR from './translations/concrete/standards/pt-br.json';
+import concreteStandardsENG from './translations/concrete/standards/en.json';
 //chapman
 import chapmanPTBR from './translations/concrete/essays/chapman/ptbr.json';
 import chapmanENG from './translations/concrete/essays/chapman/en.json';
@@ -185,6 +204,11 @@ i18n.use(initReactI18next).init({
         ...asphaltGranulometryPTBR,
         ...asphaltPenetrationPTBR,
         ...asphaltElasticRecoveryPTBR,
+        ...marshallPTBR,
+        ...superpavePTBR,
+        ...iggPTBR,
+        ...fwdPTBR,
+        ...viscosityRotationalPTBR,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
@@ -197,6 +221,7 @@ i18n.use(initReactI18next).init({
         /**@concrete */
         ...concreteEssaysPTBR,
         ...concreteMaterialsPTBR,
+        ...concreteStandardsPTBR,
         ...chapmanPTBR,
         ...unitMassPTBR,
         ...sandIncreasePTBR,
@@ -240,6 +265,11 @@ i18n.use(initReactI18next).init({
         ...asphaltGranulometryENG,
         ...asphaltPenetrationENG,
         ...asphaltElasticRecoveryENG,
+        ...marshallENG,
+        ...superpaveENG,
+        ...iggENG,
+        ...fwdENG,
+        ...viscosityRotationalENG,
         /**@soils */
         ...samplesENG,
         ...soilsEssaysENG,
@@ -252,6 +282,7 @@ i18n.use(initReactI18next).init({
         /**@concrete */
         ...concreteEssaysENG,
         ...concreteMaterialsENG,
+        ...concreteStandardsENG,
         ...chapmanENG,
         ...unitMassENG,
         ...sandIncreaseENG,

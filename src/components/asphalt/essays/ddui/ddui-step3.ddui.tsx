@@ -12,7 +12,6 @@ const Ddui_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { dduiStep3: data, setData } = useDduiStore();
 
   const rows = data.ddui_data;
-  console.log('🚀 ~ file: ddui-step3.ddui.tsx:15 ~ rows:', rows);
 
   useEffect(() => {
     if (nextDisabled) {

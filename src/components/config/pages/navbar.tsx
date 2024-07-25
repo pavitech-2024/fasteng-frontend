@@ -57,13 +57,13 @@ export default function Navbar({ open, app }: NavbarProps) {
     },
     {
       name: t('navbar.marshall'),
-      link: '/asphalt/dosages/marshall',
+      link: '/asphalt/dosages/marshall/create',
       app: 'asphalt',
       icon: <MarshallIcon sx={IconStyle} />,
       type: 'double',
       sub: [
-        { name: t('navbar.new'), link: '/dosages/marshall/new', icon: <AddIcon sx={IconStyle} /> },
-        { name: t('navbar.consult'), link: '/dosages/marshall/consult', icon: <SearchIcon sx={IconStyle} /> },
+        { name: t('navbar.new'), link: '/asphalt/dosages/marshall/create', icon: <AddIcon sx={IconStyle} /> },
+        { name: t('navbar.consult'), link: '/asphalt/dosages/marshall/consult', icon: <SearchIcon sx={IconStyle} /> },
       ],
     },
     {
@@ -73,8 +73,8 @@ export default function Navbar({ open, app }: NavbarProps) {
       icon: <SuperpaveIcon sx={IconStyle} />,
       type: 'double',
       sub: [
-        { name: t('navbar.new'), link: '/dosages/superpave/new', icon: <AddIcon sx={IconStyle} /> },
-        { name: t('navbar.consult'), link: '/dosages/superpave/consult', icon: <SearchIcon sx={IconStyle} /> },
+        { name: t('navbar.new'), link: '/asphalt/dosages/superpave/new', icon: <AddIcon sx={IconStyle} /> },
+        { name: t('navbar.consult'), link: '/asphalt/dosages/superpave/consult', icon: <SearchIcon sx={IconStyle} /> },
       ],
     },
     {

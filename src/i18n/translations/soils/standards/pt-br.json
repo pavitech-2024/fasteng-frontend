@@ -30,5 +30,10 @@
   "all": "Todos",
   "aggregates": "Agregados",
   "asphalt.mixtures": "Misturas Asfálticas",
-  "asphalt.binder": "Ligante Asfáltico"
+  "asphalt.binder": "Ligante Asfáltico",
+  "cbr": "California Bearing Ratio - CBR",
+  "hrb": "Classificação Rodoviária - HRB",
+  "sucs": "Classificação Unificada - SUCS",
+  "compression": "Ensaio de Compactação",
+  "granulometry": "Granulometria por Peneiramento"
 }

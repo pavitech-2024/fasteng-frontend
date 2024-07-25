@@ -64,7 +64,7 @@ class ADHESIVENESS_SERVICE implements IEssayService {
 
   getBindersByUserId = async (userId: string): Promise<AsphaltMaterial[]> => {
     try {
-      const { data } = await Api.get(`/asphalt/materials/binders/${userId}`);
+      const { data } = await Api.get(`/asphalt/materials/all/${userId}`);
 
       //filtrando apenas os materiais de tipo "asphaltBinder"
       return data.filter((material) => material.type === 'asphaltBinder');
@@ -97,10 +97,6 @@ class ADHESIVENESS_SERVICE implements IEssayService {
   /** @adhesivenessData Methods for adhesiveness-data (step === 1, page 2) */
   // calculate results
   calculateResults = async (adhesivenessData: AdhesivenessData): Promise<void> => {
-    console.log(
-      '🚀 ~ file: adhesiveness.service.ts:101 ~ ADHESIVENESS_SERVICE ~ calculateResults= ~ adhesivenessData:',
-      adhesivenessData
-    );
     try {
       //verify if displaced_volume (only input) is blank
       if (!adhesivenessData.adhesiveness.filmDisplacement) throw t('errors.empty-displaced-volume');

@@ -9,7 +9,7 @@ class SayboltFurol_SERVICE implements IEssayService {
   info = {
     key: 'saybolt-furol',
     icon: SayboltFurolIcon,
-    title: t('asphalt.essays.sayboltFurol'),
+    title: t('asphalt.essays.saybolt-furol'),
     path: '/asphalt/essays/sayboltFurol',
     backend_path: 'asphalt/essays/sayboltFurol',
     steps: 3,
@@ -98,10 +98,6 @@ class SayboltFurol_SERVICE implements IEssayService {
 
   // verify inputs from SayboltFurol page (step === 1, page 2)
   submitSayboltFurolCalcData = async (sayboltFurolCalc: SayboltFurolData['sayboltFurolCalc']): Promise<void> => {
-    console.log(
-      '🚀 ~ file: sayboltFurol.service.ts:101 ~ SayboltFurol_SERVICE ~ submitSayboltFurolCalcData= ~ sayboltFurolCalc:',
-      sayboltFurolCalc
-    );
     try {
     } catch (error) {
       throw error;
@@ -118,10 +114,6 @@ class SayboltFurol_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);
 
       const { success, error, result } = response.data;
-      console.log(
-        '🚀 ~ file: sayboltFurol.service.ts:120 ~ SayboltFurol_SERVICE ~ calculateResults= ~ result:',
-        result
-      );
 
       if (success === false) throw error.name;
 

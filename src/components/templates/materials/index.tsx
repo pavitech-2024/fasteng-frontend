@@ -27,11 +27,13 @@ import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { ConcreteMaterial } from '@/interfaces/concrete';
+import Link from 'next/link';
 
 interface MaterialsTemplateProps {
   materials: Sample[] | AsphaltMaterial[] | ConcreteMaterial[];
   types: DropDownOption[];
   title: 'Amostras Cadastradas' | 'Materiais Cadastrados';
+  path?: string;
   //Modal
   handleOpenModal: () => void;
   handleDeleteMaterial: (id: string) => void;
@@ -55,20 +57,30 @@ const MaterialsTemplate = ({
   materials,
   types,
   title,
+  path,
   handleOpenModal,
   handleDeleteMaterial,
   modal,
 }: MaterialsTemplateProps) => {
   const app = useRouter().pathname.split('/')[1];
+  let samplesOrMaterials: string;
 
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
+
+  const router = useRouter();
 
   const [searchBy, setSearchBy] = useState<string>('name');
   const [searchValue, setSearchValue] = useState<string>('');
 
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
+
+  if (path === 'soils') {
+    samplesOrMaterials = 'sample';
+  } else {
+    samplesOrMaterials = 'material';
+  }
 
   const columns: MaterialsColumn[] = [
     { id: 'name', label: t('materials.template.name'), width: '25%' },
@@ -310,31 +322,32 @@ const MaterialsTemplate = ({
                         {column.id === 'createdAt' && formatDate(row.createdAt)}
                         {column.id === 'actions' && (
                           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Button
-                              variant="contained"
-                              sx={{
-                                height: '25px',
-                                borderRadius: { mobile: '50%', notebook: '20px' },
-                                p: { mobile: 0, notebook: '6px 12px' },
-                                minWidth: '25px',
-                                bgcolor: 'secondaryTons.blue',
-                                color: 'primaryTons.white',
+                            <Link href={`/${path}/${row._id}`}>
+                              <Button
+                                variant="contained"
+                                sx={{
+                                  height: '25px',
+                                  borderRadius: { mobile: '50%', notebook: '20px' },
+                                  p: { mobile: 0, notebook: '6px 12px' },
+                                  minWidth: '25px',
+                                  bgcolor: 'secondaryTons.blue',
+                                  color: 'primaryTons.white',
 
-                                ':hover': {
-                                  bgcolor: 'secondaryTons.blueDisabled',
-                                },
+                                  ':hover': {
+                                    bgcolor: 'secondaryTons.blueDisabled',
+                                  },
 
-                                ':active': {
-                                  bgcolor: 'secondaryTons.blueClick',
-                                },
-                              }}
-                              onClick={(e) => console.log(e)}
-                            >
-                              <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
-                                {t('materials.template.edit')}
-                              </Typography>
-                              <NextIcon sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
-                            </Button>
+                                  ':active': {
+                                    bgcolor: 'secondaryTons.blueClick',
+                                  },
+                                }}
+                              >
+                                <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
+                                  {t('materials.template.edit')}
+                                </Typography>
+                                <NextIcon sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
+                              </Button>
+                            </Link>
                             <Button
                               variant="text"
                               color="error"

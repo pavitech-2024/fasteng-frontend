@@ -16,7 +16,6 @@ import { useEffect } from 'react';
 const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: compressionResults, compressionGeneralData } = useCompressionStore();
-  console.log('🚀 ~ file: results.compression.tsx:21 ~ compressionResults:', compressionResults);
 
   //Primeiro bloco com as informações gerais do ensaio
   const experimentResumeData: ExperimentResumeData = {
@@ -71,17 +70,10 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
     <Result_Card key={index} label={'Densidade do solo seco'} value={String(Number(value).toFixed(2))} unity={'%'} />
   ));
 
-  useEffect(
-    () => console.log(compressionResults?.drySoilDensitys.map((item) => Number(item).toFixed(2))),
-    [compressionResults?.drySoilDensitys]
-  );
-
   const graphData = [
     [`${t('compression.drySoilDensitys')} g/cm³`, `${t('compression.moistures')} %`],
     ...compressionResults.graph,
   ];
-
-  useEffect(() => console.log(compressionResults), [compressionResults]);
 
   return (
     <>

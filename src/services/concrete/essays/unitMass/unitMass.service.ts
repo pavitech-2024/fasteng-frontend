@@ -126,7 +126,6 @@ class UNITMASS_SERVICE implements IEssayService {
       });
 
       const { success, error, result } = response.data;
-      console.log('🚀 ~ file: unitMass.service.ts:130 ~ UNITMASS_SERVICE ~ calculateResults= ~ result:', result);
 
       if (success === false) throw error.name;
 
@@ -137,7 +136,6 @@ class UNITMASS_SERVICE implements IEssayService {
   };
 
   saveEssay = async (store: UnitMassData): Promise<void> => {
-    console.log('🚀 ~ file: unitMass.service.ts:141 ~ UNITMASS_SERVICE ~ saveEssay= ~ store:', store);
     try {
       const response = await Api.post(`${this.info.backend_path}/save-essay`, {
         generalData: {
