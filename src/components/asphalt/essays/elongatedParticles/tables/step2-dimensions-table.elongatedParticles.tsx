@@ -1,14 +1,14 @@
 import { ElongatedParticlesDimensionsRow } from '@/stores/asphalt/elongatedParticles/elongatedParticles.store';
+import { makeStyles } from '@mui/styles';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
 
 interface step2ElongatedParticlesProps {
   rows: ElongatedParticlesDimensionsRow[];
   columns: GridColDef[];
 }
 
-const useStyle = makeStyles({
+const useStyle: any = makeStyles({
   root: {
     '& .MuiDataGrid-columnHeaderTitle': {
       overflow: 'visible',

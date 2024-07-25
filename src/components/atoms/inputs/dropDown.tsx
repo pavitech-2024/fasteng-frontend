@@ -43,6 +43,8 @@ const DropDown = ({
       select
       label={label}
       defaultValue={defaultValue && defaultValue.value}
+      value={defaultValue ? defaultValue.value : ''} // Usando value ao invés de defaultValue
+      onChange={handleChange}
       helperText={helperText ? helperText : null}
       sx={sx}
       size={size}

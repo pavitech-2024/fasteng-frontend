@@ -1,6 +1,6 @@
 import { Sieve } from '../common';
 
-export type ConcreteMaterialTypes = 'fineAggregate' | 'coarseAggregate' | 'cement';
+export type ConcreteMaterialTypes = 'fineAggregate' | 'coarseAggregate' | 'cement' | 'teste' | 'doido';
 
 export type ConcreteMaterialData = {
   name: string;
