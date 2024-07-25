@@ -16,7 +16,7 @@ import Loading from '@/components/molecules/loading';
 const AbcpDosageConsult = () => {
   const { setData } = useABCPStore();
   const { handleNext } = new ABCP_SERVICE();
-  const [dosages, setDosages] = useState<AcpDosageData[]>([]);
+  const [dosages, setDosages] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const { user } = useAuth();
@@ -33,8 +33,8 @@ const AbcpDosageConsult = () => {
   };
 
   const rows = dosages.map((row) => ({
-    name: row.generalData.name,
-    progress: `(${row.generalData.step}/5) - ${progressTextMap[row.generalData.step]}`,
+    name: row.generalData?.name,
+    progress: `(${row.generalData?.step}/5) - ${progressTextMap[row.generalData?.step]}`,
     start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
     finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
     id: row._id,
@@ -45,15 +45,23 @@ const AbcpDosageConsult = () => {
       async () => {
         try {
           abcpDosageService.getAbcpDosagesByUserId(user._id).then((response) => {
-            setDosages(response.data);
-          });
-          if (rows.length > 0) {
+            const data = response.data;
+            dosages.push(data);
+
+            const rows = dosages[0]?.map((row) => ({
+              name: row.generalData?.name,
+              progress: `(${row.generalData?.step + 1}/5) - ${progressTextMap[row.generalData?.step + 1]}`,
+              start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
+              finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
+              id: row._id,
+            }));
+
             const arraysMenores = dividirArrayEmArraysMenores(rows, rowsPerPage);
+
             setDosageArrays(arraysMenores);
+
             setLoading(false);
-          } else {
-            setDosageArrays([[]]); // Define um array vazio como padrão se rows ainda não foi definido
-          }
+          });
         } catch (error) {
           setDosages([]);
           setLoading(false);
@@ -61,9 +69,9 @@ const AbcpDosageConsult = () => {
         }
       },
       {
-        pending: t('loading.abcp.pending'),
-        success: t('loading.abcp.success'),
-        error: t('loading.abcp.error'),
+        pending: t('loading.superpave.pending'),
+        success: t('loading.superpave.success'),
+        error: t('loading.superpave.error'),
       }
     );
   }, []);
@@ -99,19 +107,20 @@ const AbcpDosageConsult = () => {
   };
 
   const handleVisualizeDosage = (id: string) => {
-    const dosage = dosages.find((dosage) => {
+    const dosage = dosages[0].find((dosage) => {
       return dosage._id === id;
     });
-    const step = dosage.generalData.step;
+    const step = dosage?.generalData.step;
+    console.log("🚀 ~ handleVisualizeDosage ~ step:", step)
     if (dosage) {
       setData({
         step: 5,
         value: dosage,
       });
     }
-    sessionStorage.setItem('abcp-step', step.toString());
-    handleNext(step, dosage, true);
-    if (step === 4) router.push(`/concrete/dosages/abcp?consult=true`);
+    sessionStorage.setItem('abcp-step', step?.toString());
+    handleNext(step - 1, dosage, true);
+    if (step === 5) router.push(`/concrete/dosages/abcp?consult=true`);
     router.push(`/concrete/dosages/abcp`);
   };
 

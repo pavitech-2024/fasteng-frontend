@@ -43,5 +43,9 @@
   "abcp.dosage-consult.finish": "Finish",
   "abcp.dosage-consult.options": "Options",
   "abcp.dosage-title": "ABCP Dosage",
-  "errors.invalid-reduction": "The rebate must be a value between 40 and 100."
+  "errors.invalid-reduction": "The rebate must be a value between 40 and 100.",
+  "loading.superpave.success": "Materials loaded successfully",
+  "loading.superpave.pending": "Loading...",
+  "loading.superpave.error": "There was an error loading the materials",
+  "abcp.results.coefficients": "Coefficients"
 }

@@ -43,5 +43,9 @@
   "abcp.dosage-consult.finish": "Final",
   "abcp.dosage-consult.options": "Opções",
   "abcp.dosage-title": "Dosagem ABCP",
-  "errors.invalid-reduction": "O abatimento deve ser um valor entre 40 e 100."
+  "errors.invalid-reduction": "O abatimento deve ser um valor entre 40 e 100.",
+  "loading.superpave.success": "Materiais carregados com sucesso",
+  "loading.superpave.pending": "Carregando...",
+  "loading.superpave.error": "Houve um erro ao carregar os materiais",
+  "abcp.results.coefficients": "Coeficientes"
 }
