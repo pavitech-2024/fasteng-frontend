@@ -96,7 +96,6 @@ const AbcpDosageConsult = () => {
   }, []);
 
   const handleDeleteDosage = async (id: string) => {
-    console.log('🚀 ~ handleDeleteDosage ~ id:', id);
     try {
       await abcpDosageService.deleteAbcpDosage(id);
       const updatedDosages = dosages.filter((dosage) => dosage._id !== id);
@@ -111,7 +110,6 @@ const AbcpDosageConsult = () => {
       return dosage._id === id;
     });
     const step = dosage?.generalData.step;
-    console.log('🚀 ~ handleVisualizeDosage ~ step:', step);
     if (dosage) {
       setData({
         step: 5,

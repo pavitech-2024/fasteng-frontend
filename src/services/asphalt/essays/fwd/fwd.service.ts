@@ -92,7 +92,6 @@ class Fwd_SERVICE implements IEssayService {
 
   // verify inputs from Fwd page (step === 1, page 2)
   submitFwdStep2Data = async (fwdStep2: FwdData['fwdStep2']): Promise<void> => {
-    console.log('🚀 ~ file: fwd.service.ts:101 ~ Fwd_SERVICE ~ submitFwdCalcData= ~ fwdStep2:', fwdStep2);
     try {
     } catch (error) {
       throw error;
@@ -101,7 +100,6 @@ class Fwd_SERVICE implements IEssayService {
 
   // verify inputs from Fwd page (step === 1, page 2)
   submitFwdStep3Data = async (fwdStep3: FwdData['fwdStep3']): Promise<void> => {
-    console.log('🚀 ~ file: fwd.service.ts:101 ~ Fwd_SERVICE ~ submitFwdCalcData= ~ fwdStep3:', fwdStep3);
     try {
     } catch (error) {
       throw error;
@@ -119,7 +117,6 @@ class Fwd_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, body);
 
       const { success, error, result } = response.data;
-      console.log('🚀 ~ file: fwd.service.ts:120 ~ Fwd_SERVICE ~ calculateResults= ~ result:', result);
 
       if (success === false) throw error;
 

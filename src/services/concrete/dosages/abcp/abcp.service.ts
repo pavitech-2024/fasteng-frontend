@@ -181,6 +181,22 @@ class ABCP_SERVICE implements IEssayService {
     }
   };
 
+  getStep3Data = async (dosageData: ABCPData, dosageId: string): Promise<any> => {
+    try {
+      const response = await Api.get(`${this.info.backend_path}/${dosageId}`);
+
+      const { data } = response;
+
+      if (data.generalData.step !== 2) {
+        this.store_actions?.setData({ step: 2, value: { ...dosageData.essaySelectionData, ...data } });
+      } else {
+        return data;
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
   /** @essaySelection Methods for essay-selection-data (step === 2, page 3) */
 
   // send the selected essays to backend
