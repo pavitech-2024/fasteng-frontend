@@ -65,5 +65,6 @@
   "asphalt.dosages.superpave.traffic": "Tráfego",
   "asphalt.dosages.superpave.compression-params": "Parâmetros de compressão",
   "asphalt.dosages.superpave.change-initial-binder": "Alterar teor de ligante inicial",
-  "asphalt.dosages.superpave.insert-initial-binder": "Insira o teor de ligante inicial"
+  "asphalt.dosages.superpave.insert-initial-binder": "Insira o teor de ligante inicial",
+  "asphalt.dosages.superpave.confirm": "Confirmar"
 }

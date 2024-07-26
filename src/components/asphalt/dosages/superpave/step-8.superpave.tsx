@@ -348,6 +348,10 @@ const Superpave_Step8 = ({
     },
   ];
 
+  const confirmBtn = () => {
+
+  }
+
   nextDisabled && setNextDisabled(false);
 
   return (
@@ -419,7 +423,7 @@ const Superpave_Step8 = ({
           />
 
           <Typography>Densidade máxima medida</Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
             {maximumDensitiesContainers.map((item, idx) => (
               <>
                 <Box>
@@ -510,6 +514,8 @@ const Superpave_Step8 = ({
               </>
             ))}
           </Box>
+
+          <Button onClick={() => confirmBtn()} variant="outlined" sx={{ width: '100%' }}>{t('asphalt.dosages.superpave.confirm')}</Button>
         </Box>
       )}
     </>
