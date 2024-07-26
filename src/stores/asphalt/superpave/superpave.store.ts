@@ -132,7 +132,7 @@ interface FirstCompressionData {
   }[];
 }
 
-interface FirstCurvePercentageData {
+interface FirstCurvePercentagesData {
   table1: {
     expectedPorcentageGmmInitialN: number;
     expectedPorcentageGmmMaxN: number;
@@ -221,7 +221,7 @@ interface ChosenCurvePercentagesData {
 }
 
 interface SecondCompressionData {
-  tableData_0: {
+  halfLess: {
     id: number;
     averageDiammeter: number;
     averageHeight: number;
@@ -231,7 +231,7 @@ interface SecondCompressionData {
     waterTemperatureCorrection: number;
     diametralTractionResistance: number;
   }[];
-  tableData_1: {
+  halfPlus: {
     id: number;
     averageDiammeter: number;
     averageHeight: number;
@@ -241,7 +241,7 @@ interface SecondCompressionData {
     waterTemperatureCorrection: number;
     diametralTractionResistance: number;
   }[];
-  tableData_2: {
+  normal: {
     id: number;
     averageDiammeter: number;
     averageHeight: number;
@@ -251,7 +251,7 @@ interface SecondCompressionData {
     waterTemperatureCorrection: number;
     diametralTractionResistance: number;
   }[];
-  tableData_3: {
+  onePlus: {
     id: number;
     averageDiammeter: number;
     averageHeight: number;
@@ -278,7 +278,7 @@ export type SuperpaveData = {
   granulometryCompositionData: SuperpaveGranulometryCompositionData;
   initialBinderData: SuperpaveInitialBinderData;
   firstCompressionData: FirstCompressionData;
-  firstCurvePercentageData: FirstCurvePercentageData;
+  firstCurvePercentagesData: FirstCurvePercentagesData;
   chosenCurvePercentagesData: ChosenCurvePercentagesData;
   secondCompressionData: SecondCompressionData;
 };
@@ -296,7 +296,7 @@ const stepVariant = {
   2: 'granulometryCompositionData',
   3: 'initialBinderData',
   4: 'firstCompressionData',
-  5: 'firstCurvePercentageData',
+  5: 'firstCurvePercentagesData',
   6: 'chosenCurvePercentagesData',
   7: 'secondCompressionData',
 };
@@ -464,7 +464,7 @@ const initialState = {
       },
     ],
   },
-  firstCurvePercentageData: {
+  firstCurvePercentagesData: {
     table1: {
       expectedPorcentageGmmInitialN: null,
       expectedPorcentageGmmMaxN: null,
@@ -552,7 +552,7 @@ const initialState = {
     trafficVolume: null,
   },
   secondCompressionData: {
-    tableData_0: [
+    halfLess: [
       {
         id: 0,
         averageDiammeter: null,
@@ -564,7 +564,7 @@ const initialState = {
         diametralTractionResistance: null,
       },
     ],
-    tableData_1: [
+    halfPlus: [
       {
         id: 0,
         averageDiammeter: null,
@@ -576,7 +576,7 @@ const initialState = {
         diametralTractionResistance: null,
       },
     ],
-    tableData_2: [
+    normal: [
       {
         id: 0,
         averageDiammeter: null,
@@ -588,7 +588,7 @@ const initialState = {
         diametralTractionResistance: null,
       },
     ],
-    tableData_3: [
+    onePlus: [
       {
         id: 0,
         averageDiammeter: null,

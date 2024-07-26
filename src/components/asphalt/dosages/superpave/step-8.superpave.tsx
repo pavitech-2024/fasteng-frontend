@@ -19,10 +19,12 @@ const Superpave_Step8 = ({
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const {
-    materialSelectionData,
     secondCompressionData: data,
     setData,
+    granulometryCompositionData,
+    initialBinderData,
     chosenCurvePercentagesData,
+    firstCurvePercentagesData
   } = useSuperpaveStore();
 
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState({
@@ -32,10 +34,10 @@ const Superpave_Step8 = ({
     3: false,
   });
 
-  const [nProjectPercentsRows_0, setNProjectPercentsRows_0] = useState([]);
-  const [nProjectPercentsRows_1, setNProjectPercentsRows_1] = useState([]);
-  const [nProjectPercentsRows_2, setNProjectPercentsRows_2] = useState([]);
-  const [nProjectPercentsRows_3, setNProjectPercentsRows_3] = useState([]);
+  const [nProjectPercentsRows_halfLess, setNProjectPercentsRows_halfLess] = useState([]);
+  const [nProjectPercentsRows_halfPlus, setNProjectPercentsRows_halfPlus] = useState([]);
+  const [nProjectPercentsRows_normal, setNProjectPercentsRows_normal] = useState([]);
+  const [nProjectPercentsRows_onePlus, setNProjectPercentsRows_onePlus] = useState([]);
 
   const list = {
     '15°C - 0.9991': 0.9991,
@@ -68,44 +70,44 @@ const Superpave_Step8 = ({
   const { user } = useAuth();
 
   useEffect(() => {
-    setNProjectPercentsRows_0(data.tableData_0);
-    setNProjectPercentsRows_1(data.tableData_1);
-    setNProjectPercentsRows_2(data.tableData_2);
-    setNProjectPercentsRows_3(data.tableData_3);
+    setNProjectPercentsRows_halfLess(data.halfLess);
+    setNProjectPercentsRows_halfPlus(data.halfPlus);
+    setNProjectPercentsRows_normal(data.normal);
+    setNProjectPercentsRows_onePlus(data.onePlus);
   }, [data]);
 
-  const calculateRiceTest = (idx) => {
-    toast.promise(
-      async () => {
-        try {
-          const riceTest = await superpave.calculateRiceTest(data, idx);
-          console.log("🚀 ~ riceTest:", riceTest)
+  // const calculateRiceTest = (idx) => {
+  //   toast.promise(
+  //     async () => {
+  //       try {
+  //         const riceTest = await superpave.calculateRiceTest(data, idx);
+  //         console.log("🚀 ~ riceTest:", riceTest)
 
-          const value = riceTest;
+  //         const value = riceTest;
 
-          let prevData = [...data.maximumDensities];
+  //         let prevData = [...data.maximumDensities];
 
-          prevData[idx] = {...prevData[idx], insertedGmm: value}
+  //         prevData[idx] = {...prevData[idx], insertedGmm: value}
 
-          setRiceTestModalIsOpen({
-            ...riceTestModalIsOpen,
-            [idx]: false,
-          });
+  //         setRiceTestModalIsOpen({
+  //           ...riceTestModalIsOpen,
+  //           [idx]: false,
+  //         });
 
-          setData({ step: 7, value: { ...data, maximumDensities: prevData } });
-          //setLoading(false);
-        } catch (error) {
-          //setLoading(false);
-          throw error;
-        }
-      },
-      {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
-      }
-    );
-  };
+  //         setData({ step: 7, value: { ...data, maximumDensities: prevData } });
+  //         //setLoading(false);
+  //       } catch (error) {
+  //         //setLoading(false);
+  //         throw error;
+  //       }
+  //     },
+  //     {
+  //       pending: t('loading.materials.pending'),
+  //       success: t('loading.materials.success'),
+  //       error: t('loading.materials.error'),
+  //     }
+  //   );
+  // };
 
   const generateColumns = (idx: string): GridColDef[] => [
     {
@@ -114,16 +116,16 @@ const Superpave_Step8 = ({
       width: 160,
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data[`tableData${idx}`].findIndex((r) => r.id === id);
+        const index = data[`${idx}`].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
             adornment={'cm'}
             type="text"
-            value={data[`tableData${idx}`][index]?.averageDiammeter}
+            value={data[`${idx}`][index]?.averageDiammeter}
             onChange={(e) => {
-              let prevData = [...data[`tableData${idx}`]];
+              let prevData = [...data[`${idx}`]];
               prevData[index].averageDiammeter = parseFloat(e.target.value);
-              setData({ step: 7, value: { ...data, [`tableData${idx}`]: prevData } });
+              setData({ step: 7, value: { ...data, [`${idx}`]: prevData } });
             }}
           />
         );
@@ -135,16 +137,37 @@ const Superpave_Step8 = ({
       width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data[`tableData${idx}`].findIndex((r) => r.id === id);
+        const index = data[`${idx}`].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
             adornment={'cm'}
             type="number"
-            value={data[`tableData${idx}`][index]?.averageHeight}
+            value={data[`${idx}`][index]?.averageHeight}
             onChange={(e) => {
-              let prevData = [...data[`tableData${idx}`]];
+              let prevData = [...data[`${idx}`]];
               prevData[index].averageHeight = parseFloat(e.target.value);
-              setData({ step: 7, value: { ...data, [`tableData${idx}`]: prevData } });
+              setData({ step: 7, value: { ...data, [`${idx}`]: prevData } });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'dryMass',
+      headerName: 'Massa seca (g)',
+      width: 150,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data[`${idx}`].findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'g'}
+            type="number"
+            value={data[`${idx}`][index]?.dryMass}
+            onChange={(e) => {
+              let prevData = [...data[`${idx}`]];
+              prevData[index].dryMass = parseFloat(e.target.value);
+              setData({ step: 7, value: { ...data, [`${idx}`]: prevData } });
             }}
           />
         );
@@ -156,16 +179,16 @@ const Superpave_Step8 = ({
       width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data[`tableData${idx}`].findIndex((r) => r.id === id);
+        const index = data[`${idx}`].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
             adornment={'cm'}
             type="number"
-            value={data[`tableData${idx}`][index]?.submergedMass}
+            value={data[`${idx}`][index]?.submergedMass}
             onChange={(e) => {
-              let prevData = [...data[`tableData${idx}`]];
+              let prevData = [...data[`${idx}`]];
               prevData[index].submergedMass = parseFloat(e.target.value);
-              setData({ step: 7, value: { ...data, [`tableData${idx}`]: prevData } });
+              setData({ step: 7, value: { ...data, [`${idx}`]: prevData } });
             }}
           />
         );
@@ -177,16 +200,16 @@ const Superpave_Step8 = ({
       width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data[`tableData${idx}`].findIndex((r) => r.id === id);
+        const index = data[`${idx}`].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
             adornment={'cm'}
             type="number"
-            value={data[`tableData${idx}`][index]?.drySurfaceSaturatedMass}
+            value={data[`${idx}`][index]?.drySurfaceSaturatedMass}
             onChange={(e) => {
-              let prevData = [...data[`tableData${idx}`]];
+              let prevData = [...data[`${idx}`]];
               prevData[index].drySurfaceSaturatedMass = parseFloat(e.target.value);
-              setData({ step: 7, value: { ...data, [`tableData${idx}`]: prevData } });
+              setData({ step: 7, value: { ...data, [`${idx}`]: prevData } });
             }}
           />
         );
@@ -198,16 +221,16 @@ const Superpave_Step8 = ({
       width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data[`tableData${idx}`].findIndex((r) => r.id === id);
+        const index = data[`${idx}`].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
             adornment={'cm'}
             type="number"
-            value={data[`tableData${idx}`][index]?.waterTemperatureCorrection}
+            value={data[`${idx}`][index]?.waterTemperatureCorrection}
             onChange={(e) => {
-              let prevData = [...data[`tableData${idx}`]];
+              let prevData = [...data[`${idx}`]];
               prevData[index].waterTemperatureCorrection = parseFloat(e.target.value);
-              setData({ step: 7, value: { ...data, [`tableData${idx}`]: prevData } });
+              setData({ step: 7, value: { ...data, [`${idx}`]: prevData } });
             }}
           />
         );
@@ -219,16 +242,16 @@ const Superpave_Step8 = ({
       width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data[`tableData${idx}`].findIndex((r) => r.id === id);
+        const index = data[`${idx}`].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
             adornment={'cm'}
             type="number"
-            value={data[`tableData${idx}`][index]?.diametralTractionResistance}
+            value={data[`${idx}`][index]?.diametralTractionResistance}
             onChange={(e) => {
-              let prevData = [...data[`tableData${idx}`]];
+              let prevData = [...data[`${idx}`]];
               prevData[index].diametralTractionResistance = parseFloat(e.target.value);
-              setData({ step: 7, value: { ...data, [`tableData${idx}`]: prevData } });
+              setData({ step: 7, value: { ...data, [`${idx}`]: prevData } });
             }}
           />
         );
@@ -246,7 +269,7 @@ const Superpave_Step8 = ({
         { field: 'submergedMass' },
         { field: 'drySurfaceSaturatedMass' },
         { field: 'waterTemperatureCorrection' },
-        { field: 'diametralTractionResistance' }
+        { field: 'diametralTractionResistance' },
       ],
       headerAlign: 'center',
       headerName: `N Projeto`,
@@ -255,10 +278,10 @@ const Superpave_Step8 = ({
 
   const handleErase = (idx: string) => {
     try {
-      if (data[`tableData${idx}`].length > 1) {
-        const newRows = [...data[`tableData${idx}`]];
+      if (data[`${idx}`].length > 1) {
+        const newRows = [...data[`${idx}`]];
         newRows.pop();
-        setData({ step: 7, value: { ...data, [`tableData${idx}`]: newRows } });
+        setData({ step: 7, value: { ...data, [`${idx}`]: newRows } });
       } else throw t('superpave.error.minReads');
     } catch (error) {
       toast.error(error);
@@ -266,9 +289,9 @@ const Superpave_Step8 = ({
   };
 
   const handleAdd = (idx: string) => {
-    const newRows = [...data[`tableData${idx}`]];
+    const newRows = [...data[`${idx}`]];
     newRows.push({
-      id: data[`tableData${idx}`].length,
+      id: data[`${idx}`].length,
       averageDiammeter: null,
       averageHeight: null,
       dryMass: null,
@@ -277,7 +300,7 @@ const Superpave_Step8 = ({
       waterTemperatureCorrection: null,
       diametralTractionResistance: null,
     });
-    setData({ step: 7, value: { ...data, [`tableData${idx}`]: newRows } });
+    setData({ step: 7, value: { ...data, [`${idx}`]: newRows } });
   };
 
   const ExpansionToolbar = (idx: string) => {
@@ -349,8 +372,39 @@ const Superpave_Step8 = ({
   ];
 
   const confirmBtn = () => {
+    toast.promise(
+      async () => {
+        try {
+          const response = await superpave.confirmSecondCompressionPercentages(
+            data,
+            granulometryCompositionData,
+            initialBinderData,
+            firstCurvePercentagesData
+          );
+          console.log('🚀 ~ response:', response);
 
-  }
+          const value = response;
+          console.log('🚀 ~ value:', value);
+
+          let prevData = { ...data };
+
+          prevData = { ...prevData, ...value };
+          console.log('🚀 ~ prevData:', prevData);
+
+          setData({ step: 7, value: prevData });
+          //setLoading(false);
+        } catch (error) {
+          //setLoading(false);
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      }
+    );
+  };
 
   nextDisabled && setNextDisabled(false);
 
@@ -375,9 +429,9 @@ const Superpave_Step8 = ({
             disableColumnFilter
             experimentalFeatures={{ columnGrouping: true }}
             columnGroupingModel={nProjectPercentsGroupings}
-            columns={generateColumns('_0')}
-            rows={nProjectPercentsRows_0}
-            slots={{ footer: () => ExpansionToolbar('_0') }}
+            columns={generateColumns('halfLess')}
+            rows={nProjectPercentsRows_halfLess}
+            slots={{ footer: () => ExpansionToolbar('halfLess') }}
           />
 
           <Typography>
@@ -389,9 +443,9 @@ const Superpave_Step8 = ({
             disableColumnFilter
             experimentalFeatures={{ columnGrouping: true }}
             columnGroupingModel={nProjectPercentsGroupings}
-            columns={generateColumns('_1')}
-            rows={nProjectPercentsRows_1}
-            slots={{ footer: () => ExpansionToolbar('_1') }}
+            columns={generateColumns('halfPlus')}
+            rows={nProjectPercentsRows_halfPlus}
+            slots={{ footer: () => ExpansionToolbar('halfPlus') }}
           />
 
           <Typography>
@@ -403,9 +457,9 @@ const Superpave_Step8 = ({
             disableColumnFilter
             experimentalFeatures={{ columnGrouping: true }}
             columnGroupingModel={nProjectPercentsGroupings}
-            columns={generateColumns('_2')}
-            rows={nProjectPercentsRows_2}
-            slots={{ footer: () => ExpansionToolbar('_2') }}
+            columns={generateColumns('normal')}
+            rows={nProjectPercentsRows_normal}
+            slots={{ footer: () => ExpansionToolbar('normal') }}
           />
 
           <Typography>
@@ -417,9 +471,9 @@ const Superpave_Step8 = ({
             disableColumnFilter
             experimentalFeatures={{ columnGrouping: true }}
             columnGroupingModel={nProjectPercentsGroupings}
-            columns={generateColumns('_3')}
-            rows={nProjectPercentsRows_3}
-            slots={{ footer: () => ExpansionToolbar('_3') }}
+            columns={generateColumns('onePlus')}
+            rows={nProjectPercentsRows_onePlus}
+            slots={{ footer: () => ExpansionToolbar('onePlus') }}
           />
 
           <Typography>Densidade máxima medida</Typography>
@@ -445,9 +499,7 @@ const Superpave_Step8 = ({
                     onCancel={() => setRiceTestModalIsOpen({ ...riceTestModalIsOpen, [idx]: false })}
                     open={riceTestModalIsOpen[idx]}
                     size={'large'}
-                    onSubmit={() => {
-                      calculateRiceTest(idx);
-                    }}
+                    onSubmit={() => setRiceTestModalIsOpen({ ...riceTestModalIsOpen, [idx]: false })}
                   >
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                       <InputEndAdornment
@@ -493,7 +545,6 @@ const Superpave_Step8 = ({
                         label={'Selecione o fator de correção para a temperatura da água'}
                         options={waterTemperatureList}
                         callback={(selectedValue) => {
-
                           let prevData = [...data.maximumDensities];
 
                           const newRiceTest = {
@@ -501,7 +552,7 @@ const Superpave_Step8 = ({
                             waterTemperatureCorrection: Number(selectedValue),
                           };
 
-                          prevData[idx] = {...prevData[idx], riceTest: newRiceTest}
+                          prevData[idx] = { ...prevData[idx], riceTest: newRiceTest };
 
                           setData({ step: 7, value: { ...data, maximumDensities: prevData } });
                         }}
@@ -515,7 +566,9 @@ const Superpave_Step8 = ({
             ))}
           </Box>
 
-          <Button onClick={() => confirmBtn()} variant="outlined" sx={{ width: '100%' }}>{t('asphalt.dosages.superpave.confirm')}</Button>
+          <Button onClick={() => confirmBtn()} variant="outlined" sx={{ width: '100%' }}>
+            {t('asphalt.dosages.superpave.confirm')}
+          </Button>
         </Box>
       )}
     </>
