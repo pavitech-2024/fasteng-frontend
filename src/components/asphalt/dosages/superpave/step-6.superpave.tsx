@@ -23,7 +23,7 @@ const Superpave_Step6 = ({
     granulometryCompositionData,
     initialBinderData,
     generalData,
-    firstCurvePercentageData: data,
+    firstCurvePercentagesData: data,
     firstCompressionData,
     setData,
   } = useSuperpaveStore();

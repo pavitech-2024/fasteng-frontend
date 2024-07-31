@@ -353,6 +353,20 @@ interface SecondCompressionPercentagesData {
   };
 }
 
+interface ConfirmationCompressionData {
+  table: {
+    id: number;
+    averageDiammeter: number;
+    averageHeight: number;
+    dryMass: number;
+    submergedMass: number;
+    drySurfaceSaturatedMass: number;
+    waterTemperatureCorrection: number;
+    diametralTractionResistance: number
+  }[];
+  gmm: number
+}
+
 export type SuperpaveData = {
   generalData: SuperpaveGeneralData;
   materialSelectionData: SuperpaveMaterialSelectionData;
@@ -363,6 +377,7 @@ export type SuperpaveData = {
   chosenCurvePercentagesData: ChosenCurvePercentagesData;
   secondCompressionData: SecondCompressionData;
   secondCompressionPercentagesData: SecondCompressionPercentagesData;
+  confirmationCompressionData: ConfirmationCompressionData;
 };
 
 export type SuperpaveActions = {
@@ -382,6 +397,7 @@ const stepVariant = {
   6: 'chosenCurvePercentagesData',
   7: 'secondCompressionData',
   8: 'secondCompressionPercentagesData',
+  9: 'confirmationCompressionData',
 };
 
 const initialState = {
@@ -805,7 +821,22 @@ const initialState = {
       graphPA: [],
       graphRT: [],
     },
-  }
+  },
+  confirmationCompressionData: {
+    table: [
+      {
+        id: 1,
+        averageDiammeter: null,
+        averageHeight: null,
+        dryMass: null,
+        submergedMass: null,
+        drySurfaceSaturatedMass: null,
+        waterTemperatureCorrection: null,
+        diametralTractionResistance: null
+      },
+    ],
+    gmm: null
+  },
 };
 
 const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(

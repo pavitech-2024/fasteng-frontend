@@ -1,10 +1,14 @@
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
+import { DataGrid, GridColumnGroupingModel } from '@mui/x-data-grid';
+import { t } from 'i18next';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const Superpave_Step10 = ({
   nextDisabled,
@@ -12,9 +16,212 @@ const Superpave_Step10 = ({
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { materialSelectionData } = useSuperpaveStore();
+  const { materialSelectionData, confirmationCompressionData: data, setData } = useSuperpaveStore();
 
   const { user } = useAuth();
+
+  const confirmationCompressionCols = [
+    {
+      field: 'averageDiammeter',
+      headerName: 'Diâmetro médio (cm)',
+      width: 160,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data.table.findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="text"
+            value={data.table[index]?.averageDiammeter}
+            onChange={(e) => {
+              let prevData = [...data.table];
+              prevData[index].averageDiammeter = parseFloat(e.target.value);
+              setData({ step: 9, value: { ...data, table: prevData } });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'averageHeight',
+      headerName: 'Altura média (cm)',
+      width: 150,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data.table.findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="number"
+            value={data.table[index]?.averageHeight}
+            onChange={(e) => {
+              let prevData = [...data.table];
+              prevData[index].averageHeight = parseFloat(e.target.value);
+              setData({ step: 7, value: { ...data, table: prevData } });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'dryMass',
+      headerName: 'Massa seca (g)',
+      width: 150,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data.table.findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'g'}
+            type="number"
+            value={data.table[index]?.dryMass}
+            onChange={(e) => {
+              let prevData = [...data.table];
+              prevData[index].dryMass = parseFloat(e.target.value);
+              setData({ step: 7, value: { ...data, table: prevData } });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'submergedMass',
+      headerName: 'Massa submersa (g)',
+      width: 150,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data.table.findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="number"
+            value={data.table[index]?.submergedMass}
+            onChange={(e) => {
+              let prevData = [...data.table];
+              prevData[index].submergedMass = parseFloat(e.target.value);
+              setData({ step: 7, value: { ...data, table: prevData } });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'drySurfaceSaturatedMass',
+      headerName: 'Massa saturada com superfície seca (g)',
+      width: 150,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data.table.findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="number"
+            value={data.table[index]?.drySurfaceSaturatedMass}
+            onChange={(e) => {
+              let prevData = [...data.table];
+              prevData[index].drySurfaceSaturatedMass = parseFloat(e.target.value);
+              setData({ step: 7, value: { ...data, table: prevData } });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'waterTemperatureCorrection',
+      headerName: 'Fator de correção da temperatura da água (N)',
+      width: 150,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data.table.findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="number"
+            value={data.table[index]?.waterTemperatureCorrection}
+            onChange={(e) => {
+              let prevData = [...data.table];
+              prevData[index].waterTemperatureCorrection = parseFloat(e.target.value);
+              setData({ step: 7, value: { ...data, table: prevData } });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'diametralTractionResistance',
+      headerName: 'Resistência à tração por compressão diametral (MPa)',
+      width: 150,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data.table.findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="number"
+            value={data.table[index]?.diametralTractionResistance}
+            onChange={(e) => {
+              let prevData = [...data.table];
+              prevData[index].diametralTractionResistance = parseFloat(e.target.value);
+              setData({ step: 7, value: { ...data, table: prevData } });
+            }}
+          />
+        );
+      },
+    },
+  ];
+
+  const confirmationCompressionRows = [
+    {
+      id: data.table[0].id,
+      averageDiammeter: data.table[0].averageDiammeter,
+      averageHeight: data.table[0].averageHeight,
+      dryMass: data.table[0].dryMass,
+      submergedMass: data.table[0].submergedMass,
+      drySurfaceSaturatedMass: data.table[0].drySurfaceSaturatedMass,
+      waterTemperatureCorrection: data.table[0].waterTemperatureCorrection,
+      diametralTractionResistance: data.table[0].diametralTractionResistance
+    }
+  ]
+
+  const handleErase = () => {
+    try {
+      if (data.table.length > 1) {
+        const newRows = [...data.table];
+        newRows.pop();
+        setData({ step: 7, value: { ...data, table: newRows } });
+      } else throw t('superpave.error.minReads');
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
+  const handleAdd = () => {
+    const newRows = [...data.table];
+    newRows.push({
+      id: data.table.length,
+      averageDiammeter: null,
+      averageHeight: null,
+      dryMass: null,
+      submergedMass: null,
+      drySurfaceSaturatedMass: null,
+      waterTemperatureCorrection: null,
+      diametralTractionResistance: null,
+    });
+    setData({ step: 7, value: { ...data, table: newRows } });
+  };
+
+  const ExpansionToolbar = () => {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
+        <Button sx={{ color: 'secondaryTons.red' }} onClick={() => handleErase()}>
+          {t('erase')}
+        </Button>
+        <Button sx={{ color: 'secondaryTons.green' }} onClick={() => handleAdd()}>
+          {t('add')}
+        </Button>
+      </Box>
+    );
+  };
 
   nextDisabled && setNextDisabled(false);
 
@@ -32,7 +239,17 @@ const Superpave_Step10 = ({
         >
           <Typography>Gmm do teor de ligante asfaltico ótimo:</Typography>
 
-          
+          <Button variant='outlined'>Calcular densidade máxima da mistura</Button>
+
+          <DataGrid
+            hideFooter
+            disableColumnMenu
+            disableColumnFilter
+            experimentalFeatures={{ columnGrouping: true }}
+            columns={confirmationCompressionCols}
+            rows={confirmationCompressionRows}
+            slots={{ footer: ExpansionToolbar }}
+          />
         </Box>
       )}
     </>

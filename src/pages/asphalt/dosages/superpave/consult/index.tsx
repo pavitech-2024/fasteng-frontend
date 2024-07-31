@@ -31,7 +31,9 @@ const SuperpaveDosageConsult = () => {
     5: t('asphalt.dosages.superpave.first_compression'),
     6: t("asphalt.dosages.superpave.first_compression_parameters"),
     7: t("asphalt.dosages.superpave.chosen_curve_percentages"),
-    8: t("asphalt.dosages.superpave.second_compression")
+    8: t("asphalt.dosages.superpave.second_compression"),
+    9: t("asphalt.dosages.superpave.second_compression_params"),
+    10: t("asphalt.dosages.superpave.confirmation_compression"),
   };
 
   const rows = dosages.map((row) => ({
