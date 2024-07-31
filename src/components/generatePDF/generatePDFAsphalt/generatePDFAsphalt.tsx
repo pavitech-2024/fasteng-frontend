@@ -7,6 +7,11 @@ import html2canvas from 'html2canvas';
 import { t } from 'i18next';
 import { Button } from '@mui/material';
 
+interface SummaryItem {
+  title: string;
+  page: number;
+}
+
 export interface IGenratePDF {
   name: string;
   type: string;
@@ -546,8 +551,8 @@ const GeneratePDF = ({
     return `${day}/${month}/${year}`;
   };
 
-  const addSummary = async (doc: any, image: any) => {
-    let currentY = 55;
+  const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: SummaryItem[]) => {
+    let currentY = 30;
 
     doc.addImage(image, 'png', 5, 5, 50, 8);
     doc.addImage(image, 'png', 155, 5, 50, 8);
@@ -555,12 +560,24 @@ const GeneratePDF = ({
     addCenteredText(doc, `${t('asphalt.essays.project.summary')}`, currentY, 16);
     currentY += 20;
 
-    for (const section of sections) {
-      if (section.condition) {
-        addTextToLeftMargin(doc, section.title, 10, currentY, 14);
-        currentY += 10;
-      }
-    }
+    summaryItems.forEach((item) => {
+      const title = item.title;
+      const pageText = `${t('asphalt.essays.project.page')} ${item.page}`;
+      const titleWidth = doc.getTextWidth(title);
+      const pageWidth = doc.getTextWidth(pageText);
+      const totalWidth = 190;
+      const lineWidth = totalWidth - (titleWidth + pageWidth + 5);
+
+      doc.text(title, 10, currentY);
+
+      const lineLength = Math.floor(lineWidth / doc.getTextWidth('_'));
+      const line = '_'.repeat(lineLength);
+
+      doc.text(line, 10 + titleWidth + 2, currentY);
+      doc.text(pageText, 10 + titleWidth + 2 + doc.getTextWidth(line) + 3, currentY);
+
+      currentY += 10;
+    });
 
     const pageHeight = doc.internal.pageSize.height;
     const lineYPosition = pageHeight - 10;
@@ -603,7 +620,6 @@ const GeneratePDF = ({
     addCapa(doc, image, name, type);
     doc.addPage();
 
-    addSummary(doc, image);
     doc.addPage();
 
     doc.addImage(image, 'png', 5, 5, 50, 8);
@@ -614,6 +630,7 @@ const GeneratePDF = ({
     addTextToLeftMargin(doc, `${t('asphalt.materials.type')}: ${type}`, 10, 45);
 
     let currentY = 55;
+    const summaryItems: SummaryItem[] = [];
 
     for (const section of sections) {
       if (section.condition) {
@@ -621,10 +638,15 @@ const GeneratePDF = ({
         addTextToLeftMargin(doc, section.title, 10, currentY, 14);
         currentY += 5;
         currentY = await section.content(doc, currentY);
+        const pageIndex = doc.internal.pages.length - 1;
+        summaryItems.push({ title: section.title, page: pageIndex });
       }
     }
 
     calculatePageNumber(doc);
+
+    doc.setPage(2);
+    addSummary(doc, image, summaryItems);
 
     doc.save('material.pdf');
   };
