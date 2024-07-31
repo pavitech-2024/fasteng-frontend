@@ -90,9 +90,10 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitChosenCurvePercentages(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 7:
-          await this.submitSecondCompressionPercentages(data as SuperpaveData, this.userId, null,isConsult);
+          await this.submitSecondCompressionData(data as SuperpaveData, this.userId, null,isConsult);
           break;
         case 8:
+          await this.submitSecondCompressionParams(data as SuperpaveData, this.userId, null, isConsult);
           break;
         default:
           throw t('errors.invalid-step');
@@ -621,7 +622,7 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  confirmSecondCompressionPercentages = async (
+  confirmSecondCompression = async (
     step7Data: SuperpaveData['secondCompressionData'],
     step3Data: SuperpaveData['granulometryCompositionData'],
     step4Data: SuperpaveData['initialBinderData'],
@@ -672,7 +673,7 @@ class Superpave_SERVICE implements IEssayService {
     const percentsOfDosageValues = Object.values(selectedPercentsOfDosage).map((value) => Number(value));
 
     try {
-      const response = await Api.post(`${this.info.backend_path}/confirm-second-compression-percentages`, {
+      const response = await Api.post(`${this.info.backend_path}/confirm-second-compression-data`, {
         composition,
         binderSpecificGravity: binderSpecificMass,
         percentsOfDosage: percentsOfDosageValues,
@@ -693,7 +694,7 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  submitSecondCompressionPercentages = async (
+  submitSecondCompressionData = async (
     data: SuperpaveData,
     userId: string,
     user?: string,
@@ -703,45 +704,73 @@ class Superpave_SERVICE implements IEssayService {
       try {
         const { name } = data.generalData;
         const userData = userId ? userId : user;
-        // const {
-        //   halfLess,
-        //   halfPlus,
-        //   onePlus,
-        //   normal,
-        //   composition,
-        //   Gse,
-        //   combinedGsb,
-        //   expectedPli,
-        //   maximumDensities,
-        //   percentsOfDosage,
-        //   ponderatedPercentsOfDosage,
-        // } = data.secondCompressionData as SuperpaveData['secondCompressionData'];
 
-        const secondCompressionPercentagesData = {
+        const secondCompressionData = {
           ...data.secondCompressionData,
           name,
-          // halfLess,
-          // halfPlus,
-          // onePlus,
-          // normal,
-          // composition,
-          // Gse,
-          // combinedGsb,
-          // expectedPli,
-          // maximumDensities,
-          // percentsOfDosage,
-          // ponderatedPercentsOfDosage,
           isConsult: null,
         };
 
-        if (isConsult) secondCompressionPercentagesData.isConsult = isConsult;
+        if (isConsult) secondCompressionData.isConsult = isConsult;
 
-        const response = await Api.post(`${this.info.backend_path}/save-second-compression-percentages-step/${userData}`, {
-          secondCompressionPercentagesData: {
+        const response = await Api.post(`${this.info.backend_path}/save-second-compression-data-step/${userData}`, {
+          secondCompressionData: {
             ...data.secondCompressionData,
-            // porcentageAggregate,
-            // listOfPlis,
-            // trafficVolume,
+            name,
+          },
+        });
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    }
+  };
+
+    getSecondCompressionPercentages = async (
+    step8Data: SuperpaveData['secondCompressionData']
+  ): Promise<any> => {
+    try {
+      const { expectedPli, composition } = step8Data;
+
+      const response = await Api.post(`${this.info.backend_path}/get-step-9-data`, {
+        expectedPli,
+        composition
+      });
+
+      const { data, success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+      return { data, success, error };
+    } catch (error) {}
+  };
+
+  submitSecondCompressionParams = async (
+    data: SuperpaveData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
+      try {
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
+
+        const secondCompressionParams = {
+          ...data.secondCompressionPercentagesData,
+          name,
+          isConsult: null,
+        };
+
+        if (isConsult) secondCompressionParams.isConsult = isConsult;
+
+        const response = await Api.post(`${this.info.backend_path}/save-second-compression-params-step/${userData}`, {
+          secondCompressionParams: {
+            ...data.secondCompressionPercentagesData,
             name,
           },
         });

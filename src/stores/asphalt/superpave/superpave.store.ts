@@ -340,6 +340,19 @@ interface SecondCompressionData {
   ponderatedPercentsOfDosage: number[];
 }
 
+interface SecondCompressionPercentagesData {
+  optimumContent: number;
+  graphs: {
+    graphVv: any[];
+    graphVam: any[];
+    graphGmb: any[];
+    graphGmm: any[];
+    graphRBV: any[];
+    graphPA: any[];
+    graphRT: any[];
+  };
+}
+
 export type SuperpaveData = {
   generalData: SuperpaveGeneralData;
   materialSelectionData: SuperpaveMaterialSelectionData;
@@ -349,6 +362,7 @@ export type SuperpaveData = {
   firstCurvePercentagesData: FirstCurvePercentagesData;
   chosenCurvePercentagesData: ChosenCurvePercentagesData;
   secondCompressionData: SecondCompressionData;
+  secondCompressionPercentagesData: SecondCompressionPercentagesData;
 };
 
 export type SuperpaveActions = {
@@ -367,6 +381,7 @@ const stepVariant = {
   5: 'firstCurvePercentagesData',
   6: 'chosenCurvePercentagesData',
   7: 'secondCompressionData',
+  8: 'secondCompressionPercentagesData',
 };
 
 const initialState = {
@@ -779,6 +794,18 @@ const initialState = {
     Gse: null,
     ponderatedPercentsOfDosage: null,
   },
+  secondCompressionPercentagesData: {
+    optimumContent: null,
+    graphs: {
+      graphVv: [],
+      graphVam: [],
+      graphGmb: [],
+      graphGmm: [],
+      graphRBV: [],
+      graphPA: [],
+      graphRT: [],
+    },
+  }
 };
 
 const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(

@@ -375,7 +375,7 @@ const Superpave_Step8 = ({
     toast.promise(
       async () => {
         try {
-          const response = await superpave.confirmSecondCompressionPercentages(
+          const response = await superpave.confirmSecondCompression(
             data,
             granulometryCompositionData,
             initialBinderData,
