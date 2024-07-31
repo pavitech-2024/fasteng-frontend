@@ -54,6 +54,7 @@
   "pm.granularLayer.sami": "SAMI",
   "pm.granularLayer.bonding.paint": "Pintura de ligação",
   "pm.granularLayer.priming": "Imprimação",
+  "pm.granularLayer.section.type": "Tipo de seção",
   "pm.granularLayer.material": "Material",
   "pm.granularLayer.thickness": "Espessura",
   "pm.paviment.data": "Dados do pavimento no qual o material está inserido",

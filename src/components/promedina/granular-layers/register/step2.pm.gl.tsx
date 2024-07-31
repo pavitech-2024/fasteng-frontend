@@ -210,12 +210,12 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
           <InputEndAdornment
             fullWidth
             label={t('pm.granularLayer.thickness')}
-            type="number"
+            type="string"
             inputProps={{ min: 0 }}
             value={row.thickness}
             onChange={(e) => {
               const newRows = [...rows];
-              newRows[index].thickness = Number(e.target.value);
+              newRows[index].thickness = e.target.value;
               setData({ step: 1, key: 'thickness', value: newRows });
             }}
             adornment={'mm'}

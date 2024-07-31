@@ -56,7 +56,7 @@ const SpecificSample_StabilizedLayers = () => {
     },
     {
       title: t('pm.binderAsphaltConcrete.extension'),
-      value: samples?.step2Data.extension,
+      value: `${samples?.step2Data.extension} m`,
     },
     {
       title: t('pm.binderAsphaltConcrete.identification'),

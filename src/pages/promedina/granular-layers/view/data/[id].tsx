@@ -71,7 +71,9 @@ const SpecificSample_GranularLayers = () => {
   const pavimentData = pavimentDataFieldKeys.map((key) => ({
     title: t(`pm.granularLayer.${key}`),
     value:
-      key === 'averageAltitude' || key === 'trackWidth' ? `${samples?.step2Data[key]} m` : `${samples?.step2Data[key]}`,
+      key === 'averageAltitude' || key === 'trackWidth' || key === 'extension'
+        ? `${samples?.step2Data[key]} m`
+        : `${samples?.step2Data[key]}`,
   }));
 
   const preparationFields = [
