@@ -270,6 +270,74 @@ interface SecondCompressionData {
       waterTemperatureCorrection: number | string;
     };
   }[];
+  composition: {
+    halfLess: {
+      projectN: {
+        samplesData: any[];
+        gmb: number;
+        percentWaterAbs: number;
+        percentageGmm: number;
+      };
+      specifiesMass: number;
+      gmm: number;
+      Vv: number;
+      Vam: number;
+      expectedPli: number;
+      RBV: number;
+      ratioDustAsphalt: number;
+      indirectTensileStrength: number;
+    };
+    normal: {
+      projectN: {
+        samplesData: any[];
+        gmb: number;
+        percentWaterAbs: number;
+        percentageGmm: number;
+      };
+      specifiesMass: number;
+      gmm: number;
+      Vv: number;
+      Vam: number;
+      RBV: number;
+      ratioDustAsphalt: number;
+      indirectTensileStrength: number;
+    };
+    halfPlus: {
+      projectN: {
+        samplesData: any[];
+        gmb: number;
+        percentWaterAbs: number;
+        percentageGmm: number;
+      };
+      specifiesMass: number;
+      gmm: number;
+      Vv: number;
+      Vam: number;
+      RBV: number;
+      ratioDustAsphalt: number;
+      indirectTensileStrength: number;
+    };
+    onePlus: {
+      projectN: {
+        samplesData: any[];
+        gmb: number;
+        percentWaterAbs: number;
+        percentageGmm: number;
+      };
+      specifiesMass: number;
+      gmm: number;
+      Vv: number;
+      Vam: number;
+      RBV: number;
+      ratioDustAsphalt: number;
+      indirectTensileStrength: number;
+    };
+  };
+  expectedPli: number;
+  combinedGsb: number;
+  percentsOfDosage: number[];
+  Gse: number;
+  ponderatedPercentsOfDosage: number[];
 }
 
 export type SuperpaveData = {
@@ -642,6 +710,74 @@ const initialState = {
         },
       },
     ],
+    composition: {
+      halfLess: {
+        projectN: {
+          samplesData: null,
+          gmb: null,
+          percentWaterAbs: null,
+          percentageGmm: null,
+        },
+        specifiesMass: null,
+        gmm: null,
+        Vv: null,
+        Vam: null,
+        expectedPli: null,
+        RBV: null,
+        ratioDustAsphalt: null,
+        indirectTensileStrength: null,
+      },
+      normal: {
+        projectN: {
+          samplesData: null,
+          gmb: null,
+          percentWaterAbs: null,
+          percentageGmm: null,
+        },
+        specifiesMass: null,
+        gmm: null,
+        Vv: null,
+        Vam: null,
+        RBV: null,
+        ratioDustAsphalt: null,
+        indirectTensileStrength: null,
+      },
+      halfPlus: {
+        projectN: {
+          samplesData: null,
+          gmb: null,
+          percentWaterAbs: null,
+          percentageGmm: null,
+        },
+        specifiesMass: null,
+        gmm: null,
+        Vv: null,
+        Vam: null,
+        RBV: null,
+        ratioDustAsphalt: null,
+        indirectTensileStrength: null,
+      },
+      onePlus: {
+        projectN: {
+          samplesData: null,
+          gmb: null,
+          percentWaterAbs: null,
+          percentageGmm: null,
+        },
+        specifiesMass: null,
+        gmm: null,
+        Vv: null,
+        Vam: null,
+        RBV: null,
+        ratioDustAsphalt: null,
+        indirectTensileStrength: null,
+      },
+    },
+    expectedPli: null,
+    combinedGsb: null,
+    percentsOfDosage: null,
+    Gse: null,
+    ponderatedPercentsOfDosage: null,
   },
 };
 

@@ -90,6 +90,7 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitChosenCurvePercentages(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 7:
+          await this.submitSecondCompressionPercentages(data as SuperpaveData, this.userId, null,isConsult);
           break;
         case 8:
           break;
@@ -639,6 +640,8 @@ class Superpave_SERVICE implements IEssayService {
     };
 
     let combinedGsb;
+    let selectedPercentsOfDosage;
+    let selectedGse;
 
     const hasNullValues = maximumDensities.some(
       (e) => e.insertedGmm === null && Object.values(e.riceTest).some((i) => i === null)
@@ -650,19 +653,34 @@ class Superpave_SERVICE implements IEssayService {
     const propertyName = `table3${formattedCurveName}`;
     const expectedPli = table3[propertyName][`expectedPli${formattedCurveName}`];
 
-    if (selectedCurve === 'lower') combinedGsb = granulometryComposition[0].combinedGsb;
-    if (selectedCurve === 'average') combinedGsb = granulometryComposition[1].combinedGsb;
-    if (selectedCurve === 'higher') combinedGsb = granulometryComposition[2].combinedGsb;
+    if (selectedCurve === 'lower') {
+      combinedGsb = granulometryComposition[0].combinedGsb;
+      selectedGse = granulometryComposition[0].gse;
+      selectedPercentsOfDosage = percentageInputs[0];
+    }
+    if (selectedCurve === 'average') {
+      combinedGsb = granulometryComposition[1].combinedGsb;
+      selectedGse = granulometryComposition[1].gse;
+      selectedPercentsOfDosage = percentageInputs[1];
+    }
+    if (selectedCurve === 'higher') {
+      combinedGsb = granulometryComposition[2].combinedGsb;
+      selectedGse = granulometryComposition[2].gse;
+      selectedPercentsOfDosage = percentageInputs[2];
+    }
+
+    const percentsOfDosageValues = Object.values(selectedPercentsOfDosage).map((value) => Number(value));
 
     try {
       const response = await Api.post(`${this.info.backend_path}/confirm-second-compression-percentages`, {
         composition,
         binderSpecificGravity: binderSpecificMass,
-        percentsOfDosage: percentageInputs,
+        percentsOfDosage: percentsOfDosageValues,
         maximumDensities,
         expectedPli,
         combinedGsb,
-        porcentagesPassantsN200
+        porcentagesPassantsN200,
+        Gse: selectedGse,
       });
 
       const { data, success, error } = response.data;
@@ -672,6 +690,69 @@ class Superpave_SERVICE implements IEssayService {
       return data;
     } catch (error) {
       throw error;
+    }
+  };
+
+  submitSecondCompressionPercentages = async (
+    data: SuperpaveData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
+      try {
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
+        // const {
+        //   halfLess,
+        //   halfPlus,
+        //   onePlus,
+        //   normal,
+        //   composition,
+        //   Gse,
+        //   combinedGsb,
+        //   expectedPli,
+        //   maximumDensities,
+        //   percentsOfDosage,
+        //   ponderatedPercentsOfDosage,
+        // } = data.secondCompressionData as SuperpaveData['secondCompressionData'];
+
+        const secondCompressionPercentagesData = {
+          ...data.secondCompressionData,
+          name,
+          // halfLess,
+          // halfPlus,
+          // onePlus,
+          // normal,
+          // composition,
+          // Gse,
+          // combinedGsb,
+          // expectedPli,
+          // maximumDensities,
+          // percentsOfDosage,
+          // ponderatedPercentsOfDosage,
+          isConsult: null,
+        };
+
+        if (isConsult) secondCompressionPercentagesData.isConsult = isConsult;
+
+        const response = await Api.post(`${this.info.backend_path}/save-second-compression-percentages-step/${userData}`, {
+          secondCompressionPercentagesData: {
+            ...data.secondCompressionData,
+            // porcentageAggregate,
+            // listOfPlis,
+            // trafficVolume,
+            name,
+          },
+        });
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
     }
   };
 }

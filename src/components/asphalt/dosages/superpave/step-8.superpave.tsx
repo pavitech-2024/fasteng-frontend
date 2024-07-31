@@ -381,15 +381,12 @@ const Superpave_Step8 = ({
             initialBinderData,
             firstCurvePercentagesData
           );
-          console.log('🚀 ~ response:', response);
 
           const value = response;
-          console.log('🚀 ~ value:', value);
 
           let prevData = { ...data };
 
           prevData = { ...prevData, ...value };
-          console.log('🚀 ~ prevData:', prevData);
 
           setData({ step: 7, value: prevData });
           //setLoading(false);
