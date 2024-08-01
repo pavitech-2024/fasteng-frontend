@@ -364,7 +364,13 @@ interface ConfirmationCompressionData {
     waterTemperatureCorrection: number;
     diametralTractionResistance: number
   }[];
-  gmm: number
+  gmm: number;
+  riceTest: {
+    sampleAirDryMass: number;
+    containerSampleWaterMass: number;
+    containerWaterMass: number;
+    temperatureOfWater: number
+  }
 }
 
 export type SuperpaveData = {
@@ -835,7 +841,13 @@ const initialState = {
         diametralTractionResistance: null
       },
     ],
-    gmm: null
+    gmm: null,
+    riceTest: {
+      sampleAirDryMass: null,
+      containerSampleWaterMass: null,
+      containerWaterMass: null,
+      temperatureOfWater: null
+    }
   },
 };
 

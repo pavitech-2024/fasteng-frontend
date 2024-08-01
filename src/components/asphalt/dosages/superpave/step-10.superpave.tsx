@@ -1,3 +1,4 @@
+import DropDown from '@/components/atoms/inputs/dropDown';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
@@ -22,6 +23,8 @@ const Superpave_Step10 = ({
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const { user } = useAuth();
+
+  const waterTemperatureList = [];
 
   const confirmationCompressionCols = [
     {
@@ -186,6 +189,27 @@ const Superpave_Step10 = ({
     },
   ];
 
+  const gmmInputs = [
+    {
+      key: 'sampleAirDryMass',
+      value: data.riceTest.sampleAirDryMass,
+      adornment: 'g',
+      placeHolder: 'Massa da amostra seca ao ar',
+    },
+    {
+      key: 'containerSampleWaterMass',
+      value: data.riceTest.containerSampleWaterMass,
+      adornment: 'g',
+      placeHolder: 'Massa do recipiente + amostra + água (g)',
+    },
+    {
+      key: 'containerWaterMass',
+      value: data.riceTest.containerWaterMass,
+      adornment: 'g',
+      placeHolder: 'Massa do recipiente + água (g)',
+    },
+  ];
+
   const handleErase = () => {
     try {
       if (data.table.length > 1) {
@@ -242,7 +266,7 @@ const Superpave_Step10 = ({
         >
           <Typography>Gmm do teor de ligante asfaltico ótimo:</Typography>
 
-          <Button variant="outlined">Calcular densidade máxima da mistura</Button>
+          <Button variant="outlined" onClick={() => setModalIsOpen(true)}>Calcular densidade máxima da mistura</Button>
 
           <DataGrid
             hideFooter
@@ -267,6 +291,35 @@ const Superpave_Step10 = ({
               adornment={''}
               value={data.gmm}
               onChange={(e) => setData({ step: 9, key: 'gmm', value: e.target.value })}
+            />
+
+            {gmmInputs.map((input) => (
+              <InputEndAdornment
+                key={input.key}
+                adornment={input.adornment}
+                placeholder={input.placeHolder}
+                value={input.value}
+                onChange={(e) => {
+                  let prevData = { ...data.riceTest };
+                  prevData[input.key] = e.target.value;
+                  setData({ step: 9, value: { ...data, riceTest: prevData } });
+                }}
+              />
+            ))}
+
+            <DropDown
+              key={'water'}
+              variant="standard"
+              label={'Selecione o fator de correção para a temperatura da água'}
+              options={waterTemperatureList}
+              callback={(selectedValue) => {
+                let prevData = {...data.riceTest};
+                const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
+                prevData = newData;
+                setData({ step: 4, value: { ...data, riceTest: prevData } });
+              }}
+              size="medium"
+              sx={{ width: '20rem' }}
             />
           </ModalBase>
         </Box>
