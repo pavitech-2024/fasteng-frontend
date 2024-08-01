@@ -21,7 +21,6 @@ const Superpave_Step5 = ({
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const {
-    materialSelectionData,
     granulometryCompositionData,
     initialBinderData,
     firstCompressionData: data,
@@ -31,34 +30,32 @@ const Superpave_Step5 = ({
   const [stepStatus, setStepStatus] = useState('');
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   //Water temperature list;
-  const list = {
-    '15°C - 0.9991': 0.9991,
-    '16°C - 0.9989': 0.9989,
-    '17°C - 0.9988': 0.9988,
-    '18°C - 0.9986': 0.9986,
-    '19°C - 0.9984': 0.9984,
-    '20°C - 0.9982': 0.9982,
-    '21°C - 0.9980': 0.998,
-    '22°C - 0.9978': 0.9978,
-    '23°C - 0.9975': 0.9975,
-    '24°C - 0.9973': 0.9973,
-    '25°C - 0.9970': 0.997,
-    '26°C - 0.9968': 0.9968,
-    '27°C - 0.9965': 0.9965,
-    '28°C - 0.9962': 0.9962,
-    '29°C - 0.9959': 0.9959,
-    '30°C - 0.9956': 0.9956,
-  };
+  // const list = {
+  //   '15°C - 0.9991': 0.9991,
+  //   '16°C - 0.9989': 0.9989,
+  //   '17°C - 0.9988': 0.9988,
+  //   '18°C - 0.9986': 0.9986,
+  //   '19°C - 0.9984': 0.9984,
+  //   '20°C - 0.9982': 0.9982,
+  //   '21°C - 0.9980': 0.998,
+  //   '22°C - 0.9978': 0.9978,
+  //   '23°C - 0.9975': 0.9975,
+  //   '24°C - 0.9973': 0.9973,
+  //   '25°C - 0.9970': 0.997,
+  //   '26°C - 0.9968': 0.9968,
+  //   '27°C - 0.9965': 0.9965,
+  //   '28°C - 0.9962': 0.9962,
+  //   '29°C - 0.9959': 0.9959,
+  //   '30°C - 0.9956': 0.9956,
+  // };
   const waterTemperatureList = [];
 
-  const formatedWaterTempList = Object.keys(list).forEach((key) => {
-    waterTemperatureList.push({
-      label: key,
-      value: list[key],
-    });
-  });
-
-  const { user } = useAuth();
+  // const formatedWaterTempList = Object.keys(list).forEach((key) => {
+  //   waterTemperatureList.push({
+  //     label: key,
+  //     value: list[key],
+  //   });
+  // });
 
   const [inferiorRows, setInferiorRows] = useState([]);
   const [intermediariaRows, setIntermediariaRows] = useState([]);
@@ -68,7 +65,7 @@ const Superpave_Step5 = ({
   const generateRiceTestInputs = (curve: string) => [
     {
       key: 'drySampleMass',
-      label: 'Massa da amostra seca em ar',
+      label: t('asphalt.dosages.superpave.dry-sample-mass'),
       adornment: 'g',
       value: data.riceTest?.find((obj) => obj.curve === curve)
         ? data.riceTest.find((obj) => obj.curve === curve).drySampleMass
@@ -76,7 +73,7 @@ const Superpave_Step5 = ({
     },
     {
       key: 'waterSampleContainerMass',
-      label: 'Massa do recipiente + água',
+      label: t('asphalt.dosages.superpave.water-sample-container-mass'),
       adornment: 'g',
       value: data.riceTest.find((obj) => obj.curve === curve)
         ? data.riceTest.find((obj) => obj.curve === curve).waterSampleContainerMass
@@ -84,7 +81,7 @@ const Superpave_Step5 = ({
     },
     {
       key: 'waterSampleMass',
-      label: 'Massa do recipiente + amostra + água',
+      label: t('asphalt.dosages.superpave.water-sample-mass'),
       adornment: 'g',
       value: data.riceTest.find((obj) => obj.curve === curve)
         ? data.riceTest.find((obj) => obj.curve === curve).waterSampleMass
@@ -150,7 +147,7 @@ const Superpave_Step5 = ({
   const generateColumns = (curve: string): GridColDef[] => [
     {
       field: 'diammeter',
-      headerName: 'Diâmetro',
+      headerName: t('asphalt.dosages.superpave.diammeter'),
       width: 100,
       renderCell: ({ row }) => {
         const { id } = row;
@@ -171,7 +168,7 @@ const Superpave_Step5 = ({
     },
     {
       field: 'dryMass',
-      headerName: 'Massa seca (g)',
+      headerName: t('asphalt.dosages.superpave.dry-mass'),
       width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
@@ -192,7 +189,7 @@ const Superpave_Step5 = ({
     },
     {
       field: 'submergedMass',
-      headerName: 'Massa submersa (g)',
+      headerName: t('asphalt.dosages.superpave.submerged-mass'),
       width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
@@ -213,7 +210,7 @@ const Superpave_Step5 = ({
     },
     {
       field: 'drySurfaceSaturatedMass',
-      headerName: 'Massa saturada com superfície seca (g)',
+      headerName: t('asphalt.dosages.superpave.dry-surface-saturated-mass'),
       width: 210,
       renderCell: ({ row }) => {
         const { id } = row;
@@ -234,7 +231,7 @@ const Superpave_Step5 = ({
     },
     {
       field: 'waterTemperatureCorrection',
-      headerName: 'Fator de correção da temperatura da água (N)',
+      headerName: t('asphalt.dosages.superpave.water-temperature'),
       width: 210,
       renderCell: ({ row }) => {
         const { id } = row;
@@ -255,7 +252,7 @@ const Superpave_Step5 = ({
     },
     {
       field: 'document',
-      headerName: 'Planilha (.xlsx)',
+      headerName: t('asphalt.dosages.superpave.spreadsheet'),
       width: 150,
       valueFormatter: ({ value }) => (value ? `${value}` : ''),
       renderCell: (params) => <RenderCellComponent {...params} curve={curve} data={data} addPlanilha={addPlanilha} />,
@@ -273,7 +270,7 @@ const Superpave_Step5 = ({
         { field: 'waterTemperatureCorrection' },
       ],
       headerAlign: 'center',
-      headerName: `Curva inferior`,
+      headerName: t('asphalt.dosages.superpave.lower-curve'),
     },
   ];
 
@@ -288,7 +285,7 @@ const Superpave_Step5 = ({
         { field: 'waterTemperatureCorrection' },
       ],
       headerAlign: 'center',
-      headerName: `Curva intermediaria`,
+      headerName: t('asphalt.dosages.superpave.average-curve'),
     },
   ];
 
@@ -304,7 +301,7 @@ const Superpave_Step5 = ({
         { field: 'waterTemperatureCorrection' },
       ],
       headerAlign: 'center',
-      headerName: `Curva superior`,
+      headerName: t('asphalt.dosages.superpave.higher-curve'),
     },
   ];
 
@@ -374,7 +371,7 @@ const Superpave_Step5 = ({
       link.href = `/superpave-docs/${spreadSheet}`;
       link.click();
     } catch (error) {
-      console.error('Erro ao baixar o arquivo:', error);
+      toast.error(t('asphalt.dosages.superpave.file-download-error-toast'))
     }
   };
 
@@ -404,8 +401,8 @@ const Superpave_Step5 = ({
         if (initialBinderData.turnNumber.maxN == d.length) {
           arrayAux[index].planilha = d;
           setData({ step: 4, value: { ...data, [tableName]: arrayAux } });
-          setStepStatus('process');
-          toast.success('Planilha Escolhida');
+          setStepStatus(t('asphalt.dosages.superpave.processing'));
+          toast.success(t('asphalt.dosages.superpave.chosen-sheet-toast'));
         } else {
           setStepStatus('error');
           toast.error(
@@ -415,8 +412,8 @@ const Superpave_Step5 = ({
       } else {
         arrayAux[index].planilha = d;
         setData({ step: 4, value: { ...data, [tableName]: arrayAux } });
-        setStepStatus('process');
-        toast.success('Planilha Escolhida');
+        setStepStatus(t('asphalt.dosages.superpave.processing'));
+        toast.success(t('asphalt.dosages.superpave.chosen-sheet-toast'));
       }
     });
   };
@@ -461,8 +458,8 @@ const Superpave_Step5 = ({
       },
       {
         pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        success: t('asphalt.dosages.superpave.rice-test-success-toast'),
+        error: t('asphalt.dosages.superpave.rice-test-error-toast'),
       }
     );
   };
@@ -512,7 +509,7 @@ const Superpave_Step5 = ({
                 color: 'white',
               }}
             >
-              Planilha Modelo
+              {t('asphalt.dosages.superpave.model-sheet')}
             </Button>
 
             {granulometryCompositionData.chosenCurves.lower && (
@@ -556,12 +553,10 @@ const Superpave_Step5 = ({
                 slots={{ footer: () => ExpansionToolbar('superiorRows') }}
               />
             )}
-
-            {/* <Button onClick={setVolumetricParams}>Confirmar</Button> */}
           </Box>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '2rem', marginY: '2rem' }}>
-            <Typography sx={{ textAlign: 'center' }}>Densidade máxima medida</Typography>
+            <Typography sx={{ textAlign: 'center' }}>{t('asphalt.dosages.superpave.measured-max-density')}</Typography>
 
             <Box sx={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
               {granulometryCompositionData.chosenCurves.lower && (
@@ -574,9 +569,9 @@ const Superpave_Step5 = ({
                     gap: '2rem',
                   }}
                 >
-                  <Typography>Curva inferior</Typography>
+                  <Typography>{t('asphalt.dosages.superpave.lower-curve')}</Typography>
                   <Button onClick={() => showModal('lower')} variant="outlined">
-                    Calcular denasidade máxima
+                    {t('asphalt.dosages.superpave.calculate-max-density')}
                   </Button>
                 </Box>
               )}
@@ -591,9 +586,9 @@ const Superpave_Step5 = ({
                     gap: '2rem',
                   }}
                 >
-                  <Typography>Curva intermediaria</Typography>
+                  <Typography>{t('asphalt.dosages.superpave.average-curve')}</Typography>
                   <Button onClick={() => showModal('average')} variant="outlined">
-                    Calcular denasidade máxima
+                    {t('asphalt.dosages.superpave.calculate-max-density')}
                   </Button>
                 </Box>
               )}
@@ -608,9 +603,9 @@ const Superpave_Step5 = ({
                     gap: '2rem',
                   }}
                 >
-                  <Typography>Curva superior</Typography>
+                  <Typography>{t('asphalt.dosages.superpave.higher-curve')}</Typography>
                   <Button onClick={() => showModal('higher')} variant="outlined">
-                    Calcular denasidade máxima
+                    {t('asphalt.dosages.superpave.calculate-max-density')}
                   </Button>
                 </Box>
               )}
@@ -618,9 +613,9 @@ const Superpave_Step5 = ({
           </Box>
 
           <ModalBase
-            title={'Calcular por Rice Test'}
-            leftButtonTitle={'cancelar'}
-            rightButtonTitle={'confirmar'}
+            title={t('asphalt.dosages.superpave.calculate-rice-test')}
+            leftButtonTitle={t('asphalt.dosages.superpave.confirm')}
+            rightButtonTitle={t('materials.template.cancel')}
             onCancel={() => setRiceTestModalIsOpen(false)}
             open={riceTestModalIsOpen}
             size={'large'}
@@ -632,7 +627,7 @@ const Superpave_Step5 = ({
               <InputEndAdornment
                 adornment=""
                 type="number"
-                label="Inserir Gmm"
+                label={t('asphalt.dosages.superpave.insert-gmm')}
                 sx={{ width: '20rem' }}
                 value={data.riceTest?.find((obj) => obj.curve === actualCurve)?.gmm}
                 onChange={(e) => {
@@ -668,7 +663,7 @@ const Superpave_Step5 = ({
               <DropDown
                 key={'water'}
                 variant="standard"
-                label={'Selecione o fator de correção para a temperatura da água'}
+                label={t('asphalt.dosages.superpave.water-temperature-dropdown')}
                 options={waterTemperatureList}
                 callback={(selectedValue) => {
                   const prevData = [...data.riceTest];

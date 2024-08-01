@@ -63,5 +63,40 @@
   "asphalt.dosages.superpave.max-n": "maximumN",
   "asphalt.dosages.superpave.compression-params": "Compression parameters",
   "asphalt.dosages.superpave.change-initial-binder": "Change initial binder content",
-  "asphalt.dosages.superpave.insert-initial-binder": "Insert the initial binder content"
+  "asphalt.dosages.superpave.insert-initial-binder": "Insert the initial binder content",
+  "asphalt.dosages.superpave.water-temperature-dropdown": "Select the correction factor for water temperature",
+  "asphalt.dosages.superpave.dry-sample-mass": "Air-dried sample mass",
+  "asphalt.dosages.superpave.water-sample-container-mass": "Mass of container + water",
+  "asphalt.dosages.superpave.water-sample-mass": "Mass of container + sample + water",
+  "asphalt.dosages.superpave.insert-gmm": "Insert gmm",
+  "asphalt.dosages.superpave.calculate-rice-test": "Calculate Rice Test",
+  "asphalt.dosages.superpave.calculate-max-density": "Calculate maximum density",
+  "asphalt.dosages.superpave.measured-max-density": "Measured maximum density",
+  "asphalt.dosages.superpave.model-sheet": "Model sheet",
+
+  "asphalt.dosages.superpave.rice-test-success-toast": "Rice Test carried out successfully",
+  "asphalt.dosages.superpave.rice-test-error-toast": "There was an error performing the Rice Test",
+  "asphalt.dosages.superpave.chosen-sheet-toast": "Chosen spreadsheet",
+  "asphalt.dosages.superpave.processing": "Processing",
+  "asphalt.dosages.superpave.file-download-error-toast": "There was an error downloading the file",
+
+  "asphalt.dosages.superpave.spreadsheet": "Spreadsheet (.xlsx)",
+  "asphalt.dosages.superpave.water-temperature": "Water temperature correction factor (N)",
+  "asphalt.dosages.superpave.dry-surface-saturated-mass": "Saturated mass with dry surface (g)",
+  "asphalt.dosages.superpave.submerged-mass": "Submerged mass (g)",
+  "asphalt.dosages.superpave.dry-mass": "Dry mass (g)",
+  "asphalt.dosages.superpave.diammeter": "Diammeter (cm)",
+
+  "asphalt.dosages.superpave.choose-curve": "Select the curve with which you want to continue dosing:",
+  "asphalt.dosages.superpave.volumetric-graphs": "Volumetric graphs",
+  "asphalt.dosages.superpave.average": "Average",
+  "asphalt.dosages.superpave.lower": "Lower",
+  "asphalt.dosages.superpave.higher": "Higher",
+
+  "asphalt.dosages.gmm-n-max": "%Gmm NMax (%)",
+  "asphalt.dosages.gmm-n-initial": "%Gmm Ninitial (%)",
+  "asphalt.dosages.expected-pa": "Estimated P/A (%)",
+  "asphalt.dosages.estimated-vam": "Estimated VAM (%)",
+  "asphalt.dosages.estimated-binder-percentage": "Estimated binder percentage (%)",
+  "asphalt.dosages.mixture": "Mixture"
 }

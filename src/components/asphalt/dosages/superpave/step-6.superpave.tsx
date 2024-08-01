@@ -251,37 +251,37 @@ const Superpave_Step6 = ({
   const expectedParamsCols = [
     {
       field: 'mixture',
-      headerName: 'Mistura',
+      headerName: t("asphalt.dosages.mixture"),
       valueFormatter: ({ value }) => `${value}`,
       width: 160,
     },
     {
       field: 'expectedPli',
-      headerName: 'Porcentagem de ligante estimada (%)',
+      headerName: t("asphalt.dosages.estimated-binder-percentage"),
       valueFormatter: ({ value }) => `${value}`,
       width: 160,
     },
     {
       field: 'expectedVam',
-      headerName: 'VAM Estimado (%)',
+      headerName: t("asphalt.dosages.estimated-vam"),
       valueFormatter: ({ value }) => `${value}`,
       width: 160,
     },
     {
       field: 'p/a',
-      headerName: 'P/A Estimado (%)',
+      headerName: t("asphalt.dosages.expected-pa"),
       valueFormatter: ({ value }) => `${value}`,
       width: 160,
     },
     {
       field: 'expectedPercentageGmmInitialN',
-      headerName: '%Gmm Ninicial (%)',
+      headerName: t("asphalt.dosages.gmm-n-initial"),
       valueFormatter: ({ value }) => `${value}`,
       width: 160,
     },
     {
       field: 'expectedPercentageGmmMaxN',
-      headerName: '%Gmm NMax (%)',
+      headerName: t("asphalt.dosages.gmm-n-max"),
       valueFormatter: ({ value }) => `${value}`,
       width: 160,
     },
@@ -290,7 +290,7 @@ const Superpave_Step6 = ({
   const expectedParamsGroupings: GridColumnGroupingModel = [
     {
       groupId: 'expectedParams',
-      headerName: `Parâmetros estimados para Vv = ${0}`,
+      headerName: `${t("asphalt.dosages.expected-params-vv")} ${0}`,
       children: [
         { field: 'mixture' },
         { field: 'expectedPli' },
@@ -304,9 +304,9 @@ const Superpave_Step6 = ({
   ];
 
   const selectedCurveOptions: DropDownOption[] = [
-    { label: 'Inferior', value: 'lower' },
-    { label: 'Intermediária', value: 'average' },
-    { label: 'Superior', value: 'higher' },
+    { label: t("asphalt.dosages.superpave.lower"), value: 'lower' },
+    { label: t("asphalt.dosages.superpave.average"), value: 'average' },
+    { label: t("asphalt.dosages.superpave.higher"), value: 'higher' },
   ];
 
   nextDisabled && setNextDisabled(false);
@@ -343,15 +343,15 @@ const Superpave_Step6 = ({
             rows={calculatedCurvesRows}
           />
 
-          <Typography>Gráficos Volumétricos</Typography>
+          <Typography>{t("asphalt.dosages.superpave.volumetric-graphs")}</Typography>
 
-          <Typography>Curva Inferior</Typography>
+          <Typography>{t("asphalt.dosages.superpave.lower-curve")}</Typography>
           <GraphStep6 data={data.table4.table4Lower.data} />
 
-          <Typography>Curva Intermediária</Typography>
+          <Typography>{t("asphalt.dosages.superpave.average-curve")}</Typography>
           <GraphStep6 data={data.table4.table4Average.data} />
 
-          <Typography>Curva Superior</Typography>
+          <Typography>{t("asphalt.dosages.superpave.higher-curve")}</Typography>
           <GraphStep6 data={data.table4.table4Higher.data} />
 
           <DataGrid
@@ -365,7 +365,7 @@ const Superpave_Step6 = ({
           />
 
           <Box sx={{ width: '100%' }}>
-            <Typography>Selecione a curva com a qual deseja continuar a dosagem:</Typography>
+            <Typography>{t("asphalt.dosages.superpave.choose-curve")}</Typography>
             <DropDown
               label={''}
               options={selectedCurveOptions}
