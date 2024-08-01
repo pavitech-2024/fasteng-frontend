@@ -7,10 +7,35 @@ import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import { Box } from '@mui/material';
 import Result_Card from '@/components/atoms/containers/result-card';
 import AbramsCurvGraph from './graph/abramsCurveGrapg';
+import { useEffect } from 'react';
+import abcpDosageService from '@/services/concrete/dosages/abcp/abcp-consult.service';
+import { useRouter } from 'next/router';
 
-const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
+const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   nextDisabled && setNextDisabled(false);
-  const { results: abcp_results, insertParamsData } = useABCPStore();
+  const { results: abcp_results, insertParamsData, setData } = useABCPStore();
+  const { calculateResults } = new ABCP_SERVICE();
+  const store = JSON.parse(sessionStorage.getItem('abcp-store'));
+  const dosageId = store.state._id;
+  const router = useRouter();
+  const isConsult = router.query.consult ? true : false;
+
+  useEffect(() => {
+    if (isConsult) {
+      const resultData = async () => {
+        try {
+          const foundDosage = await abcpDosageService.getAbcpDosage(dosageId);
+          const calculateDosage = await calculateResults(foundDosage.data);
+          const dosageData = { ...foundDosage.data, results: calculateDosage };
+          setData({ step: 5, value: dosageData });
+        } catch (error) {
+          console.error('Failed to load dosage:', error);
+        }
+      };
+      resultData();
+    }
+  }, []);
+
   const conditionValue = insertParamsData.condition;
   const tolerance = 0.0001;
 
@@ -37,13 +62,13 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & 
     {
       key: 'wantedFck',
       label: t('abcp.results.fck'),
-      value: insertParamsData.fck,
+      value: String(insertParamsData.fck),
       unity: 'MPa',
     },
     {
       key: 'reduction',
       label: t('abcp.results.reduction'),
-      value: insertParamsData.reduction,
+      value: String(insertParamsData.reduction),
       unity: 'mm',
     },
   ];
@@ -87,9 +112,11 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & 
     },
   ];
 
-  const coefficients = `${abcp_results.cc / abcp_results.cc} : ${(abcp_results.careia / abcp_results.cc).toFixed(
+  const cc = abcp_results.cc > 1 ? abcp_results.cc : 1;
+  const ca = abcp_results.ca > 1 ? abcp_results.ca : 1;
+  const coefficients = `${cc / cc} : ${(abcp_results.careia / cc).toFixed(3)} : ${(abcp_results.cb / cc).toFixed(
     3
-  )} : ${(abcp_results.cb / abcp_results.cc).toFixed(3)} : ${(abcp_results.ca / abcp_results.cc).toFixed(3)}`;
+  )} : ${(ca / cc).toFixed(3)}`;
 
   return (
     <>
@@ -104,7 +131,7 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & 
             flexWrap: 'wrap',
           }}
         >
-          <ResultSubTitle title={t('general data')} sx={{ margin: '.65rem' }} />
+          <ResultSubTitle title={t('abcp.general-results')} sx={{ margin: '.65rem' }} />
           <Box
             sx={{
               width: '100%',
@@ -116,7 +143,7 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & 
             }}
           >
             {generalDataResults.map((item) => (
-              <Result_Card key={item.key} label={item.label} value={item.value.toString()} unity={item.unity} />
+              <Result_Card key={item.key} label={item.label} value={item.value} unity={item.unity} />
             ))}
           </Box>
 
@@ -132,7 +159,12 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & 
             }}
           >
             {results.map((item) => (
-              <Result_Card key={item.key} label={item.label} value={item.value.toString()} unity={item.unity} />
+              <Result_Card
+                key={item.key}
+                label={item.label}
+                value={typeof item.value === 'number' ? item.value.toString() : item.value}
+                unity={item.unity}
+              />
             ))}
           </Box>
 

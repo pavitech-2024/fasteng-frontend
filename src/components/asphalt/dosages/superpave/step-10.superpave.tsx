@@ -40,7 +40,7 @@ const Superpave_Step10 = ({
             type="text"
             value={data.table[index]?.averageDiammeter}
             onChange={(e) => {
-              let prevData = [...data.table];
+              const prevData = [...data.table];
               prevData[index].averageDiammeter = parseFloat(e.target.value);
               setData({ step: 9, value: { ...data, table: prevData } });
             }}
@@ -61,7 +61,7 @@ const Superpave_Step10 = ({
             type="number"
             value={data.table[index]?.averageHeight}
             onChange={(e) => {
-              let prevData = [...data.table];
+              const prevData = [...data.table];
               prevData[index].averageHeight = parseFloat(e.target.value);
               setData({ step: 7, value: { ...data, table: prevData } });
             }}
@@ -82,7 +82,7 @@ const Superpave_Step10 = ({
             type="number"
             value={data.table[index]?.dryMass}
             onChange={(e) => {
-              let prevData = [...data.table];
+              const prevData = [...data.table];
               prevData[index].dryMass = parseFloat(e.target.value);
               setData({ step: 7, value: { ...data, table: prevData } });
             }}
@@ -103,7 +103,7 @@ const Superpave_Step10 = ({
             type="number"
             value={data.table[index]?.submergedMass}
             onChange={(e) => {
-              let prevData = [...data.table];
+              const prevData = [...data.table];
               prevData[index].submergedMass = parseFloat(e.target.value);
               setData({ step: 7, value: { ...data, table: prevData } });
             }}
@@ -124,7 +124,7 @@ const Superpave_Step10 = ({
             type="number"
             value={data.table[index]?.drySurfaceSaturatedMass}
             onChange={(e) => {
-              let prevData = [...data.table];
+              const prevData = [...data.table];
               prevData[index].drySurfaceSaturatedMass = parseFloat(e.target.value);
               setData({ step: 7, value: { ...data, table: prevData } });
             }}
@@ -145,7 +145,7 @@ const Superpave_Step10 = ({
             type="number"
             value={data.table[index]?.waterTemperatureCorrection}
             onChange={(e) => {
-              let prevData = [...data.table];
+              const prevData = [...data.table];
               prevData[index].waterTemperatureCorrection = parseFloat(e.target.value);
               setData({ step: 7, value: { ...data, table: prevData } });
             }}
@@ -166,7 +166,7 @@ const Superpave_Step10 = ({
             type="number"
             value={data.table[index]?.diametralTractionResistance}
             onChange={(e) => {
-              let prevData = [...data.table];
+              const prevData = [...data.table];
               prevData[index].diametralTractionResistance = parseFloat(e.target.value);
               setData({ step: 7, value: { ...data, table: prevData } });
             }}
@@ -300,7 +300,7 @@ const Superpave_Step10 = ({
                 placeholder={input.placeHolder}
                 value={input.value}
                 onChange={(e) => {
-                  let prevData = { ...data.riceTest };
+                  const prevData = { ...data.riceTest };
                   prevData[input.key] = e.target.value;
                   setData({ step: 9, value: { ...data, riceTest: prevData } });
                 }}

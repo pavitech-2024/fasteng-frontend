@@ -119,7 +119,6 @@ const GraphStep6: React.FC<GraphProps> = ({ data }) => {
     let graphContainer = document.getElementById(graphId) as HTMLElement;
     if (graphContainer) {
       graphContainer = graphContainer.parentElement as HTMLElement;
-      let graphContainerParent = graphContainer.parentElement as HTMLElement;
       graphContainer.style.width = `${width}px`;
       height !== 0
         ? (graphContainer.style.height = `${height}px`)
@@ -128,8 +127,8 @@ const GraphStep6: React.FC<GraphProps> = ({ data }) => {
   };
 
   const updateWindowDimensions = (fullScreen: boolean) => {
-    let newOptions = { ...options };
-    let newOptionsFullScreen = { ...optionsFullScreen };
+    const newOptions = { ...options };
+    const newOptionsFullScreen = { ...optionsFullScreen };
     if (fullScreen) {
       const { width, height } = getPercentDimensions();
       updateStaticDivGoogle(window.innerWidth * 0.9, 'reactgooglegraph-2', window.innerHeight * 0.9);

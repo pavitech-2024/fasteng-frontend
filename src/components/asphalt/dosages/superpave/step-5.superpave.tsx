@@ -12,6 +12,7 @@ import { t } from 'i18next';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
+import RenderCellComponent from './functionalComponents/renderCell';
 
 const Superpave_Step5 = ({
   nextDisabled,
@@ -104,12 +105,12 @@ const Superpave_Step5 = ({
   }, [data]);
 
   useEffect(() => {
-    let prevData = [...data.riceTest];
+    const prevData = [...data.riceTest];
 
     if (granulometryCompositionData.chosenCurves.lower) {
       if (!prevData.some((obj) => obj.curve === 'lower')) {
         if (prevData.some((obj) => obj.curve === null)) {
-          let index = prevData.findIndex((obj) => obj.curve === null);
+          const index = prevData.findIndex((obj) => obj.curve === null);
           prevData[index] = { ...prevData[index], curve: 'lower' };
         } else {
           const newData = { ...prevData[0], curve: 'lower' };
@@ -122,7 +123,7 @@ const Superpave_Step5 = ({
     if (granulometryCompositionData.chosenCurves.average) {
       if (!prevData.some((obj) => obj.curve === 'average')) {
         if (prevData.some((obj) => obj.curve === null)) {
-          let index = prevData.findIndex((obj) => obj.curve === null);
+          const index = prevData.findIndex((obj) => obj.curve === null);
           prevData[index] = { ...prevData[index], curve: 'average' };
         } else {
           const newData = { ...prevData[0], curve: 'average' };
@@ -135,7 +136,7 @@ const Superpave_Step5 = ({
     if (granulometryCompositionData.chosenCurves.higher) {
       if (!prevData.some((obj) => obj.curve === 'higher')) {
         if (prevData.some((obj) => obj.curve === null)) {
-          let index = prevData.findIndex((obj) => obj.curve === null);
+          const index = prevData.findIndex((obj) => obj.curve === null);
           prevData[index] = { ...prevData[index], curve: 'higher' };
         } else {
           const newData = { ...prevData[0], curve: 'higher' };
@@ -160,7 +161,7 @@ const Superpave_Step5 = ({
             type="text"
             value={data[curve][index].diammeter}
             onChange={(e) => {
-              let prevData = [...data[curve]];
+              const prevData = [...data[curve]];
               prevData[index].diammeter = parseFloat(e.target.value);
               setData({ step: 4, value: { ...data, [curve]: prevData } });
             }}
@@ -181,7 +182,7 @@ const Superpave_Step5 = ({
             type="number"
             value={data[curve][index].dryMass}
             onChange={(e) => {
-              let prevData = [...data[curve]];
+              const prevData = [...data[curve]];
               prevData[index].dryMass = parseFloat(e.target.value);
               setData({ step: 4, value: { ...data, [curve]: prevData } });
             }}
@@ -202,7 +203,7 @@ const Superpave_Step5 = ({
             type="number"
             value={data[curve][index].submergedMass}
             onChange={(e) => {
-              let prevData = [...data[curve]];
+              const prevData = [...data[curve]];
               prevData[index].submergedMass = parseFloat(e.target.value);
               setData({ step: 4, value: { ...data, [curve]: prevData } });
             }}
@@ -223,7 +224,7 @@ const Superpave_Step5 = ({
             type="number"
             value={data[curve][index].drySurfaceSaturatedMass}
             onChange={(e) => {
-              let prevData = [...data[curve]];
+              const prevData = [...data[curve]];
               prevData[index].drySurfaceSaturatedMass = parseFloat(e.target.value);
               setData({ step: 4, value: { ...data, [curve]: prevData } });
             }}
@@ -244,7 +245,7 @@ const Superpave_Step5 = ({
             type="number"
             value={data[curve][index].waterTemperatureCorrection}
             onChange={(e) => {
-              let prevData = [...data[curve]];
+              const prevData = [...data[curve]];
               prevData[index].waterTemperatureCorrection = parseFloat(e.target.value);
               setData({ step: 4, value: { ...data, [curve]: prevData } });
             }}
@@ -257,33 +258,7 @@ const Superpave_Step5 = ({
       headerName: 'Planilha (.xlsx)',
       width: 150,
       valueFormatter: ({ value }) => (value ? `${value}` : ''),
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data[curve].findIndex((r) => r.id === id);
-        const fileInputRef = useRef(null);
-        return (
-          <>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Button
-                onClick={() => fileInputRef.current.click()}
-                variant="contained"
-                sx={{ display: { xl: 'none', xs: 'block' }, color: 'white' }}
-              >
-                Upload
-              </Button>
-              <input
-                type="file"
-                ref={fileInputRef}
-                style={{ display: 'none' }}
-                onChange={(e) => addPlanilha(curve, index, e)}
-              />
-              <Typography sx={{ textAlign: 'center' }}>
-                {data[curve][index]?.planilha ? 'Selecionado' : `Vazio`}
-              </Typography>
-            </Box>
-          </>
-        );
-      },
+      renderCell: (params) => <RenderCellComponent {...params} curve={curve} data={data} addPlanilha={addPlanilha} />,
     },
   ];
 
@@ -424,7 +399,7 @@ const Superpave_Step5 = ({
     });
 
     promise.then((d: any[]) => {
-      let arrayAux = data[tableName];
+      const arrayAux = data[tableName];
       if (initialBinderData.turnNumber) {
         if (initialBinderData.turnNumber.maxN == d.length) {
           arrayAux[index].planilha = d;
@@ -459,24 +434,24 @@ const Superpave_Step5 = ({
           const response = await superpave.calculateGmm(data);
 
           if (response.lower !== 0) {
-            let index = data.riceTest.findIndex((e) => e.curve === 'lower');
-            let arr = [...data.riceTest];
+            const index = data.riceTest.findIndex((e) => e.curve === 'lower');
+            const arr = [...data.riceTest];
             arr[index].gmm = response.lower.gmm;
-            setData({ step: 4, value: {...data, riceTest: arr}})
+            setData({ step: 4, value: { ...data, riceTest: arr } });
           }
 
           if (response.average !== 0) {
-            let index = data.riceTest.findIndex((e) => e.curve === 'average');
-            let arr = [...data.riceTest];
+            const index = data.riceTest.findIndex((e) => e.curve === 'average');
+            const arr = [...data.riceTest];
             arr[index].gmm = response.average.gmm;
-            setData({ step: 4, value: {...data, riceTest: arr}})
+            setData({ step: 4, value: { ...data, riceTest: arr } });
           }
 
           if (response.higher !== 0) {
-            let index = data.riceTest.findIndex((e) => e.curve === 'higher');
-            let arr = [...data.riceTest];
+            const index = data.riceTest.findIndex((e) => e.curve === 'higher');
+            const arr = [...data.riceTest];
             arr[index].gmm = response.higher.gmm;
-            setData({ step: 4, value: {...data, riceTest: arr}})
+            setData({ step: 4, value: { ...data, riceTest: arr } });
           }
 
           setRiceTestModalIsOpen(false);
@@ -493,11 +468,11 @@ const Superpave_Step5 = ({
   };
 
   const showModal = (curve: string) => {
-    let prevData = [...data.riceTest];
+    const prevData = [...data.riceTest];
 
     if (!prevData.find((obj) => obj.curve === curve)) {
       if (prevData.some((obj) => obj.curve === null)) {
-        let index = prevData.findIndex((obj) => obj.curve === null);
+        const index = prevData.findIndex((obj) => obj.curve === null);
         prevData[index] = { ...prevData[index], curve: curve };
       } else {
         const newData = { ...prevData[0], curve: curve };
@@ -656,13 +631,13 @@ const Superpave_Step5 = ({
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               <InputEndAdornment
                 adornment=""
-                type='number'
+                type="number"
                 label="Inserir Gmm"
                 sx={{ width: '20rem' }}
                 value={data.riceTest?.find((obj) => obj.curve === actualCurve)?.gmm}
                 onChange={(e) => {
                   const value = e.target.value;
-                  let prevData = [...data.riceTest];
+                  const prevData = [...data.riceTest];
                   const index = prevData.findIndex((obj) => obj.curve === actualCurve);
                   const newData = { ...prevData[index], gmm: parseFloat(value) };
                   prevData[index] = newData;
@@ -673,13 +648,14 @@ const Superpave_Step5 = ({
               <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
                 {generateRiceTestInputs(actualCurve).map((input) => (
                   <InputEndAdornment
+                    key={input.key}
                     adornment={input.adornment}
                     label={input.label}
                     value={input.value}
                     sx={{ width: '15rem' }}
                     onChange={(e) => {
                       const value = e.target.value;
-                      let prevData = [...data.riceTest];
+                      const prevData = [...data.riceTest];
                       const index = prevData.findIndex((obj) => obj.curve === actualCurve);
                       const newData = { ...prevData[index], [input.key]: Number(value) };
                       prevData[index] = newData;
@@ -695,7 +671,7 @@ const Superpave_Step5 = ({
                 label={'Selecione o fator de correção para a temperatura da água'}
                 options={waterTemperatureList}
                 callback={(selectedValue) => {
-                  let prevData = [...data.riceTest];
+                  const prevData = [...data.riceTest];
                   const index = prevData.findIndex((obj) => obj.curve === actualCurve);
                   const newData = { ...prevData[index], temperatureOfWater: Number(selectedValue) };
                   prevData[index] = newData;

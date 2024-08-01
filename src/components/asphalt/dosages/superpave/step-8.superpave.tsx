@@ -123,7 +123,7 @@ const Superpave_Step8 = ({
             type="text"
             value={data[`${idx}`][index]?.averageDiammeter}
             onChange={(e) => {
-              let prevData = [...data[`${idx}`]];
+              const prevData = [...data[`${idx}`]];
               prevData[index].averageDiammeter = parseFloat(e.target.value);
               setData({ step: 7, value: { ...data, [`${idx}`]: prevData } });
             }}
@@ -144,7 +144,7 @@ const Superpave_Step8 = ({
             type="number"
             value={data[`${idx}`][index]?.averageHeight}
             onChange={(e) => {
-              let prevData = [...data[`${idx}`]];
+              const prevData = [...data[`${idx}`]];
               prevData[index].averageHeight = parseFloat(e.target.value);
               setData({ step: 7, value: { ...data, [`${idx}`]: prevData } });
             }}
@@ -165,7 +165,7 @@ const Superpave_Step8 = ({
             type="number"
             value={data[`${idx}`][index]?.dryMass}
             onChange={(e) => {
-              let prevData = [...data[`${idx}`]];
+              const prevData = [...data[`${idx}`]];
               prevData[index].dryMass = parseFloat(e.target.value);
               setData({ step: 7, value: { ...data, [`${idx}`]: prevData } });
             }}
@@ -186,7 +186,7 @@ const Superpave_Step8 = ({
             type="number"
             value={data[`${idx}`][index]?.submergedMass}
             onChange={(e) => {
-              let prevData = [...data[`${idx}`]];
+              const prevData = [...data[`${idx}`]];
               prevData[index].submergedMass = parseFloat(e.target.value);
               setData({ step: 7, value: { ...data, [`${idx}`]: prevData } });
             }}
@@ -207,7 +207,7 @@ const Superpave_Step8 = ({
             type="number"
             value={data[`${idx}`][index]?.drySurfaceSaturatedMass}
             onChange={(e) => {
-              let prevData = [...data[`${idx}`]];
+              const prevData = [...data[`${idx}`]];
               prevData[index].drySurfaceSaturatedMass = parseFloat(e.target.value);
               setData({ step: 7, value: { ...data, [`${idx}`]: prevData } });
             }}
@@ -228,7 +228,7 @@ const Superpave_Step8 = ({
             type="number"
             value={data[`${idx}`][index]?.waterTemperatureCorrection}
             onChange={(e) => {
-              let prevData = [...data[`${idx}`]];
+              const prevData = [...data[`${idx}`]];
               prevData[index].waterTemperatureCorrection = parseFloat(e.target.value);
               setData({ step: 7, value: { ...data, [`${idx}`]: prevData } });
             }}
@@ -249,7 +249,7 @@ const Superpave_Step8 = ({
             type="number"
             value={data[`${idx}`][index]?.diametralTractionResistance}
             onChange={(e) => {
-              let prevData = [...data[`${idx}`]];
+              const prevData = [...data[`${idx}`]];
               prevData[index].diametralTractionResistance = parseFloat(e.target.value);
               setData({ step: 7, value: { ...data, [`${idx}`]: prevData } });
             }}
@@ -507,7 +507,7 @@ const Superpave_Step8 = ({
                         value={data.maximumDensities[idx].insertedGmm}
                         onChange={(e) => {
                           const value = e.target.value;
-                          let prevData = [...data.maximumDensities];
+                          const prevData = [...data.maximumDensities];
                           const newData = { ...prevData[idx], insertedGmm: parseFloat(value) };
                           prevData[idx] = newData;
                           setData({ step: 7, value: { ...data, maximumDensities: prevData } });
@@ -527,7 +527,7 @@ const Superpave_Step8 = ({
                               sx={{ width: '15rem' }}
                               onChange={(e) => {
                                 const value = e.target.value;
-                                let prevData = [...data.maximumDensities];
+                                const prevData = [...data.maximumDensities];
                                 const newRiceTest = { ...prevData[idx].riceTest, [key]: Number(value) };
                                 prevData[idx] = { ...prevData[idx], riceTest: newRiceTest };
                                 setData({ step: 7, value: { ...data, maximumDensities: prevData } });
@@ -542,7 +542,7 @@ const Superpave_Step8 = ({
                         label={'Selecione o fator de correção para a temperatura da água'}
                         options={waterTemperatureList}
                         callback={(selectedValue) => {
-                          let prevData = [...data.maximumDensities];
+                          const prevData = [...data.maximumDensities];
 
                           const newRiceTest = {
                             ...prevData[idx].riceTest,

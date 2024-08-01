@@ -46,7 +46,7 @@ const AsphaltStandards: NextPage = () => {
       title: t('adhesiveness'),
       icon: AdhesivenessIcon,
       key: 'adhesiveness',
-      standard: 'DNER- ME 078/94',
+      standard: 'DNER - ME 078/94',
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_078_94-1.pdf',
       type: 'aggregates',
     },
@@ -134,8 +134,9 @@ const AsphaltStandards: NextPage = () => {
       title: t('drop.weight.deflectometer'),
       icon: FwdIcon,
       key: 'fallingWeightDeflectometer',
-      standard: 'DNER-PRO 273/96',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/procedimento-pro/dner_pro_273_96.pdf',
+      standard: 'DNER - PRO 273/96',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_184_2018_me-1.pdf',
+
       type: 'asphaltMix',
     },
     {

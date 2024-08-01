@@ -54,7 +54,7 @@ const CurvesTable: React.FC<Props> = ({
   }, [materials, dnitBandsLetter]);
 
   const createObjectTableModel = (selectedMaterials: { name: string }[], dnitBandsLetter: string): TableModel => {
-    let newTable: TableModel = {
+    const newTable: TableModel = {
       columnsHeaderTop: [{ header: 'Peneira', type: 'rowSpan' }],
       columnsHeader: [],
       columnsKeys: ['peneira'],

@@ -77,7 +77,7 @@ const ViscosityRotational_Calc = ({ nextDisabled, setNextDisabled }: EssayPagePr
     },
     {
       field: 'viscosity',
-      headerName: t('saybolt-furol.viscosity'),
+      headerName: t('asphalt.essays.viscosityRotational.viscosity'),
       renderCell: ({ row }) => {
         const { id } = row;
         const index = rows.findIndex((r) => r.id === id);
@@ -85,7 +85,7 @@ const ViscosityRotational_Calc = ({ nextDisabled, setNextDisabled }: EssayPagePr
         return (
           <InputEndAdornment
             fullWidth
-            label={t('saybolt-furol.viscosity')}
+            label={t('asphalt.essays.viscosityRotational.viscosity')}
             type="number"
             inputProps={{ min: 0 }}
             value={row.viscosity}
@@ -108,7 +108,7 @@ const ViscosityRotational_Calc = ({ nextDisabled, setNextDisabled }: EssayPagePr
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <ResultSubTitle title={t('saybolt-furol.calc')} sx={{ margin: '.65rem' }} />
+      <ResultSubTitle title={t('asphalt.essays.viscosityRotational.calc')} sx={{ margin: '.65rem' }} />
 
       <DataGrid
         sx={{ mt: '1rem', borderRadius: '10px' }}

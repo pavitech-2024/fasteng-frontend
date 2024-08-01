@@ -38,8 +38,7 @@ const Superpave_Step9 = ({
           } = await superpave.getSecondCompressionPercentages(secondCompressionData);
 
           if (success) {
-            let prevData = {...data};
-            let newData = {...data, ...resData}
+            const newData = {...data, ...resData}
             setData({
               step: 8,
               value: newData,
@@ -72,7 +71,7 @@ const Superpave_Step9 = ({
 
   if (data.graphs?.graphGmb.length > 0) {
     expectedVolumetricParamsRows = data.graphs?.graphGmb.map((e, idx) => {
-      let indexName =
+      const indexName =
         idx === 0 ? 'halfLess' : idx === 1 ? 'normal' : idx === 2 ? 'halfPlus' : idx === 3 ? 'onePlus' : '';
       return {
         id: idx,
@@ -164,7 +163,7 @@ const Superpave_Step9 = ({
     },
   ];
 
-  let finalProportionsCols = [];
+  const finalProportionsCols = [];
 
   secondCompressionData.ponderatedPercentsOfDosage?.forEach((value, idx) => {
     finalProportionsCols.push({

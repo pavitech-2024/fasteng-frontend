@@ -141,7 +141,7 @@ const AsphaltEssays: NextPage = () => {
       type: 'asphaltBinder',
     },
     {
-      title: t('asphalt.essays.saybolt'),
+      title: t('asphalt.essays.saybolt-furol'),
       icon: SayboltFurolIcon,
       key: 'saybolt',
       link: '/asphalt/essays/sayboltFurol',

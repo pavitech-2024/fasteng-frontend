@@ -454,8 +454,8 @@ class Superpave_SERVICE implements IEssayService {
       const { riceTest, inferiorRows, intermediariaRows, superiorRows, maximumDensity } = step5Data;
       const { trafficVolume } = generalData;
 
-      let compositions = [inferiorRows, intermediariaRows, superiorRows];
-      let densities = [maximumDensity.lower, maximumDensity.average, maximumDensity.higher];
+      const compositions = [inferiorRows, intermediariaRows, superiorRows];
+      const densities = [maximumDensity.lower, maximumDensity.average, maximumDensity.higher];
 
       const response = await Api.post(`${this.info.backend_path}/step-5-parameters`, {
         granulometryComposition: compositions,

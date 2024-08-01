@@ -30,5 +30,10 @@
   "aggregates": "Aggregates",
   "asphalt.mixtures": "Asphalt Mixtures",
   "asphalt.binder": "Asphalt Binder",
-  "standards": "Standards"
+  "standards": "Standards",
+  "cbr": "California Bearing Ratio - CBR",
+  "hrb": "Road Classification - HRB",
+  "sucs": "Unified Classification - SUCS",
+  "compression": "Compression Test",
+  "granulometry": "Granulometry by Sieving"
 }

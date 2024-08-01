@@ -43,7 +43,7 @@ const Superpave_Step4 = ({
     toast.promise(
       async () => {
         try {
-          let newMaterials = [];
+          const newMaterials = [];
 
           const response = await materialsService.getMaterial(materialSelectionData.binder);
 
@@ -53,7 +53,7 @@ const Superpave_Step4 = ({
 
           if (success && resData.specificMasses.length > 0) {
             resData.specificMasses.forEach((e) => {
-              let obj = {
+              const obj = {
                 name: e.generalData.material.name,
                 realSpecificMass: e.results.bulk_specify_mass,
                 apparentSpecificMass: e.results.apparent_specify_mass,

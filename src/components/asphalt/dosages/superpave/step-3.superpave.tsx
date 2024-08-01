@@ -25,21 +25,19 @@ const Superpave_Step3 = ({
     return { peneira: peneira.label };
   });
 
-  let arrayResponse = data?.percentsToList;
-  let bandsHigher = data?.bands?.higher;
-  let bandsLower = data?.bands?.lower;
-  let tableDataAux;
-  let tableData;
+  const arrayResponse = data?.percentsToList;
+  const bandsHigher = data?.bands?.higher;
+  const bandsLower = data?.bands?.lower;
 
-  let tableDataLower = tableData;
-  let tableDataAverage = tableData;
-  let tableDataHigher = tableData;
+  let tableDataLower;
+  let tableDataAverage;
+  let tableDataHigher;
 
   let tableCompositionInputsLower = {};
   let tableCompositionInputsAverage = {};
   let tableCompositionInputsHigher = {};
 
-  let selectedMaterials = materialSelectionData?.aggregates;
+  const selectedMaterials = materialSelectionData?.aggregates;
   const [inferior, setInferior] = useState(data.chosenCurves.lower);
   const [intermediaria, setIntermediaria] = useState(data.chosenCurves.average);
   const [superior, setSuperior] = useState(data.chosenCurves.higher);
@@ -81,14 +79,6 @@ const Superpave_Step3 = ({
   }, []);
 
   const handleCheckboxChange = (checked, setChecked) => {
-    // if (checked) {
-    //   setInferior(false);
-    //   setIntermediaria(false);
-    //   setSuperior(false);
-    //   setChecked(true);
-    // } else {
-    //   setChecked(false);
-    // }
     setChecked(!checked);
   };
 
@@ -102,7 +92,7 @@ const Superpave_Step3 = ({
   };
 
   const validateNumber = (value) => {
-    let auxValue = convertNumber(value);
+    const auxValue = convertNumber(value);
     if (!isNaN(auxValue) && typeof auxValue === 'number') {
       return true;
     } else {
@@ -122,11 +112,10 @@ const Superpave_Step3 = ({
   };
 
   const setPercentsToListTotal = (peneiras, percentsToList) => {
-    let arrayAux = [];
+    const arrayAux = [];
     let tableData = [];
     let second = 0;
     percentsToList?.forEach((item, i) => {
-      arrayAux = [];
       second = 0;
       item.forEach((value, j) => {
         if (value !== null) {
@@ -149,10 +138,10 @@ const Superpave_Step3 = ({
     return tableData;
   };
 
-  tableDataAux = setPercentsToListTotal(peneiras, arrayResponse);
+  const tableDataAux = setPercentsToListTotal(peneiras, arrayResponse);
 
   const setBandsHigherLower = (tableData, bandsHigher, bandsLower, arrayResponse, peneiras) => {
-    let arrayAux = [];
+    const arrayAux = [];
     let second = 0;
     for (let i = 0; i < bandsHigher?.length; i++) {
       if (arrayResponse[0][i] !== null && tableData[second]?.peneira === peneiras[i]?.peneira) {
@@ -175,7 +164,11 @@ const Superpave_Step3 = ({
     return arrayAux;
   };
 
-  tableData = setBandsHigherLower(tableDataAux, bandsHigher, bandsLower, arrayResponse, peneiras);
+  const tableData = setBandsHigherLower(tableDataAux, bandsHigher, bandsLower, arrayResponse, peneiras);
+
+  tableDataLower = tableData;
+  tableDataAverage = tableData;
+  tableDataHigher = tableData;
 
   tableDataLower = tableData;
   tableDataAverage = tableData;
@@ -198,62 +191,62 @@ const Superpave_Step3 = ({
     };
   };
 
-  const convertToNumberPercentsToList = (tableCompositionInputName) => {
-    let keys = Object.keys(data.percentageInputs);
-    let arrayAux = [];
-    let inputAcess = '';
-    let sum = 0;
-    for (let i = 0; i < keys.length; i++) {
-      inputAcess = keys[i];
-      const valueMaterial_1 = convertNumber(data.percentageInputs[inputAcess].material_1);
-      const valueMaterial_2 = convertNumber(data.percentageInputs[inputAcess].material_2);
-      if (validateNumber(valueMaterial_1)) {
-        arrayAux.push(valueMaterial_1);
-        sum = Math.round((sum + valueMaterial_1) * 1e2) / 1e2;
-      }
-      if (validateNumber(valueMaterial_2)) {
-        arrayAux.push(valueMaterial_2);
-        sum = Math.round((sum + valueMaterial_2) * 1e2) / 1e2;
-      }
-    }
-    return { totalSum: sum, valuesInput: arrayAux, tableCompositionInputName };
-  };
+  // const convertToNumberPercentsToList = (tableCompositionInputName) => {
+  //   let keys = Object.keys(data.percentageInputs);
+  //   let arrayAux = [];
+  //   let inputAcess = '';
+  //   let sum = 0;
+  //   for (let i = 0; i < keys.length; i++) {
+  //     inputAcess = keys[i];
+  //     const valueMaterial_1 = convertNumber(data.percentageInputs[inputAcess].material_1);
+  //     const valueMaterial_2 = convertNumber(data.percentageInputs[inputAcess].material_2);
+  //     if (validateNumber(valueMaterial_1)) {
+  //       arrayAux.push(valueMaterial_1);
+  //       sum = Math.round((sum + valueMaterial_1) * 1e2) / 1e2;
+  //     }
+  //     if (validateNumber(valueMaterial_2)) {
+  //       arrayAux.push(valueMaterial_2);
+  //       sum = Math.round((sum + valueMaterial_2) * 1e2) / 1e2;
+  //     }
+  //   }
+  //   return { totalSum: sum, valuesInput: arrayAux, tableCompositionInputName };
+  // };
 
-  const updateTable = (percentsOfMaterials, sumOfPercentsToReturn, arrayTable) => {
-    let tableData = [];
-    let arrayResultAux = arrayTable;
-    let second = 0;
-    percentsOfMaterials.forEach((item, i) => {
-      tableData = [];
-      second = 0;
-      item.forEach((value, j) => {
-        if (value !== null) {
-          tableData.push({
-            ...arrayResultAux[second],
-            ['key%' + i]: numberRepresentation(value),
-          });
-          second++;
-        }
-      });
-      arrayResultAux = tableData;
-    });
-    tableData = [];
-    second = 0;
-    sumOfPercentsToReturn.forEach((item, i) => {
-      if (item !== null) {
-        tableData.push({
-          ...arrayResultAux[second],
-          Projeto: numberRepresentation(item),
-        });
-        second++;
-      }
-    });
+  // const updateTable = (percentsOfMaterials, sumOfPercentsToReturn, arrayTable) => {
+  //   let tableData = [];
+  //   let arrayResultAux = arrayTable;
+  //   let second = 0;
+  //   percentsOfMaterials.forEach((item, i) => {
+  //     tableData = [];
+  //     second = 0;
+  //     item.forEach((value, j) => {
+  //       if (value !== null) {
+  //         tableData.push({
+  //           ...arrayResultAux[second],
+  //           ['key%' + i]: numberRepresentation(value),
+  //         });
+  //         second++;
+  //       }
+  //     });
+  //     arrayResultAux = tableData;
+  //   });
+  //   tableData = [];
+  //   second = 0;
+  //   sumOfPercentsToReturn.forEach((item, i) => {
+  //     if (item !== null) {
+  //       tableData.push({
+  //         ...arrayResultAux[second],
+  //         Projeto: numberRepresentation(item),
+  //       });
+  //       second++;
+  //     }
+  //   });
 
-    return tableData;
-  };
+  //   return tableData;
+  // };
 
   const clearTable = () => {
-    let newInputs = data.percentageInputs.map((input) => ({
+    const newInputs = data.percentageInputs.map((input) => ({
       material_1: null,
       material_2: null,
     }));
@@ -286,8 +279,8 @@ const Superpave_Step3 = ({
   };
 
   const updateDataArray = (data) => {
-    let emptyTitles = [];
-    let result = data;
+    const emptyTitles = [];
+    const result = data;
     if (data.length > 0) {
       if (data[0].some((value) => value !== '')) {
         data[0].forEach(() => emptyTitles.push(''));
@@ -298,7 +291,7 @@ const Superpave_Step3 = ({
   };
 
   const updateGraph = (points) => {
-    let pointsOfCurve = updateDataArray(points);
+    const pointsOfCurve = updateDataArray(points);
     const prevData = { ...data };
     const newData = { ...prevData, graphData: pointsOfCurve };
     setData({ step: 2, value: newData });
@@ -308,7 +301,7 @@ const Superpave_Step3 = ({
     toast.promise(
       async () => {
         try {
-          let chosenCurves = {
+          const chosenCurves = {
             lower: inferior,
             average: intermediaria,
             higher: superior,
