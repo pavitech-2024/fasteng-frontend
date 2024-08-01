@@ -343,7 +343,7 @@ const Superpave_Step3 = ({
   }, [data.pointsOfCurve]);
 
   if (data.percentageInputs.some((item) => item.material_1 === null || item.material_2 === null)) {
-    nextDisabled
+    nextDisabled;
   } else {
     setNextDisabled(false);
   }
@@ -438,7 +438,9 @@ const Superpave_Step3 = ({
                 onChangeInputsTables={onChangeInputsTables}
               />
               <div style={{ marginTop: '1%' }}>
-                <Button onClick={() => calcular()} variant="outlined" sx={{ width: '100%' }}>{t('asphalt.dosages.superpave.calculate-average-curve')}</Button>
+                <Button onClick={() => calcular()} variant="outlined" sx={{ width: '100%' }}>
+                  {t('asphalt.dosages.superpave.calculate-average-curve')}
+                </Button>
               </div>
             </TableContainer>
           )}
@@ -466,14 +468,18 @@ const Superpave_Step3 = ({
                 onChangeInputsTables={onChangeInputsTables}
               />
               <div style={{ marginTop: '1%' }}>
-                <Button onClick={() => calcular()} variant="outlined" sx={{ width: '100%' }}>{t('asphalt.dosages.superpave.calculate-higher-curve')}</Button>
+                <Button onClick={() => calcular()} variant="outlined" sx={{ width: '100%' }}>
+                  {t('asphalt.dosages.superpave.calculate-higher-curve')}
+                </Button>
               </div>
             </TableContainer>
           )}
 
           {data.graphData.length > 0 && (
             <>
-              <Typography>{t('asphalt.dosages.superpave.maximum-nominal-size')}: {data.nominalSize.value} mm</Typography>
+              <Typography>
+                {t('asphalt.dosages.superpave.maximum-nominal-size')}: {data.nominalSize.value} mm
+              </Typography>
               <Graph data={data.graphData} />
             </>
           )}

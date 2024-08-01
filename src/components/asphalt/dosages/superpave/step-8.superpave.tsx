@@ -24,7 +24,7 @@ const Superpave_Step8 = ({
     granulometryCompositionData,
     initialBinderData,
     chosenCurvePercentagesData,
-    firstCurvePercentagesData
+    firstCurvePercentagesData,
   } = useSuperpaveStore();
 
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState({

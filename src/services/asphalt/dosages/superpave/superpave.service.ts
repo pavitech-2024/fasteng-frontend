@@ -90,7 +90,7 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitChosenCurvePercentages(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 7:
-          await this.submitSecondCompressionData(data as SuperpaveData, this.userId, null,isConsult);
+          await this.submitSecondCompressionData(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 8:
           await this.submitSecondCompressionParams(data as SuperpaveData, this.userId, null, isConsult);
@@ -730,15 +730,13 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-    getSecondCompressionPercentages = async (
-    step8Data: SuperpaveData['secondCompressionData']
-  ): Promise<any> => {
+  getSecondCompressionPercentages = async (step8Data: SuperpaveData['secondCompressionData']): Promise<any> => {
     try {
       const { expectedPli, composition } = step8Data;
 
       const response = await Api.post(`${this.info.backend_path}/get-step-9-data`, {
         expectedPli,
-        composition
+        composition,
       });
 
       const { data, success, error } = response.data;

@@ -362,15 +362,15 @@ interface ConfirmationCompressionData {
     submergedMass: number;
     drySurfaceSaturatedMass: number;
     waterTemperatureCorrection: number;
-    diametralTractionResistance: number
+    diametralTractionResistance: number;
   }[];
   gmm: number;
   riceTest: {
     sampleAirDryMass: number;
     containerSampleWaterMass: number;
     containerWaterMass: number;
-    temperatureOfWater: number
-  }
+    temperatureOfWater: number;
+  };
 }
 
 export type SuperpaveData = {
@@ -838,7 +838,7 @@ const initialState = {
         submergedMass: null,
         drySurfaceSaturatedMass: null,
         waterTemperatureCorrection: null,
-        diametralTractionResistance: null
+        diametralTractionResistance: null,
       },
     ],
     gmm: null,
@@ -846,8 +846,8 @@ const initialState = {
       sampleAirDryMass: null,
       containerSampleWaterMass: null,
       containerWaterMass: null,
-      temperatureOfWater: null
-    }
+      temperatureOfWater: null,
+    },
   },
 };
 

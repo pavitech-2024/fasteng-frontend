@@ -366,10 +366,10 @@ const Superpave_Step6 = ({
 
           <Box sx={{ width: '100%' }}>
             <Typography>Selecione a curva com a qual deseja continuar a dosagem:</Typography>
-            <DropDown 
-              label={''} 
-              options={selectedCurveOptions} 
-              callback={(value) => setData({ step: 5, key: 'selectedCurve', value })} 
+            <DropDown
+              label={''}
+              options={selectedCurveOptions}
+              callback={(value) => setData({ step: 5, key: 'selectedCurve', value })}
               size="medium"
               variant="standard"
             />

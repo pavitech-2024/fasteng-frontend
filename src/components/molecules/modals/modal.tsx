@@ -30,7 +30,7 @@ const ModalBase = ({
   onSubmit,
   disableSubmit,
   oneButton = false,
-  singleButtonTitle
+  singleButtonTitle,
 }: IModalBase) => {
   const getModalSize = (size: modalSize) => {
     switch (size) {

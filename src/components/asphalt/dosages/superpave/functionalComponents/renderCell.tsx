@@ -1,5 +1,5 @@
-import { Box, Button, Typography } from "@mui/material";
-import { useRef } from "react";
+import { Box, Button, Typography } from '@mui/material';
+import { useRef } from 'react';
 
 const RenderCellComponent = ({ row, curve, data, addPlanilha }) => {
   const { id } = row;
@@ -21,11 +21,9 @@ const RenderCellComponent = ({ row, curve, data, addPlanilha }) => {
         style={{ display: 'none' }}
         onChange={(e) => addPlanilha(curve, index, e)}
       />
-      <Typography sx={{ textAlign: 'center' }}>
-        {data[curve][index]?.planilha ? 'Selecionado' : `Vazio`}
-      </Typography>
+      <Typography sx={{ textAlign: 'center' }}>{data[curve][index]?.planilha ? 'Selecionado' : `Vazio`}</Typography>
     </Box>
   );
 };
 
-export default RenderCellComponent
+export default RenderCellComponent;

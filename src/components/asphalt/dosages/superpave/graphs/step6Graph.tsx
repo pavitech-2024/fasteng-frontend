@@ -6,14 +6,14 @@ import { Container, Modal, Typography } from '@mui/material';
 import ModalBase from '@/components/molecules/modals/modal';
 
 // Carregar Chart dinamicamente para evitar problemas com SSR
-const Chart = dynamic(() => import('react-google-charts').then(mod => mod.Chart), { ssr: false });
+const Chart = dynamic(() => import('react-google-charts').then((mod) => mod.Chart), { ssr: false });
 
 interface GraphProps {
   data: any[];
 }
 
 const GraphStep6: React.FC<GraphProps> = ({ data }) => {
-  console.log("🚀 ~ data:", data)
+  console.log('🚀 ~ data:', data);
   const [fullScreen, setFullScreen] = useState(false);
   const [options, setOptions] = useState({
     width: 0,
@@ -26,7 +26,7 @@ const GraphStep6: React.FC<GraphProps> = ({ data }) => {
     },
     chartArea: {
       width: '80%',
-      height: '80%'
+      height: '80%',
     },
     hAxis: {
       title: 'Nº de Giros',
@@ -39,29 +39,29 @@ const GraphStep6: React.FC<GraphProps> = ({ data }) => {
         lineWidth: 1,
         pointsVisible: true,
         pointSize: 1,
-        labelInLegend: "Altura (mm)"
+        labelInLegend: 'Altura (mm)',
       },
       1: {
         color: 'rgb(133, 210, 98)',
         lineWidth: 1,
         pointsVisible: true,
         pointSize: 1,
-        labelInLegend: "Gmb*/Gmm"
+        labelInLegend: 'Gmb*/Gmm',
       },
       2: {
         color: 'rgb(254, 140, 106)',
         lineWidth: 1,
         pointsVisible: true,
         pointSize: 1,
-        labelInLegend: "Volume de Vazios (%)"
+        labelInLegend: 'Volume de Vazios (%)',
       },
     },
     legend: {
       position: 'top',
       textStyle: {
         color: '#515151',
-        fontSize: 14
-      }
+        fontSize: 14,
+      },
     },
   });
   const [optionsFullScreen, setOptionsFullScreen] = useState({ ...options });
@@ -73,15 +73,15 @@ const GraphStep6: React.FC<GraphProps> = ({ data }) => {
     };
 
     const { width, height } = getPercentDimensions();
-    setOptions(prevOptions => ({
+    setOptions((prevOptions) => ({
       ...prevOptions,
       width,
-      height
+      height,
     }));
-    setOptionsFullScreen(prevOptions => ({
+    setOptionsFullScreen((prevOptions) => ({
       ...prevOptions,
       width,
-      height
+      height,
     }));
 
     window.addEventListener('resize', handleResize);
@@ -120,9 +120,7 @@ const GraphStep6: React.FC<GraphProps> = ({ data }) => {
     if (graphContainer) {
       graphContainer = graphContainer.parentElement as HTMLElement;
       graphContainer.style.width = `${width}px`;
-      height !== 0
-        ? (graphContainer.style.height = `${height}px`)
-        : (graphContainer.style.height = `${width / 2}px`);
+      height !== 0 ? (graphContainer.style.height = `${height}px`) : (graphContainer.style.height = `${width / 2}px`);
     }
   };
 
@@ -163,14 +161,14 @@ const GraphStep6: React.FC<GraphProps> = ({ data }) => {
 
   return (
     <Container id="graph-container">
-      <ModalBase 
-        open={fullScreen} 
-        title={'Modal'} 
-        leftButtonTitle={'esquerda'} 
-        rightButtonTitle={'direita'} 
-        onCancel={() => setFullScreen(false)} 
-        size={'small'} 
-        onSubmit={() => console.log("teste")}
+      <ModalBase
+        open={fullScreen}
+        title={'Modal'}
+        leftButtonTitle={'esquerda'}
+        rightButtonTitle={'direita'}
+        onCancel={() => setFullScreen(false)}
+        size={'small'}
+        onSubmit={() => console.log('teste')}
       >
         {/* <ActionsModal>
           <CloseIcon
@@ -193,11 +191,11 @@ const GraphStep6: React.FC<GraphProps> = ({ data }) => {
           <FullScreenIcon />
         </ExpandButton>
       </Actions> */}
-      <Chart 
-        chartType="LineChart" 
-        data={data} 
-        // chartEvents={chartEvents()} 
-        options={options} 
+      <Chart
+        chartType="LineChart"
+        data={data}
+        // chartEvents={chartEvents()}
+        options={options}
       />
     </Container>
   );

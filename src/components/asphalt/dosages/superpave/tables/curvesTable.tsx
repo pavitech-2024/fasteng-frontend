@@ -5,7 +5,6 @@ import useSuperpaveStore, { SuperpaveData } from '@/stores/asphalt/superpave/sup
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { t } from 'i18next';
 
-
 interface Props {
   materials: { name: string; _id: string }[];
   dnitBandsLetter: string;
@@ -25,13 +24,7 @@ interface TableModel {
   columnsKeys: string[];
 }
 
-const CurvesTable: React.FC<Props> = ({
-  materials,
-  dnitBandsLetter,
-  tableName,
-  tableData,
-}) => {
-
+const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, tableData }) => {
   const { granulometryCompositionData: data, setData } = useSuperpaveStore();
 
   const getMaterialIndex = () => {
@@ -68,9 +61,9 @@ const CurvesTable: React.FC<Props> = ({
       newTable.columnsKeys.push('key%' + i);
     });
 
-    newTable.columnsHeaderTop.push({ header: t("asphalt.dosages.superpave.project"), type: 'rowSpan' });
+    newTable.columnsHeaderTop.push({ header: t('asphalt.dosages.superpave.project'), type: 'rowSpan' });
     newTable.columnsKeys.push('Projeto');
-    newTable.columnsHeaderTop.push({ header: t("asphalt.dosages.superpave.specification"), type: 'colsSpan' });
+    newTable.columnsHeaderTop.push({ header: t('asphalt.dosages.superpave.specification'), type: 'colsSpan' });
     newTable.columnsHeader.push(`Faixa ${dnitBandsLetter}`);
     newTable.columnsKeys.push('bandsCol1');
     newTable.columnsKeys.push('bandsCol2');
@@ -79,41 +72,41 @@ const CurvesTable: React.FC<Props> = ({
   };
 
   const generateMaterialColumns = (data, materialIndex) => {
-    return materials.map((material, index) => {
-      const fieldTotalPassant = `totalPassant_${index + 1}`;
-      const fieldMaterial = `material_${index + 1}`;
-      
-      return [
-        {
-          field: fieldTotalPassant,
-          headerName: t("asphalt.dosages.superpave.total-passant"),
-          width: 138,
-          valueFormatter: ({ value }) => `${value}`,
-        },
-        {
-          field: fieldMaterial,
-          headerName: '',
-          width: 100,
-          valueFormatter: ({ value }) => `${value}`,
-          renderHeader: () => (
-            <InputEndAdornment
-              adornment="%"
-              value={data?.percentageInputs[materialIndex][fieldMaterial] || ''}
-              onChange={(e) => {
-                const prevData = [...data?.percentageInputs];
-                const newData = { ...prevData[materialIndex], [fieldMaterial]: e.target.value };
-                const updatedData = prevData.map((item, idx) => 
-                  idx === materialIndex ? newData : item
-                );
-                setData({ step: 2, value: { ...data, percentageInputs: updatedData } });
-              }}
-            />
-          ),
-        },
-      ];
-    }).flat();
+    return materials
+      .map((material, index) => {
+        const fieldTotalPassant = `totalPassant_${index + 1}`;
+        const fieldMaterial = `material_${index + 1}`;
+
+        return [
+          {
+            field: fieldTotalPassant,
+            headerName: t('asphalt.dosages.superpave.total-passant'),
+            width: 138,
+            valueFormatter: ({ value }) => `${value}`,
+          },
+          {
+            field: fieldMaterial,
+            headerName: '',
+            width: 100,
+            valueFormatter: ({ value }) => `${value}`,
+            renderHeader: () => (
+              <InputEndAdornment
+                adornment="%"
+                value={data?.percentageInputs[materialIndex][fieldMaterial] || ''}
+                onChange={(e) => {
+                  const prevData = [...data?.percentageInputs];
+                  const newData = { ...prevData[materialIndex], [fieldMaterial]: e.target.value };
+                  const updatedData = prevData.map((item, idx) => (idx === materialIndex ? newData : item));
+                  setData({ step: 2, value: { ...data, percentageInputs: updatedData } });
+                }}
+              />
+            ),
+          },
+        ];
+      })
+      .flat();
   };
-  
+
   const columns = [
     {
       field: 'peneira',
@@ -124,7 +117,7 @@ const CurvesTable: React.FC<Props> = ({
     ...generateMaterialColumns(data, materialIndex),
     {
       field: 'project',
-      headerName: t("asphalt.dosages.superpave.project"),
+      headerName: t('asphalt.dosages.superpave.project'),
       valueFormatter: ({ value }) => `${value}`,
       width: 75,
     },
@@ -141,7 +134,7 @@ const CurvesTable: React.FC<Props> = ({
       width: 75,
     },
   ];
-  
+
   const generateMaterialRows = (data, tableName, idx, e) => {
     return materials.reduce((acc, material, index) => {
       const fieldTotalPassant = `totalPassant_${index + 1}`;
@@ -149,13 +142,14 @@ const CurvesTable: React.FC<Props> = ({
       return {
         ...acc,
         [fieldTotalPassant]: e[`keyTotal${index}`],
-        [fieldMaterial]: data[tableName].percentsOfMaterials !== null 
-          ? data[tableName].percentsOfMaterials[index][idx]?.toFixed(2) 
-          : '',
+        [fieldMaterial]:
+          data[tableName].percentsOfMaterials !== null
+            ? data[tableName].percentsOfMaterials[index][idx]?.toFixed(2)
+            : '',
       };
     }, {});
   };
-  
+
   const rows = tableData.map((e, idx) => ({
     id: idx,
     peneira: e.peneira,
@@ -164,25 +158,22 @@ const CurvesTable: React.FC<Props> = ({
     band1: e.bandsCol1,
     band2: e.bandsCol2,
   }));
-  
+
   const generateMaterialGroupings = (materials) => {
     return materials.map((material, index) => {
       const groupId = `material_${index + 1}`;
       const fieldTotalPassant = `totalPassant_${index + 1}`;
       const fieldMaterial = `material_${index + 1}`;
-      
+
       return {
         groupId: groupId,
         headerName: material.name,
-        children: [
-          { field: fieldTotalPassant },
-          { field: fieldMaterial }
-        ],
+        children: [{ field: fieldTotalPassant }, { field: fieldMaterial }],
         headerAlign: 'center',
       };
     });
   };
-  
+
   const groupings = [
     ...generateMaterialGroupings(materials),
     {
@@ -198,7 +189,6 @@ const CurvesTable: React.FC<Props> = ({
       headerAlign: 'center',
     },
   ];
-  
 
   return table.columnsKeys.length > 0 ? (
     <DataGrid

@@ -13,7 +13,6 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-
 const Superpave_Step4 = ({
   nextDisabled,
   setNextDisabled,
@@ -144,20 +143,19 @@ const Superpave_Step4 = ({
           granulometricComposition: compositions[i],
           initialBinder: e.pli?.toFixed(2),
         };
-  
+
         e.percentsOfDosageWithBinder.forEach((percent, index) => {
           row[`material_${index + 1}`] = percent?.toFixed(2);
         });
-  
+
         return row;
       });
-  
+
       return updatedPercentageRows;
     } else {
       return [];
     }
   };
-  
 
   const handleModalSubmit = () => {
     toast.promise(
@@ -200,25 +198,25 @@ const Superpave_Step4 = ({
   const columns: GridColDef[] = [
     {
       field: 'granulometricComposition',
-      headerName: t("asphalt.dosages.superpave.granulometric-composition"),
+      headerName: t('asphalt.dosages.superpave.granulometric-composition'),
       valueFormatter: ({ value }) => `${value}`,
       width: 200,
     },
     {
       field: 'combinedGsb',
-      headerName: t("asphalt.dosages.superpave.combined-gsb"),
+      headerName: t('asphalt.dosages.superpave.combined-gsb'),
       valueFormatter: ({ value }) => `${value}`,
       width: 200,
     },
     {
       field: 'combinedGsa',
-      headerName: t("asphalt.dosages.superpave.combined-gsa"),
+      headerName: t('asphalt.dosages.superpave.combined-gsa'),
       valueFormatter: ({ value }) => `${value}`,
       width: 200,
     },
     {
       field: 'gse',
-      headerName: t("asphalt.dosages.superpave.gse"),
+      headerName: t('asphalt.dosages.superpave.gse'),
       valueFormatter: ({ value }) => `${value}`,
       width: 200,
     },
@@ -228,40 +226,37 @@ const Superpave_Step4 = ({
     const baseCols: GridColDef[] = [
       {
         field: 'granulometricComposition',
-        headerName: t("asphalt.dosages.superpave.granulometric-composition"),
+        headerName: t('asphalt.dosages.superpave.granulometric-composition'),
         valueFormatter: ({ value }) => `${value}`,
         width: 200,
       },
       {
         field: 'initialBinder',
-        headerName: t("asphalt.dosages.superpave.initial-binder"),
+        headerName: t('asphalt.dosages.superpave.initial-binder'),
         valueFormatter: ({ value }) => `${value}`,
         width: 200,
-      }
+      },
     ];
-  
+
     const materialCols = materialSelectionData.aggregates.map((aggregate, index) => ({
       field: `material_${index + 1}`,
       headerName: aggregate.name,
       valueFormatter: ({ value }) => `${value}`,
       width: 100,
     }));
-  
+
     return [...baseCols, ...materialCols];
   };
-  
+
   const estimatedPercentageCols = createEstimatedPercentageCols();
 
   const createEstimatedPercentageGroupings = (): GridColumnGroupingModel => {
-    const baseChildren = [
-      { field: 'granulometricComposition' },
-      { field: 'initialBinder' },
-    ];
-  
+    const baseChildren = [{ field: 'granulometricComposition' }, { field: 'initialBinder' }];
+
     const materialChildren = materialSelectionData.aggregates.map((_, index) => ({
       field: `material_${index + 1}`,
     }));
-  
+
     return [
       {
         groupId: 'estimatedPercentage',
@@ -271,31 +266,31 @@ const Superpave_Step4 = ({
       },
     ];
   };
-  
+
   const estimatedPercentageGroupings = createEstimatedPercentageGroupings();
 
   const compressionParamsCols: GridColDef[] = [
     {
       field: 'initialN',
-      headerName: t("asphalt.dosages.superpave.initial-n"),
+      headerName: t('asphalt.dosages.superpave.initial-n'),
       valueFormatter: ({ value }) => `${value}`,
       width: 200,
     },
     {
       field: 'projectN',
-      headerName: t("asphalt.dosages.superpave.project-n"),
+      headerName: t('asphalt.dosages.superpave.project-n'),
       valueFormatter: ({ value }) => `${value}`,
       width: 200,
     },
     {
       field: 'maxN',
-      headerName: t("asphalt.dosages.superpave.max-n"),
+      headerName: t('asphalt.dosages.superpave.max-n'),
       valueFormatter: ({ value }) => `${value}`,
       width: 200,
     },
     {
       field: 'tex',
-      headerName: t("asphalt.dosages.superpave.traffic"),
+      headerName: t('asphalt.dosages.superpave.traffic'),
       valueFormatter: ({ value }) => `${value}`,
       width: 200,
     },
@@ -314,7 +309,7 @@ const Superpave_Step4 = ({
   const compressionParamsGroupings: GridColumnGroupingModel = [
     {
       groupId: 'compressionParams',
-      headerName: t("asphalt.dosages.superpave.compression-params"),
+      headerName: t('asphalt.dosages.superpave.compression-params'),
       children: [{ field: 'initialN' }, { field: 'maxN' }, { field: 'projectN' }, { field: 'tex' }],
       headerAlign: 'center',
     },
@@ -358,8 +353,12 @@ const Superpave_Step4 = ({
             sx={{ marginTop: '2rem' }}
           />
 
-          <Button variant='outlined' sx={{ width: 'fit-content', marginTop: '2rem' }} onClick={() => setNewInitialBinderModalIsOpen(true)}>
-            {t("asphalt.dosages.superpave.change-initial-binder")}
+          <Button
+            variant="outlined"
+            sx={{ width: 'fit-content', marginTop: '2rem' }}
+            onClick={() => setNewInitialBinderModalIsOpen(true)}
+          >
+            {t('asphalt.dosages.superpave.change-initial-binder')}
           </Button>
 
           <DataGrid
@@ -376,7 +375,7 @@ const Superpave_Step4 = ({
 
       {specificMassModalIsOpen && (
         <ModalBase
-          title={t("asphalt.dosages.superpave.specific-mass-modal-title")}
+          title={t('asphalt.dosages.superpave.specific-mass-modal-title')}
           leftButtonTitle={''}
           rightButtonTitle={''}
           onCancel={() => {
@@ -434,7 +433,7 @@ const Superpave_Step4 = ({
           <Box>
             <InputEndAdornment
               adornment={'g/cm²'}
-              placeholder={t("asphalt.dosages.superpave.real-specific-mass")}
+              placeholder={t('asphalt.dosages.superpave.real-specific-mass')}
               value={data.binderSpecificMass}
               type="number"
               onChange={(e) => {
@@ -446,7 +445,7 @@ const Superpave_Step4 = ({
       )}
 
       <ModalBase
-        title={t("asphalt.dosages.superpave.insert-initial-binder")}
+        title={t('asphalt.dosages.superpave.insert-initial-binder')}
         leftButtonTitle={'Cancelar'}
         rightButtonTitle={'Confirmar'}
         onCancel={() => {
@@ -461,7 +460,7 @@ const Superpave_Step4 = ({
         <InputEndAdornment
           adornment="%"
           value={binderInput}
-          placeholder={t("asphalt.dosages.superpave.lower-curve")}
+          placeholder={t('asphalt.dosages.superpave.lower-curve')}
           fullWidth
           onChange={(e) => {
             setData({

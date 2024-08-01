@@ -266,7 +266,9 @@ const Superpave_Step10 = ({
         >
           <Typography>Gmm do teor de ligante asfaltico ótimo:</Typography>
 
-          <Button variant="outlined" onClick={() => setModalIsOpen(true)}>Calcular densidade máxima da mistura</Button>
+          <Button variant="outlined" onClick={() => setModalIsOpen(true)}>
+            Calcular densidade máxima da mistura
+          </Button>
 
           <DataGrid
             hideFooter
@@ -313,7 +315,7 @@ const Superpave_Step10 = ({
               label={'Selecione o fator de correção para a temperatura da água'}
               options={waterTemperatureList}
               callback={(selectedValue) => {
-                let prevData = {...data.riceTest};
+                let prevData = { ...data.riceTest };
                 const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
                 prevData = newData;
                 setData({ step: 4, value: { ...data, riceTest: prevData } });

@@ -15,14 +15,14 @@ const Superpave_Step7 = ({
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { 
-    setData, 
-    generalData, 
-    materialSelectionData, 
-    granulometryCompositionData, 
-    firstCurvePercentagesData, 
+  const {
+    setData,
+    generalData,
+    materialSelectionData,
+    granulometryCompositionData,
+    firstCurvePercentagesData,
     firstCompressionData,
-    chosenCurvePercentagesData: data
+    chosenCurvePercentagesData: data,
   } = useSuperpaveStore();
 
   const [vv, setVv] = useState();
@@ -31,14 +31,14 @@ const Superpave_Step7 = ({
     if (data.listOfPlis.length > 0) {
       const curve = firstCurvePercentagesData.selectedCurve;
       if (curve === 'lower') {
-        setVv(firstCurvePercentagesData.table2.table2Lower.porcentageVv)
+        setVv(firstCurvePercentagesData.table2.table2Lower.porcentageVv);
       } else if (curve === 'average') {
-        setVv(firstCurvePercentagesData.table2.table2Average.porcentageVv)
+        setVv(firstCurvePercentagesData.table2.table2Average.porcentageVv);
       } else if (curve === 'higher') {
-        setVv(firstCurvePercentagesData.table2.table2Higher.porcentageVv)
+        setVv(firstCurvePercentagesData.table2.table2Higher.porcentageVv);
       }
     }
-  },[data])
+  }, [data]);
 
   const { user } = useAuth();
 
@@ -92,13 +92,13 @@ const Superpave_Step7 = ({
   ];
 
   const extimatedBinderMaterialsPercentsRows = data.porcentageAggregate.map((e, i) => ({
-      id: i,
-      binder: data.listOfPlis[i].toFixed(2),
-      material_1: data.porcentageAggregate[0][i].toFixed(2),
-      material_2: data.porcentageAggregate[1][i].toFixed(2),
-      material_3: data.porcentageAggregate[2][i].toFixed(2),
-      material_4: data.porcentageAggregate[3][i].toFixed(2),
-  }))
+    id: i,
+    binder: data.listOfPlis[i].toFixed(2),
+    material_1: data.porcentageAggregate[0][i].toFixed(2),
+    material_2: data.porcentageAggregate[1][i].toFixed(2),
+    material_3: data.porcentageAggregate[2][i].toFixed(2),
+    material_4: data.porcentageAggregate[3][i].toFixed(2),
+  }));
 
   const extimatedBinderMaterialsPercentsCols = [
     {

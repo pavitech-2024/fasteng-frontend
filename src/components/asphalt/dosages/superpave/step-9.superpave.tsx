@@ -38,7 +38,7 @@ const Superpave_Step9 = ({
           } = await superpave.getSecondCompressionPercentages(secondCompressionData);
 
           if (success) {
-            const newData = {...data, ...resData}
+            const newData = { ...data, ...resData };
             setData({
               step: 8,
               value: newData,
