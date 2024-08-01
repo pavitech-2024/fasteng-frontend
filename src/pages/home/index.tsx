@@ -152,6 +152,8 @@ const Home: NextPage = () => {
         ))}
       </Box>
       <Box>
+
+        {/* alinhar icones lep e jbr */}
         <Box
           sx={{
             display: 'flex',
@@ -172,7 +174,8 @@ const Home: NextPage = () => {
               left: 0,
             }}
           >
-            <Image
+            {/* <!--realinhar icones lep e jbr-->  */}  
+            <Image 
               style={{
                 borderRadius: '100%',
                 width: '50px',
