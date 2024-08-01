@@ -20,12 +20,7 @@ const Superpave_Step5 = ({
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const {
-    granulometryCompositionData,
-    initialBinderData,
-    firstCompressionData: data,
-    setData,
-  } = useSuperpaveStore();
+  const { granulometryCompositionData, initialBinderData, firstCompressionData: data, setData } = useSuperpaveStore();
 
   const [stepStatus, setStepStatus] = useState('');
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
@@ -371,7 +366,7 @@ const Superpave_Step5 = ({
       link.href = `/superpave-docs/${spreadSheet}`;
       link.click();
     } catch (error) {
-      toast.error(t('asphalt.dosages.superpave.file-download-error-toast'))
+      toast.error(t('asphalt.dosages.superpave.file-download-error-toast'));
     }
   };
 
