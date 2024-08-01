@@ -1,5 +1,6 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
+import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
@@ -7,7 +8,7 @@ import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { Box, Button, Typography } from '@mui/material';
 import { DataGrid, GridColumnGroupingModel } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const Superpave_Step10 = ({
@@ -17,6 +18,8 @@ const Superpave_Step10 = ({
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, confirmationCompressionData: data, setData } = useSuperpaveStore();
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const { user } = useAuth();
 
@@ -179,9 +182,9 @@ const Superpave_Step10 = ({
       submergedMass: data.table[0].submergedMass,
       drySurfaceSaturatedMass: data.table[0].drySurfaceSaturatedMass,
       waterTemperatureCorrection: data.table[0].waterTemperatureCorrection,
-      diametralTractionResistance: data.table[0].diametralTractionResistance
-    }
-  ]
+      diametralTractionResistance: data.table[0].diametralTractionResistance,
+    },
+  ];
 
   const handleErase = () => {
     try {
@@ -239,7 +242,7 @@ const Superpave_Step10 = ({
         >
           <Typography>Gmm do teor de ligante asfaltico ótimo:</Typography>
 
-          <Button variant='outlined'>Calcular densidade máxima da mistura</Button>
+          <Button variant="outlined">Calcular densidade máxima da mistura</Button>
 
           <DataGrid
             hideFooter
@@ -250,6 +253,22 @@ const Superpave_Step10 = ({
             rows={confirmationCompressionRows}
             slots={{ footer: ExpansionToolbar }}
           />
+
+          <ModalBase
+            leftButtonTitle={'cancelar'}
+            rightButtonTitle={'confirmar'}
+            oneButton={true}
+            onCancel={() => setModalIsOpen(false)}
+            open={modalIsOpen}
+            size={'large'}
+            title={''}
+          >
+            <InputEndAdornment
+              adornment={''}
+              value={data.gmm}
+              onChange={(e) => setData({ step: 9, key: 'gmm', value: e.target.value })}
+            />
+          </ModalBase>
         </Box>
       )}
     </>

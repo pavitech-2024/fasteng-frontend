@@ -14,7 +14,7 @@ interface IModalBase {
   onCancel: () => void;
   open: boolean;
   size: modalSize;
-  onSubmit: () => void;
+  onSubmit?: () => void;
   disableSubmit?: boolean;
   oneButton?: boolean;
 }
