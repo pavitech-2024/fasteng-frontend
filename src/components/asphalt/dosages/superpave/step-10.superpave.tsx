@@ -277,13 +277,44 @@ const Superpave_Step10 = ({
   };
 
   const handleGmmSubmit = () => {
-    const riceTestHasValues = Object.values(data.riceTest).some((item) => item !== null)
+    const { temperatureOfWater, ...riceTestWithoutWaterTemp } = data.riceTest;
+    const riceTestHasValues = Object.values(riceTestWithoutWaterTemp).some((item) => item !== null)
     if (riceTestHasValues) {
       toast.error(t('asphalt.dosages.superpave.rice-test-empty-values'))
     } else if (!riceTestHasValues && data.gmm === null) {
       toast.error(t('asphalt.dosages.superpave.gmm-empty'))
     } else if (!riceTestHasValues && data.gmm !== null && data.riceTest.temperatureOfWater === null) {
       toast.error(t('asphalt.dosages.superpave.water-temperature-empty'))
+    } else {
+      toast.promise(
+        async () => {
+          try {
+            const {
+              data: resData,
+              success,
+              error,
+            } = await superpave.calculateRiceTestStep9(data);
+  
+            if (success) {
+              const newData = { ...data, ...resData };
+              setData({
+                step: 9,
+                value: newData,
+              });
+              setModalIsOpen(false)
+            } else {
+              console.error(`${error}`);
+            }
+          } catch (error) {
+            throw error;
+          }
+        },
+        {
+          pending: t('loading.materials.pending'),
+          success: t('loading.materials.success'),
+          error: t('loading.materials.error'),
+        }
+      );
     }
   }
 
@@ -301,7 +332,7 @@ const Superpave_Step10 = ({
             gap: '10px',
           }}
         >
-          <Typography>Gmm do teor de ligante asfaltico ótimo:</Typography>
+          <Typography>Gmm do teor de ligante asfaltico ótimo: {data.gmm}</Typography>
 
           <Button variant="outlined" onClick={() => setModalIsOpen(true)}>
             Calcular densidade máxima da mistura
@@ -361,7 +392,7 @@ const Superpave_Step10 = ({
                   let prevData = { ...data.riceTest };
                   const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
                   prevData = newData;
-                  setData({ step: 4, value: { ...data, riceTest: prevData } });
+                  setData({ step: 9, value: { ...data, riceTest: prevData } });
                 }}
                 size="medium"
                 sx={{ width: '100%' }}

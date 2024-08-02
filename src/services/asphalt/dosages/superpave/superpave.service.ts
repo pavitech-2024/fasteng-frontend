@@ -100,6 +100,10 @@ class Superpave_SERVICE implements IEssayService {
         case 8:
           await this.submitSecondCompressionParams(data as SuperpaveData, this.userId, null, isConsult);
           break;
+        case 9:
+          await this.calculateDosageEquation(data as SuperpaveData['confirmationCompressionData']);
+          await this.submitConfirmattionCompression(data as SuperpaveData, this.userId, null, isConsult);
+          break;
         default:
           throw t('errors.invalid-step');
       }
@@ -788,12 +792,13 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  calculateDosageEquation = async (step9Data: SuperpaveData['confirmationCompressionData']) => {
+  calculateRiceTestStep9 = async (step9Data: SuperpaveData['confirmationCompressionData']) => {
     try {
-      const { table: samplesData } = step9Data;
+      const { riceTest, gmm } = step9Data;
 
-      const response = await Api.post(`${this.info.backend_path}/calculate-dosage-equation`, {
-        samplesData,
+      const response = await Api.post(`${this.info.backend_path}/calculate-step-9-rice-test`, {
+        riceTest,
+        gmm,
       });
 
       const { data, success, error } = response.data;
@@ -804,6 +809,93 @@ class Superpave_SERVICE implements IEssayService {
     } catch (error) {
       console.log(error);
       throw error;
+    }
+  };
+
+  calculateDosageEquation = async (step9Data: any) => {
+    try {
+      const { table: samplesData } = step9Data.confirmationCompressionData;
+      const { porcentagesPassantsN200, percentageInputs } = step9Data.granulometryCompositionData;
+      const { optimumContent } = step9Data.secondCompressionPercentagesData;
+      const { binderSpecificMass, materials } = step9Data.initialBinderData;
+      const { selectedCurve, table3 } = step9Data.firstCurvePercentagesData;
+
+      let choosenGranulometryComposition;
+      let selectedPercentsOfDosage;
+
+      if (selectedCurve === 'lower') {
+        choosenGranulometryComposition = table3.table3Lower;
+        selectedPercentsOfDosage = percentageInputs[0];
+      }
+      if (selectedCurve === 'average') {
+        choosenGranulometryComposition = table3.table3Average;
+        selectedPercentsOfDosage = percentageInputs[1];
+      }
+      if (selectedCurve === 'higher') {
+        choosenGranulometryComposition = table3.table3Higher;
+        selectedPercentsOfDosage = percentageInputs[2];
+      }
+
+      const percentsOfDosageValues = Object.values(selectedPercentsOfDosage).map((item) => Number(item))
+
+      choosenGranulometryComposition = {
+        ...choosenGranulometryComposition,
+        percentsOfDosage: percentsOfDosageValues
+      }
+
+      const response = await Api.post(`${this.info.backend_path}/calculate-dosage-equation`, {
+        samplesData,
+        choosenGranulometryComposition,
+        optimumContent,
+        binderSpecificGravity: binderSpecificMass,
+        listOfSpecificGravities: materials,
+        porcentagesPassantsN200
+      });
+
+      const { data, success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+      return { data, success, error };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  submitConfirmattionCompression = async (
+    data: SuperpaveData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
+      try {
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
+
+        const confirmationCompressionData = {
+          ...data.secondCompressionPercentagesData,
+          name,
+          isConsult: null,
+        };
+
+        if (isConsult) confirmationCompressionData.isConsult = isConsult;
+
+        const response = await Api.post(`${this.info.backend_path}/save-confirmattion-compression-step/${userData}`, {
+          confirmationCompressionData: {
+            ...data.confirmationCompressionData,
+            name,
+          },
+        });
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
     }
   };
 }
