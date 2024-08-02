@@ -373,6 +373,10 @@ interface ConfirmationCompressionData {
   };
 }
 
+interface DosageResume {
+
+}
+
 export type SuperpaveData = {
   generalData: SuperpaveGeneralData;
   materialSelectionData: SuperpaveMaterialSelectionData;
@@ -384,6 +388,7 @@ export type SuperpaveData = {
   secondCompressionData: SecondCompressionData;
   secondCompressionPercentagesData: SecondCompressionPercentagesData;
   confirmationCompressionData: ConfirmationCompressionData;
+  dosageResume: DosageResume
 };
 
 export type SuperpaveActions = {
@@ -404,6 +409,7 @@ const stepVariant = {
   7: 'secondCompressionData',
   8: 'secondCompressionPercentagesData',
   9: 'confirmationCompressionData',
+  10: 'dosageResume'
 };
 
 const initialState = {
@@ -849,6 +855,7 @@ const initialState = {
       temperatureOfWater: null,
     },
   },
+  dosageResume: {}
 };
 
 const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(

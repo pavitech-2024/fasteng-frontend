@@ -24,7 +24,33 @@ const Superpave_Step10 = ({
 
   const { user } = useAuth();
 
+  const list = {
+    '15°C - 0.9991': 0.9991,
+    '16°C - 0.9989': 0.9989,
+    '17°C - 0.9988': 0.9988,
+    '18°C - 0.9986': 0.9986,
+    '19°C - 0.9984': 0.9984,
+    '20°C - 0.9982': 0.9982,
+    '21°C - 0.9980': 0.998,
+    '22°C - 0.9978': 0.9978,
+    '23°C - 0.9975': 0.9975,
+    '24°C - 0.9973': 0.9973,
+    '25°C - 0.9970': 0.997,
+    '26°C - 0.9968': 0.9968,
+    '27°C - 0.9965': 0.9965,
+    '28°C - 0.9962': 0.9962,
+    '29°C - 0.9959': 0.9959,
+    '30°C - 0.9956': 0.9956,
+  };
+
   const waterTemperatureList = [];
+
+  const formatedWaterTempList = Object.keys(list).forEach((key) => {
+    waterTemperatureList.push({
+      label: key,
+      value: list[key],
+    });
+  });
 
   const confirmationCompressionCols = [
     {
@@ -250,6 +276,17 @@ const Superpave_Step10 = ({
     );
   };
 
+  const handleGmmSubmit = () => {
+    const riceTestHasValues = Object.values(data.riceTest).some((item) => item !== null)
+    if (riceTestHasValues) {
+      toast.error(t('asphalt.dosages.superpave.rice-test-empty-values'))
+    } else if (!riceTestHasValues && data.gmm === null) {
+      toast.error(t('asphalt.dosages.superpave.gmm-empty'))
+    } else if (!riceTestHasValues && data.gmm !== null && data.riceTest.temperatureOfWater === null) {
+      toast.error(t('asphalt.dosages.superpave.water-temperature-empty'))
+    }
+  }
+
   nextDisabled && setNextDisabled(false);
 
   return (
@@ -288,41 +325,48 @@ const Superpave_Step10 = ({
             open={modalIsOpen}
             size={'large'}
             title={''}
+            onSubmit={handleGmmSubmit}
+            singleButtonTitle={t('asphalt.dosages.superpave.confirm')}
           >
-            <InputEndAdornment
-              adornment={''}
-              value={data.gmm}
-              onChange={(e) => setData({ step: 9, key: 'gmm', value: e.target.value })}
-            />
-
-            {gmmInputs.map((input) => (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
               <InputEndAdornment
-                key={input.key}
-                adornment={input.adornment}
-                placeholder={input.placeHolder}
-                value={input.value}
-                onChange={(e) => {
-                  const prevData = { ...data.riceTest };
-                  prevData[input.key] = e.target.value;
-                  setData({ step: 9, value: { ...data, riceTest: prevData } });
-                }}
+                adornment={''}
+                label={t('asphalt.dosages.superpave.insert-gmm')}
+                value={data.gmm}
+                onChange={(e) => setData({ step: 9, key: 'gmm', value: e.target.value })}
               />
-            ))}
 
-            <DropDown
-              key={'water'}
-              variant="standard"
-              label={'Selecione o fator de correção para a temperatura da água'}
-              options={waterTemperatureList}
-              callback={(selectedValue) => {
-                let prevData = { ...data.riceTest };
-                const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
-                prevData = newData;
-                setData({ step: 4, value: { ...data, riceTest: prevData } });
-              }}
-              size="medium"
-              sx={{ width: '20rem' }}
-            />
+              <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
+                {gmmInputs.map((input) => (
+                  <InputEndAdornment
+                    key={input.key}
+                    adornment={input.adornment}
+                    placeholder={input.placeHolder}
+                    value={input.value}
+                    onChange={(e) => {
+                      const prevData = { ...data.riceTest };
+                      prevData[input.key] = e.target.value;
+                      setData({ step: 9, value: { ...data, riceTest: prevData } });
+                    }}
+                  />
+                ))}
+              </Box>
+
+              <DropDown
+                key={'water'}
+                variant="standard"
+                label={'Selecione o fator de correção para a temperatura da água'}
+                options={waterTemperatureList}
+                callback={(selectedValue) => {
+                  let prevData = { ...data.riceTest };
+                  const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
+                  prevData = newData;
+                  setData({ step: 4, value: { ...data, riceTest: prevData } });
+                }}
+                size="medium"
+                sx={{ width: '100%' }}
+              />
+            </Box>
           </ModalBase>
         </Box>
       )}

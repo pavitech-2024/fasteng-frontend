@@ -27,13 +27,18 @@ class Superpave_SERVICE implements IEssayService {
       },
       { step: 3, description: t('asphalt.dosages.superpave.initial_binder'), path: 'initial-binder' },
       { step: 4, description: t('asphalt.dosages.superpave.first_compression'), path: 'first-compression' },
+      { step: 5, description: t('asphalt.dosages.superpave.first_curve_percentages'), path: 'first-curve-percentages' },
       {
         step: 6,
         description: t('asphalt.dosages.superpave.chosen_curve_percentages'),
         path: 'chosen-curve-percentages',
       },
       { step: 7, description: t('asphalt.dosages.superpave.second_compression'), path: 'second-compression' },
-      { step: 8, description: t('asphalt.dosages.superpave.second_compression_parameters'), path: 'dosage-resume' },
+      {
+        step: 8,
+        description: t('asphalt.dosages.superpave.second_compression_parameters'),
+        path: 'second-compression-parameters',
+      },
       {
         step: 9,
         description: t('asphalt.dosages.superpave.confirmation_compression'),
@@ -780,6 +785,25 @@ class Superpave_SERVICE implements IEssayService {
         console.log(error);
         throw error;
       }
+    }
+  };
+
+  calculateDosageEquation = async (step9Data: SuperpaveData['confirmationCompressionData']) => {
+    try {
+      const { table: samplesData } = step9Data;
+
+      const response = await Api.post(`${this.info.backend_path}/calculate-dosage-equation`, {
+        samplesData,
+      });
+
+      const { data, success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+      return { data, success, error };
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
   };
 }

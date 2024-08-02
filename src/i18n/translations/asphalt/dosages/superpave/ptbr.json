@@ -102,5 +102,9 @@
   "asphalt.dosages.expected-pa": "P/A Estimado (%)",
   "asphalt.dosages.estimated-vam": "VAM Estimado (%)",
   "asphalt.dosages.estimated-binder-percentage": "Porcentagem de ligante estimada (%)",
-  "asphalt.dosages.mixture": "Mistura"
+  "asphalt.dosages.mixture": "Mistura",
+
+  "asphalt.dosages.superpave.gmm-empty": "Insira o valor do Gmm da mistura",
+  "asphalt.dosages.superpave.rice-test-empty-values": "Insira os valores para realizar o Rice Test",
+  "asphalt.dosages.superpave.water-temperature-empty": "Selecione o fator de correção da temperatura da água"
 }
