@@ -185,7 +185,7 @@ const GeneratePDFConcreteMaterials = ({
       addCenteredText(doc, `${pageNumber}`, lineYPosition + 5, 10);
     };
   
-    const addCenteredText = (doc: any, text: any, y: any, fontSize: number = 24) => {
+    const addCenteredText = (doc: any, text: any, y: any, fontSize = 24) => {
       const pageWidth = doc.internal.pageSize.getWidth();
       const textWidth = (doc.getStringUnitWidth(text) * fontSize) / doc.internal.scaleFactor;
       const x = (pageWidth - textWidth) / 2;
@@ -193,11 +193,11 @@ const GeneratePDFConcreteMaterials = ({
       doc.text(x, y, text);
     };
   
-    const addTextToRightMargin = (doc: any, text: string, blockWidth: number, y: number, padding: number = 5) => {
+    const addTextToRightMargin = (doc: any, text: string, blockWidth: number, y: number, padding = 5) => {
       const pageWidth = doc.internal.pageSize.getWidth();
       const x = pageWidth - blockWidth;
   
-      let lines = [];
+      const lines = [];
       let currentLine = '';
       const words = text.split(' ');
   
@@ -227,14 +227,14 @@ const GeneratePDFConcreteMaterials = ({
       });
     };
   
-    const addTextToLeftMargin = (doc: any, text: any, margin: any, y: any, fontSize: number = 12) => {
+    const addTextToLeftMargin = (doc: any, text: any, margin: any, y: any, fontSize = 12) => {
       const x = margin;
       doc.setFontSize(fontSize);
       doc.text(x, y, text);
     };
     const addImageProcess = async (src: string) => {
       return new Promise((resolve, reject) => {
-        let img = new Image();
+        const img = new Image();
         img.src = src;
         img.onload = () => resolve(img);
         img.onerror = reject;
