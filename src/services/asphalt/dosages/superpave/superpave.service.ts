@@ -101,7 +101,7 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitSecondCompressionParams(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 9:
-          await this.calculateDosageEquation(data as SuperpaveData['confirmationCompressionData']);
+          await this.calculateDosageEquation(data as SuperpaveData['confirmationCompressionData'], this.userId, null, isConsult);
           await this.submitConfirmattionCompression(data as SuperpaveData, this.userId, null, isConsult);
           break;
         default:
@@ -812,54 +812,57 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  calculateDosageEquation = async (step9Data: any) => {
-    try {
-      const { table: samplesData } = step9Data.confirmationCompressionData;
-      const { porcentagesPassantsN200, percentageInputs } = step9Data.granulometryCompositionData;
-      const { optimumContent } = step9Data.secondCompressionPercentagesData;
-      const { binderSpecificMass, materials } = step9Data.initialBinderData;
-      const { selectedCurve, table3 } = step9Data.firstCurvePercentagesData;
+  calculateDosageEquation = async (step9Data: any, userId: string, user?: string, isConsult?: boolean) => {
+    if (!isConsult) {
+      try {
+        const { table: samplesData, gmm } = step9Data.confirmationCompressionData;
+        const { porcentagesPassantsN200, percentageInputs } = step9Data.granulometryCompositionData;
+        const { optimumContent } = step9Data.secondCompressionPercentagesData;
+        const { binderSpecificMass, materials } = step9Data.initialBinderData;
+        const { selectedCurve, table3 } = step9Data.firstCurvePercentagesData;
 
-      let choosenGranulometryComposition;
-      let selectedPercentsOfDosage;
+        let choosenGranulometryComposition;
+        let selectedPercentsOfDosage;
 
-      if (selectedCurve === 'lower') {
-        choosenGranulometryComposition = table3.table3Lower;
-        selectedPercentsOfDosage = percentageInputs[0];
+        if (selectedCurve === 'lower') {
+          choosenGranulometryComposition = table3.table3Lower;
+          selectedPercentsOfDosage = percentageInputs[0];
+        }
+        if (selectedCurve === 'average') {
+          choosenGranulometryComposition = table3.table3Average;
+          selectedPercentsOfDosage = percentageInputs[1];
+        }
+        if (selectedCurve === 'higher') {
+          choosenGranulometryComposition = table3.table3Higher;
+          selectedPercentsOfDosage = percentageInputs[2];
+        }
+
+        const percentsOfDosageValues = Object.values(selectedPercentsOfDosage).map((item) => Number(item));
+
+        choosenGranulometryComposition = {
+          ...choosenGranulometryComposition,
+          percentsOfDosage: percentsOfDosageValues,
+        };
+
+        const response = await Api.post(`${this.info.backend_path}/calculate-dosage-equation`, {
+          samplesData,
+          choosenGranulometryComposition,
+          optimumContent,
+          binderSpecificGravity: binderSpecificMass,
+          listOfSpecificGravities: materials,
+          porcentagesPassantsN200,
+          gmm,
+        });
+
+        const { data, success, error } = response.data;
+
+        if (success === false) throw error.name;
+
+        return { data, success, error };
+      } catch (error) {
+        console.log(error);
+        throw error;
       }
-      if (selectedCurve === 'average') {
-        choosenGranulometryComposition = table3.table3Average;
-        selectedPercentsOfDosage = percentageInputs[1];
-      }
-      if (selectedCurve === 'higher') {
-        choosenGranulometryComposition = table3.table3Higher;
-        selectedPercentsOfDosage = percentageInputs[2];
-      }
-
-      const percentsOfDosageValues = Object.values(selectedPercentsOfDosage).map((item) => Number(item))
-
-      choosenGranulometryComposition = {
-        ...choosenGranulometryComposition,
-        percentsOfDosage: percentsOfDosageValues
-      }
-
-      const response = await Api.post(`${this.info.backend_path}/calculate-dosage-equation`, {
-        samplesData,
-        choosenGranulometryComposition,
-        optimumContent,
-        binderSpecificGravity: binderSpecificMass,
-        listOfSpecificGravities: materials,
-        porcentagesPassantsN200
-      });
-
-      const { data, success, error } = response.data;
-
-      if (success === false) throw error.name;
-
-      return { data, success, error };
-    } catch (error) {
-      console.log(error);
-      throw error;
     }
   };
 

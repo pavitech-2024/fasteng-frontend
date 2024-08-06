@@ -7,9 +7,9 @@ import useAuth from '@/contexts/auth';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { Box, Button, Typography } from '@mui/material';
-import { DataGrid, GridColumnGroupingModel } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 const Superpave_Step10 = ({

@@ -111,30 +111,55 @@ const Superpave_Step3 = ({
     return aux;
   };
 
+  // const setPercentsToListTotal = (peneiras, percentsToList) => {
+  //   const arrayAux = [];
+  //   let tableData = [];
+  //   let second = 0;
+  //   percentsToList?.forEach((item, i) => {
+  //     second = 0;
+  //     item.forEach((value, j) => {
+  //       if (value !== null) {
+  //         if (i > 0) {
+  //           arrayAux.push({
+  //             ...tableData[second],
+  //             ['keyTotal' + i]: numberRepresentation(value[1]),
+  //           });
+  //           second++;
+  //         } else {
+  //           arrayAux.push({
+  //             ...peneiras[j],
+  //             ['keyTotal' + i]: numberRepresentation(value[1]),
+  //           });
+  //           second++;
+  //         }
+  //       }
+  //     });
+  //     tableData = arrayAux;
+  //   });
+  //   return tableData;
+  // };
+
   const setPercentsToListTotal = (peneiras, percentsToList) => {
-    const arrayAux = [];
-    let tableData = [];
-    let second = 0;
+    const tableData = Array.from({ length: percentsToList.length }, () => []);
+  
     percentsToList?.forEach((item, i) => {
-      second = 0;
       item.forEach((value, j) => {
         if (value !== null) {
           if (i > 0) {
-            arrayAux.push({
-              ...tableData[second],
+            tableData[i][j] = {
+              ...tableData[i][j], // Mantém os dados existentes
               ['keyTotal' + i]: numberRepresentation(value[1]),
-            });
-            second++;
+            };
           } else {
-            arrayAux.push({
+            tableData[i][j] = {
               ...peneiras[j],
               ['keyTotal' + i]: numberRepresentation(value[1]),
-            });
+            };
           }
         }
       });
-      tableData = arrayAux;
     });
+  
     return tableData;
   };
 
@@ -144,7 +169,7 @@ const Superpave_Step3 = ({
     const arrayAux = [];
     let second = 0;
     for (let i = 0; i < bandsHigher?.length; i++) {
-      if (arrayResponse[0][i] !== null && tableData[second]?.peneira === peneiras[i]?.peneira) {
+      if (arrayResponse[0][i] !== null && tableData[second] && tableData[second]?.peneira === peneiras[i]?.peneira) {
         if (bandsHigher[i] === null && bandsLower[i] === null) {
           arrayAux.push({
             ...tableData[second],
@@ -165,6 +190,7 @@ const Superpave_Step3 = ({
   };
 
   const tableData = setBandsHigherLower(tableDataAux, bandsHigher, bandsLower, arrayResponse, peneiras);
+  console.log("🚀 ~ tableData:", tableData)
 
   tableDataLower = tableData;
   tableDataAverage = tableData;
