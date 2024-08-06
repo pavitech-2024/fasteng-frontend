@@ -141,7 +141,7 @@ const Superpave_Step3 = ({
 
   const setPercentsToListTotal = (peneiras, percentsToList) => {
     const tableData = Array.from({ length: percentsToList.length }, () => []);
-  
+
     percentsToList?.forEach((item, i) => {
       item.forEach((value, j) => {
         if (value !== null) {
@@ -159,38 +159,95 @@ const Superpave_Step3 = ({
         }
       });
     });
-  
+
     return tableData;
   };
 
   const tableDataAux = setPercentsToListTotal(peneiras, arrayResponse);
 
+  // const setBandsHigherLower = (tableData, bandsHigher, bandsLower, arrayResponse, peneiras) => {
+  //   console.log('🚀 ~ setBandsHigherLower ~ tableData:', tableData);
+  //   console.log('🚀 ~ setBandsHigherLower ~ bandsHigher:', bandsHigher);
+  //   const arrayAux = [];
+  //   let second = 0;
+  //   for (let i = 0; i < bandsHigher?.length; i++) {
+  //     if (
+  //       arrayResponse[second] &&
+  //       arrayResponse[second][i] !== null &&
+  //       tableData[second] &&
+  //       tableData[second][i]?.peneira === peneiras[i]?.peneira
+  //     ) {
+  //       if (bandsHigher[i] === null && bandsLower[i] === null) {
+  //         arrayAux.push({
+  //           ...tableData[second][i],
+  //           bandsCol1: '',
+  //           bandsCol2: '',
+  //         });
+  //       } else {
+  //         arrayAux.push({
+  //           ...tableData[second][i],
+  //           bandsCol1: numberRepresentation(bandsHigher[i]),
+  //           bandsCol2: numberRepresentation(bandsLower[i]),
+  //         });
+  //       }
+  //     }
+  //     second++;
+  //   }
+  //   return arrayAux;
+  // };
   const setBandsHigherLower = (tableData, bandsHigher, bandsLower, arrayResponse, peneiras) => {
+    console.log('🚀 ~ setBandsHigherLower ~ peneiras:', peneiras);
+    console.log('🚀 ~ setBandsHigherLower ~ arrayResponse:', arrayResponse);
+    console.log('🚀 ~ setBandsHigherLower ~ tableData:', tableData);
+    console.log('🚀 ~ setBandsHigherLower ~ bandsHigher:', bandsHigher);
     const arrayAux = [];
     let second = 0;
-    for (let i = 0; i < bandsHigher?.length; i++) {
-      if (arrayResponse[0][i] !== null && tableData[second] && tableData[second]?.peneira === peneiras[i]?.peneira) {
+
+    // for (let i = 0; i < bandsHigher?.length; i++) {
+    //   if (
+    //     arrayResponse[second] &&
+    //     arrayResponse[0][i] !== null &&
+    //     tableData[second] &&
+    //     tableData[i][second]?.peneira === peneiras[i]?.peneira
+    //   ) {
+    //     if (bandsHigher[i] === null && bandsLower[i] === null) {
+    //       arrayAux.push({
+    //         ...tableData[second][i],
+    //         bandsCol1: '',
+    //         bandsCol2: '',
+    //       });
+    //     } else {
+    //       arrayAux.push({
+    //         ...tableData[second][i],
+    //         bandsCol1: numberRepresentation(bandsHigher[i]),
+    //         bandsCol2: numberRepresentation(bandsLower[i]),
+    //       });
+    //     }
+    //   }
+    //   second++;
+    // }
+    for (let i = 0; i < tableData.length; i++) {
+      for (let b = 0; b < tableData[i].length; b++) {
         if (bandsHigher[i] === null && bandsLower[i] === null) {
           arrayAux.push({
-            ...tableData[second],
+            ...tableData[i][b],
             bandsCol1: '',
             bandsCol2: '',
           });
         } else {
           arrayAux.push({
-            ...tableData[second],
+            ...tableData[i][b],
             bandsCol1: numberRepresentation(bandsHigher[i]),
             bandsCol2: numberRepresentation(bandsLower[i]),
           });
         }
-        second++;
       }
     }
     return arrayAux;
   };
 
   const tableData = setBandsHigherLower(tableDataAux, bandsHigher, bandsLower, arrayResponse, peneiras);
-  console.log("🚀 ~ tableData:", tableData)
+  console.log('🚀 ~ tableData:', tableData);
 
   tableDataLower = tableData;
   tableDataAverage = tableData;
