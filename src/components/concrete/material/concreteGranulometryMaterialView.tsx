@@ -102,29 +102,31 @@ const GranulometryMateriaView = ({ granulometryData }: IGranulometryMateriaView)
           <Result_Card key={index} label={item.label} value={item.value} unity={item.unity} />
         ))}
       </Box>
-      <Chart
-        chartType="LineChart"
-        width={'100%'}
-        height={'400px'}
-        loader={<Loading />}
-        data={graph_data}
-        options={{
-          title: t('granulometry-concrete.granulometry'),
-          backgroundColor: 'transparent',
-          pointSize: '2',
-          hAxis: {
-            title: `${t('granulometry-concrete.sieve-openness') + ' (mm)'}`,
-            type: 'number',
-            scaleType: 'log',
-          },
-          vAxis: {
-            title: `${t('granulometry-concrete.passant') + ' (%)'}`,
-            minValue: '0',
-            maxValue: '105',
-          },
-          legend: 'none',
-        }}
-      />
+      <div id="chart-div-granulometry-concrete">
+        <Chart
+          chartType="LineChart"
+          width={'100%'}
+          height={'400px'}
+          loader={<Loading />}
+          data={graph_data}
+          options={{
+            title: t('granulometry-concrete.granulometry'),
+            backgroundColor: 'transparent',
+            pointSize: '2',
+            hAxis: {
+              title: `${t('granulometry-concrete.sieve-openness') + ' (mm)'}`,
+              type: 'number',
+              scaleType: 'log',
+            },
+            vAxis: {
+              title: `${t('granulometry-concrete.passant') + ' (%)'}`,
+              minValue: '0',
+              maxValue: '105',
+            },
+            legend: 'none',
+          }}
+        />
+      </div>
       <ConcreteGranulometry_resultsTable rows={rows} columns={columns} />
     </FlexColumnBorder>
   );
