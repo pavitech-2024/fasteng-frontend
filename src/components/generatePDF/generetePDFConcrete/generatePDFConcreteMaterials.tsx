@@ -43,6 +43,8 @@ const GeneratePDFConcreteMaterials = ({
 
     const newArray = [];
 
+    let unitMassResult = null;
+
     //const dataSandIncreaseData = [];
 
     //const unitMassResult = Number(unitMassData.result).toFixed(1);
@@ -115,6 +117,10 @@ const GeneratePDFConcreteMaterials = ({
       sandIncreaseDataRows = newArray;
     }
 
+    if(unitMassData){
+      unitMassResult = Number(unitMassData.result).toFixed(1);
+    }
+
     const sections = [
       {
         condition: granulometryData,
@@ -151,6 +157,14 @@ const GeneratePDFConcreteMaterials = ({
       {
         condition: sandIncreaseData,
         title: t('concrete.essays.sandIncrease'),
+        content: async (doc, currentY) => {
+          addTextToLeftMargin(doc, `${t('concrete.essays.sandIncrease')}: ${unitMassResult} Kg/L`, 10, currentY);
+          return currentY + 5;
+        }
+      },
+      {
+        condition: unitMassResult,
+        title: t('concrete.essays.unitMass'),
         content: async (doc, currentY) => {
           addTable(doc, sandIncreaseDataRows, sandIncreaseDataRows, currentY);
           const tableHeight = (doc as any).lastAutoTable.finalY - currentY;
