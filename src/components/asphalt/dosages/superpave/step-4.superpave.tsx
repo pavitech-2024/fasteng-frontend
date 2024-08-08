@@ -316,9 +316,9 @@ const Superpave_Step4 = ({
   ];
   const handleClose = (reason) => {
     if (reason !== 'backdropClick') {
-      setSpecificMassModalIsOpen(false)
+      setSpecificMassModalIsOpen(false);
     }
-  }
+  };
 
   nextDisabled && setNextDisabled(false);
 
@@ -336,7 +336,7 @@ const Superpave_Step4 = ({
             gap: '10px',
           }}
         >
-          {rows.length > 0 && (
+          {rows.length > 0 && !Object.values(data.materials[0]).some((item) => item === null) && (
             <DataGrid
               hideFooter
               disableColumnMenu
@@ -347,16 +347,18 @@ const Superpave_Step4 = ({
             />
           )}
 
-          <DataGrid
-            hideFooter
-            disableColumnMenu
-            disableColumnFilter
-            experimentalFeatures={{ columnGrouping: true }}
-            columnGroupingModel={estimatedPercentageGroupings}
-            columns={estimatedPercentageCols}
-            rows={estimatedPercentageRows}
-            sx={{ marginTop: '2rem' }}
-          />
+          {estimatedPercentageRows.length > 0 && !Object.values(data.materials[0]).some((item) => item === null) && (
+            <DataGrid
+              hideFooter
+              disableColumnMenu
+              disableColumnFilter
+              experimentalFeatures={{ columnGrouping: true }}
+              columnGroupingModel={estimatedPercentageGroupings}
+              columns={estimatedPercentageCols}
+              rows={estimatedPercentageRows}
+              sx={{ marginTop: '2rem' }}
+            />
+          )}
 
           <Button
             variant="outlined"
@@ -384,7 +386,7 @@ const Superpave_Step4 = ({
           leftButtonTitle={''}
           rightButtonTitle={''}
           onCancel={() => {
-            handleClose('backdropClick')
+            handleClose('backdropClick');
             setLoading(false);
           }}
           open={specificMassModalIsOpen}

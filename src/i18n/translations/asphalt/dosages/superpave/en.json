@@ -7,6 +7,7 @@
   "asphalt.dosages.superpave.material_selection": "Materials selection",
   "asphalt.dosages.superpave.granulometry_composition": "Granulometric composition",
   "asphalt.dosages.superpave.initial_binder": "Initial Binder Content",
+  "asphalt.dosages.superpave.binder": "Binder content (%)",
   "asphalt.dosages.superpave.first_compression": "First Compression",
   "asphalt.dosages.superpave.first_compression_parameters": "First Compression Parameters",
   "asphalt.dosages.superpave.chosen_curve_percentages": "Chosen Curve Percentages",
@@ -103,5 +104,7 @@
   "asphalt.dosages.superpave.gmm-empty": "Enter the Gmm value of the mixture",
   "asphalt.dosages.superpave.rice-test-empty-values": "Enter the values ​​to perform the Rice Test",
   "asphalt.dosages.superpave.water-temperature-empty": "Select water temperature correction factor",
-  "asphalt.dosages.superpave.invalid-granulometry-values": "The total of the percentage values ​​must be equal to 100"
+  "asphalt.dosages.superpave.invalid-granulometry-values": "The total of the percentage values ​​must be equal to 100",
+
+  "asphalt.dosages.superpave.estimated-percentages-binder-vv": "Percentage of materials from the estimated binder content for Vv"
 }

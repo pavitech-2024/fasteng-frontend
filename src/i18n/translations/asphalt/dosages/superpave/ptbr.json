@@ -8,6 +8,7 @@
   "asphalt.dosages.superpave.material_selection": "Seleção de Materiais",
   "asphalt.dosages.superpave.granulometry_composition": "Composição Granulométrica",
   "asphalt.dosages.superpave.initial_binder": "Teor de Ligante Inicial",
+  "asphalt.dosages.superpave.binder": "Teor de ligante (%)",
   "asphalt.dosages.superpave.first_compression": "Primeira Compactação",
   "asphalt.dosages.superpave.first_compression_parameters": "Parâmetros da Primeira Compactação",
   "asphalt.dosages.superpave.chosen_curve_percentages": "Porcentagens da Curva Escolhida",
@@ -107,5 +108,7 @@
   "asphalt.dosages.superpave.gmm-empty": "Insira o valor do Gmm da mistura",
   "asphalt.dosages.superpave.rice-test-empty-values": "Insira os valores para realizar o Rice Test",
   "asphalt.dosages.superpave.water-temperature-empty": "Selecione o fator de correção da temperatura da água",
-  "asphalt.dosages.superpave.invalid-granulometry-values": "O total dos valores das porcentagens precisa ser igual a 100"
+  "asphalt.dosages.superpave.invalid-granulometry-values": "O total dos valores das porcentagens precisa ser igual a 100",
+
+  "asphalt.dosages.superpave.estimated-percentages-binder-vv": "Porcentagem dos materiais a partir do teor de ligante estimado para Vv"
 }

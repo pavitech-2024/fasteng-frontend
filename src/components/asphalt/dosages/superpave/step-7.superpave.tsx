@@ -79,7 +79,7 @@ const Superpave_Step7 = ({
   const extimatedBinderMaterialsPercentsGroupings: GridColumnGroupingModel = [
     {
       groupId: 'extimatedBinderMaterialsPercents',
-      headerName: `Porcentagem dos materiais a partir do teor de ligante estimado para Vv = ${vv} %`,
+      headerName: `${t('asphalt.dosages.superpave.estimated-percentages-binder-vv')} = ${vv} %`,
       children: [
         { field: 'binder' },
         { field: 'material_1' },
@@ -103,7 +103,7 @@ const Superpave_Step7 = ({
   const extimatedBinderMaterialsPercentsCols = [
     {
       field: 'binder',
-      headerName: 'Teor de ligante (%)',
+      headerName: t('asphalt.dosages.superpave.binder'),
       valueFormatter: ({ value }) => `${value}`,
       width: 160,
     },
