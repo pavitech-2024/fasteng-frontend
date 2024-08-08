@@ -11,8 +11,6 @@ export interface IGranulometryMateriaView {
 }
 
 const GranulometryMateriaView = ({ granulometryData }: IGranulometryMateriaView) => {
-  //console.log('🚀 ~ GranulometryMateriaView ~ granulometryData:', granulometryData);
-
   const rows = [];
   let graph_data;
 

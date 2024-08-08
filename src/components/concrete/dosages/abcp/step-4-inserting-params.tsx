@@ -7,7 +7,7 @@ import { Box } from '@mui/material';
 import { useEffect } from 'react';
 import { t } from 'i18next';
 
-const ABCP_InsertingParams = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
+const ABCP_InsertingParams = ({ setNextDisabled }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   const { insertParamsData, setData } = useABCPStore();
 
   const inputs = [
@@ -73,6 +73,10 @@ const ABCP_InsertingParams = ({ nextDisabled, setNextDisabled, abcp }: EssayPage
           sx={{ width: '100%', marginY: '20px' }}
           variant="standard"
           size="medium"
+          defaultValue={{
+            label: conditionOption.find((element) => element.value === insertParamsData.condition)?.label,
+            value: conditionOption.find((element) => element.value === insertParamsData.condition)?.value,
+          }}
           options={conditionOption.map((opt) => {
             const { value, label } = opt;
             return {

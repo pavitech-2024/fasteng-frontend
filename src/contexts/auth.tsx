@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import i18next from 'i18next';
 
-type User = {
+export type User = {
   _id: string;
   lastLoginList: Date[];
   photo: string | null;
