@@ -11,7 +11,7 @@ interface IModalBase {
   leftButtonTitle: string;
   rightButtonTitle: string;
   singleButtonTitle?: string;
-  onCancel: () => void;
+  onCancel?: () => void;
   open: boolean;
   size: modalSize;
   onSubmit?: () => void;

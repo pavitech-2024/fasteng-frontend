@@ -314,6 +314,11 @@ const Superpave_Step4 = ({
       headerAlign: 'center',
     },
   ];
+  const handleClose = (reason) => {
+    if (reason !== 'backdropClick') {
+      setSpecificMassModalIsOpen(false)
+    }
+  }
 
   nextDisabled && setNextDisabled(false);
 
@@ -379,7 +384,7 @@ const Superpave_Step4 = ({
           leftButtonTitle={''}
           rightButtonTitle={''}
           onCancel={() => {
-            setSpecificMassModalIsOpen(false);
+            handleClose('backdropClick')
             setLoading(false);
           }}
           open={specificMassModalIsOpen}
