@@ -140,7 +140,7 @@ const Superpave_Step3 = ({
 
   const setBandsHigherLower = (tableData, bandsHigher, bandsLower, arrayResponse, peneiras) => {
     let second = 0;
-    let arraySize = tableData[0].length;
+    let arraySize = tableData[0]?.length;
 
     // Inicializa o arrayAux com objetos vazios de acordo com o tamanho descoberto
     let arrayAux = Array(arraySize).fill({});
@@ -169,8 +169,6 @@ const Superpave_Step3 = ({
   };
 
   const tableData = setBandsHigherLower(tableDataAux, bandsHigher, bandsLower, arrayResponse, peneiras);
-  console.log('🚀 ~ tableData:', tableData);
-
   tableDataLower = tableData;
   tableDataAverage = tableData;
   tableDataHigher = tableData;
@@ -192,7 +190,7 @@ const Superpave_Step3 = ({
   const onChangeInputsTables = (e, tableName, index) => {
     [tableName] = {
       ...[tableName],
-      ['input' + index]: e.target.value,
+      ['input' + index]: Number(e.target.value),
     };
   };
 
@@ -302,43 +300,69 @@ const Superpave_Step3 = ({
     setData({ step: 2, value: newData });
   };
 
-  const calcular = () => {
-    toast.promise(
-      async () => {
-        try {
-          const chosenCurves = {
-            lower: inferior,
-            average: intermediaria,
-            higher: superior,
-          };
-
-          const composition = await superpave.calculateGranulometryComposition(
-            data,
-            materialSelectionData,
-            generalData,
-            chosenCurves
-          );
-
-          const prevData = data;
-
-          const newData = {
-            ...prevData,
-            ...composition,
-          };
-
-          setData({ step: 2, value: newData });
-          //setLoading(false);
-        } catch (error) {
-          //setLoading(false);
-          throw error;
-        }
-      },
-      {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+  const calcular = (curve: string) => {
+    let valueCount = 0;
+    let valueIsValid = false;
+    
+    // Deve ser exatamente 100;
+    if (curve === 'lower') {
+      valueCount = Object.values(data.percentageInputs[0]).reduce((acc, item) => acc + Number(item), 0);
+      console.log("🚀 ~ calcular ~ valueCount:", valueCount)
+      if (valueCount === 100) {
+        valueIsValid = true;
       }
-    );
+    } else if (curve === 'average') {
+      valueCount = Object.values(data.percentageInputs[1]).reduce((acc, item) => acc + Number(item), 0);
+      if (valueCount === 100) {
+        valueIsValid = true;
+      }
+    } else if (curve === 'higher') {
+      valueCount = Object.values(data.percentageInputs[2]).reduce((acc, item) => acc + Number(item), 0);
+      if (valueCount === 100) {
+        valueIsValid = true;
+      }
+    }
+    
+    if (valueIsValid) {
+      toast.promise(
+        async () => {
+          try {
+            const chosenCurves = {
+              lower: inferior,
+              average: intermediaria,
+              higher: superior,
+            };
+  
+            const composition = await superpave.calculateGranulometryComposition(
+              data,
+              materialSelectionData,
+              generalData,
+              chosenCurves
+            );
+  
+            const prevData = data;
+  
+            const newData = {
+              ...prevData,
+              ...composition,
+            };
+  
+            setData({ step: 2, value: newData });
+            //setLoading(false);
+          } catch (error) {
+            //setLoading(false);
+            throw error;
+          }
+        },
+        {
+          pending: t('loading.materials.pending'),
+          success: t('loading.materials.success'),
+          error: t('loading.materials.error'),
+        }
+      );
+    } else {
+      toast.error(t('asphalt.dosages.superpave.invalid-granulometry-values'))
+    }
   };
 
   useEffect(() => {
@@ -413,7 +437,7 @@ const Superpave_Step3 = ({
                 onChangeInputsTables={onChangeInputsTables}
               />
               <div style={{ marginTop: '1%' }}>
-                <Button onClick={() => calcular()} variant="outlined" sx={{ width: '100%' }}>
+                <Button onClick={() => calcular('lower')} variant="outlined" sx={{ width: '100%' }}>
                   {t('asphalt.dosages.superpave.calculate-lower-curve')}
                 </Button>
               </div>
@@ -443,7 +467,7 @@ const Superpave_Step3 = ({
                 onChangeInputsTables={onChangeInputsTables}
               />
               <div style={{ marginTop: '1%' }}>
-                <Button onClick={() => calcular()} variant="outlined" sx={{ width: '100%' }}>
+                <Button onClick={() => calcular('average')} variant="outlined" sx={{ width: '100%' }}>
                   {t('asphalt.dosages.superpave.calculate-average-curve')}
                 </Button>
               </div>
@@ -473,7 +497,7 @@ const Superpave_Step3 = ({
                 onChangeInputsTables={onChangeInputsTables}
               />
               <div style={{ marginTop: '1%' }}>
-                <Button onClick={() => calcular()} variant="outlined" sx={{ width: '100%' }}>
+                <Button onClick={() => calcular('higher')} variant="outlined" sx={{ width: '100%' }}>
                   {t('asphalt.dosages.superpave.calculate-higher-curve')}
                 </Button>
               </div>

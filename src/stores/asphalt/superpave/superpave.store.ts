@@ -21,8 +21,8 @@ interface SuperpaveMaterialSelectionData {
 
 interface SuperpaveGranulometryCompositionData {
   percentageInputs: {
-    material_1: string;
-    material_2: string;
+    material_1: number;
+    material_2: number;
   }[];
   graphData: any[];
   percentsToList: any[];

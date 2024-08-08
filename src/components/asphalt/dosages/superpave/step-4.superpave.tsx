@@ -383,7 +383,7 @@ const Superpave_Step4 = ({
             setLoading(false);
           }}
           open={specificMassModalIsOpen}
-          size={'large'}
+          size={'medium'}
           onSubmit={handleModalSubmit}
           oneButton={true}
           singleButtonTitle="Confirmar"
@@ -394,7 +394,7 @@ const Superpave_Step4 = ({
                 <>
                   <Typography>{materialInputs[0].name}</Typography>
 
-                  <Box key={idx} sx={{ display: 'flex', gap: '1rem' }}>
+                  <Box key={idx} sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                     {materialInputs.map((input) => (
                       <InputEndAdornment
                         key={`${input.materialIndex}_${input.key}`}

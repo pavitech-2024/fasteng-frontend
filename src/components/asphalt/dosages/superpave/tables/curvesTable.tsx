@@ -81,7 +81,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
           {
             field: fieldTotalPassant,
             headerName: t('asphalt.dosages.superpave.total-passant'),
-            width: 138,
+            width: 125,
             valueFormatter: ({ value }) => `${value}`,
           },
           {
@@ -119,19 +119,19 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
       field: 'project',
       headerName: t('asphalt.dosages.superpave.project'),
       valueFormatter: ({ value }) => `${value}`,
-      width: 75,
+      width: 70,
     },
     {
       field: 'band1',
       headerName: '',
       valueFormatter: ({ value }) => `${value}`,
-      width: 75,
+      width: 70,
     },
     {
       field: 'band2',
       headerName: '',
       valueFormatter: ({ value }) => `${value}`,
-      width: 75,
+      width: 70,
     },
   ];
 
@@ -199,6 +199,14 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
       disableColumnFilter
       experimentalFeatures={{ columnGrouping: true }}
       columnGroupingModel={groupings}
+      sx={{
+        '& .MuiDataGrid-columnHeaders': {
+          fontSize: '0.800rem', // Tamanho da fonte dos cabeçalhos
+        },
+        '& .MuiDataGrid-cell': {
+          fontSize: '0.75rem', // Tamanho da fonte das células
+        },
+      }}
     />
   ) : null;
 };

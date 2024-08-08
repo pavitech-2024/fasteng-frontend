@@ -106,5 +106,6 @@
 
   "asphalt.dosages.superpave.gmm-empty": "Insira o valor do Gmm da mistura",
   "asphalt.dosages.superpave.rice-test-empty-values": "Insira os valores para realizar o Rice Test",
-  "asphalt.dosages.superpave.water-temperature-empty": "Selecione o fator de correção da temperatura da água"
+  "asphalt.dosages.superpave.water-temperature-empty": "Selecione o fator de correção da temperatura da água",
+  "asphalt.dosages.superpave.invalid-granulometry-values": "O total dos valores das porcentagens precisa ser igual a 100"
 }
