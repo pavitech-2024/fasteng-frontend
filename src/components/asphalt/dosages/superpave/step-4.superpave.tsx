@@ -37,6 +37,8 @@ const Superpave_Step4 = ({
   const [rows, setRows] = useState([]);
   const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
   const compositions = ['inferior', 'intermediaria', 'superior'];
+  const [materialNames, setMaterialNames] = useState([])
+  console.log("🚀 ~ materialNames:", materialNames)
 
   useEffect(() => {
     toast.promise(
@@ -44,7 +46,16 @@ const Superpave_Step4 = ({
         try {
           const newMaterials = [];
 
-          const response = await materialsService.getMaterial(materialSelectionData.binder);
+          let aggregatesIds = materialSelectionData.aggregates.map((e) => e._id);
+          let binderId = materialSelectionData.binder;
+          const ids = [...aggregatesIds, binderId];
+
+          const response = await materialsService.getMaterials(ids);
+          console.log("🚀 ~ response:", response);
+
+          const names = response.data.materials.map(e => e.name);
+
+          setMaterialNames(names);
 
           setBinderData(response.data.material);
 
