@@ -37,54 +37,98 @@ const Superpave_Step4 = ({
   const [rows, setRows] = useState([]);
   const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
   const compositions = ['inferior', 'intermediaria', 'superior'];
-  const [materialNames, setMaterialNames] = useState([])
-  console.log("🚀 ~ materialNames:", materialNames)
+  const [materialNames, setMaterialNames] = useState([]);
 
   useEffect(() => {
     toast.promise(
       async () => {
         try {
           const newMaterials = [];
-
+  
           let aggregatesIds = materialSelectionData.aggregates.map((e) => e._id);
           let binderId = materialSelectionData.binder;
           const ids = [...aggregatesIds, binderId];
-
+  
           const response = await materialsService.getMaterials(ids);
-          console.log("🚀 ~ response:", response);
-
-          const names = response.data.materials.map(e => e.name);
-
+          console.log('🚀 ~ response:', response);
+  
+          const names = response.data.materials.map((e) => e.name);
+  
           setMaterialNames(names);
-
           setBinderData(response.data.material);
-
-          const { data: resData, success, error } = await superpave.getStep4SpecificMasses(materialSelectionData);
-
-          if (success && resData.specificMasses.length > 0) {
-            resData.specificMasses.forEach((e) => {
-              const obj = {
-                name: e.generalData.material.name,
-                realSpecificMass: e.results.bulk_specify_mass,
-                apparentSpecificMass: e.results.apparent_specify_mass,
-                absorption: e.results.absorption,
-              };
-              newMaterials.push(obj);
-            });
-
-            let prevData = { ...data };
-            prevData = {
-              ...prevData,
-              materials: newMaterials,
-            };
-
-            setData({
-              step: 3,
-              value: prevData,
-            });
-          } else {
-            console.error(`${error}`);
+  
+          let binderIndex = response.data.essays.findIndex((e) =>
+            e.some((f) => f.data.generalData.material.type === 'asphaltBinder')
+          );
+  
+          let binderObject = {
+            name: response.data.materials[binderIndex].name,
+            realSpecificMass: null,
+            apparentSpecificMass: null,
+            absorption: null
+          };
+  
+          const responseData = { ...response.data };
+  
+          // Remover o item de 'materials' e 'essays' no índice 'binderIndex'
+          if (binderIndex !== -1) {
+            responseData.materials.splice(binderIndex, 1);
+            responseData.essays.splice(binderIndex, 1);
           }
+  
+          for (let i = 0; i < responseData.materials.length; i++) {
+            let aggregateMaterial = {
+              name: responseData.materials[i].name,
+              realSpecificMass: null,
+              apparentSpecificMass: null,
+              absorption: null
+            };
+  
+            console.log("🚀 ~ aggregateMaterial:", aggregateMaterial);
+  
+            newMaterials.push(aggregateMaterial);
+          }
+  
+          // Adiciona o binderObject ao final de newMaterials
+          newMaterials.push(binderObject);
+  
+          let prevData = { ...data };
+          prevData = {
+            ...prevData,
+            materials: newMaterials,
+          };
+
+          setData({
+            step: 3,
+            value: prevData,
+          });
+  
+          const { data: resData, success, error } = await superpave.getStep4SpecificMasses(materialSelectionData);
+  
+          // if (success && resData.specificMasses.length > 0) {
+          //   resData.specificMasses.forEach((e) => {
+          //     const obj = {
+          //       name: e.generalData.material.name,
+          //       realSpecificMass: e.results.bulk_specify_mass,
+          //       apparentSpecificMass: e.results.apparent_specify_mass,
+          //       absorption: e.results.absorption,
+          //     };
+          //     newMaterials.push(obj);
+          //   });
+  
+          //   let prevData = { ...data };
+          //   prevData = {
+          //     ...prevData,
+          //     materials: newMaterials,
+          //   };
+  
+          //   setData({
+          //     step: 3,
+          //     value: prevData,
+          //   });
+          // } else {
+          //   console.error(`${error}`);
+          // }
         } catch (error) {
           throw error;
         }
@@ -96,6 +140,7 @@ const Superpave_Step4 = ({
       }
     );
   }, []);
+  
 
   const generateMaterialInputs = (materials) => {
     return materials.map((material, index) => [
@@ -410,7 +455,7 @@ const Superpave_Step4 = ({
             <Box sx={{ display: 'flex', gap: '1rem', flexDirection: 'column', marginBottom: '2rem' }}>
               {modalMaterialInputs.map((materialInputs, idx) => (
                 <>
-                  <Typography>{materialInputs[0].name}</Typography>
+                  <Typography>{materialNames[idx]}</Typography>
 
                   <Box key={idx} sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                     {materialInputs.map((input) => (
