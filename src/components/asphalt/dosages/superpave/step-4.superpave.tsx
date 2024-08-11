@@ -50,7 +50,6 @@ const Superpave_Step4 = ({
           const ids = [...aggregatesIds, binderId];
   
           const response = await materialsService.getMaterials(ids);
-          console.log('🚀 ~ response:', response);
   
           const names = response.data.materials.map((e) => e.name);
   
@@ -60,13 +59,6 @@ const Superpave_Step4 = ({
           let binderIndex = response.data.essays.findIndex((e) =>
             e.some((f) => f.data.generalData.material.type === 'asphaltBinder')
           );
-  
-          let binderObject = {
-            name: response.data.materials[binderIndex].name,
-            realSpecificMass: null,
-            apparentSpecificMass: null,
-            absorption: null
-          };
   
           const responseData = { ...response.data };
   
@@ -83,14 +75,12 @@ const Superpave_Step4 = ({
               apparentSpecificMass: null,
               absorption: null
             };
-  
-            console.log("🚀 ~ aggregateMaterial:", aggregateMaterial);
-  
+    
             newMaterials.push(aggregateMaterial);
           }
   
-          // Adiciona o binderObject ao final de newMaterials
-          newMaterials.push(binderObject);
+          // // Adiciona o binderObject ao final de newMaterials
+          // newMaterials.push(binderObject);
   
           let prevData = { ...data };
           prevData = {
@@ -223,6 +213,7 @@ const Superpave_Step4 = ({
             granulometryCompositionData,
             data
           );
+          console.log("🚀 ~ response:", response)
 
           const updatedRows = await updateRows();
           setRows(updatedRows);
@@ -455,7 +446,7 @@ const Superpave_Step4 = ({
             <Box sx={{ display: 'flex', gap: '1rem', flexDirection: 'column', marginBottom: '2rem' }}>
               {modalMaterialInputs.map((materialInputs, idx) => (
                 <>
-                  <Typography>{materialNames[idx]}</Typography>
+                  <Typography>{data.materials[idx].name}</Typography>
 
                   <Box key={idx} sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                     {materialInputs.map((input) => (
@@ -467,20 +458,24 @@ const Superpave_Step4 = ({
                         placeholder={input.placeHolder}
                         fullWidth
                         onChange={(e) => {
-                          const updatedMaterials = data.materials.map((material, index) => {
-                            if (index === input.materialIndex - 1) {
-                              return {
-                                ...material,
-                                [input.key]: e.target.value.replace(',', '.'),
-                              };
-                            }
-                            return material;
-                          });
+                          // const updatedMaterials = data.materials.map((material, index) => {
+                          //   if (index === input.materialIndex - 1) {
+                          //     return {
+                          //       ...material,
+                          //       [input.key]: e.target.value.replace(',', '.'),
+                          //     };
+                          //   }
+                          //   return material;
+                          // });
+
+                          const materialIndex = data.materials.findIndex((i) => i.name === input.name);
+                          const newData = [...data.materials];
+                          newData[materialIndex][input.key] = e.target.value.replace(',', '.');
 
                           setData({
                             step: 3,
                             key: `materials`,
-                            value: updatedMaterials,
+                            value: newData,
                           });
                         }}
                       />
@@ -491,7 +486,7 @@ const Superpave_Step4 = ({
             </Box>
           </Box>
 
-          <Typography>{binderData?.name}</Typography>
+          {/* <Typography>{binderData?.name}</Typography>
 
           <Box>
             <InputEndAdornment
@@ -503,7 +498,7 @@ const Superpave_Step4 = ({
                 setData({ step: 3, key: 'binderSpecificMass', value: Number(e.target.value) });
               }}
             />
-          </Box>
+          </Box> */}
         </ModalBase>
       )}
 
