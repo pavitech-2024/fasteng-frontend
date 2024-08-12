@@ -151,24 +151,28 @@ const Home: NextPage = () => {
           <CardApp key={app.name} element={app} onClick={() => Router.push(app.path)} />
         ))}
       </Box>
-      <Box>
+      <Box sx = {{position: 'relative', width: '100%'}}>
 
         {/* alinhar icones lep e jbr */}
         <Box
           sx={{
+            position: 'absolute',
+            bottom: 60,
+            right: 0,
             display: 'flex',
-            flexDirection: 'row',
-            width: '50%',
+            flexDirection: 'column',
+            width: '6%',
             justifyContent: 'space-between',
-            alignItems: 'end',
+            alignItems: 'flex-end',
             height: 'fit-content',
           }}
         >
+          
           <Link
             href="https://lepufcg.com.br/"
             sx={{
               padding: '1rem',
-              textAlign: 'start',
+              textAlign: 'end',
               position: 'absolute',
               bottom: 0,
               left: 0,
