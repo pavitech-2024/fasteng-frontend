@@ -61,6 +61,7 @@ interface SuperpaveInitialBinderData {
     realSpecificMass: number;
     apparentSpecificMass: number;
     absorption: number;
+    type: string
   }[];
   binderSpecificMass: number;
   granulometryComposition: {
@@ -481,6 +482,7 @@ const initialState = {
         realSpecificMass: null,
         apparentSpecificMass: null,
         absorption: null,
+        type: null
       },
     ],
     binderSpecificMass: null,

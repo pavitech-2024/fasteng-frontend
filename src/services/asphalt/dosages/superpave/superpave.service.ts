@@ -316,7 +316,6 @@ class Superpave_SERVICE implements IEssayService {
   ): Promise<any> => {
     try {
       const { trafficVolume } = step1Data;
-      const { aggregates } = step2Data;
       const { percentageInputs, chosenCurves, lowerComposition, averageComposition, higherComposition, nominalSize } =
         step3Data;
       const { materials, binderSpecificMass } = step4Data;
@@ -324,8 +323,8 @@ class Superpave_SERVICE implements IEssayService {
       const hasNullValue = materials.some((obj) => Object.values(obj).some((value) => value === null));
 
       if (hasNullValue) throw new Error('Algum valor não foi informado.');
-      if (binderSpecificMass === null || binderSpecificMass === 0)
-        return Error('A massa específica do ligante deve ser informada.');
+      // if (binderSpecificMass === null || binderSpecificMass === 0)
+      //   return Error('A massa específica do ligante deve ser informada.');
 
       let composition;
 
@@ -334,7 +333,7 @@ class Superpave_SERVICE implements IEssayService {
       if (chosenCurves.higher) composition = higherComposition;
 
       const response = await Api.post(`${this.info.backend_path}/step-4-data`, {
-        materials: aggregates,
+        materials,
         percentsOfDosage: percentageInputs,
         specificMassesData: materials,
         chosenCurves,
@@ -348,7 +347,8 @@ class Superpave_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
 
-      this.store_actions?.setData({ step: 3, value: { ...step4Data, ...data } });
+      return data;
+      //this.store_actions?.setData({ step: 3, value: { ...step4Data, ...data } });
     } catch (error) {
       throw error;
     }

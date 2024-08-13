@@ -38,99 +38,138 @@ const Superpave_Step4 = ({
   const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
   const compositions = ['inferior', 'intermediaria', 'superior'];
   const [materialNames, setMaterialNames] = useState([]);
+  const [activateSecondFetch, setActivateSecondFetch] = useState(false);
+  const [shouldRenderTable1, setShouldRenderTable1] = useState(false);
 
   useEffect(() => {
-    toast.promise(
-      async () => {
-        try {
-          const newMaterials = [];
-  
-          let aggregatesIds = materialSelectionData.aggregates.map((e) => e._id);
-          let binderId = materialSelectionData.binder;
-          const ids = [...aggregatesIds, binderId];
-  
-          const response = await materialsService.getMaterials(ids);
-  
-          const names = response.data.materials.map((e) => e.name);
-  
-          setMaterialNames(names);
-          setBinderData(response.data.material);
-  
-          let binderIndex = response.data.essays.findIndex((e) =>
-            e.some((f) => f.data.generalData.material.type === 'asphaltBinder')
-          );
-  
-          const responseData = { ...response.data };
-  
-          // Remover o item de 'materials' e 'essays' no índice 'binderIndex'
-          if (binderIndex !== -1) {
-            responseData.materials.splice(binderIndex, 1);
-            responseData.essays.splice(binderIndex, 1);
-          }
-  
-          for (let i = 0; i < responseData.materials.length; i++) {
-            let aggregateMaterial = {
-              name: responseData.materials[i].name,
-              realSpecificMass: null,
-              apparentSpecificMass: null,
-              absorption: null
-            };
-    
-            newMaterials.push(aggregateMaterial);
-          }
-  
-          // // Adiciona o binderObject ao final de newMaterials
-          // newMaterials.push(binderObject);
-  
-          let prevData = { ...data };
-          prevData = {
-            ...prevData,
-            materials: newMaterials,
-          };
+    if (!activateSecondFetch) {
+      toast.promise(
+        async () => {
+          try {
+            const newMaterials = [];
 
-          setData({
-            step: 3,
-            value: prevData,
-          });
-  
-          const { data: resData, success, error } = await superpave.getStep4SpecificMasses(materialSelectionData);
-  
-          // if (success && resData.specificMasses.length > 0) {
-          //   resData.specificMasses.forEach((e) => {
-          //     const obj = {
-          //       name: e.generalData.material.name,
-          //       realSpecificMass: e.results.bulk_specify_mass,
-          //       apparentSpecificMass: e.results.apparent_specify_mass,
-          //       absorption: e.results.absorption,
-          //     };
-          //     newMaterials.push(obj);
-          //   });
-  
-          //   let prevData = { ...data };
-          //   prevData = {
-          //     ...prevData,
-          //     materials: newMaterials,
-          //   };
-  
-          //   setData({
-          //     step: 3,
-          //     value: prevData,
-          //   });
-          // } else {
-          //   console.error(`${error}`);
-          // }
-        } catch (error) {
-          throw error;
+            let aggregatesIds = materialSelectionData.aggregates.map((e) => e._id);
+            let binderId = materialSelectionData.binder;
+            const ids = [...aggregatesIds, binderId];
+
+            const response = await materialsService.getMaterials(ids);
+
+            const names = response.data.materials.map((e) => e.name);
+
+            setMaterialNames(names);
+            setBinderData(response.data.material);
+
+            let binderIndex = response.data.essays.findIndex((e) =>
+              e.some((f) => f.data.generalData.material.type === 'asphaltBinder')
+            );
+
+            const responseData = { ...response.data };
+
+            for (let i = 0; i < responseData.materials.length; i++) {
+              let aggregateMaterial = {
+                name: responseData.materials[i].name,
+                type: i === binderIndex ? 'binder' : 'aggregate',
+                realSpecificMass: null,
+                apparentSpecificMass: null,
+                absorption: null,
+              };
+
+              newMaterials.push(aggregateMaterial);
+            }
+
+            let prevData = { ...data };
+            prevData = {
+              ...prevData,
+              materials: newMaterials,
+            };
+
+            setData({
+              step: 3,
+              value: prevData,
+            });
+
+            setActivateSecondFetch(true);
+          } catch (error) {
+            throw error;
+          }
+        },
+        {
+          pending: t('loading.materials.pending'),
+          success: t('loading.materials.success'),
+          error: t('erro no 1'),
         }
-      },
-      {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
-      }
-    );
+      );
+    }
   }, []);
-  
+
+  useEffect(() => {
+    let hasSomeNullValue = Object.values(rows).some((e) => e === null);
+    if (activateSecondFetch && hasSomeNullValue) {
+      toast.promise(
+        async () => {
+          try {
+            const newMaterials = [];
+            const { data: resData, success, error } = await superpave.getStep4SpecificMasses(materialSelectionData);
+
+            if (success && resData.specificMasses.length > 0) {
+              resData.specificMasses.forEach((e) => {
+                const obj = {
+                  name: e.generalData.material.name,
+                  realSpecificMass: e.results.bulk_specify_mass,
+                  apparentSpecificMass: e.results.apparent_specify_mass,
+                  absorption: e.results.absorption,
+                };
+                newMaterials.push(obj);
+              });
+
+              let prevData = { ...data };
+              prevData = {
+                ...prevData,
+                materials: newMaterials,
+              };
+
+              setData({
+                step: 3,
+                value: prevData,
+              });
+              setActivateSecondFetch(false);
+            } else {
+              let count = 0;
+              data.materials.forEach((e) => {
+                const obj = {
+                  name: e.name,
+                  realSpecificMass: e.realSpecificMass,
+                  apparentSpecificMass: e.apparentSpecificMass,
+                  absorption: e.absorption,
+                };
+                newMaterials[count].push(obj);
+                count++;
+              });
+
+              let prevData = { ...data };
+              prevData = {
+                ...prevData,
+                materials: newMaterials,
+              };
+
+              setData({
+                step: 3,
+                value: prevData,
+              });
+              setActivateSecondFetch(false);
+            }
+          } catch (error) {
+            throw error;
+          }
+        },
+        {
+          pending: t('loading.materials.pending'),
+          success: t('loading.materials.success'),
+          error: t('erro no 2'),
+        }
+      );
+    }
+  }, [activateSecondFetch, rows]);
 
   const generateMaterialInputs = (materials) => {
     return materials.map((material, index) => [
@@ -166,43 +205,6 @@ const Superpave_Step4 = ({
 
   const modalMaterialInputs = generateMaterialInputs(data.materials);
 
-  const updateRows = () => {
-    if (data.granulometryComposition) {
-      const updatedRows = data.granulometryComposition.map((e, i) => ({
-        id: i,
-        granulometricComposition: compositions[i],
-        combinedGsb: e.combinedGsb ? e.combinedGsb.toFixed(2) : '',
-        combinedGsa: e.combinedGsa ? e.combinedGsa.toFixed(2) : '',
-        gse: e.gse ? e.gse.toFixed(2) : '',
-      }));
-      return updatedRows;
-    } else {
-      return [];
-    }
-  };
-
-  const updatePercentageRows = () => {
-    if (data.granulometryComposition) {
-      const updatedPercentageRows = data.granulometryComposition.map((e, i) => {
-        const row = {
-          id: i,
-          granulometricComposition: compositions[i],
-          initialBinder: e.pli?.toFixed(2),
-        };
-
-        e.percentsOfDosageWithBinder.forEach((percent, index) => {
-          row[`material_${index + 1}`] = percent?.toFixed(2);
-        });
-
-        return row;
-      });
-
-      return updatedPercentageRows;
-    } else {
-      return [];
-    }
-  };
-
   const handleModalSubmit = () => {
     toast.promise(
       async () => {
@@ -213,13 +215,41 @@ const Superpave_Step4 = ({
             granulometryCompositionData,
             data
           );
-          console.log("🚀 ~ response:", response)
 
-          const updatedRows = await updateRows();
+          const updatedRows = response.granulometryComposition.map((e, i) => ({
+            id: i,
+            granulometricComposition: compositions[i],
+            combinedGsb: e.combinedGsb ? e.combinedGsb.toFixed(2) : '',
+            combinedGsa: e.combinedGsa ? e.combinedGsa.toFixed(2) : '',
+            gse: e.gse ? e.gse.toFixed(2) : '',
+          }));
+
           setRows(updatedRows);
 
-          const updatedPercentageRows = await updatePercentageRows();
-          setEstimatedPercentageRows(updatedPercentageRows);
+          let prevData = { ...data };
+          prevData = {
+            ...prevData,
+            granulometryComposition: response.granulometricComposition,
+            turnNumber: response.turnNumber,
+          };
+
+          const updatedPercentageRows = response.granulometryComposition.map((e, i) => {
+            const row = {
+              id: i,
+              granulometricComposition: compositions[i],
+              initialBinder: e.pli?.toFixed(2),
+            };
+    
+            e.percentsOfDosageWithBinder.forEach((percent, index) => {
+              row[`material_${index + 1}`] = percent?.toFixed(2);
+            });
+    
+            return row;
+          });
+
+          setEstimatedPercentageRows(updatedPercentageRows)
+
+          setData({ step: 3, value: prevData });
           setLoading(false);
           setSpecificMassModalIsOpen(false);
         } catch (error) {
@@ -233,14 +263,6 @@ const Superpave_Step4 = ({
       }
     );
   };
-
-  useEffect(() => {
-    const updatedRows = updateRows();
-    setRows(updatedRows);
-
-    const updatedEstimatedPercentageRows = updatePercentageRows();
-    setEstimatedPercentageRows(updatedEstimatedPercentageRows);
-  }, [data.granulometryComposition]);
 
   const columns: GridColDef[] = [
     {
@@ -361,11 +383,18 @@ const Superpave_Step4 = ({
       headerAlign: 'center',
     },
   ];
+
   const handleClose = (reason) => {
     if (reason !== 'backdropClick') {
       setSpecificMassModalIsOpen(false);
     }
   };
+
+  useEffect(() => {
+    if (Object.values(data.materials).every((e) => e !== null)) {
+      setShouldRenderTable1(true);
+    }
+  }, [data.materials]);
 
   nextDisabled && setNextDisabled(false);
 
@@ -383,7 +412,7 @@ const Superpave_Step4 = ({
             gap: '10px',
           }}
         >
-          {rows.length > 0 && !Object.values(data.materials[0]).some((item) => item === null) && (
+          {shouldRenderTable1 && (
             <DataGrid
               hideFooter
               disableColumnMenu
@@ -458,16 +487,6 @@ const Superpave_Step4 = ({
                         placeholder={input.placeHolder}
                         fullWidth
                         onChange={(e) => {
-                          // const updatedMaterials = data.materials.map((material, index) => {
-                          //   if (index === input.materialIndex - 1) {
-                          //     return {
-                          //       ...material,
-                          //       [input.key]: e.target.value.replace(',', '.'),
-                          //     };
-                          //   }
-                          //   return material;
-                          // });
-
                           const materialIndex = data.materials.findIndex((i) => i.name === input.name);
                           const newData = [...data.materials];
                           newData[materialIndex][input.key] = e.target.value.replace(',', '.');
@@ -518,7 +537,7 @@ const Superpave_Step4 = ({
         <InputEndAdornment
           adornment="%"
           value={binderInput}
-          placeholder={t('asphalt.dosages.superpave.lower-curve')}
+          placeholder={t('asphalt.dosages.superpave.initial_binder')}
           fullWidth
           onChange={(e) => {
             setData({
