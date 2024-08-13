@@ -1,26 +1,35 @@
 import DropDown from '@/components/atoms/inputs/dropDown';
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
-import useAuth from '@/contexts/auth';
 import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
-import useABCPStore from '@/stores/concrete/abcp/abcp.store';
+import useABCPStore, { ABCP_EssaySelectionData, ABCPData } from '@/stores/concrete/abcp/abcp.store';
 import { Box, TextField, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
+const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [essays, setEssays] = useState<any>();
-  const { materialSelectionData, setData, essaySelectionData } = useABCPStore();
+  const { materialSelectionData, setData, essaySelectionData, generalData } = useABCPStore();
 
-  const { user } = useAuth();
+  const fineAggNominalDiameter = essays?.fineAggregateData.granulometrys.find(
+    (element) => element._id === essaySelectionData.fineAggregate.granulometry_id
+  )?.results?.nominal_diameter;
+
+  const coarseAggNominalDiameter = essays?.coarseAggregateData.granulometrys.find(
+    (element) => element._id === essaySelectionData.coarseAggregate.granulometry_id
+  )?.results?.nominal_diameter;
+
+  const coarseAggMaximumDiameter = essays?.coarseAggregateData.unit_masses.find(
+    (element) => element._id === essaySelectionData.coarseAggregate.unitMass_id
+  )?.results?.result;
 
   useEffect(() => {
     toast.promise(
       async () => {
         try {
-          const essays = await abcp.getEssaysByMaterialId(user._id, materialSelectionData);
+          const essays = await abcp.getEssaysByMaterialId(materialSelectionData);
           console.log('ensaios', essays);
           setEssays(essays);
           setLoading(false);
@@ -38,6 +47,41 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
     );
   }, []);
 
+  useEffect(() => {
+    toast.promise(
+      async () => {
+        try {
+          const dosageData = sessionStorage.getItem('abcp-store');
+          const sessionDataJson = JSON.parse(dosageData);
+          const dosageDataJson = sessionDataJson.state as any;
+
+          const response = await abcp.getStep3Data(dosageDataJson, dosageDataJson._id.toString());
+          console.log('🚀 ~ response:', response);
+
+          const prevData = { ...dosageDataJson };
+          const newData = { ...prevData.generalData, step: 2 };
+          prevData.generalData = newData;
+
+          setData({
+            step: 5,
+            value: {
+              ...prevData,
+            },
+          });
+          setLoading(false);
+        } catch (error) {
+          setLoading(false);
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('testeeeeeeee'),
+      }
+    );
+  }, [essays]);
+
   const fineAggregate_Inputs = [];
   const coarseAggregate_Inputs = [];
   const binder_Inputs = [];
@@ -46,7 +90,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
   if (essays) coarseAggregate_Inputs.push(essays.coarseAggregate);
   if (essays) binder_Inputs.push(essays.cement);
 
-  function hasNullValue(obj: any): boolean {
+  function hasNullValue(obj: ABCP_EssaySelectionData): boolean {
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
         if (obj[key] === null || obj[key] === undefined) {
@@ -62,7 +106,6 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
 
   const hasNull = hasNullValue(essaySelectionData);
 
-  // Se hasNull for false, setNextDisabled para false; caso contrário, setNextDisabled para true.
   setNextDisabled(hasNull);
 
   return (
@@ -86,7 +129,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
               }}
             >
               <Box>
-                <Typography>{`${essays.fineAggregate.name} - ${t('abcp.step-3.fine-aggregate')}`}</Typography>
+                <Typography>{`${essays?.fineAggregateData.name} - ${t('abcp.step-3.fine-aggregate')}`}</Typography>
                 <Box
                   sx={{
                     display: 'grid',
@@ -96,9 +139,9 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                 >
                   <TextField
                     variant="standard"
-                    key={`specificMass_${essays.fineAggregate._id}`}
+                    key={`specificMass_${essays?.fineAggregateData._id}`}
                     label={t('abcp.step-3.fine-specific-mass')}
-                    value={essaySelectionData.fineAggregate.specificMass}
+                    value={essaySelectionData?.fineAggregate?.specificMass}
                     onChange={(e) => {
                       const prevData = {
                         ...essaySelectionData.fineAggregate,
@@ -110,9 +153,13 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                   />
                   <DropDown
                     variant="standard"
-                    key={`granulometry_${essays.fineAggregate._id}`}
+                    key={`granulometry_${essays?.fineAggregateData._id}`}
                     label={t('abcp.step-3.granulometry')}
-                    options={essays.fineAggregate.granulometrys?.map((essay: any) => {
+                    defaultValue={{
+                      label: `${generalData.name} - (Diâmetro máximo: ${fineAggNominalDiameter}mm)`,
+                      value: essaySelectionData.fineAggregate.granulometry_id,
+                    }}
+                    options={essays?.fineAggregateData.granulometrys?.map((essay) => {
                       const { generalData, results, _id } = essay;
                       return {
                         label: `${generalData.name} - (Diâmetro máximo: ${results.nominal_diameter}mm)`,
@@ -143,7 +190,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
               }}
             >
               <Box>
-                <Typography>{`${essays.coarseAggregate.name} - ${t('abcp.step-3.coarse-aggregate')}`}</Typography>
+                <Typography>{`${essays?.coarseAggregateData.name} - ${t('abcp.step-3.coarse-aggregate')}`}</Typography>
                 <Box
                   sx={{
                     display: 'grid',
@@ -153,7 +200,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                 >
                   <TextField
                     variant="standard"
-                    key={`specific_mass_${essays.coarseAggregate._id}`}
+                    key={`specific_mass_${essays?.coarseAggregateData._id}`}
                     label={t('abcp.step-3.coarse-specific-mass')}
                     value={essaySelectionData.coarseAggregate.specificMass}
                     onChange={(e) => {
@@ -167,9 +214,13 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                   />
                   <DropDown
                     variant="standard"
-                    key={`granulometry_${essays.coarseAggregate._id}`}
+                    key={`granulometry_${essays?.coarseAggregateData._id}`}
                     label={t('abcp.step-3.granulometry')}
-                    options={essays.coarseAggregate.granulometrys?.map((essay: any) => {
+                    defaultValue={{
+                      label: `${generalData.name} - (Diâmetro máximo: ${coarseAggNominalDiameter}mm)`,
+                      value: essaySelectionData.coarseAggregate.granulometry_id,
+                    }}
+                    options={essays?.coarseAggregateData.granulometrys?.map((essay) => {
                       const { generalData, results, _id } = essay;
                       return {
                         label: `${generalData.name} - (Diâmetro máximo: ${results.nominal_diameter}mm)`,
@@ -183,9 +234,13 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                   />
                   <DropDown
                     variant="standard"
-                    key={`unit_mass_${essays.coarseAggregate._id}`}
+                    key={`unit_mass_${essays?.coarseAggregateData._id}`}
                     label={t('abcp.step-3.unit_mass')}
-                    options={essays.coarseAggregate.unit_masses?.map((essay: any) => {
+                    defaultValue={{
+                      label: `${generalData.name} - (Diâmetro máximo: ${coarseAggMaximumDiameter}mm)`,
+                      value: essaySelectionData.coarseAggregate.unitMass_id,
+                    }}
+                    options={essays?.coarseAggregateData.unit_masses?.map((essay) => {
                       const { generalData, result, _id } = essay;
                       return {
                         key: _id,
@@ -216,7 +271,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                 }}
               >
                 <Box>
-                  <Typography>{`${essays.cement.name} - ${t('abcp.step-3.cement')}`}</Typography>
+                  <Typography>{`${essays?.cementData.name} - ${t('abcp.step-3.cement')}`}</Typography>
                   <Box
                     sx={{
                       display: 'grid',
@@ -233,7 +288,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
                         const prevData = {
                           ...essaySelectionData.cement,
                           specificMass: Number(e.target.value),
-                          _id: essays.cement._id,
+                          _id: essays?.cementData._id,
                         };
                         setData({ step: 2, key: 'cement', value: prevData });
                       }}

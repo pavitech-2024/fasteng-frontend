@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
-import ABCP_EssaySelection from '../../../components/concrete/dosages/abcp/step-3-essays-selection';
 
 interface GeneralData {
   userId: string;
@@ -9,15 +8,26 @@ interface GeneralData {
   operator?: string;
   calculist?: string;
   description?: string;
+  step: number;
 }
 
 interface ABCP_MaterialSelection {
-  coarseAggregate: string;
-  fineAggregate: string;
-  cement: string;
+  name: string;
+  coarseAggregate: {
+    id: string;
+    type: string;
+  };
+  fineAggregate: {
+    id: string;
+    type: string;
+  };
+  cement: {
+    id: string;
+    type: string;
+  };
 }
 
-interface ABCP_EssaySelectionData {
+export interface ABCP_EssaySelectionData {
   fineAggregate: {
     _id: string;
     specificMass: number;
@@ -61,6 +71,8 @@ export type ABCPData = {
   essaySelectionData: ABCP_EssaySelectionData;
   insertParamsData: ABCP_InsertParamsData;
   results: ABCP_Results;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type ABCPActions = {
@@ -86,11 +98,22 @@ const initialState = {
     operator: null,
     calculist: null,
     description: null,
+    step: 0,
   },
   materialSelectionData: {
-    coarseAggregate: null,
-    fineAggregate: null,
-    cement: null,
+    name: null,
+    coarseAggregate: {
+      id: null,
+      type: null,
+    },
+    fineAggregate: {
+      id: null,
+      type: null,
+    },
+    cement: {
+      id: null,
+      type: null,
+    },
   },
   essaySelectionData: {
     fineAggregate: {
@@ -127,6 +150,8 @@ const initialState = {
     formula: null,
     resistanceCurve: null,
   },
+  createdAt: null,
+  updatedAt: null,
 };
 
 const useABCPStore = create<ABCPData & ABCPActions>()(
@@ -134,18 +159,23 @@ const useABCPStore = create<ABCPData & ABCPActions>()(
     persist(
       (set) => ({
         ...initialState,
-
         setData: ({ step, key, value }) =>
           set((state) => {
-            if (key)
-              return {
-                ...state,
-                [stepVariant[step]]: {
-                  ...state[stepVariant[step]],
-                  [key]: value,
-                },
-              };
-            else return { ...state, [stepVariant[step]]: value };
+            if (step === 5) {
+              return value; // Substitui o estado inteiro pelo novo valor
+            } else {
+              if (key) {
+                return {
+                  ...state,
+                  [stepVariant[step]]: {
+                    ...state[stepVariant[step]],
+                    [key]: value,
+                  },
+                };
+              } else {
+                return { ...state, [stepVariant[step]]: value };
+              }
+            }
           }),
 
         reset: ({ step }) => {

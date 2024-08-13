@@ -12,7 +12,7 @@ import Footer from '@/components/organisms/footer';
 import BodyEssay from '@/components/organisms/bodyEssay';
 import { useSessionStorage } from '../../../utils/hooks/useSessionStorage';
 
-interface EssayTemplateProps {
+export interface EssayTemplateProps {
   essayInfo: IEssayService['info'];
   childrens: { step: number; children: JSX.Element; data: unknown }[];
   nextCallback: (step: number, data: unknown) => Promise<void>;

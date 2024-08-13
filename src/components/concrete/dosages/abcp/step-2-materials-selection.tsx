@@ -1,22 +1,28 @@
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
-import { ConcreteMaterial } from '@/interfaces/concrete';
+import { ConcreteMaterial, ConcreteMaterialTypes } from '@/interfaces/concrete';
 import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
-import useABCPStore, { ABCPData } from '@/stores/concrete/abcp/abcp.store';
-import { Box } from '@mui/material';
+import useABCPStore from '@/stores/concrete/abcp/abcp.store';
+import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import MaterialSelectionTable from './tables/material-selection-table';
-import { GridColDef, useGridApiContext, useGridApiRef } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
+import Step2Table from './tables/material-selection-table';
 
-const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
+const ABCP_MaterialsSelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
+  const { materialSelectionData } = useABCPStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
-  const { materialSelectionData } = useABCPStore();
-
+  const [agglomerateSearchValue, setAgglomerateSearchValue] = useState<string>('');
+  const [binderSearchValue, setBinderSearchValue] = useState<string>('');
   const { user } = useAuth();
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (error) toast.error('Você só pode escolher um agregado miúdo e um agregado graúdo por vez.');
+  }, [error]);
 
   useEffect(() => {
     toast.promise(
@@ -39,15 +45,45 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
     );
   }, []);
 
-  const aggregateRows = materials
-    .map(({ _id, name, type }) => ({
-      _id,
-      name,
-      type,
-    }))
-    .filter(({ type }) => {
-      return type === 'coarseAggregate' || type === 'fineAggregate';
-    });
+  const handleAgglomerateInputSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setAgglomerateSearchValue(value);
+  };
+
+  const handleBinderInputSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setBinderSearchValue(value);
+  };
+
+  const filteredMaterials = materials.filter(
+    ({ name, type }) => name.includes(agglomerateSearchValue) || type.includes(agglomerateSearchValue)
+  );
+
+  const aggregateRows = [
+    {
+      inputComponent: (
+        <TextField label={t('concrete.search')} variant="standard" onChange={handleAgglomerateInputSearch} />
+      ),
+      type: 'input',
+    },
+    ...filteredMaterials
+      .map(({ _id, name, type }) => {
+        let translatedType = type;
+
+        if (type === 'fineAggregate') {
+          translatedType = t('abcp.step-3.fine-aggregate') as ConcreteMaterialTypes;
+        } else if (type === 'coarseAggregate') {
+          translatedType = t('abcp.step-3.coarse-aggregate') as ConcreteMaterialTypes;
+        }
+
+        return {
+          _id,
+          name,
+          type: translatedType,
+        };
+      })
+      .filter(({ type }) => type === t('abcp.step-3.fine-aggregate') || type === t('abcp.step-3.coarse-aggregate')),
+  ];
 
   const aggregateColumns: GridColDef[] = [
     {
@@ -62,19 +98,28 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
     },
   ];
 
-  const binderRows = materials
-    .map(({ _id, name, type, description }) => {
-      const { resistance } = description;
-      return {
-        _id,
-        name,
-        type,
-        resistance,
-      };
-    })
-    .filter(({ type }) => {
-      return type === 'cement';
-    });
+  const filteredBinderMaterials = materials.filter(
+    ({ name, type }) => name.includes(binderSearchValue) || type.includes(binderSearchValue)
+  );
+
+  const binderRows = [
+    {
+      inputComponent: <TextField label={t('concrete.search')} variant="standard" onChange={handleBinderInputSearch} />,
+    },
+    ...filteredBinderMaterials
+      .map(({ _id, name, type, description }) => {
+        const { resistance } = description;
+        return {
+          _id,
+          name,
+          type,
+          resistance,
+        };
+      })
+      .filter(({ type }) => {
+        return type === 'cement';
+      }),
+  ];
 
   const binderColumns: GridColDef[] = [
     {
@@ -94,28 +139,16 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
     },
   ];
 
-  useEffect(() => {
-    if (!Object.values(materialSelectionData).some((data) => data === null)) {
-      setNextDisabled(false);
-    }
-  }, [materialSelectionData]);
-
-  function hasNullValue(obj: any): boolean {
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        if (obj[key] === null || obj[key] === undefined) {
-          return true;
-        }
-        if (typeof obj[key] === 'object' && hasNullValue(obj[key])) {
-          return true;
-        }
-      }
-    }
-    return false;
+  if (
+    materialSelectionData?.cement?.id !== null &&
+    materialSelectionData?.coarseAggregate?.id !== null &&
+    materialSelectionData?.fineAggregate?.id !== null &&
+    !error
+  ) {
+    setNextDisabled(false);
+  } else {
+    setNextDisabled(true);
   }
-
-  const hasNull = hasNullValue(materialSelectionData);
-  setNextDisabled(hasNull);
 
   return (
     <>
@@ -128,12 +161,19 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
             gap: '10px',
           }}
         >
-          <MaterialSelectionTable
+          <Step2Table
             rows={aggregateRows}
             columns={aggregateColumns}
-            header={t('concrete.materials.aggregates')}
+            abcp={new ABCP_SERVICE()}
+            handleError={(error: boolean) => setError(error)}
           />
-          <MaterialSelectionTable rows={binderRows} columns={binderColumns} header={t('concrete.materials.binders')} />
+
+          <Step2Table
+            rows={binderRows}
+            columns={binderColumns}
+            abcp={new ABCP_SERVICE()}
+            handleError={(error: boolean) => setError(error)}
+          />
         </Box>
       )}
     </>

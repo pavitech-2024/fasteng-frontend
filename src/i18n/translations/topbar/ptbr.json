@@ -25,7 +25,7 @@
   "topbar.ddui": "Determinação de Dano por Umidade Induzida",
   "topbar.softening-point": "Ponto de amolecimento",
   "topbar.penetration": "Penetração",
-  "topbar.sayboltfurol": "Viscosidade Saybolt-Furol",
+  "topbar.saybolt-furol": "Viscosidade Saybolt-Furol",
   "topbar.granulometry-asphalt": "Granulometria",
   "topbar.granulometry-concrete": "Granulometria",
   "topbar.granulometry-soils": "Granulometria",
@@ -41,5 +41,6 @@
   "topbar.shapeIndex": "Índice de Forma",
   "topbar.elongatedParticles": "Partículas Alongadas",
   "topbar.library": "Biblioteca",
-  "topbar.standards": "Normas"
+  "topbar.standards": "Normas",
+  "topbar.consult": "Listagem de ABCP"
 }

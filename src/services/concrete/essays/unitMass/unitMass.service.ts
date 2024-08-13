@@ -80,7 +80,6 @@ class UNITMASS_SERVICE implements IEssayService {
   ): Promise<void> => {
     try {
       const { containerVolume, containerWeight, sampleContainerWeight } = data.step2Data;
-      const { material } = data.generalData;
 
       if (!containerVolume) throw t('errors.empty-containerVolume');
       if (!containerWeight) throw t('errors.containerWeight');

@@ -43,36 +43,38 @@ const ViscosityRotationalMaterialView = ({ viscosityRotationalData }: IViscosity
       </Result_CardContainer>
 
       <ResultSubTitle title={t('asphalt.essays.viscosityRotational.graph')} sx={{ margin: '.65rem' }} />
-      <Chart
-        chartType="LineChart"
-        width={'100%'}
-        height={'400px'}
-        loader={<Loading />}
-        data={data.curvePoints}
-        options={{
-          backgroundColor: 'transparent',
-          hAxis: {
-            title: `${t('saybolt-furol.temperature')} C`, // Umidade %
-          },
-          vAxis: {
-            title: `${t('saybolt-furol.viscosity')} (SSF)`, // Densidade do solo seco - g/cm³
-            maxValue: '1.5',
-          },
-          explorer: {
-            actions: ['dragToZoom', 'rightClickToReset'],
-            axis: 'vertical',
-          },
-          legend: 'none',
-          trendlines: {
-            0: {
-              type: 'polynomial',
-              degree: 4,
-              visibleInLegend: true,
-              labelInLegend: 'curva',
+      <div id="chart-div-viscosity">
+        <Chart
+          chartType="LineChart"
+          width={'100%'}
+          height={'400px'}
+          loader={<Loading />}
+          data={data.curvePoints}
+          options={{
+            backgroundColor: 'transparent',
+            hAxis: {
+              title: `${t('saybolt-furol.temperature')} C`, // Umidade %
             },
-          },
-        }}
-      />
+            vAxis: {
+              title: `${t('saybolt-furol.viscosity')} (SSF)`, // Densidade do solo seco - g/cm³
+              maxValue: '1.5',
+            },
+            explorer: {
+              actions: ['dragToZoom', 'rightClickToReset'],
+              axis: 'vertical',
+            },
+            legend: 'none',
+            trendlines: {
+              0: {
+                type: 'polynomial',
+                degree: 4,
+                visibleInLegend: true,
+                labelInLegend: 'curva',
+              },
+            },
+          }}
+        />
+      </div>
     </FlexColumnBorder>
   );
 };
