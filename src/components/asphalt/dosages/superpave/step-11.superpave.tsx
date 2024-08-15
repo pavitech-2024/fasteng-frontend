@@ -21,9 +21,15 @@ const Superpave_Step11 = ({
     initialBinderData,
     firstCurvePercentagesData,
     secondCompressionPercentagesData,
+    materialSelectionData,
     dosageResume: data,
     setData,
   } = useSuperpaveStore();
+
+  const [finalProportionsRows, setFinalProportionsRows] = useState([]);
+  const [finalProportionsCols, setFinalProportionsCols] = useState([]);
+  console.log("🚀 ~ finalProportionsCols:", finalProportionsCols)
+  console.log('🚀 ~ finalProportionsRows:', finalProportionsRows);
 
   const { user } = useAuth();
 
@@ -38,10 +44,10 @@ const Superpave_Step11 = ({
             secondCompressionPercentagesData,
             confirmationCompressionData
           );
-          console.log("🚀 ~ response:", response)
+          console.log('🚀 ~ response:', response);
 
           const newData = { ...data, ...response };
-          console.log("🚀 ~ newData:", newData)
+          console.log('🚀 ~ newData:', newData);
           setData({
             step: 10,
             value: newData,
@@ -58,18 +64,55 @@ const Superpave_Step11 = ({
     );
   }, []);
 
-  // const finalProportionsCols: GridColDef[] = [
-  //   {
-  //     field: 'optimumBinder',
-  //     headerName: "Teor ótimo de ligante asfáltico",
-  //     valueFormatter: ({ value }) => `${value}`,
-  //   },
-  //   {
-  //     field: 'optimumBinder',
-  //     headerName: "Teor ótimo de ligante asfáltico",
-  //     valueFormatter: ({ value }) => `${value}`,
-  //   },
-  // ]
+  const initialCols: GridColDef[] = [
+    {
+      field: 'optimumBinder',
+      headerName: 'Teor ótimo de ligante asfáltico',
+      valueFormatter: ({ value }) => `${value}`,
+    },
+  ];
+
+  useEffect(() => {
+    if (data?.ponderatedPercentsOfDosage?.length > 0) {
+      // Resetando as linhas e colunas iniciais
+      setFinalProportionsRows([
+        {
+          id: 0,
+          optimumBinder: '---',
+        },
+      ]);
+  
+      const initialCols = [
+        {
+          field: 'optimumBinder',
+          headerName: "Teor ótimo de ligante asfáltico",
+          valueFormatter: ({ value }) => `${value}`,
+          width: 250
+        }
+      ];
+  
+      let prevRowsData = { id: 0, optimumBinder: secondCompressionPercentagesData.optimumContent ? secondCompressionPercentagesData.optimumContent : '---' };
+      let newColsData: GridColDef[] = [...initialCols];
+  
+      for (let i = 0; i < data?.ponderatedPercentsOfDosage?.length; i++) {
+        let materialName = materialSelectionData.aggregates[i].name;
+        prevRowsData = { ...prevRowsData, [materialName]: data.ponderatedPercentsOfDosage[i] };
+  
+        let newFinalProportionsCols: GridColDef = {
+          field: materialName,
+          headerName: materialName,
+          valueFormatter: ({ value }) => `${value}`,
+          width: 150
+        };
+  
+        newColsData.push(newFinalProportionsCols);
+      }
+  
+      setFinalProportionsRows([prevRowsData]);
+      setFinalProportionsCols(newColsData);
+    }
+  }, [data?.ponderatedPercentsOfDosage]);
+  
 
   nextDisabled && setNextDisabled(false);
 
@@ -87,14 +130,13 @@ const Superpave_Step11 = ({
         >
           <Typography>Proporção final dos materiais</Typography>
 
-          {/* <DataGrid
+          <DataGrid
             hideFooter
             disableColumnMenu
             disableColumnFilter
-            experimentalFeatures={{ columnGrouping: true }}
             columns={finalProportionsCols}
             rows={finalProportionsRows}
-          /> */}
+          />
         </Box>
       )}
     </>
