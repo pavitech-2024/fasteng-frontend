@@ -37,6 +37,7 @@ import { RtfoData } from '@/stores/asphalt/rtfo/rtfo.store';
 import RtfoMaterialView from '@/components/asphalt/material/rtfoMaterialView';
 import { ElasticRecoveryData } from '@/stores/asphalt/elasticRecovery/elasticRecovery.store';
 import ElasticRecoveryMaterialView from '@/components/asphalt/material/elasticRecoveryMaterialView';
+import GeneratePDF from '@/components/generatePDF/generatePDFAsphalt/generatePDFAsphalt';
 
 interface TextBoxProps {
   children: JSX.Element | ReactNode;
@@ -137,6 +138,8 @@ const Material = () => {
     updateData('ductility', 'CAP', setDuctilityData);
     updateData('elasticRecovery', 'CAP', setElasticRecoveryData);
     updateData('rtfo', 'CAP', setRtfoData);
+
+    console.log('teste', granulometryData);
   }, [material]);
 
   const TextBox = ({ children }: TextBoxProps) => (
@@ -210,6 +213,25 @@ const Material = () => {
                       <Typography>{type}</Typography>
                     </Box>
                   </TextBox>
+                  <GeneratePDF
+                    name={material.material.name}
+                    type={type}
+                    granulometryData={granulometryData}
+                    specificMassData={specificMassData}
+                    shapeIndexData={shapeIndexData}
+                    elongatedParticlesData={elongatedParticlesData}
+                    adhesivenessData={adhesivenessData}
+                    losAngelesAbrasionData={losAngelesAbrasionData}
+                    sandEquivalentData={sandEquivalentData}
+                    angularityData={angularityData}
+                    viscosityRotationalData={viscosityRotationalData}
+                    penetrationData={penetrationData}
+                    softeningPointData={softeningPointData}
+                    flashPointData={flashPointData}
+                    ductilityData={ductilityData}
+                    rtfoData={rtfoData}
+                    elasticRecoveryData={elasticRecoveryData}
+                  />
                 </Box>
               </FlexColumnBorder>
 
