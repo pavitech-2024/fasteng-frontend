@@ -24,33 +24,35 @@ const Superpave_Step5 = ({
 
   const [stepStatus, setStepStatus] = useState('');
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
+
   //Water temperature list;
-  // const list = {
-  //   '15°C - 0.9991': 0.9991,
-  //   '16°C - 0.9989': 0.9989,
-  //   '17°C - 0.9988': 0.9988,
-  //   '18°C - 0.9986': 0.9986,
-  //   '19°C - 0.9984': 0.9984,
-  //   '20°C - 0.9982': 0.9982,
-  //   '21°C - 0.9980': 0.998,
-  //   '22°C - 0.9978': 0.9978,
-  //   '23°C - 0.9975': 0.9975,
-  //   '24°C - 0.9973': 0.9973,
-  //   '25°C - 0.9970': 0.997,
-  //   '26°C - 0.9968': 0.9968,
-  //   '27°C - 0.9965': 0.9965,
-  //   '28°C - 0.9962': 0.9962,
-  //   '29°C - 0.9959': 0.9959,
-  //   '30°C - 0.9956': 0.9956,
-  // };
+  const list = {
+    '15°C - 0.9991': 0.9991,
+    '16°C - 0.9989': 0.9989,
+    '17°C - 0.9988': 0.9988,
+    '18°C - 0.9986': 0.9986,
+    '19°C - 0.9984': 0.9984,
+    '20°C - 0.9982': 0.9982,
+    '21°C - 0.9980': 0.998,
+    '22°C - 0.9978': 0.9978,
+    '23°C - 0.9975': 0.9975,
+    '24°C - 0.9973': 0.9973,
+    '25°C - 0.9970': 0.997,
+    '26°C - 0.9968': 0.9968,
+    '27°C - 0.9965': 0.9965,
+    '28°C - 0.9962': 0.9962,
+    '29°C - 0.9959': 0.9959,
+    '30°C - 0.9956': 0.9956,
+  };
+  
   const waterTemperatureList = [];
 
-  // const formatedWaterTempList = Object.keys(list).forEach((key) => {
-  //   waterTemperatureList.push({
-  //     label: key,
-  //     value: list[key],
-  //   });
-  // });
+  const formatedWaterTempList = Object.keys(list).forEach((key) => {
+    waterTemperatureList.push({
+      label: key,
+      value: list[key],
+    });
+  });
 
   const [inferiorRows, setInferiorRows] = useState([]);
   const [intermediariaRows, setIntermediariaRows] = useState([]);
@@ -146,7 +148,7 @@ const Superpave_Step5 = ({
       width: 100,
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data[curve].findIndex((r) => r.id === id);
+        const index = data[curve]?.findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
             adornment={'cm'}
@@ -371,8 +373,10 @@ const Superpave_Step5 = ({
   };
 
   const readExcel = (file, tableName, index) => {
+    console.log("🚀 ~ readExcel ~ tableName:", tableName)
     const promise = new Promise((resolve, reject) => {
       file = file[0];
+
       const fileReader = new FileReader();
       fileReader.readAsArrayBuffer(file);
 
@@ -389,6 +393,17 @@ const Superpave_Step5 = ({
         reject(error);
       };
     });
+
+    console.log("🚀 ~ readExcel ~ file:", file.name)
+
+
+    let prevData = [...data[tableName]];
+    prevData[index].document = file.name;
+    console.log("🚀 ~ readExcel ~ index:", index)
+
+    console.log("🚀 ~ readExcel ~ prevData:", prevData)
+
+    setData({ step: 4, value: {...data, [tableName]: prevData} })
 
     promise.then((d: any[]) => {
       const arrayAux = data[tableName];

@@ -55,7 +55,7 @@ const SuperpaveDosageConsult = () => {
 
             const rows = dosages[0]?.map((row) => ({
               name: row.generalData?.name,
-              progress: `(${row.generalData?.step}/9) - ${progressTextMap[row.generalData?.step]}`,
+              progress: `(${row.generalData?.step}/11) - ${progressTextMap[row.generalData?.step]}`,
               start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
               finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
               id: row._id,

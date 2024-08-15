@@ -26,6 +26,7 @@ const Superpave_Step7 = ({
   } = useSuperpaveStore();
 
   const [vv, setVv] = useState();
+  const [extimatedBinderMaterialsPercentsRows, setExtimatedBinderMaterialsPercentsRows] = useState<any[]>([]);
 
   useEffect(() => {
     if (data.listOfPlis.length > 0) {
@@ -91,45 +92,50 @@ const Superpave_Step7 = ({
     },
   ];
 
-  const extimatedBinderMaterialsPercentsRows = data.porcentageAggregate.map((e, i) => ({
-    id: i,
-    binder: data.listOfPlis[i].toFixed(2),
-    material_1: data.porcentageAggregate[0][i].toFixed(2),
-    material_2: data.porcentageAggregate[1][i].toFixed(2),
-    material_3: data.porcentageAggregate[2][i].toFixed(2),
-    material_4: data.porcentageAggregate[3][i].toFixed(2),
-  }));
+  useEffect(() => {
+    if (data?.porcentageAggregate?.length > 1) {
+      const rows = data?.porcentageAggregate?.map((e, i) => ({
+        id: i,
+        binder: data.listOfPlis[i]?.toFixed(2),
+        material_1: data.porcentageAggregate[0][i]?.toFixed(2),
+        material_2: data.porcentageAggregate[1][i]?.toFixed(2),
+        material_3: data.porcentageAggregate[2][i]?.toFixed(2),
+        material_4: data.porcentageAggregate[3][i]?.toFixed(2),
+      }));
+      setExtimatedBinderMaterialsPercentsRows(rows);
+    }
+  }, [data]);
 
   const extimatedBinderMaterialsPercentsCols = [
     {
       field: 'binder',
       headerName: t('asphalt.dosages.superpave.binder'),
       valueFormatter: ({ value }) => `${value}`,
-      width: 160,
+      width: 180,
     },
     {
       field: 'material_1',
       headerName: `${materialSelectionData.aggregates[0].name} (%)`,
       valueFormatter: ({ value }) => `${value}`,
-      width: 160,
+      width: 180,
     },
     {
       field: 'material_2',
       headerName: `${materialSelectionData.aggregates[1].name} (%)`,
       valueFormatter: ({ value }) => `${value}`,
-      width: 160,
+      width: 180,
     },
     {
       field: 'material_3',
       headerName: `${materialSelectionData.aggregates[2].name} (%)`,
       valueFormatter: ({ value }) => `${value}`,
-      width: 160,
+      width: 180,
     },
     {
       field: 'material_4',
       headerName: `${materialSelectionData.aggregates[3].name} (%)`,
       valueFormatter: ({ value }) => `${value}`,
-      width: 160,
+      width: 180,
     },
   ];
 
@@ -147,15 +153,17 @@ const Superpave_Step7 = ({
             gap: '10px',
           }}
         >
-          <DataGrid
-            hideFooter
-            disableColumnMenu
-            disableColumnFilter
-            experimentalFeatures={{ columnGrouping: true }}
-            columnGroupingModel={extimatedBinderMaterialsPercentsGroupings}
-            columns={extimatedBinderMaterialsPercentsCols}
-            rows={extimatedBinderMaterialsPercentsRows}
-          />
+          {data?.porcentageAggregate?.length > 1 && (
+            <DataGrid
+              hideFooter
+              disableColumnMenu
+              disableColumnFilter
+              experimentalFeatures={{ columnGrouping: true }}
+              columnGroupingModel={extimatedBinderMaterialsPercentsGroupings}
+              columns={extimatedBinderMaterialsPercentsCols}
+              rows={extimatedBinderMaterialsPercentsRows}
+            />
+          )}
         </Box>
       )}
     </>

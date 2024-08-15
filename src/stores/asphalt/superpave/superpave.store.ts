@@ -375,7 +375,17 @@ interface ConfirmationCompressionData {
 }
 
 interface DosageResume {
-
+  Gmb: number,
+  Gmm: number,
+  RBV: number,
+  Vam: number,
+  Vv: number,
+  diametralTractionResistance: number,
+  gmm: number,
+  percentWaterAbs: number,
+  ponderatedPercentsOfDosage: number[],
+  quantitative: number[],
+  ratioDustAsphalt: number
 }
 
 export type SuperpaveData = {
@@ -857,7 +867,19 @@ const initialState = {
       temperatureOfWater: null,
     },
   },
-  dosageResume: {}
+  dosageResume: {
+    Gmb: null,
+    Gmm: null,
+    RBV: null,
+    Vam: null,
+    Vv: null,
+    diametralTractionResistance: null,
+    gmm: null,
+    percentWaterAbs: null,
+    ponderatedPercentsOfDosage: [],
+    quantitative: [],
+    ratioDustAsphalt: null
+  }
 };
 
 const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(

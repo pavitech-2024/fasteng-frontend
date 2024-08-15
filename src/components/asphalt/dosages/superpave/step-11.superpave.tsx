@@ -3,7 +3,8 @@ import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -14,7 +15,15 @@ const Superpave_Step11 = ({
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { confirmationCompressionData: data, setData } = useSuperpaveStore();
+  const {
+    confirmationCompressionData,
+    granulometryCompositionData,
+    initialBinderData,
+    firstCurvePercentagesData,
+    secondCompressionPercentagesData,
+    dosageResume: data,
+    setData,
+  } = useSuperpaveStore();
 
   const { user } = useAuth();
 
@@ -22,21 +31,21 @@ const Superpave_Step11 = ({
     toast.promise(
       async () => {
         try {
-          const {
-            data: resData,
-            success,
-            error,
-          } = await superpave.calculateDosageEquation(data);
+          const response = await superpave.calculateDosageEquation(
+            granulometryCompositionData,
+            initialBinderData,
+            firstCurvePercentagesData,
+            secondCompressionPercentagesData,
+            confirmationCompressionData
+          );
+          console.log("🚀 ~ response:", response)
 
-          if (success) {
-            const newData = { ...data, ...resData };
-            setData({
-              step: 10,
-              value: newData,
-            });
-          } else {
-            console.error(`${error}`);
-          }
+          const newData = { ...data, ...response };
+          console.log("🚀 ~ newData:", newData)
+          setData({
+            step: 10,
+            value: newData,
+          });
         } catch (error) {
           throw error;
         }
@@ -48,6 +57,19 @@ const Superpave_Step11 = ({
       }
     );
   }, []);
+
+  // const finalProportionsCols: GridColDef[] = [
+  //   {
+  //     field: 'optimumBinder',
+  //     headerName: "Teor ótimo de ligante asfáltico",
+  //     valueFormatter: ({ value }) => `${value}`,
+  //   },
+  //   {
+  //     field: 'optimumBinder',
+  //     headerName: "Teor ótimo de ligante asfáltico",
+  //     valueFormatter: ({ value }) => `${value}`,
+  //   },
+  // ]
 
   nextDisabled && setNextDisabled(false);
 
@@ -62,7 +84,18 @@ const Superpave_Step11 = ({
             flexDirection: 'column',
             gap: '10px',
           }}
-        ></Box>
+        >
+          <Typography>Proporção final dos materiais</Typography>
+
+          {/* <DataGrid
+            hideFooter
+            disableColumnMenu
+            disableColumnFilter
+            experimentalFeatures={{ columnGrouping: true }}
+            columns={finalProportionsCols}
+            rows={finalProportionsRows}
+          /> */}
+        </Box>
       )}
     </>
   );

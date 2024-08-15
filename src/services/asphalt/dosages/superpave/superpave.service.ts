@@ -9,7 +9,7 @@ class Superpave_SERVICE implements IEssayService {
   info = {
     key: 'superpave',
     icon: SuperpaveIcon,
-    title: t('asphalt.dosages.superpave'),
+    title: t(''),
     path: '/asphalt/dosages/superpave',
     backend_path: 'asphalt/dosages/superpave',
     steps: 11,
@@ -27,7 +27,7 @@ class Superpave_SERVICE implements IEssayService {
       },
       { step: 3, description: t('asphalt.dosages.superpave.initial_binder'), path: 'initial-binder' },
       { step: 4, description: t('asphalt.dosages.superpave.first_compression'), path: 'first-compression' },
-      { step: 5, description: t('asphalt.dosages.superpave.first_curve_percentages'), path: 'first-curve-percentages' },
+      { step: 5, description: t('asphalt.dosages.superpave.first_compression_parameters'), path: 'first-curve-percentages' },
       {
         step: 6,
         description: t('asphalt.dosages.superpave.chosen_curve_percentages'),
@@ -101,7 +101,8 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitSecondCompressionParams(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 9:
-          await this.calculateDosageEquation(data as SuperpaveData['confirmationCompressionData'], this.userId, null, isConsult);
+          // const { secondCompressionPercentagesData, confirmationCompressionData } = data as SuperpaveData;
+          // await this.calculateDosageEquation(granulometryCompositionData, initialBinderData, firstCurvePercentagesData, secondCompressionPercentagesData, confirmationCompressionData, isConsult);
           await this.submitConfirmattionCompression(data as SuperpaveData, this.userId, null, isConsult);
           break;
         default:
@@ -348,7 +349,6 @@ class Superpave_SERVICE implements IEssayService {
       if (success === false) throw error.name;
 
       return data;
-      //this.store_actions?.setData({ step: 3, value: { ...step4Data, ...data } });
     } catch (error) {
       throw error;
     }
@@ -460,6 +460,7 @@ class Superpave_SERVICE implements IEssayService {
     try {
       const { nominalSize, chosenCurves, porcentagesPassantsN200, percentageInputs } = step3Data;
       const { turnNumber, binderSpecificMass, granulometryComposition: binderCompositions } = step4Data;
+      console.log("🚀 ~ Superpave_SERVICE ~ binderCompositions:", binderCompositions)
       const { riceTest, inferiorRows, intermediariaRows, superiorRows, maximumDensity } = step5Data;
       const { trafficVolume } = generalData;
 
@@ -812,14 +813,22 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  calculateDosageEquation = async (step9Data: any, userId: string, user?: string, isConsult?: boolean) => {
+  calculateDosageEquation = async (
+    step2Data: SuperpaveData['granulometryCompositionData'],
+    step3Data: SuperpaveData['initialBinderData'],
+    step5Data: SuperpaveData['firstCurvePercentagesData'],
+    step8Data:SuperpaveData['secondCompressionPercentagesData'],
+    step9Data: SuperpaveData['confirmationCompressionData'],
+    isConsult?: boolean
+  ) => {
     if (!isConsult) {
       try {
-        const { table: samplesData, gmm } = step9Data.confirmationCompressionData;
-        const { porcentagesPassantsN200, percentageInputs } = step9Data.granulometryCompositionData;
-        const { optimumContent } = step9Data.secondCompressionPercentagesData;
-        const { binderSpecificMass, materials } = step9Data.initialBinderData;
-        const { selectedCurve, table3 } = step9Data.firstCurvePercentagesData;
+        const { table: samplesData, gmm } = step9Data;
+        const { porcentagesPassantsN200, percentageInputs } = step2Data;
+        console.log("🚀 ~ Superpave_SERVICE ~ porcentagesPassantsN200:", porcentagesPassantsN200)
+        const { optimumContent } = step8Data;
+        const { binderSpecificMass, materials } = step3Data;
+        const { selectedCurve, table3 } = step5Data;
 
         let choosenGranulometryComposition;
         let selectedPercentsOfDosage;
@@ -858,7 +867,7 @@ class Superpave_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
 
-        return { data, success, error };
+        return data;
       } catch (error) {
         console.log(error);
         throw error;

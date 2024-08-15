@@ -128,10 +128,10 @@ const Superpave_Step6 = ({
   const paramsRows = [
     {
       id: 0,
-      gmmInitialN: data.table1.expectedPorcentageGmmInitialN ? data.table1.expectedPorcentageGmmInitialN : '',
-      gmmNMax: data.table1.expectedPorcentageGmmMaxN,
-      gmmNProj: data.table1.expectedPorcentageGmmProjectN,
-      expectedVam: data.table1.expectedVam,
+      gmmInitialN: data.table1.expectedPorcentageGmmInitialN ? data.table1.expectedPorcentageGmmInitialN : '---',
+      gmmNMax: data.table1.expectedPorcentageGmmMaxN !== null ? data.table1.expectedPorcentageGmmMaxN : '---',
+      gmmNProj: data.table1.expectedPorcentageGmmProjectN !== null ? data.table1.expectedPorcentageGmmProjectN : '---',
+      expectedVam: data.table1.expectedVam !== null ? data.table1.expectedVam : '---',
     },
   ];
 
@@ -309,7 +309,13 @@ const Superpave_Step6 = ({
     { label: t('asphalt.dosages.superpave.higher'), value: 'higher' },
   ];
 
-  nextDisabled && setNextDisabled(false);
+  useEffect(() => {
+    if (data.selectedCurve !== null && data.selectedCurve !== undefined) {
+      setNextDisabled(false);
+    } else {
+      setNextDisabled(true);
+    }
+  },[data.selectedCurve])
 
   return (
     <>
@@ -368,10 +374,12 @@ const Superpave_Step6 = ({
             <Typography>{t('asphalt.dosages.superpave.choose-curve')}</Typography>
             <DropDown
               label={''}
+              sx={{ width: '40%'}}
               options={selectedCurveOptions}
               callback={(value) => setData({ step: 5, key: 'selectedCurve', value })}
               size="medium"
               variant="standard"
+              defaultValue={{ value: data.selectedCurve, label: `${data.selectedCurve === null ? 'Selecionar' : data.selectedCurve}` }}
             />
           </Box>
         </Box>

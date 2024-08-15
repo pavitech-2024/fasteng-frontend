@@ -25,7 +25,8 @@ const Superpave_Step9 = ({
   } = useSuperpaveStore();
 
   const { user } = useAuth();
-  let expectedVolumetricParamsRows;
+  const [expectedVolumetricParamsRows, setExpectedVolumetricParamsRows] = useState([]);
+  console.log('🚀 ~ expectedVolumetricParamsRows:', expectedVolumetricParamsRows);
 
   useEffect(() => {
     toast.promise(
@@ -69,23 +70,35 @@ const Superpave_Step9 = ({
 
   isValid = nullCount < 4;
 
-  if (data.graphs?.graphGmb.length > 0) {
-    expectedVolumetricParamsRows = data.graphs?.graphGmb.map((e, idx) => {
-      const indexName =
-        idx === 0 ? 'halfLess' : idx === 1 ? 'normal' : idx === 2 ? 'halfPlus' : idx === 3 ? 'onePlus' : '';
-      return {
-        id: idx,
-        binder: chosenCurvePercentagesData.listOfPlis[idx]?.toFixed(2),
-        gmmNproject: secondCompressionData.composition[indexName]?.projectN.percentageGmm.toFixed(2),
-        vv: secondCompressionData.composition[indexName]?.Vv.toFixed(2),
-        vam: secondCompressionData.composition[indexName]?.ratioDustAsphalt.toFixed(2),
-        rbv: secondCompressionData.composition[indexName]?.RBV.toFixed(2),
-        pa: secondCompressionData.composition[indexName]?.indirectTensileStrength?.toFixed(2),
-        specificMass: secondCompressionData.composition[indexName]?.specifiesMass.toFixed(2),
-        absorbedWater: secondCompressionData.composition[indexName]?.projectN.percentWaterAbs.toFixed(2),
-      };
-    });
-  }
+  useEffect(() => {
+    if (data.graphs?.graphGmb.length > 0) {
+      const newRows = data.graphs?.graphGmb
+        .map((e, idx) => {
+          const indexName =
+            idx === 0 ? 'halfLess' : idx === 1 ? 'normal' : idx === 2 ? 'halfPlus' : idx === 3 ? 'onePlus' : '';
+          if (!indexName) return null; // Ignora iterações onde indexName é uma string vazia
+          return {
+            id: idx,
+            binder: chosenCurvePercentagesData.listOfPlis[idx]?.toFixed(2),
+            gmmNproject: secondCompressionData.composition[indexName]?.projectN.percentageGmm?.toFixed(2),
+            vv: secondCompressionData.composition[indexName]?.Vv?.toFixed(2),
+            vam: secondCompressionData.composition[indexName]?.ratioDustAsphalt?.toFixed(2),
+            rbv:
+              secondCompressionData.composition[indexName]?.RBV !== null
+                ? secondCompressionData.composition[indexName]?.RBV?.toFixed(2)
+                : '---',
+            pa:
+              secondCompressionData.composition[indexName]?.indirectTensileStrength !== null
+                ? secondCompressionData.composition[indexName]?.indirectTensileStrength?.toFixed(2)
+                : '---',
+            specificMass: secondCompressionData.composition[indexName]?.specifiesMass?.toFixed(2),
+            absorbedWater: secondCompressionData.composition[indexName]?.projectN.percentWaterAbs?.toFixed(2),
+          };
+        })
+        .filter((row) => row !== null);
+      setExpectedVolumetricParamsRows(newRows);
+    }
+  }, [data.graphs, chosenCurvePercentagesData.listOfPlis, secondCompressionData.composition]);
 
   const expectedVolumetricParamsCols = [
     {
@@ -110,19 +123,19 @@ const Superpave_Step9 = ({
       field: 'vam',
       headerName: `VAM (%)`,
       valueFormatter: ({ value }) => `${value}`,
-      width: 125,
+      width: 80,
     },
     {
       field: 'rbv',
       headerName: `RBV (%)`,
       valueFormatter: ({ value }) => `${value}`,
-      width: 125,
+      width: 80,
     },
     {
       field: 'pa',
       headerName: `P/A (%)`,
       valueFormatter: ({ value }) => `${value}`,
-      width: 125,
+      width: 80,
     },
     {
       field: 'specificMass',
@@ -177,10 +190,22 @@ const Superpave_Step9 = ({
   const finalProportionsRows = [
     {
       id: 1,
-      material_1: secondCompressionData.ponderatedPercentsOfDosage[0]?.toFixed(2),
-      material_2: secondCompressionData.ponderatedPercentsOfDosage[1]?.toFixed(2),
-      material_3: secondCompressionData.ponderatedPercentsOfDosage[2]?.toFixed(2),
-      material_4: secondCompressionData.ponderatedPercentsOfDosage[3]?.toFixed(2),
+      material_1:
+        secondCompressionData.ponderatedPercentsOfDosage[0] !== null
+          ? secondCompressionData.ponderatedPercentsOfDosage[0]?.toFixed(2)
+          : '---',
+      material_2:
+        secondCompressionData.ponderatedPercentsOfDosage[1] !== null
+          ? secondCompressionData.ponderatedPercentsOfDosage[1]?.toFixed(2)
+          : '---',
+      material_3:
+        secondCompressionData.ponderatedPercentsOfDosage[2] !== null
+          ? secondCompressionData.ponderatedPercentsOfDosage[2]?.toFixed(2)
+          : '---',
+      material_4:
+        secondCompressionData.ponderatedPercentsOfDosage[3] !== null
+          ? secondCompressionData.ponderatedPercentsOfDosage[3]?.toFixed(2)
+          : '---',
     },
   ];
 
@@ -198,7 +223,9 @@ const Superpave_Step9 = ({
             gap: '10px',
           }}
         >
-          <Typography>Teor de ligante ótimo estimado (%): {data.optimumContent?.toFixed(2)}</Typography>
+          {typeof data?.optimumContent !== 'string' && (
+            <Typography>Teor de ligante ótimo estimado (%): {data?.optimumContent?.toFixed(2)}</Typography>
+          )}
 
           <DataGrid
             hideFooter
@@ -223,9 +250,14 @@ const Superpave_Step9 = ({
           />
 
           <MiniGraphics data={data.graphs.graphVv} type="Vv" nameEixoY={'Vv (%)'} />
+
           <MiniGraphics nameEixoY="GMB (g/cm³)" type="GMB" data={data.graphs.graphGmb} />
+
           <MiniGraphics nameEixoY="GMM (g/cm³)" type="GMM" data={data.graphs.graphGmm} />
-          <MiniGraphics nameEixoY="RBV (g/cm³)" type="RBV" data={data.graphs.graphRBV} />
+
+          {data.graphs.graphRBV.flat().every(e => e !== null) && (
+            <MiniGraphics nameEixoY="RBV (g/cm³)" type="RBV" data={data.graphs.graphRBV} />
+          )}
           <MiniGraphics nameEixoY="VAM (g/cm³)" type="Vam" data={data.graphs.graphVam} />
 
           {isValid && <MiniGraphics nameEixoY="RT (MPa)" type="RT" data={data.graphs.graphRT} />}

@@ -70,10 +70,10 @@ const Superpave_Step8 = ({
   const { user } = useAuth();
 
   useEffect(() => {
-    setNProjectPercentsRows_halfLess(data.halfLess);
-    setNProjectPercentsRows_halfPlus(data.halfPlus);
-    setNProjectPercentsRows_normal(data.normal);
-    setNProjectPercentsRows_onePlus(data.onePlus);
+    if (data?.halfLess?.length > 0) setNProjectPercentsRows_halfLess(data.halfLess);
+    if (data?.halfPlus?.length > 0) setNProjectPercentsRows_halfPlus(data.halfPlus);
+    if (data?.normal?.length > 0) setNProjectPercentsRows_normal(data.normal);
+    if (data?.onePlus?.length > 0) setNProjectPercentsRows_onePlus(data.onePlus);
   }, [data]);
 
   // const calculateRiceTest = (idx) => {
@@ -421,15 +421,17 @@ const Superpave_Step8 = ({
             Porcentagem dos materiais a partir do teor de ligante estimado para Vv:{' '}
             {`${chosenCurvePercentagesData.listOfPlis[0].toFixed(2)}`}
           </Typography>
-          <DataGrid
-            disableColumnMenu
-            disableColumnFilter
-            experimentalFeatures={{ columnGrouping: true }}
-            columnGroupingModel={nProjectPercentsGroupings}
-            columns={generateColumns('halfLess')}
-            rows={nProjectPercentsRows_halfLess}
-            slots={{ footer: () => ExpansionToolbar('halfLess') }}
-          />
+          {nProjectPercentsRows_halfLess?.length > 0 && (
+            <DataGrid
+              disableColumnMenu
+              disableColumnFilter
+              experimentalFeatures={{ columnGrouping: true }}
+              columnGroupingModel={nProjectPercentsGroupings}
+              columns={generateColumns('halfLess')}
+              rows={nProjectPercentsRows_halfLess}
+              slots={{ footer: () => ExpansionToolbar('halfLess') }}
+            />
+          )}
 
           <Typography>
             Porcentagem dos materiais a partir do teor de ligante estimado para Vv:{' '}

@@ -229,7 +229,7 @@ const Superpave_Step4 = ({
           let prevData = { ...data };
           prevData = {
             ...prevData,
-            granulometryComposition: response.granulometricComposition,
+            granulometryComposition: response.granulometryComposition,
             turnNumber: response.turnNumber,
           };
 
