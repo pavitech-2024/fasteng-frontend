@@ -239,15 +239,15 @@ const Superpave_Step4 = ({
               granulometricComposition: compositions[i],
               initialBinder: e.pli?.toFixed(2),
             };
-    
+
             e.percentsOfDosageWithBinder.forEach((percent, index) => {
               row[`material_${index + 1}`] = percent?.toFixed(2);
             });
-    
+
             return row;
           });
 
-          setEstimatedPercentageRows(updatedPercentageRows)
+          setEstimatedPercentageRows(updatedPercentageRows);
 
           setData({ step: 3, value: prevData });
           setLoading(false);

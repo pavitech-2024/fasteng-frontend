@@ -28,24 +28,22 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     // Itera sobre todas as chaves no sessionStorage
     for (let i = sessionStorage.length - 1; i >= 0; i--) {
       const key = sessionStorage.key(i);
-      if (key) {  
+      if (key) {
         // Extraindo a parte relevante da chave
         const keyString = key.split('-')[1];
         console.log('Substring da chave:', keyString);
-  
+
         // Verificando se o pathname não contém a substring da chave
         if (!pathname.includes(keyString)) {
           sessionStorage.removeItem(key);
         }
       }
     }
-  
+
     if (window.location.pathname === '/home') {
       clearStore();
     }
   }, [pathname, clearStore]);
-  
-  
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>

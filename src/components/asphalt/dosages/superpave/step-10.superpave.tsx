@@ -278,30 +278,26 @@ const Superpave_Step10 = ({
 
   const handleGmmSubmit = () => {
     const { temperatureOfWater, ...riceTestWithoutWaterTemp } = data.riceTest;
-    const riceTestHasValues = Object.values(riceTestWithoutWaterTemp).some((item) => item !== null)
+    const riceTestHasValues = Object.values(riceTestWithoutWaterTemp).some((item) => item !== null);
     if (riceTestHasValues) {
-      toast.error(t('asphalt.dosages.superpave.rice-test-empty-values'))
+      toast.error(t('asphalt.dosages.superpave.rice-test-empty-values'));
     } else if (!riceTestHasValues && data.gmm === null) {
-      toast.error(t('asphalt.dosages.superpave.gmm-empty'))
+      toast.error(t('asphalt.dosages.superpave.gmm-empty'));
     } else if (!riceTestHasValues && data.gmm !== null && data.riceTest.temperatureOfWater === null) {
-      toast.error(t('asphalt.dosages.superpave.water-temperature-empty'))
+      toast.error(t('asphalt.dosages.superpave.water-temperature-empty'));
     } else {
       toast.promise(
         async () => {
           try {
-            const {
-              data: resData,
-              success,
-              error,
-            } = await superpave.calculateRiceTestStep9(data);
-  
+            const { data: resData, success, error } = await superpave.calculateRiceTestStep9(data);
+
             if (success) {
               const newData = { ...data, ...resData };
               setData({
                 step: 9,
                 value: newData,
               });
-              setModalIsOpen(false)
+              setModalIsOpen(false);
             } else {
               console.error(`${error}`);
             }
@@ -316,7 +312,7 @@ const Superpave_Step10 = ({
         }
       );
     }
-  }
+  };
 
   nextDisabled && setNextDisabled(false);
 

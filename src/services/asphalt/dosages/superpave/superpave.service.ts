@@ -27,7 +27,11 @@ class Superpave_SERVICE implements IEssayService {
       },
       { step: 3, description: t('asphalt.dosages.superpave.initial_binder'), path: 'initial-binder' },
       { step: 4, description: t('asphalt.dosages.superpave.first_compression'), path: 'first-compression' },
-      { step: 5, description: t('asphalt.dosages.superpave.first_compression_parameters'), path: 'first-curve-percentages' },
+      {
+        step: 5,
+        description: t('asphalt.dosages.superpave.first_compression_parameters'),
+        path: 'first-curve-percentages',
+      },
       {
         step: 6,
         description: t('asphalt.dosages.superpave.chosen_curve_percentages'),
@@ -110,7 +114,7 @@ class Superpave_SERVICE implements IEssayService {
       }
     } catch (error) {
       if (step < 10) {
-        throw error
+        throw error;
       }
     }
   };
@@ -462,7 +466,7 @@ class Superpave_SERVICE implements IEssayService {
     try {
       const { nominalSize, chosenCurves, porcentagesPassantsN200, percentageInputs } = step3Data;
       const { turnNumber, binderSpecificMass, granulometryComposition: binderCompositions } = step4Data;
-      console.log("🚀 ~ Superpave_SERVICE ~ binderCompositions:", binderCompositions)
+      console.log('🚀 ~ Superpave_SERVICE ~ binderCompositions:', binderCompositions);
       const { riceTest, inferiorRows, intermediariaRows, superiorRows, maximumDensity } = step5Data;
       const { trafficVolume } = generalData;
 
@@ -819,7 +823,7 @@ class Superpave_SERVICE implements IEssayService {
     step2Data: SuperpaveData['granulometryCompositionData'],
     step3Data: SuperpaveData['initialBinderData'],
     step5Data: SuperpaveData['firstCurvePercentagesData'],
-    step8Data:SuperpaveData['secondCompressionPercentagesData'],
+    step8Data: SuperpaveData['secondCompressionPercentagesData'],
     step9Data: SuperpaveData['confirmationCompressionData'],
     isConsult?: boolean
   ) => {
@@ -827,7 +831,7 @@ class Superpave_SERVICE implements IEssayService {
       try {
         const { table: samplesData, gmm } = step9Data;
         const { porcentagesPassantsN200, percentageInputs } = step2Data;
-        console.log("🚀 ~ Superpave_SERVICE ~ porcentagesPassantsN200:", porcentagesPassantsN200)
+        console.log('🚀 ~ Superpave_SERVICE ~ porcentagesPassantsN200:', porcentagesPassantsN200);
         const { optimumContent } = step8Data;
         const { binderSpecificMass, materials } = step3Data;
         const { selectedCurve, table3 } = step5Data;

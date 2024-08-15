@@ -61,7 +61,7 @@ interface SuperpaveInitialBinderData {
     realSpecificMass: number;
     apparentSpecificMass: number;
     absorption: number;
-    type: string
+    type: string;
   }[];
   binderSpecificMass: number;
   granulometryComposition: {
@@ -375,18 +375,18 @@ interface ConfirmationCompressionData {
 }
 
 interface DosageResume {
-  Gmb: number,
-  Gmm: number,
-  RBV: number,
-  Vam: number,
-  Vv: number,
-  diametralTractionResistance: number,
-  gmm: number,
-  percentWaterAbs: number,
-  ponderatedPercentsOfDosage: number[],
-  quantitative: number[],
-  ratioDustAsphalt: number,
-  specifiesMass: number
+  Gmb: number;
+  Gmm: number;
+  RBV: number;
+  Vam: number;
+  Vv: number;
+  diametralTractionResistance: number;
+  gmm: number;
+  percentWaterAbs: number;
+  ponderatedPercentsOfDosage: number[];
+  quantitative: number[];
+  ratioDustAsphalt: number;
+  specifiesMass: number;
 }
 
 export type SuperpaveData = {
@@ -400,7 +400,7 @@ export type SuperpaveData = {
   secondCompressionData: SecondCompressionData;
   secondCompressionPercentagesData: SecondCompressionPercentagesData;
   confirmationCompressionData: ConfirmationCompressionData;
-  dosageResume: DosageResume
+  dosageResume: DosageResume;
 };
 
 export type SuperpaveActions = {
@@ -422,7 +422,7 @@ const stepVariant = {
   7: 'secondCompressionData',
   8: 'secondCompressionPercentagesData',
   9: 'confirmationCompressionData',
-  10: 'dosageResume'
+  10: 'dosageResume',
 };
 
 const initialState = {
@@ -494,7 +494,7 @@ const initialState = {
         realSpecificMass: null,
         apparentSpecificMass: null,
         absorption: null,
-        type: null
+        type: null,
       },
     ],
     binderSpecificMass: null,
@@ -881,8 +881,8 @@ const initialState = {
     ponderatedPercentsOfDosage: [],
     quantitative: [],
     ratioDustAsphalt: null,
-    specifiesMass: null
-  }
+    specifiesMass: null,
+  },
 };
 
 const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(

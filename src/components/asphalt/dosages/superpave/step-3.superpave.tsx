@@ -302,11 +302,11 @@ const Superpave_Step3 = ({
   const calcular = (curve: string) => {
     let valueCount = 0;
     let valueIsValid = false;
-    
+
     // Deve ser exatamente 100;
     if (curve === 'lower') {
       valueCount = Object.values(data.percentageInputs[0]).reduce((acc, item) => acc + Number(item), 0);
-      console.log("🚀 ~ calcular ~ valueCount:", valueCount)
+      console.log('🚀 ~ calcular ~ valueCount:', valueCount);
       if (valueCount === 100) {
         valueIsValid = true;
       }
@@ -321,7 +321,7 @@ const Superpave_Step3 = ({
         valueIsValid = true;
       }
     }
-    
+
     if (valueIsValid) {
       toast.promise(
         async () => {
@@ -331,21 +331,21 @@ const Superpave_Step3 = ({
               average: intermediaria,
               higher: superior,
             };
-  
+
             const composition = await superpave.calculateGranulometryComposition(
               data,
               materialSelectionData,
               generalData,
               chosenCurves
             );
-  
+
             const prevData = data;
-  
+
             const newData = {
               ...prevData,
               ...composition,
             };
-  
+
             setData({ step: 2, value: newData });
             //setLoading(false);
           } catch (error) {
@@ -360,7 +360,7 @@ const Superpave_Step3 = ({
         }
       );
     } else {
-      toast.error(t('asphalt.dosages.superpave.invalid-granulometry-values'))
+      toast.error(t('asphalt.dosages.superpave.invalid-granulometry-values'));
     }
   };
 

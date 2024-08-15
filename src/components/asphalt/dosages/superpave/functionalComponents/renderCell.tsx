@@ -21,7 +21,9 @@ const RenderCellComponent = ({ row, curve, data, addPlanilha }) => {
         style={{ display: 'none' }}
         onChange={(e) => addPlanilha(curve, index, e)}
       />
-      <Typography sx={{ textAlign: 'center' }}>{data[curve][index]?.planilha ? data[curve][index].document : `Vazio`}</Typography>
+      <Typography sx={{ textAlign: 'center' }}>
+        {data[curve][index]?.planilha ? data[curve][index].document : `Vazio`}
+      </Typography>
     </Box>
   );
 };

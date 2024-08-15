@@ -315,7 +315,7 @@ const Superpave_Step6 = ({
     } else {
       setNextDisabled(true);
     }
-  },[data.selectedCurve])
+  }, [data.selectedCurve]);
 
   return (
     <>
@@ -374,12 +374,15 @@ const Superpave_Step6 = ({
             <Typography>{t('asphalt.dosages.superpave.choose-curve')}</Typography>
             <DropDown
               label={''}
-              sx={{ width: '40%'}}
+              sx={{ width: '40%' }}
               options={selectedCurveOptions}
               callback={(value) => setData({ step: 5, key: 'selectedCurve', value })}
               size="medium"
               variant="standard"
-              defaultValue={{ value: data.selectedCurve, label: `${data.selectedCurve === null ? 'Selecionar' : data.selectedCurve}` }}
+              defaultValue={{
+                value: data.selectedCurve,
+                label: `${data.selectedCurve === null ? 'Selecionar' : data.selectedCurve}`,
+              }}
             />
           </Box>
         </Box>

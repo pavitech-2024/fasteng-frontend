@@ -44,7 +44,7 @@ const Superpave_Step5 = ({
     '29°C - 0.9959': 0.9959,
     '30°C - 0.9956': 0.9956,
   };
-  
+
   const waterTemperatureList = [];
 
   const formatedWaterTempList = Object.keys(list).forEach((key) => {
@@ -373,7 +373,7 @@ const Superpave_Step5 = ({
   };
 
   const readExcel = (file, tableName, index) => {
-    console.log("🚀 ~ readExcel ~ tableName:", tableName)
+    console.log('🚀 ~ readExcel ~ tableName:', tableName);
     const promise = new Promise((resolve, reject) => {
       file = file[0];
 
@@ -394,16 +394,15 @@ const Superpave_Step5 = ({
       };
     });
 
-    console.log("🚀 ~ readExcel ~ file:", file.name)
-
+    console.log('🚀 ~ readExcel ~ file:', file.name);
 
     const prevData = [...data[tableName]];
     prevData[index].document = file.name;
-    console.log("🚀 ~ readExcel ~ index:", index)
+    console.log('🚀 ~ readExcel ~ index:', index);
 
-    console.log("🚀 ~ readExcel ~ prevData:", prevData)
+    console.log('🚀 ~ readExcel ~ prevData:', prevData);
 
-    setData({ step: 4, value: {...data, [tableName]: prevData} })
+    setData({ step: 4, value: { ...data, [tableName]: prevData } });
 
     promise.then((d: any[]) => {
       const arrayAux = data[tableName];

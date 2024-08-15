@@ -13,7 +13,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
   const { step2Data: data, setData } = useAsphaltGranulometryStore();
 
   const sievesSeries = [getSieveSeries(0), getSieveSeries(1), getSieveSeries(2), getSieveSeries(3), getSieveSeries(4)];
-  console.log("🚀 ~ sievesSeries:", sievesSeries)
+  console.log('🚀 ~ sievesSeries:', sievesSeries);
 
   if (data.sieve_series && data.table_data && data.table_data.length == 0) {
     const table_data = [];

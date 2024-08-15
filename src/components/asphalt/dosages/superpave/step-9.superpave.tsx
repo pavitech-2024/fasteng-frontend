@@ -255,7 +255,7 @@ const Superpave_Step9 = ({
 
           <MiniGraphics nameEixoY="GMM (g/cm³)" type="GMM" data={data.graphs.graphGmm} />
 
-          {data.graphs.graphRBV.flat().every(e => e !== null) && (
+          {data.graphs.graphRBV.flat().every((e) => e !== null) && (
             <MiniGraphics nameEixoY="RBV (g/cm³)" type="RBV" data={data.graphs.graphRBV} />
           )}
           <MiniGraphics nameEixoY="VAM (g/cm³)" type="Vam" data={data.graphs.graphVam} />
