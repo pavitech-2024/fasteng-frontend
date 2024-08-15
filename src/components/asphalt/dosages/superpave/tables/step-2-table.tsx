@@ -64,6 +64,7 @@ const Step2Table = ({ rows, columns, header }: Step2Props & { superpave: Superpa
           }}
           rowSelectionModel={rowSelectionModel}
           disableColumnSelector
+          hideFooter
           columns={columns.map((column) => ({
             ...column,
             disableColumnMenu: true,

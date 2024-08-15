@@ -37,7 +37,7 @@ const Marshall_Step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { ma
     return true;
   }) &&
     nextDisabled &&
-    setNextDisabled(false);
+    setNextDisabled(true);
 
   return (
     <>

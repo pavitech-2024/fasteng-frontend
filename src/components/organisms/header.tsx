@@ -1,6 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 interface HeaderProps {
   title: string;
@@ -12,6 +13,9 @@ interface HeaderProps {
 }
 
 export const Header = ({ title, subTitle, link, icon, image, children }: HeaderProps) => {
+  const { pathname } = useRouter();
+  const isSuperpavePage = pathname.includes('superpave');
+
   return (
     <Box
       sx={{
@@ -23,56 +27,58 @@ export const Header = ({ title, subTitle, link, icon, image, children }: HeaderP
         flexDirection: { notebook: 'row', mobile: 'column' },
       }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          mb: { mobile: '2vh', notebook: 0 },
-        }}
-      >
-        {image && <Image alt="essay icon" src={image} width={90} height={90} />}
-        {icon}
+      {!isSuperpavePage && (
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'column',
-            marginRight: '2rem',
+            alignItems: 'center',
+            mb: { mobile: '2vh', notebook: 0 },
           }}
         >
-          <Typography
+          {image && <Image alt="essay icon" src={image} width={90} height={90} />}
+          {icon}
+          <Box
             sx={{
-              textTransform: 'uppercase',
-              fontSize: { mobile: '1.65rem', notebook: '2rem' },
-              lineHeight: { mobile: '1.65rem', notebook: '2rem' },
-              color: 'primaryTons.darkGray',
-              fontWeight: 700,
+              display: 'flex',
+              flexDirection: 'column',
+              marginRight: '2rem',
             }}
           >
-            {title}
-          </Typography>
-          {link && (
             <Typography
               sx={{
                 textTransform: 'uppercase',
-                fontSize: { mobile: '1.15rem', notebook: '1.5rem' },
-                lineHeight: { mobile: '1.15rem', notebook: '1.5rem' },
-                fontWeight: 500,
+                fontSize: { mobile: '1.65rem', notebook: '2rem' },
+                lineHeight: { mobile: '1.65rem', notebook: '2rem' },
+                color: 'primaryTons.darkGray',
+                fontWeight: 700,
               }}
             >
-              <Link
-                href={link}
-                target="standard"
-                style={{
-                  textDecoration: 'none',
-                  color: '#F29134', //primary.main
+              {title}
+            </Typography>
+            {link && (
+              <Typography
+                sx={{
+                  textTransform: 'uppercase',
+                  fontSize: { mobile: '1.15rem', notebook: '1.5rem' },
+                  lineHeight: { mobile: '1.15rem', notebook: '1.5rem' },
+                  fontWeight: 500,
                 }}
               >
-                {subTitle}
-              </Link>
-            </Typography>
-          )}
+                <Link
+                  href={link}
+                  target="standard"
+                  style={{
+                    textDecoration: 'none',
+                    color: '#F29134', //primary.main
+                  }}
+                >
+                  {subTitle}
+                </Link>
+              </Typography>
+            )}
+          </Box>
         </Box>
-      </Box>
+      )}
 
       {children}
     </Box>
