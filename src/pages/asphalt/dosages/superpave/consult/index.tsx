@@ -1,10 +1,10 @@
-import { DeleteIcon, MarshallIcon, MarshallIconPng, NextIcon } from '@/assets';
+import { DeleteIcon, NextIcon, SuperpaveIcon } from '@/assets';
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
 import useAuth from '@/contexts/auth';
-import marshallDosageService from '@/services/asphalt/dosages/marshall/marshall.consult.service';
-import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
-import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
+import superpaveDosageService from '@/services/asphalt/dosages/superpave/superpave.consult.service';
+import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
+import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { IconButton, Container, Box, Pagination } from '@mui/material';
 import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import { t } from 'i18next';
@@ -12,9 +12,9 @@ import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
-const MarshallDosageConsult = () => {
-  const { setData } = useMarshallStore();
-  const { handleNext } = new Marshall_SERVICE();
+const SuperpaveDosageConsult = () => {
+  const { setData } = useSuperpaveStore();
+  const { handleNext } = new Superpave_SERVICE();
   const [dosages, setDosages] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
@@ -24,15 +24,17 @@ const MarshallDosageConsult = () => {
   const [dosageArrays, setDosageArrays] = useState([]);
 
   const progressTextMap = {
-    1: t('marshall.dosages.marshall.general-data'),
-    2: t('asphalt.dosages.marshall.material_selection'),
-    3: t('asphalt.dosages.marshall.granulometry_composition'),
-    4: t('asphalt.dosages.marshall.initial_binder'),
-    5: t('asphalt.dosages.marshall.max_density'),
-    6: t('asphalt.dosages.marshall.volumetric_parameters'),
-    7: t('asphalt.dosages.marshall.optimal_binder'),
-    8: t('asphalt.dosages.marshall.confirm_compression'),
-    9: t('asphalt.dosages.marshall.dosage_resume'),
+    1: t('general data'),
+    2: t('asphalt.dosages.superpave.material_selection'),
+    3: t('asphalt.dosages.superpave.granulometry_composition'),
+    4: t('asphalt.dosages.superpave.initial_binder'),
+    5: t('asphalt.dosages.superpave.first_compression'),
+    6: t('asphalt.dosages.superpave.first_compression_parameters'),
+    7: t('asphalt.dosages.superpave.chosen_curve_percentages'),
+    8: t('asphalt.dosages.superpave.second_compression'),
+    9: t('asphalt.dosages.superpave.second_compression_parameters'),
+    10: t('asphalt.dosages.superpave.confirmation_compression'),
+    11: t('asphalt.dosages.superpave.dosage_resume'),
   };
 
   const rows = dosages.map((row) => ({
@@ -47,13 +49,13 @@ const MarshallDosageConsult = () => {
     toast.promise(
       async () => {
         try {
-          marshallDosageService.getMarshallDosagesByUserId(user._id).then((response) => {
+          superpaveDosageService.getSuperpaveDosagesByUserId(user._id).then((response) => {
             const data = response.data;
             dosages.push(data);
 
             const rows = dosages[0]?.map((row) => ({
               name: row.generalData?.name,
-              progress: `(${row.generalData?.step}/9) - ${progressTextMap[row.generalData?.step]}`,
+              progress: `(${row.generalData?.step}/11) - ${progressTextMap[row.generalData?.step]}`,
               start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
               finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
               id: row._id,
@@ -72,9 +74,9 @@ const MarshallDosageConsult = () => {
         }
       },
       {
-        pending: t('loading.marshall.pending'),
-        success: t('loading.marshall.success'),
-        error: t('loading.marshall.error'),
+        pending: t('loading.superpave.pending'),
+        success: t('loading.superpave.success'),
+        error: t('loading.superpave.error'),
       }
     );
   }, []);
@@ -100,9 +102,9 @@ const MarshallDosageConsult = () => {
 
   const handleDeleteDosage = async (id: string) => {
     try {
-      await marshallDosageService.deleteMarshallDosage(id);
+      await superpaveDosageService.deleteSuperpaveDosage(id);
       // Recarregar a lista de dosagens após a exclusão
-      const response = await marshallDosageService.getMarshallDosagesByUserId(user._id);
+      const response = await superpaveDosageService.getSuperpaveDosagesByUserId(user._id);
       const updatedDosages = response.data.map((row) => ({
         name: row.generalData?.name,
         progress: `(${row.generalData?.step}/9) - ${progressTextMap[row.generalData?.step]}`,
@@ -126,39 +128,40 @@ const MarshallDosageConsult = () => {
     const dosage = dosages[0]?.find((dosage) => {
       return dosage._id === id;
     });
-    const step = dosage.generalData.step;
+    const step = dosage?.generalData.step;
+
     if (dosage) {
       setData({
-        step: 10,
+        step: 12,
         value: dosage,
       });
     }
-    sessionStorage.setItem('marshall-step', step.toString());
+    sessionStorage.setItem('superpave-step', step?.toString());
     handleNext(step, dosage, true);
-    if (step === 9) router.push(`/asphalt/dosages/marshall/create?consult=true`);
-    router.push(`/asphalt/dosages/marshall/create`);
+    if (step === 5) router.push(`/asphalt/dosages/superpave/create?consult=true`);
+    router.push(`/asphalt/dosages/superpave/create`);
   };
 
   const columns: GridColDef[] = [
     {
       field: 'name',
-      headerName: t('marshall.dosage-consult.name'),
+      headerName: t('superpave.dosage-consult.name'),
     },
     {
       field: 'progress',
-      headerName: t('marshall.dosage-consult.progress'),
+      headerName: t('superpave.dosage-consult.progress'),
     },
     {
       field: 'start',
-      headerName: t('marshall.dosage-consult.start'),
+      headerName: t('superpave.dosage-consult.start'),
     },
     {
       field: 'finish',
-      headerName: t('marshall.dosage-consult.finish'),
+      headerName: t('superpave.dosage-consult.finish'),
     },
     {
       field: 'options',
-      headerName: t('marshall.dosage-consult.options'),
+      headerName: t('superpave.dosage-consult.options'),
       renderCell: (params) => (
         <>
           <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)}>
@@ -184,7 +187,7 @@ const MarshallDosageConsult = () => {
           ) : (
             <Container>
               <Box sx={{ margin: '3rem' }}>
-                <Header title={t('marshall.dosage-title')} image={MarshallIconPng} />
+                <Header title={t('asphalt.essays.superpave')} image={SuperpaveIcon} />
               </Box>
               <Box
                 sx={{
@@ -240,4 +243,4 @@ const MarshallDosageConsult = () => {
   );
 };
 
-export default MarshallDosageConsult;
+export default SuperpaveDosageConsult;

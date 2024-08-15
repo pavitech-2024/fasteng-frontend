@@ -37,7 +37,7 @@ const Asphalt: NextPage = () => {
       name: t('navbar.superpave'),
       icon: <SuperpaveIcon width="30px" height="35px" />,
       description: t('description.superpave'),
-      path: '/asphalt/dosages/superpave',
+      path: '/asphalt/dosages/superpave/create',
     },
     {
       name: t('navbar.standards'),
