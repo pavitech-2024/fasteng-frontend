@@ -397,7 +397,7 @@ const Superpave_Step5 = ({
     console.log("🚀 ~ readExcel ~ file:", file.name)
 
 
-    let prevData = [...data[tableName]];
+    const prevData = [...data[tableName]];
     prevData[index].document = file.name;
     console.log("🚀 ~ readExcel ~ index:", index)
 

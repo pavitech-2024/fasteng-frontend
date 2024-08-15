@@ -139,11 +139,10 @@ const Superpave_Step3 = ({
   const tableDataAux = setPercentsToListTotal(peneiras, arrayResponse);
 
   const setBandsHigherLower = (tableData, bandsHigher, bandsLower, arrayResponse, peneiras) => {
-    let second = 0;
-    let arraySize = tableData[0]?.length;
+    const arraySize = tableData[0]?.length;
 
     // Inicializa o arrayAux com objetos vazios de acordo com o tamanho descoberto
-    let arrayAux = Array(arraySize).fill({});
+    const arrayAux = Array(arraySize).fill({});
 
     tableData.forEach((element) => {
       element.forEach((item, index2) => {

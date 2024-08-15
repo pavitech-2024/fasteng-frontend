@@ -385,7 +385,8 @@ interface DosageResume {
   percentWaterAbs: number,
   ponderatedPercentsOfDosage: number[],
   quantitative: number[],
-  ratioDustAsphalt: number
+  ratioDustAsphalt: number,
+  specifiesMass: number
 }
 
 export type SuperpaveData = {
@@ -405,6 +406,7 @@ export type SuperpaveData = {
 export type SuperpaveActions = {
   setData: ({ step, key, value }: setDataType) => void;
   reset: ({ step }: setDataType) => void;
+  clearStore: () => void;
 };
 
 type setDataType = { step: number; key?: string; value: unknown };
@@ -878,7 +880,8 @@ const initialState = {
     percentWaterAbs: null,
     ponderatedPercentsOfDosage: [],
     quantitative: [],
-    ratioDustAsphalt: null
+    ratioDustAsphalt: null,
+    specifiesMass: null
   }
 };
 
@@ -912,6 +915,11 @@ const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(
           return {
             [stepVariant[step]]: null,
           };
+        },
+
+        clearStore: () => {
+          sessionStorage.clear();
+          set(initialState);
         },
       }),
       {

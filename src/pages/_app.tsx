@@ -13,14 +13,39 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/en-gb';
 import 'dayjs/locale/en';
 import CssBaseline from '@mui/material/CssBaseline';
+import { useRouter } from 'next/router';
+import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { i18n } = useTranslation();
   const locale = i18n.language === 'en' ? 'en' : 'en-gb';
 
+  const { pathname } = useRouter();
+
+  const clearStore = useSuperpaveStore((state) => state.clearStore);
+
   useEffect(() => {
-    // use effect to reload the page when the language is changed
-  }, [i18n.language]);
+    // Itera sobre todas as chaves no sessionStorage
+    for (let i = sessionStorage.length - 1; i >= 0; i--) {
+      const key = sessionStorage.key(i);
+      if (key) {  
+        // Extraindo a parte relevante da chave
+        const keyString = key.split('-')[1];
+        console.log('Substring da chave:', keyString);
+  
+        // Verificando se o pathname não contém a substring da chave
+        if (!pathname.includes(keyString)) {
+          sessionStorage.removeItem(key);
+        }
+      }
+    }
+  
+    if (window.location.pathname === '/home') {
+      clearStore();
+    }
+  }, [pathname, clearStore]);
+  
+  
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>

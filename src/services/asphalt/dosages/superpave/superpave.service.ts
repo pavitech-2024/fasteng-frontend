@@ -101,15 +101,17 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitSecondCompressionParams(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 9:
-          // const { secondCompressionPercentagesData, confirmationCompressionData } = data as SuperpaveData;
-          // await this.calculateDosageEquation(granulometryCompositionData, initialBinderData, firstCurvePercentagesData, secondCompressionPercentagesData, confirmationCompressionData, isConsult);
           await this.submitConfirmattionCompression(data as SuperpaveData, this.userId, null, isConsult);
           break;
+        case 10:
+          await this.submitSuperpaveDosage(data as SuperpaveData, this.userId, null, isConsult);
         default:
           throw t('errors.invalid-step');
       }
     } catch (error) {
-      throw error;
+      if (step < 10) {
+        throw error
+      }
     }
   };
 
@@ -897,6 +899,42 @@ class Superpave_SERVICE implements IEssayService {
         const response = await Api.post(`${this.info.backend_path}/save-confirmattion-compression-step/${userData}`, {
           confirmationCompressionData: {
             ...data.confirmationCompressionData,
+            name,
+          },
+        });
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    }
+  };
+
+  submitSuperpaveDosage = async (
+    data: SuperpaveData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
+      try {
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
+
+        const resumeDosage = {
+          ...data.dosageResume,
+          name,
+          isConsult: null,
+        };
+
+        if (isConsult) resumeDosage.isConsult = isConsult;
+
+        const response = await Api.post(`${this.info.backend_path}/save-superpave-dosage/${userData}`, {
+          dosageResume: {
+            ...data.dosageResume,
             name,
           },
         });

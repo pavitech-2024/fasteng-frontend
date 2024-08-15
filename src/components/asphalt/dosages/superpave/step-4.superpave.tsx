@@ -48,8 +48,8 @@ const Superpave_Step4 = ({
           try {
             const newMaterials = [];
 
-            let aggregatesIds = materialSelectionData.aggregates.map((e) => e._id);
-            let binderId = materialSelectionData.binder;
+            const aggregatesIds = materialSelectionData.aggregates.map((e) => e._id);
+            const binderId = materialSelectionData.binder;
             const ids = [...aggregatesIds, binderId];
 
             const response = await materialsService.getMaterials(ids);
@@ -59,14 +59,14 @@ const Superpave_Step4 = ({
             setMaterialNames(names);
             setBinderData(response.data.material);
 
-            let binderIndex = response.data.essays.findIndex((e) =>
+            const binderIndex = response.data.essays.findIndex((e) =>
               e.some((f) => f.data.generalData.material.type === 'asphaltBinder')
             );
 
             const responseData = { ...response.data };
 
             for (let i = 0; i < responseData.materials.length; i++) {
-              let aggregateMaterial = {
+              const aggregateMaterial = {
                 name: responseData.materials[i].name,
                 type: i === binderIndex ? 'binder' : 'aggregate',
                 realSpecificMass: null,
@@ -103,7 +103,7 @@ const Superpave_Step4 = ({
   }, []);
 
   useEffect(() => {
-    let hasSomeNullValue = Object.values(rows).some((e) => e === null);
+    const hasSomeNullValue = Object.values(rows).some((e) => e === null);
     if (activateSecondFetch && hasSomeNullValue) {
       toast.promise(
         async () => {
