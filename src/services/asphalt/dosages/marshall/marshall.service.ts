@@ -45,12 +45,13 @@ class Marshall_SERVICE implements IEssayService {
     try {
       switch (step) {
         case 0:
-          const { generalData: generalDataStep1 } = data as MarshallData;
-          await this.submitGeneralData(generalDataStep1, this.userId, isConsult);
+          const { generalData: generalData} = data as MarshallData;
+          await this.submitGeneralData(generalData, this.userId, isConsult);
           break;
         case 1:
           await this.submitMaterialSelection(data as MarshallData, this.userId, null, isConsult);
-          await this.getStep3Data(data as MarshallData, this.userId, isConsult);
+          const { materialSelectionData } = data as MarshallData;
+          await this.getStep3Data(generalData, materialSelectionData, this.userId, isConsult);
           break;
         case 2:
           await this.submitGranulometryComposition(data as MarshallData, this.userId, null, isConsult);
@@ -194,19 +195,17 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  getStep3Data = async (dataStep3: MarshallData, user: string, isConsult: boolean): Promise<void> => {
+  getStep3Data = async (generalData: MarshallData['generalData'], step2Data: MarshallData['materialSelectionData'], user: string, isConsult?: boolean): Promise<any> => {
     if (!isConsult) {
       try {
-        const { dnitBand } = dataStep3.generalData;
+        const { dnitBand } = generalData;
 
-        const { aggregates } = dataStep3.materialSelectionData;
+        const { aggregates } = step2Data;
 
         const response = await Api.post(`${this.info.backend_path}/step-3-data`, {
           dnitBand,
           aggregates,
         });
-
-        console.log("🚀 ~ Marshall_SERVICE ~ getStep3Data= ~ response:", response)
 
         const { data, success, error } = response.data;
 
@@ -216,7 +215,9 @@ class Marshall_SERVICE implements IEssayService {
 
         const { table_data } = data;
 
-        this.store_actions.setData({ key: 'table_data', step: 2, value: table_data });
+        return table_data
+
+        // this.store_actions.setData({ key: 'table_data', step: 2, value: table_data });
       } catch (error) {
         throw error;
       }

@@ -2,13 +2,15 @@ import { EssayPageProps } from '@/components/templates/essay';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { Box, Button } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Step3Table from './tables/step-3-table';
 import Step3InputTable from './tables/step-3-input-table';
 import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
+import useAuth from '@/contexts/auth';
+import { toast } from 'react-toastify';
 
 const Marshall_Step3 = ({
   nextDisabled,
@@ -17,6 +19,8 @@ const Marshall_Step3 = ({
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const { calculateGranulometryComposition } = new Marshall_SERVICE();
   const { granulometryCompositionData: data, materialSelectionData, setData, generalData } = useMarshallStore();
+
+  const { user } = useAuth();
 
   useEffect(() => {
     if (generalData.dnitBand) {
@@ -27,6 +31,36 @@ const Marshall_Step3 = ({
       setData({ step: 2, value: insertingDnitBand });
     }
   }, [generalData]);
+  
+  
+  useEffect(() => {
+      toast.promise(
+        async () => {
+          try {
+            const { table_rows, table_column_headers } = await marshall.getStep3Data(generalData, materialSelectionData, user._id, null)
+
+            const prevData = {...data.table_data};
+
+            prevData.table_rows = table_rows;
+            prevData.table_column_headers = table_column_headers;
+
+            setData({
+              step: 2,
+              value: {...data, table_data: prevData},
+            });
+            // setLoading(false);
+          } catch (error) {
+            // setLoading(false);
+            throw error;
+          }
+        },
+        {
+          pending: t('loading.materials.pending'),
+          success: t('loading.materials.success'),
+          error: t('loading.materials.error'),
+        }
+      );
+  }, []);
 
   // Tabela de inputs
   // Definindo a row e as colunas para a tabela de inputs
@@ -41,6 +75,8 @@ const Marshall_Step3 = ({
       const { _id } = aggregate;
       aggregates_percentages['percentage_'.concat(_id)] = null;
     });
+
+    // const projectCols = 
 
     table_data?.push({ ...aggregates_percentages });
 
@@ -81,8 +117,6 @@ const Marshall_Step3 = ({
   // Tabela de dados
   // Definindo as rows para a tabela de dados
   const rows = data?.table_data?.table_rows;
-  console.log("🚀 ~ data:", data)
-  console.log("🚀 ~ rows:", rows)
 
   const [specificationRows, setSpecificationRows] = useState([]);
   const [specificationColumns, setSpecificationColumns] = useState<GridColDef[]>([]);
@@ -154,6 +188,7 @@ const Marshall_Step3 = ({
   const handleCalculateGranulometricComp = async () => {
     if (!Object.values(data.percentageInputs).some((input) => input === null)) {
       const results = await calculateGranulometryComposition(data);
+      console.log("🚀 ~ handleCalculateGranulometricComp ~ results:", results)
 
       const newPointsOfCurve = [...results?.pointsOfCurve];
 
@@ -176,39 +211,45 @@ const Marshall_Step3 = ({
   };
 
   // Definindo as colunas para tabela de dados
-  const columnGrouping = [];
-  const columns: GridColDef[] = [];
+  const [columnGrouping, setColumnGroupings] = useState([]);
+  const [columns, setColumns] = useState<GridColDef[]>([]);
 
-  data?.table_data?.table_column_headers.forEach((header) => {
-    if (header === 'sieve_label') {
-      columns.push({
-        field: 'sieve_label',
-        headerName: t('granulometry-asphalt.sieves'),
-        valueFormatter: ({ value }) => `${value}`,
-      });
-    } else {
-      if (header.startsWith('total_passant')) {
-        columns.push({
-          field: header,
-          headerName: t('granulometry-asphalt.total_passant'),
-          valueFormatter: ({ value }) => `${Number(value).toFixed(2)}%`,
+  useEffect(() => {
+    let newCols = [];
+    let newColsGrouping = [];
+    data?.table_data?.table_column_headers?.forEach((header) => {
+      if (header === 'sieve_label') {
+        newCols.push({
+          field: 'sieve_label',
+          headerName: t('granulometry-asphalt.sieves'),
+          valueFormatter: ({ value }) => `${value}`,
         });
       } else {
-        const _id = header.replace('passant_', '');
-        const name = materialSelectionData.aggregates.find((aggregate) => aggregate._id === _id)?.name;
-        columns.push({
-          field: header,
-          headerName: t('granulometry-asphalt.passant'),
-          valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
-        });
-        columnGrouping.push({
-          groupId: name,
-          children: [{ field: 'total_passant_'.concat(_id) }, { field: 'passant_'.concat(_id) }],
-          headerAlign: 'center',
-        });
+        if (header.startsWith('total_passant')) {
+          newCols.push({
+            field: header,
+            headerName: t('granulometry-asphalt.total_passant'),
+            valueFormatter: ({ value }) => `${Number(value).toFixed(2)}%`,
+          });
+        } else {
+          const _id = header.replace('passant_', '');
+          const name = materialSelectionData.aggregates.find((aggregate) => aggregate._id === _id)?.name;
+          newCols.push({
+            field: header,
+            headerName: t('granulometry-asphalt.passant'),
+            valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
+          });
+          newColsGrouping.push({
+            groupId: name,
+            children: [{ field: 'total_passant_'.concat(_id) }, { field: 'passant_'.concat(_id) }],
+            headerAlign: 'center',
+          });
+        }
       }
-    }
-  });
+    });
+    setColumns(newCols);
+    setColumnGroupings(newColsGrouping);
+  },[data.table_data.table_column_headers])
 
   nextDisabled && setNextDisabled(false);
 
@@ -221,10 +262,9 @@ const Marshall_Step3 = ({
           gap: '10px',
         }}
       >
-      
-        <Step3InputTable rows={inputRows} columns={inputColumns} marshall={marshall} />
         
         <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
+        
         
         <Button
           sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
@@ -232,7 +272,7 @@ const Marshall_Step3 = ({
         >
           {t('asphalt.dosages.marshall.calculate')}
         </Button>
-        
+        {/* 
         {data?.projections?.length > 0 && (
           <Step3Table
             rows={specificationRows}
@@ -240,7 +280,7 @@ const Marshall_Step3 = ({
             columnGrouping={specificationColumnsGroupings}
             marshall={marshall}
           />
-        )}
+        )} */}
         {/*
         {data?.graphData?.length > 1 && <Graph data={data?.graphData} />}
         */}
