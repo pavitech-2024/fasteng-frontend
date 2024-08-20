@@ -26,18 +26,23 @@ const Marshall_Step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { ma
     { label: t('asphalt.dosages.marshall.bonding-layer'), value: 'bonding' },
   ];
 
-  // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
-  inputs.every(({ required, value }) => {
+  // Função para verificar se todos os campos obrigatórios estão preenchidos
+  const allRequiredFieldsFilled = inputs.every(({ required, value }) => {
     if (!required) return true;
 
-    if (value === null) return false;
-
-    if (typeof value === 'string' && value.trim() === '') return false;
+    if (value === null || (typeof value === 'string' && value.trim() === '')) {
+      return false;
+    }
 
     return true;
-  }) &&
-    nextDisabled &&
+  });
+
+  // Atualizar o estado nextDisabled com base na verificação
+  if (allRequiredFieldsFilled && nextDisabled) {
+    setNextDisabled(false);
+  } else if (!allRequiredFieldsFilled && !nextDisabled) {
     setNextDisabled(true);
+  }
 
   return (
     <>
@@ -77,6 +82,7 @@ const Marshall_Step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { ma
                   label={input.label}
                   options={objectiveOptions}
                   callback={(value) => setData({ step: 0, key: input.key, value })}
+                  defaultValue={{ label: generalData.objective, value: generalData.objective }}
                   size="medium"
                   required={input.required}
                 />
@@ -98,6 +104,7 @@ const Marshall_Step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { ma
                     label={input.label}
                     options={trackOptions}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
+                    defaultValue={{ label: generalData.dnitBand, value: generalData.dnitBand }}
                     size="medium"
                     required={input.required}
                   />

@@ -107,7 +107,7 @@ const SuperpaveDosageConsult = () => {
       const response = await superpaveDosageService.getSuperpaveDosagesByUserId(user._id);
       const updatedDosages = response.data.map((row) => ({
         name: row.generalData?.name,
-        progress: `(${row.generalData?.step}/9) - ${progressTextMap[row.generalData?.step]}`,
+        progress: `(${row.generalData?.step}/11) - ${progressTextMap[row.generalData?.step]}`,
         start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
         finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
         id: row._id,

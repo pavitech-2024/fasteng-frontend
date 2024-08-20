@@ -81,6 +81,8 @@ const Marshall_Step3 = ({
   // Tabela de dados
   // Definindo as rows para a tabela de dados
   const rows = data?.table_data?.table_rows;
+  console.log("🚀 ~ data:", data)
+  console.log("🚀 ~ rows:", rows)
 
   const [specificationRows, setSpecificationRows] = useState([]);
   const [specificationColumns, setSpecificationColumns] = useState<GridColDef[]>([]);
@@ -219,14 +221,18 @@ const Marshall_Step3 = ({
           gap: '10px',
         }}
       >
+      
         <Step3InputTable rows={inputRows} columns={inputColumns} marshall={marshall} />
+        
         <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
+        
         <Button
           sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
           onClick={handleCalculateGranulometricComp}
         >
           {t('asphalt.dosages.marshall.calculate')}
         </Button>
+        
         {data?.projections?.length > 0 && (
           <Step3Table
             rows={specificationRows}
@@ -235,7 +241,9 @@ const Marshall_Step3 = ({
             marshall={marshall}
           />
         )}
+        {/*
         {data?.graphData?.length > 1 && <Graph data={data?.graphData} />}
+        */}
       </Box>
     </>
   );
