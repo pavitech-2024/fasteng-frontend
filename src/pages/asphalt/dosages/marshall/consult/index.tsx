@@ -24,7 +24,7 @@ const MarshallDosageConsult = () => {
   const [dosageArrays, setDosageArrays] = useState([]);
 
   const progressTextMap = {
-    1: t('marshall.dosages.marshall.general-data'),
+    1: t('general data'),
     2: t('asphalt.dosages.marshall.material_selection'),
     3: t('asphalt.dosages.marshall.granulometry_composition'),
     4: t('asphalt.dosages.marshall.initial_binder'),
@@ -37,7 +37,7 @@ const MarshallDosageConsult = () => {
 
   const rows = dosages.map((row) => ({
     name: row.generalData?.name,
-    progress: `(${row.generalData?.step}/11) - ${progressTextMap[row.generalData?.step]}`,
+    progress: `(${row.generalData?.step}/9) - ${progressTextMap[row.generalData?.step]}`,
     start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
     finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
     id: row._id,

@@ -18,7 +18,7 @@ import { Box, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { useRouter } from 'next/router';
 import { ReactNode, useState, useEffect } from 'react';
-import  GeneratePDFConcreteMaterials from '@/components/generatePDF/generetePDFConcrete/generatePDFConcreteMaterials';
+import GeneratePDFConcreteMaterials from '@/components/generatePDF/generetePDFConcrete/generatePDFConcreteMaterials';
 
 interface TextBoxProps {
   children: JSX.Element | ReactNode;
