@@ -34,7 +34,7 @@
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
     "moment": "^2.29.4",
-    "next": "^14.2.4",
+    "next": "^14.2.6",
     "nookies": "^2.5.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -55,7 +55,7 @@
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "babel-plugin-inline-react-svg": "^2.0.2",
     "eslint-config-prettier": "^8.7.0",
-    "husky": "^8.0.3",
+    "husky": "^9.1.5",
     "prettier": "^2.8.4"
   }
 }

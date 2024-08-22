@@ -8,4 +8,8 @@ module.exports = {
 
     return config;
   },
+  
+  compiler: {
+    styledComponents: true,
+  },
 };

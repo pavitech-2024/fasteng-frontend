@@ -21,6 +21,9 @@ import { JbrAnchor, LepAnchor } from '@/components/atoms/anchor/loginAnchors';
 const Login: NextPage = () => {
   const { signIn } = useAuth();
 
+  const date = new Date();
+  const year = date.getFullYear();
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
@@ -32,6 +35,7 @@ const Login: NextPage = () => {
         error: t('login.toast error'),
       });
     } catch (error) {}
+
   };
 
   return (
@@ -236,7 +240,7 @@ const Login: NextPage = () => {
               bottom: 10,
             }}
           >
-            <Typography sx={{ fontSize: { notebook: '15px', mobile: '8px' } }}>© 2020 | Pavitech</Typography>
+            <Typography sx={{ fontSize: { notebook: '15px', mobile: '8px' } }}>© {year} | Pavitech</Typography>
           </Box>
         </Container>
       </Container>

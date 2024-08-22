@@ -3,13 +3,17 @@ import { Box } from '@mui/material';
 import lep from '../../../assets/logos/lep.jpg';
 import jbr from '../../../assets/logos/jbr.jpg';
 import Image from 'next/image';
-import Link from '@mui/material/Link';
+import  Link  from '@mui/material/Link';
+
+
 
 export const LepAnchor = () => {
   return (
     <Box>
       <Link
-        href="https://lepufcg.com.br/"
+        href="https://lepufcg.com.br/" rel="noopener noreferrer" 
+        target = "_blank"
+        component={"a"}
         sx={{
           padding: '1rem',
           textAlign: 'start',
@@ -38,7 +42,9 @@ export const JbrAnchor = () => {
   return (
     <Box>
       <Link
-        href="https://www.jbr.eng.br/site/"
+        href="https://www.jbr.eng.br/site/" rel="noopener noreferrer"
+        target = "_blank"
+        component={"a"}
         style={{ padding: '1rem', textAlign: 'end', position: 'absolute', bottom: 0, right: 0 }}
       >
         <Image
