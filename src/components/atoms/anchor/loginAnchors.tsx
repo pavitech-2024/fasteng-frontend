@@ -11,9 +11,9 @@ export const LepAnchor = () => {
   return (
     <Box>
       <Link
-        href="https://lepufcg.com.br/" rel="noopener noreferrer" 
-        target = "_blank"
-        component={"a"}
+        href="https://lepufcg.com.br/"
+        rel="noopener noreferrer"
+        target="_blank"
         sx={{
           padding: '1rem',
           textAlign: 'start',
@@ -21,6 +21,7 @@ export const LepAnchor = () => {
           bottom: 0,
           right: 50,
         }}
+        component={'a'}
       >
         <Image
           style={{
@@ -42,10 +43,11 @@ export const JbrAnchor = () => {
   return (
     <Box>
       <Link
-        href="https://www.jbr.eng.br/site/" rel="noopener noreferrer"
-        target = "_blank"
-        component={"a"}
+        href="https://www.jbr.eng.br/site/"
+        rel="noopener noreferrer"
+        target="_blank"
         style={{ padding: '1rem', textAlign: 'end', position: 'absolute', bottom: 0, right: 0 }}
+        component={'a'}
       >
         <Image
           style={{

@@ -163,9 +163,9 @@ const Home: NextPage = () => {
           }}
         >
           <Link
-            href="https://lepufcg.com.br/" rel="noopener noreferrer"
-            target = "_blank"
-            component={"a"}
+            href="https://lepufcg.com.br/"
+            rel="noopener noreferrer"
+            target="_blank"
             sx={{
               padding: '1rem',
               textAlign: 'start',
@@ -173,6 +173,7 @@ const Home: NextPage = () => {
               bottom: 0,
               left: 0,
             }}
+            component={'a'}
           >
             <Image
               style={{
@@ -189,10 +190,11 @@ const Home: NextPage = () => {
         </Box>
         <Box>
           <Link
-            href="https://www.jbr.eng.br/site/" rel="noopener noreferrer"
-            target = "_blank"
-            component={"a"}
+            href="https://www.jbr.eng.br/site/"
+            rel="noopener noreferrer"
+            target="_blank"
             style={{ padding: '1rem', textAlign: 'end', position: 'absolute', bottom: 0, right: 0 }}
+            component={'a'}
           >
             <Image
               style={{
