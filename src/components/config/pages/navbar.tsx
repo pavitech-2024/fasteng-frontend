@@ -57,7 +57,7 @@ export default function Navbar({ open, app }: NavbarProps) {
     },
     {
       name: t('navbar.marshall'),
-      link: '/asphalt/dosages/marshall',
+      link: '/asphalt/dosages/marshall/create',
       app: 'asphalt',
       icon: <MarshallIcon sx={IconStyle} />,
       type: 'double',
@@ -68,12 +68,12 @@ export default function Navbar({ open, app }: NavbarProps) {
     },
     {
       name: t('navbar.superpave'),
-      link: '/asphalt/dosages/superpave',
+      link: '/asphalt/dosages/superpave/create',
       app: 'asphalt',
       icon: <SuperpaveIcon sx={IconStyle} />,
       type: 'double',
       sub: [
-        { name: t('navbar.new'), link: '/asphalt/dosages/superpave/new', icon: <AddIcon sx={IconStyle} /> },
+        { name: t('navbar.new'), link: '/asphalt/dosages/superpave/create', icon: <AddIcon sx={IconStyle} /> },
         { name: t('navbar.consult'), link: '/asphalt/dosages/superpave/consult', icon: <SearchIcon sx={IconStyle} /> },
       ],
     },
@@ -173,8 +173,10 @@ export default function Navbar({ open, app }: NavbarProps) {
 
   // when the user scroll the page, the navbar will be fixed on the top
   window.addEventListener('scroll', () => {
-    if (window.scrollY === 0) document.getElementById('navbar').style.paddingTop = '52px';
-    else document.getElementById('navbar').style.paddingTop = '0';
+    if (document.getElementById('navbar')) {
+      if (window.scrollY === 0) document.getElementById('navbar').style.paddingTop = '52px';
+      else document.getElementById('navbar').style.paddingTop = '0';
+    }
   });
 
   return (

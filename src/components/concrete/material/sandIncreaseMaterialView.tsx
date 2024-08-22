@@ -83,8 +83,9 @@ const SandIncreaseMaterialView = ({ sandIncreaseData }: ISandIncreaseMaterialVie
             unity={''}
           />
         </Box>
-
-        <GraphSandIncrease results={sandIncreaseData.results} />
+        <div id="chart-div-sand-increase-material">
+          <GraphSandIncrease results={sandIncreaseData.results} />
+        </div>
       </Box>
     </FlexColumnBorder>
   );

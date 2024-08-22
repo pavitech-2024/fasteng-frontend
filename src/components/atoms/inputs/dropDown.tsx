@@ -43,6 +43,8 @@ const DropDown = ({
       select
       label={label}
       defaultValue={defaultValue && defaultValue.value}
+      value={defaultValue ? defaultValue.value : ''} // Usando value ao invés de defaultValue
+      onChange={handleChange}
       helperText={helperText ? helperText : null}
       sx={sx}
       size={size}
@@ -50,7 +52,7 @@ const DropDown = ({
       variant={variant}
       required={required}
     >
-      {options.map((option, index) => (
+      {options?.map((option, index) => (
         <MenuItem key={index} value={option.value} onClick={() => callback(option.value)} sx={{ fontSize: '14px' }}>
           {option.label}
         </MenuItem>

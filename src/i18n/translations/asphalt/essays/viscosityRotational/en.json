@@ -1,3 +1,13 @@
 {
-  "asphalt.essays.viscosityRotational.graph": "Rotational viscosity graph"
+  "asphalt.essays.viscosityRotational.graph": "Rotational viscosity Graph",
+  "asphalt.essays.viscosityRotational.temperature": "Temperature",
+  "asphalt.essays.viscosityRotational.viscosity": "Viscosity",
+  "asphalt.essays.viscosityRotational.calc": "Rotational Viscosity",
+  "asphalt.essays.viscosityRotational.step-2-description": "Please, fill all the field below.",
+  "asphalt.essays.viscosityRotational.step-3-description": "These are theresults of your essay. Don't forget to save the experiment to be able to access it later.",
+  "asphalt.essays.viscosityRotational.compression-temperature": "Compression temperature",
+  "asphalt.essays.viscosityRotational.machining-temperature": "Machining temperature",
+  "asphalt.essays.viscosityRotational.higher": "Maximum",
+  "asphalt.essays.viscosityRotational.average": "Average",
+  "asphalt.essays.viscosityRotational.lower": "Minimum"
 }
