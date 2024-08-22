@@ -22,6 +22,11 @@ const Marshall_Step3 = ({
 
   const { user } = useAuth();
 
+  // Tabela de dados
+  // Definindo as rows para a tabela de dados
+  const [rows, setRows] = useState([]);
+  console.log('🚀 ~ rows:', rows);
+
   useEffect(() => {
     if (generalData.dnitBand) {
       const insertingDnitBand = {
@@ -31,35 +36,39 @@ const Marshall_Step3 = ({
       setData({ step: 2, value: insertingDnitBand });
     }
   }, [generalData]);
-  
-  
+
   useEffect(() => {
-      toast.promise(
-        async () => {
-          try {
-            const { table_rows, table_column_headers } = await marshall.getStep3Data(generalData, materialSelectionData, user._id, null)
+    toast.promise(
+      async () => {
+        try {
+          const { table_data, dnitBands } = await marshall.getStep3Data(
+            generalData,
+            materialSelectionData,
+            user._id,
+            null
+          );
 
-            const prevData = {...data.table_data};
+          let prevData = { ...data };
 
-            prevData.table_rows = table_rows;
-            prevData.table_column_headers = table_column_headers;
+          prevData.table_data = table_data;
+          prevData.dnitBands = dnitBands;
 
-            setData({
-              step: 2,
-              value: {...data, table_data: prevData},
-            });
-            // setLoading(false);
-          } catch (error) {
-            // setLoading(false);
-            throw error;
-          }
-        },
-        {
-          pending: t('loading.materials.pending'),
-          success: t('loading.materials.success'),
-          error: t('loading.materials.error'),
+          setData({
+            step: 2,
+            value: prevData,
+          });
+          // setLoading(false);
+        } catch (error) {
+          // setLoading(false);
+          throw error;
         }
-      );
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      }
+    );
   }, []);
 
   // Tabela de inputs
@@ -76,12 +85,35 @@ const Marshall_Step3 = ({
       aggregates_percentages['percentage_'.concat(_id)] = null;
     });
 
-    // const projectCols = 
+    // const projectCols =
 
     table_data?.push({ ...aggregates_percentages });
 
     setData({ step: 2, key: 'percentageInputs', value: table_data });
   }
+
+  useEffect(() => {
+    if (data?.dnitBands?.higher?.length > 0) {
+      let newHigherSpec = [];
+
+      data?.dnitBands?.higher.forEach((element) => {
+        // Verifique se data?.table_data?.table_rows está definido
+        if (data?.table_data?.table_rows) {
+          for (let i = 0; i < data?.table_data?.table_rows.length; i++) {
+            if (element[0] === data?.table_data?.table_rows[i]?.sieve_label) {
+              let newRow = {
+                ...data?.table_data?.table_rows[i],
+                band1: element[1],
+                band2: data.dnitBands.lower[i][1],
+              };
+              newHigherSpec.push(newRow);
+            }
+          }
+        }
+      });
+      setRows(newHigherSpec);
+    }
+  }, [data?.dnitBands]);
 
   const inputColumns: GridColDef[] = [];
 
@@ -114,10 +146,6 @@ const Marshall_Step3 = ({
     });
   });
 
-  // Tabela de dados
-  // Definindo as rows para a tabela de dados
-  const rows = data?.table_data?.table_rows;
-
   const [specificationRows, setSpecificationRows] = useState([]);
   const [specificationColumns, setSpecificationColumns] = useState<GridColDef[]>([]);
   const [specificationColumnsGroupings, setSpecificationColumnsGroupings] = useState([]);
@@ -136,12 +164,12 @@ const Marshall_Step3 = ({
           valueFormatter: ({ value }) => `${value}`,
         },
         {
-          field: 'band_1',
+          field: 'band1',
           headerName: '',
           valueFormatter: ({ value }) => `${value}`,
         },
         {
-          field: 'band_2',
+          field: 'band2',
           headerName: '',
           valueFormatter: ({ value }) => `${value}`,
         },
@@ -157,7 +185,7 @@ const Marshall_Step3 = ({
           groupId: 'Especificação',
           children: [
             {
-              groupId: `Banda ${data?.dnitBands}`,
+              groupId: `Banda ${data?.bands.letter}`,
               headerAlign: 'center',
               children: [{ field: 'band_1' }, { field: 'band_2' }],
             },
@@ -176,19 +204,19 @@ const Marshall_Step3 = ({
         newArray.push({
           label: data.projections[i]?.label,
           value: data.projections[i]?.value,
-          band_1: data.dnitBand.lowerBand[i] !== null ? data.dnitBand.lowerBand[i] : '',
-          band_2: data.dnitBand.higherBand[i] !== null ? data.dnitBand.higherBand[i] : '',
+          band_1: data.bands.lowerBand[i] !== null ? data.bands.lowerBand[i] : '',
+          band_2: data.bands.higherBand[i] !== null ? data.bands.higherBand[i] : '',
         });
       }
 
       setSpecificationRows([...newArray]);
     }
-  }, [data.sumOfPercents, data.dnitBand]);
+  }, [data.sumOfPercents, data.bands]);
 
   const handleCalculateGranulometricComp = async () => {
     if (!Object.values(data.percentageInputs).some((input) => input === null)) {
       const results = await calculateGranulometryComposition(data);
-      console.log("🚀 ~ handleCalculateGranulometricComp ~ results:", results)
+      console.log('🚀 ~ handleCalculateGranulometricComp ~ results:', results);
 
       const newPointsOfCurve = [...results?.pointsOfCurve];
 
@@ -247,9 +275,33 @@ const Marshall_Step3 = ({
         }
       }
     });
+
+    newCols.push(
+      {
+        field: 'band1',
+        headerName: 'teste',
+        valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
+      },
+      {
+        field: 'band2',
+        headerName: 'teste2',
+        valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
+      }
+    );
+
+    newColsGrouping.push({
+      groupId: 'Specification',
+      children: [
+        {
+          groupId: `Banda ${data?.bands.letter}`,
+          headerAlign: 'center',
+          children: [{ field: 'band1' }, { field: 'band2' }],
+        },
+      ],
+    });
     setColumns(newCols);
     setColumnGroupings(newColsGrouping);
-  },[data.table_data.table_column_headers])
+  }, [data.table_data?.table_column_headers]);
 
   nextDisabled && setNextDisabled(false);
 
@@ -262,10 +314,11 @@ const Marshall_Step3 = ({
           gap: '10px',
         }}
       >
-        
-        <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
-        
-        
+        {rows?.length > 0 && (
+          <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
+        )}
+
+        {/*
         <Button
           sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
           onClick={handleCalculateGranulometricComp}
@@ -280,7 +333,7 @@ const Marshall_Step3 = ({
             columnGrouping={specificationColumnsGroupings}
             marshall={marshall}
           />
-        )} */}
+        )} 
         {/*
         {data?.graphData?.length > 1 && <Graph data={data?.graphData} />}
         */}
