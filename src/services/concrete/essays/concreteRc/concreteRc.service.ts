@@ -11,7 +11,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       icon: CoarseAggregateIcon,
       title: t('concrete.essays.ConcreteRc'),
       path: '/concrete/essays/ConcreteRc',
-      backend_path: 'concrete/essays/ConcreteRc',
+      backend_path: 'concrete/essays/concreteRc',
       steps: 3,
       standard: {
         name: 'NBR 7217/1984',
@@ -29,6 +29,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
   
     /** @handleNext Receives the step and data from the form and calls the respective method */
     handleNext = async (step: number, data: unknown): Promise<void> => {
+      console.log("🚀 ~ CONCRETE_RC_SERVICE ~ handleNext= ~ step:", step)
       try {
         switch (step) {
           case 0:
@@ -85,6 +86,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
         // verify if there is already a ConcreteRc essay with same name for the material
         const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, material });
   
+        console.log("🚀 ~ CONCRETE_RC_SERVICE ~ submitGeneralData= ~ response:", response)
         const { success, error } = response.data;
   
         // if there is already a ConcreteRc essay with same name for the material, throw error
