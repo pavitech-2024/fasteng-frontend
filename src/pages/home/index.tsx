@@ -1,9 +1,5 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
-import Link from '@mui/material/Link';
-import lep from '../../assets/logos/lep.jpg';
-import jbr from '../../assets/logos/jbr.jpg';
 
 import { t } from 'i18next';
 
@@ -13,6 +9,7 @@ import { LogoBlack, AsphaltIcon, SoilsIcon, ConcreteIcon } from '@/assets';
 //MUIs
 import { Container, Box, Typography } from '@mui/material';
 import { CardApp } from '@/components/styles/muis/home';
+import { JbrAnchor, LepAnchor } from '@/components/atoms/anchor/loginAnchors';
 
 //Styleds
 import { LoginImage } from '@/components/styles/styleds/login';
@@ -89,6 +86,19 @@ const Home: NextPage = () => {
         </Box>
       </Box>
       <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              width: '50%',
+              justifyContent: 'space-between',
+              alignItems: 'end',
+              height: 'fit-content',
+            }}
+          >
+            <LepAnchor />
+            <JbrAnchor />
+          </Box>
+      <Box
         sx={{
           height: { mobile: '22.5%', notebook: '17.5%' },
           maxHeight: { mobile: 'none', ultrawide: '150px' },
@@ -150,65 +160,6 @@ const Home: NextPage = () => {
         {Applications.map((app) => (
           <CardApp key={app.name} element={app} onClick={() => Router.push(app.path)} />
         ))}
-      </Box>
-      <Box>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            width: '50%',
-            justifyContent: 'space-between',
-            alignItems: 'end',
-            height: 'fit-content',
-          }}
-        >
-          <Link
-            href="https://lepufcg.com.br/"
-            rel="noopener noreferrer"
-            target="_blank"
-            sx={{
-              padding: '1rem',
-              textAlign: 'start',
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-            }}
-            component={'a'}
-          >
-            <Image
-              style={{
-                borderRadius: '100%',
-                width: '50px',
-                height: '50px',
-              }}
-              width={60}
-              height={60}
-              alt="LEP"
-              src={lep}
-            />
-          </Link>
-        </Box>
-        <Box>
-          <Link
-            href="https://www.jbr.eng.br/site/"
-            rel="noopener noreferrer"
-            target="_blank"
-            style={{ padding: '1rem', textAlign: 'end', position: 'absolute', bottom: 0, right: 0 }}
-            component={'a'}
-          >
-            <Image
-              style={{
-                borderRadius: '100%',
-                width: '50px',
-                height: '50px',
-              }}
-              width={40}
-              height={40}
-              alt="JBR"
-              src={jbr}
-            />
-          </Link>
-        </Box>
       </Box>
     </Container>
   );

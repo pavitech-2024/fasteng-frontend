@@ -35,6 +35,7 @@ const Login: NextPage = () => {
         error: t('login.toast error'),
       });
     } catch (error) {}
+
   };
 
   return (
