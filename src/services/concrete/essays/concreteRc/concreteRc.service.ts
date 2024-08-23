@@ -9,9 +9,9 @@ class CONCRETE_RC_SERVICE implements IEssayService {
     info = {
       key: 'ConcreteRc-concrete',
       icon: CoarseAggregateIcon,
-      title: t('concrete.essays.ConcreteRc'),
+      title: t('concrete.essays.concreteRc'),
       path: '/concrete/essays/ConcreteRc',
-      backend_path: 'concrete/essays/ConcreteRc',
+      backend_path: 'concrete/essays/concreteRc',
       steps: 3,
       standard: {
         name: 'NBR 7217/1984',
@@ -78,13 +78,13 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       try {
         const { name, material } = generalData;
   
-        // verify if name and material are not empty
-        if (!name) throw t('errors.empty-name');
-        if (!material) throw t('errors.empty-material');
+        // // verify if name and material are not empty
+        // if (!name) throw t('errors.empty-name');
+        // if (!material) throw t('errors.empty-material');
   
         // verify if there is already a ConcreteRc essay with same name for the material
         const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, material });
-  
+        console.log(response)
         const { success, error } = response.data;
   
         // if there is already a ConcreteRc essay with same name for the material, throw error
