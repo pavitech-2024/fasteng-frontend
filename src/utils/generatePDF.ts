@@ -2,8 +2,11 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
 
-export const generatePDF = (material: { material: { name: string; type: string; }; essays: { essayName: string; data: EssaysData }[] }, type: string) => {
- /** 
+export const generatePDF = (
+  material: { material: { name: string; type: string }; essays: { essayName: string; data: EssaysData }[] },
+  type: string
+) => {
+  /** 
   const doc = new jsPDF();
 
   doc.text('Relatório de Material Asfáltico', 10, 10);

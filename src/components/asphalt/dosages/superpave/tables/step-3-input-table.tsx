@@ -1,26 +1,22 @@
 import { NoDataFound } from '@/components/util/tables';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import { Box } from '@mui/material';
-import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
+import { GridColDef, DataGrid } from '@mui/x-data-grid';
 
 interface Step3Props {
-  rows: any[];
+  rows: { [key: string]: number }[];
   columns: GridColDef[];
-  columnGrouping: GridColumnGroupingModel;
 }
 
-const Step3Table = ({ rows, columns, columnGrouping }: Step3Props & { superpave: Superpave_SERVICE }) => {
+const Step3InputTable = ({ rows, columns }: Step3Props & { superpave: Superpave_SERVICE }) => {
   return (
     <Box>
       <DataGrid
         sx={{
           borderRadius: '10px',
-          height: 300,
         }}
         density="compact"
         hideFooter
-        experimentalFeatures={{ columnGrouping: true }}
-        columnGroupingModel={columnGrouping}
         columns={
           columns !== null
             ? columns.map((column) => ({
@@ -43,12 +39,12 @@ const Step3Table = ({ rows, columns, columnGrouping }: Step3Props & { superpave:
             : []
         }
         slots={{
-          noRowsOverlay: () => <NoDataFound message="Nenhum material encontrado" />,
-          noResultsOverlay: () => <NoDataFound message="Nenhum material encontrado" />,
+          noRowsOverlay: () => <NoDataFound message="Nenhum dado encontrado" />,
+          noResultsOverlay: () => <NoDataFound message="Nenhum dado encontrado" />,
         }}
       />
     </Box>
   );
 };
 
-export default Step3Table;
+export default Step3InputTable;
