@@ -1,12 +1,14 @@
 import Api from "@/api";
+import { CoarseAggregateIcon } from "@/assets";
 import { IEssayService } from "@/interfaces/common/essay/essay-service.interface";
 import { ConcreteMaterial } from "@/interfaces/concrete";
+import { ConcreteRcActions, ConcreteRcData } from "@/stores/concrete/concreteRc/concreteRc.store";
 import { t } from "i18next";
 
 class CONCRETE_RC_SERVICE implements IEssayService {
     info = {
       key: 'ConcreteRc-concrete',
-      icon: ConcreteRcIcon,
+      icon: CoarseAggregateIcon,
       title: t('concrete.essays.ConcreteRc'),
       path: '/concrete/essays/ConcreteRc',
       backend_path: 'concrete/essays/ConcreteRc',

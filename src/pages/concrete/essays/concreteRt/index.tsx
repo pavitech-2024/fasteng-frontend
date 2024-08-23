@@ -1,3 +1,5 @@
+"use client"
+
 import ConcreteRt_GeneralData from "@/components/concrete/essays/concreteRt/general-data.concreteRt";
 import ConcreteRt_Results from "@/components/concrete/essays/concreteRt/results.concreteRt";
 import ConcreteRt_Step2 from "@/components/concrete/essays/concreteRt/step2.conceteRt";
@@ -34,7 +36,7 @@ const ConcreteRt = () => {
       {
         step: 2,
         children: <ConcreteRt_Results />,
-        data: store.result,
+        data: store.results,
       },
     ];
   

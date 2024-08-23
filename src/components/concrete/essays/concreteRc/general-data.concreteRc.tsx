@@ -3,25 +3,27 @@ import Loading from "@/components/molecules/loading";
 import { EssayPageProps } from "@/components/templates/essay";
 import useAuth from "@/contexts/auth";
 import { ConcreteMaterial } from "@/interfaces/concrete";
+import CONCRETE_RC_SERVICE from "@/services/concrete/essays/concreteRc/concreteRc.service";
+import useConcreteRcStore from "@/stores/concrete/concreteRc/concreteRc.store";
 import { Box, TextField } from "@mui/material";
 import { t } from "i18next";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-const ConcrereRc_GeneralData = ({
+const ConcreteRc_GeneralData = ({
     nextDisabled,
     setNextDisabled,
-    concreteRT,
-  }: EssayPageProps & { concreteRT: CONCRETE_RC_SERVICE }) => {
+    concreteRc,
+  }: EssayPageProps & { concreteRc: CONCRETE_RC_SERVICE }) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
     const { user } = useAuth();
-    const { generalData, setData } = useConcreterStore();
+    const { generalData, setData } = useConcreteRcStore();
 
     useEffect(() => {
       toast.promise(
         async () => {
-          const materials = await concreteRT.getmaterialsByUserId(user._id);
+          const materials = await concreteRc.getmaterialsByUserId(user._id);
   
           setMaterials(materials);
           setLoading(false);
@@ -143,9 +145,4 @@ const ConcrereRc_GeneralData = ({
     );
   };
   
-  export default ConcrereRc_GeneralData;
-
-function useConcreterStore(): { generalData: any; setData: any; } {
-  throw new Error("Function not implemented.");
-}
-  
+  export default ConcreteRc_GeneralData;
