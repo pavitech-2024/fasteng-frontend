@@ -223,13 +223,15 @@ class Marshall_SERVICE implements IEssayService {
   };
 
   calculateGranulometryComposition = async (
-    calculateStep3Data: MarshallData['granulometryCompositionData']
+    calculateStep3Data: MarshallData['granulometryCompositionData'],
+    generalData: MarshallData['generalData']
   ): Promise<any> => {
     try {
-      const { dnitBands, percentageInputs, table_data } = calculateStep3Data;
+      const { dnitBand: dnitBandLetter } = generalData;
+      const { percentageInputs, table_data } = calculateStep3Data;
 
       const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {
-        dnitBands,
+        dnitBands: dnitBandLetter,
         percentageInputs,
         tableRows: table_data.table_rows,
       });

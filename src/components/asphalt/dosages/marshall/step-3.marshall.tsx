@@ -25,7 +25,6 @@ const Marshall_Step3 = ({
   // Tabela de dados
   // Definindo as rows para a tabela de dados
   const [rows, setRows] = useState([]);
-  console.log('🚀 ~ rows:', rows);
 
   useEffect(() => {
     if (generalData.dnitBand) {
@@ -93,10 +92,10 @@ const Marshall_Step3 = ({
   }
 
   useEffect(() => {
-    if (data?.dnitBands?.higher?.length > 0) {
+    if (data?.dnitBands?.higherBand?.length > 0) {
       let newHigherSpec = [];
 
-      data?.dnitBands?.higher.forEach((element) => {
+      data?.dnitBands?.higherBand.forEach((element) => {
         // Verifique se data?.table_data?.table_rows está definido
         if (data?.table_data?.table_rows) {
           for (let i = 0; i < data?.table_data?.table_rows.length; i++) {
@@ -104,7 +103,7 @@ const Marshall_Step3 = ({
               let newRow = {
                 ...data?.table_data?.table_rows[i],
                 band1: element[1],
-                band2: data.dnitBands.lower[i][1],
+                band2: data.dnitBands.lowerBand[i][1],
               };
               newHigherSpec.push(newRow);
             }
@@ -204,8 +203,8 @@ const Marshall_Step3 = ({
         newArray.push({
           label: data.projections[i]?.label,
           value: data.projections[i]?.value,
-          band_1: data.bands.lowerBand[i] !== null ? data.bands.lowerBand[i] : '',
-          band_2: data.bands.higherBand[i] !== null ? data.bands.higherBand[i] : '',
+          band_1: data.dnitBands.lowerBand[i] !== null ? data.bands.lowerBand[i] : '',
+          band_2: data.dnitBands.higherBand[i] !== null ? data.bands.higherBand[i] : '',
         });
       }
 
@@ -215,7 +214,7 @@ const Marshall_Step3 = ({
 
   const handleCalculateGranulometricComp = async () => {
     if (!Object.values(data.percentageInputs).some((input) => input === null)) {
-      const results = await calculateGranulometryComposition(data);
+      const results = await calculateGranulometryComposition(data, generalData);
       console.log('🚀 ~ handleCalculateGranulometricComp ~ results:', results);
 
       const newPointsOfCurve = [...results?.pointsOfCurve];
@@ -243,9 +242,9 @@ const Marshall_Step3 = ({
   const [columns, setColumns] = useState<GridColDef[]>([]);
 
   useEffect(() => {
-    let newCols = [];
+    let newCols: GridColDef[] = [];
     let newColsGrouping = [];
-    data?.table_data?.table_column_headers?.forEach((header) => {
+    data?.table_data?.table_column_headers?.forEach((header, idx) => {
       if (header === 'sieve_label') {
         newCols.push({
           field: 'sieve_label',
@@ -266,6 +265,17 @@ const Marshall_Step3 = ({
             field: header,
             headerName: t('granulometry-asphalt.passant'),
             valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
+            renderHeader: () => (
+              <InputEndAdornment
+                adornment="%"
+                value={data?.percentageInputs[0][`percentage_${_id}`] || ''}
+                onChange={(e) => {
+                  let prevData = [...data?.percentageInputs];
+                  prevData[0][`percentage_${_id}`] = Number(e.target.value);
+                  setData({ step: 2, value: { ...data, percentageInputs: prevData } });
+                }}
+              />
+            )
           });
           newColsGrouping.push({
             groupId: name,
@@ -289,11 +299,12 @@ const Marshall_Step3 = ({
       }
     );
 
+
     newColsGrouping.push({
       groupId: 'Specification',
       children: [
         {
-          groupId: `Banda ${data?.bands.letter}`,
+          groupId: `Banda ${generalData.dnitBand}`,
           headerAlign: 'center',
           children: [{ field: 'band1' }, { field: 'band2' }],
         },
@@ -318,7 +329,6 @@ const Marshall_Step3 = ({
           <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
         )}
 
-        {/*
         <Button
           sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
           onClick={handleCalculateGranulometricComp}
