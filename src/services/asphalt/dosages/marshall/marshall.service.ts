@@ -246,7 +246,7 @@ class Marshall_SERVICE implements IEssayService {
         sumOfPercents,
         table_data: tableData,
         projections,
-        dnitBands: dnitBand,
+        bands,
       } = data;
 
       const tableData2 = {
@@ -261,7 +261,7 @@ class Marshall_SERVICE implements IEssayService {
         sumOfPercents,
         table_data: tableData2,
         projections,
-        dnitBand,
+        bands,
       };
 
       return granulometricResults;

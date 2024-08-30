@@ -25,16 +25,17 @@ const Marshall_Step3 = ({
   // Tabela de dados
   // Definindo as rows para a tabela de dados
   const [rows, setRows] = useState([]);
+  console.log('🚀 ~ rows:', rows);
 
-  useEffect(() => {
-    if (generalData.dnitBand) {
-      const insertingDnitBand = {
-        ...data,
-        dnitBands: generalData.dnitBand,
-      };
-      setData({ step: 2, value: insertingDnitBand });
-    }
-  }, [generalData]);
+  // useEffect(() => {
+  //   if (generalData.dnitBand) {
+  //     const insertingDnitBand = {
+  //       ...data,
+  //       dnitBands: generalData.dnitBand,
+  //     };
+  //     setData({ step: 2, value: insertingDnitBand });
+  //   }
+  // }, [generalData]);
 
   useEffect(() => {
     toast.promise(
@@ -92,18 +93,17 @@ const Marshall_Step3 = ({
   }
 
   useEffect(() => {
-    if (data?.dnitBands?.higherBand?.length > 0) {
+    if (data?.dnitBands?.higher?.length > 0) {
       let newHigherSpec = [];
 
-      data?.dnitBands?.higherBand.forEach((element) => {
-        // Verifique se data?.table_data?.table_rows está definido
+      data?.dnitBands?.higher.forEach((element) => {
         if (data?.table_data?.table_rows) {
           for (let i = 0; i < data?.table_data?.table_rows.length; i++) {
             if (element[0] === data?.table_data?.table_rows[i]?.sieve_label) {
               let newRow = {
                 ...data?.table_data?.table_rows[i],
                 band1: element[1],
-                band2: data.dnitBands.lowerBand[i][1],
+                band2: data.dnitBands.lower[i][1],
               };
               newHigherSpec.push(newRow);
             }
@@ -112,7 +112,7 @@ const Marshall_Step3 = ({
       });
       setRows(newHigherSpec);
     }
-  }, [data?.dnitBands]);
+  }, []);
 
   const inputColumns: GridColDef[] = [];
 
@@ -184,7 +184,7 @@ const Marshall_Step3 = ({
           groupId: 'Especificação',
           children: [
             {
-              groupId: `Banda ${data?.bands.letter}`,
+              groupId: `Banda ${generalData.dnitBand}`,
               headerAlign: 'center',
               children: [{ field: 'band_1' }, { field: 'band_2' }],
             },
@@ -203,8 +203,8 @@ const Marshall_Step3 = ({
         newArray.push({
           label: data.projections[i]?.label,
           value: data.projections[i]?.value,
-          band_1: data.dnitBands.lowerBand[i] !== null ? data.bands.lowerBand[i] : '',
-          band_2: data.dnitBands.higherBand[i] !== null ? data.bands.higherBand[i] : '',
+          band_1: data.dnitBands.lower[i] !== null ? data.bands?.lowerBand[i] : '',
+          band_2: data.dnitBands.higher[i] !== null ? data.bands?.higherBand[i] : '',
         });
       }
 
@@ -236,6 +236,32 @@ const Marshall_Step3 = ({
       setData({ step: 2, value: newResults });
     }
   };
+
+  useEffect(() => {
+    if (data.percentsOfMaterials.length > 0) {
+      const nonNullArr = data.percentsOfMaterials.map((arr) =>
+        arr.filter((value) => value !== null)
+      );
+      console.log("🚀 ~ useEffect ~ nonNullArr:", nonNullArr)
+  
+      rows.forEach((obj, index) => {
+        let counter_2 = 0;
+  
+        Object.keys(obj).forEach((key) => {
+          if (!key.startsWith('total') && !key.includes('band')) {
+            if (counter_2  < nonNullArr.length) {
+              console.log("🚀 ~ rows.forEach ~ counter_2:", counter_2)
+              // Atualiza o valor da chave específica em obj
+              obj[key] = nonNullArr[counter_2][index];
+              counter_2++;
+            }
+          }
+        });
+      });
+      console.log("🚀 ~ rows.forEach ~ rows:", rows)
+
+    }
+  }, [data]);  
 
   // Definindo as colunas para tabela de dados
   const [columnGrouping, setColumnGroupings] = useState([]);
@@ -275,7 +301,7 @@ const Marshall_Step3 = ({
                   setData({ step: 2, value: { ...data, percentageInputs: prevData } });
                 }}
               />
-            )
+            ),
           });
           newColsGrouping.push({
             groupId: name,
@@ -298,7 +324,6 @@ const Marshall_Step3 = ({
         valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
       }
     );
-
 
     newColsGrouping.push({
       groupId: 'Specification',

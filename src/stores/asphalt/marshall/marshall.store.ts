@@ -34,7 +34,7 @@ interface MarshallGranulometryCompositionData {
   };
   percentageInputs: { [key: string]: number }[];
   sumOfPercents: number[];
-  dnitBands: { higherBand: [string, number][]; lowerBand: [string, number][] };
+  dnitBands: { higher: [string, number][]; lower: [string, number][] };
   bands: { higherBand: [number]; lowerBand: [number], letter };
   pointsOfCurve: any[];
   percentsOfMaterials: any[];
@@ -283,8 +283,8 @@ const initialState = {
     percentageInputs: [],
     bands: null,
     dnitBands: {
-      higherBand: null,
-      lowerBand: null,
+      higher: null,
+      lower: null,
       letter: null
     },
     pointsOfCurve: [],
