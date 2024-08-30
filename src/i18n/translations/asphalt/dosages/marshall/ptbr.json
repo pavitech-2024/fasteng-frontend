@@ -40,5 +40,6 @@
   "asphalt.choose_dnit_track": "Escolha a Faixa do DNIT",
 
   "asphalt.dosages.marshall.bearing-layer": "Camada de Rolamento",
-  "asphalt.dosages.marshall.bonding-layer": "Camada de Ligação"
+  "asphalt.dosages.marshall.bonding-layer": "Camada de Ligação",
+  "asphalt.dosages.inputs-sum-invalid": "A soma dos valores das porcentagens dos materiais deve ser igual a 100."
 }

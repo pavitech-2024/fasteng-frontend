@@ -68,12 +68,6 @@ class Marshall_SERVICE implements IEssayService {
           await this.submitMaximumMixtureDensityData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 5:
-          // await this.setVolumetricParametersData(
-          //   data as MarshallData['volumetricParametersData'],
-          //   data as MarshallData['binderTrialData'],
-          //   data as MarshallData['maximumMixtureDensityData'],
-          //   isConsult
-          // );
           await this.submitVolumetricParametersData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 6:
@@ -89,7 +83,7 @@ class Marshall_SERVICE implements IEssayService {
           throw t('errors.invalid-step');
       }
     } catch (error) {
-      //throw error;
+      throw error;
     }
   };
 
@@ -230,6 +224,12 @@ class Marshall_SERVICE implements IEssayService {
       const { dnitBand: dnitBandLetter } = generalData;
       const { percentageInputs, table_data } = calculateStep3Data;
 
+      let inputsSum = percentageInputs.reduce((sum, input) => sum + Object.values(input)[0], 0);
+
+      console.log("🚀 ~ Marshall_SERVICE ~ inputsSum:", inputsSum)
+
+      if (inputsSum !== 100) throw t('errors.invalid-inputs-sum');
+      
       const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {
         dnitBands: dnitBandLetter,
         percentageInputs,

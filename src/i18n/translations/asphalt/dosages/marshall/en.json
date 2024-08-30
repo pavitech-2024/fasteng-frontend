@@ -40,5 +40,6 @@
   "asphalt.choose_dnit_track": "Choose the DNIT Band",
 
   "asphalt.dosages.marshall.bearing-layer": "Bearing Layer",
-  "asphalt.dosages.marshall.bonding-layer": "Connection Layer"
+  "asphalt.dosages.marshall.bonding-layer": "Connection Layer",
+  "asphalt.dosages.inputs-sum-invalid": "The sum of the percentage values ​​of the materials must be equal to 100."
 }

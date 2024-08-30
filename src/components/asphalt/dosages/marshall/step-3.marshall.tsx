@@ -25,17 +25,6 @@ const Marshall_Step3 = ({
   // Tabela de dados
   // Definindo as rows para a tabela de dados
   const [rows, setRows] = useState([]);
-  console.log('🚀 ~ rows:', rows);
-
-  // useEffect(() => {
-  //   if (generalData.dnitBand) {
-  //     const insertingDnitBand = {
-  //       ...data,
-  //       dnitBands: generalData.dnitBand,
-  //     };
-  //     setData({ step: 2, value: insertingDnitBand });
-  //   }
-  // }, [generalData]);
 
   useEffect(() => {
     toast.promise(
@@ -214,54 +203,60 @@ const Marshall_Step3 = ({
 
   const handleCalculateGranulometricComp = async () => {
     if (!Object.values(data.percentageInputs).some((input) => input === null)) {
-      const results = await calculateGranulometryComposition(data, generalData);
-      console.log('🚀 ~ handleCalculateGranulometricComp ~ results:', results);
-
-      const newPointsOfCurve = [...results?.pointsOfCurve];
-
-      newPointsOfCurve.unshift([
-        t('asphalt.dosages.marshall.sieve_mm'),
-        t('asphalt.dosages.marshall.dnit-track'),
-        'Faixa de trabalho',
-        'Mistura de projeto',
-        'Faixa de trabalho',
-        'Faixa do DNIT',
-      ]);
-
-      const newResults = {
-        ...results,
-        graphData: newPointsOfCurve,
-      };
-
-      setData({ step: 2, value: newResults });
+      
+      toast.promise(
+        async () => {
+          try {
+            const results = await calculateGranulometryComposition(data, generalData);
+  
+            const newPointsOfCurve = [...results?.pointsOfCurve];
+  
+            newPointsOfCurve.unshift([
+              t('asphalt.dosages.marshall.sieve_mm'),
+              t('asphalt.dosages.marshall.dnit-track'),
+              'Faixa de trabalho',
+              'Mistura de projeto',
+              'Faixa de trabalho',
+              'Faixa do DNIT',
+            ]);
+  
+            const { projections } = results;
+  
+            let newTable = results?.table_data?.table_rows.map((e) => ({
+              ...e,
+              projections: projections.find((proj) => proj.label === e.sieve_label).value,
+              band1: results.dnitBands.higher.find((band) => band[0] === e.sieve_label)?.[1],
+              band2: results.dnitBands.lower.find((band) => band[0] === e.sieve_label)?.[1]
+            }));
+  
+            const newResults = {
+              ...results,
+              table_data: {
+                ...results.table_data,
+                table_rows: [
+                  ...results.table_data.table_rows,
+                  newTable
+                ]
+              },
+              graphData: newPointsOfCurve,
+            };
+  
+            setRows(newTable);
+            setData({ step: 2, value: newResults });
+  
+          } catch (error) {
+            throw error;
+          }
+        },
+        {
+          pending: t('loading.calculating.pending'),
+          success: t('loading.calculating.success'),
+          error: t('asphalt.dosages.inputs-sum-invalid'),
+        }
+      );
     }
   };
-
-  useEffect(() => {
-    if (data.percentsOfMaterials.length > 0) {
-      const nonNullArr = data.percentsOfMaterials.map((arr) =>
-        arr.filter((value) => value !== null)
-      );
-      console.log("🚀 ~ useEffect ~ nonNullArr:", nonNullArr)
   
-      rows.forEach((obj, index) => {
-        let counter_2 = 0;
-  
-        Object.keys(obj).forEach((key) => {
-          if (!key.startsWith('total') && !key.includes('band')) {
-            if (counter_2  < nonNullArr.length) {
-              console.log("🚀 ~ rows.forEach ~ counter_2:", counter_2)
-              // Atualiza o valor da chave específica em obj
-              obj[key] = nonNullArr[counter_2][index];
-              counter_2++;
-            }
-          }
-        });
-      });
-      console.log("🚀 ~ rows.forEach ~ rows:", rows)
-
-    }
-  }, [data]);  
 
   // Definindo as colunas para tabela de dados
   const [columnGrouping, setColumnGroupings] = useState([]);
@@ -314,6 +309,14 @@ const Marshall_Step3 = ({
 
     newCols.push(
       {
+        field: 'projections',
+        headerName: 'Projeções',
+        valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}` : ''),
+      }
+    )
+
+    newCols.push(
+      {
         field: 'band1',
         headerName: 'teste',
         valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
@@ -339,7 +342,14 @@ const Marshall_Step3 = ({
     setColumnGroupings(newColsGrouping);
   }, [data.table_data?.table_column_headers]);
 
-  nextDisabled && setNextDisabled(false);
+  useEffect(() => {
+    const shouldDisableNext = !data.percentageInputs.some(e => 
+      Object.values(e).some(value => value === null || value === 0)
+    ) && data.graphData.length > 0;
+  
+    setNextDisabled(!shouldDisableNext);
+  }, [data.percentageInputs]);
+  
 
   return (
     <>
@@ -360,18 +370,9 @@ const Marshall_Step3 = ({
         >
           {t('asphalt.dosages.marshall.calculate')}
         </Button>
-        {/* 
-        {data?.projections?.length > 0 && (
-          <Step3Table
-            rows={specificationRows}
-            columns={specificationColumns}
-            columnGrouping={specificationColumnsGroupings}
-            marshall={marshall}
-          />
-        )} 
-        {/*
+        
         {data?.graphData?.length > 1 && <Graph data={data?.graphData} />}
-        */}
+       
       </Box>
     </>
   );

@@ -36,7 +36,7 @@ const Marshall_Step5 = ({
   const [riceTestTableColumns, setRiceTestTableColumns] = useState<GridColDef[]>([]);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
-  const materials = materialSelectionData.aggregates.map((item) => item.name);
+  const materials = materialSelectionData.aggregates;
   const [hasNull, setHasNull] = useState(true);
 
   // Activated on page render to get the indexes of each material;
@@ -48,9 +48,15 @@ const Marshall_Step5 = ({
 
           const prevData = data;
 
+          const materials = materialSelectionData.aggregates.map((material) =>({
+            ...material,
+            value: null
+          }))
+
           const newData = {
             ...prevData,
             indexesOfMissesSpecificGravity: indexes,
+            missingSpecificMass: materials
           };
 
           setData({ step: 4, value: newData });
@@ -571,6 +577,7 @@ const Marshall_Step5 = ({
                 setEnableRiceTest(true);
               }
             }}
+            defaultValue={{ value: 'dmt', label: 'DMT - Densidade máxima teórica' }}
             size="medium"
             sx={{ width: '75%', marginX: 'auto' }}
           />
@@ -612,8 +619,23 @@ const Marshall_Step5 = ({
             size={'large'}
             onSubmit={() => handleSubmitDmt()}
           >
-            <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-              <InputEndAdornment
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-around' }}>
+              {data.missingSpecificMass.length > 0 && data.missingSpecificMass?.map((material, index) => (
+                <InputEndAdornment
+                  key={`${index}`}
+                  adornment={'g/cm³'}
+                  label={material.name}
+                  value={material.value}
+                  onChange={(e) => {
+                    let prevState = [...data.missingSpecificMass];
+                    let index = prevState.findIndex(idx => idx.name === material.name);
+                    prevState[index] = {...prevState[index], value: Number(e.target.value)};
+                    setData({ step: 4, value: { ...data, missingSpecificMass: prevState } });
+                  }}
+                />
+              ))}
+
+              {/* <InputEndAdornment
                 adornment={'g/cm³'}
                 label={materials[0]}
                 value={data?.missingSpecificMass?.material_1}
@@ -634,7 +656,7 @@ const Marshall_Step5 = ({
                   const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
                   setData({ step: 4, value: newState });
                 }}
-              />
+              /> */}
             </Box>
           </ModalBase>
 
@@ -648,7 +670,7 @@ const Marshall_Step5 = ({
             onSubmit={() => handleSelectGMM()}
           >
             <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-              <InputEndAdornment
+              {/* <InputEndAdornment
                 adornment={'g/cm³'}
                 label={materials[0]}
                 value={data?.missingSpecificMass?.material_1}
@@ -669,7 +691,7 @@ const Marshall_Step5 = ({
                   const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
                   setData({ step: 4, value: newState });
                 }}
-              />
+              /> */}
             </Box>
           </ModalBase>
 
