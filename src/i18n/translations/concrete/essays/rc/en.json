@@ -1,0 +1,24 @@
+{
+    "concrete.rc.sample-origin": "Sample Origin",
+    "concrete.rc.press-specification": "Press Specification",
+    "concrete.rc.press-constant": "Press Constant",
+    "concrete.rc.sample-void-volume": "Sample Void Volume",
+    "rc.results.sampleName": "Sample Name",
+    "rc.results.RtKgf": "RT (Kgf/cm³)",
+    "rc.results.RtMpa": "RT (Mpa)",
+    "rc.results.average": "RT Average",
+    "rc.results.minimum-rt": "Min. RT (DNIT 031/2006 - ES)",
+    "rc.results.acceptance-condition": "Acceptance Condition",
+    "rc.results.acceptance-condition-true": "Minimum RT achieved",
+    "rc.results.acceptance-condition-false": "Minimum RT not reached",
+    "rc.error.minReads": "It's not possible to delete. Minimum achieved.",
+    "concrete.experimentName": "Asphalt Experement Name",
+    "concrete.material": "Material",
+    "concrete.operator": "Operator",
+    "concrete.calculist": "Calculist",
+    "concrete.materials.comments": "Material comments",
+    "concrete.essays.concreterc-concrete": "Compression Resistance",
+    "concrete.essays.concreteRc": "Compression Resistance"
+    
+  }
+  

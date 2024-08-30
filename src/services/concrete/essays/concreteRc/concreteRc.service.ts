@@ -7,10 +7,10 @@ import { t } from "i18next";
 
 class CONCRETE_RC_SERVICE implements IEssayService {
     info = {
-      key: 'ConcreteRc-concrete',
+      key: 'concreteRc',
       icon: CoarseAggregateIcon,
-      title: t('concrete.essays.ConcreteRc'),
-      path: '/concrete/essays/ConcreteRc',
+      title: t('concrete.essays.concreteRc'),
+      path: '/concrete/essays/concreteRc',
       backend_path: 'concrete/essays/concreteRc',
       steps: 3,
       standard: {
@@ -19,7 +19,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       },
       stepperData: [
         { step: 0, description: t('general data'), path: 'general-data' },
-        { step: 1, description: t('ConcreteRc-concrete'), path: 'essay-data' },
+        { step: 1, description: t('concreteRc'), path: 'essay-data' },
         { step: 2, description: t('results'), path: 'results' },
       ],
     };
@@ -79,14 +79,13 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       try {
         const { name, material } = generalData;
   
-        // verify if name and material are not empty
-        if (!name) throw t('errors.empty-name');
-        if (!material) throw t('errors.empty-material');
+        // // verify if name and material are not empty
+        // if (!name) throw t('errors.empty-name');
+        // if (!material) throw t('errors.empty-material');
   
         // verify if there is already a ConcreteRc essay with same name for the material
         const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, material });
-  
-        console.log("🚀 ~ CONCRETE_RC_SERVICE ~ submitGeneralData= ~ response:", response)
+        console.log(response)
         const { success, error } = response.data;
   
         // if there is already a ConcreteRc essay with same name for the material, throw error
