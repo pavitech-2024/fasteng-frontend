@@ -11,6 +11,7 @@ import Step3InputTable from './tables/step-3-input-table';
 import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
 import useAuth from '@/contexts/auth';
 import { toast } from 'react-toastify';
+import Loading from '@/components/molecules/loading';
 
 const Marshall_Step3 = ({
   nextDisabled,
@@ -21,10 +22,12 @@ const Marshall_Step3 = ({
   const { granulometryCompositionData: data, materialSelectionData, setData, generalData } = useMarshallStore();
 
   const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
 
   // Tabela de dados
   // Definindo as rows para a tabela de dados
   const [rows, setRows] = useState([]);
+  console.log("🚀 ~ rows:", rows)
 
   useEffect(() => {
     toast.promise(
@@ -46,9 +49,7 @@ const Marshall_Step3 = ({
             step: 2,
             value: prevData,
           });
-          // setLoading(false);
         } catch (error) {
-          // setLoading(false);
           throw error;
         }
       },
@@ -100,8 +101,9 @@ const Marshall_Step3 = ({
         }
       });
       setRows(newHigherSpec);
+      setLoading(false);
     }
-  }, []);
+  }, [data?.dnitBands?.higher]);
 
   const inputColumns: GridColDef[] = [];
 
@@ -192,8 +194,8 @@ const Marshall_Step3 = ({
         newArray.push({
           label: data.projections[i]?.label,
           value: data.projections[i]?.value,
-          band_1: data.dnitBands.lower[i] !== null ? data.bands?.lowerBand[i] : '',
-          band_2: data.dnitBands.higher[i] !== null ? data.bands?.higherBand[i] : '',
+          band_1: data.dnitBands?.lower[i] !== null ? data.bands?.lowerBand[i] : '',
+          band_2: data.dnitBands?.higher[i] !== null ? data.bands?.higherBand[i] : '',
         });
       }
 
@@ -203,14 +205,13 @@ const Marshall_Step3 = ({
 
   const handleCalculateGranulometricComp = async () => {
     if (!Object.values(data.percentageInputs).some((input) => input === null)) {
-      
       toast.promise(
         async () => {
           try {
             const results = await calculateGranulometryComposition(data, generalData);
-  
+
             const newPointsOfCurve = [...results?.pointsOfCurve];
-  
+
             newPointsOfCurve.unshift([
               t('asphalt.dosages.marshall.sieve_mm'),
               t('asphalt.dosages.marshall.dnit-track'),
@@ -219,31 +220,27 @@ const Marshall_Step3 = ({
               'Faixa de trabalho',
               'Faixa do DNIT',
             ]);
-  
+
             const { projections } = results;
-  
+
             let newTable = results?.table_data?.table_rows.map((e) => ({
               ...e,
               projections: projections.find((proj) => proj.label === e.sieve_label).value,
               band1: results.dnitBands.higher.find((band) => band[0] === e.sieve_label)?.[1],
-              band2: results.dnitBands.lower.find((band) => band[0] === e.sieve_label)?.[1]
+              band2: results.dnitBands.lower.find((band) => band[0] === e.sieve_label)?.[1],
             }));
-  
+
             const newResults = {
               ...results,
               table_data: {
                 ...results.table_data,
-                table_rows: [
-                  ...results.table_data.table_rows,
-                  newTable
-                ]
+                table_rows: [...results.table_data.table_rows, newTable],
               },
               graphData: newPointsOfCurve,
             };
-  
+
             setRows(newTable);
             setData({ step: 2, value: newResults });
-  
           } catch (error) {
             throw error;
           }
@@ -256,7 +253,6 @@ const Marshall_Step3 = ({
       );
     }
   };
-  
 
   // Definindo as colunas para tabela de dados
   const [columnGrouping, setColumnGroupings] = useState([]);
@@ -307,13 +303,11 @@ const Marshall_Step3 = ({
       }
     });
 
-    newCols.push(
-      {
-        field: 'projections',
-        headerName: 'Projeções',
-        valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}` : ''),
-      }
-    )
+    newCols.push({
+      field: 'projections',
+      headerName: 'Projeções',
+      valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}` : ''),
+    });
 
     newCols.push(
       {
@@ -340,40 +334,44 @@ const Marshall_Step3 = ({
     });
     setColumns(newCols);
     setColumnGroupings(newColsGrouping);
-  }, [data.table_data?.table_column_headers]);
+  }, [data.table_data]);
 
   useEffect(() => {
-    const shouldDisableNext = !data.percentageInputs.some(e => 
-      Object.values(e).some(value => value === null || value === 0)
-    ) && data.graphData.length > 0;
-  
+    const shouldDisableNext =
+      !data.percentageInputs.some((e) => Object.values(e).some((value) => value === null || value === 0)) &&
+      data.graphData.length > 0;
+
     setNextDisabled(!shouldDisableNext);
-  }, [data.percentageInputs]);
-  
+  }, [data.percentageInputs, data.graphData]);
 
   return (
     <>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '10px',
-        }}
-      >
-        {rows?.length > 0 && (
-          <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
-        )}
-
-        <Button
-          sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
-          onClick={handleCalculateGranulometricComp}
+      {loading ? (
+        <Loading />
+      ) : (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+          }}
         >
-          {t('asphalt.dosages.marshall.calculate')}
-        </Button>
-        
-        {data?.graphData?.length > 1 && <Graph data={data?.graphData} />}
-       
-      </Box>
+          {rows?.length > 0 && (
+            <>
+              <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
+
+              <Button
+                sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
+                onClick={handleCalculateGranulometricComp}
+              >
+                {t('asphalt.dosages.marshall.calculate')}
+              </Button>
+            </>
+          )}
+
+          {data?.graphData?.length > 1 && <Graph data={data?.graphData} />}
+        </Box>
+      )}
     </>
   );
 };

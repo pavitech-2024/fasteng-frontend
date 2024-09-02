@@ -45,7 +45,7 @@ class Marshall_SERVICE implements IEssayService {
     try {
       switch (step) {
         case 0:
-          const { generalData: generalData} = data as MarshallData;
+          const { generalData: generalData } = data as MarshallData;
           await this.submitGeneralData(generalData, this.userId, isConsult);
           break;
         case 1:
@@ -83,7 +83,7 @@ class Marshall_SERVICE implements IEssayService {
           throw t('errors.invalid-step');
       }
     } catch (error) {
-      throw error;
+      //throw error;
     }
   };
 
@@ -189,10 +189,16 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  getStep3Data = async (generalData: MarshallData['generalData'], step2Data: MarshallData['materialSelectionData'], user: string, isConsult?: boolean): Promise<any> => {
+  getStep3Data = async (
+    generalData: MarshallData['generalData'],
+    step2Data: MarshallData['materialSelectionData'],
+    user: string,
+    isConsult?: boolean
+  ): Promise<any> => {
     if (!isConsult) {
       try {
         const { dnitBand } = generalData;
+        console.log('🚀 ~ Marshall_SERVICE ~ getStep3Data= ~ dnitBand:', dnitBand);
 
         const { aggregates } = step2Data;
 
@@ -207,9 +213,7 @@ class Marshall_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
 
-        return data
-
-        // this.store_actions.setData({ key: 'table_data', step: 2, value: table_data });
+        return data;
       } catch (error) {
         throw error;
       }
@@ -224,12 +228,14 @@ class Marshall_SERVICE implements IEssayService {
       const { dnitBand: dnitBandLetter } = generalData;
       const { percentageInputs, table_data } = calculateStep3Data;
 
-      let inputsSum = percentageInputs.reduce((sum, input) => sum + Object.values(input)[0], 0);
+      // Reduzimos a matriz somando todos os valores de todas as propriedades de cada objeto.
+      let inputsSum = percentageInputs.reduce((sum, input) => {
+        return sum + Object.values(input).reduce((objSum, value) => objSum + value, 0);
+      }, 0);
 
-      console.log("🚀 ~ Marshall_SERVICE ~ inputsSum:", inputsSum)
-
+      // Verificamos se a soma total é 100.
       if (inputsSum !== 100) throw t('errors.invalid-inputs-sum');
-      
+
       const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {
         dnitBands: dnitBandLetter,
         percentageInputs,
@@ -240,14 +246,7 @@ class Marshall_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
 
-      const {
-        percentsOfMaterials,
-        pointsOfCurve,
-        sumOfPercents,
-        table_data: tableData,
-        projections,
-        bands,
-      } = data;
+      const { percentsOfMaterials, pointsOfCurve, sumOfPercents, table_data: tableData, projections, bands } = data;
 
       const tableData2 = {
         table_rows: tableData,

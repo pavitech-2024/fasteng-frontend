@@ -616,7 +616,7 @@ const Marshall_Step5 = ({
             rightButtonTitle={'confirmar'}
             onCancel={() => setDMTModalISOpen(false)}
             open={DMTModalIsOpen}
-            size={'large'}
+            size={'small'}
             onSubmit={() => handleSubmitDmt()}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-around' }}>
