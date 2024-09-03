@@ -4,7 +4,11 @@
   "errors.empty-sieve": "Empty sieve - ",
   "errors.negative-sieve": "Sieve with negative value - ",
   "errors.sieves-sum-not-equal-to-sample-mass": "Sum of Retained masses + Bottom differs from Initial mass in ",
-"errors.empty-water-temperature": "Enter the water temperature correction factor",
+  "errors.empty-water-temperature": "Enter the water temperature correction factor",
+  "errors.rice-test-empty-fields": "Enter masses for each binder content.",
+
+  "errors.invalid-gmm-mass-value": "The mass of the sample cannot be greater than the mass of the container + water or the mass of the container + water + sample.",
+  "errors.invalid-gmm-container-mass-value": "The mass of the container + water cannot be greater than the mass of the container + water + sample.",
 
   "name-already-exists": "Experiment name already exists!",
 
