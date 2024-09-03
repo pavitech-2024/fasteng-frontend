@@ -4,6 +4,7 @@
   "errors.empty-sieve": "Peneira vazia - ",
   "errors.negative-sieve": "Peneira com valor negativo - ",
   "errors.sieves-sum-not-equal-to-sample-mass": "Soma das massas Retidas + Fundos difere da Massa da Amostra em ",
+  "errors.empty-water-temperature": "Informe o fator de correção da temperatura da água.",
 
   "name-already-exists": "Nome do Experimento já cadastrado!",
 

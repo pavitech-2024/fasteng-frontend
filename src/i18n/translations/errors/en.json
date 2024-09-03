@@ -4,6 +4,7 @@
   "errors.empty-sieve": "Empty sieve - ",
   "errors.negative-sieve": "Sieve with negative value - ",
   "errors.sieves-sum-not-equal-to-sample-mass": "Sum of Retained masses + Bottom differs from Initial mass in ",
+"errors.empty-water-temperature": "Enter the water temperature correction factor",
 
   "name-already-exists": "Experiment name already exists!",
 

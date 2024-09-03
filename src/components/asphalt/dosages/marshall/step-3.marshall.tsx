@@ -27,7 +27,6 @@ const Marshall_Step3 = ({
   // Tabela de dados
   // Definindo as rows para a tabela de dados
   const [rows, setRows] = useState([]);
-  console.log("🚀 ~ rows:", rows)
 
   useEffect(() => {
     toast.promise(
@@ -101,7 +100,6 @@ const Marshall_Step3 = ({
         }
       });
       setRows(newHigherSpec);
-      setLoading(false);
     }
   }, [data?.dnitBands?.higher]);
 
@@ -285,7 +283,11 @@ const Marshall_Step3 = ({
             renderHeader: () => (
               <InputEndAdornment
                 adornment="%"
-                value={data?.percentageInputs[0][`percentage_${_id}`] || ''}
+                value={
+                  data?.percentageInputs && data.percentageInputs[0]
+                    ? data.percentageInputs[0][`percentage_${_id}`] || ''
+                    : ''
+                }
                 onChange={(e) => {
                   let prevData = [...data?.percentageInputs];
                   prevData[0][`percentage_${_id}`] = Number(e.target.value);
@@ -334,7 +336,8 @@ const Marshall_Step3 = ({
     });
     setColumns(newCols);
     setColumnGroupings(newColsGrouping);
-  }, [data.table_data]);
+    setLoading(false);
+  }, [data.table_data?.table_column_headers, data.percentageInputs.length > 0]);
 
   useEffect(() => {
     const shouldDisableNext =
@@ -356,7 +359,7 @@ const Marshall_Step3 = ({
             gap: '10px',
           }}
         >
-          {rows?.length > 0 && (
+          {data.percentageInputs.length > 0 && Object.entries(data.percentageInputs[0])?.length > 0 && (
             <>
               <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
 

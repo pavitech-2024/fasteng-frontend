@@ -32,12 +32,14 @@ const Marshall_Step5 = ({
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [methodGmm, setMethodGmm] = useState(false);
   const [methodDmt, setMethodDmt] = useState(false);
+  console.log('🚀 ~ methodDmt:', methodDmt);
   const [riceTestTableRows, setRiceTestTableRows] = useState<RiceTestRows[]>([]);
   const [riceTestTableColumns, setRiceTestTableColumns] = useState<GridColDef[]>([]);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
   const materials = materialSelectionData.aggregates;
   const [hasNull, setHasNull] = useState(true);
+  const [gmmErrorMsg, setGmmErrorMsg] = useState('');
 
   // Activated on page render to get the indexes of each material;
   useEffect(() => {
@@ -48,15 +50,15 @@ const Marshall_Step5 = ({
 
           const prevData = data;
 
-          const materials = materialSelectionData.aggregates.map((material) =>({
+          const materials = materialSelectionData.aggregates.map((material) => ({
             ...material,
-            value: null
-          }))
+            value: null,
+          }));
 
           const newData = {
             ...prevData,
             indexesOfMissesSpecificGravity: indexes,
-            missingSpecificMass: materials
+            missingSpecificMass: materials,
           };
 
           setData({ step: 4, value: newData });
@@ -321,47 +323,47 @@ const Marshall_Step5 = ({
   const calculateGmmData = () => {
     toast.promise(
       async () => {
-        try {
-          const gmm = await marshall.calculateGmmData(materialSelectionData, data);
-          const prevData = data;
-          const newData = {
-            ...prevData,
-            maxSpecificGravity: {
-              results: gmm.maxSpecificGravity,
-              method: gmm.method,
-            },
-          };
-          setData({ step: 4, value: newData });
-          const prevGmmRows = [...gmmRows];
-          const newGmmRows = prevGmmRows.map((item) => {
-            if (item.id === 1) {
-              item.GMM = gmm.maxSpecificGravity.lessOne;
-            }
-            if (item.id === 2) {
-              item.GMM = gmm.maxSpecificGravity.lessHalf;
-            }
-            if (item.id === 3) {
-              item.GMM = gmm.maxSpecificGravity.normal;
-            }
-            if (item.id === 4) {
-              item.GMM = gmm.maxSpecificGravity.plusHalf;
-            }
-            if (item.id === 5) {
-              item.GMM = gmm.maxSpecificGravity.plusOne;
-            }
-            return item;
-          });
+        if (data.temperatureOfWater === null) {
+          const error = 'errors.empty-water-temperature';
+          setGmmErrorMsg(error);
+          throw new Error(error);
+        } else {
+          try {
+            const gmm = await marshall.calculateGmmData(materialSelectionData, data);
+            console.log("🚀 ~ gmm:", gmm);
 
-          setGmmRows(newGmmRows);
-        } catch (error) {
-          //setLoading(false);
-          throw error;
+            const prevData = data;
+            const newData = {
+              ...prevData,
+              maxSpecificGravity: {
+                results: gmm.maxSpecificGravity,
+                method: gmm.method,
+              },
+            };
+
+            setData({ step: 4, value: newData });
+
+            const newGmmRows = gmmRows.map((item) => {
+              if (item.id === 1) item.GMM = gmm.maxSpecificGravity.lessOne;
+              if (item.id === 2) item.GMM = gmm.maxSpecificGravity.lessHalf;
+              if (item.id === 3) item.GMM = gmm.maxSpecificGravity.normal;
+              if (item.id === 4) item.GMM = gmm.maxSpecificGravity.plusHalf;
+              if (item.id === 5) item.GMM = gmm.maxSpecificGravity.plusOne;
+              return item;
+            });
+
+            setGmmRows(newGmmRows);
+          } catch (error) {
+            const message = error.message === 'errors.empty-water-temperature' ? error.message : 'errors.general';
+            setGmmErrorMsg(message);
+            throw new Error(message);
+          }
         }
       },
       {
         pending: t('loading.materials.pending'),
         success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        error: t(`${gmmErrorMsg}`),
       }
     );
   };
@@ -541,7 +543,8 @@ const Marshall_Step5 = ({
   }, [riceTestTableRows]);
 
   useEffect(() => {
-    if (methodDmt && data?.dmt?.material_1 !== null && data?.dmt?.material_2 !== null) {
+    const hasNullValue = data.dmt.some((e) => Object.values(e).includes(null));
+    if (methodDmt && !hasNullValue) {
       setNextDisabled(false);
     } else if (methodGmm && data?.gmm?.every((e) => e.value !== null)) {
       setNextDisabled(false);
@@ -561,7 +564,7 @@ const Marshall_Step5 = ({
             marginX: 'auto',
             width: '60%',
             flexDirection: 'column',
-            gap: '10px',
+            gap: '1rem',
           }}
         >
           <DropDown
@@ -573,11 +576,18 @@ const Marshall_Step5 = ({
               if (selectedOption === 'DMT - Densidade máxima teórica') {
                 setDMTModalISOpen(true);
               } else {
-                setGMMModalIsOpen(true);
+                setMethodGmm(true);
                 setEnableRiceTest(true);
               }
             }}
-            defaultValue={{ value: 'dmt', label: 'DMT - Densidade máxima teórica' }}
+            defaultValue={{
+              label: data.missingSpecificMass.some((e) => e.value !== null)
+                ? 'DMT - Densidade máxima teórica'
+                : 'GMM - Densidade máxima medida',
+              value: data.missingSpecificMass.some((e) => e.value !== null)
+                ? 'DMT - Densidade máxima teórica'
+                : 'GMM - Densidade máxima medida',
+            }}
             size="medium"
             sx={{ width: '75%', marginX: 'auto' }}
           />
@@ -608,7 +618,14 @@ const Marshall_Step5 = ({
             </Box>
           )}
 
-          {methodDmt && <DataGrid columns={dmtColumns} rows={dmtRows} hideFooter />}
+          {methodDmt && (
+            <DataGrid
+              columns={dmtColumns}
+              rows={dmtRows}
+              sx={{ width: 'fit-content', marginX: 'auto', marginY: '2rem' }}
+              hideFooter
+            />
+          )}
 
           <ModalBase
             title={'Insira a massa específica real dos materiais abaixo'}
@@ -616,82 +633,25 @@ const Marshall_Step5 = ({
             rightButtonTitle={'confirmar'}
             onCancel={() => setDMTModalISOpen(false)}
             open={DMTModalIsOpen}
-            size={'small'}
+            size={'medium'}
             onSubmit={() => handleSubmitDmt()}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-around' }}>
-              {data.missingSpecificMass.length > 0 && data.missingSpecificMass?.map((material, index) => (
-                <InputEndAdornment
-                  key={`${index}`}
-                  adornment={'g/cm³'}
-                  label={material.name}
-                  value={material.value}
-                  onChange={(e) => {
-                    let prevState = [...data.missingSpecificMass];
-                    let index = prevState.findIndex(idx => idx.name === material.name);
-                    prevState[index] = {...prevState[index], value: Number(e.target.value)};
-                    setData({ step: 4, value: { ...data, missingSpecificMass: prevState } });
-                  }}
-                />
-              ))}
-
-              {/* <InputEndAdornment
-                adornment={'g/cm³'}
-                label={materials[0]}
-                value={data?.missingSpecificMass?.material_1}
-                onChange={(e) => {
-                  const prevState = data;
-                  const prevDmt = data.missingSpecificMass;
-                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_1: e.target.value } };
-                  setData({ step: 4, value: newState });
-                }}
-              />
-              <InputEndAdornment
-                adornment={'g/cm³'}
-                label={materials[1]}
-                value={data?.missingSpecificMass?.material_2}
-                onChange={(e) => {
-                  const prevState = data;
-                  const prevDmt = data.missingSpecificMass;
-                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
-                  setData({ step: 4, value: newState });
-                }}
-              /> */}
-            </Box>
-          </ModalBase>
-
-          <ModalBase
-            title={'Insira a massa específica real dos materiais abaixo'}
-            leftButtonTitle={'cancelar'}
-            rightButtonTitle={'confirmar'}
-            onCancel={() => setGMMModalIsOpen(false)}
-            open={GMMModalIsOpen}
-            size={'large'}
-            onSubmit={() => handleSelectGMM()}
-          >
-            <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-              {/* <InputEndAdornment
-                adornment={'g/cm³'}
-                label={materials[0]}
-                value={data?.missingSpecificMass?.material_1}
-                onChange={(e) => {
-                  const prevState = data;
-                  const prevDmt = data.missingSpecificMass;
-                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_1: e.target.value } };
-                  setData({ step: 4, value: newState });
-                }}
-              />
-              <InputEndAdornment
-                adornment={'g/cm³'}
-                label={materials[1]}
-                value={data?.missingSpecificMass?.material_2}
-                onChange={(e) => {
-                  const prevState = data;
-                  const prevDmt = data.missingSpecificMass;
-                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
-                  setData({ step: 4, value: newState });
-                }}
-              /> */}
+              {data.missingSpecificMass.length > 0 &&
+                data.missingSpecificMass?.map((material, index) => (
+                  <InputEndAdornment
+                    key={`${index}`}
+                    adornment={'g/cm³'}
+                    label={material.name}
+                    value={material.value}
+                    onChange={(e) => {
+                      let prevState = [...data.missingSpecificMass];
+                      let index = prevState.findIndex((idx) => idx.name === material.name);
+                      prevState[index] = { ...prevState[index], value: Number(e.target.value) };
+                      setData({ step: 4, value: { ...data, missingSpecificMass: prevState } });
+                    }}
+                  />
+                ))}
             </Box>
           </ModalBase>
 

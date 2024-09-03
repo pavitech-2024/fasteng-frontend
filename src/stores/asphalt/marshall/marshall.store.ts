@@ -67,9 +67,8 @@ interface MarshallBinderTrialData {
 
 interface MarshallMaximumMixtureDensityData {
   dmt: {
-    material_1: number;
-    material_2: number;
-  };
+    [key: string]: number;
+  }[];
   gmm: {
     id: number;
     insert: boolean;
@@ -317,10 +316,7 @@ const initialState = {
     },
   },
   maximumMixtureDensityData: {
-    dmt: {
-      material_1: null,
-      material_2: null,
-    },
+    dmt: [],
     gmm: [
       {
         id: 1,
