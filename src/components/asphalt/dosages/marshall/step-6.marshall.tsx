@@ -1,12 +1,11 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
-import useAuth from '@/contexts/auth';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore, { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
@@ -44,6 +43,7 @@ const Marshall_Step6 = ({
     {
       field: 'diammeter',
       headerName: 'Diâmetro (cm)',
+      width: 115,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[tenor]?.findIndex((r) => r.id === id);
@@ -55,7 +55,6 @@ const Marshall_Step6 = ({
               const value = Number(e.target.value);
               const newState = [...data[tenor]];
               newState[index] = { ...newState[index], diammeter: value };
-              // setData({ step: 5, value: { ...data, [tenor]: newState } });
               debouncedSetData({ ...data, [tenor]: newState });
             }}
           />
@@ -85,6 +84,7 @@ const Marshall_Step6 = ({
     {
       field: 'dryMass',
       headerName: 'Massa seca (g)',
+      width: 120,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[tenor]?.findIndex((r) => r.id === id);
@@ -105,6 +105,7 @@ const Marshall_Step6 = ({
     {
       field: 'submergedMass',
       headerName: 'Massa submersa (g)',
+      width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[tenor].findIndex((r) => r.id === id);
@@ -125,6 +126,7 @@ const Marshall_Step6 = ({
     {
       field: 'drySurfaceSaturatedMass',
       headerName: 'Massa saturada com superfície seca (g)',
+      width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[tenor]?.findIndex((r) => r.id === id);
@@ -220,15 +222,18 @@ const Marshall_Step6 = ({
       headerAlign: 'center',
       renderHeaderGroup: (params) => {
         return (
-          <div>
-            {params.headerName}
+          <Box sx={{ display: 'flex', gap: '2rem' }}>
+            <Typography sx={{ marginY: 'auto', color: '#777777' }}>{params.headerName}</Typography>
+
             <Button
               startIcon={<LockOpenIcon />}
               onClick={() => setTableIsDisabled({ ...tableIsDisabled, lessOne: !tableIsDisabled.lessOne })}
+              variant="contained"
+              sx={{ marginY: '1rem' }}
             >
               {tableIsDisabled.lessOne ? 'Liberar' : 'Não usar teor'}
             </Button>
-          </div>
+          </Box>
         );
       },
     },
@@ -250,15 +255,18 @@ const Marshall_Step6 = ({
       headerAlign: 'center',
       renderHeaderGroup: (params) => {
         return (
-          <div>
-            {params.headerName}
+          <Box sx={{ display: 'flex', gap: '2rem' }}>
+            <Typography sx={{ marginY: 'auto', color: '#777777' }}>{params.headerName}</Typography>
+
             <Button
               startIcon={<LockOpenIcon />}
               onClick={() => setTableIsDisabled({ ...tableIsDisabled, lessHalf: !tableIsDisabled.lessHalf })}
+              variant="contained"
+              sx={{ marginY: '1rem' }}
             >
               {tableIsDisabled.lessHalf ? 'Liberar' : 'Não usar teor'}
-            </Button>{' '}
-          </div>
+            </Button>
+          </Box>
         );
       },
     },
@@ -280,15 +288,18 @@ const Marshall_Step6 = ({
       headerAlign: 'center',
       renderHeaderGroup: (params) => {
         return (
-          <div>
-            {params.headerName}
+          <Box sx={{ display: 'flex', gap: '2rem' }}>
+            <Typography sx={{ marginY: 'auto', color: '#777777' }}>{params.headerName}</Typography>
+
             <Button
               startIcon={<LockOpenIcon />}
               onClick={() => setTableIsDisabled({ ...tableIsDisabled, normal: !tableIsDisabled.normal })}
+              variant="contained"
+              sx={{ marginY: '1rem' }}
             >
               {tableIsDisabled.normal ? 'Liberar' : 'Não usar teor'}
-            </Button>{' '}
-          </div>
+            </Button>
+          </Box>
         );
       },
     },
@@ -310,15 +321,18 @@ const Marshall_Step6 = ({
       headerAlign: 'center',
       renderHeaderGroup: (params) => {
         return (
-          <div>
-            {params.headerName}
+          <Box sx={{ display: 'flex', gap: '2rem' }}>
+            <Typography sx={{ marginY: 'auto', color: '#777777' }}>{params.headerName}</Typography>
+
             <Button
               startIcon={<LockOpenIcon />}
               onClick={() => setTableIsDisabled({ ...tableIsDisabled, plusHalf: !tableIsDisabled.plusHalf })}
+              variant="contained"
+              sx={{ marginY: '1rem' }}
             >
               {tableIsDisabled.plusHalf ? 'Liberar' : 'Não usar teor'}
-            </Button>{' '}
-          </div>
+            </Button>
+          </Box>
         );
       },
     },
@@ -340,15 +354,18 @@ const Marshall_Step6 = ({
       headerAlign: 'center',
       renderHeaderGroup: (params) => {
         return (
-          <div>
-            {params.headerName}
+          <Box sx={{ display: 'flex', gap: '2rem' }}>
+            <Typography sx={{ marginY: 'auto', color: '#777777' }}>{params.headerName}</Typography>
+
             <Button
               startIcon={<LockOpenIcon />}
               onClick={() => setTableIsDisabled({ ...tableIsDisabled, plusOne: !tableIsDisabled.plusOne })}
+              variant="contained"
+              sx={{ marginY: '1rem' }}
             >
               {tableIsDisabled.plusOne ? 'Liberar' : 'Não usar teor'}
             </Button>
-          </div>
+          </Box>
         );
       },
     },
@@ -415,15 +432,25 @@ const Marshall_Step6 = ({
   const ExpansionToolbar = (type: string) => {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
-        <Button sx={{ color: 'secondaryTons.red' }} onClick={() => handleErase(type)}>
+        <Button sx={{ color: 'secondaryTons.red' }} disabled={tableIsDisabled[type]} onClick={() => handleErase(type)}>
           {t('erase')}
         </Button>
-        <Button sx={{ color: 'secondaryTons.green' }} onClick={() => handleAdd(type)}>
+        <Button sx={{ color: 'secondaryTons.green' }} disabled={tableIsDisabled[type]} onClick={() => handleAdd(type)}>
           {t('add')}
         </Button>
       </Box>
     );
   };
+
+  useEffect(() => {
+    let hasEmptyArrays = Object.values(data.volumetricParameters).some((arr) => arr.length < 1);
+
+    if (hasEmptyArrays) {
+      setNextDisabled(true)
+    } else {
+      setNextDisabled(false)
+    }
+  },[data])
 
   return (
     <>
@@ -443,10 +470,16 @@ const Marshall_Step6 = ({
             rows={lessOneRows}
             columnGroupingModel={lessOneColumnsGroupings}
             experimentalFeatures={{ columnGrouping: true }}
-            sx={tableIsDisabled.lessOne ? { backgroundColor: 'grey' } : {}}
+            sx={tableIsDisabled.lessOne ? { backgroundColor: '#999999' } : {}}
             density="comfortable"
             disableColumnMenu
             disableColumnSelector
+            disableRowSelectionOnClick={tableIsDisabled.lessOne}
+            slotProps={{
+              cell: {
+                style: tableIsDisabled.lessOne ? { pointerEvents: 'none', opacity: 0.3 } : {},
+              },
+            }}
             slots={{ footer: () => ExpansionToolbar('lessOne') }}
           />
 
@@ -456,10 +489,16 @@ const Marshall_Step6 = ({
             rows={lessHalfRows}
             columnGroupingModel={lessHalfColumnsGroupings}
             experimentalFeatures={{ columnGrouping: true }}
-            sx={tableIsDisabled.lessHalf ? { backgroundColor: 'grey' } : {}}
+            sx={tableIsDisabled.lessHalf ? { backgroundColor: '#999999' } : {}}
             density="comfortable"
             disableColumnMenu
             disableColumnSelector
+            disableRowSelectionOnClick={tableIsDisabled.lessHalf}
+            slotProps={{
+              cell: {
+                style: tableIsDisabled.lessHalf ? { pointerEvents: 'none', opacity: 0.3 } : {},
+              },
+            }}
             slots={{ footer: () => ExpansionToolbar('lessHalf') }}
           />
 
@@ -469,10 +508,16 @@ const Marshall_Step6 = ({
             rows={normalRows}
             columnGroupingModel={normalColumnsGroupings}
             experimentalFeatures={{ columnGrouping: true }}
-            sx={tableIsDisabled.normal ? { backgroundColor: 'grey' } : {}}
+            sx={tableIsDisabled.normal ? { backgroundColor: '#999999' } : {}}
             density="comfortable"
             disableColumnMenu
             disableColumnSelector
+            disableRowSelectionOnClick={tableIsDisabled.normal}
+            slotProps={{
+              cell: {
+                style: tableIsDisabled.normal ? { pointerEvents: 'none', opacity: 0.3 } : {},
+              },
+            }}
             slots={{ footer: () => ExpansionToolbar('normal') }}
           />
 
@@ -482,10 +527,16 @@ const Marshall_Step6 = ({
             rows={plusHalfRows}
             columnGroupingModel={plusHalfColumnsGroupings}
             experimentalFeatures={{ columnGrouping: true }}
-            sx={tableIsDisabled.plusHalf ? { backgroundColor: 'grey' } : {}}
+            sx={tableIsDisabled.plusHalf ? { backgroundColor: '#999999' } : {}}
             density="comfortable"
             disableColumnMenu
             disableColumnSelector
+            disableRowSelectionOnClick={tableIsDisabled.plusHalf}
+            slotProps={{
+              cell: {
+                style: tableIsDisabled.plusHalf ? { pointerEvents: 'none', opacity: 0.3 } : {},
+              },
+            }}
             slots={{ footer: () => ExpansionToolbar('plusHalf') }}
           />
 
@@ -495,14 +546,20 @@ const Marshall_Step6 = ({
             rows={plusOneRows}
             columnGroupingModel={plusOneColumnsGroupings}
             experimentalFeatures={{ columnGrouping: true }}
-            sx={tableIsDisabled.plusOne ? { backgroundColor: 'grey' } : {}}
+            sx={tableIsDisabled.plusOne ? { backgroundColor: '#999999' } : {}}
             density="comfortable"
             disableColumnMenu
             disableColumnSelector
+            disableRowSelectionOnClick={tableIsDisabled.plusOne}
+            slotProps={{
+              cell: {
+                style: tableIsDisabled.plusOne ? { pointerEvents: 'none', opacity: 0.3 } : {},
+              },
+            }}
             slots={{ footer: () => ExpansionToolbar('plusOne') }}
           />
 
-          <Button onClick={setVolumetricParams}>Confirmar</Button>
+          <Button onClick={setVolumetricParams} variant='outlined'>Confirmar</Button>
         </Box>
       )}
     </>

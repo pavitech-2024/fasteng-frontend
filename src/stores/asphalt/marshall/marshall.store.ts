@@ -35,7 +35,7 @@ interface MarshallGranulometryCompositionData {
   percentageInputs: { [key: string]: number }[];
   sumOfPercents: number[];
   dnitBands: { higher: [string, number][]; lower: [string, number][] };
-  bands: { higherBand: [number]; lowerBand: [number], letter };
+  bands: { higherBand: [number]; lowerBand: [number]; letter };
   pointsOfCurve: any[];
   percentsOfMaterials: any[];
   graphData: any[];
@@ -77,9 +77,9 @@ interface MarshallMaximumMixtureDensityData {
   indexesOfMissesSpecificGravity: number[];
   temperatureOfWater: number;
   missingSpecificMass: {
-    name: string,
-    _id: string,
-    value: number
+    name: string;
+    _id: string;
+    value: number;
   }[];
   maxSpecificGravity: {
     result: {
@@ -93,6 +93,7 @@ interface MarshallMaximumMixtureDensityData {
   };
   riceTest: {
     id: number;
+    teor: number;
     massOfDrySample: number;
     massOfContainerWaterSample: number;
     massOfContainerWater: number;
@@ -285,7 +286,7 @@ const initialState = {
     dnitBands: {
       higher: null,
       lower: null,
-      letter: null
+      letter: null,
     },
     pointsOfCurve: [],
     sumOfPercents: [],
@@ -359,7 +360,36 @@ const initialState = {
     },
     riceTest: [
       {
-        id: null,
+        id: 1,
+        teor: null,
+        massOfDrySample: null,
+        massOfContainerWaterSample: null,
+        massOfContainerWater: null,
+      },
+      {
+        id: 2,
+        teor: null,
+        massOfDrySample: null,
+        massOfContainerWaterSample: null,
+        massOfContainerWater: null,
+      },
+      {
+        id: 3,
+        teor: null,
+        massOfDrySample: null,
+        massOfContainerWaterSample: null,
+        massOfContainerWater: null,
+      },
+      {
+        id: 4,
+        teor: null,
+        massOfDrySample: null,
+        massOfContainerWaterSample: null,
+        massOfContainerWater: null,
+      },
+      {
+        id: 5,
+        teor: null,
         massOfDrySample: null,
         massOfContainerWaterSample: null,
         massOfContainerWater: null,
