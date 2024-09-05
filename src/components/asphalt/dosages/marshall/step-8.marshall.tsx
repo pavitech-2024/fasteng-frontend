@@ -496,9 +496,7 @@ const Marshall_Step8 = ({
           ) : (
             <Box>
               <Typography>{`Insira a Gmm ou calcule pelo Rice Test`}</Typography>
-              <Typography>{`Gmm calculada pelo Rice Test: ${data?.confirmedSpecificGravity?.result.toFixed(
-                2
-              )}`}</Typography>
+              <Typography>{`Gmm calculada pelo Rice Test: ${data?.confirmedSpecificGravity?.result}`}</Typography>
               <InputEndAdornment
                 adornment={'g/cm³'}
                 label={'Gmm do teor de ligante asfáltico:'}
@@ -536,30 +534,20 @@ const Marshall_Step8 = ({
             size={'large'}
             onSubmit={() => handleSubmitDmt()}
           >
-            <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+            {maximumMixtureDensityData.missingSpecificMass.map((material) => (
               <InputEndAdornment
+                key={material._id}
                 adornment={'g/cm³'}
-                label={materials[0]}
-                value={maximumMixtureDensityData?.missingSpecificMass?.material_1}
+                label={material.name}
+                value={material.value}
                 onChange={(e) => {
                   const prevState = maximumMixtureDensityData;
                   const prevDmt = maximumMixtureDensityData.missingSpecificMass;
-                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_1: e.target.value } };
-                  setData({ step: 4, value: newState });
+                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, [material.name]: e.target.value } };
+                  setData({ step: 7, value: newState });
                 }}
               />
-              <InputEndAdornment
-                adornment={'g/cm³'}
-                label={materials[1]}
-                value={maximumMixtureDensityData?.missingSpecificMass?.material_2}
-                onChange={(e) => {
-                  const prevState = maximumMixtureDensityData;
-                  const prevDmt = maximumMixtureDensityData.missingSpecificMass;
-                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
-                  setData({ step: 4, value: newState });
-                }}
-              />
-            </Box>
+            ))}
           </ModalBase>
 
           <ModalBase

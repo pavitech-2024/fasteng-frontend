@@ -35,8 +35,8 @@ const Marshall_Step6 = ({
     plusOne: true,
   });
 
-  const debouncedSetData = debounce((newData) => {
-    setData({ step: 5, value: newData });
+  const debouncedSetData = debounce((newData, tenor) => {
+    setData({ step: 5, value: {...data, [tenor]: newData} });
   }, 300);
 
   const generateColumns = (tenor: string): GridColDef[] => [
@@ -51,11 +51,12 @@ const Marshall_Step6 = ({
           <InputEndAdornment
             adornment={'cm'}
             value={data[tenor][index]?.diammeter}
+            type='number'
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value;
               const newState = [...data[tenor]];
-              newState[index] = { ...newState[index], diammeter: value };
-              debouncedSetData({ ...data, [tenor]: newState });
+              newState[index] = { ...newState[index], diammeter: Number(value) };
+              debouncedSetData(newState, tenor);
             }}
           />
         );
@@ -64,18 +65,20 @@ const Marshall_Step6 = ({
     {
       field: 'height',
       headerName: 'Altura (cm)',
+      width: 105,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[tenor]?.findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
             adornment={'cm'}
+            type='number'
             value={data[tenor][index]?.height}
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value;
               const newState = [...data[tenor]];
-              newState[index] = { ...newState[index], height: value };
-              setData({ step: 5, value: { ...data, [tenor]: newState } });
+              newState[index] = { ...newState[index], height: Number(value) };
+              debouncedSetData(newState, tenor);
             }}
           />
         );
@@ -90,13 +93,14 @@ const Marshall_Step6 = ({
         const index = data[tenor]?.findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'g'}
+            adornment={'cm'}
+            type='number'
             value={data[tenor][index]?.dryMass}
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value;
               const newState = [...data[tenor]];
-              newState[index] = { ...newState[index], dryMass: value };
-              setData({ step: 5, value: { ...data, [tenor]: newState } });
+              newState[index] = { ...newState[index], dryMass: Number(value) };
+              debouncedSetData(newState, tenor);
             }}
           />
         );
@@ -111,13 +115,14 @@ const Marshall_Step6 = ({
         const index = data[tenor].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'g'}
+            adornment={'cm'}
+            type='number'
             value={data[tenor][index]?.submergedMass}
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value;
               const newState = [...data[tenor]];
-              newState[index] = { ...newState[index], submergedMass: value };
-              setData({ step: 5, value: { ...data, [tenor]: newState } });
+              newState[index] = { ...newState[index], submergedMass: Number(value) };
+              debouncedSetData(newState, tenor);
             }}
           />
         );
@@ -132,13 +137,14 @@ const Marshall_Step6 = ({
         const index = data[tenor]?.findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'g'}
+            adornment={'cm'}
+            type='number'
             value={data[tenor][index]?.drySurfaceSaturatedMass}
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value;
               const newState = [...data[tenor]];
-              newState[index] = { ...newState[index], drySurfaceSaturatedMass: value };
-              setData({ step: 5, value: { ...data, [tenor]: newState } });
+              newState[index] = { ...newState[index], drySurfaceSaturatedMass: Number(value) };
+              debouncedSetData(newState, tenor);
             }}
           />
         );
@@ -152,13 +158,14 @@ const Marshall_Step6 = ({
         const index = data[tenor].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'N'}
+            adornment={'cm'}
+            type='number'
             value={data[tenor][index]?.stability}
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value;
               const newState = [...data[tenor]];
-              newState[index] = { ...newState[index], stability: value };
-              setData({ step: 5, value: { ...data, [tenor]: newState } });
+              newState[index] = { ...newState[index], stability: Number(value) };
+              debouncedSetData(newState, tenor);
             }}
           />
         );
@@ -172,13 +179,14 @@ const Marshall_Step6 = ({
         const index = data[tenor].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'mm'}
+            adornment={'cm'}
+            type='number'
             value={data[tenor][index]?.fluency}
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value;
               const newState = [...data[tenor]];
-              newState[index] = { ...newState[index], fluency: value };
-              setData({ step: 5, value: { ...data, [tenor]: newState } });
+              newState[index] = { ...newState[index], fluency: Number(value) };
+              debouncedSetData(newState, tenor);
             }}
           />
         );
@@ -193,12 +201,13 @@ const Marshall_Step6 = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
+            type='number'
             value={data[tenor][index]?.diametricalCompressionStrength}
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value;
               const newState = [...data[tenor]];
-              newState[index] = { ...newState[index], diametricalCompressionStrength: value };
-              setData({ step: 5, value: { ...data, [tenor]: newState } });
+              newState[index] = { ...newState[index], diametricalCompressionStrength: Number(value) };
+              debouncedSetData(newState, tenor);
             }}
           />
         );
@@ -370,6 +379,7 @@ const Marshall_Step6 = ({
       },
     },
   ];
+  
 
   const setVolumetricParams = () => {
     toast.promise(

@@ -333,10 +333,12 @@ const Marshall_Step5 = ({
         } else {
           try {
             const gmm = await marshall.calculateGmmData(materialSelectionData, data);
+            console.log("🚀 ~ gmm:", gmm)
 
             const prevData = data;
             const newData = {
               ...prevData,
+              listOfSpecificGravities: gmm.listOfSpecificGravities,
               maxSpecificGravity: {
                 results: gmm.maxSpecificGravity,
                 method: gmm.method,

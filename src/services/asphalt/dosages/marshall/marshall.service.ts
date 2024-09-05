@@ -639,6 +639,7 @@ class Marshall_SERVICE implements IEssayService {
     const { trial } = step4Data;
     let result;
 
+
     try {
       const response = await Api.post(`${this.info.backend_path}/set-step-7-optimum-binder`, {
         volumetricParametersData: volumetricParameters,
@@ -651,6 +652,7 @@ class Marshall_SERVICE implements IEssayService {
       result = {
         ...data,
       };
+      
 
       try {
         const { percentageInputs: percentsOfDosage } = step3Data;

@@ -84,32 +84,39 @@ const Marshall_Step7 = ({
   // Preparando os dados points para o componente GraficoPage7N
   const points = data?.optimumBinder?.pointsOfCurveDosage;
   points.unshift(['', '', '']);
+  console.log("🚀 ~ points:", points)
+
 
   const expectedParametersColumns: GridColDef[] = [
     {
       field: 'vv',
       headerName: 'Vv (%)',
       valueFormatter: ({ value }) => `${value}`,
+      width: 200,
     },
     {
       field: 'rbv',
       headerName: 'Rbv (%)',
       valueFormatter: ({ value }) => `${value}`,
+      width: 200,
     },
     {
       field: 'vam',
       headerName: 'Vam (%)',
       valueFormatter: ({ value }) => `${value}`,
+      width: 200,
     },
     {
       field: 'gmb',
       headerName: 'Gmb (g/cm³)',
       valueFormatter: ({ value }) => `${value}`,
+      width: 200,
     },
     {
       field: 'dmt',
       headerName: 'DMT (g/cm³)',
       valueFormatter: ({ value }) => `${value}`,
+      width: 200,
     },
   ];
 
@@ -139,52 +146,60 @@ const Marshall_Step7 = ({
     },
   ];
 
-  const material_1 = materialSelectionData?.aggregates[0].name;
-  const material_2 = materialSelectionData?.aggregates[1].name;
-  const binder = materialSelectionData?.binder;
+  const finalProportionCols = () => {
+    let cols: GridColDef[] = [];
 
-  const finalProportionCols: GridColDef[] = [
-    {
-      field: 'binder',
-      headerName: `${binder} (%)`,
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'material_1',
-      headerName: `${material_1} (%)`,
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'material_2',
-      headerName: `${material_2} (%)`,
-      valueFormatter: ({ value }) => `${value}`,
-    },
-  ];
+    materialSelectionData.aggregates.forEach((material) => {
+      let materialCol = {
+        field: `${material._id}`,
+        headerName: `${material.name} (%)`,
+        valueFormatter: ({ value }) => `${value}`,
+        width: 300
+      }
+      cols.push(materialCol)
+    })  
 
-  const finalProportionsRows = [
-    {
-      id: 1,
-      binder: data?.optimumBinder.optimumContent?.toFixed(2),
-      material_1: data?.optimumBinder.confirmedPercentsOfDosage[0]?.toFixed(2),
-      material_2: data?.optimumBinder.confirmedPercentsOfDosage[1]?.toFixed(2),
-    },
-  ];
+    return cols
+  } 
+
+  const finalProportionsRows = () => {
+    let obj = {id: 1}
+    let count = 0;
+    for (let i = 0; i < data.optimumBinder.confirmedPercentsOfDosage.length; i++) {
+      obj = {
+        ...obj,
+        [materialSelectionData.aggregates[i]._id]: data.optimumBinder.confirmedPercentsOfDosage[i].toFixed(2)
+      }
+
+      count = i
+    }
+
+    obj = {
+      ...obj,
+      [materialSelectionData.binder]: data.optimumBinder.confirmedPercentsOfDosage[count].toFixed(2)
+    }
+
+    return [obj]
+  }
 
   const percentsCols: GridColDef[] = [
     {
       field: 'binder',
       headerName: `Porcentagem de ligante (%)`,
       valueFormatter: ({ value }) => `${value}`,
+      width: 300,
     },
     {
       field: 'col1',
       headerName: `${volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.asphaltContent} (%)`,
       valueFormatter: ({ value }) => `${value}`,
+      width: 300,
     },
     {
       field: 'col2',
       headerName: `${volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.asphaltContent} (%)`,
       valueFormatter: ({ value }) => `${value}`,
+      width: 300,
     },
   ];
 
@@ -294,6 +309,7 @@ const Marshall_Step7 = ({
       ),
     },
   ];
+  
 
   nextDisabled && setNextDisabled(false);
 
@@ -312,13 +328,31 @@ const Marshall_Step7 = ({
           {points?.length > 0 && <GraficoPage7N data={points} />}
 
           {!Object.values(data?.expectedParameters?.expectedParameters).some((item) => item === null) && (
-            <DataGrid columns={expectedParametersColumns} rows={expectedParametersRows} hideFooter disableColumnMenu />
+            <DataGrid
+              columns={expectedParametersColumns}
+              rows={expectedParametersRows}
+              hideFooter
+              disableColumnMenu
+              sx={{ width: 'fit-content', marginX: 'auto' }}
+            />
           )}
 
-          <DataGrid columns={percentsCols} rows={percentRows} hideFooter disableColumnMenu />
+          <DataGrid
+            columns={percentsCols}
+            rows={percentRows}
+            hideFooter
+            disableColumnMenu
+            sx={{ width: 'fit-content', marginX: 'auto' }}
+          />
 
           {data?.optimumBinder.optimumContent !== null && (
-            <DataGrid columns={finalProportionCols} rows={finalProportionsRows} hideFooter disableColumnMenu />
+            <DataGrid
+              columns={finalProportionCols()}
+              rows={finalProportionsRows()}
+              hideFooter
+              disableColumnMenu
+              sx={{ width: 'fit-content', marginX: 'auto' }}
+            />
           )}
 
           <Box
