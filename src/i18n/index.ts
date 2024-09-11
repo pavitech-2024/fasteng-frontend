@@ -160,6 +160,9 @@ import coarseAggregateENG from './translations/concrete/essays/coarseAggregate/e
 // rc 
 import rcPTBR from './translations/concrete/essays/rc/ptbr.json';
 import rcENG from './translations/concrete/essays/rc/en.json';
+// rt 
+import rtPTBR from './translations/concrete/essays/rt/ptbr.json';
+import rtENG from './translations/concrete/essays/rt/en.json';
 // dosages
 // abcp
 import concreteABCPPTBR from './translations/concrete/dosages/abcp/ptbr.json';
@@ -235,6 +238,7 @@ i18n.use(initReactI18next).init({
         ...concreteGranulometryPTBR,
         ...coarseAggregatePTBR,
         ...rcPTBR,
+        ...rtPTBR,
         ...concreteABCPPTBR,
         ...concreteABCPPTBR,
         /**@common */
@@ -298,6 +302,7 @@ i18n.use(initReactI18next).init({
         ...concreteGranulometryENG,
         ...coarseAggregateENG,
         ...rcENG,
+        ...rtENG,
         ...concreteABCPENG,
         ...concreteABCPENG,
         /**@common */
