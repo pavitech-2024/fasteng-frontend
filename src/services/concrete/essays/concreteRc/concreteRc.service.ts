@@ -7,7 +7,7 @@ import { t } from "i18next";
 
 class CONCRETE_RC_SERVICE implements IEssayService {
     info = {
-      key: 'ConcreteRc',
+      key: 'concreteRc',
       icon: CoarseAggregateIcon,
       title: t('concrete.essays.concreteRc'),
       path: '/concrete/essays/concreteRc',
