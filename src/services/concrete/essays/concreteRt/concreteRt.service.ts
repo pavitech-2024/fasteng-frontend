@@ -7,11 +7,11 @@ import { t } from "i18next";
 
 class CONCRETE_RT_SERVICE implements IEssayService {
     info = {
-      key: 'ConcreteRt-concrete',
+      key: 'concreteRt-concrete',
       icon: CoarseAggregateIcon,
-      title: t('concrete.essays.ConcreteRt'),
-      path: '/concrete/essays/ConcreteRt',
-      backend_path: 'concrete/essays/ConcreteRt',
+      title: t('concrete.essays.concreteRt'),
+      path: '/concrete/essays/concreteRt',
+      backend_path: 'concrete/essays/concreteRt',
       steps: 3,
       standard: {
         name: 'NBR 7217/1984',
@@ -19,7 +19,7 @@ class CONCRETE_RT_SERVICE implements IEssayService {
       },
       stepperData: [
         { step: 0, description: t('general data'), path: 'general-data' },
-        { step: 1, description: t('ConcreteRt-concrete'), path: 'essay-data' },
+        { step: 1, description: t('concreteRt-concrete'), path: 'essay-data' },
         { step: 2, description: t('results'), path: 'results' },
       ],
     };

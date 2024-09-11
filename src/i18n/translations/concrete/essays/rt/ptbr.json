@@ -18,7 +18,7 @@
     "concrete.operator": "Operador",
     "concrete.calculist": "Calculista",
     "concrete.materials.comments": "Informações do Material",
-    "concrete.essays.concretert-concrete": "Resistência a Tração",
-    "concrete.essays.concreteRc": "Resistência a Tração"
+    "concrete.essays.concreteRt-concrete": "Resistência a Tração",
+    "concrete.essays.concreteRt": "Resistência a Tração"
   }
   

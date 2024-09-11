@@ -13,6 +13,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ title, subTitle, link, icon, image, children }: HeaderProps) => {
+  console.log("🚀 ~ Header ~ title:", title)
   const { pathname } = useRouter();
   const isSuperpavePage = pathname.includes('superpave');
 
