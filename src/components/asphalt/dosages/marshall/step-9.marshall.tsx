@@ -13,32 +13,62 @@ const Marshall_Step9 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { ma
   const material_1 = materialSelectionData?.aggregates[0].name;
   const material_2 = materialSelectionData?.aggregates[1].name;
 
-  const optimumContentCols: GridColDef[] = [
-    {
-      field: 'optimumBinder',
-      headerName: 'Teor ótimo de ligante asfáltico',
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'material_1',
-      headerName: `${material_1}`,
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'material_2',
-      headerName: `${material_2}`,
-      valueFormatter: ({ value }) => `${value}`,
-    },
-  ];
+  // const optimumContentCols: GridColDef[] = [
+  //   {
+  //     field: 'optimumBinder',
+  //     width: 250,
+  //     headerName: 'Teor ótimo de ligante asfáltico',
+  //     valueFormatter: ({ value }) => `${value}`,
+  //   },
+  //   {
+  //     field: 'material_1',
+  //     width: 250,
+  //     headerName: `${material_1}`,
+  //     valueFormatter: ({ value }) => `${value}`,
+  //   },
+  //   {
+  //     field: 'material_2',
+  //     width: 250,
+  //     headerName: `${material_2}`,
+  //     valueFormatter: ({ value }) => `${value}`,
+  //   },
+  // ];
 
-  const optimumContentRows = [
-    {
-      id: 0,
-      optimumBinder: optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2),
-      material_1: optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage[0].toFixed(2),
-      material_2: optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage[1].toFixed(2),
-    },
-  ];
+  const getOptimunContentCols = () => {
+    const newCols: GridColDef[] = [];
+    materialSelectionData.aggregates.forEach((material) => {
+      const col: GridColDef = {
+        field: `${material._id}`,
+        width: 250,
+        headerName: `${material.name}`,
+        valueFormatter: ({ value }) => `${value}`
+      }
+      newCols.push(col)
+    })
+    newCols.push({
+      field: `${materialSelectionData.binder}`,
+      width: 250,
+      headerName: `${materialSelectionData.binder}`,
+      valueFormatter: ({ value }) => `${value}`
+    })
+
+    return newCols
+  } 
+
+  const optimumContentCols: GridColDef[] = getOptimunContentCols(); 
+  const optimumContentRows = [];
+  
+
+
+
+  // const optimumContentRows = [
+  //   {
+  //     id: 0,
+  //     optimumBinder: optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2),
+  //     material_1: optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage[0].toFixed(2),
+  //     material_2: optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage[1].toFixed(2),
+  //   },
+  // ];
 
   const optimumContentGroup: GridColumnGroupingModel = [
     {
@@ -51,20 +81,25 @@ const Marshall_Step9 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { ma
   const quantitativeCols: GridColDef[] = [
     {
       field: 'binder',
+      width: 250,
       headerName: 'Teor ótimo de ligante asfáltico',
       valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'material_1',
+      width: 250,
       headerName: `${material_1} (m³)`,
       valueFormatter: ({ value }) => `${value}`,
     },
     {
       field: 'material_2',
+      width: 250,
       headerName: `${material_2} (m³)`,
       valueFormatter: ({ value }) => `${value}`,
     },
   ];
+
+
 
   const quantitativeRows = [
     {
@@ -197,6 +232,7 @@ const Marshall_Step9 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { ma
           disableColumnMenu
           disableColumnSelector
           hideFooter
+          sx={{ width: 'fit-content', marginX: 'auto' }}
         />
 
         <DataGrid
@@ -209,6 +245,7 @@ const Marshall_Step9 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { ma
           disableColumnMenu
           disableColumnSelector
           hideFooter
+          sx={{ width: 'fit-content', marginX: 'auto' }}
         />
 
         <FlexColumnBorder>

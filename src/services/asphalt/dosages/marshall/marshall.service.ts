@@ -135,11 +135,11 @@ class Marshall_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/get-specific-mass-indexes`, aggregates);
 
       const { success, error } = response.data;
-      const { indexesOfMissesSpecificGravity } = response.data.data;
+      const { missesSpecificGravity } = response.data.data;
 
       if (success === false) throw error.name;
 
-      return indexesOfMissesSpecificGravity;
+      return missesSpecificGravity;
     } catch (error) {
       throw error;
     }
@@ -425,22 +425,19 @@ class Marshall_SERVICE implements IEssayService {
     step5Data: MarshallData['maximumMixtureDensityData']
   ): Promise<any> => {
     const { aggregates } = step2Data;
-    const { indexesOfMissesSpecificGravity, missingSpecificMass } = step5Data;
+    const { missingSpecificMass } = step5Data;
     const { newPercentOfDosage, trial } = step4Data;
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-dmt-data`, {
         aggregates,
         percentsOfDosage: newPercentOfDosage,
         trial,
-        indexesOfMissesSpecificGravity,
         missingSpecificGravity: missingSpecificMass,
       });
 
       const { data, success, error } = response.data;
 
       if (success === false) throw error.name;
-
-      const { listOfSpecificGravities, maxSpecificGravity } = data;
 
       return data;
     } catch (error) {
@@ -638,7 +635,6 @@ class Marshall_SERVICE implements IEssayService {
     const { volumetricParameters } = step6Data;
     const { trial } = step4Data;
     let result;
-
 
     try {
       const response = await Api.post(`${this.info.backend_path}/set-step-7-optimum-binder`, {

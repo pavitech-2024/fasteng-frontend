@@ -27,6 +27,8 @@ const Marshall_Step7 = ({
     setData,
   } = useMarshallStore();
 
+  
+
   useEffect(() => {
     toast.promise(
       async () => {
@@ -85,7 +87,6 @@ const Marshall_Step7 = ({
   const points = data?.optimumBinder?.pointsOfCurveDosage;
   points.unshift(['', '', '']);
   console.log("🚀 ~ points:", points)
-
 
   const expectedParametersColumns: GridColDef[] = [
     {

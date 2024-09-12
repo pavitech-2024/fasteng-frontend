@@ -32,6 +32,7 @@ const Marshall_Step8 = ({
   const materials = materialSelectionData.aggregates.map((item) => item.name);
   const [methodGmm, setMethodGmm] = useState(false);
   const [methodDmt, setMethodDmt] = useState(false);
+  const [method, setMethod] = useState('');
   const optimumBinderRows = data?.optimumBinder;
 
   useEffect(() => {
@@ -70,6 +71,7 @@ const Marshall_Step8 = ({
     {
       field: 'diammeter',
       headerName: 'Diâmetro (cm)',
+      width: 125,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data?.optimumBinder.findIndex((r) => r.id === id);
@@ -77,6 +79,7 @@ const Marshall_Step8 = ({
           <InputEndAdornment
             adornment={'cm'}
             value={data?.optimumBinder[index]?.diammeter}
+            type='number'
             onChange={(e) => {
               const value = Number(e.target.value);
               const newState = [...data.optimumBinder];
@@ -90,6 +93,7 @@ const Marshall_Step8 = ({
     {
       field: 'height',
       headerName: 'Altura (cm)',
+      width: 125,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data?.optimumBinder.findIndex((r) => r.id === id);
@@ -97,6 +101,7 @@ const Marshall_Step8 = ({
           <InputEndAdornment
             adornment={'cm'}
             value={data?.optimumBinder[index]?.height}
+            type='number'
             onChange={(e) => {
               const value = Number(e.target.value);
               const newState = [...data.optimumBinder];
@@ -110,6 +115,7 @@ const Marshall_Step8 = ({
     {
       field: 'dryMass',
       headerName: 'Massa seca (g)',
+      width: 125,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data?.optimumBinder.findIndex((r) => r.id === id);
@@ -117,6 +123,7 @@ const Marshall_Step8 = ({
           <InputEndAdornment
             adornment={'g'}
             value={data?.optimumBinder[index]?.dryMass}
+            type='number'
             onChange={(e) => {
               const value = Number(e.target.value);
               const newState = [...data.optimumBinder];
@@ -130,6 +137,7 @@ const Marshall_Step8 = ({
     {
       field: 'submergedMass',
       headerName: 'Massa submersa (g)',
+      width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data.optimumBinder.findIndex((r) => r.id === id);
@@ -137,6 +145,7 @@ const Marshall_Step8 = ({
           <InputEndAdornment
             adornment={'g'}
             value={data?.optimumBinder[index]?.submergedMass}
+            type='number'
             onChange={(e) => {
               const value = Number(e.target.value);
               const newState = [...data.optimumBinder];
@@ -150,6 +159,7 @@ const Marshall_Step8 = ({
     {
       field: 'drySurfaceSaturatedMass',
       headerName: 'Massa saturada com superfície seca (g)',
+      width: 175,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data?.optimumBinder.findIndex((r) => r.id === id);
@@ -157,6 +167,7 @@ const Marshall_Step8 = ({
           <InputEndAdornment
             adornment={'g'}
             value={data?.optimumBinder[index]?.drySurfaceSaturatedMass}
+            type='number'
             onChange={(e) => {
               const value = Number(e.target.value);
               const newState = [...data.optimumBinder];
@@ -170,6 +181,7 @@ const Marshall_Step8 = ({
     {
       field: 'stability',
       headerName: 'Estabilidade (N)',
+      width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data.optimumBinder.findIndex((r) => r.id === id);
@@ -177,6 +189,7 @@ const Marshall_Step8 = ({
           <InputEndAdornment
             adornment={'N'}
             value={data?.optimumBinder[index]?.stability}
+            type='number'
             onChange={(e) => {
               const value = Number(e.target.value);
               const newState = [...data.optimumBinder];
@@ -190,6 +203,7 @@ const Marshall_Step8 = ({
     {
       field: 'fluency',
       headerName: 'Fluência (mm)',
+      width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data.optimumBinder.findIndex((r) => r.id === id);
@@ -197,6 +211,7 @@ const Marshall_Step8 = ({
           <InputEndAdornment
             adornment={'mm'}
             value={data?.optimumBinder[index]?.fluency}
+            type='number'
             onChange={(e) => {
               const value = Number(e.target.value);
               const newState = [...data.optimumBinder];
@@ -210,6 +225,7 @@ const Marshall_Step8 = ({
     {
       field: 'diametricalCompressionStrength',
       headerName: 'Resistência à tração por compressão diametral (MPa)',
+      width: 210,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data?.optimumBinder.findIndex((r) => r.id === id);
@@ -217,6 +233,7 @@ const Marshall_Step8 = ({
           <InputEndAdornment
             adornment={'cm'}
             value={data?.optimumBinder[index]?.diametricalCompressionStrength}
+            type='number'
             onChange={(e) => {
               const value = Number(e.target.value);
               const newState = [...data.optimumBinder];
@@ -328,10 +345,9 @@ const Marshall_Step8 = ({
             binderTrialData,
             maximumMixtureDensityData
           );
-          const prevData = data;
 
           const newData = {
-            ...prevData,
+            ...data,
             maxSpecificGravity: {
               result: dmt.maxSpecificGravity,
               method: dmt.method,
@@ -475,14 +491,32 @@ const Marshall_Step8 = ({
             variant="standard"
             label={'Selecione o método de cálculo da densidade da mistura'}
             options={calcMethodOptions}
+            defaultValue={{
+              label:
+                method === 'DMT'
+                  ? 'DMT - Densidade máxima teórica'
+                  : method === 'GMM'
+                  ? 'GMM - Densidade máxima medida'
+                  : '',
+              value:
+                method === 'DMT'
+                  ? 'DMT - Densidade máxima teórica'
+                  : method === 'GMM'
+                  ? 'GMM - Densidade máxima medida'
+                  : '',
+            }}
             callback={(selectedOption) => {
               if (
-                selectedOption === 'DMT - Densidade máxima teórica' &&
-                maximumMixtureDensityData?.maxSpecificGravity?.method !== 'DMT'
+                selectedOption === 'DMT - Densidade máxima teórica'
+                // && maximumMixtureDensityData?.maxSpecificGravity?.method !== 'DMT'
               ) {
+                setMethod('DMT');
                 setDMTModalISOpen(true);
-              } else {
+              } else if (selectedOption === 'GMM - Densidade máxima medida') {
+                setMethod('GMM');
                 setMethodGmm(true);
+              } else {
+                setMethod('');
               }
             }}
             size="medium"
@@ -534,20 +568,25 @@ const Marshall_Step8 = ({
             size={'large'}
             onSubmit={() => handleSubmitDmt()}
           >
-            {maximumMixtureDensityData.missingSpecificMass.map((material) => (
-              <InputEndAdornment
-                key={material._id}
-                adornment={'g/cm³'}
-                label={material.name}
-                value={material.value}
-                onChange={(e) => {
-                  const prevState = maximumMixtureDensityData;
-                  const prevDmt = maximumMixtureDensityData.missingSpecificMass;
-                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, [material.name]: e.target.value } };
-                  setData({ step: 7, value: newState });
-                }}
-              />
-            ))}
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginY: '2rem' }}>
+              {maximumMixtureDensityData.missingSpecificMass && maximumMixtureDensityData.missingSpecificMass.map((material) => (
+                <InputEndAdornment
+                  key={material._id}
+                  adornment={'g/cm³'}
+                  label={material.name}
+                  value={material.value}
+                  onChange={(e) => {
+                    const prevState = maximumMixtureDensityData;
+                    const prevDmt = maximumMixtureDensityData.missingSpecificMass;
+                    const newState = {
+                      ...prevState,
+                      missingSpecificMass: { ...prevDmt, [material.name]: e.target.value },
+                    };
+                    setData({ step: 7, value: newState });
+                  }}
+                />
+              ))}
+            </Box>
           </ModalBase>
 
           <ModalBase

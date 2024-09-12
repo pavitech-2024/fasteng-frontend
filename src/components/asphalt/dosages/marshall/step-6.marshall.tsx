@@ -65,7 +65,7 @@ const Marshall_Step6 = ({
     {
       field: 'height',
       headerName: 'Altura (cm)',
-      width: 105,
+      width: 115,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[tenor]?.findIndex((r) => r.id === id);
@@ -153,6 +153,7 @@ const Marshall_Step6 = ({
     {
       field: 'stability',
       headerName: 'Estabilidade (N)',
+      width: 125,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[tenor].findIndex((r) => r.id === id);
@@ -174,6 +175,7 @@ const Marshall_Step6 = ({
     {
       field: 'fluency',
       headerName: 'Fluência (mm)',
+      width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[tenor].findIndex((r) => r.id === id);
@@ -195,6 +197,7 @@ const Marshall_Step6 = ({
     {
       field: 'diametricalCompressionStrength',
       headerName: 'Resistência à tração por compressão diametral (MPa)',
+      width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[tenor]?.findIndex((r) => r.id === id);

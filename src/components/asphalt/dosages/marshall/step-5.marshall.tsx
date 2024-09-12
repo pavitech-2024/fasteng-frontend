@@ -46,19 +46,18 @@ const Marshall_Step5 = ({
     toast.promise(
       async () => {
         try {
-          const indexes = await marshall.getIndexesOfMissesSpecificGravity(materialSelectionData);
+          const response = await marshall.getIndexesOfMissesSpecificGravity(materialSelectionData);
 
           const prevData = data;
 
-          const materials = materialSelectionData.aggregates.map((material) => ({
-            ...material,
-            value: null,
-          }));
+          // const materials = materialSelectionData.aggregates.map((material) => ({
+          //   ...material,
+          //   value: null,
+          // }));
 
           const newData = {
             ...prevData,
-            indexesOfMissesSpecificGravity: indexes,
-            missingSpecificMass: materials,
+            missingSpecificMass: response,
           };
 
           setData({ step: 4, value: newData });
@@ -574,15 +573,18 @@ const Marshall_Step5 = ({
   }, [data.riceTest]);
 
   useEffect(() => {
+    setNextDisabled(true);
     const hasNullValue = data.dmt.some((e) => Object.values(e).includes(null));
 
-    if (selectedMethod === 'DMT' && !hasNullValue) {
+    console.log("🚀 ~ useEffect ~ selectedMethod === 'DMT' && !hasNullValue && data.temperatureOfWater !== null:", selectedMethod)
+
+    if (selectedMethod === 'DMT' && !hasNullValue && data.temperatureOfWater !== null) {
       setNextDisabled(false);
     }
-    if (selectedMethod === 'GMM' && data?.gmm?.every((e) => e.value !== null)) {
+    if (selectedMethod === 'GMM' && data?.gmm?.every((e) => e.value !== null) && data.temperatureOfWater !== null) {
       setNextDisabled(false);
     }
-  }, [selectedMethod]);
+  }, [selectedMethod, data.temperatureOfWater]);
 
   // nextDisabled && setNextDisabled(false);
 

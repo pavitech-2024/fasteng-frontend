@@ -15,7 +15,7 @@ interface MarhsallGeneralData {
 
 interface MarshallMaterialSelectionData {
   aggregates: { _id: string; name: string }[];
-  binder: string;
+  binder: { _id: string; name: string };
 }
 
 interface MarshallGranulometryCompositionData {
@@ -74,7 +74,6 @@ interface MarshallMaximumMixtureDensityData {
     insert: boolean;
     value: number;
   }[];
-  indexesOfMissesSpecificGravity: number[];
   temperatureOfWater: number;
   missingSpecificMass: {
     name: string;
@@ -346,7 +345,6 @@ const initialState = {
       },
     ],
     missingSpecificMass: [],
-    indexesOfMissesSpecificGravity: [],
     temperatureOfWater: null,
     maxSpecificGravity: {
       result: {
