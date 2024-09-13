@@ -15,7 +15,7 @@ interface MarhsallGeneralData {
 
 interface MarshallMaterialSelectionData {
   aggregates: { _id: string; name: string }[];
-  binder: { _id: string; name: string };
+  binder: string;
 }
 
 interface MarshallGranulometryCompositionData {

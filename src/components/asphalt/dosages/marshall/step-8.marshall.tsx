@@ -71,7 +71,6 @@ const Marshall_Step8 = ({
     {
       field: 'diammeter',
       headerName: 'Diâmetro (cm)',
-      width: 125,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data?.optimumBinder.findIndex((r) => r.id === id);
@@ -93,7 +92,6 @@ const Marshall_Step8 = ({
     {
       field: 'height',
       headerName: 'Altura (cm)',
-      width: 125,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data?.optimumBinder.findIndex((r) => r.id === id);
@@ -115,7 +113,6 @@ const Marshall_Step8 = ({
     {
       field: 'dryMass',
       headerName: 'Massa seca (g)',
-      width: 125,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data?.optimumBinder.findIndex((r) => r.id === id);
@@ -137,7 +134,6 @@ const Marshall_Step8 = ({
     {
       field: 'submergedMass',
       headerName: 'Massa submersa (g)',
-      width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data.optimumBinder.findIndex((r) => r.id === id);
@@ -159,7 +155,6 @@ const Marshall_Step8 = ({
     {
       field: 'drySurfaceSaturatedMass',
       headerName: 'Massa saturada com superfície seca (g)',
-      width: 175,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data?.optimumBinder.findIndex((r) => r.id === id);
@@ -181,7 +176,6 @@ const Marshall_Step8 = ({
     {
       field: 'stability',
       headerName: 'Estabilidade (N)',
-      width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data.optimumBinder.findIndex((r) => r.id === id);
@@ -203,7 +197,6 @@ const Marshall_Step8 = ({
     {
       field: 'fluency',
       headerName: 'Fluência (mm)',
-      width: 150,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data.optimumBinder.findIndex((r) => r.id === id);
@@ -225,7 +218,6 @@ const Marshall_Step8 = ({
     {
       field: 'diametricalCompressionStrength',
       headerName: 'Resistência à tração por compressão diametral (MPa)',
-      width: 210,
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data?.optimumBinder.findIndex((r) => r.id === id);
@@ -483,7 +475,7 @@ const Marshall_Step8 = ({
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '10px',
+            gap: '3rem',
           }}
         >
           <DropDown
@@ -547,7 +539,11 @@ const Marshall_Step8 = ({
 
           <DataGrid
             key={'optimumBinder'}
-            columns={generateColumns}
+            columns={generateColumns.map((col) => ({
+              ...col,
+              width: 150,
+              flex: 1
+            }))}
             rows={optimumBinderRows}
             experimentalFeatures={{ columnGrouping: true }}
             columnGroupingModel={optimumBinderColumnGroup}
@@ -557,7 +553,7 @@ const Marshall_Step8 = ({
             slots={{ footer: () => ExpansionToolbar() }}
           />
 
-          <Button onClick={handleConfirm}>Confirmar</Button>
+          <Button onClick={handleConfirm} variant='outlined'>Confirmar</Button>
 
           <ModalBase
             title={'Insira a massa específica real dos materiais abaixo'}
@@ -601,7 +597,11 @@ const Marshall_Step8 = ({
             }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
-              <DataGrid columns={riceTestColumns} rows={riceTestRows} hideFooter />
+              <DataGrid 
+                columns={riceTestColumns} 
+                rows={riceTestRows} 
+                hideFooter 
+              />
             </Box>
           </ModalBase>
         </Box>

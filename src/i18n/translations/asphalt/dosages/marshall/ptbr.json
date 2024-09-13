@@ -5,6 +5,7 @@
   "marshall.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica da mistura.",
   "marshall.step-4-description": "Insira o teor inicial de ligante.",
   "marshall.step-5-description": "Insira os dados de densidade máxima real ou teórica da mistura.",
+  "marshall.step-9-description": "Esses são os resultados da sua dosagem Marshall. Lembre-se de salvar o projeto para garantir o acesso a ele no futuro.",
 
   "marshall.dosages.marshall.general-data": "Dados Gerais",
   "asphalt.dosages.marshall.material_selection": "Seleção de Materiais",
@@ -41,5 +42,24 @@
 
   "asphalt.dosages.marshall.bearing-layer": "Camada de Rolamento",
   "asphalt.dosages.marshall.bonding-layer": "Camada de Ligação",
-  "asphalt.dosages.inputs-sum-invalid": "A soma dos valores das porcentagens dos materiais deve ser igual a 100."
+  "asphalt.dosages.inputs-sum-invalid": "A soma dos valores das porcentagens dos materiais deve ser igual a 100.",
+
+  "asphalt.dosages.indirect-tensile-strength": "Resistência à tração por compressão diametral",
+  "asphalt.dosages.fluency": "Fluência",
+  "asphalt.dosages.marshall-stability": "Estabilidade Marshall",
+  "asphalt.dosages.rbv": "Relação betume-vazios",
+  "asphalt.dosages.vam": "Vazios do agregado mineral (VAM)",
+  "asphalt.dosages.vv": "Volume de vazios (Vv)",
+  "asphalt.dosages.gmb": "Massa específica aparente (Gmb)",
+  "asphalt.dosages.dmt": "Densidade máximo teórica (DMT)",
+  "asphalt.dosages.optimum-binder": "Teor ótimo de ligante asfáltico",
+  "asphalt.dosages.binder-volumetric-mechanic-params": "Parametros volumétricos e mecanicos da mistura no teor ótimo de ligante asfáltico",
+  "asphalt.dosages.mineral-aggregate-voids": "Vazios do agregado mineral (%)",
+  "asphalt.dosages.mixture-voids": "Vazios na mistura",
+  "asphalt.dosages.stability": "Estabilidade",
+  "asphalt.dosages.marshall.unity": "Unidade",
+  "asphalt.dosages.marshall.parameter": "Parâmetro",
+  "asphalt.dosages.marshall.asphalt-mass-quantitative": "Quantitativo para 1 metro cúbico de massa asfáltica",
+  "asphalt.dosages.marshall.asphaltic-binder": "Ligante asfáltico",
+  "asphalt.dosages.marshall.materials-final-proportions": "Proporção final dos materiais"
 }
