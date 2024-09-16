@@ -74,8 +74,6 @@ const Marshall_Step3 = ({
       aggregates_percentages['percentage_'.concat(_id)] = null;
     });
 
-    // const projectCols =
-
     table_data?.push({ ...aggregates_percentages });
 
     setData({ step: 2, key: 'percentageInputs', value: table_data });
@@ -307,28 +305,30 @@ const Marshall_Step3 = ({
 
     newCols.push({
       field: 'projections',
-      headerName: 'Projeções',
+      headerName: t('asphalt.dosages.marshall.projections'),
       valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}` : ''),
     });
 
     newCols.push(
       {
         field: 'band1',
-        headerName: 'teste',
+        headerName: '',
         valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
       },
       {
         field: 'band2',
-        headerName: 'teste2',
+        headerName: '',
         valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
       }
     );
 
     newColsGrouping.push({
       groupId: 'Specification',
+      headerName: t('asphalt.dosages.marshall.specification'),
+      headerAlign: 'center',
       children: [
         {
-          groupId: `Banda ${generalData.dnitBand}`,
+          groupId: t('asphalt.dosages.marshall.band') + ` ${generalData.dnitBand}`,
           headerAlign: 'center',
           children: [{ field: 'band1' }, { field: 'band2' }],
         },

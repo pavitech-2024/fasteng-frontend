@@ -27,6 +27,8 @@
   "asphalt.dosages.marshall.sieve": "Sieve",
   "asphalt.dosages.marshall.project": "Project",
   "asphalt.dosages.marshall.specification": "Specification",
+  "asphalt.dosages.marshall.band": "Band",
+  "asphalt.dosages.marshall.projections": "Projections",
   "asphalt.dosages.marshall.sieve_mm": "Sieve (mm)",
   "asphalt.dosages.marshall.dnit-track": "DNIT Track",
   "asphalt.dosages.marshall.initial-binder": "Initial trial binder",
