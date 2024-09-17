@@ -198,7 +198,6 @@ class Marshall_SERVICE implements IEssayService {
     if (!isConsult) {
       try {
         const { dnitBand } = generalData;
-        console.log('🚀 ~ Marshall_SERVICE ~ getStep3Data= ~ dnitBand:', dnitBand);
 
         const { aggregates } = step2Data;
 

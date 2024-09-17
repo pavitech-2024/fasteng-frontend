@@ -373,7 +373,6 @@ const Superpave_Step5 = ({
   };
 
   const readExcel = (file, tableName, index) => {
-    console.log('🚀 ~ readExcel ~ tableName:', tableName);
     const promise = new Promise((resolve, reject) => {
       file = file[0];
 
@@ -394,13 +393,8 @@ const Superpave_Step5 = ({
       };
     });
 
-    console.log('🚀 ~ readExcel ~ file:', file.name);
-
     const prevData = [...data[tableName]];
     prevData[index].document = file.name;
-    console.log('🚀 ~ readExcel ~ index:', index);
-
-    console.log('🚀 ~ readExcel ~ prevData:', prevData);
 
     setData({ step: 4, value: { ...data, [tableName]: prevData } });
 

@@ -252,7 +252,6 @@ const Superpave_Step3 = ({
     // Deve ser exatamente 100;
     if (curve === 'lower') {
       valueCount = Object.values(data.percentageInputs[0]).reduce((acc, item) => acc + Number(item), 0);
-      console.log('🚀 ~ calcular ~ valueCount:', valueCount);
       if (valueCount === 100) {
         valueIsValid = true;
       }

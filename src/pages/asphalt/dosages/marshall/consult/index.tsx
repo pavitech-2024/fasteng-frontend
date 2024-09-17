@@ -127,7 +127,6 @@ const MarshallDosageConsult = () => {
       return dosage._id === id;
     });
     const step = dosage.generalData.step - 1;
-    console.log('🚀 ~ handleVisualizeDosage ~ step:', step);
     if (dosage) {
       setData({
         step: 10,

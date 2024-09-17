@@ -45,7 +45,6 @@ const Superpave_Step11 = ({
             secondCompressionPercentagesData,
             confirmationCompressionData
           );
-          console.log('🚀 ~ response:', response);
 
           const newData = { ...data, ...response };
 
@@ -180,7 +179,6 @@ const Superpave_Step11 = ({
     if (validateNumber(aux)) {
       const formato = { minimumFractionDigits: digits, maximumFractionDigits: digits };
       aux = Number(aux.toLocaleString('pt-BR', formato));
-      console.log('🚀 ~ numberRepresentation ~ aux:', aux);
     } else {
       aux = 0;
     }

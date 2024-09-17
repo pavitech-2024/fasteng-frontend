@@ -395,8 +395,9 @@ const Marshall_Step9 = ({
           rows={volumetricParamsRows}
           columns={volumetricParamsCols.map((col) => ({
             ...col,
-            width: 350,
             flex: 1,
+            headerAlign: 'center',
+            align: 'center',
           }))}
           density="comfortable"
           disableColumnMenu
@@ -408,8 +409,9 @@ const Marshall_Step9 = ({
           rows={mineralAggregateVoidsRows}
           columns={mineralAggregateVoidsCols.map((col) => ({
             ...col,
-            width: 350,
             flex: 1,
+            headerAlign: 'center',
+            align: 'center',
           }))}
           columnGroupingModel={mineralAggregateVoidsGroup}
           experimentalFeatures={{ columnGrouping: true }}

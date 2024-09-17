@@ -439,44 +439,46 @@ const Marshall_Step5 = ({
   };
 
   useEffect(() => {
-    const newRiceTestRows = [
-      {
-        id: 1,
-        teor: binderTrialData.percentsOfDosage[2][0],
-        massOfDrySample: data?.riceTest[0]?.massOfDrySample,
-        massOfContainerWaterSample: data?.riceTest[0]?.massOfContainerWaterSample,
-        massOfContainerWater: data?.riceTest[0]?.massOfContainerWater,
-      },
-      {
-        id: 2,
-        teor: binderTrialData.percentsOfDosage[2][1],
-        massOfDrySample: data?.riceTest[1]?.massOfDrySample,
-        massOfContainerWaterSample: data?.riceTest[1]?.massOfContainerWaterSample,
-        massOfContainerWater: data?.riceTest[1]?.massOfContainerWater,
-      },
-      {
-        id: 3,
-        teor: binderTrialData.percentsOfDosage[2][2],
-        massOfDrySample: data?.riceTest[2]?.massOfDrySample,
-        massOfContainerWaterSample: data?.riceTest[2]?.massOfContainerWaterSample,
-        massOfContainerWater: data?.riceTest[2]?.massOfContainerWater,
-      },
-      {
-        id: 4,
-        teor: binderTrialData.percentsOfDosage[2][3],
-        massOfDrySample: data?.riceTest[3]?.massOfDrySample,
-        massOfContainerWaterSample: data?.riceTest[3]?.massOfContainerWaterSample,
-        massOfContainerWater: data?.riceTest[3]?.massOfContainerWater,
-      },
-      {
-        id: 5,
-        teor: binderTrialData.percentsOfDosage[2][4],
-        massOfDrySample: data?.riceTest[4]?.massOfDrySample,
-        massOfContainerWaterSample: data?.riceTest[4]?.massOfContainerWaterSample,
-        massOfContainerWater: data?.riceTest[4]?.massOfContainerWater,
-      },
-    ];
-    setRiceTestTableRows(newRiceTestRows);
+    if (data.riceTest && data.riceTest?.length > 0) {
+      const newRiceTestRows = [
+        {
+          id: 1,
+          teor: binderTrialData.percentsOfDosage[2][0],
+          massOfDrySample: data?.riceTest[0]?.massOfDrySample,
+          massOfContainerWaterSample: data?.riceTest[0]?.massOfContainerWaterSample,
+          massOfContainerWater: data?.riceTest[0]?.massOfContainerWater,
+        },
+        {
+          id: 2,
+          teor: binderTrialData.percentsOfDosage[2][1],
+          massOfDrySample: data?.riceTest[1]?.massOfDrySample,
+          massOfContainerWaterSample: data?.riceTest[1]?.massOfContainerWaterSample,
+          massOfContainerWater: data?.riceTest[1]?.massOfContainerWater,
+        },
+        {
+          id: 3,
+          teor: binderTrialData.percentsOfDosage[2][2],
+          massOfDrySample: data?.riceTest[2]?.massOfDrySample,
+          massOfContainerWaterSample: data?.riceTest[2]?.massOfContainerWaterSample,
+          massOfContainerWater: data?.riceTest[2]?.massOfContainerWater,
+        },
+        {
+          id: 4,
+          teor: binderTrialData.percentsOfDosage[2][3],
+          massOfDrySample: data?.riceTest[3]?.massOfDrySample,
+          massOfContainerWaterSample: data?.riceTest[3]?.massOfContainerWaterSample,
+          massOfContainerWater: data?.riceTest[3]?.massOfContainerWater,
+        },
+        {
+          id: 5,
+          teor: binderTrialData.percentsOfDosage[2][4],
+          massOfDrySample: data?.riceTest[4]?.massOfDrySample,
+          massOfContainerWaterSample: data?.riceTest[4]?.massOfContainerWaterSample,
+          massOfContainerWater: data?.riceTest[4]?.massOfContainerWater,
+        },
+      ];
+      setRiceTestTableRows(newRiceTestRows);
+    }
   }, []);
 
   useEffect(() => {
@@ -561,7 +563,7 @@ const Marshall_Step5 = ({
 
   useEffect(() => {
     setNextDisabled(true);
-    const hasNullValue = data.dmt.some((e) => Object.values(e).includes(null));
+    const hasNullValue = data.dmt?.some((e) => Object.values(e).includes(null));
 
     if (selectedMethod === 'DMT' && !hasNullValue && data.temperatureOfWater !== null) {
       setNextDisabled(false);
@@ -688,7 +690,7 @@ const Marshall_Step5 = ({
             onSubmit={() => handleSubmitDmt()}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-around' }}>
-              {data.missingSpecificMass.length > 0 &&
+              {data.missingSpecificMass?.length > 0 &&
                 data.missingSpecificMass?.map((material, index) => (
                   <InputEndAdornment
                     key={`${index}`}
