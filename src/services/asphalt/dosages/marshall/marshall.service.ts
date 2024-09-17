@@ -648,7 +648,6 @@ class Marshall_SERVICE implements IEssayService {
       result = {
         ...data,
       };
-      
 
       try {
         const { percentageInputs: percentsOfDosage } = step3Data;

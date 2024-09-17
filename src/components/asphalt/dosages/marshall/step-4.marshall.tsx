@@ -217,7 +217,7 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
                   flex: 1,
                   width: 200,
                   headerAlign: 'center',
-                  align: 'center'
+                  align: 'center',
                 }))}
                 rows={rows}
                 hideFooter
@@ -233,7 +233,7 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
                     flex: 1,
                     width: 200,
                     headerAlign: 'center',
-                    align: 'center'
+                    align: 'center',
                   }))}
                   rows={machiningRows}
                   experimentalFeatures={{ columnGrouping: true }}
@@ -247,7 +247,7 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
                     flex: 1,
                     width: 200,
                     headerAlign: 'center',
-                    align: 'center'
+                    align: 'center',
                   }))}
                   rows={compressionRows}
                   experimentalFeatures={{ columnGrouping: true }}

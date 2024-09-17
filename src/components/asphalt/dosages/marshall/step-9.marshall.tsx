@@ -16,8 +16,18 @@ type RowsObj = {
   optimumBinder: number;
 };
 
-const Marshall_Step9 = ({ nextDisabled, setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
-  const { materialSelectionData, optimumBinderContentData, maximumMixtureDensityData, confirmationCompressionData: data, setData } = useMarshallStore();
+const Marshall_Step9 = ({
+  nextDisabled,
+  setNextDisabled,
+  marshall,
+}: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+  const {
+    materialSelectionData,
+    optimumBinderContentData,
+    maximumMixtureDensityData,
+    confirmationCompressionData: data,
+    setData,
+  } = useMarshallStore();
 
   useEffect(() => {
     toast.promise(
@@ -47,7 +57,6 @@ const Marshall_Step9 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
       }
     );
   }, []);
-  
 
   const getOptimunContentCols = () => {
     const newCols: GridColDef[] = [];
@@ -270,7 +279,6 @@ const Marshall_Step9 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
           gap: '3rem',
         }}
       >
-        
         <DataGrid
           key={'optimumContent'}
           columns={getOptimunContentCols()}
@@ -298,10 +306,7 @@ const Marshall_Step9 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
         />
 
         <FlexColumnBorder>
-          <ResultSubTitle
-            title={t('asphalt.dosages.binder-volumetric-mechanic-params')}
-            sx={{ margin: '.65rem' }}
-          />
+          <ResultSubTitle title={t('asphalt.dosages.binder-volumetric-mechanic-params')} sx={{ margin: '.65rem' }} />
         </FlexColumnBorder>
         <Box
           sx={{
@@ -391,7 +396,7 @@ const Marshall_Step9 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
           columns={volumetricParamsCols.map((col) => ({
             ...col,
             width: 350,
-            flex: 1
+            flex: 1,
           }))}
           density="comfortable"
           disableColumnMenu
@@ -404,7 +409,7 @@ const Marshall_Step9 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
           columns={mineralAggregateVoidsCols.map((col) => ({
             ...col,
             width: 350,
-            flex: 1
+            flex: 1,
           }))}
           columnGroupingModel={mineralAggregateVoidsGroup}
           experimentalFeatures={{ columnGrouping: true }}

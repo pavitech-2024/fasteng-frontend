@@ -27,8 +27,6 @@ const Marshall_Step7 = ({
     setData,
   } = useMarshallStore();
 
-  
-
   useEffect(() => {
     toast.promise(
       async () => {
@@ -154,33 +152,33 @@ const Marshall_Step7 = ({
         field: `${material._id}`,
         headerName: `${material.name} (%)`,
         valueFormatter: ({ value }) => `${value}`,
-        width: 300
-      }
-      cols.push(materialCol)
-    })  
+        width: 300,
+      };
+      cols.push(materialCol);
+    });
 
-    return cols
-  } 
+    return cols;
+  };
 
   const finalProportionsRows = () => {
-    let obj = {id: 1}
+    let obj = { id: 1 };
     let count = 0;
 
     for (let i = 0; i < data.optimumBinder.confirmedPercentsOfDosage.length; i++) {
       obj = {
         ...obj,
-        [materialSelectionData.aggregates[i]._id]: data.optimumBinder.confirmedPercentsOfDosage[i].toFixed(2)
-      }
-      count = i
+        [materialSelectionData.aggregates[i]._id]: data.optimumBinder.confirmedPercentsOfDosage[i].toFixed(2),
+      };
+      count = i;
     }
 
     obj = {
       ...obj,
-      [materialSelectionData.binder]: data.optimumBinder.confirmedPercentsOfDosage[count].toFixed(2)
-    }
+      [materialSelectionData.binder]: data.optimumBinder.confirmedPercentsOfDosage[count].toFixed(2),
+    };
 
-    return [obj]
-  }
+    return [obj];
+  };
 
   const percentsCols: GridColDef[] = [
     {
@@ -309,7 +307,6 @@ const Marshall_Step7 = ({
       ),
     },
   ];
-  
 
   nextDisabled && setNextDisabled(false);
 
@@ -334,7 +331,7 @@ const Marshall_Step7 = ({
                 flex: 1,
                 width: 200,
                 headerAlign: 'center',
-                align: 'center'
+                align: 'center',
               }))}
               rows={expectedParametersRows}
               hideFooter
@@ -349,7 +346,7 @@ const Marshall_Step7 = ({
               flex: 1,
               width: 200,
               headerAlign: 'center',
-              align: 'center'
+              align: 'center',
             }))}
             rows={percentRows}
             hideFooter
@@ -391,7 +388,11 @@ const Marshall_Step7 = ({
 
             <MiniGraphics data={data?.graphics?.rbv} type={'Rbv'} nameEixoY={t('asphalt.dosages.rbv') + '(%)'} />
 
-            <MiniGraphics data={data?.graphics?.stability} type={'Estabilidade'} nameEixoY={t('asphalt.dosages.stability') + '(N)'} />
+            <MiniGraphics
+              data={data?.graphics?.stability}
+              type={'Estabilidade'}
+              nameEixoY={t('asphalt.dosages.stability') + '(N)'}
+            />
           </Box>
         </Box>
       )}

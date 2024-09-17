@@ -248,9 +248,7 @@ const Marshall_Step5 = ({
         },
       ]);
 
-      const hasNull = data?.riceTest.some(obj => 
-        Object.values(obj).some(value => value === null)
-      );
+      const hasNull = data?.riceTest.some((obj) => Object.values(obj).some((value) => value === null));
 
       if (hasNull) {
         setGmmColumns([
@@ -477,15 +475,15 @@ const Marshall_Step5 = ({
         massOfContainerWaterSample: data?.riceTest[4]?.massOfContainerWaterSample,
         massOfContainerWater: data?.riceTest[4]?.massOfContainerWater,
       },
-    ]
+    ];
     setRiceTestTableRows(newRiceTestRows);
   }, []);
 
   useEffect(() => {
     if (selectedMethod === 'GMM') {
-      setData({ step: 4, value: {...data, riceTest: riceTestTableRows} })
+      setData({ step: 4, value: { ...data, riceTest: riceTestTableRows } });
     }
-  },[riceTestTableRows, selectedMethod])
+  }, [riceTestTableRows, selectedMethod]);
 
   useEffect(() => {
     setRiceTestTableColumns([
@@ -604,16 +602,18 @@ const Marshall_Step5 = ({
               }
             }}
             defaultValue={{
-              label: selectedMethod === 'DMT'
-                ? 'DMT - Densidade máxima teórica'
-                : selectedMethod === 'GMM'
-                ? 'GMM - Densidade máxima medida'
-                : '',
-              value: selectedMethod === 'GMM'
-                ? 'GMM - Densidade máxima medida'
-                : selectedMethod === 'DMT'
-                ? 'DMT - Densidade máxima teórica'
-                : '',
+              label:
+                selectedMethod === 'DMT'
+                  ? 'DMT - Densidade máxima teórica'
+                  : selectedMethod === 'GMM'
+                  ? 'GMM - Densidade máxima medida'
+                  : '',
+              value:
+                selectedMethod === 'GMM'
+                  ? 'GMM - Densidade máxima medida'
+                  : selectedMethod === 'DMT'
+                  ? 'DMT - Densidade máxima teórica'
+                  : '',
             }}
             size="medium"
             sx={{ width: '75%', marginX: 'auto' }}
@@ -651,7 +651,7 @@ const Marshall_Step5 = ({
                   flex: 1,
                   width: 200,
                   headerAlign: 'center',
-                  align: 'center'
+                  align: 'center',
                 }))}
                 rows={gmmRows}
                 hideFooter
@@ -671,7 +671,7 @@ const Marshall_Step5 = ({
                 flex: 1,
                 width: 200,
                 headerAlign: 'center',
-                align: 'center'
+                align: 'center',
               }))}
               rows={dmtRows}
               hideFooter
@@ -718,16 +718,16 @@ const Marshall_Step5 = ({
             }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
-              <DataGrid 
+              <DataGrid
                 columns={riceTestTableColumns.map((col) => ({
                   ...col,
                   flex: 1,
                   width: 200,
                   headerAlign: 'center',
-                  align: 'center'
-                }))} 
-                rows={riceTestTableRows} 
-                hideFooter 
+                  align: 'center',
+                }))}
+                rows={riceTestTableRows}
+                hideFooter
               />
 
               <DropDown
