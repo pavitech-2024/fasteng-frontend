@@ -26,7 +26,6 @@ const Superpave_Step9 = ({
 
   const { user } = useAuth();
   const [expectedVolumetricParamsRows, setExpectedVolumetricParamsRows] = useState([]);
-  console.log('🚀 ~ expectedVolumetricParamsRows:', expectedVolumetricParamsRows);
 
   useEffect(() => {
     toast.promise(

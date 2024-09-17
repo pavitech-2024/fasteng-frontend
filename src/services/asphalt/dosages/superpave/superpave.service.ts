@@ -408,8 +408,6 @@ class Superpave_SERVICE implements IEssayService {
         riceTest: riceTestData,
       });
 
-      console.log('🚀 ~ Superpave_SERVICE ~ response:', response);
-
       const { data, success, error } = response.data;
 
       if (success === false) throw error.name;
@@ -466,7 +464,6 @@ class Superpave_SERVICE implements IEssayService {
     try {
       const { nominalSize, chosenCurves, porcentagesPassantsN200, percentageInputs } = step3Data;
       const { turnNumber, binderSpecificMass, granulometryComposition: binderCompositions } = step4Data;
-      console.log('🚀 ~ Superpave_SERVICE ~ binderCompositions:', binderCompositions);
       const { riceTest, inferiorRows, intermediariaRows, superiorRows, maximumDensity } = step5Data;
       const { trafficVolume } = generalData;
 
@@ -628,7 +625,6 @@ class Superpave_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/calculate-step-7-rice-test`, maximumDensity);
 
       const { data, success, error } = response.data;
-      console.log('🚀 ~ Superpave_SERVICE ~ calculateRiceTest= ~ data:', data);
 
       if (success === false) throw error.name;
 
@@ -831,7 +827,6 @@ class Superpave_SERVICE implements IEssayService {
       try {
         const { table: samplesData, gmm } = step9Data;
         const { porcentagesPassantsN200, percentageInputs } = step2Data;
-        console.log('🚀 ~ Superpave_SERVICE ~ porcentagesPassantsN200:', porcentagesPassantsN200);
         const { optimumContent } = step8Data;
         const { binderSpecificMass, materials } = step3Data;
         const { selectedCurve, table3 } = step5Data;

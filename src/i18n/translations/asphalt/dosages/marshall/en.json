@@ -4,7 +4,8 @@
   "marshall.step-2-description": "Select the aggregates and asphalt binder that will be used in the dosage.",
   "marshall.step-3-description": "Enter the percentages of each aggregate in the granulometric composition of the mixture",
   "marshall.step-4-description": "Enter the binder trial content.",
-  "marshall.step-5-description": "Enter the actual or theoretical maximum density data for the mixture.",
+  "marshall.step-5-description": "Enter the actual or theoretical maximum density data for the mixture and the correction factor for water temperature.",
+  "marshall.step-9-description": "These are the results of your Marshall dosage. Remember to save the project to ensure access to it in the future.",
 
   "marshall.dosages.marshall.general-data": "General Data",
   "asphalt.dosages.marshall.material_selection": "Material Selection",
@@ -26,6 +27,8 @@
   "asphalt.dosages.marshall.sieve": "Sieve",
   "asphalt.dosages.marshall.project": "Project",
   "asphalt.dosages.marshall.specification": "Specification",
+  "asphalt.dosages.marshall.band": "Band",
+  "asphalt.dosages.marshall.projections": "Projections",
   "asphalt.dosages.marshall.sieve_mm": "Sieve (mm)",
   "asphalt.dosages.marshall.dnit-track": "DNIT Track",
   "asphalt.dosages.marshall.initial-binder": "Initial trial binder",
@@ -40,5 +43,51 @@
   "asphalt.choose_dnit_track": "Choose the DNIT Band",
 
   "asphalt.dosages.marshall.bearing-layer": "Bearing Layer",
-  "asphalt.dosages.marshall.bonding-layer": "Connection Layer"
+  "asphalt.dosages.marshall.bonding-layer": "Connection Layer",
+  "asphalt.dosages.inputs-sum-invalid": "The sum of the percentage values ​​of the materials must be equal to 100.",
+
+  "asphalt.dosages.indirect-tensile-strength": "Tensile strength by diametric tendency",
+  "asphalt.dosages.fluency": "Fluency",
+  "asphalt.dosages.marshall-stability": "Marshall stability",
+  "asphalt.dosages.rbv": "Bitumen-void ratio",
+  "asphalt.dosages.vam": "Mineral aggregate voids (VAM)",
+  "asphalt.dosages.vv": "Volume of voids (Vv)",
+  "asphalt.dosages.gmb": "Apparent specific mass (Gmb)",
+  "asphalt.dosages.dmt": "Theoretical Maximum Density (DMT)",
+  "asphalt.dosages.optimum-binder": "Optimum asphalt binder content",
+  "asphalt.dosages.binder-volumetric-mechanic-params": "Volumetric and mechanical parameters of the mixture at the optimum asphalt binder content",
+  "asphalt.dosages.mineral-aggregate-voids": "Mineral aggregate voids (%)",
+  "asphalt.dosages.mixture-voids": "Mixture voids",
+  "asphalt.dosages.stability": "stability",
+  "asphalt.dosages.marshall.unity": "Unity",
+  "asphalt.dosages.marshall.asphalt-mass-quantitative": "Quantitative for 1 cubic meter of asphalt mass",
+  "asphalt.dosages.marshall.asphaltic-binder": "Asphalt binder",
+  "asphalt.dosages.marshall.materials-final-proportions": "Final materials proportion",
+
+  "asphalt.dosages.marshall.cancel": "Cancel",
+  "asphalt.dosages.marshall.confirm": "Confirm",
+
+  "asphalt.dosages.marshall.rice-test-data": "Rice Test data",
+  "asphalt.dosages.marshall.gmm-calculated-rice-test": "Gmm calculated by Rice Test:",
+  "asphalt.dosages.marshall.binder-trial-gmm": "Asphalt binder content Gmm:",
+  "asphalt.dosages.marshall.insert-gmm": "Insert Gmm or calculate using Rice Test",
+  "asphalt.dosages.marshall.binder-trial-dmt": "Optimal binder content DMT:",
+  "asphalt.dosages.marshall.select-mixture-density-method": "Select mixture density calculation method",
+
+  "asphalt.dosages.marshall.insert-real-specific-mass": "Enter the actual specific gravity of the materials below.",
+
+  "asphalt.dosages.marshall.container-sample-water-mass": "Mass of container + sample + water (g)",
+  "asphalt.dosages.marshall.dry-sample-mass": "Mass of air-dried sample (g)",
+  "asphalt.dosages.marshall.tenor": "Tenor",
+
+  "asphalt.dosages.marshall.dry-surface-saturated-mass": "Saturated mass with dry surface",
+  "asphalt.dosages.marshall.submerged-mass": "Submerged mass",
+  "asphalt.dosages.marshall.dry-mass": "Dry mass",
+  "asphalt.dosages.marshall.height": "Height",
+  "asphalt.dosages.marshall.diammeter": "Diammeter",
+
+  "asphalt.dosages.marshall.binder-percentage": "Binder percentage (%)",
+
+  "asphalt.dosages.enable": "Enable",
+  "asphalt.dosages.disable": "Do not use this content"
 }

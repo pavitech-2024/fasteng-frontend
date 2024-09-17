@@ -46,55 +46,62 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
 
   useEffect(() => {
     if (binderTrialData?.percentsOfDosage?.length > 0) {
-      const columns = [
-        {
-          field: 'binder',
-          headerName: t('asphalt.dosages.marshall.binder-trial'),
-          valueFormatter: ({ value }) => `${value}`,
-          width: 200,
-        },
-        {
-          field: 'material_1',
-          headerName: `${materialSelectionData?.aggregates[0]?.name}`,
-          valueFormatter: ({ value }) => `${value}`,
-          width: 150,
-        },
-        {
-          field: 'material_2',
-          headerName: `${materialSelectionData.aggregates[1]?.name}`,
-          valueFormatter: ({ value }) => `${value}`,
-          width: 150,
-        },
-      ];
+      const columns = [];
 
-      const rows = binderTrialData.percentsOfDosage[0].map((_, index) => ({
-        id: index,
-        binder: `${binderTrialData.percentsOfDosage[2][index]} %`,
-        material_1: `${binderTrialData.percentsOfDosage[0][index]} %`,
-        material_2: `${binderTrialData.percentsOfDosage[1][index]} %`,
-      }));
+      materialSelectionData.aggregates.forEach((material) => {
+        const col = {
+          field: material._id,
+          headerName: material.name,
+          width: 300,
+          valueFormatter: ({ value }) => `${value}`,
+        };
+        columns.push(col);
+      });
+
+      const binderObj = {
+        field: 'binder',
+        headerName: t('asphalt.dosages.marshall.binder-trial'),
+        valueFormatter: ({ value }) => `${value}`,
+      };
+
+      columns.unshift(binderObj);
+
+      const trials = ['oneLess', 'halfLess', 'normal', 'halPlus', 'onePlus'];
+
+      // Função para formatar o array de materiais em objetos conforme o formato esperado pela tabela
+      const formattedArray = trials.map((trial, index) => {
+        const row = { id: index };
+
+        binderTrialData.percentsOfDosage.forEach((materialArray) => {
+          const materialEntry = materialArray.find((item) => item.trial === trial);
+
+          if (materialEntry) {
+            const key = materialEntry.material ? materialEntry.material : 'binder';
+            row[key] = materialEntry.value;
+          }
+        });
+
+        return row;
+      });
 
       setColumns(columns);
-      setRows(rows);
+      setRows(formattedArray);
 
       const machiningTemperatureColumns = [
         {
           field: 'lower',
           headerName: t('asphalt.dosages.marshall.lower'),
           valueFormatter: ({ value }) => `${value}`,
-          width: 150,
         },
         {
           field: 'average',
           headerName: t('asphalt.dosages.marshall.average'),
           valueFormatter: ({ value }) => `${value}`,
-          width: 150,
         },
         {
           field: 'higher',
           headerName: t('asphalt.dosages.marshall.higher'),
           valueFormatter: ({ value }) => `${value}`,
-          width: 150,
         },
       ];
 
@@ -205,10 +212,15 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {columns?.length > 0 && (
               <DataGrid
-                columns={columns}
+                columns={columns.map((col) => ({
+                  ...col,
+                  flex: 1,
+                  width: 200,
+                  headerAlign: 'center',
+                  align: 'center',
+                }))}
                 rows={rows}
                 hideFooter
-                sx={{ marginX: 'auto', width: 'fit-content' }}
                 disableColumnMenu
               />
             )}
@@ -216,7 +228,13 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
             {machiningColumns.length > 0 && (
               <Box sx={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
                 <DataGrid
-                  columns={machiningColumns}
+                  columns={machiningColumns.map((col) => ({
+                    ...col,
+                    flex: 1,
+                    width: 200,
+                    headerAlign: 'center',
+                    align: 'center',
+                  }))}
                   rows={machiningRows}
                   experimentalFeatures={{ columnGrouping: true }}
                   columnGroupingModel={machiningColumnGroupings}
@@ -224,7 +242,13 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
                   hideFooter
                 />
                 <DataGrid
-                  columns={compressionColumns}
+                  columns={compressionColumns.map((col) => ({
+                    ...col,
+                    flex: 1,
+                    width: 200,
+                    headerAlign: 'center',
+                    align: 'center',
+                  }))}
                   rows={compressionRows}
                   experimentalFeatures={{ columnGrouping: true }}
                   columnGroupingModel={compressionColumnGroupings}

@@ -45,12 +45,13 @@ class Marshall_SERVICE implements IEssayService {
     try {
       switch (step) {
         case 0:
-          const { generalData: generalDataStep1 } = data as MarshallData;
-          await this.submitGeneralData(generalDataStep1, this.userId, isConsult);
+          const { generalData: generalData } = data as MarshallData;
+          await this.submitGeneralData(generalData, this.userId, isConsult);
           break;
         case 1:
           await this.submitMaterialSelection(data as MarshallData, this.userId, null, isConsult);
-          await this.getStep3Data(data as MarshallData, this.userId, isConsult);
+          const { materialSelectionData } = data as MarshallData;
+          await this.getStep3Data(generalData, materialSelectionData, this.userId, isConsult);
           break;
         case 2:
           await this.submitGranulometryComposition(data as MarshallData, this.userId, null, isConsult);
@@ -67,12 +68,6 @@ class Marshall_SERVICE implements IEssayService {
           await this.submitMaximumMixtureDensityData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 5:
-          // await this.setVolumetricParametersData(
-          //   data as MarshallData['volumetricParametersData'],
-          //   data as MarshallData['binderTrialData'],
-          //   data as MarshallData['maximumMixtureDensityData'],
-          //   isConsult
-          // );
           await this.submitVolumetricParametersData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 6:
@@ -140,11 +135,11 @@ class Marshall_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/get-specific-mass-indexes`, aggregates);
 
       const { success, error } = response.data;
-      const { indexesOfMissesSpecificGravity } = response.data.data;
+      const { missesSpecificGravity } = response.data.data;
 
       if (success === false) throw error.name;
 
-      return indexesOfMissesSpecificGravity;
+      return missesSpecificGravity;
     } catch (error) {
       throw error;
     }
@@ -164,7 +159,7 @@ class Marshall_SERVICE implements IEssayService {
         const userData = userId ? userId : user;
 
         if (!aggregates) throw t('errors.empty-aggregates');
-        if (aggregates.length > 2) throw t('errors.empty-second-aggregate');
+        // if (aggregates.length < 2) throw t('errors.empty-second-aggregate');
         if (!binder) throw t('errors.empty-binder');
 
         const materialSelectionData = {
@@ -194,12 +189,17 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  getStep3Data = async (dataStep3: MarshallData, user: string, isConsult: boolean): Promise<void> => {
+  getStep3Data = async (
+    generalData: MarshallData['generalData'],
+    step2Data: MarshallData['materialSelectionData'],
+    user: string,
+    isConsult?: boolean
+  ): Promise<any> => {
     if (!isConsult) {
       try {
-        const { dnitBand } = dataStep3.generalData;
+        const { dnitBand } = generalData;
 
-        const { aggregates } = dataStep3.materialSelectionData;
+        const { aggregates } = step2Data;
 
         const response = await Api.post(`${this.info.backend_path}/step-3-data`, {
           dnitBand,
@@ -212,9 +212,7 @@ class Marshall_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
 
-        const { table_data } = data;
-
-        this.store_actions.setData({ key: 'table_data', step: 2, value: table_data });
+        return data;
       } catch (error) {
         throw error;
       }
@@ -222,13 +220,23 @@ class Marshall_SERVICE implements IEssayService {
   };
 
   calculateGranulometryComposition = async (
-    calculateStep3Data: MarshallData['granulometryCompositionData']
+    calculateStep3Data: MarshallData['granulometryCompositionData'],
+    generalData: MarshallData['generalData']
   ): Promise<any> => {
     try {
-      const { dnitBands, percentageInputs, table_data } = calculateStep3Data;
+      const { dnitBand: dnitBandLetter } = generalData;
+      const { percentageInputs, table_data } = calculateStep3Data;
+
+      // Reduzimos a matriz somando todos os valores de todas as propriedades de cada objeto.
+      const inputsSum = percentageInputs.reduce((sum, input) => {
+        return sum + Object.values(input).reduce((objSum, value) => objSum + value, 0);
+      }, 0);
+
+      // Verificamos se a soma total é 100.
+      if (inputsSum !== 100) throw t('errors.invalid-inputs-sum');
 
       const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {
-        dnitBands,
+        dnitBands: dnitBandLetter,
         percentageInputs,
         tableRows: table_data.table_rows,
       });
@@ -237,14 +245,7 @@ class Marshall_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
 
-      const {
-        percentsOfMaterials,
-        pointsOfCurve,
-        sumOfPercents,
-        table_data: tableData,
-        projections,
-        dnitBands: dnitBand,
-      } = data;
+      const { percentsOfMaterials, pointsOfCurve, sumOfPercents, table_data: tableData, projections, bands } = data;
 
       const tableData2 = {
         table_rows: tableData,
@@ -258,7 +259,7 @@ class Marshall_SERVICE implements IEssayService {
         sumOfPercents,
         table_data: tableData2,
         projections,
-        dnitBand,
+        bands,
       };
 
       return granulometricResults;
@@ -423,22 +424,19 @@ class Marshall_SERVICE implements IEssayService {
     step5Data: MarshallData['maximumMixtureDensityData']
   ): Promise<any> => {
     const { aggregates } = step2Data;
-    const { indexesOfMissesSpecificGravity, missingSpecificMass } = step5Data;
+    const { missingSpecificMass } = step5Data;
     const { newPercentOfDosage, trial } = step4Data;
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-dmt-data`, {
         aggregates,
         percentsOfDosage: newPercentOfDosage,
         trial,
-        indexesOfMissesSpecificGravity,
         missingSpecificGravity: missingSpecificMass,
       });
 
       const { data, success, error } = response.data;
 
       if (success === false) throw error.name;
-
-      const { listOfSpecificGravities, maxSpecificGravity } = data;
 
       return data;
     } catch (error) {
