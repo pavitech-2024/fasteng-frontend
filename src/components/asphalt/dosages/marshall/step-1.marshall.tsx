@@ -1,10 +1,7 @@
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import { EssayPageProps } from '../../../templates/essay/index';
-import { useState } from 'react';
-import useAuth from '@/contexts/auth';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { t } from 'i18next';
-import Loading from '@/components/molecules/loading';
 import { Box, TextField } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 
