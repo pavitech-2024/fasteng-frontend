@@ -4,6 +4,10 @@
   "errors.empty-sieve": "Peneira vazia - ",
   "errors.negative-sieve": "Peneira com valor negativo - ",
   "errors.sieves-sum-not-equal-to-sample-mass": "Soma das massas Retidas + Fundos difere da Massa da Amostra em ",
+  "errors.empty-water-temperature": "Informe o fator de correção da temperatura da água.",
+  "errors.rice-test-empty-fields": "Insira as massas para cada teor de ligante no teor de ",
+  "errors.invalid-gmm-mass-value": "A massa da amostra não pode ser maior do que a massa do container + água ou do que a massa do container + água + amostra",
+  "errors.invalid-gmm-container-mass-value": "A massa do container + água não pode ser maior do que a massa do container + água + amostra",
 
   "name-already-exists": "Nome do Experimento já cadastrado!",
 

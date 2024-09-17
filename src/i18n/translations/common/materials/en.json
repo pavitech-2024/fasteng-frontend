@@ -1,5 +1,11 @@
 {
   "materials.coarseAggregate": "Coarse aggregate",
   "materials.fineAggregate": "Fine aggregate",
-  "materials.cement": "Cement"
+  "materials.cement": "Cement",
+  "loading.materials.pending": "Loading materials",
+  "loading.data.pending": "Loading data",
+  "loading.materials.success": "Materials loaded",
+  "loading.data.success": "Data loaded",
+  "loading.materials.error": "Error on loading materials",
+  "loading.data.error": "Error on loading data"
 }

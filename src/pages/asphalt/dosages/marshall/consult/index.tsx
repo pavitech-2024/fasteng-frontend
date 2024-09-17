@@ -126,7 +126,7 @@ const MarshallDosageConsult = () => {
     const dosage = dosages[0]?.find((dosage) => {
       return dosage._id === id;
     });
-    const step = dosage.generalData.step;
+    const step = dosage.generalData.step - 1;
     if (dosage) {
       setData({
         step: 10,

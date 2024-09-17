@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 
 export type RiceTestRows = {
   id: number;
-  Teor?: number;
+  teor?: number;
   massOfDrySample: number;
   massOfContainerWaterSample: number;
   massOfContainerWater: number;
@@ -30,30 +30,29 @@ const Marshall_Step5 = ({
   const [GMMModalIsOpen, setGMMModalIsOpen] = useState(false);
   const [gmmRows, setGmmRows] = useState([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
-  const [methodGmm, setMethodGmm] = useState(false);
-  const [methodDmt, setMethodDmt] = useState(false);
+  const [selectedMethod, setSelectedMethod] = useState('');
   const [riceTestTableRows, setRiceTestTableRows] = useState<RiceTestRows[]>([]);
   const [riceTestTableColumns, setRiceTestTableColumns] = useState<GridColDef[]>([]);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
-  const materials = materialSelectionData.aggregates.map((item) => item.name);
+  const materials = materialSelectionData.aggregates;
   const [hasNull, setHasNull] = useState(true);
+  const [gmmErrorMsg, setGmmErrorMsg] = useState('');
 
   // Activated on page render to get the indexes of each material;
   useEffect(() => {
     toast.promise(
       async () => {
         try {
-          const indexes = await marshall.getIndexesOfMissesSpecificGravity(materialSelectionData);
-
-          const prevData = data;
+          const response = await marshall.getIndexesOfMissesSpecificGravity(materialSelectionData);
 
           const newData = {
-            ...prevData,
-            indexesOfMissesSpecificGravity: indexes,
+            ...data,
+            missingSpecificMass: response,
           };
 
           setData({ step: 4, value: newData });
+
           setLoading(false);
         } catch (error) {
           setLoading(false);
@@ -61,9 +60,9 @@ const Marshall_Step5 = ({
         }
       },
       {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
       }
     );
   }, []);
@@ -119,34 +118,34 @@ const Marshall_Step5 = ({
     {
       id: 1,
       DMT: data?.maxSpecificGravity?.result?.lessOne?.toFixed(2),
-      Teor: binderTrialData.percentsOfDosage[2][0],
+      Teor: binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][0].value,
     },
     {
       id: 2,
       DMT: data?.maxSpecificGravity?.result?.lessHalf?.toFixed(2),
-      Teor: binderTrialData.percentsOfDosage[2][1],
+      Teor: binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][1].value,
     },
     {
       id: 3,
       DMT: data?.maxSpecificGravity?.result?.normal?.toFixed(2),
-      Teor: binderTrialData.percentsOfDosage[2][2],
+      Teor: binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][2].value,
     },
     {
       id: 4,
       DMT: data?.maxSpecificGravity?.result?.plusHalf?.toFixed(2),
-      Teor: binderTrialData.percentsOfDosage[2][3],
+      Teor: binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][3].value,
     },
     {
       id: 5,
       DMT: data?.maxSpecificGravity?.result?.plusOne?.toFixed(2),
-      Teor: binderTrialData.percentsOfDosage[2][4],
+      Teor: binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][4].value,
     },
   ];
 
   const dmtColumns: GridColDef[] = [
     {
       field: 'Teor',
-      headerName: 'Teor',
+      headerName: t('asphalt.dosages.marshall.tenor'),
       valueFormatter: ({ value }) => `${value}`,
     },
     {
@@ -157,8 +156,7 @@ const Marshall_Step5 = ({
   ];
 
   const handleSubmitDmt = async () => {
-    setMethodDmt(true);
-    setMethodGmm(false);
+    setSelectedMethod('DMT');
     toast.promise(
       async () => {
         try {
@@ -181,9 +179,9 @@ const Marshall_Step5 = ({
         }
       },
       {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
       }
     );
   };
@@ -216,13 +214,12 @@ const Marshall_Step5 = ({
   //Activated when gmm method is selected
   const handleSelectGMM = () => {
     setGMMModalIsOpen(false);
-    setMethodGmm(true);
-    setMethodDmt(false);
+    setSelectedMethod('GMM');
   };
 
   // Creates the gmm method rows and columns
   useEffect(() => {
-    if (methodGmm && data?.riceTest.length <= 1) {
+    if (selectedMethod === 'GMM') {
       setGmmRows([
         {
           id: 1,
@@ -251,11 +248,13 @@ const Marshall_Step5 = ({
         },
       ]);
 
-      if (data?.riceTest?.length <= 1) {
+      const hasNull = data?.riceTest.some((obj) => Object.values(obj).some((value) => value === null));
+
+      if (hasNull) {
         setGmmColumns([
           {
             field: 'Teor',
-            headerName: 'Teor',
+            headerName: t('asphalt.dosages.marshall.tenor'),
             valueFormatter: ({ value }) => `${value}`,
           },
           {
@@ -299,7 +298,7 @@ const Marshall_Step5 = ({
         ]);
       }
     }
-  }, [methodGmm]);
+  }, [selectedMethod]);
 
   // Format the gmmRows for the store data structure
   useEffect(() => {
@@ -315,234 +314,264 @@ const Marshall_Step5 = ({
   const calculateGmmData = () => {
     toast.promise(
       async () => {
-        try {
-          const gmm = await marshall.calculateGmmData(materialSelectionData, data);
-          const prevData = data;
-          const newData = {
-            ...prevData,
-            maxSpecificGravity: {
-              results: gmm.maxSpecificGravity,
-              method: gmm.method,
-            },
-          };
-          setData({ step: 4, value: newData });
-          const prevGmmRows = [...gmmRows];
-          const newGmmRows = prevGmmRows.map((item) => {
-            if (item.id === 1) {
-              item.GMM = gmm.maxSpecificGravity.lessOne;
-            }
-            if (item.id === 2) {
-              item.GMM = gmm.maxSpecificGravity.lessHalf;
-            }
-            if (item.id === 3) {
-              item.GMM = gmm.maxSpecificGravity.normal;
-            }
-            if (item.id === 4) {
-              item.GMM = gmm.maxSpecificGravity.plusHalf;
-            }
-            if (item.id === 5) {
-              item.GMM = gmm.maxSpecificGravity.plusOne;
-            }
-            return item;
-          });
+        if (data.temperatureOfWater === null) {
+          const error = 'errors.empty-water-temperature';
+          setGmmErrorMsg(error);
+          throw new Error(error);
+        } else {
+          try {
+            const gmm = await marshall.calculateGmmData(materialSelectionData, data);
 
-          setGmmRows(newGmmRows);
-        } catch (error) {
-          //setLoading(false);
-          throw error;
+            const newData = {
+              ...data,
+              listOfSpecificGravities: gmm.listOfSpecificGravities,
+              maxSpecificGravity: {
+                results: gmm.maxSpecificGravity,
+                method: gmm.method,
+              },
+            };
+
+            setData({ step: 4, value: newData });
+
+            const newGmmRows = gmmRows.map((item) => {
+              if (item.id === 1) item.GMM = gmm.maxSpecificGravity.lessOne;
+              if (item.id === 2) item.GMM = gmm.maxSpecificGravity.lessHalf;
+              if (item.id === 3) item.GMM = gmm.maxSpecificGravity.normal;
+              if (item.id === 4) item.GMM = gmm.maxSpecificGravity.plusHalf;
+              if (item.id === 5) item.GMM = gmm.maxSpecificGravity.plusOne;
+              return item;
+            });
+
+            setGmmRows(newGmmRows);
+          } catch (error) {
+            const message = error.message === 'errors.empty-water-temperature' ? error.message : 'errors.general';
+            setGmmErrorMsg(message);
+            throw new Error(message);
+          }
         }
       },
       {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t(`${gmmErrorMsg}`),
       }
     );
-  };
-
-  const handleRiceTestOnChange = (index: number, e: any, prop: string) => {
-    if (e.target.value === null) return;
-
-    const newState = [...data.riceTest];
-    const newValue = Number(e.target.value);
-
-    if (newState[index]?.[prop] !== null) {
-      // If the input field already has a value, update it
-      newState[index] = { ...newState[index], [prop]: newValue };
-    } else {
-      // If the input field is new, add it to the gmmRows waterTemperatureList
-      newState.splice(index, 0, { ...newState[index], id: index + 1, [prop]: newValue });
-    }
-
-    // Update gmmRows directly
-    setRiceTestTableRows((prevRows) => {
-      const updatedRows = [...prevRows];
-      updatedRows[index] = { ...updatedRows[index], [prop]: newValue };
-      return updatedRows;
-    });
-
-    console.log('riceTestRows', data?.riceTest);
-
-    // // Create a new copy of the state object with the updated gmmRows waterTemperatureList
-    setData({ step: 4, value: { ...data, riceTest: newState } });
   };
 
   const calculateRiceTest = () => {
+    let errorMsg = ''; // Inicializar errorMsg para garantir que nunca seja undefined
+    let errorIndex;
+
+    // Validações
+    const hasNullValues = data.riceTest.some((tenor, idx) => {
+      // Verifica se algum valor dentro do objeto tenor é null ou menor que 1
+      const isInvalid = Object.values(tenor).some((value) => value === null || value < 1);
+      if (isInvalid) {
+        errorIndex = idx; // Atualiza o índice do erro
+      }
+      return isInvalid; // Retorna true se algum valor for inválido
+    });
+
+    const valuesAreValid = data.riceTest.find(
+      (tenor) =>
+        tenor.massOfDrySample > tenor.massOfContainerWater ||
+        tenor.massOfDrySample > tenor.massOfContainerWaterSample ||
+        tenor.massOfContainerWater > tenor.massOfContainerWaterSample
+    );
+
+    if (hasNullValues) {
+      errorMsg = 'errors.rice-test-empty-fields';
+    }
+    if (
+      errorMsg === '' &&
+      valuesAreValid &&
+      (valuesAreValid.massOfDrySample > valuesAreValid.massOfContainerWater ||
+        valuesAreValid.massOfDrySample > valuesAreValid.massOfContainerWaterSample)
+    ) {
+      errorMsg = 'errors.invalid-gmm-mass-value';
+    }
+    if (
+      errorMsg === '' &&
+      valuesAreValid &&
+      valuesAreValid.massOfContainerWater > valuesAreValid.massOfContainerWaterSample
+    ) {
+      errorMsg = 'errors.invalid-gmm-container-mass-value';
+    }
+
     toast.promise(
       async () => {
-        try {
-          const riceTest = await marshall.calculateRiceTest(data);
-          const prevData = data;
-          const newData = {
-            ...prevData,
-            ...riceTest,
-          };
-
-          setRiceTestModalIsOpen(false);
-
-          const formattedGmm = riceTest?.maxSpecificGravity.map((item) => {
-            return {
-              id: item.id,
-              Teor: item.Teor,
-              GMM: item.GMM,
+        if (errorMsg === '') {
+          try {
+            const riceTest = await marshall.calculateRiceTest(data);
+            const prevData = data;
+            const newData = {
+              ...prevData,
+              ...riceTest,
             };
-          });
 
-          setGmmRows(formattedGmm);
-          setData({ step: 4, value: newData });
-          //setLoading(false);
-        } catch (error) {
-          //setLoading(false);
-          throw error;
+            setRiceTestModalIsOpen(false);
+
+            const formattedGmm = riceTest?.maxSpecificGravity.map((item) => {
+              return {
+                id: item.id,
+                Teor: item.Teor,
+                GMM: item.GMM,
+              };
+            });
+
+            setGmmRows(formattedGmm);
+            setData({ step: 4, value: newData });
+            // setLoading(false);
+          } catch (error) {
+            errorMsg = error.message || 'errors.general';
+            throw new Error(errorMsg);
+          }
+        } else {
+          throw new Error(errorMsg);
         }
       },
       {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('errors.rice-test-empty-fields') + `${binderTrialData.percentsOfDosage[2][errorIndex]}%`,
       }
     );
   };
 
   useEffect(() => {
-    if (riceTestModalIsOpen) {
-      setRiceTestTableRows([
+    if (data.riceTest && data.riceTest?.length > 0) {
+      const newRiceTestRows = [
         {
           id: 1,
-          Teor: binderTrialData.percentsOfDosage[2][0],
-          massOfDrySample: data?.riceTest[0]?.massOfDrySample ?? null,
-          massOfContainerWaterSample: data?.riceTest[0]?.massOfContainerWaterSample ?? null,
-          massOfContainerWater: data?.riceTest[0]?.massOfContainerWater ?? null,
+          teor: binderTrialData.percentsOfDosage[2][0],
+          massOfDrySample: data?.riceTest[0]?.massOfDrySample,
+          massOfContainerWaterSample: data?.riceTest[0]?.massOfContainerWaterSample,
+          massOfContainerWater: data?.riceTest[0]?.massOfContainerWater,
         },
         {
           id: 2,
-          Teor: binderTrialData.percentsOfDosage[2][1],
-          massOfDrySample: data?.riceTest[1]?.massOfDrySample ?? null,
-          massOfContainerWaterSample: data?.riceTest[1]?.massOfContainerWaterSample ?? null,
-          massOfContainerWater: data?.riceTest[1]?.massOfContainerWater ?? null,
+          teor: binderTrialData.percentsOfDosage[2][1],
+          massOfDrySample: data?.riceTest[1]?.massOfDrySample,
+          massOfContainerWaterSample: data?.riceTest[1]?.massOfContainerWaterSample,
+          massOfContainerWater: data?.riceTest[1]?.massOfContainerWater,
         },
         {
           id: 3,
-          Teor: binderTrialData.percentsOfDosage[2][2],
-          massOfDrySample: data?.riceTest[2]?.massOfDrySample ?? null,
-          massOfContainerWaterSample: data?.riceTest[2]?.massOfContainerWaterSample ?? null,
-          massOfContainerWater: data?.riceTest[2]?.massOfContainerWater ?? null,
+          teor: binderTrialData.percentsOfDosage[2][2],
+          massOfDrySample: data?.riceTest[2]?.massOfDrySample,
+          massOfContainerWaterSample: data?.riceTest[2]?.massOfContainerWaterSample,
+          massOfContainerWater: data?.riceTest[2]?.massOfContainerWater,
         },
         {
           id: 4,
-          Teor: binderTrialData.percentsOfDosage[2][3],
-          massOfDrySample: data?.riceTest[3]?.massOfDrySample ?? null,
-          massOfContainerWaterSample: data?.riceTest[3]?.massOfContainerWaterSample ?? null,
-          massOfContainerWater: data?.riceTest[3]?.massOfContainerWater ?? null,
+          teor: binderTrialData.percentsOfDosage[2][3],
+          massOfDrySample: data?.riceTest[3]?.massOfDrySample,
+          massOfContainerWaterSample: data?.riceTest[3]?.massOfContainerWaterSample,
+          massOfContainerWater: data?.riceTest[3]?.massOfContainerWater,
         },
         {
           id: 5,
-          Teor: binderTrialData.percentsOfDosage[2][4],
-          massOfDrySample: data?.riceTest[4]?.massOfDrySample ?? null,
-          massOfContainerWaterSample: data?.riceTest[4]?.massOfContainerWaterSample ?? null,
-          massOfContainerWater: data?.riceTest[4]?.massOfContainerWater ?? null,
+          teor: binderTrialData.percentsOfDosage[2][4],
+          massOfDrySample: data?.riceTest[4]?.massOfDrySample,
+          massOfContainerWaterSample: data?.riceTest[4]?.massOfContainerWaterSample,
+          massOfContainerWater: data?.riceTest[4]?.massOfContainerWater,
         },
-      ]);
-
-      setRiceTestTableColumns([
-        {
-          field: 'Teor',
-          headerName: 'Teor',
-          valueFormatter: ({ value }) => `${value}`,
-        },
-        {
-          field: 'massOfDrySample',
-          headerName: 'Massa da amostra seca em ar (g)',
-          renderCell: ({ row }) => {
-            const { id } = row;
-            const index = data?.riceTest?.findIndex((r) => r.id === id);
-            return (
-              <InputEndAdornment
-                adornment={'g'}
-                type="text"
-                value={riceTestTableRows[index]?.massOfDrySample}
-                onChange={(e) => {
-                  handleRiceTestOnChange(index, e, 'massOfDrySample');
-                }}
-              />
-            );
-          },
-        },
-        {
-          field: 'massOfContainerWaterSample',
-          headerName: 'Massa do recipiente + amostra + água (g)',
-          renderCell: ({ row }) => {
-            const { id } = row;
-            const index = data?.riceTest?.findIndex((r) => r.id === id);
-            return (
-              <InputEndAdornment
-                adornment={'g'}
-                type="text"
-                value={riceTestTableRows[index]?.massOfContainerWaterSample}
-                onChange={(e) => {
-                  handleRiceTestOnChange(index, e, 'massOfContainerWaterSample');
-                }}
-              />
-            );
-          },
-        },
-        {
-          field: 'massOfContainerWater',
-          headerName: 'Massa do recipiente + água (g)',
-          renderCell: ({ row }) => {
-            const { id } = row;
-            const index = data?.riceTest?.findIndex((r) => r.id === id);
-            return (
-              <InputEndAdornment
-                adornment={'g'}
-                type="text"
-                value={riceTestTableRows[index]?.massOfContainerWater}
-                onChange={(e) => {
-                  handleRiceTestOnChange(index, e, 'massOfContainerWater');
-                }}
-              />
-            );
-          },
-        },
-      ]);
+      ];
+      setRiceTestTableRows(newRiceTestRows);
     }
-  }, [riceTestModalIsOpen]);
+  }, []);
 
   useEffect(() => {
-    if (riceTestTableRows.length > 1) {
+    if (selectedMethod === 'GMM') {
       setData({ step: 4, value: { ...data, riceTest: riceTestTableRows } });
     }
-  }, [riceTestTableRows]);
+  }, [riceTestTableRows, selectedMethod]);
 
   useEffect(() => {
-    if (methodDmt && data?.dmt?.material_1 !== null && data?.dmt?.material_2 !== null) {
-      setNextDisabled(false);
-    } else if (methodGmm && data?.gmm?.every((e) => e.value !== null)) {
+    setRiceTestTableColumns([
+      {
+        field: 'teor',
+        headerName: t('asphalt.dosages.marshall.tenor'),
+        valueFormatter: ({ value }) => `${value}`,
+        width: 50,
+      },
+      {
+        field: 'massOfDrySample',
+        headerName: t('asphalt.dosages.marshall.dry-sample-mass') + '(g)',
+        width: 200,
+        renderCell: ({ row }) => {
+          const { id } = row;
+          const index = data?.riceTest?.findIndex((r) => r.id === id);
+          return (
+            <InputEndAdornment
+              adornment={'g'}
+              type="text"
+              value={data.riceTest[index]?.massOfDrySample}
+              onChange={(e) => {
+                const newData = [...data.riceTest];
+                newData[index].massOfDrySample = Number(e.target.value);
+                setData({ step: 4, value: { ...data, riceTest: newData } });
+              }}
+            />
+          );
+        },
+      },
+      {
+        field: 'massOfContainerWaterSample',
+        headerName: t('asphalt.dosages.marshall.dry-sample-mass') + '(g)',
+        width: 220,
+        renderCell: ({ row }) => {
+          const { id } = row;
+          const index = data?.riceTest?.findIndex((r) => r.id === id);
+          return (
+            <InputEndAdornment
+              adornment={'g'}
+              type="text"
+              value={data.riceTest[index]?.massOfContainerWaterSample}
+              onChange={(e) => {
+                const newData = [...data.riceTest];
+                newData[index].massOfContainerWaterSample = Number(e.target.value);
+                setData({ step: 4, value: { ...data, riceTest: newData } });
+              }}
+            />
+          );
+        },
+      },
+      {
+        field: 'massOfContainerWater',
+        headerName: t('asphalt.dosages.marshall.container-water-mass') + '(g)',
+        width: 210,
+        renderCell: ({ row }) => {
+          const { id } = row;
+          const index = data?.riceTest?.findIndex((r) => r.id === id);
+          return (
+            <InputEndAdornment
+              adornment={'g'}
+              type="text"
+              value={data.riceTest[index]?.massOfContainerWater}
+              onChange={(e) => {
+                const newData = [...data.riceTest];
+                newData[index].massOfContainerWater = Number(e.target.value);
+                setData({ step: 4, value: { ...data, riceTest: newData } });
+              }}
+            />
+          );
+        },
+      },
+    ]);
+  }, [data.riceTest]);
+
+  useEffect(() => {
+    setNextDisabled(true);
+    const hasNullValue = data.dmt?.some((e) => Object.values(e).includes(null));
+
+    if (selectedMethod === 'DMT' && !hasNullValue && data.temperatureOfWater !== null) {
       setNextDisabled(false);
     }
-  }, [methodDmt]);
-
-  nextDisabled && setNextDisabled(false);
+    if (selectedMethod === 'GMM' && data?.gmm?.every((e) => e.value !== null) && data.temperatureOfWater !== null) {
+      setNextDisabled(false);
+    }
+  }, [selectedMethod, data.temperatureOfWater]);
 
   return (
     <>
@@ -555,21 +584,38 @@ const Marshall_Step5 = ({
             marginX: 'auto',
             width: '60%',
             flexDirection: 'column',
-            gap: '10px',
+            gap: '1rem',
           }}
         >
           <DropDown
             key={'density'}
             variant="standard"
-            label={'Selecione o método de cálculo da densidade da mistura'}
+            label={t('asphalt.dosages.marshall.select-mixture-density-method')}
             options={calcMethodOptions}
             callback={(selectedOption) => {
               if (selectedOption === 'DMT - Densidade máxima teórica') {
                 setDMTModalISOpen(true);
-              } else {
-                setGMMModalIsOpen(true);
+                setSelectedMethod('DMT');
+              } else if (selectedOption === 'GMM - Densidade máxima medida') {
+                setSelectedMethod('GMM');
                 setEnableRiceTest(true);
+              } else {
+                setSelectedMethod('');
               }
+            }}
+            defaultValue={{
+              label:
+                selectedMethod === 'DMT'
+                  ? 'DMT - Densidade máxima teórica'
+                  : selectedMethod === 'GMM'
+                  ? 'GMM - Densidade máxima medida'
+                  : '',
+              value:
+                selectedMethod === 'GMM'
+                  ? 'GMM - Densidade máxima medida'
+                  : selectedMethod === 'DMT'
+                  ? 'DMT - Densidade máxima teórica'
+                  : '',
             }}
             size="medium"
             sx={{ width: '75%', marginX: 'auto' }}
@@ -577,106 +623,95 @@ const Marshall_Step5 = ({
           <DropDown
             key={'water'}
             variant="standard"
-            label={'Selecione o fator de correção para a temperatura da água'}
+            label={t('asphalt.dosages.marshall.water-temperature')}
             options={waterTemperatureList}
             callback={(selectedValue) => {
               const prevData = data;
               const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
               setData({ step: 4, value: newData });
             }}
+            defaultValue={{
+              label: '',
+              value: data.temperatureOfWater,
+            }}
             size="medium"
             sx={{ width: '75%', marginX: 'auto' }}
           />
 
-          {methodGmm && (
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          {selectedMethod === 'GMM' && (
+            <Box sx={{ display: 'flex', gap: '1rem', marginY: '2rem', flexDirection: 'column' }}>
               <Typography sx={{ display: 'flex', justifyContent: 'center' }}>
                 Insira o Gmm e/ou calcule pelo Rice Test
               </Typography>
-              <Button onClick={() => setRiceTestModalIsOpen(true)}>Rice Test</Button>
+              <Button onClick={() => setRiceTestModalIsOpen(true)} variant="outlined">
+                Rice Test
+              </Button>
 
-              <DataGrid columns={gmmColumns} rows={gmmRows} hideFooter />
+              <DataGrid
+                columns={gmmColumns.map((col) => ({
+                  ...col,
+                  flex: 1,
+                  width: 200,
+                  headerAlign: 'center',
+                  align: 'center',
+                }))}
+                rows={gmmRows}
+                hideFooter
+                sx={{ marginY: '2rem', width: 'fit-content', marginX: 'auto' }}
+              />
 
-              <Button onClick={calculateGmmData}>Confirmar</Button>
+              <Button onClick={calculateGmmData} variant="outlined">
+                {t('asphalt.dosages.marshall.confirm')}
+              </Button>
             </Box>
           )}
 
-          {methodDmt && <DataGrid columns={dmtColumns} rows={dmtRows} hideFooter />}
+          {selectedMethod === 'DMT' && (
+            <DataGrid
+              columns={dmtColumns.map((col) => ({
+                ...col,
+                flex: 1,
+                width: 200,
+                headerAlign: 'center',
+                align: 'center',
+              }))}
+              rows={dmtRows}
+              hideFooter
+            />
+          )}
 
           <ModalBase
-            title={'Insira a massa específica real dos materiais abaixo'}
-            leftButtonTitle={'cancelar'}
-            rightButtonTitle={'confirmar'}
+            title={t('asphalt.dosages.marshall.insert-real-specific-mass')}
+            leftButtonTitle={t('asphalt.dosages.marshall.cancel')}
+            rightButtonTitle={t('asphalt.dosages.marshall.confirm')}
             onCancel={() => setDMTModalISOpen(false)}
             open={DMTModalIsOpen}
-            size={'large'}
+            size={'medium'}
             onSubmit={() => handleSubmitDmt()}
           >
-            <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-              <InputEndAdornment
-                adornment={'g/cm³'}
-                label={materials[0]}
-                value={data?.missingSpecificMass?.material_1}
-                onChange={(e) => {
-                  const prevState = data;
-                  const prevDmt = data.missingSpecificMass;
-                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_1: e.target.value } };
-                  setData({ step: 4, value: newState });
-                }}
-              />
-              <InputEndAdornment
-                adornment={'g/cm³'}
-                label={materials[1]}
-                value={data?.missingSpecificMass?.material_2}
-                onChange={(e) => {
-                  const prevState = data;
-                  const prevDmt = data.missingSpecificMass;
-                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
-                  setData({ step: 4, value: newState });
-                }}
-              />
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-around' }}>
+              {data.missingSpecificMass?.length > 0 &&
+                data.missingSpecificMass?.map((material, index) => (
+                  <InputEndAdornment
+                    key={`${index}`}
+                    adornment={'g/cm³'}
+                    label={material.name}
+                    value={material.value}
+                    onChange={(e) => {
+                      const prevState = [...data.missingSpecificMass];
+                      const index = prevState.findIndex((idx) => idx.name === material.name);
+                      prevState[index] = { ...prevState[index], value: Number(e.target.value) };
+                      setData({ step: 4, value: { ...data, missingSpecificMass: prevState } });
+                    }}
+                  />
+                ))}
             </Box>
           </ModalBase>
 
           <ModalBase
-            title={'Insira a massa específica real dos materiais abaixo'}
-            leftButtonTitle={'cancelar'}
-            rightButtonTitle={'confirmar'}
-            onCancel={() => setGMMModalIsOpen(false)}
-            open={GMMModalIsOpen}
-            size={'large'}
-            onSubmit={() => handleSelectGMM()}
-          >
-            <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-              <InputEndAdornment
-                adornment={'g/cm³'}
-                label={materials[0]}
-                value={data?.missingSpecificMass?.material_1}
-                onChange={(e) => {
-                  const prevState = data;
-                  const prevDmt = data.missingSpecificMass;
-                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_1: e.target.value } };
-                  setData({ step: 4, value: newState });
-                }}
-              />
-              <InputEndAdornment
-                adornment={'g/cm³'}
-                label={materials[1]}
-                value={data?.missingSpecificMass?.material_2}
-                onChange={(e) => {
-                  const prevState = data;
-                  const prevDmt = data.missingSpecificMass;
-                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
-                  setData({ step: 4, value: newState });
-                }}
-              />
-            </Box>
-          </ModalBase>
-
-          <ModalBase
-            title={'Dados do Rice Test'}
-            leftButtonTitle={'cancelar'}
-            rightButtonTitle={'confirmar'}
+            title={t('asphalt.dosages.marshall.rice-test-data')}
+            leftButtonTitle={t('asphalt.dosages.marshall.cancel')}
+            rightButtonTitle={t('asphalt.dosages.marshall.confirm')}
             onCancel={() => setRiceTestModalIsOpen(false)}
             open={riceTestModalIsOpen}
             size={'large'}
@@ -685,17 +720,31 @@ const Marshall_Step5 = ({
             }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
-              <DataGrid columns={riceTestTableColumns} rows={riceTestTableRows} hideFooter />
+              <DataGrid
+                columns={riceTestTableColumns.map((col) => ({
+                  ...col,
+                  flex: 1,
+                  width: 200,
+                  headerAlign: 'center',
+                  align: 'center',
+                }))}
+                rows={riceTestTableRows}
+                hideFooter
+              />
 
               <DropDown
                 key={'water'}
                 variant="standard"
-                label={'Selecione o fator de correção para a temperatura da água'}
+                label={t('asphalt.dosages.marshall.water-temperature')}
                 options={waterTemperatureList}
                 callback={(selectedValue) => {
                   const prevData = data;
                   const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
                   setData({ step: 4, value: newData });
+                }}
+                defaultValue={{
+                  label: '',
+                  value: data.temperatureOfWater,
                 }}
                 size="medium"
                 sx={{ width: '75%', marginX: 'auto' }}

@@ -56,7 +56,6 @@ const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp:
           const dosageDataJson = sessionDataJson.state as any;
 
           const response = await abcp.getStep3Data(dosageDataJson, dosageDataJson._id.toString());
-          console.log('🚀 ~ response:', response);
 
           const prevData = { ...dosageDataJson };
           const newData = { ...prevData.generalData, step: 2 };

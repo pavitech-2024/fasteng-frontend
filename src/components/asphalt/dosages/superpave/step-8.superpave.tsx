@@ -76,39 +76,6 @@ const Superpave_Step8 = ({
     if (data?.onePlus?.length > 0) setNProjectPercentsRows_onePlus(data.onePlus);
   }, [data]);
 
-  // const calculateRiceTest = (idx) => {
-  //   toast.promise(
-  //     async () => {
-  //       try {
-  //         const riceTest = await superpave.calculateRiceTest(data, idx);
-  //         console.log("🚀 ~ riceTest:", riceTest)
-
-  //         const value = riceTest;
-
-  //         let prevData = [...data.maximumDensities];
-
-  //         prevData[idx] = {...prevData[idx], insertedGmm: value}
-
-  //         setRiceTestModalIsOpen({
-  //           ...riceTestModalIsOpen,
-  //           [idx]: false,
-  //         });
-
-  //         setData({ step: 7, value: { ...data, maximumDensities: prevData } });
-  //         //setLoading(false);
-  //       } catch (error) {
-  //         //setLoading(false);
-  //         throw error;
-  //       }
-  //     },
-  //     {
-  //       pending: t('loading.materials.pending'),
-  //       success: t('loading.materials.success'),
-  //       error: t('loading.materials.error'),
-  //     }
-  //   );
-  // };
-
   const generateColumns = (idx: string): GridColDef[] => [
     {
       field: 'averageDiammeter',

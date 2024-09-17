@@ -31,7 +31,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       if (key) {
         // Extraindo a parte relevante da chave
         const keyString = key.split('-')[1];
-        console.log('Substring da chave:', keyString);
 
         // Verificando se o pathname não contém a substring da chave
         if (!pathname.includes(keyString)) {

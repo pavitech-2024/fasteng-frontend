@@ -16,5 +16,11 @@
   "asphalt.materials.filler": "Filler",
   "asphalt.materials.cap": "CAP",
   "asphalt.materials.other": "Other",
-  "asphalt.materials.comments": "Comments"
+  "asphalt.materials.comments": "Comments",
+
+  "loading.marshall.pending": "Loading",
+  "loading.marshall.success": "Dosages loaded succsesfully",
+  "loading.marshall.error": "Error on dosages loading",
+
+  "asphalt.dosages.superpave.material_selection": "Metyrials selection"
 }
