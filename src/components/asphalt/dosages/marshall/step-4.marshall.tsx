@@ -49,7 +49,7 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
       const columns = [];
 
       materialSelectionData.aggregates.forEach((material) => {
-        let col = {
+        const col = {
           field: material._id,
           headerName: material.name,
           width: 300,
@@ -216,6 +216,8 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
                   ...col,
                   flex: 1,
                   width: 200,
+                  headerAlign: 'center',
+                  align: 'center'
                 }))}
                 rows={rows}
                 hideFooter
@@ -226,7 +228,13 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
             {machiningColumns.length > 0 && (
               <Box sx={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
                 <DataGrid
-                  columns={machiningColumns}
+                  columns={machiningColumns.map((col) => ({
+                    ...col,
+                    flex: 1,
+                    width: 200,
+                    headerAlign: 'center',
+                    align: 'center'
+                  }))}
                   rows={machiningRows}
                   experimentalFeatures={{ columnGrouping: true }}
                   columnGroupingModel={machiningColumnGroupings}
@@ -234,7 +242,13 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
                   hideFooter
                 />
                 <DataGrid
-                  columns={compressionColumns}
+                  columns={compressionColumns.map((col) => ({
+                    ...col,
+                    flex: 1,
+                    width: 200,
+                    headerAlign: 'center',
+                    align: 'center'
+                  }))}
                   rows={compressionRows}
                   experimentalFeatures={{ columnGrouping: true }}
                   columnGroupingModel={compressionColumnGroupings}

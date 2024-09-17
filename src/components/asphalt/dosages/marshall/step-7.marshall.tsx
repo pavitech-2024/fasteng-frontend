@@ -76,9 +76,9 @@ const Marshall_Step7 = ({
         }
       },
       {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
       }
     );
   }, []);
@@ -86,7 +86,6 @@ const Marshall_Step7 = ({
   // Preparando os dados points para o componente GraficoPage7N
   const points = data?.optimumBinder?.pointsOfCurveDosage;
   points.unshift(['', '', '']);
-  console.log("🚀 ~ points:", points)
 
   const expectedParametersColumns: GridColDef[] = [
     {
@@ -148,10 +147,10 @@ const Marshall_Step7 = ({
   ];
 
   const finalProportionCols = () => {
-    let cols: GridColDef[] = [];
+    const cols: GridColDef[] = [];
 
     materialSelectionData.aggregates.forEach((material) => {
-      let materialCol = {
+      const materialCol = {
         field: `${material._id}`,
         headerName: `${material.name} (%)`,
         valueFormatter: ({ value }) => `${value}`,
@@ -166,12 +165,12 @@ const Marshall_Step7 = ({
   const finalProportionsRows = () => {
     let obj = {id: 1}
     let count = 0;
+
     for (let i = 0; i < data.optimumBinder.confirmedPercentsOfDosage.length; i++) {
       obj = {
         ...obj,
         [materialSelectionData.aggregates[i]._id]: data.optimumBinder.confirmedPercentsOfDosage[i].toFixed(2)
       }
-
       count = i
     }
 
@@ -186,7 +185,7 @@ const Marshall_Step7 = ({
   const percentsCols: GridColDef[] = [
     {
       field: 'binder',
-      headerName: `Porcentagem de ligante (%)`,
+      headerName: t('asphalt.dosages.marshall.binder-percentage'),
       valueFormatter: ({ value }) => `${value}`,
       width: 300,
     },
@@ -279,19 +278,19 @@ const Marshall_Step7 = ({
     },
     {
       id: 6,
-      binder: 'Fluência (mm)',
+      binder: t('asphalt.dosages.fluency') + '(mm)',
       col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.fluency.toFixed(2),
       col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.fluency.toFixed(2),
     },
     {
       id: 7,
-      binder: 'Estabilidade (N)',
+      binder: t('asphalt.dosages.stability') + '(N)',
       col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.stability.toFixed(2),
       col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.stability.toFixed(2),
     },
     {
       id: 7,
-      binder: 'Resistência à tração por compressão diametral (MPa)',
+      binder: t('asphalt.dosages.indirect-tensile-strength') + '(MPa)',
       col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.diametricalCompressionStrength.toFixed(
         2
       ),
@@ -330,7 +329,13 @@ const Marshall_Step7 = ({
 
           {!Object.values(data?.expectedParameters?.expectedParameters).some((item) => item === null) && (
             <DataGrid
-              columns={expectedParametersColumns}
+              columns={expectedParametersColumns.map((col) => ({
+                ...col,
+                flex: 1,
+                width: 200,
+                headerAlign: 'center',
+                align: 'center'
+              }))}
               rows={expectedParametersRows}
               hideFooter
               disableColumnMenu
@@ -339,7 +344,13 @@ const Marshall_Step7 = ({
           )}
 
           <DataGrid
-            columns={percentsCols}
+            columns={percentsCols.map((col) => ({
+              ...col,
+              flex: 1,
+              width: 200,
+              headerAlign: 'center',
+              align: 'center'
+            }))}
             rows={percentRows}
             hideFooter
             disableColumnMenu
@@ -364,7 +375,7 @@ const Marshall_Step7 = ({
               gap: '10px',
             }}
           >
-            <MiniGraphics data={data?.graphics?.gmb} type={'gmb'} nameEixoY={'Massa específica aparente (g/cm³)'} />
+            <MiniGraphics data={data?.graphics?.gmb} type={'gmb'} nameEixoY={t('asphalt.dosages.gmb') + '(g/cm³)'} />
 
             <MiniGraphics
               data={data?.graphics?.sg}
@@ -376,11 +387,11 @@ const Marshall_Step7 = ({
               }
             />
 
-            <MiniGraphics data={data?.graphics?.vv} type={'Vv'} nameEixoY={'Volume de vazios (%)'} />
+            <MiniGraphics data={data?.graphics?.vv} type={'Vv'} nameEixoY={t('asphalt.dosages.vv') + '(%)'} />
 
-            <MiniGraphics data={data?.graphics?.rbv} type={'Rbv'} nameEixoY={'Relação betume/vazios (%)'} />
+            <MiniGraphics data={data?.graphics?.rbv} type={'Rbv'} nameEixoY={t('asphalt.dosages.rbv') + '(%)'} />
 
-            <MiniGraphics data={data?.graphics?.stability} type={'Estabilidade'} nameEixoY={'Estabilidade (N)'} />
+            <MiniGraphics data={data?.graphics?.stability} type={'Estabilidade'} nameEixoY={t('asphalt.dosages.stability') + '(N)'} />
           </Box>
         </Box>
       )}

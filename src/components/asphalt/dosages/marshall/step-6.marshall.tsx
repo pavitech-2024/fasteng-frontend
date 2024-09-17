@@ -42,7 +42,10 @@ const Marshall_Step6 = ({
   const generateColumns = (tenor: string): GridColDef[] => [
     {
       field: 'diammeter',
-      headerName: 'Diâmetro (cm)',
+      headerName: t('asphalt.dosages.marshall.diammeter') + '(cm)',
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
       width: 115,
       renderCell: ({ row }) => {
         const { id } = row;
@@ -64,7 +67,10 @@ const Marshall_Step6 = ({
     },
     {
       field: 'height',
-      headerName: 'Altura (cm)',
+      headerName: t('asphalt.dosages.marshall.height') +  '(cm)',
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
       width: 115,
       renderCell: ({ row }) => {
         const { id } = row;
@@ -86,8 +92,11 @@ const Marshall_Step6 = ({
     },
     {
       field: 'dryMass',
-      headerName: 'Massa seca (g)',
+      headerName: t('asphalt.dosages.marshall.dry-mass') +  '(g)',
       width: 120,
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[tenor]?.findIndex((r) => r.id === id);
@@ -108,8 +117,11 @@ const Marshall_Step6 = ({
     },
     {
       field: 'submergedMass',
-      headerName: 'Massa submersa (g)',
+      headerName: t('asphalt.dosages.marshall.submerged-mass') +  '(g)',
       width: 150,
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[tenor].findIndex((r) => r.id === id);
@@ -130,8 +142,11 @@ const Marshall_Step6 = ({
     },
     {
       field: 'drySurfaceSaturatedMass',
-      headerName: 'Massa saturada com superfície seca (g)',
+      headerName: t('asphalt.dosages.marshall.dry-surface-saturated-mass') + '(g)',
       width: 150,
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[tenor]?.findIndex((r) => r.id === id);
@@ -152,8 +167,11 @@ const Marshall_Step6 = ({
     },
     {
       field: 'stability',
-      headerName: 'Estabilidade (N)',
+      headerName: t('asphalt.dosages.marshall.stability') + '(N)',
       width: 125,
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[tenor].findIndex((r) => r.id === id);
@@ -174,8 +192,11 @@ const Marshall_Step6 = ({
     },
     {
       field: 'fluency',
-      headerName: 'Fluência (mm)',
+      headerName: t('asphalt.dosages.marshall.fluency') +  '(mm)',
       width: 150,
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[tenor].findIndex((r) => r.id === id);
@@ -196,8 +217,11 @@ const Marshall_Step6 = ({
     },
     {
       field: 'diametricalCompressionStrength',
-      headerName: 'Resistência à tração por compressão diametral (MPa)',
+      headerName: t('asphalt.dosages.indirect-tensile-strength') + '(MPa)',
       width: 150,
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[tenor]?.findIndex((r) => r.id === id);
@@ -220,7 +244,7 @@ const Marshall_Step6 = ({
 
   const lessOneColumnsGroupings: GridColumnGroupingModel = [
     {
-      groupId: `${binderTrialData.percentsOfDosage[2][0]},00 %`,
+      groupId: `${binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][0].value},00 %`,
       children: [
         { field: 'diammeter' },
         { field: 'height' },
@@ -243,7 +267,7 @@ const Marshall_Step6 = ({
               variant="contained"
               sx={{ marginY: '1rem' }}
             >
-              {tableIsDisabled.lessOne ? 'Liberar' : 'Não usar teor'}
+              {tableIsDisabled.lessOne ? t('asphalt.dosages.enable') : t('asphalt.dosages.disable')}
             </Button>
           </Box>
         );
@@ -253,7 +277,7 @@ const Marshall_Step6 = ({
 
   const lessHalfColumnsGroupings: GridColumnGroupingModel = [
     {
-      groupId: `${binderTrialData.percentsOfDosage[2][1]},00 %`,
+      groupId: `${binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][1].value},00 %`,
       children: [
         { field: 'diammeter' },
         { field: 'height' },
@@ -276,7 +300,7 @@ const Marshall_Step6 = ({
               variant="contained"
               sx={{ marginY: '1rem' }}
             >
-              {tableIsDisabled.lessHalf ? 'Liberar' : 'Não usar teor'}
+              {tableIsDisabled.lessHalf ? t('asphalt.dosages.enable') : t('asphalt.dosages.disable')}
             </Button>
           </Box>
         );
@@ -286,7 +310,7 @@ const Marshall_Step6 = ({
 
   const normalColumnsGroupings: GridColumnGroupingModel = [
     {
-      groupId: `${binderTrialData.percentsOfDosage[2][2]},00 %`,
+      groupId: `${binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][2].value},00 %`,
       children: [
         { field: 'diammeter' },
         { field: 'height' },
@@ -309,7 +333,7 @@ const Marshall_Step6 = ({
               variant="contained"
               sx={{ marginY: '1rem' }}
             >
-              {tableIsDisabled.normal ? 'Liberar' : 'Não usar teor'}
+              {tableIsDisabled.normal ? t('asphalt.dosages.enable') : t('asphalt.dosages.disable')}
             </Button>
           </Box>
         );
@@ -319,7 +343,7 @@ const Marshall_Step6 = ({
 
   const plusHalfColumnsGroupings: GridColumnGroupingModel = [
     {
-      groupId: `${binderTrialData.percentsOfDosage[2][3]},00 %`,
+      groupId: `${binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][3].value},00 %`,
       children: [
         { field: 'diammeter' },
         { field: 'height' },
@@ -342,7 +366,7 @@ const Marshall_Step6 = ({
               variant="contained"
               sx={{ marginY: '1rem' }}
             >
-              {tableIsDisabled.plusHalf ? 'Liberar' : 'Não usar teor'}
+              {tableIsDisabled.plusHalf ? t('asphalt.dosages.enable') : t('asphalt.dosages.disable')}
             </Button>
           </Box>
         );
@@ -352,7 +376,7 @@ const Marshall_Step6 = ({
 
   const plusOneColumnsGroupings: GridColumnGroupingModel = [
     {
-      groupId: `${binderTrialData.percentsOfDosage[2][4]},00 %`,
+      groupId: `${binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][4].value},00 %`,
       children: [
         { field: 'diammeter' },
         { field: 'height' },
@@ -375,7 +399,7 @@ const Marshall_Step6 = ({
               variant="contained"
               sx={{ marginY: '1rem' }}
             >
-              {tableIsDisabled.plusOne ? 'Liberar' : 'Não usar teor'}
+              {tableIsDisabled.plusOne ? t('asphalt.dosages.enable') : t('asphalt.dosages.disable')}
             </Button>
           </Box>
         );
@@ -393,23 +417,21 @@ const Marshall_Step6 = ({
             binderTrialData,
             maximumMixtureDensityData
           );
-          const prevData = data;
+
           const newData = {
-            ...prevData,
+            ...data,
             ...volumetricParams,
           };
 
           setData({ step: 5, value: newData });
-          //setLoading(false);
         } catch (error) {
-          //setLoading(false);
           throw error;
         }
       },
       {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
       }
     );
   };
@@ -456,7 +478,7 @@ const Marshall_Step6 = ({
   };
 
   useEffect(() => {
-    let hasEmptyArrays = Object.values(data.volumetricParameters).some((arr) => arr.length < 1);
+    const hasEmptyArrays = Object.values(data.volumetricParameters).some((arr) => arr.length < 1);
 
     if (hasEmptyArrays) {
       setNextDisabled(true)
@@ -572,7 +594,7 @@ const Marshall_Step6 = ({
             slots={{ footer: () => ExpansionToolbar('plusOne') }}
           />
 
-          <Button onClick={setVolumetricParams} variant='outlined'>Confirmar</Button>
+          <Button onClick={setVolumetricParams} variant='outlined'> {t('asphalt.dosages.marshall.confirm')} </Button>
         </Box>
       )}
     </>

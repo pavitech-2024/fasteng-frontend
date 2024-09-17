@@ -31,9 +31,7 @@ const Marshall_Step5 = ({
   const [gmmRows, setGmmRows] = useState([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [selectedMethod, setSelectedMethod] = useState('');
-  console.log("🚀 ~ selectedMethod:", selectedMethod)
   const [riceTestTableRows, setRiceTestTableRows] = useState<RiceTestRows[]>([]);
-  console.log("🚀 ~ riceTestTableRows:", riceTestTableRows)
   const [riceTestTableColumns, setRiceTestTableColumns] = useState<GridColDef[]>([]);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
@@ -48,15 +46,8 @@ const Marshall_Step5 = ({
         try {
           const response = await marshall.getIndexesOfMissesSpecificGravity(materialSelectionData);
 
-          const prevData = data;
-
-          // const materials = materialSelectionData.aggregates.map((material) => ({
-          //   ...material,
-          //   value: null,
-          // }));
-
           const newData = {
-            ...prevData,
+            ...data,
             missingSpecificMass: response,
           };
 
@@ -69,9 +60,9 @@ const Marshall_Step5 = ({
         }
       },
       {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
       }
     );
   }, []);
@@ -127,34 +118,34 @@ const Marshall_Step5 = ({
     {
       id: 1,
       DMT: data?.maxSpecificGravity?.result?.lessOne?.toFixed(2),
-      Teor: binderTrialData.percentsOfDosage[2][0],
+      Teor: binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][0].value,
     },
     {
       id: 2,
       DMT: data?.maxSpecificGravity?.result?.lessHalf?.toFixed(2),
-      Teor: binderTrialData.percentsOfDosage[2][1],
+      Teor: binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][1].value,
     },
     {
       id: 3,
       DMT: data?.maxSpecificGravity?.result?.normal?.toFixed(2),
-      Teor: binderTrialData.percentsOfDosage[2][2],
+      Teor: binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][2].value,
     },
     {
       id: 4,
       DMT: data?.maxSpecificGravity?.result?.plusHalf?.toFixed(2),
-      Teor: binderTrialData.percentsOfDosage[2][3],
+      Teor: binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][3].value,
     },
     {
       id: 5,
       DMT: data?.maxSpecificGravity?.result?.plusOne?.toFixed(2),
-      Teor: binderTrialData.percentsOfDosage[2][4],
+      Teor: binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][4].value,
     },
   ];
 
   const dmtColumns: GridColDef[] = [
     {
       field: 'Teor',
-      headerName: 'Teor',
+      headerName: t('asphalt.dosages.marshall.tenor'),
       valueFormatter: ({ value }) => `${value}`,
     },
     {
@@ -188,9 +179,9 @@ const Marshall_Step5 = ({
         }
       },
       {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
       }
     );
   };
@@ -265,7 +256,7 @@ const Marshall_Step5 = ({
         setGmmColumns([
           {
             field: 'Teor',
-            headerName: 'Teor',
+            headerName: t('asphalt.dosages.marshall.tenor'),
             valueFormatter: ({ value }) => `${value}`,
           },
           {
@@ -332,11 +323,9 @@ const Marshall_Step5 = ({
         } else {
           try {
             const gmm = await marshall.calculateGmmData(materialSelectionData, data);
-            console.log("🚀 ~ gmm:", gmm)
 
-            const prevData = data;
             const newData = {
-              ...prevData,
+              ...data,
               listOfSpecificGravities: gmm.listOfSpecificGravities,
               maxSpecificGravity: {
                 results: gmm.maxSpecificGravity,
@@ -364,15 +353,15 @@ const Marshall_Step5 = ({
         }
       },
       {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
         error: t(`${gmmErrorMsg}`),
       }
     );
   };
 
   const calculateRiceTest = () => {
-    let errorMsg: string = ''; // Inicializar errorMsg para garantir que nunca seja undefined
+    let errorMsg = ''; // Inicializar errorMsg para garantir que nunca seja undefined
     let errorIndex;
 
     // Validações
@@ -444,8 +433,8 @@ const Marshall_Step5 = ({
         }
       },
       {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
         error: t('errors.rice-test-empty-fields') + `${binderTrialData.percentsOfDosage[2][errorIndex]}%`,
       }
     );
@@ -502,13 +491,13 @@ const Marshall_Step5 = ({
     setRiceTestTableColumns([
       {
         field: 'teor',
-        headerName: 'Teor',
+        headerName: t('asphalt.dosages.marshall.tenor'),
         valueFormatter: ({ value }) => `${value}`,
         width: 50,
       },
       {
         field: 'massOfDrySample',
-        headerName: 'Massa da amostra seca em ar (g)',
+        headerName: t('asphalt.dosages.marshall.dry-sample-mass') + '(g)',
         width: 200,
         renderCell: ({ row }) => {
           const { id } = row;
@@ -519,7 +508,7 @@ const Marshall_Step5 = ({
               type="text"
               value={data.riceTest[index]?.massOfDrySample}
               onChange={(e) => {
-                let newData = [...data.riceTest];
+                const newData = [...data.riceTest];
                 newData[index].massOfDrySample = Number(e.target.value);
                 setData({ step: 4, value: { ...data, riceTest: newData } });
               }}
@@ -529,7 +518,7 @@ const Marshall_Step5 = ({
       },
       {
         field: 'massOfContainerWaterSample',
-        headerName: 'Massa do recipiente + amostra + água (g)',
+        headerName: t('asphalt.dosages.marshall.dry-sample-mass') + '(g)',
         width: 220,
         renderCell: ({ row }) => {
           const { id } = row;
@@ -540,7 +529,7 @@ const Marshall_Step5 = ({
               type="text"
               value={data.riceTest[index]?.massOfContainerWaterSample}
               onChange={(e) => {
-                let newData = [...data.riceTest];
+                const newData = [...data.riceTest];
                 newData[index].massOfContainerWaterSample = Number(e.target.value);
                 setData({ step: 4, value: { ...data, riceTest: newData } });
               }}
@@ -550,7 +539,7 @@ const Marshall_Step5 = ({
       },
       {
         field: 'massOfContainerWater',
-        headerName: 'Massa do recipiente + água (g)',
+        headerName: t('asphalt.dosages.marshall.container-water-mass') + '(g)',
         width: 210,
         renderCell: ({ row }) => {
           const { id } = row;
@@ -561,7 +550,7 @@ const Marshall_Step5 = ({
               type="text"
               value={data.riceTest[index]?.massOfContainerWater}
               onChange={(e) => {
-                let newData = [...data.riceTest];
+                const newData = [...data.riceTest];
                 newData[index].massOfContainerWater = Number(e.target.value);
                 setData({ step: 4, value: { ...data, riceTest: newData } });
               }}
@@ -576,8 +565,6 @@ const Marshall_Step5 = ({
     setNextDisabled(true);
     const hasNullValue = data.dmt.some((e) => Object.values(e).includes(null));
 
-    console.log("🚀 ~ useEffect ~ selectedMethod === 'DMT' && !hasNullValue && data.temperatureOfWater !== null:", selectedMethod)
-
     if (selectedMethod === 'DMT' && !hasNullValue && data.temperatureOfWater !== null) {
       setNextDisabled(false);
     }
@@ -585,8 +572,6 @@ const Marshall_Step5 = ({
       setNextDisabled(false);
     }
   }, [selectedMethod, data.temperatureOfWater]);
-
-  // nextDisabled && setNextDisabled(false);
 
   return (
     <>
@@ -605,7 +590,7 @@ const Marshall_Step5 = ({
           <DropDown
             key={'density'}
             variant="standard"
-            label={'Selecione o método de cálculo da densidade da mistura'}
+            label={t('asphalt.dosages.marshall.select-mixture-density-method')}
             options={calcMethodOptions}
             callback={(selectedOption) => {
               if (selectedOption === 'DMT - Densidade máxima teórica') {
@@ -626,7 +611,7 @@ const Marshall_Step5 = ({
                 : '',
               value: selectedMethod === 'GMM'
                 ? 'GMM - Densidade máxima medida'
-                : selectedMethod === 'GMM'
+                : selectedMethod === 'DMT'
                 ? 'DMT - Densidade máxima teórica'
                 : '',
             }}
@@ -636,7 +621,7 @@ const Marshall_Step5 = ({
           <DropDown
             key={'water'}
             variant="standard"
-            label={'Selecione o fator de correção para a temperatura da água'}
+            label={t('asphalt.dosages.marshall.water-temperature')}
             options={waterTemperatureList}
             callback={(selectedValue) => {
               const prevData = data;
@@ -661,31 +646,42 @@ const Marshall_Step5 = ({
               </Button>
 
               <DataGrid
-                columns={gmmColumns}
+                columns={gmmColumns.map((col) => ({
+                  ...col,
+                  flex: 1,
+                  width: 200,
+                  headerAlign: 'center',
+                  align: 'center'
+                }))}
                 rows={gmmRows}
                 hideFooter
                 sx={{ marginY: '2rem', width: 'fit-content', marginX: 'auto' }}
               />
 
               <Button onClick={calculateGmmData} variant="outlined">
-                Confirmar
+                {t('asphalt.dosages.marshall.confirm')}
               </Button>
             </Box>
           )}
 
           {selectedMethod === 'DMT' && (
             <DataGrid
-              columns={dmtColumns}
+              columns={dmtColumns.map((col) => ({
+                ...col,
+                flex: 1,
+                width: 200,
+                headerAlign: 'center',
+                align: 'center'
+              }))}
               rows={dmtRows}
-              sx={{ width: 'fit-content', marginX: 'auto', marginY: '2rem' }}
               hideFooter
             />
           )}
 
           <ModalBase
-            title={'Insira a massa específica real dos materiais abaixo'}
-            leftButtonTitle={'cancelar'}
-            rightButtonTitle={'confirmar'}
+            title={t('asphalt.dosages.marshall.insert-real-specific-mass')}
+            leftButtonTitle={t('asphalt.dosages.marshall.cancel')}
+            rightButtonTitle={t('asphalt.dosages.marshall.confirm')}
             onCancel={() => setDMTModalISOpen(false)}
             open={DMTModalIsOpen}
             size={'medium'}
@@ -700,8 +696,8 @@ const Marshall_Step5 = ({
                     label={material.name}
                     value={material.value}
                     onChange={(e) => {
-                      let prevState = [...data.missingSpecificMass];
-                      let index = prevState.findIndex((idx) => idx.name === material.name);
+                      const prevState = [...data.missingSpecificMass];
+                      const index = prevState.findIndex((idx) => idx.name === material.name);
                       prevState[index] = { ...prevState[index], value: Number(e.target.value) };
                       setData({ step: 4, value: { ...data, missingSpecificMass: prevState } });
                     }}
@@ -711,9 +707,9 @@ const Marshall_Step5 = ({
           </ModalBase>
 
           <ModalBase
-            title={'Dados do Rice Test'}
-            leftButtonTitle={'cancelar'}
-            rightButtonTitle={'confirmar'}
+            title={t('asphalt.dosages.marshall.rice-test-data')}
+            leftButtonTitle={t('asphalt.dosages.marshall.cancel')}
+            rightButtonTitle={t('asphalt.dosages.marshall.confirm')}
             onCancel={() => setRiceTestModalIsOpen(false)}
             open={riceTestModalIsOpen}
             size={'large'}
@@ -722,12 +718,22 @@ const Marshall_Step5 = ({
             }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
-              <DataGrid columns={riceTestTableColumns} rows={riceTestTableRows} hideFooter />
+              <DataGrid 
+                columns={riceTestTableColumns.map((col) => ({
+                  ...col,
+                  flex: 1,
+                  width: 200,
+                  headerAlign: 'center',
+                  align: 'center'
+                }))} 
+                rows={riceTestTableRows} 
+                hideFooter 
+              />
 
               <DropDown
                 key={'water'}
                 variant="standard"
-                label={'Selecione o fator de correção para a temperatura da água'}
+                label={t('asphalt.dosages.marshall.water-temperature')}
                 options={waterTemperatureList}
                 callback={(selectedValue) => {
                   const prevData = data;

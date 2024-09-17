@@ -41,9 +41,9 @@ const Marshall_Step9 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
         }
       },
       {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
       }
     );
   }, []);
@@ -91,7 +91,7 @@ const Marshall_Step9 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
   };
 
   const optimumContentGroup = () => {
-    let optimumContentGroupArr: GridColumnGroupingModel = [
+    const optimumContentGroupArr: GridColumnGroupingModel = [
       {
         groupId: 'optimumContentGrouping',
         headerName: t('asphalt.dosages.marshall.materials-final-proportions'),
@@ -149,7 +149,7 @@ const Marshall_Step9 = ({ nextDisabled, setNextDisabled, marshall }: EssayPagePr
   };
 
   const quantitativeGroup = () => {
-    let quantitativeGroupArr: GridColumnGroupingModel = [
+    const quantitativeGroupArr: GridColumnGroupingModel = [
       {
         groupId: 'quantitativeGrouping',
         headerName: t('asphalt.dosages.marshall.asphalt-mass-quantitative'),

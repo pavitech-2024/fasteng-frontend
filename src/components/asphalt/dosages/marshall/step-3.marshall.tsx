@@ -39,7 +39,7 @@ const Marshall_Step3 = ({
             null
           );
 
-          let prevData = { ...data };
+          const prevData = { ...data };
 
           prevData.table_data = table_data;
           prevData.dnitBands = dnitBands;
@@ -81,13 +81,13 @@ const Marshall_Step3 = ({
 
   useEffect(() => {
     if (data?.dnitBands?.higher?.length > 0) {
-      let newHigherSpec = [];
+      const newHigherSpec = [];
 
       data?.dnitBands?.higher.forEach((element) => {
         if (data?.table_data?.table_rows) {
           for (let i = 0; i < data?.table_data?.table_rows.length; i++) {
             if (element[0] === data?.table_data?.table_rows[i]?.sieve_label) {
-              let newRow = {
+              const newRow = {
                 ...data?.table_data?.table_rows[i],
                 band1: element[1],
                 band2: data.dnitBands.lower[i][1],
@@ -219,7 +219,7 @@ const Marshall_Step3 = ({
 
             const { projections } = results;
 
-            let newTable = results?.table_data?.table_rows.map((e) => ({
+            const newTable = results?.table_data?.table_rows.map((e) => ({
               ...e,
               projections: projections.find((proj) => proj.label === e.sieve_label).value,
               band1: results.dnitBands.higher.find((band) => band[0] === e.sieve_label)?.[1],
@@ -255,8 +255,8 @@ const Marshall_Step3 = ({
   const [columns, setColumns] = useState<GridColDef[]>([]);
 
   useEffect(() => {
-    let newCols: GridColDef[] = [];
-    let newColsGrouping = [];
+    const newCols: GridColDef[] = [];
+    const newColsGrouping = [];
     data?.table_data?.table_column_headers?.forEach((header, idx) => {
       if (header === 'sieve_label') {
         newCols.push({
@@ -287,7 +287,7 @@ const Marshall_Step3 = ({
                     : ''
                 }
                 onChange={(e) => {
-                  let prevData = [...data?.percentageInputs];
+                  const prevData = [...data?.percentageInputs];
                   prevData[0][`percentage_${_id}`] = Number(e.target.value);
                   setData({ step: 2, value: { ...data, percentageInputs: prevData } });
                 }}

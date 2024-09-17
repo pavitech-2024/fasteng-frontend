@@ -229,7 +229,7 @@ class Marshall_SERVICE implements IEssayService {
       const { percentageInputs, table_data } = calculateStep3Data;
 
       // Reduzimos a matriz somando todos os valores de todas as propriedades de cada objeto.
-      let inputsSum = percentageInputs.reduce((sum, input) => {
+      const inputsSum = percentageInputs.reduce((sum, input) => {
         return sum + Object.values(input).reduce((objSum, value) => objSum + value, 0);
       }, 0);
 
