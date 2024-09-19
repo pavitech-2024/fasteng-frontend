@@ -218,7 +218,12 @@ const Login: NextPage = () => {
                 disabled={password === '' || email === ''}
                 handleClick={() => handleLogin()}
               />
-              <Link href={'https://minhaconta.fastengapp.com.br/forgot-password'} passHref target="_blank" rel="noopener noreferrer">
+              <Link
+                href={'https://minhaconta.fastengapp.com.br/forgot-password'}
+                passHref
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <ButtonBase sx={{ color: 'primary.main', fontSize: { desktop: '1rem', mobile: '0.85rem' } }}>
                   {t('login.forget password')}
                 </ButtonBase>
