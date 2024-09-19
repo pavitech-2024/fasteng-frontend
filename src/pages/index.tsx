@@ -43,7 +43,7 @@ const Login: NextPage = () => {
   const handleForgetPassword = async (email: string) => {
     // Verificações do email;
     try {
-      const response = await axios.post(`https://minhaconta.fastengapp.com.br/forgot-password`, email);
+      const response = await axios.post(`/api/forgot-password`, {email});
 
       console.log('🚀 ~ handleForgetPassword ~ response:', response);
     } catch (error) {
@@ -271,7 +271,7 @@ const Login: NextPage = () => {
         onSubmit={() => handleForgetPassword(email)}
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginY: '3rem' }}>
-          <Typography children={'Insira seu email'} />
+          <Typography>Insira seu email</Typography>
           <Input sx={{ width: '100%' }} value={email} type="email" onChange={(e) => {
             const value = e.target.value;
             setEmail(value);

@@ -11,4 +11,12 @@ module.exports = {
   compiler: {
     styledComponents: true,
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/forgot-password',
+        destination: 'https://minhaconta.fastengapp.com.br/forgot-password',
+      },
+    ]
+  },
 };
