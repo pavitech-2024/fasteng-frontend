@@ -17,6 +17,6 @@ module.exports = {
         source: '/api/forgot-password',
         destination: 'https://minhaconta.fastengapp.com.br/forgot-password',
       },
-    ]
+    ];
   },
 };
