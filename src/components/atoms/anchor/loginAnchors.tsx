@@ -3,9 +3,7 @@ import { Box } from '@mui/material';
 import lep from '../../../assets/logos/lep.jpg';
 import jbr from '../../../assets/logos/jbr.jpg';
 import Image from 'next/image';
-import  Link  from '@mui/material/Link';
-
-
+import Link from '@mui/material/Link';
 
 export const LepAnchor = () => {
   return (

@@ -54,7 +54,7 @@ const Marshall_Step6 = ({
           <InputEndAdornment
             adornment={'cm'}
             value={data[tenor][index]?.diammeter}
-            type='number'
+            type="number"
             onChange={(e) => {
               const value = e.target.value;
               const newState = [...data[tenor]];
@@ -67,7 +67,7 @@ const Marshall_Step6 = ({
     },
     {
       field: 'height',
-      headerName: t('asphalt.dosages.marshall.height') +  '(cm)',
+      headerName: t('asphalt.dosages.marshall.height') + '(cm)',
       flex: 1,
       headerAlign: 'center',
       align: 'center',
@@ -78,7 +78,7 @@ const Marshall_Step6 = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
-            type='number'
+            type="number"
             value={data[tenor][index]?.height}
             onChange={(e) => {
               const value = e.target.value;
@@ -92,7 +92,7 @@ const Marshall_Step6 = ({
     },
     {
       field: 'dryMass',
-      headerName: t('asphalt.dosages.marshall.dry-mass') +  '(g)',
+      headerName: t('asphalt.dosages.marshall.dry-mass') + '(g)',
       width: 120,
       flex: 1,
       headerAlign: 'center',
@@ -103,7 +103,7 @@ const Marshall_Step6 = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
-            type='number'
+            type="number"
             value={data[tenor][index]?.dryMass}
             onChange={(e) => {
               const value = e.target.value;
@@ -117,7 +117,7 @@ const Marshall_Step6 = ({
     },
     {
       field: 'submergedMass',
-      headerName: t('asphalt.dosages.marshall.submerged-mass') +  '(g)',
+      headerName: t('asphalt.dosages.marshall.submerged-mass') + '(g)',
       width: 150,
       flex: 1,
       headerAlign: 'center',
@@ -128,7 +128,7 @@ const Marshall_Step6 = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
-            type='number'
+            type="number"
             value={data[tenor][index]?.submergedMass}
             onChange={(e) => {
               const value = e.target.value;
@@ -153,7 +153,7 @@ const Marshall_Step6 = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
-            type='number'
+            type="number"
             value={data[tenor][index]?.drySurfaceSaturatedMass}
             onChange={(e) => {
               const value = e.target.value;
@@ -178,7 +178,7 @@ const Marshall_Step6 = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
-            type='number'
+            type="number"
             value={data[tenor][index]?.stability}
             onChange={(e) => {
               const value = e.target.value;
@@ -192,7 +192,7 @@ const Marshall_Step6 = ({
     },
     {
       field: 'fluency',
-      headerName: t('asphalt.dosages.marshall.fluency') +  '(mm)',
+      headerName: t('asphalt.dosages.marshall.fluency') + '(mm)',
       width: 150,
       flex: 1,
       headerAlign: 'center',
@@ -203,7 +203,7 @@ const Marshall_Step6 = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
-            type='number'
+            type="number"
             value={data[tenor][index]?.fluency}
             onChange={(e) => {
               const value = e.target.value;
@@ -228,7 +228,7 @@ const Marshall_Step6 = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
-            type='number'
+            type="number"
             value={data[tenor][index]?.diametricalCompressionStrength}
             onChange={(e) => {
               const value = e.target.value;
@@ -406,7 +406,6 @@ const Marshall_Step6 = ({
       },
     },
   ];
-  
 
   const setVolumetricParams = () => {
     toast.promise(
@@ -481,11 +480,11 @@ const Marshall_Step6 = ({
     const hasEmptyArrays = Object.values(data.volumetricParameters).some((arr) => arr.length < 1);
 
     if (hasEmptyArrays) {
-      setNextDisabled(true)
+      setNextDisabled(true);
     } else {
-      setNextDisabled(false)
+      setNextDisabled(false);
     }
-  },[data])
+  }, [data]);
 
   return (
     <>
@@ -518,7 +517,7 @@ const Marshall_Step6 = ({
             }}
             slots={{ footer: () => ExpansionToolbar('lessOne') }}
           />
-  
+
           {/* DataGrid para lessHalf */}
           <DataGrid
             key={'lessHalf'}
@@ -538,7 +537,7 @@ const Marshall_Step6 = ({
             }}
             slots={{ footer: () => ExpansionToolbar('lessHalf') }}
           />
-  
+
           {/* DataGrid para normal */}
           <DataGrid
             key={'normal'}
@@ -558,7 +557,7 @@ const Marshall_Step6 = ({
             }}
             slots={{ footer: () => ExpansionToolbar('normal') }}
           />
-  
+
           {/* DataGrid para plusHalf */}
           <DataGrid
             key={'plusHalf'}
@@ -578,7 +577,7 @@ const Marshall_Step6 = ({
             }}
             slots={{ footer: () => ExpansionToolbar('plusHalf') }}
           />
-  
+
           {/* DataGrid para plusOne */}
           <DataGrid
             key={'plusOne'}
@@ -598,7 +597,7 @@ const Marshall_Step6 = ({
             }}
             slots={{ footer: () => ExpansionToolbar('plusOne') }}
           />
-  
+
           {/* Botões de ação */}
           <Button onClick={setVolumetricParams} variant="outlined">
             {t('asphalt.dosages.marshall.confirm')}
@@ -607,7 +606,6 @@ const Marshall_Step6 = ({
       )}
     </>
   );
-  
 };
 
 export default Marshall_Step6;

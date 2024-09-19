@@ -86,18 +86,18 @@ const Home: NextPage = () => {
         </Box>
       </Box>
       <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              width: '50%',
-              justifyContent: 'space-between',
-              alignItems: 'end',
-              height: 'fit-content',
-            }}
-          >
-            <LepAnchor />
-            <JbrAnchor />
-          </Box>
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '50%',
+          justifyContent: 'space-between',
+          alignItems: 'end',
+          height: 'fit-content',
+        }}
+      >
+        <LepAnchor />
+        <JbrAnchor />
+      </Box>
       <Box
         sx={{
           height: { mobile: '22.5%', notebook: '17.5%' },
