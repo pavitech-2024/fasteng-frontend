@@ -17,5 +17,9 @@
   "asphalt.material": "Material",
   "asphalt.operator": "Operador",
   "asphalt.calculist": "Calculista",
-  "asphalt.materials.comments": "Informações do Material"
+  "asphalt.materials.comments": "Informações do Material",
+
+  "rtcd.step-2-description": "Preencha todos os campos abaixo",
+  "asphalt.essays.rtcdStep2": "Passo 2",
+  "asphalt.essays.rtcdStep3": "Passo 3"
 }

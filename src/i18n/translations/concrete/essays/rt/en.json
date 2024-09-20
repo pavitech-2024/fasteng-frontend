@@ -18,7 +18,10 @@
     "concrete.calculist": "Calculist",
     "concrete.materials.comments": "Material comments",
     "concrete.essays.concretert-concrete": "Traction Resistance",
-    "concrete.essays.concreteRc": "Traction Resistance"
-    
+    "concrete.essays.concreteRc": "Traction Resistance",
+    "granulometry-concrete.step-2-description": "Fill in all the fields below.",
+    "concreteRt.material_mass": "Material mass",
+    "concreteRt-concrete.choose-series": "Choose series",
+    "concreteRt-concrete.bottom": "Bottom"
   }
   

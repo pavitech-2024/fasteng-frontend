@@ -11,11 +11,26 @@ interface ConcreteGeneralData {
     description?: string;
   }
   
-  interface ConcreteRt_step2Data {
-    material_mass: number;
-    table_data: { sieve: string; passant: number; retained: number }[];
-    sieve_series: { label: string; value: number }[];
-    bottom: number;
+  interface ConcreteRtStep2Data {
+    dnitRange: string;
+    sampleVoidVolume: number;
+    pressConstant: number;
+    pressSpecification: string;
+    sampleOrigin: string;
+  }
+
+  interface ConcreteRtStep3Data {
+    concreteRt_data: {
+      id: number;
+      sampleName: string;
+      d1: number;
+      d2: number;
+      d3: number;
+      h1: number;
+      h2: number;
+      h3: number;
+      pressReading: number;
+    }[];
   }
   
   interface ConcreteRt_results {
@@ -34,7 +49,8 @@ interface ConcreteGeneralData {
   
   export type ConcreteRtData = {
     generalData: ConcreteGeneralData;
-    step2Data: ConcreteRt_step2Data;
+    step2Data: ConcreteRtStep2Data;
+    step3Data: ConcreteRtStep3Data;
     results: ConcreteRt_results;
   };
   
@@ -57,10 +73,26 @@ interface ConcreteGeneralData {
       description: null,
     },
     step2Data: {
-      material_mass: null,
-      table_data: null,
-      sieve_series: null,
-      bottom: null,
+      dnitRange: null,
+      sampleVoidVolume: null,
+      pressConstant: null,
+      pressSpecification: null,
+      sampleOrigin: null,
+    },
+    step3Data: {
+      concreteRt_data: [
+        {
+          id: 0,
+          sampleName: null,
+          d1: null,
+          d2: null,
+          d3: null,
+          h1: null,
+          h2: null,
+          h3: null,
+          pressReading: null,
+        },
+      ],
     },
     results: {
       accumulated_retained: [],
