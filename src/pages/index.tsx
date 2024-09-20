@@ -17,8 +17,8 @@ import { MainButton as Button } from '@/components/styles/global';
 //mui
 import { TextField, Box, Container, Typography, ButtonBase, Input } from '@mui/material';
 import { JbrAnchor, LepAnchor } from '@/components/atoms/anchor/loginAnchors';
-import ModalBase from '@/components/molecules/modals/modal';
-import axios from 'axios';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const Login: NextPage = () => {
   const { signIn } = useAuth();
@@ -28,7 +28,7 @@ const Login: NextPage = () => {
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const { push } = useRouter();
 
   const handleLogin = async () => {
     try {
@@ -38,17 +38,6 @@ const Login: NextPage = () => {
         error: t('login.toast error'),
       });
     } catch (error) {}
-  };
-
-  const handleForgetPassword = async (email: string) => {
-    // Verificações do email;
-    try {
-      const response = await axios.post(`/api/forgot-password`, { email });
-
-      console.log('🚀 ~ handleForgetPassword ~ response:', response);
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   return (
@@ -229,12 +218,16 @@ const Login: NextPage = () => {
                 disabled={password === '' || email === ''}
                 handleClick={() => handleLogin()}
               />
-              <ButtonBase
-                onClick={() => setModalIsOpen(true)}
-                sx={{ color: 'primary.main', fontSize: { desktop: '1rem', mobile: '0.85rem' } }}
+              <Link
+                href={'https://minhaconta.fastengapp.com.br/forgot-password'}
+                passHref
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                {t('login.forget password')}
-              </ButtonBase>
+                <ButtonBase sx={{ color: 'primary.main', fontSize: { desktop: '1rem', mobile: '0.85rem' } }}>
+                  {t('login.forget password')}
+                </ButtonBase>
+              </Link>
             </Box>
           </Box>
           <Box
@@ -260,29 +253,6 @@ const Login: NextPage = () => {
           </Box>
         </Container>
       </Container>
-
-      <ModalBase
-        title={'Recuperação de senha'}
-        leftButtonTitle={'Cancelar'}
-        rightButtonTitle={'Enviar'}
-        open={modalIsOpen}
-        size={'small'}
-        onCancel={() => setModalIsOpen(false)}
-        onSubmit={() => handleForgetPassword(email)}
-      >
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginY: '3rem' }}>
-          <Typography>Insira seu email</Typography>
-          <Input
-            sx={{ width: '100%' }}
-            value={email}
-            type="email"
-            onChange={(e) => {
-              const value = e.target.value;
-              setEmail(value);
-            }}
-          />
-        </Box>
-      </ModalBase>
     </>
   );
 };
