@@ -11,5 +11,6 @@
   "login.password placeholder": "Digite sua senha...",
   "login.email placeholder": "Digite seu email...",
   "forgot-password.success": "As instruções de recuperação de senha foram enviadas ao e-mail cadastrado.",
-  "forgot-password.error": "Houve um erro ao enviar as istruções de recuperação de senha para o e-mail cadastrado."
+  "forgot-password.error": "Houve um erro ao enviar as istruções de recuperação de senha para o e-mail cadastrado.",
+  "forgot-password.pending": "Enviando e-mail com instrução de recuperação de senha..."
 }
