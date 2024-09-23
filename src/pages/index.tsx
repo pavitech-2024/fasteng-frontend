@@ -64,7 +64,7 @@ const Login: NextPage = () => {
         }
       },
       {
-        pending: t('loading.materials.pending'),
+        pending: t('forgot-password.pending'),
         success: t('forgot-password.success'),
         error: {
           render({ data }) {
