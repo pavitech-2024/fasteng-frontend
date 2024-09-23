@@ -297,12 +297,12 @@ const Login: NextPage = () => {
         open={modalIsOpen}
         size={'small'}
       >
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginY: '2rem' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginY: '2rem' }}>
           <TextField
-            type='email'
-            placeholder='Insira o e-mail cadastrado...'
-            label='E-mail'
-            variant='standard'
+            type="email"
+            placeholder="Insira o e-mail cadastrado..."
+            label="E-mail"
+            variant="standard"
             sx={{ width: '100%' }}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
