@@ -128,6 +128,7 @@ const ConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
             { value: 'E', label: 'E' },
           ]}
           callback={(value) => setData({ step: 1, key: 'dnitRange', value })}
+          defaultValue={{label: data.dnitRange, value: data.dnitRange}}
         />
       </Box>
     </Box>

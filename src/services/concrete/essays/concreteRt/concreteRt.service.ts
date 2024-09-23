@@ -19,8 +19,9 @@ class CONCRETE_RT_SERVICE implements IEssayService {
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
-      { step: 1, description: t('concreteRt-concrete'), path: 'essay-data' },
-      { step: 2, description: t('results'), path: 'results' },
+      { step: 1, description: t('concrete.essays.concreteRt.step2Data'), path: 'essay-data' },
+      { step: 2, description: t('concrete.essays.concreteRt.step3Data'), path: 'essay-data' },
+      { step: 3, description: t('results'), path: 'results' },
     ],
   };
 
@@ -37,7 +38,6 @@ class CONCRETE_RT_SERVICE implements IEssayService {
           break;
         case 1:
           await this.submitConcreteRtStep2Data(data as ConcreteRtData['step2Data']);
-          await this.calculateResults(data as ConcreteRtData);
           break;
         case 2:
           await this.submitConcreteRtStep3Data(data as ConcreteRtData['step3Data']);

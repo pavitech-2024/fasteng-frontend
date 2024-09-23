@@ -4,7 +4,7 @@ import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import Rtcd_SERVICE from '@/services/asphalt/essays/rtcd/rtcd.service';
-import useRtcdStore from '@/stores/asphalt/rtcd.store';
+import useRtcdStore from '@/stores/asphalt/rtcd/rtcd.store';
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import { useState, useEffect } from 'react';

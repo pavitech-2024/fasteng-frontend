@@ -1,16 +1,16 @@
-import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
-import { EssayPageProps } from '@/components/templates/essay';
-import useRtcdStore from '@/stores/asphalt/rtcd/rtcd.store';
-import { Box, Button } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { t } from 'i18next';
-import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import InputEndAdornment from "@/components/atoms/inputs/input-endAdornment";
+import { EssayPageProps } from "@/components/templates/essay";
+import useConcreteRtStore from "@/stores/concrete/concreteRt/concreteRt.store";
+import { Box, Button } from "@mui/material";
+import { GridColDef, DataGrid } from "@mui/x-data-grid";
+import { t } from "i18next";
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
-const Rtcd_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { rtcdStep3: data, setData } = useRtcdStore();
+const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
+  const { step3Data: data, setData } = useConcreteRtStore();
 
-  const [localRows, setLocalRows] = useState(data.rtcd_data); // Define the 'localRows' variable
+  const [localRows, setLocalRows] = useState(data.concreteRt_data); // Define the 'localRows' variable
 
   useEffect(() => {
     if (nextDisabled) {
@@ -44,7 +44,7 @@ const Rtcd_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
         newRows.pop();
         setData({ step: 2, key: 'data', value: newRows });
         setLocalRows(newRows);
-      } else throw t('rtcd.error.minReads');
+      } else throw t('concreteRt.error.minReads');
     } catch (error) {
       toast.error(error);
     }
@@ -106,7 +106,7 @@ const Rtcd_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               if (e.target.value === null || e.target.value === '0') return;
               const newRows = [...localRows];
               if (!isFieldValid(Number(e.target.value))) {
-                throw t('rtcd.invalid.zero.value');
+                throw t('concreteRt.invalid.zero.value');
               }
               newRows[index].h1 = Number(e.target.value);
               setData({ step: 2, key: 'data', value: newRows });
@@ -131,7 +131,7 @@ const Rtcd_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               if (e.target.value === null) return;
               const newRows = [...localRows];
               if (!isFieldValid(Number(e.target.value))) {
-                throw t('rtcd.invalid.zero.value');
+                throw t('concreteRt.invalid.zero.value');
               }
               newRows[index].h2 = Number(e.target.value);
               setData({ step: 2, key: 'data', value: newRows });
@@ -156,7 +156,7 @@ const Rtcd_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               if (e.target.value === null) return;
               const newRows = [...localRows];
               if (!isFieldValid(Number(e.target.value))) {
-                throw t('rtcd.invalid.zero.value');
+                throw t('concreteRt.invalid.zero.value');
               }
               newRows[index].h3 = Number(e.target.value);
               setData({ step: 2, key: 'data', value: newRows });
@@ -181,7 +181,7 @@ const Rtcd_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               if (e.target.value === null) return;
               const newRows = [...localRows];
               if (!isFieldValid(Number(e.target.value))) {
-                throw t('rtcd.invalid.zero.value');
+                throw t('concreteRt.invalid.zero.value');
               }
               newRows[index].d1 = Number(e.target.value);
               setData({ step: 2, key: 'data', value: newRows });
@@ -206,7 +206,7 @@ const Rtcd_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               if (e.target.value === null) return;
               const newRows = [...localRows];
               if (!isFieldValid(Number(e.target.value))) {
-                throw t('rtcd.invalid.zero.value');
+                throw t('concreteRt.invalid.zero.value');
               }
               newRows[index].d2 = Number(e.target.value);
               setData({ step: 2, key: 'data', value: newRows });
@@ -231,7 +231,7 @@ const Rtcd_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               if (e.target.value === null) return;
               const newRows = [...localRows];
               if (!isFieldValid(Number(e.target.value))) {
-                throw t('rtcd.invalid.zero.value');
+                throw t('concreteRt.invalid.zero.value');
               }
               newRows[index].d3 = Number(e.target.value);
               setData({ step: 2, key: 'data', value: newRows });
@@ -256,7 +256,7 @@ const Rtcd_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
               if (e.target.value === null) return;
               const newRows = [...localRows];
               if (!isFieldValid(Number(e.target.value))) {
-                throw t('rtcd.invalid.zero.value');
+                throw t('concreteRt.invalid.zero.value');
               }
               newRows[index].pressReading = Number(e.target.value);
               setData({ step: 2, key: 'data', value: newRows });
@@ -307,4 +307,4 @@ const Rtcd_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   );
 };
 
-export default Rtcd_Step3;
+export default ConcreteRt_Step3;

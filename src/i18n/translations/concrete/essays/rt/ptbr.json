@@ -23,5 +23,8 @@
   "concreteRt.step-2-description": "Preencha todos os campos abaixo.",
   "concreteRt.material_mass": "Massa do material",
   "concreteRt-concrete.choose-series": "Escolha a série",
-  "concreteRt-concrete.bottom": "Fundo"
+  "concreteRt-concrete.bottom": "Fundo",
+  "concrete.essays.concreteRt.step2Data": "Passo 2",
+  "concrete.essays.concreteRt.step3Data": "Passo 3",
+  "concreteRt.step-3-description": "Preencha todos os campos abaixo"
 }

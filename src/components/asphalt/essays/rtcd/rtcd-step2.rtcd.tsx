@@ -1,7 +1,7 @@
 import DropDown from '@/components/atoms/inputs/dropDown';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import useRtcdStore from '@/stores/asphalt/rtcd.store';
+import useRtcdStore from '@/stores/asphalt/rtcd/rtcd.store';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
 

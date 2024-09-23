@@ -6,138 +6,103 @@ import Loading from "@/components/molecules/loading";
 import { EssayPageProps } from "@/components/templates/essay";
 import useConcreteRtStore from "@/stores/concrete/concreteRt/concreteRt.store";
 import { Box } from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { t } from "i18next";
 import Chart from "react-google-charts";
 
 const ConcreteRt_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
-    nextDisabled && setNextDisabled(false);
-    const { results: concreteRt_results, step2Data, generalData } = useConcreteRtStore();
-  
-    const data = {
-      // container "Resultados"
-      container_other_data: [],
-    };
-  
-    if (concreteRt_results) {
-      data.container_other_data.push(
-        { label: t('concreteRt-concrete.total-retained'), value: concreteRt_results.total_retained, unity: 'g' },
-        { label: t('concreteRt-concrete.nominal-size'), value: concreteRt_results.nominal_size, unity: 'mm' },
-        { label: t('concreteRt-concrete.nominal-diameter'), value: concreteRt_results.nominal_diameter, unity: 'mm' },
-        { label: t('concreteRt-concrete.fineness-module'), value: concreteRt_results.fineness_module, unity: '%' },
-        { label: t('concreteRt-concrete.cc'), value: concreteRt_results.cc },
-        { label: t('concreteRt-concrete.cnu'), value: concreteRt_results.cnu },
-        { label: t('concreteRt-concrete.error'), value: concreteRt_results.error, unity: '%' }
-      );
-    }
-  
-    // criando o objeto que será passado para o componente ExperimentResume
-    const experimentResumeData: ExperimentResumeData = {
-      experimentName: generalData.name,
-      materials: [{ name: generalData.material.name, type: generalData.material.type }],
-    };
-  
-    const graph_data = [
-      [t('concreteRt-concrete.passant'), t('concreteRt-concrete.diameter')],
-      ...concreteRt_results.graph_data,
-    ];
-  
-    const rows = [];
-  
-    step2Data.table_data.map((value, index) => {
-      rows.push({
-        sieve: value.sieve,
-        passant_porcentage: value.passant,
-        passant: concreteRt_results.passant[index],
-        retained_porcentage: concreteRt_results.retained_porcentage[index],
-        retained: value.retained,
-        accumulated_retained: concreteRt_results.accumulated_retained[index],
-      });
+  nextDisabled && setNextDisabled(false);
+  const { results: results, generalData } = useConcreteRtStore();
+
+  // criando o objeto que será passado para o componente ExperimentResume
+  const experimentResumeData: ExperimentResumeData = {
+    experimentName: generalData.name,
+    materials: [{ name: generalData.material.name, type: generalData.material.type }],
+  };
+
+  const data = {
+    everyRtsMpa: [],
+    everyRtsKgf: [],
+    average: 0,
+    acceptanceCondition: '',
+  };
+  const minimumRtValue = 0.65;
+
+  if (results) {
+    data.everyRtsKgf = results.everyRtsKgf.map((element) => {
+      return Number(element).toFixed(2);
     });
-  
-    const columns: GridColDef[] = [
-      {
-        field: 'sieve',
-        headerName: t('concreteRt-concrete.sieves'),
-        valueFormatter: ({ value }) => `${value}`,
-      },
-      {
-        field: 'passant_porcentage',
-        headerName: t('concreteRt-concrete.passant') + ' (%)',
-        valueFormatter: ({ value }) => `${value}`,
-      },
-      {
-        field: 'passant',
-        headerName: t('concreteRt-concrete.passant') + ' (g)',
-        valueFormatter: ({ value }) => `${value}`,
-      },
-      {
-        field: 'retained_porcentage',
-        headerName: t('concreteRt-concrete.retained') + ' (%)',
-        valueFormatter: ({ value }) => `${value}`,
-      },
-      {
-        field: 'retained',
-        headerName: t('concreteRt-concrete.retained') + ' (g)',
-        valueFormatter: ({ value }) => `${value}`,
-      },
-      {
-        field: 'accumulated_retained',
-        headerName: t('concreteRt-concrete.accumulated-retained') + ' (%)',
-        valueFormatter: ({ value }) => `${value}`,
-      },
-    ];
-  
-    return (
-      <>
-        <ExperimentResume data={experimentResumeData} />
-        <FlexColumnBorder title={t('results')} open={true}>
-          <ResultSubTitle title={t('concrete.essays.concreteRt')} sx={{ margin: '.65rem' }} />
+    data.everyRtsMpa = results.everyRtsMpa.map((element) => {
+      return Number(element).toFixed(2);
+    });
+    data.average = Number(Number(results.average).toFixed(2));
+    data.acceptanceCondition =
+      data.average > minimumRtValue
+        ? t('concreteRt.results.acceptance-condition-true')
+        : t('concreteRt.results.acceptance-condition-false');
+  }
+
+  const rows = data.everyRtsKgf.map((value, index) => ({
+    id: index,
+    sampleName: experimentResumeData.experimentName,
+    rtKgf: value.toString().replace('.', ','),
+    rtMpa: data.everyRtsMpa[index].toString().replace('.', ','),
+  }));
+
+  return (
+    <>
+      <ExperimentResume data={experimentResumeData} />
+      <FlexColumnBorder title={t('results')} open={true}>
+        <DataGrid
+          sx={{ lineHeight: '1.2rem' }}
+          rows={rows}
+          columns={[
+            {
+              field: 'sampleName',
+              headerName: t('concreteRt.results.sampleName'),
+              flex: 1,
+              align: 'center',
+              headerAlign: 'center',
+            },
+            { field: 'rtKgf', headerName: t('concreteRt.results.RtKgf'), flex: 1, align: 'center', headerAlign: 'center' },
+            { field: 'rtMpa', headerName: t('concreteRt.results.RtMpa'), flex: 1, align: 'center', headerAlign: 'center' },
+          ]}
+        />
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            marginTop: '2rem',
+            marginBottom: '2rem',
+            gap: '.65rem',
+            paddingX: '1.5rem',
+            justifyContent: 'center',
+          }}
+        >
           <Box
             sx={{
-              width: '100%',
               display: 'flex',
-              // gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
-              gap: '10px',
-              mt: '20px',
+              gap: '.65rem',
+              alignItems: 'center',
             }}
           >
-            {data.container_other_data.map((item, index) => (
-              <Result_Card key={index} label={item.label} value={item.value} unity={item.unity} />
-            ))}
+            <Result_Card
+              label={t('concreteRt.results.minimum-rt')}
+              value={`${minimumRtValue.toString().replace('.', ',')}`}
+              unity={'Mpa'}
+            />
+            <Result_Card
+              label={t('concreteRt.results.average')}
+              value={data.average.toString().replace('.', ',')}
+              unity={'MPa'}
+            />
+            <Result_Card label={t('concreteRt.results.acceptance-condition')} value={data.acceptanceCondition} unity={''} />
           </Box>
-          <Chart
-            chartType="LineChart"
-            width={'100%'}
-            height={'400px'}
-            loader={<Loading />}
-            data={graph_data}
-            options={{
-              title: t('concreteRt-concrete.concreteRt'),
-              backgroundColor: 'transparent',
-              pointSize: '2',
-              hAxis: {
-                title: `${t('concreteRt-concrete.sieve-openness') + ' (mm)'}`,
-                type: 'number',
-                scaleType: 'log',
-              },
-              vAxis: {
-                title: `${t('concreteRt-concrete.passant') + ' (%)'}`,
-                minValue: '0',
-                maxValue: '105',
-              },
-              legend: 'none',
-            }}
-          />
-          <ConcreteRt_resultsTable rows={rows} columns={columns} />
-        </FlexColumnBorder>
-      </>
-    );
-  };
-  
-  export default ConcreteRt_Results;
+        </Box>
+      </FlexColumnBorder>
+    </>
+  );
+};
 
-function usConcreteRteStore(): { results: any; step2Data: any; generalData: any; } {
-    throw new Error("Function not implemented.");
-}
+export default ConcreteRt_Results;
   

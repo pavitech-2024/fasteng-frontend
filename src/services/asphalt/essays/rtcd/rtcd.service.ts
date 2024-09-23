@@ -3,7 +3,7 @@ import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { t } from 'i18next';
 import Api from '@/api';
-import { RtcdActions, RtcdData } from '@/stores/asphalt/rtcd.store';
+import { RtcdActions, RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
 
 class Rtcd_SERVICE implements IEssayService {
   info = {
