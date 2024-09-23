@@ -11,5 +11,6 @@
   "login.password placeholder": "Enter your password...",
   "login.email placeholder": "Enter your email...",
   "forgot-password.success": "Password recovery instructions have been sent to your registered email address.",
-  "forgot-password.error": "There was an error sending password recovery instructions to the registered email address."
+  "forgot-password.error": "There was an error sending password recovery instructions to the registered email address.",
+  "forgot-password.pending": "Sending email with password recovery instructions..."
 }
