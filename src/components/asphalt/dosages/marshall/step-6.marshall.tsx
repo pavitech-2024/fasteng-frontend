@@ -2,7 +2,7 @@ import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
-import useMarshallStore, { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
+import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { Box, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
@@ -35,10 +35,6 @@ const Marshall_Step6 = ({
     plusOne: true,
   });
 
-  const debouncedSetData = debounce((newData) => {
-    setData({ step: 5, value: newData });
-  }, 300);
-
   const generateColumns = (tenor: string): GridColDef[] => [
     {
       field: 'diammeter',
@@ -59,7 +55,13 @@ const Marshall_Step6 = ({
               const value = e.target.value;
               const newState = [...data[tenor]];
               newState[index] = { ...newState[index], diammeter: Number(value) };
-              debouncedSetData(newState, tenor);
+    
+              debounce((newState, tenor) => {
+                setData({ step: 5, value: {...data, [tenor]: newState} })
+              }, 300)
+              debounce((newState, tenor) => {
+                setData({ step: 5, value: {...data, [tenor]: newState} })
+              }, 300)
             }}
           />
         );
@@ -84,7 +86,9 @@ const Marshall_Step6 = ({
               const value = e.target.value;
               const newState = [...data[tenor]];
               newState[index] = { ...newState[index], height: Number(value) };
-              debouncedSetData(newState, tenor);
+              debounce((newState, tenor) => {
+                setData({ step: 5, value: {...data, [tenor]: newState} })
+              }, 300)
             }}
           />
         );
@@ -109,7 +113,9 @@ const Marshall_Step6 = ({
               const value = e.target.value;
               const newState = [...data[tenor]];
               newState[index] = { ...newState[index], dryMass: Number(value) };
-              debouncedSetData(newState, tenor);
+              debounce((newState, tenor) => {
+                setData({ step: 5, value: {...data, [tenor]: newState} })
+              }, 300)
             }}
           />
         );
@@ -134,7 +140,9 @@ const Marshall_Step6 = ({
               const value = e.target.value;
               const newState = [...data[tenor]];
               newState[index] = { ...newState[index], submergedMass: Number(value) };
-              debouncedSetData(newState, tenor);
+              debounce((newState, tenor) => {
+                setData({ step: 5, value: {...data, [tenor]: newState} })
+              }, 300)
             }}
           />
         );
@@ -159,7 +167,9 @@ const Marshall_Step6 = ({
               const value = e.target.value;
               const newState = [...data[tenor]];
               newState[index] = { ...newState[index], drySurfaceSaturatedMass: Number(value) };
-              debouncedSetData(newState, tenor);
+              debounce((newState, tenor) => {
+                setData({ step: 5, value: {...data, [tenor]: newState} })
+              }, 300)
             }}
           />
         );
@@ -184,7 +194,9 @@ const Marshall_Step6 = ({
               const value = e.target.value;
               const newState = [...data[tenor]];
               newState[index] = { ...newState[index], stability: Number(value) };
-              debouncedSetData(newState, tenor);
+              debounce((newState, tenor) => {
+                setData({ step: 5, value: {...data, [tenor]: newState} })
+              }, 300)
             }}
           />
         );
@@ -209,7 +221,9 @@ const Marshall_Step6 = ({
               const value = e.target.value;
               const newState = [...data[tenor]];
               newState[index] = { ...newState[index], fluency: Number(value) };
-              debouncedSetData(newState, tenor);
+              debounce((newState, tenor) => {
+                setData({ step: 5, value: {...data, [tenor]: newState} })
+              }, 300)
             }}
           />
         );
@@ -234,7 +248,9 @@ const Marshall_Step6 = ({
               const value = e.target.value;
               const newState = [...data[tenor]];
               newState[index] = { ...newState[index], diametricalCompressionStrength: Number(value) };
-              debouncedSetData(newState, tenor);
+              debounce((newState, tenor) => {
+                setData({ step: 5, value: {...data, [tenor]: newState} })
+              }, 300)
             }}
           />
         );
