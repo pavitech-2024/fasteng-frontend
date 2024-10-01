@@ -1,5 +1,5 @@
 import Api from '@/api';
-import { CoarseAggregateIcon } from '@/assets';
+import { RtcdIcon } from '@/assets';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import { ConcreteRtActions, ConcreteRtData } from '@/stores/concrete/concreteRt/concreteRt.store';
@@ -8,7 +8,7 @@ import { t } from 'i18next';
 class CONCRETE_RT_SERVICE implements IEssayService {
   info = {
     key: 'concreteRt-concrete',
-    icon: CoarseAggregateIcon,
+    icon: RtcdIcon,
     title: t('concrete.essays.concreteRt'),
     path: '/concrete/essays/concreteRt',
     backend_path: 'concrete/essays/concreteRt',
@@ -30,7 +30,7 @@ class CONCRETE_RT_SERVICE implements IEssayService {
 
   /** @handleNext Receives the step and data from the form and calls the respective method */
   handleNext = async (step: number, data: unknown): Promise<void> => {
-    console.log('🚀 ~ CONCRETE_RT_SERVICE ~ handleNext= ~ data:', data);
+    console.log("🚀 ~ CONCRETE_RT_SERVICE ~ handleNext= ~ data:", data)
     try {
       switch (step) {
         case 0:
@@ -40,7 +40,8 @@ class CONCRETE_RT_SERVICE implements IEssayService {
           await this.submitConcreteRtStep2Data(data as ConcreteRtData['step2Data']);
           break;
         case 2:
-          await this.submitConcreteRtStep3Data(data as ConcreteRtData['step3Data']);
+          const { step3Data } = data as ConcreteRtData;
+          await this.submitConcreteRtStep3Data(step3Data);
           await this.calculateResults(data as ConcreteRtData);
           break;
         case 3:
@@ -111,6 +112,7 @@ class CONCRETE_RT_SERVICE implements IEssayService {
 
   // verify inputs from ConcreteRt page (step === 1, page 2)
   submitConcreteRtStep3Data = async (concreteRtStep3: ConcreteRtData['step3Data']): Promise<void> => {
+    console.log("🚀 ~ CONCRETE_RT_SERVICE ~ submitConcreteRtStep3Data= ~ concreteRtStep3:", concreteRtStep3)
     try {
       // verify if concreteRt_data is not empty
       if (!concreteRtStep3.concreteRt_data) throw t('errors.empty-concreteRt_data');
@@ -121,10 +123,19 @@ class CONCRETE_RT_SERVICE implements IEssayService {
 
   // calculate results from ConcreteRt essay
   calculateResults = async (store: ConcreteRtData): Promise<void> => {
+    console.log("🚀 ~ CONCRETE_RT_SERVICE ~ calculateResults= ~ store:", store)
+
+    const averageDiammeter = store.step3Data.concreteRt_data.map((e) => e.d1 + e.d2 / 2);
+
+    const heightDiammeterRatio = store.step3Data.concreteRt_data.map((e, idx) => e.height / averageDiammeter[idx]);
+
+    if (heightDiammeterRatio.some((e) => e <= 2.06)) throw t('errors.invalid-height-diammeter-ratio');
+
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
         step2Data: store.step2Data,
+        step3Data: store.step3Data
       });
 
       const { success, error, result } = response.data;

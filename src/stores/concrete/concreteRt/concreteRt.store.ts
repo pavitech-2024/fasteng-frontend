@@ -19,16 +19,27 @@ interface ConcreteRtStep2Data {
   sampleOrigin: string;
 }
 
+// interface ConcreteRtStep3Data {
+//   concreteRt_data: {
+//     id: number;
+//     sampleName: string;
+//     d1: number;
+//     d2: number;
+//     d3: number;
+//     h1: number;
+//     h2: number;
+//     h3: number;
+//     pressReading: number;
+//   }[];
+// }
+
 interface ConcreteRtStep3Data {
   concreteRt_data: {
     id: number;
     sampleName: string;
     d1: number;
     d2: number;
-    d3: number;
-    h1: number;
-    h2: number;
-    h3: number;
+    height: number;
     pressReading: number;
   }[];
 }
@@ -78,10 +89,7 @@ const initialState = {
         sampleName: null,
         d1: null,
         d2: null,
-        d3: null,
-        h1: null,
-        h2: null,
-        h3: null,
+        height: null,
         pressReading: null,
       },
     ],

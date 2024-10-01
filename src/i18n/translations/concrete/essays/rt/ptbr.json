@@ -26,5 +26,6 @@
   "concreteRt-concrete.bottom": "Fundo",
   "concrete.essays.concreteRt.step2Data": "Passo 2",
   "concrete.essays.concreteRt.step3Data": "Passo 3",
-  "concreteRt.step-3-description": "Preencha todos os campos abaixo"
+  "concreteRt.step-3-description": "Preencha todos os campos abaixo",
+  "errors.invalid-height-diammeter-ratio": "A média dos diametros dividido pela altura precisa ser maior ou igual à 2,06."
 }

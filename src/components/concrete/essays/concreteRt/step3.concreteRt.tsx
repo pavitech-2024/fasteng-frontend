@@ -15,10 +15,28 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
   useEffect(() => {
     if (nextDisabled) {
       const hasEmptyValues = localRows.some((item) => Object.values(item).some((value) => value === null));
+      console.log("🚀 ~ useEffect ~ hasEmptyValues:", hasEmptyValues)
       if (!hasEmptyValues) setNextDisabled(false);
     }
   }, [localRows, nextDisabled, setNextDisabled]);
 
+  // const handleAdd = () => {
+  //   const newRows = [...localRows];
+  //   newRows.push({
+  //     id: localRows.length,
+  //     sampleName: null,
+  //     d1: null,
+  //     d2: null,
+  //     d3: null,
+  //     height: null,
+  //     h2: null,
+  //     h3: null,
+  //     pressReading: null,
+  //   });
+  //   setData({ step: 2, key: 'data', value: newRows });
+  //   setLocalRows(newRows);
+  //   setNextDisabled(false);
+  // };
   const handleAdd = () => {
     const newRows = [...localRows];
     newRows.push({
@@ -26,10 +44,7 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
       sampleName: null,
       d1: null,
       d2: null,
-      d3: null,
-      h1: null,
-      h2: null,
-      h3: null,
+      height: null,
       pressReading: null,
     });
     setData({ step: 2, key: 'data', value: newRows });
@@ -67,6 +82,205 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     return fieldValue > 0;
   };
 
+  // const columns: GridColDef[] = [
+  //   {
+  //     field: 'sampleName',
+  //     headerName: t('Nome do corpo de prova'),
+  //     width: 110,
+  //     renderCell: ({ row }) => {
+  //       const { sampleName } = row;
+  //       const index = localRows.findIndex((r) => r.sampleName === sampleName);
+  //       return (
+  //         <InputEndAdornment
+  //           adornment={''}
+  //           type="text"
+  //           value={localRows[index].sampleName}
+  //           onChange={(e) => {
+  //             if (e.target.value === null) return;
+  //             const newRows = [...localRows];
+  //             newRows[index].sampleName = e.target.value;
+  //             setData({ step: 2, key: 'data', value: newRows });
+  //           }}
+  //         />
+  //       );
+  //     },
+  //   },
+  //   {
+  //     field: 'height',
+  //     headerName: 'height',
+  //     width: 80,
+  //     renderCell: ({ row }) => {
+  //       const { height } = row;
+  //       const index = localRows.findIndex((r) => r.height === height);
+  //       return (
+  //         <InputEndAdornment
+  //           adornment={''}
+  //           type="number"
+  //           value={localRows[index].height}
+  //           onChange={(e) => {
+  //             if (e.target.value === null || e.target.value === '0') return;
+  //             const newRows = [...localRows];
+  //             if (!isFieldValid(Number(e.target.value))) {
+  //               throw t('concreteRt.invalid.zero.value');
+  //             }
+  //             newRows[index].height = Number(e.target.value);
+  //             setData({ step: 2, key: 'data', value: newRows });
+  //           }}
+  //         />
+  //       );
+  //     },
+  //   },
+  //   {
+  //     field: 'h2',
+  //     headerName: 'h2 (mm)',
+  //     width: 80,
+  //     renderCell: ({ row }) => {
+  //       const { h2 } = row;
+  //       const index = localRows.findIndex((r) => r.h2 === h2);
+  //       return (
+  //         <InputEndAdornment
+  //           adornment={''}
+  //           type="number"
+  //           value={localRows[index].h2}
+  //           onChange={(e) => {
+  //             if (e.target.value === null) return;
+  //             const newRows = [...localRows];
+  //             if (!isFieldValid(Number(e.target.value))) {
+  //               throw t('concreteRt.invalid.zero.value');
+  //             }
+  //             newRows[index].h2 = Number(e.target.value);
+  //             setData({ step: 2, key: 'data', value: newRows });
+  //           }}
+  //         />
+  //       );
+  //     },
+  //   },
+  //   {
+  //     field: 'h3',
+  //     headerName: 'h3 (mm)',
+  //     width: 80,
+  //     renderCell: ({ row }) => {
+  //       const { h3 } = row;
+  //       const index = localRows.findIndex((r) => r.h3 === h3);
+  //       return (
+  //         <InputEndAdornment
+  //           adornment={''}
+  //           type="number"
+  //           value={localRows[index].h3}
+  //           onChange={(e) => {
+  //             if (e.target.value === null) return;
+  //             const newRows = [...localRows];
+  //             if (!isFieldValid(Number(e.target.value))) {
+  //               throw t('concreteRt.invalid.zero.value');
+  //             }
+  //             newRows[index].h3 = Number(e.target.value);
+  //             setData({ step: 2, key: 'data', value: newRows });
+  //           }}
+  //         />
+  //       );
+  //     },
+  //   },
+  //   {
+  //     field: 'd1',
+  //     headerName: 'd1 (mm)',
+  //     width: 80,
+  //     renderCell: ({ row }) => {
+  //       const { d1 } = row;
+  //       const index = localRows.findIndex((r) => r.d1 === d1);
+  //       return (
+  //         <InputEndAdornment
+  //           adornment={''}
+  //           type="number"
+  //           value={localRows[index].d1}
+  //           onChange={(e) => {
+  //             if (e.target.value === null) return;
+  //             const newRows = [...localRows];
+  //             if (!isFieldValid(Number(e.target.value))) {
+  //               throw t('concreteRt.invalid.zero.value');
+  //             }
+  //             newRows[index].d1 = Number(e.target.value);
+  //             setData({ step: 2, key: 'data', value: newRows });
+  //           }}
+  //         />
+  //       );
+  //     },
+  //   },
+  //   {
+  //     field: 'd2',
+  //     headerName: 'd2 (mm)',
+  //     width: 80,
+  //     renderCell: ({ row }) => {
+  //       const { d2 } = row;
+  //       const index = localRows.findIndex((r) => r.d2 === d2);
+  //       return (
+  //         <InputEndAdornment
+  //           adornment={''}
+  //           type="number"
+  //           value={localRows[index].d2}
+  //           onChange={(e) => {
+  //             if (e.target.value === null) return;
+  //             const newRows = [...localRows];
+  //             if (!isFieldValid(Number(e.target.value))) {
+  //               throw t('concreteRt.invalid.zero.value');
+  //             }
+  //             newRows[index].d2 = Number(e.target.value);
+  //             setData({ step: 2, key: 'data', value: newRows });
+  //           }}
+  //         />
+  //       );
+  //     },
+  //   },
+  //   {
+  //     field: 'd3',
+  //     headerName: 'd3 (mm)',
+  //     width: 80,
+  //     renderCell: ({ row }) => {
+  //       const { d3 } = row;
+  //       const index = localRows.findIndex((r) => r.d3 === d3);
+  //       return (
+  //         <InputEndAdornment
+  //           adornment={''}
+  //           type="number"
+  //           value={localRows[index].d3}
+  //           onChange={(e) => {
+  //             if (e.target.value === null) return;
+  //             const newRows = [...localRows];
+  //             if (!isFieldValid(Number(e.target.value))) {
+  //               throw t('concreteRt.invalid.zero.value');
+  //             }
+  //             newRows[index].d3 = Number(e.target.value);
+  //             setData({ step: 2, key: 'data', value: newRows });
+  //           }}
+  //         />
+  //       );
+  //     },
+  //   },
+  //   {
+  //     field: 'pressReading',
+  //     headerName: 'Leitura da prensa (Kgf)',
+  //     width: 110,
+  //     renderCell: ({ row }) => {
+  //       const { pressReading } = row;
+  //       const index = localRows.findIndex((r) => r.pressReading === pressReading);
+  //       return (
+  //         <InputEndAdornment
+  //           adornment={''}
+  //           type="number"
+  //           value={localRows[index].pressReading}
+  //           onChange={(e) => {
+  //             if (e.target.value === null) return;
+  //             const newRows = [...localRows];
+  //             if (!isFieldValid(Number(e.target.value))) {
+  //               throw t('concreteRt.invalid.zero.value');
+  //             }
+  //             newRows[index].pressReading = Number(e.target.value);
+  //             setData({ step: 2, key: 'data', value: newRows });
+  //           }}
+  //         />
+  //       );
+  //     },
+  //   },
+  // ];
   const columns: GridColDef[] = [
     {
       field: 'sampleName',
@@ -91,74 +305,24 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
       },
     },
     {
-      field: 'h1',
-      headerName: 'h1',
+      field: 'height',
+      headerName: 'height',
       width: 80,
       renderCell: ({ row }) => {
-        const { h1 } = row;
-        const index = localRows.findIndex((r) => r.h1 === h1);
+        const { height } = row;
+        const index = localRows.findIndex((r) => r.height === height);
         return (
           <InputEndAdornment
             adornment={''}
             type="number"
-            value={localRows[index].h1}
+            value={localRows[index].height}
             onChange={(e) => {
               if (e.target.value === null || e.target.value === '0') return;
               const newRows = [...localRows];
               if (!isFieldValid(Number(e.target.value))) {
                 throw t('concreteRt.invalid.zero.value');
               }
-              newRows[index].h1 = Number(e.target.value);
-              setData({ step: 2, key: 'data', value: newRows });
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'h2',
-      headerName: 'h2 (mm)',
-      width: 80,
-      renderCell: ({ row }) => {
-        const { h2 } = row;
-        const index = localRows.findIndex((r) => r.h2 === h2);
-        return (
-          <InputEndAdornment
-            adornment={''}
-            type="number"
-            value={localRows[index].h2}
-            onChange={(e) => {
-              if (e.target.value === null) return;
-              const newRows = [...localRows];
-              if (!isFieldValid(Number(e.target.value))) {
-                throw t('concreteRt.invalid.zero.value');
-              }
-              newRows[index].h2 = Number(e.target.value);
-              setData({ step: 2, key: 'data', value: newRows });
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'h3',
-      headerName: 'h3 (mm)',
-      width: 80,
-      renderCell: ({ row }) => {
-        const { h3 } = row;
-        const index = localRows.findIndex((r) => r.h3 === h3);
-        return (
-          <InputEndAdornment
-            adornment={''}
-            type="number"
-            value={localRows[index].h3}
-            onChange={(e) => {
-              if (e.target.value === null) return;
-              const newRows = [...localRows];
-              if (!isFieldValid(Number(e.target.value))) {
-                throw t('concreteRt.invalid.zero.value');
-              }
-              newRows[index].h3 = Number(e.target.value);
+              newRows[index].height = Number(e.target.value);
               setData({ step: 2, key: 'data', value: newRows });
             }}
           />
@@ -216,31 +380,6 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
       },
     },
     {
-      field: 'd3',
-      headerName: 'd3 (mm)',
-      width: 80,
-      renderCell: ({ row }) => {
-        const { d3 } = row;
-        const index = localRows.findIndex((r) => r.d3 === d3);
-        return (
-          <InputEndAdornment
-            adornment={''}
-            type="number"
-            value={localRows[index].d3}
-            onChange={(e) => {
-              if (e.target.value === null) return;
-              const newRows = [...localRows];
-              if (!isFieldValid(Number(e.target.value))) {
-                throw t('concreteRt.invalid.zero.value');
-              }
-              newRows[index].d3 = Number(e.target.value);
-              setData({ step: 2, key: 'data', value: newRows });
-            }}
-          />
-        );
-      },
-    },
-    {
       field: 'pressReading',
       headerName: 'Leitura da prensa (Kgf)',
       width: 110,
@@ -276,9 +415,9 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
       columnGroupingModel={[
         {
           groupId: 'Alturas',
-          headerName: 'Alturas',
+          headerName: 'Altura',
           headerAlign: 'center',
-          children: [{ field: 'h1' }, { field: 'h2' }, { field: 'h3' }],
+          children: [{ field: 'height' }, { field: 'h2' }, { field: 'h3' }],
         },
         {
           groupId: 'Diametros',

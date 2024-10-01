@@ -32,17 +32,17 @@ const ConcreteRt = () => {
       {
         step: 1,
         children: <ConcreteRt_Step2 />,
-        data: store.step2Data,
+        data: store,
       },
       {
         step: 2,
         children: <ConcreteRt_Step3 />,
-        data: store.step3Data,
+        data: store,
       },
       {
         step: 3,
         children: <ConcreteRt_Results />,
-        data: store.results,
+        data: store,
       },
     ];
   
