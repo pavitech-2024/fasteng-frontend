@@ -7,9 +7,9 @@ import Api from '@/api';
 
 class SandEquivalent_SERVICE implements IEssayService {
   info = {
-    key: 'sand-equivalent',
+    key: 'sandequivalent',
     icon: SandEquivalentIcon,
-    title: t('asphalt.essays.sandEquivalent'),
+    title: t('asphalt.essays.sandequivalent'),
     path: '/asphalt/essays/sandEquivalent',
     backend_path: 'asphalt/essays/sandEquivalent',
     steps: 3,

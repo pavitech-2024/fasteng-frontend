@@ -25,7 +25,9 @@ const Abrasion_GeneralData = ({
       async () => {
         const materials = await abrasion.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        const filteredMaterials = materials.filter((material) => material.type === 'coarseAggregate');
+
+        setMaterials(filteredMaterials);
         setLoading(false);
       },
       {
@@ -35,7 +37,6 @@ const Abrasion_GeneralData = ({
       }
     );
     // se não deixar o array vazio ele vai ficar fazendo requisições infinitas
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const inputs = [
@@ -60,7 +61,7 @@ const Abrasion_GeneralData = ({
     setNextDisabled(false);
 
   return (
-    <>
+    <div>
       {loading ? (
         <Loading />
       ) : (
@@ -141,7 +142,7 @@ const Abrasion_GeneralData = ({
           />
         </Box>
       )}
-    </>
+    </div>
   );
 };
 
