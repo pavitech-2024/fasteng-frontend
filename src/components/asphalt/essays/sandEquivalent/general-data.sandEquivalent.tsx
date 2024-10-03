@@ -25,7 +25,9 @@ const SandEquivalent_GeneralData = ({
       async () => {
         const materials = await sandEquivalent.getmaterialsByUserId(user._id);
 
-        const filteredMaterials = materials.filter((material) => material.type === 'coarseAggregate' || material.type === 'fineAggregate');
+        const filteredMaterials = materials.filter(
+          (material) => material.type === 'coarseAggregate' || material.type === 'fineAggregate'
+        );
 
         setMaterials(filteredMaterials);
         setLoading(false);
