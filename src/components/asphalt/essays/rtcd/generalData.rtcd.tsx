@@ -21,7 +21,9 @@ const Rtcd_GeneralData = ({ nextDisabled, setNextDisabled, rtcd }: EssayPageProp
       async () => {
         const materials = await rtcd.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        const filteredMaterials = materials.filter((material) => material.type === 'filler');
+
+        setMaterials(filteredMaterials);
         setLoading(false);
       },
       {
@@ -56,7 +58,7 @@ const Rtcd_GeneralData = ({ nextDisabled, setNextDisabled, rtcd }: EssayPageProp
     setNextDisabled(false);
 
   return (
-    <>
+    <div>
       {loading ? (
         <Loading />
       ) : (
@@ -137,7 +139,7 @@ const Rtcd_GeneralData = ({ nextDisabled, setNextDisabled, rtcd }: EssayPageProp
           />
         </Box>
       )}
-    </>
+    </div>
   );
 };
 
