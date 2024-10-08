@@ -1,1 +1,7 @@
-{}
+{
+  "flashPoint": "Flash Point",
+  "flashPoint.step-2-description": "Fill in all fields",
+  "flashPoint.step-3-description": "These are the results of your experiment. Remember to save the experiment so you can access it later.",
+  "flashPoint.ignition_temperature": "Ignition temperature",
+  "flashPoint.temperature": "Temperature"
+}
