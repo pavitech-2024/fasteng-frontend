@@ -7,11 +7,36 @@ const ABCP_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
   const { generalData, setData } = useABCPStore();
 
   const inputs = [
-    { label: t('experiment-name'), value: generalData.name, key: 'name', required: true },
-    { label: t('laboratory'), value: generalData.laboratory, key: 'laboratory', required: false },
-    { label: t('operator'), value: generalData.operator, key: 'operator', required: false },
-    { label: t('calculist'), value: generalData.calculist, key: 'calculist', required: false },
-    { label: t('samples.comments'), value: generalData.description, key: 'description', required: false },
+    {
+      label: t('experiment-name'),
+      value: generalData.name,
+      key: 'name',
+      required: true,
+    },
+    {
+      label: t('laboratory'),
+      value: generalData.laboratory,
+      key: 'laboratory',
+      required: false,
+    },
+    {
+      label: t('operator'),
+      value: generalData.operator,
+      key: 'operator',
+      required: false,
+    },
+    {
+      label: t('calculist'),
+      value: generalData.calculist,
+      key: 'calculist',
+      required: false,
+    },
+    {
+      label: t('samples.comments'),
+      value: generalData.description,
+      key: 'description',
+      required: false,
+    },
   ];
 
   inputs.every(({ required, value }) => {

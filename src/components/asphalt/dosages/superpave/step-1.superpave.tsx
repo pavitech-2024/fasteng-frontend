@@ -18,8 +18,8 @@ const Superpave_Step1 = ({
   const { generalData, setData } = useSuperpaveStore();
 
   const inputs = [
-    { label: t('asphalt.project_name'), value: generalData.projectName, key: 'projectName', required: true },
-    { label: t('asphalt.laboratory_name'), value: generalData.labName, key: 'labName', required: false },
+    { label: t('asphalt.project_name'), value: generalData.name, key: 'name', required: true },
+    { label: t('asphalt.laboratory_name'), value: generalData.laboratory, key: 'laboratory', required: false },
     { label: t('asphalt.operator'), value: generalData.operator, key: 'operator', required: false },
     { label: t('asphalt.calculist'), value: generalData.calculist, key: 'calculist', required: false },
     {
@@ -45,18 +45,23 @@ const Superpave_Step1 = ({
     { label: t('asphalt.dosages.superpave.bonding-layer'), value: 'bonding' },
   ];
 
-  // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
-  inputs.every(({ required, value }) => {
+  // Função para verificar se todos os campos obrigatórios estão preenchidos
+  const allRequiredFieldsFilled = inputs.every(({ required, value }) => {
     if (!required) return true;
 
-    if (value === null) return false;
-
-    if (typeof value === 'string' && value.trim() === '') return false;
+    if (value === null || (typeof value === 'string' && value.trim() === '')) {
+      return false;
+    }
 
     return true;
-  }) &&
-    nextDisabled &&
+  });
+
+  // Atualizar o estado nextDisabled com base na verificação
+  if (allRequiredFieldsFilled && nextDisabled) {
     setNextDisabled(false);
+  } else if (!allRequiredFieldsFilled && !nextDisabled) {
+    setNextDisabled(true);
+  }
 
   return (
     <>
@@ -80,7 +85,7 @@ const Superpave_Step1 = ({
             }}
           >
             {inputs.map((input) => {
-              if (['projectName', 'labName', 'operator', 'calculist'].includes(input.key)) {
+              if (['name', 'laboratory', 'operator', 'calculist'].includes(input.key)) {
                 return (
                   <TextField
                     variant="standard"
@@ -99,6 +104,7 @@ const Superpave_Step1 = ({
                     label={input.label}
                     options={trafficVolumeOptions}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
+                    defaultValue={{ label: generalData.trafficVolume, value: generalData.trafficVolume }}
                     size="medium"
                     required={input.required}
                   />
@@ -111,6 +117,7 @@ const Superpave_Step1 = ({
                     label={input.label}
                     options={objectiveOptions}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
+                    defaultValue={{ label: generalData.objective, value: generalData.objective }}
                     size="medium"
                     required={input.required}
                   />
@@ -132,6 +139,7 @@ const Superpave_Step1 = ({
                       label={input.label}
                       options={trackOptions}
                       callback={(value) => setData({ step: 0, key: input.key, value })}
+                      defaultValue={{ label: generalData.dnitBand, value: generalData.dnitBand }}
                       size="medium"
                       required={input.required}
                     />

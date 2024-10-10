@@ -4,7 +4,8 @@
   "marshall.step-2-description": "Selecione os agregados e o ligante asfáltico que serão utilizados na dosagem.",
   "marshall.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica da mistura.",
   "marshall.step-4-description": "Insira o teor inicial de ligante.",
-  "marshall.step-5-description": "Insira os dados de densidade máxima real ou teórica da mistura.",
+  "marshall.step-5-description": "Insira os dados de densidade máxima real ou teórica da mistura e o fator de correção para a temperatura da água.",
+  "marshall.step-9-description": "Esses são os resultados da sua dosagem Marshall. Lembre-se de salvar o projeto para garantir o acesso a ele no futuro.",
 
   "marshall.dosages.marshall.general-data": "Dados Gerais",
   "asphalt.dosages.marshall.material_selection": "Seleção de Materiais",
@@ -26,6 +27,8 @@
   "asphalt.dosages.marshall.sieve": "Peneira",
   "asphalt.dosages.marshall.project": "Projeto",
   "asphalt.dosages.marshall.specification": "Especificação",
+  "asphalt.dosages.marshall.band": "Banda",
+  "asphalt.dosages.marshall.projections": "Projeções",
   "asphalt.dosages.marshall.sieve_mm": "Peneira (mm)",
   "asphalt.dosages.marshall.dnit-track": "Faixa do DNIT",
   "asphalt.dosages.marshall.initial-binder": "Teor de ligante inicial",
@@ -40,5 +43,55 @@
   "asphalt.choose_dnit_track": "Escolha a Faixa do DNIT",
 
   "asphalt.dosages.marshall.bearing-layer": "Camada de Rolamento",
-  "asphalt.dosages.marshall.bonding-layer": "Camada de Ligação"
+  "asphalt.dosages.marshall.bonding-layer": "Camada de Ligação",
+  "asphalt.dosages.inputs-sum-invalid": "A soma dos valores das porcentagens dos materiais deve ser igual a 100.",
+
+  "asphalt.dosages.indirect-tensile-strength": "Resistência à tração por compressão diametral",
+  "asphalt.dosages.fluency": "Fluência",
+  "asphalt.dosages.marshall-stability": "Estabilidade Marshall",
+  "asphalt.dosages.rbv": "Relação betume-vazios",
+  "asphalt.dosages.vam": "Vazios do agregado mineral (VAM)",
+  "asphalt.dosages.vv": "Volume de vazios",
+  "asphalt.dosages.gmb": "Massa específica aparente",
+  "asphalt.dosages.dmt": "Densidade máximo teórica (DMT)",
+  "asphalt.dosages.optimum-binder": "Teor ótimo de ligante asfáltico",
+  "asphalt.dosages.binder-volumetric-mechanic-params": "Parametros volumétricos e mecanicos da mistura no teor ótimo de ligante asfáltico",
+  "asphalt.dosages.mineral-aggregate-voids": "Vazios do agregado mineral (%)",
+  "asphalt.dosages.mixture-voids": "Vazios na mistura",
+  "asphalt.dosages.stability": "Estabilidade",
+  "asphalt.dosages.marshall.unity": "Unidade",
+  "asphalt.dosages.marshall.parameter": "Parâmetro",
+  "asphalt.dosages.marshall.asphalt-mass-quantitative": "Quantitativo para 1 metro cúbico de massa asfáltica",
+  "asphalt.dosages.marshall.asphaltic-binder": "Ligante asfáltico",
+  "asphalt.dosages.marshall.materials-final-proportions": "Proporção final dos materiais",
+
+  "asphalt.dosages.marshall.cancel": "Cancelar",
+  "asphalt.dosages.marshall.confirm": "Confirmar",
+
+  "asphalt.dosages.marshall.rice-test-data": "Dados do Rice Test",
+  "asphalt.dosages.marshall.rice-test": "Rice Test",
+  "asphalt.dosages.marshall.gmm-calculated-rice-test": "Gmm calculada pelo Rice Test:",
+  "asphalt.dosages.marshall.binder-trial-gmm": "Gmm do teor de ligante asfáltico:",
+  "asphalt.dosages.marshall.insert-gmm": "Insira a Gmm ou calcule pelo Rice Test",
+  "asphalt.dosages.marshall.binder-trial-dmt": "DMT do teor de ligante ótimo:",
+  "asphalt.dosages.marshall.select-mixture-density-method": "Selecione o método de cálculo da densidade da mistura",
+  "asphalt.dosages.marshall.water-temperature": "Selecione o fator de correção para a temperatura da água",
+
+  "asphalt.dosages.marshall.insert-real-specific-mass": "Insira a massa específica real dos materiais abaixo.",
+
+  "asphalt.dosages.marshall.container-water-mass": "Massa do recipiente + água (g)",
+  "asphalt.dosages.marshall.container-sample-water-mass": "Massa do recipiente + amostra + água (g)",
+  "asphalt.dosages.marshall.dry-sample-mass": "Massa da amostra seca em ar (g)",
+  "asphalt.dosages.marshall.tenor": "Teor",
+
+  "asphalt.dosages.marshall.dry-surface-saturated-mass": "Massa saturada com superfície seca",
+  "asphalt.dosages.marshall.submerged-mass": "Massa submersa",
+  "asphalt.dosages.marshall.dry-mass": "Massa seca",
+  "asphalt.dosages.marshall.height": "Altura",
+  "asphalt.dosages.marshall.diammeter": "Diametro",
+
+  "asphalt.dosages.marshall.binder-percentage": "Porcentagem de ligante (%)",
+
+  "asphalt.dosages.enable": "Liberar",
+  "asphalt.dosages.disable": "Não usar esse teor"
 }

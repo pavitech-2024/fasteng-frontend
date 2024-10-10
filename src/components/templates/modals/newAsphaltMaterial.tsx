@@ -205,6 +205,7 @@ const NewAsphaltMaterialModal = ({
                   sx={{ minWidth: '120px', bgcolor: 'primaryTons.white' }}
                   label={t(`asphalt.materials.${input.key}`)}
                   variant="standard"
+                  defaultValue={{ value: material.type, label: material.type }}
                   size="medium"
                   options={
                     input.key === 'type'

@@ -32,6 +32,7 @@ const Marshall_Step8 = ({
   const materials = materialSelectionData.aggregates.map((item) => item.name);
   const [methodGmm, setMethodGmm] = useState(false);
   const [methodDmt, setMethodDmt] = useState(false);
+  const [method, setMethod] = useState('');
   const optimumBinderRows = data?.optimumBinder;
 
   useEffect(() => {
@@ -59,9 +60,9 @@ const Marshall_Step8 = ({
         }
       },
       {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
       }
     );
   }, []);
@@ -69,7 +70,7 @@ const Marshall_Step8 = ({
   const generateColumns: GridColDef[] = [
     {
       field: 'diammeter',
-      headerName: 'Diâmetro (cm)',
+      headerName: t('asphalt.dosages.marshall.diammeter') + '(cm)',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data?.optimumBinder.findIndex((r) => r.id === id);
@@ -77,6 +78,7 @@ const Marshall_Step8 = ({
           <InputEndAdornment
             adornment={'cm'}
             value={data?.optimumBinder[index]?.diammeter}
+            type="number"
             onChange={(e) => {
               const value = Number(e.target.value);
               const newState = [...data.optimumBinder];
@@ -89,7 +91,7 @@ const Marshall_Step8 = ({
     },
     {
       field: 'height',
-      headerName: 'Altura (cm)',
+      headerName: t('asphalt.dosages.marshall.height') + '(cm)',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data?.optimumBinder.findIndex((r) => r.id === id);
@@ -97,6 +99,7 @@ const Marshall_Step8 = ({
           <InputEndAdornment
             adornment={'cm'}
             value={data?.optimumBinder[index]?.height}
+            type="number"
             onChange={(e) => {
               const value = Number(e.target.value);
               const newState = [...data.optimumBinder];
@@ -109,7 +112,7 @@ const Marshall_Step8 = ({
     },
     {
       field: 'dryMass',
-      headerName: 'Massa seca (g)',
+      headerName: t('asphalt.dosages.marshall.dry-mass') + '(g)',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data?.optimumBinder.findIndex((r) => r.id === id);
@@ -117,6 +120,7 @@ const Marshall_Step8 = ({
           <InputEndAdornment
             adornment={'g'}
             value={data?.optimumBinder[index]?.dryMass}
+            type="number"
             onChange={(e) => {
               const value = Number(e.target.value);
               const newState = [...data.optimumBinder];
@@ -129,7 +133,7 @@ const Marshall_Step8 = ({
     },
     {
       field: 'submergedMass',
-      headerName: 'Massa submersa (g)',
+      headerName: t('asphalt.dosages.marshall.submerged-mass') + '(g)',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data.optimumBinder.findIndex((r) => r.id === id);
@@ -137,6 +141,7 @@ const Marshall_Step8 = ({
           <InputEndAdornment
             adornment={'g'}
             value={data?.optimumBinder[index]?.submergedMass}
+            type="number"
             onChange={(e) => {
               const value = Number(e.target.value);
               const newState = [...data.optimumBinder];
@@ -149,7 +154,7 @@ const Marshall_Step8 = ({
     },
     {
       field: 'drySurfaceSaturatedMass',
-      headerName: 'Massa saturada com superfície seca (g)',
+      headerName: t('asphalt.dosages.marshall.dry-surface-saturated-mass') + '(g)',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data?.optimumBinder.findIndex((r) => r.id === id);
@@ -157,6 +162,7 @@ const Marshall_Step8 = ({
           <InputEndAdornment
             adornment={'g'}
             value={data?.optimumBinder[index]?.drySurfaceSaturatedMass}
+            type="number"
             onChange={(e) => {
               const value = Number(e.target.value);
               const newState = [...data.optimumBinder];
@@ -169,7 +175,7 @@ const Marshall_Step8 = ({
     },
     {
       field: 'stability',
-      headerName: 'Estabilidade (N)',
+      headerName: t('asphalt.dosages.marshall-stability') + '(N)',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data.optimumBinder.findIndex((r) => r.id === id);
@@ -177,6 +183,7 @@ const Marshall_Step8 = ({
           <InputEndAdornment
             adornment={'N'}
             value={data?.optimumBinder[index]?.stability}
+            type="number"
             onChange={(e) => {
               const value = Number(e.target.value);
               const newState = [...data.optimumBinder];
@@ -189,7 +196,7 @@ const Marshall_Step8 = ({
     },
     {
       field: 'fluency',
-      headerName: 'Fluência (mm)',
+      headerName: t('asphalt.dosages.fluency') + '(mm)',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data.optimumBinder.findIndex((r) => r.id === id);
@@ -197,6 +204,7 @@ const Marshall_Step8 = ({
           <InputEndAdornment
             adornment={'mm'}
             value={data?.optimumBinder[index]?.fluency}
+            type="number"
             onChange={(e) => {
               const value = Number(e.target.value);
               const newState = [...data.optimumBinder];
@@ -209,7 +217,7 @@ const Marshall_Step8 = ({
     },
     {
       field: 'diametricalCompressionStrength',
-      headerName: 'Resistência à tração por compressão diametral (MPa)',
+      headerName: t('asphalt.dosages.indirect-tensile-strength') + '(MPa)',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data?.optimumBinder.findIndex((r) => r.id === id);
@@ -217,6 +225,7 @@ const Marshall_Step8 = ({
           <InputEndAdornment
             adornment={'cm'}
             value={data?.optimumBinder[index]?.diametricalCompressionStrength}
+            type="number"
             onChange={(e) => {
               const value = Number(e.target.value);
               const newState = [...data.optimumBinder];
@@ -258,12 +267,12 @@ const Marshall_Step8 = ({
   const riceTestColumns: GridColDef[] = [
     {
       field: 'Teor',
-      headerName: 'Teor',
+      headerName: t('asphalt.dosages.marshall.tenor'),
       valueFormatter: () => `${optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2)}%`,
     },
     {
       field: 'massOfDrySample',
-      headerName: 'Massa da amostra seca em ar (g)',
+      headerName: t('asphalt.dosages.marshall.dry-sample-mass'),
       renderCell: () => {
         return (
           <InputEndAdornment
@@ -281,7 +290,7 @@ const Marshall_Step8 = ({
     },
     {
       field: 'massOfContainerWaterSample',
-      headerName: 'Massa do recipiente + amostra + água (g)',
+      headerName: t('asphalt.dosages.marshall.container-sample-water-mass'),
       renderCell: () => {
         return (
           <InputEndAdornment
@@ -299,7 +308,7 @@ const Marshall_Step8 = ({
     },
     {
       field: 'massOfContainerWater',
-      headerName: 'Massa do recipiente + água (g)',
+      headerName: t('asphalt.dosages.marshall.container-water-mass'),
       renderCell: () => {
         return (
           <InputEndAdornment
@@ -328,10 +337,9 @@ const Marshall_Step8 = ({
             binderTrialData,
             maximumMixtureDensityData
           );
-          const prevData = data;
 
           const newData = {
-            ...prevData,
+            ...data,
             maxSpecificGravity: {
               result: dmt.maxSpecificGravity,
               method: dmt.method,
@@ -346,9 +354,9 @@ const Marshall_Step8 = ({
         }
       },
       {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
       }
     );
   };
@@ -379,9 +387,9 @@ const Marshall_Step8 = ({
         }
       },
       {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
       }
     );
   };
@@ -408,9 +416,9 @@ const Marshall_Step8 = ({
         }
       },
       {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
       }
     );
   };
@@ -467,22 +475,37 @@ const Marshall_Step8 = ({
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '10px',
+            gap: '3rem',
           }}
         >
           <DropDown
             key={'density'}
             variant="standard"
-            label={'Selecione o método de cálculo da densidade da mistura'}
+            label={t('asphalt.dosages.marshall.select-mixture-density-method')}
             options={calcMethodOptions}
+            defaultValue={{
+              label:
+                method === 'DMT'
+                  ? 'DMT - Densidade máxima teórica'
+                  : method === 'GMM'
+                  ? 'GMM - Densidade máxima medida'
+                  : '',
+              value:
+                method === 'DMT'
+                  ? 'DMT - Densidade máxima teórica'
+                  : method === 'GMM'
+                  ? 'GMM - Densidade máxima medida'
+                  : '',
+            }}
             callback={(selectedOption) => {
-              if (
-                selectedOption === 'DMT - Densidade máxima teórica' &&
-                maximumMixtureDensityData?.maxSpecificGravity?.method !== 'DMT'
-              ) {
+              if (selectedOption === 'DMT - Densidade máxima teórica') {
+                setMethod('DMT');
                 setDMTModalISOpen(true);
-              } else {
+              } else if (selectedOption === 'GMM - Densidade máxima medida') {
+                setMethod('GMM');
                 setMethodGmm(true);
+              } else {
+                setMethod('');
               }
             }}
             size="medium"
@@ -490,18 +513,19 @@ const Marshall_Step8 = ({
           />
 
           {maximumMixtureDensityData?.maxSpecificGravity?.method === 'DMT' ? (
-            <Typography>{`DMT do teor de ligante ótimo: ${data?.confirmedSpecificGravity?.result?.toFixed(
-              2
-            )} g/cm³`}</Typography>
+            <Typography>
+              {t('asphalt.dosages.marshall.binder-trial-dmt') +
+                `${data?.confirmedSpecificGravity?.result?.toFixed(2)} g/cm³`}
+            </Typography>
           ) : (
             <Box>
-              <Typography>{`Insira a Gmm ou calcule pelo Rice Test`}</Typography>
-              <Typography>{`Gmm calculada pelo Rice Test: ${data?.confirmedSpecificGravity?.result.toFixed(
-                2
-              )}`}</Typography>
+              <Typography>{t('asphalt.dosages.marshall.insert-gmm')}</Typography>
+              <Typography>
+                {t('asphalt.dosages.marshall.gmm-calculated-rice-test') + `${data?.confirmedSpecificGravity?.result}`}
+              </Typography>
               <InputEndAdornment
                 adornment={'g/cm³'}
-                label={'Gmm do teor de ligante asfáltico:'}
+                label={t('asphalt.dosages.marshall.binder-trial-gmm')}
                 value={data?.gmm}
                 onChange={(e) => {
                   const prevData: MarshallData['confirmationCompressionData'] = data;
@@ -509,13 +533,19 @@ const Marshall_Step8 = ({
                   setData({ step: 7, value: newData });
                 }}
               />
-              <Button onClick={() => setRiceTestModalIsOpen(true)}>Rice Test</Button>
+              <Button onClick={() => setRiceTestModalIsOpen(true)}>{t('asphalt.dosages.marshall.rice-test')}</Button>
             </Box>
           )}
 
           <DataGrid
             key={'optimumBinder'}
-            columns={generateColumns}
+            columns={generateColumns.map((col) => ({
+              ...col,
+              width: 150,
+              flex: 1,
+              headerAlign: 'center',
+              align: 'center',
+            }))}
             rows={optimumBinderRows}
             experimentalFeatures={{ columnGrouping: true }}
             columnGroupingModel={optimumBinderColumnGroup}
@@ -525,47 +555,45 @@ const Marshall_Step8 = ({
             slots={{ footer: () => ExpansionToolbar() }}
           />
 
-          <Button onClick={handleConfirm}>Confirmar</Button>
+          <Button onClick={handleConfirm} variant="outlined">
+            {t('asphalt.dosages.marshall.confirm')}
+          </Button>
 
           <ModalBase
-            title={'Insira a massa específica real dos materiais abaixo'}
-            leftButtonTitle={'cancelar'}
-            rightButtonTitle={'confirmar'}
+            title={t('asphalt.dosages.marshall.insert-real-specific-mass')}
+            leftButtonTitle={t('asphalt.dosages.marshall.cancel')}
+            rightButtonTitle={t('asphalt.dosages.marshall.confirm')}
             onCancel={() => setDMTModalISOpen(false)}
             open={DMTModalIsOpen}
             size={'large'}
             onSubmit={() => handleSubmitDmt()}
           >
-            <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-              <InputEndAdornment
-                adornment={'g/cm³'}
-                label={materials[0]}
-                value={maximumMixtureDensityData?.missingSpecificMass?.material_1}
-                onChange={(e) => {
-                  const prevState = maximumMixtureDensityData;
-                  const prevDmt = maximumMixtureDensityData.missingSpecificMass;
-                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_1: e.target.value } };
-                  setData({ step: 4, value: newState });
-                }}
-              />
-              <InputEndAdornment
-                adornment={'g/cm³'}
-                label={materials[1]}
-                value={maximumMixtureDensityData?.missingSpecificMass?.material_2}
-                onChange={(e) => {
-                  const prevState = maximumMixtureDensityData;
-                  const prevDmt = maximumMixtureDensityData.missingSpecificMass;
-                  const newState = { ...prevState, missingSpecificMass: { ...prevDmt, material_2: e.target.value } };
-                  setData({ step: 4, value: newState });
-                }}
-              />
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginY: '2rem' }}>
+              {maximumMixtureDensityData.missingSpecificMass &&
+                maximumMixtureDensityData.missingSpecificMass.map((material) => (
+                  <InputEndAdornment
+                    key={material._id}
+                    adornment={'g/cm³'}
+                    label={material.name}
+                    value={material.value}
+                    onChange={(e) => {
+                      const prevState = maximumMixtureDensityData;
+                      const prevDmt = maximumMixtureDensityData.missingSpecificMass;
+                      const newState = {
+                        ...prevState,
+                        missingSpecificMass: { ...prevDmt, [material.name]: e.target.value },
+                      };
+                      setData({ step: 7, value: newState });
+                    }}
+                  />
+                ))}
             </Box>
           </ModalBase>
 
           <ModalBase
-            title={'Dados do Rice Test'}
-            leftButtonTitle={'cancelar'}
-            rightButtonTitle={'confirmar'}
+            title={t('asphalt.dosages.marshall.rice-test-data')}
+            leftButtonTitle={t('asphalt.dosages.marshall.cancel')}
+            rightButtonTitle={t('asphalt.dosages.marshall.confirm')}
             onCancel={() => setRiceTestModalIsOpen(false)}
             open={riceTestModalIsOpen}
             size={'large'}
@@ -574,7 +602,17 @@ const Marshall_Step8 = ({
             }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
-              <DataGrid columns={riceTestColumns} rows={riceTestRows} hideFooter />
+              <DataGrid
+                columns={riceTestColumns.map((col) => ({
+                  ...col,
+                  flex: 1,
+                  width: 200,
+                  headerAlign: 'center',
+                  align: 'center',
+                }))}
+                rows={riceTestRows}
+                hideFooter
+              />
             </Box>
           </ModalBase>
         </Box>

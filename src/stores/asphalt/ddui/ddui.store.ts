@@ -36,8 +36,8 @@ interface DduiStep3 {
 }
 
 interface Ddui_results {
-  everyRtsMpa: any[];
-  everyRtsKgf: any[];
+  everyRtsMpa: number[];
+  everyRtsKgf: number[];
   conditionedAverage: number;
   unconditionedAverage: number;
   rrt: number;

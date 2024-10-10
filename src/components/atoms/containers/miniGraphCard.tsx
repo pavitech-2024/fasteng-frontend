@@ -22,7 +22,7 @@ const CardMiniGrafico = ({ children }) => {
           height: '250px',
         },
         '@media (min-width:1200px)': {
-          width: '40vw',
+          width: '30vw',
           height: '50vh',
         },
       }}

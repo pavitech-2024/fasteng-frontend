@@ -91,7 +91,7 @@ const Marshall_Step2 = ({
     },
   ];
 
-  materialSelectionData.binder && materialSelectionData.aggregates.length > 1 && nextDisabled && setNextDisabled(false);
+  materialSelectionData.binder && materialSelectionData.aggregates.length > 0 && nextDisabled && setNextDisabled(false);
 
   return (
     <>

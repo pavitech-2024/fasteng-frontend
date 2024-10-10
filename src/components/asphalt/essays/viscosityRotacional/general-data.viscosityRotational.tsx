@@ -61,7 +61,7 @@ const ViscosityRotational_GeneralData = ({
     setNextDisabled(false);
 
   return (
-    <>
+    <div>
       {loading ? (
         <Loading />
       ) : (
@@ -141,7 +141,7 @@ const ViscosityRotational_GeneralData = ({
           />
         </Box>
       )}
-    </>
+    </div>
   );
 };
 
