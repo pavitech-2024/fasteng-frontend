@@ -14,7 +14,6 @@ const Rtcd_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   // criando o objeto que será passado para o componente ExperimentResume
   const experimentResumeData: ExperimentResumeData = {
     experimentName: generalData.name,
-    materials: [{ name: generalData.material.name, type: generalData.material.type }],
   };
 
   const data = {

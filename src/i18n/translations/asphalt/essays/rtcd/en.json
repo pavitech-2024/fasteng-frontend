@@ -16,5 +16,7 @@
   "asphalt.material": "Material",
   "asphalt.operator": "Operator",
   "asphalt.calculist": "Calculist",
-  "asphalt.materials.comments": "Material comments"
+  "asphalt.materials.comments": "Material comments",
+  "asphalt.essays.rtcdStep2": "Step 2",
+  "asphalt.essays.rtcdStep3": "Step 3"
 }
