@@ -33,11 +33,9 @@ const EssayTemplate = ({
   const app = router.pathname.split('/')[1];
   const essay = router.pathname.split('/')[3];
 
-
   const isIGG = essay === 'igg'; // Condicional para alterar somente o titulo do igg sem afetar o titulo dos outros ensaios
 
   const isSuperpavePage = router.pathname.includes('superpave');
-
 
   // persiste the active step in the sessionStorage, if the user reload the page, the active step will be the same  example: cbr-{step}
   const step = parseInt(sessionStorage.getItem(essay + '-step')) || 0;
@@ -86,7 +84,12 @@ const EssayTemplate = ({
 
   return (
     <Container>
-      <Header title={isIGG ? 'Índice de Gravidade Global (IGG)' :t(`${app}.essays.${key}`)} subTitle={standard.name} image={icon} link={standard.link}>
+      <Header
+        title={isIGG ? 'Índice de Gravidade Global (IGG)' : t(`${app}.essays.${key}`)}
+        subTitle={standard.name}
+        image={icon}
+        link={standard.link}
+      >
         <Box
           sx={{
             width: { mobile: '100%', notebook: isSuperpavePage ? '100%' : '75%' },

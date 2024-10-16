@@ -66,7 +66,8 @@ const AsphaltStandards: NextPage = () => {
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_163_98.pdf',
       type: 'asphaltBinder',
     },
-    { //Consertar link de durability
+    {
+      //Consertar link de durability
       title: t('durability'),
       icon: DurabilityIcon,
       key: 'durability',
@@ -106,7 +107,8 @@ const AsphaltStandards: NextPage = () => {
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_155_2010_me.pdf',
       type: 'asphaltBinder',
     },
-    {  // Corrigir link do ensaio marshall
+    {
+      // Corrigir link do ensaio marshall
       title: t('marshall.essay'),
       icon: MarshallIconPng,
       key: 'marshall',
@@ -114,7 +116,8 @@ const AsphaltStandards: NextPage = () => {
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_447_2024_me.pdf',
       type: 'asphaltMix',
     },
-    {  //Corrigir link de sand.equivalent
+    {
+      //Corrigir link de sand.equivalent
       title: t('sand.equivalent'),
       icon: SandEquivalentIcon,
       key: 'sandEquivalent',

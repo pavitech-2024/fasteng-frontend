@@ -51,7 +51,7 @@ export const StandardsTemplate = ({ standards, filterOptions }: StandardsTemplat
         {standardsFiltered?.map((standard) => {
           // aqui o componente Card axige novas props agora que ele se tornou adptável à página em que é chamado;
           return (
-           <Card key={standard.key} data={standard} type={'standard'} hrefLink={standard.link} target="_blank"></Card>
+            <Card key={standard.key} data={standard} type={'standard'} hrefLink={standard.link} target="_blank"></Card>
           );
         })}
       </CardContainer>
