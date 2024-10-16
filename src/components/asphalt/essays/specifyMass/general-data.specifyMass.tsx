@@ -25,7 +25,11 @@ const SpecifyMass_GeneralData = ({
       async () => {
         const materials = await specifyMass.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        const filteredMaterials = materials.filter(
+          (material) => material.type === 'coarseAggregate' || material.type === 'fineAggregate'
+        );
+
+        setMaterials(filteredMaterials);
         setLoading(false);
       },
       {
@@ -60,7 +64,7 @@ const SpecifyMass_GeneralData = ({
     setNextDisabled(false);
 
   return (
-    <>
+    <div>
       {loading ? (
         <Loading />
       ) : (
@@ -141,7 +145,7 @@ const SpecifyMass_GeneralData = ({
           />
         </Box>
       )}
-    </>
+    </div>
   );
 };
 

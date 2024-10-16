@@ -13,7 +13,6 @@ interface GraphProps {
 }
 
 const GraphStep6: React.FC<GraphProps> = ({ data }) => {
-  console.log('🚀 ~ data:', data);
   const [fullScreen, setFullScreen] = useState(false);
   const [options, setOptions] = useState({
     width: 0,

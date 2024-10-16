@@ -25,7 +25,9 @@ const FlashPoint_GeneralData = ({
       async () => {
         const materials = await flashPoint.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        const filteredMaterials = materials.filter((material) => material.type === 'asphaltBinder');
+
+        setMaterials(filteredMaterials);
         setLoading(false);
       },
       {
@@ -60,7 +62,7 @@ const FlashPoint_GeneralData = ({
     setNextDisabled(false);
 
   return (
-    <>
+    <div>
       {loading ? (
         <Loading />
       ) : (
@@ -141,7 +143,7 @@ const FlashPoint_GeneralData = ({
           />
         </Box>
       )}
-    </>
+    </div>
   );
 };
 

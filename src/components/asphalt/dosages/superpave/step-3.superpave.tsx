@@ -193,60 +193,6 @@ const Superpave_Step3 = ({
     };
   };
 
-  // const convertToNumberPercentsToList = (tableCompositionInputName) => {
-  //   let keys = Object.keys(data.percentageInputs);
-  //   let arrayAux = [];
-  //   let inputAcess = '';
-  //   let sum = 0;
-  //   for (let i = 0; i < keys.length; i++) {
-  //     inputAcess = keys[i];
-  //     const valueMaterial_1 = convertNumber(data.percentageInputs[inputAcess].material_1);
-  //     const valueMaterial_2 = convertNumber(data.percentageInputs[inputAcess].material_2);
-  //     if (validateNumber(valueMaterial_1)) {
-  //       arrayAux.push(valueMaterial_1);
-  //       sum = Math.round((sum + valueMaterial_1) * 1e2) / 1e2;
-  //     }
-  //     if (validateNumber(valueMaterial_2)) {
-  //       arrayAux.push(valueMaterial_2);
-  //       sum = Math.round((sum + valueMaterial_2) * 1e2) / 1e2;
-  //     }
-  //   }
-  //   return { totalSum: sum, valuesInput: arrayAux, tableCompositionInputName };
-  // };
-
-  // const updateTable = (percentsOfMaterials, sumOfPercentsToReturn, arrayTable) => {
-  //   let tableData = [];
-  //   let arrayResultAux = arrayTable;
-  //   let second = 0;
-  //   percentsOfMaterials.forEach((item, i) => {
-  //     tableData = [];
-  //     second = 0;
-  //     item.forEach((value, j) => {
-  //       if (value !== null) {
-  //         tableData.push({
-  //           ...arrayResultAux[second],
-  //           ['key%' + i]: numberRepresentation(value),
-  //         });
-  //         second++;
-  //       }
-  //     });
-  //     arrayResultAux = tableData;
-  //   });
-  //   tableData = [];
-  //   second = 0;
-  //   sumOfPercentsToReturn.forEach((item, i) => {
-  //     if (item !== null) {
-  //       tableData.push({
-  //         ...arrayResultAux[second],
-  //         Projeto: numberRepresentation(item),
-  //       });
-  //       second++;
-  //     }
-  //   });
-
-  //   return tableData;
-  // };
-
   const clearTable = () => {
     const newInputs = data.percentageInputs.map((input) => ({
       material_1: null,
@@ -306,7 +252,6 @@ const Superpave_Step3 = ({
     // Deve ser exatamente 100;
     if (curve === 'lower') {
       valueCount = Object.values(data.percentageInputs[0]).reduce((acc, item) => acc + Number(item), 0);
-      console.log('🚀 ~ calcular ~ valueCount:', valueCount);
       if (valueCount === 100) {
         valueIsValid = true;
       }

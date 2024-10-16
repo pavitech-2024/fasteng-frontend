@@ -35,7 +35,7 @@ interface MarshallGranulometryCompositionData {
   percentageInputs: { [key: string]: number }[];
   sumOfPercents: number[];
   dnitBands: { higher: [string, number][]; lower: [string, number][] };
-  dnitBand: { higherBand: [number]; lowerBand: [number] };
+  bands: { higherBand: [number]; lowerBand: [number]; letter };
   pointsOfCurve: any[];
   percentsOfMaterials: any[];
   graphData: any[];
@@ -67,20 +67,19 @@ interface MarshallBinderTrialData {
 
 interface MarshallMaximumMixtureDensityData {
   dmt: {
-    material_1: number;
-    material_2: number;
-  };
+    [key: string]: number;
+  }[];
   gmm: {
     id: number;
     insert: boolean;
     value: number;
   }[];
-  indexesOfMissesSpecificGravity: number[];
   temperatureOfWater: number;
   missingSpecificMass: {
-    material_1: number;
-    material_2: number;
-  };
+    name: string;
+    _id: string;
+    value: number;
+  }[];
   maxSpecificGravity: {
     result: {
       lessOne: number;
@@ -93,6 +92,7 @@ interface MarshallMaximumMixtureDensityData {
   };
   riceTest: {
     id: number;
+    teor: number;
     massOfDrySample: number;
     massOfContainerWaterSample: number;
     massOfContainerWater: number;
@@ -281,10 +281,11 @@ const initialState = {
   granulometryCompositionData: {
     table_data: null,
     percentageInputs: [],
-    dnitBands: null,
-    dnitBand: {
-      higherBand: null,
-      lowerBand: null,
+    bands: null,
+    dnitBands: {
+      higher: null,
+      lower: null,
+      letter: null,
     },
     pointsOfCurve: [],
     sumOfPercents: [],
@@ -315,10 +316,7 @@ const initialState = {
     },
   },
   maximumMixtureDensityData: {
-    dmt: {
-      material_1: null,
-      material_2: null,
-    },
+    dmt: [],
     gmm: [
       {
         id: 1,
@@ -346,11 +344,7 @@ const initialState = {
         value: 5,
       },
     ],
-    missingSpecificMass: {
-      material_1: null,
-      material_2: null,
-    },
-    indexesOfMissesSpecificGravity: [],
+    missingSpecificMass: [],
     temperatureOfWater: null,
     maxSpecificGravity: {
       result: {
@@ -364,7 +358,36 @@ const initialState = {
     },
     riceTest: [
       {
-        id: null,
+        id: 1,
+        teor: null,
+        massOfDrySample: null,
+        massOfContainerWaterSample: null,
+        massOfContainerWater: null,
+      },
+      {
+        id: 2,
+        teor: null,
+        massOfDrySample: null,
+        massOfContainerWaterSample: null,
+        massOfContainerWater: null,
+      },
+      {
+        id: 3,
+        teor: null,
+        massOfDrySample: null,
+        massOfContainerWaterSample: null,
+        massOfContainerWater: null,
+      },
+      {
+        id: 4,
+        teor: null,
+        massOfDrySample: null,
+        massOfContainerWaterSample: null,
+        massOfContainerWater: null,
+      },
+      {
+        id: 5,
+        teor: null,
         massOfDrySample: null,
         massOfContainerWaterSample: null,
         massOfContainerWater: null,

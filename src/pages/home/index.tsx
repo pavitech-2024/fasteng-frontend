@@ -1,9 +1,5 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
-import Link from '@mui/material/Link';
-import lep from '../../assets/logos/lep.jpg';
-import jbr from '../../assets/logos/jbr.jpg';
 
 import { t } from 'i18next';
 
@@ -13,6 +9,7 @@ import { LogoBlack, AsphaltIcon, SoilsIcon, ConcreteIcon } from '@/assets';
 //MUIs
 import { Container, Box, Typography } from '@mui/material';
 import { CardApp } from '@/components/styles/muis/home';
+import { JbrAnchor, LepAnchor } from '@/components/atoms/anchor/loginAnchors';
 
 //Styleds
 import { LoginImage } from '@/components/styles/styleds/login';
@@ -82,11 +79,24 @@ const Home: NextPage = () => {
             fontWeight: 700,
             color: 'primaryTons.lightGray',
             textAlign: 'center',
-            m: 0,
+            m: 0 ,
           }}
         >
           {t('home.fast way to')}
         </Box>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '50%',
+          justifyContent: 'space-between',
+          alignItems: 'end',
+          height: 'fit-content',
+        }}
+      >
+        <LepAnchor />
+        <JbrAnchor />
       </Box>
       <Box
         sx={{
@@ -151,9 +161,8 @@ const Home: NextPage = () => {
           <CardApp key={app.name} element={app} onClick={() => Router.push(app.path)} />
         ))}
       </Box>
-      <Box sx = {{position: 'relative', width: '100%'}}>
+      {/* <Box sx = {{position: 'relative', width: '100%'}}>
 
-        {/* alinhar icones lep e jbr */}
         <Box
           sx={{
             position: 'absolute',
@@ -181,7 +190,6 @@ const Home: NextPage = () => {
             }}
             component={'a'}
           >
-            {/* <!--realinhar icones lep e jbr-->  */}  
             <Image 
               style={{
                 borderRadius: '100%',
@@ -216,7 +224,7 @@ const Home: NextPage = () => {
             />
           </Link>
         </Box>
-      </Box>
+      </Box> */}
     </Container>
   );
 };

@@ -105,9 +105,9 @@ class SPECIFYMASS_SERVICE implements IEssayService {
       if (step2Data.surface_saturated_mass <= step2Data.dry_mass) {
         throw t('errors.surface-saturated-mass-not-greater-than-dry-mass');
       }
-      if (step2Data.submerged_mass <= step2Data.dry_mass) {
-        throw t('errors.submerged-mass-not-greater-than-dry-mass');
-      }
+      // if (step2Data.submerged_mass <= step2Data.dry_mass) {
+      //   throw t('errors.submerged-mass-not-greater-than-dry-mass');
+      // }
     } catch (error) {
       throw error;
     }

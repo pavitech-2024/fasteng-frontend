@@ -20,8 +20,10 @@ const Rtfo_GeneralData = ({ nextDisabled, setNextDisabled, rtfo }: EssayPageProp
     toast.promise(
       async () => {
         const materials = await rtfo.getmaterialsByUserId(user._id);
+        const filteredMaterials = materials.filter((material) => material.type === 'asphaltBinder');
 
-        setMaterials(materials);
+        setMaterials(filteredMaterials);
+
         setLoading(false);
       },
       {
@@ -56,7 +58,7 @@ const Rtfo_GeneralData = ({ nextDisabled, setNextDisabled, rtfo }: EssayPageProp
     setNextDisabled(false);
 
   return (
-    <>
+    <div>
       {loading ? (
         <Loading />
       ) : (
@@ -137,7 +139,7 @@ const Rtfo_GeneralData = ({ nextDisabled, setNextDisabled, rtfo }: EssayPageProp
           />
         </Box>
       )}
-    </>
+    </div>
   );
 };
 

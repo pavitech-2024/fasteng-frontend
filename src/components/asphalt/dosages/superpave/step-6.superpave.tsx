@@ -32,7 +32,6 @@ const Superpave_Step6 = ({
 
   useEffect(() => {
     const table3Arr = Object.values(data.table3);
-    console.log('🚀 ~ useEffect ~ table3Arr:', table3Arr);
     if (table3Arr.some((e) => e !== null)) {
       setRenderTable3(true);
     }

@@ -20,5 +20,11 @@
   "asphalt.materials.filler": "Fíler",
   "asphalt.materials.cap": "Cimento Asfáltico de Petróleo (CAP)",
   "asphalt.materials.other": "Outro",
-  "asphalt.materials.comments": "Comentários"
+  "asphalt.materials.comments": "Comentários",
+
+  "loading.marshall.pending": "Carregando...",
+  "loading.marshall.success": "Dosagens carregadas com sucesso",
+  "loading.marshall.error": "Erro ao carregar as dosagens",
+
+  "asphalt.dosages.superpave.material_selection": "Seleção de Materiais"
 }
