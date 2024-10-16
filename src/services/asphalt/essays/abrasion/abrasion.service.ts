@@ -14,8 +14,8 @@ class Abrasion_SERVICE implements IEssayService {
     backend_path: 'asphalt/essays/abrasion',
     steps: 3,
     standard: {
-      name: '',
-      link: '',
+      name: 'teste',
+      link: 'https://google.com',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
