@@ -9,6 +9,7 @@ import useAbrasionStore, { AbrasionActions } from '@/stores/asphalt/abrasion/abr
 const Abrasion = () => {
   // start an instance of the service
   const abrasion = new Abrasion_SERVICE();
+  
 
   // get the userId
   const {
