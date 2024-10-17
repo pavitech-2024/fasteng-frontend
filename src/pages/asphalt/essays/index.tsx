@@ -32,6 +32,7 @@ const AsphaltEssays: NextPage = () => {
     { key: 'aggregates', title: t('asphalt.essays.filter.aggregates'), isSelected: false },
     { key: 'highwaySection', title: t('asphalt.essays.filter.highwaySection'), isSelected: false },
     { key: 'asphaltBinder', title: t('asphalt.essays.filter.asphaltBinder'), isSelected: false },
+    { key: 'asphaltMix', title: t('asphalt.essays.filter.asphaltMix'), isSelected: false },
   ];
 
   const essays: Essay[] = [
