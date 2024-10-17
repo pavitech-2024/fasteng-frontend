@@ -12,10 +12,11 @@ interface ConcreteGeneralData {
   }
   
   interface ConcreteRc_step2Data {
-    material_mass: number;
-    table_data: { sieve: string; passant: number; retained: number }[];
-    sieve_series: { label: string; value: number }[];
-    bottom: number;
+    diammeter1: number,
+    diammeter2: number,
+    height: number,
+    age: number,
+    tolerance: number
   }
   
   interface ConcreteRc_results {
@@ -57,10 +58,11 @@ interface ConcreteGeneralData {
       description: null,
     },
     step2Data: {
-      material_mass: null,
-      table_data: null,
-      sieve_series: null,
-      bottom: null,
+      diammeter1: null,
+      diammeter2: null,
+      height: null,
+      age: null,
+      tolerance: null
     },
     results: {
       accumulated_retained: [],

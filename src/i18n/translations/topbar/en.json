@@ -41,5 +41,6 @@
   "topbar.standards": "Standards",
   "topbar.consult": "ABCP Consult",
   "topbar.rtcd": "Tensile Strength by Diametrical Compression - RT",
-  "topbar.concretert": "Tensile Strength - RT"
+  "topbar.concretert": "Tensile Strength - RT",
+  "topbar.concreterc": "Compression Strenght - RC"
 }

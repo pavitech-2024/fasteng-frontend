@@ -1,24 +1,25 @@
 {
-    "concrete.rc.sample-origin": "Sample Origin",
-    "concrete.rc.press-specification": "Press Specification",
-    "concrete.rc.press-constant": "Press Constant",
-    "concrete.rc.sample-void-volume": "Sample Void Volume",
-    "rc.results.sampleName": "Sample Name",
-    "rc.results.RtKgf": "RC (Kgf/cm³)",
-    "rc.results.RtMpa": "RC (Mpa)",
-    "rc.results.average": "RC Average",
-    "rc.results.minimum-rt": "Min. RC (DNIT 031/2006 - ES)",
-    "rc.results.acceptance-condition": "Acceptance Condition",
-    "rc.results.acceptance-condition-true": "Minimum RC achieved",
-    "rc.results.acceptance-condition-false": "Minimum RC not reached",
-    "rc.error.minReads": "It's not possible to delete. Minimum achieved.",
-    "concrete.experimentName": "Asphalt Experement Name",
-    "concrete.material": "Material",
-    "concrete.operator": "Operator",
-    "concrete.calculist": "Calculist",
-    "concrete.materials.comments": "Material comments",
-    "concrete.essays.concreterc-concrete": "Compression Resistance",
-    "concrete.essays.concreteRc": "Compression Resistance"
-    
-  }
-  
+  "concreteRc.step-2-description": "Fill in all the fields bellow",
+  "concreteRc.step2": "Step 2",
+
+  "concrete.rc.sample-origin": "Sample Origin",
+  "concrete.rc.press-specification": "Press Specification",
+  "concrete.rc.press-constant": "Press Constant",
+  "concrete.rc.sample-void-volume": "Sample Void Volume",
+  "rc.results.sampleName": "Sample Name",
+  "rc.results.RtKgf": "RC (Kgf/cm³)",
+  "rc.results.RtMpa": "RC (Mpa)",
+  "rc.results.average": "RC Average",
+  "rc.results.minimum-rt": "Min. RC (DNIT 031/2006 - ES)",
+  "rc.results.acceptance-condition": "Acceptance Condition",
+  "rc.results.acceptance-condition-true": "Minimum RC achieved",
+  "rc.results.acceptance-condition-false": "Minimum RC not reached",
+  "rc.error.minReads": "It's not possible to delete. Minimum achieved.",
+  "concrete.experimentName": "Asphalt Experement Name",
+  "concrete.material": "Material",
+  "concrete.operator": "Operator",
+  "concrete.calculist": "Calculist",
+  "concrete.materials.comments": "Material comments",
+  "concrete.essays.concreterc-concrete": "Compression Resistance",
+  "concrete.essays.concreteRc": "Compression Resistance"
+}

@@ -19,7 +19,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       },
       stepperData: [
         { step: 0, description: t('general data'), path: 'general-data' },
-        { step: 1, description: t('concreteRc'), path: 'essay-data' },
+        { step: 1, description: t('concreteRc.step2'), path: 'essay-data' },
         { step: 2, description: t('results'), path: 'results' },
       ],
     };
@@ -101,25 +101,25 @@ class CONCRETE_RC_SERVICE implements IEssayService {
     submitStep2Data = async (step2Data: ConcreteRcData['step2Data']): Promise<void> => {
       try {
         // verify if the material mass is not empty or negative
-        if (!step2Data.material_mass) throw t('errors.empty-material-mass');
-        if (step2Data.material_mass < 0) throw t('errors.negative-material-mass');
+        // if (!step2Data.material_mass) throw t('errors.empty-material-mass');
+        // if (step2Data.material_mass < 0) throw t('errors.negative-material-mass');
   
-        // verify if all the passant porcentages are not empty or negative
-        step2Data.table_data.forEach((row) => {
-          if (row.passant === null || row.retained === null) throw t('errors.empty-sieve') + row.sieve;
-          if (row.passant < 0 || row.retained < 0) throw t('errors.negative-sieve') + row.sieve;
-        });
+        // // verify if all the passant porcentages are not empty or negative
+        // step2Data.table_data.forEach((row) => {
+        //   if (row.passant === null || row.retained === null) throw t('errors.empty-sieve') + row.sieve;
+        //   if (row.passant < 0 || row.retained < 0) throw t('errors.negative-sieve') + row.sieve;
+        // });
   
-        //verify if the sum of the masses (retained + bottom) equals the material mass
-        let retained = 0.0;
-        step2Data.table_data.forEach((row) => {
-          retained += row.retained;
-        });
-        const sum = Math.round(100 * (retained + step2Data.bottom)) / 100;
+        // //verify if the sum of the masses (retained + bottom) equals the material mass
+        // let retained = 0.0;
+        // step2Data.table_data.forEach((row) => {
+        //   retained += row.retained;
+        // });
+        // const sum = Math.round(100 * (retained + step2Data.bottom)) / 100;
   
-        if (sum > step2Data.material_mass) {
-          throw `${t('errors.sieves-sum-not-equal-to-material-mass')}\nRetida + Fundos: ${sum}g.`;
-        }
+        // if (sum > step2Data.material_mass) {
+        //   throw `${t('errors.sieves-sum-not-equal-to-material-mass')}\nRetida + Fundos: ${sum}g.`;
+        // }
       } catch (error) {
         throw error;
       }

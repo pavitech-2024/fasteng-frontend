@@ -128,7 +128,7 @@ const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
               legend: 'none',
             }}
           />
-          <ConcreteRc_resultsTable rows={rows} columns={columns} />
+          {/* <ConcreteRc_resultsTable rows={rows} columns={columns} /> */}
         </FlexColumnBorder>
       </>
     );

@@ -1,4 +1,7 @@
 {
+  "concreteRc.step-2-description": "Preencha todos os campos abaixo",
+  "concreteRc.step2": "Passo 2",
+
   "concrete.rc.sample-origin": "Procedência dos Corpos de Prova",
   "concrete.rc.press-specification": "Nome/Especificação da Prensa",
   "concrete.rc.press-constant": "Constante da Prensa",

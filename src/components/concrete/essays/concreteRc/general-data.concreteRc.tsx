@@ -24,6 +24,7 @@ const ConcreteRc_GeneralData = ({
       toast.promise(
         async () => {
           const materials = await concreteRc.getmaterialsByUserId(user._id);
+          console.log("🚀 ~ materials:", materials)
   
           setMaterials(materials);
           setLoading(false);
