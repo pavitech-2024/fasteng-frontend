@@ -25,7 +25,9 @@ const SofteningPoint_GeneralData = ({
       async () => {
         const materials = await softeningPoint.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        const filteredMaterials = materials.filter((material) => material.type === 'asphaltBinder');
+
+        setMaterials(filteredMaterials);
         setLoading(false);
       },
       {
@@ -60,7 +62,7 @@ const SofteningPoint_GeneralData = ({
     setNextDisabled(false);
 
   return (
-    <>
+    <div>
       {loading ? (
         <Loading />
       ) : (
@@ -141,7 +143,7 @@ const SofteningPoint_GeneralData = ({
           />
         </Box>
       )}
-    </>
+    </div>
   );
 };
 

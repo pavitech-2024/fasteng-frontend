@@ -39,7 +39,7 @@ const AsphaltStandards: NextPage = () => {
       icon: AbrasionIcon,
       key: 'abrasion',
       standard: 'DNER - ME 035/98',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner-me035-98.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_451_2024_me.pdf',
       type: 'aggregates',
     },
     {
@@ -67,11 +67,12 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltBinder',
     },
     {
+      //Consertar link de durability
       title: t('durability'),
       icon: DurabilityIcon,
       key: 'durability',
       standard: 'DNER - ME 089/94',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_089_94.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_446_me_avaliacao-de-durabilidade-de-agregados_com-incorporacao-da-errata-1.pdf',
       type: 'aggregates',
     },
     {
@@ -107,19 +108,21 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltBinder',
     },
     {
+      // Corrigir link do ensaio marshall
       title: t('marshall.essay'),
       icon: MarshallIconPng,
       key: 'marshall',
       standard: 'DNER - ME 043/95',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_043_95.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_447_2024_me.pdf',
       type: 'asphaltMix',
     },
     {
+      //Corrigir link de sand.equivalent
       title: t('sand.equivalent'),
       icon: SandEquivalentIcon,
       key: 'sandEquivalent',
       standard: 'DNER - ME 054/97',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner-me054-97.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_450_2024_me-1.pdf',
       type: 'aggregates',
     },
     {

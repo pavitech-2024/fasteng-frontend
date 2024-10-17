@@ -25,7 +25,11 @@ const ShapeIndex_GeneralData = ({
       async () => {
         const materials = await shapeIndex.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        const filteredMaterials = materials.filter(
+          (material) => material.type === 'coarseAggregate' || material.type === 'fineAggregate'
+        );
+
+        setMaterials(filteredMaterials);
         setLoading(false);
       },
       {
@@ -60,7 +64,7 @@ const ShapeIndex_GeneralData = ({
     setNextDisabled(false);
 
   return (
-    <>
+    <div>
       {loading ? (
         <Loading />
       ) : (
@@ -138,7 +142,7 @@ const ShapeIndex_GeneralData = ({
           />
         </Box>
       )}
-    </>
+    </div>
   );
 };
 

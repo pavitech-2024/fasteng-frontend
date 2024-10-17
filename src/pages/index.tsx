@@ -15,10 +15,10 @@ import { AboutButton } from '@/components/styles/muis/login';
 import { MainButton as Button } from '@/components/styles/global';
 
 //mui
-import { TextField, Box, Container, Typography, ButtonBase, Input } from '@mui/material';
+import { TextField, Box, Container, Typography, ButtonBase } from '@mui/material';
 import { JbrAnchor, LepAnchor } from '@/components/atoms/anchor/loginAnchors';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
+import axios from 'axios';
+import ModalBase from '@/components/molecules/modals/modal';
 
 const Login: NextPage = () => {
   const { signIn } = useAuth();
@@ -26,9 +26,11 @@ const Login: NextPage = () => {
   const date = new Date();
   const year = date.getFullYear();
 
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const { push } = useRouter();
+  const roxApiUrl = 'https://minhaconta.fastengapp.com.br/api/forgot-password ';
 
   const handleLogin = async () => {
     try {
@@ -38,6 +40,42 @@ const Login: NextPage = () => {
         error: t('login.toast error'),
       });
     } catch (error) {}
+  };
+
+  const handleForgotPassword = () => {
+    toast.promise(
+      async () => {
+        try {
+          const { data } = await axios.post(`${roxApiUrl}`, { email });
+
+          if (!data.status) {
+            throw new Error(data.message);
+          } else {
+            setModalIsOpen(false);
+          }
+        } catch (error: unknown) {
+          if (axios.isAxiosError(error)) {
+            throw new Error(error.response?.data?.message || error.message || 'Erro desconhecido');
+          } else if (error instanceof Error) {
+            throw error;
+          } else {
+            throw new Error('Erro desconhecido');
+          }
+        }
+      },
+      {
+        pending: t('forgot-password.pending'),
+        success: t('forgot-password.success'),
+        error: {
+          render({ data }) {
+            if (data instanceof Error) {
+              return `${data.message}`;
+            }
+            return t('forgot-password.error');
+          },
+        },
+      }
+    );
   };
 
   return (
@@ -218,16 +256,13 @@ const Login: NextPage = () => {
                 disabled={password === '' || email === ''}
                 handleClick={() => handleLogin()}
               />
-              <Link
-                href={'https://minhaconta.fastengapp.com.br/forgot-password'}
-                passHref
-                target="_blank"
-                rel="noopener noreferrer"
+
+              <ButtonBase
+                onClick={() => setModalIsOpen(true)}
+                sx={{ color: 'primary.main', fontSize: { desktop: '1rem', mobile: '0.85rem' } }}
               >
-                <ButtonBase sx={{ color: 'primary.main', fontSize: { desktop: '1rem', mobile: '0.85rem' } }}>
-                  {t('login.forget password')}
-                </ButtonBase>
-              </Link>
+                {t('login.forget password')}
+              </ButtonBase>
             </Box>
           </Box>
           <Box
@@ -253,6 +288,27 @@ const Login: NextPage = () => {
           </Box>
         </Container>
       </Container>
+      <ModalBase
+        title={'Insira o e-mail cadastrado para recuperar a senha'}
+        leftButtonTitle={'Cancelar'}
+        rightButtonTitle={'Confirmar'}
+        onSubmit={handleForgotPassword}
+        onCancel={() => setModalIsOpen(false)}
+        open={modalIsOpen}
+        size={'small'}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginY: '2rem' }}>
+          <TextField
+            type="email"
+            placeholder="Insira o e-mail cadastrado..."
+            label="E-mail"
+            variant="standard"
+            sx={{ width: '100%' }}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </Box>
+      </ModalBase>
     </>
   );
 };

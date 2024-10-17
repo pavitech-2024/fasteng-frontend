@@ -1,11 +1,9 @@
-import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
 interface DduiGeneralData {
   userId: string;
   name: string;
-  material: AsphaltMaterial;
   operator?: string;
   calculist?: string;
   description?: string;
@@ -63,7 +61,6 @@ const initialState = {
   generalData: {
     userId: null,
     name: null,
-    material: null,
     operator: null,
     calculist: null,
     description: null,
