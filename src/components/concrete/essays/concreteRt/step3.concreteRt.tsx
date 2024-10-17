@@ -1,11 +1,11 @@
-import InputEndAdornment from "@/components/atoms/inputs/input-endAdornment";
-import { EssayPageProps } from "@/components/templates/essay";
-import useConcreteRtStore from "@/stores/concrete/concreteRt/concreteRt.store";
-import { Box, Button } from "@mui/material";
-import { GridColDef, DataGrid } from "@mui/x-data-grid";
-import { t } from "i18next";
-import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { EssayPageProps } from '@/components/templates/essay';
+import useConcreteRtStore from '@/stores/concrete/concreteRt/concreteRt.store';
+import { Box, Button } from '@mui/material';
+import { GridColDef, DataGrid } from '@mui/x-data-grid';
+import { t } from 'i18next';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step3Data: data, setData } = useConcreteRtStore();
@@ -15,7 +15,7 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
   useEffect(() => {
     if (nextDisabled) {
       const hasEmptyValues = localRows.some((item) => Object.values(item).some((value) => value === null));
-      console.log("🚀 ~ useEffect ~ hasEmptyValues:", hasEmptyValues)
+      console.log('🚀 ~ useEffect ~ hasEmptyValues:', hasEmptyValues);
       if (!hasEmptyValues) setNextDisabled(false);
     }
   }, [localRows, nextDisabled, setNextDisabled]);

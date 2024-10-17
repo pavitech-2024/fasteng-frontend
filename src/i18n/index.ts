@@ -157,10 +157,10 @@ import concreteGranulometryENG from './translations/concrete/essays/granulometry
 // coarse aggregate
 import coarseAggregatePTBR from './translations/concrete/essays/coarseAggregate/ptbr.json';
 import coarseAggregateENG from './translations/concrete/essays/coarseAggregate/en.json';
-// rc 
+// rc
 import rcPTBR from './translations/concrete/essays/rc/ptbr.json';
 import rcENG from './translations/concrete/essays/rc/en.json';
-// rt 
+// rt
 import rtPTBR from './translations/concrete/essays/rt/ptbr.json';
 import rtENG from './translations/concrete/essays/rt/en.json';
 // dosages

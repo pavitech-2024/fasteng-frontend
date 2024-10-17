@@ -4,9 +4,9 @@ import Axios from 'axios';
 const isLocalHost = process.env.NODE_ENV === 'development';
 
 const [localhost, test] = [
-  'http://localhost:8080', 
+  'http://localhost:8080',
   // 'https://fasteng-backend-eocdo.ondigitalocean.app/'
-  'https://oyster-app-nekyt.ondigitalocean.app/'
+  'https://oyster-app-nekyt.ondigitalocean.app/',
 ];
 
 const Api = Axios.create({

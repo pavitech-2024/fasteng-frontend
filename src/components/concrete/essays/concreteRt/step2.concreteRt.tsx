@@ -1,12 +1,12 @@
-import DropDown from "@/components/atoms/inputs/dropDown";
-import InputEndAdornment from "@/components/atoms/inputs/input-endAdornment";
-import { EssayPageProps } from "@/components/templates/essay";
-import { SieveSeries } from "@/interfaces/common";
-import useConcreteRtStore from "@/stores/concrete/concreteRt/concreteRt.store";
-import { getSieveSeries } from "@/utils/sieves";
-import { Box } from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
-import { t } from "i18next";
+import DropDown from '@/components/atoms/inputs/dropDown';
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { EssayPageProps } from '@/components/templates/essay';
+import { SieveSeries } from '@/interfaces/common';
+import useConcreteRtStore from '@/stores/concrete/concreteRt/concreteRt.store';
+import { getSieveSeries } from '@/utils/sieves';
+import { Box } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
+import { t } from 'i18next';
 
 const ConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useConcreteRtStore();
@@ -128,7 +128,7 @@ const ConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
             { value: 'E', label: 'E' },
           ]}
           callback={(value) => setData({ step: 1, key: 'dnitRange', value })}
-          defaultValue={{label: data.dnitRange, value: data.dnitRange}}
+          defaultValue={{ label: data.dnitRange, value: data.dnitRange }}
         />
       </Box>
     </Box>
@@ -136,4 +136,3 @@ const ConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
 };
 
 export default ConcreteRt_Step2;
-  

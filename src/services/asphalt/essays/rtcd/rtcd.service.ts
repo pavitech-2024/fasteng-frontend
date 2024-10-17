@@ -30,7 +30,7 @@ class Rtcd_SERVICE implements IEssayService {
 
   /** @handleNext Receives the step and data from the form and calls the respective method */
   handleNext = async (step: number, data: unknown): Promise<void> => {
-    console.log("🚀 ~ Rtcd_SERVICE ~ handleNext= ~ data:", data)
+    console.log('🚀 ~ Rtcd_SERVICE ~ handleNext= ~ data:', data);
     try {
       switch (step) {
         case 0:

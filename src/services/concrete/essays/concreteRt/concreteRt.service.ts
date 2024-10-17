@@ -30,7 +30,7 @@ class CONCRETE_RT_SERVICE implements IEssayService {
 
   /** @handleNext Receives the step and data from the form and calls the respective method */
   handleNext = async (step: number, data: unknown): Promise<void> => {
-    console.log("🚀 ~ CONCRETE_RT_SERVICE ~ handleNext= ~ data:", data)
+    console.log('🚀 ~ CONCRETE_RT_SERVICE ~ handleNext= ~ data:', data);
     try {
       switch (step) {
         case 0:
@@ -112,7 +112,7 @@ class CONCRETE_RT_SERVICE implements IEssayService {
 
   // verify inputs from ConcreteRt page (step === 1, page 2)
   submitConcreteRtStep3Data = async (concreteRtStep3: ConcreteRtData['step3Data']): Promise<void> => {
-    console.log("🚀 ~ CONCRETE_RT_SERVICE ~ submitConcreteRtStep3Data= ~ concreteRtStep3:", concreteRtStep3)
+    console.log('🚀 ~ CONCRETE_RT_SERVICE ~ submitConcreteRtStep3Data= ~ concreteRtStep3:', concreteRtStep3);
     try {
       // verify if concreteRt_data is not empty
       if (!concreteRtStep3.concreteRt_data) throw t('errors.empty-concreteRt_data');
@@ -123,7 +123,7 @@ class CONCRETE_RT_SERVICE implements IEssayService {
 
   // calculate results from ConcreteRt essay
   calculateResults = async (store: ConcreteRtData): Promise<void> => {
-    console.log("🚀 ~ CONCRETE_RT_SERVICE ~ calculateResults= ~ store:", store)
+    console.log('🚀 ~ CONCRETE_RT_SERVICE ~ calculateResults= ~ store:', store);
 
     const averageDiammeter = store.step3Data.concreteRt_data.map((e) => e.d1 + e.d2 / 2);
 
@@ -135,7 +135,7 @@ class CONCRETE_RT_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
         step2Data: store.step2Data,
-        step3Data: store.step3Data
+        step3Data: store.step3Data,
       });
 
       const { success, error, result } = response.data;
