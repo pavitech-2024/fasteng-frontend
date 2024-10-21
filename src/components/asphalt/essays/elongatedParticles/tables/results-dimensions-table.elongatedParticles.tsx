@@ -1,5 +1,5 @@
 import { ElongatedParticlesResultsDimensionsRow } from '@/stores/asphalt/elongatedParticles/elongatedParticles.store';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 
