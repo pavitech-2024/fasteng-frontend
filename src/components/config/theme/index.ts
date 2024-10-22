@@ -1,6 +1,5 @@
-// import { createTheme } from '@mui/material';
+// import { adaptV4Theme, createTheme } from "@mui/material";
 
-// import { adaptV4Theme } from '@mui/material/styles';
 
 // export const theme = createTheme(adaptV4Theme({
 //   breakpoints: {
@@ -100,71 +99,101 @@
 //     },
 //   },
 // }));
-import { createTheme, ThemeOptions } from '@mui/material/styles';
 
-// Estendendo o ThemeOptions para incluir suas propriedades customizadas
-declare module '@mui/material/styles' {
-  interface Palette {
-    primaryTons?: {
-      white: string;
-      lightGray: string;
-      mediumGray: string;
-      darkGray: string;
-      black: string;
-    };
-    secondaryTons?: {
-      main: string;
-      contrastText: string;
-    };
-  }
+import { createTheme } from '@mui/material/styles';
 
-  interface PaletteOptions {
-    primaryTons: {
-      white: string;
-      lightGray: string;
-      mediumGray: string;
-      darkGray: string;
-      black: string;
-    };
-    secondaryTons: {
-      main: string;
-      contrastText: string;
-    };
-  }
-
-  // Adicionando suas propriedades personalizadas ao theme
-  interface Theme {
-    customComponents?: Record<string, any>;
-  }
-
-  // Adicionando a tipagem correta para `ThemeOptions` para suportar `customComponents`
-  interface ThemeOptions {
-    customComponents?: Record<string, any>;
-  }
-}
-
-// Criação do tema com as opções customizadas
 export const theme = createTheme({
+  breakpoints: {
+    values: {
+      mobile: 0,
+      tablet: 360,
+      notebook: 768,
+      desktop: 1025,
+      ultrawide: 1920,
+      containerMargin: 2016,
+    },
+  },
+
   palette: {
     primary: {
-      main: '#1976d2',
+      main: '#F29134',
+      // Adicione tons aqui, se necessário
+      contrastText: '#fff', // Por exemplo
+    },
+    secondary: {
+      main: '#00A3FF',
+      // Adicione tons aqui, se necessário
     },
     primaryTons: {
-      white: '#ffffff',
-      lightGray: '#f5f5f5',
-      mediumGray: '#cccccc',
-      darkGray: '#666666',
-      black: '#000000',
+      white: '',
+      background: '',
+      border: '',
+      lightGray: '',
+      mainGray: '',
+      darkGray: ''
     },
     secondaryTons: {
-      main: '#ff4081',
-      contrastText: '#ffffff',
-    },
+      blue: '',
+      blueClick: '',
+      blueDisabled: '',
+      red: '',
+      green: '',
+      greenPM: '',
+      yellowWarning: ''
+    }
   },
+
   typography: {
-    // Suas configurações de tipografia
+    fontFamily: "'Roboto', sans-serif",
   },
-  customComponents: {
-    // Suas customizações de componentes
+
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          m: 0,
+          p: 0,
+          boxSizing: 'border-box',
+          backgroundColor: '#F2F2F2',
+          color: '#2F3559',
+          fontWeight: '400',
+          overflowX: 'hidden',
+        },
+        a: {
+          textDecoration: 'none',
+        },
+        'body::-webkit-scrollbar': {
+          width: '12px',
+        },
+        'body::-webkit-scrollbar-track': {
+          background: '#FCFCFC',
+        },
+        'body::-webkit-scrollbar-thumb': {
+          backgroundColor: '#121212',
+          borderRadius: '20px',
+          border: '2px solid #F2F2F2',
+        },
+      },
+    },
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          margin: 0,
+          padding: 0,
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: '20px',
+          cursor: 'pointer',
+          boxShadow: 'unset',
+          ':hover': {
+            boxShadow: 'unset',
+          },
+        },
+      },
+    },
   },
 });

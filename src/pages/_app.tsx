@@ -16,12 +16,10 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { useRouter } from 'next/router';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 
-
 // declare module '@mui/styles/defaultTheme' {
 //   // eslint-disable-next-line @typescript-eslint/no-empty-interface
 //   interface DefaultTheme extends Theme {}
 // }
-
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { i18n } = useTranslation();

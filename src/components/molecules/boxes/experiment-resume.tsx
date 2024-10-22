@@ -57,7 +57,7 @@ const ExperimentResume = ({ data }: ExperimentResumeProps) => {
     });
   }
   return (
-    (<FlexColumnBorder title={t('general data of essay')} open={open} generalData={true}>
+    <FlexColumnBorder title={t('general data of essay')} open={open} generalData={true}>
       <Box
         sx={{
           display: 'flex',
@@ -94,7 +94,7 @@ const ExperimentResume = ({ data }: ExperimentResumeProps) => {
           ))}
         </Box>
       </Fade>
-    </FlexColumnBorder>)
+    </FlexColumnBorder>
   );
 };
 
