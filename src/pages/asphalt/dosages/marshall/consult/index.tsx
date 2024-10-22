@@ -161,11 +161,17 @@ const MarshallDosageConsult = () => {
       headerName: t('marshall.dosage-consult.options'),
       renderCell: (params) => (
         <>
-          <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)}>
+          <IconButton
+            aria-label="Excluir"
+            onClick={() => handleDeleteDosage(params.row.id)}
+            size="large">
             <DeleteIcon />
           </IconButton>
 
-          <IconButton aria-label="Visualizar" onClick={() => handleVisualizeDosage(params.row.id)}>
+          <IconButton
+            aria-label="Visualizar"
+            onClick={() => handleVisualizeDosage(params.row.id)}
+            size="large">
             <NextIcon />
           </IconButton>
         </>

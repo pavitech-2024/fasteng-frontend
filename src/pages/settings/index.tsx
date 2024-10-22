@@ -71,7 +71,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
     }
   };
   return (
-    <Container>
+    (<Container>
       <ModalBase
         open={open}
         title={t('settings.changeAvatar')}
@@ -104,19 +104,19 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
               setOldPhoto(user?.photo);
               onSubmitPhoto(null);
             }}
-          >
+            size="large">
             <DeleteIcon color="error" sx={{ width: '80px', height: '80px' }} />
           </IconButton>
           {avatares.map((avatar: string) => {
             return (
-              <IconButton
+              (<IconButton
                 key={avatar}
                 sx={{ p: 0, ':hover': { opacity: 0.8, cursor: 'pointer' } }}
                 onClick={() => onSubmitPhoto(avatar)}
-              >
+                size="large">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img alt="avatar" src={avatar} width={98} height={98} />
-              </IconButton>
+              </IconButton>)
             );
           })}
         </Box>
@@ -179,7 +179,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           }}
         >
           <Tooltip title={t('settings.changeAvatar')}>
-            <IconButton sx={{ p: 0 }} onClick={() => setOpen(true)}>
+            <IconButton sx={{ p: 0 }} onClick={() => setOpen(true)} size="large">
               <Avatar
                 alt="user photo"
                 src={user?.photo}
@@ -290,7 +290,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           {t('settings.save')}
         </Button>
       </Box>
-    </Container>
+    </Container>)
   );
 };
 export default Settings;

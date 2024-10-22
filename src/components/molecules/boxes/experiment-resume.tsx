@@ -57,7 +57,7 @@ const ExperimentResume = ({ data }: ExperimentResumeProps) => {
     });
   }
   return (
-    <FlexColumnBorder title={t('general data of essay')} open={open} generalData={true}>
+    (<FlexColumnBorder title={t('general data of essay')} open={open} generalData={true}>
       <Box
         sx={{
           display: 'flex',
@@ -65,7 +65,7 @@ const ExperimentResume = ({ data }: ExperimentResumeProps) => {
           transform: { mobile: 'translate(10px, -60px)', notebook: 'translateY(-45px)' },
         }}
       >
-        <IconButton>
+        <IconButton size="large">
           {open ? (
             <CloseIcon onClick={() => setOpen((prev) => !prev)} />
           ) : (
@@ -73,7 +73,6 @@ const ExperimentResume = ({ data }: ExperimentResumeProps) => {
           )}
         </IconButton>
       </Box>
-
       {/* fade sem animaçao */}
       <Fade in={open} timeout={0} unmountOnExit>
         <Box
@@ -95,7 +94,7 @@ const ExperimentResume = ({ data }: ExperimentResumeProps) => {
           ))}
         </Box>
       </Fade>
-    </FlexColumnBorder>
+    </FlexColumnBorder>)
   );
 };
 

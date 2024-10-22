@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app';
 import Pages from '@/components/config/pages';
 import { AuthProvider } from '@/contexts/auth';
-import { ThemeProvider as MuiTheme } from '@mui/material';
+import { ThemeProvider as MuiTheme, Theme, StyledEngineProvider } from '@mui/material';
 import { ThemeProvider as StyledTheme } from 'styled-components';
 import { theme } from '@/components/config/theme';
 import { ToastContainer } from 'react-toastify';
@@ -15,6 +15,13 @@ import 'dayjs/locale/en';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useRouter } from 'next/router';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
+
+
+// declare module '@mui/styles/defaultTheme' {
+//   // eslint-disable-next-line @typescript-eslint/no-empty-interface
+//   interface DefaultTheme extends Theme {}
+// }
+
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { i18n } = useTranslation();

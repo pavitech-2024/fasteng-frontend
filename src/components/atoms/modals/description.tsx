@@ -34,7 +34,7 @@ export default function DescriptionModal({ title, description }: IModal) {
   };
 
   return (
-    <React.Fragment>
+    (<React.Fragment>
       <Button variant="outlined" onClick={handleClickOpen}>
         {t('description.read.more')}
       </Button>
@@ -51,7 +51,7 @@ export default function DescriptionModal({ title, description }: IModal) {
             top: 8,
             color: (theme) => theme.palette.grey[500],
           }}
-        >
+          size="large">
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
@@ -60,6 +60,6 @@ export default function DescriptionModal({ title, description }: IModal) {
           </Typography>
         </DialogContent>
       </BootstrapDialog>
-    </React.Fragment>
+    </React.Fragment>)
   );
 }
