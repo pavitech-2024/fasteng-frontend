@@ -1,6 +1,5 @@
 // import { adaptV4Theme, createTheme } from "@mui/material";
 
-
 // export const theme = createTheme(adaptV4Theme({
 //   breakpoints: {
 //     values: {
@@ -130,7 +129,7 @@ export const theme = createTheme({
       border: '',
       lightGray: '',
       mainGray: '',
-      darkGray: ''
+      darkGray: '',
     },
     secondaryTons: {
       blue: '',
@@ -139,8 +138,8 @@ export const theme = createTheme({
       red: '',
       green: '',
       greenPM: '',
-      yellowWarning: ''
-    }
+      yellowWarning: '',
+    },
   },
 
   typography: {
