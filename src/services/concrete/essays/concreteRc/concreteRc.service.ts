@@ -36,7 +36,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
           break;
         case 1:
           const { step2Data } = data as ConcreteRcData;
-          console.log("🚀 ~ CONCRETE_RC_SERVICE ~ handleNext= ~ step2Data:", step2Data)
           await this.submitStep2Data(step2Data);
           await this.calculateResults(data as ConcreteRcData);
           break;
@@ -101,7 +100,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
   submitStep2Data = async (step2Data: ConcreteRcData['step2Data']): Promise<void> => {
     try {
       const { age, tolerance } = step2Data;
-      let reference;
+      let lowerReference, higherReference;
 
       const concreteRcToleranceAge = [
         {
@@ -130,38 +129,33 @@ class CONCRETE_RC_SERVICE implements IEssayService {
         },
       ];
 
-      const errorMargin = 10 / 60; // 10 minutos em horas
-      const isAgeWithinErrorMargin = concreteRcToleranceAge.some((e) => 
-        age >= e.age - errorMargin && age <= e.age + errorMargin
-      );
+      // Encontrar o índice onde age se encaixa entre os valores de age no array
+      const referenceIndex = concreteRcToleranceAge.findIndex((e, i, arr) => {
+        const nextAge = (arr[i + 1]?.age) * 60;
+        const totalMinutes = (age.hours * 60) + age.minutes;
+        return totalMinutes >= (e.age * 60) && (nextAge === undefined || totalMinutes < nextAge); // Verifica o intervalo
+      });
 
+      // Se encontramos um índice válido, pegamos o próximo
+      if (referenceIndex !== -1) {
+        higherReference = concreteRcToleranceAge[referenceIndex + 1] || concreteRcToleranceAge[referenceIndex];
+        lowerReference = concreteRcToleranceAge[referenceIndex - 1] || concreteRcToleranceAge[referenceIndex];
 
-      if (!isAgeWithinErrorMargin) {
-        // Encontrar o índice onde age se encaixa entre os valores de age no array
-        const referenceIndex = concreteRcToleranceAge.findIndex((e, i, arr) => {
-          const nextAge = arr[i + 1]?.age;
-          return age >= e.age && (nextAge === undefined || age < nextAge); // Verifica o intervalo
+        // Fazer chamada para a interpolação
+        const response = await Api.post(`${this.info.backend_path}/interpolation`, {
+          age: (age.hours * 60) + age.minutes,
+          tolerance: (tolerance.hours * 60) + tolerance.minutes,
+          higherReference,
+          lowerReference,
         });
 
-        // Se encontramos um índice válido, pegamos o próximo
-        if (referenceIndex !== -1) {
-          reference = concreteRcToleranceAge[referenceIndex + 1] || concreteRcToleranceAge[referenceIndex]; // Próximo ou o próprio
+        const { success, error, result } = response.data;
 
-          // Fazer chamada para a interpolação
-          const response = await Api.post(`${this.info.backend_path}/interpolation`, {
-            age,
-            tolerance,
-            reference,
-          });
+        if (success === false) throw error.name;
 
-          const { success, error, result } = response.data;
-
-          if (success === false) throw error.name;
-
-          this.store_actions.setData({ step: 2, value: result });
-        } else {
-          throw t('errooooouuu');
-        }
+        this.store_actions.setData({ step: 2, value: result });
+      } else {
+        throw t('errooooouuu');
       }
     } catch (error) {
       throw error;

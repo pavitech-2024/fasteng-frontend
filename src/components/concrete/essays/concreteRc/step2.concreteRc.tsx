@@ -1,16 +1,23 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import useConcreteRcStore from '@/stores/concrete/concreteRc/concreteRc.store';
-import { Box } from '@mui/material';
+import { Box, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
+import { Direction } from 'react-toastify/dist/utils';
 
 const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useConcreteRcStore();
 
   const [hoursInputs, setHoursInputs] = useState({
-    age: '',
-    tolerance: ''
-  })
+    age: {
+      hours: 0,
+      minutes: 0,
+    },
+    tolerance: {
+      hours: 0,
+      minutes: 0,
+    },
+  });
 
   const materialInputs = [
     {
@@ -59,7 +66,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
   ];
 
   const handleHourFormat = (e: any, key: string) => {
-    console.log("🚀 ~ handleHourFormat ~ key:", key)
+    console.log('🚀 ~ handleHourFormat ~ key:', key);
     const rawValue = e.target.value;
 
     // Permitir valor vazio e lidar com conversão para número apenas quando apropriado
@@ -70,13 +77,12 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     const hoursNumber = Number(hours); // Converter a parte de horas para número
     const minutesNumber = Number(minutes || 0);
 
-    const hoursToMinutes = hoursNumber + (minutesNumber / 60);
-    console.log("🚀 ~ handleHourFormat ~ hoursToMinutes:", hoursToMinutes)
+    const hoursToMinutes = hoursNumber + minutesNumber / 60;
 
-    setData({ step: 1, key: key, value: hoursToMinutes })
+    setData({ step: 1, key: key, value: hoursToMinutes });
 
     // Apenas atualize se for um número ou se for vazio (o usuário apagando todos os números)
-    setHoursInputs({...hoursInputs, [key]: value}, );
+    setHoursInputs({ ...hoursInputs, [key]: value });
   };
 
   if (
@@ -116,7 +122,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           ))}
         </Box>
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%' }}>
+        {/* <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%' }}>
           {timeInputs.map((input) => (
             <InputEndAdornment
               key={input.key}
@@ -131,6 +137,91 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
               }}
             />
           ))}
+        </Box> */}
+
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <Typography>Idade do corpo de prova</Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
+            <Box>
+              <TextField
+                label="Horas"
+                type='number'
+                value={data.age.hours}
+                onChange={(e) => {
+                  const newData = { ...data };
+                  newData.age.hours = Number(e.target.value);
+                  setData({ step: 1, value: { ...data, value: newData } });
+                }}
+                variant="outlined"
+                size="medium"
+                sx={{ width: '7rem' }}
+              >
+                {Array.from({ length: 24 }, (_, i) => (
+                  <MenuItem key={i} value={i}>
+                    {i}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Box>
+
+            <Box>
+              <TextField
+                label="Minutos"
+                type='number'
+                value={data.age.minutes}
+                onChange={(e) => {
+                  const newData = { ...data };
+                  newData.age.minutes = Number(e.target.value);
+                  setData({ step: 1, value: { ...data, value: newData } });
+                }}
+                variant="outlined"
+                size="medium"
+                sx={{ width: '7rem' }}
+              >
+                {Array.from({ length: 60 }, (_, i) => (
+                  <MenuItem key={i} value={i}>
+                    {i}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Box>
+          </Box>
+
+          <Typography>Tolerância utilizada</Typography>
+
+          <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
+            <Box>
+              <TextField
+                label="Horas"
+                type='number'
+                value={data.tolerance.hours}
+                onChange={(e) => {
+                  const newData = { ...data };
+                  newData.tolerance.hours = Number(e.target.value);
+                  setData({ step: 1, value: { ...data, value: newData } });
+                }}
+                variant="outlined"
+                size="medium"
+                sx={{ width: '7rem' }}
+              />
+            </Box>
+
+            <Box>
+              <TextField
+                label="Minutos"
+                type='number'
+                value={data.tolerance.minutes}
+                onChange={(e) => {
+                  const newData = { ...data };
+                  newData.tolerance.minutes = Number(e.target.value);
+                  setData({ step: 1, value: { ...data, value: newData } });
+                }}
+                variant="outlined"
+                size="medium"
+                sx={{ width: '7rem' }}
+              />
+            </Box>
+          </Box>
         </Box>
       </Box>
     </Box>
