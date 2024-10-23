@@ -1,24 +1,16 @@
-import DropDown from '@/components/atoms/inputs/dropDown';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import { SieveSeries } from '@/interfaces/common';
 import useConcreteRcStore from '@/stores/concrete/concreteRc/concreteRc.store';
-import { getSieveSeries } from '@/utils/sieves';
 import { Box } from '@mui/material';
-import { GridColDef } from '@mui/x-data-grid';
-import { t } from 'i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useConcreteRcStore();
 
-  const [ageInput, setAgeInput] = useState(data.age);
-  const [toleranceInput, setToleranceInput] = useState(data.tolerance);
-
-  const [timeInutsValues, setTimeInputsValues] = useState({
-    age: data.age,
-    tolerance: data.tolerance,
-  });
+  const [hoursInputs, setHoursInputs] = useState({
+    age: '',
+    tolerance: ''
+  })
 
   const materialInputs = [
     {
@@ -51,32 +43,40 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     {
       key: 'age',
       placeholder: 'Inserir a idade do corpo de prova',
-      value: timeInutsValues.age,
+      value: data.age,
       adornment: 'hr',
-      type: 'time',
+      type: 'number',
       label: 'Idade do corpo de prova',
     },
     {
       key: 'tolerance',
       placeholder: 'Inserir a tolerância utilizada',
-      value: timeInutsValues.tolerance,
+      value: data.tolerance,
       adornment: 'hr',
-      type: 'time',
+      type: 'number',
       label: 'Tolerância utilizada',
     },
   ];
 
-  const handleTimeInputs = (e: any, key: string) => {
-    const timeString = e.target.value;
-    const [hours, minutes] = timeString.split(':').map(Number);
-    const totalMinutes = hours * 60 + minutes;
+  const handleHourFormat = (e: any, key: string) => {
+    console.log("🚀 ~ handleHourFormat ~ key:", key)
+    const rawValue = e.target.value;
 
-    setTimeInputsValues({
-      ...timeInutsValues,
-      [key]: e.target.value,
-    });
+    // Permitir valor vazio e lidar com conversão para número apenas quando apropriado
+    const value = rawValue === '' ? '' : parseFloat(rawValue);
 
-    setData({ step: 1, key, value: totalMinutes });
+    const [hours, minutes] = rawValue.split('.');
+
+    const hoursNumber = Number(hours); // Converter a parte de horas para número
+    const minutesNumber = Number(minutes || 0);
+
+    const hoursToMinutes = hoursNumber + (minutesNumber / 60);
+    console.log("🚀 ~ handleHourFormat ~ hoursToMinutes:", hoursToMinutes)
+
+    setData({ step: 1, key: key, value: hoursToMinutes })
+
+    // Apenas atualize se for um número ou se for vazio (o usuário apagando todos os números)
+    setHoursInputs({...hoursInputs, [key]: value}, );
   };
 
   if (
@@ -123,10 +123,11 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
               adornment={input.adornment}
               placeholder={input.placeholder}
               label={input.label}
+              inputProps={{ step: '0.01', min: '0' }}
               type={input.type}
-              value={input.value}
+              value={hoursInputs[input.key]}
               onChange={(e) => {
-                handleTimeInputs(e, input.key);
+                handleHourFormat(e, input.key);
               }}
             />
           ))}

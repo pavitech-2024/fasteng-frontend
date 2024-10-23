@@ -29,7 +29,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
   /** @handleNext Receives the step and data from the form and calls the respective method */
   handleNext = async (step: number, data: unknown): Promise<void> => {
-    console.log('🚀 ~ CONCRETE_RC_SERVICE ~ handleNext= ~ step:', step);
     try {
       switch (step) {
         case 0:
@@ -37,6 +36,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
           break;
         case 1:
           const { step2Data } = data as ConcreteRcData;
+          console.log("🚀 ~ CONCRETE_RC_SERVICE ~ handleNext= ~ step2Data:", step2Data)
           await this.submitStep2Data(step2Data);
           await this.calculateResults(data as ConcreteRcData);
           break;
@@ -100,23 +100,69 @@ class CONCRETE_RC_SERVICE implements IEssayService {
   // verify inputs from ConcreteRc page (step === 1, page 2)
   submitStep2Data = async (step2Data: ConcreteRcData['step2Data']): Promise<void> => {
     try {
-      // verify if the material mass is not empty or negative
-      // if (!step2Data.material_mass) throw t('errors.empty-material-mass');
-      // if (step2Data.material_mass < 0) throw t('errors.negative-material-mass');
-      // // verify if all the passant porcentages are not empty or negative
-      // step2Data.table_data.forEach((row) => {
-      //   if (row.passant === null || row.retained === null) throw t('errors.empty-sieve') + row.sieve;
-      //   if (row.passant < 0 || row.retained < 0) throw t('errors.negative-sieve') + row.sieve;
-      // });
-      // //verify if the sum of the masses (retained + bottom) equals the material mass
-      // let retained = 0.0;
-      // step2Data.table_data.forEach((row) => {
-      //   retained += row.retained;
-      // });
-      // const sum = Math.round(100 * (retained + step2Data.bottom)) / 100;
-      // if (sum > step2Data.material_mass) {
-      //   throw `${t('errors.sieves-sum-not-equal-to-material-mass')}\nRetida + Fundos: ${sum}g.`;
-      // }
+      const { age, tolerance } = step2Data;
+      let reference;
+
+      const concreteRcToleranceAge = [
+        {
+          age: 24.0,
+          tolerance: 0.5,
+        },
+        {
+          age: 72.0, // 3d
+          tolerance: 2,
+        },
+        {
+          age: 168, // 7d
+          tolerance: 6,
+        },
+        {
+          age: 672, // 28d
+          tolerance: 24,
+        },
+        {
+          age: 1512, // 63d
+          tolerance: 36,
+        },
+        {
+          age: 2184, // 91d
+          tolerance: 48,
+        },
+      ];
+
+      const errorMargin = 10 / 60; // 10 minutos em horas
+      const isAgeWithinErrorMargin = concreteRcToleranceAge.some((e) => 
+        age >= e.age - errorMargin && age <= e.age + errorMargin
+      );
+
+
+      if (!isAgeWithinErrorMargin) {
+        // Encontrar o índice onde age se encaixa entre os valores de age no array
+        const referenceIndex = concreteRcToleranceAge.findIndex((e, i, arr) => {
+          const nextAge = arr[i + 1]?.age;
+          return age >= e.age && (nextAge === undefined || age < nextAge); // Verifica o intervalo
+        });
+
+        // Se encontramos um índice válido, pegamos o próximo
+        if (referenceIndex !== -1) {
+          reference = concreteRcToleranceAge[referenceIndex + 1] || concreteRcToleranceAge[referenceIndex]; // Próximo ou o próprio
+
+          // Fazer chamada para a interpolação
+          const response = await Api.post(`${this.info.backend_path}/interpolation`, {
+            age,
+            tolerance,
+            reference,
+          });
+
+          const { success, error, result } = response.data;
+
+          if (success === false) throw error.name;
+
+          this.store_actions.setData({ step: 2, value: result });
+        } else {
+          throw t('errooooouuu');
+        }
+      }
     } catch (error) {
       throw error;
     }

@@ -28,12 +28,12 @@ const ConcreteRc = () => {
     {
       step: 1,
       children: <ConcreteRc_Step2 />,
-      data: store.step2Data,
+      data: store,
     },
     {
       step: 2,
       children: <ConcreteRc_Results />,
-      data: store.results,
+      data: store,
     },
   ];
 
