@@ -5,7 +5,7 @@ import Rtcd_Results from '@/components/asphalt/essays/rtcd/results.rtcd';
 import Rtcd_GeneralData from '@/components/asphalt/essays/rtcd/generalData.rtcd';
 import useAuth from '@/contexts/auth';
 import Rtcd_SERVICE from '@/services/asphalt/essays/rtcd/rtcd.service';
-import useRtcdStore, { RtcdActions } from '@/stores/asphalt/rtcd.store';
+import useRtcdStore, { RtcdActions } from '@/stores/asphalt/rtcd/rtcd.store';
 
 const Rtcd = () => {
   // start an instance of the service

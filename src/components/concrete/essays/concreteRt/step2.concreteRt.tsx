@@ -1,35 +1,38 @@
 import DropDown from '@/components/atoms/inputs/dropDown';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import useRtcdStore from '@/stores/asphalt/rtcd/rtcd.store';
+import { SieveSeries } from '@/interfaces/common';
+import useConcreteRtStore from '@/stores/concrete/concreteRt/concreteRt.store';
+import { getSieveSeries } from '@/utils/sieves';
 import { Box } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 
-const Rtcd_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { rtcdStep2: data, setData } = useRtcdStore();
+const ConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
+  const { step2Data: data, setData } = useConcreteRtStore();
 
   const inputs = [
     {
       key: 'sampleOrigin',
-      label: t('asphalt.rtcd.sample-origin'),
+      label: t('asphalt.concreteRt.sample-origin'),
       value: data.sampleOrigin,
       required: false,
     },
     {
       key: 'pressSpecification',
-      label: t('asphalt.rtcd.press-specification'),
+      label: t('asphalt.concreteRt.press-specification'),
       value: data.pressSpecification,
       required: false,
     },
     {
       key: 'pressConstant',
-      label: t('asphalt.rtcd.press-constant'),
+      label: t('asphalt.concreteRt.press-constant'),
       value: data.pressConstant,
       required: true,
     },
     {
       key: 'sampleVoidVolume',
-      label: t('asphalt.rtcd.sample-void-volume'),
+      label: t('asphalt.concreteRt.sample-void-volume'),
       value: data.sampleVoidVolume,
       required: false,
     },
@@ -125,10 +128,11 @@ const Rtcd_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
             { value: 'E', label: 'E' },
           ]}
           callback={(value) => setData({ step: 1, key: 'dnitRange', value })}
+          defaultValue={{ label: data.dnitRange, value: data.dnitRange }}
         />
       </Box>
     </Box>
   );
 };
 
-export default Rtcd_Step2;
+export default ConcreteRt_Step2;
