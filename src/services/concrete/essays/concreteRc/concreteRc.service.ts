@@ -131,9 +131,9 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
       // Encontrar o índice onde age se encaixa entre os valores de age no array
       const referenceIndex = concreteRcToleranceAge.findIndex((e, i, arr) => {
-        const nextAge = (arr[i + 1]?.age) * 60;
-        const totalMinutes = (age.hours * 60) + age.minutes;
-        return totalMinutes >= (e.age * 60) && (nextAge === undefined || totalMinutes < nextAge); // Verifica o intervalo
+        const nextAge = arr[i + 1]?.age * 60;
+        const totalMinutes = age.hours * 60 + age.minutes;
+        return totalMinutes >= e.age * 60 && (nextAge === undefined || totalMinutes < nextAge); // Verifica o intervalo
       });
 
       // Se encontramos um índice válido, pegamos o próximo
@@ -143,8 +143,8 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
         // Fazer chamada para a interpolação
         const response = await Api.post(`${this.info.backend_path}/interpolation`, {
-          age: (age.hours * 60) + age.minutes,
-          tolerance: (tolerance.hours * 60) + tolerance.minutes,
+          age: age.hours * 60 + age.minutes,
+          tolerance: tolerance.hours * 60 + tolerance.minutes,
           higherReference,
           lowerReference,
         });

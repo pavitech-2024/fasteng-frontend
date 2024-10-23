@@ -145,7 +145,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
             <Box>
               <TextField
                 label="Horas"
-                type='number'
+                type="number"
                 value={data.age.hours}
                 onChange={(e) => {
                   const newData = { ...data };
@@ -167,7 +167,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
             <Box>
               <TextField
                 label="Minutos"
-                type='number'
+                type="number"
                 value={data.age.minutes}
                 onChange={(e) => {
                   const newData = { ...data };
@@ -193,7 +193,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
             <Box>
               <TextField
                 label="Horas"
-                type='number'
+                type="number"
                 value={data.tolerance.hours}
                 onChange={(e) => {
                   const newData = { ...data };
@@ -209,7 +209,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
             <Box>
               <TextField
                 label="Minutos"
-                type='number'
+                type="number"
                 value={data.tolerance.minutes}
                 onChange={(e) => {
                   const newData = { ...data };

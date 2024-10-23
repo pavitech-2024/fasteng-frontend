@@ -12,9 +12,9 @@ interface ConcreteGeneralData {
 }
 
 type TimeObject = {
-  hours: number,
-  minutes: number
-}
+  hours: number;
+  minutes: number;
+};
 
 interface ConcreteRc_step2Data {
   diammeter1: number;
@@ -68,11 +68,11 @@ const initialState = {
     height: null,
     age: {
       hours: null,
-      minutes: null
+      minutes: null,
     },
     tolerance: {
       hours: null,
-      minutes: null
+      minutes: null,
     },
   },
   results: {
