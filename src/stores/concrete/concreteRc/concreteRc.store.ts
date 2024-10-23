@@ -16,26 +16,22 @@ type TimeObject = {
   minutes: number;
 };
 
+type ToleranceObject = {
+  resultTolerance: number;
+  isPermited: boolean;
+};
+
 interface ConcreteRc_step2Data {
   diammeter1: number;
   diammeter2: number;
   height: number;
   age: TimeObject;
   tolerance: TimeObject;
+  newTolerance: ToleranceObject
 }
 
 interface ConcreteRc_results {
-  accumulated_retained: number[];
-  graph_data: [number, number][];
-  passant: number[];
-  retained_porcentage: number[];
-  total_retained: number;
-  nominal_size: number;
-  nominal_diameter: number;
-  fineness_module: number;
-  cc: number;
-  cnu: number;
-  error: number;
+  resistanceFactor:number
 }
 
 export type ConcreteRcData = {
@@ -74,19 +70,13 @@ const initialState = {
       hours: null,
       minutes: null,
     },
+    newTolerance: {
+      resultTolerance: null,
+      isPermited: null
+    }
   },
   results: {
-    accumulated_retained: [],
-    graph_data: [],
-    passant: [],
-    retained_porcentage: [],
-    total_retained: null,
-    nominal_size: null,
-    nominal_diameter: null,
-    fineness_module: null,
-    cc: null,
-    cnu: null,
-    error: null,
+    resistanceFactor: null
   },
 };
 

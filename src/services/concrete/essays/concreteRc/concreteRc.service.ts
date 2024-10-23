@@ -37,7 +37,8 @@ class CONCRETE_RC_SERVICE implements IEssayService {
         case 1:
           const { step2Data } = data as ConcreteRcData;
           await this.submitStep2Data(step2Data);
-          await this.calculateResults(data as ConcreteRcData);
+          await this.calculateStep2Data(step2Data);
+          // await this.calculateResults(data as ConcreteRcData);
           break;
         case 2:
           await this.saveEssay(data as ConcreteRcData);
@@ -101,6 +102,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
     try {
       const { age, tolerance } = step2Data;
       let lowerReference, higherReference;
+      let newTolerance;
 
       const concreteRcToleranceAge = [
         {
@@ -129,34 +131,57 @@ class CONCRETE_RC_SERVICE implements IEssayService {
         },
       ];
 
-      // Encontrar o índice onde age se encaixa entre os valores de age no array
-      const referenceIndex = concreteRcToleranceAge.findIndex((e, i, arr) => {
-        const nextAge = arr[i + 1]?.age * 60;
-        const totalMinutes = age.hours * 60 + age.minutes;
-        return totalMinutes >= e.age * 60 && (nextAge === undefined || totalMinutes < nextAge); // Verifica o intervalo
-      });
+      const toleranceFound = concreteRcToleranceAge.find((e) => e.age === age.hours * 60 + age.minutes);
 
-      // Se encontramos um índice válido, pegamos o próximo
-      if (referenceIndex !== -1) {
-        higherReference = concreteRcToleranceAge[referenceIndex + 1] || concreteRcToleranceAge[referenceIndex];
-        lowerReference = concreteRcToleranceAge[referenceIndex - 1] || concreteRcToleranceAge[referenceIndex];
-
-        // Fazer chamada para a interpolação
-        const response = await Api.post(`${this.info.backend_path}/interpolation`, {
-          age: age.hours * 60 + age.minutes,
-          tolerance: tolerance.hours * 60 + tolerance.minutes,
-          higherReference,
-          lowerReference,
+      if (toleranceFound) {
+        newTolerance = toleranceFound;
+      } else {
+        // Encontrar o índice onde age se encaixa entre os valores de age no array
+        const referenceIndex = concreteRcToleranceAge.findIndex((e, i, arr) => {
+          const nextAge = arr[i + 1]?.age * 60;
+          const totalMinutes = age.hours * 60 + age.minutes;
+          return totalMinutes >= e.age * 60 && (nextAge === undefined || totalMinutes < nextAge); // Verifica o intervalo
         });
 
-        const { success, error, result } = response.data;
+        // Se encontramos um índice válido, pegamos o próximo
+        if (referenceIndex !== -1) {
+          higherReference = concreteRcToleranceAge[referenceIndex + 1] || concreteRcToleranceAge[referenceIndex];
+          lowerReference = concreteRcToleranceAge[referenceIndex - 1] || concreteRcToleranceAge[referenceIndex];
 
-        if (success === false) throw error.name;
+          // Fazer chamada para a interpolação
+          const response = await Api.post(`${this.info.backend_path}/interpolation`, {
+            age: age.hours * 60 + age.minutes,
+            tolerance: tolerance.hours * 60 + tolerance.minutes,
+            higherReference,
+            lowerReference,
+          });
 
-        this.store_actions.setData({ step: 2, value: result });
-      } else {
-        throw t('errooooouuu');
+          const { success, error, result } = response.data;
+
+          if (success === false) throw error.name;
+
+          this.store_actions.setData({ step: 1, value: { ...step2Data, newTolerance: result } });
+        } else {
+          throw t('errooooouuu');
+        }
       }
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  // verify inputs from ConcreteRc page (step === 1, page 2)
+  calculateStep2Data = async (step2Data: ConcreteRcData['step2Data']): Promise<void> => {
+    try {
+      const { diammeter1, diammeter2, height } = step2Data;
+
+      const averageDiammeter = diammeter1 + diammeter2 / 2;
+      console.log("🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ averageDiammeter:", averageDiammeter)
+      const diammHeightRatio = averageDiammeter / height;
+      console.log("🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ diammHeightRatio:", diammHeightRatio)
+
+      if (diammHeightRatio > 2.06) throw t('erro');
+      if (diammHeightRatio < 1.94) throw t('por implementar');
     } catch (error) {
       throw error;
     }
