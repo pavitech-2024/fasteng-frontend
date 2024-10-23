@@ -27,11 +27,11 @@ interface ConcreteRc_step2Data {
   height: number;
   age: TimeObject;
   tolerance: TimeObject;
-  newTolerance: ToleranceObject
+  newTolerance: ToleranceObject;
 }
 
 interface ConcreteRc_results {
-  resistanceFactor:number
+  resistanceFactor: number;
 }
 
 export type ConcreteRcData = {
@@ -72,11 +72,11 @@ const initialState = {
     },
     newTolerance: {
       resultTolerance: null,
-      isPermited: null
-    }
+      isPermited: null,
+    },
   },
   results: {
-    resistanceFactor: null
+    resistanceFactor: null,
   },
 };
 

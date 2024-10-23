@@ -176,9 +176,9 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       const { diammeter1, diammeter2, height } = step2Data;
 
       const averageDiammeter = diammeter1 + diammeter2 / 2;
-      console.log("🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ averageDiammeter:", averageDiammeter)
+      console.log('🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ averageDiammeter:', averageDiammeter);
       const diammHeightRatio = averageDiammeter / height;
-      console.log("🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ diammHeightRatio:", diammHeightRatio)
+      console.log('🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ diammHeightRatio:', diammHeightRatio);
 
       if (diammHeightRatio > 2.06) throw t('erro');
       if (diammHeightRatio < 1.94) throw t('por implementar');
