@@ -1,19 +1,23 @@
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import Result_Card from '@/components/atoms/containers/result-card';
+import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
+import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
-import useRtcdStore from '@/stores/asphalt/rtcd/rtcd.store';
+import useConcreteRtStore from '@/stores/concrete/concreteRt/concreteRt.store';
 import { Box } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
+import Chart from 'react-google-charts';
 
-const Rtcd_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
+const ConcreteRt_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
-  const { results: results, generalData } = useRtcdStore();
+  const { results: results, generalData } = useConcreteRtStore();
 
   // criando o objeto que será passado para o componente ExperimentResume
   const experimentResumeData: ExperimentResumeData = {
     experimentName: generalData.name,
+    materials: [{ name: generalData.material.name, type: generalData.material.type }],
   };
 
   const data = {
@@ -34,8 +38,8 @@ const Rtcd_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
     data.average = Number(Number(results.average).toFixed(2));
     data.acceptanceCondition =
       data.average > minimumRtValue
-        ? t('rtcd.results.acceptance-condition-true')
-        : t('rtcd.results.acceptance-condition-false');
+        ? t('concreteRt.results.acceptance-condition-true')
+        : t('concreteRt.results.acceptance-condition-false');
   }
 
   const rows = data.everyRtsKgf.map((value, index) => ({
@@ -55,13 +59,25 @@ const Rtcd_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
           columns={[
             {
               field: 'sampleName',
-              headerName: t('rtcd.results.sampleName'),
+              headerName: t('concreteRt.results.sampleName'),
               flex: 1,
               align: 'center',
               headerAlign: 'center',
             },
-            { field: 'rtKgf', headerName: t('rtcd.results.RtKgf'), flex: 1, align: 'center', headerAlign: 'center' },
-            { field: 'rtMpa', headerName: t('rtcd.results.RtMpa'), flex: 1, align: 'center', headerAlign: 'center' },
+            {
+              field: 'rtKgf',
+              headerName: t('concreteRt.results.RtKgf'),
+              flex: 1,
+              align: 'center',
+              headerAlign: 'center',
+            },
+            {
+              field: 'rtMpa',
+              headerName: t('concreteRt.results.RtMpa'),
+              flex: 1,
+              align: 'center',
+              headerAlign: 'center',
+            },
           ]}
         />
         <Box
@@ -83,16 +99,20 @@ const Rtcd_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
             }}
           >
             <Result_Card
-              label={t('rtcd.results.minimum-rt')}
+              label={t('concreteRt.results.minimum-rt')}
               value={`${minimumRtValue.toString().replace('.', ',')}`}
               unity={'Mpa'}
             />
             <Result_Card
-              label={t('rtcd.results.average')}
+              label={t('concreteRt.results.average')}
               value={data.average.toString().replace('.', ',')}
               unity={'MPa'}
             />
-            <Result_Card label={t('rtcd.results.acceptance-condition')} value={data.acceptanceCondition} unity={''} />
+            <Result_Card
+              label={t('concreteRt.results.acceptance-condition')}
+              value={data.acceptanceCondition}
+              unity={''}
+            />
           </Box>
         </Box>
       </FlexColumnBorder>
@@ -100,4 +120,4 @@ const Rtcd_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   );
 };
 
-export default Rtcd_Results;
+export default ConcreteRt_Results;

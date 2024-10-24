@@ -51,6 +51,7 @@ export default function DescriptionModal({ title, description }: IModal) {
             top: 8,
             color: (theme) => theme.palette.grey[500],
           }}
+          size="large"
         >
           <CloseIcon />
         </IconButton>
