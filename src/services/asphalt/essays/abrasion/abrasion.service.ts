@@ -14,8 +14,8 @@ class Abrasion_SERVICE implements IEssayService {
     backend_path: 'asphalt/essays/abrasion',
     steps: 3,
     standard: {
-      name: '',
-      link: '',
+      name: 'DNIT-ME 054/97',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_451_2024_me.pdf',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
