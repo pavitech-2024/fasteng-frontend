@@ -17,7 +17,7 @@ type TimeObject = {
 };
 
 type ToleranceObject = {
-  resultTolerance: number;
+  data: number;
   isPermited: boolean;
 };
 
@@ -30,6 +30,10 @@ interface ConcreteRc_step2Data {
   newTolerance: ToleranceObject;
 }
 
+interface ConcreteRc_step3Data {
+  rupture: string
+}
+
 interface ConcreteRc_results {
   resistanceFactor: number;
 }
@@ -37,6 +41,7 @@ interface ConcreteRc_results {
 export type ConcreteRcData = {
   generalData: ConcreteGeneralData;
   step2Data: ConcreteRc_step2Data;
+  step3Data: ConcreteRc_step3Data;
   results: ConcreteRc_results;
 };
 
@@ -45,7 +50,7 @@ export type ConcreteRcActions = {
   reset: ({ step }: setDataType) => void;
 };
 
-const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'results' };
+const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'ste3Data', 3: 'results' };
 
 type setDataType = { step: number; key?: string; value: unknown };
 
@@ -71,9 +76,12 @@ const initialState = {
       minutes: null,
     },
     newTolerance: {
-      resultTolerance: null,
+      data: null,
       isPermited: null,
     },
+  },
+  step3Data: {
+    rupture: null
   },
   results: {
     resistanceFactor: null,

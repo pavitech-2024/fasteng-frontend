@@ -1,6 +1,7 @@
 import ConcreteRc_GeneralData from '@/components/concrete/essays/concreteRc/general-data.concreteRc';
 import ConcreteRc_Results from '@/components/concrete/essays/concreteRc/results.concreteRc';
 import ConcreteRc_Step2 from '@/components/concrete/essays/concreteRc/step2.concreteRc';
+import ConcreteRc_Step3 from '@/components/concrete/essays/concreteRc/step3.concreteRc';
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import CONCRETE_RC_SERVICE from '@/services/concrete/essays/concreteRc/concreteRc.service';
@@ -32,6 +33,11 @@ const ConcreteRc = () => {
     },
     {
       step: 2,
+      children: <ConcreteRc_Step3 />,
+      data: store,
+    },
+    {
+      step: 3,
       children: <ConcreteRc_Results />,
       data: store,
     },

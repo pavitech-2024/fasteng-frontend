@@ -20,7 +20,8 @@ class CONCRETE_RC_SERVICE implements IEssayService {
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
       { step: 1, description: t('concreteRc.step2'), path: 'essay-data' },
-      { step: 2, description: t('results'), path: 'results' },
+      { step: 2, description: t('concreteRc.step3'), path: 'essay-data' },
+      { step: 3, description: t('results'), path: 'results' },
     ],
   };
 
@@ -150,10 +151,11 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
           // Fazer chamada para a interpolação
           const response = await Api.post(`${this.info.backend_path}/interpolation`, {
-            age: age.hours * 60 + age.minutes,
-            tolerance: tolerance.hours * 60 + tolerance.minutes,
+            age_diammHeightRatio: age.hours * 60 + age.minutes,
+            tolerance_strenght: tolerance.hours * 60 + tolerance.minutes,
             higherReference,
             lowerReference,
+            type: 'tolerance',
           });
 
           const { success, error, result } = response.data;
@@ -180,8 +182,8 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       const averageDiammeter = diammeter1 + diammeter2 / 2;
       const diammHeightRatio = averageDiammeter / height;
 
-      if (diammHeightRatio <= 2.06) throw t('erro');
-      if (diammHeightRatio >= 1.94) {
+      if (diammHeightRatio >= 2.06) throw t('erro testeeee');
+      if (diammHeightRatio <= 1.94) {
         const correctionFactorArr = [
           {
             diammHeightRatio: 2.0,
@@ -208,28 +210,31 @@ class CONCRETE_RC_SERVICE implements IEssayService {
         const diammHeightRatioFound = correctionFactorArr.find((e) => e.diammHeightRatio === diammHeightRatio);
 
         if (diammHeightRatioFound) {
-          correctionFactor = newTolerance.resultTolerance * diammHeightRatioFound.correctionFactor;
+          correctionFactor = newTolerance.data * diammHeightRatioFound.correctionFactor;
         } else {
           // Interpolação
-          let higherReference;
-          let lowerReference;
+          let higherReference = null;
+          let lowerReference = null;
 
           for (let i = 0; i < correctionFactorArr.length; i++) {
+            // Verifica se o `diammHeightRatio` está entre os valores de `diammHeightRatio` adjacentes
+
             if (
               correctionFactorArr[i].diammHeightRatio > diammHeightRatio &&
-              correctionFactorArr[i + 1].diammHeightRatio > diammHeightRatio
+              correctionFactorArr[i + 1].diammHeightRatio < diammHeightRatio
             ) {
-              higherReference = correctionFactorArr[i].correctionFactor;
-              lowerReference = correctionFactorArr[i + 1].correctionFactor;
+              higherReference = correctionFactorArr[i];
+              lowerReference = correctionFactorArr[i + 1];
             }
           }
 
           // Fazer chamada para a interpolação
           const response = await Api.post(`${this.info.backend_path}/interpolation`, {
-            // age: age.hours * 60 + age.minutes,
-            // tolerance: tolerance.hours * 60 + tolerance.minutes,
-            // higherReference,
-            // lowerReference,
+            age_diammHeightRatio: diammHeightRatio,
+            tolerance_strenght: newTolerance.data,
+            higherReference,
+            lowerReference,
+            type: 'correctionFactor',
           });
 
           const { success, error, result } = response.data;
@@ -239,6 +244,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
           correctionFactor = result;
         }
       }
+      this.store_actions.setData({ step: 1, value: { ...step2Data, correctionFactor } });
     } catch (error) {
       throw error;
     }
