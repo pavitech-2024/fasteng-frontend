@@ -1,4 +1,5 @@
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import Result_Card from '@/components/atoms/containers/result-card';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 import { EssayPageProps } from '@/components/templates/essay';
@@ -8,7 +9,7 @@ import { t } from 'i18next';
 
 const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
-  const { results: concreteRc_results, step2Data, generalData } = useConcreteRcStore();
+  const { results: data, step2Data, generalData } = useConcreteRcStore();
 
   // criando o objeto que será passado para o componente ExperimentResume
   const experimentResumeData: ExperimentResumeData = {
@@ -29,7 +30,9 @@ const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
             gap: '10px',
             mt: '20px',
           }}
-        ></Box>
+        >
+          <Result_Card label={'fc'} value={data.finalCorrectionFactor.toFixed(2).toString()} unity={'Mpa'}/>
+        </Box>
       </FlexColumnBorder>
     </>
   );

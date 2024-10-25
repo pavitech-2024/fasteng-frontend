@@ -12,7 +12,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
     title: t('concrete.essays.concreteRc'),
     path: '/concrete/essays/concreteRc',
     backend_path: 'concrete/essays/concreteRc',
-    steps: 3,
+    steps: 4,
     standard: {
       name: 'NBR 7217/1984',
       link: 'https://engenhariacivilfsp.files.wordpress.com/2015/03/nbr-7181.pdf',
@@ -39,6 +39,8 @@ class CONCRETE_RC_SERVICE implements IEssayService {
           const { step2Data } = data as ConcreteRcData;
           await this.submitStep2Data(step2Data);
           await this.calculateStep2Data(step2Data);
+          break;
+        case 2:
           await this.calculateResults(data as ConcreteRcData);
           break;
         case 2:
@@ -137,6 +139,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       if (toleranceFound) {
         newTolerance = toleranceFound;
       } else {
+
         // Encontrar o índice onde age se encaixa entre os valores de age no array
         const referenceIndex = concreteRcToleranceAge.findIndex((e, i, arr) => {
           const nextAge = arr[i + 1]?.age * 60;
@@ -179,7 +182,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       const { diammeter1, diammeter2, height, newTolerance } = step2Data;
       let correctionFactor;
 
-      const averageDiammeter = diammeter1 + diammeter2 / 2;
+      const averageDiammeter = (diammeter1 + diammeter2) / 2;
       const diammHeightRatio = averageDiammeter / height;
 
       if (diammHeightRatio >= 2.06) throw t('erro testeeee');
@@ -210,8 +213,11 @@ class CONCRETE_RC_SERVICE implements IEssayService {
         const diammHeightRatioFound = correctionFactorArr.find((e) => e.diammHeightRatio === diammHeightRatio);
 
         if (diammHeightRatioFound) {
+          console.log("passei aqui")
           correctionFactor = newTolerance.data * diammHeightRatioFound.correctionFactor;
+          console.log("🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ correctionFactor:", correctionFactor)
         } else {
+          console.log("passei aqui")
           // Interpolação
           let higherReference = null;
           let lowerReference = null;
@@ -242,9 +248,10 @@ class CONCRETE_RC_SERVICE implements IEssayService {
           if (success === false) throw error.name;
 
           correctionFactor = result;
+          console.log("🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ correctionFactor:", correctionFactor)
         }
       }
-      this.store_actions.setData({ step: 2, value: { ...step2Data, correctionFactor } });
+      this.store_actions.setData({ step: 1, key: 'correctionFactor', value: correctionFactor });
     } catch (error) {
       throw error;
     }
@@ -252,6 +259,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
   // calculate results from ConcreteRc essay
   calculateResults = async (store: ConcreteRcData): Promise<void> => {
+    console.log("passei aqui")
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,

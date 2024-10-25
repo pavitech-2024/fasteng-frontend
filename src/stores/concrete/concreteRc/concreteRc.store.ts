@@ -33,15 +33,15 @@ interface ConcreteRc_step2Data {
   age: TimeObject;
   tolerance: TimeObject;
   newTolerance: ToleranceObject;
+  correctionFactor: number
 }
 
 interface ConcreteRc_step3Data {
   rupture: RuptureObject
-  correctionFactor: number
 }
 
 interface ConcreteRc_results {
-  resistanceFactor: number;
+  finalCorrectionFactor: number;
 }
 
 export type ConcreteRcData = {
@@ -85,16 +85,16 @@ const initialState = {
       data: null,
       isPermited: null,
     },
+    correctionFactor: null
   },
   step3Data: {
     rupture: {
       type: null,
       src: null
     },
-    correctionFactor: null
   },
   results: {
-    resistanceFactor: null,
+    finalCorrectionFactor: null,
   },
 };
 

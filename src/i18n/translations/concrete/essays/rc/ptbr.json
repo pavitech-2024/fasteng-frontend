@@ -1,6 +1,7 @@
 {
   "concreteRc.step-2-description": "Preencha todos os campos abaixo",
   "concreteRc.step2": "Passo 2",
+  "concreteRc.step3": "Passo 3",
 
   "concrete.rc.sample-origin": "Procedência dos Corpos de Prova",
   "concrete.rc.press-specification": "Nome/Especificação da Prensa",
@@ -20,7 +21,7 @@
   "concrete.material": "Material",
   "concrete.operator": "Operador",
   "concrete.calculist": "Calculista",
-  "concrete.materials.comments": "Informações do Material",
+  "concrete.comments": "Comentários",
   "concrete.essays.concreterc-concrete": "Resistência a Compressão",
   "concrete.essays.concreteRc": "Resistência a Compressão"
 }
