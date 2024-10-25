@@ -46,45 +46,6 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     },
   ];
 
-  const timeInputs = [
-    {
-      key: 'age',
-      placeholder: 'Inserir a idade do corpo de prova',
-      value: data.age,
-      adornment: 'hr',
-      type: 'number',
-      label: 'Idade do corpo de prova',
-    },
-    {
-      key: 'tolerance',
-      placeholder: 'Inserir a tolerância utilizada',
-      value: data.tolerance,
-      adornment: 'hr',
-      type: 'number',
-      label: 'Tolerância utilizada',
-    },
-  ];
-
-  const handleHourFormat = (e: any, key: string) => {
-    console.log('🚀 ~ handleHourFormat ~ key:', key);
-    const rawValue = e.target.value;
-
-    // Permitir valor vazio e lidar com conversão para número apenas quando apropriado
-    const value = rawValue === '' ? '' : parseFloat(rawValue);
-
-    const [hours, minutes] = rawValue.split('.');
-
-    const hoursNumber = Number(hours); // Converter a parte de horas para número
-    const minutesNumber = Number(minutes || 0);
-
-    const hoursToMinutes = hoursNumber + minutesNumber / 60;
-
-    setData({ step: 1, key: key, value: hoursToMinutes });
-
-    // Apenas atualize se for um número ou se for vazio (o usuário apagando todos os números)
-    setHoursInputs({ ...hoursInputs, [key]: value });
-  };
-
   if (
     nextDisabled &&
     data.diammeter1 !== null &&
@@ -121,23 +82,6 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
             />
           ))}
         </Box>
-
-        {/* <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%' }}>
-          {timeInputs.map((input) => (
-            <InputEndAdornment
-              key={input.key}
-              adornment={input.adornment}
-              placeholder={input.placeholder}
-              label={input.label}
-              inputProps={{ step: '0.01', min: '0' }}
-              type={input.type}
-              value={hoursInputs[input.key]}
-              onChange={(e) => {
-                handleHourFormat(e, input.key);
-              }}
-            />
-          ))}
-        </Box> */}
 
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <Typography>Idade do corpo de prova</Typography>

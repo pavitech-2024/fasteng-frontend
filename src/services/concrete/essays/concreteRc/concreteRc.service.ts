@@ -160,11 +160,12 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
           if (success === false) throw error.name;
 
-          this.store_actions.setData({ step: 1, value: { ...step2Data, newTolerance: result } });
+          newTolerance = result;
         } else {
           throw t('errooooouuu');
         }
       }
+      this.store_actions.setData({ step: 1, value: { ...step2Data, newTolerance } });
     } catch (error) {
       throw error;
     }
@@ -173,15 +174,71 @@ class CONCRETE_RC_SERVICE implements IEssayService {
   // verify inputs from ConcreteRc page (step === 1, page 2)
   calculateStep2Data = async (step2Data: ConcreteRcData['step2Data']): Promise<void> => {
     try {
-      const { diammeter1, diammeter2, height } = step2Data;
+      const { diammeter1, diammeter2, height, newTolerance } = step2Data;
+      let correctionFactor;
 
       const averageDiammeter = diammeter1 + diammeter2 / 2;
-      console.log('🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ averageDiammeter:', averageDiammeter);
       const diammHeightRatio = averageDiammeter / height;
-      console.log('🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ diammHeightRatio:', diammHeightRatio);
 
-      if (diammHeightRatio > 2.06) throw t('erro');
-      if (diammHeightRatio < 1.94) throw t('por implementar');
+      if (diammHeightRatio <= 2.06) throw t('erro');
+      if (diammHeightRatio >= 1.94) {
+        const correctionFactorArr = [
+          {
+            diammHeightRatio: 2.0,
+            correctionFactor: 1.0,
+          },
+          {
+            diammHeightRatio: 1.75,
+            correctionFactor: 0.98,
+          },
+          {
+            diammHeightRatio: 1.5,
+            correctionFactor: 0.96,
+          },
+          {
+            diammHeightRatio: 1.25,
+            correctionFactor: 0.93,
+          },
+          {
+            diammHeightRatio: 1.0,
+            correctionFactor: 0.86,
+          },
+        ];
+
+        const diammHeightRatioFound = correctionFactorArr.find((e) => e.diammHeightRatio === diammHeightRatio);
+
+        if (diammHeightRatioFound) {
+          correctionFactor = newTolerance.resultTolerance * diammHeightRatioFound.correctionFactor;
+        } else {
+          // Interpolação
+          let higherReference;
+          let lowerReference;
+
+          for (let i = 0; i < correctionFactorArr.length; i++) {
+            if (
+              correctionFactorArr[i].diammHeightRatio > diammHeightRatio &&
+              correctionFactorArr[i + 1].diammHeightRatio > diammHeightRatio
+            ) {
+              higherReference = correctionFactorArr[i].correctionFactor;
+              lowerReference = correctionFactorArr[i + 1].correctionFactor;
+            }
+          }
+
+          // Fazer chamada para a interpolação
+          const response = await Api.post(`${this.info.backend_path}/interpolation`, {
+            // age: age.hours * 60 + age.minutes,
+            // tolerance: tolerance.hours * 60 + tolerance.minutes,
+            // higherReference,
+            // lowerReference,
+          });
+
+          const { success, error, result } = response.data;
+
+          if (success === false) throw error.name;
+
+          correctionFactor = result;
+        }
+      }
     } catch (error) {
       throw error;
     }
