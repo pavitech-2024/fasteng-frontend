@@ -5,7 +5,10 @@ import { Box, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 
 const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { step2Data: data, setData } = useConcreteRcStore();
+  const { step3Data: data, setData } = useConcreteRcStore();
+
+  const [selectedRupture, setSelectedRupture] = useState('');
+  console.log("🚀 ~ selectedRupture:", selectedRupture)
 
   const ruptureImg = [
     {
@@ -60,15 +63,21 @@ const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     },
   ];
 
-  // if (
-  //   // nextDisabled &&
-  //   // data.diammeter1 !== null &&
-  //   // data.diammeter2 !== null &&
-  //   // data.age !== null &&
-  //   // data.height !== null &&
-  //   // data.tolerance !== null
-  // )
-  //   setNextDisabled(false);
+  const handleSelectRupture = (img: any) => {
+    if (img.key === selectedRupture) {
+      setSelectedRupture('');
+      setData({ step: 2, key: 'rupture', value: { type: null, src: null } })
+    } else {
+      setSelectedRupture(img.key);
+      setData({ step: 2, value: { type: img.label, src: img.src } })
+    }
+  }
+
+  if (
+    nextDisabled &&
+    !Object.values(data).some(e => e === null)
+  )
+    setNextDisabled(false);
 
   return (
     <Box
@@ -83,7 +92,18 @@ const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem', width: '100%', flexWrap: 'wrap' }}>
         {ruptureImg.map((img) => (
           <>
-            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', placeItems: 'center', maxWidth: '14rem', minHeight: '15rem', marginTop: '2rem' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1rem',
+                justifyContent: 'space-between',
+                placeItems: 'center',
+                maxWidth: '14rem',
+                minHeight: '15rem',
+                marginTop: '2rem',
+              }}
+            >
               <Typography>{img.label}</Typography>
               <Box
                 key={img.key}
@@ -94,10 +114,15 @@ const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
                   width: 200,
                   height: 200,
                   objectFit: 'cover',
+                  border: selectedRupture === img.key ? '3px solid orange' : 'none',
                   borderRadius: 2,
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  transition: 'transform 0.3s ease-in-out',
+                  '&:hover': {
+                    transform: 'scale(1.05)', // Aumenta a escala para 5% maior no hover
+                  },
                 }}
-                onClick={() => setData({ step: 2, key: 'rupture', value: img.label })}
+                onClick={() => handleSelectRupture(img)}
               />
             </Box>
           </>

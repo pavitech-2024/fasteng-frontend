@@ -2,15 +2,6 @@ import { ConcreteMaterial } from '@/interfaces/concrete';
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
-interface ConcreteGeneralData {
-  userId: string;
-  name: string;
-  material: ConcreteMaterial;
-  operator?: string;
-  calculist?: string;
-  description?: string;
-}
-
 type TimeObject = {
   hours: number;
   minutes: number;
@@ -20,6 +11,20 @@ type ToleranceObject = {
   data: number;
   isPermited: boolean;
 };
+
+type RuptureObject = {
+  type: string
+  src: string
+}
+
+interface ConcreteGeneralData {
+  userId: string;
+  name: string;
+  material: ConcreteMaterial;
+  operator?: string;
+  calculist?: string;
+  description?: string;
+}
 
 interface ConcreteRc_step2Data {
   diammeter1: number;
@@ -31,7 +36,8 @@ interface ConcreteRc_step2Data {
 }
 
 interface ConcreteRc_step3Data {
-  rupture: string
+  rupture: RuptureObject
+  correctionFactor: number
 }
 
 interface ConcreteRc_results {
@@ -50,7 +56,7 @@ export type ConcreteRcActions = {
   reset: ({ step }: setDataType) => void;
 };
 
-const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'ste3Data', 3: 'results' };
+const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data', 3: 'results' };
 
 type setDataType = { step: number; key?: string; value: unknown };
 
@@ -81,7 +87,11 @@ const initialState = {
     },
   },
   step3Data: {
-    rupture: null
+    rupture: {
+      type: null,
+      src: null
+    },
+    correctionFactor: null
   },
   results: {
     resistanceFactor: null,

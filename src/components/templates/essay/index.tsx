@@ -55,7 +55,6 @@ const EssayTemplate = ({
     try {
       // check if the activeStep is the same as the step of the current child
       if (activeStep !== childrens[activeStep]?.step) throw t('loading.invalid-step');
-      console.log('🚀 ~ handleNextClick ~ childrens:', childrens);
       // call and wait the callback function
       await nextCallback(activeStep, childrens[activeStep]['data']);
       toast.update(nextToast, {

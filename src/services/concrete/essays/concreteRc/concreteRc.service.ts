@@ -39,7 +39,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
           const { step2Data } = data as ConcreteRcData;
           await this.submitStep2Data(step2Data);
           await this.calculateStep2Data(step2Data);
-          // await this.calculateResults(data as ConcreteRcData);
+          await this.calculateResults(data as ConcreteRcData);
           break;
         case 2:
           await this.saveEssay(data as ConcreteRcData);
@@ -244,7 +244,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
           correctionFactor = result;
         }
       }
-      this.store_actions.setData({ step: 1, value: { ...step2Data, correctionFactor } });
+      this.store_actions.setData({ step: 2, value: { ...step2Data, correctionFactor } });
     } catch (error) {
       throw error;
     }
@@ -256,13 +256,14 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
         step2Data: store.step2Data,
+        step3Data: store.step3Data
       });
 
       const { success, error, result } = response.data;
 
       if (success === false) throw error.name;
 
-      this.store_actions.setData({ step: 2, value: result });
+      this.store_actions.setData({ step: 3, value: result });
     } catch (error) {
       throw error;
     }
