@@ -6,7 +6,7 @@ import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import { useState } from 'react';
 
-const Fwd_GeneralData = ({ nextDisabled, setNextDisabled, fwd }: EssayPageProps & { fwd: Fwd_SERVICE }) => {
+const Fwd_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps & { fwd: Fwd_SERVICE }) => {
   const [loading] = useState<boolean>(false);
   const { generalData, setData } = useFwdStore();
 
