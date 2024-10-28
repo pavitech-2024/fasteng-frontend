@@ -86,7 +86,7 @@ import SucsTableImage from './soils/tables/sucs_table_image.jpeg';
 import CoarseAggregateIcon from './concrete/essays/CoarseAggregate.png';
 import SandIncreaseIcon from './concrete/essays/SandIncrease.png';
 import UnitMassIcon from './concrete/essays/UnitMass.png';
-import ConcreteRcIcon from './concrete/essays/concreteRc.png';
+import ConcreteRcIcon from './concrete/essays/ConcreteRc.png';
 
 //dosages
 import AbcpIcon from './concrete/dosages/abcp.svg';
