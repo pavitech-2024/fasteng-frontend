@@ -1,6 +1,5 @@
 import Api from '@/api';
-import { CoarseAggregateIcon } from '@/assets';
-import Step3InputTable from '@/components/asphalt/dosages/marshall/tables/step-3-input-table';
+import { CoarseAggregateIcon, ConcreteRcIcon } from '@/assets';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import { ConcreteRcActions, ConcreteRcData } from '@/stores/concrete/concreteRc/concreteRc.store';
@@ -9,7 +8,7 @@ import { t } from 'i18next';
 class CONCRETE_RC_SERVICE implements IEssayService {
   info = {
     key: 'concreteRc',
-    icon: CoarseAggregateIcon,
+    icon: ConcreteRcIcon,
     title: t('concrete.essays.concreteRc'),
     path: '/concrete/essays/concreteRc',
     backend_path: 'concrete/essays/concreteRc',
