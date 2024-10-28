@@ -84,10 +84,11 @@ const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
   };
 
   if (
-    nextDisabled && 
+    nextDisabled &&
     !Object.values(data.rupture).some((e) => e === null) &&
     !Object.values(data.graphImg).some((e) => e === null)
-  ) setNextDisabled(false);
+  )
+    setNextDisabled(false);
 
   return (
     <Box
@@ -140,7 +141,7 @@ const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
       </Box>
 
       <Box sx={{ paddingY: '2rem' }}>
-        <ImgFileInput onFileChange={(file) => handleGraphImgUpload(file)} file={data.graphImg}/>
+        <ImgFileInput onFileChange={(file) => handleGraphImgUpload(file)} file={data.graphImg} />
       </Box>
     </Box>
   );

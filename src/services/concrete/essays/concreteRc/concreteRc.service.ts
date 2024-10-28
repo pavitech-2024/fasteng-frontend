@@ -99,7 +99,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
   // verify inputs from ConcreteRc page (step === 1, page 2)
   submitStep2Data = async (step2Data: ConcreteRcData['step2Data']): Promise<void> => {
-
     // Erro: não pode ser menor que 24h
     try {
       const { age, tolerance } = step2Data;
@@ -138,7 +137,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       if (toleranceFound) {
         newTolerance = toleranceFound;
       } else {
-
         // Encontrar o índice onde age se encaixa entre os valores de age no array
         const referenceIndex = concreteRcToleranceAge.findIndex((e, i, arr) => {
           const nextAge = arr[i + 1]?.age * 60;
@@ -256,7 +254,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
         step2Data: store.step2Data,
-        step3Data: store.step3Data
+        step3Data: store.step3Data,
       });
 
       const { success, error, result } = response.data;

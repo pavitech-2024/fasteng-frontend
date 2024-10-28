@@ -13,14 +13,14 @@ type ToleranceObject = {
 };
 
 type RuptureObject = {
-  type: string
-  src: string
-}
+  type: string;
+  src: string;
+};
 
 type GraphImgObject = {
-  name: string
-  src: string
-}
+  name: string;
+  src: string;
+};
 
 interface ConcreteGeneralData {
   userId: string;
@@ -38,12 +38,12 @@ interface ConcreteRc_step2Data {
   age: TimeObject;
   tolerance: TimeObject;
   newTolerance: ToleranceObject;
-  correctionFactor: number
+  correctionFactor: number;
 }
 
 interface ConcreteRc_step3Data {
-  rupture: RuptureObject,
-  graphImg: GraphImgObject
+  rupture: RuptureObject;
+  graphImg: GraphImgObject;
 }
 
 interface ConcreteRc_results {
@@ -91,17 +91,17 @@ const initialState = {
       data: null,
       isPermited: null,
     },
-    correctionFactor: null
+    correctionFactor: null,
   },
   step3Data: {
     rupture: {
       type: null,
-      src: null
+      src: null,
     },
     graphImg: {
       name: null,
-      src: null
-    }
+      src: null,
+    },
   },
   results: {
     finalCorrectionFactor: null,

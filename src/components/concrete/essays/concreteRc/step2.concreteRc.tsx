@@ -10,7 +10,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
   const materialInputs = [
     {
       key: 'diammeter1',
-      placeholder: t("concrete.essays.diammeter-1-label"),
+      placeholder: t('concrete.essays.diammeter-1-label'),
       value: data.diammeter1,
       adornment: 'cm',
       type: 'number',
@@ -18,7 +18,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     },
     {
       key: 'diammeter2',
-      placeholder: t("concrete.essays.diammeter-2-label"),
+      placeholder: t('concrete.essays.diammeter-2-label'),
       value: data.diammeter2,
       adornment: 'cm',
       type: 'number',
@@ -26,11 +26,11 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     },
     {
       key: 'height',
-      placeholder: t("concrete.essays.height-label"),
+      placeholder: t('concrete.essays.height-label'),
       value: data.height,
       adornment: 'cm',
       type: 'number',
-      label: t("concrete.essays.height"),
+      label: t('concrete.essays.height'),
     },
   ];
 
@@ -72,11 +72,11 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         </Box>
 
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <Typography>{t("concrete.essays.age")}</Typography>
+          <Typography>{t('concrete.essays.age')}</Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
             <Box>
               <TextField
-                label={t("concrete.essays.hours")}
+                label={t('concrete.essays.hours')}
                 type="number"
                 value={data.age.hours}
                 onChange={(e) => {
@@ -92,7 +92,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
 
             <Box>
               <TextField
-                label={t("concrete.essays.minutes")}
+                label={t('concrete.essays.minutes')}
                 type="number"
                 value={data.age.minutes}
                 onChange={(e) => {
@@ -107,12 +107,12 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
             </Box>
           </Box>
 
-          <Typography>{t("concrete.essays.used-tolerance")}</Typography>
+          <Typography>{t('concrete.essays.used-tolerance')}</Typography>
 
           <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
             <Box>
               <TextField
-                label={t("concrete.essays.hours")}
+                label={t('concrete.essays.hours')}
                 type="number"
                 value={data.tolerance.hours}
                 onChange={(e) => {
@@ -128,7 +128,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
 
             <Box>
               <TextField
-                label={t("concrete.essays.minutes")}
+                label={t('concrete.essays.minutes')}
                 type="number"
                 value={data.tolerance.minutes}
                 onChange={(e) => {

@@ -47,6 +47,6 @@
   "concrete.essays.topRuptures": "Type F: Cracks at the top of capping",
   "concrete.essays.multipleTopRuptures": "Type G: Multiple cracks at the top of capping",
 
-    "concrete.essays.errors.invalid-diammHeightRatio": "The ratio of the average diameters divided by the height must be greater than or equal to 2.06.",
+  "concrete.essays.errors.invalid-diammHeightRatio": "The ratio of the average diameters divided by the height must be greater than or equal to 2.06.",
   "concrete.essays.errors.connection-error": "An error occurred while connecting to the server. Please try again later."
 }

@@ -1,5 +1,5 @@
-import { Button } from "@mui/material";
-import { useRef } from "react";
+import { Button } from '@mui/material';
+import { useRef } from 'react';
 
 const ImgFileInput = ({ onFileChange, file }) => {
   const fileInputRef = useRef(null);
@@ -36,13 +36,7 @@ const ImgFileInput = ({ onFileChange, file }) => {
       >
         Escolher arquivo
       </Button>
-      <input
-        type="file"
-        ref={fileInputRef}
-        accept="image/*"
-        onChange={handleFileChange}
-        style={{ display: 'none' }}
-      />
+      <input type="file" ref={fileInputRef} accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
       {selectedFileName && <p style={{ marginTop: '8px' }}>Arquivo selecionado: {selectedFileName}</p>}
     </div>
   );

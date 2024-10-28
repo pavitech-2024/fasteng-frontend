@@ -41,7 +41,14 @@ const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
             alt={'rupture image'}
           />
           <Typography
-            sx={{ margin: '.65rem', mb: '2rem', fontWeight: '500', textAlign: 'justify', lineHeight: '1.2rem', width: 'fit-content' }}
+            sx={{
+              margin: '.65rem',
+              mb: '2rem',
+              fontWeight: '500',
+              textAlign: 'justify',
+              lineHeight: '1.2rem',
+              width: 'fit-content',
+            }}
           >
             {step3Data.rupture.type}
           </Typography>
@@ -55,7 +62,14 @@ const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
             alt={'rupture image'}
           />
           <Typography
-            sx={{ margin: '.65rem', mb: '2rem', fontWeight: '500', textAlign: 'justify', lineHeight: '1.2rem', width: 'fit-content' }}
+            sx={{
+              margin: '.65rem',
+              mb: '2rem',
+              fontWeight: '500',
+              textAlign: 'justify',
+              lineHeight: '1.2rem',
+              width: 'fit-content',
+            }}
           >
             {step3Data.graphImg.name}
           </Typography>
