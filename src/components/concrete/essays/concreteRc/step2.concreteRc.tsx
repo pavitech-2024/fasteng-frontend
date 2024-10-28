@@ -39,8 +39,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     data.diammeter1 !== null &&
     data.diammeter2 !== null &&
     !Object.values(data.age).some((value) => value === null) &&
-    data.height !== null &&
-    !Object.values(data.tolerance).some((value) => value === null)
+    data.height !== null
   )
     setNextDisabled(false);
 
@@ -60,6 +59,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
             <InputEndAdornment
               key={input.key}
               adornment={input.adornment}
+              required
               placeholder={input.placeholder}
               label={input.label}
               type={input.type}
@@ -78,6 +78,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
               <TextField
                 label={t('concrete.essays.hours')}
                 type="number"
+                required
                 value={data.age.hours}
                 onChange={(e) => {
                   const newData = { ...data };
