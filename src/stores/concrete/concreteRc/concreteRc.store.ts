@@ -2,6 +2,26 @@ import { ConcreteMaterial } from '@/interfaces/concrete';
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
+type TimeObject = {
+  hours: number;
+  minutes: number;
+};
+
+type ToleranceObject = {
+  data: number;
+  isPermited: boolean;
+};
+
+type RuptureObject = {
+  type: string;
+  src: string;
+};
+
+type GraphImgObject = {
+  name: string;
+  src: string;
+};
+
 interface ConcreteGeneralData {
   userId: string;
   name: string;
@@ -11,16 +31,6 @@ interface ConcreteGeneralData {
   description?: string;
 }
 
-type TimeObject = {
-  hours: number;
-  minutes: number;
-};
-
-type ToleranceObject = {
-  resultTolerance: number;
-  isPermited: boolean;
-};
-
 interface ConcreteRc_step2Data {
   diammeter1: number;
   diammeter2: number;
@@ -28,15 +38,22 @@ interface ConcreteRc_step2Data {
   age: TimeObject;
   tolerance: TimeObject;
   newTolerance: ToleranceObject;
+  correctionFactor: number;
+}
+
+interface ConcreteRc_step3Data {
+  rupture: RuptureObject;
+  graphImg: GraphImgObject;
 }
 
 interface ConcreteRc_results {
-  resistanceFactor: number;
+  finalCorrectionFactor: number;
 }
 
 export type ConcreteRcData = {
   generalData: ConcreteGeneralData;
   step2Data: ConcreteRc_step2Data;
+  step3Data: ConcreteRc_step3Data;
   results: ConcreteRc_results;
 };
 
@@ -45,7 +62,7 @@ export type ConcreteRcActions = {
   reset: ({ step }: setDataType) => void;
 };
 
-const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'results' };
+const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data', 3: 'results' };
 
 type setDataType = { step: number; key?: string; value: unknown };
 
@@ -71,12 +88,23 @@ const initialState = {
       minutes: null,
     },
     newTolerance: {
-      resultTolerance: null,
+      data: null,
       isPermited: null,
+    },
+    correctionFactor: null,
+  },
+  step3Data: {
+    rupture: {
+      type: null,
+      src: null,
+    },
+    graphImg: {
+      name: null,
+      src: null,
     },
   },
   results: {
-    resistanceFactor: null,
+    finalCorrectionFactor: null,
   },
 };
 

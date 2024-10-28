@@ -1,6 +1,9 @@
 {
   "concreteRc.step-2-description": "Preencha todos os campos abaixo",
+  "concreteRc.step-3-description": "Selecione o tipo de ruptura obtido e faça o upload do arquivo do gráfico gerado durante o processo de prensagem.",
+
   "concreteRc.step2": "Passo 2",
+  "concreteRc.step3": "Passo 3",
 
   "concrete.rc.sample-origin": "Procedência dos Corpos de Prova",
   "concrete.rc.press-specification": "Nome/Especificação da Prensa",
@@ -20,7 +23,31 @@
   "concrete.material": "Material",
   "concrete.operator": "Operador",
   "concrete.calculist": "Calculista",
-  "concrete.materials.comments": "Informações do Material",
+  "concrete.comments": "Comentários",
   "concrete.essays.concreterc-concrete": "Resistência a Compressão",
-  "concrete.essays.concreteRc": "Resistência a Compressão"
+  "concrete.essays.concreteRc": "Resistência a Compressão",
+  "concrete.essays.diammeter-1": "Diametro 1",
+  "concrete.essays.diammeter-1-label": "Inserir o diametro 1",
+  "concrete.essays.diammeter-2": "Diametro 2",
+  "concrete.essays.diammeter-2-label": "Inserir o diametro 2",
+  "concrete.essays.height-label": "Inserir a altura do corpo de prova",
+  "concrete.essays.height": "Altura do corpo de prova",
+  "concrete.essays.age": "Idade do corpo de prova",
+  "concrete.essays.hours": "Horas",
+  "concrete.essays.minutes": "Minutos",
+  "concrete.essays.used-tolerance": "Tolerância Usada",
+
+  "concrete.essays.conic": "A - Cônica",
+  "concrete.essays.conic-25mm": "A - Cônica afastada em 25mm do capeamento",
+  "concrete.essays.conic-bipartid": "B - Cônica bipartida",
+  "concrete.essays.conic-multiple-bipartid": "B - Cônica multiparitida",
+  "concrete.essays.conic-column": "Tipo C: coluna com formação de cones",
+  "concrete.essays.conic-cis": "Tipo C: cônica e cisalhada",
+  "concrete.essays.cis": "Tipo E: cisalhada",
+  "concrete.essays.baseRuptures": "Tipo F: fissuras na base do capeamento",
+  "concrete.essays.topRuptures": "Tipo F: fissuras no topo do capeamento",
+  "concrete.essays.multipleTopRuptures": "Tipo G: multiplas fissuras no topo do capeamento",
+
+  "concrete.essays.errors.invalid-diammHeightRatio": "A média dos diametros dividido pela altura precisa ser maior ou igual à 2,06.",
+  "concrete.essays.errors.connection-error": "Ocorreu um erro ao conectar ao servidor. Tente novamente mais tarde."
 }

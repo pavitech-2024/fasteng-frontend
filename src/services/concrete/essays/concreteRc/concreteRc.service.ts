@@ -1,5 +1,6 @@
 import Api from '@/api';
 import { CoarseAggregateIcon } from '@/assets';
+import Step3InputTable from '@/components/asphalt/dosages/marshall/tables/step-3-input-table';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import { ConcreteRcActions, ConcreteRcData } from '@/stores/concrete/concreteRc/concreteRc.store';
@@ -12,7 +13,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
     title: t('concrete.essays.concreteRc'),
     path: '/concrete/essays/concreteRc',
     backend_path: 'concrete/essays/concreteRc',
-    steps: 3,
+    steps: 4,
     standard: {
       name: 'NBR 7217/1984',
       link: 'https://engenhariacivilfsp.files.wordpress.com/2015/03/nbr-7181.pdf',
@@ -20,7 +21,8 @@ class CONCRETE_RC_SERVICE implements IEssayService {
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
       { step: 1, description: t('concreteRc.step2'), path: 'essay-data' },
-      { step: 2, description: t('results'), path: 'results' },
+      { step: 2, description: t('concreteRc.step3'), path: 'essay-data' },
+      { step: 3, description: t('results'), path: 'results' },
     ],
   };
 
@@ -38,9 +40,11 @@ class CONCRETE_RC_SERVICE implements IEssayService {
           const { step2Data } = data as ConcreteRcData;
           await this.submitStep2Data(step2Data);
           await this.calculateStep2Data(step2Data);
-          // await this.calculateResults(data as ConcreteRcData);
           break;
         case 2:
+          await this.calculateResults(data as ConcreteRcData);
+          break;
+        case 3:
           await this.saveEssay(data as ConcreteRcData);
           break;
         default:
@@ -79,10 +83,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
     try {
       const { name, material } = generalData;
 
-      // // verify if name and material are not empty
-      // if (!name) throw t('errors.empty-name');
-      // if (!material) throw t('errors.empty-material');
-
       // verify if there is already a ConcreteRc essay with same name for the material
       const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, material });
       console.log(response);
@@ -99,6 +99,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
   // verify inputs from ConcreteRc page (step === 1, page 2)
   submitStep2Data = async (step2Data: ConcreteRcData['step2Data']): Promise<void> => {
+    // Erro: não pode ser menor que 24h
     try {
       const { age, tolerance } = step2Data;
       let lowerReference, higherReference;
@@ -150,21 +151,23 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
           // Fazer chamada para a interpolação
           const response = await Api.post(`${this.info.backend_path}/interpolation`, {
-            age: age.hours * 60 + age.minutes,
-            tolerance: tolerance.hours * 60 + tolerance.minutes,
+            age_diammHeightRatio: age.hours * 60 + age.minutes,
+            tolerance_strenght: tolerance.hours * 60 + tolerance.minutes,
             higherReference,
             lowerReference,
+            type: 'tolerance',
           });
 
           const { success, error, result } = response.data;
 
           if (success === false) throw error.name;
 
-          this.store_actions.setData({ step: 1, value: { ...step2Data, newTolerance: result } });
+          newTolerance = result;
         } else {
-          throw t('errooooouuu');
+          throw t('concrete.essays.errors.connection-error');
         }
       }
+      this.store_actions.setData({ step: 1, value: { ...step2Data, newTolerance } });
     } catch (error) {
       throw error;
     }
@@ -173,15 +176,73 @@ class CONCRETE_RC_SERVICE implements IEssayService {
   // verify inputs from ConcreteRc page (step === 1, page 2)
   calculateStep2Data = async (step2Data: ConcreteRcData['step2Data']): Promise<void> => {
     try {
-      const { diammeter1, diammeter2, height } = step2Data;
+      const { diammeter1, diammeter2, height, newTolerance } = step2Data;
+      let correctionFactor;
 
-      const averageDiammeter = diammeter1 + diammeter2 / 2;
-      console.log('🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ averageDiammeter:', averageDiammeter);
-      const diammHeightRatio = averageDiammeter / height;
-      console.log('🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ diammHeightRatio:', diammHeightRatio);
+      const averageDiammeter = (diammeter1 + diammeter2) / 2;
+      const diammHeightRatio = height / averageDiammeter;
 
-      if (diammHeightRatio > 2.06) throw t('erro');
-      if (diammHeightRatio < 1.94) throw t('por implementar');
+      if (diammHeightRatio >= 2.06) throw t('concrete.essays.errors.invalid-diammHeightRatio');
+      if (diammHeightRatio <= 1.94 || (diammHeightRatio > 1.94 && diammHeightRatio < 2.06)) {
+        const correctionFactorArr = [
+          {
+            diammHeightRatio: 2.0,
+            correctionFactor: 1.0,
+          },
+          {
+            diammHeightRatio: 1.75,
+            correctionFactor: 0.98,
+          },
+          {
+            diammHeightRatio: 1.5,
+            correctionFactor: 0.96,
+          },
+          {
+            diammHeightRatio: 1.25,
+            correctionFactor: 0.93,
+          },
+          {
+            diammHeightRatio: 1.0,
+            correctionFactor: 0.86,
+          },
+        ];
+
+        const diammHeightRatioFound = correctionFactorArr.find((e) => e.diammHeightRatio === diammHeightRatio);
+
+        if (diammHeightRatioFound) {
+          correctionFactor = newTolerance.data * diammHeightRatioFound.correctionFactor;
+        } else {
+          // Interpolação
+          let higherReference = null;
+          let lowerReference = null;
+
+          for (let i = 0; i < correctionFactorArr.length - 1; i++) {
+            // Verifica se o `diammHeightRatio` está entre os valores de `diammHeightRatio` adjacentes
+            if (
+              correctionFactorArr[i].diammHeightRatio > diammHeightRatio &&
+              correctionFactorArr[i + 1].diammHeightRatio < diammHeightRatio
+            ) {
+              lowerReference = correctionFactorArr[i];
+              higherReference = correctionFactorArr[i + 1];
+            }
+          }
+
+          const response = await Api.post(`${this.info.backend_path}/interpolation`, {
+            age_diammHeightRatio: diammHeightRatio,
+            tolerance_strenght: newTolerance.data,
+            higherReference,
+            lowerReference,
+            type: 'correctionFactor',
+          });
+
+          const { success, error, result } = response.data;
+
+          if (success === false) throw error.name;
+
+          correctionFactor = result;
+        }
+      }
+      this.store_actions.setData({ step: 1, key: 'correctionFactor', value: correctionFactor });
     } catch (error) {
       throw error;
     }
@@ -193,13 +254,14 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
         step2Data: store.step2Data,
+        step3Data: store.step3Data,
       });
 
       const { success, error, result } = response.data;
 
       if (success === false) throw error.name;
 
-      this.store_actions.setData({ step: 2, value: result });
+      this.store_actions.setData({ step: 3, value: result });
     } catch (error) {
       throw error;
     }
@@ -216,14 +278,13 @@ class CONCRETE_RC_SERVICE implements IEssayService {
           userId: this.userId,
         },
         step2Data: store.step2Data,
+        step3Data: store.step3Data,
         results: store.results,
       });
 
       const { success, error } = response.data;
 
       if (success === false) throw error.name;
-
-      // this.store_actions.reset( { step: null, value: null });
     } catch (error) {
       throw error;
     }
