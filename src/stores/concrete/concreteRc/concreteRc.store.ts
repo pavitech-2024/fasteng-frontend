@@ -17,6 +17,11 @@ type RuptureObject = {
   src: string
 }
 
+type GraphImgObject = {
+  name: string
+  src: string
+}
+
 interface ConcreteGeneralData {
   userId: string;
   name: string;
@@ -37,7 +42,8 @@ interface ConcreteRc_step2Data {
 }
 
 interface ConcreteRc_step3Data {
-  rupture: RuptureObject
+  rupture: RuptureObject,
+  graphImg: GraphImgObject
 }
 
 interface ConcreteRc_results {
@@ -92,6 +98,10 @@ const initialState = {
       type: null,
       src: null
     },
+    graphImg: {
+      name: null,
+      src: null
+    }
   },
   results: {
     finalCorrectionFactor: null,

@@ -1,83 +1,93 @@
-import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import ImgFileInput from '@/components/atoms/inputs/imgFileInput';
 import { EssayPageProps } from '@/components/templates/essay';
 import useConcreteRcStore from '@/stores/concrete/concreteRc/concreteRc.store';
-import { Box, Grid, MenuItem, TextField, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import { t } from 'i18next';
 import { useState } from 'react';
 
 const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step3Data: data, setData } = useConcreteRcStore();
 
   const [selectedRupture, setSelectedRupture] = useState('');
-  console.log("🚀 ~ selectedRupture:", selectedRupture)
 
   const ruptureImg = [
     {
       key: 'A - conic',
-      label: 'Tipo A: cônica',
+      label: t('concrete.essays.conic'),
       src: '/concrete/essays/rc/compressionRuptureImgs/tipoA-conica.png',
     },
     {
       key: 'A - conic25mm',
-      label: 'Tipo A: cônica afastada em 25mm do capeamento',
+      label: t('concrete.essays.conic-25mm'),
       src: '/concrete/essays/rc/compressionRuptureImgs/tipoA-conica-2mm.png',
     },
     {
       key: 'B - conicBipartid',
-      label: 'Tipo B: cônica bipartida',
+      label: t('concrete.essays.conic-bipartid'),
       src: '/concrete/essays/rc/compressionRuptureImgs/tipoB-conica-bipartida.png',
     },
     {
       key: 'B - conicMultipleBipartid',
-      label: 'Tipo B: cônica com mais de uma partição',
+      label: t('concrete.essays.conic-multiple-bipartid'),
       src: '/concrete/essays/rc/compressionRuptureImgs/tipoB-conica-multiplas-biparticoes.png',
     },
     {
       key: 'C - conicColumn',
-      label: 'Tipo C: coluna com formação de cones',
+      label: t('concrete.essays.conic-column'),
       src: '/concrete/essays/rc/compressionRuptureImgs/tipoC-coluna-cones.png',
     },
     {
       key: 'D - conicCis',
-      label: 'Tipo D: conica e cisalhada',
+      label: t('concrete.essays.conic-cis'),
       src: '/concrete/essays/rc/compressionRuptureImgs/tipoD-conica-cisalhada.png',
     },
     {
       key: 'E - cis',
-      label: 'Tipo E: cisalhada',
+      label: t('concrete.essays.cis'),
       src: '/concrete/essays/rc/compressionRuptureImgs/tipoE-cisalhada.png',
     },
     {
       key: 'F - baseRuptures',
-      label: 'Tipo F: fissuras na base do capeamento',
+      label: t('concrete.essays.baseRuptures'),
       src: '/concrete/essays/rc/compressionRuptureImgs/tipoF-fissuras-base.png',
     },
     {
       key: 'F - topRuptures',
-      label: 'Tipo F: fissuras no topo do capeamento',
+      label: t('concrete.essays.topRuptures'),
       src: '/concrete/essays/rc/compressionRuptureImgs/tipoF-fissuras-topo.png',
     },
     {
       key: 'G - multipleTopRuptures',
-      label: 'Tipo G: multiplas fissuras no topo do capeamento',
+      label: t('concrete.essays.multipleTopRuptures'),
       src: '/concrete/essays/rc/compressionRuptureImgs/tipoG-multiplas-fissuras-topo.png',
     },
   ];
 
-  const handleSelectRupture = (img: any) => {
-    if (img.key === selectedRupture) {
+  const handleSelectRupture = (image: any) => {
+    const updatedRupture = { ...data.rupture };
+    if (image.key === selectedRupture) {
       setSelectedRupture('');
-      setData({ step: 2, key: 'rupture', value: { type: null, src: null } })
+      updatedRupture.type = null;
+      updatedRupture.src = null;
     } else {
-      setSelectedRupture(img.key);
-      setData({ step: 2, value: { type: img.label, src: img.src } })
+      setSelectedRupture(image.key);
+      updatedRupture.type = image.label;
+      updatedRupture.src = image.src;
     }
-  }
+    setData({ step: 2, value: { ...data, rupture: updatedRupture } });
+  };
+
+  const handleGraphImgUpload = (file: any) => {
+    if (file) {
+      setData({ step: 2, key: 'graphImg', value: { name: file.name, src: file.src } });
+    }
+  };
 
   if (
-    nextDisabled &&
-    !Object.values(data).some(e => e === null)
-  )
-    setNextDisabled(false);
+    nextDisabled && 
+    !Object.values(data.rupture).some((e) => e === null) &&
+    !Object.values(data.graphImg).some((e) => e === null)
+  ) setNextDisabled(false);
 
   return (
     <Box
@@ -119,7 +129,7 @@ const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
                   cursor: 'pointer',
                   transition: 'transform 0.3s ease-in-out',
                   '&:hover': {
-                    transform: 'scale(1.05)', // Aumenta a escala para 5% maior no hover
+                    transform: 'scale(1.05)',
                   },
                 }}
                 onClick={() => handleSelectRupture(img)}
@@ -127,6 +137,10 @@ const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
             </Box>
           </>
         ))}
+      </Box>
+
+      <Box sx={{ paddingY: '2rem' }}>
+        <ImgFileInput onFileChange={(file) => handleGraphImgUpload(file)} file={data.graphImg}/>
       </Box>
     </Box>
   );

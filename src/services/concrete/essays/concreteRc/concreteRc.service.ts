@@ -1,5 +1,6 @@
 import Api from '@/api';
 import { CoarseAggregateIcon } from '@/assets';
+import Step3InputTable from '@/components/asphalt/dosages/marshall/tables/step-3-input-table';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import { ConcreteRcActions, ConcreteRcData } from '@/stores/concrete/concreteRc/concreteRc.store';
@@ -43,7 +44,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
         case 2:
           await this.calculateResults(data as ConcreteRcData);
           break;
-        case 2:
+        case 3:
           await this.saveEssay(data as ConcreteRcData);
           break;
         default:
@@ -82,10 +83,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
     try {
       const { name, material } = generalData;
 
-      // // verify if name and material are not empty
-      // if (!name) throw t('errors.empty-name');
-      // if (!material) throw t('errors.empty-material');
-
       // verify if there is already a ConcreteRc essay with same name for the material
       const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, material });
       console.log(response);
@@ -102,6 +99,8 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
   // verify inputs from ConcreteRc page (step === 1, page 2)
   submitStep2Data = async (step2Data: ConcreteRcData['step2Data']): Promise<void> => {
+
+    // Erro: não pode ser menor que 24h
     try {
       const { age, tolerance } = step2Data;
       let lowerReference, higherReference;
@@ -167,7 +166,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
           newTolerance = result;
         } else {
-          throw t('errooooouuu');
+          throw t('concrete.essays.errors.connection-error');
         }
       }
       this.store_actions.setData({ step: 1, value: { ...step2Data, newTolerance } });
@@ -183,10 +182,10 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       let correctionFactor;
 
       const averageDiammeter = (diammeter1 + diammeter2) / 2;
-      const diammHeightRatio = averageDiammeter / height;
+      const diammHeightRatio = height / averageDiammeter;
 
-      if (diammHeightRatio >= 2.06) throw t('erro testeeee');
-      if (diammHeightRatio <= 1.94) {
+      if (diammHeightRatio >= 2.06) throw t('concrete.essays.errors.invalid-diammHeightRatio');
+      if (diammHeightRatio <= 1.94 || (diammHeightRatio > 1.94 && diammHeightRatio < 2.06)) {
         const correctionFactorArr = [
           {
             diammHeightRatio: 2.0,
@@ -213,28 +212,23 @@ class CONCRETE_RC_SERVICE implements IEssayService {
         const diammHeightRatioFound = correctionFactorArr.find((e) => e.diammHeightRatio === diammHeightRatio);
 
         if (diammHeightRatioFound) {
-          console.log("passei aqui")
           correctionFactor = newTolerance.data * diammHeightRatioFound.correctionFactor;
-          console.log("🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ correctionFactor:", correctionFactor)
         } else {
-          console.log("passei aqui")
           // Interpolação
           let higherReference = null;
           let lowerReference = null;
 
-          for (let i = 0; i < correctionFactorArr.length; i++) {
+          for (let i = 0; i < correctionFactorArr.length - 1; i++) {
             // Verifica se o `diammHeightRatio` está entre os valores de `diammHeightRatio` adjacentes
-
             if (
               correctionFactorArr[i].diammHeightRatio > diammHeightRatio &&
               correctionFactorArr[i + 1].diammHeightRatio < diammHeightRatio
             ) {
-              higherReference = correctionFactorArr[i];
-              lowerReference = correctionFactorArr[i + 1];
+              lowerReference = correctionFactorArr[i];
+              higherReference = correctionFactorArr[i + 1];
             }
           }
 
-          // Fazer chamada para a interpolação
           const response = await Api.post(`${this.info.backend_path}/interpolation`, {
             age_diammHeightRatio: diammHeightRatio,
             tolerance_strenght: newTolerance.data,
@@ -248,7 +242,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
           if (success === false) throw error.name;
 
           correctionFactor = result;
-          console.log("🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ correctionFactor:", correctionFactor)
         }
       }
       this.store_actions.setData({ step: 1, key: 'correctionFactor', value: correctionFactor });
@@ -259,7 +252,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
   // calculate results from ConcreteRc essay
   calculateResults = async (store: ConcreteRcData): Promise<void> => {
-    console.log("passei aqui")
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
@@ -288,14 +280,13 @@ class CONCRETE_RC_SERVICE implements IEssayService {
           userId: this.userId,
         },
         step2Data: store.step2Data,
+        step3Data: store.step3Data,
         results: store.results,
       });
 
       const { success, error } = response.data;
 
       if (success === false) throw error.name;
-
-      // this.store_actions.reset( { step: null, value: null });
     } catch (error) {
       throw error;
     }
