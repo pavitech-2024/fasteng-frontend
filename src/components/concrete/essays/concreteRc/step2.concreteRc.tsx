@@ -1,97 +1,46 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import useConcreteRcStore from '@/stores/concrete/concreteRc/concreteRc.store';
-import { Box, Grid, MenuItem, TextField, Typography } from '@mui/material';
-import { useState } from 'react';
-import { Direction } from 'react-toastify/dist/utils';
+import { Box, TextField, Typography } from '@mui/material';
+import { t } from 'i18next';
 
 const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useConcreteRcStore();
 
-  const [hoursInputs, setHoursInputs] = useState({
-    age: {
-      hours: 0,
-      minutes: 0,
-    },
-    tolerance: {
-      hours: 0,
-      minutes: 0,
-    },
-  });
-
   const materialInputs = [
     {
       key: 'diammeter1',
-      placeholder: 'Inserir o diametro 1',
+      placeholder: t('concrete.essays.diammeter-1-label'),
       value: data.diammeter1,
       adornment: 'cm',
       type: 'number',
-      label: 'Diametro 1',
+      label: t('concrete.essays.diammeter-1'),
     },
     {
       key: 'diammeter2',
-      placeholder: 'Inserir o diametro 2',
+      placeholder: t('concrete.essays.diammeter-2-label'),
       value: data.diammeter2,
       adornment: 'cm',
       type: 'number',
-      label: 'Diametro 2',
+      label: t('concrete.essays.diammeter-2'),
     },
     {
       key: 'height',
-      placeholder: 'Inserir a altura do corpo de prova',
+      placeholder: t('concrete.essays.height-label'),
       value: data.height,
       adornment: 'cm',
       type: 'number',
-      label: 'altura do corpo de prova',
+      label: t('concrete.essays.height'),
     },
   ];
-
-  const timeInputs = [
-    {
-      key: 'age',
-      placeholder: 'Inserir a idade do corpo de prova',
-      value: data.age,
-      adornment: 'hr',
-      type: 'number',
-      label: 'Idade do corpo de prova',
-    },
-    {
-      key: 'tolerance',
-      placeholder: 'Inserir a tolerância utilizada',
-      value: data.tolerance,
-      adornment: 'hr',
-      type: 'number',
-      label: 'Tolerância utilizada',
-    },
-  ];
-
-  const handleHourFormat = (e: any, key: string) => {
-    console.log('🚀 ~ handleHourFormat ~ key:', key);
-    const rawValue = e.target.value;
-
-    // Permitir valor vazio e lidar com conversão para número apenas quando apropriado
-    const value = rawValue === '' ? '' : parseFloat(rawValue);
-
-    const [hours, minutes] = rawValue.split('.');
-
-    const hoursNumber = Number(hours); // Converter a parte de horas para número
-    const minutesNumber = Number(minutes || 0);
-
-    const hoursToMinutes = hoursNumber + minutesNumber / 60;
-
-    setData({ step: 1, key: key, value: hoursToMinutes });
-
-    // Apenas atualize se for um número ou se for vazio (o usuário apagando todos os números)
-    setHoursInputs({ ...hoursInputs, [key]: value });
-  };
 
   if (
     nextDisabled &&
     data.diammeter1 !== null &&
     data.diammeter2 !== null &&
-    data.age !== null &&
+    !Object.values(data.age).some((value) => value === null) &&
     data.height !== null &&
-    data.tolerance !== null
+    !Object.values(data.tolerance).some((value) => value === null)
   )
     setNextDisabled(false);
 
@@ -122,29 +71,12 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           ))}
         </Box>
 
-        {/* <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%' }}>
-          {timeInputs.map((input) => (
-            <InputEndAdornment
-              key={input.key}
-              adornment={input.adornment}
-              placeholder={input.placeholder}
-              label={input.label}
-              inputProps={{ step: '0.01', min: '0' }}
-              type={input.type}
-              value={hoursInputs[input.key]}
-              onChange={(e) => {
-                handleHourFormat(e, input.key);
-              }}
-            />
-          ))}
-        </Box> */}
-
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <Typography>Idade do corpo de prova</Typography>
+          <Typography>{t('concrete.essays.age')}</Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
             <Box>
               <TextField
-                label="Horas"
+                label={t('concrete.essays.hours')}
                 type="number"
                 value={data.age.hours}
                 onChange={(e) => {
@@ -155,18 +87,12 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
                 variant="outlined"
                 size="medium"
                 sx={{ width: '7rem' }}
-              >
-                {Array.from({ length: 24 }, (_, i) => (
-                  <MenuItem key={i} value={i}>
-                    {i}
-                  </MenuItem>
-                ))}
-              </TextField>
+              />
             </Box>
 
             <Box>
               <TextField
-                label="Minutos"
+                label={t('concrete.essays.minutes')}
                 type="number"
                 value={data.age.minutes}
                 onChange={(e) => {
@@ -177,22 +103,16 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
                 variant="outlined"
                 size="medium"
                 sx={{ width: '7rem' }}
-              >
-                {Array.from({ length: 60 }, (_, i) => (
-                  <MenuItem key={i} value={i}>
-                    {i}
-                  </MenuItem>
-                ))}
-              </TextField>
+              />
             </Box>
           </Box>
 
-          <Typography>Tolerância utilizada</Typography>
+          <Typography>{t('concrete.essays.used-tolerance')}</Typography>
 
           <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
             <Box>
               <TextField
-                label="Horas"
+                label={t('concrete.essays.hours')}
                 type="number"
                 value={data.tolerance.hours}
                 onChange={(e) => {
@@ -208,7 +128,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
 
             <Box>
               <TextField
-                label="Minutos"
+                label={t('concrete.essays.minutes')}
                 type="number"
                 value={data.tolerance.minutes}
                 onChange={(e) => {

@@ -1,6 +1,9 @@
 {
   "concreteRc.step-2-description": "Fill in all the fields bellow",
+  "concreteRc.step-3-description": "Select the type of rupture obtained and upload the graph file generated during the pressing process.",
+
   "concreteRc.step2": "Step 2",
+  "concreteRc.step3": "Step 3",
 
   "concrete.rc.sample-origin": "Sample Origin",
   "concrete.rc.press-specification": "Press Specification",
@@ -19,7 +22,31 @@
   "concrete.material": "Material",
   "concrete.operator": "Operator",
   "concrete.calculist": "Calculist",
-  "concrete.materials.comments": "Material comments",
+  "concrete.comments": "Comments",
   "concrete.essays.concreterc-concrete": "Compression Resistance",
-  "concrete.essays.concreteRc": "Compression Resistance"
+  "concrete.essays.concreteRc": "Compression Resistance",
+  "concrete.essays.diammeter-1": "Diammeter 1",
+  "concrete.essays.diammeter-1-label": "Insert diammeter 1 value",
+  "concrete.essays.diammeter-2": "Diammeter 2",
+  "concrete.essays.diammeter-2-label": "Insert diammeter 2 value",
+  "concrete.essays.height-label": "Insert sample height value",
+  "concrete.essays.height": "Sample height",
+  "concrete.essays.age": "Sample age",
+  "concrete.essays.hours": "Hours",
+  "concrete.essays.minutes": "Minutes",
+  "concrete.essays.used-tolerance": "Used Tolerance",
+
+  "concrete.essays.conic": "A - Conical",
+  "concrete.essays.conic-25mm": "A - Conical, 25mm offset from capping",
+  "concrete.essays.conic-bipartid": "B - Bipartite Conical",
+  "concrete.essays.conic-multiple-bipartid": "B - Multiple Bipartite Conical",
+  "concrete.essays.conic-column": "Type C: Column with cone formation",
+  "concrete.essays.conic-cis": "Type C: Conical and Sheared",
+  "concrete.essays.cis": "Type E: Sheared",
+  "concrete.essays.baseRuptures": "Type F: Cracks at the base of capping",
+  "concrete.essays.topRuptures": "Type F: Cracks at the top of capping",
+  "concrete.essays.multipleTopRuptures": "Type G: Multiple cracks at the top of capping",
+
+  "concrete.essays.errors.invalid-diammHeightRatio": "The ratio of the average diameters divided by the height must be greater than or equal to 2.06.",
+  "concrete.essays.errors.connection-error": "An error occurred while connecting to the server. Please try again later."
 }
