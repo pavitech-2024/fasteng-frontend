@@ -30,13 +30,13 @@ const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
             mt: '20px',
           }}
         >
-          <Result_Card label={'fc'} value={data.finalCorrectionFactor.toFixed(2).toString()} unity={'Mpa'} />
+          <Result_Card label={'fc'} value={data.finalCorrectionFactor?.toFixed(2).toString()} unity={'Mpa'} />
         </Box>
 
         <Box sx={{ width: 'fit-content', display: 'flex', flexDirection: 'column', gap: '10px', mt: '20px' }}>
           <Box
             component={'img'}
-            sx={{ width: '35%', height: '50%' }}
+            sx={{ width: { mobile: '50%', notebook: '35%' }, height: '50%' }}
             src={step3Data.rupture.src}
             alt={'rupture image'}
           />

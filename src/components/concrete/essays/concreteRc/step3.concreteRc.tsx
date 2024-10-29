@@ -100,18 +100,27 @@ const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         mt: '20px',
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem', width: '100%', flexWrap: 'wrap' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '2rem',
+          width: '100%',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+        }}
+      >
         {ruptureImg.map((img) => (
           <>
             <Box
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '1rem',
+                gap: { mobile: 'none', notebook: '1rem' },
                 justifyContent: 'space-between',
                 placeItems: 'center',
                 maxWidth: '14rem',
-                minHeight: '15rem',
+                minHeight: { mobile: '8rem', notebook: '15rem' },
                 marginTop: '2rem',
               }}
             >
@@ -122,8 +131,8 @@ const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
                 src={img.src}
                 alt={img.label}
                 sx={{
-                  width: 200,
-                  height: 200,
+                  width: { mobile: '8rem', notebook: '10rem' },
+                  height: { mobile: '8rem', notebook: '10rem' },
                   objectFit: 'cover',
                   border: selectedRupture === img.key ? '3px solid orange' : 'none',
                   borderRadius: 2,
