@@ -2,7 +2,14 @@ import { NextPage } from 'next';
 import React from 'react';
 import { EssaysTemplate } from '../../../components/templates/essays';
 import { Essay } from '@/interfaces/common';
-import { CoarseAggregateIcon, GranulometryIcon, SandIncreaseIcon, SpecifyMassIcon, UnitMassIcon } from '@/assets';
+import {
+  CoarseAggregateIcon,
+  ConcreteRcIcon,
+  GranulometryIcon,
+  SandIncreaseIcon,
+  SpecifyMassIcon,
+  UnitMassIcon,
+} from '@/assets';
 import { t } from 'i18next';
 
 const index: NextPage = () => {
@@ -36,6 +43,18 @@ const index: NextPage = () => {
       key: 'coarseAggregate',
       icon: CoarseAggregateIcon,
       link: '/concrete/essays/coarseAggregate',
+    },
+    {
+      title: t('concrete.essays.concreteRt'),
+      key: 'concreteRt',
+      icon: CoarseAggregateIcon,
+      link: '/concrete/essays/concreteRt',
+    },
+    {
+      title: t('concrete.essays.concreteRc'),
+      key: 'concreteRc',
+      icon: ConcreteRcIcon,
+      link: '/concrete/essays/concreteRc',
     },
   ];
   return <EssaysTemplate essays={essays} />;
