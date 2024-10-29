@@ -36,8 +36,6 @@ const Igg = () => {
   ];
 
   return <EssayTemplate essayInfo={igg.info} childrens={childrens} nextCallback={igg.handleNext} />;
-  
-
 };
 
 export default Igg;
