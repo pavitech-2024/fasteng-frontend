@@ -1,6 +1,7 @@
 {
   "concreteRc.step-2-description": "Fill in all the fields bellow",
   "concreteRc.step-3-description": "Select the type of rupture obtained and upload the graph file generated during the pressing process.",
+  "concreteRc.step-4-description": "These are the results of your experiment. Remember to save the experiment to be able to access it later.",
 
   "concreteRc.step2": "Step 2",
   "concreteRc.step3": "Step 3",

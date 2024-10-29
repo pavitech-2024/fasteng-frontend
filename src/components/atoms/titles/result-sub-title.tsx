@@ -9,7 +9,7 @@ const ResultSubTitle = ({ title, sx }: ResultSubTitleProps) => {
   return (
     <Typography
       sx={{
-        width: 'fit-content',
+        width: { mobile: '100%', notebook: 'fit-content' },
         bgcolor: 'primaryTons.border',
         mb: { mobile: '2vh', notebook: '2vh' },
         paddingInline: '2vw 10vw',
@@ -23,7 +23,7 @@ const ResultSubTitle = ({ title, sx }: ResultSubTitleProps) => {
         lineHeight: { mobile: '2rem', notebook: '2.3rem' },
         color: 'primaryTons.lightGray',
         fontWeight: '700',
-        whiteSpace: 'nowrap',
+        whiteSpace: { mobile: 'wrap', notebook: 'nowrap' },
         mt: { notebook: 0, mobile: '1rem' },
         borderRadius: '0 10px 10px 0',
         borderBottom: '3px solid',

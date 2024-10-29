@@ -1,6 +1,7 @@
 {
   "concreteRc.step-2-description": "Preencha todos os campos abaixo",
   "concreteRc.step-3-description": "Selecione o tipo de ruptura obtido e faça o upload do arquivo do gráfico gerado durante o processo de prensagem.",
+  "concreteRc.step-4-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
 
   "concreteRc.step2": "Passo 2",
   "concreteRc.step3": "Passo 3",
