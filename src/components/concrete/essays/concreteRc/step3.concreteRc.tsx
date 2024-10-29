@@ -100,7 +100,16 @@ const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         mt: '20px',
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem', width: '100%', flexWrap: 'wrap', justifyContent: 'center' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '2rem',
+          width: '100%',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+        }}
+      >
         {ruptureImg.map((img) => (
           <>
             <Box

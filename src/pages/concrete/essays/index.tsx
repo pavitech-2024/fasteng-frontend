@@ -2,7 +2,14 @@ import { NextPage } from 'next';
 import React from 'react';
 import { EssaysTemplate } from '../../../components/templates/essays';
 import { Essay } from '@/interfaces/common';
-import { CoarseAggregateIcon, ConcreteRcIcon, GranulometryIcon, SandIncreaseIcon, SpecifyMassIcon, UnitMassIcon } from '@/assets';
+import {
+  CoarseAggregateIcon,
+  ConcreteRcIcon,
+  GranulometryIcon,
+  SandIncreaseIcon,
+  SpecifyMassIcon,
+  UnitMassIcon,
+} from '@/assets';
 import { t } from 'i18next';
 
 const index: NextPage = () => {

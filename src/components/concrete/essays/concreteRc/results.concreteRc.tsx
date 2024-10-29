@@ -21,7 +21,7 @@ const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
     <>
       <ExperimentResume data={experimentResumeData} />
       <FlexColumnBorder title={t('results')} open={true}>
-        <ResultSubTitle title={t('concrete.essays.concreteRc')} sx={{ margin: '.65rem' } } />
+        <ResultSubTitle title={t('concrete.essays.concreteRc')} sx={{ margin: '.65rem' }} />
         <Box
           sx={{
             width: '100%',
