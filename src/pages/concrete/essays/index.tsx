@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import React from 'react';
 import { EssaysTemplate } from '../../../components/templates/essays';
 import { Essay } from '@/interfaces/common';
-import { CoarseAggregateIcon, GranulometryIcon, SandIncreaseIcon, SpecifyMassIcon, UnitMassIcon } from '@/assets';
+import { CoarseAggregateIcon, ConcreteRcIcon, GranulometryIcon, SandIncreaseIcon, SpecifyMassIcon, UnitMassIcon } from '@/assets';
 import { t } from 'i18next';
 
 const index: NextPage = () => {
@@ -46,7 +46,7 @@ const index: NextPage = () => {
     {
       title: t('concrete.essays.concreteRc'),
       key: 'concreteRc',
-      icon: CoarseAggregateIcon,
+      icon: ConcreteRcIcon,
       link: '/concrete/essays/concreteRc',
     },
   ];

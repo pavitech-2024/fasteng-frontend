@@ -53,7 +53,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         mt: '20px',
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: '20rem', width: '100%' }}>
+      <Box sx={{ display: 'flex', flexDirection: { mobile: 'column', notebook: 'row' }, gap: { mobile: '2rem', notebook: '20rem' }, width: '100%' }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%' }}>
           {materialInputs.map((input) => (
             <InputEndAdornment
