@@ -4,45 +4,18 @@ import { EssayPageProps } from '@/components/templates/essay';
 import { SieveSeries } from '@/interfaces/common';
 import useConcreteRtStore from '@/stores/concrete/concreteRt/concreteRt.store';
 import { getSieveSeries } from '@/utils/sieves';
-import { Box } from '@mui/material';
+import { Box, TextField, Typography } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 
 const ConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useConcreteRtStore();
 
-  const inputs = [
-    {
-      key: 'sampleOrigin',
-      label: t('asphalt.concreteRt.sample-origin'),
-      value: data.sampleOrigin,
-      required: false,
-    },
-    {
-      key: 'pressSpecification',
-      label: t('asphalt.concreteRt.press-specification'),
-      value: data.pressSpecification,
-      required: false,
-    },
-    {
-      key: 'pressConstant',
-      label: t('asphalt.concreteRt.press-constant'),
-      value: data.pressConstant,
-      required: true,
-    },
-    {
-      key: 'sampleVoidVolume',
-      label: t('asphalt.concreteRt.sample-void-volume'),
-      value: data.sampleVoidVolume,
-      required: false,
-    },
-  ];
-
-  if (nextDisabled) {
-    const hasEmptyValues =
-      data.pressConstant && data.pressSpecification && data.sampleOrigin && data.sampleVoidVolume !== null;
-    if (hasEmptyValues) setNextDisabled(false);
-  }
+  if (
+    nextDisabled &&
+    !Object.values(data.age).some((value) => value === null)
+  )
+    setNextDisabled(false);
 
   return (
     <Box
@@ -53,83 +26,78 @@ const ConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         alignItems: 'flex-start',
       }}
     >
-      <Box
-        sx={{
-          display: 'grid',
-          width: '100%',
-          gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
-          gap: '5px 20px',
-        }}
-      >
-        {inputs.map((input) => (
-          <Box
-            key={input.key}
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              gap: '40px',
-            }}
-          >
-            <InputEndAdornment
-              variant="standard"
-              fullWidth
-              type="text"
-              key={input.key}
-              label={input.label}
-              value={input.value}
+      <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <Typography>{t('concrete.essays.age')}</Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
+          <Box>
+            <TextField
+              label={t('concrete.essays.hours')}
+              type="number"
+              required
+              value={data.age.hours}
               onChange={(e) => {
-                const inputValue = e.target.value;
-
-                const isNumeric = !isNaN(parseFloat(inputValue)) && inputValue !== '';
-                // Adicione exceções para 'sampleOrigin' e 'pressSpecification'
-                const isSpecialField = input.key === 'sampleOrigin' || input.key === 'pressSpecification';
-
-                let formattedValue = inputValue;
-
-                if (isNumeric) {
-                  formattedValue = Number(inputValue).toString();
-                } else if (isSpecialField) {
-                  // Se for um campo especial e não for numérico, mantenha o valor original
-                  formattedValue = inputValue;
-                } else {
-                  // Se não for numérico e não é um campo especial, defina o valor como vazio ('')
-                  formattedValue = '';
-                }
-
-                setData({ step: 1, key: input.key, value: formattedValue });
+                const newData = { ...data };
+                newData.age.hours = Number(e.target.value);
+                setData({ step: 1, value: { ...data, value: newData } });
               }}
-              adornment={input.key === 'sampleVoidVolume' ? '%' : ''}
+              variant="outlined"
+              size="medium"
+              sx={{ width: '7rem' }}
             />
           </Box>
-        ))}
-      </Box>
 
-      <Box
-        sx={{
-          width: '49%',
-          alignItems: 'flex-start',
-          justifyContent: 'flex-start', // Adicione esta linha
-        }}
-      >
-        <DropDown
-          label={'Faixa do DNIT'}
-          variant="standard"
-          size="medium"
-          sx={{
-            width: '100%',
-            display: 'flex',
-            marginX: 'auto',
-          }}
-          options={[
-            { value: 'A', label: 'A' },
-            { value: 'B', label: 'B' },
-            { value: 'C', label: 'C' },
-            { value: 'D', label: 'D' },
-            { value: 'E', label: 'E' },
-          ]}
-          callback={(value) => setData({ step: 1, key: 'dnitRange', value })}
-          defaultValue={{ label: data.dnitRange, value: data.dnitRange }}
-        />
+          <Box>
+            <TextField
+              label={t('concrete.essays.minutes')}
+              type="number"
+              value={data.age.minutes}
+              onChange={(e) => {
+                const newData = { ...data };
+                newData.age.minutes = Number(e.target.value);
+                setData({ step: 1, value: { ...data, value: newData } });
+              }}
+              variant="outlined"
+              size="medium"
+              sx={{ width: '7rem' }}
+            />
+          </Box>
+        </Box>
+
+        <Typography>{t('concrete.essays.used-tolerance')}</Typography>
+
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
+          <Box>
+            <TextField
+              label={t('concrete.essays.hours')}
+              type="number"
+              value={data.tolerance.hours}
+              onChange={(e) => {
+                const newData = { ...data };
+                newData.tolerance.hours = Number(e.target.value);
+                setData({ step: 1, value: { ...data, value: newData } });
+              }}
+              variant="outlined"
+              size="medium"
+              sx={{ width: '7rem' }}
+            />
+          </Box>
+
+          <Box>
+            <TextField
+              label={t('concrete.essays.minutes')}
+              type="number"
+              value={data.tolerance.minutes}
+              onChange={(e) => {
+                const newData = { ...data };
+                newData.tolerance.minutes = Number(e.target.value);
+                setData({ step: 1, value: { ...data, value: newData } });
+              }}
+              variant="outlined"
+              size="medium"
+              sx={{ width: '7rem' }}
+            />
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

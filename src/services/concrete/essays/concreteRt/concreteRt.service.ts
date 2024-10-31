@@ -7,20 +7,20 @@ import { t } from 'i18next';
 
 class CONCRETE_RT_SERVICE implements IEssayService {
   info = {
-    key: 'concreteRt-concrete',
+    key: 'concreteRt',
     icon: RtcdIcon,
     title: t('concrete.essays.concreteRt'),
     path: '/concrete/essays/concreteRt',
     backend_path: 'concrete/essays/concreteRt',
-    steps: 3,
+    steps: 4,
     standard: {
       name: 'NBR 7217/1984',
       link: 'https://engenhariacivilfsp.files.wordpress.com/2015/03/nbr-7181.pdf',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
-      { step: 1, description: t('concrete.essays.concreteRt.step2Data'), path: 'essay-data' },
-      { step: 2, description: t('concrete.essays.concreteRt.step3Data'), path: 'essay-data' },
+      { step: 1, description: t('concreteRt.step2Data'), path: 'essay-data' },
+      { step: 2, description: t('concreteRt.step3Data'), path: 'essay-data' },
       { step: 3, description: t('results'), path: 'results' },
     ],
   };
@@ -30,18 +30,17 @@ class CONCRETE_RT_SERVICE implements IEssayService {
 
   /** @handleNext Receives the step and data from the form and calls the respective method */
   handleNext = async (step: number, data: unknown): Promise<void> => {
-    console.log('🚀 ~ CONCRETE_RT_SERVICE ~ handleNext= ~ data:', data);
     try {
       switch (step) {
         case 0:
           await this.submitGeneralData(data as ConcreteRtData['generalData']);
           break;
         case 1:
-          await this.submitConcreteRtStep2Data(data as ConcreteRtData['step2Data']);
+          const { step2Data } = data as ConcreteRtData;
+          await this.submitStep2Data(data as ConcreteRtData['step2Data']);
+          await this.calculateStep2Data(step2Data);
           break;
         case 2:
-          const { step3Data } = data as ConcreteRtData;
-          await this.submitConcreteRtStep3Data(step3Data);
           await this.calculateResults(data as ConcreteRtData);
           break;
         case 3:
@@ -101,36 +100,90 @@ class CONCRETE_RT_SERVICE implements IEssayService {
   /** @ConcreteRt Methods for ConcreteRt page (step === 1, page 2) */
 
   // verify inputs from ConcreteRt page (step === 1, page 2)
-  submitConcreteRtStep2Data = async (concreteRtStep2: ConcreteRtData['step2Data']): Promise<void> => {
+  submitStep2Data = async (concreteRtStep2: ConcreteRtData['step2Data']): Promise<void> => {
     try {
       // verify if press_constant is not empty
-      if (!concreteRtStep2.pressConstant) throw t('errors.empty-press-constant');
+      // if (!concreteRtStep2.pressConstant) throw t('errors.empty-press-constant');
     } catch (error) {
       throw error;
     }
   };
 
-  // verify inputs from ConcreteRt page (step === 1, page 2)
-  submitConcreteRtStep3Data = async (concreteRtStep3: ConcreteRtData['step3Data']): Promise<void> => {
-    console.log('🚀 ~ CONCRETE_RT_SERVICE ~ submitConcreteRtStep3Data= ~ concreteRtStep3:', concreteRtStep3);
-    try {
-      // verify if concreteRt_data is not empty
-      if (!concreteRtStep3.concreteRt_data) throw t('errors.empty-concreteRt_data');
-    } catch (error) {
-      throw error;
-    }
-  };
+    // verify inputs from ConcreteRc page (step === 1, page 2)
+    calculateStep2Data = async (step2Data: ConcreteRtData['step2Data']): Promise<void> => {
+      try {
+        const { age, tolerance } = step2Data;
+        let finalTolerance;
+
+          const ruptureAgeArr = [
+            {
+              ruptureAge: 1440, // 1440 minutes = 24h
+              tolerance: 60, // 60 minutes = 1h
+            },
+            {
+              ruptureAge: 4320, // 4320 minutes = 72h = 3d
+              tolerance: 120, // 120 minutes = 2h
+            },
+            {
+              ruptureAge: 10080, // 10080 minutes = 168h = 7d
+              tolerance: 240, // 240 minutes = 4h
+            },
+            {
+              ruptureAge: 20160, // 20160 minutes = 336h = 14d
+              tolerance: 360, // 360 minutes = 6h
+            },
+            {
+              ruptureAge: 40320, // 40320 minutes = 672h = 28d
+              tolerance: 480, // 480 minutes = 8h
+            },
+            {
+              ruptureAge: 131040, // 131040 minutes = 2184h = 91d
+              tolerance: 1440, // 1440 minutes = 24h
+            },
+          ];
+  
+          const ruptureAgeFound = ruptureAgeArr.find((e) => e.ruptureAge === ((age.hours * 60) + age.minutes));
+
+          const ageInMinutes = age.hours * 60 + age.minutes;
+
+          if (ruptureAgeFound) {
+            finalTolerance = ruptureAgeFound.tolerance;
+          } else {
+            // Interpolação
+            let higherReference = null;
+            let lowerReference = null;
+
+            for (let i = 0; i < ruptureAgeArr.length; i++) {
+              if (
+                ruptureAgeArr[i].ruptureAge < ageInMinutes &&
+                ruptureAgeArr[i + 1].ruptureAge > ageInMinutes
+              ) {
+                lowerReference = ruptureAgeArr[i];
+                higherReference = ruptureAgeArr[i + 1];
+              }
+            }
+  
+            const response = await Api.post(`${this.info.backend_path}/interpolation`, {
+              age: (age.hours * 60) + age.minutes,
+              tolerance: (tolerance.hours * 60) + tolerance.minutes,
+              higherReference,
+              lowerReference,
+            });
+  
+            const { success, error, result } = response.data;
+  
+            if (success === false) throw error.name;
+  
+            finalTolerance = result;
+          }
+        this.store_actions.setData({ step: 1, key: 'finalTolerance', value: finalTolerance });
+      } catch (error) {
+        throw error;
+      }
+    };
 
   // calculate results from ConcreteRt essay
   calculateResults = async (store: ConcreteRtData): Promise<void> => {
-    console.log('🚀 ~ CONCRETE_RT_SERVICE ~ calculateResults= ~ store:', store);
-
-    const averageDiammeter = store.step3Data.concreteRt_data.map((e) => e.d1 + e.d2 / 2);
-
-    const heightDiammeterRatio = store.step3Data.concreteRt_data.map((e, idx) => e.height / averageDiammeter[idx]);
-
-    if (heightDiammeterRatio.some((e) => e <= 2.06)) throw t('errors.invalid-height-diammeter-ratio');
-
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
@@ -142,7 +195,7 @@ class CONCRETE_RT_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
 
-      this.store_actions.setData({ step: 2, value: result });
+      this.store_actions.setData({ step: 3, value: result });
     } catch (error) {
       throw error;
     }
@@ -159,14 +212,13 @@ class CONCRETE_RT_SERVICE implements IEssayService {
           userId: this.userId,
         },
         step2Data: store.step2Data,
+        step3Data: store.step3Data,
         results: store.results,
       });
 
       const { success, error } = response.data;
 
       if (success === false) throw error.name;
-
-      // this.store_actions.reset( { step: null, value: null });
     } catch (error) {
       throw error;
     }

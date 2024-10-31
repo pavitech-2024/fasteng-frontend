@@ -2,6 +2,16 @@ import { ConcreteMaterial } from '@/interfaces/concrete';
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
+type TimeObject = {
+  hours: number;
+  minutes: number;
+};
+
+type GraphImgObject = {
+  name: string;
+  src: string;
+};
+
 interface ConcreteGeneralData {
   userId: string;
   name: string;
@@ -12,42 +22,20 @@ interface ConcreteGeneralData {
 }
 
 interface ConcreteRtStep2Data {
-  dnitRange: string;
-  sampleVoidVolume: number;
-  pressConstant: number;
-  pressSpecification: string;
-  sampleOrigin: string;
+  age: TimeObject;
+  tolerance: TimeObject;
+  finalTolerance: number
 }
 
-// interface ConcreteRtStep3Data {
-//   concreteRt_data: {
-//     id: number;
-//     sampleName: string;
-//     d1: number;
-//     d2: number;
-//     d3: number;
-//     h1: number;
-//     h2: number;
-//     h3: number;
-//     pressReading: number;
-//   }[];
-// }
-
 interface ConcreteRtStep3Data {
-  concreteRt_data: {
-    id: number;
-    sampleName: string;
-    d1: number;
-    d2: number;
-    height: number;
-    pressReading: number;
-  }[];
+  appliedCharge: number;
+  supportsDistance: number;
+  graphImg: GraphImgObject;
 }
 
 interface ConcreteRt_results {
-  everyRtsMpa: number[];
-  everyRtsKgf: number[];
-  average: number;
+  flexualTensileStrength: number;
+  compressionResistance: number;
 }
 
 export type ConcreteRtData = {
@@ -76,28 +64,27 @@ const initialState = {
     description: null,
   },
   step2Data: {
-    dnitRange: null,
-    sampleVoidVolume: null,
-    pressConstant: null,
-    pressSpecification: null,
-    sampleOrigin: null,
+    age: {
+      hours: null,
+      minutes: null,
+    },
+    tolerance: {
+      hours: null,
+      minutes: null,
+    },
+    finalTolerance: null
   },
   step3Data: {
-    concreteRt_data: [
-      {
-        id: 0,
-        sampleName: null,
-        d1: null,
-        d2: null,
-        height: null,
-        pressReading: null,
-      },
-    ],
+    appliedCharge: null,
+    supportsDistance: null,
+    graphImg: {
+      name: null,
+      src: null,
+    },
   },
   results: {
-    everyRtsMpa: [],
-    everyRtsKgf: [],
-    average: null,
+    flexualTensileStrength: null,
+    compressionResistance: null,
   },
 };
 

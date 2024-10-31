@@ -20,100 +20,34 @@ const ConcreteRt_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
     materials: [{ name: generalData.material.name, type: generalData.material.type }],
   };
 
-  const data = {
-    everyRtsMpa: [],
-    everyRtsKgf: [],
-    average: 0,
-    acceptanceCondition: '',
-  };
-  const minimumRtValue = 0.65;
-
-  if (results) {
-    data.everyRtsKgf = results.everyRtsKgf.map((element) => {
-      return Number(element).toFixed(2);
-    });
-    data.everyRtsMpa = results.everyRtsMpa.map((element) => {
-      return Number(element).toFixed(2);
-    });
-    data.average = Number(Number(results.average).toFixed(2));
-    data.acceptanceCondition =
-      data.average > minimumRtValue
-        ? t('concreteRt.results.acceptance-condition-true')
-        : t('concreteRt.results.acceptance-condition-false');
-  }
-
-  const rows = data.everyRtsKgf.map((value, index) => ({
-    id: index,
-    sampleName: experimentResumeData.experimentName,
-    rtKgf: value.toString().replace('.', ','),
-    rtMpa: data.everyRtsMpa[index].toString().replace('.', ','),
-  }));
+  const resultCards = [
+    {
+      key: 'flexualTensileStrength',
+      label: t('results.flexual-tensile'),
+      value: results.flexualTensileStrength?.toFixed(4).toString(),
+    },
+    {
+      key: 'compressionResistance',
+      label: t('results.compression'),
+      value: results.compressionResistance?.toFixed(4).toString(),
+    }
+  ]
 
   return (
     <>
       <ExperimentResume data={experimentResumeData} />
       <FlexColumnBorder title={t('results')} open={true}>
-        <DataGrid
-          sx={{ lineHeight: '1.2rem' }}
-          rows={rows}
-          columns={[
-            {
-              field: 'sampleName',
-              headerName: t('concreteRt.results.sampleName'),
-              flex: 1,
-              align: 'center',
-              headerAlign: 'center',
-            },
-            {
-              field: 'rtKgf',
-              headerName: t('concreteRt.results.RtKgf'),
-              flex: 1,
-              align: 'center',
-              headerAlign: 'center',
-            },
-            {
-              field: 'rtMpa',
-              headerName: t('concreteRt.results.RtMpa'),
-              flex: 1,
-              align: 'center',
-              headerAlign: 'center',
-            },
-          ]}
-        />
         <Box
           sx={{
+            width: '100%',
             display: 'flex',
-            flexDirection: 'row',
-            marginTop: '2rem',
-            marginBottom: '2rem',
-            gap: '.65rem',
-            paddingX: '1.5rem',
-            justifyContent: 'center',
+            gap: '10px',
+            mt: '20px',
           }}
         >
-          <Box
-            sx={{
-              display: 'flex',
-              gap: '.65rem',
-              alignItems: 'center',
-            }}
-          >
-            <Result_Card
-              label={t('concreteRt.results.minimum-rt')}
-              value={`${minimumRtValue.toString().replace('.', ',')}`}
-              unity={'Mpa'}
-            />
-            <Result_Card
-              label={t('concreteRt.results.average')}
-              value={data.average.toString().replace('.', ',')}
-              unity={'MPa'}
-            />
-            <Result_Card
-              label={t('concreteRt.results.acceptance-condition')}
-              value={data.acceptanceCondition}
-              unity={''}
-            />
-          </Box>
+          {resultCards.map((item) => (
+            <Result_Card key={item.key} label={item.label} value={item.value} unity={'Mpa'} />
+          ))}
         </Box>
       </FlexColumnBorder>
     </>
