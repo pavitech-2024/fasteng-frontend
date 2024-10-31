@@ -11,11 +11,7 @@ import { t } from 'i18next';
 const ConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useConcreteRtStore();
 
-  if (
-    nextDisabled &&
-    !Object.values(data.age).some((value) => value === null)
-  )
-    setNextDisabled(false);
+  if (nextDisabled && !Object.values(data.age).some((value) => value === null)) setNextDisabled(false);
 
   return (
     <Box

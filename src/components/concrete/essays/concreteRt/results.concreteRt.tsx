@@ -30,8 +30,8 @@ const ConcreteRt_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
       key: 'compressionResistance',
       label: t('results.compression'),
       value: results.compressionResistance?.toFixed(4).toString(),
-    }
-  ]
+    },
+  ];
 
   return (
     <>

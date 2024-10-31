@@ -24,7 +24,7 @@ interface ConcreteGeneralData {
 interface ConcreteRtStep2Data {
   age: TimeObject;
   tolerance: TimeObject;
-  finalTolerance: number
+  finalTolerance: number;
 }
 
 interface ConcreteRtStep3Data {
@@ -72,7 +72,7 @@ const initialState = {
       hours: null,
       minutes: null,
     },
-    finalTolerance: null
+    finalTolerance: null,
   },
   step3Data: {
     appliedCharge: null,

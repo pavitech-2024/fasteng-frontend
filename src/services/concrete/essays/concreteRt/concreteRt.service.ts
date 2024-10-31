@@ -109,78 +109,75 @@ class CONCRETE_RT_SERVICE implements IEssayService {
     }
   };
 
-    // verify inputs from ConcreteRc page (step === 1, page 2)
-    calculateStep2Data = async (step2Data: ConcreteRtData['step2Data']): Promise<void> => {
-      try {
-        const { age, tolerance } = step2Data;
-        let finalTolerance;
+  // verify inputs from ConcreteRc page (step === 1, page 2)
+  calculateStep2Data = async (step2Data: ConcreteRtData['step2Data']): Promise<void> => {
+    try {
+      const { age, tolerance } = step2Data;
+      let finalTolerance;
 
-          const ruptureAgeArr = [
-            {
-              ruptureAge: 1440, // 1440 minutes = 24h
-              tolerance: 60, // 60 minutes = 1h
-            },
-            {
-              ruptureAge: 4320, // 4320 minutes = 72h = 3d
-              tolerance: 120, // 120 minutes = 2h
-            },
-            {
-              ruptureAge: 10080, // 10080 minutes = 168h = 7d
-              tolerance: 240, // 240 minutes = 4h
-            },
-            {
-              ruptureAge: 20160, // 20160 minutes = 336h = 14d
-              tolerance: 360, // 360 minutes = 6h
-            },
-            {
-              ruptureAge: 40320, // 40320 minutes = 672h = 28d
-              tolerance: 480, // 480 minutes = 8h
-            },
-            {
-              ruptureAge: 131040, // 131040 minutes = 2184h = 91d
-              tolerance: 1440, // 1440 minutes = 24h
-            },
-          ];
-  
-          const ruptureAgeFound = ruptureAgeArr.find((e) => e.ruptureAge === ((age.hours * 60) + age.minutes));
+      const ruptureAgeArr = [
+        {
+          ruptureAge: 1440, // 1440 minutes = 24h
+          tolerance: 60, // 60 minutes = 1h
+        },
+        {
+          ruptureAge: 4320, // 4320 minutes = 72h = 3d
+          tolerance: 120, // 120 minutes = 2h
+        },
+        {
+          ruptureAge: 10080, // 10080 minutes = 168h = 7d
+          tolerance: 240, // 240 minutes = 4h
+        },
+        {
+          ruptureAge: 20160, // 20160 minutes = 336h = 14d
+          tolerance: 360, // 360 minutes = 6h
+        },
+        {
+          ruptureAge: 40320, // 40320 minutes = 672h = 28d
+          tolerance: 480, // 480 minutes = 8h
+        },
+        {
+          ruptureAge: 131040, // 131040 minutes = 2184h = 91d
+          tolerance: 1440, // 1440 minutes = 24h
+        },
+      ];
 
-          const ageInMinutes = age.hours * 60 + age.minutes;
+      const ruptureAgeFound = ruptureAgeArr.find((e) => e.ruptureAge === age.hours * 60 + age.minutes);
 
-          if (ruptureAgeFound) {
-            finalTolerance = ruptureAgeFound.tolerance;
-          } else {
-            // Interpolação
-            let higherReference = null;
-            let lowerReference = null;
+      const ageInMinutes = age.hours * 60 + age.minutes;
 
-            for (let i = 0; i < ruptureAgeArr.length; i++) {
-              if (
-                ruptureAgeArr[i].ruptureAge < ageInMinutes &&
-                ruptureAgeArr[i + 1].ruptureAge > ageInMinutes
-              ) {
-                lowerReference = ruptureAgeArr[i];
-                higherReference = ruptureAgeArr[i + 1];
-              }
-            }
-  
-            const response = await Api.post(`${this.info.backend_path}/interpolation`, {
-              age: (age.hours * 60) + age.minutes,
-              tolerance: (tolerance.hours * 60) + tolerance.minutes,
-              higherReference,
-              lowerReference,
-            });
-  
-            const { success, error, result } = response.data;
-  
-            if (success === false) throw error.name;
-  
-            finalTolerance = result;
+      if (ruptureAgeFound) {
+        finalTolerance = ruptureAgeFound.tolerance;
+      } else {
+        // Interpolação
+        let higherReference = null;
+        let lowerReference = null;
+
+        for (let i = 0; i < ruptureAgeArr.length; i++) {
+          if (ruptureAgeArr[i].ruptureAge < ageInMinutes && ruptureAgeArr[i + 1].ruptureAge > ageInMinutes) {
+            lowerReference = ruptureAgeArr[i];
+            higherReference = ruptureAgeArr[i + 1];
           }
-        this.store_actions.setData({ step: 1, key: 'finalTolerance', value: finalTolerance });
-      } catch (error) {
-        throw error;
+        }
+
+        const response = await Api.post(`${this.info.backend_path}/interpolation`, {
+          age: age.hours * 60 + age.minutes,
+          tolerance: tolerance.hours * 60 + tolerance.minutes,
+          higherReference,
+          lowerReference,
+        });
+
+        const { success, error, result } = response.data;
+
+        if (success === false) throw error.name;
+
+        finalTolerance = result;
       }
-    };
+      this.store_actions.setData({ step: 1, key: 'finalTolerance', value: finalTolerance });
+    } catch (error) {
+      throw error;
+    }
+  };
 
   // calculate results from ConcreteRt essay
   calculateResults = async (store: ConcreteRtData): Promise<void> => {

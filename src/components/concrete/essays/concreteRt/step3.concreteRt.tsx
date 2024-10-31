@@ -40,13 +40,7 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     }
   };
 
-  if (
-    nextDisabled &&
-    data.appliedCharge &&
-    data.supportsDistance &&
-    data.graphImg
-  )
-    setNextDisabled(false);
+  if (nextDisabled && data.appliedCharge && data.supportsDistance && data.graphImg) setNextDisabled(false);
 
   return (
     <Box
@@ -58,7 +52,15 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         mt: '20px',
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem', justifyContent: 'space-evenly', marginBottom: '2rem' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '2rem',
+          justifyContent: 'space-evenly',
+          marginBottom: '2rem',
+        }}
+      >
         {inputs.map((input) => (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem' }} key={input.key}>
             <Typography variant="h5">{input.label}</Typography>
@@ -75,9 +77,13 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         ))}
       </Box>
 
-      <Typography sx={{ textAlign: 'center' }} variant="h5">{t('concrete.essays.compressionRupture')}</Typography>
+      <Typography sx={{ textAlign: 'center' }} variant="h5">
+        {t('concrete.essays.compressionRupture')}
+      </Typography>
 
-      <Typography sx={{ textAlign: 'center', marginTop: '2rem' }} variant="h5">{t('concrete.essays.graphImg')}</Typography>
+      <Typography sx={{ textAlign: 'center', marginTop: '2rem' }} variant="h5">
+        {t('concrete.essays.graphImg')}
+      </Typography>
 
       <Box sx={{ paddingY: '2rem' }}>
         <ImgFileInput onFileChange={(file) => handleGraphImgUpload(file)} file={data.graphImg} />
