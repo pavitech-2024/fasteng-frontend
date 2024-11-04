@@ -14,8 +14,8 @@ class CONCRETE_RT_SERVICE implements IEssayService {
     backend_path: 'concrete/essays/concreteRt',
     steps: 5,
     standard: {
-      name: 'NBR 7217/1984',
-      link: 'https://engenhariacivilfsp.files.wordpress.com/2015/03/nbr-7181.pdf',
+      name: 'NBR 13279/2005',
+      link: '',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },

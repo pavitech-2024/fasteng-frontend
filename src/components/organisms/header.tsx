@@ -13,7 +13,6 @@ interface HeaderProps {
 }
 
 export const Header = ({ title, subTitle, link, icon, image, children }: HeaderProps) => {
-  console.log('🚀 ~ Header ~ title:', title);
   const { pathname } = useRouter();
   const isSuperpavePage = pathname.includes('superpave');
 
@@ -57,7 +56,7 @@ export const Header = ({ title, subTitle, link, icon, image, children }: HeaderP
             >
               {title}
             </Typography>
-            {link && (
+            {subTitle && (
               <Typography
                 sx={{
                   textTransform: 'uppercase',
@@ -66,16 +65,30 @@ export const Header = ({ title, subTitle, link, icon, image, children }: HeaderP
                   fontWeight: 500,
                 }}
               >
-                <Link
-                  href={link}
-                  target="standard"
-                  style={{
-                    textDecoration: 'none',
-                    color: '#F29134', //primary.main
-                  }}
-                >
-                  {subTitle}
-                </Link>
+                {link && link !== '' ? (
+                  <Link
+                    href={link}
+                    target="standard"
+                    download={link}
+                    style={{
+                      textDecoration: 'none',
+                      color: '#F29134', //primary.main
+                    }}
+                  >
+                    {subTitle}
+                  </Link>
+                ) : (
+                  <Typography
+                    style={{
+                      textDecoration: 'none',
+                      color: '#F29134', //primary.main
+                      fontWeight: 500,
+                      fontSize: '1.5rem',
+                    }}
+                  >
+                    {subTitle}
+                  </Typography>
+                )}
               </Typography>
             )}
           </Box>

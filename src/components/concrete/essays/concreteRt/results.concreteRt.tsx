@@ -1,19 +1,14 @@
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import Result_Card from '@/components/atoms/containers/result-card';
-import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
-import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import useConcreteRtStore from '@/stores/concrete/concreteRt/concreteRt.store';
 import { Box } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import Chart from 'react-google-charts';
 
 const ConcreteRt_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: results, generalData } = useConcreteRtStore();
-  console.log('🚀 ~ results:', results);
 
   // criando o objeto que será passado para o componente ExperimentResume
   const experimentResumeData: ExperimentResumeData = {
