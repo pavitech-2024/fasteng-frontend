@@ -3,7 +3,7 @@ import { useRef } from 'react';
 
 const ImgFileInput = ({ onFileChange, file }) => {
   const fileInputRef = useRef(null);
-  const selectedFileName = file.name;
+  const selectedFileName = file?.name;
 
   const handleButtonClick = () => {
     fileInputRef.current.click();
