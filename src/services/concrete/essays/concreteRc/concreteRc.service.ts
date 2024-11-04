@@ -1,5 +1,5 @@
 import Api from '@/api';
-import { CoarseAggregateIcon, ConcreteRcIcon } from '@/assets';
+import { ConcreteRcIcon } from '@/assets';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import { ConcreteRcActions, ConcreteRcData } from '@/stores/concrete/concreteRc/concreteRc.store';
@@ -14,8 +14,8 @@ class CONCRETE_RC_SERVICE implements IEssayService {
     backend_path: 'concrete/essays/concreteRc',
     steps: 4,
     standard: {
-      name: 'NBR 7217/1984',
-      link: 'https://engenhariacivilfsp.files.wordpress.com/2015/03/nbr-7181.pdf',
+      name: 'NBR 5739/2018',
+      link: '',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
