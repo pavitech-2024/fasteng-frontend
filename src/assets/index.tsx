@@ -87,6 +87,7 @@ import CoarseAggregateIcon from './concrete/essays/CoarseAggregate.png';
 import SandIncreaseIcon from './concrete/essays/SandIncrease.png';
 import UnitMassIcon from './concrete/essays/UnitMass.png';
 import ConcreteRcIcon from './concrete/essays/ConcreteRc.png';
+import ConcreteRtIcon from './concrete/essays/ConcreteRt.png';
 
 //dosages
 import AbcpIcon from './concrete/dosages/abcp.svg';
@@ -186,6 +187,7 @@ export {
   SandIncreaseIcon,
   UnitMassIcon,
   ConcreteRcIcon,
+  ConcreteRtIcon,
   //dosages
   AbcpIcon,
   AbcpLogo,

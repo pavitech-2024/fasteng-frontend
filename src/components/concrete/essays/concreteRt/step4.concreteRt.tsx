@@ -5,35 +5,27 @@ import useConcreteRtStore from '@/stores/concrete/concreteRt/concreteRt.store';
 import { Box, Typography } from '@mui/material';
 import { t } from 'i18next';
 
-const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { step3Data: data, setData } = useConcreteRtStore();
+const ConcreteRt_Step4 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
+  const { step4Data: data, setData } = useConcreteRtStore();
 
   const inputs = [
     {
-      key: 'appliedCharge',
-      label: t('concrete.essays.applied-charge'),
-      placeHolder: t('concrete.essays.applied-charge-placeholder'),
+      key: 'compressionCharge',
+      label: t('concrete.essays.compression-charge'),
+      placeHolder: t('concrete.essays.compression-charge-placeholder'),
       adornment: 'N',
       type: 'number',
-      value: data.appliedCharge,
-    },
-    {
-      key: 'supportsDistance',
-      label: t('concrete.essays.supports-distance'),
-      placeHolder: t('concrete.essays.supports-distance-placeholder'),
-      adornment: 'mm',
-      type: 'number',
-      value: data.supportsDistance,
-    },
+      value: data.compressionCharge,
+    }
   ];
 
   const handleGraphImgUpload = (file: any) => {
     if (file) {
-      setData({ step: 2, key: 'graphImg', value: { name: file.name, src: file.src } });
+      setData({ step: 3, key: 'graphImg', value: { name: file.name, src: file.src } });
     }
   };
 
-  if (nextDisabled && data.appliedCharge && data.supportsDistance && !Object.values(data.graphImg).some((key) => key === null)) setNextDisabled(false);
+  if (nextDisabled && data.compressionCharge && !Object.values(data.graphImg).some((value) => value === null)) setNextDisabled(false);
 
   return (
     <Box
@@ -54,7 +46,7 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         }}
       >
         {inputs.map((input) => (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%' }} key={input.key}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '30%', marginX: 'auto'  }} key={input.key}>
             <Typography variant="h5">{input.label}</Typography>
             <InputEndAdornment
               adornment={input.adornment}
@@ -62,7 +54,7 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
               value={input.value}
               type={input.type}
               onChange={(e: any) => {
-                setData({ step: 2, key: input.key, value: Number(e.target.value) });
+                setData({ step: 3, key: input.key, value: Number(e.target.value) });
               }}
             />
           </Box>
@@ -80,4 +72,4 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
   );
 };
 
-export default ConcreteRt_Step3;
+export default ConcreteRt_Step4;

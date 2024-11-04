@@ -26,6 +26,23 @@
   "concreteRt-concrete.bottom": "Fundo",
   "concrete.essays.concreteRt.step2Data": "Passo 2",
   "concrete.essays.concreteRt.step3Data": "Passo 3",
-  "concreteRt.step-3-description": "Preencha todos os campos abaixo",
-  "errors.invalid-height-diammeter-ratio": "A média dos diametros dividido pela altura precisa ser maior ou igual à 2,06."
+  "concreteRt.step-3-description": "Insira a carga aplicada verticalmente no centro do prisma, a distância entre os suportes e faça o upload da imagem do gráfico gerada pela prensa.",
+  "concreteRt.step-4-description": "Insira a carga aplicada para compressão e faça o upload da imagem do gráfico gerada pela prensa.",
+  "errors.invalid-height-diammeter-ratio": "A média dos diametros dividido pela altura precisa ser maior ou igual à 2,06.",
+
+  "concrete.essays.applied-charge": "Carga Aplicada",
+  "concrete.essays.applied-charge-placeholder": "Insira a carga aplicada verticalmente no centro do prisma",
+  "concrete.essays.supports-distance": "Insira a distância entre os suportes",
+  "concrete.essays.supports-distance-placeholder": "Insira a distância entre os suportes",
+  "concrete.essays.graphImg": "Imagem do grafico",
+  "concrete.essays.compression-charge": "Carga de Compressão",
+  "concrete.essays.compression-charge-placeholder": "Insira a carga aplicada para compressão",
+  "results.flexual-tensile": "Resistência à Tração na Flexão",
+  "results.compression": "Resistência à Compressão",
+
+  "concreteRt.step2Data": "Passo 2",
+  "concreteRt.step3Data": "Passo 3",
+  "concreteRt.step4Data": "Passo 4",
+  "concreteRt.step-5-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde."
+
 }

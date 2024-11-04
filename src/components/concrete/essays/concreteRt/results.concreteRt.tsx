@@ -13,6 +13,7 @@ import Chart from 'react-google-charts';
 const ConcreteRt_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: results, generalData } = useConcreteRtStore();
+  console.log("🚀 ~ results:", results)
 
   // criando o objeto que será passado para o componente ExperimentResume
   const experimentResumeData: ExperimentResumeData = {

@@ -1,5 +1,5 @@
 import Api from '@/api';
-import { RtcdIcon } from '@/assets';
+import { ConcreteRtIcon } from '@/assets';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import { ConcreteRtActions, ConcreteRtData } from '@/stores/concrete/concreteRt/concreteRt.store';
@@ -8,11 +8,11 @@ import { t } from 'i18next';
 class CONCRETE_RT_SERVICE implements IEssayService {
   info = {
     key: 'concreteRt',
-    icon: RtcdIcon,
+    icon: ConcreteRtIcon,
     title: t('concrete.essays.concreteRt'),
     path: '/concrete/essays/concreteRt',
     backend_path: 'concrete/essays/concreteRt',
-    steps: 4,
+    steps: 5,
     standard: {
       name: 'NBR 7217/1984',
       link: 'https://engenhariacivilfsp.files.wordpress.com/2015/03/nbr-7181.pdf',
@@ -21,7 +21,8 @@ class CONCRETE_RT_SERVICE implements IEssayService {
       { step: 0, description: t('general data'), path: 'general-data' },
       { step: 1, description: t('concreteRt.step2Data'), path: 'essay-data' },
       { step: 2, description: t('concreteRt.step3Data'), path: 'essay-data' },
-      { step: 3, description: t('results'), path: 'results' },
+      { step: 3, description: t('concreteRt.step4Data'), path: 'essay-data' },
+      { step: 4, description: t('results'), path: 'results' },
     ],
   };
 
@@ -41,10 +42,14 @@ class CONCRETE_RT_SERVICE implements IEssayService {
           await this.calculateStep2Data(step2Data);
           break;
         case 2:
-          await this.calculateResults(data as ConcreteRtData);
+          await this.submitStep3Data(data as ConcreteRtData['step3Data']);
           break;
         case 3:
+          await this.calculateResults(data as ConcreteRtData);
+          break;
+        case 4:
           await this.saveEssay(data as ConcreteRtData);
+          break;
         default:
           throw t('errors.invalid-step');
       }
@@ -179,6 +184,16 @@ class CONCRETE_RT_SERVICE implements IEssayService {
     }
   };
 
+  // verify inputs from ConcreteRt page (step === 4, page 4)
+  submitStep3Data = async (concreteRtStep3: ConcreteRtData['step3Data']): Promise<void> => {
+    try {
+      // verify if press_constant is not empty
+      // if (!concreteRtStep2.pressConstant) throw t('errors.empty-press-constant');
+    } catch (error) {
+      throw error;
+    }
+  };
+
   // calculate results from ConcreteRt essay
   calculateResults = async (store: ConcreteRtData): Promise<void> => {
     try {
@@ -186,13 +201,14 @@ class CONCRETE_RT_SERVICE implements IEssayService {
         generalData: store.generalData,
         step2Data: store.step2Data,
         step3Data: store.step3Data,
+        step4Data: store.step4Data
       });
 
       const { success, error, result } = response.data;
 
       if (success === false) throw error.name;
 
-      this.store_actions.setData({ step: 3, value: result });
+      this.store_actions.setData({ step: 4, value: result });
     } catch (error) {
       throw error;
     }
@@ -210,6 +226,7 @@ class CONCRETE_RT_SERVICE implements IEssayService {
         },
         step2Data: store.step2Data,
         step3Data: store.step3Data,
+        step4Data: store.step4Data,
         results: store.results,
       });
 

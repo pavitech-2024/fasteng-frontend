@@ -33,6 +33,11 @@ interface ConcreteRtStep3Data {
   graphImg: GraphImgObject;
 }
 
+interface ConcreteRtStep4Data {
+  compressionCharge: number;
+  graphImg: GraphImgObject;
+}
+
 interface ConcreteRt_results {
   flexualTensileStrength: number;
   compressionResistance: number;
@@ -42,6 +47,7 @@ export type ConcreteRtData = {
   generalData: ConcreteGeneralData;
   step2Data: ConcreteRtStep2Data;
   step3Data: ConcreteRtStep3Data;
+  step4Data: ConcreteRtStep4Data;
   results: ConcreteRt_results;
 };
 
@@ -50,7 +56,7 @@ export type ConcreteRtActions = {
   reset: ({ step }: setDataType) => void;
 };
 
-const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data', 3: 'results' };
+const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data', 3: 'step4Data',  4: 'results' };
 
 type setDataType = { step: number; key?: string; value: unknown };
 
@@ -77,6 +83,13 @@ const initialState = {
   step3Data: {
     appliedCharge: null,
     supportsDistance: null,
+    graphImg: {
+      name: null,
+      src: null,
+    },
+  },
+  step4Data: {
+    compressionCharge: null,
     graphImg: {
       name: null,
       src: null,
