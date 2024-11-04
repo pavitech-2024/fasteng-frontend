@@ -201,7 +201,7 @@ class CONCRETE_RT_SERVICE implements IEssayService {
         generalData: store.generalData,
         step2Data: store.step2Data,
         step3Data: store.step3Data,
-        step4Data: store.step4Data
+        step4Data: store.step4Data,
       });
 
       const { success, error, result } = response.data;

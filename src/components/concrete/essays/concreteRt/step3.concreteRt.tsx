@@ -33,7 +33,13 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     }
   };
 
-  if (nextDisabled && data.appliedCharge && data.supportsDistance && !Object.values(data.graphImg).some((key) => key === null)) setNextDisabled(false);
+  if (
+    nextDisabled &&
+    data.appliedCharge &&
+    data.supportsDistance &&
+    !Object.values(data.graphImg).some((key) => key === null)
+  )
+    setNextDisabled(false);
 
   return (
     <Box

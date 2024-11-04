@@ -56,7 +56,7 @@ export type ConcreteRtActions = {
   reset: ({ step }: setDataType) => void;
 };
 
-const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data', 3: 'step4Data',  4: 'results' };
+const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data', 3: 'step4Data', 4: 'results' };
 
 type setDataType = { step: number; key?: string; value: unknown };
 

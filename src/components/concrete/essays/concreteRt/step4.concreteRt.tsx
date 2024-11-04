@@ -16,7 +16,7 @@ const ConcreteRt_Step4 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
       adornment: 'N',
       type: 'number',
       value: data.compressionCharge,
-    }
+    },
   ];
 
   const handleGraphImgUpload = (file: any) => {
@@ -25,7 +25,8 @@ const ConcreteRt_Step4 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     }
   };
 
-  if (nextDisabled && data.compressionCharge && !Object.values(data.graphImg).some((value) => value === null)) setNextDisabled(false);
+  if (nextDisabled && data.compressionCharge && !Object.values(data.graphImg).some((value) => value === null))
+    setNextDisabled(false);
 
   return (
     <Box
@@ -46,7 +47,10 @@ const ConcreteRt_Step4 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         }}
       >
         {inputs.map((input) => (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '30%', marginX: 'auto'  }} key={input.key}>
+          <Box
+            sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '30%', marginX: 'auto' }}
+            key={input.key}
+          >
             <Typography variant="h5">{input.label}</Typography>
             <InputEndAdornment
               adornment={input.adornment}
