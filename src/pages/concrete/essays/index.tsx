@@ -5,6 +5,7 @@ import { Essay } from '@/interfaces/common';
 import {
   CoarseAggregateIcon,
   ConcreteRcIcon,
+  ConcreteRtIcon,
   GranulometryIcon,
   SandIncreaseIcon,
   SpecifyMassIcon,
@@ -47,7 +48,7 @@ const index: NextPage = () => {
     {
       title: t('concrete.essays.concreteRt'),
       key: 'concreteRt',
-      icon: CoarseAggregateIcon,
+      icon: ConcreteRtIcon,
       link: '/concrete/essays/concreteRt',
     },
     {
