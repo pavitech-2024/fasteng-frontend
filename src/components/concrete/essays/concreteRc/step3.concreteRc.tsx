@@ -100,6 +100,10 @@ const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         mt: '20px',
       }}
     >
+      <Typography variant="h4" sx={{ textAlign: 'center' }}>
+        {t('concrete.essays.compression-rupture')}
+      </Typography>
+
       <Box
         sx={{
           display: 'flex',
@@ -148,6 +152,10 @@ const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           </>
         ))}
       </Box>
+
+      <Typography variant="h4" sx={{ textAlign: 'center', marginTop: '2rem' }}>
+        {t('concrete.essays.graph-image')}
+      </Typography>
 
       <Box sx={{ paddingY: '2rem' }}>
         <ImgFileInput onFileChange={(file) => handleGraphImgUpload(file)} file={data.graphImg} />

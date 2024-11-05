@@ -4,6 +4,7 @@ import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 import { EssayPageProps } from '@/components/templates/essay';
 import useConcreteRcStore from '@/stores/concrete/concreteRc/concreteRc.store';
+import { WidthFull } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 import { t } from 'i18next';
 
@@ -34,6 +35,7 @@ const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
         </Box>
 
         <Box sx={{ width: 'fit-content', display: 'flex', flexDirection: 'column', gap: '10px', mt: '20px' }}>
+          <ResultSubTitle title={t('concrete.essays.compression-rupture')} sx={{ margin: '.65rem' }} />
           <Box
             component={'img'}
             sx={{ width: { mobile: '50%', notebook: '35%' }, height: '50%' }}
@@ -45,7 +47,7 @@ const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
               margin: '.65rem',
               mb: '2rem',
               fontWeight: '500',
-              textAlign: 'justify',
+              textAlign: 'center',
               lineHeight: '1.2rem',
               width: 'fit-content',
             }}
@@ -53,6 +55,8 @@ const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
             {step3Data.rupture.type}
           </Typography>
         </Box>
+
+        <ResultSubTitle title={t('concrete.essays.graph-image')} sx={{ margin: '.65rem', width: '100%' }} />
 
         <Box sx={{ width: 'fit-content', display: 'flex', flexDirection: 'column', gap: '10px', mt: '20px' }}>
           <Box
@@ -66,7 +70,7 @@ const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
               margin: '.65rem',
               mb: '2rem',
               fontWeight: '500',
-              textAlign: 'justify',
+              textAlign: 'center',
               lineHeight: '1.2rem',
               width: 'fit-content',
             }}
