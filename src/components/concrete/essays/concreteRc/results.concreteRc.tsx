@@ -56,7 +56,7 @@ const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
           </Typography>
         </Box>
 
-        <ResultSubTitle title={t('concrete.essays.graph-image')} sx={{ margin: '.65rem', width:'100%' }} />
+        <ResultSubTitle title={t('concrete.essays.graph-image')} sx={{ margin: '.65rem', width: '100%' }} />
 
         <Box sx={{ width: 'fit-content', display: 'flex', flexDirection: 'column', gap: '10px', mt: '20px' }}>
           <Box
