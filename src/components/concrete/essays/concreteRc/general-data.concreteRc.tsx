@@ -40,6 +40,7 @@ const ConcreteRc_GeneralData = ({
 
   const inputs = [
     { label: t('concrete.experimentName'), value: generalData.name, key: 'name', required: true },
+    // Todo-rc: é necessário selecionar um material?
     { label: t('concrete.material'), value: generalData.material, key: 'material', required: true },
     { label: t('concrete.operator'), value: generalData.operator, key: 'operator', required: false },
     { label: t('concrete.calculist'), value: generalData.calculist, key: 'calculist', required: false },

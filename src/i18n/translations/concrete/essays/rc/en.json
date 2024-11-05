@@ -37,6 +37,9 @@
   "concrete.essays.minutes": "Minutes",
   "concrete.essays.used-tolerance": "Used Tolerance",
 
+  "concrete.essays.graph-image": "Graph Image",
+
+  "concrete.essays.compression-rupture": "Type of rupture",
   "concrete.essays.conic": "A - Conical",
   "concrete.essays.conic-25mm": "A - Conical, 25mm offset from capping",
   "concrete.essays.conic-bipartid": "B - Bipartite Conical",
@@ -49,5 +52,6 @@
   "concrete.essays.multipleTopRuptures": "Type G: Multiple cracks at the top of capping",
 
   "concrete.essays.errors.invalid-diammHeightRatio": "The ratio of the average diameters divided by the height must be greater than or equal to 2.06.",
-  "concrete.essays.errors.connection-error": "An error occurred while connecting to the server. Please try again later."
+  "concrete.essays.errors.connection-error": "An error occurred while connecting to the server. Please try again later.",
+  "concrete.essays.errors.tolerance-not-permited": "The tolerance value is not allowed."
 }

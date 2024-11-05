@@ -131,7 +131,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
         },
       ];
 
-      const toleranceFound = concreteRcToleranceAge.find((e) => e.age === age.hours * 60 + age.minutes);
+      const toleranceFound = concreteRcToleranceAge.find((e) => e.age === (age.hours * 60) + age.minutes);
 
       if (toleranceFound) {
         newTolerance = toleranceFound;
@@ -150,8 +150,8 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
           // Fazer chamada para a interpolação
           const response = await Api.post(`${this.info.backend_path}/interpolation`, {
-            age_diammHeightRatio: age.hours * 60 + age.minutes,
-            tolerance_strenght: tolerance.hours * 60 + tolerance.minutes,
+            age_diammHeightRatio: (age.hours * 60) + age.minutes,
+            tolerance_strenght: (tolerance.hours * 60) + tolerance.minutes,
             higherReference,
             lowerReference,
             type: 'tolerance',
@@ -160,6 +160,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
           const { success, error, result } = response.data;
 
           if (success === false) throw error.name;
+          if (!result.isPermited) throw t('concrete.essays.errors.tolerance-not-permited');
 
           newTolerance = result;
         } else {
@@ -180,6 +181,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
       const averageDiammeter = (diammeter1 + diammeter2) / 2;
       const diammHeightRatio = height / averageDiammeter;
+      console.log("🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ diammHeightRatio:", diammHeightRatio)
 
       if (diammHeightRatio >= 2.06) throw t('concrete.essays.errors.invalid-diammHeightRatio');
       if (diammHeightRatio <= 1.94 || (diammHeightRatio > 1.94 && diammHeightRatio < 2.06)) {
@@ -221,8 +223,8 @@ class CONCRETE_RC_SERVICE implements IEssayService {
               correctionFactorArr[i].diammHeightRatio > diammHeightRatio &&
               correctionFactorArr[i + 1].diammHeightRatio < diammHeightRatio
             ) {
-              lowerReference = correctionFactorArr[i];
-              higherReference = correctionFactorArr[i + 1];
+              higherReference = correctionFactorArr[i];
+              lowerReference = correctionFactorArr[i + 1];
             }
           }
 
@@ -238,7 +240,7 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
           if (success === false) throw error.name;
 
-          correctionFactor = result;
+          correctionFactor = result.data;
         }
       }
       this.store_actions.setData({ step: 1, key: 'correctionFactor', value: correctionFactor });

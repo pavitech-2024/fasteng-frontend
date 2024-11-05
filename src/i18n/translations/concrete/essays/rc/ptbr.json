@@ -36,8 +36,11 @@
   "concrete.essays.age": "Idade do corpo de prova",
   "concrete.essays.hours": "Horas",
   "concrete.essays.minutes": "Minutos",
-  "concrete.essays.used-tolerance": "Tolerância Usada",
+  "concrete.essays.used-tolerance": "Tolerância usada",
 
+  "concrete.essays.graph-image": "Imagem do Gráfico",
+
+  "concrete.essays.compression-rupture": "Tipo de ruptura",
   "concrete.essays.conic": "A - Cônica",
   "concrete.essays.conic-25mm": "A - Cônica afastada em 25mm do capeamento",
   "concrete.essays.conic-bipartid": "B - Cônica bipartida",
@@ -50,5 +53,6 @@
   "concrete.essays.multipleTopRuptures": "Tipo G: multiplas fissuras no topo do capeamento",
 
   "concrete.essays.errors.invalid-diammHeightRatio": "A média dos diametros dividido pela altura precisa ser maior ou igual à 2,06.",
-  "concrete.essays.errors.connection-error": "Ocorreu um erro ao conectar ao servidor. Tente novamente mais tarde."
+  "concrete.essays.errors.connection-error": "Ocorreu um erro ao conectar ao servidor. Tente novamente mais tarde.",
+  "concrete.essays.errors.tolerance-not-permited": "A tolerância informada não é permitida."
 }
