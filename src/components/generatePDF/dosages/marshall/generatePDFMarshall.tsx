@@ -10,7 +10,7 @@ const GenerateDosagePDF = ({ dosageData }: any) => {
 
   const generatePDF = async () => {
     const doc = new jsPDF('p', 'mm', 'a4');
-    
+
     const pageWidth = doc.internal.pageSize.getWidth();
 
     // Adicionando logo ao PDF
@@ -20,17 +20,17 @@ const GenerateDosagePDF = ({ dosageData }: any) => {
     doc.addImage(imgLogo, 'PNG', 10, 10, 50, 20); // Adiciona logo no topo
     doc.setFontSize(12);
     doc.text(`Relatório de Dosagem - ${dosageData.name}`, pageWidth / 2, 30, { align: 'center' });
-    
+
     // Adicionar informações do usuário
     doc.setFontSize(10);
     doc.text(`Gerado por: ${user.name}`, 10, 40);
     doc.text(`Email: ${user.email}`, 10, 45);
     doc.text(`Data: ${new Date().toLocaleDateString()}`, 10, 50);
-    
+
     // Adicionar resumo das dosagens
     doc.setFontSize(12);
-    doc.text("Resumo das Dosagens:", 10, 60);
-    
+    doc.text('Resumo das Dosagens:', 10, 60);
+
     dosageData.forEach((dosage, index) => {
       doc.text(`Dosagem ${index + 1}: ${dosage.title}`, 10, 70 + index * 10);
       doc.text(`Página: ${dosage.page}`, 10, 75 + index * 10);
@@ -39,8 +39,8 @@ const GenerateDosagePDF = ({ dosageData }: any) => {
     // Exemplo de tabela com autoTable
     autoTable(doc, {
       head: [['Componente', 'Quantidade']],
-      body: dosageData.map(item => [item.component, item.quantity]),
-      startY: 100
+      body: dosageData.map((item) => [item.component, item.quantity]),
+      startY: 100,
     });
 
     // Seções adicionais

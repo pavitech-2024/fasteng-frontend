@@ -252,7 +252,7 @@ const GeneratePDF = ({
         const addTextToLeftMargin = (doc, text, x, y) => {
           doc.text(text, x, y);
         };
-  
+
         // Adicionando informações do usuário
         addTextToLeftMargin(doc, `Nome: ${user.name}`, 10, currentY);
         currentY += 5;
@@ -475,12 +475,10 @@ const GeneratePDF = ({
     },
   ];
 
-  
-
   const calculatePageNumber = (doc: any) => {
     const totalPages = doc.internal.pages.length;
     for (let pageNumber = 1; pageNumber < totalPages; pageNumber++) {
-      if(pageNumber>1){
+      if (pageNumber > 1) {
         doc.setPage(pageNumber);
         addPageNumber(doc, pageNumber);
       }
@@ -694,8 +692,3 @@ const GeneratePDF = ({
 };
 
 export default GeneratePDF;
-
-
-
-
-
