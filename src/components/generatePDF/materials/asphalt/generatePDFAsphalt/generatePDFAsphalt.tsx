@@ -1,11 +1,12 @@
 import jsPDF from 'jspdf';
 import React from 'react';
-import logo from '../../../assets/fasteng/LogoBlack.png';
+import logo from '@/assets/fasteng/LogoBlack.png';
 import autoTable from 'jspdf-autotable';
 import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
 import html2canvas from 'html2canvas';
 import { t } from 'i18next';
 import { Button } from '@mui/material';
+import useAuth from '@/contexts/auth';
 
 interface SummaryItem {
   title: string;
@@ -51,6 +52,7 @@ const GeneratePDF = ({
   rtfoData,
   elasticRecoveryData,
 }: IGenratePDF) => {
+  const { user } = useAuth(); // Obtendo o usuário
   //----------------------------------------datas------------------------------------------------------------------------------
   const dataSpecificMass = {
     specificMassContainer: [],
@@ -241,6 +243,23 @@ const GeneratePDF = ({
   //------------------------------------Text Format------------------------------------------------------
 
   const sections = [
+    // Adicionando uma nova seção para informações do usuário
+    {
+      condition: true, // Sempre incluir esta seção
+      title: 'Informações do Usuário',
+      content: (doc, currentY) => {
+        // Função para adicionar texto à margem esquerda
+        const addTextToLeftMargin = (doc, text, x, y) => {
+          doc.text(text, x, y);
+        };
+  
+        // Adicionando informações do usuário
+        addTextToLeftMargin(doc, `Nome: ${user.name}`, 10, currentY);
+        currentY += 5;
+        addTextToLeftMargin(doc, `E-mail: ${user.email}`, 10, currentY);
+        return currentY + 10; // Ajuste a posição Y para a próxima seção
+      },
+    },
     {
       condition: granulometryRows.length > 0,
       title: t('asphalt.essays.granulometry'),
@@ -336,37 +355,44 @@ const GeneratePDF = ({
       title: t('asphalt.essays.viscosityRotational'),
       content: async (doc, currentY) => {
         addTextToLeftMargin(doc, `${t('saybolt-furol.compression-temperature')}`, 10, currentY);
+        currentY += 5;
         addTextToLeftMargin(
           doc,
           `${t('saybolt-furol.higher')}: ${dataViscosity.compressionTemperature.higher}°C`,
           10,
           currentY
         );
+        currentY += 5;
         addTextToLeftMargin(
           doc,
           `${t('saybolt-furol.average')}: ${dataViscosity.compressionTemperature.average}°C`,
           10,
           currentY
         );
+        currentY += 5;
         addTextToLeftMargin(
           doc,
           `${t('saybolt-furol.lower')}: ${dataViscosity.compressionTemperature.lower}°C`,
           10,
           currentY
         );
+        currentY += 10;
         addTextToLeftMargin(doc, `${t('saybolt-furol.machining-temperature')}`, 10, currentY);
+        currentY += 5;
         addTextToLeftMargin(
           doc,
           `${t('saybolt-furol.higher')}: ${dataViscosity.machiningTemperature.higher}°C`,
           10,
           currentY
         );
+        currentY += 5;
         addTextToLeftMargin(
           doc,
           `${t('saybolt-furol.average')}: ${dataViscosity.machiningTemperature.average}°C`,
           10,
           currentY
         );
+        currentY += 5;
         addTextToLeftMargin(
           doc,
           `${t('saybolt-furol.lower')}: ${dataViscosity.machiningTemperature.lower}°C`,
@@ -382,7 +408,7 @@ const GeneratePDF = ({
     },
     {
       condition: dataPenetration,
-      title: t('asphalt.essays.penetration-asphaltl'),
+      title: t('asphalt.essays.penetration-asphalt'),
       content: (doc, currentY) => {
         addTextToLeftMargin(
           doc,
@@ -449,11 +475,15 @@ const GeneratePDF = ({
     },
   ];
 
+  
+
   const calculatePageNumber = (doc: any) => {
     const totalPages = doc.internal.pages.length;
     for (let pageNumber = 1; pageNumber < totalPages; pageNumber++) {
-      doc.setPage(pageNumber);
-      addPageNumber(doc, pageNumber);
+      if(pageNumber>1){
+        doc.setPage(pageNumber);
+        addPageNumber(doc, pageNumber);
+      }
     }
   };
 
@@ -474,7 +504,7 @@ const GeneratePDF = ({
     doc.text(x, y, text);
   };
 
-  const addTextToRightMargin = (doc: any, text: string, blockWidth: number, y: number, padding = 5) => {
+  const addTextToRightMargin = (doc: any, text: string, blockWidth: number, y: number, padding = 10) => {
     const pageWidth = doc.internal.pageSize.getWidth();
     const x = pageWidth - blockWidth;
 
@@ -557,7 +587,7 @@ const GeneratePDF = ({
     doc.addImage(image, 'png', 5, 5, 50, 8);
     doc.addImage(image, 'png', 155, 5, 50, 8);
 
-    addCenteredText(doc, `${t('asphalt.essays.project.summary')}`, currentY, 16);
+    addCenteredText(doc, `${t('asphalt.essays.project.summary')}`, currentY, 12);
     currentY += 20;
 
     summaryItems.forEach((item) => {
@@ -593,10 +623,10 @@ const GeneratePDF = ({
     doc.addImage(logo, 'png', 155, 5, 50, 8);
 
     let currentY = 55;
-    addCenteredText(doc, `${t('asphalt.essays.project.title')}`, currentY, 16);
-    currentY += 20;
-    addCenteredText(doc, `${t('asphalt.essays.project.name')}: ${nomeProjeto}`, currentY, 16);
-    currentY += 30;
+    addCenteredText(doc, `${t('asphalt.essays.project.title')}`, currentY, 12);
+    currentY += 50;
+    addCenteredText(doc, `${t('asphalt.essays.project.name')}: ${nomeProjeto}`, currentY, 12);
+    currentY += 90;
     addTextToRightMargin(doc, `${t('asphalt.essays.project.description.text')} ${nomeMaterial}`, 100, currentY);
 
     const pageHeight = doc.internal.pageSize.height;
@@ -605,12 +635,7 @@ const GeneratePDF = ({
 
     const formattedDate = getCurrentDateFormatted();
 
-    addCenteredText(doc, formattedDate, dateYPosition, 14);
-
-    doc.setLineWidth(0.5);
-    doc.line(10, lineYPosition, 200, lineYPosition);
-
-    addCenteredText(doc, '1', lineYPosition + 5, 10);
+    addCenteredText(doc, formattedDate, dateYPosition, 12);
   };
 
   const generate = async () => {
@@ -625,7 +650,7 @@ const GeneratePDF = ({
     doc.addImage(image, 'png', 5, 5, 50, 8);
     doc.addImage(image, 'png', 155, 5, 50, 8);
 
-    addCenteredText(doc, `${t('general data of essay')}`, 30);
+    addCenteredText(doc, `${t('general data of essay')}`, 30, 12);
     addTextToLeftMargin(doc, `${t('asphalt.materials.name')}: ${name}`, 10, 40);
     addTextToLeftMargin(doc, `${t('asphalt.materials.type')}: ${type}`, 10, 45);
 
@@ -635,7 +660,7 @@ const GeneratePDF = ({
     for (const section of sections) {
       if (section.condition) {
         currentY += 5;
-        addTextToLeftMargin(doc, section.title, 10, currentY, 14);
+        addTextToLeftMargin(doc, section.title, 10, currentY, 12);
         currentY += 5;
         currentY = await section.content(doc, currentY);
         const pageIndex = doc.internal.pages.length - 1;
@@ -669,3 +694,8 @@ const GeneratePDF = ({
 };
 
 export default GeneratePDF;
+
+
+
+
+
