@@ -19,7 +19,7 @@ class SAND_INCREASE_SERVICE implements IEssayService {
     backend_path: 'concrete/essays/sandIncrease',
     standard: {
       name: 'ABNT NBR 6467',
-      link: 'link da norma',
+      link: 'https://www.target.com.br/produtos/normas-tecnicas/36323/nbr6467-agregados-determinacao-do-inchamento-de-agregado-miudo-metodo-de-ensaio',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
