@@ -69,8 +69,6 @@ export default function ReportError({ openModalProp }: IReportErrorProps) {
           body: '',
         });
 
-        
-
         setTimeout(() => setOpenModal(false), 3000);
         setTimeout(() => setEmailStatusMessage(''));
       } else {

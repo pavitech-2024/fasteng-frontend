@@ -305,7 +305,7 @@ export default function Navbar({ open, app }: NavbarProps) {
           );
       })}
 
-      <ReportError openModalProp={openModal}/>
+      <ReportError openModalProp={openModal} />
     </Box>
   );
 }
