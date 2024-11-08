@@ -164,7 +164,7 @@ export default function Navbar({ open, app }: NavbarProps) {
 
     {
       name: t('navbar.report'),
-      link: '/report',
+      link: '',
       app: 'common',
       icon: <ReportIcon sx={IconStyle} />,
       type: 'single',
@@ -305,7 +305,7 @@ export default function Navbar({ open, app }: NavbarProps) {
           );
       })}
 
-      <ReportError openModalProp={openModal} setOpenModalProp={() => setOpenModal((prev) => !prev)} />
+      <ReportError openModalProp={openModal}/>
     </Box>
   );
 }
