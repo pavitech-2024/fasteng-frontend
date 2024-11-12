@@ -1,47 +1,250 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import useConcreteRcStore from '@/stores/concrete/concreteRc/concreteRc.store';
-import { Box, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography } from '@mui/material';
+import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 import { t } from 'i18next';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useConcreteRcStore();
 
-  const materialInputs = [
+  const columns: GridColDef[] = [
     {
-      key: 'diammeter1',
-      placeholder: t('concrete.essays.diammeter-1-label'),
-      value: data.diammeter1,
-      adornment: 'cm',
-      type: 'number',
-      label: t('concrete.essays.diammeter-1'),
+      field: 'diammeter1',
+      headerName: t('concrete.essays.diammeter-1'),
+      width: 120,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        return (
+          <InputEndAdornment
+            adornment="cm"
+            type="number"
+            value={data.samples[id - 1].diammeter1}
+            onChange={(e) => {
+              const newData = [...data.samples];
+              newData[id - 1].diammeter1 = Number(e.target.value);
+              setData({ step: 1, key: 'samples', value: newData });
+            }}
+          />
+        );
+      },
     },
     {
-      key: 'diammeter2',
-      placeholder: t('concrete.essays.diammeter-2-label'),
-      value: data.diammeter2,
-      adornment: 'cm',
-      type: 'number',
-      label: t('concrete.essays.diammeter-2'),
+      field: 'diammeter2',
+      headerName: t('concrete.essays.diammeter-2'),
+      width: 120,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        return (
+          <InputEndAdornment
+            adornment="cm"
+            type="number"
+            value={data.samples[id - 1].diammeter2}
+            onChange={(e) => {
+              const newData = [...data.samples];
+              newData[id - 1].diammeter2 = Number(e.target.value);
+              setData({ step: 1, key: 'samples', value: newData });
+            }}
+          />
+        );
+      },
     },
     {
-      key: 'height',
-      placeholder: t('concrete.essays.height-label'),
-      value: data.height,
-      adornment: 'cm',
-      type: 'number',
-      label: t('concrete.essays.height'),
+      field: 'height',
+      headerName: t('concrete.essays.height'),
+      width: 120,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        return (
+          <InputEndAdornment
+            adornment="cm"
+            type="number"
+            value={data.samples[id - 1].height}
+            onChange={(e) => {
+              const newData = [...data.samples];
+              newData[id - 1].height = Number(e.target.value);
+              setData({ step: 1, key: 'samples', value: newData });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'ageHours',
+      headerName: t('concrete.essays.hours'),
+      width: 120,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        return (
+          <InputEndAdornment
+            adornment="hr"
+            type="number"
+            value={data.samples[id - 1].age.hours}
+            onChange={(e) => {
+              const newData = [...data.samples];
+              newData[id - 1].age.hours = Number(e.target.value);
+              setData({ step: 1, key: 'samples', value: newData });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'ageMinutes',
+      headerName: t('concrete.essays.minutes'),
+      width: 120,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        return (
+          <InputEndAdornment
+            adornment="min"
+            type="number"
+            value={data.samples[id - 1].age.minutes}
+            onChange={(e) => {
+              const newData = [...data.samples];
+              newData[id - 1].age.minutes = Number(e.target.value);
+              setData({ step: 1, key: 'samples', value: newData });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'toleranceHours',
+      headerName: t('concrete.essays.hours'),
+      width: 120,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        return (
+          <InputEndAdornment
+            adornment="hr"
+            type="number"
+            value={data.samples[id - 1].tolerance.hours}
+            onChange={(e) => {
+              const newData = [...data.samples];
+              newData[id - 1].tolerance.hours = Number(e.target.value);
+              setData({ step: 1, key: 'samples', value: newData });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'toleranceMinutes',
+      headerName: t('concrete.essays.minutes'),
+      width: 120,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        return (
+          <InputEndAdornment
+            adornment="min"
+            type="number"
+            value={data.samples[id - 1].tolerance.minutes}
+            onChange={(e) => {
+              const newData = [...data.samples];
+              newData[id - 1].tolerance.minutes = Number(e.target.value);
+              setData({ step: 1, key: 'samples', value: newData });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'maximumStrenght',
+      headerName: t('concrete.essays.max-strenght'),
+      width: 120,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        return (
+          <InputEndAdornment
+            adornment="N"
+            type="number"
+            value={data.samples[id - 1].maximumStrength}
+            onChange={(e) => {
+              const newData = [...data.samples];
+              newData[id - 1].maximumStrength = Number(e.target.value);
+              setData({ step: 1, key: 'samples', value: newData });
+            }}
+          />
+        );
+      },
     },
   ];
 
-  if (
-    nextDisabled &&
-    data.diammeter1 !== null &&
-    data.diammeter2 !== null &&
-    !Object.values(data.age).some((value) => value === null) &&
-    data.height !== null
-  )
-    setNextDisabled(false);
+  const columnGrouping: GridColumnGroupingModel = [
+    {
+      groupId: 'age',
+      headerName: t('concrete.essays.age'),
+      headerAlign: 'center',
+      children: [{ field: 'ageHours' }, { field: 'ageMinutes' }],
+    },
+    {
+      groupId: 'tolerance',
+      headerName: t('concrete.essays.used-tolerance'),
+      headerAlign: 'center',
+      children: [{ field: 'toleranceHours' }, { field: 'toleranceMinutes' }],
+    },
+  ];
+
+  const handleAdd = () => {
+    const newRows = [...data.samples];
+    newRows.push({
+      id: data.samples.length + 1,
+      diammeter1: null,
+      diammeter2: null,
+      height: null,
+      age: { hours: null, minutes: null },
+      tolerance: { hours: null, minutes: null },
+      maximumStrength: null
+    });
+    setData({ step: 1, key: 'samples', value: newRows });
+    setNextDisabled(true);
+  };
+
+  const handleErase = () => {
+    try {
+      if (data.samples.length > 1) {
+        const newRows = [...data.samples];
+        newRows.pop();
+        setData({ step: 1, key: 'samples', value: newRows });
+      } else throw t('igg.error.minReads');
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
+  const ExpansionToolbar = () => {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
+        <Button sx={{ color: 'secondaryTons.red' }} onClick={handleErase}>
+          {t('erase')}
+        </Button>
+        <Button sx={{ color: 'secondaryTons.green' }} onClick={handleAdd}>
+          {t('add')}
+        </Button>
+      </Box>
+    );
+  };
+
+  useEffect(() => {
+    if (
+      nextDisabled &&
+      !Object.values(data.samples).some(
+        (value) =>
+          value.diammeter1 === null ||
+          value.diammeter2 === null ||
+          value.height === null ||
+          value.age.hours === null ||
+          value.age.minutes === null ||
+          value.tolerance.hours === null ||
+          value.tolerance.minutes === null ||
+          value.maximumStrength === null
+      )
+    )
+      setNextDisabled(false);
+  }, [data.samples, nextDisabled, setNextDisabled]);
 
   return (
     <Box
@@ -53,105 +256,21 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         mt: '20px',
       }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: { mobile: 'column', notebook: 'row' },
-          gap: { mobile: '2rem', notebook: '20rem' },
-          width: '100%',
-        }}
-      >
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%' }}>
-          {materialInputs.map((input) => (
-            <InputEndAdornment
-              key={input.key}
-              adornment={input.adornment}
-              required
-              placeholder={input.placeholder}
-              label={input.label}
-              type={input.type}
-              value={input.value}
-              onChange={(e) => {
-                setData({ step: 1, key: input.key, value: Number(e.target.value) });
-              }}
-            />
-          ))}
-        </Box>
-
-        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <Typography>{t('concrete.essays.age')}</Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
-            <Box>
-              <TextField
-                label={t('concrete.essays.hours')}
-                type="number"
-                required
-                value={data.age.hours}
-                onChange={(e) => {
-                  const newData = { ...data };
-                  newData.age.hours = Number(e.target.value);
-                  setData({ step: 1, value: { ...data, value: newData } });
-                }}
-                variant="outlined"
-                size="medium"
-                sx={{ width: '7rem' }}
-              />
-            </Box>
-
-            <Box>
-              <TextField
-                label={t('concrete.essays.minutes')}
-                type="number"
-                value={data.age.minutes}
-                onChange={(e) => {
-                  const newData = { ...data };
-                  newData.age.minutes = Number(e.target.value);
-                  setData({ step: 1, value: { ...data, value: newData } });
-                }}
-                variant="outlined"
-                size="medium"
-                sx={{ width: '7rem' }}
-              />
-            </Box>
-          </Box>
-
-          <Typography>{t('concrete.essays.used-tolerance')}</Typography>
-
-          <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
-            <Box>
-              <TextField
-                label={t('concrete.essays.hours')}
-                type="number"
-                value={data.tolerance.hours}
-                onChange={(e) => {
-                  const newData = { ...data };
-                  newData.tolerance.hours = Number(e.target.value);
-                  setData({ step: 1, value: { ...data, value: newData } });
-                }}
-                variant="outlined"
-                size="medium"
-                sx={{ width: '7rem' }}
-              />
-            </Box>
-
-            <Box>
-              <TextField
-                label={t('concrete.essays.minutes')}
-                type="number"
-                value={data.tolerance.minutes}
-                onChange={(e) => {
-                  const newData = { ...data };
-                  newData.tolerance.minutes = Number(e.target.value);
-                  setData({ step: 1, value: { ...data, value: newData } });
-                }}
-                variant="outlined"
-                size="medium"
-                sx={{ width: '7rem' }}
-              />
-            </Box>
-          </Box>
-        </Box>
-      </Box>
+      <DataGrid
+        columns={columns.map((column) => ({
+          ...column,
+          sortable: false,
+          disableColumnMenu: true,
+          align: 'center',
+          headerAlign: 'center',
+          minWidth: 70,
+          flex: 1,
+        }))}
+        rows={data.samples}
+        experimentalFeatures={{ columnGrouping: true }}
+        columnGroupingModel={columnGrouping}
+        slots={{ footer: ExpansionToolbar }}
+      />
     </Box>
   );
 };

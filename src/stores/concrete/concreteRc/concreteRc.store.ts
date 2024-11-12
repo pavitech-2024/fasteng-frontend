@@ -1,4 +1,5 @@
 import { ConcreteMaterial } from '@/interfaces/concrete';
+import Samples from '@/pages/soils/samples';
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
@@ -32,13 +33,15 @@ interface ConcreteGeneralData {
 }
 
 interface ConcreteRc_step2Data {
-  diammeter1: number;
-  diammeter2: number;
-  height: number;
-  age: TimeObject;
-  tolerance: TimeObject;
-  newTolerance: ToleranceObject;
-  correctionFactor: number;
+  samples: {
+    id: number;
+    diammeter1: number;
+    diammeter2: number;
+    height: number;
+    age: TimeObject;
+    tolerance: TimeObject;
+    maximumStrength: number;
+  }[];
 }
 
 interface ConcreteRc_step3Data {
@@ -47,7 +50,9 @@ interface ConcreteRc_step3Data {
 }
 
 interface ConcreteRc_results {
-  finalCorrectionFactor: number;
+  correctionFactors: number[];
+  finalResult: number[];
+  tolerances: number[]
 }
 
 export type ConcreteRcData = {
@@ -76,22 +81,23 @@ const initialState = {
     description: null,
   },
   step2Data: {
-    diammeter1: null,
-    diammeter2: null,
-    height: null,
-    age: {
-      hours: null,
-      minutes: null,
-    },
-    tolerance: {
-      hours: null,
-      minutes: null,
-    },
-    newTolerance: {
-      data: null,
-      isPermited: null,
-    },
-    correctionFactor: null,
+    samples: [
+      {
+        id: 1,
+        diammeter1: null,
+        diammeter2: null,
+        height: null,
+        age: {
+          hours: null,
+          minutes: null,
+        },
+        tolerance: {
+          hours: null,
+          minutes: null,
+        },
+        maximumStrength: null,
+      },
+    ],
   },
   step3Data: {
     rupture: {
@@ -104,7 +110,9 @@ const initialState = {
     },
   },
   results: {
-    finalCorrectionFactor: null,
+    correctionFactors: null,
+    finalResult: null,
+    tolerances: null
   },
 };
 
