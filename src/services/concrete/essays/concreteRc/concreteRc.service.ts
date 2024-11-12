@@ -2,6 +2,7 @@ import Api from '@/api';
 import { ConcreteRcIcon } from '@/assets';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { ConcreteMaterial } from '@/interfaces/concrete';
+import Sample from '@/pages/soils/samples/sample/[id]';
 import { ConcreteRcActions, ConcreteRcData } from '@/stores/concrete/concreteRc/concreteRc.store';
 import { t } from 'i18next';
 
@@ -80,14 +81,14 @@ class CONCRETE_RC_SERVICE implements IEssayService {
   // send general data to backend to verify if there is already a ConcreteRc essay with same name for the material
   submitGeneralData = async (generalData: ConcreteRcData['generalData']): Promise<void> => {
     try {
-      const { name, material } = generalData;
+      const { name } = generalData;
 
-      // verify if there is already a ConcreteRc essay with same name for the material
-      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, material });
+      // verify if there is already a ConcreteRc essay with same name
+      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name });
       console.log(response);
       const { success, error } = response.data;
 
-      // if there is already a ConcreteRc essay with same name for the material, throw error
+      // if there is already a ConcreteRc essay with same name, throw error
       if (success === false) throw error.name;
     } catch (error) {
       throw error;
@@ -100,74 +101,78 @@ class CONCRETE_RC_SERVICE implements IEssayService {
   submitStep2Data = async (step2Data: ConcreteRcData['step2Data']): Promise<void> => {
     // Erro: não pode ser menor que 24h
     try {
-      const { age, tolerance } = step2Data;
-      let lowerReference, higherReference;
-      let newTolerance;
+      // const { samples } = step2Data;
+      // console.log('🚀 ~ CONCRETE_RC_SERVICE ~ submitStep2Data= ~ samples:', samples);
+      // let lowerReference = [],
+      //   higherReference = [],
+      //   newTolerance = [],
+      //   formattedSamples = [];
 
-      const concreteRcToleranceAge = [
-        {
-          age: 24.0,
-          tolerance: 0.5,
-        },
-        {
-          age: 72.0, // 3d
-          tolerance: 2,
-        },
-        {
-          age: 168, // 7d
-          tolerance: 6,
-        },
-        {
-          age: 672, // 28d
-          tolerance: 24,
-        },
-        {
-          age: 1512, // 63d
-          tolerance: 36,
-        },
-        {
-          age: 2184, // 91d
-          tolerance: 48,
-        },
-      ];
 
-      const toleranceFound = concreteRcToleranceAge.find((e) => e.age === age.hours * 60 + age.minutes);
 
-      if (toleranceFound) {
-        newTolerance = toleranceFound;
-      } else {
-        // Encontrar o índice onde age se encaixa entre os valores de age no array
-        const referenceIndex = concreteRcToleranceAge.findIndex((e, i, arr) => {
-          const nextAge = arr[i + 1]?.age * 60;
-          const totalMinutes = age.hours * 60 + age.minutes;
-          return totalMinutes >= e.age * 60 && (nextAge === undefined || totalMinutes < nextAge); // Verifica o intervalo
-        });
+      // for (let i = 0; i < samples.length; i++) {
+      //   const toleranceFound = concreteRcToleranceAge.find(
+      //     (e) => e.age === samples[i].age.hours * 60 + samples[i].age.minutes
+      //   );
+      //   console.log('🚀 ~ CONCRETE_RC_SERVICE ~ submitStep2Data= ~ toleranceFound:', toleranceFound);
+      //   if (toleranceFound) {
+      //     newTolerance.push(toleranceFound);
+      //   } else {
+      //     // Encontrar o índice onde age se encaixa entre os valores de age no array
+      //     const referenceIndex = concreteRcToleranceAge.findIndex((e, idx, arr) => {
 
-        // Se encontramos um índice válido, pegamos o próximo
-        if (referenceIndex !== -1) {
-          higherReference = concreteRcToleranceAge[referenceIndex + 1] || concreteRcToleranceAge[referenceIndex];
-          lowerReference = concreteRcToleranceAge[referenceIndex - 1] || concreteRcToleranceAge[referenceIndex];
+      //       return (
+      //         samples[i].age.hours * 60 + samples[i].age.minutes >= e.age * 60  &&
+      //         samples[i + 1]?.age.hours * 60 + samples[i + 1]?.age.minutes < e.age * 60  
+      //       );
+      //     });
 
-          // Fazer chamada para a interpolação
-          const response = await Api.post(`${this.info.backend_path}/interpolation`, {
-            age_diammHeightRatio: age.hours * 60 + age.minutes,
-            tolerance_strenght: tolerance.hours * 60 + tolerance.minutes,
-            higherReference,
-            lowerReference,
-            type: 'tolerance',
-          });
+      //     console.log('🚀 ~ CONCRETE_RC_SERVICE ~ referenceIndex ~ referenceIndex:', referenceIndex);
 
-          const { success, error, result } = response.data;
+      //     // Se encontramos um índice válido, pegamos o próximo
+      //     if (referenceIndex !== -1) {
+      //       const higherReferenceArr =
+      //         concreteRcToleranceAge[referenceIndex + 1] || concreteRcToleranceAge[referenceIndex];
+      //       higherReference.push(higherReferenceArr);
+      //       const lowerReferenceArr =
+      //         concreteRcToleranceAge[referenceIndex - 1] || concreteRcToleranceAge[referenceIndex];
+      //       lowerReference.push(lowerReferenceArr);
 
-          if (success === false) throw error.name;
-          if (!result.isPermited) throw t('concrete.essays.errors.tolerance-not-permited');
+      //       const formattedSamplesArr = samples.map((sample) => {
+      //         return {
+      //           age: sample.age.hours * 60 + sample.age.minutes,
+      //           tolerance: sample.tolerance.hours * 60 + sample.tolerance.minutes,
+      //           ...sample,
+      //         };
+      //       });
 
-          newTolerance = result;
-        } else {
-          throw t('concrete.essays.errors.connection-error');
-        }
-      }
-      this.store_actions.setData({ step: 1, value: { ...step2Data, newTolerance } });
+      //       formattedSamples.push(formattedSamplesArr);
+      //     } else {
+      //       console.log('Fora do findIndex');
+      //       // código para lidar com o caso em que o elemento não é encontrado
+      //       throw t('concrete.essays.errors.connection-error');
+      //     }
+      //   }
+      // }
+
+      // console.log('Passei aqui');
+
+      // // Fazer chamada para a interpolação
+      // const response = await Api.post(`${this.info.backend_path}/interpolation`, {
+      //   samples: formattedSamples,
+      //   higherReference,
+      //   lowerReference,
+      //   type: 'tolerance',
+      // });
+
+      // const { success, error, result } = response.data;
+
+      // if (success === false) throw error.name;
+      // if (!result.isPermited) throw t('concrete.essays.errors.tolerance-not-permited');
+
+      // newTolerance = result;
+
+      // this.store_actions.setData({ step: 1, value: { ...step2Data, newTolerance } });
     } catch (error) {
       throw error;
     }
@@ -175,86 +180,85 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
   // verify inputs from ConcreteRc page (step === 1, page 2)
   calculateStep2Data = async (step2Data: ConcreteRcData['step2Data']): Promise<void> => {
-    try {
-      const { diammeter1, diammeter2, height, newTolerance } = step2Data;
-      let correctionFactor;
-
-      const averageDiammeter = (diammeter1 + diammeter2) / 2;
-      const diammHeightRatio = height / averageDiammeter;
-      console.log('🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ diammHeightRatio:', diammHeightRatio);
-
-      if (diammHeightRatio >= 2.06) throw t('concrete.essays.errors.invalid-diammHeightRatio');
-      if (diammHeightRatio <= 1.94 || (diammHeightRatio > 1.94 && diammHeightRatio < 2.06)) {
-        const correctionFactorArr = [
-          {
-            diammHeightRatio: 2.0,
-            correctionFactor: 1.0,
-          },
-          {
-            diammHeightRatio: 1.75,
-            correctionFactor: 0.98,
-          },
-          {
-            diammHeightRatio: 1.5,
-            correctionFactor: 0.96,
-          },
-          {
-            diammHeightRatio: 1.25,
-            correctionFactor: 0.93,
-          },
-          {
-            diammHeightRatio: 1.0,
-            correctionFactor: 0.86,
-          },
-        ];
-
-        const diammHeightRatioFound = correctionFactorArr.find((e) => e.diammHeightRatio === diammHeightRatio);
-
-        if (diammHeightRatioFound) {
-          correctionFactor = newTolerance.data * diammHeightRatioFound.correctionFactor;
-        } else {
-          // Interpolação
-          let higherReference = null;
-          let lowerReference = null;
-
-          for (let i = 0; i < correctionFactorArr.length - 1; i++) {
-            // Verifica se o `diammHeightRatio` está entre os valores de `diammHeightRatio` adjacentes
-            if (
-              correctionFactorArr[i].diammHeightRatio > diammHeightRatio &&
-              correctionFactorArr[i + 1].diammHeightRatio < diammHeightRatio
-            ) {
-              higherReference = correctionFactorArr[i];
-              lowerReference = correctionFactorArr[i + 1];
-            }
-          }
-
-          const response = await Api.post(`${this.info.backend_path}/interpolation`, {
-            age_diammHeightRatio: diammHeightRatio,
-            tolerance_strenght: newTolerance.data,
-            higherReference,
-            lowerReference,
-            type: 'correctionFactor',
-          });
-
-          const { success, error, result } = response.data;
-
-          if (success === false) throw error.name;
-
-          correctionFactor = result.data;
-        }
-      }
-      this.store_actions.setData({ step: 1, key: 'correctionFactor', value: correctionFactor });
-    } catch (error) {
-      throw error;
-    }
+    // try {
+    //   const { diammeter1, diammeter2, height, newTolerance } = step2Data;
+    //   let correctionFactor;
+    //   const averageDiammeter = (diammeter1 + diammeter2) / 2;
+    //   const diammHeightRatio = height / averageDiammeter;
+    //   console.log('🚀 ~ CONCRETE_RC_SERVICE ~ calculateStep2Data= ~ diammHeightRatio:', diammHeightRatio);
+    //   if (diammHeightRatio >= 2.06) throw t('concrete.essays.errors.invalid-diammHeightRatio');
+    //   if (diammHeightRatio <= 1.94 || (diammHeightRatio > 1.94 && diammHeightRatio < 2.06)) {
+    //     const correctionFactorArr = [
+    //       {
+    //         diammHeightRatio: 2.0,
+    //         correctionFactor: 1.0,
+    //       },
+    //       {
+    //         diammHeightRatio: 1.75,
+    //         correctionFactor: 0.98,
+    //       },
+    //       {
+    //         diammHeightRatio: 1.5,
+    //         correctionFactor: 0.96,
+    //       },
+    //       {
+    //         diammHeightRatio: 1.25,
+    //         correctionFactor: 0.93,
+    //       },
+    //       {
+    //         diammHeightRatio: 1.0,
+    //         correctionFactor: 0.86,
+    //       },
+    //     ];
+    //     const diammHeightRatioFound = correctionFactorArr.find((e) => e.diammHeightRatio === diammHeightRatio);
+    //     if (diammHeightRatioFound) {
+    //       correctionFactor = newTolerance.data * diammHeightRatioFound.correctionFactor;
+    //     } else {
+    //       // Interpolação
+    //       let higherReference = null;
+    //       let lowerReference = null;
+    //       for (let i = 0; i < correctionFactorArr.length - 1; i++) {
+    //         // Verifica se o `diammHeightRatio` está entre os valores de `diammHeightRatio` adjacentes
+    //         if (
+    //           correctionFactorArr[i].diammHeightRatio > diammHeightRatio &&
+    //           correctionFactorArr[i + 1].diammHeightRatio < diammHeightRatio
+    //         ) {
+    //           higherReference = correctionFactorArr[i];
+    //           lowerReference = correctionFactorArr[i + 1];
+    //         }
+    //       }
+    //       const response = await Api.post(`${this.info.backend_path}/interpolation`, {
+    //         age_diammHeightRatio: diammHeightRatio,
+    //         tolerance_strenght: newTolerance.data,
+    //         higherReference,
+    //         lowerReference,
+    //         type: 'correctionFactor',
+    //       });
+    //       const { success, error, result } = response.data;
+    //       if (success === false) throw error.name;
+    //       correctionFactor = result.data;
+    //     }
+    //   }
+    //   this.store_actions.setData({ step: 1, key: 'correctionFactor', value: correctionFactor });
+    // } catch (error) {
+    //   throw error;
+    // }
   };
 
   // calculate results from ConcreteRc essay
   calculateResults = async (store: ConcreteRcData): Promise<void> => {
     try {
+      const formattedSamples = store.step2Data.samples.map((sample) => ({
+        ...sample,
+        age: (sample.age.hours * 60) + sample.age.minutes,
+        tolerance:  (sample.tolerance.hours * 60) + sample.tolerance.minutes
+      }));
+
+      console.log("🚀 ~ CONCRETE_RC_SERVICE ~ formattedSamples ~ formattedSamples:", formattedSamples)
+
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
-        step2Data: store.step2Data,
+        step2Data: formattedSamples,
         step3Data: store.step3Data,
       });
 

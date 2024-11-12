@@ -54,5 +54,7 @@
 
   "concrete.essays.errors.invalid-diammHeightRatio": "A média dos diametros dividido pela altura precisa ser maior ou igual à 2,06.",
   "concrete.essays.errors.connection-error": "Ocorreu um erro ao conectar ao servidor. Tente novamente mais tarde.",
-  "concrete.essays.errors.tolerance-not-permited": "A tolerância informada não é permitida."
+  "concrete.essays.errors.tolerance-not-permited": "A tolerância informada não é permitida.",
+
+  "concrete.essays.max-strenght": "Força máxima"
 }

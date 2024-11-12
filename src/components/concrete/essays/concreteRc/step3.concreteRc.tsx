@@ -1,4 +1,5 @@
 import ImgFileInput from '@/components/atoms/inputs/imgFileInput';
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import useConcreteRcStore from '@/stores/concrete/concreteRc/concreteRc.store';
 import { Box, Typography } from '@mui/material';
@@ -100,6 +101,21 @@ const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         mt: '20px',
       }}
     >
+      <Typography variant="h4" sx={{ textAlign: 'center' }}>
+        {t('concrete.essays.max-strenght')}
+      </Typography>
+      <InputEndAdornment
+        adornment={'N'}
+        value={data.maximumStrength}
+        type="number"
+        sx={{ width: '35%', marginX: 'auto', marginBottom: '2rem' }}
+        onChange={(e) => {
+          const newData = { ...data };
+          newData.maximumStrength = Number(e.target.value);
+          setData({ step: 2, value: newData });
+        }}
+      />
+
       <Typography variant="h4" sx={{ textAlign: 'center' }}>
         {t('concrete.essays.compression-rupture')}
       </Typography>
