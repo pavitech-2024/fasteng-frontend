@@ -37,6 +37,9 @@
   "concrete.essays.hours": "Horas",
   "concrete.essays.minutes": "Minutos",
   "concrete.essays.used-tolerance": "Tolerância usada",
+  "concrete.essays.average-diammeter": "Diametro médio",
+  "concrete.essays.correction-factor": "Fator de correção",
+  "concrete.essays.compression-resistance": "Resistência a Compressão",
 
   "concrete.essays.graph-image": "Imagem do Gráfico",
 
@@ -56,5 +59,6 @@
   "concrete.essays.errors.connection-error": "Ocorreu um erro ao conectar ao servidor. Tente novamente mais tarde.",
   "concrete.essays.errors.tolerance-not-permited": "A tolerância informada não é permitida.",
 
-  "concrete.essays.max-strenght": "Força máxima"
+  "concrete.essays.max-strenght": "Força máxima",
+  "errors.invalid-diammeter-height-ratio": "A média dos diametros dividido pela altura precisa ser maior ou igual à 2,06 para o corpo de prova"
 }

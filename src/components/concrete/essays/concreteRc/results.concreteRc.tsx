@@ -6,6 +6,7 @@ import { EssayPageProps } from '@/components/templates/essay';
 import useConcreteRcStore from '@/stores/concrete/concreteRc/concreteRc.store';
 import { WidthFull } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 
 const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
@@ -15,8 +16,39 @@ const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
   // criando o objeto que será passado para o componente ExperimentResume
   const experimentResumeData: ExperimentResumeData = {
     experimentName: generalData.name,
-    materials: [{ name: generalData.material.name, type: generalData.material.type }],
   };
+
+  const rows = data.finalResult.map((item, i) => ({
+    id: i,
+    averageDiammeter: (step2Data.samples[i].diammeter1 + step2Data.samples[i].diammeter2) / 2,
+    height: step2Data.samples[i].height,
+    age: ((step2Data.samples[i].age.hours * 60) + step2Data.samples[i].age.minutes) / 60,
+    tolerance: data.tolerances[i].toFixed(2),
+    maximumStrength: step2Data.samples[i].maximumStrength,
+    correctionFactor: data.correctionFactors[i].toFixed(2),
+    finalResult: item.toFixed(2),
+  }));
+
+  const columns: GridColDef[] = [
+    {
+      field: 'maximumStrength',
+      headerName: t('concrete.essays.max-strenght'),
+      width: 120,
+      valueFormatter: ({ value }) => `${value} N`,
+    },
+    {
+      field: 'correctionFactor',
+      headerName: t('concrete.essays.correction-factor'),
+      width: 120,
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'finalResult',
+      headerName: t('concrete.essays.compression-resistance'),
+      width: 120,
+      valueFormatter: ({ value }) => `${value} Mpa`,
+    },
+  ];
 
   return (
     <>
@@ -31,7 +63,22 @@ const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
             mt: '20px',
           }}
         >
-          <Result_Card label={'fc'} value={data.finalCorrectionFactor?.toFixed(2).toString()} unity={'Mpa'} />
+          {columns.length > 0 && rows?.length > 0 && (
+            <DataGrid
+              columns={columns.map((column) => ({
+                ...column,
+                sortable: false,
+                disableColumnMenu: true,
+                align: 'center',
+                headerAlign: 'center',
+                minWidth: 70,
+                flex: 1,
+              }))}
+              rows={rows}
+              getRowId={(row) => row.id}
+              hideFooter
+            />
+          )}
         </Box>
 
         <Box sx={{ width: 'fit-content', display: 'flex', flexDirection: 'column', gap: '10px', mt: '20px' }}>

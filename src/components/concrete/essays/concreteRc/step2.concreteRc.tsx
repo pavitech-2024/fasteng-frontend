@@ -151,6 +151,26 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         );
       },
     },
+    {
+      field: 'maximumStrenght',
+      headerName: t('concrete.essays.max-strenght'),
+      width: 120,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        return (
+          <InputEndAdornment
+            adornment="N"
+            type="number"
+            value={data.samples[id - 1].maximumStrength}
+            onChange={(e) => {
+              const newData = [...data.samples];
+              newData[id - 1].maximumStrength = Number(e.target.value);
+              setData({ step: 1, key: 'samples', value: newData });
+            }}
+          />
+        );
+      },
+    },
   ];
 
   const columnGrouping: GridColumnGroupingModel = [
@@ -176,9 +196,11 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
       diammeter2: null,
       height: null,
       age: { hours: null, minutes: null },
-      tolerance: { hours: null, minutes: null }
+      tolerance: { hours: null, minutes: null },
+      maximumStrength: null
     });
     setData({ step: 1, key: 'samples', value: newRows });
+    setNextDisabled(true);
   };
 
   const handleErase = () => {
@@ -217,7 +239,8 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           value.age.hours === null ||
           value.age.minutes === null ||
           value.tolerance.hours === null ||
-          value.tolerance.minutes === null
+          value.tolerance.minutes === null ||
+          value.maximumStrength === null
       )
     )
       setNextDisabled(false);

@@ -40,17 +40,19 @@ interface ConcreteRc_step2Data {
     height: number;
     age: TimeObject;
     tolerance: TimeObject;
-  }[]
+    maximumStrength: number;
+  }[];
 }
 
 interface ConcreteRc_step3Data {
   rupture: RuptureObject;
   graphImg: GraphImgObject;
-  maximumStrength: number;
 }
 
 interface ConcreteRc_results {
-  finalCorrectionFactor: number;
+  correctionFactors: number[];
+  finalResult: number[];
+  tolerances: number[]
 }
 
 export type ConcreteRcData = {
@@ -93,8 +95,9 @@ const initialState = {
           hours: null,
           minutes: null,
         },
-      }
-    ]
+        maximumStrength: null,
+      },
+    ],
   },
   step3Data: {
     rupture: {
@@ -105,10 +108,11 @@ const initialState = {
       name: null,
       src: null,
     },
-    maximumStrength: null
   },
   results: {
-    finalCorrectionFactor: null,
+    correctionFactors: null,
+    finalResult: null,
+    tolerances: null
   },
 };
 
