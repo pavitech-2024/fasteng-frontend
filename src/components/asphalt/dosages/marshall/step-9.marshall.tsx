@@ -10,7 +10,7 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-type RowsObj = {
+export type RowsObj = {
   id: number;
   [key: string]: number;
   optimumBinder: number;

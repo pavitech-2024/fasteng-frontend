@@ -167,7 +167,7 @@ const MarshallDosageConsult = () => {
       headerName: t('marshall.dosage-consult.options'),
       renderCell: (params) => (
         <>
-          <GenerateDosagePDF dosages={dosages} />
+          <GenerateDosagePDF dosages={dosages[0].find((dosage) => dosage._id === params.row.id)} />
 
           <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)} size="large">
             <DeleteIcon />
