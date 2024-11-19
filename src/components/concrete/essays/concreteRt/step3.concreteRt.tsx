@@ -8,24 +8,24 @@ import { t } from 'i18next';
 const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step3Data: data, setData } = useConcreteRtStore();
 
-  const inputs = [
-    {
-      key: 'appliedCharge',
-      label: t('concrete.essays.applied-charge'),
-      placeHolder: t('concrete.essays.applied-charge-placeholder'),
-      adornment: 'N',
-      type: 'number',
-      value: data.appliedCharge,
-    },
-    {
-      key: 'supportsDistance',
-      label: t('concrete.essays.supports-distance'),
-      placeHolder: t('concrete.essays.supports-distance-placeholder'),
-      adornment: 'mm',
-      type: 'number',
-      value: data.supportsDistance,
-    },
-  ];
+  // const inputs = [
+  //   {
+  //     key: 'appliedCharge',
+  //     label: t('concrete.essays.applied-charge'),
+  //     placeHolder: t('concrete.essays.applied-charge-placeholder'),
+  //     adornment: 'N',
+  //     type: 'number',
+  //     value: data.appliedCharge,
+  //   },
+  //   {
+  //     key: 'supportsDistance',
+  //     label: t('concrete.essays.supports-distance'),
+  //     placeHolder: t('concrete.essays.supports-distance-placeholder'),
+  //     adornment: 'mm',
+  //     type: 'number',
+  //     value: data.supportsDistance,
+  //   },
+  // ];
 
   const handleGraphImgUpload = (file: any) => {
     if (file) {
@@ -35,8 +35,6 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
 
   if (
     nextDisabled &&
-    data.appliedCharge &&
-    data.supportsDistance &&
     !Object.values(data.graphImg).some((key) => key === null)
   )
     setNextDisabled(false);
@@ -59,20 +57,6 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           marginBottom: '2rem',
         }}
       >
-        {inputs.map((input) => (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%' }} key={input.key}>
-            <Typography variant="h5">{input.label}</Typography>
-            <InputEndAdornment
-              adornment={input.adornment}
-              placeholder={input.placeHolder}
-              value={input.value}
-              type={input.type}
-              onChange={(e: any) => {
-                setData({ step: 2, key: input.key, value: Number(e.target.value) });
-              }}
-            />
-          </Box>
-        ))}
       </Box>
 
       <Typography sx={{ textAlign: 'center', marginTop: '2rem' }} variant="h5">

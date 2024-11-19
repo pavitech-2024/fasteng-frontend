@@ -22,14 +22,16 @@ interface ConcreteGeneralData {
 }
 
 interface ConcreteRtStep2Data {
-  age: TimeObject;
-  tolerance: TimeObject;
-  finalTolerance: number;
+  samples: {
+    id: number;
+    age: TimeObject;
+    tolerance: TimeObject;
+    appliedCharge: number;
+    supportDistance: number
+  }[];
 }
 
 interface ConcreteRtStep3Data {
-  appliedCharge: number;
-  supportsDistance: number;
   graphImg: GraphImgObject;
 }
 
@@ -39,8 +41,8 @@ interface ConcreteRtStep4Data {
 }
 
 interface ConcreteRt_results {
-  flexualTensileStrength: number;
-  compressionResistance: number;
+  flexualTensileStrength: number[];
+  compressionResistance: number[];
 }
 
 export type ConcreteRtData = {
@@ -70,19 +72,23 @@ const initialState = {
     description: null,
   },
   step2Data: {
-    age: {
-      hours: null,
-      minutes: null,
-    },
-    tolerance: {
-      hours: null,
-      minutes: null,
-    },
-    finalTolerance: null,
+    samples: [
+      {
+        id: 1,
+        appliedCharge: null,
+        supportDistance: null,
+        age: {
+          hours: null,
+          minutes: null,
+        },
+        tolerance: {
+          hours: null,
+          minutes: null,
+        },
+      },
+    ],
   },
   step3Data: {
-    appliedCharge: null,
-    supportsDistance: null,
     graphImg: {
       name: null,
       src: null,

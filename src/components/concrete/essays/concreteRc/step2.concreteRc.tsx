@@ -1,10 +1,10 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import useConcreteRcStore from '@/stores/concrete/concreteRc/concreteRc.store';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
@@ -197,7 +197,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
       height: null,
       age: { hours: null, minutes: null },
       tolerance: { hours: null, minutes: null },
-      maximumStrength: null
+      maximumStrength: null,
     });
     setData({ step: 1, key: 'samples', value: newRows });
     setNextDisabled(true);

@@ -52,7 +52,7 @@ interface ConcreteRc_step3Data {
 interface ConcreteRc_results {
   correctionFactors: number[];
   finalResult: number[];
-  tolerances: number[]
+  tolerances: number[];
 }
 
 export type ConcreteRcData = {
@@ -112,7 +112,7 @@ const initialState = {
   results: {
     correctionFactors: null,
     finalResult: null,
-    tolerances: null
+    tolerances: null,
   },
 };
 
