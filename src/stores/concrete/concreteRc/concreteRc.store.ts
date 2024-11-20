@@ -35,6 +35,7 @@ interface ConcreteGeneralData {
 interface ConcreteRc_step2Data {
   samples: {
     id: number;
+    sampleName: string;
     diammeter1: number;
     diammeter2: number;
     height: number;
@@ -84,6 +85,7 @@ const initialState = {
     samples: [
       {
         id: 1,
+        sampleName: null,
         diammeter1: null,
         diammeter2: null,
         height: null,

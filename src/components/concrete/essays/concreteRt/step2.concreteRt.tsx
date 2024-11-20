@@ -12,6 +12,26 @@ const ConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
 
   const columns: GridColDef[] = [
     {
+      field: 'sampleName',
+      headerName: t('concrete.essays.sample-name'),
+      width: 100,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        return (
+          <InputEndAdornment
+          adornment=''
+            type="text"
+            value={data.samples[id - 1].sampleName}
+            onChange={(e) => {
+              const newData = [...data.samples];
+              newData[id - 1].sampleName = e.target.value;
+              setData({ step: 1, key: 'samples', value: newData });
+            }}
+          />
+        );
+      },
+    },
+    {
       field: 'ageHours',
       headerName: t('concrete.essays.hours'),
       width: 100,
@@ -152,6 +172,7 @@ const ConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     const newRows = [...data.samples];
     newRows.push({
       id: data.samples.length + 1,
+      sampleName: null,
       age: { hours: null, minutes: null },
       tolerance: { hours: null, minutes: null },
       appliedCharge: null,
@@ -191,11 +212,12 @@ const ConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
       nextDisabled &&
       !Object.values(data.samples).some(
         (value) =>
-          value.age.hours === null ||
-          value.age.minutes === null ||
-          value.tolerance.hours === null ||
+          value.sampleName === null        ||
+          value.age.hours === null         ||
+          value.age.minutes === null       ||
+          value.tolerance.hours === null   ||
           value.tolerance.minutes === null ||
-          value.appliedCharge === null ||
+          value.appliedCharge === null     ||
           value.supportDistance === null
       )
     )

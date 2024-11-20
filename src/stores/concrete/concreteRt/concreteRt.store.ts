@@ -24,6 +24,7 @@ interface ConcreteGeneralData {
 interface ConcreteRtStep2Data {
   samples: {
     id: number;
+    sampleName: string;
     age: TimeObject;
     tolerance: TimeObject;
     appliedCharge: number;
@@ -75,6 +76,7 @@ const initialState = {
     samples: [
       {
         id: 1,
+        sampleName: null,
         appliedCharge: null,
         supportDistance: null,
         age: {

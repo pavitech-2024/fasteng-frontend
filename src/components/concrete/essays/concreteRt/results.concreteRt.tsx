@@ -18,6 +18,7 @@ const ConcreteRt_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
 
   const rows = step2Data.samples.map((item, i) => ({
     id: item.id,
+    sampleName: step2Data.samples[i].sampleName,
     age: (item.age.hours * 60 + item.age.minutes) / 60,
     tolerance: (item.tolerance.hours * 60 + item.tolerance.minutes) / 60,
     appliedCharge: item.appliedCharge,
@@ -27,6 +28,12 @@ const ConcreteRt_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
   }));
 
   const columns: GridColDef[] = [
+    {
+      field: 'sampleName',
+      headerName: t('concrete.essays.sample-name'),
+      width: 120,
+      valueFormatter: ({ value }) => `${value} N`,
+    },
     {
       field: 'appliedCharge',
       headerName: t('concrete.essays.applied-charge'),

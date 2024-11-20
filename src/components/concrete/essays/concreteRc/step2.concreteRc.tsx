@@ -12,6 +12,24 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
 
   const columns: GridColDef[] = [
     {
+      field: 'sampleName',
+      headerName: t('concrete.essays.sample-name'),
+      width: 120,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        return (
+          <InputEndAdornment
+            type="text"
+            value={data.samples[id - 1].sampleName}
+            onChange={(e) => {
+              const newData = [...data.samples];
+              newData[id - 1].sampleName = e.target.value;
+              setData({ step: 1, key: 'samples', value: newData });
+            } } adornment={''}          />
+        );
+      },
+    },
+    {
       field: 'diammeter1',
       headerName: t('concrete.essays.diammeter-1'),
       width: 120,
@@ -192,6 +210,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     const newRows = [...data.samples];
     newRows.push({
       id: data.samples.length + 1,
+      sampleName: null,
       diammeter1: null,
       diammeter2: null,
       height: null,
@@ -233,13 +252,12 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
       nextDisabled &&
       !Object.values(data.samples).some(
         (value) =>
-          value.diammeter1 === null ||
-          value.diammeter2 === null ||
-          value.height === null ||
-          value.age.hours === null ||
+          value.sampleName === null  ||
+          value.diammeter1 === null  ||
+          value.diammeter2 === null  ||
+          value.height === null      ||
+          value.age.hours === null   ||
           value.age.minutes === null ||
-          value.tolerance.hours === null ||
-          value.tolerance.minutes === null ||
           value.maximumStrength === null
       )
     )

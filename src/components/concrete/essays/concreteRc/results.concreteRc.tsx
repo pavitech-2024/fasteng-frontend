@@ -18,6 +18,7 @@ const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
 
   const rows = data.finalResult.map((item, i) => ({
     id: i,
+    sampleName: step2Data.samples[i].sampleName,
     averageDiammeter: (step2Data.samples[i].diammeter1 + step2Data.samples[i].diammeter2) / 2,
     height: step2Data.samples[i].height,
     age: (step2Data.samples[i].age.hours * 60 + step2Data.samples[i].age.minutes) / 60,
@@ -29,16 +30,16 @@ const ConcreteRc_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) =
 
   const columns: GridColDef[] = [
     {
-      field: 'maximumStrength',
-      headerName: t('concrete.essays.max-strenght'),
+      field: 'sampleName',
+      headerName: t('concrete.essays.sample-name'),
       width: 120,
       valueFormatter: ({ value }) => `${value} N`,
     },
     {
-      field: 'correctionFactor',
-      headerName: t('concrete.essays.correction-factor'),
+      field: 'maximumStrength',
+      headerName: t('concrete.essays.max-strenght'),
       width: 120,
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => `${value} N`,
     },
     {
       field: 'finalResult',
