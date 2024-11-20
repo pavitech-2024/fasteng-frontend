@@ -19,7 +19,7 @@ const ConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         const { id } = row;
         return (
           <InputEndAdornment
-          adornment=''
+            adornment=""
             type="text"
             value={data.samples[id - 1].sampleName}
             onChange={(e) => {
@@ -150,7 +150,7 @@ const ConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           />
         );
       },
-    }
+    },
   ];
 
   const columnGrouping: GridColumnGroupingModel = [
@@ -176,7 +176,7 @@ const ConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
       age: { hours: null, minutes: null },
       tolerance: { hours: null, minutes: null },
       appliedCharge: null,
-      supportDistance: null
+      supportDistance: null,
     });
     setData({ step: 1, key: 'samples', value: newRows });
     setNextDisabled(true);
@@ -212,12 +212,12 @@ const ConcreteRt_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
       nextDisabled &&
       !Object.values(data.samples).some(
         (value) =>
-          value.sampleName === null        ||
-          value.age.hours === null         ||
-          value.age.minutes === null       ||
-          value.tolerance.hours === null   ||
+          value.sampleName === null ||
+          value.age.hours === null ||
+          value.age.minutes === null ||
+          value.tolerance.hours === null ||
           value.tolerance.minutes === null ||
-          value.appliedCharge === null     ||
+          value.appliedCharge === null ||
           value.supportDistance === null
       )
     )

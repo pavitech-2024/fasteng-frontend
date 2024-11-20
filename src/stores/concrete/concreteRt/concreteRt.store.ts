@@ -28,7 +28,7 @@ interface ConcreteRtStep2Data {
     age: TimeObject;
     tolerance: TimeObject;
     appliedCharge: number;
-    supportDistance: number
+    supportDistance: number;
   }[];
 }
 

@@ -25,7 +25,9 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
               const newData = [...data.samples];
               newData[id - 1].sampleName = e.target.value;
               setData({ step: 1, key: 'samples', value: newData });
-            } } adornment={''}          />
+            }}
+            adornment={''}
+          />
         );
       },
     },
@@ -252,11 +254,11 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
       nextDisabled &&
       !Object.values(data.samples).some(
         (value) =>
-          value.sampleName === null  ||
-          value.diammeter1 === null  ||
-          value.diammeter2 === null  ||
-          value.height === null      ||
-          value.age.hours === null   ||
+          value.sampleName === null ||
+          value.diammeter1 === null ||
+          value.diammeter2 === null ||
+          value.height === null ||
+          value.age.hours === null ||
           value.age.minutes === null ||
           value.maximumStrength === null
       )

@@ -33,11 +33,7 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     }
   };
 
-  if (
-    nextDisabled &&
-    !Object.values(data.graphImg).some((key) => key === null)
-  )
-    setNextDisabled(false);
+  if (nextDisabled && !Object.values(data.graphImg).some((key) => key === null)) setNextDisabled(false);
 
   return (
     <Box
@@ -56,8 +52,7 @@ const ConcreteRt_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           gap: '20rem',
           marginBottom: '2rem',
         }}
-      >
-      </Box>
+      ></Box>
 
       <Typography sx={{ textAlign: 'center', marginTop: '2rem' }} variant="h5">
         {t('concrete.essays.graphImg')}
