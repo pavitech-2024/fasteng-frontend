@@ -35,6 +35,7 @@ interface ConcreteGeneralData {
 interface ConcreteRc_step2Data {
   samples: {
     id: number;
+    sampleName: string;
     diammeter1: number;
     diammeter2: number;
     height: number;
@@ -52,7 +53,7 @@ interface ConcreteRc_step3Data {
 interface ConcreteRc_results {
   correctionFactors: number[];
   finalResult: number[];
-  tolerances: number[]
+  tolerances: number[];
 }
 
 export type ConcreteRcData = {
@@ -84,6 +85,7 @@ const initialState = {
     samples: [
       {
         id: 1,
+        sampleName: null,
         diammeter1: null,
         diammeter2: null,
         height: null,
@@ -112,7 +114,7 @@ const initialState = {
   results: {
     correctionFactors: null,
     finalResult: null,
-    tolerances: null
+    tolerances: null,
   },
 };
 
