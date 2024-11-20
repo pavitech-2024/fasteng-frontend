@@ -878,6 +878,7 @@ class Marshall_SERVICE implements IEssayService {
     user?: string,
     isConsult?: boolean
   ): Promise<void> => {
+    console.log("🚀 ~ Marshall_SERVICE ~ data:", data)
     if (!isConsult) {
       try {
         const userData = userId ? userId : user;

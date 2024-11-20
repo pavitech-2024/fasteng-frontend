@@ -28,6 +28,7 @@ const Marshall_Step9 = ({
     confirmationCompressionData: data,
     setData,
   } = useMarshallStore();
+    console.log("🚀 ~ data:", data)
 
   useEffect(() => {
     toast.promise(
@@ -393,11 +394,14 @@ const Marshall_Step9 = ({
 
         <DataGrid
           rows={volumetricParamsRows}
-          columns={volumetricParamsCols.map((col) => ({
-            ...col,
-            flex: 1,
-            headerAlign: 'center',
+          columns={volumetricParamsCols.map((column) => ({
+            ...column,
+            sortable: false,
+            disableColumnMenu: true,
             align: 'center',
+            headerAlign: 'center',
+            minWidth: 200,
+            flex: 1,
           }))}
           density="comfortable"
           disableColumnMenu
@@ -407,11 +411,14 @@ const Marshall_Step9 = ({
 
         <DataGrid
           rows={mineralAggregateVoidsRows}
-          columns={mineralAggregateVoidsCols.map((col) => ({
-            ...col,
-            flex: 1,
-            headerAlign: 'center',
+          columns={mineralAggregateVoidsCols.map((column) => ({
+            ...column,
+            sortable: false,
+            disableColumnMenu: true,
             align: 'center',
+            headerAlign: 'center',
+            minWidth: 200,
+            flex: 1,
           }))}
           columnGroupingModel={mineralAggregateVoidsGroup}
           experimentalFeatures={{ columnGrouping: true }}

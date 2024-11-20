@@ -4,7 +4,6 @@ import autoTable from 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import { Button } from '@mui/material';
 import useAuth from '@/contexts/auth';
-import { RowsObj } from '@/components/asphalt/dosages/marshall/step-9.marshall';
 import { t } from 'i18next';
 import { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
 
@@ -16,7 +15,6 @@ const GenerateDosagePDF = ({ dosages }: IGeneratedPDF) => {
   const { user } = useAuth();
 
   const generatePDF = async () => {
-    console.log('🚀 ~ GenerateDosagePDF ~ dosages:', dosages);
     const doc = new jsPDF('p', 'mm', 'a4');
 
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -77,14 +75,12 @@ const GenerateDosagePDF = ({ dosages }: IGeneratedPDF) => {
     //Quantitativos
 
     doc.setFontSize(12);
-    doc.text(`Quantitativo para 1 metro cúbico de massa asfáltica`, pageWidth / 2, 130, { align: 'center' });
+    doc.text(`Quantitativo para 1 metro cúbico de massa asfáltica`, pageWidth / 2, 140, { align: 'center' });
 
     const quantitative =
       dosages?.confirmationCompressionData?.confirmedVolumetricParameters?.quantitative.map(
         (confirmedPercentsOfDosage) => confirmedPercentsOfDosage.toFixed(2)
       ) || [];
-      console.log("🚀 ~ generatePDF ~ dosages?.confirmationCompressionData?.confirmedVolumetricParameters?.quantitative:", dosages)
-
 
     const segundaTabelaConfig = {
       head: [materials],
@@ -96,6 +92,26 @@ const GenerateDosagePDF = ({ dosages }: IGeneratedPDF) => {
     };
 
     autoTable(doc, segundaTabelaConfig);
+
+    // Parametros volumétricos
+    doc.setFontSize(12);
+    doc.text(`Parâmetros volumétricos e mecanicos da mistura no teor ótimo de ligante asfáltico`, pageWidth / 2, 190, { align: 'center' });
+
+    doc.text(`${t("asphalt.dosages.optimum-binder")}: ${dosages.optimumBinderContentData.optimumBinder.optimumContent.toFixed(2)} %`, 10, 200);
+
+    doc.text(`${t("asphalt.dosages.dmt")}: ${dosages.confirmationCompressionData.confirmedSpecificGravity?.result.toFixed(2)} g/cm³`, 10, 205);
+
+    doc.text(`${t("asphalt.dosages.gmb")}: ${dosages.confirmationCompressionData.confirmedVolumetricParameters?.values?.apparentBulkSpecificGravity.toFixed(2)} g/cm³`, 10, 210);
+
+    doc.text(`${t("asphalt.dosages.vv")}: ${(dosages.confirmationCompressionData.confirmedVolumetricParameters?.values?.aggregateVolumeVoids * 100).toFixed(2)} %`, 10, 215);
+
+    doc.text(`${t("asphalt.dosages.vam")}: ${dosages.confirmationCompressionData.confirmedVolumetricParameters?.values?.voidsFilledAsphalt.toFixed(2)} %`, 10, 220);
+
+    doc.text(`${t("asphalt.dosages.rbv") + " (RBV)"}: ${(dosages.confirmationCompressionData?.confirmedVolumetricParameters?.values?.ratioBitumenVoid * 100).toFixed(2)} %`, 10, 225);
+
+    doc.text(`${t("asphalt.dosages.marshall-stability")}: ${dosages.confirmationCompressionData.confirmedVolumetricParameters?.values?.stability.toFixed(2)} N`, 10, 230);
+
+    doc.text(`${t("asphalt.dosages.fluency")}: ${dosages.confirmationCompressionData.confirmedVolumetricParameters?.values?.fluency.toFixed(2)} MPa`, 10, 235);
 
     // Seções adicionais
     // Exemplo de adicionar gráficos ou outros dados
