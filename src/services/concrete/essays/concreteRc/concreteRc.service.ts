@@ -105,7 +105,11 @@ class CONCRETE_RC_SERVICE implements IEssayService {
         const { diammeter1, diammeter2, height } = sample;
         const diammeterHeightRatio = height / (diammeter1 + diammeter2 / 2);
         if (diammeterHeightRatio >= 2.06) {
-          throw t(`errors.invalid-diammeter-height-ratio`) + ` ${index + 1}.` + ` d/h atual = ${diammeterHeightRatio.toFixed(2)}.`;
+          throw (
+            t(`errors.invalid-diammeter-height-ratio`) +
+            ` ${index + 1}.` +
+            ` d/h atual = ${diammeterHeightRatio.toFixed(2)}.`
+          );
         }
       });
     } catch (error) {
@@ -116,7 +120,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
   // verify inputs from ConcreteRc page (step === 1, page 2)
   calculateStep2Data = async (step2Data: ConcreteRcData['step2Data']): Promise<void> => {
     try {
-      
     } catch (error) {
       throw error;
     }
@@ -127,8 +130,8 @@ class CONCRETE_RC_SERVICE implements IEssayService {
     try {
       const formattedSamples = store.step2Data.samples.map((sample) => ({
         ...sample,
-        age: (sample.age.hours * 60) + sample.age.minutes,
-        tolerance:  (sample.tolerance.hours * 60) + sample.tolerance.minutes
+        age: sample.age.hours * 60 + sample.age.minutes,
+        tolerance: sample.tolerance.hours * 60 + sample.tolerance.minutes,
       }));
 
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {

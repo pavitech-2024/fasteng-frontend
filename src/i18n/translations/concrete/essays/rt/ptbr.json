@@ -19,7 +19,7 @@
   "concrete.calculist": "Calculista",
   "concrete.materials.comments": "Informações do Material",
   "concrete.essays.concreteRt-concrete": "Resistência a Tração",
-  "concrete.essays.concreteRt": "Resistência a Tração",
+  "concrete.essays.concreteRt": "Compressão de corpos de prova cilíndricos",
   "concreteRt.step-2-description": "Preencha todos os campos abaixo.",
   "concreteRt.material_mass": "Massa do material",
   "concreteRt-concrete.choose-series": "Escolha a série",
@@ -32,7 +32,7 @@
 
   "concrete.essays.applied-charge": "Carga Aplicada",
   "concrete.essays.applied-charge-placeholder": "Insira a carga aplicada verticalmente no centro do prisma",
-  "concrete.essays.supports-distance": "Insira a distância entre os suportes",
+  "concrete.essays.supports-distance": "Distância entre os suportes",
   "concrete.essays.supports-distance-placeholder": "Insira a distância entre os suportes",
   "concrete.essays.graphImg": "Imagem do grafico",
   "concrete.essays.compression-charge": "Carga de Compressão",

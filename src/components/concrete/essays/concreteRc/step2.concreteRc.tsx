@@ -1,16 +1,36 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import useConcreteRcStore from '@/stores/concrete/concreteRc/concreteRc.store';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useConcreteRcStore();
 
   const columns: GridColDef[] = [
+    {
+      field: 'sampleName',
+      headerName: t('concrete.essays.sample-name'),
+      width: 120,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        return (
+          <InputEndAdornment
+            type="text"
+            value={data.samples[id - 1].sampleName}
+            onChange={(e) => {
+              const newData = [...data.samples];
+              newData[id - 1].sampleName = e.target.value;
+              setData({ step: 1, key: 'samples', value: newData });
+            }}
+            adornment={''}
+          />
+        );
+      },
+    },
     {
       field: 'diammeter1',
       headerName: t('concrete.essays.diammeter-1'),
@@ -192,12 +212,13 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     const newRows = [...data.samples];
     newRows.push({
       id: data.samples.length + 1,
+      sampleName: null,
       diammeter1: null,
       diammeter2: null,
       height: null,
       age: { hours: null, minutes: null },
       tolerance: { hours: null, minutes: null },
-      maximumStrength: null
+      maximumStrength: null,
     });
     setData({ step: 1, key: 'samples', value: newRows });
     setNextDisabled(true);
@@ -233,13 +254,12 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
       nextDisabled &&
       !Object.values(data.samples).some(
         (value) =>
+          value.sampleName === null ||
           value.diammeter1 === null ||
           value.diammeter2 === null ||
           value.height === null ||
           value.age.hours === null ||
           value.age.minutes === null ||
-          value.tolerance.hours === null ||
-          value.tolerance.minutes === null ||
           value.maximumStrength === null
       )
     )
