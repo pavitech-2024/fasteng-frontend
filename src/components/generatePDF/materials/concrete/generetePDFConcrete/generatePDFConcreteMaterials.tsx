@@ -44,12 +44,6 @@ const GeneratePDFConcreteMaterials = ({
 
   let unitMassResult = null;
 
-  //const dataSandIncreaseData = [];
-
-  //const unitMassResult = Number(unitMassData.result).toFixed(1);
-
-  //chapmanData.results.m_e.toFixed(user_decimal)
-
   const granulometryRows = [];
   const granulometryColumns = [
     t('granulometry-asphalt.sieves'),

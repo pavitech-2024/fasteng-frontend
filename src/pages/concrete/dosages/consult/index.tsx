@@ -1,10 +1,9 @@
-import { AbcpIcon, AbcpLogo, DeleteIcon, NextIcon } from '@/assets';
+import { AbcpLogo, DeleteIcon, NextIcon } from '@/assets';
 import Header from '@/components/organisms/header';
 import useAuth from '@/contexts/auth';
-import { AcpDosageData } from '@/interfaces/concrete/abcp';
 import abcpDosageService from '@/services/concrete/dosages/abcp/abcp-consult.service';
 import { Box, Container, IconButton, Pagination } from '@mui/material';
-import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { t } from 'i18next';
@@ -12,6 +11,7 @@ import useABCPStore from '@/stores/concrete/abcp/abcp.store';
 import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
 import { toast } from 'react-toastify';
 import Loading from '@/components/molecules/loading';
+import GenerateAbcpDosagePDF from '@/components/generatePDF/dosages/concrete/abcp/generatePDFAbcpDosage';
 
 const AbcpDosageConsult = () => {
   const { setData } = useABCPStore();
@@ -23,6 +23,7 @@ const AbcpDosageConsult = () => {
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
   const [dosageArrays, setDosageArrays] = useState([]);
+  console.log("🚀 ~ AbcpDosageConsult ~ dosageArrays:", dosageArrays)
 
   const progressTextMap = {
     1: t('general data'),
@@ -141,7 +142,7 @@ const AbcpDosageConsult = () => {
     },
     {
       field: 'options',
-      headerName: t('abcp.dosage-consult.options'),
+      headerName: t('concrete.dosage.consult-options'),
       renderCell: (params) => (
         <>
           <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)} size="large">

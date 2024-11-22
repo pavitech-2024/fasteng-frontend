@@ -7,9 +7,11 @@ import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import { Box } from '@mui/material';
 import Result_Card from '@/components/atoms/containers/result-card';
 import AbramsCurvGraph from './graph/abramsCurveGrapg';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import abcpDosageService from '@/services/concrete/dosages/abcp/abcp-consult.service';
 import { useRouter } from 'next/router';
+import abcp from '@/pages/concrete/dosages/abcp';
+import GenerateAbcpDosagePDF from '@/components/generatePDF/dosages/concrete/abcp/generatePDFAbcpDosage';
 
 const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   nextDisabled && setNextDisabled(false);
@@ -17,24 +19,30 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
   const { calculateResults } = new ABCP_SERVICE();
   const store = JSON.parse(sessionStorage.getItem('abcp-store'));
   const dosageId = store.state._id;
-  const router = useRouter();
-  const isConsult = router.query.consult ? true : false;
+  const [pdfIsAvailable, setPdfIsAvailable] = useState(false);
+  const [dosage, setDosage] = useState(null);
 
   useEffect(() => {
-    if (isConsult) {
-      const resultData = async () => {
-        try {
-          const foundDosage = await abcpDosageService.getAbcpDosage(dosageId);
-          const calculateDosage = await calculateResults(foundDosage.data);
-          const dosageData = { ...foundDosage.data, results: calculateDosage };
-          setData({ step: 5, value: dosageData });
-        } catch (error) {
-          console.error('Failed to load dosage:', error);
-        }
-      };
-      resultData();
-    }
+    const resultData = async () => {
+      try {
+        const foundDosage = await abcpDosageService.getAbcpDosage(dosageId);
+        setDosage(foundDosage.data);
+
+        const calculateDosage = await calculateResults(foundDosage.data);
+        const dosageData = { ...foundDosage.data, results: calculateDosage };
+        setData({ step: 5, value: dosageData });
+      } catch (error) {
+        console.error('Failed to load dosage:', error);
+      }
+    };
+    resultData();
   }, []);
+
+  useEffect(() => {
+    if (!Object.values(abcp_results).some((value) => value === null)) {
+      setPdfIsAvailable(true);
+    }
+  }, [abcp_results]);
 
   const conditionValue = insertParamsData.condition;
   const tolerance = 0.0001;
@@ -121,6 +129,8 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
   return (
     <>
       <FlexColumnBorder title={t('results')} open={true}>
+        <GenerateAbcpDosagePDF dosages={dosage} />
+
         <Box
           sx={{
             width: '100%',

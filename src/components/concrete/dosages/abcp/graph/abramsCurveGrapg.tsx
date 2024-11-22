@@ -35,8 +35,8 @@ export default function AbramsCurvGraph({ result }) {
   };
 
   const options = {
-    title: `Equação de Referência: ${result.formula}`,
-    subtitle: `A/c: ${result.ac}  /  Fcj: ${result.fcj}`,
+    title: `Equação de Referência: ${result?.formula}`,
+    subtitle: `A/c: ${result?.ac}  /  Fcj: ${result?.fcj}`,
     legend: 'none',
     curveType: 'function',
     pointSize: 7,
@@ -59,7 +59,7 @@ export default function AbramsCurvGraph({ result }) {
       {loading ? (
         <Loading />
       ) : (
-        <div>
+        <div id='curve_chart'>
           <Chart chartType="LineChart" height="500px" data={mountData()} options={options} />
         </div>
       )}
