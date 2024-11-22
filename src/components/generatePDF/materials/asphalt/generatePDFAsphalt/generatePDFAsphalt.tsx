@@ -8,7 +8,7 @@ import { t } from 'i18next';
 import { Button } from '@mui/material';
 import useAuth from '@/contexts/auth';
 
-interface SummaryItem {
+export interface SummaryItem {
   title: string;
   page: number;
 }
