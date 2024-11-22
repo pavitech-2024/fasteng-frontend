@@ -59,9 +59,7 @@ const GenerateAbcpDosagePDF = ({ dosages }: IGeneratedPDF) => {
 
   const addChart = async (chart: any, doc: any, currentY: number) => {
     const canvas = await html2canvas(chart);
-    console.log("🚀 ~ addChart ~ canvas:", canvas)
     const imgData = canvas.toDataURL('image/png');
-    console.log("🚀 ~ addChart ~ imgData:", imgData)
     const imgProps = doc.getImageProperties(imgData);
     const pdfWidth = doc.internal.pageSize.getWidth();
     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
