@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 
-export const addImageProcess = async (src: string) => {
+export const addImageProcess = async (src: string): Promise<HTMLImageElement> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.src = src;

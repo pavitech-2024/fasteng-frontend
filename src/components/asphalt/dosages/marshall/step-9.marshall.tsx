@@ -1,7 +1,9 @@
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import Result_Card from '@/components/atoms/containers/result-card';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
+import GenerateMarshallDosagePDF from '@/components/generatePDF/dosages/asphalt/marshall/generatePDFMarshall';
 import { EssayPageProps } from '@/components/templates/essay';
+import marshallDosageService from '@/services/asphalt/dosages/marshall/marshall.consult.service';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { Box } from '@mui/material';
@@ -28,13 +30,29 @@ const Marshall_Step9 = ({
     confirmationCompressionData: data,
     setData,
   } = useMarshallStore();
-    console.log("🚀 ~ data:", data)
+
+  const [dosage, setDosage] = useState(null);
+  console.log("🚀 ~ dosage:", dosage)
+  const store = JSON.parse(sessionStorage.getItem('asphalt-marshall-store'));
+  const dosageId = store.state._id;
+
+  const [optimumContentRows, setOptimumContentRows] = useState([]);
+  const [optimumContentCols, setOptimumContentCols] = useState([]);
+  const [optimumContentGroupings, setOptimumContentGroupings] = useState<GridColumnGroupingModel>([]);
+
+  const [quantitativeRows, setQuantitativeRows] = useState([]);
+  const [quantitativeCols, setQuantitativeCols] = useState([]);
+  const [quantitativeGroupings, setQuantitativeGroupings] = useState<GridColumnGroupingModel>([]);
 
   useEffect(() => {
     toast.promise(
       async () => {
         try {
           let newData = {};
+
+          const foundDosage = await marshallDosageService.getMarshallDosage(dosageId);
+          setDosage(foundDosage.data.dosage);
+
           const response = await marshall.confirmVolumetricParameters(
             maximumMixtureDensityData,
             optimumBinderContentData,
@@ -52,11 +70,21 @@ const Marshall_Step9 = ({
         }
       },
       {
-        pending: t('loading.data.pending'),
-        success: t('loading.data.success'),
-        error: t('loading.data.error'),
+        pending: t('loading.dosage.pending'),
+        success: t('loading.dosage.success'),
+        error: t('loading.dosage.error'),
       }
     );
+  }, []);
+
+  useEffect(() => {
+    getOptimumContentRows();
+    getOptimunContentCols();
+    getOptimumContentGroupings();
+
+    getQuantitativeCols();
+    getQuantitativeRows();
+    getQuantitativeGroupings();
   }, []);
 
   const getOptimunContentCols = () => {
@@ -81,7 +109,7 @@ const Marshall_Step9 = ({
 
     newCols.unshift(optimumBinderObj);
 
-    return newCols;
+    setOptimumContentCols(newCols);
   };
 
   const getOptimumContentRows = () => {
@@ -97,10 +125,10 @@ const Marshall_Step9 = ({
       };
     });
 
-    return [rowsObj];
+    setOptimumContentRows([rowsObj]);
   };
 
-  const optimumContentGroup = () => {
+  const getOptimumContentGroupings = () => {
     const optimumContentGroupArr: GridColumnGroupingModel = [
       {
         groupId: 'optimumContentGrouping',
@@ -114,7 +142,7 @@ const Marshall_Step9 = ({
       optimumContentGroupArr[0].children.push({ field: `${material._id}` });
     });
 
-    return optimumContentGroupArr;
+    setOptimumContentGroupings(optimumContentGroupArr);
   };
 
   const getQuantitativeCols = () => {
@@ -139,10 +167,10 @@ const Marshall_Step9 = ({
 
     newCols.unshift(binderObj);
 
-    return newCols;
+    setQuantitativeCols(newCols);
   };
 
-  const quantitativeRows = () => {
+  const getQuantitativeRows = () => {
     let rowsObj = {
       id: 0,
       binder: data?.confirmedVolumetricParameters?.quantitative[0].toFixed(2),
@@ -155,10 +183,10 @@ const Marshall_Step9 = ({
       };
     });
 
-    return [rowsObj];
+    setQuantitativeRows([rowsObj]);
   };
 
-  const quantitativeGroup = () => {
+  const getQuantitativeGroupings = () => {
     const quantitativeGroupArr: GridColumnGroupingModel = [
       {
         groupId: 'quantitativeGrouping',
@@ -172,7 +200,7 @@ const Marshall_Step9 = ({
       quantitativeGroupArr[0].children.push({ field: `${material._id}` });
     });
 
-    return quantitativeGroupArr;
+    setQuantitativeGroupings(quantitativeGroupArr);
   };
 
   const volumetricParamsCols: GridColDef[] = [
@@ -269,165 +297,164 @@ const Marshall_Step9 = ({
     },
   ];
 
+  const volumetricMechanicParams = [
+    {
+      label: t('asphalt.dosages.optimum-binder'),
+      value: optimumBinderContentData.optimumBinder.optimumContent.toFixed(2).toString(),
+      unity: '%',
+    },
+    {
+      label: t('asphalt.dosages.dmt'),
+      value: data?.confirmedSpecificGravity?.result.toFixed(2).toString(),
+      unity: 'g/cm³',
+    },
+    {
+      label: t('asphalt.dosages.gmb'),
+      value: data?.confirmedVolumetricParameters?.values?.apparentBulkSpecificGravity.toFixed(2).toString(),
+      unity: 'g/cm³',
+    },
+    {
+      label: t('asphalt.dosages.vv'),
+      value: (data?.confirmedVolumetricParameters?.values?.aggregateVolumeVoids * 100).toFixed(2),
+      unity: '%',
+    },
+    {
+      label: t('asphalt.dosages.vam'),
+      value: data?.confirmedVolumetricParameters?.values?.voidsFilledAsphalt.toFixed(2).toString(),
+      unity: '%',
+    },
+    {
+      label: t('asphalt.dosages.rbv') + ' (RBV)',
+      value: (data?.confirmedVolumetricParameters?.values?.ratioBitumenVoid * 100).toFixed(2),
+      unity: '%',
+    },
+    {
+      label: t('asphalt.dosages.marshall-stability'),
+      value: data?.confirmedVolumetricParameters?.values?.stability.toFixed(2).toString(),
+      unity: 'N',
+    },
+    {
+      label: t('asphalt.dosages.fluency'),
+      value: data?.confirmedVolumetricParameters?.values?.fluency.toFixed(2).toString(),
+      unity: 'mm',
+    },
+    {
+      label: t('asphalt.dosages.indirect-tensile-strength'),
+      value: data?.confirmedVolumetricParameters?.values?.indirectTensileStrength.toFixed(2).toString(),
+      unity: 'MPa',
+    },
+  ];
+
   nextDisabled && setNextDisabled(false);
 
   return (
     <>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '3rem',
-        }}
-      >
-        <DataGrid
-          key={'optimumContent'}
-          columns={getOptimunContentCols()}
-          rows={getOptimumContentRows()}
-          columnGroupingModel={optimumContentGroup()}
-          experimentalFeatures={{ columnGrouping: true }}
-          density="comfortable"
-          disableColumnMenu
-          disableColumnSelector
-          hideFooter
-          sx={{ width: 'fit-content', marginX: 'auto' }}
-        />
-
-        <DataGrid
-          key={'quantitative'}
-          columns={getQuantitativeCols()}
-          rows={quantitativeRows()}
-          columnGroupingModel={quantitativeGroup()}
-          experimentalFeatures={{ columnGrouping: true }}
-          density="comfortable"
-          disableColumnMenu
-          disableColumnSelector
-          hideFooter
-          sx={{ width: 'fit-content', marginX: 'auto' }}
-        />
-
-        <FlexColumnBorder>
-          <ResultSubTitle title={t('asphalt.dosages.binder-volumetric-mechanic-params')} sx={{ margin: '.65rem' }} />
-        </FlexColumnBorder>
+      <FlexColumnBorder title={t('results')} open={true}>
+        <GenerateMarshallDosagePDF dosage={dosage} />
         <Box
           sx={{
             width: '100%',
             display: 'flex',
-            flexWrap: 'wrap',
-            gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
+            flexDirection: 'column',
             gap: '10px',
-            mt: '20px',
+            marginY: '20px',
           }}
         >
-          {optimumBinderContentData.optimumBinder.optimumContent && (
-            <Result_Card
-              label={t('asphalt.dosages.optimum-binder')}
-              value={optimumBinderContentData.optimumBinder.optimumContent.toFixed(2).toString()}
-              unity={'%'}
+          <ResultSubTitle title={t('marshall.general-results')} sx={{ margin: '.65rem' }} />
+
+          {optimumContentCols.length > 0 && optimumContentRows.length > 0 && optimumContentGroupings.length > 0 && (
+            <DataGrid
+              key={'optimumContent'}
+              columns={optimumContentCols.map((col) => ({
+                ...col,
+                flex: 1,
+                headerAlign: 'center',
+                align: 'center',
+              }))}
+              rows={optimumContentRows}
+              columnGroupingModel={optimumContentGroupings}
+              experimentalFeatures={{ columnGrouping: true }}
+              disableColumnMenu
+              disableColumnSelector
+              hideFooter
             />
           )}
 
-          {data?.confirmedSpecificGravity?.type === 'DMT' && (
-            <Result_Card
-              label={t('asphalt.dosages.dmt')}
-              value={data?.confirmedSpecificGravity?.result.toFixed(2).toString()}
-              unity={'g/cm³'}
-            />
-          )}
+          <ResultSubTitle title={t('asphalt.dosages.marshall.asphalt-mass-quantitative')} />
 
-          {data?.confirmedVolumetricParameters?.values?.apparentBulkSpecificGravity && (
-            <Result_Card
-              label={t('asphalt.dosages.gmb')}
-              value={data?.confirmedVolumetricParameters?.values?.apparentBulkSpecificGravity.toFixed(2).toString()}
-              unity={'g/cm³'}
-            />
-          )}
+          <DataGrid
+            columns={quantitativeCols.map((col) => ({
+              ...col,
+              flex: 1,
+              sortable: false,
+              headerAlign: 'center',
+              align: 'center',
+            }))}
+            rows={quantitativeRows}
+            columnGroupingModel={quantitativeGroupings}
+            experimentalFeatures={{ columnGrouping: true }}
+            disableColumnMenu
+            disableColumnSelector
+            hideFooter
+          />
 
-          {data?.confirmedVolumetricParameters?.values?.aggregateVolumeVoids && (
-            <Result_Card
-              label={t('asphalt.dosages.vv')}
-              value={(data?.confirmedVolumetricParameters?.values?.aggregateVolumeVoids * 100).toFixed(2)}
-              unity={'%'}
-            />
-          )}
+          <ResultSubTitle
+            title={t('asphalt.dosages.binder-volumetric-mechanic-params')}
+            sx={{
+              maxWidth: '103%',
+              wordWrap: 'break-word',
+            }}
+          />
 
-          {data?.confirmedVolumetricParameters?.values?.voidsFilledAsphalt && (
-            <Result_Card
-              label={t('asphalt.dosages.vam')}
-              value={data?.confirmedVolumetricParameters?.values?.voidsFilledAsphalt.toFixed(2).toString()}
-              unity={'%'}
-            />
-          )}
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
+              gap: '10px',
+              mt: '20px',
+            }}
+          >
+            {volumetricMechanicParams.map((item) => {
+              if (item.value) {
+                return <Result_Card key={item.label} label={item.label} value={item.value} unity={item.unity} />;
+              }
+            })}
+          </Box>
 
-          {data?.confirmedVolumetricParameters?.values?.ratioBitumenVoid && (
-            <Result_Card
-              label={t('asphalt.dosages.rbv') + ' (RBV)'}
-              value={(data?.confirmedVolumetricParameters?.values?.ratioBitumenVoid * 100).toFixed(2)}
-              unity={'%'}
-            />
-          )}
+          <DataGrid
+            rows={volumetricParamsRows}
+            columns={volumetricParamsCols.map((col) => ({
+              ...col,
+              flex: 1,
+              headerAlign: 'center',
+              align: 'center',
+              sortable: false
+            }))}
+            disableColumnMenu
+            disableColumnSelector
+          
+            hideFooter
+          />
 
-          {data?.confirmedVolumetricParameters?.values?.stability && (
-            <Result_Card
-              label={t('asphalt.dosages.marshall-stability')}
-              value={data?.confirmedVolumetricParameters?.values?.stability.toFixed(2).toString()}
-              unity={'N'}
-            />
-          )}
-
-          {data?.confirmedVolumetricParameters?.values?.fluency && (
-            <Result_Card
-              label={t('asphalt.dosages.fluency')}
-              value={data?.confirmedVolumetricParameters?.values?.fluency.toFixed(2).toString()}
-              unity={'mm'}
-            />
-          )}
-
-          {data?.confirmedVolumetricParameters?.values?.indirectTensileStrength && (
-            <Result_Card
-              label={t('asphalt.dosages.indirect-tensile-strength')}
-              value={data?.confirmedVolumetricParameters?.values?.indirectTensileStrength.toFixed(2).toString()}
-              unity={'MPa'}
-            />
-          )}
+          <DataGrid
+            rows={mineralAggregateVoidsRows}
+            columns={mineralAggregateVoidsCols.map((column) => ({
+              ...column,
+              sortable: false,
+              align: 'center',
+              headerAlign: 'center',
+              flex: 1,
+            }))}
+            columnGroupingModel={mineralAggregateVoidsGroup}
+            experimentalFeatures={{ columnGrouping: true }}
+            disableColumnMenu
+            disableColumnSelector
+            hideFooter
+          />
         </Box>
-
-        <DataGrid
-          rows={volumetricParamsRows}
-          columns={volumetricParamsCols.map((column) => ({
-            ...column,
-            sortable: false,
-            disableColumnMenu: true,
-            align: 'center',
-            headerAlign: 'center',
-            minWidth: 200,
-            flex: 1,
-          }))}
-          density="comfortable"
-          disableColumnMenu
-          disableColumnSelector
-          hideFooter
-        />
-
-        <DataGrid
-          rows={mineralAggregateVoidsRows}
-          columns={mineralAggregateVoidsCols.map((column) => ({
-            ...column,
-            sortable: false,
-            disableColumnMenu: true,
-            align: 'center',
-            headerAlign: 'center',
-            minWidth: 200,
-            flex: 1,
-          }))}
-          columnGroupingModel={mineralAggregateVoidsGroup}
-          experimentalFeatures={{ columnGrouping: true }}
-          density="comfortable"
-          disableColumnMenu
-          disableColumnSelector
-          hideFooter
-        />
-      </Box>
+      </FlexColumnBorder>
     </>
   );
 };

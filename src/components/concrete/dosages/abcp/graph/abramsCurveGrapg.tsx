@@ -2,7 +2,15 @@ import { useEffect, useState } from 'react';
 import { Chart } from 'react-google-charts';
 import Loading from '@/components/molecules/loading';
 
-export default function AbramsCurvGraph({ result }) {
+interface AbramsCurveGraphProps {
+  Xvalues: number[];
+  Yvalues: number[];
+  ac: number;
+  formula: string;
+  fcj: number;
+}
+
+export default function AbramsCurvGraph({ Xvalues, Yvalues, ac, formula, fcj }: AbramsCurveGraphProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -10,7 +18,6 @@ export default function AbramsCurvGraph({ result }) {
   }, []);
 
   const mountData = () => {
-    const { Xvalues, Yvalues, ac } = result;
     const data: (number | string | { type: string; role: string })[][] = [
       ['Relação A/c', 'Fcj', { type: 'string', role: 'style' }, { type: 'string', role: 'tooltip' }],
     ];
@@ -35,8 +42,8 @@ export default function AbramsCurvGraph({ result }) {
   };
 
   const options = {
-    title: `Equação de Referência: ${result?.formula}`,
-    subtitle: `A/c: ${result?.ac}  /  Fcj: ${result?.fcj}`,
+    title: `Equação de Referência: ${formula}`,
+    subtitle: `A/c: ${ac}  /  Fcj: ${fcj}`,
     legend: 'none',
     curveType: 'function',
     pointSize: 7,
@@ -59,7 +66,7 @@ export default function AbramsCurvGraph({ result }) {
       {loading ? (
         <Loading />
       ) : (
-        <div id='curve_chart'>
+        <div id='chart-div-abramsCurveGraph'>
           <Chart chartType="LineChart" height="500px" data={mountData()} options={options} />
         </div>
       )}

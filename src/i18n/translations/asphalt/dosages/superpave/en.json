@@ -1,6 +1,9 @@
 {
   "superpave.step-2-description": "Select the aggregates and asphalt binder that will be used in the dosage",
   "superpave.step-3-description": "Enter the percentages of each aggregate in the granulometric composition of the mixture",
+  "superpave.step-11-description": "These are the results of yourSuperpave dosage. Don't forget to save the experiment so you can access it later.",
+
+  "superpave.step-11": "Results",
   "asphalt.essays.superpave": "Superpave Dosage",
   "topbar.superpave": "Superpave",
 
@@ -49,9 +52,11 @@
   "superpave.dosage-consult.start": "Start",
   "superpave.dosage-consult.finish": "Finish",
   "superpave.dosage-consult.options": "Options",
+  "superpave.dosage.asphalt-binder": "Asphalt binder (kg)",
 
   "asphalt.dosages.superpave.real-specific-mass": "Real specific mass",
   "asphalt.dosages.superpave.apparent-specific-mass": "Apparent specific mass",
+  "asphalt.dosages.superpave.specific-mass": "Specific mass",
   "asphalt.dosages.superpave.absorption": "Absorption",
   "asphalt.dosages.superpave.granulometric-composition": "Granulometric composition",
   "asphalt.dosages.superpave.combined-gsb": "Combined gsb (g/cm³)",
@@ -101,10 +106,18 @@
   "asphalt.dosages.estimated-binder-percentage": "Estimated binder percentage (%)",
   "asphalt.dosages.mixture": "Mixture",
 
+  "asphalt.dosages.superpave.void-volume": "Void volume",
+  "asphalt.dosages.vam": "Vazios do agregado mineral (VAM)",
+  "asphalt.dosages.vam": "Mineral aggregate voids (VAM)",
+  "asphalt.dosages.absorbed-water": "Absorbed water",
+
   "asphalt.dosages.superpave.gmm-empty": "Enter the Gmm value of the mixture",
   "asphalt.dosages.superpave.rice-test-empty-values": "Enter the values ​​to perform the Rice Test",
   "asphalt.dosages.superpave.water-temperature-empty": "Select water temperature correction factor",
   "asphalt.dosages.superpave.invalid-granulometry-values": "The total of the percentage values ​​must be equal to 100",
 
-  "asphalt.dosages.superpave.estimated-percentages-binder-vv": "Percentage of materials from the estimated binder content for Vv"
+  "asphalt.dosages.superpave.estimated-percentages-binder-vv": "Percentage of materials from the estimated binder content for Vv",
+  "asphalt.dosages.superpave.asphalt-mass-quantitative": "Quantitative for 1 cubic meter of asphalt mass",
+
+  "asphalt.dosages.superpave.mechanic-volumetric-params": "Volumetric and mechanical parameters of the mixture at the optimal binder content"
 }

@@ -1,19 +1,19 @@
 import jsPDF from 'jspdf';
 import React from 'react';
 import autoTable from 'jspdf-autotable';
-import { Button } from '@mui/material';
+import { Box, Button, Tooltip } from '@mui/material';
 import useAuth from '@/contexts/auth';
 import { t } from 'i18next';
 import { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
 import logo from '@/assets/fasteng/LogoBlack.png';
 import { SummaryItem } from '../../../materials/asphalt/generatePDFAsphalt/generatePDFAsphalt';
-import { addCapa, addCenteredText, addImageProcess,calculatePageNumber } from '../../../commom';
+import { addCapa, addCenteredText, addImageProcess,calculatePageNumber } from '../../../common';
 
 interface IGeneratedPDF {
-  dosages: MarshallData;
+  dosage: MarshallData;
 }
 
-const GenerateMarshallDosagePDF = ({ dosages }: IGeneratedPDF) => {
+const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
   const { user } = useAuth();
 
   const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: SummaryItem[]) => {
@@ -53,23 +53,21 @@ const GenerateMarshallDosagePDF = ({ dosages }: IGeneratedPDF) => {
     calculatePageNumber(doc);
   };
 
-  const generatePDF = async () => {
-    const doc = new jsPDF('p', 'mm', 'a4');
-
-    const image = (await addImageProcess(logo.src)) as HTMLImageElement;
-
-    addCapa(doc, image, dosages.generalData.name);
-    doc.addPage();
-
+  const addHeader = (doc: jsPDF, image: HTMLImageElement) => {
     doc.addImage(image, 'png', 5, 5, 50, 8);
     doc.addImage(image, 'png', 155, 5, 50, 8);
+  };
 
-    let currentY = 55;
-    const summaryItems: SummaryItem[] = [];
+  const generatePDF = async () => {
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const image = (await addImageProcess(logo.src)) as HTMLImageElement;
 
-    const pageWidth = doc.internal.pageSize.getWidth();
+    addCapa(doc, image, dosage.generalData.name);
+    doc.addPage();
 
-    const sections = [
+    addHeader(doc, image);
+
+    const summaryItems: SummaryItem[] = [
       {
         title: t('asphalt.dosages.marshall.materials-final-proportions'),
         page: 3,
@@ -88,11 +86,6 @@ const GenerateMarshallDosagePDF = ({ dosages }: IGeneratedPDF) => {
       },
     ];
 
-    for (const section of sections) {
-      const pageIndex = section.page;
-      summaryItems.push({ title: section.title, page: pageIndex });
-    }
-
     calculatePageNumber(doc);
 
     doc.setPage(2);
@@ -101,7 +94,7 @@ const GenerateMarshallDosagePDF = ({ dosages }: IGeneratedPDF) => {
     doc.addPage();
 
     doc.setFontSize(12);
-    doc.text(`Relatório de Dosagem - ${dosages.generalData.name}`, pageWidth / 2, 30, { align: 'center' });
+    doc.text(`Relatório de Dosagem - ${dosage.generalData.name}`, doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
 
     // Adicionar informações do usuário
     doc.setFontSize(10);
@@ -114,19 +107,19 @@ const GenerateMarshallDosagePDF = ({ dosages }: IGeneratedPDF) => {
     doc.text('Resumo das Dosagens:', 10, 60);
 
     // Exemplo de tabela com autoTable
-    const materials = dosages?.materialSelectionData?.aggregates?.map((material) => material.name) || [];
+    const materials = dosage?.materialSelectionData?.aggregates?.map((material) => material.name) || [];
 
     const optimumBinder =
-      dosages?.optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage?.map((confirmedPercentsOfDosage) =>
+      dosage?.optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage?.map((confirmedPercentsOfDosage) =>
         confirmedPercentsOfDosage.toFixed(2)
       ) || [];
 
-    materials.push(t('asphalt.dosages.optimum-binder'));
+    materials.push(t('asphalt.dosage.optimum-binder'));
 
-    optimumBinder.push(dosages.optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2));
+    optimumBinder.push(dosage.optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2));
 
     doc.setFontSize(12);
-    doc.text(`Proporção final dos materiais`, pageWidth / 2, 90, { align: 'center' });
+    doc.text(t('asphalt.dosages.marshall.materials-final-proportions'), doc.internal.pageSize.getWidth() / 2, 90, { align: 'center' });
 
     autoTable(doc, {
       head: [materials],
@@ -140,10 +133,10 @@ const GenerateMarshallDosagePDF = ({ dosages }: IGeneratedPDF) => {
     //Quantitativos
 
     doc.setFontSize(12);
-    doc.text(`Quantitativo para 1 metro cúbico de massa asfáltica`, pageWidth / 2, 140, { align: 'center' });
+    doc.text(t('asphalt.dosages.marshall.asphalt-mass-quantitative'), doc.internal.pageSize.getWidth() / 2, 140, { align: 'center' });
 
     const quantitative =
-      dosages?.confirmationCompressionData?.confirmedVolumetricParameters?.quantitative.map(
+      dosage?.confirmationCompressionData?.confirmedVolumetricParameters?.quantitative.map(
         (confirmedPercentsOfDosage) => confirmedPercentsOfDosage.toFixed(2)
       ) || [];
 
@@ -160,12 +153,12 @@ const GenerateMarshallDosagePDF = ({ dosages }: IGeneratedPDF) => {
 
     // Parametros volumétricos
     doc.setFontSize(12);
-    doc.text(`Parâmetros volumétricos e mecanicos da mistura no teor ótimo de ligante asfáltico`, pageWidth / 2, 190, {
+    doc.text(t('asphalt.dosages.binder-volumetric-mechanic-params'), doc.internal.pageSize.getWidth() / 2, 190, {
       align: 'center',
     });
 
     doc.text(
-      `${t('asphalt.dosages.optimum-binder')}: ${dosages.optimumBinderContentData.optimumBinder.optimumContent.toFixed(
+      `${t('asphalt.dosage.optimum-binder')}: ${dosage.optimumBinderContentData.optimumBinder.optimumContent.toFixed(
         2
       )} %`,
       10,
@@ -173,7 +166,7 @@ const GenerateMarshallDosagePDF = ({ dosages }: IGeneratedPDF) => {
     );
 
     doc.text(
-      `${t('asphalt.dosages.dmt')}: ${dosages.confirmationCompressionData.confirmedSpecificGravity?.result.toFixed(
+      `${t('asphalt.dosage.dmt')}: ${dosage.confirmationCompressionData.confirmedSpecificGravity?.result.toFixed(
         2
       )} g/cm³`,
       10,
@@ -182,8 +175,8 @@ const GenerateMarshallDosagePDF = ({ dosages }: IGeneratedPDF) => {
 
     doc.text(
       `${t(
-        'asphalt.dosages.gmb'
-      )}: ${dosages.confirmationCompressionData.confirmedVolumetricParameters?.values?.apparentBulkSpecificGravity.toFixed(
+        'asphalt.dosage.gmb'
+      )}: ${dosage.confirmationCompressionData.confirmedVolumetricParameters?.values?.apparentBulkSpecificGravity.toFixed(
         2
       )} g/cm³`,
       10,
@@ -191,8 +184,8 @@ const GenerateMarshallDosagePDF = ({ dosages }: IGeneratedPDF) => {
     );
 
     doc.text(
-      `${t('asphalt.dosages.vv')}: ${(
-        dosages.confirmationCompressionData.confirmedVolumetricParameters?.values?.aggregateVolumeVoids * 100
+      `${t('asphalt.dosage.vv')}: ${(
+        dosage.confirmationCompressionData.confirmedVolumetricParameters?.values?.aggregateVolumeVoids * 100
       ).toFixed(2)} %`,
       10,
       215
@@ -200,8 +193,8 @@ const GenerateMarshallDosagePDF = ({ dosages }: IGeneratedPDF) => {
 
     doc.text(
       `${t(
-        'asphalt.dosages.vam'
-      )}: ${dosages.confirmationCompressionData.confirmedVolumetricParameters?.values?.voidsFilledAsphalt.toFixed(
+        'asphalt.dosage.vam'
+      )}: ${dosage.confirmationCompressionData.confirmedVolumetricParameters?.values?.voidsFilledAsphalt.toFixed(
         2
       )} %`,
       10,
@@ -209,8 +202,8 @@ const GenerateMarshallDosagePDF = ({ dosages }: IGeneratedPDF) => {
     );
 
     doc.text(
-      `${t('asphalt.dosages.rbv') + ' (RBV)'}: ${(
-        dosages.confirmationCompressionData?.confirmedVolumetricParameters?.values?.ratioBitumenVoid * 100
+      `${t('asphalt.dosage.rbv') + ' (RBV)'}: ${(
+        dosage.confirmationCompressionData?.confirmedVolumetricParameters?.values?.ratioBitumenVoid * 100
       ).toFixed(2)} %`,
       10,
       225
@@ -218,16 +211,16 @@ const GenerateMarshallDosagePDF = ({ dosages }: IGeneratedPDF) => {
 
     doc.text(
       `${t(
-        'asphalt.dosages.marshall-stability'
-      )}: ${dosages.confirmationCompressionData.confirmedVolumetricParameters?.values?.stability.toFixed(2)} N`,
+        'asphalt.dosage.marshall-stability'
+      )}: ${dosage.confirmationCompressionData.confirmedVolumetricParameters?.values?.stability.toFixed(2)} N`,
       10,
       230
     );
 
     doc.text(
       `${t(
-        'asphalt.dosages.fluency'
-      )}: ${dosages.confirmationCompressionData.confirmedVolumetricParameters?.values?.fluency.toFixed(2)} MPa`,
+        'asphalt.dosage.fluency'
+      )}: ${dosage.confirmationCompressionData.confirmedVolumetricParameters?.values?.fluency.toFixed(2)} MPa`,
       10,
       235
     );
@@ -242,17 +235,17 @@ const GenerateMarshallDosagePDF = ({ dosages }: IGeneratedPDF) => {
     doc.addPage();
 
     const headers = [
-      t('asphalt.dosages.marshall.parameter'),
-      t('asphalt.dosages.marshall.unity'),
-      t('asphalt.dosages.marshall.bearing-layer'),
-      t('asphalt.dosages.marshall.bonding-layer'),
+      t('asphalt.dosage.marshall.parameter'),
+      t('asphalt.dosage.marshall.unity'),
+      t('asphalt.dosage.marshall.bearing-layer'),
+      t('asphalt.dosage.marshall.bonding-layer'),
     ];
 
     const volumetricParamsRows = [
-      [t('asphalt.dosages.stability'), 'Kgf', '>=500', '>=500'],
-      [t('asphalt.dosages.rbv'), '%', '75 - 82', '65 - 72'],
-      [t('asphalt.dosages.mixture-voids'), '%', '3 - 5', '4 - 6'],
-      [`${t('asphalt.dosages.indirect-tensile-strength')}` + ` (25 °C)`, 'MPa', '>= 0,65', '>= 0,65'],
+      [t('asphalt.dosage.stability'), 'Kgf', '>=500', '>=500'],
+      [t('asphalt.dosage.rbv'), '%', '75 - 82', '65 - 72'],
+      [t('asphalt.dosage.mixture-voids'), '%', '3 - 5', '4 - 6'],
+      [`${t('asphalt.dosage.indirect-tensile-strength')}` + ` (25 °C)`, 'MPa', '>= 0,65', '>= 0,65'],
     ];
 
     const volumetricParamsTable = {
@@ -265,14 +258,14 @@ const GenerateMarshallDosagePDF = ({ dosages }: IGeneratedPDF) => {
     };
 
     doc.setFontSize(12);
-    doc.text(`Quantitativo para 1 metro cúbico de massa asfáltica`, pageWidth / 2, 10, { align: 'center' });
+    doc.text(`Quantitativo para 1 metro cúbico de massa asfáltica`, doc.internal.pageSize.getWidth() / 2, 10, { align: 'center' });
 
     autoTable(doc, volumetricParamsTable);
 
     // Vazios do agregado mineral
 
     doc.setFontSize(12);
-    doc.text(t('asphalt.dosages.mineral-aggregate-voids'), pageWidth / 2, 80, { align: 'center' });
+    doc.text(t('asphalt.dosages.vam'), doc.internal.pageSize.getWidth() / 2, 80, { align: 'center' });
 
     const mineralAggregateVoidsHeaders = ['TMN', 'Vam (%'];
 
@@ -297,23 +290,20 @@ const GenerateMarshallDosagePDF = ({ dosages }: IGeneratedPDF) => {
 
     doc.setPage(4);
 
-    // Seções adicionais
-    // Exemplo de adicionar gráficos ou outros dados
-    // const chartElement = document.getElementById('chart-div');
-    // if (chartElement) {
-    //   const chartCanvas = await html2canvas(chartElement);
-    //   const chartImage = chartCanvas.toDataURL('image/png');
-    //   // doc.addImage(chartImage, 'PNG', 10, doc?.lastAutoTable.finalY + 10, 180, 90);
-    // }
-
     // Salvar o PDF
-    doc.save(`Relatorio_Dosagem_${dosages?.generalData.name}.pdf`);
+    doc.save(`Relatorio_Dosagem_${dosage?.generalData.name}.pdf`);
   };
 
   return (
-    <Button onClick={generatePDF} variant="contained" color="primary">
-      Gerar PDF
-    </Button>
+    <>
+      <Tooltip title={t('asphalt.dosage.superpave.tooltips.disabled-pdf-generator')} placement="top">
+        <Box onClick={dosage?.confirmationCompressionData && generatePDF} sx={{ width: 'fit-content' }}>
+          <Button variant="contained" color="primary" disabled={!dosage?.confirmationCompressionData}>
+            Gerar PDF
+          </Button>
+        </Box>
+      </Tooltip>
+    </>
   );
 };
 

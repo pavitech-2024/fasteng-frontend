@@ -6,7 +6,7 @@ import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import superpaveDosageService from '@/services/asphalt/dosages/superpave/superpave.consult.service';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
-import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
+import useSuperpaveStore, { SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
 import { Box } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
@@ -34,48 +34,53 @@ const Superpave_Step11 = ({
   const [finalProportionsCols, setFinalProportionsCols] = useState([]);
   const [quantitativeRows, setQuantitativeRows] = useState([]);
   const [quantitativeCols, setQuantitativeCols] = useState([]);
-  const [dosage, setDosage] = useState(null);
-  console.log("🚀 ~ dosage:", dosage)
-  const store = JSON.parse(sessionStorage.getItem('asphalt-superpave-store'));
-  const dosageId = store?.state._id;
+  const [dosage, setDosage] = useState<SuperpaveData>(null);
+  const store = JSON.parse(sessionStorage.getItem('abcp-store'));
+  const dosageId = store.state._id;
 
   useEffect(() => {
-    const fetchDosage = async () => {
-      try {
-        const response = await superpave.calculateDosageEquation(
-          granulometryCompositionData,
-          initialBinderData,
-          firstCurvePercentagesData,
-          secondCompressionPercentagesData,
-          confirmationCompressionData
-        );
-
-        const foundDosage = await superpaveDosageService.getSuperpaveDosage(dosageId);
-
-        setDosage(foundDosage.data.dosage);
-        const newData = { ...data, ...response };
-
-        setData({
-          step: 10,
-          value: newData,
-        });
-      } catch (error) {
-        throw error;
-      }
-    };
-
     toast.promise(
-      fetchDosage(),
+      async () => {
+        try {
+          const response = await superpave.calculateDosageEquation(
+            granulometryCompositionData,
+            initialBinderData,
+            firstCurvePercentagesData,
+            secondCompressionPercentagesData,
+            confirmationCompressionData
+          );
+
+          const foundDosage = await superpaveDosageService.getSuperpaveDosage(dosageId);
+
+          setDosage(foundDosage.data);
+          const newData = { ...data, ...response };
+
+          setData({
+            step: 10,
+            value: newData,
+          });
+        } catch (error) {
+          throw error;
+        }
+      },
       {
-        pending: t('loading.dosages.pending'),
-        success: t('loading.dosages.success'),
-        error: t('loading.dosages.error'),
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
       }
     );
   }, []);
 
   useEffect(() => {
     if (data?.ponderatedPercentsOfDosage?.length > 0) {
+      // Resetando as linhas e colunas iniciais
+      setFinalProportionsRows([
+        {
+          id: 0,
+          optimumBinder: '---',
+        },
+      ]);
+
       const initialCols = [
         {
           field: 'optimumBinder',
@@ -85,19 +90,17 @@ const Superpave_Step11 = ({
         },
       ];
 
-      const prevRowsData = {
+      let prevRowsData = {
         id: 0,
         optimumBinder: secondCompressionPercentagesData.optimumContent
           ? secondCompressionPercentagesData.optimumContent
           : '---',
       };
-
       const newColsData: GridColDef[] = [...initialCols];
 
-      data.ponderatedPercentsOfDosage.forEach((materialPercent, index) => {
-        const materialName = materialSelectionData.aggregates[index].name;
-
-        prevRowsData[materialName] = materialPercent;
+      for (let i = 0; i < data?.ponderatedPercentsOfDosage?.length; i++) {
+        const materialName = materialSelectionData.aggregates[i].name;
+        prevRowsData = { ...prevRowsData, [materialName]: data.ponderatedPercentsOfDosage[i] };
 
         const newFinalProportionsCols: GridColDef = {
           field: materialName,
@@ -107,7 +110,7 @@ const Superpave_Step11 = ({
         };
 
         newColsData.push(newFinalProportionsCols);
-      });
+      }
 
       setFinalProportionsRows([prevRowsData]);
       setFinalProportionsCols(newColsData);
@@ -116,7 +119,15 @@ const Superpave_Step11 = ({
 
   useEffect(() => {
     if (data?.quantitative?.length > 0) {
-      const initialCols: GridColDef[] = [
+      // Resetando as linhas e colunas iniciais
+      setQuantitativeRows([
+        {
+          id: 0,
+          asphaltBinder: '---',
+        },
+      ]);
+
+      const initialCols = [
         {
           field: 'asphaltBinder',
           headerName: t('superpave.dosage.asphalt-binder'),
@@ -125,33 +136,29 @@ const Superpave_Step11 = ({
         },
       ];
 
-      const newRowsData = data.quantitative.reduce(
-        (prevRowsData, materialPercent, index) => {
-          const materialName = materialSelectionData.aggregates[index]?.name;
+      let prevRowsData = {
+        id: 0,
+        asphaltBinder: typeof data.quantitative[0] === 'number' ? data.quantitative[0] : '---',
+      };
 
-          return {
-            ...prevRowsData,
-            [materialName]: materialPercent.toFixed(2),
-          };
-        },
-        { id: 0, asphaltBinder: typeof data.quantitative[0] === 'number' ? data.quantitative[0] : '---' }
-      );
+      const newColsData: GridColDef[] = [...initialCols];
 
-      const newColsData = materialSelectionData.aggregates.reduce(
-        (prevColumns, material, index) => {
-          const newQuantitativeCols: GridColDef = {
-            field: material.name,
-            headerName: `${material.name} (m³)`,
-            valueFormatter: ({ value }) => `${value}`,
-            width: 180,
-          };
+      for (let i = 1; i < data?.quantitative?.length; i++) {
+        const materialName = materialSelectionData.aggregates[i - 1]?.name;
 
-          return [...prevColumns, newQuantitativeCols];
-        },
-        [...initialCols]
-      );
+        prevRowsData = { ...prevRowsData, [materialName]: data.quantitative[i].toFixed(2) };
 
-      setQuantitativeRows([newRowsData]);
+        const newQuantitativeCols: GridColDef = {
+          field: materialName,
+          headerName: `${materialName} (m³)`,
+          valueFormatter: ({ value }) => `${value}`,
+          width: 180,
+        };
+
+        newColsData.push(newQuantitativeCols);
+      }
+
+      setQuantitativeRows([prevRowsData]);
       setQuantitativeCols(newColsData);
 
       setLoading(false);
@@ -199,7 +206,9 @@ const Superpave_Step11 = ({
         <Loading />
       ) : (
         <FlexColumnBorder open={true} title={t('superpave.step-11')}>
+          
           <GenerateSuperpaveDosagePDF dosage={dosage} />
+
           <Box
             sx={{
               width: '100%',

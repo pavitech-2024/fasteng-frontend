@@ -11,7 +11,6 @@ import useABCPStore from '@/stores/concrete/abcp/abcp.store';
 import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
 import { toast } from 'react-toastify';
 import Loading from '@/components/molecules/loading';
-import GenerateAbcpDosagePDF from '@/components/generatePDF/dosages/concrete/abcp/generatePDFAbcpDosage';
 
 const AbcpDosageConsult = () => {
   const { setData } = useABCPStore();
@@ -23,7 +22,6 @@ const AbcpDosageConsult = () => {
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
   const [dosageArrays, setDosageArrays] = useState([]);
-  console.log("🚀 ~ AbcpDosageConsult ~ dosageArrays:", dosageArrays)
 
   const progressTextMap = {
     1: t('general data'),
@@ -110,7 +108,8 @@ const AbcpDosageConsult = () => {
     const dosage = dosages[0].find((dosage) => {
       return dosage._id === id;
     });
-    const step = dosage?.generalData.step;
+
+    const step = dosage?.generalData.step - 1;
     if (dosage) {
       setData({
         step: 5,
