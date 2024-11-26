@@ -74,7 +74,7 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
     currentY += 10;
 
     return currentY;
-  }
+  };
 
   const generatePDF = async () => {
     const doc = new jsPDF('p', 'mm', 'a4');
