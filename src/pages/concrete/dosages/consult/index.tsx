@@ -49,7 +49,7 @@ const AbcpDosageConsult = () => {
 
             const rows = dosages[0]?.map((row) => ({
               name: row.generalData?.name,
-              progress: `(${row.generalData?.step + 1}/5) - ${progressTextMap[row.generalData?.step + 1]}`,
+              progress: `(${row.generalData?.step}/5) - ${progressTextMap[row.generalData?.step]}`,
               start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
               finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
               id: row._id,
