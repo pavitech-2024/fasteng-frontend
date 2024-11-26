@@ -7,6 +7,8 @@
   "marshall.step-5-description": "Insira os dados de densidade máxima real ou teórica da mistura e o fator de correção para a temperatura da água.",
   "marshall.step-9-description": "Esses são os resultados da sua dosagem Marshall. Lembre-se de salvar o projeto para garantir o acesso a ele no futuro.",
 
+  "marshall.general-results": "Resultados Gerais",
+
   "marshall.dosages.marshall.general-data": "Dados Gerais",
   "asphalt.dosages.marshall.material_selection": "Seleção de Materiais",
   "asphalt.dosages.marshall.granulometry_composition": "Composição Granulométrica",
@@ -93,5 +95,9 @@
   "asphalt.dosages.marshall.binder-percentage": "Porcentagem de ligante (%)",
 
   "asphalt.dosages.enable": "Liberar",
-  "asphalt.dosages.disable": "Não usar esse teor"
+  "asphalt.dosages.disable": "Não usar esse teor",
+
+  "loading.dosage.pending": "Carregando dados da dosagem...",
+  "loading.dosage.success": "Dados da dosagem carregados!",
+  "loading.dosage.error": "Erro ao carregar dados da dosagem!"
 }

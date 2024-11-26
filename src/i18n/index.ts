@@ -105,6 +105,9 @@ import iggENG from './translations/asphalt/essays/igg/en.json';
 // fwd
 import fwdPTBR from './translations/asphalt/essays/fwd/ptbr.json';
 import fwdENG from './translations/asphalt/essays/fwd/en.json';
+// superpave tooltips
+import superpaveTooltipsPTBR from './translations/asphalt/dosages/tooltips/superpave/ptbr.json';
+import superpaveTooltipsENG from './translations/asphalt/dosages/tooltips/superpave/en.json';
 
 /**@soils */
 // samples
@@ -219,6 +222,8 @@ i18n.use(initReactI18next).init({
         ...iggPTBR,
         ...fwdPTBR,
         ...viscosityRotationalPTBR,
+        ...superpaveTooltipsPTBR,
+        ...superpaveTooltipsENG,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
