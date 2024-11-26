@@ -65,6 +65,17 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
     doc.addImage(image, 'png', 155, 5, 50, 8);
   };
 
+  const handleAddSubtitle = (text: string, doc: jsPDF, dosage: ABCPData, currentY: number) => {
+    doc.setFontSize(12);
+    doc.text(`${text}`, doc.internal.pageSize.getWidth() / 2, currentY, {
+      align: 'center',
+    });
+
+    currentY += 10;
+
+    return currentY;
+  }
+
   const generatePDF = async () => {
     const doc = new jsPDF('p', 'mm', 'a4');
     let currentY = 55;
@@ -92,10 +103,9 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     doc.addPage();
 
-    doc.setFontSize(12);
-    doc.text(`Relatório de Dosagem - ${dosage.generalData.name}`, doc.internal.pageSize.getWidth() / 2, 30, {
-      align: 'center',
-    });
+    currentY = 30;
+
+    currentY = handleAddSubtitle(`Relatório de Dosagem - ${dosage.generalData.name}`, doc, dosage, currentY);
 
     doc.setFontSize(10);
     doc.text(`Gerado por: ${user.name}`, 10, 40);
@@ -104,8 +114,9 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     addHeader(doc, image);
 
-    doc.setFontSize(12);
-    doc.text(`Resultados gerais`, doc.internal.pageSize.getWidth() / 2, 60, { align: 'center' });
+    currentY = 55;
+
+    currentY = handleAddSubtitle('Resultados gerais', doc, dosage, currentY);
 
     const conditionValue = dosage.insertParamsData.condition;
     const tolerance = 0.0001;
@@ -133,49 +144,29 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
       { label: t('abcp.results.fine-aggregate-consume'), value: dosage.results?.cc, measureUnity: 'kg/m³' },
     ];
 
-    currentY = 75;
-
     generalResultsValues.forEach((resultValue, index) => {
       doc.text(`${resultValue.label}: ${resultValue.value} ${resultValue.measureUnity}`, 10, currentY);
-      currentY += index + 1 === generalResultsValues.length ? 20 : 5;
+      currentY += index + 1 === generalResultsValues.length ? 10 : 5;
     });
 
-    doc.setFontSize(12);
-    doc.text(`Resultados`, doc.internal.pageSize.getWidth() / 2, currentY, { align: 'center' });
-
-    currentY += 20;
+    currentY = handleAddSubtitle('Resultados', doc, dosage, currentY);
 
     resultsValues.forEach((resultValue, index) => {
       doc.text(`${resultValue.label}: ${resultValue.value} ${resultValue.measureUnity}`, 10, currentY);
-      currentY += index + 1 === resultsValues.length ? 20 : 5;
+      currentY += index + 1 === resultsValues.length ? 10 : 5;
     });
 
-    currentY += 20;
+    currentY = handleAddSubtitle(t('abcp.result.coefficients'), doc, dosage, currentY);
 
-    doc.setFontSize(12);
-    doc.text(t('abcp.result.coefficients'), doc.internal.pageSize.getWidth() / 2, currentY, { align: 'center' });
-
-    currentY += 20;
-
-    doc.text(`${t('abcp.result.coefficients')}: ${coefficients}`, 10, currentY);
+    currentY = handleAddSubtitle(`${t('abcp.result.coefficients')}: ${coefficients}`, doc, dosage, currentY);
 
     calculatePageNumber(doc);
 
     doc.setPage(3);
-    doc.addPage();
 
-    addHeader(doc, image);
+    currentY = handleAddSubtitle(t('abcp.result.graph'), doc, dosage, currentY + 5);
 
-    currentY = 30;
-
-    doc.setFontSize(12);
-    doc.text(t('abcp.result.graph'), doc.internal.pageSize.getWidth() / 2, currentY, { align: 'center' });
-
-    await addChart(document.getElementById('chart-div-abramsCurveGraph') as HTMLDivElement, doc, currentY + 5);
-
-    calculatePageNumber(doc);
-
-    doc.setPage(4);
+    await addChart(document.getElementById('chart-div-abramsCurveGraph') as HTMLDivElement, doc, currentY);
 
     doc.save(`Relatorio_Dosagem_${dosage?.generalData.name}.pdf`);
   };

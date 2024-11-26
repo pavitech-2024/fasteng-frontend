@@ -78,41 +78,39 @@ const Marshall_Step9 = ({
   }, []);
 
   useEffect(() => {
-    getOptimumContentRows();
-    getOptimunContentCols();
-    getOptimumContentGroupings();
+    createOptimumContentRows();
+    createOptimumContentColumns();
+    createOptimumContentGroupings();
 
     getQuantitativeCols();
     getQuantitativeRows();
     getQuantitativeGroupings();
   }, []);
 
-  const getOptimunContentCols = () => {
-    const newCols: GridColDef[] = [];
-
-    const optimumBinderObj = {
-      field: 'optimumBinder',
-      width: 250,
-      headerName: t('asphalt.dosages.optimum-binder'),
-      valueFormatter: ({ value }) => `${value}`,
-    };
+  const createOptimumContentColumns = () => {
+    const columns: GridColDef[] = [
+      {
+        field: 'optimumBinder',
+        width: 250,
+        headerName: t('asphalt.dosages.optimum-binder'),
+        valueFormatter: ({ value }) => value?.toFixed(2),
+      },
+    ];
 
     materialSelectionData.aggregates.forEach((material) => {
-      const col: GridColDef = {
-        field: `${material._id}`,
+      const column: GridColDef = {
+        field: material._id,
         width: 250,
-        headerName: `${material.name}`,
-        valueFormatter: ({ value }) => `${value}`,
+        headerName: material.name,
+        valueFormatter: ({ value }) => value?.toFixed(2),
       };
-      newCols.push(col);
+      columns.push(column);
     });
 
-    newCols.unshift(optimumBinderObj);
-
-    setOptimumContentCols(newCols);
+    setOptimumContentCols(columns);
   };
 
-  const getOptimumContentRows = () => {
+  const createOptimumContentRows = () => {
     let rowsObj: RowsObj = {
       id: 0,
       optimumBinder: Number(optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2)),
@@ -128,10 +126,10 @@ const Marshall_Step9 = ({
     setOptimumContentRows([rowsObj]);
   };
 
-  const getOptimumContentGroupings = () => {
-    const optimumContentGroupArr: GridColumnGroupingModel = [
+  const createOptimumContentGroupings = () => {
+    const groupings: GridColumnGroupingModel = [
       {
-        groupId: 'optimumContentGrouping',
+        groupId: 'optimumContent',
         headerName: t('asphalt.dosages.marshall.materials-final-proportions'),
         headerAlign: 'center',
         children: [{ field: 'optimumBinder' }],
@@ -139,10 +137,10 @@ const Marshall_Step9 = ({
     ];
 
     materialSelectionData.aggregates.forEach((material) => {
-      optimumContentGroupArr[0].children.push({ field: `${material._id}` });
+      groupings[0].children.push({ field: material._id });
     });
 
-    setOptimumContentGroupings(optimumContentGroupArr);
+    setOptimumContentGroupings(groupings);
   };
 
   const getQuantitativeCols = () => {
