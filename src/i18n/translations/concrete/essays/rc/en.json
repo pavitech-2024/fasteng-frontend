@@ -6,6 +6,7 @@
   "concreteRc.step2": "Step 2",
   "concreteRc.step3": "Step 3",
 
+  "concrete.essays.sample-name": "Sample Name",
   "concrete.rc.sample-origin": "Sample Origin",
   "concrete.rc.press-specification": "Press Specification",
   "concrete.rc.press-constant": "Press Constant",
@@ -36,6 +37,8 @@
   "concrete.essays.hours": "Hours",
   "concrete.essays.minutes": "Minutes",
   "concrete.essays.used-tolerance": "Used Tolerance",
+  "concrete.essays.average-diammeter": "Average Diammeter",
+  "concrete.essays.correction-factor": "Correction Factor",
 
   "concrete.essays.graph-image": "Graph Image",
 
@@ -53,5 +56,7 @@
 
   "concrete.essays.errors.invalid-diammHeightRatio": "The ratio of the average diameters divided by the height must be greater than or equal to 2.06.",
   "concrete.essays.errors.connection-error": "An error occurred while connecting to the server. Please try again later.",
-  "concrete.essays.errors.tolerance-not-permited": "The tolerance value is not allowed."
+  "concrete.essays.errors.tolerance-not-permited": "The tolerance value is not allowed.",
+
+  "concrete.essays.max-strenght": "Maximum strenght"
 }

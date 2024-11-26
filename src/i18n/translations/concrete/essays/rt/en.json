@@ -18,7 +18,7 @@
   "concrete.calculist": "Calculist",
   "concrete.materials.comments": "Material comments",
   "concrete.essays.concretert-concrete": "Traction Resistance",
-  "concrete.essays.concreteRc": "Traction Resistance",
+  "concrete.essays.concreteRt": "Compression of Cylindrical Samples",
   "granulometry-concrete.step-2-description": "Fill in all the fields below.",
   "concreteRt.material_mass": "Material mass",
   "concreteRt-concrete.choose-series": "Choose series",
@@ -30,7 +30,7 @@
 
   "concrete.essays.applied-charge": "Applied Load",
   "concrete.essays.applied-charge-placeholder": "Enter the load applied vertically to the center of the prism",
-  "concrete.essays.supports-distance": "Enter the distance between the supports",
+  "concrete.essays.supports-distance": "Distance between the supports",
   "concrete.essays.supports-distance-placeholder": "Enter the distance between the supports",
   "concrete.essays.graphImg": "Graph Image",
   "concrete.essays.compression-charge": "Compression Load",

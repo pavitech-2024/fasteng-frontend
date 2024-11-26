@@ -14,7 +14,7 @@ class CONCRETE_RT_SERVICE implements IEssayService {
     backend_path: 'concrete/essays/concreteRt',
     steps: 5,
     standard: {
-      name: 'NBR 13279/2005',
+      name: 'NBR 5739',
       link: '',
     },
     stepperData: [
@@ -39,7 +39,6 @@ class CONCRETE_RT_SERVICE implements IEssayService {
         case 1:
           const { step2Data } = data as ConcreteRtData;
           await this.submitStep2Data(data as ConcreteRtData['step2Data']);
-          await this.calculateStep2Data(step2Data);
           break;
         case 2:
           await this.submitStep3Data(data as ConcreteRtData['step3Data']);
@@ -84,14 +83,13 @@ class CONCRETE_RT_SERVICE implements IEssayService {
   // send general data to backend to verify if there is already a ConcreteRt essay with same name for the material
   submitGeneralData = async (generalData: ConcreteRtData['generalData']): Promise<void> => {
     try {
-      const { name, material } = generalData;
+      const { name } = generalData;
 
       // verify if name and material are not empty
       if (!name) throw t('errors.empty-name');
-      if (!material) throw t('errors.empty-material');
 
       // verify if there is already a ConcreteRt essay with same name for the material
-      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, material });
+      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name });
 
       const { success, error } = response.data;
 
@@ -117,7 +115,7 @@ class CONCRETE_RT_SERVICE implements IEssayService {
   // verify inputs from ConcreteRc page (step === 1, page 2)
   calculateStep2Data = async (step2Data: ConcreteRtData['step2Data']): Promise<void> => {
     try {
-      const { age, tolerance } = step2Data;
+      const { samples } = step2Data;
       let finalTolerance;
 
       const ruptureAgeArr = [
@@ -147,38 +145,38 @@ class CONCRETE_RT_SERVICE implements IEssayService {
         },
       ];
 
-      const ruptureAgeFound = ruptureAgeArr.find((e) => e.ruptureAge === age.hours * 60 + age.minutes);
+      // const ruptureAgeFound = ruptureAgeArr.find((e) => e.ruptureAge === age.hours * 60 + age.minutes);
 
-      const ageInMinutes = age.hours * 60 + age.minutes;
+      // const ageInMinutes = age.hours * 60 + age.minutes;
 
-      if (ruptureAgeFound) {
-        finalTolerance = ruptureAgeFound.tolerance;
-      } else {
-        // Interpolação
-        let higherReference = null;
-        let lowerReference = null;
+      // if (ruptureAgeFound) {
+      //   finalTolerance = ruptureAgeFound.tolerance;
+      // } else {
+      //   // Interpolação
+      //   let higherReference = null;
+      //   let lowerReference = null;
 
-        for (let i = 0; i < ruptureAgeArr.length; i++) {
-          if (ruptureAgeArr[i].ruptureAge < ageInMinutes && ruptureAgeArr[i + 1].ruptureAge > ageInMinutes) {
-            lowerReference = ruptureAgeArr[i];
-            higherReference = ruptureAgeArr[i + 1];
-          }
-        }
+      //   for (let i = 0; i < ruptureAgeArr.length; i++) {
+      //     if (ruptureAgeArr[i].ruptureAge < ageInMinutes && ruptureAgeArr[i + 1].ruptureAge > ageInMinutes) {
+      //       lowerReference = ruptureAgeArr[i];
+      //       higherReference = ruptureAgeArr[i + 1];
+      //     }
+      //   }
 
-        const response = await Api.post(`${this.info.backend_path}/interpolation`, {
-          age: age.hours * 60 + age.minutes,
-          tolerance: tolerance.hours * 60 + tolerance.minutes,
-          higherReference,
-          lowerReference,
-        });
+      //   const response = await Api.post(`${this.info.backend_path}/interpolation`, {
+      //     age: age.hours * 60 + age.minutes,
+      //     tolerance: tolerance.hours * 60 + tolerance.minutes,
+      //     higherReference,
+      //     lowerReference,
+      //   });
 
-        const { success, error, result } = response.data;
+      //   const { success, error, result } = response.data;
 
-        if (success === false) throw error.name;
+      //   if (success === false) throw error.name;
 
-        finalTolerance = result;
-      }
-      this.store_actions.setData({ step: 1, key: 'finalTolerance', value: finalTolerance });
+      //   finalTolerance = result;
+      // }
+      // this.store_actions.setData({ step: 1, key: 'finalTolerance', value: finalTolerance });
     } catch (error) {
       throw error;
     }
