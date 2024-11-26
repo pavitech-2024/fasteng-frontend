@@ -65,7 +65,7 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
     doc.addImage(image, 'png', 155, 5, 50, 8);
   };
 
-  const handleAddSubtitle = (text: string, doc: jsPDF, dosage: ABCPData, currentY: number) => {
+  const handleAddSubtitle = (text: string, doc: jsPDF, currentY: number) => {
     doc.setFontSize(12);
     doc.text(`${text}`, doc.internal.pageSize.getWidth() / 2, currentY, {
       align: 'center',
@@ -105,7 +105,7 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     currentY = 30;
 
-    currentY = handleAddSubtitle(`Relatório de Dosagem - ${dosage.generalData.name}`, doc, dosage, currentY);
+    currentY = handleAddSubtitle(`Relatório de Dosagem - ${dosage.generalData.name}`, doc, currentY);
 
     doc.setFontSize(10);
     doc.text(`Gerado por: ${user.name}`, 10, 40);
@@ -116,7 +116,7 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     currentY = 55;
 
-    currentY = handleAddSubtitle('Resultados gerais', doc, dosage, currentY);
+    currentY = handleAddSubtitle('Resultados gerais', doc, currentY);
 
     const conditionValue = dosage.insertParamsData.condition;
     const tolerance = 0.0001;
@@ -149,22 +149,22 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
       currentY += index + 1 === generalResultsValues.length ? 10 : 5;
     });
 
-    currentY = handleAddSubtitle('Resultados', doc, dosage, currentY);
+    currentY = handleAddSubtitle('Resultados', doc, currentY);
 
     resultsValues.forEach((resultValue, index) => {
       doc.text(`${resultValue.label}: ${resultValue.value} ${resultValue.measureUnity}`, 10, currentY);
       currentY += index + 1 === resultsValues.length ? 10 : 5;
     });
 
-    currentY = handleAddSubtitle(t('abcp.result.coefficients'), doc, dosage, currentY);
+    currentY = handleAddSubtitle(t('abcp.result.coefficients'), doc, currentY);
 
-    currentY = handleAddSubtitle(`${t('abcp.result.coefficients')}: ${coefficients}`, doc, dosage, currentY);
+    currentY = handleAddSubtitle(`${t('abcp.result.coefficients')}: ${coefficients}`, doc, currentY);
 
     calculatePageNumber(doc);
 
     doc.setPage(3);
 
-    currentY = handleAddSubtitle(t('abcp.result.graph'), doc, dosage, currentY + 5);
+    currentY = handleAddSubtitle(t('abcp.result.graph'), doc, currentY + 5);
 
     await addChart(document.getElementById('chart-div-abramsCurveGraph') as HTMLDivElement, doc, currentY);
 
