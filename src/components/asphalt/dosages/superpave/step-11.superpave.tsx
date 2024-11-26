@@ -35,7 +35,7 @@ const Superpave_Step11 = ({
   const [quantitativeRows, setQuantitativeRows] = useState([]);
   const [quantitativeCols, setQuantitativeCols] = useState([]);
   const [dosage, setDosage] = useState(null);
-  console.log("🚀 ~ dosage:", dosage)
+  console.log('🚀 ~ dosage:', dosage);
   const store = JSON.parse(sessionStorage.getItem('asphalt-superpave-store'));
   const dosageId = store?.state._id;
 
@@ -64,14 +64,11 @@ const Superpave_Step11 = ({
       }
     };
 
-    toast.promise(
-      fetchDosage(),
-      {
-        pending: t('loading.dosages.pending'),
-        success: t('loading.dosages.success'),
-        error: t('loading.dosages.error'),
-      }
-    );
+    toast.promise(fetchDosage(), {
+      pending: t('loading.dosages.pending'),
+      success: t('loading.dosages.success'),
+      error: t('loading.dosages.error'),
+    });
   }, []);
 
   useEffect(() => {

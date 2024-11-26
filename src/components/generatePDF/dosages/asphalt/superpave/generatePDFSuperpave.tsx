@@ -117,7 +117,9 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
     currentY = currentY + 30;
 
     doc.setFontSize(12);
-    doc.text(t('asphalt.dosages.superpave.asphalt-mass-quantitative'), doc.internal.pageSize.getWidth() / 2, currentY, { align: 'center' });
+    doc.text(t('asphalt.dosages.superpave.asphalt-mass-quantitative'), doc.internal.pageSize.getWidth() / 2, currentY, {
+      align: 'center',
+    });
 
     currentY += 10;
 
@@ -135,7 +137,12 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
     currentY += 40;
 
     doc.setFontSize(12);
-    doc.text(t('asphalt.dosages.superpave.mechanic-volumetric-params'), doc.internal.pageSize.getWidth() / 2, currentY, { align: 'center' });
+    doc.text(
+      t('asphalt.dosages.superpave.mechanic-volumetric-params'),
+      doc.internal.pageSize.getWidth() / 2,
+      currentY,
+      { align: 'center' }
+    );
 
     currentY += 20;
 

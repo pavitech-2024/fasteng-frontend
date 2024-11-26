@@ -7,7 +7,7 @@ import { t } from 'i18next';
 import { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
 import logo from '@/assets/fasteng/LogoBlack.png';
 import { SummaryItem } from '../../../materials/asphalt/generatePDFAsphalt/generatePDFAsphalt';
-import { addCapa, addCenteredText, addImageProcess,calculatePageNumber } from '../../../common';
+import { addCapa, addCenteredText, addImageProcess, calculatePageNumber } from '../../../common';
 
 interface IGeneratedPDF {
   dosage: MarshallData;
@@ -94,7 +94,9 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     doc.addPage();
 
     doc.setFontSize(12);
-    doc.text(`Relatório de Dosagem - ${dosage.generalData.name}`, doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
+    doc.text(`Relatório de Dosagem - ${dosage.generalData.name}`, doc.internal.pageSize.getWidth() / 2, 30, {
+      align: 'center',
+    });
 
     // Adicionar informações do usuário
     doc.setFontSize(10);
@@ -119,7 +121,9 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     optimumBinder.push(dosage.optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2));
 
     doc.setFontSize(12);
-    doc.text(t('asphalt.dosages.marshall.materials-final-proportions'), doc.internal.pageSize.getWidth() / 2, 90, { align: 'center' });
+    doc.text(t('asphalt.dosages.marshall.materials-final-proportions'), doc.internal.pageSize.getWidth() / 2, 90, {
+      align: 'center',
+    });
 
     autoTable(doc, {
       head: [materials],
@@ -133,7 +137,9 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     //Quantitativos
 
     doc.setFontSize(12);
-    doc.text(t('asphalt.dosages.marshall.asphalt-mass-quantitative'), doc.internal.pageSize.getWidth() / 2, 140, { align: 'center' });
+    doc.text(t('asphalt.dosages.marshall.asphalt-mass-quantitative'), doc.internal.pageSize.getWidth() / 2, 140, {
+      align: 'center',
+    });
 
     const quantitative =
       dosage?.confirmationCompressionData?.confirmedVolumetricParameters?.quantitative.map(
@@ -194,9 +200,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     doc.text(
       `${t(
         'asphalt.dosage.vam'
-      )}: ${dosage.confirmationCompressionData.confirmedVolumetricParameters?.values?.voidsFilledAsphalt.toFixed(
-        2
-      )} %`,
+      )}: ${dosage.confirmationCompressionData.confirmedVolumetricParameters?.values?.voidsFilledAsphalt.toFixed(2)} %`,
       10,
       220
     );
@@ -258,7 +262,9 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     };
 
     doc.setFontSize(12);
-    doc.text(`Quantitativo para 1 metro cúbico de massa asfáltica`, doc.internal.pageSize.getWidth() / 2, 10, { align: 'center' });
+    doc.text(`Quantitativo para 1 metro cúbico de massa asfáltica`, doc.internal.pageSize.getWidth() / 2, 10, {
+      align: 'center',
+    });
 
     autoTable(doc, volumetricParamsTable);
 

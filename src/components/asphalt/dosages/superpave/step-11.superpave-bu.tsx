@@ -206,7 +206,6 @@ const Superpave_Step11 = ({
         <Loading />
       ) : (
         <FlexColumnBorder open={true} title={t('superpave.step-11')}>
-          
           <GenerateSuperpaveDosagePDF dosage={dosage} />
 
           <Box

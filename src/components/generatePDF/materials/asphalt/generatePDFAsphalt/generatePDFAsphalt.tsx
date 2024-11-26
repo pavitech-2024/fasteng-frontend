@@ -106,7 +106,7 @@ const GeneratePDF = ({
       ? t('adhesiveness.filmDisplacement-true')
       : t('adhesiveness.filmDisplacement-false');
   }
-  
+
   if (granulometryData?.results.graph_data) {
     granulometryData.step2Data.table_data.map((value, index) => {
       granulometryRows.push({

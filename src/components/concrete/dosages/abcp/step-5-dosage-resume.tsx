@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react';
 import abcpDosageService from '@/services/concrete/dosages/abcp/abcp-consult.service';
 import GenerateAbcpDosagePDF from '@/components/generatePDF/dosages/concrete/abcp/generatePDFAbcpDosage';
 
-
 const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   nextDisabled && setNextDisabled(false);
   const { results: abcp_results, insertParamsData, setData } = useABCPStore();

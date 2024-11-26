@@ -66,7 +66,7 @@ export default function AbramsCurvGraph({ Xvalues, Yvalues, ac, formula, fcj }: 
       {loading ? (
         <Loading />
       ) : (
-        <div id='chart-div-abramsCurveGraph'>
+        <div id="chart-div-abramsCurveGraph">
           <Chart chartType="LineChart" height="500px" data={mountData()} options={options} />
         </div>
       )}

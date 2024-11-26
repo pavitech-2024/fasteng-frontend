@@ -947,8 +947,8 @@ class Superpave_SERVICE implements IEssayService {
           value: {
             ...superpaveData,
             dosageResume: data.dosageResume,
-          }
-        })
+          },
+        });
       } catch (error) {
         console.log(error);
         throw error;

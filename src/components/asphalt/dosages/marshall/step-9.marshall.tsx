@@ -32,7 +32,7 @@ const Marshall_Step9 = ({
   } = useMarshallStore();
 
   const [dosage, setDosage] = useState(null);
-  console.log("🚀 ~ dosage:", dosage)
+  console.log('🚀 ~ dosage:', dosage);
   const store = JSON.parse(sessionStorage.getItem('asphalt-marshall-store'));
   const dosageId = store.state._id;
 
@@ -430,11 +430,10 @@ const Marshall_Step9 = ({
               flex: 1,
               headerAlign: 'center',
               align: 'center',
-              sortable: false
+              sortable: false,
             }))}
             disableColumnMenu
             disableColumnSelector
-          
             hideFooter
           />
 

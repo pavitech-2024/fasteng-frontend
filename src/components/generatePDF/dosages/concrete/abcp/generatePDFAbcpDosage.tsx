@@ -93,7 +93,9 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
     doc.addPage();
 
     doc.setFontSize(12);
-    doc.text(`Relatório de Dosagem - ${dosage.generalData.name}`, doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
+    doc.text(`Relatório de Dosagem - ${dosage.generalData.name}`, doc.internal.pageSize.getWidth() / 2, 30, {
+      align: 'center',
+    });
 
     doc.setFontSize(10);
     doc.text(`Gerado por: ${user.name}`, 10, 40);
@@ -108,17 +110,18 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
     const conditionValue = dosage.insertParamsData.condition;
     const tolerance = 0.0001;
 
-    const conditionLabel = Math.abs(conditionValue - 4) < tolerance
-      ? 'Condição A - Sd = 4,0'
-      : Math.abs(conditionValue - 5.5) < tolerance
-      ? 'Condição B - Sd = 5,5'
-      : 'Condição C - Sd = 7,0';
+    const conditionLabel =
+      Math.abs(conditionValue - 4) < tolerance
+        ? 'Condição A - Sd = 4,0'
+        : Math.abs(conditionValue - 5.5) < tolerance
+        ? 'Condição B - Sd = 5,5'
+        : 'Condição C - Sd = 7,0';
 
     const generalResultsValues = [
       { label: t('abcp.results.resistance-curve'), value: dosage.results?.resistanceCurve, measureUnity: 'MPa' },
       { label: conditionLabel, value: '', measureUnity: 'MPa' },
       { label: t('abcp.results.fck'), value: dosage.insertParamsData.fck, measureUnity: 'MPa' },
-      { label: t('abcp.results.reduction'), value: dosage.insertParamsData.reduction, measureUnity: '%' }
+      { label: t('abcp.results.reduction'), value: dosage.insertParamsData.reduction, measureUnity: '%' },
     ];
 
     const resultsValues = [
@@ -127,7 +130,7 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
       { label: t('abcp.results.water-consume'), value: dosage.results?.cb, measureUnity: 'Lm³' },
       { label: t('abcp.results.cement-consume'), value: dosage.results?.cc, measureUnity: 'kg/m³' },
       { label: t('abcp.results.coarse-aggregate-consume'), value: dosage.results?.cc, measureUnity: 'kg/m³' },
-      { label: t('abcp.results.fine-aggregate-consume'), value: dosage.results?.cc, measureUnity: 'kg/m³' }
+      { label: t('abcp.results.fine-aggregate-consume'), value: dosage.results?.cc, measureUnity: 'kg/m³' },
     ];
 
     currentY = 75;
