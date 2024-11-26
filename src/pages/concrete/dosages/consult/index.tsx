@@ -1,10 +1,9 @@
-import { AbcpIcon, AbcpLogo, DeleteIcon, NextIcon } from '@/assets';
+import { AbcpLogo, DeleteIcon, NextIcon } from '@/assets';
 import Header from '@/components/organisms/header';
 import useAuth from '@/contexts/auth';
-import { AcpDosageData } from '@/interfaces/concrete/abcp';
 import abcpDosageService from '@/services/concrete/dosages/abcp/abcp-consult.service';
 import { Box, Container, IconButton, Pagination } from '@mui/material';
-import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { t } from 'i18next';
@@ -109,7 +108,8 @@ const AbcpDosageConsult = () => {
     const dosage = dosages[0].find((dosage) => {
       return dosage._id === id;
     });
-    const step = dosage?.generalData.step;
+
+    const step = dosage?.generalData.step - 1;
     if (dosage) {
       setData({
         step: 5,
@@ -141,7 +141,7 @@ const AbcpDosageConsult = () => {
     },
     {
       field: 'options',
-      headerName: t('abcp.dosage-consult.options'),
+      headerName: t('concrete.dosage.consult-options'),
       renderCell: (params) => (
         <>
           <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)} size="large">

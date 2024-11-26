@@ -268,10 +268,8 @@ class ABCP_SERVICE implements IEssayService {
         const { success, error, result } = response.data;
 
         if (success === false) throw error.name;
-        else {
-          this.store_actions.setData({ step: 4, value: result });
-          return result;
-        }
+
+        return result;
       } catch (error) {
         throw error;
       }

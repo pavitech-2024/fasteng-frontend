@@ -913,18 +913,18 @@ class Superpave_SERVICE implements IEssayService {
   };
 
   submitSuperpaveDosage = async (
-    data: SuperpaveData,
+    superpaveData: SuperpaveData,
     userId: string,
     user?: string,
     isConsult?: boolean
   ): Promise<void> => {
     if (!isConsult) {
       try {
-        const { name } = data.generalData;
+        const { name } = superpaveData.generalData;
         const userData = userId ? userId : user;
 
         const resumeDosage = {
-          ...data.dosageResume,
+          ...superpaveData.dosageResume,
           name,
           isConsult: null,
         };
@@ -933,14 +933,22 @@ class Superpave_SERVICE implements IEssayService {
 
         const response = await Api.post(`${this.info.backend_path}/save-superpave-dosage/${userData}`, {
           dosageResume: {
-            ...data.dosageResume,
+            ...superpaveData.dosageResume,
             name,
           },
         });
 
-        const { success, error } = response.data;
+        const { data, success, error } = response.data;
 
         if (success === false) throw error.name;
+
+        this.store_actions.setData({
+          step: 10,
+          value: {
+            ...superpaveData,
+            dosageResume: data.dosageResume,
+          },
+        });
       } catch (error) {
         console.log(error);
         throw error;

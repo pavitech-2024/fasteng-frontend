@@ -1,5 +1,6 @@
 import { DeleteIcon, MarshallIcon, MarshallIconPng, NextIcon } from '@/assets';
-import GenerateDosagePDF from '@/components/generatePDF/dosages/marshall/generatePDFMarshall';
+import GenerateMarshallDosagePDF from '@/components/generatePDF/dosages/asphalt/marshall/generatePDFMarshall';
+import GenerateDosagePDF from '@/components/generatePDF/dosages/asphalt/marshall/generatePDFMarshall';
 import GeneratePDF from '@/components/generatePDF/materials/asphalt/generatePDFAsphalt/generatePDFAsphalt';
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
@@ -141,10 +142,6 @@ const MarshallDosageConsult = () => {
     router.push(`/asphalt/dosages/marshall/create`);
   };
 
-  const handleDownloadPdf = (id: string) => {
-    console.log('🚀 ~ handleDownloadPdf ~ id:', id);
-  };
-
   const columns: GridColDef[] = [
     {
       field: 'name',
@@ -167,8 +164,6 @@ const MarshallDosageConsult = () => {
       headerName: t('marshall.dosage-consult.options'),
       renderCell: (params) => (
         <>
-          <GenerateDosagePDF dosages={dosages} />
-
           <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)} size="large">
             <DeleteIcon />
           </IconButton>
