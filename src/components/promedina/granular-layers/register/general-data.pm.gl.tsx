@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 
 const GranularLayers_step1 = ({ setNextDisabled }: EssayPageProps) => {
   const { generalData, setData } = useGranularLayersStore();
+  console.log("🚀 ~ generalData:", generalData)
 
   const inputs = [
     { label: t('pm.granularLayer.name'), value: generalData.name, key: 'name', required: true },
@@ -28,6 +29,10 @@ const GranularLayers_step1 = ({ setNextDisabled }: EssayPageProps) => {
       required: false,
     },
   ];
+
+  // useEffect(async () => {
+  //   const result  = await samplesService.getSample();
+  // },[]);
 
   useEffect(() => {
     if (generalData?.name !== null && generalData?.name !== '') setNextDisabled(false);

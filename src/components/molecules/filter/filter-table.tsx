@@ -25,6 +25,9 @@ import { PromedinaDataFilter } from '@/interfaces/promedina';
 import DropDown from '@/components/atoms/inputs/dropDown';
 import StepDescription from '@/components/atoms/titles/step-description';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
+import { useSessionStorage } from '@/utils/hooks/useSessionStorage';
 
 interface PromedinaMaterialsTemplateProps {
   materials: PromedinaDataFilter[];
@@ -61,6 +64,8 @@ const PromedinaMaterialsTemplate = ({
   onPageChange,
 }: PromedinaMaterialsTemplateProps) => {
   const [materialsData, setMaterialsData] = useState(materials);
+  console.log("🚀 ~ materialsData:", materialsData)
+  const { setData, generalData, step2Data, step3Data } = useGranularLayersStore();
 
   useEffect(() => {
     setMaterialsData(materials);
@@ -83,6 +88,7 @@ const PromedinaMaterialsTemplate = ({
   const [searchValue, setSearchValue] = useState<string>('');
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
+  const { push } = useRouter();
 
   const columns: MaterialsColumn[] = [
     { id: 'name', label: t('materials.template.name'), width: '25%' },
@@ -150,6 +156,22 @@ const PromedinaMaterialsTemplate = ({
         })
     );
   }, [materialsData]);
+
+  const handleVisualize = (id: string) => {
+    push(`/promedina/${area}/view/data/${id}`);
+  }
+
+  const handleEdit = (id:string) => {
+    const sample: any = materialsData.find((sample) => {
+      return sample._id === id
+    })
+
+    if (sample) {
+      sessionStorage.setItem('granularLayers-store', JSON.stringify({ state: {...sample} }));
+
+      push(`/promedina/${area}/register`);
+    }
+  }
 
   return (
     <>
@@ -793,9 +815,11 @@ const PromedinaMaterialsTemplate = ({
                               }}
                             >
                               {actions.map((item) => (
-                                <Link href={item.id == 'visualize' ? `/promedina/${area}/view/data/${row._id}` : `/promedina/${area}/register`}>
+                                // <Link href={item.id == 'visualize' ? `/promedina/${area}/view/data/${row._id}` : `/promedina/${area}/register`}>
                                   <Button
+                                    key={item.id}
                                     variant="contained"
+                                    onClick={item.id == 'visualize' ? () => handleVisualize(row._id) : () => handleEdit(row._id)}
                                     sx={{
                                       height: '25px',
                                       width: '100px',
@@ -825,7 +849,7 @@ const PromedinaMaterialsTemplate = ({
                                       sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }}
                                     />
                                   </Button>
-                                </Link>
+                                // </Link>
                               ))}
                             </Box>
                             <Button
