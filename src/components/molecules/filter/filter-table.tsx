@@ -167,7 +167,12 @@ const PromedinaMaterialsTemplate = ({
     })
 
     if (sample) {
-      sessionStorage.setItem('granularLayers-store', JSON.stringify({ state: {...sample} }));
+      // sessionStorage.setItem('granularLayers-store', JSON.stringify({ state: {...sample} }));
+      setData({
+        step: 3,
+        value: sample
+      });
+      sessionStorage.setItem('granularLayers-step', '0');
 
       push(`/promedina/${area}/register`);
     }
