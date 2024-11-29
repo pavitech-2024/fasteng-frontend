@@ -16,7 +16,7 @@ class SoilsGranulometry_SERVICE implements IEssayService {
     steps: 3,
     standard: {
       name: 'NBR 7181/1984',
-      link: 'https://engenhariacivilfsp.files.wordpress.com/2015/03/nbr-7181.pdf',
+      link: 'https://www.normas.com.br/visualizar/abnt-nbr-nm/1968/abnt-nbr7181-solo-analise-granulometrica',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },

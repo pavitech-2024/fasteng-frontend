@@ -16,7 +16,7 @@ class COARSE_AGGREGATE_SERVICE implements IEssayService {
     steps: 3,
     standard: {
       name: 'ABNT NM 53',
-      link: 'https://docs.google.com/file/d/0BxP7mphRg3A2YzRhZWUzNWQtODIzMS00YzE1LTg5ZjktZGQwOGQyMjgyNWYz/edit?pli=1&resourcekey=0-ql_GiaAIDdRFyfrgVtMNmQ',
+      link: 'https://www.normas.com.br/visualizar/abnt-nbr-nm/22881/abnt-nbrnm53-agregado-graudo-determinacao-de-massa-especifica-massa-especifica-aparente-e-absorcao-de-agua',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
