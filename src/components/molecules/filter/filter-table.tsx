@@ -93,6 +93,21 @@ const PromedinaMaterialsTemplate = ({
     { id: 'actions', label: t('materials.template.actions'), width: '25%' },
   ];
 
+  const actions = [
+    {
+      id: 'visualize',
+      tooltipText: 'Visualizar dados desta amostra',
+      text: t('promedina.granular-layers.visualize'),
+      btnColor: 'blue'
+    },
+    {
+      id: 'edit',
+      tooltipText: 'Editar dados desta amostra',
+      text: t('promedina.granular-layers.edit'),
+      btnColor: 'orange'
+    },
+  ];
+
   useEffect(() => {
     setSearchValue('');
   }, [searchBy]);
@@ -767,37 +782,52 @@ const PromedinaMaterialsTemplate = ({
                         {column.id === 'layer' && row.layer}
                         {column.id === 'zone' && row.zone}
                         {column.id === 'actions' && (
-                          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Link href={`/promedina/${area}/view/data/${row._id}`}>
-                              <Button
-                                variant="contained"
-                                sx={{
-                                  height: '25px',
-                                  borderRadius: { mobile: '50%', notebook: '20px' },
-                                  p: { mobile: 0, notebook: '6px 12px' },
-                                  minWidth: '25px',
-                                  bgcolor: 'secondaryTons.blue',
-                                  color: 'primaryTons.white',
+                          <Box sx={{ display: 'flex', gap: '0.5rem' }}>
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '0.5rem',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}
+                            >
+                              {actions.map((item) => (
+                                <Link href={item.id == 'visualize' ? `/promedina/${area}/view/data/${row._id}` : `/promedina/${area}/register`}>
+                                  <Button
+                                    variant="contained"
+                                    sx={{
+                                      height: '25px',
+                                      width: '100px',
+                                      borderRadius: { mobile: '50%', notebook: '20px' },
+                                      p: { mobile: 0, notebook: '6px 12px' },
+                                      minWidth: '25px',
+                                      bgcolor: `secondaryTons.${item.btnColor}`,
+                                      color: 'primaryTons.white',
 
-                                  ':hover': {
-                                    bgcolor: 'secondaryTons.blueDisabled',
-                                  },
+                                      ':hover': {
+                                        bgcolor: `secondaryTons.${item.btnColor}Disabled`,
+                                      },
 
-                                  ':active': {
-                                    bgcolor: 'secondaryTons.blueClick',
-                                  },
-                                }}
-                              >
-                                <Tooltip title="Visualizar dados desta amostra">
-                                  <Typography
-                                    sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}
+                                      ':active': {
+                                        bgcolor: `secondaryTons.${item.btnColor}Click`,
+                                      },
+                                    }}
                                   >
-                                    {t('materials.template.edit')}
-                                  </Typography>
-                                </Tooltip>
-                                <NextIcon sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
-                              </Button>
-                            </Link>
+                                    <Tooltip placement={item.id == 'visualize' ? 'top' : 'bottom'} title={item.tooltipText}>
+                                      <Typography
+                                        sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}
+                                      >
+                                        {item.text}
+                                      </Typography>
+                                    </Tooltip>
+                                    <NextIcon
+                                      sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }}
+                                    />
+                                  </Button>
+                                </Link>
+                              ))}
+                            </Box>
                             <Button
                               variant="text"
                               color="error"

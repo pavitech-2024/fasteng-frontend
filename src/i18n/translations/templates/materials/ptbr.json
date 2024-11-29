@@ -17,5 +17,7 @@
   "materials.template.newMaterial": "Novo Material",
   "materials.template.newSample": "Nova Amostra",
   "materials.template.search.label": "Pesquisar...",
-  "materials.template.edit": "Visualizar"
+  "materials.template.visualize": "Visualizar",
+  "materials.template.edit": "Editar"
+
 }

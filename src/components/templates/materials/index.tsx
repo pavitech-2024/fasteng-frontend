@@ -329,7 +329,7 @@ const MaterialsTemplate = ({
                               onClick={(e) => console.log(e)}
                             >
                               <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
-                                {t('materials.template.edit')}
+                                {t('materials.template.visualize')}
                               </Typography>
                               <NextIcon sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
                             </Button>
