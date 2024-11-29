@@ -15,7 +15,7 @@ class SPECIFYMASS_SERVICE implements IEssayService {
     backend_path: 'asphalt/essays/specifyMass',
     standard: {
       name: 'NBR 9776',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/MassaEspecificaAgregadoMiudoDNIT4112019.8b89a1d7.pdf',
+      link: 'https://www.target.com.br/produtos/normas-tecnicas/36401/nbr9776-agregados-determinacao-da-massa-especifica-de-agregados-miudos-por-meio-do-frasco-chapman',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
