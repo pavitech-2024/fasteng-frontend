@@ -26,16 +26,14 @@ import DropDown from '@/components/atoms/inputs/dropDown';
 import StepDescription from '@/components/atoms/titles/step-description';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
-import { useSessionStorage } from '@/utils/hooks/useSessionStorage';
-import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
-import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
+
+type Area = 'stabilized-layers' | 'binder-asphalt-concrete' | 'granularLayers';
 
 interface PromedinaMaterialsTemplateProps {
   materials: PromedinaDataFilter[];
   handleDeleteMaterial: (id: string) => void;
   getFilter: (e: any) => void;
-  area: string;
+  area: Area;
   pages: number;
   count: number;
   onSearchParamsChange: (params: any) => void;
@@ -68,10 +66,28 @@ const PromedinaMaterialsTemplate = ({
   setData,
 }: PromedinaMaterialsTemplateProps) => {
   const [materialsData, setMaterialsData] = useState(materials);
+  console.log("🚀 ~ materialsData:", materialsData)
+  const [page, setPage] = useState<number>(1);
+  const [searchBy, setSearchBy] = useState<string>('name');
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
+  const { push } = useRouter();
 
   useEffect(() => {
     setMaterialsData(materials);
   }, [materials]);
+
+  const [filteredData, setFilteredData] = useState([
+    {
+      _id: '',
+      name: '',
+      cityState: '',
+      layer: '',
+      zone: '',
+      highway: '',
+    },
+  ]);
 
   const [searchParams, setSearchParams] = useState({
     name: '',
@@ -84,13 +100,6 @@ const PromedinaMaterialsTemplate = ({
   useEffect(() => {
     onSearchParamsChange(searchParams);
   }, [searchParams]);
-
-  const [page, setPage] = useState<number>(1);
-  const [searchBy, setSearchBy] = useState<string>('name');
-  const [searchValue, setSearchValue] = useState<string>('');
-  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
-  const { push } = useRouter();
 
   const columns: MaterialsColumn[] = [
     { id: 'name', label: t('materials.template.name'), width: '25%' },
@@ -123,17 +132,6 @@ const PromedinaMaterialsTemplate = ({
   useEffect(() => {
     onPageChange(page);
   }, [page]);
-
-  const [filteredData, setFilteredData] = useState([
-    {
-      _id: '',
-      name: '',
-      cityState: '',
-      layer: '',
-      zone: '',
-      highway: '',
-    },
-  ]);
 
   useEffect(() => {
     setFilteredData(
@@ -883,10 +881,8 @@ const PromedinaMaterialsTemplate = ({
           </TableContainer>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
             <Pagination
-              //count={Math.ceil(materialsData?.length / rowsPerPage)}
               count={pages}
               size="small"
-              //disabled={filteredData?.length < rowsPerPage}
               onChange={(event, value) => setPage(value)}
             />
           </Box>

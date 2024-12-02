@@ -6,6 +6,7 @@ import {
   StabilizedLayersData,
 } from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 import { UnitMassIcon } from '@/assets';
+import samplesService from './stabilized-layers-view.service';
 
 type DataIndex = keyof StabilizedLayersData;
 
@@ -67,16 +68,21 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: StabilizedLayersData['generalData']): Promise<void> => {
+  console.log("🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitGeneralData= ~ generalData:", generalData)
   };
 
   submitStep2Data = async (step2Data: StabilizedLayersData['step2Data']): Promise<void> => {
+  console.log("🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitStep2Data= ~ step2Data:", step2Data)
   };
 
   submitStep3Data = async (step3Data: StabilizedLayersData['step3Data']): Promise<void> => {
+  console.log("🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitStep3Data= ~ step3Data:", step3Data)
   };
 
   // save essay
   saveSample = async (store: StabilizedLayersData): Promise<void> => {
+    const { _id } = store;
+
     const replaceNullValues = (data: StabilizedLayersData): StabilizedLayersData => {
       const newData = { ...data };
 
@@ -100,11 +106,13 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
     const { generalData, step2Data, step3Data } = updatedData;
 
     try {
-      const response = await Api.post(`${this.info.backend_path}/save`, {
-        generalData,
-        step2Data,
-        step3Data,
-      });
+      let response;
+
+      if (!_id) {
+        response = await samplesService.saveSample({ ...store, generalData, step2Data, step3Data });
+      } else {
+        response = await samplesService.updateSample(_id, { ...store, generalData, step2Data, step3Data });
+      }
 
       const { success, error } = response.data;
 

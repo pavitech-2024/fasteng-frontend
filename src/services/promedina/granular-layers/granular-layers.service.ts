@@ -1,4 +1,3 @@
-import Api from '@/api';
 import { UnitMassIcon } from '@/assets';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { GranularLayersActions, GranularLayersData } from '@/stores/promedina/granular-layers/granular-layers.store';
@@ -51,12 +50,15 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: GranularLayersData['generalData']): Promise<void> => {
+  console.log("🚀 ~ GRANULARLAYERS_SERVICE ~ submitGeneralData= ~ generalData:", generalData)
   };
 
   submitStep2Data = async (step2Data: GranularLayersData['step2Data']): Promise<void> => {
+  console.log("🚀 ~ GRANULARLAYERS_SERVICE ~ submitStep2Data= ~ step2Data:", step2Data)
   };
 
   submitStep3Data = async (step3Data: GranularLayersData['step3Data']): Promise<void> => {
+  console.log("🚀 ~ GRANULARLAYERS_SERVICE ~ submitStep3Data= ~ step3Data:", step3Data)
   };
 
   // save essay
@@ -89,10 +91,8 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
       let response;
 
       if (!_id) {
-        console.log('entrou no save');
         response = await samplesService.saveSample({ ...store, generalData, step2Data, step3Data });
       } else {
-        console.log('entrou no update');
         response = await samplesService.updateSample(_id, { ...store, generalData, step2Data, step3Data });
       }
 

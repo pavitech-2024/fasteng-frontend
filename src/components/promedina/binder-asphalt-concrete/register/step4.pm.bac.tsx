@@ -6,88 +6,96 @@ import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-con
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 
 const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
-  const { step4Data, setData } = useBinderAsphaltConcreteStore();
+  const { step4Data, generalData, step2Data, step3Data, setData } = useBinderAsphaltConcreteStore();
 
   const inputsPavimentData = [
     {
       label: t('pm.binderAsphaltConcrete.granulometricRange'),
-      value: step4Data.granulometricRange,
+      value: step4Data?.granulometricRange,
       key: 'granulometricRange',
       required: true,
+      type: 'text',
     },
-    { label: t('pm.binderAsphaltConcrete.tmn'), value: step4Data.tmn, key: 'tmn', required: true },
+    { label: t('pm.binderAsphaltConcrete.tmn'), value: step4Data?.tmn, key: 'tmn', required: true },
     {
       label: t('pm.binderAsphaltConcrete.asphaltTenor'),
-      value: step4Data.asphaltTenor,
+      value: step4Data?.asphaltTenor,
       key: 'asphaltTenor',
       required: true,
+      input: 'text'
     },
     {
       label: t('pm.binderAsphaltConcrete.specificMass'),
-      value: step4Data.specificMass,
+      value: step4Data?.specificMass,
       key: 'specificMass',
       required: true,
+      input: 'text'
     },
     {
       label: t('pm.binderAsphaltConcrete.volumeVoids'),
-      value: step4Data.volumeVoids,
+      value: step4Data?.volumeVoids,
       key: 'volumeVoids',
       required: true,
+      input: 'text'
     },
     {
       label: t('pm.binderAsphaltConcrete.rt'),
-      value: step4Data.rt,
+      value: step4Data?.rt,
       key: 'rt',
       required: true,
+      input: 'text'
     },
     {
       label: t('pm.binderAsphaltConcrete.flowNumber'),
-      value: step4Data.flowNumber,
+      value: step4Data?.flowNumber,
       key: 'flowNumber',
       required: true,
+      input: 'text'
     },
     {
       label: t('pm.binderAsphaltConcrete.abrasionLA'),
-      value: step4Data.abrasionLA,
+      value: step4Data?.abrasionLA,
       key: 'abrasionLA',
       required: true,
+      input: 'number'
     },
     {
       label: t('pm.binderAsphaltConcrete.mr'),
-      value: step4Data.mr,
+      value: step4Data?.mr,
       key: 'mr',
       required: true,
+      input: 'text'
     },
   ];
 
   const inputsDiametralCompressionFatigueCurve = [
     {
       label: t('pm.binderAsphaltConcrete.fatigueCurve_n_cps'),
-      value: step4Data.fatigueCurve_n_cps,
+      value: step4Data?.fatigueCurve_n_cps,
       key: 'fatigueCurve_n_cps',
       required: true,
     },
     {
       label: t('pm.binderAsphaltConcrete.fatigueCurve_k1'),
-      value: step4Data.fatigueCurve_k1,
+      value: step4Data?.fatigueCurve_k1,
       key: 'fatigueCurve_k1',
       required: true,
     },
     {
       label: t('pm.binderAsphaltConcrete.fatigueCurve_k2'),
-      value: step4Data.fatigueCurve_k2,
+      value: step4Data?.fatigueCurve_k2,
       key: 'fatigueCurve_k2',
       required: true,
     },
     {
       label: t('pm.binderAsphaltConcrete.fatigueCurve_r2'),
-      value: step4Data.fatigueCurve_r2,
+      value: step4Data?.fatigueCurve_r2,
       key: 'fatigueCurve_r2',
       required: true,
     },
     {
       label: t('pm.binderAsphaltConcrete.observations'),
-      value: step4Data.observations,
+      value: step4Data?.observations,
       key: 'observations',
       required: false,
     },
@@ -115,32 +123,21 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
               paddingBottom: '20px',
             }}
           >
-            {inputsPavimentData.map((input) => {
-              if (input.key === 'abrasionLA') {
-                return (
-                  <InputEndAdornment
-                    adornment={'%'}
-                    type="number"
-                    key={input.key}
-                    variant="standard"
-                    label={input.label}
-                    value={input.value?.toString()}
-                    onChange={(e) => setData({ step: 3, key: input.key, value: e.target.value })}
-                  />
-                );
-              } else {
-                return (
-                  <TextField
-                    key={input.key}
-                    variant="standard"
-                    label={input.label}
-                    value={input.value}
-                    required={input.required}
-                    onChange={(e) => setData({ step: 3, key: input.key, value: e.target.value })}
-                  />
-                );
-              }
-            })}
+            {inputsPavimentData.map((input) => (
+              <TextField
+                key={input.key}
+                variant="standard"
+                type={input.type}
+                label={input.label}
+                value={input.value}
+                required={input.required}
+                onChange={(e) => {
+                  const newStep4Data = { ...step4Data, [input.key]: e.target.value };
+                  const newData = { generalData, step2Data, step3Data, step4Data: newStep4Data };
+                  setData({ step: 3, value: newData })
+                }}
+              />
+            ))}
           </Box>
         </Box>
       </FlexColumnBorder>
@@ -176,7 +173,11 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
                   label={input.label}
                   value={input.value}
                   required={input.required}
-                  onChange={(e) => setData({ step: 3, key: input.key, value: e.target.value })}
+                  onChange={(e) => {
+                    const newStep4Data = { ...step4Data, [input.key]: e.target.value };
+                    const newData = { generalData, step2Data, step3Data, step4Data: newStep4Data };
+                    setData({ step: 3, value: newData })
+                  }}
                 />
               );
             })}

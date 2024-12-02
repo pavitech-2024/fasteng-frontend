@@ -6,6 +6,7 @@ import {
   BinderAsphaltConcreteActions,
   BinderAsphaltConcreteData,
 } from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
+import samplesService from './binder-asphalt-concrete-view.service';
 
 class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   info = {
@@ -61,19 +62,25 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: BinderAsphaltConcreteData['generalData']): Promise<void> => {
+  console.log("🚀 ~ BINDER_ASPHALT_CONCRETE_SERVICE ~ submitGeneralData= ~ generalData:", generalData)
   };
 
   submitStep2Data = async (step2Data: BinderAsphaltConcreteData['step2Data']): Promise<void> => {
+  console.log("🚀 ~ BINDER_ASPHALT_CONCRETE_SERVICE ~ submitStep2Data= ~ step2Data:", step2Data)
   };
 
   submitStep3Data = async (step3Data: BinderAsphaltConcreteData['step3Data']): Promise<void> => {
+  console.log("🚀 ~ BINDER_ASPHALT_CONCRETE_SERVICE ~ submitStep3Data= ~ step3Data:", step3Data)
   };
 
   submitStep4Data = async (step4Data: BinderAsphaltConcreteData['step4Data']): Promise<void> => {
+  console.log("🚀 ~ BINDER_ASPHALT_CONCRETE_SERVICE ~ submitStep4Data= ~ step4Data:", step4Data)
   };
 
   // save essay
   saveEssay = async (store: BinderAsphaltConcreteData): Promise<void> => {
+    const { _id } = store;
+
     const replaceNullValues = (data: BinderAsphaltConcreteData): BinderAsphaltConcreteData => {
       const newData = { ...data };
 
@@ -97,12 +104,13 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
     const { generalData, step2Data, step3Data, step4Data } = updatedData;
 
     try {
-      const response = await Api.post(`${this.info.backend_path}/save`, {
-        generalData,
-        step2Data,
-        step3Data,
-        step4Data,
-      });
+      let response;
+
+      if (!_id) {
+        response = await samplesService.saveSample({ ...store, generalData, step2Data, step3Data });
+      } else {
+        response = await samplesService.updateSample(_id, { ...store, generalData, step2Data, step3Data, step4Data });
+      }
 
       const { success, error } = response.data;
 

@@ -37,7 +37,7 @@ const StabilizedLayers_view = () => {
     const encodedFilter = encodeURIComponent(JSON.stringify(filter));
 
     try {
-      const response = await samplesService.getFilteredSamples(encodedFilter, page);
+      const response = await samplesService.getFilteredSamples(encodedFilter, page, 10, true);
       setSamples(response.data.docs);
       setTotalPages(response.data.totalPages);
       setCount(response.data.count);
