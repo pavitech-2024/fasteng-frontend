@@ -46,6 +46,10 @@
   "loading.save.success": "Salvo com sucesso!",
   "loading.save.error": "Erro ao salvar!",
 
+  "loading.update.pending": "Atualizando...",
+  "loading.update.success": "Atualizado com sucesso!",
+  "loading.update.error": "Erro ao atualizar!",
+
   "AlreadyExists": "Já cadastrado.",
   "NotFound": "Não encontrado."
 }

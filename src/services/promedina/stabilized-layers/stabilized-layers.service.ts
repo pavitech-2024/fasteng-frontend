@@ -10,20 +10,20 @@ import { UnitMassIcon } from '@/assets';
 type DataIndex = keyof StabilizedLayersData;
 
 // Function that replaces all empty inputs for '-';
-function replaceNullValues<T extends DataIndex>(data: StabilizedLayersData[T]): StabilizedLayersData[T] {
-  const newData: StabilizedLayersData[T] = { ...data };
+// function replaceNullValues<T extends DataIndex>(data: StabilizedLayersData[T]): StabilizedLayersData[T] {
+//   const newData: StabilizedLayersData[T] = { ...data };
 
-  for (const key in newData) {
-    if (newData[key] === null || newData[key] === undefined) {
-      newData[key] = '-' as any;
-    }
-  }
-  return newData;
-}
+//   for (const key in newData) {
+//     if (newData[key] === null || newData[key] === undefined) {
+//       newData[key] = '-' as any;
+//     }
+//   }
+//   return newData;
+// }
 
 class STABILIZEDLAYERS_SERVICE implements IEssayService {
   info = {
-    key: 'stabilizedLayers',
+    key: 'stabilized-layers',
     icon: UnitMassIcon,
     title: t('pm.stabilized-layers-register'),
     path: '/promedina/stabilized-layers',
@@ -67,15 +67,12 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: StabilizedLayersData['generalData']): Promise<void> => {
-    console.log('🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitGeneralData= ~ generalData:', generalData);
   };
 
   submitStep2Data = async (step2Data: StabilizedLayersData['step2Data']): Promise<void> => {
-    console.log('🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitStep2Data= ~ step2Data:', step2Data);
   };
 
   submitStep3Data = async (step3Data: StabilizedLayersData['step3Data']): Promise<void> => {
-    console.log('🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitStep3Data= ~ step3Data:', step3Data);
   };
 
   // save essay

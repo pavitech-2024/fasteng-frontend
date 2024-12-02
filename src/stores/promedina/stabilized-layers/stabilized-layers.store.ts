@@ -73,6 +73,7 @@ export type StabilizedLayersData = {
   generalData: GeneralData;
   step2Data: Step2Data;
   step3Data: Step3Data;
+  _id: string;
 };
 
 export type StabilizedLayersActions = {
@@ -83,87 +84,108 @@ const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data' };
 
 export type setDataType = { step: number; key?: string; value: unknown };
 
+const initialState = {
+  generalData: {
+    highway: null,
+    name: null,
+    zone: null,
+    layer: null,
+    cityState: null,
+    guideLineSpeed: null,
+    observations: null,
+  },
+  step2Data: {
+    identification: null,
+    sectionType: null,
+    extension: null,
+    initialStakeMeters: null,
+    latitudeI: null,
+    longitudeI: null,
+    finalStakeMeters: null,
+    latitudeF: null,
+    longitudeF: null,
+    monitoringPhase: null,
+    observation: null,
+    milling: null,
+    interventionAtTheBase: null,
+    sami: null,
+    bondingPaint: null,
+    priming: null,
+    images: null,
+    imagesDate: null,
+    trafficLiberation: null,
+    lastUpdate: null,
+    averageAltitude: null,
+    numberOfTracks: null,
+    monitoredTrack: null,
+    trackWidth: null,
+    structuralComposition: [
+      {
+        id: 0,
+        layer: null,
+        material: null,
+        thickness: null,
+      },
+    ],
+  },
+  step3Data: {
+    // Paviment Data
+    stabilizer: null,
+    tenor: null,
+    especificMass: null,
+    compressionEnergy: null,
+    rtcd: null,
+    rtf: null,
+    rcs: null,
+    granulometricRange: null,
+    optimalHumidity: null,
+    // Resilience module
+    rsInitial: null,
+    rsFinal: null,
+    constantA: null,
+    constantB: null,
+    // Material fatigue
+    fatiguek1psi1: null,
+    fatiguek2psi2: null,
+    observations: null,
+  },
+  _id: null
+}
+
 const useStabilizedLayersStore = create<StabilizedLayersData & StabilizedLayersActions>()(
   devtools(
     persist(
       (set) => ({
-        generalData: {
-          name: null,
-          zone: null,
-          highway: null,
-          layer: null,
-          cityState: null,
-          guideLineSpeed: null,
-          observations: null,
-        },
-        step2Data: {
-          identification: null,
-          sectionType: null,
-          extension: null,
-          initialStakeMeters: null,
-          latitudeI: null,
-          longitudeI: null,
-          finalStakeMeters: null,
-          latitudeF: null,
-          longitudeF: null,
-          monitoringPhase: null,
-          observation: null,
-          milling: null,
-          interventionAtTheBase: null,
-          sami: null,
-          bondingPaint: null,
-          priming: null,
-          images: null,
-          imagesDate: null,
-          trafficLiberation: null,
-          lastUpdate: null,
-          averageAltitude: null,
-          numberOfTracks: null,
-          monitoredTrack: null,
-          trackWidth: null,
-          structuralComposition: [
-            {
-              id: 0,
-              layer: null,
-              material: null,
-              thickness: null,
-            },
-          ],
-        },
-        step3Data: {
-          stabilizer: null,
-          tenor: null,
-          especificMass: null,
-          compressionEnergy: null,
-          rtcd: null,
-          rtf: null,
-          rcs: null,
-          granulometricRange: null,
-          optimalHumidity: null,
-          rsInitial: null,
-          rsFinal: null,
-          constantA: null,
-          constantB: null,
-          fatiguek1psi1: null,
-          fatiguek2psi2: null,
-          observations: null,
-        },
+        ...initialState,
         setData: ({ step, key, value }) =>
           set((state) => {
-            if (key)
-              return {
-                ...state,
-                [stepVariant[step]]: {
-                  ...state[stepVariant[step]],
-                  [key]: value,
-                },
-              };
-            else return { ...state, [stepVariant[step]]: value };
+            if (step === 3) {
+              return value; // Substitui o estado inteiro pelo novo valor
+            } else {
+              if (key) {
+                return {
+                  ...state,
+                  [stepVariant[step]]: {
+                    ...state[stepVariant[step]],
+                    [key]: value,
+                  },
+                };
+              } else {
+                return { ...state, [stepVariant[step]]: value };
+              }
+            }
           }),
+
+        reset: ({ step }) => {
+          set(initialState);
+          return {
+            [stepVariant[step]]: null,
+          };
+        },
       }),
       {
         // name data store e config no session storage
-        name: 'stabilizedLayers-store',
+        name: 'stabilized-layers-store',
         storage: createJSONStorage(() => sessionStorage),
       }
     )

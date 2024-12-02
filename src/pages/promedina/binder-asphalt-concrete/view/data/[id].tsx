@@ -16,10 +16,6 @@ const SpecificSample_BinderAsphaltConcrete = () => {
   const query = router.query as any;
 
   useEffect(() => {
-    console.log('🚀 ~ samples:', samples);
-  }, [samples]);
-
-  useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await samplesService.getSample(query.id);

@@ -130,18 +130,12 @@ const SpecificSample_GranularLayers = () => {
     title: field.title,
     value: samples?.step3Data?.[field.key],
   }));
-  console.log('🚀 ~ techData ~ techData:', techData);
 
   const fatigueFields = [
     { title: t('pm.granularLayer.k1.psi1'), key: 'fatiguek1psi1' },
     { title: t('pm.granularLayer.k2.psi2'), key: 'fatiguek2psi2' },
     { title: t('pm.granularLayer.mf.observations'), key: 'observations' },
   ];
-
-  const materialFatigue = fatigueFields.map((field) => ({
-    title: field.title,
-    value: samples?.step3Data?.[field.key],
-  }));
 
   return (
     <>

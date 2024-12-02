@@ -83,6 +83,7 @@ export type GranularLayersData = {
   generalData: GeneralData;
   step2Data: Step2Data;
   step3Data: Step3Data;
+  _id: string
 };
 
 export type GranularLayersActions = {
@@ -156,6 +157,7 @@ const initialState = {
     k4psi4: null,
     observations: null,
   },
+  _id: null
 }
 
 const useGranularLayersStore = create<GranularLayersData & GranularLayersActions>()(
@@ -188,18 +190,6 @@ const useGranularLayersStore = create<GranularLayersData & GranularLayersActions
             [stepVariant[step]]: null,
           };
         },
-        // setData: ({ step, key, value }) =>
-        //   set((state) => {
-        //     if (key)
-        //       return {
-        //         ...state,
-        //         [stepVariant[step]]: {
-        //           ...state[stepVariant[step]],
-        //           [key]: value,
-        //         },
-        //       };
-        //     else return { ...state, [stepVariant[step]]: value };
-        //   }),
       }),
       {
         // name data store e config no session storage

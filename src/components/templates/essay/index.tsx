@@ -14,7 +14,7 @@ import { useSessionStorage } from '../../../utils/hooks/useSessionStorage';
 
 interface EssayTemplateProps {
   essayInfo: IEssayService['info'];
-  childrens: { step: number; children: JSX.Element; data: unknown }[];
+  childrens: { step: number; children: JSX.Element; data: any }[];
   nextCallback: (step: number, data: unknown) => Promise<void>;
 }
 
@@ -41,10 +41,11 @@ const EssayTemplate = ({
 
   async function handleNextClick() {
     // to check if the button is saving or going to the next step
-    const isSaving = childrens.length - 1 === activeStep ? true : false;
+    const isSaving = childrens.length - 1 === activeStep && !childrens[activeStep].data._id ? true : false;
+    const isUpdating = childrens.length - 1 === activeStep && childrens[activeStep].data._id ? true : false;
 
     // create a loading toast
-    const nextToast = toast.loading(isSaving ? t('loading.save.pending') : t('loading.nextStep.pending'), {
+    const nextToast = toast.loading(isSaving ? t('loading.save.pending') : isUpdating ? t('loading.update.pending') : t('loading.nextStep.pending'), {
       autoClose: 5000,
     });
 
@@ -56,12 +57,12 @@ const EssayTemplate = ({
       toast.update(nextToast, {
         autoClose: 5000,
         type: 'success',
-        render: isSaving ? t('loading.save.success') : t('loading.nextStep.success'),
+        render: isSaving ? t('loading.save.success') : isUpdating ? t('loading.update.success') : t('loading.nextStep.success'),
         isLoading: false,
         closeButton: true,
       });
 
-      if (!isSaving) {
+      if (!isSaving && !isUpdating) {
         // if the callback function is successful, go to the next step
         setActiveStep(activeStep + 1);
         // disable the next step button
@@ -76,6 +77,18 @@ const EssayTemplate = ({
         closeButton: true,
       });
     }
+  }
+
+  const handleNextBtnText = () => {
+    let btnText;
+    if (childrens.length - 1 === activeStep && !childrens[childrens.length - 1].data._id) {
+      btnText = t('footer.save');
+    } else if (childrens.length - 1 > activeStep) {
+      btnText = t('footer.next');
+    } else if (childrens.length - 1 === activeStep && childrens[childrens.length - 1].data._id) {
+      btnText = t('footer.update')
+    }
+    return btnText;
   }
 
   return (
@@ -140,7 +153,7 @@ const EssayTemplate = ({
         previousText={t('footer.previous')}
         previousDisabled={activeStep === 0}
         handlePreviousClick={() => setActiveStep(activeStep - 1)}
-        nextText={childrens.length - 1 === activeStep ? t('footer.save') : t('footer.next')}
+        nextText={handleNextBtnText()}
         nextDisabled={nextDisabled}
         handleNextClick={handleNextClick}
       />

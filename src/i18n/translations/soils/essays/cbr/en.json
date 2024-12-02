@@ -37,6 +37,10 @@
   "loading.save.success": "Saved successfully!",
   "loading.save.error": "Error on saving!",
 
+  "loading.update.pending": "Updating...",
+  "loading.update.success": "Updated successfully!",
+  "loading.update.error": "Error on updating!",
+
   "AlreadyExists": "Already exists!",
   "NotFound": "Not found!"
 }

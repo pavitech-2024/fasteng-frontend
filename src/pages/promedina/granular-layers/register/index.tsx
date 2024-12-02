@@ -33,7 +33,7 @@ const GranularLayers = () => {
   ];
 
   return (
-    <EssayTemplate essayInfo={granularLayers.info} nextCallback={granularLayers.handleNext} childrens={childrens} />
+    <EssayTemplate essayInfo={granularLayers.info} nextCallback={granularLayers.handleNext} childrens={childrens}/>
   );
 };
 

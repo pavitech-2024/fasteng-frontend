@@ -28,6 +28,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
 import { useSessionStorage } from '@/utils/hooks/useSessionStorage';
+import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
+import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
 
 interface PromedinaMaterialsTemplateProps {
   materials: PromedinaDataFilter[];
@@ -38,6 +40,7 @@ interface PromedinaMaterialsTemplateProps {
   count: number;
   onSearchParamsChange: (params: any) => void;
   onPageChange: (page: number) => void;
+  setData: any
 }
 
 interface MaterialsColumn {
@@ -62,10 +65,9 @@ const PromedinaMaterialsTemplate = ({
   pages,
   onSearchParamsChange,
   onPageChange,
+  setData,
 }: PromedinaMaterialsTemplateProps) => {
   const [materialsData, setMaterialsData] = useState(materials);
-  console.log("🚀 ~ materialsData:", materialsData)
-  const { setData, generalData, step2Data, step3Data } = useGranularLayersStore();
 
   useEffect(() => {
     setMaterialsData(materials);
@@ -104,13 +106,13 @@ const PromedinaMaterialsTemplate = ({
       id: 'visualize',
       tooltipText: 'Visualizar dados desta amostra',
       text: t('promedina.granular-layers.visualize'),
-      btnColor: 'blue'
+      btnColor: 'blue',
     },
     {
       id: 'edit',
       tooltipText: 'Editar dados desta amostra',
       text: t('promedina.granular-layers.edit'),
-      btnColor: 'orange'
+      btnColor: 'orange',
     },
   ];
 
@@ -159,24 +161,23 @@ const PromedinaMaterialsTemplate = ({
 
   const handleVisualize = (id: string) => {
     push(`/promedina/${area}/view/data/${id}`);
-  }
+  };
 
-  const handleEdit = (id:string) => {
+  const handleEdit = (id: string) => {
     const sample: any = materialsData.find((sample) => {
-      return sample._id === id
-    })
+      return sample._id === id;
+    });
 
     if (sample) {
-      // sessionStorage.setItem('granularLayers-store', JSON.stringify({ state: {...sample} }));
       setData({
         step: 3,
-        value: sample
+        value: sample,
       });
-      sessionStorage.setItem('granularLayers-step', '0');
+      sessionStorage.setItem(`${area}-step`, '0');
 
       push(`/promedina/${area}/register`);
     }
-  }
+  };
 
   return (
     <>
@@ -820,41 +821,42 @@ const PromedinaMaterialsTemplate = ({
                               }}
                             >
                               {actions.map((item) => (
-                                // <Link href={item.id == 'visualize' ? `/promedina/${area}/view/data/${row._id}` : `/promedina/${area}/register`}>
-                                  <Button
-                                    key={item.id}
-                                    variant="contained"
-                                    onClick={item.id == 'visualize' ? () => handleVisualize(row._id) : () => handleEdit(row._id)}
-                                    sx={{
-                                      height: '25px',
-                                      width: '100px',
-                                      borderRadius: { mobile: '50%', notebook: '20px' },
-                                      p: { mobile: 0, notebook: '6px 12px' },
-                                      minWidth: '25px',
-                                      bgcolor: `secondaryTons.${item.btnColor}`,
-                                      color: 'primaryTons.white',
+                                <Button
+                                  key={item.id}
+                                  variant="contained"
+                                  onClick={
+                                    item.id == 'visualize' ? () => handleVisualize(row._id) : () => handleEdit(row._id)
+                                  }
+                                  sx={{
+                                    height: '25px',
+                                    width: '100px',
+                                    borderRadius: { mobile: '50%', notebook: '20px' },
+                                    p: { mobile: 0, notebook: '6px 12px' },
+                                    minWidth: '25px',
+                                    bgcolor: `secondaryTons.${item.btnColor}`,
+                                    color: 'primaryTons.white',
 
-                                      ':hover': {
-                                        bgcolor: `secondaryTons.${item.btnColor}Disabled`,
-                                      },
+                                    ':hover': {
+                                      bgcolor: `secondaryTons.${item.btnColor}Disabled`,
+                                    },
 
-                                      ':active': {
-                                        bgcolor: `secondaryTons.${item.btnColor}Click`,
-                                      },
-                                    }}
+                                    ':active': {
+                                      bgcolor: `secondaryTons.${item.btnColor}Click`,
+                                    },
+                                  }}
+                                >
+                                  <Tooltip
+                                    placement={item.id == 'visualize' ? 'top' : 'bottom'}
+                                    title={item.tooltipText}
                                   >
-                                    <Tooltip placement={item.id == 'visualize' ? 'top' : 'bottom'} title={item.tooltipText}>
-                                      <Typography
-                                        sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}
-                                      >
-                                        {item.text}
-                                      </Typography>
-                                    </Tooltip>
-                                    <NextIcon
-                                      sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }}
-                                    />
-                                  </Button>
-                                // </Link>
+                                    <Typography
+                                      sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}
+                                    >
+                                      {item.text}
+                                    </Typography>
+                                  </Tooltip>
+                                  <NextIcon sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
+                                </Button>
                               ))}
                             </Box>
                             <Button
