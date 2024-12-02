@@ -4,6 +4,7 @@ import PromedinaMaterialsTemplate from '@/components/molecules/filter/filter-tab
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
 import samplesService from '@/services/promedina/stabilized-layers/stabilized-layers-view.service';
+import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 import { Box, Button, Container } from '@mui/material';
 import { useState, useEffect } from 'react';
 
@@ -13,6 +14,7 @@ const StabilizedLayers_view = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
+  const { setData } = useStabilizedLayersStore();
 
   const [searchParams, setSearchParams] = useState({
     _id: '',
@@ -35,7 +37,7 @@ const StabilizedLayers_view = () => {
     const encodedFilter = encodeURIComponent(JSON.stringify(filter));
 
     try {
-      const response = await samplesService.getFilteredSamples(encodedFilter, page);
+      const response = await samplesService.getFilteredSamples(encodedFilter, page, 10, true);
       setSamples(response.data.docs);
       setTotalPages(response.data.totalPages);
       setCount(response.data.count);
@@ -105,6 +107,7 @@ const StabilizedLayers_view = () => {
                 area={'stabilized-layers'}
                 pages={totalPages}
                 count={count}
+                setData={setData}
                 onSearchParamsChange={setSearchParams}
                 onPageChange={setPage}
               />

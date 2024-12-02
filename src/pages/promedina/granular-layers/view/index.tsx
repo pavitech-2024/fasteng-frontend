@@ -4,6 +4,7 @@ import PromedinaMaterialsTemplate from '@/components/molecules/filter/filter-tab
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
 import samplesService from '@/services/promedina/granular-layers/granular-layers-view.service';
+import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
 import { Box, Button, Container } from '@mui/material';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
@@ -14,6 +15,7 @@ const GranularLayers_view = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
+  const { setData } = useGranularLayersStore();
 
   const [searchParams, setSearchParams] = useState({
     _id: '',
@@ -104,9 +106,10 @@ const GranularLayers_view = () => {
                 getFilter={getFilter}
                 pages={totalPages}
                 count={count}
+                setData={setData}
                 onSearchParamsChange={setSearchParams}
                 onPageChange={setPage}
-                area={'granular-layers'}
+                area={'granularLayers'}
               />
             </Box>
           </Box>

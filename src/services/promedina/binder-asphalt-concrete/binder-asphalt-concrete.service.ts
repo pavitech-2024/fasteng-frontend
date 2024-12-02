@@ -6,6 +6,7 @@ import {
   BinderAsphaltConcreteActions,
   BinderAsphaltConcreteData,
 } from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
+import samplesService from './binder-asphalt-concrete-view.service';
 
 class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   info = {
@@ -78,6 +79,8 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
 
   // save essay
   saveEssay = async (store: BinderAsphaltConcreteData): Promise<void> => {
+    const { _id } = store;
+
     const replaceNullValues = (data: BinderAsphaltConcreteData): BinderAsphaltConcreteData => {
       const newData = { ...data };
 
@@ -101,12 +104,13 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
     const { generalData, step2Data, step3Data, step4Data } = updatedData;
 
     try {
-      const response = await Api.post(`${this.info.backend_path}/save`, {
-        generalData,
-        step2Data,
-        step3Data,
-        step4Data,
-      });
+      let response;
+
+      if (!_id) {
+        response = await samplesService.saveSample({ ...store, generalData, step2Data, step3Data });
+      } else {
+        response = await samplesService.updateSample(_id, { ...store, generalData, step2Data, step3Data, step4Data });
+      }
 
       const { success, error } = response.data;
 

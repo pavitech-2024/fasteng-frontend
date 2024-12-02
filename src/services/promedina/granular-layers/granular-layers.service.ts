@@ -1,8 +1,8 @@
-import Api from '@/api';
 import { UnitMassIcon } from '@/assets';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { GranularLayersActions, GranularLayersData } from '@/stores/promedina/granular-layers/granular-layers.store';
 import { t } from 'i18next';
+import samplesService from './granular-layers-view.service';
 
 class GRANULARLAYERS_SERVICE implements IEssayService {
   info = {
@@ -63,6 +63,8 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
 
   // save essay
   saveSample = async (store: GranularLayersData): Promise<void> => {
+    const { _id } = store;
+
     const replaceNullValues = (data: GranularLayersData): GranularLayersData => {
       const newData = { ...data };
 
@@ -82,16 +84,17 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
     };
 
     const updatedData = replaceNullValues(store);
-    console.log(updatedData);
 
     const { generalData, step2Data, step3Data } = updatedData;
 
     try {
-      const response = await Api.post(`${this.info.backend_path}/save`, {
-        generalData,
-        step2Data,
-        step3Data,
-      });
+      let response;
+
+      if (!_id) {
+        response = await samplesService.saveSample({ ...store, generalData, step2Data, step3Data });
+      } else {
+        response = await samplesService.updateSample(_id, { ...store, generalData, step2Data, step3Data });
+      }
 
       const { success, error } = response.data;
 

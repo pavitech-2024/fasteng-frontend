@@ -4,6 +4,7 @@ import PromedinaMaterialsTemplate from '@/components/molecules/filter/filter-tab
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
 import samplesService from '@/services/promedina/binder-asphalt-concrete/binder-asphalt-concrete-view.service';
+import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
 import { Box, Button, Container } from '@mui/material';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
@@ -14,6 +15,7 @@ const BinderAsphaltConcrete_view = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
+  const { setData } = useBinderAsphaltConcreteStore();
 
   const [searchParams, setSearchParams] = useState({
     _id: '',
@@ -36,7 +38,7 @@ const BinderAsphaltConcrete_view = () => {
     const encodedFilter = encodeURIComponent(JSON.stringify(filter));
 
     try {
-      const response = await samplesService.getFilteredSamples(encodedFilter, page);
+      const response = await samplesService.getFilteredSamples(encodedFilter, page, 10, true);
       setSamples(response.data.docs);
       setTotalPages(response.data.totalPages);
       setCount(response.data.count);
@@ -105,6 +107,7 @@ const BinderAsphaltConcrete_view = () => {
                 getFilter={getFilter}
                 pages={totalPages}
                 count={count}
+                setData={setData}
                 onSearchParamsChange={setSearchParams}
                 onPageChange={setPage}
                 area={'binder-asphalt-concrete'}
