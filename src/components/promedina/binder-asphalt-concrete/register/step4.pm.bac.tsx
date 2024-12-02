@@ -22,49 +22,49 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
       value: step4Data?.asphaltTenor,
       key: 'asphaltTenor',
       required: true,
-      input: 'text'
+      input: 'text',
     },
     {
       label: t('pm.binderAsphaltConcrete.specificMass'),
       value: step4Data?.specificMass,
       key: 'specificMass',
       required: true,
-      input: 'text'
+      input: 'text',
     },
     {
       label: t('pm.binderAsphaltConcrete.volumeVoids'),
       value: step4Data?.volumeVoids,
       key: 'volumeVoids',
       required: true,
-      input: 'text'
+      input: 'text',
     },
     {
       label: t('pm.binderAsphaltConcrete.rt'),
       value: step4Data?.rt,
       key: 'rt',
       required: true,
-      input: 'text'
+      input: 'text',
     },
     {
       label: t('pm.binderAsphaltConcrete.flowNumber'),
       value: step4Data?.flowNumber,
       key: 'flowNumber',
       required: true,
-      input: 'text'
+      input: 'text',
     },
     {
       label: t('pm.binderAsphaltConcrete.abrasionLA'),
       value: step4Data?.abrasionLA,
       key: 'abrasionLA',
       required: true,
-      input: 'number'
+      input: 'number',
     },
     {
       label: t('pm.binderAsphaltConcrete.mr'),
       value: step4Data?.mr,
       key: 'mr',
       required: true,
-      input: 'text'
+      input: 'text',
     },
   ];
 
@@ -134,7 +134,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
                 onChange={(e) => {
                   const newStep4Data = { ...step4Data, [input.key]: e.target.value };
                   const newData = { generalData, step2Data, step3Data, step4Data: newStep4Data };
-                  setData({ step: 3, value: newData })
+                  setData({ step: 3, value: newData });
                 }}
               />
             ))}
@@ -176,7 +176,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
                   onChange={(e) => {
                     const newStep4Data = { ...step4Data, [input.key]: e.target.value };
                     const newData = { generalData, step2Data, step3Data, step4Data: newStep4Data };
-                    setData({ step: 3, value: newData })
+                    setData({ step: 3, value: newData });
                   }}
                 />
               );

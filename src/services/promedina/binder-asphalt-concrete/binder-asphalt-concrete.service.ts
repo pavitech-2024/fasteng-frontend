@@ -62,19 +62,19 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: BinderAsphaltConcreteData['generalData']): Promise<void> => {
-  console.log("🚀 ~ BINDER_ASPHALT_CONCRETE_SERVICE ~ submitGeneralData= ~ generalData:", generalData)
+    console.log('🚀 ~ BINDER_ASPHALT_CONCRETE_SERVICE ~ submitGeneralData= ~ generalData:', generalData);
   };
 
   submitStep2Data = async (step2Data: BinderAsphaltConcreteData['step2Data']): Promise<void> => {
-  console.log("🚀 ~ BINDER_ASPHALT_CONCRETE_SERVICE ~ submitStep2Data= ~ step2Data:", step2Data)
+    console.log('🚀 ~ BINDER_ASPHALT_CONCRETE_SERVICE ~ submitStep2Data= ~ step2Data:', step2Data);
   };
 
   submitStep3Data = async (step3Data: BinderAsphaltConcreteData['step3Data']): Promise<void> => {
-  console.log("🚀 ~ BINDER_ASPHALT_CONCRETE_SERVICE ~ submitStep3Data= ~ step3Data:", step3Data)
+    console.log('🚀 ~ BINDER_ASPHALT_CONCRETE_SERVICE ~ submitStep3Data= ~ step3Data:', step3Data);
   };
 
   submitStep4Data = async (step4Data: BinderAsphaltConcreteData['step4Data']): Promise<void> => {
-  console.log("🚀 ~ BINDER_ASPHALT_CONCRETE_SERVICE ~ submitStep4Data= ~ step4Data:", step4Data)
+    console.log('🚀 ~ BINDER_ASPHALT_CONCRETE_SERVICE ~ submitStep4Data= ~ step4Data:', step4Data);
   };
 
   // save essay

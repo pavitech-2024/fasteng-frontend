@@ -68,15 +68,15 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: StabilizedLayersData['generalData']): Promise<void> => {
-  console.log("🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitGeneralData= ~ generalData:", generalData)
+    console.log('🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitGeneralData= ~ generalData:', generalData);
   };
 
   submitStep2Data = async (step2Data: StabilizedLayersData['step2Data']): Promise<void> => {
-  console.log("🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitStep2Data= ~ step2Data:", step2Data)
+    console.log('🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitStep2Data= ~ step2Data:', step2Data);
   };
 
   submitStep3Data = async (step3Data: StabilizedLayersData['step3Data']): Promise<void> => {
-  console.log("🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitStep3Data= ~ step3Data:", step3Data)
+    console.log('🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitStep3Data= ~ step3Data:', step3Data);
   };
 
   // save essay

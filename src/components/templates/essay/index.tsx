@@ -45,9 +45,12 @@ const EssayTemplate = ({
     const isUpdating = childrens.length - 1 === activeStep && childrens[activeStep].data._id ? true : false;
 
     // create a loading toast
-    const nextToast = toast.loading(isSaving ? t('loading.save.pending') : isUpdating ? t('loading.update.pending') : t('loading.nextStep.pending'), {
-      autoClose: 5000,
-    });
+    const nextToast = toast.loading(
+      isSaving ? t('loading.save.pending') : isUpdating ? t('loading.update.pending') : t('loading.nextStep.pending'),
+      {
+        autoClose: 5000,
+      }
+    );
 
     try {
       // check if the activeStep is the same as the step of the current child
@@ -57,7 +60,11 @@ const EssayTemplate = ({
       toast.update(nextToast, {
         autoClose: 5000,
         type: 'success',
-        render: isSaving ? t('loading.save.success') : isUpdating ? t('loading.update.success') : t('loading.nextStep.success'),
+        render: isSaving
+          ? t('loading.save.success')
+          : isUpdating
+          ? t('loading.update.success')
+          : t('loading.nextStep.success'),
         isLoading: false,
         closeButton: true,
       });
@@ -86,10 +93,10 @@ const EssayTemplate = ({
     } else if (childrens.length - 1 > activeStep) {
       btnText = t('footer.next');
     } else if (childrens.length - 1 === activeStep && childrens[childrens.length - 1].data._id) {
-      btnText = t('footer.update')
+      btnText = t('footer.update');
     }
     return btnText;
-  }
+  };
 
   return (
     <Container>

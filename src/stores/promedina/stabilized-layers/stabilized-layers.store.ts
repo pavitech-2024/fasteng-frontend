@@ -149,8 +149,8 @@ const initialState = {
     fatiguek2psi2: null,
     observations: null,
   },
-  _id: null
-}
+  _id: null,
+};
 
 const useStabilizedLayersStore = create<StabilizedLayersData & StabilizedLayersActions>()(
   devtools(

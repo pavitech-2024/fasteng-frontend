@@ -34,7 +34,6 @@ const BinderAsphaltConcrete_view = () => {
         filter.push({ [key]: searchParams[key] });
       }
     }
-    
 
     const encodedFilter = encodeURIComponent(JSON.stringify(filter));
 

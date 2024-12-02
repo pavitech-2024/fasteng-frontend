@@ -38,7 +38,7 @@ interface PromedinaMaterialsTemplateProps {
   count: number;
   onSearchParamsChange: (params: any) => void;
   onPageChange: (page: number) => void;
-  setData: any
+  setData: any;
 }
 
 interface MaterialsColumn {
@@ -66,7 +66,7 @@ const PromedinaMaterialsTemplate = ({
   setData,
 }: PromedinaMaterialsTemplateProps) => {
   const [materialsData, setMaterialsData] = useState(materials);
-  console.log("🚀 ~ materialsData:", materialsData)
+  console.log('🚀 ~ materialsData:', materialsData);
   const [page, setPage] = useState<number>(1);
   const [searchBy, setSearchBy] = useState<string>('name');
   const [searchValue, setSearchValue] = useState<string>('');
@@ -880,11 +880,7 @@ const PromedinaMaterialsTemplate = ({
             </Table>
           </TableContainer>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
-            <Pagination
-              count={pages}
-              size="small"
-              onChange={(event, value) => setPage(value)}
-            />
+            <Pagination count={pages} size="small" onChange={(event, value) => setPage(value)} />
           </Box>
         </Paper>
       </Box>
