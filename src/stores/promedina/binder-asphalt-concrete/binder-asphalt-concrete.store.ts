@@ -96,6 +96,7 @@ export type BinderAsphaltConcreteData = {
 
 export type BinderAsphaltConcreteActions = {
   setData: ({ step, key, value }: setDataType) => void;
+  clearStore: () => void;
 };
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data', 3: 'step4Data' };
@@ -212,6 +213,11 @@ const useBinderAsphaltConcreteStore = create<BinderAsphaltConcreteData & BinderA
           return {
             [stepVariant[step]]: null,
           };
+        },
+
+        clearStore: () => {
+          sessionStorage.clear();
+          set(initialState);
         },
       }),
       {

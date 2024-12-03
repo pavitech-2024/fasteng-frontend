@@ -10,9 +10,9 @@ const samplesService = {
   getSamples: () => Api.get(`promedina/granular-layers/granular-layers-samples/all`),
   updateSample: (sampleId: string, sampleData: GranularLayersData) =>
     Api.put(`promedina/granular-layers/granular-layers-samples/${sampleId}`, sampleData),
-  getFilteredSamples: (params: any, page: number) =>
+  getFilteredSamples: (params: any, page: number, limit: number, need_count: boolean) =>
     Api.get(
-      `promedina/granular-layers/granular-layers-samples/filter?filter=${params}&limit=15&need_count=true&page=${page}`
+      `promedina/granular-layers/granular-layers-samples/filter?filter=${params}&limit=${limit}&need_count=${need_count}&page=${page}`
     ),
   getSample: (sampleId: string) => Api.get(`promedina/granular-layers/granular-layers-samples/${sampleId}`),
 };
