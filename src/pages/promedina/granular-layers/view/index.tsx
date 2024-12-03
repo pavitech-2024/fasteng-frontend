@@ -6,11 +6,13 @@ import Header from '@/components/organisms/header';
 import samplesService from '@/services/promedina/granular-layers/granular-layers-view.service';
 import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
 import { Box, Button, Container } from '@mui/material';
+import { t } from 'i18next';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 const GranularLayers_view = () => {
   const [samples, setSamples] = useState<any[]>([]);
+  console.log('🚀 ~ samples:', samples);
   const [loading, setLoading] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
@@ -38,7 +40,9 @@ const GranularLayers_view = () => {
     const encodedFilter = encodeURIComponent(JSON.stringify(filter));
 
     try {
-      const response = await samplesService.getFilteredSamples(encodedFilter, page);
+      const response = await samplesService.getFilteredSamples(encodedFilter, page, 15, true);
+      console.log('🚀 ~ fetchData ~ response.data.docs:', response.data.docs);
+
       setSamples(response.data.docs);
       setTotalPages(response.data.totalPages);
       setCount(response.data.count);
@@ -75,7 +79,7 @@ const GranularLayers_view = () => {
       ) : (
         <Container>
           <Header
-            title={'Amostras cadastradas em Camadas Granulares'}
+            title={t('promedina.essays.granularLayersView')}
             image={GranularLayersIcon}
             sx={{ marginTop: '3rem' }}
           />
@@ -109,66 +113,68 @@ const GranularLayers_view = () => {
                 setData={setData}
                 onSearchParamsChange={setSearchParams}
                 onPageChange={setPage}
-                area={'granularLayers'}
+                area={'granular-layers'}
               />
             </Box>
           </Box>
         </Container>
       )}
-      <Box
-        sx={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          p: { mobile: '4vh 4vw', notebook: '3vh 6vw' },
-        }}
-      >
-        <Link
-          href="/promedina/granular-layers"
-          style={{
-            backgroundColor: '#00A3FF',
-            color: '#FFFFFF',
-            height: '32px',
-            width: '140px',
-            fontSize: '1.2rem',
-            alignItems: 'center',
-            border: '#00A3FF',
-            borderRadius: '30px',
-            textAlign: 'center',
-            fontWeight: 'bold',
-            paddingTop: '0.2rem',
-          }}
-        >
-          VOLTAR
-        </Link>
-
-        <Button
-          endIcon={<NextIcon />}
-          variant="contained"
-          disabled
+      {!loading && (
+        <Box
           sx={{
-            bgcolor: 'secondaryTons.blue',
-            color: 'primaryTons.white',
-            height: '32px',
-            width: '140px',
-            fontSize: '1rem',
-            display: 'none',
-
-            ':hover': {
-              transition: 'all 0.1s ease-in-out',
-              bgcolor: 'secondaryTons.blueDisabled',
-            },
-
-            ':active': {
-              transition: 'all 0.1s ease-in-out',
-              bgcolor: 'secondaryTons.blueClick',
-            },
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            p: { mobile: '4vh 4vw', notebook: '3vh 6vw' },
           }}
         >
-          Próximo
-        </Button>
-      </Box>
+          <Link
+            href="/promedina/granular-layers"
+            style={{
+              backgroundColor: '#00A3FF',
+              color: '#FFFFFF',
+              height: '32px',
+              width: '140px',
+              fontSize: '1.2rem',
+              alignItems: 'center',
+              border: '#00A3FF',
+              borderRadius: '30px',
+              textAlign: 'center',
+              fontWeight: 'bold',
+              paddingTop: '0.2rem',
+            }}
+          >
+            VOLTAR
+          </Link>
+
+          <Button
+            endIcon={<NextIcon />}
+            variant="contained"
+            disabled
+            sx={{
+              bgcolor: 'secondaryTons.blue',
+              color: 'primaryTons.white',
+              height: '32px',
+              width: '140px',
+              fontSize: '1rem',
+              display: 'none',
+
+              ':hover': {
+                transition: 'all 0.1s ease-in-out',
+                bgcolor: 'secondaryTons.blueDisabled',
+              },
+
+              ':active': {
+                transition: 'all 0.1s ease-in-out',
+                bgcolor: 'secondaryTons.blueClick',
+              },
+            }}
+          >
+            Próximo
+          </Button>
+        </Box>
+      )}
     </Container>
   );
 };

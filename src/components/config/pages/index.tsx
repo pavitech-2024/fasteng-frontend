@@ -31,7 +31,7 @@ const Pages = (props: PagesProps) => {
     const navbar =
       Router.pathname.includes('asphalt/') ||
       Router.pathname.includes('soils/') ||
-      Router.pathname.includes('concrete/') ||
+      Router.pathname.includes('/concrete/') ||
       Router.pathname.includes('settings');
 
     useEffect(() => {

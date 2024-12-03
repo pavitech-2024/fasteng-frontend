@@ -27,7 +27,7 @@ import StepDescription from '@/components/atoms/titles/step-description';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-type Area = 'stabilized-layers' | 'binder-asphalt-concrete' | 'granularLayers';
+type Area = 'stabilized-layers' | 'binder-asphalt-concrete' | 'granular-layers';
 
 interface PromedinaMaterialsTemplateProps {
   materials: PromedinaDataFilter[];
