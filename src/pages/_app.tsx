@@ -35,7 +35,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     clearGranularLayersStore();
     clearStabilizedLayersStore();
     clearConcreteBinderAsphaltStore();
-  }
+  };
 
   useEffect(() => {
     // Itera sobre todas as chaves no sessionStorage
@@ -54,8 +54,8 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
     if (window.location.pathname === '/home') {
       clearAllStores();
-    } else if((pathname.includes('promedina') && !pathname.includes('register'))) {
-      clearAllStores()
+    } else if (pathname.includes('promedina') && !pathname.includes('register')) {
+      clearAllStores();
     }
   }, [pathname, clearAllStores]);
 

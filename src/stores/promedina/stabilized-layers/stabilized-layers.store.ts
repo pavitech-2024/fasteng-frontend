@@ -78,7 +78,7 @@ export type StabilizedLayersData = {
 
 export type StabilizedLayersActions = {
   setData: ({ step, key, value }: setDataType) => void;
-  clearStore: () => void
+  clearStore: () => void;
 };
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data' };
@@ -177,17 +177,17 @@ const useStabilizedLayersStore = create<StabilizedLayersData & StabilizedLayersA
             }
           }),
 
-          reset: ({ step }) => {
-            set(initialState);
-            return {
-              [stepVariant[step]]: null,
-            };
-          },
-  
-          clearStore: () => {
-            sessionStorage.clear();
-            set(initialState);
-          },
+        reset: ({ step }) => {
+          set(initialState);
+          return {
+            [stepVariant[step]]: null,
+          };
+        },
+
+        clearStore: () => {
+          sessionStorage.clear();
+          set(initialState);
+        },
       }),
       {
         // name data store e config no session storage
