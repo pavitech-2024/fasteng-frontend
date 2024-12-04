@@ -1,5 +1,6 @@
 {
   "marshall.dosage-title": "Dosagem Marshall",
+  "marshall.dosage-pdf-title": "Relatório de Dosagem Marshall",
 
   "marshall.step-2-description": "Selecione os agregados e o ligante asfáltico que serão utilizados na dosagem.",
   "marshall.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica da mistura.",

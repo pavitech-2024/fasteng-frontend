@@ -6,8 +6,7 @@ import useAuth from '@/contexts/auth';
 import { t } from 'i18next';
 import { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
 import logo from '@/assets/fasteng/LogoBlack.png';
-import { SummaryItem } from '../../../materials/asphalt/generatePDFAsphalt/generatePDFAsphalt';
-import { addCapa, addCenteredText, addImageProcess, calculatePageNumber } from '../../../common';
+import { addCapa, addCenteredText, addImageProcess, addSummary, calculatePageNumber, handleAddPage, SummaryItem } from '../../../common';
 
 interface IGeneratedPDF {
   dosage: MarshallData;
@@ -16,69 +15,31 @@ interface IGeneratedPDF {
 const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
   const { user } = useAuth();
 
-  const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: SummaryItem[]) => {
-    let currentY = 30;
-
-    doc.addImage(image, 'png', 5, 5, 50, 8);
-    doc.addImage(image, 'png', 155, 5, 50, 8);
-
-    addCenteredText(doc, `${t('asphalt.essays.project.summary')}`, currentY, 12);
-    currentY += 20;
-
-    summaryItems.forEach((item) => {
-      const title = item.title;
-      const pageText = `${t('asphalt.essays.project.page')} ${item.page}`;
-      const titleWidth = doc.getTextWidth(title);
-      const pageWidth = doc.getTextWidth(pageText);
-      const totalWidth = 190;
-      const lineWidth = totalWidth - (titleWidth + pageWidth + 5);
-
-      doc.text(title, 10, currentY);
-
-      const lineLength = Math.floor(lineWidth / doc.getTextWidth('_'));
-      const line = '_'.repeat(lineLength);
-
-      doc.text(line, 10 + titleWidth + 2, currentY);
-      doc.text(pageText, 10 + titleWidth + 2 + doc.getTextWidth(line) + 3, currentY);
-
-      currentY += 10;
-    });
-
-    const pageHeight = doc.internal.pageSize.height;
-    const lineYPosition = pageHeight - 10;
-
-    doc.setLineWidth(0.5);
-    doc.line(10, lineYPosition, 200, lineYPosition);
-
-    calculatePageNumber(doc);
-  };
-
-  const addHeader = (doc: jsPDF, image: HTMLImageElement) => {
-    doc.addImage(image, 'png', 5, 5, 50, 8);
-    doc.addImage(image, 'png', 155, 5, 50, 8);
-  };
-
-  const handleAddPage = (doc: jsPDF, image: HTMLImageElement, currentY: number) => {
-    const page = doc.getCurrentPageInfo().pageNumber;
-    doc.setPage(page + 1);
-    doc.addPage();
-    addHeader(doc, image);
-    if (page >= 3) {
-      return (currentY = 30);
-    } else {
-      return currentY;
-    }
-  };
-
   const generatePDF = async () => {
     const doc = new jsPDF('p', 'mm', 'a4');
     const image = (await addImageProcess(logo.src)) as HTMLImageElement;
     let currentY = 30;
 
-    addCapa(doc, image, dosage.generalData.name);
+    addCapa(
+      doc,
+      image,
+      'marshall',
+      dosage.createdAt.toString(),
+      dosage.generalData.name,
+      dosage.generalData.operator,
+      dosage.generalData.laboratory
+    );
     handleAddPage(doc, image, currentY);
 
     const summaryItems: SummaryItem[] = [
+      {
+        title: t('asphalt.dosages.marshall.general-data'),
+        page: 3,
+      },
+      {
+        title: t('asphalt.dosages.marshall.materials-caracterization'),
+        page: 3,
+      },
       {
         title: t('asphalt.dosages.marshall.materials-final-proportions'),
         page: 3,
@@ -157,11 +118,11 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       },
     ];
 
-    calculatePageNumber(doc);
-
-    addSummary(doc, image, summaryItems);
+    addSummary(doc, image, summaryItems, dosage.materialSelectionData.binder, dosage.materialSelectionData.aggregates);
 
     handleAddPage(doc, image, currentY);
+
+    // calculatePageNumber(doc, t('marshall.dosage-pdf-title'));
 
     doc.setFontSize(12);
     doc.text(`Relatório de Dosagem - ${dosage.generalData.name}`, doc.internal.pageSize.getWidth() / 2, currentY, {
@@ -288,14 +249,9 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     autoTable(doc, volumetricParamsTable);
 
-    calculatePageNumber(doc);
-
-    // Volumetric params table
-
-    // Adicione uma nova página ao documento
     currentY = handleAddPage(doc, image, currentY);
 
-    // Vazios do agregado mineral
+    // calculatePageNumber(doc, t('marshall.dosage-pdf-title'));
 
     doc.setFontSize(12);
     doc.text(t('asphalt.dosages.vam'), doc.internal.pageSize.getWidth() / 2, currentY, { align: 'center' });
@@ -321,7 +277,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     autoTable(doc, mineralAgregateVoidsTable);
 
-    calculatePageNumber(doc);
+    // calculatePageNumber(doc, t('marshall.dosage-pdf-title'));
 
     // Salvar o PDF
     doc.save(`Relatorio_Dosagem_${dosage?.generalData.name}.pdf`);
