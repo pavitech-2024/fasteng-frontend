@@ -1,12 +1,15 @@
 import jsPDF from 'jspdf';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import autoTable from 'jspdf-autotable';
 import { Box, Button, Tooltip } from '@mui/material';
 import useAuth from '@/contexts/auth';
 import { t } from 'i18next';
 import { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
 import logo from '@/assets/fasteng/LogoBlack.png';
-import { addCapa, addCenteredText, addImageProcess, addSummary, calculatePageNumber, handleAddPage, SummaryItem } from '../../../common';
+import { addCapa, addCenteredText, addImageProcess, addSummary, calculatePageNumber, formatDate, getCurrentDateFormatted, handleAddPage, SummaryItem } from '../../../common';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import marshallDosageService from '@/services/asphalt/dosages/marshall/marshall.consult.service';
+import materialsService from '@/services/asphalt/asphalt-materials.service';
 
 interface IGeneratedPDF {
   dosage: MarshallData;
@@ -14,8 +17,26 @@ interface IGeneratedPDF {
 
 const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
   const { user } = useAuth();
+  const [materialsData, setMaterialsData] = useState<AsphaltMaterial[]>([]);
+  console.log("🚀 ~ GenerateMarshallDosagePDF ~ materials:", materialsData)
+
+  useEffect(() => {
+    const handleGetMaterialsData = async () => {
+      try {
+        const materialsIds = dosage.materialSelectionData.aggregates.map((material) => material._id);
+        const response = await materialsService.getMaterials(materialsIds);
+        console.log("🚀 ~ handleGetMaterialsData ~ response:", response)
+        setMaterialsData(response.data.materials);
+        
+      } catch (error) {
+        console.error('Failed to get materials data:', error);
+      }
+    };
+    handleGetMaterialsData();
+  }, [dosage]);
 
   const generatePDF = async () => {
+    console.log("🚀 ~ generatePDF ~ materialsData:", materialsData)
     const doc = new jsPDF('p', 'mm', 'a4');
     const image = (await addImageProcess(logo.src)) as HTMLImageElement;
     let currentY = 30;
@@ -38,7 +59,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       },
       {
         title: t('asphalt.dosages.marshall.materials-caracterization'),
-        page: 3,
+        page: 4,
       },
       {
         title: t('asphalt.dosages.marshall.materials-final-proportions'),
@@ -57,6 +78,79 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
         page: 4,
       },
     ];
+
+    const materialNames = dosage.materialSelectionData.aggregates.map((material) => material.name);
+    const materialNamesWithBinder = [...materialNames, dosage.materialSelectionData.binder].join(', ');
+
+    const userData = [
+      {
+        key: 'name',
+        label: t('asphalt.dosages.marshall.generated-by'),
+        value: user.name
+      },
+      {
+        key: 'email',
+        label: t('asphalt.dosages.marshall.email'),
+        value: user.email
+      }
+    ]
+
+    const generalData = [
+      {
+        key: 'projectName',
+        label: t('asphalt.project_name'),
+        value: dosage.generalData.name
+      },
+      {
+        key: 'usedMaterials',
+        label: t('asphalt.used-materials'),
+        value: materialNamesWithBinder
+      },
+      {
+        key: 'dnitBand',
+        label: t('asphalt.dosages.marshall.dnit-track'),
+        value: dosage.generalData.dnitBand
+      },
+      {
+        key: 'initialDate',
+        label: t('asphalt.project-initial-date'),
+        value: formatDate(dosage.createdAt.toString())
+      },
+      {
+        key: 'pdfGenerationDate',
+        label: t('asphalt.pdf-generation-date'),
+        value: getCurrentDateFormatted()
+      },
+      {
+        key: 'objective',
+        label: t('asphalt.objective'),
+        value: dosage.generalData.objective === "bearing" ? t('asphalt.dosages.marshall.bearing-layer') : dosage.generalData.objective ===  "bonding" ? t('asphalt.dosages.marshall.bonding-layer') : ""
+      },
+      {
+        key: 'initialBinder',
+        label: t('asphalt.dosages.marshall.initial_binder'),
+        value: dosage.binderTrialData.trial
+      },
+      {
+        key: 'operator',
+        label: t('asphalt.dosages.project-author'),
+        value: dosage.generalData.operator
+      },
+      {
+        key: 'laboratory',
+        label: t('asphalt.dosages.project-laboratory'),
+        value: dosage.generalData.laboratory
+      },
+    ];
+
+    const materialsArray = materialsData.map((material) => ({
+      name: material.name,
+      type: material.type,
+      creationDate: formatDate(material.createdAt.toString()),
+      source: material.description.source ? material.description.source : "---",
+      receivedDate: material.description.recieveDate ? formatDate(material.description.recieveDate?.toString()) : '--/--/----',
+      classification: "?"
+    }));
 
     const volumetricMechanicParams = [
       {
@@ -122,20 +216,51 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     handleAddPage(doc, image, currentY);
 
-    // calculatePageNumber(doc, t('marshall.dosage-pdf-title'));
+    for (let i = 0; i < userData.length; i++) {
+      doc.setFontSize(10);
+      const value = userData[i].value ? userData[i].value.toString() : "---";
+      doc.text(`${userData[i].label}: ${value}`, 10, currentY);
+      currentY += 5;
+    }
+
+    currentY += 10;
 
     doc.setFontSize(12);
-    doc.text(`Relatório de Dosagem - ${dosage.generalData.name}`, doc.internal.pageSize.getWidth() / 2, currentY, {
-      align: 'center',
-    });
-
-    currentY += 30; // 60
+    doc.text(`1. ${t('asphalt.dosages.marshall.general-data').toUpperCase()}`, 10, currentY);
+    currentY += 15;
 
     // Adicionar informações do usuário
-    doc.setFontSize(10);
-    doc.text(`Gerado por: ${user.name}`, 10, 40);
-    doc.text(`Email: ${user.email}`, 10, 45);
-    doc.text(`Data: ${new Date().toLocaleDateString()}`, 10, 50);
+
+    for (let i = 0; i < generalData.length; i++) {
+      doc.setFontSize(12);
+      doc.text(`${generalData[i].label}:`, 10, currentY);
+      currentY += 5;
+      doc.setFontSize(10);
+      const value = generalData[i].value ? generalData[i].value.toString() : "---";
+      doc.text(`${value}`, 10, currentY);
+      currentY += 10;
+    }
+
+    handleAddPage(doc, image, currentY);
+
+    // Criar uma página para cada material
+
+    materialsArray.forEach((material) => {
+      currentY = 30;
+      Object.entries(material).forEach(([key, value]) => {
+        doc.setFontSize(12);
+        doc.text(t(`asphalt.dosages.marshall.${key}`), 10, currentY);
+        currentY += 5;
+        doc.setFontSize(10);
+        doc.text(value, 10, currentY);
+        currentY += 10;
+      });
+      handleAddPage(doc, image, 30);
+    });
+
+    // doc.setFontSize(12);
+    // doc.text(`1. ${generalData}`, 10, currentY);
+    // currentY += 15;
 
     // Adicionar resumo das dosagens
     doc.setFontSize(12);

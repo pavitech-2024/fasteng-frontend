@@ -18,5 +18,17 @@
 
   "asphalt.dosages.marshall.general-data": "Dados gerais do projeto de dosagem",
   "asphalt.dosages.marshall.materials-caracterization": "Caracterização dos materiais",
-  "asphalt.dosages.marshall.asphalt-binder": "Ligante asfáltico"
+  "asphalt.dosages.marshall.asphalt-binder": "Ligante asfáltico",
+
+  "asphalt.dosages.marshall.generated-by": "Gerado por",
+  "asphalt.dosages.marshall.email": "E-mail",
+
+  "asphalt.dosages.marshall.name": "Nome do material",
+  "asphalt.dosages.marshall.source": "Procedência do material",
+  "asphalt.dosages.marshall.type": "Tipo do material",
+  "asphalt.dosages.marshall.classification": "Classificação",
+  "asphalt.dosages.marshall.creationDate": "Data de criação",
+  "asphalt.dosages.marshall.receivedDate": "Data de recebimento"
+
+
 }

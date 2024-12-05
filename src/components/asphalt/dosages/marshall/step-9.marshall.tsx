@@ -32,7 +32,6 @@ const Marshall_Step9 = ({
   } = useMarshallStore();
 
   const [dosage, setDosage] = useState(null);
-  console.log('🚀 ~ dosage:', dosage);
   const store = JSON.parse(sessionStorage.getItem('asphalt-marshall-store'));
   const dosageId = store.state._id;
 
@@ -51,6 +50,7 @@ const Marshall_Step9 = ({
           let newData = {};
 
           const foundDosage = await marshallDosageService.getMarshallDosage(dosageId);
+          console.log("🚀 ~ foundDosage:", foundDosage)
           setDosage(foundDosage.data.dosage);
 
           const response = await marshall.confirmVolumetricParameters(

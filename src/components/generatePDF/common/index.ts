@@ -26,6 +26,7 @@ export const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: Su
 
   addCenteredText(doc, `${t('asphalt.essays.project.summary')}`, currentY, 12);
   currentY += 20;
+  let page = 3;
 
   summaryItems.forEach((item, idx) => {
     const title = item.title; 
@@ -40,8 +41,9 @@ export const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: Su
 
     doc.text(externalNumber + '. ' + title, currentX, currentY);
     doc.text(line, 10 + titleWidth + currentX, currentY);
-    doc.text(item.page.toString(), totalWidth, currentY);
+    doc.text(page.toString(), totalWidth, currentY);
 
+    page += 1;
     currentY += 10;
 
     let previousCurrentX = currentX;
@@ -56,8 +58,9 @@ export const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: Su
 
       doc.text(externalNumber + '.' + internalNumber + '. ' + binder, currentX, currentY);
       doc.text(line, lineLength + currentX, currentY);
-      doc.text(item.page.toString(), totalWidth, currentY);
+      doc.text(page.toString(), totalWidth, currentY);
 
+      page += 1;
       internalNumber++;
       currentY += 10;
 
@@ -68,8 +71,9 @@ export const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: Su
 
       doc.text(externalNumber + '.' + internalNumber + '. ' + "Agregados", currentX, currentY);
       doc.text(line, currentX + titleWidth + 10, currentY);
-      doc.text(item.page.toString(), totalWidth, currentY);
+      doc.text(page.toString(), totalWidth, currentY);
 
+      page += 1;
       internalNumber++;
       currentY += 10;
       currentX += 10;
@@ -83,8 +87,9 @@ export const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: Su
 
         doc.text(aggregate.name, currentX, currentY);
         doc.text(line, currentX + titleWidth + 5, currentY);
-        doc.text(item.page.toString(), totalWidth, currentY);
+        doc.text(page.toString(), totalWidth, currentY);
 
+        page += 1;
         currentY += 10;
       }
     }
@@ -181,6 +186,14 @@ export const getCurrentDateFormatted = (): string => {
 
   return `${day}/${month}/${year}`;
 };
+
+export const formatDate = (date: string): string => {
+  const dateObject = new Date(date);
+  const day = String(dateObject.getDate()).padStart(2, '0');
+  const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+  const year = dateObject.getFullYear();
+  return `${day}/${month}/${year}`;
+}
 
 export const addPageNumber = (doc: jsPDF, pageNumber: number, dosageType: string) => {
   const pageHeight = doc.internal.pageSize.height;
