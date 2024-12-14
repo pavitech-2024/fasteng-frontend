@@ -25,7 +25,9 @@ interface TableModel {
 }
 
 const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, tableData }) => {
+  console.log("🚀 ~ tableData:", tableData)
   const { granulometryCompositionData: data, setData } = useSuperpaveStore();
+  console.log("🚀 ~ data:", data)
 
   const getMaterialIndex = () => {
     if (tableName === 'lowerComposition') return 0;
@@ -135,29 +137,54 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
     },
   ];
 
-  const generateMaterialRows = (data, tableName, idx, e) => {
+  /**
+   * Generates material row data for a given index and table name.
+   * 
+   * @param data - The data containing material percentage information.
+   * @param tableName - The name of the table being processed.
+   * @param idx - The index of the current row.
+   * @param row - The row data containing key values.
+   * @returns An object with formatted field values for each material.
+   */
+  const generateMaterialRows = (data, tableName, idx, row) => {
     return materials.reduce((acc, material, index) => {
-      const fieldTotalPassant = `totalPassant_${index + 1}`;
-      const fieldMaterial = `material_${index + 1}`;
+      // Define field names for total passant and material percentage
+      const totalPassantField = `totalPassant_${index + 1}`;
+      const materialField = `material_${index + 1}`;
+
+      // Accumulate formatted values for each material field
       return {
         ...acc,
-        [fieldTotalPassant]: e[`keyTotal${index}`],
-        [fieldMaterial]:
-          data[tableName].percentsOfMaterials !== null
-            ? data[tableName].percentsOfMaterials[index][idx]?.toFixed(2)
+        [totalPassantField]: row[`keyTotal${index}`],
+        [materialField]:
+          data[tableName].percentsOfMaterials[index] !== null &&
+          Array.isArray(data[tableName].percentsOfMaterials[index]) &&
+          data[tableName].percentsOfMaterials[index][idx] !== undefined &&
+          data[tableName].percentsOfMaterials[index][idx] !== null
+            ? data[tableName].percentsOfMaterials[index][idx].toFixed(2)
             : '',
       };
     }, {});
   };
 
-  const rows = tableData.map((e, idx) => ({
-    id: idx,
-    peneira: e.peneira,
-    ...generateMaterialRows(data, tableName, idx, e),
-    project: data[tableName].sumOfPercents !== null ? data[tableName].sumOfPercents[idx]?.toFixed(2) : '',
-    band1: e.bandsCol1,
-    band2: e.bandsCol2,
-  }));
+  const rows = tableData.map((e, idx) => {
+    const rowsData = generateMaterialRows(data, tableName, idx, e);
+
+    Object.keys(rowsData).forEach((key) => {
+      if (rowsData[key] === undefined) {
+        rowsData[key] = '---';
+      }
+    });
+
+    return {
+      id: idx,
+      peneira: e.peneira,
+      ...rowsData,
+      project: data[tableName].sumOfPercents !== null ? data[tableName].sumOfPercents[idx]?.toFixed(2) : '',
+      band1: e.bandsCol1,
+      band2: e.bandsCol2,
+    };
+  });
 
   const generateMaterialGroupings = (materials) => {
     return materials.map((material, index) => {
