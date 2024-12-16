@@ -50,7 +50,7 @@ const Superpave_Step3 = ({
       toast.promise(
         async () => {
           try {
-            console.log("testeeee");
+            console.log('testeeee');
             const dosageData = sessionStorage.getItem('asphalt-superpave-store');
             const sessionDataJson = JSON.parse(dosageData);
             const dosageDataJson = sessionDataJson.state as SuperpaveData;

@@ -25,9 +25,9 @@ interface TableModel {
 }
 
 const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, tableData }) => {
-  console.log("🚀 ~ tableData:", tableData)
+  console.log('🚀 ~ tableData:', tableData);
   const { granulometryCompositionData: data, setData } = useSuperpaveStore();
-  console.log("🚀 ~ data:", data)
+  console.log('🚀 ~ data:', data);
 
   const getMaterialIndex = () => {
     if (tableName === 'lowerComposition') return 0;
@@ -139,7 +139,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
 
   /**
    * Generates material row data for a given index and table name.
-   * 
+   *
    * @param data - The data containing material percentage information.
    * @param tableName - The name of the table being processed.
    * @param idx - The index of the current row.

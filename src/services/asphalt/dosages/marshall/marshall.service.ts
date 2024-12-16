@@ -87,11 +87,7 @@ class Marshall_SERVICE implements IEssayService {
   };
 
   // send general data to backend to verify if there is already a Marshall dosage with same name for the material
-  submitGeneralData = async (
-    data: MarshallData,
-    userId: string,
-    isConsult = false
-  ): Promise<void> => {
+  submitGeneralData = async (data: MarshallData, userId: string, isConsult = false): Promise<void> => {
     const user = userId || data.generalData.userId;
     if (!isConsult) {
       try {
