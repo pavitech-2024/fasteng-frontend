@@ -50,6 +50,7 @@ const Superpave_Step3 = ({
       toast.promise(
         async () => {
           try {
+            console.log('testeeee');
             const dosageData = sessionStorage.getItem('asphalt-superpave-store');
             const sessionDataJson = JSON.parse(dosageData);
             const dosageDataJson = sessionDataJson.state as SuperpaveData;
@@ -315,9 +316,7 @@ const Superpave_Step3 = ({
     }
   }, [data.pointsOfCurve]);
 
-  if (data.percentageInputs.some((item) => item.material_1 === null || item.material_2 === null)) {
-    nextDisabled;
-  } else {
+  if (data.graphData.length > 0) {
     setNextDisabled(false);
   }
 
@@ -356,7 +355,7 @@ const Superpave_Step3 = ({
             />
           </FormGroup>
 
-          {inferior && (
+          {inferior && data.lowerComposition.percentsOfMaterials && (
             <TableContainer>
               <Box
                 sx={{
