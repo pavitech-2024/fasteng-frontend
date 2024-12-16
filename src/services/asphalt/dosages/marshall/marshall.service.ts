@@ -90,7 +90,7 @@ class Marshall_SERVICE implements IEssayService {
   submitGeneralData = async (
     data: MarshallData,
     userId: string,
-    isConsult: boolean = false
+    isConsult = false
   ): Promise<void> => {
     const user = userId || data.generalData.userId;
     if (!isConsult) {
