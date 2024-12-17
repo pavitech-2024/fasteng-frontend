@@ -12,6 +12,7 @@ import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
 import useAuth from '@/contexts/auth';
 import { toast } from 'react-toastify';
 import Loading from '@/components/molecules/loading';
+import { isNumber } from '@mui/x-data-grid/internals';
 
 const Marshall_Step3 = ({
   nextDisabled,
@@ -27,6 +28,7 @@ const Marshall_Step3 = ({
   // Tabela de dados
   // Definindo as rows para a tabela de dados
   const [rows, setRows] = useState([]);
+  console.log("🚀 ~ rows:", rows)
 
   useEffect(() => {
     toast.promise(
@@ -38,6 +40,7 @@ const Marshall_Step3 = ({
             user._id,
             null
           );
+          console.log("🚀 ~ table_data:", table_data);
 
           const prevData = { ...data };
 
@@ -97,6 +100,8 @@ const Marshall_Step3 = ({
           }
         }
       });
+      console.log("🚀 ~ useEffect ~ newHigherSpec:", newHigherSpec)
+
       setRows(newHigherSpec);
     }
   }, [data?.dnitBands?.higher]);
@@ -205,6 +210,7 @@ const Marshall_Step3 = ({
         async () => {
           try {
             const results = await calculateGranulometryComposition(data, generalData);
+            console.log("🚀 ~ results:", results)
 
             const newPointsOfCurve = [...results?.pointsOfCurve];
 
@@ -234,7 +240,7 @@ const Marshall_Step3 = ({
               },
               graphData: newPointsOfCurve,
             };
-
+            
             setRows(newTable);
             setData({ step: 2, value: newResults });
           } catch (error) {
@@ -269,7 +275,7 @@ const Marshall_Step3 = ({
           newCols.push({
             field: header,
             headerName: t('granulometry-asphalt.total_passant'),
-            valueFormatter: ({ value }) => `${Number(value).toFixed(2)}%`,
+            valueFormatter: ({ value }) => value && isNumber(value) ? `${Number(value).toFixed(2)}%` : '---',
           });
         } else {
           const _id = header.replace('passant_', '');
@@ -277,7 +283,7 @@ const Marshall_Step3 = ({
           newCols.push({
             field: header,
             headerName: t('granulometry-asphalt.passant'),
-            valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
+            valueFormatter: ({ value }) => value && isNumber(value) ? `${Number(value).toFixed(2)}%` : '---',
             renderHeader: () => (
               <InputEndAdornment
                 adornment="%"

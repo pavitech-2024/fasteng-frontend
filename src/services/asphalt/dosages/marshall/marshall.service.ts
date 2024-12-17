@@ -202,8 +202,6 @@ class Marshall_SERVICE implements IEssayService {
 
         const { data, success, error } = response.data;
 
-        console.log(data);
-
         if (success === false) throw error.name;
 
         return data;
@@ -212,6 +210,7 @@ class Marshall_SERVICE implements IEssayService {
       }
     }
   };
+  
 
   calculateGranulometryComposition = async (
     calculateStep3Data: MarshallData['granulometryCompositionData'],
