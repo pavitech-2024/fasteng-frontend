@@ -210,7 +210,6 @@ class Marshall_SERVICE implements IEssayService {
       }
     }
   };
-  
 
   calculateGranulometryComposition = async (
     calculateStep3Data: MarshallData['granulometryCompositionData'],

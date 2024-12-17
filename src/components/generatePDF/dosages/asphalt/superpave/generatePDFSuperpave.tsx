@@ -57,7 +57,6 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
   };
 
   const generatePDF = async () => {
-
     const doc = new jsPDF('p', 'mm', 'a4');
     let currentY = 55;
 

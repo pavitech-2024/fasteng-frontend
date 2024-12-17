@@ -205,7 +205,7 @@ const Marshall_Step3 = ({
 
   const calculateGranulometricComposition = async () => {
     let sumOfInputs = 0;
-    
+
     Object.values(data.percentageInputs[0]).forEach((input) => {
       sumOfInputs += input as unknown as number;
     });
@@ -277,7 +277,7 @@ const Marshall_Step3 = ({
           newCols.push({
             field: header,
             headerName: t('granulometry-asphalt.total_passant'),
-            valueFormatter: ({ value }) => value && isNumber(value) ? `${Number(value).toFixed(2)}%` : '---',
+            valueFormatter: ({ value }) => (value && isNumber(value) ? `${Number(value).toFixed(2)}%` : '---'),
           });
         } else {
           const _id = header.replace('passant_', '');
@@ -285,7 +285,7 @@ const Marshall_Step3 = ({
           newCols.push({
             field: header,
             headerName: t('granulometry-asphalt.passant'),
-            valueFormatter: ({ value }) => value && isNumber(value) ? `${Number(value).toFixed(2)}%` : '---',
+            valueFormatter: ({ value }) => (value && isNumber(value) ? `${Number(value).toFixed(2)}%` : '---'),
             renderHeader: () => (
               <InputEndAdornment
                 adornment="%"
