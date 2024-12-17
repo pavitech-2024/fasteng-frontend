@@ -132,7 +132,6 @@ class Superpave_SERVICE implements IEssayService {
         const response = await Api.post(`${this.info.backend_path}/verify-init/${user}`, data.generalData);
 
         const { success, dosage, error } = response.data;
-        console.log('🚀 ~ Superpave_SERVICE ~ response.data:', response.data);
 
         // if there is already a Superpave dosage with same project name, throw error
         if (success === false) throw error.name;

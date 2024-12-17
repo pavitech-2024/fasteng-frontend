@@ -32,7 +32,6 @@ const Marshall_Step9 = ({
   } = useMarshallStore();
 
   const [dosage, setDosage] = useState(null);
-  console.log('🚀 ~ dosage:', dosage);
   const store = JSON.parse(sessionStorage.getItem('asphalt-marshall-store'));
   const dosageId = store.state._id;
 
