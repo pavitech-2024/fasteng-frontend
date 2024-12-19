@@ -118,25 +118,23 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  // send general data to backend to verify if there is already a Superpave dosage with same name for the material
-  submitGeneralData = async (data: SuperpaveData, userId: string, isConsult?: boolean): Promise<void> => {
-    const user = userId ? userId : data.generalData.userId;
+  // send general data to backend to verify if there is already a Marshall dosage with same name for the material
+  submitGeneralData = async (data: SuperpaveData, userId: string, isConsult = false): Promise<void> => {
+    const user = userId || data.generalData.userId;
     if (!isConsult) {
       try {
         const { name } = data.generalData;
 
-        // verify if the project name is not empty
         if (!name) throw t('errors.empty-project-name');
 
-        // verify if there is already a Superpave dosage with same name for the material
         const response = await Api.post(`${this.info.backend_path}/verify-init/${user}`, data.generalData);
 
         const { success, dosage, error } = response.data;
+        console.log("🚀 ~ Superpave_SERVICE ~ submitGeneralData= ~ dosage:", dosage)
 
-        // if there is already a Superpave dosage with same project name, throw error
-        if (success === false) throw error.name;
+        if (!success) throw error.name;
 
-        this.store_actions.setData({ step: dosage.generalData.step, value: { ...data, ...dosage } });
+        this.store_actions.setData({ step: 12, value: { ...data, ...dosage } });
       } catch (error) {
         throw error;
       }
@@ -165,6 +163,7 @@ class Superpave_SERVICE implements IEssayService {
     user?: string,
     isConsult?: boolean
   ): Promise<void> => {
+    console.log("🚀 ~ Superpave_SERVICE ~ data:", data)
     if (!isConsult) {
       try {
         const { aggregates, binder } = data.materialSelectionData;
@@ -191,15 +190,9 @@ class Superpave_SERVICE implements IEssayService {
           },
         });
 
-        const { success, dosage, error } = response.data;
+        const { success, error } = response.data;
 
         if (success === false) throw error.name;
-
-        const prevData = { ...data };
-
-        if (prevData.generalData.step < 2) prevData.generalData.step = dosage.generalData.step;
-
-        this.store_actions.setData({ step: 2, value: prevData });
       } catch (error) {
         console.log(error);
         throw error;
@@ -220,13 +213,19 @@ class Superpave_SERVICE implements IEssayService {
           aggregates: aggregates,
         });
 
+        console.log("🚀 ~ Superpave_SERVICE ~ getStep3Data= ~ response:", response)
+
         const { data, success, error } = response.data;
 
         if (success === false) throw error.name;
 
         if (step !== 2) {
-          this.store_actions?.setData({ step: 2, value: { ...dosageData.granulometryCompositionData, ...data } });
+          console.log("aquiiiiiii")
+          // this.store_actions?.setData({ step: 2, value: { ...dosageData.granulometryCompositionData, ...data } });
+          return data;
         } else {
+          console.log("elseeeee")
+
           return data;
         }
       } catch (error) {

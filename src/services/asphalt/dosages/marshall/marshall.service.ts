@@ -153,7 +153,6 @@ class Marshall_SERVICE implements IEssayService {
         const userData = userId ? userId : user;
 
         if (!aggregates) throw t('errors.empty-aggregates');
-        // if (aggregates.length < 2) throw t('errors.empty-second-aggregate');
         if (!binder) throw t('errors.empty-binder');
 
         const materialSelectionData = {

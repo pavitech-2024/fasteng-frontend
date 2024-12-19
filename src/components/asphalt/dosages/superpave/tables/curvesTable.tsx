@@ -145,25 +145,43 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
    * @returns An object with formatted field values for each material.
    */
   const generateMaterialRows = (data, tableName, idx, row) => {
+    console.log("🚀 ~ generateMaterialRows ~ row:", row)
+    console.log("🚀 ~ generateMaterialRows ~ data:", data)
     return materials.reduce((acc, material, index) => {
       // Define field names for total passant and material percentage
       const totalPassantField = `totalPassant_${index + 1}`;
       const materialField = `material_${index + 1}`;
 
       // Accumulate formatted values for each material field
-      return {
-        ...acc,
-        [totalPassantField]: row[`keyTotal${index}`],
-        [materialField]:
-          data[tableName].percentsOfMaterials[index] !== null &&
-          Array.isArray(data[tableName].percentsOfMaterials[index]) &&
-          data[tableName].percentsOfMaterials[index][idx] !== undefined &&
-          data[tableName].percentsOfMaterials[index][idx] !== null
-            ? data[tableName].percentsOfMaterials[index][idx].toFixed(2)
-            : '',
-      };
+      // return {
+      //   ...acc,
+      //   [totalPassantField]: row[`keyTotal${index}`],
+      //   [materialField]:
+      //     data[tableName].percentsOfMaterials[index] !== null &&
+      //     Array.isArray(data[tableName].percentsOfMaterials[index]) &&
+      //     data[tableName].percentsOfMaterials[index][idx] !== undefined &&
+      //     data[tableName].percentsOfMaterials[index][idx] !== null
+      //       ? data[tableName].percentsOfMaterials[index][idx].toFixed(2)
+      //       : '',
+      // };
+      if (idx !== 0) {
+        if (data.percentsToList[index][0] ===  row.peneira) {
+          return {
+            ...acc,
+            [totalPassantField]: row[`keyTotal${index}`],
+            [materialField]:
+              data.percentsToList[index] !== null &&
+              Array.isArray(data.percentsToList[index]) &&
+              data.percentsToList[index][idx] !== undefined &&
+              data.percentsToList[index][idx] !== null
+                ? data.percentsToList[index][idx]
+                : '',
+          };
+        }
+      }
     }, {});
   };
+  console.log("🚀 ~ generateMaterialRows ~ generateMaterialRows:", generateMaterialRows(data, tableName, 0, 0))
 
   const rows = tableData.map((e, idx) => {
     const rowsData = generateMaterialRows(data, tableName, idx, e);
