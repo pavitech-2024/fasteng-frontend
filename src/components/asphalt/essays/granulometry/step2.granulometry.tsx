@@ -3,11 +3,10 @@ import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import { SieveSeries } from '@/interfaces/common';
 import { getSieveSeries } from '@/utils/sieves';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import AsphaltGranulometry_step2Table from './tables/step2-table.granulometry';
-import { Add } from '@mui/icons-material';
 import { AddIcon } from '@/assets';
 import useAsphaltGranulometryStore from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
 
@@ -182,11 +181,16 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
         );
       },
     },
-
     {
-      field: 'teste',
-      headerName: 'cabecalho',
-      valueFormatter:({ value }) => `${value}`, 
+      field: 'button',
+      headerName: 'Adicionar',
+      renderCell: ({ row }) => {
+        return (
+          <Button>
+            <AddIcon />
+          </Button>
+        );
+      },
     },
   ];
 

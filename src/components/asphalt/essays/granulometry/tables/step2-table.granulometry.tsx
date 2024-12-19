@@ -21,7 +21,8 @@ const AsphaltGranulometry_step2Table = ({ rows, columns }: step2GranulometryProp
         align: 'center',
         headerAlign: 'center',
         minWidth: column.field === 'extended_read' ? 250 : 100,
-        flex: 1,
+        flex: column.field !== 'button' ? 1 : undefined,
+        width: column.field === 'button' ? 100 : undefined,
       }))}
       rows={rows !== null ? rows.map((row, index) => ({ ...row, id: index })) : []}
     />
