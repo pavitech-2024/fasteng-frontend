@@ -40,14 +40,13 @@ const UnitMass_GeneralData = ({
   }, [user]);
 
   useEffect(() => {
-    if (materials) {
-      const materialsWMaxD = materials.map((material: ConcreteMaterial) => {
-        if (material.description.maxDiammeter !== null) {
-          setMaterialsWithMaxD(materialsWMaxD);
-        }
+    if (materials.length > 0) {
+      const materialsWMaxD = materials.filter((material: ConcreteMaterial) => 
+        material.description.maxDiammeter !== null 
+      );
+      setMaterialsWithMaxD(materialsWMaxD);
         console.log(materialsWMaxD);
-      });
-    }
+      }
   }, [materials]);
 
   const methodOptions = [

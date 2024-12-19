@@ -1,12 +1,9 @@
 import { GranulometryIcon } from '@/assets';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
-import {
-  AsphaltGranulometryActions,
-  AsphaltGranulometryData,
-} from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
 import Api from '@/api';
 import { t } from 'i18next';
+import { AsphaltGranulometryActions, AsphaltGranulometryData } from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
 
 class AsphaltGranulometry_SERVICE implements IEssayService {
   info = {

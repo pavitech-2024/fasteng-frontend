@@ -2,23 +2,27 @@ import DropDown from '@/components/atoms/inputs/dropDown';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import { SieveSeries } from '@/interfaces/common';
-import useAsphaltGranulometryStore from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
 import { getSieveSeries } from '@/utils/sieves';
 import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import AsphaltGranulometry_step2Table from './tables/step2-table.granulometry';
+import { Add } from '@mui/icons-material';
+import { AddIcon } from '@/assets';
+import useAsphaltGranulometryStore from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
 
 const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useAsphaltGranulometryStore();
 
   const sievesSeries = [getSieveSeries(0), getSieveSeries(1), getSieveSeries(2), getSieveSeries(3), getSieveSeries(4)];
 
+  console.log(data.sieve_series && data.table_data && data.table_data.length == 0)
   if (data.sieve_series && data.table_data && data.table_data.length == 0) {
     const table_data = [];
     data.sieve_series.map((s) => {
-      table_data.push({ sieve_label: s.label, sieve_value: s.value, passant: 100, retained: 0 });
+      table_data.push({ sieve_label: s.label, sieve_value: s.value, passant: 100, retained: 0, button: <AddIcon/>,});
     });
+    console.log('dentro', table_data)
     setData({ step: 1, key: 'table_data', value: table_data });
   }
 
@@ -177,6 +181,12 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
           />
         );
       },
+    },
+
+    {
+      field: 'teste',
+      headerName: 'cabecalho',
+      valueFormatter:({ value }) => `${value}`, 
     },
   ];
 
