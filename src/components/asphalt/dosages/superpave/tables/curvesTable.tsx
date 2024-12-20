@@ -145,53 +145,22 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
    * @returns An object with formatted field values for each material.
    */
   const generateMaterialRows = (data, tableName, idx, row) => {
-    console.log("🚀 ~ generateMaterialRows ~ row:", row)
-    console.log("🚀 ~ generateMaterialRows ~ data:", data)
     return materials.reduce((acc, material, index) => {
-      // Define field names for total passant and material percentage
-      const totalPassantField = `totalPassant_${index + 1}`;
-      const materialField = `material_${index + 1}`;
-
-      // Accumulate formatted values for each material field
-      // return {
-      //   ...acc,
-      //   [totalPassantField]: row[`keyTotal${index}`],
-      //   [materialField]:
-      //     data[tableName].percentsOfMaterials[index] !== null &&
-      //     Array.isArray(data[tableName].percentsOfMaterials[index]) &&
-      //     data[tableName].percentsOfMaterials[index][idx] !== undefined &&
-      //     data[tableName].percentsOfMaterials[index][idx] !== null
-      //       ? data[tableName].percentsOfMaterials[index][idx].toFixed(2)
-      //       : '',
-      // };
-      if (idx !== 0) {
-        if (data.percentsToList[index][0] ===  row.peneira) {
-          return {
-            ...acc,
-            [totalPassantField]: row[`keyTotal${index}`],
-            [materialField]:
-              data.percentsToList[index] !== null &&
-              Array.isArray(data.percentsToList[index]) &&
-              data.percentsToList[index][idx] !== undefined &&
-              data.percentsToList[index][idx] !== null
-                ? data.percentsToList[index][idx]
-                : '',
-          };
-        }
-      }
+      const fieldTotalPassant = `totalPassant_${index + 1}`;
+      const fieldMaterial = `material_${index + 1}`;
+      return {
+        ...acc,
+        [fieldTotalPassant]: row[`keyTotal${index}`],
+        [fieldMaterial]:
+          data[tableName].percentsOfMaterials !== null
+            ? data[tableName].percentsOfMaterials[index][idx]?.toFixed(2)
+            : '',
+      };
     }, {});
   };
-  console.log("🚀 ~ generateMaterialRows ~ generateMaterialRows:", generateMaterialRows(data, tableName, 0, 0))
 
   const rows = tableData.map((e, idx) => {
     const rowsData = generateMaterialRows(data, tableName, idx, e);
-
-    Object.keys(rowsData).forEach((key) => {
-      if (rowsData[key] === undefined) {
-        rowsData[key] = '---';
-      }
-    });
-
     return {
       id: idx,
       peneira: e.peneira,
@@ -204,14 +173,17 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
 
   const generateMaterialGroupings = (materials) => {
     return materials.map((material, index) => {
-      const groupId = `material_${index + 1}`;
-      const fieldTotalPassant = `totalPassant_${index + 1}`;
-      const fieldMaterial = `material_${index + 1}`;
+      const materialId = `material_${index + 1}`;
+      const totalPassantField = `totalPassant_${index + 1}`;
+      const materialField = `material_${index + 1}`;
 
       return {
-        groupId: groupId,
+        groupId: materialId,
         headerName: material.name,
-        children: [{ field: fieldTotalPassant }, { field: fieldMaterial }],
+        children: [
+          { field: totalPassantField },
+          { field: materialField },
+        ],
         headerAlign: 'center',
       };
     });

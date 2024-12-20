@@ -119,5 +119,8 @@
   "asphalt.dosages.superpave.estimated-percentages-binder-vv": "Percentage of materials from the estimated binder content for Vv",
   "asphalt.dosages.superpave.asphalt-mass-quantitative": "Quantitative for 1 cubic meter of asphalt mass",
 
-  "asphalt.dosages.superpave.mechanic-volumetric-params": "Volumetric and mechanical parameters of the mixture at the optimal binder content"
+  "asphalt.dosages.superpave.mechanic-volumetric-params": "Volumetric and mechanical parameters of the mixture at the optimal binder content",
+  "asphalt.dosages.superpave.step-3.lower": "Inferior",
+  "asphalt.dosages.superpave.step-3.higher": "Superior",
+  "asphalt.dosages.superpave.step-3.average": "Average"
 }
