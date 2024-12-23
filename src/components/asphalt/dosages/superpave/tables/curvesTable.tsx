@@ -4,6 +4,8 @@ import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import useSuperpaveStore, { SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { t } from 'i18next';
+import { styled } from '@mui/material/styles';
+import { StyledDataGrid } from '@/components/molecules/tables/styledDataGrid';
 
 interface Props {
   materials: { name: string; _id: string }[];
@@ -25,9 +27,7 @@ interface TableModel {
 }
 
 const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, tableData }) => {
-  console.log('🚀 ~ tableData:', tableData);
   const { granulometryCompositionData: data, setData } = useSuperpaveStore();
-  console.log('🚀 ~ data:', data);
 
   const getMaterialIndex = () => {
     if (tableName === 'lowerComposition') return 0;
@@ -147,35 +147,30 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
    * @returns An object with formatted field values for each material.
    */
   const generateMaterialRows = (data, tableName, idx, row) => {
-    return materials.reduce((acc, material, index) => {
-      // Define field names for total passant and material percentage
-      const totalPassantField = `totalPassant_${index + 1}`;
-      const materialField = `material_${index + 1}`;
-
-      // Accumulate formatted values for each material field
+    const rowsData = materials.reduce((acc, material, index) => {
+      const fieldTotalPassant = `totalPassant_${index + 1}`;
+      const fieldMaterial = `material_${index + 1}`;
       return {
         ...acc,
-        [totalPassantField]: row[`keyTotal${index}`],
-        [materialField]:
-          data[tableName].percentsOfMaterials[index] !== null &&
-          Array.isArray(data[tableName].percentsOfMaterials[index]) &&
-          data[tableName].percentsOfMaterials[index][idx] !== undefined &&
-          data[tableName].percentsOfMaterials[index][idx] !== null
-            ? data[tableName].percentsOfMaterials[index][idx].toFixed(2)
+        [fieldTotalPassant]: row[`keyTotal${index}`],
+        [fieldMaterial]:
+          data[tableName].percentsOfMaterials !== null
+            ? data[tableName].percentsOfMaterials[index][idx]?.toFixed(2) ?? '---'
             : '',
       };
     }, {});
-  };
 
-  const rows = tableData.map((e, idx) => {
-    const rowsData = generateMaterialRows(data, tableName, idx, e);
-
-    Object.keys(rowsData).forEach((key) => {
-      if (rowsData[key] === undefined) {
+    Object.entries(rowsData).forEach(([key, value], idx) => {
+      if (value === undefined) {
         rowsData[key] = '---';
       }
     });
 
+    return rowsData;
+  };
+
+  const rows = tableData.map((e, idx) => {
+    const rowsData = generateMaterialRows(data, tableName, idx, e);
     return {
       id: idx,
       peneira: e.peneira,
@@ -188,14 +183,14 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
 
   const generateMaterialGroupings = (materials) => {
     return materials.map((material, index) => {
-      const groupId = `material_${index + 1}`;
-      const fieldTotalPassant = `totalPassant_${index + 1}`;
-      const fieldMaterial = `material_${index + 1}`;
+      const materialId = `material_${index + 1}`;
+      const totalPassantField = `totalPassant_${index + 1}`;
+      const materialField = `material_${index + 1}`;
 
       return {
-        groupId: groupId,
+        groupId: materialId,
         headerName: material.name,
-        children: [{ field: fieldTotalPassant }, { field: fieldMaterial }],
+        children: [{ field: totalPassantField }, { field: materialField }],
         headerAlign: 'center',
       };
     });
@@ -218,7 +213,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
   ];
 
   return table.columnsKeys.length > 0 ? (
-    <DataGrid
+    <StyledDataGrid
       rows={rows}
       columns={columns}
       hideFooter
