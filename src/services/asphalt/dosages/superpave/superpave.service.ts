@@ -255,13 +255,14 @@ class Superpave_SERVICE implements IEssayService {
         ? percentageInputs[2]
         : percentageInputs;
 
-        console.log("🚀 ~ Superpave_SERVICE ~ selectedCurveInputs:", selectedCurveInputs)
+      console.log('🚀 ~ Superpave_SERVICE ~ selectedCurveInputs:', selectedCurveInputs);
 
-      const inputsSum = selectedCurveInputs instanceof Object
-        ? Object.values(selectedCurveInputs).reduce((sum, input) => {
-            return sum + Number(input);
-          }, 0)
-        : 0;
+      const inputsSum =
+        selectedCurveInputs instanceof Object
+          ? Object.values(selectedCurveInputs).reduce((sum, input) => {
+              return sum + Number(input);
+            }, 0)
+          : 0;
 
       console.log('🚀 ~ Superpave_SERVICE ~ inputsSum ~ inputsSum:', inputsSum);
 

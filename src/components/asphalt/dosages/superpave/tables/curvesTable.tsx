@@ -4,6 +4,8 @@ import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import useSuperpaveStore, { SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { t } from 'i18next';
+import { styled } from '@mui/material/styles';
+import { StyledDataGrid } from '@/components/molecules/tables/styledDataGrid';
 
 interface Props {
   materials: { name: string; _id: string }[];
@@ -145,7 +147,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
    * @returns An object with formatted field values for each material.
    */
   const generateMaterialRows = (data, tableName, idx, row) => {
-    return materials.reduce((acc, material, index) => {
+    const rowsData = materials.reduce((acc, material, index) => {
       const fieldTotalPassant = `totalPassant_${index + 1}`;
       const fieldMaterial = `material_${index + 1}`;
       return {
@@ -153,10 +155,18 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
         [fieldTotalPassant]: row[`keyTotal${index}`],
         [fieldMaterial]:
           data[tableName].percentsOfMaterials !== null
-            ? data[tableName].percentsOfMaterials[index][idx]?.toFixed(2)
+            ? data[tableName].percentsOfMaterials[index][idx]?.toFixed(2) ?? '---'
             : '',
       };
     }, {});
+
+    Object.entries(rowsData).forEach(([key, value], idx) => {
+      if (value === undefined) {
+        rowsData[key] = '---';
+      }
+    });
+
+    return rowsData;
   };
 
   const rows = tableData.map((e, idx) => {
@@ -180,10 +190,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
       return {
         groupId: materialId,
         headerName: material.name,
-        children: [
-          { field: totalPassantField },
-          { field: materialField },
-        ],
+        children: [{ field: totalPassantField }, { field: materialField }],
         headerAlign: 'center',
       };
     });
@@ -206,7 +213,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
   ];
 
   return table.columnsKeys.length > 0 ? (
-    <DataGrid
+    <StyledDataGrid
       rows={rows}
       columns={columns}
       hideFooter
