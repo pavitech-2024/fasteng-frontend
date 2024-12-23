@@ -475,7 +475,9 @@ const Superpave_Step4 = ({
             <Box sx={{ display: 'flex', gap: '1rem', flexDirection: 'column', marginBottom: '2rem' }}>
               {modalMaterialInputs.map((materialInputs, idx) => (
                 <>
-                  <Typography component={'h3'} sx={{ marginTop: '2rem'}}>{data.materials[idx].name}</Typography>
+                  <Typography component={'h3'} sx={{ marginTop: '2rem' }}>
+                    {data.materials[idx].name}
+                  </Typography>
 
                   <Box key={idx} sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                     {materialInputs.map((input) => (
