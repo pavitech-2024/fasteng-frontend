@@ -12,7 +12,7 @@ import { PageGenericContainer as Container } from '@/components/organisms/pageCo
 const Materials = () => {
   const [openModal, setOpenModal] = useState(false);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
-  const [materialToEdit, setMaterialToEdit] = useState<AsphaltMaterial>()
+  const [materialToEdit, setMaterialToEdit] = useState<AsphaltMaterial>();
   const [loading, setLoading] = useState<boolean>(true);
   const [isEdit, setIsEdit] = useState<boolean>(false);
 

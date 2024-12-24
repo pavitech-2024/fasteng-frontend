@@ -25,7 +25,7 @@ export const CreateEditSoilSampleModal = ({
   sampleToEdit,
   isEdit,
 }: CreateEditSoilSampleModalProps) => {
-  const initialSampleState: SoilSample ={
+  const initialSampleState: SoilSample = {
     name: '',
     type: null,
     description: {
@@ -41,22 +41,22 @@ export const CreateEditSoilSampleModal = ({
     },
     _id: '',
     createdAt: undefined,
-    userId: ''
+    userId: '',
   };
 
   const [sample, setSample] = useState<SoilSample>(initialSampleState);
 
-    const resetSample = () => {
-      setSample(initialSampleState);
-    };
-  
-    const modalTitle = isEdit ? 'Editar sample' : 'Cadastrar sample';
-  
-    useEffect(() => {
-      if (isEdit && sampleToEdit) {
-        setSample(sampleToEdit);
-      }
-    }, [sampleToEdit]);
+  const resetSample = () => {
+    setSample(initialSampleState);
+  };
+
+  const modalTitle = isEdit ? 'Editar sample' : 'Cadastrar sample';
+
+  useEffect(() => {
+    if (isEdit && sampleToEdit) {
+      setSample(sampleToEdit);
+    }
+  }, [sampleToEdit]);
 
   const inputs = [
     { label: t('samples.name'), value: sample.name, key: 'name' },
