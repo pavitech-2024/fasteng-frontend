@@ -3,7 +3,7 @@ import { t } from 'i18next';
 import DropDown from '@/components/atoms/inputs/dropDown';
 import SUCS_SERVICE from '@/services/soils/essays/sucs/sucs.service';
 import Loading from '@/components/molecules/loading';
-import { Sample } from '@/interfaces/soils';
+import { SoilSample } from '@/interfaces/soils';
 import { useEffect, useState } from 'react';
 import useAuth from '@/contexts/auth';
 import useSucsStore from '@/stores/soils/sucs/sucs.store';
@@ -15,7 +15,7 @@ import { SucsTableImage } from '../../../../assets';
 const SUCS_GeneralData = ({ nextDisabled, setNextDisabled, sucs }: EssayPageProps & { sucs: SUCS_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [open, setOpen] = useState<boolean>(false);
-  const [samples, setSamples] = useState<Sample[]>([]);
+  const [samples, setSamples] = useState<SoilSample[]>([]);
   const { user } = useAuth();
   const { generalData, setData } = useSucsStore();
 
@@ -114,7 +114,7 @@ const SUCS_GeneralData = ({ nextDisabled, setNextDisabled, sucs }: EssayPageProp
                     key={input.key}
                     variant="standard"
                     label={input.label}
-                    options={samples.map((sample: Sample) => {
+                    options={samples.map((sample: SoilSample) => {
                       return { label: sample.name + ' | ' + t(`${'samples.' + sample.type}`), value: sample };
                     })}
                     defaultValue={defaultValue}
