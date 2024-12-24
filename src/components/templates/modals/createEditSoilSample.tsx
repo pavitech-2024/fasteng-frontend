@@ -1,22 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { FormControl, Input, InputAdornment, InputLabel, TextField } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
-import { SampleData, Sample } from '@/interfaces/soils';
+import { SampleData, SoilSample } from '@/interfaces/soils';
 import ModalBase from '../../molecules/modals/modal';
 import { toast } from 'react-toastify';
 import samplesService from '@/services/soils/soils-samples.service';
 import { t } from 'i18next';
 
-interface NewSampleModalProps {
+interface CreateEditSoilSampleModalProps {
   openModal: boolean;
   handleCloseModal: () => void;
   updateSamples: () => void;
-  samples: Sample[];
+  samples: SoilSample[];
+  sampleToEdit?: SoilSample;
+  isEdit: boolean;
 }
 
-export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, samples }: NewSampleModalProps) => {
-  const [sample, setSample] = useState<SampleData>({
+export const CreateEditSoilSampleModal = ({
+  openModal,
+  handleCloseModal,
+  updateSamples,
+  samples,
+  sampleToEdit,
+  isEdit,
+}: CreateEditSoilSampleModalProps) => {
+  const initialSampleState: SoilSample ={
     name: '',
     type: null,
     description: {
@@ -30,7 +39,24 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, sam
       collectionDate: null,
       observation: null,
     },
-  });
+    _id: '',
+    createdAt: undefined,
+    userId: ''
+  };
+
+  const [sample, setSample] = useState<SoilSample>(initialSampleState);
+
+    const resetSample = () => {
+      setSample(initialSampleState);
+    };
+  
+    const modalTitle = isEdit ? 'Editar sample' : 'Cadastrar sample';
+  
+    useEffect(() => {
+      if (isEdit && sampleToEdit) {
+        setSample(sampleToEdit);
+      }
+    }, [sampleToEdit]);
 
   const inputs = [
     { label: t('samples.name'), value: sample.name, key: 'name' },
@@ -56,8 +82,8 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, sam
     else setSample({ ...sample, description: { ...sample.description, [key]: value } });
   };
 
-  const handleSubmitNewSample = async () => {
-    const createMaterialToast = toast.loading('Cadastrando amostra...', { autoClose: 5000 });
+  const handleCreateSample = async () => {
+    const CreateEditMaterialToast = toast.loading('Cadastrando amostra...', { autoClose: 5000 });
     try {
       if (sample.name === '') throw 'Nome não pode ser vazio!';
       if (sample.type === null) throw 'Tipo não pode ser vazio!';
@@ -68,7 +94,7 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, sam
 
       await updateSamples();
       handleCloseModal();
-      toast.update(createMaterialToast, {
+      toast.update(CreateEditMaterialToast, {
         render: 'Amostra cadastrada com sucesso!',
         type: 'success',
         isLoading: false,
@@ -76,7 +102,44 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, sam
         closeButton: true,
       });
     } catch (error) {
-      toast.update(createMaterialToast, {
+      toast.update(CreateEditMaterialToast, {
+        render: error,
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+        closeButton: true,
+      });
+    }
+  };
+
+  const validateSampleData = () => {
+    if (sample.name === '') throw 'Nome não pode ser vazio!';
+    if (sample.type === null) throw 'Tipo não pode ser vazio!';
+    if (sample.description.depth < 0) throw 'Profundidade não pode ser negativa!';
+    if (samples.find((s) => s.name === sample.name)) throw 'Já existe uma amostra com esse nome!';
+  };
+
+  const handleEditSample = async () => {
+    const toastId = toast.loading('Editando sample...', { autoClose: 5000 });
+
+    try {
+      validateSampleData();
+
+      await samplesService.editSample(sampleToEdit._id, sample);
+
+      await updateSamples();
+
+      handleCloseModal();
+
+      toast.update(toastId, {
+        render: 'Material editado com sucesso!',
+        type: 'success',
+        isLoading: false,
+        autoClose: 5000,
+        closeButton: true,
+      });
+    } catch (error) {
+      toast.update(toastId, {
         render: error,
         type: 'error',
         isLoading: false,
@@ -88,13 +151,22 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, sam
 
   return (
     <ModalBase
-      title={t('samples.newSample')}
+      title={modalTitle}
       open={openModal}
       leftButtonTitle={t('samples.cancel')}
-      rightButtonTitle={t('samples.register')}
+      rightButtonTitle={isEdit ? t('samples.edit') : t('samples.register')}
       size="medium"
-      onSubmit={() => handleSubmitNewSample()}
-      onCancel={handleCloseModal}
+      onSubmit={() => {
+        if (isEdit) {
+          handleEditSample();
+        } else {
+          handleCreateSample();
+        }
+      }}
+      onCancel={() => {
+        resetSample();
+        handleCloseModal();
+      }}
       disableSubmit={sample.name === ''}
     >
       <Box sx={{ mb: '1rem' }}>
@@ -121,6 +193,7 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, sam
                   variant="standard"
                   size="medium"
                   options={types}
+                  isEdit={isEdit}
                   callback={(value: string) => changeSample('type', value)}
                   required
                 />
@@ -164,4 +237,4 @@ export const NewSampleModal = ({ openModal, handleCloseModal, updateSamples, sam
   );
 };
 
-export default NewSampleModal;
+export default CreateEditSoilSampleModal;
