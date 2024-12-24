@@ -43,6 +43,12 @@ const Login: NextPage = () => {
     } catch (error) { }
   };
 
+  const handleHealthCheck = async () => {
+    try {
+      const result = await axios.
+    } catch (error) { }
+  };
+
   const handleForgotPassword = () => {
     toast.promise(
       async () => {
