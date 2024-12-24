@@ -17,6 +17,7 @@ interface DropDownProps {
   size?: 'small' | 'medium';
   variant?: 'standard' | 'outlined' | 'filled';
   required?: boolean;
+  isEdit?: boolean;
 }
 
 const DropDown = ({
@@ -29,6 +30,7 @@ const DropDown = ({
   size,
   variant,
   required,
+  isEdit,
 }: DropDownProps) => {
   const [selectedValue, setSelectedValue] = useState(defaultValue?.value || '');
 
@@ -43,7 +45,7 @@ const DropDown = ({
       select
       label={label}
       defaultValue={defaultValue && defaultValue.value}
-      value={defaultValue ? defaultValue.value : ''} // Usando value ao invés de defaultValue
+      value={defaultValue ? defaultValue.value : ''}
       onChange={handleChange}
       helperText={helperText ? helperText : null}
       sx={sx}
@@ -51,6 +53,7 @@ const DropDown = ({
       color="primary"
       variant={variant}
       required={required}
+      focused={isEdit}
     >
       {options?.map((option, index) => (
         <MenuItem key={index} value={option.value} onClick={() => callback(option.value)} sx={{ fontSize: '14px' }}>

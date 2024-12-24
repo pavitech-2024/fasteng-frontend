@@ -34,7 +34,7 @@ interface IEssaysData {
   data: EssaysData;
 }
 
-const Sample = () => {
+const SoilSample = () => {
   const router = useRouter();
   const query = router.query;
   const id = query.id.toString();
@@ -177,4 +177,4 @@ const Sample = () => {
   );
 };
 
-export default Sample;
+export default SoilSample;
