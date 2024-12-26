@@ -41,6 +41,7 @@ export const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: Su
 
     doc.text(externalNumber + '. ' + title, currentX, currentY);
     doc.text(line, 10 + titleWidth + currentX, currentY);
+
     doc.text(page.toString(), totalWidth, currentY);
 
     page += 1;
@@ -52,12 +53,17 @@ export const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: Su
       currentX += 10;
 
       titleWidth = doc.getTextWidth(`${externalNumber + '.' + internalNumber + ' ' + binder}`);
-      lineWidth = totalWidth - (titleWidth - currentX);
+      lineWidth = totalWidth - (titleWidth - currentX) - 7.5;
       lineLength = Math.floor(lineWidth / doc.getTextWidth('_'));
       line = '_'.repeat(lineLength - currentX);
 
       doc.text(externalNumber + '.' + internalNumber + '. ' + binder, currentX, currentY);
-      doc.text(line, lineLength + currentX, currentY);
+      doc.text(line, currentX + titleWidth + 10, currentY);
+
+      if (currentX !== 10) {
+        page -= 1;
+      }
+
       doc.text(page.toString(), totalWidth, currentY);
 
       page += 1;
@@ -78,6 +84,8 @@ export const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: Su
       currentY += 10;
       currentX += 10;
 
+      let newPage = false;
+
       for (let i = 0; i < aggregates.length; i++) {
         titleWidth = doc.getTextWidth(aggregates[i].name);
         lineWidth = totalWidth - (titleWidth + currentX) - 7;
@@ -87,6 +95,12 @@ export const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: Su
 
         doc.text(aggregate.name, currentX, currentY);
         doc.text(line, currentX + titleWidth + 5, currentY);
+
+        if (currentX !== 10 && !newPage) {
+          page -= 1;
+          newPage = true;
+        }
+
         doc.text(page.toString(), totalWidth, currentY);
 
         page += 1;

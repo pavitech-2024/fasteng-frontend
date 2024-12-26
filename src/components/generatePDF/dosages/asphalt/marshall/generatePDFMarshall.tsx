@@ -20,22 +20,26 @@ import {
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import marshallDosageService from '@/services/asphalt/dosages/marshall/marshall.consult.service';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
+import { isTemplateExpression } from 'typescript';
 
 interface IGeneratedPDF {
   dosage: MarshallData;
 }
 
 const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
+  console.log('🚀 ~ GenerateMarshallDosagePDF ~ dosage:', dosage);
   const { user } = useAuth();
   const [materialsData, setMaterialsData] = useState<AsphaltMaterial[]>([]);
+  console.log("🚀 ~ GenerateMarshallDosagePDF ~ materialsData:", materialsData)
   const [materialsEssays, setMaterialsEssays] = useState<any[]>([]);
+  
 
   useEffect(() => {
     const handleGetMaterialsData = async () => {
       try {
         const materialsIds = dosage.materialSelectionData.aggregates.map((material) => material._id);
+        materialsIds.unshift(dosage.materialSelectionData.binder);
         const response = await materialsService.getMaterials(materialsIds);
-        console.log('🚀 ~ handleGetMaterialsData ~ response:', response);
         setMaterialsData(response.data.materials);
         setMaterialsEssays(response.data.essays);
       } catch (error) {
@@ -104,7 +108,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       },
     ];
 
-    const generalData = [
+    const generalDataArray = [
       {
         key: 'projectName',
         label: t('asphalt.project_name'),
@@ -168,17 +172,42 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       classification: '?',
     }));
 
-    const essaysArray = materialsEssays.map((essay) => {
-      const granulometryIndex = essay.findIndex((item) => item.essayName === 'granulometry');
-      if (granulometryIndex !== -1) {
-        return {
-          granulometry: essay[granulometryIndex].data.generalData.name,
-          nominalSize: essay[granulometryIndex].data?.results.nominal_size,
-          nominalDiammeter: essay[granulometryIndex].data?.results.nominal_diameter,
-          finenessModule: essay[granulometryIndex].data?.results.fineness_module,
-        };
-      }
-    });
+    // Inserir o binder no array de materiais
+
+    const essaysResults = materialsEssays
+      .flatMap((essay) => {
+        if (essay[0].data?.generalData.material.type !== 'asphaltBinder') {
+          const granulometryIndex = essay.findIndex((item) => item.essayName === 'granulometry');
+          if (granulometryIndex !== -1) {
+            return {
+              granulometry: {
+                results: {
+                  essayName: essay[granulometryIndex].data.generalData.name,
+                  nominalSize: essay[granulometryIndex].data?.results.nominal_size,
+                  nominalDiammeter: essay[granulometryIndex].data?.results.nominal_diameter,
+                  finenessModule: essay[granulometryIndex].data?.results.fineness_module,
+                },
+              },
+            };
+          }
+        } else {
+          return {
+            viscosityRotational: {
+              machiningTemperatureRange: {
+                higher: essay.find((item) => item.essayName === 'viscosityRotational').data.results
+                  .machiningTemperatureRange.higher,
+                lower: essay.find((item) => item.essayName === 'viscosityRotational').data.results
+                  .machiningTemperatureRange.lower,
+                average: essay.find((item) => item.essayName === 'viscosityRotational').data.results
+                  .machiningTemperatureRange.average,
+              },
+            },
+          };
+        }
+      })
+      .filter((item) => item);
+
+    console.log('🚀 ~ generatePDF ~ essaysResults:', essaysResults);
 
     const volumetricMechanicParams = [
       {
@@ -240,7 +269,13 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       },
     ];
 
-    addSummary(doc, image, summaryItems, dosage.materialSelectionData.binder, dosage.materialSelectionData.aggregates);
+    addSummary(
+      doc,
+      image,
+      summaryItems,
+      materialsEssays[0][0].data.generalData.material.name,
+      dosage.materialSelectionData.aggregates
+    );
 
     handleAddPage(doc, image, currentY);
 
@@ -259,14 +294,18 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     // Adicionar informações do usuário
 
-    for (let i = 0; i < generalData.length; i++) {
+    for (let i = 0; i < generalDataArray.length; i++) {
       doc.setFontSize(12);
-      doc.text(`${generalData[i].label}:`, 10, currentY);
+      doc.text(`${generalDataArray[i].label}:`, 10, currentY);
       currentY += 5;
       doc.setFontSize(10);
-      const value = generalData[i].value ? generalData[i].value.toString() : '---';
+      const value = generalDataArray[i].value ? generalDataArray[i].value.toString().split(',').join('\n') : '---';
       doc.text(`${value}`, 10, currentY);
-      currentY += 10;
+      if (generalDataArray[i].key === 'usedMaterials') {
+        currentY += 25;
+      } else {
+        currentY += 10;
+      }
     }
 
     handleAddPage(doc, image, currentY);
@@ -300,13 +339,24 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       doc.text(`Propriedades`.toUpperCase(), 10, currentY);
       currentY += 10;
 
-      Object.entries(essaysArray[idx]).forEach(([key, value]) => {
+      Object.entries(essaysResults[idx]).forEach(([key, value]) => {
         doc.setFontSize(12);
-        doc.text(t(`granulometry-soils.${key}`), 10, currentY);
-        currentY += 5;
-        doc.setFontSize(10);
-        doc.text(value?.toString(), 10, currentY);
-        currentY += 10;
+        doc.text(`${t(`asphalt.essays.${key}`)}:`, 10, currentY);
+
+        Object.entries(value).forEach(([subKey, subValue]) => {
+          doc.text(`${t(`asphalt.essays.${key}.${subKey}`)}:`, 20, (currentY += 5));
+
+          Object.entries(subValue).forEach(([subSubKey, subSubValue]) => {
+            doc.setFontSize(10);
+            doc.text(
+              `${t(`asphalt.essays.${key}.${subKey}.${subSubKey}`)}: ${
+                !isNaN(Number(subSubValue)) ? Number(subSubValue).toFixed(2) : subSubValue
+              }`,
+              30,
+              (currentY += 5)
+            );
+          });
+        });
       });
 
       handleAddPage(doc, image, 30);
@@ -316,24 +366,49 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     // Adicionar resumo das dosagens
     doc.setFontSize(12);
-    doc.text('Resumo das Dosagens:', 10, currentY);
+    doc.text('Resumo das Dosagens:'.toUpperCase(), 10, currentY);
     currentY += 10; // 70
 
-    // Exemplo de tabela com autoTable
-    const materials = dosage?.materialSelectionData?.aggregates?.map((material) => material.name) || [];
+    const materials = materialsData.map((material) => material.name);
+    console.log('🚀 ~ generatePDF ~ materials:', materials);
 
-    const optimumBinder =
-      dosage?.optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage?.map((confirmedPercentsOfDosage) =>
-        confirmedPercentsOfDosage.toFixed(2)
-      ) || [];
+    // const optimumBinder =
+    //   dosage?.optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage?.map((confirmedPercentsOfDosage) =>
+    //     confirmedPercentsOfDosage.toFixed(2)
+    //   ) || [];
 
-    materials.push(t('asphalt.dosages.optimum-binder'));
+    // const optimumBinder = dosage?.optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage.map(
+    //   (percent, idx) => {
+    //     if (materialsData[idx].type !== 'asphaltBinder') {
+    //       console.log("Agregado")
+    //       return percent.toFixed(2);
+    //     } else {
+    //       console.log("ligante")
+    //       return dosage.optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2);
+    //     }
+    //   }
+    // );
+    
 
-    optimumBinder.push(dosage.optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2));
+    const optimumBinder = []; 
+    let index = 0;
+    
+    materialsData.forEach((material, idx) => {
+      if (material.type !== 'asphaltBinder') {
+        optimumBinder.push(Number(dosage.optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage[index]).toFixed(2));
+        index++;
+      } else {
+        optimumBinder.push(Number(dosage.optimumBinderContentData?.optimumBinder?.optimumContent).toFixed(2));
+      }
+    })
+
+    console.log("🚀 ~ optimumBinder ~ optimumBinder:", optimumBinder)
+
+    // optimumBinder.push(dosage.optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2));
 
     doc.setFontSize(12);
     doc.text(
-      t('asphalt.dosages.marshall.materials-final-proportions'),
+      t('asphalt.dosages.marshall.materials-final-proportions').toUpperCase(),
       doc.internal.pageSize.getWidth() / 2,
       currentY,
       {

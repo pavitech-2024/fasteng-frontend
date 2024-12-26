@@ -18,8 +18,8 @@
   "granulometry-soils.other-data": "Outros dados",
   "granulometry-soils.total-retained": "Total retido",
   "granulometry-soils.nominalSize": "Tamanho nominal",
-  "granulometry-soils.nominalDiammeter": "Diâmetro nominal",
-  "granulometry-soils.finenessModule": "Módulo finura",
+  "granulometry-soils.nominalDiammeter": "asphalt.essays.granulometry.results.nominalDiammeter",
+  "granulometry-soils.finenessModule": "Módulo de finura",
   "granulometry-soils.cc": "CC",
   "granulometry-soils.cnu": "CNU",
   "granulometry-soils.error": "Erro"
