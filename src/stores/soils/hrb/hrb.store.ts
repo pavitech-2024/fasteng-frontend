@@ -1,4 +1,4 @@
-import { Sample } from '@/interfaces/soils';
+import { SoilSample } from '@/interfaces/soils';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { setDataType } from '../cbr/cbr.store';
@@ -6,7 +6,7 @@ import { setDataType } from '../cbr/cbr.store';
 interface GeneralData {
   userId: string;
   name: string;
-  sample: Sample;
+  sample: SoilSample;
   operator?: string;
   calculist?: string;
   description?: string;

@@ -3,7 +3,7 @@ import { t } from 'i18next';
 import DropDown from '@/components/atoms/inputs/dropDown';
 import CBR_SERVICE from '@/services/soils/essays/cbr/cbr.service';
 import Loading from '@/components/molecules/loading';
-import { Sample } from '@/interfaces/soils';
+import { SoilSample } from '@/interfaces/soils';
 import { useEffect, useState } from 'react';
 import useAuth from '@/contexts/auth';
 import useCbrStore from '@/stores/soils/cbr/cbr.store';
@@ -12,7 +12,7 @@ import { EssayPageProps } from '@/components/templates/essay';
 
 const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps & { cbr: CBR_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [samples, setSamples] = useState<Sample[]>([]);
+  const [samples, setSamples] = useState<SoilSample[]>([]);
   const { user } = useAuth();
   const { generalData, setData } = useCbrStore();
 
@@ -111,7 +111,7 @@ const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps 
                     key={input.key}
                     variant="standard"
                     label={input.label}
-                    options={samples.map((sample: Sample) => {
+                    options={samples.map((sample: SoilSample) => {
                       return { label: sample.name + ' | ' + t(`${'samples.' + sample.type}`), value: sample };
                     })}
                     defaultValue={defaultValue}

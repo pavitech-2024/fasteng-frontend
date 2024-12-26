@@ -46,7 +46,7 @@
 
   "asphalt.dosages.marshall.bearing-layer": "Bearing Layer",
   "asphalt.dosages.marshall.bonding-layer": "Connection Layer",
-  "asphalt.dosages.inputs-sum-invalid": "The sum of the percentage values ​​of the materials must be equal to 100.",
+  "asphalt.dosages.inputs-sum-invalid": "The sum of the percentage values ​​of the materials must be equal to 100. Soma atual: ",
 
   "asphalt.dosages.indirect-tensile-strength": "Tensile strength by diametric tendency",
   "asphalt.dosages.fluency": "Fluency",

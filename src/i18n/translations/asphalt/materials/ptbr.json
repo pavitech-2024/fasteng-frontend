@@ -27,5 +27,6 @@
   "loading.marshall.success": "Dosagens carregadas com sucesso",
   "loading.marshall.error": "Erro ao carregar as dosagens",
 
-  "asphalt.dosages.superpave.material_selection": "Seleção de Materiais"
+  "asphalt.dosages.superpave.material_selection": "Seleção de Materiais",
+  "asphalt.materials.edit.title": "Editar Material"
 }

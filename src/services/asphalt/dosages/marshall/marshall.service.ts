@@ -45,12 +45,11 @@ class Marshall_SERVICE implements IEssayService {
     try {
       switch (step) {
         case 0:
-          const { generalData: generalData } = data as MarshallData;
-          await this.submitGeneralData(generalData, this.userId, isConsult);
+          await this.submitGeneralData(data as MarshallData, this.userId, isConsult);
           break;
         case 1:
           await this.submitMaterialSelection(data as MarshallData, this.userId, null, isConsult);
-          const { materialSelectionData } = data as MarshallData;
+          const { materialSelectionData, generalData } = data as MarshallData;
           await this.getStep3Data(generalData, materialSelectionData, this.userId, isConsult);
           break;
         case 2:
@@ -83,31 +82,26 @@ class Marshall_SERVICE implements IEssayService {
           throw t('errors.invalid-step');
       }
     } catch (error) {
-      //throw error;
+      throw error;
     }
   };
 
   // send general data to backend to verify if there is already a Marshall dosage with same name for the material
-  submitGeneralData = async (
-    generalData: MarshallData['generalData'],
-    userId: string,
-    isConsult?: boolean
-  ): Promise<void> => {
-    const user = userId ? userId : generalData.userId;
+  submitGeneralData = async (data: MarshallData, userId: string, isConsult = false): Promise<void> => {
+    const user = userId || data.generalData.userId;
     if (!isConsult) {
       try {
-        const { name } = generalData;
+        const { name } = data.generalData;
 
-        // verify if the project name is not empty
         if (!name) throw t('errors.empty-project-name');
 
-        // verify if there is already a Marshall dosage with same name for the material
-        const response = await Api.post(`${this.info.backend_path}/verify-init/${user}`, generalData);
+        const response = await Api.post(`${this.info.backend_path}/verify-init/${user}`, data.generalData);
 
-        const { success, error } = response.data;
+        const { success, dosage, error } = response.data;
 
-        // if there is already a Marshall dosage with same project name, throw error
-        if (success === false) throw error.name;
+        if (!success) throw error.name;
+
+        this.store_actions.setData({ step: 10, value: { ...data, ...dosage } });
       } catch (error) {
         throw error;
       }
@@ -159,7 +153,6 @@ class Marshall_SERVICE implements IEssayService {
         const userData = userId ? userId : user;
 
         if (!aggregates) throw t('errors.empty-aggregates');
-        // if (aggregates.length < 2) throw t('errors.empty-second-aggregate');
         if (!binder) throw t('errors.empty-binder');
 
         const materialSelectionData = {
@@ -207,8 +200,6 @@ class Marshall_SERVICE implements IEssayService {
         });
 
         const { data, success, error } = response.data;
-
-        console.log(data);
 
         if (success === false) throw error.name;
 
@@ -878,7 +869,6 @@ class Marshall_SERVICE implements IEssayService {
     user?: string,
     isConsult?: boolean
   ): Promise<void> => {
-    console.log('🚀 ~ Marshall_SERVICE ~ data:', data);
     if (!isConsult) {
       try {
         const userData = userId ? userId : user;

@@ -34,7 +34,7 @@
   "asphalt.materials.comments": "Observations",
   "asphalt.comments": "Comments",
   "asphalt.essays.penetration-asphalt": "Penetration",
-  "asphalt.essays.abrasion.final-mass": "Sample mass after test",
+  "asphalt.essays.abrasion.final-mass": "SoilSample mass after test",
   "asphalt.essays.abrasion.graduation": "Choose the graduation",
   "asphalt.essays.abrasion.initial-mass": "Initial mass"
 }
