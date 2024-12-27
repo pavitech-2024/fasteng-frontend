@@ -8,7 +8,7 @@ import { AbrasionActions, AbrasionData } from '@/stores/asphalt/abrasion/abrasio
 class Abrasion_SERVICE implements IEssayService {
   info = {
     key: 'abrasion',
-    icon: AbrasionIcon ,
+    icon: AbrasionIcon,
     title: t('asphalt.essays.abrasion'),
     path: '/asphalt/essays/abrasion',
     backend_path: 'asphalt/essays/abrasion',

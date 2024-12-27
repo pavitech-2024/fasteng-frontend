@@ -1,4 +1,4 @@
-import { NextPage} from 'next';
+import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { t } from 'i18next';
 import Head from 'next/head';
@@ -41,7 +41,7 @@ const Login: NextPage = () => {
         success: t('login.toast success'),
         error: t('login.toast error'),
       });
-    } catch (error) { }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -54,11 +54,10 @@ const Login: NextPage = () => {
         }
       } catch (error) {
         console.error(error);
-       }
-    }; 
+      }
+    };
     handleHealthCheck();
   }, []);
-
 
   const handleForgotPassword = () => {
     toast.promise(
@@ -283,15 +282,13 @@ const Login: NextPage = () => {
                   {t('login.forget password')}
                 </ButtonBase>
               </Box>
-            </Box>) : (
-
-          <Box
-          sx={{
-
-          }}>
-            <Image src="/favicon.ico" width={200} height={200} alt="" />
-            <Typography>{t("home.maintenance")}</Typography>
-          </Box> )}
+            </Box>
+          ) : (
+            <Box sx={{}}>
+              <Image src="/favicon.ico" width={200} height={200} alt="" />
+              <Typography>{t('home.maintenance')}</Typography>
+            </Box>
+          )}
 
           <Box
             sx={{
