@@ -37,7 +37,7 @@ import { RtfoData } from '@/stores/asphalt/rtfo/rtfo.store';
 import RtfoMaterialView from '@/components/asphalt/material/rtfoMaterialView';
 import { ElasticRecoveryData } from '@/stores/asphalt/elasticRecovery/elasticRecovery.store';
 import ElasticRecoveryMaterialView from '@/components/asphalt/material/elasticRecoveryMaterialView';
-import GeneratePDF from '@/components/generatePDF/generatePDFAsphalt/generatePDFAsphalt';
+import GeneratePDF from '@/components/generatePDF/materials/asphalt/generatePDFAsphalt/generatePDFAsphalt';
 
 interface TextBoxProps {
   children: JSX.Element | ReactNode;

@@ -7,6 +7,8 @@
   "marshall.step-5-description": "Enter the actual or theoretical maximum density data for the mixture and the correction factor for water temperature.",
   "marshall.step-9-description": "These are the results of your Marshall dosage. Remember to save the project to ensure access to it in the future.",
 
+  "marshall.general-results": "General Results",
+
   "marshall.dosages.marshall.general-data": "General Data",
   "asphalt.dosages.marshall.material_selection": "Material Selection",
   "asphalt.dosages.marshall.granulometry_composition": "Granulometric Composition",
@@ -44,7 +46,7 @@
 
   "asphalt.dosages.marshall.bearing-layer": "Bearing Layer",
   "asphalt.dosages.marshall.bonding-layer": "Connection Layer",
-  "asphalt.dosages.inputs-sum-invalid": "The sum of the percentage values ​​of the materials must be equal to 100.",
+  "asphalt.dosages.inputs-sum-invalid": "The sum of the percentage values ​​of the materials must be equal to 100. Soma atual: ",
 
   "asphalt.dosages.indirect-tensile-strength": "Tensile strength by diametric tendency",
   "asphalt.dosages.fluency": "Fluency",

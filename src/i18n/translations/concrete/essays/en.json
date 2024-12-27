@@ -12,5 +12,6 @@
   "general data of essay": "Essay General Data",
   "sandIncrease.container_volume": "Container volume",
   "sandIncrease.container_weight": "Container weight",
-  "concrete.essays.abcp": "ABCP Dosage"
+  "concrete.essays.abcp": "ABCP Dosage",
+  "concrete.essays.aRC": "Compression Resistance"
 }

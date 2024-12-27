@@ -1,10 +1,13 @@
+import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import Result_Card from '@/components/atoms/containers/result-card';
+import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
+import GenerateSuperpaveDosagePDF from '@/components/generatePDF/dosages/asphalt/superpave/generatePDFSuperpave';
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
-import useAuth from '@/contexts/auth';
+import superpaveDosageService from '@/services/asphalt/dosages/superpave/superpave.consult.service';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
@@ -31,69 +34,66 @@ const Superpave_Step11 = ({
   const [finalProportionsCols, setFinalProportionsCols] = useState([]);
   const [quantitativeRows, setQuantitativeRows] = useState([]);
   const [quantitativeCols, setQuantitativeCols] = useState([]);
-
-  const { user } = useAuth();
+  const [dosage, setDosage] = useState(null);
+  const store = JSON.parse(sessionStorage.getItem('asphalt-superpave-store'));
+  const dosageId = store?.state._id;
 
   useEffect(() => {
-    toast.promise(
-      async () => {
-        try {
-          const response = await superpave.calculateDosageEquation(
-            granulometryCompositionData,
-            initialBinderData,
-            firstCurvePercentagesData,
-            secondCompressionPercentagesData,
-            confirmationCompressionData
-          );
+    const fetchDosage = async () => {
+      try {
+        const response = await superpave.calculateDosageEquation(
+          granulometryCompositionData,
+          initialBinderData,
+          firstCurvePercentagesData,
+          secondCompressionPercentagesData,
+          confirmationCompressionData
+        );
 
-          const newData = { ...data, ...response };
+        const foundDosage = await superpaveDosageService.getSuperpaveDosage(dosageId);
 
-          setData({
-            step: 10,
-            value: newData,
-          });
-        } catch (error) {
-          throw error;
-        }
-      },
-      {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        setDosage(foundDosage.data.dosage);
+        const newData = { ...data, ...response };
+
+        setData({
+          step: 10,
+          value: newData,
+        });
+      } catch (error) {
+        throw error;
       }
-    );
+    };
+
+    toast.promise(fetchDosage(), {
+      pending: t('loading.dosages.pending'),
+      success: t('loading.dosages.success'),
+      error: t('loading.dosages.error'),
+    });
   }, []);
 
   useEffect(() => {
     if (data?.ponderatedPercentsOfDosage?.length > 0) {
-      // Resetando as linhas e colunas iniciais
-      setFinalProportionsRows([
-        {
-          id: 0,
-          optimumBinder: '---',
-        },
-      ]);
-
       const initialCols = [
         {
           field: 'optimumBinder',
-          headerName: 'Teor ótimo de ligante asfáltico',
+          headerName: t('asphalt.dosages.optimum-binder'),
           valueFormatter: ({ value }) => `${value}`,
           width: 250,
         },
       ];
 
-      let prevRowsData = {
+      const prevRowsData = {
         id: 0,
         optimumBinder: secondCompressionPercentagesData.optimumContent
           ? secondCompressionPercentagesData.optimumContent
           : '---',
       };
+
       const newColsData: GridColDef[] = [...initialCols];
 
-      for (let i = 0; i < data?.ponderatedPercentsOfDosage?.length; i++) {
-        const materialName = materialSelectionData.aggregates[i].name;
-        prevRowsData = { ...prevRowsData, [materialName]: data.ponderatedPercentsOfDosage[i] };
+      data.ponderatedPercentsOfDosage.forEach((materialPercent, index) => {
+        const materialName = materialSelectionData.aggregates[index].name;
+
+        prevRowsData[materialName] = materialPercent;
 
         const newFinalProportionsCols: GridColDef = {
           field: materialName,
@@ -103,7 +103,7 @@ const Superpave_Step11 = ({
         };
 
         newColsData.push(newFinalProportionsCols);
-      }
+      });
 
       setFinalProportionsRows([prevRowsData]);
       setFinalProportionsCols(newColsData);
@@ -112,79 +112,80 @@ const Superpave_Step11 = ({
 
   useEffect(() => {
     if (data?.quantitative?.length > 0) {
-      // Resetando as linhas e colunas iniciais
-      setQuantitativeRows([
-        {
-          id: 0,
-          asphaltBinder: '---',
-        },
-      ]);
-
-      const initialCols = [
+      const initialCols: GridColDef[] = [
         {
           field: 'asphaltBinder',
-          headerName: 'Ligante asfáltico (kg)',
+          headerName: t('superpave.dosage.asphalt-binder'),
           valueFormatter: ({ value }) => `${value}`,
           width: 200,
         },
       ];
 
-      let prevRowsData = {
-        id: 0,
-        asphaltBinder: typeof data.quantitative[0] === 'number' ? data.quantitative[0] : '---',
-      };
+      const newRowsData = data.quantitative.reduce(
+        (prevRowsData, materialPercent, index) => {
+          const materialName = materialSelectionData.aggregates[index]?.name;
 
-      const newColsData: GridColDef[] = [...initialCols];
+          return {
+            ...prevRowsData,
+            [materialName]: materialPercent.toFixed(2),
+          };
+        },
+        { id: 0, asphaltBinder: typeof data.quantitative[0] === 'number' ? data.quantitative[0] : '---' }
+      );
 
-      for (let i = 1; i < data?.quantitative?.length; i++) {
-        const materialName = materialSelectionData.aggregates[i - 1]?.name;
+      const newColsData = materialSelectionData.aggregates.reduce(
+        (prevColumns, material, index) => {
+          const newQuantitativeCols: GridColDef = {
+            field: material.name,
+            headerName: `${material.name} (m³)`,
+            valueFormatter: ({ value }) => `${value}`,
+            width: 180,
+          };
 
-        prevRowsData = { ...prevRowsData, [materialName]: data.quantitative[i].toFixed(2) };
+          return [...prevColumns, newQuantitativeCols];
+        },
+        [...initialCols]
+      );
 
-        const newQuantitativeCols: GridColDef = {
-          field: materialName,
-          headerName: `${materialName} (m³)`,
-          valueFormatter: ({ value }) => `${value}`,
-          width: 180,
-        };
-
-        newColsData.push(newQuantitativeCols);
-      }
-
-      setQuantitativeRows([prevRowsData]);
+      setQuantitativeRows([newRowsData]);
       setQuantitativeCols(newColsData);
+
+      setLoading(false);
     }
   }, [data?.quantitative]);
 
-  const convertNumber = (value) => {
-    let aux = value;
-    if (typeof aux !== 'number' && aux !== null && aux !== undefined && aux.includes(',')) {
-      aux = aux.replace('.', '').replace(',', '.');
-    }
-
-    return parseFloat(aux);
-  };
-
-  const validateNumber = (value) => {
-    const auxValue = convertNumber(value);
-    if (!isNaN(auxValue) && typeof auxValue === 'number') {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  const numberRepresentation = (value, digits = 2) => {
-    let aux = convertNumber(value);
-    if (validateNumber(aux)) {
-      const formato = { minimumFractionDigits: digits, maximumFractionDigits: digits };
-      aux = Number(aux.toLocaleString('pt-BR', formato));
-    } else {
-      aux = 0;
-    }
-
-    return aux;
-  };
+  const resultCards = [
+    {
+      label: t('asphalt.dosages.superpave.apparent-specific-mass') + ' (Gmb):',
+      value: data?.Gmb.toFixed(2).toString(),
+      unity: 'g/cm3',
+    },
+    {
+      label: t('asphalt.dosages.superpave.void-volume') + ' (Vv):',
+      value: (data?.Vv * 100).toFixed(2).toString(),
+      unity: '%',
+    },
+    {
+      label: t('Vazios do agregado mineral (VAM):'),
+      value: data?.Vam?.toFixed(2).toString(),
+      unity: '%',
+    },
+    {
+      label: t('asphalt.dosages.rbv') + ' (RBV):',
+      value: (data?.RBV * 100).toFixed(2).toString(),
+      unity: '%',
+    },
+    {
+      label: t('asphalt.dosages.absorbed-water'),
+      value: data?.percentWaterAbs.toFixed(2).toString(),
+      unity: '%',
+    },
+    {
+      label: t('asphalt.dosages.superpave.specific-mass'),
+      value: data?.specifiesMass.toFixed(2).toString(),
+      unity: 'g/cm',
+    },
+  ];
 
   nextDisabled && setNextDisabled(false);
 
@@ -193,89 +194,67 @@ const Superpave_Step11 = ({
       {loading ? (
         <Loading />
       ) : (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '3rem',
-          }}
-        >
+        <FlexColumnBorder open={true} title={t('superpave.step-11')}>
+          <GenerateSuperpaveDosagePDF dosage={dosage} />
           <Box
             sx={{
+              width: '100%',
               display: 'flex',
               flexDirection: 'column',
               gap: '10px',
+              marginY: '20px',
             }}
           >
-            <Typography>Proporção final dos materiais</Typography>
+            <ResultSubTitle title={t('superpave.step-11')} />
 
             <DataGrid
               hideFooter
               disableColumnMenu
               disableColumnFilter
-              columns={finalProportionsCols}
+              columns={finalProportionsCols.map((col) => ({
+                ...col,
+                flex: 1,
+                autoWidth: true,
+                maxWidth: 180,
+                headerAlign: 'center',
+                align: 'center',
+              }))}
               rows={finalProportionsRows}
             />
-          </Box>
 
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '10px',
-            }}
-          >
-            <Typography>Quantitativo para 1 metro cúbico de massa asfáltica</Typography>
+            <ResultSubTitle title={t('asphalt.dosages.superpave.asphalt-mass-quantitative')} />
 
             <DataGrid
               hideFooter
               disableColumnMenu
               disableColumnFilter
-              columns={quantitativeCols}
+              columns={quantitativeCols.map((col) => ({
+                ...col,
+                flex: 1,
+                width: 200,
+                headerAlign: 'center',
+                align: 'center',
+              }))}
               rows={quantitativeRows}
             />
-          </Box>
 
-          <Typography>Parâmetros volumétricos e mecânicos da mistura no teor ótimo de ligante asfáltico</Typography>
-
-          <Box sx={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-            <Result_Card
-              label={'Massa específica aparente (Gmb):'}
-              value={data?.Gmb.toFixed(2).toString()}
-              unity={'g/cm³'}
+            <ResultSubTitle
+              title={t('asphalt.dosages.superpave.mechanic-volumetric-params')}
+              sx={{
+                maxWidth: '103%',
+                wordWrap: 'break-word',
+              }}
             />
 
-            <Result_Card label={'Volume de vazios (Vv):'} value={(data?.Vv * 100).toFixed(2).toString()} unity={'%'} />
-
-            {data?.Vam && (
-              <Result_Card label={'Vazios do agregado mineral (VAM):'} value={`${data?.Vam}`} unity={'%'} />
-            )}
-
-            {numberRepresentation(data?.RBV * 100) > 0 ||
-              !(
-                Number.isNaN(numberRepresentation(data?.RBV * 100)) && (
-                  <Result_Card
-                    label={'Relação betume-vazios (RBV):'}
-                    value={`${numberRepresentation(data?.RBV * 100)}`}
-                    unity={'%'}
-                  />
-                )
-              )}
-
-            {convertNumber(data?.percentWaterAbs) > 0 ||
-              (Number.isNaN(convertNumber(data?.percentWaterAbs)) && (
-                <Result_Card
-                  label={'Água absorvida:'}
-                  value={`${numberRepresentation(data?.percentWaterAbs)}`}
-                  unity={'%'}
-                />
-              ))}
-
-            {convertNumber(data?.specifiesMass) > 0 && (
-              <Result_Card label={'Massa específica:'} value={`${data?.specifiesMass.toFixed(2)}`} unity={'g/cm'} />
-            )}
+            <Box sx={{ display: 'flex', gap: '10px' }}>
+              {resultCards.map((card) => {
+                if (card.value !== undefined) {
+                  return <Result_Card key={card.label} label={card.label} value={card.value} unity={card.unity} />;
+                }
+              })}
+            </Box>
           </Box>
-        </Box>
+        </FlexColumnBorder>
       )}
     </>
   );

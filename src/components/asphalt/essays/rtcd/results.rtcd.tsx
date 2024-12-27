@@ -2,7 +2,7 @@ import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-bor
 import Result_Card from '@/components/atoms/containers/result-card';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 import { EssayPageProps } from '@/components/templates/essay';
-import useRtcdStore from '@/stores/asphalt/rtcd.store';
+import useRtcdStore from '@/stores/asphalt/rtcd/rtcd.store';
 import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { t } from 'i18next';

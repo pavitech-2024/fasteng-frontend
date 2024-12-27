@@ -204,7 +204,13 @@ const SpecificAbcpDosage = () => {
                 </Box>
 
                 <ResultSubTitle title={t('abcp.result.graph')} sx={{ margin: '.65rem' }} />
-                <AbramsCurvGraph result={dosage.results} />
+                <AbramsCurvGraph
+                  Xvalues={dosage.results.Xvalues}
+                  Yvalues={dosage.results.Yvalues}
+                  ac={dosage.results.ac}
+                  formula={dosage.results.formula}
+                  fcj={dosage.results.fcj}
+                />
               </FlexColumnBorder>
             </Box>
           </Box>

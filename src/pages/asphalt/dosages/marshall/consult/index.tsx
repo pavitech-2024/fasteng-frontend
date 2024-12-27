@@ -1,11 +1,14 @@
 import { DeleteIcon, MarshallIcon, MarshallIconPng, NextIcon } from '@/assets';
+import GenerateMarshallDosagePDF from '@/components/generatePDF/dosages/asphalt/marshall/generatePDFMarshall';
+import GenerateDosagePDF from '@/components/generatePDF/dosages/asphalt/marshall/generatePDFMarshall';
+import GeneratePDF from '@/components/generatePDF/materials/asphalt/generatePDFAsphalt/generatePDFAsphalt';
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
 import useAuth from '@/contexts/auth';
 import marshallDosageService from '@/services/asphalt/dosages/marshall/marshall.consult.service';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
-import { IconButton, Container, Box, Pagination } from '@mui/material';
+import { IconButton, Container, Box, Pagination, Button } from '@mui/material';
 import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useRouter } from 'next/router';
@@ -161,11 +164,11 @@ const MarshallDosageConsult = () => {
       headerName: t('marshall.dosage-consult.options'),
       renderCell: (params) => (
         <>
-          <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)}>
+          <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)} size="large">
             <DeleteIcon />
           </IconButton>
 
-          <IconButton aria-label="Visualizar" onClick={() => handleVisualizeDosage(params.row.id)}>
+          <IconButton aria-label="Visualizar" onClick={() => handleVisualizeDosage(params.row.id)} size="large">
             <NextIcon />
           </IconButton>
         </>

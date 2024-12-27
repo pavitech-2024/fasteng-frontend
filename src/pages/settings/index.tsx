@@ -104,6 +104,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
               setOldPhoto(user?.photo);
               onSubmitPhoto(null);
             }}
+            size="large"
           >
             <DeleteIcon color="error" sx={{ width: '80px', height: '80px' }} />
           </IconButton>
@@ -113,6 +114,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
                 key={avatar}
                 sx={{ p: 0, ':hover': { opacity: 0.8, cursor: 'pointer' } }}
                 onClick={() => onSubmitPhoto(avatar)}
+                size="large"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img alt="avatar" src={avatar} width={98} height={98} />
@@ -179,7 +181,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           }}
         >
           <Tooltip title={t('settings.changeAvatar')}>
-            <IconButton sx={{ p: 0 }} onClick={() => setOpen(true)}>
+            <IconButton sx={{ p: 0 }} onClick={() => setOpen(true)} size="large">
               <Avatar
                 alt="user photo"
                 src={user?.photo}

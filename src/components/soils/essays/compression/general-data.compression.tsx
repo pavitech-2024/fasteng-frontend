@@ -1,6 +1,6 @@
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
-import { Sample } from '@/interfaces/soils';
+import { SoilSample } from '@/interfaces/soils';
 import COMPRESSION_SERVICE from '@/services/soils/essays/compression/compression.service';
 import useCompressionStore from '@/stores/soils/compression/compression.store';
 import { t } from 'i18next';
@@ -16,7 +16,7 @@ const Compression_GeneralData = ({
   compression,
 }: EssayPageProps & { compression: COMPRESSION_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [samples, setSamples] = useState<Sample[]>([]);
+  const [samples, setSamples] = useState<SoilSample[]>([]);
   const { user } = useAuth();
   const { compressionGeneralData, setData } = useCompressionStore();
   useEffect(() => {
@@ -118,7 +118,7 @@ const Compression_GeneralData = ({
                     key={input.key}
                     variant="standard"
                     label={input.label}
-                    options={samples.map((sample: Sample) => {
+                    options={samples.map((sample: SoilSample) => {
                       return { label: sample.name + ' | ' + t(`${'samples.' + sample.type}`), value: sample };
                     })}
                     defaultValue={defaultValue}

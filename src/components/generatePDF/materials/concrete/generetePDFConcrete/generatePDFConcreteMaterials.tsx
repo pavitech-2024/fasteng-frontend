@@ -1,7 +1,7 @@
 import { EssaysData } from '@/pages/concrete/materials/material/[id]';
 import jsPDF from 'jspdf';
 import React from 'react';
-import logo from '../../../assets/fasteng/LogoBlack.png';
+import logo from '@/assets/fasteng/LogoBlack.png';
 import autoTable from 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import useAuth from '@/contexts/auth';
@@ -43,12 +43,6 @@ const GeneratePDFConcreteMaterials = ({
   const newArray = [];
 
   let unitMassResult = null;
-
-  //const dataSandIncreaseData = [];
-
-  //const unitMassResult = Number(unitMassData.result).toFixed(1);
-
-  //chapmanData.results.m_e.toFixed(user_decimal)
 
   const granulometryRows = [];
   const granulometryColumns = [
@@ -146,7 +140,7 @@ const GeneratePDFConcreteMaterials = ({
       condition: chapmanData,
       title: t('concrete.essays.coarseAggregate'),
       content: async (doc, currentY) => {
-        addTextToLeftMargin(doc, t('results'), 10, currentY, 14);
+        addTextToLeftMargin(doc, t('results'), 10, currentY, 12);
         currentY += 5;
         addTextToLeftMargin(doc, `M.E: ${chapmanData.results.m_e.toFixed(user_decimal)} kg/L`, 10, currentY);
         return currentY + 5;
@@ -156,17 +150,11 @@ const GeneratePDFConcreteMaterials = ({
       condition: sandIncreaseData,
       title: t('concrete.essays.sandIncrease'),
       content: async (doc, currentY) => {
-        addTextToLeftMargin(doc, `${t('concrete.essays.sandIncrease')}: ${unitMassResult} Kg/L`, 10, currentY);
-        return currentY + 5;
-      },
-    },
-    {
-      condition: unitMassResult,
-      title: t('concrete.essays.unitMass'),
-      content: async (doc, currentY) => {
-        addTable(doc, sandIncreaseDataRows, sandIncreaseDataRows, currentY);
-        const tableHeight = (doc as any).lastAutoTable.finalY - currentY;
-        currentY += tableHeight + 5;
+        if (sandIncreaseDataRows.length > 0) {
+          addTable(doc, sandIncreaseDataRows, sandIncreaseDataColumns, currentY);
+          const tableHeight = (doc as any).lastAutoTable.finalY - currentY;
+          currentY += tableHeight + 5;
+        }
         addTextToLeftMargin(
           doc,
           `${t('sandIncrease.averageCoefficient')}: ${sandIncreaseData.results?.averageCoefficient
@@ -190,13 +178,28 @@ const GeneratePDFConcreteMaterials = ({
         return currentY + 5;
       },
     },
+    {
+      condition: unitMassResult,
+      title: t('concrete.essays.unitMass'),
+      content: async (doc, currentY) => {
+        addTextToLeftMargin(
+          doc,
+          `${t('concrete.essays.unitMasst')}: ${Number(unitMassData.result).toFixed(1)} Kg/L`,
+          10,
+          currentY
+        );
+        return currentY + 5;
+      },
+    },
   ];
 
   const calculatePageNumber = (doc: any) => {
     const totalPages = doc.internal.pages.length;
     for (let pageNumber = 1; pageNumber < totalPages; pageNumber++) {
-      doc.setPage(pageNumber);
-      addPageNumber(doc, pageNumber);
+      if (pageNumber > 1) {
+        doc.setPage(pageNumber);
+        addPageNumber(doc, pageNumber);
+      }
     }
   };
 
@@ -300,7 +303,7 @@ const GeneratePDFConcreteMaterials = ({
     doc.addImage(image, 'png', 5, 5, 50, 8);
     doc.addImage(image, 'png', 155, 5, 50, 8);
 
-    addCenteredText(doc, `${t('asphalt.essays.project.summary')}`, currentY, 16);
+    addCenteredText(doc, `${t('asphalt.essays.project.summary')}`, currentY, 12);
     currentY += 20;
 
     summaryItems.forEach((item) => {
@@ -336,10 +339,10 @@ const GeneratePDFConcreteMaterials = ({
     doc.addImage(logo, 'png', 155, 5, 50, 8);
 
     let currentY = 55;
-    addCenteredText(doc, `${t('asphalt.essays.project.title')}`, currentY, 16);
-    currentY += 20;
-    addCenteredText(doc, `${t('asphalt.essays.project.name')}: ${nomeProjeto}`, currentY, 16);
-    currentY += 30;
+    addCenteredText(doc, `${t('asphalt.essays.project.title')}`, currentY, 12);
+    currentY += 50;
+    addCenteredText(doc, `${t('asphalt.essays.project.name')}: ${nomeProjeto}`, currentY, 12);
+    currentY += 90;
     addTextToRightMargin(doc, `${t('asphalt.essays.project.description.text')} ${nomeMaterial}`, 100, currentY);
 
     const pageHeight = doc.internal.pageSize.height;
@@ -348,12 +351,7 @@ const GeneratePDFConcreteMaterials = ({
 
     const formattedDate = getCurrentDateFormatted();
 
-    addCenteredText(doc, formattedDate, dateYPosition, 14);
-
-    doc.setLineWidth(0.5);
-    doc.line(10, lineYPosition, 200, lineYPosition);
-
-    addCenteredText(doc, '1', lineYPosition + 5, 10);
+    addCenteredText(doc, formattedDate, dateYPosition, 12);
   };
 
   const generate = async () => {
@@ -368,7 +366,7 @@ const GeneratePDFConcreteMaterials = ({
     doc.addImage(image, 'png', 5, 5, 50, 8);
     doc.addImage(image, 'png', 155, 5, 50, 8);
 
-    addCenteredText(doc, `${t('general data of essay')}`, 30);
+    addCenteredText(doc, `${t('general data of essay')}`, 30, 12);
     addTextToLeftMargin(doc, `${t('asphalt.materials.name')}: ${name}`, 10, 40);
     addTextToLeftMargin(doc, `${t('asphalt.materials.type')}: ${type}`, 10, 45);
 
@@ -378,7 +376,7 @@ const GeneratePDFConcreteMaterials = ({
     for (const section of sections) {
       if (section.condition) {
         currentY += 5;
-        addTextToLeftMargin(doc, section.title, 10, currentY, 14);
+        addTextToLeftMargin(doc, section.title, 10, currentY, 12);
         currentY += 5;
         currentY = await section.content(doc, currentY);
         const pageIndex = doc.internal.pages.length - 1;

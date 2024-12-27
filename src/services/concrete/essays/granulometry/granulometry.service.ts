@@ -19,7 +19,7 @@ class ConcreteGranulometry_SERVICE implements IEssayService {
     steps: 3,
     standard: {
       name: 'NBR 7217/1984',
-      link: 'https://engenhariacivilfsp.files.wordpress.com/2015/03/nbr-7181.pdf',
+      link: 'https://www.target.com.br/produtos/normas-tecnicas/36308/nbr7217-agregados-determinacao-da-composicao-granulometrica',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },

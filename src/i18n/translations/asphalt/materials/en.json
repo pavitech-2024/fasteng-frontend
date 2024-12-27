@@ -22,5 +22,6 @@
   "loading.marshall.success": "Dosages loaded succsesfully",
   "loading.marshall.error": "Error on dosages loading",
 
-  "asphalt.dosages.superpave.material_selection": "Metyrials selection"
+  "asphalt.dosages.superpave.material_selection": "Metyrials selection",
+  "asphalt.materials.edit.title": "Edit Material"
 }

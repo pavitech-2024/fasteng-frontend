@@ -12,8 +12,8 @@
 
   "name-already-exists": "Experiment name already exists!",
 
-  "sample-sucs-not-found": "Sample not found for SUCS!",
-  "sample-GRANULOMETRY-not-found": "Sample not found for Granulometry!",
+  "sample-sucs-not-found": "SoilSample not found for SUCS!",
+  "sample-GRANULOMETRY-not-found": "SoilSample not found for Granulometry!",
 
   "essay-granulometry-not-found": "Granulometry essay not found!",
 

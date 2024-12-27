@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CompressionIcon, SandIncreaseIcon } from '@/assets';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
-import { Sample } from '@/interfaces/soils';
+import { SoilSample } from '@/interfaces/soils';
 import { t } from 'i18next';
 import Api from '@/api';
 import { CompressionActions, CompressionData } from '@/stores/soils/compression/compression.store';
@@ -19,7 +19,7 @@ class SAND_INCREASE_SERVICE implements IEssayService {
     backend_path: 'concrete/essays/sandIncrease',
     standard: {
       name: 'ABNT NBR 6467',
-      link: 'link da norma',
+      link: 'https://www.target.com.br/produtos/normas-tecnicas/36323/nbr6467-agregados-determinacao-do-inchamento-de-agregado-miudo-metodo-de-ensaio',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
