@@ -1,5 +1,5 @@
 import { NextPage} from 'next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { t } from 'i18next';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -20,6 +20,7 @@ import { TextField, Box, Container, Typography, ButtonBase } from '@mui/material
 import { JbrAnchor, LepAnchor } from '@/components/atoms/anchor/loginAnchors';
 import axios from 'axios';
 import ModalBase from '@/components/molecules/modals/modal';
+import Api from '@/api';
 
 const Login: NextPage = () => {
   const { signIn } = useAuth();
@@ -32,7 +33,7 @@ const Login: NextPage = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const roxApiUrl = 'https://minhaconta.fastengapp.com.br/api/forgot-password ';
-  const teste = false;
+  const [roxIsRunning, setRoxIsRunning] = useState(true);
   const handleLogin = async () => {
     try {
       toast.promise(async () => await signIn(email, password), {
@@ -43,11 +44,21 @@ const Login: NextPage = () => {
     } catch (error) { }
   };
 
-  const handleHealthCheck = async () => {
-    try {
-      const result = await axios.
-    } catch (error) { }
-  };
+  useEffect(() => {
+    const handleHealthCheck = async () => {
+      try {
+        const result = await Api.get('/app/health-check');
+
+        if (result.data.status !== 'success') {
+          setRoxIsRunning(false);
+        }
+      } catch (error) {
+        console.error(error);
+       }
+    }; 
+    handleHealthCheck();
+  }, []);
+
 
   const handleForgotPassword = () => {
     toast.promise(
@@ -184,7 +195,7 @@ const Login: NextPage = () => {
             bottom: '0',
           }}
         >
-          {teste ? (
+          {roxIsRunning ? (
             <Box
               sx={{
                 display: 'flex',
