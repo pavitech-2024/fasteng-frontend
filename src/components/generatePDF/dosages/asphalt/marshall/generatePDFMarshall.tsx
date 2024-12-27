@@ -364,36 +364,16 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     currentY = 30;
 
-    // Adicionar resumo das dosagens
+    // Resumo das dosagens
     doc.setFontSize(12);
     doc.text('Resumo das Dosagens:'.toUpperCase(), 10, currentY);
-    currentY += 10; // 70
+    currentY += 10;
 
     const materials = materialsData.map((material) => material.name);
-    console.log('🚀 ~ generatePDF ~ materials:', materials);
-
-    // const optimumBinder =
-    //   dosage?.optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage?.map((confirmedPercentsOfDosage) =>
-    //     confirmedPercentsOfDosage.toFixed(2)
-    //   ) || [];
-
-    // const optimumBinder = dosage?.optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage.map(
-    //   (percent, idx) => {
-    //     if (materialsData[idx].type !== 'asphaltBinder') {
-    //       console.log("Agregado")
-    //       return percent.toFixed(2);
-    //     } else {
-    //       console.log("ligante")
-    //       return dosage.optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2);
-    //     }
-    //   }
-    // );
-    
-
     const optimumBinder = []; 
     let index = 0;
     
-    materialsData.forEach((material, idx) => {
+    materialsData.forEach((material) => {
       if (material.type !== 'asphaltBinder') {
         optimumBinder.push(Number(dosage.optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage[index]).toFixed(2));
         index++;
@@ -401,10 +381,6 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
         optimumBinder.push(Number(dosage.optimumBinderContentData?.optimumBinder?.optimumContent).toFixed(2));
       }
     })
-
-    console.log("🚀 ~ optimumBinder ~ optimumBinder:", optimumBinder)
-
-    // optimumBinder.push(dosage.optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2));
 
     doc.setFontSize(12);
     doc.text(
@@ -415,7 +391,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
         align: 'center',
       }
     );
-    currentY += 10; // 80
+    currentY += 10;
 
     autoTable(doc, {
       head: [materials],
