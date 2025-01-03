@@ -23,7 +23,7 @@ interface IGeneratedPDF {
 }
 
 const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
-  console.log("🚀 ~ GenerateMarshallDosagePDF ~ dosage:", dosage)
+  console.log('🚀 ~ GenerateMarshallDosagePDF ~ dosage:', dosage);
   const { user } = useAuth();
   const [materialsData, setMaterialsData] = useState<AsphaltMaterial[]>([]);
   const [materialsEssays, setMaterialsEssays] = useState<any[]>([]);
@@ -364,17 +364,19 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     currentY += 10;
 
     const materials = materialsData.map((material) => material.name);
-    const optimumBinder = []; 
+    const optimumBinder = [];
     let index = 0;
-    
+
     materialsData.forEach((material) => {
       if (material.type !== 'asphaltBinder') {
-        optimumBinder.push(Number(dosage.optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage[index]).toFixed(2));
+        optimumBinder.push(
+          Number(dosage.optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage[index]).toFixed(2)
+        );
         index++;
       } else {
         optimumBinder.push(Number(dosage.optimumBinderContentData?.optimumBinder?.optimumContent).toFixed(2));
       }
-    })
+    });
 
     doc.setFontSize(12);
     doc.text(
@@ -406,9 +408,14 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     //Quantitativos
 
     doc.setFontSize(12);
-    doc.text(t('asphalt.dosages.marshall.asphalt-mass-quantitative').toUpperCase(), doc.internal.pageSize.getWidth() / 2, currentY + 5, {
-      align: 'center',
-    });
+    doc.text(
+      t('asphalt.dosages.marshall.asphalt-mass-quantitative').toUpperCase(),
+      doc.internal.pageSize.getWidth() / 2,
+      currentY + 5,
+      {
+        align: 'center',
+      }
+    );
     currentY += 15;
 
     const quantitative =
@@ -436,11 +443,11 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     // Parametros volumétricos
     doc.setFontSize(12);
-    const title = t('asphalt.dosages.binder-volumetric-mechanic-params')
-    const titleArray = title.split(" ");
-    const wrapIndex = titleArray.findIndex((word) => word === 'mistura')
-    const titleFirstLine = title.split(" ").splice(0, wrapIndex).join(' ');
-    const titleSecondLine = title.split(" ").splice(wrapIndex).join(' ');
+    const title = t('asphalt.dosages.binder-volumetric-mechanic-params');
+    const titleArray = title.split(' ');
+    const wrapIndex = titleArray.findIndex((word) => word === 'mistura');
+    const titleFirstLine = title.split(' ').splice(0, wrapIndex).join(' ');
+    const titleSecondLine = title.split(' ').splice(wrapIndex).join(' ');
     doc.text(titleFirstLine.toUpperCase(), doc.internal.pageSize.getWidth() / 2, currentY + 5, { align: 'center' });
     currentY += 5;
     doc.text(titleSecondLine.toUpperCase(), doc.internal.pageSize.getWidth() / 2, currentY + 5, { align: 'center' });
@@ -469,9 +476,14 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     currentY += 10;
 
     doc.setFontSize(12);
-    doc.text(t('asphalt.dosages.marshall.asphalt-mass-quantitative').toUpperCase(), doc.internal.pageSize.getWidth() / 2, currentY + 5, {
-      align: 'center',
-    });
+    doc.text(
+      t('asphalt.dosages.marshall.asphalt-mass-quantitative').toUpperCase(),
+      doc.internal.pageSize.getWidth() / 2,
+      currentY + 5,
+      {
+        align: 'center',
+      }
+    );
 
     currentY += 10;
 
@@ -494,7 +506,9 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     currentY = handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
 
     doc.setFontSize(12);
-    doc.text(t('asphalt.dosages.vam').toUpperCase(), doc.internal.pageSize.getWidth() / 2, currentY, { align: 'center' });
+    doc.text(t('asphalt.dosages.vam').toUpperCase(), doc.internal.pageSize.getWidth() / 2, currentY, {
+      align: 'center',
+    });
 
     currentY += 10;
 

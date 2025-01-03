@@ -25,7 +25,7 @@ export const addSummary = (
   aggregates: any,
   dosageType: string
 ) => {
-  console.log("🚀 ~ binder:", binder)
+  console.log('🚀 ~ binder:', binder);
   let currentY = 30;
   let currentX = 10;
 
