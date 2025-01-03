@@ -1,5 +1,6 @@
 {
   "marshall.dosage-title": "Marshall dosage",
+  "marshall.dosage-pdf-title": "Marshall dosage report",
 
   "marshall.step-2-description": "Select the aggregates and asphalt binder that will be used in the dosage.",
   "marshall.step-3-description": "Enter the percentages of each aggregate in the granulometric composition of the mixture",

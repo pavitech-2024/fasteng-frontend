@@ -401,6 +401,7 @@ export type SuperpaveData = {
   secondCompressionPercentagesData: SecondCompressionPercentagesData;
   confirmationCompressionData: ConfirmationCompressionData;
   dosageResume: DosageResume;
+  createdAt: Date;
 };
 
 export type SuperpaveActions = {
@@ -883,6 +884,8 @@ const initialState = {
     ratioDustAsphalt: null,
     specifiesMass: null,
   },
+  createdAt: null,
+  updatedAt: null,
 };
 
 const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(
