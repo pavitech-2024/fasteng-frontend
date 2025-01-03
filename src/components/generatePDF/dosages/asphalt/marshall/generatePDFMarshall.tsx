@@ -8,31 +8,25 @@ import { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
 import logo from '@/assets/fasteng/LogoBlack.png';
 import {
   addCapa,
-  addCenteredText,
   addImageProcess,
   addSummary,
-  calculatePageNumber,
   formatDate,
   getCurrentDateFormatted,
   handleAddPage,
   SummaryItem,
 } from '../../../common';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
-import marshallDosageService from '@/services/asphalt/dosages/marshall/marshall.consult.service';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
-import { isTemplateExpression } from 'typescript';
 
 interface IGeneratedPDF {
   dosage: MarshallData;
 }
 
 const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
-  console.log('🚀 ~ GenerateMarshallDosagePDF ~ dosage:', dosage);
+  console.log("🚀 ~ GenerateMarshallDosagePDF ~ dosage:", dosage)
   const { user } = useAuth();
   const [materialsData, setMaterialsData] = useState<AsphaltMaterial[]>([]);
-  console.log("🚀 ~ GenerateMarshallDosagePDF ~ materialsData:", materialsData)
   const [materialsEssays, setMaterialsEssays] = useState<any[]>([]);
-  
 
   useEffect(() => {
     const handleGetMaterialsData = async () => {
@@ -63,7 +57,8 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       dosage.generalData.operator,
       dosage.generalData.laboratory
     );
-    handleAddPage(doc, image, currentY);
+
+    handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
 
     const summaryItems: SummaryItem[] = [
       {
@@ -93,7 +88,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     ];
 
     const materialNames = dosage.materialSelectionData.aggregates.map((material) => material.name);
-    const materialNamesWithBinder = [...materialNames, dosage.materialSelectionData.binder].join(', ');
+    const materialNamesWithBinder = [...materialNames, materialsEssays[0][0].data.generalData.material.name].join(', ');
 
     const userData = [
       {
@@ -207,8 +202,6 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       })
       .filter((item) => item);
 
-    console.log('🚀 ~ generatePDF ~ essaysResults:', essaysResults);
-
     const volumetricMechanicParams = [
       {
         label: t('asphalt.dosages.optimum-binder'),
@@ -274,10 +267,11 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       image,
       summaryItems,
       materialsEssays[0][0].data.generalData.material.name,
-      dosage.materialSelectionData.aggregates
+      dosage.materialSelectionData.aggregates,
+      t('marshall.dosage-pdf-title')
     );
 
-    handleAddPage(doc, image, currentY);
+    handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
 
     for (let i = 0; i < userData.length; i++) {
       doc.setFontSize(10);
@@ -308,7 +302,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       }
     }
 
-    handleAddPage(doc, image, currentY);
+    handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
 
     // Cria uma página para cada material
 
@@ -359,7 +353,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
         });
       });
 
-      handleAddPage(doc, image, 30);
+      handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
     });
 
     currentY = 30;
@@ -400,22 +394,22 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
         0: { width: 100 } as any, // largura da coluna
       },
       styles: {
-        fillColor: [255, 165, 0], // cor laranja
+        fillColor: '#F29134', // cor laranja
         textColor: [0, 0, 0], // cor preta para o texto
         fontSize: 12,
       },
       startY: currentY,
     });
 
-    currentY += 30; // 110
+    currentY += 30;
 
     //Quantitativos
 
     doc.setFontSize(12);
-    doc.text(t('asphalt.dosages.marshall.asphalt-mass-quantitative'), doc.internal.pageSize.getWidth() / 2, currentY, {
+    doc.text(t('asphalt.dosages.marshall.asphalt-mass-quantitative').toUpperCase(), doc.internal.pageSize.getWidth() / 2, currentY + 5, {
       align: 'center',
     });
-    currentY += 10; // 120
+    currentY += 15;
 
     const quantitative =
       dosage?.confirmationCompressionData?.confirmedVolumetricParameters?.quantitative.map(
@@ -429,7 +423,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
         0: { width: 100 } as any, // largura da coluna
       },
       styles: {
-        fillColor: '#FFA500', // cor laranja
+        fillColor: '#F29134', // cor laranja
         textColor: [0, 0, 0] as Color, // cor preta para o texto
         fontSize: 12,
       },
@@ -438,22 +432,27 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     autoTable(doc, segundaTabelaConfig);
 
-    currentY += 30; // 150
+    currentY += 30;
 
     // Parametros volumétricos
     doc.setFontSize(12);
-    doc.text(t('asphalt.dosages.binder-volumetric-mechanic-params'), doc.internal.pageSize.getWidth() / 2, currentY, {
-      align: 'center',
-    });
+    const title = t('asphalt.dosages.binder-volumetric-mechanic-params')
+    const titleArray = title.split(" ");
+    const wrapIndex = titleArray.findIndex((word) => word === 'mistura')
+    const titleFirstLine = title.split(" ").splice(0, wrapIndex).join(' ');
+    const titleSecondLine = title.split(" ").splice(wrapIndex).join(' ');
+    doc.text(titleFirstLine.toUpperCase(), doc.internal.pageSize.getWidth() / 2, currentY + 5, { align: 'center' });
+    currentY += 5;
+    doc.text(titleSecondLine.toUpperCase(), doc.internal.pageSize.getWidth() / 2, currentY + 5, { align: 'center' });
 
-    currentY += 10; // 160
+    currentY += 15;
 
     for (let i = 0; i < volumetricMechanicParams.length; i++) {
       doc.text(`${volumetricMechanicParams[i].label}: ${volumetricMechanicParams[i].value} %`, 10, currentY);
       currentY += 5;
     }
 
-    const headers = [
+    const volumetricParamsHeaders = [
       t('asphalt.dosages.marshall.parameter'),
       t('asphalt.dosages.marshall.unity'),
       t('asphalt.dosages.marshall.bearing-layer'),
@@ -470,20 +469,20 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     currentY += 10;
 
     doc.setFontSize(12);
-    doc.text(t('asphalt.dosages.marshall.asphalt-mass-quantitative'), doc.internal.pageSize.getWidth() / 2, currentY, {
+    doc.text(t('asphalt.dosages.marshall.asphalt-mass-quantitative').toUpperCase(), doc.internal.pageSize.getWidth() / 2, currentY + 5, {
       align: 'center',
     });
 
     currentY += 10;
 
     const volumetricParamsTable = {
-      head: [headers],
+      head: [volumetricParamsHeaders],
       body: volumetricParamsRows,
       columnStyles: {
         0: { width: 100 } as any, // largura da coluna
       },
       styles: {
-        fillColor: [255, 165, 0] as Color, // cor laranja
+        fillColor: '#F29134' as Color, // cor laranja
         textColor: [0, 0, 0] as Color, // cor preta para o texto
         fontSize: 12,
       },
@@ -492,12 +491,10 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     autoTable(doc, volumetricParamsTable);
 
-    currentY = handleAddPage(doc, image, currentY);
-
-    // calculatePageNumber(doc, t('marshall.dosage-pdf-title'));
+    currentY = handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
 
     doc.setFontSize(12);
-    doc.text(t('asphalt.dosages.vam'), doc.internal.pageSize.getWidth() / 2, currentY, { align: 'center' });
+    doc.text(t('asphalt.dosages.vam').toUpperCase(), doc.internal.pageSize.getWidth() / 2, currentY, { align: 'center' });
 
     currentY += 10;
 
@@ -516,7 +513,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
         0: { width: 100 } as any, // largura da coluna
       },
       styles: {
-        fillColor: [255, 165, 0] as Color,
+        fillColor: '#F29134' as Color,
         textColor: [0, 0, 0] as Color,
         fontSize: 12,
       },

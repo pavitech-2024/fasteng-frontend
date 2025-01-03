@@ -17,7 +17,15 @@ export const addHeader = (doc: jsPDF, image: HTMLImageElement) => {
   doc.addImage(image, 'png', 155, 5, 50, 8);
 };
 
-export const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: SummaryItem[], binder: string, aggregates: any) => {
+export const addSummary = (
+  doc: jsPDF,
+  image: HTMLImageElement,
+  summaryItems: SummaryItem[],
+  binder: string,
+  aggregates: any,
+  dosageType: string
+) => {
+  console.log("🚀 ~ binder:", binder)
   let currentY = 30;
   let currentX = 10;
 
@@ -29,14 +37,14 @@ export const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: Su
   let page = 3;
 
   summaryItems.forEach((item, idx) => {
-    const title = item.title; 
+    const title = item.title;
     const externalNumber = idx + 1;
     const totalWidth = 190;
 
     let internalNumber = 1;
     let titleWidth = doc.getTextWidth(title);
     let lineWidth = totalWidth - (titleWidth + 2);
-    let lineLength = Math.floor(lineWidth / doc.getTextWidth('_'));;
+    let lineLength = Math.floor(lineWidth / doc.getTextWidth('_'));
     let line = '_'.repeat(lineLength - 10);
 
     doc.text(externalNumber + '. ' + title, currentX, currentY);
@@ -47,7 +55,7 @@ export const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: Su
     page += 1;
     currentY += 10;
 
-    let previousCurrentX = currentX;
+    const previousCurrentX = currentX;
 
     if (idx == 1) {
       currentX += 10;
@@ -70,12 +78,12 @@ export const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: Su
       internalNumber++;
       currentY += 10;
 
-      titleWidth = doc.getTextWidth("Agregados");
-      lineWidth = (totalWidth - (titleWidth - currentX)) - 7;
+      titleWidth = doc.getTextWidth('Agregados');
+      lineWidth = totalWidth - (titleWidth - currentX) - 7;
       lineLength = Math.floor(lineWidth / doc.getTextWidth('_'));
       line = '_'.repeat(lineLength - currentX);
 
-      doc.text(externalNumber + '.' + internalNumber + '. ' + "Agregados", currentX, currentY);
+      doc.text(externalNumber + '.' + internalNumber + '. ' + 'Agregados', currentX, currentY);
       doc.text(line, currentX + titleWidth + 10, currentY);
       doc.text(page.toString(), totalWidth, currentY);
 
@@ -117,14 +125,14 @@ export const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: Su
   doc.setLineWidth(0.5);
   doc.line(10, lineYPosition, 200, lineYPosition);
 
-  calculatePageNumber(doc, t('marshall.dosage-pdf-title'));
+  calculatePageNumber(doc, dosageType);
 };
 
-export const handleAddPage = (doc: jsPDF, image: HTMLImageElement, currentY: number) => {
+export const handleAddPage = (doc: jsPDF, image: HTMLImageElement, currentY: number, dosageType: string) => {
   const page = doc.getCurrentPageInfo().pageNumber;
   doc.setPage(page + 1);
   doc.addPage();
-  calculatePageNumber(doc, t('marshall.dosage-pdf-title'));
+  calculatePageNumber(doc, dosageType);
   addHeader(doc, image);
   if (page >= 3) {
     return (currentY = 30);
@@ -180,7 +188,6 @@ export const addTextToRightMargin = (doc: jsPDF, text: string, blockWidth: numbe
 
   addLine(currentLine);
 
-
   lines.forEach((line, index) => {
     const lineWidth = (doc.getStringUnitWidth(line) * doc.getFontSize()) / doc.internal.scaleFactor;
 
@@ -207,7 +214,7 @@ export const formatDate = (date: string): string => {
   const month = String(dateObject.getMonth() + 1).padStart(2, '0');
   const year = dateObject.getFullYear();
   return `${day}/${month}/${year}`;
-}
+};
 
 export const addPageNumber = (doc: jsPDF, pageNumber: number, dosageType: string) => {
   const pageHeight = doc.internal.pageSize.height;
