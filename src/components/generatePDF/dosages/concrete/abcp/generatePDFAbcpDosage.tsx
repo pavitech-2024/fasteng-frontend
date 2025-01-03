@@ -1,5 +1,10 @@
-import { addCenteredText, calculatePageNumber, addImageProcess, addCapa } from '@/components/generatePDF/common';
-import { SummaryItem } from '@/components/generatePDF/materials/asphalt/generatePDFAsphalt/generatePDFAsphalt';
+import {
+  addCenteredText,
+  calculatePageNumber,
+  addImageProcess,
+  addCapa,
+  SummaryItem,
+} from '@/components/generatePDF/common';
 import useAuth from '@/contexts/auth';
 import { ABCPData } from '@/stores/concrete/abcp/abcp.store';
 import { Box, Button, Tooltip } from '@mui/material';
@@ -46,8 +51,6 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     doc.setLineWidth(0.5);
     doc.line(10, lineYPosition, 200, lineYPosition);
-
-    calculatePageNumber(doc);
   };
 
   const addChart = async (chartElement: HTMLDivElement, doc: jsPDF, currentY: number) => {
@@ -84,7 +87,15 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
     const coefficients = `${cc / cc} : ${(careia / cc).toFixed(3)} : ${(cb / cc).toFixed(3)} : ${(ca / cc).toFixed(3)}`;
     const image = (await addImageProcess(logo.src)) as HTMLImageElement;
 
-    addCapa(doc, image, dosage.generalData.name);
+    addCapa(
+      doc,
+      image,
+      'abcp',
+      dosage.createdAt.toString(),
+      dosage.generalData.name,
+      dosage.generalData.operator,
+      dosage.generalData.laboratory
+    );
     doc.addPage();
 
     addHeader(doc, image);
@@ -95,8 +106,6 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
       { title: t('abcp.results.coefficients'), page: 3 },
       { title: t('abcp.result.graph'), page: 4 },
     ];
-
-    calculatePageNumber(doc);
 
     doc.setPage(2);
     addSummary(doc, image, summaryItems);
@@ -159,8 +168,6 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
     currentY = handleAddSubtitle(t('abcp.result.coefficients'), doc, currentY);
 
     currentY = handleAddSubtitle(`${t('abcp.result.coefficients')}: ${coefficients}`, doc, currentY);
-
-    calculatePageNumber(doc);
 
     doc.setPage(3);
 

@@ -50,6 +50,7 @@ const Marshall_Step9 = ({
           let newData = {};
 
           const foundDosage = await marshallDosageService.getMarshallDosage(dosageId);
+          console.log('🚀 ~ foundDosage:', foundDosage);
           setDosage(foundDosage.data.dosage);
 
           const response = await marshall.confirmVolumetricParameters(

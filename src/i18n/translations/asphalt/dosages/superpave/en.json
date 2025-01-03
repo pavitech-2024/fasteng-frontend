@@ -122,5 +122,6 @@
   "asphalt.dosages.superpave.mechanic-volumetric-params": "Volumetric and mechanical parameters of the mixture at the optimal binder content",
   "asphalt.dosages.superpave.step-3.lower": "Inferior",
   "asphalt.dosages.superpave.step-3.higher": "Superior",
-  "asphalt.dosages.superpave.step-3.average": "Average"
+  "asphalt.dosages.superpave.step-3.average": "Average",
+  "marshall.dosage-pdf-title": "Superpave dosage report"
 }

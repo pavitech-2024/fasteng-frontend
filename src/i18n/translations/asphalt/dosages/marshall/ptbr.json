@@ -1,5 +1,6 @@
 {
   "marshall.dosage-title": "Dosagem Marshall",
+  "marshall.dosage-pdf-title": "Relatório de Dosagem Marshall",
 
   "marshall.step-2-description": "Selecione os agregados e o ligante asfáltico que serão utilizados na dosagem.",
   "marshall.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica da mistura.",
@@ -42,7 +43,12 @@
   "asphalt.project_name": "Nome do Projeto",
   "asphalt.laboratory_name": "Nome do Laboratório",
   "asphalt.choose_objective": "Escolha o Objetivo da Mistura",
+  "asphalt.objective": "Escolha o Objetivo da Mistura",
   "asphalt.choose_dnit_track": "Escolha a Faixa do DNIT",
+
+  "asphalt.used-materials": "Materiais utilizados",
+  "asphalt.project-initial-date": "Data de início do projeto",
+  "asphalt.pdf-generation-date": "Data de criação deste relatório",
 
   "asphalt.dosages.marshall.bearing-layer": "Camada de Rolamento",
   "asphalt.dosages.marshall.bonding-layer": "Camada de Ligação",
@@ -99,5 +105,8 @@
 
   "loading.dosage.pending": "Carregando dados da dosagem...",
   "loading.dosage.success": "Dados da dosagem carregados!",
-  "loading.dosage.error": "Erro ao carregar dados da dosagem!"
+  "loading.dosage.error": "Erro ao carregar dados da dosagem!",
+
+  "asphalt.dosages.project-author": "Responsável pela dosagem",
+  "asphalt.dosages.project-laboratory": "Laboratório responsável pela dosagem"
 }
