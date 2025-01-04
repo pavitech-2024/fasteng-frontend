@@ -12,6 +12,7 @@ const materialsService = {
 
   editMaterial: (materialId: string, material: AsphaltMaterialData) =>
     Api.put(`asphalt/materials/${materialId}`, material),
+  
   getMaterials: (ids: string[]) => Api.get(`asphalt/materials/selected/${ids}`),
 };
 

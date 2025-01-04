@@ -9,7 +9,7 @@ import Result_Card from '@/components/atoms/containers/result-card';
 import AbramsCurvGraph from './graph/abramsCurveGrapg';
 import { useEffect, useState } from 'react';
 import abcpDosageService from '@/services/concrete/dosages/abcp/abcp-consult.service';
-import GenerateAbcpDosagePDF from '@/components/generatePDF/dosages/concrete/abcp/generatePDFAbcpDosage';
+import GenerateAbcpDosagePDF from '@/components/generatePDF/dosages/concrete/abcp/generatePDFAbcp';
 
 const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   nextDisabled && setNextDisabled(false);

@@ -1,5 +1,6 @@
 import { t } from 'i18next';
 import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 export interface SummaryItem {
   title: string;
@@ -25,7 +26,6 @@ export const addSummary = (
   aggregates: any,
   dosageType: string
 ) => {
-  console.log('🚀 ~ binder:', binder);
   let currentY = 30;
   let currentX = 10;
 
@@ -290,4 +290,14 @@ export const addTextToLeftMargin = (doc: any, text: any, margin: any, y: any, fo
   const x = margin;
   doc.setFontSize(fontSize);
   doc.text(x, y, text);
+};
+
+export const addChart = async (chartElement: HTMLDivElement, doc: jsPDF, currentY: number) => {
+  const canvas = await html2canvas(chartElement);
+  const imgData = canvas.toDataURL('image/png');
+  const imgProps = doc.getImageProperties(imgData);
+  const pdfWidth = doc.internal.pageSize.getWidth();
+  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  const xPosition = (doc.internal.pageSize.getWidth() - pdfWidth) / 2;
+  doc.addImage(imgData, 'PNG', xPosition, currentY, pdfWidth, pdfHeight);
 };
