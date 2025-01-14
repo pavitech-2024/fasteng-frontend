@@ -85,6 +85,7 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
     ];
 
     const materialNames = dosage.materialSelectionData.aggregates.map((material) => material.name);
+    
     const materialNamesWithBinder = [...materialNames, materialsEssays[0][0].data.generalData.material.name].join(', ');
 
     const userData = [
@@ -361,11 +362,11 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
       head: [materials],
       body: [finalProportionsBody],
       columnStyles: {
-        0: { width: 100 } as any, // largura da coluna
+        0: { width: 100 } as any,
       },
       styles: {
-        fillColor: '#F29134', // cor laranja
-        textColor: [0, 0, 0], // cor preta para o texto
+        fillColor: '#F29134',
+        textColor: [0, 0, 0],
         fontSize: 12,
       },
       startY: currentY,

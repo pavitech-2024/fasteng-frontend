@@ -11,7 +11,10 @@ import { toast } from 'react-toastify';
 import { GridColDef } from '@mui/x-data-grid';
 import Step2Table from './tables/material-selection-table';
 
-const ABCP_MaterialsSelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
+const ABCP_MaterialsSelection = ({ 
+  setNextDisabled, 
+  abcp 
+}: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   const { materialSelectionData } = useABCPStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
