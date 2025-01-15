@@ -1,5 +1,8 @@
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
+import { ConcreteGranulometryData } from '../granulometry/granulometry.store';
+import { ConcreteUnitMassData } from '../unitMass/unitMass.store';
+import { ConcreteMaterial } from '@/interfaces/concrete';
 
 interface GeneralData {
   userId: string;
@@ -12,37 +15,36 @@ interface GeneralData {
 }
 
 interface ABCP_MaterialSelection {
-  name: string;
-  coarseAggregate: {
-    id: string;
-    type: string;
-  };
-  fineAggregate: {
-    id: string;
-    type: string;
-  };
-  cement: {
-    id: string;
-    type: string;
-  };
+  aggregates: { _id: string; name: string }[];
+  cement: string;
+}
+
+// export interface ABCP_EssaySelectionData {
+//   fineAggregate: {
+//     _id: string;
+//     specificMass: number;
+//     granulometry_id: string;
+//   };
+//   coarseAggregate: {
+//     _id: string;
+//     granulometry_id: string;
+//     specificMass: number;
+//     unitMass_id: number;
+//   };
+//   cement: {
+//     _id: string;
+//     specificMass: number;
+//   };
+// }
+
+type AggregatesEssaysData = {
+  granulometrys: ConcreteGranulometryData[],
+  unitMasses: ConcreteUnitMassData[]
 }
 
 export interface ABCP_EssaySelectionData {
-  fineAggregate: {
-    _id: string;
-    specificMass: number;
-    granulometry_id: string;
-  };
-  coarseAggregate: {
-    _id: string;
-    granulometry_id: string;
-    specificMass: number;
-    unitMass_id: number;
-  };
-  cement: {
-    _id: string;
-    specificMass: number;
-  };
+  aggregatesData: AggregatesEssaysData[],
+  cementData: ConcreteMaterial
 }
 
 interface ABCP_InsertParamsData {
@@ -101,36 +103,12 @@ const initialState = {
     step: 0,
   },
   materialSelectionData: {
-    name: null,
-    coarseAggregate: {
-      id: null,
-      type: null,
-    },
-    fineAggregate: {
-      id: null,
-      type: null,
-    },
-    cement: {
-      id: null,
-      type: null,
-    },
+    aggregates: [],
+    cement: null,
   },
   essaySelectionData: {
-    fineAggregate: {
-      _id: null,
-      specificMass: null,
-      granulometry_id: null,
-    },
-    coarseAggregate: {
-      _id: null,
-      granulometry_id: null,
-      specificMass: null,
-      unitMass_id: null,
-    },
-    cement: {
-      _id: null,
-      specificMass: null,
-    },
+    aggregatesData: [],
+    cementData: null
   },
   insertParamsData: {
     condition: null,
@@ -159,9 +137,10 @@ const useABCPStore = create<ABCPData & ABCPActions>()(
     persist(
       (set) => ({
         ...initialState,
+
         setData: ({ step, key, value }) =>
           set((state) => {
-            if (step === 5) {
+            if (step === 10) {
               return value; // Substitui o estado inteiro pelo novo valor
             } else {
               if (key) {

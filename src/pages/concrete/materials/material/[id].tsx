@@ -13,7 +13,7 @@ import { ChapmanData } from '@/stores/concrete/chapman/chapman.store';
 import { CoarseAggregateData } from '@/stores/concrete/coarseAggregate/coarseAggregate.store';
 import { ConcreteGranulometryData } from '@/stores/concrete/granulometry/granulometry.store';
 import { SandIncreaseData } from '@/stores/concrete/sandIncrease/sandIncrease.store';
-import { UnitMassData } from '@/stores/concrete/unitMass/unitMass.store';
+import { ConcreteUnitMassData } from '@/stores/concrete/unitMass/unitMass.store';
 import { Box, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { useRouter } from 'next/router';
@@ -27,7 +27,7 @@ interface TextBoxProps {
 export type EssaysData = {
   concreteGranulometryData: ConcreteGranulometryData;
   chapmanData: ChapmanData;
-  unitMassData: UnitMassData;
+  unitMassData: ConcreteUnitMassData;
   sandIncreaseData: SandIncreaseData;
   coarseAggregateSpecificMassRepositoryData: CoarseAggregateData;
 };
@@ -45,7 +45,7 @@ const Material = () => {
 
   const [granulometryData, setGranulometryData] = useState<ConcreteGranulometryData>();
   const [specificMassData, setSpecificMassData] = useState<CoarseAggregateData>();
-  const [unitMassData, setUnitMassData] = useState<UnitMassData>();
+  const [unitMassData, setUnitMassData] = useState<ConcreteUnitMassData>();
   const [sandIncreaseData, setSandIncreaseData] = useState<SandIncreaseData>();
   const [chapmanData, setChapmanData] = useState<ChapmanData>();
   const [type, setType] = useState<string>('');

@@ -13,7 +13,7 @@ interface Step2Props {
 
 const Step2Table = ({ rows, columns, header }: Step2Props & { marshall: Marshall_SERVICE }) => {
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
-  const { materialSelectionData, setData } = useMarshallStore();
+  const { setData } = useMarshallStore();
 
   return (
     <Box

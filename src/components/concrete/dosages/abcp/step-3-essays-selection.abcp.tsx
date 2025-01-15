@@ -13,18 +13,6 @@ const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp:
   const [essays, setEssays] = useState<any>();
   const { materialSelectionData, setData, essaySelectionData, generalData } = useABCPStore();
 
-  const fineAggNominalDiameter = essays?.fineAggregateData.granulometrys.find(
-    (element) => element._id === essaySelectionData.fineAggregate.granulometry_id
-  )?.results?.nominal_diameter;
-
-  const coarseAggNominalDiameter = essays?.coarseAggregateData.granulometrys.find(
-    (element) => element._id === essaySelectionData.coarseAggregate.granulometry_id
-  )?.results?.nominal_diameter;
-
-  const coarseAggMaximumDiameter = essays?.coarseAggregateData.unit_masses.find(
-    (element) => element._id === essaySelectionData.coarseAggregate.unitMass_id
-  )?.results?.result;
-
   useEffect(() => {
     toast.promise(
       async () => {
@@ -46,6 +34,36 @@ const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp:
       }
     );
   }, []);
+
+  // const fineAggNominalDiameter = essays?.fineAggregateData.granulometrys.find(
+  //   (element) => element._id === essaySelectionData.fineAggregate.granulometry_id
+  // )?.results?.nominal_diameter;
+
+  // const coarseAggNominalDiameter = essays?.coarseAggregateData.granulometrys.find(
+  //   (element) => element._id === essaySelectionData.coarseAggregate.granulometry_id
+  // )?.results?.nominal_diameter;
+
+  // const coarseAggMaximumDiameter = essays?.coarseAggregateData.unit_masses.find(
+  //   (element) => element._id === essaySelectionData.coarseAggregate.unitMass_id
+  // )?.results?.result;
+
+  const aggregatesNominalDiameter = essays?.aggregatesData.map((aggregates) => {
+    return aggregates.granulometrys.map((granulometry) => ({
+      essayName: granulometry.generalData.name,
+      materialName: granulometry.generalData.material.name,
+      type: granulometry.generalData.material.type,
+      nominalDiameter: granulometry.results.nominal_diameter,
+    }))
+  });
+
+  const agregatesMaximumDiameter = essays?.aggregatesData.map((aggregates) => {
+    return aggregates.unitMasses.map((unitMass) => ({
+      essayName: unitMass.generalData.experimentName,
+      materialName: unitMass.generalData.material.name,
+      type: unitMass.generalData.material.type,
+      maximumDiameter: unitMass.result.result,
+    }))
+  });
 
   useEffect(() => {
     toast.promise(
@@ -80,6 +98,17 @@ const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp:
       }
     );
   }, [essays]);
+
+  const aggregates = [
+    {
+      title: t('aggregates.fineAggregate'),
+      // inputs: aggregatesNominalDiameter,
+    },
+    {
+      title: t('aggregates.coarseAggregate'),
+      // inputs: agregatesMaximumDiameter,
+    },
+  ]
 
   const fineAggregate_Inputs = [];
   const coarseAggregate_Inputs = [];
@@ -136,7 +165,7 @@ const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp:
                     gap: '1rem',
                   }}
                 >
-                  <TextField
+                  {/* <TextField
                     variant="standard"
                     key={`specificMass_${essays?.fineAggregateData._id}`}
                     label={t('abcp.step-3.fine-specific-mass')}
@@ -149,8 +178,8 @@ const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp:
                       };
                       setData({ step: 2, key: `fineAggregate`, value: prevData });
                     }}
-                  />
-                  <DropDown
+                  /> */}
+                  {/* <DropDown
                     variant="standard"
                     key={`granulometry_${essays?.fineAggregateData._id}`}
                     label={t('abcp.step-3.granulometry')}
@@ -169,12 +198,12 @@ const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp:
                       const prevData = { ...essaySelectionData.fineAggregate, granulometry_id: value };
                       setData({ step: 2, key: 'fineAggregate', value: prevData });
                     }}
-                  />
+                  /> */}
                 </Box>
               </Box>
             </Box>
           </Box>
-          <Box
+          {/* <Box
             sx={{
               display: 'grid',
               gap: '10px',
@@ -296,7 +325,7 @@ const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp:
                 </Box>
               </Box>
             </Box>
-          </Box>
+          </Box> */}
         </>
       )}
     </>

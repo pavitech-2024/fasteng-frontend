@@ -6,23 +6,6 @@ import { ConcreteMaterial } from '@/interfaces/concrete';
 import { AbcpLogo } from '@/assets';
 import { ConcreteGranulometryData } from '@/stores/concrete/granulometry/granulometry.store';
 
-type EssaySelection_Results = {
-  cement: {
-    _id: string;
-    name: string;
-  };
-  fineAggregate: {
-    name: string;
-    _id: string;
-    granulometrys: ConcreteGranulometryData[];
-  };
-  coarseAggregate: {
-    name: string;
-    _id: string;
-    granulometrys: ConcreteGranulometryData[];
-  };
-};
-
 class ABCP_SERVICE implements IEssayService {
   info = {
     key: 'abcp',
@@ -117,13 +100,14 @@ class ABCP_SERVICE implements IEssayService {
 
   // get essay from materials id
   getEssaysByMaterialId = async (
-    data: ABCPData['essaySelectionData'] | ABCPData['materialSelectionData']
-  ): Promise<EssaySelection_Results> => {
+    materialSelectionData: ABCPData['materialSelectionData']
+  ) => {
     try {
+      const {  aggregates, cement } = materialSelectionData;
+
       const response = await Api.post(`${this.info.backend_path}/essay-selection`, {
-        cement: data.cement,
-        coarseAggregate: data.coarseAggregate,
-        fineAggregate: data.fineAggregate,
+        cement,
+        aggregates
       });
 
       const { essays, success, error } = response.data;
@@ -144,18 +128,16 @@ class ABCP_SERVICE implements IEssayService {
   ): Promise<void> => {
     if (!isConsult) {
       try {
-        const { coarseAggregate, fineAggregate, cement } = data.materialSelectionData;
+        const { aggregates, cement } = data.materialSelectionData;
         const { name } = data.generalData;
         const userData = userId ? userId : user;
 
-        if (!coarseAggregate) throw t('errors.empty-coarseAggregates');
-        if (!fineAggregate) throw t('errors.empty-fineAggregates');
+        if (!aggregates) throw t('errors.empty-aggregates');
         if (!cement) throw t('errors.empty-binder');
 
         const materialSelectionData = {
           name,
-          coarseAggregate,
-          fineAggregate,
+          aggregates,
           cement,
           isConsult: null,
         };
@@ -165,8 +147,7 @@ class ABCP_SERVICE implements IEssayService {
         const response = await Api.post(`${this.info.backend_path}/save-material-selection-step/${userData}`, {
           materialSelectionData: {
             name,
-            coarseAggregate,
-            fineAggregate,
+            aggregates,
             cement,
           },
         });
@@ -202,7 +183,7 @@ class ABCP_SERVICE implements IEssayService {
   // send the selected essays to backend
   submitEssaySelection = async (data: ABCPData, userId: string, isConsult?: boolean): Promise<void> => {
     if (!isConsult) {
-      const { coarseAggregate, fineAggregate, cement } = data.essaySelectionData;
+      const { aggregatesData, cementData } = data.essaySelectionData;
 
       const { name } = data.generalData;
 
@@ -210,9 +191,8 @@ class ABCP_SERVICE implements IEssayService {
         const response = await Api.post(`${this.info.backend_path}/save-essay-selection-step/${userId}`, {
           essaySelectionData: {
             name,
-            fineAggregate,
-            coarseAggregate,
-            cement,
+            aggregatesData,
+            cementData
           },
         });
 

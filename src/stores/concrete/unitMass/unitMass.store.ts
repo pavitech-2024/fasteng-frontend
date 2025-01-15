@@ -19,7 +19,7 @@ interface unitMass_step3Result {
   result: number;
 }
 
-export type UnitMassData = {
+export type ConcreteUnitMassData = {
   generalData: UnitMassGeneralData;
   step2Data: unitMass_step2Data;
   result: unitMass_step3Result;
@@ -32,7 +32,7 @@ const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'result' };
 
 export type setDataType = { step: number; key?: string; value: unknown };
 
-const useUnitMassStore = create<UnitMassData & UnitMassActions>()(
+const useUnitMassStore = create<ConcreteUnitMassData & UnitMassActions>()(
   devtools(
     persist(
       (set) => ({

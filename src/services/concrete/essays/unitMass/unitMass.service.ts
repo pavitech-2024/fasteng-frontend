@@ -1,5 +1,5 @@
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
-import { UnitMassActions, UnitMassData } from '@/stores/concrete/unitMass/unitMass.store';
+import { UnitMassActions, ConcreteUnitMassData } from '@/stores/concrete/unitMass/unitMass.store';
 import Api from '@/api';
 import { UnitMassIcon } from '@/assets';
 import { t } from 'i18next';
@@ -31,14 +31,14 @@ class UNITMASS_SERVICE implements IEssayService {
     try {
       switch (step) {
         case 0:
-          await this.submitGeneralData(data as UnitMassData['generalData']);
+          await this.submitGeneralData(data as ConcreteUnitMassData['generalData']);
           break;
         case 1:
-          await this.submitStep2Data(data as UnitMassData);
-          await this.calculateResults(data as UnitMassData);
+          await this.submitStep2Data(data as ConcreteUnitMassData);
+          await this.calculateResults(data as ConcreteUnitMassData);
           break;
         case 2:
-          await this.saveEssay(data as UnitMassData);
+          await this.saveEssay(data as ConcreteUnitMassData);
           break;
         default:
           throw t('errors.invalid-step');
@@ -48,7 +48,7 @@ class UNITMASS_SERVICE implements IEssayService {
     }
   };
 
-  submitGeneralData = async (generalData: UnitMassData['generalData']): Promise<void> => {
+  submitGeneralData = async (generalData: ConcreteUnitMassData['generalData']): Promise<void> => {
     try {
       const { experimentName, material, method } = generalData;
 
@@ -75,8 +75,8 @@ class UNITMASS_SERVICE implements IEssayService {
   };
 
   submitStep2Data = async (
-    // generalData: UnitMassData['generalData'],
-    data: UnitMassData
+    // generalData: ConcreteUnitMassData['generalData'],
+    data: ConcreteUnitMassData
   ): Promise<void> => {
     try {
       const { containerVolume, containerWeight, sampleContainerWeight } = data.step2Data;
@@ -118,7 +118,7 @@ class UNITMASS_SERVICE implements IEssayService {
     }
   };
 
-  calculateResults = async (store: UnitMassData): Promise<void> => {
+  calculateResults = async (store: ConcreteUnitMassData): Promise<void> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
@@ -135,7 +135,7 @@ class UNITMASS_SERVICE implements IEssayService {
     }
   };
 
-  saveEssay = async (store: UnitMassData): Promise<void> => {
+  saveEssay = async (store: ConcreteUnitMassData): Promise<void> => {
     try {
       const response = await Api.post(`${this.info.backend_path}/save-essay`, {
         generalData: {
