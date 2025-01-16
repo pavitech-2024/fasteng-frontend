@@ -19,32 +19,31 @@ interface ABCP_MaterialSelection {
   cement: string;
 }
 
-// export interface ABCP_EssaySelectionData {
-//   fineAggregate: {
-//     _id: string;
-//     specificMass: number;
-//     granulometry_id: string;
-//   };
-//   coarseAggregate: {
-//     _id: string;
-//     granulometry_id: string;
-//     specificMass: number;
-//     unitMass_id: number;
-//   };
-//   cement: {
-//     _id: string;
-//     specificMass: number;
-//   };
-// }
+type AggregateEssays = {
+  granulometryId: string,
+  unitMassId: string,
+  granulometryName: string,
+  unitMassName: string,
+  materialName: string,
+  materialId: string,
+  maximumDiameter: number,
+  nominalDiameter: number,
+  type: string
+  specificMass: number
+}
 
-type AggregatesEssaysData = {
-  granulometrys: ConcreteGranulometryData[],
-  unitMasses: ConcreteUnitMassData[]
+type SelectedEssays = {
+  specificMassValue: number,
+  granulometryId: string,
+  unitMassId?: string,
+  materialId: string,
+  materialType: string
 }
 
 export interface ABCP_EssaySelectionData {
-  aggregatesData: AggregatesEssaysData[],
-  cementData: ConcreteMaterial
+  aggregateEssays: AggregateEssays[],
+  selectedEssays: SelectedEssays[]
+  cementSpecificMass: number
 }
 
 interface ABCP_InsertParamsData {
@@ -107,8 +106,9 @@ const initialState = {
     cement: null,
   },
   essaySelectionData: {
-    aggregatesData: [],
-    cementData: null
+    aggregateEssays: [],
+    selectedEssays: [],
+    cementSpecificMass: null
   },
   insertParamsData: {
     condition: null,

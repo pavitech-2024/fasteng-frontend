@@ -1,25 +1,86 @@
 import DropDown from '@/components/atoms/inputs/dropDown';
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
+import { ConcreteMaterialData } from '@/interfaces/concrete';
 import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
-import useABCPStore, { ABCP_EssaySelectionData, ABCPData } from '@/stores/concrete/abcp/abcp.store';
+import useABCPStore from '@/stores/concrete/abcp/abcp.store';
+import { ConcreteGranulometryData } from '@/stores/concrete/granulometry/granulometry.store';
+import { ConcreteUnitMassData } from '@/stores/concrete/unitMass/unitMass.store';
 import { Box, TextField, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+interface IConcreteGranulometryDataId extends ConcreteGranulometryData {
+  _id: string;
+}
+
+interface IConcreteUnitMassDataId extends ConcreteUnitMassData {
+  _id: string;
+}
+
+type AggregatesData = {
+  granulometrys: IConcreteGranulometryDataId[];
+  unitMasses: IConcreteUnitMassDataId[];
+};
+
+interface IConcreteMaterialDataId extends ConcreteMaterialData {
+  _id: string;
+}
+
+type EssaysData = {
+  aggregatesData: AggregatesData[];
+  cementData: IConcreteMaterialDataId;
+};
+
 const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [essays, setEssays] = useState<any>();
-  const { materialSelectionData, setData, essaySelectionData, generalData } = useABCPStore();
+  const [essays, setEssays] = useState<EssaysData>();
+  console.log('🚀 ~ constABCP_EssaySelection= ~ essays:', essays);
+  const { materialSelectionData, setData, essaySelectionData } = useABCPStore();
 
   useEffect(() => {
     toast.promise(
       async () => {
         try {
           const essays = await abcp.getEssaysByMaterialId(materialSelectionData);
-          console.log('ensaios', essays);
           setEssays(essays);
+
+          const aggregateEssays: AggregatesData[] = essays?.aggregatesData.flatMap((aggregates) => {
+            if (aggregates.granulometrys.length > 0) {
+              return aggregates.granulometrys.map((granulometry, i) => ({
+                granulometryId: granulometry._id,
+                unitMassId: aggregates.unitMasses[i]?._id ?? null,
+                granulometryName: granulometry.generalData.name,
+                unitMassName: aggregates.unitMasses[i]?.generalData.experimentName ?? null,
+                materialName: granulometry.generalData.material.name,
+                materialId: granulometry.generalData.material._id,
+                type: granulometry.generalData.material.type,
+                nominalDiameter: granulometry.results.nominal_diameter,
+                maximumDiameter: aggregates.unitMasses[i]?.result?.result ?? null,
+                specificMass: null,
+              }));
+            } else if (aggregates.unitMasses.length > 0) {
+              return [
+                {
+                  granulometryId: null,
+                  unitMassId: aggregates.unitMasses[0]?._id,
+                  granulometryName: null,
+                  unitMassName: aggregates.unitMasses[0]?.generalData.experimentName,
+                  materialName: aggregates.unitMasses[0].generalData.material.name,
+                  materialId: aggregates.unitMasses[0].generalData.material._id,
+                  type: aggregates.unitMasses[0].generalData.material.type,
+                  nominalDiameter: null,
+                  maximumDiameter: aggregates.unitMasses[0]?.result?.result ?? null,
+                  specificMass: null,
+                },
+              ];
+            }
+            return [];
+          });
+
+          setData({ step: 2, key: 'aggregateEssays', value: aggregateEssays });
+
           setLoading(false);
         } catch (error) {
           setEssays(null);
@@ -35,106 +96,105 @@ const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp:
     );
   }, []);
 
-  // const fineAggNominalDiameter = essays?.fineAggregateData.granulometrys.find(
-  //   (element) => element._id === essaySelectionData.fineAggregate.granulometry_id
-  // )?.results?.nominal_diameter;
+  const hasNullValues = essaySelectionData.selectedEssays.some((material) => {
+    const isCoarseAggregate = material.materialType === 'coarseAggregate';
+    let coarseAggHasNullValues: boolean;
+    let fineAggHasNullValues: boolean;
 
-  // const coarseAggNominalDiameter = essays?.coarseAggregateData.granulometrys.find(
-  //   (element) => element._id === essaySelectionData.coarseAggregate.granulometry_id
-  // )?.results?.nominal_diameter;
-
-  // const coarseAggMaximumDiameter = essays?.coarseAggregateData.unit_masses.find(
-  //   (element) => element._id === essaySelectionData.coarseAggregate.unitMass_id
-  // )?.results?.result;
-
-  const aggregatesNominalDiameter = essays?.aggregatesData.map((aggregates) => {
-    return aggregates.granulometrys.map((granulometry) => ({
-      essayName: granulometry.generalData.name,
-      materialName: granulometry.generalData.material.name,
-      type: granulometry.generalData.material.type,
-      nominalDiameter: granulometry.results.nominal_diameter,
-    }))
-  });
-
-  const agregatesMaximumDiameter = essays?.aggregatesData.map((aggregates) => {
-    return aggregates.unitMasses.map((unitMass) => ({
-      essayName: unitMass.generalData.experimentName,
-      materialName: unitMass.generalData.material.name,
-      type: unitMass.generalData.material.type,
-      maximumDiameter: unitMass.result.result,
-    }))
-  });
-
-  useEffect(() => {
-    toast.promise(
-      async () => {
-        try {
-          const dosageData = sessionStorage.getItem('abcp-store');
-          const sessionDataJson = JSON.parse(dosageData);
-          const dosageDataJson = sessionDataJson.state as any;
-
-          const response = await abcp.getStep3Data(dosageDataJson, dosageDataJson._id.toString());
-
-          const prevData = { ...dosageDataJson };
-          const newData = { ...prevData.generalData, step: 2 };
-          prevData.generalData = newData;
-
-          setData({
-            step: 5,
-            value: {
-              ...prevData,
-            },
-          });
-          setLoading(false);
-        } catch (error) {
-          setLoading(false);
-          throw error;
-        }
-      },
-      {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('testeeeeeeee'),
-      }
-    );
-  }, [essays]);
-
-  const aggregates = [
-    {
-      title: t('aggregates.fineAggregate'),
-      // inputs: aggregatesNominalDiameter,
-    },
-    {
-      title: t('aggregates.coarseAggregate'),
-      // inputs: agregatesMaximumDiameter,
-    },
-  ]
-
-  const fineAggregate_Inputs = [];
-  const coarseAggregate_Inputs = [];
-  const binder_Inputs = [];
-
-  if (essays) fineAggregate_Inputs.push(essays.fineAggregate);
-  if (essays) coarseAggregate_Inputs.push(essays.coarseAggregate);
-  if (essays) binder_Inputs.push(essays.cement);
-
-  function hasNullValue(obj: ABCP_EssaySelectionData): boolean {
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        if (obj[key] === null || obj[key] === undefined) {
-          return true;
-        }
-        if (typeof obj[key] === 'object' && hasNullValue(obj[key])) {
-          return true;
-        }
-      }
+    if (!isCoarseAggregate) {
+      fineAggHasNullValues = !material.granulometryId || !material.specificMassValue;
+    } else {
+      coarseAggHasNullValues = Object.values(material).some((value) => value === null);
     }
-    return false;
-  }
 
-  const hasNull = hasNullValue(essaySelectionData);
+    return coarseAggHasNullValues && fineAggHasNullValues;
+  });
 
-  setNextDisabled(hasNull);
+  if (!hasNullValues) setNextDisabled(false);
+
+  const findSelectedEssayId = (materialId) => {
+    return essaySelectionData.selectedEssays.findIndex((e) => e.materialId === materialId);
+  };
+
+  const selectedUnitMassName = essays?.aggregatesData
+    .find((material) => {
+      return material.unitMasses.find((unitMass) => {
+        if (
+          unitMass._id ===
+          essaySelectionData.selectedEssays[findSelectedEssayId(unitMass.generalData.material._id)]?.unitMassId
+        ) {
+          return unitMass.generalData.experimentName;
+        }
+      });
+    })
+    ?.unitMasses.find(
+      (unitMass) =>
+        unitMass._id ===
+        essaySelectionData.selectedEssays[findSelectedEssayId(unitMass.generalData.material._id)]?.unitMassId
+    )?.generalData.experimentName;
+
+  const selectedUnitMassId = essays?.aggregatesData
+    .find((material) => {
+      return material.unitMasses.find((unitMass) => {
+        if (
+          unitMass._id ===
+          essaySelectionData.selectedEssays[findSelectedEssayId(unitMass.generalData.material._id)]?.unitMassId
+        ) {
+          return unitMass.generalData.experimentName;
+        }
+      });
+    })
+    ?.unitMasses.find(
+      (unitMass) =>
+        unitMass._id ===
+        essaySelectionData.selectedEssays[findSelectedEssayId(unitMass.generalData.material._id)]?.unitMassId
+    )?._id;
+
+  const unitMassDropdownDefault = {
+    label: selectedUnitMassName,
+    value: selectedUnitMassId,
+  };
+
+  //granulometry dropdown selected option
+  const selectedGranulometryName = essays?.aggregatesData
+    .find((material) => {
+      return material.granulometrys.find((granulometry) => {
+        if (
+          granulometry._id ===
+          essaySelectionData.selectedEssays[findSelectedEssayId(granulometry.generalData.material._id)]?.granulometryId
+        ) {
+          return granulometry.generalData.name;
+        }
+      });
+    })
+    ?.granulometrys.find(
+      (granulometry) =>
+        granulometry._id ===
+        essaySelectionData.selectedEssays[findSelectedEssayId(granulometry.generalData.material._id)]?.granulometryId
+    )?.generalData.name;
+
+  const selectedGranulometryId = essays?.aggregatesData
+    .find((material) => {
+      return material.granulometrys.find((granulometry) => {
+        if (
+          granulometry._id ===
+          essaySelectionData.selectedEssays[findSelectedEssayId(granulometry.generalData.material._id)]?.granulometryId
+        ) {
+          return granulometry.generalData.name;
+        }
+      });
+    })
+    ?.unitMasses.find(
+      (granulometry) =>
+        granulometry._id ===
+        essaySelectionData.selectedEssays[findSelectedEssayId(granulometry.generalData.material._id)]?.granulometryId
+    )?._id;
+
+  const granulometryDropdownDefault = {
+    label: selectedGranulometryName,
+    value: selectedGranulometryId,
+  };
+  console.log('🚀 ~ constABCP_EssaySelection= ~ granulometryDropdownDefault:', granulometryDropdownDefault);
 
   return (
     <>
@@ -144,188 +204,212 @@ const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp:
         <>
           <Box
             sx={{
-              display: 'grid',
-              gap: '10px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4rem',
             }}
           >
-            <Box
-              sx={{
-                p: '1rem',
-                textAlign: 'center',
-                border: '1px solid lightgray',
-                borderRadius: '10px',
-              }}
-            >
-              <Box>
-                <Typography>{`${essays?.fineAggregateData.name} - ${t('abcp.step-3.fine-aggregate')}`}</Typography>
+            {essaySelectionData?.aggregateEssays?.length > 0 &&
+              essaySelectionData.aggregateEssays.map((essay, idx) => (
                 <Box
                   sx={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr 1fr',
-                    gap: '1rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '2rem',
+                    width: '100%',
+                    border: '1px solid',
+                    borderRadius: '10px',
+                    borderColor: 'primaryTons.border',
+                    padding: '1rem',
                   }}
                 >
-                  {/* <TextField
-                    variant="standard"
-                    key={`specificMass_${essays?.fineAggregateData._id}`}
-                    label={t('abcp.step-3.fine-specific-mass')}
-                    value={essaySelectionData?.fineAggregate?.specificMass}
-                    onChange={(e) => {
-                      const prevData = {
-                        ...essaySelectionData.fineAggregate,
-                        specificMass: Number(e.target.value),
-                        _id: materialSelectionData.fineAggregate,
-                      };
-                      setData({ step: 2, key: `fineAggregate`, value: prevData });
-                    }}
-                  /> */}
-                  {/* <DropDown
-                    variant="standard"
-                    key={`granulometry_${essays?.fineAggregateData._id}`}
-                    label={t('abcp.step-3.granulometry')}
-                    defaultValue={{
-                      label: `${generalData.name} - (Diâmetro máximo: ${fineAggNominalDiameter}mm)`,
-                      value: essaySelectionData.fineAggregate.granulometry_id,
-                    }}
-                    options={essays?.fineAggregateData.granulometrys?.map((essay) => {
-                      const { generalData, results, _id } = essay;
-                      return {
-                        label: `${generalData.name} - (Diâmetro máximo: ${results.nominal_diameter}mm)`,
-                        value: _id,
-                      };
-                    })}
-                    callback={(value) => {
-                      const prevData = { ...essaySelectionData.fineAggregate, granulometry_id: value };
-                      setData({ step: 2, key: 'fineAggregate', value: prevData });
-                    }}
-                  /> */}
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-          {/* <Box
-            sx={{
-              display: 'grid',
-              gap: '10px',
-            }}
-          >
-            <Box
-              sx={{
-                p: '1rem',
-                textAlign: 'center',
-                border: '1px solid lightgray',
-                borderRadius: '10px',
-              }}
-            >
-              <Box>
-                <Typography>{`${essays?.coarseAggregateData.name} - ${t('abcp.step-3.coarse-aggregate')}`}</Typography>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr 1fr',
-                    gap: '1rem',
-                  }}
-                >
-                  <TextField
-                    variant="standard"
-                    key={`specific_mass_${essays?.coarseAggregateData._id}`}
-                    label={t('abcp.step-3.coarse-specific-mass')}
-                    value={essaySelectionData.coarseAggregate.specificMass}
-                    onChange={(e) => {
-                      const prevData = {
-                        ...essaySelectionData.coarseAggregate,
-                        specificMass: Number(e.target.value),
-                        _id: materialSelectionData.coarseAggregate,
-                      };
-                      setData({ step: 2, key: 'coarseAggregate', value: prevData });
-                    }}
-                  />
-                  <DropDown
-                    variant="standard"
-                    key={`granulometry_${essays?.coarseAggregateData._id}`}
-                    label={t('abcp.step-3.granulometry')}
-                    defaultValue={{
-                      label: `${generalData.name} - (Diâmetro máximo: ${coarseAggNominalDiameter}mm)`,
-                      value: essaySelectionData.coarseAggregate.granulometry_id,
-                    }}
-                    options={essays?.coarseAggregateData.granulometrys?.map((essay) => {
-                      const { generalData, results, _id } = essay;
-                      return {
-                        label: `${generalData.name} - (Diâmetro máximo: ${results.nominal_diameter}mm)`,
-                        value: _id,
-                      };
-                    })}
-                    callback={(value) => {
-                      const prevData = { ...essaySelectionData.coarseAggregate, granulometry_id: value };
-                      setData({ step: 2, key: 'coarseAggregate', value: prevData });
-                    }}
-                  />
-                  <DropDown
-                    variant="standard"
-                    key={`unit_mass_${essays?.coarseAggregateData._id}`}
-                    label={t('abcp.step-3.unit_mass')}
-                    defaultValue={{
-                      label: `${generalData.name} - (Diâmetro máximo: ${coarseAggMaximumDiameter}mm)`,
-                      value: essaySelectionData.coarseAggregate.unitMass_id,
-                    }}
-                    options={essays?.coarseAggregateData.unit_masses?.map((essay) => {
-                      const { generalData, result, _id } = essay;
-                      return {
-                        key: _id,
-                        label: `${generalData.experimentName} - (Diâmetro máximo: ${result?.result}mm)`,
-                        value: _id,
-                      };
-                    })}
-                    callback={(value) => {
-                      const prevData = { ...essaySelectionData.coarseAggregate, unitMass_id: value };
-                      setData({ step: 2, key: 'coarseAggregate', value: prevData });
-                    }}
-                  />
-                </Box>
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: 'grid',
-                gap: '10px',
-              }}
-            >
-              <Box
-                sx={{
-                  p: '1rem',
-                  textAlign: 'center',
-                  border: '1px solid lightgray',
-                  borderRadius: '10px',
-                }}
-              >
-                <Box>
-                  <Typography>{`${essays?.cementData.name} - ${t('abcp.step-3.cement')}`}</Typography>
+                  <Typography variant="h6">{`${essay.materialName} - ${t(`abcp.step-3.${essay.type}`)}`}</Typography>
+
                   <Box
                     sx={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr 1fr',
-                      gap: '1rem',
+                      display: 'flex',
+                      gap: '2rem',
+                      width: '100%',
                     }}
                   >
                     <TextField
-                      variant="standard"
-                      key={`specific_mass_${essaySelectionData.cement._id}`}
-                      label={t('abcp.step-3.cement-specific-mass')}
-                      value={essaySelectionData.cement.specificMass}
+                      variant={
+                        essaySelectionData.selectedEssays.find((element) => element.materialId === essay.materialId)
+                          ?.specificMassValue
+                          ? 'filled'
+                          : 'standard'
+                      }
+                      sx={{ width: '100%' }}
+                      key={`specificMass_${essay.materialName}`}
+                      label={t('abcp.step-3.aggregate-specific-mass')}
+                      value={
+                        essaySelectionData.selectedEssays.find((element) => element.materialId === essay.materialId)
+                          ?.specificMassValue
+                      }
                       onChange={(e) => {
-                        const prevData = {
-                          ...essaySelectionData.cement,
-                          specificMass: Number(e.target.value),
-                          _id: essays?.cementData._id,
-                        };
-                        setData({ step: 2, key: 'cement', value: prevData });
+                        const prevData = { ...essaySelectionData };
+                        prevData.aggregateEssays[idx].specificMass = Number(e.target.value);
+
+                        const materialIndex = essaySelectionData.selectedEssays.findIndex(
+                          (material) => material.materialId === essay.materialId
+                        );
+
+                        if (materialIndex === -1) {
+                          const essayData = {
+                            materialId: essay.materialId,
+                            granulometryId: null,
+                            specificMassValue: Number(e.target.value),
+                            unitMassId: null,
+                            materialType: essay.type,
+                          };
+                          prevData.selectedEssays.push(essayData);
+                        } else {
+                          prevData.selectedEssays[materialIndex] = {
+                            ...prevData.selectedEssays[materialIndex],
+                            specificMassValue: Number(e.target.value),
+                          };
+                        }
+                        setData({ step: 2, value: prevData });
                       }}
                     />
+
+                    <DropDown
+                      variant={
+                        essaySelectionData.selectedEssays.find((element) => element.materialId === essay.materialId)
+                          ?.granulometryId
+                          ? 'filled'
+                          : 'standard'
+                      }
+                      sx={{ width: '100%' }}
+                      key={`granulometry_${essay.materialName}`}
+                      label={t('abcp.step-3.granulometry')}
+                      defaultValue={granulometryDropdownDefault}
+                      options={
+                        essays?.aggregatesData[idx].granulometrys.length > 0
+                          ? essays?.aggregatesData[idx].granulometrys.map((granulometry: IConcreteGranulometryDataId) => {
+                              const { generalData, results, _id } = granulometry;
+                              return {
+                                label: `${generalData.name} - (Diâmetro nominal: ${results.nominal_diameter} mm)`,
+                                value: _id,
+                              };
+                            })
+                          : [
+                              {
+                                label: 'Não há granulometria disponível.',
+                                value: '',
+                              },
+                            ]
+                      }
+                      callback={(value) => {
+                        const prevData = { ...essaySelectionData };
+                        const materialIndex = prevData.selectedEssays.findIndex(
+                          (material) => material.materialId === essay.materialId
+                        );
+
+                        if (materialIndex === -1) {
+                          const essayData = {
+                            materialId: essay.materialId,
+                            granulometryId: value as string,
+                            specificMassValue: null,
+                            materialType: essay.type,
+                          };
+                          prevData.selectedEssays.push(essayData);
+                        } else {
+                          prevData.selectedEssays[materialIndex] = {
+                            ...prevData.selectedEssays[materialIndex],
+                            granulometryId: value as string,
+                          };
+                        }
+
+                        setData({ step: 2, value: prevData });
+                      }}
+                    />
+
+                    {essay.type === 'coarseAggregate' && (
+                      <DropDown
+                        variant="standard"
+                        sx={{ width: '100%' }}
+                        key={`unitMass_${essay.materialName}_${idx}`}
+                        label={t('abcp.step-3.unitMass')}
+                        defaultValue={unitMassDropdownDefault}
+                        options={
+                          essays?.aggregatesData[idx].unitMasses.length > 0
+                            ? essays?.aggregatesData[idx].unitMasses.map((unitMass: IConcreteUnitMassDataId) => {
+                                const { generalData, result, _id } = unitMass;
+                                return {
+                                  label: `${generalData.experimentName} - (Diâmetro nominal: ${result.result} mm)`,
+                                  value: _id,
+                                };
+                              })
+                            : [
+                                {
+                                  label: 'Não há granulometria disponível.',
+                                  value: '',
+                                },
+                              ]
+                        }
+                        callback={(value) => {
+                          const prevData = { ...essaySelectionData };
+                          const materialIndex = prevData.selectedEssays.findIndex(
+                            (material) => material.materialId === essay.materialId
+                          );
+
+                          if (materialIndex === -1) {
+                            const essayData = {
+                              materialId: essay.materialId,
+                              granulometryId: null,
+                              specificMassValue: null,
+                              unitMassId: value as string,
+                              materialType: essay.type,
+                            };
+                            prevData.selectedEssays.push(essayData);
+                          } else {
+                            prevData.selectedEssays[materialIndex] = {
+                              ...prevData.selectedEssays[materialIndex],
+                              unitMassId: value as string,
+                            };
+                          }
+
+                          setData({ step: 2, value: prevData });
+                        }}
+                      />
+                    )}
                   </Box>
                 </Box>
-              </Box>
+              ))}
+
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '2rem',
+                width: '100%',
+                border: '1px solid',
+                borderRadius: '10px',
+                borderColor: 'primaryTons.border',
+                padding: '1rem',
+              }}
+            >
+              <Typography variant="h6">{`${essays.cementData.name} - ${t(
+                `abcp.step-3.${essays.cementData.type}`
+              )}`}</Typography>
+
+              <TextField
+                variant="standard"
+                sx={{ width: '50%' }}
+                key={`specificMass_${essays.cementData.name}`}
+                label={t('abcp.step-3.aggregate-specific-mass')}
+                value={essaySelectionData.cementSpecificMass}
+                onChange={(e) => {
+                  setData({ step: 2, key: 'cementSpecificMass', value: Number(e.target.value) });
+                }}
+              />
             </Box>
-          </Box> */}
+          </Box>
         </>
       )}
     </>
