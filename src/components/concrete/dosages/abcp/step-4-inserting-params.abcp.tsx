@@ -56,12 +56,16 @@ const ABCP_InsertingParams = ({ setNextDisabled }: EssayPageProps & { abcp: ABCP
   return (
     <Box
       sx={{
-        display: 'grid',
+        display: 'flex',
         gap: '10px',
+        width: '100%',
       }}
     >
       <Box
         sx={{
+          display: 'flex',
+          gap: '2rem',
+          width: '100%',
           p: '1rem',
           textAlign: 'center',
           border: '1px solid lightgray',
@@ -70,7 +74,7 @@ const ABCP_InsertingParams = ({ setNextDisabled }: EssayPageProps & { abcp: ABCP
       >
         <DropDown
           label={t('abcp.step-4.select-condition')}
-          sx={{ width: '100%', marginY: '20px' }}
+          sx={{ width: '100%' }}
           variant="standard"
           size="medium"
           defaultValue={{

@@ -183,7 +183,7 @@ class ABCP_SERVICE implements IEssayService {
   // send the selected essays to backend
   submitEssaySelection = async (data: ABCPData, userId: string, isConsult?: boolean): Promise<void> => {
     if (!isConsult) {
-      const { aggregatesData, cementData } = data.essaySelectionData;
+      const { aggregateEssays, selectedEssays, cementSpecificMass } = data.essaySelectionData;
 
       const { name } = data.generalData;
 
@@ -191,8 +191,9 @@ class ABCP_SERVICE implements IEssayService {
         const response = await Api.post(`${this.info.backend_path}/save-essay-selection-step/${userId}`, {
           essaySelectionData: {
             name,
-            aggregatesData,
-            cementData
+            aggregateEssays,
+            cementSpecificMass,
+            selectedEssays,
           },
         });
 
