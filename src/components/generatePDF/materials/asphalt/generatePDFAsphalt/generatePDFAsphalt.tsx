@@ -7,11 +7,7 @@ import html2canvas from 'html2canvas';
 import { t } from 'i18next';
 import { Button } from '@mui/material';
 import useAuth from '@/contexts/auth';
-
-export interface SummaryItem {
-  title: string;
-  page: number;
-}
+import { SummaryItem } from '@/components/generatePDF/common';
 
 export interface IGenratePDF {
   name: string;
