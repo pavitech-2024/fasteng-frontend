@@ -13,7 +13,7 @@ export type SampleData = {
     observation?: string;
   };
 };
-export class Sample {
+export class SoilSample {
   _id: string;
   name: string;
   type: SampleTypes;

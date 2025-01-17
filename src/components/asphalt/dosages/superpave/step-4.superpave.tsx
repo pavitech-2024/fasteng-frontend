@@ -475,7 +475,9 @@ const Superpave_Step4 = ({
             <Box sx={{ display: 'flex', gap: '1rem', flexDirection: 'column', marginBottom: '2rem' }}>
               {modalMaterialInputs.map((materialInputs, idx) => (
                 <>
-                  <Typography>{data.materials[idx].name}</Typography>
+                  <Typography component={'h3'} sx={{ marginTop: '2rem' }}>
+                    {data.materials[idx].name}
+                  </Typography>
 
                   <Box key={idx} sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                     {materialInputs.map((input) => (
@@ -504,20 +506,6 @@ const Superpave_Step4 = ({
               ))}
             </Box>
           </Box>
-
-          {/* <Typography>{binderData?.name}</Typography>
-
-          <Box>
-            <InputEndAdornment
-              adornment={'g/cm²'}
-              placeholder={t('asphalt.dosages.superpave.real-specific-mass')}
-              value={data.binderSpecificMass}
-              type="number"
-              onChange={(e) => {
-                setData({ step: 3, key: 'binderSpecificMass', value: Number(e.target.value) });
-              }}
-            />
-          </Box> */}
         </ModalBase>
       )}
 

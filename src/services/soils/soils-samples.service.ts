@@ -6,6 +6,7 @@ const samplesService = {
   deleteSample: (sampleId: string) => Api.delete(`soils/samples/${sampleId}`),
   getSamplesByUserId: (userId: string) => Api.get(`soils/samples/all/${userId}`),
   getSample: (sampleId: string) => Api.get(`soils/samples/${sampleId}`),
+  editSample: (sampleId: string, sampleData: SampleData) => Api.put(`soils/samples/${sampleId}`, sampleData),
 };
 
 export default samplesService;

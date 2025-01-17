@@ -4,7 +4,7 @@
   "compression.samples": "Samples",
   "compression.cauculist": "Cauculist",
   "compression.observation": "Observation",
-  "sample": "Sample",
+  "sample": "SoilSample",
   "material": "Material",
   "graph": "Graph",
   "authorName": "Author name",

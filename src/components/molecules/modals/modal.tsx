@@ -62,6 +62,8 @@ const ModalBase = ({
           boxShadow: 24,
           borderRadius: '10px',
           maxHeight: '80%',
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#121212 #f1c40f',
           overflowY: {
             mobile: 'scroll',
             notebook: 'auto',

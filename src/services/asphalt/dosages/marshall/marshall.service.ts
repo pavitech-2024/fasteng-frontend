@@ -153,7 +153,6 @@ class Marshall_SERVICE implements IEssayService {
         const userData = userId ? userId : user;
 
         if (!aggregates) throw t('errors.empty-aggregates');
-        // if (aggregates.length < 2) throw t('errors.empty-second-aggregate');
         if (!binder) throw t('errors.empty-binder');
 
         const materialSelectionData = {
@@ -201,8 +200,6 @@ class Marshall_SERVICE implements IEssayService {
         });
 
         const { data, success, error } = response.data;
-
-        console.log(data);
 
         if (success === false) throw error.name;
 
@@ -872,7 +869,6 @@ class Marshall_SERVICE implements IEssayService {
     user?: string,
     isConsult?: boolean
   ): Promise<void> => {
-    console.log('🚀 ~ Marshall_SERVICE ~ data:', data);
     if (!isConsult) {
       try {
         const userData = userId ? userId : user;
