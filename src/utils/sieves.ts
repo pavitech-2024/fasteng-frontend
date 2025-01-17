@@ -6,6 +6,6 @@ import { AllSieves, Sieve, AllSieveSeries, SieveSeries } from '../interfaces/com
     return N° 10 - 2.00 mm 
 
 */
-export const getSieveName = (value: number): string => AllSieves.find((sieve: Sieve) => sieve.value === value).label;
+export const getSieveName = (value: number): string => AllSieves.find((sieve: Sieve) => sieve.value === value).label;7
 
 export const getSieveSeries = (index: number): SieveSeries => AllSieveSeries[index];

@@ -19,7 +19,7 @@ export type Sieve = {
   value: number; // mm
 };
 
-export const AllSieves = [
+export const AllSieves: Sieve[] = [
   {
     label: '3 pol - 75 mm',
     value: 75, // mm

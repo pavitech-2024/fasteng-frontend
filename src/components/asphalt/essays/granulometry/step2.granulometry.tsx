@@ -1,16 +1,31 @@
 import DropDown from '@/components/atoms/inputs/dropDown';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import { SieveSeries } from '@/interfaces/common';
+import { AllSieves, Sieve, SieveSeries } from '@/interfaces/common';
 import useAsphaltGranulometryStore from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
 import { getSieveSeries } from '@/utils/sieves';
-import { Box } from '@mui/material';
-import { GridColDef } from '@mui/x-data-grid';
+import { Box, Button } from '@mui/material';
+import { GridColDef, GridRowId } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import AsphaltGranulometry_step2Table from './tables/step2-table.granulometry';
+import { useState } from 'react';
+import { AddIcon } from '@/assets';
+import AddSieveModal from '@/components/atoms/modals/addSieveModal';
+
+export type NewSieves = {
+  higher: Sieve;
+  lower: Sieve;
+  baseSieve: Sieve;
+};
 
 const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useAsphaltGranulometryStore();
+  const [addSieveModalIsOpen, setAddSieveModalIsOpen] = useState(false);
+  const [newSieves, setNewSieves] = useState({
+    higher: { label: '', value: 0 },
+    lower: { label: '', value: 0 },
+    baseSieve: { label: '', value: 0 },
+  });
 
   const sievesSeries = [getSieveSeries(0), getSieveSeries(1), getSieveSeries(2), getSieveSeries(3), getSieveSeries(4)];
 
@@ -178,7 +193,79 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
         );
       },
     },
+    {
+      field: 'addBtn',
+      headerName: t('granulometry-asphalt.add-btn'),
+      renderCell: (params) => {
+        const selectedSieveBaseRow: number = params.row.sieve_value;
+        const index = AllSieves.findIndex((s) => s.value === selectedSieveBaseRow);
+        const nextHigherSieve = AllSieves[index + 1];
+        const nextLowerSieve = AllSieves[index - 1];
+
+        const userSeriesIndex = data.sieve_series.findIndex((s) => s.value === selectedSieveBaseRow);
+        const userNextHigherSieve =
+          userSeriesIndex + 1 < data.sieve_series.length ? data.sieve_series[userSeriesIndex + 1] : null;
+        const userNextLowerSieve = userSeriesIndex - 1 >= 0 ? data.sieve_series[userSeriesIndex - 1] : null;
+
+        const isButtonEnabled =
+          (nextHigherSieve && (!userNextHigherSieve || nextHigherSieve.value !== userNextHigherSieve.value)) ||
+          (nextLowerSieve && (!userNextLowerSieve || nextLowerSieve.value !== userNextLowerSieve.value));
+
+        return (
+          <Button
+            disabled={!isButtonEnabled}
+            sx={{
+              ':hover': {
+                color: 'secondaryTons.green',
+                transform: 'scale(1.5)',
+                transition: 'transform 0.2s ease-in-out, color 0.2s ease-in-out',
+              },
+              color: 'primaryTons',
+            }}
+            onClick={(event) => handleAddSieve(event, params.id)}
+          >
+            <AddIcon />
+          </Button>
+        );
+      },
+    },
   ];
+
+  const handleAddSieve = (event: any, row: GridRowId) => {
+    setAddSieveModalIsOpen(true);
+
+    // 1 - Identificar o tamanho da peneira relativa ao index selecionado dentro do array da série de peneiras escolhida pelo usuário
+    const selectedSieveBaseRow: number = rows[row].sieve_value;
+
+    // 2 - Verificar no array "todas as peneiras" quais são as peneiras logo acima e logo abaixo da selecionada e apresentá-las ao usuário
+    const index = AllSieves.findIndex((s) => s.value === selectedSieveBaseRow);
+    const nextHigherSieve = AllSieves[index + 1];
+    const nextLowerSieve = AllSieves[index - 1];
+    console.log('🚀 ~ handleAddSieve ~ AllSieves:', AllSieves);
+
+    const userSeriesIndex = data.sieve_series.findIndex((s) => s.value === selectedSieveBaseRow);
+
+    const userNextHigherSieve =
+      userSeriesIndex + 1 < data.sieve_series.length ? data.sieve_series[userSeriesIndex + 1] : null;
+      console.log("🚀 ~ handleAddSieve ~ userNextHigherSieve:", userNextHigherSieve)
+
+      
+    const userNextLowerSieve = userSeriesIndex - 1 >= 0 ? data.sieve_series[userSeriesIndex - 1] : null;
+    console.log("🚀 ~ handleAddSieve ~ userNextLowerSieve:", userNextLowerSieve)
+
+    setNewSieves({
+      higher: nextHigherSieve,
+      lower: nextLowerSieve,
+      baseSieve: {
+        label: rows[row].sieve_label,
+        value: rows[row].sieve_value,
+      },
+    });
+
+    // 3 - Permitir ao usuário escolher onde deseja adicionar a nova peneira
+    // 4 - Gerar um novoo array baseado na série escolhida e com as novas peneiras
+    // 5 - Atualizar o array de peneiras na tabela com o novo array gerado
+  };
 
   if (
     nextDisabled &&
@@ -196,7 +283,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
           width: '100%',
           display: 'grid',
           gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
-          gap: '10px',
+          gap: '2rem',
           mt: '20px',
         }}
       >
@@ -240,6 +327,16 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
           key={'sieve_series'}
           variant="standard"
           label={t('granulometry-asphalt.choose-series')}
+          defaultValue={
+            sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)
+              ? {
+                  label: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!
+                    .label,
+                  value: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!
+                    .sieves,
+                }
+              : undefined
+          }
           options={sievesSeries.map((sieveSeries: SieveSeries) => {
             return { label: sieveSeries.label, value: sieveSeries.sieves };
           })}
@@ -251,28 +348,39 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
           required
         />
       </Box>
-      <AsphaltGranulometry_step2Table rows={rows} columns={columns} />
-      <Box
-        sx={{
-          width: '100%',
-          display: 'grid',
-          gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
-          gap: '10px',
-          mt: '20px',
-        }}
-      >
-        <Box key={'bottom'}>
-          <InputEndAdornment
-            label={t('granulometry-asphalt.bottom')}
-            value={data.bottom}
-            onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
-            adornment={'g'}
-            type="number"
-            inputProps={{ min: 0 }}
-            required
-          />
-        </Box>
-      </Box>
+
+      {data.sieve_series !== null && data.table_data.length > 0 && (
+        <>
+          <AsphaltGranulometry_step2Table rows={rows} columns={columns} />
+          <Box
+            sx={{
+              width: '100%',
+              display: 'grid',
+              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
+              gap: '10px',
+              mt: '20px',
+            }}
+          >
+            <Box key={'bottom'}>
+              <InputEndAdornment
+                label={t('granulometry-asphalt.bottom')}
+                value={data.bottom}
+                onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
+                adornment={'g'}
+                type="number"
+                inputProps={{ min: 0 }}
+                required
+              />
+            </Box>
+          </Box>
+        </>
+      )}
+
+      <AddSieveModal
+        addSieveModalIsOpen={addSieveModalIsOpen}
+        setCloseModal={(isClosed: boolean) => setAddSieveModalIsOpen(isClosed)}
+        newSieves={newSieves}
+      />
     </Box>
   );
 };
