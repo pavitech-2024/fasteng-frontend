@@ -9,6 +9,7 @@ import { t } from 'i18next';
 import AsphaltGranulometry_step2Table from './tables/step2-table.granulometry';
 import { AddIcon } from '@/assets';
 import useAsphaltGranulometryStore from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
+import React from 'react';
 
 const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useAsphaltGranulometryStore();
@@ -19,7 +20,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
   if (data.sieve_series && data.table_data && data.table_data.length == 0) {
     const table_data = [];
     data.sieve_series.map((s) => {
-      table_data.push({ sieve_label: s.label, sieve_value: s.value, passant: 100, retained: 0, button: <AddIcon/>,});
+      table_data.push({ sieve_label: s.label, sieve_value: s.value, passant: 100, retained: 0,});
     });
     console.log('dentro', table_data)
     setData({ step: 1, key: 'table_data', value: table_data });
@@ -185,7 +186,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
       field: 'button',
       headerName: 'Adicionar',
       renderCell: ({ row }) => {
-        return (
+        return(
           <Button>
             <AddIcon />
           </Button>
