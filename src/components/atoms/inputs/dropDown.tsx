@@ -10,7 +10,7 @@ export interface DropDownOption {
 interface DropDownProps {
   label: string;
   options: DropDownOption[];
-  callback: (value: unknown) => void;
+  callback: (value: unknown, index?: number) => void;
   defaultValue?: DropDownOption;
   helperText?: string;
   sx?: { [key: string]: string | number | { [key: string]: string | number } };
@@ -56,7 +56,7 @@ const DropDown = ({
       focused={isEdit}
     >
       {options?.map((option, index) => (
-        <MenuItem key={index} value={option.value} onClick={() => callback(option.value)} sx={{ fontSize: '14px' }}>
+        <MenuItem key={index} value={option.value} onClick={() => callback(option.value, index)} sx={{ fontSize: '14px' }}>
           {option.label}
         </MenuItem>
       ))}

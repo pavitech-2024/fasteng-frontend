@@ -19,7 +19,7 @@ export type Sieve = {
   value: number; // mm
 };
 
-export const AllSieves = [
+export const AllSieves: Sieve[] = [
   {
     label: '3 pol - 75 mm',
     value: 75, // mm
@@ -107,6 +107,7 @@ export const normalIntermediateSeriesAbntIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9
 export const normalSeriesDnitIndexes = [2, 3, 5, 6, 7, 8, 10, 12, 15, 17, 19];
 export const normalSeriesDnit2019Indexes = [0, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
 export const intermediateSeriesConcrete = [1, 2, 4, 5, 7, 9];
+export const customSieveSeries = [0, 1];
 
 export type SieveSeries = {
   label: string;
@@ -137,6 +138,10 @@ export const AllSieveSeries = [
   {
     label: t('granulometry-soils.intermediate-series-concrete'),
     sieves: intermediateSeriesConcrete.map((index) => AllSieves[index]),
+  },
+  {
+    label: t('granulometry-soils.custom-series'),
+    sieves: customSieveSeries.map((index) => AllSieves[index]),
   },
 ];
 
