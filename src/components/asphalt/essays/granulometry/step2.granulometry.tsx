@@ -8,14 +8,23 @@ import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import AsphaltGranulometry_step2Table from './tables/step2-table.granulometry';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import GranulometryCustomSeriesModal from '@/components/atoms/modals/GranulometryCustomSeriesModal';
-import { NumberFormat } from 'xlsx';
 
 const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useAsphaltGranulometryStore();
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [dropdownDefaultValue, setDropdownDefaultValue] = useState({ label: '', value: [] });
+  const [bottom, setBottom] = useState(0);
+
+  useEffect(() => {
+    if (data.material_mass != null && data.table_data.length > 0) {
+      const totalRetained = data.table_data.reduce((sum, row) => sum + row.retained, 0);
+      const remaining = data.material_mass - totalRetained;
+      setBottom(remaining);
+    }
+  }, [data.material_mass, data.table_data]);
 
   const sievesSeries = [
     getSieveSeries(0),
@@ -49,9 +58,9 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
             value: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!.sieves,
           })
         : (value = {
-          label: 'teste',
-          value: []
-        });
+            label: 'teste',
+            value: [],
+          });
     } else {
       value = {
         label: t('granulometry-asphalt.custom-series'),
@@ -59,9 +68,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
       };
     }
 
-    console.log("🚀 ~ handleDropdownDefaultValue ~ value:", value)
-
-    return value;
+    setDropdownDefaultValue(value);
   };
 
   const handleShowCustomSeries = (customSieveSeries: Sieve[]) => {
@@ -230,9 +237,12 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
   const handleSelectSeries = (value: Sieve[], index: number) => {
     if (index === sievesSeries.length - 1) {
       setModalIsOpen(true);
+      setDropdownDefaultValue({ label: t('granulometry-asphalt.custom-series'), value: [] });
     } else {
-      setData({ step: 1, key: 'sieve_series', value });
+      const selectedSeries = sievesSeries[index];
+      setData({ step: 1, key: 'sieve_series', value: selectedSeries.sieves });
       setData({ step: 1, key: 'table_data', value: [] });
+      setDropdownDefaultValue({ label: selectedSeries.label, value: selectedSeries.sieves });
     }
   };
 
@@ -296,24 +306,10 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
           key={'sieve_series'}
           variant="standard"
           label={t('granulometry-asphalt.choose-series')}
-          // defaultValue={
-          //   sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)
-          //     ? {
-          //         label: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!
-          //           .label,
-          //         value: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!
-          //           .sieves,
-          //       }
-          //     : undefined
-          // }
-          defaultValue={handleDropdownDefaultValue(false)}
+          value={dropdownDefaultValue}
           options={sievesSeries.map((sieveSeries: SieveSeries) => {
             return { label: sieveSeries.label, value: sieveSeries.sieves };
           })}
-          // callback={(value) => {
-          //   setData({ step: 1, key: 'sieve_series', value });
-          //   setData({ step: 1, key: 'table_data', value: [] });
-          // }}
           callback={(value: Sieve[], index?: number) => {
             handleSelectSeries(value, index);
           }}
@@ -334,7 +330,8 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
         <Box key={'bottom'}>
           <InputEndAdornment
             label={t('granulometry-asphalt.bottom')}
-            value={data.bottom}
+            // value={data.bottom}
+            value={bottom}
             onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
             adornment={'g'}
             type="number"
@@ -348,7 +345,6 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
         setCloseModal={(isClosed: boolean) => setModalIsOpen(isClosed)}
         isOpen={modalIsOpen}
         customSieveSeries={(customSieveSeries) => {
-          console.log('🚀 ~ constAsphaltGranulometry_Step2= ~ customSieveSeries:', customSieveSeries);
           handleShowCustomSeries(customSieveSeries);
           handleDropdownDefaultValue(true);
         }}
