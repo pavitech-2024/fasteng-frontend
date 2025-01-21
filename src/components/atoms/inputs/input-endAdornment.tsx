@@ -14,6 +14,8 @@ interface Props {
   required?: boolean;
   sx?: unknown;
   fullWidth?: boolean;
+  readOnly?: boolean;
+  focused?: boolean
 }
 
 const InputEndAdornment = ({
@@ -29,9 +31,11 @@ const InputEndAdornment = ({
   required,
   sx,
   fullWidth,
+  readOnly,
+  focused
 }: Props) => {
   return (
-    <FormControl variant={variant} key={key} fullWidth={fullWidth}>
+    <FormControl focused={focused} variant={variant} key={key} fullWidth={fullWidth}>
       {label ? <InputLabel htmlFor={`outlined-adornment-${key}`}>{label}</InputLabel> : <></>}
       <Input
         fullWidth={fullWidth}
@@ -44,6 +48,7 @@ const InputEndAdornment = ({
         type={type}
         inputProps={inputProps}
         sx={sx}
+        readOnly={readOnly ? readOnly : false}
       />
     </FormControl>
   );

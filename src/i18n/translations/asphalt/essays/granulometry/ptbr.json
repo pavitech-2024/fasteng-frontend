@@ -26,5 +26,6 @@
   "granulometry-asphalt.cc": "CC",
   "granulometry-asphalt.cnu": "CNU",
   "granulometry-asphalt.error": "Erro",
-  "granulometry-soils.custom-series": "Série personalizada"
+  "granulometry-soils.custom-series": "Série personalizada",
+  "granulometry.step-2-description": "Informe a massa total do material e selecione uma série de peneiras. A última opção permite criar uma série customizada escolhendo as peneiras desejadas."
 }

@@ -16,13 +16,12 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [dropdownDefaultValue, setDropdownDefaultValue] = useState({ label: '', value: [] });
-  const [bottom, setBottom] = useState(0);
 
   useEffect(() => {
-    if (data.material_mass != null && data.table_data.length > 0) {
+    if (data.material_mass != null && data.table_data?.length > 0) {
       const totalRetained = data.table_data.reduce((sum, row) => sum + row.retained, 0);
       const remaining = data.material_mass - totalRetained;
-      setBottom(remaining);
+      setData({ step: 1, key: 'bottom', value: remaining });
     }
   }, [data.material_mass, data.table_data]);
 
@@ -44,6 +43,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
   }
 
   const rows = data.table_data;
+  console.log("🚀 ~ constAsphaltGranulometry_Step2= ~ rows:", rows)
 
   const handleDropdownDefaultValue = (isCustomSieries?: boolean) => {
     let value: { label: string; value: Sieve[] } | undefined = {
@@ -93,6 +93,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
         }
         const { sieve_label } = row;
         const sieve_index = rows.findIndex((r) => r.sieve_label === sieve_label);
+        console.log("🚀 ~ constAsphaltGranulometry_Step2= ~ sieve_index:", sieve_index)
 
         return (
           <InputEndAdornment
@@ -100,7 +101,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
             adornment="%"
             type="number"
             inputProps={{ min: 0 }}
-            value={rows[sieve_index].passant}
+            value={rows[sieve_index]?.passant}
             required
             onChange={(e) => {
               if (e.target.value === null) return;
@@ -177,7 +178,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
             adornment="g"
             type="number"
             inputProps={{ min: 0 }}
-            value={rows[sieve_index].retained}
+            value={rows[sieve_index]?.retained}
             required
             onChange={(e) => {
               if (e.target.value === null) return;
@@ -330,14 +331,17 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
         <Box key={'bottom'}>
           <InputEndAdornment
             label={t('granulometry-asphalt.bottom')}
-            // value={data.bottom}
-            value={bottom}
+            variant={'filled'}
+            key='bottom'
+            value={data.bottom}
             onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
             adornment={'g'}
             type="number"
             inputProps={{ min: 0 }}
-            required
+            readOnly={true}
+            focused
           />
+
         </Box>
       </Box>
 
