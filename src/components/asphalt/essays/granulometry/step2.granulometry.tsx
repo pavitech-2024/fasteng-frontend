@@ -36,6 +36,41 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
 
   const rows = data.table_data;
 
+  const handleDropdownDefaultValue = (isCustomSieries?: boolean) => {
+    let value: { label: string; value: Sieve[] } | undefined = {
+      label: '',
+      value: [],
+    };
+
+    if (!isCustomSieries) {
+      sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)
+        ? (value = {
+            label: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!.label,
+            value: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!.sieves,
+          })
+        : (value = {
+          label: 'teste',
+          value: []
+        });
+    } else {
+      value = {
+        label: t('granulometry-asphalt.custom-series'),
+        value: [],
+      };
+    }
+
+    console.log("🚀 ~ handleDropdownDefaultValue ~ value:", value)
+
+    return value;
+  };
+
+  const handleShowCustomSeries = (customSieveSeries: Sieve[]) => {
+    if (customSieveSeries.length > 0) {
+      setData({ step: 1, key: 'sieve_series', value: customSieveSeries });
+      setData({ step: 1, key: 'table_data', value: [] });
+    }
+  };
+
   const columns: GridColDef[] = [
     {
       field: 'sieve_label',
@@ -261,16 +296,17 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
           key={'sieve_series'}
           variant="standard"
           label={t('granulometry-asphalt.choose-series')}
-          defaultValue={
-            sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)
-              ? {
-                  label: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!
-                    .label,
-                  value: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!
-                    .sieves,
-                }
-              : undefined
-          }
+          // defaultValue={
+          //   sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)
+          //     ? {
+          //         label: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!
+          //           .label,
+          //         value: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!
+          //           .sieves,
+          //       }
+          //     : undefined
+          // }
+          defaultValue={handleDropdownDefaultValue(false)}
           options={sievesSeries.map((sieveSeries: SieveSeries) => {
             return { label: sieveSeries.label, value: sieveSeries.sieves };
           })}
@@ -311,6 +347,11 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
       <GranulometryCustomSeriesModal
         setCloseModal={(isClosed: boolean) => setModalIsOpen(isClosed)}
         isOpen={modalIsOpen}
+        customSieveSeries={(customSieveSeries) => {
+          console.log('🚀 ~ constAsphaltGranulometry_Step2= ~ customSieveSeries:', customSieveSeries);
+          handleShowCustomSeries(customSieveSeries);
+          handleDropdownDefaultValue(true);
+        }}
       />
     </Box>
   );

@@ -114,7 +114,7 @@ export type SieveSeries = {
   sieves: Sieve[];
 };
 
-export const AllSieveSeries = [
+export const AllSieveSeries: SieveSeries[] = [
   {
     label: t('granulometry-soils.all-sieves'),
     sieves: AllSieves,
