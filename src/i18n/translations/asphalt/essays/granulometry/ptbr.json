@@ -27,5 +27,8 @@
   "granulometry-asphalt.cnu": "CNU",
   "granulometry-asphalt.error": "Erro",
   "granulometry-soils.custom-series": "Série personalizada",
-  "granulometry.step-2-description": "Informe a massa total do material e selecione uma série de peneiras. A última opção permite criar uma série customizada escolhendo as peneiras desejadas."
+  "granulometry.step-2-description": "Informe a massa total do material e selecione uma série de peneiras. A última opção permite criar uma série customizada escolhendo as peneiras desejadas.",
+
+  "graulometry.custom-sieves-modal-title": "Selecione ao menos 4 peneiras",
+  "graulometry.sieves-quantity": "Quantidade de peneiras selecionadas"
 }

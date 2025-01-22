@@ -5,6 +5,7 @@ import { AllSieves, AllSieveSeries, Sieve } from '@/interfaces/common';
 import { getSieveSeries } from '@/utils/sieves';
 import { Box, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { t } from 'i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 type Rows = {
@@ -20,11 +21,17 @@ interface IGranulometryCustomSeriesModal {
   customSieveSeries: (customSieveSeries: Sieve[]) => void;
 }
 
-const GranulometryCustomSeriesModal = ({ isOpen, setCloseModal, customSieveSeries }: IGranulometryCustomSeriesModal) => {
+const GranulometryCustomSeriesModal = ({
+  isOpen,
+  setCloseModal,
+  customSieveSeries,
+}: IGranulometryCustomSeriesModal) => {
   const [rows, setRows] = useState<Rows[]>([]);
 
   // Filters the rows dynamically
   const selectedRows = useMemo(() => rows.filter((row) => row.isSelected), [rows]);
+
+  const hasInsuficientSieves = selectedRows.length < 4;
 
   // Update the rows state on the component mount
   useEffect(() => {
@@ -82,18 +89,29 @@ const GranulometryCustomSeriesModal = ({ isOpen, setCloseModal, customSieveSerie
     );
   }, []);
 
-  const handleConfirmSieveSelection = () => {
-    const customSeries = AllSieves.filter((sieve) => {
-      for(let i = 0; i < selectedRows.length; i++) {
-        if (sieve.label === selectedRows[i].label) {
-          return sieve;
-        }
-      }
-    });
+  const scrollToTop = () => {
+    const sievesQuantityElement = document.querySelector('#sieves-quantity') as HTMLElement;
+    if (sievesQuantityElement) {
+      sievesQuantityElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
 
-    customSieveSeries(customSeries);
-    setCloseModal(false);
-  }
+  const handleConfirmSieveSelection = () => {
+    if (selectedRows.length >= 4) {
+      const customSeries = AllSieves.filter((sieve) => {
+        for (let i = 0; i < selectedRows.length; i++) {
+          if (sieve.label === selectedRows[i].label) {
+            return sieve;
+          }
+        }
+      });
+
+      customSieveSeries(customSeries);
+      setCloseModal(false);
+    } else {
+      scrollToTop();
+    }
+  };
 
   const handleClose = () => {
     setCloseModal(false);
@@ -101,7 +119,7 @@ const GranulometryCustomSeriesModal = ({ isOpen, setCloseModal, customSieveSerie
 
   return (
     <ModalBase
-      title={'Selecione as peneiras que deseja utilizar neste ensaio'}
+      title={t('graulometry.custom-sieves-modal-title')}
       leftButtonTitle={'Cancelar'}
       rightButtonTitle={'Confirmar'}
       onCancel={handleClose}
@@ -109,9 +127,19 @@ const GranulometryCustomSeriesModal = ({ isOpen, setCloseModal, customSieveSerie
       open={isOpen}
       size={'large'}
     >
-      <Box sx={{ marginTop: '1rem' }}>
-        <Typography variant="body2">
-          {`Número de peneiras selecionadas: ${selectedRows.length}`}
+      <Box 
+        id={'sieves-quantity'} 
+        sx={{ marginTop: '1rem' }}
+      >
+        <Typography 
+          variant="body2" 
+          sx={{ 
+            color: hasInsuficientSieves ? 'secondaryTons.red' : '', 
+            marginY: '1rem',
+            transition: 'font-size 3s ease',
+          }}
+        >
+          {`${t('graulometry.sieves-quantity')}: ${selectedRows.length}`}
         </Typography>
       </Box>
       <DataGrid

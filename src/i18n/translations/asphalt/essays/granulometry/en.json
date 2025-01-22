@@ -5,5 +5,8 @@
   "asphalt.essays.granulometry.results.essayName": "Essay name",
   "asphalt.essays.granulometry.results.finenessModule": "Fineness module",
   "asphalt.essays.granulometry.results.nominalDiammeter": "Nominal diameter",
-  "asphalt.essays.granulometry.results.nominalSize": "Nominal size"
+  "asphalt.essays.granulometry.results.nominalSize": "Nominal size",
+
+  "graulometry.custom-sieves-modal-title": "Select at least 4 sieves",
+  "graulometry.sieves-quantity": "Sieves quantity"
 }
