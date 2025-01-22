@@ -127,14 +127,11 @@ const GranulometryCustomSeriesModal = ({
       open={isOpen}
       size={'large'}
     >
-      <Box 
-        id={'sieves-quantity'} 
-        sx={{ marginTop: '1rem' }}
-      >
-        <Typography 
-          variant="body2" 
-          sx={{ 
-            color: hasInsuficientSieves ? 'secondaryTons.red' : '', 
+      <Box id={'sieves-quantity'} sx={{ marginTop: '1rem' }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: hasInsuficientSieves ? 'secondaryTons.red' : '',
             marginY: '1rem',
             transition: 'font-size 3s ease',
           }}

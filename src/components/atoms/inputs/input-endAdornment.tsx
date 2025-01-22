@@ -15,7 +15,7 @@ interface Props {
   sx?: unknown;
   fullWidth?: boolean;
   readOnly?: boolean;
-  focused?: boolean
+  focused?: boolean;
 }
 
 const InputEndAdornment = ({
@@ -32,7 +32,7 @@ const InputEndAdornment = ({
   sx,
   fullWidth,
   readOnly,
-  focused
+  focused,
 }: Props) => {
   return (
     <FormControl focused={focused} variant={variant} key={key} fullWidth={fullWidth}>

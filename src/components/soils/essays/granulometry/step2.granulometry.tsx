@@ -25,14 +25,13 @@ const SoilsGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPagePro
   }, [data.sample_mass, data.table_data]);
 
   const sievesSeries = [
-    getSieveSeries(0), 
-    getSieveSeries(1), 
-    getSieveSeries(2), 
-    getSieveSeries(3), 
+    getSieveSeries(0),
+    getSieveSeries(1),
+    getSieveSeries(2),
+    getSieveSeries(3),
     getSieveSeries(4),
     getSieveSeries(6),
   ];
-
 
   if (data.sieve_series && data.table_data && data.table_data.length == 0) {
     const table_data = [];
@@ -218,50 +217,50 @@ const SoilsGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPagePro
     },
   ];
 
-    const handleDropdownDefaultValue = (isCustomSieries?: boolean) => {
-      let value: { label: string; value: Sieve[] } | undefined = {
-        label: '',
+  const handleDropdownDefaultValue = (isCustomSieries?: boolean) => {
+    let value: { label: string; value: Sieve[] } | undefined = {
+      label: '',
+      value: [],
+    };
+
+    if (!isCustomSieries) {
+      sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)
+        ? (value = {
+            label: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!.label,
+            value: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!.sieves,
+          })
+        : (value = {
+            label: 'teste',
+            value: [],
+          });
+    } else {
+      value = {
+        label: t('granulometry-asphalt.custom-series'),
         value: [],
       };
-  
-      if (!isCustomSieries) {
-        sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)
-          ? (value = {
-              label: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!.label,
-              value: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!.sieves,
-            })
-          : (value = {
-              label: 'teste',
-              value: [],
-            });
-      } else {
-        value = {
-          label: t('granulometry-asphalt.custom-series'),
-          value: [],
-        };
-      }
-  
-      setDropdownDefaultValue(value);
-    };
-  
-    const handleShowCustomSeries = (customSieveSeries: Sieve[]) => {
-      if (customSieveSeries.length > 0) {
-        setData({ step: 1, key: 'sieve_series', value: customSieveSeries });
-        setData({ step: 1, key: 'table_data', value: [] });
-      }
-    };
-  
-    const handleSelectSeries = (value: Sieve[], index: number) => {
-      if (index === sievesSeries.length - 1) {
-        setModalIsOpen(true);
-        setDropdownDefaultValue({ label: t('granulometry-asphalt.custom-series'), value: [] });
-      } else {
-        const selectedSeries = sievesSeries[index];
-        setData({ step: 1, key: 'sieve_series', value: selectedSeries.sieves });
-        setData({ step: 1, key: 'table_data', value: [] });
-        setDropdownDefaultValue({ label: selectedSeries.label, value: selectedSeries.sieves });
-      }
-    };
+    }
+
+    setDropdownDefaultValue(value);
+  };
+
+  const handleShowCustomSeries = (customSieveSeries: Sieve[]) => {
+    if (customSieveSeries.length > 0) {
+      setData({ step: 1, key: 'sieve_series', value: customSieveSeries });
+      setData({ step: 1, key: 'table_data', value: [] });
+    }
+  };
+
+  const handleSelectSeries = (value: Sieve[], index: number) => {
+    if (index === sievesSeries.length - 1) {
+      setModalIsOpen(true);
+      setDropdownDefaultValue({ label: t('granulometry-asphalt.custom-series'), value: [] });
+    } else {
+      const selectedSeries = sievesSeries[index];
+      setData({ step: 1, key: 'sieve_series', value: selectedSeries.sieves });
+      setData({ step: 1, key: 'table_data', value: [] });
+      setDropdownDefaultValue({ label: selectedSeries.label, value: selectedSeries.sieves });
+    }
+  };
 
   if (
     nextDisabled &&
@@ -348,7 +347,7 @@ const SoilsGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPagePro
           <InputEndAdornment
             label={t('granulometry-soils.bottom')}
             variant={'filled'}
-            key='bottom'
+            key="bottom"
             value={data.bottom}
             onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
             adornment={'g'}
