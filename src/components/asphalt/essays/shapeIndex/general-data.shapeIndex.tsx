@@ -122,7 +122,7 @@ const ShapeIndex_GeneralData = ({
                     options={materials.map((material: AsphaltMaterial) => {
                       return { label: material.name + ' | ' + t(`${'materials.' + material.type}`), value: material };
                     })}
-                    defaultValue={defaultValue}
+                    value={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
                     size="medium"
                     required={input.required}
