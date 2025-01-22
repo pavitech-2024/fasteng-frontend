@@ -483,7 +483,7 @@ const Marshall_Step8 = ({
             variant="standard"
             label={t('asphalt.dosages.marshall.select-mixture-density-method')}
             options={calcMethodOptions}
-            defaultValue={{
+            value={{
               label:
                 method === 'DMT'
                   ? 'DMT - Densidade máxima teórica'

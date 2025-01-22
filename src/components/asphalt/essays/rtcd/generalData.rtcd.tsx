@@ -90,7 +90,7 @@ const Rtcd_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps & { 
                       value: material,
                     };
                   })}
-                  defaultValue={defaultValue}
+                  value={defaultValue}
                   callback={(value) => setData({ step: 0, key: input.key, value })}
                   size="medium"
                   required={input.required}

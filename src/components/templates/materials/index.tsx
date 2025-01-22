@@ -219,7 +219,7 @@ const MaterialsTemplate = ({
               callback={setSearchBy}
               size="small"
               sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
-              defaultValue={{ label: t('materials.template.name'), value: 'name' }}
+              value={{ label: t('materials.template.name'), value: 'name' }}
             />
             {searchBy === 'name' && (
               <Search
