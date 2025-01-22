@@ -116,7 +116,7 @@ const UnitMass_GeneralData = ({
                   value: material,
                 };
               })}
-              defaultValue={{
+              value={{
                 label: materials[0].name + ' | ' + t(`${'concrete.materials.' + materials[0].type}`),
                 value: materials[0].name,
               }}
@@ -132,7 +132,7 @@ const UnitMass_GeneralData = ({
               options={methodOptions.map((method) => {
                 return { label: method.label, value: method.value };
               })}
-              defaultValue={methodOptions[0]}
+              value={methodOptions[0]}
               callback={(value: string) => setData({ step: 0, key: 'method', value })}
               size="medium"
               required

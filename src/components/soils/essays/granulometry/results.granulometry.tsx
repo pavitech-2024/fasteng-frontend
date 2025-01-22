@@ -14,6 +14,7 @@ import SoilsGranulometry_resultsTable from './tables/results-table.granulometry'
 const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: granulometry_results, step2Data, generalData } = useSoilsGranulometryStore();
+  console.log("🚀 ~ constGranulometry_Results= ~ granulometry_results:", granulometry_results)
 
   const data = {
     // container "Resultados"

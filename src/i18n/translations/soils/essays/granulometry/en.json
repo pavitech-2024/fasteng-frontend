@@ -1,3 +1,28 @@
 {
-  "granulometry-soils.custom-series": "Custom series"
+  "granulometry-soils.granulometry": "Granulometry",
+
+  "granulometry-soils.step-2-description": "Fill in all the fields below.",
+  "granulometry.step-3-description": "These are the results of your experiment. Remember to save the experiment so you can access it later.",
+
+  "granulometry-soils.custom-series": "Custom series",
+  "granulometry-soils.sieves": "Sieves",
+  "granulometry-soils.sieve-openness": "Sieve openness",
+  "granulometry-soils.passant": "Passant",
+  "granulometry-soils.retained": "Retained",
+  "granulometry-soils.accumulated-retained": "Accumulated retained",
+  "granulometry-soils.sample_mass": "Sample mass",
+  "granulometry-soils.bottom": "Bottom",
+  "granulometry-soils.choose-series": "Choose series",
+  "granulometry-soils.all-sieves": "All sieves",
+  "granulometry-soils.normal-series-abnt-astm": "Normal series ABNT-ASTM",
+  "granulometry-soils.normal-intermediate-series-abnt": "Normal intermediate series ABNT",
+  "granulometry-soils.normal-series-dnit": "Normal series DNIT",
+  "granulometry-soils.normal-series-dnit-2019": "Normal series DNIT (2019)",
+  "granulometry-soils.intermediate-series": "Intermediate series",
+  "granulometry-soils.other-data": "Other data",
+
+  "granulometry-soils.total-retained": "Total retained",
+  "granulometry-soils.nominalSize": "Nominal size",
+  "granulometry-soils.nominalDiammeter": "Nominal diameter",
+  "granulometry-soils.finenessModule": "Fineness module"
 }

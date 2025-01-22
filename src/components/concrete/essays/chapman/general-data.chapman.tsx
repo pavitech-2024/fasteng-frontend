@@ -119,7 +119,7 @@ const CHAPMAN_GeneralData = ({
                         value: material,
                       };
                     })}
-                    defaultValue={defaultValue}
+                    value={defaultValue}
                     required={input.required}
                     size="medium"
                     callback={(value) => setData({ step: 0, key: input.key, value: value })}

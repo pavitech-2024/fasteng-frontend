@@ -43,40 +43,6 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
   }
 
   const rows = data.table_data;
-  console.log("🚀 ~ constAsphaltGranulometry_Step2= ~ rows:", rows)
-
-  const handleDropdownDefaultValue = (isCustomSieries?: boolean) => {
-    let value: { label: string; value: Sieve[] } | undefined = {
-      label: '',
-      value: [],
-    };
-
-    if (!isCustomSieries) {
-      sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)
-        ? (value = {
-            label: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!.label,
-            value: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!.sieves,
-          })
-        : (value = {
-            label: 'teste',
-            value: [],
-          });
-    } else {
-      value = {
-        label: t('granulometry-asphalt.custom-series'),
-        value: [],
-      };
-    }
-
-    setDropdownDefaultValue(value);
-  };
-
-  const handleShowCustomSeries = (customSieveSeries: Sieve[]) => {
-    if (customSieveSeries.length > 0) {
-      setData({ step: 1, key: 'sieve_series', value: customSieveSeries });
-      setData({ step: 1, key: 'table_data', value: [] });
-    }
-  };
 
   const columns: GridColDef[] = [
     {
@@ -93,7 +59,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
         }
         const { sieve_label } = row;
         const sieve_index = rows.findIndex((r) => r.sieve_label === sieve_label);
-        console.log("🚀 ~ constAsphaltGranulometry_Step2= ~ sieve_index:", sieve_index)
+        console.log('🚀 ~ constAsphaltGranulometry_Step2= ~ sieve_index:', sieve_index);
 
         return (
           <InputEndAdornment
@@ -235,6 +201,39 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
     },
   ];
 
+  const handleDropdownDefaultValue = (isCustomSieries?: boolean) => {
+    let value: { label: string; value: Sieve[] } | undefined = {
+      label: '',
+      value: [],
+    };
+
+    if (!isCustomSieries) {
+      sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)
+        ? (value = {
+            label: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!.label,
+            value: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!.sieves,
+          })
+        : (value = {
+            label: 'teste',
+            value: [],
+          });
+    } else {
+      value = {
+        label: t('granulometry-asphalt.custom-series'),
+        value: [],
+      };
+    }
+
+    setDropdownDefaultValue(value);
+  };
+
+  const handleShowCustomSeries = (customSieveSeries: Sieve[]) => {
+    if (customSieveSeries.length > 0) {
+      setData({ step: 1, key: 'sieve_series', value: customSieveSeries });
+      setData({ step: 1, key: 'table_data', value: [] });
+    }
+  };
+
   const handleSelectSeries = (value: Sieve[], index: number) => {
     if (index === sievesSeries.length - 1) {
       setModalIsOpen(true);
@@ -318,7 +317,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
           required
         />
       </Box>
-      <AsphaltGranulometry_step2Table rows={rows} columns={columns} />
+      {rows.length > 0 && columns.length > 0 && <AsphaltGranulometry_step2Table rows={rows} columns={columns} />}
       <Box
         sx={{
           width: '100%',
@@ -332,7 +331,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
           <InputEndAdornment
             label={t('granulometry-asphalt.bottom')}
             variant={'filled'}
-            key='bottom'
+            key="bottom"
             value={data.bottom}
             onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
             adornment={'g'}
@@ -341,7 +340,6 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
             readOnly={true}
             focused
           />
-
         </Box>
       </Box>
 
