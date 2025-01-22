@@ -10,7 +10,7 @@
   "granulometry-soils.sample_mass": "Massa da amostra",
   "granulometry-soils.bottom": "Fundos",
   "granulometry-soils.choose-series": "Escolha a série",
-  "granulometry-soils.all-sieves": "Todas as séries",
+  "granulometry.all-sieves": "Todas as séries",
   "granulometry-soils.normal-series-abnt-astm": "Série da ASTM",
   "granulometry-soils.normal-intermediate-series-abnt": "Série da ABNT",
   "granulometry-soils.normal-series-dnit": "Série do DNIT",

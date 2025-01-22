@@ -1,1 +1,9 @@
-{}
+{
+  "granulometry-concrete.total-retained": "Total Retained",
+  "granulometry-concrete.nominal-size": "Nominal Size",
+  "granulometry-concrete.nominal-diameter": "Nominal Diameter",
+  "granulometry-concrete.fineness-module": "Fineness Module",
+  "granulometry-concrete.cc": "CC",
+  "granulometry-concrete.cnu": "CNU",
+  "granulometry-concrete.error": "Error"
+}

@@ -11,7 +11,7 @@
   "granulometry-concrete.material_mass": "Massa do material",
   "granulometry-concrete.bottom": "Fundos",
   "granulometry-concrete.choose-series": "Escolha a série",
-  "granulometry-concrete.all-sieves": "Todas as séries",
+  "granulometry.all-sieves": "Todas as séries",
   "granulometry-concrete.normal-series-abnt-astm": "Série da ASTM",
   "granulometry-concrete.normal-intermediate-series-abnt": "Série da ABNT",
   "granulometry-concrete.normal-series-dnit": "Série do DNIT",

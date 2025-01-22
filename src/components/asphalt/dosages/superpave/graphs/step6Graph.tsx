@@ -146,18 +146,6 @@ const GraphStep6: React.FC<GraphProps> = ({ data }) => {
     setFullScreen(fullScreen);
   };
 
-  const chartEvents = () => [
-    {
-      eventName: 'ready',
-      callback: ({ chartWrapper }) => {
-        if (!ready) {
-          scrollToGraph();
-          setReady(true);
-        }
-      },
-    },
-  ];
-
   return (
     <Container id="graph-container">
       <ModalBase
@@ -169,31 +157,12 @@ const GraphStep6: React.FC<GraphProps> = ({ data }) => {
         size={'small'}
         onSubmit={() => console.log('teste')}
       >
-        {/* <ActionsModal>
-          <CloseIcon
-            fill="#efc6c6"
-            onClick={() => {
-              updateWindowDimensions(false);
-            }}
-          />
-        </ActionsModal> */}
         <Chart chartType="LineChart" data={data} options={optionsFullScreen} />
       </ModalBase>
       <Typography>Parâmetros vs Nº de Giros</Typography>
-      {/* <Actions>
-        <ExpandButton
-          onClick={() => {
-            updateWindowDimensions(true);
-          }}
-        >
-          Expandir gráfico
-          <FullScreenIcon />
-        </ExpandButton>
-      </Actions> */}
       <Chart
         chartType="LineChart"
         data={data}
-        // chartEvents={chartEvents()}
         options={options}
       />
     </Container>

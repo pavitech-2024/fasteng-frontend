@@ -119,7 +119,7 @@ const Rtfo_GeneralData = ({ nextDisabled, setNextDisabled, rtfo }: EssayPageProp
                         value: material,
                       };
                     })}
-                    defaultValue={defaultValue}
+                    value={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
                     size="medium"
                     required={input.required}

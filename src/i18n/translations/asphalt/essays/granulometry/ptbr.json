@@ -12,7 +12,7 @@
   "granulometry-asphalt.material_mass": "Massa do material",
   "granulometry-asphalt.bottom": "Fundos",
   "granulometry-asphalt.choose-series": "Escolha a série",
-  "granulometry-asphalt.all-sieves": "Todas as séries",
+  "granulometry.all-sieves": "Todas as séries",
   "granulometry-asphalt.normal-series-abnt-astm": "Série da ASTM",
   "granulometry-asphalt.normal-intermediate-series-abnt": "Série da ABNT",
   "granulometry-asphalt.normal-series-dnit": "Série do DNIT",
@@ -27,5 +27,6 @@
   "granulometry-asphalt.cnu": "CNU",
   "granulometry-asphalt.error": "Erro",
   "granulometry-soils.custom-series": "Série personalizada",
-  "granulometry.step-2-description": "Informe a massa total do material e selecione uma série de peneiras. A última opção permite criar uma série customizada escolhendo as peneiras desejadas."
+  "granulometry.step-2-description": "Informe a massa total do material e selecione uma série de peneiras. A última opção permite criar uma série customizada escolhendo as peneiras desejadas.",
+  "granulometry.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde."
 }

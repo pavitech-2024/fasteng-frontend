@@ -136,9 +136,15 @@ class AsphaltGranulometry_SERVICE implements IEssayService {
   // calculate results from granulometry essay
   calculateResults = async (store: AsphaltGranulometryData): Promise<void> => {
     try {
+      const { bottom, table_data, material_mass } = store.step2Data;
+
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
-        step2Data: store.step2Data,
+        step2Data: {
+          material_mass,
+          table_data,
+          bottom,
+        },
       });
 
       const { success, error, result } = response.data;

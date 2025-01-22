@@ -8,12 +8,54 @@ import useAsphaltGranulometryStore from '@/stores/asphalt/granulometry/asphalt-g
 import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import Chart from 'react-google-charts';
+import Chart, { GoogleChartOptions, ReactGoogleChartProps } from 'react-google-charts';
 import AsphaltGranulometry_resultsTable from './tables/results-table.granulometry';
+import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
+import { useState } from 'react';
 
 const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: granulometry_results, step2Data, generalData } = useAsphaltGranulometryStore();
+  console.log("🚀 ~ constAsphaltGranulometry_Results= ~ granulometry_results:", granulometry_results)
+
+  const [graphOptions, setGraphOptions] = useState<GoogleChartOptions>(
+    {
+      title: '',
+      hAxis: {
+        title: 'Abertura das peneiras (mm)',
+        logScale: true,
+        titleTextStyle: {
+          color: '#3d3d3d',
+          bold: true,
+          italic: false,
+        },
+        gridlines: {
+          color: '#000',
+          count: 4,
+        },
+        minorGridlines: {
+          count: 8,
+        },
+        // ticks: [0, 0.1, 1, 10, 100],
+        ticks: granulometry_results.graph_data.map((item: any) => item[0]),
+      },
+      vAxis: {
+        title: 'Porcentagem passante',
+        titleTextStyle: {
+          color: '#3d3d3d',
+          bold: true,
+          italic: false,
+        },
+        ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+      },
+      legend: 'none',
+      chartArea: { width: '80%', height: '80%' },
+      backgroundColor: 'transparent'
+    }
+  );
+  console.log("🚀 ~ constAsphaltGranulometry_Results= ~ graphOptions:", graphOptions)
+
+  const [graphIsFullscreen, setGraphIsFullscreen] = useState(false);
 
   const data = {
     container_other_data: [],
@@ -105,6 +147,23 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
     },
   ];
 
+  const updateWindowDimensions = (fullScreen) => {
+    
+  };
+
+  function Grafico(valors, valors2) {
+    let data = [];
+    data.unshift(['Abertura das peneiras (mm)', 'Porcentagem passante']);
+    for (let index = 1; index < valors.length + 1; index++) {
+      const index1 = valors[index - 1];
+      const index2 = valors2[index - 1];
+      data[index] = [index1, index2];
+    }
+    return data;
+  }
+
+  
+
   return (
     <>
       <ExperimentResume data={experimentResumeData} />
@@ -126,30 +185,41 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
             }
           })}
         </Box>
-        <Chart
-          chartType="LineChart"
-          width={'100%'}
-          height={'400px'}
-          loader={<Loading />}
-          data={graph_data}
-          options={{
-            title: t('granulometry-asphalt.granulometry'),
-            backgroundColor: 'transparent',
-            pointSize: '2',
-            hAxis: {
-              title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
-              type: 'number',
-              scaleType: 'log',
-            },
-            vAxis: {
-              title: `${t('granulometry-asphalt.passant') + ' (%)'}`,
-              minValue: '0',
-              maxValue: '105',
-            },
-            legend: 'none',
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            background: '#ffffffff',
           }}
-        />
-        <AsphaltGranulometry_resultsTable rows={rows} columns={columns} />
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              width: '100%',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <Box
+              onClick={() => {
+                updateWindowDimensions(true);
+              }}
+            >
+              Expandir gráfico
+              <SettingsOverscanIcon />
+            </Box>
+          </Box>
+          <Chart
+            chartType="LineChart"
+            width={'100%'}
+            height={'400px'}
+            loader={<Loading />}
+            data={graph_data}
+            options={graphOptions}
+          />
+        </Box>
+
+        {/* <AsphaltGranulometry_resultsTable rows={rows} columns={columns} /> */}
       </FlexColumnBorder>
     </>
   );

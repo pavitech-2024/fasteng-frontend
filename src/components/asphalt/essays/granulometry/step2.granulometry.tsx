@@ -43,7 +43,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
   }
 
   const rows = data.table_data;
-  console.log("🚀 ~ constAsphaltGranulometry_Step2= ~ rows:", rows)
+  console.log('🚀 ~ constAsphaltGranulometry_Step2= ~ rows:', rows);
 
   const handleDropdownDefaultValue = (isCustomSieries?: boolean) => {
     let value: { label: string; value: Sieve[] } | undefined = {
@@ -93,7 +93,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
         }
         const { sieve_label } = row;
         const sieve_index = rows.findIndex((r) => r.sieve_label === sieve_label);
-        console.log("🚀 ~ constAsphaltGranulometry_Step2= ~ sieve_index:", sieve_index)
+        console.log('🚀 ~ constAsphaltGranulometry_Step2= ~ sieve_index:', sieve_index);
 
         return (
           <InputEndAdornment
@@ -318,7 +318,9 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
           required
         />
       </Box>
-      <AsphaltGranulometry_step2Table rows={rows} columns={columns} />
+
+      {rows && columns && <AsphaltGranulometry_step2Table rows={rows} columns={columns} />}
+
       <Box
         sx={{
           width: '100%',
@@ -332,7 +334,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
           <InputEndAdornment
             label={t('granulometry-asphalt.bottom')}
             variant={'filled'}
-            key='bottom'
+            key="bottom"
             value={data.bottom}
             onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
             adornment={'g'}
@@ -341,7 +343,6 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
             readOnly={true}
             focused
           />
-
         </Box>
       </Box>
 

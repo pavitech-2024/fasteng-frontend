@@ -1,9 +1,26 @@
 {
+  "granulometry-asphalt": "Granulometry",
+
+  "granulometry-asphalt.material_mass": "Material mass",
+  "granulometry-asphalt.choose-series": "Choose series",
+
+  "granulometry.all-sieves": "All sieves",
   "granulometry-asphalt.sieves": "Sieves",
   "granulometry-asphalt.total_passant": "Total passant",
   "granulometry-asphalt.passant": "Passant",
+
   "asphalt.essays.granulometry.results.essayName": "Essay name",
   "asphalt.essays.granulometry.results.finenessModule": "Fineness module",
   "asphalt.essays.granulometry.results.nominalDiammeter": "Nominal diameter",
-  "asphalt.essays.granulometry.results.nominalSize": "Nominal size"
+  "asphalt.essays.granulometry.results.nominalSize": "Nominal size",
+  "granulometry-asphalt.total-retained": "Total retained",
+  "granulometry-asphalt.error": "Error",
+
+  "granulometry-asphalt.sieve-openness": "Sieve openness",
+
+  "granulometry-asphalt.retained": "Retained",
+  "granulometry-asphalt.accumulated-retained": "Accumulated retained",
+
+  "granulometry.step-2-description": "Enter the total mass of the material and select a series of sieves. The last option allows you to create a customized series by choosing the desired sieves.",
+  "granulometry.step-3-description": "These are the results of your experiment. Remember to save the experiment so you can access it later."
 }
