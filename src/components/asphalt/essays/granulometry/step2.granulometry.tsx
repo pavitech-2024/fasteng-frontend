@@ -317,7 +317,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
           required
         />
       </Box>
-      {rows.length > 0 && columns.length > 0 && <AsphaltGranulometry_step2Table rows={rows} columns={columns} />}
+      {rows?.length > 0 && columns?.length > 0 && <AsphaltGranulometry_step2Table rows={rows} columns={columns} />}
       <Box
         sx={{
           width: '100%',
