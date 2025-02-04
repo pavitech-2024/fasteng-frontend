@@ -92,7 +92,7 @@ import ConcreteRtIcon from './concrete/essays/ConcreteRt.png';
 
 //dosages
 import AbcpIcon from './concrete/dosages/abcp.svg';
-import AbcpLogo from './concrete/dosages/ABCP-Logo.png';
+import AbcpLogo from './concrete/dosages/abcp-icon.png';
 
 // creators
 import Article from './creators/Article.png';
