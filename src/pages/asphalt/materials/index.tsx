@@ -8,6 +8,7 @@ import useAuth from '@/contexts/auth';
 import MaterialsTemplate from '@/components/templates/materials';
 import CreateEditMaterialModal from '../../../components/templates/modals/createEditAsphaltMaterial';
 import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
+import Loading from '@/components/molecules/loading';
 
 const Materials = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -17,6 +18,7 @@ const Materials = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const { user } = useAuth();
+  console.log("🚀 ~ Materials ~ user:", user)
 
   useEffect(() => {
     materialsService
@@ -70,7 +72,7 @@ const Materials = () => {
   return (
     <Container>
       {loading ? (
-        <div>Carregando...</div>
+        <div><Loading/></div>
       ) : (
         <MaterialsTemplate
           materials={materials}
