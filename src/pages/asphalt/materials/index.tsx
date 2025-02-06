@@ -18,7 +18,7 @@ const Materials = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const { user } = useAuth();
-  console.log("🚀 ~ Materials ~ user:", user)
+  console.log('🚀 ~ Materials ~ user:', user);
 
   useEffect(() => {
     materialsService
@@ -72,7 +72,9 @@ const Materials = () => {
   return (
     <Container>
       {loading ? (
-        <div><Loading/></div>
+        <div>
+          <Loading />
+        </div>
       ) : (
         <MaterialsTemplate
           materials={materials}
