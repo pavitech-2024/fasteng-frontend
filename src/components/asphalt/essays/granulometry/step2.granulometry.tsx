@@ -59,7 +59,6 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
         }
         const { sieve_label } = row;
         const sieve_index = rows.findIndex((r) => r.sieve_label === sieve_label);
-        console.log('🚀 ~ constAsphaltGranulometry_Step2= ~ sieve_index:', sieve_index);
 
         return (
           <InputEndAdornment

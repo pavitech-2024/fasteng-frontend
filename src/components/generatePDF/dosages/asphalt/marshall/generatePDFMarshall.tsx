@@ -23,7 +23,6 @@ interface IGeneratedPDF {
 }
 
 const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
-  console.log('🚀 ~ GenerateMarshallDosagePDF ~ dosage:', dosage);
   const { user } = useAuth();
   const [materialsData, setMaterialsData] = useState<AsphaltMaterial[]>([]);
   const [materialsEssays, setMaterialsEssays] = useState<any[]>([]);

@@ -211,6 +211,7 @@ const Login: NextPage = () => {
                 position: { desktop: 'static', mobile: 'absolute' },
                 zIndex: { desktop: 'auto', mobile: '3' },
                 bottom: { desktop: 'auto', mobile: '15vh' },
+                boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.25)',
               }}
             >
               <Box

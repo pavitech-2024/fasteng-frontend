@@ -22,6 +22,7 @@ const UnitMass_GeneralData = ({
   const { user } = useAuth();
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
   const [materialsWithMaxD, setMaterialsWithMaxD] = useState([]);
+  const [materialDropdownDefaultValue, setMaterialDropdownDefaultValue] = useState<string>('');
 
   useEffect(() => {
     toast.promise(
@@ -45,10 +46,15 @@ const UnitMass_GeneralData = ({
         if (material.description.maxDiammeter !== null) {
           setMaterialsWithMaxD(materialsWMaxD);
         }
-        console.log(materialsWMaxD);
       });
     }
   }, [materials]);
+
+  useEffect(() => {
+    if (generalData.material?.name !== null) {
+      setMaterialDropdownDefaultValue(generalData.material?.name);
+    }
+  },[generalData.material])
 
   const methodOptions = [
     {
@@ -117,8 +123,8 @@ const UnitMass_GeneralData = ({
                 };
               })}
               value={{
-                label: materials[0].name + ' | ' + t(`${'concrete.materials.' + materials[0].type}`),
-                value: materials[0].name,
+                label: materials.find(material => material.name === materialDropdownDefaultValue)?.name + ' | ' + t(`${'concrete.materials.' + materials.find(material => material.name === materialDropdownDefaultValue)?.type}`),
+                value: materials.find(material => material.name === materialDropdownDefaultValue),
               }}
               callback={(value) => setData({ step: 0, key: 'material', value })}
               size="medium"
@@ -132,7 +138,7 @@ const UnitMass_GeneralData = ({
               options={methodOptions.map((method) => {
                 return { label: method.label, value: method.value };
               })}
-              value={methodOptions[0]}
+              value={methodOptions.find(option => option.value === generalData.method)}
               callback={(value: string) => setData({ step: 0, key: 'method', value })}
               size="medium"
               required

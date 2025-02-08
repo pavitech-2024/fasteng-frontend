@@ -18,7 +18,6 @@ const Materials = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const { user } = useAuth();
-  console.log('🚀 ~ Materials ~ user:', user);
 
   useEffect(() => {
     materialsService
