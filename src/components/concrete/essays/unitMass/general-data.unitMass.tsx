@@ -54,7 +54,7 @@ const UnitMass_GeneralData = ({
     if (generalData.material?.name !== null) {
       setMaterialDropdownDefaultValue(generalData.material?.name);
     }
-  },[generalData.material])
+  }, [generalData.material]);
 
   const methodOptions = [
     {
@@ -123,8 +123,16 @@ const UnitMass_GeneralData = ({
                 };
               })}
               value={{
-                label: materials.find(material => material.name === materialDropdownDefaultValue)?.name + ' | ' + t(`${'concrete.materials.' + materials.find(material => material.name === materialDropdownDefaultValue)?.type}`),
-                value: materials.find(material => material.name === materialDropdownDefaultValue),
+                label:
+                  materials.find((material) => material.name === materialDropdownDefaultValue)?.name +
+                  ' | ' +
+                  t(
+                    `${
+                      'concrete.materials.' +
+                      materials.find((material) => material.name === materialDropdownDefaultValue)?.type
+                    }`
+                  ),
+                value: materials.find((material) => material.name === materialDropdownDefaultValue),
               }}
               callback={(value) => setData({ step: 0, key: 'material', value })}
               size="medium"
@@ -138,7 +146,7 @@ const UnitMass_GeneralData = ({
               options={methodOptions.map((method) => {
                 return { label: method.label, value: method.value };
               })}
-              value={methodOptions.find(option => option.value === generalData.method)}
+              value={methodOptions.find((option) => option.value === generalData.method)}
               callback={(value: string) => setData({ step: 0, key: 'method', value })}
               size="medium"
               required

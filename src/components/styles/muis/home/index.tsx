@@ -32,10 +32,10 @@ export const CardApp: NextPage<Props> = ({ element, onClick }) => (
       flexDirection: { mobile: 'row', notebook: 'column' },
       cursor: 'pointer',
       backgroundColor: 'white',
-      ":hover": {
+      ':hover': {
         boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.7)',
         transition: 'all .2s',
-      }
+      },
     }}
   >
     <Box
