@@ -5,9 +5,10 @@
   "samples.organicSoil": "Organic Soil",
   "samples.pavementLayer": "Paviment Layer",
 
-  "samples.newSample": "New Sample",
+  "samples.newSample": "New SoilSample",
   "samples.cancel": "Cancel",
   "samples.register": "Register",
+  "samples.edit": "Edit",
   "samples.name": "Name",
   "samples.type": "Type",
   "samples.construction": "Construction",

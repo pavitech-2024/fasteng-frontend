@@ -1,9 +1,9 @@
 {
-  "concrete.rt.sample-origin": "Sample Origin",
+  "concrete.rt.sample-origin": "SoilSample Origin",
   "concrete.rt.press-specification": "Press Specification",
   "concrete.rt.press-constant": "Press Constant",
-  "concrete.rt.sample-void-volume": "Sample Void Volume",
-  "rt.results.sampleName": "Sample Name",
+  "concrete.rt.sample-void-volume": "SoilSample Void Volume",
+  "rt.results.sampleName": "SoilSample Name",
   "rt.results.RtKgf": "RT (Kgf/cm³)",
   "rt.results.RtMpa": "RT (Mpa)",
   "rt.results.average": "RT Average",

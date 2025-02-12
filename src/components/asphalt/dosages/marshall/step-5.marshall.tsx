@@ -603,7 +603,7 @@ const Marshall_Step5 = ({
                 setSelectedMethod('');
               }
             }}
-            defaultValue={{
+            value={{
               label:
                 selectedMethod === 'DMT'
                   ? 'DMT - Densidade máxima teórica'
@@ -630,7 +630,7 @@ const Marshall_Step5 = ({
               const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
               setData({ step: 4, value: newData });
             }}
-            defaultValue={{
+            value={{
               label: '',
               value: data.temperatureOfWater,
             }}
@@ -742,7 +742,7 @@ const Marshall_Step5 = ({
                   const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
                   setData({ step: 4, value: newData });
                 }}
-                defaultValue={{
+                value={{
                   label: '',
                   value: data.temperatureOfWater,
                 }}

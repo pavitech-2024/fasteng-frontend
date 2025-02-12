@@ -1,11 +1,11 @@
-import { Sample } from '@/interfaces/soils';
+import { SoilSample } from '@/interfaces/soils';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
 interface compression_generalData {
   userId: string;
   name: string;
-  sample: Sample; // materialID
+  sample: SoilSample; // materialID
   operator?: string;
   description?: string;
   cauculist?: string;

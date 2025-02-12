@@ -6,13 +6,16 @@ import materialsService from '@/services/asphalt/asphalt-materials.service';
 import { t } from 'i18next';
 import useAuth from '@/contexts/auth';
 import MaterialsTemplate from '@/components/templates/materials';
-import NewAsphaltMaterialModal from '../../../components/templates/modals/newAsphaltMaterial';
+import CreateEditMaterialModal from '../../../components/templates/modals/createEditAsphaltMaterial';
 import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
+import Loading from '@/components/molecules/loading';
 
 const Materials = () => {
   const [openModal, setOpenModal] = useState(false);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
+  const [materialToEdit, setMaterialToEdit] = useState<AsphaltMaterial>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const { user } = useAuth();
 
@@ -54,24 +57,44 @@ const Materials = () => {
       });
   };
 
+  const handleEditMaterial = async (materialId: string) => {
+    try {
+      const selectedMaterialToEdit = materials.find((material) => material._id === materialId);
+      setMaterialToEdit(selectedMaterialToEdit);
+      setIsEdit(true);
+      setOpenModal(true);
+    } catch (error) {
+      console.error('Failed to get the selected material to edit:', error);
+    }
+  };
+
   return (
     <Container>
       {loading ? (
-        <div>Carregando...</div>
+        <div>
+          <Loading />
+        </div>
       ) : (
         <MaterialsTemplate
           materials={materials}
           types={types}
           title={t('asphalt.materials.title')}
           handleOpenModal={() => setOpenModal(true)}
-          handleDeleteMaterial={handleDeleteMaterial}
+          deleteMaterial={handleDeleteMaterial}
+          editMaterial={handleEditMaterial}
           path="asphalt/materials/material"
           modal={
-            <NewAsphaltMaterialModal
+            <CreateEditMaterialModal
               openModal={openModal}
-              handleCloseModal={() => setOpenModal(false)}
+              handleCloseModal={() => {
+                setOpenModal(false);
+                setIsEdit(false);
+                setMaterialToEdit(undefined);
+              }}
               updateMaterials={addNewMaterial}
               materials={materials}
+              materialToEdit={materialToEdit ? materialToEdit : undefined}
+              isEdit={isEdit}
             />
           }
         />

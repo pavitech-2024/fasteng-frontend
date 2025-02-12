@@ -7,6 +7,7 @@ import {
   Task,
   VideoLibrary,
   Delete,
+  Edit,
   Settings,
   Logout,
   ArrowForward,
@@ -91,7 +92,7 @@ import ConcreteRtIcon from './concrete/essays/ConcreteRt.png';
 
 //dosages
 import AbcpIcon from './concrete/dosages/abcp.svg';
-import AbcpLogo from './concrete/dosages/ABCP-Logo.png';
+import AbcpLogo from './concrete/dosages/abcp-icon.png';
 
 // creators
 import Article from './creators/Article.png';
@@ -105,6 +106,7 @@ export {
   Task as StandartsIcon,
   VideoLibrary as LibraryIcon,
   Delete as DeleteIcon,
+  Edit as EditIcon,
   Settings as SettingsIcon,
   Logout as LogoutIcon,
   PictureAsPdfIcon as PDFIcon,

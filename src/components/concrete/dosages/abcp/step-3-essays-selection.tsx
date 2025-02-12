@@ -154,7 +154,7 @@ const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp:
                     variant="standard"
                     key={`granulometry_${essays?.fineAggregateData._id}`}
                     label={t('abcp.step-3.granulometry')}
-                    defaultValue={{
+                    value={{
                       label: `${generalData.name} - (Diâmetro máximo: ${fineAggNominalDiameter}mm)`,
                       value: essaySelectionData.fineAggregate.granulometry_id,
                     }}
@@ -215,7 +215,7 @@ const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp:
                     variant="standard"
                     key={`granulometry_${essays?.coarseAggregateData._id}`}
                     label={t('abcp.step-3.granulometry')}
-                    defaultValue={{
+                    value={{
                       label: `${generalData.name} - (Diâmetro máximo: ${coarseAggNominalDiameter}mm)`,
                       value: essaySelectionData.coarseAggregate.granulometry_id,
                     }}
@@ -235,7 +235,7 @@ const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp:
                     variant="standard"
                     key={`unit_mass_${essays?.coarseAggregateData._id}`}
                     label={t('abcp.step-3.unit_mass')}
-                    defaultValue={{
+                    value={{
                       label: `${generalData.name} - (Diâmetro máximo: ${coarseAggMaximumDiameter}mm)`,
                       value: essaySelectionData.coarseAggregate.unitMass_id,
                     }}

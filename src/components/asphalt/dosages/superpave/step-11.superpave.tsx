@@ -35,7 +35,6 @@ const Superpave_Step11 = ({
   const [quantitativeRows, setQuantitativeRows] = useState([]);
   const [quantitativeCols, setQuantitativeCols] = useState([]);
   const [dosage, setDosage] = useState(null);
-  console.log('🚀 ~ dosage:', dosage);
   const store = JSON.parse(sessionStorage.getItem('asphalt-superpave-store'));
   const dosageId = store?.state._id;
 

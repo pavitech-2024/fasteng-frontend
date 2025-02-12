@@ -118,26 +118,22 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  // send general data to backend to verify if there is already a Superpave dosage with same name for the material
-  submitGeneralData = async (data: SuperpaveData, userId: string, isConsult?: boolean): Promise<void> => {
-    const user = userId ? userId : data.generalData.userId;
+  // send general data to backend to verify if there is already a Marshall dosage with same name for the material
+  submitGeneralData = async (data: SuperpaveData, userId: string, isConsult = false): Promise<void> => {
+    const user = userId || data.generalData.userId;
     if (!isConsult) {
       try {
         const { name } = data.generalData;
 
-        // verify if the project name is not empty
         if (!name) throw t('errors.empty-project-name');
 
-        // verify if there is already a Superpave dosage with same name for the material
         const response = await Api.post(`${this.info.backend_path}/verify-init/${user}`, data.generalData);
 
         const { success, dosage, error } = response.data;
-        console.log('🚀 ~ Superpave_SERVICE ~ response.data:', response.data);
 
-        // if there is already a Superpave dosage with same project name, throw error
-        if (success === false) throw error.name;
+        if (!success) throw error.name;
 
-        this.store_actions.setData({ step: dosage.generalData.step, value: { ...data, ...dosage } });
+        this.store_actions.setData({ step: 12, value: { ...data, ...dosage } });
       } catch (error) {
         throw error;
       }
@@ -192,15 +188,9 @@ class Superpave_SERVICE implements IEssayService {
           },
         });
 
-        const { success, dosage, error } = response.data;
+        const { success, error } = response.data;
 
         if (success === false) throw error.name;
-
-        const prevData = { ...data };
-
-        if (prevData.generalData.step < 2) prevData.generalData.step = dosage.generalData.step;
-
-        this.store_actions.setData({ step: 2, value: prevData });
       } catch (error) {
         console.log(error);
         throw error;
@@ -226,8 +216,12 @@ class Superpave_SERVICE implements IEssayService {
         if (success === false) throw error.name;
 
         if (step !== 2) {
-          this.store_actions?.setData({ step: 2, value: { ...dosageData.granulometryCompositionData, ...data } });
+          console.log('aquiiiiiii');
+          // this.store_actions?.setData({ step: 2, value: { ...dosageData.granulometryCompositionData, ...data } });
+          return data;
         } else {
+          console.log('elseeeee');
+
           return data;
         }
       } catch (error) {
@@ -246,6 +240,25 @@ class Superpave_SERVICE implements IEssayService {
       const { percentageInputs, nominalSize, percentsToList } = calculateStep3Data;
       const { dnitBand } = step1Data;
       const { aggregates } = step2Data;
+
+      // Reduzimos a matriz somando todos os valores de todas as propriedades de cada objeto.
+      const selectedCurveInputs = chosenCurves.lower
+        ? percentageInputs[0]
+        : chosenCurves.average
+        ? percentageInputs[1]
+        : chosenCurves.higher
+        ? percentageInputs[2]
+        : percentageInputs;
+
+      const inputsSum =
+        selectedCurveInputs instanceof Object
+          ? Object.values(selectedCurveInputs).reduce((sum, input) => {
+              return sum + Number(input);
+            }, 0)
+          : 0;
+
+      // Verificamos se a soma total é 100.
+      if (inputsSum !== 100) throw t('errors.invalid-inputs-sum');
 
       const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {
         chosenCurves,

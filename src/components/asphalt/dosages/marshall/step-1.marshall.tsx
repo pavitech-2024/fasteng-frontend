@@ -79,7 +79,7 @@ const Marshall_Step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { ma
                   label={input.label}
                   options={objectiveOptions}
                   callback={(value) => setData({ step: 0, key: input.key, value })}
-                  defaultValue={{ label: generalData.objective, value: generalData.objective }}
+                  value={{ label: generalData.objective, value: generalData.objective }}
                   size="medium"
                   required={input.required}
                 />
@@ -101,7 +101,7 @@ const Marshall_Step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { ma
                     label={input.label}
                     options={trackOptions}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
-                    defaultValue={{ label: generalData.dnitBand, value: generalData.dnitBand }}
+                    value={{ label: generalData.dnitBand, value: generalData.dnitBand }}
                     size="medium"
                     required={input.required}
                   />
