@@ -11,6 +11,8 @@ export type User = {
   connections: number;
   name: string;
   email: string;
+  phone: string;
+  dob: string;
   planName: string;
   preferences: {
     language: string;

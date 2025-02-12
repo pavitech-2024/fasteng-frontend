@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { NextPage } from 'next';
 import useAuth from '@/contexts/auth';
 import { Avatar, Box, Button, IconButton, Tooltip, Typography } from '@mui/material';
@@ -12,6 +12,8 @@ import Api from '../../api';
 import { DeleteIcon } from '../../assets';
 import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
 import UploadIcon from '@mui/icons-material/Upload';
+import { TextField } from '@mui/material';
+import { red } from '@mui/material/colors';
 
 export const getStaticProps = async () => {
   const avatares: string[] = [
@@ -32,6 +34,32 @@ interface SettingsProps {
 const Settings: NextPage = ({ avatares }: SettingsProps) => {
   const { user, setUser } = useAuth();
 
+  const [name, setName] = useState(user?.name || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [phone, setPhone] = useState(user?.phone || '');
+  const [dob, setDob] = useState(user?.dob || '');
+
+  const onSaveUser = async () => {
+    try {
+      const updatedUser = { ...user, name, email, phone, dob };
+      const response = await Api.put(`users/${user._id}`, updatedUser);
+
+      setUser({ ...user, ...response.data });
+      toast.success('Usuário salvo com sucesso!');
+    } catch (error) {
+      toast.error('Erro ao salvar usuário');
+    }
+  };
+
+  const onDeleteUser = async () => {
+    try {
+      await Api.delete(`users/${user._id}`);
+      toast.success('Usuário excluído com sucesso!');
+    } catch (error) {
+      toast.error('Erro ao excluir usuário');
+    }
+  };
+
   const [open, setOpen] = useState(false);
   const [oldPhoto, setOldPhoto] = useState<string | null>(user?.photo);
 
@@ -46,7 +74,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
     { label: '3', value: 3 },
     { label: '4', value: 4 },
     { label: '5', value: 5 },
-  ];
+  ]; 
 
   const onSubmitPhoto = async (avatar: string | File | null) => {
     try {
@@ -159,7 +187,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           justifyContent: 'center',
           mb: '4vh',
         }}
-      >
+      >       
         <Typography
           sx={{
             width: { mobile: '85%', notebook: '100%' },
@@ -181,7 +209,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           }}
         >
           <Tooltip title={t('settings.changeAvatar')}>
-            <IconButton sx={{ p: 0 }} onClick={() => setOpen(true)} size="large">
+            <IconButton sx={{ p: 0, ml: '60px' }} onClick={() => setOpen(true)} size="large">
               <Avatar
                 alt="user photo"
                 src={user?.photo}
@@ -217,6 +245,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
               zIndex: 1,
               height: 'calc(100px - 2rem)',
               minWidth: '220px',
+              marginTop: '10px',
             }}
           >
             <Typography
@@ -244,6 +273,87 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             justifyContent: 'flex-start',
           }}
         >
+
+Dados do Usuário
+        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            width: { mobile: '85%', notebook: '70%' },
+          }}
+        >
+          <TextField
+            label="Nome"
+            variant="standard"
+            fullWidth
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            sx={{
+              height: '50px',
+            }}
+          />
+          <TextField
+            label="Email"
+            variant="standard"
+            fullWidth
+            required
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            sx={{
+              height: '50px',
+            }}
+          />
+          <TextField
+            label="Telefone"
+            variant="standard"
+            fullWidth
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            sx={{
+              height: '60px',
+            }}
+          />
+          <TextField
+            label="Data de Nascimento"
+            variant="standard"
+            fullWidth
+            type="date"
+            InputLabelProps={{ shrink: true }}
+            value={dob}
+            onChange={(e) => setDob(e.target.value)}
+          />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={onSaveUser}
+              sx={{ width: '25%' }}
+            >
+              Salvar Alterações
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={onDeleteUser}
+              sx={{
+                backgroundColor: '#b22222',
+                color: 'white',
+                position: 'relative', // Changed to relative
+                left: 'auto',       // Reset left positioning
+                width: 'auto',      // Reset width
+                marginLeft: 'auto'  // Push to the right
+              }}
+            >
+              Excluir Usuário
+            </Button>
+          </Box>
+        </Box>
+      
+          <Typography>
           {t('settings.preferences')}
         </Typography>
         <Box
@@ -260,7 +370,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             label={t('settings.language.label')}
             options={LanguageOptions}
             size="medium"
-            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white' }}
+            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white', ml: 5 }}
             defaultValue={user?.preferences.language === 'en' ? LanguageOptions[0] : LanguageOptions[1]}
             callback={(value: string) => {
               i18next.changeLanguage(value);
@@ -271,12 +381,12 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             label={t('settings.decimal.label')}
             options={DecimalOptions}
             size="medium"
-            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white' }}
+            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white', ml: 5 }}
             defaultValue={DecimalOptions[user?.preferences.decimal - 1]}
             callback={(value: number) => {
               setUser({ ...user, preferences: { ...user.preferences, decimal: value } });
             }}
-          />
+          />  
         </Box>
         <Button
           variant="contained"
