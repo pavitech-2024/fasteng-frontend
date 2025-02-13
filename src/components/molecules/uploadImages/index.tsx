@@ -58,9 +58,9 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '4rem' }}>
       <label
-        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '1rem' }}
+        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '2rem' }}
         htmlFor="uploadImages"
       >
         <Button variant="contained" component="label" startIcon={<AddAPhoto />}>
@@ -76,13 +76,6 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
           />
         </Button>
       </label>
-      <Input
-        type="file"
-        inputProps={{ accept: '.jpg,.jpeg,.png,.webm', multiple: false }}
-        onChange={handleAddImage}
-        style={{ display: 'hidden', cursor: 'pointer' }}
-        id="uploadImages"
-      />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
         {images && (
           <Image
