@@ -218,5 +218,10 @@
   "pm-tooltip-filter-highway": "Você digitou um filtro por rodovia",
   "pm-tooltip-del-sample": "Deletar amostra",
   "pm-datasheet": "Ficha técnica",
-  "pm-type-of-section": "Tipo de seção"
+  "pm-type-of-section": "Tipo de seção",
+  "pm.granularLayer.especific.mass": "Massa específica",
+
+  "pm.generate-pdf-button": "Gerar PDF",
+
+  "pm.register.resume": "Resumo"
 }

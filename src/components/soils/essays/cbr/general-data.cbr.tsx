@@ -58,7 +58,7 @@ const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps 
   return (
     <>
       {loading ? (
-        <Loading />
+        <Loading size={30} color={"secondary"} />
       ) : (
         <Box
           sx={{

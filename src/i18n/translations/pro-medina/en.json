@@ -199,5 +199,10 @@
   "upload.images": "Upload imaged",
   "erase": "Erase",
   "add": "Add",
-  "pm.sample-data": "other technical data of the sample"
+  "pm.sample-data": "other technical data of the sample",
+  "pm.granularLayer.especific.mass": "Specific mass",
+
+  "pm.generate-pdf-button": "Generate PDF",
+
+  "pm.register.resume": "Resume"
 }

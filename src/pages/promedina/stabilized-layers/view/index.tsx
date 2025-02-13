@@ -71,7 +71,7 @@ const StabilizedLayers_view = () => {
   return (
     <Container>
       {loading ? (
-        <Loading />
+        <Loading size={30} color={"secondary"} />
       ) : (
         <Container>
           <Header

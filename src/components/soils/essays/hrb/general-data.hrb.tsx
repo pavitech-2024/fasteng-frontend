@@ -61,7 +61,7 @@ const HRB_GeneralData = ({ nextDisabled, setNextDisabled, hrb }: EssayPageProps 
   return (
     <>
       {loading ? (
-        <Loading />
+        <Loading size={30} color={"secondary"} />
       ) : (
         <Box
           sx={{

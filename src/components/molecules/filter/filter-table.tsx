@@ -66,7 +66,6 @@ const PromedinaMaterialsTemplate = ({
   setData,
 }: PromedinaMaterialsTemplateProps) => {
   const [materialsData, setMaterialsData] = useState(materials);
-  console.log('🚀 ~ materialsData:', materialsData);
   const [page, setPage] = useState<number>(1);
   const [searchBy, setSearchBy] = useState<string>('name');
   const [searchValue, setSearchValue] = useState<string>('');
@@ -771,14 +770,16 @@ const PromedinaMaterialsTemplate = ({
         <Paper
           sx={{
             width: '100%',
+            maxWidth: '100%',
             borderRadius: '20px',
             border: '1px solid rgba(0,0,0,0.17)',
             mt: '1rem',
             background: 'primaryTons.white',
+            overflowX: 'hidden'
           }}
         >
-          <TableContainer sx={{ borderRadius: '20px' }}>
-            <Table stickyHeader aria-label="sticky table">
+          <TableContainer sx={{ borderRadius: '20px', width: '100%', maxWidth: '100%'}}>
+            <Table stickyHeader aria-label="sticky table" sx={{ width: '100%' }}>
               <TableHead>
                 <TableRow>
                   {columns.map((column) => (
@@ -786,7 +787,10 @@ const PromedinaMaterialsTemplate = ({
                       key={column.id}
                       align="center"
                       style={{
-                        width: column.width,
+                        maxWidth: column.width,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
                         fontWeight: '700',
                         fontSize: '1rem',
                       }}
@@ -797,7 +801,6 @@ const PromedinaMaterialsTemplate = ({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {/* {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => ( */}
                 {filteredData.map((row) => (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                     {columns.map((column) => (
@@ -808,7 +811,7 @@ const PromedinaMaterialsTemplate = ({
                         {column.id === 'layer' && row.layer}
                         {column.id === 'zone' && row.zone}
                         {column.id === 'actions' && (
-                          <Box sx={{ display: 'flex', gap: '0.5rem' }}>
+                          <Box sx={{ display: 'flex', gap: '0.5rem' }} id={row._id}>
                             <Box
                               sx={{
                                 display: 'flex',
@@ -818,9 +821,9 @@ const PromedinaMaterialsTemplate = ({
                                 alignItems: 'center',
                               }}
                             >
-                              {actions.map((item) => (
+                              {actions.map((item, index) => (
                                 <Button
-                                  key={item.id}
+                                  key={index}
                                   variant="contained"
                                   onClick={
                                     item.id == 'visualize' ? () => handleVisualize(row._id) : () => handleEdit(row._id)

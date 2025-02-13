@@ -10,7 +10,7 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
     icon: UnitMassIcon,
     title: t('pm.granular-layers-register'),
     path: '/promedina/granular-layers',
-    steps: 3,
+    steps: 4,
     backend_path: 'promedina/granular-layers/granular-layers-samples',
     standard: {
       name: '',
@@ -20,6 +20,7 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
       { step: 0, description: t('general data'), path: 'generalData' },
       { step: 1, description: t('pm.pavement.specific.data'), path: 'step2' },
       { step: 2, description: t('pm.pavement.specific.data'), path: 'step3' },
+      { step: 3, description: t('pm.register.resume'), path: 'resume' },
     ],
   };
 
@@ -39,6 +40,8 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
           break;
         case 2:
           await this.submitStep3Data(data as GranularLayersData['step3Data']);
+          break;
+        case 3:
           await this.saveSample(data as GranularLayersData);
           break;
         default:

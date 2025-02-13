@@ -316,7 +316,8 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
                 return (
                   <TextField
                     key={input.key}
-                    variant="standard"
+                    variant={input.key === "trafficLiberation" ? "filled" : "standard"}
+                    focused={input.key === "trafficLiberation"}
                     type={input.type}
                     multiline={input.key === 'observation' ? true : false}
                     sx={input.key === 'observations' && { width: '100%' }}

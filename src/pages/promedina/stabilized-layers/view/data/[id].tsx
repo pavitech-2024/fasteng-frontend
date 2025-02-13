@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { NextIcon } from '@/assets';
 import Loading from '@/components/molecules/loading';
 import Link from 'next/link';
+import GeneratePDF_ProMedina from '@/components/generatePDF/promedina/granularLayers/generatePDF.promedina';
 
 const SpecificSample_StabilizedLayers = () => {
   const [samples, setSamples] = useState<any>();
@@ -28,6 +29,20 @@ const SpecificSample_StabilizedLayers = () => {
 
     fetchData();
   }, [query.id]);
+
+  const sections = [
+    'general-data',
+    'pavement-data',
+    'pavement-preparation',
+    'material-data',
+    'material-fatigue',
+    'permanent-deformation',
+    'resilience-module-2',
+    'diametrical-compression-fatigue-curve',
+    'brookfield-viscosity',
+    'other-info',
+    'structural-composition',
+  ];
 
   const columns: GridColDef[] = [
     { field: 'layer', headerName: t('materials.template.layer') },
@@ -434,9 +449,9 @@ const SpecificSample_StabilizedLayers = () => {
   return (
     <>
       {loading ? (
-        <Loading />
+        <Loading size={30} color={'secondary'} />
       ) : (
-        <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column', marginTop: '3rem' }}>
           <Box
             sx={{
               width: { mobile: '90%', notebook: '80%' },
@@ -450,169 +465,146 @@ const SpecificSample_StabilizedLayers = () => {
               marginTop: '1rem',
             }}
           >
+            <GeneratePDF_ProMedina sample={samples} sections={sections} />
             {samples?.generalData?.name &&
               samples?.generalData?.zone &&
               samples?.generalData?.layer &&
               samples?.generalData?.cityState && (
-                <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
-                  <Box
-                    sx={{
-                      display: 'grid',
-                      gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
-                      justifyItems: 'center',
-                      alignItems: 'center',
-                      gap: '1rem',
-                      justifyContent: 'space-evenly',
-                    }}
-                  >
-                    {generalData.map((item, idx) => (
-                      <Box
-                        sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
-                        key={idx}
-                      >
-                        {item.value && (
-                          <>
-                            <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                              {item.title}
-                            </Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                              <Typography
-                                sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
-                              >
-                                {item.value}
+                <Box id="general-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+                  <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
+                    <Box
+                      sx={{
+                        display: { mobile: 'flex', notebook: 'grid' },
+                        flexDirection: 'column',
+                        gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                        justifyItems: 'center',
+                        alignItems: 'center',
+                        gap: '1rem',
+                        justifyContent: 'space-evenly',
+                      }}
+                    >
+                      {generalData.map((item, idx) => (
+                        <Box
+                          sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                          key={idx}
+                        >
+                          {item.value && (
+                            <>
+                              <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                                {item.title}
                               </Typography>
-                            </Box>
-                          </>
-                        )}
-                      </Box>
-                    ))}
-                  </Box>
-                </FlexColumnBorder>
+                              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                <Typography
+                                  sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
+                                >
+                                  {item.value}
+                                </Typography>
+                              </Box>
+                            </>
+                          )}
+                        </Box>
+                      ))}
+                    </Box>
+                  </FlexColumnBorder>
+                </Box>
               )}
             {/** DADOS DO PAVIMENTO NO QUAL O MATERIAL ESTÁ INSERIDO */}
-            {samples?.step2Data.sectionType &&
-              samples?.step2Data.extension &&
-              samples?.step2Data.initialStakeMeters &&
-              samples?.step2Data.latitudeI &&
-              samples?.step2Data.longitudeI &&
-              samples?.step2Data.identification &&
-              samples?.step2Data.finalStakeMeters &&
-              samples?.step2Data.latitudeF &&
-              samples?.step2Data.longitudeF &&
-              samples?.step2Data.monitoringPhase && (
-                <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'}>
-                  <Box
-                    sx={{
-                      display: 'grid',
-                      gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr 1fr' },
-                      justifyItems: 'center',
-                      alignItems: 'center',
-                      gap: '1rem',
-                      justifyContent: 'space-evenly',
-                    }}
-                  >
-                    {pavimentData.map((item, idx) => (
-                      <Box
-                        sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
-                        key={idx}
-                      >
-                        {item.value && (
-                          <>
-                            <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                              {item.title}
-                            </Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                              <Typography
-                                sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
-                              >
-                                {item.value}
+            <Box id="pavement-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+              {samples?.step2Data.sectionType &&
+                samples?.step2Data.extension &&
+                samples?.step2Data.initialStakeMeters &&
+                samples?.step2Data.latitudeI &&
+                samples?.step2Data.longitudeI &&
+                samples?.step2Data.identification &&
+                samples?.step2Data.finalStakeMeters &&
+                samples?.step2Data.latitudeF &&
+                samples?.step2Data.longitudeF &&
+                samples?.step2Data.monitoringPhase && (
+                  <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'}>
+                    <Box
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr 1fr' },
+                        justifyItems: 'center',
+                        alignItems: 'center',
+                        gap: '1rem',
+                        justifyContent: 'space-evenly',
+                      }}
+                    >
+                      {pavimentData.map((item, idx) => (
+                        <Box
+                          sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                          key={idx}
+                        >
+                          {item.value && (
+                            <>
+                              <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                                {item.title}
                               </Typography>
-                            </Box>
-                          </>
-                        )}
-                      </Box>
-                    ))}
-                  </Box>
-                </FlexColumnBorder>
-              )}
+                              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                <Typography
+                                  sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
+                                >
+                                  {item.value}
+                                </Typography>
+                              </Box>
+                            </>
+                          )}
+                        </Box>
+                      ))}
+                    </Box>
+                  </FlexColumnBorder>
+                )}
+            </Box>
 
             {/**  PREPARO DO PAVIMENTO */}
-            {samples?.step2Data?.milling &&
-              samples?.step2Data?.interventionAtTheBase &&
-              samples?.step2Data?.sami &&
-              samples?.step2Data?.bondingPaint &&
-              samples?.step2Data?.priming && (
-                <FlexColumnBorder title={t('pm.paviment.preparation')} open={true} theme={'#07B811'}>
-                  <Box
-                    sx={{
-                      display: 'grid',
-                      gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr 1fr' },
-                      justifyItems: 'center',
-                      alignItems: 'center',
-                      gap: '1rem',
-                      justifyContent: 'space-evenly',
-                      marginBottom: '0.5rem',
-                    }}
-                  >
-                    {pavimentPreparation.map((item, idx) => (
-                      <Box
-                        sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
-                        key={idx}
-                      >
-                        {item.value && (
-                          <>
-                            <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                              {item.title}
-                            </Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                              <Typography
-                                sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
-                              >
-                                {item.value}
+            <Box id="pavement-preparation" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+              {samples?.step2Data?.milling &&
+                samples?.step2Data?.interventionAtTheBase &&
+                samples?.step2Data?.sami &&
+                samples?.step2Data?.bondingPaint &&
+                samples?.step2Data?.priming && (
+                  <FlexColumnBorder title={t('pm.paviment.preparation')} open={true} theme={'#07B811'}>
+                    <Box
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr 1fr' },
+                        justifyItems: 'center',
+                        alignItems: 'center',
+                        gap: '1rem',
+                        justifyContent: 'space-evenly',
+                        marginBottom: '0.5rem',
+                      }}
+                    >
+                      {pavimentPreparation.map((item, idx) => (
+                        <Box
+                          sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                          key={idx}
+                        >
+                          {item.value && (
+                            <>
+                              <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                                {item.title}
                               </Typography>
-                            </Box>
-                          </>
-                        )}
-                      </Box>
-                    ))}
-                  </Box>
-                </FlexColumnBorder>
-              )}
-
-            <FlexColumnBorder title={t('pm.material-data')} open={true} theme={'#07B811'}>
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
-                  justifyItems: 'center',
-                  alignItems: 'center',
-                  gap: '1rem',
-                  justifyContent: 'space-evenly',
-                  marginBottom: '0.5rem',
-                }}
-              >
-                {materialData.map((item, idx) => (
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }} key={idx}>
-                    {item.value && (
-                      <>
-                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                          {item.title}
-                        </Typography>
-                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                          <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                            {item.value}
-                          </Typography>
+                              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                <Typography
+                                  sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
+                                >
+                                  {item.value}
+                                </Typography>
+                              </Box>
+                            </>
+                          )}
                         </Box>
-                      </>
-                    )}
-                  </Box>
-                ))}
-              </Box>
-            </FlexColumnBorder>
+                      ))}
+                    </Box>
+                  </FlexColumnBorder>
+                )}
+            </Box>
 
-            {/** FADIGUA DO MATERIAL */}
-            {samples?.step3Data?.fatiguek1psi1 && samples?.step3Data?.fatiguek2psi2 && (
-              <FlexColumnBorder title={t('pm.material-permanentDeformation')} open={true} theme={'#07B811'}>
+            {/** DADOS DO MATERIAL */}
+            <Box id="material-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+              <FlexColumnBorder title={t('pm.material-data')} open={true} theme={'#07B811'}>
                 <Box
                   sx={{
                     display: 'grid',
@@ -624,7 +616,7 @@ const SpecificSample_StabilizedLayers = () => {
                     marginBottom: '0.5rem',
                   }}
                 >
-                  {materialFatigue.map((item, idx) => (
+                  {materialData.map((item, idx) => (
                     <Box
                       sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
                       key={idx}
@@ -645,13 +637,188 @@ const SpecificSample_StabilizedLayers = () => {
                   ))}
                 </Box>
               </FlexColumnBorder>
-            )}
+            </Box>
+
+            {/** FADIGUA DO MATERIAL */}
+            <Box id="material-fatigue" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+              {samples?.step3Data?.fatiguek1psi1 && samples?.step3Data?.fatiguek2psi2 && (
+                <FlexColumnBorder title={t('pm.material-permanentDeformation')} open={true} theme={'#07B811'}>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                      justifyItems: 'center',
+                      alignItems: 'center',
+                      gap: '1rem',
+                      justifyContent: 'space-evenly',
+                      marginBottom: '0.5rem',
+                    }}
+                  >
+                    {materialFatigue.map((item, idx) => (
+                      <Box
+                        sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                        key={idx}
+                      >
+                        {item.value && (
+                          <>
+                            <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                              {item.title}
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                              <Typography
+                                sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
+                              >
+                                {item.value}
+                              </Typography>
+                            </Box>
+                          </>
+                        )}
+                      </Box>
+                    ))}
+                  </Box>
+                </FlexColumnBorder>
+              )}
+            </Box>
 
             {/** MÓDULO DE RESILIÊNCIA */}
-            {samples?.step3Data?.rsInitial &&
-              samples?.step3Data?.rsFinal &&
-              samples?.step3Data?.constantA &&
-              samples?.step3Data?.constantB && (
+            <Box id="resilience-module" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+              {samples?.step3Data?.rsInitial &&
+                samples?.step3Data?.rsFinal &&
+                samples?.step3Data?.constantA &&
+                samples?.step3Data?.constantB && (
+                  <FlexColumnBorder title={t('pm.resilience.module')} open={true} theme={'#07B811'}>
+                    <Box
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                        justifyItems: 'center',
+                        alignItems: 'center',
+                        gap: '1rem',
+                        justifyContent: 'space-evenly',
+                        marginBottom: '0.5rem',
+                      }}
+                    >
+                      {resilienceModuleStabilized.map((item, idx) => (
+                        <Box
+                          sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                          key={idx}
+                        >
+                          {item.value && (
+                            <>
+                              <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                                {item.title}
+                              </Typography>
+                              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                <Typography
+                                  sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
+                                >
+                                  {item.value}
+                                </Typography>
+                              </Box>
+                            </>
+                          )}
+                        </Box>
+                      ))}
+                    </Box>
+                  </FlexColumnBorder>
+                )}
+            </Box>
+
+            {/** DADOS TÉCNICOS DA AMOSTRA */}
+            <Box id="technical-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+              {samples?.step3Data?.mctGroup &&
+                samples?.step3Data?.mctGroupmctCoefficientC &&
+                samples?.step3Data?.mctIndexE &&
+                samples?.step3Data?.especificMass &&
+                samples?.step3Data?.compressionEnergy &&
+                samples?.step3Data?.granulometricRange &&
+                samples?.step3Data?.optimalHumidity &&
+                samples?.step3Data?.abrasionLA && (
+                  <FlexColumnBorder title={t('pm.sample-data')} open={true} theme={'#07B811'}>
+                    <Box
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                        justifyItems: 'center',
+                        alignItems: 'center',
+                        gap: '1rem',
+                        justifyContent: 'space-evenly',
+                        marginBottom: '0.5rem',
+                      }}
+                    >
+                      {techData.map((item, idx) => (
+                        <Box
+                          sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                          key={idx}
+                        >
+                          {item.value && (
+                            <>
+                              <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                                {item.title}
+                              </Typography>
+                              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                <Typography
+                                  sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
+                                >
+                                  {item.value}
+                                </Typography>
+                              </Box>
+                            </>
+                          )}
+                        </Box>
+                      ))}
+                    </Box>
+                  </FlexColumnBorder>
+                )}
+            </Box>
+
+            {/** DEFORMAÇÃO PERMANENTE */}
+            <Box id="permanent-deformation" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+              {samples?.step3Data?.k1psi1 &&
+                samples?.step3Data?.k2psi2 &&
+                samples?.step3Data?.k3psi3 &&
+                samples?.step3Data?.k4psi4 && (
+                  <FlexColumnBorder title={t('pm.permanent.deformation')} open={true} theme={'#07B811'}>
+                    <Box
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                        justifyItems: 'center',
+                        alignItems: 'center',
+                        gap: '1rem',
+                        justifyContent: 'space-evenly',
+                        marginBottom: '0.5rem',
+                      }}
+                    >
+                      {permanentDeformation.map((item, idx) => (
+                        <Box
+                          sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                          key={idx}
+                        >
+                          {item.value && (
+                            <>
+                              <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                                {item.title}
+                              </Typography>
+                              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                <Typography
+                                  sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
+                                >
+                                  {item.value}
+                                </Typography>
+                              </Box>
+                            </>
+                          )}
+                        </Box>
+                      ))}
+                    </Box>
+                  </FlexColumnBorder>
+                )}
+            </Box>
+
+            {/**  MÓDULO DE RESILIÊNCIA */}
+            <Box id="resilience-module-2" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+              {samples?.step3Data?.k1 && samples?.step3Data?.k2 && samples?.step3Data?.k3 && samples?.step3Data?.k4 && (
                 <FlexColumnBorder title={t('pm.resilience.module')} open={true} theme={'#07B811'}>
                   <Box
                     sx={{
@@ -664,7 +831,7 @@ const SpecificSample_StabilizedLayers = () => {
                       marginBottom: '0.5rem',
                     }}
                   >
-                    {resilienceModuleStabilized.map((item, idx) => (
+                    {resilienceModule.map((item, idx) => (
                       <Box
                         sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
                         key={idx}
@@ -688,136 +855,55 @@ const SpecificSample_StabilizedLayers = () => {
                   </Box>
                 </FlexColumnBorder>
               )}
+            </Box>
 
-            {/** DADOS TÉCNICOS DA AMOSTRA */}
-            {samples?.step3Data?.mctGroup &&
-              samples?.step3Data?.mctGroupmctCoefficientC &&
-              samples?.step3Data?.mctIndexE &&
-              samples?.step3Data?.especificMass &&
-              samples?.step3Data?.compressionEnergy &&
-              samples?.step3Data?.granulometricRange &&
-              samples?.step3Data?.optimalHumidity &&
-              samples?.step3Data?.abrasionLA && (
-                <FlexColumnBorder title={t('pm.sample-data')} open={true} theme={'#07B811'}>
-                  <Box
-                    sx={{
-                      display: 'grid',
-                      gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
-                      justifyItems: 'center',
-                      alignItems: 'center',
-                      gap: '1rem',
-                      justifyContent: 'space-evenly',
-                      marginBottom: '0.5rem',
-                    }}
-                  >
-                    {techData.map((item, idx) => (
-                      <Box
-                        sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
-                        key={idx}
-                      >
-                        {item.value && (
-                          <>
-                            <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                              {item.title}
-                            </Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                              <Typography
-                                sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
-                              >
-                                {item.value}
-                              </Typography>
-                            </Box>
-                          </>
-                        )}
-                      </Box>
-                    ))}
-                  </Box>
-                </FlexColumnBorder>
-              )}
-            {/** DEFORMAÇÃO PERMANENTE */}
-            {samples?.step3Data?.k1psi1 &&
-              samples?.step3Data?.k2psi2 &&
-              samples?.step3Data?.k3psi3 &&
-              samples?.step3Data?.k4psi4 && (
-                <FlexColumnBorder title={t('pm.permanent.deformation')} open={true} theme={'#07B811'}>
-                  <Box
-                    sx={{
-                      display: 'grid',
-                      gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
-                      justifyItems: 'center',
-                      alignItems: 'center',
-                      gap: '1rem',
-                      justifyContent: 'space-evenly',
-                      marginBottom: '0.5rem',
-                    }}
-                  >
-                    {permanentDeformation.map((item, idx) => (
-                      <Box
-                        sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
-                        key={idx}
-                      >
-                        {item.value && (
-                          <>
-                            <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                              {item.title}
-                            </Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                              <Typography
-                                sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
-                              >
-                                {item.value}
-                              </Typography>
-                            </Box>
-                          </>
-                        )}
-                      </Box>
-                    ))}
-                  </Box>
-                </FlexColumnBorder>
-              )}
-
-            {/**  MÓDULO DE RESILIÊNCIA */}
-            {samples?.step3Data?.k1 && samples?.step3Data?.k2 && samples?.step3Data?.k3 && samples?.step3Data?.k4 && (
-              <FlexColumnBorder title={t('pm.resilience.module')} open={true} theme={'#07B811'}>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
-                    justifyItems: 'center',
-                    alignItems: 'center',
-                    gap: '1rem',
-                    justifyContent: 'space-evenly',
-                    marginBottom: '0.5rem',
-                  }}
-                >
-                  {resilienceModule.map((item, idx) => (
-                    <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
-                      key={idx}
-                    >
-                      {item.value && (
-                        <>
-                          <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                            {item.title}
-                          </Typography>
-                          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                              {item.value}
-                            </Typography>
-                          </Box>
-                        </>
-                      )}
-                    </Box>
-                  ))}
-                </Box>
-              </FlexColumnBorder>
-            )}
             {/** CURVA DE FADIGA À COMPRESSÃO DIAMETRAL */}
-            {samples?.Step4Data?.fatigueCurve_n_cps &&
-              samples?.Step4Data?.fatigueCurve_k1 &&
-              samples?.Step4Data?.fatigueCurve_k2 &&
-              samples?.Step4Data?.fatigueCurve_r2 && (
-                <FlexColumnBorder title={t('pm.diametral.compression.fatigue.curve')} open={true} theme={'#07B811'}>
+            <Box id="diametrical-compression-fatigue-curve" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+              {samples?.Step4Data?.fatigueCurve_n_cps &&
+                samples?.Step4Data?.fatigueCurve_k1 &&
+                samples?.Step4Data?.fatigueCurve_k2 &&
+                samples?.Step4Data?.fatigueCurve_r2 && (
+                  <FlexColumnBorder title={t('pm.diametral.compression.fatigue.curve')} open={true} theme={'#07B811'}>
+                    <Box
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                        justifyItems: 'center',
+                        alignItems: 'center',
+                        gap: '1rem',
+                        justifyContent: 'space-evenly',
+                      }}
+                    >
+                      {fadigueCurveCD.map((item, idx) => (
+                        <Box
+                          sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                          key={idx}
+                        >
+                          {item.value && (
+                            <>
+                              <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                                {item.title}
+                              </Typography>
+                              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                <Typography
+                                  sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
+                                >
+                                  {item.value}
+                                </Typography>
+                              </Box>
+                            </>
+                          )}
+                        </Box>
+                      ))}
+                    </Box>
+                  </FlexColumnBorder>
+                )}
+            </Box>
+
+            {/** VISCOSIDADE BROOKFIELD */}
+            <Box id="brookfield-viscosity" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+              {samples?.step3Data?.vb_sp21_20 && samples?.step3Data?.vb_sp21_50 && samples?.step3Data?.vb_sp21_100 && (
+                <FlexColumnBorder title={t('pm.brookfield.viscosity')} open={true} theme={'#07B811'}>
                   <Box
                     sx={{
                       display: 'grid',
@@ -826,94 +912,10 @@ const SpecificSample_StabilizedLayers = () => {
                       alignItems: 'center',
                       gap: '1rem',
                       justifyContent: 'space-evenly',
-                    }}
-                  >
-                    {fadigueCurveCD.map((item, idx) => (
-                      <Box
-                        sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
-                        key={idx}
-                      >
-                        {item.value && (
-                          <>
-                            <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                              {item.title}
-                            </Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                              <Typography
-                                sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
-                              >
-                                {item.value}
-                              </Typography>
-                            </Box>
-                          </>
-                        )}
-                      </Box>
-                    ))}
-                  </Box>
-                </FlexColumnBorder>
-              )}
-            {/** VISCOSIDADE BROOKFIELD */}
-            {samples?.step3Data?.vb_sp21_20 && samples?.step3Data?.vb_sp21_50 && samples?.step3Data?.vb_sp21_100 && (
-              <FlexColumnBorder title={t('pm.brookfield.viscosity')} open={true} theme={'#07B811'}>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
-                    justifyItems: 'center',
-                    alignItems: 'center',
-                    gap: '1rem',
-                    justifyContent: 'space-evenly',
-                    marginBottom: '0.5rem',
-                  }}
-                >
-                  {brookfield.map((item, idx) => (
-                    <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
-                      key={idx}
-                    >
-                      {item.value && (
-                        <>
-                          <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                            {item.title}
-                          </Typography>
-                          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                              {item.value}
-                            </Typography>
-                          </Box>
-                        </>
-                      )}
-                    </Box>
-                  ))}
-                </Box>
-              </FlexColumnBorder>
-            )}
-            {/** OUTRAS INFORMAÇÕES SOBRE O MATERIAL */}
-            {samples?.step3Data?.refinery &&
-              samples?.step3Data?.company &&
-              samples?.step3Data?.collectionDate &&
-              samples?.step3Data?.invoiceNumber &&
-              samples?.step3Data?.dataInvoice &&
-              samples?.step3Data?.certificateDate &&
-              samples?.step3Data?.certificateNumber &&
-              samples?.step3Data?.capType &&
-              samples?.step3Data?.performanceGrade &&
-              samples?.step3Data?.penetration &&
-              samples?.step3Data?.softeningPoint &&
-              samples?.step3Data?.elasticRecovery && (
-                <FlexColumnBorder title={t('pm.sample-data')} open={true} theme={'#07B811'}>
-                  <Box
-                    sx={{
-                      display: 'grid',
-                      gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr 1fr' },
-                      justifyItems: 'center',
-                      alignItems: 'center',
-                      gap: '1rem',
-                      justifyContent: 'space-evenly',
                       marginBottom: '0.5rem',
                     }}
                   >
-                    {sampleData.map((item, idx) => (
+                    {brookfield.map((item, idx) => (
                       <Box
                         sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
                         key={idx}
@@ -937,64 +939,122 @@ const SpecificSample_StabilizedLayers = () => {
                   </Box>
                 </FlexColumnBorder>
               )}
+            </Box>
+
+            {/** OUTRAS INFORMAÇÕES SOBRE O MATERIAL */}
+            <Box id="other-info" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+              {samples?.step3Data?.refinery &&
+                samples?.step3Data?.company &&
+                samples?.step3Data?.collectionDate &&
+                samples?.step3Data?.invoiceNumber &&
+                samples?.step3Data?.dataInvoice &&
+                samples?.step3Data?.certificateDate &&
+                samples?.step3Data?.certificateNumber &&
+                samples?.step3Data?.capType &&
+                samples?.step3Data?.performanceGrade &&
+                samples?.step3Data?.penetration &&
+                samples?.step3Data?.softeningPoint &&
+                samples?.step3Data?.elasticRecovery && (
+                  <FlexColumnBorder title={t('pm.sample-data')} open={true} theme={'#07B811'}>
+                    <Box
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr 1fr' },
+                        justifyItems: 'center',
+                        alignItems: 'center',
+                        gap: '1rem',
+                        justifyContent: 'space-evenly',
+                        marginBottom: '0.5rem',
+                      }}
+                    >
+                      {sampleData.map((item, idx) => (
+                        <Box
+                          sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                          key={idx}
+                        >
+                          {item.value && (
+                            <>
+                              <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                                {item.title}
+                              </Typography>
+                              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                <Typography
+                                  sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
+                                >
+                                  {item.value}
+                                </Typography>
+                              </Box>
+                            </>
+                          )}
+                        </Box>
+                      ))}
+                    </Box>
+                  </FlexColumnBorder>
+                )}
+            </Box>
+
             {/** COMPOSIÇÃO ESTRUTURAL  */}
-            <FlexColumnBorder title={t('pm.structural.composition')} open={true} theme={'#07B811'}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '1rem',
-                }}
-              >
-                <div style={{ height: 'fit-content', width: '100%' }}>
-                  {rows !== undefined && (
-                    <DataGrid
-                      rows={rows}
-                      hideFooter
-                      columns={columns.map((column) => ({
-                        ...column,
-                        disableColumnMenu: true,
-                        sortable: false,
-                        align: 'center',
-                        headerAlign: 'center',
-                        minWidth: 100,
-                        flex: 1,
-                      }))}
-                    />
-                  )}
-                </div>
-              </Box>
-              <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Typography
-                  sx={{
-                    fontWeight: 'bold',
-                    marginTop: '1rem',
-                    color: 'black',
-                  }}
-                >
-                  {t('pm-image-structural-composition')}
-                </Typography>
+            <Box id="structural-composition" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+              <FlexColumnBorder title={t('pm.structural.composition')} open={true} theme={'#07B811'}>
                 <Box
                   sx={{
                     display: 'flex',
-                    flexDirection: { mobile: 'column', desktop: 'row' },
-                    gap: '1rem',
+                    flexDirection: 'column',
                     alignItems: 'center',
-                    marginY: '1rem',
+                    gap: '1rem',
                   }}
                 >
-                  <img
-                    src={samples?.step2Data.images}
-                    alt={t('pm-image-structural-composition')}
-                    width={'250px'}
-                    height={'250px'}
-                  />
+                  <div style={{ height: 'fit-content', width: '100%' }}>
+                    {rows !== undefined && (
+                      <DataGrid
+                        rows={rows}
+                        hideFooter
+                        columns={columns.map((column) => ({
+                          ...column,
+                          disableColumnMenu: true,
+                          sortable: false,
+                          align: 'center',
+                          headerAlign: 'center',
+                          minWidth: 100,
+                          flex: 1,
+                        }))}
+                      />
+                    )}
+                  </div>
                 </Box>
-                <Typography sx={{ color: 'gray' }}>{t('pm-estructural-composition-image-date')}</Typography>
-                <Typography sx={{ color: 'black' }}>{samples?.step2Data.imagesDate}</Typography>
-              </Box>
-            </FlexColumnBorder>
+                {samples.step2Data.images && (
+                  <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Typography
+                      sx={{
+                        fontWeight: 'bold',
+                        marginTop: '1rem',
+                        color: 'black',
+                      }}
+                    >
+                      {t('pm-image-structural-composition')}
+                    </Typography>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: { mobile: 'column', desktop: 'row' },
+                        gap: '1rem',
+                        alignItems: 'center',
+                        marginY: '1rem',
+                      }}
+                    >
+                      <img
+                        src={samples?.step2Data.images}
+                        alt={t('pm-image-structural-composition')}
+                        width={'250px'}
+                        height={'250px'}
+                      />
+                    </Box>
+                    <Typography sx={{ color: 'gray' }}>{t('pm-estructural-composition-image-date')}</Typography>
+                    <Typography sx={{ color: 'black' }}>{samples?.step2Data.imagesDate}</Typography>
+                  </Box>
+                )}
+              </FlexColumnBorder>
+            </Box>
           </Box>
 
           {/** FOOTER */}

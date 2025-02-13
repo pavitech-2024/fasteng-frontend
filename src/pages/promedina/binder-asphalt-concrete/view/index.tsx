@@ -73,7 +73,7 @@ const BinderAsphaltConcrete_view = () => {
   return (
     <Container>
       {loading ? (
-        <Loading />
+        <Loading size={30} color={'secondary'} />
       ) : (
         <Container>
           <Header
@@ -94,7 +94,7 @@ const BinderAsphaltConcrete_view = () => {
               sx={{
                 width: { mobile: '90%', notebook: '80%' },
                 maxWidth: '2200px',
-                padding: { mobile: '1rem', notebook: '2rem' },
+                padding: { mobile: '1rem' },
                 borderRadius: '20px',
                 bgcolor: 'primaryTons.white',
                 border: '1px solid',

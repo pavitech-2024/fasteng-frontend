@@ -73,7 +73,7 @@ const CoarseAggregate_Results = ({ setNextDisabled, nextDisabled }: EssayPagePro
           chartType="LineChart"
           width={'100%'}
           height={'400px'}
-          loader={<Loading />}
+          loader={<Loading size={30} color={"secondary"} />}
           data={graph_data}
           options={{
             title: t('granulometry.granulometry'),
