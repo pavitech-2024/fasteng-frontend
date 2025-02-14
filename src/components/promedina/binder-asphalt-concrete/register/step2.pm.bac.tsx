@@ -15,27 +15,27 @@ const BinderAsphaltConcrete_step2 = ({ setNextDisabled }: EssayPageProps) => {
   const rows = step2Data?.structuralComposition;
   const [images, setImages] = useState<string>(step2Data?.images ? step2Data?.images : '');
 
+  // Effect to update the images data when images state changes
   useEffect(() => {
     if (images !== null) {
       setData({ step: 1, key: 'images', value: images });
     }
   }, [images, setData]);
 
-  // Remover mais uma linha de determinado valor
+  // Function to remove the last row from the structural composition
   const handleErase = () => {
     try {
       if (rows.length > 1) {
-        // O mínimo é um valor de cada
         const newRows = [...rows];
         newRows.pop();
         setData({ step: 1, key: 'structuralComposition', value: newRows });
-      } else throw t('compression.error.minValue');
+      } else throw t('compression.error.minValue'); // Throw error if trying to remove the last row
     } catch (error) {
       toast.error(error);
     }
   };
 
-  // Adicionar mais uma linha de determinado valor
+  // Function to add a new row to the structural composition
   const handleAdd = () => {
     const newRows = [...rows];
     newRows.push({
@@ -45,7 +45,7 @@ const BinderAsphaltConcrete_step2 = ({ setNextDisabled }: EssayPageProps) => {
       thickness: null,
     });
     setData({ step: 1, key: 'structuralComposition', value: newRows });
-    setNextDisabled(true);
+    setNextDisabled(true); // Disable the next step button
   };
 
   const ExpansionToolbar = () => {
@@ -392,9 +392,10 @@ const BinderAsphaltConcrete_step2 = ({ setNextDisabled }: EssayPageProps) => {
             alignItems: 'center',
           }}
         >
-          <UploadImages onImagesUpdate={(images: string) => setImages(images)} />
+          <UploadImages editarImages={step2Data?.images} onImagesUpdate={(images: string) => setImages(images)} />
           <TextField
             variant="standard"
+            sx={{ width: 'fit-content', marginX: 'auto' }}
             label={t('pm-estructural-composition-image-date')}
             placeholder="_ _/_ _/_ _ _ _"
             value={step2Data?.imagesDate !== undefined ? dateFormatter(step2Data?.imagesDate) : null}
