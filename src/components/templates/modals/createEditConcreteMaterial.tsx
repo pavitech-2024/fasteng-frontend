@@ -336,7 +336,9 @@ const CreateEditConcreteMaterialModal = ({
                   callback={(value: string) => changeMaterial(input.key, value)}
                   required={input.required}
                   label={t(`concrete.materials.${input.key}`)}
-                  options={input.key === 'type' ? types : input.key === 'resistance' ? resistances : dropDowns[input.key]}
+                  options={
+                    input.key === 'type' ? types : input.key === 'resistance' ? resistances : dropDowns[input.key]
+                  }
                   value={{ value: material.type, label: material.type }}
                 />
               );
