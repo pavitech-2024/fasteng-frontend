@@ -431,12 +431,12 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
 
   return (
     <>
-      <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column', marginTop: '3rem' }}>
+      <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
         <Box
           sx={{
-            width: { mobile: '90%', notebook: '80%' },
+            width: { mobile: '90%', notebook: '100%' },
             maxWidth: '2200px',
-            padding: '2rem',
+            paddingY: '2rem',
             borderRadius: '20px',
             bgcolor: 'primaryTons.white',
             border: '1px solid',

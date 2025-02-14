@@ -53,15 +53,33 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: GranularLayersData['generalData']): Promise<void> => {
-    console.log('🚀 ~ GRANULARLAYERS_SERVICE ~ submitGeneralData= ~ generalData:', generalData);
+    let data = generalData;
+    for (const key in data) {
+      if (data[key] === null) {
+        data[key] = '---';
+      }
+    }
+    this.store_actions.setData({ step: 0, key: 'generalData', value: data });
   };
 
   submitStep2Data = async (step2Data: GranularLayersData['step2Data']): Promise<void> => {
-    console.log('🚀 ~ GRANULARLAYERS_SERVICE ~ submitStep2Data= ~ step2Data:', step2Data);
+    let data = step2Data;
+    for (const key in data) {
+      if (data[key] === null) {
+        data[key] = '---';
+      }
+    }
+    this.store_actions.setData({ step: 1, key: 'step2Data', value: data });
   };
 
   submitStep3Data = async (step3Data: GranularLayersData['step3Data']): Promise<void> => {
-    console.log('🚀 ~ GRANULARLAYERS_SERVICE ~ submitStep3Data= ~ step3Data:', step3Data);
+    let data = step3Data;
+    for (const key in data) {
+      if (data[key] === null) {
+        data[key] = '---';
+      }
+    }
+    this.store_actions.setData({ step: 2, key: 'step3Data', value: data });
   };
 
   // save essay

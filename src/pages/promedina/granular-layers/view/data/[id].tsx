@@ -151,7 +151,7 @@ const SpecificSample_GranularLayers = () => {
   return (
     <>
       {loading ? (
-        <Loading size={30} color={"secondary"} />
+        <Loading size={30} color={'secondary'} />
       ) : (
         <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column', marginTop: '3rem' }}>
           <Box
@@ -167,7 +167,7 @@ const SpecificSample_GranularLayers = () => {
               marginTop: '1rem',
             }}
           >
-            <GeneratePDF_ProMedina sample={samples} sections={sections}/>
+            <GeneratePDF_ProMedina sample={samples} sections={sections} />
 
             <Box id="first-section" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
               <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
@@ -434,28 +434,30 @@ const SpecificSample_GranularLayers = () => {
                     )}
                   </div>
                 </Box>
-                <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem', color: 'black' }}>
-                    {t('pm-image-structural-composition')}
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: { mobile: 'column', desktop: 'row' },
-                      gap: '1rem',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <img
-                      src={samples?.step2Data.images}
-                      alt={t('pm-image-structural-composition')}
-                      width={'250px'}
-                      height={'250px'}
-                    />
+                {samples.step2Data.images && (
+                  <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem', color: 'black' }}>
+                      {t('pm-image-structural-composition')}
+                    </Typography>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: { mobile: 'column', desktop: 'row' },
+                        gap: '1rem',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <img
+                        src={samples?.step2Data.images}
+                        alt={t('pm-image-structural-composition')}
+                        width={'250px'}
+                        height={'250px'}
+                      />
+                    </Box>
+                    <Typography sx={{ color: 'gray' }}>{t('pm-estructural-composition-image-date')}</Typography>
+                    <Typography sx={{ color: 'black' }}>{samples?.step2Data.imagesDate}</Typography>
                   </Box>
-                  <Typography sx={{ color: 'gray' }}>{t('pm-estructural-composition-image-date')}</Typography>
-                  <Typography sx={{ color: 'black' }}>{samples?.step2Data.imagesDate}</Typography>
-                </Box>
+                )}
               </FlexColumnBorder>
             </Box>
           </Box>

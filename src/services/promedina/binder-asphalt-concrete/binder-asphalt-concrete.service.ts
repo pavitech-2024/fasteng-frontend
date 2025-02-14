@@ -62,19 +62,43 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: BinderAsphaltConcreteData['generalData']): Promise<void> => {
-    console.log('🚀 ~ BINDER_ASPHALT_CONCRETE_SERVICE ~ submitGeneralData= ~ generalData:', generalData);
+    let data = generalData;
+    for (const key in data) {
+      if (data[key] === null) {
+        data[key] = '---';
+      }
+    }
+    this.store_actions.setData({ step: 0, key: 'generalData', value: data });
   };
 
   submitStep2Data = async (step2Data: BinderAsphaltConcreteData['step2Data']): Promise<void> => {
-    console.log('🚀 ~ BINDER_ASPHALT_CONCRETE_SERVICE ~ submitStep2Data= ~ step2Data:', step2Data);
+    let data = step2Data;
+    for (const key in data) {
+      if (data[key] === null) {
+        data[key] = '---';
+      }
+    }
+    this.store_actions.setData({ step: 1, key: 'step2Data', value: data });
   };
 
   submitStep3Data = async (step3Data: BinderAsphaltConcreteData['step3Data']): Promise<void> => {
-    console.log('🚀 ~ BINDER_ASPHALT_CONCRETE_SERVICE ~ submitStep3Data= ~ step3Data:', step3Data);
+    let data = step3Data;
+    for (const key in data) {
+      if (data[key] === null) {
+        data[key] = '---';
+      }
+    }
+    this.store_actions.setData({ step: 2, key: 'step3Data', value: data });
   };
 
   submitStep4Data = async (step4Data: BinderAsphaltConcreteData['step4Data']): Promise<void> => {
-    console.log('🚀 ~ BINDER_ASPHALT_CONCRETE_SERVICE ~ submitStep4Data= ~ step4Data:', step4Data);
+    let data = step4Data;
+    for (const key in data) {
+      if (data[key] === null) {
+        data[key] = '---';
+      }
+    }
+    this.store_actions.setData({ step: 3, key: 'step4Data', value: data });
   };
 
   // save essay

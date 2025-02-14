@@ -194,7 +194,7 @@
   "pm.granularLayer.highway": "Rodovia",
   "promedina.essays.stabilizedLayersView": "Amostras cadastradas em Camadas estabilizadas",
   "promedina.essays.binderAsphaltConcreteView": "Amostras cadastradas em Ligante e Concreto asfálticos",
-  "register.step-4-description": "Preencha todos os dados obrigatórios.",
+  "register.step-4-description": "Esse é o resumo da sua amostra.",
   "pm.granularLayer.stabilizer": "Estabilizante",
   "pm.granularLayer.asphaltTenor": "Teor",
   "pm.granularLayer.rcs": "RCS, 28 dias (MPa)",

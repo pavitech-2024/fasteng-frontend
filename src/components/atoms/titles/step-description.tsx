@@ -20,7 +20,7 @@ const StepDescription = ({ text, warning = false }: StepDescriptionProps) => {
           borderColor: 'primaryTons.border',
           borderRadius: '15px',
           padding: '.5rem 1rem',
-          mb: '32px',
+          mb: '1rem',
           bgcolor: warning ? 'secondaryTons.yellowWarning' : 'secondaryTons.blueDisabled',
         }}
       >
