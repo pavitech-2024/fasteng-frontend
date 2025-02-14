@@ -332,11 +332,12 @@ const CreateEditConcreteMaterialModal = ({
                   variant="standard"
                   size="medium"
                   isEdit={isEdit}
-                  sx={{ minWidth: '120px', bgcolor: 'white' }}
+                  sx={{ minWidth: '120px', bgcolor: 'primaryTons.white' }}
                   callback={(value: string) => changeMaterial(input.key, value)}
                   required={input.required}
                   label={t(`concrete.materials.${input.key}`)}
-                  options={dropDowns[input.key]}
+                  options={input.key === 'type' ? types : input.key === 'resistance' ? resistances : dropDowns[input.key]}
+                  value={{ value: material.type, label: material.type }}
                 />
               );
             } else {
