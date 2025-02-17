@@ -8,6 +8,7 @@ import { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
 import logo from '@/assets/fasteng/LogoBlack.png';
 import {
   addCapa,
+  addChart,
   addImageProcess,
   addSummary,
   formatDate,
@@ -67,6 +68,10 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       {
         title: t('asphalt.dosages.marshall.materials-caracterization'),
         page: 4,
+      },
+      {
+        title: t('asphalt.dosages.marshall.ranulometric-curve'),
+        page: 5
       },
       {
         title: t('asphalt.dosages.marshall.materials-final-proportions'),
@@ -305,7 +310,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     // Cria uma página para cada material
 
-    materialsArray.forEach((material, idx) => {
+    materialsArray.forEach(async (material, idx) => {
       currentY = 30;
       doc.setFontSize(12);
       doc.text(`2. ${t('asphalt.dosages.marshall.materials-caracterization').toUpperCase()}`, 10, currentY);
@@ -356,6 +361,13 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     });
 
     currentY = 30;
+
+    doc.setFontSize(12);
+    doc.text(`3. ${t('asphalt.dosages.marshall.granulometric-curve').toUpperCase()}`, 10, currentY);
+    currentY += 10;
+    await addChart(document.getElementById('chart-div-granulometricCurve') as HTMLDivElement, doc, currentY);
+
+    handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
 
     // Resumo das dosagens
     doc.setFontSize(12);

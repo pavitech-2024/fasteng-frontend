@@ -1,5 +1,6 @@
 import { t } from 'i18next';
 import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 export interface SummaryItem {
   title: string;
@@ -15,6 +16,16 @@ export interface SummaryItem {
 export const addHeader = (doc: jsPDF, image: HTMLImageElement) => {
   doc.addImage(image, 'png', 5, 5, 50, 8);
   doc.addImage(image, 'png', 155, 5, 50, 8);
+};
+
+export const addChart = async (chartElement: HTMLDivElement, doc: jsPDF, currentY: number) => {
+  const canvas = await html2canvas(chartElement);
+  const imgData = canvas.toDataURL('image/png');
+  const imgProps = doc.getImageProperties(imgData);
+  const pdfWidth = doc.internal.pageSize.getWidth();
+  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  const xPosition = (doc.internal.pageSize.getWidth() - pdfWidth) / 2;
+  doc.addImage(imgData, 'PNG', xPosition, currentY, pdfWidth, pdfHeight);
 };
 
 export const addSummary = (

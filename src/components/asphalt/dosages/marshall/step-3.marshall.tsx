@@ -2,12 +2,11 @@ import { EssayPageProps } from '@/components/templates/essay';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { Box, Button } from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Step3Table from './tables/step-3-table';
-import Step3InputTable from './tables/step-3-input-table';
 import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
 import useAuth from '@/contexts/auth';
 import { toast } from 'react-toastify';
@@ -15,7 +14,6 @@ import Loading from '@/components/molecules/loading';
 import { isNumber } from '@mui/x-data-grid/internals';
 
 const Marshall_Step3 = ({
-  nextDisabled,
   setNextDisabled,
   marshall,
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
@@ -25,9 +23,10 @@ const Marshall_Step3 = ({
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState([]);
+  const [columnGrouping, setColumnGroupings] = useState([]);
+  const [columns, setColumns] = useState<GridColDef[]>([]);
 
   useEffect(() => {
-    // Display a promise toast notification during the data fetching process.
     toast.promise(
       async () => {
         try {
@@ -258,10 +257,6 @@ const Marshall_Step3 = ({
     );
   };
 
-  // Definindo as colunas para tabela de dados
-  const [columnGrouping, setColumnGroupings] = useState([]);
-  const [columns, setColumns] = useState<GridColDef[]>([]);
-
   useEffect(() => {
     const newCols: GridColDef[] = [];
     const newColsGrouping = [];
@@ -358,7 +353,7 @@ const Marshall_Step3 = ({
   return (
     <>
       {loading ? (
-        <Loading />
+        <Loading/>
       ) : (
         <Box
           sx={{

@@ -10,6 +10,8 @@ interface Step3Props {
 }
 
 const Step3Table = ({ rows, columns, columnGrouping }: Step3Props & { marshall: Marshall_SERVICE }) => {
+  console.log("🚀 ~ Step3Table ~ rows:", rows)
+  console.log("🚀 ~ Step3Table ~ columns:", columns)
   return (
     <Box>
       <DataGrid

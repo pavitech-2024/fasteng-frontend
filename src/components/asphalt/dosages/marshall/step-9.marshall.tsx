@@ -2,15 +2,21 @@ import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-bor
 import Result_Card from '@/components/atoms/containers/result-card';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import GenerateMarshallDosagePDF from '@/components/generatePDF/dosages/asphalt/marshall/generatePDFMarshall';
+import GenerateDosagePDF from '@/components/generatePDF/dosages/generateDosagePDF';
 import { EssayPageProps } from '@/components/templates/essay';
+import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
 import marshallDosageService from '@/services/asphalt/dosages/marshall/marshall.consult.service';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
-import { Box } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
+import { validateSections } from '@mui/x-date-pickers/internals/hooks/useField/useField.utils';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import Step3Table from './tables/step-3-table';
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { isNumber } from 'util';
 
 export type RowsObj = {
   id: number;
@@ -24,7 +30,9 @@ const Marshall_Step9 = ({
   marshall,
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const {
+    generalData,
     materialSelectionData,
+    granulometryCompositionData,
     optimumBinderContentData,
     maximumMixtureDensityData,
     confirmationCompressionData: data,
@@ -42,6 +50,8 @@ const Marshall_Step9 = ({
   const [quantitativeRows, setQuantitativeRows] = useState([]);
   const [quantitativeCols, setQuantitativeCols] = useState([]);
   const [quantitativeGroupings, setQuantitativeGroupings] = useState<GridColumnGroupingModel>([]);
+
+  const [granulometryTableColumnGrouping, setGranulometryTableColumnGroupings] = useState([]);
 
   useEffect(() => {
     toast.promise(
@@ -85,6 +95,26 @@ const Marshall_Step9 = ({
     getQuantitativeRows();
     getQuantitativeGroupings();
   }, []);
+
+  const granulometryTableColumns: GridColDef[] = granulometryCompositionData.table_data.table_column_headers.map((column) => ({
+    field: column,
+    headerName: column,
+    width: 150,
+    renderCell: (params) => typeof params.value === 'number' ? params.value.toFixed(2) : params.value,
+  }));
+
+  const granulometryTableRows = granulometryCompositionData.table_data.table_rows.map((row) => ({
+    id: row.id,
+    ...row,
+  }))
+
+  const sections = [
+    'general-results',
+    'asphalt-mass-quantitative',
+    'volumetric-mechanic-params',
+    'volumetric-params',
+    'mineral-aggregate-voids',
+  ];
 
   const createOptimumContentColumns = () => {
     const columns: GridColDef[] = [
@@ -348,107 +378,142 @@ const Marshall_Step9 = ({
     <>
       <FlexColumnBorder title={t('results')} open={true}>
         <GenerateMarshallDosagePDF dosage={dosage} />
+        {/* <GenerateDosagePDF sections={sections} dosage={dosage} /> */}
         <Box
           sx={{
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
-            gap: '10px',
+            gap: '4rem',
             marginY: '20px',
           }}
         >
-          <ResultSubTitle title={t('marshall.general-results')} sx={{ margin: '.65rem' }} />
+          <Box id="general-results">
+            <ResultSubTitle title={t('marshall.general-results')} sx={{ margin: '.65rem' }} />
 
-          {optimumContentCols.length > 0 && optimumContentRows.length > 0 && optimumContentGroupings.length > 0 && (
+            {optimumContentCols.length > 0 && optimumContentRows.length > 0 && optimumContentGroupings.length > 0 && (
+              <DataGrid
+                key={'optimumContent'}
+                columns={optimumContentCols.map((col) => ({
+                  ...col,
+                  flex: 1,
+                  headerAlign: 'center',
+                  align: 'center',
+                }))}
+                rows={optimumContentRows}
+                columnGroupingModel={optimumContentGroupings}
+                experimentalFeatures={{ columnGrouping: true }}
+                disableColumnMenu
+                disableColumnSelector
+                hideFooter
+              />
+            )}
+          </Box>
+
+          <Box id="asphalt-mass-quantitative">
+            <ResultSubTitle title={t('asphalt.dosages.marshall.asphalt-mass-quantitative')} />
+
             <DataGrid
-              key={'optimumContent'}
-              columns={optimumContentCols.map((col) => ({
+              columns={quantitativeCols.map((col) => ({
                 ...col,
                 flex: 1,
+                sortable: false,
                 headerAlign: 'center',
                 align: 'center',
               }))}
-              rows={optimumContentRows}
-              columnGroupingModel={optimumContentGroupings}
+              rows={quantitativeRows}
+              columnGroupingModel={quantitativeGroupings}
               experimentalFeatures={{ columnGrouping: true }}
               disableColumnMenu
               disableColumnSelector
               hideFooter
             />
-          )}
-
-          <ResultSubTitle title={t('asphalt.dosages.marshall.asphalt-mass-quantitative')} />
-
-          <DataGrid
-            columns={quantitativeCols.map((col) => ({
-              ...col,
-              flex: 1,
-              sortable: false,
-              headerAlign: 'center',
-              align: 'center',
-            }))}
-            rows={quantitativeRows}
-            columnGroupingModel={quantitativeGroupings}
-            experimentalFeatures={{ columnGrouping: true }}
-            disableColumnMenu
-            disableColumnSelector
-            hideFooter
-          />
-
-          <ResultSubTitle
-            title={t('asphalt.dosages.binder-volumetric-mechanic-params')}
-            sx={{
-              maxWidth: '103%',
-              wordWrap: 'break-word',
-            }}
-          />
-
-          <Box
-            sx={{
-              width: '100%',
-              display: 'flex',
-              flexWrap: 'wrap',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
-              gap: '10px',
-              mt: '20px',
-            }}
-          >
-            {volumetricMechanicParams.map((item) => {
-              if (item.value) {
-                return <Result_Card key={item.label} label={item.label} value={item.value} unity={item.unity} />;
-              }
-            })}
           </Box>
 
-          <DataGrid
-            rows={volumetricParamsRows}
-            columns={volumetricParamsCols.map((col) => ({
-              ...col,
-              flex: 1,
-              headerAlign: 'center',
-              align: 'center',
-              sortable: false,
-            }))}
-            disableColumnMenu
-            disableColumnSelector
-            hideFooter
+          <Box id="volumetric-mechanic-params">
+            <ResultSubTitle
+              title={t('asphalt.dosages.binder-volumetric-mechanic-params')}
+              sx={{
+                maxWidth: '103%',
+                wordWrap: 'break-word',
+              }}
+            />
+
+            <Box
+              sx={{
+                width: '100%',
+                display: 'flex',
+                flexWrap: 'wrap',
+                gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
+                gap: '10px',
+                mt: '20px',
+              }}
+            >
+              {volumetricMechanicParams.map((item) => {
+                if (item.value) {
+                  return <Result_Card key={item.label} label={item.label} value={item.value} unity={item.unity} />;
+                }
+              })}
+            </Box>
+          </Box>
+
+          <Box id="volumetric-params">
+            <DataGrid
+              rows={volumetricParamsRows}
+              columns={volumetricParamsCols.map((col) => ({
+                ...col,
+                flex: 1,
+                headerAlign: 'center',
+                align: 'center',
+                sortable: false,
+              }))}
+              disableColumnMenu
+              disableColumnSelector
+              hideFooter
+            />
+          </Box>
+
+          <Box id="mineral-aggregate-voids">
+            <DataGrid
+              rows={mineralAggregateVoidsRows}
+              columns={mineralAggregateVoidsCols.map((column) => ({
+                ...column,
+                sortable: false,
+                align: 'center',
+                headerAlign: 'center',
+                flex: 1,
+              }))}
+              columnGroupingModel={mineralAggregateVoidsGroup}
+              experimentalFeatures={{ columnGrouping: true }}
+              disableColumnMenu
+              disableColumnSelector
+              hideFooter
+            />
+          </Box>
+        </Box>
+      </FlexColumnBorder>
+
+      <FlexColumnBorder title={t('granulometric curve')} open={true}>
+        <Box
+          sx={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4rem',
+            marginY: '20px',
+          }}
+          id="chart-div-granulometricCurve"
+        >
+          <Step3Table
+            rows={granulometryTableRows}
+            columns={granulometryTableColumns}
+            columnGrouping={granulometryTableColumnGrouping}
+            marshall={marshall}
           />
 
-          <DataGrid
-            rows={mineralAggregateVoidsRows}
-            columns={mineralAggregateVoidsCols.map((column) => ({
-              ...column,
-              sortable: false,
-              align: 'center',
-              headerAlign: 'center',
-              flex: 1,
-            }))}
-            columnGroupingModel={mineralAggregateVoidsGroup}
-            experimentalFeatures={{ columnGrouping: true }}
-            disableColumnMenu
-            disableColumnSelector
-            hideFooter
-          />
+          {granulometryCompositionData?.graphData?.length > 1 && (
+            <Graph data={granulometryCompositionData?.graphData} />
+          )}
         </Box>
       </FlexColumnBorder>
     </>
