@@ -65,7 +65,7 @@ const Compression_GeneralData = ({
   return (
     <>
       {loading ? (
-        <Loading size={30} color={"secondary"} />
+        <Loading size={30} color={'secondary'} />
       ) : (
         <Box
           sx={{

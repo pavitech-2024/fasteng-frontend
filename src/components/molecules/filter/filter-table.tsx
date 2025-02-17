@@ -775,10 +775,10 @@ const PromedinaMaterialsTemplate = ({
             border: '1px solid rgba(0,0,0,0.17)',
             mt: '1rem',
             background: 'primaryTons.white',
-            overflowX: 'hidden'
+            overflowX: 'hidden',
           }}
         >
-          <TableContainer sx={{ borderRadius: '20px', width: '100%', maxWidth: '100%'}}>
+          <TableContainer sx={{ borderRadius: '20px', width: '100%', maxWidth: '100%' }}>
             <Table stickyHeader aria-label="sticky table" sx={{ width: '100%' }}>
               <TableHead>
                 <TableRow>

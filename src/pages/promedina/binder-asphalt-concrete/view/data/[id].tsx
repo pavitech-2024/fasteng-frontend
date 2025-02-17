@@ -192,7 +192,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
   return (
     <>
       {loading ? (
-        <Loading size={30} color={"secondary"} />
+        <Loading size={30} color={'secondary'} />
       ) : (
         <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column', marginTop: '3rem' }}>
           <Box
@@ -224,7 +224,10 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                   }}
                 >
                   {generalData.map((item, idx) => (
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }} key={idx}>
+                    <Box
+                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                      key={idx}
+                    >
                       {item.value && (
                         <>
                           <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>

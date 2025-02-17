@@ -58,7 +58,7 @@ const Ddui_GeneralData = ({ nextDisabled, setNextDisabled, ddui }: EssayPageProp
   return (
     <>
       {loading ? (
-        <Loading size={30} color={"secondary"} />
+        <Loading size={30} color={'secondary'} />
       ) : (
         <Box
           sx={{

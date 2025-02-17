@@ -58,7 +58,7 @@ const Rtfo_GeneralData = ({ nextDisabled, setNextDisabled, rtfo }: EssayPageProp
   return (
     <>
       {loading ? (
-        <Loading size={30} color={"secondary"} />
+        <Loading size={30} color={'secondary'} />
       ) : (
         <Box
           sx={{

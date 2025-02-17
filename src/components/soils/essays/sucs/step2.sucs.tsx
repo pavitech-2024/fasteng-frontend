@@ -101,7 +101,7 @@ const SUCS_Step2 = ({
   return (
     <>
       {loading ? (
-        <Loading size={30} color={"secondary"} />
+        <Loading size={30} color={'secondary'} />
       ) : (
         <Box>
           <Sucs_step2Table rows={rows} columns={columns} />

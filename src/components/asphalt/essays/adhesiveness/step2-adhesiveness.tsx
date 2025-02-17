@@ -65,7 +65,7 @@ const ADHESIVENESS_Step2 = ({
   return (
     <>
       {loading ? (
-        <Loading size={30} color={"secondary"} />
+        <Loading size={30} color={'secondary'} />
       ) : (
         <Box
           sx={{
