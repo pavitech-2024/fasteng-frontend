@@ -12,7 +12,6 @@ import { useState, useEffect } from 'react';
 
 const GranularLayers_view = () => {
   const [samples, setSamples] = useState<any[]>([]);
-  console.log('🚀 ~ samples:', samples);
   const [loading, setLoading] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
@@ -41,7 +40,6 @@ const GranularLayers_view = () => {
 
     try {
       const response = await samplesService.getFilteredSamples(encodedFilter, page, 15, true);
-      console.log('🚀 ~ fetchData ~ response.data.docs:', response.data.docs);
 
       setSamples(response.data.docs);
       setTotalPages(response.data.totalPages);

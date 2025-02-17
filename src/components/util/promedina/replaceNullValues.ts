@@ -2,7 +2,7 @@ import GRANULARLAYERS_SERVICE from "@/services/promedina/granular-layers/granula
 import useGranularLayersStore, { GranularLayersData } from "@/stores/promedina/granular-layers/granular-layers.store";
 
 export function replaceNullValues(data: GranularLayersData, type: string) {
-  let formatedData = data;
+  const formatedData = data;
     for (const key in formatedData) {
       if (formatedData[key] === null) {
         formatedData[key] = '---';

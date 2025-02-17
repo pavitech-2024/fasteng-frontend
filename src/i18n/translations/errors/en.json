@@ -17,5 +17,12 @@
   "errors.unitMass-containerWeight-sampleContainerWeigth": "Weight of the container + sample must be greater than the weight of the container",
   "errors.unitMass-containerVolume-10-maxDiameter-37.5": "Enter a container weight greater than 10 liters",
   "errors.unitMass-containerVolume-15-37.5maxDiameter-50": "Enter a container volume greater than 15 liters",
-  "errors.unitMass-containerVolume-30-50-maxDiameter-75": "Enter a container volume greater than 30 liters"
+  "errors.unitMass-containerVolume-30-50-maxDiameter-75": "Enter a container volume greater than 30 liters",
+
+  "upload.error.noFileSelected": "No file selected",
+  "upload.error.maxImages": "Limit of images reached. Limit: 1 image",
+  "upload.error.alreadyUploaded": "Image already uploaded",
+  "upload.error.invalid-type": "Invalid file type. Accepted types: png, jpg, jpeg, webp",
+  "upload.error.fileTooLarge": "File too large. Maximum size: 3MB",
+  "upload.error.compression-error": "Image compression error"
 }

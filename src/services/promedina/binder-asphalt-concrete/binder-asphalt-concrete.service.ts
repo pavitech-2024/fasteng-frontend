@@ -62,7 +62,7 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: BinderAsphaltConcreteData['generalData']): Promise<void> => {
-    let data = generalData;
+    const data = generalData;
     for (const key in data) {
       if (data[key] === null) {
         data[key] = '---';
@@ -72,7 +72,7 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   };
 
   submitStep2Data = async (step2Data: BinderAsphaltConcreteData['step2Data']): Promise<void> => {
-    let data = step2Data;
+    const data = step2Data;
     for (const key in data) {
       if (data[key] === null) {
         data[key] = '---';
@@ -82,7 +82,7 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   };
 
   submitStep3Data = async (step3Data: BinderAsphaltConcreteData['step3Data']): Promise<void> => {
-    let data = step3Data;
+    const data = step3Data;
     for (const key in data) {
       if (data[key] === null) {
         data[key] = '---';
@@ -92,7 +92,7 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   };
 
   submitStep4Data = async (step4Data: BinderAsphaltConcreteData['step4Data']): Promise<void> => {
-    let data = step4Data;
+    const data = step4Data;
     for (const key in data) {
       if (data[key] === null) {
         data[key] = '---';

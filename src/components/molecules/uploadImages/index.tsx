@@ -28,6 +28,7 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
     const files = event.target.files;
 
     if (files.length === 0) {
+      toast.error(t('upload.error.noFileSelected'));
       return;
     }
 
@@ -36,11 +37,28 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
       return;
     }
 
+    if (images) {
+      toast.error(t('upload.error.alreadyUploaded'));
+      return;
+    }
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+    if (!allowedTypes.includes(files[0].type)) {
+      toast.error(t('upload.error.invalid-type'));
+      return;
+    }
+
     const file = files[0];
+
+    const maxSizeMB = 3;
+    if (file.size > maxSizeMB * 1024 * 1024) {
+      toast.error(t('upload.error.fileTooLarge', { maxSizeMB }));
+      return;
+    }
 
     // Compression configuration
     const options = {
-      maxSizeMB: 1,
+      maxSizeMB: 3,
       maxWidthOrHeight: 1024,
       useWebWorker: true,
     };
@@ -56,7 +74,7 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
 
       reader.readAsDataURL(compressedFile);
     } catch (error) {
-      toast.error(t('upload.error.compression-error'));
+      console.error(t('upload.error.compression-error'));
     }
   };
 
@@ -80,13 +98,15 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
         placeItems: 'center',
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', justifyContent: 'center', alignItems: 'center' }}>
+      <Box
+        sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', justifyContent: 'center', alignItems: 'center' }}
+      >
         {images && (
           <Box
             sx={{
               position: 'relative',
               display: 'inline-block',
-              width: '45%'
+              width: '45%',
             }}
           >
             <CardMedia
@@ -111,7 +131,7 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
                 '&:hover': {
                   transform: 'scale(1.2)',
                   transition: 'all 0.3s ease-in-out',
-                }
+                },
               }}
             >
               <TrashIcon />

@@ -53,7 +53,7 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: GranularLayersData['generalData']): Promise<void> => {
-    let data = generalData;
+    const data = generalData;
     for (const key in data) {
       if (data[key] === null) {
         data[key] = '---';
@@ -63,7 +63,7 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
   };
 
   submitStep2Data = async (step2Data: GranularLayersData['step2Data']): Promise<void> => {
-    let data = step2Data;
+    const data = step2Data;
     for (const key in data) {
       if (data[key] === null) {
         data[key] = '---';
@@ -73,7 +73,7 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
   };
 
   submitStep3Data = async (step3Data: GranularLayersData['step3Data']): Promise<void> => {
-    let data = step3Data;
+    const data = step3Data;
     for (const key in data) {
       if (data[key] === null) {
         data[key] = '---';
