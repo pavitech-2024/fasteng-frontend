@@ -4,7 +4,7 @@
   "specifyMass.step-3-description": "These are the results of your experiment. Remember to save the experiment so you can access it later.",
   "specifyMass.dry_mass": "Dry mass",
   "specifyMass.submerged_mass": "Submerged mass",
-  "specifyMass.surface_saturado_mass": "Saturated surface mass",
+  "specifyMass.surface_saturado_mass": "Saturated surface mass with dry surface",
   "specifyMass.bulk_specify_mass": "Actual specific mass",
   "specifyMass.apparent_specify_mass": "Apparent apparent mass",
   "specifyMass.absorption": "Absorption"
