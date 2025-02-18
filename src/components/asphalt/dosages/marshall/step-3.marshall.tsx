@@ -13,10 +13,7 @@ import { toast } from 'react-toastify';
 import Loading from '@/components/molecules/loading';
 import { isNumber } from '@mui/x-data-grid/internals';
 
-const Marshall_Step3 = ({
-  setNextDisabled,
-  marshall,
-}: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+const Marshall_Step3 = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const { calculateGranulometryComposition } = new Marshall_SERVICE();
   const { granulometryCompositionData: data, materialSelectionData, setData, generalData } = useMarshallStore();
 
@@ -353,7 +350,7 @@ const Marshall_Step3 = ({
   return (
     <>
       {loading ? (
-        <Loading/>
+        <Loading />
       ) : (
         <Box
           sx={{

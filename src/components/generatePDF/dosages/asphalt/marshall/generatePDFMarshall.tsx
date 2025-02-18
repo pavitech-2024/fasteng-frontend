@@ -71,7 +71,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       },
       {
         title: t('asphalt.dosages.marshall.ranulometric-curve'),
-        page: 5
+        page: 5,
       },
       {
         title: t('asphalt.dosages.marshall.materials-final-proportions'),

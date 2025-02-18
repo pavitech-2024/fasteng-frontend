@@ -5,7 +5,7 @@ interface ILoading {
   color?: 'secondary' | 'inherit' | 'info' | 'success' | 'warning' | 'error' | 'primary';
 }
 
-const Loading = ({size=60, color="secondary"}: ILoading) => {
+const Loading = ({ size = 60, color = 'secondary' }: ILoading) => {
   return (
     <Box
       sx={{

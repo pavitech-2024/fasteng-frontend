@@ -9,7 +9,7 @@ import marshallDosageService from '@/services/asphalt/dosages/marshall/marshall.
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { Box, TextField } from '@mui/material';
-import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
+import { DataGrid, GridAlignment, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 import { validateSections } from '@mui/x-date-pickers/internals/hooks/useField/useField.utils';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
@@ -50,8 +50,6 @@ const Marshall_Step9 = ({
   const [quantitativeRows, setQuantitativeRows] = useState([]);
   const [quantitativeCols, setQuantitativeCols] = useState([]);
   const [quantitativeGroupings, setQuantitativeGroupings] = useState<GridColumnGroupingModel>([]);
-
-  const [granulometryTableColumnGrouping, setGranulometryTableColumnGroupings] = useState([]);
 
   useEffect(() => {
     toast.promise(
@@ -96,17 +94,39 @@ const Marshall_Step9 = ({
     getQuantitativeGroupings();
   }, []);
 
-  const granulometryTableColumns: GridColDef[] = granulometryCompositionData.table_data.table_column_headers.map((column) => ({
-    field: column,
-    headerName: column,
-    width: 150,
-    renderCell: (params) => typeof params.value === 'number' ? params.value.toFixed(2) : params.value,
-  }));
+  // Create table columns for granulometry composition table
+  const granulometryTableColumns: GridColDef[] = granulometryCompositionData.table_data.table_column_headers.map(
+    (column) => ({
+      field: column,
+      // Set header name based on column name
+      headerName: column.startsWith('total_passant')
+        ? t('granulometry-asphalt.total_passant')
+        : t(`granulometry-asphalt.${column === 'sieve_label' ? 'sieves' : 'passant'}`),
+      // Set column width
+      width: 150,
+      // Render cell value as a percentage if it's not a sieve label
+      renderCell: (params) => (column === 'sieve_label' ? params.value : `${Number(params.value).toFixed(2)} %`),
+    })
+  );
 
   const granulometryTableRows = granulometryCompositionData.table_data.table_rows.map((row) => ({
     id: row.id,
     ...row,
-  }))
+  }));
+
+  // Create granulometry table column groupings
+  // It will be the same groups as the material selection
+  // Each group will have two columns: total passant and passant
+  const granulometryTableColumnGroupings: GridColumnGroupingModel = materialSelectionData.aggregates
+    .map(({ _id, name }) => ({
+      // Group id will be the material name
+      groupId: name,
+      headerAlign: 'center' as GridAlignment,
+      // Children will be the two columns: total passant and passant
+      children: [{ field: `total_passant_${_id}` }, { field: `passant_${_id}` }],
+    }))
+    // Remove null values from the array
+    .filter((group) => group !== null);
 
   const sections = [
     'general-results',
@@ -507,7 +527,7 @@ const Marshall_Step9 = ({
           <Step3Table
             rows={granulometryTableRows}
             columns={granulometryTableColumns}
-            columnGrouping={granulometryTableColumnGrouping}
+            columnGrouping={granulometryTableColumnGroupings}
             marshall={marshall}
           />
 
