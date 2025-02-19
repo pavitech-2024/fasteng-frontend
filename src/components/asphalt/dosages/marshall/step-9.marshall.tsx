@@ -109,6 +109,16 @@ const Marshall_Step9 = ({
     })
   );
 
+  const dataGridCols: GridColDef[] = granulometryCompositionData.table_data.table_column_headers.map((row) => {
+    if (row === 'sieve_label') {
+      return {
+        field: row,
+        headerName: t('granulometry-asphalt.sieves'),
+        width: 150,
+      };
+    }
+  })
+
   const granulometryTableRows = granulometryCompositionData.table_data.table_rows.map((row) => ({
     id: row.id,
     ...row,
@@ -524,12 +534,14 @@ const Marshall_Step9 = ({
           }}
           id="chart-div-granulometricCurve"
         >
-          <Step3Table
+          {/* <Step3Table
             rows={granulometryTableRows}
             columns={granulometryTableColumns}
             columnGrouping={granulometryTableColumnGroupings}
             marshall={marshall}
-          />
+          /> */}
+
+          <DataGrid rows={[]} columns={[]}/>
 
           {granulometryCompositionData?.graphData?.length > 1 && (
             <Graph data={granulometryCompositionData?.graphData} />
