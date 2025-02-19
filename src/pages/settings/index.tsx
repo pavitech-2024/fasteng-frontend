@@ -39,6 +39,8 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
   const [phone, setPhone] = useState(user?.phone || '');
   const [dob, setDob] = useState(user?.dob || '');
 
+  console.log(user);
+
   const onSaveUser = async () => {
     try {
       const updatedUser = { ...user, name, email, phone, dob };
@@ -327,7 +329,7 @@ Dados do Usuário
             onChange={(e) => setDob(e.target.value)}
           />
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-            <Button
+           {/* <Button
               variant="contained"
               color="primary"
               onClick={onSaveUser}
@@ -349,11 +351,17 @@ Dados do Usuário
               }}
             >
               Excluir Usuário
-            </Button>
+            </Button>*/}
           </Box>
         </Box>
       
-          <Typography>
+          <Typography sx={{width: { mobile: '85%', notebook: '100%' },
+            fontSize: { mobile: '1.25rem', notebook: '1.75rem' },
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            color: 'primaryTons.lightGray',
+            display: 'flex',
+            justifyContent: 'flex-start',}}>
           {t('settings.preferences')}
         </Typography>
         <Box
@@ -395,7 +403,7 @@ Dados do Usuário
             }}
           />  
         </Box>
-        <Button
+        {/*<Button
           variant="contained"
           sx={{ color: 'primaryTons.white' }}
           onClick={() =>
@@ -407,7 +415,34 @@ Dados do Usuário
           }
         >
           {t('settings.save')}
-        </Button>
+        </Button>*/}
+<Box sx= {{ display: 'flex', justifyContent: 'space-between', mt: 2 , width: '80%'}}> 
+  <Button
+              variant="contained"
+              color="primary"
+              onClick={onSaveUser}
+              sx={{  }}
+            >
+              Salvar Alterações
+            </Button>
+
+        <Button
+              variant="outlined"
+              color="error"
+              onClick={onDeleteUser}
+              sx={{
+                backgroundColor: '#b22222',
+                color: 'white',
+                position: 'relative', // Changed to relative
+                left: 'auto',       // Reset left positioning
+                width: 'auto',      // Reset width
+                marginLeft: 'auto'  // Push to the right
+              }}
+            >
+              Excluir Usuário
+            </Button>
+          </Box>
+            
       </Box>
     </Container>
   );
