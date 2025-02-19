@@ -2,21 +2,16 @@ import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-bor
 import Result_Card from '@/components/atoms/containers/result-card';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import GenerateMarshallDosagePDF from '@/components/generatePDF/dosages/asphalt/marshall/generatePDFMarshall';
-import GenerateDosagePDF from '@/components/generatePDF/dosages/generateDosagePDF';
 import { EssayPageProps } from '@/components/templates/essay';
 import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
 import marshallDosageService from '@/services/asphalt/dosages/marshall/marshall.consult.service';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
-import { Box, TextField } from '@mui/material';
+import { Box } from '@mui/material';
 import { DataGrid, GridAlignment, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
-import { validateSections } from '@mui/x-date-pickers/internals/hooks/useField/useField.utils';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import Step3Table from './tables/step-3-table';
-import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
-import { isNumber } from 'util';
 
 export type RowsObj = {
   id: number;
@@ -94,49 +89,53 @@ const Marshall_Step9 = ({
     getQuantitativeGroupings();
   }, []);
 
-  // Create table columns for granulometry composition table
-  const granulometryTableColumns: GridColDef[] = granulometryCompositionData.table_data.table_column_headers.map(
-    (column) => ({
-      field: column,
-      // Set header name based on column name
-      headerName: column.startsWith('total_passant')
-        ? t('granulometry-asphalt.total_passant')
-        : t(`granulometry-asphalt.${column === 'sieve_label' ? 'sieves' : 'passant'}`),
-      // Set column width
-      width: 150,
-      // Render cell value as a percentage if it's not a sieve label
-      renderCell: (params) => (column === 'sieve_label' ? params.value : `${Number(params.value).toFixed(2)} %`),
-    })
-  );
+  const granulometricCompTableColumns: GridColDef[] = [
+    {
+      field: 'sieve_label',
+      headerName: t('granulometry-asphalt.sieves'),
+    },
+    {
+      field: 'projections',
+      headerName: t('asphalt.dosages.marshall.projections'),
+    },
+    {
+      field: 'lowerBand',
+      headerName: t('asphalt.dosages.marshall.inferiorBand'),
+    },
+    {
+      field: 'higherBand',
+      headerName: t('asphalt.dosages.marshall.superiorBand'),
+    },
+  ];
 
-  const dataGridCols: GridColDef[] = granulometryCompositionData.table_data.table_column_headers.map((row) => {
-    if (row === 'sieve_label') {
-      return {
-        field: row,
-        headerName: t('granulometry-asphalt.sieves'),
-        width: 150,
-      };
+  const granulometricCompTableRows = granulometryCompositionData.projections.map((row, i) => {
+    let lowerBandValue = null;
+    let higherBandValue = null;
+    if (granulometryCompositionData.bands.lowerBand[i]) {
+      lowerBandValue = granulometryCompositionData.bands.lowerBand[i].toFixed(2);
     }
-  })
+    if (granulometryCompositionData.bands.higherBand[i]) {
+      higherBandValue = granulometryCompositionData.bands.higherBand[i].toFixed(2);
+    }
+    return {
+      id: i,
+      sieve_label: row.label,
+      projections: row.value,
+      lowerBand: lowerBandValue,
+      higherBand: higherBandValue,
+    };
+  });
 
-  const granulometryTableRows = granulometryCompositionData.table_data.table_rows.map((row) => ({
-    id: row.id,
-    ...row,
-  }));
-
-  // Create granulometry table column groupings
-  // It will be the same groups as the material selection
-  // Each group will have two columns: total passant and passant
-  const granulometryTableColumnGroupings: GridColumnGroupingModel = materialSelectionData.aggregates
-    .map(({ _id, name }) => ({
-      // Group id will be the material name
-      groupId: name,
+  const granulometricCompTableGroupings: GridColumnGroupingModel = [
+    {
+      groupId: 'granulometry',
       headerAlign: 'center' as GridAlignment,
-      // Children will be the two columns: total passant and passant
-      children: [{ field: `total_passant_${_id}` }, { field: `passant_${_id}` }],
-    }))
-    // Remove null values from the array
-    .filter((group) => group !== null);
+      headerName:
+        t('asphalt.dosages.marshall.specification') +
+        ` (${t('asphalt.dosages.marshall.band')} ${generalData.dnitBand})`,
+      children: [{ field: 'lowerBand' }, { field: 'higherBand' }],
+    },
+  ];
 
   const sections = [
     'general-results',
@@ -408,7 +407,6 @@ const Marshall_Step9 = ({
     <>
       <FlexColumnBorder title={t('results')} open={true}>
         <GenerateMarshallDosagePDF dosage={dosage} />
-        {/* <GenerateDosagePDF sections={sections} dosage={dosage} /> */}
         <Box
           sx={{
             width: '100%',
@@ -532,20 +530,29 @@ const Marshall_Step9 = ({
             gap: '4rem',
             marginY: '20px',
           }}
-          id="chart-div-granulometricCurve"
         >
-          {/* <Step3Table
-            rows={granulometryTableRows}
-            columns={granulometryTableColumns}
-            columnGrouping={granulometryTableColumnGroupings}
-            marshall={marshall}
-          /> */}
+          <Box id="granulometric-composition-table" sx={{ paddingX: '6rem' }}>
+            <DataGrid
+              rows={granulometricCompTableRows}
+              columns={granulometricCompTableColumns.map((col) => ({
+                ...col,
+                flex: 1,
+                sortable: false,
+                align: 'center',
+                headerAlign: 'center',
+              }))}
+              columnGroupingModel={granulometricCompTableGroupings}
+              experimentalFeatures={{ columnGrouping: true }}
+              disableColumnMenu
+              hideFooter
+            />
+          </Box>
 
-          <DataGrid rows={[]} columns={[]}/>
-
-          {granulometryCompositionData?.graphData?.length > 1 && (
-            <Graph data={granulometryCompositionData?.graphData} />
-          )}
+          <Box id='chart-div-granulometricCurve' sx={{ paddingX: '6rem' }}>
+            {granulometryCompositionData?.graphData?.length > 1 && (
+              <Graph data={granulometryCompositionData?.graphData} />
+            )}
+          </Box>
         </Box>
       </FlexColumnBorder>
     </>

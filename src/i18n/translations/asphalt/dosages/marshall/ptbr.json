@@ -108,5 +108,14 @@
   "loading.dosage.error": "Erro ao carregar dados da dosagem!",
 
   "asphalt.dosages.project-author": "Responsável pela dosagem",
-  "asphalt.dosages.project-laboratory": "Laboratório responsável pela dosagem"
+  "asphalt.dosages.project-laboratory": "Laboratório responsável pela dosagem",
+
+  "asphalt.dosages.marshall.superiorBand": "Superior",
+  "asphalt.dosages.marshall.inferiorBand": "Inferior",
+
+  "loading.calculating.pending": "Calculando...",
+  "loading.calculating.success": "Calculado com sucesso!",
+  "loading.calculating.error": "Erro ao calcular!",
+
+  "asphalt.dosages.marshall.granulometric-curve": "Curva granulométrica"
 }

@@ -301,3 +301,24 @@ export const addTextToLeftMargin = (doc: any, text: any, margin: any, y: any, fo
   doc.setFontSize(fontSize);
   doc.text(x, y, text);
 };
+
+export const addSection = async (sectionElement: HTMLDivElement, doc: jsPDF, currentY: number): Promise<number> => {
+  if (!sectionElement) return currentY;
+
+  const canvas = await html2canvas(sectionElement);
+  const imgData = canvas.toDataURL('image/png');
+  const imgProps = doc.getImageProperties(imgData);
+  const pdfWidth = doc.internal.pageSize.getWidth();
+  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const xPosition = (doc.internal.pageSize.getWidth() - pdfWidth) / 2;
+
+  if (currentY + pdfHeight > pageHeight - 10) {
+    doc.addPage();
+    currentY = 5;
+  }
+
+  doc.addImage(imgData, 'PNG', xPosition, currentY, pdfWidth, pdfHeight);
+
+  return currentY + pdfHeight + 5;
+};

@@ -10,6 +10,7 @@ import {
   addCapa,
   addChart,
   addImageProcess,
+  addSection,
   addSummary,
   formatDate,
   getCurrentDateFormatted,
@@ -18,6 +19,7 @@ import {
 } from '../../../common';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
+import Loading from '@/components/molecules/loading';
 
 interface IGeneratedPDF {
   dosage: MarshallData;
@@ -27,6 +29,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
   const { user } = useAuth();
   const [materialsData, setMaterialsData] = useState<AsphaltMaterial[]>([]);
   const [materialsEssays, setMaterialsEssays] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const handleGetMaterialsData = async () => {
@@ -44,6 +47,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
   }, [dosage]);
 
   const generatePDF = async () => {
+    setLoading(true);
     const doc = new jsPDF('p', 'mm', 'a4');
     const image = (await addImageProcess(logo.src)) as HTMLImageElement;
     let currentY = 30;
@@ -365,7 +369,18 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     doc.setFontSize(12);
     doc.text(`3. ${t('asphalt.dosages.marshall.granulometric-curve').toUpperCase()}`, 10, currentY);
     currentY += 10;
-    await addChart(document.getElementById('chart-div-granulometricCurve') as HTMLDivElement, doc, currentY);
+
+    await addSection(document.getElementById('granulometric-composition-table') as HTMLDivElement, doc, currentY);
+
+    currentY = await addSection(
+      document.getElementById('granulometric-composition-table') as HTMLDivElement,
+      doc,
+      currentY
+    );
+
+    await addSection(document.getElementById('chart-div-granulometricCurve') as HTMLDivElement, doc, currentY);
+
+    // await addChart(document.getElementById('chart-div-granulometricCurve') as HTMLDivElement, doc, currentY);
 
     handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
 
@@ -549,17 +564,21 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     // Salvar o PDF
     doc.save(`Relatorio_Dosagem_${dosage?.generalData.name}.pdf`);
+    setLoading(false);
   };
 
   return (
     <>
-      <Tooltip title={t('asphalt.dosages.superpave.tooltips.disabled-pdf-generator')} placement="top">
-        <Box onClick={dosage?.confirmationCompressionData && generatePDF} sx={{ width: 'fit-content' }}>
-          <Button variant="contained" color="primary" disabled={!dosage?.confirmationCompressionData}>
-            Gerar PDF
-          </Button>
-        </Box>
-      </Tooltip>
+      <Box onClick={dosage?.confirmationCompressionData && generatePDF} sx={{ width: 'fit-content' }}>
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={!dosage?.confirmationCompressionData}
+          sx={{ minWidth: '200px', minHeight: '3rem' }}
+        >
+          {loading ? <Loading size={30} color={'inherit'} /> : t('generate.dosage.button')}
+        </Button>
+      </Box>
     </>
   );
 };

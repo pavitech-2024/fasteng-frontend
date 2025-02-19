@@ -92,5 +92,12 @@
   "asphalt.dosages.marshall.binder-percentage": "Binder percentage (%)",
 
   "asphalt.dosages.enable": "Enable",
-  "asphalt.dosages.disable": "Do not use this content"
+  "asphalt.dosages.disable": "Do not use this content",
+
+  "asphalt.dosages.marshall.superiorBand": "Superior",
+  "asphalt.dosages.marshall.inferiorBand": "Inferior",
+
+  "loading.calculating.pending": "Calculating...",
+  "loading.calculating.success": "Calculated successfully!",
+  "loading.calculating.error": "Error calculating!"
 }
