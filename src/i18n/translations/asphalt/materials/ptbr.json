@@ -28,5 +28,9 @@
   "loading.marshall.error": "Erro ao carregar as dosagens",
 
   "asphalt.dosages.superpave.material_selection": "Seleção de Materiais",
-  "asphalt.materials.edit.title": "Editar Material"
+  "asphalt.materials.edit.title": "Editar Material",
+
+  "asphalt.materials.materialCreated": "Material cadastrado com sucesso",
+  "asphalt.materials.errorCreatingMaterial": "Erro ao cadastrar material",
+  "asphalt.materials.creatingMaterial": "Cadastrando material..."
 }

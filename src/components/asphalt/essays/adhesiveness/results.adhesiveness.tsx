@@ -23,14 +23,7 @@ const ADHESIVENESS_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     <>
       <ExperimentResume data={experimentResumeData} />
       <FlexColumnBorder title={t('results')} open={true}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <Box>
           <Result_Card label={t('adhesiveness.chosen-filmDisplacement')} value={filmDisplacement} unity={''} />
         </Box>
       </FlexColumnBorder>
