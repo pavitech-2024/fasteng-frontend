@@ -21,6 +21,10 @@ const Superpave_Step3 = ({
 
   const { user } = useAuth();
 
+  const [lower, setLower] = useState(false);
+  const [average, setAverage] = useState(false);
+  const [higher, setHigher] = useState(false);
+
   const peneiras = AllSieves.map((peneira) => {
     return { peneira: peneira.label };
   });
@@ -38,49 +42,80 @@ const Superpave_Step3 = ({
   let tableCompositionInputsHigher = {};
 
   const selectedMaterials = materialSelectionData?.aggregates;
-  const [inferior, setInferior] = useState(data.chosenCurves.lower);
-  const [intermediaria, setIntermediaria] = useState(data.chosenCurves.average);
-  const [superior, setSuperior] = useState(data.chosenCurves.higher);
+
+  const checkBoxes = [
+    {
+      key: 'lower',
+      label: t('asphalt.dosages.superpave.step-3.lower'),
+      value: lower,
+    },
+    {
+      key: 'average',
+      label: t('asphalt.dosages.superpave.step-3.average'),
+      value: average,
+    },
+    {
+      key: 'higher',
+      label: t('asphalt.dosages.superpave.step-3.higher'),
+      value: higher,
+    },
+  ];
 
   useEffect(() => {
     if (data.percentsToList.length > 0) {
       setLoading(false);
     }
-    if (generalData.step === 2) {
-      toast.promise(
-        async () => {
-          try {
-            console.log('testeeee');
-            const dosageData = sessionStorage.getItem('asphalt-superpave-store');
-            const sessionDataJson = JSON.parse(dosageData);
-            const dosageDataJson = sessionDataJson.state as SuperpaveData;
 
-            const response = await superpave.getStep3Data(dosageDataJson, user._id);
+    toast.promise(
+      async () => {
+        try {
+          const dosageData = sessionStorage.getItem('asphalt-superpave-store');
+          const sessionDataJson = JSON.parse(dosageData);
+          const dosageDataJson = sessionDataJson.state as SuperpaveData;
 
-            setData({
-              step: 2,
-              value: {
-                ...dosageDataJson.granulometryCompositionData,
-                ...response,
-              },
-            });
-            setLoading(false);
-          } catch (error) {
-            setLoading(false);
-            throw error;
-          }
-        },
-        {
-          pending: t('loading.materials.pending'),
-          success: t('loading.materials.success'),
-          error: t('loading.materials.error'),
+          const response = await superpave.getStep3Data(dosageDataJson, user._id);
+
+          setData({
+            step: 2,
+            value: {
+              ...dosageDataJson.granulometryCompositionData,
+              ...response,
+            },
+          });
+          setLoading(false);
+        } catch (error) {
+          setLoading(false);
+          throw error;
         }
-      );
-    }
+      },
+      {
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
+      }
+    );
   }, []);
 
-  const handleCheckboxChange = (checked, setChecked) => {
-    setChecked(!checked);
+  const toggleSelectedCurve = (label: string) => {
+    switch (label) {
+      case 'lower':
+        setLower(true);
+        setAverage(false);
+        setHigher(false);
+        break;
+      case 'average':
+        setLower(false);
+        setAverage(true);
+        setHigher(false);
+        break;
+      case 'higher':
+        setLower(false);
+        setAverage(false);
+        setHigher(true);
+        break;
+      default:
+        break;
+    }
   };
 
   const convertNumber = (value) => {
@@ -169,6 +204,7 @@ const Superpave_Step3 = ({
   };
 
   const tableData = setBandsHigherLower(tableDataAux, bandsHigher, bandsLower, arrayResponse, peneiras);
+
   tableDataLower = tableData;
   tableDataAverage = tableData;
   tableDataHigher = tableData;
@@ -187,6 +223,33 @@ const Superpave_Step3 = ({
     tableCompositionInputsHigher['input' + (i * 2 + 1)] = '';
   });
 
+  const tables = [
+    {
+      key: 'lower',
+      data: tableDataLower,
+      inputs: tableCompositionInputsLower,
+      name: 'lowerComposition',
+      isActive: lower,
+      title: t('asphalt.dosages.superpave.lower-curve'),
+    },
+    {
+      key: 'average',
+      data: tableDataAverage,
+      inputs: tableCompositionInputsAverage,
+      name: 'averageComposition',
+      isActive: average,
+      title: t('asphalt.dosages.superpave.average-curve'),
+    },
+    {
+      key: 'higher',
+      data: tableDataHigher,
+      inputs: tableCompositionInputsHigher,
+      name: 'higherComposition',
+      isActive: higher,
+      title: t('asphalt.dosages.superpave.higher-curve'),
+    },
+  ];
+
   const onChangeInputsTables = (e, tableName, index) => {
     [tableName] = {
       ...[tableName],
@@ -200,9 +263,9 @@ const Superpave_Step3 = ({
       material_2: null,
     }));
 
-    setInferior(false);
-    setIntermediaria(false);
-    setSuperior(false);
+    setLower(false);
+    setAverage(false);
+    setHigher(false);
 
     const prevData = data;
 
@@ -273,9 +336,9 @@ const Superpave_Step3 = ({
         async () => {
           try {
             const chosenCurves = {
-              lower: inferior,
-              average: intermediaria,
-              higher: superior,
+              lower,
+              average,
+              higher,
             };
 
             const composition = await superpave.calculateGranulometryComposition(
@@ -332,120 +395,63 @@ const Superpave_Step3 = ({
             gap: '10px',
           }}
         >
-          <FormGroup sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-            <FormControlLabel
-              control={<Checkbox checked={inferior} onChange={() => handleCheckboxChange(inferior, setInferior)} />}
-              label={t('asphalt.dosages.superpave.lower-curve')}
-              value={inferior}
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={intermediaria}
-                  onChange={() => handleCheckboxChange(intermediaria, setIntermediaria)}
-                />
+          <Box
+            sx={{
+              display: 'flex',
+              gap: '5rem',
+            }}
+          >
+            {checkBoxes.map((box) => (
+              <FormControlLabel
+                key={box.key}
+                control={<Checkbox checked={box.value} />}
+                onChange={() => toggleSelectedCurve(box.key)}
+                label={box.label}
+                sx={{ display: 'flex', width: 'fit-content' }}
+              />
+            ))}
+          </Box>
+
+          {(lower || average || higher) &&
+            tables.map((table) => {
+              if (table.isActive) {
+                return (
+                  <TableContainer key={table.key}>
+                    <Box
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 100px',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      <Typography sx={{ textAlign: 'center', marginTop: '2rem', fontSize: '1.5rem' }}>
+                        {table.title}
+                      </Typography>
+                      <Button onClick={() => clearTable()} variant="outlined">
+                        {t('asphalt.dosages.superpave.clear-table')}
+                      </Button>
+                    </Box>
+                    <CurvesTable
+                      materials={selectedMaterials}
+                      dnitBandsLetter={data?.bands?.letter}
+                      tableInputs={table.inputs}
+                      tableName={table.name}
+                      tableData={table.data}
+                      onChangeInputsTables={onChangeInputsTables}
+                    />
+                    <Button
+                      onClick={() => calcular(table.key)}
+                      variant="outlined"
+                      sx={{ width: '100%', marginTop: '2%' }}
+                    >
+                      {t('asphalt.dosages.superpave.calculate-higher-curve')}
+                    </Button>
+                  </TableContainer>
+                );
               }
-              label={t('asphalt.dosages.superpave.average-curve')}
-              value={intermediaria}
-            />
-            <FormControlLabel
-              control={<Checkbox checked={superior} onChange={() => handleCheckboxChange(superior, setSuperior)} />}
-              label={t('asphalt.dosages.superpave.higher-curve')}
-              value={superior}
-            />
-          </FormGroup>
-
-          {inferior && data.lowerComposition.percentsOfMaterials && (
-            <TableContainer>
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 100px',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginBottom: '10px',
-                }}
-              >
-                <Typography>{t('asphalt.dosages.superpave.lower-curve')}</Typography>
-                <Button onClick={clearTable} variant="outlined">
-                  {t('asphalt.dosages.superpave.clear-table')}
-                </Button>
-              </Box>
-              <CurvesTable
-                materials={selectedMaterials}
-                dnitBandsLetter={data?.bands?.letter}
-                tableInputs={tableCompositionInputsLower}
-                tableName="lowerComposition"
-                tableData={tableDataLower}
-                onChangeInputsTables={onChangeInputsTables}
-              />
-              <div style={{ marginTop: '1%' }}>
-                <Button onClick={() => calcular('lower')} variant="outlined" sx={{ width: '100%' }}>
-                  {t('asphalt.dosages.superpave.calculate-lower-curve')}
-                </Button>
-              </div>
-            </TableContainer>
-          )}
-
-          {intermediaria && (
-            <TableContainer>
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 100px',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginBottom: '10px',
-                }}
-              >
-                <Typography>{t('asphalt.dosages.superpave.average-curve')}</Typography>
-                <Button onClick={clearTable}>{t('asphalt.dosages.superpave.clear-table')}</Button>
-              </Box>
-              <CurvesTable
-                materials={selectedMaterials}
-                dnitBandsLetter={data?.bands?.letter}
-                tableInputs={tableCompositionInputsAverage}
-                tableName="averageComposition"
-                tableData={tableDataAverage}
-                onChangeInputsTables={onChangeInputsTables}
-              />
-              <div style={{ marginTop: '1%' }}>
-                <Button onClick={() => calcular('average')} variant="outlined" sx={{ width: '100%' }}>
-                  {t('asphalt.dosages.superpave.calculate-average-curve')}
-                </Button>
-              </div>
-            </TableContainer>
-          )}
-
-          {superior && (
-            <TableContainer>
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 100px',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginBottom: '10px',
-                }}
-              >
-                <Typography>{t('asphalt.dosages.superpave.higher-curve')}</Typography>
-                <Button onClick={clearTable}>{t('asphalt.dosages.superpave.clear-table')}</Button>
-              </Box>
-              <CurvesTable
-                materials={selectedMaterials}
-                dnitBandsLetter={data?.bands?.letter}
-                tableInputs={tableCompositionInputsHigher}
-                tableName="higherComposition"
-                tableData={tableDataHigher}
-                onChangeInputsTables={onChangeInputsTables}
-              />
-              <div style={{ marginTop: '1%' }}>
-                <Button onClick={() => calcular('higher')} variant="outlined" sx={{ width: '100%' }}>
-                  {t('asphalt.dosages.superpave.calculate-higher-curve')}
-                </Button>
-              </div>
-            </TableContainer>
-          )}
+            })}
 
           {data.graphData.length > 0 && (
             <>

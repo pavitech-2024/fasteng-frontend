@@ -261,7 +261,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             options={LanguageOptions}
             size="medium"
             sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white' }}
-            defaultValue={user?.preferences.language === 'en' ? LanguageOptions[0] : LanguageOptions[1]}
+            value={user?.preferences.language === 'en' ? LanguageOptions[0] : LanguageOptions[1]}
             callback={(value: string) => {
               i18next.changeLanguage(value);
               setUser({ ...user, preferences: { ...user.preferences, language: value } });
@@ -272,7 +272,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             options={DecimalOptions}
             size="medium"
             sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white' }}
-            defaultValue={DecimalOptions[user?.preferences.decimal - 1]}
+            value={DecimalOptions[user?.preferences.decimal - 1]}
             callback={(value: number) => {
               setUser({ ...user, preferences: { ...user.preferences, decimal: value } });
             }}

@@ -13,7 +13,7 @@
   "asphalt.essays.softening-point": "Softening Point",
   "asphalt.essays.flashPoint": "Flash Point",
   "asphalt.essays.elasticRecovery": "Elastic Recovery",
-  "asphalt.essays.rotational": "Rotational Viscosity",
+  "asphalt.essays.viscosityRotational": "Rotational Viscosity",
   "asphalt.essays.saybolt": "Saybolt-Furol Viscosity",
   "asphalt.essays.rtcd": "Tensile Strength by Diametral Compression",
   "asphalt.essays.fwd": "Falling Weight Deflectometer - FWD",
@@ -34,7 +34,7 @@
   "asphalt.materials.comments": "Observations",
   "asphalt.comments": "Comments",
   "asphalt.essays.penetration-asphalt": "Penetration",
-  "asphalt.essays.abrasion.final-mass": "Sample mass after test",
+  "asphalt.essays.abrasion.final-mass": "SoilSample mass after test",
   "asphalt.essays.abrasion.graduation": "Choose the graduation",
   "asphalt.essays.abrasion.initial-mass": "Initial mass"
 }

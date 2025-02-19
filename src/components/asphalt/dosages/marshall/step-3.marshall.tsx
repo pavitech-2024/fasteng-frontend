@@ -12,6 +12,7 @@ import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
 import useAuth from '@/contexts/auth';
 import { toast } from 'react-toastify';
 import Loading from '@/components/molecules/loading';
+import { isNumber } from '@mui/x-data-grid/internals';
 
 const Marshall_Step3 = ({
   nextDisabled,
@@ -23,15 +24,14 @@ const Marshall_Step3 = ({
 
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
-
-  // Tabela de dados
-  // Definindo as rows para a tabela de dados
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
+    // Display a promise toast notification during the data fetching process.
     toast.promise(
       async () => {
         try {
+          // Fetch step 3 data using the marshall service with necessary parameters.
           const { table_data, dnitBands } = await marshall.getStep3Data(
             generalData,
             materialSelectionData,
@@ -39,11 +39,14 @@ const Marshall_Step3 = ({
             null
           );
 
+          // Create a copy of the current data state to update with new fetched data.
           const prevData = { ...data };
 
+          // Update the copied data with fetched table data and dnit bands.
           prevData.table_data = table_data;
           prevData.dnitBands = dnitBands;
 
+          // Set the new data state with the updated information.
           setData({
             step: 2,
             value: prevData,
@@ -97,6 +100,7 @@ const Marshall_Step3 = ({
           }
         }
       });
+
       setRows(newHigherSpec);
     }
   }, [data?.dnitBands?.higher]);
@@ -199,55 +203,59 @@ const Marshall_Step3 = ({
     }
   }, [data.sumOfPercents, data.bands]);
 
-  const handleCalculateGranulometricComp = async () => {
-    if (!Object.values(data.percentageInputs).some((input) => input === null)) {
-      toast.promise(
-        async () => {
-          try {
-            const results = await calculateGranulometryComposition(data, generalData);
+  const calculateGranulometricComposition = async () => {
+    let sumOfInputs = 0;
 
-            const newPointsOfCurve = [...results?.pointsOfCurve];
+    Object.values(data.percentageInputs[0]).forEach((input) => {
+      sumOfInputs += input as unknown as number;
+    });
 
-            newPointsOfCurve.unshift([
-              t('asphalt.dosages.marshall.sieve_mm'),
-              t('asphalt.dosages.marshall.dnit-track'),
-              'Faixa de trabalho',
-              'Mistura de projeto',
-              'Faixa de trabalho',
-              'Faixa do DNIT',
-            ]);
-
-            const { projections } = results;
-
-            const newTable = results?.table_data?.table_rows.map((e) => ({
-              ...e,
-              projections: projections.find((proj) => proj.label === e.sieve_label).value,
-              band1: results.dnitBands.higher.find((band) => band[0] === e.sieve_label)?.[1],
-              band2: results.dnitBands.lower.find((band) => band[0] === e.sieve_label)?.[1],
-            }));
-
-            const newResults = {
-              ...results,
-              table_data: {
-                ...results.table_data,
-                table_rows: [...results.table_data.table_rows, newTable],
-              },
-              graphData: newPointsOfCurve,
-            };
-
-            setRows(newTable);
-            setData({ step: 2, value: newResults });
-          } catch (error) {
-            throw error;
-          }
-        },
-        {
-          pending: t('loading.calculating.pending'),
-          success: t('loading.calculating.success'),
-          error: t('asphalt.dosages.inputs-sum-invalid'),
-        }
-      );
+    if (sumOfInputs !== 100) {
+      toast.error(`${t('asphalt.dosages.inputs-sum-invalid')} (${sumOfInputs}%)`);
+      return;
     }
+
+    toast.promise(
+      async () => {
+        const results = await calculateGranulometryComposition(data, generalData);
+
+        const newPointsOfCurve = [...results.pointsOfCurve];
+
+        newPointsOfCurve.unshift([
+          t('asphalt.dosages.marshall.sieve_mm'),
+          t('asphalt.dosages.marshall.dnit-track'),
+          'Faixa de trabalho',
+          'Mistura de projeto',
+          'Faixa de trabalho',
+          'Faixa do DNIT',
+        ]);
+
+        const { projections } = results;
+
+        const newTable = results.table_data.table_rows.map((tableRow) => ({
+          ...tableRow,
+          projections: projections.find((proj) => proj.label === tableRow.sieve_label).value,
+          band1: results.dnitBands.higher.find((band) => band[0] === tableRow.sieve_label)?.[1],
+          band2: results.dnitBands.lower.find((band) => band[0] === tableRow.sieve_label)?.[1],
+        }));
+
+        const newResults = {
+          ...results,
+          table_data: {
+            ...results.table_data,
+            table_rows: [...results.table_data.table_rows, newTable],
+          },
+          graphData: newPointsOfCurve,
+        };
+
+        setRows(newTable);
+        setData({ step: 2, value: newResults });
+      },
+      {
+        pending: t('loading.calculating.pending'),
+        success: t('loading.calculating.success'),
+      }
+    );
   };
 
   // Definindo as colunas para tabela de dados
@@ -269,7 +277,7 @@ const Marshall_Step3 = ({
           newCols.push({
             field: header,
             headerName: t('granulometry-asphalt.total_passant'),
-            valueFormatter: ({ value }) => `${Number(value).toFixed(2)}%`,
+            valueFormatter: ({ value }) => (value && isNumber(value) ? `${Number(value).toFixed(2)}%` : '---'),
           });
         } else {
           const _id = header.replace('passant_', '');
@@ -277,7 +285,7 @@ const Marshall_Step3 = ({
           newCols.push({
             field: header,
             headerName: t('granulometry-asphalt.passant'),
-            valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
+            valueFormatter: ({ value }) => (value && isNumber(value) ? `${Number(value).toFixed(2)}%` : '---'),
             renderHeader: () => (
               <InputEndAdornment
                 adornment="%"
@@ -365,7 +373,7 @@ const Marshall_Step3 = ({
 
               <Button
                 sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
-                onClick={handleCalculateGranulometricComp}
+                onClick={calculateGranulometricComposition}
               >
                 {t('asphalt.dosages.marshall.calculate')}
               </Button>

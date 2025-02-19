@@ -4,23 +4,27 @@ import { ConcreteMaterial, ConcreteMaterialData } from '@/interfaces/concrete';
 import concreteMaterialService from '@/services/concrete/concrete-materials.service';
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-interface NewConcreteMaterialModalProps {
+interface CreateEditConcreteMaterialModalProps {
   openModal: boolean;
   handleCloseModal: () => void;
   updateMaterials: () => void;
   materials: ConcreteMaterial[];
+  materialToEdit?: ConcreteMaterial;
+  isEdit: boolean;
 }
 
-const NewConcreteMaterialModal = ({
+const CreateEditConcreteMaterialModal = ({
   openModal,
   handleCloseModal,
   updateMaterials,
   materials,
-}: NewConcreteMaterialModalProps) => {
-  const [material, setMaterial] = useState<ConcreteMaterialData>({
+  materialToEdit,
+  isEdit,
+}: CreateEditConcreteMaterialModalProps) => {
+  const initialMaterialState: ConcreteMaterialData = {
     name: '',
     type: null,
     description: {
@@ -37,7 +41,21 @@ const NewConcreteMaterialModal = ({
       resistance: null,
       observation: null,
     },
-  });
+  };
+
+  const [material, setMaterial] = useState<ConcreteMaterialData>(initialMaterialState);
+
+  const modalTitle = isEdit ? 'Editar material' : 'Cadastrar material';
+
+  const resetMaterial = () => {
+    setMaterial(initialMaterialState);
+  };
+
+  useEffect(() => {
+    if (isEdit && materialToEdit) {
+      setMaterial(materialToEdit);
+    }
+  }, [materialToEdit]);
 
   const getInputs = () => {
     const inputs = [
@@ -194,12 +212,10 @@ const NewConcreteMaterialModal = ({
     else setMaterial({ ...material, description: { ...material.description, [key]: value } });
   };
 
-  const handleSubmitNewMaterial = async () => {
-    const createMaterialToast = toast.loading('Cadastrando material...', { autoClose: 5000 });
+  const handleCreateMaterial = async () => {
+    const CreateEditMaterialToast = toast.loading('Cadastrando material...', { autoClose: 5000 });
     try {
-      if (material.name === '') throw 'Nome do material não pode ser vazio';
-      if (material.type === null) throw 'Tipo do material não pode ser vazio';
-      if (materials.find((m) => m.name === material.name)) throw 'Já existe uma amostra com esse nome!';
+      validateMaterialData();
 
       await concreteMaterialService.createMaterial(material);
 
@@ -207,7 +223,7 @@ const NewConcreteMaterialModal = ({
 
       handleCloseModal();
 
-      toast.update(createMaterialToast, {
+      toast.update(CreateEditMaterialToast, {
         render: 'Material cadastrado com sucesso!',
         type: 'success',
         isLoading: false,
@@ -215,7 +231,43 @@ const NewConcreteMaterialModal = ({
         closeButton: true,
       });
     } catch (error) {
-      toast.update(createMaterialToast, {
+      toast.update(CreateEditMaterialToast, {
+        render: error,
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+        closeButton: true,
+      });
+    }
+  };
+
+  const validateMaterialData = () => {
+    if (material.name === '') throw 'Nome do material não pode ser vazio';
+    if (material.type === null) throw 'Tipo do material não pode ser vazio';
+    if (materials.find((m) => m.name === material.name)) throw 'Já existe uma amostra com esse nome!';
+  };
+
+  const handleEditMaterial = async () => {
+    const toastId = toast.loading('Editando material...', { autoClose: 5000 });
+
+    try {
+      validateMaterialData();
+
+      await concreteMaterialService.editMaterial(materialToEdit._id, material);
+
+      await updateMaterials();
+
+      handleCloseModal();
+
+      toast.update(toastId, {
+        render: 'Material editado com sucesso!',
+        type: 'success',
+        isLoading: false,
+        autoClose: 5000,
+        closeButton: true,
+      });
+    } catch (error) {
+      toast.update(toastId, {
         render: error,
         type: 'error',
         isLoading: false,
@@ -227,13 +279,22 @@ const NewConcreteMaterialModal = ({
 
   return (
     <ModalBase
-      title={t('concrete.materials.newMaterial')}
+      title={modalTitle}
       open={openModal}
       leftButtonTitle={t('samples.cancel')}
-      rightButtonTitle={t('samples.register')}
+      rightButtonTitle={isEdit ? t('samples.edit') : t('samples.register')}
       size="medium"
-      onSubmit={() => handleSubmitNewMaterial()}
-      onCancel={handleCloseModal}
+      onSubmit={() => {
+        if (isEdit) {
+          handleEditMaterial();
+        } else {
+          handleCreateMaterial();
+        }
+      }}
+      onCancel={() => {
+        resetMaterial();
+        handleCloseModal();
+      }}
       disableSubmit={
         material.name === '' ||
         material.type === null ||
@@ -270,11 +331,15 @@ const NewConcreteMaterialModal = ({
                   key={input.key}
                   variant="standard"
                   size="medium"
-                  sx={{ minWidth: '120px', bgcolor: 'white' }}
+                  isEdit={isEdit}
+                  sx={{ minWidth: '120px', bgcolor: 'primaryTons.white' }}
                   callback={(value: string) => changeMaterial(input.key, value)}
                   required={input.required}
                   label={t(`concrete.materials.${input.key}`)}
-                  options={dropDowns[input.key]}
+                  options={
+                    input.key === 'type' ? types : input.key === 'resistance' ? resistances : dropDowns[input.key]
+                  }
+                  value={{ value: material.type, label: material.type }}
                 />
               );
             } else {
@@ -304,4 +369,4 @@ const NewConcreteMaterialModal = ({
   );
 };
 
-export default NewConcreteMaterialModal;
+export default CreateEditConcreteMaterialModal;

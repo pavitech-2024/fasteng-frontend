@@ -73,7 +73,7 @@ const ABCP_InsertingParams = ({ setNextDisabled }: EssayPageProps & { abcp: ABCP
           sx={{ width: '100%', marginY: '20px' }}
           variant="standard"
           size="medium"
-          defaultValue={{
+          value={{
             label: conditionOption.find((element) => element.value === insertParamsData.condition)?.label,
             value: conditionOption.find((element) => element.value === insertParamsData.condition)?.value,
           }}

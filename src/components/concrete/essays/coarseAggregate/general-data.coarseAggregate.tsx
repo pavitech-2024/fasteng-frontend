@@ -109,7 +109,7 @@ const CoarseAggregate_GeneralData = ({
               options={materials.map((material: ConcreteMaterial) => {
                 return { label: material.name + ' | ' + t(`${'materials.' + material.type}`), value: material };
               })}
-              defaultValue={defaultMaterial}
+              value={defaultMaterial}
               callback={(value) => setData({ step: 0, key: inputs[1].key, value })}
               size="medium"
               required={inputs[1].required}

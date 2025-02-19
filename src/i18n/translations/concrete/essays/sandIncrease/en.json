@@ -9,7 +9,7 @@
   "sandIncrease.container_volume": "Container Volume",
   "sandIncrease.container_weight": "Container Weight",
   "sandIncrease.samples": "Samples",
-  "sandIncrease.containerWeightSample": "Container Weight + Sample",
+  "sandIncrease.containerWeightSample": "Container Weight + SoilSample",
   "sandIncrease.moistureContent": "Moisture Content",
   "sandIncrease.unitMass": "Unit Mass",
   "sandIncrease.sand-increase.step-3-description": "Fill in all fields below.",

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CompressionIcon, SandIncreaseIcon } from '@/assets';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
-import { Sample } from '@/interfaces/soils';
+import { SoilSample } from '@/interfaces/soils';
 import { t } from 'i18next';
 import Api from '@/api';
 import { CompressionActions, CompressionData } from '@/stores/soils/compression/compression.store';

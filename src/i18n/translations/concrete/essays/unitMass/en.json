@@ -1,4 +1,5 @@
 {
+  "unitMass.step-2-description": "Fill in all fields below.",
   "unitMass.generalData": "General Data",
   "unitMass.material": "Material",
   "unitMass.method": "Method",
@@ -6,7 +7,7 @@
   "unitMass.method.B": "Method B",
   "unitMass.method.C": "Method C",
   "unitMass.experimentName": "Experiment name",
-  "unitMass.repositoryAndSample": "Repository and Sample Data",
+  "unitMass.repositoryAndSample": "Repository and SoilSample Data",
   "unitMass.containerVolume": "Container volume",
   "unitMass.containerWeight": "Container weight",
   "unitMass.sampleContainerWeight": "Container weight + sample",

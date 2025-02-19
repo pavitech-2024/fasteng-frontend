@@ -1,11 +1,11 @@
-import { Sample } from '@/interfaces/soils';
+import { SoilSample } from '@/interfaces/soils';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
 interface GeneralData {
   userId: string;
   name: string;
-  sample: Sample;
+  sample: SoilSample;
   operator?: string;
   calculist?: string;
   description?: string;

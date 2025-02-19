@@ -35,6 +35,8 @@ import welcomeENG from './translations/templates/welcome/en.json';
 // pdf
 import asphaltPDFPTBR from './translations/asphalt/pdf/ptbr.json';
 import asphaltPDFENG from './translations/asphalt/pdf/en.json';
+import commmonPDFPTBR from './translations/asphalt/pdf/common/ptbr.json';
+import commmonPDFENG from './translations/asphalt/pdf/common/en.json';
 // materials
 import asphaltMaterialsPTBR from './translations/asphalt/materials/ptbr.json';
 import asphaltMaterialsENG from './translations/asphalt/materials/en.json';
@@ -249,6 +251,8 @@ i18n.use(initReactI18next).init({
         /**@common */
         ...commonEssaysPTBR,
         ...commonMaterialsPTBR,
+        /**@pdf */
+        ...commmonPDFPTBR,
       },
     },
     en: {
@@ -313,6 +317,8 @@ i18n.use(initReactI18next).init({
         /**@common */
         ...commonEssaysENG,
         ...commonMaterialsENG,
+        /** @pdf */
+        ...commmonPDFENG,
       },
     },
   },

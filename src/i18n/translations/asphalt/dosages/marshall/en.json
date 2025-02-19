@@ -1,5 +1,6 @@
 {
   "marshall.dosage-title": "Marshall dosage",
+  "marshall.dosage-pdf-title": "Marshall dosage report",
 
   "marshall.step-2-description": "Select the aggregates and asphalt binder that will be used in the dosage.",
   "marshall.step-3-description": "Enter the percentages of each aggregate in the granulometric composition of the mixture",
@@ -46,7 +47,7 @@
 
   "asphalt.dosages.marshall.bearing-layer": "Bearing Layer",
   "asphalt.dosages.marshall.bonding-layer": "Connection Layer",
-  "asphalt.dosages.inputs-sum-invalid": "The sum of the percentage values ​​of the materials must be equal to 100.",
+  "asphalt.dosages.inputs-sum-invalid": "The sum of the percentage values ​​of the materials must be equal to 100. Soma atual: ",
 
   "asphalt.dosages.indirect-tensile-strength": "Tensile strength by diametric tendency",
   "asphalt.dosages.fluency": "Fluency",
