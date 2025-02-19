@@ -12,16 +12,11 @@ import { toast } from 'react-toastify';
 import useAuth from '@/contexts/auth';
 import Loading from '@/components/molecules/loading';
 
-const UnitMass_GeneralData = ({
-  nextDisabled,
-  setNextDisabled,
-  unitMass,
-}: EssayPageProps & { unitMass: UNITMASS_SERVICE }) => {
+const UnitMass_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps & { unitMass: UNITMASS_SERVICE }) => {
   const { generalData, setData } = useUnitMassStore();
   const [loading, setLoading] = useState<boolean>(true);
   const { user } = useAuth();
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
-  const [materialsWithMaxD, setMaterialsWithMaxD] = useState([]);
   const [materialDropdownDefaultValue, setMaterialDropdownDefaultValue] = useState<string>('');
 
   useEffect(() => {
@@ -39,16 +34,6 @@ const UnitMass_GeneralData = ({
       }
     );
   }, [user]);
-
-  useEffect(() => {
-    if (materials) {
-      const materialsWMaxD = materials.map((material: ConcreteMaterial) => {
-        if (material.description.maxDiammeter !== null) {
-          setMaterialsWithMaxD(materialsWMaxD);
-        }
-      });
-    }
-  }, [materials]);
 
   useEffect(() => {
     if (generalData.material?.name !== null) {
