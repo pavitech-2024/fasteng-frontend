@@ -122,7 +122,7 @@ const ADHESIVENESS_Step2 = ({
                       ? { label: t('adhesiveness.filmDisplacement-true'), value: true }
                       : null
                     : null
-                }                
+                }
                 required={input.required}
                 size="medium"
                 callback={(value: string | boolean) => {

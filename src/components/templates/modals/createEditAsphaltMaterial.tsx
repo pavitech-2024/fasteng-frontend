@@ -44,7 +44,7 @@ const CreateEditMaterialModal = ({
   };
 
   const [material, setMaterial] = useState<AsphaltMaterialData>(initialMaterialState);
-  console.log("🚀 ~ material:", material);
+  console.log('🚀 ~ material:', material);
 
   const resetMaterial = () => {
     setMaterial(initialMaterialState);
@@ -232,15 +232,21 @@ const CreateEditMaterialModal = ({
         return { label: material.type?.toString(), value: material.type };
       case 'classification_CAP':
         // Return the label and value of the CAP classification
-        return { label: material.description.classification_CAP?.toString(), value: material.description.classification_CAP };
+        return {
+          label: material.description.classification_CAP?.toString(),
+          value: material.description.classification_CAP,
+        };
       case 'classification_AMP':
         // Return the label and value of the AMP classification
-        return { label: material.description.classification_AMP?.toString(), value: material.description.classification_AMP };
+        return {
+          label: material.description.classification_AMP?.toString(),
+          value: material.description.classification_AMP,
+        };
       default:
         // Return the label and value of the property
         return { label: value.toString(), value: value };
     }
-  }
+  };
 
   return (
     <ModalBase
