@@ -192,6 +192,7 @@ export const CreateEditSoilSampleModal = ({
                   label={t('samples.type')}
                   variant="standard"
                   size="medium"
+                  value={{ label: sample.type, value: sample.type }}
                   options={types}
                   isEdit={isEdit}
                   callback={(value: string) => changeSample('type', value)}
