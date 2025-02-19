@@ -1,5 +1,6 @@
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import ModalBase from '@/components/molecules/modals/modal';
+import { Sieve } from '@/interfaces/common';
 import { ConcreteMaterial, ConcreteMaterialData } from '@/interfaces/concrete';
 import concreteMaterialService from '@/services/concrete/concrete-materials.service';
 import { Box, TextField } from '@mui/material';
@@ -277,6 +278,21 @@ const CreateEditConcreteMaterialModal = ({
     }
   };
 
+  const getDropdownDefaultValue = (key: string, value: string | Sieve) => {
+    switch (key) {
+      case 'type':
+        return { label: material.type, value: material.type };
+      case 'classification_CAP':
+        return { label: material.description.classification_CAP, value: material.description.classification_CAP };
+      case 'classification_AMP':
+        return { label: material.description.classification_AMP, value: material.description.classification_AMP };
+      case 'resistance':
+        return { label: material.description.resistance, value: material.description.resistance };
+      default:
+        return { label: value.toString(), value: value };
+    }
+  };
+
   return (
     <ModalBase
       title={modalTitle}
@@ -339,7 +355,7 @@ const CreateEditConcreteMaterialModal = ({
                   options={
                     input.key === 'type' ? types : input.key === 'resistance' ? resistances : dropDowns[input.key]
                   }
-                  value={{ value: material.type, label: material.type }}
+                  value={getDropdownDefaultValue(input.key, input.value)}
                 />
               );
             } else {

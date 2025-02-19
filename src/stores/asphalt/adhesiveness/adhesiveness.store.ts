@@ -9,7 +9,7 @@ interface GeneralData {
 }
 
 interface adhesiveness_step2Data {
-  binder: string;
+  binder: AsphaltMaterial;
   filmDisplacement: boolean;
 }
 

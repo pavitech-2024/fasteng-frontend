@@ -40,7 +40,7 @@ const DropDown = ({
     <TextField
       select
       label={label}
-      value={value?.value || ''} // Exibe o valor controlado externamente
+      value={value?.value ?? ''} // Exibe o valor controlado externamente
       onChange={handleChange}
       helperText={helperText || null}
       sx={sx}
