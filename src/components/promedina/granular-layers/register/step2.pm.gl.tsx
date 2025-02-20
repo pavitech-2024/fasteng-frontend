@@ -431,6 +431,7 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
           <UploadImages editarImages={step2Data?.images} onImagesUpdate={(images: string) => setImages(images)} />
           <TextField
             variant="standard"
+            sx={{ width: 'fit-content', marginX: 'auto' }}
             type="string"
             label={t('pm-estructural-composition-image-date')}
             placeholder="_ _/_ _/_ _ _ _"

@@ -366,6 +366,7 @@ const StabilizedLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
           <UploadImages editarImages={step2Data.images} onImagesUpdate={(images: string) => setImages(images)} />
           <TextField
             variant="standard"
+            sx={{ width: 'fit-content', marginX: 'auto' }}
             label={t('pm-estructural-composition-image-date')}
             placeholder="_ _/_ _/_ _ _ _"
             value={dateFormatter(step2Data.imagesDate)}

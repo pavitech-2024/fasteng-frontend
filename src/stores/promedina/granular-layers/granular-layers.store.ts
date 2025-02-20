@@ -1,4 +1,3 @@
-import { initializeTraceState } from 'next/dist/trace';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
