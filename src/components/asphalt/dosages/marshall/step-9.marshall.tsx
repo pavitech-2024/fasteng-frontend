@@ -521,7 +521,7 @@ const Marshall_Step9 = ({
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title={t('granulometric curve')} open={true}>
+      <FlexColumnBorder title={t('c')} open={true}>
         <Box
           sx={{
             width: '100%',

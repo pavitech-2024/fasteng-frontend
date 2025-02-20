@@ -233,7 +233,6 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     addSummary(
       doc,
-      image,
       summaryItems,
       materialsEssays[0][0].data.generalData.material.name,
       dosage.materialSelectionData.aggregates,

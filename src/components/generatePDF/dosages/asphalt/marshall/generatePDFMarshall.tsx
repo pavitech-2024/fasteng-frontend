@@ -74,24 +74,12 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
         page: 4,
       },
       {
-        title: t('asphalt.dosages.marshall.ranulometric-curve'),
+        title: t('asphalt.dosages.marshall.granulometry_composition'),
         page: 5,
       },
       {
-        title: t('asphalt.dosages.marshall.materials-final-proportions'),
+        title: t('asphalt.dosages.marshall.dosage_resume'),
         page: 3,
-      },
-      {
-        title: t('asphalt.dosages.marshall.asphalt-mass-quantitative'),
-        page: 3,
-      },
-      {
-        title: t('asphalt.dosages.binder-volumetric-mechanic-params'),
-        page: 3,
-      },
-      {
-        title: t('asphalt.dosages.mineral-aggregate-voids'),
-        page: 4,
       },
     ];
 
@@ -272,7 +260,6 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     addSummary(
       doc,
-      image,
       summaryItems,
       materialsEssays[0][0].data.generalData.material.name,
       dosage.materialSelectionData.aggregates,
@@ -380,13 +367,11 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     await addSection(document.getElementById('chart-div-granulometricCurve') as HTMLDivElement, doc, currentY);
 
-    // await addChart(document.getElementById('chart-div-granulometricCurve') as HTMLDivElement, doc, currentY);
-
-    handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
+    currentY = handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
 
     // Resumo das dosagens
     doc.setFontSize(12);
-    doc.text('Resumo das Dosagens:'.toUpperCase(), 10, currentY);
+    doc.text('4. Resumo das Dosagens:'.toUpperCase(), 10, currentY);
     currentY += 10;
 
     const materials = materialsData.map((material) => material.name);
@@ -574,9 +559,9 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
           variant="contained"
           color="primary"
           disabled={!dosage?.confirmationCompressionData}
-          sx={{ minWidth: '200px', minHeight: '3rem' }}
+          sx={{ minWidth: '200px', minHeight: '2rem' }}
         >
-          {loading ? <Loading size={30} color={'inherit'} /> : t('generate.dosage.button')}
+          {loading ? <Loading size={25} color={'inherit'} /> : t('generate.dosage.button')}
         </Button>
       </Box>
     </>
