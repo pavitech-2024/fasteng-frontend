@@ -338,8 +338,7 @@ const CreateEditConcreteMaterialModal = ({
         material.name === '' ||
         material.type === null ||
         (material.type === 'cement'
-          ? material.description.cementType === null ||
-            material.description.resistance === null
+          ? material.description.cementType === null || material.description.resistance === null
           : false)
       }
     >
@@ -376,7 +375,13 @@ const CreateEditConcreteMaterialModal = ({
                   required={input.required}
                   label={t(`concrete.materials.${input.key}`)}
                   options={
-                    input.key === 'type' ? types : input.key === 'resistance' ? resistances : input.key === 'cementType' ? cementTypes : dropDowns[input.key]
+                    input.key === 'type'
+                      ? types
+                      : input.key === 'resistance'
+                      ? resistances
+                      : input.key === 'cementType'
+                      ? cementTypes
+                      : dropDowns[input.key]
                   }
                   value={getDropdownDefaultValue(input.key, input.value)}
                 />
