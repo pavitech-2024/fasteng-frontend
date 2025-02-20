@@ -22,5 +22,7 @@
   "errors.unitMass-containerVolume-10-maxDiameter-37.5": "Insira um volume do recipiente maior que 10 litros",
   "errors.unitMass-containerVolume-15-37.5maxDiameter-50": "Insira um volume do recipiente maior que 15 litros",
   "errors.unitMass-containerVolume-30-50-maxDiameter-75": "Insira um volume do recipiente maior que 30 litros",
-  "errors.sieves-sum-not-equal-to-material-mass": "A soma dos valores de retidos nas peneiras não é igual ao total inicial da amostra."
+  "errors.sieves-sum-not-equal-to-material-mass": "A soma dos valores de retidos nas peneiras não é igual ao total inicial da amostra.",
+
+  "generate.dosage.button": "Gerar PDF da Dosagem"
 }

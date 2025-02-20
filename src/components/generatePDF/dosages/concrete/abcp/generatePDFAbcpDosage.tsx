@@ -4,6 +4,7 @@ import {
   addImageProcess,
   addCapa,
   SummaryItem,
+  addChart,
 } from '@/components/generatePDF/common';
 import useAuth from '@/contexts/auth';
 import { ABCPData } from '@/stores/concrete/abcp/abcp.store';
@@ -11,7 +12,6 @@ import { Box, Button, Tooltip } from '@mui/material';
 import { t } from 'i18next';
 import jsPDF from 'jspdf';
 import logo from '@/assets/fasteng/LogoBlack.png';
-import html2canvas from 'html2canvas';
 
 interface IGeneratedPDF {
   dosage: ABCPData;
@@ -51,16 +51,6 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     doc.setLineWidth(0.5);
     doc.line(10, lineYPosition, 200, lineYPosition);
-  };
-
-  const addChart = async (chartElement: HTMLDivElement, doc: jsPDF, currentY: number) => {
-    const canvas = await html2canvas(chartElement);
-    const imgData = canvas.toDataURL('image/png');
-    const imgProps = doc.getImageProperties(imgData);
-    const pdfWidth = doc.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    const xPosition = (doc.internal.pageSize.getWidth() - pdfWidth) / 2;
-    doc.addImage(imgData, 'PNG', xPosition, currentY, pdfWidth, pdfHeight);
   };
 
   const addHeader = (doc: jsPDF, image: HTMLImageElement) => {

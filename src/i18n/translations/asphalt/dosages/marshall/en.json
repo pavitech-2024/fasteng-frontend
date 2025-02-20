@@ -9,6 +9,7 @@
   "marshall.step-9-description": "These are the results of your Marshall dosage. Remember to save the project to ensure access to it in the future.",
 
   "marshall.general-results": "General Results",
+  "asphalt.dosages.marshall.materials-caracterization": "Materials Caracterization",
 
   "marshall.dosages.marshall.general-data": "General Data",
   "asphalt.dosages.marshall.material_selection": "Material Selection",
@@ -92,5 +93,12 @@
   "asphalt.dosages.marshall.binder-percentage": "Binder percentage (%)",
 
   "asphalt.dosages.enable": "Enable",
-  "asphalt.dosages.disable": "Do not use this content"
+  "asphalt.dosages.disable": "Do not use this content",
+
+  "asphalt.dosages.marshall.superiorBand": "Superior",
+  "asphalt.dosages.marshall.inferiorBand": "Inferior",
+
+  "loading.calculating.pending": "Calculating...",
+  "loading.calculating.success": "Calculated successfully!",
+  "loading.calculating.error": "Error calculating!"
 }

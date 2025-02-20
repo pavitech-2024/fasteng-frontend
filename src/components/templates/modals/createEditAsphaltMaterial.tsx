@@ -44,7 +44,6 @@ const CreateEditMaterialModal = ({
   };
 
   const [material, setMaterial] = useState<AsphaltMaterialData>(initialMaterialState);
-  console.log('🚀 ~ material:', material);
 
   const resetMaterial = () => {
     setMaterial(initialMaterialState);
