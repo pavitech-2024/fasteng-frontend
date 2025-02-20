@@ -470,13 +470,13 @@ const SpecificSample_StabilizedLayers = () => {
               samples?.generalData?.zone &&
               samples?.generalData?.layer &&
               samples?.generalData?.cityState && (
-                <Box id="general-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+                <Box id="general-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
                   <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
                     <Box
                       sx={{
                         display: { mobile: 'flex', notebook: 'grid' },
                         flexDirection: 'column',
-                        gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                        gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr 1fr' },
                         justifyItems: 'center',
                         alignItems: 'center',
                         gap: '1rem',
@@ -485,7 +485,14 @@ const SpecificSample_StabilizedLayers = () => {
                     >
                       {generalData.map((item, idx) => (
                         <Box
-                          sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '0.3rem',
+                            alignItems: 'center',
+                            alignSelf: 'start',
+                            textAlign: 'center',
+                          }}
                           key={idx}
                         >
                           {item.value && (
@@ -509,7 +516,7 @@ const SpecificSample_StabilizedLayers = () => {
                 </Box>
               )}
             {/** DADOS DO PAVIMENTO NO QUAL O MATERIAL ESTÁ INSERIDO */}
-            <Box id="pavement-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="pavement-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               {samples?.step2Data.sectionType &&
                 samples?.step2Data.extension &&
                 samples?.step2Data.initialStakeMeters &&
@@ -533,7 +540,14 @@ const SpecificSample_StabilizedLayers = () => {
                     >
                       {pavimentData.map((item, idx) => (
                         <Box
-                          sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '0.3rem',
+                            alignItems: 'center',
+                            alignSelf: 'start',
+                            textAlign: 'center',
+                          }}
                           key={idx}
                         >
                           {item.value && (
@@ -558,7 +572,7 @@ const SpecificSample_StabilizedLayers = () => {
             </Box>
 
             {/**  PREPARO DO PAVIMENTO */}
-            <Box id="pavement-preparation" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="pavement-preparation" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               {samples?.step2Data?.milling &&
                 samples?.step2Data?.interventionAtTheBase &&
                 samples?.step2Data?.sami &&
@@ -578,7 +592,14 @@ const SpecificSample_StabilizedLayers = () => {
                     >
                       {pavimentPreparation.map((item, idx) => (
                         <Box
-                          sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '0.3rem',
+                            alignItems: 'center',
+                            alignSelf: 'start',
+                            textAlign: 'center',
+                          }}
                           key={idx}
                         >
                           {item.value && (
@@ -603,7 +624,7 @@ const SpecificSample_StabilizedLayers = () => {
             </Box>
 
             {/** DADOS DO MATERIAL */}
-            <Box id="material-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="material-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               <FlexColumnBorder title={t('pm.material-data')} open={true} theme={'#07B811'}>
                 <Box
                   sx={{
@@ -618,7 +639,14 @@ const SpecificSample_StabilizedLayers = () => {
                 >
                   {materialData.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.3rem',
+                        alignItems: 'center',
+                        alignSelf: 'start',
+                        textAlign: 'center',
+                      }}
                       key={idx}
                     >
                       {item.value && (
@@ -640,7 +668,7 @@ const SpecificSample_StabilizedLayers = () => {
             </Box>
 
             {/** FADIGUA DO MATERIAL */}
-            <Box id="material-fatigue" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="material-fatigue" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               {samples?.step3Data?.fatiguek1psi1 && samples?.step3Data?.fatiguek2psi2 && (
                 <FlexColumnBorder title={t('pm.material-permanentDeformation')} open={true} theme={'#07B811'}>
                   <Box
@@ -656,7 +684,14 @@ const SpecificSample_StabilizedLayers = () => {
                   >
                     {materialFatigue.map((item, idx) => (
                       <Box
-                        sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '0.3rem',
+                          alignItems: 'center',
+                          alignSelf: 'start',
+                          textAlign: 'center',
+                        }}
                         key={idx}
                       >
                         {item.value && (
@@ -681,7 +716,7 @@ const SpecificSample_StabilizedLayers = () => {
             </Box>
 
             {/** MÓDULO DE RESILIÊNCIA */}
-            <Box id="resilience-module" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="resilience-module" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               {samples?.step3Data?.rsInitial &&
                 samples?.step3Data?.rsFinal &&
                 samples?.step3Data?.constantA &&
@@ -700,7 +735,14 @@ const SpecificSample_StabilizedLayers = () => {
                     >
                       {resilienceModuleStabilized.map((item, idx) => (
                         <Box
-                          sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '0.3rem',
+                            alignItems: 'center',
+                            alignSelf: 'start',
+                            textAlign: 'center',
+                          }}
                           key={idx}
                         >
                           {item.value && (
@@ -725,7 +767,7 @@ const SpecificSample_StabilizedLayers = () => {
             </Box>
 
             {/** DADOS TÉCNICOS DA AMOSTRA */}
-            <Box id="technical-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="technical-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               {samples?.step3Data?.mctGroup &&
                 samples?.step3Data?.mctGroupmctCoefficientC &&
                 samples?.step3Data?.mctIndexE &&
@@ -748,7 +790,14 @@ const SpecificSample_StabilizedLayers = () => {
                     >
                       {techData.map((item, idx) => (
                         <Box
-                          sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '0.3rem',
+                            alignItems: 'center',
+                            alignSelf: 'start',
+                            textAlign: 'center',
+                          }}
                           key={idx}
                         >
                           {item.value && (
@@ -773,7 +822,7 @@ const SpecificSample_StabilizedLayers = () => {
             </Box>
 
             {/** DEFORMAÇÃO PERMANENTE */}
-            <Box id="permanent-deformation" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="permanent-deformation" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               {samples?.step3Data?.k1psi1 &&
                 samples?.step3Data?.k2psi2 &&
                 samples?.step3Data?.k3psi3 &&
@@ -792,7 +841,14 @@ const SpecificSample_StabilizedLayers = () => {
                     >
                       {permanentDeformation.map((item, idx) => (
                         <Box
-                          sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '0.3rem',
+                            alignItems: 'center',
+                            alignSelf: 'start',
+                            textAlign: 'center',
+                          }}
                           key={idx}
                         >
                           {item.value && (
@@ -817,7 +873,7 @@ const SpecificSample_StabilizedLayers = () => {
             </Box>
 
             {/**  MÓDULO DE RESILIÊNCIA */}
-            <Box id="resilience-module-2" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="resilience-module-2" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               {samples?.step3Data?.k1 && samples?.step3Data?.k2 && samples?.step3Data?.k3 && samples?.step3Data?.k4 && (
                 <FlexColumnBorder title={t('pm.resilience.module')} open={true} theme={'#07B811'}>
                   <Box
@@ -833,7 +889,14 @@ const SpecificSample_StabilizedLayers = () => {
                   >
                     {resilienceModule.map((item, idx) => (
                       <Box
-                        sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '0.3rem',
+                          alignItems: 'center',
+                          alignSelf: 'start',
+                          textAlign: 'center',
+                        }}
                         key={idx}
                       >
                         {item.value && (
@@ -858,7 +921,7 @@ const SpecificSample_StabilizedLayers = () => {
             </Box>
 
             {/** CURVA DE FADIGA À COMPRESSÃO DIAMETRAL */}
-            <Box id="diametrical-compression-fatigue-curve" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="diametrical-compression-fatigue-curve" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               {samples?.Step4Data?.fatigueCurve_n_cps &&
                 samples?.Step4Data?.fatigueCurve_k1 &&
                 samples?.Step4Data?.fatigueCurve_k2 &&
@@ -876,7 +939,14 @@ const SpecificSample_StabilizedLayers = () => {
                     >
                       {fadigueCurveCD.map((item, idx) => (
                         <Box
-                          sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '0.3rem',
+                            alignItems: 'center',
+                            alignSelf: 'start',
+                            textAlign: 'center',
+                          }}
                           key={idx}
                         >
                           {item.value && (
@@ -901,7 +971,7 @@ const SpecificSample_StabilizedLayers = () => {
             </Box>
 
             {/** VISCOSIDADE BROOKFIELD */}
-            <Box id="brookfield-viscosity" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="brookfield-viscosity" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               {samples?.step3Data?.vb_sp21_20 && samples?.step3Data?.vb_sp21_50 && samples?.step3Data?.vb_sp21_100 && (
                 <FlexColumnBorder title={t('pm.brookfield.viscosity')} open={true} theme={'#07B811'}>
                   <Box
@@ -917,7 +987,14 @@ const SpecificSample_StabilizedLayers = () => {
                   >
                     {brookfield.map((item, idx) => (
                       <Box
-                        sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '0.3rem',
+                          alignItems: 'center',
+                          alignSelf: 'start',
+                          textAlign: 'center',
+                        }}
                         key={idx}
                       >
                         {item.value && (
@@ -942,7 +1019,7 @@ const SpecificSample_StabilizedLayers = () => {
             </Box>
 
             {/** OUTRAS INFORMAÇÕES SOBRE O MATERIAL */}
-            <Box id="other-info" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="other-info" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               {samples?.step3Data?.refinery &&
                 samples?.step3Data?.company &&
                 samples?.step3Data?.collectionDate &&
@@ -969,7 +1046,14 @@ const SpecificSample_StabilizedLayers = () => {
                     >
                       {sampleData.map((item, idx) => (
                         <Box
-                          sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '0.3rem',
+                            alignItems: 'center',
+                            alignSelf: 'start',
+                            textAlign: 'center',
+                          }}
                           key={idx}
                         >
                           {item.value && (
@@ -994,7 +1078,7 @@ const SpecificSample_StabilizedLayers = () => {
             </Box>
 
             {/** COMPOSIÇÃO ESTRUTURAL  */}
-            <Box id="structural-composition" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="structural-composition" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               <FlexColumnBorder title={t('pm.structural.composition')} open={true} theme={'#07B811'}>
                 <Box
                   sx={{

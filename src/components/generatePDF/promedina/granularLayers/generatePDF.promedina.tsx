@@ -8,6 +8,8 @@ import { useState } from 'react';
 import Loading from '@/components/molecules/loading';
 import { StabilizedLayersData } from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 import { BinderAsphaltConcreteData } from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
+import { addImageProcess } from '../../common';
+import logo from '../../../../assets/pro-medina/LogoBlack.png';
 
 interface IGenerateGranularLayersPDF {
   sample: GranularLayersData | StabilizedLayersData | BinderAsphaltConcreteData;
@@ -41,7 +43,19 @@ const GeneratePDF_ProMedina = ({ sample, sections }: IGenerateGranularLayersPDF)
   const generatePDF = async () => {
     setLoading(true);
     const doc = new jsPDF('p', 'mm', 'a4');
-    let currentY = 10;
+    const image = (await addImageProcess(logo.src)) as HTMLImageElement;
+    const imageWidth = image.width;
+    const imageHeight = image.height;
+
+    let currentY = 20;
+
+    // Mantendo proporção ao definir o width no PDF
+    const pdfWidth = 100; // Largura desejada no PDF
+    const pdfHeight = (pdfWidth * imageHeight) / imageWidth; // Mantém proporção
+
+    doc.addImage(image, 'PNG', 20, currentY, pdfWidth, pdfHeight);
+
+    currentY += 15;
 
     for (const sectionId of sections) {
       const section = document.getElementById(sectionId) as HTMLDivElement;
@@ -56,9 +70,9 @@ const GeneratePDF_ProMedina = ({ sample, sections }: IGenerateGranularLayersPDF)
 
   return (
     <>
-      <Box onClick={sample && generatePDF} sx={{ width: 'fit-content', paddingX: '1rem' }}>
-        <Button variant="contained" color="primary" disabled={!sample} sx={{ minWidth: '8rem', minHeight: '3rem' }}>
-          {loading ? <Loading size={30} color={'inherit'} /> : t('pm.generate-pdf-button')}
+      <Box onClick={sample && generatePDF} sx={{ width: 'fit-content', paddingX: '6rem' }}>
+        <Button variant="contained" color="primary" disabled={!sample} sx={{ minWidth: '8rem', minHeight: '2rem' }}>
+          {loading ? <Loading size={25} color={'inherit'} /> : t('pm.generate-pdf-button')}
         </Button>
       </Box>
     </>

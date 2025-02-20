@@ -169,7 +169,7 @@ const SpecificSample_GranularLayers = () => {
           >
             <GeneratePDF_ProMedina sample={samples} sections={sections} />
 
-            <Box id="first-section" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="first-section" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
                 <Box
                   sx={{
@@ -184,7 +184,7 @@ const SpecificSample_GranularLayers = () => {
                 >
                   {generalData.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignSelf: 'start', textAlign: 'center' }}
                       key={idx}
                     >
                       <>
@@ -211,7 +211,7 @@ const SpecificSample_GranularLayers = () => {
             </Box>
 
             {/** DADOS DO PAVIMENTO NO QUAL O MATERIAL ESTÁ INSERIDO */}
-            <Box id="pavement-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="pavement-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               <FlexColumnBorder
                 title={t('pm.paviment.data')}
                 open={true}
@@ -231,7 +231,7 @@ const SpecificSample_GranularLayers = () => {
                 >
                   {pavimentData.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', alignSelf: 'start', textAlign: 'center' }}
                       key={idx}
                     >
                       {item.value !== undefined && (
@@ -255,7 +255,7 @@ const SpecificSample_GranularLayers = () => {
             </Box>
 
             {/**  PREPARO DO PAVIMENTO */}
-            <Box id="pavement-preparation" sx={{ paddingTop: '1rem', paddingX: '1rem' }} className="third-section">
+            <Box id="pavement-preparation" sx={{ paddingTop: '1rem', paddingX: '6rem' }} className="third-section">
               <FlexColumnBorder title={t('pm.paviment.preparation')} open={true} theme={'#07B811'}>
                 <Box
                   sx={{
@@ -270,7 +270,7 @@ const SpecificSample_GranularLayers = () => {
                 >
                   {pavimentPreparation.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', alignSelf: 'start', textAlign: 'center' }}
                       key={idx}
                     >
                       <>
@@ -290,7 +290,7 @@ const SpecificSample_GranularLayers = () => {
             </Box>
 
             {/** DADOS TÉCNICOS DA AMOSTRA */}
-            <Box id="technical-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }} className="fourth-section">
+            <Box id="technical-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }} className="fourth-section">
               <FlexColumnBorder
                 title={t('pm.sample-data')}
                 open={true}
@@ -311,7 +311,7 @@ const SpecificSample_GranularLayers = () => {
                 >
                   {techData.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', alignSelf: 'start', textAlign: 'center' }}
                       key={idx}
                     >
                       <>
@@ -331,7 +331,7 @@ const SpecificSample_GranularLayers = () => {
             </Box>
 
             {/** DEFORMAÇÃO PERMANENTE */}
-            <Box id="permanent-deformation" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="permanent-deformation" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               <FlexColumnBorder title={t('pm.permanent.deformation')} open={true} theme={'#07B811'}>
                 <Box
                   sx={{
@@ -346,7 +346,7 @@ const SpecificSample_GranularLayers = () => {
                 >
                   {permanentDeformation.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', alignSelf: 'start', textAlign: 'center' }}
                       key={idx}
                     >
                       <>
@@ -366,7 +366,7 @@ const SpecificSample_GranularLayers = () => {
             </Box>
 
             {/**  MÓDULO DE RESILIÊNCIA */}
-            <Box id="resilience-module" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="resilience-module" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               <FlexColumnBorder
                 title={t('pm.resilience.module')}
                 open={true}
@@ -386,7 +386,7 @@ const SpecificSample_GranularLayers = () => {
                 >
                   {resilienceModule.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', alignSelf: 'start', textAlign: 'center' }}
                       key={idx}
                     >
                       <>
@@ -406,7 +406,7 @@ const SpecificSample_GranularLayers = () => {
             </Box>
 
             {/** COMPOSIÇÃO ESTRUTURAL  */}
-            <Box id="structural-composition" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="structural-composition" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               <FlexColumnBorder title={t('pm.structural.composition')} open={true} theme={'#07B811'}>
                 <Box
                   sx={{
