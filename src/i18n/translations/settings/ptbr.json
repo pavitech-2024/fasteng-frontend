@@ -15,5 +15,6 @@
   "settings.toast.input error": "Erro ao carregar foto ...",
   "settings.toast loading": "Salvando preferências...",
   "settings.toast success": "Preferências salvas com sucesso!",
-  "settings.toast error": "Erro ao salvar preferências!"
+  "settings.toast error": "Erro ao salvar preferências!",
+  "settings.personal": "Dados do usuário"
 }

@@ -276,7 +276,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           }}
         >
 
-Dados do Usuário
+          {t('settings.personal')}
         </Typography>
         <Box
           sx={{
