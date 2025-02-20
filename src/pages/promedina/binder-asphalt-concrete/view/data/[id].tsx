@@ -210,7 +210,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
           >
             <GeneratePDF_ProMedina sample={samples} sections={sections} />
 
-            <Box id="general-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="general-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
                 <Box
                   sx={{
@@ -225,7 +225,14 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 >
                   {generalData.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.3rem',
+                        alignItems: 'center',
+                        alignSelf: 'start',
+                        textAlign: 'center',
+                      }}
                       key={idx}
                     >
                       {item.value && (
@@ -256,7 +263,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
             </Box>
 
             {/** DADOS DO PAVIMENTO NO QUAL O MATERIAL ESTÁ INSERIDO */}
-            <Box id="paviment-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="paviment-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               <FlexColumnBorder
                 title={t('pm.paviment.data')}
                 open={true}
@@ -276,7 +283,14 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 >
                   {pavimentData.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.3rem',
+                        alignItems: 'center',
+                        alignSelf: 'start',
+                        textAlign: 'center',
+                      }}
                       key={idx}
                     >
                       <>
@@ -298,7 +312,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
             </Box>
 
             {/**  PREPARO DO PAVIMENTO */}
-            <Box id="paviment-preparation" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="paviment-preparation" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               <FlexColumnBorder title={t('pm.paviment.preparation')} open={true} theme={'#07B811'}>
                 <Box
                   sx={{
@@ -313,7 +327,14 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 >
                   {pavimentPreparation.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.3rem',
+                        alignItems: 'center',
+                        alignSelf: 'start',
+                        textAlign: 'center',
+                      }}
                       key={idx}
                     >
                       <>
@@ -333,7 +354,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
             </Box>
 
             {/** DADOS TÉCNICOS DA AMOSTRA */}
-            <Box id="technical-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="technical-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               <FlexColumnBorder
                 title={t('pm.sample-data')}
                 open={true}
@@ -353,7 +374,14 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 >
                   {techData.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.3rem',
+                        alignItems: 'center',
+                        alignSelf: 'start',
+                        textAlign: 'center',
+                      }}
                       key={idx}
                     >
                       <>
@@ -373,7 +401,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
             </Box>
 
             {/** CURVA DE FADIGA À COMPRESSÃO DIAMETRAL */}
-            <Box id="diametral-compression" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="diametral-compression" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               <FlexColumnBorder
                 title={t('pm.diametral.compression.fatigue.curve')}
                 open={true}
@@ -392,7 +420,14 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 >
                   {fadigueCurveCD.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.3rem',
+                        alignItems: 'center',
+                        alignSelf: 'start',
+                        textAlign: 'center',
+                      }}
                       key={idx}
                     >
                       <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
@@ -410,7 +445,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
             </Box>
 
             {/** VISCOSIDADE BROOKFIELD */}
-            <Box id="brookfield-viscosity" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="brookfield-viscosity" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               <FlexColumnBorder title={t('pm.brookfield.viscosity')} open={true} theme={'#07B811'}>
                 <Box
                   sx={{
@@ -425,7 +460,14 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 >
                   {brookfield.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.3rem',
+                        alignItems: 'center',
+                        alignSelf: 'start',
+                        textAlign: 'center',
+                      }}
                       key={idx}
                     >
                       <>
@@ -445,7 +487,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
             </Box>
 
             {/** OUTRAS INFORMAÇÕES SOBRE O MATERIAL */}
-            <Box id="material-info" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="material-info" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               <FlexColumnBorder
                 title={t('pm.sample-data')}
                 open={true}
@@ -465,7 +507,14 @@ const SpecificSample_BinderAsphaltConcrete = () => {
                 >
                   {sampleData.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.3rem',
+                        alignItems: 'center',
+                        alignSelf: 'start',
+                        textAlign: 'center',
+                      }}
                       key={idx}
                     >
                       <>
@@ -485,7 +534,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
             </Box>
 
             {/** COMPOSIÇÃO ESTRUTURAL  */}
-            <Box id="structural-composition" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+            <Box id="structural-composition" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               <FlexColumnBorder
                 title={t('pm.structural.composition')}
                 open={true}
