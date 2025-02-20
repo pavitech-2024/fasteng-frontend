@@ -61,7 +61,7 @@ const SUCS_GeneralData = ({ nextDisabled, setNextDisabled, sucs }: EssayPageProp
   return (
     <>
       {loading ? (
-        <Loading size={30} color={"secondary"} />
+        <Loading size={30} color={'secondary'} />
       ) : (
         <Box
           sx={{

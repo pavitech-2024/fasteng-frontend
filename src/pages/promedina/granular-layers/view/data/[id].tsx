@@ -184,7 +184,13 @@ const SpecificSample_GranularLayers = () => {
                 >
                   {generalData.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignSelf: 'start', textAlign: 'center' }}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.3rem',
+                        alignSelf: 'start',
+                        textAlign: 'center',
+                      }}
                       key={idx}
                     >
                       <>
@@ -231,7 +237,14 @@ const SpecificSample_GranularLayers = () => {
                 >
                   {pavimentData.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', alignSelf: 'start', textAlign: 'center' }}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.3rem',
+                        alignItems: 'center',
+                        alignSelf: 'start',
+                        textAlign: 'center',
+                      }}
                       key={idx}
                     >
                       {item.value !== undefined && (
@@ -270,7 +283,14 @@ const SpecificSample_GranularLayers = () => {
                 >
                   {pavimentPreparation.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', alignSelf: 'start', textAlign: 'center' }}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.3rem',
+                        alignItems: 'center',
+                        alignSelf: 'start',
+                        textAlign: 'center',
+                      }}
                       key={idx}
                     >
                       <>
@@ -311,7 +331,14 @@ const SpecificSample_GranularLayers = () => {
                 >
                   {techData.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', alignSelf: 'start', textAlign: 'center' }}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.3rem',
+                        alignItems: 'center',
+                        alignSelf: 'start',
+                        textAlign: 'center',
+                      }}
                       key={idx}
                     >
                       <>
@@ -346,7 +373,14 @@ const SpecificSample_GranularLayers = () => {
                 >
                   {permanentDeformation.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', alignSelf: 'start', textAlign: 'center' }}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.3rem',
+                        alignItems: 'center',
+                        alignSelf: 'start',
+                        textAlign: 'center',
+                      }}
                       key={idx}
                     >
                       <>
@@ -386,7 +420,14 @@ const SpecificSample_GranularLayers = () => {
                 >
                   {resilienceModule.map((item, idx) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', alignSelf: 'start', textAlign: 'center' }}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.3rem',
+                        alignItems: 'center',
+                        alignSelf: 'start',
+                        textAlign: 'center',
+                      }}
                       key={idx}
                     >
                       <>

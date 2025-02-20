@@ -72,7 +72,7 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
             multiple={false}
             hidden
             accept=".jpg,.jpeg,.png,.webm"
-            id='uploadImages'
+            id="uploadImages"
           />
         </Button>
       </label>

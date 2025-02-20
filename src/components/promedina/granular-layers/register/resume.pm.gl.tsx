@@ -6,7 +6,7 @@ import GeneratePDF_ProMedina from '@/components/generatePDF/promedina/granularLa
 import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
 import { EssayPageProps } from '@/components/templates/essay';
 
-const GranularLayersResume = ({setNextDisabled}: EssayPageProps) => {
+const GranularLayersResume = ({ setNextDisabled }: EssayPageProps) => {
   const { generalData: data, step2Data, step3Data } = useGranularLayersStore();
   const samples = { generalData: { ...data }, step2Data, step3Data };
 

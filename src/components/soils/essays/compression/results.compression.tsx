@@ -121,7 +121,7 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
           chartType="LineChart"
           width={'100%'}
           height={'400px'}
-          loader={<Loading size={30} color={"secondary"} />}
+          loader={<Loading size={30} color={'secondary'} />}
           data={graphData}
           options={{
             backgroundColor: 'transparent',
