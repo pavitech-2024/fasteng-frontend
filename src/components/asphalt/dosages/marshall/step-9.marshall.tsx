@@ -548,7 +548,7 @@ const Marshall_Step9 = ({
             />
           </Box>
 
-          <Box id='chart-div-granulometricCurve' sx={{ paddingX: '6rem' }}>
+          <Box id="chart-div-granulometricCurve" sx={{ paddingX: '6rem' }}>
             {granulometryCompositionData?.graphData?.length > 1 && (
               <Graph data={granulometryCompositionData?.graphData} />
             )}
