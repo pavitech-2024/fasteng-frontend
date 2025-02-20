@@ -3,6 +3,8 @@
 /* eslint-disable @next/next/no-img-element */
 import CameraIcon from '@/components/atoms/icons/cameraIcon';
 import TrashIcon from '@/components/atoms/icons/trashIcon';
+import { AddAPhoto } from '@mui/icons-material';
+import { Button, Input } from '@mui/material';
 import { t } from 'i18next';
 import { useState, useEffect } from 'react';
 
@@ -56,23 +58,24 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '4rem' }}>
       <label
-        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.2rem' }}
+        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '2rem' }}
         htmlFor="uploadImages"
       >
-        <CameraIcon />
-        <span style={{ fontFamily: 'roboto', fontSize: 'bold' }}>{t('upload.images')}</span>
+        <Button variant="contained" component="label" startIcon={<AddAPhoto />}>
+          {' '}
+          {t('upload.images')}
+          <input
+            type="file"
+            onChange={handleAddImage}
+            multiple={false}
+            hidden
+            accept=".jpg,.jpeg,.png,.webm"
+            id="uploadImages"
+          />
+        </Button>
       </label>
-      <input
-        type="file"
-        accept=".jpg,.jpeg,.png,.webm"
-        multiple={false}
-        onChange={handleAddImage}
-        style={{ display: 'hidden' }}
-        id="uploadImages"
-        title=" "
-      />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
         {images && (
           <Image

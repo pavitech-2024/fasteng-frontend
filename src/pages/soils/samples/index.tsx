@@ -64,7 +64,7 @@ const Samples: NextPage = () => {
   return (
     <Container>
       {loading ? (
-        <Loading />
+        <Loading size={30} color={'secondary'} />
       ) : (
         <MaterialsTemplate
           materials={samples}

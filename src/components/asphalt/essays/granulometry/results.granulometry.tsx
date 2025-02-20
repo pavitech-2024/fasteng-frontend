@@ -111,7 +111,7 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
           chartType="LineChart"
           width={'100%'}
           height={'400px'}
-          loader={<Loading />}
+          loader={<Loading size={30} color={'secondary'} />}
           data={graph_data}
           options={{
             title: t('granulometry-asphalt.granulometry'),

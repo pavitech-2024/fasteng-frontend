@@ -1,9 +1,9 @@
-function CameraIcon() {
+function CameraIcon({ width = '20', height = '20' }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
+      width={width}
+      height={height}
       fill="#121212"
       className="mr-1 items-center text-center mt-1"
     >

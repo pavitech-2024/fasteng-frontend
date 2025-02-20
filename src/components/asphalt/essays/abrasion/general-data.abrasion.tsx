@@ -62,7 +62,7 @@ const Abrasion_GeneralData = ({
   return (
     <>
       {loading ? (
-        <Loading />
+        <Loading size={30} color={'secondary'} />
       ) : (
         <Box
           sx={{

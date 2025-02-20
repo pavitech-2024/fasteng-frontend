@@ -194,7 +194,7 @@
   "pm.granularLayer.highway": "Rodovia",
   "promedina.essays.stabilizedLayersView": "Amostras cadastradas em Camadas estabilizadas",
   "promedina.essays.binderAsphaltConcreteView": "Amostras cadastradas em Ligante e Concreto asfálticos",
-  "register.step-4-description": "Preencha todos os dados obrigatórios.",
+  "register.step-4-description": "Esse é o resumo da sua amostra.",
   "pm.granularLayer.stabilizer": "Estabilizante",
   "pm.granularLayer.asphaltTenor": "Teor",
   "pm.granularLayer.rcs": "RCS, 28 dias (MPa)",
@@ -218,5 +218,10 @@
   "pm-tooltip-filter-highway": "Você digitou um filtro por rodovia",
   "pm-tooltip-del-sample": "Deletar amostra",
   "pm-datasheet": "Ficha técnica",
-  "pm-type-of-section": "Tipo de seção"
+  "pm-type-of-section": "Tipo de seção",
+  "pm.granularLayer.especific.mass": "Massa específica",
+
+  "pm.generate-pdf-button": "Gerar PDF",
+
+  "pm.register.resume": "Resumo"
 }
