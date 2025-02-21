@@ -107,7 +107,6 @@ class ADHESIVENESS_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
 
-
       this.store_actions.setData({ step: 2, value: result });
     } catch (error) {
       throw error;
