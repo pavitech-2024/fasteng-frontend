@@ -63,8 +63,6 @@ const SandIncrease_GeneralData = ({
     nextDisabled &&
     setNextDisabled(false);
 
-  useEffect(() => console.log(sandIncreaseGeneralData), [sandIncreaseGeneralData]);
-
   return (
     <>
       {loading ? (

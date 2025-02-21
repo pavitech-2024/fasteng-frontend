@@ -168,8 +168,6 @@ class CBR_SERVICE implements IEssayService {
 
       const { success, error } = response.data;
 
-      console.log(error);
-
       if (success === false) throw error.name;
     } catch (error) {
       throw error;

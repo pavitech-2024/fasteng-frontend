@@ -30,7 +30,6 @@ class SHAPEINDEX_SERVICE implements IEssayService {
   /** @handleNext Receives the step and data from the form and calls the respective method */
   handleNext = async (step: number, data: unknown): Promise<void> => {
     try {
-      console.log(data);
       switch (step) {
         case 0:
           await this.submitGeneralData(data as ShapeIndexData['generalData']);

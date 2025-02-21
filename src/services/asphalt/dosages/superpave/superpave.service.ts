@@ -192,7 +192,6 @@ class Superpave_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -216,12 +215,8 @@ class Superpave_SERVICE implements IEssayService {
         if (success === false) throw error.name;
 
         if (step !== 2) {
-          console.log('aquiiiiiii');
-          // this.store_actions?.setData({ step: 2, value: { ...dosageData.granulometryCompositionData, ...data } });
           return data;
         } else {
-          console.log('elseeeee');
-
           return data;
         }
       } catch (error) {
@@ -309,7 +304,6 @@ class Superpave_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -407,7 +401,6 @@ class Superpave_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -465,7 +458,6 @@ class Superpave_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -542,7 +534,6 @@ class Superpave_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -627,7 +618,6 @@ class Superpave_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -753,7 +743,6 @@ class Superpave_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -806,7 +795,6 @@ class Superpave_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -827,7 +815,6 @@ class Superpave_SERVICE implements IEssayService {
 
       return { data, success, error };
     } catch (error) {
-      console.log(error);
       throw error;
     }
   };
@@ -887,7 +874,6 @@ class Superpave_SERVICE implements IEssayService {
 
         return data;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -923,7 +909,6 @@ class Superpave_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -967,7 +952,6 @@ class Superpave_SERVICE implements IEssayService {
           },
         });
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }

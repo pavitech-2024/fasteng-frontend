@@ -58,7 +58,6 @@ export const HRB_ReferenceTableCBR = ({ classification, sx }: HRB_ReferenceTable
       }))}
       rows={rows.map((row, index) => ({ ...row, id: index }))}
       getRowClassName={(params) => {
-        console.log(params.row);
         return params.row.id === selectedRowIndex && 'selected-by-hrb-classification';
       }}
     />

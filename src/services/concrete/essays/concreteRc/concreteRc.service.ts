@@ -84,7 +84,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
       // verify if there is already a ConcreteRc essay with same name
       const response = await Api.post(`${this.info.backend_path}/verify-init`, { name });
-      console.log(response);
       const { success, error } = response.data;
 
       // if there is already a ConcreteRc essay with same name, throw error

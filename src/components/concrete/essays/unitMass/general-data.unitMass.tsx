@@ -60,7 +60,6 @@ const UnitMass_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps 
   ];
 
   useEffect(() => {
-    console.log(generalData.material);
     if (generalData.experimentName !== null && generalData.method !== null && generalData.material !== null)
       nextDisabled && setNextDisabled(false);
   }, [generalData, nextDisabled, setNextDisabled]);
