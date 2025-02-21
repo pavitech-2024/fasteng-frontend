@@ -138,8 +138,6 @@ const Material = () => {
     updateData('ductility', 'CAP', setDuctilityData);
     updateData('elasticRecovery', 'CAP', setElasticRecoveryData);
     updateData('rtfo', 'CAP', setRtfoData);
-
-    console.log('teste', granulometryData);
   }, [material]);
 
   const TextBox = ({ children }: TextBoxProps) => (

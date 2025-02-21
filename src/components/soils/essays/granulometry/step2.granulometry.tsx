@@ -93,12 +93,8 @@ const SoilsGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPagePro
 
               const new_current_accumulative_retained = accumulative_retained;
 
-              console.log(new_current_accumulative_retained);
-
               nextRows.map(function (item, index) {
                 const row = item;
-
-                console.log(row);
 
                 if (index > 0) {
                   const currentRows = nextRows.slice(0, index + 1);
@@ -109,17 +105,12 @@ const SoilsGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPagePro
                     initial_retained
                   );
 
-                  console.log(accumulative_retained);
-
                   const retained =
                     Math.round(100 * (mass !== 0 ? ((100 - row.passant) / 100) * mass - accumulative_retained : 0)) /
                     100;
 
                   const passant =
                     Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
-
-                  console.log(passant);
-                  console.log(retained);
 
                   newRows.map((e) => {
                     if (e.sieve === row.sieve) {
@@ -177,12 +168,8 @@ const SoilsGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPagePro
 
               const new_current_accumulative_retained = current_accumulative_retained - current_retained;
 
-              console.log(new_current_accumulative_retained);
-
               nextRows.map(function (item, index) {
                 const row = item;
-
-                console.log(row);
 
                 if (index > 0) {
                   const currentRows = nextRows.slice(0, index + 1);
@@ -193,13 +180,8 @@ const SoilsGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPagePro
                     initial_retained
                   );
 
-                  console.log(accumulative_retained);
-
                   const passant =
                     Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
-
-                  console.log(passant);
-                  console.log(item.retained);
 
                   newRows.map((e) => {
                     if (e.sieve === row.sieve) {

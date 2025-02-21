@@ -61,7 +61,6 @@ const Compression_GeneralData = ({
     nextDisabled &&
     setNextDisabled(false);
 
-  useEffect(() => console.log(compressionGeneralData), [compressionGeneralData]);
   return (
     <>
       {loading ? (

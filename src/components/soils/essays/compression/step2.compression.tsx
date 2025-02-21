@@ -213,7 +213,6 @@ const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
       setNextDisabled(false);
   }
 
-  useEffect(() => console.log(data, rows), [data, rows]);
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Box

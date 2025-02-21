@@ -62,8 +62,6 @@ class UNITMASS_SERVICE implements IEssayService {
         method,
       };
 
-      console.log(payload);
-
       const response = await Api.post(`${this.info.backend_path}/verify-init`, payload);
 
       const { success, error } = response.data;
@@ -147,8 +145,6 @@ class UNITMASS_SERVICE implements IEssayService {
       });
 
       const { success, error } = response.data;
-
-      console.log(error);
 
       if (success === false) throw error.name;
     } catch (error) {
