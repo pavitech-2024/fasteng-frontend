@@ -30,7 +30,6 @@ const ABCP_EssaySelection = ({ setNextDisabled, abcp }: EssayPageProps & { abcp:
       async () => {
         try {
           const essays = await abcp.getEssaysByMaterialId(materialSelectionData);
-          console.log('ensaios', essays);
           setEssays(essays);
           setLoading(false);
         } catch (error) {

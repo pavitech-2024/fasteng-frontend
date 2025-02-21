@@ -86,8 +86,6 @@ class COMPRESSION_SERVICE implements IEssayService {
     try {
       Object.entries(hygroscopicData).forEach((array) => {
         const [key, value] = array;
-        if (!value) console.log(`errors.empty-${key}`);
-        // ver se precisa de mais alguma validação fora ver se esta vazio
       });
 
       const {
@@ -140,8 +138,6 @@ class COMPRESSION_SERVICE implements IEssayService {
     try {
       Object.entries(humidityDeterminationData).forEach((array) => {
         const [key, value] = array;
-        if (!value) console.log(`errors.empty-${key}`);
-        // ver se precisa de mais alguma validação fora ver se esta vazio
       });
 
       const { humidityTable } = humidityDeterminationData;
@@ -180,8 +176,6 @@ class COMPRESSION_SERVICE implements IEssayService {
     try {
       Object.entries(hygroscopicData).forEach((array) => {
         const [key, value] = array;
-        if (!value) console.log(`errors.empty-${key}`);
-        // ver se precisa de mais alguma validação fora ver se esta vazio
       });
 
       const {

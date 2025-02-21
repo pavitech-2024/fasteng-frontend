@@ -176,7 +176,6 @@ class Marshall_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -316,7 +315,6 @@ class Marshall_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -403,7 +401,6 @@ class Marshall_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -519,7 +516,6 @@ class Marshall_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -564,7 +560,6 @@ class Marshall_SERVICE implements IEssayService {
     user?: string,
     isConsult?: boolean
   ): Promise<void> => {
-    console.log('aqui');
     if (!isConsult) {
       try {
         const volumetricParameters = data.volumetricParametersData;
@@ -590,7 +585,6 @@ class Marshall_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -728,7 +722,6 @@ class Marshall_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -857,7 +850,6 @@ class Marshall_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -889,7 +881,6 @@ class Marshall_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
