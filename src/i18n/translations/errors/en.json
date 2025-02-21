@@ -17,6 +17,7 @@
 
   "essay-granulometry-not-found": "Granulometry essay not found!",
 
+  "errors.emptySampleContainerWeight": "Sample container weight empty!",
   "errors.sampleContainerWeightValue": "The sum of the Container Volume and Container Weight values ​​cannot be less than the container weight + sample.",
   "errors.unitMass-containerVolume-0": "Enter a valid volume",
   "errors.unitMass-containerWeight-sampleContainerWeigth": "Weight of the container + sample must be greater than the weight of the container",

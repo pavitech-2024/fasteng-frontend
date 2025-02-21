@@ -16,6 +16,7 @@
 
   "essay-granulometry-not-found": "Ensaio de Granulometria não encontrado!",
 
+  "errors.emptySampleContainerWeight": "Peso do recipiente da amostra vazio!",
   "errors.sampleContainerWeightValue": "A soma dos valores do Volume do Container e o Peso do Container não pode ser menor do que o valor do Peso do Container + Amostra.",
   "errors.unitMass-containerVolume-0": "Insira um volume válido",
   "errors.unitMass-containerWeight-sampleContainerWeigth": "Peso do recipiente + amostra tem que ser maior que o peso do recipiente",
