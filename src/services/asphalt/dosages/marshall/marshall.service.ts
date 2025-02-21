@@ -274,6 +274,8 @@ class Marshall_SERVICE implements IEssayService {
           percentsOfMaterials,
           graphData,
           projections,
+          dnitBands,
+          bands,
         } = data.granulometryCompositionData;
         const { name } = data.generalData;
         const userData = userId ? userId : user;
@@ -292,6 +294,8 @@ class Marshall_SERVICE implements IEssayService {
           percentsOfMaterials,
           graphData,
           projections,
+          dnitBands,
+          bands,
           name,
           isConsult: null,
         };
@@ -307,6 +311,8 @@ class Marshall_SERVICE implements IEssayService {
             percentsOfMaterials,
             graphData,
             projections,
+            dnitBands,
+            bands,
             name,
           },
         });

@@ -1,35 +1,58 @@
 import { t } from 'i18next';
 import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 export interface SummaryItem {
   title: string;
   page: number;
 }
 
-// const dosageDescription = {
-//   ['marshall']: t('asphalt.dosages.marshall.project.description.text'),
-//   ['superpave']: t('asphalt.dosages.superpave.project.description.text'),
-//   ['abcp']: t('asphalt.dosages.abcp.project.description.text'),
-// };
-
 export const addHeader = (doc: jsPDF, image: HTMLImageElement) => {
-  doc.addImage(image, 'png', 5, 5, 50, 8);
-  doc.addImage(image, 'png', 155, 5, 50, 8);
+  const imageWidth = image.width;
+  const imageHeight = image.height;
+  const docWidth = doc.internal.pageSize.getWidth();
+  const docMargins = (docWidth * 0.2) / 2;
+  let currentY = 20;
+
+  // Mantendo proporção ao definir o width no PDF
+  const pdfImageWidth = 50; // Largura desejada no PDF
+  const pdfImageHeight = (pdfImageWidth * imageHeight) / imageWidth; // Mantém proporção
+
+  doc.addImage(image, 'png', docMargins, currentY, pdfImageWidth, pdfImageHeight);
+  doc.addImage(image, 'png', docWidth - docMargins - pdfImageWidth, currentY, pdfImageWidth, pdfImageHeight);
+
+  const pageHeight = doc.internal.pageSize.height - docMargins;
+  const lineYPosition = pageHeight;
+  const dateYPosition = lineYPosition - 5;
+
+  const formattedDate = getCurrentDateFormatted();
+
+  addCenteredText(doc, formattedDate, dateYPosition, 12);
+
+  return (currentY = pageHeight - pdfImageHeight - 30);
+};
+
+export const addChart = async (chartElement: HTMLDivElement, doc: jsPDF, currentY: number) => {
+  const canvas = await html2canvas(chartElement);
+  const imgData = canvas.toDataURL('image/png');
+  const imgProps = doc.getImageProperties(imgData);
+  const pdfWidth = doc.internal.pageSize.getWidth();
+  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  const xPosition = (doc.internal.pageSize.getWidth() - pdfWidth) / 2;
+  doc.addImage(imgData, 'PNG', xPosition, currentY, pdfWidth, pdfHeight);
 };
 
 export const addSummary = (
   doc: jsPDF,
-  image: HTMLImageElement,
   summaryItems: SummaryItem[],
   binder: string,
   aggregates: any,
   dosageType: string
 ) => {
-  let currentY = 30;
-  let currentX = 10;
-
-  doc.addImage(image, 'png', 5, 5, 50, 8);
-  doc.addImage(image, 'png', 155, 5, 50, 8);
+  const docWidth = doc.internal.pageSize.getWidth();
+  const docMargins = (docWidth * 0.2) / 2;
+  let currentY = 40;
+  let currentX = docMargins;
 
   addCenteredText(doc, `${t('asphalt.essays.project.summary')}`, currentY, 12);
   currentY += 20;
@@ -38,13 +61,18 @@ export const addSummary = (
   summaryItems.forEach((item, idx) => {
     const title = item.title;
     const externalNumber = idx + 1;
-    const totalWidth = 190;
+    const totalWidth = docWidth - docMargins;
 
     let internalNumber = 1;
     let titleWidth = doc.getTextWidth(title);
-    let lineWidth = totalWidth - (titleWidth + 2);
+    let lineWidth = totalWidth - titleWidth;
+    if (lineWidth > docWidth - docMargins * 2 - titleWidth) {
+      lineWidth = docWidth - docMargins * 2 - titleWidth - 15;
+    } else if (lineWidth < docWidth - docMargins * 2 - titleWidth) {
+      lineWidth = docWidth - docMargins * 2 - titleWidth + 10;
+    }
     let lineLength = Math.floor(lineWidth / doc.getTextWidth('_'));
-    let line = '_'.repeat(lineLength - 10);
+    let line = '_'.repeat(lineLength);
 
     doc.text(externalNumber + '. ' + title, currentX, currentY);
     doc.text(line, 10 + titleWidth + currentX, currentY);
@@ -60,7 +88,7 @@ export const addSummary = (
       currentX += 10;
 
       titleWidth = doc.getTextWidth(`${externalNumber + '.' + internalNumber + ' ' + binder}`);
-      lineWidth = totalWidth - (titleWidth - currentX) - 7.5;
+      lineWidth = totalWidth - (titleWidth - currentX);
       lineLength = Math.floor(lineWidth / doc.getTextWidth('_'));
       line = '_'.repeat(lineLength - currentX);
 
@@ -78,7 +106,7 @@ export const addSummary = (
       currentY += 10;
 
       titleWidth = doc.getTextWidth('Agregados');
-      lineWidth = totalWidth - (titleWidth - currentX) - 7;
+      lineWidth = totalWidth - (titleWidth - currentX);
       lineLength = Math.floor(lineWidth / doc.getTextWidth('_'));
       line = '_'.repeat(lineLength - currentX);
 
@@ -95,7 +123,7 @@ export const addSummary = (
 
       for (let i = 0; i < aggregates.length; i++) {
         titleWidth = doc.getTextWidth(aggregates[i].name);
-        lineWidth = totalWidth - (titleWidth + currentX) - 7;
+        lineWidth = totalWidth - (titleWidth + currentX) - 8.5;
         lineLength = Math.floor(lineWidth / doc.getTextWidth('_'));
         line = '_'.repeat(lineLength);
         const aggregate = aggregates[i];
@@ -253,8 +281,7 @@ export const addCapa = (
     ['abcp']: t('asphalt.dosages.abcp.project.description.text'),
   };
 
-  doc.addImage(logo, 'png', 5, 5, 50, 8);
-  doc.addImage(logo, 'png', 155, 5, 50, 8);
+  addHeader(doc, logo);
 
   let currentY = 55;
   addCenteredText(doc, `${t('asphalt.pdf.project-title') + ' ' + projectType}`, currentY, 12);
@@ -275,18 +302,31 @@ export const addCapa = (
   }
 
   addTextToRightMargin(doc, `${dosageDescription[projectType]}`, 100, currentY);
-
-  const pageHeight = doc.internal.pageSize.height;
-  const lineYPosition = pageHeight - 10;
-  const dateYPosition = lineYPosition - 5;
-
-  const formattedDate = getCurrentDateFormatted();
-
-  addCenteredText(doc, formattedDate, dateYPosition, 12);
 };
 
 export const addTextToLeftMargin = (doc: any, text: any, margin: any, y: any, fontSize = 12) => {
   const x = margin;
   doc.setFontSize(fontSize);
   doc.text(x, y, text);
+};
+
+export const addSection = async (sectionElement: HTMLDivElement, doc: jsPDF, currentY: number): Promise<number> => {
+  if (!sectionElement) return currentY;
+
+  const canvas = await html2canvas(sectionElement);
+  const imgData = canvas.toDataURL('image/png');
+  const imgProps = doc.getImageProperties(imgData);
+  const pdfWidth = doc.internal.pageSize.getWidth();
+  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const xPosition = (doc.internal.pageSize.getWidth() - pdfWidth) / 2;
+
+  if (currentY + pdfHeight > pageHeight - 10) {
+    doc.addPage();
+    currentY = 5;
+  }
+
+  doc.addImage(imgData, 'PNG', xPosition, currentY, pdfWidth, pdfHeight);
+
+  return currentY + pdfHeight + 5;
 };

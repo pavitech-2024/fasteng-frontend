@@ -20,5 +20,7 @@
   "concrete.materials.other": "Other",
   "concrete.materials.comments": "Comments",
   "concrete.materials.maxDiammeter": "Maximum Diammeter",
-  "concrete.materials.resistance": "Resistance"
+  "concrete.materials.resistance": "Resistance",
+  "concrete.materials.cementType": "Tipo de cimento",
+  "concrete.materials.cementType.other": "Other"
 }
