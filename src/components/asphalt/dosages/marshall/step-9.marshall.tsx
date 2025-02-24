@@ -412,13 +412,12 @@ const Marshall_Step9 = ({
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
-            gap: '4rem',
+            gap: {mobile: '5px', notebook: '4rem'},
             marginY: '20px',
           }}
         >
-          <Box id="general-results">
-            <ResultSubTitle title={t('marshall.general-results')} sx={{ margin: '.65rem' }} />
-
+          <ResultSubTitle title={t('marshall.general-results')} sx={{ margin: '.65rem' }} />
+          <Box id="general-results" sx={{ width: '100%', overflowX: 'auto' }}>
             {optimumContentCols.length > 0 && optimumContentRows.length > 0 && optimumContentGroupings.length > 0 && (
               <DataGrid
                 key={'optimumContent'}
@@ -434,13 +433,15 @@ const Marshall_Step9 = ({
                 disableColumnMenu
                 disableColumnSelector
                 hideFooter
+                sx={{
+                  minWidth: '600px',
+                }}
               />
             )}
           </Box>
 
-          <Box id="asphalt-mass-quantitative">
-            <ResultSubTitle title={t('asphalt.dosages.marshall.asphalt-mass-quantitative')} />
-
+          <ResultSubTitle title={t('asphalt.dosages.marshall.asphalt-mass-quantitative')} sx={{ marginX: '.65rem' }} />
+          <Box id="asphalt-mass-quantitative" sx={{ width: '100%', overflowX: 'auto' }}>
             <DataGrid
               columns={quantitativeCols.map((col) => ({
                 ...col,
@@ -455,6 +456,9 @@ const Marshall_Step9 = ({
               disableColumnMenu
               disableColumnSelector
               hideFooter
+              sx={{
+                minWidth: '600px',
+              }}
             />
           </Box>
 
@@ -464,6 +468,7 @@ const Marshall_Step9 = ({
               sx={{
                 maxWidth: '103%',
                 wordWrap: 'break-word',
+                marginX: '.65rem'
               }}
             />
 
@@ -471,6 +476,7 @@ const Marshall_Step9 = ({
               sx={{
                 width: '100%',
                 display: 'flex',
+                justifyContent: { mobile: 'center', notebook: 'flex-start' },
                 flexWrap: 'wrap',
                 gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
                 gap: '10px',
@@ -485,7 +491,7 @@ const Marshall_Step9 = ({
             </Box>
           </Box>
 
-          <Box id="volumetric-params">
+          <Box id="volumetric-params" sx={{ width: '100%', overflowX: 'auto' }}>
             <DataGrid
               rows={volumetricParamsRows}
               columns={volumetricParamsCols.map((col) => ({
@@ -498,10 +504,13 @@ const Marshall_Step9 = ({
               disableColumnMenu
               disableColumnSelector
               hideFooter
+              sx={{
+                minWidth: '600px',
+              }}
             />
           </Box>
 
-          <Box id="mineral-aggregate-voids">
+          <Box id="mineral-aggregate-voids" sx={{ width: '100%', overflowX: 'auto' }}>
             <DataGrid
               rows={mineralAggregateVoidsRows}
               columns={mineralAggregateVoidsCols.map((column) => ({
@@ -516,12 +525,15 @@ const Marshall_Step9 = ({
               disableColumnMenu
               disableColumnSelector
               hideFooter
+              sx={{
+                minWidth: '600px',
+              }}
             />
           </Box>
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title={t('c')} open={true}>
+      <FlexColumnBorder title={t('asphalt.dosages.marshall.granulometric-composition')} open={true}>
         <Box
           sx={{
             width: '100%',
@@ -531,7 +543,7 @@ const Marshall_Step9 = ({
             marginY: '20px',
           }}
         >
-          <Box id="granulometric-composition-table" sx={{ paddingX: '6rem' }}>
+          <Box id="granulometric-composition-table" sx={{ paddingX: { mobile: '0px', notebook: '6rem'}, width: '100%', overflowX: 'auto' }}>
             <DataGrid
               rows={granulometricCompTableRows}
               columns={granulometricCompTableColumns.map((col) => ({
@@ -545,10 +557,13 @@ const Marshall_Step9 = ({
               experimentalFeatures={{ columnGrouping: true }}
               disableColumnMenu
               hideFooter
+              sx={{
+                minWidth: '600px',
+              }}
             />
           </Box>
 
-          <Box id="chart-div-granulometricCurve" sx={{ paddingX: '6rem' }}>
+          <Box id="chart-div-granulometricCurve" sx={{ paddingX: { mobile: '0px', notebook: '6rem'} }}>
             {granulometryCompositionData?.graphData?.length > 1 && (
               <Graph data={granulometryCompositionData?.graphData} />
             )}

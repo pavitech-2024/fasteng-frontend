@@ -126,7 +126,6 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
           sx={{
             width: '100%',
             display: 'flex',
-            // gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
             gap: '10px',
             marginY: '20px',
             flexWrap: 'wrap',
@@ -137,9 +136,9 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
             sx={{
               width: '100%',
               display: 'flex',
-              // gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
+              justifyContent: {mobile: 'center', notebook: 'flex-start'},
               gap: '10px',
-              mt: '20px',
+              mt: {xs: '0px', md: '20px'},
               flexWrap: 'wrap',
             }}
           >
@@ -153,7 +152,7 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
             sx={{
               width: '100%',
               display: 'flex',
-              // gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
+              justifyContent: {mobile: 'center', notebook: 'flex-start'},
               gap: '10px',
               mt: '20px',
               flexWrap: 'wrap',
@@ -174,7 +173,7 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
             sx={{
               width: '100%',
               display: 'flex',
-              // gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
+              justifyContent: {mobile: 'center', notebook: 'flex-start'},
               gap: '10px',
               mt: '20px',
               flexWrap: 'wrap',

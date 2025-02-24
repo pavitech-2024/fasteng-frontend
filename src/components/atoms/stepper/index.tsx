@@ -26,7 +26,7 @@ interface StepperWelcomeProps {
 export const Stepper = ({ stepperData, activeStep, variant }: StepperProps) => {
   return (
     <>
-      <StepperMui activeStep={activeStep} alternativeLabel sx={{ width: '100%' }} connector={<QontoConnector />}>
+      <StepperMui activeStep={activeStep} alternativeLabel sx={{ width: '100%', display: 'flex', flexWrap: 'wrap' }} connector={<QontoConnector />}>
         {stepperData.map((step: StepperData, index: number) => (
           <Step
             key={index}

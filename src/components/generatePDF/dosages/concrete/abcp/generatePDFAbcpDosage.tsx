@@ -1,17 +1,19 @@
 import {
   addCenteredText,
-  calculatePageNumber,
   addImageProcess,
   addCapa,
   SummaryItem,
   addChart,
+  handleAddPage,
 } from '@/components/generatePDF/common';
 import useAuth from '@/contexts/auth';
 import { ABCPData } from '@/stores/concrete/abcp/abcp.store';
-import { Box, Button, Tooltip } from '@mui/material';
+import { Box, Button, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { t } from 'i18next';
 import jsPDF from 'jspdf';
 import logo from '@/assets/fasteng/LogoBlack.png';
+import Loading from '@/components/molecules/loading';
+import { useState } from 'react';
 
 interface IGeneratedPDF {
   dosage: ABCPData;
@@ -19,30 +21,48 @@ interface IGeneratedPDF {
 
 const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
   const { user } = useAuth();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up(theme.breakpoints.values.notebook));
 
   const addSummary = (doc: jsPDF, image: HTMLImageElement, summaryItems: SummaryItem[]) => {
-    let currentY = 30;
-
-    doc.addImage(image, 'png', 5, 5, 50, 8);
-    doc.addImage(image, 'png', 155, 5, 50, 8);
+    let currentY = 40;
+    const docWidth = doc.internal.pageSize.getWidth();
+    const docMargins = (docWidth * 0.2) / 2;
+    let currentX = docMargins;
 
     addCenteredText(doc, `${t('asphalt.essays.project.summary')}`, currentY, 12);
     currentY += 20;
+    let page = 3;
 
-    summaryItems.forEach((item) => {
+    summaryItems.forEach((item, idx) => {
       const title = item.title;
-      const pageText = `${t('asphalt.essays.project.page')} ${item.page}`;
-      const titleWidth = doc.getTextWidth(title);
-      const pageWidth = doc.getTextWidth(pageText);
-      const totalWidth = 190;
-      const lineWidth = totalWidth - (titleWidth + pageWidth + 5);
+      const externalNumber = idx + 1;
+      const totalWidth = docWidth - docMargins;
+      let internalNumber = 1;
+      let titleWidth = doc.getTextWidth(title);
+      let lineWidth = totalWidth - titleWidth;
 
-      doc.text(title, 10, currentY);
+      if (lineWidth > docWidth - docMargins * 2 - titleWidth) {
+        lineWidth = docWidth - docMargins * 2 - titleWidth - 15;
+      } else if (lineWidth < docWidth - docMargins * 2 - titleWidth) {
+        lineWidth = docWidth - docMargins * 2 - titleWidth + 10;
+      }
 
-      const line = '_'.repeat(Math.floor(lineWidth / doc.getTextWidth('_')));
-      doc.text(line, 12 + titleWidth, currentY);
-      doc.text(pageText, 15 + titleWidth + doc.getTextWidth(line), currentY);
+      let lineLength = Math.floor(lineWidth / doc.getTextWidth('_'));
+      let line = '';
+      if (lineLength < 0) {
+        line = '_';
+      } else {
+        line = '_'.repeat(lineLength);
+      }
 
+      doc.text(externalNumber + '. ' + title, currentX, currentY);
+      doc.text(line, 10 + titleWidth + currentX, currentY);
+      doc.text(page.toString(), totalWidth, currentY);
+
+      page += 1;
       currentY += 10;
     });
 
@@ -51,11 +71,6 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     doc.setLineWidth(0.5);
     doc.line(10, lineYPosition, 200, lineYPosition);
-  };
-
-  const addHeader = (doc: jsPDF, image: HTMLImageElement) => {
-    doc.addImage(image, 'png', 5, 5, 50, 8);
-    doc.addImage(image, 'png', 155, 5, 50, 8);
   };
 
   const handleAddSubtitle = (text: string, doc: jsPDF, currentY: number) => {
@@ -70,6 +85,7 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
   };
 
   const generatePDF = async () => {
+    setLoading(true);
     const doc = new jsPDF('p', 'mm', 'a4');
     let currentY = 55;
 
@@ -86,9 +102,8 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
       dosage.generalData.operator,
       dosage.generalData.laboratory
     );
-    doc.addPage();
 
-    addHeader(doc, image);
+    handleAddPage(doc, image, currentY, t('concrete.dosage-pdf-title'));
 
     const summaryItems: SummaryItem[] = [
       { title: t('abcp.general-results'), page: 3 },
@@ -97,23 +112,24 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
       { title: t('abcp.result.graph'), page: 4 },
     ];
 
-    doc.setPage(2);
     addSummary(doc, image, summaryItems);
 
-    doc.addPage();
+    handleAddPage(doc, image, currentY, t('concrete.dosage-pdf-title'));
 
-    currentY = 30;
+    currentY = 40;
 
     currentY = handleAddSubtitle(`Relatório de Dosagem - ${dosage.generalData.name}`, doc, currentY);
 
+    currentY += 5;
+
     doc.setFontSize(10);
-    doc.text(`Gerado por: ${user.name}`, 10, 40);
-    doc.text(`Email: ${user.email}`, 10, 45);
-    doc.text(`Data: ${new Date().toLocaleDateString()}`, 10, 50);
+    doc.text(`Gerado por: ${user.name}`, 10, currentY);
+    currentY += 5;
+    doc.text(`Email: ${user.email}`, 10, currentY);
+    currentY += 5;
+    doc.text(`Data: ${new Date().toLocaleDateString()}`, 10, currentY);
 
-    addHeader(doc, image);
-
-    currentY = 55;
+    currentY += 10;
 
     currentY = handleAddSubtitle('Resultados gerais', doc, currentY);
 
@@ -161,22 +177,37 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     doc.setPage(3);
 
+    currentY = 40;
+
+    handleAddPage(doc, image, currentY, t('concrete.dosage-pdf-title'));
+
     currentY = handleAddSubtitle(t('abcp.result.graph'), doc, currentY + 5);
 
     await addChart(document.getElementById('chart-div-abramsCurveGraph') as HTMLDivElement, doc, currentY);
 
     doc.save(`Relatorio_Dosagem_${dosage?.generalData.name}.pdf`);
+    setLoading(false);
   };
 
   return (
     <>
-      <Tooltip title={t('asphalt.dosages.superpave.tooltips.disabled-pdf-generator')} placement="top">
-        <Box onClick={dosage?.results && generatePDF} sx={{ width: 'fit-content' }}>
-          <Button variant="contained" color="primary" disabled={!dosage?.results}>
-            Gerar PDF
-          </Button>
-        </Box>
-      </Tooltip>
+      {dosage?.results && isDesktop && (
+        <Tooltip title={t('asphalt.dosages.superpave.tooltips.disabled-pdf-generator')} placement="top">
+          <Box
+            onClick={generatePDF}
+            sx={{ width: 'fit-content' }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={!dosage?.results}
+              sx={{ minWidth: '200px', minHeight: '2rem' }}
+            >
+              {loading ? <Loading size={25} color={'inherit'} /> : t('generate.dosage.button')}
+            </Button>
+          </Box>
+        </Tooltip>
+      )}
     </>
   );
 };
