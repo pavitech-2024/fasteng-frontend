@@ -10,45 +10,25 @@ const Soils: NextPage = () => {
     {
       name: t('navbar.samples'),
       icon: <MaterialsIcon width="30px" height="35px" />,
-<<<<<<< HEAD
-      /*description: 'Descrição sobre materiais',*/
-      description: t('welcome.soils.description'),
-=======
       description: t('description.materials'),
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
       path: '/soils/samples',
     },
     {
       name: t('navbar.essays'),
       icon: <EssayIcon width="30px" height="35px" />,
-<<<<<<< HEAD
-      /*description: 'Descrição sobre materiais',*/
-      description: t('welcome.soils.description'),
-=======
       description: t('description.essays'),
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
       path: '/soils/essays',
     },
     {
       name: t('navbar.standards'),
       icon: <StandartsIcon style={{ color: 'white', fontSize: '30px' }} />,
-<<<<<<< HEAD
-      /*description: 'Descrição sobre materiais',*/
-      description: t('welcome.soils.description'),
-=======
       description: t('description.standards'),
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
       path: '/soils/standards',
     },
     {
       name: t('navbar.library'),
       icon: <LibraryIcon style={{ color: 'white', fontSize: '30px' }} />,
-<<<<<<< HEAD
-      /*description: 'Descrição sobre materiais',*/
-      description: t('welcome.soils.description'),
-=======
       description: t('description.library'),
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
       path: '/soils/library',
     },
   ];

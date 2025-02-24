@@ -38,50 +38,6 @@ const WelcomeTemplateConcrete = ({ welcomeData, stepperData, icon }: WelcomeTemp
 
   const [modalOpen, setModalOpen] = useState(false);
 
-<<<<<<< HEAD:src/pages/promedina/granular-layers/index.tsx
-  const stepperDataView: StepperData[] = [
-    {
-      step: 1,
-      description: t('welcome.step.granular-layers.view.1'),
-    },
-    {
-      step: 2,
-      description: t('welcome.step.granular-layers.view.2'),
-    },
-  ];
-
-  const stepperDataRegister: StepperData[] = [
-    {
-      step: 1,
-      description: t('welcome.step.granular-layers.register.1'),
-    },
-    {
-      step: 2,
-      description: t('welcome.step.granular-layers.register.2'),
-    },
-    {
-      step: 2,
-      description: t('welcome.step.granular-layers.register.3'),
-    },
-  ];
-
-  const welcomeData: WelcomeData[] = [
-    {
-      name: t('pm.register'),
-      icon: <MaterialsIcon width="30px" height="35px" />,
-      description: t('pm.register'),
-      path: '/promedina/granular-layers/register',
-    },
-    {
-      name: t('pm.view'),
-      icon: <MarshallIcon width="30px" height="35px" />,
-      description: t('pm.view'),
-      path: '/promedina/granular-layers/view',
-    },
-  ];
-
-=======
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d:src/components/templates/welcome/concrete/index.tsx
   return (
     <Container>
       <Box
@@ -171,10 +127,6 @@ const WelcomeTemplateConcrete = ({ welcomeData, stepperData, icon }: WelcomeTemp
               >
                 {t('welcome.how it works')}
               </Typography>
-<<<<<<< HEAD:src/pages/promedina/granular-layers/index.tsx
-              <Typography sx={{ marginBottom: '1rem' }}>{t('pm.granular.works.register')}</Typography>
-=======
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d:src/components/templates/welcome/concrete/index.tsx
               <Box
                 sx={{
                   position: 'absolute',
@@ -203,10 +155,6 @@ const WelcomeTemplateConcrete = ({ welcomeData, stepperData, icon }: WelcomeTemp
                   width: '100%',
                   mt: { mobile: '3vh', notebook: '25px' },
                   transition: '0.5s ease-out',
-<<<<<<< HEAD:src/pages/promedina/granular-layers/index.tsx
-                  marginBottom: '1rem',
-=======
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d:src/components/templates/welcome/concrete/index.tsx
                 }}
               >
                 <Typography

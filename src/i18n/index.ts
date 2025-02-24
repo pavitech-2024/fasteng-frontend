@@ -23,15 +23,6 @@ import settingsENG from './translations/settings/en.json';
 //errors
 import errorsPTBR from './translations/errors/ptbr.json';
 import errorsENG from './translations/errors/en.json';
-<<<<<<< HEAD
-// Pro-medina
-import promedinaPTBR from './translations/pro-medina/pt-br.json';
-import promedinaENG from './translations/pro-medina/en.json';
-// Pro-medina / granular layers
-import proMedinaGranularLayersPTBR from './translations/pro-medina/granularLayers/ptbr.json';
-import proMedinaGranularLayersENG from './translations/pro-medina/granularLayers/en.json';
-=======
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
 
 /** @templates */
 import materialsPTBR from './translations/templates/materials/ptbr.json';
@@ -205,12 +196,6 @@ i18n.use(initReactI18next).init({
         ...settingsPTBR,
         ...footerPTBR,
         ...errorsPTBR,
-<<<<<<< HEAD
-        /**@proMedina */
-        ...promedinaPTBR,
-        ...proMedinaGranularLayersPTBR,
-=======
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
         /**@templates */
         ...materialsPTBR,
         ...welcomePTBR,
@@ -279,12 +264,6 @@ i18n.use(initReactI18next).init({
         ...settingsENG,
         ...footerENG,
         ...errorsENG,
-<<<<<<< HEAD
-        /**@proMedina */
-        ...promedinaENG,
-        ...proMedinaGranularLayersENG,
-=======
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
         /**@templates */
         ...materialsENG,
         ...welcomeENG,

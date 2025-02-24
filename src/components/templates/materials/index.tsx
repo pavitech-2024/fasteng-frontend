@@ -340,19 +340,6 @@ const MaterialsTemplate = ({
                                     bgcolor: 'secondaryTons.blueDisabled',
                                   },
 
-<<<<<<< HEAD
-                                ':active': {
-                                  bgcolor: 'secondaryTons.blueClick',
-                                },
-                              }}
-                              onClick={(e) => console.log(e)}
-                            >
-                              <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
-                                {t('materials.template.visualize')}
-                              </Typography>
-                              <NextIcon sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
-                            </Button>
-=======
                                   ':active': {
                                     bgcolor: 'secondaryTons.blueClick',
                                   },
@@ -365,7 +352,6 @@ const MaterialsTemplate = ({
                                 <NextIcon sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
                               </Button>
                             </Link>
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
                             <Button
                               variant="text"
                               color="error"

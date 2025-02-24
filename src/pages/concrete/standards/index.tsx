@@ -11,17 +11,7 @@ import { Standard } from '@/interfaces/common';
 import { t } from 'i18next';
 import { NextPage } from 'next';
 
-<<<<<<< HEAD
-
-interface ConcreteStandardsProps {
-  standards: Standard[];
-  filterOptions: FilterOption[];
-}
-
-export const getStaticProps = async () => {
-=======
 const ConcreteStandards: NextPage = () => {
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
   const standards: Standard[] = [
     {
       title: t('chapman'),
@@ -60,25 +50,9 @@ const ConcreteStandards: NextPage = () => {
     },
   ];
 
-<<<<<<< HEAD
-  /*const filterOptions: FilterOption[] = [
-    { key: 'all', title: 'Todos', isSelected: true },
-    { key: 'aggregates', title: 'Agregados', isSelected: false },
-    { key: 'asphaltMix', title: 'Misturas Asfálticas', isSelected: false },
-    { key: 'asphaltBinder', title: 'Ligante Asfáltico', isSelected: false },
-  ];*/
-
-  return {
-    props: {
-      standards,
-      //filterOptions,
-    },
-  };
-=======
   const filterOptions: FilterOption[] = [{ key: 'all', title: t('all'), isSelected: true }];
 
   return <StandardsTemplate standards={standards} filterOptions={filterOptions} />;
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
 };
 
 export default ConcreteStandards;

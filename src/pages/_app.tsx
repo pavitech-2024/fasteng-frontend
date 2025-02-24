@@ -13,12 +13,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/en-gb';
 import 'dayjs/locale/en';
 import CssBaseline from '@mui/material/CssBaseline';
-<<<<<<< HEAD
-import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
-import { useRouter } from 'next/router';
-import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
-import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
-=======
 import { useRouter } from 'next/router';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 
@@ -26,7 +20,6 @@ import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 //   // eslint-disable-next-line @typescript-eslint/no-empty-interface
 //   interface DefaultTheme extends Theme {}
 // }
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { i18n } = useTranslation();

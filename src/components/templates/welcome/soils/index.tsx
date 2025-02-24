@@ -38,50 +38,6 @@ const WelcomeTemplateSoils = ({ welcomeData, stepperData, icon }: WelcomeTemplat
 
   const [modalOpen, setModalOpen] = useState(false);
 
-<<<<<<< HEAD:src/pages/promedina/binder-asphalt-concrete/index.tsx
-  const stepperDataView: StepperData[] = [
-    {
-      step: 1,
-      description: t('welcome.step.binder-asphalt-concrete.view.1'),
-    },
-    {
-      step: 2,
-      description: t('welcome.step.binder-asphalt-concrete.view.2'),
-    },
-  ];
-
-  const stepperDataRegister: StepperData[] = [
-    {
-      step: 1,
-      description: t('welcome.step.binder-asphalt-concrete.register.1'),
-    },
-    {
-      step: 2,
-      description: t('welcome.step.binder-asphalt-concrete.register.2'),
-    },
-    {
-      step: 2,
-      description: t('welcome.step.binder-asphalt-concrete.register.3'),
-    },
-  ];
-
-  const welcomeData: WelcomeData[] = [
-    {
-      name: t('pm.register'),
-      icon: <MaterialsIcon width="30px" height="35px" />,
-      description: t('pm.register'),
-      path: '/promedina/binder-asphalt-concrete/register',
-    },
-    {
-      name: t('pm.view'),
-      icon: <MarshallIcon width="30px" height="35px" />,
-      description: t('pm.view'),
-      path: '/promedina/binder-asphalt-concrete/view',
-    },
-  ];
-
-=======
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d:src/components/templates/welcome/soils/index.tsx
   return (
     <Container>
       <Box
@@ -171,10 +127,6 @@ const WelcomeTemplateSoils = ({ welcomeData, stepperData, icon }: WelcomeTemplat
               >
                 {t('welcome.how it works')}
               </Typography>
-<<<<<<< HEAD:src/pages/promedina/binder-asphalt-concrete/index.tsx
-              <Typography sx={{ marginBottom: '1rem' }}>{t('pm.granular.works.register')}</Typography>
-=======
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d:src/components/templates/welcome/soils/index.tsx
               <Box
                 sx={{
                   position: 'absolute',
@@ -203,10 +155,6 @@ const WelcomeTemplateSoils = ({ welcomeData, stepperData, icon }: WelcomeTemplat
                   width: '100%',
                   mt: { mobile: '3vh', notebook: '25px' },
                   transition: '0.5s ease-out',
-<<<<<<< HEAD:src/pages/promedina/binder-asphalt-concrete/index.tsx
-                  marginBottom: '1rem',
-=======
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d:src/components/templates/welcome/soils/index.tsx
                 }}
               >
                 <Typography

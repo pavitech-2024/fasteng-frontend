@@ -15,17 +15,12 @@ import { LoginImage, LoginBackgroundPhoto } from '@/components/styles/styleds/lo
 import { AboutButton } from '@/components/styles/muis/login';
 import { MainButton as Button } from '@/components/styles/global';
 
-<<<<<<< HEAD
-// mui
-import { TextField, Box, Container, Typography } from '@mui/material';
-=======
 //mui
 import { TextField, Box, Container, Typography, ButtonBase } from '@mui/material';
 import { JbrAnchor, LepAnchor } from '@/components/atoms/anchor/loginAnchors';
 import axios from 'axios';
 import ModalBase from '@/components/molecules/modals/modal';
 import Api from '@/api';
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
 
 const Login: NextPage = () => {
   const { signIn } = useAuth();

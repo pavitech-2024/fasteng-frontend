@@ -38,50 +38,6 @@ const WelcomeTemplateAsphalt = ({ welcomeData, stepperData, icon }: WelcomeTempl
 
   const [modalOpen, setModalOpen] = useState(false);
 
-<<<<<<< HEAD:src/pages/promedina/stabilized-layers/index.tsx
-  const stepperDataView: StepperData[] = [
-    {
-      step: 1,
-      description: t('welcome.step.stabilized-layers.view.1'),
-    },
-    {
-      step: 2,
-      description: t('welcome.step.stabilized-layers.view.2'),
-    },
-  ];
-
-  const stepperDataRegister: StepperData[] = [
-    {
-      step: 1,
-      description: t('welcome.step.stabilized-layers.register.1'),
-    },
-    {
-      step: 2,
-      description: t('welcome.step.stabilized-layers.register.2'),
-    },
-    {
-      step: 2,
-      description: t('welcome.step.stabilized-layers.register.3'),
-    },
-  ];
-
-  const welcomeData: WelcomeData[] = [
-    {
-      name: t('pm.register'),
-      icon: <MaterialsIcon width="30px" height="35px" />,
-      description: t('pm.register'),
-      path: '/promedina/stabilized-layers/register',
-    },
-    {
-      name: t('pm.view'),
-      icon: <MarshallIcon width="30px" height="35px" />,
-      description: t('pm.view'),
-      path: '/promedina/stabilized-layers/view',
-    },
-  ];
-
-=======
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d:src/components/templates/welcome/asphalt/index.tsx
   return (
     <Container>
       <Box
@@ -171,10 +127,6 @@ const WelcomeTemplateAsphalt = ({ welcomeData, stepperData, icon }: WelcomeTempl
               >
                 {t('welcome.how it works')}
               </Typography>
-<<<<<<< HEAD:src/pages/promedina/stabilized-layers/index.tsx
-              <Typography sx={{ marginBottom: '1rem' }}>{t('pm.stabilized.works.register')}</Typography>
-=======
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d:src/components/templates/welcome/asphalt/index.tsx
               <Box
                 sx={{
                   position: 'absolute',
@@ -203,10 +155,6 @@ const WelcomeTemplateAsphalt = ({ welcomeData, stepperData, icon }: WelcomeTempl
                   width: '100%',
                   mt: { mobile: '3vh', notebook: '25px' },
                   transition: '0.5s ease-out',
-<<<<<<< HEAD:src/pages/promedina/stabilized-layers/index.tsx
-                  marginBottom: '1rem',
-=======
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d:src/components/templates/welcome/asphalt/index.tsx
                 }}
               >
                 <Typography
