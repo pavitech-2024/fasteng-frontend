@@ -22,6 +22,7 @@ interface IGeneratedPDF {
 const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
+  const [openTooltip, setOpenTooltip] = useState(false);
 
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up(theme.breakpoints.values.notebook));
@@ -190,13 +191,28 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
   return (
     <>
-      {dosage?.results && isDesktop && (
-        <Tooltip title={t('asphalt.dosages.superpave.tooltips.disabled-pdf-generator')} placement="top">
-          <Box onClick={generatePDF} sx={{ width: 'fit-content' }}>
+      {dosage?.results && (
+        <Tooltip
+          title={isDesktop ? t('dosages.tooltips.save-dosage') : t('asphalt.tooltips.disabled-pdf-generator')}
+          placement="top"
+          leaveTouchDelay={5000}
+          open={!isDesktop && openTooltip}
+          onClose={() => setOpenTooltip(false)}
+        >
+          <Box
+            onClick={() => {
+              if (isDesktop) {
+                generatePDF();
+              } else {
+                setOpenTooltip(true)
+              }
+            }}
+            sx={{ width: 'fit-content' }}
+          >
             <Button
               variant="contained"
               color="primary"
-              disabled={!dosage?.results}
+              disabled={!dosage?.results || !isDesktop}
               sx={{ minWidth: '200px', minHeight: '2rem' }}
             >
               {loading ? <Loading size={25} color={'inherit'} /> : t('generate.dosage.button')}
