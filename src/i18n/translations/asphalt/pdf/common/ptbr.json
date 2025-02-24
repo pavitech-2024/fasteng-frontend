@@ -8,5 +8,5 @@
   "dosages.report.material-receivedDate": "Data de recebimento",
   "dosages.report.material-classification": "Classificação",
   "dosages.report.material-source": "Procedência do material",
-  "asphalt.tooltips.disabled-pdf-generator" : "O PDF é gerado somente na versão desktop."
+  "asphalt.tooltips.disabled-pdf-generator": "O PDF é gerado somente na versão desktop."
 }

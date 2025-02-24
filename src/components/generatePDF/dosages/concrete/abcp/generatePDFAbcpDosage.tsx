@@ -204,7 +204,7 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
               if (isDesktop) {
                 generatePDF();
               } else {
-                setOpenTooltip(true)
+                setOpenTooltip(true);
               }
             }}
             sx={{ width: 'fit-content' }}

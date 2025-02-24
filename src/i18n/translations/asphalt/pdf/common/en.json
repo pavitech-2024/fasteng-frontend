@@ -9,5 +9,5 @@
   "dosages.report.material-classification": "Classification",
   "dosages.report.material-source": "Material source",
 
-  "asphalt.tooltips.disabled-pdf-generator" : "The PDF is generated only in the desktop version."
+  "asphalt.tooltips.disabled-pdf-generator": "The PDF is generated only in the desktop version."
 }
