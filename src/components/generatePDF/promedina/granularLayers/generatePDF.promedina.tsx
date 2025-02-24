@@ -1,6 +1,5 @@
-import useAuth from '@/contexts/auth';
 import { GranularLayersData } from '@/stores/promedina/granular-layers/granular-layers.store';
-import { Tooltip, Box, Button } from '@mui/material';
+import { Tooltip, Box, Button, useTheme, useMediaQuery } from '@mui/material';
 import { t } from 'i18next';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -18,6 +17,10 @@ interface IGenerateGranularLayersPDF {
 
 const GeneratePDF_ProMedina = ({ sample, sections }: IGenerateGranularLayersPDF) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [openTooltip, setOpenTooltip] = useState(false);
+
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up(theme.breakpoints.values.notebook));
 
   const addSection = async (sectionElement: HTMLDivElement, doc: jsPDF, currentY: number): Promise<number> => {
     if (!sectionElement) return currentY;
@@ -70,11 +73,33 @@ const GeneratePDF_ProMedina = ({ sample, sections }: IGenerateGranularLayersPDF)
 
   return (
     <>
-      <Box onClick={sample && generatePDF} sx={{ width: 'fit-content', paddingX: '6rem' }}>
-        <Button variant="contained" color="primary" disabled={!sample} sx={{ minWidth: '8rem', minHeight: '2rem' }}>
-          {loading ? <Loading size={25} color={'inherit'} /> : t('pm.generate-pdf-button')}
-        </Button>
-      </Box>
+      <Tooltip
+        title={isDesktop ? t('dosages.tooltips.save-dosage') : t('asphalt.tooltips.disabled-pdf-generator')}
+        placement="top"
+        leaveTouchDelay={5000}
+        open={!isDesktop && openTooltip}
+        onClose={() => setOpenTooltip(false)}
+      >
+        <Box
+          sx={{ width: 'fit-content', paddingX: '6rem' }}
+          onClick={() => {
+            if (sample && isDesktop) {
+              generatePDF();
+            } else {
+              setOpenTooltip(true);
+            }
+          }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={!sample || !isDesktop}
+            sx={{ minWidth: '8rem', minHeight: '2rem' }}
+          >
+            {loading ? <Loading size={25} color={'inherit'} /> : t('pm.generate-pdf-button')}
+          </Button>
+        </Box>
+      </Tooltip>
     </>
   );
 };
