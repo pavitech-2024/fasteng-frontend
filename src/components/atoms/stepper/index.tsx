@@ -35,7 +35,7 @@ export const Stepper = ({ stepperData, activeStep, variant }: StepperProps) => {
                 color: 'secondaryTons.green',
               },
               '& .MuiStepIcon-text': {
-                fill: '#FCFCFC', // primaryTons.white
+                fill: 'primaryTons.white',
               },
               '& .MuiStepLabel-label.MuiStepLabel-alternativeLabel': {
                 fontSize: '0.8rem',

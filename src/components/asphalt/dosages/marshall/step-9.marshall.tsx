@@ -526,7 +526,7 @@ const Marshall_Step9 = ({
               disableColumnSelector
               hideFooter
               sx={{
-                minWidth: '600px',
+                minWidth: '100%',
               }}
             />
           </Box>
@@ -558,7 +558,7 @@ const Marshall_Step9 = ({
               disableColumnMenu
               hideFooter
               sx={{
-                minWidth: '600px',
+                minWidth: '500px',
               }}
             />
           </Box>

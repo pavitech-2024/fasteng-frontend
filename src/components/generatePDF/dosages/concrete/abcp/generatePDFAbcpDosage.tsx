@@ -30,7 +30,7 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
     let currentY = 40;
     const docWidth = doc.internal.pageSize.getWidth();
     const docMargins = (docWidth * 0.2) / 2;
-    let currentX = docMargins;
+    const currentX = docMargins;
 
     addCenteredText(doc, `${t('asphalt.essays.project.summary')}`, currentY, 12);
     currentY += 20;
@@ -40,8 +40,7 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
       const title = item.title;
       const externalNumber = idx + 1;
       const totalWidth = docWidth - docMargins;
-      let internalNumber = 1;
-      let titleWidth = doc.getTextWidth(title);
+      const titleWidth = doc.getTextWidth(title);
       let lineWidth = totalWidth - titleWidth;
 
       if (lineWidth > docWidth - docMargins * 2 - titleWidth) {
@@ -50,7 +49,7 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
         lineWidth = docWidth - docMargins * 2 - titleWidth + 10;
       }
 
-      let lineLength = Math.floor(lineWidth / doc.getTextWidth('_'));
+      const lineLength = Math.floor(lineWidth / doc.getTextWidth('_'));
       let line = '';
       if (lineLength < 0) {
         line = '_';
