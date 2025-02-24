@@ -4,7 +4,7 @@ import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import Abrasion_SERVICE from '@/services/asphalt/essays/abrasion/abrasion.service';
-import useAbrasionStore from '@/stores/asphalt/abrasion.store';
+import useAbrasionStore from '@/stores/asphalt/abrasion/abrasion.store';
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import { useState, useEffect } from 'react';
@@ -25,7 +25,9 @@ const Abrasion_GeneralData = ({
       async () => {
         const materials = await abrasion.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        const filteredMaterials = materials.filter((material) => material.type === 'coarseAggregate');
+
+        setMaterials(filteredMaterials);
         setLoading(false);
       },
       {
@@ -35,7 +37,6 @@ const Abrasion_GeneralData = ({
       }
     );
     // se não deixar o array vazio ele vai ficar fazendo requisições infinitas
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const inputs = [
@@ -60,7 +61,7 @@ const Abrasion_GeneralData = ({
     setNextDisabled(false);
 
   return (
-    <>
+    <div>
       {loading ? (
         <Loading />
       ) : (
@@ -121,7 +122,7 @@ const Abrasion_GeneralData = ({
                         value: material,
                       };
                     })}
-                    defaultValue={defaultValue}
+                    value={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
                     size="medium"
                     required={input.required}
@@ -141,7 +142,7 @@ const Abrasion_GeneralData = ({
           />
         </Box>
       )}
-    </>
+    </div>
   );
 };
 

@@ -16,16 +16,32 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
   const { results: granulometry_results, step2Data, generalData } = useAsphaltGranulometryStore();
 
   const data = {
-    // container "Resultados"
     container_other_data: [],
   };
 
   if (granulometry_results) {
     data.container_other_data.push(
+      {
+        label: t('granulometry-asphalt.accumulated-retained'),
+        value: granulometry_results.accumulated_retained,
+        unity: '%',
+      },
       { label: t('granulometry-asphalt.total-retained'), value: granulometry_results.total_retained, unity: 'g' },
-      { label: t('granulometry-asphalt.nominal-size'), value: granulometry_results.nominal_size, unity: 'mm' },
-      { label: t('granulometry-asphalt.nominal-diameter'), value: granulometry_results.nominal_diameter, unity: 'mm' },
-      { label: t('granulometry-asphalt.fineness-module'), value: granulometry_results.fineness_module, unity: '%' },
+      {
+        label: t('asphalt.essays.granulometry.results.nominalSize'),
+        value: granulometry_results.nominal_size,
+        unity: 'mm',
+      },
+      {
+        label: t('asphalt.essays.granulometry.results.nominalDiammeter'),
+        value: granulometry_results.nominal_diameter,
+        unity: 'mm',
+      },
+      {
+        label: t('asphalt.essays.granulometry.results.finenessModule'),
+        value: granulometry_results.fineness_module,
+        unity: '%',
+      },
       { label: t('granulometry-asphalt.cc'), value: granulometry_results.cc },
       { label: t('granulometry-asphalt.cnu'), value: granulometry_results.cnu },
       { label: t('granulometry-asphalt.error'), value: granulometry_results.error, unity: '%' }
@@ -47,12 +63,12 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
 
   step2Data.table_data.map((value, index) => {
     rows.push({
-      sieve: value.sieve,
+      sieve: value.sieve_label,
       passant_porcentage: value.passant,
-      passant: granulometry_results.passant[index],
-      retained_porcentage: granulometry_results.retained_porcentage[index],
+      passant: granulometry_results.passant[index][1],
+      retained_porcentage: granulometry_results.retained_porcentage[index][1],
       retained: value.retained,
-      accumulated_retained: granulometry_results.accumulated_retained[index],
+      accumulated_retained: granulometry_results.accumulated_retained[index][1],
     });
   });
 
@@ -98,14 +114,17 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
           sx={{
             width: '100%',
             display: 'flex',
-            // gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
             gap: '10px',
             mt: '20px',
           }}
         >
-          {data.container_other_data.map((item, index) => (
-            <Result_Card key={index} label={item.label} value={item.value} unity={item.unity} />
-          ))}
+          {data.container_other_data.map((item, index) => {
+            if (Array.isArray(item.value)) {
+              return null;
+            } else {
+              return <Result_Card key={index} label={item.label} value={item.value} unity={item.unity} />;
+            }
+          })}
         </Box>
         <Chart
           chartType="LineChart"

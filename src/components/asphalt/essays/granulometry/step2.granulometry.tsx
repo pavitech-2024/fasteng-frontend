@@ -1,23 +1,43 @@
 import DropDown from '@/components/atoms/inputs/dropDown';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import { SieveSeries } from '@/interfaces/common';
+import { Sieve, SieveSeries } from '@/interfaces/common';
 import useAsphaltGranulometryStore from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
 import { getSieveSeries } from '@/utils/sieves';
 import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import AsphaltGranulometry_step2Table from './tables/step2-table.granulometry';
+import { useEffect, useState } from 'react';
+import GranulometryCustomSeriesModal from '@/components/atoms/modals/GranulometryCustomSeriesModal';
 
 const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step2Data: data, setData } = useAsphaltGranulometryStore();
 
-  const sievesSeries = [getSieveSeries(0), getSieveSeries(1), getSieveSeries(2), getSieveSeries(3), getSieveSeries(4)];
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [dropdownDefaultValue, setDropdownDefaultValue] = useState({ label: '', value: [] });
+
+  useEffect(() => {
+    if (data.material_mass != null && data.table_data?.length > 0) {
+      const totalRetained = data.table_data.reduce((sum, row) => sum + row.retained, 0);
+      const remaining = data.material_mass - totalRetained;
+      setData({ step: 1, key: 'bottom', value: remaining });
+    }
+  }, [data.material_mass, data.table_data]);
+
+  const sievesSeries = [
+    getSieveSeries(0),
+    getSieveSeries(1),
+    getSieveSeries(2),
+    getSieveSeries(3),
+    getSieveSeries(4),
+    getSieveSeries(6),
+  ];
 
   if (data.sieve_series && data.table_data && data.table_data.length == 0) {
     const table_data = [];
     data.sieve_series.map((s) => {
-      table_data.push({ sieve: s.label, passant: 100, retained: 0 });
+      table_data.push({ sieve_label: s.label, sieve_value: s.value, passant: 100, retained: 0 });
     });
     setData({ step: 1, key: 'table_data', value: table_data });
   }
@@ -26,7 +46,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
 
   const columns: GridColDef[] = [
     {
-      field: 'sieve',
+      field: 'sieve_label',
       headerName: t('granulometry-asphalt.sieves'),
       valueFormatter: ({ value }) => `${value}`,
     },
@@ -37,8 +57,8 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
         if (!rows) {
           return;
         }
-        const { sieve } = row;
-        const sieve_index = rows.findIndex((r) => r.sieve === sieve);
+        const { sieve_label } = row;
+        const sieve_index = rows.findIndex((r) => r.sieve_label === sieve_label);
 
         return (
           <InputEndAdornment
@@ -46,7 +66,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
             adornment="%"
             type="number"
             inputProps={{ min: 0 }}
-            value={rows[sieve_index].passant}
+            value={rows[sieve_index]?.passant}
             required
             onChange={(e) => {
               if (e.target.value === null) return;
@@ -74,12 +94,8 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
 
               const new_current_accumulative_retained = accumulative_retained;
 
-              console.log(new_current_accumulative_retained);
-
               nextRows.map(function (item, index) {
                 const row = item;
-
-                console.log(row);
 
                 if (index > 0) {
                   const currentRows = nextRows.slice(0, index + 1);
@@ -90,8 +106,6 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
                     initial_retained
                   );
 
-                  console.log(accumulative_retained);
-
                   const retained =
                     Math.round(100 * (mass !== 0 ? ((100 - row.passant) / 100) * mass - accumulative_retained : 0)) /
                     100;
@@ -99,15 +113,11 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
                   const passant =
                     Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
 
-                  console.log(passant);
-                  console.log(retained);
-
                   newRows.map((e) => {
-                    if (e.sieve === row.sieve) {
+                    if (e.sieve_label === row.sieve_label) {
                       e.passant = passant;
                     }
                   });
-                  // newRows[sieve_index + index].retained = retained;
                 }
               });
 
@@ -124,8 +134,8 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
         if (!rows) {
           return;
         }
-        const { sieve } = row;
-        const sieve_index = rows.findIndex((r) => r.sieve === sieve);
+        const { sieve_label } = row;
+        const sieve_index = rows.findIndex((r) => r.sieve_label === sieve_label);
 
         return (
           <InputEndAdornment
@@ -133,7 +143,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
             adornment="g"
             type="number"
             inputProps={{ min: 0 }}
-            value={rows[sieve_index].retained}
+            value={rows[sieve_index]?.retained}
             required
             onChange={(e) => {
               if (e.target.value === null) return;
@@ -159,12 +169,8 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
 
               const new_current_accumulative_retained = current_accumulative_retained - current_retained;
 
-              console.log(new_current_accumulative_retained);
-
               nextRows.map(function (item, index) {
                 const row = item;
-
-                console.log(row);
 
                 if (index > 0) {
                   const currentRows = nextRows.slice(0, index + 1);
@@ -175,26 +181,14 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
                     initial_retained
                   );
 
-                  console.log(accumulative_retained);
-
-                  // const retained =
-                  // Math.round(
-                  //   100 *
-                  //     (mass !== 0 ? ((100 - row.passant) / 100) * mass - accumulative_retained : 0)
-                  // ) / 100;
-
                   const passant =
                     Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
 
-                  console.log(passant);
-                  console.log(item.retained);
-
                   newRows.map((e) => {
-                    if (e.sieve === row.sieve) {
+                    if (e.sieve_label === row.sieve_label) {
                       e.passant = passant;
                     }
                   });
-                  // newRows[sieve_index + index].retained = retained;
                 }
               });
 
@@ -205,6 +199,51 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
       },
     },
   ];
+
+  const handleDropdownDefaultValue = (isCustomSieries?: boolean) => {
+    let value: { label: string; value: Sieve[] } | undefined = {
+      label: '',
+      value: [],
+    };
+
+    if (!isCustomSieries) {
+      sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)
+        ? (value = {
+            label: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!.label,
+            value: sievesSeries.find((sieveSeries: SieveSeries) => sieveSeries.sieves === data.sieve_series)!.sieves,
+          })
+        : (value = {
+            label: 'teste',
+            value: [],
+          });
+    } else {
+      value = {
+        label: t('granulometry-asphalt.custom-series'),
+        value: [],
+      };
+    }
+
+    setDropdownDefaultValue(value);
+  };
+
+  const handleShowCustomSeries = (customSieveSeries: Sieve[]) => {
+    if (customSieveSeries.length > 0) {
+      setData({ step: 1, key: 'sieve_series', value: customSieveSeries });
+      setData({ step: 1, key: 'table_data', value: [] });
+    }
+  };
+
+  const handleSelectSeries = (value: Sieve[], index: number) => {
+    if (index === sievesSeries.length - 1) {
+      setModalIsOpen(true);
+      setDropdownDefaultValue({ label: t('granulometry-asphalt.custom-series'), value: [] });
+    } else {
+      const selectedSeries = sievesSeries[index];
+      setData({ step: 1, key: 'sieve_series', value: selectedSeries.sieves });
+      setData({ step: 1, key: 'table_data', value: [] });
+      setDropdownDefaultValue({ label: selectedSeries.label, value: selectedSeries.sieves });
+    }
+  };
 
   if (
     nextDisabled &&
@@ -266,18 +305,18 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
           key={'sieve_series'}
           variant="standard"
           label={t('granulometry-asphalt.choose-series')}
+          value={dropdownDefaultValue}
           options={sievesSeries.map((sieveSeries: SieveSeries) => {
             return { label: sieveSeries.label, value: sieveSeries.sieves };
           })}
-          callback={(value) => {
-            setData({ step: 1, key: 'sieve_series', value });
-            setData({ step: 1, key: 'table_data', value: [] });
+          callback={(value: Sieve[], index?: number) => {
+            handleSelectSeries(value, index);
           }}
           size="medium"
           required
         />
       </Box>
-      <AsphaltGranulometry_step2Table rows={rows} columns={columns} />
+      {rows?.length > 0 && columns?.length > 0 && <AsphaltGranulometry_step2Table rows={rows} columns={columns} />}
       <Box
         sx={{
           width: '100%',
@@ -290,15 +329,27 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
         <Box key={'bottom'}>
           <InputEndAdornment
             label={t('granulometry-asphalt.bottom')}
+            variant={'filled'}
+            key="bottom"
             value={data.bottom}
             onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
             adornment={'g'}
             type="number"
             inputProps={{ min: 0 }}
-            required
+            readOnly={true}
+            focused
           />
         </Box>
       </Box>
+
+      <GranulometryCustomSeriesModal
+        setCloseModal={(isClosed: boolean) => setModalIsOpen(isClosed)}
+        isOpen={modalIsOpen}
+        customSieveSeries={(customSieveSeries) => {
+          handleShowCustomSeries(customSieveSeries);
+          handleDropdownDefaultValue(true);
+        }}
+      />
     </Box>
   );
 };

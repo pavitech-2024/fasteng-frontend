@@ -30,7 +30,6 @@ class ADHESIVENESS_SERVICE implements IEssayService {
   /** @handleNext Receives the step and data from the form and calls the respective method */
   handleNext = async (step: number, data: unknown): Promise<void> => {
     try {
-      console.log(data);
       switch (step) {
         case 0:
           await this.submitGeneralData(data as AdhesivenessData['generalData']);
@@ -64,7 +63,7 @@ class ADHESIVENESS_SERVICE implements IEssayService {
 
   getBindersByUserId = async (userId: string): Promise<AsphaltMaterial[]> => {
     try {
-      const { data } = await Api.get(`/asphalt/materials/binders/${userId}`);
+      const { data } = await Api.get(`/asphalt/materials/all/${userId}`);
 
       //filtrando apenas os materiais de tipo "asphaltBinder"
       return data.filter((material) => material.type === 'asphaltBinder');
@@ -107,8 +106,6 @@ class ADHESIVENESS_SERVICE implements IEssayService {
       const { success, error, result } = response.data;
 
       if (success === false) throw error.name;
-
-      console.log(result);
 
       this.store_actions.setData({ step: 2, value: result });
     } catch (error) {

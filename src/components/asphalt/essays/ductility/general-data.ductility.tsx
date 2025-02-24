@@ -25,7 +25,9 @@ const Ductility_GeneralData = ({
       async () => {
         const materials = await ductility.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        const filteredMaterials = materials.filter((material) => material.type === 'asphaltBinder');
+
+        setMaterials(filteredMaterials);
         setLoading(false);
       },
       {
@@ -60,7 +62,7 @@ const Ductility_GeneralData = ({
     setNextDisabled(false);
 
   return (
-    <>
+    <div>
       {loading ? (
         <Loading />
       ) : (
@@ -121,7 +123,7 @@ const Ductility_GeneralData = ({
                         value: material,
                       };
                     })}
-                    defaultValue={defaultValue}
+                    value={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
                     size="medium"
                     required={input.required}
@@ -141,7 +143,7 @@ const Ductility_GeneralData = ({
           />
         </Box>
       )}
-    </>
+    </div>
   );
 };
 

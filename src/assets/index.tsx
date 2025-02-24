@@ -7,6 +7,7 @@ import {
   Task,
   VideoLibrary,
   Delete,
+  Edit,
   Settings,
   Logout,
   ArrowForward,
@@ -86,11 +87,15 @@ import SucsTableImage from './soils/tables/sucs_table_image.jpeg';
 import CoarseAggregateIcon from './concrete/essays/CoarseAggregate.png';
 import SandIncreaseIcon from './concrete/essays/SandIncrease.png';
 import UnitMassIcon from './concrete/essays/UnitMass.png';
+import ConcreteRcIcon from './concrete/essays/ConcreteRc.png';
+import ConcreteRtIcon from './concrete/essays/ConcreteRt.png';
 
 //dosages
 import AbcpIcon from './concrete/dosages/abcp.svg';
-import AbcpLogo from './concrete/dosages/ABCP-Logo.png';
+import AbcpLogo from './concrete/dosages/abcp-icon.png';
 
+// creators
+import Article from './creators/Article.png';
 // export all assets
 export {
   // materialui
@@ -101,6 +106,7 @@ export {
   Task as StandartsIcon,
   VideoLibrary as LibraryIcon,
   Delete as DeleteIcon,
+  Edit as EditIcon,
   Settings as SettingsIcon,
   Logout as LogoutIcon,
   PictureAsPdfIcon as PDFIcon,
@@ -128,6 +134,7 @@ export {
   SpecifyMassIcon,
   GranulometryIcon,
   InducedMoistureDamageIcon,
+
   //others
   EssayIcon,
   MaterialsIcon,
@@ -181,7 +188,12 @@ export {
   CoarseAggregateIcon,
   SandIncreaseIcon,
   UnitMassIcon,
-  //doasges
+  ConcreteRcIcon,
+  ConcreteRtIcon,
+  //dosages
   AbcpIcon,
   AbcpLogo,
+
+  // creators
+  Article,
 };

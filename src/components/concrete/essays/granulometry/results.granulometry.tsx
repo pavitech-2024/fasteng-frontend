@@ -93,7 +93,7 @@ const ConcreteGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPa
     <>
       <ExperimentResume data={experimentResumeData} />
       <FlexColumnBorder title={t('results')} open={true}>
-        <ResultSubTitle title={t('concrete.essays.granulometry-concrete')} sx={{ margin: '.65rem' }} />
+        <ResultSubTitle title={t('concrete.essays.granulometry')} sx={{ margin: '.65rem' }} />
         <Box
           sx={{
             width: '100%',

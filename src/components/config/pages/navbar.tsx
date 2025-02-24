@@ -57,24 +57,24 @@ export default function Navbar({ open, app }: NavbarProps) {
     },
     {
       name: t('navbar.marshall'),
-      link: '/asphalt/dosages/marshall',
+      link: '/asphalt/dosages/marshall/create',
       app: 'asphalt',
       icon: <MarshallIcon sx={IconStyle} />,
       type: 'double',
       sub: [
-        { name: t('navbar.new'), link: '/dosages/marshall/new', icon: <AddIcon sx={IconStyle} /> },
-        { name: t('navbar.consult'), link: '/dosages/marshall/consult', icon: <SearchIcon sx={IconStyle} /> },
+        { name: t('navbar.new'), link: '/asphalt/dosages/marshall/create', icon: <AddIcon sx={IconStyle} /> },
+        { name: t('navbar.consult'), link: '/asphalt/dosages/marshall/consult', icon: <SearchIcon sx={IconStyle} /> },
       ],
     },
     {
       name: t('navbar.superpave'),
-      link: '/asphalt/dosages/superpave',
+      link: '/asphalt/dosages/superpave/create',
       app: 'asphalt',
       icon: <SuperpaveIcon sx={IconStyle} />,
       type: 'double',
       sub: [
-        { name: t('navbar.new'), link: '/dosages/superpave/new', icon: <AddIcon sx={IconStyle} /> },
-        { name: t('navbar.consult'), link: '/dosages/superpave/consult', icon: <SearchIcon sx={IconStyle} /> },
+        { name: t('navbar.new'), link: '/asphalt/dosages/superpave/create', icon: <AddIcon sx={IconStyle} /> },
+        { name: t('navbar.consult'), link: '/asphalt/dosages/superpave/consult', icon: <SearchIcon sx={IconStyle} /> },
       ],
     },
     {
@@ -140,11 +140,11 @@ export default function Navbar({ open, app }: NavbarProps) {
       name: t('navbar.abcp'),
       link: '/concrete/dosages/abcp',
       app: 'concrete',
-      icon: <AbcpIcon sx={IconStyle} width={'20px'} />,
+      icon: <AbcpIcon sx={IconStyle} width={'28px'} />,
       type: 'double',
       sub: [
-        { name: t('navbar.new'), link: '/concrete/dosages/abcp/new', icon: <AddIcon sx={IconStyle} /> },
-        { name: t('navbar.consult'), link: '/concrete/dosages/abcp/consult', icon: <SearchIcon sx={IconStyle} /> },
+        { name: t('navbar.new'), link: '/concrete/dosages/abcp', icon: <AddIcon sx={IconStyle} /> },
+        { name: t('navbar.consult'), link: '/concrete/dosages/consult', icon: <SearchIcon sx={IconStyle} /> },
       ],
     },
     {
@@ -164,7 +164,7 @@ export default function Navbar({ open, app }: NavbarProps) {
 
     {
       name: t('navbar.report'),
-      link: '/report',
+      link: '',
       app: 'common',
       icon: <ReportIcon sx={IconStyle} />,
       type: 'single',
@@ -172,14 +172,12 @@ export default function Navbar({ open, app }: NavbarProps) {
   ].filter((item) => item.app === Router.pathname.split('/')[1] || item.app === 'common');
 
   // when the user scroll the page, the navbar will be fixed on the top
-
-  // ISSO TÁ BUGADO
-
-  // window.addEventListener('scroll', () => {
-  //   if (window.innerWidth > 768)
-  //     if (window.scrollY === 0) document.getElementById('navbar').style.paddingTop = '52px';
-  //     else document.getElementById('navbar').style.paddingTop = '0';
-  // });
+  window.addEventListener('scroll', () => {
+    if (document.getElementById('navbar')) {
+      if (window.scrollY === 0) document.getElementById('navbar').style.paddingTop = '52px';
+      else document.getElementById('navbar').style.paddingTop = '0';
+    }
+  });
 
   return (
     <Box
@@ -307,7 +305,7 @@ export default function Navbar({ open, app }: NavbarProps) {
           );
       })}
 
-      <ReportError openModalProp={openModal} setOpenModalProp={() => setOpenModal((prev) => !prev)} />
+      <ReportError openModalProp={openModal} />
     </Box>
   );
 }

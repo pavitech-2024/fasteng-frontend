@@ -1,5 +1,5 @@
 import { Container, Box, Typography } from '@mui/material';
-import { Essay, Standard } from '@/interfaces/common';
+import { Essay, Library, Standard } from '@/interfaces/common';
 import Image from 'next/image';
 import Link from 'next/link';
 import { PDFIcon } from '@/assets';
@@ -33,8 +33,8 @@ export const CardContainer = ({ children }: CardContainerProps) => {
   );
 };
 interface CardProps {
-  data: Essay | Standard;
-  type: 'essay' | 'standard';
+  data: Essay | Standard | Library;
+  type: 'essay' | 'standard' | 'library';
   hrefLink: string;
   target?: string;
 }
@@ -98,39 +98,40 @@ export const Card = ({ data, type, hrefLink, target }: CardProps) => {
           >
             {data.title}
           </Typography>
-          {type === 'standard' && (
-            <>
-              <PDFIcon
-                sx={{
-                  fontSize: 20,
-                  color: 'secondaryTons.red',
-                  position: 'absolute',
-                  right: 10,
-                  top: 10,
-                }}
-              />
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  p: '2px 4px',
-                  borderRadius: '5px 0 0 5px',
-                  bgcolor: 'primary.main',
-                  position: 'absolute',
-                  right: 0,
-                  bottom: { mobile: '65px', notebook: '72px' },
-                }}
-              >
-                <Typography
-                  sx={{ textAlign: 'center', fontWeight: '400', fontSize: '12px', color: 'primaryTons.white' }}
+          {type === 'standard' ||
+            (type === 'library' && (
+              <>
+                <PDFIcon
+                  sx={{
+                    fontSize: 20,
+                    color: 'secondaryTons.red',
+                    position: 'absolute',
+                    right: 10,
+                    top: 10,
+                  }}
+                />
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    p: '2px 4px',
+                    borderRadius: '5px 0 0 5px',
+                    bgcolor: 'primary.main',
+                    position: 'absolute',
+                    right: 0,
+                    bottom: { mobile: '65px', notebook: '72px' },
+                  }}
                 >
-                  {'standard' in data ? data.standard : null}
-                </Typography>
-              </Box>
-            </>
-          )}
+                  <Typography
+                    sx={{ textAlign: 'center', fontWeight: '400', fontSize: '12px', color: 'primaryTons.white' }}
+                  >
+                    {'standard' in data ? data.standard : null}
+                  </Typography>
+                </Box>
+              </>
+            ))}
         </Box>
       </Box>
     </Link>

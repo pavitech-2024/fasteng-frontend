@@ -18,7 +18,7 @@ const StyledDataGrid = styled(DataGrid)({
   borderRadius: '10px',
 });
 
-const ElongatedParticles_results_Dimensions_Table = ({ rows, columns }: resultsElongatedParticlesProps) => {
+const ElongatedParticlesResultsDimensionsTable: React.FC<resultsElongatedParticlesProps> = ({ rows, columns }) => {
   return (
     <StyledDataGrid
       density="compact"
@@ -38,4 +38,4 @@ const ElongatedParticles_results_Dimensions_Table = ({ rows, columns }: resultsE
   );
 };
 
-export default ElongatedParticles_results_Dimensions_Table;
+export default ElongatedParticlesResultsDimensionsTable;

@@ -4,18 +4,26 @@
   "errors.empty-sieve": "Empty sieve - ",
   "errors.negative-sieve": "Sieve with negative value - ",
   "errors.sieves-sum-not-equal-to-sample-mass": "Sum of Retained masses + Bottom differs from Initial mass in ",
+  "errors.empty-water-temperature": "Enter the water temperature correction factor",
+  "errors.rice-test-empty-fields": "Enter masses for each binder content.",
+
+  "errors.invalid-gmm-mass-value": "The mass of the sample cannot be greater than the mass of the container + water or the mass of the container + water + sample.",
+  "errors.invalid-gmm-container-mass-value": "The mass of the container + water cannot be greater than the mass of the container + water + sample.",
 
   "name-already-exists": "Experiment name already exists!",
 
-  "sample-sucs-not-found": "Sample not found for SUCS!",
-  "sample-GRANULOMETRY-not-found": "Sample not found for Granulometry!",
+  "sample-sucs-not-found": "SoilSample not found for SUCS!",
+  "sample-GRANULOMETRY-not-found": "SoilSample not found for Granulometry!",
 
   "essay-granulometry-not-found": "Granulometry essay not found!",
 
+  "errors.emptySampleContainerWeight": "Sample container weight empty!",
   "errors.sampleContainerWeightValue": "The sum of the Container Volume and Container Weight values ​​cannot be less than the container weight + sample.",
   "errors.unitMass-containerVolume-0": "Enter a valid volume",
   "errors.unitMass-containerWeight-sampleContainerWeigth": "Weight of the container + sample must be greater than the weight of the container",
   "errors.unitMass-containerVolume-10-maxDiameter-37.5": "Enter a container weight greater than 10 liters",
   "errors.unitMass-containerVolume-15-37.5maxDiameter-50": "Enter a container volume greater than 15 liters",
-  "errors.unitMass-containerVolume-30-50-maxDiameter-75": "Enter a container volume greater than 30 liters"
+  "errors.unitMass-containerVolume-30-50-maxDiameter-75": "Enter a container volume greater than 30 liters",
+
+  "generate.dosage.button": "Generate PDF dosage report"
 }

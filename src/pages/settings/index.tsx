@@ -104,6 +104,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
               setOldPhoto(user?.photo);
               onSubmitPhoto(null);
             }}
+            size="large"
           >
             <DeleteIcon color="error" sx={{ width: '80px', height: '80px' }} />
           </IconButton>
@@ -113,6 +114,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
                 key={avatar}
                 sx={{ p: 0, ':hover': { opacity: 0.8, cursor: 'pointer' } }}
                 onClick={() => onSubmitPhoto(avatar)}
+                size="large"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img alt="avatar" src={avatar} width={98} height={98} />
@@ -179,7 +181,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           }}
         >
           <Tooltip title={t('settings.changeAvatar')}>
-            <IconButton sx={{ p: 0 }} onClick={() => setOpen(true)}>
+            <IconButton sx={{ p: 0 }} onClick={() => setOpen(true)} size="large">
               <Avatar
                 alt="user photo"
                 src={user?.photo}
@@ -259,7 +261,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             options={LanguageOptions}
             size="medium"
             sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white' }}
-            defaultValue={user?.preferences.language === 'en' ? LanguageOptions[0] : LanguageOptions[1]}
+            value={user?.preferences.language === 'en' ? LanguageOptions[0] : LanguageOptions[1]}
             callback={(value: string) => {
               i18next.changeLanguage(value);
               setUser({ ...user, preferences: { ...user.preferences, language: value } });
@@ -270,7 +272,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             options={DecimalOptions}
             size="medium"
             sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white' }}
-            defaultValue={DecimalOptions[user?.preferences.decimal - 1]}
+            value={DecimalOptions[user?.preferences.decimal - 1]}
             callback={(value: number) => {
               setUser({ ...user, preferences: { ...user.preferences, decimal: value } });
             }}

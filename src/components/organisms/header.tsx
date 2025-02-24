@@ -1,6 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 interface HeaderProps {
   title: string;
@@ -12,7 +13,10 @@ interface HeaderProps {
   sx?: { [key: string]: string | number | { [key: string]: string | number } };
 }
 
-export const Header = ({ title, subTitle, link, icon, image, children, sx }: HeaderProps) => {
+export const Header = ({ title, subTitle, link, icon, image, children }: HeaderProps) => {
+  const { pathname } = useRouter();
+  const isSuperpavePage = pathname.includes('superpave');
+
   return (
     <Box
       style={sx}
@@ -25,57 +29,73 @@ export const Header = ({ title, subTitle, link, icon, image, children, sx }: Hea
         flexDirection: { notebook: 'row', mobile: 'column' },
       }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          mb: { mobile: '2vh', notebook: 0 },
-        }}
-      >
-        {image && <Image alt="essay icon" src={image} width={90} height={90} />}
-        {icon}
+      {!isSuperpavePage && (
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'column',
-            marginRight: '2rem',
+            alignItems: 'center',
+            mb: { mobile: '2vh', notebook: 0 },
+            gap: '3rem',
           }}
         >
-          <Typography
+          {image && <Image alt="essay icon" src={image} width={90} height={90} />}
+          {icon}
+          <Box
             sx={{
-              textTransform: 'uppercase',
-              fontSize: { mobile: '1.65rem', notebook: '2rem' },
-              lineHeight: { mobile: '1.65rem', notebook: '2rem' },
-              color: 'primaryTons.darkGray',
-              fontWeight: 700,
-              textAlign: { mobile: 'center' },
+              display: 'flex',
+              flexDirection: 'column',
+              marginRight: '2rem',
             }}
           >
-            {title}
-          </Typography>
-          {link && (
             <Typography
               sx={{
                 textTransform: 'uppercase',
-                fontSize: { mobile: '1.15rem', notebook: '1.5rem' },
-                lineHeight: { mobile: '1.15rem', notebook: '1.5rem' },
-                fontWeight: 500,
+                fontSize: { mobile: '1.65rem', notebook: '2rem' },
+                lineHeight: { mobile: '1.65rem', notebook: '2rem' },
+                color: 'primaryTons.darkGray',
+                fontWeight: 700,
               }}
             >
-              <Link
-                href={link}
-                target="standard"
-                style={{
-                  textDecoration: 'none',
-                  color: '#F29134', //primary.main
+              {title}
+            </Typography>
+            {subTitle && (
+              <Typography
+                sx={{
+                  textTransform: 'uppercase',
+                  fontSize: { mobile: '1.15rem', notebook: '1.5rem' },
+                  lineHeight: { mobile: '1.15rem', notebook: '1.5rem' },
+                  fontWeight: 500,
                 }}
               >
-                {subTitle}
-              </Link>
-            </Typography>
-          )}
+                {link && link !== '' ? (
+                  <Link
+                    href={link}
+                    target="standard"
+                    download={link}
+                    style={{
+                      textDecoration: 'none',
+                      color: '#F29134', //primary.main
+                    }}
+                  >
+                    {subTitle}
+                  </Link>
+                ) : (
+                  <Typography
+                    style={{
+                      textDecoration: 'none',
+                      color: '#F29134', //primary.main
+                      fontWeight: 500,
+                      fontSize: '1.5rem',
+                    }}
+                  >
+                    {subTitle}
+                  </Typography>
+                )}
+              </Typography>
+            )}
+          </Box>
         </Box>
-      </Box>
+      )}
 
       {children}
     </Box>

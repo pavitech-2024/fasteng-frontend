@@ -9,11 +9,10 @@ import { LogoBlack, AsphaltIcon, SoilsIcon, ConcreteIcon } from '@/assets';
 //MUIs
 import { Container, Box, Typography } from '@mui/material';
 import { CardApp } from '@/components/styles/muis/home';
+import { JbrAnchor, LepAnchor } from '@/components/atoms/anchor/loginAnchors';
 
 //Styleds
 import { LoginImage } from '@/components/styles/styleds/login';
-import { CardPromedina } from '@/components/atoms/containers/card-promedina';
-import PromedinaProvIcon from '@/components/atoms/icons/promedinaProvIcon';
 
 const Home: NextPage = () => {
   const Router = useRouter();
@@ -33,14 +32,6 @@ const Home: NextPage = () => {
       name: t('home.concrete'),
       icon: <ConcreteIcon width="100%" height="100%" />,
       path: '/concrete',
-    },
-  ];
-
-  const Promedina = [
-    {
-      name: 'Pro-Medina',
-      icon: <PromedinaProvIcon />,
-      path: '/promedina',
     },
   ];
 
@@ -96,10 +87,24 @@ const Home: NextPage = () => {
       </Box>
       <Box
         sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '50%',
+          justifyContent: 'space-between',
+          alignItems: 'end',
+          height: 'fit-content',
+        }}
+      >
+        <LepAnchor />
+        <JbrAnchor />
+      </Box>
+      <Box
+        sx={{
           height: { mobile: '22.5%', notebook: '17.5%' },
           maxHeight: { mobile: 'none', ultrawide: '150px' },
           display: 'flex',
           alignItems: 'center',
+          m: '1.5rem 0 0',
         }}
       >
         <Box
@@ -112,7 +117,7 @@ const Home: NextPage = () => {
         >
           <Typography
             sx={{
-              fontSize: { desktop: '1.15rem', notebook: '1rem', mobile: '.85rem' },
+              fontSize: { desktop: '1.15rem', notebook: '1rem', mobile: '.9rem' },
               fontWeight: 400,
               color: 'primaryTons.darkGray',
               textAlign: 'center',
@@ -125,25 +130,29 @@ const Home: NextPage = () => {
       </Box>
       <Box
         sx={{
-          display: 'flex',
+          display: 'grid',
           gridTemplateColumns: {
             mobile: '1fr',
-            tablet: '1fr 1fr',
-            notebook: '1fr 1fr 1fr 1fr',
+            tablet: '1fr',
+            notebook: '1fr 1fr 1fr',
           },
           gap: {
-            mobile: '20px 0',
+            mobile: '10px 0',
             notebook: '10px 15px',
           },
           justifyItems: 'center',
           marginRight: { notebook: '55px', mobile: '0px' },
+          marginLeft: { notebook: '55px', mobile: '0px' },
+          padding: { mobile: '0 0 40px' },
+          height: { mobile: '18rem' },
           flexDirection: { notebook: 'row', tablet: 'column', mobile: 'column' },
-          width: '100%',
+          justifyContent: 'center',
+          scale: { mobile: '0.85' },
           minWidth: 'fit-content',
           maxWidth: '1400px',
           pt: '2vh',
 
-          '@media only screen and (min-width: 1024px)': {
+          '@media only screen and (min-width: 768px)': {
             width: '60%',
           },
         }}
@@ -151,7 +160,6 @@ const Home: NextPage = () => {
         {Applications.map((app) => (
           <CardApp key={app.name} element={app} onClick={() => Router.push(app.path)} />
         ))}
-        <CardPromedina element={Promedina[0]} onClick={() => Router.push(Promedina[0].path)} />
       </Box>
     </Container>
   );

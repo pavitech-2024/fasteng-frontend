@@ -1,0 +1,11 @@
+{
+  "dosages.report.general-data": "Dados gerais do projeto de dosagem",
+  "dosages.report.materials-caracterization": "Caracterização dos materiais",
+  "dosages.report.results": "Resultados da dosagem",
+  "dosages.report.material-name": "Nome do material",
+  "dosages.report.material-type": "Tipo do material",
+  "dosages.report.material-creationDate": "Data de criação",
+  "dosages.report.material-receivedDate": "Data de recebimento",
+  "dosages.report.material-classification": "Classificação",
+  "dosages.report.material-source": "Procedência do material"
+}

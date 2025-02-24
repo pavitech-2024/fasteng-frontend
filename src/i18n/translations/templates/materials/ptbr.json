@@ -17,6 +17,10 @@
   "materials.template.newMaterial": "Novo Material",
   "materials.template.newSample": "Nova Amostra",
   "materials.template.search.label": "Pesquisar...",
+<<<<<<< HEAD
   "materials.template.visualize": "Visualizar",
   "materials.template.edit": "Editar"
+=======
+  "materials.template.visualize": "Visualizar"
+>>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
 }

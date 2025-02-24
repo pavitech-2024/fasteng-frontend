@@ -4,6 +4,7 @@
   "concrete.operator": "Operador",
   "concrete.calculist": "Calculista",
   "concrete.essays.granulometry-concrete": "Granulometria por Peneiramento",
+  "concrete.essays.granulometry": "Granulometria por Peneiramento",
   "concrete.essays.chapman": "Massa Específica - Frasco de Chapman",
   "concrete.essays.unitMass": "Massa Unitária",
   "concrete.essays.sandIncrease": "Inchamento da Areia",
@@ -12,7 +13,11 @@
   "loading.materials.success": "Materiais carregados!",
   "loading.materials.error": "Erro ao carregar os materiais!",
   "loading.materials.pending": "Carregando os materiais...",
+  "loading.data.success": "Dados carregados!",
+  "loading.data.error": "Erro ao carregar os dados!",
+  "loading.data.pending": "Carregando os dados...",
   "sandIncrease.materials": "Materiais",
   "unit mass determination": "Determinação da Massa Unitária",
-  "humidity found": "Umidade Encontrada"
+  "humidity found": "Umidade Encontrada",
+  "concrete.essays.concreteRc": "teste"
 }

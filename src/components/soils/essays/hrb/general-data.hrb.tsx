@@ -5,7 +5,7 @@ import useAuth from '../../../../contexts/auth';
 import { t } from 'i18next';
 import { toast } from 'react-toastify';
 import useHrbStore from '../../../../stores/soils/hrb/hrb.store';
-import { Sample } from '../../../../interfaces/soils';
+import { SoilSample } from '../../../../interfaces/soils';
 import Loading from '../../../molecules/loading';
 import { Box, Dialog, TextField } from '@mui/material';
 import DropDown from '../../../atoms/inputs/dropDown';
@@ -15,7 +15,7 @@ import { HrbTableImage } from '../../../../assets';
 const HRB_GeneralData = ({ nextDisabled, setNextDisabled, hrb }: EssayPageProps & { hrb: HRB_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [open, setOpen] = useState<boolean>(false);
-  const [samples, setSamples] = useState<Sample[]>([]);
+  const [samples, setSamples] = useState<SoilSample[]>([]);
   const { user } = useAuth();
   const { generalData, setData } = useHrbStore();
 
@@ -114,10 +114,10 @@ const HRB_GeneralData = ({ nextDisabled, setNextDisabled, hrb }: EssayPageProps 
                     key={input.key}
                     variant="standard"
                     label={input.label}
-                    options={samples.map((sample: Sample) => {
+                    options={samples.map((sample: SoilSample) => {
                       return { label: sample.name + ' | ' + t(`${'samples.' + sample.type}`), value: sample };
                     })}
-                    defaultValue={defaultValue}
+                    value={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
                     size="medium"
                     required={input.required}

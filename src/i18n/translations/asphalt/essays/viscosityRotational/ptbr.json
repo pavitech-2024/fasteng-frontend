@@ -1,0 +1,13 @@
+{
+  "asphalt.essays.viscosityRotational.graph": "Gráfico de viscosidade rotacional",
+  "asphalt.essays.viscosityRotational.temperature": "Temperatura",
+  "asphalt.essays.viscosityRotational.viscosity": "Viscosidade",
+  "asphalt.essays.viscosityRotational.calc": "Viscosidade Rotacional",
+  "viscosityRotational.step-2-description": "Por favor, preencha todas as informações abaixo.",
+  "viscosityRotational.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
+  "asphalt.essays.viscosityRotational.compression-temperature": "Temperatura de compactação",
+  "asphalt.essays.viscosityRotational.machiningTemperatureRange": "Temperatura de usinagem",
+  "asphalt.essays.viscosityRotational.machiningTemperatureRange.higher": "Máxima",
+  "asphalt.essays.viscosityRotational.machiningTemperatureRange.average": "Média",
+  "asphalt.essays.viscosityRotational.machiningTemperatureRange.lower": "Mínima"
+}

@@ -3,7 +3,7 @@ import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { t } from 'i18next';
 import Api from '@/api';
-import { AbrasionActions, AbrasionData } from '@/stores/asphalt/abrasion.store';
+import { AbrasionActions, AbrasionData } from '@/stores/asphalt/abrasion/abrasion.store';
 
 class Abrasion_SERVICE implements IEssayService {
   info = {
@@ -14,8 +14,8 @@ class Abrasion_SERVICE implements IEssayService {
     backend_path: 'asphalt/essays/abrasion',
     steps: 3,
     standard: {
-      name: '',
-      link: '',
+      name: 'DNIT-ME 054/97',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_451_2024_me.pdf',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
@@ -101,7 +101,7 @@ class Abrasion_SERVICE implements IEssayService {
     try {
       const { finalMass, initialMass } = abrasionCalc;
 
-      if (Number(finalMass) > Number(initialMass)) throw t('errors.final-mass-lower-than-initial-mass');
+      // if (Number(finalMass) > Number(initialMass)) throw t('errors.final-mass-lower-than-initial-mass');
     } catch (error) {
       throw error;
     }

@@ -55,7 +55,7 @@ const Result_Card = ({ label, value, unity }: Result_CardProps) => {
           mobile: '180px',
           notebook: '230px',
         },
-        height: '100px',
+        height: '150px',
         display: 'flex',
         flexDirection: 'column',
         border: '1px solid',

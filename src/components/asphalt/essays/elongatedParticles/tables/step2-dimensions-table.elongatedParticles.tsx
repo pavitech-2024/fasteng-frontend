@@ -1,13 +1,14 @@
 import { ElongatedParticlesDimensionsRow } from '@/stores/asphalt/elongatedParticles/elongatedParticles.store';
+import { styled } from '@mui/material/styles';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
-import { makeStyles, styled } from '@mui/material/styles';
 
-interface step2ElongatedParticlesProps {
+interface Step2ElongatedParticlesProps {
   rows: ElongatedParticlesDimensionsRow[];
   columns: GridColDef[];
 }
 
+// Aplicando os estilos diretamente ao DataGrid com `styled`
 const StyledDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaderTitle': {
     overflow: 'visible',
@@ -18,7 +19,7 @@ const StyledDataGrid = styled(DataGrid)({
   borderRadius: '10px',
 });
 
-const ElongatedParticles_step2_Dimensions_Table = ({ rows, columns }: step2ElongatedParticlesProps) => {
+const ElongatedParticlesStep2DimensionsTable: React.FC<Step2ElongatedParticlesProps> = ({ rows, columns }) => {
   return (
     <StyledDataGrid
       density="compact"
@@ -39,4 +40,4 @@ const ElongatedParticles_step2_Dimensions_Table = ({ rows, columns }: step2Elong
   );
 };
 
-export default ElongatedParticles_step2_Dimensions_Table;
+export default ElongatedParticlesStep2DimensionsTable;

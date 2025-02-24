@@ -1,1 +1,14 @@
-{}
+{
+  "granulometry.step-3-description": "",
+  "granulometry-asphalt.step-3-description": "These are the results of your experiment. Remember to save the experiment so you can access it later.",
+  "granulometry-asphalt.sieves": "Sieves",
+  "granulometry-asphalt.total_passant": "Total passant",
+  "granulometry-asphalt.passant": "Passant",
+  "asphalt.essays.granulometry.results.essayName": "Essay name",
+  "asphalt.essays.granulometry.results.finenessModule": "Fineness module",
+  "asphalt.essays.granulometry.results.nominalDiammeter": "Nominal diameter",
+  "asphalt.essays.granulometry.results.nominalSize": "Nominal size",
+
+  "graulometry.custom-sieves-modal-title": "Select at least 4 sieves",
+  "graulometry.sieves-quantity": "Sieves quantity"
+}

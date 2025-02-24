@@ -30,8 +30,9 @@ const AsphaltEssays: NextPage = () => {
   const filterOptions: FilterOption[] = [
     { key: 'all', title: t('asphalt.essays.filter.all'), isSelected: true },
     { key: 'aggregates', title: t('asphalt.essays.filter.aggregates'), isSelected: false },
-    { key: 'asphaltMix', title: t('asphalt.essays.filter.asphaltMix'), isSelected: false },
+    { key: 'highwaySection', title: t('asphalt.essays.filter.highwaySection'), isSelected: false },
     { key: 'asphaltBinder', title: t('asphalt.essays.filter.asphaltBinder'), isSelected: false },
+    { key: 'asphaltMix', title: t('asphalt.essays.filter.asphaltMix'), isSelected: false },
   ];
 
   const essays: Essay[] = [
@@ -134,10 +135,10 @@ const AsphaltEssays: NextPage = () => {
       type: 'asphaltBinder',
     },
     {
-      title: t('asphalt.essays.rotational'),
+      title: t('asphalt.essays.viscosityRotational'),
       icon: RotationalIcon,
       key: 'rotational',
-      link: '/asphalt/essays/rotational',
+      link: '/asphalt/essays/viscosityRotational',
       type: 'asphaltBinder',
     },
     {
@@ -159,7 +160,7 @@ const AsphaltEssays: NextPage = () => {
       icon: FwdIcon,
       key: 'fwd',
       link: '/asphalt/essays/fwd',
-      type: 'asphaltMix',
+      type: 'highwaySection',
     },
     {
       title: t('asphalt.essays.ddui'),
@@ -173,7 +174,7 @@ const AsphaltEssays: NextPage = () => {
       icon: IggIcon,
       key: 'igg',
       link: '/asphalt/essays/igg',
-      type: 'asphaltMix',
+      type: 'highwaySection',
     },
   ];
   return <EssaysTemplate essays={essays} filterOptions={filterOptions} />;

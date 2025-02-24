@@ -19,7 +19,7 @@ class ConcreteGranulometry_SERVICE implements IEssayService {
     steps: 3,
     standard: {
       name: 'NBR 7217/1984',
-      link: 'https://engenhariacivilfsp.files.wordpress.com/2015/03/nbr-7181.pdf',
+      link: 'https://www.target.com.br/produtos/normas-tecnicas/36308/nbr7217-agregados-determinacao-da-composicao-granulometrica',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
@@ -109,8 +109,8 @@ class ConcreteGranulometry_SERVICE implements IEssayService {
 
       // verify if all the passant porcentages are not empty or negative
       step2Data.table_data.forEach((row) => {
-        if (row.passant == null || row.retained == null) throw t('errors.empty-sieve') + row.sieve;
-        if (row.passant < 0 || row.passant < 0) throw t('errors.negative-sieve') + row.sieve;
+        if (row.passant === null || row.retained === null) throw t('errors.empty-sieve') + row.sieve;
+        if (row.passant < 0 || row.retained < 0) throw t('errors.negative-sieve') + row.sieve;
       });
 
       //verify if the sum of the masses (retained + bottom) equals the material mass
@@ -121,13 +121,7 @@ class ConcreteGranulometry_SERVICE implements IEssayService {
       const sum = Math.round(100 * (retained + step2Data.bottom)) / 100;
 
       if (sum > step2Data.material_mass) {
-        throw (
-          t('errors.sieves-sum-not-equal-to-material-mass') +
-          (step2Data.material_mass - sum) +
-          'g.\n' +
-          'Retida + Fundos: ' +
-          sum
-        );
+        throw `${t('errors.sieves-sum-not-equal-to-material-mass')}\nRetida + Fundos: ${sum}g.`;
       }
     } catch (error) {
       throw error;

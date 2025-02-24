@@ -27,14 +27,14 @@ class UNITMASS_SERVICE implements IEssayService {
   userId: string;
 
   /** @handleNext Receives the step and data from the form and calls the respective method */
-  handleNext = async (step: number, data: unknown, initData?: unknown): Promise<void> => {
+  handleNext = async (step: number, data: unknown): Promise<void> => {
     try {
       switch (step) {
         case 0:
           await this.submitGeneralData(data as UnitMassData['generalData']);
           break;
         case 1:
-          await this.submitStep2Data(data as UnitMassData['step2Data'], initData as UnitMassData['generalData']);
+          await this.submitStep2Data(data as UnitMassData);
           await this.calculateResults(data as UnitMassData);
           break;
         case 2:
@@ -62,8 +62,6 @@ class UNITMASS_SERVICE implements IEssayService {
         method,
       };
 
-      console.log(payload);
-
       const response = await Api.post(`${this.info.backend_path}/verify-init`, payload);
 
       const { success, error } = response.data;
@@ -75,36 +73,18 @@ class UNITMASS_SERVICE implements IEssayService {
   };
 
   submitStep2Data = async (
-    generalData: UnitMassData['step2Data'],
-    initData: UnitMassData['generalData']
+    // generalData: UnitMassData['generalData'],
+    data: UnitMassData
   ): Promise<void> => {
     try {
-      console.log(initData);
-      const { containerVolume, containerWeight, sampleContainerWeight } = generalData;
-      const { material } = initData;
+      const { containerVolume, containerWeight, sampleContainerWeight } = data.step2Data;
 
       if (!containerVolume) throw t('errors.empty-containerVolume');
       if (!containerWeight) throw t('errors.containerWeight');
-      if (!sampleContainerWeight) throw t('errors.sampleContainerWeight');
+      if (!sampleContainerWeight) throw t('errors.emptySampleContainerWeight');
       if (containerVolume + containerWeight <= sampleContainerWeight) throw t('errors.sampleContainerWeightValue');
       if (containerVolume === 0) throw t('errors.unitMass-containerVolume-0');
       if (containerWeight >= sampleContainerWeight) throw t('errors.unitMass-containerWeight-sampleContainerWeigth');
-      if (material.description.maxDiammeter.value <= 37.5 && containerVolume < 10)
-        throw t('errors.unitMass-containerVolume-10-maxDiameter-37.5');
-      if (
-        material.description.maxDiammeter.value > 37.5 &&
-        material.description.maxDiammeter.value <= 50 &&
-        containerVolume <= 37.5 &&
-        containerVolume < 15
-      )
-        throw t('errors.unitMass-containerVolume-15-37.5maxDiameter-50');
-      if (
-        material.description.maxDiammeter.value > 50 &&
-        material.description.maxDiammeter.value <= 75 &&
-        containerVolume < 30 &&
-        containerVolume < 30
-      )
-        throw t('errors.unitMass-containerVolume-30-50-maxDiameter-75');
 
       const response = await Api.post(`${this.info.backend_path}/step2-unitMass-data`, {
         containerVolume,
@@ -149,8 +129,6 @@ class UNITMASS_SERVICE implements IEssayService {
       });
 
       const { success, error } = response.data;
-
-      console.log(error);
 
       if (success === false) throw error.name;
     } catch (error) {

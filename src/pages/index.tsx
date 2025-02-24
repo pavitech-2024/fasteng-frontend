@@ -1,7 +1,8 @@
 import { NextPage } from 'next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { t } from 'i18next';
 import Head from 'next/head';
+import Image from 'next/image';
 
 // files
 import { toast } from 'react-toastify';
@@ -14,15 +15,30 @@ import { LoginImage, LoginBackgroundPhoto } from '@/components/styles/styleds/lo
 import { AboutButton } from '@/components/styles/muis/login';
 import { MainButton as Button } from '@/components/styles/global';
 
+<<<<<<< HEAD
 // mui
 import { TextField, Box, Container, Typography } from '@mui/material';
+=======
+//mui
+import { TextField, Box, Container, Typography, ButtonBase } from '@mui/material';
+import { JbrAnchor, LepAnchor } from '@/components/atoms/anchor/loginAnchors';
+import axios from 'axios';
+import ModalBase from '@/components/molecules/modals/modal';
+import Api from '@/api';
+>>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
 
 const Login: NextPage = () => {
   const { signIn } = useAuth();
 
+  const date = new Date();
+  const year = date.getFullYear();
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-
+  const roxApiUrl = 'https://minhaconta.fastengapp.com.br/api/forgot-password ';
+  const [roxIsRunning, setRoxIsRunning] = useState(true);
   const handleLogin = async () => {
     try {
       toast.promise(async () => await signIn(email, password), {
@@ -31,6 +47,57 @@ const Login: NextPage = () => {
         error: t('login.toast error'),
       });
     } catch (error) {}
+  };
+
+  useEffect(() => {
+    const handleHealthCheck = async () => {
+      try {
+        const result = await Api.get('/app/health-check');
+
+        if (result.data.status !== 'success') {
+          setRoxIsRunning(false);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    handleHealthCheck();
+  }, []);
+
+  const handleForgotPassword = () => {
+    toast.promise(
+      async () => {
+        try {
+          const { data } = await axios.post(`${roxApiUrl}`, { email });
+
+          if (!data.status) {
+            throw new Error(data.message);
+          } else {
+            setModalIsOpen(false);
+          }
+        } catch (error: unknown) {
+          if (axios.isAxiosError(error)) {
+            throw new Error(error.response?.data?.message || error.message || 'Erro desconhecido');
+          } else if (error instanceof Error) {
+            throw error;
+          } else {
+            throw new Error('Erro desconhecido');
+          }
+        }
+      },
+      {
+        pending: t('forgot-password.pending'),
+        success: t('forgot-password.success'),
+        error: {
+          render({ data }) {
+            if (data instanceof Error) {
+              return `${data.message}`;
+            }
+            return t('forgot-password.error');
+          },
+        },
+      }
+    );
   };
 
   return (
@@ -74,7 +141,14 @@ const Login: NextPage = () => {
               }}
             >
               <Languages left={10} top={10} unSelectedColor="primaryTons.border" />
-              <LoginImage alt="Fasteng" src={LogoWhite} />
+              <Box
+                sx={{
+                  scale: { mobile: '0.7' },
+                  marginTop: { mobile: '1.5rem' },
+                }}
+              >
+                <LoginImage alt="Fasteng" src={LogoWhite} />
+              </Box>
             </Box>
             <Box
               sx={{
@@ -82,6 +156,7 @@ const Login: NextPage = () => {
                 display: 'flex',
                 alignItems: 'center',
                 textAlign: 'center',
+                marginTop: { mobile: '1.5rem' },
                 fontSize: {
                   ultrawide: '0.95rem',
                   desktop: '0.85rem',
@@ -103,10 +178,11 @@ const Login: NextPage = () => {
                 width: '100%',
                 maxWidth: '980px',
                 p: '2vh 0',
+                marginTop: { mobile: '0.5rem' },
               }}
             >
               <Button text="Assine" linkTo="https://fastengapp.com.br/" />
-              <AboutButton />
+              <AboutButton text="Saiba mais" href="/creators" />
             </Box>
           </Container>
         </Box>
@@ -123,82 +199,115 @@ const Login: NextPage = () => {
             bottom: '0',
           }}
         >
+          {roxIsRunning ? (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                p: { desktop: '2vh 0 1vh', notebook: '3vh 0 2vh', mobile: '2vh 0 1vh' },
+                borderRadius: '0.5rem',
+                width: { desktop: '30vw', mobile: '80vw' },
+                maxWidth: { desktop: '600px', notebook: '500px', mobile: '600px' },
+                height: { ultrawide: '30vh', desktop: '34vh', notebook: '30vh', mobile: '32vh' },
+                maxHeight: { desktop: '280px', notebook: '410px', mobile: '280px' },
+                bgcolor: 'primaryTons.background',
+                position: { desktop: 'static', mobile: 'absolute' },
+                zIndex: { desktop: 'auto', mobile: '3' },
+                bottom: { desktop: 'auto', mobile: '15vh' },
+                boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.25)',
+              }}
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'space-around',
+                  height: '70%',
+                  width: '100%',
+                  gap: '10px',
+                  padding: { mobile: '10px 0 0 0' },
+                }}
+              >
+                <TextField
+                  label="Email"
+                  variant="outlined"
+                  value={email}
+                  placeholder={t('login.email placeholder')}
+                  sx={{
+                    width: '85%',
+                    bgcolor: 'primaryTons.white',
+                  }}
+                  inputProps={{
+                    style: { height: '7px' },
+                  }}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  InputLabelProps={{ shrink: true }}
+                />
+                <TextField
+                  variant="outlined"
+                  label={t('login.password')}
+                  placeholder={t('login.password placeholder')}
+                  type="password"
+                  value={password}
+                  sx={{
+                    width: '85%',
+                    bgcolor: 'primaryTons.white',
+                  }}
+                  inputProps={{
+                    style: { height: '7px' },
+                  }}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-around',
+                  alignItems: 'center',
+                  height: '28%',
+                  width: '100%',
+                }}
+              >
+                <Button
+                  text={t('login.enter')}
+                  disabled={password === '' || email === ''}
+                  handleClick={() => handleLogin()}
+                />
+
+                <ButtonBase
+                  onClick={() => setModalIsOpen(true)}
+                  sx={{ color: 'primary.main', fontSize: { desktop: '1rem', mobile: '0.85rem' } }}
+                >
+                  {t('login.forget password')}
+                </ButtonBase>
+              </Box>
+            </Box>
+          ) : (
+            <Box sx={{}}>
+              <Image src="/favicon.ico" width={200} height={200} alt="" />
+              <Typography>{t('home.maintenance')}</Typography>
+            </Box>
+          )}
+
           <Box
             sx={{
               display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+              flexDirection: 'row',
+              width: '50%',
               justifyContent: 'space-between',
-              p: { desktop: '2vh 0 1vh', notebook: '3vh 0 2vh', mobile: '2vh 0 1vh' },
-              borderRadius: '0.5rem',
-              width: { desktop: '30vw', mobile: '80vw' },
-              maxWidth: { desktop: '600px', notebook: '500px', mobile: '600px' },
-              height: { ultrawide: '30vh', desktop: '34vh', notebook: '30vh', mobile: '32vh' },
-              maxHeight: { desktop: '280px', notebook: '410px', mobile: '280px' },
-              bgcolor: 'primaryTons.background',
-              position: { desktop: 'static', mobile: 'absolute' },
-              zIndex: { desktop: 'auto', mobile: '3' },
-              bottom: { desktop: 'auto', mobile: '15vh' },
+              alignItems: 'end',
+              height: 'fit-content',
             }}
           >
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'space-around',
-                height: '70%',
-                width: '100%',
-                gap: '10px',
-              }}
-            >
-              <TextField
-                label="Email"
-                variant="outlined"
-                value={email}
-                placeholder={t('login.email placeholder')}
-                sx={{
-                  width: '85%',
-                  bgcolor: 'primaryTons.white',
-                }}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                InputLabelProps={{ shrink: true }}
-              />
-              <TextField
-                variant="outlined"
-                label={t('login.password')}
-                placeholder={t('login.password placeholder')}
-                type="password"
-                value={password}
-                sx={{
-                  width: '85%',
-                  bgcolor: 'primaryTons.white',
-                }}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                InputLabelProps={{ shrink: true }}
-              />
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-around',
-                alignItems: 'center',
-                height: '28%',
-                width: '100%',
-              }}
-            >
-              <Button
-                text={t('login.enter')}
-                disabled={password === '' || email === ''}
-                handleClick={() => handleLogin()}
-              />
-              <Typography sx={{ color: 'primary.main', fontSize: { desktop: '1rem', mobile: '0.85rem' } }}>
-                {t('login.forget password')}
-              </Typography>
-            </Box>
+            <LepAnchor />
+            <JbrAnchor />
           </Box>
           <Box
             sx={{
@@ -206,10 +315,31 @@ const Login: NextPage = () => {
               bottom: 10,
             }}
           >
-            <Typography sx={{ fontSize: { notebook: '15px', mobile: '8px' } }}>© 2020 | Pavitech</Typography>
+            <Typography sx={{ fontSize: { notebook: '15px', mobile: '8px' } }}>© {year} | Pavitech</Typography>
           </Box>
         </Container>
       </Container>
+      <ModalBase
+        title={'Insira o e-mail cadastrado para recuperar a senha'}
+        leftButtonTitle={'Cancelar'}
+        rightButtonTitle={'Confirmar'}
+        onSubmit={handleForgotPassword}
+        onCancel={() => setModalIsOpen(false)}
+        open={modalIsOpen}
+        size={'small'}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginY: '2rem' }}>
+          <TextField
+            type="email"
+            placeholder="Insira o e-mail cadastrado..."
+            label="E-mail"
+            variant="standard"
+            sx={{ width: '100%' }}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </Box>
+      </ModalBase>
     </>
   );
 };

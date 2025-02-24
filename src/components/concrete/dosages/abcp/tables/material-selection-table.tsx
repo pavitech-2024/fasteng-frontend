@@ -1,28 +1,48 @@
 import { NoDataFound } from '@/components/util/tables';
-// import useABCPStore from '@/stores/concrete/abcp/abcp.store';
+import ABCP_SERVICE from '@/services/concrete/dosages/abcp/abcp.service';
+import useABCPStore from '@/stores/concrete/abcp/abcp.store';
 import { Box } from '@mui/material';
-import { DataGrid, GridColDef, GridEventListener, GridRowSelectionModel } from '@mui/x-data-grid';
-import { useState } from 'react';
+import { DataGrid, GridCellParams, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
+import { t } from 'i18next';
+import { useEffect, useState } from 'react';
 
-interface MaterialSelectionProps {
+interface Step2Props {
   header?: string;
-  rows: { _id: string; name: string; type: string; resistance?: string }[];
+  rows: any;
   columns: GridColDef[];
+  handleError: (error: boolean) => void;
 }
 
-const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProps) => {
+const ABCP_MaterialSelectionTable = ({ rows, columns, header, handleError }: Step2Props & { abcp: ABCP_SERVICE }) => {
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
-  const [cement, setCement] = useState<number>(null);
-  // const [coarseAggregate, setCoarseAggregate] = useState<string>('');
-  // const [fineAggregate, setFineAggregate] = useState<string>('');
-  // const { materialSelectionData, setData } = useABCPStore();
+  const { materialSelectionData, setData } = useABCPStore();
+  //to do: fazer carregar os dados já selecionados nos inputs ao abrir a página.
 
-  const handleRowClick: GridEventListener<'rowClick'> = (
-    params // GridRowParams
-    // event, // MuiEvent<React.MouseEvent<HTMLElement>>
-    // details // GridCallbackDetails
-  ) => {
-    console.log(params.row.name);
+  useEffect(() => {
+    if (materialSelectionData.cement.id !== null) {
+      const cementIndex = rows.findIndex((element) => element._id === materialSelectionData.cement.id) + 1;
+      if (rowSelectionModel.includes(cementIndex)) {
+        rowSelectionModel.filter((item) => item !== cementIndex);
+      } else {
+        rowSelectionModel.push(cementIndex);
+      }
+    }
+  });
+
+  useEffect(() => {
+    if (rowSelectionModel.length > 2) {
+      handleError(true);
+    } else {
+      handleError(false);
+    }
+  }, [rowSelectionModel]);
+
+  const renderCell = (params: GridCellParams) => {
+    const row = rows[params.id];
+    if ('inputComponent' in row) {
+      return row.inputComponent;
+    }
+    return params.value;
   };
 
   return (
@@ -35,65 +55,99 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
       }}
     >
       <h3>{header}</h3>
-      <Box
-        sx={{
-          display: 'flex',
-          msFlex: 'none',
-          gap: '1rem',
-          m: 'auto',
-        }}
-      ></Box>
-      <Box
-        sx={{
-          mt: '1rem',
-        }}
-      >
+
+      <Box>
         <DataGrid
           sx={{
             borderRadius: '10px',
             height: 300,
           }}
-          onRowClick={handleRowClick}
+          onStateChange={() => {
+            // to do -> selecionar na tabela os materiais já selecionados que estão no store
+            // após a página ser recarregada
+          }}
           checkboxSelection
-          disableRowSelectionOnClick
-          // isRowSelectable={(params: GridRowParams) => {
-          //   return rows.some((element, index) => {
-          //     if (element.type === 'cement') {
-          //       console.log(`Row[${index}] selecionável: `, cement === null || (cement !== null && cement === index));
-          //       return cement === null || (cement !== null && cement === index);
-          //     } else {
-          //       return true;
-          //     }
-          //   });
-          // }}
+          disableRowSelectionOnClick={true}
           onRowSelectionModelChange={(rowSelection) => {
-            setRowSelectionModel(rowSelection);
-            console.log(rowSelection);
+            let cementObject = {
+              ...materialSelectionData,
+              cement: {
+                id: null,
+                type: null,
+              },
+            };
             if (rows.some((element) => element.type === 'cement')) {
-              // setCement(null)
-              rowSelection.map((row, index) => {
-                // const { _id } = rows[index];
-                setCement(index);
-              });
-              console.log(cement);
-              // setData({ step: 1, key: 'cement', value: cement !== null ? rows[cement]._id : null });
-            }
-            // else {
-            //   console.log(coarseAggregate)
-            //   console.log(fineAggregate)
-            //   rowSelection.map((row, index) => {
-            //     const { _id, type } = rows[index];
-            //     if (type === 'coarseAggregate') {
-            //       setCoarseAggregate(_id);
-            //     }
-            //     if (type === 'fineAggregate') {
-            //       setFineAggregate(_id);
-            //     }
-            //   });
+              if (rowSelection.length > 2) {
+                rowSelection = [];
+              } else if (rowSelection.length > 1) {
+                rowSelection.shift();
+              }
 
-            //   setData({ step: 1, key: 'fineAggregate', value: fineAggregate });
-            //   setData({ step: 1, key: 'coarseAggregate', value: coarseAggregate });
-            // }
+              if (rowSelection.length > 0) {
+                cementObject = {
+                  ...materialSelectionData,
+                  cement: {
+                    id: rows[rowSelection[0]]._id,
+                    type: 'cement',
+                  },
+                };
+              } else {
+                cementObject = {
+                  ...materialSelectionData,
+                  cement: {
+                    id: null,
+                    type: null,
+                  },
+                };
+              }
+
+              setData({ step: 1, value: cementObject });
+            } else {
+              const aggregates = [];
+              let coarseAggregate = materialSelectionData.coarseAggregate;
+              let fineAggregate = materialSelectionData.fineAggregate;
+              let aggregatesObject = {
+                ...materialSelectionData,
+                coarseAggregate: {
+                  id: null,
+                  type: null,
+                },
+                fineAggregate: {
+                  id: null,
+                  type: null,
+                },
+              };
+
+              rowSelection.forEach((row, index) => {
+                aggregates.push({
+                  _id: rows[rowSelection[index]]._id,
+                  name: rows[rowSelection[index]].name,
+                });
+
+                if (rows[rowSelection[index]].type === t('abcp.step-3.coarse-aggregate')) {
+                  coarseAggregate = {
+                    id: rows[rowSelection[index]]._id,
+                    type: rows[rowSelection[index]].type,
+                  };
+                }
+
+                if (rows[rowSelection[index]].type === t('abcp.step-3.fine-aggregate')) {
+                  fineAggregate = {
+                    id: rows[rowSelection[index]]._id,
+                    type: rows[rowSelection[index]].type,
+                  };
+                }
+
+                aggregatesObject = {
+                  ...materialSelectionData,
+                  coarseAggregate,
+                  fineAggregate,
+                };
+              });
+
+              setData({ step: 1, value: aggregatesObject });
+            }
+            setRowSelectionModel(rowSelection);
           }}
           rowSelectionModel={rowSelectionModel}
           disableColumnSelector
@@ -103,8 +157,9 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
             sortable: false,
             align: 'center',
             headerAlign: 'center',
-            minWidth: 50,
+            minWidth: 100,
             flex: 1,
+            renderCell: renderCell as (params: GridCellParams) => React.ReactNode,
           }))}
           rows={
             rows !== null
@@ -124,4 +179,4 @@ const MaterialSelectionTable = ({ rows, columns, header }: MaterialSelectionProp
   );
 };
 
-export default MaterialSelectionTable;
+export default ABCP_MaterialSelectionTable;

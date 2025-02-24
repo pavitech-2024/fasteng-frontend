@@ -33,26 +33,25 @@ import { t } from 'i18next';
 import { NextPage } from 'next';
 
 const AsphaltStandards: NextPage = () => {
-  // retirando do getStaticProps pq como existe tradução, a info não é estática
   const standards: Standard[] = [
     {
-      title: t('asphalt.essay.abrasion'),
+      title: t('abrasion.los.angeles'),
       icon: AbrasionIcon,
       key: 'abrasion',
       standard: 'DNER - ME 035/98',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/AbrasaoLosAngeles03598.0fb55fd3.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_451_2024_me.pdf',
       type: 'aggregates',
     },
     {
-      title: 'Adesividade',
+      title: t('adhesiveness'),
       icon: AdhesivenessIcon,
       key: 'adhesiveness',
-      standard: 'DNER- ME 078/94',
-      link: 'http://smartdoser.fastengapp.com.br/static/media/AdesividadeDnitme07894.b8c14e56.pdf',
+      standard: 'DNER - ME 078/94',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_078_94-1.pdf',
       type: 'aggregates',
     },
     {
-      title: 'Dano por Umidade Induzida',
+      title: t('induced.moisture.damage'),
       icon: InducedMoistureDamageIcon,
       key: 'inducedMoistureDamage',
       standard: 'DNIT 180/2018 - ME',
@@ -60,23 +59,24 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: 'Ductilidade',
+      title: t('ductility'),
       icon: DuctilityIcon,
       key: 'ductility',
       standard: 'DNER - ME 163/98',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_180_2018_me-1.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_163_98.pdf',
       type: 'asphaltBinder',
     },
     {
-      title: 'Durabilidade',
+      //Consertar link de durability
+      title: t('durability'),
       icon: DurabilityIcon,
       key: 'durability',
       standard: 'DNER - ME 089/94',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_089_94.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_446_me_avaliacao-de-durabilidade-de-agregados_com-incorporacao-da-errata-1.pdf',
       type: 'aggregates',
     },
     {
-      title: 'Ensaio Cântabro',
+      title: t('cantabro.essay'),
       icon: CantabrianIcon,
       key: 'cantabrian',
       standard: 'DNER - ME 383/99',
@@ -84,7 +84,7 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: 'Ensaio de Angularidade',
+      title: t('angularity.essay'),
       icon: AngularityIcon,
       key: 'angularity',
       standard: 'DNER - ME 415/2019',
@@ -92,7 +92,7 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: 'Ensaio de Fadiga',
+      title: t('fatigue.essay'),
       icon: FatigueIcon,
       key: 'fatigue',
       standard: 'DNIT - ME 183/2018',
@@ -100,31 +100,33 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltBinder',
     },
     {
-      title: 'Ensaio de Penetração',
+      title: t('penetration.essay'),
       icon: PenetrationIcon,
       key: 'penetration',
       standard: 'DNIT - ME 155/2010',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/DuctilidadeDnerMe16398.a7e9de87.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_155_2010_me.pdf',
       type: 'asphaltBinder',
     },
     {
-      title: 'Ensaio Marshall',
+      // Corrigir link do ensaio marshall
+      title: t('marshall.essay'),
       icon: MarshallIconPng,
       key: 'marshall',
       standard: 'DNER - ME 043/95',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_043_95.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_447_2024_me.pdf',
       type: 'asphaltMix',
     },
     {
-      title: 'Equivalente Areia',
+      //Corrigir link de sand.equivalent
+      title: t('sand.equivalent'),
       icon: SandEquivalentIcon,
       key: 'sandEquivalent',
       standard: 'DNER - ME 054/97',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/EquivalenteAreiaDNERME05497.a8d7e948.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_450_2024_me-1.pdf',
       type: 'aggregates',
     },
     {
-      title: 'Estabilidade à Estocagem',
+      title: t('storage.stability'),
       icon: StorageStabilityIcon,
       key: 'storageStability',
       standard: 'DNER - ME 384/99',
@@ -132,23 +134,24 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltBinder',
     },
     {
-      title: 'Deflectômetro de Queda de Peso',
+      title: t('drop.weight.deflectometer'),
       icon: FwdIcon,
       key: 'fallingWeightDeflectometer',
-      standard: 'DNER-PRO 273/96',
+      standard: 'DNER - PRO 273/96',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_184_2018_me-1.pdf',
+
+      type: 'asphaltMix',
+    },
+    {
+      title: t('flow.number'),
+      icon: FlowNumberIcon,
+      key: 'flowNumber',
+      standard: 'DNIT 184/2018',
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_184_2018_me-1.pdf',
       type: 'asphaltMix',
     },
     {
-      title: 'Número de Fluxo',
-      icon: FlowNumberIcon,
-      key: 'flowNumber',
-      standard: 'DNIT 184/2018',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/procedimento-pro/dner_pro_273_96.pdf',
-      type: 'asphaltMix',
-    },
-    {
-      title: 'Fluência e Recuperação Sob Tensões Múltiplas (MSCR)',
+      title: t('multiple.stress.creep.recovery'),
       icon: MSCRIcon,
       key: 'mscr',
       standard: 'DNIT 423/2020 - ME',
@@ -156,15 +159,15 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltMix',
     },
     {
-      title: 'Granulometria por Peneiramento',
+      title: t('sieving.granulometry'),
       icon: GranulometryIcon,
       key: 'granulometry-asphalt',
       standard: 'DNER - ME 083/98',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/GranulometriaDnerMe08398.1ca0cbba.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner-me083-98.pdf',
       type: 'aggregates',
     },
     {
-      title: 'Índice de Forma',
+      title: t('shape.index'),
       icon: ShapeIndexIcon,
       key: 'shapeIndex',
       standard: 'DNIT 424/2020 - ME',
@@ -172,7 +175,7 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: 'Massa Específica - Agregado Graúdo',
+      title: t('specific.mass-coarse.aggregate'),
       icon: SpecifyMassIcon,
       key: 'specifyMassBigAggregates',
       standard: 'DNIT 413/2021 - ME',
@@ -180,7 +183,7 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: 'Massa Específica - Agregado Miúdo',
+      title: t('specific.mass-fine.aggregate'),
       icon: SpecifyMassIcon,
       key: 'specifyMassSmallAggregates',
       standard: 'DNIT 411/2021 - ME',
@@ -188,7 +191,7 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: 'Módulo de Resiliência',
+      title: t('resilience.module'),
       icon: ResiliencyModuleIcon,
       key: 'resilienceModule',
       standard: 'DNIT 135/2018 - ME',
@@ -196,23 +199,23 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltMix',
     },
     {
-      title: 'Partículas Alongadas e Achatadas',
+      title: t('elongated.flattened.particles'),
       icon: ElongatedParticlesIcon,
       key: 'elongatedParticles',
       standard: 'DNIT 429/2020 - ME',
-      link: '/https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_429_2020_me-3.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_429_2020_me-3.pdf',
       type: 'aggregates',
     },
     {
-      title: 'Ponto de Amolecimento',
+      title: t('softening.point'),
       icon: SofteningPointIcon,
       key: 'softeningPoint',
       standard: 'DNIT 131/2010 - ME',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/PontoDeAmolecimentoDNITME1312010.90d3b6e9.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_131_2010_me.pdf',
       type: 'asphaltBinder',
     },
     {
-      title: 'Ponto de Fulgor',
+      title: t('flash.point'),
       icon: FlashPointIcon,
       key: 'flashPoint',
       standard: 'DNER - ME 148/94',
@@ -220,15 +223,15 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltBinder',
     },
     {
-      title: 'Recuperação Elástica',
+      title: t('elastic.recovery'),
       icon: ElasticRecoveryIcon,
       key: 'elasticRecovery',
       standard: 'DNER 130/2010 - ME',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/RecuperacaoElasticasDnit1302010.592ab73d.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_130_2010_me.pdf',
       type: 'asphaltBinder',
     },
     {
-      title: 'Resistência à Tração por Compressão Diametral - RT',
+      title: t('tensile.strength.by.diametral.compression-rt'),
       icon: RtcdIcon,
       key: 'rtcd',
       standard: 'DNIT 136/2018 - ME',
@@ -236,7 +239,7 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltMix',
     },
     {
-      title: 'Método Rice',
+      title: t('rice.method'),
       icon: RiceTestIcon,
       key: 'rice',
       standard: 'DNIT 136/2018 - ME',
@@ -244,20 +247,20 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltMix',
     },
     {
-      title: 'Viscosidade Rotacional',
+      title: t('rotational.viscosity'),
       icon: RotationalIcon,
       key: 'rotational',
       standard: 'DNIT 427/2020 - ME',
-      link: '',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_427_2020_me-2.pdf',
       type: 'asphaltBinder',
     },
   ];
 
   const filterOptions: FilterOption[] = [
-    { key: 'all', title: 'Todos', isSelected: true },
-    { key: 'aggregates', title: 'Agregados', isSelected: false },
-    { key: 'asphaltMix', title: 'Misturas Asfálticas', isSelected: false },
-    { key: 'asphaltBinder', title: 'Ligante Asfáltico', isSelected: false },
+    { key: 'all', title: t('all'), isSelected: true },
+    { key: 'aggregates', title: t('aggregates'), isSelected: false },
+    { key: 'asphaltMix', title: t('asphalt.mixtures'), isSelected: false },
+    { key: 'asphaltBinder', title: t('asphalt.binder'), isSelected: false },
   ];
 
   return <StandardsTemplate standards={standards} filterOptions={filterOptions} />;

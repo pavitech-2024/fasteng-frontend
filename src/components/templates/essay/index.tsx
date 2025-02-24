@@ -12,7 +12,7 @@ import Footer from '@/components/organisms/footer';
 import BodyEssay from '@/components/organisms/bodyEssay';
 import { useSessionStorage } from '../../../utils/hooks/useSessionStorage';
 
-interface EssayTemplateProps {
+export interface EssayTemplateProps {
   essayInfo: IEssayService['info'];
   childrens: { step: number; children: JSX.Element; data: any }[];
   nextCallback: (step: number, data: unknown) => Promise<void>;
@@ -32,6 +32,10 @@ const EssayTemplate = ({
   const router = useRouter();
   const app = router.pathname.split('/')[1];
   const essay = router.pathname.split('/')[3];
+
+  const isIGG = essay === 'igg'; // Condicional para alterar somente o titulo do igg sem afetar o titulo dos outros ensaios
+
+  const isSuperpavePage = router.pathname.includes('superpave');
 
   // persiste the active step in the sessionStorage, if the user reload the page, the active step will be the same  example: cbr-{step}
   const step = parseInt(sessionStorage.getItem(essay + '-step')) || 0;
@@ -100,10 +104,15 @@ const EssayTemplate = ({
 
   return (
     <Container>
-      <Header title={t(`${app}.essays.${key}`)} subTitle={standard.name} image={icon} link={standard.link}>
+      <Header
+        title={isIGG ? 'Índice de Gravidade Global (IGG)' : t(`${app}.essays.${key}`)}
+        subTitle={standard.name}
+        image={icon}
+        link={standard.link}
+      >
         <Box
           sx={{
-            width: { mobile: '100%', notebook: '57%' },
+            width: { mobile: '100%', notebook: isSuperpavePage ? '100%' : '75%' },
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

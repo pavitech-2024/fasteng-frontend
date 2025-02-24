@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import i18next from 'i18next';
 
-type User = {
+export type User = {
   _id: string;
   lastLoginList: Date[];
   photo: string | null;
@@ -87,11 +87,16 @@ export function AuthProvider({ children }) {
 
         user.preferences.language !== null && i18next.changeLanguage(user.preferences.language);
 
-        if (Router.pathname === '/') await Router.push('/home');
+        if (Router.pathname !== '/' && Router.pathname !== '/creators') {
+          await Router.push('/home');
+        }
       }
     } catch (error) {
-      if (Router.pathname !== '/') await Router.push('/');
-      else throw error;
+      if (Router.pathname !== '/' && Router.pathname !== '/creators') {
+        await Router.push('/');
+      } else {
+        throw error;
+      }
     }
   }
 

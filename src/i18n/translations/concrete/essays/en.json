@@ -3,14 +3,15 @@
   "concrete.material": "Material",
   "concrete.operator": "Operator",
   "concrete.calculist": "Calculist",
-  "concrete.essays.granulometry-concrete": "Granulometry by Sifting",
+  "concrete.essays.granulometry": "Granulometry by Sifting",
   "concrete.essays.chapman": "Specific Mass - Chapman's Flask",
   "concrete.essays.unitMass": "Unit Mass",
   "concrete.essays.sandIncrease": "Sand Increase",
   "concrete.essays.coarseAggregate": "Specific Mass of Coarse Aggregate",
-  "concrete.essays.abcp": "ABCP Dosage",
   "general data": "General Data",
   "general data of essay": "Essay General Data",
   "sandIncrease.container_volume": "Container volume",
-  "sandIncrease.container_weight": "Container weight"
+  "sandIncrease.container_weight": "Container weight",
+  "concrete.essays.abcp": "ABCP Dosage",
+  "concrete.essays.aRC": "Compression Resistance"
 }

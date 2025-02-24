@@ -70,17 +70,10 @@ const Compression_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
     <Result_Card key={index} label={'Densidade do solo seco'} value={String(Number(value).toFixed(2))} unity={'%'} />
   ));
 
-  useEffect(
-    () => console.log(compressionResults?.drySoilDensitys.map((item) => Number(item).toFixed(2))),
-    [compressionResults?.drySoilDensitys]
-  );
-
   const graphData = [
     [`${t('compression.drySoilDensitys')} g/cm³`, `${t('compression.moistures')} %`],
     ...compressionResults.graph,
   ];
-
-  useEffect(() => console.log(compressionResults), [compressionResults]);
 
   return (
     <>

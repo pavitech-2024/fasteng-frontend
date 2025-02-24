@@ -7,15 +7,15 @@ import Api from '@/api';
 
 class SandEquivalent_SERVICE implements IEssayService {
   info = {
-    key: 'sand-equivalent',
+    key: 'sandequivalent',
     icon: SandEquivalentIcon,
-    title: t('asphalt.essays.sandEquivalent'),
+    title: t('asphalt.essays.sandequivalent'),
     path: '/asphalt/essays/sandEquivalent',
     backend_path: 'asphalt/essays/sandEquivalent',
     steps: 3,
     standard: {
       name: 'DNIT-ME 054/97',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/EquivalenteAreiaDNERME05497.a8d7e948.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_450_2024_me-1.pdf',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },

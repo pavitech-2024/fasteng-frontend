@@ -13,16 +13,16 @@ interface AsphaltGeneralData {
 
 interface AsphaltGranulometry_step2Data {
   material_mass: number;
-  table_data: { sieve: string; passant: number; retained: number }[];
+  table_data: { sieve_label: string; sieve_value: number; passant: number; retained: number }[];
   sieve_series: { label: string; value: number }[];
   bottom: number;
 }
 
 interface AsphaltGranulometry_results {
-  accumulated_retained: number[];
+  accumulated_retained: [string, number][];
   graph_data: [number, number][];
-  passant: number[];
-  retained_porcentage: number[];
+  passant: [string, number][];
+  retained_porcentage: [string, number][];
   total_retained: number;
   nominal_size: number;
   nominal_diameter: number;

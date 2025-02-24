@@ -25,7 +25,11 @@ const ShapeIndex_GeneralData = ({
       async () => {
         const materials = await shapeIndex.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        const filteredMaterials = materials.filter(
+          (material) => material.type === 'coarseAggregate' || material.type === 'fineAggregate'
+        );
+
+        setMaterials(filteredMaterials);
         setLoading(false);
       },
       {
@@ -60,7 +64,7 @@ const ShapeIndex_GeneralData = ({
     setNextDisabled(false);
 
   return (
-    <>
+    <div>
       {loading ? (
         <Loading />
       ) : (
@@ -118,7 +122,7 @@ const ShapeIndex_GeneralData = ({
                     options={materials.map((material: AsphaltMaterial) => {
                       return { label: material.name + ' | ' + t(`${'materials.' + material.type}`), value: material };
                     })}
-                    defaultValue={defaultValue}
+                    value={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
                     size="medium"
                     required={input.required}
@@ -138,7 +142,7 @@ const ShapeIndex_GeneralData = ({
           />
         </Box>
       )}
-    </>
+    </div>
   );
 };
 

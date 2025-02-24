@@ -1,0 +1,24 @@
+{
+  "asphalt.rtcd.sample-origin": "SoilSample Origin",
+  "asphalt.rtcd.press-specification": "Press Specification",
+  "asphalt.rtcd.press-constant": "Press Constant",
+  "asphalt.rtcd.sample-void-volume": "SoilSample Void Volume",
+  "rtcd.results.sampleName": "SoilSample Name",
+  "rtcd.results.RtKgf": "RT (Kgf/cm³)",
+  "rtcd.results.RtMpa": "RT (Mpa)",
+  "rtcd.results.average": "RT Average",
+  "rtcd.results.minimum-rt": "Min. RT (DNIT 031/2006 - ES)",
+  "rtcd.results.acceptance-condition": "Acceptance Condition",
+  "rtcd.results.acceptance-condition-true": "Minimum RT achieved",
+  "rtcd.results.acceptance-condition-false": "Minimum RT not reached",
+  "rtcd.error.minReads": "It's not possible to delete. Minimum achieved.",
+  "asphalt.experimentName": "Asphalt Experement Name",
+  "asphalt.material": "Material",
+  "asphalt.operator": "Operator",
+  "asphalt.calculist": "Calculist",
+  "asphalt.materials.comments": "Material comments",
+
+  "rtcd.step-2-description": "Fill in all the fields bellow",
+  "asphalt.essays.rtcdStep2": "Step 2",
+  "asphalt.essays.rtcdStep3": "Step 3"
+}

@@ -1,11 +1,11 @@
 import { NextPage } from 'next';
 import MaterialsTemplate from '@/components/templates/materials';
-import { Sample } from '@/interfaces/soils';
+import { SoilSample } from '@/interfaces/soils';
 import { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import { useEffect, useState } from 'react';
 import samplesService from '@/services/soils/soils-samples.service';
 import useAuth from '@/contexts/auth';
-import NewSampleModal from '@/components/templates/modals/newSample';
+import CreateEditSoilSampleModal from '@/components/templates/modals/createEditSoilSample';
 import { t } from 'i18next';
 import Loading from '@/components/molecules/loading';
 import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
@@ -20,9 +20,11 @@ const Samples: NextPage = () => {
 
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
+  const [sampleToEdit, setSampleToEdit] = useState<SoilSample>();
+  const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const { user } = useAuth();
-  const [samples, setSamples] = useState<Sample[]>([]);
+  const [samples, setSamples] = useState<SoilSample[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -61,6 +63,17 @@ const Samples: NextPage = () => {
       });
   };
 
+  const handleEditSample = async (sampleId: string) => {
+    try {
+      const selectedSampleToEdit = samples.find((sample) => sample._id === sampleId);
+      setSampleToEdit(selectedSampleToEdit);
+      setIsEdit(true);
+      setOpenModal(true);
+    } catch (error) {
+      console.error('Failed to get the selected sample to edit:', error);
+    }
+  };
+
   return (
     <Container>
       {loading ? (
@@ -70,14 +83,22 @@ const Samples: NextPage = () => {
           materials={samples}
           types={types}
           title={t('samples.title')}
+          path="soils/samples/sample"
           handleOpenModal={handleOpenModal}
-          handleDeleteMaterial={handleDeleteSample}
+          deleteMaterial={handleDeleteSample}
+          editMaterial={handleEditSample}
           modal={
-            <NewSampleModal
+            <CreateEditSoilSampleModal
               openModal={openModal}
-              handleCloseModal={() => setOpenModal(false)}
+              handleCloseModal={() => {
+                setOpenModal(false);
+                setIsEdit(false);
+                setSampleToEdit(undefined);
+              }}
               updateSamples={addNewSample}
               samples={samples}
+              sampleToEdit={sampleToEdit ? sampleToEdit : undefined}
+              isEdit={isEdit}
             />
           }
         />

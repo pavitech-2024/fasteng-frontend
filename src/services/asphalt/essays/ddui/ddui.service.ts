@@ -1,7 +1,7 @@
 import { DduiIcon } from '@/assets';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
-import { DduiActions, DduiData } from '@/stores/asphalt/ddui.store';
+import { DduiActions, DduiData } from '@/stores/asphalt/ddui/ddui.store';
 import { t } from 'i18next';
 import Api from '@/api';
 
@@ -80,14 +80,13 @@ class Ddui_SERVICE implements IEssayService {
   // send general data to backend to verify if there is already a Ddui essay with same name for the material
   submitGeneralData = async (generalData: DduiData['generalData']): Promise<void> => {
     try {
-      const { name, material } = generalData;
+      const { name } = generalData;
 
       // verify if name and material are not empty
       if (!name) throw t('errors.empty-name');
-      if (!material) throw t('errors.empty-material');
 
       // verify if there is already a Ddui essay with same name for the material
-      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name, material });
+      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name });
 
       const { success, error } = response.data;
 

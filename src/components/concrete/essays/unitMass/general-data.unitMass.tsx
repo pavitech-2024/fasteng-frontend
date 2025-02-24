@@ -12,16 +12,12 @@ import { toast } from 'react-toastify';
 import useAuth from '@/contexts/auth';
 import Loading from '@/components/molecules/loading';
 
-const UnitMass_GeneralData = ({
-  nextDisabled,
-  setNextDisabled,
-  unitMass,
-}: EssayPageProps & { unitMass: UNITMASS_SERVICE }) => {
+const UnitMass_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps & { unitMass: UNITMASS_SERVICE }) => {
   const { generalData, setData } = useUnitMassStore();
   const [loading, setLoading] = useState<boolean>(true);
   const { user } = useAuth();
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
-  const [materialsWithMaxD, setMaterialsWithMaxD] = useState([]);
+  const [materialDropdownDefaultValue, setMaterialDropdownDefaultValue] = useState<string>('');
 
   useEffect(() => {
     toast.promise(
@@ -40,15 +36,10 @@ const UnitMass_GeneralData = ({
   }, [user]);
 
   useEffect(() => {
-    if (materials) {
-      const materialsWMaxD = materials.map((material: ConcreteMaterial) => {
-        if (material.description.maxDiammeter !== null) {
-          setMaterialsWithMaxD(materialsWMaxD);
-        }
-        console.log(materialsWMaxD);
-      });
+    if (generalData.material?.name !== null) {
+      setMaterialDropdownDefaultValue(generalData.material?.name);
     }
-  }, [materials]);
+  }, [generalData.material]);
 
   const methodOptions = [
     {
@@ -69,7 +60,6 @@ const UnitMass_GeneralData = ({
   ];
 
   useEffect(() => {
-    console.log(generalData.material);
     if (generalData.experimentName !== null && generalData.method !== null && generalData.material !== null)
       nextDisabled && setNextDisabled(false);
   }, [generalData, nextDisabled, setNextDisabled]);
@@ -116,9 +106,17 @@ const UnitMass_GeneralData = ({
                   value: material,
                 };
               })}
-              defaultValue={{
-                label: materials[0].name + ' | ' + t(`${'concrete.materials.' + materials[0].type}`),
-                value: materials[0].name,
+              value={{
+                label:
+                  materials.find((material) => material.name === materialDropdownDefaultValue)?.name +
+                  ' | ' +
+                  t(
+                    `${
+                      'concrete.materials.' +
+                      materials.find((material) => material.name === materialDropdownDefaultValue)?.type
+                    }`
+                  ),
+                value: materials.find((material) => material.name === materialDropdownDefaultValue),
               }}
               callback={(value) => setData({ step: 0, key: 'material', value })}
               size="medium"
@@ -132,7 +130,7 @@ const UnitMass_GeneralData = ({
               options={methodOptions.map((method) => {
                 return { label: method.label, value: method.value };
               })}
-              defaultValue={methodOptions[0]}
+              value={methodOptions.find((option) => option.value === generalData.method)}
               callback={(value: string) => setData({ step: 0, key: 'method', value })}
               size="medium"
               required

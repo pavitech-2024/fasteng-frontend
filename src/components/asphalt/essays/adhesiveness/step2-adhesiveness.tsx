@@ -14,7 +14,7 @@ const ADHESIVENESS_Step2 = ({
   setNextDisabled,
   adhesiveness,
 }: EssayPageProps & { adhesiveness: ADHESIVENESS_SERVICE }) => {
-  const { setData } = useAdhesivenessStore();
+  const { adhesiveness: data, setData } = useAdhesivenessStore();
   const [binders, setBinders] = useState<AsphaltMaterial[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { user } = useAuth();
@@ -111,6 +111,17 @@ const ADHESIVENESS_Step2 = ({
                         },
                       ]
                     : []
+                }
+                value={
+                  input.key === 'binder'
+                    ? { label: data[input.key]?.name || '', value: data[input.key] || '' }
+                    : input.key === 'filmDisplacement'
+                    ? data[input.key] === false
+                      ? { label: t('adhesiveness.filmDisplacement-false'), value: false }
+                      : data[input.key] === true
+                      ? { label: t('adhesiveness.filmDisplacement-true'), value: true }
+                      : null
+                    : null
                 }
                 required={input.required}
                 size="medium"

@@ -1,0 +1,13 @@
+{
+  "materials.aggregates": "Agregados",
+  "materials.binders": "Aglomerantes (cimento)",
+  "materials.coarseAggregate": "Agregado graúdo",
+  "materials.fineAggregate": "Agregado miúdo",
+  "materials.cement": "Aglomerante",
+  "loading.materials.pending": "Carregando materiais",
+  "loading.data.pending": "Carregando dados",
+  "loading.materials.success": "Materiais carregados",
+  "loading.data.success": "Dados carregados",
+  "loading.materials.error": "Erro ao carregar os materiais",
+  "loading.data.error": "Erro ao carregar os dados"
+}

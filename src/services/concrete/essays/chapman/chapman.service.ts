@@ -15,7 +15,7 @@ class CHAPMAN_SERVICE implements IEssayService {
     backend_path: 'concrete/essays/chapman',
     standard: {
       name: 'NBR 9776',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/MassaEspecificaAgregadoMiudoDNIT4112019.8b89a1d7.pdf',
+      link: 'https://www.target.com.br/produtos/normas-tecnicas/36401/nbr9776-agregados-determinacao-da-massa-especifica-de-agregados-miudos-por-meio-do-frasco-chapman',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
@@ -30,7 +30,6 @@ class CHAPMAN_SERVICE implements IEssayService {
   /** @handleNext Receives the step and data from the form and calls the respective method */
   handleNext = async (step: number, data: unknown): Promise<void> => {
     try {
-      console.log(data);
       switch (step) {
         case 0:
           await this.submitGeneralData(data as ChapmanData['generalData']);
@@ -96,8 +95,6 @@ class CHAPMAN_SERVICE implements IEssayService {
       const { success, error, result } = response.data;
 
       if (success === false) throw error.name;
-
-      console.log(result);
 
       this.store_actions.setData({ step: 2, value: result });
     } catch (error) {

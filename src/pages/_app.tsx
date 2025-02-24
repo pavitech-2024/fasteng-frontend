@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app';
 import Pages from '@/components/config/pages';
 import { AuthProvider } from '@/contexts/auth';
-import { ThemeProvider as MuiTheme } from '@mui/material';
+import { ThemeProvider as MuiTheme, Theme, StyledEngineProvider } from '@mui/material';
 import { ThemeProvider as StyledTheme } from 'styled-components';
 import { theme } from '@/components/config/theme';
 import { ToastContainer } from 'react-toastify';
@@ -13,19 +13,49 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/en-gb';
 import 'dayjs/locale/en';
 import CssBaseline from '@mui/material/CssBaseline';
+<<<<<<< HEAD
 import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
 import { useRouter } from 'next/router';
 import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
+=======
+import { useRouter } from 'next/router';
+import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
+
+// declare module '@mui/styles/defaultTheme' {
+//   // eslint-disable-next-line @typescript-eslint/no-empty-interface
+//   interface DefaultTheme extends Theme {}
+// }
+>>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { i18n } = useTranslation();
   const locale = i18n.language === 'en' ? 'en' : 'en-gb';
   const { pathname } = useRouter();
 
-  useEffect(() => {
-    // use effect to reload the page when the language is changed
-  }, [i18n.language]);
+  const { pathname } = useRouter();
+
+  // const clearStore = useSuperpaveStore((state) => state.clearStore);
+
+  // useEffect(() => {
+  //   // Itera sobre todas as chaves no sessionStorage
+  //   for (let i = sessionStorage.length - 1; i >= 0; i--) {
+  //     const key = sessionStorage.key(i);
+  //     if (key) {
+  //       // Extraindo a parte relevante da chave
+  //       const keyString = key.split('-')[1];
+
+  //       // Verificando se o pathname não contém a substring da chave
+  //       if (!pathname.includes(keyString)) {
+  //         sessionStorage.removeItem(key);
+  //       }
+  //     }
+  //   }
+
+  //   if (window.location.pathname === '/home') {
+  //     clearStore();
+  //   }
+  // }, [pathname, clearStore]);
 
   const clearGranularLayersStore = useGranularLayersStore((state) => state.clearStore);
   const clearStabilizedLayersStore = useStabilizedLayersStore((state) => state.clearStore);

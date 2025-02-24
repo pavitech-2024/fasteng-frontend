@@ -9,17 +9,17 @@ import useFlashPointStore from '@/stores/asphalt/flashPoint/flashPoint.store';
 
 const FlashPoint_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
-  const { results: flashpoint_results, generalData } = useFlashPointStore();
+  const { results: flashPoint_results, generalData } = useFlashPointStore();
 
   const data = {
     // container "Resultados"
     container_other_data: [],
   };
 
-  if (flashpoint_results) {
+  if (flashPoint_results) {
     data.container_other_data.push({
       label: t('flashPoint.temperature'),
-      value: flashpoint_results.temperature,
+      value: flashPoint_results.temperature,
       unity: '°C',
     });
   }

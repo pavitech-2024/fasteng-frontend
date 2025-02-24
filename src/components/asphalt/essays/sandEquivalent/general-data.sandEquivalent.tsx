@@ -25,7 +25,11 @@ const SandEquivalent_GeneralData = ({
       async () => {
         const materials = await sandEquivalent.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        const filteredMaterials = materials.filter(
+          (material) => material.type === 'coarseAggregate' || material.type === 'fineAggregate'
+        );
+
+        setMaterials(filteredMaterials);
         setLoading(false);
       },
       {
@@ -60,7 +64,7 @@ const SandEquivalent_GeneralData = ({
     setNextDisabled(false);
 
   return (
-    <>
+    <div>
       {loading ? (
         <Loading />
       ) : (
@@ -121,7 +125,7 @@ const SandEquivalent_GeneralData = ({
                         value: material,
                       };
                     })}
-                    defaultValue={defaultValue}
+                    value={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
                     size="medium"
                     required={input.required}
@@ -141,7 +145,7 @@ const SandEquivalent_GeneralData = ({
           />
         </Box>
       )}
-    </>
+    </div>
   );
 };
 

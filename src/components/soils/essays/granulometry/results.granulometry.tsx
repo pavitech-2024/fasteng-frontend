@@ -23,9 +23,9 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
   if (granulometry_results) {
     data.container_other_data.push(
       { label: t('granulometry-soils.total-retained'), value: granulometry_results.total_retained, unity: 'g' },
-      { label: t('granulometry-soils.nominal-size'), value: granulometry_results.nominal_size, unity: 'mm' },
-      { label: t('granulometry-soils.nominal-diameter'), value: granulometry_results.nominal_diameter, unity: 'mm' },
-      { label: t('granulometry-soils.fineness-module'), value: granulometry_results.fineness_module, unity: '%' },
+      { label: t('granulometry-soils.nominalSize'), value: granulometry_results.nominal_size, unity: 'mm' },
+      { label: t('granulometry-soils.nominalDiammeter'), value: granulometry_results.nominal_diameter, unity: 'mm' },
+      { label: t('granulometry-soils.finenessModule'), value: granulometry_results.fineness_module, unity: '%' },
       { label: t('granulometry-soils.cc'), value: granulometry_results.cc },
       { label: t('granulometry-soils.cnu'), value: granulometry_results.cnu },
       { label: t('granulometry-soils.error'), value: granulometry_results.error, unity: '%' }
@@ -93,7 +93,7 @@ const Granulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps)
     <>
       <ExperimentResume data={experimentResumeData} />
       <FlexColumnBorder title={t('results')} open={true}>
-        <ResultSubTitle title={t('soils.essays.granulometry-soils')} sx={{ margin: '.65rem' }} />
+        <ResultSubTitle title={t('soils.essays.granulometry')} sx={{ margin: '.65rem' }} />
         <Box
           sx={{
             width: '100%',

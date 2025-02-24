@@ -5,7 +5,6 @@ import Api from '@/api';
 
 export interface IReportErrorProps {
   openModalProp: boolean;
-  setOpenModalProp: (e) => void;
 }
 
 export default function ReportError({ openModalProp }: IReportErrorProps) {
@@ -69,6 +68,7 @@ export default function ReportError({ openModalProp }: IReportErrorProps) {
           sender: '',
           body: '',
         });
+
         setTimeout(() => setOpenModal(false), 3000);
         setTimeout(() => setEmailStatusMessage(''));
       } else {
