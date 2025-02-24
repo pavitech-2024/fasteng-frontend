@@ -9,31 +9,36 @@ const Concrete: NextPage = () => {
     {
       name: t('navbar.materials'),
       icon: <MaterialsIcon width="30px" height="35px" />,
-      description: 'Descrição sobre materiais',
+      /*description: 'Descrição sobre materiais',*/
+      description: t('welcome.concrete.description'),
       path: '/concrete/materials',
     },
     {
       name: t('navbar.essays'),
       icon: <EssayIcon width="30px" height="35px" />,
-      description: 'Descrição sobre materiais',
+      /*description: 'Descrição sobre materiais',*/
+      description: t('welcome.concrete.description'),
       path: '/concrete/essays',
     },
     {
       name: t('navbar.abcp'),
       icon: <AbcpIcon width="35px" height="40px" />,
-      description: 'Descrição sobre materiais',
+      /*description: 'Descrição sobre materiais',*/
+      description: t('welcome.concrete.description'),
       path: '/concrete/abcp',
     },
     {
       name: t('navbar.standards'),
       icon: <StandartsIcon style={{ color: 'white', fontSize: '30px' }} />,
-      description: 'Descrição sobre materiais',
+      /*description: 'Descrição sobre materiais',*/
+      description: t('welcome.concrete.description'),
       path: '/concrete/standards',
     },
     {
       name: t('navbar.library'),
       icon: <LibraryIcon style={{ color: 'white', fontSize: '30px' }} />,
-      description: 'Descrição sobre materiais',
+      /*description: 'Descrição sobre materiais',*/
+      description: t('welcome.concrete.description'),
       path: '/concrete/library',
     },
   ];

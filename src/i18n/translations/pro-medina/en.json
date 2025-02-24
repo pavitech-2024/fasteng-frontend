@@ -199,5 +199,21 @@
   "upload.images": "Upload imaged",
   "erase": "Erase",
   "add": "Add",
-  "pm.sample-data": "other technical data of the sample"
+  "pm.sample-data": "other technical data of the sample",
+  "asphalt.essay.abrasion": "Abrasion 'Los Angeles'",
+  "asphalt.essays.sand-equivalent": "Sand Equivalent",
+  "asphalt.essays.granulometry": "Granulometry",
+  "asphalt.essays.softeningPoint": "Softening Point",
+  "asphalt.essays.saybolt-furol": "Viscosity Saybolt-Furol",
+  "welcome.materials.description": "Description of materials",
+  "soils.essays.granulometry": "Granulometry",
+  "welcome.soils.description": "Description of materials",
+  "welcome.concrete.description": "Description of materials",
+  "concrete.essays.granulometry": "Granulometry by sifting",
+  "unit mass determination": "Unit mass determination",
+  "humidity found": "Humidity found",
+  "results": "Results",
+  "granulometry-concrete": "Granulometry",
+  "concrete.comments": "Comments",
+  "asphalt.essays.filter.all": "All"
 }

@@ -218,5 +218,20 @@
   "pm-tooltip-filter-highway": "Você digitou um filtro por rodovia",
   "pm-tooltip-del-sample": "Deletar amostra",
   "pm-datasheet": "Ficha técnica",
-  "pm-type-of-section": "Tipo de seção"
+  "pm-type-of-section": "Tipo de seção",
+  "concrete.essays.granulometry": "Granulometria por peneiramento",
+  "soils.essays.granulometry": "Granulometria por peneiramento",
+  "asphalt.essays.granulometry": "Granulometria por peneiramento",
+  "asphalt.essays.softeningPoint": "Ponto de amolecimento",
+  "asphalt.essays.sand-equivalent": "Equivalente Areia",
+  "asphalt.essays.saybolt-furol": "Viscosidade Saybolt-Furol",
+  "asphalt.essay.abrasion": "Abrasão 'Los Angeles'",
+  "welcome.materials.description": "Descrição sobre materiais",
+  "welcome.soils.description": "Descrição sobre materiais",
+  "welcome.concrete.description": "Descrição sobre materiais",
+  "unit mass determination": "Determinação da Massa Unitária",
+  "humidity found": "Umidade encontrada",
+  "results": "Resultados",
+  "granulometry-concrete": "Granulometria",
+  "concrete.comments": "Comentários"
 }

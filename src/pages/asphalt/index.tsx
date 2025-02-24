@@ -17,37 +17,37 @@ const Asphalt: NextPage = () => {
     {
       name: t('navbar.materials'),
       icon: <MaterialsIcon width="30px" height="35px" />,
-      description: 'Descrição sobre materiais',
+      description: t('welcome.materials.description'),
       path: '/asphalt/materials',
     },
     {
       name: t('navbar.essays'),
       icon: <EssayIcon width="30px" height="35px" />,
-      description: 'Descrição sobre materiais',
+      description: t('welcome.materials.description'),
       path: '/asphalt/essays',
     },
     {
       name: t('navbar.marshall'),
       icon: <MarshallIcon width="30px" height="35px" />,
-      description: 'Descrição sobre materiais',
+      description: t('welcome.materials.description'),
       path: '/asphalt/marshall',
     },
     {
       name: t('navbar.superpave'),
       icon: <SuperpaveIcon width="30px" height="35px" />,
-      description: 'Descrição sobre materiais',
+      description: t('welcome.materials.description'),
       path: '/asphalt/superpave',
     },
     {
       name: t('navbar.standards'),
       icon: <StandartsIcon style={{ color: 'white', fontSize: '30px' }} />,
-      description: 'Descrição sobre materiais',
+      description: t('welcome.materials.description'),
       path: '/asphalt/standards',
     },
     {
       name: t('navbar.library'),
       icon: <LibraryIcon style={{ color: 'white', fontSize: '30px' }} />,
-      description: 'Descrição sobre materiais',
+      description: t('welcome.materials.description'),
       path: '/asphalt/library',
     },
   ];

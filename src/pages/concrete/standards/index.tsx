@@ -29,7 +29,9 @@ import {
 import { FilterOption } from '@/components/molecules/buttons/filter';
 import { StandardsTemplate } from '@/components/templates/standards';
 import { Standard } from '@/interfaces/common';
+import { t } from 'i18next';
 import { NextPage } from 'next';
+
 
 interface ConcreteStandardsProps {
   standards: Standard[];
@@ -256,17 +258,17 @@ export const getStaticProps = async () => {
     },
   ];
 
-  const filterOptions: FilterOption[] = [
+  /*const filterOptions: FilterOption[] = [
     { key: 'all', title: 'Todos', isSelected: true },
     { key: 'aggregates', title: 'Agregados', isSelected: false },
     { key: 'asphaltMix', title: 'Misturas Asfálticas', isSelected: false },
     { key: 'asphaltBinder', title: 'Ligante Asfáltico', isSelected: false },
-  ];
+  ];*/
 
   return {
     props: {
       standards,
-      filterOptions,
+      //filterOptions,
     },
   };
 };

@@ -9,25 +9,29 @@ const Soils: NextPage = () => {
     {
       name: t('navbar.samples'),
       icon: <MaterialsIcon width="30px" height="35px" />,
-      description: 'Descrição sobre materiais',
+      /*description: 'Descrição sobre materiais',*/
+      description: t('welcome.soils.description'),
       path: '/soils/samples',
     },
     {
       name: t('navbar.essays'),
       icon: <EssayIcon width="30px" height="35px" />,
-      description: 'Descrição sobre materiais',
+      /*description: 'Descrição sobre materiais',*/
+      description: t('welcome.soils.description'),
       path: '/soils/essays',
     },
     {
       name: t('navbar.standards'),
       icon: <StandartsIcon style={{ color: 'white', fontSize: '30px' }} />,
-      description: 'Descrição sobre materiais',
+      /*description: 'Descrição sobre materiais',*/
+      description: t('welcome.soils.description'),
       path: '/soils/standards',
     },
     {
       name: t('navbar.library'),
       icon: <LibraryIcon style={{ color: 'white', fontSize: '30px' }} />,
-      description: 'Descrição sobre materiais',
+      /*description: 'Descrição sobre materiais',*/
+      description: t('welcome.soils.description'),
       path: '/soils/library',
     },
   ];
