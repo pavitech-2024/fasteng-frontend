@@ -412,7 +412,7 @@ const Marshall_Step9 = ({
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
-            gap: {mobile: '5px', notebook: '4rem'},
+            gap: { mobile: '5px', notebook: '4rem' },
             marginY: '20px',
           }}
         >
@@ -468,7 +468,7 @@ const Marshall_Step9 = ({
               sx={{
                 maxWidth: '103%',
                 wordWrap: 'break-word',
-                marginX: '.65rem'
+                marginX: '.65rem',
               }}
             />
 
@@ -543,7 +543,10 @@ const Marshall_Step9 = ({
             marginY: '20px',
           }}
         >
-          <Box id="granulometric-composition-table" sx={{ paddingX: { mobile: '0px', notebook: '6rem'}, width: '100%', overflowX: 'auto' }}>
+          <Box
+            id="granulometric-composition-table"
+            sx={{ paddingX: { mobile: '0px', notebook: '6rem' }, width: '100%', overflowX: 'auto' }}
+          >
             <DataGrid
               rows={granulometricCompTableRows}
               columns={granulometricCompTableColumns.map((col) => ({
@@ -563,7 +566,7 @@ const Marshall_Step9 = ({
             />
           </Box>
 
-          <Box id="chart-div-granulometricCurve" sx={{ paddingX: { mobile: '0px', notebook: '6rem'} }}>
+          <Box id="chart-div-granulometricCurve" sx={{ paddingX: { mobile: '0px', notebook: '6rem' } }}>
             {granulometryCompositionData?.graphData?.length > 1 && (
               <Graph data={granulometryCompositionData?.graphData} />
             )}

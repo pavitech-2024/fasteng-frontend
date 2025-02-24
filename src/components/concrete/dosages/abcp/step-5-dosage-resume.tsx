@@ -136,9 +136,9 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
             sx={{
               width: '100%',
               display: 'flex',
-              justifyContent: {mobile: 'center', notebook: 'flex-start'},
+              justifyContent: { mobile: 'center', notebook: 'flex-start' },
               gap: '10px',
-              mt: {xs: '0px', md: '20px'},
+              mt: { xs: '0px', md: '20px' },
               flexWrap: 'wrap',
             }}
           >
@@ -152,7 +152,7 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
             sx={{
               width: '100%',
               display: 'flex',
-              justifyContent: {mobile: 'center', notebook: 'flex-start'},
+              justifyContent: { mobile: 'center', notebook: 'flex-start' },
               gap: '10px',
               mt: '20px',
               flexWrap: 'wrap',
@@ -173,7 +173,7 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
             sx={{
               width: '100%',
               display: 'flex',
-              justifyContent: {mobile: 'center', notebook: 'flex-start'},
+              justifyContent: { mobile: 'center', notebook: 'flex-start' },
               gap: '10px',
               mt: '20px',
               flexWrap: 'wrap',

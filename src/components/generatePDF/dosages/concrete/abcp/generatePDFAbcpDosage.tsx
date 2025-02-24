@@ -192,10 +192,7 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
     <>
       {dosage?.results && isDesktop && (
         <Tooltip title={t('asphalt.dosages.superpave.tooltips.disabled-pdf-generator')} placement="top">
-          <Box
-            onClick={generatePDF}
-            sx={{ width: 'fit-content' }}
-          >
+          <Box onClick={generatePDF} sx={{ width: 'fit-content' }}>
             <Button
               variant="contained"
               color="primary"
