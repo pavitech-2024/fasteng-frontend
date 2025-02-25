@@ -100,5 +100,6 @@
 
   "loading.calculating.pending": "Calculating...",
   "loading.calculating.success": "Calculated successfully!",
-  "loading.calculating.error": "Error calculating!"
+  "loading.calculating.error": "Error calculating!",
+  "asphalt.dosages.marshall.granulometric-composition": "Composição granulométrica"
 }

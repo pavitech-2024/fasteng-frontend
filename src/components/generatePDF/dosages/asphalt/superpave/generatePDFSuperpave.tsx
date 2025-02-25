@@ -10,7 +10,7 @@ import {
   getCurrentDateFormatted,
 } from '@/components/generatePDF/common';
 import useAuth from '@/contexts/auth';
-import { Box, Button, Tooltip } from '@mui/material';
+import { Box, Button, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { t } from 'i18next';
 import jsPDF from 'jspdf';
 import logo from '@/assets/fasteng/LogoBlack.png';
@@ -19,6 +19,7 @@ import autoTable, { Color } from 'jspdf-autotable';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { useState, useEffect } from 'react';
+import Loading from '@/components/molecules/loading';
 
 interface IGeneratedPDF {
   dosage: SuperpaveData;
@@ -28,6 +29,11 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
   const { user } = useAuth();
   const [materialsData, setMaterialsData] = useState<AsphaltMaterial[]>([]);
   const [materialsEssays, setMaterialsEssays] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [openTooltip, setOpenTooltip] = useState(false);
+
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up(theme.breakpoints.values.notebook));
 
   useEffect(() => {
     const handleGetMaterialsData = async () => {
@@ -45,6 +51,8 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
   }, [dosage]);
 
   const generatePDF = async () => {
+    setLoading(true);
+
     const doc = new jsPDF('p', 'mm', 'a4');
     const image = (await addImageProcess(logo.src)) as HTMLImageElement;
     let currentY = 30;
@@ -241,6 +249,8 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     handleAddPage(doc, image, 30, t('superpave.dosage-pdf-title'));
 
+    currentY += 10;
+
     for (let i = 0; i < userData.length; i++) {
       doc.setFontSize(10);
       const value = userData[i].value ? userData[i].value.toString() : '---';
@@ -275,7 +285,7 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
     // Cria uma página para cada material
 
     materialsArray.forEach((material, idx) => {
-      currentY = 30;
+      currentY = 40;
       doc.setFontSize(12);
       doc.text(`2. ${t('dosages.report.materials-caracterization').toUpperCase()}`, 10, currentY);
       currentY += 10;
@@ -324,7 +334,7 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
       handleAddPage(doc, image, 30, t('superpave.dosage-pdf-title'));
     });
 
-    currentY = 30;
+    currentY = 40;
 
     // Resumo das dosagens
     doc.setFontSize(12);
@@ -423,17 +433,40 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
     doc.setPage(3);
 
     doc.save(`Relatorio_Dosagem_${dosage?.generalData.name}.pdf`);
+    setLoading(false);
   };
 
   return (
     <>
-      <Tooltip title={t('asphalt.dosages.superpave.tooltips.disabled-pdf-generator')} placement="top">
-        <Box onClick={dosage?.dosageResume && generatePDF} sx={{ width: 'fit-content' }}>
-          <Button variant="contained" color="primary" disabled={!dosage?.dosageResume}>
-            Gerar PDF
-          </Button>
-        </Box>
-      </Tooltip>
+      {dosage?.confirmationCompressionData && isDesktop && (
+        <Tooltip
+          title={isDesktop ? t('dosages.tooltips.save-dosage') : t('asphalt.tooltips.disabled-pdf-generator')}
+          placement="top"
+          leaveTouchDelay={5000}
+          open={!isDesktop && openTooltip}
+          onClose={() => setOpenTooltip(false)}
+        >
+          <Box
+            onClick={() => {
+              if (isDesktop) {
+                generatePDF();
+              } else {
+                setOpenTooltip(true);
+              }
+            }}
+            sx={{ width: 'fit-content' }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={!dosage?.confirmationCompressionData || !isDesktop}
+              sx={{ minWidth: '200px', minHeight: '2rem' }}
+            >
+              {loading ? <Loading size={25} color={'inherit'} /> : t('generate.dosage.button')}
+            </Button>
+          </Box>
+        </Tooltip>
+      )}
     </>
   );
 };

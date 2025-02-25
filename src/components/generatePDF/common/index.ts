@@ -72,7 +72,12 @@ export const addSummary = (
       lineWidth = docWidth - docMargins * 2 - titleWidth + 10;
     }
     let lineLength = Math.floor(lineWidth / doc.getTextWidth('_'));
-    let line = '_'.repeat(lineLength);
+    let line = '';
+    if (lineLength < 0) {
+      line = '_';
+    } else {
+      line = '_'.repeat(lineLength);
+    }
 
     doc.text(externalNumber + '. ' + title, currentX, currentY);
     doc.text(line, 10 + titleWidth + currentX, currentY);

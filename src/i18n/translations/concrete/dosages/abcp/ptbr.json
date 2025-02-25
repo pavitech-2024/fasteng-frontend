@@ -47,5 +47,6 @@
   "loading.superpave.success": "Materiais carregados com sucesso",
   "loading.superpave.pending": "Carregando...",
   "loading.superpave.error": "Houve um erro ao carregar os materiais",
-  "abcp.results.coefficients": "Coeficientes"
+  "abcp.results.coefficients": "Coeficientes",
+  "concrete.dosage-pdf-title": "Relatório de Dosagem Marshall"
 }
