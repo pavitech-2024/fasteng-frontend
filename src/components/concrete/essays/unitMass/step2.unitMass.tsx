@@ -14,16 +14,19 @@ const UnitMass_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { un
       key: 'containerVolume',
       label: t('unitMass.containerVolume'),
       value: step2Data.containerVolume,
+      adornment: 'l'
     },
     {
       key: 'containerWeight',
       label: t('unitMass.containerWeight'),
       value: step2Data.containerWeight,
+      adornment: 'Kg'
     },
     {
       key: 'sampleContainerWeight',
       label: t('unitMass.sampleContainerWeight'),
       value: step2Data.sampleContainerWeight,
+      adornment: 'Kg'
     },
   ];
 
@@ -61,7 +64,7 @@ const UnitMass_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { un
             value={input.value}
             onChange={(e) => setData({ step: 1, key: input.key, value: Number(e.target.value) })}
             type="number"
-            adornment={'g'}
+            adornment={input.adornment}
             sx={{ marginY: '10px' }}
           />
         ))}

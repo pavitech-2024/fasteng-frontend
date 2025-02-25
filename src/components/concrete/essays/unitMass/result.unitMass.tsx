@@ -3,6 +3,7 @@ import Result_Card, { Result_CardContainer } from '@/components/atoms/containers
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 import { EssayPageProps } from '@/components/templates/essay';
 import useUnitMassStore from '@/stores/concrete/unitMass/unitMass.store';
+import { Box } from '@mui/material';
 import { t } from 'i18next';
 
 const UnitMass_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
@@ -20,9 +21,16 @@ const UnitMass_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => 
     <>
       <ExperimentResume data={experimentResumeData} />
       <FlexColumnBorder title={t('results')} open={true}>
-        <Result_CardContainer hideBorder mt={'none'} title={t('unitMass.result')}>
-          <Result_Card label={''} value={unitMassResult} unity={'Kg/L'} />
-        </Result_CardContainer>
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              gap: '10px',
+              justifyContent: { mobile: 'center', notebook: 'flex-start' }
+            }}
+          >
+            <Result_Card label={t('unitMass.unitMass')} value={unitMassResult} unity={'Kg/L'} />
+          </Box>
       </FlexColumnBorder>
     </>
   );

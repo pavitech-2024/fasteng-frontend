@@ -92,7 +92,7 @@ const Result_Card = ({ label, value, unity }: Result_CardProps) => {
           alignItems: 'center',
           gap: '5px',
           borderRadius: '0 0 10px 10px',
-          fontSize: { mobile: '12px', notebook: '1rem' },
+          fontSize: { mobile: '1.35rem', notebook: '1rem' },
         }}
       >
         {value}
