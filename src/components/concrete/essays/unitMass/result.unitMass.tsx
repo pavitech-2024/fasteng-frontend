@@ -21,16 +21,16 @@ const UnitMass_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => 
     <>
       <ExperimentResume data={experimentResumeData} />
       <FlexColumnBorder title={t('results')} open={true}>
-          <Box
-            sx={{
-              width: '100%',
-              display: 'flex',
-              gap: '10px',
-              justifyContent: { mobile: 'center', notebook: 'flex-start' }
-            }}
-          >
-            <Result_Card label={t('unitMass.unitMass')} value={unitMassResult} unity={'Kg/L'} />
-          </Box>
+        <Box
+          sx={{
+            width: '100%',
+            display: 'flex',
+            gap: '10px',
+            justifyContent: { mobile: 'center', notebook: 'flex-start' },
+          }}
+        >
+          <Result_Card label={t('unitMass.unitMass')} value={unitMassResult} unity={'Kg/L'} />
+        </Box>
       </FlexColumnBorder>
     </>
   );

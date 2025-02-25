@@ -14,19 +14,19 @@ const UnitMass_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { un
       key: 'containerVolume',
       label: t('unitMass.containerVolume'),
       value: step2Data.containerVolume,
-      adornment: 'l'
+      adornment: 'l',
     },
     {
       key: 'containerWeight',
       label: t('unitMass.containerWeight'),
       value: step2Data.containerWeight,
-      adornment: 'Kg'
+      adornment: 'Kg',
     },
     {
       key: 'sampleContainerWeight',
       label: t('unitMass.sampleContainerWeight'),
       value: step2Data.sampleContainerWeight,
-      adornment: 'Kg'
+      adornment: 'Kg',
     },
   ];
 
