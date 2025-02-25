@@ -118,5 +118,6 @@
   "loading.calculating.success": "Calculado com sucesso!",
   "loading.calculating.error": "Erro ao calcular!",
 
-  "asphalt.dosages.marshall.granulometric-curve": "Curva granulométrica"
+  "asphalt.dosages.marshall.granulometric-curve": "Curva granulométrica",
+  "asphalt.dosages.marshall.granulometric-composition": "Composição granulométrica"
 }

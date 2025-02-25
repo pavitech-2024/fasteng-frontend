@@ -25,5 +25,5 @@
   "errors.unitMass-containerVolume-15-37.5maxDiameter-50": "Enter a container volume greater than 15 liters",
   "errors.unitMass-containerVolume-30-50-maxDiameter-75": "Enter a container volume greater than 30 liters",
 
-  "generate.dosage.button": "Generate PDF dosage report"
+  "generate.dosage.button": "Generate PDF"
 }
