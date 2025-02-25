@@ -47,5 +47,6 @@
   "loading.superpave.success": "Materials loaded successfully",
   "loading.superpave.pending": "Loading...",
   "loading.superpave.error": "There was an error loading the materials",
-  "abcp.results.coefficients": "Coefficients"
+  "abcp.results.coefficients": "Coefficients",
+  "concrete.dosage-pdf-title": "ABCP dosage report"
 }
