@@ -110,7 +110,6 @@ const ElasticRecovery_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps)
     }) && setNextDisabled(false);
   }
 
-  useEffect(() => console.log(data, rows), [data, rows]);
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Box

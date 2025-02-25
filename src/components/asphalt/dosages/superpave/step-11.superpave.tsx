@@ -201,52 +201,74 @@ const Superpave_Step11 = ({
               width: '100%',
               display: 'flex',
               flexDirection: 'column',
-              gap: '10px',
+              gap: { mobile: '5px', notebook: '4rem' },
               marginY: '20px',
             }}
           >
-            <ResultSubTitle title={t('superpave.step-11')} />
+            <ResultSubTitle title={t('superpave.step-11')} sx={{ margin: '.65rem' }} />
 
-            <DataGrid
-              hideFooter
-              disableColumnMenu
-              disableColumnFilter
-              columns={finalProportionsCols.map((col) => ({
-                ...col,
-                flex: 1,
-                autoWidth: true,
-                maxWidth: 180,
-                headerAlign: 'center',
-                align: 'center',
-              }))}
-              rows={finalProportionsRows}
+            <Box id="general-results" sx={{ width: '100%', overflowX: 'auto' }}>
+              <DataGrid
+                hideFooter
+                disableColumnMenu
+                disableColumnFilter
+                columns={finalProportionsCols.map((col) => ({
+                  ...col,
+                  flex: 1,
+                  autoWidth: true,
+                  maxWidth: 180,
+                  headerAlign: 'center',
+                  align: 'center',
+                }))}
+                rows={finalProportionsRows}
+                sx={{
+                  minWidth: '800px',
+                }}
+              />
+            </Box>
+
+            <ResultSubTitle
+              title={t('asphalt.dosages.superpave.asphalt-mass-quantitative')}
+              sx={{ margin: '.65rem' }}
             />
 
-            <ResultSubTitle title={t('asphalt.dosages.superpave.asphalt-mass-quantitative')} />
-
-            <DataGrid
-              hideFooter
-              disableColumnMenu
-              disableColumnFilter
-              columns={quantitativeCols.map((col) => ({
-                ...col,
-                flex: 1,
-                width: 200,
-                headerAlign: 'center',
-                align: 'center',
-              }))}
-              rows={quantitativeRows}
-            />
+            <Box sx={{ width: '100%', overflowX: 'auto' }}>
+              <DataGrid
+                hideFooter
+                disableColumnMenu
+                disableColumnFilter
+                columns={quantitativeCols.map((col) => ({
+                  ...col,
+                  flex: 1,
+                  width: 200,
+                  headerAlign: 'center',
+                  align: 'center',
+                }))}
+                rows={quantitativeRows}
+                sx={{
+                  minWidth: '800px',
+                }}
+              />
+            </Box>
 
             <ResultSubTitle
               title={t('asphalt.dosages.superpave.mechanic-volumetric-params')}
               sx={{
                 maxWidth: '103%',
                 wordWrap: 'break-word',
+                margin: '.65rem',
               }}
             />
 
-            <Box sx={{ display: 'flex', gap: '10px' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: { mobile: 'column', notebook: 'row' },
+                gap: '10px',
+                alignItems: { mobile: 'center', notebook: 'flex-start' },
+                justifyContent: { mobile: 'center', notebook: 'flex-start' },
+              }}
+            >
               {resultCards.map((card) => {
                 if (card.value !== undefined) {
                   return <Result_Card key={card.label} label={card.label} value={card.value} unity={card.unity} />;

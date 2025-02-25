@@ -1,14 +1,16 @@
 import jsPDF from 'jspdf';
 import React, { useEffect, useState } from 'react';
 import autoTable, { Color } from 'jspdf-autotable';
-import { Box, Button, Tooltip } from '@mui/material';
+import { Box, Button, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import useAuth from '@/contexts/auth';
 import { t } from 'i18next';
 import { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
 import logo from '@/assets/fasteng/LogoBlack.png';
 import {
   addCapa,
+  addChart,
   addImageProcess,
+  addSection,
   addSummary,
   formatDate,
   getCurrentDateFormatted,
@@ -17,6 +19,7 @@ import {
 } from '../../../common';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
+import Loading from '@/components/molecules/loading';
 
 interface IGeneratedPDF {
   dosage: MarshallData;
@@ -26,6 +29,11 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
   const { user } = useAuth();
   const [materialsData, setMaterialsData] = useState<AsphaltMaterial[]>([]);
   const [materialsEssays, setMaterialsEssays] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [openTooltip, setOpenTooltip] = useState(false);
+
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up(theme.breakpoints.values.notebook));
 
   useEffect(() => {
     const handleGetMaterialsData = async () => {
@@ -43,6 +51,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
   }, [dosage]);
 
   const generatePDF = async () => {
+    setLoading(true);
     const doc = new jsPDF('p', 'mm', 'a4');
     const image = (await addImageProcess(logo.src)) as HTMLImageElement;
     let currentY = 30;
@@ -69,20 +78,12 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
         page: 4,
       },
       {
-        title: t('asphalt.dosages.marshall.materials-final-proportions'),
-        page: 3,
+        title: t('asphalt.dosages.marshall.granulometry_composition'),
+        page: 5,
       },
       {
-        title: t('asphalt.dosages.marshall.asphalt-mass-quantitative'),
+        title: t('asphalt.dosages.marshall.dosage_resume'),
         page: 3,
-      },
-      {
-        title: t('asphalt.dosages.binder-volumetric-mechanic-params'),
-        page: 3,
-      },
-      {
-        title: t('asphalt.dosages.mineral-aggregate-voids'),
-        page: 4,
       },
     ];
 
@@ -263,7 +264,6 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     addSummary(
       doc,
-      image,
       summaryItems,
       materialsEssays[0][0].data.generalData.material.name,
       dosage.materialSelectionData.aggregates,
@@ -271,6 +271,8 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     );
 
     handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
+
+    currentY += 10;
 
     for (let i = 0; i < userData.length; i++) {
       doc.setFontSize(10);
@@ -305,8 +307,8 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     // Cria uma página para cada material
 
-    materialsArray.forEach((material, idx) => {
-      currentY = 30;
+    materialsArray.forEach(async (material, idx) => {
+      currentY = 40;
       doc.setFontSize(12);
       doc.text(`2. ${t('asphalt.dosages.marshall.materials-caracterization').toUpperCase()}`, 10, currentY);
       currentY += 10;
@@ -355,11 +357,29 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
     });
 
-    currentY = 30;
+    currentY = 40;
+
+    doc.setFontSize(12);
+    doc.text(`3. ${t('asphalt.dosages.marshall.granulometric-curve').toUpperCase()}`, 10, currentY);
+    currentY += 10;
+
+    await addSection(document.getElementById('granulometric-composition-table') as HTMLDivElement, doc, currentY);
+
+    currentY = await addSection(
+      document.getElementById('granulometric-composition-table') as HTMLDivElement,
+      doc,
+      currentY
+    );
+
+    await addSection(document.getElementById('chart-div-granulometricCurve') as HTMLDivElement, doc, currentY);
+
+    currentY = handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
+
+    currentY += 10;
 
     // Resumo das dosagens
     doc.setFontSize(12);
-    doc.text('Resumo das Dosagens:'.toUpperCase(), 10, currentY);
+    doc.text('4. Resumo das Dosagens:'.toUpperCase(), 10, currentY);
     currentY += 10;
 
     const materials = materialsData.map((material) => material.name);
@@ -503,6 +523,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     autoTable(doc, volumetricParamsTable);
 
     currentY = handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
+    currentY += 10;
 
     doc.setFontSize(12);
     doc.text(t('asphalt.dosages.vam').toUpperCase(), doc.internal.pageSize.getWidth() / 2, currentY, {
@@ -537,17 +558,40 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     // Salvar o PDF
     doc.save(`Relatorio_Dosagem_${dosage?.generalData.name}.pdf`);
+    setLoading(false);
   };
 
   return (
     <>
-      <Tooltip title={t('asphalt.dosages.superpave.tooltips.disabled-pdf-generator')} placement="top">
-        <Box onClick={dosage?.confirmationCompressionData && generatePDF} sx={{ width: 'fit-content' }}>
-          <Button variant="contained" color="primary" disabled={!dosage?.confirmationCompressionData}>
-            Gerar PDF
-          </Button>
-        </Box>
-      </Tooltip>
+      {dosage?.confirmationCompressionData && (
+        <Tooltip
+          title={isDesktop ? t('dosages.tooltips.save-dosage') : t('asphalt.tooltips.disabled-pdf-generator')}
+          placement="top"
+          leaveTouchDelay={5000}
+          open={!isDesktop && openTooltip}
+          onClose={() => setOpenTooltip(false)}
+        >
+          <Box
+            onClick={() => {
+              if (isDesktop) {
+                generatePDF();
+              } else {
+                setOpenTooltip(true);
+              }
+            }}
+            sx={{ width: 'fit-content' }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={!dosage?.confirmationCompressionData || !isDesktop}
+              sx={{ minWidth: '200px', minHeight: '2rem' }}
+            >
+              {loading ? <Loading size={25} color={'inherit'} /> : t('generate.dosage.button')}
+            </Button>
+          </Box>
+        </Tooltip>
+      )}
     </>
   );
 };

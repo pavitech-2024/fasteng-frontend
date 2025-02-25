@@ -11,5 +11,6 @@
   "unitMass.containerVolume": "Container volume",
   "unitMass.containerWeight": "Container weight",
   "unitMass.sampleContainerWeight": "Container weight + sample",
-  "unitMass.result": "Result"
+  "unitMass.result": "Result",
+  "unitMass.unitMass": "Unit Mass"
 }

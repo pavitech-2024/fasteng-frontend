@@ -138,8 +138,6 @@ const Material = () => {
     updateData('ductility', 'CAP', setDuctilityData);
     updateData('elasticRecovery', 'CAP', setElasticRecoveryData);
     updateData('rtfo', 'CAP', setRtfoData);
-
-    console.log('teste', granulometryData);
   }, [material]);
 
   const TextBox = ({ children }: TextBoxProps) => (
@@ -212,6 +210,18 @@ const Material = () => {
                       <span style={{ fontWeight: '700', marginRight: '5px' }}>{t('asphalt.materials.type')}:</span>
                       <Typography>{type}</Typography>
                     </Box>
+                    {['CAP', 'asphaltBinder'].includes(material.material.type) && (
+                      <Box sx={{ display: 'flex' }}>
+                        <span style={{ fontWeight: '700', marginRight: '5px' }}>
+                          {t('asphalt.materials.classification')}:
+                        </span>
+                        <Typography>
+                          {material.material.type === 'CAP'
+                            ? material.material.description.classification_CAP
+                            : material.material.description.classification_AMP}
+                        </Typography>
+                      </Box>
+                    )}
                   </TextBox>
                   <GeneratePDF
                     name={material.material.name}

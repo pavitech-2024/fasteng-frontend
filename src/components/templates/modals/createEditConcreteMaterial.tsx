@@ -1,5 +1,6 @@
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import ModalBase from '@/components/molecules/modals/modal';
+import { Sieve } from '@/interfaces/common';
 import { ConcreteMaterial, ConcreteMaterialData } from '@/interfaces/concrete';
 import concreteMaterialService from '@/services/concrete/concrete-materials.service';
 import { Box, TextField } from '@mui/material';
@@ -38,6 +39,7 @@ const CreateEditConcreteMaterialModal = ({
       collectionDate: null,
       classification_CAP: null,
       classification_AMP: null,
+      cementType: null,
       resistance: null,
       observation: null,
     },
@@ -114,6 +116,12 @@ const CreateEditConcreteMaterialModal = ({
         required: true,
       },
       {
+        label: t('concrete.materials.cementType'),
+        value: material.description.cementType,
+        key: 'cementType',
+        required: true,
+      },
+      {
         label: t('concrete.materials.boughtDate'),
         value: material.description.boughtDate,
         key: 'boughtDate',
@@ -135,7 +143,7 @@ const CreateEditConcreteMaterialModal = ({
         label: t('concrete.materials.collectionDate'),
         value: material.description.collectionDate,
         key: 'collectionDate',
-        required: true,
+        required: false,
       },
       {
         label: t('concrete.materials.observation'),
@@ -155,7 +163,7 @@ const CreateEditConcreteMaterialModal = ({
         WhiteList.push('maxDiammeter', 'aggregateNature', 'extractionDate', 'collectionDate');
         break;
       case 'cement':
-        WhiteList.push('classification_AMP', 'classification_CAP', 'collectionDate', 'resistance');
+        WhiteList.push('cementType', 'collectionDate', 'resistance');
         break;
       default:
         break;
@@ -182,6 +190,7 @@ const CreateEditConcreteMaterialModal = ({
     { label: 'CP-44', value: 'CP-44' },
     { label: 'CP-47', value: 'CP-47' },
     { label: 'CP-50', value: 'CP-50' },
+    { label: t('concrete.materials.cementType.other'), value: 'Other' },
   ];
 
   const classification_CAP_options: DropDownOption[] = [
@@ -198,6 +207,19 @@ const CreateEditConcreteMaterialModal = ({
     { label: 'AMP 55/75', value: 'AMP 55/75' },
     { label: 'AMP 60/85', value: 'AMP 60/85' },
     { label: 'AMP 65/90', value: 'AMP 65/90' },
+  ];
+
+  const cementTypes: DropDownOption[] = [
+    { label: '', value: null },
+    { label: 'CP I', value: 'CP I' },
+    { label: 'CP I-S', value: 'CP I-S' },
+    { label: 'CP II-E', value: 'CP II-E' },
+    { label: 'CP II-Z', value: 'CP II-Z' },
+    { label: 'CP II-F', value: 'CP II-F' },
+    { label: 'CP III', value: 'CP III' },
+    { label: 'CP IV', value: 'CP IV' },
+    { label: 'CP V-ARI', value: 'CP V-ARI' },
+    { label: 'CP V-ARI RS', value: 'CP V-ARI RS' },
   ];
 
   const dropDowns = {
@@ -277,6 +299,23 @@ const CreateEditConcreteMaterialModal = ({
     }
   };
 
+  const getDropdownDefaultValue = (key: string, value: string | Sieve) => {
+    switch (key) {
+      case 'type':
+        return { label: material.type, value: material.type };
+      case 'classification_CAP':
+        return { label: material.description.classification_CAP, value: material.description.classification_CAP };
+      case 'classification_AMP':
+        return { label: material.description.classification_AMP, value: material.description.classification_AMP };
+      case 'resistance':
+        return { label: material.description.resistance, value: material.description.resistance };
+      case 'cementType':
+        return { label: material.description.cementType, value: material.description.cementType };
+      default:
+        return { label: value.toString(), value: value };
+    }
+  };
+
   return (
     <ModalBase
       title={modalTitle}
@@ -298,10 +337,8 @@ const CreateEditConcreteMaterialModal = ({
       disableSubmit={
         material.name === '' ||
         material.type === null ||
-        material.description.collectionDate === null ||
         (material.type === 'cement'
-          ? (material.description.classification_AMP === null && material.description.classification_CAP === null) ||
-            material.description.resistance === null
+          ? material.description.cementType === null || material.description.resistance === null
           : false)
       }
     >
@@ -324,7 +361,8 @@ const CreateEditConcreteMaterialModal = ({
               input.key === 'type' ||
               input.key === 'classification_CAP' ||
               input.key === 'classification_AMP' ||
-              input.key === 'resistance'
+              input.key === 'resistance' ||
+              input.key === 'cementType'
             ) {
               return (
                 <DropDown
@@ -337,9 +375,15 @@ const CreateEditConcreteMaterialModal = ({
                   required={input.required}
                   label={t(`concrete.materials.${input.key}`)}
                   options={
-                    input.key === 'type' ? types : input.key === 'resistance' ? resistances : dropDowns[input.key]
+                    input.key === 'type'
+                      ? types
+                      : input.key === 'resistance'
+                      ? resistances
+                      : input.key === 'cementType'
+                      ? cementTypes
+                      : dropDowns[input.key]
                   }
-                  value={{ value: material.type, label: material.type }}
+                  value={getDropdownDefaultValue(input.key, input.value)}
                 />
               );
             } else {
