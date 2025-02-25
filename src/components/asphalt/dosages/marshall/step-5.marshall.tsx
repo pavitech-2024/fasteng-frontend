@@ -20,7 +20,6 @@ export type RiceTestRows = {
 };
 
 const Marshall_Step5 = ({
-  nextDisabled,
   setNextDisabled,
   marshall,
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
@@ -666,7 +665,7 @@ const Marshall_Step5 = ({
             </Box>
           )}
 
-          {selectedMethod === 'DMT' && (
+          {selectedMethod === 'DMT' && !DMTModalIsOpen && !dmtRows.some((e) => !e.Teor) && (
             <DataGrid
               columns={dmtColumns.map((col) => ({
                 ...col,
@@ -684,7 +683,9 @@ const Marshall_Step5 = ({
             title={t('asphalt.dosages.marshall.insert-real-specific-mass')}
             leftButtonTitle={t('asphalt.dosages.marshall.cancel')}
             rightButtonTitle={t('asphalt.dosages.marshall.confirm')}
-            onCancel={() => setDMTModalISOpen(false)}
+            onCancel={(event, reason) => { if (reason !== 'backdropClick') {
+              setDMTModalISOpen(false)
+            }}}
             open={DMTModalIsOpen}
             size={'medium'}
             onSubmit={() => handleSubmitDmt()}

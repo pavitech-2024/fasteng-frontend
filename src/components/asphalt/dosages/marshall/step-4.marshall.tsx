@@ -186,7 +186,7 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
           display: 'flex',
           justifyContent: 'center',
           flexDirection: 'column',
-          gap: '10px',
+          gap: {mobile: '2rem', notebook: '10px'},
         }}
       >
         <Box key={'initial_binder'} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -206,7 +206,7 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
         >
           {t('asphalt.dosages.marshall.calculate')}
         </Button>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', overflowX: 'auto' }}>
           {columns?.length > 0 && (
             <DataGrid
               columns={columns.map((col) => ({
@@ -219,11 +219,15 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
               rows={rows}
               hideFooter
               disableColumnMenu
+              sx={{
+                minWidth: '600px',
+              }}
             />
           )}
-
+        </Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', overflowX: 'auto' }}>
           {machiningColumns.length > 0 && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+            <Box sx={{ display: 'flex', flexDirection: { mobile: 'column', notebook: 'row'}, justifyContent: 'center', gap: '1rem' }}>
               <DataGrid
                 columns={machiningColumns.map((col) => ({
                   ...col,
@@ -237,6 +241,9 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
                 columnGroupingModel={machiningColumnGroupings}
                 disableColumnMenu
                 hideFooter
+                // sx={{
+                //   minWidth: '600px',
+                // }}
               />
               <DataGrid
                 columns={compressionColumns.map((col) => ({

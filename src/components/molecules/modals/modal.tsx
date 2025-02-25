@@ -11,7 +11,7 @@ interface IModalBase {
   leftButtonTitle: string;
   rightButtonTitle: string;
   singleButtonTitle?: string;
-  onCancel?: () => void;
+  onCancel?: (event?: any, reason?: string) => void;
   open: boolean;
   size: modalSize;
   onSubmit?: () => void;
@@ -47,7 +47,13 @@ const ModalBase = ({
   };
 
   return (
-    <Modal open={open} onClose={onCancel} disableScrollLock={false} sx={{ overflowY: 'scroll' }}>
+    <Modal
+      component="div"
+      open={open}
+      onClose={onCancel}
+      disableScrollLock={false}
+      sx={{ overflowY: 'scroll' }}
+    >
       <Box
         sx={{
           position: 'absolute' as const,
