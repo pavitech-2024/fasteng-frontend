@@ -47,6 +47,7 @@ const SpecifyMass_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           required
         />
         <InputEndAdornment
+          sx={{ minWidth: '500px'}}
           label={t('specifyMass.surface_saturated_mass')}
           value={data.surface_saturated_mass}
           onChange={(e) => {
@@ -55,7 +56,7 @@ const SpecifyMass_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           }}
           adornment={'g'}
           type="number"
-          inputProps={{ min: 0 }}
+          inputProps={{ min: 0}}
           required
         />
       </Box>
