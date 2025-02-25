@@ -11,5 +11,6 @@
   "unitMass.containerVolume": "Volume do recipiente",
   "unitMass.containerWeight": "Peso do recipiente",
   "unitMass.sampleContainerWeight": "Peso do recipiente + amostra",
-  "unitMass.result": "Resultado"
+  "unitMass.result": "Resultado",
+  "unitMass.unitMass": "Massa unitária"
 }
