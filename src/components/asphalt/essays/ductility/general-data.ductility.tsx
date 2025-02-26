@@ -25,7 +25,9 @@ const Ductility_GeneralData = ({
       async () => {
         const materials = await ductility.getmaterialsByUserId(user._id);
 
-        const filteredMaterials = materials.filter((material) => material.type === 'asphaltBinder' || material.type === 'CAP')
+        const filteredMaterials = materials.filter(
+          (material) => material.type === 'asphaltBinder' || material.type === 'CAP'
+        );
 
         setMaterials(filteredMaterials);
         setLoading(false);
