@@ -1,4 +1,5 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Tooltip, Typography } from '@mui/material';
+import { useState } from 'react';
 
 interface FlexColumnBorderProps {
   children: React.ReactNode | JSX.Element;
@@ -23,6 +24,7 @@ const FlexColumnBorder = ({
   generalData,
   theme,
 }: FlexColumnBorderProps) => {
+  const [openTooltip, setOpenTooltip] = useState(false);
   return (
     <Box
       sx={{
@@ -42,6 +44,7 @@ const FlexColumnBorder = ({
         <Typography
           sx={{
             width: 'fit-content',
+            maxWidth: '100%',
             bgcolor: 'primaryTons.white',
             ml: { mobile: '0', notebook: '2%' },
             paddingInline: { mobile: '5px', notebook: '10px' },
@@ -55,11 +58,27 @@ const FlexColumnBorder = ({
             fontWeight: '700',
             whiteSpace: 'nowrap',
             mt: { notebook: 0, mobile: '1rem' },
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            display: 'block',
+            position: 'relative',
             ...sx_title,
           }}
           variant="h6"
+          onClick={() => {
+            setOpenTooltip(true);
+          }}
         >
-          {title}
+          <Tooltip
+            title={title}
+            placement="top-start"
+            leaveTouchDelay={3000}
+            open={openTooltip}
+            onClose={() => setOpenTooltip(false)}
+            sx={{ display: { mobile: 'flex', notebook: 'hidden' } }}
+          >
+            <span>{title}</span>
+          </Tooltip>
         </Typography>
       )}
       <Box>{children}</Box>
