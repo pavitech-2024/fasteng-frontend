@@ -25,7 +25,7 @@ const FlashPoint_GeneralData = ({
       async () => {
         const materials = await flashPoint.getmaterialsByUserId(user._id);
 
-        const filteredMaterials = materials.filter((material) => material.type === 'asphaltBinder');
+        const filteredMaterials = materials.filter((material) => material.type === 'asphaltBinder' || material.type === 'CAP');
 
         setMaterials(filteredMaterials);
         setLoading(false);

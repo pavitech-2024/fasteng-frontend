@@ -25,7 +25,7 @@ const SofteningPoint_GeneralData = ({
       async () => {
         const materials = await softeningPoint.getmaterialsByUserId(user._id);
 
-        const filteredMaterials = materials.filter((material) => material.type === 'asphaltBinder');
+        const filteredMaterials = materials.filter((material) => material.type === 'asphaltBinder' || material.type === 'CAP');
 
         setMaterials(filteredMaterials);
         setLoading(false);
