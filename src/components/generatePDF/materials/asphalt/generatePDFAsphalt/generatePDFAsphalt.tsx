@@ -5,7 +5,7 @@ import autoTable from 'jspdf-autotable';
 import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
 import html2canvas from 'html2canvas';
 import { t } from 'i18next';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import useAuth from '@/contexts/auth';
 import { SummaryItem } from '@/components/generatePDF/common';
 
@@ -672,7 +672,7 @@ const GeneratePDF = ({
   };
 
   return (
-    <div>
+    <Box>
       <Button
         sx={{
           fontWeight: 700,
@@ -684,7 +684,7 @@ const GeneratePDF = ({
       >
         Download PDF
       </Button>
-    </div>
+    </Box>
   );
 };
 
