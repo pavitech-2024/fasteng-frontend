@@ -329,10 +329,10 @@ const MaterialsTemplate = ({
                               <Button
                                 variant="contained"
                                 sx={{
-                                  height: {mobile: '18px', notebook: '25px'},
+                                  height: { mobile: '18px', notebook: '25px' },
                                   borderRadius: { mobile: '50%', notebook: '20px' },
                                   p: { mobile: 0, notebook: '6px 12px' },
-                                  minWidth: {mobile: '18px', notebook: '25px'},
+                                  minWidth: { mobile: '18px', notebook: '25px' },
                                   bgcolor: 'secondaryTons.blue',
                                   color: 'primaryTons.white',
 
