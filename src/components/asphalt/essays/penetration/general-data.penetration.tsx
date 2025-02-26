@@ -25,7 +25,9 @@ const Penetration_GeneralData = ({
       async () => {
         const materials = await penetration.getmaterialsByUserId(user._id);
 
-        const filteredMaterials = materials.filter((material) => material.type === 'asphaltBinder' || material.type === 'CAP');
+        const filteredMaterials = materials.filter(
+          (material) => material.type === 'asphaltBinder' || material.type === 'CAP'
+        );
 
         setMaterials(filteredMaterials);
         setLoading(false);
