@@ -9,6 +9,7 @@ import MaterialsTemplate from '@/components/templates/materials';
 import CreateEditMaterialModal from '../../../components/templates/modals/createEditAsphaltMaterial';
 import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
 import Loading from '@/components/molecules/loading';
+import { Box } from '@mui/material';
 
 const Materials = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -71,9 +72,9 @@ const Materials = () => {
   return (
     <Container>
       {loading ? (
-        <div>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
           <Loading />
-        </div>
+        </Box>
       ) : (
         <MaterialsTemplate
           materials={materials}
