@@ -7,6 +7,8 @@ import concreteMaterialService from '@/services/concrete/concrete-materials.serv
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
+import Loading from '@/components/molecules/loading';
+import { Box } from '@mui/material';
 
 const ConcreteMaterials = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -68,7 +70,9 @@ const ConcreteMaterials = () => {
   return (
     <Container>
       {loading ? (
-        <p>Carregando...</p>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+          <Loading />
+        </Box>
       ) : (
         <MaterialsTemplate
           materials={materials}
