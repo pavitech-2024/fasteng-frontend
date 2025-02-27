@@ -30,7 +30,7 @@ export const Result_CardContainer = ({ title, children, hideBorder, mt }: Result
             mobile: 'repeat(auto-fill, 180px)',
             notebook: 'repeat(auto-fill, 230px)',
           },
-          gridTemplateRows: 'repeat(auto-fill, 100px)',
+          // gridTemplateRows: 'repeat(auto-fill, 100px)',
           gap: '10px',
           placeContent: 'center',
         }}
