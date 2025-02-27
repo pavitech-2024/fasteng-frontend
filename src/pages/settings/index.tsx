@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import useAuth from '@/contexts/auth';
 import { Avatar, Box, Button, IconButton, Tooltip, Typography } from '@mui/material';
@@ -41,7 +41,68 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
 
   console.log(user);
 
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    dob: '',
+  });
+
+  useEffect(() => {
+    if (user?.dob) {
+      setDob(user.dob);
+    }
+  }, [user]);
+
+  const validateName = (name: string) => {
+    const regex = /^[A-Za-z\s]{3,50}$/;
+    return regex.test(name);
+  };
+
+  const validateEmail = (email: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email) && email.length <= 80;
+  };
+
+  const validatePhone = (phone: string) => {
+    const regex = /^\d{10,11}$/;
+    return regex.test(phone);
+  };
+
+  const formatPhone = (phone: string) => {
+    const digits = phone.replace(/\D/g, ''); 
+    const limiteDigits = digits.slice(0, 11); 
+
+    if (limiteDigits.length === 11) {
+      return limiteDigits.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    } else if (limiteDigits.length === 10) {
+      return limiteDigits.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+    }
+    return limiteDigits;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '');
+    setPhone(value);
+  };
+
+
   const onSaveUser = async () => {
+
+    const newErrors = {
+      name: validateName(name) ? '' : 'Nome inválido',
+      email: validateEmail(email) ? '' : 'Email inválido',
+      phone: validatePhone(phone) ? '' : 'Telefone inválido',
+      dob: dob ? '' : 'Data de nascimento é obrigatória',
+    };
+
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).some((error) => error)) {
+      toast.error('Por favor, corrija os erros antes de salvar.');
+      return;
+    }
+
     try {
       const updatedUser = { ...user, name, email, phone, dob };
       const response = await Api.put(`users/${user._id}`, updatedUser);
@@ -313,8 +374,10 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             label="Telefone"
             variant="standard"
             fullWidth
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            value={formatPhone(phone)}
+            onChange={handlePhoneChange}
+            error={!!errors.phone}
+            helperText={errors.phone}
             sx={{
               height: '60px',
             }}
@@ -327,6 +390,8 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             InputLabelProps={{ shrink: true }}
             value={dob}
             onChange={(e) => setDob(e.target.value)}
+            error={!!errors.dob}
+            helperText={errors.dob}
           />
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
            {/* <Button
