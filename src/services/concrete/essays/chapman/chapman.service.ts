@@ -30,7 +30,6 @@ class CHAPMAN_SERVICE implements IEssayService {
   /** @handleNext Receives the step and data from the form and calls the respective method */
   handleNext = async (step: number, data: unknown): Promise<void> => {
     try {
-      console.log(data);
       switch (step) {
         case 0:
           await this.submitGeneralData(data as ChapmanData['generalData']);
@@ -96,8 +95,6 @@ class CHAPMAN_SERVICE implements IEssayService {
       const { success, error, result } = response.data;
 
       if (success === false) throw error.name;
-
-      console.log(result);
 
       this.store_actions.setData({ step: 2, value: result });
     } catch (error) {

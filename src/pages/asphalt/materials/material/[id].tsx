@@ -38,6 +38,7 @@ import RtfoMaterialView from '@/components/asphalt/material/rtfoMaterialView';
 import { ElasticRecoveryData } from '@/stores/asphalt/elasticRecovery/elasticRecovery.store';
 import ElasticRecoveryMaterialView from '@/components/asphalt/material/elasticRecoveryMaterialView';
 import GeneratePDF from '@/components/generatePDF/materials/asphalt/generatePDFAsphalt/generatePDFAsphalt';
+import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 
 interface TextBoxProps {
   children: JSX.Element | ReactNode;
@@ -138,9 +139,14 @@ const Material = () => {
     updateData('ductility', 'CAP', setDuctilityData);
     updateData('elasticRecovery', 'CAP', setElasticRecoveryData);
     updateData('rtfo', 'CAP', setRtfoData);
-
-    console.log('teste', granulometryData);
   }, [material]);
+
+  const experimentResumeData: ExperimentResumeData = {
+    experimentName: granulometryData?.generalData.name,
+    materials: [
+      { name: granulometryData?.generalData.material.name, type: granulometryData?.generalData.material.type },
+    ],
+  };
 
   const TextBox = ({ children }: TextBoxProps) => (
     <Box
@@ -191,49 +197,34 @@ const Material = () => {
                 marginTop: '5rem',
               }}
             >
-              <FlexColumnBorder title={t('general data of essay')} open={true}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    padding: { mobile: '10px', notebook: '25px' },
-                    mb: { mobile: '-55px', notebook: '-80px' },
-                    transform: { mobile: 'translateY(-70px)', notebook: 'translateY(-60px)' },
-                    alignItems: 'flex-start',
-                    flexDirection: 'column',
-                    gap: '10px',
-                  }}
-                >
-                  <TextBox>
-                    <Box sx={{ display: 'flex' }}>
-                      <span style={{ fontWeight: '700', marginRight: '5px' }}>{t('asphalt.materials.name')}:</span>
-                      <Typography>{material.material.name}</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex' }}>
-                      <span style={{ fontWeight: '700', marginRight: '5px' }}>{t('asphalt.materials.type')}:</span>
-                      <Typography>{type}</Typography>
-                    </Box>
-                  </TextBox>
-                  <GeneratePDF
-                    name={material.material.name}
-                    type={type}
-                    granulometryData={granulometryData}
-                    specificMassData={specificMassData}
-                    shapeIndexData={shapeIndexData}
-                    elongatedParticlesData={elongatedParticlesData}
-                    adhesivenessData={adhesivenessData}
-                    losAngelesAbrasionData={losAngelesAbrasionData}
-                    sandEquivalentData={sandEquivalentData}
-                    angularityData={angularityData}
-                    viscosityRotationalData={viscosityRotationalData}
-                    penetrationData={penetrationData}
-                    softeningPointData={softeningPointData}
-                    flashPointData={flashPointData}
-                    ductilityData={ductilityData}
-                    rtfoData={rtfoData}
-                    elasticRecoveryData={elasticRecoveryData}
-                  />
-                </Box>
-              </FlexColumnBorder>
+              <Box
+                sx={{
+                  width: 'fit-content',
+                  padding: '0 0 2rem 0',
+                }}
+              >
+                <GeneratePDF
+                  name={material.material.name}
+                  type={type}
+                  granulometryData={granulometryData}
+                  specificMassData={specificMassData}
+                  shapeIndexData={shapeIndexData}
+                  elongatedParticlesData={elongatedParticlesData}
+                  adhesivenessData={adhesivenessData}
+                  losAngelesAbrasionData={losAngelesAbrasionData}
+                  sandEquivalentData={sandEquivalentData}
+                  angularityData={angularityData}
+                  viscosityRotationalData={viscosityRotationalData}
+                  penetrationData={penetrationData}
+                  softeningPointData={softeningPointData}
+                  flashPointData={flashPointData}
+                  ductilityData={ductilityData}
+                  rtfoData={rtfoData}
+                  elasticRecoveryData={elasticRecoveryData}
+                />
+              </Box>
+
+              <ExperimentResume data={experimentResumeData} />
 
               {granulometryData?.results && <GranulometryMateriaView granulometryData={granulometryData} />}
 

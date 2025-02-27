@@ -98,7 +98,6 @@ const ConcreteGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPa
           sx={{
             width: '100%',
             display: 'flex',
-            // gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
             gap: '10px',
             mt: '20px',
           }}

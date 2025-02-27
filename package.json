@@ -51,6 +51,7 @@
     "@nestjs/common": "^10.4.13",
     "@svgr/webpack": "^7.0.0",
     "@types/d3-dsv": "^3.0.7",
+    "@types/google.visualization": "^0.0.74",
     "@types/js-cookie": "^3.0.3",
     "@types/scheduler": "^0.23.0",
     "@types/xlsx": "^0.0.35",

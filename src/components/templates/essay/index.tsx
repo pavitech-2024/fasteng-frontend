@@ -33,8 +33,6 @@ const EssayTemplate = ({
   const app = router.pathname.split('/')[1];
   const essay = router.pathname.split('/')[3];
 
-  console.log(standard);
-
   const isIGG = essay === 'igg'; // Condicional para alterar somente o titulo do igg sem afetar o titulo dos outros ensaios
 
   const isSuperpavePage = router.pathname.includes('superpave');

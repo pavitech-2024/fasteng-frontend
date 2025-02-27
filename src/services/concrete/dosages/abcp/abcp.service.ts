@@ -175,7 +175,6 @@ class ABCP_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }
@@ -220,7 +219,6 @@ class ABCP_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     }

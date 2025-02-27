@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
 import ModalBase from '@/components/molecules/modals/modal';
 import { Box, TextField } from '@mui/material';
+import { Sieve } from '@/interfaces/common';
 
 interface CreateEditMaterialModalProps {
   openModal: boolean;
@@ -146,7 +147,7 @@ const CreateEditMaterialModal = ({
   };
 
   const handleCreateMaterial = async () => {
-    const createMaterialToastId = toast.loading(`Creating material...`, {
+    const createMaterialToastId = toast.loading(t('asphalt.materials.creatingMaterial'), {
       autoClose: 5000,
     });
 
@@ -160,7 +161,7 @@ const CreateEditMaterialModal = ({
       handleCloseModal();
 
       toast.update(createMaterialToastId, {
-        render: `Material created successfully!`,
+        render: t('asphalt.materials.materialCreated'),
         type: 'success',
         isLoading: false,
         autoClose: 5000,
@@ -168,7 +169,7 @@ const CreateEditMaterialModal = ({
       });
     } catch (error) {
       toast.update(createMaterialToastId, {
-        render: error,
+        render: t('asphalt.materials.errorCreatingMaterial'),
         type: 'error',
         isLoading: false,
         autoClose: 5000,
@@ -214,6 +215,35 @@ const CreateEditMaterialModal = ({
         autoClose: 5000,
         closeButton: true,
       });
+    }
+  };
+
+  /**
+   * Return the default value for a DropDown based on the material properties
+   * @param key the key of the property
+   * @param value the value of the property
+   * @returns the default DropDown value
+   */
+  const defaultDropDownValue = (key: string, value: string | Sieve) => {
+    switch (key) {
+      case 'type':
+        // Return the label and value of the material type
+        return { label: material.type?.toString(), value: material.type };
+      case 'classification_CAP':
+        // Return the label and value of the CAP classification
+        return {
+          label: material.description.classification_CAP?.toString(),
+          value: material.description.classification_CAP,
+        };
+      case 'classification_AMP':
+        // Return the label and value of the AMP classification
+        return {
+          label: material.description.classification_AMP?.toString(),
+          value: material.description.classification_AMP,
+        };
+      default:
+        // Return the label and value of the property
+        return { label: value.toString(), value: value };
     }
   };
 
@@ -269,7 +299,7 @@ const CreateEditMaterialModal = ({
                   sx={{ minWidth: '120px', bgcolor: 'primaryTons.white' }}
                   label={t(`asphalt.materials.${input.key}`)}
                   variant="standard"
-                  value={{ value: material.type, label: material.type }}
+                  value={defaultDropDownValue(input.key, input.value)}
                   size="medium"
                   isEdit={isEdit}
                   options={
