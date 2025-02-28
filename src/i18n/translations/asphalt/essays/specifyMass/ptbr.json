@@ -7,5 +7,6 @@
   "specifyMass.surface_saturated_mass": "Massa saturada com a superfície seca ",
   "specifyMass.bulk_specify_mass": "Massa específica real",
   "specifyMass.apparent_specify_mass": "Massa específica aparente",
-  "specifyMass.absorption": "Absorção"
+  "specifyMass.absorption": "Absorção",
+  "errors.surface-saturated-mass-not-greater-than-dry-mass": "A massa saturada com a superfície seca deve ser maior que a massa seca"
 }
