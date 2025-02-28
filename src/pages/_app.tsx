@@ -15,6 +15,9 @@ import 'dayjs/locale/en';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useRouter } from 'next/router';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
+import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
+import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
+import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 
 // declare module '@mui/styles/defaultTheme' {
 //   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -26,7 +29,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   const locale = i18n.language === 'en' ? 'en' : 'en-gb';
   const { pathname } = useRouter();
 
-  const { pathname } = useRouter();
 
   // const clearStore = useSuperpaveStore((state) => state.clearStore);
 

@@ -15,20 +15,16 @@
   "topbar.abrasion": "'Los Angeles' Abrasion",
   "topbar.hrb": "Road Classification - HRB",
   "topbar.sucs": "Unified Classification - SUCS",
-<<<<<<< HEAD
-=======
   "topbar.granulometry": "Granulometry",
   "topbar.compression": "Compression",
   "topbar.granular-layers": "Granular Layers",
   "topbar.adhesiveness": "Adhesiveness",
-  "topbar.rtcd": "Traction Resistance",
   "topbar.rtfo": "Short Term Aging - RTFO",
   "topbar.view": "SoilSample Register",
   "topbar.stabilized-layers": "Stabilized Layers",
   "topbar.register": "New Samples Register",
   "topbar.binder-asphalt-concrete": "Binder and Concrete Asphalt",
   "topbar.viscosityrotational": "Viscosity Rotational",
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
   "topbar.ddui": "Determination of Induced Moisture Damage",
   "topbar.softeningpoint": "Softening Point",
   "topbar.penetration": "Penetration",
@@ -42,14 +38,6 @@
   "topbar.flashpoint": "Flash Point",
   "topbar.ductility": "Ductility",
   "topbar.angularity": "Angularity",
-<<<<<<< HEAD
-  "topbar.granulometry": "Granulometry",
-  "topbar.promedina": "PRO-MEDINA",
-  "topbar.granular-layers": "Granular Layers",
-  "topbar.view": "Sample Register",
-  "topbar.stabilized-layers": "Stabilized Layers",
-  "topbar.binder-asphalt-concrete": "Binder and Concrete Asphalt"
-=======
   "topbar.shapeIndex": "Shape Index",
   "topbar.elongatedParticles": "Elongated Particles",
   "topbar.elasticrecovery": "Elastic Recovery",
@@ -59,5 +47,4 @@
   "topbar.rtcd": "Tensile Strength by Diametrical Compression - RT",
   "topbar.concretert": "Tensile Strength - RT",
   "topbar.concreterc": "Compression Strenght - RC"
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
 }

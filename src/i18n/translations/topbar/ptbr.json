@@ -16,25 +16,15 @@
   "topbar.hrb": "Classificação Rodoviária - HRB",
   "topbar.sucs": "Classificação Unificada - SUCS",
   "topbar.granulometry": "Granulometria",
-<<<<<<< HEAD
-  "topbar.promedina": "PRO-MEDINA",
-  "topbar.granular-layers": "Camadas Granulares",
-  "topbar.view": "Amostras cadastradas",
-  "topbar.stabilized-layers": "Camadas Estabilizadas",
-  "topbar.register": "Cadastro de novas amostras",
-  "topbar.binder-asphalt-concrete": "Ligante e concreto asfálticos",
-=======
   "topbar.compression": "Compactação",
   "topbar.granular-layers": "Camadas Granulares",
   "topbar.adhesiveness": "Adesividade",
-  "topbar.rtcd": "Resistência à Tração",
   "topbar.rtfo": "Envelhecimento à curto prazo - RTFO",
   "topbar.view": "Cadastro de amostras",
   "topbar.stabilized-layers": "Camadas Estabilizadas",
   "topbar.register": "Cadastro de novas amostras",
   "topbar.binder-asphalt-concrete": "Ligante e concreto asfálticos",
   "topbar.viscosityrotational": "Viscosidade Rotacional",
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
   "topbar.ddui": "Determinação de Dano por Umidade Induzida",
   "topbar.softeningpoint": "Ponto de amolecimento",
   "topbar.penetration": "Penetração",
@@ -49,9 +39,6 @@
   "topbar.ductility": "Ductilidade",
   "topbar.angularity": "Angularidade",
   "topbar.shapeindex": "Índice de Forma",
-<<<<<<< HEAD
-  "topbar.elongatedparticles": "Partículas Alongadas"
-=======
   "topbar.elongatedparticles": "Partículas Alongadas",
   "topbar.elasticrecovery": "recuperação Elástica",
   "topbar.marshall": "Dosagem Marshall",
@@ -63,5 +50,4 @@
   "topbar.rtcd": "Resistência à Tração por Compressão diametral - RT",
   "topbar.concretert": "Resistência à Tração - RT",
   "topbar.concreterc": "Resistência à Compressão - RC"
->>>>>>> 5e294e0adfc76eab4b91977a30ee47890e9a506d
 }
