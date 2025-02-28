@@ -8,5 +8,6 @@
   "specifyMass.bulk_specify_mass": "Actual specific mass",
   "specifyMass.apparent_specify_mass": "Apparent apparent mass",
   "specifyMass.absorption": "Absorption",
-  "specifyMass.surface_saturated_mass": "Surface saturated mass"
+  "specifyMass.surface_saturated_mass": "Dry surface saturated mass",
+  "errors.surface-saturated-mass-not-greater-than-dry-mass": "The saturated mass with a dry surface must be greater than the dry mass"
 }
