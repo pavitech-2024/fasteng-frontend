@@ -65,7 +65,7 @@ const SpecifyMass_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           }}
           adornment={'g'}
           type="number"
-          inputProps={{ min: 0}}
+          inputProps={{ min: 0 }}
           required
         />
       </Box>

@@ -48,7 +48,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   //     clearStore();
   //   }
   // }, [pathname, clearStore]);
-  
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
