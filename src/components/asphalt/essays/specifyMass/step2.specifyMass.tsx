@@ -17,7 +17,7 @@ const SpecifyMass_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
         sx={{
           width: '100%',
           display: 'grid',
-          gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
+          gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
           gap: '10px',
           mt: '20px',
         }}
@@ -46,8 +46,17 @@ const SpecifyMass_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
           inputProps={{ min: 0 }}
           required
         />
+      </Box>
+      <Box
+        sx={{
+          width: '50%',
+          display: 'grid',
+          gridTemplateColumns: { mobile: '1fr', notebook: '1fr' },
+          gap: '10px',
+          mt: '20px',
+        }}
+      >
         <InputEndAdornment
-          sx={{ minWidth: '500px'}}
           label={t('specifyMass.surface_saturated_mass')}
           value={data.surface_saturated_mass}
           onChange={(e) => {
