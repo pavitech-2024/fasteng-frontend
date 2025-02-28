@@ -9,6 +9,7 @@ import CreateEditSoilSampleModal from '@/components/templates/modals/createEditS
 import { t } from 'i18next';
 import Loading from '@/components/molecules/loading';
 import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
+import { Box } from '@mui/material';
 
 const Samples: NextPage = () => {
   const types: DropDownOption[] = [
@@ -77,7 +78,9 @@ const Samples: NextPage = () => {
   return (
     <Container>
       {loading ? (
-        <Loading />
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+          <Loading />
+        </Box>
       ) : (
         <MaterialsTemplate
           materials={samples}

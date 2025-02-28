@@ -329,10 +329,10 @@ const MaterialsTemplate = ({
                               <Button
                                 variant="contained"
                                 sx={{
-                                  height: '25px',
+                                  height: { mobile: '18px', notebook: '25px' },
                                   borderRadius: { mobile: '50%', notebook: '20px' },
                                   p: { mobile: 0, notebook: '6px 12px' },
-                                  minWidth: '25px',
+                                  minWidth: { mobile: '18px', notebook: '25px' },
                                   bgcolor: 'secondaryTons.blue',
                                   color: 'primaryTons.white',
 
@@ -348,7 +348,7 @@ const MaterialsTemplate = ({
                                 <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
                                   {t('materials.template.visualize')}
                                 </Typography>
-                                <Edit sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
+                                <Edit sx={{ display: { mobile: 'none', notebook: 'none' }, fontSize: '1rem' }} />
                                 <NextIcon sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
                               </Button>
                             </Link>
