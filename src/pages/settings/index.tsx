@@ -445,8 +445,6 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             size="medium"
 
             sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white', ml: 5 }}
-            defaultValue={user?.preferences.language === 'en' ? LanguageOptions[0] : LanguageOptions[1]}
-            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white' }}
             value={user?.preferences.language === 'en' ? LanguageOptions[0] : LanguageOptions[1]}
  
             callback={(value: string) => {
@@ -460,8 +458,6 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             size="medium"
 
             sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white', ml: 5 }}
-            defaultValue={DecimalOptions[user?.preferences.decimal - 1]}
-            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white' }}
             value={DecimalOptions[user?.preferences.decimal - 1]}
             callback={(value: number) => {
               setUser({ ...user, preferences: { ...user.preferences, decimal: value } });
