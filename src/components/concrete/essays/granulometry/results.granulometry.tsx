@@ -115,7 +115,7 @@ const ConcreteGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPa
           options={{
             title: t('granulometry-concrete.granulometry'),
             backgroundColor: 'transparent',
-            pointSize: '2',
+            pointSize: '5',
             hAxis: {
               title: `${t('granulometry-concrete.sieve-openness') + ' (mm)'}`,
               type: 'number',
