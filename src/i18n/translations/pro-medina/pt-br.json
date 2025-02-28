@@ -194,7 +194,7 @@
   "pm.granularLayer.highway": "Rodovia",
   "promedina.essays.stabilizedLayersView": "Amostras cadastradas em Camadas estabilizadas",
   "promedina.essays.binderAsphaltConcreteView": "Amostras cadastradas em Ligante e Concreto asfálticos",
-  "register.step-4-description": "Esse é o resumo da sua amostra.",
+  "register.step-4-description": "Preencha todos os dados obrigatórios.",
   "pm.granularLayer.stabilizer": "Estabilizante",
   "pm.granularLayer.asphaltTenor": "Teor",
   "pm.granularLayer.rcs": "RCS, 28 dias (MPa)",
@@ -219,9 +219,19 @@
   "pm-tooltip-del-sample": "Deletar amostra",
   "pm-datasheet": "Ficha técnica",
   "pm-type-of-section": "Tipo de seção",
-  "pm.granularLayer.especific.mass": "Massa específica",
-
-  "pm.generate-pdf-button": "Gerar PDF",
-
-  "pm.register.resume": "Resumo"
+  "concrete.essays.granulometry": "Granulometria por peneiramento",
+  "soils.essays.granulometry": "Granulometria por peneiramento",
+  "asphalt.essays.granulometry": "Granulometria por peneiramento",
+  "asphalt.essays.softeningPoint": "Ponto de amolecimento",
+  "asphalt.essays.sand-equivalent": "Equivalente Areia",
+  "asphalt.essays.saybolt-furol": "Viscosidade Saybolt-Furol",
+  "asphalt.essay.abrasion": "Abrasão 'Los Angeles'",
+  "welcome.materials.description": "Descrição sobre materiais",
+  "welcome.soils.description": "Descrição sobre materiais",
+  "welcome.concrete.description": "Descrição sobre materiais",
+  "unit mass determination": "Determinação da Massa Unitária",
+  "humidity found": "Umidade encontrada",
+  "results": "Resultados",
+  "granulometry-concrete": "Granulometria por peneiramento",
+  "concrete.comments": "Comentários"
 }
