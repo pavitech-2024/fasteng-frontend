@@ -135,7 +135,7 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
           options={{
             title: t('granulometry-asphalt.granulometry'),
             backgroundColor: 'transparent',
-            pointSize: '2',
+            pointSize: '5',
             hAxis: {
               title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
               type: 'number',
