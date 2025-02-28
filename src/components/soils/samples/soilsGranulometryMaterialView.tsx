@@ -111,7 +111,7 @@ const GranulometrySampleView = ({ granulometryData }: IGranulometrySampleView) =
         options={{
           title: t('granulometry-soils.granulometry'),
           backgroundColor: 'transparent',
-          pointSize: '2',
+          pointSize: '5',
           hAxis: {
             title: `${t('granulometry-soils.sieve-openness') + ' (mm)'}`,
             type: 'number',
