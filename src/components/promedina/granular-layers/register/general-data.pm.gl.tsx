@@ -47,9 +47,12 @@ const GranularLayers_step1 = ({ setNextDisabled }: EssayPageProps) => {
         >
           <Box
             sx={{
-              display: 'grid',
+              display: 'flex',
               width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
+              flexWrap: 'wrap',
+              '& > *': {
+                width: 'calc(50% - 10px)',
+              },
               gap: '5px 20px',
               marginBottom: '10px',
               marginTop: '-20px',
@@ -74,7 +77,9 @@ const GranularLayers_step1 = ({ setNextDisabled }: EssayPageProps) => {
                   <TextField
                     key={input.key}
                     variant="standard"
+                    multiline={input.key === 'observations'}
                     label={input.label}
+                    sx={input.key === 'observations' && { width: '100%' }}
                     value={input.value}
                     required={input.required}
                     onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}

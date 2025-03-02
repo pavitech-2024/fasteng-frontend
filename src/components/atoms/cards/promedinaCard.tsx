@@ -27,12 +27,15 @@ export const CardPromedinaApp: NextPage<Props> = ({ element, onClick }) => (
         ultrawide: '300px',
       },
       borderRadius: '20px',
-      boxShadow: 'unset',
       display: 'flex',
       flexDirection: { mobile: 'row', notebook: 'column' },
       cursor: 'pointer',
       backgroundColor: 'white',
       marginX: { mobile: 'auto' },
+      ':hover': {
+        boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.7)',
+        transition: 'all .2s',
+      },
     }}
   >
     <Box

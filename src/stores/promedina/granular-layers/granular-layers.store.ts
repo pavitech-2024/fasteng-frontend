@@ -1,4 +1,3 @@
-import { initializeTraceState } from 'next/dist/trace';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
@@ -83,7 +82,7 @@ export type GranularLayersData = {
   generalData: GeneralData;
   step2Data: Step2Data;
   step3Data: Step3Data;
-  _id: string;
+  _id?: string;
 };
 
 export type GranularLayersActions = {

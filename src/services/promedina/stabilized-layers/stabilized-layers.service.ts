@@ -1,6 +1,5 @@
 import { t } from 'i18next';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
-import Api from '@/api';
 import {
   StabilizedLayersActions,
   StabilizedLayersData,
@@ -8,27 +7,13 @@ import {
 import { UnitMassIcon } from '@/assets';
 import samplesService from './stabilized-layers-view.service';
 
-type DataIndex = keyof StabilizedLayersData;
-
-// Function that replaces all empty inputs for '-';
-// function replaceNullValues<T extends DataIndex>(data: StabilizedLayersData[T]): StabilizedLayersData[T] {
-//   const newData: StabilizedLayersData[T] = { ...data };
-
-//   for (const key in newData) {
-//     if (newData[key] === null || newData[key] === undefined) {
-//       newData[key] = '-' as any;
-//     }
-//   }
-//   return newData;
-// }
-
 class STABILIZEDLAYERS_SERVICE implements IEssayService {
   info = {
     key: 'stabilized-layers',
     icon: UnitMassIcon,
     title: t('pm.stabilized-layers-register'),
     path: '/promedina/stabilized-layers',
-    steps: 3,
+    steps: 4,
     backend_path: 'promedina/stabilized-layers/stabilized-layers-samples',
     standard: {
       name: '',
@@ -38,6 +23,7 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
       { step: 0, description: t('general data'), path: 'generalData' },
       { step: 1, description: t('pm.pavement.specific.data'), path: 'step2' },
       { step: 2, description: t('pm.pavement.specific.data'), path: 'step3' },
+      { step: 3, description: t('pm.register.resume'), path: 'step4' },
     ],
   };
 
@@ -57,6 +43,8 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
           break;
         case 2:
           await this.submitStep3Data(data as StabilizedLayersData['step3Data']);
+          break;
+        case 3:
           await this.saveSample(data as StabilizedLayersData);
           break;
         default:
@@ -68,15 +56,33 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: StabilizedLayersData['generalData']): Promise<void> => {
-    console.log('🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitGeneralData= ~ generalData:', generalData);
+    const data = generalData;
+    for (const key in data) {
+      if (data[key] === null) {
+        data[key] = '---';
+      }
+    }
+    this.store_actions.setData({ step: 1, key: 'generalData', value: data });
   };
 
   submitStep2Data = async (step2Data: StabilizedLayersData['step2Data']): Promise<void> => {
-    console.log('🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitStep2Data= ~ step2Data:', step2Data);
+    const data = step2Data;
+    for (const key in data) {
+      if (data[key] === null) {
+        data[key] = '---';
+      }
+    }
+    this.store_actions.setData({ step: 2, key: 'step2Data', value: data });
   };
 
   submitStep3Data = async (step3Data: StabilizedLayersData['step3Data']): Promise<void> => {
-    console.log('🚀 ~ STABILIZEDLAYERS_SERVICE ~ submitStep3Data= ~ step3Data:', step3Data);
+    const data = step3Data;
+    for (const key in data) {
+      if (data[key] === null) {
+        data[key] = '---';
+      }
+    }
+    this.store_actions.setData({ step: 3, key: 'step3Data', value: data });
   };
 
   // save essay

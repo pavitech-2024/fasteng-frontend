@@ -44,7 +44,7 @@ const ABCP_EssaySelection = ({ nextDisabled, setNextDisabled, abcp }: EssayPageP
   return (
     <>
       {loading ? (
-        <Loading />
+        <Loading size={30} color={'secondary'} />
       ) : (
         <Box
           sx={{

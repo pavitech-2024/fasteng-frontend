@@ -7,6 +7,7 @@ import useStabilizedLayersStore, {
   StabilizedLayersActions,
 } from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 import STABILIZEDLAYERS_SERVICE from '@/services/promedina/stabilized-layers/stabilized-layers.service';
+import StabilizedLayersResume from '@/components/promedina/stabilized-layers/register/resume.pm.stabilized-layers';
 
 const StabilizedLayers = () => {
   // start an instance of the service
@@ -30,6 +31,7 @@ const StabilizedLayers = () => {
     { step: 0, children: <StabilizedLayers_step1 />, data: store.generalData },
     { step: 1, children: <StabilizedLayers_step2 />, data: store },
     { step: 2, children: <StabilizedLayers_step3 />, data: store },
+    { step: 3, children: <StabilizedLayersResume />, data: store },
   ];
 
   return (

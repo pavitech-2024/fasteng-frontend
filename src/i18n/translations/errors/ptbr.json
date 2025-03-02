@@ -17,5 +17,12 @@
   "errors.unitMass-containerWeight-sampleContainerWeigth": "Peso do recipiente + amostra tem que ser maior que o peso do recipiente",
   "errors.unitMass-containerVolume-10-maxDiameter-37.5": "Insira um volume do recipiente maior que 10 litros",
   "errors.unitMass-containerVolume-15-37.5maxDiameter-50": "Insira um volume do recipiente maior que 15 litros",
-  "errors.unitMass-containerVolume-30-50-maxDiameter-75": "Insira um volume do recipiente maior que 30 litros"
+  "errors.unitMass-containerVolume-30-50-maxDiameter-75": "Insira um volume do recipiente maior que 30 litros",
+
+  "upload.error.noFileSelected": "Nenhum arquivo selecionado",
+  "upload.error.maxImages": "Limite de imagens atingido. Limite: 1 imagem",
+  "upload.error.alreadyUploaded": "Imagem já cadastrada",
+  "upload.error.invalid-type": "Tipo de arquivo inválido. Tipis aceitos: png, jpg, jpeg, webp",
+  "upload.error.fileTooLarge": "Arquivo muito grande: Tamanho máximo: 3MB",
+  "upload.error.compression-error": "Erro ao comprimir imagem"
 }

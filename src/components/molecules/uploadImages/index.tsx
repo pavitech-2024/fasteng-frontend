@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @next/next/no-img-element */
-import CameraIcon from '@/components/atoms/icons/cameraIcon';
 import TrashIcon from '@/components/atoms/icons/trashIcon';
+import { AddAPhoto } from '@mui/icons-material';
+import { Box, Button, CardMedia } from '@mui/material';
 import { t } from 'i18next';
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import imageCompression from 'browser-image-compression';
 
 interface IImages {
   editarImages?: string;
@@ -24,26 +24,58 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
     }
   }, [editarImages]);
 
-  const handleAddImage = (event: any) => {
+  const handleAddImage = async (event: any) => {
     const files = event.target.files;
 
     if (files.length === 0) {
+      toast.error(t('upload.error.noFileSelected'));
       return;
     }
 
     if (files.length > 1 || images) {
-      alert('Você só pode adicionar uma imagem');
+      toast.error(t('upload.error.maxImages'));
+      return;
+    }
+
+    if (images) {
+      toast.error(t('upload.error.alreadyUploaded'));
+      return;
+    }
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+    if (!allowedTypes.includes(files[0].type)) {
+      toast.error(t('upload.error.invalid-type'));
       return;
     }
 
     const file = files[0];
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImages(reader.result);
+    const maxSizeMB = 3;
+    if (file.size > maxSizeMB * 1024 * 1024) {
+      toast.error(t('upload.error.fileTooLarge', { maxSizeMB }));
+      return;
+    }
+
+    // Compression configuration
+    const options = {
+      maxSizeMB: 3,
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
     };
 
-    reader.readAsDataURL(file);
+    try {
+      const compressedFile = await imageCompression(file, options);
+
+      // Convert to Base64
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImages(reader.result);
+      };
+
+      reader.readAsDataURL(compressedFile);
+    } catch (error) {
+      console.error(t('upload.error.compression-error'));
+    }
   };
 
   const handleRemoveImage = () => {
@@ -56,59 +88,74 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        marginTop: '4rem',
+        gap: '2rem',
+        justifyContent: 'center',
+        placeItems: 'center',
+      }}
+    >
+      <Box
+        sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', justifyContent: 'center', alignItems: 'center' }}
+      >
+        {images && (
+          <Box
+            sx={{
+              position: 'relative',
+              display: 'inline-block',
+              width: '45%',
+            }}
+          >
+            <CardMedia
+              component="img"
+              image={images}
+              alt=""
+              sx={{
+                maxWidth: '100%',
+                border: '5px solid',
+                borderColor: 'primary.main',
+                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+              }}
+            />
+            <Box
+              onClick={handleRemoveImage}
+              sx={{
+                position: 'absolute',
+                top: '1rem',
+                right: '1rem',
+                cursor: 'pointer',
+                zIndex: 9,
+                '&:hover': {
+                  transform: 'scale(1.2)',
+                  transition: 'all 0.3s ease-in-out',
+                },
+              }}
+            >
+              <TrashIcon />
+            </Box>
+          </Box>
+        )}
+      </Box>
       <label
-        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.2rem' }}
+        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '2rem' }}
         htmlFor="uploadImages"
       >
-        <CameraIcon />
-        <span style={{ fontFamily: 'roboto', fontSize: 'bold' }}>{t('upload.images')}</span>
-      </label>
-      <input
-        type="file"
-        accept=".jpg,.jpeg,.png,.webm"
-        multiple={false}
-        onChange={handleAddImage}
-        style={{ display: 'hidden' }}
-        id="uploadImages"
-        title=" "
-      />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
-        {images && (
-          <Image
-            key={images.id ? images.id : `${images}`}
-            id={images.id}
-            src={images}
-            index={0}
-            onRemove={handleRemoveImage}
-            alt={''}
+        <Button variant="contained" component="label" startIcon={<AddAPhoto />}>
+          {' '}
+          {t('upload.images')}
+          <input
+            type="file"
+            onChange={handleAddImage}
+            multiple={false}
+            hidden
+            accept=".jpg,.jpeg,.png,.webm"
+            id="uploadImages"
           />
-        )}
-      </div>
-    </div>
-  );
-};
-interface ImageProps {
-  id: string;
-  src: string;
-  index: number;
-  onRemove: (id: string) => void;
-  alt: string;
-}
-
-const Image: React.FC<ImageProps> = ({ id, src, onRemove, alt }) => {
-  return (
-    <div style={{ display: 'relative', padding: '1rem', marginTop: '1rem' }}>
-      <img
-        src={src}
-        alt={alt}
-        style={{ maxWidth: '10rem', height: '12rem', objectFit: 'cover' }}
-        width={'260px'}
-        height={'100px'}
-      />
-      <div style={{ display: 'absolute', top: '0', right: '0', cursor: 'pointer' }} onClick={() => onRemove(id)}>
-        <TrashIcon />
-      </div>
+        </Button>
+      </label>
     </div>
   );
 };

@@ -7,6 +7,7 @@ import useGranularLayersStore, {
   GranularLayersActions,
 } from '@/stores/promedina/granular-layers/granular-layers.store';
 import GRANULARLAYERS_SERVICE from '@/services/promedina/granular-layers/granular-layers.service';
+import GranularLayersResume from '@/components/promedina/granular-layers/register/resume.pm.gl';
 
 const GranularLayers = () => {
   // start an instance of the service
@@ -30,6 +31,7 @@ const GranularLayers = () => {
     { step: 0, children: <GranularLayers_step1 />, data: store.generalData },
     { step: 1, children: <GranularLayers_step2 />, data: store },
     { step: 2, children: <GranularLayers_step3 />, data: store },
+    { step: 3, children: <GranularLayersResume />, data: store },
   ];
 
   return (

@@ -8,12 +8,12 @@ type modalSize = 'small' | 'medium' | 'large';
 interface IModalBase {
   title: string;
   children: JSX.Element | React.ReactNode;
-  leftButtonTitle: string;
-  rightButtonTitle: string;
+  leftButtonTitle?: string;
+  rightButtonTitle?: string;
   onCancel: () => void;
   open: boolean;
   size: modalSize;
-  onSubmit: () => void;
+  onSubmit?: () => void;
   disableSubmit?: boolean;
 }
 

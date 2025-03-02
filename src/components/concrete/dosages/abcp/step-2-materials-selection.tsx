@@ -103,7 +103,7 @@ const ABCP_MaterialsSelection = ({ nextDisabled, setNextDisabled, abcp }: EssayP
   return (
     <>
       {loading ? (
-        <Loading />
+        <Loading size={30} color={'secondary'} />
       ) : (
         <Box
           sx={{

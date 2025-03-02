@@ -74,62 +74,113 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
       value: step2Data?.identification,
       key: 'identification',
       required: true,
+      type: 'text',
     },
-    { label: t('pm.granularLayer.section.type'), value: step2Data?.sectionType, key: 'sectionType', required: true },
-    { label: t('pm.granularLayer.extension'), value: step2Data?.extension, key: 'extension', required: true },
+    {
+      label: t('pm.granularLayer.section.type'),
+      value: step2Data?.sectionType,
+      key: 'sectionType',
+      required: true,
+      type: 'text',
+    },
+    {
+      label: t('pm.granularLayer.extension'),
+      value: step2Data?.extension,
+      key: 'extension',
+      required: true,
+      type: 'number',
+    },
     {
       label: t('pm.granularLayer.initialStakeMeters'),
       value: step2Data?.initialStakeMeters,
       key: 'initialStakeMeters',
       required: true,
+      type: 'number',
     },
-    { label: t('pm.granularLayer.latitudeI'), value: step2Data?.latitudeI, key: 'latitudeI', required: true },
-    { label: t('pm.granularLayer.longitudeI'), value: step2Data?.longitudeI, key: 'longitudeI', required: true },
+    {
+      label: t('pm.granularLayer.latitudeI'),
+      value: step2Data?.latitudeI,
+      key: 'latitudeI',
+      required: true,
+      type: 'text',
+    },
+    {
+      label: t('pm.granularLayer.longitudeI'),
+      value: step2Data?.longitudeI,
+      key: 'longitudeI',
+      required: true,
+      type: 'text',
+    },
     {
       label: t('pm.granularLayer.finalStakeMeters'),
       value: step2Data?.finalStakeMeters,
       key: 'finalStakeMeters',
       required: true,
+      type: 'text',
     },
-    { label: t('pm.granularLayer.latitudeF'), value: step2Data?.latitudeF, key: 'latitudeF', required: true },
-    { label: t('pm.granularLayer.longitudeF'), value: step2Data?.longitudeF, key: 'longitudeF', required: true },
+    {
+      label: t('pm.granularLayer.latitudeF'),
+      value: step2Data?.latitudeF,
+      key: 'latitudeF',
+      required: true,
+      type: 'text',
+    },
+    {
+      label: t('pm.granularLayer.longitudeF'),
+      value: step2Data?.longitudeF,
+      key: 'longitudeF',
+      required: true,
+      type: 'text',
+    },
     {
       label: t('pm.granularLayer.monitoringPhase'),
       value: step2Data?.monitoringPhase,
       key: 'monitoringPhase',
       required: true,
+      type: 'text',
     },
     {
       label: t('pm.granularLayer.trafficLiberation'),
       value: dateFormatter(step2Data?.trafficLiberation),
       key: 'trafficLiberation',
       required: true,
+      type: 'date',
     },
     {
       label: t('pm.granularLayer.averageAltitude'),
       value: step2Data?.averageAltitude,
       key: 'averageAltitude',
       required: true,
+      type: 'number',
     },
     {
       label: t('pm.granularLayer.numberOfTracks'),
       value: step2Data?.numberOfTracks,
       key: 'numberOfTracks',
       required: true,
+      type: 'number',
     },
     {
       label: t('pm.granularLayer.monitoredTrack'),
       value: step2Data?.monitoredTrack,
       key: 'monitoredTrack',
       required: true,
+      type: 'text',
     },
     {
       label: t('pm.granularLayer.trackWidth'),
       value: step2Data?.trackWidth,
       key: 'trackWidth',
       required: true,
+      type: 'number',
     },
-    { label: t('pm.granularLayer.observations'), value: step2Data?.observation, key: 'observation', required: false },
+    {
+      label: t('pm.granularLayer.observations'),
+      value: step2Data?.observation,
+      key: 'observation',
+      required: false,
+      type: 'text',
+    },
   ];
 
   const inputsPavimentPreparation = [
@@ -252,7 +303,7 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
                 return (
                   <InputEndAdornment
                     adornment={'m'}
-                    type="number"
+                    type={input.type}
                     key={input.key}
                     variant="standard"
                     label={input.label}
@@ -265,7 +316,11 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
                 return (
                   <TextField
                     key={input.key}
-                    variant="standard"
+                    variant={input.key === 'trafficLiberation' ? 'filled' : 'standard'}
+                    focused={input.key === 'trafficLiberation'}
+                    type={input.type}
+                    multiline={input.key === 'observation' ? true : false}
+                    sx={input.key === 'observations' && { width: '100%' }}
                     label={input.label}
                     value={input.value}
                     required={input.required}
@@ -332,8 +387,8 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
           >
             <TextField
               key={'lastUpdate'}
-              variant="standard"
-              label={t('pm.paviment.lastUpdate')}
+              variant="filled"
+              type="date"
               value={step2Data?.lastUpdate}
               required
               onChange={(e) => setData({ step: 1, key: 'lastUpdate', value: e.target.value })}
@@ -366,16 +421,17 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
         <Box
           id="upload-images"
           sx={{
-            display: 'grid',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '2rem',
             width: '100%',
-            gridTemplateColumns: '1fr',
             paddingBottom: '20px',
-            alignItems: 'center',
           }}
         >
           <UploadImages editarImages={step2Data?.images} onImagesUpdate={(images: string) => setImages(images)} />
           <TextField
             variant="standard"
+            sx={{ width: 'fit-content', marginX: 'auto' }}
             type="string"
             label={t('pm-estructural-composition-image-date')}
             placeholder="_ _/_ _/_ _ _ _"
