@@ -95,7 +95,7 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
       value: step2Data?.initialStakeMeters,
       key: 'initialStakeMeters',
       required: true,
-      type: 'number',
+      type: 'text',
     },
     {
       label: t('pm.granularLayer.latitudeI'),
@@ -144,7 +144,7 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
       value: dateFormatter(step2Data?.trafficLiberation),
       key: 'trafficLiberation',
       required: true,
-      type: 'date',
+      type: 'text',
     },
     {
       label: t('pm.granularLayer.averageAltitude'),

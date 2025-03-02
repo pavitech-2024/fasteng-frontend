@@ -81,7 +81,7 @@ const GeneratePDF_ProMedina = ({ sample, sections }: IGenerateGranularLayersPDF)
         onClose={() => setOpenTooltip(false)}
       >
         <Box
-          sx={{ width: 'fit-content', paddingX: '6rem' }}
+          sx={{ width: 'fit-content', paddingX: '5rem' }}
           onClick={() => {
             if (sample && isDesktop) {
               generatePDF();

@@ -3,7 +3,6 @@ import { Box, Button, Typography } from '@mui/material';
 import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { NextIcon } from '@/assets';
-import Loading from '@/components/molecules/loading';
 import Link from 'next/link';
 import GeneratePDF_ProMedina from '@/components/generatePDF/promedina/granularLayers/generatePDF.promedina';
 import { EssayPageProps } from '@/components/templates/essay';
