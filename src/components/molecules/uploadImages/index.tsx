@@ -58,7 +58,7 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
 
     // Compression configuration
     const options = {
-      maxSizeMB: 3,
+      maxSizeMB: 1,
       maxWidthOrHeight: 1024,
       useWebWorker: true,
     };

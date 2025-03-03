@@ -85,6 +85,7 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
   // save essay
   saveSample = async (store: GranularLayersData): Promise<void> => {
     const { _id } = store;
+    console.log("🚀 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~ _id:", _id)
 
     const replaceNullValues = (data: GranularLayersData): GranularLayersData => {
       const newData = { ...data };
@@ -111,8 +112,9 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
     try {
       let response;
 
-      if (!_id) {
-        response = await samplesService.saveSample({ ...store, generalData, step2Data, step3Data });
+      if (!_id || _id === '---') {
+        const { _id, ...storeWithoutId } = store;
+        response = await samplesService.saveSample({ ...storeWithoutId, generalData, step2Data, step3Data });
       } else {
         response = await samplesService.updateSample(_id, { ...store, generalData, step2Data, step3Data });
       }
