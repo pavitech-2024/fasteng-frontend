@@ -4,10 +4,11 @@ import ProvSoils1Icon from '@/components/atoms/icons/provSoils1Icon';
 import ProvSoils2Icon from '@/components/atoms/icons/provSoils2Icon';
 import ProvSoils3Icon from '@/components/atoms/icons/provSoils3Icon';
 import { LoginImage } from '@/components/styles/styleds/login';
-import { Container, Box, Typography } from '@mui/material';
+import { Container, Box, Typography, CardMedia } from '@mui/material';
 import { t } from 'i18next';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
+import granularLayersImage from '../../assets/pro-medina/granularLayers/granular-layers-image.png';
 
 const Promedina: NextPage = () => {
   const Router = useRouter();
@@ -15,6 +16,16 @@ const Promedina: NextPage = () => {
   const Applications = [
     {
       name: t('home.pm.granular'),
+      // icon: (
+      //   <CardMedia
+      //     component="img"
+      //     image={granularLayersImage.src}
+      //     sx={{
+      //       width: '100%',
+      //       height: '100%',
+      //     }}
+      //   />
+      // ),
       icon: <ProvSoils1Icon width="100%" height="100%" />,
       path: '/promedina/granular-layers',
     },
