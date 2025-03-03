@@ -85,7 +85,7 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
   // save essay
   saveSample = async (store: GranularLayersData): Promise<void> => {
     const { _id } = store;
-    console.log("🚀 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~ _id:", _id)
+    console.log('🚀 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~ _id:', _id);
 
     const replaceNullValues = (data: GranularLayersData): GranularLayersData => {
       const newData = { ...data };

@@ -26,7 +26,7 @@ const Promedina: NextPage = () => {
       //     }}
       //   />
       // ),
-      icon: <ProvSoils1Icon  width="100%" height="100%" />,
+      icon: <ProvSoils1Icon width="100%" height="100%" />,
       path: '/promedina/granular-layers',
     },
     {
