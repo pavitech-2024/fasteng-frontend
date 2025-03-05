@@ -27,5 +27,8 @@
 
   "asphalt.materials.materialCreated": "Material created successfully",
   "asphalt.materials.errorCreatingMaterial": "Error creating material",
-  "asphalt.materials.creatingMaterial": "Creating material..."
+  "asphalt.materials.creatingMaterial": "Creating material...",
+
+  "asphalt.materialName": "Material Name",
+  "asphalt.materialType": "Tipo de Material"
 }
