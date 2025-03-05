@@ -33,7 +33,7 @@ export const Header = ({ title, subTitle, link, icon, image, children }: HeaderP
             display: 'flex',
             alignItems: 'center',
             mb: { mobile: '2vh', notebook: 0 },
-            gap: '3rem',
+            gap: { mobile: '1rem', notebook: '3rem'},
           }}
         >
           {image && <Image alt="essay icon" src={image} width={90} height={90} />}
