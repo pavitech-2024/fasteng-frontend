@@ -1,20 +1,20 @@
 import { t } from 'i18next';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
-import Api from '@/api';
 import { UnitMassIcon } from '@/assets';
 import {
   BinderAsphaltConcreteActions,
   BinderAsphaltConcreteData,
 } from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
 import samplesService from './binder-asphalt-concrete-view.service';
+import concreteBinderAsphaltImage from '../../../assets/pro-medina/concreteBinderAsphalt/concrete-binder-asphalt-image.png';
 
 class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   info = {
     key: 'binderAsphaltConcrete',
-    icon: UnitMassIcon,
+    icon: concreteBinderAsphaltImage,
     title: t('pm.binder-asphalt-concrete-register'),
     path: '/promedina/binder-asphalt-concrete',
-    steps: 4,
+    steps: 5,
     backend_path: 'promedina/binder-asphalt-concrete/binder-asphalt-concrete-samples',
     standard: {
       name: '',
@@ -25,6 +25,7 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
       { step: 1, description: t('pm.pavement.specific.data'), path: 'step2' },
       { step: 2, description: t('pm.pavement.specific.data'), path: 'step3' },
       { step: 3, description: t('pm.pavement.specific.data'), path: 'step4' },
+      { step: 4, description: t('pm.pavement.resume'), path: 'resume' },
     ],
   };
 
@@ -51,7 +52,10 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
         case 3:
           true;
           await this.submitStep4Data(data as BinderAsphaltConcreteData['step4Data']);
-          await this.saveEssay(data as BinderAsphaltConcreteData);
+          break;
+        case 4:
+          true;
+          await this.saveSample(data as BinderAsphaltConcreteData);
           break;
         default:
           throw t('errors.invalid-step');
@@ -102,7 +106,7 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
   };
 
   // save essay
-  saveEssay = async (store: BinderAsphaltConcreteData): Promise<void> => {
+  saveSample = async (store: BinderAsphaltConcreteData): Promise<void> => {
     const { _id } = store;
 
     const replaceNullValues = (data: BinderAsphaltConcreteData): BinderAsphaltConcreteData => {
@@ -130,8 +134,9 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
     try {
       let response;
 
-      if (!_id) {
-        response = await samplesService.saveSample({ ...store, generalData, step2Data, step3Data });
+      if (!_id || _id === '---') {
+        const { _id, ...storeWithoutId } = store;
+        response = await samplesService.saveSample({ ...storeWithoutId, generalData, step2Data, step3Data, step4Data });
       } else {
         response = await samplesService.updateSample(_id, { ...store, generalData, step2Data, step3Data, step4Data });
       }

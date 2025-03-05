@@ -13,6 +13,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ title, subTitle, link, icon, image, children, sx }: HeaderProps) => {
+  console.log("🚀 ~ Header ~ image:", image)
   return (
     <Box
       style={sx}
@@ -32,7 +33,7 @@ export const Header = ({ title, subTitle, link, icon, image, children, sx }: Hea
           mb: { mobile: '2vh', notebook: 0 },
         }}
       >
-        {image && <Image alt="essay icon" src={image} width={90} height={90} />}
+        {image && <Image alt="essay icon" src={image} width={100} />}
         {icon}
         <Box
           sx={{

@@ -201,7 +201,9 @@
   "add": "Add",
   "pm.sample-data": "other technical data of the sample",
   "pm.granularLayer.especific.mass": "Specific mass",
-  "register.step-4-description": "These are the resume data of the sample.",
+  "register.step-4-description": "Insert the data related of your sample.",
+  "register.step-5-description": "This is the resume of your sample",
+  "pm.pavement.resume": "Sample resume",
 
   "pm.generate-pdf-button": "Generate PDF",
 

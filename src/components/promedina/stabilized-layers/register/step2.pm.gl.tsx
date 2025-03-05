@@ -169,7 +169,7 @@ const StabilizedLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
     },
     {
       label: t('pm.granularLayer.trafficLiberation'),
-      value: step2Data.trafficLiberation,
+      value: dateFormatter(step2Data?.trafficLiberation),
       key: 'trafficLiberation',
       required: true,
     },

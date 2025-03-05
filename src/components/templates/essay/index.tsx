@@ -87,6 +87,7 @@ const EssayTemplate = ({
   }
 
   const handleNextBtnText = () => {
+
     let btnText;
     if (
       (childrens.length - 1 === activeStep && !childrens[childrens.length - 1].data._id) ||
@@ -100,6 +101,7 @@ const EssayTemplate = ({
     }
     return btnText;
   };
+
 
   return (
     <Container>

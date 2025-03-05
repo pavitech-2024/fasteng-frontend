@@ -10,7 +10,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import granularLayersImage from '../../assets/pro-medina/granularLayers/granular-layers-image.png';
 import stabilizedLayersImage from '../../assets/pro-medina/stabilizedLayers/stabilized-layers-image.png';
-import concreteBinderAsphaltImage from '../../assets/pro-medina/concreteBinderAphalt/concrete-binder-asphalt-image.png';
+import concreteBinderAsphaltImage from '../../assets/pro-medina/concreteBinderAsphalt/concrete-binder-asphalt-image.png';
 
 const Promedina: NextPage = () => {
   const Router = useRouter();

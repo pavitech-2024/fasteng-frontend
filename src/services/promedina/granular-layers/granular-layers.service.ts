@@ -3,11 +3,12 @@ import { IEssayService } from '@/interfaces/common/essay/essay-service.interface
 import { GranularLayersActions, GranularLayersData } from '@/stores/promedina/granular-layers/granular-layers.store';
 import { t } from 'i18next';
 import samplesService from './granular-layers-view.service';
+import granularLayersImage from '../../../assets/pro-medina/granularLayers/granular-layers-image.png';
 
 class GRANULARLAYERS_SERVICE implements IEssayService {
   info = {
     key: 'granularLayers',
-    icon: UnitMassIcon,
+    icon: granularLayersImage,
     title: t('pm.granular-layers-register'),
     path: '/promedina/granular-layers',
     steps: 4,
@@ -85,7 +86,6 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
   // save essay
   saveSample = async (store: GranularLayersData): Promise<void> => {
     const { _id } = store;
-    console.log('🚀 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~ _id:', _id);
 
     const replaceNullValues = (data: GranularLayersData): GranularLayersData => {
       const newData = { ...data };
