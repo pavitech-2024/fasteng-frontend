@@ -9,6 +9,9 @@ import { t } from 'i18next';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import granularLayersImage from '../../assets/pro-medina/granularLayers/granular-layers-image.png';
+import stabilizedLayersImage from '../../assets/pro-medina/stabilizedLayers/stabilized-layers-image.png';
+import concreteBinderAsphaltImage from '../../assets/pro-medina/concreteBinderAphalt/concrete-binder-asphalt-image.png';
+
 
 const Promedina: NextPage = () => {
   const Router = useRouter();
@@ -16,27 +19,45 @@ const Promedina: NextPage = () => {
   const Applications = [
     {
       name: t('home.pm.granular'),
-      // icon: (
-      //   <CardMedia
-      //     component="img"
-      //     image={granularLayersImage.src}
-      //     sx={{
-      //       width: '100%',
-      //       height: '100%',
-      //     }}
-      //   />
-      // ),
-      icon: <ProvSoils1Icon width="100%" height="100%" />,
+      icon: (
+        <CardMedia
+          component="img"
+          image={granularLayersImage.src}
+          sx={{
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      ),
+      // icon: <ProvSoils1Icon width="100%" height="100%" />,
       path: '/promedina/granular-layers',
     },
     {
       name: t('home.pm.stabilized'),
-      icon: <ProvSoils2Icon width="100%" height="100%" />,
+      icon: (
+        <CardMedia
+          component="img"
+          image={stabilizedLayersImage.src}
+          sx={{
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      ),
       path: '/promedina/stabilized-layers',
     },
     {
       name: t('home.pm.asphalt'),
-      icon: <ProvSoils3Icon width="100%" height="100%" />,
+      icon: (
+        <CardMedia
+          component="img"
+          image={concreteBinderAsphaltImage.src}
+          sx={{
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      ),
       path: '/promedina/binder-asphalt-concrete',
     },
   ];
