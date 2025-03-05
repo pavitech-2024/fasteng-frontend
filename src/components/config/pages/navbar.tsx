@@ -36,6 +36,8 @@ export default function Navbar({ open, app }: NavbarProps) {
   const Router = useRouter();
   const [openModal, setOpenModal] = useState(false);
 
+  const isMaterialResumePage = Router.pathname.includes('/materials/material/')
+
   const IconStyle = { color: 'primaryTons.white', fontSize: '1.5rem' };
 
   const Items: ItemProps[] = [
@@ -170,10 +172,12 @@ export default function Navbar({ open, app }: NavbarProps) {
       type: 'single',
     },
   ].filter((item) => item.app === Router.pathname.split('/')[1] || item.app === 'common');
+  console.log("🚀 ~ Navbar ~ Router.pathname:", Router.pathname)
 
   // when the user scroll the page, the navbar will be fixed on the top
   window.addEventListener('scroll', () => {
     if (document.getElementById('navbar')) {
+
       if (window.scrollY === 0) document.getElementById('navbar').style.paddingTop = '52px';
       else document.getElementById('navbar').style.paddingTop = '0';
     }
@@ -189,7 +193,7 @@ export default function Navbar({ open, app }: NavbarProps) {
         alignItems: 'flex-start',
         width: `${open ? '225px' : '52px'}`,
         pt: { mobile: '52px', notebook: '0' },
-        mt: '-52px',
+        mt: isMaterialResumePage ? '0' : '-52px',
         bgcolor: 'primaryTons.mainGray',
         height: '100vh',
         transition: 'width 0.5s, padding-top 0.2s',
