@@ -13,7 +13,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ title, subTitle, link, icon, image, children, sx }: HeaderProps) => {
-  console.log("🚀 ~ Header ~ image:", image)
+  console.log('🚀 ~ Header ~ image:', image);
   return (
     <Box
       style={sx}

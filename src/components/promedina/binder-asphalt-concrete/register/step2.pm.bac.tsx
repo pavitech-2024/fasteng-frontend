@@ -267,16 +267,15 @@ const BinderAsphaltConcrete_step2 = ({ setNextDisabled }: EssayPageProps) => {
           >
             {inputsPavimentData.length > 0 &&
               inputsPavimentData.map((input) => (
-                    <TextField
-                      key={input.key}
-                      variant="standard"
-                      label={input.label}
-                      value={input.value}
-                      required={input.required}
-                      onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
-                    />
-                  )
-              )}
+                <TextField
+                  key={input.key}
+                  variant="standard"
+                  label={input.label}
+                  value={input.value}
+                  required={input.required}
+                  onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+                />
+              ))}
           </Box>
         </Box>
       </FlexColumnBorder>

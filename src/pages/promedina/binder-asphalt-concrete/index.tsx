@@ -99,7 +99,12 @@ const BinderAsphaltConcrete: NextPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Image alt="promedina concrete asphalt binder icon" src={concreteBinderAsphalt.src} width={100} height={90}/>
+                <Image
+                  alt="promedina concrete asphalt binder icon"
+                  src={concreteBinderAsphalt.src}
+                  width={100}
+                  height={90}
+                />
               </Box>
               <Box
                 color="primary"
