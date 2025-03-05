@@ -293,7 +293,6 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
         </Button>
       </Box>
     </Container>
-    
   );
 };
 export default Settings;
