@@ -31,7 +31,7 @@ const GranularLayersResume = ({ setNextDisabled }: EssayPageProps) => {
   }));
 
   const sections = [
-    'first-section',
+    'general-data',
     'pavement-data',
     'pavement-preparation',
     'technical-data',
@@ -148,7 +148,7 @@ const GranularLayersResume = ({ setNextDisabled }: EssayPageProps) => {
         >
           <GeneratePDF_ProMedina sample={samples} sections={sections} />
 
-          <Box id="first-section" sx={{ paddingTop: '1rem', paddingX: '5rem' }}>
+          <Box id="general-data" sx={{ paddingTop: '1rem', paddingX: '5rem' }}>
             <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
               <Box
                 sx={{

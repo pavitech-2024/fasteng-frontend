@@ -266,33 +266,16 @@ const BinderAsphaltConcrete_step2 = ({ setNextDisabled }: EssayPageProps) => {
             }}
           >
             {inputsPavimentData.length > 0 &&
-              inputsPavimentData.map((input) => {
-                if (input.key === 'extension' || input.key === 'averageAltitude' || input.key === 'trackWidth') {
-                  return (
-                    <InputEndAdornment
-                      adornment={'m'}
-                      type="number"
-                      key={input.key}
-                      variant="standard"
-                      label={input.label}
-                      value={input.value?.toString()}
-                      required={input.required}
-                      onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
-                    />
-                  );
-                } else {
-                  return (
-                    <TextField
-                      key={input.key}
-                      variant="standard"
-                      label={input.label}
-                      value={input.value}
-                      required={input.required}
-                      onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
-                    />
-                  );
-                }
-              })}
+              inputsPavimentData.map((input) => (
+                <TextField
+                  key={input.key}
+                  variant="standard"
+                  label={input.label}
+                  value={input.value}
+                  required={input.required}
+                  onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+                />
+              ))}
           </Box>
         </Box>
       </FlexColumnBorder>

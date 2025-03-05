@@ -1,5 +1,5 @@
 import { ArrowDownIcon, MaterialsIcon, MarshallIcon } from '@/assets';
-import ProvSoils1Icon from '@/components/atoms/icons/provSoils1Icon';
+import Image from 'next/image';
 import { WelcomeData } from '@/components/templates/welcome';
 import { Container, Box, Typography, Stack } from '@mui/material';
 import { StepperData, StepperWelcome as Stepper } from '@/components/atoms/stepper';
@@ -7,6 +7,7 @@ import { t } from 'i18next';
 import { NextPage } from 'next';
 import { useState } from 'react';
 import { PMCardMenuOptions } from '@/components/atoms/cards/view-register-card';
+import granularLayersImage from '../../../assets/pro-medina/granularLayers/granular-layers-image.png';
 
 const GranularLayers: NextPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -98,7 +99,7 @@ const GranularLayers: NextPage = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <ProvSoils1Icon width="5rem" height="5rem" />
+                <Image width={100} height={90} src={granularLayersImage.src} alt="logo promedina granular layers" />
               </Box>
               <Box
                 color="primary"

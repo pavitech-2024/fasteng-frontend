@@ -8,6 +8,7 @@ import BinderAsphaltConcrete_step2 from '@/components/promedina/binder-asphalt-c
 import BinderAsphaltConcrete_step3 from '@/components/promedina/binder-asphalt-concrete/register/step3.pm.bac';
 import BinderAsphaltConcrete_step4 from '@/components/promedina/binder-asphalt-concrete/register/step4.pm.bac';
 import BINDER_ASPHALT_CONCRETE_SERVICE from '@/services/promedina/binder-asphalt-concrete/binder-asphalt-concrete.service';
+import BinderAsphaltConcreteResume from '@/components/promedina/binder-asphalt-concrete/register/resume.pm.bac';
 
 const BinderAsphaltConcrete = () => {
   // start an instance of the service
@@ -32,6 +33,7 @@ const BinderAsphaltConcrete = () => {
     { step: 1, children: <BinderAsphaltConcrete_step2 />, data: store },
     { step: 2, children: <BinderAsphaltConcrete_step3 />, data: store },
     { step: 3, children: <BinderAsphaltConcrete_step4 />, data: store },
+    { step: 4, children: <BinderAsphaltConcreteResume />, data: store },
   ];
 
   return (

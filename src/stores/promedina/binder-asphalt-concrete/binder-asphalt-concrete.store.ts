@@ -91,7 +91,7 @@ export type BinderAsphaltConcreteData = {
   step2Data: Step2Data;
   step3Data: Step3Data;
   step4Data: Step4Data;
-  _id: string;
+  _id?: string;
 };
 
 export type BinderAsphaltConcreteActions = {

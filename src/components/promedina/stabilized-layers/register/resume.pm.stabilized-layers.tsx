@@ -60,11 +60,11 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
       value: samples?.step2Data.identification,
     },
     {
-      title: t('pm.binderAsphaltConcrete.initial.stake.meters'),
+      title: t('pm.granularLayer.initialStakeMeters'),
       value: samples?.step2Data.initialStakeMeters,
     },
     {
-      title: t('pm.binderAsphaltConcrete.final.stake.meters'),
+      title: t('pm.granularLayer.finalStakeMeters'),
       value: samples?.step2Data.finalStakeMeters,
     },
     {
@@ -428,6 +428,8 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
     },
   ];
 
+  setNextDisabled(false);
+
   return (
     <>
       <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
@@ -445,11 +447,12 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
           }}
         >
           <GeneratePDF_ProMedina sample={samples} sections={sections} />
+
           {samples?.generalData?.name &&
             samples?.generalData?.zone &&
             samples?.generalData?.layer &&
             samples?.generalData?.cityState && (
-              <Box id="general-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+              <Box id="general-data" sx={{ paddingTop: '1rem', paddingX: '5rem' }}>
                 <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
                   <Box
                     sx={{
@@ -468,18 +471,27 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
                         key={idx}
                       >
                         {item.value && (
-                          <>
+                          <Box sx={{ minWidth: '150px' }}>
                             <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
                               {item.title}
                             </Typography>
                             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                               <Typography
-                                sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
+                                sx={{
+                                  display: 'flex',
+                                  fontWeight: 'bold',
+                                  fontSize: '14px',
+                                  color: 'black',
+                                  maxWidth: '150px',
+                                  overflow: 'hidden',
+                                  whiteSpace: 'nowrap',
+                                  textOverflow: 'ellipsis',
+                                }}
                               >
                                 {item.value}
                               </Typography>
                             </Box>
-                          </>
+                          </Box>
                         )}
                       </Box>
                     ))}
@@ -488,7 +500,7 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
               </Box>
             )}
           {/** DADOS DO PAVIMENTO NO QUAL O MATERIAL ESTÁ INSERIDO */}
-          <Box id="pavement-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+          <Box id="pavement-data" sx={{ paddingTop: '1rem', paddingX: '5rem' }}>
             {samples?.step2Data.sectionType &&
               samples?.step2Data.extension &&
               samples?.step2Data.initialStakeMeters &&
@@ -537,7 +549,7 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
           </Box>
 
           {/**  PREPARO DO PAVIMENTO */}
-          <Box id="pavement-preparation" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+          <Box id="pavement-preparation" sx={{ paddingTop: '1rem', paddingX: '5rem' }}>
             {samples?.step2Data?.milling &&
               samples?.step2Data?.interventionAtTheBase &&
               samples?.step2Data?.sami &&
@@ -582,7 +594,7 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
           </Box>
 
           {/** DADOS DO MATERIAL */}
-          <Box id="material-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+          <Box id="material-data" sx={{ paddingTop: '1rem', paddingX: '5rem' }}>
             <FlexColumnBorder title={t('pm.material-data')} open={true} theme={'#07B811'}>
               <Box
                 sx={{
@@ -616,7 +628,7 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
           </Box>
 
           {/** FADIGUA DO MATERIAL */}
-          <Box id="material-fatigue" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+          <Box id="material-fatigue" sx={{ paddingTop: '1rem', paddingX: '5rem' }}>
             {samples?.step3Data?.fatiguek1psi1 && samples?.step3Data?.fatiguek2psi2 && (
               <FlexColumnBorder title={t('pm.material-permanentDeformation')} open={true} theme={'#07B811'}>
                 <Box
@@ -655,7 +667,7 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
           </Box>
 
           {/** MÓDULO DE RESILIÊNCIA */}
-          <Box id="resilience-module" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+          <Box id="resilience-module" sx={{ paddingTop: '1rem', paddingX: '5rem' }}>
             {samples?.step3Data?.rsInitial &&
               samples?.step3Data?.rsFinal &&
               samples?.step3Data?.constantA &&
@@ -699,7 +711,7 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
           </Box>
 
           {/** DADOS TÉCNICOS DA AMOSTRA */}
-          <Box id="technical-data" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+          <Box id="technical-data" sx={{ paddingTop: '1rem', paddingX: '5rem' }}>
             {samples?.step3Data?.mctGroup &&
               samples?.step3Data?.mctGroupmctCoefficientC &&
               samples?.step3Data?.mctIndexE &&
@@ -747,7 +759,7 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
           </Box>
 
           {/** DEFORMAÇÃO PERMANENTE */}
-          <Box id="permanent-deformation" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+          <Box id="permanent-deformation" sx={{ paddingTop: '1rem', paddingX: '5rem' }}>
             {samples?.step3Data?.k1psi1 &&
               samples?.step3Data?.k2psi2 &&
               samples?.step3Data?.k3psi3 &&
@@ -791,7 +803,7 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
           </Box>
 
           {/**  MÓDULO DE RESILIÊNCIA */}
-          <Box id="resilience-module-2" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+          <Box id="resilience-module-2" sx={{ paddingTop: '1rem', paddingX: '5rem' }}>
             {samples?.step3Data?.k1 && samples?.step3Data?.k2 && samples?.step3Data?.k3 && samples?.step3Data?.k4 && (
               <FlexColumnBorder title={t('pm.resilience.module')} open={true} theme={'#07B811'}>
                 <Box
@@ -830,7 +842,7 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
           </Box>
 
           {/** CURVA DE FADIGA À COMPRESSÃO DIAMETRAL */}
-          <Box id="diametrical-compression-fatigue-curve" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+          <Box id="diametrical-compression-fatigue-curve" sx={{ paddingTop: '1rem', paddingX: '5rem' }}>
             {samples?.step4Data?.fatigueCurve_n_cps &&
               samples?.step4Data?.fatigueCurve_k1 &&
               samples?.step4Data?.fatigueCurve_k2 &&
@@ -873,7 +885,7 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
           </Box>
 
           {/** VISCOSIDADE BROOKFIELD */}
-          <Box id="brookfield-viscosity" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+          <Box id="brookfield-viscosity" sx={{ paddingTop: '1rem', paddingX: '5rem' }}>
             {samples?.step3Data?.vb_sp21_20 && samples?.step3Data?.vb_sp21_50 && samples?.step3Data?.vb_sp21_100 && (
               <FlexColumnBorder title={t('pm.brookfield.viscosity')} open={true} theme={'#07B811'}>
                 <Box
@@ -912,19 +924,19 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
           </Box>
 
           {/** OUTRAS INFORMAÇÕES SOBRE O MATERIAL */}
-          <Box id="other-info" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
-            {samples?.step3Data?.refinery &&
-              samples?.step3Data?.company &&
-              samples?.step3Data?.collectionDate &&
-              samples?.step3Data?.invoiceNumber &&
-              samples?.step3Data?.dataInvoice &&
-              samples?.step3Data?.certificateDate &&
-              samples?.step3Data?.certificateNumber &&
-              samples?.step3Data?.capType &&
-              samples?.step3Data?.performanceGrade &&
-              samples?.step3Data?.penetration &&
-              samples?.step3Data?.softeningPoint &&
-              samples?.step3Data?.elasticRecovery && (
+          {samples?.step3Data?.refinery &&
+            samples?.step3Data?.company &&
+            samples?.step3Data?.collectionDate &&
+            samples?.step3Data?.invoiceNumber &&
+            samples?.step3Data?.dataInvoice &&
+            samples?.step3Data?.certificateDate &&
+            samples?.step3Data?.certificateNumber &&
+            samples?.step3Data?.capType &&
+            samples?.step3Data?.performanceGrade &&
+            samples?.step3Data?.penetration &&
+            samples?.step3Data?.softeningPoint &&
+            samples?.step3Data?.elasticRecovery && (
+              <Box id="other-info" sx={{ paddingTop: '1rem', paddingX: '5rem' }}>
                 <FlexColumnBorder title={t('pm.sample-data')} open={true} theme={'#07B811'}>
                   <Box
                     sx={{
@@ -960,11 +972,11 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
                     ))}
                   </Box>
                 </FlexColumnBorder>
-              )}
-          </Box>
+              </Box>
+            )}
 
           {/** COMPOSIÇÃO ESTRUTURAL  */}
-          <Box id="structural-composition" sx={{ paddingTop: '1rem', paddingX: '1rem' }}>
+          <Box id="structural-composition" sx={{ paddingTop: '1rem', paddingX: '5rem' }}>
             <FlexColumnBorder title={t('pm.structural.composition')} open={true} theme={'#07B811'}>
               <Box
                 sx={{
@@ -1025,62 +1037,6 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
               )}
             </FlexColumnBorder>
           </Box>
-        </Box>
-
-        {/** FOOTER */}
-        <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            p: { mobile: '4vh 4vw', notebook: '3vh 6vw' },
-          }}
-        >
-          <Link
-            href="/promedina/granular-layers/view"
-            style={{
-              backgroundColor: '#00A3FF',
-              color: '#FFFFFF',
-              height: '32px',
-              width: '140px',
-              fontSize: '1.2rem',
-              alignItems: 'center',
-              border: '#00A3FF',
-              borderRadius: '30px',
-              textAlign: 'center',
-              fontWeight: 'bold',
-              paddingTop: '0.2rem',
-            }}
-          >
-            {t('button-previous')}
-          </Link>
-
-          <Button
-            endIcon={<NextIcon />}
-            variant="contained"
-            disabled
-            sx={{
-              bgcolor: 'secondaryTons.blue',
-              color: 'primaryTons.white',
-              height: '32px',
-              width: '140px',
-              fontSize: '1rem',
-              display: 'none',
-
-              ':hover': {
-                transition: 'all 0.1s ease-in-out',
-                bgcolor: 'secondaryTons.blueDisabled',
-              },
-
-              ':active': {
-                transition: 'all 0.1s ease-in-out',
-                bgcolor: 'secondaryTons.blueClick',
-              },
-            }}
-          >
-            {t('button-next')}
-          </Button>
         </Box>
       </Box>
     </>
