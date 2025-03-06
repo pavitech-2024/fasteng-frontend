@@ -21,7 +21,7 @@ const BinderAsphaltConcrete_view = () => {
 
   useEffect(() => {
     if (samples.find((sample) => sample._id === '67c9b80b70a52b70dcbf0509')) {
-      console.log("deu certo")
+      console.log('deu certo');
     }
   }, [samples]);
 
@@ -56,7 +56,6 @@ const BinderAsphaltConcrete_view = () => {
       console.error('Failed to load samples:', error);
     }
   };
-
 
   useEffect(() => {
     fetchData();
