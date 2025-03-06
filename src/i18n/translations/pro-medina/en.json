@@ -56,6 +56,7 @@
   "pm.paviment.preparation": "Pavement preparation",
   "pm.structural.composition": "Structural composition",
   "pm.resilience.module": "Resilience Module - 28 days (MPA)",
+  "pm.granularLayers.resilience.module": "Resilience Module",
   "pm.permanent.deformation": "Permanent Deformation",
   "pm.granularLayer.mctCoefficientC": "MCT-Coefficient c'",
   "pm.granularLayer.especific.mass": "Especific Mass",
@@ -201,7 +202,7 @@
   "add": "Add",
   "pm.sample-data": "other technical data of the sample",
   "pm.granularLayer.especific.mass": "Specific mass",
-  "register.step-4-description": "Insert the data related of your sample.",
+  "register.step-4-description": "This are the data of your sample. Don't forget to save it so you can access it later",
   "register.step-5-description": "This is the resume of your sample",
   "pm.pavement.resume": "Sample resume",
 

@@ -332,7 +332,7 @@ const GranularLayersResume = ({ setNextDisabled }: EssayPageProps) => {
           {/**  MÓDULO DE RESILIÊNCIA */}
           <Box id="resilience-module" sx={{ paddingTop: '1rem', paddingX: '5rem' }}>
             <FlexColumnBorder
-              title={t('pm.resilience.module')}
+              title={t('pm.granularLayers.resilience.module')}
               open={true}
               theme={'#07B811'}
               sx_title={{ whiteSpace: 'wrap' }}
@@ -396,7 +396,7 @@ const GranularLayersResume = ({ setNextDisabled }: EssayPageProps) => {
                 </div>
               </Box>
               {samples.step2Data.images && (
-                <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}>
                   <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem', color: 'black' }}>
                     {t('pm-image-structural-composition')}
                   </Typography>
@@ -406,6 +406,9 @@ const GranularLayersResume = ({ setNextDisabled }: EssayPageProps) => {
                       flexDirection: { mobile: 'column', desktop: 'row' },
                       gap: '1rem',
                       alignItems: 'center',
+                      border: '2px solid #07B811',
+                      borderRadius: '10px',
+                      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                     }}
                   >
                     <img
@@ -413,6 +416,7 @@ const GranularLayersResume = ({ setNextDisabled }: EssayPageProps) => {
                       alt={t('pm-image-structural-composition')}
                       width={'250px'}
                       height={'250px'}
+                      style={{ borderRadius: '8px' }}
                     />
                   </Box>
                   <Typography sx={{ color: 'gray' }}>{t('pm-estructural-composition-image-date')}</Typography>

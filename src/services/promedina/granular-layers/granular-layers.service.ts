@@ -127,6 +127,7 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
         }
       }
     } catch (error) {
+      console.log("🚀 ~ GRANULARLAYERS_SERVICE ~ saveSample= ~ error:", error)
       if (error.response?.status === 413) {
         throw new Error(t('pm.register.payload-too-large-error'));
       }

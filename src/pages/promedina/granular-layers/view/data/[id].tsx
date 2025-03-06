@@ -402,7 +402,7 @@ const SpecificSample_GranularLayers = () => {
             {/**  MÓDULO DE RESILIÊNCIA */}
             <Box id="resilience-module" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
               <FlexColumnBorder
-                title={t('pm.resilience.module')}
+                title={t('pm.granularLayers.resilience.module')}
                 open={true}
                 theme={'#07B811'}
                 sx_title={{ whiteSpace: 'wrap' }}
@@ -476,7 +476,7 @@ const SpecificSample_GranularLayers = () => {
                   </div>
                 </Box>
                 {samples.step2Data.images && (
-                  <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
                     <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem', color: 'black' }}>
                       {t('pm-image-structural-composition')}
                     </Typography>
@@ -486,6 +486,9 @@ const SpecificSample_GranularLayers = () => {
                         flexDirection: { mobile: 'column', desktop: 'row' },
                         gap: '1rem',
                         alignItems: 'center',
+                        border: '2px solid #07B811',
+                        borderRadius: '10px',
+                        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                       }}
                     >
                       <img
@@ -493,6 +496,7 @@ const SpecificSample_GranularLayers = () => {
                         alt={t('pm-image-structural-composition')}
                         width={'250px'}
                         height={'250px'}
+                        style={{ borderRadius: '8px' }}
                       />
                     </Box>
                     <Typography sx={{ color: 'gray' }}>{t('pm-estructural-composition-image-date')}</Typography>

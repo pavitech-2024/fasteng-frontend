@@ -9,6 +9,7 @@ import UploadImages from '@/components/molecules/uploadImages';
 import { useState, useEffect } from 'react';
 import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
 import { dateFormatter } from '@/utils/dateFormatter';
+import EditableCell from '@/utils/hooks/editableTableCell';
 
 const BinderAsphaltConcrete_step2 = ({ setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useBinderAsphaltConcreteStore();
@@ -63,85 +64,116 @@ const BinderAsphaltConcrete_step2 = ({ setNextDisabled }: EssayPageProps) => {
 
   const inputsPavimentData = [
     {
-      label: t('pm.binderAsphaltConcrete.identification'),
+      label: t('pm.granularLayer.identification'),
       value: step2Data?.identification,
       key: 'identification',
       required: true,
+      type: 'text',
     },
     {
-      label: t('pm.binderAsphaltConcrete.section.type'),
+      label: t('pm.granularLayer.section.type'),
       value: step2Data?.sectionType,
       key: 'sectionType',
       required: true,
+      type: 'text',
     },
-    { label: t('pm.binderAsphaltConcrete.extension'), value: step2Data?.extension, key: 'extension', required: true },
     {
-      label: t('pm.binderAsphaltConcrete.initialStakeMeters'),
+      label: t('pm.granularLayer.extension'),
+      value: step2Data?.extension,
+      key: 'extension',
+      required: true,
+      type: 'number',
+    },
+    {
+      label: t('pm.granularLayer.initialStakeMeters'),
       value: step2Data?.initialStakeMeters,
       key: 'initialStakeMeters',
       required: true,
+      type: 'text',
     },
-    { label: t('pm.binderAsphaltConcrete.latitudeI'), value: step2Data?.latitudeI, key: 'latitudeI', required: true },
     {
-      label: t('pm.binderAsphaltConcrete.longitudeI'),
+      label: t('pm.granularLayer.latitudeI'),
+      value: step2Data?.latitudeI,
+      key: 'latitudeI',
+      required: true,
+      type: 'text',
+    },
+    {
+      label: t('pm.granularLayer.longitudeI'),
       value: step2Data?.longitudeI,
       key: 'longitudeI',
       required: true,
+      type: 'text',
     },
     {
-      label: t('pm.binderAsphaltConcrete.finalStakeMeters'),
+      label: t('pm.granularLayer.finalStakeMeters'),
       value: step2Data?.finalStakeMeters,
       key: 'finalStakeMeters',
       required: true,
+      type: 'text',
     },
-    { label: t('pm.binderAsphaltConcrete.latitudeF'), value: step2Data?.latitudeF, key: 'latitudeF', required: true },
     {
-      label: t('pm.binderAsphaltConcrete.longitudeF'),
+      label: t('pm.granularLayer.latitudeF'),
+      value: step2Data?.latitudeF,
+      key: 'latitudeF',
+      required: true,
+      type: 'text',
+    },
+    {
+      label: t('pm.granularLayer.longitudeF'),
       value: step2Data?.longitudeF,
       key: 'longitudeF',
       required: true,
+      type: 'text',
     },
     {
-      label: t('pm.binderAsphaltConcrete.monitoring.phase'),
+      label: t('pm.granularLayer.monitoringPhase'),
       value: step2Data?.monitoringPhase,
       key: 'monitoringPhase',
       required: true,
+      type: 'text',
     },
     {
       label: t('pm.granularLayer.trafficLiberation'),
-      value: step2Data?.trafficLiberation !== undefined ? dateFormatter(step2Data?.trafficLiberation) : null,
+      value: dateFormatter(step2Data?.trafficLiberation),
       key: 'trafficLiberation',
       required: true,
+      type: 'text',
     },
     {
       label: t('pm.granularLayer.averageAltitude'),
       value: step2Data?.averageAltitude,
       key: 'averageAltitude',
       required: true,
+      type: 'number',
     },
     {
       label: t('pm.granularLayer.numberOfTracks'),
       value: step2Data?.numberOfTracks,
       key: 'numberOfTracks',
       required: true,
+      type: 'number',
     },
     {
       label: t('pm.granularLayer.monitoredTrack'),
       value: step2Data?.monitoredTrack,
       key: 'monitoredTrack',
       required: true,
+      type: 'text',
     },
     {
       label: t('pm.granularLayer.trackWidth'),
       value: step2Data?.trackWidth,
       key: 'trackWidth',
       required: true,
+      type: 'number',
     },
     {
-      label: t('pm.binderAsphaltConcrete.observations'),
+      label: t('pm.granularLayer.observations'),
       value: step2Data?.observation,
       key: 'observation',
       required: false,
+      type: 'text',
     },
   ];
 
@@ -173,72 +205,21 @@ const BinderAsphaltConcrete_step2 = ({ setNextDisabled }: EssayPageProps) => {
       field: 'layer',
       headerName: t('pm.granularLayer.layer'),
       renderCell: ({ row }) => {
-        const { id } = row;
-        const index = rows.findIndex((r) => r.id === id);
-
-        return (
-          <InputEndAdornment
-            fullWidth
-            label={t('pm.granularLayer.layer')}
-            type="string"
-            inputProps={{ min: 0 }}
-            value={row.layer}
-            onChange={(e) => {
-              const newRows = [...rows];
-              rows[index].layer = e.target.value;
-              setData({ step: 1, key: 'layer', value: newRows });
-            }}
-            adornment={''}
-          />
-        );
+        return <EditableCell row={row} field="layer" rows={rows} setData={setData} adornment={''} />;
       },
     },
     {
       field: 'material',
       headerName: t('pm.granularLayer.material'),
       renderCell: ({ row }) => {
-        const { id } = row;
-        const index = rows.findIndex((r) => r.id === id);
-
-        return (
-          <InputEndAdornment
-            fullWidth
-            label={t('pm.granularLayer.material')}
-            type="string"
-            inputProps={{ min: 0 }}
-            value={row.wetGrossWeightCapsule}
-            onChange={(e) => {
-              const newRows = [...rows];
-              newRows[index].material = e.target.value;
-              setData({ step: 1, key: 'material', value: newRows });
-            }}
-            adornment={''}
-          />
-        );
+        return <EditableCell row={row} field="material" rows={rows} setData={setData} adornment={''} />;
       },
     },
     {
       field: 'thickness',
       headerName: t('pm.granularLayer.thickness'),
       renderCell: ({ row }) => {
-        const { id } = row;
-        const index = rows.findIndex((r) => r.id === id);
-
-        return (
-          <InputEndAdornment
-            fullWidth
-            label={t('pm.granularLayer.thickness')}
-            type="number"
-            inputProps={{ min: 0 }}
-            value={row.thickness}
-            onChange={(e) => {
-              const newRows = [...rows];
-              newRows[index].thickness = e.target.value;
-              setData({ step: 1, key: 'thickness', value: newRows });
-            }}
-            adornment={'mm'}
-          />
-        );
+        return <EditableCell row={row} field="thickness" rows={rows} setData={setData} adornment={'mm'} />;
       },
     },
   ];
@@ -265,17 +246,36 @@ const BinderAsphaltConcrete_step2 = ({ setNextDisabled }: EssayPageProps) => {
               paddingBottom: '20px',
             }}
           >
-            {inputsPavimentData.length > 0 &&
-              inputsPavimentData.map((input) => (
-                <TextField
-                  key={input.key}
-                  variant="standard"
-                  label={input.label}
-                  value={input.value}
-                  required={input.required}
-                  onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
-                />
-              ))}
+            {inputsPavimentData.map((input) => {
+              if (input.key === 'extension' || input.key === 'averageAltitude' || input.key === 'trackWidth') {
+                return (
+                  <InputEndAdornment
+                    adornment={'m'}
+                    type={input.type}
+                    key={input.key}
+                    variant="standard"
+                    label={input.label}
+                    value={input.value?.toString()}
+                    required={input.required}
+                    onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+                  />
+                );
+              } else {
+                return (
+                  <TextField
+                    key={input.key}
+                    variant={'standard'}
+                    type={input.type}
+                    multiline={input.key === 'observation' ? true : false}
+                    sx={input.key === 'observations' && { width: '100%' }}
+                    label={input.label}
+                    value={input.value}
+                    required={input.required}
+                    onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+                  />
+                );
+              }
+            })}
           </Box>
         </Box>
       </FlexColumnBorder>

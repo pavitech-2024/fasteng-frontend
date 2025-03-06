@@ -9,6 +9,7 @@ interface Props {
   adornment: string;
   value: unknown;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: () => void;
   type?: string;
   inputProps?: unknown;
   required?: boolean;
@@ -24,6 +25,7 @@ const InputEndAdornment = ({
   adornment,
   value,
   onChange,
+  onBlur,
   type,
   inputProps,
   required,
@@ -41,6 +43,7 @@ const InputEndAdornment = ({
         endAdornment={<InputAdornment position="end">{adornment}</InputAdornment>}
         value={value}
         onChange={onChange}
+        onBlur={onBlur}
         type={type}
         inputProps={inputProps}
         sx={sx}
