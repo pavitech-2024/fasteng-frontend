@@ -9,7 +9,7 @@ import { Box, Button, Container } from '@mui/material';
 import { t } from 'i18next';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import granularLayersImage from '../../../assets/pro-medina/granularLayers/granular-layers-image.png';
+import granularLayersImage from '../../../../assets/pro-medina/granularLayers/granular-layers-image.png';
 
 const GranularLayers_view = () => {
   const [samples, setSamples] = useState<any[]>([]);

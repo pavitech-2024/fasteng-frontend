@@ -13,12 +13,17 @@ import binderAsphaltConcreteImage from '../../../../assets/pro-medina/concreteBi
 
 const BinderAsphaltConcrete_view = () => {
   const [samples, setSamples] = useState<any[]>([]);
-  console.log("🚀 ~ constBinderAsphaltConcrete_view= ~ samples:", samples)
   const [loading, setLoading] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
   const { setData } = useBinderAsphaltConcreteStore();
+
+  useEffect(() => {
+    if (samples.find((sample) => sample._id === '67c9b80b70a52b70dcbf0509')) {
+      console.log("deu certo")
+    }
+  }, [samples]);
 
   const [searchParams, setSearchParams] = useState({
     _id: '',
@@ -51,6 +56,7 @@ const BinderAsphaltConcrete_view = () => {
       console.error('Failed to load samples:', error);
     }
   };
+
 
   useEffect(() => {
     fetchData();
