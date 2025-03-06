@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
-import { NextIcon, UnitMassIcon } from '@/assets';
+import { NextIcon } from '@/assets';
 import PromedinaMaterialsTemplate from '@/components/molecules/filter/filter-table';
 import Loading from '@/components/molecules/loading';
 import Header from '@/components/organisms/header';
@@ -9,9 +9,11 @@ import { Box, Button, Container } from '@mui/material';
 import { t } from 'i18next';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import binderAsphaltConcreteImage from '../../../../assets/pro-medina/concreteBinderAsphalt/concrete-binder-asphalt-image.png';
 
 const BinderAsphaltConcrete_view = () => {
   const [samples, setSamples] = useState<any[]>([]);
+  console.log("🚀 ~ constBinderAsphaltConcrete_view= ~ samples:", samples)
   const [loading, setLoading] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
@@ -39,7 +41,8 @@ const BinderAsphaltConcrete_view = () => {
     const encodedFilter = encodeURIComponent(JSON.stringify(filter));
 
     try {
-      const response = await samplesService.getFilteredSamples(encodedFilter, page, 10, true);
+      const response = await samplesService.getFilteredSamples(encodedFilter, page, 15, true);
+
       setSamples(response.data.docs);
       setTotalPages(response.data.totalPages);
       setCount(response.data.count);
@@ -64,12 +67,10 @@ const BinderAsphaltConcrete_view = () => {
     }
   };
 
-  const getFilter = async (param: any) => {
+  const getFilter = async (param) => {
     setSearchParams(param);
-    fetchData();
   };
 
-  const GranularLayersIcon = UnitMassIcon;
   return (
     <Container>
       {loading ? (
@@ -78,7 +79,7 @@ const BinderAsphaltConcrete_view = () => {
         <Container>
           <Header
             title={t('promedina.essays.binderAsphaltConcreteView')}
-            image={GranularLayersIcon}
+            image={binderAsphaltConcreteImage}
             sx={{ marginTop: '3rem' }}
           />
           <Box

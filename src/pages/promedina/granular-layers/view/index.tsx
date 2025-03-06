@@ -9,6 +9,7 @@ import { Box, Button, Container } from '@mui/material';
 import { t } from 'i18next';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import granularLayersImage from '../../../assets/pro-medina/granularLayers/granular-layers-image.png';
 
 const GranularLayers_view = () => {
   const [samples, setSamples] = useState<any[]>([]);
@@ -69,7 +70,6 @@ const GranularLayers_view = () => {
     setSearchParams(param);
   };
 
-  const GranularLayersIcon = UnitMassIcon;
   return (
     <Container>
       {loading ? (
@@ -78,7 +78,7 @@ const GranularLayers_view = () => {
         <Container>
           <Header
             title={t('promedina.essays.granularLayersView')}
-            image={GranularLayersIcon}
+            image={granularLayersImage}
             sx={{ marginTop: '3rem' }}
           />
           <Box
@@ -102,17 +102,19 @@ const GranularLayers_view = () => {
                 marginBottom: '1rem',
               }}
             >
-              <PromedinaMaterialsTemplate
-                materials={samples}
-                handleDeleteMaterial={handleDeleteSample}
-                getFilter={getFilter}
-                pages={totalPages}
-                count={count}
-                setData={setData}
-                onSearchParamsChange={setSearchParams}
-                onPageChange={setPage}
-                area={'granular-layers'}
-              />
+              {!loading && (
+                <PromedinaMaterialsTemplate
+                  materials={samples}
+                  handleDeleteMaterial={handleDeleteSample}
+                  getFilter={getFilter}
+                  pages={totalPages}
+                  count={count}
+                  setData={setData}
+                  onSearchParamsChange={setSearchParams}
+                  onPageChange={setPage}
+                  area={'granular-layers'}
+                />
+              )}
             </Box>
           </Box>
         </Container>

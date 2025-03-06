@@ -230,7 +230,7 @@ const PromedinaMaterialsTemplate = ({
 
       {/*Page */}
       <StepDescription text={t('pm.filter-table-description')} />
-      <Box sx={{ p: { mobile: '0 1vw', notebook: '0 2vw' }, mb: '4vw', width: '100%', maxWidth: '1800px' }}>
+      <Box sx={{ p: { mobile: '0 1vw', notebook: '0 0' }, mb: '4vw', width: '100%', maxWidth: '1800px' }}>
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr' }}>
           <Box
             sx={{
