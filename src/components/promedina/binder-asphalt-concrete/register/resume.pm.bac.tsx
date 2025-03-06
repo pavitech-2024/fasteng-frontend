@@ -74,9 +74,7 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
   const pavimentData = pavimentFields.map((field) => ({
     title: field.title,
     value:
-      field.key === 'averageAltitude' ||
-      field.key === 'trackWidth' ||
-      field.key === 'extension'
+      field.key === 'averageAltitude' || field.key === 'trackWidth' || field.key === 'extension'
         ? `${samples?.step2Data[field.key]} m`
         : `${samples?.step2Data[field.key]}`,
   }));
@@ -550,7 +548,15 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
               </Box>
 
               {samples.step2Data.images && (
-                <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', }}>
+                <Box
+                  sx={{
+                    marginBottom: '1rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '1rem',
+                  }}
+                >
                   <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem', color: 'black' }}>
                     {t('pm-image-structural-composition')}
                   </Typography>

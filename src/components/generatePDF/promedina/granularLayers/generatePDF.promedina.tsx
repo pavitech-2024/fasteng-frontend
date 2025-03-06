@@ -97,7 +97,7 @@ const GeneratePDF_ProMedina = ({ sample, sections }: IGenerateGranularLayersPDF)
             sx={{
               minWidth: '8rem',
               minHeight: '2rem',
-              color:'white',
+              color: 'white',
               backgroundColor: '#07B811', // Cor de fundo
               '&:hover': { bgcolor: '#05990E' },
             }}

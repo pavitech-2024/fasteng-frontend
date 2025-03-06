@@ -1,6 +1,6 @@
-import InputEndAdornment from "@/components/atoms/inputs/input-endAdornment";
-import { t } from "i18next";
-import { useState, useEffect } from "react";
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { t } from 'i18next';
+import { useState, useEffect } from 'react';
 
 const EditableCell = ({ row, field, adornment, rows, setData }) => {
   const index = rows.findIndex((r) => r.id === row.id);
@@ -28,4 +28,4 @@ const EditableCell = ({ row, field, adornment, rows, setData }) => {
   );
 };
 
-export default EditableCell
+export default EditableCell;

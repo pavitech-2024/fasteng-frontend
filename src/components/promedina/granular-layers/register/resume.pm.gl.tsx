@@ -396,7 +396,15 @@ const GranularLayersResume = ({ setNextDisabled }: EssayPageProps) => {
                 </div>
               </Box>
               {samples.step2Data.images && (
-                <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}>
+                <Box
+                  sx={{
+                    marginBottom: '1rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                    alignItems: 'center',
+                  }}
+                >
                   <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem', color: 'black' }}>
                     {t('pm-image-structural-composition')}
                   </Typography>

@@ -476,7 +476,16 @@ const SpecificSample_GranularLayers = () => {
                   </div>
                 </Box>
                 {samples.step2Data.images && (
-                  <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
+                  <Box
+                    sx={{
+                      marginBottom: '1rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '1rem',
+                      marginTop: '1rem',
+                    }}
+                  >
                     <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem', color: 'black' }}>
                       {t('pm-image-structural-composition')}
                     </Typography>
