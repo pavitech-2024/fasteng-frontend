@@ -9,6 +9,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import UploadImages from '@/components/molecules/uploadImages';
 import { useState, useEffect } from 'react';
 import { dateFormatter } from '@/utils/dateFormatter';
+import EditableCell from '@/utils/hooks/editableTableCell';
 
 const StabilizedLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useStabilizedLayersStore();
@@ -66,72 +67,21 @@ const StabilizedLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
       field: 'layer',
       headerName: t('pm.granularLayer.layer'),
       renderCell: ({ row }) => {
-        const { id } = row;
-        const index = rows.findIndex((r) => r.id === id);
-
-        return (
-          <InputEndAdornment
-            fullWidth
-            label={t('pm.granularLayer.layer')}
-            type="string"
-            inputProps={{ min: 0 }}
-            value={row.layer}
-            onChange={(e) => {
-              const newRows = [...rows];
-              rows[index].layer = e.target.value;
-              setData({ step: 1, key: 'layer', value: newRows });
-            }}
-            adornment={''}
-          />
-        );
+        return <EditableCell row={row} field="layer" rows={rows} setData={setData} adornment={''} />;
       },
     },
     {
       field: 'material',
       headerName: t('pm.granularLayer.material'),
       renderCell: ({ row }) => {
-        const { id } = row;
-        const index = rows.findIndex((r) => r.id === id);
-
-        return (
-          <InputEndAdornment
-            fullWidth
-            label={t('pm.granularLayer.material')}
-            type="string"
-            inputProps={{ min: 0 }}
-            value={row.wetGrossWeightCapsule}
-            onChange={(e) => {
-              const newRows = [...rows];
-              newRows[index].material = e.target.value;
-              setData({ step: 1, key: 'material', value: newRows });
-            }}
-            adornment={''}
-          />
-        );
+        return <EditableCell row={row} field="material" rows={rows} setData={setData} adornment={''} />;
       },
     },
     {
       field: 'thickness',
       headerName: t('pm.granularLayer.thickness'),
       renderCell: ({ row }) => {
-        const { id } = row;
-        const index = rows.findIndex((r) => r.id === id);
-
-        return (
-          <InputEndAdornment
-            fullWidth
-            label={t('pm.granularLayer.thickness')}
-            type="number"
-            inputProps={{ min: 0 }}
-            value={row.thickness}
-            onChange={(e) => {
-              const newRows = [...rows];
-              newRows[index].thickness = e.target.value;
-              setData({ step: 1, key: 'thickness', value: newRows });
-            }}
-            adornment={'mm'}
-          />
-        );
+        return <EditableCell row={row} field="thickness" rows={rows} setData={setData} adornment={'mm'} />;
       },
     },
   ];

@@ -47,9 +47,12 @@ const BinderAsphaltConcrete_step1 = ({ setNextDisabled }: EssayPageProps) => {
         >
           <Box
             sx={{
-              display: 'grid',
+              display: 'flex',
               width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
+              flexWrap: 'wrap',
+              '& > *': {
+                width: 'calc(50% - 10px)',
+              },
               gap: '5px 20px',
               marginBottom: '10px',
               marginTop: '-20px',
@@ -75,6 +78,8 @@ const BinderAsphaltConcrete_step1 = ({ setNextDisabled }: EssayPageProps) => {
                     variant="standard"
                     label={input.label}
                     value={input.value}
+                    sx={input.key === 'observations' && { width: '100%' }}
+                    multiline={input.key === 'observations'}
                     required={input.required}
                     onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
                   />

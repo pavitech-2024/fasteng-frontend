@@ -1123,7 +1123,9 @@ const SpecificSample_StabilizedLayers = () => {
                         flexDirection: { mobile: 'column', desktop: 'row' },
                         gap: '1rem',
                         alignItems: 'center',
-                        marginY: '1rem',
+                        border: '2px solid #07B811',
+                        borderRadius: '10px',
+                        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                       }}
                     >
                       <img
@@ -1131,6 +1133,7 @@ const SpecificSample_StabilizedLayers = () => {
                         alt={t('pm-image-structural-composition')}
                         width={'250px'}
                         height={'250px'}
+                        style={{ borderRadius: '8px' }}
                       />
                     </Box>
                     <Typography sx={{ color: 'gray' }}>{t('pm-estructural-composition-image-date')}</Typography>

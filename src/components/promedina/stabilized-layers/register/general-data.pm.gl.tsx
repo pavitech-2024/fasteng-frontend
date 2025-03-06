@@ -47,9 +47,12 @@ const StabilizedLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProp
         >
           <Box
             sx={{
-              display: 'grid',
+              display: 'flex',
               width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
+              flexWrap: 'wrap',
+              '& > *': {
+                width: 'calc(50% - 10px)',
+              },
               gap: '5px 20px',
               marginBottom: '10px',
               marginTop: '-20px',
@@ -74,6 +77,8 @@ const StabilizedLayers_step1 = ({ nextDisabled, setNextDisabled }: EssayPageProp
                   <TextField
                     key={input.key}
                     variant="standard"
+                    multiline={input.key === 'observations'}
+                    sx={input.key === 'observations' && { width: '100%' }}
                     label={input.label}
                     value={input.value}
                     required={input.required}

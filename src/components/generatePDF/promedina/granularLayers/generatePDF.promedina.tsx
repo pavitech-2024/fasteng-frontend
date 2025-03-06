@@ -81,7 +81,7 @@ const GeneratePDF_ProMedina = ({ sample, sections }: IGenerateGranularLayersPDF)
         onClose={() => setOpenTooltip(false)}
       >
         <Box
-          sx={{ width: 'fit-content', paddingX: '5rem' }}
+          sx={{ width: 'fit-content', paddingX: '6rem' }}
           onClick={() => {
             if (sample && isDesktop) {
               generatePDF();
@@ -94,7 +94,13 @@ const GeneratePDF_ProMedina = ({ sample, sections }: IGenerateGranularLayersPDF)
             variant="contained"
             color="primary"
             disabled={!sample || !isDesktop}
-            sx={{ minWidth: '8rem', minHeight: '2rem' }}
+            sx={{
+              minWidth: '8rem',
+              minHeight: '2rem',
+              color: 'white',
+              backgroundColor: '#07B811', // Cor de fundo
+              '&:hover': { bgcolor: '#05990E' },
+            }}
           >
             {loading ? <Loading size={25} color={'inherit'} /> : t('pm.generate-pdf-button')}
           </Button>

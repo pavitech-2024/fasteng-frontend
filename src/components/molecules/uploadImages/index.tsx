@@ -58,7 +58,7 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
 
     // Compression configuration
     const options = {
-      maxSizeMB: 1,
+      maxSizeMB: 3,
       maxWidthOrHeight: 1024,
       useWebWorker: true,
     };
@@ -116,7 +116,7 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
               sx={{
                 maxWidth: '100%',
                 border: '5px solid',
-                borderColor: 'primary.main',
+                borderColor: '#07B811',
                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
               }}
             />
@@ -143,7 +143,16 @@ const UploadImages = ({ editarImages, onImagesUpdate }: IImages) => {
         style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '2rem' }}
         htmlFor="uploadImages"
       >
-        <Button variant="contained" component="label" startIcon={<AddAPhoto />}>
+        <Button
+          variant="contained"
+          component="label"
+          sx={{
+            color: 'white',
+            backgroundColor: '#07B811',
+            '&:hover': { bgcolor: '#05990E' },
+          }}
+          startIcon={<AddAPhoto />}
+        >
           {' '}
           {t('upload.images')}
           <input

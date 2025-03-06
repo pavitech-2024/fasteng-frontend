@@ -74,11 +74,7 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
   const pavimentData = pavimentFields.map((field) => ({
     title: field.title,
     value:
-      field.key === 'averageAltitude' ||
-      field.key === 'trackWidth' ||
-      field.key === 'numberOfTracks' ||
-      field.key === 'trafficLiberation' ||
-      field.key === 'extension'
+      field.key === 'averageAltitude' || field.key === 'trackWidth' || field.key === 'extension'
         ? `${samples?.step2Data[field.key]} m`
         : `${samples?.step2Data[field.key]}`,
   }));
@@ -552,7 +548,15 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
               </Box>
 
               {samples.step2Data.images && (
-                <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Box
+                  sx={{
+                    marginBottom: '1rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '1rem',
+                  }}
+                >
                   <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem', color: 'black' }}>
                     {t('pm-image-structural-composition')}
                   </Typography>
@@ -562,6 +566,9 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
                       flexDirection: { mobile: 'column', desktop: 'row' },
                       gap: '1rem',
                       alignItems: 'center',
+                      border: '2px solid #07B811',
+                      borderRadius: '10px',
+                      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                     }}
                   >
                     <img
@@ -569,6 +576,7 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
                       alt={t('pm-image-structural-composition')}
                       width={'250px'}
                       height={'250px'}
+                      style={{ borderRadius: '8px' }}
                     />
                   </Box>
                   <Typography sx={{ color: 'gray' }}>{t('pm-estructural-composition-image-date')}</Typography>

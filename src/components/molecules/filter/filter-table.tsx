@@ -230,7 +230,7 @@ const PromedinaMaterialsTemplate = ({
 
       {/*Page */}
       <StepDescription text={t('pm.filter-table-description')} />
-      <Box sx={{ p: { mobile: '0 1vw', notebook: '0 2vw' }, mb: '4vw', width: '100%', maxWidth: '1800px' }}>
+      <Box sx={{ p: { mobile: '0 1vw', notebook: '0 0' }, mb: '4vw', width: '100%', maxWidth: '1800px' }}>
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr' }}>
           <Box
             sx={{
@@ -782,9 +782,9 @@ const PromedinaMaterialsTemplate = ({
             <Table stickyHeader aria-label="sticky table" sx={{ width: '100%' }}>
               <TableHead>
                 <TableRow>
-                  {columns.map((column) => (
+                  {columns.map((column, idx) => (
                     <TableCell
-                      key={column.id}
+                      key={idx}
                       align="center"
                       style={{
                         maxWidth: column.width,
@@ -803,15 +803,15 @@ const PromedinaMaterialsTemplate = ({
               <TableBody>
                 {filteredData.map((row) => (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
-                    {columns.map((column) => (
-                      <TableCell key={row._id} align="center">
+                    {columns.map((column, idx) => (
+                      <TableCell key={idx} align="center">
                         {column.id === 'name' && row.name}
                         {column.id === 'cityState' && row.cityState}
                         {column.id === 'highway' && row.highway}
                         {column.id === 'layer' && row.layer}
                         {column.id === 'zone' && row.zone}
                         {column.id === 'actions' && (
-                          <Box sx={{ display: 'flex', gap: '0.5rem' }} id={row._id}>
+                          <Box sx={{ display: 'flex', gap: '0.5rem' }} id={idx.toString()}>
                             <Box
                               sx={{
                                 display: 'flex',

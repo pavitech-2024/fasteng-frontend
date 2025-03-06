@@ -107,7 +107,7 @@ const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
       </FlexColumnBorder>
 
       <FlexColumnBorder
-        title={t('pm.resilience.module')}
+        title={t('pm.granularLayers.resilience.module')}
         open={true}
         theme={'#07B811'}
         sx_title={{ fontSize: { mobile: '1rem' }, whiteSpace: 'wrap' }}
