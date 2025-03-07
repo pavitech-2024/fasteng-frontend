@@ -710,10 +710,10 @@ const GeneratePDF = ({
     for (const section of sections) {
       if (section.condition) {
         currentY += 5;
-        doc.setFont("Helvetica", "bold");
+        doc.setFont('Helvetica', 'bold');
         addTextToLeftMargin(doc, section.title, 10, currentY, 12);
         currentY += 5;
-        doc.setFont("Helvetica", "normal");
+        doc.setFont('Helvetica', 'normal');
 
         // Verificar se a página chegou ao final
         const pageHeight = doc.internal.pageSize.getHeight();
