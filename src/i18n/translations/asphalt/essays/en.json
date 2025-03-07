@@ -36,5 +36,7 @@
   "asphalt.essays.penetration-asphalt": "Penetration",
   "asphalt.essays.abrasion.final-mass": "SoilSample mass after test",
   "asphalt.essays.abrasion.graduation": "Choose the graduation",
-  "asphalt.essays.abrasion.initial-mass": "Initial mass"
+  "asphalt.essays.abrasion.initial-mass": "Initial mass",
+
+  "asphalt.essays.granulometryResults": "Resultados da Granulometria por Peneiramento"
 }

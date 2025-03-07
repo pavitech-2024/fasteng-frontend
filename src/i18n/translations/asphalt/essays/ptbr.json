@@ -40,5 +40,7 @@
   "asphalt.essays.abrasion.final-mass": "Massa da amostra após ensaio",
   "asphalt.essays.abrasion.graduation": "Escolha a graduação",
   "errors.final-mass-lower-than-initial-mass": "A massa final não pode ser maior do que a massa inicial.",
-  "asphalt.essays.marshall": "Dosagem Marshall"
+  "asphalt.essays.marshall": "Dosagem Marshall",
+
+  "asphalt.essays.granulometryResults": "Resultados da Granulometria por Peneiramento"
 }
