@@ -1,13 +1,13 @@
 import jsPDF from 'jspdf';
 import React from 'react';
-import logo from '@/assets/fasteng/LogoBlack.png';
 import autoTable from 'jspdf-autotable';
 import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
 import html2canvas from 'html2canvas';
 import { t } from 'i18next';
 import { Box, Button } from '@mui/material';
 import useAuth from '@/contexts/auth';
-import { SummaryItem } from '@/components/generatePDF/common';
+import { handleAddPage, SummaryItem } from '@/components/generatePDF/common';
+import logo from '@/assets/fasteng/LogoBlack.png';
 
 export interface IGenratePDF {
   name: string;
@@ -92,6 +92,7 @@ const GeneratePDF = ({
   const rtfoColumns = [t('rtfo.weight-loss')];
 
   const granulometryRows = [];
+  const granulometryResults = [];
   let elongatedParticlesRows;
   const angularityRows = [];
   let rtfoRows;
@@ -114,6 +115,44 @@ const GeneratePDF = ({
         accumulated_retained: granulometryData.results.accumulated_retained[index][1],
       });
     });
+
+    granulometryResults.push(
+      {
+        label: t('granulometry-asphalt.total-retained'),
+        value: granulometryData.results.total_retained,
+        unity: 'g',
+      },
+      {
+        label: t('asphalt.essays.granulometry.results.nominalSize'),
+        value: granulometryData.results.nominal_size,
+        unity: 'mm',
+      },
+      {
+        label: t('asphalt.essays.granulometry.results.nominalDiammeter'),
+        value: granulometryData.results.nominal_diameter,
+        unity: 'mm',
+      },
+      {
+        label: t('asphalt.essays.granulometry.results.finenessModule'),
+        value: granulometryData.results.fineness_module,
+        unity: '%',
+      },
+      {
+        label: t('granulometry-asphalt.cc'),
+        value: granulometryData.results.cc,
+        unity: '',
+      },
+      {
+        label: t('granulometry-asphalt.cnu'),
+        value: granulometryData.results.cnu,
+        unity: '',
+      },
+      {
+        label: t('granulometry-asphalt.error'),
+        value: granulometryData.results.error,
+        unity: '%',
+      }
+    );
   }
 
   if (elongatedParticlesData) {
@@ -261,13 +300,28 @@ const GeneratePDF = ({
       condition: granulometryRows.length > 0,
       title: t('asphalt.essays.granulometry'),
       content: async (doc, currentY) => {
+        const image = (await addImageProcess(logo.src)) as HTMLImageElement;
         addTable(doc, granulometryRows, granulometryColumns, currentY);
         const tableHeight = (doc as any).lastAutoTable.finalY - currentY;
         currentY += tableHeight + 5;
         const chart = document.getElementById('chart-div-granulometry');
         if (chart) {
+          currentY = handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
+          // Verificar se a página chegou ao final
           return addChart(chart, doc, currentY);
         }
+        return currentY;
+      },
+    },
+    {
+      condition: granulometryResults.length > 0,
+      title: t('asphalt.essays.granulometryResults'),
+      content: (doc, currentY) => {
+        currentY += 5;
+        granulometryResults.forEach((item) => {
+          addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
+          currentY += 5;
+        });
         return currentY;
       },
     },
@@ -275,6 +329,7 @@ const GeneratePDF = ({
       condition: dataSpecificMass.specificMassContainer.length > 0,
       title: t('asphalt.essays.specifyMass'),
       content: (doc, currentY) => {
+        currentY += 5;
         dataSpecificMass.specificMassContainer.forEach((item) => {
           addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
           currentY += 5;
@@ -655,8 +710,18 @@ const GeneratePDF = ({
     for (const section of sections) {
       if (section.condition) {
         currentY += 5;
+        doc.setFont('Helvetica', 'bold');
         addTextToLeftMargin(doc, section.title, 10, currentY, 12);
         currentY += 5;
+        doc.setFont('Helvetica', 'normal');
+
+        // Verificar se a página chegou ao final
+        const pageHeight = doc.internal.pageSize.getHeight();
+        if (currentY > pageHeight - 10) {
+          // Usar o handleAddPage para adicionar uma nova página
+          currentY = handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
+        }
+
         currentY = await section.content(doc, currentY);
         const pageIndex = doc.internal.pages.length - 1;
         summaryItems.push({ title: section.title, page: pageIndex });
