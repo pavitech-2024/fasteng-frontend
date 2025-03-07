@@ -121,7 +121,7 @@ const ViscosityRotational_Calc = ({ nextDisabled, setNextDisabled }: EssayPagePr
           disableColumnMenu: true,
           align: 'center',
           headerAlign: 'center',
-          minWidth: 200,
+          minWidth: 150,
           flex: 1,
         }))}
       />
