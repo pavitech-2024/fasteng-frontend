@@ -86,11 +86,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
   const pavimentData = pavimentFields.map((field) => ({
     title: field.title,
     value:
-      field.key === 'averageAltitude' ||
-      field.key === 'trackWidth' ||
-      field.key === 'numberOfTracks' ||
-      field.key === 'trafficLiberation' ||
-      field.key === 'extension'
+      field.key === 'averageAltitude' || field.key === 'trackWidth' || field.key === 'extension'
         ? `${samples?.step2Data[field.key]} m`
         : `${samples?.step2Data[field.key]}`,
   }));
