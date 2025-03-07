@@ -41,10 +41,9 @@ const EssayTemplate = ({
 
   async function handleNextClick() {
     // to check if the button is saving or going to the next step
-    // const isSaving = childrens.length - 1 === activeStep && !childrens[activeStep].data._id ? true : false;
     const isLastStep = childrens.length - 1 === activeStep;
-    const isSaving = isLastStep && !childrens[activeStep].data._id;
-    const isUpdating = isLastStep && childrens[activeStep].data._id === '---';
+    const isSaving = isLastStep && !childrens[activeStep].data?._id;
+    const isUpdating = isLastStep && !!childrens[activeStep].data?._id;
 
     // create a loading toast
     const nextToast = toast.loading(

@@ -56,33 +56,33 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: StabilizedLayersData['generalData']): Promise<void> => {
-    const data = generalData;
-    for (const key in data) {
-      if (data[key] === null) {
-        data[key] = '---';
-      }
-    }
-    this.store_actions.setData({ step: 1, key: 'generalData', value: data });
+    // const data = generalData;
+    // for (const key in data) {
+    //   if (data[key] === null) {
+    //     data[key] = '---';
+    //   }
+    // }
+    // this.store_actions.setData({ step: 1, key: 'generalData', value: data });
   };
 
   submitStep2Data = async (step2Data: StabilizedLayersData['step2Data']): Promise<void> => {
-    const data = step2Data;
-    for (const key in data) {
-      if (data[key] === null) {
-        data[key] = '---';
-      }
-    }
-    this.store_actions.setData({ step: 2, key: 'step2Data', value: data });
+    // const data = step2Data;
+    // for (const key in data) {
+    //   if (data[key] === null) {
+    //     data[key] = '---';
+    //   }
+    // }
+    // this.store_actions.setData({ step: 2, key: 'step2Data', value: data });
   };
 
   submitStep3Data = async (step3Data: StabilizedLayersData['step3Data']): Promise<void> => {
-    const data = step3Data;
-    for (const key in data) {
-      if (data[key] === null) {
-        data[key] = '---';
-      }
-    }
-    this.store_actions.setData({ step: 3, key: 'step3Data', value: data });
+    // const data = step3Data;
+    // for (const key in data) {
+    //   if (data[key] === null) {
+    //     data[key] = '---';
+    //   }
+    // }
+    // this.store_actions.setData({ step: 3, key: 'step3Data', value: data });
   };
 
   // save essay
