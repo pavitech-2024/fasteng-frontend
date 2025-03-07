@@ -19,12 +19,6 @@ const BinderAsphaltConcrete_view = () => {
   const [count, setCount] = useState(0);
   const { setData } = useBinderAsphaltConcreteStore();
 
-  useEffect(() => {
-    if (samples.find((sample) => sample._id === '67c9b80b70a52b70dcbf0509')) {
-      console.log('deu certo');
-    }
-  }, [samples]);
-
   const [searchParams, setSearchParams] = useState({
     _id: '',
     name: '',
