@@ -17,7 +17,7 @@ export const Result_CardContainer = ({ title, children, hideBorder, mt }: Result
         borderColor: 'primaryTons.border',
         padding: '10px',
         zIndex: 2,
-        mt: mt || '1.5rem',
+        mt: mt || { mobile: '0', notebook: '1.5rem' },
         borderRadius: '10px',
       }}
     >

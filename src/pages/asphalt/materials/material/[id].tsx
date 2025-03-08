@@ -1,7 +1,6 @@
 import GranulometryMateriaView from '@/components/asphalt/material/granulometryMaterialView';
 import ShapeIndexMaterialView from '@/components/asphalt/material/shapeIndexMaterialView';
 import SpecificMassMaterialView from '@/components/asphalt/material/specificMassMaterialView';
-import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import Loading from '@/components/molecules/loading';
 import BodyEssay from '@/components/organisms/bodyEssay';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
@@ -10,7 +9,7 @@ import { ElongatedParticlesData } from '@/stores/asphalt/elongatedParticles/elon
 import { AsphaltGranulometryData } from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
 import { ShapeIndexData } from '@/stores/asphalt/shapeIndex/shapeIndex.store';
 import { SpecifyMassData } from '@/stores/asphalt/specifyMass/specifyMass.store';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { t } from 'i18next';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
@@ -38,11 +37,7 @@ import RtfoMaterialView from '@/components/asphalt/material/rtfoMaterialView';
 import { ElasticRecoveryData } from '@/stores/asphalt/elasticRecovery/elasticRecovery.store';
 import ElasticRecoveryMaterialView from '@/components/asphalt/material/elasticRecoveryMaterialView';
 import GeneratePDF from '@/components/generatePDF/materials/asphalt/generatePDFAsphalt/generatePDFAsphalt';
-import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
-
-interface TextBoxProps {
-  children: JSX.Element | ReactNode;
-}
+import MaterialResume, { MaterialResumeData } from '@/components/molecules/boxes/material-resume';
 
 export type EssaysData = {
   asphaltGranulometryData: AsphaltGranulometryData;
@@ -89,8 +84,6 @@ const Material = () => {
   const [rtfoData, setRtfoData] = useState<RtfoData>();
   const [elasticRecoveryData, setElasticRecoveryData] = useState<ElasticRecoveryData>();
   const [type, setType] = useState('');
-
-  // To-do: remover material hardcoded;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -141,26 +134,10 @@ const Material = () => {
     updateData('rtfo', 'CAP', setRtfoData);
   }, [material]);
 
-  const experimentResumeData: ExperimentResumeData = {
-    experimentName: granulometryData?.generalData.name,
-    materials: [
-      { name: granulometryData?.generalData.material.name, type: granulometryData?.generalData.material.type },
-    ],
+  const materialResumeData: MaterialResumeData = {
+    name: material?.material?.name,
+    type,
   };
-
-  const TextBox = ({ children }: TextBoxProps) => (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        flexWrap: 'no-wrap',
-        fontSize: { mobile: '.85rem', notebook: '1rem' },
-        color: 'primaryTons.mainGray',
-      }}
-    >
-      {children}
-    </Box>
-  );
 
   useEffect(() => {
     if (material?.material.type === 'CAP') {
@@ -224,7 +201,7 @@ const Material = () => {
                 />
               </Box>
 
-              <ExperimentResume data={experimentResumeData} />
+              <MaterialResume data={materialResumeData} />
 
               {granulometryData?.results && <GranulometryMateriaView granulometryData={granulometryData} />}
 

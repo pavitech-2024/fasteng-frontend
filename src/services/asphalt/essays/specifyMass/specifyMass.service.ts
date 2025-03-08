@@ -16,7 +16,7 @@ class SPECIFYMASS_SERVICE implements IEssayService {
     standard: {
       name: 'DNIT 411/2021 - ME',
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_411_2021_me-1.pdf',
-     /* name: 'NBR 9776',
+      /* name: 'NBR 9776',
       link: 'https://www.target.com.br/produtos/normas-tecnicas/36401/nbr9776-agregados-determinacao-da-massa-especifica-de-agregados-miudos-por-meio-do-frasco-chapman',*/
     },
     stepperData: [
