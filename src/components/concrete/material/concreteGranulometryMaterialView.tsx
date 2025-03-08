@@ -129,6 +129,7 @@ const GranulometryMateriaView = ({ granulometryData }: IGranulometryMateriaView)
       </div>
       <ConcreteGranulometry_resultsTable rows={rows} columns={columns} />
     </FlexColumnBorder>
+    
   );
 };
 
