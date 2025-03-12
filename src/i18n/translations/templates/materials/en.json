@@ -3,7 +3,7 @@
   "materials.template.type": "Type",
   "materials.template.createdAt": "Register Date",
   "materials.template.actions": "Actions",
-  "materials.template.deleteTitle": "Atention",
+  "materials.template.deleteTitle": "Attention",
   "materials.template.deleteText": "Are you sure you want to delete",
   "materials.template.cancel": "Cancel",
   "materials.template.delete": "Delete",
