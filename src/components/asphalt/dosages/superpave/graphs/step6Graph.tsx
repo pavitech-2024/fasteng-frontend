@@ -167,7 +167,6 @@ const GraphStep6: React.FC<GraphProps> = ({ data }) => {
         rightButtonTitle={'direita'}
         onCancel={() => setFullScreen(false)}
         size={'small'}
-        onSubmit={() => console.log('teste')}
       >
         {/* <ActionsModal>
           <CloseIcon

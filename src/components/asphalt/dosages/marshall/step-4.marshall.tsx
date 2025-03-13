@@ -26,7 +26,6 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
         ...response,
         trial: binderTrialData.trial,
       };
-      console.log('🚀 ~ handleCalculate ~ newResult:', newResult);
 
       setData({ step: 3, value: newResult });
     }
@@ -34,7 +33,6 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
 
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState([]);
-  console.log('🚀 ~ constMarshall_Step4= ~ rows:', rows);
 
   const [machiningColumns, setMachiningColumns] = useState<GridColDef[]>([]);
   const [machiningRows, setMachiningRows] = useState([]);
