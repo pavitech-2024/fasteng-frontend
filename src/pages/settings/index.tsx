@@ -14,6 +14,13 @@ import { PageGenericContainer as Container } from '@/components/organisms/pageCo
 import UploadIcon from '@mui/icons-material/Upload';
 import { TextField } from '@mui/material';
 import { red } from '@mui/material/colors';
+import { nameMask } from '@/utils/masks/nameMask/nameMask.mask';
+import { phoneMask } from '@/utils/masks/phoneMask/phoneMask.mask';
+import { validateEmail } from '@/utils/validators/emailValidator';
+import { validateName } from '@/utils/validators/nameValidator';
+import { validatePhone } from '@/utils/validators/phoneValidator';
+import { fontGrid } from '@mui/material/styles/cssUtils';
+import Cookies from 'js-cookie';
 
 export const getStaticProps = async () => {
   const avatares: string[] = [
@@ -39,8 +46,6 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
   const [phone, setPhone] = useState(user?.phone || '');
   const [dob, setDob] = useState(user?.dob || '');
 
-  console.log(user);
-
   const [errors, setErrors] = useState({
     name: '',
     email: '',
@@ -54,52 +59,43 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
     }
   }, [user]);
 
-  const validateName = (name: string) => {
-    const regex = /^[A-Za-z\s]{3,50}$/;
-    return regex.test(name);
-  };
-
-  const validateEmail = (email: string) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email) && email.length <= 80;
-  };
-
-  const validatePhone = (phone: string) => {
-    const regex = /^\d{10,11}$/;
-    return regex.test(phone);
-  };
-
-  const formatPhone = (phone: string) => {
-    const digits = phone.replace(/\D/g, ''); 
-    const limiteDigits = digits.slice(0, 11); 
-
-    if (limiteDigits.length === 11) {
-      return limiteDigits.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-    } else if (limiteDigits.length === 10) {
-      return limiteDigits.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-    }
-    return limiteDigits;
-  };
-
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '');
     setPhone(value);
   };
 
-
   const onSaveUser = async () => {
+    setErrors({ name: '', email: '', phone: '', dob: '' });
 
-    const newErrors = {
-      name: validateName(name) ? '' : 'Nome inválido',
-      email: validateEmail(email) ? '' : 'Email inválido',
-      phone: validatePhone(phone) ? '' : 'Telefone inválido',
-      dob: dob ? '' : 'Data de nascimento é obrigatória',
+    let newErrors = {
+      name: '',
+      email: '',
+      phone: '',
+      dob: '',
     };
+
+    if (!name) {
+      newErrors.name = t('settings.errors.emptyName');
+    } else if (!validateName(name)) {
+      newErrors.name = t('settings.errors.invalidName');
+    }
+
+    if (!email) {
+      newErrors.email = t('settings.errors.emptyEmail');
+    } else if (!validateEmail(email)) {
+      newErrors.email = t('settings.errors.invalidEmail');
+    }
+
+    if (!phone) {
+      newErrors.phone = t('settings.errors.emptyPhone');
+    } else if (!validatePhone(phone)) {
+      newErrors.phone = t('settings.errors.invalidPhone');
+    }
 
     setErrors(newErrors);
 
     if (Object.values(newErrors).some((error) => error)) {
-      toast.error('Por favor, corrija os erros antes de salvar.');
+      toast.error(t('settings.toast.submitError'));
       return;
     }
 
@@ -108,9 +104,9 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
       const response = await Api.put(`users/${user._id}`, updatedUser);
 
       setUser({ ...user, ...response.data });
-      toast.success('Usuário salvo com sucesso!');
+      toast.success(t("settings.toast.success"));
     } catch (error) {
-      toast.error('Erro ao salvar usuário');
+      toast.error(t("settings.toast.error"));
     }
   };
 
@@ -137,7 +133,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
     { label: '3', value: 3 },
     { label: '4', value: 4 },
     { label: '5', value: 5 },
-  ]; 
+  ];
 
   const onSubmitPhoto = async (avatar: string | File | null) => {
     try {
@@ -161,6 +157,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
       throw error;
     }
   };
+
   return (
     <Container>
       <ModalBase
@@ -250,7 +247,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           justifyContent: 'center',
           mb: '4vh',
         }}
-      >       
+      >
         <Typography
           sx={{
             width: { mobile: '85%', notebook: '100%' },
@@ -336,7 +333,6 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             justifyContent: 'flex-start',
           }}
         >
-
           {t('settings.personal')}
         </Typography>
         <Box
@@ -347,41 +343,66 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             width: { mobile: '85%', notebook: '70%' },
           }}
         >
-          <TextField
-            label="Nome"
-            variant="standard"
-            fullWidth
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            sx={{
-              height: '50px',
-            }}
-          />
-          <TextField
-            label="Email"
-            variant="standard"
-            fullWidth
-            required
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            sx={{
-              height: '50px',
-            }}
-          />
-          <TextField
-            label="Telefone"
-            variant="standard"
-            fullWidth
-            value={formatPhone(phone)}
-            onChange={handlePhoneChange}
-            error={!!errors.phone}
-            helperText={errors.phone}
-            sx={{
-              height: '60px',
-            }}
-          />
+          <Box>
+            <TextField
+              label="Nome"
+              variant="standard"
+              fullWidth
+              required
+              type="text"
+              value={nameMask(name)}
+              onChange={(e) => setName(e.target.value)}
+              sx={{
+                height: '50px',
+              }}
+            />
+            {errors.name && (
+              <Box component="span" sx={{ color: 'red', fontSize: '12px' }}>
+                {errors.name}
+              </Box>
+            )}
+          </Box>
+
+          <Box>
+            <TextField
+              label="Email"
+              variant="standard"
+              fullWidth
+              required
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              sx={{
+                height: '50px',
+              }}
+            />
+            {errors.email && (
+              <Box component="span" sx={{ color: 'red', fontSize: '12px' }}>
+                {errors.email}
+              </Box>
+            )}
+          </Box>
+
+          <Box>
+            <TextField
+              label="Telefone"
+              variant="standard"
+              fullWidth
+              value={phoneMask(phone)}
+              onChange={handlePhoneChange}
+              error={!!errors.phone}
+              helperText={errors.phone}
+              sx={{
+                height: '60px',
+              }}
+            />
+            {errors.phone && (
+              <Box component="span" sx={{ color: 'red', fontSize: '12px' }}>
+                {errors.phone}
+              </Box>
+            )}
+          </Box>
+
           <TextField
             label="Data de Nascimento"
             variant="standard"
@@ -393,40 +414,21 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             error={!!errors.dob}
             helperText={errors.dob}
           />
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-           {/* <Button
-              variant="contained"
-              color="primary"
-              onClick={onSaveUser}
-              sx={{ width: '25%' }}
-            >
-              Salvar Alterações
-            </Button>
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={onDeleteUser}
-              sx={{
-                backgroundColor: '#b22222',
-                color: 'white',
-                position: 'relative', // Changed to relative
-                left: 'auto',       // Reset left positioning
-                width: 'auto',      // Reset width
-                marginLeft: 'auto'  // Push to the right
-              }}
-            >
-              Excluir Usuário
-            </Button>*/}
-          </Box>
         </Box>
-      
-          <Typography sx={{width: { mobile: '85%', notebook: '100%' },
+
+        <Typography
+          sx={{
+            width: { mobile: '85%', notebook: '100%' },
             fontSize: { mobile: '1.25rem', notebook: '1.75rem' },
             fontWeight: 700,
             textTransform: 'uppercase',
             color: 'primaryTons.lightGray',
             display: 'flex',
-            justifyContent: 'flex-start',}}>
+            justifyContent: 'flex-start',
+            paddingTop: '2rem',
+            paddingBottom: '1rem'
+          }}
+        >
           {t('settings.preferences')}
         </Typography>
         <Box
@@ -443,10 +445,8 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             label={t('settings.language.label')}
             options={LanguageOptions}
             size="medium"
-
             sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white', ml: 5 }}
             value={user?.preferences.language === 'en' ? LanguageOptions[0] : LanguageOptions[1]}
- 
             callback={(value: string) => {
               i18next.changeLanguage(value);
               setUser({ ...user, preferences: { ...user.preferences, language: value } });
@@ -456,54 +456,34 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             label={t('settings.decimal.label')}
             options={DecimalOptions}
             size="medium"
-
             sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white', ml: 5 }}
             value={DecimalOptions[user?.preferences.decimal - 1]}
             callback={(value: number) => {
               setUser({ ...user, preferences: { ...user.preferences, decimal: value } });
             }}
-          />  
+          />
         </Box>
-        {/*<Button
-          variant="contained"
-          sx={{ color: 'primaryTons.white' }}
-          onClick={() =>
-            toast.promise(async () => await onSavePreferences(), {
-              pending: t('settings.toast loading'),
-              success: t('settings.toast success'),
-              error: t('settings.toast error'),
-            })
-          }
-        >
-          {t('settings.save')}
-        </Button>*/}
-<Box sx= {{ display: 'flex', justifyContent: 'space-between', mt: 2 , width: '80%'}}> 
-  <Button
-              variant="contained"
-              color="primary"
-              onClick={onSaveUser}
-              sx={{  }}
-            >
-              Salvar Alterações
-            </Button>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, width: '80%' }}>
+          <Button variant="contained" color="primary" onClick={onSaveUser} sx={{}}>
+            Salvar Alterações
+          </Button>
 
-        <Button
-              variant="outlined"
-              color="error"
-              onClick={onDeleteUser}
-              sx={{
-                backgroundColor: '#b22222',
-                color: 'white',
-                position: 'relative', // Changed to relative
-                left: 'auto',       // Reset left positioning
-                width: 'auto',      // Reset width
-                marginLeft: 'auto'  // Push to the right
-              }}
-            >
-              Excluir Usuário
-            </Button>
-          </Box>
-            
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={onDeleteUser}
+            sx={{
+              backgroundColor: '#b22222',
+              color: 'white',
+              position: 'relative',
+              left: 'auto',
+              width: 'auto',
+              marginLeft: 'auto',
+            }}
+          >
+            Excluir Usuário
+          </Button>
+        </Box>
       </Box>
     </Container>
   );

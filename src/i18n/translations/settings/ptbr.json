@@ -16,5 +16,15 @@
   "settings.toast loading": "Salvando preferências...",
   "settings.toast success": "Preferências salvas com sucesso!",
   "settings.toast error": "Erro ao salvar preferências!",
-  "settings.personal": "Dados do usuário"
+  "settings.personal": "Dados do usuário",
+
+  "settings.errors.emptyName": "O nome deve ser preenchido",
+  "settings.errors.invalidName": "O nome deve ter de 3 a 50 caracteres",
+  "settings.errors.emptyEmail": "O email deve ser preenchido",
+  "settings.errors.invalidEmail": "O email deve ser valido",
+  "settings.errors.emptyPhone": "O telefone deve ser preenchido",
+  "settings.errors.invalidPhone": "O telefone deve ser valido",
+  "settings.toast.submitError": "Corrija os campos antes de salvar",
+  "settings.toast.success": "Alterações salvas com sucesso!",
+  "settings.toast.error": "Erro ao salvar alterações!"
 }
