@@ -20,6 +20,7 @@ export type User = {
   };
 };
 
+
 export type AuthContent = {
   isAuthenticated: boolean;
   user: User | null;

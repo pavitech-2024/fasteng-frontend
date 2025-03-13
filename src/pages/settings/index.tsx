@@ -67,7 +67,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
   const onSaveUser = async () => {
     setErrors({ name: '', email: '', phone: '', dob: '' });
 
-    let newErrors = {
+    const newErrors = {
       name: '',
       email: '',
       phone: '',
