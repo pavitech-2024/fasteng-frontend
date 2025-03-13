@@ -6,9 +6,9 @@
   "asphalt.essays.penetration": "Penetration",
   "asphalt.essays.rtfo": "Short Term Aging - RTFO",
   "asphalt.essays.sand-equivalent": "Sand Equivalent",
-  "asphalt.essays.granulometry": "Granulometry by Sifting",
+  "asphalt.essays.granulometry": "Granulometry by Sieving",
   "asphalt.essays.shapeIndex": "Shape Index",
-  "asphalt.essays.specifyMass": "Especific Mass",
+  "asphalt.essays.specifyMass": "Specific Mass",
   "asphalt.essays.elongatedParticles": "Elongated and Flattened Particles",
   "asphalt.essays.softening-point": "Softening Point",
   "asphalt.essays.flashPoint": "Flash Point",
@@ -38,5 +38,5 @@
   "asphalt.essays.abrasion.graduation": "Choose the graduation",
   "asphalt.essays.abrasion.initial-mass": "Initial mass",
 
-  "asphalt.essays.granulometryResults": "Resultados da Granulometria por Peneiramento"
+  "asphalt.essays.granulometryResults": "Granulometry Results by Sieving"
 }

@@ -9,7 +9,7 @@
   "marshall.step-9-description": "These are the results of your Marshall dosage. Remember to save the project to ensure access to it in the future.",
 
   "marshall.general-results": "General Results",
-  "asphalt.dosages.marshall.materials-caracterization": "Materials Caracterization",
+  "asphalt.dosages.marshall.materials-caracterization": "Materials Characterization",
 
   "marshall.dosages.marshall.general-data": "General Data",
   "asphalt.dosages.marshall.material_selection": "Material Selection",
@@ -88,7 +88,7 @@
   "asphalt.dosages.marshall.submerged-mass": "Submerged mass",
   "asphalt.dosages.marshall.dry-mass": "Dry mass",
   "asphalt.dosages.marshall.height": "Height",
-  "asphalt.dosages.marshall.diammeter": "Diammeter",
+  "asphalt.dosages.marshall.diammeter": "Diameter",
 
   "asphalt.dosages.marshall.binder-percentage": "Binder percentage (%)",
 

@@ -12,13 +12,13 @@
   "rtcd.results.acceptance-condition-true": "Minimum RT achieved",
   "rtcd.results.acceptance-condition-false": "Minimum RT not reached",
   "rtcd.error.minReads": "It's not possible to delete. Minimum achieved.",
-  "asphalt.experimentName": "Asphalt Experement Name",
+  "asphalt.experimentName": "Asphalt Experiment Name",
   "asphalt.material": "Material",
   "asphalt.operator": "Operator",
   "asphalt.calculist": "Calculist",
   "asphalt.materials.comments": "Material comments",
 
-  "rtcd.step-2-description": "Fill in all the fields bellow",
+  "rtcd.step-2-description": "Fill in all the fields below",
   "asphalt.essays.rtcdStep2": "Step 2",
   "asphalt.essays.rtcdStep3": "Step 3"
 }
