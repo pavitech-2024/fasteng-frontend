@@ -4,7 +4,7 @@ import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
-import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
+import useMarshallStore, { GmmRows } from '@/stores/asphalt/marshall/marshall.store';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
@@ -13,14 +13,14 @@ import { toast } from 'react-toastify';
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaderTitle': {
-    whiteSpace: 'normal', // Permite quebra de linha
-    lineHeight: '1.2', // Ajusta o espaçamento entre linhas
-    textAlign: 'center', // Centraliza o texto
-    wordWrap: 'break-word', // Quebra palavras longas
-    overflowWrap: 'break-word', // Alternativa para quebra de texto
+    whiteSpace: 'normal',
+    lineHeight: '1.2',
+    textAlign: 'center',
+    wordWrap: 'break-word',
+    overflowWrap: 'break-word',
   },
   '& .MuiDataGrid-columnHeader': {
-    whiteSpace: 'normal', // Permite múltiplas linhas no cabeçalho
+    whiteSpace: 'normal',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -37,14 +37,18 @@ export type RiceTestRows = {
   massOfContainerWater: number;
 };
 
+type GmmTableRows = {
+  id: number,
+  GMM: number,
+  Teor: number
+}
+
 const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
-  console.log('🚀 ~ constMarshall_Step5= ~ binderTrialData:', binderTrialData);
   const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [GMMModalIsOpen, setGMMModalIsOpen] = useState(false);
-  const [gmmRows, setGmmRows] = useState([]);
-  console.log('🚀 ~ constMarshall_Step5= ~ gmmRows:', gmmRows);
+  const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [selectedMethod, setSelectedMethod] = useState('');
   const [riceTestTableRows, setRiceTestTableRows] = useState<RiceTestRows[]>([]);
@@ -202,11 +206,11 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
     );
   };
 
-  const handleGmmOnChange = (index, e) => {
-    if (e.target.value === null) return;
+  const handleGmmOnChange = (index: number, value: string) => {
+    if (value === null) return;
 
     const newState = [...data.gmm];
-    const newValue = Number(e.target.value);
+    const newValue = Number(value);
 
     if (newState[index].value !== null) {
       // If the input field already has a value, update it
@@ -216,12 +220,15 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
       newState.splice(index, 0, { id: index + 1, insert: true, value: newValue });
     }
 
-    // Update gmmRows directly
-    setGmmRows((prevRows) => {
-      const updatedRows = [...prevRows];
-      updatedRows[index] = { ...updatedRows[index], GMM: newValue };
-      return updatedRows;
+    const updatedRows = gmmRows.map((row) => {
+      if (row.id === index + 1) {
+        return { ...row, GMM: newValue };
+      }
+      return row;
     });
+
+    // Update gmmRows directly
+    setGmmRows(updatedRows);
 
     // Create a new copy of the state object with the updated gmmRows waterTemperatureList
     setData({ step: 4, value: { ...data, gmm: newState } });
@@ -236,18 +243,13 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
   // Creates the gmm method rows and columns
   useEffect(() => {
     if (selectedMethod === 'GMM') {
-      const gmmRows = [];
+      const gmmRows: GmmTableRows[] = [];
 
       for (let i = 0; i < data.gmm.length; i++) {
-        console.log(
-          '🚀 ~ useEffect ~ binderTrialData.percentsOfDosage[2][i]:',
-          binderTrialData.percentsOfDosage[2][i].value
-        );
-
         gmmRows.push({
           id: i + 1,
           GMM: data?.gmm[i].value,
-          Teor: binderTrialData.percentsOfDosage[2][i].value,
+          Teor: binderTrialData.percentsOfDosage[2][i]?.value,
         });
       }
 
@@ -271,10 +273,10 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
               return (
                 <InputEndAdornment
                   adornment={''}
-                  type="text"
+                  type="number"
                   value={gmmRows[index]?.GMM}
                   onChange={(e) => {
-                    handleGmmOnChange(index, e);
+                    handleGmmOnChange(index, e.target.value);
                   }}
                 />
               );
@@ -303,17 +305,17 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
         ]);
       }
     }
-  }, [selectedMethod]);
+  }, [selectedMethod, data.gmm]);
 
   // Format the gmmRows for the store data structure
   useEffect(() => {
-    const newArrayOfObjects = gmmRows.map((item) => ({
+    const gmmValuesToStore = gmmRows.map((item) => ({
       id: item.id,
       insert: item.GMM !== null,
       value: item.GMM,
     }));
 
-    setData({ step: 4, value: { ...data, gmm: newArrayOfObjects } });
+    setData({ step: 4, value: { ...data, gmm: gmmValuesToStore } });
   }, [gmmRows]);
 
   const calculateGmmData = () => {
@@ -510,7 +512,7 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
           return (
             <InputEndAdornment
               adornment={'g'}
-              type="text"
+              type="number"
               value={data.riceTest[index]?.massOfDrySample}
               onChange={(e) => {
                 const newData = [...data.riceTest];
@@ -531,7 +533,7 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
           return (
             <InputEndAdornment
               adornment={'g'}
-              type="text"
+              type="number"
               value={data.riceTest[index]?.massOfContainerWaterSample}
               onChange={(e) => {
                 const newData = [...data.riceTest];
@@ -552,7 +554,7 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
           return (
             <InputEndAdornment
               adornment={'g'}
-              type="text"
+              type="number"
               value={data.riceTest[index]?.massOfContainerWater}
               onChange={(e) => {
                 const newData = [...data.riceTest];
