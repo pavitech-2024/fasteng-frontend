@@ -47,13 +47,7 @@ const ModalBase = ({
   };
 
   return (
-    <Modal
-      component="div"
-      open={open}
-      onClose={onCancel}
-      disableScrollLock={false}
-      sx={{ overflowY: 'scroll' }}
-    >
+    <Modal component="div" open={open} onClose={onCancel} disableScrollLock={false} sx={{ overflowY: 'scroll' }}>
       <Box
         sx={{
           position: 'absolute' as const,

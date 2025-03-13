@@ -26,7 +26,7 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
         ...response,
         trial: binderTrialData.trial,
       };
-      console.log("🚀 ~ handleCalculate ~ newResult:", newResult)
+      console.log('🚀 ~ handleCalculate ~ newResult:', newResult);
 
       setData({ step: 3, value: newResult });
     }
@@ -34,7 +34,7 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
 
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState([]);
-  console.log("🚀 ~ constMarshall_Step4= ~ rows:", rows)
+  console.log('🚀 ~ constMarshall_Step4= ~ rows:', rows);
 
   const [machiningColumns, setMachiningColumns] = useState<GridColDef[]>([]);
   const [machiningRows, setMachiningRows] = useState([]);
@@ -186,7 +186,7 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
           display: 'flex',
           justifyContent: 'center',
           flexDirection: 'column',
-          gap: {mobile: '2rem', notebook: '10px'},
+          gap: { mobile: '2rem', notebook: '10px' },
         }}
       >
         <Box key={'initial_binder'} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -227,7 +227,14 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', overflowX: 'auto' }}>
           {machiningColumns.length > 0 && (
-            <Box sx={{ display: 'flex', flexDirection: { mobile: 'column', notebook: 'row'}, justifyContent: 'center', gap: '1rem' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: { mobile: 'column', notebook: 'row' },
+                justifyContent: 'center',
+                gap: '1rem',
+              }}
+            >
               <DataGrid
                 columns={machiningColumns.map((col) => ({
                   ...col,
