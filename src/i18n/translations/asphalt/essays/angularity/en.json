@@ -1,6 +1,6 @@
 {
   "angularity": "Angularity",
-  "angularity.step-2-description": "Fill in all the fields bellow",
+  "angularity.step-2-description": "Fill in all the fields below",
   "angularity.step-3-description": "These are the results of your experiment. Remember to save it so you can access them later",
   "angularity.relative_density": "Relative density",
   "angularity.cylinder_volume": "Cilinder volume",
@@ -10,8 +10,8 @@
   "angularity.diameter-1": "2,36 mm (nº 8) a 1,18 mm (nº 8)",
   "angularity.diameter-2": "1,18 mm (nº 16) a 600 µm (nº 30)",
   "angularity.diameter-3": "600 µm (nº 30) a 300 µm (nº 50)",
-  "angularity.determination-1": "1° determination",
-  "angularity.determination-2": "2° determination",
+  "angularity.determination-1": "1st determination",
+  "angularity.determination-2": "2nd determination",
   "angularity.angularity": "Angularity",
   "angularity.average_angularity": "Average angularity"
 }

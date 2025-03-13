@@ -17,7 +17,7 @@
   "asphalt.dosages.superpave.second_compression": "Second Compression",
   "asphalt.dosages.superpave.second_compression_parameters": "Second Compression Parameters",
   "asphalt.dosages.superpave.confirmation_compression": "Commit Compression",
-  "asphalt.dosages.superpave.dosage_resume": "Dosagem Resume",
+  "asphalt.dosages.superpave.dosage_resume": "Dosage Resume",
 
   "asphalt.project_name": "Project Name",
   "asphalt.laboratory_name": "Laboratory Name",
@@ -91,7 +91,7 @@
   "asphalt.dosages.superpave.dry-surface-saturated-mass": "Saturated mass with dry surface (g)",
   "asphalt.dosages.superpave.submerged-mass": "Submerged mass (g)",
   "asphalt.dosages.superpave.dry-mass": "Dry mass (g)",
-  "asphalt.dosages.superpave.diammeter": "Diammeter (cm)",
+  "asphalt.dosages.superpave.diammeter": "Diameter (cm)",
 
   "asphalt.dosages.superpave.choose-curve": "Select the curve with which you want to continue dosing:",
   "asphalt.dosages.superpave.volumetric-graphs": "Volumetric graphs",
