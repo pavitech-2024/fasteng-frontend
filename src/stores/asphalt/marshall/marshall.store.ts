@@ -5,7 +5,7 @@ export type GmmRows = {
   id: number;
   insert: boolean;
   value: number;
-}
+};
 
 interface MarhsallGeneralData {
   userId: string;

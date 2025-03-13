@@ -38,10 +38,10 @@ export type RiceTestRows = {
 };
 
 type GmmTableRows = {
-  id: number,
-  GMM: number,
-  Teor: number
-}
+  id: number;
+  GMM: number;
+  Teor: number;
+};
 
 const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
