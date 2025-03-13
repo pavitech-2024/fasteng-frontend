@@ -10,8 +10,6 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 
 const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
-  const [loading, setLoading] = useState<boolean>(false);
-
   const { binderTrialData, granulometryCompositionData, materialSelectionData, setData } = useMarshallStore();
 
   const { calculateBinderTrialData } = marshall;
@@ -28,6 +26,7 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
         ...response,
         trial: binderTrialData.trial,
       };
+      console.log("🚀 ~ handleCalculate ~ newResult:", newResult)
 
       setData({ step: 3, value: newResult });
     }
@@ -35,6 +34,7 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
 
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState([]);
+  console.log("🚀 ~ constMarshall_Step4= ~ rows:", rows)
 
   const [machiningColumns, setMachiningColumns] = useState<GridColDef[]>([]);
   const [machiningRows, setMachiningRows] = useState([]);
@@ -66,7 +66,7 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
 
       columns.unshift(binderObj);
 
-      const trials = ['oneLess', 'halfLess', 'normal', 'halPlus', 'onePlus'];
+      const trials = ['oneLess', 'halfLess', 'normal', 'halfPlus', 'onePlus'];
 
       // Função para formatar o array de materiais em objetos conforme o formato esperado pela tabela
       const formattedArray = trials.map((trial, index) => {
@@ -181,85 +181,88 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
 
   return (
     <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            gap: '10px',
-          }}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          gap: {mobile: '2rem', notebook: '10px'},
+        }}
+      >
+        <Box key={'initial_binder'} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <InputEndAdornment
+            label={t('asphalt.dosages.marshall.initial-binder')}
+            value={binderTrialData.trial}
+            onChange={(e) => setData({ step: 3, key: 'trial', value: Number(e.target.value) })}
+            adornment={'g'}
+            type="number"
+            inputProps={{ min: 0 }}
+            required
+          />
+        </Box>
+        <Button
+          onClick={handleCalculate}
+          sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
         >
-          <Box key={'initial_binder'} sx={{ display: 'flex', justifyContent: 'center' }}>
-            <InputEndAdornment
-              label={t('asphalt.dosages.marshall.initial-binder')}
-              value={binderTrialData.trial}
-              onChange={(e) => setData({ step: 3, key: 'trial', value: Number(e.target.value) })}
-              adornment={'g'}
-              type="number"
-              inputProps={{ min: 0 }}
-              required
+          {t('asphalt.dosages.marshall.calculate')}
+        </Button>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', overflowX: 'auto' }}>
+          {columns?.length > 0 && (
+            <DataGrid
+              columns={columns.map((col) => ({
+                ...col,
+                flex: 1,
+                width: 200,
+                headerAlign: 'center',
+                align: 'center',
+              }))}
+              rows={rows}
+              hideFooter
+              disableColumnMenu
+              sx={{
+                minWidth: '600px',
+              }}
             />
-          </Box>
-          <Button
-            onClick={handleCalculate}
-            sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
-          >
-            {t('asphalt.dosages.marshall.calculate')}
-          </Button>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {columns?.length > 0 && (
+          )}
+        </Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', overflowX: 'auto' }}>
+          {machiningColumns.length > 0 && (
+            <Box sx={{ display: 'flex', flexDirection: { mobile: 'column', notebook: 'row'}, justifyContent: 'center', gap: '1rem' }}>
               <DataGrid
-                columns={columns.map((col) => ({
+                columns={machiningColumns.map((col) => ({
                   ...col,
                   flex: 1,
                   width: 200,
                   headerAlign: 'center',
                   align: 'center',
                 }))}
-                rows={rows}
-                hideFooter
+                rows={machiningRows}
+                experimentalFeatures={{ columnGrouping: true }}
+                columnGroupingModel={machiningColumnGroupings}
                 disableColumnMenu
+                hideFooter
+                // sx={{
+                //   minWidth: '600px',
+                // }}
               />
-            )}
-
-            {machiningColumns.length > 0 && (
-              <Box sx={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
-                <DataGrid
-                  columns={machiningColumns.map((col) => ({
-                    ...col,
-                    flex: 1,
-                    width: 200,
-                    headerAlign: 'center',
-                    align: 'center',
-                  }))}
-                  rows={machiningRows}
-                  experimentalFeatures={{ columnGrouping: true }}
-                  columnGroupingModel={machiningColumnGroupings}
-                  disableColumnMenu
-                  hideFooter
-                />
-                <DataGrid
-                  columns={compressionColumns.map((col) => ({
-                    ...col,
-                    flex: 1,
-                    width: 200,
-                    headerAlign: 'center',
-                    align: 'center',
-                  }))}
-                  rows={compressionRows}
-                  experimentalFeatures={{ columnGrouping: true }}
-                  columnGroupingModel={compressionColumnGroupings}
-                  disableColumnMenu
-                  hideFooter
-                />
-              </Box>
-            )}
-          </Box>
+              <DataGrid
+                columns={compressionColumns.map((col) => ({
+                  ...col,
+                  flex: 1,
+                  width: 200,
+                  headerAlign: 'center',
+                  align: 'center',
+                }))}
+                rows={compressionRows}
+                experimentalFeatures={{ columnGrouping: true }}
+                columnGroupingModel={compressionColumnGroupings}
+                disableColumnMenu
+                hideFooter
+              />
+            </Box>
+          )}
         </Box>
-      )}
+      </Box>
     </>
   );
 };
