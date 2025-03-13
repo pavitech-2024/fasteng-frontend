@@ -86,7 +86,7 @@
   "asphalt.dosages.marshall.select-mixture-density-method": "Selecione o método de cálculo da densidade da mistura",
   "asphalt.dosages.marshall.water-temperature": "Selecione o fator de correção para a temperatura da água",
 
-  "asphalt.dosages.marshall.insert-real-specific-mass": "Insira a massa específica real dos materiais abaixo.",
+  "asphalt.dosages.marshall.insert-real-specific-mass": "Insira a massa específica real dos materiais abaixo",
 
   "asphalt.dosages.marshall.container-water-mass": "Massa do recipiente + água (g)",
   "asphalt.dosages.marshall.container-sample-water-mass": "Massa do recipiente + amostra + água (g)",
