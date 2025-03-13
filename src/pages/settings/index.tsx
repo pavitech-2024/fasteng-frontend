@@ -104,9 +104,9 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
       const response = await Api.put(`users/${user._id}`, updatedUser);
 
       setUser({ ...user, ...response.data });
-      toast.success(t("settings.toast.success"));
+      toast.success(t('settings.toast.success'));
     } catch (error) {
-      toast.error(t("settings.toast.error"));
+      toast.error(t('settings.toast.error'));
     }
   };
 
@@ -426,7 +426,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             display: 'flex',
             justifyContent: 'flex-start',
             paddingTop: '2rem',
-            paddingBottom: '1rem'
+            paddingBottom: '1rem',
           }}
         >
           {t('settings.preferences')}

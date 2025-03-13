@@ -20,7 +20,6 @@ export type User = {
   };
 };
 
-
 export type AuthContent = {
   isAuthenticated: boolean;
   user: User | null;
@@ -95,7 +94,6 @@ export function AuthProvider({ children }) {
 
       // If the user is not authenticated and has a token and a user id, it refreshes the login.
       if (token && _id && !isAuthenticated) {
-
         const response = await Api.post('auth/refresh-login', { token, _id });
 
         const { user: loggedUser, token: newToken } = response.data;
