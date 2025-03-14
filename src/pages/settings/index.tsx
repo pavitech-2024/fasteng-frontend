@@ -21,6 +21,7 @@ import { validateName } from '@/utils/validators/nameValidator';
 import { validatePhone } from '@/utils/validators/phoneValidator';
 import { fontGrid } from '@mui/material/styles/cssUtils';
 import Cookies from 'js-cookie';
+import PersonIcon from '@mui/icons-material/Person';
 
 export const getStaticProps = async () => {
   const avatares: string[] = [
@@ -187,14 +188,20 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           }}
         >
           <IconButton
-            sx={{ p: 0, ':hover': { opacity: 0.8, cursor: 'pointer' } }}
+            sx={{ p: 0, ':hover': { opacity: 0.8, cursor: 'pointer' },
+            position: 'absolute', // Posicionamento absoluto
+            top: 50,              // Alinhar ao topo
+            right: 20,            // Alinhar à direita
+            zIndex: 4
+          
+          }}
             onClick={() => {
               setOldPhoto(user?.photo);
               onSubmitPhoto(null);
             }}
             size="large"
           >
-            <DeleteIcon color="error" sx={{ width: '80px', height: '80px' }} />
+            <DeleteIcon color="error" sx={{ width:'50px' /*'80px'*/, height: '80px' }} />
           </IconButton>
           {avatares.map((avatar: string) => {
             return (
@@ -269,13 +276,14 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           }}
         >
           <Tooltip title={t('settings.changeAvatar')}>
-            <IconButton sx={{ p: 0, ml: '60px' }} onClick={() => setOpen(true)} size="large">
+            <IconButton sx={{ p: 0, ml: { mobile: '-30px', notebook: '60px' } }} onClick={() => setOpen(true)} size="large">
               <Avatar
                 alt="user photo"
                 src={user?.photo}
                 sx={{
                   height: '90px',
                   width: '90px',
+                  //borderRadius: '50%',
                   transition: 'all .3s ease-in-out',
                   zIndex: 3,
                   ':hover': { opacity: 0.8 },
@@ -487,5 +495,6 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
       </Box>
     </Container>
   );
+  
 };
 export default Settings;
