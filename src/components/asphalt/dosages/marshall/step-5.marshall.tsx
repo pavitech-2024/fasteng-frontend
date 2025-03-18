@@ -4,12 +4,30 @@ import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
-import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
-import { Box, Button, Typography } from '@mui/material';
+import useMarshallStore, { GmmRows } from '@/stores/asphalt/marshall/marshall.store';
+import { Box, Button, styled, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+
+const CustomDataGrid = styled(DataGrid)({
+  '& .MuiDataGrid-columnHeaderTitle': {
+    whiteSpace: 'normal',
+    lineHeight: '1.2',
+    textAlign: 'center',
+    wordWrap: 'break-word',
+    overflowWrap: 'break-word',
+  },
+  '& .MuiDataGrid-columnHeader': {
+    whiteSpace: 'normal',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    padding: '8px',
+  },
+});
 
 export type RiceTestRows = {
   id: number;
@@ -19,16 +37,18 @@ export type RiceTestRows = {
   massOfContainerWater: number;
 };
 
-const Marshall_Step5 = ({
-  nextDisabled,
-  setNextDisabled,
-  marshall,
-}: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+type GmmTableRows = {
+  id: number;
+  GMM: number;
+  Teor: number;
+};
+
+const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
   const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [GMMModalIsOpen, setGMMModalIsOpen] = useState(false);
-  const [gmmRows, setGmmRows] = useState([]);
+  const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [selectedMethod, setSelectedMethod] = useState('');
   const [riceTestTableRows, setRiceTestTableRows] = useState<RiceTestRows[]>([]);
@@ -186,11 +206,11 @@ const Marshall_Step5 = ({
     );
   };
 
-  const handleGmmOnChange = (index, e) => {
-    if (e.target.value === null) return;
+  const handleGmmOnChange = (index: number, value: string) => {
+    if (value === null) return;
 
     const newState = [...data.gmm];
-    const newValue = Number(e.target.value);
+    const newValue = Number(value);
 
     if (newState[index].value !== null) {
       // If the input field already has a value, update it
@@ -200,12 +220,15 @@ const Marshall_Step5 = ({
       newState.splice(index, 0, { id: index + 1, insert: true, value: newValue });
     }
 
-    // Update gmmRows directly
-    setGmmRows((prevRows) => {
-      const updatedRows = [...prevRows];
-      updatedRows[index] = { ...updatedRows[index], GMM: newValue };
-      return updatedRows;
+    const updatedRows = gmmRows.map((row) => {
+      if (row.id === index + 1) {
+        return { ...row, GMM: newValue };
+      }
+      return row;
     });
+
+    // Update gmmRows directly
+    setGmmRows(updatedRows);
 
     // Create a new copy of the state object with the updated gmmRows waterTemperatureList
     setData({ step: 4, value: { ...data, gmm: newState } });
@@ -220,33 +243,17 @@ const Marshall_Step5 = ({
   // Creates the gmm method rows and columns
   useEffect(() => {
     if (selectedMethod === 'GMM') {
-      setGmmRows([
-        {
-          id: 1,
-          GMM: data?.gmm[0].value,
-          Teor: binderTrialData.percentsOfDosage[2][0],
-        },
-        {
-          id: 2,
-          GMM: data?.gmm[1].value,
-          Teor: binderTrialData.percentsOfDosage[2][1],
-        },
-        {
-          id: 3,
-          GMM: data?.gmm[2].value,
-          Teor: binderTrialData.percentsOfDosage[2][2],
-        },
-        {
-          id: 4,
-          GMM: data?.gmm[3].value,
-          Teor: binderTrialData.percentsOfDosage[2][3],
-        },
-        {
-          id: 5,
-          GMM: data?.gmm[4].value,
-          Teor: binderTrialData.percentsOfDosage[2][4],
-        },
-      ]);
+      const gmmRows: GmmTableRows[] = [];
+
+      for (let i = 0; i < data.gmm.length; i++) {
+        gmmRows.push({
+          id: i + 1,
+          GMM: data?.gmm[i].value,
+          Teor: binderTrialData.percentsOfDosage[2][i]?.value,
+        });
+      }
+
+      setGmmRows(gmmRows);
 
       const hasNull = data?.riceTest.some((obj) => Object.values(obj).some((value) => value === null));
 
@@ -266,10 +273,10 @@ const Marshall_Step5 = ({
               return (
                 <InputEndAdornment
                   adornment={''}
-                  type="text"
+                  type="number"
                   value={gmmRows[index]?.GMM}
                   onChange={(e) => {
-                    handleGmmOnChange(index, e);
+                    handleGmmOnChange(index, e.target.value);
                   }}
                 />
               );
@@ -298,17 +305,17 @@ const Marshall_Step5 = ({
         ]);
       }
     }
-  }, [selectedMethod]);
+  }, [selectedMethod, data.gmm]);
 
   // Format the gmmRows for the store data structure
   useEffect(() => {
-    const newArrayOfObjects = gmmRows.map((item) => ({
+    const gmmValuesToStore = gmmRows.map((item) => ({
       id: item.id,
       insert: item.GMM !== null,
       value: item.GMM,
     }));
 
-    setData({ step: 4, value: { ...data, gmm: newArrayOfObjects } });
+    setData({ step: 4, value: { ...data, gmm: gmmValuesToStore } });
   }, [gmmRows]);
 
   const calculateGmmData = () => {
@@ -443,35 +450,35 @@ const Marshall_Step5 = ({
       const newRiceTestRows = [
         {
           id: 1,
-          teor: binderTrialData.percentsOfDosage[2][0],
+          teor: binderTrialData.percentsOfDosage[2][0].value,
           massOfDrySample: data?.riceTest[0]?.massOfDrySample,
           massOfContainerWaterSample: data?.riceTest[0]?.massOfContainerWaterSample,
           massOfContainerWater: data?.riceTest[0]?.massOfContainerWater,
         },
         {
           id: 2,
-          teor: binderTrialData.percentsOfDosage[2][1],
+          teor: binderTrialData.percentsOfDosage[2][1].value,
           massOfDrySample: data?.riceTest[1]?.massOfDrySample,
           massOfContainerWaterSample: data?.riceTest[1]?.massOfContainerWaterSample,
           massOfContainerWater: data?.riceTest[1]?.massOfContainerWater,
         },
         {
           id: 3,
-          teor: binderTrialData.percentsOfDosage[2][2],
+          teor: binderTrialData.percentsOfDosage[2][2].value,
           massOfDrySample: data?.riceTest[2]?.massOfDrySample,
           massOfContainerWaterSample: data?.riceTest[2]?.massOfContainerWaterSample,
           massOfContainerWater: data?.riceTest[2]?.massOfContainerWater,
         },
         {
           id: 4,
-          teor: binderTrialData.percentsOfDosage[2][3],
+          teor: binderTrialData.percentsOfDosage[2][3].value,
           massOfDrySample: data?.riceTest[3]?.massOfDrySample,
           massOfContainerWaterSample: data?.riceTest[3]?.massOfContainerWaterSample,
           massOfContainerWater: data?.riceTest[3]?.massOfContainerWater,
         },
         {
           id: 5,
-          teor: binderTrialData.percentsOfDosage[2][4],
+          teor: binderTrialData.percentsOfDosage[2][4].value,
           massOfDrySample: data?.riceTest[4]?.massOfDrySample,
           massOfContainerWaterSample: data?.riceTest[4]?.massOfContainerWaterSample,
           massOfContainerWater: data?.riceTest[4]?.massOfContainerWater,
@@ -497,7 +504,7 @@ const Marshall_Step5 = ({
       },
       {
         field: 'massOfDrySample',
-        headerName: t('asphalt.dosages.marshall.dry-sample-mass') + '(g)',
+        headerName: t('asphalt.dosages.marshall.dry-sample-mass'),
         width: 200,
         renderCell: ({ row }) => {
           const { id } = row;
@@ -505,7 +512,7 @@ const Marshall_Step5 = ({
           return (
             <InputEndAdornment
               adornment={'g'}
-              type="text"
+              type="number"
               value={data.riceTest[index]?.massOfDrySample}
               onChange={(e) => {
                 const newData = [...data.riceTest];
@@ -518,7 +525,7 @@ const Marshall_Step5 = ({
       },
       {
         field: 'massOfContainerWaterSample',
-        headerName: t('asphalt.dosages.marshall.dry-sample-mass') + '(g)',
+        headerName: t('asphalt.dosages.marshall.dry-sample-mass'),
         width: 220,
         renderCell: ({ row }) => {
           const { id } = row;
@@ -526,7 +533,7 @@ const Marshall_Step5 = ({
           return (
             <InputEndAdornment
               adornment={'g'}
-              type="text"
+              type="number"
               value={data.riceTest[index]?.massOfContainerWaterSample}
               onChange={(e) => {
                 const newData = [...data.riceTest];
@@ -539,7 +546,7 @@ const Marshall_Step5 = ({
       },
       {
         field: 'massOfContainerWater',
-        headerName: t('asphalt.dosages.marshall.container-water-mass') + '(g)',
+        headerName: t('asphalt.dosages.marshall.container-water-mass'),
         width: 210,
         renderCell: ({ row }) => {
           const { id } = row;
@@ -547,7 +554,7 @@ const Marshall_Step5 = ({
           return (
             <InputEndAdornment
               adornment={'g'}
-              type="text"
+              type="number"
               value={data.riceTest[index]?.massOfContainerWater}
               onChange={(e) => {
                 const newData = [...data.riceTest];
@@ -650,14 +657,16 @@ const Marshall_Step5 = ({
               <DataGrid
                 columns={gmmColumns.map((col) => ({
                   ...col,
+                  disableColumnMenu: true,
+                  sortable: false,
                   flex: 1,
-                  width: 200,
+                  moinWidth: 100,
                   headerAlign: 'center',
                   align: 'center',
                 }))}
                 rows={gmmRows}
                 hideFooter
-                sx={{ marginY: '2rem', width: 'fit-content', marginX: 'auto' }}
+                sx={{ marginY: '2rem' }}
               />
 
               <Button onClick={calculateGmmData} variant="outlined">
@@ -666,7 +675,7 @@ const Marshall_Step5 = ({
             </Box>
           )}
 
-          {selectedMethod === 'DMT' && (
+          {selectedMethod === 'DMT' && !DMTModalIsOpen && !dmtRows.some((e) => !e.Teor) && (
             <DataGrid
               columns={dmtColumns.map((col) => ({
                 ...col,
@@ -684,7 +693,11 @@ const Marshall_Step5 = ({
             title={t('asphalt.dosages.marshall.insert-real-specific-mass')}
             leftButtonTitle={t('asphalt.dosages.marshall.cancel')}
             rightButtonTitle={t('asphalt.dosages.marshall.confirm')}
-            onCancel={() => setDMTModalISOpen(false)}
+            onCancel={(event, reason) => {
+              if (reason !== 'backdropClick') {
+                setDMTModalISOpen(false);
+              }
+            }}
             open={DMTModalIsOpen}
             size={'medium'}
             onSubmit={() => handleSubmitDmt()}
@@ -720,11 +733,13 @@ const Marshall_Step5 = ({
             }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
-              <DataGrid
+              <CustomDataGrid
                 columns={riceTestTableColumns.map((col) => ({
                   ...col,
+                  disableColumnMenu: true,
+                  sortable: false,
                   flex: 1,
-                  width: 200,
+                  minWidth: 100,
                   headerAlign: 'center',
                   align: 'center',
                 }))}

@@ -172,7 +172,6 @@ export default function Navbar({ open, app }: NavbarProps) {
       type: 'single',
     },
   ].filter((item) => item.app === Router.pathname.split('/')[1] || item.app === 'common');
-  console.log('🚀 ~ Navbar ~ Router.pathname:', Router.pathname);
 
   // when the user scroll the page, the navbar will be fixed on the top
   window.addEventListener('scroll', () => {
