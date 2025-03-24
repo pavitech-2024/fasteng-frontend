@@ -25,22 +25,20 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   const clearStore = useSuperpaveStore((state) => state.clearStore);
 
   useEffect(() => {
-    // Itera sobre todas as chaves no sessionStorage
+    /**
+     * This code is responsible for clearing the sessionStorage when the user navigates to a new essay/dosage.
+     * It iterates over all the keys in the sessionStorage and checks if the current pathname does not contain the key.
+     * If it doesn't, it clears the sessionStorage.
+     */
     for (let i = sessionStorage.length - 1; i >= 0; i--) {
       const key = sessionStorage.key(i);
       if (key) {
-        // Extraindo a parte relevante da chave
         const keyString = key.split('-')[1];
 
-        // Verificando se o pathname não contém a substring da chave
         if (!pathname.includes(keyString)) {
-          sessionStorage.removeItem(key);
+          sessionStorage.clear();
         }
       }
-    }
-
-    if (window.location.pathname === '/home') {
-      clearStore();
     }
   }, [pathname, clearStore]);
 

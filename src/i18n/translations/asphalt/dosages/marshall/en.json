@@ -101,5 +101,7 @@
   "loading.calculating.pending": "Calculating...",
   "loading.calculating.success": "Calculated successfully!",
   "loading.calculating.error": "Error calculating!",
-  "asphalt.dosages.marshall.granulometric-composition": "Composição granulométrica"
+  "asphalt.dosages.marshall.granulometric-composition": "Composição granulométrica",
+
+  "errors.binder-trial-not-calculated": "Binder trial not calculated. Please use the calculate button."
 }
