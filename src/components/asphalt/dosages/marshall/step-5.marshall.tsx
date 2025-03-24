@@ -47,19 +47,24 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
   const [enableRiceTest, setEnableRiceTest] = useState(false);
-  const [GMMModalIsOpen, setGMMModalIsOpen] = useState(false);
   const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
-  const [selectedMethod, setSelectedMethod] = useState('');
+  const [selectedMethod, setSelectedMethod] = useState({
+    dmt: false,
+    gmm: false
+  });
+  console.log("🚀 ~ constMarshall_Step5= ~ selectedMethod:", selectedMethod)
   const [riceTestTableRows, setRiceTestTableRows] = useState<RiceTestRows[]>([]);
   const [riceTestTableColumns, setRiceTestTableColumns] = useState<GridColDef[]>([]);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
-  const materials = materialSelectionData.aggregates;
-  const [hasNull, setHasNull] = useState(true);
   const [gmmErrorMsg, setGmmErrorMsg] = useState('');
 
-  // Activated on page render to get the indexes of each material;
+  
+  /**
+   * It gets the indexes of the missing specific gravity from the material selection data and updates the store.
+   * It also sets the loading state to false.
+   */
   useEffect(() => {
     toast.promise(
       async () => {
@@ -87,49 +92,39 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
     );
   }, []);
 
-  //Water temperature list;
-  const list = {
-    '15°C - 0.9991': 0.9991,
-    '16°C - 0.9989': 0.9989,
-    '17°C - 0.9988': 0.9988,
-    '18°C - 0.9986': 0.9986,
-    '19°C - 0.9984': 0.9984,
-    '20°C - 0.9982': 0.9982,
-    '21°C - 0.9980': 0.998,
-    '22°C - 0.9978': 0.9978,
-    '23°C - 0.9975': 0.9975,
-    '24°C - 0.9973': 0.9973,
-    '25°C - 0.9970': 0.997,
-    '26°C - 0.9968': 0.9968,
-    '27°C - 0.9965': 0.9965,
-    '28°C - 0.9962': 0.9962,
-    '29°C - 0.9959': 0.9959,
-    '30°C - 0.9956': 0.9956,
-  };
-
-  const waterTemperatureList = [];
-
-  const formatedWaterTempList = Object.keys(list).forEach((key) => {
-    waterTemperatureList.push({
-      label: key,
-      value: list[key],
-    });
-  });
-
-  // Method option dropdown;
-  const calcMethodOptions: DropDownOption[] = [
-    { label: 'DMT - Densidade máxima teórica', value: 'DMT - Densidade máxima teórica' },
-    { label: 'GMM - Densidade máxima medida', value: 'GMM - Densidade máxima medida' },
+  const methodDropdownValues = [
+    {
+      label: t('asphalt.dosages.dmt'),
+      value: 'DMT',
+    },
+    {
+      label: t('asphalt.dosages.gmm'),
+      value: 'GMM'
+    }
   ];
+
+  const waterTemperatureList = Object.entries({
+    '15°C': 0.9991,
+    '16°C': 0.9989,
+    '17°C': 0.9988,
+    '18°C': 0.9986,
+    '19°C': 0.9984,
+    '20°C': 0.9982,
+    '21°C': 0.998,
+    '22°C': 0.9978,
+    '23°C': 0.9975,
+    '24°C': 0.9973,
+    '25°C': 0.997,
+    '26°C': 0.9968,
+    '27°C': 0.9965,
+    '28°C': 0.9962,
+    '29°C': 0.9959,
+    '30°C': 0.9956,
+  }).map(([label, value]) => ({ label, value }));
 
   useEffect(() => {
     function hasNullValue(obj) {
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key) && obj[key] === null) {
-          setHasNull(false);
-        }
-      }
-      setHasNull(true);
+      return Object.values(obj).includes(null);
     }
     hasNullValue(data.maxSpecificGravity);
   }, [data.maxSpecificGravity]);
@@ -175,37 +170,57 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
     },
   ];
 
-  const handleSubmitDmt = async () => {
-    setSelectedMethod('DMT');
-    toast.promise(
-      async () => {
-        try {
-          const dmt = await marshall.calculateMaximumMixtureDensityDMT(materialSelectionData, binderTrialData, data);
-          const prevData = data;
+/**
+ * Handles the submission process for calculating the maximum mixture density (DMT).
+ * It triggers a toast notification indicating the status of the calculation process.
+ * On successful calculation, it updates the data store with the new maximum specific gravity
+ * and a list of specific gravities, and closes the DMT modal.
+ *
+ * @async
+ * @throws Will throw an error if the calculation fails.
+ */
+const handleSubmitDmt = async () => {
+  toast.promise(
+    async () => {
+      try {
+        const dmtResult = await marshall.calculateMaximumMixtureDensityDMT(
+          materialSelectionData,
+          binderTrialData,
+          data
+        );
 
-          const newData = {
-            ...prevData,
-            maxSpecificGravity: {
-              result: dmt.maxSpecificGravity,
-              method: dmt.method,
-            },
-            listOfSpecificGravities: dmt.listOfSpecificGravities,
-          };
+        const updatedData = {
+          ...data,
+          maxSpecificGravity: {
+            result: dmtResult.maxSpecificGravity,
+            method: dmtResult.method,
+          },
+          listOfSpecificGravities: dmtResult.listOfSpecificGravities,
+        };
 
-          setData({ step: 4, value: newData });
-          setDMTModalISOpen(false);
-        } catch (error) {
-          throw error;
-        }
-      },
-      {
-        pending: t('loading.data.pending'),
-        success: t('loading.data.success'),
-        error: t('loading.data.error'),
+        setData({ step: 4, value: updatedData });
+        setDMTModalISOpen(false);
+      } catch (error) {
+        throw error;
       }
-    );
-  };
+    },
+    {
+      pending: t('loading.data.pending'),
+      success: t('loading.data.success'),
+      error: t('loading.data.error'),
+    }
+  );
+};
 
+  /**
+   * Handles the change event for the GMM input fields.
+   * It updates the state of the gmmRows and the data object.
+   * If the input field already has a value, it updates it.
+   * If the input field is new, it adds it to the gmmRows waterTemperatureList.
+   * It also creates a new copy of the state object with the updated gmmRows waterTemperatureList.
+   * @param index The index of the input field.
+   * @param value The new value of the input field.
+   */
   const handleGmmOnChange = (index: number, value: string) => {
     if (value === null) return;
 
@@ -213,10 +228,8 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
     const newValue = Number(value);
 
     if (newState[index].value !== null) {
-      // If the input field already has a value, update it
       newState[index] = { ...newState[index], value: newValue };
     } else {
-      // If the input field is new, add it to the gmmRows waterTemperatureList
       newState.splice(index, 0, { id: index + 1, insert: true, value: newValue });
     }
 
@@ -227,25 +240,16 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
       return row;
     });
 
-    // Update gmmRows directly
     setGmmRows(updatedRows);
-
-    // Create a new copy of the state object with the updated gmmRows waterTemperatureList
     setData({ step: 4, value: { ...data, gmm: newState } });
-  };
-
-  //Activated when gmm method is selected
-  const handleSelectGMM = () => {
-    setGMMModalIsOpen(false);
-    setSelectedMethod('GMM');
   };
 
   // Creates the gmm method rows and columns
   useEffect(() => {
-    if (selectedMethod === 'GMM') {
+    if (selectedMethod.gmm) {
       const gmmRows: GmmTableRows[] = [];
 
-      for (let i = 0; i < data.gmm.length; i++) {
+      for (let i = 0; i < data.gmm?.length; i++) {
         gmmRows.push({
           id: i + 1,
           GMM: data?.gmm[i].value,
@@ -255,7 +259,7 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
 
       setGmmRows(gmmRows);
 
-      const hasNull = data?.riceTest.some((obj) => Object.values(obj).some((value) => value === null));
+      const hasNull = data?.riceTest?.some((obj) => Object.values(obj).some((value) => value === null));
 
       if (hasNull) {
         setGmmColumns([
@@ -305,7 +309,7 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
         ]);
       }
     }
-  }, [selectedMethod, data.gmm]);
+  }, [selectedMethod]);
 
   // Format the gmmRows for the store data structure
   useEffect(() => {
@@ -489,7 +493,7 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
   }, []);
 
   useEffect(() => {
-    if (selectedMethod === 'GMM') {
+    if (selectedMethod.gmm) {
       setData({ step: 4, value: { ...data, riceTest: riceTestTableRows } });
     }
   }, [riceTestTableRows, selectedMethod]);
@@ -525,7 +529,7 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
       },
       {
         field: 'massOfContainerWaterSample',
-        headerName: t('asphalt.dosages.marshall.dry-sample-mass'),
+        headerName: t('asphalt.dosages.marshall.container-sample-water-mass'),
         width: 220,
         renderCell: ({ row }) => {
           const { id } = row;
@@ -572,10 +576,10 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
     setNextDisabled(true);
     const hasNullValue = data.dmt?.some((e) => Object.values(e).includes(null));
 
-    if (selectedMethod === 'DMT' && !hasNullValue && data.temperatureOfWater !== null) {
+    if (selectedMethod.dmt && !hasNullValue && data.temperatureOfWater !== null) {
       setNextDisabled(false);
     }
-    if (selectedMethod === 'GMM' && data?.gmm?.every((e) => e.value !== null) && data.temperatureOfWater !== null) {
+    if (selectedMethod.gmm && data?.gmm?.every((e) => e.value !== null) && data.temperatureOfWater !== null) {
       setNextDisabled(false);
     }
   }, [selectedMethod, data.temperatureOfWater]);
@@ -598,31 +602,19 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
             key={'density'}
             variant="standard"
             label={t('asphalt.dosages.marshall.select-mixture-density-method')}
-            options={calcMethodOptions}
+            options={methodDropdownValues}
             callback={(selectedOption) => {
-              if (selectedOption === 'DMT - Densidade máxima teórica') {
+              if (selectedOption === 'DMT') {
                 setDMTModalISOpen(true);
-                setSelectedMethod('DMT');
-              } else if (selectedOption === 'GMM - Densidade máxima medida') {
-                setSelectedMethod('GMM');
+                setSelectedMethod({ dmt: true, gmm: false });
+              } else if (selectedOption === 'GMM') {
+                setSelectedMethod({ dmt: false, gmm: true });
                 setEnableRiceTest(true);
-              } else {
-                setSelectedMethod('');
               }
             }}
             value={{
-              label:
-                selectedMethod === 'DMT'
-                  ? 'DMT - Densidade máxima teórica'
-                  : selectedMethod === 'GMM'
-                  ? 'GMM - Densidade máxima medida'
-                  : '',
-              value:
-                selectedMethod === 'GMM'
-                  ? 'GMM - Densidade máxima medida'
-                  : selectedMethod === 'DMT'
-                  ? 'DMT - Densidade máxima teórica'
-                  : '',
+              label: selectedMethod.dmt ? t('asphalt.dosages.dmt') : t('asphalt.dosages.gmm'),
+              value: selectedMethod.dmt ? 'DMT' : 'GMM',
             }}
             size="medium"
             sx={{ width: '75%', marginX: 'auto' }}
@@ -645,7 +637,7 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
             sx={{ width: '75%', marginX: 'auto' }}
           />
 
-          {selectedMethod === 'GMM' && (
+          {selectedMethod.gmm && (
             <Box sx={{ display: 'flex', gap: '1rem', marginY: '2rem', flexDirection: 'column' }}>
               <Typography sx={{ display: 'flex', justifyContent: 'center' }}>
                 Insira o Gmm e/ou calcule pelo Rice Test
@@ -675,7 +667,7 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
             </Box>
           )}
 
-          {selectedMethod === 'DMT' && !DMTModalIsOpen && !dmtRows.some((e) => !e.Teor) && (
+          {selectedMethod.dmt && !DMTModalIsOpen && !dmtRows.some((e) => !e.Teor) && (
             <DataGrid
               columns={dmtColumns.map((col) => ({
                 ...col,
