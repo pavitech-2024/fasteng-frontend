@@ -9,11 +9,13 @@ import { t } from 'i18next';
 const Penetration_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: results, generalData } = usePenetrationStore();
+  console.log("🚀 ~ constPenetration_Results= ~ results:", results)
 
   const data = {
-    penetration: results.penetration.toString(),
+    penetration: Number(results.penetration.toFixed(2)).toString(),
     alerts: results.alerts[0],
   };
+  console.log("🚀 ~ constPenetration_Results= ~ data.alerts:", data.alerts)
 
   // criando o objeto que será passado para o componente ExperimentResume
   const experimentResumeData: ExperimentResumeData = {
