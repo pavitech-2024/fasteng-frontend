@@ -119,5 +119,7 @@
   "loading.calculating.error": "Erro ao calcular!",
 
   "asphalt.dosages.marshall.granulometric-curve": "Curva granulométrica",
-  "asphalt.dosages.marshall.granulometric-composition": "Composição granulométrica"
+  "asphalt.dosages.marshall.granulometric-composition": "Composição granulométrica",
+
+  "errors.binder-trial-not-calculated": "O teor de ligante asfáltico ainda não foi calculado. Clique no botão calcular."
 }
