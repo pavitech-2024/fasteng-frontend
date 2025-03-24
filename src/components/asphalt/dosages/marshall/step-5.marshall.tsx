@@ -51,16 +51,14 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [selectedMethod, setSelectedMethod] = useState({
     dmt: false,
-    gmm: false
+    gmm: false,
   });
-  console.log("🚀 ~ constMarshall_Step5= ~ selectedMethod:", selectedMethod)
   const [riceTestTableRows, setRiceTestTableRows] = useState<RiceTestRows[]>([]);
   const [riceTestTableColumns, setRiceTestTableColumns] = useState<GridColDef[]>([]);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
   const [gmmErrorMsg, setGmmErrorMsg] = useState('');
 
-  
   /**
    * It gets the indexes of the missing specific gravity from the material selection data and updates the store.
    * It also sets the loading state to false.
@@ -75,6 +73,14 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
             ...data,
             missingSpecificMass: response,
           };
+
+          newData.gmm = [
+            { id: 1, insert: true, value: null },
+            { id: 2, insert: true, value: null },
+            { id: 3, insert: true, value: null },
+            { id: 4, insert: true, value: null },
+            { id: 5, insert: true, value: null },
+          ];
 
           setData({ step: 4, value: newData });
 
@@ -99,8 +105,8 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
     },
     {
       label: t('asphalt.dosages.gmm'),
-      value: 'GMM'
-    }
+      value: 'GMM',
+    },
   ];
 
   const waterTemperatureList = Object.entries({
@@ -170,47 +176,47 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
     },
   ];
 
-/**
- * Handles the submission process for calculating the maximum mixture density (DMT).
- * It triggers a toast notification indicating the status of the calculation process.
- * On successful calculation, it updates the data store with the new maximum specific gravity
- * and a list of specific gravities, and closes the DMT modal.
- *
- * @async
- * @throws Will throw an error if the calculation fails.
- */
-const handleSubmitDmt = async () => {
-  toast.promise(
-    async () => {
-      try {
-        const dmtResult = await marshall.calculateMaximumMixtureDensityDMT(
-          materialSelectionData,
-          binderTrialData,
-          data
-        );
+  /**
+   * Handles the submission process for calculating the maximum mixture density (DMT).
+   * It triggers a toast notification indicating the status of the calculation process.
+   * On successful calculation, it updates the data store with the new maximum specific gravity
+   * and a list of specific gravities, and closes the DMT modal.
+   *
+   * @async
+   * @throws Will throw an error if the calculation fails.
+   */
+  const handleSubmitDmt = async () => {
+    toast.promise(
+      async () => {
+        try {
+          const dmtResult = await marshall.calculateMaximumMixtureDensityDMT(
+            materialSelectionData,
+            binderTrialData,
+            data
+          );
 
-        const updatedData = {
-          ...data,
-          maxSpecificGravity: {
-            result: dmtResult.maxSpecificGravity,
-            method: dmtResult.method,
-          },
-          listOfSpecificGravities: dmtResult.listOfSpecificGravities,
-        };
+          const updatedData = {
+            ...data,
+            maxSpecificGravity: {
+              result: dmtResult.maxSpecificGravity,
+              method: dmtResult.method,
+            },
+            listOfSpecificGravities: dmtResult.listOfSpecificGravities,
+          };
 
-        setData({ step: 4, value: updatedData });
-        setDMTModalISOpen(false);
-      } catch (error) {
-        throw error;
+          setData({ step: 4, value: updatedData });
+          setDMTModalISOpen(false);
+        } catch (error) {
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
       }
-    },
-    {
-      pending: t('loading.data.pending'),
-      success: t('loading.data.success'),
-      error: t('loading.data.error'),
-    }
-  );
-};
+    );
+  };
 
   /**
    * Handles the change event for the GMM input fields.
@@ -230,6 +236,7 @@ const handleSubmitDmt = async () => {
     if (newState[index].value !== null) {
       newState[index] = { ...newState[index], value: newValue };
     } else {
+      console.log('entrou');
       newState.splice(index, 0, { id: index + 1, insert: true, value: newValue });
     }
 
@@ -252,62 +259,40 @@ const handleSubmitDmt = async () => {
       for (let i = 0; i < data.gmm?.length; i++) {
         gmmRows.push({
           id: i + 1,
-          GMM: data?.gmm[i].value,
+          GMM: data?.gmm[i].value ?? null,
           Teor: binderTrialData.percentsOfDosage[2][i]?.value,
         });
       }
 
       setGmmRows(gmmRows);
 
-      const hasNull = data?.riceTest?.some((obj) => Object.values(obj).some((value) => value === null));
-
-      if (hasNull) {
-        setGmmColumns([
-          {
-            field: 'Teor',
-            headerName: t('asphalt.dosages.marshall.tenor'),
-            valueFormatter: ({ value }) => `${value}`,
+      setGmmColumns([
+        {
+          field: 'Teor',
+          headerName: t('asphalt.dosages.marshall.tenor'),
+          valueFormatter: ({ value }) => `${value}`,
+        },
+        {
+          field: 'GMM',
+          headerName: 'GMM',
+          renderCell: ({ row }) => {
+            const { id } = row;
+            const index = data?.gmm?.findIndex((r) => r.id === id);
+            return (
+              <InputEndAdornment
+                adornment={''}
+                type="number"
+                value={data.gmm[index]?.value}
+                onChange={(e) => {
+                  const newData = [...data.gmm];
+                  newData[index].value = Number(e.target.value);
+                  setData({ step: 4, value: { ...data, gmm: newData } });
+                }}
+              />
+            );
           },
-          {
-            field: 'GMM',
-            headerName: 'GMM',
-            renderCell: ({ row }) => {
-              const { id } = row;
-              const index = data?.gmm?.findIndex((r) => r.id === id);
-              return (
-                <InputEndAdornment
-                  adornment={''}
-                  type="number"
-                  value={gmmRows[index]?.GMM}
-                  onChange={(e) => {
-                    handleGmmOnChange(index, e.target.value);
-                  }}
-                />
-              );
-            },
-          },
-        ]);
-      } else {
-        const formattedGmm2 = Object.values(data?.maxSpecificGravity).map((item, idx) => {
-          return {
-            id: idx + 1,
-            Teor: binderTrialData.percentsOfDosage[2][idx],
-            GMM: gmmRows[idx]?.GMM,
-          };
-        });
-        setGmmColumns([
-          {
-            field: 'Teor',
-            headerName: 'Teor',
-            valueFormatter: ({ value }) => `${value}`,
-          },
-          {
-            field: 'GMM',
-            headerName: 'GMM',
-            valueFormatter: ({ value }) => `${value}`,
-          },
-        ]);
-      }
+        },
+      ]);
     }
   }, [selectedMethod]);
 
