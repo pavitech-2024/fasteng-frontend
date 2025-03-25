@@ -335,7 +335,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
               marginTop: '10px',
               marginLeft: {
                 mobile: '0px',
-                notebook:'-80px', 
+                notebook:'-80px' , 
               }
             } }
           >
