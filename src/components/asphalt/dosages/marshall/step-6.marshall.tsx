@@ -478,6 +478,7 @@ const Marshall_Step6 = ({
     });
     setData({ step: 5, value: { ...data, [type]: newRows } });
   };
+  
 
   const ExpansionToolbar = (type: string) => {
     return (

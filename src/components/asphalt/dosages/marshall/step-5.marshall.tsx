@@ -46,16 +46,13 @@ type GmmTableRows = {
 const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
-  console.log('🚀 ~ constMarshall_Step5= ~ data:', data);
   const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
-  console.log("🚀 ~ constMarshall_Step5= ~ gmmRows:", gmmRows)
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [selectedMethod, setSelectedMethod] = useState({
     dmt: data?.method === 'DMT',
     gmm: data?.method === 'GMM',
   });
-  console.log("🚀 ~ constMarshall_Step5= ~ selectedMethod:", selectedMethod)
   const [riceTestTableRows, setRiceTestTableRows] = useState<RiceTestRows[]>([]);
   const [riceTestTableColumns, setRiceTestTableColumns] = useState<GridColDef[]>([]);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
@@ -78,12 +75,12 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
         try {
           const response = await marshall.getIndexesOfMissesSpecificGravity(materialSelectionData);
 
-          let newData = {
+          const newData = {
             ...data,
             missingSpecificMass: response,
           };
 
-          let gmmData = [];
+          const gmmData = [];
           for (let i = 1; i <= 5; i++) {
             gmmData.push({ id: i, insert: true, value: null });
           }
@@ -481,7 +478,6 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
       setNextDisabled(hasNullValue || data.temperatureOfWater === null);
     } else if (selectedMethod.gmm) {
       const hasNullValue = data.gmm?.some((e) => e.value === null);
-      console.log("🚀 ~ useEffect ~ hasNullValue:", hasNullValue)
       setNextDisabled(hasNullValue || data.temperatureOfWater === null);
     }
   }, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows]);
