@@ -1,10 +1,10 @@
-import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
+import DropDown from '@/components/atoms/inputs/dropDown';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
-import useMarshallStore, { GmmRows } from '@/stores/asphalt/marshall/marshall.store';
+import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
@@ -46,14 +46,15 @@ type GmmTableRows = {
 const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
+  console.log('🚀 ~ constMarshall_Step5= ~ data:', data);
   const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
-  console.log('🚀 ~ constMarshall_Step5= ~ gmmRows:', gmmRows);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [selectedMethod, setSelectedMethod] = useState({
-    dmt: false,
-    gmm: false,
+    dmt: data?.method === 'DMT',
+    gmm: data?.method === 'GMM',
   });
+  console.log("🚀 ~ constMarshall_Step5= ~ selectedMethod:", selectedMethod)
   const [riceTestTableRows, setRiceTestTableRows] = useState<RiceTestRows[]>([]);
   const [riceTestTableColumns, setRiceTestTableColumns] = useState<GridColDef[]>([]);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
@@ -61,8 +62,14 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
   const [gmmErrorMsg, setGmmErrorMsg] = useState('');
 
   /**
-   * It gets the indexes of the missing specific gravity from the material selection data and updates the store.
-   * It also sets the loading state to false.
+   * This useEffect is responsible for calculating the indexes of missing specific
+   * gravity values in the GMM table and setting the initial values of the rice
+   * test table.
+   *
+   * If the GMM table is completed, the function will return and do nothing.
+   *
+   * After the calculation is done, the function will update the data in the store
+   * with the new values and set the loading state to false.
    */
   useEffect(() => {
     toast.promise(
@@ -75,56 +82,22 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
             missingSpecificMass: response,
           };
 
-          newData.gmm = [
-            { id: 1, insert: true, value: null },
-            { id: 2, insert: true, value: null },
-            { id: 3, insert: true, value: null },
-            { id: 4, insert: true, value: null },
-            { id: 5, insert: true, value: null },
-          ];
-
-          if (!data.riceTest) {
-            newData = {
-              ...newData,
-              riceTest: [
-                {
-                  id: 1,
-                  teor: null,
-                  massOfDrySample: null,
-                  massOfContainerWaterSample: null,
-                  massOfContainerWater: null,
-                },
-                {
-                  id: 2,
-                  teor: null,
-                  massOfDrySample: null,
-                  massOfContainerWaterSample: null,
-                  massOfContainerWater: null,
-                },
-                {
-                  id: 3,
-                  teor: null,
-                  massOfDrySample: null,
-                  massOfContainerWaterSample: null,
-                  massOfContainerWater: null,
-                },
-                {
-                  id: 4,
-                  teor: null,
-                  massOfDrySample: null,
-                  massOfContainerWaterSample: null,
-                  massOfContainerWater: null,
-                },
-                {
-                  id: 5,
-                  teor: null,
-                  massOfDrySample: null,
-                  massOfContainerWaterSample: null,
-                  massOfContainerWater: null,
-                },
-              ],
-            };
+          let gmmData = [];
+          for (let i = 1; i <= 5; i++) {
+            gmmData.push({ id: i, insert: true, value: null });
           }
+
+          newData.gmm = gmmData;
+
+          newData.riceTest =
+            newData.riceTest ||
+            Array.from({ length: 5 }, (_, i) => ({
+              id: i + 1,
+              teor: null,
+              massOfDrySample: null,
+              massOfContainerWaterSample: null,
+              massOfContainerWater: null,
+            }));
 
           setData({ step: 4, value: newData });
 
@@ -172,40 +145,11 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
     '30°C': 0.9956,
   }).map(([label, value]) => ({ label, value }));
 
-  useEffect(() => {
-    function hasNullValue(obj) {
-      return Object.values(obj).includes(null);
-    }
-    hasNullValue(data.maxSpecificGravity);
-  }, [data.maxSpecificGravity]);
-
-  const dmtRows = [
-    {
-      id: 1,
-      DMT: data?.maxSpecificGravity?.result?.lessOne?.toFixed(2),
-      Teor: binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][0].value,
-    },
-    {
-      id: 2,
-      DMT: data?.maxSpecificGravity?.result?.lessHalf?.toFixed(2),
-      Teor: binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][1].value,
-    },
-    {
-      id: 3,
-      DMT: data?.maxSpecificGravity?.result?.normal?.toFixed(2),
-      Teor: binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][2].value,
-    },
-    {
-      id: 4,
-      DMT: data?.maxSpecificGravity?.result?.plusHalf?.toFixed(2),
-      Teor: binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][3].value,
-    },
-    {
-      id: 5,
-      DMT: data?.maxSpecificGravity?.result?.plusOne?.toFixed(2),
-      Teor: binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][4].value,
-    },
-  ];
+  const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => ({
+    id: index + 1,
+    DMT: data?.maxSpecificGravity?.result?.lessOne?.toFixed(2),
+    Teor: item.value,
+  }));
 
   const dmtColumns: GridColDef[] = [
     {
@@ -314,38 +258,47 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
    * @throws Will throw an error if the calculation fails.
    */
   const calculateGmmData = async () => {
-    try {
-      if (data.temperatureOfWater === null) {
-        setGmmErrorMsg('errors.empty-water-temperature');
-        throw new Error('errors.empty-water-temperature');
-      }
-
-      const gmm = await marshall.calculateGmmData(materialSelectionData, data);
-
-      const newData = {
-        ...data,
-        listOfSpecificGravities: gmm.listOfSpecificGravities,
-        maxSpecificGravity: {
-          results: gmm.maxSpecificGravity,
-          method: gmm.method,
-        },
-      };
-
-      setData({ step: 4, value: newData });
-
-      const newGmmRows = gmmRows.map((item) => {
-        if (item.id === 1) item.GMM = gmm.maxSpecificGravity.lessOne;
-        if (item.id === 2) item.GMM = gmm.maxSpecificGravity.lessHalf;
-        if (item.id === 3) item.GMM = gmm.maxSpecificGravity.normal;
-        if (item.id === 4) item.GMM = gmm.maxSpecificGravity.plusHalf;
-        if (item.id === 5) item.GMM = gmm.maxSpecificGravity.plusOne;
-        return item;
-      });
-
-      setGmmRows(newGmmRows);
-    } catch (error) {
-      setGmmErrorMsg(error.message);
+    if (data.temperatureOfWater === null) {
+      setGmmErrorMsg('errors.empty-water-temperature');
+      throw new Error('errors.empty-water-temperature');
     }
+
+    toast.promise(
+      async () => {
+        try {
+          const gmm = await marshall.calculateGmmData(materialSelectionData, data);
+
+          const newData = {
+            ...data,
+            listOfSpecificGravities: gmm.listOfSpecificGravities,
+            maxSpecificGravity: {
+              results: gmm.maxSpecificGravity,
+              method: gmm.method,
+            },
+          };
+
+          setData({ step: 4, value: newData });
+
+          const newGmmRows = gmmRows.map((item) => {
+            if (item.id === 1) item.GMM = gmm.maxSpecificGravity.lessOne;
+            if (item.id === 2) item.GMM = gmm.maxSpecificGravity.lessHalf;
+            if (item.id === 3) item.GMM = gmm.maxSpecificGravity.normal;
+            if (item.id === 4) item.GMM = gmm.maxSpecificGravity.plusHalf;
+            if (item.id === 5) item.GMM = gmm.maxSpecificGravity.plusOne;
+            return item;
+          });
+
+          setGmmRows(newGmmRows);
+        } catch (error) {
+          console.error(error);
+        }
+      },
+      {
+        pending: t('submiting.data.pending'),
+        success: t('submiting.data.success'),
+        error: t('submiting.data.error'),
+      }
+    );
   };
 
   /**
@@ -414,8 +367,8 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
         }
       },
       {
-        pending: t('loading.data.pending'),
-        success: t('loading.data.success'),
+        pending: t('submiting.data.pending'),
+        success: t('submiting.data.success'),
         error: `${t('errors.rice-test-empty-fields')}${binderTrialData.percentsOfDosage[2][errorIndex]?.value}%`,
       }
     );
@@ -514,17 +467,22 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
     ]);
   }, [data.riceTest]);
 
+  /**
+   * Effect that checks if there is any null value in the data.
+   * If there is, it sets the nextDisabled state to true.
+   * The nextDisabled state is used to disable the next button
+   * if the user has not filled all the required data.
+   */
   useEffect(() => {
-    setNextDisabled(true);
-    const hasNullValue = data.dmt?.some((e) => Object.values(e).includes(null));
-
-    if (selectedMethod.dmt && !hasNullValue && data.temperatureOfWater !== null) {
-      setNextDisabled(false);
+    if (selectedMethod.dmt) {
+      const hasNullValue = dmtRows?.some((e) => Object.values(e).includes(null));
+      setNextDisabled(hasNullValue || data.temperatureOfWater === null);
+    } else if (selectedMethod.gmm) {
+      const hasNullValue = data.gmm?.some((e) => e.value === null);
+      console.log("🚀 ~ useEffect ~ hasNullValue:", hasNullValue)
+      setNextDisabled(hasNullValue || data.temperatureOfWater === null);
     }
-    if (selectedMethod.gmm && data?.gmm?.every((e) => e.value !== null) && data.temperatureOfWater !== null) {
-      setNextDisabled(false);
-    }
-  }, [selectedMethod, data.temperatureOfWater]);
+  }, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows]);
 
   return (
     <>
