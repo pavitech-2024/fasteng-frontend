@@ -230,9 +230,9 @@ const MaterialsTemplate = ({
                   width: { mobile: '100%', notebook: '75%' },
                   maxWidth: '450px',
                   height: '39px',
-                  '& .MuiSvgIcon-root': { 
-                    fontSize: '45px', 
-    },
+                  '& .MuiSvgIcon-root': {
+                    fontSize: '45px',
+                  },
                 }}
                 value={searchValue}
                 setValue={setSearchValue}
@@ -302,11 +302,11 @@ const MaterialsTemplate = ({
             border: '1px solid rgba(0,0,0,0.17)',
             mt: '1rem',
             background: 'primaryTons.white',
-            overflowX: 'hidden', 
+            overflowX: 'hidden',
           }}
         >
           {/*<TableContainer sx={{ borderRadius: '20px' }}>*/}
-          <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'hidden'}}>
+          <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'hidden' }}>
             {/*<Table stickyHeader aria-label="sticky table">*/}
             <Table sx={{ width: '100%', tableLayout: 'fixed' }} aria-label="materials table">
               <TableHead>
@@ -314,12 +314,11 @@ const MaterialsTemplate = ({
                   {columns.map((column) => (
                     <TableCell
                       key={column.id}
-                      
-                      sx={{ 
-                        fontWeight: 'bold', 
+                      sx={{
+                        fontWeight: 'bold',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
-                        width: column.width 
+                        width: column.width,
                       }}
                       /*align="center"
                       style={{
@@ -337,8 +336,7 @@ const MaterialsTemplate = ({
                 {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                     {columns.map((column) => (
-                      <TableCell key={column.id} 
-                      align="center">
+                      <TableCell key={column.id} align="center">
                         {column.id === 'name' && row.name}
                         {column.id === 'type' && translateType(row.type)}
                         {column.id === 'createdAt' && formatDate(row.createdAt)}

@@ -56,13 +56,15 @@
   "asphalt.dosages.inputs-sum-invalid": "A soma dos valores das porcentagens dos materiais deve ser igual a 100.",
 
   "asphalt.dosages.indirect-tensile-strength": "Resistência à tração por compressão diametral",
-  "asphalt.dosages.fluency": "Fluência",
-  "asphalt.dosages.marshall-stability": "Estabilidade Marshall",
+  "asphalt.dosages.marshall.fluency": "Fluência",
+  "asphalt.dosages.marshall.stability": "Estabilidade Marshall",
   "asphalt.dosages.rbv": "Relação betume-vazios",
   "asphalt.dosages.vam": "Vazios do agregado mineral (VAM)",
   "asphalt.dosages.vv": "Volume de vazios",
   "asphalt.dosages.gmb": "Massa específica aparente",
   "asphalt.dosages.dmt": "Densidade máximo teórica (DMT)",
+  "asphalt.dosages.gmm": "Densidade máxima medida (GMM)",
+
   "asphalt.dosages.optimum-binder": "Teor ótimo de ligante asfáltico",
   "asphalt.dosages.binder-volumetric-mechanic-params": "Parametros volumétricos e mecanicos da mistura no teor ótimo de ligante asfáltico",
   "asphalt.dosages.mineral-aggregate-voids": "Vazios do agregado mineral (%)",
@@ -95,7 +97,7 @@
 
   "asphalt.dosages.marshall.dry-surface-saturated-mass": "Massa saturada com superfície seca",
   "asphalt.dosages.marshall.submerged-mass": "Massa submersa",
-  "asphalt.dosages.marshall.dry-mass": "Massa seca",
+  "asphalt.dosages.marshall.dry-mass": "Massa da amostra seca em ar",
   "asphalt.dosages.marshall.height": "Altura",
   "asphalt.dosages.marshall.diammeter": "Diametro",
 

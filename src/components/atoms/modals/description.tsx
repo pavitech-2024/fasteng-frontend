@@ -36,9 +36,9 @@ export default function DescriptionModal({ title, description }: IModal) {
   return (
     <React.Fragment>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
-      <Button variant="outlined" onClick={handleClickOpen} sx={{ width: '200px' }}>
-        {t('description.read.more')}
-      </Button>
+        <Button variant="outlined" onClick={handleClickOpen} sx={{ width: '200px' }}>
+          {t('description.read.more')}
+        </Button>
       </div>
 
       <BootstrapDialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
