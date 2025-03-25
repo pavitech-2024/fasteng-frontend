@@ -336,8 +336,9 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
               marginLeft: {
                 mobile: '0px',
                 notebook:'-80px', 
-                
+
               }
+              
             } }
           >
             <Typography
