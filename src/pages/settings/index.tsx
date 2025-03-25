@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import useAuth from '@/contexts/auth';
-import { Avatar, Box, Button, IconButton, Tooltip, Typography } from '@mui/material';
+import { Avatar, Box, Button, Grid, IconButton, Tooltip, Typography } from '@mui/material';
 import Header from '@/components/organisms/header';
 import i18next, { t } from 'i18next';
 import ModalBase from '@/components/molecules/modals/modal';
@@ -26,6 +26,10 @@ import PersonIcon from '@mui/icons-material/Person';
 export const getStaticProps = async () => {
   const avatares: string[] = [
     //'https://thumbs.dreamstime.com/z/vetor-de-%C3%ADcone-perfil-do-avatar-padr%C3%A3o-foto-usu%C3%A1rio-m%C3%ADdia-social-183042379.jpg',
+
+    //'https://www.svgrepo.com/show/535711/user.svg',
+
+    'https://i.pinimg.com/736x/e8/d7/d0/e8d7d05f392d9c2cf0285ce928fb9f4a.jpg',
   ];
 
   return {
@@ -173,50 +177,55 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
         onSubmit={() => setOpen(false)}
         size="small"
       >
+        
         <Box
           sx={{
             width: '99%',
             height: '200px',
-            border: '1px solid #121212',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, 100px)',
-            gridTemplateRows: 'repeat(auto-fill, 100px)',
-            gap: '1px',
-            p: '1rem 0',
-            overflow: 'auto',
-            placeContent: 'start center',
+            border: '5px solid #F2A255',
+            display: 'flex',
+            overflow: 'hidden',
+            position: 'relative',
           }}
         >
-          <IconButton
-            sx={{ p: 0, ':hover': { opacity: 0.8, cursor: 'pointer' },
-            position: 'absolute', // Posicionamento absoluto
-            top: 50,              // Alinhar ao topo
-            right: 20,            // Alinhar à direita
-            zIndex: 4
-          
-          }}
-            onClick={() => {
-              setOldPhoto(user?.photo);
-              onSubmitPhoto(null);
-            }}
-            size="large"
-          >
-            <DeleteIcon color="error" sx={{ width:'50px' /*'80px'*/, height: '80px' }} />
-          </IconButton>
-          {avatares.map((avatar: string) => {
-            return (
+          {avatares.map((avatar: string) => (
+            <Box
+              key={avatar}
+              sx={{
+                position: 'relative',
+                flex: 1,
+                height: '100%',
+              }}
+            >
+              <img
+                alt="avatar"
+                src={avatar}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+              />
+              {user?.photo && (
               <IconButton
-                key={avatar}
-                sx={{ p: 0, ':hover': { opacity: 0.8, cursor: 'pointer' } }}
-                onClick={() => onSubmitPhoto(avatar)}
-                size="large"
+                sx={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  ':hover': { opacity: 0.8 },
+                }}
+                onClick={() => onSubmitPhoto(null)}
+                size="small"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img alt="avatar" src={avatar} width={98} height={98} />
+                <DeleteIcon color="error" sx={{ width: '20px', height: '20px' }} />
               </IconButton>
-            );
-          })}
+              )}
+            </Box>
+          ))}
         </Box>
+        
+        {user?.photo && (
         <Button
           component="label"
           sx={{ mt: '1rem', color: 'secondaryTons.red' }}
@@ -228,6 +237,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
         >
           Apagar foto atual
         </Button>
+        )}
         <Button component="label" sx={{ mt: '1rem' }} startIcon={<UploadIcon />}>
           {t('settings.upload')}
           <input
@@ -244,7 +254,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           />
         </Button>
       </ModalBase>
-      <Header title={t('settings')} />
+      {/*<Header title={t('settings')} />*/}
       <Box
         sx={{
           width: { mobile: '100%', notebook: '80%' },
@@ -273,6 +283,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             width: { mobile: '70%', notebook: '80%' },
             display: 'flex',
             m: '2vh 0 4vh',
+            //marginLeft: '-80px'
           }}
         >
           <Tooltip title={t('settings.changeAvatar')}>
@@ -287,6 +298,10 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
                   transition: 'all .3s ease-in-out',
                   zIndex: 3,
                   ':hover': { opacity: 0.8 },
+                  marginLeft: {
+                    mobile: '0px',
+                    notebook: '-250px',
+                  }
                 }}
               />
               <Box
@@ -297,6 +312,10 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
                   borderRadius: '50%',
                   position: 'absolute',
                   zIndex: 2,
+                  marginLeft: {
+                    mobile: '0px',
+                    notebook: '-250px',
+                  }
                 }}
               />
             </IconButton>
@@ -314,6 +333,10 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
               height: 'calc(100px - 2rem)',
               minWidth: '220px',
               marginTop: '10px',
+              marginLeft: {
+                mobile: '0px',
+                notebook:'-80px',
+              }
             }}
           >
             <Typography
@@ -349,6 +372,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             flexDirection: 'column',
             gap: '1rem',
             width: { mobile: '85%', notebook: '70%' },
+            paddingLeft: '16px',
           }}
         >
           <Box>
@@ -361,7 +385,11 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
               value={nameMask(name)}
               onChange={(e) => setName(e.target.value)}
               sx={{
-                height: '50px',
+                height: '50px', 
+                marginLeft: {
+                  mobile: '-15px',
+                  notebook: '-170px'
+                }
               }}
             />
             {errors.name && (
@@ -382,6 +410,10 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
               onChange={(e) => setEmail(e.target.value)}
               sx={{
                 height: '50px',
+                marginLeft: {
+                  mobile: '-15px',
+                  notebook: '-170px'
+                }
               }}
             />
             {errors.email && (
@@ -402,6 +434,10 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
               helperText={errors.phone}
               sx={{
                 height: '60px',
+                marginLeft: {
+                  mobile: '-15px',
+                  notebook: '-170px'
+                }
               }}
             />
             {errors.phone && (
@@ -421,6 +457,10 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             onChange={(e) => setDob(e.target.value)}
             error={!!errors.dob}
             helperText={errors.dob}
+            sx = {{ marginLeft: {
+              mobile: '-15px',
+              notebook: '-170px'
+            } }}
           />
         </Box>
 
@@ -435,6 +475,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             justifyContent: 'flex-start',
             paddingTop: '2rem',
             paddingBottom: '1rem',
+            
           }}
         >
           {t('settings.preferences')}
@@ -453,7 +494,9 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             label={t('settings.language.label')}
             options={LanguageOptions}
             size="medium"
-            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white', ml: 5 }}
+            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white', ml: 5, marginLeft: {mobile:'-30px',
+              notebook: '-105px'
+            } }}
             value={user?.preferences.language === 'en' ? LanguageOptions[0] : LanguageOptions[1]}
             callback={(value: string) => {
               i18next.changeLanguage(value);
@@ -464,7 +507,10 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             label={t('settings.decimal.label')}
             options={DecimalOptions}
             size="medium"
-            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white', ml: 5 }}
+            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white', ml: 5, marginLeft: {
+              mobile: '-30px',
+              notebook: '-105px'
+            } }}
             value={DecimalOptions[user?.preferences.decimal - 1]}
             callback={(value: number) => {
               setUser({ ...user, preferences: { ...user.preferences, decimal: value } });
