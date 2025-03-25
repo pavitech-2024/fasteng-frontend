@@ -56,8 +56,8 @@
   "asphalt.dosages.inputs-sum-invalid": "A soma dos valores das porcentagens dos materiais deve ser igual a 100.",
 
   "asphalt.dosages.indirect-tensile-strength": "Resistência à tração por compressão diametral",
-  "asphalt.dosages.fluency": "Fluência",
-  "asphalt.dosages.marshall-stability": "Estabilidade Marshall",
+  "asphalt.dosages.marshall.fluency": "Fluência",
+  "asphalt.dosages.marshall.stability": "Estabilidade Marshall",
   "asphalt.dosages.rbv": "Relação betume-vazios",
   "asphalt.dosages.vam": "Vazios do agregado mineral (VAM)",
   "asphalt.dosages.vv": "Volume de vazios",

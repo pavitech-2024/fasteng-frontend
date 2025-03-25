@@ -49,6 +49,7 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
   console.log('🚀 ~ constMarshall_Step5= ~ data:', data);
   const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
+  console.log("🚀 ~ constMarshall_Step5= ~ gmmRows:", gmmRows)
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [selectedMethod, setSelectedMethod] = useState({
     dmt: data?.method === 'DMT',
@@ -260,7 +261,8 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
   const calculateGmmData = async () => {
     if (data.temperatureOfWater === null) {
       setGmmErrorMsg('errors.empty-water-temperature');
-      throw new Error('errors.empty-water-temperature');
+      toast.error(t('errors.empty-water-temperature'));
+      return;
     }
 
     toast.promise(
