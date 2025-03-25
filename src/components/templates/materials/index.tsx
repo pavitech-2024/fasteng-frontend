@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { SoilSample } from '@/interfaces/soils';
 import Header from '@/components/organisms/header';
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
+  IconButton,
 } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import Search from '@/components/atoms/inputs/search';
@@ -29,6 +30,8 @@ import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import Link from 'next/link';
 import { Edit } from '@mui/icons-material';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 
 interface MaterialsTemplateProps {
   materials: SoilSample[] | AsphaltMaterial[] | ConcreteMaterial[];
@@ -227,6 +230,9 @@ const MaterialsTemplate = ({
                   width: { mobile: '100%', notebook: '75%' },
                   maxWidth: '450px',
                   height: '39px',
+                  '& .MuiSvgIcon-root': {
+                    fontSize: '45px',
+                  },
                 }}
                 value={searchValue}
                 setValue={setSearchValue}
@@ -251,15 +257,17 @@ const MaterialsTemplate = ({
               color: 'primaryTons.white',
               bgcolor: 'primary.main',
               height: { mobile: '36px', notebook: '28px' },
-              width: { mobile: '36px', notebook: 'fit-content' },
+              //width: { mobile: '36px', notebook: 'fit-content' },
+              width: { mobile: 'fit-content', notebook: 'fit-content' },
               borderRadius: '20px',
-              p: { mobile: 0, notebook: '0 12px' },
+              p: { mobile: '0 10px', notebook: '0 12px' },
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontWeight: '700',
               ml: '2px',
               cursor: 'pointer',
+              gap: '4px',
 
               '&:hover': {
                 bgcolor: 'primary.light',
@@ -273,8 +281,8 @@ const MaterialsTemplate = ({
             <AddIcon sx={{ fontSize: '1.15rem', fontWeight: 700 }} />
             <Typography
               sx={{
-                display: { mobile: 'none', notebook: 'flex' },
-                fontSize: '1rem',
+                display: { mobile: 'flex', notebook: 'flex' },
+                fontSize: '0.8rem',
                 fontWeight: 700,
                 lineHeight: '1.1rem',
                 ml: '4px',
@@ -294,21 +302,30 @@ const MaterialsTemplate = ({
             border: '1px solid rgba(0,0,0,0.17)',
             mt: '1rem',
             background: 'primaryTons.white',
+            overflowX: 'hidden',
           }}
         >
-          <TableContainer sx={{ borderRadius: '20px' }}>
-            <Table stickyHeader aria-label="sticky table">
+          {/*<TableContainer sx={{ borderRadius: '20px' }}>*/}
+          <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'hidden' }}>
+            {/*<Table stickyHeader aria-label="sticky table">*/}
+            <Table sx={{ width: '100%', tableLayout: 'fixed' }} aria-label="materials table">
               <TableHead>
                 <TableRow>
                   {columns.map((column) => (
                     <TableCell
                       key={column.id}
-                      align="center"
+                      sx={{
+                        fontWeight: 'bold',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        width: column.width,
+                      }}
+                      /*align="center"
                       style={{
                         width: column.width,
                         fontWeight: '700',
                         fontSize: '1rem',
-                      }}
+                      }}*/
                     >
                       {column.label}
                     </TableCell>

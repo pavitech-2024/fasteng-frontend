@@ -14,6 +14,7 @@ const Loading = ({ size = 60, color = 'secondary' }: ILoading) => {
         alignItems: 'center',
         width: '100%',
         height: '100%',
+        minHeight: '100vh',
       }}
     >
       <CircularProgress size={size} color={color} />

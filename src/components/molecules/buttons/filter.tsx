@@ -18,6 +18,7 @@ const Filter = ({ options, callback }: FilterProps) => {
       sx={{
         display: 'flex',
         justifyContent: { mobile: 'center', notebook: 'end' },
+        width: '100%',
       }}
     >
       {options.map((option) => (
