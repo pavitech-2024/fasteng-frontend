@@ -181,7 +181,7 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
     } else {
       setNextDisabled(true);
     }
-  },[binderTrialData.percentsOfDosage])
+  }, [binderTrialData.percentsOfDosage]);
 
   return (
     <>
