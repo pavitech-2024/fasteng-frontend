@@ -175,7 +175,13 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
     }
   }, [binderTrialData, materialSelectionData]);
 
-  setNextDisabled(false);
+  useEffect(() => {
+    if (binderTrialData.percentsOfDosage.length > 0) {
+      setNextDisabled(false);
+    } else {
+      setNextDisabled(true);
+    }
+  }, [binderTrialData.percentsOfDosage]);
 
   return (
     <>

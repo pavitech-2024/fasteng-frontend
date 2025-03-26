@@ -380,7 +380,7 @@ class Marshall_SERVICE implements IEssayService {
         const userData = userId ? userId : user;
 
         if (!trial) throw t('errors.empty-trial');
-        if (percentsOfDosage.length === 0) throw t('errors.empty-percents-dosage');
+        if (percentsOfDosage.length === 0) throw t('errors.binder-trial-not-calculated');
 
         const binderTrialData = {
           trial,

@@ -72,6 +72,7 @@ interface MarshallBinderTrialData {
 }
 
 interface MarshallMaximumMixtureDensityData {
+  method: string;
   dmt: {
     [key: string]: number;
   }[];
@@ -318,6 +319,7 @@ const initialState = {
     },
   },
   maximumMixtureDensityData: {
+    method: null,
     dmt: [],
     gmm: [
       {
