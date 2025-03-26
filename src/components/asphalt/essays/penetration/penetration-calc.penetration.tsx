@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 const Penetration_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { penetrationCalc: data, setData } = usePenetrationStore();
 
-  const [inputFields, setInputFields] = useState(data.points || [0]); // Inicialize com o valor existente ou vazio
+  const [inputFields, setInputFields] = useState(data.points || [null]);
 
   const handleErase = () => {
     try {
@@ -27,7 +27,7 @@ const Penetration_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
   };
 
   const handleAdd = () => {
-    const newInputFields = [...inputFields, 0];
+    const newInputFields = [...inputFields, null];
     setInputFields(newInputFields);
     setData({ step: 1, key: 'points', value: newInputFields });
     setNextDisabled(true);
@@ -55,7 +55,7 @@ const Penetration_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
   };
 
   return (
-    <Box sx={{ width: '50%', marginX: 'auto' }}>
+    <Box sx={{ width: { mobile: '100%', tablet: '100%', desktop: '50%' }, marginX: 'auto' }}>
       {inputFields.map((input, index) => (
         <Box
           key={index}
@@ -79,7 +79,6 @@ const Penetration_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
             }}
             adornment="dmm"
             type="number"
-            inputProps={{ min: 0 }}
           />
         </Box>
       ))}

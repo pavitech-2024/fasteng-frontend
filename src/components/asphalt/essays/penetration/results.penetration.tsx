@@ -11,11 +11,10 @@ const Penetration_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
   const { results: results, generalData } = usePenetrationStore();
 
   const data = {
-    penetration: results.penetration.toString(),
+    penetration: Number(results.penetration.toFixed(2)).toString(),
     alerts: results.alerts[0],
   };
 
-  // criando o objeto que será passado para o componente ExperimentResume
   const experimentResumeData: ExperimentResumeData = {
     experimentName: generalData.name,
     materials: [{ name: generalData.material.name, type: generalData.material.type }],
