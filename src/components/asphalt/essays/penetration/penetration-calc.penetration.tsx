@@ -55,7 +55,7 @@ const Penetration_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
   };
 
   return (
-    <Box sx={{ width: { mobile: '100%', tablet: '100%', desktop: '50%'}, marginX: 'auto' }}>
+    <Box sx={{ width: { mobile: '100%', tablet: '100%', desktop: '50%' }, marginX: 'auto' }}>
       {inputFields.map((input, index) => (
         <Box
           key={index}
