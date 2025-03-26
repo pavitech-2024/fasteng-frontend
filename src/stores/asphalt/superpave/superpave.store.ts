@@ -922,7 +922,7 @@ const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(
 
         clearStore: () => {
           sessionStorage.clear();
-          set(initialState);
+          // set(initialState);
         },
       }),
       {
