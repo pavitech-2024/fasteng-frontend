@@ -80,11 +80,11 @@ const usePenetrationStore = create<PenetrationData & PenetrationActions>()(
             else return { ...state, [stepVariant[step]]: value };
           }),
 
-        reset: ({ step }) => {
+        reset: () => {
           set(initialState);
-          return {
-            [stepVariant[step]]: null,
-          };
+          // return {
+          //   [stepVariant[step]]: null,
+          // };
         },
       }),
       {
