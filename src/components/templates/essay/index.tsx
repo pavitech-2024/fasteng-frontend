@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Stepper } from '../../atoms/stepper';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
@@ -40,12 +40,36 @@ const EssayTemplate = ({
   // persiste the active step in the sessionStorage, if the user reload the page, the active step will be the same  example: cbr-{step}
   const step = parseInt(sessionStorage.getItem(essay + '-step')) || 0;
   const [activeStep, setActiveStep] = useSessionStorage({ key: essay + '-step', initialValue: step });
+  const [isEssaySaved, setIsEssaySaved] = useState(false);
+  const [nextDisabled, setNextDisabled] = useState(true);
 
-  const [nextDisabled, setNextDisabled] = React.useState(true);
-
+  /**
+   * Function to handle the click event of the next button.
+   * If the user is in the last step, it will save the essay and in the next click it will reset the essay.
+   * If the user is not in the last step, it will call the nextCallback function with the current step and data.
+   * If the nextCallback function is successful, it will go to the next step and thenext button will change to save essay and if the user save the essay the button will change to reset essay.
+   * If the nextCallback function fails, it will show an error toast.
+   *
+   * @remarks
+   * This function is used in the EssayTemplate component.
+   */
   async function handleNextClick() {
+    if (isEssaySaved && childrens.length - 1 === activeStep) {
+      childrens.forEach(({ children }) => {
+        const essayProps = children.props[essay];
+        if (essayProps) {
+          essayProps.store_actions.reset();
+        }
+      });
+      sessionStorage.clear();
+      setIsEssaySaved(false);
+      setActiveStep(0);
+      return;
+    }
+
+
     // to check if the button is saving or going to the next step
-    const isSaving = childrens.length - 1 === activeStep ? true : false;
+    const isSaving = childrens.length - 1 === activeStep;
 
     // create a loading toast
     const nextToast = toast.loading(isSaving ? t('loading.save.pending') : t('loading.nextStep.pending'), {
@@ -65,7 +89,9 @@ const EssayTemplate = ({
         closeButton: true,
       });
 
-      if (!isSaving) {
+      if (isSaving) {
+        setIsEssaySaved(true);
+      } else {
         // if the callback function is successful, go to the next step
         setActiveStep(activeStep + 1);
         // disable the next step button
@@ -148,8 +174,16 @@ const EssayTemplate = ({
       <Footer
         previousText={t('footer.previous')}
         previousDisabled={activeStep === 0}
-        handlePreviousClick={() => setActiveStep(activeStep - 1)}
-        nextText={childrens.length - 1 === activeStep ? t('footer.save') : t('footer.next')}
+        handlePreviousClick={() => {
+          setActiveStep(activeStep - 1)
+        }}
+        nextText={
+          isEssaySaved && childrens.length - 1 === activeStep
+            ? t('footer.newEssay')
+            : childrens.length - 1 === activeStep
+            ? t('footer.save')
+            : t('footer.next')
+        }
         nextDisabled={nextDisabled}
         handleNextClick={handleNextClick}
       />

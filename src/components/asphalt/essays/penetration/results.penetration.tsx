@@ -11,14 +11,15 @@ const Penetration_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
   const { results: results, generalData } = usePenetrationStore();
 
   const data = {
-    penetration: Number(results.penetration.toFixed(2)).toString(),
-    alerts: results.alerts[0],
+    penetration: Number(results.penetration?.toFixed(2)).toString(),
+    alerts: Array.isArray(results.alerts) ? results.alerts[0] : null,
   };
 
   const experimentResumeData: ExperimentResumeData = {
     experimentName: generalData.name,
-    materials: [{ name: generalData.material.name, type: generalData.material.type }],
+    materials: [{ name: generalData.material?.name, type: generalData.material?.type }],
   };
+  console.log("🚀 ~ constPenetration_Results= ~ experimentResumeData:", experimentResumeData)
 
   return (
     <>

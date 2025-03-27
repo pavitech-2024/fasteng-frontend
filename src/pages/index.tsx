@@ -28,20 +28,23 @@ const Login: NextPage = () => {
   const date = new Date();
   const year = date.getFullYear();
 
+  const [loading, setLoading] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const roxApiUrl = 'https://minhaconta.fastengapp.com.br/api/forgot-password ';
   const [roxIsRunning, setRoxIsRunning] = useState(true);
   const handleLogin = async () => {
+    setLoading(true);
     try {
       toast.promise(async () => await signIn(email, password), {
         pending: t('login.toast loading'),
         success: t('login.toast success'),
         error: t('login.toast error'),
       });
-    } catch (error) {}
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -272,7 +275,7 @@ const Login: NextPage = () => {
               >
                 <Button
                   text={t('login.enter')}
-                  disabled={password === '' || email === ''}
+                  disabled={password === '' || email === '' || loading}
                   handleClick={() => handleLogin()}
                 />
 

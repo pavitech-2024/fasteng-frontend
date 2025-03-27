@@ -38,5 +38,7 @@
   "asphalt.essays.abrasion.graduation": "Choose the graduation",
   "asphalt.essays.abrasion.initial-mass": "Initial mass",
 
-  "asphalt.essays.granulometryResults": "Granulometry Results by Sieving"
+  "asphalt.essays.granulometryResults": "Granulometry Results by Sieving",
+  "erase": "Erase",
+  "add": "Add"
 }
