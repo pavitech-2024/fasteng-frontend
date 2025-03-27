@@ -2,5 +2,7 @@
   "asphalt.materia": "Material",
   "asphalt.essays.penetration": "Ensaio de Penetração",
   "penetration.step-2-description": "Preencha todos os campos abaixo.",
-  "penetration.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde."
+  "penetration.step-3-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
+  "errors.empty-name": "O nome do ensaio deve ser preenchido.",
+  "errors.empty-material": "O material deve ser preenchido."
 }
