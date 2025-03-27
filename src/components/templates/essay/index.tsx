@@ -67,7 +67,6 @@ const EssayTemplate = ({
       return;
     }
 
-
     // to check if the button is saving or going to the next step
     const isSaving = childrens.length - 1 === activeStep;
 
@@ -175,7 +174,7 @@ const EssayTemplate = ({
         previousText={t('footer.previous')}
         previousDisabled={activeStep === 0}
         handlePreviousClick={() => {
-          setActiveStep(activeStep - 1)
+          setActiveStep(activeStep - 1);
         }}
         nextText={
           isEssaySaved && childrens.length - 1 === activeStep
