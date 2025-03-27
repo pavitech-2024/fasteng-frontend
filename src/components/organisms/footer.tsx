@@ -57,7 +57,9 @@ export const Footer = ({
       </Button>
 
       <Button
-        endIcon={nextText === t('footer.next') ? <NextIcon /> : nextText === t('footer.newEssay') ? <></> : <SaveIcon />}
+        endIcon={
+          nextText === t('footer.next') ? <NextIcon /> : nextText === t('footer.newEssay') ? <></> : <SaveIcon />
+        }
         variant="contained"
         disabled={nextDisabled}
         onClick={handleNextClick}

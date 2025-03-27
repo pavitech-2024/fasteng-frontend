@@ -19,7 +19,7 @@ const Penetration_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) 
     experimentName: generalData.name,
     materials: [{ name: generalData.material?.name, type: generalData.material?.type }],
   };
-  console.log("🚀 ~ constPenetration_Results= ~ experimentResumeData:", experimentResumeData)
+  console.log('🚀 ~ constPenetration_Results= ~ experimentResumeData:', experimentResumeData);
 
   return (
     <>
