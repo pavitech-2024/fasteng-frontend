@@ -177,7 +177,7 @@ const Marshall_Step6 = ({
     },
     {
       field: 'stability',
-      headerName: t('asphalt.dosages.marshall.stability') + '(N)',
+      headerName: t('asphalt.dosages.stability') + '(N)',
       width: 125,
       flex: 1,
       headerAlign: 'center',
@@ -187,7 +187,7 @@ const Marshall_Step6 = ({
         const index = data[tenor].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'cm'}
+            adornment={''}
             type="number"
             value={data[tenor][index]?.stability}
             onChange={(e) => {
@@ -204,7 +204,7 @@ const Marshall_Step6 = ({
     },
     {
       field: 'fluency',
-      headerName: t('asphalt.dosages.marshall.fluency') + '(mm)',
+      headerName: t('asphalt.dosages.fluency') + '(mm)',
       width: 150,
       flex: 1,
       headerAlign: 'center',
@@ -214,7 +214,7 @@ const Marshall_Step6 = ({
         const index = data[tenor].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'cm'}
+            adornment={''}
             type="number"
             value={data[tenor][index]?.fluency}
             onChange={(e) => {
