@@ -178,7 +178,7 @@ const useABCPStore = create<ABCPData & ABCPActions>()(
             }
           }),
 
-reset: () => {
+        reset: () => {
           set(initialState);
         },
       }),

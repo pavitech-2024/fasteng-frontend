@@ -23,25 +23,30 @@ export type ChapmanData = {
 
 export type ChapmanActions = {
   setData: ({ step, key, value }: setDataType) => void;
+  reset: () => void;
 };
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'results' };
+
+const initialState = {
+  generalData: {
+    userId: null,
+    name: null,
+    material: null,
+  },
+  step2Data: {
+    displaced_volume: null,
+  },
+  results: {
+    m_e: null,
+  },
+}
 
 const useChapmanStore = create<ChapmanData & ChapmanActions>()(
   devtools(
     persist(
       (set) => ({
-        generalData: {
-          userId: null,
-          name: null,
-          material: null,
-        },
-        step2Data: {
-          displaced_volume: null,
-        },
-        results: {
-          m_e: null,
-        },
+        ...initialState,
 
         /**
          * Updates the value of the given key in the state of the store for the given step.
@@ -52,7 +57,7 @@ const useChapmanStore = create<ChapmanData & ChapmanActions>()(
          * If not given, the value is set as the whole state of the given step.
          * @param {unknown} data.value The new value to set in the state of the given step.
          */
-setData: ({ step, key, value }) =>
+        setData: ({ step, key, value }) =>
           set((state) => {
             if (key)
               return {
@@ -64,6 +69,10 @@ setData: ({ step, key, value }) =>
               };
             else return { ...state, [stepVariant[step]]: value };
           }),
+
+          reset: () => {
+            set(initialState)
+          }
       }),
       {
         name: 'chapman-storage',
