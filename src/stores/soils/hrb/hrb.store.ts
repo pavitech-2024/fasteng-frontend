@@ -37,48 +37,53 @@ export type HrbData = {
 
 export type HrbActions = {
   setData: ({ step, key, value }: setDataType) => void;
+  reset: () => void
 };
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'results' };
+
+const initialState = {
+  generalData: {
+    userId: null,
+    name: null,
+    sample: null,
+    operator: null,
+    calculist: null,
+    description: null,
+  },
+
+  step2Data: {
+    liquidity_limit: null,
+    plasticity_limit: null,
+    tableData: [
+      {
+        sieve: 2,
+        percent_passant: null,
+      },
+
+      {
+        sieve: 0.43,
+        percent_passant: null,
+      },
+
+      {
+        sieve: 0.075,
+        percent_passant: null,
+      },
+    ],
+  },
+  results: {
+    classification: null,
+    group_index: null,
+    plasticity_index: null,
+  },
+}
 
 const useHrbStore = create<HrbData & HrbActions>()(
   devtools(
     persist(
       (set) => ({
-        generalData: {
-          userId: null,
-          name: null,
-          sample: null,
-          operator: null,
-          calculist: null,
-          description: null,
-        },
-
-        step2Data: {
-          liquidity_limit: null,
-          plasticity_limit: null,
-          tableData: [
-            {
-              sieve: 2,
-              percent_passant: null,
-            },
-
-            {
-              sieve: 0.43,
-              percent_passant: null,
-            },
-
-            {
-              sieve: 0.075,
-              percent_passant: null,
-            },
-          ],
-        },
-        results: {
-          classification: null,
-          group_index: null,
-          plasticity_index: null,
-        },
+        ...initialState,
 
         /**
          * Updates the value of the given key in the state of the store for the given step.
@@ -89,7 +94,7 @@ const useHrbStore = create<HrbData & HrbActions>()(
          * If not given, the value is set as the whole state of the given step.
          * @param {unknown} data.value The new value to set in the state of the given step.
          */
-setData: ({ step, key, value }) =>
+        setData: ({ step, key, value }) =>
           set((state) => {
             if (key)
               return {
@@ -101,6 +106,10 @@ setData: ({ step, key, value }) =>
               };
             else return { ...state, [stepVariant[step]]: value };
           }),
+
+          reset: () => {
+            set(initialState)
+          }
       }),
       {
         name: 'hrb-store',

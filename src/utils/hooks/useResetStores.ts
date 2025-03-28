@@ -18,6 +18,10 @@ import useShapeIndexStore from "@/stores/asphalt/shapeIndex/shapeIndex.store";
 import useSofteningPointStore from "@/stores/asphalt/softeningPoint/softeningPoint.store";
 import useSpecifyMassStore from "@/stores/asphalt/specifyMass/specifyMass.store";
 import useViscosityRotationalStore from "@/stores/asphalt/viscosityRotational/viscosityRotational.store";
+import useCbrStore from "@/stores/soils/cbr/cbr.store";
+import useCompressionStore from "@/stores/soils/compression/compression.store";
+import useSoilsGranulometryStore from "@/stores/soils/granulometry/granulometry.store";
+import useHrbStore from "@/stores/soils/hrb/hrb.store";
 
 const useResetStores = () => {
 
@@ -45,7 +49,10 @@ const useResetStores = () => {
     useIggStore(),
 
     // soil stores
-    
+    useCbrStore(),
+    useCompressionStore(),
+    useSoilsGranulometryStore(),
+    useHrbStore()
   ]
 
   return () => {

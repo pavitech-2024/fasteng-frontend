@@ -1,3 +1,4 @@
+import { StoreActions } from '@/interfaces/common/stores/storeActions.interface';
 import { SoilSample } from '@/interfaces/soils';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
@@ -77,7 +78,7 @@ const initialState = {
   },
 };
 
-const useSoilsGranulometryStore = create<SoilsGranulometryData & SoilsGranulometryActions>()(
+const useSoilsGranulometryStore = create<SoilsGranulometryData & StoreActions>()(
   devtools(
     persist(
       (set) => ({
@@ -92,7 +93,7 @@ const useSoilsGranulometryStore = create<SoilsGranulometryData & SoilsGranulomet
          * If not given, the value is set as the whole state of the given step.
          * @param {unknown} data.value The new value to set in the state of the given step.
          */
-setData: ({ step, key, value }) =>
+        setData: ({ step, key, value }) =>
           set((state) => {
             if (key)
               return {
@@ -105,7 +106,7 @@ setData: ({ step, key, value }) =>
             else return { ...state, [stepVariant[step]]: value };
           }),
 
-reset: () => {
+        reset: () => {
           set(initialState);
         },
       }),

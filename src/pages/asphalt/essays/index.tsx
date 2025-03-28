@@ -25,7 +25,6 @@ import {
   SpecifyMassIcon,
 } from '@/assets';
 import { t } from 'i18next';
-import useAbrasionStore from '@/stores/asphalt/abrasion/abrasion.store';
 
 const AsphaltEssays: NextPage = () => {
   const filterOptions: FilterOption[] = [
