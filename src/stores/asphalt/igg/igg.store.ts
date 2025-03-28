@@ -1,3 +1,4 @@
+import { StoreActions } from '@/interfaces/common/stores/storeActions.interface';
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
@@ -98,7 +99,7 @@ const initialState: IggData = {
   },
 };
 
-const useIggStore = create<IggData & IggActions>()(
+const useIggStore = create<IggData & StoreActions>()(
   devtools(
     persist(
       (set) => ({
@@ -113,7 +114,7 @@ const useIggStore = create<IggData & IggActions>()(
          * If not given, the value is set as the whole state of the given step.
          * @param {unknown} data.value The new value to set in the state of the given step.
          */
-setData: ({ step, key, value }) =>
+        setData: ({ step, key, value }) =>
           set((state) => {
             if (key)
               return {
@@ -126,14 +127,8 @@ setData: ({ step, key, value }) =>
             else return { ...state, [stepVariant[step]]: value };
           }),
 
-        reset: ({ step }) => {
-          set((state) => {
-            const resetState = { ...state };
-
-            resetState[stepVariant[step]] = initialState[stepVariant[step]];
-
-            return resetState;
-          });
+        reset: () => {
+          set(initialState);
         },
       }),
       {

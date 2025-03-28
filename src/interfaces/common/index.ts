@@ -12,7 +12,6 @@ export type Essay = {
   title: string;
   icon: StaticImageData;
   link: string;
-  store: StoreActions;
   type?: string;
 };
 

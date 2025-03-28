@@ -1,3 +1,4 @@
+import { StoreActions } from '@/interfaces/common/stores/storeActions.interface';
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
@@ -108,7 +109,7 @@ const initialState: FwdData = {
   },
 };
 
-const useFwdStore = create<FwdData & FwdActions>()(
+const useFwdStore = create<FwdData & StoreActions>()(
   devtools(
     persist(
       (set) => ({
@@ -136,14 +137,8 @@ setData: ({ step, key, value }) =>
             else return { ...state, [stepVariant[step]]: value };
           }),
 
-        reset: ({ step }) => {
-          set((state) => {
-            const resetState = { ...state };
-
-            resetState[stepVariant[step]] = initialState[stepVariant[step]];
-
-            return resetState;
-          });
+        reset: () => {
+          set(initialState);
         },
       }),
       {

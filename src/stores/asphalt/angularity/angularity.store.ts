@@ -1,4 +1,5 @@
 import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { StoreActions } from '@/interfaces/common/stores/storeActions.interface';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
@@ -51,30 +52,34 @@ const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'results' };
 
 type setDataType = { step: number; key?: string; value: unknown };
 
-const useAngularityStore = create<AngularityData & AngularityActions>()(
+const initialState = {
+  generalData: {
+    userId: null,
+    name: null,
+    material: null,
+    operator: null,
+    calculist: null,
+    description: null,
+  },
+  step2Data: {
+    relative_density: null,
+    cylinder_volume: null,
+    method: null,
+    determinations: [],
+  },
+  results: {
+    angularities: [],
+    averageOfAll: null,
+    porcentagesOfVoids: [],
+    alerts: [],
+  },
+};
+
+const useAngularityStore = create<AngularityData & StoreActions>()(
   devtools(
     persist(
       (set) => ({
-        generalData: {
-          userId: null,
-          name: null,
-          material: null,
-          operator: null,
-          calculist: null,
-          description: null,
-        },
-        step2Data: {
-          relative_density: null,
-          cylinder_volume: null,
-          method: null,
-          determinations: [],
-        },
-        results: {
-          angularities: [],
-          averageOfAll: null,
-          porcentagesOfVoids: [],
-          alerts: [],
-        },
+        ...initialState,
 
         /**
          * Updates the value of the given key in the state of the store for the given step.
@@ -85,7 +90,7 @@ const useAngularityStore = create<AngularityData & AngularityActions>()(
          * If not given, the value is set as the whole state of the given step.
          * @param {unknown} data.value The new value to set in the state of the given step.
          */
-setData: ({ step, key, value }) =>
+        setData: ({ step, key, value }) =>
           set((state) => {
             if (key)
               return {
@@ -97,6 +102,10 @@ setData: ({ step, key, value }) =>
               };
             else return { ...state, [stepVariant[step]]: value };
           }),
+
+        reset: () => {
+          set(initialState);
+        },
       }),
       {
         name: 'angularity-store',

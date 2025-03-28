@@ -26,25 +26,6 @@ import {
 } from '@/assets';
 import { t } from 'i18next';
 import useAbrasionStore from '@/stores/asphalt/abrasion/abrasion.store';
-import useAdhesivenessStore from '@/stores/asphalt/adhesiveness/adhesiveness.store';
-import useDuctilityStore from '@/stores/asphalt/ductility/ductility.store';
-import useAngularityStore from '@/stores/asphalt/angularity/angularity.store';
-import usePenetrationStore from '@/stores/asphalt/penetration/penetration.store';
-import useRtfoStore from '@/stores/asphalt/rtfo/rtfo.store';
-import useSandEquivalentStore from '@/stores/asphalt/sandEquivalent/sandEquivalent.store';
-import useAsphaltGranulometryStore from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
-import useShapeIndexStore from '@/stores/asphalt/shapeIndex/shapeIndex.store';
-import useElongatedParticlesStore from '@/stores/asphalt/elongatedParticles/elongatedParticles.store';
-import useSpecifyMassStore from '@/stores/asphalt/specifyMass/specifyMass.store';
-import useSofteningPointStore from '@/stores/asphalt/softeningPoint/softeningPoint.store';
-import useFlashPointStore from '@/stores/asphalt/flashPoint/flashPoint.store';
-import useElasticRecoveryStore from '@/stores/asphalt/elasticRecovery/elasticRecovery.store';
-import useViscosityRotationalStore from '@/stores/asphalt/viscosityRotational/viscosityRotational.store';
-import useSayboltFurolStore from '@/stores/asphalt/sayboltFurol/sayboltFurol.store';
-import useRtcdStore from '@/stores/asphalt/rtcd/rtcd.store';
-import useFwdStore from '@/stores/asphalt/fwd/fwd.store';
-import useDduiStore from '@/stores/asphalt/ddui/ddui.store';
-import useIggStore from '@/stores/asphalt/igg/igg.store';
 
 const AsphaltEssays: NextPage = () => {
   const filterOptions: FilterOption[] = [
@@ -61,7 +42,6 @@ const AsphaltEssays: NextPage = () => {
       icon: AbrasionIcon,
       key: 'abrasion',
       link: '/asphalt/essays/abrasion',
-      store: useAbrasionStore(),
       type: 'aggregates',
     },
     {
@@ -69,7 +49,6 @@ const AsphaltEssays: NextPage = () => {
       icon: AdhesivenessIcon,
       key: 'adhesiveness',
       link: '/asphalt/essays/adhesiveness',
-      store: useAdhesivenessStore(),
       type: 'aggregates',
     },
     {
@@ -77,7 +56,6 @@ const AsphaltEssays: NextPage = () => {
       icon: DuctilityIcon,
       key: 'ductility',
       link: '/asphalt/essays/ductility',
-      store: useDuctilityStore(),
       type: 'asphaltBinder',
     },
     {
@@ -85,7 +63,6 @@ const AsphaltEssays: NextPage = () => {
       icon: AngularityIcon,
       key: 'angularity',
       link: '/asphalt/essays/angularity',
-      store: useAngularityStore(),
       type: 'aggregates',
     },
     {
@@ -93,7 +70,6 @@ const AsphaltEssays: NextPage = () => {
       icon: PenetrationIcon,
       key: 'penetration',
       link: '/asphalt/essays/penetration',
-      store: usePenetrationStore(),
       type: 'asphaltBinder',
     },
     {
@@ -101,7 +77,6 @@ const AsphaltEssays: NextPage = () => {
       icon: RtfoIcon,
       key: 'rtfo',
       link: '/asphalt/essays/rtfo',
-      store: useRtfoStore(),
       type: 'asphaltBinder',
     },
     {
@@ -109,7 +84,6 @@ const AsphaltEssays: NextPage = () => {
       icon: SandEquivalentIcon,
       key: 'sandEquivalent',
       link: '/asphalt/essays/sandEquivalent',
-      store: useSandEquivalentStore(),
       type: 'aggregates',
     },
     {
@@ -117,7 +91,6 @@ const AsphaltEssays: NextPage = () => {
       icon: GranulometryIcon,
       key: 'granulometry',
       link: '/asphalt/essays/granulometry',
-      store: useAsphaltGranulometryStore(),
       type: 'aggregates',
     },
     {
@@ -125,7 +98,6 @@ const AsphaltEssays: NextPage = () => {
       icon: ShapeIndexIcon,
       key: 'shapeIndex',
       link: '/asphalt/essays/shapeIndex',
-      store: useShapeIndexStore(),
       type: 'aggregates',
     },
     {
@@ -133,7 +105,6 @@ const AsphaltEssays: NextPage = () => {
       icon: SpecifyMassIcon,
       key: 'specifyMass',
       link: '/asphalt/essays/specifyMass',
-      store: useSpecifyMassStore(),
       type: 'aggregates',
     },
     {
@@ -141,7 +112,6 @@ const AsphaltEssays: NextPage = () => {
       icon: ElongatedParticlesIcon,
       key: 'elongatedParticles',
       link: '/asphalt/essays/elongatedParticles',
-      store: useElongatedParticlesStore(),
       type: 'aggregates',
     },
     {
@@ -149,7 +119,6 @@ const AsphaltEssays: NextPage = () => {
       icon: SofteningPointIcon,
       key: 'softeningPoint',
       link: '/asphalt/essays/softeningPoint',
-      store: useSofteningPointStore(),
       type: 'asphaltBinder',
     },
     {
@@ -157,7 +126,6 @@ const AsphaltEssays: NextPage = () => {
       icon: FlashPointIcon,
       key: 'flashPoint',
       link: '/asphalt/essays/flashPoint',
-      store: useFlashPointStore(),
       type: 'asphaltBinder',
     },
     {
@@ -165,7 +133,6 @@ const AsphaltEssays: NextPage = () => {
       icon: ElasticRecoveryIcon,
       key: 'elasticRecovery',
       link: '/asphalt/essays/elasticRecovery',
-      store: useElasticRecoveryStore(),
       type: 'asphaltBinder',
     },
     {
@@ -173,7 +140,6 @@ const AsphaltEssays: NextPage = () => {
       icon: RotationalIcon,
       key: 'rotational',
       link: '/asphalt/essays/viscosityRotational',
-      store: useViscosityRotationalStore(),
       type: 'asphaltBinder',
     },
     {
@@ -181,7 +147,6 @@ const AsphaltEssays: NextPage = () => {
       icon: SayboltFurolIcon,
       key: 'saybolt',
       link: '/asphalt/essays/sayboltFurol',
-      store: useSayboltFurolStore(),
       type: 'asphaltBinder',
     },
     {
@@ -189,7 +154,6 @@ const AsphaltEssays: NextPage = () => {
       icon: RtcdIcon,
       key: 'rtcd',
       link: '/asphalt/essays/rtcd',
-      store: useRtcdStore(),
       type: 'asphaltMix',
     },
     {
@@ -197,7 +161,6 @@ const AsphaltEssays: NextPage = () => {
       icon: FwdIcon,
       key: 'fwd',
       link: '/asphalt/essays/fwd',
-      store: useFwdStore(),
       type: 'highwaySection',
     },
     {
@@ -205,7 +168,6 @@ const AsphaltEssays: NextPage = () => {
       icon: DduiIcon,
       key: 'ddui',
       link: '/asphalt/essays/ddui',
-      store: useDduiStore(),
       type: 'asphaltMix',
     },
     {
@@ -213,7 +175,6 @@ const AsphaltEssays: NextPage = () => {
       icon: IggIcon,
       key: 'igg',
       link: '/asphalt/essays/igg',
-      store: useIggStore(),
       type: 'highwaySection',
     },
   ];

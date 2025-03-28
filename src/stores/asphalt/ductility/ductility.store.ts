@@ -1,4 +1,5 @@
 import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { StoreActions } from '@/interfaces/common/stores/storeActions.interface';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
@@ -35,26 +36,30 @@ const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'results' };
 
 type setDataType = { step: number; key?: string; value: unknown };
 
-const useDuctilityStore = create<DuctilityData & DuctilityActions>()(
+const initialState = {
+  generalData: {
+    userId: null,
+    name: null,
+    material: null,
+    operator: null,
+    calculist: null,
+    description: null,
+  },
+  step2Data: {
+    first_rupture_length: null,
+    second_rupture_length: null,
+    third_rupture_length: null,
+  },
+  results: {
+    ductility: null,
+  }
+}
+
+const useDuctilityStore = create<DuctilityData & StoreActions>()(
   devtools(
     persist(
       (set) => ({
-        generalData: {
-          userId: null,
-          name: null,
-          material: null,
-          operator: null,
-          calculist: null,
-          description: null,
-        },
-        step2Data: {
-          first_rupture_length: null,
-          second_rupture_length: null,
-          third_rupture_length: null,
-        },
-        results: {
-          ductility: null,
-        },
+        ...initialState,
 
         /**
          * Updates the value of the given key in the state of the store for the given step.
@@ -77,6 +82,10 @@ setData: ({ step, key, value }) =>
               };
             else return { ...state, [stepVariant[step]]: value };
           }),
+
+          reset: () => {
+            set(initialState)
+          }
       }),
       {
         name: 'ductility-store',

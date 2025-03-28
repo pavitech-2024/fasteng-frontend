@@ -3,9 +3,9 @@ import AsphaltGranulometry_Results from '@/components/asphalt/essays/granulometr
 import AsphaltGranulometry_Step2 from '@/components/asphalt/essays/granulometry/step2.granulometry';
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
+import { StoreActions } from '@/interfaces/common/stores/storeActions.interface';
 import AsphaltGranulometry_SERVICE from '@/services/asphalt/essays/granulometry/granulometry.service';
 import useAsphaltGranulometryStore, {
-  AsphaltGranulometryActions,
 } from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
 
 const AsphaltGranulometry = () => {
@@ -24,7 +24,7 @@ const AsphaltGranulometry = () => {
   granulometry.userId = userId;
 
   // set the store to the service
-  granulometry.store_actions = store as AsphaltGranulometryActions;
+  granulometry.store_actions = store as StoreActions;
 
   // inform the childrens with the step of the children and the part of the store that they will use
   const childrens = [
