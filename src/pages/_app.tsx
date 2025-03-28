@@ -15,14 +15,14 @@ import 'dayjs/locale/en';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useRouter } from 'next/router';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
+import useResetStores from '@/utils/hooks/useResetStores';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { i18n } = useTranslation();
   const locale = i18n.language === 'en' ? 'en' : 'en-gb';
 
   const { pathname } = useRouter();
-
-  const clearStore = useSuperpaveStore((state) => state.clearStore);
+  const resetStores = useResetStores();
 
   useEffect(() => {
     /**
@@ -37,10 +37,11 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
         if (!pathname.includes(keyString)) {
           sessionStorage.clear();
+          resetStores();
         }
       }
     }
-  }, [pathname, clearStore]);
+  }, [pathname]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>

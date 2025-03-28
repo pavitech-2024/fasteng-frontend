@@ -77,7 +77,7 @@ export type ABCPData = {
 
 export type ABCPActions = {
   setData: ({ step, key, value }: setDataType) => void;
-  reset: ({ step }: setDataType) => void;
+  reset: () => void;
 };
 
 const stepVariant = {
@@ -178,11 +178,8 @@ const useABCPStore = create<ABCPData & ABCPActions>()(
             }
           }),
 
-        reset: ({ step }) => {
+reset: () => {
           set(initialState);
-          return {
-            [stepVariant[step]]: null,
-          };
         },
       }),
       {

@@ -1,5 +1,6 @@
 import { t } from 'i18next';
 import { StaticImageData } from 'next/image';
+import { StoreActions } from './stores/storeActions.interface';
 
 export interface StandardData {
   name: string;
@@ -11,6 +12,7 @@ export type Essay = {
   title: string;
   icon: StaticImageData;
   link: string;
+  store: StoreActions;
   type?: string;
 };
 

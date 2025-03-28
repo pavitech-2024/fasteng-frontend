@@ -54,8 +54,11 @@ const EssayTemplate = ({
    * This function is used in the EssayTemplate component.
    */
   async function handleNextClick() {
+    console.log("🚀 ~ childrens.forEach ~ essay:", essay)
+
     if (isEssaySaved && childrens.length - 1 === activeStep) {
       childrens.forEach(({ children }) => {
+        console.log("🚀 ~ childrens.forEach ~ children:", children)
         const essayProps = children.props[essay];
         if (essayProps) {
           essayProps.store_actions.reset();

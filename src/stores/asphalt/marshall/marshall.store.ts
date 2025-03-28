@@ -249,7 +249,7 @@ export type MarshallData = {
 
 export type MarshallActions = {
   setData: ({ step, key, value }: setDataType) => void;
-  reset: ({ step }: setDataType) => void;
+  reset: () => void;
 };
 
 type setDataType = { step: number; key?: string; value: unknown };
@@ -569,11 +569,8 @@ const useMarshallStore = create<MarshallData & MarshallActions>()(
             }
           }),
 
-        reset: ({ step }) => {
+reset: () => {
           set(initialState);
-          return {
-            [stepVariant[step]]: null,
-          };
         },
       }),
       {

@@ -913,11 +913,8 @@ const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(
             }
           }),
 
-        reset: ({ step }) => {
+reset: () => {
           set(initialState);
-          return {
-            [stepVariant[step]]: null,
-          };
         },
 
         clearStore: () => {

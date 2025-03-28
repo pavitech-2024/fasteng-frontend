@@ -39,6 +39,11 @@ export function AuthProvider({ children }) {
 
   const Router = useRouter();
 
+  /**
+   * Verifies if the user is authenticated when the component is mounted.
+   * If the user is not authenticated, it calls the refreshLogin function.
+   * If the refreshLogin function fails, it does nothing.
+   */
   useEffect(() => {
     async function loadUser() {
       try {
