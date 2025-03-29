@@ -43,7 +43,7 @@ const initialState = {
   results: {
     filmDisplacement: null,
   },
-}
+};
 
 const useAdhesivenessStore = create<AdhesivenessData & StoreActions>()(
   devtools(

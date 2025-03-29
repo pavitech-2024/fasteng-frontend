@@ -86,7 +86,7 @@ const useRtfoStore = create<RtfoData & RtfoActions>()(
          * If not given, the value is set as the whole state of the given step.
          * @param {unknown} data.value The new value to set in the state of the given step.
          */
-setData: ({ step, key, value }) =>
+        setData: ({ step, key, value }) =>
           set((state) => {
             if (key)
               return {
@@ -99,7 +99,7 @@ setData: ({ step, key, value }) =>
             else return { ...state, [stepVariant[step]]: value };
           }),
 
-reset: () => {
+        reset: () => {
           set(initialState);
         },
       }),

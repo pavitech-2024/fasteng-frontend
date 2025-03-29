@@ -107,7 +107,7 @@ export function AuthProvider({ children }) {
         const updatedUser = await Api.get(`users/${loggedUser._id}`, {
           headers: {
             Authorization: `Bearer ${newToken}`,
-          }
+          },
         });
 
         // Creates a new user object with the updated user data.
@@ -133,7 +133,7 @@ export function AuthProvider({ children }) {
       }
     } catch (error) {
       if (Router.pathname !== '/' && Router.pathname !== '/creators') {
-        console.error("entrouuu if", error)
+        console.error('entrouuu if', error);
 
         await Router.push('/');
       } else {

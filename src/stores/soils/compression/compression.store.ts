@@ -139,7 +139,7 @@ const initialState = {
     optimumDensity: null,
     graph: null,
   },
-}
+};
 
 const useCompressionStore = create<CompressionData & CompressionActions>()(
   devtools(
@@ -169,9 +169,9 @@ const useCompressionStore = create<CompressionData & CompressionActions>()(
             else return { ...state, [stepVariant[step]]: value };
           }),
 
-          reset: () => {
-            set(initialState)
-          }
+        reset: () => {
+          set(initialState);
+        },
       }),
       {
         name: 'compression-store',

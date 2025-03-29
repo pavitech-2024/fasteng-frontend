@@ -5,8 +5,7 @@ import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { StoreActions } from '@/interfaces/common/stores/storeActions.interface';
 import AsphaltGranulometry_SERVICE from '@/services/asphalt/essays/granulometry/granulometry.service';
-import useAsphaltGranulometryStore, {
-} from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
+import useAsphaltGranulometryStore from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
 
 const AsphaltGranulometry = () => {
   // start an instance of the service

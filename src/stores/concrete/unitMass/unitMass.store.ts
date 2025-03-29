@@ -48,7 +48,7 @@ const initialState = {
   result: {
     result: null,
   },
-}
+};
 
 const useUnitMassStore = create<UnitMassData & UnitMassActions>()(
   devtools(
@@ -78,9 +78,9 @@ const useUnitMassStore = create<UnitMassData & UnitMassActions>()(
             else return { ...state, [stepVariant[step]]: value };
           }),
 
-          reset: () => {
-            set(initialState)
-          }
+        reset: () => {
+          set(initialState);
+        },
       }),
       {
         name: 'unitMass-store',

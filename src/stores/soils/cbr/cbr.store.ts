@@ -118,7 +118,7 @@ const initialState = {
     cbr_graph: [],
     free_expansion: null,
   },
-}
+};
 
 const useCbrStore = create<CbrData & StoreActions>()(
   devtools(
@@ -148,9 +148,9 @@ const useCbrStore = create<CbrData & StoreActions>()(
             else return { ...state, [stepVariant[step]]: value };
           }),
 
-          reset: () => {
-            set(initialState)
-          }
+        reset: () => {
+          set(initialState);
+        },
       }),
       {
         // name data store e config no session storage

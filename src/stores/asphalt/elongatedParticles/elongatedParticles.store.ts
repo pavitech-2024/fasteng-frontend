@@ -62,7 +62,7 @@ const initialState = {
     results_dimensions_table_data: [],
     alerts: [],
   },
-}
+};
 
 const useElongatedParticlesStore = create<ElongatedParticlesData & StoreActions>()(
   devtools(
@@ -79,7 +79,7 @@ const useElongatedParticlesStore = create<ElongatedParticlesData & StoreActions>
          * If not given, the value is set as the whole state of the given step.
          * @param {unknown} data.value The new value to set in the state of the given step.
          */
-setData: ({ step, key, value }) =>
+        setData: ({ step, key, value }) =>
           set((state) => {
             if (key)
               return {
@@ -92,9 +92,9 @@ setData: ({ step, key, value }) =>
             else return { ...state, [stepVariant[step]]: value };
           }),
 
-          reset: () => {
-            set(initialState)
-          }
+        reset: () => {
+          set(initialState);
+        },
       }),
       {
         name: 'elongatedParticles-store',

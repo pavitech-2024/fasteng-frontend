@@ -37,7 +37,7 @@ export type HrbData = {
 
 export type HrbActions = {
   setData: ({ step, key, value }: setDataType) => void;
-  reset: () => void
+  reset: () => void;
 };
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'results' };
@@ -77,7 +77,7 @@ const initialState = {
     group_index: null,
     plasticity_index: null,
   },
-}
+};
 
 const useHrbStore = create<HrbData & HrbActions>()(
   devtools(
@@ -107,9 +107,9 @@ const useHrbStore = create<HrbData & HrbActions>()(
             else return { ...state, [stepVariant[step]]: value };
           }),
 
-          reset: () => {
-            set(initialState)
-          }
+        reset: () => {
+          set(initialState);
+        },
       }),
       {
         name: 'hrb-store',

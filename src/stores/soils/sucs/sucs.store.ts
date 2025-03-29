@@ -69,7 +69,7 @@ const initialState = {
     ip: null,
     classification: null,
   },
-}
+};
 
 const useSucsStore = create<SucsData & SucsActions>()(
   devtools(

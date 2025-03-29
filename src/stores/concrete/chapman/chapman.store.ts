@@ -40,7 +40,7 @@ const initialState = {
   results: {
     m_e: null,
   },
-}
+};
 
 const useChapmanStore = create<ChapmanData & ChapmanActions>()(
   devtools(
@@ -70,9 +70,9 @@ const useChapmanStore = create<ChapmanData & ChapmanActions>()(
             else return { ...state, [stepVariant[step]]: value };
           }),
 
-          reset: () => {
-            set(initialState)
-          }
+        reset: () => {
+          set(initialState);
+        },
       }),
       {
         name: 'chapman-storage',

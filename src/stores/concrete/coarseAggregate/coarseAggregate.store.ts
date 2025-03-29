@@ -47,7 +47,7 @@ const initialState = {
   result: {
     result: null,
   },
-}
+};
 
 const useCoarseAggregateStore = create<CoarseAggregateData & CoarseAggregateActions>()(
   devtools(
@@ -77,9 +77,9 @@ const useCoarseAggregateStore = create<CoarseAggregateData & CoarseAggregateActi
             else return { ...state, [stepVariant[step]]: value };
           }),
 
-          reset: () => {
-            set(initialState)
-          }
+        reset: () => {
+          set(initialState);
+        },
       }),
       {
         name: 'coarseAggregate-store',

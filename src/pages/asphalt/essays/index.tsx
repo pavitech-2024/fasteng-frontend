@@ -177,7 +177,7 @@ const AsphaltEssays: NextPage = () => {
       type: 'highwaySection',
     },
   ];
-  
+
   return <EssaysTemplate essays={essays} filterOptions={filterOptions} />;
 };
 
