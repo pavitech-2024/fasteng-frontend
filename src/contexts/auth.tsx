@@ -39,6 +39,11 @@ export function AuthProvider({ children }) {
 
   const Router = useRouter();
 
+  /**
+   * Verifies if the user is authenticated when the component is mounted.
+   * If the user is not authenticated, it calls the refreshLogin function.
+   * If the refreshLogin function fails, it does nothing.
+   */
   useEffect(() => {
     async function loadUser() {
       try {
@@ -102,7 +107,7 @@ export function AuthProvider({ children }) {
         const updatedUser = await Api.get(`users/${loggedUser._id}`, {
           headers: {
             Authorization: `Bearer ${newToken}`,
-          }
+          },
         });
 
         // Creates a new user object with the updated user data.
@@ -128,7 +133,7 @@ export function AuthProvider({ children }) {
       }
     } catch (error) {
       if (Router.pathname !== '/' && Router.pathname !== '/creators') {
-        console.error("entrouuu if", error)
+        console.error('entrouuu if', error);
 
         await Router.push('/');
       } else {
