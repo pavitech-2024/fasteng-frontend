@@ -39,17 +39,12 @@ export type AsphaltGranulometryData = {
   results: AsphaltGranulometry_results;
 };
 
-// export type AsphaltGranulometryActions = {
-//   setData: ({ step, key, value }: setDataType) => void;
-//   reset: () => void;
-// };
+export type AsphaltGranulometryActions = {
+  setData: ({ step, key, value }: setDataType) => void;
+  reset: () => void;
+};
 
-// export type StoreActions = {
-//   setData: ({ step, key, value }: setDataType) => void;
-//   reset: () => void;
-// };
-
-// type setDataType = { step: number; key?: string; value: unknown };
+type setDataType = { step: number; key?: string; value: unknown };
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'results' };
 
@@ -83,7 +78,7 @@ const initialState = {
   },
 };
 
-const useAsphaltGranulometryStore = create<AsphaltGranulometryData & StoreActions>()(
+const useAsphaltGranulometryStore = create<AsphaltGranulometryData & AsphaltGranulometryActions>()(
   devtools(
     persist(
       (set) => ({
