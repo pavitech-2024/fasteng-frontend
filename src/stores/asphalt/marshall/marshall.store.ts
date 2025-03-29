@@ -569,7 +569,7 @@ const useMarshallStore = create<MarshallData & MarshallActions>()(
             }
           }),
 
-reset: () => {
+        reset: () => {
           set(initialState);
         },
       }),

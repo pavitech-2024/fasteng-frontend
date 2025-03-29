@@ -406,7 +406,7 @@ export type SuperpaveData = {
 
 export type SuperpaveActions = {
   setData: ({ step, key, value }: setDataType) => void;
-  reset: ({ step }: setDataType) => void;
+  reset: () => void;
   clearStore: () => void;
 };
 
@@ -913,7 +913,7 @@ const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(
             }
           }),
 
-reset: () => {
+        reset: () => {
           set(initialState);
         },
 

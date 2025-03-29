@@ -19,7 +19,7 @@ const SoilsEssays: NextPage = () => {
     {
       title: t('soils.essays.hrb'),
       icon: HrbIcon,
-      key: 'hbr',
+      key: 'hrb',
       link: '/soils/essays/hrb',
     },
     {

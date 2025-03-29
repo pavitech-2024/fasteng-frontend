@@ -24,12 +24,12 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   const { pathname } = useRouter();
   const resetStores = useResetStores();
 
+  /**
+   * This useEffect hook iterates through sessionStorage keys in reverse order.
+   * It checks if the current pathname includes a specific key substring.
+   * If not, it clears the sessionStorage and resets stores.
+   */
   useEffect(() => {
-    /**
-     * This code is responsible for clearing the sessionStorage when the user navigates to a new essay/dosage.
-     * It iterates over all the keys in the sessionStorage and checks if the current pathname does not contain the key.
-     * If it doesn't, it clears the sessionStorage.
-     */
     for (let i = sessionStorage.length - 1; i >= 0; i--) {
       const key = sessionStorage.key(i);
       if (key) {
