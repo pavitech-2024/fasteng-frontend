@@ -22,6 +22,7 @@ import { validatePhone } from '@/utils/validators/phoneValidator';
 import { fontGrid } from '@mui/material/styles/cssUtils';
 import Cookies from 'js-cookie';
 import PersonIcon from '@mui/icons-material/Person';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
 
 export const getStaticProps = async () => {
   const avatares: string[] = [
@@ -140,7 +141,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
     { label: '5', value: 5 },
   ];
 
-  const onSubmitPhoto = async (avatar: string | File | null) => {
+  /*const onSubmitPhoto = async (avatar: string | File | null) => {
     try {
       if (typeof avatar === 'string') return setUser({ ...user, photo: avatar });
 
@@ -150,6 +151,37 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           if (typeof res === 'string') setUser({ ...user, photo: res });
         });
     } catch (error) {}
+  };*/
+
+  const onSubmitPhoto = async (avatar: string | File | null) => {
+    try {
+      let photoUrl = null;
+      
+      if (typeof avatar === 'string') {
+        photoUrl = avatar;
+      } else if (avatar === null) {
+        //photoUrl = null;
+        photoUrl = avatares[0];
+      } else {
+        photoUrl = await toBase64(avatar);
+      }
+  
+      // Atualiza o backend
+      const response = await Api.put(`users/${user._id}`, { 
+        ...user, 
+        photo: photoUrl 
+        //photo: typeof photoUrl === 'string' ? photoUrl : null 
+      });
+  
+      // Atualiza o estado local com os dados do backend
+      setUser(response.data);
+      setOldPhoto(response.data.photo);
+      toast.success(t('settings.toast.success'));
+  
+    } catch (error) {
+      console.error('Error saving photo:', error);
+      toast.error(t('settings.toast.error'));
+    }
   };
 
   const onSavePreferences = async () => {
@@ -199,14 +231,16 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             >
               <img
                 alt="avatar"
-                src={avatar}
+                src={user?.photo || 'https://i.pinimg.com/736x/e8/d7/d0/e8d7d05f392d9c2cf0285ce928fb9f4a.jpg'}
+                onError={(e) => e.currentTarget.src = 'https://i.pinimg.com/736x/e8/d7/d0/e8d7d05f392d9c2cf0285ce928fb9f4a.jpg'}
+                //src={avatar}
                 style={{
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
                 }}
               />
-              {user?.photo && (
+              {user?.photo && user.photo !== avatares[0] && (
               <IconButton
                 sx={{
                   position: 'absolute',
@@ -225,7 +259,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           ))}
         </Box>
         
-        {user?.photo && (
+        {/*user?.photo && (
         <Button
           component="label"
           sx={{ mt: '1rem', color: 'secondaryTons.red' }}
@@ -237,8 +271,12 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
         >
           Apagar foto atual
         </Button>
-        )}
-        <Button component="label" sx={{ mt: '1rem' }} startIcon={<UploadIcon />}>
+        )*/}
+        <Button component="label" sx={{ mt: '1rem', width: '100%',  backgroundColor: '#F29134 ', // Cor laranja
+      color: '#000000', // Cor preta para o texto
+      '&:hover': {
+        backgroundColor: '#E69138' }}} startIcon={<CameraAltIcon />}
+        >
           {t('settings.upload')}
           <input
             type="file"
@@ -290,7 +328,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             <IconButton sx={{ p: 0, ml: { mobile: '-30px', notebook: '60px' } }} onClick={() => setOpen(true)} size="large">
               <Avatar
                 alt="user photo"
-                src={user?.photo}
+                src={user?.photo || avatares[0]} 
                 sx={{
                   height: '90px',
                   width: '90px',
