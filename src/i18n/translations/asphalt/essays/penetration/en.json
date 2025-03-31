@@ -1,5 +1,7 @@
 {
   "penetration.penetration": "Penetration essay",
   "penetration.step-2-description": "Fill in all the fields below.",
-  "penetration.step-3-description": "These are the results of your experiment. Remember to save the experiment so you can access it later."
+  "penetration.step-3-description": "These are the results of your experiment. Remember to save the experiment so you can access it later.",
+  "errors.empty-name": "The name of the essay must be filled in.",
+  "errors.empty-material": ""
 }

@@ -57,12 +57,14 @@ export const Footer = ({
       </Button>
 
       <Button
-        endIcon={nextText === t('footer.next') ? <NextIcon /> : <SaveIcon />}
+        endIcon={
+          nextText === t('footer.next') ? <NextIcon /> : nextText === t('footer.newEssay') ? <></> : <SaveIcon />
+        }
         variant="contained"
         disabled={nextDisabled}
         onClick={handleNextClick}
         sx={{
-          bgcolor: 'secondaryTons.blue',
+          bgcolor: nextText === t('footer.newEssay') ? 'secondaryTons.orange' : 'secondaryTons.blue',
           color: 'primaryTons.white',
           height: '32px',
           width: '140px',
@@ -70,7 +72,7 @@ export const Footer = ({
 
           ':hover': {
             transition: 'all 0.1s ease-in-out',
-            bgcolor: 'secondaryTons.blueDisabled',
+            bgcolor: nextText === t('footer.newEssay') ? 'primary.main opacity: 0.8' : 'secondaryTons.blueDisabled',
           },
 
           ':active': {

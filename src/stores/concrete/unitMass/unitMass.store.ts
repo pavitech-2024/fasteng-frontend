@@ -27,30 +27,44 @@ export type UnitMassData = {
 
 export type UnitMassActions = {
   setData: ({ step, key, value }: setDataType) => void;
+  reset: () => void;
 };
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'result' };
 
 export type setDataType = { step: number; key?: string; value: unknown };
 
+const initialState = {
+  generalData: {
+    userId: null,
+    experimentName: null,
+    material: null,
+    method: null,
+  },
+  step2Data: {
+    containerVolume: null,
+    containerWeight: null,
+    sampleContainerWeight: null,
+  },
+  result: {
+    result: null,
+  },
+};
+
 const useUnitMassStore = create<UnitMassData & UnitMassActions>()(
   devtools(
     persist(
       (set) => ({
-        generalData: {
-          userId: null,
-          experimentName: null,
-          material: null,
-          method: null,
-        },
-        step2Data: {
-          containerVolume: null,
-          containerWeight: null,
-          sampleContainerWeight: null,
-        },
-        result: {
-          result: null,
-        },
+        ...initialState,
 
+        /**
+         * Updates the value of the given key in the state of the store for the given step.
+         * If no key is given, the value is set as the whole state of the given step.
+         * @param {{ step: number; key?: string; value: unknown }} data
+         * @param {number} data.step The step of the state to update.
+         * @param {string} [data.key] The key of the value to update in the state of the given step.
+         * If not given, the value is set as the whole state of the given step.
+         * @param {unknown} data.value The new value to set in the state of the given step.
+         */
         setData: ({ step, key, value }) =>
           set((state) => {
             if (key)
@@ -63,6 +77,10 @@ const useUnitMassStore = create<UnitMassData & UnitMassActions>()(
               };
             else return { ...state, [stepVariant[step]]: value };
           }),
+
+        reset: () => {
+          set(initialState);
+        },
       }),
       {
         name: 'unitMass-store',
