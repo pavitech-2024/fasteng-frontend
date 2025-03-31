@@ -34,7 +34,7 @@ const Login: NextPage = () => {
   const [password, setPassword] = useState<string>('');
   const roxApiUrl = 'https://minhaconta.fastengapp.com.br/api/forgot-password ';
   const [roxIsRunning, setRoxIsRunning] = useState(true);
-  
+
   const handleLogin = async () => {
     setLoading(true);
     try {
@@ -51,10 +51,10 @@ const Login: NextPage = () => {
   };
 
   useEffect(() => {
-  /**
-   * Function to check if the Fasteng API is running
-   * If the API is not running, then set the roxIsRunning state to false
-   */
+    /**
+     * Function to check if the Fasteng API is running
+     * If the API is not running, then set the roxIsRunning state to false
+     */
     const handleHealthCheck = async () => {
       try {
         const result = await Api.get('/app/health-check');
