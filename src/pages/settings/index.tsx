@@ -207,7 +207,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           setOpen(false);
         }}
         onSubmit={() => setOpen(false)}
-        size="small"
+        size="small" 
       >
         
         <Box

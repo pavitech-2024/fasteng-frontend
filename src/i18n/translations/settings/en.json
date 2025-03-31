@@ -28,6 +28,6 @@
   "settings.toast.success": "Changes saved successfully!",
   "settings.toast.error": "Error saving changes!",
 
-  "cancel": "cancel",
+  "cancel": "cancel", 
   "submit": "Save"
 }
