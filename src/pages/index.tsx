@@ -52,7 +52,7 @@ const Login: NextPage = () => {
 
   useEffect(() => {
     /**
-     * Function to check if the Fasteng API is running
+     * Function to check if the Rox API is running
      * If the API is not running, then set the roxIsRunning state to false
      */
     const handleHealthCheck = async () => {
