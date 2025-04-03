@@ -1,6 +1,6 @@
 {
   "superpave.step-2-description": "Select the aggregates and cement for dosing. Only registered materials with granulometry tests for aggregates and rotational viscosity tests for asphalt binders will be displayed.",
-  "superpave.step-3-description": "Enter the percentages of each aggregate in the granulometric composition of the mixture",
+  "superpave.step-3-description": "Choose the desired granulometric curve and enter the aggregate percentages, ensuring a total of 100%.",
   "superpave.step-11-description": "These are the results of yourSuperpave dosage. Don't forget to save the experiment so you can access it later.",
 
   "superpave.step-11": "Results",

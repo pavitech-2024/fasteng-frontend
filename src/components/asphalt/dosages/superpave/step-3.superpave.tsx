@@ -399,6 +399,7 @@ const Superpave_Step3 = ({
             sx={{
               display: 'flex',
               gap: '5rem',
+              justifyContent: 'center',
             }}
           >
             {checkBoxes.map((box) => (
@@ -410,6 +411,12 @@ const Superpave_Step3 = ({
                 sx={{ display: 'flex', width: 'fit-content' }}
               />
             ))}
+
+            <Box sx={{ width: 'fit-content', display: 'flex', justifyContent: 'end' }}>
+              <Button onClick={() => clearTable()} variant="outlined">
+                {t('asphalt.dosages.superpave.clear-table')}
+              </Button>
+            </Box>
           </Box>
 
           {(lower || average || higher) &&
@@ -420,7 +427,6 @@ const Superpave_Step3 = ({
                     <Box
                       sx={{
                         display: 'grid',
-                        gridTemplateColumns: '1fr 100px',
                         justifyContent: 'center',
                         alignItems: 'center',
                         marginBottom: '10px',
@@ -429,9 +435,6 @@ const Superpave_Step3 = ({
                       <Typography sx={{ textAlign: 'center', marginTop: '2rem', fontSize: '1.5rem' }}>
                         {table.title}
                       </Typography>
-                      <Button onClick={() => clearTable()} variant="outlined">
-                        {t('asphalt.dosages.superpave.clear-table')}
-                      </Button>
                     </Box>
                     <CurvesTable
                       materials={selectedMaterials}

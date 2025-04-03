@@ -1,6 +1,6 @@
 {
   "superpave.step-2-description": "Selecione os agregados e o cimento para a dosagem. Apenas materiais cadastrados com ensaios de granulometria para agregados e viscosidade rotacional para ligantes asfálticos serão exibidos.",
-  "superpave.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica da mistura",
+  "superpave.step-3-description": "Escolha a curva granulométrica desejada e insira as porcentagens dos agregados, garantindo um total de 100%.",
   "superpave.step-11-description": "Esses são os resultados da sua dosagem Superpave. Não se esqueça de salvar para acessá-las mais tarde.",
 
   "superpave.step-11": "Resultados",

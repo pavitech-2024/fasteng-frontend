@@ -35,6 +35,18 @@ const Marshall_Step6 = ({
     plusOne: true,
   });
 
+  /**
+   * Generates column definitions for a DataGrid based on the specified tenor.
+   * Each column represents a different attribute of the asphalt dosages
+   * Marshall test, such as diameter, height, dry mass, etc. The columns
+   * include input fields that allow users to modify data directly within the grid.
+   * Changes are debounced to optimize performance and are stored using setData.
+   *
+   * @param {string} tenor - The category or key used to access specific data
+   *                         entries from the volumetric parameters data.
+   * @returns {GridColDef[]} An array of column definitions for the DataGrid.
+   */
+
   const generateColumns = (tenor: string): GridColDef[] => [
     {
       field: 'diammeter',
@@ -56,9 +68,6 @@ const Marshall_Step6 = ({
               const newState = [...data[tenor]];
               newState[index] = { ...newState[index], diammeter: Number(value) };
 
-              debounce((newState, tenor) => {
-                setData({ step: 5, value: { ...data, [tenor]: newState } });
-              }, 300);
               debounce((newState, tenor) => {
                 setData({ step: 5, value: { ...data, [tenor]: newState } });
               }, 300);

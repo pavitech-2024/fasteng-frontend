@@ -24,9 +24,11 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   const resetStores = useResetStores();
 
   /**
-   * This useEffect hook iterates through sessionStorage keys in reverse order.
-   * It checks if the current pathname includes a specific key substring.
-   * If not, it clears the sessionStorage and resets stores.
+   * Checks if the user is navigating to a new essay.
+   * If so, reset all the stores that hold data for the essays.
+   * This function is used when the user navigate from one essay to another,
+   * so that the data of the previous
+   * essay is not kept in memory.
    */
   useEffect(() => {
     for (let i = sessionStorage.length - 1; i >= 0; i--) {
@@ -35,8 +37,8 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         const keyString = key.split('-')[1];
 
         if (!pathname.includes(keyString)) {
-          sessionStorage.clear();
           resetStores();
+          sessionStorage.clear();
         }
       }
     }
