@@ -1,402 +1,419 @@
-import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
-import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
-import { AsphaltMaterialData } from '@/interfaces/asphalt';
-import materialsService from '@/services/asphalt/asphalt-materials.service';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
-import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
-import { Box, Button, Typography } from '@mui/material';
-import { DataGrid, GridAlignment, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
-import { t } from 'i18next';
+import useSuperpaveStore, { SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
+import { Box, Button, Checkbox, FormControlLabel, FormGroup, Table, TableContainer, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { AllSieves } from '@/interfaces/common';
+import CurvesTable from './tables/curvesTable';
 import { toast } from 'react-toastify';
+import { t } from 'i18next';
+import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
 
-const Superpave_Step4 = ({
-  nextDisabled,
-  setNextDisabled,
-  superpave,
-}: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const {
+    granulometryCompositionData: data,
     materialSelectionData,
-    initialBinderData: data,
-    granulometryCompositionData,
     generalData,
     setData,
+    hasHydrated,
   } = useSuperpaveStore();
-
-  const [specificMassModalIsOpen, setSpecificMassModalIsOpen] = useState(true);
-  const [newInitialBinderModalIsOpen, setNewInitialBinderModalIsOpen] = useState(false);
-  const [binderInput, setBinderInput] = useState();
 
   const { user } = useAuth();
 
-  const [binderData, setBinderData] = useState<AsphaltMaterialData>();
-  const [rows, setRows] = useState([]);
-  const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
-  const compositions = ['inferior', 'intermediaria', 'superior'];
-  const [materialNames, setMaterialNames] = useState([]);
-  const [activateSecondFetch, setActivateSecondFetch] = useState(false);
-  const [shouldRenderTable1, setShouldRenderTable1] = useState(false);
+  const [lower, setLower] = useState(false);
+  const [average, setAverage] = useState(false);
+  const [higher, setHigher] = useState(false);
 
+  const peneiras = AllSieves.map((peneira) => {
+    return { peneira: peneira.label };
+  });
+  
+
+  const arrayResponse = data?.percentsToList;
+  const bandsHigher = data?.bands?.higher;
+  const bandsLower = data?.bands?.lower;
+
+  let tableDataLower;
+  let tableDataAverage;
+  let tableDataHigher;
+
+  let tableCompositionInputsLower = {};
+  let tableCompositionInputsAverage = {};
+  let tableCompositionInputsHigher = {};
+
+  const selectedMaterials = materialSelectionData?.aggregates;
+
+  const checkBoxes = [
+    {
+      key: 'lower',
+      label: t('asphalt.dosages.superpave.step-3.lower'),
+      value: lower,
+    },
+    {
+      key: 'average',
+      label: t('asphalt.dosages.superpave.step-3.average'),
+      value: average,
+    },
+    {
+      key: 'higher',
+      label: t('asphalt.dosages.superpave.step-3.higher'),
+      value: higher,
+    },
+  ];
+
+  /**
+   * Hydrates the store with the data from the backend.
+   * If the data is already present in the store, it doesn't do anything.
+   */
   useEffect(() => {
-    if (!activateSecondFetch) {
-      toast.promise(
-        async () => {
-          try {
-            const newMaterials = [];
-
-            const aggregatesIds = materialSelectionData.aggregates.map((e) => e._id);
-            const binderId = materialSelectionData.binder;
-            const ids = [...aggregatesIds, binderId];
-
-            const response = await materialsService.getMaterials(ids);
-
-            const names = response.data.materials.map((e) => e.name);
-
-            setMaterialNames(names);
-            setBinderData(response.data.material);
-
-            const binderIndex = response.data.essays.findIndex((e) =>
-              e.some((f) => f.data.generalData.material.type === 'asphaltBinder')
-            );
-
-            const responseData = { ...response.data };
-
-            for (let i = 0; i < responseData.materials.length; i++) {
-              const aggregateMaterial = {
-                name: responseData.materials[i].name,
-                type: i === binderIndex ? 'binder' : 'aggregate',
-                realSpecificMass: null,
-                apparentSpecificMass: null,
-                absorption: null,
-              };
-
-              newMaterials.push(aggregateMaterial);
-            }
-
-            let prevData = { ...data };
-            prevData = {
-              ...prevData,
-              materials: newMaterials,
-            };
-
-            setData({
-              step: 3,
-              value: prevData,
-            });
-
-            setActivateSecondFetch(true);
-          } catch (error) {
-            throw error;
-          }
-        },
-        {
-          pending: t('loading.materials.pending'),
-          success: t('loading.materials.success'),
-          error: t('erro no 1'),
-        }
-      );
+    if (!hasHydrated) return;
+  
+    if (data.percentsToList.length > 0) {
+      setLoading(false);
+      return;
     }
-  }, []);
-
-  useEffect(() => {
-    const hasSomeNullValue = Object.values(rows).some((e) => e === null);
-    if (activateSecondFetch && hasSomeNullValue) {
-      toast.promise(
-        async () => {
-          try {
-            const newMaterials = [];
-            const { data: resData, success, error } = await superpave.getStep4SpecificMasses(materialSelectionData);
-
-            if (success && resData.specificMasses.length > 0) {
-              resData.specificMasses.forEach((e) => {
-                const obj = {
-                  name: e.generalData.material.name,
-                  realSpecificMass: e.results.bulk_specify_mass,
-                  apparentSpecificMass: e.results.apparent_specify_mass,
-                  absorption: e.results.absorption,
-                };
-                newMaterials.push(obj);
-              });
-
-              let prevData = { ...data };
-              prevData = {
-                ...prevData,
-                materials: newMaterials,
-              };
-
-              setData({
-                step: 3,
-                value: prevData,
-              });
-              setActivateSecondFetch(false);
-            } else {
-              let count = 0;
-              data.materials.forEach((e) => {
-                const obj = {
-                  name: e.name,
-                  realSpecificMass: e.realSpecificMass,
-                  apparentSpecificMass: e.apparentSpecificMass,
-                  absorption: e.absorption,
-                };
-                newMaterials[count].push(obj);
-                count++;
-              });
-
-              let prevData = { ...data };
-              prevData = {
-                ...prevData,
-                materials: newMaterials,
-              };
-
-              setData({
-                step: 3,
-                value: prevData,
-              });
-              setActivateSecondFetch(false);
-            }
-          } catch (error) {
-            throw error;
-          }
-        },
-        {
-          pending: t('loading.materials.pending'),
-          success: t('loading.materials.success'),
-          error: t('erro no 2'),
-        }
-      );
-    }
-  }, [activateSecondFetch, rows]);
-
-  const generateMaterialInputs = (materials) => {
-    return materials.map((material, index) => [
-      {
-        key: 'realSpecificMass',
-        label: t('asphalt.dosages.superpave.real-specific-mass'),
-        placeHolder: 'Massa específica real',
-        adornment: 'g/cm²',
-        value: material.realSpecificMass,
-        materialIndex: index + 1,
-        name: material.name,
-      },
-      {
-        key: 'apparentSpecificMass',
-        label: t('asphalt.dosages.superpave.apparent-specific-mass'),
-        placeHolder: 'Massa específica aparente',
-        adornment: 'g/cm²',
-        value: material.apparentSpecificMass,
-        materialIndex: index + 1,
-        name: material.name,
-      },
-      {
-        key: 'absorption',
-        label: t('asphalt.dosages.superpave.absorption'),
-        placeHolder: 'Absorção',
-        adornment: '%',
-        value: material.absorption,
-        materialIndex: index + 1,
-        name: material.name,
-      },
-    ]);
-  };
-
-  const modalMaterialInputs = generateMaterialInputs(data.materials);
-
-  const handleModalSubmit = () => {
+  
     toast.promise(
       async () => {
         try {
-          const response = await superpave.getStep4Data(
-            generalData,
-            materialSelectionData,
-            granulometryCompositionData,
-            data
-          );
-
-          const updatedRows = response.granulometryComposition.map((e, i) => ({
-            id: i,
-            granulometricComposition: compositions[i],
-            combinedGsb: e.combinedGsb ? e.combinedGsb.toFixed(2) : '',
-            combinedGsa: e.combinedGsa ? e.combinedGsa.toFixed(2) : '',
-            gse: e.gse ? e.gse.toFixed(2) : '',
-          }));
-
-          setRows(updatedRows);
-
-          let prevData = { ...data };
-          prevData = {
-            ...prevData,
-            granulometryComposition: response.granulometryComposition,
-            turnNumber: response.turnNumber,
-          };
-
-          const updatedPercentageRows = response.granulometryComposition.map((e, i) => {
-            const row = {
-              id: i,
-              granulometricComposition: compositions[i],
-              initialBinder: e.pli?.toFixed(2),
-            };
-
-            e.percentsOfDosageWithBinder.forEach((percent, index) => {
-              row[`material_${index + 1}`] = percent?.toFixed(2);
-            });
-
-            return row;
+          const storeState = useSuperpaveStore.getState();
+          const response = await superpave.getStep3Data(storeState, user._id);
+  
+          setData({
+            step: 2,
+            value: {
+              ...storeState.granulometryCompositionData,
+              ...response,
+            },
           });
-
-          setEstimatedPercentageRows(updatedPercentageRows);
-
-          setData({ step: 3, value: prevData });
+  
           setLoading(false);
-          setSpecificMassModalIsOpen(false);
         } catch (error) {
+          setLoading(false);
           throw error;
         }
       },
       {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
       }
     );
+  }, [hasHydrated]);
+
+  const toggleSelectedCurve = (label: string) => {
+    switch (label) {
+      case 'lower':
+        setLower(true);
+        setAverage(false);
+        setHigher(false);
+        break;
+      case 'average':
+        setLower(false);
+        setAverage(true);
+        setHigher(false);
+        break;
+      case 'higher':
+        setLower(false);
+        setAverage(false);
+        setHigher(true);
+        break;
+      default:
+        break;
+    }
   };
 
-  const columns: GridColDef[] = [
+  const convertNumber = (value) => {
+    let aux = value;
+    if (typeof aux !== 'number' && aux !== null && aux !== undefined && aux.includes(',')) {
+      aux = aux.replace('.', '').replace(',', '.');
+    }
+
+    return parseFloat(aux);
+  };
+
+  const validateNumber = (value) => {
+    const auxValue = convertNumber(value);
+    if (!isNaN(auxValue) && typeof auxValue === 'number') {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const numberRepresentation = (value, digits = 2) => {
+    let aux: any = convertNumber(value);
+    if (validateNumber(aux)) {
+      const formato = { minimumFractionDigits: digits, maximumFractionDigits: digits };
+      aux = aux.toLocaleString('pt-BR', formato);
+    } else {
+      aux = '';
+    }
+    return aux;
+  };
+
+  const setPercentsToListTotal = (peneiras: { peneira: string }[], percentsToList) => {
+    const tableData = Array.from({ length: percentsToList.length }, () => []);
+
+    percentsToList?.forEach((item, i) => {
+      item.forEach((value, j) => {
+        if (value !== null) {
+          if (i > 0) {
+            tableData[i][j] = {
+              ...peneiras[j],
+              ...tableData[i][j], // Mantém os dados existentes
+              ['keyTotal' + i]: numberRepresentation(value[1]),
+            };
+          } else {
+            tableData[i][j] = {
+              ...peneiras[j],
+              ['keyTotal' + i]: numberRepresentation(value[1]),
+            };
+          }
+        }
+      });
+    });
+
+    return tableData;
+  };
+
+  const test = (peneiras: { peneira: string }[], percentsToList: Array<Array<[string, number] | null>>) => {
+    const tableData = peneiras.map((peneira) => ({ ...peneira }));
+
+    percentsToList?.forEach((column, columnIndex) => {
+      column.forEach((value, rowIndex) => {
+        if (value !== null && tableData[rowIndex]) {
+          console.log('entrou no if');
+          tableData[rowIndex] = {
+            ...tableData[rowIndex],
+            ['keyTotal' + columnIndex]: numberRepresentation(value[1]),
+          };
+        }
+      });
+    });
+
+    return tableData;
+  };
+
+  const tableDataAux = setPercentsToListTotal(peneiras, arrayResponse);
+
+  const setBandsHigherLower = (tableData, bandsHigher, bandsLower, arrayResponse, peneiras) => {
+    const arraySize = tableData[0]?.length;
+
+    // Inicializa o arrayAux com objetos vazios de acordo com o tamanho descoberto
+    const arrayAux = Array(arraySize).fill({});
+
+    tableData.forEach((element) => {
+      element.forEach((item, index2) => {
+        if (bandsLower[index2] === null && bandsHigher[index2] === null) {
+          arrayAux[index2] = {
+            ...arrayAux[index2],
+            ...item,
+            bandsCol1: '',
+            bandsCol2: '',
+          };
+        } else {
+          arrayAux[index2] = {
+            ...arrayAux[index2],
+            ...item,
+            bandsCol1: numberRepresentation(bandsHigher[index2]),
+            bandsCol2: numberRepresentation(bandsLower[index2]),
+          };
+        }
+      });
+    });
+
+    return arrayAux;
+  };
+
+  const tableData = setBandsHigherLower(tableDataAux, bandsHigher, bandsLower, arrayResponse, peneiras);
+
+  tableDataLower = tableData;
+  tableDataAverage = tableData;
+  tableDataHigher = tableData;
+
+  tableDataLower = tableData;
+  tableDataAverage = tableData;
+  tableDataHigher = tableData;
+
+  const inputsInit = (key: string) => {
+    tableCompositionInputsLower[key] = '';
+    tableCompositionInputsAverage[key] = '';
+    tableCompositionInputsHigher[key] = '';
+  };
+
+  selectedMaterials.forEach((_, i) => {
+    inputsInit(`input${i * 2 + 1}`);
+  });
+
+  const tables = [
     {
-      field: 'granulometricComposition',
-      headerName: t('asphalt.dosages.superpave.granulometric-composition'),
-      valueFormatter: ({ value }) => `${value}`,
-      width: 200,
+      key: 'lower',
+      data: tableDataLower,
+      inputs: tableCompositionInputsLower,
+      name: 'lowerComposition',
+      isActive: lower,
+      title: t('asphalt.dosages.superpave.lower-curve'),
     },
     {
-      field: 'combinedGsb',
-      headerName: t('asphalt.dosages.superpave.combined-gsb'),
-      valueFormatter: ({ value }) => `${value}`,
-      width: 200,
+      key: 'average',
+      data: tableDataAverage,
+      inputs: tableCompositionInputsAverage,
+      name: 'averageComposition',
+      isActive: average,
+      title: t('asphalt.dosages.superpave.average-curve'),
     },
     {
-      field: 'combinedGsa',
-      headerName: t('asphalt.dosages.superpave.combined-gsa'),
-      valueFormatter: ({ value }) => `${value}`,
-      width: 200,
-    },
-    {
-      field: 'gse',
-      headerName: t('asphalt.dosages.superpave.gse'),
-      valueFormatter: ({ value }) => `${value}`,
-      width: 200,
+      key: 'higher',
+      data: tableDataHigher,
+      inputs: tableCompositionInputsHigher,
+      name: 'higherComposition',
+      isActive: higher,
+      title: t('asphalt.dosages.superpave.higher-curve'),
     },
   ];
 
-  const createEstimatedPercentageCols = () => {
-    const baseCols: GridColDef[] = [
-      {
-        field: 'granulometricComposition',
-        headerName: t('asphalt.dosages.superpave.granulometric-composition'),
-        valueFormatter: ({ value }) => `${value}`,
-        width: 200,
-      },
-      {
-        field: 'initialBinder',
-        headerName: t('asphalt.dosages.superpave.initial-binder'),
-        valueFormatter: ({ value }) => `${value}`,
-        width: 200,
-      },
-    ];
+  /**
+   * Update the selected table inputs when the user changes one of them
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement>} e - The input change event
+   * @param {string} tableName - The name of the table ('lower', 'average', 'higher')
+   * @param {number} index - The index of the material in the table
+   */
+  const onChangeInputsTables = (e, tableName, index) => {
+    [tableName] = {
+      ...[tableName],
+      ['input' + index]: Number(e.target.value),
+    };
+  };
 
-    const materialCols = materialSelectionData.aggregates.map((aggregate, index) => ({
-      field: `material_${index + 1}`,
-      headerName: aggregate.name,
-      valueFormatter: ({ value }) => `${value}`,
-      width: 100,
+  const clearTable = () => {
+    const newInputs = data.percentageInputs.map((input) => ({
+      material_1: null,
+      material_2: null,
     }));
 
-    return [...baseCols, ...materialCols];
-  };
+    setLower(false);
+    setAverage(false);
+    setHigher(false);
 
-  const estimatedPercentageCols = createEstimatedPercentageCols();
+    const prevData = data;
 
-  const createEstimatedPercentageGroupings = (): GridColumnGroupingModel => {
-    const baseChildren = [{ field: 'granulometricComposition' }, { field: 'initialBinder' }];
-
-    const materialChildren = materialSelectionData.aggregates.map((_, index) => ({
-      field: `material_${index + 1}`,
-    }));
-
-    return [
-      {
-        groupId: 'estimatedPercentage',
-        headerName: 'Porcentagem estimada de materiais',
-        children: [...baseChildren, ...materialChildren],
-        headerAlign: 'center' as GridAlignment,
+    const newData = {
+      ...prevData,
+      graphData: [],
+      percentageInputs: newInputs,
+      lowerComposition: {
+        percentsOfMaterials: null,
+        sumOfPercents: null,
       },
-    ];
+      averageComposition: {
+        percentsOfMaterials: null,
+        sumOfPercents: null,
+      },
+      higherComposition: {
+        percentsOfMaterials: null,
+        sumOfPercents: null,
+      },
+    };
+
+    setData({ step: 2, value: newData });
   };
 
-  const estimatedPercentageGroupings = createEstimatedPercentageGroupings();
+  const updateDataArray = (data) => {
+    const emptyTitles = [];
+    const result = data;
+    if (data.length > 0) {
+      if (data[0].some((value) => value !== '')) {
+        data[0].forEach(() => emptyTitles.push(''));
+        result.unshift(emptyTitles);
+      }
+    }
+    return result;
+  };
 
-  const compressionParamsCols: GridColDef[] = [
-    {
-      field: 'initialN',
-      headerName: t('asphalt.dosages.superpave.initial-n'),
-      valueFormatter: ({ value }) => `${value}`,
-      width: 200,
-    },
-    {
-      field: 'projectN',
-      headerName: t('asphalt.dosages.superpave.project-n'),
-      valueFormatter: ({ value }) => `${value}`,
-      width: 200,
-    },
-    {
-      field: 'maxN',
-      headerName: t('asphalt.dosages.superpave.max-n'),
-      valueFormatter: ({ value }) => `${value}`,
-      width: 200,
-    },
-    {
-      field: 'tex',
-      headerName: t('asphalt.dosages.superpave.traffic'),
-      valueFormatter: ({ value }) => `${value}`,
-      width: 200,
-    },
-  ];
+  const updateGraph = (points) => {
+    const pointsOfCurve = updateDataArray(points);
+    const prevData = { ...data };
+    const newData = { ...prevData, graphData: pointsOfCurve };
+    setData({ step: 2, value: newData });
+  };
 
-  const compressionParamsRows = [
-    {
-      id: 0,
-      initialN: data.turnNumber.initialN ? data.turnNumber.initialN : '',
-      maxN: data.turnNumber.maxN,
-      projectN: data.turnNumber.projectN,
-      tex: data.turnNumber.tex !== '' ? data.turnNumber.tex : generalData.trafficVolume,
-    },
-  ];
+  const calcular = (curve: string) => {
+    let valueCount = 0;
+    let valueIsValid = false;
 
-  const compressionParamsGroupings: GridColumnGroupingModel = [
-    {
-      groupId: 'compressionParams',
-      headerName: t('asphalt.dosages.superpave.compression-params'),
-      children: [{ field: 'initialN' }, { field: 'maxN' }, { field: 'projectN' }, { field: 'tex' }],
-      headerAlign: 'center',
-    },
-  ];
+    // Deve ser exatamente 100;
+    if (curve === 'lower') {
+      valueCount = Object.values(data.percentageInputs[0]).reduce((acc, item) => acc + Number(item), 0);
+      if (valueCount === 100) {
+        valueIsValid = true;
+      }
+    } else if (curve === 'average') {
+      valueCount = Object.values(data.percentageInputs[1]).reduce((acc, item) => acc + Number(item), 0);
+      if (valueCount === 100) {
+        valueIsValid = true;
+      }
+    } else if (curve === 'higher') {
+      valueCount = Object.values(data.percentageInputs[2]).reduce((acc, item) => acc + Number(item), 0);
+      if (valueCount === 100) {
+        valueIsValid = true;
+      }
+    }
 
-  const handleClose = (reason) => {
-    if (reason !== 'backdropClick') {
-      setSpecificMassModalIsOpen(false);
+    if (valueIsValid) {
+      toast.promise(
+        async () => {
+          try {
+            const chosenCurves = {
+              lower,
+              average,
+              higher,
+            };
+
+            const composition = await superpave.calculateGranulometryComposition(
+              data,
+              materialSelectionData,
+              generalData,
+              chosenCurves
+            );
+
+            const prevData = data;
+
+            const newData = {
+              ...prevData,
+              ...composition,
+            };
+
+            setData({ step: 2, value: newData });
+            //setLoading(false);
+          } catch (error) {
+            //setLoading(false);
+            throw error;
+          }
+        },
+        {
+          pending: t('loading.materials.pending'),
+          success: t('loading.materials.success'),
+          error: t('loading.materials.error'),
+        }
+      );
+    } else {
+      toast.error(t('asphalt.dosages.superpave.invalid-granulometry-values'));
     }
   };
 
   useEffect(() => {
-    if (Object.values(data.materials).every((e) => e !== null)) {
-      setShouldRenderTable1(true);
+    if (data.pointsOfCurve.length > 0) {
+      updateGraph(data.pointsOfCurve);
     }
-  }, [data.materials]);
+  }, [data.pointsOfCurve]);
 
-  nextDisabled && setNextDisabled(false);
+  if (data.graphData.length > 0) {
+    setNextDisabled(false);
+  }
 
   return (
     <>
@@ -407,135 +424,80 @@ const Superpave_Step4 = ({
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
             gap: '10px',
           }}
         >
-          {shouldRenderTable1 && (
-            <DataGrid
-              hideFooter
-              disableColumnMenu
-              disableColumnFilter
-              experimentalFeatures={{ columnGrouping: true }}
-              columns={columns}
-              rows={rows}
-            />
-          )}
-
-          {estimatedPercentageRows.length > 0 && !Object.values(data.materials[0]).some((item) => item === null) && (
-            <DataGrid
-              hideFooter
-              disableColumnMenu
-              disableColumnFilter
-              experimentalFeatures={{ columnGrouping: true }}
-              columnGroupingModel={estimatedPercentageGroupings}
-              columns={estimatedPercentageCols}
-              rows={estimatedPercentageRows}
-              sx={{ marginTop: '2rem' }}
-            />
-          )}
-
-          <Button
-            variant="outlined"
-            sx={{ width: 'fit-content', marginTop: '2rem' }}
-            onClick={() => setNewInitialBinderModalIsOpen(true)}
+          <Box
+            sx={{
+              display: 'flex',
+              gap: '5rem',
+              justifyContent: 'center',
+            }}
           >
-            {t('asphalt.dosages.superpave.change-initial-binder')}
-          </Button>
+            {checkBoxes.map((box) => (
+              <FormControlLabel
+                key={box.key}
+                control={<Checkbox checked={box.value} />}
+                onChange={() => toggleSelectedCurve(box.key)}
+                label={box.label}
+                sx={{ display: 'flex', width: 'fit-content' }}
+              />
+            ))}
 
-          <DataGrid
-            hideFooter
-            disableColumnMenu
-            disableColumnFilter
-            experimentalFeatures={{ columnGrouping: true }}
-            columnGroupingModel={compressionParamsGroupings}
-            columns={compressionParamsCols}
-            rows={compressionParamsRows}
-          />
-        </Box>
-      )}
-
-      {specificMassModalIsOpen && (
-        <ModalBase
-          title={t('asphalt.dosages.superpave.specific-mass-modal-title')}
-          leftButtonTitle={''}
-          rightButtonTitle={''}
-          onCancel={() => {
-            handleClose('backdropClick');
-            setLoading(false);
-          }}
-          open={specificMassModalIsOpen}
-          size={'medium'}
-          onSubmit={handleModalSubmit}
-          oneButton={true}
-          singleButtonTitle="Confirmar"
-        >
-          <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1rem', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', gap: '1rem', flexDirection: 'column', marginBottom: '2rem' }}>
-              {modalMaterialInputs.map((materialInputs, idx) => (
-                <>
-                  <Typography component={'h3'} sx={{ marginTop: '2rem' }}>
-                    {data.materials[idx].name}
-                  </Typography>
-
-                  <Box key={idx} sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                    {materialInputs.map((input) => (
-                      <InputEndAdornment
-                        key={`${input.materialIndex}_${input.key}`}
-                        adornment={input.adornment}
-                        value={input.value}
-                        label={input.label}
-                        placeholder={input.placeHolder}
-                        fullWidth
-                        onChange={(e) => {
-                          const materialIndex = data.materials.findIndex((i) => i.name === input.name);
-                          const newData = [...data.materials];
-                          newData[materialIndex][input.key] = e.target.value.replace(',', '.');
-
-                          setData({
-                            step: 3,
-                            key: `materials`,
-                            value: newData,
-                          });
-                        }}
-                      />
-                    ))}
-                  </Box>
-                </>
-              ))}
+            <Box sx={{ width: 'fit-content', display: 'flex', justifyContent: 'end' }}>
+              <Button onClick={() => clearTable()} variant="outlined">
+                {t('asphalt.dosages.superpave.clear-table')}
+              </Button>
             </Box>
           </Box>
-        </ModalBase>
-      )}
 
-      <ModalBase
-        title={t('asphalt.dosages.superpave.insert-initial-binder')}
-        leftButtonTitle={'Cancelar'}
-        rightButtonTitle={'Confirmar'}
-        onCancel={() => {
-          setNewInitialBinderModalIsOpen(false);
-          setLoading(false);
-        }}
-        open={newInitialBinderModalIsOpen}
-        size={'medium'}
-        onSubmit={handleModalSubmit}
-        oneButton={false}
-      >
-        <InputEndAdornment
-          adornment="%"
-          value={binderInput}
-          placeholder={t('asphalt.dosages.superpave.initial_binder')}
-          fullWidth
-          onChange={(e) => {
-            setData({
-              step: 3,
-              key: `binderInput`,
-              value: Number(e.target.value),
-            });
-          }}
-        />
-      </ModalBase>
+          {(lower || average || higher) &&
+            tables.map((table) => {
+              if (table.isActive) {
+                return (
+                  <TableContainer key={table.key}>
+                    <Box
+                      sx={{
+                        display: 'grid',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      <Typography sx={{ textAlign: 'center', marginTop: '2rem', fontSize: '1.5rem' }}>
+                        {table.title}
+                      </Typography>
+                    </Box>
+                    <CurvesTable
+                      materials={selectedMaterials}
+                      dnitBandsLetter={data?.bands?.letter}
+                      tableInputs={table.inputs}
+                      tableName={table.name}
+                      tableData={table.data}
+                      onChangeInputsTables={onChangeInputsTables}
+                    />
+                    <Button
+                      onClick={() => calcular(table.key)}
+                      variant="outlined"
+                      sx={{ width: '100%', marginTop: '2%' }}
+                    >
+                      {t('asphalt.dosages.superpave.calculate-higher-curve')}
+                    </Button>
+                  </TableContainer>
+                );
+              }
+            })}
+
+          {data.graphData.length > 0 && (
+            <>
+              <Typography>
+                {t('asphalt.dosages.superpave.maximum-nominal-size')}: {data.nominalSize.value} mm
+              </Typography>
+              <Graph data={data.graphData} />
+            </>
+          )}
+        </Box>
+      )}
     </>
   );
 };

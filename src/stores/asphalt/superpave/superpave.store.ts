@@ -14,6 +14,27 @@ interface SuperpaveGeneralData {
   step: number;
 }
 
+interface SuperpaveGranulometryEssayData {
+  material_mass: number;
+  table_data: { sieve_label: string; sieve_value: number; passant: number; retained: number }[];
+  sieve_series: { label: string; value: number }[];
+  bottom: number;
+
+  // Seria necessário?
+  
+  // accumulated_retained: [string, number][];
+  // graph_data: [number, number][];
+  // passant: [string, number][];
+  // retained_porcentage: [string, number][];
+  // total_retained: number;
+  // nominal_size: number;
+  // nominal_diameter: number;
+  // fineness_module: number;
+  // cc: number;
+  // cnu: number;
+  // error: number;
+}
+
 interface SuperpaveMaterialSelectionData {
   aggregates: { _id: string; name: string }[]; // lista de ids dos agregados
   binder: string; // id do ligante
@@ -390,6 +411,7 @@ interface DosageResume {
 
 export type SuperpaveData = {
   generalData: SuperpaveGeneralData;
+  granulometryEssayData: SuperpaveGranulometryEssayData;
   materialSelectionData: SuperpaveMaterialSelectionData;
   granulometryCompositionData: SuperpaveGranulometryCompositionData;
   initialBinderData: SuperpaveInitialBinderData;
@@ -414,16 +436,17 @@ type setDataType = { step: number; key?: string; value: unknown };
 
 const stepVariant = {
   0: 'generalData',
-  1: 'materialSelectionData',
-  2: 'granulometryCompositionData',
-  3: 'initialBinderData',
-  4: 'firstCompressionData',
-  5: 'firstCurvePercentagesData',
-  6: 'chosenCurvePercentagesData',
-  7: 'secondCompressionData',
-  8: 'secondCompressionPercentagesData',
-  9: 'confirmationCompressionData',
-  10: 'dosageResume',
+  1: 'granulometryEssayData',
+  2: 'materialSelectionData',
+  3: 'granulometryCompositionData',
+  4: 'initialBinderData',
+  5: 'firstCompressionData',
+  6: 'firstCurvePercentagesData',
+  7: 'chosenCurvePercentagesData',
+  8: 'secondCompressionData',
+  9: 'secondCompressionPercentagesData',
+  10: 'confirmationCompressionData',
+  11: 'dosageResume',
 };
 
 const initialState = {
@@ -438,6 +461,12 @@ const initialState = {
     dnitBand: null,
     description: null,
     step: 0,
+  },
+  granulometryEssayData: {
+    material_mass: null,
+    table_data: null,
+    sieve_series: null,
+    bottom: null,
   },
   materialSelectionData: {
     aggregates: [],

@@ -1,490 +1,400 @@
-import DropDown from '@/components/atoms/inputs/dropDown';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
+import { AsphaltMaterialData } from '@/interfaces/asphalt';
+import materialsService from '@/services/asphalt/asphalt-materials.service';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { Box, Button, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
+import { DataGrid, GridAlignment, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import * as XLSX from 'xlsx';
-import RenderCellComponent from './functionalComponents/renderCell';
 
 const Superpave_Step5 = ({
   nextDisabled,
   setNextDisabled,
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const { granulometryCompositionData, initialBinderData, firstCompressionData: data, setData } = useSuperpaveStore();
+  const [loading, setLoading] = useState<boolean>(true);
+  const {
+    materialSelectionData,
+    initialBinderData: data,
+    granulometryCompositionData,
+    generalData,
+    setData,
+  } = useSuperpaveStore();
 
-  const [stepStatus, setStepStatus] = useState('');
-  const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
+  const [specificMassModalIsOpen, setSpecificMassModalIsOpen] = useState(true);
+  const [newInitialBinderModalIsOpen, setNewInitialBinderModalIsOpen] = useState(false);
+  const [binderInput, setBinderInput] = useState();
 
-  //Water temperature list;
-  const list = {
-    '15°C - 0.9991': 0.9991,
-    '16°C - 0.9989': 0.9989,
-    '17°C - 0.9988': 0.9988,
-    '18°C - 0.9986': 0.9986,
-    '19°C - 0.9984': 0.9984,
-    '20°C - 0.9982': 0.9982,
-    '21°C - 0.9980': 0.998,
-    '22°C - 0.9978': 0.9978,
-    '23°C - 0.9975': 0.9975,
-    '24°C - 0.9973': 0.9973,
-    '25°C - 0.9970': 0.997,
-    '26°C - 0.9968': 0.9968,
-    '27°C - 0.9965': 0.9965,
-    '28°C - 0.9962': 0.9962,
-    '29°C - 0.9959': 0.9959,
-    '30°C - 0.9956': 0.9956,
-  };
+  const { user } = useAuth();
 
-  const waterTemperatureList = [];
-
-  const formatedWaterTempList = Object.keys(list).forEach((key) => {
-    waterTemperatureList.push({
-      label: key,
-      value: list[key],
-    });
-  });
-
-  const [inferiorRows, setInferiorRows] = useState([]);
-  const [intermediariaRows, setIntermediariaRows] = useState([]);
-  const [superiorRows, setSuperiorRows] = useState([]);
-  const [actualCurve, setActualCurve] = useState('');
-
-  const generateRiceTestInputs = (curve: string) => [
-    {
-      key: 'drySampleMass',
-      label: t('asphalt.dosages.superpave.dry-sample-mass'),
-      adornment: 'g',
-      value: data.riceTest?.find((obj) => obj.curve === curve)
-        ? data.riceTest.find((obj) => obj.curve === curve).drySampleMass
-        : null,
-    },
-    {
-      key: 'waterSampleContainerMass',
-      label: t('asphalt.dosages.superpave.water-sample-container-mass'),
-      adornment: 'g',
-      value: data.riceTest.find((obj) => obj.curve === curve)
-        ? data.riceTest.find((obj) => obj.curve === curve).waterSampleContainerMass
-        : null,
-    },
-    {
-      key: 'waterSampleMass',
-      label: t('asphalt.dosages.superpave.water-sample-mass'),
-      adornment: 'g',
-      value: data.riceTest.find((obj) => obj.curve === curve)
-        ? data.riceTest.find((obj) => obj.curve === curve).waterSampleMass
-        : null,
-    },
-  ];
+  const [binderData, setBinderData] = useState<AsphaltMaterialData>();
+  const [rows, setRows] = useState([]);
+  const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
+  const compositions = ['inferior', 'intermediaria', 'superior'];
+  const [materialNames, setMaterialNames] = useState([]);
+  const [activateSecondFetch, setActivateSecondFetch] = useState(false);
+  const [shouldRenderTable1, setShouldRenderTable1] = useState(false);
 
   useEffect(() => {
-    if (data.inferiorRows.length !== inferiorRows.length) {
-      setInferiorRows(data.inferiorRows);
+    if (!activateSecondFetch) {
+      toast.promise(
+        async () => {
+          try {
+            const newMaterials = [];
+
+            const aggregatesIds = materialSelectionData.aggregates.map((e) => e._id);
+            const binderId = materialSelectionData.binder;
+            const ids = [...aggregatesIds, binderId];
+
+            const response = await materialsService.getMaterials(ids);
+
+            const names = response.data.materials.map((e) => e.name);
+
+            setMaterialNames(names);
+            setBinderData(response.data.material);
+
+            const binderIndex = response.data.essays.findIndex((e) =>
+              e.some((f) => f.data.generalData.material.type === 'asphaltBinder')
+            );
+
+            const responseData = { ...response.data };
+
+            for (let i = 0; i < responseData.materials.length; i++) {
+              const aggregateMaterial = {
+                name: responseData.materials[i].name,
+                type: i === binderIndex ? 'binder' : 'aggregate',
+                realSpecificMass: null,
+                apparentSpecificMass: null,
+                absorption: null,
+              };
+
+              newMaterials.push(aggregateMaterial);
+            }
+
+            let prevData = { ...data };
+            prevData = {
+              ...prevData,
+              materials: newMaterials,
+            };
+
+            setData({
+              step: 3,
+              value: prevData,
+            });
+
+            setActivateSecondFetch(true);
+          } catch (error) {
+            throw error;
+          }
+        },
+        {
+          pending: t('loading.materials.pending'),
+          success: t('loading.materials.success'),
+          error: t('erro no 1'),
+        }
+      );
     }
-    if (data.intermediariaRows.length !== intermediariaRows.length) {
-      setIntermediariaRows(data.intermediariaRows);
-    }
-    if (data.superiorRows.length !== superiorRows.length) {
-      setSuperiorRows(data.superiorRows);
-    }
-  }, [data]);
+  }, []);
 
   useEffect(() => {
-    const prevData = [...data.riceTest];
+    const hasSomeNullValue = Object.values(rows).some((e) => e === null);
+    if (activateSecondFetch && hasSomeNullValue) {
+      toast.promise(
+        async () => {
+          try {
+            const newMaterials = [];
+            const { data: resData, success, error } = await superpave.getStep4SpecificMasses(materialSelectionData);
 
-    if (granulometryCompositionData.chosenCurves.lower) {
-      if (!prevData.some((obj) => obj.curve === 'lower')) {
-        if (prevData.some((obj) => obj.curve === null)) {
-          const index = prevData.findIndex((obj) => obj.curve === null);
-          prevData[index] = { ...prevData[index], curve: 'lower' };
-        } else {
-          const newData = { ...prevData[0], curve: 'lower' };
-          prevData.push(newData);
+            if (success && resData.specificMasses.length > 0) {
+              resData.specificMasses.forEach((e) => {
+                const obj = {
+                  name: e.generalData.material.name,
+                  realSpecificMass: e.results.bulk_specify_mass,
+                  apparentSpecificMass: e.results.apparent_specify_mass,
+                  absorption: e.results.absorption,
+                };
+                newMaterials.push(obj);
+              });
+
+              let prevData = { ...data };
+              prevData = {
+                ...prevData,
+                materials: newMaterials,
+              };
+
+              setData({
+                step: 3,
+                value: prevData,
+              });
+              setActivateSecondFetch(false);
+            } else {
+              let count = 0;
+              data.materials.forEach((e) => {
+                const obj = {
+                  name: e.name,
+                  realSpecificMass: e.realSpecificMass,
+                  apparentSpecificMass: e.apparentSpecificMass,
+                  absorption: e.absorption,
+                };
+                newMaterials[count].push(obj);
+                count++;
+              });
+
+              let prevData = { ...data };
+              prevData = {
+                ...prevData,
+                materials: newMaterials,
+              };
+
+              setData({
+                step: 3,
+                value: prevData,
+              });
+              setActivateSecondFetch(false);
+            }
+          } catch (error) {
+            throw error;
+          }
+        },
+        {
+          pending: t('loading.materials.pending'),
+          success: t('loading.materials.success'),
+          error: t('erro no 2'),
         }
-        setData({ step: 4, value: { ...data, riceTest: prevData } });
-      }
+      );
     }
+  }, [activateSecondFetch, rows]);
 
-    if (granulometryCompositionData.chosenCurves.average) {
-      if (!prevData.some((obj) => obj.curve === 'average')) {
-        if (prevData.some((obj) => obj.curve === null)) {
-          const index = prevData.findIndex((obj) => obj.curve === null);
-          prevData[index] = { ...prevData[index], curve: 'average' };
-        } else {
-          const newData = { ...prevData[0], curve: 'average' };
-          prevData.push(newData);
-        }
-        setData({ step: 4, value: { ...data, riceTest: prevData } });
-      }
-    }
-
-    if (granulometryCompositionData.chosenCurves.higher) {
-      if (!prevData.some((obj) => obj.curve === 'higher')) {
-        if (prevData.some((obj) => obj.curve === null)) {
-          const index = prevData.findIndex((obj) => obj.curve === null);
-          prevData[index] = { ...prevData[index], curve: 'higher' };
-        } else {
-          const newData = { ...prevData[0], curve: 'higher' };
-          prevData.push(newData);
-        }
-        setData({ step: 4, value: { ...data, riceTest: prevData } });
-      }
-    }
-  }, [granulometryCompositionData.chosenCurves]);
-
-  const generateColumns = (curve: string): GridColDef[] => [
-    {
-      field: 'diammeter',
-      headerName: t('asphalt.dosages.superpave.diammeter'),
-      width: 100,
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data[curve]?.findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="text"
-            value={data[curve][index].diammeter}
-            onChange={(e) => {
-              const prevData = [...data[curve]];
-              prevData[index].diammeter = parseFloat(e.target.value);
-              setData({ step: 4, value: { ...data, [curve]: prevData } });
-            }}
-          />
-        );
+  const generateMaterialInputs = (materials) => {
+    return materials.map((material, index) => [
+      {
+        key: 'realSpecificMass',
+        label: t('asphalt.dosages.superpave.real-specific-mass'),
+        placeHolder: 'Massa específica real',
+        adornment: 'g/cm²',
+        value: material.realSpecificMass,
+        materialIndex: index + 1,
+        name: material.name,
       },
-    },
-    {
-      field: 'dryMass',
-      headerName: t('asphalt.dosages.superpave.dry-mass'),
-      width: 150,
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data[curve].findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="number"
-            value={data[curve][index].dryMass}
-            onChange={(e) => {
-              const prevData = [...data[curve]];
-              prevData[index].dryMass = parseFloat(e.target.value);
-              setData({ step: 4, value: { ...data, [curve]: prevData } });
-            }}
-          />
-        );
+      {
+        key: 'apparentSpecificMass',
+        label: t('asphalt.dosages.superpave.apparent-specific-mass'),
+        placeHolder: 'Massa específica aparente',
+        adornment: 'g/cm²',
+        value: material.apparentSpecificMass,
+        materialIndex: index + 1,
+        name: material.name,
       },
-    },
-    {
-      field: 'submergedMass',
-      headerName: t('asphalt.dosages.superpave.submerged-mass'),
-      width: 150,
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data[curve].findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="number"
-            value={data[curve][index].submergedMass}
-            onChange={(e) => {
-              const prevData = [...data[curve]];
-              prevData[index].submergedMass = parseFloat(e.target.value);
-              setData({ step: 4, value: { ...data, [curve]: prevData } });
-            }}
-          />
-        );
+      {
+        key: 'absorption',
+        label: t('asphalt.dosages.superpave.absorption'),
+        placeHolder: 'Absorção',
+        adornment: '%',
+        value: material.absorption,
+        materialIndex: index + 1,
+        name: material.name,
       },
-    },
-    {
-      field: 'drySurfaceSaturatedMass',
-      headerName: t('asphalt.dosages.superpave.dry-surface-saturated-mass'),
-      width: 210,
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data[curve].findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="number"
-            value={data[curve][index].drySurfaceSaturatedMass}
-            onChange={(e) => {
-              const prevData = [...data[curve]];
-              prevData[index].drySurfaceSaturatedMass = parseFloat(e.target.value);
-              setData({ step: 4, value: { ...data, [curve]: prevData } });
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'waterTemperatureCorrection',
-      headerName: t('asphalt.dosages.superpave.water-temperature'),
-      width: 210,
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data[curve].findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="number"
-            value={data[curve][index].waterTemperatureCorrection}
-            onChange={(e) => {
-              const prevData = [...data[curve]];
-              prevData[index].waterTemperatureCorrection = parseFloat(e.target.value);
-              setData({ step: 4, value: { ...data, [curve]: prevData } });
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'document',
-      headerName: t('asphalt.dosages.superpave.spreadsheet'),
-      width: 150,
-      valueFormatter: ({ value }) => (value ? `${value}` : ''),
-      renderCell: (params) => <RenderCellComponent {...params} curve={curve} data={data} addPlanilha={addPlanilha} />,
-    },
-  ];
-
-  const inferiorGroupings: GridColumnGroupingModel = [
-    {
-      groupId: `Curva inferior`,
-      children: [
-        { field: 'diammeter' },
-        { field: 'dryMass' },
-        { field: 'submergedMass' },
-        { field: 'drySurfaceSaturatedMass' },
-        { field: 'waterTemperatureCorrection' },
-      ],
-      headerAlign: 'center',
-      headerName: t('asphalt.dosages.superpave.lower-curve'),
-    },
-  ];
-
-  const intermediariaGroupings: GridColumnGroupingModel = [
-    {
-      groupId: `Curva intermediaria`,
-      children: [
-        { field: 'diammeter' },
-        { field: 'dryMass' },
-        { field: 'submergedMass' },
-        { field: 'drySurfaceSaturatedMass' },
-        { field: 'waterTemperatureCorrection' },
-      ],
-      headerAlign: 'center',
-      headerName: t('asphalt.dosages.superpave.average-curve'),
-    },
-  ];
-
-  const superiorGroupings: GridColumnGroupingModel = [
-    {
-      groupId: `Curva superior`,
-      children: [
-        { field: 'diammeter' },
-        { field: 'height' },
-        { field: 'dryMass' },
-        { field: 'submergedMass' },
-        { field: 'drySurfaceSaturatedMass' },
-        { field: 'waterTemperatureCorrection' },
-      ],
-      headerAlign: 'center',
-      headerName: t('asphalt.dosages.superpave.higher-curve'),
-    },
-  ];
-
-  const handleErase = (curve: string) => {
-    try {
-      if (data[curve].length > 1) {
-        const newRows = [...data[curve]];
-        newRows.pop();
-        setData({ step: 4, value: { ...data, [curve]: newRows } });
-      } else throw t('superpave.error.minReads');
-    } catch (error) {
-      toast.error(error);
-    }
+    ]);
   };
 
-  const handleAdd = (curve: string) => {
-    const newRows = [...data[curve]];
-    newRows.push({
-      id: data[curve].length,
-      diammeter: null,
-      dryMass: null,
-      submergedMass: null,
-      drySurfaceSaturatedMass: null,
-      waterTemperatureCorrection: null,
-    });
-    setData({ step: 4, value: { ...data, [curve]: newRows } });
-  };
+  const modalMaterialInputs = generateMaterialInputs(data.materials);
 
-  const ExpansionToolbar = (curve: string) => {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
-        <Button sx={{ color: 'secondaryTons.red' }} onClick={() => handleErase(curve)}>
-          {t('erase')}
-        </Button>
-        <Button sx={{ color: 'secondaryTons.green' }} onClick={() => handleAdd(curve)}>
-          {t('add')}
-        </Button>
-      </Box>
-    );
-  };
-
-  const onDownload = () => {
-    try {
-      let spreadSheet;
-      if (initialBinderData.turnNumber) {
-        switch (initialBinderData.turnNumber.maxN) {
-          case 75:
-            spreadSheet = 'Superpave Planilha Modelo 75 Giros.xlsx';
-            setData({ step: 4, key: 'spreadSheetTemplate', value: 'Modelo75Giros' });
-            break;
-          case 115:
-            spreadSheet = 'Superpave Planilha Modelo 115 Giros.xlsx';
-            setData({ step: 4, key: 'spreadSheetTemplate', value: 'Modelo115Giros' });
-            break;
-          case 160:
-            spreadSheet = 'Superpave Planilha Modelo 160 Giros.xlsx';
-            setData({ step: 4, key: 'spreadSheetTemplate', value: 'Modelo160Giros' });
-            break;
-          default:
-            spreadSheet = 'Superpave Planilha Modelo 205 Giros.xlsx';
-            setData({ step: 4, key: 'spreadSheetTemplate', value: 'Modelo205Giros' });
-            break;
-        }
-      }
-      const link = document.createElement('a');
-      link.download = spreadSheet;
-      link.href = `/superpave-docs/${spreadSheet}`;
-      link.click();
-    } catch (error) {
-      toast.error(t('asphalt.dosages.superpave.file-download-error-toast'));
-    }
-  };
-
-  const readExcel = (file, tableName, index) => {
-    const promise = new Promise((resolve, reject) => {
-      file = file[0];
-
-      const fileReader = new FileReader();
-      fileReader.readAsArrayBuffer(file);
-
-      fileReader.onload = (e) => {
-        const bufferArray = e.target.result;
-        const wb = XLSX.read(bufferArray, { type: 'buffer' });
-        const wsname = wb.SheetNames[0];
-        const ws = wb.Sheets[wsname];
-        const data = XLSX.utils.sheet_to_json(ws);
-        resolve(data);
-      };
-
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-
-    const prevData = [...data[tableName]];
-    prevData[index].document = file.name;
-
-    setData({ step: 4, value: { ...data, [tableName]: prevData } });
-
-    promise.then((d: any[]) => {
-      const arrayAux = data[tableName];
-      if (initialBinderData.turnNumber) {
-        if (initialBinderData.turnNumber.maxN == d.length) {
-          arrayAux[index].planilha = d;
-          setData({ step: 4, value: { ...data, [tableName]: arrayAux } });
-          setStepStatus(t('asphalt.dosages.superpave.processing'));
-          toast.success(t('asphalt.dosages.superpave.chosen-sheet-toast'));
-        } else {
-          setStepStatus('error');
-          toast.error(
-            `Número de Giros inválido. Para um trânsito ${initialBinderData.turnNumber.tex} é necessário uma Planilha contendo ${initialBinderData.turnNumber.maxN} Giros.`
-          );
-        }
-      } else {
-        arrayAux[index].planilha = d;
-        setData({ step: 4, value: { ...data, [tableName]: arrayAux } });
-        setStepStatus(t('asphalt.dosages.superpave.processing'));
-        toast.success(t('asphalt.dosages.superpave.chosen-sheet-toast'));
-      }
-    });
-  };
-
-  const addPlanilha = (tableName, index, e) => {
-    const file = e.target.files;
-
-    readExcel(file, tableName, index);
-  };
-
-  const calculateRiceTest = () => {
+  const handleModalSubmit = () => {
     toast.promise(
       async () => {
         try {
-          const response = await superpave.calculateGmm(data);
+          const response = await superpave.getStep4Data(
+            generalData,
+            materialSelectionData,
+            granulometryCompositionData,
+            data
+          );
 
-          if (response.lower !== 0) {
-            const index = data.riceTest.findIndex((e) => e.curve === 'lower');
-            const arr = [...data.riceTest];
-            arr[index].gmm = response.lower.gmm;
-            setData({ step: 4, value: { ...data, riceTest: arr } });
-          }
+          const updatedRows = response.granulometryComposition.map((e, i) => ({
+            id: i,
+            granulometricComposition: compositions[i],
+            combinedGsb: e.combinedGsb ? e.combinedGsb.toFixed(2) : '',
+            combinedGsa: e.combinedGsa ? e.combinedGsa.toFixed(2) : '',
+            gse: e.gse ? e.gse.toFixed(2) : '',
+          }));
 
-          if (response.average !== 0) {
-            const index = data.riceTest.findIndex((e) => e.curve === 'average');
-            const arr = [...data.riceTest];
-            arr[index].gmm = response.average.gmm;
-            setData({ step: 4, value: { ...data, riceTest: arr } });
-          }
+          setRows(updatedRows);
 
-          if (response.higher !== 0) {
-            const index = data.riceTest.findIndex((e) => e.curve === 'higher');
-            const arr = [...data.riceTest];
-            arr[index].gmm = response.higher.gmm;
-            setData({ step: 4, value: { ...data, riceTest: arr } });
-          }
+          let prevData = { ...data };
+          prevData = {
+            ...prevData,
+            granulometryComposition: response.granulometryComposition,
+            turnNumber: response.turnNumber,
+          };
 
-          setRiceTestModalIsOpen(false);
+          const updatedPercentageRows = response.granulometryComposition.map((e, i) => {
+            const row = {
+              id: i,
+              granulometricComposition: compositions[i],
+              initialBinder: e.pli?.toFixed(2),
+            };
+
+            e.percentsOfDosageWithBinder.forEach((percent, index) => {
+              row[`material_${index + 1}`] = percent?.toFixed(2);
+            });
+
+            return row;
+          });
+
+          setEstimatedPercentageRows(updatedPercentageRows);
+
+          setData({ step: 3, value: prevData });
+          setLoading(false);
+          setSpecificMassModalIsOpen(false);
         } catch (error) {
           throw error;
         }
       },
       {
         pending: t('loading.materials.pending'),
-        success: t('asphalt.dosages.superpave.rice-test-success-toast'),
-        error: t('asphalt.dosages.superpave.rice-test-error-toast'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
       }
     );
   };
 
-  const showModal = (curve: string) => {
-    const prevData = [...data.riceTest];
+  const columns: GridColDef[] = [
+    {
+      field: 'granulometricComposition',
+      headerName: t('asphalt.dosages.superpave.granulometric-composition'),
+      valueFormatter: ({ value }) => `${value}`,
+      width: 200,
+    },
+    {
+      field: 'combinedGsb',
+      headerName: t('asphalt.dosages.superpave.combined-gsb'),
+      valueFormatter: ({ value }) => `${value}`,
+      width: 200,
+    },
+    {
+      field: 'combinedGsa',
+      headerName: t('asphalt.dosages.superpave.combined-gsa'),
+      valueFormatter: ({ value }) => `${value}`,
+      width: 200,
+    },
+    {
+      field: 'gse',
+      headerName: t('asphalt.dosages.superpave.gse'),
+      valueFormatter: ({ value }) => `${value}`,
+      width: 200,
+    },
+  ];
 
-    if (!prevData.find((obj) => obj.curve === curve)) {
-      if (prevData.some((obj) => obj.curve === null)) {
-        const index = prevData.findIndex((obj) => obj.curve === null);
-        prevData[index] = { ...prevData[index], curve: curve };
-      } else {
-        const newData = { ...prevData[0], curve: curve };
-        prevData.push(newData);
-      }
+  const createEstimatedPercentageCols = () => {
+    const baseCols: GridColDef[] = [
+      {
+        field: 'granulometricComposition',
+        headerName: t('asphalt.dosages.superpave.granulometric-composition'),
+        valueFormatter: ({ value }) => `${value}`,
+        width: 200,
+      },
+      {
+        field: 'initialBinder',
+        headerName: t('asphalt.dosages.superpave.initial-binder'),
+        valueFormatter: ({ value }) => `${value}`,
+        width: 200,
+      },
+    ];
 
-      setData({ step: 4, value: { ...data, riceTest: prevData } });
-    }
+    const materialCols = materialSelectionData.aggregates.map((aggregate, index) => ({
+      field: `material_${index + 1}`,
+      headerName: aggregate.name,
+      valueFormatter: ({ value }) => `${value}`,
+      width: 100,
+    }));
 
-    setActualCurve(curve);
-    setRiceTestModalIsOpen(true);
+    return [...baseCols, ...materialCols];
   };
+
+  const estimatedPercentageCols = createEstimatedPercentageCols();
+
+  const createEstimatedPercentageGroupings = (): GridColumnGroupingModel => {
+    const baseChildren = [{ field: 'granulometricComposition' }, { field: 'initialBinder' }];
+
+    const materialChildren = materialSelectionData.aggregates.map((_, index) => ({
+      field: `material_${index + 1}`,
+    }));
+
+    return [
+      {
+        groupId: 'estimatedPercentage',
+        headerName: 'Porcentagem estimada de materiais',
+        children: [...baseChildren, ...materialChildren],
+        headerAlign: 'center' as GridAlignment,
+      },
+    ];
+  };
+
+  const estimatedPercentageGroupings = createEstimatedPercentageGroupings();
+
+  const compressionParamsCols: GridColDef[] = [
+    {
+      field: 'initialN',
+      headerName: t('asphalt.dosages.superpave.initial-n'),
+      valueFormatter: ({ value }) => `${value}`,
+      width: 200,
+    },
+    {
+      field: 'projectN',
+      headerName: t('asphalt.dosages.superpave.project-n'),
+      valueFormatter: ({ value }) => `${value}`,
+      width: 200,
+    },
+    {
+      field: 'maxN',
+      headerName: t('asphalt.dosages.superpave.max-n'),
+      valueFormatter: ({ value }) => `${value}`,
+      width: 200,
+    },
+    {
+      field: 'tex',
+      headerName: t('asphalt.dosages.superpave.traffic'),
+      valueFormatter: ({ value }) => `${value}`,
+      width: 200,
+    },
+  ];
+
+  const compressionParamsRows = [
+    {
+      id: 0,
+      initialN: data.turnNumber.initialN ? data.turnNumber.initialN : '',
+      maxN: data.turnNumber.maxN,
+      projectN: data.turnNumber.projectN,
+      tex: data.turnNumber.tex !== '' ? data.turnNumber.tex : generalData.trafficVolume,
+    },
+  ];
+
+  const compressionParamsGroupings: GridColumnGroupingModel = [
+    {
+      groupId: 'compressionParams',
+      headerName: t('asphalt.dosages.superpave.compression-params'),
+      children: [{ field: 'initialN' }, { field: 'maxN' }, { field: 'projectN' }, { field: 'tex' }],
+      headerAlign: 'center',
+    },
+  ];
+
+  const handleClose = (reason) => {
+    if (reason !== 'backdropClick') {
+      setSpecificMassModalIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (Object.values(data.materials).every((e) => e !== null)) {
+      setShouldRenderTable1(true);
+    }
+  }, [data.materials]);
 
   nextDisabled && setNextDisabled(false);
 
@@ -493,195 +403,139 @@ const Superpave_Step5 = ({
       {loading ? (
         <Loading />
       ) : (
-        <>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              flexDirection: 'column',
-              gap: '50px',
-            }}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '10px',
+          }}
+        >
+          {shouldRenderTable1 && (
+            <DataGrid
+              hideFooter
+              disableColumnMenu
+              disableColumnFilter
+              experimentalFeatures={{ columnGrouping: true }}
+              columns={columns}
+              rows={rows}
+            />
+          )}
+
+          {estimatedPercentageRows.length > 0 && !Object.values(data.materials[0]).some((item) => item === null) && (
+            <DataGrid
+              hideFooter
+              disableColumnMenu
+              disableColumnFilter
+              experimentalFeatures={{ columnGrouping: true }}
+              columnGroupingModel={estimatedPercentageGroupings}
+              columns={estimatedPercentageCols}
+              rows={estimatedPercentageRows}
+              sx={{ marginTop: '2rem' }}
+            />
+          )}
+
+          <Button
+            variant="outlined"
+            sx={{ width: 'fit-content', marginTop: '2rem' }}
+            onClick={() => setNewInitialBinderModalIsOpen(true)}
           >
-            <Button
-              variant="contained"
-              onClick={onDownload}
-              sx={{
-                width: 'fit-content',
-                display: 'flex',
-                marginX: 'auto',
-                color: 'white',
-              }}
-            >
-              {t('asphalt.dosages.superpave.model-sheet')}
-            </Button>
+            {t('asphalt.dosages.superpave.change-initial-binder')}
+          </Button>
 
-            {granulometryCompositionData.chosenCurves.lower && (
-              <DataGrid
-                key="inferior"
-                columns={generateColumns('inferiorRows')}
-                rows={inferiorRows}
-                columnGroupingModel={inferiorGroupings}
-                experimentalFeatures={{ columnGrouping: true }}
-                density="comfortable"
-                disableColumnMenu
-                disableColumnSelector
-                slots={{ footer: () => ExpansionToolbar('inferiorRows') }}
-              />
-            )}
-
-            {granulometryCompositionData.chosenCurves.average && (
-              <DataGrid
-                key="intermediaria"
-                columns={generateColumns('intermediariaRows')}
-                rows={intermediariaRows}
-                columnGroupingModel={intermediariaGroupings}
-                experimentalFeatures={{ columnGrouping: true }}
-                density="comfortable"
-                disableColumnMenu
-                disableColumnSelector
-                slots={{ footer: () => ExpansionToolbar('intermediariaRows') }}
-              />
-            )}
-
-            {granulometryCompositionData.chosenCurves.higher && (
-              <DataGrid
-                key="superior"
-                columns={generateColumns('superiorRows')}
-                rows={superiorRows}
-                columnGroupingModel={superiorGroupings}
-                experimentalFeatures={{ columnGrouping: true }}
-                density="comfortable"
-                disableColumnMenu
-                disableColumnSelector
-                slots={{ footer: () => ExpansionToolbar('superiorRows') }}
-              />
-            )}
-          </Box>
-
-          <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '2rem', marginY: '2rem' }}>
-            <Typography sx={{ textAlign: 'center' }}>{t('asphalt.dosages.superpave.measured-max-density')}</Typography>
-
-            <Box sx={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-              {granulometryCompositionData.chosenCurves.lower && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                    alignItems: 'center',
-                    gap: '2rem',
-                  }}
-                >
-                  <Typography>{t('asphalt.dosages.superpave.lower-curve')}</Typography>
-                  <Button onClick={() => showModal('lower')} variant="outlined">
-                    {t('asphalt.dosages.superpave.calculate-max-density')}
-                  </Button>
-                </Box>
-              )}
-
-              {granulometryCompositionData.chosenCurves.average && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                    alignItems: 'center',
-                    gap: '2rem',
-                  }}
-                >
-                  <Typography>{t('asphalt.dosages.superpave.average-curve')}</Typography>
-                  <Button onClick={() => showModal('average')} variant="outlined">
-                    {t('asphalt.dosages.superpave.calculate-max-density')}
-                  </Button>
-                </Box>
-              )}
-
-              {granulometryCompositionData.chosenCurves.higher && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                    alignItems: 'center',
-                    gap: '2rem',
-                  }}
-                >
-                  <Typography>{t('asphalt.dosages.superpave.higher-curve')}</Typography>
-                  <Button onClick={() => showModal('higher')} variant="outlined">
-                    {t('asphalt.dosages.superpave.calculate-max-density')}
-                  </Button>
-                </Box>
-              )}
-            </Box>
-          </Box>
-
-          <ModalBase
-            title={t('asphalt.dosages.superpave.calculate-rice-test')}
-            leftButtonTitle={t('asphalt.dosages.superpave.confirm')}
-            rightButtonTitle={t('materials.template.cancel')}
-            onCancel={() => setRiceTestModalIsOpen(false)}
-            open={riceTestModalIsOpen}
-            size={'large'}
-            onSubmit={() => {
-              calculateRiceTest();
-            }}
-          >
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              <InputEndAdornment
-                adornment=""
-                type="number"
-                label={t('asphalt.dosages.superpave.insert-gmm')}
-                sx={{ width: '20rem' }}
-                value={data.riceTest?.find((obj) => obj.curve === actualCurve)?.gmm}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  const prevData = [...data.riceTest];
-                  const index = prevData.findIndex((obj) => obj.curve === actualCurve);
-                  const newData = { ...prevData[index], gmm: parseFloat(value) };
-                  prevData[index] = newData;
-                  setData({ step: 4, value: { ...data, riceTest: prevData } });
-                }}
-              />
-
-              <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
-                {generateRiceTestInputs(actualCurve).map((input) => (
-                  <InputEndAdornment
-                    key={input.key}
-                    adornment={input.adornment}
-                    label={input.label}
-                    value={input.value}
-                    sx={{ width: '15rem' }}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      const prevData = [...data.riceTest];
-                      const index = prevData.findIndex((obj) => obj.curve === actualCurve);
-                      const newData = { ...prevData[index], [input.key]: Number(value) };
-                      prevData[index] = newData;
-                      setData({ step: 4, value: { ...data, riceTest: prevData } });
-                    }}
-                  />
-                ))}
-              </Box>
-
-              <DropDown
-                key={'water'}
-                variant="standard"
-                label={t('asphalt.dosages.superpave.water-temperature-dropdown')}
-                options={waterTemperatureList}
-                callback={(selectedValue) => {
-                  const prevData = [...data.riceTest];
-                  const index = prevData.findIndex((obj) => obj.curve === actualCurve);
-                  const newData = { ...prevData[index], temperatureOfWater: Number(selectedValue) };
-                  prevData[index] = newData;
-                  setData({ step: 4, value: { ...data, riceTest: prevData } });
-                }}
-                size="medium"
-                sx={{ width: '20rem' }}
-              />
-            </Box>
-          </ModalBase>
-        </>
+          <DataGrid
+            hideFooter
+            disableColumnMenu
+            disableColumnFilter
+            experimentalFeatures={{ columnGrouping: true }}
+            columnGroupingModel={compressionParamsGroupings}
+            columns={compressionParamsCols}
+            rows={compressionParamsRows}
+          />
+        </Box>
       )}
+
+      {specificMassModalIsOpen && (
+        <ModalBase
+          title={t('asphalt.dosages.superpave.specific-mass-modal-title')}
+          leftButtonTitle={''}
+          rightButtonTitle={''}
+          onCancel={() => {
+            handleClose('backdropClick');
+            setLoading(false);
+          }}
+          open={specificMassModalIsOpen}
+          size={'medium'}
+          onSubmit={handleModalSubmit}
+          oneButton={true}
+          singleButtonTitle="Confirmar"
+        >
+          <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1rem', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', gap: '1rem', flexDirection: 'column', marginBottom: '2rem' }}>
+              {modalMaterialInputs.map((materialInputs, idx) => (
+                <>
+                  <Typography component={'h3'} sx={{ marginTop: '2rem' }}>
+                    {data.materials[idx].name}
+                  </Typography>
+
+                  <Box key={idx} sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                    {materialInputs.map((input) => (
+                      <InputEndAdornment
+                        key={`${input.materialIndex}_${input.key}`}
+                        adornment={input.adornment}
+                        value={input.value}
+                        label={input.label}
+                        placeholder={input.placeHolder}
+                        fullWidth
+                        onChange={(e) => {
+                          const materialIndex = data.materials.findIndex((i) => i.name === input.name);
+                          const newData = [...data.materials];
+                          newData[materialIndex][input.key] = e.target.value.replace(',', '.');
+
+                          setData({
+                            step: 3,
+                            key: `materials`,
+                            value: newData,
+                          });
+                        }}
+                      />
+                    ))}
+                  </Box>
+                </>
+              ))}
+            </Box>
+          </Box>
+        </ModalBase>
+      )}
+
+      <ModalBase
+        title={t('asphalt.dosages.superpave.insert-initial-binder')}
+        leftButtonTitle={'Cancelar'}
+        rightButtonTitle={'Confirmar'}
+        onCancel={() => {
+          setNewInitialBinderModalIsOpen(false);
+          setLoading(false);
+        }}
+        open={newInitialBinderModalIsOpen}
+        size={'medium'}
+        onSubmit={handleModalSubmit}
+        oneButton={false}
+      >
+        <InputEndAdornment
+          adornment="%"
+          value={binderInput}
+          placeholder={t('asphalt.dosages.superpave.initial_binder')}
+          fullWidth
+          onChange={(e) => {
+            setData({
+              step: 3,
+              key: `binderInput`,
+              value: Number(e.target.value),
+            });
+          }}
+        />
+      </ModalBase>
     </>
   );
 };

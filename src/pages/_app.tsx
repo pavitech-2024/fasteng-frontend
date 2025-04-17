@@ -57,7 +57,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       if (keyString !== 'step') {
         // Obter o storeName
         storeName = keyString.split('-')[0]; // ex: 'superpave' em 'asphalt-superpave-store'
-        console.log("🚀 ~ useEffect ~ storeName:", storeName)
       }
 
       let step = null;
@@ -70,7 +69,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
       // Encontrar o service correspondente ao keyString
       const service = serviceMap[storeName];
-      console.log("🚀 ~ useEffect ~ service:", service)
 
       // Obter o número total de steps
       const totalSteps = service?.info?.steps;

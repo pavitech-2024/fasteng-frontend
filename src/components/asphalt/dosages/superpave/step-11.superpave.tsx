@@ -1,16 +1,15 @@
-import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
-import Result_Card from '@/components/atoms/containers/result-card';
-import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
-import GenerateSuperpaveDosagePDF from '@/components/generatePDF/dosages/asphalt/superpave/generatePDFSuperpave';
+import DropDown from '@/components/atoms/inputs/dropDown';
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
+import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
-import superpaveDosageService from '@/services/asphalt/dosages/superpave/superpave.consult.service';
+import useAuth from '@/contexts/auth';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
-import { Box } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Box, Button, Typography } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 const Superpave_Step11 = ({
@@ -19,173 +18,301 @@ const Superpave_Step11 = ({
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const {
-    confirmationCompressionData,
-    granulometryCompositionData,
-    initialBinderData,
-    firstCurvePercentagesData,
-    secondCompressionPercentagesData,
-    materialSelectionData,
-    dosageResume: data,
-    setData,
-  } = useSuperpaveStore();
+  const { materialSelectionData, confirmationCompressionData: data, setData } = useSuperpaveStore();
 
-  const [finalProportionsRows, setFinalProportionsRows] = useState([]);
-  const [finalProportionsCols, setFinalProportionsCols] = useState([]);
-  const [quantitativeRows, setQuantitativeRows] = useState([]);
-  const [quantitativeCols, setQuantitativeCols] = useState([]);
-  const [dosage, setDosage] = useState(null);
-  const store = JSON.parse(sessionStorage.getItem('asphalt-superpave-store'));
-  const dosageId = store?.state._id;
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchDosage = async () => {
-      try {
-        const response = await superpave.calculateDosageEquation(
-          granulometryCompositionData,
-          initialBinderData,
-          firstCurvePercentagesData,
-          secondCompressionPercentagesData,
-          confirmationCompressionData
-        );
+  const { user } = useAuth();
 
-        const foundDosage = await superpaveDosageService.getSuperpaveDosage(dosageId);
+  const list = {
+    '15°C - 0.9991': 0.9991,
+    '16°C - 0.9989': 0.9989,
+    '17°C - 0.9988': 0.9988,
+    '18°C - 0.9986': 0.9986,
+    '19°C - 0.9984': 0.9984,
+    '20°C - 0.9982': 0.9982,
+    '21°C - 0.9980': 0.998,
+    '22°C - 0.9978': 0.9978,
+    '23°C - 0.9975': 0.9975,
+    '24°C - 0.9973': 0.9973,
+    '25°C - 0.9970': 0.997,
+    '26°C - 0.9968': 0.9968,
+    '27°C - 0.9965': 0.9965,
+    '28°C - 0.9962': 0.9962,
+    '29°C - 0.9959': 0.9959,
+    '30°C - 0.9956': 0.9956,
+  };
 
-        setDosage(foundDosage.data.dosage);
-        const newData = { ...data, ...response };
+  const waterTemperatureList = [];
 
-        setData({
-          step: 10,
-          value: newData,
-        });
-      } catch (error) {
-        throw error;
-      }
-    };
-
-    toast.promise(fetchDosage(), {
-      pending: t('loading.dosages.pending'),
-      success: t('loading.dosages.success'),
-      error: t('loading.dosages.error'),
+  const formatedWaterTempList = Object.keys(list).forEach((key) => {
+    waterTemperatureList.push({
+      label: key,
+      value: list[key],
     });
-  }, []);
+  });
 
-  useEffect(() => {
-    if (data?.ponderatedPercentsOfDosage?.length > 0) {
-      const initialCols = [
-        {
-          field: 'optimumBinder',
-          headerName: t('asphalt.dosages.optimum-binder'),
-          valueFormatter: ({ value }) => `${value}`,
-          width: 250,
-        },
-      ];
-
-      const prevRowsData = {
-        id: 0,
-        optimumBinder: secondCompressionPercentagesData.optimumContent
-          ? secondCompressionPercentagesData.optimumContent
-          : '---',
-      };
-
-      const newColsData: GridColDef[] = [...initialCols];
-
-      data.ponderatedPercentsOfDosage.forEach((materialPercent, index) => {
-        const materialName = materialSelectionData.aggregates[index].name;
-
-        prevRowsData[materialName] = materialPercent;
-
-        const newFinalProportionsCols: GridColDef = {
-          field: materialName,
-          headerName: materialName,
-          valueFormatter: ({ value }) => `${value}`,
-          width: 150,
-        };
-
-        newColsData.push(newFinalProportionsCols);
-      });
-
-      setFinalProportionsRows([prevRowsData]);
-      setFinalProportionsCols(newColsData);
-    }
-  }, [data?.ponderatedPercentsOfDosage]);
-
-  useEffect(() => {
-    if (data?.quantitative?.length > 0) {
-      const initialCols: GridColDef[] = [
-        {
-          field: 'asphaltBinder',
-          headerName: t('superpave.dosage.asphalt-binder'),
-          valueFormatter: ({ value }) => `${value}`,
-          width: 200,
-        },
-      ];
-
-      const newRowsData = data.quantitative.reduce(
-        (prevRowsData, materialPercent, index) => {
-          const materialName = materialSelectionData.aggregates[index]?.name;
-
-          return {
-            ...prevRowsData,
-            [materialName]: materialPercent.toFixed(2),
-          };
-        },
-        { id: 0, asphaltBinder: typeof data.quantitative[0] === 'number' ? data.quantitative[0] : '---' }
-      );
-
-      const newColsData = materialSelectionData.aggregates.reduce(
-        (prevColumns, material, index) => {
-          const newQuantitativeCols: GridColDef = {
-            field: material.name,
-            headerName: `${material.name} (m³)`,
-            valueFormatter: ({ value }) => `${value}`,
-            width: 180,
-          };
-
-          return [...prevColumns, newQuantitativeCols];
-        },
-        [...initialCols]
-      );
-
-      setQuantitativeRows([newRowsData]);
-      setQuantitativeCols(newColsData);
-
-      setLoading(false);
-    }
-  }, [data?.quantitative]);
-
-  const resultCards = [
+  const confirmationCompressionCols = [
     {
-      label: t('asphalt.dosages.superpave.apparent-specific-mass') + ' (Gmb):',
-      value: data?.Gmb.toFixed(2).toString(),
-      unity: 'g/cm3',
+      field: 'averageDiammeter',
+      headerName: 'Diâmetro médio (cm)',
+      width: 160,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data.table.findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="text"
+            value={data.table[index]?.averageDiammeter}
+            onChange={(e) => {
+              const prevData = [...data.table];
+              prevData[index].averageDiammeter = parseFloat(e.target.value);
+              setData({ step: 9, value: { ...data, table: prevData } });
+            }}
+          />
+        );
+      },
     },
     {
-      label: t('asphalt.dosages.superpave.void-volume') + ' (Vv):',
-      value: (data?.Vv * 100).toFixed(2).toString(),
-      unity: '%',
+      field: 'averageHeight',
+      headerName: 'Altura média (cm)',
+      width: 150,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data.table.findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="number"
+            value={data.table[index]?.averageHeight}
+            onChange={(e) => {
+              const prevData = [...data.table];
+              prevData[index].averageHeight = parseFloat(e.target.value);
+              setData({ step: 7, value: { ...data, table: prevData } });
+            }}
+          />
+        );
+      },
     },
     {
-      label: t('Vazios do agregado mineral (VAM):'),
-      value: data?.Vam?.toFixed(2).toString(),
-      unity: '%',
+      field: 'dryMass',
+      headerName: 'Massa seca (g)',
+      width: 150,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data.table.findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'g'}
+            type="number"
+            value={data.table[index]?.dryMass}
+            onChange={(e) => {
+              const prevData = [...data.table];
+              prevData[index].dryMass = parseFloat(e.target.value);
+              setData({ step: 7, value: { ...data, table: prevData } });
+            }}
+          />
+        );
+      },
     },
     {
-      label: t('asphalt.dosages.rbv') + ' (RBV):',
-      value: (data?.RBV * 100).toFixed(2).toString(),
-      unity: '%',
+      field: 'submergedMass',
+      headerName: 'Massa submersa (g)',
+      width: 150,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data.table.findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="number"
+            value={data.table[index]?.submergedMass}
+            onChange={(e) => {
+              const prevData = [...data.table];
+              prevData[index].submergedMass = parseFloat(e.target.value);
+              setData({ step: 7, value: { ...data, table: prevData } });
+            }}
+          />
+        );
+      },
     },
     {
-      label: t('asphalt.dosages.absorbed-water'),
-      value: data?.percentWaterAbs.toFixed(2).toString(),
-      unity: '%',
+      field: 'drySurfaceSaturatedMass',
+      headerName: 'Massa saturada com superfície seca (g)',
+      width: 150,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data.table.findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="number"
+            value={data.table[index]?.drySurfaceSaturatedMass}
+            onChange={(e) => {
+              const prevData = [...data.table];
+              prevData[index].drySurfaceSaturatedMass = parseFloat(e.target.value);
+              setData({ step: 7, value: { ...data, table: prevData } });
+            }}
+          />
+        );
+      },
     },
     {
-      label: t('asphalt.dosages.superpave.specific-mass'),
-      value: data?.specifiesMass.toFixed(2).toString(),
-      unity: 'g/cm',
+      field: 'waterTemperatureCorrection',
+      headerName: 'Fator de correção da temperatura da água (N)',
+      width: 150,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data.table.findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="number"
+            value={data.table[index]?.waterTemperatureCorrection}
+            onChange={(e) => {
+              const prevData = [...data.table];
+              prevData[index].waterTemperatureCorrection = parseFloat(e.target.value);
+              setData({ step: 7, value: { ...data, table: prevData } });
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: 'diametralTractionResistance',
+      headerName: 'Resistência à tração por compressão diametral (MPa)',
+      width: 150,
+      renderCell: ({ row }) => {
+        const { id } = row;
+        const index = data.table.findIndex((r) => r.id === id);
+        return (
+          <InputEndAdornment
+            adornment={'cm'}
+            type="number"
+            value={data.table[index]?.diametralTractionResistance}
+            onChange={(e) => {
+              const prevData = [...data.table];
+              prevData[index].diametralTractionResistance = parseFloat(e.target.value);
+              setData({ step: 7, value: { ...data, table: prevData } });
+            }}
+          />
+        );
+      },
     },
   ];
+
+  const confirmationCompressionRows = [
+    {
+      id: data.table[0].id,
+      averageDiammeter: data.table[0].averageDiammeter,
+      averageHeight: data.table[0].averageHeight,
+      dryMass: data.table[0].dryMass,
+      submergedMass: data.table[0].submergedMass,
+      drySurfaceSaturatedMass: data.table[0].drySurfaceSaturatedMass,
+      waterTemperatureCorrection: data.table[0].waterTemperatureCorrection,
+      diametralTractionResistance: data.table[0].diametralTractionResistance,
+    },
+  ];
+
+  const gmmInputs = [
+    {
+      key: 'sampleAirDryMass',
+      value: data.riceTest.sampleAirDryMass,
+      adornment: 'g',
+      placeHolder: 'Massa da amostra seca ao ar',
+    },
+    {
+      key: 'containerSampleWaterMass',
+      value: data.riceTest.containerSampleWaterMass,
+      adornment: 'g',
+      placeHolder: 'Massa do recipiente + amostra + água (g)',
+    },
+    {
+      key: 'containerWaterMass',
+      value: data.riceTest.containerWaterMass,
+      adornment: 'g',
+      placeHolder: 'Massa do recipiente + água (g)',
+    },
+  ];
+
+  const handleErase = () => {
+    try {
+      if (data.table.length > 1) {
+        const newRows = [...data.table];
+        newRows.pop();
+        setData({ step: 7, value: { ...data, table: newRows } });
+      } else throw t('superpave.error.minReads');
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
+  const handleAdd = () => {
+    const newRows = [...data.table];
+    newRows.push({
+      id: data.table.length,
+      averageDiammeter: null,
+      averageHeight: null,
+      dryMass: null,
+      submergedMass: null,
+      drySurfaceSaturatedMass: null,
+      waterTemperatureCorrection: null,
+      diametralTractionResistance: null,
+    });
+    setData({ step: 7, value: { ...data, table: newRows } });
+  };
+
+  const ExpansionToolbar = () => {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
+        <Button sx={{ color: 'secondaryTons.red' }} onClick={() => handleErase()}>
+          {t('erase')}
+        </Button>
+        <Button sx={{ color: 'secondaryTons.green' }} onClick={() => handleAdd()}>
+          {t('add')}
+        </Button>
+      </Box>
+    );
+  };
+
+  const handleGmmSubmit = () => {
+    const { temperatureOfWater, ...riceTestWithoutWaterTemp } = data.riceTest;
+    const riceTestHasValues = Object.values(riceTestWithoutWaterTemp).some((item) => item !== null);
+    if (riceTestHasValues) {
+      toast.error(t('asphalt.dosages.superpave.rice-test-empty-values'));
+    } else if (!riceTestHasValues && data.gmm === null) {
+      toast.error(t('asphalt.dosages.superpave.gmm-empty'));
+    } else if (!riceTestHasValues && data.gmm !== null && data.riceTest.temperatureOfWater === null) {
+      toast.error(t('asphalt.dosages.superpave.water-temperature-empty'));
+    } else {
+      toast.promise(
+        async () => {
+          try {
+            const { data: resData, success, error } = await superpave.calculateRiceTestStep9(data);
+
+            if (success) {
+              const newData = { ...data, ...resData };
+              setData({
+                step: 9,
+                value: newData,
+              });
+              setModalIsOpen(false);
+            } else {
+              console.error(`${error}`);
+            }
+          } catch (error) {
+            throw error;
+          }
+        },
+        {
+          pending: t('loading.materials.pending'),
+          success: t('loading.materials.success'),
+          error: t('loading.materials.error'),
+        }
+      );
+    }
+  };
 
   nextDisabled && setNextDisabled(false);
 
@@ -194,89 +321,81 @@ const Superpave_Step11 = ({
       {loading ? (
         <Loading />
       ) : (
-        <FlexColumnBorder open={true} title={t('superpave.step-11')}>
-          <GenerateSuperpaveDosagePDF dosage={dosage} />
-          <Box
-            sx={{
-              width: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: { mobile: '5px', notebook: '4rem' },
-              marginY: '20px',
-            }}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+          }}
+        >
+          <Typography>Gmm do teor de ligante asfaltico ótimo: {data.gmm}</Typography>
+
+          <Button variant="outlined" onClick={() => setModalIsOpen(true)}>
+            Calcular densidade máxima da mistura
+          </Button>
+
+          <DataGrid
+            hideFooter
+            disableColumnMenu
+            disableColumnFilter
+            experimentalFeatures={{ columnGrouping: true }}
+            columns={confirmationCompressionCols}
+            rows={confirmationCompressionRows}
+            slots={{ footer: ExpansionToolbar }}
+          />
+
+          <ModalBase
+            leftButtonTitle={'cancelar'}
+            rightButtonTitle={'confirmar'}
+            oneButton={true}
+            onCancel={() => setModalIsOpen(false)}
+            open={modalIsOpen}
+            size={'large'}
+            title={''}
+            onSubmit={handleGmmSubmit}
+            singleButtonTitle={t('asphalt.dosages.superpave.confirm')}
           >
-            <ResultSubTitle title={t('superpave.step-11')} sx={{ margin: '.65rem' }} />
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+              <InputEndAdornment
+                adornment={''}
+                label={t('asphalt.dosages.superpave.insert-gmm')}
+                value={data.gmm}
+                onChange={(e) => setData({ step: 9, key: 'gmm', value: e.target.value })}
+              />
 
-            <Box id="general-results" sx={{ width: '100%', overflowX: 'auto' }}>
-              <DataGrid
-                hideFooter
-                disableColumnMenu
-                disableColumnFilter
-                columns={finalProportionsCols.map((col) => ({
-                  ...col,
-                  flex: 1,
-                  autoWidth: true,
-                  maxWidth: 180,
-                  headerAlign: 'center',
-                  align: 'center',
-                }))}
-                rows={finalProportionsRows}
-                sx={{
-                  minWidth: '800px',
+              <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
+                {gmmInputs.map((input) => (
+                  <InputEndAdornment
+                    key={input.key}
+                    adornment={input.adornment}
+                    placeholder={input.placeHolder}
+                    value={input.value}
+                    onChange={(e) => {
+                      const prevData = { ...data.riceTest };
+                      prevData[input.key] = e.target.value;
+                      setData({ step: 9, value: { ...data, riceTest: prevData } });
+                    }}
+                  />
+                ))}
+              </Box>
+
+              <DropDown
+                key={'water'}
+                variant="standard"
+                label={'Selecione o fator de correção para a temperatura da água'}
+                options={waterTemperatureList}
+                callback={(selectedValue) => {
+                  let prevData = { ...data.riceTest };
+                  const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
+                  prevData = newData;
+                  setData({ step: 9, value: { ...data, riceTest: prevData } });
                 }}
+                size="medium"
+                sx={{ width: '100%' }}
               />
             </Box>
-
-            <ResultSubTitle
-              title={t('asphalt.dosages.superpave.asphalt-mass-quantitative')}
-              sx={{ margin: '.65rem' }}
-            />
-
-            <Box sx={{ width: '100%', overflowX: 'auto' }}>
-              <DataGrid
-                hideFooter
-                disableColumnMenu
-                disableColumnFilter
-                columns={quantitativeCols.map((col) => ({
-                  ...col,
-                  flex: 1,
-                  width: 200,
-                  headerAlign: 'center',
-                  align: 'center',
-                }))}
-                rows={quantitativeRows}
-                sx={{
-                  minWidth: '800px',
-                }}
-              />
-            </Box>
-
-            <ResultSubTitle
-              title={t('asphalt.dosages.superpave.mechanic-volumetric-params')}
-              sx={{
-                maxWidth: '103%',
-                wordWrap: 'break-word',
-                margin: '.65rem',
-              }}
-            />
-
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: { mobile: 'column', notebook: 'row' },
-                gap: '10px',
-                alignItems: { mobile: 'center', notebook: 'flex-start' },
-                justifyContent: { mobile: 'center', notebook: 'flex-start' },
-              }}
-            >
-              {resultCards.map((card) => {
-                if (card.value !== undefined) {
-                  return <Result_Card key={card.label} label={card.label} value={card.value} unity={card.unity} />;
-                }
-              })}
-            </Box>
-          </Box>
-        </FlexColumnBorder>
+          </ModalBase>
+        </Box>
       )}
     </>
   );
