@@ -11,13 +11,37 @@ import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
 
-const Superpave_Step3 = ({
-  nextDisabled,
-  setNextDisabled,
-  superpave,
-}: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+const Superpave_Step3 = ({ setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const { granulometryCompositionData: data, materialSelectionData, generalData, setData } = useSuperpaveStore();
+  const {
+    granulometryCompositionData: data,
+    materialSelectionData,
+    generalData,
+    setData,
+    hasHydrated,
+  } = useSuperpaveStore();
+
+  const raw = sessionStorage.getItem('asphalt-superpave-store');
+
+  if (raw) {
+    const parsed = JSON.parse(raw);
+    console.log("session fora", parsed);
+    console.log("generalData fora", generalData) // Agora aparece como objeto formatado
+  }
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+
+    const raw = sessionStorage.getItem('asphalt-superpave-store');
+
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      console.log("Session dentro",parsed); // Agora aparece como objeto formatado
+      console.log("generalData dentro", generalData);
+    }
+  
+    console.log("✅ generalData após hydration:", generalData);
+  }, [hasHydrated]);
 
   const { user } = useAuth();
 
@@ -61,27 +85,63 @@ const Superpave_Step3 = ({
     },
   ];
 
+  // useEffect(() => {
+  //   if (data.percentsToList.length > 0) {
+  //     setLoading(false);
+  //   }
+
+  //   toast.promise(
+  //     async () => {
+  //       try {
+  //         const dosageData = sessionStorage.getItem('asphalt-superpave-store');
+  //         const sessionDataJson = JSON.parse(dosageData);
+  //         const dosageDataJson = sessionDataJson.state as SuperpaveData;
+
+  //         const response = await superpave.getStep3Data(dosageDataJson, user._id);
+
+  //         setData({
+  //           step: 2,
+  //           value: {
+  //             ...dosageDataJson.granulometryCompositionData,
+  //             ...response,
+  //           },
+  //         });
+  //         setLoading(false);
+  //       } catch (error) {
+  //         setLoading(false);
+  //         throw error;
+  //       }
+  //     },
+  //     {
+  //       pending: t('loading.data.pending'),
+  //       success: t('loading.data.success'),
+  //       error: t('loading.data.error'),
+  //     }
+  //   );
+  // }, []);
+
   useEffect(() => {
+    if (!hasHydrated) return;
+  
     if (data.percentsToList.length > 0) {
       setLoading(false);
+      return;
     }
-
+  
     toast.promise(
       async () => {
         try {
-          const dosageData = sessionStorage.getItem('asphalt-superpave-store');
-          const sessionDataJson = JSON.parse(dosageData);
-          const dosageDataJson = sessionDataJson.state as SuperpaveData;
-
-          const response = await superpave.getStep3Data(dosageDataJson, user._id);
-
+          const storeState = useSuperpaveStore.getState(); // ✅ estado real, já reidratado
+          const response = await superpave.getStep3Data(storeState, user._id);
+  
           setData({
             step: 2,
             value: {
-              ...dosageDataJson.granulometryCompositionData,
+              ...storeState.granulometryCompositionData,
               ...response,
             },
           });
+  
           setLoading(false);
         } catch (error) {
           setLoading(false);
@@ -94,7 +154,7 @@ const Superpave_Step3 = ({
         error: t('loading.data.error'),
       }
     );
-  }, []);
+  }, [hasHydrated]);
 
   const toggleSelectedCurve = (label: string) => {
     switch (label) {
@@ -147,7 +207,7 @@ const Superpave_Step3 = ({
     return aux;
   };
 
-  const setPercentsToListTotal = (peneiras, percentsToList) => {
+  const setPercentsToListTotal = (peneiras: { peneira: string }[], percentsToList) => {
     const tableData = Array.from({ length: percentsToList.length }, () => []);
 
     percentsToList?.forEach((item, i) => {
@@ -165,6 +225,24 @@ const Superpave_Step3 = ({
               ['keyTotal' + i]: numberRepresentation(value[1]),
             };
           }
+        }
+      });
+    });
+
+    return tableData;
+  };
+
+  const test = (peneiras: { peneira: string }[], percentsToList: Array<Array<[string, number] | null>>) => {
+    const tableData = peneiras.map((peneira) => ({ ...peneira }));
+
+    percentsToList?.forEach((column, columnIndex) => {
+      column.forEach((value, rowIndex) => {
+        if (value !== null && tableData[rowIndex]) {
+          console.log('entrou no if');
+          tableData[rowIndex] = {
+            ...tableData[rowIndex],
+            ['keyTotal' + columnIndex]: numberRepresentation(value[1]),
+          };
         }
       });
     });

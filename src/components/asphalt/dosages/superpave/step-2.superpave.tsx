@@ -18,10 +18,14 @@ const Superpave_Step2 = ({
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
-  const { materialSelectionData: data } = useSuperpaveStore();
+  const { materialSelectionData: data, generalData } = useSuperpaveStore();
 
   const { user } = useAuth();
 
+  /**
+   * Fetches materials for the current user and updates the local state.
+   * Displays toast notifications for loading, success, and error states.
+   */
   useEffect(() => {
     toast.promise(
       async () => {
@@ -43,16 +47,24 @@ const Superpave_Step2 = ({
     );
   }, []);
 
+  /**
+   * Filters materials to include only aggregates such as coarseAggregate, fineAggregate, filler, or other.
+   * @returns {Array} Array of aggregate materials with their id, name, and type.
+   */
   const aggregateRows = materials
     .map(({ _id, name, type }) => ({
       _id,
       name,
       type,
     }))
-    .filter(({ type }) => {
-      return type === 'coarseAggregate' || type === 'fineAggregate' || type === 'filler' || type === 'other';
-    });
+    .filter(({ type }) => 
+      type === 'coarseAggregate' || type === 'fineAggregate' || type === 'filler' || type === 'other'
+    );
 
+  /**
+   * Defines the columns for displaying aggregate materials.
+   * The columns include name and type, with translated headers and formatted values.
+   */
   const aggregateColumns: GridColDef[] = [
     {
       field: 'name',
@@ -66,6 +78,10 @@ const Superpave_Step2 = ({
     },
   ];
 
+  /**
+   * Filters materials to include only binder materials such as CAP or asphaltBinder.
+   * @returns {Array} Array of binder materials with their id, name, and type.
+   */
   const binderRows = materials
     .map(({ _id, name, type }) => {
       return {
@@ -78,6 +94,10 @@ const Superpave_Step2 = ({
       return type === 'CAP' || type === 'asphaltBinder';
     });
 
+  /**
+   * Defines the columns for displaying binder materials.
+   * The columns include name and type, with translated headers and formatted values.
+   */
   const binderColumns: GridColDef[] = [
     {
       field: 'name',
@@ -91,6 +111,9 @@ const Superpave_Step2 = ({
     },
   ];
 
+  /**
+   * Disables the next button if the binder and aggregates are not selected.
+   */
   data.binder && data.aggregates.length > 0 && nextDisabled && setNextDisabled(false);
 
   return (

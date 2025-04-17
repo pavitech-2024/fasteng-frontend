@@ -2,10 +2,16 @@ import Api from '@/api';
 import { SuperpaveIcon } from '@/assets';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
-import { SuperpaveActions, SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
+import { getSuperpaveStore, SuperpaveActions, SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
 import { t } from 'i18next';
 
 class Superpave_SERVICE implements IEssayService {
+  userId: string;
+
+  get store_actions(): SuperpaveActions {
+    return getSuperpaveStore.getState();
+  }
+
   info = {
     key: 'superpave',
     icon: SuperpaveIcon,
@@ -51,9 +57,6 @@ class Superpave_SERVICE implements IEssayService {
       { step: 10, description: t('asphalt.dosages.superpave.dosage_resume'), path: 'dosage-resume' },
     ],
   };
-
-  store_actions: SuperpaveActions;
-  userId: string;
 
   /** @handleNext Receives the step and data from the form and calls the respective method */
   handleNext = async (step: number, data: unknown, isConsult?: boolean): Promise<void> => {
@@ -162,6 +165,7 @@ class Superpave_SERVICE implements IEssayService {
     user?: string,
     isConsult?: boolean
   ): Promise<void> => {
+
     if (!isConsult) {
       try {
         const { aggregates, binder } = data.materialSelectionData;
@@ -194,6 +198,8 @@ class Superpave_SERVICE implements IEssayService {
       } catch (error) {
         throw error;
       }
+    } else {
+      this.store_actions.setAllData(data);
     }
   };
 
@@ -222,9 +228,19 @@ class Superpave_SERVICE implements IEssayService {
       } catch (error) {
         throw error;
       }
+    } else {
+      this.store_actions.setData({  step, value: dosageData });
     }
   };
 
+  /**
+   * Calculates the granulometry composition based on the user's input.
+   * @param calculateStep3Data - The data of the granulometry composition calculation.
+   * @param step2Data - The data of the material selection step.
+   * @param step1Data - The data of the general step.
+   * @param chosenCurves - The chosen curves of the lower, average and higher curves.
+   * @returns The calculated granulometry composition.
+   */
   calculateGranulometryComposition = async (
     calculateStep3Data: SuperpaveData['granulometryCompositionData'],
     step2Data: SuperpaveData['materialSelectionData'],
@@ -236,7 +252,6 @@ class Superpave_SERVICE implements IEssayService {
       const { dnitBand } = step1Data;
       const { aggregates } = step2Data;
 
-      // Reduzimos a matriz somando todos os valores de todas as propriedades de cada objeto.
       const selectedCurveInputs = chosenCurves.lower
         ? percentageInputs[0]
         : chosenCurves.average
@@ -245,14 +260,15 @@ class Superpave_SERVICE implements IEssayService {
         ? percentageInputs[2]
         : percentageInputs;
 
+      /**
+       * Sums up the values of the selected curve inputs.
+       * If selectedCurveInputs is not an object, returns 0.
+       */
       const inputsSum =
         selectedCurveInputs instanceof Object
-          ? Object.values(selectedCurveInputs).reduce((sum, input) => {
-              return sum + Number(input);
-            }, 0)
+          ? Object.values(selectedCurveInputs).reduce((sum, input) => sum + Number(input), 0)
           : 0;
 
-      // Verificamos se a soma total é 100.
       if (inputsSum !== 100) throw t('errors.invalid-inputs-sum');
 
       const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {

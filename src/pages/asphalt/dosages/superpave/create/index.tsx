@@ -29,9 +29,6 @@ const Superpave = () => {
   // set the userId to the service
   superpave.userId = userId;
 
-  // set the store to the service
-  superpave.store_actions = store as SuperpaveActions;
-
   // inform the childrens with the step of the children and the part of the store that they will use
   const childrens = [
     { step: 0, children: <Superpave_Step1 superpave={superpave} />, data: store },

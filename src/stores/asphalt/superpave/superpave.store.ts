@@ -21,7 +21,7 @@ interface SuperpaveMaterialSelectionData {
 
 interface SuperpaveGranulometryCompositionData {
   percentageInputs: {
-    [key:string]: number;
+    [key: string]: number;
   }[];
   graphData: any[];
   percentsToList: any[];
@@ -405,6 +405,7 @@ export type SuperpaveData = {
 
 export type SuperpaveActions = {
   setData: ({ step, key, value }: setDataType) => void;
+  setAllData: (value: Partial<SuperpaveData>) => void;
   reset: () => void;
   clearStore: () => void;
 };
@@ -887,47 +888,60 @@ const initialState = {
   updatedAt: null,
 };
 
-const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(
+type Hydration = {
+  hasHydrated: boolean;
+  setHasHydrated: (state: boolean) => void;
+};
+
+const useSuperpaveStore = create<SuperpaveData & SuperpaveActions & Hydration>()(
   devtools(
     persist(
-      (set) => ({
+      (set, get) => ({
         ...initialState,
+
+        hasHydrated: false,
+        setHasHydrated: (state) => set({ hasHydrated: state }),
 
         setData: ({ step, key, value }) =>
           set((state) => {
-            if (step === 12) {
-              return value; // Substitui o estado inteiro pelo novo valor
+            if (key) {
+              return {
+                ...state,
+                [stepVariant[step]]: {
+                  ...state[stepVariant[step]],
+                  [key]: value,
+                },
+              };
             } else {
-              if (key) {
-                return {
-                  ...state,
-                  [stepVariant[step]]: {
-                    ...state[stepVariant[step]],
-                    [key]: value,
-                  },
-                };
-              } else {
-                return { ...state, [stepVariant[step]]: value };
-              }
+              return { ...state, [stepVariant[step]]: value };
             }
           }),
 
-        reset: () => {
-          set(initialState);
-        },
+          setAllData: (value: Partial<SuperpaveData>) => set((state) => ({
+            ...state,
+            ...value
+          })),
 
-        clearStore: () => {
-          sessionStorage.clear();
-          // set(initialState);
-        },
+          reset: () => {
+            set(initialState);
+          },
+
+          clearStore: () => {
+            sessionStorage.clear();
+            // set(initialState);
+          },
       }),
       {
         // name data store e config no session storage
         name: 'asphalt-superpave-store',
         storage: createJSONStorage(() => sessionStorage),
+        onRehydrateStorage: () => (state) => {
+          state?.setHasHydrated(true);
+        },
       }
     )
   )
 );
 
 export default useSuperpaveStore;
+export const getSuperpaveStore = useSuperpaveStore;

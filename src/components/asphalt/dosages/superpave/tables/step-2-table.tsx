@@ -11,6 +11,15 @@ interface Step2Props {
   columns: GridColDef[];
 }
 
+
+/**
+ * Component responsible for rendering the material selection table of step 2 of the asphalt superpave dosage calculation.
+ * 
+ * @param {Step2Props} props
+ * @param {Superpave_SERVICE} props.superpave
+ * 
+ * @returns {JSX.Element} The Step2Table component.
+ */
 const Step2Table = ({ rows, columns, header }: Step2Props & { superpave: Superpave_SERVICE }) => {
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
   const { materialSelectionData, setData } = useSuperpaveStore();

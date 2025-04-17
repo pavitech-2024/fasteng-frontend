@@ -180,7 +180,6 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
       band2: e.bandsCol2,
     };
   });
-
   const generateMaterialGroupings = (materials) => {
     return materials.map((material, index) => {
       const materialId = `material_${index + 1}`;
