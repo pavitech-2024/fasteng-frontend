@@ -18,44 +18,45 @@ class Superpave_SERVICE implements IEssayService {
     title: t(''),
     path: '/asphalt/dosages/superpave',
     backend_path: 'asphalt/dosages/superpave',
-    steps: 12,
+    steps: 13,
     standard: {
       name: '',
       link: '',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
-      { step: 1, description: t('asphalt.dosages.superpave.granulometry_essay'), path: 'material-selection' },
-      { step: 2, description: t('asphalt.dosages.superpave.material_selection'), path: 'material-selection' },
+      { step: 1, description: t('asphalt.dosages.superpave.granulometry_essay'), path: 'granulometry-essay' },
+      { step: 2, description: t('asphalt.dosages.superpave.granulometry_essay_result'), path: 'granulometry-essay-result' },
+      { step: 3, description: t('asphalt.dosages.superpave.material_selection'), path: 'material-selection' },
       {
-        step: 3,
+        step: 4,
         description: t('asphalt.dosages.superpave.granulometry_composition'),
         path: 'granulometry-composition',
       },
-      { step: 4, description: t('asphalt.dosages.superpave.initial_binder'), path: 'initial-binder' },
-      { step: 5, description: t('asphalt.dosages.superpave.first_compression'), path: 'first-compression' },
+      { step: 5, description: t('asphalt.dosages.superpave.initial_binder'), path: 'initial-binder' },
+      { step: 6, description: t('asphalt.dosages.superpave.first_compression'), path: 'first-compression' },
       {
-        step: 6,
+        step: 7,
         description: t('asphalt.dosages.superpave.first_compression_parameters'),
         path: 'first-curve-percentages',
       },
       {
-        step: 7,
+        step: 8,
         description: t('asphalt.dosages.superpave.chosen_curve_percentages'),
         path: 'chosen-curve-percentages',
       },
-      { step: 8, description: t('asphalt.dosages.superpave.second_compression'), path: 'second-compression' },
+      { step: 9, description: t('asphalt.dosages.superpave.second_compression'), path: 'second-compression' },
       {
-        step: 9,
+        step: 10,
         description: t('asphalt.dosages.superpave.second_compression_parameters'),
         path: 'second-compression-parameters',
       },
       {
-        step: 10,
+        step: 11,
         description: t('asphalt.dosages.superpave.confirmation_compression'),
         path: 'confirmation-compression',
       },
-      { step: 11, description: t('asphalt.dosages.superpave.dosage_resume'), path: 'dosage-resume' },
+      { step: 12, description: t('asphalt.dosages.superpave.dosage_resume'), path: 'dosage-resume' },
     ],
   };
 
@@ -68,27 +69,28 @@ class Superpave_SERVICE implements IEssayService {
           break;
         case 1:
           await this.calculateGranulometryEssayData(data as SuperpaveData, isConsult);
-          await this.submitGranulometryEssayData(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 2:
+          await this.submitGranulometryEssayData(data as SuperpaveData, this.userId, null, isConsult);
+        case 3:
           await this.submitMaterialSelection(data as SuperpaveData, this.userId, null, isConsult);
           await this.getStep3Data(data as SuperpaveData, this.userId, isConsult);
           break;
-        case 3:
+        case 4:
           if (isConsult) {
             await this.getStep3Data(data as SuperpaveData, this.userId, isConsult);
           }
           await this.submitGranulometryComposition(data as SuperpaveData, this.userId, null, isConsult);
           break;
-        case 4:
+        case 5:
           const { materialSelectionData } = data as SuperpaveData;
           await this.getStep4SpecificMasses(materialSelectionData, isConsult);
           await this.submitInitialBinder(data as SuperpaveData, this.userId, null, isConsult);
           break;
-        case 5:
+        case 6:
           await this.submitFirstCompression(data as SuperpaveData, this.userId, null, isConsult);
           break;
-        case 6:
+        case 7:
           const { generalData, initialBinderData, granulometryCompositionData, firstCompressionData } =
             data as SuperpaveData;
           await this.getStepFirstCurvePercentages(
@@ -102,19 +104,19 @@ class Superpave_SERVICE implements IEssayService {
           const { firstCurvePercentagesData } = data as SuperpaveData;
           await this.getChosenCurvePercentages(generalData, granulometryCompositionData, firstCurvePercentagesData);
           break;
-        case 7:
+        case 8:
           await this.submitChosenCurvePercentages(data as SuperpaveData, this.userId, null, isConsult);
           break;
-        case 8:
+        case 9:
           await this.submitSecondCompressionData(data as SuperpaveData, this.userId, null, isConsult);
           break;
-        case 9:
+        case 10:
           await this.submitSecondCompressionParams(data as SuperpaveData, this.userId, null, isConsult);
           break;
-        case 10:
+        case 11:
           await this.submitConfirmattionCompression(data as SuperpaveData, this.userId, null, isConsult);
           break;
-        case 11:
+        case 12:
           await this.submitSuperpaveDosage(data as SuperpaveData, this.userId, null, isConsult);
         default:
           throw t('errors.invalid-step');
@@ -208,12 +210,10 @@ class Superpave_SERVICE implements IEssayService {
   calculateGranulometryEssayData = async (data: SuperpaveData, isConsult?: boolean): Promise<void> => {
     if (!isConsult) {
       try {
-        const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
-          generalData: data.generalData,
-          step2Data: data.granulometryEssayData,
-        });
+        const response = await Api.post(`${this.info.backend_path}/calculate-granulometry-essay-data`, data.granulometryEssayData);
 
         const { success, error, result } = response.data;
+        console.log("🚀 ~ Superpave_SERVICE ~ calculateGranulometryEssayData= ~ response.data:", response.data)
 
         if (success === false) throw error.name;
 

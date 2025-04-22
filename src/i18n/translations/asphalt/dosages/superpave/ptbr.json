@@ -8,6 +8,8 @@
   "asphalt.dosages.superpave": "Dosagem Superpave",
   "topbar.superpave": "Superpave",
 
+  "asphalt.dosages.superpave.granulometry_essay": "Ensaio de Granulometria",
+  "asphalt.dosages.superpave.granulometry_essay_result": "Resultados da Granulometria",
   "asphalt.dosages.superpave.material_selection": "Seleção de Materiais",
   "asphalt.dosages.superpave.granulometry_composition": "Composição Granulométrica",
   "asphalt.dosages.superpave.initial_binder": "Teor de Ligante Inicial",

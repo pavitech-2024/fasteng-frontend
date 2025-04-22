@@ -7,6 +7,8 @@
   "asphalt.essays.superpave": "Superpave Dosage",
   "topbar.superpave": "Superpave",
 
+  "asphalt.dosages.superpave.granulometry_essay": "Granulometry Essay",
+  "asphalt.dosages.superpave.granulometry_essay_result": "Granulometry Essay Result",
   "asphalt.dosages.superpave.material_selection": "Materials selection",
   "asphalt.dosages.superpave.granulometry_composition": "Granulometric composition",
   "asphalt.dosages.superpave.initial_binder": "Initial Binder Content",
