@@ -34,7 +34,7 @@ import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 
 interface MaterialsTemplateProps {
-  materials: SoilSample[] | AsphaltMaterial[] | ConcreteMaterial[];
+  materials: SoilSample[] | AsphaltMaterial[] | ConcreteMaterial[] | undefined;
   types: DropDownOption[];
   title: 'Amostras Cadastradas' | 'Materiais Cadastrados';
   path?: string;
@@ -74,6 +74,7 @@ const MaterialsTemplate = ({
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
   const [searchBy, setSearchBy] = useState<string>('name');
+  console.log(searchBy);
   const [searchValue, setSearchValue] = useState<string>('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
@@ -86,9 +87,17 @@ const MaterialsTemplate = ({
 
   const columns: MaterialsColumn[] = [
     { id: 'name', label: t('materials.template.name'), width: '25%' },
-    { id: 'type', label: t('materials.template.type'), width: '25%' },
+    //{ id: 'type', label: t('materials.template.type'), width: '25%' },
+    { id: 'type', label: 'Ensaio', width: '25%' },
     { id: 'createdAt', label: t('materials.template.createdAt'), width: '25%' },
     { id: 'actions', label: t('materials.template.actions'), width: '25%' },
+  ];
+
+  const options = [
+    { label: t('materials.template.name'), value: 'name' },
+    { label: t('materials.template.type'), value: 'type' },
+    { label: t('materials.template.mix'), value: 'mix' },
+    { label: t('materials.template.stretch'), value: 'stretch' },
   ];
 
   const translateType = (type: string) => {
@@ -120,21 +129,40 @@ const MaterialsTemplate = ({
     setSearchValue('');
   }, [searchBy]);
 
+  console.log('Materiais recebidos:', materials);
+
   const filteredData = materials
-    .map(({ _id, name, type, createdAt }) => ({
+  .map((material) => {
+    const { _id, name, type, createdAt } = material;
+    const materialProperty = 'material' in material ? material.material : null;
+    return {
       _id,
       name,
       type,
       createdAt,
-    }))
+      material: materialProperty,
+    };
+  })
+
     .filter((material) => {
       return searchValue.length > 0
         ? searchBy === 'name'
           ? material[searchBy].toLowerCase().includes(searchValue.toLowerCase())
           : material[searchBy] === searchValue
         : true;
+    })
+    .filter((material) => {
+      if (searchBy === 'mix') {
+        // coloque a condição que identifica uma mistura
+        return material.type === 'mix'; // ou qualquer valor que represente mistura
+      } else if (searchBy === 'stretch') {
+        // coloque a condição que identifica um trecho
+        return material === undefined; // ou outro valor que represente trecho
+      }
+      return true; // para os outros casos, mantém tudo
     });
-
+    console.log("Filtro exemplo",filteredData);
+    console.log("Teste" ,materials)
   const handleEditMaterial = (rowId: string) => {
     editMaterial(rowId);
   };
@@ -193,8 +221,14 @@ const MaterialsTemplate = ({
       {modal}
 
       {/*Page */}
-      <Header title={`${title}`} />
-      <Box sx={{ p: { mobile: '0 4vw', notebook: '0 6vw' }, mb: '4vw', width: '100%', maxWidth: '1800px' }}>
+      {/**Coloquei o header abaixo como comentário para remover o título "Materiais cadastrados"*/}
+      {/*<Header title={`${title}`} />*/}
+      <Box sx={{ 
+          //p: { mobile: '0 4vw', notebook: '0 6vw' }, 
+          p: { mobile: '2rem 4vw 0', notebook: '2rem 6vw 0' },
+          mb: '4vw', 
+          width: '100%', 
+          maxWidth: '1800px' }}>
         <Box
           sx={{
             display: 'flex',
@@ -213,17 +247,33 @@ const MaterialsTemplate = ({
               width: '55%',
             }}
           >
-            <DropDown
+            {/*<DropDown
               label={t('materials.template.searchBy')}
               options={[
                 { label: t('materials.template.name'), value: 'name' },
                 { label: t('materials.template.type'), value: 'type' },
+                { label: t('materials.template.mix'), value: 'mix' },
+                {label: t('materials.template.stretch'), value: 'stretch'},
               ]}
               callback={setSearchBy}
               size="small"
               sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
               value={{ label: t('materials.template.name'), value: 'name' }}
-            />
+            />*/}
+
+          <DropDown
+            label={t('materials.template.searchBy')}
+            options={[
+              { label: t('materials.template.name'), value: 'name' },
+              { label: t('materials.template.type'), value: 'type' },
+              { label: t('materials.template.mix'), value: 'mix' },
+              { label: t('materials.template.stretch'), value: 'stretch' },
+            ]}
+            callback={setSearchBy}
+            size="small"
+            sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
+            value={options.find(option => option.value === searchBy) || options[0]} // Dinâmico baseado em searchBy
+          />
             {searchBy === 'name' && (
               <Search
                 sx={{
@@ -314,6 +364,7 @@ const MaterialsTemplate = ({
                   {columns.map((column) => (
                     <TableCell
                       key={column.id}
+                      align="center"
                       sx={{
                         fontWeight: 'bold',
                         whiteSpace: 'nowrap',
@@ -380,7 +431,8 @@ const MaterialsTemplate = ({
                             >
                               <DeleteIcon color="error" sx={{ fontSize: '1.25rem' }} />
                             </Button>
-                            <Button
+                            {/**Coloquei esse botão como comentário para retirar o botão de edição dos materiais */}
+                            {/*<Button
                               variant="text"
                               color="warning"
                               sx={{ p: 0, width: '30px', minWidth: '35px' }}
@@ -389,7 +441,7 @@ const MaterialsTemplate = ({
                               }}
                             >
                               <EditIcon color="warning" sx={{ fontSize: '1.25rem' }} />
-                            </Button>
+                            </Button>*/}
                           </Box>
                         )}
                       </TableCell>
