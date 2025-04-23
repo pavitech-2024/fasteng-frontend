@@ -1,21 +1,23 @@
 import { AddIcon, DeleteIcon, EditIcon } from '@/assets';
 import CreateEditMaterialModal from '@/components/templates/modals/createEditAsphaltMaterial';
-import useAuth from '@/contexts/auth';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
 import { Box, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const CreateMaterialDosageTable = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
   console.log("🚀 ~ CreateMaterialDosageTable ~ materials:", materials)
+
+  const [rows, setRows] = useState([]);
+  console.log("🚀 ~ CreateMaterialDosageTable ~ rows:", rows)
+
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [createdMaterialId, setCreatedMaterialId] = useState<string[]>([]);
-
-  const { user } = useAuth();
+  console.log("🚀 ~ CreateMaterialDosageTable ~ createdMaterialId:", createdMaterialId)
 
   const handleEditMaterial = () => {};
 
@@ -23,10 +25,13 @@ const CreateMaterialDosageTable = () => {
 
   const addNewMaterial = () => {
     setLoading(true);
+    console.log("🚀 ~ addNewMaterial ~ createdMaterialId:", createdMaterialId)
+
     materialsService
-      .getMaterialsById(createdMaterialId)
+      .getMaterials(createdMaterialId)
       .then((response) => {
-        setMaterials(response.data);
+        console.log("🚀 ~ .then ~ response.data:", response.data)
+        setMaterials(response.data.materials);
         setLoading(false);
       })
       .catch((error) => {
@@ -39,15 +44,15 @@ const CreateMaterialDosageTable = () => {
     { field: 'type', headerName: 'Tipo' },
     { field: 'source', headerName: 'Fonte' },
     { field: 'responsible', headerName: 'Responsável' },
-    { field: 'nature', headerName: 'Natureza do Agregado' },
-    { field: 'date', headerName: 'Data de coleta' },
-    { field: 'observations', headerName: 'Observações' },
+    { field: 'aggregateNature', headerName: 'Natureza do Agregado' },
+    { field: 'boughtDate', headerName: 'Data de coleta' },
+    { field: 'observation', headerName: 'Observações' },
     {
       field: 'actions',
       headerName: 'Ações',
       renderCell: () => {
         return (
-          <Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <Button onClick={handleEditMaterial}>
               <EditIcon /> Editar
             </Button>
@@ -59,6 +64,23 @@ const CreateMaterialDosageTable = () => {
       },
     },
   ];
+
+  useEffect(() => {
+    if (materials.length > 0) {
+      const rows = materials.map((material) => ({
+        id: material._id,
+        name: material.name,
+        type: material.type,
+        source: material.description.source,
+        responsible: material.description.responsible,
+        aggregateNature: material.description.aggregateNature,
+        boughtDate: material.description.boughtDate,
+        observation: material.description.observation,
+      }));
+
+      setRows(rows);
+    }
+  },[materials])
 
   return (
     <Box>
@@ -73,7 +95,7 @@ const CreateMaterialDosageTable = () => {
 
       <DataGrid
         columns={columns.map((column) => ({ ...column, flex: 1, headerAlign: 'center', align: 'center' }))}
-        rows={[]}
+        rows={rows}
         hideFooter
       />
 

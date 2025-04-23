@@ -28,6 +28,8 @@ const CreateEditMaterialModal = ({
   isEdit,
   createdMaterialId
 }: CreateEditMaterialModalProps) => {
+  console.log("🚀 ~ materials:", materials)
+  console.log("🚀 ~ isEdit:", isEdit)
   const initialMaterialState: AsphaltMaterialData = {
     name: '',
     type: null,
@@ -47,6 +49,7 @@ const CreateEditMaterialModal = ({
   };
 
   const [material, setMaterial] = useState<AsphaltMaterialData>(initialMaterialState);
+  console.log("🚀 ~ material:", material)
   const {pathname} = useRouter();
 
   const resetMaterial = () => {
@@ -158,7 +161,10 @@ const CreateEditMaterialModal = ({
     try {
       validateMaterialData();
 
+      console.log("🧪 Passou pela validação");
+
       const response = await materialsService.createMaterial(material);
+      console.log("🚀 ~ handleCreateMaterial ~ response:", response)
 
       if (pathname.includes('superpave')) {
         createdMaterialId(response.data._id);
@@ -176,6 +182,8 @@ const CreateEditMaterialModal = ({
         closeButton: true,
       });
     } catch (error) {
+      console.error("❌ Erro ao criar material:", error);
+
       toast.update(createMaterialToastId, {
         render: t('asphalt.materials.errorCreatingMaterial'),
         type: 'error',
@@ -187,13 +195,26 @@ const CreateEditMaterialModal = ({
   };
 
   const validateMaterialData = () => {
-    if (material.name === '') throw 'Material name cannot be empty';
-    if (material.type === null) throw 'Material type cannot be empty';
-    if (materials.find((m) => m.name === material.name)) throw 'A material with the same name already exists!';
-    if (material.type === 'CAP' && material.description.classification_CAP === null)
-      throw 'CAP classification cannot be empty';
-    if (material.type === 'asphaltBinder' && material.description.classification_AMP === null)
-      throw 'AMP classification cannot be empty';
+    if (material.name === '') {
+      console.log("Material name cannot be empty");
+      throw new Error('Material name cannot be empty');
+    }
+    if (material.type === null) {
+      console.log("Material type cannot be empty");
+      throw new Error('Material type cannot be empty');
+    }
+    if (materials.find((m) => m.name === material.name)) {
+      console.log("A material with the same name already exists!");
+      throw new Error('A material with the same name already exists!');
+    }
+    if (material.type === 'CAP' && material.description.classification_CAP === null) {
+      console.log("CAP classification cannot be empty");
+      throw new Error('CAP classification cannot be empty');
+    }
+    if (material.type === 'asphaltBinder' && material.description.classification_AMP === null) {
+      console.log("AMP classification cannot be empty");
+      throw new Error('AMP classification cannot be empty');
+    }
   };
 
   const handleEditMaterial = async () => {
