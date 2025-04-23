@@ -212,12 +212,11 @@ class Superpave_SERVICE implements IEssayService {
       try {
         const response = await Api.post(`${this.info.backend_path}/calculate-granulometry-essay-data`, data.granulometryEssayData);
 
-        const { success, error, result } = response.data;
-        console.log("🚀 ~ Superpave_SERVICE ~ calculateGranulometryEssayData= ~ response.data:", response.data)
+        const { success, error, granulometry } = response.data;
 
         if (success === false) throw error.name;
 
-        this.store_actions.setData({ step: 2, value: result });
+        this.store_actions.setData({ step: 2, value: granulometry.result });
       } catch (error) {
         throw error;
       }

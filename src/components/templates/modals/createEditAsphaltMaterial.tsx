@@ -7,6 +7,7 @@ import materialsService from '@/services/asphalt/asphalt-materials.service';
 import ModalBase from '@/components/molecules/modals/modal';
 import { Box, TextField } from '@mui/material';
 import { Sieve } from '@/interfaces/common';
+import { useRouter } from 'next/router';
 
 interface CreateEditMaterialModalProps {
   openModal: boolean;
@@ -15,6 +16,7 @@ interface CreateEditMaterialModalProps {
   materials: AsphaltMaterial[];
   materialToEdit?: AsphaltMaterial;
   isEdit: boolean;
+  createdMaterialId?: (id: string) => void;
 }
 
 const CreateEditMaterialModal = ({
@@ -24,6 +26,7 @@ const CreateEditMaterialModal = ({
   materials,
   materialToEdit,
   isEdit,
+  createdMaterialId
 }: CreateEditMaterialModalProps) => {
   const initialMaterialState: AsphaltMaterialData = {
     name: '',
@@ -44,6 +47,7 @@ const CreateEditMaterialModal = ({
   };
 
   const [material, setMaterial] = useState<AsphaltMaterialData>(initialMaterialState);
+  const {pathname} = useRouter();
 
   const resetMaterial = () => {
     setMaterial(initialMaterialState);
@@ -154,7 +158,11 @@ const CreateEditMaterialModal = ({
     try {
       validateMaterialData();
 
-      await materialsService.createMaterial(material);
+      const response = await materialsService.createMaterial(material);
+
+      if (pathname.includes('superpave')) {
+        createdMaterialId(response.data._id);
+      }
 
       await updateMaterials();
 

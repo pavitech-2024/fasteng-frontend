@@ -1,9 +1,12 @@
 {
-  "superpave.step-2-description": "Select the aggregates and cement for dosing. Only registered materials with granulometry tests for aggregates and rotational viscosity tests for asphalt binders will be displayed.",
-  "superpave.step-3-description": "Choose the desired granulometric curve and enter the aggregate percentages, ensuring a total of 100%.",
-  "superpave.step-11-description": "These are the results of yourSuperpave dosage. Don't forget to save the experiment so you can access it later.",
+  "superpave.step-1-description": "Insert the material total mass and the percentage or total mass of retained material on each sieve.",
+  "superpave.step-2-description": "These are the results of the granulometry test.",
 
-  "superpave.step-11": "Results",
+  "superpave.step-3-description": "Select the aggregates and cement for dosing. Only registered materials with granulometry tests for aggregates and rotational viscosity tests for asphalt binders will be displayed.",
+  "superpave.step-4-description": "Choose the desired granulometric curve and enter the aggregate percentages, ensuring a total of 100%.",
+  "superpave.step-12-description": "These are the results of yourSuperpave dosage. Don't forget to save the experiment so you can access it later.",
+
+  "superpave.step-12": "Results",
   "asphalt.essays.superpave": "Superpave Dosage",
   "topbar.superpave": "Superpave",
 
@@ -122,8 +125,8 @@
   "asphalt.dosages.superpave.asphalt-mass-quantitative": "Quantitative for 1 cubic meter of asphalt mass",
 
   "asphalt.dosages.superpave.mechanic-volumetric-params": "Volumetric and mechanical parameters of the mixture at the optimal binder content",
-  "asphalt.dosages.superpave.step-3.lower": "Inferior",
-  "asphalt.dosages.superpave.step-3.higher": "Superior",
-  "asphalt.dosages.superpave.step-3.average": "Average",
+  "asphalt.dosages.superpave.step-4.lower": "Inferior",
+  "asphalt.dosages.superpave.step-4.higher": "Superior",
+  "asphalt.dosages.superpave.step-4.average": "Average",
   "marshall.dosage-pdf-title": "Superpave dosage report"
 }

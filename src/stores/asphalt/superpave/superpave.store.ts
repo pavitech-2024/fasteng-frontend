@@ -21,7 +21,7 @@ interface SuperpaveGranulometryEssayData {
   bottom: number;
 
   // Seria necessário?
-  
+
   // accumulated_retained: [string, number][];
   // graph_data: [number, number][];
   // passant: [string, number][];
@@ -33,6 +33,20 @@ interface SuperpaveGranulometryEssayData {
   // cc: number;
   // cnu: number;
   // error: number;
+}
+
+interface SuperpaveGranulometryResults {
+  accumulated_retained: [string, number][];
+  graph_data: [number, number][];
+  passant: [string, number][];
+  retained_porcentage: [string, number][];
+  total_retained: number;
+  nominal_size: number;
+  nominal_diameter: number;
+  fineness_module: number;
+  cc: number;
+  cnu: number;
+  error: number;
 }
 
 interface SuperpaveMaterialSelectionData {
@@ -412,6 +426,7 @@ interface DosageResume {
 export type SuperpaveData = {
   generalData: SuperpaveGeneralData;
   granulometryEssayData: SuperpaveGranulometryEssayData;
+  granulometryResultsData: SuperpaveGranulometryResults;
   materialSelectionData: SuperpaveMaterialSelectionData;
   granulometryCompositionData: SuperpaveGranulometryCompositionData;
   initialBinderData: SuperpaveInitialBinderData;
@@ -437,16 +452,17 @@ type setDataType = { step: number; key?: string; value: unknown };
 const stepVariant = {
   0: 'generalData',
   1: 'granulometryEssayData',
-  2: 'materialSelectionData',
-  3: 'granulometryCompositionData',
-  4: 'initialBinderData',
-  5: 'firstCompressionData',
-  6: 'firstCurvePercentagesData',
-  7: 'chosenCurvePercentagesData',
-  8: 'secondCompressionData',
-  9: 'secondCompressionPercentagesData',
-  10: 'confirmationCompressionData',
-  11: 'dosageResume',
+  2: 'granulometryResultsData',
+  3: 'materialSelectionData',
+  4: 'granulometryCompositionData',
+  5: 'initialBinderData',
+  6: 'firstCompressionData',
+  7: 'firstCurvePercentagesData',
+  8: 'chosenCurvePercentagesData',
+  9: 'secondCompressionData',
+  10: 'secondCompressionPercentagesData',
+  11: 'confirmationCompressionData',
+  12: 'dosageResume',
 };
 
 const initialState = {
@@ -467,6 +483,19 @@ const initialState = {
     table_data: null,
     sieve_series: null,
     bottom: null,
+  },
+  granulometryResultsData: {
+    accumulated_retained: [],
+    graph_data: [],
+    passant: [],
+    retained_porcentage: [],
+    total_retained: null,
+    nominal_size: null,
+    nominal_diameter: null,
+    fineness_module: null,
+    cc: null,
+    cnu: null,
+    error: null,
   },
   materialSelectionData: {
     aggregates: [],
@@ -927,38 +956,39 @@ const useSuperpaveStore = create<SuperpaveData & SuperpaveActions & Hydration>()
     persist(
       (set, get) => ({
         ...initialState,
-
         hasHydrated: false,
         setHasHydrated: (state) => set({ hasHydrated: state }),
 
         setData: ({ step, key, value }) =>
           set((state) => {
+            const stepKey = stepVariant[step];
             if (key) {
               return {
                 ...state,
-                [stepVariant[step]]: {
-                  ...state[stepVariant[step]],
+                [stepKey]: {
+                  ...state[stepKey],
                   [key]: value,
                 },
               };
             } else {
-              return { ...state, [stepVariant[step]]: value };
+              return { ...state, [stepKey]: value };
             }
           }),
 
-          setAllData: (value: Partial<SuperpaveData>) => set((state) => ({
+        setAllData: (value: Partial<SuperpaveData>) =>
+          set((state) => ({
             ...state,
-            ...value
+            ...value,
           })),
 
-          reset: () => {
-            set(initialState);
-          },
+        reset: () => {
+          set(initialState);
+        },
 
-          clearStore: () => {
-            sessionStorage.clear();
-            // set(initialState);
-          },
+        clearStore: () => {
+          sessionStorage.clear();
+          // set(initialState);
+        },
       }),
       {
         // name data store e config no session storage

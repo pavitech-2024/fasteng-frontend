@@ -1,9 +1,11 @@
 {
-  "superpave.step-2-description": "Selecione os agregados e o cimento para a dosagem. Apenas materiais cadastrados com ensaios de granulometria para agregados e viscosidade rotacional para ligantes asfálticos serão exibidos.",
-  "superpave.step-3-description": "Escolha a curva granulométrica desejada e insira as porcentagens dos agregados, garantindo um total de 100%.",
-  "superpave.step-11-description": "Esses são os resultados da sua dosagem Superpave. Não se esqueça de salvar para acessá-las mais tarde.",
+  "superpave.step-2-description": "Insira a massa total do material ensaiado e as porentagens ou peso total dos retidos em cada peneira.",
+  "superpave.step-3-description": "Estes são os resultados do ensaio de granulometria.",
+  "superpave.step-4-description": "Selecione os agregados e o cimento para a dosagem. Apenas materiais cadastrados com ensaios de granulometria para agregados e viscosidade rotacional para ligantes asfálticos serão exibidos.",
+  "superpave.step-5-description": "Escolha a curva granulométrica desejada e insira as porcentagens dos agregados, garantindo um total de 100%.",
+  "superpave.step-12-description": "Esses são os resultados da sua dosagem Superpave. Não se esqueça de salvar para acessá-las mais tarde.",
 
-  "superpave.step-11": "Resultados",
+  "superpave.step-12": "Resultados",
 
   "asphalt.dosages.superpave": "Dosagem Superpave",
   "topbar.superpave": "Superpave",
@@ -131,8 +133,8 @@
 
   "asphalt.dosages.superpave.mechanic-volumetric-params": "Parâmetros volumétricos e mecânicos da mistura no teor ótimo de ligante asfáltico",
 
-  "asphalt.dosages.superpave.step-3.lower": "Inferior",
-  "asphalt.dosages.superpave.step-3.higher": "Superior",
-  "asphalt.dosages.superpave.step-3.average": "Intermediária",
+  "asphalt.dosages.superpave.step-4.lower": "Inferior",
+  "asphalt.dosages.superpave.step-4.higher": "Superior",
+  "asphalt.dosages.superpave.step-4.average": "Intermediária",
   "marshall.dosage-pdf-title": "Relatório de Dosagem Superpave"
 }
