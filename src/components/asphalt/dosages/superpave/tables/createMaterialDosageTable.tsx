@@ -82,7 +82,7 @@ const CreateMaterialDosageTable = ({ onMaterialCreation }: ICreateMaterialDosage
     if (materials.length > 0) {
       onMaterialCreation(materials);
     }
-  },[materials])
+  }, [materials]);
 
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Nome' },
@@ -96,11 +96,45 @@ const CreateMaterialDosageTable = ({ onMaterialCreation }: ICreateMaterialDosage
       field: 'actions',
       headerName: 'Ações',
       renderCell: () => {
+        const iconStyle = {
+          width: '2rem',
+          cursor: 'pointer',
+          ':hover': {
+            color: 'secondaryTons.green',
+            transform: 'scale(1.2)',
+            transition: 'transform 0.2s ease-in-out',
+          },
+        }
         return (
           <Box sx={{ display: 'flex' }}>
-            <ScienceIcon sx={{ width: '2rem', cursor: 'pointer' }} color='success'/>
-            <EditIcon sx={{ width: '2rem', cursor: 'pointer' }} color='warning'/>
-            <DeleteIcon sx={{ width: '2rem', cursor: 'pointer' }} color="error" />
+            <ScienceIcon
+              sx={iconStyle}
+              color="success"
+            />
+            <EditIcon
+              sx={{
+                width: '2rem',
+                cursor: 'pointer',
+                ':hover': {
+                  color: 'orange',
+                  transform: 'scale(1.2)',
+                  transition: 'transform 0.2s ease-in-out',
+                },
+              }}
+              color="warning"
+            />
+            <DeleteIcon
+              sx={{
+                width: '2rem',
+                cursor: 'pointer',
+                ':hover': {
+                  color: 'red',
+                  transform: 'scale(1.2)',
+                  transition: 'transform 0.2s ease-in-out',
+                },
+              }}
+              color="error"
+            />
           </Box>
         );
       },
