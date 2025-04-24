@@ -10,7 +10,11 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import ScienceIcon from '@mui/icons-material/Science';
 
-const CreateMaterialDosageTable = () => {
+interface ICreateMaterialDosageTable {
+  onMaterialCreation: (materials: AsphaltMaterial[]) => void;
+}
+
+const CreateMaterialDosageTable = ({ onMaterialCreation }: ICreateMaterialDosageTable) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
   console.log('🚀 ~ CreateMaterialDosageTable ~ materials:', materials);
@@ -70,10 +74,15 @@ const CreateMaterialDosageTable = () => {
 
       const prevData = [...data.materials];
       prevData.push(newMaterial);
-      setMaterials([...materials, newMaterial]);
-      setData({ step: 1, value: prevData, key: 'materials' });
+      setData({ step: 1, key: 'materials', value: prevData });
     }
   };
+
+  useEffect(() => {
+    if (materials.length > 0) {
+      onMaterialCreation(materials);
+    }
+  },[materials])
 
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Nome' },
