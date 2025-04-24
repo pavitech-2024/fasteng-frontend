@@ -1,3 +1,4 @@
+import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
@@ -15,10 +16,14 @@ interface SuperpaveGeneralData {
 }
 
 interface SuperpaveGranulometryEssayData {
-  material_mass: number;
-  table_data: { sieve_label: string; sieve_value: number; passant: number; retained: number }[];
-  sieve_series: { label: string; value: number }[];
-  bottom: number;
+  materials: AsphaltMaterial[];
+  granulometrys: {
+    material: AsphaltMaterial;
+    material_mass: number;
+    table_data: { sieve_label: string; sieve_value: number; passant: number; retained: number }[];
+    sieve_series: { label: string; value: number }[];
+    bottom: number;
+  }[];
 
   // Seria necessário?
 
@@ -479,10 +484,8 @@ const initialState = {
     step: 0,
   },
   granulometryEssayData: {
-    material_mass: null,
-    table_data: null,
-    sieve_series: null,
-    bottom: null,
+    materials: [],
+    granulometrys: [],
   },
   granulometryResultsData: {
     accumulated_retained: [],

@@ -12,11 +12,11 @@ import { useRouter } from 'next/router';
 interface CreateEditMaterialModalProps {
   openModal: boolean;
   handleCloseModal: () => void;
-  updateMaterials: () => void;
   materials: AsphaltMaterial[];
-  materialToEdit?: AsphaltMaterial;
   isEdit: boolean;
-  createdMaterialId?: (id: string) => void;
+  materialToEdit?: AsphaltMaterial;
+  updateMaterials?: () => void;
+  createdMaterial?: (material: AsphaltMaterial) => void;
 }
 
 const CreateEditMaterialModal = ({
@@ -26,10 +26,8 @@ const CreateEditMaterialModal = ({
   materials,
   materialToEdit,
   isEdit,
-  createdMaterialId
+  createdMaterial
 }: CreateEditMaterialModalProps) => {
-  console.log("🚀 ~ materials:", materials)
-  console.log("🚀 ~ isEdit:", isEdit)
   const initialMaterialState: AsphaltMaterialData = {
     name: '',
     type: null,
@@ -49,7 +47,6 @@ const CreateEditMaterialModal = ({
   };
 
   const [material, setMaterial] = useState<AsphaltMaterialData>(initialMaterialState);
-  console.log("🚀 ~ material:", material)
   const {pathname} = useRouter();
 
   const resetMaterial = () => {
@@ -167,7 +164,7 @@ const CreateEditMaterialModal = ({
       console.log("🚀 ~ handleCreateMaterial ~ response:", response)
 
       if (pathname.includes('superpave')) {
-        createdMaterialId(response.data._id);
+        createdMaterial(response.data);
       }
 
       await updateMaterials();
