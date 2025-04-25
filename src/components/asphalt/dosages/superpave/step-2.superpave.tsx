@@ -15,9 +15,6 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
 
   const setData = useSuperpaveStore((state) => state.setData);
 
-  const [materials, setMaterials] = useState([]);
-  console.log('🚀 ~ constSuperpave_Step2= ~ materials:', materials);
-
   const rows = data.granulometrys.map((granul) => ({ ...granul }));
 
   const columns: GridColDef[] = [
@@ -34,10 +31,8 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
           return;
         }
         const { sieve_label, material } = row;
-        const rowIndex = materials.findIndex((mat) => mat._id === material._id);
-        console.log('🚀 ~ constSuperpave_Step2= ~ rowIndex:', rowIndex);
+        const rowIndex = data.materials.findIndex((mat) => mat._id === material?._id);
         const sieve_index = rows[rowIndex]?.table_data.findIndex((r) => r.sieve_label === sieve_label);
-        console.log('🚀 ~ constSuperpave_Step2= ~ sieve_index:', sieve_index);
 
         return (
           <InputEndAdornment
@@ -119,7 +114,7 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
           return;
         }
         const { sieve_label, material } = row;
-        const rowIndex = materials.findIndex((mat) => mat._id === material._id);
+        const rowIndex = data.materials.findIndex((mat) => mat._id === material?._id);
         const sieve_index = rows[rowIndex]?.table_data.findIndex((r) => r.sieve_label === sieve_label);
 
         return (
@@ -184,14 +179,72 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
       },
     },
   ];
+  
 
   return (
     <Box>
-      <CreateMaterialDosageTable onMaterialCreation={(materials) => setMaterials(materials)} />
+      <CreateMaterialDosageTable />
+
       {rows.length > 0 &&
-        rows.map((row) => (
-          <Box sx={{ marginY: '2rem' }}>
-            <Typography variant='h5'>{row.material.name} | {row.material.type}</Typography>
+        data.materials.length > 0 &&
+        rows.map((row, idx) => (
+          <Box sx={{ marginY: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <Typography variant="h5">
+              {data.materials[idx].name} | {data.materials[idx].type}
+            </Typography>
+            <Box sx={{ display: 'flex', gap: '5rem' }}>
+              <InputEndAdornment
+                label={t('granulometry-asphalt.material_mass')}
+                value={row.material_mass}
+                onChange={(e) => {
+                  if (e.target.value === null) return;
+                  const mass = Number(e.target.value);
+
+                  setData({ step: 1, key: 'material_mass', value: mass });
+
+                  if (rows === null) return;
+
+                  const newRows = [];
+
+                  rows.map(function (item, index) {
+                    const row = item;
+
+                    const currentRows = index > 0 ? newRows.slice(0, index) : [];
+                    const initial_retained = 0;
+                    const acumulative_retained = currentRows.reduce(
+                      (accumulator: number, current_value) => accumulator + current_value.retained,
+                      initial_retained
+                    );
+
+                    row.table_data[idx].retained =
+                      Math.round(
+                        100 *
+                          (mass !== 0 ? ((100 - row.table_data[idx].passant) / 100) * mass - acumulative_retained : 0)
+                      ) / 100;
+
+                    newRows.push({ ...row });
+                  });
+                  setData({ step: 1, key: 'table_data', value: newRows });
+                }}
+                adornment={'g'}
+                type="number"
+                inputProps={{ min: 0 }}
+                required
+              />
+              <InputEndAdornment
+                label={t('granulometry-asphalt.bottom')}
+                variant={'filled'}
+                key="bottom"
+                value={data.granulometrys[idx].bottom}
+                onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
+                adornment={'g'}
+                type="number"
+                inputProps={{ min: 0 }}
+                readOnly={true}
+                focused
+              />
+            </Box>
+
             <AsphaltGranulometry_step2Table rows={row.table_data} columns={columns} />
           </Box>
         ))}
