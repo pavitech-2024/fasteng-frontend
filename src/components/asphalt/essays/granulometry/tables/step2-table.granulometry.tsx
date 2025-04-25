@@ -1,7 +1,8 @@
+import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { GridColDef, DataGrid } from '@mui/x-data-grid';
 
 interface step2GranulometryProps {
-  rows: { sieve_label: string; sieve_value: number; passant: number; retained: number }[];
+  rows: { sieve_label: string; sieve_value: number; passant: number; retained: number, material?: AsphaltMaterial }[];
   columns: GridColDef[];
 }
 

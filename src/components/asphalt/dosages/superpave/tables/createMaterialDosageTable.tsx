@@ -9,6 +9,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import ScienceIcon from '@mui/icons-material/Science';
+import materialsService from '@/services/asphalt/asphalt-materials.service';
 
 interface ICreateMaterialDosageTable {
   onMaterialCreation: (materials: AsphaltMaterial[]) => void;
@@ -17,41 +18,56 @@ interface ICreateMaterialDosageTable {
 const CreateMaterialDosageTable = ({ onMaterialCreation }: ICreateMaterialDosageTable) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
-  console.log('🚀 ~ CreateMaterialDosageTable ~ materials:', materials);
-  const [minimumAggrPresent, setMinimumAggrPresent] = useState(false);
   const { granulometryEssayData: data, setData } = useSuperpaveStore();
+
+  const [minimumAggrPresent, setMinimumAggrPresent] = useState({
+    fineAggr: false,
+    coarseAggr: false,
+    filler: false
+  })
 
   const [rows, setRows] = useState([]);
 
   const handleEditMaterial = () => {};
 
-  const handleDeleteMaterial = () => {};
-
-  useEffect(() => {
-    if (materials.length > 0) {
-      const newDataTable = [];
-
-      AllSievesSuperpaveUpdatedAstm.map((s) => {
-        newDataTable.push({ sieve_label: s.label, sieve_value: s.value, passant: 100, retained: 0 });
-      });
-
-      setData({ step: 1, key: 'table_data', value: newDataTable });
+  const handleDeleteMaterial = async (id: string) => {
+    try {
+      await materialsService.deleteMaterial(id);
+      const updatedMaterials = materials.filter((material) => material._id !== id);
+      const updatedGranulometrys = data.granulometrys.filter((gran) => gran.material._id !== id);
+      setMaterials(updatedMaterials);
+      setData({step: 1, key: 'materials', value: updatedMaterials })
+      setData({ step: 1, key: 'granulometrys', value: updatedGranulometrys })
+    } catch (error) {
+      console.error('Failed to delete material:', error);
     }
-  }, [materials]);
+  };
 
-  if (data.granulometrys?.length > 0) {
-    const table_data = Array(data.granulometrys?.length).fill(null);
-    data.granulometrys.map((s, index) => {
-      table_data[index] = {
-        material: materials[index],
-        sieve_label: s[index].sieve_series.label,
-        sieve_value: s[index].sieve_series.value,
-        passant: 100,
-        retained: 0,
-      };
-    });
-    setData({ step: 1, key: 'table_data', value: table_data });
-  }
+  // useEffect(() => {
+  //   if (materials.length > 0) {
+  //     const newDataTable = [];
+
+  //     AllSievesSuperpaveUpdatedAstm.map((s) => {
+  //       newDataTable.push({ sieve_label: s.label, sieve_value: s.value, passant: 100, retained: 0 });
+  //     });
+
+  //     setData({ step: 1, key: 'table_data', value: newDataTable });
+  //   }
+  // }, [materials]);
+
+  // if (data.granulometrys?.length > 0) {
+  //   const table_data = Array(data.granulometrys?.length).fill(null);
+  //   data.granulometrys.map((s, index) => {
+  //     table_data[index] = {
+  //       material: materials[index],
+  //       sieve_label: s[index]?.sieve_series.label,
+  //       sieve_value: s[index]?.sieve_series.value,
+  //       passant: 100,
+  //       retained: 0,
+  //     };
+  //   });
+  //   setData({ step: 1, key: 'table_data', value: table_data });
+  // }
 
   const addNewMaterial = () => {
     if (materials.length === 0) {
@@ -72,9 +88,30 @@ const CreateMaterialDosageTable = ({ onMaterialCreation }: ICreateMaterialDosage
         type: materials[materials.length - 1].type,
       };
 
-      const prevData = [...data.materials];
-      prevData.push(newMaterial);
-      setData({ step: 1, key: 'materials', value: prevData });
+      const newTableData = [];
+      const newSieveSeries = [];
+
+      AllSievesSuperpaveUpdatedAstm.map((s) => {
+        newTableData.push({ sieve_label: s.label, sieve_value: s.value, passant: 100, retained: 0 });
+        newSieveSeries.push({ sieve_label: s.label, sieve_value: s.value })
+      });
+
+      const newGranul = {
+        material: materials[materials.length - 1],
+        material_mass: 0,
+        table_data: newTableData,
+        sieve_series: newSieveSeries,
+        bottom: 0,
+      };
+
+      const prevMaterialsData = [...data.materials];
+      prevMaterialsData.push(newMaterial);
+
+      const prevGranulData = [...data.granulometrys];
+      prevGranulData.push(newGranul);
+
+      setData({ step: 1, key: 'materials', value: prevMaterialsData });
+      setData({ step: 1, key: 'granulometrys', value: prevGranulData });
     }
   };
 
@@ -95,7 +132,8 @@ const CreateMaterialDosageTable = ({ onMaterialCreation }: ICreateMaterialDosage
     {
       field: 'actions',
       headerName: 'Ações',
-      renderCell: () => {
+      renderCell: ({ row }) => {
+        const index = row.id;
         const iconStyle = {
           width: '2rem',
           cursor: 'pointer',
@@ -104,13 +142,10 @@ const CreateMaterialDosageTable = ({ onMaterialCreation }: ICreateMaterialDosage
             transform: 'scale(1.2)',
             transition: 'transform 0.2s ease-in-out',
           },
-        }
+        };
         return (
           <Box sx={{ display: 'flex' }}>
-            <ScienceIcon
-              sx={iconStyle}
-              color="success"
-            />
+            <ScienceIcon sx={iconStyle} color="success" />
             <EditIcon
               sx={{
                 width: '2rem',
@@ -134,6 +169,7 @@ const CreateMaterialDosageTable = ({ onMaterialCreation }: ICreateMaterialDosage
                 },
               }}
               color="error"
+              onClick={() => handleDeleteMaterial(index)}
             />
           </Box>
         );
@@ -156,13 +192,17 @@ const CreateMaterialDosageTable = ({ onMaterialCreation }: ICreateMaterialDosage
 
       setRows(rows);
 
-      const coarseAggregates = rows.filter((row) => row.type === 'coarseAggregate'); // Filtra os agregados graudos
-      const minimumCoarseAggrIsPresent = coarseAggregates.length >= 2; // Verifica se há pelo menos dois agregados graudos
+      const minimumCoarseAggrIsPresent = rows.some((row) => row.type === 'fineAggregate'); // Verifica se há pelo menos dois agregados graudos
       const minimumFineAggrIsPresent = rows.some((row) => row.type === 'fineAggregate'); // Verifica se algum item possui o tipo "Aggregado Fine"
+      const minimunFillerAggrIsPresent = rows.some((row) => row.type === 'filler')
 
-      if (minimumCoarseAggrIsPresent && minimumFineAggrIsPresent) {
-        setMinimumAggrPresent(true);
-      }
+      setMinimumAggrPresent({
+        fineAggr: minimumFineAggrIsPresent,
+        coarseAggr: minimumCoarseAggrIsPresent,
+        filler: minimunFillerAggrIsPresent
+      })
+
+      addNewMaterial();
     }
   }, [materials]);
 
@@ -173,7 +213,6 @@ const CreateMaterialDosageTable = ({ onMaterialCreation }: ICreateMaterialDosage
         onClick={() => setModalIsOpen(true)}
         variant="contained"
         sx={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginY: '1rem' }}
-        disabled={minimumAggrPresent}
       >
         <AddIcon /> Novo Material
       </Button>
@@ -192,7 +231,6 @@ const CreateMaterialDosageTable = ({ onMaterialCreation }: ICreateMaterialDosage
       <CreateEditMaterialModal
         openModal={modalIsOpen}
         handleCloseModal={() => setModalIsOpen(false)}
-        updateMaterials={addNewMaterial}
         materials={materials}
         isEdit={false}
         createdMaterial={(material: AsphaltMaterial) => setMaterials([...materials, material])}

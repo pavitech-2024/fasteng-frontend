@@ -165,9 +165,9 @@ const CreateEditMaterialModal = ({
 
       if (pathname.includes('superpave')) {
         createdMaterial(response.data);
+      } else {
+        await updateMaterials();
       }
-
-      await updateMaterials();
 
       handleCloseModal();
 

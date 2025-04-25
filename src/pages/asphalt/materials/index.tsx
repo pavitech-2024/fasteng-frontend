@@ -37,7 +37,6 @@ const Materials = () => {
   const handleDeleteMaterial = async (id: string) => {
     try {
       await materialsService.deleteMaterial(id);
-      // deleta a amostra do estado
       const updatedMaterials = materials.filter((material) => material._id !== id);
       setMaterials(updatedMaterials);
     } catch (error) {
