@@ -156,7 +156,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
   const onSubmitPhoto = async (avatar: string | File | null) => {
     try {
       let photoUrl = null;
-      
+
       if (typeof avatar === 'string') {
         photoUrl = avatar;
       } else if (avatar === null) {
@@ -165,19 +165,18 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
       } else {
         photoUrl = await toBase64(avatar);
       }
-  
+
       // Atualiza o backend
-      const response = await Api.put(`users/${user._id}`, { 
-        ...user, 
-        photo: photoUrl 
-        //photo: typeof photoUrl === 'string' ? photoUrl : null 
+      const response = await Api.put(`users/${user._id}`, {
+        ...user,
+        photo: photoUrl,
+        //photo: typeof photoUrl === 'string' ? photoUrl : null
       });
-  
+
       // Atualiza o estado local com os dados do backend
       setUser(response.data);
       setOldPhoto(response.data.photo);
       toast.success(t('settings.toast.success'));
-  
     } catch (error) {
       console.error('Error saving photo:', error);
       toast.error(t('settings.toast.error'));
@@ -207,10 +206,9 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           setOpen(false);
         }}
         onSubmit={() => setOpen(false)}
-        size="small" 
-        buttonSize="small"   
+        size="small"
+        buttonSize="small"
       >
-        
         <Box
           sx={{
             width: '99%',
@@ -233,7 +231,9 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
               <img
                 alt="avatar"
                 src={user?.photo || 'https://i.pinimg.com/736x/e8/d7/d0/e8d7d05f392d9c2cf0285ce928fb9f4a.jpg'}
-                onError={(e) => e.currentTarget.src = 'https://i.pinimg.com/736x/e8/d7/d0/e8d7d05f392d9c2cf0285ce928fb9f4a.jpg'}
+                onError={(e) =>
+                  (e.currentTarget.src = 'https://i.pinimg.com/736x/e8/d7/d0/e8d7d05f392d9c2cf0285ce928fb9f4a.jpg')
+                }
                 //src={avatar}
                 style={{
                   width: '100%',
@@ -242,24 +242,24 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
                 }}
               />
               {user?.photo && user.photo !== avatares[0] && (
-              <IconButton
-                sx={{
-                  position: 'absolute',
-                  top: 10,
-                  right: 10,
-                  backgroundColor: 'rgba(0,0,0,0.5)',
-                  ':hover': { opacity: 0.8 },
-                }}
-                onClick={() => onSubmitPhoto(null)}
-                size="small"
-              >
-                <DeleteIcon color="error" sx={{ width: '20px', height: '20px' }} />
-              </IconButton>
+                <IconButton
+                  sx={{
+                    position: 'absolute',
+                    top: 10,
+                    right: 10,
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    ':hover': { opacity: 0.8 },
+                  }}
+                  onClick={() => onSubmitPhoto(null)}
+                  size="small"
+                >
+                  <DeleteIcon color="error" sx={{ width: '20px', height: '20px' }} />
+                </IconButton>
               )}
             </Box>
           ))}
         </Box>
-        
+
         {/*user?.photo && (
         <Button
           component="label"
@@ -273,25 +273,36 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           Apagar foto atual
         </Button>
         )*/}
-        <Button component="label" sx={{ mt: '1rem', width: '100%',  backgroundColor: '#F29134 ', // Cor laranja
-      color: '#000000', // Cor preta para o texto
-      '&:hover': {
-        backgroundColor: '#E69138' }}} startIcon={<CameraAltIcon />}
-        >
-          {t('settings.upload')}
-          <input
-            type="file"
-            hidden
-            accept="image/*"
-            onChange={(e) =>
-              toast.promise(async () => await onSubmitPhoto(e.target.files[0]), {
-                pending: t('settings.toast loading'),
-                success: t('settings.toast success'),
-                error: t('settings.toast error'),
-              })
-            }
-          />
-        </Button>
+        <Box sx={{ width: '100%', display: 'flex', justifyContent: "center" }}>
+          <Button
+            component="label"
+            sx={{
+              mt: '1rem',
+              width: 'fit-content',
+              paddingX: '1rem',
+              backgroundColor: '#F29134 ', // Cor laranja
+              color: '#000000', // Cor preta para o texto
+              '&:hover': {
+                backgroundColor: '#E69138',
+              },
+            }}
+            startIcon={<CameraAltIcon />}
+          >
+            {t('settings.upload')}
+            <input
+              type="file"
+              hidden
+              accept="image/*"
+              onChange={(e) =>
+                toast.promise(async () => await onSubmitPhoto(e.target.files[0]), {
+                  pending: t('settings.toast loading'),
+                  success: t('settings.toast success'),
+                  error: t('settings.toast error'),
+                })
+              }
+            />
+          </Button>
+        </Box>
       </ModalBase>
       {/*<Header title={t('settings')} />*/}
       <Box
@@ -326,10 +337,14 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           }}
         >
           <Tooltip title={t('settings.changeAvatar')}>
-            <IconButton sx={{ p: 0, ml: { mobile: '-30px', notebook: '60px' } }} onClick={() => setOpen(true)} size="large">
+            <IconButton
+              sx={{ p: 0, ml: { mobile: '-30px', notebook: '60px' } }}
+              onClick={() => setOpen(true)}
+              size="large"
+            >
               <Avatar
                 alt="user photo"
-                src={user?.photo || avatares[0]} 
+                src={user?.photo || avatares[0]}
                 sx={{
                   height: '90px',
                   width: '90px',
@@ -340,7 +355,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
                   marginLeft: {
                     mobile: '0px',
                     notebook: '-250px',
-                  }
+                  },
                 }}
               />
               <Box
@@ -354,7 +369,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
                   marginLeft: {
                     mobile: '0px',
                     notebook: '-250px',
-                  }
+                  },
                 }}
               />
             </IconButton>
@@ -374,11 +389,9 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
               marginTop: '10px',
               marginLeft: {
                 mobile: '0px',
-                notebook:'-80px', 
-
-              }
-              
-            } }
+                notebook: '-80px',
+              },
+            }}
           >
             <Typography
               variant="h6"
@@ -426,11 +439,11 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
               value={nameMask(name)}
               onChange={(e) => setName(e.target.value)}
               sx={{
-                height: '50px', 
+                height: '50px',
                 marginLeft: {
                   mobile: '-15px',
-                  notebook: '-170px'
-                }
+                  notebook: '-170px',
+                },
               }}
             />
             {errors.name && (
@@ -453,8 +466,8 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
                 height: '50px',
                 marginLeft: {
                   mobile: '-15px',
-                  notebook: '-170px'
-                }
+                  notebook: '-170px',
+                },
               }}
             />
             {errors.email && (
@@ -477,8 +490,8 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
                 height: '60px',
                 marginLeft: {
                   mobile: '-15px',
-                  notebook: '-170px'
-                }
+                  notebook: '-170px',
+                },
               }}
             />
             {errors.phone && (
@@ -498,10 +511,12 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             onChange={(e) => setDob(e.target.value)}
             error={!!errors.dob}
             helperText={errors.dob}
-            sx = {{ marginLeft: {
-              mobile: '-15px',
-              notebook: '-170px'
-            } }}
+            sx={{
+              marginLeft: {
+                mobile: '-15px',
+                notebook: '-170px',
+              },
+            }}
           />
         </Box>
 
@@ -516,7 +531,6 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             justifyContent: 'flex-start',
             paddingTop: '2rem',
             paddingBottom: '1rem',
-            
           }}
         >
           {t('settings.preferences')}
@@ -535,9 +549,13 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             label={t('settings.language.label')}
             options={LanguageOptions}
             size="medium"
-            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white', ml: 5, marginLeft: {mobile:'-30px',
-              notebook: '-105px'
-            } }}
+            sx={{
+              minWidth: '150px',
+              width: '30%',
+              bgcolor: 'primaryTons.white',
+              ml: 5,
+              marginLeft: { mobile: '-30px', notebook: '-105px' },
+            }}
             value={user?.preferences.language === 'en' ? LanguageOptions[0] : LanguageOptions[1]}
             callback={(value: string) => {
               i18next.changeLanguage(value);
@@ -548,10 +566,16 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             label={t('settings.decimal.label')}
             options={DecimalOptions}
             size="medium"
-            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white', ml: 5, marginLeft: {
-              mobile: '-30px',
-              notebook: '-105px'
-            } }}
+            sx={{
+              minWidth: '150px',
+              width: '30%',
+              bgcolor: 'primaryTons.white',
+              ml: 5,
+              marginLeft: {
+                mobile: '-30px',
+                notebook: '-105px',
+              },
+            }}
             value={DecimalOptions[user?.preferences.decimal - 1]}
             callback={(value: number) => {
               setUser({ ...user, preferences: { ...user.preferences, decimal: value } });
@@ -582,6 +606,5 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
       </Box>
     </Container>
   );
-  
 };
 export default Settings;
