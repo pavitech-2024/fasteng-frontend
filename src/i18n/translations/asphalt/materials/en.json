@@ -14,7 +14,9 @@
   "asphalt.materials.coarseAggregate": "Coarse Aggregate",
   "asphalt.materials.fineAggregate": "Fine Aggregate",
   "asphalt.materials.filler": "Filler",
-  "asphalt.materials.CAP": "Modified Asphalt Binder (CAP",
+  "asphalt.materials.CAP": "Modified Asphalt Binder (CAP)",
+  "asphalt.materials.cap": "Modified Asphalt Binder (CAP",
+
   "asphalt.materials.other": "Other",
   "asphalt.materials.comments": "Comments",
 

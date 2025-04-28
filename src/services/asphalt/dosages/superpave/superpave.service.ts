@@ -68,6 +68,7 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitGeneralData(data as SuperpaveData, this.userId, isConsult);
           break;
         case 1:
+          await this.validateGranulometryEssayData(data as SuperpaveData['granulometryEssayData']);
           await this.calculateGranulometryEssayData(data as SuperpaveData, isConsult);
           break;
         case 2:
@@ -171,33 +172,46 @@ class Superpave_SERVICE implements IEssayService {
    * @returns materials list
    * @throws error if there is an error
    */
-  validateGranulometryEssayData = async (data: SuperpaveData): Promise<void> => {
+  validateGranulometryEssayData = async (data: SuperpaveData['granulometryEssayData']): Promise<void> => {
     // Verify if the material mass is not empty or negative
-    if (!data.granulometryEssayData.material_mass) throw t('errors.empty-material-mass');
-    if (data.granulometryEssayData.material_mass < 0) throw t('errors.negative-material-mass');
+
+    data.granulometrys.forEach((material, i) => {
+      if (!material.material_mass) throw t('errors.empty-material-mass');
+      if (material.material_mass < 0) throw t('errors.negative-material-mass');
+    });
 
     // Verify if all the passant percentages are not empty or negative
-    data.granulometryEssayData.table_data.forEach((row) => {
-      if (row.passant == null || row.retained == null) throw t('errors.empty-sieve') + row.sieve_label;
-      if (row.passant < 0 || row.retained < 0) throw t('errors.negative-sieve') + row.sieve_label;
+    data.granulometrys.forEach((material) => {
+
+      material.table_data.forEach((row) => {
+        if (row.passant === null) throw t('errors.empty-passant') + row.sieve_label;
+        if (row.passant < 0) throw t('errors.negative-passant') + row.sieve_label;
+      })
     });
 
     // Verify if the sum of the masses (retained + bottom) equals the material mass
     let retained = 0.0;
-    data.granulometryEssayData.table_data.forEach((row) => {
-      retained += row.retained;
-    });
-    const sum = Math.round(100 * (retained + data.granulometryEssayData.bottom)) / 100;
+    
+    data.granulometrys.forEach((material) => {
 
-    if (sum > data.granulometryEssayData.material_mass) {
-      throw (
-        t('errors.sieves-sum-not-equal-to-material-mass') +
-        (data.granulometryEssayData.material_mass - sum) +
-        'g.\n' +
-        'Retida + Fundos: ' +
-        sum
-      );
-    }
+      material.table_data.forEach((row) => {
+        retained += row.retained;
+      })
+    });
+
+    data.granulometrys.forEach((material) => {
+      const sum = Math.round(100 * (retained + material.bottom)) / 100;
+
+      if (sum > material.material_mass) {
+        throw (
+          t('errors.sieves-sum-not-equal-to-material-mass') +
+          (material.material_mass - sum) +
+          'g.\n' +
+          'Retida + Fundos: ' +
+          sum
+        );
+      }
+    });
   };
 
   /**

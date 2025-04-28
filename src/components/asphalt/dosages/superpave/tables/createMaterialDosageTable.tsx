@@ -111,7 +111,6 @@ const CreateMaterialDosageTable = () => {
         };
         return (
           <Box sx={{ display: 'flex' }}>
-            <ScienceIcon sx={iconStyle} color="success" />
             <EditIcon
               sx={{
                 width: '2rem',
