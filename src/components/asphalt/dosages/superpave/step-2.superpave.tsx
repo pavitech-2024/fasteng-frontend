@@ -4,19 +4,20 @@ import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.se
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import CreateMaterialDosageTable from './tables/createMaterialDosageTable';
 import AsphaltGranulometry_step2Table from '../../essays/granulometry/tables/step2-table.granulometry';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 
 const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const data = useSuperpaveStore((state) => state.granulometryEssayData);
-  console.log('🚀 ~ constSuperpave_Step2= ~ data:', data);
 
   const setData = useSuperpaveStore((state) => state.setData);
 
   const rows = data.granulometrys.map((granul) => ({ ...granul }));
+  
 
+  console.log("🚀 ~ constSuperpave_Step2= ~ rows:", rows)
   const columns: GridColDef[] = [
     {
       field: 'sieve_label',
@@ -31,7 +32,9 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
           return;
         }
         const { sieve_label, material } = row;
+
         const rowIndex = data.materials.findIndex((mat) => mat._id === material?._id);
+        
         const sieve_index = rows[rowIndex]?.table_data.findIndex((r) => r.sieve_label === sieve_label);
 
         return (
@@ -45,13 +48,14 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
             onChange={(e) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
-              const mass = data.granulometrys[rowIndex].material_mass;
+
+              const mass = data.granulometrys[rowIndex]?.material_mass;
               const current_passant = Number(e.target.value);
 
               const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
               const initial_retained = 0;
               const accumulative_retained = currentRows.reduce(
-                (accumulator: number, current_value) => accumulator + current_value[sieve_index].retained,
+                (accumulator: number, current_value) => accumulator + current_value[sieve_index]?.retained,
                 initial_retained
               );
 
@@ -59,8 +63,10 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
                 Math.round(100 * (mass !== 0 ? ((100 - current_passant) / 100) * mass - accumulative_retained : 0)) /
                 100;
 
-              newRows[rowIndex].table_data[sieve_index].passant = current_passant;
-              newRows[rowIndex].table_data[sieve_index].retained = current_retained;
+                if (newRows[rowIndex]) {
+                  newRows[rowIndex].table_data[sieve_index].passant = current_passant;
+                  newRows[rowIndex].table_data[sieve_index].retained = current_retained;
+                }
 
               setData({ step: 1, key: 'passant', value: newRows });
               setData({ step: 1, key: 'retained', value: newRows });
@@ -179,7 +185,24 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
       },
     },
   ];
-  
+
+  /**
+   * Calculates the remaining mass after accounting for the retained material
+   * in the specified granulometry index and updates the bottom value.
+   *
+   * @param {number} idx - The index of the granulometry data to update.
+   */
+  // const handleBottomCalc = (idx: number) => {
+  //   console.log("🚀 ~ handleBottomCalc ~ idx:", idx)
+  //   if (data.granulometrys[idx].material_mass !== 0 && data.granulometrys[idx].table_data.length > 0) {
+  //     const totalRetained = data.granulometrys[idx].table_data.reduce((sum, row) => sum + row.retained, 0);
+  //     const remaining = data.granulometrys[idx].material_mass - totalRetained;
+  //     const prevData = [...data.granulometrys];
+  //     prevData[idx].bottom = remaining;
+
+  //     setData({ step: 1, key: 'granulometrys', value: prevData });
+  //   }
+  // };
 
   return (
     <Box>
@@ -199,8 +222,12 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
                 onChange={(e) => {
                   if (e.target.value === null) return;
                   const mass = Number(e.target.value);
+                  console.log('🚀 ~ constSuperpave_Step2= ~ mass:', mass);
 
-                  setData({ step: 1, key: 'material_mass', value: mass });
+                  const prevData = [...data.granulometrys];
+                  prevData[idx].material_mass = mass;
+
+                  setData({ step: 1, key: 'granulometrys', value: prevData });
 
                   if (rows === null) return;
 
@@ -224,6 +251,7 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
 
                     newRows.push({ ...row });
                   });
+                  // handleBottomCalc(idx);
                   setData({ step: 1, key: 'table_data', value: newRows });
                 }}
                 adornment={'g'}
@@ -245,7 +273,7 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
               />
             </Box>
 
-            <AsphaltGranulometry_step2Table rows={row.table_data} columns={columns} />
+            <AsphaltGranulometry_step2Table rows={row.table_data.map((row, index) => ({ ...row, material: rows[idx].material }))} columns={columns} />
           </Box>
         ))}
     </Box>

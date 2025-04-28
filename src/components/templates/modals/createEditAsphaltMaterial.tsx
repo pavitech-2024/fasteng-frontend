@@ -26,7 +26,7 @@ const CreateEditMaterialModal = ({
   materials,
   materialToEdit,
   isEdit,
-  createdMaterial
+  createdMaterial,
 }: CreateEditMaterialModalProps) => {
   const initialMaterialState: AsphaltMaterialData = {
     name: '',
@@ -47,7 +47,7 @@ const CreateEditMaterialModal = ({
   };
 
   const [material, setMaterial] = useState<AsphaltMaterialData>(initialMaterialState);
-  const {pathname} = useRouter();
+  const { pathname } = useRouter();
 
   const resetMaterial = () => {
     setMaterial(initialMaterialState);
@@ -158,10 +158,10 @@ const CreateEditMaterialModal = ({
     try {
       validateMaterialData();
 
-      console.log("🧪 Passou pela validação");
+      console.log('🧪 Passou pela validação');
 
       const response = await materialsService.createMaterial(material);
-      console.log("🚀 ~ handleCreateMaterial ~ response:", response)
+      console.log('🚀 ~ handleCreateMaterial ~ response:', response);
 
       if (pathname.includes('superpave')) {
         createdMaterial(response.data);
@@ -179,37 +179,51 @@ const CreateEditMaterialModal = ({
         closeButton: true,
       });
     } catch (error) {
-      console.error("❌ Erro ao criar material:", error);
+      console.error('❌ Erro ao criar material:', error);
 
-      toast.update(createMaterialToastId, {
-        render: t('asphalt.materials.errorCreatingMaterial'),
-        type: 'error',
-        isLoading: false,
-        autoClose: 5000,
-        closeButton: true,
-      });
+      const errorMessage = error?.response?.data?.message;
+      console.log("🚀 ~ handleCreateMaterial ~ errorMessage:", errorMessage)
+      console.log("🚀 ~ handleCreateMaterial ~ errorMessage?.includes('already-exists'):", errorMessage?.includes('already-exists'))
+
+      if (errorMessage?.includes('already exists')) {
+        toast.update(createMaterialToastId, {
+          render: 'Já existe um material cadastrado com esse nome!',
+          type: 'error',
+          isLoading: false,
+          autoClose: 5000,
+          closeButton: true,
+        });
+      } else {
+        toast.update(createMaterialToastId, {
+          render: t('asphalt.materials.errorCreatingMaterial'),
+          type: 'error',
+          isLoading: false,
+          autoClose: 5000,
+          closeButton: true,
+        });
+      }
     }
   };
 
   const validateMaterialData = () => {
     if (material.name === '') {
-      console.log("Material name cannot be empty");
+      console.log('Material name cannot be empty');
       throw new Error('Material name cannot be empty');
     }
     if (material.type === null) {
-      console.log("Material type cannot be empty");
+      console.log('Material type cannot be empty');
       throw new Error('Material type cannot be empty');
     }
     if (materials.find((m) => m.name === material.name)) {
-      console.log("A material with the same name already exists!");
+      console.log('A material with the same name already exists!');
       throw new Error('A material with the same name already exists!');
     }
     if (material.type === 'CAP' && material.description.classification_CAP === null) {
-      console.log("CAP classification cannot be empty");
+      console.log('CAP classification cannot be empty');
       throw new Error('CAP classification cannot be empty');
     }
     if (material.type === 'asphaltBinder' && material.description.classification_AMP === null) {
-      console.log("AMP classification cannot be empty");
+      console.log('AMP classification cannot be empty');
       throw new Error('AMP classification cannot be empty');
     }
   };

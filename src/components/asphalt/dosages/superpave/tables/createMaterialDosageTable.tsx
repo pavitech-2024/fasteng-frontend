@@ -14,7 +14,6 @@ import RtfoMaterialView from '@/components/asphalt/material/rtfoMaterialView';
 
 const CreateMaterialDosageTable = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  // const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
   const { granulometryEssayData: data, setData } = useSuperpaveStore();
 
   const [minimumAggrPresent, setMinimumAggrPresent] = useState({
@@ -69,7 +68,7 @@ const CreateMaterialDosageTable = () => {
     });
 
     const newGranul = {
-      material: data.materials[data.materials.length - 1],
+      material: material,
       material_mass: 0,
       table_data: newTableData,
       sieve_series: newSieveSeries,
