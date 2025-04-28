@@ -15,9 +15,7 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
   const setData = useSuperpaveStore((state) => state.setData);
 
   const rows = data.granulometrys.map((granul) => ({ ...granul }));
-  
 
-  console.log("🚀 ~ constSuperpave_Step2= ~ rows:", rows)
   const columns: GridColDef[] = [
     {
       field: 'sieve_label',
@@ -31,10 +29,11 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
         if (!rows) {
           return;
         }
+
         const { sieve_label, material } = row;
 
         const rowIndex = data.materials.findIndex((mat) => mat._id === material?._id);
-        
+
         const sieve_index = rows[rowIndex]?.table_data.findIndex((r) => r.sieve_label === sieve_label);
 
         return (
@@ -45,69 +44,106 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
             inputProps={{ min: 0 }}
             value={rows[rowIndex]?.table_data[sieve_index]?.passant}
             required
+            // onChange={(e) => {
+            //   if (e.target.value === null) return;
+            //   const newRows = [...rows];
+
+            //   const mass = data.granulometrys[rowIndex]?.material_mass;
+            //   const validMass = isNaN(mass) ? 0 : mass;
+            //   const current_passant = isNaN(Number(e.target.value)) ? 0 : Number(e.target.value);
+
+            //   // Agora, para calcular o acumulado de retidos:
+            //   const peneiras_anteriores = newRows[rowIndex].table_data.slice(0, sieve_index);
+
+            //   const accumulative_retained = peneiras_anteriores.reduce((acc, peneira) => {
+            //     return acc + (peneira.retained || 0);
+            //   }, 0);
+
+            //   const current_retained =
+            //     Math.round(
+            //       100 * (validMass !== 0 ? ((100 - current_passant) / 100) * validMass - accumulative_retained : 0)
+            //     ) / 100;
+
+            //   if (newRows[rowIndex]) {
+            //     newRows[rowIndex].table_data[sieve_index].passant = current_passant;
+            //     newRows[rowIndex].table_data[sieve_index].retained = current_retained;
+            //   }
+
+            //   const bottomValue = data.granulometrys[rowIndex]?.table_data.reduce((acc, peneira) => {
+            //     return acc + peneira.retained;
+            //   }, 0);
+
+            //   const bottom = Math.round(100 * (validMass !== 0 ? validMass - bottomValue : 0)) / 100;
+
+            //   newRows[rowIndex].bottom = bottom;
+
+            //   setData({ step: 1, key: 'granulometrys', value: newRows });
+            // }}
             onChange={(e) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
-
+            
               const mass = data.granulometrys[rowIndex]?.material_mass;
-              const current_passant = Number(e.target.value);
-
-              const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
-              const initial_retained = 0;
-              const accumulative_retained = currentRows.reduce(
-                (accumulator: number, current_value) => accumulator + current_value[sieve_index]?.retained,
-                initial_retained
-              );
-
+              const validMass = isNaN(mass) ? 0 : mass;
+              const input_passant = isNaN(Number(e.target.value)) ? 0 : Number(e.target.value);
+            
+              // Garante que o input nunca seja maior que o passante anterior (ou 100 na primeira linha)
+              let current_passant = input_passant;
+              if (sieve_index > 0) {
+                const previous_passant = newRows[rowIndex].table_data[sieve_index - 1]?.passant ?? 100;
+                if (current_passant > previous_passant) {
+                  current_passant = previous_passant;
+                }
+              } else {
+                if (current_passant > 100) current_passant = 100;
+              }
+            
+              // Atualiza a linha atual
+              const peneiras_anteriores = newRows[rowIndex].table_data.slice(0, sieve_index);
+              const accumulative_retained = peneiras_anteriores.reduce((acc, peneira) => {
+                return acc + (peneira.retained || 0);
+              }, 0);
+            
               const current_retained =
-                Math.round(100 * (mass !== 0 ? ((100 - current_passant) / 100) * mass - accumulative_retained : 0)) /
-                100;
-
-                if (newRows[rowIndex]) {
-                  newRows[rowIndex].table_data[sieve_index].passant = current_passant;
-                  newRows[rowIndex].table_data[sieve_index].retained = current_retained;
-                }
-
-              setData({ step: 1, key: 'passant', value: newRows });
-              setData({ step: 1, key: 'retained', value: newRows });
-
-              const nextRows = sieve_index > 0 ? newRows.slice(sieve_index) : [...rows];
-
-              const new_current_accumulative_retained = accumulative_retained;
-
-              nextRows.map(function (item, index) {
-                const row = item;
-
-                if (index > 0) {
-                  const currentRows = nextRows.slice(0, index + 1);
-
-                  const initial_retained = new_current_accumulative_retained;
-                  const accumulative_retained = currentRows.reduce(
-                    (accumulator: number, current_value) => accumulator + current_value[sieve_index].retained,
-                    initial_retained
-                  );
-
-                  const retained =
-                    Math.round(
-                      100 *
-                        (mass !== 0
-                          ? ((100 - row[rowIndex].table_data[sieve_index].passant) / 100) * mass - accumulative_retained
-                          : 0)
-                    ) / 100;
-
-                  const passant =
-                    Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
-
-                  newRows.map((e) => {
-                    if (e[sieve_index].sieve_label === row[rowIndex].table_data[sieve_index].sieve_label) {
-                      e[sieve_index].passant = passant;
-                    }
-                  });
-                }
-              });
-
-              setData({ step: 1, key: 'table_data', value: newRows });
+                Math.round(
+                  100 * (validMass !== 0 ? ((100 - current_passant) / 100) * validMass - accumulative_retained : 0)
+                ) / 100;
+            
+              if (newRows[rowIndex]) {
+                newRows[rowIndex].table_data[sieve_index].passant = current_passant;
+                newRows[rowIndex].table_data[sieve_index].retained = current_retained;
+              }
+            
+              // Atualiza as próximas linhas
+              for (let i = sieve_index + 1; i < newRows[rowIndex].table_data.length; i++) {
+                const peneiras_anteriores = newRows[rowIndex].table_data.slice(0, i);
+                const accumulative_retained = peneiras_anteriores.reduce((acc, peneira) => {
+                  return acc + (peneira.retained || 0);
+                }, 0);
+            
+                const retained =
+                  Math.round(
+                    100 * (validMass !== 0 ? ((100 - current_passant) / 100) * validMass - accumulative_retained : 0)
+                  ) / 100;
+            
+                const passant =
+                  Math.round(100 * (validMass !== 0 ? (100 * (validMass - accumulative_retained)) / validMass : 0)) / 100;
+            
+                newRows[rowIndex].table_data[i].passant = passant > current_passant ? current_passant : passant;
+                newRows[rowIndex].table_data[i].retained = retained;
+              }
+            
+              // Atualiza o valor de fundo (bottom)
+              const bottomValue = newRows[rowIndex].table_data.reduce((acc, peneira) => {
+                return acc + peneira.retained;
+              }, 0);
+            
+              const bottom = Math.round(100 * (validMass !== 0 ? validMass - bottomValue : 0)) / 100;
+              newRows[rowIndex].bottom = bottom;
+            
+              setData({ step: 1, key: 'granulometrys', value: newRows });
             }}
+            
           />
         );
       },
@@ -129,13 +165,19 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
             adornment="g"
             type="number"
             inputProps={{ min: 0 }}
-            value={rows[rowIndex]?.table_data[sieve_index]?.retained}
+            // value={rows[rowIndex]?.table_data[sieve_index]?.retained}
+            value={
+              isNaN(rows[rowIndex]?.table_data[sieve_index]?.retained)
+                ? 'erro'
+                : rows[rowIndex]?.table_data[sieve_index]?.retained
+            }
             required
             onChange={(e) => {
               if (e.target.value === null) return;
               const newRows = [...rows];
               const mass = data.granulometrys[rowIndex].material_mass;
               const current_retained = Number(e.target.value);
+              console.log('🚀 ~ constSuperpave_Step2= ~ current_retained:', current_retained);
 
               const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
               const initial_retained = current_retained;
@@ -173,6 +215,7 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
                   newRows.map((e) => {
                     if (e[sieve_index].sieve_label === row[rowIndex].table_data[sieve_index].sieve_label) {
                       e[sieve_index].passant = passant;
+                      e[sieve_index].retained = accumulative_retained;
                     }
                   });
                 }
@@ -192,17 +235,18 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
    *
    * @param {number} idx - The index of the granulometry data to update.
    */
-  // const handleBottomCalc = (idx: number) => {
-  //   console.log("🚀 ~ handleBottomCalc ~ idx:", idx)
-  //   if (data.granulometrys[idx].material_mass !== 0 && data.granulometrys[idx].table_data.length > 0) {
-  //     const totalRetained = data.granulometrys[idx].table_data.reduce((sum, row) => sum + row.retained, 0);
-  //     const remaining = data.granulometrys[idx].material_mass - totalRetained;
-  //     const prevData = [...data.granulometrys];
-  //     prevData[idx].bottom = remaining;
+  const handleBottomCalc = (idx: number) => {
+    console.log('🚀 ~ handleBottomCalc ~ idx:', idx);
+    if (data.granulometrys[idx].material_mass !== 0 && data.granulometrys[idx].table_data.length > 0) {
+      const totalRetained = data.granulometrys[idx].table_data.reduce((sum, row) => sum + row.retained, 0);
+      const remaining = data.granulometrys[idx].material_mass - totalRetained;
+      console.log('🚀 ~ handleBottomCalc ~ remaining:', remaining);
+      const prevData = [...data.granulometrys];
+      prevData[idx].bottom = remaining;
 
-  //     setData({ step: 1, key: 'granulometrys', value: prevData });
-  //   }
-  // };
+      setData({ step: 1, key: 'granulometrys', value: prevData });
+    }
+  };
 
   return (
     <Box>
@@ -251,7 +295,7 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
 
                     newRows.push({ ...row });
                   });
-                  // handleBottomCalc(idx);
+                  handleBottomCalc(idx);
                   setData({ step: 1, key: 'table_data', value: newRows });
                 }}
                 adornment={'g'}
@@ -273,7 +317,10 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
               />
             </Box>
 
-            <AsphaltGranulometry_step2Table rows={row.table_data.map((row, index) => ({ ...row, material: rows[idx].material }))} columns={columns} />
+            <AsphaltGranulometry_step2Table
+              rows={row.table_data.map((row, index) => ({ ...row, material: rows[idx].material }))}
+              columns={columns}
+            />
           </Box>
         ))}
     </Box>
