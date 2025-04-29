@@ -1,18 +1,18 @@
 import { AddIcon, DeleteIcon, EditIcon } from '@/assets';
-import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import CreateEditMaterialModal from '@/components/templates/modals/createEditAsphaltMaterial';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { AllSievesSuperpaveUpdatedAstm } from '@/interfaces/common';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { t } from 'i18next';
 import { useEffect, useState } from 'react';
-import ScienceIcon from '@mui/icons-material/Science';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
-import RtfoMaterialView from '@/components/asphalt/material/rtfoMaterialView';
 
-const CreateMaterialDosageTable = () => {
+interface ICreateMaterialDosageTable {
+  onRowClick: (row: any) => void;
+}
+
+const CreateMaterialDosageTable = ({ onRowClick }: ICreateMaterialDosageTable) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const { granulometryEssayData: data, setData } = useSuperpaveStore();
 
@@ -209,8 +209,6 @@ const CreateMaterialDosageTable = () => {
         coarseAggr: minimumCoarseAggrIsPresent,
         filler: minimunFillerAggrIsPresent,
       });
-
-      // addNewMaterial();
     }
   }, [data.materials]);
 
@@ -232,6 +230,7 @@ const CreateMaterialDosageTable = () => {
           disableColumnFilter
           disableColumnSelector
           disableDensitySelector
+          onRowClick={({ row }) => onRowClick(row)}
         />
       )}
 

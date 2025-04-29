@@ -4,7 +4,7 @@ import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.se
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import CreateMaterialDosageTable from './tables/createMaterialDosageTable';
 import AsphaltGranulometry_step2Table from '../../essays/granulometry/tables/step2-table.granulometry';
-import { useEffect } from 'react';
+import { MutableRefObject, useEffect, useRef } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
@@ -12,10 +12,9 @@ import { toast } from 'react-toastify';
 
 const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const data = useSuperpaveStore((state) => state.granulometryEssayData);
-
-  console.log('testeee', data.viscosity?.dataPoints?.length);
-
   const setData = useSuperpaveStore((state) => state.setData);
+
+  const myRef = useRef<any>({});
 
   const aggregatesRows = data.granulometrys
     .map((granul) => ({ ...granul }))
@@ -302,14 +301,38 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
     );
   };
 
+  const handleClickedMaterial = (row) => {
+    const targetRef = myRef.current[row.name];
+    if (targetRef) {
+      targetRef.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    // Aguarde a próxima "pintura" do DOM
+    requestAnimationFrame(() => {
+      console.log("Elemento:", myRef.current["box"]); // Agora deve funcionar
+    });
+  }, []);
+
   return (
     <Box>
-      <CreateMaterialDosageTable />
+      <CreateMaterialDosageTable
+        onRowClick={(row: any) => {
+          handleClickedMaterial(row);
+        }}
+      />
 
       {aggregatesRows.length > 0 &&
         data.materials.length > 0 &&
         aggregatesRows.map((row, idx) => (
-          <Box sx={{ marginY: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <Box
+            key={idx}
+            sx={{ marginY: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}
+            ref={(el) => {
+              if (el) myRef.current[row.material.name] = el;
+            }}
+          >
             <Typography variant="h5">
               {data.materials[idx].name} | {data.materials[idx].type}
             </Typography>
