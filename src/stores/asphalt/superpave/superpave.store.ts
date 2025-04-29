@@ -24,20 +24,13 @@ interface SuperpaveGranulometryEssayData {
     sieve_series: { label: string; value: number }[];
     bottom: number;
   }[];
-
-  // Seria necessário?
-
-  // accumulated_retained: [string, number][];
-  // graph_data: [number, number][];
-  // passant: [string, number][];
-  // retained_porcentage: [string, number][];
-  // total_retained: number;
-  // nominal_size: number;
-  // nominal_diameter: number;
-  // fineness_module: number;
-  // cc: number;
-  // cnu: number;
-  // error: number;
+  viscosity: {
+    dataPoints: {
+      id: number;
+      temperature: number;
+      viscosity: number;
+    }[];
+  }
 }
 
 interface SuperpaveGranulometryResults {
@@ -486,6 +479,7 @@ const initialState = {
   granulometryEssayData: {
     materials: [],
     granulometrys: [],
+    viscosity: null,
   },
   granulometryResultsData: {
     accumulated_retained: [],

@@ -1,20 +1,25 @@
 import { EssayPageProps } from '@/components/templates/essay';
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import CreateMaterialDosageTable from './tables/createMaterialDosageTable';
 import AsphaltGranulometry_step2Table from '../../essays/granulometry/tables/step2-table.granulometry';
 import { useEffect, useState } from 'react';
-import { GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { toast } from 'react-toastify';
 
 const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const data = useSuperpaveStore((state) => state.granulometryEssayData);
 
   const setData = useSuperpaveStore((state) => state.setData);
 
-  const rows = data.granulometrys.map((granul) => ({ ...granul }));
+  const rows = data.granulometrys
+    .map((granul) => ({ ...granul }))
+    .filter(
+      ({ material }) => material.type !== 'asphaltBinder' && material.type !== 'CAP' && material.type !== 'other'
+    );
 
   const columns: GridColDef[] = [
     {
@@ -202,7 +207,43 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
     if (hasCoarseAggregate && hasFineAggregate && hasFiller && hasBinder) {
       setNextDisabled(false);
     }
-  },[data.materials])
+  }, [data.materials]);
+
+  const handleErase = () => {
+    try {
+      if (rows.length > 1) {
+        const newRows = [...rows];
+        newRows.pop();
+        setData({ step: 1, key: 'dataPoints', value: newRows });
+      } else throw t('saybolt-furol.error.minValue');
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
+  const handleAdd = () => {
+    const newRows = [...rows];
+    newRows.push({
+      id: rows.length,
+      temperature: null,
+      viscosity: null,
+    });
+    setData({ step: 1, key: 'dataPoints', value: newRows });
+    setNextDisabled(true);
+  };
+
+  const ExpansionToolbar = () => {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
+        <Button sx={{ color: 'secondaryTons.red' }} onClick={handleErase}>
+          {t('erase')}
+        </Button>
+        <Button sx={{ color: 'secondaryTons.green' }} onClick={handleAdd}>
+          {t('add')}
+        </Button>
+      </Box>
+    );
+  };
 
   return (
     <Box>
@@ -282,6 +323,24 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
             <AsphaltGranulometry_step2Table
               rows={row.table_data.map((row) => ({ ...row, material: rows[idx].material }))}
               columns={columns}
+            />
+
+            <DataGrid
+              sx={{ mt: '1rem', borderRadius: '10px' }}
+              density="compact"
+              showCellVerticalBorder
+              showColumnVerticalBorder
+              slots={{ footer: ExpansionToolbar }}
+              rows={rows.map((row, index) => ({ ...row, id: index }))}
+              columns={columns.map((column) => ({
+                ...column,
+                sortable: false,
+                disableColumnMenu: true,
+                align: 'center',
+                headerAlign: 'center',
+                minWidth: 150,
+                flex: 1,
+              }))}
             />
           </Box>
         ))}

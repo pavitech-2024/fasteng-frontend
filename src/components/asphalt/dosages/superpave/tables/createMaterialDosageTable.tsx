@@ -173,7 +173,6 @@ const CreateMaterialDosageTable = () => {
 
   return (
     <Box>
-      <Typography variant="h6">AGREGADOS</Typography>
       <Button
         onClick={() => setModalIsOpen(true)}
         variant="contained"
