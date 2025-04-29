@@ -1,5 +1,5 @@
 {
-  "superpave.step-2-description": "Insira a massa total do material ensaiado e as porentagens ou peso total dos retidos em cada peneira.",
+  "superpave.step-2-description": "Crie os materiais para a dosagem, incluindo pelo menos um agregado graúdo, um miúdo e um filler com seus dados de granulometria, além de ao menos um ligante com os dados de viscosidade rotacional.",
   "superpave.step-3-description": "Estes são os resultados do ensaio de granulometria.",
   "superpave.step-4-description": "Selecione os agregados e o cimento para a dosagem. Apenas materiais cadastrados com ensaios de granulometria para agregados e viscosidade rotacional para ligantes asfálticos serão exibidos.",
   "superpave.step-5-description": "Escolha a curva granulométrica desejada e insira as porcentagens dos agregados, garantindo um total de 100%.",

@@ -1,6 +1,6 @@
 {
   "superpave.step-1-description": "Insert the material total mass and the percentage or total mass of retained material on each sieve.",
-  "superpave.step-2-description": "These are the results of the granulometry test.",
+  "superpave.step-2-description": "Create the materials for dosing, including at least one coarse aggregate, one fine aggregate, and a filler with their granulometry data, as well as at least one binder with rotational viscosity data.",
 
   "superpave.step-3-description": "Select the aggregates and cement for dosing. Only registered materials with granulometry tests for aggregates and rotational viscosity tests for asphalt binders will be displayed.",
   "superpave.step-4-description": "Choose the desired granulometric curve and enter the aggregate percentages, ensuring a total of 100%.",

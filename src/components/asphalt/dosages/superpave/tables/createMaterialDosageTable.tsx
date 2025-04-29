@@ -91,7 +91,7 @@ const CreateMaterialDosageTable = () => {
 
     setData({ step: 1, key: 'materials', value: prevMaterialsData });
 
-    if (material.type === 'coarseAggregate' || material.type === 'fineAggregate') {
+    if (material.type === 'coarseAggregate' || material.type === 'fineAggregate' || material.type === 'filler') {
       const newGranul = {
         material: material,
         material_mass: 0,

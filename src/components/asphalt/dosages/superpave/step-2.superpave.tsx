@@ -10,7 +10,7 @@ import { t } from 'i18next';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { toast } from 'react-toastify';
 
-const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const data = useSuperpaveStore((state) => state.granulometryEssayData);
 
   console.log('testeee', data.viscosity?.dataPoints?.length);
@@ -255,10 +255,11 @@ const Superpave_Step2 = ({ setNextDisabled, nextDisabled }: EssayPageProps & { s
   ];
 
   useEffect(() => {
+    setNextDisabled(true);
     const hasCoarseAggregate = data.materials.some((material) => material.type === 'coarseAggregate');
     const hasFineAggregate = data.materials.some((material) => material.type === 'fineAggregate');
     const hasFiller = data.materials.some((material) => material.type === 'filler');
-    const hasBinder = data.materials.some((material) => material.type === 'asphaltBinder' || 'CAP');
+    const hasBinder = data.materials.some((material) => material.type === 'asphaltBinder' || material.type === 'CAP');
 
     if (hasCoarseAggregate && hasFineAggregate && hasFiller && hasBinder) {
       setNextDisabled(false);
