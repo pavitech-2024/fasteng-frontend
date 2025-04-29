@@ -27,15 +27,19 @@ const CreateMaterialDosageTable = () => {
   const handleEditMaterial = () => {};
 
   const handleDeleteMaterial = async (id: string) => {
-    console.log("🚀 ~ handleDeleteMaterial ~ id:", id)
+    console.log('🚀 ~ handleDeleteMaterial ~ id:', id);
     try {
-      const prevData = {...data};
-      console.log("🚀 ~ handleDeleteMaterial ~ prevData:", prevData)
+      const prevData = { ...data };
+      console.log('🚀 ~ handleDeleteMaterial ~ prevData:', prevData);
 
       await materialsService.deleteMaterial(id);
       const updatedMaterials = prevData.materials.filter((material) => material._id !== id);
       const updatedGranulometrys = prevData.granulometrys.filter((gran) => gran.material._id !== id);
       
+      if (prevData.viscosity.material._id === id) {
+        setData({ step: 1, key: 'viscosity', value: null});
+      }
+
       setData({ step: 1, key: 'materials', value: updatedMaterials });
       setData({ step: 1, key: 'granulometrys', value: updatedGranulometrys });
     } catch (error) {
@@ -67,24 +71,63 @@ const CreateMaterialDosageTable = () => {
       newSieveSeries.push({ label: s.label, value: s.value });
     });
 
-    const newGranul = {
-      material: material,
-      material_mass: 0,
-      table_data: newTableData,
-      sieve_series: newSieveSeries,
-      bottom: 0,
-    };
-
-    console.log('🚀 ~ addNewMaterial ~ newGranul:', newGranul);
-
     const prevMaterialsData = [...data.materials];
-    prevMaterialsData.push(newMaterial);
 
-    const prevGranulData = [...data.granulometrys];
-    prevGranulData.push(newGranul);
+    if (material.type === 'asphaltBinder' || material.type === 'CAP') {
+      // Verifica se já existe um material do mesmo tipo
+      const existingIndex = prevMaterialsData.findIndex((m) => m.type === 'asphaltBinder' || m.type === 'CAP');
+
+      if (existingIndex !== -1) {
+        // Substitui o material existente
+        prevMaterialsData[existingIndex] = newMaterial;
+      } else {
+        // Adiciona o novo material
+        prevMaterialsData.push(newMaterial);
+      }
+    } else {
+      // Apenas adiciona normalmente
+      prevMaterialsData.push(newMaterial);
+    }
 
     setData({ step: 1, key: 'materials', value: prevMaterialsData });
-    setData({ step: 1, key: 'granulometrys', value: prevGranulData });
+
+    if (material.type === 'coarseAggregate' || material.type === 'fineAggregate') {
+      const newGranul = {
+        material: material,
+        material_mass: 0,
+        table_data: newTableData,
+        sieve_series: newSieveSeries,
+        bottom: 0,
+      };
+
+      const prevGranulData = [...data.granulometrys];
+      prevGranulData.push(newGranul);
+
+      setData({ step: 1, key: 'granulometrys', value: prevGranulData });
+    } else {
+      const newBinder = {
+        material: material,
+        dataPoints: [
+          {
+            id: 0,
+            temperature: 135,
+            viscosity: null,
+          },
+          {
+            id: 1,
+            temperature: 150,
+            viscosity: null,
+          },
+          {
+            id: 2,
+            temperature: 177,
+            viscosity: null,
+          },
+        ],
+      };
+
+      setData({ step: 1, key: 'viscosity', value: newBinder });
+    }
   };
 
   const columns: GridColDef[] = [

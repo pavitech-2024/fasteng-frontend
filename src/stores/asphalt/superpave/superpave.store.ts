@@ -25,6 +25,7 @@ interface SuperpaveGranulometryEssayData {
     bottom: number;
   }[];
   viscosity: {
+    material: AsphaltMaterial;
     dataPoints: {
       id: number;
       temperature: number;
