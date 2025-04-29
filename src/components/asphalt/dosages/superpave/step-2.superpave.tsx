@@ -311,7 +311,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
   useEffect(() => {
     // Aguarde a próxima "pintura" do DOM
     requestAnimationFrame(() => {
-      console.log("Elemento:", myRef.current["box"]); // Agora deve funcionar
+      console.log('Elemento:', myRef.current['box']); // Agora deve funcionar
     });
   }, []);
 
@@ -408,7 +408,12 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
         ))}
 
       {data.viscosity?.dataPoints?.length > 0 && (
-        <Box sx={{ marginY: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <Box
+          sx={{ marginY: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}
+          ref={(el) => {
+            if (el) myRef.current[data.viscosity.material.name] = el;
+          }}
+        >
           <Typography variant="h5">
             {data.viscosity.material.name} | {data.viscosity.material.type}
           </Typography>
