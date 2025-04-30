@@ -31,21 +31,48 @@ interface SuperpaveGranulometryEssayData {
       temperature: number;
       viscosity: number;
     }[];
-  }
+  };
 }
 
 interface SuperpaveGranulometryResults {
-  accumulated_retained: [string, number][];
-  graph_data: [number, number][];
-  passant: [string, number][];
-  retained_porcentage: [string, number][];
-  total_retained: number;
-  nominal_size: number;
-  nominal_diameter: number;
-  fineness_module: number;
-  cc: number;
-  cnu: number;
-  error: number;
+  granulometrys: {
+    material: AsphaltMaterial;
+    accumulated_retained: [string, number][];
+    graph_data: [number, number][];
+    passant: [string, number][];
+    retained_porcentage: [string, number][];
+    total_retained: number;
+    nominal_size: number;
+    nominal_diameter: number;
+    fineness_module: number;
+    cc: number;
+    cnu: number;
+    error: number;
+  }[];
+  viscosity: {
+    material: AsphaltMaterial;
+    graph: string;
+    machiningTemperatureRange: {
+      higher: number;
+      lower: number;
+      average: number;
+    };
+    compressionTemperatureRange: {
+      higher: number;
+      lower: number;
+      average: number;
+    };
+    aggregateTemperatureRange: {
+      higher: number;
+      lower: number;
+      average: number;
+    };
+    curvePoints: number[][];
+    equation: {
+      aIndex: number;
+      bIndex: number;
+    };
+  };
 }
 
 interface SuperpaveMaterialSelectionData {
@@ -483,21 +510,12 @@ const initialState = {
     viscosity: null,
   },
   granulometryResultsData: {
-    accumulated_retained: [],
-    graph_data: [],
-    passant: [],
-    retained_porcentage: [],
-    total_retained: null,
-    nominal_size: null,
-    nominal_diameter: null,
-    fineness_module: null,
-    cc: null,
-    cnu: null,
-    error: null,
+    granulometrys: [],
+    viscosity: null,
   },
   materialSelectionData: {
     aggregates: [],
-    binder: null,
+    binder: null
   },
   granulometryCompositionData: {
     porcentagesPassantsN200: null,
@@ -985,7 +1003,6 @@ const useSuperpaveStore = create<SuperpaveData & SuperpaveActions & Hydration>()
 
         clearStore: () => {
           sessionStorage.clear();
-          // set(initialState);
         },
       }),
       {

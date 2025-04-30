@@ -15,59 +15,60 @@ const Superpave_Step3 = ({
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const { granulometryResultsData, granulometryEssayData } = useSuperpaveStore();
+  console.log("🚀 ~ granulometryResultsData:", granulometryResultsData)
 
   const data = {
     container_other_data: [],
   };
 
-  if (granulometryResultsData) {
-    data.container_other_data.push(
-      {
-        label: t('granulometry-asphalt.accumulated-retained'),
-        value: granulometryResultsData.accumulated_retained,
-        unity: '%',
-      },
-      { label: t('granulometry-asphalt.total-retained'), value: granulometryResultsData.total_retained, unity: 'g' },
-      {
-        label: t('asphalt.essays.granulometry.results.nominalSize'),
-        value: granulometryResultsData.nominal_size,
-        unity: 'mm',
-      },
-      {
-        label: t('asphalt.essays.granulometry.results.nominalDiammeter'),
-        value: granulometryResultsData.nominal_diameter,
-        unity: 'mm',
-      },
-      {
-        label: t('asphalt.essays.granulometry.results.finenessModule'),
-        value: granulometryResultsData.fineness_module,
-        unity: '%',
-      },
-      { label: t('granulometry-asphalt.cc'), value: granulometryResultsData.cc },
-      { label: t('granulometry-asphalt.cnu'), value: granulometryResultsData.cnu },
-      { label: t('granulometry-asphalt.error'), value: granulometryResultsData.error, unity: '%' }
-    );
-  }
+  // if (granulometryResultsData) {
+  //   data.container_other_data.push(
+  //     {
+  //       label: t('granulometry-asphalt.accumulated-retained'),
+  //       value: granulometryResultsData.accumulated_retained,
+  //       unity: '%',
+  //     },
+  //     { label: t('granulometry-asphalt.total-retained'), value: granulometryResultsData.total_retained, unity: 'g' },
+  //     {
+  //       label: t('asphalt.essays.granulometry.results.nominalSize'),
+  //       value: granulometryResultsData.nominal_size,
+  //       unity: 'mm',
+  //     },
+  //     {
+  //       label: t('asphalt.essays.granulometry.results.nominalDiammeter'),
+  //       value: granulometryResultsData.nominal_diameter,
+  //       unity: 'mm',
+  //     },
+  //     {
+  //       label: t('asphalt.essays.granulometry.results.finenessModule'),
+  //       value: granulometryResultsData.fineness_module,
+  //       unity: '%',
+  //     },
+  //     { label: t('granulometry-asphalt.cc'), value: granulometryResultsData.cc },
+  //     { label: t('granulometry-asphalt.cnu'), value: granulometryResultsData.cnu },
+  //     { label: t('granulometry-asphalt.error'), value: granulometryResultsData.error, unity: '%' }
+  //   );
+  // }
 
-  const graph_data = [
-    [t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')],
-    ...granulometryResultsData.graph_data,
-  ];
+  // const graph_data = [
+  //   [t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')],
+  //   ...granulometryResultsData.graph_data,
+  // ];
 
-  const rows = [];
+  const granulometryRows = [];
 
-  granulometryEssayData.table_data.map((value, index) => {
-    rows.push({
-      sieve: value.sieve_label,
-      passant_porcentage: value.passant,
-      passant: granulometryResultsData.passant[index][1],
-      retained_porcentage: granulometryResultsData.retained_porcentage[index][1],
-      retained: value.retained,
-      accumulated_retained: granulometryResultsData.accumulated_retained[index][1],
-    });
-  });
+  // granulometryEssayData.table_data.map((value, index) => {
+  //   rows.push({
+  //     sieve: value.sieve_label,
+  //     passant_porcentage: value.passant,
+  //     passant: granulometryResultsData.passant[index][1],
+  //     retained_porcentage: granulometryResultsData.retained_porcentage[index][1],
+  //     retained: value.retained,
+  //     accumulated_retained: granulometryResultsData.accumulated_retained[index][1],
+  //   });
+  // });
 
-  const columns: GridColDef[] = [
+  const granulometryColumns: GridColDef[] = [
     {
       field: 'sieve',
       headerName: t('granulometry-asphalt.sieves'),
@@ -100,11 +101,11 @@ const Superpave_Step3 = ({
     },
   ];
 
-  setNextDisabled(false);
+  // setNextDisabled(false);
 
   return (
     <>
-      <Box
+      {/* <Box
         sx={{
           width: '100%',
           display: 'flex',
@@ -145,7 +146,7 @@ const Superpave_Step3 = ({
         }}
       />
 
-      <AsphaltGranulometry_resultsTable rows={rows} columns={columns} />
+      <AsphaltGranulometry_resultsTable rows={rows} columns={columns} /> */}
     </>
   );
 };
