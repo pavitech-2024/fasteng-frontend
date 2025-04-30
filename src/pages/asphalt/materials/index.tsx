@@ -24,6 +24,7 @@ const Materials = () => {
     materialsService
       .getMaterialsByUserId(user._id)
       .then((response) => {
+        console.log(response.data);
         setMaterials(response.data);
         setLoading(false);
       })
