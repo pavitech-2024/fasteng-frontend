@@ -121,17 +121,17 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
           {
             id: 0,
             temperature: 135,
-            viscosity: null,
+            viscosity: 0,
           },
           {
             id: 1,
             temperature: 150,
-            viscosity: null,
+            viscosity: 0,
           },
           {
             id: 2,
             temperature: 177,
-            viscosity: null,
+            viscosity: 0,
           },
         ],
       };
@@ -240,7 +240,11 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
           disableColumnFilter
           disableColumnSelector
           disableDensitySelector
-          onRowClick={({ row }) => onRowClick(row)}
+          onCellClick={(params, event) => {
+            if (params.field !== 'actions') {
+              onRowClick(params.row);
+            }
+          }}
         />
       )}
 

@@ -246,7 +246,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
               newRows[index].viscosity = Number(e.target.value);
               setData({ step: 1, key: 'viscosity', value: newRows });
             }}
-            adornment={'SSF'}
+            adornment={'Poise'}
           />
         );
       },
@@ -307,13 +307,6 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
       targetRef.scrollIntoView({ behavior: 'smooth' });
     }
   };
-
-  useEffect(() => {
-    // Aguarde a próxima "pintura" do DOM
-    requestAnimationFrame(() => {
-      console.log('Elemento:', myRef.current['box']); // Agora deve funcionar
-    });
-  }, []);
 
   return (
     <Box>
