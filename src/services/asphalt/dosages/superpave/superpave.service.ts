@@ -219,7 +219,7 @@ class Superpave_SERVICE implements IEssayService {
     data.granulometryEssayData.viscosity.dataPoints.forEach((point, index) => {
       if (!point.viscosity) throw `${t('errors.empty-viscosity')} + ${index}`;
       if (point.viscosity < 1) throw t('errors.zero-viscosity');
-    })
+    });
   };
 
   /**
@@ -243,12 +243,23 @@ class Superpave_SERVICE implements IEssayService {
         );
 
         const { success, error, granulometry, viscosity } = response.data;
+        console.log("🚀 ~ Superpave_SERVICE ~ calculateGranulometryEssayData= ~ viscosity:", viscosity)
 
         if (success === false) throw error.name;
 
+        const formattedGranulometry = granulometry.map((item) => {
+          return {
+            material: item.material,
+            result: item.result,
+          };
+        });
+
         this.store_actions.setData({
           step: 2,
-          value: { granulometry: granulometry, viscosity: viscosity },
+          value: {
+            granulometrys: formattedGranulometry,
+            viscosity: { material: viscosity.material, result: viscosity.result },
+          },
         });
       } catch (error) {
         throw error;
