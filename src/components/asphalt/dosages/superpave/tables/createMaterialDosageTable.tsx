@@ -12,7 +12,7 @@ interface ICreateMaterialDosageTable {
   onRowClick: (row: any) => void;
 }
 
-const CreateMaterialDosageTable = ({ onRowClick }: ICreateMaterialDosageTable) => {
+const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const { granulometryEssayData: data, setData } = useSuperpaveStore();
 
@@ -27,23 +27,33 @@ const CreateMaterialDosageTable = ({ onRowClick }: ICreateMaterialDosageTable) =
   const handleEditMaterial = () => {};
 
   const handleDeleteMaterial = async (id: string) => {
-    console.log('🚀 ~ handleDeleteMaterial ~ id:', id);
-    try {
-      const prevData = { ...data };
-      console.log('🚀 ~ handleDeleteMaterial ~ prevData:', prevData);
+    const prevData = { ...data };
 
+    const updatedMaterials = prevData.materials.filter((material) => material._id !== id);
+    const updatedGranulometrys = prevData.granulometrys.filter((gran) => gran.material._id !== id);
+    const updatedViscosity = null;
+    try {
       await materialsService.deleteMaterial(id);
-      const updatedMaterials = prevData.materials.filter((material) => material._id !== id);
-      const updatedGranulometrys = prevData.granulometrys.filter((gran) => gran.material._id !== id);
-      
-      if (prevData.viscosity.material._id === id) {
-        setData({ step: 1, key: 'viscosity', value: null});
-      }
 
       setData({ step: 1, key: 'materials', value: updatedMaterials });
       setData({ step: 1, key: 'granulometrys', value: updatedGranulometrys });
+      if (prevData.viscosity?.material._id === id) {
+        setData({ step: 1, key: 'viscosity', value: updatedViscosity});
+      }
     } catch (error) {
       console.error('Failed to delete material:', error);
+
+      if (prevData.materials.some((material) => material._id === id)) {
+        setData({ step: 1, key: 'materials', value: updatedMaterials });
+      }
+
+      if (prevData.granulometrys.some((gran) => gran.material._id === id)) {
+        setData({ step: 1, key: 'granulometrys', value: updatedGranulometrys });
+      }
+
+      if (prevData.viscosity?.material._id === id) {
+        setData({ step: 1, key: 'viscosity', value: updatedViscosity});
+      }
     }
   };
 
