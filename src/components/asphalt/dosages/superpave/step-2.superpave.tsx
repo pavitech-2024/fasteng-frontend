@@ -213,13 +213,12 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
           <InputEndAdornment
             fullWidth
             type="number"
-            inputProps={{ min: 0 }}
             value={row.temperature}
             onChange={(e) => {
               const newRows = [...binderRows];
               if (index !== -1) {
-                binderRows[index].temperature = Number(e.target.value);
-                setData({ step: 1, key: 'temperature', value: newRows });
+                newRows[index].temperature = Number(e.target.value);
+                setData({ step: 1, key: 'viscosity', value: {...data.viscosity, dataPoints: newRows} });
               }
             }}
             adornment={'°C'}
@@ -239,12 +238,11 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
             fullWidth
             label={t('asphalt.essays.viscosityRotational.viscosity')}
             type="number"
-            inputProps={{ min: 0 }}
             value={row.viscosity}
             onChange={(e) => {
               const newRows = [...binderRows];
               newRows[index].viscosity = Number(e.target.value);
-              setData({ step: 1, key: 'viscosity', value: newRows });
+              setData({ step: 1, key: 'viscosity', value: {...data.viscosity, dataPoints: newRows} });
             }}
             adornment={'Poise'}
           />
@@ -337,7 +335,6 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
                   if (e.target.value === null) return;
 
                   const mass = Number(e.target.value);
-                  console.log('🚀 ~ mass:', mass);
 
                   if (aggregatesRows === null) return;
 
@@ -351,7 +348,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
                     const currentRows = index > 0 ? aggregatesRows.slice(0, index) : [];
                     const initial_retained = 0;
                     const acumulative_retained = currentRows.reduce(
-                      (accumulator: number, current_value) => accumulator + (current_value[idx].retained || 0),
+                      (accumulator: number, current_value) => accumulator + (current_value[idx]?.table_data.retained || 0),
                       initial_retained
                     );
 

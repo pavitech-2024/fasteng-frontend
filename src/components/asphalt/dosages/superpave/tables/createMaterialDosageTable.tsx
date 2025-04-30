@@ -51,7 +51,7 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
         setData({ step: 1, key: 'granulometrys', value: updatedGranulometrys });
       }
 
-      if (prevData.viscosity?.material._id === id) {
+      if (prevData.viscosity?.material?._id === id) {
         setData({ step: 1, key: 'viscosity', value: updatedViscosity});
       }
     }

@@ -26,7 +26,11 @@ class Superpave_SERVICE implements IEssayService {
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
       { step: 1, description: t('asphalt.dosages.superpave.granulometry_essay'), path: 'granulometry-essay' },
-      { step: 2, description: t('asphalt.dosages.superpave.granulometry_essay_result'), path: 'granulometry-essay-result' },
+      {
+        step: 2,
+        description: t('asphalt.dosages.superpave.granulometry_essay_result'),
+        path: 'granulometry-essay-result',
+      },
       { step: 3, description: t('asphalt.dosages.superpave.material_selection'), path: 'material-selection' },
       {
         step: 4,
@@ -68,8 +72,9 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitGeneralData(data as SuperpaveData, this.userId, isConsult);
           break;
         case 1:
-          await this.validateGranulometryEssayData(data as SuperpaveData['granulometryEssayData']);
+          await this.validateGranulometryEssayData(data as SuperpaveData);
           await this.calculateGranulometryEssayData(data as SuperpaveData, isConsult);
+          // inserir o submit desses dados
           break;
         case 2:
           await this.submitGranulometryEssayData(data as SuperpaveData, this.userId, null, isConsult);
@@ -172,34 +177,32 @@ class Superpave_SERVICE implements IEssayService {
    * @returns materials list
    * @throws error if there is an error
    */
-  validateGranulometryEssayData = async (data: SuperpaveData['granulometryEssayData']): Promise<void> => {
+  validateGranulometryEssayData = async (data: SuperpaveData): Promise<void> => {
     // Verify if the material mass is not empty or negative
 
-    data.granulometrys.forEach((material, i) => {
+    data.granulometryEssayData.granulometrys.forEach((material, i) => {
       if (!material.material_mass) throw t('errors.empty-material-mass');
       if (material.material_mass < 0) throw t('errors.negative-material-mass');
     });
 
     // Verify if all the passant percentages are not empty or negative
-    data.granulometrys.forEach((material) => {
-
+    data.granulometryEssayData.granulometrys.forEach((material) => {
       material.table_data.forEach((row) => {
         if (row.passant === null) throw t('errors.empty-passant') + row.sieve_label;
         if (row.passant < 0) throw t('errors.negative-passant') + row.sieve_label;
-      })
+      });
     });
 
     // Verify if the sum of the masses (retained + bottom) equals the material mass
     let retained = 0.0;
-    
-    data.granulometrys.forEach((material) => {
 
+    data.granulometryEssayData.granulometrys.forEach((material) => {
       material.table_data.forEach((row) => {
         retained += row.retained;
-      })
+      });
     });
 
-    data.granulometrys.forEach((material) => {
+    data.granulometryEssayData.granulometrys.forEach((material) => {
       const sum = Math.round(100 * (retained + material.bottom)) / 100;
 
       if (sum > material.material_mass) {
@@ -212,6 +215,11 @@ class Superpave_SERVICE implements IEssayService {
         );
       }
     });
+
+    data.granulometryEssayData.viscosity.dataPoints.forEach((point, index) => {
+      if (!point.viscosity) throw `${t('errors.empty-viscosity')} + ${index}`;
+      if (point.viscosity < 1) throw t('errors.zero-viscosity');
+    })
   };
 
   /**
@@ -224,13 +232,24 @@ class Superpave_SERVICE implements IEssayService {
   calculateGranulometryEssayData = async (data: SuperpaveData, isConsult?: boolean): Promise<void> => {
     if (!isConsult) {
       try {
-        const response = await Api.post(`${this.info.backend_path}/calculate-granulometry-essay-data`, data.granulometryEssayData);
+        const granulometryEssayData = {
+          granulometrys: data.granulometryEssayData.granulometrys,
+          viscosity: data.granulometryEssayData.viscosity,
+        };
 
-        const { success, error, granulometry } = response.data;
+        const response = await Api.post(
+          `${this.info.backend_path}/calculate-granulometry-essay-data`,
+          granulometryEssayData
+        );
+
+        const { success, error, granulometry, viscosity } = response.data;
 
         if (success === false) throw error.name;
 
-        this.store_actions.setData({ step: 2, value: granulometry.result });
+        this.store_actions.setData({
+          step: 2,
+          value: { granulometry: granulometry, viscosity: viscosity },
+        });
       } catch (error) {
         throw error;
       }
