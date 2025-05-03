@@ -1,32 +1,32 @@
-import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
-import Loading from '@/components/molecules/loading';
-import { EssayPageProps } from '@/components/templates/essay';
-import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
-import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import debounce from 'lodash/debounce';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
-import debounce from 'lodash/debounce';
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import Loading from '@/components/molecules/loading';
+import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
+import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
+import { EssayPageProps } from '@/components/templates/essay';
 
+/**
+ * Componente para a etapa 6 do ensaio Marshall.
+ * Renderiza tabelas editáveis com parâmetros volumétricos para diferentes dosagens de ligante.
+ *
+ * @param nextDisabled - Estado que indica se o botão "Próximo" está desabilitado.
+ * @param setNextDisabled - Função para definir o estado do botão "Próximo".
+ * @param marshall - Serviço Marshall para manipulação dos parâmetros volumétricos.
+ */
 const Marshall_Step6 = ({
   nextDisabled,
   setNextDisabled,
   marshall,
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  // Estados locais
+  const [loading, setLoading] = useState(false);
   const { volumetricParametersData: data, binderTrialData, maximumMixtureDensityData, setData } = useMarshallStore();
-
-  nextDisabled && setNextDisabled(false);
-
-  const lessOneRows = data?.lessOne;
-  const lessHalfRows = data?.lessHalf;
-  const normalRows = data?.normal;
-  const plusHalfRows = data?.plusHalf;
-  const plusOneRows = data?.plusOne;
-
   const [tableIsDisabled, setTableIsDisabled] = useState({
     lessOne: true,
     lessHalf: true,
@@ -35,410 +35,156 @@ const Marshall_Step6 = ({
     plusOne: true,
   });
 
+  /**
+   * Efeito para verificar se há arrays vazios nos dados volumétricos,
+   * e definir o estado do botão "Próximo" com base nisso.
+   */
+  useEffect(() => {
+    const hasEmptyArrays = Object.values(data.volumetricParameters).some((arr) => arr.length < 1);
+    setNextDisabled(hasEmptyArrays);
+  }, [data]);
+
+  /**
+   * Função para lidar com a alteração dos inputs, com debounce para otimização.
+   *
+   * @param tenor - Tipo de dosagem (lessOne, lessHalf, normal, plusHalf, plusOne).
+   * @param index - Índice do item a ser atualizado.
+   * @param field - Campo a ser atualizado.
+   */
+  const handleInputChange = (tenor: string, index: number, field: string) => debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    const newState = [...data[tenor]];
+    newState[index] = { ...newState[index], [field]: value };
+    setData({ step: 5, value: { ...data, [tenor]: newState } });
+  }, 300);
+
+  /**
+   * Gera as colunas para o DataGrid com base no tipo de dosagem.
+   *
+   * @param tenor - Tipo de dosagem.
+   * @returns Array de definições de colunas.
+   */
   const generateColumns = (tenor: string): GridColDef[] => [
-    {
-      field: 'diammeter',
-      headerName: t('asphalt.dosages.marshall.diammeter') + '(cm)',
-      flex: 1,
-      headerAlign: 'center',
-      align: 'center',
-      width: 115,
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data[tenor]?.findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            value={data[tenor][index]?.diammeter}
-            type="number"
-            onChange={(e) => {
-              const value = e.target.value;
-              const newState = [...data[tenor]];
-              newState[index] = { ...newState[index], diammeter: Number(value) };
+    { field: 'diammeter', headerName: t('asphalt.dosages.marshall.diammeter', 'Diametro'), flex: 1, headerAlign: 'center', align: 'center', width: 115, renderCell: ({ row }) => renderInputCell(tenor, row, 'diammeter') },
+    { field: 'height', headerName: t('asphalt.dosages.marshall.height', 'Altura'), flex: 1, headerAlign: 'center', align: 'center', width: 115, renderCell: ({ row }) => renderInputCell(tenor, row, 'height') },
+    { field: 'dryMass', headerName: t('asphalt.dosages.marshall.dry-mass', 'Massa seca'), width: 120, flex: 1, headerAlign: 'center', align: 'center', renderCell: ({ row }) => renderInputCell(tenor, row, 'dryMass') },
+    { field: 'submergedMass', headerName: t('asphalt.dosages.marshall.submerged-mass', 'Massa submersa'), width: 150, flex: 1, headerAlign: 'center', align: 'center', renderCell: ({ row }) => renderInputCell(tenor, row, 'submergedMass') },
+    { field: 'drySurfaceSaturatedMass', headerName: t('asphalt.dosages.marshall.dry-surface-saturated-mass', 'Massa saturada com superfície seca'), width: 150, flex: 1, headerAlign: 'center', align: 'center', renderCell: ({ row }) => renderInputCell(tenor, row, 'drySurfaceSaturatedMass') },
+    { field: 'stability', headerName: t('asphalt.dosages.marshall.stability', 'Estabilidade Marshall'), width: 125, flex: 1, headerAlign: 'center', align: 'center', renderCell: ({ row }) => renderInputCell(tenor, row, 'stability') },
+    { field: 'fluency', headerName: t('asphalt.dosages.marshall.fluency', 'Fluência'), width: 150, flex: 1, headerAlign: 'center', align: 'center', renderCell: ({ row }) => renderInputCell(tenor, row, 'fluency') },
+    { field: 'diametricalCompressionStrength', headerName: t('asphalt.dosages.indirect-tensile-strength', 'Resistência à tração por compressão diametral'), width: 150, flex: 1, headerAlign: 'center', align: 'center', renderCell: ({ row }) => renderInputCell(tenor, row, 'diametricalCompressionStrength') },
+  ];
 
-              debounce((newState, tenor) => {
-                setData({ step: 5, value: { ...data, [tenor]: newState } });
-              }, 300);
-              debounce((newState, tenor) => {
-                setData({ step: 5, value: { ...data, [tenor]: newState } });
-              }, 300);
-            }}
-          />
-        );
-      },
-    },
+  /**
+   * Renderiza uma célula de entrada de dados no DataGrid.
+   *
+   * @param tenor - Tipo de dosagem.
+   * @param row - Linha de dados.
+   * @param field - Campo a ser renderizado.
+   * @returns Componente de entrada de dados.
+   */
+  const renderInputCell = (tenor: string, row: any, field: string) => {
+    const { id } = row;
+    const index = data[tenor]?.findIndex((r) => r.id === id);
+    return (
+      <InputEndAdornment
+        adornment=""
+        type="number"
+        value={data[tenor][index]?.[field]}
+        onChange={handleInputChange(tenor, index, field)}
+      />
+    );
+  };
+
+  /**
+   * Gera o modelo de agrupamento de colunas para o DataGrid.
+   *
+   * @param tenor - Tipo de dosagem.
+   * @param index - Índice da dosagem no array de percentuais.
+   * @returns Modelo de agrupamento de colunas.
+   */
+  const generateColumnGroupingModel = (tenor: string, index: number): GridColumnGroupingModel => [
     {
-      field: 'height',
-      headerName: t('asphalt.dosages.marshall.height') + '(cm)',
-      flex: 1,
+      groupId: `${binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][index].value},00 %`,
+      children: ['diammeter', 'height', 'dryMass', 'submergedMass', 'drySurfaceSaturatedMass', 'stability', 'fluency', 'diametricalCompressionStrength'].map(field => ({ field })),
       headerAlign: 'center',
-      align: 'center',
-      width: 115,
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data[tenor]?.findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="number"
-            value={data[tenor][index]?.height}
-            onChange={(e) => {
-              const value = e.target.value;
-              const newState = [...data[tenor]];
-              newState[index] = { ...newState[index], height: Number(value) };
-              debounce((newState, tenor) => {
-                setData({ step: 5, value: { ...data, [tenor]: newState } });
-              }, 300);
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'dryMass',
-      headerName: t('asphalt.dosages.marshall.dry-mass') + '(g)',
-      width: 120,
-      flex: 1,
-      headerAlign: 'center',
-      align: 'center',
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data[tenor]?.findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="number"
-            value={data[tenor][index]?.dryMass}
-            onChange={(e) => {
-              const value = e.target.value;
-              const newState = [...data[tenor]];
-              newState[index] = { ...newState[index], dryMass: Number(value) };
-              debounce((newState, tenor) => {
-                setData({ step: 5, value: { ...data, [tenor]: newState } });
-              }, 300);
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'submergedMass',
-      headerName: t('asphalt.dosages.marshall.submerged-mass') + '(g)',
-      width: 150,
-      flex: 1,
-      headerAlign: 'center',
-      align: 'center',
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data[tenor].findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="number"
-            value={data[tenor][index]?.submergedMass}
-            onChange={(e) => {
-              const value = e.target.value;
-              const newState = [...data[tenor]];
-              newState[index] = { ...newState[index], submergedMass: Number(value) };
-              debounce((newState, tenor) => {
-                setData({ step: 5, value: { ...data, [tenor]: newState } });
-              }, 300);
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'drySurfaceSaturatedMass',
-      headerName: t('asphalt.dosages.marshall.dry-surface-saturated-mass') + '(g)',
-      width: 150,
-      flex: 1,
-      headerAlign: 'center',
-      align: 'center',
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data[tenor]?.findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="number"
-            value={data[tenor][index]?.drySurfaceSaturatedMass}
-            onChange={(e) => {
-              const value = e.target.value;
-              const newState = [...data[tenor]];
-              newState[index] = { ...newState[index], drySurfaceSaturatedMass: Number(value) };
-              debounce((newState, tenor) => {
-                setData({ step: 5, value: { ...data, [tenor]: newState } });
-              }, 300);
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'stability',
-      headerName: t('asphalt.dosages.marshall.stability') + '(N)',
-      width: 125,
-      flex: 1,
-      headerAlign: 'center',
-      align: 'center',
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data[tenor].findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="number"
-            value={data[tenor][index]?.stability}
-            onChange={(e) => {
-              const value = e.target.value;
-              const newState = [...data[tenor]];
-              newState[index] = { ...newState[index], stability: Number(value) };
-              debounce((newState, tenor) => {
-                setData({ step: 5, value: { ...data, [tenor]: newState } });
-              }, 300);
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'fluency',
-      headerName: t('asphalt.dosages.marshall.fluency') + '(mm)',
-      width: 150,
-      flex: 1,
-      headerAlign: 'center',
-      align: 'center',
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data[tenor].findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="number"
-            value={data[tenor][index]?.fluency}
-            onChange={(e) => {
-              const value = e.target.value;
-              const newState = [...data[tenor]];
-              newState[index] = { ...newState[index], fluency: Number(value) };
-              debounce((newState, tenor) => {
-                setData({ step: 5, value: { ...data, [tenor]: newState } });
-              }, 300);
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'diametricalCompressionStrength',
-      headerName: t('asphalt.dosages.indirect-tensile-strength') + '(MPa)',
-      width: 150,
-      flex: 1,
-      headerAlign: 'center',
-      align: 'center',
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data[tenor]?.findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="number"
-            value={data[tenor][index]?.diametricalCompressionStrength}
-            onChange={(e) => {
-              const value = e.target.value;
-              const newState = [...data[tenor]];
-              newState[index] = { ...newState[index], diametricalCompressionStrength: Number(value) };
-              debounce((newState, tenor) => {
-                setData({ step: 5, value: { ...data, [tenor]: newState } });
-              }, 300);
-            }}
-          />
-        );
-      },
+      renderHeaderGroup: (params) => (
+        <Box sx={{ display: 'flex', gap: '2rem' }}>
+          <Typography sx={{ marginY: 'auto', color: '#777777' }}>{params.headerName}</Typography>
+          <Button
+            startIcon={<LockOpenIcon />}
+            onClick={() => setTableIsDisabled({ ...tableIsDisabled, [tenor]: !tableIsDisabled[tenor] })}
+            variant="contained"
+            sx={{ marginY: '1rem' }}
+          >
+            {tableIsDisabled[tenor] ? t('asphalt.dosages.enable') : t('asphalt.dosages.disable')}
+          </Button>
+        </Box>
+      ),
     },
   ];
 
-  const lessOneColumnsGroupings: GridColumnGroupingModel = [
-    {
-      groupId: `${binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][0].value},00 %`,
-      children: [
-        { field: 'diammeter' },
-        { field: 'height' },
-        { field: 'dryMass' },
-        { field: 'submergedMass' },
-        { field: 'drySurfaceSaturatedMass' },
-        { field: 'stability' },
-        { field: 'fluency' },
-        { field: 'diametricalCompressionStrength' },
-      ],
-      headerAlign: 'center',
-      renderHeaderGroup: (params) => {
-        return (
-          <Box sx={{ display: 'flex', gap: '2rem' }}>
-            <Typography sx={{ marginY: 'auto', color: '#777777' }}>{params.headerName}</Typography>
+  /**
+   * Handle para remover a última linha de dados de um tipo específico.
+   *
+   * @param type - Tipo de dosagem.
+   */
+  const handleErase = (type: string) => {
+    const newRows = [...data[type]];
+    if (newRows.length > 1) {
+      newRows.pop();
+      setData({ step: 5, value: { ...data, [type]: newRows } });
+    } else {
+      toast.error(t('ddui.error.minReads'));
+    }
+  };
 
-            <Button
-              startIcon={<LockOpenIcon />}
-              onClick={() => setTableIsDisabled({ ...tableIsDisabled, lessOne: !tableIsDisabled.lessOne })}
-              variant="contained"
-              sx={{ marginY: '1rem' }}
-            >
-              {tableIsDisabled.lessOne ? t('asphalt.dosages.enable') : t('asphalt.dosages.disable')}
-            </Button>
-          </Box>
-        );
-      },
-    },
-  ];
+  /**
+   * Handle para adicionar uma nova linha de dados a um tipo específico.
+   *
+   * @param type - Tipo de dosagem.
+   */
+  const handleAdd = (type: string) => {
+    const newRows = [...data[type], {
+      id: data[type].length,
+      diammeter: null,
+      height: null,
+      dryMass: null,
+      submergedMass: null,
+      drySurfaceSaturatedMass: null,
+      stability: null,
+      fluency: null,
+      diametricalCompressionStrength: null,
+    }];
+    setData({ step: 5, value: { ...data, [type]: newRows } });
+  };
 
-  const lessHalfColumnsGroupings: GridColumnGroupingModel = [
-    {
-      groupId: `${binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][1].value},00 %`,
-      children: [
-        { field: 'diammeter' },
-        { field: 'height' },
-        { field: 'dryMass' },
-        { field: 'submergedMass' },
-        { field: 'drySurfaceSaturatedMass' },
-        { field: 'stability' },
-        { field: 'fluency' },
-        { field: 'diametricalCompressionStrength' },
-      ],
-      headerAlign: 'center',
-      renderHeaderGroup: (params) => {
-        return (
-          <Box sx={{ display: 'flex', gap: '2rem' }}>
-            <Typography sx={{ marginY: 'auto', color: '#777777' }}>{params.headerName}</Typography>
+  /**
+   * Componente de barra de ferramentas para expansão do DataGrid.
+   *
+   * @param type - Tipo de dosagem.
+   * @returns Componente de barra de ferramentas.
+   */
+  const ExpansionToolbar = (type: string) => (
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
+      <Button sx={{ color: 'secondaryTons.red' }} disabled={tableIsDisabled[type]} onClick={() => handleErase(type)}>
+        {t('erase')}
+      </Button>
+      <Button sx={{ color: 'secondaryTons.green' }} disabled={tableIsDisabled[type]} onClick={() => handleAdd(type)}>
+        {t('add')}
+      </Button>
+    </Box>
+  );
 
-            <Button
-              startIcon={<LockOpenIcon />}
-              onClick={() => setTableIsDisabled({ ...tableIsDisabled, lessHalf: !tableIsDisabled.lessHalf })}
-              variant="contained"
-              sx={{ marginY: '1rem' }}
-            >
-              {tableIsDisabled.lessHalf ? t('asphalt.dosages.enable') : t('asphalt.dosages.disable')}
-            </Button>
-          </Box>
-        );
-      },
-    },
-  ];
-
-  const normalColumnsGroupings: GridColumnGroupingModel = [
-    {
-      groupId: `${binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][2].value},00 %`,
-      children: [
-        { field: 'diammeter' },
-        { field: 'height' },
-        { field: 'dryMass' },
-        { field: 'submergedMass' },
-        { field: 'drySurfaceSaturatedMass' },
-        { field: 'stability' },
-        { field: 'fluency' },
-        { field: 'diametricalCompressionStrength' },
-      ],
-      headerAlign: 'center',
-      renderHeaderGroup: (params) => {
-        return (
-          <Box sx={{ display: 'flex', gap: '2rem' }}>
-            <Typography sx={{ marginY: 'auto', color: '#777777' }}>{params.headerName}</Typography>
-
-            <Button
-              startIcon={<LockOpenIcon />}
-              onClick={() => setTableIsDisabled({ ...tableIsDisabled, normal: !tableIsDisabled.normal })}
-              variant="contained"
-              sx={{ marginY: '1rem' }}
-            >
-              {tableIsDisabled.normal ? t('asphalt.dosages.enable') : t('asphalt.dosages.disable')}
-            </Button>
-          </Box>
-        );
-      },
-    },
-  ];
-
-  const plusHalfColumnsGroupings: GridColumnGroupingModel = [
-    {
-      groupId: `${binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][3].value},00 %`,
-      children: [
-        { field: 'diammeter' },
-        { field: 'height' },
-        { field: 'dryMass' },
-        { field: 'submergedMass' },
-        { field: 'drySurfaceSaturatedMass' },
-        { field: 'stability' },
-        { field: 'fluency' },
-        { field: 'diametricalCompressionStrength' },
-      ],
-      headerAlign: 'center',
-      renderHeaderGroup: (params) => {
-        return (
-          <Box sx={{ display: 'flex', gap: '2rem' }}>
-            <Typography sx={{ marginY: 'auto', color: '#777777' }}>{params.headerName}</Typography>
-
-            <Button
-              startIcon={<LockOpenIcon />}
-              onClick={() => setTableIsDisabled({ ...tableIsDisabled, plusHalf: !tableIsDisabled.plusHalf })}
-              variant="contained"
-              sx={{ marginY: '1rem' }}
-            >
-              {tableIsDisabled.plusHalf ? t('asphalt.dosages.enable') : t('asphalt.dosages.disable')}
-            </Button>
-          </Box>
-        );
-      },
-    },
-  ];
-
-  const plusOneColumnsGroupings: GridColumnGroupingModel = [
-    {
-      groupId: `${binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][4].value},00 %`,
-      children: [
-        { field: 'diammeter' },
-        { field: 'height' },
-        { field: 'dryMass' },
-        { field: 'submergedMass' },
-        { field: 'drySurfaceSaturatedMass' },
-        { field: 'stability' },
-        { field: 'fluency' },
-        { field: 'diametricalCompressionStrength' },
-      ],
-      headerAlign: 'center',
-      renderHeaderGroup: (params) => {
-        return (
-          <Box sx={{ display: 'flex', gap: '2rem' }}>
-            <Typography sx={{ marginY: 'auto', color: '#777777' }}>{params.headerName}</Typography>
-
-            <Button
-              startIcon={<LockOpenIcon />}
-              onClick={() => setTableIsDisabled({ ...tableIsDisabled, plusOne: !tableIsDisabled.plusOne })}
-              variant="contained"
-              sx={{ marginY: '1rem' }}
-            >
-              {tableIsDisabled.plusOne ? t('asphalt.dosages.enable') : t('asphalt.dosages.disable')}
-            </Button>
-          </Box>
-        );
-      },
-    },
-  ];
-
+  /**
+   * Função para definir os parâmetros volumétricos.
+   */
   const setVolumetricParams = () => {
     toast.promise(
       async () => {
         try {
-          const volumetricParams = await marshall.setVolumetricParametersData(
-            data,
-            binderTrialData,
-            maximumMixtureDensityData
-          );
-
-          const newData = {
-            ...data,
-            ...volumetricParams,
-          };
-
-          setData({ step: 5, value: newData });
+          const volumetricParams = await marshall.setVolumetricParametersData(data, binderTrialData, maximumMixtureDensityData);
+          setData({ step: 5, value: { ...data, ...volumetricParams } });
         } catch (error) {
           throw error;
         }
@@ -451,176 +197,47 @@ const Marshall_Step6 = ({
     );
   };
 
-  const handleErase = (type: string) => {
-    try {
-      if (data[type].length > 1) {
-        const newRows = [...data[type]];
-        newRows.pop();
-        setData({ step: 5, value: { ...data, [type]: newRows } });
-      } else throw t('ddui.error.minReads');
-    } catch (error) {
-      toast.error(error);
-    }
-  };
+  /**
+   * Renderiza o componente DataGrid para um tipo específico de dosagem.
+   *
+   * @param tenor - Tipo de dosagem.
+   * @param rows - Linhas de dados.
+   * @param index - Índice da dosagem no array de percentuais.
+   * @returns Componente DataGrid.
+   */
+  const renderDataGrid = (tenor: string, rows: any[], index: number) => (
+    <DataGrid
+      key={tenor}
+      columns={generateColumns(tenor)}
+      rows={rows}
+      columnGroupingModel={generateColumnGroupingModel(tenor, index)}
+      experimentalFeatures={{ columnGrouping: true }}
+      density="comfortable"
+      disableColumnMenu
+      disableColumnSelector
+      disableRowSelectionOnClick={tableIsDisabled[tenor]}
+      sx={tableIsDisabled[tenor] ? { backgroundColor: '#999999' } : {}}
+      slotProps={{
+        cell: {
+          style: tableIsDisabled[tenor] ? { pointerEvents: 'none', opacity: 0.3 } : {},
+        },
+      }}
+      slots={{ footer: () => ExpansionToolbar(tenor) }}
+    />
+  );
 
-  const handleAdd = (type: string) => {
-    const newRows = [...data[type]];
-    newRows.push({
-      id: data[type].length,
-      diammeter: null,
-      height: null,
-      dryMass: null,
-      submergedMass: null,
-      drySurfaceSaturatedMass: null,
-      stability: null,
-      fluency: null,
-      diametricalCompressionStrength: null,
-    });
-    setData({ step: 5, value: { ...data, [type]: newRows } });
-  };
-
-  const ExpansionToolbar = (type: string) => {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
-        <Button sx={{ color: 'secondaryTons.red' }} disabled={tableIsDisabled[type]} onClick={() => handleErase(type)}>
-          {t('erase')}
-        </Button>
-        <Button sx={{ color: 'secondaryTons.green' }} disabled={tableIsDisabled[type]} onClick={() => handleAdd(type)}>
-          {t('add')}
-        </Button>
-      </Box>
-    );
-  };
-
-  useEffect(() => {
-    const hasEmptyArrays = Object.values(data.volumetricParameters).some((arr) => arr.length < 1);
-
-    if (hasEmptyArrays) {
-      setNextDisabled(true);
-    } else {
-      setNextDisabled(false);
-    }
-  }, [data]);
-
-  return (
-    <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '50px',
-          }}
-        >
-          {/* DataGrid para lessOne */}
-          <DataGrid
-            key={'lessOne'}
-            columns={generateColumns('lessOne')}
-            rows={lessOneRows}
-            columnGroupingModel={lessOneColumnsGroupings}
-            experimentalFeatures={{ columnGrouping: true }}
-            sx={tableIsDisabled.lessOne ? { backgroundColor: '#999999' } : {}}
-            density="comfortable"
-            disableColumnMenu
-            disableColumnSelector
-            disableRowSelectionOnClick={tableIsDisabled.lessOne}
-            slotProps={{
-              cell: {
-                style: tableIsDisabled.lessOne ? { pointerEvents: 'none', opacity: 0.3 } : {},
-              },
-            }}
-            slots={{ footer: () => ExpansionToolbar('lessOne') }}
-          />
-
-          {/* DataGrid para lessHalf */}
-          <DataGrid
-            key={'lessHalf'}
-            columns={generateColumns('lessHalf')}
-            rows={lessHalfRows}
-            columnGroupingModel={lessHalfColumnsGroupings}
-            experimentalFeatures={{ columnGrouping: true }}
-            sx={tableIsDisabled.lessHalf ? { backgroundColor: '#999999' } : {}}
-            density="comfortable"
-            disableColumnMenu
-            disableColumnSelector
-            disableRowSelectionOnClick={tableIsDisabled.lessHalf}
-            slotProps={{
-              cell: {
-                style: tableIsDisabled.lessHalf ? { pointerEvents: 'none', opacity: 0.3 } : {},
-              },
-            }}
-            slots={{ footer: () => ExpansionToolbar('lessHalf') }}
-          />
-
-          {/* DataGrid para normal */}
-          <DataGrid
-            key={'normal'}
-            columns={generateColumns('normal')}
-            rows={normalRows}
-            columnGroupingModel={normalColumnsGroupings}
-            experimentalFeatures={{ columnGrouping: true }}
-            sx={tableIsDisabled.normal ? { backgroundColor: '#999999' } : {}}
-            density="comfortable"
-            disableColumnMenu
-            disableColumnSelector
-            disableRowSelectionOnClick={tableIsDisabled.normal}
-            slotProps={{
-              cell: {
-                style: tableIsDisabled.normal ? { pointerEvents: 'none', opacity: 0.3 } : {},
-              },
-            }}
-            slots={{ footer: () => ExpansionToolbar('normal') }}
-          />
-
-          {/* DataGrid para plusHalf */}
-          <DataGrid
-            key={'plusHalf'}
-            columns={generateColumns('plusHalf')}
-            rows={plusHalfRows}
-            columnGroupingModel={plusHalfColumnsGroupings}
-            experimentalFeatures={{ columnGrouping: true }}
-            sx={tableIsDisabled.plusHalf ? { backgroundColor: '#999999' } : {}}
-            density="comfortable"
-            disableColumnMenu
-            disableColumnSelector
-            disableRowSelectionOnClick={tableIsDisabled.plusHalf}
-            slotProps={{
-              cell: {
-                style: tableIsDisabled.plusHalf ? { pointerEvents: 'none', opacity: 0.3 } : {},
-              },
-            }}
-            slots={{ footer: () => ExpansionToolbar('plusHalf') }}
-          />
-
-          {/* DataGrid para plusOne */}
-          <DataGrid
-            key={'plusOne'}
-            columns={generateColumns('plusOne')}
-            rows={plusOneRows}
-            columnGroupingModel={plusOneColumnsGroupings}
-            experimentalFeatures={{ columnGrouping: true }}
-            sx={tableIsDisabled.plusOne ? { backgroundColor: '#999999' } : {}}
-            density="comfortable"
-            disableColumnMenu
-            disableColumnSelector
-            disableRowSelectionOnClick={tableIsDisabled.plusOne}
-            slotProps={{
-              cell: {
-                style: tableIsDisabled.plusOne ? { pointerEvents: 'none', opacity: 0.3 } : {},
-              },
-            }}
-            slots={{ footer: () => ExpansionToolbar('plusOne') }}
-          />
-
-          {/* Botões de ação */}
-          <Button onClick={setVolumetricParams} variant="outlined">
-            {t('asphalt.dosages.marshall.confirm')}
-          </Button>
-        </Box>
-      )}
-    </>
+  // Renderização do componente principal
+  return loading ? <Loading /> : (
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>
+      {renderDataGrid('lessOne', data.lessOne, 0)}
+      {renderDataGrid('lessHalf', data.lessHalf, 1)}
+      {renderDataGrid('normal', data.normal, 2)}
+      {renderDataGrid('plusHalf', data.plusHalf, 3)}
+      {renderDataGrid('plusOne', data.plusOne, 4)}
+      <Button onClick={setVolumetricParams} variant="outlined">
+        {t('asphalt.dosages.marshall.confirm')}
+      </Button>
+    </Box>
   );
 };
 

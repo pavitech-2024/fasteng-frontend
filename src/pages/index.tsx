@@ -185,8 +185,8 @@ const Login: NextPage = () => {
               justifyContent: 'space-between',
               p: { desktop: '2vh 0 1vh', notebook: '3vh 0 2vh', mobile: '2vh 0 1vh' },
               borderRadius: '0.5rem',
-              width: { desktop: '30vw', mobile: '80vw' },
-              maxWidth: { desktop: '600px', notebook: '500px', mobile: '600px' },
+              width: { desktop: '30vw', mobile: '75vw' }, // Reduced width for mobile
+              maxWidth: { desktop: '600px', notebook: '500px', mobile: '350px' }, // Reduced maxWidth for mobile
               height: { ultrawide: '30vh', desktop: '34vh', notebook: '30vh', mobile: '32vh' },
               maxHeight: { desktop: '280px', notebook: '410px', mobile: '280px' },
               bgcolor: 'primaryTons.background',
