@@ -19,10 +19,16 @@
   "granulometry-asphalt.normal-series-dnit-2019": "Série do DNIT (2019)",
   "granulometry-asphalt.other-data": "Outros dados",
   "granulometry-asphalt.total-retained": "Total retido",
-  "granulometry-asphalt.nominal-size": "Tamanho nominal",
-  "granulometry-asphalt.nominal-diameter": "Diâmetro nominal",
-  "granulometry-asphalt.fineness-module": "Módulo finura",
+  "asphalt.essays.granulometry.results.nominalSize": "Tamanho nominal",
+  "asphalt.essays.granulometry.results.nominalDiammeter": "Diâmetro nominal",
+  "asphalt.essays.granulometry.results.finenessModule": "Módulo de finura",
+  "asphalt.essays.granulometry.results.essayName": "Nome do ensaio",
   "granulometry-asphalt.cc": "CC",
   "granulometry-asphalt.cnu": "CNU",
-  "granulometry-asphalt.error": "Erro"
+  "granulometry-asphalt.error": "Erro",
+  "granulometry-soils.custom-series": "Série personalizada",
+  "granulometry.step-2-description": "Informe a massa total do material e selecione uma série de peneiras. A última opção permite criar uma série customizada escolhendo as peneiras desejadas.",
+
+  "graulometry.custom-sieves-modal-title": "Selecione ao menos 4 peneiras",
+  "graulometry.sieves-quantity": "Quantidade de peneiras selecionadas"
 }

@@ -1,59 +1,62 @@
 import { MenuItem, TextField } from '@mui/material';
-import { useState } from 'react';
 
 export interface DropDownOption {
   label: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value: any;
+  value: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 interface DropDownProps {
   label: string;
   options: DropDownOption[];
-  callback: (value: unknown) => void;
-  defaultValue?: DropDownOption;
+  callback: (value: unknown, index?: number) => void;
+  value?: DropDownOption;
   helperText?: string;
   sx?: { [key: string]: string | number | { [key: string]: string | number } };
   size?: 'small' | 'medium';
   variant?: 'standard' | 'outlined' | 'filled';
   required?: boolean;
+  isEdit?: boolean;
 }
 
 const DropDown = ({
   label,
   options,
-  defaultValue,
+  value,
   helperText,
   callback,
   sx,
   size,
   variant,
   required,
+  isEdit,
 }: DropDownProps) => {
-  const [selectedValue, setSelectedValue] = useState(defaultValue?.value || '');
-
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const value = event.target.value as string;
-    setSelectedValue(value);
-    callback(value);
+    const selectedValue = event.target.value;
+    const selectedIndex = options.findIndex((option) => option.value === selectedValue);
+    callback(selectedValue, selectedIndex);
   };
 
   return (
     <TextField
       select
       label={label}
-      defaultValue={defaultValue && defaultValue.value}
-      value={defaultValue ? defaultValue.value : ''} // Usando value ao invés de defaultValue
+      value={value?.value ?? ''} // Exibe o valor controlado externamente
       onChange={handleChange}
-      helperText={helperText ? helperText : null}
+      helperText={helperText || null}
       sx={sx}
       size={size}
       color="primary"
       variant={variant}
       required={required}
+      focused={isEdit}
     >
       {options?.map((option, index) => (
-        <MenuItem key={index} value={option.value} onClick={() => callback(option.value)} sx={{ fontSize: '14px' }}>
+        <MenuItem
+          key={index}
+          value={option.value}
+          onClick={() => callback(option.value, index)}
+          sx={{ fontSize: '14px' }}
+        >
           {option.label}
         </MenuItem>
       ))}

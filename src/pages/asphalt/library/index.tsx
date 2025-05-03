@@ -33,7 +33,8 @@ const AsphaltLibrary: NextPage = () => {
     {
       title: 'Manual de Pavimentação',
       icon: Article,
-      link: 'https://smartdoser.fastengapp.com.br/static/media/bookKennedy.75503a01.pdf',
+      link: 'https://trello.com/1/cards/67be4c75d5df8e5e343edc30/attachments/67ca315da21f24752e527c17/download/Manual-Avaliacao-Manutencao-E-book-2-Ed.-2024.pdf',
+      //link: 'https://smartdoser.fastengapp.com.br/static/media/bookKennedy.75503a01.pdf',
       type: 'books',
       key: 'asphalt-guide',
     },

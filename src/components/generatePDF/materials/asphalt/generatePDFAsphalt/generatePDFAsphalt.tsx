@@ -1,16 +1,13 @@
 import jsPDF from 'jspdf';
 import React from 'react';
-import logo from '../../../assets/fasteng/LogoBlack.png';
 import autoTable from 'jspdf-autotable';
 import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
 import html2canvas from 'html2canvas';
 import { t } from 'i18next';
-import { Button } from '@mui/material';
-
-interface SummaryItem {
-  title: string;
-  page: number;
-}
+import { Box, Button } from '@mui/material';
+import useAuth from '@/contexts/auth';
+import { handleAddPage, SummaryItem } from '@/components/generatePDF/common';
+import logo from '@/assets/fasteng/LogoBlack.png';
 
 export interface IGenratePDF {
   name: string;
@@ -51,6 +48,7 @@ const GeneratePDF = ({
   rtfoData,
   elasticRecoveryData,
 }: IGenratePDF) => {
+  const { user } = useAuth(); // Obtendo o usuário
   //----------------------------------------datas------------------------------------------------------------------------------
   const dataSpecificMass = {
     specificMassContainer: [],
@@ -94,6 +92,7 @@ const GeneratePDF = ({
   const rtfoColumns = [t('rtfo.weight-loss')];
 
   const granulometryRows = [];
+  const granulometryResults = [];
   let elongatedParticlesRows;
   const angularityRows = [];
   let rtfoRows;
@@ -104,6 +103,7 @@ const GeneratePDF = ({
       ? t('adhesiveness.filmDisplacement-true')
       : t('adhesiveness.filmDisplacement-false');
   }
+
   if (granulometryData?.results.graph_data) {
     granulometryData.step2Data.table_data.map((value, index) => {
       granulometryRows.push({
@@ -115,6 +115,44 @@ const GeneratePDF = ({
         accumulated_retained: granulometryData.results.accumulated_retained[index][1],
       });
     });
+
+    granulometryResults.push(
+      {
+        label: t('granulometry-asphalt.total-retained'),
+        value: granulometryData.results.total_retained,
+        unity: 'g',
+      },
+      {
+        label: t('asphalt.essays.granulometry.results.nominalSize'),
+        value: granulometryData.results.nominal_size,
+        unity: 'mm',
+      },
+      {
+        label: t('asphalt.essays.granulometry.results.nominalDiammeter'),
+        value: granulometryData.results.nominal_diameter,
+        unity: 'mm',
+      },
+      {
+        label: t('asphalt.essays.granulometry.results.finenessModule'),
+        value: granulometryData.results.fineness_module,
+        unity: '%',
+      },
+      {
+        label: t('granulometry-asphalt.cc'),
+        value: granulometryData.results.cc,
+        unity: '',
+      },
+      {
+        label: t('granulometry-asphalt.cnu'),
+        value: granulometryData.results.cnu,
+        unity: '',
+      },
+      {
+        label: t('granulometry-asphalt.error'),
+        value: granulometryData.results.error,
+        unity: '%',
+      }
+    );
   }
 
   if (elongatedParticlesData) {
@@ -241,17 +279,49 @@ const GeneratePDF = ({
   //------------------------------------Text Format------------------------------------------------------
 
   const sections = [
+    // Adicionando uma nova seção para informações do usuário
+    {
+      condition: true, // Sempre incluir esta seção
+      title: 'Informações do Usuário',
+      content: (doc, currentY) => {
+        // Função para adicionar texto à margem esquerda
+        const addTextToLeftMargin = (doc, text, x, y) => {
+          doc.text(text, x, y);
+        };
+
+        // Adicionando informações do usuário
+        addTextToLeftMargin(doc, `Nome: ${user.name}`, 10, currentY);
+        currentY += 5;
+        addTextToLeftMargin(doc, `E-mail: ${user.email}`, 10, currentY);
+        return currentY + 10; // Ajuste a posição Y para a próxima seção
+      },
+    },
     {
       condition: granulometryRows.length > 0,
       title: t('asphalt.essays.granulometry'),
       content: async (doc, currentY) => {
+        const image = (await addImageProcess(logo.src)) as HTMLImageElement;
         addTable(doc, granulometryRows, granulometryColumns, currentY);
         const tableHeight = (doc as any).lastAutoTable.finalY - currentY;
         currentY += tableHeight + 5;
         const chart = document.getElementById('chart-div-granulometry');
         if (chart) {
+          currentY = handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
+          // Verificar se a página chegou ao final
           return addChart(chart, doc, currentY);
         }
+        return currentY;
+      },
+    },
+    {
+      condition: granulometryResults.length > 0,
+      title: t('asphalt.essays.granulometryResults'),
+      content: (doc, currentY) => {
+        currentY += 5;
+        granulometryResults.forEach((item) => {
+          addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
+          currentY += 5;
+        });
         return currentY;
       },
     },
@@ -259,6 +329,7 @@ const GeneratePDF = ({
       condition: dataSpecificMass.specificMassContainer.length > 0,
       title: t('asphalt.essays.specifyMass'),
       content: (doc, currentY) => {
+        currentY += 5;
         dataSpecificMass.specificMassContainer.forEach((item) => {
           addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
           currentY += 5;
@@ -336,37 +407,44 @@ const GeneratePDF = ({
       title: t('asphalt.essays.viscosityRotational'),
       content: async (doc, currentY) => {
         addTextToLeftMargin(doc, `${t('saybolt-furol.compression-temperature')}`, 10, currentY);
+        currentY += 5;
         addTextToLeftMargin(
           doc,
           `${t('saybolt-furol.higher')}: ${dataViscosity.compressionTemperature.higher}°C`,
           10,
           currentY
         );
+        currentY += 5;
         addTextToLeftMargin(
           doc,
           `${t('saybolt-furol.average')}: ${dataViscosity.compressionTemperature.average}°C`,
           10,
           currentY
         );
+        currentY += 5;
         addTextToLeftMargin(
           doc,
           `${t('saybolt-furol.lower')}: ${dataViscosity.compressionTemperature.lower}°C`,
           10,
           currentY
         );
+        currentY += 10;
         addTextToLeftMargin(doc, `${t('saybolt-furol.machining-temperature')}`, 10, currentY);
+        currentY += 5;
         addTextToLeftMargin(
           doc,
           `${t('saybolt-furol.higher')}: ${dataViscosity.machiningTemperature.higher}°C`,
           10,
           currentY
         );
+        currentY += 5;
         addTextToLeftMargin(
           doc,
           `${t('saybolt-furol.average')}: ${dataViscosity.machiningTemperature.average}°C`,
           10,
           currentY
         );
+        currentY += 5;
         addTextToLeftMargin(
           doc,
           `${t('saybolt-furol.lower')}: ${dataViscosity.machiningTemperature.lower}°C`,
@@ -382,7 +460,7 @@ const GeneratePDF = ({
     },
     {
       condition: dataPenetration,
-      title: t('asphalt.essays.penetration-asphaltl'),
+      title: t('asphalt.essays.penetration-asphalt'),
       content: (doc, currentY) => {
         addTextToLeftMargin(
           doc,
@@ -452,8 +530,10 @@ const GeneratePDF = ({
   const calculatePageNumber = (doc: any) => {
     const totalPages = doc.internal.pages.length;
     for (let pageNumber = 1; pageNumber < totalPages; pageNumber++) {
-      doc.setPage(pageNumber);
-      addPageNumber(doc, pageNumber);
+      if (pageNumber > 1) {
+        doc.setPage(pageNumber);
+        addPageNumber(doc, pageNumber);
+      }
     }
   };
 
@@ -474,7 +554,7 @@ const GeneratePDF = ({
     doc.text(x, y, text);
   };
 
-  const addTextToRightMargin = (doc: any, text: string, blockWidth: number, y: number, padding = 5) => {
+  const addTextToRightMargin = (doc: any, text: string, blockWidth: number, y: number, padding = 10) => {
     const pageWidth = doc.internal.pageSize.getWidth();
     const x = pageWidth - blockWidth;
 
@@ -557,7 +637,7 @@ const GeneratePDF = ({
     doc.addImage(image, 'png', 5, 5, 50, 8);
     doc.addImage(image, 'png', 155, 5, 50, 8);
 
-    addCenteredText(doc, `${t('asphalt.essays.project.summary')}`, currentY, 16);
+    addCenteredText(doc, `${t('asphalt.essays.project.summary')}`, currentY, 12);
     currentY += 20;
 
     summaryItems.forEach((item) => {
@@ -593,10 +673,10 @@ const GeneratePDF = ({
     doc.addImage(logo, 'png', 155, 5, 50, 8);
 
     let currentY = 55;
-    addCenteredText(doc, `${t('asphalt.essays.project.title')}`, currentY, 16);
-    currentY += 20;
-    addCenteredText(doc, `${t('asphalt.essays.project.name')}: ${nomeProjeto}`, currentY, 16);
-    currentY += 30;
+    addCenteredText(doc, `${t('asphalt.essays.project.title')}`, currentY, 12);
+    currentY += 50;
+    addCenteredText(doc, `${t('asphalt.essays.project.name')}: ${nomeProjeto}`, currentY, 12);
+    currentY += 90;
     addTextToRightMargin(doc, `${t('asphalt.essays.project.description.text')} ${nomeMaterial}`, 100, currentY);
 
     const pageHeight = doc.internal.pageSize.height;
@@ -605,12 +685,7 @@ const GeneratePDF = ({
 
     const formattedDate = getCurrentDateFormatted();
 
-    addCenteredText(doc, formattedDate, dateYPosition, 14);
-
-    doc.setLineWidth(0.5);
-    doc.line(10, lineYPosition, 200, lineYPosition);
-
-    addCenteredText(doc, '1', lineYPosition + 5, 10);
+    addCenteredText(doc, formattedDate, dateYPosition, 12);
   };
 
   const generate = async () => {
@@ -625,7 +700,7 @@ const GeneratePDF = ({
     doc.addImage(image, 'png', 5, 5, 50, 8);
     doc.addImage(image, 'png', 155, 5, 50, 8);
 
-    addCenteredText(doc, `${t('general data of essay')}`, 30);
+    addCenteredText(doc, `${t('general data of essay')}`, 30, 12);
     addTextToLeftMargin(doc, `${t('asphalt.materials.name')}: ${name}`, 10, 40);
     addTextToLeftMargin(doc, `${t('asphalt.materials.type')}: ${type}`, 10, 45);
 
@@ -635,8 +710,18 @@ const GeneratePDF = ({
     for (const section of sections) {
       if (section.condition) {
         currentY += 5;
-        addTextToLeftMargin(doc, section.title, 10, currentY, 14);
+        doc.setFont('Helvetica', 'bold');
+        addTextToLeftMargin(doc, section.title, 10, currentY, 12);
         currentY += 5;
+        doc.setFont('Helvetica', 'normal');
+
+        // Verificar se a página chegou ao final
+        const pageHeight = doc.internal.pageSize.getHeight();
+        if (currentY > pageHeight - 10) {
+          // Usar o handleAddPage para adicionar uma nova página
+          currentY = handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
+        }
+
         currentY = await section.content(doc, currentY);
         const pageIndex = doc.internal.pages.length - 1;
         summaryItems.push({ title: section.title, page: pageIndex });
@@ -652,7 +737,7 @@ const GeneratePDF = ({
   };
 
   return (
-    <div>
+    <Box>
       <Button
         sx={{
           fontWeight: 700,
@@ -664,7 +749,7 @@ const GeneratePDF = ({
       >
         Download PDF
       </Button>
-    </div>
+    </Box>
   );
 };
 

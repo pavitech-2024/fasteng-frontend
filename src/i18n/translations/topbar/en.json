@@ -21,7 +21,7 @@
   "topbar.adhesiveness": "Adhesiveness",
   "topbar.rtcd": "Traction Resistance",
   "topbar.rtfo": "Short Term Aging - RTFO",
-  "topbar.view": "Sample Register",
+  "topbar.view": "SoilSample Register",
   "topbar.stabilized-layers": "Stabilized Layers",
   "topbar.register": "New Samples Register",
   "topbar.binder-asphalt-concrete": "Binder and Concrete Asphalt",
@@ -44,5 +44,8 @@
   "topbar.elasticrecovery": "Elastic Recovery",
   "topbar.library": "Library",
   "topbar.standards": "Standards",
-  "topbar.consult": "ABCP Consult"
+  "topbar.consult": "ABCP Consult",
+  "topbar.rtcd": "Tensile Strength by Diametrical Compression - RT",
+  "topbar.concretert": "Tensile Strength - RT",
+  "topbar.concreterc": "Compression Strength - RC"
 }

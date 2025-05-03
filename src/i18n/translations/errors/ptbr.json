@@ -16,11 +16,14 @@
 
   "essay-granulometry-not-found": "Ensaio de Granulometria não encontrado!",
 
+  "errors.emptySampleContainerWeight": "Peso do recipiente da amostra vazio!",
   "errors.sampleContainerWeightValue": "A soma dos valores do Volume do Container e o Peso do Container não pode ser menor do que o valor do Peso do Container + Amostra.",
   "errors.unitMass-containerVolume-0": "Insira um volume válido",
   "errors.unitMass-containerWeight-sampleContainerWeigth": "Peso do recipiente + amostra tem que ser maior que o peso do recipiente",
   "errors.unitMass-containerVolume-10-maxDiameter-37.5": "Insira um volume do recipiente maior que 10 litros",
   "errors.unitMass-containerVolume-15-37.5maxDiameter-50": "Insira um volume do recipiente maior que 15 litros",
   "errors.unitMass-containerVolume-30-50-maxDiameter-75": "Insira um volume do recipiente maior que 30 litros",
-  "errors.sieves-sum-not-equal-to-material-mass": "A soma dos valores de retidos nas peneiras não é igual ao total inicial da amostra."
+  "errors.sieves-sum-not-equal-to-material-mass": "A soma dos valores de retidos nas peneiras não é igual ao total inicial da amostra.",
+
+  "generate.dosage.button": "Gerar PDF"
 }

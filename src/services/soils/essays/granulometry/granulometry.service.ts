@@ -2,7 +2,7 @@ import { GranulometryIcon } from '@/assets';
 import { t } from 'i18next';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import Api from '@/api';
-import { Sample } from '@/interfaces/soils';
+import { SoilSample } from '@/interfaces/soils';
 import { SoilsGranulometryData, SoilsGranulometryActions } from '@/stores/soils/granulometry/granulometry.store';
 // import { persist } from 'zustand/middleware';
 
@@ -16,7 +16,7 @@ class SoilsGranulometry_SERVICE implements IEssayService {
     steps: 3,
     standard: {
       name: 'NBR 7181/1984',
-      link: 'https://engenhariacivilfsp.files.wordpress.com/2015/03/nbr-7181.pdf',
+      link: 'https://www.normas.com.br/visualizar/abnt-nbr-nm/1968/abnt-nbr7181-solo-analise-granulometrica',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
@@ -54,7 +54,7 @@ class SoilsGranulometry_SERVICE implements IEssayService {
   /** @generalData Methods for general-data (step === 0, page 1) */
 
   // get all samples from user from backend
-  getSamplesByUserId = async (userId: string): Promise<Sample[]> => {
+  getSamplesByUserId = async (userId: string): Promise<SoilSample[]> => {
     try {
       // get all samples from user from backend
       const response = await Api.get(`soils/samples/all/${userId}`);

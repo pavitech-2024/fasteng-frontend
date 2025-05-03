@@ -153,7 +153,7 @@ const Topbar = ({ setOpenSidebar }: TopbarProps) => {
                 >
                   {user?.name}
                 </Typography>
-                <IconButton sx={{ p: 0 }}>
+                <IconButton sx={{ p: 0 }} size="large">
                   <Avatar alt="user photo" src={user?.photo} style={{ height: '40px', width: '40px' }} />
                 </IconButton>
               </>

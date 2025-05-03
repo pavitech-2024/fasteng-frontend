@@ -378,7 +378,7 @@ const Superpave_Step6 = ({
               callback={(value) => setData({ step: 5, key: 'selectedCurve', value })}
               size="medium"
               variant="standard"
-              defaultValue={{
+              value={{
                 value: data.selectedCurve,
                 label: `${data.selectedCurve === null ? 'Selecionar' : data.selectedCurve}`,
               }}

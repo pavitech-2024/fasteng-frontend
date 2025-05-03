@@ -1,11 +1,11 @@
-import { Sample } from '@/interfaces/soils';
+import { SoilSample } from '@/interfaces/soils';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
 interface compression_generalData {
   userId: string;
   name: string;
-  sample: Sample; // materialID
+  sample: SoilSample; // materialID
   operator?: string;
   description?: string;
   cauculist?: string;
@@ -55,16 +55,15 @@ interface compression_results {
 
   wetSoilWeights: number[]; // Peso do solo úmido (g)
   wetSoilDensitys: number[]; // Densidade do solo úmido (g/cm³)
-  netWeightsDrySoil: number[]; // Peso do solo seco (g)
-  moistures: number[]; // Umidade média (%)
-  drySoilDensitys: number[]; // Densidade do solo seco (%)
-  // Dados para o gráfico >> tá muito confuso essa parte <<
+  netWeightsDrySoil: number[];
+  moistures: number[];
+  drySoilDensitys: number[];
   regression: number;
   a_index: number;
   b_index: number;
   optimumMoisture: number;
   optimumDensity: number;
-  graph: [number, number][]; // esse deveria ser o que vai ser usado pra fazer o grafico entao a gente teria que formatar isso aqui com os valores de hAxis e vAxis
+  graph: [number, number][];
 }
 
 export type CompressionData = {
@@ -76,73 +75,87 @@ export type CompressionData = {
 
 export type CompressionActions = {
   setData: ({ step, key, value }: setDataType) => void;
+  reset: () => void;
 };
 
 type setDataType = { step: number; key?: string; value: unknown };
 
 const stepVariant = { 0: 'compressionGeneralData', 1: 'hygroscopicData', 2: 'humidityDeterminationData', 3: 'results' };
 
+const initialState = {
+  compressionGeneralData: {
+    userId: null,
+    name: null,
+    sample: null,
+    operator: null,
+    description: null,
+    cauculist: null,
+  },
+  hygroscopicData: {
+    hygroscopicTable: [
+      {
+        id: 0,
+        capsule: null,
+        wetGrossWeightCapsule: null,
+        dryGrossWeight: null,
+        capsuleTare: null,
+      },
+    ],
+    moldNumber: null,
+    moldVolume: null,
+    moldWeight: null,
+    socketWeight: null,
+    spaceDiscThickness: null,
+    strokesPerLayer: null,
+    layers: null,
+  },
+  humidityDeterminationData: {
+    humidityTable: [
+      {
+        id: 0,
+        capsules: null,
+        wetGrossWeightsCapsule: null,
+        wetGrossWeights: null,
+        dryGrossWeightsCapsule: null,
+        capsulesTare: null,
+      },
+    ],
+  },
+  results: {
+    netWeightDrySoil: null,
+    waterWeight: null,
+    hygroscopicMoisture: null,
+
+    wetSoilWeights: null,
+    wetSoilDensitys: null,
+    netWeightsDrySoil: null,
+    moistures: null,
+    drySoilDensitys: null,
+
+    regression: null,
+    a_index: null,
+    b_index: null,
+    optimumMoisture: null,
+    optimumDensity: null,
+    graph: null,
+  },
+};
+
 const useCompressionStore = create<CompressionData & CompressionActions>()(
   devtools(
     persist(
       (set) => ({
-        compressionGeneralData: {
-          userId: null,
-          name: null,
-          sample: null,
-          operator: null,
-          description: null,
-          cauculist: null,
-        },
-        hygroscopicData: {
-          hygroscopicTable: [
-            {
-              id: 0,
-              capsule: null,
-              wetGrossWeightCapsule: null,
-              dryGrossWeight: null,
-              capsuleTare: null,
-            },
-          ],
-          moldNumber: null,
-          moldVolume: null,
-          moldWeight: null,
-          socketWeight: null,
-          spaceDiscThickness: null,
-          strokesPerLayer: null,
-          layers: null,
-        },
-        humidityDeterminationData: {
-          humidityTable: [
-            {
-              id: 0,
-              capsules: null,
-              wetGrossWeightsCapsule: null,
-              wetGrossWeights: null,
-              dryGrossWeightsCapsule: null,
-              capsulesTare: null,
-            },
-          ],
-        },
-        results: {
-          netWeightDrySoil: null, // Peso do solo seco (g)
-          waterWeight: null, // Peso da água (g)
-          hygroscopicMoisture: null, // Umidade Higroscópica (%)
+        ...initialState,
 
-          wetSoilWeights: null, // Peso do solo úmido (g)
-          wetSoilDensitys: null, // Densidade do solo úmido (g/cm³)
-          netWeightsDrySoil: null, // Peso do solo seco (g)
-          moistures: null, // Umidade média (%)
-          drySoilDensitys: null, // Densidade do solo seco (%)
-
-          regression: null,
-          a_index: null,
-          b_index: null,
-          optimumMoisture: null,
-          optimumDensity: null,
-          graph: null,
-        },
-
+        /**
+         * Updates the value of the given key in the state of the store for the given step.
+         * If no key is given, the value is set as the whole state of the given step.
+         * @param {{ step: number; key?: string; value: unknown }} data
+         * @param {number} data.step The step of the state to update.
+         * @param {string} [data.key] The key of the value to update in the state of the given step.
+         * If not given, the value is set as the whole state of the given step.
+         * @param {unknown} data.value The new value to set in the state of the given step.
+         */
         setData: ({ step, key, value }) =>
           set((state) => {
             if (key)
@@ -155,6 +168,10 @@ const useCompressionStore = create<CompressionData & CompressionActions>()(
               };
             else return { ...state, [stepVariant[step]]: value };
           }),
+
+        reset: () => {
+          set(initialState);
+        },
       }),
       {
         name: 'compression-store',

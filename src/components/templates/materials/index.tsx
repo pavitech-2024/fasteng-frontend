@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
-import { Sample } from '@/interfaces/soils';
+import { SoilSample } from '@/interfaces/soils';
 import Header from '@/components/organisms/header';
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -18,25 +18,30 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
+  IconButton,
 } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import Search from '@/components/atoms/inputs/search';
-import { AddIcon, DeleteIcon, NextIcon } from '@/assets';
+import { AddIcon, DeleteIcon, EditIcon, NextIcon } from '@/assets';
 import { formatDate } from '@/utils/format';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import Link from 'next/link';
+import { Edit } from '@mui/icons-material';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 
 interface MaterialsTemplateProps {
-  materials: Sample[] | AsphaltMaterial[] | ConcreteMaterial[];
+  materials: SoilSample[] | AsphaltMaterial[] | ConcreteMaterial[];
   types: DropDownOption[];
   title: 'Amostras Cadastradas' | 'Materiais Cadastrados';
   path?: string;
   //Modal
   handleOpenModal: () => void;
-  handleDeleteMaterial: (id: string) => void;
+  deleteMaterial: (id: string) => void;
+  editMaterial: (materiaId: string) => void;
   modal: JSX.Element;
 }
 
@@ -46,7 +51,7 @@ interface MaterialsColumn {
   width: string;
 }
 
-interface DataToFilter {
+export interface DataToFilter {
   _id: string;
   name: string;
   type: string;
@@ -59,7 +64,8 @@ const MaterialsTemplate = ({
   title,
   path,
   handleOpenModal,
-  handleDeleteMaterial,
+  deleteMaterial,
+  editMaterial,
   modal,
 }: MaterialsTemplateProps) => {
   const app = useRouter().pathname.split('/')[1];
@@ -67,13 +73,9 @@ const MaterialsTemplate = ({
 
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
-
-  const router = useRouter();
-
   const [searchBy, setSearchBy] = useState<string>('name');
   const [searchValue, setSearchValue] = useState<string>('');
-
-  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
 
   if (path === 'soils') {
@@ -133,10 +135,14 @@ const MaterialsTemplate = ({
         : true;
     });
 
+  const handleEditMaterial = (rowId: string) => {
+    editMaterial(rowId);
+  };
+
   return (
     <>
       {/*Delete Modal */}
-      <Dialog open={openDeleteModal}>
+      <Dialog open={isDeleteModalOpen}>
         <DialogTitle sx={{ fontSize: '1rem', textTransform: 'uppercase', fontWeight: 700 }} color="secondary">
           {t('materials.template.deleteTitle')}
         </DialogTitle>
@@ -153,7 +159,7 @@ const MaterialsTemplate = ({
                 fontSize: { mobile: '11px', notebook: '13px' },
                 width: '40%',
               }}
-              onClick={() => setOpenDeleteModal(false)}
+              onClick={() => setIsDeleteModalOpen(false)}
             >
               {t('materials.template.cancel')}
             </Button>
@@ -167,12 +173,12 @@ const MaterialsTemplate = ({
               }}
               onClick={() => {
                 try {
-                  toast.promise(async () => await handleDeleteMaterial(RowToDelete?._id), {
+                  toast.promise(async () => await deleteMaterial(RowToDelete?._id), {
                     pending: t('materials.template.toast.delete.pending') + RowToDelete?.name + '...',
                     success: RowToDelete?.name + t('materials.template.toast.delete.sucess'),
                     error: t('materials.template.toast.delete.error') + RowToDelete?.name + '.',
                   });
-                  setOpenDeleteModal(false);
+                  setIsDeleteModalOpen(false);
                 } catch (error) {
                   throw error;
                 }
@@ -216,7 +222,7 @@ const MaterialsTemplate = ({
               callback={setSearchBy}
               size="small"
               sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
-              defaultValue={{ label: t('materials.template.name'), value: 'name' }}
+              value={{ label: t('materials.template.name'), value: 'name' }}
             />
             {searchBy === 'name' && (
               <Search
@@ -224,6 +230,9 @@ const MaterialsTemplate = ({
                   width: { mobile: '100%', notebook: '75%' },
                   maxWidth: '450px',
                   height: '39px',
+                  '& .MuiSvgIcon-root': {
+                    fontSize: '45px',
+                  },
                 }}
                 value={searchValue}
                 setValue={setSearchValue}
@@ -248,15 +257,17 @@ const MaterialsTemplate = ({
               color: 'primaryTons.white',
               bgcolor: 'primary.main',
               height: { mobile: '36px', notebook: '28px' },
-              width: { mobile: '36px', notebook: 'fit-content' },
+              //width: { mobile: '36px', notebook: 'fit-content' },
+              width: { mobile: 'fit-content', notebook: 'fit-content' },
               borderRadius: '20px',
-              p: { mobile: 0, notebook: '0 12px' },
+              p: { mobile: '0 10px', notebook: '0 12px' },
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontWeight: '700',
               ml: '2px',
               cursor: 'pointer',
+              gap: '4px',
 
               '&:hover': {
                 bgcolor: 'primary.light',
@@ -270,8 +281,8 @@ const MaterialsTemplate = ({
             <AddIcon sx={{ fontSize: '1.15rem', fontWeight: 700 }} />
             <Typography
               sx={{
-                display: { mobile: 'none', notebook: 'flex' },
-                fontSize: '1rem',
+                display: { mobile: 'flex', notebook: 'flex' },
+                fontSize: '0.8rem',
                 fontWeight: 700,
                 lineHeight: '1.1rem',
                 ml: '4px',
@@ -291,21 +302,30 @@ const MaterialsTemplate = ({
             border: '1px solid rgba(0,0,0,0.17)',
             mt: '1rem',
             background: 'primaryTons.white',
+            overflowX: 'hidden',
           }}
         >
-          <TableContainer sx={{ borderRadius: '20px' }}>
-            <Table stickyHeader aria-label="sticky table">
+          {/*<TableContainer sx={{ borderRadius: '20px' }}>*/}
+          <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'hidden' }}>
+            {/*<Table stickyHeader aria-label="sticky table">*/}
+            <Table sx={{ width: '100%', tableLayout: 'fixed' }} aria-label="materials table">
               <TableHead>
                 <TableRow>
                   {columns.map((column) => (
                     <TableCell
                       key={column.id}
-                      align="center"
+                      sx={{
+                        fontWeight: 'bold',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        width: column.width,
+                      }}
+                      /*align="center"
                       style={{
                         width: column.width,
                         fontWeight: '700',
                         fontSize: '1rem',
-                      }}
+                      }}*/
                     >
                       {column.label}
                     </TableCell>
@@ -326,10 +346,10 @@ const MaterialsTemplate = ({
                               <Button
                                 variant="contained"
                                 sx={{
-                                  height: '25px',
+                                  height: { mobile: '18px', notebook: '25px' },
                                   borderRadius: { mobile: '50%', notebook: '20px' },
                                   p: { mobile: 0, notebook: '6px 12px' },
-                                  minWidth: '25px',
+                                  minWidth: { mobile: '18px', notebook: '25px' },
                                   bgcolor: 'secondaryTons.blue',
                                   color: 'primaryTons.white',
 
@@ -343,8 +363,9 @@ const MaterialsTemplate = ({
                                 }}
                               >
                                 <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
-                                  {t('materials.template.edit')}
+                                  {t('materials.template.visualize')}
                                 </Typography>
+                                <Edit sx={{ display: { mobile: 'none', notebook: 'none' }, fontSize: '1rem' }} />
                                 <NextIcon sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
                               </Button>
                             </Link>
@@ -354,10 +375,20 @@ const MaterialsTemplate = ({
                               sx={{ p: 0, width: '30px', minWidth: '35px' }}
                               onClick={() => {
                                 setRowToDelete(row);
-                                setOpenDeleteModal(true);
+                                setIsDeleteModalOpen(true);
                               }}
                             >
                               <DeleteIcon color="error" sx={{ fontSize: '1.25rem' }} />
+                            </Button>
+                            <Button
+                              variant="text"
+                              color="warning"
+                              sx={{ p: 0, width: '30px', minWidth: '35px' }}
+                              onClick={() => {
+                                handleEditMaterial(row._id);
+                              }}
+                            >
+                              <EditIcon color="warning" sx={{ fontSize: '1.25rem' }} />
                             </Button>
                           </Box>
                         )}

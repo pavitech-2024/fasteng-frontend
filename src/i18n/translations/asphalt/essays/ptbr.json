@@ -6,6 +6,7 @@
   "asphalt.essays.penetration": "Penetração",
   "asphalt.essays.rtfo": "Envelhecimento à Curto Prazo - RTFO",
   "asphalt.essays.granulometry": "Granulometria por Peneiramento",
+  "asphalt.essays.granulometry.results": "Resultados",
   "asphalt.essays.sandEquivalent": "Equivalente Areia",
   "asphalt.essays.shapeIndex": "Índice de Forma",
   "asphalt.essays.specifyMass": "Massa Específica",
@@ -13,7 +14,8 @@
   "asphalt.essays.softeningPoint": "Ponto de Amolecimento",
   "asphalt.essays.flashPoint": "Ponto de Fulgor",
   "asphalt.essays.elasticRecovery": "Recuperação Elástica",
-  "asphalt.essays.rotational": "Viscosidade Rotacional",
+  "asphalt.essays.viscosityRotational": "Viscosidade Rotacional",
+  "asphalt.essays.saybolt-furol": "Viscosidade Saybolt-Furol",
   "asphalt.essays.saybolt": "Viscosidade Saybolt-Furol",
   "asphalt.essays.rtcd": "Resistência à Tração por Compressão Diametral - RT",
   "asphalt.essays.fwd": "Falling Weight Deflectometer - FWD",
@@ -30,7 +32,7 @@
   "asphalt.experimentName": "Nome do experimento",
   "asphalt.operator": "Operador",
   "asphalt.material": "Material",
-  "asphalt.calculist": "Cauculista",
+  "asphalt.calculist": "Calculista",
   "asphalt.materials.comments": "Observações",
   "asphalt.comments": "Comentários",
   "asphalt.essays.penetration-asphalt": "Penetração",
@@ -38,5 +40,7 @@
   "asphalt.essays.abrasion.final-mass": "Massa da amostra após ensaio",
   "asphalt.essays.abrasion.graduation": "Escolha a graduação",
   "errors.final-mass-lower-than-initial-mass": "A massa final não pode ser maior do que a massa inicial.",
-  "asphalt.essays.marshall": "Dosagem Marshall"
+  "asphalt.essays.marshall": "Dosagem Marshall",
+
+  "asphalt.essays.granulometryResults": "Resultados da Granulometria por Peneiramento"
 }

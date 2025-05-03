@@ -1,8 +1,11 @@
 {
-  "superpave.step-2-description": "Selecione os agregados e o ligante asfáltico que serão utilizados na dosagem",
+  "superpave.step-2-description": "Selecione os agregados e o cimento para a dosagem. Apenas materiais cadastrados com ensaios de granulometria para agregados e viscosidade rotacional para ligantes asfálticos serão exibidos.",
   "superpave.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica da mistura",
+  "superpave.step-11-description": "Esses são os resultados da sua dosagem Superpave. Não se esqueça de salvar para acessá-las mais tarde.",
 
-  "asphalt.essays.superpave": "Dosagem Superpave",
+  "superpave.step-11": "Resultados",
+
+  "asphalt.dosages.superpave": "Dosagem Superpave",
   "topbar.superpave": "Superpave",
 
   "asphalt.dosages.superpave.material_selection": "Seleção de Materiais",
@@ -50,9 +53,15 @@
   "superpave.dosage-consult.start": "Início",
   "superpave.dosage-consult.finish": "Fim",
   "superpave.dosage-consult.options": "Opções",
+  "superpave.dosage.asphalt-binder": "Ligante asfáltico (kg)",
+
+  "loading.dosages.pending": "Carregando a dosagem!",
+  "loading.dosages.error": "Erro ao carregar a dosagem!",
+  "loading.dosages.success": "Sucesso ao carregar a dosagem!",
 
   "asphalt.dosages.superpave.real-specific-mass": "Massa específica real",
   "asphalt.dosages.superpave.apparent-specific-mass": "Massa específica aparente",
+  "asphalt.dosages.superpave.specific-mass": "Massa específica",
   "asphalt.dosages.superpave.absorption": "Absorção",
   "asphalt.dosages.superpave.granulometric-composition": "Composição granulométrica",
   "asphalt.dosages.superpave.combined-gsb": "Gsb combinado (g/cm³)",
@@ -105,10 +114,23 @@
   "asphalt.dosages.estimated-binder-percentage": "Porcentagem de ligante estimada (%)",
   "asphalt.dosages.mixture": "Mistura",
 
+  "asphalt.dosages.superpave.void-volume": "Volume de vazios",
+  "asphalt.dosages.vam": "Vazios do agregado mineral (VAM)",
+  "asphalt.dosages.absorbed-water": "Água absorvida",
+
   "asphalt.dosages.superpave.gmm-empty": "Insira o valor do Gmm da mistura",
   "asphalt.dosages.superpave.rice-test-empty-values": "Insira os valores para realizar o Rice Test",
   "asphalt.dosages.superpave.water-temperature-empty": "Selecione o fator de correção da temperatura da água",
   "asphalt.dosages.superpave.invalid-granulometry-values": "O total dos valores das porcentagens precisa ser igual a 100",
 
-  "asphalt.dosages.superpave.estimated-percentages-binder-vv": "Porcentagem dos materiais a partir do teor de ligante estimado para Vv"
+  "asphalt.dosages.superpave.estimated-percentages-binder-vv": "Porcentagem dos materiais a partir do teor de ligante estimado para Vv",
+
+  "asphalt.dosages.superpave.asphalt-mass-quantitative": "Quantitativo para 1 metro cúbico de massa asfáltica",
+
+  "asphalt.dosages.superpave.mechanic-volumetric-params": "Parâmetros volumétricos e mecânicos da mistura no teor ótimo de ligante asfáltico",
+
+  "asphalt.dosages.superpave.step-3.lower": "Inferior",
+  "asphalt.dosages.superpave.step-3.higher": "Superior",
+  "asphalt.dosages.superpave.step-3.average": "Intermediária",
+  "marshall.dosage-pdf-title": "Relatório de Dosagem Superpave"
 }

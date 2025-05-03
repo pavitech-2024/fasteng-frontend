@@ -26,7 +26,7 @@ export const useSessionStorage = ({ key, initialValue }: IUseSessionStorage) => 
         setState(value);
         sessionStorage.setItem(key, JSON.stringify(value));
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
     [key]

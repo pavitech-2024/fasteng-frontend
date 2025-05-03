@@ -401,11 +401,12 @@ export type SuperpaveData = {
   secondCompressionPercentagesData: SecondCompressionPercentagesData;
   confirmationCompressionData: ConfirmationCompressionData;
   dosageResume: DosageResume;
+  createdAt: Date;
 };
 
 export type SuperpaveActions = {
   setData: ({ step, key, value }: setDataType) => void;
-  reset: ({ step }: setDataType) => void;
+  reset: () => void;
   clearStore: () => void;
 };
 
@@ -883,6 +884,8 @@ const initialState = {
     ratioDustAsphalt: null,
     specifiesMass: null,
   },
+  createdAt: null,
+  updatedAt: null,
 };
 
 const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(
@@ -910,16 +913,13 @@ const useSuperpaveStore = create<SuperpaveData & SuperpaveActions>()(
             }
           }),
 
-        reset: ({ step }) => {
+        reset: () => {
           set(initialState);
-          return {
-            [stepVariant[step]]: null,
-          };
         },
 
         clearStore: () => {
           sessionStorage.clear();
-          set(initialState);
+          // set(initialState);
         },
       }),
       {

@@ -184,7 +184,7 @@ const Angularity_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           options={methodOptions.map((method) => {
             return { label: method, value: method };
           })}
-          defaultValue={{ label: data.method ? data.method : '', value: data.method ? data.method : null }}
+          value={{ label: data.method ? data.method : '', value: data.method ? data.method : null }}
           callback={(value) => {
             setData({ step: 1, key: 'method', value });
             setData({ step: 1, key: 'determinations', value: [] });

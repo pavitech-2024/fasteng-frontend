@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CompressionIcon } from '@/assets';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
-import { Sample } from '@/interfaces/soils';
+import { SoilSample } from '@/interfaces/soils';
 import { t } from 'i18next';
 import Api from '@/api';
 import { CompressionActions, CompressionData } from '@/stores/soils/compression/compression.store';
@@ -56,7 +56,7 @@ class COMPRESSION_SERVICE implements IEssayService {
     }
   };
 
-  getSamplesByUserId = async (userId: string): Promise<Sample[]> => {
+  getSamplesByUserId = async (userId: string): Promise<SoilSample[]> => {
     try {
       const response = await Api.get(`soils/samples/all/${userId}`);
       return response.data;
@@ -86,8 +86,6 @@ class COMPRESSION_SERVICE implements IEssayService {
     try {
       Object.entries(hygroscopicData).forEach((array) => {
         const [key, value] = array;
-        if (!value) console.log(`errors.empty-${key}`);
-        // ver se precisa de mais alguma validação fora ver se esta vazio
       });
 
       const {
@@ -140,8 +138,6 @@ class COMPRESSION_SERVICE implements IEssayService {
     try {
       Object.entries(humidityDeterminationData).forEach((array) => {
         const [key, value] = array;
-        if (!value) console.log(`errors.empty-${key}`);
-        // ver se precisa de mais alguma validação fora ver se esta vazio
       });
 
       const { humidityTable } = humidityDeterminationData;
@@ -180,8 +176,6 @@ class COMPRESSION_SERVICE implements IEssayService {
     try {
       Object.entries(hygroscopicData).forEach((array) => {
         const [key, value] = array;
-        if (!value) console.log(`errors.empty-${key}`);
-        // ver se precisa de mais alguma validação fora ver se esta vazio
       });
 
       const {

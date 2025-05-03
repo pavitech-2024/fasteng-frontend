@@ -1,6 +1,6 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import useRtcdStore from '@/stores/asphalt/rtcd.store';
+import useRtcdStore from '@/stores/asphalt/rtcd/rtcd.store';
 import { Box, Button } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';

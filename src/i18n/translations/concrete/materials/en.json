@@ -6,7 +6,7 @@
   "concrete.materials.source": "Source",
   "concrete.materials.responsible": "Responsible",
   "concrete.materials.classification_AMP": "AMP Classification",
-  "concrete.materials.recieveDate": "Recieve Date",
+  "concrete.materials.recieveDate": "Receive Date",
   "concrete.materials.aggregateNature": "Nature of the Aggregate",
   "concrete.materials.collectionDate": "Collection Date",
   "concrete.materials.boughtDate": "Bought Date",
@@ -19,6 +19,8 @@
   "concrete.materials.cap": "CAP",
   "concrete.materials.other": "Other",
   "concrete.materials.comments": "Comments",
-  "concrete.materials.maxDiammeter": "Maximum Diammeter",
-  "concrete.materials.resistance": "Resistance"
+  "concrete.materials.maxDiammeter": "Maximum Diameter",
+  "concrete.materials.resistance": "Resistance",
+  "concrete.materials.cementType": "Cement Type",
+  "concrete.materials.cementType.other": "Other"
 }

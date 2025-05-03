@@ -1,12 +1,10 @@
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import ChapmanMaterialView from '@/components/concrete/material/chapmanMaterialView';
-import CoarseAggregateSpecificMassMaterialView from '@/components/concrete/material/coarseAggregateMaterialView';
 import GranulometryMateriaView from '@/components/concrete/material/concreteGranulometryMaterialView';
 import SandIncreaseMaterialView from '@/components/concrete/material/sandIncreaseMaterialView';
 import UnitMassMaterialView from '@/components/concrete/material/unitMassMaterialView';
 import Loading from '@/components/molecules/loading';
 import BodyEssay from '@/components/organisms/bodyEssay';
-import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import concreteMaterialService from '@/services/concrete/concrete-materials.service';
 import { ChapmanData } from '@/stores/concrete/chapman/chapman.store';
@@ -18,7 +16,7 @@ import { Box, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { useRouter } from 'next/router';
 import { ReactNode, useState, useEffect } from 'react';
-import GeneratePDFConcreteMaterials from '@/components/generatePDF/generetePDFConcrete/generatePDFConcreteMaterials';
+import GeneratePDFConcreteMaterials from '@/components/generatePDF/materials/concrete/generetePDFConcrete/generatePDFConcreteMaterials';
 
 interface TextBoxProps {
   children: JSX.Element | ReactNode;
@@ -157,6 +155,22 @@ const Material = () => {
                       <span style={{ fontWeight: '700', marginRight: '5px' }}>{t('concrete.materials.type')}:</span>
                       <Typography>{type}</Typography>
                     </Box>
+                    {material.material.type === 'cement' && (
+                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <span style={{ fontWeight: '700', marginRight: '5px', display: 'flex', gap: '0.5rem' }}>
+                          {t('concrete.materials.classification_AMP')}:
+                          <Typography>{material.material.description.classification_AMP}</Typography>
+                        </span>
+                        <span style={{ fontWeight: '700', marginRight: '5px', display: 'flex', gap: '0.5rem' }}>
+                          {t('concrete.materials.classification_CAP')}:
+                          <Typography>{material.material.description.classification_CAP}</Typography>
+                        </span>
+                        <span style={{ fontWeight: '700', marginRight: '5px', display: 'flex', gap: '0.5rem' }}>
+                          {t('concrete.materials.resistance')}:
+                          <Typography>{material.material.description.resistance}</Typography>
+                        </span>
+                      </Box>
+                    )}
                   </TextBox>
                   <GeneratePDFConcreteMaterials
                     name={material.material.name}
@@ -170,8 +184,6 @@ const Material = () => {
               </FlexColumnBorder>
 
               {granulometryData?.results && <GranulometryMateriaView granulometryData={granulometryData} />}
-
-              {/* {specificMassData?.result && <CoarseAggregateSpecificMassMaterialView specificMassData={specificMassData} />} */}
 
               {chapmanData?.results && <ChapmanMaterialView chapmanData={chapmanData} />}
 

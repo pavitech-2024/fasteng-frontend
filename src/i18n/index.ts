@@ -35,6 +35,8 @@ import welcomeENG from './translations/templates/welcome/en.json';
 // pdf
 import asphaltPDFPTBR from './translations/asphalt/pdf/ptbr.json';
 import asphaltPDFENG from './translations/asphalt/pdf/en.json';
+import commmonPDFPTBR from './translations/asphalt/pdf/common/ptbr.json';
+import commmonPDFENG from './translations/asphalt/pdf/common/en.json';
 // materials
 import asphaltMaterialsPTBR from './translations/asphalt/materials/ptbr.json';
 import asphaltMaterialsENG from './translations/asphalt/materials/en.json';
@@ -105,6 +107,9 @@ import iggENG from './translations/asphalt/essays/igg/en.json';
 // fwd
 import fwdPTBR from './translations/asphalt/essays/fwd/ptbr.json';
 import fwdENG from './translations/asphalt/essays/fwd/en.json';
+// superpave tooltips
+import superpaveTooltipsPTBR from './translations/asphalt/dosages/tooltips/superpave/ptbr.json';
+import superpaveTooltipsENG from './translations/asphalt/dosages/tooltips/superpave/en.json';
 
 /**@soils */
 // samples
@@ -157,6 +162,12 @@ import concreteGranulometryENG from './translations/concrete/essays/granulometry
 // coarse aggregate
 import coarseAggregatePTBR from './translations/concrete/essays/coarseAggregate/ptbr.json';
 import coarseAggregateENG from './translations/concrete/essays/coarseAggregate/en.json';
+// rc
+import rcPTBR from './translations/concrete/essays/rc/ptbr.json';
+import rcENG from './translations/concrete/essays/rc/en.json';
+// rt
+import rtPTBR from './translations/concrete/essays/rt/ptbr.json';
+import rtENG from './translations/concrete/essays/rt/en.json';
 // dosages
 // abcp
 import concreteABCPPTBR from './translations/concrete/dosages/abcp/ptbr.json';
@@ -213,6 +224,8 @@ i18n.use(initReactI18next).init({
         ...iggPTBR,
         ...fwdPTBR,
         ...viscosityRotationalPTBR,
+        ...superpaveTooltipsPTBR,
+        ...superpaveTooltipsENG,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
@@ -231,11 +244,15 @@ i18n.use(initReactI18next).init({
         ...sandIncreasePTBR,
         ...concreteGranulometryPTBR,
         ...coarseAggregatePTBR,
+        ...rcPTBR,
+        ...rtPTBR,
         ...concreteABCPPTBR,
         ...concreteABCPPTBR,
         /**@common */
         ...commonEssaysPTBR,
         ...commonMaterialsPTBR,
+        /**@pdf */
+        ...commmonPDFPTBR,
       },
     },
     en: {
@@ -293,11 +310,15 @@ i18n.use(initReactI18next).init({
         ...sandIncreaseENG,
         ...concreteGranulometryENG,
         ...coarseAggregateENG,
+        ...rcENG,
+        ...rtENG,
         ...concreteABCPENG,
         ...concreteABCPENG,
         /**@common */
         ...commonEssaysENG,
         ...commonMaterialsENG,
+        /** @pdf */
+        ...commmonPDFENG,
       },
     },
   },

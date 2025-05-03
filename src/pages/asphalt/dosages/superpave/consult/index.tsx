@@ -39,7 +39,7 @@ const SuperpaveDosageConsult = () => {
 
   const rows = dosages.map((row) => ({
     name: row.generalData?.name,
-    progress: `(${row.generalData?.step}/11) - ${progressTextMap[row.generalData?.step]}`,
+    progress: `(${row.generalData?.step + 1}/11) - ${progressTextMap[row.generalData?.step]}`,
     start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
     finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
     id: row._id,
@@ -55,7 +55,7 @@ const SuperpaveDosageConsult = () => {
 
             const rows = dosages[0]?.map((row) => ({
               name: row.generalData?.name,
-              progress: `(${row.generalData?.step}/11) - ${progressTextMap[row.generalData?.step]}`,
+              progress: `(${row.generalData?.step + 1}/11) - ${progressTextMap[row.generalData?.step]}`,
               start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
               finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
               id: row._id,
@@ -164,11 +164,11 @@ const SuperpaveDosageConsult = () => {
       headerName: t('superpave.dosage-consult.options'),
       renderCell: (params) => (
         <>
-          <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)}>
+          <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)} size="large">
             <DeleteIcon />
           </IconButton>
 
-          <IconButton aria-label="Visualizar" onClick={() => handleVisualizeDosage(params.row.id)}>
+          <IconButton aria-label="Visualizar" onClick={() => handleVisualizeDosage(params.row.id)} size="large">
             <NextIcon />
           </IconButton>
         </>

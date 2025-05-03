@@ -98,7 +98,6 @@ const ConcreteGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPa
           sx={{
             width: '100%',
             display: 'flex',
-            // gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
             gap: '10px',
             mt: '20px',
           }}
@@ -116,7 +115,7 @@ const ConcreteGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPa
           options={{
             title: t('granulometry-concrete.granulometry'),
             backgroundColor: 'transparent',
-            pointSize: '2',
+            pointSize: '5',
             hAxis: {
               title: `${t('granulometry-concrete.sieve-openness') + ' (mm)'}`,
               type: 'number',

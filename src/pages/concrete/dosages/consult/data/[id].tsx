@@ -5,7 +5,7 @@ import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import AbramsCurvGraph from '@/components/concrete/dosages/abcp/graph/abramsCurveGrapg';
 import Header from '@/components/organisms/header';
 import useAuth from '@/contexts/auth';
-import { AcpDosageData } from '@/interfaces/concrete/abcp';
+import { AbcpDosageData } from '@/interfaces/concrete/abcp';
 import abcpDosageService from '@/services/concrete/dosages/abcp/abcp-consult.service';
 import { Box, Container } from '@mui/material';
 import { t } from 'i18next';
@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 const SpecificAbcpDosage = () => {
-  const [dosage, setDosage] = useState<AcpDosageData>();
+  const [dosage, setDosage] = useState<AbcpDosageData>();
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const dosageId = router.query?.id as string;
@@ -204,7 +204,13 @@ const SpecificAbcpDosage = () => {
                 </Box>
 
                 <ResultSubTitle title={t('abcp.result.graph')} sx={{ margin: '.65rem' }} />
-                <AbramsCurvGraph result={dosage.results} />
+                <AbramsCurvGraph
+                  Xvalues={dosage.results.Xvalues}
+                  Yvalues={dosage.results.Yvalues}
+                  ac={dosage.results.ac}
+                  formula={dosage.results.formula}
+                  fcj={dosage.results.fcj}
+                />
               </FlexColumnBorder>
             </Box>
           </Box>

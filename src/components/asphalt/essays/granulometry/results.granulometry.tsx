@@ -27,9 +27,21 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
         unity: '%',
       },
       { label: t('granulometry-asphalt.total-retained'), value: granulometry_results.total_retained, unity: 'g' },
-      { label: t('granulometry-asphalt.nominal-size'), value: granulometry_results.nominal_size, unity: 'mm' },
-      { label: t('granulometry-asphalt.nominal-diameter'), value: granulometry_results.nominal_diameter, unity: 'mm' },
-      { label: t('granulometry-asphalt.fineness-module'), value: granulometry_results.fineness_module, unity: '%' },
+      {
+        label: t('asphalt.essays.granulometry.results.nominalSize'),
+        value: granulometry_results.nominal_size,
+        unity: 'mm',
+      },
+      {
+        label: t('asphalt.essays.granulometry.results.nominalDiammeter'),
+        value: granulometry_results.nominal_diameter,
+        unity: 'mm',
+      },
+      {
+        label: t('asphalt.essays.granulometry.results.finenessModule'),
+        value: granulometry_results.fineness_module,
+        unity: '%',
+      },
       { label: t('granulometry-asphalt.cc'), value: granulometry_results.cc },
       { label: t('granulometry-asphalt.cnu'), value: granulometry_results.cnu },
       { label: t('granulometry-asphalt.error'), value: granulometry_results.error, unity: '%' }
@@ -123,7 +135,7 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
           options={{
             title: t('granulometry-asphalt.granulometry'),
             backgroundColor: 'transparent',
-            pointSize: '2',
+            pointSize: '5',
             hAxis: {
               title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
               type: 'number',

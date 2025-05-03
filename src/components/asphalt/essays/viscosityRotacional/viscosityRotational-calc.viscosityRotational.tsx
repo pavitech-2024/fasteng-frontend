@@ -66,8 +66,6 @@ const ViscosityRotational_Calc = ({ nextDisabled, setNextDisabled }: EssayPagePr
               if (index !== -1) {
                 rows[index].temperature = Number(e.target.value);
                 setData({ step: 1, key: 'temperature', value: newRows });
-              } else {
-                console.log('error', id);
               }
             }}
             adornment={'°C'}
@@ -123,7 +121,7 @@ const ViscosityRotational_Calc = ({ nextDisabled, setNextDisabled }: EssayPagePr
           disableColumnMenu: true,
           align: 'center',
           headerAlign: 'center',
-          minWidth: 200,
+          minWidth: 150,
           flex: 1,
         }))}
       />

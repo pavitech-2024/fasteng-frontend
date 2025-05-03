@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AsphaltMaterial, AsphaltMaterialData } from '@/interfaces/asphalt';
 import { t } from 'i18next';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
@@ -6,21 +6,26 @@ import { toast } from 'react-toastify';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
 import ModalBase from '@/components/molecules/modals/modal';
 import { Box, TextField } from '@mui/material';
+import { Sieve } from '@/interfaces/common';
 
-interface NewAsphaltMaterialModalProps {
+interface CreateEditMaterialModalProps {
   openModal: boolean;
   handleCloseModal: () => void;
   updateMaterials: () => void;
   materials: AsphaltMaterial[];
+  materialToEdit?: AsphaltMaterial;
+  isEdit: boolean;
 }
 
-const NewAsphaltMaterialModal = ({
+const CreateEditMaterialModal = ({
   openModal,
   handleCloseModal,
   updateMaterials,
   materials,
-}: NewAsphaltMaterialModalProps) => {
-  const [material, setMaterial] = useState<AsphaltMaterialData>({
+  materialToEdit,
+  isEdit,
+}: CreateEditMaterialModalProps) => {
+  const initialMaterialState: AsphaltMaterialData = {
     name: '',
     type: null,
     description: {
@@ -36,7 +41,21 @@ const NewAsphaltMaterialModal = ({
       classification_AMP: null,
       observation: null,
     },
-  });
+  };
+
+  const [material, setMaterial] = useState<AsphaltMaterialData>(initialMaterialState);
+
+  const resetMaterial = () => {
+    setMaterial(initialMaterialState);
+  };
+
+  const modalTitle = isEdit ? 'Editar material' : 'Cadastrar material';
+
+  useEffect(() => {
+    if (isEdit && materialToEdit) {
+      setMaterial(materialToEdit);
+    }
+  }, [materialToEdit]);
 
   const getInputs = () => {
     const inputs = [
@@ -127,16 +146,13 @@ const NewAsphaltMaterialModal = ({
     else setMaterial({ ...material, description: { ...material.description, [key]: value } });
   };
 
-  const handleSubmitNewMaterial = async () => {
-    const createMaterialToast = toast.loading('Cadastrando material...', { autoClose: 5000 });
+  const handleCreateMaterial = async () => {
+    const createMaterialToastId = toast.loading(t('asphalt.materials.creatingMaterial'), {
+      autoClose: 5000,
+    });
+
     try {
-      if (material.name === '') throw 'Nome do material não pode ser vazio';
-      if (material.type === null) throw 'Tipo do material não pode ser vazio';
-      if (materials.find((m) => m.name === material.name)) throw 'Já existe uma amostra com esse nome!';
-      if (material.type === 'CAP' && material.description.classification_CAP === null)
-        throw 'Classificação do CAP não pode ser vazio';
-      if (material.type === 'asphaltBinder' && material.description.classification_AMP === null)
-        throw 'Classificação do AMP não pode ser vazio';
+      validateMaterialData();
 
       await materialsService.createMaterial(material);
 
@@ -144,15 +160,55 @@ const NewAsphaltMaterialModal = ({
 
       handleCloseModal();
 
-      toast.update(createMaterialToast, {
-        render: 'Material cadastrado com sucesso!',
+      toast.update(createMaterialToastId, {
+        render: t('asphalt.materials.materialCreated'),
         type: 'success',
         isLoading: false,
         autoClose: 5000,
         closeButton: true,
       });
     } catch (error) {
-      toast.update(createMaterialToast, {
+      toast.update(createMaterialToastId, {
+        render: t('asphalt.materials.errorCreatingMaterial'),
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+        closeButton: true,
+      });
+    }
+  };
+
+  const validateMaterialData = () => {
+    if (material.name === '') throw 'Material name cannot be empty';
+    if (material.type === null) throw 'Material type cannot be empty';
+    if (materials.find((m) => m.name === material.name)) throw 'A material with the same name already exists!';
+    if (material.type === 'CAP' && material.description.classification_CAP === null)
+      throw 'CAP classification cannot be empty';
+    if (material.type === 'asphaltBinder' && material.description.classification_AMP === null)
+      throw 'AMP classification cannot be empty';
+  };
+
+  const handleEditMaterial = async () => {
+    const toastId = toast.loading('Editando material...', { autoClose: 5000 });
+
+    try {
+      validateMaterialData();
+
+      await materialsService.editMaterial(materialToEdit._id, material);
+
+      await updateMaterials();
+
+      handleCloseModal();
+
+      toast.update(toastId, {
+        render: 'Material editado com sucesso!',
+        type: 'success',
+        isLoading: false,
+        autoClose: 5000,
+        closeButton: true,
+      });
+    } catch (error) {
+      toast.update(toastId, {
         render: error,
         type: 'error',
         isLoading: false,
@@ -162,15 +218,53 @@ const NewAsphaltMaterialModal = ({
     }
   };
 
+  /**
+   * Return the default value for a DropDown based on the material properties
+   * @param key the key of the property
+   * @param value the value of the property
+   * @returns the default DropDown value
+   */
+  const defaultDropDownValue = (key: string, value: string | Sieve) => {
+    switch (key) {
+      case 'type':
+        // Return the label and value of the material type
+        return { label: material.type?.toString(), value: material.type };
+      case 'classification_CAP':
+        // Return the label and value of the CAP classification
+        return {
+          label: material.description.classification_CAP?.toString(),
+          value: material.description.classification_CAP,
+        };
+      case 'classification_AMP':
+        // Return the label and value of the AMP classification
+        return {
+          label: material.description.classification_AMP?.toString(),
+          value: material.description.classification_AMP,
+        };
+      default:
+        // Return the label and value of the property
+        return { label: value.toString(), value: value };
+    }
+  };
+
   return (
     <ModalBase
-      title={t('asphalt.materials.newMaterial')}
+      title={modalTitle}
       open={openModal}
       leftButtonTitle={t('samples.cancel')}
-      rightButtonTitle={t('samples.register')}
+      rightButtonTitle={isEdit ? t('samples.edit') : t('samples.register')}
       size="medium"
-      onSubmit={() => handleSubmitNewMaterial()}
-      onCancel={handleCloseModal}
+      onSubmit={() => {
+        if (isEdit) {
+          handleEditMaterial();
+        } else {
+          handleCreateMaterial();
+        }
+      }}
+      onCancel={() => {
+        resetMaterial();
+        handleCloseModal();
+      }}
       disableSubmit={
         material.name === '' ||
         material.type === null ||
@@ -205,8 +299,9 @@ const NewAsphaltMaterialModal = ({
                   sx={{ minWidth: '120px', bgcolor: 'primaryTons.white' }}
                   label={t(`asphalt.materials.${input.key}`)}
                   variant="standard"
-                  defaultValue={{ value: material.type, label: material.type }}
+                  value={defaultDropDownValue(input.key, input.value)}
                   size="medium"
+                  isEdit={isEdit}
                   options={
                     input.key === 'type'
                       ? types
@@ -245,4 +340,4 @@ const NewAsphaltMaterialModal = ({
   );
 };
 
-export default NewAsphaltMaterialModal;
+export default CreateEditMaterialModal;

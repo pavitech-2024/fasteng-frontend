@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import useAuth from '@/contexts/auth';
 import { Avatar, Box, Button, IconButton, Tooltip, Typography } from '@mui/material';
@@ -12,6 +12,15 @@ import Api from '../../api';
 import { DeleteIcon } from '../../assets';
 import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
 import UploadIcon from '@mui/icons-material/Upload';
+import { TextField } from '@mui/material';
+import { red } from '@mui/material/colors';
+import { nameMask } from '@/utils/masks/nameMask/nameMask.mask';
+import { phoneMask } from '@/utils/masks/phoneMask/phoneMask.mask';
+import { validateEmail } from '@/utils/validators/emailValidator';
+import { validateName } from '@/utils/validators/nameValidator';
+import { validatePhone } from '@/utils/validators/phoneValidator';
+import { fontGrid } from '@mui/material/styles/cssUtils';
+import Cookies from 'js-cookie';
 
 export const getStaticProps = async () => {
   const avatares: string[] = [
@@ -31,6 +40,84 @@ interface SettingsProps {
 
 const Settings: NextPage = ({ avatares }: SettingsProps) => {
   const { user, setUser } = useAuth();
+
+  const [name, setName] = useState(user?.name || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [phone, setPhone] = useState(user?.phone || '');
+  const [dob, setDob] = useState(user?.dob || '');
+
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    dob: '',
+  });
+
+  useEffect(() => {
+    if (user?.dob) {
+      setDob(user.dob);
+    }
+  }, [user]);
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '');
+    setPhone(value);
+  };
+
+  const onSaveUser = async () => {
+    setErrors({ name: '', email: '', phone: '', dob: '' });
+
+    const newErrors = {
+      name: '',
+      email: '',
+      phone: '',
+      dob: '',
+    };
+
+    if (!name) {
+      newErrors.name = t('settings.errors.emptyName');
+    } else if (!validateName(name)) {
+      newErrors.name = t('settings.errors.invalidName');
+    }
+
+    if (!email) {
+      newErrors.email = t('settings.errors.emptyEmail');
+    } else if (!validateEmail(email)) {
+      newErrors.email = t('settings.errors.invalidEmail');
+    }
+
+    if (!phone) {
+      newErrors.phone = t('settings.errors.emptyPhone');
+    } else if (!validatePhone(phone)) {
+      newErrors.phone = t('settings.errors.invalidPhone');
+    }
+
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).some((error) => error)) {
+      toast.error(t('settings.toast.submitError'));
+      return;
+    }
+
+    try {
+      const updatedUser = { ...user, name, email, phone, dob };
+      const response = await Api.put(`users/${user._id}`, updatedUser);
+
+      setUser({ ...user, ...response.data });
+      toast.success(t('settings.toast.success'));
+    } catch (error) {
+      toast.error(t('settings.toast.error'));
+    }
+  };
+
+  const onDeleteUser = async () => {
+    try {
+      await Api.delete(`users/${user._id}`);
+      toast.success('Usuário excluído com sucesso!');
+    } catch (error) {
+      toast.error('Erro ao excluir usuário');
+    }
+  };
 
   const [open, setOpen] = useState(false);
   const [oldPhoto, setOldPhoto] = useState<string | null>(user?.photo);
@@ -70,6 +157,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
       throw error;
     }
   };
+
   return (
     <Container>
       <ModalBase
@@ -104,6 +192,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
               setOldPhoto(user?.photo);
               onSubmitPhoto(null);
             }}
+            size="large"
           >
             <DeleteIcon color="error" sx={{ width: '80px', height: '80px' }} />
           </IconButton>
@@ -113,6 +202,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
                 key={avatar}
                 sx={{ p: 0, ':hover': { opacity: 0.8, cursor: 'pointer' } }}
                 onClick={() => onSubmitPhoto(avatar)}
+                size="large"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img alt="avatar" src={avatar} width={98} height={98} />
@@ -179,7 +269,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           }}
         >
           <Tooltip title={t('settings.changeAvatar')}>
-            <IconButton sx={{ p: 0 }} onClick={() => setOpen(true)}>
+            <IconButton sx={{ p: 0, ml: '60px' }} onClick={() => setOpen(true)} size="large">
               <Avatar
                 alt="user photo"
                 src={user?.photo}
@@ -215,6 +305,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
               zIndex: 1,
               height: 'calc(100px - 2rem)',
               minWidth: '220px',
+              marginTop: '10px',
             }}
           >
             <Typography
@@ -242,6 +333,102 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             justifyContent: 'flex-start',
           }}
         >
+          {t('settings.personal')}
+        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            width: { mobile: '85%', notebook: '70%' },
+          }}
+        >
+          <Box>
+            <TextField
+              label="Nome"
+              variant="standard"
+              fullWidth
+              required
+              type="text"
+              value={nameMask(name)}
+              onChange={(e) => setName(e.target.value)}
+              sx={{
+                height: '50px',
+              }}
+            />
+            {errors.name && (
+              <Box component="span" sx={{ color: 'red', fontSize: '12px' }}>
+                {errors.name}
+              </Box>
+            )}
+          </Box>
+
+          <Box>
+            <TextField
+              label="Email"
+              variant="standard"
+              fullWidth
+              required
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              sx={{
+                height: '50px',
+              }}
+            />
+            {errors.email && (
+              <Box component="span" sx={{ color: 'red', fontSize: '12px' }}>
+                {errors.email}
+              </Box>
+            )}
+          </Box>
+
+          <Box>
+            <TextField
+              label="Telefone"
+              variant="standard"
+              fullWidth
+              value={phoneMask(phone)}
+              onChange={handlePhoneChange}
+              error={!!errors.phone}
+              helperText={errors.phone}
+              sx={{
+                height: '60px',
+              }}
+            />
+            {errors.phone && (
+              <Box component="span" sx={{ color: 'red', fontSize: '12px' }}>
+                {errors.phone}
+              </Box>
+            )}
+          </Box>
+
+          <TextField
+            label="Data de Nascimento"
+            variant="standard"
+            fullWidth
+            type="date"
+            InputLabelProps={{ shrink: true }}
+            value={dob}
+            onChange={(e) => setDob(e.target.value)}
+            error={!!errors.dob}
+            helperText={errors.dob}
+          />
+        </Box>
+
+        <Typography
+          sx={{
+            width: { mobile: '85%', notebook: '100%' },
+            fontSize: { mobile: '1.25rem', notebook: '1.75rem' },
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            color: 'primaryTons.lightGray',
+            display: 'flex',
+            justifyContent: 'flex-start',
+            paddingTop: '2rem',
+            paddingBottom: '1rem',
+          }}
+        >
           {t('settings.preferences')}
         </Typography>
         <Box
@@ -258,8 +445,8 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             label={t('settings.language.label')}
             options={LanguageOptions}
             size="medium"
-            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white' }}
-            defaultValue={user?.preferences.language === 'en' ? LanguageOptions[0] : LanguageOptions[1]}
+            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white', ml: 5 }}
+            value={user?.preferences.language === 'en' ? LanguageOptions[0] : LanguageOptions[1]}
             callback={(value: string) => {
               i18next.changeLanguage(value);
               setUser({ ...user, preferences: { ...user.preferences, language: value } });
@@ -269,26 +456,34 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
             label={t('settings.decimal.label')}
             options={DecimalOptions}
             size="medium"
-            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white' }}
-            defaultValue={DecimalOptions[user?.preferences.decimal - 1]}
+            sx={{ minWidth: '150px', width: '30%', bgcolor: 'primaryTons.white', ml: 5 }}
+            value={DecimalOptions[user?.preferences.decimal - 1]}
             callback={(value: number) => {
               setUser({ ...user, preferences: { ...user.preferences, decimal: value } });
             }}
           />
         </Box>
-        <Button
-          variant="contained"
-          sx={{ color: 'primaryTons.white' }}
-          onClick={() =>
-            toast.promise(async () => await onSavePreferences(), {
-              pending: t('settings.toast loading'),
-              success: t('settings.toast success'),
-              error: t('settings.toast error'),
-            })
-          }
-        >
-          {t('settings.save')}
-        </Button>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, width: '80%' }}>
+          <Button variant="contained" color="primary" onClick={onSaveUser} sx={{}}>
+            Salvar Alterações
+          </Button>
+
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={onDeleteUser}
+            sx={{
+              backgroundColor: '#b22222',
+              color: 'white',
+              position: 'relative',
+              left: 'auto',
+              width: 'auto',
+              marginLeft: 'auto',
+            }}
+          >
+            Excluir Usuário
+          </Button>
+        </Box>
       </Box>
     </Container>
   );

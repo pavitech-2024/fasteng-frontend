@@ -25,7 +25,9 @@ const FlashPoint_GeneralData = ({
       async () => {
         const materials = await flashPoint.getmaterialsByUserId(user._id);
 
-        const filteredMaterials = materials.filter((material) => material.type === 'asphaltBinder');
+        const filteredMaterials = materials.filter(
+          (material) => material.type === 'asphaltBinder' || material.type === 'CAP'
+        );
 
         setMaterials(filteredMaterials);
         setLoading(false);
@@ -123,7 +125,7 @@ const FlashPoint_GeneralData = ({
                         value: material,
                       };
                     })}
-                    defaultValue={defaultValue}
+                    value={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
                     size="medium"
                     required={input.required}

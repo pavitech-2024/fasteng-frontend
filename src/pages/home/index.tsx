@@ -79,7 +79,7 @@ const Home: NextPage = () => {
             fontWeight: 700,
             color: 'primaryTons.lightGray',
             textAlign: 'center',
-            m: 0 ,
+            m: 0,
           }}
         >
           {t('home.fast way to')}

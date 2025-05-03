@@ -2,7 +2,7 @@ import DropDown from '@/components/atoms/inputs/dropDown';
 import { EssayPageProps } from '@/components/templates/essay';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import Rtcd_SERVICE from '@/services/asphalt/essays/rtcd/rtcd.service';
-import useRtcdStore from '@/stores/asphalt/rtcd.store';
+import useRtcdStore from '@/stores/asphalt/rtcd/rtcd.store';
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import { useState } from 'react';
@@ -90,7 +90,7 @@ const Rtcd_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps & { 
                       value: material,
                     };
                   })}
-                  defaultValue={defaultValue}
+                  value={defaultValue}
                   callback={(value) => setData({ step: 0, key: input.key, value })}
                   size="medium"
                   required={input.required}

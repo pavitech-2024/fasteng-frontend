@@ -17,7 +17,7 @@ export const Result_CardContainer = ({ title, children, hideBorder, mt }: Result
         borderColor: 'primaryTons.border',
         padding: '10px',
         zIndex: 2,
-        mt: mt || '1.5rem',
+        mt: mt || { mobile: '0', notebook: '1.5rem' },
         borderRadius: '10px',
       }}
     >
@@ -30,7 +30,7 @@ export const Result_CardContainer = ({ title, children, hideBorder, mt }: Result
             mobile: 'repeat(auto-fill, 180px)',
             notebook: 'repeat(auto-fill, 230px)',
           },
-          gridTemplateRows: 'repeat(auto-fill, 100px)',
+          // gridTemplateRows: 'repeat(auto-fill, 100px)',
           gap: '10px',
           placeContent: 'center',
         }}
@@ -55,7 +55,7 @@ const Result_Card = ({ label, value, unity }: Result_CardProps) => {
           mobile: '180px',
           notebook: '230px',
         },
-        height: '100px',
+        height: '150px',
         display: 'flex',
         flexDirection: 'column',
         border: '1px solid',
@@ -92,7 +92,7 @@ const Result_Card = ({ label, value, unity }: Result_CardProps) => {
           alignItems: 'center',
           gap: '5px',
           borderRadius: '0 0 10px 10px',
-          fontSize: { mobile: '12px', notebook: '1rem' },
+          fontSize: { mobile: '1.35rem', notebook: '1rem' },
         }}
       >
         {value}
