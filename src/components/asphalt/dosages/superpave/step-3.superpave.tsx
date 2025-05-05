@@ -17,10 +17,9 @@ const Superpave_Step3 = ({
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const { granulometryResultsData: data } = useSuperpaveStore();
-  console.log('🚀 ~ data:', data);
 
   const [granulometryData, setGranulometryData] = useState([]);
-  console.log('🚀 ~ granulometryData:', granulometryData);
+  const [materialsToShow, setMaterialToShow] = useState([]);
 
   const aggregatesCheckboxes = data.granulometrys.map((gran) => ({
     name: gran.material.name,
@@ -29,29 +28,7 @@ const Superpave_Step3 = ({
 
   aggregatesCheckboxes.push({ name: data.viscosity.material.name, type: data.viscosity.material.type });
 
-  const [materialsToShow, setMaterialToShow] = useState([]);
-  console.log('🚀 ~ materialsToShow:', materialsToShow);
-
-  const [aggregatesData, setAggregatesData] = useState([]);
-  console.log('🚀 ~ aggregatesData:', aggregatesData);
-
-  // const graph_data = [
-  //   [t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')],
-  //   ...granulometryResultsData.graph_data,
-  // ];
-
   const granulometryRows = [];
-
-  // granulometryEssayData.table_data.map((value, index) => {
-  //   rows.push({
-  //     sieve: value.sieve_label,
-  //     passant_porcentage: value.passant,
-  //     passant: granulometryResultsData.passant[index][1],
-  //     retained_porcentage: granulometryResultsData.retained_porcentage[index][1],
-  //     retained: value.retained,
-  //     accumulated_retained: granulometryResultsData.accumulated_retained[index][1],
-  //   });
-  // });
 
   const granulometryColumns: GridColDef[] = [
     {
@@ -140,7 +117,7 @@ const Superpave_Step3 = ({
     }
   };
 
-  // setNextDisabled(false);
+  setNextDisabled(false);
 
   return (
     <>

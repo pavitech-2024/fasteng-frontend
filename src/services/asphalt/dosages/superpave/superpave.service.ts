@@ -79,7 +79,7 @@ class Superpave_SERVICE implements IEssayService {
         case 2:
           await this.submitGranulometryEssayData(data as SuperpaveData, this.userId, null, isConsult);
         case 3:
-          await this.submitMaterialSelection(data as SuperpaveData, this.userId, null, isConsult);
+          // await this.submitMaterialSelection(data as SuperpaveData, this.userId, null, isConsult);
           await this.getStep3Data(data as SuperpaveData, this.userId, isConsult);
           break;
         case 4:
@@ -284,6 +284,7 @@ class Superpave_SERVICE implements IEssayService {
           granulometryEssayData: {
             name,
             data: data.granulometryEssayData,
+            results: data.granulometryResultsData,
           },
         });
 
