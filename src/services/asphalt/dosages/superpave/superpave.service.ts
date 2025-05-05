@@ -79,17 +79,17 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitGranulometryEssayData(data as SuperpaveData, this.userId, null, isConsult);
         case 3:
           // await this.submitGranulometricComposition(data as SuperpaveData, this.userId, null, isConsult);
-          await this.getGranulometricCompositionData(data as SuperpaveData, this.userId, isConsult);
+          // await this.getGranulometricCompositionData(data as SuperpaveData, this.userId, isConsult);
           break;
         case 4:
           if (isConsult) {
-            await this.getGranulometricCompositionData(data as SuperpaveData, this.userId, isConsult);
+            // await this.getGranulometricCompositionData(data as SuperpaveData, this.userId, isConsult);
           }
           await this.submitGranulometryComposition(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 5:
-          const { materialSelectionData } = data as SuperpaveData;
-          await this.getStep4SpecificMasses(materialSelectionData, isConsult);
+          // const { materialSelectionData } = data as SuperpaveData;
+          // await this.getStep4SpecificMasses(materialSelectionData, isConsult);
           await this.submitInitialBinder(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 6:
@@ -299,48 +299,48 @@ class Superpave_SERVICE implements IEssayService {
   };
 
   // send the selected materials to backend
-  submitGranulometricComposition = async (
-    data: SuperpaveData,
-    userId: string,
-    user?: string,
-    isConsult?: boolean
-  ): Promise<void> => {
-    if (!isConsult) {
-      try {
-        const { aggregates, binder } = data.materialSelectionData;
-        const { name } = data.generalData;
-        const userData = userId ? userId : user;
+  // submitGranulometricComposition = async (
+  //   data: SuperpaveData,
+  //   userId: string,
+  //   user?: string,
+  //   isConsult?: boolean
+  // ): Promise<void> => {
+  //   if (!isConsult) {
+  //     try {
+  //       const { aggregates, binder } = data.materialSelectionData;
+  //       const { name } = data.generalData;
+  //       const userData = userId ? userId : user;
 
-        if (!aggregates) throw t('errors.empty-aggregates');
-        if (!binder) throw t('errors.empty-binder');
+  //       if (!aggregates) throw t('errors.empty-aggregates');
+  //       if (!binder) throw t('errors.empty-binder');
 
-        const materialSelectionData = {
-          name,
-          aggregates,
-          binder,
-          isConsult: null,
-        };
+  //       const materialSelectionData = {
+  //         name,
+  //         aggregates,
+  //         binder,
+  //         isConsult: null,
+  //       };
 
-        if (isConsult) materialSelectionData.isConsult = isConsult;
+  //       if (isConsult) materialSelectionData.isConsult = isConsult;
 
-        const response = await Api.post(`${this.info.backend_path}/save-material-selection-step/${userData}`, {
-          materialSelectionData: {
-            name,
-            aggregates,
-            binder,
-          },
-        });
+  //       const response = await Api.post(`${this.info.backend_path}/save-material-selection-step/${userData}`, {
+  //         materialSelectionData: {
+  //           name,
+  //           aggregates,
+  //           binder,
+  //         },
+  //       });
 
-        const { success, error } = response.data;
+  //       const { success, error } = response.data;
 
-        if (success === false) throw error.name;
-      } catch (error) {
-        throw error;
-      }
-    } else {
-      this.store_actions.setAllData(data);
-    }
-  };
+  //       if (success === false) throw error.name;
+  //     } catch (error) {
+  //       throw error;
+  //     }
+  //   } else {
+  //     this.store_actions.setAllData(data);
+  //   }
+  // };
 
   getGranulometricCompositionData = async (dosageData: SuperpaveData, user: string, isConsult?: boolean): Promise<any> => {
     const step = dosageData.generalData.step;
@@ -348,7 +348,7 @@ class Superpave_SERVICE implements IEssayService {
       try {
         const { dnitBand } = dosageData.generalData;
 
-        const { aggregates } = dosageData.materialSelectionData;
+        const aggregates = dosageData.granulometryEssayData.materials;
 
         const response = await Api.post(`${this.info.backend_path}/step-3-data`, {
           dnitBand: dnitBand,
@@ -382,14 +382,14 @@ class Superpave_SERVICE implements IEssayService {
    */
   calculateGranulometryComposition = async (
     calculateStep3Data: SuperpaveData['granulometryCompositionData'],
-    step2Data: SuperpaveData['materialSelectionData'],
+    step2Data: SuperpaveData['granulometryEssayData'],
     step1Data: SuperpaveData['generalData'],
     chosenCurves: any
   ): Promise<any> => {
     try {
       const { percentageInputs, nominalSize, percentsToList } = calculateStep3Data;
       const { dnitBand } = step1Data;
-      const { aggregates } = step2Data;
+      const aggregates = step2Data.materials;
 
       const selectedCurveInputs = chosenCurves.lower
         ? percentageInputs[0]
@@ -464,67 +464,67 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  getStep4SpecificMasses = async (step2Data: SuperpaveData['materialSelectionData'], isConsult?): Promise<any> => {
-    try {
-      const { aggregates, binder } = step2Data;
+  // getStep4SpecificMasses = async (step2Data: SuperpaveData['materialSelectionData'], isConsult?): Promise<any> => {
+  //   try {
+  //     const { aggregates, binder } = step2Data;
 
-      const response = await Api.post(`${this.info.backend_path}/step-4-specific-masses`, {
-        materials: aggregates,
-        binder,
-      });
+  //     const response = await Api.post(`${this.info.backend_path}/step-4-specific-masses`, {
+  //       materials: aggregates,
+  //       binder,
+  //     });
 
-      const { data, success, error } = response.data;
+  //     const { data, success, error } = response.data;
 
-      if (success === false) throw error.name;
+  //     if (success === false) throw error.name;
 
-      return { data, success, error };
-    } catch (error) {}
-  };
+  //     return { data, success, error };
+  //   } catch (error) {}
+  // };
 
-  getStep4Data = async (
-    step1Data: SuperpaveData['generalData'],
-    step2Data: SuperpaveData['materialSelectionData'],
-    step3Data: SuperpaveData['granulometryCompositionData'],
-    step4Data: SuperpaveData['initialBinderData']
-  ): Promise<any> => {
-    try {
-      const { trafficVolume } = step1Data;
-      const { percentageInputs, chosenCurves, lowerComposition, averageComposition, higherComposition, nominalSize } =
-        step3Data;
-      const { materials, binderSpecificMass } = step4Data;
+  // getStep4Data = async (
+  //   step1Data: SuperpaveData['generalData'],
+  //   step2Data: SuperpaveData['materialSelectionData'],
+  //   step3Data: SuperpaveData['granulometryCompositionData'],
+  //   step4Data: SuperpaveData['initialBinderData']
+  // ): Promise<any> => {
+  //   try {
+  //     const { trafficVolume } = step1Data;
+  //     const { percentageInputs, chosenCurves, lowerComposition, averageComposition, higherComposition, nominalSize } =
+  //       step3Data;
+  //     const { materials, binderSpecificMass } = step4Data;
 
-      const hasNullValue = materials.some((obj) => Object.values(obj).some((value) => value === null));
+  //     const hasNullValue = materials.some((obj) => Object.values(obj).some((value) => value === null));
 
-      if (hasNullValue) throw new Error('Algum valor não foi informado.');
-      // if (binderSpecificMass === null || binderSpecificMass === 0)
-      //   return Error('A massa específica do ligante deve ser informada.');
+  //     if (hasNullValue) throw new Error('Algum valor não foi informado.');
+  //     // if (binderSpecificMass === null || binderSpecificMass === 0)
+  //     //   return Error('A massa específica do ligante deve ser informada.');
 
-      let composition;
+  //     let composition;
 
-      if (chosenCurves.lower) composition = lowerComposition;
-      if (chosenCurves.average) composition = averageComposition;
-      if (chosenCurves.higher) composition = higherComposition;
+  //     if (chosenCurves.lower) composition = lowerComposition;
+  //     if (chosenCurves.average) composition = averageComposition;
+  //     if (chosenCurves.higher) composition = higherComposition;
 
-      const response = await Api.post(`${this.info.backend_path}/step-4-data`, {
-        materials,
-        percentsOfDosage: percentageInputs,
-        specificMassesData: materials,
-        chosenCurves,
-        composition,
-        binderSpecificMass,
-        nominalSize,
-        trafficVolume,
-      });
+  //     const response = await Api.post(`${this.info.backend_path}/step-4-data`, {
+  //       materials,
+  //       percentsOfDosage: percentageInputs,
+  //       specificMassesData: materials,
+  //       chosenCurves,
+  //       composition,
+  //       binderSpecificMass,
+  //       nominalSize,
+  //       trafficVolume,
+  //     });
 
-      const { data, success, error } = response.data;
+  //     const { data, success, error } = response.data;
 
-      if (success === false) throw error.name;
+  //     if (success === false) throw error.name;
 
-      return data;
-    } catch (error) {
-      throw error;
-    }
-  };
+  //     return data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // };
 
   submitInitialBinder = async (
     data: SuperpaveData,

@@ -459,7 +459,6 @@ export type SuperpaveData = {
   generalData: SuperpaveGeneralData;
   granulometryEssayData: SuperpaveGranulometryEssayData;
   granulometryResultsData: SuperpaveGranulometryResults;
-  materialSelectionData: SuperpaveMaterialSelectionData;
   granulometryCompositionData: SuperpaveGranulometryCompositionData;
   initialBinderData: SuperpaveInitialBinderData;
   firstCompressionData: FirstCompressionData;
@@ -485,16 +484,15 @@ const stepVariant = {
   0: 'generalData',
   1: 'granulometryEssayData',
   2: 'granulometryResultsData',
-  3: 'materialSelectionData',
-  4: 'granulometryCompositionData',
-  5: 'initialBinderData',
-  6: 'firstCompressionData',
-  7: 'firstCurvePercentagesData',
-  8: 'chosenCurvePercentagesData',
-  9: 'secondCompressionData',
-  10: 'secondCompressionPercentagesData',
-  11: 'confirmationCompressionData',
-  12: 'dosageResume',
+  3: 'granulometryCompositionData',
+  4: 'initialBinderData',
+  5: 'firstCompressionData',
+  6: 'firstCurvePercentagesData',
+  7: 'chosenCurvePercentagesData',
+  8: 'secondCompressionData',
+  9: 'secondCompressionPercentagesData',
+  10: 'confirmationCompressionData',
+  11: 'dosageResume',
 };
 
 const initialState = {
@@ -518,10 +516,6 @@ const initialState = {
   granulometryResultsData: {
     granulometrys: [],
     viscosity: null,
-  },
-  materialSelectionData: {
-    aggregates: [],
-    binder: null,
   },
   granulometryCompositionData: {
     porcentagesPassantsN200: null,

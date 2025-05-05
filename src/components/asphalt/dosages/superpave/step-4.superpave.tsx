@@ -5,7 +5,7 @@ import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.se
 import useSuperpaveStore, { SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
 import { Box, Button, Checkbox, FormControlLabel, FormGroup, Table, TableContainer, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { AllSieves } from '@/interfaces/common';
+import { AllSieves, AllSievesSuperpaveUpdatedAstm } from '@/interfaces/common';
 import CurvesTable from './tables/curvesTable';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
@@ -15,7 +15,8 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   const [loading, setLoading] = useState<boolean>(true);
   const {
     granulometryCompositionData: data,
-    materialSelectionData,
+    granulometryResultsData,
+    granulometryEssayData,
     generalData,
     setData,
     hasHydrated,
@@ -27,7 +28,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   const [average, setAverage] = useState(false);
   const [higher, setHigher] = useState(false);
 
-  const peneiras = AllSieves.map((peneira) => {
+  const peneiras = AllSievesSuperpaveUpdatedAstm.map((peneira) => {
     return { peneira: peneira.label };
   });
   
@@ -44,7 +45,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   let tableCompositionInputsAverage = {};
   let tableCompositionInputsHigher = {};
 
-  const selectedMaterials = materialSelectionData?.aggregates;
+  const selectedMaterials = granulometryEssayData.materials.map((material) => ({ name: material.name, _id: material._id }));
 
   const checkBoxes = [
     {
@@ -156,6 +157,9 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   };
 
   const setPercentsToListTotal = (peneiras: { peneira: string }[], percentsToList) => {
+    console.log("🚀 ~ setPercentsToListTotal ~ peneiras:", peneiras)
+    console.log("🚀 ~ setPercentsToListTotal ~ percentsToList:", percentsToList)
+
     const tableData = Array.from({ length: percentsToList.length }, () => []);
 
     percentsToList?.forEach((item, i) => {
@@ -375,7 +379,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
 
             const composition = await superpave.calculateGranulometryComposition(
               data,
-              materialSelectionData,
+              granulometryEssayData,
               generalData,
               chosenCurves
             );
