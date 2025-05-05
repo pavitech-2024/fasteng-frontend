@@ -31,36 +31,35 @@ class Superpave_SERVICE implements IEssayService {
         description: t('asphalt.dosages.superpave.granulometry_essay_result'),
         path: 'granulometry-essay-result',
       },
-      { step: 3, description: t('asphalt.dosages.superpave.material_selection'), path: 'material-selection' },
       {
-        step: 4,
+        step: 3,
         description: t('asphalt.dosages.superpave.granulometry_composition'),
         path: 'granulometry-composition',
       },
-      { step: 5, description: t('asphalt.dosages.superpave.initial_binder'), path: 'initial-binder' },
-      { step: 6, description: t('asphalt.dosages.superpave.first_compression'), path: 'first-compression' },
+      { step: 4, description: t('asphalt.dosages.superpave.initial_binder'), path: 'initial-binder' },
+      { step: 5, description: t('asphalt.dosages.superpave.first_compression'), path: 'first-compression' },
       {
-        step: 7,
+        step: 6,
         description: t('asphalt.dosages.superpave.first_compression_parameters'),
         path: 'first-curve-percentages',
       },
       {
-        step: 8,
+        step: 7,
         description: t('asphalt.dosages.superpave.chosen_curve_percentages'),
         path: 'chosen-curve-percentages',
       },
-      { step: 9, description: t('asphalt.dosages.superpave.second_compression'), path: 'second-compression' },
+      { step: 8, description: t('asphalt.dosages.superpave.second_compression'), path: 'second-compression' },
       {
-        step: 10,
+        step: 9,
         description: t('asphalt.dosages.superpave.second_compression_parameters'),
         path: 'second-compression-parameters',
       },
       {
-        step: 11,
+        step: 10,
         description: t('asphalt.dosages.superpave.confirmation_compression'),
         path: 'confirmation-compression',
       },
-      { step: 12, description: t('asphalt.dosages.superpave.dosage_resume'), path: 'dosage-resume' },
+      { step: 11, description: t('asphalt.dosages.superpave.dosage_resume'), path: 'dosage-resume' },
     ],
   };
 
@@ -79,12 +78,12 @@ class Superpave_SERVICE implements IEssayService {
         case 2:
           await this.submitGranulometryEssayData(data as SuperpaveData, this.userId, null, isConsult);
         case 3:
-          // await this.submitMaterialSelection(data as SuperpaveData, this.userId, null, isConsult);
-          await this.getStep3Data(data as SuperpaveData, this.userId, isConsult);
+          // await this.submitGranulometricComposition(data as SuperpaveData, this.userId, null, isConsult);
+          await this.getGranulometricCompositionData(data as SuperpaveData, this.userId, isConsult);
           break;
         case 4:
           if (isConsult) {
-            await this.getStep3Data(data as SuperpaveData, this.userId, isConsult);
+            await this.getGranulometricCompositionData(data as SuperpaveData, this.userId, isConsult);
           }
           await this.submitGranulometryComposition(data as SuperpaveData, this.userId, null, isConsult);
           break;
@@ -300,7 +299,7 @@ class Superpave_SERVICE implements IEssayService {
   };
 
   // send the selected materials to backend
-  submitMaterialSelection = async (
+  submitGranulometricComposition = async (
     data: SuperpaveData,
     userId: string,
     user?: string,
@@ -343,7 +342,7 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  getStep3Data = async (dosageData: SuperpaveData, user: string, isConsult?: boolean): Promise<any> => {
+  getGranulometricCompositionData = async (dosageData: SuperpaveData, user: string, isConsult?: boolean): Promise<any> => {
     const step = dosageData.generalData.step;
     if (!isConsult || (isConsult && step === 2)) {
       try {
