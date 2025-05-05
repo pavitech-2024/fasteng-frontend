@@ -10,6 +10,10 @@
   "asphalt.dosages.superpave": "Dosagem Superpave",
   "topbar.superpave": "Superpave",
 
+  "viscosity-rotational.compression-temperature": "Temperatura de compressão",
+  "viscosity-rotational.aggregate-temperature": "Temperatura do agregado",
+  "viscosity-rotational.machining-temperature": "Temperatura de usinagem",
+
   "asphalt.dosages.superpave.granulometry_essay": "Ensaio de Granulometria",
   "asphalt.dosages.superpave.granulometry_essay_result": "Resultados da Granulometria",
   "asphalt.dosages.superpave.material_selection": "Seleção de Materiais",
@@ -45,7 +49,11 @@
   "asphalt.dosages.superpave.calculate-lower-curve": "Calcular curva inferior",
   "asphalt.dosages.superpave.calculate-average-curve": "Calcular curva intermediária",
   "asphalt.dosages.superpave.calculate-higher-curve": "Calcular curva superior",
+  "asphalt.dosages.superpave.granulometry-fineness-module": "Módulo de finura",
   "asphalt.dosages.superpave.maximum-nominal-size": "Tamanho nominal máximo",
+  "asphalt.dosages.superpave.granulometry-cc": "CC",
+  "asphalt.dosages.superpave.granulometry-cnu": "CNU",
+  "asphalt.dosages.superpave.granulometry-error": "Erro",
   "asphalt.dosages.superpave.sieve": "Peneira",
   "asphalt.dosages.superpave.project": "Projeto",
   "asphalt.dosages.superpave.total-passant": "Passante total (%)",

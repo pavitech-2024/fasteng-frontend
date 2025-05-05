@@ -6,12 +6,14 @@ interface Result_CardContainerProps {
   children: JSX.Element | React.ReactNode;
   hideBorder?: boolean;
   mt?: string;
+  sx?: React.CSSProperties;
 }
 
-export const Result_CardContainer = ({ title, children, hideBorder, mt }: Result_CardContainerProps) => {
+export const Result_CardContainer = ({ title, children, hideBorder, mt, sx }: Result_CardContainerProps) => {
   return (
     <Container
       sx={{
+        ...sx,
         border: hideBorder ? 'none' : '1px solid',
         transform: { mobile: 'translateY(-35px)', notebook: 'translateY(-15px)' },
         borderColor: 'primaryTons.border',

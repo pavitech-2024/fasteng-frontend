@@ -53,26 +53,30 @@ interface SuperpaveGranulometryResults {
   }[];
   viscosity: {
     material: AsphaltMaterial;
-    graph: string;
-    machiningTemperatureRange: {
-      higher: number;
-      lower: number;
-      average: number;
-    };
-    compressionTemperatureRange: {
-      higher: number;
-      lower: number;
-      average: number;
-    };
-    aggregateTemperatureRange: {
-      higher: number;
-      lower: number;
-      average: number;
-    };
-    curvePoints: number[][];
-    equation: {
-      aIndex: number;
-      bIndex: number;
+    result: {
+      result: {
+        graph: string;
+        machiningTemperatureRange: {
+          higher: number;
+          lower: number;
+          average: number;
+        };
+        compressionTemperatureRange: {
+          higher: number;
+          lower: number;
+          average: number;
+        };
+        aggregateTemperatureRange: {
+          higher: number;
+          lower: number;
+          average: number;
+        };
+        curvePoints: number[][];
+        equation: {
+          aIndex: number;
+          bIndex: number;
+        };
+      };
     };
   };
 }
@@ -517,7 +521,7 @@ const initialState = {
   },
   materialSelectionData: {
     aggregates: [],
-    binder: null
+    binder: null,
   },
   granulometryCompositionData: {
     porcentagesPassantsN200: null,
