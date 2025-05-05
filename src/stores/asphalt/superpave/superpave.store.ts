@@ -37,17 +37,19 @@ interface SuperpaveGranulometryEssayData {
 interface SuperpaveGranulometryResults {
   granulometrys: {
     material: AsphaltMaterial;
-    accumulated_retained: [string, number][];
-    graph_data: [number, number][];
-    passant: [string, number][];
-    retained_porcentage: [string, number][];
-    total_retained: number;
-    nominal_size: number;
-    nominal_diameter: number;
-    fineness_module: number;
-    cc: number;
-    cnu: number;
-    error: number;
+    result: {
+      accumulated_retained: [string, number][];
+      graph_data: [number, number][];
+      passant: [string, number][];
+      retained_porcentage: [string, number][];
+      total_retained: number;
+      nominal_size: number;
+      nominal_diameter: number;
+      fineness_module: number;
+      cc: number;
+      cnu: number;
+      error: number;
+    };
   }[];
   viscosity: {
     material: AsphaltMaterial;

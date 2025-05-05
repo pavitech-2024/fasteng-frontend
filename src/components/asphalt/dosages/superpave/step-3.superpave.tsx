@@ -8,7 +8,7 @@ import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import Chart from 'react-google-charts';
 import AsphaltGranulometry_resultsTable from '../../essays/granulometry/tables/results-table.granulometry';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Superpave_Step3 = ({
   nextDisabled,
@@ -16,6 +16,7 @@ const Superpave_Step3 = ({
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const { granulometryResultsData: data } = useSuperpaveStore();
+  console.log("🚀 ~ data:", data)
 
   const aggregatesCheckboxes = data.granulometrys.map((gran) => ({
     name: gran.material.name,
@@ -25,41 +26,43 @@ const Superpave_Step3 = ({
   aggregatesCheckboxes.push({ name: data.viscosity.material.name, type: data.viscosity.material.type });
 
   const [materialsToShow, setMaterialToShow] = useState([]);
+  console.log('🚀 ~ materialsToShow:', materialsToShow);
 
-  const aggregatesData = {
-    container_other_data: [],
-  };
+  const [aggregatesData, setAggregatesData] = useState([]);
+  console.log('🚀 ~ aggregatesData:', aggregatesData);
 
-  if (data) {
-    data.granulometrys.map((gran) => {
-      aggregatesData.container_other_data.push(
-        {
-          label: t('granulometry-asphalt.accumulated-retained'),
-          value: gran.accumulated_retained,
-          unity: '%',
-        },
-        { label: t('granulometry-asphalt.total-retained'), value: gran.total_retained, unity: 'g' },
-        {
-          label: t('asphalt.essays.granulometry.results.nominalSize'),
-          value: gran.nominal_size,
-          unity: 'mm',
-        },
-        {
-          label: t('asphalt.essays.granulometry.results.nominalDiammeter'),
-          value: gran.nominal_diameter,
-          unity: 'mm',
-        },
-        {
-          label: t('asphalt.essays.granulometry.results.finenessModule'),
-          value: gran.fineness_module,
-          unity: '%',
-        },
-        { label: t('granulometry-asphalt.cc'), value: gran.cc },
-        { label: t('granulometry-asphalt.cnu'), value: gran.cnu },
-        { label: t('granulometry-asphalt.error'), value: gran.error, unity: '%' }
-      );
-    });
-  }
+  // useEffect(() => {
+  //   if (aggregatesData.some((material) => material.name === data.viscosity.material.name)) {
+  //     data.granulometrys.map((gran) => {
+  //       aggregatesData.push(
+  //         {
+  //           label: t('granulometry-asphalt.accumulated-retained'),
+  //           value: gran.accumulated_retained,
+  //           unity: '%',
+  //         },
+  //         { label: t('granulometry-asphalt.total-retained'), value: gran.total_retained, unity: 'g' },
+  //         {
+  //           label: t('asphalt.essays.granulometry.results.nominalSize'),
+  //           value: gran.nominal_size,
+  //           unity: 'mm',
+  //         },
+  //         {
+  //           label: t('asphalt.essays.granulometry.results.nominalDiammeter'),
+  //           value: gran.nominal_diameter,
+  //           unity: 'mm',
+  //         },
+  //         {
+  //           label: t('asphalt.essays.granulometry.results.finenessModule'),
+  //           value: gran.fineness_module,
+  //           unity: '%',
+  //         },
+  //         { label: t('granulometry-asphalt.cc'), value: gran.cc },
+  //         { label: t('granulometry-asphalt.cnu'), value: gran.cnu },
+  //         { label: t('granulometry-asphalt.error'), value: gran.error, unity: '%' }
+  //       );
+  //     });
+  //   }
+  // }, [aggregatesCheckboxes])
 
   // const graph_data = [
   //   [t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')],
@@ -113,10 +116,42 @@ const Superpave_Step3 = ({
   ];
 
   const handleCheckboxClick = (item: { name: string; type: string }) => {
-    if (materialsToShow.find((material) => material.name === item.name)) {
-      setMaterialToShow(materialsToShow.filter((material) => material.name !== item.name));
+    let newData = {material: null, data: []};
+    if (materialsToShow.find((material) => material.material?.name === item.name)) {
+      setMaterialToShow(materialsToShow.filter((material) => material.material?.name !== item.name));
     } else {
-      setMaterialToShow([...materialsToShow, item]);
+      data.granulometrys.find((gran) => {
+        if (gran.material.name === item.name) {
+          newData.data.push(
+            {
+              label: t('granulometry-asphalt.accumulated-retained'),
+              value: gran.result.accumulated_retained,
+              unity: '%',
+            },
+            { label: t('granulometry-asphalt.total-retained'), value: gran.result.total_retained, unity: 'g' },
+            {
+              label: t('asphalt.essays.granulometry.results.nominalSize'),
+              value: gran.result.nominal_size,
+              unity: 'mm',
+            },
+            {
+              label: t('asphalt.essays.granulometry.results.nominalDiammeter'),
+              value: gran.result.nominal_diameter,
+              unity: 'mm',
+            },
+            {
+              label: t('asphalt.essays.granulometry.results.finenessModule'),
+              value: gran.result.fineness_module,
+              unity: '%',
+            },
+            { label: t('granulometry-asphalt.cc'), value: gran.result.cc },
+            { label: t('granulometry-asphalt.cnu'), value: gran.result.cnu },
+            { label: t('granulometry-asphalt.error'), value: gran.result.error, unity: '%' }
+          );
+          newData.material = gran.material;
+        }
+      });
+      setMaterialToShow([...materialsToShow, newData]);
     }
   };
 
@@ -135,16 +170,38 @@ const Superpave_Step3 = ({
           ))}
         </FormGroup>
 
+        {/* {materialsToShow.map((item, index) => (
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '10px',
+              mt: '20px',
+            }}
+          >
+            <Typography variant="h5" sx={{ width: '100%', fontWeight: 'bold' }}>
+              {item.name} | {item.type}
+            </Typography>
+            {aggregatesData.map((item, index) => (
+              <Result_Card key={index} label={item.label} value={item.value} unity={item.unity} />
+            ))}
+          </Box>
+        ))} */}
         {materialsToShow.map((item, index) => (
-          <Box sx={{
-            width: '100%',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '10px',
-            mt: '20px',
-          }}>
-            <Typography variant='h5' sx={{ width: '100%', fontWeight: 'bold' }}>{item.name} | {item.type}</Typography>
-            {aggregatesData.container_other_data.map((item, index) => {
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '10px',
+              mt: '20px',
+            }}
+          >
+            <Typography variant="h5" sx={{ width: '100%', fontWeight: 'bold' }}>
+              {item.material?.name} | {item.material?.type}
+            </Typography>
+            {item.data.map((item, index) => {
               if (Array.isArray(item.value)) {
                 return null;
               } else {

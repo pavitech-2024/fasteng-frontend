@@ -136,5 +136,6 @@
   "asphalt.dosages.superpave.step-4.lower": "Inferior",
   "asphalt.dosages.superpave.step-4.higher": "Superior",
   "asphalt.dosages.superpave.step-4.average": "Intermediária",
-  "marshall.dosage-pdf-title": "Relatório de Dosagem Superpave"
+  "marshall.dosage-pdf-title": "Relatório de Dosagem Superpave",
+  "errors.empty-material-mass": "A massa total de cada agregado deve ser preenchida"
 }
