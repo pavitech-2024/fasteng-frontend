@@ -21,12 +21,12 @@ const Superpave_Step3 = ({
   const [granulometryData, setGranulometryData] = useState([]);
   const [materialsToShow, setMaterialToShow] = useState([]);
 
-  const aggregatesCheckboxes = data.granulometrys.map((gran) => ({
+  const aggregatesCheckboxes = data.granulometrys?.map((gran) => ({
     name: gran.material.name,
     type: gran.material.type,
   }));
 
-  aggregatesCheckboxes.push({ name: data.viscosity.material.name, type: data.viscosity.material.type });
+  aggregatesCheckboxes?.push({ name: data.viscosity.material.name, type: data.viscosity.material.type });
 
   const granulometryRows = [];
 
@@ -64,7 +64,7 @@ const Superpave_Step3 = ({
   ];
 
   useEffect(() => {
-    const newGranulometryData = data.granulometrys.map((gran) => ({
+    const newGranulometryData = data.granulometrys?.map((gran) => ({
       material: gran.material,
       graph: [[t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')], ...gran.result.graph_data],
       data: [
@@ -123,7 +123,7 @@ const Superpave_Step3 = ({
     <>
       <Box>
         <FormGroup sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          {aggregatesCheckboxes.map((item, index) => (
+          {aggregatesCheckboxes?.map((item, index) => (
             <FormControlLabel
               key={index}
               control={<Checkbox onClick={() => handleCheckboxClick(item)} />}
@@ -132,7 +132,7 @@ const Superpave_Step3 = ({
           ))}
         </FormGroup>
 
-        {granulometryData.map((item, index) => {
+        {granulometryData?.map((item, index) => {
           if (!materialsToShow.find((material) => material === item.material?.name)) {
             return null;
           } else {

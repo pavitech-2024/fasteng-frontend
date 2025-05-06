@@ -78,8 +78,8 @@ class Superpave_SERVICE implements IEssayService {
         case 2:
           await this.submitGranulometryEssayData(data as SuperpaveData, this.userId, null, isConsult);
         case 3:
+          await this.getGranulometricCompositionData(data as SuperpaveData, this.userId, isConsult);
           // await this.submitGranulometricComposition(data as SuperpaveData, this.userId, null, isConsult);
-          // await this.getGranulometricCompositionData(data as SuperpaveData, this.userId, isConsult);
           break;
         case 4:
           if (isConsult) {
@@ -242,7 +242,7 @@ class Superpave_SERVICE implements IEssayService {
         );
 
         const { success, error, granulometry, viscosity } = response.data;
-        console.log("🚀 ~ Superpave_SERVICE ~ calculateGranulometryEssayData= ~ viscosity:", viscosity)
+        console.log('🚀 ~ Superpave_SERVICE ~ calculateGranulometryEssayData= ~ viscosity:', viscosity);
 
         if (success === false) throw error.name;
 
@@ -342,13 +342,23 @@ class Superpave_SERVICE implements IEssayService {
   //   }
   // };
 
-  getGranulometricCompositionData = async (dosageData: SuperpaveData, user: string, isConsult?: boolean): Promise<any> => {
+  getGranulometricCompositionData = async (
+    dosageData: SuperpaveData,
+    user: string,
+    isConsult?: boolean
+  ): Promise<any> => {
     const step = dosageData.generalData.step;
     if (!isConsult || (isConsult && step === 2)) {
       try {
         const { dnitBand } = dosageData.generalData;
 
-        const aggregates = dosageData.granulometryEssayData.materials;
+        let aggregates = dosageData.granulometryEssayData.granulometrys;
+        
+        aggregates = aggregates.filter(
+          (agg) => agg.material.type !== 'asphaltBinder' && agg.material.type !== 'CAP'
+        );
+
+        console.log("🚀 ~ Superpave_SERVICE ~ aggregates:", aggregates)
 
         const response = await Api.post(`${this.info.backend_path}/step-3-data`, {
           dnitBand: dnitBand,
