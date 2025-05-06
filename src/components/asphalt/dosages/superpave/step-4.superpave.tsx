@@ -12,7 +12,7 @@ import { t } from 'i18next';
 import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
 
 const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const {
     granulometryCompositionData: data,
     granulometryResultsData,
@@ -45,7 +45,14 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   let tableCompositionInputsAverage = {};
   let tableCompositionInputsHigher = {};
 
-  const selectedMaterials = granulometryEssayData.materials.map((material) => ({ name: material.name, _id: material._id }));
+  const selectedMaterials = granulometryEssayData.materials.map((material) => {
+    if (material.type !== 'asphaltBinder' && material.type !== 'CAP') {
+      return {
+        name: material.name,
+        _id: material._id,
+      }
+    }
+  }).filter((material) => material !== undefined);
 
   const checkBoxes = [
     {
@@ -69,41 +76,41 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
    * Hydrates the store with the data from the backend.
    * If the data is already present in the store, it doesn't do anything.
    */
-  useEffect(() => {
-    if (!hasHydrated) return;
+  // useEffect(() => {
+  //   if (!hasHydrated) return;
   
-    if (data.percentsToList.length > 0) {
-      setLoading(false);
-      return;
-    }
+  //   if (data.percentsToList.length > 0) {
+  //     setLoading(false);
+  //     return;
+  //   }
   
-    toast.promise(
-      async () => {
-        try {
-          const storeState = useSuperpaveStore.getState();
-          const response = await superpave.getGranulometricCompositionData(storeState, user._id);
+  //   toast.promise(
+  //     async () => {
+  //       try {
+  //         const storeState = useSuperpaveStore.getState();
+  //         const response = await superpave.getGranulometricCompositionData(storeState, user._id);
   
-          setData({
-            step: 2,
-            value: {
-              ...storeState.granulometryCompositionData,
-              ...response,
-            },
-          });
+  //         setData({
+  //           step: 2,
+  //           value: {
+  //             ...storeState.granulometryCompositionData,
+  //             ...response,
+  //           },
+  //         });
   
-          setLoading(false);
-        } catch (error) {
-          setLoading(false);
-          throw error;
-        }
-      },
-      {
-        pending: t('loading.data.pending'),
-        success: t('loading.data.success'),
-        error: t('loading.data.error'),
-      }
-    );
-  }, [hasHydrated]);
+  //         setLoading(false);
+  //       } catch (error) {
+  //         setLoading(false);
+  //         throw error;
+  //       }
+  //     },
+  //     {
+  //       pending: t('loading.data.pending'),
+  //       success: t('loading.data.success'),
+  //       error: t('loading.data.error'),
+  //     }
+  //   );
+  // }, [hasHydrated]);
 
   const toggleSelectedCurve = (label: string) => {
     switch (label) {
@@ -157,9 +164,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   };
 
   const setPercentsToListTotal = (peneiras: { peneira: string }[], percentsToList) => {
-    console.log("🚀 ~ setPercentsToListTotal ~ peneiras:", peneiras)
-    console.log("🚀 ~ setPercentsToListTotal ~ percentsToList:", percentsToList)
-
     const tableData = Array.from({ length: percentsToList.length }, () => []);
 
     percentsToList?.forEach((item, i) => {
@@ -180,31 +184,13 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
         }
       });
     });
-
-    return tableData;
-  };
-
-  const test = (peneiras: { peneira: string }[], percentsToList: Array<Array<[string, number] | null>>) => {
-    const tableData = peneiras.map((peneira) => ({ ...peneira }));
-
-    percentsToList?.forEach((column, columnIndex) => {
-      column.forEach((value, rowIndex) => {
-        if (value !== null && tableData[rowIndex]) {
-          console.log('entrou no if');
-          tableData[rowIndex] = {
-            ...tableData[rowIndex],
-            ['keyTotal' + columnIndex]: numberRepresentation(value[1]),
-          };
-        }
-      });
-    });
-
     return tableData;
   };
 
   const tableDataAux = setPercentsToListTotal(peneiras, arrayResponse);
 
   const setBandsHigherLower = (tableData, bandsHigher, bandsLower, arrayResponse, peneiras) => {
+    console.log("🚀 ~ setBandsHigherLower ~ tableData:", tableData)
     const arraySize = tableData[0]?.length;
 
     // Inicializa o arrayAux com objetos vazios de acordo com o tamanho descoberto

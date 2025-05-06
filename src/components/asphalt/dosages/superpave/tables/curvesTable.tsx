@@ -56,7 +56,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
     };
 
     selectedMaterials.forEach((item, i) => {
-      newTable.columnsHeaderTop.push({ header: item.name, type: 'colsSpan' });
+      newTable.columnsHeaderTop.push({ header: item?.name, type: 'colsSpan' });
       newTable.columnsHeader.push('Total passante (%)');
       newTable.columnsHeader.push('%');
       newTable.columnsKeys.push('keyTotal' + i);
@@ -74,6 +74,8 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
   };
 
   const generateMaterialColumns = (data, materialIndex) => {
+    console.log("🚀 ~ generateMaterialColumns ~ data:", data)
+    console.log("🚀 ~ generateMaterialColumns ~ materials:", materials)
     return materials
       .map((material, index) => {
         const fieldTotalPassant = `totalPassant_${index + 1}`;
@@ -97,8 +99,12 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
                 value={data?.percentageInputs[materialIndex][fieldMaterial] || ''}
                 onChange={(e) => {
                   const prevData = [...data?.percentageInputs];
+                  console.log("🚀 ~ .map ~ prevData:", prevData)
                   const newData = { ...prevData[materialIndex], [fieldMaterial]: e.target.value };
+                  console.log("🚀 ~ .map ~ newData:", newData)
+
                   const updatedData = prevData.map((item, idx) => (idx === materialIndex ? newData : item));
+                  console.log("🚀 ~ .map ~ updatedData:", updatedData)
                   setData({ step: 2, value: { ...data, percentageInputs: updatedData } });
                 }}
               />
@@ -188,7 +194,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
 
       return {
         groupId: materialId,
-        headerName: material.name,
+        headerName: material?.name,
         children: [{ field: totalPassantField }, { field: materialField }],
         headerAlign: 'center',
       };

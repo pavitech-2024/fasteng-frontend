@@ -351,14 +351,19 @@ class Superpave_SERVICE implements IEssayService {
     if (!isConsult || (isConsult && step === 2)) {
       try {
         const { dnitBand } = dosageData.generalData;
+        const { granulometrys: resultsData } = dosageData.granulometryResultsData;
+        const { granulometrys: essayData } = dosageData.granulometryEssayData;
 
-        let aggregates = dosageData.granulometryEssayData.granulometrys;
-        
+        let aggregates = essayData.map((item) => {
+          return {
+            data: item,
+            results: resultsData.find((result) => result.material.type === item.material.type),
+          };
+        });
+
         aggregates = aggregates.filter(
-          (agg) => agg.material.type !== 'asphaltBinder' && agg.material.type !== 'CAP'
+          (agg) => agg.data.material.type !== 'asphaltBinder' && agg.data.material.type !== 'CAP'
         );
-
-        console.log("🚀 ~ Superpave_SERVICE ~ aggregates:", aggregates)
 
         const response = await Api.post(`${this.info.backend_path}/step-3-data`, {
           dnitBand: dnitBand,
@@ -369,11 +374,13 @@ class Superpave_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
 
-        if (step !== 2) {
-          return data;
-        } else {
-          return data;
-        }
+        this.store_actions.setData({
+          step: 3,
+          value: {
+            ...dosageData.granulometryCompositionData,
+            ...data,
+          },
+        });
       } catch (error) {
         throw error;
       }
