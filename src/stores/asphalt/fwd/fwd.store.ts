@@ -70,6 +70,7 @@ export interface FwdData {
   fwdStep2: FwdStep2;
   fwdStep3: FwdStep3;
   results: FwdResults;
+  _id?: string;
 }
 
 export interface FwdActions {

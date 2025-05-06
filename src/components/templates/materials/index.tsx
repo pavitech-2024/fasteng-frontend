@@ -32,9 +32,11 @@ import Link from 'next/link';
 import { Edit } from '@mui/icons-material';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
+import { FwdData } from '@/stores/asphalt/fwd/fwd.store';
 
 interface MaterialsTemplateProps {
   materials: SoilSample[] | AsphaltMaterial[] | ConcreteMaterial[] | undefined;
+  fwdEssays: FwdData[] | undefined;
   types: DropDownOption[];
   title: 'Amostras Cadastradas' | 'Materiais Cadastrados';
   path?: string;
@@ -60,6 +62,7 @@ export interface DataToFilter {
 
 const MaterialsTemplate = ({
   materials,
+  fwdEssays,
   types,
   title,
   path,
@@ -78,6 +81,7 @@ const MaterialsTemplate = ({
   const [searchValue, setSearchValue] = useState<string>('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
+  const [tableData, setTableData] = useState<any[]>([]);
 
   if (path === 'soils') {
     samplesOrMaterials = 'sample';
@@ -131,7 +135,40 @@ const MaterialsTemplate = ({
 
   console.log('Materiais recebidos:', materials);
 
-  const filteredData = materials
+  const filteredData = (Array.isArray(materials) ? materials : [])
+  .map(({ _id, name, type, createdAt }) => ({
+    _id,
+    name,
+    type,
+    createdAt
+  }))
+  .filter((material) => {
+    if (!searchValue) return true;
+    
+    if (searchBy === 'name') {
+      return material.name.toLowerCase().includes(searchValue.toLowerCase());
+    }
+    if (searchBy === 'type') {
+      return material.type === searchValue;
+    }
+    return true;
+  });
+
+  const fwdEssaysData = fwdEssays.map(({_id, generalData }) => ({
+    name: generalData.name,
+    type: 'FWD',
+    createdAt: generalData.createdAt,
+    _id: _id
+  }))
+  console.log("testando o fwdEssayData", fwdEssaysData);
+
+  useEffect(() => {
+    if(searchBy === 'stretch') {
+      setTableData (fwdEssaysData)
+    }
+  }, [searchBy]);
+
+  /*const filteredData = materials
   .map((material) => {
     const { _id, name, type, createdAt } = material;
     const materialProperty = 'material' in material ? material.material : null;
@@ -160,7 +197,7 @@ const MaterialsTemplate = ({
         return material === undefined; // ou outro valor que represente trecho
       }
       return true; // para os outros casos, mantém tudo
-    });
+    });*/
     console.log("Filtro exemplo",filteredData);
     console.log("Teste" ,materials)
   const handleEditMaterial = (rowId: string) => {
@@ -384,7 +421,7 @@ const MaterialsTemplate = ({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                     {columns.map((column) => (
                       <TableCell key={column.id} align="center">

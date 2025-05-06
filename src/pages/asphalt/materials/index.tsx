@@ -10,6 +10,7 @@ import CreateEditMaterialModal from '../../../components/templates/modals/create
 import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
 import Loading from '@/components/molecules/loading';
 import { Box } from '@mui/material';
+import { FwdData } from '@/stores/asphalt/fwd/fwd.store';
 
 const Materials = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -17,6 +18,7 @@ const Materials = () => {
   const [materialToEdit, setMaterialToEdit] = useState<AsphaltMaterial>();
   const [loading, setLoading] = useState<boolean>(true);
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [fwdEssays, setFwdEssays] = useState<FwdData[]>([]);
 
   const { user } = useAuth();
 
@@ -26,6 +28,9 @@ const Materials = () => {
       .then((response) => {
         setMaterials(response.data);
         setLoading(false);
+        console.log("Testando o response.data", response.data);
+        setFwdEssays(response.data[0].fwdEssays); // semMaterial = response.data[0].fwdEssays;
+        //console.log("Testando o semMaterial", semMaterial);
       })
       .catch((error) => {
         console.error('Failed to load materials:', error);
@@ -78,6 +83,7 @@ const Materials = () => {
       ) : (
         <MaterialsTemplate
           materials={materials}
+          fwdEssays={fwdEssays}
           types={types}
           title={t('asphalt.materials.title')}
           handleOpenModal={() => setOpenModal(true)}
