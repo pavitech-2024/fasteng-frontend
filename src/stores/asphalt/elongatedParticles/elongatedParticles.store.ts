@@ -1,4 +1,5 @@
 import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { StoreActions } from '@/interfaces/common/stores/storeActions.interface';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
@@ -45,26 +46,39 @@ const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'results' };
 
 type setDataType = { step: number; key?: string; value: unknown };
 
-const useElongatedParticlesStore = create<ElongatedParticlesData & ElongatedParticlesActions>()(
+const initialState = {
+  generalData: {
+    userId: null,
+    name: null,
+    material: null,
+    operator: null,
+    calculist: null,
+    description: null,
+  },
+  step2Data: {
+    dimensions_table_data: [],
+  },
+  results: {
+    results_dimensions_table_data: [],
+    alerts: [],
+  },
+};
+
+const useElongatedParticlesStore = create<ElongatedParticlesData & StoreActions>()(
   devtools(
     persist(
       (set) => ({
-        generalData: {
-          userId: null,
-          name: null,
-          material: null,
-          operator: null,
-          calculist: null,
-          description: null,
-        },
-        step2Data: {
-          dimensions_table_data: [],
-        },
-        results: {
-          results_dimensions_table_data: [],
-          alerts: [],
-        },
+        ...initialState,
 
+        /**
+         * Updates the value of the given key in the state of the store for the given step.
+         * If no key is given, the value is set as the whole state of the given step.
+         * @param {{ step: number; key?: string; value: unknown }} data
+         * @param {number} data.step The step of the state to update.
+         * @param {string} [data.key] The key of the value to update in the state of the given step.
+         * If not given, the value is set as the whole state of the given step.
+         * @param {unknown} data.value The new value to set in the state of the given step.
+         */
         setData: ({ step, key, value }) =>
           set((state) => {
             if (key)
@@ -77,6 +91,10 @@ const useElongatedParticlesStore = create<ElongatedParticlesData & ElongatedPart
               };
             else return { ...state, [stepVariant[step]]: value };
           }),
+
+        reset: () => {
+          set(initialState);
+        },
       }),
       {
         name: 'elongatedParticles-store',

@@ -32,7 +32,7 @@ export type PenetrationData = {
 
 export type PenetrationActions = {
   setData: ({ step, key, value }: setDataType) => void;
-  reset: ({ step }: setDataType) => void;
+  reset: () => void;
 };
 
 type setDataType = { step: number; key?: string; value: unknown };
@@ -67,6 +67,15 @@ const usePenetrationStore = create<PenetrationData & PenetrationActions>()(
       (set) => ({
         ...initialState,
 
+        /**
+         * Updates the value of the given key in the state of the store for the given step.
+         * If no key is given, the value is set as the whole state of the given step.
+         * @param {{ step: number; key?: string; value: unknown }} data
+         * @param {number} data.step The step of the state to update.
+         * @param {string} [data.key] The key of the value to update in the state of the given step.
+         * If not given, the value is set as the whole state of the given step.
+         * @param {unknown} data.value The new value to set in the state of the given step.
+         */
         setData: ({ step, key, value }) =>
           set((state) => {
             if (key)
@@ -80,11 +89,11 @@ const usePenetrationStore = create<PenetrationData & PenetrationActions>()(
             else return { ...state, [stepVariant[step]]: value };
           }),
 
-        reset: ({ step }) => {
+        /**
+         * Reset all data to initial state.
+         */
+        reset: () => {
           set(initialState);
-          return {
-            [stepVariant[step]]: null,
-          };
         },
       }),
       {

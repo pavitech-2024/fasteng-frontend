@@ -28,23 +28,33 @@ const Login: NextPage = () => {
   const date = new Date();
   const year = date.getFullYear();
 
+  const [loading, setLoading] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const roxApiUrl = 'https://minhaconta.fastengapp.com.br/api/forgot-password ';
   const [roxIsRunning, setRoxIsRunning] = useState(true);
+
   const handleLogin = async () => {
+    setLoading(true);
     try {
       toast.promise(async () => await signIn(email, password), {
         pending: t('login.toast loading'),
         success: t('login.toast success'),
         error: t('login.toast error'),
       });
-    } catch (error) {}
+    } catch (error) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
+    /**
+     * Function to check if the Rox API is running
+     * If the API is not running, then set the roxIsRunning state to false
+     */
     const handleHealthCheck = async () => {
       try {
         const result = await Api.get('/app/health-check');
@@ -59,6 +69,14 @@ const Login: NextPage = () => {
     handleHealthCheck();
   }, []);
 
+  /**
+   * Function to handle forgot password
+   * @remarks
+   * It makes a post request to the rox api with the email, and if the response is successful,
+   * it closes the modal and shows a success toast. If the response is not successful, it shows
+   * an error toast with the error message. If there is a network error, it shows a generic error
+   * message.
+   */
   const handleForgotPassword = () => {
     toast.promise(
       async () => {
@@ -272,7 +290,7 @@ const Login: NextPage = () => {
               >
                 <Button
                   text={t('login.enter')}
-                  disabled={password === '' || email === ''}
+                  disabled={password === '' || email === '' || loading}
                   handleClick={() => handleLogin()}
                 />
 

@@ -2,7 +2,7 @@
   "marshall.dosage-title": "Marshall dosage",
   "marshall.dosage-pdf-title": "Marshall dosage report",
 
-  "marshall.step-2-description": "Select the aggregates and asphalt binder that will be used in the dosage.",
+  "marshall.step-2-description": "Select the aggregates and cement for dosing. Only registered materials with granulometry tests for aggregates and rotational viscosity tests for asphalt binders will be displayed.",
   "marshall.step-3-description": "Enter the percentages of each aggregate in the granulometric composition of the mixture",
   "marshall.step-4-description": "Enter the binder trial content.",
   "marshall.step-5-description": "Enter the actual or theoretical maximum density data for the mixture and the correction factor for water temperature.",

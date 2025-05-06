@@ -14,22 +14,21 @@ import 'dayjs/locale/en-gb';
 import 'dayjs/locale/en';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useRouter } from 'next/router';
-import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
+import useResetStores from '@/utils/hooks/useResetStores';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { i18n } = useTranslation();
   const locale = i18n.language === 'en' ? 'en' : 'en-gb';
 
   const { pathname } = useRouter();
+  const resetStores = useResetStores();
 
-  const clearStore = useSuperpaveStore((state) => state.clearStore);
-
+  /**
+   * This useEffect hook iterates through sessionStorage keys in reverse order.
+   * It checks if the current pathname includes a specific key substring.
+   * If not, it clears the sessionStorage and resets stores.
+   */
   useEffect(() => {
-    /**
-     * This code is responsible for clearing the sessionStorage when the user navigates to a new essay/dosage.
-     * It iterates over all the keys in the sessionStorage and checks if the current pathname does not contain the key.
-     * If it doesn't, it clears the sessionStorage.
-     */
     for (let i = sessionStorage.length - 1; i >= 0; i--) {
       const key = sessionStorage.key(i);
       if (key) {
@@ -37,10 +36,11 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
         if (!pathname.includes(keyString)) {
           sessionStorage.clear();
+          resetStores();
         }
       }
     }
-  }, [pathname, clearStore]);
+  }, [pathname]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
