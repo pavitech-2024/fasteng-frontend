@@ -29,6 +29,20 @@ interface TableModel {
 const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, tableData }) => {
   const { granulometryCompositionData: data, setData } = useSuperpaveStore();
 
+  // const newpercentageInputs = materials.map((material, index) => {
+  //   return `material_${index + 1}`;
+  // });
+
+  // Passar isso pro initalData do store
+  // useEffect(() => {
+  //   const initialInputs = materials.map(() => ({}));
+  //   setData({
+  //     step: 3,
+  //     key: 'percentageInputs',
+  //     value: initialInputs,
+  //   });
+  // }, []);
+
   const getMaterialIndex = () => {
     if (tableName === 'lowerComposition') return 0;
     if (tableName === 'averageComposition') return 1;
@@ -74,8 +88,6 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
   };
 
   const generateMaterialColumns = (data, materialIndex) => {
-    console.log("🚀 ~ generateMaterialColumns ~ data:", data)
-    console.log("🚀 ~ generateMaterialColumns ~ materials:", materials)
     return materials
       .map((material, index) => {
         const fieldTotalPassant = `totalPassant_${index + 1}`;
@@ -96,16 +108,19 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
             renderHeader: () => (
               <InputEndAdornment
                 adornment="%"
-                value={data?.percentageInputs[materialIndex][fieldMaterial] || ''}
+                value={data?.percentageInputs[materialIndex]?.[fieldMaterial] || ''}
                 onChange={(e) => {
                   const prevData = [...data?.percentageInputs];
                   console.log("🚀 ~ .map ~ prevData:", prevData)
-                  const newData = { ...prevData[materialIndex], [fieldMaterial]: e.target.value };
-                  console.log("🚀 ~ .map ~ newData:", newData)
 
-                  const updatedData = prevData.map((item, idx) => (idx === materialIndex ? newData : item));
+                  const newData = { ...prevData[materialIndex], [fieldMaterial]: e.target.value };
+
+                  console.log("🚀 ~ .map ~ newData:", newData)
+                  // const updatedData = prevData.map((item, idx) => (idx === materialIndex ? newData : item));
+                  prevData[materialIndex] = newData;
+                  const updatedData = [...prevData];
                   console.log("🚀 ~ .map ~ updatedData:", updatedData)
-                  setData({ step: 2, value: { ...data, percentageInputs: updatedData } });
+                  setData({ step: 3, key: 'percentageInputs', value: updatedData });
                 }}
               />
             ),

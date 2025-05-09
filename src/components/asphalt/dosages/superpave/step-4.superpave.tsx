@@ -115,19 +115,13 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   const toggleSelectedCurve = (label: string) => {
     switch (label) {
       case 'lower':
-        setLower(true);
-        setAverage(false);
-        setHigher(false);
+        setLower(!lower);
         break;
       case 'average':
-        setLower(false);
-        setAverage(true);
-        setHigher(false);
+        setAverage(!average);
         break;
       case 'higher':
-        setLower(false);
-        setAverage(false);
-        setHigher(true);
+        setHigher(!higher);
         break;
       default:
         break;
@@ -471,7 +465,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
                       variant="outlined"
                       sx={{ width: '100%', marginTop: '2%' }}
                     >
-                      {t('asphalt.dosages.superpave.calculate-higher-curve')}
+                      {t(`asphalt.dosages.superpave.calculate-${table.key}-curve`)}
                     </Button>
                   </TableContainer>
                 );
