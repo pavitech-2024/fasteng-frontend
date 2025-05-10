@@ -427,7 +427,7 @@ class Superpave_SERVICE implements IEssayService {
 
       if (inputsSum !== 100) throw t('errors.invalid-inputs-sum');
 
-      const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {
+      const response = await Api.post(`${this.info.backend_path}/calculate-granulometric-composition-data`, {
         chosenCurves,
         percentageInputs,
         percentsToList,

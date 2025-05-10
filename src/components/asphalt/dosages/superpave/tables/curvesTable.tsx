@@ -111,15 +111,9 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
                 value={data?.percentageInputs[materialIndex]?.[fieldMaterial] || ''}
                 onChange={(e) => {
                   const prevData = [...data?.percentageInputs];
-                  console.log("🚀 ~ .map ~ prevData:", prevData)
-
                   const newData = { ...prevData[materialIndex], [fieldMaterial]: e.target.value };
-
-                  console.log("🚀 ~ .map ~ newData:", newData)
-                  // const updatedData = prevData.map((item, idx) => (idx === materialIndex ? newData : item));
                   prevData[materialIndex] = newData;
                   const updatedData = [...prevData];
-                  console.log("🚀 ~ .map ~ updatedData:", updatedData)
                   setData({ step: 3, key: 'percentageInputs', value: updatedData });
                 }}
               />
