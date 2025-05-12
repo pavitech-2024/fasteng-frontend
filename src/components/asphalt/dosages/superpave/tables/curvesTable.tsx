@@ -27,6 +27,7 @@ interface TableModel {
 }
 
 const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, tableData }) => {
+  console.log("🚀 ~ tableData:", tableData)
   const { granulometryCompositionData: data, setData } = useSuperpaveStore();
 
   // const newpercentageInputs = materials.map((material, index) => {
@@ -88,6 +89,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
   };
 
   const generateMaterialColumns = (data, materialIndex) => {
+    console.log("🚀 ~ generateMaterialColumns ~ data:", data)
     return materials
       .map((material, index) => {
         const fieldTotalPassant = `totalPassant_${index + 1}`;
@@ -195,6 +197,8 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
       band2: e.bandsCol2,
     };
   });
+  console.log("🚀 ~ rows ~ rows:", rows)
+  
   const generateMaterialGroupings = (materials) => {
     return materials.map((material, index) => {
       const materialId = `material_${index + 1}`;

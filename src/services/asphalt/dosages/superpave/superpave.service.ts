@@ -403,10 +403,13 @@ class Superpave_SERVICE implements IEssayService {
     step1Data: SuperpaveData['generalData'],
     chosenCurves: any
   ): Promise<any> => {
+    console.log('🚀 ~ Superpave_SERVICE ~ chosenCurves:', chosenCurves);
     try {
       const { percentageInputs, nominalSize, percentsToList } = calculateStep3Data;
       const { dnitBand } = step1Data;
       const aggregates = step2Data.materials;
+
+      console.log('testeeee');
 
       const selectedCurveInputs = chosenCurves.lower
         ? percentageInputs[0]
@@ -420,10 +423,13 @@ class Superpave_SERVICE implements IEssayService {
        * Sums up the values of the selected curve inputs.
        * If selectedCurveInputs is not an object, returns 0.
        */
-      const inputsSum =
-        selectedCurveInputs instanceof Object
-          ? Object.values(selectedCurveInputs).reduce((sum, input) => sum + Number(input), 0)
-          : 0;
+      const curveIndex =
+        chosenCurves === 'lower' ? 0 : chosenCurves === 'average' ? 1 : chosenCurves === 'higher' ? 2 : null;
+      console.log('🚀 ~ Superpave_SERVICE ~ curveIndex:', curveIndex);
+
+      const inputsObject = selectedCurveInputs[curveIndex];
+
+      const inputsSum = Object.values(inputsObject).reduce((sum: number, input) => sum + Number(input || 0), 0);
 
       if (inputsSum !== 100) throw t('errors.invalid-inputs-sum');
 
@@ -440,7 +446,11 @@ class Superpave_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
 
-      return data;
+      const prevData = { ...calculateStep3Data.averageComposition, ...data };
+      prevData.pointsOfCurve = { ...prevData.pointsOfCurve, [chosenCurves]: data.pointsOfCurve };
+      console.log('🚀 ~ Superpave_SERVICE ~ prevData:', prevData);
+
+      this.store_actions.setData({ step: 3, value: prevData });
     } catch (error) {
       throw error;
     }
@@ -480,68 +490,6 @@ class Superpave_SERVICE implements IEssayService {
       }
     }
   };
-
-  // getStep4SpecificMasses = async (step2Data: SuperpaveData['materialSelectionData'], isConsult?): Promise<any> => {
-  //   try {
-  //     const { aggregates, binder } = step2Data;
-
-  //     const response = await Api.post(`${this.info.backend_path}/step-4-specific-masses`, {
-  //       materials: aggregates,
-  //       binder,
-  //     });
-
-  //     const { data, success, error } = response.data;
-
-  //     if (success === false) throw error.name;
-
-  //     return { data, success, error };
-  //   } catch (error) {}
-  // };
-
-  // getStep4Data = async (
-  //   step1Data: SuperpaveData['generalData'],
-  //   step2Data: SuperpaveData['materialSelectionData'],
-  //   step3Data: SuperpaveData['granulometryCompositionData'],
-  //   step4Data: SuperpaveData['initialBinderData']
-  // ): Promise<any> => {
-  //   try {
-  //     const { trafficVolume } = step1Data;
-  //     const { percentageInputs, chosenCurves, lowerComposition, averageComposition, higherComposition, nominalSize } =
-  //       step3Data;
-  //     const { materials, binderSpecificMass } = step4Data;
-
-  //     const hasNullValue = materials.some((obj) => Object.values(obj).some((value) => value === null));
-
-  //     if (hasNullValue) throw new Error('Algum valor não foi informado.');
-  //     // if (binderSpecificMass === null || binderSpecificMass === 0)
-  //     //   return Error('A massa específica do ligante deve ser informada.');
-
-  //     let composition;
-
-  //     if (chosenCurves.lower) composition = lowerComposition;
-  //     if (chosenCurves.average) composition = averageComposition;
-  //     if (chosenCurves.higher) composition = higherComposition;
-
-  //     const response = await Api.post(`${this.info.backend_path}/step-4-data`, {
-  //       materials,
-  //       percentsOfDosage: percentageInputs,
-  //       specificMassesData: materials,
-  //       chosenCurves,
-  //       composition,
-  //       binderSpecificMass,
-  //       nominalSize,
-  //       trafficVolume,
-  //     });
-
-  //     const { data, success, error } = response.data;
-
-  //     if (success === false) throw error.name;
-
-  //     return data;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // };
 
   submitInitialBinder = async (
     data: SuperpaveData,

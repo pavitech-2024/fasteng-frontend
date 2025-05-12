@@ -10,6 +10,7 @@ import CurvesTable from './tables/curvesTable';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
+import Chart from 'react-google-charts';
 
 const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -31,7 +32,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   const peneiras = AllSievesSuperpaveUpdatedAstm.map((peneira) => {
     return { peneira: peneira.label };
   });
-  
 
   const arrayResponse = data?.percentsToList;
   const bandsHigher = data?.bands?.higher;
@@ -45,14 +45,16 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   let tableCompositionInputsAverage = {};
   let tableCompositionInputsHigher = {};
 
-  const selectedMaterials = granulometryEssayData.materials.map((material) => {
-    if (material.type !== 'asphaltBinder' && material.type !== 'CAP') {
-      return {
-        name: material.name,
-        _id: material._id,
+  const selectedMaterials = granulometryEssayData.materials
+    .map((material) => {
+      if (material.type !== 'asphaltBinder' && material.type !== 'CAP') {
+        return {
+          name: material.name,
+          _id: material._id,
+        };
       }
-    }
-  }).filter((material) => material !== undefined);
+    })
+    .filter((material) => material !== undefined);
 
   const checkBoxes = [
     {
@@ -78,18 +80,18 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
    */
   // useEffect(() => {
   //   if (!hasHydrated) return;
-  
+
   //   if (data.percentsToList.length > 0) {
   //     setLoading(false);
   //     return;
   //   }
-  
+
   //   toast.promise(
   //     async () => {
   //       try {
   //         const storeState = useSuperpaveStore.getState();
   //         const response = await superpave.getGranulometricCompositionData(storeState, user._id);
-  
+
   //         setData({
   //           step: 2,
   //           value: {
@@ -97,7 +99,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   //             ...response,
   //           },
   //         });
-  
+
   //         setLoading(false);
   //       } catch (error) {
   //         setLoading(false);
@@ -158,7 +160,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   };
 
   const setPercentsToListTotal = (peneiras: { peneira: string }[], percentsToList) => {
-    const tableData = Array.from({ length: percentsToList.length }, () => []);
+    const tableData = Array.from({ length: percentsToList?.length }, () => []);
 
     percentsToList?.forEach((item, i) => {
       item.forEach((value, j) => {
@@ -184,7 +186,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   const tableDataAux = setPercentsToListTotal(peneiras, arrayResponse);
 
   const setBandsHigherLower = (tableData, bandsHigher, bandsLower, arrayResponse, peneiras) => {
-    console.log("🚀 ~ setBandsHigherLower ~ tableData:", tableData)
+    console.log('🚀 ~ setBandsHigherLower ~ tableData:', tableData);
     const arraySize = tableData[0]?.length;
 
     // Inicializa o arrayAux com objetos vazios de acordo com o tamanho descoberto
@@ -310,7 +312,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     const emptyTitles = [];
     const result = data;
     if (data.length > 0) {
-      if (data[0].some((value) => value !== '')) {
+      if (data[0]?.some((value) => value !== '')) {
         data[0].forEach(() => emptyTitles.push(''));
         result.unshift(emptyTitles);
       }
@@ -318,10 +320,10 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     return result;
   };
 
-  const updateGraph = (points) => {
+  const updateGraph = (points, curve) => {
     const pointsOfCurve = updateDataArray(points);
     const prevData = { ...data };
-    const newData = { ...prevData, graphData: pointsOfCurve };
+    const newData = { ...prevData, graphData: {...prevData.graphData, [curve]: pointsOfCurve} };
     setData({ step: 2, value: newData });
   };
 
@@ -332,7 +334,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     // Deve ser exatamente 100;
     if (curve === 'lower') {
       valueCount = Object.values(data.percentageInputs[0]).reduce((acc, item) => acc + Number(item), 0);
-      console.log("🚀 ~ calcular ~ valueCount:", valueCount)
       if (valueCount === 100) {
         valueIsValid = true;
       }
@@ -362,8 +363,10 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
               data,
               granulometryEssayData,
               generalData,
-              chosenCurves
+              // chosenCurves
+              curve
             );
+            console.log('🚀 ~ composition:', composition);
 
             const prevData = data;
 
@@ -373,6 +376,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
             };
 
             setData({ step: 2, value: newData });
+            updateGraph(data.pointsOfCurve[curve], curve);
             //setLoading(false);
           } catch (error) {
             //setLoading(false);
@@ -390,13 +394,13 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     }
   };
 
-  useEffect(() => {
-    if (data.pointsOfCurve.length > 0) {
-      updateGraph(data.pointsOfCurve);
-    }
-  }, [data.pointsOfCurve]);
+  // useEffect(() => {
+  //   if (data.pointsOfCurve.length > 0) {
+  //     updateGraph(data.pointsOfCurve);
+  //   }
+  // }, [data.pointsOfCurve]);
 
-  if (data.graphData.length > 0) {
+  if (data.graphData?.length > 0) {
     setNextDisabled(false);
   }
 
@@ -461,6 +465,33 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
                       tableData={table.data}
                       onChangeInputsTables={onChangeInputsTables}
                     />
+
+                    {data.pointsOfCurve[table.key]?.length > 0 && (
+                      <Chart
+                        chartType="LineChart"
+                        width={'100%'}
+                        height={'400px'}
+                        loader={<Loading />}
+                        data={data.pointsOfCurve}
+                        options={{
+                          title: t('granulometry-asphalt.granulometry'),
+                          backgroundColor: 'transparent',
+                          pointSize: '5',
+                          hAxis: {
+                            title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
+                            type: 'number',
+                            scaleType: 'log',
+                          },
+                          vAxis: {
+                            title: `${t('granulometry-asphalt.passant') + ' (%)'}`,
+                            minValue: '0',
+                            maxValue: '105',
+                          },
+                          legend: 'none',
+                        }}
+                      />
+                    )}
+
                     <Button
                       onClick={() => calcular(table.key)}
                       variant="outlined"
@@ -473,7 +504,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
               }
             })}
 
-          {data.graphData.length > 0 && (
+          {data.graphData?.length > 0 && (
             <>
               <Typography>
                 {t('asphalt.dosages.superpave.maximum-nominal-size')}: {data.nominalSize.value} mm
