@@ -33,10 +33,17 @@ import { Edit } from '@mui/icons-material';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import { FwdData } from '@/stores/asphalt/fwd/fwd.store';
+import { IggData } from '@/stores/asphalt/igg/igg.store';
+import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
+import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
+import { create } from 'domain';
 
 interface MaterialsTemplateProps {
   materials: SoilSample[] | AsphaltMaterial[] | ConcreteMaterial[] | undefined;
   fwdEssays: FwdData[] | undefined;
+  iggEssays: IggData[] | undefined;
+  rtcdEssays: RtcdData[] | undefined;
+  dduiEssays: DduiData[] | undefined; 
   types: DropDownOption[];
   title: 'Amostras Cadastradas' | 'Materiais Cadastrados';
   path?: string;
@@ -63,6 +70,9 @@ export interface DataToFilter {
 const MaterialsTemplate = ({
   materials,
   fwdEssays,
+  iggEssays,
+  rtcdEssays,
+  dduiEssays,
   types,
   title,
   path,
@@ -74,6 +84,7 @@ const MaterialsTemplate = ({
   const app = useRouter().pathname.split('/')[1];
   let samplesOrMaterials: string;
 
+
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
   const [searchBy, setSearchBy] = useState<string>('name');
@@ -82,6 +93,9 @@ const MaterialsTemplate = ({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
   const [tableData, setTableData] = useState<any[]>([]);
+
+  console.log('testando tableData', tableData);
+  console.log('testando o rtcdEssays', rtcdEssays);
 
   if (path === 'soils') {
     samplesOrMaterials = 'sample';
@@ -140,7 +154,10 @@ const MaterialsTemplate = ({
     _id,
     name,
     type,
-    createdAt
+    //createdAt
+    createdAt: createdAt instanceof Date ? createdAt : new Date(createdAt) 
+    
+    
   }))
   .filter((material) => {
     if (!searchValue) return true;
@@ -154,19 +171,88 @@ const MaterialsTemplate = ({
     return true;
   });
 
+  console.log("Testando a data", filteredData);
+
   const fwdEssaysData = fwdEssays.map(({_id, generalData }) => ({
     name: generalData.name,
     type: 'FWD',
-    createdAt: generalData.createdAt,
+    //createdAt: generalData.createdAt,
+    createdAt: generalData.createdAt instanceof Date ? generalData.createdAt : new Date(generalData.createdAt),
     _id: _id
   }))
   console.log("testando o fwdEssayData", fwdEssaysData);
 
+  const iggEssaysData = (Array.isArray(iggEssays) ? iggEssays: []).map(({_id, generalData}) =>
+  ({
+    name: generalData.name,
+    type: 'IGG',
+    createdAt: generalData.createdAt,
+    _id: _id
+  }))
+
+  const props = {
+  rtcdEssays: [], // initialize rtcdEssays with an empty array
+};
+
+  const rtcdEssaysData = rtcdEssays.map((essay)=> ({
+  _id: essay._id,
+  name: essay.generalData.name,
+  type: 'RTCD',
+  createdAt: essay.createdAt
+}));
+console.log("testando o rtcdEssayData", rtcdEssaysData);
+
+const dduiEssaysData = dduiEssays.map((essay) => ({
+    name: essay.generalData.name,
+    type: 'FWD',
+    //createdAt: generalData.createdAt,
+    //createdAt: generalData.createdAt instanceof Date ? generalData.createdAt : new Date(generalData.createdAt),
+    createdAt: essay.createdAt,
+    _id: essay._id
+  }))
+
   useEffect(() => {
-    if(searchBy === 'stretch') {
-      setTableData (fwdEssaysData)
+    console.log("Testando o searchBy", searchBy);
+    if (searchBy === 'stretch') {
+      // Combina FWD e IGG quando "stretch" for selecionado
+      setTableData([...fwdEssaysData, ...iggEssaysData]);
+    } else if (searchBy === 'mix') {
+      // Lógica para mistura (se ainda necessário)
+      //setTableData(filteredData.filter(material => material.type === 'mix'));
+      setTableData([...rtcdEssaysData, ...dduiEssaysData]);  // Mostra SOMENTE ensaios RTCD e DDUI (mistura)
+    } else if (searchBy === 'name') {
+      // Mostra TUDO (materiais + todos ensaios)
+      const newData = [...filteredData, ...fwdEssaysData, ...iggEssaysData, ...rtcdEssaysData, ...dduiEssaysData];
+      console.log("testando o newData", newData);
+    setTableData(
+      newData
+      /*...filteredData,
+      ...fwdEssaysData,
+      ...iggEssaysData,
+      ...rtcdEssaysData,
+      ...dduiEssaysData,*/
+      
+    );
+    }
+    else {
+      // Caso padrão (nome ou tipo)
+      setTableData(filteredData);
     }
   }, [searchBy]);
+
+
+  /*useEffect(() => {
+    if(searchBy === 'stretch') {
+      setTableData (fwdEssaysData)
+      setTableData (iggEssaysData)
+    }
+    else if(searchBy === 'mix') {
+      setTableData(rtcdEssaysData)
+      //setTableData(dduiEssaysData)
+    }
+  }, [searchBy]);*/
+
+  
 
   /*const filteredData = materials
   .map((material) => {
@@ -203,6 +289,8 @@ const MaterialsTemplate = ({
   const handleEditMaterial = (rowId: string) => {
     editMaterial(rowId);
   };
+
+  
 
   return (
     <>
@@ -426,7 +514,15 @@ const MaterialsTemplate = ({
                     {columns.map((column) => (
                       <TableCell key={column.id} align="center">
                         {column.id === 'name' && row.name}
-                        {column.id === 'type' && translateType(row.type)}
+                        {column.id === 'type' && (
+                          <>
+                            {row.type === 'FWD'}
+                            {row.type === 'IGG'}
+                            {!['FWD', 'IGG'].includes(row.type) && translateType(row.type)}
+                          </>
+                        )
+
+                        /*translateType(row.type)*/}
                         {column.id === 'createdAt' && formatDate(row.createdAt)}
                         {column.id === 'actions' && (
                           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

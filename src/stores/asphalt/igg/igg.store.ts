@@ -48,6 +48,7 @@ export interface IggData {
   iggStep3: IggStep3;
   iggStep4: IggStep4;
   results: IggResults;
+  _id?: string;
 }
 
 export interface IggActions {
