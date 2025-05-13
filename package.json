@@ -13,6 +13,10 @@
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^5.16.5",
     "@mui/material": "^5.16.5",
+<<<<<<< HEAD
+    "@mui/styles": "^6.4.7",
+=======
+>>>>>>> 7f12cf5f2e99f9d77e1e8d2cd322fcb422582dad
     "@mui/x-data-grid": "^6.20.4",
     "@mui/x-data-grid-pro": "^6.20.4",
     "@mui/x-date-pickers": "^6.20.2",
