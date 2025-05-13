@@ -17,6 +17,7 @@ interface IModalBase {
   onSubmit?: () => void;
   disableSubmit?: boolean;
   oneButton?: boolean;
+  buttonSize?: 'small' | 'medium' | 'large';
 }
 
 const ModalBase = ({
@@ -31,11 +32,12 @@ const ModalBase = ({
   disableSubmit,
   oneButton = false,
   singleButtonTitle,
+  buttonSize,
 }: IModalBase) => {
   const getModalSize = (size: modalSize) => {
     switch (size) {
       case 'small': {
-        return '25%';
+        return '27%';
       }
       case 'medium': {
         return '40%';
@@ -94,6 +96,7 @@ const ModalBase = ({
         {!oneButton ? (
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', pt: '1rem' }}>
             <Button
+              size="small"
               onClick={onCancel}
               variant="outlined"
               color="primary"
@@ -114,6 +117,7 @@ const ModalBase = ({
               {leftButtonTitle}
             </Button>
             <Button
+              size = {buttonSize}
               onClick={onSubmit}
               variant="contained"
               disabled={disableSubmit}
@@ -137,6 +141,7 @@ const ModalBase = ({
         ) : (
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', pt: '1rem' }}>
             <Button
+              size = {buttonSize}
               onClick={onSubmit}
               variant="outlined"
               color="primary"
