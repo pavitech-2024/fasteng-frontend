@@ -532,20 +532,7 @@ const initialState = {
       percentsOfMaterials: null,
       sumOfPercents: null,
     },
-    percentageInputs: [
-      {
-        material_1: null,
-        material_2: null,
-      },
-      {
-        material_1: null,
-        material_2: null,
-      },
-      {
-        material_1: null,
-        material_2: null,
-      },
-    ],
+    percentageInputs: [],
     percentsToList: [],
     nominalSize: {
       value: null,

@@ -403,13 +403,10 @@ class Superpave_SERVICE implements IEssayService {
     step1Data: SuperpaveData['generalData'],
     chosenCurves: any
   ): Promise<any> => {
-    console.log('🚀 ~ Superpave_SERVICE ~ chosenCurves:', chosenCurves);
     try {
       const { percentageInputs, nominalSize, percentsToList } = calculateStep3Data;
       const { dnitBand } = step1Data;
       const aggregates = step2Data.materials;
-
-      console.log('testeeee');
 
       const selectedCurveInputs = chosenCurves.lower
         ? percentageInputs[0]
@@ -425,7 +422,6 @@ class Superpave_SERVICE implements IEssayService {
        */
       const curveIndex =
         chosenCurves === 'lower' ? 0 : chosenCurves === 'average' ? 1 : chosenCurves === 'higher' ? 2 : null;
-      console.log('🚀 ~ Superpave_SERVICE ~ curveIndex:', curveIndex);
 
       const inputsObject = selectedCurveInputs[curveIndex];
 
@@ -443,10 +439,11 @@ class Superpave_SERVICE implements IEssayService {
       });
 
       const { data, success, error } = response.data;
+      console.log("🚀 ~ Superpave_SERVICE ~ data:", data)
 
       if (success === false) throw error.name;
 
-      const prevData = { ...calculateStep3Data.averageComposition, ...data };
+      const prevData = { ...calculateStep3Data, ...data };
       prevData.pointsOfCurve = { ...prevData.pointsOfCurve, [chosenCurves]: data.pointsOfCurve };
       console.log('🚀 ~ Superpave_SERVICE ~ prevData:', prevData);
 
