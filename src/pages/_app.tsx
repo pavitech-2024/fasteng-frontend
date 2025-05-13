@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app';
 import Pages from '@/components/config/pages';
 import { AuthProvider } from '@/contexts/auth';
-import { ThemeProvider as MuiTheme } from '@mui/material';
+import { ThemeProvider as MuiTheme, Theme, StyledEngineProvider } from '@mui/material';
 import { ThemeProvider as StyledTheme } from 'styled-components';
 import { theme } from '@/components/config/theme';
 import { ToastContainer } from 'react-toastify';
@@ -14,35 +14,33 @@ import 'dayjs/locale/en-gb';
 import 'dayjs/locale/en';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useRouter } from 'next/router';
-import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
+import useResetStores from '@/utils/hooks/useResetStores';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { i18n } = useTranslation();
   const locale = i18n.language === 'en' ? 'en' : 'en-gb';
 
   const { pathname } = useRouter();
+  const resetStores = useResetStores();
 
-  const clearStore = useSuperpaveStore((state) => state.clearStore);
-
+  /**
+   * This useEffect hook iterates through sessionStorage keys in reverse order.
+   * It checks if the current pathname includes a specific key substring.
+   * If not, it clears the sessionStorage and resets stores.
+   */
   useEffect(() => {
-    // Itera sobre todas as chaves no sessionStorage
     for (let i = sessionStorage.length - 1; i >= 0; i--) {
       const key = sessionStorage.key(i);
       if (key) {
-        // Extraindo a parte relevante da chave
         const keyString = key.split('-')[1];
 
-        // Verificando se o pathname não contém a substring da chave
         if (!pathname.includes(keyString)) {
-          sessionStorage.removeItem(key);
+          sessionStorage.clear();
+          resetStores();
         }
       }
     }
-
-    if (window.location.pathname === '/home') {
-      clearStore();
-    }
-  }, [pathname, clearStore]);
+  }, [pathname]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>

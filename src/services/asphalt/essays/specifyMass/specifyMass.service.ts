@@ -14,8 +14,10 @@ class SPECIFYMASS_SERVICE implements IEssayService {
     steps: 3,
     backend_path: 'asphalt/essays/specifyMass',
     standard: {
-      name: 'NBR 9776',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/MassaEspecificaAgregadoMiudoDNIT4112019.8b89a1d7.pdf',
+      name: 'DNIT 411/2021 - ME',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_411_2021_me-1.pdf',
+      /* name: 'NBR 9776',
+      link: 'https://www.target.com.br/produtos/normas-tecnicas/36401/nbr9776-agregados-determinacao-da-massa-especifica-de-agregados-miudos-por-meio-do-frasco-chapman',*/
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
@@ -30,7 +32,6 @@ class SPECIFYMASS_SERVICE implements IEssayService {
   /** @handleNext Receives the step and data from the form and calls the respective method */
   handleNext = async (step: number, data: unknown): Promise<void> => {
     try {
-      console.log(data);
       switch (step) {
         case 0:
           await this.submitGeneralData(data as SpecifyMassData['generalData']);

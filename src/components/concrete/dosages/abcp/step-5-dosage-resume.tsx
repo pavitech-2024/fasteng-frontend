@@ -7,9 +7,9 @@ import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import { Box } from '@mui/material';
 import Result_Card from '@/components/atoms/containers/result-card';
 import AbramsCurvGraph from './graph/abramsCurveGrapg';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import abcpDosageService from '@/services/concrete/dosages/abcp/abcp-consult.service';
-import { useRouter } from 'next/router';
+import GenerateAbcpDosagePDF from '@/components/generatePDF/dosages/concrete/abcp/generatePDFAbcpDosage';
 
 const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp: ABCP_SERVICE }) => {
   nextDisabled && setNextDisabled(false);
@@ -17,23 +17,22 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
   const { calculateResults } = new ABCP_SERVICE();
   const store = JSON.parse(sessionStorage.getItem('abcp-store'));
   const dosageId = store.state._id;
-  const router = useRouter();
-  const isConsult = router.query.consult ? true : false;
+  const [dosage, setDosage] = useState(null);
 
   useEffect(() => {
-    if (isConsult) {
-      const resultData = async () => {
-        try {
-          const foundDosage = await abcpDosageService.getAbcpDosage(dosageId);
-          const calculateDosage = await calculateResults(foundDosage.data);
-          const dosageData = { ...foundDosage.data, results: calculateDosage };
-          setData({ step: 5, value: dosageData });
-        } catch (error) {
-          console.error('Failed to load dosage:', error);
-        }
-      };
-      resultData();
-    }
+    const resultData = async () => {
+      try {
+        const foundDosage = await abcpDosageService.getAbcpDosage(dosageId);
+        setDosage(foundDosage.data);
+
+        const calculateDosage = await calculateResults(foundDosage.data);
+        const dosageData = { ...foundDosage.data, results: calculateDosage };
+        setData({ step: 5, value: dosageData });
+      } catch (error) {
+        console.error('Failed to load dosage:', error);
+      }
+    };
+    resultData();
   }, []);
 
   const conditionValue = insertParamsData.condition;
@@ -121,11 +120,12 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
   return (
     <>
       <FlexColumnBorder title={t('results')} open={true}>
+        <GenerateAbcpDosagePDF dosage={dosage} />
+
         <Box
           sx={{
             width: '100%',
             display: 'flex',
-            // gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
             gap: '10px',
             marginY: '20px',
             flexWrap: 'wrap',
@@ -136,9 +136,9 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
             sx={{
               width: '100%',
               display: 'flex',
-              // gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
+              justifyContent: { mobile: 'center', notebook: 'flex-start' },
               gap: '10px',
-              mt: '20px',
+              mt: { xs: '0px', md: '20px' },
               flexWrap: 'wrap',
             }}
           >
@@ -152,7 +152,7 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
             sx={{
               width: '100%',
               display: 'flex',
-              // gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
+              justifyContent: { mobile: 'center', notebook: 'flex-start' },
               gap: '10px',
               mt: '20px',
               flexWrap: 'wrap',
@@ -173,7 +173,7 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
             sx={{
               width: '100%',
               display: 'flex',
-              // gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
+              justifyContent: { mobile: 'center', notebook: 'flex-start' },
               gap: '10px',
               mt: '20px',
               flexWrap: 'wrap',
@@ -184,7 +184,13 @@ const ABCP_Results = ({ nextDisabled, setNextDisabled }: EssayPageProps & { abcp
         </Box>
 
         <ResultSubTitle title={t('abcp.result.graph')} sx={{ margin: '.65rem' }} />
-        <AbramsCurvGraph result={abcp_results} />
+        <AbramsCurvGraph
+          Xvalues={abcp_results.Xvalues}
+          Yvalues={abcp_results.Yvalues}
+          ac={abcp_results.ac}
+          formula={abcp_results.formula}
+          fcj={abcp_results.fcj}
+        />
       </FlexColumnBorder>
     </>
   );

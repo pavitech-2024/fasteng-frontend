@@ -1,17 +1,21 @@
 import { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import MaterialsTemplate from '@/components/templates/materials';
-import NewConcreteMaterialModal from '@/components/templates/modals/newConcreteMaterial';
+import CreateEditConcreteMaterialModal from '@/components/templates/modals/createEditConcreteMaterial';
 import useAuth from '@/contexts/auth';
 import { ConcreteMaterial } from '@/interfaces/concrete';
 import concreteMaterialService from '@/services/concrete/concrete-materials.service';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
+import Loading from '@/components/molecules/loading';
+import { Box } from '@mui/material';
 
 const ConcreteMaterials = () => {
   const [openModal, setOpenModal] = useState(false);
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [materialToEdit, setMaterialToEdit] = useState<ConcreteMaterial>();
+  const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const { user } = useAuth();
 
@@ -52,24 +56,44 @@ const ConcreteMaterials = () => {
       });
   };
 
+  const handleEditMaterial = async (materialId: string) => {
+    try {
+      const selectedMaterialToEdit = materials.find((material) => material._id === materialId);
+      setMaterialToEdit(selectedMaterialToEdit);
+      setIsEdit(true);
+      setOpenModal(true);
+    } catch (error) {
+      console.error('Failed to get the selected material to edit:', error);
+    }
+  };
+
   return (
     <Container>
       {loading ? (
-        <p>Carregando...</p>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+          <Loading />
+        </Box>
       ) : (
         <MaterialsTemplate
           materials={materials}
           types={types}
           title={t('concrete.materials.title')}
           handleOpenModal={() => setOpenModal(true)}
-          handleDeleteMaterial={handleDeleteMaterial}
+          deleteMaterial={handleDeleteMaterial}
           path="concrete/materials/material"
+          editMaterial={handleEditMaterial}
           modal={
-            <NewConcreteMaterialModal
+            <CreateEditConcreteMaterialModal
               openModal={openModal}
-              handleCloseModal={() => setOpenModal(false)}
+              handleCloseModal={() => {
+                setOpenModal(false);
+                setIsEdit(false);
+                setMaterialToEdit(undefined);
+              }}
               updateMaterials={addNewMaterial}
               materials={materials}
+              materialToEdit={materialToEdit ? materialToEdit : undefined}
+              isEdit={isEdit}
             />
           }
         />

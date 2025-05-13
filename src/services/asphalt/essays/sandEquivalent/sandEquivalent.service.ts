@@ -15,7 +15,7 @@ class SandEquivalent_SERVICE implements IEssayService {
     steps: 3,
     standard: {
       name: 'DNIT-ME 054/97',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/EquivalenteAreiaDNERME05497.a8d7e948.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_450_2024_me-1.pdf',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },

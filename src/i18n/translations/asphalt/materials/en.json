@@ -5,7 +5,7 @@
   "asphalt.materials.source": "Source",
   "asphalt.materials.responsible": "Responsible",
   "asphalt.materials.classification_AMP": "Classification",
-  "asphalt.materials.recieveDate": "Recieve Date",
+  "asphalt.materials.recieveDate": "Receive Date",
   "asphalt.materials.aggregateNature": "Nature of the Aggregate",
   "asphalt.materials.collectionDate": "Collection Date",
   "asphalt.materials.boughtDate": "Bought Date",
@@ -14,13 +14,21 @@
   "asphalt.materials.coarseAggregate": "Coarse Aggregate",
   "asphalt.materials.fineAggregate": "Fine Aggregate",
   "asphalt.materials.filler": "Filler",
-  "asphalt.materials.cap": "CAP",
+  "asphalt.materials.CAP": "Modified Asphalt Binder (CAP",
   "asphalt.materials.other": "Other",
   "asphalt.materials.comments": "Comments",
 
   "loading.marshall.pending": "Loading",
-  "loading.marshall.success": "Dosages loaded succsesfully",
+  "loading.marshall.success": "Dosages loaded successfully",
   "loading.marshall.error": "Error on dosages loading",
 
-  "asphalt.dosages.superpave.material_selection": "Metyrials selection"
+  "asphalt.dosages.superpave.material_selection": "Materials selection",
+  "asphalt.materials.edit.title": "Edit Material",
+
+  "asphalt.materials.materialCreated": "Material created successfully",
+  "asphalt.materials.errorCreatingMaterial": "Error creating material",
+  "asphalt.materials.creatingMaterial": "Creating material...",
+
+  "asphalt.materialName": "Material Name",
+  "asphalt.materialType": "Material Type"
 }

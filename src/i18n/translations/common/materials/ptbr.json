@@ -9,5 +9,8 @@
   "loading.materials.success": "Materiais carregados",
   "loading.data.success": "Dados carregados",
   "loading.materials.error": "Erro ao carregar os materiais",
-  "loading.data.error": "Erro ao carregar os dados"
+  "loading.data.error": "Erro ao carregar os dados",
+  "submiting.data.success": "Dados enviados com sucesso",
+  "submiting.data.error": "Erro ao enviar os dados",
+  "submiting.data.pending": "Enviando dados"
 }

@@ -25,7 +25,9 @@ const Ductility_GeneralData = ({
       async () => {
         const materials = await ductility.getmaterialsByUserId(user._id);
 
-        const filteredMaterials = materials.filter((material) => material.type === 'asphaltBinder');
+        const filteredMaterials = materials.filter(
+          (material) => material.type === 'asphaltBinder' || material.type === 'CAP'
+        );
 
         setMaterials(filteredMaterials);
         setLoading(false);
@@ -36,8 +38,6 @@ const Ductility_GeneralData = ({
         error: t('loading.materials.error'),
       }
     );
-    // se não deixar o array vazio ele vai ficar fazendo requisições infinitas
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const inputs = [
@@ -123,7 +123,7 @@ const Ductility_GeneralData = ({
                         value: material,
                       };
                     })}
-                    defaultValue={defaultValue}
+                    value={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
                     size="medium"
                     required={input.required}

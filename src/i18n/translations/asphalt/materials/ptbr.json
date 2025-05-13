@@ -6,19 +6,19 @@
   "asphalt.materials.source": "Fonte",
   "asphalt.materials.responsible": "Responsável",
   "asphalt.materials.classification_AMP": "Classificação",
+  "asphalt.materials.classification": "Classificação",
   "asphalt.materials.recieveDate": "Data de Recebimento",
   "asphalt.materials.aggregateNature": "Natureza do Agregado",
   "asphalt.materials.collectionDate": "Data de Coleta",
   "asphalt.materials.boughtDate": "Data de Compra",
   "asphalt.materials.classification_CAP": "Classificação",
   "asphalt.materials.asphaltBinder": "Ligante Asfáltico Modificado",
-  "asphalt.materials.CAP": "Ligante Asfáltico",
   "asphalt.materials.binders": "Ligantes",
   "asphalt.materials.aggregates": "Agregados",
   "asphalt.materials.coarseAggregate": "Agregado Graúdo",
   "asphalt.materials.fineAggregate": "Agregado Miúdo",
   "asphalt.materials.filler": "Fíler",
-  "asphalt.materials.cap": "Cimento Asfáltico de Petróleo (CAP)",
+  "asphalt.materials.CAP": "Ligante Asfáltico Modificado (CAP)",
   "asphalt.materials.other": "Outro",
   "asphalt.materials.comments": "Comentários",
 
@@ -26,5 +26,13 @@
   "loading.marshall.success": "Dosagens carregadas com sucesso",
   "loading.marshall.error": "Erro ao carregar as dosagens",
 
-  "asphalt.dosages.superpave.material_selection": "Seleção de Materiais"
+  "asphalt.dosages.superpave.material_selection": "Seleção de Materiais",
+  "asphalt.materials.edit.title": "Editar Material",
+
+  "asphalt.materials.materialCreated": "Material cadastrado com sucesso",
+  "asphalt.materials.errorCreatingMaterial": "Erro ao cadastrar material",
+  "asphalt.materials.creatingMaterial": "Cadastrando material...",
+
+  "asphalt.materialName": "Nome do Material",
+  "asphalt.materialType": "Tipo de Material"
 }

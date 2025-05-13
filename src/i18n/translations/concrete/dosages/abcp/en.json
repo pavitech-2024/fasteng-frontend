@@ -9,8 +9,8 @@
   "abcp.dosage-resume": "Dosage Resume",
   "abcp.results.resistance-curve": "Cement strength",
   "abcp.results.condition": "Condition",
-  "abcp.results.fck": "Choosen Fck",
-  "abcp.results.reduction": "Choosen rebate",
+  "abcp.results.fck": "Chosen Fck",
+  "abcp.results.reduction": "Chosen rebate",
   "abcp.results.fcj": "Fcj",
   "abcp.results.water-cement": "Water/cement ratio",
   "abcp.results.water-consume": "Approximate water consumption",
@@ -47,5 +47,6 @@
   "loading.superpave.success": "Materials loaded successfully",
   "loading.superpave.pending": "Loading...",
   "loading.superpave.error": "There was an error loading the materials",
-  "abcp.results.coefficients": "Coefficients"
+  "abcp.results.coefficients": "Coefficients",
+  "concrete.dosage-pdf-title": "ABCP dosage report"
 }

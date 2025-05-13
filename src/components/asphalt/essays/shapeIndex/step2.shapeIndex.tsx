@@ -369,7 +369,7 @@ const ShapeIndex_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           key={'essay_method'}
           variant="standard"
           label={t('shapeIndex.choose-method')}
-          defaultValue={data.method ? { label: data.method, value: data.method } : null}
+          value={data.method ? { label: data.method, value: data.method } : null}
           options={methodOptions.map((method) => {
             return { label: method.label, value: method.value };
           })}
@@ -414,7 +414,7 @@ const ShapeIndex_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
             key={'graduation'}
             variant="standard"
             label={t('shapeIndex.choose-graduation')}
-            defaultValue={data.graduation ? { label: data.graduation, value: data.graduation } : null}
+            value={data.graduation ? { label: data.graduation, value: data.graduation } : null}
             options={graduationOptions.map((graduation) => {
               return { label: graduation.label, value: graduation.value };
             })}

@@ -11,6 +11,8 @@ export type User = {
   connections: number;
   name: string;
   email: string;
+  phone: string;
+  dob: string;
   planName: string;
   preferences: {
     language: string;
@@ -37,6 +39,11 @@ export function AuthProvider({ children }) {
 
   const Router = useRouter();
 
+  /**
+   * Verifies if the user is authenticated when the component is mounted.
+   * If the user is not authenticated, it calls the refreshLogin function.
+   * If the refreshLogin function fails, it does nothing.
+   */
   useEffect(() => {
     async function loadUser() {
       try {
@@ -48,19 +55,29 @@ export function AuthProvider({ children }) {
     loadUser();
   });
 
+  /**
+   * Authenticates the user by sending a POST request to the /auth/login endpoint with the given email and password.
+   * If the authentication is successful, it sets the user and the token to the Axios headers.
+   */
   async function signIn(email: string, password: string): Promise<void> {
     try {
       const response = await Api.post('auth/login', { email, password });
-      const { token, user, name, planName } = response.data;
 
+      const { token, user } = response.data;
+
+      //Sets the token and the user id in the cookies for the next requests.
       Cookies.set('fasteng.token', token, { expires: 0.416 });
       Cookies.set('fasteng._id', user._id, { expires: 0.416 });
 
-      // set token to axios headers
+      //Sets the token in the Axios headers.
       Api.defaults.headers.Authorization = `Bearer ${token}`;
 
-      await setUser({ ...user, name, planName, email });
+      //Updates the user state with the user data from the server.
+      const updatedUser = await Api.get(`users/${user._id}`);
 
+      setUser(updatedUser.data);
+
+      //Changes the language of the app if the user has a preferred language.
       user.preferences.language !== null && i18next.changeLanguage(user.preferences.language);
 
       Router.push('/home');
@@ -69,30 +86,55 @@ export function AuthProvider({ children }) {
     }
   }
 
+  /**
+   * Checks if the user has a valid token and if not, it refreshes the token using the refresh-login endpoint.
+   * If the refresh is successful, it updates the user state with the new user data from the server.
+   * If the user has a preferred language, it changes the language of the app.
+   * If the user is not in the root page, it redirects the user to the home page.
+   */
   async function refreshLogin() {
     try {
+      // Gets the token and the user id from the cookies.
       const { 'fasteng.token': token, 'fasteng._id': _id } = Cookies.get();
 
+      // If the user is not authenticated and has a token and a user id, it refreshes the login.
       if (token && _id && !isAuthenticated) {
         const response = await Api.post('auth/refresh-login', { token, _id });
-        const { user, name, planName, email } = response.data;
 
-        Cookies.set('fasteng.token', token, { expires: 0.416 });
-        Cookies.set('fasteng._id', user._id, { expires: 0.416 });
+        const { user: loggedUser, token: newToken } = response.data;
 
-        // set token to axios headers
-        Api.defaults.headers.Authorization = `Bearer ${response.data.token}`;
+        // Makes a GET request to the users endpoint with the logged user id to get the user data.
+        const updatedUser = await Api.get(`users/${loggedUser._id}`, {
+          headers: {
+            Authorization: `Bearer ${newToken}`,
+          },
+        });
 
-        setUser({ ...user, name, planName, email });
+        // Creates a new user object with the updated user data.
+        const finalUser = { ...updatedUser.data };
 
-        user.preferences.language !== null && i18next.changeLanguage(user.preferences.language);
+        // Sets the new token and the user id to the cookies.
+        Cookies.set('fasteng.token', newToken, { expires: 0.416 });
+        Cookies.set('fasteng._id', finalUser._id, { expires: 0.416 });
 
+        // Sets the new token to the axios headers.
+        Api.defaults.headers.Authorization = `Bearer ${newToken}`;
+
+        // Updates the user state with the new user data.
+        setUser(finalUser);
+
+        // If the user has a preferred language, it changes the language of the app.
+        finalUser.preferences?.language !== null && i18next.changeLanguage(finalUser.preferences?.language);
+
+        // If the user is not in the root page, it redirects the user to the home page.
         if (Router.pathname !== '/' && Router.pathname !== '/creators') {
           await Router.push('/home');
         }
       }
     } catch (error) {
       if (Router.pathname !== '/' && Router.pathname !== '/creators') {
+        console.error('entrouuu if', error);
+
         await Router.push('/');
       } else {
         throw error;

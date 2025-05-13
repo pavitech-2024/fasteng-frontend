@@ -2,9 +2,11 @@ import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-bor
 import Loading from '@/components/molecules/loading';
 import { t } from 'i18next';
 import Chart from 'react-google-charts';
-import AsphaltGranulometry_resultsTable from '../essays/granulometry/tables/results-table.granulometry';
+import AsphaltgranulometryDataTable from '../essays/granulometry/tables/results-table.granulometry';
 import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
 import { GridColDef } from '@mui/x-data-grid';
+import Result_Card, { Result_CardContainer } from '@/components/atoms/containers/result-card';
+import { isArray } from 'util';
 
 export interface IGranulometryMateriaView {
   granulometryData: EssaysData['asphaltGranulometryData'];
@@ -47,6 +49,33 @@ const GranulometryMateriaView = ({ granulometryData }: IGranulometryMateriaView)
     },
   ];
 
+  const resultCards = [
+    {
+      label: t('granulometry-asphalt.accumulated-retained'),
+      value: granulometryData.results.accumulated_retained,
+      unity: '%',
+    },
+    { label: t('granulometry-asphalt.total-retained'), value: granulometryData.results.total_retained, unity: 'g' },
+    {
+      label: t('asphalt.essays.granulometry.results.nominalSize'),
+      value: granulometryData.results.nominal_size,
+      unity: 'mm',
+    },
+    {
+      label: t('asphalt.essays.granulometry.results.nominalDiammeter'),
+      value: granulometryData.results.nominal_diameter,
+      unity: 'mm',
+    },
+    {
+      label: t('asphalt.essays.granulometry.results.finenessModule'),
+      value: granulometryData.results.fineness_module,
+      unity: '%',
+    },
+    { label: t('granulometry-asphalt.cc'), value: granulometryData.results.cc },
+    { label: t('granulometry-asphalt.cnu'), value: granulometryData.results.cnu },
+    { label: t('granulometry-asphalt.error'), value: granulometryData.results.error, unity: '%' },
+  ];
+
   if (granulometryData?.results.graph_data) {
     graph_data = [
       [t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')],
@@ -67,7 +96,15 @@ const GranulometryMateriaView = ({ granulometryData }: IGranulometryMateriaView)
 
   return (
     <FlexColumnBorder title={t('asphalt.essays.granulometry')} open={true}>
-      <AsphaltGranulometry_resultsTable rows={rows} columns={columns} />
+      <Result_CardContainer>
+        {resultCards.map((item, index) => {
+          if (!Array.isArray(item.value)) {
+            return <Result_Card key={index} label={item.label} value={item.value.toString()} unity={item.unity} />;
+          }
+        })}
+      </Result_CardContainer>
+
+      <AsphaltgranulometryDataTable rows={rows} columns={columns} />
       <div id="chart-div-granulometry">
         <Chart
           chartType="LineChart"
@@ -78,7 +115,7 @@ const GranulometryMateriaView = ({ granulometryData }: IGranulometryMateriaView)
           options={{
             title: t('granulometry-asphalt.granulometry'),
             backgroundColor: 'transparent',
-            pointSize: '2',
+            pointSize: '5',
             hAxis: {
               title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
               type: 'number',

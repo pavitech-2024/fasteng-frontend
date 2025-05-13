@@ -1,11 +1,15 @@
 {
   "marshall.dosage-title": "Dosagem Marshall",
+  "marshall.dosage-pdf-title": "Relatório de Dosagem Marshall",
 
-  "marshall.step-2-description": "Selecione os agregados e o ligante asfáltico que serão utilizados na dosagem.",
+  "marshall.step-2-description": "Selecione os agregados e o cimento para a dosagem. Apenas materiais cadastrados com ensaios de granulometria para agregados e viscosidade rotacional para ligantes asfálticos serão exibidos.",
   "marshall.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica da mistura.",
   "marshall.step-4-description": "Insira o teor inicial de ligante.",
   "marshall.step-5-description": "Insira os dados de densidade máxima real ou teórica da mistura e o fator de correção para a temperatura da água.",
   "marshall.step-9-description": "Esses são os resultados da sua dosagem Marshall. Lembre-se de salvar o projeto para garantir o acesso a ele no futuro.",
+
+  "marshall.general-results": "Resultados Gerais",
+  "asphalt.dosages.marshall.materials-caracterization": "Caracterização dos materiais",
 
   "marshall.dosages.marshall.general-data": "Dados Gerais",
   "asphalt.dosages.marshall.material_selection": "Seleção de Materiais",
@@ -40,20 +44,27 @@
   "asphalt.project_name": "Nome do Projeto",
   "asphalt.laboratory_name": "Nome do Laboratório",
   "asphalt.choose_objective": "Escolha o Objetivo da Mistura",
+  "asphalt.objective": "Escolha o Objetivo da Mistura",
   "asphalt.choose_dnit_track": "Escolha a Faixa do DNIT",
+
+  "asphalt.used-materials": "Materiais utilizados",
+  "asphalt.project-initial-date": "Data de início do projeto",
+  "asphalt.pdf-generation-date": "Data de criação deste relatório",
 
   "asphalt.dosages.marshall.bearing-layer": "Camada de Rolamento",
   "asphalt.dosages.marshall.bonding-layer": "Camada de Ligação",
   "asphalt.dosages.inputs-sum-invalid": "A soma dos valores das porcentagens dos materiais deve ser igual a 100.",
 
   "asphalt.dosages.indirect-tensile-strength": "Resistência à tração por compressão diametral",
-  "asphalt.dosages.fluency": "Fluência",
-  "asphalt.dosages.marshall-stability": "Estabilidade Marshall",
+  "asphalt.dosages.marshall.fluency": "Fluência",
+  "asphalt.dosages.marshall.stability": "Estabilidade Marshall",
   "asphalt.dosages.rbv": "Relação betume-vazios",
   "asphalt.dosages.vam": "Vazios do agregado mineral (VAM)",
   "asphalt.dosages.vv": "Volume de vazios",
   "asphalt.dosages.gmb": "Massa específica aparente",
   "asphalt.dosages.dmt": "Densidade máximo teórica (DMT)",
+  "asphalt.dosages.gmm": "Densidade máxima medida (GMM)",
+
   "asphalt.dosages.optimum-binder": "Teor ótimo de ligante asfáltico",
   "asphalt.dosages.binder-volumetric-mechanic-params": "Parametros volumétricos e mecanicos da mistura no teor ótimo de ligante asfáltico",
   "asphalt.dosages.mineral-aggregate-voids": "Vazios do agregado mineral (%)",
@@ -77,7 +88,7 @@
   "asphalt.dosages.marshall.select-mixture-density-method": "Selecione o método de cálculo da densidade da mistura",
   "asphalt.dosages.marshall.water-temperature": "Selecione o fator de correção para a temperatura da água",
 
-  "asphalt.dosages.marshall.insert-real-specific-mass": "Insira a massa específica real dos materiais abaixo.",
+  "asphalt.dosages.marshall.insert-real-specific-mass": "Insira a massa específica real dos materiais abaixo",
 
   "asphalt.dosages.marshall.container-water-mass": "Massa do recipiente + água (g)",
   "asphalt.dosages.marshall.container-sample-water-mass": "Massa do recipiente + amostra + água (g)",
@@ -86,12 +97,31 @@
 
   "asphalt.dosages.marshall.dry-surface-saturated-mass": "Massa saturada com superfície seca",
   "asphalt.dosages.marshall.submerged-mass": "Massa submersa",
-  "asphalt.dosages.marshall.dry-mass": "Massa seca",
+  "asphalt.dosages.marshall.dry-mass": "Massa da amostra seca em ar",
   "asphalt.dosages.marshall.height": "Altura",
   "asphalt.dosages.marshall.diammeter": "Diametro",
 
   "asphalt.dosages.marshall.binder-percentage": "Porcentagem de ligante (%)",
 
   "asphalt.dosages.enable": "Liberar",
-  "asphalt.dosages.disable": "Não usar esse teor"
+  "asphalt.dosages.disable": "Não usar esse teor",
+
+  "loading.dosage.pending": "Carregando dados da dosagem...",
+  "loading.dosage.success": "Dados da dosagem carregados!",
+  "loading.dosage.error": "Erro ao carregar dados da dosagem!",
+
+  "asphalt.dosages.project-author": "Responsável pela dosagem",
+  "asphalt.dosages.project-laboratory": "Laboratório responsável pela dosagem",
+
+  "asphalt.dosages.marshall.superiorBand": "Superior",
+  "asphalt.dosages.marshall.inferiorBand": "Inferior",
+
+  "loading.calculating.pending": "Calculando...",
+  "loading.calculating.success": "Calculado com sucesso!",
+  "loading.calculating.error": "Erro ao calcular!",
+
+  "asphalt.dosages.marshall.granulometric-curve": "Curva granulométrica",
+  "asphalt.dosages.marshall.granulometric-composition": "Composição granulométrica",
+
+  "errors.binder-trial-not-calculated": "O teor de ligante asfáltico ainda não foi calculado. Clique no botão calcular."
 }

@@ -18,7 +18,7 @@ const Superpave_Step2 = ({
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
-  const { materialSelectionData } = useSuperpaveStore();
+  const { materialSelectionData: data } = useSuperpaveStore();
 
   const { user } = useAuth();
 
@@ -91,7 +91,7 @@ const Superpave_Step2 = ({
     },
   ];
 
-  materialSelectionData.binder && materialSelectionData.aggregates.length > 0 && nextDisabled && setNextDisabled(false);
+  data.binder && data.aggregates.length > 0 && nextDisabled && setNextDisabled(false);
 
   return (
     <>

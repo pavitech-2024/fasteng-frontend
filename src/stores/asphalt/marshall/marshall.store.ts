@@ -1,6 +1,12 @@
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
+export type GmmRows = {
+  id: number;
+  insert: boolean;
+  value: number;
+};
+
 interface MarhsallGeneralData {
   userId: string;
   name: string;
@@ -66,14 +72,11 @@ interface MarshallBinderTrialData {
 }
 
 interface MarshallMaximumMixtureDensityData {
+  method: string;
   dmt: {
     [key: string]: number;
   }[];
-  gmm: {
-    id: number;
-    insert: boolean;
-    value: number;
-  }[];
+  gmm: GmmRows[];
   temperatureOfWater: number;
   missingSpecificMass: {
     name: string;
@@ -246,7 +249,7 @@ export type MarshallData = {
 
 export type MarshallActions = {
   setData: ({ step, key, value }: setDataType) => void;
-  reset: ({ step }: setDataType) => void;
+  reset: () => void;
 };
 
 type setDataType = { step: number; key?: string; value: unknown };
@@ -316,32 +319,33 @@ const initialState = {
     },
   },
   maximumMixtureDensityData: {
+    method: null,
     dmt: [],
     gmm: [
       {
         id: 1,
         insert: true,
-        value: 5,
+        value: null,
       },
       {
         id: 2,
         insert: true,
-        value: 5,
+        value: null,
       },
       {
         id: 3,
         insert: true,
-        value: 5,
+        value: null,
       },
       {
         id: 4,
         insert: true,
-        value: 5,
+        value: null,
       },
       {
         id: 5,
         insert: true,
-        value: 5,
+        value: null,
       },
     ],
     missingSpecificMass: [],
@@ -565,11 +569,8 @@ const useMarshallStore = create<MarshallData & MarshallActions>()(
             }
           }),
 
-        reset: ({ step }) => {
+        reset: () => {
           set(initialState);
-          return {
-            [stepVariant[step]]: null,
-          };
         },
       }),
       {

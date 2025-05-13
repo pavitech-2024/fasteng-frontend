@@ -1,4 +1,4 @@
-import { Sample } from '@/interfaces/soils';
+import { SoilSample } from '@/interfaces/soils';
 import { getSieveName } from '@/utils/sieves';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
@@ -6,7 +6,7 @@ import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 interface GeneralData {
   userId: string;
   name: string;
-  sample: Sample;
+  sample: SoilSample;
   operator?: string;
   calculist?: string;
   description?: string;
@@ -36,42 +36,56 @@ export type SucsData = {
 
 export type SucsActions = {
   setData: ({ step, key, value }: setDataType) => void;
+  reset: () => void;
 };
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'results' };
 
 type setDataType = { step: number; key?: string; value: unknown };
 
+const initialState = {
+  generalData: {
+    userId: null,
+    name: null,
+    sample: null,
+    operator: null,
+    calculist: null,
+    description: null,
+  },
+  step2Data: {
+    cc: null,
+    cnu: null,
+    liquidity_limit: null,
+    plasticity_limit: null,
+    sieves: [
+      { sieve: getSieveName(4.8), passant: null },
+      { sieve: getSieveName(0.075), passant: null },
+    ],
+    organic_matter: null,
+  },
+  results: {
+    cc: null,
+    cnu: null,
+    ip: null,
+    classification: null,
+  },
+};
+
 const useSucsStore = create<SucsData & SucsActions>()(
   devtools(
     persist(
       (set) => ({
-        generalData: {
-          userId: null,
-          name: null,
-          sample: null,
-          operator: null,
-          calculist: null,
-          description: null,
-        },
-        step2Data: {
-          cc: null,
-          cnu: null,
-          liquidity_limit: null,
-          plasticity_limit: null,
-          sieves: [
-            { sieve: getSieveName(4.8), passant: null },
-            { sieve: getSieveName(0.075), passant: null },
-          ],
-          organic_matter: null,
-        },
-        results: {
-          cc: null,
-          cnu: null,
-          ip: null,
-          classification: null,
-        },
+        ...initialState,
 
+        /**
+         * Updates the value of the given key in the state of the store for the given step.
+         * If no key is given, the value is set as the whole state of the given step.
+         * @param {{ step: number; key?: string; value: unknown }} data
+         * @param {number} data.step The step of the state to update.
+         * @param {string} [data.key] The key of the value to update in the state of the given step.
+         * If not given, the value is set as the whole state of the given step.
+         * @param {unknown} data.value The new value to set in the state of the given step.
+         */
         setData: ({ step, key, value }) =>
           set((state) => {
             if (key)
@@ -84,6 +98,10 @@ const useSucsStore = create<SucsData & SucsActions>()(
               };
             else return { ...state, [stepVariant[step]]: value };
           }),
+
+        reset: () => {
+          set(initialState);
+        },
       }),
       {
         // name data store e config no session storage
