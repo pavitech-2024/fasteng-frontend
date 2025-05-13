@@ -186,7 +186,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   const tableDataAux = setPercentsToListTotal(peneiras, arrayResponse);
 
   const setBandsHigherLower = (tableData, bandsHigher, bandsLower, arrayResponse, peneiras) => {
-    console.log('🚀 ~ setBandsHigherLower ~ tableData:', tableData);
     const arraySize = tableData[0]?.length;
 
     // Inicializa o arrayAux com objetos vazios de acordo com o tamanho descoberto
@@ -322,9 +321,9 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
 
   const updateGraph = (points, curve) => {
     const pointsOfCurve = updateDataArray(points);
-    const prevData = { ...data };
-    const newData = { ...prevData, graphData: {...prevData.graphData, [curve]: pointsOfCurve} };
-    setData({ step: 2, value: newData });
+    const prevData = { ...data.pointsOfCurve };
+    const newData = { ...prevData, [curve]: pointsOfCurve };
+    setData({ step: 3, key: 'pointsOfCurve', value: newData });
   };
 
   const calcular = (curve: string) => {
@@ -404,6 +403,16 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     setNextDisabled(false);
   }
 
+
+  // useEffect(() => {
+  //   const newPointsOfCurve = {
+  //     lower: [],
+  //     average: [],
+  //     higher: [],
+  //   };
+  //   setData({ step: 3, key: 'pointsOfCurve', value: newPointsOfCurve });
+  // },[]);
+
   return (
     <>
       {loading ? (
@@ -472,7 +481,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
                         width={'100%'}
                         height={'400px'}
                         loader={<Loading />}
-                        data={data.pointsOfCurve}
+                        data={data.pointsOfCurve[table.key]}
                         options={{
                           title: t('granulometry-asphalt.granulometry'),
                           backgroundColor: 'transparent',

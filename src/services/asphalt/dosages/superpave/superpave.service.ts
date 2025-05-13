@@ -442,10 +442,15 @@ class Superpave_SERVICE implements IEssayService {
       console.log("🚀 ~ Superpave_SERVICE ~ data:", data)
 
       if (success === false) throw error.name;
+      const formattedData = {...data}
+      formattedData.pointsOfCurve = {
+        ...calculateStep3Data.pointsOfCurve,
+        [chosenCurves]: data.pointsOfCurve,
+      };
 
-      const prevData = { ...calculateStep3Data, ...data };
-      prevData.pointsOfCurve = { ...prevData.pointsOfCurve, [chosenCurves]: data.pointsOfCurve };
-      console.log('🚀 ~ Superpave_SERVICE ~ prevData:', prevData);
+      const prevData = { ...calculateStep3Data, ...formattedData };
+      // prevData[chosenCurves] = data.pointsOfCurve;
+      console.log("🚀 ~ Superpave_SERVICE ~ prevData:", prevData)
 
       this.store_actions.setData({ step: 3, value: prevData });
     } catch (error) {
