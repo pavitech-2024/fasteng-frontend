@@ -39,7 +39,7 @@ import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
 import { create } from 'domain';
 
 interface MaterialsTemplateProps {
-  materials: SoilSample[] | AsphaltMaterial[] | ConcreteMaterial[] | undefined;
+  materials: any[] | undefined;
   fwdEssays: FwdData[] | undefined;
   iggEssays: IggData[] | undefined;
   rtcdEssays: RtcdData[] | undefined;
@@ -106,7 +106,8 @@ const MaterialsTemplate = ({
   const columns: MaterialsColumn[] = [
     { id: 'name', label: t('materials.template.name'), width: '25%' },
     //{ id: 'type', label: t('materials.template.type'), width: '25%' },
-    { id: 'type', label: 'Ensaio', width: '25%' },
+    //{ id: 'type', label: 'Ensaio', width: '25%' },
+    { id: 'type', label: t('materials.template.essay'), width: '25%' },
     { id: 'createdAt', label: t('materials.template.createdAt'), width: '25%' },
     { id: 'actions', label: t('materials.template.actions'), width: '25%' },
   ];
@@ -149,7 +150,7 @@ const MaterialsTemplate = ({
 
   console.log('Materiais recebidos:', materials);
 
-  const filteredData = (Array.isArray(materials) ? materials : [])
+  const filteredData = (Array.isArray(materials[0].materials) ? materials[0].materials : [])
   .map(({ _id, name, type, createdAt }) => ({
     _id,
     name,
@@ -171,7 +172,7 @@ const MaterialsTemplate = ({
     return true;
   });
 
-  console.log("Testando a data", filteredData);
+  console.log("Testando filtro de nome", filteredData);
 
   const fwdEssaysData = fwdEssays.map(({_id, generalData }) => ({
     name: generalData.name,
@@ -515,14 +516,23 @@ const dduiEssaysData = dduiEssays.map((essay) => ({
                       <TableCell key={column.id} align="center">
                         {column.id === 'name' && row.name}
                         {column.id === 'type' && (
+                           <>
+                          {row.type === 'FWD' && 'FWD'}
+                          {row.type === 'IGG' && 'IGG'}
+                          {row.type === 'RTCD' && 'RTCD'}
+                          {row.type === 'DDUI' && 'DDUI'}
+                          {!['FWD', 'IGG', 'RTCD', 'DDUI'].includes(row.type) && translateType(row.type)}
+                          </>
+                        )}
+                       {/* {column.id === 'type' && (
                           <>
                             {row.type === 'FWD'}
                             {row.type === 'IGG'}
                             {!['FWD', 'IGG'].includes(row.type) && translateType(row.type)}
                           </>
-                        )
+                        )*/}
 
-                        /*translateType(row.type)*/}
+                        {/*translateType(row.type)*/}
                         {column.id === 'createdAt' && formatDate(row.createdAt)}
                         {column.id === 'actions' && (
                           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -586,12 +596,22 @@ const dduiEssaysData = dduiEssays.map((essay) => ({
           </TableContainer>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
             <Pagination
+              count={Math.ceil(tableData.length / rowsPerPage)}  // Usa tableData em vez de filteredData
+              size="small"
+              disabled={tableData.length <= rowsPerPage}  // Desabilita se houver apenas 1 página
+              onChange={(event, value) => setPage(value - 1)}
+              showFirstButton
+              showLastButton
+            />
+          </Box>
+          {/*<Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
+            <Pagination
               count={Math.ceil(filteredData.length / rowsPerPage)}
               size="small"
               disabled={filteredData.length < rowsPerPage}
               onChange={(event, value) => setPage(value - 1)}
             />
-          </Box>
+          </Box>*/}
         </Paper>
       </Box>
     </>
