@@ -35,6 +35,7 @@ const Materials = () => {
     materialsService
       .getMaterialsByUserId(user._id)
       .then((response) => {
+        console.log(response.data);
         setMaterials(response.data);
         setLoading(false);
         console.log("Testando o response.data", response.data);
