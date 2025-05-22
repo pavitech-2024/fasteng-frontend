@@ -352,12 +352,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
       toast.promise(
         async () => {
           try {
-            const chosenCurves = {
-              lower,
-              average,
-              higher,
-            };
-
             const composition = await superpave.calculateGranulometryComposition(
               data,
               granulometryEssayData,
@@ -365,7 +359,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
               // chosenCurves
               curve
             );
-            console.log('🚀 ~ composition:', composition);
 
             const prevData = data;
 
@@ -403,7 +396,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     setNextDisabled(false);
   }
 
-
   // useEffect(() => {
   //   const newPointsOfCurve = {
   //     lower: [],
@@ -412,6 +404,9 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   //   };
   //   setData({ step: 3, key: 'pointsOfCurve', value: newPointsOfCurve });
   // },[]);
+
+  console.log('🚀 ~ constSuperpave_Step4= ~ data.pointsOfCurve[table.key]:', data.pointsOfCurve.lower);
+  console.log('🚀 ~ constSuperpave_Step4= ~ tables:', tables);
 
   return (
     <>
@@ -511,16 +506,17 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
                   </TableContainer>
                 );
               }
+              {
+                data.pointsOfCurve[table.key] > 0 && (
+                  <>
+                    <Typography>
+                      {t('asphalt.dosages.superpave.maximum-nominal-size')}: {data.nominalSize.value} mm
+                    </Typography>
+                    <Graph data={data.pointsOfCurve[table.key]} />
+                  </>
+                );
+              }
             })}
-
-          {data.graphData?.length > 0 && (
-            <>
-              <Typography>
-                {t('asphalt.dosages.superpave.maximum-nominal-size')}: {data.nominalSize.value} mm
-              </Typography>
-              <Graph data={data.graphData} />
-            </>
-          )}
         </Box>
       )}
     </>

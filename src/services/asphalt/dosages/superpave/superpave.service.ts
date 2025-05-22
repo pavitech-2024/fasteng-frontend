@@ -201,19 +201,19 @@ class Superpave_SERVICE implements IEssayService {
       });
     });
 
-    data.granulometryEssayData.granulometrys.forEach((material) => {
-      const sum = Math.round(100 * (retained + material.bottom)) / 100;
+    // data.granulometryEssayData.granulometrys.forEach((material) => {
+    //   const sum = Math.round(100 * (retained + material.bottom)) / 100;
 
-      if (sum > material.material_mass) {
-        throw (
-          t('errors.sieves-sum-not-equal-to-material-mass') +
-          (material.material_mass - sum) +
-          'g.\n' +
-          'Retida + Fundos: ' +
-          sum
-        );
-      }
-    });
+    //   if (sum > material.material_mass) {
+    //     throw (
+    //       t('errors.sieves-sum-not-equal-to-material-mass') +
+    //       (material.material_mass - sum) +
+    //       'g.\n' +
+    //       'Retida + Fundos: ' +
+    //       sum
+    //     );
+    //   }
+    // });
 
     data.granulometryEssayData.viscosity.dataPoints.forEach((point, index) => {
       if (!point.viscosity) throw `${t('errors.empty-viscosity')} + ${index}`;
@@ -242,7 +242,7 @@ class Superpave_SERVICE implements IEssayService {
         );
 
         const { success, error, granulometry, viscosity } = response.data;
-        console.log('🚀 ~ Superpave_SERVICE ~ calculateGranulometryEssayData= ~ viscosity:', viscosity);
+        console.log("🚀 ~ Superpave_SERVICE ~ calculateGranulometryEssayData= ~ granulometry:", granulometry)
 
         if (success === false) throw error.name;
 

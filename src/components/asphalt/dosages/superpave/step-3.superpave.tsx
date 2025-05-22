@@ -17,6 +17,7 @@ const Superpave_Step3 = ({
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const { granulometryResultsData: data } = useSuperpaveStore();
+  console.log("🚀 ~ data:", data)
 
   const [granulometryData, setGranulometryData] = useState([]);
   const [materialsToShow, setMaterialToShow] = useState([]);
@@ -66,7 +67,7 @@ const Superpave_Step3 = ({
   useEffect(() => {
     const newGranulometryData = data.granulometrys?.map((gran) => ({
       material: gran.material,
-      graph: [[t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')], ...gran.result.graph_data],
+      graph: [[t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')], ...gran.result?.graph_data],
       data: [
         {
           label: t('granulometry-asphalt.accumulated-retained'),
