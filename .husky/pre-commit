@@ -1,6 +1,13 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+#. "$(dirname -- "$0")/_/husky.sh"
 
-yarn tsc --noEmit && yarn eslint . && yarn prettier --write .
-npm run lint
+#yarn tsc --noEmit && yarn eslint . && yarn prettier --write .
+#npm run lint
+#npm run build
+
+#!/bin/env sh
+
+. "$(dirname "$0")/_/husky.sh"
+
+npm run lint 
 npm run build

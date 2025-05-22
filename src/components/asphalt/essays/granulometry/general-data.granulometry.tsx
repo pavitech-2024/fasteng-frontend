@@ -27,11 +27,12 @@ const AsphaltGranulometry_GeneralData = ({
 
         const filteredMaterials = materials.filter(
           (material) => material.type === 'coarseAggregate' || material.type === 'fineAggregate' || 'filler'
+          
         );
 
         setMaterials(filteredMaterials);
         setLoading(false);
-        
+
       },
       {
         pending: t('loading.materials.pending'),
