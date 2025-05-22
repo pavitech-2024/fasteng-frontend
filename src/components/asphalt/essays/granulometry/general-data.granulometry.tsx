@@ -31,6 +31,7 @@ const AsphaltGranulometry_GeneralData = ({
 
         setMaterials(filteredMaterials);
         setLoading(false);
+        
       },
       {
         pending: t('loading.materials.pending'),
