@@ -42,6 +42,8 @@ export type RtcdData = {
   rtcdStep2: RtcdStep2;
   rtcdStep3: RtcdStep3;
   results: Rtcd_results;
+  _id?: string;
+  createdAt?: string;
 };
 
 export type RtcdActions = {
