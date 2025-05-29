@@ -63,6 +63,7 @@ const Superpave_Step3 = ({
       valueFormatter: ({ value }) => `${value}`,
     },
   ];
+  
 
   useEffect(() => {
     const newGranulometryData = data.granulometrys?.map((gran) => ({

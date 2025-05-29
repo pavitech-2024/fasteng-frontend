@@ -359,6 +359,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
               // chosenCurves
               curve
             );
+            console.log("🚀 ~ composition:", composition)
 
             const prevData = data;
 
@@ -367,7 +368,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
               ...composition,
             };
 
-            setData({ step: 2, value: newData });
+            setData({ step: 3, value: newData });
             updateGraph(data.pointsOfCurve[curve], curve);
             //setLoading(false);
           } catch (error) {
