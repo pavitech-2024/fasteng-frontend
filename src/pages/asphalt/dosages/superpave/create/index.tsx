@@ -7,8 +7,8 @@ import Superpave_Step13 from '@/components/asphalt/dosages/superpave/step-13.sup
 import Superpave_Step2 from '@/components/asphalt/dosages/superpave/step-2.superpave';
 import Superpave_Step3 from '@/components/asphalt/dosages/superpave/step-3.superpave';
 import Superpave_Step4 from '@/components/asphalt/dosages/superpave/step-4.superpave';
-import Superpave_Step5 from '@/components/asphalt/dosages/superpave/step-4.superpave';
-import Superpave_Step6 from '@/components/asphalt/dosages/superpave/step-6.superpave';
+import Superpave_Step5 from '@/components/asphalt/dosages/superpave/step-5.superpave';
+import Superpave_Step6 from '@/components/asphalt/dosages/superpave/step-5.superpave';
 import Superpave_Step7 from '@/components/asphalt/dosages/superpave/step-7.superpave';
 import Superpave_Step8 from '@/components/asphalt/dosages/superpave/step-8.superpave';
 import Superpave_Step9 from '@/components/asphalt/dosages/superpave/step-9.superpave';

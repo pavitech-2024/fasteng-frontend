@@ -13,14 +13,14 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const Superpave_Step6 = ({
+const Superpave_Step5 = ({
   nextDisabled,
   setNextDisabled,
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const {
-    materialSelectionData,
+    granulometryEssayData,
     initialBinderData: data,
     granulometryCompositionData,
     generalData,
@@ -33,11 +33,11 @@ const Superpave_Step6 = ({
 
   const { user } = useAuth();
 
-  const [binderData, setBinderData] = useState<AsphaltMaterialData>();
+  // const [binderData, setBinderData] = useState<AsphaltMaterialData>();
   const [rows, setRows] = useState([]);
   const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
   const compositions = ['inferior', 'intermediaria', 'superior'];
-  const [materialNames, setMaterialNames] = useState([]);
+  const [materialNames, setMaterialNames] = useState<{_id: string, name: string, type: string}[]>([]);
   const [activateSecondFetch, setActivateSecondFetch] = useState(false);
   const [shouldRenderTable1, setShouldRenderTable1] = useState(false);
 
@@ -48,27 +48,18 @@ const Superpave_Step6 = ({
           try {
             const newMaterials = [];
 
-            const aggregatesIds = materialSelectionData.aggregates.map((e) => e._id);
-            const binderId = materialSelectionData.binder;
-            const ids = [...aggregatesIds, binderId];
+            const materials = granulometryEssayData.materials.map((e) => ({
+              _id: e._id,
+              name: e.name,
+              type: e.type,
+            }));
 
-            const response = await materialsService.getMaterials(ids);
+            setMaterialNames(materials);
 
-            const names = response.data.materials.map((e) => e.name);
-
-            setMaterialNames(names);
-            setBinderData(response.data.material);
-
-            const binderIndex = response.data.essays.findIndex((e) =>
-              e.some((f) => f.data.generalData.material.type === 'asphaltBinder')
-            );
-
-            const responseData = { ...response.data };
-
-            for (let i = 0; i < responseData.materials.length; i++) {
+            for (let i = 0; i < materials.length; i++) {
               const aggregateMaterial = {
-                name: responseData.materials[i].name,
-                type: i === binderIndex ? 'binder' : 'aggregate',
+                name: materials[i].name,
+                type: materials[i].type,
                 realSpecificMass: null,
                 apparentSpecificMass: null,
                 absorption: null,
@@ -84,7 +75,7 @@ const Superpave_Step6 = ({
             };
 
             setData({
-              step: 3,
+              step: 4,
               value: prevData,
             });
 
@@ -109,7 +100,7 @@ const Superpave_Step6 = ({
         async () => {
           try {
             const newMaterials = [];
-            const { data: resData, success, error } = await superpave.getStep4SpecificMasses(materialSelectionData);
+            const { data: resData, success, error } = await superpave.getStep5SpecificMasses(granulometryEssayData);
 
             if (success && resData.specificMasses.length > 0) {
               resData.specificMasses.forEach((e) => {
@@ -209,9 +200,9 @@ const Superpave_Step6 = ({
     toast.promise(
       async () => {
         try {
-          const response = await superpave.getStep4Data(
+          const response = await superpave.getStep5Data(
             generalData,
-            materialSelectionData,
+            granulometryEssayData,
             granulometryCompositionData,
             data
           );
@@ -307,7 +298,9 @@ const Superpave_Step6 = ({
       },
     ];
 
-    const materialCols = materialSelectionData.aggregates.map((aggregate, index) => ({
+    const aggregates = granulometryEssayData.materials.filter((material) => material.type.includes('Aggregate'));
+
+    const materialCols = aggregates.map((aggregate, index) => ({
       field: `material_${index + 1}`,
       headerName: aggregate.name,
       valueFormatter: ({ value }) => `${value}`,
@@ -321,8 +314,9 @@ const Superpave_Step6 = ({
 
   const createEstimatedPercentageGroupings = (): GridColumnGroupingModel => {
     const baseChildren = [{ field: 'granulometricComposition' }, { field: 'initialBinder' }];
+    const aggregates = granulometryEssayData.materials.filter((material) => material.type.includes('Aggregate'));
 
-    const materialChildren = materialSelectionData.aggregates.map((_, index) => ({
+    const materialChildren = aggregates.map((_, index) => ({
       field: `material_${index + 1}`,
     }));
 
@@ -540,4 +534,4 @@ const Superpave_Step6 = ({
   );
 };
 
-export default Superpave_Step6;
+export default Superpave_Step5;

@@ -89,7 +89,7 @@ class Superpave_SERVICE implements IEssayService {
           break;
         case 5:
           // const { materialSelectionData } = data as SuperpaveData;
-          // await this.getStep4SpecificMasses(materialSelectionData, isConsult);
+          await this.getStep5SpecificMasses(data as SuperpaveData['granulometryEssayData'], isConsult);
           await this.submitInitialBinder(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 6:
@@ -242,7 +242,7 @@ class Superpave_SERVICE implements IEssayService {
         );
 
         const { success, error, granulometry, viscosity } = response.data;
-        console.log("🚀 ~ Superpave_SERVICE ~ calculateGranulometryEssayData= ~ granulometry:", granulometry)
+        console.log('🚀 ~ Superpave_SERVICE ~ calculateGranulometryEssayData= ~ granulometry:', granulometry);
 
         if (success === false) throw error.name;
 
@@ -439,10 +439,10 @@ class Superpave_SERVICE implements IEssayService {
       });
 
       const { data, success, error } = response.data;
-      console.log("🚀 ~ Superpave_SERVICE ~ data:", data)
+      console.log('🚀 ~ Superpave_SERVICE ~ data:', data);
 
       if (success === false) throw error.name;
-      const formattedData = {...data}
+      const formattedData = { ...data };
 
       formattedData.pointsOfCurve = {
         ...step4Data.pointsOfCurve,
@@ -471,7 +471,7 @@ class Superpave_SERVICE implements IEssayService {
 
       const prevData = { ...step4Data, ...formattedData };
       // prevData[chosenCurves] = data.pointsOfCurve;
-      console.log("🚀 ~ Superpave_SERVICE ~ prevData:", prevData)
+      console.log('🚀 ~ Superpave_SERVICE ~ prevData:', prevData);
 
       this.store_actions.setData({ step: 3, value: prevData });
     } catch (error) {
@@ -511,6 +511,67 @@ class Superpave_SERVICE implements IEssayService {
       } catch (error) {
         throw error;
       }
+    }
+  };
+
+  getStep5SpecificMasses = async (step2Data: SuperpaveData['granulometryEssayData'], isConsult?): Promise<any> => {
+    try {
+      const { materials } = step2Data;
+
+      const response = await Api.post(`${this.info.backend_path}/step-5-specific-masses`, {
+        materials,
+      });
+
+      const { data, success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+      return { data, success, error };
+    } catch (error) {}
+  };
+
+  getStep5Data = async (
+    step1Data: SuperpaveData['generalData'],
+    step2Data: SuperpaveData['granulometryEssayData'],
+    step3Data: SuperpaveData['granulometryCompositionData'],
+    step4Data: SuperpaveData['initialBinderData']
+  ): Promise<any> => {
+    try {
+      const { trafficVolume } = step1Data;
+      const { percentageInputs, chosenCurves, lowerComposition, averageComposition, higherComposition, nominalSize } =
+        step3Data;
+      const { materials, binderSpecificMass } = step4Data;
+
+      const hasNullValue = materials.some((obj) => Object.values(obj).some((value) => value === null));
+
+      if (hasNullValue) throw new Error('Algum valor não foi informado.');
+      // if (binderSpecificMass === null || binderSpecificMass === 0)
+      //   return Error('A massa específica do ligante deve ser informada.');
+
+      let composition;
+
+      if (chosenCurves.lower) composition = lowerComposition;
+      if (chosenCurves.average) composition = averageComposition;
+      if (chosenCurves.higher) composition = higherComposition;
+
+      const response = await Api.post(`${this.info.backend_path}/step-4-data`, {
+        materials,
+        percentsOfDosage: percentageInputs,
+        specificMassesData: materials,
+        chosenCurves,
+        composition,
+        binderSpecificMass,
+        nominalSize,
+        trafficVolume,
+      });
+
+      const { data, success, error } = response.data;
+
+      if (success === false) throw error.name;
+
+      return data;
+    } catch (error) {
+      throw error;
     }
   };
 

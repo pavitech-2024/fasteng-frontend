@@ -448,29 +448,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
                     {data.pointsOfCurve[table.key]?.length > 0 && (
                       <>
                       <div>{`${table.key}`}</div>
-                        {/* <Chart
-                          chartType="LineChart"
-                          width={'100%'}
-                          height={'400px'}
-                          loader={<Loading />}
-                          data={data.pointsOfCurve[table.key]}
-                          options={{
-                            title: t('granulometry-asphalt.granulometry'),
-                            backgroundColor: 'transparent',
-                            pointSize: '5',
-                            hAxis: {
-                              title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
-                              type: 'number',
-                              scaleType: 'log',
-                            },
-                            vAxis: {
-                              title: `${t('granulometry-asphalt.passant') + ' (%)'}`,
-                              minValue: '0',
-                              maxValue: '105',
-                            },
-                            legend: 'none',
-                          }}
-                        /> */}
                         <Graph data={data.pointsOfCurve[table.key]} />
                       </>
                     )}
@@ -485,16 +462,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
                   </TableContainer>
                 );
               }
-              // {
-              //   data.pointsOfCurve[table.key] > 0 && (
-              //     <>
-              //       <Typography>
-              //         {t('asphalt.dosages.superpave.maximum-nominal-size')}: {data.nominalSize.value} mm
-              //       </Typography>
-              //       <Graph data={data.pointsOfCurve[table.key]} />
-              //     </>
-              //   );
-              // }
             })}
         </Box>
       )}
