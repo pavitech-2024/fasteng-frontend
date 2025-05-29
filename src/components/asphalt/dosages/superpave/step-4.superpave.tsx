@@ -352,23 +352,13 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
       toast.promise(
         async () => {
           try {
-            const composition = await superpave.calculateGranulometryComposition(
+            await superpave.calculateGranulometryComposition(
               data,
               granulometryEssayData,
               generalData,
-              // chosenCurves
               curve
             );
-            console.log("🚀 ~ composition:", composition)
 
-            const prevData = data;
-
-            const newData = {
-              ...prevData,
-              ...composition,
-            };
-
-            setData({ step: 3, value: newData });
             updateGraph(data.pointsOfCurve[curve], curve);
             //setLoading(false);
           } catch (error) {
@@ -387,27 +377,11 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     }
   };
 
-  // useEffect(() => {
-  //   if (data.pointsOfCurve.length > 0) {
-  //     updateGraph(data.pointsOfCurve);
-  //   }
-  // }, [data.pointsOfCurve]);
-
-  if (data.graphData?.length > 0) {
+  if (Object.entries(data.pointsOfCurve).some(([key, value]) => value.length > 0)) {
     setNextDisabled(false);
+  } else {
+    setNextDisabled(true);
   }
-
-  // useEffect(() => {
-  //   const newPointsOfCurve = {
-  //     lower: [],
-  //     average: [],
-  //     higher: [],
-  //   };
-  //   setData({ step: 3, key: 'pointsOfCurve', value: newPointsOfCurve });
-  // },[]);
-
-  console.log('🚀 ~ constSuperpave_Step4= ~ data.pointsOfCurve[table.key]:', data.pointsOfCurve.lower);
-  console.log('🚀 ~ constSuperpave_Step4= ~ tables:', tables);
 
   return (
     <>
@@ -472,29 +446,33 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
                     />
 
                     {data.pointsOfCurve[table.key]?.length > 0 && (
-                      <Chart
-                        chartType="LineChart"
-                        width={'100%'}
-                        height={'400px'}
-                        loader={<Loading />}
-                        data={data.pointsOfCurve[table.key]}
-                        options={{
-                          title: t('granulometry-asphalt.granulometry'),
-                          backgroundColor: 'transparent',
-                          pointSize: '5',
-                          hAxis: {
-                            title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
-                            type: 'number',
-                            scaleType: 'log',
-                          },
-                          vAxis: {
-                            title: `${t('granulometry-asphalt.passant') + ' (%)'}`,
-                            minValue: '0',
-                            maxValue: '105',
-                          },
-                          legend: 'none',
-                        }}
-                      />
+                      <>
+                      <div>{`${table.key}`}</div>
+                        {/* <Chart
+                          chartType="LineChart"
+                          width={'100%'}
+                          height={'400px'}
+                          loader={<Loading />}
+                          data={data.pointsOfCurve[table.key]}
+                          options={{
+                            title: t('granulometry-asphalt.granulometry'),
+                            backgroundColor: 'transparent',
+                            pointSize: '5',
+                            hAxis: {
+                              title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
+                              type: 'number',
+                              scaleType: 'log',
+                            },
+                            vAxis: {
+                              title: `${t('granulometry-asphalt.passant') + ' (%)'}`,
+                              minValue: '0',
+                              maxValue: '105',
+                            },
+                            legend: 'none',
+                          }}
+                        /> */}
+                        <Graph data={data.pointsOfCurve[table.key]} />
+                      </>
                     )}
 
                     <Button
@@ -507,16 +485,16 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
                   </TableContainer>
                 );
               }
-              {
-                data.pointsOfCurve[table.key] > 0 && (
-                  <>
-                    <Typography>
-                      {t('asphalt.dosages.superpave.maximum-nominal-size')}: {data.nominalSize.value} mm
-                    </Typography>
-                    <Graph data={data.pointsOfCurve[table.key]} />
-                  </>
-                );
-              }
+              // {
+              //   data.pointsOfCurve[table.key] > 0 && (
+              //     <>
+              //       <Typography>
+              //         {t('asphalt.dosages.superpave.maximum-nominal-size')}: {data.nominalSize.value} mm
+              //       </Typography>
+              //       <Graph data={data.pointsOfCurve[table.key]} />
+              //     </>
+              //   );
+              // }
             })}
         </Box>
       )}

@@ -391,20 +391,20 @@ class Superpave_SERVICE implements IEssayService {
 
   /**
    * Calculates the granulometry composition based on the user's input.
-   * @param calculateStep3Data - The data of the granulometry composition calculation.
+   * @param step4Data - The data of the granulometry composition calculation.
    * @param step2Data - The data of the material selection step.
    * @param step1Data - The data of the general step.
    * @param chosenCurves - The chosen curves of the lower, average and higher curves.
    * @returns The calculated granulometry composition.
    */
   calculateGranulometryComposition = async (
-    calculateStep3Data: SuperpaveData['granulometryCompositionData'],
+    step4Data: SuperpaveData['granulometryCompositionData'],
     step2Data: SuperpaveData['granulometryEssayData'],
     step1Data: SuperpaveData['generalData'],
     chosenCurves: any
   ): Promise<any> => {
     try {
-      const { percentageInputs, nominalSize, percentsToList } = calculateStep3Data;
+      const { percentageInputs, nominalSize, percentsToList } = step4Data;
       const { dnitBand } = step1Data;
       const aggregates = step2Data.materials;
 
@@ -443,12 +443,33 @@ class Superpave_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
       const formattedData = {...data}
+
       formattedData.pointsOfCurve = {
-        ...calculateStep3Data.pointsOfCurve,
+        ...step4Data.pointsOfCurve,
         [chosenCurves]: data.pointsOfCurve,
       };
 
-      const prevData = { ...calculateStep3Data, ...formattedData };
+      if (step4Data.lowerComposition.percentsOfMaterials.length > 0) {
+        formattedData.lowerComposition = {
+          ...step4Data.lowerComposition,
+          percentsOfMaterials: [...step4Data.lowerComposition.percentsOfMaterials],
+          sumOfPercents: [...step4Data.lowerComposition.sumOfPercents],
+        };
+      } else if (step4Data.averageComposition.percentsOfMaterials.length > 0) {
+        formattedData.averageComposition = {
+          ...step4Data.averageComposition,
+          percentsOfMaterials: [...step4Data.averageComposition.percentsOfMaterials],
+          sumOfPercents: [...step4Data.averageComposition.sumOfPercents],
+        };
+      } else if (step4Data.higherComposition.percentsOfMaterials.length > 0) {
+        formattedData.higherComposition = {
+          ...step4Data.higherComposition,
+          percentsOfMaterials: [...step4Data.higherComposition.percentsOfMaterials],
+          sumOfPercents: [...step4Data.higherComposition.sumOfPercents],
+        };
+      }
+
+      const prevData = { ...step4Data, ...formattedData };
       // prevData[chosenCurves] = data.pointsOfCurve;
       console.log("🚀 ~ Superpave_SERVICE ~ prevData:", prevData)
 
