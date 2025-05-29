@@ -449,19 +449,19 @@ class Superpave_SERVICE implements IEssayService {
         [chosenCurves]: data.pointsOfCurve,
       };
 
-      if (step4Data.lowerComposition.percentsOfMaterials.length > 0) {
+      if (step4Data?.lowerComposition?.percentsOfMaterials?.length > 0) {
         formattedData.lowerComposition = {
           ...step4Data.lowerComposition,
           percentsOfMaterials: [...step4Data.lowerComposition.percentsOfMaterials],
           sumOfPercents: [...step4Data.lowerComposition.sumOfPercents],
         };
-      } else if (step4Data.averageComposition.percentsOfMaterials.length > 0) {
+      } else if (step4Data?.averageComposition?.percentsOfMaterials?.length > 0) {
         formattedData.averageComposition = {
           ...step4Data.averageComposition,
           percentsOfMaterials: [...step4Data.averageComposition.percentsOfMaterials],
           sumOfPercents: [...step4Data.averageComposition.sumOfPercents],
         };
-      } else if (step4Data.higherComposition.percentsOfMaterials.length > 0) {
+      } else if (step4Data?.higherComposition?.percentsOfMaterials?.length > 0) {
         formattedData.higherComposition = {
           ...step4Data.higherComposition,
           percentsOfMaterials: [...step4Data.higherComposition.percentsOfMaterials],
@@ -530,7 +530,7 @@ class Superpave_SERVICE implements IEssayService {
     } catch (error) {}
   };
 
-  getStep5Data = async (
+  calculateStep5Data = async (
     step1Data: SuperpaveData['generalData'],
     step2Data: SuperpaveData['granulometryEssayData'],
     step3Data: SuperpaveData['granulometryCompositionData'],
@@ -554,7 +554,7 @@ class Superpave_SERVICE implements IEssayService {
       if (chosenCurves.average) composition = averageComposition;
       if (chosenCurves.higher) composition = higherComposition;
 
-      const response = await Api.post(`${this.info.backend_path}/step-4-data`, {
+      const response = await Api.post(`${this.info.backend_path}/calculate-step-5-data`, {
         materials,
         percentsOfDosage: percentageInputs,
         specificMassesData: materials,

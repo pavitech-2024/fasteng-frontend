@@ -120,7 +120,7 @@ const Superpave_Step5 = ({
               };
 
               setData({
-                step: 3,
+                step: 4,
                 value: prevData,
               });
               setActivateSecondFetch(false);
@@ -144,7 +144,7 @@ const Superpave_Step5 = ({
               };
 
               setData({
-                step: 3,
+                step: 4,
                 value: prevData,
               });
               setActivateSecondFetch(false);
@@ -200,7 +200,7 @@ const Superpave_Step5 = ({
     toast.promise(
       async () => {
         try {
-          const response = await superpave.getStep5Data(
+          const response = await superpave.calculateStep5Data(
             generalData,
             granulometryEssayData,
             granulometryCompositionData,
@@ -240,7 +240,7 @@ const Superpave_Step5 = ({
 
           setEstimatedPercentageRows(updatedPercentageRows);
 
-          setData({ step: 3, value: prevData });
+          setData({ step: 4, value: prevData });
           setLoading(false);
           setSpecificMassModalIsOpen(false);
         } catch (error) {
@@ -488,7 +488,7 @@ const Superpave_Step5 = ({
                           newData[materialIndex][input.key] = e.target.value.replace(',', '.');
 
                           setData({
-                            step: 3,
+                            step: 4,
                             key: `materials`,
                             value: newData,
                           });
@@ -523,7 +523,7 @@ const Superpave_Step5 = ({
           fullWidth
           onChange={(e) => {
             setData({
-              step: 3,
+              step: 4,
               key: `binderInput`,
               value: Number(e.target.value),
             });

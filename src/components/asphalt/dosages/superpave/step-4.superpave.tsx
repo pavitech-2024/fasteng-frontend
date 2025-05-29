@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
 import Chart from 'react-google-charts';
+import { Preview } from '@mui/icons-material';
 
 const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -28,6 +29,12 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   const [lower, setLower] = useState(false);
   const [average, setAverage] = useState(false);
   const [higher, setHigher] = useState(false);
+
+  const [chosenCurves, setChosenCurves] = useState({
+    lower: false,
+    average: false,
+    higher: false,
+  });
 
   const peneiras = AllSievesSuperpaveUpdatedAstm.map((peneira) => {
     return { peneira: peneira.label };
@@ -129,6 +136,15 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
         break;
     }
   };
+
+  useEffect(() => {
+    let curves = chosenCurves;
+    chosenCurves.lower = lower;
+    chosenCurves.average = average;
+    chosenCurves.higher = higher;
+
+    setData({ step: 3, key: 'chosenCurves', value: curves });
+  }, [lower, average, higher]);
 
   const convertNumber = (value) => {
     let aux = value;
@@ -377,11 +393,12 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     }
   };
 
-  if (Object.entries(data.pointsOfCurve).some(([key, value]) => value.length > 0)) {
+  if (Object.entries(data.pointsOfCurve).some(([key, value]) => value)) {
     setNextDisabled(false);
   } else {
     setNextDisabled(true);
   }
+
 
   return (
     <>
