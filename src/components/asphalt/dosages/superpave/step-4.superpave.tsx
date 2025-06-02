@@ -139,12 +139,12 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
 
   useEffect(() => {
     let curves = chosenCurves;
-    chosenCurves.lower = lower;
-    chosenCurves.average = average;
-    chosenCurves.higher = higher;
+    if (data.pointsOfCurve.lower.length > 0) curves.lower = true;
+    if (data.pointsOfCurve.average.length > 0) curves.average = true;
+    if (data.pointsOfCurve.higher.length > 0) curves.higher = true;
 
     setData({ step: 3, key: 'chosenCurves', value: curves });
-  }, [lower, average, higher]);
+  }, [data.pointsOfCurve]);
 
   const convertNumber = (value) => {
     let aux = value;
@@ -336,46 +336,34 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   };
 
   const updateGraph = (points, curve) => {
+    console.log("🚀 ~ updateGraph ~ points:", points)
     const pointsOfCurve = updateDataArray(points);
     const prevData = { ...data.pointsOfCurve };
     const newData = { ...prevData, [curve]: pointsOfCurve };
     setData({ step: 3, key: 'pointsOfCurve', value: newData });
+    console.log("🚀 ~ updateGraph ~ newData:", newData)
   };
 
-  const calcular = (curve: string) => {
-    let valueCount = 0;
-    let valueIsValid = false;
-
-    // Deve ser exatamente 100;
-    if (curve === 'lower') {
-      valueCount = Object.values(data.percentageInputs[0]).reduce((acc, item) => acc + Number(item), 0);
-      if (valueCount === 100) {
-        valueIsValid = true;
-      }
-    } else if (curve === 'average') {
-      valueCount = Object.values(data.percentageInputs[1]).reduce((acc, item) => acc + Number(item), 0);
-      if (valueCount === 100) {
-        valueIsValid = true;
-      }
-    } else if (curve === 'higher') {
-      valueCount = Object.values(data.percentageInputs[2]).reduce((acc, item) => acc + Number(item), 0);
-      if (valueCount === 100) {
-        valueIsValid = true;
-      }
-    }
+  const calculate = (curve: string) => {
+    const index = curve === 'lower' ? 0 : curve === 'average' ? 1 : 2;
+    const valueCount = Object.values(data.percentageInputs[index]).reduce((acc, item) => acc + Number(item), 0);
+    const valueIsValid = valueCount === 100;
 
     if (valueIsValid) {
       toast.promise(
         async () => {
           try {
-            await superpave.calculateGranulometryComposition(
+            const response = await superpave.calculateGranulometryComposition(
               data,
               granulometryEssayData,
               generalData,
               curve
             );
+            console.log("🚀 ~ response:", response)
 
-            updateGraph(data.pointsOfCurve[curve], curve);
+            setData({ step: 3, value: response });
+
+            updateGraph(response.pointsOfCurve[curve], curve);
             //setLoading(false);
           } catch (error) {
             //setLoading(false);
@@ -462,15 +450,10 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
                       onChangeInputsTables={onChangeInputsTables}
                     />
 
-                    {data.pointsOfCurve[table.key]?.length > 0 && (
-                      <>
-                      <div>{`${table.key}`}</div>
-                        <Graph data={data.pointsOfCurve[table.key]} />
-                      </>
-                    )}
+                    {data.pointsOfCurve[table.key]?.length > 0 && <Graph data={data.pointsOfCurve[table.key]} />}
 
                     <Button
-                      onClick={() => calcular(table.key)}
+                      onClick={() => calculate(table.key)}
                       variant="outlined"
                       sx={{ width: '100%', marginTop: '2%' }}
                     >

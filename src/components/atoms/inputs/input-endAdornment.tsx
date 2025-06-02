@@ -34,6 +34,7 @@ const InputEndAdornment = ({
   readOnly,
   focused,
 }: Props) => {
+  console.log("🚀 ~ sx:", sx)
   return (
     <FormControl focused={focused} variant={variant} key={key} fullWidth={fullWidth}>
       {label ? <InputLabel htmlFor={`outlined-adornment-${key}`}>{label}</InputLabel> : <></>}

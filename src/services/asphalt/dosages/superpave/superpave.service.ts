@@ -473,7 +473,8 @@ class Superpave_SERVICE implements IEssayService {
       // prevData[chosenCurves] = data.pointsOfCurve;
       console.log('🚀 ~ Superpave_SERVICE ~ prevData:', prevData);
 
-      this.store_actions.setData({ step: 3, value: prevData });
+      return prevData;
+      // this.store_actions.setData({ step: 3, value: prevData });
     } catch (error) {
       throw error;
     }

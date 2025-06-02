@@ -2,6 +2,8 @@
   "superpave.step-2-description": "Crie os materiais para a dosagem, incluindo pelo menos um agregado graúdo, um miúdo e um filler com seus dados de granulometria, além de ao menos um ligante com os dados de viscosidade rotacional.",
   "superpave.step-3-description": "Clique no material testado para ver o resultado dos ensaios de granulometria (agregados) e viscosidade rotacional (ligantes).",
   "superpave.step-4-description": "Escolha a curva granulométrica desejada e insira as porcentagens dos agregados, garantindo um total de 100%.",
+  "superpave.step-5-description": "Confira os dados de teor de ligante inicial.",
+  "superpave.step-6-description": "Faça o download da planilha modelo, insira os dados gerados pelo compactador e faça o upload da planilha preenchida para cada curva selecionada.",
   "superpave.step-12-description": "Esses são os resultados da sua dosagem Superpave. Não se esqueça de salvar para acessá-las mais tarde.",
 
   "superpave.step-12": "Resultados",
@@ -79,6 +81,7 @@
   "asphalt.dosages.superpave.combined-gsa": "Gsa combinado (g/cm³)",
   "asphalt.dosages.superpave.gse": "Gse (g/cm³)",
   "asphalt.dosages.superpave.initial-binder": "Teor de ligante inicial",
+  "asphalt.dosages.superpave.materials-estimated-percentage": "Porcentagem estimada de materiais",
 
   "asphalt.dosages.superpave.initial-n": "Ninicial",
   "asphalt.dosages.superpave.project-n": "Nprojeto",
@@ -144,5 +147,7 @@
   "asphalt.dosages.superpave.step-3.higher": "Superior",
   "asphalt.dosages.superpave.step-3.average": "Intermediária",
   "marshall.dosage-pdf-title": "Relatório de Dosagem Superpave",
-  "errors.empty-material-mass": "A massa total de cada agregado deve ser preenchida"
+  "errors.empty-material-mass": "A massa total de cada agregado deve ser preenchida",
+
+  "superpave.error.minReads": "Não é possível excluir. Mínimo de linhas atingido."
 }

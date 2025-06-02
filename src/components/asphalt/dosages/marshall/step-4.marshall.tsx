@@ -252,9 +252,6 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
                 columnGroupingModel={machiningColumnGroupings}
                 disableColumnMenu
                 hideFooter
-                // sx={{
-                //   minWidth: '600px',
-                // }}
               />
               <DataGrid
                 columns={compressionColumns.map((col) => ({

@@ -37,7 +37,7 @@ const Superpave_Step5 = ({
   const [rows, setRows] = useState([]);
   const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
   const compositions = ['inferior', 'intermediaria', 'superior'];
-  const [materialNames, setMaterialNames] = useState<{_id: string, name: string, type: string}[]>([]);
+  const [materialNames, setMaterialNames] = useState<{ _id: string; name: string; type: string }[]>([]);
   const [activateSecondFetch, setActivateSecondFetch] = useState(false);
   const [shouldRenderTable1, setShouldRenderTable1] = useState(false);
 
@@ -206,6 +206,7 @@ const Superpave_Step5 = ({
             granulometryCompositionData,
             data
           );
+          console.log("🚀 ~ response:", response)
 
           const updatedRows = response.granulometryComposition.map((e, i) => ({
             id: i,
@@ -237,6 +238,7 @@ const Superpave_Step5 = ({
 
             return row;
           });
+          console.log("🚀 ~ updatedPercentageRows ~ updatedPercentageRows:", updatedPercentageRows)
 
           setEstimatedPercentageRows(updatedPercentageRows);
 
@@ -298,7 +300,7 @@ const Superpave_Step5 = ({
       },
     ];
 
-    const aggregates = granulometryEssayData.materials.filter((material) => material.type.includes('Aggregate'));
+    const aggregates = granulometryEssayData.materials.filter((material) => material.type.includes('Aggregate') || material.type.includes('filler'));
 
     const materialCols = aggregates.map((aggregate, index) => ({
       field: `material_${index + 1}`,
@@ -314,7 +316,7 @@ const Superpave_Step5 = ({
 
   const createEstimatedPercentageGroupings = (): GridColumnGroupingModel => {
     const baseChildren = [{ field: 'granulometricComposition' }, { field: 'initialBinder' }];
-    const aggregates = granulometryEssayData.materials.filter((material) => material.type.includes('Aggregate'));
+    const aggregates = granulometryEssayData.materials.filter((material) => material.type.includes('Aggregate') || material.type.includes('filler'));
 
     const materialChildren = aggregates.map((_, index) => ({
       field: `material_${index + 1}`,
@@ -323,7 +325,7 @@ const Superpave_Step5 = ({
     return [
       {
         groupId: 'estimatedPercentage',
-        headerName: 'Porcentagem estimada de materiais',
+        headerName: t('asphalt.dosages.superpave.materials-estimated-percentage'),
         children: [...baseChildren, ...materialChildren],
         headerAlign: 'center' as GridAlignment,
       },
@@ -412,8 +414,9 @@ const Superpave_Step5 = ({
               disableColumnMenu
               disableColumnFilter
               experimentalFeatures={{ columnGrouping: true }}
-              columns={columns}
+              columns={columns.map((col) => ({ ...col, flex: 1, headerAlign: 'center', align: 'center' }))}
               rows={rows}
+              sx={{ width: '100%' }}
             />
           )}
 
@@ -424,9 +427,14 @@ const Superpave_Step5 = ({
               disableColumnFilter
               experimentalFeatures={{ columnGrouping: true }}
               columnGroupingModel={estimatedPercentageGroupings}
-              columns={estimatedPercentageCols}
+              columns={estimatedPercentageCols.map((col) => ({
+                ...col,
+                flex: 1,
+                headerAlign: 'center',
+                align: 'center',
+              }))}
               rows={estimatedPercentageRows}
-              sx={{ marginTop: '2rem' }}
+              sx={{ marginTop: '2rem', width: '100%' }}
             />
           )}
 
@@ -444,8 +452,9 @@ const Superpave_Step5 = ({
             disableColumnFilter
             experimentalFeatures={{ columnGrouping: true }}
             columnGroupingModel={compressionParamsGroupings}
-            columns={compressionParamsCols}
+            columns={compressionParamsCols.map((col) => ({ ...col, flex: 1, headerAlign: 'center', align: 'center' }))}
             rows={compressionParamsRows}
+            sx={{ marginTop: '2rem', width: '100%' }}
           />
         </Box>
       )}
