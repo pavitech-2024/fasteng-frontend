@@ -139,9 +139,9 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
 
   useEffect(() => {
     let curves = chosenCurves;
-    if (data.pointsOfCurve.lower.length > 0) curves.lower = true;
-    if (data.pointsOfCurve.average.length > 0) curves.average = true;
-    if (data.pointsOfCurve.higher.length > 0) curves.higher = true;
+    if (data.pointsOfCurve.lower?.length > 0) curves.lower = true;
+    if (data.pointsOfCurve.average?.length > 0) curves.average = true;
+    if (data.pointsOfCurve.higher?.length > 0) curves.higher = true;
 
     setData({ step: 3, key: 'chosenCurves', value: curves });
   }, [data.pointsOfCurve]);

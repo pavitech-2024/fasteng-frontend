@@ -365,7 +365,7 @@ class Superpave_SERVICE implements IEssayService {
           (agg) => agg.data.material.type !== 'asphaltBinder' && agg.data.material.type !== 'CAP'
         );
 
-        const response = await Api.post(`${this.info.backend_path}/step-3-data`, {
+        const response = await Api.post(`${this.info.backend_path}/get-granulometric-composition-data`, {
           dnitBand: dnitBand,
           aggregates: aggregates,
         });
@@ -398,15 +398,15 @@ class Superpave_SERVICE implements IEssayService {
    * @returns The calculated granulometry composition.
    */
   calculateGranulometryComposition = async (
-    step4Data: SuperpaveData['granulometryCompositionData'],
-    step2Data: SuperpaveData['granulometryEssayData'],
-    step1Data: SuperpaveData['generalData'],
+    granulometryCompositionData: SuperpaveData['granulometryCompositionData'],
+    granulometryEssayData: SuperpaveData['granulometryEssayData'],
+    generalData: SuperpaveData['generalData'],
     chosenCurves: any
   ): Promise<any> => {
     try {
-      const { percentageInputs, nominalSize, percentsToList } = step4Data;
-      const { dnitBand } = step1Data;
-      const aggregates = step2Data.materials;
+      const { percentageInputs, nominalSize, percentsToList } = granulometryCompositionData;
+      const { dnitBand } = generalData;
+      const aggregates = granulometryEssayData.materials;
 
       const selectedCurveInputs = chosenCurves.lower
         ? percentageInputs[0]
@@ -445,31 +445,31 @@ class Superpave_SERVICE implements IEssayService {
       const formattedData = { ...data };
 
       formattedData.pointsOfCurve = {
-        ...step4Data.pointsOfCurve,
+        ...granulometryCompositionData.pointsOfCurve,
         [chosenCurves]: data.pointsOfCurve,
       };
 
-      if (step4Data?.lowerComposition?.percentsOfMaterials?.length > 0) {
+      if (granulometryCompositionData?.lowerComposition?.percentsOfMaterials?.length > 0) {
         formattedData.lowerComposition = {
-          ...step4Data.lowerComposition,
-          percentsOfMaterials: [...step4Data.lowerComposition.percentsOfMaterials],
-          sumOfPercents: [...step4Data.lowerComposition.sumOfPercents],
+          ...granulometryCompositionData.lowerComposition,
+          percentsOfMaterials: [...granulometryCompositionData.lowerComposition.percentsOfMaterials],
+          sumOfPercents: [...granulometryCompositionData.lowerComposition.sumOfPercents],
         };
-      } else if (step4Data?.averageComposition?.percentsOfMaterials?.length > 0) {
+      } else if (granulometryCompositionData?.averageComposition?.percentsOfMaterials?.length > 0) {
         formattedData.averageComposition = {
-          ...step4Data.averageComposition,
-          percentsOfMaterials: [...step4Data.averageComposition.percentsOfMaterials],
-          sumOfPercents: [...step4Data.averageComposition.sumOfPercents],
+          ...granulometryCompositionData.averageComposition,
+          percentsOfMaterials: [...granulometryCompositionData.averageComposition.percentsOfMaterials],
+          sumOfPercents: [...granulometryCompositionData.averageComposition.sumOfPercents],
         };
-      } else if (step4Data?.higherComposition?.percentsOfMaterials?.length > 0) {
+      } else if (granulometryCompositionData?.higherComposition?.percentsOfMaterials?.length > 0) {
         formattedData.higherComposition = {
-          ...step4Data.higherComposition,
-          percentsOfMaterials: [...step4Data.higherComposition.percentsOfMaterials],
-          sumOfPercents: [...step4Data.higherComposition.sumOfPercents],
+          ...granulometryCompositionData.higherComposition,
+          percentsOfMaterials: [...granulometryCompositionData.higherComposition.percentsOfMaterials],
+          sumOfPercents: [...granulometryCompositionData.higherComposition.sumOfPercents],
         };
       }
 
-      const prevData = { ...step4Data, ...formattedData };
+      const prevData = { ...granulometryCompositionData, ...formattedData };
       // prevData[chosenCurves] = data.pointsOfCurve;
       console.log('🚀 ~ Superpave_SERVICE ~ prevData:', prevData);
 
