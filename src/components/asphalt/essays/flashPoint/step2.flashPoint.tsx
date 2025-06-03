@@ -15,8 +15,7 @@ const FlashPoint_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         key={'top'}
         sx={{
           width: '100%',
-          display: 'grid',
-          gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
+          display: 'flex',
           gap: '10px',
           mt: '20px',
         }}
@@ -32,6 +31,7 @@ const FlashPoint_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           type="number"
           inputProps={{ min: 0 }}
           required
+          sx={{ width: '25rem' }}
         />
       </Box>
     </Box>
