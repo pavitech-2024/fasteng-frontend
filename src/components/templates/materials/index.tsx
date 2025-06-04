@@ -40,10 +40,10 @@ import { create } from 'domain';
 
 interface MaterialsTemplateProps {
   materials: any[] | undefined;
-  fwdEssays: FwdData[] | undefined;
-  iggEssays: IggData[] | undefined;
-  rtcdEssays: RtcdData[] | undefined;
-  dduiEssays: DduiData[] | undefined; 
+  fwdEssays?: FwdData[] | undefined;
+  iggEssays?: IggData[] | undefined;
+  rtcdEssays?: RtcdData[] | undefined;
+  dduiEssays?: DduiData[] | undefined; 
   types: DropDownOption[];
   title: 'Amostras Cadastradas' | 'Materiais Cadastrados';
   path?: string;
@@ -115,9 +115,14 @@ const MaterialsTemplate = ({
   const options = [
     { label: t('materials.template.name'), value: 'name' },
     { label: t('materials.template.type'), value: 'type' },
-    { label: t('materials.template.mix'), value: 'mix' },
-    { label: t('materials.template.stretch'), value: 'stretch' },
   ];
+
+  if (path.includes('asphalt')) {
+    options.push(
+      { label: t('materials.template.mix'), value: 'mix' },
+      { label: t('materials.template.stretch'), value: 'stretch' },
+    );
+  }
 
   const translateType = (type: string) => {
     switch (type) {
@@ -174,7 +179,7 @@ const MaterialsTemplate = ({
 
   console.log("Testando filtro de nome", filteredData);
 
-  const fwdEssaysData = fwdEssays.map(({_id, generalData }) => ({
+  const fwdEssaysData = fwdEssays?.map(({_id, generalData }) => ({
     name: generalData.name,
     type: 'FWD',
     //createdAt: generalData.createdAt,
@@ -191,48 +196,38 @@ const MaterialsTemplate = ({
     _id: _id
   }))
 
-  const props = {
-  rtcdEssays: [], // initialize rtcdEssays with an empty array
-};
-
-  const rtcdEssaysData = rtcdEssays.map((essay)=> ({
+  const rtcdEssaysData = rtcdEssays?.map((essay)=> ({
   _id: essay._id,
   name: essay.generalData.name,
   type: 'RTCD',
   createdAt: essay.createdAt
 }));
-console.log("testando o rtcdEssayData", rtcdEssaysData);
 
-const dduiEssaysData = dduiEssays.map((essay) => ({
+
+const dduiEssaysData = dduiEssays?.map((essay) => ({
     name: essay.generalData.name,
     type: 'FWD',
-    //createdAt: generalData.createdAt,
-    //createdAt: generalData.createdAt instanceof Date ? generalData.createdAt : new Date(generalData.createdAt),
     createdAt: essay.createdAt,
     _id: essay._id
   }))
 
   useEffect(() => {
-    console.log("Testando o searchBy", searchBy);
     if (searchBy === 'stretch') {
       // Combina FWD e IGG quando "stretch" for selecionado
       setTableData([...fwdEssaysData, ...iggEssaysData]);
     } else if (searchBy === 'mix') {
-      // Lógica para mistura (se ainda necessário)
-      //setTableData(filteredData.filter(material => material.type === 'mix'));
       setTableData([...rtcdEssaysData, ...dduiEssaysData]);  // Mostra SOMENTE ensaios RTCD e DDUI (mistura)
     } else if (searchBy === 'name') {
       // Mostra TUDO (materiais + todos ensaios)
-      const newData = [...filteredData, ...fwdEssaysData, ...iggEssaysData, ...rtcdEssaysData, ...dduiEssaysData];
-      console.log("testando o newData", newData);
+      console.log("igg", iggEssaysData);
+      console.log("fwd", fwdEssaysData);
+      console.log("rtcd", rtcdEssaysData);
+      console.log("ddui", dduiEssaysData);
+      const newData = fwdEssaysData || iggEssaysData.length > 0 || rtcdEssaysData || dduiEssaysData ? 
+       [...filteredData, ...fwdEssaysData, ...iggEssaysData, ...rtcdEssaysData, ...dduiEssaysData] : filteredData;
+       console.log("Testando o newData", newData);
     setTableData(
       newData
-      /*...filteredData,
-      ...fwdEssaysData,
-      ...iggEssaysData,
-      ...rtcdEssaysData,
-      ...dduiEssaysData,*/
-      
     );
     }
     else {
@@ -241,50 +236,6 @@ const dduiEssaysData = dduiEssays.map((essay) => ({
     }
   }, [searchBy]);
 
-
-  /*useEffect(() => {
-    if(searchBy === 'stretch') {
-      setTableData (fwdEssaysData)
-      setTableData (iggEssaysData)
-    }
-    else if(searchBy === 'mix') {
-      setTableData(rtcdEssaysData)
-      //setTableData(dduiEssaysData)
-    }
-  }, [searchBy]);*/
-
-  
-
-  /*const filteredData = materials
-  .map((material) => {
-    const { _id, name, type, createdAt } = material;
-    const materialProperty = 'material' in material ? material.material : null;
-    return {
-      _id,
-      name,
-      type,
-      createdAt,
-      material: materialProperty,
-    };
-  })
-
-    .filter((material) => {
-      return searchValue.length > 0
-        ? searchBy === 'name'
-          ? material[searchBy].toLowerCase().includes(searchValue.toLowerCase())
-          : material[searchBy] === searchValue
-        : true;
-    })
-    .filter((material) => {
-      if (searchBy === 'mix') {
-        // coloque a condição que identifica uma mistura
-        return material.type === 'mix'; // ou qualquer valor que represente mistura
-      } else if (searchBy === 'stretch') {
-        // coloque a condição que identifica um trecho
-        return material === undefined; // ou outro valor que represente trecho
-      }
-      return true; // para os outros casos, mantém tudo
-    });*/
     console.log("Filtro exemplo",filteredData);
     console.log("Teste" ,materials)
   const handleEditMaterial = (rowId: string) => {
@@ -373,28 +324,16 @@ const dduiEssaysData = dduiEssays.map((essay) => ({
               width: '55%',
             }}
           >
-            {/*<DropDown
-              label={t('materials.template.searchBy')}
-              options={[
-                { label: t('materials.template.name'), value: 'name' },
-                { label: t('materials.template.type'), value: 'type' },
-                { label: t('materials.template.mix'), value: 'mix' },
-                {label: t('materials.template.stretch'), value: 'stretch'},
-              ]}
-              callback={setSearchBy}
-              size="small"
-              sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
-              value={{ label: t('materials.template.name'), value: 'name' }}
-            />*/}
 
           <DropDown
             label={t('materials.template.searchBy')}
-            options={[
+            /*options={[
               { label: t('materials.template.name'), value: 'name' },
               { label: t('materials.template.type'), value: 'type' },
               { label: t('materials.template.mix'), value: 'mix' },
               { label: t('materials.template.stretch'), value: 'stretch' },
-            ]}
+            ]}*/
+            options={options}
             callback={setSearchBy}
             size="small"
             sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
