@@ -75,24 +75,28 @@ const ConcreteMaterials = () => {
         </Box>
       ) : (
         <MaterialsTemplate
-            materials={materials}
-            types={types}
-            title={t('concrete.materials.title')}
-            handleOpenModal={() => setOpenModal(true)}
-            deleteMaterial={handleDeleteMaterial}
-            path="concrete/materials/material"
-            editMaterial={handleEditMaterial}
-            modal={<CreateEditConcreteMaterialModal
+          materials={materials}
+          types={types}
+          title={t('concrete.materials.title')}
+          handleOpenModal={() => setOpenModal(true)}
+          deleteMaterial={handleDeleteMaterial}
+          path="concrete/materials/material"
+          editMaterial={handleEditMaterial}
+          modal={
+            <CreateEditConcreteMaterialModal
               openModal={openModal}
               handleCloseModal={() => {
                 setOpenModal(false);
                 setIsEdit(false);
                 setMaterialToEdit(undefined);
-              } }
+              }}
               updateMaterials={addNewMaterial}
               materials={materials}
               materialToEdit={materialToEdit ? materialToEdit : undefined}
-              isEdit={isEdit} />}         />
+              isEdit={isEdit}
+            />
+          }
+        />
       )}
     </Container>
   );

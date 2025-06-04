@@ -38,7 +38,7 @@ const Materials = () => {
         console.log(response.data);
         setMaterials(response.data);
         setLoading(false);
-        console.log("Testando o response.data", response.data);
+        console.log('Testando o response.data', response.data);
         setFwdEssays(response.data[0].fwdEssays); // semMaterial = response.data[0].fwdEssays;
         //console.log("Testando o semMaterial", semMaterial);
         setIggEssays(response.data[0].iggEssays);

@@ -10,19 +10,18 @@ import i18next from 'i18next';
 };*/
 
 export const formatDate = (date: Date | string | number): string => {
-  const language =  i18next.language === 'en' ? 'en-US' : 'pt-BR';  // Formato brasileiro ou americano, a depender do idioma escolhido pelo usuário
-  
+  const language = i18next.language === 'en' ? 'en-US' : 'pt-BR'; // Formato brasileiro ou americano, a depender do idioma escolhido pelo usuário
+
   const parsedDate = new Date(date);
   if (isNaN(parsedDate.getTime())) {
-    return ""; // Retorna vazio se a data for inválida
+    return ''; // Retorna vazio se a data for inválida
   }
 
   return new Intl.DateTimeFormat(language, {
-    dateStyle: 'long' 
+    dateStyle: 'long',
   }).format(parsedDate);
 };
 
-  
 // to convert file to base64
 export const toBase64 = (file: File) => {
   return new Promise((resolve, reject) => {
