@@ -117,7 +117,7 @@ const ModalBase = ({
               {leftButtonTitle}
             </Button>
             <Button
-              size = {buttonSize}
+              size={buttonSize}
               onClick={onSubmit}
               variant="contained"
               disabled={disableSubmit}
@@ -141,7 +141,7 @@ const ModalBase = ({
         ) : (
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', pt: '1rem' }}>
             <Button
-              size = {buttonSize}
+              size={buttonSize}
               onClick={onSubmit}
               variant="outlined"
               color="primary"
