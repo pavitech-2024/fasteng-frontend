@@ -40,10 +40,10 @@ import { create } from 'domain';
 
 interface MaterialsTemplateProps {
   materials: any[] | undefined;
-  fwdEssays: FwdData[] | undefined;
-  iggEssays: IggData[] | undefined;
-  rtcdEssays: RtcdData[] | undefined;
-  dduiEssays: DduiData[] | undefined; 
+  fwdEssays?: FwdData[] | undefined;
+  iggEssays?: IggData[] | undefined;
+  rtcdEssays?: RtcdData[] | undefined;
+  dduiEssays?: DduiData[] | undefined; 
   types: DropDownOption[];
   title: 'Amostras Cadastradas' | 'Materiais Cadastrados';
   path?: string;

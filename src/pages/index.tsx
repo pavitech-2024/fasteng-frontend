@@ -22,6 +22,9 @@ import axios from 'axios';
 import ModalBase from '@/components/molecules/modals/modal';
 import Api from '@/api';
 
+import { IconButton, InputAdornment } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+
 const Login: NextPage = () => {
   const { signIn } = useAuth();
 
@@ -34,6 +37,7 @@ const Login: NextPage = () => {
   const [password, setPassword] = useState<string>('');
   const roxApiUrl = 'https://minhaconta.fastengapp.com.br/api/forgot-password ';
   const [roxIsRunning, setRoxIsRunning] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     setLoading(true);
@@ -264,7 +268,8 @@ const Login: NextPage = () => {
                   variant="outlined"
                   label={t('login.password')}
                   placeholder={t('login.password placeholder')}
-                  type="password"
+                  //type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   sx={{
                     width: '85%',
@@ -276,6 +281,20 @@ const Login: NextPage = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   InputLabelProps={{ shrink: true }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                        size="small"
+                      >
+                      {showPassword ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
                 />
               </Box>
               <Box
