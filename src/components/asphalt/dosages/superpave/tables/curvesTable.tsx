@@ -28,6 +28,7 @@ interface TableModel {
 
 const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, tableData }) => {
   const { granulometryCompositionData: data, setData } = useSuperpaveStore();
+  console.log("🚀 ~ data:", data)
 
   // const newpercentageInputs = materials.map((material, index) => {
   //   return `material_${index + 1}`;
