@@ -1,6 +1,4 @@
 import { useRouter } from 'next/router';
-import { SoilSample } from '@/interfaces/soils';
-import Header from '@/components/organisms/header';
 import { JSX, useEffect, useState } from 'react';
 import {
   Box,
@@ -18,25 +16,19 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  IconButton,
 } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import Search from '@/components/atoms/inputs/search';
-import { AddIcon, DeleteIcon, EditIcon, NextIcon } from '@/assets';
+import { AddIcon, DeleteIcon, NextIcon } from '@/assets';
 import { formatDate } from '@/utils/format';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
-import { AsphaltMaterial } from '@/interfaces/asphalt';
-import { ConcreteMaterial } from '@/interfaces/concrete';
 import Link from 'next/link';
 import { Edit } from '@mui/icons-material';
-import FullscreenIcon from '@mui/icons-material/Fullscreen';
-import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import { FwdData } from '@/stores/asphalt/fwd/fwd.store';
 import { IggData } from '@/stores/asphalt/igg/igg.store';
 import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
 import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
-import { create } from 'domain';
 
 interface MaterialsTemplateProps {
   materials: any[] | undefined;
@@ -87,14 +79,10 @@ const MaterialsTemplate = ({
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
   const [searchBy, setSearchBy] = useState<string>('name');
-  console.log(searchBy);
   const [searchValue, setSearchValue] = useState<string>('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
   const [tableData, setTableData] = useState<any[]>([]);
-
-  console.log('testando tableData', tableData);
-  console.log('testando o rtcdEssays', rtcdEssays);
 
   if (path === 'soils') {
     samplesOrMaterials = 'sample';
@@ -104,8 +92,6 @@ const MaterialsTemplate = ({
 
   const columns: MaterialsColumn[] = [
     { id: 'name', label: t('materials.template.name'), width: '25%' },
-    //{ id: 'type', label: t('materials.template.type'), width: '25%' },
-    //{ id: 'type', label: 'Ensaio', width: '25%' },
     { id: 'type', label: t('materials.template.essay'), width: '25%' },
     { id: 'createdAt', label: t('materials.template.createdAt'), width: '25%' },
     { id: 'actions', label: t('materials.template.actions'), width: '25%' },
@@ -152,86 +138,72 @@ const MaterialsTemplate = ({
     setSearchValue('');
   }, [searchBy]);
 
-  console.log('Materiais recebidos:', materials);
-
   const filteredData = (Array.isArray(materials[0].materials) ? materials[0].materials : [])
     .map(({ _id, name, type, createdAt }) => ({
       _id,
       name,
       type,
-      //createdAt
       createdAt: createdAt instanceof Date ? createdAt : new Date(createdAt),
     }))
     .filter((material) => {
       if (!searchValue) return true;
 
-      if (searchBy === 'name') {
-        return material.name.toLowerCase().includes(searchValue.toLowerCase());
+      switch (searchBy) {
+        case 'name':
+          return material.name.toLowerCase().includes(searchValue.toLowerCase());
+        case 'type':
+          return material.type === searchValue;
+        default:
+          return true;
       }
-      if (searchBy === 'type') {
-        return material.type === searchValue;
-      }
-      return true;
     });
 
-  console.log('Testando filtro de nome', filteredData);
-
-  const fwdEssaysData = fwdEssays?.map(({ _id, generalData }) => ({
-    name: generalData.name,
-    type: 'FWD',
-    //createdAt: generalData.createdAt,
-    createdAt: generalData.createdAt instanceof Date ? generalData.createdAt : new Date(generalData.createdAt),
-    _id: _id,
-  }));
-  console.log('testando o fwdEssayData', fwdEssaysData);
-
-  const iggEssaysData = (Array.isArray(iggEssays) ? iggEssays : []).map(({ _id, generalData }) => ({
-    name: generalData.name,
-    type: 'IGG',
-    createdAt: generalData.createdAt,
-    _id: _id,
-  }));
-
-  const rtcdEssaysData = rtcdEssays?.map((essay) => ({
-    _id: essay._id,
-    name: essay.generalData.name,
-    type: 'RTCD',
-    createdAt: essay.createdAt,
-  }));
-
-  const dduiEssaysData = dduiEssays?.map((essay) => ({
-    name: essay.generalData.name,
-    type: 'FWD',
-    createdAt: essay.createdAt,
-    _id: essay._id,
-  }));
+  const essaysData = [
+    ...(fwdEssays?.map(({ _id, generalData }) => ({
+      _id,
+      name: generalData.name,
+      type: 'FWD',
+      createdAt: generalData.createdAt,
+    })) ?? []),
+    ...(rtcdEssays?.map(({ _id, generalData }) => ({
+      _id,
+      name: generalData.name,
+      type: 'RTCD',
+      createdAt: generalData.createdAt,
+    })) ?? []),
+    ...(dduiEssays?.map(({ _id, generalData }) => ({
+      _id,
+      name: generalData.name,
+      type: 'DDUI',
+      createdAt: generalData.createdAt,
+    })) ?? []),
+    ...(Array.isArray(iggEssays) ? iggEssays : []).map(({ _id, generalData }) => ({
+      _id,
+      name: generalData.name,
+      type: 'IGG',
+      createdAt: generalData.createdAt,
+    })),
+  ];
 
   useEffect(() => {
-    if (searchBy === 'stretch') {
-      // Combina FWD e IGG quando "stretch" for selecionado
-      setTableData([...fwdEssaysData, ...iggEssaysData]);
-    } else if (searchBy === 'mix') {
-      setTableData([...rtcdEssaysData, ...dduiEssaysData]); // Mostra SOMENTE ensaios RTCD e DDUI (mistura)
-    } else if (searchBy === 'name') {
-      // Mostra TUDO (materiais + todos ensaios)
-      console.log('igg', iggEssaysData);
-      console.log('fwd', fwdEssaysData);
-      console.log('rtcd', rtcdEssaysData);
-      console.log('ddui', dduiEssaysData);
-      const newData =
-        fwdEssaysData || iggEssaysData.length > 0 || rtcdEssaysData || dduiEssaysData
-          ? [...filteredData, ...fwdEssaysData, ...iggEssaysData, ...rtcdEssaysData, ...dduiEssaysData]
-          : filteredData;
-      console.log('Testando o newData', newData);
-      setTableData(newData);
-    } else {
-      // Caso padrão (nome ou tipo)
-      setTableData(filteredData);
+    let newData;
+
+    switch (searchBy) {
+      case 'stretch':
+        newData = essaysData.filter((essay) => essay.type === 'FWD' || essay.type === 'IGG');
+        break;
+      case 'mix':
+        newData = essaysData.filter((essay) => essay.type === 'RTCD' || essay.type === 'DDUI');
+        break;
+      case 'name':
+        newData = [...filteredData, ...essaysData];
+        break;
+      default:
+        newData = filteredData;
     }
+    setTableData(newData);
   }, [searchBy]);
 
-  console.log('Filtro exemplo', filteredData);
-  console.log('Teste', materials);
   const handleEditMaterial = (rowId: string) => {
     editMaterial(rowId);
   };
@@ -290,11 +262,8 @@ const MaterialsTemplate = ({
       {modal}
 
       {/*Page */}
-      {/**Coloquei o header abaixo como comentário para remover o título "Materiais cadastrados"*/}
-      {/*<Header title={`${title}`} />*/}
       <Box
         sx={{
-          //p: { mobile: '0 4vw', notebook: '0 6vw' },
           p: { mobile: '2rem 4vw 0', notebook: '2rem 6vw 0' },
           mb: '4vw',
           width: '100%',
@@ -321,12 +290,6 @@ const MaterialsTemplate = ({
           >
             <DropDown
               label={t('materials.template.searchBy')}
-              /*options={[
-              { label: t('materials.template.name'), value: 'name' },
-              { label: t('materials.template.type'), value: 'type' },
-              { label: t('materials.template.mix'), value: 'mix' },
-              { label: t('materials.template.stretch'), value: 'stretch' },
-            ]}*/
               options={options}
               callback={setSearchBy}
               size="small"
@@ -366,7 +329,6 @@ const MaterialsTemplate = ({
               color: 'primaryTons.white',
               bgcolor: 'primary.main',
               height: { mobile: '36px', notebook: '28px' },
-              //width: { mobile: '36px', notebook: 'fit-content' },
               width: { mobile: 'fit-content', notebook: 'fit-content' },
               borderRadius: '20px',
               p: { mobile: '0 10px', notebook: '0 12px' },
@@ -414,9 +376,7 @@ const MaterialsTemplate = ({
             overflowX: 'hidden',
           }}
         >
-          {/*<TableContainer sx={{ borderRadius: '20px' }}>*/}
           <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'hidden' }}>
-            {/*<Table stickyHeader aria-label="sticky table">*/}
             <Table sx={{ width: '100%', tableLayout: 'fixed' }} aria-label="materials table">
               <TableHead>
                 <TableRow>
@@ -430,12 +390,6 @@ const MaterialsTemplate = ({
                         overflow: 'hidden',
                         width: column.width,
                       }}
-                      /*align="center"
-                      style={{
-                        width: column.width,
-                        fontWeight: '700',
-                        fontSize: '1rem',
-                      }}*/
                     >
                       {column.label}
                     </TableCell>
@@ -457,15 +411,7 @@ const MaterialsTemplate = ({
                             {!['FWD', 'IGG', 'RTCD', 'DDUI'].includes(row.type) && translateType(row.type)}
                           </>
                         )}
-                        {/* {column.id === 'type' && (
-                          <>
-                            {row.type === 'FWD'}
-                            {row.type === 'IGG'}
-                            {!['FWD', 'IGG'].includes(row.type) && translateType(row.type)}
-                          </>
-                        )*/}
 
-                        {/*translateType(row.type)*/}
                         {column.id === 'createdAt' && formatDate(row.createdAt)}
                         {column.id === 'actions' && (
                           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -507,17 +453,6 @@ const MaterialsTemplate = ({
                             >
                               <DeleteIcon color="error" sx={{ fontSize: '1.25rem' }} />
                             </Button>
-                            {/**Coloquei esse botão como comentário para retirar o botão de edição dos materiais */}
-                            {/*<Button
-                              variant="text"
-                              color="warning"
-                              sx={{ p: 0, width: '30px', minWidth: '35px' }}
-                              onClick={() => {
-                                handleEditMaterial(row._id);
-                              }}
-                            >
-                              <EditIcon color="warning" sx={{ fontSize: '1.25rem' }} />
-                            </Button>*/}
                           </Box>
                         )}
                       </TableCell>
@@ -537,14 +472,6 @@ const MaterialsTemplate = ({
               showLastButton
             />
           </Box>
-          {/*<Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
-            <Pagination
-              count={Math.ceil(filteredData.length / rowsPerPage)}
-              size="small"
-              disabled={filteredData.length < rowsPerPage}
-              onChange={(event, value) => setPage(value - 1)}
-            />
-          </Box>*/}
         </Paper>
       </Box>
     </>
