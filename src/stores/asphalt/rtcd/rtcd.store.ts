@@ -7,6 +7,7 @@ interface RtcdGeneralData {
   operator?: string;
   calculist?: string;
   description?: string;
+  createdAt?: Date;
 }
 
 interface RtcdStep2 {
