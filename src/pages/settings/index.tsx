@@ -273,7 +273,7 @@ const Settings: NextPage = ({ avatares }: SettingsProps) => {
           Apagar foto atual
         </Button>
         )*/}
-        <Box sx={{ width: '100%', display: 'flex', justifyContent: "center" }}>
+        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
           <Button
             component="label"
             sx={{

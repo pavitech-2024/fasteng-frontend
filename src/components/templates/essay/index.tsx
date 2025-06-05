@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import { t } from 'i18next';
 import { useRouter } from 'next/router';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
-import { toast } from 'react-toastify';
+import { toast } from 'react-toastify'; 
 import StepDescription from '../../atoms/titles/step-description';
 import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
 import Header from '@/components/organisms/header';
@@ -12,7 +12,10 @@ import Footer from '@/components/organisms/footer';
 import BodyEssay from '@/components/organisms/bodyEssay';
 import { useSessionStorage } from '../../../utils/hooks/useSessionStorage';
 
+
+
 export interface EssayTemplateProps {
+
   essayInfo: IEssayService['info'];
   childrens: { step: number; children: JSX.Element; data: unknown }[];
   nextCallback: (step: number, data: unknown) => Promise<void>;

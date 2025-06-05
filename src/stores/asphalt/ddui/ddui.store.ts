@@ -105,7 +105,7 @@ const useDduiStore = create<DduiData & DduiActions>()(
     persist(
       (set) => ({
         ...initialState,
-         _id: null,
+        _id: null,
         createdAt: null,
 
         /**
