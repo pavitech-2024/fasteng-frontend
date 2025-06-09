@@ -255,10 +255,10 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
     setNextDisabled(true);
     const hasCoarseAggregate = data.materials.some((material) => material.type === 'coarseAggregate');
     const hasFineAggregate = data.materials.some((material) => material.type === 'fineAggregate');
-    const hasFiller = data.materials.some((material) => material.type === 'filler');
+    // const hasFiller = data.materials.some((material) => material.type === 'filler');
     const hasBinder = data.materials.some((material) => material.type === 'asphaltBinder' || material.type === 'CAP');
 
-    if (hasCoarseAggregate && hasFineAggregate && hasFiller && hasBinder) {
+    if (hasCoarseAggregate && hasFineAggregate && hasBinder) {
       setNextDisabled(false);
     }
   }, [data.materials]);
