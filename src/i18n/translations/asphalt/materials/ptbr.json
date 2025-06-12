@@ -32,6 +32,7 @@
 
   "asphalt.materials.materialCreated": "Material cadastrado com sucesso",
   "asphalt.materials.errorCreatingMaterial": "Erro ao cadastrar material",
+  "asphalt.materials.materialWithSameName": "Material com o mesmo nome já cadastrado",
   "asphalt.materials.creatingMaterial": "Cadastrando material...",
 
   "asphalt.materialName": "Nome do Material",

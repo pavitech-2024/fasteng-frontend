@@ -178,30 +178,25 @@ const CreateEditMaterialModal = ({
         autoClose: 5000,
         closeButton: true,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro ao criar material:', error);
 
-      const errorMessage = error?.response?.data?.message;
-      console.log("🚀 ~ handleCreateMaterial ~ errorMessage:", errorMessage)
-      console.log("🚀 ~ handleCreateMaterial ~ errorMessage?.includes('already-exists'):", errorMessage?.includes('already-exists'))
+      const backendMessage = error?.response?.data?.message;
+      const validationMessage: string = error?.message;
 
-      if (errorMessage?.includes('already exists')) {
-        toast.update(createMaterialToastId, {
-          render: 'Já existe um material cadastrado com esse nome!',
-          type: 'error',
-          isLoading: false,
-          autoClose: 5000,
-          closeButton: true,
-        });
-      } else {
-        toast.update(createMaterialToastId, {
-          render: t('asphalt.materials.errorCreatingMaterial'),
-          type: 'error',
-          isLoading: false,
-          autoClose: 5000,
-          closeButton: true,
-        });
-      }
+      const isBackendAlreadyExistsError: boolean = backendMessage?.includes('already exists');
+
+      toast.update(createMaterialToastId, {
+        render:
+          t(validationMessage) ??
+          (isBackendAlreadyExistsError
+            ? 'Já existe um material cadastrado com esse nome!'
+            : backendMessage ?? t('asphalt.materials.errorCreatingMaterial')),
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+        closeButton: true,
+      });
     }
   };
 
@@ -216,7 +211,7 @@ const CreateEditMaterialModal = ({
     }
     if (materials.find((m) => m.name === material.name)) {
       console.log('A material with the same name already exists!');
-      throw new Error('A material with the same name already exists!');
+      throw new Error('asphalt.materials.materialWithSameName');
     }
     if (material.type === 'CAP' && material.description.classification_CAP === null) {
       console.log('CAP classification cannot be empty');

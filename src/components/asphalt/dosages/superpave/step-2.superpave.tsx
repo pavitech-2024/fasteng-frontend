@@ -138,7 +138,6 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
             adornment="g"
             type="number"
             inputProps={{ min: 0 }}
-            // value={aggregatesRows[rowIndex]?.table_data[sieve_index]?.retained}
             value={
               isNaN(aggregatesRows[rowIndex]?.table_data[sieve_index]?.retained)
                 ? 'erro'

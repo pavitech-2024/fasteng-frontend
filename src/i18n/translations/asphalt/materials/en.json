@@ -30,6 +30,7 @@
   "asphalt.materials.materialCreated": "Material created successfully",
   "asphalt.materials.errorCreatingMaterial": "Error creating material",
   "asphalt.materials.creatingMaterial": "Creating material...",
+  "asphalt.materials.materialWithSameName": "A material with the same name already exists!",
 
   "asphalt.materialName": "Material Name",
   "asphalt.materialType": "Material Type"
