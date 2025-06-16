@@ -4,11 +4,12 @@ import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.se
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import CreateMaterialDosageTable from './tables/createMaterialDosageTable';
 import AsphaltGranulometry_step2Table from '../../essays/granulometry/tables/step2-table.granulometry';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { toast } from 'react-toastify';
+import GranulometryRow from './functionalComponents/granulometryTableRow';
 
 const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const data = useSuperpaveStore((state) => state.granulometryEssayData);
@@ -22,7 +23,35 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
       ({ material }) => material.type !== 'asphaltBinder' && material.type !== 'CAP' && material.type !== 'other'
     );
 
-  const binderRows = data.viscosity?.dataPoints;
+  const [materialMassInputs, setMaterialMassInputs] = useState<number[]>(
+    aggregatesRows.map((row) => row.material_mass || 0)
+  );
+
+  const initialRows = useMemo(() => {
+    return data.viscosity.dataPoints.map((point) => ({
+      id: point.id,
+      temperature: point.temperature,
+      viscosity: point.viscosity,
+    }));
+  }, []);
+
+  const [binderInputs, setBinderInputs] = useState(() => {
+    return initialRows.map((row) => ({
+      id: row.id,
+      viscosity: row.viscosity,
+    }));
+  });
+
+  const binderRows = useMemo(() => {
+    return data.viscosity.dataPoints.map((point) => {
+      const localInput = binderInputs.find((input) => input.id === point.id);
+      return {
+        id: point.id,
+        temperature: point.temperature,
+        viscosity: localInput?.viscosity ?? point.viscosity,
+      };
+    });
+  }, [binderInputs, data.viscosity.dataPoints]);
 
   const aggregatesColumns: GridColDef[] = [
     {
@@ -217,7 +246,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
               const newRows = [...binderRows];
               if (index !== -1) {
                 newRows[index].temperature = Number(e.target.value);
-                setData({ step: 1, key: 'viscosity', value: {...data.viscosity, dataPoints: newRows} });
+                setData({ step: 1, key: 'viscosity', value: { ...data.viscosity, dataPoints: newRows } });
               }
             }}
             adornment={'°C'}
@@ -228,22 +257,54 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
     {
       field: 'viscosity',
       headerName: t('asphalt.essays.viscosityRotational.viscosity'),
+      // renderCell: ({ row }) => {
+      //   const { id } = row;
+      //   const index = binderRows.findIndex((r) => r.id === id);
+
+      //   return (
+      //     <InputEndAdornment
+      //       fullWidth
+      //       label={t('asphalt.essays.viscosityRotational.viscosity')}
+      //       type="number"
+      //       value={row.viscosity}
+      //       onChange={(e) => {
+      //         const newRows = [...binderRows];
+      //         newRows[index].viscosity = Number(e.target.value);
+      //         setData({ step: 1, key: 'viscosity', value: { ...data.viscosity, dataPoints: newRows } });
+      //       }}
+      //       adornment={'Poise'}
+      //     />
+      //   );
+      // },
       renderCell: ({ row }) => {
-        const { id } = row;
-        const index = binderRows.findIndex((r) => r.id === id);
+        const localViscosity = binderInputs.find((i) => i.id === row.id)?.viscosity ?? '';
 
         return (
           <InputEndAdornment
-            fullWidth
-            label={t('asphalt.essays.viscosityRotational.viscosity')}
             type="number"
-            value={row.viscosity}
+            variant="standard"
+            value={localViscosity}
             onChange={(e) => {
-              const newRows = [...binderRows];
-              newRows[index].viscosity = Number(e.target.value);
-              setData({ step: 1, key: 'viscosity', value: {...data.viscosity, dataPoints: newRows} });
+              const value = Number(e.target.value);
+
+              setBinderInputs((prev) =>
+                prev.map((input) => (input.id === row.id ? { ...input, viscosity: value } : input))
+              );
             }}
-            adornment={'Poise'}
+            onBlur={(e) => {
+              const value = Number(e.target.value);
+              const updatedDataPoints = data.viscosity.dataPoints.map((dp) =>
+                dp.id === row.id ? { ...dp, viscosity: value } : dp
+              );
+
+              setData({
+                step: 1,
+                key: 'viscosity',
+                value: { ...data.viscosity, dataPoints: updatedDataPoints },
+              });
+            }}
+            adornment="Poise"
+            inputProps={{ min: 0 }}
           />
         );
       },
@@ -316,84 +377,119 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
       {aggregatesRows.length > 0 &&
         data.materials.length > 0 &&
         aggregatesRows.map((row, idx) => (
-          <Box
+          //   {
+          //   const tableRows = useMemo(() => {
+          //     return (
+          //       aggregatesRows[idx]?.table_data.map((row) => ({
+          //         ...row,
+          //         material: aggregatesRows[idx].material,
+          //       })) ?? []
+          //     );
+          //   }, [aggregatesRows, idx]);
+          //   return (
+          //     <Box
+          //       key={idx}
+          //       sx={{ marginY: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}
+          //       ref={(el) => {
+          //         if (el) myRef.current[row.material.name] = el;
+          //       }}
+          //     >
+          //       <Typography variant="h5">
+          //         {data.materials[idx].name} | {data.materials[idx].type}
+          //       </Typography>
+          //       <Box sx={{ display: 'flex', gap: '5rem' }}>
+          //         <InputEndAdornment
+          //           label={t('granulometry-asphalt.material_mass')}
+          //           value={materialMassInputs[idx]}
+          //           onChange={(e) => {
+          //             if (e.target.value === null) return;
+          //             const mass = Number(e.target.value);
+
+          //             // Atualiza o valor local para exibir imediatamente no input
+          //             setMaterialMassInputs((prev) => {
+          //               const updated = [...prev];
+          //               updated[idx] = mass;
+          //               return updated;
+          //             });
+
+          //             // PROCESSAMENTO PESADO
+          //             if (aggregatesRows === null) return;
+
+          //             const newRows = aggregatesRows.map((item, index) => {
+          //               const row = { ...item };
+          //               const currentMass = index === idx ? mass : materialMassInputs[index] || item.material_mass;
+
+          //               if (index === idx) {
+          //                 row.material_mass = mass;
+          //               }
+
+          //               const currentRows = index > 0 ? aggregatesRows.slice(0, index) : [];
+          //               const acumulative_retained = currentRows.reduce(
+          //                 (accumulator: number, current_value) =>
+          //                   accumulator + (current_value[idx]?.table_data.retained || 0),
+          //                 0
+          //               );
+
+          //               if (row.table_data[idx]) {
+          //                 row.table_data[idx].retained =
+          //                   Math.round(
+          //                     100 *
+          //                       (currentMass !== 0
+          //                         ? ((100 - row.table_data[idx].passant) / 100) * currentMass - acumulative_retained
+          //                         : 0)
+          //                   ) / 100;
+          //               }
+
+          //               return row;
+          //             });
+
+          //             const totalRetained = newRows[idx].table_data.reduce((sum, row) => sum + row.retained, 0);
+          //             const remaining = newRows[idx].material_mass - totalRetained;
+
+          //             newRows[idx].bottom = remaining;
+
+          //             setData({ step: 1, key: 'granulometrys', value: newRows });
+          //           }}
+          //           adornment={'g'}
+          //           type="number"
+          //           inputProps={{ min: 0 }}
+          //           required
+          //         />
+          //         <InputEndAdornment
+          //           label={t('granulometry-asphalt.bottom')}
+          //           variant={'filled'}
+          //           key="bottom"
+          //           value={data.granulometrys[idx].bottom}
+          //           onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
+          //           adornment={'g'}
+          //           type="number"
+          //           inputProps={{ min: 0 }}
+          //           readOnly={true}
+          //           focused
+          //         />
+          //       </Box>
+
+          //       <AsphaltGranulometry_step2Table
+          //         // rows={row.table_data.map((row) => ({ ...row, material: aggregatesRows[idx].material }))}
+          //         rows={tableRows}
+          //         columns={aggregatesColumns}
+          //       />
+          //     </Box>
+          //   );
+          // }
+          <GranulometryRow
             key={idx}
-            sx={{ marginY: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}
-            ref={(el) => {
-              if (el) myRef.current[row.material.name] = el;
-            }}
-          >
-            <Typography variant="h5">
-              {data.materials[idx].name} | {data.materials[idx].type}
-            </Typography>
-            <Box sx={{ display: 'flex', gap: '5rem' }}>
-              <InputEndAdornment
-                label={t('granulometry-asphalt.material_mass')}
-                value={row.material_mass}
-                onChange={(e) => {
-                  if (e.target.value === null) return;
-
-                  const mass = Number(e.target.value);
-
-                  if (aggregatesRows === null) return;
-
-                  const newRows = aggregatesRows.map((item, index) => {
-                    const row = { ...item };
-
-                    if (index === idx) {
-                      row.material_mass = mass; // atualiza o material_mass na linha certa
-                    }
-
-                    const currentRows = index > 0 ? aggregatesRows.slice(0, index) : [];
-                    const initial_retained = 0;
-                    const acumulative_retained = currentRows.reduce(
-                      (accumulator: number, current_value) => accumulator + (current_value[idx]?.table_data.retained || 0),
-                      initial_retained
-                    );
-
-                    if (row.table_data[idx]) {
-                      row.table_data[idx].retained =
-                        Math.round(
-                          100 *
-                            (mass !== 0 ? ((100 - row.table_data[idx].passant) / 100) * mass - acumulative_retained : 0)
-                        ) / 100;
-                    }
-
-                    return row;
-                  });
-
-                  // Agora calcula o bottom depois de atualizar os dados
-                  const totalRetained = newRows[idx].table_data.reduce((sum, row) => sum + row.retained, 0);
-                  const remaining = newRows[idx].material_mass - totalRetained;
-
-                  newRows[idx].bottom = remaining; // atualiza o bottom na linha correta
-
-                  setData({ step: 1, key: 'granulometrys', value: newRows });
-                }}
-                adornment={'g'}
-                type="number"
-                inputProps={{ min: 0 }}
-                required
-              />
-              <InputEndAdornment
-                label={t('granulometry-asphalt.bottom')}
-                variant={'filled'}
-                key="bottom"
-                value={data.granulometrys[idx].bottom}
-                onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
-                adornment={'g'}
-                type="number"
-                inputProps={{ min: 0 }}
-                readOnly={true}
-                focused
-              />
-            </Box>
-
-            <AsphaltGranulometry_step2Table
-              rows={row.table_data.map((row) => ({ ...row, material: aggregatesRows[idx].material }))}
-              columns={aggregatesColumns}
-            />
-          </Box>
+            idx={idx}
+            row={row}
+            aggregatesRows={aggregatesRows}
+            data={data}
+            materialMassInputs={materialMassInputs}
+            setMaterialMassInputs={setMaterialMassInputs}
+            setData={setData}
+            myRef={myRef}
+            t={t}
+            aggregatesColumns={aggregatesColumns}
+          />
         ))}
 
       {data.viscosity?.dataPoints?.length > 0 && (
@@ -412,7 +508,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
             showCellVerticalBorder
             showColumnVerticalBorder
             slots={{ footer: ExpansionToolbar }}
-            rows={binderRows.map((row, index) => ({ ...row, id: index }))}
+            rows={initialRows}
             columns={binderColumns.map((column) => ({
               ...column,
               sortable: false,

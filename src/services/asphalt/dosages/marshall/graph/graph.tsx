@@ -28,24 +28,112 @@ const Graph = ({ data }) => {
       chartType="LineChart"
       loader={<div>Loading Chart</div>}
       data={newData}
+      // options={{
+      //   title: '',
+      //   hAxis: {
+      //     title: 'Diâmetro (mm)',
+      //     logScale: false,
+      //     titleTextStyle: { italic: false },
+      //   },
+      //   chartArea: { width: '70%', height: '70%' },
+      //   vAxis: { title: 'Passante (%)', titleTextStyle: { italic: false } },
+      //   legend: { position: 'bottom' },
+      //   series: {
+      //     0: { color: 'blue', lineDashStyle: [15, 15], lineWidth: 3 },
+      //     1: { color: 'gray', lineDashStyle: [2, 2] },
+      //     2: { color: 'black' },
+      //     3: { color: 'gray', lineDashStyle: [2, 2], visibleInLegend: false },
+      //     4: { color: 'blue', lineDashStyle: [15, 15], lineWidth: 3, visibleInLegend: false },
+      //   },
+      // }}
       options={{
-        title: '',
-        hAxis: {
-          title: 'Diâmetro (mm)',
-          logScale: false,
-          titleTextStyle: { italic: false },
-        },
-        chartArea: { width: '70%', height: '70%' },
-        vAxis: { title: 'Passante (%)', titleTextStyle: { italic: false } },
-        legend: { position: 'bottom' },
-        series: {
-          0: { color: 'blue', lineDashStyle: [15, 15], lineWidth: 3 },
-          1: { color: 'gray', lineDashStyle: [2, 2] },
-          2: { color: 'black' },
-          3: { color: 'gray', lineDashStyle: [2, 2], visibleInLegend: false },
-          4: { color: 'blue', lineDashStyle: [15, 15], lineWidth: 3, visibleInLegend: false },
-        },
-      }}
+				title: 'Curvas granulométricas',
+				width: 0,
+				height: 0,
+				selectionMode: 'multiple',
+				animation: {
+					duration: 500,
+					easing: 'linear',
+					startup: true,
+				},
+				hAxis: {
+					title: '(D/d)^0,45',
+					titleTextStyle: { italic: false },
+				},
+				trendlines: {
+					4: {
+						color: 'blue',
+						labelInLegend: 'Densidade máxima',
+						visibleInLegend: true,
+					},
+				},
+				series: {
+					0: {
+						color: 'black',
+						lineWidth: 0,
+						opacity: 1,
+						pointsVisible: true,
+						pointSize: 7,
+						pointShape: 'square',
+						visibleInLegend: false,
+					},
+					1: {
+						color: 'black',
+						lineWidth: 0,
+						opacity: 1,
+						pointsVisible: true,
+						pointSize: 7,
+						labelInLegend: 'Pontos de controle',
+						pointShape: 'square',
+					},
+					2: {
+						color: 'red',
+						visibleInLegend: false,
+					},
+					4: {
+						visibleInLegend: false,
+					},
+					3: {
+						color: 'red',
+						labelInLegend: 'Zona de restrição',
+					},
+					5: {
+						color: 'green',
+						opacity: 1,
+						labelInLegend: 'Faixa do DNIT',
+					},
+					6: {
+						color: 'green',
+						opacity: 1,
+						visibleInLegend: false,
+					},
+					7: {
+						color: 'black',
+						pointsVisible: true,
+						pointSize: 1.5,
+						// visibleInLegend: false
+						labelInLegend: 'Curva inferior',
+					},
+					8: {
+						color: 'black',
+						pointsVisible: true,
+						pointSize: 1.5,
+						lineDashStyle: [2, 2],
+						// visibleInLegend: false
+						labelInLegend: 'Curva intermediária',
+					},
+					9: {
+						color: 'black',
+						pointsVisible: true,
+						lineDashStyle: [10, 5],
+						pointSize: 1.5,
+						labelInLegend: 'Curva superior',
+					},
+				},
+				chartArea: { width: '80%', height: '80%' },
+				vAxis: { title: 'Porcentagem passante (%)', titleTextStyle: { italic: false } },
+				legend: { position: 'bottom', textStyle: { color: '#515151', fontSize: 11 } },
+			}}
     />
   );
 };
