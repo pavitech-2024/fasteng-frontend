@@ -449,7 +449,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
                       tableData={table.data}
                       onChangeInputsTables={onChangeInputsTables}
                     />
-                    
 
                     {data.pointsOfCurve[table.key]?.length > 0 && <Graph data={data.pointsOfCurve[table.key]} />}
 

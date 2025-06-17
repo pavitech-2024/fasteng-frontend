@@ -1,10 +1,7 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
-import useSuperpaveStore, { SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
-import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
+import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { t } from 'i18next';
-import { styled } from '@mui/material/styles';
 import { StyledDataGrid } from '@/components/molecules/tables/styledDataGrid';
 
 interface Props {
@@ -205,6 +202,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
       band2: e.bandsCol2,
     };
   });
+  console.log("🚀 ~ rows ~ rows:", rows)
   
   const generateMaterialGroupings = (materials) => {
     return materials.map((material, index) => {
