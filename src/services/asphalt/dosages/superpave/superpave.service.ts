@@ -415,6 +415,7 @@ class Superpave_SERVICE implements IEssayService {
         : chosenCurves.higher
         ? percentageInputs[2]
         : percentageInputs;
+        
 
       /**
        * Sums up the values of the selected curve inputs.

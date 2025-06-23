@@ -2,16 +2,14 @@ import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
-import useSuperpaveStore, { SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
-import { Box, Button, Checkbox, FormControlLabel, FormGroup, Table, TableContainer, Typography } from '@mui/material';
+import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
+import { Box, Button, Checkbox, FormControlLabel, TableContainer, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { AllSieves, AllSievesSuperpaveUpdatedAstm } from '@/interfaces/common';
+import { AllSievesSuperpaveUpdatedAstm } from '@/interfaces/common';
 import CurvesTable from './tables/curvesTable';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
-import Chart from 'react-google-charts';
-import { Preview } from '@mui/icons-material';
 
 const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);

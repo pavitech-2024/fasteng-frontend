@@ -104,7 +104,7 @@ export const AllSieves: Sieve[] = [
 
 export const AllSievesSuperpaveUpdatedAstm: Sieve[] = [
   {
-    label: '1 1/2 pol - 3,1mm',
+    label: '1 1/2 pol - 30,1mm',
     value: 38.1, // mm
   },
   {
