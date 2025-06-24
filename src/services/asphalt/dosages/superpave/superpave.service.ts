@@ -447,28 +447,33 @@ class Superpave_SERVICE implements IEssayService {
         [chosenCurves]: data.pointsOfCurve,
       };
 
-      if (granulometryCompositionData?.lowerComposition?.percentsOfMaterials?.length > 0) {
-        formattedData.lowerComposition = {
-          ...granulometryCompositionData.lowerComposition,
-          percentsOfMaterials: [...granulometryCompositionData.lowerComposition.percentsOfMaterials],
-          sumOfPercents: [...granulometryCompositionData.lowerComposition.sumOfPercents],
-        };
-      } else if (granulometryCompositionData?.averageComposition?.percentsOfMaterials?.length > 0) {
-        formattedData.averageComposition = {
-          ...granulometryCompositionData.averageComposition,
-          percentsOfMaterials: [...granulometryCompositionData.averageComposition.percentsOfMaterials],
-          sumOfPercents: [...granulometryCompositionData.averageComposition.sumOfPercents],
-        };
-      } else if (granulometryCompositionData?.higherComposition?.percentsOfMaterials?.length > 0) {
-        formattedData.higherComposition = {
-          ...granulometryCompositionData.higherComposition,
-          percentsOfMaterials: [...granulometryCompositionData.higherComposition.percentsOfMaterials],
-          sumOfPercents: [...granulometryCompositionData.higherComposition.sumOfPercents],
-        };
-      }
+      formattedData.lowerComposition = { ...granulometryCompositionData.lowerComposition, ...data.lowerComposition };
+      // formattedData.averageComposition = { ...granulometryCompositionData.averageComposition, ...data.averageComposition };
+      // formattedData.higherComposition = { ...granulometryCompositionData.higherComposition, ...data.higherComposition };
+
+      // if (granulometryCompositionData?.lowerComposition?.percentsOfMaterials?.length > 0) {
+      //   formattedData.lowerComposition = {
+      //     ...granulometryCompositionData.lowerComposition,
+      //     // percentsOfMaterials: [...granulometryCompositionData.lowerComposition.percentsOfMaterials],
+      //     // sumOfPercents: [...granulometryCompositionData.lowerComposition.sumOfPercents],
+      //   };
+      // } else if (granulometryCompositionData?.averageComposition?.percentsOfMaterials?.length > 0) {
+      //   formattedData.averageComposition = {
+      //     ...granulometryCompositionData.averageComposition,
+      //     percentsOfMaterials: [...granulometryCompositionData.averageComposition.percentsOfMaterials],
+      //     sumOfPercents: [...granulometryCompositionData.averageComposition.sumOfPercents],
+      //   };
+      // } else if (granulometryCompositionData?.higherComposition?.percentsOfMaterials?.length > 0) {
+      //   formattedData.higherComposition = {
+      //     ...granulometryCompositionData.higherComposition,
+      //     percentsOfMaterials: [...granulometryCompositionData.higherComposition.percentsOfMaterials],
+      //     sumOfPercents: [...granulometryCompositionData.higherComposition.sumOfPercents],
+      //   };
+      // }
 
       const prevData = { ...granulometryCompositionData, ...formattedData };
       // prevData[chosenCurves] = data.pointsOfCurve;
+      console.log("🚀 ~ Superpave_SERVICE ~ prevData:", prevData)
 
       return prevData;
       // this.store_actions.setData({ step: 3, value: prevData });

@@ -356,6 +356,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
               generalData,
               curve
             );
+            console.log("🚀 ~ response:", response)
             setData({ step: 3, value: response });
 
             updateGraph(response.pointsOfCurve[curve], curve);

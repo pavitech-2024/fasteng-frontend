@@ -205,7 +205,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
 
                   const initial_retained = new_current_accumulative_retained;
                   const accumulative_retained = currentRows.reduce(
-                    (accumulator: number, current_value) => accumulator + current_value[sieve_index].retained,
+                    (accumulator: number, current_value) => accumulator + current_value[sieve_index]?.retained,
                     initial_retained
                   );
 
