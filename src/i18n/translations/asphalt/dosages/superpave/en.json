@@ -50,7 +50,7 @@
   "asphalt.dosages.superpave.maximum-nominal-size": "Maximum nominal size",
   "asphalt.dosages.superpave.sieve": "Sieve",
   "asphalt.dosages.superpave.project": "Project",
-  "asphalt.dosages.superpave.total-passant": "Total passant (%)",
+  "asphalt.dosages.superpave.total-passant": "Total passant (g)",
   "asphalt.dosages.superpave.specification": "Specification",
   "asphalt.dosages.superpave.specific-mass-modal-title": "Enter the specific masses of the materials",
 

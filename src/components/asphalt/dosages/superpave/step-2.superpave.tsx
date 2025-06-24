@@ -348,6 +348,8 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
     }
   };
 
+  console.log('🚀 ~ constSuperpave_Step2= ~ data.viscosity?.dataPoints:', data.viscosity?.dataPoints);
+
   return (
     <Box>
       <CreateMaterialDosageTable

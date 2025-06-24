@@ -39,6 +39,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   });
 
   const arrayResponse = data?.percentsToList;
+      console.log("🚀 ~ constSuperpave_Step4= ~ data?.percentsToList:", data?.percentsToList)
   const bandsHigher = data?.bands?.higher;
   const bandsLower = data?.bands?.lower;
 
@@ -174,6 +175,8 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   };
 
   const setPercentsToListTotal = (peneiras: { peneira: string }[], percentsToList) => {
+      console.log("🚀 ~ setPercentsToListTotal ~ percentsToList:", percentsToList)
+
     const tableData = Array.from({ length: percentsToList?.length }, () => []);
 
     percentsToList?.forEach((item, i) => {
@@ -200,6 +203,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   const tableDataAux = setPercentsToListTotal(peneiras, arrayResponse);
 
   const setBandsHigherLower = (tableData, bandsHigher, bandsLower, arrayResponse, peneiras) => {
+    console.log("🚀 ~ setBandsHigherLower ~ tableData:", tableData)
     const arraySize = tableData[0]?.length;
 
     // Inicializa o arrayAux com objetos vazios de acordo com o tamanho descoberto
