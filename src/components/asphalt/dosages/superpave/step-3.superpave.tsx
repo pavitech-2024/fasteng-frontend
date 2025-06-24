@@ -17,7 +17,6 @@ const Superpave_Step3 = ({
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const { granulometryResultsData: data } = useSuperpaveStore();
-  console.log("🚀 ~ data:", data)
 
   const [granulometryData, setGranulometryData] = useState([]);
   const [materialsToShow, setMaterialToShow] = useState([]);

@@ -242,7 +242,6 @@ class Superpave_SERVICE implements IEssayService {
         );
 
         const { success, error, granulometry, viscosity } = response.data;
-        console.log('🚀 ~ Superpave_SERVICE ~ calculateGranulometryEssayData= ~ granulometry:', granulometry);
 
         if (success === false) throw error.name;
 
@@ -357,7 +356,7 @@ class Superpave_SERVICE implements IEssayService {
         let aggregates = essayData.map((item) => {
           return {
             data: item,
-            results: resultsData.find((result) => result.material.type === item.material.type),
+            results: resultsData.find((result) => result.material.name === item.material.name),
           };
         });
 
@@ -415,7 +414,6 @@ class Superpave_SERVICE implements IEssayService {
         : chosenCurves.higher
         ? percentageInputs[2]
         : percentageInputs;
-        
 
       /**
        * Sums up the values of the selected curve inputs.
@@ -440,7 +438,6 @@ class Superpave_SERVICE implements IEssayService {
       });
 
       const { data, success, error } = response.data;
-      console.log('🚀 ~ Superpave_SERVICE ~ data:', data);
 
       if (success === false) throw error.name;
       const formattedData = { ...data };
@@ -472,7 +469,6 @@ class Superpave_SERVICE implements IEssayService {
 
       const prevData = { ...granulometryCompositionData, ...formattedData };
       // prevData[chosenCurves] = data.pointsOfCurve;
-      console.log('🚀 ~ Superpave_SERVICE ~ prevData:', prevData);
 
       return prevData;
       // this.store_actions.setData({ step: 3, value: prevData });

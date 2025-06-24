@@ -39,7 +39,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   });
 
   const arrayResponse = data?.percentsToList;
-      console.log("🚀 ~ constSuperpave_Step4= ~ data?.percentsToList:", data?.percentsToList)
   const bandsHigher = data?.bands?.higher;
   const bandsLower = data?.bands?.lower;
 
@@ -175,7 +174,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   };
 
   const setPercentsToListTotal = (peneiras: { peneira: string }[], percentsToList) => {
-      console.log("🚀 ~ setPercentsToListTotal ~ percentsToList:", percentsToList)
 
     const tableData = Array.from({ length: percentsToList?.length }, () => []);
 
@@ -203,7 +201,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   const tableDataAux = setPercentsToListTotal(peneiras, arrayResponse);
 
   const setBandsHigherLower = (tableData, bandsHigher, bandsLower, arrayResponse, peneiras) => {
-    console.log("🚀 ~ setBandsHigherLower ~ tableData:", tableData)
     const arraySize = tableData[0]?.length;
 
     // Inicializa o arrayAux com objetos vazios de acordo com o tamanho descoberto
@@ -338,12 +335,10 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   };
 
   const updateGraph = (points, curve) => {
-    console.log("🚀 ~ updateGraph ~ points:", points)
     const pointsOfCurve = updateDataArray(points);
     const prevData = { ...data.pointsOfCurve };
     const newData = { ...prevData, [curve]: pointsOfCurve };
     setData({ step: 3, key: 'pointsOfCurve', value: newData });
-    console.log("🚀 ~ updateGraph ~ newData:", newData)
   };
 
   const calculate = (curve: string) => {
@@ -361,8 +356,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
               generalData,
               curve
             );
-            console.log("🚀 ~ response:", response)
-
             setData({ step: 3, value: response });
 
             updateGraph(response.pointsOfCurve[curve], curve);

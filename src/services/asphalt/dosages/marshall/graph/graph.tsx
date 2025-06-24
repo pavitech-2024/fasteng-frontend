@@ -4,22 +4,22 @@ import { Chart } from 'react-google-charts';
 
 const Graph = ({ data }) => {
   console.log('🚀 ~ Graph ~ data:', data);
-  const [newData, setNewData] = useState();
-  console.log("🚀 ~ Graph ~ newData:", newData)
+  // const [newData, setNewData] = useState();
+  // console.log("🚀 ~ Graph ~ newData:", newData)
 
-  useEffect(() => {
-    let updatedData = data.map((curve) => {
-      return curve.map((row) => {
-        if (row > 100) {
-          return row / 100;
-        } else {
-          return row;
-        }
-      });
-    });
-    console.log("🚀 ~ updatedData ~ updatedData:", updatedData)
-    setNewData(updatedData);
-  }, [data])
+  // useEffect(() => {
+  //   let updatedData = data.map((curve) => {
+  //     return curve.map((row) => {
+  //       if (row > 100) {
+  //         return row / 100;
+  //       } else {
+  //         return row;
+  //       }
+  //     });
+  //   });
+  //   console.log("🚀 ~ updatedData ~ updatedData:", updatedData)
+  //   setNewData(updatedData);
+  // }, [data])
 
   return (
     <Chart
@@ -27,7 +27,7 @@ const Graph = ({ data }) => {
       height={'400px'}
       chartType="LineChart"
       loader={<div>Loading Chart</div>}
-      data={newData}
+      data={data}
       // options={{
       //   title: '',
       //   hAxis: {

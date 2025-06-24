@@ -15,7 +15,6 @@ const GranulometryRow = ({
   t,
   aggregatesColumns,
 }) => {
-  console.log("🚀 ~ data:", data)
   const tableRows = useMemo(() => {
     return (
       aggregatesRows[idx]?.table_data.map((row) => ({
@@ -26,7 +25,6 @@ const GranulometryRow = ({
   }, [aggregatesRows, idx]);
 
   const formattedData = data.materials.filter((row) => row.type !== 'asphaltBinder' && row.type !== 'CAP');
-  console.log("🚀 ~ formattedData:", formattedData)
 
   return (
     <Box

@@ -206,7 +206,6 @@ const Superpave_Step5 = ({
             granulometryCompositionData,
             data
           );
-          console.log("🚀 ~ response:", response)
 
           const updatedRows = response.granulometryComposition.map((e, i) => ({
             id: i,
@@ -238,7 +237,6 @@ const Superpave_Step5 = ({
 
             return row;
           });
-          console.log("🚀 ~ updatedPercentageRows ~ updatedPercentageRows:", updatedPercentageRows)
 
           setEstimatedPercentageRows(updatedPercentageRows);
 

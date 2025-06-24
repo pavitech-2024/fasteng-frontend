@@ -57,7 +57,7 @@
   "asphalt.dosages.superpave.granulometry-error": "Erro",
   "asphalt.dosages.superpave.sieve": "Peneira",
   "asphalt.dosages.superpave.project": "Projeto",
-  "asphalt.dosages.superpave.total-passant": "Passante total (g)",
+  "asphalt.dosages.superpave.total-passant": "Passante total %",
   "asphalt.dosages.superpave.specification": "Especificação",
   "asphalt.dosages.superpave.specific-mass-modal-title": "Insira as massas específicas dos materiais",
 
