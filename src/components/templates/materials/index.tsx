@@ -204,6 +204,7 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
   }))
 
   useEffect(() => {
+    //let newData: any[] = [];
     if (searchBy === 'stretch') {
       // Combina FWD e IGG quando "stretch" for selecionado
       setTableData([...fwdEssaysData, ...iggEssaysData]);
@@ -226,7 +227,7 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
       // Caso padrão (nome ou tipo)
       setTableData(filteredData);
     }
-    setTableData(newData);
+    //setTableData(newData);
   }, [searchBy]);
 
     console.log("Filtro exemplo",filteredData);

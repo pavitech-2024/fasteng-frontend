@@ -45,7 +45,7 @@ const AsphaltStandards: NextPage = () => {
     },
     {
       //title: t('adhesiveness'),
-      title: 'Adesividade - DNER - ME 078/94',
+      title: 'Adesividade - DNER - ME 078/94', 
       icon: AdhesivenessIcon,
       key: 'adhesiveness',
       standard: 'DNER - ME 078/94',
