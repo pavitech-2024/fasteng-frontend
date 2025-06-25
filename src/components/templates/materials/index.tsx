@@ -1,6 +1,4 @@
 import { useRouter } from 'next/router';
-import { SoilSample } from '@/interfaces/soils';
-import Header from '@/components/organisms/header';
 import { JSX, useEffect, useState } from 'react';
 import {
   Box,
@@ -18,25 +16,19 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  IconButton,
 } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import Search from '@/components/atoms/inputs/search';
-import { AddIcon, DeleteIcon, EditIcon, NextIcon } from '@/assets';
+import { AddIcon, DeleteIcon, NextIcon } from '@/assets';
 import { formatDate } from '@/utils/format';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
-import { AsphaltMaterial } from '@/interfaces/asphalt';
-import { ConcreteMaterial } from '@/interfaces/concrete';
 import Link from 'next/link';
 import { Edit } from '@mui/icons-material';
-import FullscreenIcon from '@mui/icons-material/Fullscreen';
-import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import { FwdData } from '@/stores/asphalt/fwd/fwd.store';
 import { IggData } from '@/stores/asphalt/igg/igg.store';
 import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
 import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
-import { create } from 'domain';
 
 interface MaterialsTemplateProps {
   materials: any[] | undefined;
@@ -88,14 +80,10 @@ const MaterialsTemplate = ({
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
   const [searchBy, setSearchBy] = useState<string>('name');
-  console.log(searchBy);
   const [searchValue, setSearchValue] = useState<string>('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
   const [tableData, setTableData] = useState<any[]>([]);
-
-  console.log('testando tableData', tableData);
-  console.log('testando o rtcdEssays', rtcdEssays);
 
   if (path === 'soils') {
     samplesOrMaterials = 'sample';
@@ -105,8 +93,6 @@ const MaterialsTemplate = ({
 
   const columns: MaterialsColumn[] = [
     { id: 'name', label: t('materials.template.name'), width: '25%' },
-    //{ id: 'type', label: t('materials.template.type'), width: '25%' },
-    //{ id: 'type', label: 'Ensaio', width: '25%' },
     { id: 'type', label: t('materials.template.essay'), width: '25%' },
     { id: 'createdAt', label: t('materials.template.createdAt'), width: '25%' },
     { id: 'actions', label: t('materials.template.actions'), width: '25%' },
@@ -160,8 +146,6 @@ const MaterialsTemplate = ({
   useEffect(() => {
     setSearchValue('');
   }, [searchBy]);
-
-  console.log('Materiais recebidos:', materials);
 
   const filteredData = (Array.isArray(materials[0].materials) ? materials[0].materials : [])
   .map(({ _id, name, type, createdAt }) => ({
@@ -242,6 +226,7 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
       // Caso padrão (nome ou tipo)
       setTableData(filteredData);
     }
+    setTableData(newData);
   }, [searchBy]);
 
     console.log("Filtro exemplo",filteredData);
@@ -380,7 +365,6 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
               color: 'primaryTons.white',
               bgcolor: 'primary.main',
               height: { mobile: '36px', notebook: '28px' },
-              //width: { mobile: '36px', notebook: 'fit-content' },
               width: { mobile: 'fit-content', notebook: 'fit-content' },
               borderRadius: '20px',
               p: { mobile: '0 10px', notebook: '0 12px' },
@@ -428,9 +412,7 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
             overflowX: 'hidden',
           }}
         >
-          {/*<TableContainer sx={{ borderRadius: '20px' }}>*/}
           <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'hidden' }}>
-            {/*<Table stickyHeader aria-label="sticky table">*/}
             <Table sx={{ width: '100%', tableLayout: 'fixed' }} aria-label="materials table">
               <TableHead>
                 <TableRow>
@@ -444,12 +426,6 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
                         overflow: 'hidden',
                         width: column.width,
                       }}
-                      /*align="center"
-                      style={{
-                        width: column.width,
-                        fontWeight: '700',
-                        fontSize: '1rem',
-                      }}*/
                     >
                       {column.label}
                     </TableCell>
@@ -479,7 +455,6 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
                           </>
                         )*/}
 
-                        {/*translateType(row.type)*/}
                         {column.id === 'createdAt' && formatDate(row.createdAt)}
                         {column.id === 'actions' && (
                           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -521,17 +496,6 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
                             >
                               <DeleteIcon color="error" sx={{ fontSize: '1.25rem' }} />
                             </Button>
-                            {/**Coloquei esse botão como comentário para retirar o botão de edição dos materiais */}
-                            {/*<Button
-                              variant="text"
-                              color="warning"
-                              sx={{ p: 0, width: '30px', minWidth: '35px' }}
-                              onClick={() => {
-                                handleEditMaterial(row._id);
-                              }}
-                            >
-                              <EditIcon color="warning" sx={{ fontSize: '1.25rem' }} />
-                            </Button>*/}
                           </Box>
                         )}
                       </TableCell>

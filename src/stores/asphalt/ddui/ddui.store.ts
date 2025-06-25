@@ -7,6 +7,7 @@ interface DduiGeneralData {
   operator?: string;
   calculist?: string;
   description?: string;
+  createdAt?: Date;
 }
 
 interface DduiStep2 {

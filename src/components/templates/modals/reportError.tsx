@@ -21,22 +21,24 @@ export default function ReportError({ openModalProp }: IReportErrorProps) {
   const getModalInput = () => {
     const modalInputs = [
       {
-        label: 'assunto',
+        label: 'Assunto',
         key: 'subject',
         value: modalValues.subject,
       },
+
       {
-        label: 'contato',
+        label: 'Contato',
         key: 'contact',
         value: modalValues.contact,
       },
+      //Adicionei esse comentario apenas para ter uma alteração válida e conseguir subir a branch, pois o git estava considerando que ela e a developer estavam iguais e eu não estava conseguindo criar o pull request. 
       {
-        label: 'nome',
+        label: 'Nome',
         key: 'sender',
         value: modalValues.sender,
       },
       {
-        label: 'texto',
+        label: 'Texto',
         key: 'body',
         value: modalValues.body,
       },
