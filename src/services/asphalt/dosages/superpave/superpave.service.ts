@@ -544,13 +544,9 @@ class Superpave_SERVICE implements IEssayService {
       const { percentageInputs, chosenCurves, lowerComposition, averageComposition, higherComposition, nominalSize } =
         step3Data;
       const { materials, binderSpecificMass } = step4Data;
-
-      const hasNullValue = materials.some((obj) => Object.values(obj).some((value) => value === null));
-
+      const materialsWithoutBinder = materials.filter((material) => material.type.includes('Aggregate') || material.type.includes('filler'));
+      const hasNullValue = materialsWithoutBinder.some((obj) => Object.values(obj).some((value) => value === null));
       if (hasNullValue) throw new Error('Algum valor não foi informado.');
-      // if (binderSpecificMass === null || binderSpecificMass === 0)
-      //   return Error('A massa específica do ligante deve ser informada.');
-
       let composition;
 
       if (chosenCurves.lower) composition = lowerComposition;

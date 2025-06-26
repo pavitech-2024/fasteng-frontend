@@ -22,7 +22,7 @@ interface Step2Props {
  */
 const Step2Table = ({ rows, columns, header }: Step2Props & { superpave: Superpave_SERVICE }) => {
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
-  const { materialSelectionData, setData } = useSuperpaveStore();
+  const { setData } = useSuperpaveStore();
 
   return (
     <Box

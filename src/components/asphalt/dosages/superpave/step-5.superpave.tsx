@@ -194,7 +194,9 @@ const Superpave_Step5 = ({
     ]);
   };
 
-  const modalMaterialInputs = generateMaterialInputs(data.materials);
+  const modalMaterialInputs = generateMaterialInputs(
+    data.materials.filter((material) => material.type.includes('Aggregate') || material.type.includes('filler'))
+  );
 
   const handleModalSubmit = () => {
     toast.promise(
@@ -206,6 +208,7 @@ const Superpave_Step5 = ({
             granulometryCompositionData,
             data
           );
+          console.log('🚀 ~ response:', response);
 
           const updatedRows = response.granulometryComposition.map((e, i) => ({
             id: i,
@@ -298,7 +301,9 @@ const Superpave_Step5 = ({
       },
     ];
 
-    const aggregates = granulometryEssayData.materials.filter((material) => material.type.includes('Aggregate') || material.type.includes('filler'));
+    const aggregates = granulometryEssayData.materials.filter(
+      (material) => material.type.includes('Aggregate') || material.type.includes('filler')
+    );
 
     const materialCols = aggregates.map((aggregate, index) => ({
       field: `material_${index + 1}`,
@@ -314,7 +319,9 @@ const Superpave_Step5 = ({
 
   const createEstimatedPercentageGroupings = (): GridColumnGroupingModel => {
     const baseChildren = [{ field: 'granulometricComposition' }, { field: 'initialBinder' }];
-    const aggregates = granulometryEssayData.materials.filter((material) => material.type.includes('Aggregate') || material.type.includes('filler'));
+    const aggregates = granulometryEssayData.materials.filter(
+      (material) => material.type.includes('Aggregate') || material.type.includes('filler')
+    );
 
     const materialChildren = aggregates.map((_, index) => ({
       field: `material_${index + 1}`,
@@ -485,6 +492,7 @@ const Superpave_Step5 = ({
                       <InputEndAdornment
                         key={`${input.materialIndex}_${input.key}`}
                         adornment={input.adornment}
+                        type="number"
                         value={input.value}
                         label={input.label}
                         placeholder={input.placeHolder}
