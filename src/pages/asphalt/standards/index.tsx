@@ -35,7 +35,8 @@ import { NextPage } from 'next';
 const AsphaltStandards: NextPage = () => {
   const standards: Standard[] = [
     {
-      title: t('abrasion.los.angeles'),
+      //title: t('abrasion.los.angeles'),
+      title: 'Abrasão Los Angeles - DNER - ME 035/98',
       icon: AbrasionIcon,
       key: 'abrasion',
       standard: 'DNER - ME 035/98',
@@ -43,7 +44,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('adhesiveness'),
+      //title: t('adhesiveness'),
+      title: 'Adesividade - DNER - ME 078/94', 
       icon: AdhesivenessIcon,
       key: 'adhesiveness',
       standard: 'DNER - ME 078/94',
@@ -51,7 +53,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('induced.moisture.damage'),
+      //title: t('induced.moisture.damage'),
+      title: 'Dano por Umidade Induzida - DNIT 180/2018 - ME',
       icon: InducedMoistureDamageIcon,
       key: 'inducedMoistureDamage',
       standard: 'DNIT 180/2018 - ME',
@@ -59,7 +62,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('ductility'),
+      //title: t('ductility'),
+      title: 'Ductibilidade - DNER - ME 163/98',
       icon: DuctilityIcon,
       key: 'ductility',
       standard: 'DNER - ME 163/98',
@@ -68,7 +72,8 @@ const AsphaltStandards: NextPage = () => {
     },
     {
       //Consertar link de durability
-      title: t('durability'),
+      //title: t('durability'),
+      title: 'Durabilidade - DNER - ME 089/94',
       icon: DurabilityIcon,
       key: 'durability',
       standard: 'DNER - ME 089/94',
@@ -76,7 +81,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('cantabro.essay'),
+      //title: t('cantabro.essay'),
+      title: 'Ensaio Cântabro - DNER - ME 383/99',
       icon: CantabrianIcon,
       key: 'cantabrian',
       standard: 'DNER - ME 383/99',
@@ -84,7 +90,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('angularity.essay'),
+      //title: t('angularity.essay'),
+      title: 'Angularidade - DNER - ME 415/2019',
       icon: AngularityIcon,
       key: 'angularity',
       standard: 'DNER - ME 415/2019',
@@ -92,7 +99,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('fatigue.essay'),
+      //title: t('fatigue.essay'),
+      title: 'Ensaio de Fadiga - DNIT - ME 183/2018',
       icon: FatigueIcon,
       key: 'fatigue',
       standard: 'DNIT - ME 183/2018',
@@ -100,7 +108,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltBinder',
     },
     {
-      title: t('penetration.essay'),
+      //title: t('penetration.essay'),
+      title: 'Ensaio de Penetração -  DNIT - ME 155/2010',
       icon: PenetrationIcon,
       key: 'penetration',
       standard: 'DNIT - ME 155/2010',
@@ -109,7 +118,8 @@ const AsphaltStandards: NextPage = () => {
     },
     {
       // Corrigir link do ensaio marshall
-      title: t('marshall.essay'),
+      //title: t('marshall.essay'),
+      title: 'Ensaio Marshall - DNER - ME 043/95',
       icon: MarshallIconPng,
       key: 'marshall',
       standard: 'DNER - ME 043/95',
@@ -118,7 +128,8 @@ const AsphaltStandards: NextPage = () => {
     },
     {
       //Corrigir link de sand.equivalent
-      title: t('sand.equivalent'),
+      //title: t('sand.equivalent'),
+      title: 'Equivalente de Areia - DNER - ME 054/97',
       icon: SandEquivalentIcon,
       key: 'sandEquivalent',
       standard: 'DNER - ME 054/97',
@@ -126,7 +137,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('storage.stability'),
+      //title: t('storage.stability'),
+      title: 'Estabilidade à estocagem - DNER - ME 384/99',
       icon: StorageStabilityIcon,
       key: 'storageStability',
       standard: 'DNER - ME 384/99',
@@ -134,7 +146,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltBinder',
     },
     {
-      title: t('drop.weight.deflectometer'),
+      //title: t('drop.weight.deflectometer'),
+      title: 'Deflectômetro de queda de peso - DNER - PRO 273/96',
       icon: FwdIcon,
       key: 'fallingWeightDeflectometer',
       standard: 'DNER - PRO 273/96',
@@ -143,7 +156,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltMix',
     },
     {
-      title: t('flow.number'),
+      //title: t('flow.number'),
+      title: 'Número de fluxo - DNIT 184/2018',
       icon: FlowNumberIcon,
       key: 'flowNumber',
       standard: 'DNIT 184/2018',
@@ -151,7 +165,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltMix',
     },
     {
-      title: t('multiple.stress.creep.recovery'),
+      //title: t('multiple.stress.creep.recovery'),
+      title: 'Fluência e Recuperação Sob Tensões Múltiplas (MSCR) - DNIT 423/2020 - ME',
       icon: MSCRIcon,
       key: 'mscr',
       standard: 'DNIT 423/2020 - ME',
@@ -159,7 +174,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltMix',
     },
     {
-      title: t('sieving.granulometry'),
+      //title: t('sieving.granulometry'),
+      title: 'Granulometria por Peneiramento - DNER - ME 083/98',
       icon: GranulometryIcon,
       key: 'granulometry-asphalt',
       standard: 'DNER - ME 083/98',
@@ -167,7 +183,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('shape.index'),
+      //title: t('shape.index'),
+      title: 'Índice de Forma - DNIT 424/2020 - ME',
       icon: ShapeIndexIcon,
       key: 'shapeIndex',
       standard: 'DNIT 424/2020 - ME',
@@ -175,7 +192,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('specific.mass-coarse.aggregate'),
+      //title: t('specific.mass-coarse.aggregate'),
+      title: 'Massa Específica - Agregrado Graúdo - DNIT 413/2021 - ME',
       icon: SpecifyMassIcon,
       key: 'specifyMassBigAggregates',
       standard: 'DNIT 413/2021 - ME',
@@ -183,7 +201,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('specific.mass-fine.aggregate'),
+      //title: t('specific.mass-fine.aggregate'),
+      title: 'Massa Específica - Agregado Miúdo - DNIT 411/2021 - ME',
       icon: SpecifyMassIcon,
       key: 'specifyMassSmallAggregates',
       standard: 'DNIT 411/2021 - ME',
@@ -191,7 +210,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('resilience.module'),
+      //title: t('resilience.module'),
+      title: 'Módulo de Resiliência - DNIT 135/2018 - ME',
       icon: ResiliencyModuleIcon,
       key: 'resilienceModule',
       standard: 'DNIT 135/2018 - ME',
@@ -199,7 +219,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltMix',
     },
     {
-      title: t('elongated.flattened.particles'),
+      //title: t('elongated.flattened.particles'),
+      title: 'Partículas Alongadas e Achatadas - DNIT 429/2020 - ME',
       icon: ElongatedParticlesIcon,
       key: 'elongatedParticles',
       standard: 'DNIT 429/2020 - ME',
@@ -207,7 +228,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'aggregates',
     },
     {
-      title: t('softening.point'),
+      //title: t('softening.point'),
+      title: 'Ponto de Amolecimento - DNIT 131/2010 - ME',
       icon: SofteningPointIcon,
       key: 'softeningPoint',
       standard: 'DNIT 131/2010 - ME',
@@ -215,7 +237,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltBinder',
     },
     {
-      title: t('flash.point'),
+      //title: t('flash.point'),
+      title: 'Ponto de Fulgor - DNER - ME 148/94',
       icon: FlashPointIcon,
       key: 'flashPoint',
       standard: 'DNER - ME 148/94',
@@ -223,15 +246,17 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltBinder',
     },
     {
-      title: t('elastic.recovery'),
+      //title: t('elastic.recovery'),
+      title: 'Recuperação Elástica - DNER 130/2010 - ME',
       icon: ElasticRecoveryIcon,
       key: 'elasticRecovery',
       standard: 'DNER 130/2010 - ME',
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_130_2010_me.pdf',
       type: 'asphaltBinder',
     },
-    {
-      title: t('tensile.strength.by.diametral.compression-rt'),
+    { 
+      //title: t('tensile.strength.by.diametral.compression-rt'),
+      title: 'Resistência à Tração por Compressão Diametral - RT - DNIT 136/2018 - ME',
       icon: RtcdIcon,
       key: 'rtcd',
       standard: 'DNIT 136/2018 - ME',
@@ -239,7 +264,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltMix',
     },
     {
-      title: t('rice.method'),
+      //title: t('rice.method'),
+      title: 'Método Rice - DNIT 136/2018 - ME',
       icon: RiceTestIcon,
       key: 'rice',
       standard: 'DNIT 136/2018 - ME',
@@ -247,7 +273,8 @@ const AsphaltStandards: NextPage = () => {
       type: 'asphaltMix',
     },
     {
-      title: t('rotational.viscosity'),
+      //title: t('rotational.viscosity'),
+      title: 'Viscosidade Rotacional - DNIT 427/2020 - ME',
       icon: RotationalIcon,
       key: 'rotational',
       standard: 'DNIT 427/2020 - ME',
