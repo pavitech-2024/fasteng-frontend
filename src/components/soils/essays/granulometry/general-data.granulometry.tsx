@@ -25,7 +25,7 @@ const SoilsGranulometry_GeneralData = ({
       async () => {
         const samples = await granulometry.getSamplesByUserId(user._id);
 
-        setSamples(samples);
+        setSamples(samples[0].materials);
         setLoading(false);
       },
       {

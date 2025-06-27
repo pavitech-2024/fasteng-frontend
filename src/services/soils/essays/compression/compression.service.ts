@@ -56,7 +56,7 @@ class COMPRESSION_SERVICE implements IEssayService {
     }
   };
 
-  getSamplesByUserId = async (userId: string): Promise<SoilSample[]> => {
+  getSamplesByUserId = async (userId: string): Promise<SoilSample> => {
     try {
       const response = await Api.get(`soils/samples/all/${userId}`);
       return response.data;

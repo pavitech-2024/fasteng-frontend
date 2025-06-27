@@ -58,7 +58,7 @@ class SAND_INCREASE_SERVICE implements IEssayService {
 
   /** @generalData Methods for general-data (step === 0, page 1) */
 
-  getMaterialsByUserId = async (userId: string): Promise<ConcreteMaterial[]> => {
+  getmaterialsByUserId = async (userId: string): Promise<ConcreteMaterial> => {
     try {
       const response = await Api.get(`concrete/materials/all/${userId}`);
       return response.data;

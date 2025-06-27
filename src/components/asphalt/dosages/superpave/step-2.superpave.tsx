@@ -26,8 +26,8 @@ const Superpave_Step2 = ({
     toast.promise(
       async () => {
         try {
-          const materials = await superpave.getMaterialsByUserId(user._id);
-          setMaterials(materials);
+          const data = await superpave.getmaterialsByUserId(user._id);
+          setMaterials(data[0].materials);
           setLoading(false);
         } catch (error) {
           setMaterials([]);
