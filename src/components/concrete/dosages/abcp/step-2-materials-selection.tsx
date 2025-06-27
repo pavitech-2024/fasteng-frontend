@@ -28,8 +28,8 @@ const ABCP_MaterialsSelection = ({ setNextDisabled, abcp }: EssayPageProps & { a
     toast.promise(
       async () => {
         try {
-          const materials = await abcp.getMaterialsByUserId(user._id);
-          setMaterials(materials);
+          const data = await abcp.getmaterialsByUserId(user._id);
+          setMaterials(data[0].materials);
           setLoading(false);
         } catch (error) {
           setMaterials([]);

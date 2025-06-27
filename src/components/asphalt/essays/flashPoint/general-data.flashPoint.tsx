@@ -23,14 +23,11 @@ const FlashPoint_GeneralData = ({
   useEffect(() => {
     toast.promise(
       async () => {
-        const materials = await flashPoint.getmaterialsByUserId(user._id);
-        console.log('Ponto de fulgor', materials);
+        const data = await flashPoint.getmaterialsByUserId(user._id);
 
-        const filteredMaterials = materials[0].materials.filter(
+        const filteredMaterials = data[0].materials.filter(
           (material) => material.type === 'asphaltBinder' || material.type === 'CAP'
         );
-
-        console.log('Filtered Materials ponto de fulgor', filteredMaterials);
 
         setMaterials(filteredMaterials);
         setLoading(false);
