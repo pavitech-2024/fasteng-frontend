@@ -107,11 +107,7 @@ interface SuperpaveGranulometryCompositionData {
   nominalSize: {
     value: number;
   };
-  pointsOfCurve: {
-    lower: number[];
-    average: number[];
-    higher: number[];
-  };
+  pointsOfCurve: number[];
   chosenCurves: {
     lower: boolean;
     average: boolean;
@@ -541,11 +537,7 @@ const initialState = {
     nominalSize: {
       value: null,
     },
-    pointsOfCurve: {
-      lower: null,
-      average: null,
-      higher: null,
-    },
+    pointsOfCurve: [],
     chosenCurves: {
       lower: null,
       average: null,

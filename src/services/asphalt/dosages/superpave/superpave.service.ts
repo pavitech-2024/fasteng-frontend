@@ -442,10 +442,10 @@ class Superpave_SERVICE implements IEssayService {
       if (success === false) throw error.name;
       const formattedData = { ...data };
 
-      formattedData.pointsOfCurve = {
-        ...granulometryCompositionData.pointsOfCurve,
-        [chosenCurves]: data.pointsOfCurve,
-      };
+      // formattedData.pointsOfCurve = {
+      //   ...granulometryCompositionData.pointsOfCurve,
+      //   [chosenCurves]: data.pointsOfCurve,
+      // };
 
       formattedData.lowerComposition = { ...granulometryCompositionData.lowerComposition, ...data.lowerComposition };
       // formattedData.averageComposition = { ...granulometryCompositionData.averageComposition, ...data.averageComposition };

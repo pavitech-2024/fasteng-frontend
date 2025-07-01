@@ -38,8 +38,6 @@ const AsphaltGranulometry_GeneralData = ({
         error: t('loading.materials.error'),
       }
     );
-    // se não deixar o array vazio ele vai ficar fazendo requisições infinitas
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const inputs = [

@@ -374,7 +374,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
           />
         ))}
 
-      {data?.viscosity?.dataPoints?.length > 0 && (
+      {data?.viscosity?.dataPoints?.length > 0 && initialRows?.length > 0 && binderColumns?.length > 0 && (
         <Box
           sx={{ marginY: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}
           ref={(el) => {

@@ -21,6 +21,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     setData,
     hasHydrated,
   } = useSuperpaveStore();
+    console.log("🚀 ~ constSuperpave_Step4= ~ data:", data)
 
   const { user } = useAuth();
 
@@ -135,14 +136,14 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     }
   };
 
-  useEffect(() => {
-    let curves = chosenCurves;
-    if (data.pointsOfCurve.lower?.length > 0) curves.lower = true;
-    if (data.pointsOfCurve.average?.length > 0) curves.average = true;
-    if (data.pointsOfCurve.higher?.length > 0) curves.higher = true;
+  // useEffect(() => {
+  //   let curves = chosenCurves;
+  //   if (data.pointsOfCurve.lower?.length > 0) curves.lower = true;
+  //   if (data.pointsOfCurve.average?.length > 0) curves.average = true;
+  //   if (data.pointsOfCurve.higher?.length > 0) curves.higher = true;
 
-    setData({ step: 3, key: 'chosenCurves', value: curves });
-  }, [data.pointsOfCurve]);
+  //   setData({ step: 3, key: 'chosenCurves', value: curves });
+  // }, [data.pointsOfCurve]);
 
   const convertNumber = (value) => {
     let aux = value;
@@ -174,7 +175,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   };
 
   const setPercentsToListTotal = (peneiras: { peneira: string }[], percentsToList) => {
-
     const tableData = Array.from({ length: percentsToList?.length }, () => []);
 
     percentsToList?.forEach((item, i) => {
@@ -319,9 +319,16 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
       },
     };
 
-    setData({ step: 2, value: newData });
+    setData({ step: 3, value: newData });
   };
 
+/**
+ * Atualiza o array de dados inserindo uma linha de títulos vazios no início
+ * se a primeira linha contiver algum valor não vazio.
+ *
+ * @param {Array<any[]>} data - O array de entrada contendo linhas de dados.
+ * @returns {Array<any[]>} O array de dados atualizado com uma linha de títulos vazios opcional.
+*/
   const updateDataArray = (data) => {
     const emptyTitles = [];
     const result = data;
@@ -334,15 +341,29 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     return result;
   };
 
-  const updateGraph = (points, curve) => {
+  /**
+   * Atualiza o gráfico com os novos pontos de curva.
+   * Recebe um array de pontos de curva e o atualiza no estado.
+   * @param {number[][]} points - Os pontos de curva a serem atualizados.
+   */
+  const updateGraph = (points) => {
+    // Atualiza os dados do gráfico com os novos pontos de curva
     const pointsOfCurve = updateDataArray(points);
-    const prevData = { ...data.pointsOfCurve };
-    const newData = { ...prevData, [curve]: pointsOfCurve };
-    setData({ step: 3, key: 'pointsOfCurve', value: newData });
+    setData({ step: 3, key: 'pointsOfCurve', value: pointsOfCurve });
   };
 
+  /**
+   * Calcula a composição granulométrica com base na curva fornecida.
+   * Valida se a soma dos valores de entrada é igual a 100 antes de realizar o cálculo.
+   * Caso contrário, exibe um erro de toast.
+   * 
+   * @param {string} curve - A curva selecionada ('lower', 'average' ou 'higher').
+   */
   const calculate = (curve: string) => {
+    // Determina o índice com base na curva selecionada
     const index = curve === 'lower' ? 0 : curve === 'average' ? 1 : 2;
+
+    // Soma os valores de entrada para a curva selecionada
     const valueCount = Object.values(data.percentageInputs[index]).reduce((acc, item) => acc + Number(item), 0);
     const valueIsValid = valueCount === 100;
 
@@ -350,16 +371,18 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
       toast.promise(
         async () => {
           try {
+            // Chama a função para calcular a composição granulométrica
             const response = await superpave.calculateGranulometryComposition(
               data,
               granulometryEssayData,
               generalData,
               curve
             );
-            console.log("🚀 ~ response:", response)
+
             setData({ step: 3, value: response });
 
-            updateGraph(response.pointsOfCurve[curve], curve);
+            // Atualiza o gráfico com os novos pontos de curva
+            updateGraph(response.pointsOfCurve);
             //setLoading(false);
           } catch (error) {
             //setLoading(false);
@@ -382,7 +405,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   } else {
     setNextDisabled(true);
   }
-
 
   return (
     <>
@@ -446,8 +468,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
                       onChangeInputsTables={onChangeInputsTables}
                     />
 
-                    {data.pointsOfCurve[table.key]?.length > 0 && <Graph data={data.pointsOfCurve[table.key]} />}
-
                     <Button
                       onClick={() => calculate(table.key)}
                       variant="outlined"
@@ -459,6 +479,8 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
                 );
               }
             })}
+
+          {data.pointsOfCurve?.length > 0 && <Graph data={data.pointsOfCurve} />}
         </Box>
       )}
     </>

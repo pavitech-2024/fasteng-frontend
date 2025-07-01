@@ -56,7 +56,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       // Verificar se o keyString é diferente de 'step', logo, é o nome do ensaio/dosagem
       if (keyString !== 'step') {
         // Obter o storeName
-        storeName = keyString.split('-')[0]; // ex: 'superpave' em 'asphalt-superpave-store'
+        storeName = keyString?.split('-')[0]; // ex: 'superpave' em 'asphalt-superpave-store'
       }
 
       let step = null;
