@@ -267,6 +267,8 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
+
+
   submitGranulometryEssayData = async (
     data: SuperpaveData,
     userId: string,
@@ -438,45 +440,16 @@ class Superpave_SERVICE implements IEssayService {
       });
 
       const { data, success, error } = response.data;
+      console.log("🚀 ~ Superpave_SERVICE ~ data:", data)
 
       if (success === false) throw error.name;
+
       const formattedData = { ...data };
 
-      // formattedData.pointsOfCurve = {
-      //   ...granulometryCompositionData.pointsOfCurve,
-      //   [chosenCurves]: data.pointsOfCurve,
-      // };
-
-      formattedData.lowerComposition = { ...granulometryCompositionData.lowerComposition, ...data.lowerComposition };
-      // formattedData.averageComposition = { ...granulometryCompositionData.averageComposition, ...data.averageComposition };
-      // formattedData.higherComposition = { ...granulometryCompositionData.higherComposition, ...data.higherComposition };
-
-      // if (granulometryCompositionData?.lowerComposition?.percentsOfMaterials?.length > 0) {
-      //   formattedData.lowerComposition = {
-      //     ...granulometryCompositionData.lowerComposition,
-      //     // percentsOfMaterials: [...granulometryCompositionData.lowerComposition.percentsOfMaterials],
-      //     // sumOfPercents: [...granulometryCompositionData.lowerComposition.sumOfPercents],
-      //   };
-      // } else if (granulometryCompositionData?.averageComposition?.percentsOfMaterials?.length > 0) {
-      //   formattedData.averageComposition = {
-      //     ...granulometryCompositionData.averageComposition,
-      //     percentsOfMaterials: [...granulometryCompositionData.averageComposition.percentsOfMaterials],
-      //     sumOfPercents: [...granulometryCompositionData.averageComposition.sumOfPercents],
-      //   };
-      // } else if (granulometryCompositionData?.higherComposition?.percentsOfMaterials?.length > 0) {
-      //   formattedData.higherComposition = {
-      //     ...granulometryCompositionData.higherComposition,
-      //     percentsOfMaterials: [...granulometryCompositionData.higherComposition.percentsOfMaterials],
-      //     sumOfPercents: [...granulometryCompositionData.higherComposition.sumOfPercents],
-      //   };
-      // }
-
       const prevData = { ...granulometryCompositionData, ...formattedData };
-      // prevData[chosenCurves] = data.pointsOfCurve;
-      console.log("🚀 ~ Superpave_SERVICE ~ prevData:", prevData)
+      console.log('🚀 ~ Superpave_SERVICE ~ prevData:', prevData);
 
       return prevData;
-      // this.store_actions.setData({ step: 3, value: prevData });
     } catch (error) {
       throw error;
     }
@@ -544,7 +517,9 @@ class Superpave_SERVICE implements IEssayService {
       const { percentageInputs, chosenCurves, lowerComposition, averageComposition, higherComposition, nominalSize } =
         step3Data;
       const { materials, binderSpecificMass } = step4Data;
-      const materialsWithoutBinder = materials.filter((material) => material.type.includes('Aggregate') || material.type.includes('filler'));
+      const materialsWithoutBinder = materials.filter(
+        (material) => material.type.includes('Aggregate') || material.type.includes('filler')
+      );
       const hasNullValue = materialsWithoutBinder.some((obj) => Object.values(obj).some((value) => value === null));
       if (hasNullValue) throw new Error('Algum valor não foi informado.');
       let composition;

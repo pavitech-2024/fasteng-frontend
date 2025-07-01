@@ -21,7 +21,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     setData,
     hasHydrated,
   } = useSuperpaveStore();
-    console.log("🚀 ~ constSuperpave_Step4= ~ data:", data)
+  console.log('🚀 ~ constSuperpave_Step4= ~ data:', data);
 
   const { user } = useAuth();
 
@@ -245,6 +245,12 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     tableCompositionInputsHigher[key] = '';
   };
 
+  // useEffect(() => {
+  //   const prevData = {...data};
+  //   prevData.pointsOfCurve = [];
+  //   setData({ step: 3, key: 'pointsOfCurve', value: prevData.pointsOfCurve });
+  // }, []);
+
   selectedMaterials.forEach((_, i) => {
     inputsInit(`input${i * 2 + 1}`);
   });
@@ -322,13 +328,13 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     setData({ step: 3, value: newData });
   };
 
-/**
- * Atualiza o array de dados inserindo uma linha de títulos vazios no início
- * se a primeira linha contiver algum valor não vazio.
- *
- * @param {Array<any[]>} data - O array de entrada contendo linhas de dados.
- * @returns {Array<any[]>} O array de dados atualizado com uma linha de títulos vazios opcional.
-*/
+  /**
+   * Atualiza o array de dados inserindo uma linha de títulos vazios no início
+   * se a primeira linha contiver algum valor não vazio.
+   *
+   * @param {Array<any[]>} data - O array de entrada contendo linhas de dados.
+   * @returns {Array<any[]>} O array de dados atualizado com uma linha de títulos vazios opcional.
+   */
   const updateDataArray = (data) => {
     const emptyTitles = [];
     const result = data;
@@ -356,7 +362,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
    * Calcula a composição granulométrica com base na curva fornecida.
    * Valida se a soma dos valores de entrada é igual a 100 antes de realizar o cálculo.
    * Caso contrário, exibe um erro de toast.
-   * 
+   *
    * @param {string} curve - A curva selecionada ('lower', 'average' ou 'higher').
    */
   const calculate = (curve: string) => {
@@ -378,6 +384,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
               generalData,
               curve
             );
+            console.log('🚀 ~ response:', response);
 
             setData({ step: 3, value: response });
 
@@ -400,7 +407,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     }
   };
 
-  if (Object.entries(data.pointsOfCurve).some(([key, value]) => value)) {
+  if (data.pointsOfCurve?.length > 0) {
     setNextDisabled(false);
   } else {
     setNextDisabled(true);
