@@ -19,7 +19,7 @@ const Rtfo_GeneralData = ({ nextDisabled, setNextDisabled, rtfo }: EssayPageProp
   useEffect(() => {
     toast.promise(
       async () => {
-        const materials = await rtfo.getmaterialsByUserId(user._id);
+        const data = await rtfo.getmaterialsByUserId(user._id);
         const filteredMaterials = materials.filter((material) => material.type === 'asphaltBinder');
 
         setMaterials(filteredMaterials);

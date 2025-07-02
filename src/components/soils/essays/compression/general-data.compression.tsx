@@ -24,7 +24,7 @@ const Compression_GeneralData = ({
       async () => {
         const samples = await compression.getSamplesByUserId(user._id);
 
-        setSamples(samples);
+        setSamples(samples[0].materials);
         setLoading(false);
       },
       {

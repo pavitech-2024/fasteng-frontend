@@ -30,6 +30,7 @@ import { IggData } from '@/stores/asphalt/igg/igg.store';
 import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
 import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
 
+
 interface MaterialsTemplateProps {
   materials: any[] | undefined;
   fwdEssays?: FwdData[] | undefined;
@@ -99,14 +100,14 @@ const MaterialsTemplate = ({
   ];
 
  /*************  ✨ Windsurf Command 🌟  *************/
- const options = [
+ /*const options = [
     { label: t('materials.template.name'), value: 'name' },
     { label: t('materials.template.type'), value: 'type' },
      /*{ label: t('materials.template.mix'), value: 'mix' },
-    { label: t('materials.template.stretch'), value: 'stretch' },*/
- ];
+    { label: t('materials.template.stretch'), value: 'stretch' },
+ ];*/
  
-  if (path.includes('asphalt')) {
+/*  if (path.includes('asphalt')) {
     options.push(
       { label: t('materials.template.mix'), value: 'mix' },
       { label: t('materials.template.stretch'), value: 'stretch' },
@@ -115,7 +116,22 @@ const MaterialsTemplate = ({
   if(path.includes('asphalt')){
     options.push({ label: t('materials.template.mix'), value: 'mix' });
     options.push({ label: t('materials.template.stretch'), value: 'stretch' });
-  }
+  }*/
+
+    const options = [
+  { label: t('materials.template.name'), value: 'name' },
+  { label: t('materials.template.type'), value: 'type' },
+];
+
+// Adiciona apenas uma vez, se o path tiver "asphalt"
+const isAsphaltPath = path?.includes('asphalt');
+if (isAsphaltPath) {
+  options.push(
+    { label: t('materials.template.mix'), value: 'mix' },
+    { label: t('materials.template.stretch'), value: 'stretch' },
+  );
+}
+
 
 /*******  b8f77572-72b8-4e11-aeb0-6b9fe12308cf  *******/
  const translateType = (type: string) => {
@@ -520,5 +536,5 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
   );
 };
 
-};
+//};
 export default MaterialsTemplate;

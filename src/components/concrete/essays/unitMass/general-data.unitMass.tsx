@@ -12,7 +12,11 @@ import { toast } from 'react-toastify';
 import useAuth from '@/contexts/auth';
 import Loading from '@/components/molecules/loading';
 
-const UnitMass_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps & { unitMass: UNITMASS_SERVICE }) => {
+const UnitMass_GeneralData = ({
+  nextDisabled,
+  setNextDisabled,
+  unitMass,
+}: EssayPageProps & { unitMass: UNITMASS_SERVICE }) => {
   const { generalData, setData } = useUnitMassStore();
   const [loading, setLoading] = useState<boolean>(true);
   const { user } = useAuth();
@@ -22,9 +26,10 @@ const UnitMass_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps 
   useEffect(() => {
     toast.promise(
       async () => {
-        const materials = await concreteMaterialService.getMaterialsByUserId(user._id);
+        const data = await unitMass.getmaterialsByUserId(user._id);
+        console.log('🚀 ~ data:', data);
 
-        setMaterials(materials.data);
+        setMaterials(data[0].materials);
         setLoading(false);
       },
       {
@@ -100,7 +105,7 @@ const UnitMass_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps 
               key={'material'}
               variant="standard"
               label={t('unitMass.material')}
-              options={materials.map((material: ConcreteMaterial) => {
+              options={materials?.map((material: ConcreteMaterial) => {
                 return {
                   label: material.name + ' | ' + t(`${'concrete.materials.' + material.type}`),
                   value: material,

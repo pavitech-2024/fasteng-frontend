@@ -22,9 +22,9 @@ const SandIncrease_GeneralData = ({
   useEffect(() => {
     toast.promise(
       async () => {
-        const materials = await sandIncrease.getMaterialsByUserId(user._id);
+        const data = await sandIncrease.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        setMaterials(data[0].materials);
         setLoading(false);
       },
       {

@@ -24,11 +24,11 @@ const ViscosityRotational_GeneralData = ({
   useEffect(() => {
     toast.promise(
       async () => {
-        const materials = await viscosityRotational.getmaterialsByUserId(user._id);
+        const data = await viscosityRotational.getmaterialsByUserId(user._id);
 
-        const binders = materials.filter((e) => e.type === 'asphaltBinder' || e.type === 'CAP');
+        const materials = data[0].materials.filter((e) => e.type === 'asphaltBinder' || e.type === 'CAP');
 
-        setMaterials(binders);
+        setMaterials(materials);
         setLoading(false);
       },
       {
