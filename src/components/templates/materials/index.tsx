@@ -99,14 +99,14 @@ const MaterialsTemplate = ({
   ];
 
  /*************  ✨ Windsurf Command 🌟  *************/
- const options = [
-    { label: t('materials.template.name'), value: 'name' },
-    { label: t('materials.template.type'), value: 'type' },
+ //const options = [
+    //{ label: t('materials.template.name'), value: 'name' },
+    //{ label: t('materials.template.type'), value: 'type' },
      /*{ label: t('materials.template.mix'), value: 'mix' },
     { label: t('materials.template.stretch'), value: 'stretch' },*/
- ];
+ //];
  
-  if (path.includes('asphalt')) {
+  /*if (path.includes('asphalt')) {
     options.push(
       { label: t('materials.template.mix'), value: 'mix' },
       { label: t('materials.template.stretch'), value: 'stretch' },
@@ -115,7 +115,21 @@ const MaterialsTemplate = ({
   if(path.includes('asphalt')){
     options.push({ label: t('materials.template.mix'), value: 'mix' });
     options.push({ label: t('materials.template.stretch'), value: 'stretch' });
-  }
+  }*/
+ const options = [
+  { label: t('materials.template.name'), value: 'name' },
+  { label: t('materials.template.type'), value: 'type' },
+];
+
+// Adiciona apenas uma vez, se o path tiver "asphalt"
+const isAsphaltPath = path?.includes('asphalt');
+if (isAsphaltPath) {
+  options.push(
+    { label: t('materials.template.mix'), value: 'mix' },
+    { label: t('materials.template.stretch'), value: 'stretch' },
+  );
+}
+
 
 /*******  b8f77572-72b8-4e11-aeb0-6b9fe12308cf  *******/
  const translateType = (type: string) => {
@@ -204,8 +218,23 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
   }))
 
   useEffect(() => {
+  let newData: any[] = [];
+
+  if (searchBy === 'stretch') {
+    newData = [...fwdEssaysData, ...iggEssaysData];
+  } else if (searchBy === 'mix') {
+    newData = [...rtcdEssaysData, ...dduiEssaysData];
+  } else if (searchBy === 'name') {
+    newData = [...filteredData, ...fwdEssaysData, ...iggEssaysData, ...rtcdEssaysData, ...dduiEssaysData];
+  } else {
+    newData = filteredData;
+  }
+
+  setTableData(newData);
+}, [searchBy, filteredData, fwdEssaysData, iggEssaysData, rtcdEssaysData, dduiEssaysData]);
+
     //let newData: any[] = [];
-    if (searchBy === 'stretch') {
+    /*if (searchBy === 'stretch') {
       // Combina FWD e IGG quando "stretch" for selecionado
       setTableData([...fwdEssaysData, ...iggEssaysData]);
     } else if (searchBy === 'mix') {
@@ -226,9 +255,9 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
     else {
       // Caso padrão (nome ou tipo)
       setTableData(filteredData);
-    }
+    }*/
     //setTableData(newData);
-  }, [searchBy]);
+  //}, [searchBy]);
 
     console.log("Filtro exemplo",filteredData);
     console.log("Teste" ,materials)
@@ -520,5 +549,5 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
   );
 };
 
-};
+//};
 export default MaterialsTemplate;

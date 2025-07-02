@@ -23,9 +23,9 @@ const Penetration_GeneralData = ({
   useEffect(() => {
     toast.promise(
       async () => {
-        const materials = await penetration.getmaterialsByUserId(user._id);
+        const data = await penetration.getmaterialsByUserId(user._id);
 
-        const filteredMaterials = materials.filter(
+        const filteredMaterials = data[0].materials.filter(
           (material) => material.type === 'asphaltBinder' || material.type === 'CAP'
         );
 

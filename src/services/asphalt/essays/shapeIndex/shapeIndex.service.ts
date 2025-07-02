@@ -53,7 +53,7 @@ class SHAPEINDEX_SERVICE implements IEssayService {
   /** @generalData Methods for general-data (step === 0, page 1) */
 
   // get all materials from user from backend
-  getmaterialsByUserId = async (userId: string): Promise<AsphaltMaterial[]> => {
+  getmaterialsByUserId = async (userId: string): Promise<AsphaltMaterial> => {
     try {
       // get all materials from user from backend
       const response = await Api.get(`asphalt/materials/all/${userId}`);

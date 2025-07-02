@@ -24,9 +24,9 @@ const CoarseAggregate_GeneralData = ({
   useEffect(() => {
     toast.promise(
       async () => {
-        const materials = await coarseAggregate.getmaterialsByUserId(user._id);
+        const data = await coarseAggregate.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        setMaterials(data[0].materials);
         setLoading(false);
       },
       {
