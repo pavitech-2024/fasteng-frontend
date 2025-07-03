@@ -25,8 +25,6 @@ interface TableModel {
 
 const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, tableData }) => {
   const { granulometryCompositionData: data, setData } = useSuperpaveStore();
-  console.log("🚀 ~ data:", data)
-
 
   // const newpercentageInputs = materials.map((material, index) => {
   //   return `material_${index + 1}`;
@@ -170,6 +168,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
    * @returns An object with formatted field values for each material.
    */
   const generateMaterialRows = (data, tableName, idx, row) => {
+    console.log("🚀 ~ generateMaterialRows ~ data:", data)
     const rowsData = materials.reduce((acc, material, index) => {
       const fieldTotalPassant = `totalPassant_${index + 1}`;
       const fieldMaterial = `material_${index + 1}`;
@@ -192,13 +191,16 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
     return rowsData;
   };
 
+
+  console.log('🚀 ~ rows ~ data[lowerComposition]:', data.lowerComposition);
+
   const rows = tableData.map((e, idx) => {
     const rowsData = generateMaterialRows(data, tableName, idx, e);
     return {
       id: idx,
       peneira: e.peneira,
       ...rowsData,
-      project: data[tableName]?.sumOfPercents !== null ? data[tableName]?.sumOfPercents[idx]?.toFixed(2) : '',
+      project: data[tableName]?.sumOfPercents.length > 0 ? data[tableName]?.sumOfPercents[idx]?.toFixed(2) : '',
       band1: e.bandsCol1,
       band2: e.bandsCol2,
     };

@@ -267,8 +267,6 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-
-
   submitGranulometryEssayData = async (
     data: SuperpaveData,
     userId: string,
@@ -409,27 +407,6 @@ class Superpave_SERVICE implements IEssayService {
       const { dnitBand } = generalData;
       const aggregates = granulometryEssayData.materials;
 
-      const selectedCurveInputs = chosenCurves.lower
-        ? percentageInputs[0]
-        : chosenCurves.average
-        ? percentageInputs[1]
-        : chosenCurves.higher
-        ? percentageInputs[2]
-        : percentageInputs;
-
-      /**
-       * Sums up the values of the selected curve inputs.
-       * If selectedCurveInputs is not an object, returns 0.
-       */
-      const curveIndex =
-        chosenCurves === 'lower' ? 0 : chosenCurves === 'average' ? 1 : chosenCurves === 'higher' ? 2 : null;
-
-      const inputsObject = selectedCurveInputs[curveIndex];
-
-      const inputsSum = Object.values(inputsObject).reduce((sum: number, input) => sum + Number(input || 0), 0);
-
-      if (inputsSum !== 100) throw t('errors.invalid-inputs-sum');
-
       const response = await Api.post(`${this.info.backend_path}/calculate-granulometric-composition-data`, {
         chosenCurves,
         percentageInputs,
@@ -440,14 +417,12 @@ class Superpave_SERVICE implements IEssayService {
       });
 
       const { data, success, error } = response.data;
-      console.log("🚀 ~ Superpave_SERVICE ~ data:", data)
 
       if (success === false) throw error.name;
 
       const formattedData = { ...data };
 
       const prevData = { ...granulometryCompositionData, ...formattedData };
-      console.log('🚀 ~ Superpave_SERVICE ~ prevData:', prevData);
 
       return prevData;
     } catch (error) {

@@ -21,19 +21,10 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     setData,
     hasHydrated,
   } = useSuperpaveStore();
-  console.log('🚀 ~ constSuperpave_Step4= ~ data:', data);
-
-  const { user } = useAuth();
 
   const [lower, setLower] = useState(false);
   const [average, setAverage] = useState(false);
   const [higher, setHigher] = useState(false);
-
-  const [chosenCurves, setChosenCurves] = useState({
-    lower: false,
-    average: false,
-    higher: false,
-  });
 
   const peneiras = AllSievesSuperpaveUpdatedAstm.map((peneira) => {
     return { peneira: peneira.label };
@@ -282,6 +273,8 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     },
   ];
 
+  console.log('🚀 ~ constSuperpave_Step4= ~ tables:', tables);
+
   /**
    * Update the selected table inputs when the user changes one of them
    * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement>} e - The input change event
@@ -335,43 +328,63 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
    * @param {Array<any[]>} data - O array de entrada contendo linhas de dados.
    * @returns {Array<any[]>} O array de dados atualizado com uma linha de títulos vazios opcional.
    */
-  const updateDataArray = (data) => {
-    const emptyTitles = [];
-    const result = data;
-    if (data.length > 0) {
-      if (data[0]?.some((value) => value !== '')) {
-        data[0].forEach(() => emptyTitles.push(''));
-        result.unshift(emptyTitles);
-      }
-    }
-    return result;
-  };
+  // const updateDataArray = (data) => {
+  //   const emptyTitles = [];
+  //   const result = data;
+  //   if (data.length > 0) {
+  //     if (data[0]?.some((value) => value !== '')) {
+  //       data[0].forEach(() => emptyTitles.push(''));
+  //       result.unshift(emptyTitles);
+  //     }
+  //   }
+  //   return result;
+  // };
+  function updateDataArray(points) {
+    const header = [
+      '(D/d)^0,45',
+      'Pontos de controle min',
+      'Pontos de controle máx',
+      'Zona restrição min',
+      'Zona restrição máx',
+      'Densidade máxima',
+      'Faixa DNIT min',
+      'Faixa DNIT máx',
+      'Curva inferior',
+      'Curva intermediária',
+      'Curva superior',
+    ];
+
+    return [header, ...points.slice(1)];
+  }
 
   /**
    * Atualiza o gráfico com os novos pontos de curva.
    * Recebe um array de pontos de curva e o atualiza no estado.
    * @param {number[][]} points - Os pontos de curva a serem atualizados.
    */
-  const updateGraph = (points) => {
+  const updateGraph = (points, chosenCurves: string[]) => {
     // Atualiza os dados do gráfico com os novos pontos de curva
+    
     const pointsOfCurve = updateDataArray(points);
+    console.log('🚀 ~ updateGraph ~ pointsOfCurve:', pointsOfCurve);
     setData({ step: 3, key: 'pointsOfCurve', value: pointsOfCurve });
   };
 
-  /**
-   * Calcula a composição granulométrica com base na curva fornecida.
-   * Valida se a soma dos valores de entrada é igual a 100 antes de realizar o cálculo.
-   * Caso contrário, exibe um erro de toast.
-   *
-   * @param {string} curve - A curva selecionada ('lower', 'average' ou 'higher').
-   */
-  const calculate = (curve: string) => {
+
+  const calculate = (curves: string[]) => {
     // Determina o índice com base na curva selecionada
-    const index = curve === 'lower' ? 0 : curve === 'average' ? 1 : 2;
+    const indexes = curves.map((item) => {
+      if (item === 'lower') return 0;
+      if (item === 'average') return 1;
+      if (item === 'higher') return 2;
+    });
 
     // Soma os valores de entrada para a curva selecionada
-    const valueCount = Object.values(data.percentageInputs[index]).reduce((acc, item) => acc + Number(item), 0);
-    const valueIsValid = valueCount === 100;
+    const valueCounts = indexes.map((index) =>
+      Object.values(data.percentageInputs[index]).reduce((acc, item) => acc + Number(item), 0)
+    );
+
+    const valueIsValid = valueCounts.every((valueCount) => valueCount === 100);
 
     if (valueIsValid) {
       toast.promise(
@@ -382,14 +395,14 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
               data,
               granulometryEssayData,
               generalData,
-              curve
+              curves
             );
             console.log('🚀 ~ response:', response);
 
             setData({ step: 3, value: response });
 
             // Atualiza o gráfico com os novos pontos de curva
-            updateGraph(response.pointsOfCurve);
+            updateGraph(response.pointsOfCurve, curves);
             //setLoading(false);
           } catch (error) {
             //setLoading(false);
@@ -451,6 +464,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
 
           {(lower || average || higher) &&
             tables.map((table) => {
+              const enabledCurves = tables.filter((table) => table.isActive).map((table) => table.key);
               if (table.isActive) {
                 return (
                   <TableContainer key={table.key}>
@@ -476,7 +490,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
                     />
 
                     <Button
-                      onClick={() => calculate(table.key)}
+                      onClick={() => calculate(enabledCurves)}
                       variant="outlined"
                       sx={{ width: '100%', marginTop: '2%' }}
                     >
@@ -487,7 +501,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
               }
             })}
 
-          {data.pointsOfCurve?.length > 0 && <Graph data={data.pointsOfCurve} />}
+          {data?.pointsOfCurve?.length > 0 && <Graph data={data?.pointsOfCurve} />}
         </Box>
       )}
     </>
