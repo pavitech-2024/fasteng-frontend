@@ -57,7 +57,7 @@ class CBR_SERVICE implements IEssayService {
   /** @generalData Methods for general-data (step === 0, page 1) */
 
   // get all samples from user from backend
-  getSamplesByUserId = async (userId: string): Promise<SoilSample[]> => {
+  getSamplesByUserId = async (userId: string): Promise<SoilSample> => {
     try {
       // get all samples from user from backend
       const response = await Api.get(`soils/samples/all/${userId}`);

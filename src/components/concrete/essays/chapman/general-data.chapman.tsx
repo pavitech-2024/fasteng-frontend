@@ -23,9 +23,10 @@ const CHAPMAN_GeneralData = ({
   useEffect(() => {
     toast.promise(
       async () => {
-        const materials = await chapman.getMaterialsByUserId(user._id);
+        const data = await chapman.getmaterialsByUserId(user._id);
+        console.log("🚀 ~ data:", data)
 
-        setMaterials(materials);
+        setMaterials(data[0].materials);
         setLoading(false);
       },
       {

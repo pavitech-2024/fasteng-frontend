@@ -26,5 +26,8 @@
   "settings.errors.invalidPhone": "O telefone deve ser valido",
   "settings.toast.submitError": "Corrija os campos antes de salvar",
   "settings.toast.success": "Alterações salvas com sucesso!",
-  "settings.toast.error": "Erro ao salvar alterações!"
+  "settings.toast.error": "Erro ao salvar alterações!",
+
+  "cancel": "cancelar",
+  "submit": "Salvar"
 }

@@ -7,6 +7,7 @@ interface DduiGeneralData {
   operator?: string;
   calculist?: string;
   description?: string;
+  createdAt?: Date;
 }
 
 interface DduiStep2 {
@@ -46,6 +47,8 @@ export type DduiData = {
   dduiStep2: DduiStep2;
   dduiStep3: DduiStep3;
   results: Ddui_results;
+  _id: string;
+  createdAt: string;
 };
 
 export type DduiActions = {
@@ -103,6 +106,8 @@ const useDduiStore = create<DduiData & DduiActions>()(
     persist(
       (set) => ({
         ...initialState,
+        _id: null,
+        createdAt: null,
 
         /**
          * Updates the value of the given key in the state of the store for the given step.

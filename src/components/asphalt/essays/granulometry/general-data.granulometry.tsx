@@ -23,7 +23,8 @@ const AsphaltGranulometry_GeneralData = ({
   useEffect(() => {
     toast.promise(
       async () => {
-        const materials = await granulometry.getmaterialsByUserId(user._id);
+        const data = await granulometry.getmaterialsByUserId(user._id);
+        
 
         const filteredMaterials = materials.filter(
           (material) => material.type === 'coarseAggregate' || material.type === 'fineAggregate' || 'filler'
@@ -31,6 +32,7 @@ const AsphaltGranulometry_GeneralData = ({
 
         setMaterials(filteredMaterials);
         setLoading(false);
+
       },
       {
         pending: t('loading.materials.pending'),

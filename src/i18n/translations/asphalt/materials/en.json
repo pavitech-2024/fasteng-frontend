@@ -33,5 +33,11 @@
   "asphalt.materials.materialWithSameName": "A material with the same name already exists!",
 
   "asphalt.materialName": "Material Name",
-  "asphalt.materialType": "Material Type"
+  "asphalt.materialType": "Material Type",
+
+  "materials.template.type": "Materials",
+  "materials.template.essay": "Essay",
+
+  "materials.template.mix": "Mistura",
+  "materials.template.stretch": "Trecho"
 }
