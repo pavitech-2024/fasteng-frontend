@@ -288,33 +288,36 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     };
   };
 
-  const clearTable = () => {
-    const newInputs = data.percentageInputs.map((input) => ({
-      material_1: null,
-      material_2: null,
-    }));
+  const clearTable = (index: number) => {
+    const currentInputs = data.percentageInputs[index];
+    const newInputs: Record<string, number | null> = {};
 
-    setLower(false);
-    setAverage(false);
-    setHigher(false);
+    Object.keys(currentInputs).forEach((key) => {
+      newInputs[key] = null;
+    });
 
     const prevData = data;
 
     const newData = {
       ...prevData,
       graphData: [],
-      percentageInputs: newInputs,
+      pointsOfCurve: [],
+      percentageInputs: [
+        ...prevData.percentageInputs.slice(0, index),
+        newInputs,
+        ...prevData.percentageInputs.slice(index + 1),
+      ],
       lowerComposition: {
         percentsOfMaterials: null,
-        sumOfPercents: null,
+        sumOfPercents: [],
       },
       averageComposition: {
         percentsOfMaterials: null,
-        sumOfPercents: null,
+        sumOfPercents: [],
       },
       higherComposition: {
         percentsOfMaterials: null,
-        sumOfPercents: null,
+        sumOfPercents: [],
       },
     };
 
@@ -322,55 +325,33 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   };
 
   /**
-   * Atualiza o array de dados inserindo uma linha de títulos vazios no início
+   * Insere uma linha de títulos vazios no início do array de dados
    * se a primeira linha contiver algum valor não vazio.
    *
    * @param {Array<any[]>} data - O array de entrada contendo linhas de dados.
    * @returns {Array<any[]>} O array de dados atualizado com uma linha de títulos vazios opcional.
    */
-  // const updateDataArray = (data) => {
-  //   const emptyTitles = [];
-  //   const result = data;
-  //   if (data.length > 0) {
-  //     if (data[0]?.some((value) => value !== '')) {
-  //       data[0].forEach(() => emptyTitles.push(''));
-  //       result.unshift(emptyTitles);
-  //     }
-  //   }
-  //   return result;
-  // };
-  function updateDataArray(points) {
-    const header = [
-      '(D/d)^0,45',
-      'Pontos de controle min',
-      'Pontos de controle máx',
-      'Zona restrição min',
-      'Zona restrição máx',
-      'Densidade máxima',
-      'Faixa DNIT min',
-      'Faixa DNIT máx',
-      'Curva inferior',
-      'Curva intermediária',
-      'Curva superior',
-    ];
-
-    return [header, ...points];
-  }
+  const addEmptyTitles = (data) => {
+    const emptyTitles = data[0]?.some((value) => value !== '') ? data[0].map(() => '') : [];
+    return [emptyTitles, ...data];
+  };
 
   /**
    * Atualiza o gráfico com os novos pontos de curva.
    * Recebe um array de pontos de curva e o atualiza no estado.
-   * @param {number[][]} points - Os pontos de curva a serem atualizados.
+   * @param {number[][]} points - Os pontos da curva do gráfico a serem atualizados.
    */
-  const updateGraph = (points, chosenCurves: string[]) => {
-    // Atualiza os dados do gráfico com os novos pontos de curva
-    
-    const pointsOfCurve = updateDataArray(points);
-    console.log('🚀 ~ updateGraph ~ pointsOfCurve:', pointsOfCurve);
+  const updateGraph = (points) => {
+    const pointsOfCurve = addEmptyTitles(points);
     setData({ step: 3, key: 'pointsOfCurve', value: pointsOfCurve });
   };
 
-
+  /**
+   * Calcula a composição granulométrica com base nas curvas selecionadas.
+   *
+   * @param {string[]} curves - As curvas selecionadas a serem consideradas para o cálculo.
+   * @returns {Promise<void>} Uma promessa que resolve com o novo estado atualizado.
+   */
   const calculate = (curves: string[]) => {
     // Determina o índice com base na curva selecionada
     const indexes = curves.map((item) => {
@@ -379,7 +360,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
       if (item === 'higher') return 2;
     });
 
-    // Soma os valores de entrada para a curva selecionada
+    // Soma os valores de entrada para a curva selecionada e verifica se a soma é 100
     const valueCounts = indexes.map((index) =>
       Object.values(data.percentageInputs[index]).reduce((acc, item) => acc + Number(item), 0)
     );
@@ -390,22 +371,18 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
       toast.promise(
         async () => {
           try {
-            // Chama a função para calcular a composição granulométrica
             const response = await superpave.calculateGranulometryComposition(
               data,
               granulometryEssayData,
               generalData,
               curves
             );
-            console.log('🚀 ~ response:', response);
 
             setData({ step: 3, value: response });
 
             // Atualiza o gráfico com os novos pontos de curva
-            updateGraph(response.pointsOfCurve, curves);
-            //setLoading(false);
+            updateGraph(response.pointsOfCurve);
           } catch (error) {
-            //setLoading(false);
             throw error;
           }
         },
@@ -454,31 +431,29 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
                 sx={{ display: 'flex', width: 'fit-content' }}
               />
             ))}
-
-            <Box sx={{ width: 'fit-content', display: 'flex', justifyContent: 'end' }}>
-              <Button onClick={() => clearTable()} variant="outlined">
-                {t('asphalt.dosages.superpave.clear-table')}
-              </Button>
-            </Box>
           </Box>
 
           {(lower || average || higher) &&
-            tables.map((table) => {
+            tables.map((table, index) => {
               const enabledCurves = tables.filter((table) => table.isActive).map((table) => table.key);
               if (table.isActive) {
                 return (
                   <TableContainer key={table.key}>
                     <Box
                       sx={{
-                        display: 'grid',
+                        display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
+                        gap: '1rem',
                         marginBottom: '10px',
+                        marginTop: '2rem',
                       }}
                     >
-                      <Typography sx={{ textAlign: 'center', marginTop: '2rem', fontSize: '1.5rem' }}>
-                        {table.title}
-                      </Typography>
+                      <Typography sx={{ textAlign: 'center', fontSize: '1.5rem' }}>{table.title}</Typography>
+
+                      <Button onClick={() => clearTable(index)} variant="outlined">
+                        {t('asphalt.dosages.superpave.clear-table')}
+                      </Button>
                     </Box>
                     <CurvesTable
                       materials={selectedMaterials}
