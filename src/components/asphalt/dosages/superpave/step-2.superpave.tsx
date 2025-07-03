@@ -13,6 +13,7 @@ import GranulometryRow from './functionalComponents/granulometryTableRow';
 
 const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const data = useSuperpaveStore((state) => state.granulometryEssayData);
+  console.log('🚀 ~ constSuperpave_Step2= ~ data:', data);
   const setData = useSuperpaveStore((state) => state.setData);
 
   const myRef = useRef<any>({});
@@ -33,7 +34,8 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
       temperature: point.temperature,
       viscosity: point.viscosity,
     }));
-  }, []);
+  }, [data.viscosity?.dataPoints]);
+  console.log('🚀 ~ initialRows ~ initialRows:', initialRows);
 
   const [binderInputs, setBinderInputs] = useState(() => {
     return initialRows?.map((row) => ({
@@ -51,7 +53,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
         viscosity: localInput?.viscosity ?? point.viscosity,
       };
     });
-  }, [binderInputs, data.viscosity?.dataPoints]);
+  }, [data.viscosity?.dataPoints]);
 
   const aggregatesColumns: GridColDef[] = [
     {
@@ -258,7 +260,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
       field: 'viscosity',
       headerName: t('asphalt.essays.viscosityRotational.viscosity'),
       renderCell: ({ row }) => {
-        const localViscosity = binderInputs.find((i) => i.id === row.id)?.viscosity ?? '';
+        const localViscosity = binderInputs?.find((i) => i.id === row.id)?.viscosity ?? '';
 
         return (
           <InputEndAdornment
@@ -292,6 +294,8 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
       },
     },
   ];
+
+  console.log('🚀 ~ constSuperpave_Step2= ~ binderColumns:', binderColumns);
 
   useEffect(() => {
     setNextDisabled(true);
