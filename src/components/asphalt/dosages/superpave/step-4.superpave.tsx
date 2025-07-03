@@ -354,7 +354,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
       'Curva superior',
     ];
 
-    return [header, ...points.slice(1)];
+    return [header, ...points];
   }
 
   /**

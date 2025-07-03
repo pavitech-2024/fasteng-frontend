@@ -19,7 +19,7 @@ const Graph = ({ data }) => {
         },
         chartArea: { width: '100%', height: '80%' },
         vAxis: { title: 'Porcentagem passante (%)', titleTextStyle: { italic: false } },
-        legend: { position: 'bottom', textStyle: { color: 'black', italic: false, fontSize: 10 } },
+        legend: { position: 'bottom', textStyle: { color: 'black', italic: false, fontSize: 12 } },
         trendlines: {
           4: {
             color: 'blue',
@@ -47,7 +47,7 @@ const Graph = ({ data }) => {
           },
           2: { color: 'red', visibleInLegend: false },
           3: { color: 'red', labelInLegend: 'Zona de restrição' },
-          4: { color: 'blue', visibleInLegend: true, labelInLegend: 'Densidade máxima' },
+          4: { visibleInLegend: false },
           5: { color: 'green', opacity: 1, labelInLegend: 'Faixa do DNIT' },
           6: { color: 'green', opacity: 1, visibleInLegend: false },
           7: { color: 'black', pointsVisible: true, pointSize: 1.5, labelInLegend: 'Curva inferior' },
