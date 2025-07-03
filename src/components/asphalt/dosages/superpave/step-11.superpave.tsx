@@ -21,7 +21,6 @@ const Superpave_Step11 = ({
     secondCompressionPercentagesData: data,
     setData,
     chosenCurvePercentagesData,
-    materialSelectionData,
   } = useSuperpaveStore();
 
   const { user } = useAuth();
@@ -180,7 +179,8 @@ const Superpave_Step11 = ({
   secondCompressionData.ponderatedPercentsOfDosage?.forEach((value, idx) => {
     finalProportionsCols.push({
       field: `material_${idx + 1}`,
-      headerName: `${materialSelectionData.aggregates[idx].name}`,
+      // headerName: `${materialSelectionData.aggregates[idx].name}`,
+      headerName: ``,
       valueFormatter: ({ value }) => `${value}`,
       width: 240,
     });

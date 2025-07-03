@@ -35,20 +35,20 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up(theme.breakpoints.values.notebook));
 
-  useEffect(() => {
-    const handleGetMaterialsData = async () => {
-      try {
-        const materialsIds = dosage.materialSelectionData.aggregates.map((material) => material._id);
-        materialsIds.unshift(dosage.materialSelectionData.binder);
-        const response = await materialsService.getMaterials(materialsIds);
-        setMaterialsData(response.data.materials);
-        setMaterialsEssays(response.data.essays);
-      } catch (error) {
-        console.error('Failed to get materials data:', error);
-      }
-    };
-    handleGetMaterialsData();
-  }, [dosage]);
+  // useEffect(() => {
+  //   const handleGetMaterialsData = async () => {
+  //     try {
+  //       const materialsIds = dosage.materialSelectionData.aggregates.map((material) => material._id);
+  //       materialsIds.unshift(dosage.materialSelectionData.binder);
+  //       const response = await materialsService.getMaterials(materialsIds);
+  //       setMaterialsData(response.data.materials);
+  //       setMaterialsEssays(response.data.essays);
+  //     } catch (error) {
+  //       console.error('Failed to get materials data:', error);
+  //     }
+  //   };
+  //   handleGetMaterialsData();
+  // }, [dosage]);
 
   const generatePDF = async () => {
     setLoading(true);
@@ -92,7 +92,9 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
       },
     ];
 
-    const materialNames = dosage.materialSelectionData.aggregates.map((material) => material.name);
+    // const materialNames = dosage.materialSelectionData.aggregates.map((material) => material.name);
+    const materialNames = [];
+
     const materialNamesWithBinder = [...materialNames, materialsEssays[0][0].data.generalData.material.name].join(', ');
 
     const userData = [
@@ -239,13 +241,13 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
       })
       .filter((item) => item);
 
-    addSummary(
-      doc,
-      summaryItems,
-      materialsEssays[0][0].data.generalData.material.name,
-      dosage.materialSelectionData.aggregates,
-      t('superpave.dosage-pdf-title')
-    );
+    // addSummary(
+    //   doc,
+    //   summaryItems,
+    //   materialsEssays[0][0].data.generalData.material.name,
+    //   dosage.materialSelectionData.aggregates,
+    //   t('superpave.dosage-pdf-title')
+    // );
 
     handleAddPage(doc, image, 30, t('superpave.dosage-pdf-title'));
 

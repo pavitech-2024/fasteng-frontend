@@ -544,6 +544,7 @@ const Superpave_Step6 = ({
                 if (value) {
                   return (
                     <Box
+                      key={key}
                       sx={{
                         display: 'flex',
                         flexDirection: 'column',

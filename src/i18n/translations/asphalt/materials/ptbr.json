@@ -22,7 +22,6 @@
   "asphalt.materials.CAP": "Ligante Asfáltico Modificado (CAP)",
   "asphalt.materials.other": "Outro",
   "asphalt.materials.comments": "Comentários",
-
   "loading.marshall.pending": "Carregando...",
   "loading.marshall.success": "Dosagens carregadas com sucesso",
   "loading.marshall.error": "Erro ao carregar as dosagens",

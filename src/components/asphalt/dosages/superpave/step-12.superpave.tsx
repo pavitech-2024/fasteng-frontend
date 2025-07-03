@@ -18,7 +18,7 @@ const Superpave_Step12 = ({
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { materialSelectionData, confirmationCompressionData: data, setData } = useSuperpaveStore();
+  const { confirmationCompressionData: data, setData } = useSuperpaveStore();
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 

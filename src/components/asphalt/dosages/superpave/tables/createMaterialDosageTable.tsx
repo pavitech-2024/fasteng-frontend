@@ -24,8 +24,6 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
 
   const [rows, setRows] = useState([]);
 
-  const handleEditMaterial = () => {};
-
   const handleDeleteMaterial = async (id: string) => {
     const prevData = { ...data };
 

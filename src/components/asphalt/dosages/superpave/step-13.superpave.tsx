@@ -25,7 +25,6 @@ const Superpave_Step13 = ({
     initialBinderData,
     firstCurvePercentagesData,
     secondCompressionPercentagesData,
-    materialSelectionData,
     dosageResume: data,
     setData,
   } = useSuperpaveStore();
@@ -91,7 +90,8 @@ const Superpave_Step13 = ({
       const newColsData: GridColDef[] = [...initialCols];
 
       data.ponderatedPercentsOfDosage.forEach((materialPercent, index) => {
-        const materialName = materialSelectionData.aggregates[index].name;
+        // const materialName = materialSelectionData.aggregates[index].name;
+        const materialName = '';
 
         prevRowsData[materialName] = materialPercent;
 
@@ -123,7 +123,8 @@ const Superpave_Step13 = ({
 
       const newRowsData = data.quantitative.reduce(
         (prevRowsData, materialPercent, index) => {
-          const materialName = materialSelectionData.aggregates[index]?.name;
+          // const materialName = materialSelectionData.aggregates[index]?.name;
+          const materialName = "";
 
           return {
             ...prevRowsData,
@@ -133,22 +134,22 @@ const Superpave_Step13 = ({
         { id: 0, asphaltBinder: typeof data.quantitative[0] === 'number' ? data.quantitative[0] : '---' }
       );
 
-      const newColsData = materialSelectionData.aggregates.reduce(
-        (prevColumns, material, index) => {
-          const newQuantitativeCols: GridColDef = {
-            field: material.name,
-            headerName: `${material.name} (m³)`,
-            valueFormatter: ({ value }) => `${value}`,
-            width: 180,
-          };
+      // const newColsData = materialSelectionData.aggregates.reduce(
+      //   (prevColumns, material, index) => {
+      //     const newQuantitativeCols: GridColDef = {
+      //       field: material.name,
+      //       headerName: `${material.name} (m³)`,
+      //       valueFormatter: ({ value }) => `${value}`,
+      //       width: 180,
+      //     };
 
-          return [...prevColumns, newQuantitativeCols];
-        },
-        [...initialCols]
-      );
+      //     return [...prevColumns, newQuantitativeCols];
+      //   },
+      //   [...initialCols]
+      // );
 
       setQuantitativeRows([newRowsData]);
-      setQuantitativeCols(newColsData);
+      // setQuantitativeCols(newColsData);
 
       setLoading(false);
     }

@@ -138,7 +138,7 @@ const Superpave_Step3 = ({
             return null;
           } else {
             return (
-              <FlexColumnBorder title={`${item.material?.name} | ${item.material?.type}`} open={true}>
+              <FlexColumnBorder key={index} title={`${item.material?.name} | ${item.material?.type}`} open={true}>
                 <Box
                   sx={{
                     width: '100%',

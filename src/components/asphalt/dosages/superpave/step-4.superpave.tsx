@@ -38,9 +38,9 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   let tableDataAverage;
   let tableDataHigher;
 
-  let tableCompositionInputsLower = {};
-  let tableCompositionInputsAverage = {};
-  let tableCompositionInputsHigher = {};
+  const tableCompositionInputsLower = {};
+  const tableCompositionInputsAverage = {};
+  const tableCompositionInputsHigher = {};
 
   const selectedMaterials = granulometryEssayData.materials
     .map((material) => {
