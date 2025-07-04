@@ -499,9 +499,9 @@ class Superpave_SERVICE implements IEssayService {
       if (hasNullValue) throw new Error('Algum valor não foi informado.');
       let composition;
 
-      if (chosenCurves.lower) composition = lowerComposition;
-      if (chosenCurves.average) composition = averageComposition;
-      if (chosenCurves.higher) composition = higherComposition;
+      if (chosenCurves.includes('lower')) composition = lowerComposition;
+      if (chosenCurves.includes('average')) composition = averageComposition;
+      if (chosenCurves.includes('higher')) composition = higherComposition;
 
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-data`, {
         materials,

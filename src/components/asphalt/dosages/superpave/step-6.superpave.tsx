@@ -162,7 +162,7 @@ const Superpave_Step6 = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
-            type="text"
+            type="number"
             value={data[curve][index]?.diammeter}
             onChange={(e) => {
               const prevData = [...data[curve]];
@@ -505,34 +505,31 @@ const Superpave_Step6 = ({
               {t('asphalt.dosages.superpave.model-sheet')}
             </Button>
 
-            {Object.entries(granulometryCompositionData.chosenCurves).map(([key, value]) => {
-              if (value) {
-                const curveName =
-                  key === 'lower' ? 'inferiorRows' : key === 'average' ? 'intermediariaRows' : 'superiorRows';
-                return (
-                  <>
-                    <DataGrid
-                      key={key}
-                      columns={generateColumns(curveName).map((column) => ({
-                        ...column,
-                        disableColumnMenu: true,
-                        sortable: false,
-                        align: 'center',
-                        headerAlign: 'center',
-                        minWidth: 100,
-                        flex: 1,
-                      }))}
-                      rows={key === 'lower' ? inferiorRows : key === 'average' ? intermediariaRows : superiorRows}
-                      columnGroupingModel={generateGroupings(key)}
-                      experimentalFeatures={{ columnGrouping: true }}
-                      density="comfortable"
-                      disableColumnMenu
-                      disableColumnSelector
-                      slots={{ footer: () => ExpansionToolbar(curveName) }}
-                    />
-                  </>
-                );
-              }
+            {granulometryCompositionData.chosenCurves.map((curve, index) => {
+              const curveName = curve === 'lower' ? 'inferiorRows' : curve === 'average' ? 'intermediariaRows' : 'superiorRows';
+              return (
+                <Box>
+                  <DataGrid
+                    key={index}
+                    columns={generateColumns(curveName).map((column) => ({
+                      ...column,
+                      disableColumnMenu: true,
+                      sortable: false,
+                      align: 'center',
+                      headerAlign: 'center',
+                      minWidth: 100,
+                      flex: 1,
+                    }))}
+                    rows={curve === 'lower' ? inferiorRows : curve === 'average' ? intermediariaRows : superiorRows}
+                    columnGroupingModel={generateGroupings(curve)}
+                    experimentalFeatures={{ columnGrouping: true }}
+                    density="comfortable"
+                    disableColumnMenu
+                    disableColumnSelector
+                    slots={{ footer: () => ExpansionToolbar(curveName) }}
+                  />
+                </Box>
+              );
             })}
           </Box>
 
@@ -561,57 +558,6 @@ const Superpave_Step6 = ({
                   );
                 }
               })}
-
-              {/* {granulometryCompositionData.chosenCurves.lower && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                    alignItems: 'center',
-                    gap: '2rem',
-                  }}
-                >
-                  <Typography>{t('asphalt.dosages.superpave.lower-curve')}</Typography>
-                  <Button onClick={() => showModal('lower')} variant="outlined">
-                    {t('asphalt.dosages.superpave.calculate-max-density')}
-                  </Button>
-                </Box>
-              )}
-
-              {granulometryCompositionData.chosenCurves.average && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                    alignItems: 'center',
-                    gap: '2rem',
-                  }}
-                >
-                  <Typography>{t('asphalt.dosages.superpave.average-curve')}</Typography>
-                  <Button onClick={() => showModal('average')} variant="outlined">
-                    {t('asphalt.dosages.superpave.calculate-max-density')}
-                  </Button>
-                </Box>
-              )}
-
-              {granulometryCompositionData.chosenCurves.higher && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                    alignItems: 'center',
-                    gap: '2rem',
-                  }}
-                >
-                  <Typography>{t('asphalt.dosages.superpave.higher-curve')}</Typography>
-                  <Button onClick={() => showModal('higher')} variant="outlined">
-                    {t('asphalt.dosages.superpave.calculate-max-density')}
-                  </Button>
-                </Box>
-              )} */}
             </Box>
           </Box>
 
@@ -643,7 +589,7 @@ const Superpave_Step6 = ({
                 }}
               />
 
-              <Box id="riceTestInputs" sx={{ display: 'flex', flexDirection: 'row', gap: '2rem', width: '100%'}}>
+              <Box id="riceTestInputs" sx={{ display: 'flex', flexDirection: 'row', gap: '2rem', width: '100%' }}>
                 {generateRiceTestInputs(actualCurve).map((input) => (
                   <InputEndAdornment
                     key={input.key}

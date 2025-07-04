@@ -108,11 +108,7 @@ interface SuperpaveGranulometryCompositionData {
     value: number;
   };
   pointsOfCurve: number[][];
-  chosenCurves: {
-    lower: boolean;
-    average: boolean;
-    higher: boolean;
-  };
+  chosenCurves: string[];
   bands: {
     higher: any[];
     lower: any[];
@@ -538,11 +534,7 @@ const initialState = {
       value: null,
     },
     pointsOfCurve: [],
-    chosenCurves: {
-      lower: null,
-      average: null,
-      higher: null,
-    },
+    chosenCurves: [],
     bands: {
       higher: [],
       lower: [],
