@@ -35,7 +35,7 @@ const GranulometryRow = ({
       }}
     >
       <Typography variant="h5">
-        {formattedData[idx].name} | {formattedData[idx].type}
+        {formattedData[idx].name} | {t('asphalt.materials.' + formattedData[idx].type)}
       </Typography>
 
       <Box sx={{ display: 'flex', gap: '5rem' }}>

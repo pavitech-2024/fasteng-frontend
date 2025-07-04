@@ -200,7 +200,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
       id: idx,
       peneira: e.peneira,
       ...rowsData,
-      project: data[tableName]?.sumOfPercents.length > 0 ? data[tableName]?.sumOfPercents[idx]?.toFixed(2) : '',
+      project: data[tableName]?.sumOfPercents?.length > 0 ? data[tableName]?.sumOfPercents[idx]?.toFixed(2) : '',
       band1: e.bandsCol1,
       band2: e.bandsCol2,
     };

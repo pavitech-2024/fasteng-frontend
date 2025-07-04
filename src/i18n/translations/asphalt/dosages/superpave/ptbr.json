@@ -149,5 +149,6 @@
   "marshall.dosage-pdf-title": "Relatório de Dosagem Superpave",
   "errors.empty-material-mass": "A massa total de cada agregado deve ser preenchida",
 
-  "superpave.error.minReads": "Não é possível excluir. Mínimo de linhas atingido."
+  "superpave.error.minReads": "Não é possível excluir. Mínimo de linhas atingido.",
+  "superpave.common.type": "Tipo"
 }

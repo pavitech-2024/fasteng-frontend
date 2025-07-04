@@ -195,7 +195,7 @@ const Superpave_Step5 = ({
   };
 
   const modalMaterialInputs = generateMaterialInputs(
-    data.materials.filter((material) => material.type.includes('Aggregate') || material.type.includes('filler'))
+    data.materials.filter((material) => material.type?.includes('Aggregate') || material.type?.includes('filler'))
   );
 
   const handleModalSubmit = () => {

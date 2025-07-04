@@ -7,6 +7,7 @@ import { Box, Button } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
+import { t } from 'i18next';
 
 interface ICreateMaterialDosageTable {
   onRowClick: (row: any) => void;
@@ -139,13 +140,12 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
   };
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Nome' },
-    { field: 'type', headerName: 'Tipo' },
-    { field: 'source', headerName: 'Fonte' },
-    { field: 'responsible', headerName: 'Responsável' },
-    { field: 'aggregateNature', headerName: 'Natureza do Agregado' },
-    { field: 'boughtDate', headerName: 'Data de coleta' },
-    { field: 'observation', headerName: 'Observações' },
+    { field: 'name', headerName: t('asphalt.materials.name') },
+    { field: 'type', headerName: t('asphalt.materials.type') },
+    { field: 'source', headerName: t('asphalt.materials.source') },
+    { field: 'responsible', headerName: t('asphalt.materials.responsible') },
+    { field: 'aggregateNature', headerName: t('asphalt.materials.aggregateNature') },
+    { field: 'boughtDate', headerName: t('asphalt.materials.collectionDate') },
     {
       field: 'actions',
       headerName: 'Ações',
@@ -198,7 +198,7 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
       const rows = data.materials.map((material) => ({
         id: material._id,
         name: material.name,
-        type: material.type,
+        type: t('asphalt.materials.' + material.type),
         source: material.description.source,
         responsible: material.description.responsible,
         aggregateNature: material.description.aggregateNature,

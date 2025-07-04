@@ -158,10 +158,7 @@ const CreateEditMaterialModal = ({
     try {
       validateMaterialData();
 
-      console.log('🧪 Passou pela validação');
-
       const response = await materialsService.createMaterial(material);
-      console.log('🚀 ~ handleCreateMaterial ~ response:', response);
 
       if (pathname.includes('superpave')) {
         createdMaterial(response.data);
@@ -179,16 +176,11 @@ const CreateEditMaterialModal = ({
         closeButton: true,
       });
     } catch (error: any) {
-      console.error('❌ Erro ao criar material:', error);
-
       const backendMessage = error?.response?.data?.message;
       const validationMessage: string = error?.message;
-
-      const isBackendAlreadyExistsError: boolean = backendMessage?.includes('already exists');
-
+      const isBackendAlreadyExistsError: boolean = backendMessage?.includes('already exists') || backendMessage?.includes('Server');
       toast.update(createMaterialToastId, {
         render:
-          t(validationMessage) ??
           (isBackendAlreadyExistsError
             ? 'Já existe um material cadastrado com esse nome!'
             : backendMessage ?? t('asphalt.materials.errorCreatingMaterial')),
@@ -202,23 +194,18 @@ const CreateEditMaterialModal = ({
 
   const validateMaterialData = () => {
     if (material.name === '') {
-      console.log('Material name cannot be empty');
       throw new Error('Material name cannot be empty');
     }
     if (material.type === null) {
-      console.log('Material type cannot be empty');
       throw new Error('Material type cannot be empty');
     }
     if (materials.find((m) => m.name === material.name)) {
-      console.log('A material with the same name already exists!');
       throw new Error('asphalt.materials.materialWithSameName');
     }
     if (material.type === 'CAP' && material.description.classification_CAP === null) {
-      console.log('CAP classification cannot be empty');
       throw new Error('CAP classification cannot be empty');
     }
     if (material.type === 'asphaltBinder' && material.description.classification_AMP === null) {
-      console.log('AMP classification cannot be empty');
       throw new Error('AMP classification cannot be empty');
     }
   };

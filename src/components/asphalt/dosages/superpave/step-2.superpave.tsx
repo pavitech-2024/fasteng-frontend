@@ -35,14 +35,19 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
       viscosity: point.viscosity,
     }));
   }, [data.viscosity?.dataPoints]);
-  console.log('🚀 ~ initialRows ~ initialRows:', initialRows);
 
-  const [binderInputs, setBinderInputs] = useState(() => {
-    return initialRows?.map((row) => ({
-      id: row.id,
-      viscosity: row.viscosity,
-    }));
-  });
+  const [binderInputs, setBinderInputs] = useState([]);
+
+  useEffect(() => {
+    if (data.viscosity?.dataPoints?.length) {
+      setBinderInputs(
+        data.viscosity.dataPoints.map((point) => ({
+          id: point.id,
+          viscosity: point.viscosity,
+        }))
+      );
+    }
+  }, [data.viscosity?.dataPoints]);
 
   const binderRows = useMemo(() => {
     return data.viscosity?.dataPoints.map((point) => {
@@ -103,8 +108,8 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
               }
 
               // Atualiza a linha atual
-              const peneiras_anteriores = newRows[rowIndex].table_data.slice(0, sieve_index);
-              const accumulative_retained = peneiras_anteriores.reduce((acc, peneira) => {
+              const peneiras_anteriores = newRows[rowIndex]?.table_data.slice(0, sieve_index);
+              const accumulative_retained = peneiras_anteriores?.reduce((acc, peneira) => {
                 return acc + (peneira.retained || 0);
               }, 0);
 
@@ -119,7 +124,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
               }
 
               // Atualiza as próximas linhas
-              for (let i = sieve_index + 1; i < newRows[rowIndex].table_data.length; i++) {
+              for (let i = sieve_index + 1; i < newRows[rowIndex]?.table_data.length; i++) {
                 const peneiras_anteriores = newRows[rowIndex].table_data.slice(0, i);
                 const accumulative_retained = peneiras_anteriores.reduce((acc, peneira) => {
                   return acc + (peneira.retained || 0);
@@ -139,7 +144,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
               }
 
               // Atualiza o valor de fundo (bottom)
-              const bottomValue = newRows[rowIndex].table_data.reduce((acc, peneira) => {
+              const bottomValue = newRows[rowIndex]?.table_data.reduce((acc, peneira) => {
                 return acc + peneira.retained;
               }, 0);
 
@@ -384,7 +389,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
           }}
         >
           <Typography variant="h5">
-            {data.viscosity.material.name} | {data.viscosity.material.type}
+            {data.viscosity.material.name} | {t('asphalt.materials.' + data.viscosity.material.type)}
           </Typography>
           <DataGrid
             sx={{ mt: '1rem', borderRadius: '10px' }}
@@ -392,7 +397,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
             showCellVerticalBorder
             showColumnVerticalBorder
             slots={{ footer: ExpansionToolbar }}
-            rows={initialRows}
+            rows={binderRows}
             columns={binderColumns.map((column) => ({
               ...column,
               sortable: false,
