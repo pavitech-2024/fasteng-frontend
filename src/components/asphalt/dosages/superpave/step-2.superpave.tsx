@@ -28,12 +28,14 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
   );
 
   const initialRows = useMemo(() => {
-    return data.viscosity?.dataPoints.map((point) => ({
+    if (!data.viscosity?.dataPoints) return [];
+    return data.viscosity.dataPoints.map((point) => ({
       id: point.id,
       temperature: point.temperature,
       viscosity: point.viscosity,
     }));
-  }, []);
+  }, [data.viscosity?.dataPoints]);
+  console.log('🚀 ~ initialRows ~ initialRows:', initialRows);
 
   const [binderInputs, setBinderInputs] = useState(() => {
     return initialRows?.map((row) => ({
@@ -258,7 +260,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
       field: 'viscosity',
       headerName: t('asphalt.essays.viscosityRotational.viscosity'),
       renderCell: ({ row }) => {
-        const localViscosity = binderInputs.find((i) => i.id === row.id)?.viscosity ?? '';
+        const localViscosity = binderInputs?.find((i) => i.id === row.id)?.viscosity ?? '';
 
         return (
           <InputEndAdornment
