@@ -26,7 +26,7 @@ const Superpave_Step3 = ({
     type: gran.material.type,
   }));
 
-  aggregatesCheckboxes?.push({ name: data.viscosity.material.name, type: data.viscosity.material.type });
+  aggregatesCheckboxes?.push({ name: data.viscosity?.material.name, type: data.viscosity?.material.type });
 
   const granulometryRows = [];
 
