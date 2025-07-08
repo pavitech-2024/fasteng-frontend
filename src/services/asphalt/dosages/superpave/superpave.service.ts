@@ -491,10 +491,13 @@ class Superpave_SERVICE implements IEssayService {
       const { trafficVolume } = step1Data;
       const { percentageInputs, chosenCurves, lowerComposition, averageComposition, higherComposition, nominalSize } =
         step3Data;
+      console.log('🚀 ~ Superpave_SERVICE ~ percentageInputs:', percentageInputs);
       const { materials, binderSpecificMass } = step4Data;
+      console.log("🚀 ~ Superpave_SERVICE ~ materials:", materials)
       const materialsWithoutBinder = materials.filter(
         (material) => material.type.includes('Aggregate') || material.type.includes('filler')
       );
+      console.log("🚀 ~ Superpave_SERVICE ~ materialsWithoutBinder:", materialsWithoutBinder)
       const hasNullValue = materialsWithoutBinder.some((obj) => Object.values(obj).some((value) => value === null));
       if (hasNullValue) throw new Error('Algum valor não foi informado.');
       let composition;

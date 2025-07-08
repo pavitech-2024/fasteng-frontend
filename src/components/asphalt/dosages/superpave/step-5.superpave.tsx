@@ -46,37 +46,22 @@ const Superpave_Step5 = ({
       toast.promise(
         async () => {
           try {
-            const newMaterials = [];
-
-            const materials = granulometryEssayData.materials.map((e) => ({
-              _id: e._id,
-              name: e.name,
-              type: e.type,
-            }));
-
-            setMaterialNames(materials);
-
-            for (let i = 0; i < materials.length; i++) {
-              const aggregateMaterial = {
-                name: materials[i].name,
-                type: materials[i].type,
+            const aggregateMaterials = granulometryEssayData.materials
+              .filter(({ type }) => type !== 'filler')
+              .map(({ _id, name, type }) => ({
+                name,
+                type,
                 realSpecificMass: null,
                 apparentSpecificMass: null,
                 absorption: null,
-              };
-
-              newMaterials.push(aggregateMaterial);
-            }
-
-            let prevData = { ...data };
-            prevData = {
-              ...prevData,
-              materials: newMaterials,
-            };
+              }));
 
             setData({
               step: 4,
-              value: prevData,
+              value: {
+                ...data,
+                materials: aggregateMaterials,
+              },
             });
 
             setActivateSecondFetch(true);
