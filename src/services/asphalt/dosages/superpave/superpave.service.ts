@@ -404,8 +404,11 @@ class Superpave_SERVICE implements IEssayService {
   ): Promise<any> => {
     try {
       const { percentageInputs, nominalSize, percentsToList } = granulometryCompositionData;
+      console.log("🚀 ~ Superpave_SERVICE ~ percentageInputs:", percentageInputs)
       const { dnitBand } = generalData;
       const aggregates = granulometryEssayData.materials;
+      console.log("🚀 ~ Superpave_SERVICE ~ aggregates:", aggregates)
+
 
       const response = await Api.post(`${this.info.backend_path}/calculate-granulometric-composition-data`, {
         chosenCurves,

@@ -24,6 +24,8 @@ interface TableModel {
 }
 
 const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, tableData }) => {
+  console.log("🚀 ~ tableData:", tableData)
+  console.log("🚀 ~ materials:", materials)
   const { granulometryCompositionData: data, setData } = useSuperpaveStore();
 
   // const newpercentageInputs = materials.map((material, index) => {
@@ -96,8 +98,8 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
   const generateMaterialColumns = (data, materialIndex) => {
     return materials
       .map((material, index) => {
-        const fieldTotalPassant = `totalPassant_${index + 1}`;
-        const fieldMaterial = `material_${index + 1}`;
+        const fieldTotalPassant = `totalPassant_${material._id}_${index + 1}`;
+        const fieldMaterial = `material_${material._id}_${index + 1}`;
 
         return [
           {
@@ -170,8 +172,8 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
   const generateMaterialRows = (data, tableName, idx, row) => {
     console.log("🚀 ~ generateMaterialRows ~ data:", data)
     const rowsData = materials.reduce((acc, material, index) => {
-      const fieldTotalPassant = `totalPassant_${index + 1}`;
-      const fieldMaterial = `material_${index + 1}`;
+      const fieldTotalPassant = `totalPassant_${material._id}_${index + 1}`;
+      const fieldMaterial = `material_${material._id}_${index + 1}`;
       return {
         ...acc,
         [fieldTotalPassant]: row[`keyTotal${index}`],
@@ -190,9 +192,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
 
     return rowsData;
   };
-
-
-  console.log('🚀 ~ rows ~ data[lowerComposition]:', data.lowerComposition);
+  
 
   const rows = tableData.map((e, idx) => {
     const rowsData = generateMaterialRows(data, tableName, idx, e);
@@ -205,6 +205,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
       band2: e.bandsCol2,
     };
   });
+  console.log("🚀 ~ rows ~ rows:", rows)
 
   const generateMaterialGroupings = (materials) => {
     return materials.map((material, index) => {

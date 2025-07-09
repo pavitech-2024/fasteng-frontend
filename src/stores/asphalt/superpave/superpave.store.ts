@@ -81,11 +81,6 @@ interface SuperpaveGranulometryResults {
   };
 }
 
-interface SuperpaveMaterialSelectionData {
-  aggregates: { _id: string; name: string }[]; // lista de ids dos agregados
-  binder: string; // id do ligante
-}
-
 interface SuperpaveGranulometryCompositionData {
   percentageInputs: {
     [key: string]: number;

@@ -21,6 +21,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     setData,
     hasHydrated,
   } = useSuperpaveStore();
+  console.log('🚀 ~ constSuperpave_Step4= ~ data:', data);
 
   const [lower, setLower] = useState(false);
   const [average, setAverage] = useState(false);
@@ -273,8 +274,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     },
   ];
 
-  console.log('🚀 ~ constSuperpave_Step4= ~ tables:', tables);
-
   /**
    * Update the selected table inputs when the user changes one of them
    * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement>} e - The input change event
@@ -366,8 +365,10 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     );
 
     const valueIsValid = valueCounts.every((valueCount) => valueCount === 100);
+    const noEmptyInputs = data.percentageInputs.every((item) => Object.values(item).some((value) => value !== 0));
+    console.log("🚀 ~ calculate ~ noEmptyInputs:", noEmptyInputs)
 
-    if (valueIsValid) {
+    if (valueIsValid && noEmptyInputs) {
       toast.promise(
         async () => {
           try {
@@ -393,7 +394,11 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
         }
       );
     } else {
-      toast.error(t('asphalt.dosages.superpave.invalid-granulometry-values'));
+      if (noEmptyInputs) {
+        toast.error(t('asphalt.dosages.superpave.empty-granulometry-values'));
+      } else {
+        toast.error(t('asphalt.dosages.superpave.invalid-granulometry-values'));
+      }
     }
   };
 
