@@ -26,6 +26,8 @@ import DropDown from '@/components/atoms/inputs/dropDown';
 import StepDescription from '@/components/atoms/titles/step-description';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import EditIcon from '@mui/icons-material/Edit';
 
 type Area = 'stabilized-layers' | 'binder-asphalt-concrete' | 'granular-layers';
 
@@ -42,7 +44,7 @@ interface PromedinaMaterialsTemplateProps {
 }
 
 interface MaterialsColumn {
-  id: 'name' | 'layer' | 'cityState' | 'zone' | 'actions' | 'highway';
+  id: 'name' | 'layer' | 'cityState' | 'zone' | 'actions' | 'highway' | 'updatedAt';
   label: string;
   width: string;
 }
@@ -106,6 +108,7 @@ const PromedinaMaterialsTemplate = ({
     { id: 'highway', label: t('materials.template.highway'), width: '15%' },
     { id: 'layer', label: t('materials.template.layer'), width: '25%' },
     { id: 'zone', label: t('materials.template.zone'), width: '30%' },
+    { id: 'updatedAt', label: 'Última Atualização', width: '20%' }, // NOVA COLUNA
     { id: 'actions', label: t('materials.template.actions'), width: '25%' },
   ];
 
@@ -810,70 +813,96 @@ const PromedinaMaterialsTemplate = ({
                         {column.id === 'highway' && row.highway}
                         {column.id === 'layer' && row.layer}
                         {column.id === 'zone' && row.zone}
+                        {column.id === 'updatedAt' && (
+                            // Pegue o material original pelo _id
+                            (() => {
+                              const material = materialsData.find((m) => m._id === row._id);
+                              if (material?.updatedAt) {
+                                // Exiba a data formatada no padrão brasileiro
+                                const date = new Date(material.updatedAt);
+                                return date.toLocaleString('pt-BR');
+                              }
+                              return '-';
+                            })()
+                          )}
                         {column.id === 'actions' && (
-                          <Box sx={{ display: 'flex', gap: '0.5rem' }} id={idx.toString()}>
-                            <Box
+                          <Box
+                          sx={{
+                            display: 'flex',
+                            gap: 1,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                          id={idx.toString()}
+                        >
+                          <Tooltip title="Visualizar dados desta amostra">
+                            <Button
+                              onClick={() => handleVisualize(row._id)}
                               sx={{
+                                minWidth: 0,
+                                width: 36,
+                                height: 36,
+                                padding: 0,
+                                borderRadius: '50%',
+                                bgcolor: '#fff', // Círculo branco
+                                color: '#FFA500', // Ícone laranja
                                 display: 'flex',
-                                flexDirection: 'column',
-                                gap: '0.5rem',
-                                justifyContent: 'center',
                                 alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'background 0.2s',
+                                boxShadow: 1,
+                                '&:hover': { bgcolor: '#f5f5f5' }, // leve cinza no hover
+                                '&:active': { bgcolor: '#eeeeee' },
                               }}
                             >
-                              {actions.map((item, index) => (
-                                <Button
-                                  key={index}
-                                  variant="contained"
-                                  onClick={
-                                    item.id == 'visualize' ? () => handleVisualize(row._id) : () => handleEdit(row._id)
-                                  }
-                                  sx={{
-                                    height: '25px',
-                                    width: '100px',
-                                    borderRadius: { mobile: '50%', notebook: '20px' },
-                                    p: { mobile: 0, notebook: '6px 12px' },
-                                    minWidth: '25px',
-                                    bgcolor: `secondaryTons.${item.btnColor}`,
-                                    color: 'primaryTons.white',
-
-                                    ':hover': {
-                                      bgcolor: `secondaryTons.${item.btnColor}Disabled`,
-                                    },
-
-                                    ':active': {
-                                      bgcolor: `secondaryTons.${item.btnColor}Click`,
-                                    },
-                                  }}
-                                >
-                                  <Tooltip
-                                    placement={item.id == 'visualize' ? 'top' : 'bottom'}
-                                    title={item.tooltipText}
-                                  >
-                                    <Typography
-                                      sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}
-                                    >
-                                      {item.text}
-                                    </Typography>
-                                  </Tooltip>
-                                  <NextIcon sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
-                                </Button>
-                              ))}
-                            </Box>
+                              <VisibilityIcon sx={{ fontSize: 22 }} />
+                            </Button>
+                          </Tooltip>
+                          <Tooltip title="Editar dados desta amostra">
+                            <Button
+                              onClick={() => handleEdit(row._id)}
+                              sx={{
+                                minWidth: 0,
+                                width: 36,
+                                height: 36,
+                                padding: 0,
+                                borderRadius: '50%',
+                                bgcolor: 'secondaryTons.orange',
+                                color: '#222', // ou 'primaryTons.black' se existir no seu tema
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'background 0.2s',
+                                '&:hover': { bgcolor: 'secondaryTons.orangeDisabled' },
+                                '&:active': { bgcolor: 'secondaryTons.orangeClick' },
+                              }}
+                            >
+                              <EditIcon sx={{ fontSize: 22 }} />
+                            </Button>
+                          </Tooltip>
+                          <Tooltip title={t('pm-tooltip-del-sample')}>
                             <Button
                               variant="text"
                               color="error"
-                              sx={{ p: 0, width: '30px', minWidth: '35px' }}
+                              sx={{
+                                minWidth: 0,
+                                width: 36,
+                                height: 36,
+                                padding: 0,
+                                borderRadius: '50%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}
                               onClick={() => {
                                 setRowToDelete(row);
                                 setOpenDeleteModal(true);
                               }}
                             >
-                              <Tooltip title={t('pm-tooltip-del-sample')}>
-                                <DeleteIcon color="error" sx={{ fontSize: '1.25rem' }} />
-                              </Tooltip>
+                              <DeleteIcon color="error" sx={{ fontSize: 22 }} />
                             </Button>
-                          </Box>
+                          </Tooltip>
+                        </Box>
                         )}
                       </TableCell>
                     ))}

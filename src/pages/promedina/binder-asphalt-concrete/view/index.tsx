@@ -13,6 +13,7 @@ import binderAsphaltConcreteImage from '../../../../assets/pro-medina/concreteBi
 
 const BinderAsphaltConcrete_view = () => {
   const [samples, setSamples] = useState<any[]>([]);
+  console.log('samples', samples);
   const [loading, setLoading] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);

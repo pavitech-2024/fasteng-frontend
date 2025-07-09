@@ -7,6 +7,7 @@ import samplesService from '@/services/promedina/stabilized-layers/stabilized-la
 import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 import { Box, Button, Container } from '@mui/material';
 import { useState, useEffect } from 'react';
+import StabilizedLayers from '@/assets/pro-medina/stabilizedLayers/stabilized-layers-image.png';
 
 const StabilizedLayers_view = () => {
   const [samples, setSamples] = useState<any[]>([]);
@@ -76,7 +77,7 @@ const StabilizedLayers_view = () => {
         <Container>
           <Header
             title={'Amostras cadastradas em Camadas Estabilizadas'}
-            image={GranularLayersIcon}
+            image={StabilizedLayers}
             sx={{ marginTop: '3rem' }}
           />
           <Box
