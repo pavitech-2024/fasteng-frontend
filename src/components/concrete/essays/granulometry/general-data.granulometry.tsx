@@ -23,9 +23,9 @@ const ConcreteGranulometry_GeneralData = ({
   useEffect(() => {
     toast.promise(
       async () => {
-        const materials = await granulometry.getmaterialsByUserId(user._id);
+        const data = await granulometry.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        setMaterials(data[0].materials);
         setLoading(false);
       },
       {

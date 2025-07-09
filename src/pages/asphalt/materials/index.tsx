@@ -10,6 +10,10 @@ import CreateEditMaterialModal from '../../../components/templates/modals/create
 import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
 import Loading from '@/components/molecules/loading';
 import { Box } from '@mui/material';
+import { FwdData } from '@/stores/asphalt/fwd/fwd.store';
+import { IggData } from '@/stores/asphalt/igg/igg.store';
+import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
+import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
 
 const Materials = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -17,15 +21,31 @@ const Materials = () => {
   const [materialToEdit, setMaterialToEdit] = useState<AsphaltMaterial>();
   const [loading, setLoading] = useState<boolean>(true);
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [fwdEssays, setFwdEssays] = useState<FwdData[]>([]);
+  const [iggEssays, setIggEssays] = useState<IggData[]>([]);
+  const [rtcdEssays, setRtcdEssays] = useState<RtcdData[]>([]);
+  const [stretchEssays, setStretchEssays] = useState<any[]>([]);
+  const [dduiEssays, setDduiEssays] = useState<DduiData[]>([]);
 
   const { user } = useAuth();
+
+  console.log('Testando o undefined', rtcdEssays);
 
   useEffect(() => {
     materialsService
       .getMaterialsByUserId(user._id)
       .then((response) => {
+        console.log(response.data);
         setMaterials(response.data);
         setLoading(false);
+        console.log('Testando o response.data', response.data);
+        setFwdEssays(response.data[0].fwdEssays); // semMaterial = response.data[0].fwdEssays;
+        //console.log("Testando o semMaterial", semMaterial);
+        setIggEssays(response.data[0].iggEssays);
+        console.log('Testando o rtcd mistura', response.data[0].rtcdEssays);
+        setRtcdEssays(response.data[0].rtcdEssays);
+        setStretchEssays([...response.data[0].fwdEssays, ...response.data[0].iggEssays]);
+        setDduiEssays(response.data[0].dduiEssays);
       })
       .catch((error) => {
         console.error('Failed to load materials:', error);
@@ -78,6 +98,10 @@ const Materials = () => {
       ) : (
         <MaterialsTemplate
           materials={materials}
+          fwdEssays={fwdEssays}
+          iggEssays={iggEssays}
+          rtcdEssays={rtcdEssays}
+          dduiEssays={dduiEssays}
           types={types}
           title={t('asphalt.materials.title')}
           handleOpenModal={() => setOpenModal(true)}

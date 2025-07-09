@@ -1,6 +1,4 @@
 import { useRouter } from 'next/router';
-import { SoilSample } from '@/interfaces/soils';
-import Header from '@/components/organisms/header';
 import { JSX, useEffect, useState } from 'react';
 import {
   Box,
@@ -18,23 +16,26 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  IconButton,
 } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import Search from '@/components/atoms/inputs/search';
-import { AddIcon, DeleteIcon, EditIcon, NextIcon } from '@/assets';
+import { AddIcon, DeleteIcon, NextIcon } from '@/assets';
 import { formatDate } from '@/utils/format';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
-import { AsphaltMaterial } from '@/interfaces/asphalt';
-import { ConcreteMaterial } from '@/interfaces/concrete';
 import Link from 'next/link';
 import { Edit } from '@mui/icons-material';
-import FullscreenIcon from '@mui/icons-material/Fullscreen';
-import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
+import { FwdData } from '@/stores/asphalt/fwd/fwd.store';
+import { IggData } from '@/stores/asphalt/igg/igg.store';
+import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
+import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
 
 interface MaterialsTemplateProps {
-  materials: SoilSample[] | AsphaltMaterial[] | ConcreteMaterial[];
+  materials: any[] | undefined;
+  fwdEssays?: FwdData[] | undefined;
+  iggEssays?: IggData[] | undefined;
+  dduiEssays?: DduiData[] | undefined;
+  rtcdEssays?: RtcdData[] | undefined;
   types: DropDownOption[];
   title: 'Amostras Cadastradas' | 'Materiais Cadastrados';
   path?: string;
@@ -60,6 +61,10 @@ export interface DataToFilter {
 
 const MaterialsTemplate = ({
   materials,
+  fwdEssays,
+  iggEssays,
+  rtcdEssays,
+  dduiEssays,
   types,
   title,
   path,
@@ -71,12 +76,14 @@ const MaterialsTemplate = ({
   const app = useRouter().pathname.split('/')[1];
   let samplesOrMaterials: string;
 
+
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
   const [searchBy, setSearchBy] = useState<string>('name');
   const [searchValue, setSearchValue] = useState<string>('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
+  const [tableData, setTableData] = useState<any[]>([]);
 
   if (path === 'soils') {
     samplesOrMaterials = 'sample';
@@ -86,12 +93,46 @@ const MaterialsTemplate = ({
 
   const columns: MaterialsColumn[] = [
     { id: 'name', label: t('materials.template.name'), width: '25%' },
-    { id: 'type', label: t('materials.template.type'), width: '25%' },
+    { id: 'type', label: t('materials.template.essay'), width: '25%' },
     { id: 'createdAt', label: t('materials.template.createdAt'), width: '25%' },
     { id: 'actions', label: t('materials.template.actions'), width: '25%' },
   ];
 
-  const translateType = (type: string) => {
+ /*************  ✨ Windsurf Command 🌟  *************/
+ //const options = [
+    //{ label: t('materials.template.name'), value: 'name' },
+    //{ label: t('materials.template.type'), value: 'type' },
+     /*{ label: t('materials.template.mix'), value: 'mix' },
+    { label: t('materials.template.stretch'), value: 'stretch' },*/
+ //];
+ 
+  /*if (path.includes('asphalt')) {
+    options.push(
+      { label: t('materials.template.mix'), value: 'mix' },
+      { label: t('materials.template.stretch'), value: 'stretch' },
+    );
+  console.log('path', path);
+  if(path.includes('asphalt')){
+    options.push({ label: t('materials.template.mix'), value: 'mix' });
+    options.push({ label: t('materials.template.stretch'), value: 'stretch' });
+  }*/
+ const options = [
+  { label: t('materials.template.name'), value: 'name' },
+  { label: t('materials.template.type'), value: 'type' },
+];
+
+// Adiciona apenas uma vez, se o path tiver "asphalt"
+const isAsphaltPath = path?.includes('asphalt');
+if (isAsphaltPath) {
+  options.push(
+    { label: t('materials.template.mix'), value: 'mix' },
+    { label: t('materials.template.stretch'), value: 'stretch' },
+  );
+}
+
+
+/*******  b8f77572-72b8-4e11-aeb0-6b9fe12308cf  *******/
+ const translateType = (type: string) => {
     switch (type) {
       case 'inorganicSoil':
         return t('samples.inorganicSoil');
@@ -120,24 +161,111 @@ const MaterialsTemplate = ({
     setSearchValue('');
   }, [searchBy]);
 
-  const filteredData = materials
-    .map(({ _id, name, type, createdAt }) => ({
-      _id,
-      name,
-      type,
-      createdAt,
-    }))
-    .filter((material) => {
-      return searchValue.length > 0
-        ? searchBy === 'name'
-          ? material[searchBy].toLowerCase().includes(searchValue.toLowerCase())
-          : material[searchBy] === searchValue
-        : true;
-    });
+  const filteredData = (Array.isArray(materials[0].materials) ? materials[0].materials : [])
+  .map(({ _id, name, type, createdAt }) => ({
+    _id,
+    name,
+    type,
+    //createdAt
+    createdAt: createdAt instanceof Date ? createdAt : new Date(createdAt) 
+    
+    
+  }))
+  .filter((material) => {
+    if (!searchValue) return true;
+    
+    if (searchBy === 'name') {
+      return material.name.toLowerCase().includes(searchValue.toLowerCase());
+    }
+    if (searchBy === 'type') {
+      return material.type === searchValue;
+    }
+    return true;
+  });
 
+  console.log("Testando filtro de nome", filteredData);
+
+  const fwdEssaysData = fwdEssays?.map(({_id, generalData }) => ({
+    name: generalData.name,
+    type: 'FWD',
+    //createdAt: generalData.createdAt,
+    createdAt: generalData.createdAt instanceof Date ? generalData.createdAt : new Date(generalData.createdAt),
+    _id: _id
+  }))
+  console.log("testando o fwdEssayData", fwdEssaysData);
+
+  const iggEssaysData = (Array.isArray(iggEssays) ? iggEssays: []).map(({_id, generalData}) =>
+  ({
+    name: generalData.name,
+    type: 'IGG',
+    createdAt: generalData.createdAt,
+    _id: _id
+  }))
+
+  const rtcdEssaysData = rtcdEssays?.map((essay)=> ({
+  _id: essay._id,
+  name: essay.generalData.name,
+  type: 'RTCD',
+  createdAt: essay.createdAt
+}));
+
+
+const dduiEssaysData = dduiEssays?.map((essay) => ({
+    name: essay.generalData.name,
+    type: 'FWD',
+    createdAt: essay.createdAt,
+    _id: essay._id
+  }))
+
+  useEffect(() => {
+  let newData: any[] = [];
+
+  if (searchBy === 'stretch') {
+    newData = [...fwdEssaysData, ...iggEssaysData];
+  } else if (searchBy === 'mix') {
+    newData = [...rtcdEssaysData, ...dduiEssaysData];
+  } else if (searchBy === 'name') {
+    newData = [...filteredData, ...fwdEssaysData, ...iggEssaysData, ...rtcdEssaysData, ...dduiEssaysData];
+  } else {
+    newData = filteredData;
+  }
+
+  setTableData(newData);
+}, [searchBy, filteredData, fwdEssaysData, iggEssaysData, rtcdEssaysData, dduiEssaysData]);
+
+    //let newData: any[] = [];
+    /*if (searchBy === 'stretch') {
+      // Combina FWD e IGG quando "stretch" for selecionado
+      setTableData([...fwdEssaysData, ...iggEssaysData]);
+    } else if (searchBy === 'mix') {
+      setTableData([...rtcdEssaysData, ...dduiEssaysData]);  // Mostra SOMENTE ensaios RTCD e DDUI (mistura)
+    } else if (searchBy === 'name') {
+      // Mostra TUDO (materiais + todos ensaios)
+      console.log("igg", iggEssaysData);
+      console.log("fwd", fwdEssaysData);
+      console.log("rtcd", rtcdEssaysData);
+      console.log("ddui", dduiEssaysData);
+      const newData = fwdEssaysData || iggEssaysData.length > 0 || rtcdEssaysData || dduiEssaysData ? 
+       [...filteredData, ...fwdEssaysData, ...iggEssaysData, ...rtcdEssaysData, ...dduiEssaysData] : filteredData;
+       console.log("Testando o newData", newData);
+    setTableData(
+      newData
+    );
+    }
+    else {
+      // Caso padrão (nome ou tipo)
+      setTableData(filteredData);
+    }*/
+    //setTableData(newData);
+  //}, [searchBy]);
+
+    console.log("Filtro exemplo",filteredData);
+    console.log("Teste" ,materials)
   const handleEditMaterial = (rowId: string) => {
     editMaterial(rowId);
   };
+
+  
 
   return (
     <>
@@ -193,8 +321,14 @@ const MaterialsTemplate = ({
       {modal}
 
       {/*Page */}
-      <Header title={`${title}`} />
-      <Box sx={{ p: { mobile: '0 4vw', notebook: '0 6vw' }, mb: '4vw', width: '100%', maxWidth: '1800px' }}>
+      {/**Coloquei o header abaixo como comentário para remover o título "Materiais cadastrados"*/}
+      {/*<Header title={`${title}`} />*/}
+      <Box sx={{ 
+          //p: { mobile: '0 4vw', notebook: '0 6vw' }, 
+          p: { mobile: '2rem 4vw 0', notebook: '2rem 6vw 0' },
+          mb: '4vw', 
+          width: '100%', 
+          maxWidth: '1800px' }}>
         <Box
           sx={{
             display: 'flex',
@@ -213,17 +347,21 @@ const MaterialsTemplate = ({
               width: '55%',
             }}
           >
-            <DropDown
-              label={t('materials.template.searchBy')}
-              options={[
-                { label: t('materials.template.name'), value: 'name' },
-                { label: t('materials.template.type'), value: 'type' },
-              ]}
-              callback={setSearchBy}
-              size="small"
-              sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
-              value={{ label: t('materials.template.name'), value: 'name' }}
-            />
+
+          <DropDown
+            label={t('materials.template.searchBy')}
+            /*/*tions={[
+              { label: t('materials.template.name'), value: 'name' },
+              { label: t('materials.template.type'), value: 'type' },
+              { label: t('materials.template.mix'), value: 'mix' },
+              { label: t('materials.template.stretch'), value: 'stretch' },
+            ]}*/
+            options={options}
+            callback={setSearchBy}
+            size="small"
+            sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
+            value={options.find(option => option.value === searchBy) || options[0]} // Dinâmico baseado em searchBy
+          />
             {searchBy === 'name' && (
               <Search
                 sx={{
@@ -257,7 +395,6 @@ const MaterialsTemplate = ({
               color: 'primaryTons.white',
               bgcolor: 'primary.main',
               height: { mobile: '36px', notebook: '28px' },
-              //width: { mobile: '36px', notebook: 'fit-content' },
               width: { mobile: 'fit-content', notebook: 'fit-content' },
               borderRadius: '20px',
               p: { mobile: '0 10px', notebook: '0 12px' },
@@ -305,27 +442,20 @@ const MaterialsTemplate = ({
             overflowX: 'hidden',
           }}
         >
-          {/*<TableContainer sx={{ borderRadius: '20px' }}>*/}
           <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'hidden' }}>
-            {/*<Table stickyHeader aria-label="sticky table">*/}
             <Table sx={{ width: '100%', tableLayout: 'fixed' }} aria-label="materials table">
               <TableHead>
                 <TableRow>
                   {columns.map((column) => (
                     <TableCell
                       key={column.id}
+                      align="center"
                       sx={{
                         fontWeight: 'bold',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         width: column.width,
                       }}
-                      /*align="center"
-                      style={{
-                        width: column.width,
-                        fontWeight: '700',
-                        fontSize: '1rem',
-                      }}*/
                     >
                       {column.label}
                     </TableCell>
@@ -333,12 +463,28 @@ const MaterialsTemplate = ({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                     {columns.map((column) => (
                       <TableCell key={column.id} align="center">
                         {column.id === 'name' && row.name}
-                        {column.id === 'type' && translateType(row.type)}
+                        {column.id === 'type' && (
+                           <>
+                          {row.type === 'FWD' && 'FWD'}
+                          {row.type === 'IGG' && 'IGG'}
+                          {row.type === 'RTCD' && 'RTCD'}
+                          {row.type === 'DDUI' && 'DDUI'}
+                          {!['FWD', 'IGG', 'RTCD', 'DDUI'].includes(row.type) && translateType(row.type)}
+                          </>
+                        )}
+                       {/* {column.id === 'type' && (
+                          <>
+                            {row.type === 'FWD'}
+                            {row.type === 'IGG'}
+                            {!['FWD', 'IGG'].includes(row.type) && translateType(row.type)}
+                          </>
+                        )*/}
+
                         {column.id === 'createdAt' && formatDate(row.createdAt)}
                         {column.id === 'actions' && (
                           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -380,16 +526,6 @@ const MaterialsTemplate = ({
                             >
                               <DeleteIcon color="error" sx={{ fontSize: '1.25rem' }} />
                             </Button>
-                            <Button
-                              variant="text"
-                              color="warning"
-                              sx={{ p: 0, width: '30px', minWidth: '35px' }}
-                              onClick={() => {
-                                handleEditMaterial(row._id);
-                              }}
-                            >
-                              <EditIcon color="warning" sx={{ fontSize: '1.25rem' }} />
-                            </Button>
                           </Box>
                         )}
                       </TableCell>
@@ -401,9 +537,9 @@ const MaterialsTemplate = ({
           </TableContainer>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
             <Pagination
-              count={Math.ceil(filteredData.length / rowsPerPage)}
+              count={Math.ceil(tableData.length / rowsPerPage)}  // Usa tableData em vez de filteredData
               size="small"
-              disabled={filteredData.length < rowsPerPage}
+              disabled={tableData.length <= rowsPerPage}  // Desabilita se houver apenas 1 pág
               onChange={(event, value) => setPage(value - 1)}
             />
           </Box>
@@ -413,4 +549,5 @@ const MaterialsTemplate = ({
   );
 };
 
+//};
 export default MaterialsTemplate;

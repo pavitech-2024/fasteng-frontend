@@ -23,7 +23,7 @@ const ElongatedParticles_GeneralData = ({
   useEffect(() => {
     toast.promise(
       async () => {
-        const materials = await elongatedParticles.getmaterialsByUserId(user._id);
+        const data = await elongatedParticles.getmaterialsByUserId(user._id);
 
         setMaterials(materials);
         setLoading(false);

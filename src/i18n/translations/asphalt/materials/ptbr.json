@@ -18,7 +18,9 @@
   "asphalt.materials.coarseAggregate": "Agregado Graúdo",
   "asphalt.materials.fineAggregate": "Agregado Miúdo",
   "asphalt.materials.filler": "Fíler",
+  "asphalt.materials.cap": "Ligante Asfáltico Modificado (CAP)",
   "asphalt.materials.CAP": "Ligante Asfáltico Modificado (CAP)",
+
   "asphalt.materials.other": "Outro",
   "asphalt.materials.comments": "Comentários",
 
@@ -34,5 +36,11 @@
   "asphalt.materials.creatingMaterial": "Cadastrando material...",
 
   "asphalt.materialName": "Nome do Material",
-  "asphalt.materialType": "Tipo de Material"
+  "asphalt.materialType": "Tipo de Material",
+
+  "materials.template.type": "Materiais",
+  "materials.template.essay": "Ensaio",
+
+  "materials.template.mix": "Mistura",
+  "materials.template.stretch": "Trecho"
 }

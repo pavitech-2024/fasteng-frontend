@@ -23,9 +23,9 @@ const Abrasion_GeneralData = ({
   useEffect(() => {
     toast.promise(
       async () => {
-        const materials = await abrasion.getmaterialsByUserId(user._id);
+        const data = await abrasion.getmaterialsByUserId(user._id);
 
-        const filteredMaterials = materials.filter((material) => material.type === 'coarseAggregate');
+        const filteredMaterials = data[0].filter((material) => material.type === 'coarseAggregate');
 
         setMaterials(filteredMaterials);
         setLoading(false);

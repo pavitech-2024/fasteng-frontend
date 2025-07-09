@@ -16,13 +16,24 @@ const SoilsGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPagePro
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [dropdownDefaultValue, setDropdownDefaultValue] = useState({ label: '', value: [] });
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (data.sample_mass != null && data.table_data?.length > 0) {
       const totalRetained = data.table_data.reduce((sum, row) => sum + row.retained, 0);
       const remaining = data.sample_mass - totalRetained;
       setData({ step: 1, key: 'bottom', value: remaining });
     }
-  }, [data.sample_mass, data.table_data]);
+  }, [data.sample_mass, data.table_data]);*/
+
+   useEffect(() => {
+  if (data.sample_mass != null && data.table_data?.length > 0) {
+    const totalRetained = data.table_data.reduce((sum, row) => sum + row.retained, 0);
+    const remaining = data.sample_mass - totalRetained;
+
+    const arredondado = Math.round((remaining + Number.EPSILON) * 100) / 100;
+
+    setData({ step: 1, key: 'bottom', value: arredondado });
+  }
+}, [data.sample_mass, data.table_data]);
 
   const sievesSeries = [
     getSieveSeries(0),
@@ -330,7 +341,13 @@ const SoilsGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPagePro
             label={t('granulometry-soils.bottom')}
             variant={'filled'}
             key="bottom"
-            value={data.bottom}
+            //value={data.bottom}
+            value={
+              data.bottom != null
+              ? Number(data.bottom).toFixed(2)
+              : ''
+
+}
             onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
             adornment={'g'}
             type="number"

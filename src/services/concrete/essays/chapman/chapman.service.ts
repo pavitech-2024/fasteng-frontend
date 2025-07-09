@@ -50,12 +50,12 @@ class CHAPMAN_SERVICE implements IEssayService {
 
   /** @generalData Methods for general-data (step === 0, page 1) */
   // get all materials from user from backend
-  getMaterialsByUserId = async (userId: string): Promise<ConcreteMaterial[]> => {
+  getmaterialsByUserId = async (userId: string): Promise<ConcreteMaterial> => {
     try {
       const { data } = await Api.get(`/concrete/materials/all/${userId}`);
-
-      //filtrando apenas os materiais de tipo "coarseAggregate"
-      return data.filter((material) => material.type === 'coarseAggregate');
+      
+      console.log("🚀 ~ CHAPMAN_SERVICE ~ getmaterialsByUserId= ~ data:", data)
+      return data;
     } catch (error) {
       throw error;
     }
