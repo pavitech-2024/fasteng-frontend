@@ -97,48 +97,6 @@ const Superpave_Step6 = ({
     }
   }, [data]);
 
-  // useEffect(() => {
-  //   const prevData = [...data.riceTest];
-
-  //   if (granulometryCompositionData.chosenCurves.lower) {
-  //     if (!prevData.some((obj) => obj.curve === 'lower')) {
-  //       if (prevData.some((obj) => obj.curve === null)) {
-  //         const index = prevData.findIndex((obj) => obj.curve === null);
-  //         prevData[index] = { ...prevData[index], curve: 'lower' };
-  //       } else {
-  //         const newData = { ...prevData[0], curve: 'lower' };
-  //         prevData.push(newData);
-  //       }
-  //       setData({ step: 5, value: { ...data, riceTest: prevData } });
-  //     }
-  //   }
-
-  //   if (granulometryCompositionData.chosenCurves.average) {
-  //     if (!prevData.some((obj) => obj.curve === 'average')) {
-  //       if (prevData.some((obj) => obj.curve === null)) {
-  //         const index = prevData.findIndex((obj) => obj.curve === null);
-  //         prevData[index] = { ...prevData[index], curve: 'average' };
-  //       } else {
-  //         const newData = { ...prevData[0], curve: 'average' };
-  //         prevData.push(newData);
-  //       }
-  //       setData({ step: 5, value: { ...data, riceTest: prevData } });
-  //     }
-  //   }
-
-  //   if (granulometryCompositionData.chosenCurves.higher) {
-  //     if (!prevData.some((obj) => obj.curve === 'higher')) {
-  //       if (prevData.some((obj) => obj.curve === null)) {
-  //         const index = prevData.findIndex((obj) => obj.curve === null);
-  //         prevData[index] = { ...prevData[index], curve: 'higher' };
-  //       } else {
-  //         const newData = { ...prevData[0], curve: 'higher' };
-  //         prevData.push(newData);
-  //       }
-  //       setData({ step: 5, value: { ...data, riceTest: prevData } });
-  //     }
-  //   }
-  // }, [granulometryCompositionData.chosenCurves]);
   useEffect(() => {
     const prevData = [...data.riceTest];
 
@@ -423,27 +381,6 @@ const Superpave_Step6 = ({
             }
           });
 
-          // if (response.lower !== 0) {
-          //   const index = data.riceTest.findIndex((e) => e.curve === 'lower');
-          //   const arr = [...data.riceTest];
-          //   arr[index].gmm = response.lower.gmm;
-          //   setData({ step: 5, value: { ...data, riceTest: arr } });
-          // }
-
-          // if (response.average !== 0) {
-          //   const index = data.riceTest.findIndex((e) => e.curve === 'average');
-          //   const arr = [...data.riceTest];
-          //   arr[index].gmm = response.average.gmm;
-          //   setData({ step: 5, value: { ...data, riceTest: arr } });
-          // }
-
-          // if (response.higher !== 0) {
-          //   const index = data.riceTest.findIndex((e) => e.curve === 'higher');
-          //   const arr = [...data.riceTest];
-          //   arr[index].gmm = response.higher.gmm;
-          //   setData({ step: 5, value: { ...data, riceTest: arr } });
-          // }
-
           setRiceTestModalIsOpen(false);
         } catch (error) {
           throw error;
@@ -506,7 +443,8 @@ const Superpave_Step6 = ({
             </Button>
 
             {granulometryCompositionData.chosenCurves.map((curve, index) => {
-              const curveName = curve === 'lower' ? 'inferiorRows' : curve === 'average' ? 'intermediariaRows' : 'superiorRows';
+              const curveName =
+                curve === 'lower' ? 'inferiorRows' : curve === 'average' ? 'intermediariaRows' : 'superiorRows';
               return (
                 <Box>
                   <DataGrid
@@ -534,37 +472,35 @@ const Superpave_Step6 = ({
           </Box>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '2rem', marginY: '2rem' }}>
-            <Typography sx={{ textAlign: 'center' }}>{t('asphalt.dosages.superpave.measured-max-density')}</Typography>
+            <Typography variant='h5' sx={{ textAlign: 'center' }}>{t('asphalt.dosages.superpave.measured-max-density')}</Typography>
 
             <Box sx={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-              {Object.entries(granulometryCompositionData.chosenCurves).map(([key, value]) => {
-                if (value) {
-                  return (
-                    <Box
-                      key={key}
-                      sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        width: '100%',
-                        alignItems: 'center',
-                        gap: '2rem',
-                      }}
-                    >
-                      <Typography>{t(`asphalt.dosages.superpave.${key}-curve`)}</Typography>
-                      <Button onClick={() => showModal(key)} variant="outlined">
-                        {t('asphalt.dosages.superpave.calculate-max-density')}
-                      </Button>
-                    </Box>
-                  );
-                }
+              {granulometryCompositionData.chosenCurves.map((curve) => {
+                return (
+                  <Box
+                    key={curve}
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      width: '100%',
+                      alignItems: 'center',
+                      gap: '2rem',
+                    }}
+                  >
+                    <Typography>{t(`asphalt.dosages.superpave.${curve}-curve`)}</Typography>
+                    <Button onClick={() => showModal(curve)} variant="outlined">
+                      {t('asphalt.dosages.superpave.calculate-max-density')}
+                    </Button>
+                  </Box>
+                );
               })}
             </Box>
           </Box>
 
           <ModalBase
             title={t('asphalt.dosages.superpave.calculate-rice-test')}
-            leftButtonTitle={t('asphalt.dosages.superpave.confirm')}
-            rightButtonTitle={t('materials.template.cancel')}
+            leftButtonTitle={t('materials.template.cancel')}
+            rightButtonTitle={t('asphalt.dosages.superpave.confirm')}
             onCancel={() => setRiceTestModalIsOpen(false)}
             open={riceTestModalIsOpen}
             size={'larger'}

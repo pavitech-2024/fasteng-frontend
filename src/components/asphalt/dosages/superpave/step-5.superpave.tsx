@@ -26,6 +26,7 @@ const Superpave_Step5 = ({
     generalData,
     setData,
   } = useSuperpaveStore();
+  console.log('🚀 ~ data:', data);
 
   const [specificMassModalIsOpen, setSpecificMassModalIsOpen] = useState(true);
   const [newInitialBinderModalIsOpen, setNewInitialBinderModalIsOpen] = useState(false);
@@ -36,25 +37,30 @@ const Superpave_Step5 = ({
   // const [binderData, setBinderData] = useState<AsphaltMaterialData>();
   const [rows, setRows] = useState([]);
   const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
+  console.log("🚀 ~ estimatedPercentageRows:", estimatedPercentageRows)
   const compositions = ['inferior', 'intermediaria', 'superior'];
   const [materialNames, setMaterialNames] = useState<{ _id: string; name: string; type: string }[]>([]);
   const [activateSecondFetch, setActivateSecondFetch] = useState(false);
   const [shouldRenderTable1, setShouldRenderTable1] = useState(false);
 
   useEffect(() => {
-    if (!activateSecondFetch) {
+    console.log('entrou no useEffect', activateSecondFetch);
+    // if (!activateSecondFetch) {
+      console.log('passou da vaidação');
       toast.promise(
         async () => {
           try {
+            console.log('entrou na promise');
             const aggregateMaterials = granulometryEssayData.materials
-              .filter(({ type }) => type !== 'filler')
-              .map(({ _id, name, type }) => ({
+              .map(({ _id, name, type }, index) => ({
                 name,
                 type,
-                realSpecificMass: null,
-                apparentSpecificMass: null,
-                absorption: null,
+                realSpecificMass: data.materials[index]?.realSpecificMass ?? null,
+                apparentSpecificMass: data.materials[index]?.apparentSpecificMass ?? null,
+                absorption: data.materials[index]?.absorption ?? null,
               }));
+
+            console.log('🚀 ~ aggregateMaterials:', aggregateMaterials);
 
             setData({
               step: 4,
@@ -75,7 +81,7 @@ const Superpave_Step5 = ({
           error: t('erro no 1'),
         }
       );
-    }
+    // }
   }, []);
 
   useEffect(() => {
@@ -108,7 +114,7 @@ const Superpave_Step5 = ({
                 step: 4,
                 value: prevData,
               });
-              setActivateSecondFetch(false);
+              // setActivateSecondFetch(false);
             } else {
               let count = 0;
               data.materials.forEach((e) => {
@@ -132,7 +138,7 @@ const Superpave_Step5 = ({
                 step: 4,
                 value: prevData,
               });
-              setActivateSecondFetch(false);
+              // setActivateSecondFetch(false);
             }
           } catch (error) {
             throw error;
@@ -145,7 +151,7 @@ const Superpave_Step5 = ({
         }
       );
     }
-  }, [activateSecondFetch, rows]);
+  }, [rows]);
 
   const generateMaterialInputs = (materials) => {
     return materials.map((material, index) => [
@@ -200,7 +206,7 @@ const Superpave_Step5 = ({
             granulometricComposition: compositions[i],
             combinedGsb: e.combinedGsb ? e.combinedGsb.toFixed(2) : '',
             combinedGsa: e.combinedGsa ? e.combinedGsa.toFixed(2) : '',
-            gse: e.gse ? e.gse.toFixed(2) : '',
+            gse: e.gse || e.gse === 0 ? e.gse.toFixed(2) : '',
           }));
 
           setRows(updatedRows);
@@ -231,6 +237,7 @@ const Superpave_Step5 = ({
           setData({ step: 4, value: prevData });
           setLoading(false);
           setSpecificMassModalIsOpen(false);
+          setNewInitialBinderModalIsOpen(false);
         } catch (error) {
           throw error;
         }
@@ -269,6 +276,7 @@ const Superpave_Step5 = ({
       width: 200,
     },
   ];
+  
 
   const createEstimatedPercentageCols = () => {
     const baseCols: GridColDef[] = [
@@ -286,9 +294,7 @@ const Superpave_Step5 = ({
       },
     ];
 
-    const aggregates = granulometryEssayData.materials.filter(
-      (material) => material.type.includes('Aggregate') || material.type.includes('filler')
-    );
+    const aggregates = granulometryEssayData.materials.filter((material) => material.type.includes('Aggregate'));
 
     const materialCols = aggregates.map((aggregate, index) => ({
       field: `material_${index + 1}`,
@@ -381,6 +387,14 @@ const Superpave_Step5 = ({
       setShouldRenderTable1(true);
     }
   }, [data.materials]);
+
+  const handleInitialBinderSubmit = () => {
+    const newRows = estimatedPercentageRows.map((row) => ({ ...row, initialBinder: data.binderInput }) as any);
+    const newData = data.granulometryComposition.map((row) => ({ ...row, pli: data.binderInput }) as any);
+    setEstimatedPercentageRows(newRows);
+    setData({ step: 4, key: 'granulometryComposition', value: newData });
+    setNewInitialBinderModalIsOpen(false);
+  }
 
   nextDisabled && setNextDisabled(false);
 
@@ -512,8 +526,8 @@ const Superpave_Step5 = ({
           setLoading(false);
         }}
         open={newInitialBinderModalIsOpen}
-        size={'medium'}
-        onSubmit={handleModalSubmit}
+        size={'small'}
+        onSubmit={handleInitialBinderSubmit}
         oneButton={false}
       >
         <InputEndAdornment
