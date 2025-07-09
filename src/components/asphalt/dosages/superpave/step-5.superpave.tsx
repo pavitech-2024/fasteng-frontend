@@ -37,7 +37,7 @@ const Superpave_Step5 = ({
   // const [binderData, setBinderData] = useState<AsphaltMaterialData>();
   const [rows, setRows] = useState([]);
   const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
-  console.log("🚀 ~ estimatedPercentageRows:", estimatedPercentageRows)
+  console.log('🚀 ~ estimatedPercentageRows:', estimatedPercentageRows);
   const compositions = ['inferior', 'intermediaria', 'superior'];
   const [materialNames, setMaterialNames] = useState<{ _id: string; name: string; type: string }[]>([]);
   const [activateSecondFetch, setActivateSecondFetch] = useState(false);
@@ -46,41 +46,40 @@ const Superpave_Step5 = ({
   useEffect(() => {
     console.log('entrou no useEffect', activateSecondFetch);
     // if (!activateSecondFetch) {
-      console.log('passou da vaidação');
-      toast.promise(
-        async () => {
-          try {
-            console.log('entrou na promise');
-            const aggregateMaterials = granulometryEssayData.materials
-              .map(({ _id, name, type }, index) => ({
-                name,
-                type,
-                realSpecificMass: data.materials[index]?.realSpecificMass ?? null,
-                apparentSpecificMass: data.materials[index]?.apparentSpecificMass ?? null,
-                absorption: data.materials[index]?.absorption ?? null,
-              }));
+    console.log('passou da vaidação');
+    toast.promise(
+      async () => {
+        try {
+          console.log('entrou na promise');
+          const aggregateMaterials = granulometryEssayData.materials.map(({ _id, name, type }, index) => ({
+            name,
+            type,
+            realSpecificMass: data.materials[index]?.realSpecificMass ?? null,
+            apparentSpecificMass: data.materials[index]?.apparentSpecificMass ?? null,
+            absorption: data.materials[index]?.absorption ?? null,
+          }));
 
-            console.log('🚀 ~ aggregateMaterials:', aggregateMaterials);
+          console.log('🚀 ~ aggregateMaterials:', aggregateMaterials);
 
-            setData({
-              step: 4,
-              value: {
-                ...data,
-                materials: aggregateMaterials,
-              },
-            });
+          setData({
+            step: 4,
+            value: {
+              ...data,
+              materials: aggregateMaterials,
+            },
+          });
 
-            setActivateSecondFetch(true);
-          } catch (error) {
-            throw error;
-          }
-        },
-        {
-          pending: t('loading.materials.pending'),
-          success: t('loading.materials.success'),
-          error: t('erro no 1'),
+          setActivateSecondFetch(true);
+        } catch (error) {
+          throw error;
         }
-      );
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('erro no 1'),
+      }
+    );
     // }
   }, []);
 
@@ -276,7 +275,6 @@ const Superpave_Step5 = ({
       width: 200,
     },
   ];
-  
 
   const createEstimatedPercentageCols = () => {
     const baseCols: GridColDef[] = [
@@ -294,41 +292,50 @@ const Superpave_Step5 = ({
       },
     ];
 
-    const aggregates = granulometryEssayData.materials.filter((material) => material.type.includes('Aggregate'));
+    const aggregates = granulometryEssayData.materials?.filter((material) => material.type.includes('Aggregate'));
 
-    const materialCols = aggregates.map((aggregate, index) => ({
+    const materialCols = aggregates?.map((aggregate, index) => ({
       field: `material_${index + 1}`,
       headerName: aggregate.name,
       valueFormatter: ({ value }) => `${value}`,
       width: 100,
     }));
 
-    return [...baseCols, ...materialCols];
+    if (Array.isArray(materialCols) && materialCols.length > 0) {
+      return [...baseCols, ...materialCols];
+    } else {
+      return [];
+    }
   };
 
   const estimatedPercentageCols = createEstimatedPercentageCols();
 
-  const createEstimatedPercentageGroupings = (): GridColumnGroupingModel => {
-    const baseChildren = [{ field: 'granulometricComposition' }, { field: 'initialBinder' }];
-    const aggregates = granulometryEssayData.materials.filter(
-      (material) => material.type.includes('Aggregate') || material.type.includes('filler')
+  const createEstimatedPercentageGroupingModel = (): GridColumnGroupingModel => {
+    const baseColumnChildren = [{ field: 'granulometricComposition' }, { field: 'initialBinder' }];
+
+    const aggregateMaterials = granulometryEssayData.materials?.filter(({ type }) =>
+      ['Aggregate', 'Filler'].some((materialType) => type.includes(materialType))
     );
 
-    const materialChildren = aggregates.map((_, index) => ({
+    const materialColumnChildren = aggregateMaterials?.map((_, index) => ({
       field: `material_${index + 1}`,
     }));
 
-    return [
-      {
-        groupId: 'estimatedPercentage',
-        headerName: t('asphalt.dosages.superpave.materials-estimated-percentage'),
-        children: [...baseChildren, ...materialChildren],
-        headerAlign: 'center' as GridAlignment,
-      },
-    ];
+    if (Array.isArray(materialColumnChildren) && materialColumnChildren.length > 0) {
+      return [
+        {
+          groupId: 'estimatedPercentage',
+          headerName: t('asphalt.dosages.superpave.materials-estimated-percentage'),
+          children: [...baseColumnChildren, ...materialColumnChildren],
+          headerAlign: 'center' as GridAlignment,
+        },
+      ];
+    } else {
+      return [];
+    }
   };
 
-  const estimatedPercentageGroupings = createEstimatedPercentageGroupings();
+  const estimatedPercentageGroupings = createEstimatedPercentageGroupingModel();
 
   const compressionParamsCols: GridColDef[] = [
     {
@@ -389,12 +396,24 @@ const Superpave_Step5 = ({
   }, [data.materials]);
 
   const handleInitialBinderSubmit = () => {
-    const newRows = estimatedPercentageRows.map((row) => ({ ...row, initialBinder: data.binderInput }) as any);
-    const newData = data.granulometryComposition.map((row) => ({ ...row, pli: data.binderInput }) as any);
-    setEstimatedPercentageRows(newRows);
-    setData({ step: 4, key: 'granulometryComposition', value: newData });
+    const updatedEstimatedPercentageRows = estimatedPercentageRows.map((row) => ({
+      ...row,
+      initialBinder: binderInput,
+    }));
+
+    const updatedGranulometryComposition = data.granulometryComposition.map((row) => ({
+      ...row,
+      pli: binderInput,
+    }));
+
+    setEstimatedPercentageRows(updatedEstimatedPercentageRows);
+    setData({
+      step: 4,
+      key: 'granulometryComposition',
+      value: updatedGranulometryComposition,
+    });
     setNewInitialBinderModalIsOpen(false);
-  }
+  };
 
   nextDisabled && setNextDisabled(false);
 

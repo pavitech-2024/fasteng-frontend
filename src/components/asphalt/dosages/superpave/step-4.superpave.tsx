@@ -43,8 +43,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   const tableCompositionInputsAverage = {};
   const tableCompositionInputsHigher = {};
 
-  const selectedMaterials = granulometryEssayData.materials
-    .map((material) => {
+  const selectedMaterials = granulometryEssayData.materials?.map((material) => {
       if (material.type !== 'asphaltBinder' && material.type !== 'CAP') {
         return {
           name: material.name,
@@ -237,13 +236,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     tableCompositionInputsHigher[key] = '';
   };
 
-  // useEffect(() => {
-  //   const prevData = {...data};
-  //   prevData.pointsOfCurve = [];
-  //   setData({ step: 3, key: 'pointsOfCurve', value: prevData.pointsOfCurve });
-  // }, []);
-
-  selectedMaterials.forEach((_, i) => {
+  selectedMaterials?.forEach((_, i) => {
     inputsInit(`input${i * 2 + 1}`);
   });
 

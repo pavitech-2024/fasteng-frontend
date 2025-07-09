@@ -24,23 +24,9 @@ interface TableModel {
 }
 
 const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, tableData }) => {
-  console.log("🚀 ~ tableData:", tableData)
-  console.log("🚀 ~ materials:", materials)
+  console.log('🚀 ~ tableData:', tableData);
+  console.log('🚀 ~ materials:', materials);
   const { granulometryCompositionData: data, setData } = useSuperpaveStore();
-
-  // const newpercentageInputs = materials.map((material, index) => {
-  //   return `material_${index + 1}`;
-  // });
-
-  // Passar isso pro initalData do store
-  // useEffect(() => {
-  //   const initialInputs = materials.map(() => ({}));
-  //   setData({
-  //     step: 3,
-  //     key: 'percentageInputs',
-  //     value: initialInputs,
-  //   });
-  // }, []);
 
   const getMaterialIndex = () => {
     if (tableName === 'lowerComposition') return 0;
@@ -86,18 +72,9 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
     return newTable;
   };
 
-  // useEffect(() => {
-  //   const percentageInputs = [{material_1: null, material_2: null, material_3: null}];
-  //   setData({
-  //     step: 3,
-  //     key: 'percentageInputs',
-  //     value: percentageInputs,
-  //   });
-  // },[])
-
   const generateMaterialColumns = (data, materialIndex) => {
-    return materials
-      .map((material, index) => {
+    const columns = materials
+      ?.map((material, index) => {
         const fieldTotalPassant = `totalPassant_${material._id}_${index + 1}`;
         const fieldMaterial = `material_${material._id}_${index + 1}`;
 
@@ -130,6 +107,12 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
         ];
       })
       .flat();
+
+    if (Array.isArray(columns)) {
+      return columns;
+    } else {
+      return [];
+    }
   };
 
   const columns = [
@@ -160,6 +143,8 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
     },
   ];
 
+  console.log('🚀 ~ columns:', columns);
+
   /**
    * Generates material row data for a given index and table name.
    *
@@ -170,8 +155,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
    * @returns An object with formatted field values for each material.
    */
   const generateMaterialRows = (data, tableName, idx, row) => {
-    console.log("🚀 ~ generateMaterialRows ~ data:", data)
-    const rowsData = materials.reduce((acc, material, index) => {
+    let rowsData = materials?.reduce((acc, material, index) => {
       const fieldTotalPassant = `totalPassant_${material._id}_${index + 1}`;
       const fieldMaterial = `material_${material._id}_${index + 1}`;
       return {
@@ -184,15 +168,18 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
       };
     }, {});
 
-    Object.entries(rowsData).forEach(([key, value], idx) => {
-      if (value === undefined) {
-        rowsData[key] = '---';
-      }
-    });
+    if (rowsData) {
+      Object.entries(rowsData).forEach(([key, value], idx) => {
+        if (value === undefined) {
+          rowsData[key] = '---';
+        }
+      });
+    } else {
+      rowsData = {};
+    }
 
     return rowsData;
   };
-  
 
   const rows = tableData.map((e, idx) => {
     const rowsData = generateMaterialRows(data, tableName, idx, e);
@@ -205,25 +192,21 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
       band2: e.bandsCol2,
     };
   });
-  console.log("🚀 ~ rows ~ rows:", rows)
 
-  const generateMaterialGroupings = (materials) => {
-    return materials.map((material, index) => {
-      const materialId = `material_${index + 1}`;
-      const totalPassantField = `totalPassant_${index + 1}`;
-      const materialField = `material_${index + 1}`;
-
-      return {
-        groupId: materialId,
-        headerName: material?.name,
-        children: [{ field: totalPassantField }, { field: materialField }],
-        headerAlign: 'center',
-      };
-    });
+  const createMaterialGroupings = (materials) => {
+    return materials?.map((material, index) => ({
+      groupId: `material_${material._id}_${index + 1}`,
+      headerName: material.name,
+      children: [
+        { field: `totalPassant_${material._id}_${index + 1}` },
+        { field: `material_${material._id}_${index + 1}` },
+      ],
+      headerAlign: 'center',
+    }));
   };
 
   const groupings = [
-    ...generateMaterialGroupings(materials),
+    ...createMaterialGroupings(materials),
     {
       groupId: 'specification',
       headerName: 'Especificação',
