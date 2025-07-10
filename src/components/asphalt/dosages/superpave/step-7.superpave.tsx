@@ -11,9 +11,8 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import GraphStep6 from './graphs/step6Graph';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
-import { Widgets } from '@mui/icons-material';
 
-const Superpave_Step8 = ({
+const Superpave_Step7 = ({
   nextDisabled,
   setNextDisabled,
   superpave,
@@ -56,9 +55,11 @@ const Superpave_Step8 = ({
             firstCompressionData
           );
 
+          console.log('🚀 ~ resData:', resData);
+
           if (success) {
             setData({
-              step: 5,
+              step: 6,
               value: resData,
             });
           } else {
@@ -334,7 +335,15 @@ const Superpave_Step8 = ({
             disableColumnFilter
             experimentalFeatures={{ columnGrouping: true }}
             columnGroupingModel={paramsGroupings}
-            columns={paramsCols}
+            columns={paramsCols.map((column) => ({
+              ...column,
+              disableColumnMenu: true,
+              sortable: false,
+              align: 'center',
+              headerAlign: 'center',
+              minWidth: 100,
+              flex: 1,
+            }))}
             rows={paramsRows}
           />
 
@@ -344,7 +353,15 @@ const Superpave_Step8 = ({
             disableColumnFilter
             experimentalFeatures={{ columnGrouping: true }}
             columnGroupingModel={calculatedCurvesGroupings}
-            columns={calculatedCurvesCols}
+            columns={calculatedCurvesCols.map((column) => ({
+              ...column,
+              disableColumnMenu: true,
+              sortable: false,
+              align: 'center',
+              headerAlign: 'center',
+              minWidth: 100,
+              flex: 1,
+            }))}
             rows={calculatedCurvesRows}
           />
 
@@ -375,7 +392,7 @@ const Superpave_Step8 = ({
               label={''}
               sx={{ width: '40%' }}
               options={selectedCurveOptions}
-              callback={(value) => setData({ step: 5, key: 'selectedCurve', value })}
+              callback={(value) => setData({ step: 6, key: 'selectedCurve', value })}
               size="medium"
               variant="standard"
               value={{
@@ -390,4 +407,4 @@ const Superpave_Step8 = ({
   );
 };
 
-export default Superpave_Step8;
+export default Superpave_Step7;

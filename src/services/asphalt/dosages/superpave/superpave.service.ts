@@ -84,13 +84,14 @@ class Superpave_SERVICE implements IEssayService {
             // await this.getGranulometricCompositionData(data as SuperpaveData, this.userId, isConsult);
           }
           await this.submitGranulometryComposition(data as SuperpaveData, this.userId, null, isConsult);
-          break;
-        case 5:
-          await this.getStep5SpecificMasses(data as SuperpaveData, this.userId, null, isConsult);
           await this.submitInitialBinder(data as SuperpaveData, this.userId, null, isConsult);
           break;
-        case 6:
+        case 5:
+          const { granulometryEssayData } = data as SuperpaveData;
+          await this.getFirstCompressionSpecificMasses(granulometryEssayData);
           await this.submitFirstCompression(data as SuperpaveData, this.userId, null, isConsult);
+          break;
+        case 6:
           break;
         case 7:
           const { generalData, initialBinderData, granulometryCompositionData, firstCompressionData } =
@@ -387,11 +388,10 @@ class Superpave_SERVICE implements IEssayService {
   ): Promise<any> => {
     try {
       const { percentageInputs, nominalSize, percentsToList } = granulometryCompositionData;
-      console.log("🚀 ~ Superpave_SERVICE ~ percentageInputs:", percentageInputs)
+      console.log('🚀 ~ Superpave_SERVICE ~ percentageInputs:', percentageInputs);
       const { dnitBand } = generalData;
       const aggregates = granulometryEssayData.materials;
-      console.log("🚀 ~ Superpave_SERVICE ~ aggregates:", aggregates)
-
+      console.log('🚀 ~ Superpave_SERVICE ~ aggregates:', aggregates);
 
       const response = await Api.post(`${this.info.backend_path}/calculate-granulometric-composition-data`, {
         chosenCurves,
@@ -451,14 +451,19 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  getStep5SpecificMasses = async (SuperpaveData: SuperpaveData, userId, user, isConsult?): Promise<any> => {
+  getFirstCompressionSpecificMasses = async (
+    granulometryEssayData: SuperpaveData['granulometryEssayData']
+  ): Promise<any> => {
+    console.log('🚀 ~ Superpave_SERVICE ~ getStep6SpecificMasses= ~ granulometryEssayData:', granulometryEssayData);
     try {
-      const { granulometryEssayData: { materials } } = SuperpaveData;
-      console.log("🚀 ~ Superpave_SERVICE ~ getStep5SpecificMasses= ~ materials:", materials)
+      const { materials } = granulometryEssayData;
+      console.log('🚀 ~ Superpave_SERVICE ~ getStep6SpecificMasses= ~ materials:', materials);
 
       const response = await Api.post(`${this.info.backend_path}/step-5-specific-masses`, {
         materials,
       });
+
+      console.log('🚀 ~ Superpave_SERVICE ~ getStep6SpecificMasses= ~ response:', response);
 
       const { data, success, error } = response.data;
 
@@ -480,11 +485,11 @@ class Superpave_SERVICE implements IEssayService {
         step3Data;
       console.log('🚀 ~ Superpave_SERVICE ~ percentageInputs:', percentageInputs);
       const { materials, binderSpecificMass } = step4Data;
-      console.log("🚀 ~ Superpave_SERVICE ~ materials:", materials)
+      console.log('🚀 ~ Superpave_SERVICE ~ materials:', materials);
       const materialsWithoutBinder = materials.filter(
         (material) => material.type.includes('Aggregate') || material.type.includes('filler')
       );
-      console.log("🚀 ~ Superpave_SERVICE ~ materialsWithoutBinder:", materialsWithoutBinder)
+      console.log('🚀 ~ Superpave_SERVICE ~ materialsWithoutBinder:', materialsWithoutBinder);
       const hasNullValue = materialsWithoutBinder.some((obj) => Object.values(obj).some((value) => value === null));
       if (hasNullValue) throw new Error('Algum valor não foi informado.');
       let composition;
@@ -606,6 +611,44 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
+  // getStepFirstCurvePercentages = async (
+  //   generalData: SuperpaveData['generalData'],
+  //   step3Data: SuperpaveData['granulometryCompositionData'],
+  //   step4Data: SuperpaveData['initialBinderData'],
+  //   step5Data: SuperpaveData['firstCompressionData'],
+  //   isConsult?
+  // ): Promise<any> => {
+  //   try {
+  //     const { nominalSize, chosenCurves, porcentagesPassantsN200, percentageInputs } = step3Data;
+  //     const { turnNumber, binderSpecificMass, granulometryComposition: binderCompositions } = step4Data;
+  //     const { riceTest, inferiorRows, intermediariaRows, superiorRows, maximumDensity } = step5Data;
+  //     const { trafficVolume } = generalData;
+
+  //     const compositions = [inferiorRows, intermediariaRows, superiorRows];
+  //     const densities = [maximumDensity.lower, maximumDensity.average, maximumDensity.higher];
+
+  //     const response = await Api.post(`${this.info.backend_path}/step-5-parameters`, {
+  //       granulometryComposition: compositions,
+  //       trafficVolume,
+  //       nominalSize,
+  //       turnNumber,
+  //       chosenCurves,
+  //       binderSpecificGravity: binderSpecificMass,
+  //       porcentagesPassantsN200,
+  //       riceTest,
+  //       maximumDensity: densities,
+  //       binderCompositions,
+  //       percentageInputs,
+  //     });
+
+  //     const { data, success, error } = response.data;
+
+  //     if (success === false) throw error.name;
+
+  //     return { data, success, error };
+  //   } catch (error) {}
+  // };
+
   getStepFirstCurvePercentages = async (
     generalData: SuperpaveData['generalData'],
     step3Data: SuperpaveData['granulometryCompositionData'],
@@ -621,8 +664,9 @@ class Superpave_SERVICE implements IEssayService {
 
       const compositions = [inferiorRows, intermediariaRows, superiorRows];
       const densities = [maximumDensity.lower, maximumDensity.average, maximumDensity.higher];
+      
 
-      const response = await Api.post(`${this.info.backend_path}/step-5-parameters`, {
+      const response = await Api.post(`${this.info.backend_path}/get-first-compression-parameters`, {
         granulometryComposition: compositions,
         trafficVolume,
         nominalSize,

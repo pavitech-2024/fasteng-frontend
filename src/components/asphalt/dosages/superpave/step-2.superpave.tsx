@@ -16,7 +16,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
   const setData = useSuperpaveStore((state) => state.setData);
   const myRef = useRef<any>({});
 
-  const aggregatesRows = data.granulometrys.filter(
+  const aggregatesRows = data.granulometrys?.filter(
     ({ material }) => material.type !== 'asphaltBinder' && material.type !== 'CAP' && material.type !== 'other'
   );
 

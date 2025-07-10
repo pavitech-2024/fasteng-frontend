@@ -71,7 +71,7 @@ const Superpave_Step6 = ({
       key: 'waterSampleContainerMass',
       label: t('asphalt.dosages.superpave.water-sample-container-mass'),
       adornment: 'g',
-      value: data.riceTest.find((obj) => obj.curve === curve)
+      value: data.riceTest?.find((obj) => obj.curve === curve)
         ? data.riceTest.find((obj) => obj.curve === curve).waterSampleContainerMass
         : null,
     },
@@ -79,20 +79,20 @@ const Superpave_Step6 = ({
       key: 'waterSampleMass',
       label: t('asphalt.dosages.superpave.water-sample-mass'),
       adornment: 'g',
-      value: data.riceTest.find((obj) => obj.curve === curve)
+      value: data.riceTest?.find((obj) => obj.curve === curve)
         ? data.riceTest.find((obj) => obj.curve === curve).waterSampleMass
         : null,
     },
   ];
 
   useEffect(() => {
-    if (data.inferiorRows.length !== inferiorRows.length) {
+    if (data.inferiorRows?.length !== inferiorRows.length) {
       setInferiorRows(data.inferiorRows);
     }
-    if (data.intermediariaRows.length !== intermediariaRows.length) {
+    if (data.intermediariaRows?.length !== intermediariaRows.length) {
       setIntermediariaRows(data.intermediariaRows);
     }
-    if (data.superiorRows.length !== superiorRows.length) {
+    if (data.superiorRows?.length !== superiorRows.length) {
       setSuperiorRows(data.superiorRows);
     }
   }, [data]);

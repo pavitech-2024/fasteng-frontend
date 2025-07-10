@@ -3,8 +3,6 @@ import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
-import { AsphaltMaterialData } from '@/interfaces/asphalt';
-import materialsService from '@/services/asphalt/asphalt-materials.service';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { Box, Button, Typography } from '@mui/material';
@@ -37,10 +35,12 @@ const Superpave_Step5 = ({
   // const [binderData, setBinderData] = useState<AsphaltMaterialData>();
   const [rows, setRows] = useState([]);
   const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
+  console.log("🚀 ~ estimatedPercentageRows:", estimatedPercentageRows)
   const compositions = ['inferior', 'intermediaria', 'superior'];
   const [materialNames, setMaterialNames] = useState<{ _id: string; name: string; type: string }[]>([]);
   const [activateSecondFetch, setActivateSecondFetch] = useState(false);
   const [shouldRenderTable1, setShouldRenderTable1] = useState(false);
+  console.log("🚀 ~ shouldRenderTable1:", shouldRenderTable1)
 
   useEffect(() => {
     console.log('entrou no useEffect', activateSecondFetch);
@@ -58,8 +58,6 @@ const Superpave_Step5 = ({
             absorption: data.materials[index]?.absorption ?? null,
           }));
 
-          console.log('🚀 ~ aggregateMaterials:', aggregateMaterials);
-
           setData({
             step: 4,
             value: {
@@ -68,7 +66,7 @@ const Superpave_Step5 = ({
             },
           });
 
-          setActivateSecondFetch(true);
+          // setActivateSecondFetch(true);
         } catch (error) {
           throw error;
         }
@@ -84,12 +82,15 @@ const Superpave_Step5 = ({
 
   useEffect(() => {
     const hasSomeNullValue = Object.values(rows).some((e) => e === null);
-    if (activateSecondFetch && hasSomeNullValue) {
+    if (
+      // activateSecondFetch &&
+      hasSomeNullValue
+    ) {
       toast.promise(
         async () => {
           try {
             const newMaterials = [];
-            const { data: resData, success, error } = await superpave.getStep5SpecificMasses(granulometryEssayData);
+            const { data: resData, success } = await superpave.getFirstCompressionSpecificMasses(granulometryEssayData);
 
             if (success && resData.specificMasses.length > 0) {
               resData.specificMasses.forEach((e) => {
@@ -207,6 +208,7 @@ const Superpave_Step5 = ({
             granulometryCompositionData,
             data
           );
+          console.log('🚀 ~ response:', response);
 
           const updatedRows = response.granulometryComposition.map((composition, index) => ({
             id: index,
@@ -227,18 +229,26 @@ const Superpave_Step5 = ({
           setData({ step: 4, value: updatedData });
 
           const updatedPercentageRows = response.granulometryComposition.map((composition, index) => {
+            console.log('🚀 ~ updatedPercentageRows ~ composition:', composition);
+
             const row: Record<string, string | number> = {
               id: index,
               granulometricComposition: compositions[index],
               initialBinder: composition.pli?.toFixed(2),
             };
 
+            console.log('🚀 ~ updatedPercentageRows ~ row antes:', row);
+
             composition.percentsOfDosageWithBinder.forEach((percent, materialIndex) => {
+              console.log('🚀 ~ composition.percentsOfDosageWithBinder.forEach ~ percent:', percent);
               row[`material_${materialIndex + 1}`] = percent?.toFixed(2);
             });
 
+            console.log('🚀 ~ updatedPercentageRows ~ row após:', row);
+
             return row;
           });
+          console.log('🚀 ~ updatedPercentageRows ~ updatedPercentageRows:', updatedPercentageRows);
 
           setEstimatedPercentageRows(updatedPercentageRows);
 
@@ -300,7 +310,9 @@ const Superpave_Step5 = ({
       },
     ];
 
-    const aggregateMaterials = granulometryEssayData.materials?.filter(({ type }) => type.includes('Aggregate'));
+    const aggregateMaterials = granulometryEssayData.materials?.filter(
+      ({ type }) => type.includes('Aggregate') || type.includes('filler')
+    );
 
     const materialColumns = aggregateMaterials?.map((material, index) => ({
       field: `material_${index + 1}`,
