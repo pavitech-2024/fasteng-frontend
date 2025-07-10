@@ -24,7 +24,6 @@ const Superpave_Step5 = ({
     generalData,
     setData,
   } = useSuperpaveStore();
-  console.log('🚀 ~ data:', data);
 
   const [specificMassModalIsOpen, setSpecificMassModalIsOpen] = useState(true);
   const [newInitialBinderModalIsOpen, setNewInitialBinderModalIsOpen] = useState(false);
@@ -35,21 +34,16 @@ const Superpave_Step5 = ({
   // const [binderData, setBinderData] = useState<AsphaltMaterialData>();
   const [rows, setRows] = useState([]);
   const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
-  console.log("🚀 ~ estimatedPercentageRows:", estimatedPercentageRows)
   const compositions = ['inferior', 'intermediaria', 'superior'];
   const [materialNames, setMaterialNames] = useState<{ _id: string; name: string; type: string }[]>([]);
   const [activateSecondFetch, setActivateSecondFetch] = useState(false);
   const [shouldRenderTable1, setShouldRenderTable1] = useState(false);
-  console.log("🚀 ~ shouldRenderTable1:", shouldRenderTable1)
 
   useEffect(() => {
-    console.log('entrou no useEffect', activateSecondFetch);
     // if (!activateSecondFetch) {
-    console.log('passou da vaidação');
     toast.promise(
       async () => {
         try {
-          console.log('entrou na promise');
           const aggregateMaterials = granulometryEssayData.materials.map(({ _id, name, type }, index) => ({
             name,
             type,
@@ -208,7 +202,6 @@ const Superpave_Step5 = ({
             granulometryCompositionData,
             data
           );
-          console.log('🚀 ~ response:', response);
 
           const updatedRows = response.granulometryComposition.map((composition, index) => ({
             id: index,
@@ -229,7 +222,6 @@ const Superpave_Step5 = ({
           setData({ step: 4, value: updatedData });
 
           const updatedPercentageRows = response.granulometryComposition.map((composition, index) => {
-            console.log('🚀 ~ updatedPercentageRows ~ composition:', composition);
 
             const row: Record<string, string | number> = {
               id: index,
@@ -237,21 +229,14 @@ const Superpave_Step5 = ({
               initialBinder: composition.pli?.toFixed(2),
             };
 
-            console.log('🚀 ~ updatedPercentageRows ~ row antes:', row);
-
             composition.percentsOfDosageWithBinder.forEach((percent, materialIndex) => {
-              console.log('🚀 ~ composition.percentsOfDosageWithBinder.forEach ~ percent:', percent);
               row[`material_${materialIndex + 1}`] = percent?.toFixed(2);
             });
 
-            console.log('🚀 ~ updatedPercentageRows ~ row após:', row);
-
             return row;
           });
-          console.log('🚀 ~ updatedPercentageRows ~ updatedPercentageRows:', updatedPercentageRows);
 
           setEstimatedPercentageRows(updatedPercentageRows);
-
           setLoading(false);
           setSpecificMassModalIsOpen(false);
           setNewInitialBinderModalIsOpen(false);

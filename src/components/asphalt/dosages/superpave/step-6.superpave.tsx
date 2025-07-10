@@ -86,19 +86,24 @@ const Superpave_Step6 = ({
   ];
 
   useEffect(() => {
-    if (data.inferiorRows?.length !== inferiorRows.length) {
+    if (data.inferiorRows?.length !== inferiorRows?.length) {
       setInferiorRows(data.inferiorRows);
     }
-    if (data.intermediariaRows?.length !== intermediariaRows.length) {
+    if (data.intermediariaRows?.length !== intermediariaRows?.length) {
       setIntermediariaRows(data.intermediariaRows);
     }
-    if (data.superiorRows?.length !== superiorRows.length) {
+    if (data.superiorRows?.length !== superiorRows?.length) {
       setSuperiorRows(data.superiorRows);
     }
   }, [data]);
 
   useEffect(() => {
-    const prevData = [...data.riceTest];
+    let prevData;
+    if (data.riceTest) {
+      prevData = [...data.riceTest];
+    } else {
+      prevData = [];
+    }
 
     Object.entries(granulometryCompositionData.chosenCurves).forEach(([curve, value]) => {
       if (value && !prevData.some((obj) => obj.curve === curve)) {
@@ -117,6 +122,7 @@ const Superpave_Step6 = ({
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[curve]?.findIndex((r) => r.id === id);
+
         return (
           <InputEndAdornment
             adornment={'cm'}
@@ -370,7 +376,6 @@ const Superpave_Step6 = ({
       async () => {
         try {
           const response = await superpave.calculateGmm(data);
-          console.log("🚀 ~ response:", response)
 
           //todo: tipar esse any
           Object.values(response).forEach((e: any, i) => {
@@ -416,14 +421,12 @@ const Superpave_Step6 = ({
 
   useEffect(() => {
     // Verifica se todos os valores de GMM foram preenchidos pelo Rice Test
-    const isRiceTestFinished = data.riceTest.every(({ gmm }) => gmm !== 0);
+    const isRiceTestFinished = data.riceTest?.every(({ gmm }) => gmm !== 0);
 
     // Verifica se todos os inputs de todas as curvas foram preenchidos
-    const isCurvesComplete = [
-      data.inferiorRows,
-      data.intermediariaRows,
-      data.superiorRows,
-    ].every((rows) => rows.every(({ dryMass }) => dryMass !== null));
+    const isCurvesComplete = [data.inferiorRows, data.intermediariaRows, data.superiorRows].every((rows) =>
+      rows?.every(({ dryMass }) => dryMass !== null)
+    );
 
     // Atualiza o estado de nextDisabled se uma das condições acima for verdadeira
     setNextDisabled(!(isRiceTestFinished || isCurvesComplete));
@@ -486,7 +489,9 @@ const Superpave_Step6 = ({
           </Box>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '2rem', marginY: '2rem' }}>
-            <Typography variant='h5' sx={{ textAlign: 'center' }}>{t('asphalt.dosages.superpave.measured-max-density')}</Typography>
+            <Typography variant="h5" sx={{ textAlign: 'center' }}>
+              {t('asphalt.dosages.superpave.measured-max-density')}
+            </Typography>
 
             <Box sx={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
               {granulometryCompositionData.chosenCurves.map((curve) => {
@@ -546,7 +551,7 @@ const Superpave_Step6 = ({
                     adornment={input.adornment}
                     label={input.label}
                     value={input.value}
-                    type='number'
+                    type="number"
                     fullWidth
                     onChange={(e) => {
                       const value = e.target.value;
@@ -565,7 +570,10 @@ const Superpave_Step6 = ({
                 variant="standard"
                 label={t('asphalt.dosages.superpave.water-temperature-dropdown')}
                 options={waterTemperatureList}
-                value={{ value: data.riceTest?.find((obj) => obj.curve === actualCurve)?.temperatureOfWater, label: '' }}
+                value={{
+                  value: data.riceTest?.find((obj) => obj.curve === actualCurve)?.temperatureOfWater,
+                  label: '',
+                }}
                 callback={(selectedValue) => {
                   const prevData = [...data.riceTest];
                   const index = prevData.findIndex((obj) => obj.curve === actualCurve);

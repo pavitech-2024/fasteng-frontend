@@ -1,7 +1,6 @@
 
 import Superpave_Step1 from '@/components/asphalt/dosages/superpave/step-1.superpave';
-import Superpave_Step10 from '@/components/asphalt/dosages/superpave/step-10.superpave';
-import Superpave_Step11 from '@/components/asphalt/dosages/superpave/step-11.superpave';
+import Superpave_Step11 from '@/components/asphalt/dosages/superpave/step-10.superpave';
 import Superpave_Step12 from '@/components/asphalt/dosages/superpave/step-12.superpave';
 import Superpave_Step13 from '@/components/asphalt/dosages/superpave/step-13.superpave';
 import Superpave_Step2 from '@/components/asphalt/dosages/superpave/step-2.superpave';
@@ -10,11 +9,13 @@ import Superpave_Step4 from '@/components/asphalt/dosages/superpave/step-4.super
 import Superpave_Step5 from '@/components/asphalt/dosages/superpave/step-5.superpave';
 import Superpave_Step6 from '@/components/asphalt/dosages/superpave/step-6.superpave';
 import Superpave_Step7 from '@/components/asphalt/dosages/superpave/step-7.superpave';
-import Superpave_Step9 from '@/components/asphalt/dosages/superpave/step-9.superpave';
+import Superpave_Step8 from '@/components/asphalt/dosages/superpave/step-8.superpave';
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
+import Superpave_Step9 from '@/components/asphalt/dosages/superpave/step-9.superpave';
+import Superpave_Step10 from '@/components/asphalt/dosages/superpave/step-10.superpave';
 
 const Superpave = () => {
   // start an instance of the service
@@ -40,6 +41,7 @@ const Superpave = () => {
     { step: 4, children: <Superpave_Step5 superpave={superpave} />, data: store },
     { step: 5, children: <Superpave_Step6 superpave={superpave} />, data: store },
     { step: 6, children: <Superpave_Step7 superpave={superpave} />, data: store },
+    { step: 7, children: <Superpave_Step8 superpave={superpave} />, data: store },
     { step: 8, children: <Superpave_Step9 superpave={superpave} />, data: store },
     { step: 9, children: <Superpave_Step10 superpave={superpave} />, data: store },
     { step: 10, children: <Superpave_Step11 superpave={superpave} />, data: store },

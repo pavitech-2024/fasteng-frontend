@@ -103,7 +103,7 @@ class Superpave_SERVICE implements IEssayService {
             firstCompressionData,
             isConsult
           );
-          await this.submitFirstCurvePercentages(data as SuperpaveData, this.userId, null, isConsult);
+          // await this.submitPercentsOfChosenCurve(data as SuperpaveData, this.userId, null, isConsult);
           const { firstCurvePercentagesData } = data as SuperpaveData;
           await this.getChosenCurvePercentages(generalData, granulometryCompositionData, firstCurvePercentagesData);
           break;
@@ -388,10 +388,8 @@ class Superpave_SERVICE implements IEssayService {
   ): Promise<any> => {
     try {
       const { percentageInputs, nominalSize, percentsToList } = granulometryCompositionData;
-      console.log('🚀 ~ Superpave_SERVICE ~ percentageInputs:', percentageInputs);
       const { dnitBand } = generalData;
       const aggregates = granulometryEssayData.materials;
-      console.log('🚀 ~ Superpave_SERVICE ~ aggregates:', aggregates);
 
       const response = await Api.post(`${this.info.backend_path}/calculate-granulometric-composition-data`, {
         chosenCurves,
@@ -454,16 +452,12 @@ class Superpave_SERVICE implements IEssayService {
   getFirstCompressionSpecificMasses = async (
     granulometryEssayData: SuperpaveData['granulometryEssayData']
   ): Promise<any> => {
-    console.log('🚀 ~ Superpave_SERVICE ~ getStep6SpecificMasses= ~ granulometryEssayData:', granulometryEssayData);
     try {
       const { materials } = granulometryEssayData;
-      console.log('🚀 ~ Superpave_SERVICE ~ getStep6SpecificMasses= ~ materials:', materials);
 
       const response = await Api.post(`${this.info.backend_path}/step-5-specific-masses`, {
         materials,
       });
-
-      console.log('🚀 ~ Superpave_SERVICE ~ getStep6SpecificMasses= ~ response:', response);
 
       const { data, success, error } = response.data;
 
@@ -483,13 +477,10 @@ class Superpave_SERVICE implements IEssayService {
       const { trafficVolume } = step1Data;
       const { percentageInputs, chosenCurves, lowerComposition, averageComposition, higherComposition, nominalSize } =
         step3Data;
-      console.log('🚀 ~ Superpave_SERVICE ~ percentageInputs:', percentageInputs);
       const { materials, binderSpecificMass } = step4Data;
-      console.log('🚀 ~ Superpave_SERVICE ~ materials:', materials);
       const materialsWithoutBinder = materials.filter(
         (material) => material.type.includes('Aggregate') || material.type.includes('filler')
       );
-      console.log('🚀 ~ Superpave_SERVICE ~ materialsWithoutBinder:', materialsWithoutBinder);
       const hasNullValue = materialsWithoutBinder.some((obj) => Object.values(obj).some((value) => value === null));
       if (hasNullValue) throw new Error('Algum valor não foi informado.');
       let composition;
@@ -664,7 +655,6 @@ class Superpave_SERVICE implements IEssayService {
 
       const compositions = [inferiorRows, intermediariaRows, superiorRows];
       const densities = [maximumDensity.lower, maximumDensity.average, maximumDensity.higher];
-      
 
       const response = await Api.post(`${this.info.backend_path}/get-first-compression-parameters`, {
         granulometryComposition: compositions,
@@ -688,7 +678,7 @@ class Superpave_SERVICE implements IEssayService {
     } catch (error) {}
   };
 
-  submitFirstCurvePercentages = async (
+  submitPercentsOfChosenCurve = async (
     data: SuperpaveData,
     userId: string,
     user?: string,
@@ -709,7 +699,7 @@ class Superpave_SERVICE implements IEssayService {
 
         if (isConsult) firstCurvePercentagesData.isConsult = isConsult;
 
-        const response = await Api.post(`${this.info.backend_path}/save-first-curve-percentage-step/${userData}`, {
+        const response = await Api.post(`${this.info.backend_path}/save-percents-of-chosen-curve-step/${userData}`, {
           firstCurvePercentagesData: {
             ...data.firstCurvePercentagesData,
             selectedCurve,
@@ -939,7 +929,7 @@ class Superpave_SERVICE implements IEssayService {
     try {
       const { expectedPli, composition } = step8Data;
 
-      const response = await Api.post(`${this.info.backend_path}/get-step-9-data`, {
+      const response = await Api.post(`${this.info.backend_path}/get-second-compression-percentage-data`, {
         expectedPli,
         composition,
       });

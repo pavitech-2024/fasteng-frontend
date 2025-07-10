@@ -30,15 +30,15 @@ const Superpave_Step7 = ({
   const [renderTable3, setRenderTable3] = useState(false);
 
   useEffect(() => {
-    const table3Arr = Object.values(data.table3);
-    if (table3Arr.some((e) => e !== null)) {
-      setRenderTable3(true);
+    if (data.table3) {
+      const table3Arr = Object.values(data.table3);
+      if (table3Arr.some((e) => e !== null)) {
+        setRenderTable3(true);
+      }
     }
   }, [data?.table3]);
 
-  const table2Arr = [data.table2.table2Lower, data.table2.table2Average, data.table2.table2Higher];
-
-  const { user } = useAuth();
+  const table2Arr = [data.table2?.table2Lower, data.table2?.table2Average, data.table2?.table2Higher];
 
   useEffect(() => {
     toast.promise(
@@ -54,8 +54,6 @@ const Superpave_Step7 = ({
             initialBinderData,
             firstCompressionData
           );
-
-          console.log('🚀 ~ resData:', resData);
 
           if (success) {
             setData({
@@ -103,7 +101,7 @@ const Superpave_Step7 = ({
       width: 180,
     },
     {
-      field: 'p/a',
+      field: 'p_a',
       headerName: 'P/A (%)',
       valueFormatter: ({ value }) => `${value}`,
       width: 180,
@@ -113,13 +111,13 @@ const Superpave_Step7 = ({
   const paramsGroupings: GridColumnGroupingModel = [
     {
       groupId: 'params',
-      headerName: `Parâmteros para o nível de tráfego ${generalData.trafficVolume} e tamanho nominal máximo ${data.table1.nominalSize}`,
+      headerName: `Parâmteros para o nível de tráfego ${generalData.trafficVolume} e tamanho nominal máximo ${data.table1?.nominalSize}`,
       children: [
         { field: 'gmmInitialN' },
         { field: 'gmmNProj' },
         { field: 'gmmNMax' },
         { field: 'expectedVam' },
-        { field: 'p/a' },
+        { field: 'p_a' },
       ],
       headerAlign: 'center',
     },
@@ -128,10 +126,12 @@ const Superpave_Step7 = ({
   const paramsRows = [
     {
       id: 0,
-      gmmInitialN: data.table1.expectedPorcentageGmmInitialN ? data.table1.expectedPorcentageGmmInitialN : '---',
-      gmmNMax: data.table1.expectedPorcentageGmmMaxN !== null ? data.table1.expectedPorcentageGmmMaxN : '---',
-      gmmNProj: data.table1.expectedPorcentageGmmProjectN !== null ? data.table1.expectedPorcentageGmmProjectN : '---',
-      expectedVam: data.table1.expectedVam !== null ? data.table1.expectedVam : '---',
+      gmmInitialN: data.table1?.expectedPorcentageGmmInitialN ? data.table1?.expectedPorcentageGmmInitialN : '---',
+      gmmNMax: data.table1?.expectedPorcentageGmmMaxN !== null ? data.table1?.expectedPorcentageGmmMaxN : '---',
+      gmmNProj:
+        data.table1?.expectedPorcentageGmmProjectN !== null ? data.table1?.expectedPorcentageGmmProjectN : '---',
+      expectedVam: data.table1?.expectedVam !== null ? data.table1?.expectedVam : '---',
+      p_a: data.table1?.expectedRBV_Lower !== null ? data.table1?.expectedRBV_Lower : '---',
     },
   ];
 
@@ -207,44 +207,44 @@ const Superpave_Step7 = ({
   const calculatedCurvesRows = table2Arr.map((arr, idx) => ({
     id: idx,
     mixture: idx === 0 ? 'Inferior' : idx === 1 ? 'Intermediária' : idx === 2 ? 'Superior' : '',
-    gmmInitialN: arr.percentageGmmInitialN,
-    gmmNMax: Number(arr.percentageGmmMaxN).toFixed(2),
-    gmmNProj: arr.percentageGmmProjectN,
-    expectedVam: Number(arr.porcentageVam).toFixed(2),
-    specificMass: Number(arr.specificMass).toFixed(2),
-    absorbedWater: Number(arr.percentWaterAbs).toFixed(2),
+    gmmInitialN: arr?.percentageGmmInitialN,
+    gmmNMax: Number(arr?.percentageGmmMaxN).toFixed(2),
+    gmmNProj: arr?.percentageGmmProjectN,
+    expectedVam: Number(arr?.porcentageVam).toFixed(2),
+    specificMass: Number(arr?.specificMass).toFixed(2),
+    absorbedWater: Number(arr?.percentWaterAbs).toFixed(2),
   }));
 
   const expectedParamsRows = [
     {
       id: 0,
       mixture: 'Inferior',
-      expectedPli: data.table3.table3Lower.expectedPliLower?.toFixed(2),
-      expectedPercentageGmmInitialN: data.table3.table3Lower.expectedPercentageGmmInitialNLower?.toFixed(2),
-      expectedPercentageGmmMaxN: data.table3.table3Lower.expectedPercentageGmmMaxNLower?.toFixed(2),
-      expectedRBV: data.table3.table3Lower.expectedRBVLower?.toFixed(2),
-      expectedVam: data.table3.table3Lower.expectedVamLower?.toFixed(2),
-      expectedRatioDustAsphalt: data.table3.table3Lower.expectedRatioDustAsphaltLower,
+      expectedPli: data.table3?.table3Lower.expectedPliLower?.toFixed(2),
+      expectedPercentageGmmInitialN: data.table3?.table3Lower.expectedPercentageGmmInitialNLower?.toFixed(2),
+      expectedPercentageGmmMaxN: data.table3?.table3Lower.expectedPercentageGmmMaxNLower?.toFixed(2),
+      expectedRBV: data.table3?.table3Lower.expectedRBVLower?.toFixed(2),
+      expectedVam: data.table3?.table3Lower.expectedVamLower?.toFixed(2),
+      expectedRatioDustAsphalt: data.table3?.table3Lower.expectedRatioDustAsphaltLower,
     },
     {
       id: 1,
       mixture: 'Intermediária',
-      expectedPli: data.table3.table3Average.expectedPliAverage?.toFixed(2),
-      expectedPercentageGmmInitialN: data.table3.table3Average.expectedPercentageGmmInitialNAverage?.toFixed(2),
-      expectedPercentageGmmMaxN: data.table3.table3Average.expectedPercentageGmmMaxNAverage?.toFixed(2),
-      expectedRBV: data.table3.table3Average.expectedRBVAverage?.toFixed(2),
-      expectedVam: data.table3.table3Average.expectedVamAverage?.toFixed(2),
-      expectedRatioDustAsphalt: data.table3.table3Average.expectedRatioDustAsphaltAverage,
+      expectedPli: data.table3?.table3Average.expectedPliAverage?.toFixed(2),
+      expectedPercentageGmmInitialN: data.table3?.table3Average.expectedPercentageGmmInitialNAverage?.toFixed(2),
+      expectedPercentageGmmMaxN: data.table3?.table3Average.expectedPercentageGmmMaxNAverage?.toFixed(2),
+      expectedRBV: data.table3?.table3Average.expectedRBVAverage?.toFixed(2),
+      expectedVam: data.table3?.table3Average.expectedVamAverage?.toFixed(2),
+      expectedRatioDustAsphalt: data.table3?.table3Average.expectedRatioDustAsphaltAverage,
     },
     {
       id: 2,
       mixture: 'Superior',
-      expectedPli: data.table3.table3Higher.expectedPliHigher?.toFixed(2),
-      expectedPercentageGmmInitialN: data.table3.table3Higher.expectedPercentageGmmInitialNHigher?.toFixed(2),
-      expectedPercentageGmmMaxN: data.table3.table3Higher.expectedPercentageGmmMaxNHigher?.toFixed(2),
-      expectedRBV: data.table3.table3Higher.expectedRBVHigher?.toFixed(2),
-      expectedVam: data.table3.table3Higher.expectedVamHigher?.toFixed(2),
-      expectedRatioDustAsphalt: data.table3.table3Higher.expectedRatioDustAsphaltHigher,
+      expectedPli: data.table3?.table3Higher.expectedPliHigher?.toFixed(2),
+      expectedPercentageGmmInitialN: data.table3?.table3Higher.expectedPercentageGmmInitialNHigher?.toFixed(2),
+      expectedPercentageGmmMaxN: data.table3?.table3Higher.expectedPercentageGmmMaxNHigher?.toFixed(2),
+      expectedRBV: data.table3?.table3Higher.expectedRBVHigher?.toFixed(2),
+      expectedVam: data.table3?.table3Higher.expectedVamHigher?.toFixed(2),
+      expectedRatioDustAsphalt: data.table3?.table3Higher.expectedRatioDustAsphaltHigher,
     },
   ];
 
@@ -365,26 +365,30 @@ const Superpave_Step7 = ({
             rows={calculatedCurvesRows}
           />
 
-          <Typography>{t('asphalt.dosages.superpave.volumetric-graphs')}</Typography>
+          <Box style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <Typography variant="h5" style={{ width: '100%', textAlign: 'center' }}>
+              {t('asphalt.dosages.superpave.volumetric-graphs')}
+            </Typography>
 
-          <Typography>{t('asphalt.dosages.superpave.lower-curve')}</Typography>
-          <GraphStep6 data={data.table4.table4Lower.data} />
+            <Typography variant="h6">{t('asphalt.dosages.superpave.lower-curve')}</Typography>
+            <GraphStep6 data={data.table4?.table4Lower.data} />
 
-          <Typography>{t('asphalt.dosages.superpave.average-curve')}</Typography>
-          <GraphStep6 data={data.table4.table4Average.data} />
+            <Typography variant="h6">{t('asphalt.dosages.superpave.average-curve')}</Typography>
+            <GraphStep6 data={data.table4?.table4Average.data} />
 
-          <Typography>{t('asphalt.dosages.superpave.higher-curve')}</Typography>
-          <GraphStep6 data={data.table4.table4Higher.data} />
+            <Typography variant="h6">{t('asphalt.dosages.superpave.higher-curve')}</Typography>
+            <GraphStep6 data={data.table4?.table4Higher.data} />
 
-          <DataGrid
-            hideFooter
-            disableColumnMenu
-            disableColumnFilter
-            experimentalFeatures={{ columnGrouping: true }}
-            columnGroupingModel={expectedParamsGroupings}
-            columns={expectedParamsCols}
-            rows={expectedParamsRows}
-          />
+            <DataGrid
+              hideFooter
+              disableColumnMenu
+              disableColumnFilter
+              experimentalFeatures={{ columnGrouping: true }}
+              columnGroupingModel={expectedParamsGroupings}
+              columns={expectedParamsCols}
+              rows={expectedParamsRows}
+            />
+          </Box>
 
           <Box sx={{ width: '100%' }}>
             <Typography>{t('asphalt.dosages.superpave.choose-curve')}</Typography>
