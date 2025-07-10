@@ -37,7 +37,6 @@ const Superpave_Step5 = ({
   // const [binderData, setBinderData] = useState<AsphaltMaterialData>();
   const [rows, setRows] = useState([]);
   const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
-  console.log('🚀 ~ estimatedPercentageRows:', estimatedPercentageRows);
   const compositions = ['inferior', 'intermediaria', 'superior'];
   const [materialNames, setMaterialNames] = useState<{ _id: string; name: string; type: string }[]>([]);
   const [activateSecondFetch, setActivateSecondFetch] = useState(false);
@@ -185,10 +184,20 @@ const Superpave_Step5 = ({
   };
 
   const modalMaterialInputs = generateMaterialInputs(
-    data.materials.filter((material) => material.type?.includes('Aggregate') || material.type?.includes('filler'))
+    data.materials.filter((material) => material?.type?.includes('Aggregate') || material?.type?.includes('filler'))
   );
 
-  const handleModalSubmit = () => {
+  /**
+   * Handles the submission process for calculating the maximum mixture density (DMT) and
+   * the maximum compacted density (DMM) for the asphalt mixture. It triggers a toast
+   * notification indicating the status of the calculation process. On successful
+   * calculation, it updates the data store with the new maximum specific gravity and a
+   * list of specific gravities, and closes the DMT modal.
+   *
+   * @async
+   * @throws Will throw an error if the calculation fails.
+   */
+  const handleSubmitSpecificMasses = () => {
     toast.promise(
       async () => {
         try {
@@ -198,34 +207,34 @@ const Superpave_Step5 = ({
             granulometryCompositionData,
             data
           );
-          console.log('🚀 ~ response:', response);
 
-          const updatedRows = response.granulometryComposition.map((e, i) => ({
-            id: i,
-            granulometricComposition: compositions[i],
-            combinedGsb: e.combinedGsb ? e.combinedGsb.toFixed(2) : '',
-            combinedGsa: e.combinedGsa ? e.combinedGsa.toFixed(2) : '',
-            gse: e.gse || e.gse === 0 ? e.gse.toFixed(2) : '',
+          const updatedRows = response.granulometryComposition.map((composition, index) => ({
+            id: index,
+            granulometricComposition: compositions[index],
+            combinedGsb: composition.combinedGsb ? composition.combinedGsb.toFixed(2) : '',
+            combinedGsa: composition.combinedGsa ? composition.combinedGsa.toFixed(2) : '',
+            gse: composition.gse || composition.gse === 0 ? composition.gse.toFixed(2) : '',
           }));
 
           setRows(updatedRows);
 
-          let prevData = { ...data };
-          prevData = {
-            ...prevData,
+          const updatedData = {
+            ...data,
             granulometryComposition: response.granulometryComposition,
             turnNumber: response.turnNumber,
           };
 
-          const updatedPercentageRows = response.granulometryComposition.map((e, i) => {
-            const row = {
-              id: i,
-              granulometricComposition: compositions[i],
-              initialBinder: e.pli?.toFixed(2),
+          setData({ step: 4, value: updatedData });
+
+          const updatedPercentageRows = response.granulometryComposition.map((composition, index) => {
+            const row: Record<string, string | number> = {
+              id: index,
+              granulometricComposition: compositions[index],
+              initialBinder: composition.pli?.toFixed(2),
             };
 
-            e.percentsOfDosageWithBinder.forEach((percent, index) => {
-              row[`material_${index + 1}`] = percent?.toFixed(2);
+            composition.percentsOfDosageWithBinder.forEach((percent, materialIndex) => {
+              row[`material_${materialIndex + 1}`] = percent?.toFixed(2);
             });
 
             return row;
@@ -233,7 +242,6 @@ const Superpave_Step5 = ({
 
           setEstimatedPercentageRows(updatedPercentageRows);
 
-          setData({ step: 4, value: prevData });
           setLoading(false);
           setSpecificMassModalIsOpen(false);
           setNewInitialBinderModalIsOpen(false);
@@ -276,8 +284,8 @@ const Superpave_Step5 = ({
     },
   ];
 
-  const createEstimatedPercentageCols = () => {
-    const baseCols: GridColDef[] = [
+  const createEstimatedPercentageColumns = (): GridColDef[] => {
+    const baseColumns: GridColDef[] = [
       {
         field: 'granulometricComposition',
         headerName: t('asphalt.dosages.superpave.granulometric-composition'),
@@ -292,24 +300,26 @@ const Superpave_Step5 = ({
       },
     ];
 
-    const aggregates = granulometryEssayData.materials?.filter((material) => material.type.includes('Aggregate'));
+    const aggregateMaterials = granulometryEssayData.materials?.filter(({ type }) => type.includes('Aggregate'));
 
-    const materialCols = aggregates?.map((aggregate, index) => ({
+    const materialColumns = aggregateMaterials?.map((material, index) => ({
       field: `material_${index + 1}`,
-      headerName: aggregate.name,
+      headerName: material.name,
       valueFormatter: ({ value }) => `${value}`,
       width: 100,
     }));
 
-    if (Array.isArray(materialCols) && materialCols.length > 0) {
-      return [...baseCols, ...materialCols];
-    } else {
-      return [];
-    }
+    return materialColumns ? [...baseColumns, ...materialColumns] : [];
   };
 
-  const estimatedPercentageCols = createEstimatedPercentageCols();
+  const estimatedPercentageCols = createEstimatedPercentageColumns();
 
+  /**
+   * Creates a grouping model for the estimated percentage table columns.
+   * This function is used to group the columns into a single group with the header
+   * "Materials Estimated Percentage".
+   * @returns {GridColumnGroupingModel} The grouping model for the estimated percentage table columns.
+   */
   const createEstimatedPercentageGroupingModel = (): GridColumnGroupingModel => {
     const baseColumnChildren = [{ field: 'granulometricComposition' }, { field: 'initialBinder' }];
 
@@ -395,23 +405,32 @@ const Superpave_Step5 = ({
     }
   }, [data.materials]);
 
-  const handleInitialBinderSubmit = () => {
-    const updatedEstimatedPercentageRows = estimatedPercentageRows.map((row) => ({
-      ...row,
-      initialBinder: binderInput,
-    }));
-
-    const updatedGranulometryComposition = data.granulometryComposition.map((row) => ({
-      ...row,
-      pli: binderInput,
-    }));
-
-    setEstimatedPercentageRows(updatedEstimatedPercentageRows);
+  /**
+   * Updates the estimated percentage rows and granulometry composition data
+   * with the specified initial binder value.
+   *
+   * @param {number} initialBinder - The initial binder value to be set for each row.
+   */
+  const updateRowsWithInitialBinder = (initialBinder: number) => {
+    setEstimatedPercentageRows(
+      estimatedPercentageRows.map((row) => ({
+        ...row,
+        initialBinder,
+      }))
+    );
     setData({
       step: 4,
       key: 'granulometryComposition',
-      value: updatedGranulometryComposition,
+      value: data.granulometryComposition.map((row) => ({
+        ...row,
+        pli: initialBinder,
+      })),
     });
+  };
+
+  const handleInitialBinderSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    updateRowsWithInitialBinder(data.binderInput);
     setNewInitialBinderModalIsOpen(false);
   };
 
@@ -493,7 +512,7 @@ const Superpave_Step5 = ({
           }}
           open={specificMassModalIsOpen}
           size={'medium'}
-          onSubmit={handleModalSubmit}
+          onSubmit={handleSubmitSpecificMasses}
           oneButton={true}
           singleButtonTitle="Confirmar"
         >

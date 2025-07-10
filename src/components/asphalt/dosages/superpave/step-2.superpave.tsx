@@ -14,18 +14,13 @@ import GranulometryRow from './functionalComponents/granulometryTableRow';
 const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const data = useSuperpaveStore((state) => state.granulometryEssayData);
   const setData = useSuperpaveStore((state) => state.setData);
-
   const myRef = useRef<any>({});
 
-  const aggregatesRows = data.granulometrys
-    .map((granul) => ({ ...granul }))
-    .filter(
-      ({ material }) => material.type !== 'asphaltBinder' && material.type !== 'CAP' && material.type !== 'other'
-    );
-
-  const [materialMassInputs, setMaterialMassInputs] = useState<number[]>(
-    aggregatesRows.map((row) => row.material_mass || 0)
+  const aggregatesRows = data.granulometrys.filter(
+    ({ material }) => material.type !== 'asphaltBinder' && material.type !== 'CAP' && material.type !== 'other'
   );
+
+  const [materialMassInputs, setMaterialMassInputs] = useState(aggregatesRows.map((row) => row.material_mass || 0));
 
   const initialRows = useMemo(() => {
     if (!data.viscosity?.dataPoints) return [];
@@ -70,16 +65,10 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
       field: 'passant',
       headerName: t('granulometry-asphalt.passant'),
       renderCell: ({ row }) => {
-        if (!aggregatesRows) {
-          return;
-        }
-
+        if (!aggregatesRows) return;
         const { sieve_label, material } = row;
-
         const rowIndex = data.materials.findIndex((mat) => mat._id === material?._id);
-
         const sieve_index = aggregatesRows[rowIndex]?.table_data.findIndex((r) => r.sieve_label === sieve_label);
-
         return (
           <InputEndAdornment
             fullWidth
@@ -91,7 +80,6 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
             onChange={(e) => {
               if (e.target.value === null) return;
               const newRows = [...aggregatesRows];
-
               const mass = data.granulometrys[rowIndex]?.material_mass;
               const validMass = isNaN(mass) ? 0 : mass;
               const input_passant = isNaN(Number(e.target.value)) ? 0 : Number(e.target.value);
@@ -100,9 +88,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
               let current_passant = input_passant;
               if (sieve_index > 0) {
                 const previous_passant = newRows[rowIndex].table_data[sieve_index - 1]?.passant ?? 100;
-                if (current_passant > previous_passant) {
-                  current_passant = previous_passant;
-                }
+                if (current_passant > previous_passant) current_passant = previous_passant;
               } else {
                 if (current_passant > 100) current_passant = 100;
               }
@@ -161,13 +147,10 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
       field: 'retained',
       headerName: t('granulometry-asphalt.retained'),
       renderCell: ({ row }) => {
-        if (!aggregatesRows) {
-          return;
-        }
+        if (!aggregatesRows) return;
         const { sieve_label, material } = row;
         const rowIndex = data.materials.findIndex((mat) => mat._id === material?._id);
         const sieve_index = aggregatesRows[rowIndex]?.table_data.findIndex((r) => r.sieve_label === sieve_label);
-
         return (
           <InputEndAdornment
             fullWidth
@@ -185,7 +168,6 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
               const newRows = [...aggregatesRows];
               const mass = data.granulometrys[rowIndex].material_mass;
               const current_retained = Number(e.target.value);
-
               const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
               const initial_retained = current_retained;
               const current_accumulative_retained = currentRows.reduce(
@@ -201,7 +183,6 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
               setData({ step: 1, key: 'passant', value: newRows });
 
               const nextRows = sieve_index > 0 ? newRows.slice(sieve_index) : [...aggregatesRows];
-
               const new_current_accumulative_retained = current_accumulative_retained - current_retained;
 
               nextRows.map(function (item, index) {
@@ -209,7 +190,6 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
 
                 if (index > 0) {
                   const currentRows = nextRows.slice(0, index + 1);
-
                   const initial_retained = new_current_accumulative_retained;
                   const accumulative_retained = currentRows.reduce(
                     (accumulator: number, current_value) => accumulator + current_value[sieve_index]?.retained,
@@ -274,7 +254,6 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
             value={localViscosity}
             onChange={(e) => {
               const value = Number(e.target.value);
-
               setBinderInputs((prev) =>
                 prev.map((input) => (input.id === row.id ? { ...input, viscosity: value } : input))
               );
@@ -284,7 +263,6 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
               const updatedDataPoints = data.viscosity.dataPoints.map((dp) =>
                 dp.id === row.id ? { ...dp, viscosity: value } : dp
               );
-
               setData({
                 step: 1,
                 key: 'viscosity',
@@ -304,12 +282,9 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
     setNextDisabled(true);
     const hasCoarseAggregate = data.materials.some((material) => material.type === 'coarseAggregate');
     const hasFineAggregate = data.materials.some((material) => material.type === 'fineAggregate');
-    // const hasFiller = data.materials.some((material) => material.type === 'filler');
     const hasBinder = data.materials.some((material) => material.type === 'asphaltBinder' || material.type === 'CAP');
 
-    if (hasCoarseAggregate && hasFineAggregate && hasBinder) {
-      setNextDisabled(false);
-    }
+    if (hasCoarseAggregate && hasFineAggregate && hasBinder) setNextDisabled(false);
   }, [data.materials]);
 
   const handleErase = () => {
@@ -350,9 +325,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
 
   const handleClickedMaterial = (row) => {
     const targetRef = myRef.current[row.name];
-    if (targetRef) {
-      targetRef.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (targetRef) targetRef.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (

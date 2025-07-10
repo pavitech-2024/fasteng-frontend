@@ -73,13 +73,11 @@ class Superpave_SERVICE implements IEssayService {
         case 1:
           await this.validateGranulometryEssayData(data as SuperpaveData);
           await this.calculateGranulometryEssayData(data as SuperpaveData, isConsult);
-          // inserir o submit desses dados
           break;
         case 2:
           await this.submitGranulometryEssayData(data as SuperpaveData, this.userId, null, isConsult);
         case 3:
           await this.getGranulometricCompositionData(data as SuperpaveData, this.userId, isConsult);
-          // await this.submitGranulometricComposition(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 4:
           if (isConsult) {
@@ -88,8 +86,7 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitGranulometryComposition(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 5:
-          // const { materialSelectionData } = data as SuperpaveData;
-          await this.getStep5SpecificMasses(data as SuperpaveData['granulometryEssayData'], isConsult);
+          await this.getStep5SpecificMasses(data as SuperpaveData, this.userId, null, isConsult);
           await this.submitInitialBinder(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 6:
@@ -127,7 +124,7 @@ class Superpave_SERVICE implements IEssayService {
           throw t('errors.invalid-step');
       }
     } catch (error) {
-      if (step < 10) {
+      if (step < 12) {
         throw error;
       }
     }
@@ -454,9 +451,10 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  getStep5SpecificMasses = async (step2Data: SuperpaveData['granulometryEssayData'], isConsult?): Promise<any> => {
+  getStep5SpecificMasses = async (SuperpaveData: SuperpaveData, userId, user, isConsult?): Promise<any> => {
     try {
-      const { materials } = step2Data;
+      const { granulometryEssayData: { materials } } = SuperpaveData;
+      console.log("🚀 ~ Superpave_SERVICE ~ getStep5SpecificMasses= ~ materials:", materials)
 
       const response = await Api.post(`${this.info.backend_path}/step-5-specific-masses`, {
         materials,

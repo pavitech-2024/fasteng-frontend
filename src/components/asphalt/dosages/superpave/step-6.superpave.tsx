@@ -140,7 +140,7 @@ const Superpave_Step6 = ({
         const index = data[curve].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'cm'}
+            adornment={'g'}
             type="number"
             value={data[curve][index]?.dryMass}
             onChange={(e) => {
@@ -161,7 +161,7 @@ const Superpave_Step6 = ({
         const index = data[curve].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'cm'}
+            adornment={'g'}
             type="number"
             value={data[curve][index]?.submergedMass}
             onChange={(e) => {
@@ -182,7 +182,7 @@ const Superpave_Step6 = ({
         const index = data[curve].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'cm'}
+            adornment={'g'}
             type="number"
             value={data[curve][index]?.drySurfaceSaturatedMass}
             onChange={(e) => {
@@ -203,7 +203,7 @@ const Superpave_Step6 = ({
         const index = data[curve].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'cm'}
+            adornment={'N'}
             type="number"
             value={data[curve][index]?.waterTemperatureCorrection}
             onChange={(e) => {
@@ -370,10 +370,11 @@ const Superpave_Step6 = ({
       async () => {
         try {
           const response = await superpave.calculateGmm(data);
+          console.log("🚀 ~ response:", response)
 
           //todo: tipar esse any
           Object.values(response).forEach((e: any, i) => {
-            if (e !== 0) {
+            if (e.gmm !== 0) {
               const index = data.riceTest.findIndex((e) => e.curve === Object.keys(response)[i]);
               const arr = [...data.riceTest];
               arr[index].gmm = e.gmm;
@@ -413,7 +414,20 @@ const Superpave_Step6 = ({
     setRiceTestModalIsOpen(true);
   };
 
-  nextDisabled && setNextDisabled(false);
+  useEffect(() => {
+    // Verifica se todos os valores de GMM foram preenchidos pelo Rice Test
+    const isRiceTestFinished = data.riceTest.every(({ gmm }) => gmm !== 0);
+
+    // Verifica se todos os inputs de todas as curvas foram preenchidos
+    const isCurvesComplete = [
+      data.inferiorRows,
+      data.intermediariaRows,
+      data.superiorRows,
+    ].every((rows) => rows.every(({ dryMass }) => dryMass !== null));
+
+    // Atualiza o estado de nextDisabled se uma das condições acima for verdadeira
+    setNextDisabled(!(isRiceTestFinished || isCurvesComplete));
+  }, [data.inferiorRows, data.intermediariaRows, data.riceTest, data.superiorRows]);
 
   return (
     <>
@@ -532,6 +546,7 @@ const Superpave_Step6 = ({
                     adornment={input.adornment}
                     label={input.label}
                     value={input.value}
+                    type='number'
                     fullWidth
                     onChange={(e) => {
                       const value = e.target.value;
@@ -550,6 +565,7 @@ const Superpave_Step6 = ({
                 variant="standard"
                 label={t('asphalt.dosages.superpave.water-temperature-dropdown')}
                 options={waterTemperatureList}
+                value={{ value: data.riceTest?.find((obj) => obj.curve === actualCurve)?.temperatureOfWater, label: '' }}
                 callback={(selectedValue) => {
                   const prevData = [...data.riceTest];
                   const index = prevData.findIndex((obj) => obj.curve === actualCurve);

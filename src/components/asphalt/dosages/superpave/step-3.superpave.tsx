@@ -12,12 +12,9 @@ import { useEffect, useState } from 'react';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 
 const Superpave_Step3 = ({
-  nextDisabled,
   setNextDisabled,
-  superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const { granulometryResultsData: data } = useSuperpaveStore();
-
   const [granulometryData, setGranulometryData] = useState([]);
   const [materialsToShow, setMaterialToShow] = useState([]);
 
@@ -27,42 +24,6 @@ const Superpave_Step3 = ({
   }));
 
   aggregatesCheckboxes?.push({ name: data.viscosity?.material.name, type: data.viscosity?.material.type });
-
-  const granulometryRows = [];
-
-  const granulometryColumns: GridColDef[] = [
-    {
-      field: 'sieve',
-      headerName: t('granulometry-asphalt.sieves'),
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'passant_porcentage',
-      headerName: t('granulometry-asphalt.passant') + ' (%)',
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'passant',
-      headerName: t('granulometry-asphalt.passant') + ' (g)',
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'retained_porcentage',
-      headerName: t('granulometry-asphalt.retained') + ' (%)',
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'retained',
-      headerName: t('granulometry-asphalt.retained') + ' (g)',
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'accumulated_retained',
-      headerName: t('granulometry-asphalt.accumulated-retained') + ' (%)',
-      valueFormatter: ({ value }) => `${value}`,
-    },
-  ];
-  
 
   useEffect(() => {
     const newGranulometryData = data.granulometrys?.map((gran) => ({

@@ -627,16 +627,7 @@ const initialState = {
         gmb: null,
       },
     },
-    riceTest: [
-      {
-        curve: null,
-        drySampleMass: null,
-        waterSampleMass: null,
-        waterSampleContainerMass: null,
-        gmm: 0,
-        temperatureOfWater: null,
-      },
-    ],
+    riceTest: [],
   },
   firstCurvePercentagesData: {
     table1: {
