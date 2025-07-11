@@ -26,6 +26,7 @@ const Superpave_Step7 = ({
     firstCompressionData,
     setData,
   } = useSuperpaveStore();
+    console.log("🚀 ~ data:", data)
 
   const [renderTable3, setRenderTable3] = useState(false);
 
@@ -131,7 +132,7 @@ const Superpave_Step7 = ({
       gmmNProj:
         data.table1?.expectedPorcentageGmmProjectN !== null ? data.table1?.expectedPorcentageGmmProjectN : '---',
       expectedVam: data.table1?.expectedVam !== null ? data.table1?.expectedVam : '---',
-      p_a: data.table1?.expectedRBV_Lower !== null ? data.table1?.expectedRBV_Lower : '---',
+      p_a: '0,6 - 1,2',
     },
   ];
 
@@ -167,7 +168,7 @@ const Superpave_Step7 = ({
       width: 130,
     },
     {
-      field: 'p/a',
+      field: 'p_a',
       headerName: 'P/A (%)',
       valueFormatter: ({ value }) => `${value}`,
       width: 130,
@@ -196,7 +197,7 @@ const Superpave_Step7 = ({
         { field: 'gmmNProj' },
         { field: 'gmmNMax' },
         { field: 'expectedVam' },
-        { field: 'p/a' },
+        { field: 'p_a' },
         { field: 'specificMass' },
         { field: 'absorbedWater' },
       ],
@@ -211,6 +212,7 @@ const Superpave_Step7 = ({
     gmmNMax: Number(arr?.percentageGmmMaxN).toFixed(2),
     gmmNProj: arr?.percentageGmmProjectN,
     expectedVam: Number(arr?.porcentageVam).toFixed(2),
+    p_a: Number(arr?.ratioDustAsphalt).toFixed(2),
     specificMass: Number(arr?.specificMass).toFixed(2),
     absorbedWater: Number(arr?.percentWaterAbs).toFixed(2),
   }));
@@ -224,7 +226,7 @@ const Superpave_Step7 = ({
       expectedPercentageGmmMaxN: data.table3?.table3Lower.expectedPercentageGmmMaxNLower?.toFixed(2),
       expectedRBV: data.table3?.table3Lower.expectedRBVLower?.toFixed(2),
       expectedVam: data.table3?.table3Lower.expectedVamLower?.toFixed(2),
-      expectedRatioDustAsphalt: data.table3?.table3Lower.expectedRatioDustAsphaltLower,
+      p_a: data.table3?.table3Lower.expectedRatioDustAsphaltLower,
     },
     {
       id: 1,
@@ -234,7 +236,7 @@ const Superpave_Step7 = ({
       expectedPercentageGmmMaxN: data.table3?.table3Average.expectedPercentageGmmMaxNAverage?.toFixed(2),
       expectedRBV: data.table3?.table3Average.expectedRBVAverage?.toFixed(2),
       expectedVam: data.table3?.table3Average.expectedVamAverage?.toFixed(2),
-      expectedRatioDustAsphalt: data.table3?.table3Average.expectedRatioDustAsphaltAverage,
+      p_a: data.table3?.table3Average.expectedRatioDustAsphaltAverage,
     },
     {
       id: 2,
@@ -244,7 +246,7 @@ const Superpave_Step7 = ({
       expectedPercentageGmmMaxN: data.table3?.table3Higher.expectedPercentageGmmMaxNHigher?.toFixed(2),
       expectedRBV: data.table3?.table3Higher.expectedRBVHigher?.toFixed(2),
       expectedVam: data.table3?.table3Higher.expectedVamHigher?.toFixed(2),
-      expectedRatioDustAsphalt: data.table3?.table3Higher.expectedRatioDustAsphaltHigher,
+      p_a: data.table3?.table3Higher.expectedRatioDustAsphaltHigher,
     },
   ];
 
@@ -268,7 +270,7 @@ const Superpave_Step7 = ({
       width: 160,
     },
     {
-      field: 'p/a',
+      field: 'p_a',
       headerName: t('asphalt.dosages.expected-pa'),
       valueFormatter: ({ value }) => `${value}`,
       width: 160,

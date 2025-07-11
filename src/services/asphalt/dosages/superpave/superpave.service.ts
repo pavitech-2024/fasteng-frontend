@@ -647,6 +647,7 @@ class Superpave_SERVICE implements IEssayService {
     step5Data: SuperpaveData['firstCompressionData'],
     isConsult?
   ): Promise<any> => {
+    console.log("🚀 ~ Superpave_SERVICE ~ step4Data:", step4Data)
     try {
       const { nominalSize, chosenCurves, porcentagesPassantsN200, percentageInputs } = step3Data;
       const { turnNumber, binderSpecificMass, granulometryComposition: binderCompositions } = step4Data;
@@ -662,8 +663,8 @@ class Superpave_SERVICE implements IEssayService {
         nominalSize,
         turnNumber,
         chosenCurves,
-        binderSpecificGravity: binderSpecificMass,
         porcentagesPassantsN200,
+        binderSpecificGravity: binderSpecificMass,
         riceTest,
         maximumDensity: densities,
         binderCompositions,
@@ -925,9 +926,20 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  getSecondCompressionPercentages = async (step8Data: SuperpaveData['secondCompressionData']): Promise<any> => {
+  getSecondCompressionPercentages = async (
+    firstCurvePercentagesData: SuperpaveData['firstCurvePercentagesData'],
+    secondCompressionData: SuperpaveData['secondCompressionData']
+  ): Promise<any> => {
     try {
-      const { expectedPli, composition } = step8Data;
+      const { selectedCurve, table3 } = firstCurvePercentagesData;
+      const { composition } = secondCompressionData;
+
+      const expectedPli =
+        selectedCurve === 'lower'
+          ? table3.table3Lower.expectedPliLower
+          : selectedCurve === 'average'
+          ? table3.table3Average.expectedPliAverage
+          : table3.table3Higher.expectedPliHigher;
 
       const response = await Api.post(`${this.info.backend_path}/get-second-compression-percentage-data`, {
         expectedPli,

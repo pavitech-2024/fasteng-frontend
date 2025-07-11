@@ -17,6 +17,7 @@ const Superpave_Step10 = ({
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const {
+    firstCurvePercentagesData,
     secondCompressionData,
     secondCompressionPercentagesData: data,
     setData,
@@ -38,7 +39,7 @@ const Superpave_Step10 = ({
             data: resData,
             success,
             error,
-          } = await superpave.getSecondCompressionPercentages(secondCompressionData);
+          } = await superpave.getSecondCompressionPercentages(firstCurvePercentagesData, secondCompressionData);
 
           if (success) {
             const newData = { ...data, ...resData };

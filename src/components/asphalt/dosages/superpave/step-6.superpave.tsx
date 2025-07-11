@@ -520,7 +520,13 @@ const Superpave_Step6 = ({
             title={t('asphalt.dosages.superpave.calculate-rice-test')}
             leftButtonTitle={t('materials.template.cancel')}
             rightButtonTitle={t('asphalt.dosages.superpave.confirm')}
-            onCancel={() => setRiceTestModalIsOpen(false)}
+            onCancel={() => {
+              const prevData = [...data.riceTest];
+              const index = prevData.findIndex((obj) => obj.curve === actualCurve);
+              prevData.splice(index, 1);
+              setData({ step: 5, key: 'riceTest', value: prevData });
+              setRiceTestModalIsOpen(false)
+            } }
             open={riceTestModalIsOpen}
             size={'larger'}
             onSubmit={() => {
