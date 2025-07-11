@@ -1,5 +1,5 @@
 import { SpecifyMassIcon } from '@/assets';
-import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { AsphaltMaterial, Materials } from '@/interfaces/asphalt';
 import { AdhesivenessActions, AdhesivenessData } from '@/stores/asphalt/adhesiveness/adhesiveness.store';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import Api from '@/api';
@@ -50,12 +50,10 @@ class ADHESIVENESS_SERVICE implements IEssayService {
 
   /** @generalData Methods for general-data (step === 0, page 1) */
   // get all materials from user from backend
-  getMaterialsByUserId = async (userId: string): Promise<AsphaltMaterial[]> => {
+  getMaterialsByUserId = async (userId: string): Promise<Materials> => {
     try {
       const { data } = await Api.get(`/asphalt/materials/all/${userId}`);
-
-      //filtrando apenas os materiais de tipo "coarseAggregate"
-      return data.filter((material) => material.type === 'coarseAggregate');
+      return data;
     } catch (error) {
       throw error;
     }

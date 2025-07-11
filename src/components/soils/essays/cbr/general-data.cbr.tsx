@@ -21,7 +21,7 @@ const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps 
       async () => {
         const samples = await cbr.getSamplesByUserId(user._id);
 
-        setSamples(samples);
+        setSamples(samples[0].materials);
         setLoading(false);
       },
       {

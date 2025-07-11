@@ -23,9 +23,9 @@ const ShapeIndex_GeneralData = ({
   useEffect(() => {
     toast.promise(
       async () => {
-        const materials = await shapeIndex.getmaterialsByUserId(user._id);
+        const data = await shapeIndex.getmaterialsByUserId(user._id);
 
-        const filteredMaterials = materials.filter(
+        const filteredMaterials = data[0].materials.filter(
           (material) => material.type === 'coarseAggregate' || material.type === 'fineAggregate'
         );
 
