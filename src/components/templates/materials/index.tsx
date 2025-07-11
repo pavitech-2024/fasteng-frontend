@@ -99,25 +99,6 @@ const MaterialsTemplate = ({
     { id: 'actions', label: t('materials.template.actions'), width: '25%' },
   ];
 
- /*************  ✨ Windsurf Command 🌟  *************/
- /*const options = [
-    { label: t('materials.template.name'), value: 'name' },
-    { label: t('materials.template.type'), value: 'type' },
-     /*{ label: t('materials.template.mix'), value: 'mix' },
-    { label: t('materials.template.stretch'), value: 'stretch' },
- ];*/
- 
-/*  if (path.includes('asphalt')) {
-    options.push(
-      { label: t('materials.template.mix'), value: 'mix' },
-      { label: t('materials.template.stretch'), value: 'stretch' },
-    );
-  console.log('path', path);
-  if(path.includes('asphalt')){
-    options.push({ label: t('materials.template.mix'), value: 'mix' });
-    options.push({ label: t('materials.template.stretch'), value: 'stretch' });
-  }*/
-
     const options = [
   { label: t('materials.template.name'), value: 'name' },
   { label: t('materials.template.type'), value: 'type' },
@@ -168,10 +149,7 @@ if (isAsphaltPath) {
     _id,
     name,
     type,
-    //createdAt
     createdAt: createdAt instanceof Date ? createdAt : new Date(createdAt) 
-    
-    
   }))
   .filter((material) => {
     if (!searchValue) return true;
@@ -220,7 +198,8 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
   }))
 
   useEffect(() => {
-    //let newData: any[] = [];
+    console.log("Testando o searchBy", searchBy);
+    console.log("Testando o filteredData", filteredData);
     if (searchBy === 'stretch') {
       // Combina FWD e IGG quando "stretch" for selecionado
       setTableData([...fwdEssaysData, ...iggEssaysData]);
@@ -228,10 +207,6 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
       setTableData([...rtcdEssaysData, ...dduiEssaysData]);  // Mostra SOMENTE ensaios RTCD e DDUI (mistura)
     } else if (searchBy === 'name') {
       // Mostra TUDO (materiais + todos ensaios)
-      console.log("igg", iggEssaysData);
-      console.log("fwd", fwdEssaysData);
-      console.log("rtcd", rtcdEssaysData);
-      console.log("ddui", dduiEssaysData);
       const newData = fwdEssaysData || iggEssaysData.length > 0 || rtcdEssaysData || dduiEssaysData ? 
        [...filteredData, ...fwdEssaysData, ...iggEssaysData, ...rtcdEssaysData, ...dduiEssaysData] : filteredData;
        console.log("Testando o newData", newData);
@@ -244,7 +219,7 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
       setTableData(filteredData);
     }
     //setTableData(newData);
-  }, [searchBy]);
+  }, [searchBy, materials]);
 
     console.log("Filtro exemplo",filteredData);
     console.log("Teste" ,materials)
