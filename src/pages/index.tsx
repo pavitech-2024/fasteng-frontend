@@ -216,7 +216,6 @@ const Login: NextPage = () => {
             bottom: '0',
           }}
         >
-<<<<<<< HEAD
           <Box
             sx={{
               display: 'flex',
@@ -235,119 +234,118 @@ const Login: NextPage = () => {
               bottom: { desktop: 'auto', mobile: '15vh' },
             }}
           >
-=======
-          {roxIsRunning ? (
->>>>>>> 7f12cf5f2e99f9d77e1e8d2cd322fcb422582dad
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                p: { desktop: '2vh 0 1vh', notebook: '3vh 0 2vh', mobile: '2vh 0 1vh' },
-                borderRadius: '0.5rem',
-                width: { desktop: '30vw', mobile: '80vw' },
-                maxWidth: { desktop: '600px', notebook: '500px', mobile: '600px' },
-                height: { ultrawide: '30vh', desktop: '34vh', notebook: '30vh', mobile: '32vh' },
-                maxHeight: { desktop: '280px', notebook: '410px', mobile: '280px' },
-                bgcolor: 'primaryTons.background',
-                position: { desktop: 'static', mobile: 'absolute' },
-                zIndex: { desktop: 'auto', mobile: '3' },
-                bottom: { desktop: 'auto', mobile: '15vh' },
-                boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.25)',
-              }}
-            >
+            {roxIsRunning ? (
               <Box
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  justifyContent: 'space-around',
-                  height: '70%',
-                  width: '100%',
-                  gap: '10px',
-                  padding: { mobile: '10px 0 0 0' },
+                  justifyContent: 'space-between',
+                  p: { desktop: '2vh 0 1vh', notebook: '3vh 0 2vh', mobile: '2vh 0 1vh' },
+                  borderRadius: '0.5rem',
+                  width: { desktop: '30vw', mobile: '80vw' },
+                  maxWidth: { desktop: '600px', notebook: '500px', mobile: '600px' },
+                  height: { ultrawide: '30vh', desktop: '34vh', notebook: '30vh', mobile: '32vh' },
+                  maxHeight: { desktop: '280px', notebook: '410px', mobile: '280px' },
+                  bgcolor: 'primaryTons.background',
+                  position: { desktop: 'static', mobile: 'absolute' },
+                  zIndex: { desktop: 'auto', mobile: '3' },
+                  bottom: { desktop: 'auto', mobile: '15vh' },
+                  boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.25)',
                 }}
               >
-                <TextField
-                  label="Email"
-                  variant="outlined"
-                  value={email}
-                  placeholder={t('login.email placeholder')}
+                <Box
                   sx={{
-                    width: '85%',
-                    bgcolor: 'primaryTons.white',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'space-around',
+                    height: '70%',
+                    width: '100%',
+                    gap: '10px',
+                    padding: { mobile: '10px 0 0 0' },
                   }}
-                  inputProps={{
-                    style: { height: '7px' },
-                  }}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  InputLabelProps={{ shrink: true }}
-                />
-                <TextField
-                  variant="outlined"
-                  label={t('login.password')}
-                  placeholder={t('login.password placeholder')}
-                  //type="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  sx={{
-                    width: '85%',
-                    bgcolor: 'primaryTons.white',
-                  }}
-                  inputProps={{
-                    style: { height: '7px' },
-                  }}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  InputLabelProps={{ shrink: true }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={() => setShowPassword(!showPassword)}
-                          edge="end"
-                          size="small"
-                        >
-                          {showPassword ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Box>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-around',
-                  alignItems: 'center',
-                  height: '28%',
-                  width: '100%',
-                }}
-              >
-                <Button
-                  text={t('login.enter')}
-                  disabled={password === '' || email === '' || loading}
-                  handleClick={() => handleLogin()}
-                />
-
-                <ButtonBase
-                  onClick={() => setModalIsOpen(true)}
-                  sx={{ color: 'primary.main', fontSize: { desktop: '1rem', mobile: '0.85rem' } }}
                 >
-                  {t('login.forget password')}
-                </ButtonBase>
+                  <TextField
+                    label="Email"
+                    variant="outlined"
+                    value={email}
+                    placeholder={t('login.email placeholder')}
+                    sx={{
+                      width: '85%',
+                      bgcolor: 'primaryTons.white',
+                    }}
+                    inputProps={{
+                      style: { height: '7px' },
+                    }}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    InputLabelProps={{ shrink: true }}
+                  />
+                  <TextField
+                    variant="outlined"
+                    label={t('login.password')}
+                    placeholder={t('login.password placeholder')}
+                    //type="password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    sx={{
+                      width: '85%',
+                      bgcolor: 'primaryTons.white',
+                    }}
+                    inputProps={{
+                      style: { height: '7px' },
+                    }}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    InputLabelProps={{ shrink: true }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={() => setShowPassword(!showPassword)}
+                            edge="end"
+                            size="small"
+                          >
+                            {showPassword ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-around',
+                    alignItems: 'center',
+                    height: '28%',
+                    width: '100%',
+                  }}
+                >
+                  <Button
+                    text={t('login.enter')}
+                    disabled={password === '' || email === '' || loading}
+                    handleClick={() => handleLogin()}
+                  />
+
+                  <ButtonBase
+                    onClick={() => setModalIsOpen(true)}
+                    sx={{ color: 'primary.main', fontSize: { desktop: '1rem', mobile: '0.85rem' } }}
+                  >
+                    {t('login.forget password')}
+                  </ButtonBase>
+                </Box>
               </Box>
-            </Box>
-          ) : (
-            <Box sx={{}}>
-              <Image src="/favicon.ico" width={200} height={200} alt="" />
-              <Typography>{t('home.maintenance')}</Typography>
-            </Box>
-          )}
+            ) : (
+              <Box sx={{}}>
+                <Image src="/favicon.ico" width={200} height={200} alt="" />
+                <Typography>{t('home.maintenance')}</Typography>
+              </Box>
+            )}
+          </Box>
 
           <Box
             sx={{
