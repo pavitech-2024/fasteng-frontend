@@ -26,8 +26,8 @@ const Marshall_Step2 = ({
     toast.promise(
       async () => {
         try {
-          const materials = await marshall.getMaterialsByUserId(user._id);
-          setMaterials(materials);
+          const data = await marshall.getmaterialsByUserId(user._id);
+          setMaterials(data[0].materials);
           setLoading(false);
         } catch (error) {
           setMaterials([]);

@@ -3,6 +3,7 @@ import { UnitMassActions, UnitMassData } from '@/stores/concrete/unitMass/unitMa
 import Api from '@/api';
 import { UnitMassIcon } from '@/assets';
 import { t } from 'i18next';
+import { ConcreteMaterial } from '@/interfaces/concrete';
 
 class UNITMASS_SERVICE implements IEssayService {
   info = {
@@ -67,6 +68,18 @@ class UNITMASS_SERVICE implements IEssayService {
       const { success, error } = response.data;
 
       if (success === false) throw error.name;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /** @generalData Methods for general-data (step === 0, page 1) */
+  // get all materials from user from backend
+  getmaterialsByUserId = async (userId: string): Promise<ConcreteMaterial> => {
+    try {
+      const { data } = await Api.get(`/concrete/materials/all/${userId}`);
+
+      return data;
     } catch (error) {
       throw error;
     }

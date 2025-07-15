@@ -7,12 +7,13 @@ import materialsService from '@/services/asphalt/asphalt-materials.service';
 import ModalBase from '@/components/molecules/modals/modal';
 import { Box, TextField } from '@mui/material';
 import { Sieve } from '@/interfaces/common';
+import { MaterialsProps } from '@/pages/asphalt/materials';
 
 interface CreateEditMaterialModalProps {
   openModal: boolean;
   handleCloseModal: () => void;
   updateMaterials: () => void;
-  materials: AsphaltMaterial[];
+  materials: MaterialsProps[];
   materialToEdit?: AsphaltMaterial;
   isEdit: boolean;
 }
@@ -181,7 +182,7 @@ const CreateEditMaterialModal = ({
   const validateMaterialData = () => {
     if (material.name === '') throw 'Material name cannot be empty';
     if (material.type === null) throw 'Material type cannot be empty';
-    if (materials.find((m) => m.name === material.name)) throw 'A material with the same name already exists!';
+    if (materials[0].materials.find((m) => m.name === material.name)) throw 'A material with the same name already exists!';
     if (material.type === 'CAP' && material.description.classification_CAP === null)
       throw 'CAP classification cannot be empty';
     if (material.type === 'asphaltBinder' && material.description.classification_AMP === null)

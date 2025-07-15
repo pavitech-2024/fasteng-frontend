@@ -52,7 +52,7 @@ class ViscosityRotational_SERVICE implements IEssayService {
     }
   };
 
-  getmaterialsByUserId = async (userId: string): Promise<AsphaltMaterial[]> => {
+  getmaterialsByUserId = async (userId: string): Promise<AsphaltMaterial> => {
     try {
       const response = await Api.get(`asphalt/materials/all/${userId}`);
       return response.data;
