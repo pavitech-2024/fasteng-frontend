@@ -12,10 +12,7 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const Superpave_Step9 = ({
-  setNextDisabled,
-  superpave,
-}: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+const Superpave_Step9 = ({ setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const {
     secondCompressionData: data,
@@ -342,6 +339,7 @@ const Superpave_Step9 = ({
     toast.promise(
       async () => {
         try {
+          console.log('chegou aqui');
           const response = await superpave.confirmSecondCompression(
             data,
             granulometryCompositionData,
@@ -371,12 +369,9 @@ const Superpave_Step9 = ({
   };
 
   useEffect(() => {
-    const allTablesAreComplete = [
-      data.halfLess,
-      data.halfPlus,
-      data.onePlus,
-      data.normal,
-    ].every((table) => table.every((row) => Object.values(row).every((value) => value !== null)));
+    const allTablesAreComplete = [data.halfLess, data.halfPlus, data.onePlus, data.normal].every((table) =>
+      table.every((row) => Object.values(row).every((value) => value !== null))
+    );
 
     if (allTablesAreComplete) {
       setNextDisabled(false);
@@ -533,6 +528,8 @@ const Superpave_Step9 = ({
                             const prevData = [...data.maximumDensities];
                             const newData = { ...prevData[idx], insertedGmm: parseFloat(value) };
                             prevData[idx] = newData;
+                            console.log('🚀 ~ prevData:', prevData);
+
                             setData({ step: 8, value: { ...data, maximumDensities: prevData } });
                           }}
                         />

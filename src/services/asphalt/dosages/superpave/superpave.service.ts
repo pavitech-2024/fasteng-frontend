@@ -836,21 +836,24 @@ class Superpave_SERVICE implements IEssayService {
       normal,
       onePlus,
     };
+    console.log("🚀 ~ Superpave_SERVICE ~ composition:", composition)
 
     let combinedGsb;
     let selectedPercentsOfDosage;
     let selectedGse;
 
-    const hasNullValues = maximumDensities.some(
-      (e) => e.insertedGmm === null && Object.values(e.riceTest).some((i) => i === null)
-    );
+    // const hasNullValues = maximumDensities.some(
+    //   (e) => e.insertedGmm === null && Object.entries(e.riceTest).some(([key, value]) => key === 'gmm' && value === null)
+    // );
+    // console.log("🚀 ~ Superpave_SERVICE ~ hasNullValues:", hasNullValues)
 
-    if (hasNullValues) throw t('errors.empty-gmm');
+    // if (hasNullValues) throw t('errors.empty-gmm');
 
     const formattedCurveName = `${selectedCurve.charAt(0).toUpperCase() + selectedCurve.slice(1)}`;
     const propertyName = `table3${formattedCurveName}`;
     const expectedPli = table3[propertyName][`expectedPli${formattedCurveName}`];
 
+    console.log("🚀 ~ Superpave_SERVICE ~ expectedPli:", expectedPli)
     if (selectedCurve === 'lower') {
       combinedGsb = granulometryComposition[0].combinedGsb;
       selectedGse = granulometryComposition[0].gse;
@@ -868,8 +871,10 @@ class Superpave_SERVICE implements IEssayService {
     }
 
     const percentsOfDosageValues = Object.values(selectedPercentsOfDosage).map((value) => Number(value));
+    console.log("🚀 ~ Superpave_SERVICE ~ percentsOfDosageValues:", percentsOfDosageValues)
 
     try {
+      console.log("chegou qui");
       const response = await Api.post(`${this.info.backend_path}/confirm-second-compression-data`, {
         composition,
         binderSpecificGravity: binderSpecificMass,

@@ -27,7 +27,12 @@ const Superpave_Step5 = ({
 
   const [specificMassModalIsOpen, setSpecificMassModalIsOpen] = useState(true);
   const [newInitialBinderModalIsOpen, setNewInitialBinderModalIsOpen] = useState(false);
-  const [binderInput, setBinderInput] = useState();
+  const [binderInput, setBinderInput] = useState(
+    granulometryCompositionData.chosenCurves.map((curve) => ({
+      curve,
+      value: 0,
+    }))
+  );
 
   const { user } = useAuth();
 
@@ -222,7 +227,6 @@ const Superpave_Step5 = ({
           setData({ step: 4, value: updatedData });
 
           const updatedPercentageRows = response.granulometryComposition.map((composition, index) => {
-
             const row: Record<string, string | number> = {
               id: index,
               granulometricComposition: compositions[index],
@@ -408,11 +412,12 @@ const Superpave_Step5 = ({
    *
    * @param {number} initialBinder - The initial binder value to be set for each row.
    */
-  const updateRowsWithInitialBinder = (initialBinder: number) => {
+  const updateRowsWithInitialBinder = (initialBinder: { curve: string; value: number }[]) => {
+    console.log("🚀 ~ updateRowsWithInitialBinder ~ initialBinder:", initialBinder)
     setEstimatedPercentageRows(
       estimatedPercentageRows.map((row) => ({
         ...row,
-        initialBinder,
+        initialBinder: initialBinder.find((obj) => obj.curve === row.granulometricComposition)?.value,
       }))
     );
     setData({
@@ -427,7 +432,7 @@ const Superpave_Step5 = ({
 
   const handleInitialBinderSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    updateRowsWithInitialBinder(data.binderInput);
+    updateRowsWithInitialBinder(binderInput);
     setNewInitialBinderModalIsOpen(false);
   };
 
@@ -547,6 +552,38 @@ const Superpave_Step5 = ({
                   </Box>
                 </>
               ))}
+
+              <Box>
+                <Typography component={'h3'} sx={{ marginTop: '2rem' }}>
+                  {data.materials.find((material) => material.type === 'asphaltBinder' || material.type === 'CAP').name}
+                </Typography>
+                <InputEndAdornment
+                  type="number"
+                  adornment="g/cm2"
+                  value={
+                    data.materials.find((material) => material.type === 'asphaltBinder' || material.type === 'CAP')
+                      .realSpecificMass !== 0 ||
+                    data.materials.find((material) => material.type === 'asphaltBinder' || material.type === 'CAP')
+                      .realSpecificMass !== null
+                      ? data.materials.find((material) => material.type === 'asphaltBinder' || material.type === 'CAP')
+                          .realSpecificMass
+                      : '1,03'
+                  }
+                  label="Massa especifica do ligante"
+                  placeholder="Insira a massa específicia do ligante"
+                  fullWidth
+                  onChange={(e) => {
+                    const materialIndex = data.materials.findIndex((i) => i.type === 'asphaltBinder' || 'CAP');
+                    const newData = [...data.materials];
+                    newData[materialIndex].realSpecificMass = parseFloat(e.target.value.replace(',', '.'));
+                    setData({
+                      step: 4,
+                      key: `materials`,
+                      value: newData,
+                    });
+                  }}
+                />
+              </Box>
             </Box>
           </Box>
         </ModalBase>
@@ -565,19 +602,30 @@ const Superpave_Step5 = ({
         onSubmit={handleInitialBinderSubmit}
         oneButton={false}
       >
-        <InputEndAdornment
-          adornment="%"
-          value={binderInput}
-          placeholder={t('asphalt.dosages.superpave.initial_binder')}
-          fullWidth
-          onChange={(e) => {
-            setData({
-              step: 4,
-              key: `binderInput`,
-              value: Number(e.target.value),
-            });
-          }}
-        />
+        <Box style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {granulometryCompositionData.chosenCurves.map((curve, idx) => {
+            const curveName = curve === 'lower' ? 'inferior' : curve === 'average' ? 'intermediária' : 'superior';
+            return (
+              <Box key={idx}>
+                <Typography>{'Curva' + ' ' + curveName}</Typography>
+                <InputEndAdornment
+                  adornment="%"
+                  value={binderInput[curve] || ''}
+                  placeholder={t('asphalt.dosages.superpave.initial_binder')}
+                  fullWidth
+                  onChange={(e) => {
+                    setBinderInput({ ...binderInput, [curve]: e.target.value });
+                    setData({
+                      step: 4,
+                      key: `binderInput`,
+                      value: Number(e.target.value),
+                    });
+                  }}
+                />
+              </Box>
+            );
+          })}
+        </Box>
       </ModalBase>
     </>
   );

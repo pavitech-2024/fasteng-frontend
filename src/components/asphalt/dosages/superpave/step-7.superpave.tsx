@@ -26,7 +26,6 @@ const Superpave_Step7 = ({
     firstCompressionData,
     setData,
   } = useSuperpaveStore();
-    console.log("🚀 ~ data:", data)
 
   const [renderTable3, setRenderTable3] = useState(false);
 
