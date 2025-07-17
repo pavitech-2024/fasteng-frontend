@@ -30,12 +30,13 @@ import { IggData } from '@/stores/asphalt/igg/igg.store';
 import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
 import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
 
+
 interface MaterialsTemplateProps {
   materials: any[] | undefined;
   fwdEssays?: FwdData[] | undefined;
   iggEssays?: IggData[] | undefined;
-  rtcdEssays?: RtcdData[] | undefined;
   dduiEssays?: DduiData[] | undefined;
+  rtcdEssays?: RtcdData[] | undefined;
   types: DropDownOption[];
   title: 'Amostras Cadastradas' | 'Materiais Cadastrados';
   path?: string;
@@ -76,6 +77,7 @@ const MaterialsTemplate = ({
   const app = useRouter().pathname.split('/')[1];
   let samplesOrMaterials: string;
 
+
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
   const [searchBy, setSearchBy] = useState<string>('name');
@@ -97,19 +99,23 @@ const MaterialsTemplate = ({
     { id: 'actions', label: t('materials.template.actions'), width: '25%' },
   ];
 
-  const options = [
-    { label: t('materials.template.name'), value: 'name' },
-    { label: t('materials.template.type'), value: 'type' },
-  ];
+    const options = [
+  { label: t('materials.template.name'), value: 'name' },
+  { label: t('materials.template.type'), value: 'type' },
+];
 
-  if (path.includes('asphalt')) {
-    options.push(
-      { label: t('materials.template.mix'), value: 'mix' },
-      { label: t('materials.template.stretch'), value: 'stretch' }
-    );
-  }
+// Adiciona apenas uma vez, se o path tiver "asphalt"
+const isAsphaltPath = path?.includes('asphalt');
+if (isAsphaltPath) {
+  options.push(
+    { label: t('materials.template.mix'), value: 'mix' },
+    { label: t('materials.template.stretch'), value: 'stretch' },
+  );
+}
 
-  const translateType = (type: string) => {
+
+/*******  b8f77572-72b8-4e11-aeb0-6b9fe12308cf  *******/
+ const translateType = (type: string) => {
     switch (type) {
       case 'inorganicSoil':
         return t('samples.inorganicSoil');
@@ -139,74 +145,89 @@ const MaterialsTemplate = ({
   }, [searchBy]);
 
   const filteredData = (Array.isArray(materials[0].materials) ? materials[0].materials : [])
-    .map(({ _id, name, type, createdAt }) => ({
-      _id,
-      name,
-      type,
-      createdAt: createdAt instanceof Date ? createdAt : new Date(createdAt),
-    }))
-    .filter((material) => {
-      if (!searchValue) return true;
+  .map(({ _id, name, type, createdAt }) => ({
+    _id,
+    name,
+    type,
+    createdAt: createdAt instanceof Date ? createdAt : new Date(createdAt) 
+  }))
+  .filter((material) => {
+    if (!searchValue) return true;
+    
+    if (searchBy === 'name') {
+      return material.name.toLowerCase().includes(searchValue.toLowerCase());
+    }
+    if (searchBy === 'type') {
+      return material.type === searchValue;
+    }
+    return true;
+  });
 
-      switch (searchBy) {
-        case 'name':
-          return material.name.toLowerCase().includes(searchValue.toLowerCase());
-        case 'type':
-          return material.type === searchValue;
-        default:
-          return true;
-      }
-    });
+  console.log("Testando filtro de nome", filteredData);
 
-  const essaysData = [
-    ...(fwdEssays?.map(({ _id, generalData }) => ({
-      _id,
-      name: generalData.name,
-      type: 'FWD',
-      createdAt: generalData.createdAt,
-    })) ?? []),
-    ...(rtcdEssays?.map(({ _id, generalData }) => ({
-      _id,
-      name: generalData.name,
-      type: 'RTCD',
-      createdAt: generalData.createdAt,
-    })) ?? []),
-    ...(dduiEssays?.map(({ _id, generalData }) => ({
-      _id,
-      name: generalData.name,
-      type: 'DDUI',
-      createdAt: generalData.createdAt,
-    })) ?? []),
-    ...(Array.isArray(iggEssays) ? iggEssays : []).map(({ _id, generalData }) => ({
-      _id,
-      name: generalData.name,
-      type: 'IGG',
-      createdAt: generalData.createdAt,
-    })),
-  ];
+  const fwdEssaysData = fwdEssays?.map(({_id, generalData }) => ({
+    name: generalData.name,
+    type: 'FWD',
+    //createdAt: generalData.createdAt,
+    createdAt: generalData.createdAt instanceof Date ? generalData.createdAt : new Date(generalData.createdAt),
+    _id: _id
+  }))
+  console.log("testando o fwdEssayData", fwdEssaysData);
+
+  const iggEssaysData = (Array.isArray(iggEssays) ? iggEssays: []).map(({_id, generalData}) =>
+  ({
+    name: generalData.name,
+    type: 'IGG',
+    createdAt: generalData.createdAt,
+    _id: _id
+  }))
+
+  const rtcdEssaysData = rtcdEssays?.map((essay)=> ({
+  _id: essay._id,
+  name: essay.generalData.name,
+  type: 'RTCD',
+  createdAt: essay.createdAt
+}));
+
+
+const dduiEssaysData = dduiEssays?.map((essay) => ({
+    name: essay.generalData.name,
+    type: 'FWD',
+    createdAt: essay.createdAt,
+    _id: essay._id
+  }))
 
   useEffect(() => {
-    let newData;
-
-    switch (searchBy) {
-      case 'stretch':
-        newData = essaysData.filter((essay) => essay.type === 'FWD' || essay.type === 'IGG');
-        break;
-      case 'mix':
-        newData = essaysData.filter((essay) => essay.type === 'RTCD' || essay.type === 'DDUI');
-        break;
-      case 'name':
-        newData = [...filteredData, ...essaysData];
-        break;
-      default:
-        newData = filteredData;
+    console.log("Testando o searchBy", searchBy);
+    console.log("Testando o filteredData", filteredData);
+    if (searchBy === 'stretch') {
+      // Combina FWD e IGG quando "stretch" for selecionado
+      setTableData([...fwdEssaysData, ...iggEssaysData]);
+    } else if (searchBy === 'mix') {
+      setTableData([...rtcdEssaysData, ...dduiEssaysData]);  // Mostra SOMENTE ensaios RTCD e DDUI (mistura)
+    } else if (searchBy === 'name') {
+      // Mostra TUDO (materiais + todos ensaios)
+      const newData = fwdEssaysData || iggEssaysData.length > 0 || rtcdEssaysData || dduiEssaysData ? 
+       [...filteredData, ...fwdEssaysData, ...iggEssaysData, ...rtcdEssaysData, ...dduiEssaysData] : filteredData;
+       console.log("Testando o newData", newData);
+    setTableData(
+      newData
+    );
     }
-    setTableData(newData);
-  }, [searchBy]);
+    else {
+      // Caso padrão (nome ou tipo)
+      setTableData(filteredData);
+    }
+    //setTableData(newData);
+  }, [searchBy, materials]);
 
+    console.log("Filtro exemplo",filteredData);
+    console.log("Teste" ,materials)
   const handleEditMaterial = (rowId: string) => {
     editMaterial(rowId);
   };
+
+  
 
   return (
     <>
@@ -262,14 +283,14 @@ const MaterialsTemplate = ({
       {modal}
 
       {/*Page */}
-      <Box
-        sx={{
+      {/**Coloquei o header abaixo como comentário para remover o título "Materiais cadastrados"*/}
+      {/*<Header title={`${title}`} />*/}
+      <Box sx={{ 
+          //p: { mobile: '0 4vw', notebook: '0 6vw' }, 
           p: { mobile: '2rem 4vw 0', notebook: '2rem 6vw 0' },
-          mb: '4vw',
-          width: '100%',
-          maxWidth: '1800px',
-        }}
-      >
+          mb: '4vw', 
+          width: '100%', 
+          maxWidth: '1800px' }}>
         <Box
           sx={{
             display: 'flex',
@@ -288,14 +309,21 @@ const MaterialsTemplate = ({
               width: '55%',
             }}
           >
-            <DropDown
-              label={t('materials.template.searchBy')}
-              options={options}
-              callback={setSearchBy}
-              size="small"
-              sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
-              value={options.find((option) => option.value === searchBy) || options[0]} // Dinâmico baseado em searchBy
-            />
+
+          <DropDown
+            label={t('materials.template.searchBy')}
+            /*/*tions={[
+              { label: t('materials.template.name'), value: 'name' },
+              { label: t('materials.template.type'), value: 'type' },
+              { label: t('materials.template.mix'), value: 'mix' },
+              { label: t('materials.template.stretch'), value: 'stretch' },
+            ]}*/
+            options={options}
+            callback={setSearchBy}
+            size="small"
+            sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
+            value={options.find(option => option.value === searchBy) || options[0]} // Dinâmico baseado em searchBy
+          />
             {searchBy === 'name' && (
               <Search
                 sx={{
@@ -403,14 +431,21 @@ const MaterialsTemplate = ({
                       <TableCell key={column.id} align="center">
                         {column.id === 'name' && row.name}
                         {column.id === 'type' && (
-                          <>
-                            {row.type === 'FWD' && 'FWD'}
-                            {row.type === 'IGG' && 'IGG'}
-                            {row.type === 'RTCD' && 'RTCD'}
-                            {row.type === 'DDUI' && 'DDUI'}
-                            {!['FWD', 'IGG', 'RTCD', 'DDUI'].includes(row.type) && translateType(row.type)}
+                           <>
+                          {row.type === 'FWD' && 'FWD'}
+                          {row.type === 'IGG' && 'IGG'}
+                          {row.type === 'RTCD' && 'RTCD'}
+                          {row.type === 'DDUI' && 'DDUI'}
+                          {!['FWD', 'IGG', 'RTCD', 'DDUI'].includes(row.type) && translateType(row.type)}
                           </>
                         )}
+                       {/* {column.id === 'type' && (
+                          <>
+                            {row.type === 'FWD'}
+                            {row.type === 'IGG'}
+                            {!['FWD', 'IGG'].includes(row.type) && translateType(row.type)}
+                          </>
+                        )*/}
 
                         {column.id === 'createdAt' && formatDate(row.createdAt)}
                         {column.id === 'actions' && (
@@ -464,12 +499,10 @@ const MaterialsTemplate = ({
           </TableContainer>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
             <Pagination
-              count={Math.ceil(tableData.length / rowsPerPage)} // Usa tableData em vez de filteredData
+              count={Math.ceil(tableData.length / rowsPerPage)}  // Usa tableData em vez de filteredData
               size="small"
-              disabled={tableData.length <= rowsPerPage} // Desabilita se houver apenas 1 página
+              disabled={tableData.length <= rowsPerPage}  // Desabilita se houver apenas 1 pág
               onChange={(event, value) => setPage(value - 1)}
-              showFirstButton
-              showLastButton
             />
           </Box>
         </Paper>
@@ -478,4 +511,5 @@ const MaterialsTemplate = ({
   );
 };
 
+//};
 export default MaterialsTemplate;

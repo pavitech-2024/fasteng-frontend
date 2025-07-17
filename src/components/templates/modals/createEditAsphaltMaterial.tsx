@@ -8,11 +8,12 @@ import ModalBase from '@/components/molecules/modals/modal';
 import { Box, TextField } from '@mui/material';
 import { Sieve } from '@/interfaces/common';
 import { useRouter } from 'next/router';
+import { MaterialsProps } from '@/pages/asphalt/materials';
 
 interface CreateEditMaterialModalProps {
   openModal: boolean;
   handleCloseModal: () => void;
-  materials: AsphaltMaterial[];
+  materials: MaterialsProps[] | AsphaltMaterial[];
   isEdit: boolean;
   materialToEdit?: AsphaltMaterial;
   updateMaterials?: () => void;
@@ -193,21 +194,13 @@ const CreateEditMaterialModal = ({
   };
 
   const validateMaterialData = () => {
-    if (material.name === '') {
-      throw new Error('Material name cannot be empty');
-    }
-    if (material.type === null) {
-      throw new Error('Material type cannot be empty');
-    }
-    if (materials.find((m) => m.name === material.name)) {
-      throw new Error('asphalt.materials.materialWithSameName');
-    }
-    if (material.type === 'CAP' && material.description.classification_CAP === null) {
-      throw new Error('CAP classification cannot be empty');
-    }
-    if (material.type === 'asphaltBinder' && material.description.classification_AMP === null) {
-      throw new Error('AMP classification cannot be empty');
-    }
+    if (material.name === '') throw 'Material name cannot be empty';
+    if (material.type === null) throw 'Material type cannot be empty';
+    // if (!material.name) throw 'A material with the same name already exists!';
+    if (material.type === 'CAP' && material.description.classification_CAP === null)
+      throw 'CAP classification cannot be empty';
+    if (material.type === 'asphaltBinder' && material.description.classification_AMP === null)
+      throw 'AMP classification cannot be empty';
   };
 
   const handleEditMaterial = async () => {

@@ -463,9 +463,8 @@ const Superpave_Step6 = ({
               const curveName =
                 curve === 'lower' ? 'inferiorRows' : curve === 'average' ? 'intermediariaRows' : 'superiorRows';
               return (
-                <Box>
+                <Box key={index}>
                   <DataGrid
-                    key={index}
                     columns={generateColumns(curveName).map((column) => ({
                       ...column,
                       disableColumnMenu: true,
@@ -525,8 +524,8 @@ const Superpave_Step6 = ({
               const index = prevData.findIndex((obj) => obj.curve === actualCurve);
               prevData.splice(index, 1);
               setData({ step: 5, key: 'riceTest', value: prevData });
-              setRiceTestModalIsOpen(false)
-            } }
+              setRiceTestModalIsOpen(false);
+            }}
             open={riceTestModalIsOpen}
             size={'larger'}
             onSubmit={() => {

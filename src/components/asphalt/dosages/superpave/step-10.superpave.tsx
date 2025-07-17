@@ -25,7 +25,7 @@ const Superpave_Step10 = ({
     granulometryEssayData,
   } = useSuperpaveStore();
 
-  const aggregateMaterials = granulometryEssayData.materials?.filter(
+  const aggregateMaterials = granulometryEssayData[0].materials?.filter(
     ({ type }) => type.includes('Aggregate') || type.includes('filler')
   );
   

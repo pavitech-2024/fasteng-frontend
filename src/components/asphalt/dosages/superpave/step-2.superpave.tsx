@@ -13,6 +13,7 @@ import GranulometryRow from './functionalComponents/granulometryTableRow';
 
 const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const data = useSuperpaveStore((state) => state.granulometryEssayData);
+  console.log('🚀 ~ constSuperpave_Step2= ~ data:', data);
   const setData = useSuperpaveStore((state) => state.setData);
   const myRef = useRef<any>({});
 
@@ -53,7 +54,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
         viscosity: localInput?.viscosity ?? point.viscosity,
       };
     });
-  }, [binderInputs, data.viscosity?.dataPoints]);
+  }, [data.viscosity?.dataPoints]);
 
   const aggregatesColumns: GridColDef[] = [
     {
@@ -277,6 +278,8 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
       },
     },
   ];
+
+  console.log('🚀 ~ constSuperpave_Step2= ~ binderColumns:', binderColumns);
 
   useEffect(() => {
     setNextDisabled(true);

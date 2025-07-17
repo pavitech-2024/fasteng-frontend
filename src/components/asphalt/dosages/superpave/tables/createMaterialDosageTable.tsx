@@ -28,7 +28,7 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
   const handleDeleteMaterial = async (id: string) => {
     const prevData = { ...data };
 
-    const updatedMaterials = prevData.materials.filter((material) => material._id !== id);
+    const updatedMaterials = prevData[0].materials.filter((material) => material._id !== id);
     const updatedGranulometrys = prevData.granulometrys.filter((gran) => gran.material._id !== id);
     const updatedViscosity = null;
     try {
@@ -42,7 +42,7 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
     } catch (error) {
       console.error('Failed to delete material:', error);
 
-      if (prevData.materials.some((material) => material._id === id)) {
+      if (prevData[0].materials.some((material) => material._id === id)) {
         setData({ step: 1, key: 'materials', value: updatedMaterials });
       }
 
