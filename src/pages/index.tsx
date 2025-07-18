@@ -20,7 +20,7 @@ import { TextField, Box, Container, Typography, ButtonBase } from '@mui/material
 import { JbrAnchor, LepAnchor } from '@/components/atoms/anchor/loginAnchors';
 import axios from 'axios';
 import ModalBase from '@/components/molecules/modals/modal';
-import Api from '@/api';
+import Api, { isLocalHost, isTest } from '@/api';
 
 import { IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -72,6 +72,11 @@ const Login: NextPage = () => {
     };
     handleHealthCheck();
   }, []);
+
+  useEffect(() => {
+    console.log("isTest", isTest);
+    console.log("islocalHost", isLocalHost);
+  },[])
 
   /**
    * Function to handle forgot password

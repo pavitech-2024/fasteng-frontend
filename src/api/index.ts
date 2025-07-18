@@ -1,8 +1,10 @@
 import Axios from 'axios';
 
 //.env
-const isLocalHost = process.env.NODE_ENV === 'development';
-const isTest = process.env.NODE_ENV === 'test';
+export const isLocalHost = process.env.NODE_ENV === 'development';
+console.log("🚀 ~ isLocalHost:", isLocalHost)
+export const isTest = process.env.NODE_ENV === 'test';
+console.log("🚀 ~ isTest:", isTest)
 
 const [localhost, test, prod] = [
   'http://localhost:8080',

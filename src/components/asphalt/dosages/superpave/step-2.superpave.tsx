@@ -18,18 +18,17 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
 
   const myRef = useRef<any>({});
 
-  const aggregatesRows = data.granulometrys
-    .map((granul) => ({ ...granul }))
+  const aggregatesRows = data.granulometrys?.map((granul) => ({ ...granul }))
     .filter(
       ({ material }) => material.type !== 'asphaltBinder' && material.type !== 'CAP' && material.type !== 'other'
     );
 
   const [materialMassInputs, setMaterialMassInputs] = useState<number[]>(
-    aggregatesRows.map((row) => row.material_mass || 0)
+    aggregatesRows?.map((row) => row.material_mass || 0)
   );
 
   const initialRows = useMemo(() => {
-    return data.viscosity?.dataPoints.map((point) => ({
+    return data.viscosity?.dataPoints?.map((point) => ({
       id: point.id,
       temperature: point.temperature,
       viscosity: point.viscosity,
@@ -45,7 +44,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
   });
 
   const binderRows = useMemo(() => {
-    return data.viscosity?.dataPoints.map((point) => {
+    return data.viscosity?.dataPoints?.map((point) => {
       const localInput = binderInputs?.find((input) => input.id === point.id);
       return {
         id: point.id,
@@ -199,7 +198,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
 
               const new_current_accumulative_retained = current_accumulative_retained - current_retained;
 
-              nextRows.map(function (item, index) {
+              nextRows?.map(function (item, index) {
                 const row = item;
 
                 if (index > 0) {
@@ -214,7 +213,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
                   const passant =
                     Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
 
-                  newRows.map((e) => {
+                  newRows?.map((e) => {
                     if (e[sieve_index].sieve_label === row[rowIndex].table_data[sieve_index].sieve_label) {
                       e[sieve_index].passant = passant;
                       e[sieve_index].retained = accumulative_retained;
@@ -271,12 +270,12 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
               const value = Number(e.target.value);
 
               setBinderInputs((prev) =>
-                prev.map((input) => (input.id === row.id ? { ...input, viscosity: value } : input))
+                prev?.map((input) => (input.id === row.id ? { ...input, viscosity: value } : input))
               );
             }}
             onBlur={(e) => {
               const value = Number(e.target.value);
-              const updatedDataPoints = data.viscosity.dataPoints.map((dp) =>
+              const updatedDataPoints = data.viscosity.dataPoints?.map((dp) =>
                 dp.id === row.id ? { ...dp, viscosity: value } : dp
               );
 
@@ -362,7 +361,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
 
       {aggregatesRows.length > 0 &&
         data.materials.length > 0 &&
-        aggregatesRows.map((row, idx) => (
+        aggregatesRows?.map((row, idx) => (
           <GranulometryRow
             key={idx}
             idx={idx}
@@ -395,7 +394,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
             showColumnVerticalBorder
             slots={{ footer: ExpansionToolbar }}
             rows={initialRows}
-            columns={binderColumns.map((column) => ({
+            columns={binderColumns?.map((column) => ({
               ...column,
               sortable: false,
               disableColumnMenu: true,
