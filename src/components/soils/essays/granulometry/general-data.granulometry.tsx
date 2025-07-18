@@ -24,6 +24,7 @@ const SoilsGranulometry_GeneralData = ({
     toast.promise(
       async () => {
         const samples = await granulometry.getSamplesByUserId(user._id);
+        console.log("🚀 ~ samples:", samples)
 
         setSamples(samples[0].materials);
         setLoading(false);
@@ -115,7 +116,7 @@ const SoilsGranulometry_GeneralData = ({
                     key={input.key}
                     variant="standard"
                     label={input.label}
-                    options={samples.map((sample: SoilSample) => {
+                    options={samples?.map((sample: SoilSample) => {
                       return { label: sample.name + ' | ' + t(`${'samples.' + sample.type}`), value: sample };
                     })}
                     value={defaultValue}

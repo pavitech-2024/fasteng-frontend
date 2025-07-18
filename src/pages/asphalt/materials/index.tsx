@@ -35,25 +35,17 @@ const Materials = () => {
   const [rtcdEssays, setRtcdEssays] = useState<RtcdData[]>([]);
   const [stretchEssays, setStretchEssays] = useState<any[]>([]);
   const [dduiEssays, setDduiEssays] = useState<DduiData[]>([]);
-
-  console.log("testando o Materials", materials);
-
   const { user } = useAuth();
-
-  console.log('Testando o undefined', rtcdEssays);
 
   useEffect(() => {
     materialsService
       .getMaterialsByUserId(user._id)
       .then((response) => {
-        console.log(response.data);
         setMaterials(response.data);
         setLoading(false);
         console.log('Testando o response.data', response.data);
-        setFwdEssays(response.data[0].fwdEssays); // semMaterial = response.data[0].fwdEssays;
-        //console.log("Testando o semMaterial", semMaterial);
+        setFwdEssays(response.data[0].fwdEssays);
         setIggEssays(response.data[0].iggEssays);
-        console.log('Testando o rtcd mistura', response.data[0].rtcdEssays);
         setRtcdEssays(response.data[0].rtcdEssays);
         setStretchEssays([...response.data[0].fwdEssays, ...response.data[0].iggEssays]);
         setDduiEssays(response.data[0].dduiEssays);
@@ -66,7 +58,6 @@ const Materials = () => {
   const types: DropDownOption[] = [{ label: t('samples.all'), value: '' }];
 
   const handleDeleteMaterial = async (id: string) => {
-    console.log("Testando o id", id);
     try {
       await materialsService.deleteMaterial(id);
       // deleta a amostra do estado

@@ -115,7 +115,7 @@ const ConcreteGranulometry_GeneralData = ({
                     key={input.key}
                     variant="standard"
                     label={input.label}
-                    options={materials.map((material: ConcreteMaterial) => {
+                    options={materials?.map((material: ConcreteMaterial) => {
                       return {
                         label: material.name + ' | ' + t(`${'concrete.materials.' + material.type}`),
                         value: material,

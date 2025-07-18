@@ -24,6 +24,7 @@ const FlashPoint_GeneralData = ({
     toast.promise(
       async () => {
         const data = await flashPoint.getmaterialsByUserId(user._id);
+        console.log("🚀 ~ data:", data)
 
         const filteredMaterials = data[0].materials.filter(
           (material) => material.type === 'asphaltBinder' || material.type === 'CAP'
