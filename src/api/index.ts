@@ -6,6 +6,8 @@ console.log("🚀 ~ isLocalHost:", isLocalHost)
 export const isTest = process.env.NODE_ENV === 'test';
 console.log("🚀 ~ isTest:", isTest)
 
+console.log("🚀 ~ process.env.NODE_ENV:", process.env.NODE_ENV)
+
 const [localhost, test, prod] = [
   'http://localhost:8080',
   'https://fasteng-backend.vercel.app/',
