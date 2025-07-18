@@ -13,7 +13,7 @@ const RenderCellComponent = ({ row, curve, data, addPlanilha }) => {
         variant="contained"
         sx={{ display: { xl: 'none', xs: 'block' }, color: 'white' }}
       >
-        Upload
+        {data[curve][index]?.planilha ? 'Alterar' : 'Adicionar'}
       </Button>
       <input
         type="file"

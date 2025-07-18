@@ -15,7 +15,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   const [loading, setLoading] = useState<boolean>(false);
   const {
     granulometryCompositionData: data,
-    granulometryResultsData,
     granulometryEssayData,
     generalData,
     setData,
@@ -42,8 +41,8 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   const tableCompositionInputsAverage = {};
   const tableCompositionInputsHigher = {};
 
-  const selectedMaterials = granulometryEssayData.materials
-    .map((material) => {
+  const selectedMaterials = granulometryEssayData[0].materials
+    ?.map((material) => {
       if (material.type !== 'asphaltBinder' && material.type !== 'CAP') {
         return {
           name: material.name,
@@ -127,21 +126,10 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     }
   };
 
-  // useEffect(() => {
-  //   let curves = chosenCurves;
-  //   if (data.pointsOfCurve.lower?.length > 0) curves.lower = true;
-  //   if (data.pointsOfCurve.average?.length > 0) curves.average = true;
-  //   if (data.pointsOfCurve.higher?.length > 0) curves.higher = true;
-
-  //   setData({ step: 3, key: 'chosenCurves', value: curves });
-  // }, [data.pointsOfCurve]);
-
   const convertNumber = (value) => {
     let aux = value;
-    if (typeof aux !== 'number' && aux !== null && aux !== undefined && aux.includes(',')) {
+    if (typeof aux !== 'number' && aux !== null && aux !== undefined && aux.includes(','))
       aux = aux.replace('.', '').replace(',', '.');
-    }
-
     return parseFloat(aux);
   };
 
@@ -191,7 +179,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
 
   const tableDataAux = setPercentsToListTotal(peneiras, arrayResponse);
 
-  const setBandsHigherLower = (tableData, bandsHigher, bandsLower, arrayResponse, peneiras) => {
+  const setBandsHigherLower = (tableData, bandsHigher, bandsLower) => {
     const arraySize = tableData[0]?.length;
 
     // Inicializa o arrayAux com objetos vazios de acordo com o tamanho descoberto
@@ -220,7 +208,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     return arrayAux;
   };
 
-  const tableData = setBandsHigherLower(tableDataAux, bandsHigher, bandsLower, arrayResponse, peneiras);
+  const tableData = setBandsHigherLower(tableDataAux, bandsHigher, bandsLower);
 
   tableDataLower = tableData;
   tableDataAverage = tableData;
@@ -236,13 +224,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     tableCompositionInputsHigher[key] = '';
   };
 
-  // useEffect(() => {
-  //   const prevData = {...data};
-  //   prevData.pointsOfCurve = [];
-  //   setData({ step: 3, key: 'pointsOfCurve', value: prevData.pointsOfCurve });
-  // }, []);
-
-  selectedMaterials.forEach((_, i) => {
+  selectedMaterials?.forEach((_, i) => {
     inputsInit(`input${i * 2 + 1}`);
   });
 
@@ -272,8 +254,6 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
       title: t('asphalt.dosages.superpave.higher-curve'),
     },
   ];
-
-  console.log('🚀 ~ constSuperpave_Step4= ~ tables:', tables);
 
   /**
    * Update the selected table inputs when the user changes one of them
@@ -366,8 +346,9 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
     );
 
     const valueIsValid = valueCounts.every((valueCount) => valueCount === 100);
+    const noEmptyInputs = data.percentageInputs.every((item) => Object.values(item).some((value) => value !== 0));
 
-    if (valueIsValid) {
+    if (valueIsValid && noEmptyInputs) {
       toast.promise(
         async () => {
           try {
@@ -393,7 +374,11 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
         }
       );
     } else {
-      toast.error(t('asphalt.dosages.superpave.invalid-granulometry-values'));
+      if (noEmptyInputs) {
+        toast.error(t('asphalt.dosages.superpave.empty-granulometry-values'));
+      } else {
+        toast.error(t('asphalt.dosages.superpave.invalid-granulometry-values'));
+      }
     }
   };
 

@@ -2,8 +2,11 @@
   "superpave.step-2-description": "Crie os materiais para a dosagem, incluindo pelo menos um agregado graúdo, um miúdo e um filler com seus dados de granulometria, além de ao menos um ligante com os dados de viscosidade rotacional.",
   "superpave.step-3-description": "Clique no material testado para ver o resultado dos ensaios de granulometria (agregados) e viscosidade rotacional (ligantes).",
   "superpave.step-4-description": "Escolha a curva granulométrica desejada e insira as porcentagens dos agregados, garantindo um total de 100%.",
-  "superpave.step-5-description": "Confira os dados de teor de ligante inicial.",
+  "superpave.step-5-description": "Confira o teor de ligante inicial e altere-o, se necessário.",
   "superpave.step-6-description": "Faça o download da planilha modelo, insira os dados gerados pelo compactador e faça o upload da planilha preenchida para cada curva selecionada.",
+  "superpave.step-7-description": "Esses são os parâmetros da primeira compactação. Altere-os conforme necessário.",
+  "superpave.step-8-description": "Essas são as porcentagens da curva escolhida.",
+  "superpave.step-9-description": "Insira os valores da segunda compactação para calcular a densidade máxima real ou utilize os botões de densidade máxima medida disponíveis ao final da tela.",
   "superpave.step-12-description": "Esses são os resultados da sua dosagem Superpave. Não se esqueça de salvar para acessá-las mais tarde.",
 
   "superpave.step-12": "Resultados",
@@ -149,5 +152,6 @@
   "marshall.dosage-pdf-title": "Relatório de Dosagem Superpave",
   "errors.empty-material-mass": "A massa total de cada agregado deve ser preenchida",
 
-  "superpave.error.minReads": "Não é possível excluir. Mínimo de linhas atingido."
+  "superpave.error.minReads": "Não é possível excluir. Mínimo de linhas atingido.",
+  "superpave.common.type": "Tipo"
 }

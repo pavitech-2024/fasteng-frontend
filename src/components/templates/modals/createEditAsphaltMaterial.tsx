@@ -13,7 +13,7 @@ import { MaterialsProps } from '@/pages/asphalt/materials';
 interface CreateEditMaterialModalProps {
   openModal: boolean;
   handleCloseModal: () => void;
-  materials: AsphaltMaterial[];
+  materials: MaterialsProps[] | AsphaltMaterial[];
   isEdit: boolean;
   materialToEdit?: AsphaltMaterial;
   updateMaterials?: () => void;
@@ -159,10 +159,7 @@ const CreateEditMaterialModal = ({
     try {
       validateMaterialData();
 
-      console.log('🧪 Passou pela validação');
-
       const response = await materialsService.createMaterial(material);
-      console.log('🚀 ~ handleCreateMaterial ~ response:', response);
 
       if (pathname.includes('superpave')) {
         createdMaterial(response.data);
@@ -180,16 +177,11 @@ const CreateEditMaterialModal = ({
         closeButton: true,
       });
     } catch (error: any) {
-      console.error('❌ Erro ao criar material:', error);
-
       const backendMessage = error?.response?.data?.message;
       const validationMessage: string = error?.message;
-
-      const isBackendAlreadyExistsError: boolean = backendMessage?.includes('already exists');
-
+      const isBackendAlreadyExistsError: boolean = backendMessage?.includes('already exists') || backendMessage?.includes('Server');
       toast.update(createMaterialToastId, {
         render:
-          t(validationMessage) ??
           (isBackendAlreadyExistsError
             ? 'Já existe um material cadastrado com esse nome!'
             : backendMessage ?? t('asphalt.materials.errorCreatingMaterial')),
@@ -204,7 +196,7 @@ const CreateEditMaterialModal = ({
   const validateMaterialData = () => {
     if (material.name === '') throw 'Material name cannot be empty';
     if (material.type === null) throw 'Material type cannot be empty';
-    if (materials.find((m) => m.name === material.name)) throw 'A material with the same name already exists!';
+    // if (!material.name) throw 'A material with the same name already exists!';
     if (material.type === 'CAP' && material.description.classification_CAP === null)
       throw 'CAP classification cannot be empty';
     if (material.type === 'asphaltBinder' && material.description.classification_AMP === null)

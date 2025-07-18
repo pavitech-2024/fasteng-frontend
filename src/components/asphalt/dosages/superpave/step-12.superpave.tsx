@@ -279,6 +279,7 @@ const Superpave_Step12 = ({
   const handleGmmSubmit = () => {
     const { temperatureOfWater, ...riceTestWithoutWaterTemp } = data.riceTest;
     const riceTestHasValues = Object.values(riceTestWithoutWaterTemp).some((item) => item !== null);
+    console.log("🚀 ~ handleGmmSubmit ~ riceTestHasValues:", riceTestHasValues)
     if (riceTestHasValues) {
       toast.error(t('asphalt.dosages.superpave.rice-test-empty-values'));
     } else if (!riceTestHasValues && data.gmm === null) {

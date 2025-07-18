@@ -71,7 +71,7 @@ const Superpave_Step6 = ({
       key: 'waterSampleContainerMass',
       label: t('asphalt.dosages.superpave.water-sample-container-mass'),
       adornment: 'g',
-      value: data.riceTest.find((obj) => obj.curve === curve)
+      value: data.riceTest?.find((obj) => obj.curve === curve)
         ? data.riceTest.find((obj) => obj.curve === curve).waterSampleContainerMass
         : null,
     },
@@ -79,68 +79,31 @@ const Superpave_Step6 = ({
       key: 'waterSampleMass',
       label: t('asphalt.dosages.superpave.water-sample-mass'),
       adornment: 'g',
-      value: data.riceTest.find((obj) => obj.curve === curve)
+      value: data.riceTest?.find((obj) => obj.curve === curve)
         ? data.riceTest.find((obj) => obj.curve === curve).waterSampleMass
         : null,
     },
   ];
 
   useEffect(() => {
-    if (data.inferiorRows.length !== inferiorRows.length) {
+    if (data.inferiorRows?.length !== inferiorRows?.length) {
       setInferiorRows(data.inferiorRows);
     }
-    if (data.intermediariaRows.length !== intermediariaRows.length) {
+    if (data.intermediariaRows?.length !== intermediariaRows?.length) {
       setIntermediariaRows(data.intermediariaRows);
     }
-    if (data.superiorRows.length !== superiorRows.length) {
+    if (data.superiorRows?.length !== superiorRows?.length) {
       setSuperiorRows(data.superiorRows);
     }
   }, [data]);
 
-  // useEffect(() => {
-  //   const prevData = [...data.riceTest];
-
-  //   if (granulometryCompositionData.chosenCurves.lower) {
-  //     if (!prevData.some((obj) => obj.curve === 'lower')) {
-  //       if (prevData.some((obj) => obj.curve === null)) {
-  //         const index = prevData.findIndex((obj) => obj.curve === null);
-  //         prevData[index] = { ...prevData[index], curve: 'lower' };
-  //       } else {
-  //         const newData = { ...prevData[0], curve: 'lower' };
-  //         prevData.push(newData);
-  //       }
-  //       setData({ step: 5, value: { ...data, riceTest: prevData } });
-  //     }
-  //   }
-
-  //   if (granulometryCompositionData.chosenCurves.average) {
-  //     if (!prevData.some((obj) => obj.curve === 'average')) {
-  //       if (prevData.some((obj) => obj.curve === null)) {
-  //         const index = prevData.findIndex((obj) => obj.curve === null);
-  //         prevData[index] = { ...prevData[index], curve: 'average' };
-  //       } else {
-  //         const newData = { ...prevData[0], curve: 'average' };
-  //         prevData.push(newData);
-  //       }
-  //       setData({ step: 5, value: { ...data, riceTest: prevData } });
-  //     }
-  //   }
-
-  //   if (granulometryCompositionData.chosenCurves.higher) {
-  //     if (!prevData.some((obj) => obj.curve === 'higher')) {
-  //       if (prevData.some((obj) => obj.curve === null)) {
-  //         const index = prevData.findIndex((obj) => obj.curve === null);
-  //         prevData[index] = { ...prevData[index], curve: 'higher' };
-  //       } else {
-  //         const newData = { ...prevData[0], curve: 'higher' };
-  //         prevData.push(newData);
-  //       }
-  //       setData({ step: 5, value: { ...data, riceTest: prevData } });
-  //     }
-  //   }
-  // }, [granulometryCompositionData.chosenCurves]);
   useEffect(() => {
-    const prevData = [...data.riceTest];
+    let prevData;
+    if (data.riceTest) {
+      prevData = [...data.riceTest];
+    } else {
+      prevData = [];
+    }
 
     Object.entries(granulometryCompositionData.chosenCurves).forEach(([curve, value]) => {
       if (value && !prevData.some((obj) => obj.curve === curve)) {
@@ -159,10 +122,11 @@ const Superpave_Step6 = ({
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data[curve]?.findIndex((r) => r.id === id);
+
         return (
           <InputEndAdornment
             adornment={'cm'}
-            type="text"
+            type="number"
             value={data[curve][index]?.diammeter}
             onChange={(e) => {
               const prevData = [...data[curve]];
@@ -182,7 +146,7 @@ const Superpave_Step6 = ({
         const index = data[curve].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'cm'}
+            adornment={'g'}
             type="number"
             value={data[curve][index]?.dryMass}
             onChange={(e) => {
@@ -203,7 +167,7 @@ const Superpave_Step6 = ({
         const index = data[curve].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'cm'}
+            adornment={'g'}
             type="number"
             value={data[curve][index]?.submergedMass}
             onChange={(e) => {
@@ -224,7 +188,7 @@ const Superpave_Step6 = ({
         const index = data[curve].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'cm'}
+            adornment={'g'}
             type="number"
             value={data[curve][index]?.drySurfaceSaturatedMass}
             onChange={(e) => {
@@ -245,7 +209,7 @@ const Superpave_Step6 = ({
         const index = data[curve].findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'cm'}
+            adornment={'N'}
             type="number"
             value={data[curve][index]?.waterTemperatureCorrection}
             onChange={(e) => {
@@ -415,34 +379,13 @@ const Superpave_Step6 = ({
 
           //todo: tipar esse any
           Object.values(response).forEach((e: any, i) => {
-            if (e !== 0) {
+            if (e.gmm !== 0) {
               const index = data.riceTest.findIndex((e) => e.curve === Object.keys(response)[i]);
               const arr = [...data.riceTest];
               arr[index].gmm = e.gmm;
               setData({ step: 5, value: { ...data, riceTest: arr } });
             }
           });
-
-          // if (response.lower !== 0) {
-          //   const index = data.riceTest.findIndex((e) => e.curve === 'lower');
-          //   const arr = [...data.riceTest];
-          //   arr[index].gmm = response.lower.gmm;
-          //   setData({ step: 5, value: { ...data, riceTest: arr } });
-          // }
-
-          // if (response.average !== 0) {
-          //   const index = data.riceTest.findIndex((e) => e.curve === 'average');
-          //   const arr = [...data.riceTest];
-          //   arr[index].gmm = response.average.gmm;
-          //   setData({ step: 5, value: { ...data, riceTest: arr } });
-          // }
-
-          // if (response.higher !== 0) {
-          //   const index = data.riceTest.findIndex((e) => e.curve === 'higher');
-          //   const arr = [...data.riceTest];
-          //   arr[index].gmm = response.higher.gmm;
-          //   setData({ step: 5, value: { ...data, riceTest: arr } });
-          // }
 
           setRiceTestModalIsOpen(false);
         } catch (error) {
@@ -476,7 +419,18 @@ const Superpave_Step6 = ({
     setRiceTestModalIsOpen(true);
   };
 
-  nextDisabled && setNextDisabled(false);
+  useEffect(() => {
+    // Verifica se todos os valores de GMM foram preenchidos pelo Rice Test
+    const isRiceTestFinished = data.riceTest?.every(({ gmm }) => gmm !== 0);
+
+    // Verifica se todos os inputs de todas as curvas foram preenchidos
+    const isCurvesComplete = [data.inferiorRows, data.intermediariaRows, data.superiorRows].every((rows) =>
+      rows?.every(({ dryMass }) => dryMass !== null)
+    );
+
+    // Atualiza o estado de nextDisabled se uma das condições acima for verdadeira
+    setNextDisabled(!(isRiceTestFinished || isCurvesComplete));
+  }, [data.inferiorRows, data.intermediariaRows, data.riceTest, data.superiorRows]);
 
   return (
     <>
@@ -505,121 +459,73 @@ const Superpave_Step6 = ({
               {t('asphalt.dosages.superpave.model-sheet')}
             </Button>
 
-            {Object.entries(granulometryCompositionData.chosenCurves).map(([key, value]) => {
-              if (value) {
-                const curveName =
-                  key === 'lower' ? 'inferiorRows' : key === 'average' ? 'intermediariaRows' : 'superiorRows';
-                return (
-                  <>
-                    <DataGrid
-                      key={key}
-                      columns={generateColumns(curveName).map((column) => ({
-                        ...column,
-                        disableColumnMenu: true,
-                        sortable: false,
-                        align: 'center',
-                        headerAlign: 'center',
-                        minWidth: 100,
-                        flex: 1,
-                      }))}
-                      rows={key === 'lower' ? inferiorRows : key === 'average' ? intermediariaRows : superiorRows}
-                      columnGroupingModel={generateGroupings(key)}
-                      experimentalFeatures={{ columnGrouping: true }}
-                      density="comfortable"
-                      disableColumnMenu
-                      disableColumnSelector
-                      slots={{ footer: () => ExpansionToolbar(curveName) }}
-                    />
-                  </>
-                );
-              }
+            {granulometryCompositionData.chosenCurves.map((curve, index) => {
+              const curveName =
+                curve === 'lower' ? 'inferiorRows' : curve === 'average' ? 'intermediariaRows' : 'superiorRows';
+              return (
+                <Box key={index}>
+                  <DataGrid
+                    columns={generateColumns(curveName).map((column) => ({
+                      ...column,
+                      disableColumnMenu: true,
+                      sortable: false,
+                      align: 'center',
+                      headerAlign: 'center',
+                      minWidth: 100,
+                      flex: 1,
+                    }))}
+                    rows={curve === 'lower' ? inferiorRows : curve === 'average' ? intermediariaRows : superiorRows}
+                    columnGroupingModel={generateGroupings(curve)}
+                    experimentalFeatures={{ columnGrouping: true }}
+                    density="comfortable"
+                    disableColumnMenu
+                    disableColumnSelector
+                    slots={{ footer: () => ExpansionToolbar(curveName) }}
+                  />
+                </Box>
+              );
             })}
           </Box>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '2rem', marginY: '2rem' }}>
-            <Typography sx={{ textAlign: 'center' }}>{t('asphalt.dosages.superpave.measured-max-density')}</Typography>
+            <Typography variant="h5" sx={{ textAlign: 'center' }}>
+              {t('asphalt.dosages.superpave.measured-max-density')}
+            </Typography>
 
             <Box sx={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-              {Object.entries(granulometryCompositionData.chosenCurves).map(([key, value]) => {
-                if (value) {
-                  return (
-                    <Box
-                      key={key}
-                      sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        width: '100%',
-                        alignItems: 'center',
-                        gap: '2rem',
-                      }}
-                    >
-                      <Typography>{t(`asphalt.dosages.superpave.${key}-curve`)}</Typography>
-                      <Button onClick={() => showModal(key)} variant="outlined">
-                        {t('asphalt.dosages.superpave.calculate-max-density')}
-                      </Button>
-                    </Box>
-                  );
-                }
+              {granulometryCompositionData.chosenCurves.map((curve) => {
+                return (
+                  <Box
+                    key={curve}
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      width: '100%',
+                      alignItems: 'center',
+                      gap: '2rem',
+                    }}
+                  >
+                    <Typography>{t(`asphalt.dosages.superpave.${curve}-curve`)}</Typography>
+                    <Button onClick={() => showModal(curve)} variant="outlined">
+                      {t('asphalt.dosages.superpave.calculate-max-density')}
+                    </Button>
+                  </Box>
+                );
               })}
-
-              {/* {granulometryCompositionData.chosenCurves.lower && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                    alignItems: 'center',
-                    gap: '2rem',
-                  }}
-                >
-                  <Typography>{t('asphalt.dosages.superpave.lower-curve')}</Typography>
-                  <Button onClick={() => showModal('lower')} variant="outlined">
-                    {t('asphalt.dosages.superpave.calculate-max-density')}
-                  </Button>
-                </Box>
-              )}
-
-              {granulometryCompositionData.chosenCurves.average && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                    alignItems: 'center',
-                    gap: '2rem',
-                  }}
-                >
-                  <Typography>{t('asphalt.dosages.superpave.average-curve')}</Typography>
-                  <Button onClick={() => showModal('average')} variant="outlined">
-                    {t('asphalt.dosages.superpave.calculate-max-density')}
-                  </Button>
-                </Box>
-              )}
-
-              {granulometryCompositionData.chosenCurves.higher && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                    alignItems: 'center',
-                    gap: '2rem',
-                  }}
-                >
-                  <Typography>{t('asphalt.dosages.superpave.higher-curve')}</Typography>
-                  <Button onClick={() => showModal('higher')} variant="outlined">
-                    {t('asphalt.dosages.superpave.calculate-max-density')}
-                  </Button>
-                </Box>
-              )} */}
             </Box>
           </Box>
 
           <ModalBase
             title={t('asphalt.dosages.superpave.calculate-rice-test')}
-            leftButtonTitle={t('asphalt.dosages.superpave.confirm')}
-            rightButtonTitle={t('materials.template.cancel')}
-            onCancel={() => setRiceTestModalIsOpen(false)}
+            leftButtonTitle={t('materials.template.cancel')}
+            rightButtonTitle={t('asphalt.dosages.superpave.confirm')}
+            onCancel={() => {
+              const prevData = [...data.riceTest];
+              const index = prevData.findIndex((obj) => obj.curve === actualCurve);
+              prevData.splice(index, 1);
+              setData({ step: 5, key: 'riceTest', value: prevData });
+              setRiceTestModalIsOpen(false);
+            }}
             open={riceTestModalIsOpen}
             size={'larger'}
             onSubmit={() => {
@@ -643,13 +549,14 @@ const Superpave_Step6 = ({
                 }}
               />
 
-              <Box id="riceTestInputs" sx={{ display: 'flex', flexDirection: 'row', gap: '2rem', width: '100%'}}>
+              <Box id="riceTestInputs" sx={{ display: 'flex', flexDirection: 'row', gap: '2rem', width: '100%' }}>
                 {generateRiceTestInputs(actualCurve).map((input) => (
                   <InputEndAdornment
                     key={input.key}
                     adornment={input.adornment}
                     label={input.label}
                     value={input.value}
+                    type="number"
                     fullWidth
                     onChange={(e) => {
                       const value = e.target.value;
@@ -668,6 +575,10 @@ const Superpave_Step6 = ({
                 variant="standard"
                 label={t('asphalt.dosages.superpave.water-temperature-dropdown')}
                 options={waterTemperatureList}
+                value={{
+                  value: data.riceTest?.find((obj) => obj.curve === actualCurve)?.temperatureOfWater,
+                  label: '',
+                }}
                 callback={(selectedValue) => {
                   const prevData = [...data.riceTest];
                   const index = prevData.findIndex((obj) => obj.curve === actualCurve);

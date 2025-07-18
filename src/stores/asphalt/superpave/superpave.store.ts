@@ -81,11 +81,6 @@ interface SuperpaveGranulometryResults {
   };
 }
 
-interface SuperpaveMaterialSelectionData {
-  aggregates: { _id: string; name: string }[]; // lista de ids dos agregados
-  binder: string; // id do ligante
-}
-
 interface SuperpaveGranulometryCompositionData {
   percentageInputs: {
     [key: string]: number;
@@ -108,11 +103,7 @@ interface SuperpaveGranulometryCompositionData {
     value: number;
   };
   pointsOfCurve: number[][];
-  chosenCurves: {
-    lower: boolean;
-    average: boolean;
-    higher: boolean;
-  };
+  chosenCurves: string[];
   bands: {
     higher: any[];
     lower: any[];
@@ -137,7 +128,7 @@ interface SuperpaveInitialBinderData {
     pli: number;
     percentsOfDosageWithBinder: number[];
   }[];
-  binderInput: number;
+  binderInput: {curve: string, value: number}[];
   turnNumber: {
     initialN: number;
     maxN: number;
@@ -538,11 +529,7 @@ const initialState = {
       value: null,
     },
     pointsOfCurve: [],
-    chosenCurves: {
-      lower: null,
-      average: null,
-      higher: null,
-    },
+    chosenCurves: [],
     bands: {
       higher: [],
       lower: [],
@@ -583,7 +570,7 @@ const initialState = {
         percentsOfDosageWithBinder: [],
       },
     ],
-    binderInput: null,
+    binderInput: [],
     turnNumber: {
       initialN: null,
       maxN: null,
@@ -640,16 +627,7 @@ const initialState = {
         gmb: null,
       },
     },
-    riceTest: [
-      {
-        curve: null,
-        drySampleMass: null,
-        waterSampleMass: null,
-        waterSampleContainerMass: null,
-        gmm: 0,
-        temperatureOfWater: null,
-      },
-    ],
+    riceTest: [],
   },
   firstCurvePercentagesData: {
     table1: {
