@@ -17,19 +17,21 @@ const SoilsStandards: NextPage = () => {
     },
     {
       //title: t('compression'),
-      title: 'Ensaio de Compactação - DNER - ME 162/94',
+      title: 'Ensaio de Compactação - DNIT 164/2013-ME',
       icon: CompressionIcon,
       key: 'compression',
       standard: 'DNER - ME 162/94',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_162_94.pdf',
+      //link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_162_94.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_164_2013_me.pdf',
     },
     {
       //title: t('granulometry'),
-      title: 'Granulometria por Peneiramento - DNER - ME 083/98',
+      title: 'Granulometria por Peneiramento - DNIT 163/2010 - ME',
       icon: GranulometryIcon,
       key: 'granulometry',
       standard: 'DNER - ME 083/98',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_083_98.pdf',
+      //link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_083_98.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner-me083-98.pdf',
     },
   ];
 

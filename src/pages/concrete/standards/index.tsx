@@ -15,7 +15,8 @@ const ConcreteStandards: NextPage = () => {
   const standards: Standard[] = [
     {
       //title: t('chapman'),
-      title: 'Massa Específica - Frasco de Chapman - DNER - ME 194/98',
+      //title: 'Massa Específica - Frasco de Chapman - DNER - ME 194/98',
+      title: 'Massa Específica - Frasco de Chapman - DNIT 411/2021 - ME',
       icon: SpecifyMassIcon,
       key: 'chapman',
       standard: 'DNER - ME 194/98',
@@ -23,7 +24,8 @@ const ConcreteStandards: NextPage = () => {
     },
     {
       //title: t('coarseAggregate'),
-      title: 'Massa Específica de Agregrado Graúdo - DNER - ME 195/97',
+      //title: 'Massa Específica de Agregrado Graúdo - DNER - ME 195/97',
+      title: 'Massa Específica de Agregrado Graúdo - DNIT 412/2021 - ME',
       icon: CoarseAggregateIcon,
       key: 'coarseAggregate',
       standard: 'DNER - ME 195/97',
@@ -31,15 +33,17 @@ const ConcreteStandards: NextPage = () => {
     },
     {
       //title: t('granulometry'),
-      title: 'Granulometria por Peneiramento - DNER - ME 083/98',
+      title: 'Granulometria por Peneiramento - DNIT 163/2010 - ME',
       icon: GranulometryIcon,
       key: 'granulometry',
       standard: 'DNER - ME 083/98',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_083_98.pdf',
+      //link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner_me_083_98.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner-me083-98.pdf',
     },
     {
       //title: t('sandIncrease'),
-      title: 'Inchamento de Areia - DNER - ME 192/97',
+      //title: 'Inchamento de Areia - DNER - ME 192/97',
+      title: 'Inchamento de Areia - DNIT 031/2024 – ME',
       icon: SandIncreaseIcon,
       key: 'sandIncrease',
       standard: 'DNER - ME 192/97',
