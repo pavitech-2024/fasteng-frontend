@@ -76,6 +76,7 @@ const MaterialsTemplate = ({
   const app = useRouter().pathname.split('/')[1];
   let samplesOrMaterials: string;
 
+  const [matwerialsData, setmaterialsData] = useState<any[]>(materials);
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
   const [searchBy, setSearchBy] = useState<string>('name');
@@ -137,9 +138,9 @@ const MaterialsTemplate = ({
     }
   };
 
-  useEffect(() => {
-    setSearchValue('');
-  }, [searchBy]);
+  // useEffect(() => {
+  //   setSearchValue('');
+  // }, [searchBy]);
 
   const filteredData = (Array.isArray(materials[0].materials) ? materials[0].materials : [])
     .map(({ _id, name, type, createdAt }) => ({
@@ -165,11 +166,9 @@ const MaterialsTemplate = ({
   const fwdEssaysData = fwdEssays?.map(({ _id, generalData }) => ({
     name: generalData.name,
     type: 'FWD',
-    //createdAt: generalData.createdAt,
     createdAt: generalData.createdAt instanceof Date ? generalData.createdAt : new Date(generalData.createdAt),
     _id: _id,
   }));
-  console.log('testando o fwdEssayData', fwdEssaysData);
 
   const iggEssaysData = (Array.isArray(iggEssays) ? iggEssays : []).map(({ _id, generalData }) => ({
     name: generalData.name,
@@ -193,6 +192,7 @@ const MaterialsTemplate = ({
   }));
 
   useEffect(() => {
+    console.log('searchBy', searchBy);
     if (searchBy === 'stretch') {
       // Combina FWD e IGG quando "stretch" for selecionado
       setTableData([...fwdEssaysData, ...iggEssaysData]);
@@ -210,7 +210,7 @@ const MaterialsTemplate = ({
       setTableData(filteredData);
     }
     //setTableData(newData);
-  }, [searchBy, materials]);
+  }, [searchBy, searchValue, materials]);
 
   const handleEditMaterial = (rowId: string) => {
     editMaterial(rowId);
@@ -270,11 +270,8 @@ const MaterialsTemplate = ({
       {modal}
 
       {/*Page */}
-      {/**Coloquei o header abaixo como comentário para remover o título "Materiais cadastrados"*/}
-      {/*<Header title={`${title}`} />*/}
       <Box
         sx={{
-          //p: { mobile: '0 4vw', notebook: '0 6vw' },
           p: { mobile: '2rem 4vw 0', notebook: '2rem 6vw 0' },
           mb: '4vw',
           width: '100%',
@@ -301,17 +298,11 @@ const MaterialsTemplate = ({
           >
             <DropDown
               label={t('materials.template.searchBy')}
-              /*/*tions={[
-              { label: t('materials.template.name'), value: 'name' },
-              { label: t('materials.template.type'), value: 'type' },
-              { label: t('materials.template.mix'), value: 'mix' },
-              { label: t('materials.template.stretch'), value: 'stretch' },
-            ]}*/
               options={options}
               callback={setSearchBy}
               size="small"
               sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
-              value={options.find((option) => option.value === searchBy) || options[0]} // Dinâmico baseado em searchBy
+              value={options.find((option) => option.value === searchBy) || options[0]}
             />
             {searchBy === 'name' && (
               <Search
@@ -337,6 +328,7 @@ const MaterialsTemplate = ({
                 size="small"
                 callback={setSearchValue}
                 options={types}
+                value={{ label: searchValue, value: searchValue }}
               />
             )}
           </Box>
@@ -428,13 +420,6 @@ const MaterialsTemplate = ({
                             {!['FWD', 'IGG', 'RTCD', 'DDUI'].includes(row.type) && translateType(row.type)}
                           </>
                         )}
-                        {/* {column.id === 'type' && (
-                          <>
-                            {row.type === 'FWD'}
-                            {row.type === 'IGG'}
-                            {!['FWD', 'IGG'].includes(row.type) && translateType(row.type)}
-                          </>
-                        )*/}
 
                         {column.id === 'createdAt' && formatDate(row.createdAt)}
                         {column.id === 'actions' && (

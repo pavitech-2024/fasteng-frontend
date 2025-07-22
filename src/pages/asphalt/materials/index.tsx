@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import { DropDownOption } from '@/components/atoms/inputs/dropDown';
-import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { AsphaltMaterial, AsphaltMaterialTypesEnum } from '@/interfaces/asphalt';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
 import { t } from 'i18next';
 import useAuth from '@/contexts/auth';
@@ -43,7 +43,6 @@ const Materials = () => {
       .then((response) => {
         setMaterials(response.data);
         setLoading(false);
-        console.log('Testando o response.data', response.data);
         setFwdEssays(response.data[0].fwdEssays);
         setIggEssays(response.data[0].iggEssays);
         setRtcdEssays(response.data[0].rtcdEssays);
@@ -55,16 +54,16 @@ const Materials = () => {
       });
   }, [user]);
 
-  const types: DropDownOption[] = [{ label: t('samples.all'), value: '' }];
+  const types: DropDownOption[] = Object.values(AsphaltMaterialTypesEnum).map((value) => ({
+    label: t(`asphalt.materials.${value}`),
+    value: value,
+  }));
 
   const handleDeleteMaterial = async (id: string) => {
     try {
       await materialsService.deleteMaterial(id);
       // deleta a amostra do estado
       const updatedMaterials = materials[0].materials.filter((material) => material._id !== id);
-      console.log("Testando o updatedMaterials", updatedMaterials);
-      const testandoMateriais = updatedMaterials.find((material) => material._id === id);
-      console.log("'Testando o material",testandoMateriais)
       const prevData = [...materials];
       prevData[0].materials = updatedMaterials;
       setMaterials(prevData);
