@@ -7,9 +7,10 @@ interface SearchProps {
   placeholder?: string;
   value: string;
   setValue: (value: string) => void;
+  handleSubmit?: () => void;
 }
 
-const Search = ({ sx, placeholder, value, setValue }: SearchProps) => {
+const Search = ({ sx, placeholder, value, setValue, handleSubmit }: SearchProps) => {
   return (
     <Paper
       component="div"
@@ -29,7 +30,7 @@ const Search = ({ sx, placeholder, value, setValue }: SearchProps) => {
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
-      <SearchIcon sx={{ p: '10px' }} />
+      <SearchIcon sx={{ p: '10px', ':hover': { cursor: 'pointer' } }} onClick={handleSubmit} />
     </Paper>
   );
 };

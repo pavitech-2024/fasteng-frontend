@@ -29,6 +29,7 @@ import { FwdData } from '@/stores/asphalt/fwd/fwd.store';
 import { IggData } from '@/stores/asphalt/igg/igg.store';
 import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
 import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
 
 interface MaterialsTemplateProps {
   materials: any[] | undefined;
@@ -76,11 +77,11 @@ const MaterialsTemplate = ({
   const app = useRouter().pathname.split('/')[1];
   let samplesOrMaterials: string;
 
-  const [matwerialsData, setmaterialsData] = useState<any[]>(materials);
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
   const [searchBy, setSearchBy] = useState<string>('name');
   const [searchValue, setSearchValue] = useState<string>('');
+  const [searchString, setSearchString] = useState<string>('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
   const [tableData, setTableData] = useState<any[]>([]);
@@ -161,8 +162,6 @@ const MaterialsTemplate = ({
       return true;
     });
 
-  console.log('Testando filtro de nome', filteredData);
-
   const fwdEssaysData = fwdEssays?.map(({ _id, generalData }) => ({
     name: generalData.name,
     type: 'FWD',
@@ -214,6 +213,18 @@ const MaterialsTemplate = ({
 
   const handleEditMaterial = (rowId: string) => {
     editMaterial(rowId);
+  };
+
+  const handleStringSearch = () => {
+    const newData = [];
+    if (Array.isArray(filteredData)) {
+      Object.values(filteredData).forEach((material: AsphaltMaterial) => {
+        if (material?.name?.toLowerCase().includes(searchString.toLowerCase())) {
+          newData.push(material);
+        }
+      });
+      setTableData(newData);
+    }
   };
 
   return (
@@ -314,8 +325,9 @@ const MaterialsTemplate = ({
                     fontSize: '45px',
                   },
                 }}
-                value={searchValue}
-                setValue={setSearchValue}
+                value={searchString}
+                setValue={setSearchString}
+                handleSubmit={handleStringSearch}
               />
             )}
             {searchBy === 'type' && (
