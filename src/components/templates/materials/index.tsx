@@ -29,6 +29,7 @@ import { FwdData } from '@/stores/asphalt/fwd/fwd.store';
 import { IggData } from '@/stores/asphalt/igg/igg.store';
 import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
 import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
 
 interface MaterialsTemplateProps {
   materials: any[] | undefined;
@@ -80,6 +81,7 @@ const MaterialsTemplate = ({
   const rowsPerPage = 10;
   const [searchBy, setSearchBy] = useState<string>('name');
   const [searchValue, setSearchValue] = useState<string>('');
+  const [searchString, setSearchString] = useState<string>('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
   const [tableData, setTableData] = useState<any[]>([]);
@@ -137,9 +139,9 @@ const MaterialsTemplate = ({
     }
   };
 
-  useEffect(() => {
-    setSearchValue('');
-  }, [searchBy]);
+  // useEffect(() => {
+  //   setSearchValue('');
+  // }, [searchBy]);
 
   const filteredData = (Array.isArray(materials[0].materials) ? materials[0].materials : [])
     .map(({ _id, name, type, createdAt }) => ({
@@ -160,16 +162,12 @@ const MaterialsTemplate = ({
       return true;
     });
 
-  console.log('Testando filtro de nome', filteredData);
-
   const fwdEssaysData = fwdEssays?.map(({ _id, generalData }) => ({
     name: generalData.name,
     type: 'FWD',
-    //createdAt: generalData.createdAt,
     createdAt: generalData.createdAt instanceof Date ? generalData.createdAt : new Date(generalData.createdAt),
     _id: _id,
   }));
-  console.log('testando o fwdEssayData', fwdEssaysData);
 
   const iggEssaysData = (Array.isArray(iggEssays) ? iggEssays : []).map(({ _id, generalData }) => ({
     name: generalData.name,
@@ -193,6 +191,7 @@ const MaterialsTemplate = ({
   }));
 
   useEffect(() => {
+    console.log('searchBy', searchBy);
     if (searchBy === 'stretch') {
       // Combina FWD e IGG quando "stretch" for selecionado
       setTableData([...fwdEssaysData, ...iggEssaysData]);
@@ -210,10 +209,22 @@ const MaterialsTemplate = ({
       setTableData(filteredData);
     }
     //setTableData(newData);
-  }, [searchBy, materials]);
+  }, [searchBy, searchValue, materials]);
 
   const handleEditMaterial = (rowId: string) => {
     editMaterial(rowId);
+  };
+
+  const handleStringSearch = () => {
+    const newData = [];
+    if (Array.isArray(filteredData)) {
+      Object.values(filteredData).forEach((material: AsphaltMaterial) => {
+        if (material?.name?.toLowerCase().includes(searchString.toLowerCase())) {
+          newData.push(material);
+        }
+      });
+      setTableData(newData);
+    }
   };
 
   return (
@@ -270,11 +281,8 @@ const MaterialsTemplate = ({
       {modal}
 
       {/*Page */}
-      {/**Coloquei o header abaixo como comentário para remover o título "Materiais cadastrados"*/}
-      {/*<Header title={`${title}`} />*/}
       <Box
         sx={{
-          //p: { mobile: '0 4vw', notebook: '0 6vw' },
           p: { mobile: '2rem 4vw 0', notebook: '2rem 6vw 0' },
           mb: '4vw',
           width: '100%',
@@ -301,17 +309,11 @@ const MaterialsTemplate = ({
           >
             <DropDown
               label={t('materials.template.searchBy')}
-              /*/*tions={[
-              { label: t('materials.template.name'), value: 'name' },
-              { label: t('materials.template.type'), value: 'type' },
-              { label: t('materials.template.mix'), value: 'mix' },
-              { label: t('materials.template.stretch'), value: 'stretch' },
-            ]}*/
               options={options}
               callback={setSearchBy}
               size="small"
               sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
-              value={options.find((option) => option.value === searchBy) || options[0]} // Dinâmico baseado em searchBy
+              value={options.find((option) => option.value === searchBy) || options[0]}
             />
             {searchBy === 'name' && (
               <Search
@@ -323,8 +325,9 @@ const MaterialsTemplate = ({
                     fontSize: '45px',
                   },
                 }}
-                value={searchValue}
-                setValue={setSearchValue}
+                value={searchString}
+                setValue={setSearchString}
+                handleSubmit={handleStringSearch}
               />
             )}
             {searchBy === 'type' && (
@@ -337,6 +340,7 @@ const MaterialsTemplate = ({
                 size="small"
                 callback={setSearchValue}
                 options={types}
+                value={{ label: searchValue, value: searchValue }}
               />
             )}
           </Box>
@@ -428,13 +432,6 @@ const MaterialsTemplate = ({
                             {!['FWD', 'IGG', 'RTCD', 'DDUI'].includes(row.type) && translateType(row.type)}
                           </>
                         )}
-                        {/* {column.id === 'type' && (
-                          <>
-                            {row.type === 'FWD'}
-                            {row.type === 'IGG'}
-                            {!['FWD', 'IGG'].includes(row.type) && translateType(row.type)}
-                          </>
-                        )*/}
 
                         {column.id === 'createdAt' && formatDate(row.createdAt)}
                         {column.id === 'actions' && (

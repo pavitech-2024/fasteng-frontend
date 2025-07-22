@@ -4,7 +4,22 @@ import { IggData } from '@/stores/asphalt/igg/igg.store';
 import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
 import { Sieve } from '../common';
 
-export type AsphaltMaterialTypes = 'coarseAggregate' | 'fineAggregate' | 'asphaltBinder' | 'CAP' | 'filler' | 'other';
+export enum AsphaltMaterialTypesEnum {
+  COARSE_AGGREGATE = 'coarseAggregate',
+  FINE_AGGREGATE = 'fineAggregate',
+  ASPHALT_BINDER = 'asphaltBinder',
+  CAP = 'CAP',
+  FILLER = 'filler',
+  OTHER = 'other',
+}
+
+export type AsphaltMaterialTypes =
+  | AsphaltMaterialTypesEnum.COARSE_AGGREGATE
+  | AsphaltMaterialTypesEnum.FINE_AGGREGATE
+  | AsphaltMaterialTypesEnum.ASPHALT_BINDER
+  | AsphaltMaterialTypesEnum.CAP
+  | AsphaltMaterialTypesEnum.FILLER
+  | AsphaltMaterialTypesEnum.OTHER;
 
 export type AsphaltMaterialData = {
   name: string;
@@ -51,4 +66,4 @@ export type Materials = {
   fwdEssays: FwdData[];
   iggEssays: IggData[];
   rtcdEssays: RtcdData[];
-}
+};
