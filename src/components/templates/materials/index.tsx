@@ -139,9 +139,9 @@ const MaterialsTemplate = ({
     }
   };
 
-  // useEffect(() => {
-  //   setSearchValue('');
-  // }, [searchBy]);
+  useEffect(() => {
+    setSearchValue('');
+  }, [searchBy]);
 
   const filteredData = (Array.isArray(materials[0].materials) ? materials[0].materials : [])
     .map(({ _id, name, type, createdAt }) => ({
