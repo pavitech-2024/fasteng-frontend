@@ -41,7 +41,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   const tableCompositionInputsAverage = {};
   const tableCompositionInputsHigher = {};
 
-  const selectedMaterials = granulometryEssayData[0].materials
+  const selectedMaterials = granulometryEssayData?.materials
     ?.map((material) => {
       if (material.type !== 'asphaltBinder' && material.type !== 'CAP') {
         return {
