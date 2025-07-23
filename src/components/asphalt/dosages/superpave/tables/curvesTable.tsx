@@ -52,7 +52,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
       columnsKeys: ['peneira'],
     };
 
-    selectedMaterials.forEach((item, i) => {
+    selectedMaterials?.forEach((item, i) => {
       newTable.columnsHeaderTop.push({ header: item?.name, type: 'colsSpan' });
       newTable.columnsHeader.push('Total passante (%)');
       newTable.columnsHeader.push('%');
@@ -190,7 +190,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
   });
 
   const createMaterialGroupings = (materials) => {
-    return materials?.map((material, index) => ({
+    const materialGroupings = materials?.map((material, index) => ({
       groupId: `material_${material._id}_${index + 1}`,
       headerName: material.name,
       children: [
@@ -199,6 +199,14 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
       ],
       headerAlign: 'center',
     }));
+    console.log("🚀 ~ materialGroupings ~ materialGroupings:", materialGroupings)
+    console.log("tipo ~ materialGroupings ~ materialGroupings:", typeof materialGroupings)
+
+    if (materialGroupings) {
+      return materialGroupings;
+    } else {
+      return [];
+    }
   };
 
   const groupings = [

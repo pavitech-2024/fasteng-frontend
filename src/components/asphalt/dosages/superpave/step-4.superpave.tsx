@@ -1,10 +1,9 @@
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
-import useAuth from '@/contexts/auth';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { Box, Button, Checkbox, FormControlLabel, TableContainer, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { AllSievesSuperpaveUpdatedAstm } from '@/interfaces/common';
 import CurvesTable from './tables/curvesTable';
 import { toast } from 'react-toastify';
@@ -41,7 +40,7 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   const tableCompositionInputsAverage = {};
   const tableCompositionInputsHigher = {};
 
-  const selectedMaterials = granulometryEssayData[0].materials
+  const selectedMaterials = granulometryEssayData?.materials
     ?.map((material) => {
       if (material.type !== 'asphaltBinder' && material.type !== 'CAP') {
         return {

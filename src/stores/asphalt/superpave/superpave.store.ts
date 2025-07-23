@@ -127,6 +127,7 @@ interface SuperpaveInitialBinderData {
     gse: number;
     pli: number;
     percentsOfDosageWithBinder: number[];
+    curve: string;
   }[];
   binderInput: {curve: string, value: number}[];
   turnNumber: {
@@ -554,20 +555,7 @@ const initialState = {
         gse: null,
         pli: null,
         percentsOfDosageWithBinder: [],
-      },
-      {
-        combinedGsa: null,
-        combinedGsb: null,
-        gse: null,
-        pli: null,
-        percentsOfDosageWithBinder: [],
-      },
-      {
-        combinedGsa: null,
-        combinedGsb: null,
-        gse: null,
-        pli: null,
-        percentsOfDosageWithBinder: [],
+        curve: null
       },
     ],
     binderInput: [],
