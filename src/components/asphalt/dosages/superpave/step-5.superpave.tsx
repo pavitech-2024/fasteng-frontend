@@ -403,42 +403,46 @@ const Superpave_Step5 = ({
   };
 
   useEffect(() => {
-    if (data.materials &&Object.values(data.materials).every((e) => e !== null)) {
+    if (data.materials && Object.values(data.materials).every((e) => e !== null)) {
       setShouldRenderTable1(true);
     }
   }, [data.materials]);
 
   /**
    * Updates the estimated percentage rows and granulometry composition data
-   * with the specified initial binder value.
+   * with the specified initial binder values.
    *
-   * @param {number} initialBinder - The initial binder value to be set for each row.
+   * @param {{ curve: string; value: number }[]} initialBinderValues - The initial binder values to be set for each row.
    */
-  const updateRowsWithInitialBinder = (initialBinder: { curve: string; value: number }[]) => {
-    console.log("🚀 ~ updateRowsWithInitialBinder ~ initialBinder:", initialBinder)
-    const newRows = estimatedPercentageRows.map((row) => {
-      console.log("row ~ row:", row)
-      const curveName = row.granulometricComposition === 'inferior' ? 'lower' : row.granulometricComposition === 'intermediaria' ? 'average' : 'higher';
+  const updateRowsWithInitialBinderValues = (initialBinderValues: { curve: string; value: number }[]) => {
+    const newRowData = estimatedPercentageRows.map((row) => {
+      const curveName =
+        row.granulometricComposition === 'inferior'
+          ? 'lower'
+          : row.granulometricComposition === 'intermediaria'
+          ? 'average'
+          : 'higher';
+      const initialBinderValue = initialBinderValues.find((obj) => obj.curve === curveName)?.value ?? '---';
+
       return {
         ...row,
-        initialBinder: initialBinder?.find((obj) => obj.curve === curveName)?.value ?? '---',
+        initialBinder: initialBinderValue,
       };
     });
-    console.log("🚀 ~ newRows ~ newRows:", newRows)
-    setEstimatedPercentageRows(newRows);
+    setEstimatedPercentageRows(newRowData);
     setData({
       step: 4,
       key: 'granulometryComposition',
       value: data.granulometryComposition.map((row) => ({
         ...row,
-        pli: initialBinder?.find((obj) => obj.curve === row.curve)?.value,
+        pli: initialBinderValues.find((obj) => obj.curve === row.curve)?.value,
       })),
     });
   };
 
   const handleInitialBinderSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    updateRowsWithInitialBinder(binderInput);
+    updateRowsWithInitialBinderValues(binderInput);
     setNewInitialBinderModalIsOpen(false);
   };
 
