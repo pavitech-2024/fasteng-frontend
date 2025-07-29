@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
 
-const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+const Superpave_Step4_GranulometryComposition = ({ setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const {
     granulometryCompositionData: data,
@@ -467,4 +467,4 @@ const Superpave_Step4 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   );
 };
 
-export default Superpave_Step4;
+export default Superpave_Step4_GranulometryComposition;

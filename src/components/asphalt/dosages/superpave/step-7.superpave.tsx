@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import GraphStep6 from './graphs/step6Graph';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 
-const Superpave_Step7 = ({
+const Superpave_Step7_FirstCompactionParams = ({
   nextDisabled,
   setNextDisabled,
   superpave,
@@ -26,7 +26,6 @@ const Superpave_Step7 = ({
     firstCompressionData,
     setData,
   } = useSuperpaveStore();
-    console.log("🚀 ~ Superpave_Step7 ~ data:", data)
 
   const [renderTable3, setRenderTable3] = useState(false);
 
@@ -413,4 +412,4 @@ const Superpave_Step7 = ({
   );
 };
 
-export default Superpave_Step7;
+export default Superpave_Step7_FirstCompactionParams;

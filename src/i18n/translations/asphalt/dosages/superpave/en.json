@@ -10,8 +10,8 @@
   "superpave.step-8-description": "These are the aggregate percentages of the selected curve.",
   "superpave.step-9-description": "Enter the values of the second compaction to calculate the maximum real density or use the buttons of maximum measured density available at the end of the screen.",
   "superpave.step-10-description": "These are the parameters of the second compaction.",
+  "superpave.step-11-description": "Enter the compaction data and perform the Rice Test to calculate the maximum density of the mixture. After filling in the fields, click on confirm to continue.",
   "superpave.step-12-description": "These are the results of yourSuperpave dosage. Don't forget to save the experiment so you can access it later.",
-
   "superpave.step-12": "Results",
   "asphalt.essays.superpave": "Superpave Dosage",
   "topbar.superpave": "Superpave",

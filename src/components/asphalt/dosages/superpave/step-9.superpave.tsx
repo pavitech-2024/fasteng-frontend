@@ -12,7 +12,7 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const Superpave_Step9 = ({ setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const {
     secondCompressionData: data,
@@ -591,4 +591,4 @@ const Superpave_Step9 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   );
 };
 
-export default Superpave_Step9;
+export default Superpave_Step9_SecondCompaction;

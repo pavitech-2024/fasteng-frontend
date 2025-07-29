@@ -11,7 +11,7 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const Superpave_Step5 = ({
+const Superpave_Step5_InitialBinder = ({
   nextDisabled,
   setNextDisabled,
   superpave,
@@ -647,4 +647,4 @@ const Superpave_Step5 = ({
   );
 };
 
-export default Superpave_Step5;
+export default Superpave_Step5_InitialBinder;

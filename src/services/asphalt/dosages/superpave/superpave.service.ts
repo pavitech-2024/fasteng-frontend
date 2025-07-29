@@ -114,13 +114,12 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitSecondCompressionData(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 10:
-          await this.submitSecondCompressionParams(data as SuperpaveData, this.userId, null, isConsult);
-          break;
-        case 11:
+          // await this.submitSecondCompressionParams(data as SuperpaveData, this.userId, null, isConsult);
           await this.submitConfirmattionCompression(data as SuperpaveData, this.userId, null, isConsult);
           break;
-        case 12:
+        case 11:
           await this.submitSuperpaveDosage(data as SuperpaveData, this.userId, null, isConsult);
+          break;
         default:
           throw t('errors.invalid-step');
       }
@@ -647,7 +646,7 @@ class Superpave_SERVICE implements IEssayService {
     step5Data: SuperpaveData['firstCompressionData'],
     isConsult?
   ): Promise<any> => {
-    console.log("🚀 ~ Superpave_SERVICE ~ step4Data:", step4Data)
+    console.log('🚀 ~ Superpave_SERVICE ~ step4Data:', step4Data);
     try {
       const { nominalSize, chosenCurves, porcentagesPassantsN200, percentageInputs } = step3Data;
       const { turnNumber, binderSpecificMass, granulometryComposition: binderCompositions } = step4Data;
@@ -827,7 +826,6 @@ class Superpave_SERVICE implements IEssayService {
   ): Promise<any> => {
     const { halfLess, halfPlus, normal, onePlus, maximumDensities } = step7Data;
     const { binderSpecificMass, granulometryComposition } = initialBinderData;
-    console.log("🚀 ~ Superpave_SERVICE ~ binderSpecificMass:", binderSpecificMass)
     const { percentageInputs, porcentagesPassantsN200 } = step3Data;
     const { selectedCurve, table3 } = step5Data;
 
@@ -837,24 +835,15 @@ class Superpave_SERVICE implements IEssayService {
       normal,
       onePlus,
     };
-    console.log("🚀 ~ Superpave_SERVICE ~ composition:", composition)
 
     let combinedGsb;
     let selectedPercentsOfDosage;
     let selectedGse;
 
-    // const hasNullValues = maximumDensities.some(
-    //   (e) => e.insertedGmm === null && Object.entries(e.riceTest).some(([key, value]) => key === 'gmm' && value === null)
-    // );
-    // console.log("🚀 ~ Superpave_SERVICE ~ hasNullValues:", hasNullValues)
-
-    // if (hasNullValues) throw t('errors.empty-gmm');
-
     const formattedCurveName = `${selectedCurve.charAt(0).toUpperCase() + selectedCurve.slice(1)}`;
     const propertyName = `table3${formattedCurveName}`;
     const expectedPli = table3[propertyName][`expectedPli${formattedCurveName}`];
 
-    console.log("🚀 ~ Superpave_SERVICE ~ expectedPli:", expectedPli)
     if (selectedCurve === 'lower') {
       combinedGsb = granulometryComposition[0].combinedGsb;
       selectedGse = granulometryComposition[0].gse;
@@ -872,7 +861,6 @@ class Superpave_SERVICE implements IEssayService {
     }
 
     const percentsOfDosageValues = Object.values(selectedPercentsOfDosage).map((value) => Number(value));
-    console.log("🚀 ~ Superpave_SERVICE ~ percentsOfDosageValues:", percentsOfDosageValues)
 
     try {
       const response = await Api.post(`${this.info.backend_path}/confirm-second-compression-data`, {
@@ -930,7 +918,7 @@ class Superpave_SERVICE implements IEssayService {
       }
     }
   };
-  
+
   getSecondCompressionPercentages = async (
     firstCurvePercentagesData: SuperpaveData['firstCurvePercentagesData'],
     secondCompressionData: SuperpaveData['secondCompressionData']
@@ -938,7 +926,6 @@ class Superpave_SERVICE implements IEssayService {
     try {
       const { selectedCurve, table3 } = firstCurvePercentagesData;
       const { composition } = secondCompressionData;
-      console.log("🚀 ~ Superpave_SERVICE ~ composition:", composition)
 
       const expectedPli =
         selectedCurve === 'lower'
@@ -1086,7 +1073,7 @@ class Superpave_SERVICE implements IEssayService {
         const userData = userId ? userId : user;
 
         const confirmationCompressionData = {
-          ...data.secondCompressionPercentagesData,
+          ...data.confirmationCompressionData,
           name,
           isConsult: null,
         };

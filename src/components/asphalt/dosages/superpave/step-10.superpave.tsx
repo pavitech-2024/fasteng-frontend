@@ -10,7 +10,7 @@ import { t } from 'i18next';
 import { DataGrid, GridColumnGroupingModel } from '@mui/x-data-grid';
 import MiniGraphics from '../marshall/graphs/miniGraph';
 
-const Superpave_Step10 = ({
+const Superpave_Step10_SecondCompactionParams = ({
   nextDisabled,
   setNextDisabled,
   superpave,
@@ -24,13 +24,10 @@ const Superpave_Step10 = ({
     chosenCurvePercentagesData,
     granulometryEssayData,
   } = useSuperpaveStore();
-  console.log('🚀 ~ Superpave_Step10 ~ secondCompressionData:', secondCompressionData);
-  console.log('🚀 ~ Superpave_Step10 ~ data:', data);
 
   const aggregateMaterials = granulometryEssayData?.materials?.filter(
     ({ type }) => type.includes('Aggregate') || type.includes('filler')
   );
-  console.log('🚀 ~ Superpave_Step10 ~ aggregateMaterials:', aggregateMaterials);
 
   const [expectedVolumetricParamsRows, setExpectedVolumetricParamsRows] = useState([]);
 
@@ -44,9 +41,9 @@ const Superpave_Step10 = ({
             error,
           } = await superpave.getSecondCompressionPercentages(firstCurvePercentagesData, secondCompressionData);
 
-          console.log('🚀 ~ Superpave_Step10 ~ error:', error);
-          console.log('🚀 ~ Superpave_Step10 ~ success:', success);
-          console.log('🚀 ~ Superpave_Step10 ~ resData:', resData);
+          console.log('🚀 ~ Superpave_Step10_ ~ error:', error);
+          console.log('🚀 ~ Superpave_Step10_ ~ success:', success);
+          console.log('🚀 ~ Superpave_Step10_ ~ resData:', resData);
 
           if (success) {
             const newData = { ...data, ...resData };
@@ -264,20 +261,20 @@ const Superpave_Step10 = ({
           </Box>
 
           <Box sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-            <MiniGraphics data={data.graphs.graphVv} type="Vv" nameEixoY={'Vv (%)'} />
+            <MiniGraphics data={data.graphs?.graphVv} type="Vv" nameEixoY={'Vv (%)'} />
 
-            <MiniGraphics nameEixoY="GMB (g/cm³)" type="GMB" data={data.graphs.graphGmb} />
+            <MiniGraphics nameEixoY="GMB (g/cm³)" type="GMB" data={data.graphs?.graphGmb} />
 
-            <MiniGraphics nameEixoY="GMM (g/cm³)" type="GMM" data={data.graphs.graphGmm} />
+            <MiniGraphics nameEixoY="GMM (g/cm³)" type="GMM" data={data.graphs?.graphGmm} />
 
-            {data.graphs.graphRBV.flat().every((e) => e !== null) && (
-              <MiniGraphics nameEixoY="RBV (g/cm³)" type="RBV" data={data.graphs.graphRBV} />
+            {data.graphs?.graphRBV.flat().every((e) => e !== null) && (
+              <MiniGraphics nameEixoY="RBV (g/cm³)" type="RBV" data={data.graphs?.graphRBV} />
             )}
-            <MiniGraphics nameEixoY="VAM (g/cm³)" type="Vam" data={data.graphs.graphVam} />
+            <MiniGraphics nameEixoY="VAM (g/cm³)" type="Vam" data={data.graphs?.graphVam} />
 
-            {isValid && <MiniGraphics nameEixoY="RT (MPa)" type="RT" data={data.graphs.graphRT} />}
+            {isValid && <MiniGraphics nameEixoY="RT (MPa)" type="RT" data={data.graphs?.graphRT} />}
 
-            <MiniGraphics nameEixoY="PA" type="Relação pó/asfalto" data={data.graphs.graphPA} />
+            <MiniGraphics nameEixoY="PA" type="Relação pó/asfalto" data={data.graphs?.graphPA} />
           </Box>
         </Box>
       )}
@@ -285,4 +282,4 @@ const Superpave_Step10 = ({
   );
 };
 
-export default Superpave_Step10;
+export default Superpave_Step10_SecondCompactionParams;

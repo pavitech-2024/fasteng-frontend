@@ -9,7 +9,7 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const Superpave_Step8 = ({
+const Superpave_Step8_ChosenCurvePercents = ({
   nextDisabled,
   setNextDisabled,
   superpave,
@@ -162,4 +162,4 @@ const Superpave_Step8 = ({
   );
 };
 
-export default Superpave_Step8;
+export default Superpave_Step8_ChosenCurvePercents;

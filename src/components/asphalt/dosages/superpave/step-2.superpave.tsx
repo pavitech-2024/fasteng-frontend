@@ -11,9 +11,8 @@ import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { toast } from 'react-toastify';
 import GranulometryRow from './functionalComponents/granulometryTableRow';
 
-const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const data = useSuperpaveStore((state) => state.granulometryEssayData);
-  console.log('🚀 ~ constSuperpave_Step2= ~ data:', data);
   const setData = useSuperpaveStore((state) => state.setData);
   const myRef = useRef<any>({});
 
@@ -388,4 +387,4 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
   );
 };
 
-export default Superpave_Step2;
+export default Superpave_Step2_GranulometryEssay;

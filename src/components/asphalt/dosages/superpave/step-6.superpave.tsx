@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
 import RenderCellComponent from './functionalComponents/renderCell';
 
-const Superpave_Step6 = ({
+const Superpave_Step6_FirstCompaction = ({
   nextDisabled,
   setNextDisabled,
   superpave,
@@ -596,4 +596,4 @@ const Superpave_Step6 = ({
   );
 };
 
-export default Superpave_Step6;
+export default Superpave_Step6_FirstCompaction;

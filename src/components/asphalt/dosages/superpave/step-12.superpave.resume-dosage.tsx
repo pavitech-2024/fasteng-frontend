@@ -13,7 +13,7 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const Superpave_Step13 = ({
+const Superpave_Step12_ResumeDosage = ({
   nextDisabled,
   setNextDisabled,
   superpave,
@@ -21,6 +21,7 @@ const Superpave_Step13 = ({
   const [loading, setLoading] = useState<boolean>(false);
   const {
     confirmationCompressionData,
+    granulometryEssayData,
     granulometryCompositionData,
     initialBinderData,
     firstCurvePercentagesData,
@@ -28,14 +29,21 @@ const Superpave_Step13 = ({
     dosageResume: data,
     setData,
   } = useSuperpaveStore();
+    console.log("🚀 ~ Superpave_Step12_ResumeDosage ~ data:", data)
 
   const [finalProportionsRows, setFinalProportionsRows] = useState([]);
-  const [finalProportionsCols, setFinalProportionsCols] = useState([]);
+  // const [finalProportionsCols, setFinalProportionsCols] = useState([]);
   const [quantitativeRows, setQuantitativeRows] = useState([]);
   const [quantitativeCols, setQuantitativeCols] = useState([]);
   const [dosage, setDosage] = useState(null);
   const store = JSON.parse(sessionStorage.getItem('asphalt-superpave-store'));
   const dosageId = store?.state._id;
+
+  const finalProportionsCols = granulometryEssayData.materials.map((material) => ({
+    field: material.name,
+    headerName: material.name,
+    valueFormatter: ({ value }) => `${value}`,
+  }))
 
   useEffect(() => {
     const fetchDosage = async () => {
@@ -54,7 +62,7 @@ const Superpave_Step13 = ({
         const newData = { ...data, ...response };
 
         setData({
-          step: 10,
+          step: 11,
           value: newData,
         });
       } catch (error) {
@@ -71,15 +79,6 @@ const Superpave_Step13 = ({
 
   useEffect(() => {
     if (data?.ponderatedPercentsOfDosage?.length > 0) {
-      const initialCols = [
-        {
-          field: 'optimumBinder',
-          headerName: t('asphalt.dosages.optimum-binder'),
-          valueFormatter: ({ value }) => `${value}`,
-          width: 250,
-        },
-      ];
-
       const prevRowsData = {
         id: 0,
         optimumBinder: secondCompressionPercentagesData.optimumContent
@@ -87,28 +86,14 @@ const Superpave_Step13 = ({
           : '---',
       };
 
-      const newColsData: GridColDef[] = [...initialCols];
-
-      data.ponderatedPercentsOfDosage.forEach((materialPercent, index) => {
-        // const materialName = materialSelectionData.aggregates[index].name;
+      data.ponderatedPercentsOfDosage.forEach((materialPercent) => {
         const materialName = '';
-
         prevRowsData[materialName] = materialPercent;
-
-        const newFinalProportionsCols: GridColDef = {
-          field: materialName,
-          headerName: materialName,
-          valueFormatter: ({ value }) => `${value}`,
-          width: 150,
-        };
-
-        newColsData.push(newFinalProportionsCols);
       });
 
       setFinalProportionsRows([prevRowsData]);
-      setFinalProportionsCols(newColsData);
     }
-  }, [data?.ponderatedPercentsOfDosage]);
+  }, []);
 
   useEffect(() => {
     if (data?.quantitative?.length > 0) {
@@ -128,7 +113,7 @@ const Superpave_Step13 = ({
 
           return {
             ...prevRowsData,
-            [materialName]: materialPercent.toFixed(2),
+            [materialName]: materialPercent,
           };
         },
         { id: 0, asphaltBinder: typeof data.quantitative[0] === 'number' ? data.quantitative[0] : '---' }
@@ -158,32 +143,32 @@ const Superpave_Step13 = ({
   const resultCards = [
     {
       label: t('asphalt.dosages.superpave.apparent-specific-mass') + ' (Gmb):',
-      value: data?.Gmb.toFixed(2).toString(),
+      value: data?.Gmb,
       unity: 'g/cm3',
     },
     {
       label: t('asphalt.dosages.superpave.void-volume') + ' (Vv):',
-      value: (data?.Vv * 100).toFixed(2).toString(),
+      value: (data?.Vv * 100),
       unity: '%',
     },
     {
       label: t('Vazios do agregado mineral (VAM):'),
-      value: data?.Vam?.toFixed(2).toString(),
+      value: data?.Vam,
       unity: '%',
     },
     {
       label: t('asphalt.dosages.rbv') + ' (RBV):',
-      value: (data?.RBV * 100).toFixed(2).toString(),
+      value: (data?.RBV * 100),
       unity: '%',
     },
     {
       label: t('asphalt.dosages.absorbed-water'),
-      value: data?.percentWaterAbs.toFixed(2).toString(),
+      value: data?.percentWaterAbs,
       unity: '%',
     },
     {
       label: t('asphalt.dosages.superpave.specific-mass'),
-      value: data?.specifiesMass.toFixed(2).toString(),
+      value: data?.specifiesMass,
       unity: 'g/cm',
     },
   ];
@@ -195,7 +180,7 @@ const Superpave_Step13 = ({
       {loading ? (
         <Loading />
       ) : (
-        <FlexColumnBorder open={true} title={t('superpave.step-11')}>
+        <FlexColumnBorder open={true} title={t('superpave.results')}>
           <GenerateSuperpaveDosagePDF dosage={dosage} />
           <Box
             sx={{
@@ -206,7 +191,7 @@ const Superpave_Step13 = ({
               marginY: '20px',
             }}
           >
-            <ResultSubTitle title={t('superpave.step-11')} sx={{ margin: '.65rem' }} />
+            <ResultSubTitle title={t('superpave.step-12')} sx={{ margin: '.65rem' }} />
 
             <Box id="general-results" sx={{ width: '100%', overflowX: 'auto' }}>
               <DataGrid
@@ -272,7 +257,7 @@ const Superpave_Step13 = ({
             >
               {resultCards.map((card) => {
                 if (card.value !== undefined) {
-                  return <Result_Card key={card.label} label={card.label} value={card.value} unity={card.unity} />;
+                  return <Result_Card key={card.label} label={card.label} value={card.value?.toString()} unity={card.unity} />;
                 }
               })}
             </Box>
@@ -283,4 +268,4 @@ const Superpave_Step13 = ({
   );
 };
 
-export default Superpave_Step13;
+export default Superpave_Step12_ResumeDosage;
