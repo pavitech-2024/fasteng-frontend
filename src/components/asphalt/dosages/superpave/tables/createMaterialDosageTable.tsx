@@ -28,7 +28,7 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
   const handleDeleteMaterial = async (id: string) => {
     const prevData = { ...data };
 
-    const updatedMaterials = prevData[0].materials.filter((material) => material._id !== id);
+    const updatedMaterials = prevData[0]?.materials.filter((material) => material._id !== id);
     const updatedGranulometrys = prevData.granulometrys.filter((gran) => gran.material._id !== id);
     const updatedViscosity = null;
     try {
@@ -194,7 +194,7 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
   ];
 
   useEffect(() => {
-    if (data.materials.length > 0) {
+    if (data.materials?.length > 0) {
       const rows = data.materials.map((material) => ({
         id: material._id,
         name: material.name,
@@ -230,7 +230,7 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
         <AddIcon /> Novo Material
       </Button>
 
-      {data.materials.length > 0 && (
+      {data.materials?.length > 0 && (
         <DataGrid
           columns={columns.map((column) => ({ ...column, flex: 1, headerAlign: 'center', align: 'center' }))}
           rows={rows}

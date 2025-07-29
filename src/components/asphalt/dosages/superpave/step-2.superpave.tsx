@@ -279,13 +279,11 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
     },
   ];
 
-  console.log('🚀 ~ constSuperpave_Step2= ~ binderColumns:', binderColumns);
-
   useEffect(() => {
     setNextDisabled(true);
-    const hasCoarseAggregate = data.materials.some((material) => material.type === 'coarseAggregate');
-    const hasFineAggregate = data.materials.some((material) => material.type === 'fineAggregate');
-    const hasBinder = data.materials.some((material) => material.type === 'asphaltBinder' || material.type === 'CAP');
+    const hasCoarseAggregate = data.materials?.some((material) => material.type === 'coarseAggregate');
+    const hasFineAggregate = data.materials?.some((material) => material.type === 'fineAggregate');
+    const hasBinder = data.materials?.some((material) => material.type === 'asphaltBinder' || material.type === 'CAP');
 
     if (hasCoarseAggregate && hasFineAggregate && hasBinder) setNextDisabled(false);
   }, [data.materials]);
@@ -340,7 +338,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
       />
 
       {aggregatesRows.length > 0 &&
-        data.materials.length > 0 &&
+        data.materials?.length > 0 &&
         aggregatesRows?.map((row, idx) => (
           <GranulometryRow
             key={idx}

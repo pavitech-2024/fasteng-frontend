@@ -24,11 +24,13 @@ const Superpave_Step10 = ({
     chosenCurvePercentagesData,
     granulometryEssayData,
   } = useSuperpaveStore();
+    console.log("🚀 ~ Superpave_Step10 ~ secondCompressionData:", secondCompressionData)
+  console.log('🚀 ~ Superpave_Step10 ~ data:', data);
 
-  const aggregateMaterials = granulometryEssayData[0].materials?.filter(
+  const aggregateMaterials = granulometryEssayData?.materials?.filter(
     ({ type }) => type.includes('Aggregate') || type.includes('filler')
   );
-  
+
   const [expectedVolumetricParamsRows, setExpectedVolumetricParamsRows] = useState([]);
 
   useEffect(() => {
@@ -41,6 +43,10 @@ const Superpave_Step10 = ({
             error,
           } = await superpave.getSecondCompressionPercentages(firstCurvePercentagesData, secondCompressionData);
 
+          console.log('🚀 ~ Superpave_Step10 ~ error:', error);
+          console.log('🚀 ~ Superpave_Step10 ~ success:', success);
+          console.log('🚀 ~ Superpave_Step10 ~ resData:', resData);
+        
           if (success) {
             const newData = { ...data, ...resData };
             setData({
@@ -91,11 +97,12 @@ const Superpave_Step10 = ({
                 ? secondCompressionData.composition[indexName]?.RBV?.toFixed(2)
                 : '---',
             pa:
-              secondCompressionData.composition[indexName]?.indirectTensileStrength !== null
-                ? secondCompressionData.composition[indexName]?.indirectTensileStrength?.toFixed(2)
+              secondCompressionData.composition[indexName]?.ratioDustAsphalt !== null
+                ? secondCompressionData.composition[indexName]?.ratioDustAsphalt?.toFixed(2)
                 : '---',
             specificMass: secondCompressionData.composition[indexName]?.specifiesMass?.toFixed(2),
             absorbedWater: secondCompressionData.composition[indexName]?.projectN.percentWaterAbs?.toFixed(2),
+            rt: secondCompressionData.composition[indexName]?.indirectTensileStrength?.toFixed(2)
           };
         })
         .filter((row) => row !== null);
@@ -183,7 +190,7 @@ const Superpave_Step10 = ({
 
   secondCompressionData.ponderatedPercentsOfDosage?.forEach((value, idx) => {
     finalProportionsCols.push({
-      field: `material_${aggregateMaterials[idx]._id}_${idx + 1}`,
+      field: `material_${aggregateMaterials[idx]?._id}_${idx + 1}`,
       headerName: ``,
       valueFormatter: ({ value }) => `${value}`,
       width: 240,

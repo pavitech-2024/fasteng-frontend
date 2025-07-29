@@ -587,11 +587,11 @@ const Superpave_Step5 = ({
                   fullWidth
                   onChange={(e) => {
                     const materialIndex = data.materials?.findIndex((i) => i.type === 'asphaltBinder' || 'CAP');
-                    const newData = [...data?.materials];
-                    newData[materialIndex].realSpecificMass = parseFloat(e.target.value.replace(',', '.'));
+                    const newData = {...data}
+                    newData.materials[materialIndex].realSpecificMass = parseFloat(e.target.value.replace(',', '.'));
+                    newData.binderSpecificMass = parseFloat(e.target.value.replace(',', '.'));
                     setData({
                       step: 4,
-                      key: `materials`,
                       value: newData,
                     });
                   }}
