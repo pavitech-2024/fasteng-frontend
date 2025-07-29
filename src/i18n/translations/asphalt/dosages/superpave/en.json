@@ -9,6 +9,7 @@
   "superpave.step-7-description": "These are the parameters of the first compaction. Change them if necessary.",
   "superpave.step-8-description": "These are the aggregate percentages of the selected curve.",
   "superpave.step-9-description": "Enter the values of the second compaction to calculate the maximum real density or use the buttons of maximum measured density available at the end of the screen.",
+  "superpave.step-10-description": "These are the parameters of the second compaction.",
   "superpave.step-12-description": "These are the results of yourSuperpave dosage. Don't forget to save the experiment so you can access it later.",
 
   "superpave.step-12": "Results",
