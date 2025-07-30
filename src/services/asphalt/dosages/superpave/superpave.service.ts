@@ -1006,16 +1006,20 @@ class Superpave_SERVICE implements IEssayService {
     step3Data: SuperpaveData['initialBinderData'],
     step5Data: SuperpaveData['firstCurvePercentagesData'],
     step8Data: SuperpaveData['secondCompressionPercentagesData'],
-    step9Data: SuperpaveData['confirmationCompressionData'],
+    confirmationCompressionData: SuperpaveData['confirmationCompressionData'],
     isConsult?: boolean
   ) => {
+    console.log("🚀 ~ Superpave_SERVICE ~ confirmationCompressionData:", confirmationCompressionData)
     if (!isConsult) {
       try {
-        const { table: samplesData, gmm } = step9Data;
+        const { table, gmm } = confirmationCompressionData;
         const { porcentagesPassantsN200, percentageInputs } = step2Data;
         const { optimumContent } = step8Data;
         const { binderSpecificMass, materials } = step3Data;
         const { selectedCurve, table3 } = step5Data;
+
+        const dataCopy: any = {...confirmationCompressionData};
+        const samplesData = table ? table : dataCopy.samplesData;
 
         let choosenGranulometryComposition;
         let selectedPercentsOfDosage;
@@ -1041,7 +1045,7 @@ class Superpave_SERVICE implements IEssayService {
         };
 
         const response = await Api.post(`${this.info.backend_path}/calculate-dosage-equation`, {
-          samplesData,
+          samplesData: samplesData ? samplesData : confirmationCompressionData.table,
           choosenGranulometryComposition,
           optimumContent,
           binderSpecificGravity: binderSpecificMass,

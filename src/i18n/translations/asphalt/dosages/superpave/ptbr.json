@@ -148,6 +148,8 @@
 
   "asphalt.dosages.superpave.mechanic-volumetric-params": "Parâmetros volumétricos e mecânicos da mistura no teor ótimo de ligante asfáltico",
 
+  "asphalt.dosages.superpave.optimum-binder": "Teor ótimo de ligante asfáltico (%)",
+
   "asphalt.dosages.superpave.step-3.lower": "Inferior",
   "asphalt.dosages.superpave.step-3.higher": "Superior",
   "asphalt.dosages.superpave.step-3.average": "Intermediária",
