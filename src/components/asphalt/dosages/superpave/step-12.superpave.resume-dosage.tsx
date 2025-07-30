@@ -100,23 +100,21 @@ const Superpave_Step12_ResumeDosage = ({
 
       setFinalProportionsRows([prevRowsData]);
     }
-  }, []);
+  }, [data.ponderatedPercentsOfDosage]);
 
   useEffect(() => {
     if (data?.quantitative?.length > 0) {
-      const newRowsData = data.quantitative.reduce(
-        (prevRowsData, materialPercent, index) => {
-          const materialName = '';
+      const arr = { id: 1 };
+      data.quantitative.forEach((material, index) => {
+        const materialName = granulometryEssayData.materials[index - 1]?.name;
+        if (index > 0) {
+          arr[materialName] = material.toFixed(2);
+        }
+      });
 
-          return {
-            ...prevRowsData,
-            [materialName]: materialPercent,
-          };
-        },
-        { id: 0, asphaltBinder: typeof data.quantitative[0] === 'number' ? data.quantitative[0] : '---' }
-      );
+      const newRowsData = [arr];
 
-      setQuantitativeRows([newRowsData]);
+      setQuantitativeRows(newRowsData);
       setLoading(false);
     }
   }, [data?.quantitative]);
@@ -172,9 +170,9 @@ const Superpave_Step12_ResumeDosage = ({
               marginY: '20px',
             }}
           >
-            <ResultSubTitle title={t('superpave.step-12')} sx={{ margin: '.65rem' }} />
-
             <Box id="general-results" sx={{ width: '100%', overflowX: 'auto' }}>
+              <ResultSubTitle title={t('superpave.step-12')} sx={{ margin: '.65rem' }} />
+
               <DataGrid
                 hideFooter
                 disableColumnMenu
@@ -192,17 +190,16 @@ const Superpave_Step12_ResumeDosage = ({
               />
             </Box>
 
-            <ResultSubTitle
-              title={t('asphalt.dosages.superpave.asphalt-mass-quantitative')}
-              sx={{ margin: '.65rem' }}
-            />
-
             <Box sx={{ width: '100%', overflowX: 'auto' }}>
+              <ResultSubTitle
+                title={t('asphalt.dosages.superpave.asphalt-mass-quantitative')}
+                sx={{ margin: '.65rem' }}
+              />
               <DataGrid
                 hideFooter
                 disableColumnMenu
                 disableColumnFilter
-                columns={quantitativeCols.map((col) => ({
+                columns={finalProportionsCols.map((col) => ({
                   ...col,
                   flex: 1,
                   width: 200,
@@ -240,7 +237,7 @@ const Superpave_Step12_ResumeDosage = ({
                     <Result_Card
                       key={card.label}
                       label={card.label}
-                      value={card.value?.toString()}
+                      value={card.value?.toFixed(2).toString()}
                       unity={card.unity}
                     />
                   );

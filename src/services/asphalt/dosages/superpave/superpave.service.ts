@@ -1006,6 +1006,7 @@ class Superpave_SERVICE implements IEssayService {
           ...choosenGranulometryComposition,
           percentsOfDosage: percentsOfDosageValues,
         };
+        
 
         const response = await Api.post(`${this.info.backend_path}/calculate-dosage-equation`, {
           samplesData: samplesData ? samplesData : confirmationCompressionData.table,
