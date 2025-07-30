@@ -39,6 +39,7 @@ const Superpave_Step7_FirstCompactionParams = ({
   }, [data?.table3]);
 
   const table2Arr = [data.table2?.table2Lower, data.table2?.table2Average, data.table2?.table2Higher];
+  console.log("🚀 ~ Superpave_Step7_FirstCompactionParams ~ table2Arr:", table2Arr)
 
   useEffect(() => {
     toast.promise(

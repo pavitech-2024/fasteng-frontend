@@ -19,6 +19,7 @@ const Superpave_Step11_ConfirmCompaction = ({
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { confirmationCompressionData: data, setData } = useSuperpaveStore();
+  console.log('🚀 ~ Superpave_Step11_ConfirmCompaction ~ data:', data);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -63,7 +64,7 @@ const Superpave_Step11_ConfirmCompaction = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
-            type="text"
+            type="number"
             value={data.table[index]?.averageDiammeter}
             onChange={(e) => {
               const prevData = [...data.table];
@@ -258,7 +259,7 @@ const Superpave_Step11_ConfirmCompaction = ({
       waterTemperatureCorrection: null,
       diametralTractionResistance: null,
     });
-    setData({ step: 10, key: "table", value: newRows });
+    setData({ step: 10, key: 'table', value: newRows });
   };
 
   const ExpansionToolbar = () => {
@@ -275,53 +276,56 @@ const Superpave_Step11_ConfirmCompaction = ({
   };
 
   const handleGmmSubmit = () => {
-    const { temperatureOfWater, ...riceTestWithoutWaterTemp } = data.riceTest;
-    const riceTestHasValues = Object.values(riceTestWithoutWaterTemp).some((item) => item === null);
-    if (riceTestHasValues) {
-      toast.error(t('asphalt.dosages.superpave.rice-test-empty-values'));
-    } else if (!riceTestHasValues && data.gmm === null) {
-      toast.error(t('asphalt.dosages.superpave.gmm-empty'));
-    } else if (!riceTestHasValues && data.gmm !== null && data.riceTest.temperatureOfWater === null) {
-      toast.error(t('asphalt.dosages.superpave.water-temperature-empty'));
+    if (data.gmm) {
+      setData({ step: 10, key: 'gmm', value: data.gmm });
+      setModalIsOpen(false);
     } else {
-      toast.promise(
-        async () => {
-          try {
-            const { data: resData, success, error } = await superpave.calculateRiceTestStep9(data);
-            console.log('🚀 ~ handleGmmSubmit ~ resData:', resData);
+      const riceTestHasSomeNullValue = gmmInputs.forEach((item) => {
+        Object.entries(item).forEach(([key, value]) => {
+          if (key === value && value === null) {
+            toast.error(t('asphalt.dosages.superpave.rice-test-empty-values'));
+          } else {
+            toast.promise(
+              async () => {
+                try {
+                  const { data: resData, success, error } = await superpave.calculateRiceTestStep9(data);
+                  console.log('🚀 ~ handleGmmSubmit ~ resData:', resData);
 
-            if (success) {
-              setData({
-                step: 10,
-                key: 'gmm',
-                value: resData.toFixed(2),
-              });
-              setModalIsOpen(false);
-            } else {
-              console.error(`${error}`);
-            }
-          } catch (error) {
-            throw error;
+                  if (success) {
+                    setData({
+                      step: 10,
+                      key: 'gmm',
+                      value: resData.toFixed(2),
+                    });
+                    setModalIsOpen(false);
+                  } else {
+                    console.error(`${error}`);
+                  }
+                } catch (error) {
+                  throw error;
+                }
+              },
+              {
+                pending: t('loading.materials.pending'),
+                success: t('loading.materials.success'),
+                error: t('loading.materials.error'),
+              }
+            );
           }
-        },
-        {
-          pending: t('loading.materials.pending'),
-          success: t('loading.materials.success'),
-          error: t('loading.materials.error'),
-        }
-      );
+        });
+      });
     }
   };
 
   useEffect(() => {
     const tableHasNullVales = data.table.some((item) => item.averageDiammeter === null);
-    console.log("🚀 ~ tableHasNullVales:", tableHasNullVales)
+    console.log('🚀 ~ tableHasNullVales:', tableHasNullVales);
     if (!tableHasNullVales && data.gmm) {
       setNextDisabled(false);
     } else {
       setNextDisabled(true);
     }
-  },[])
+  }, []);
 
   return (
     <>
@@ -358,7 +362,7 @@ const Superpave_Step11_ConfirmCompaction = ({
             slots={{ footer: () => ExpansionToolbar() }}
           />
 
-          <Button variant='contained'>Confirmar</Button>
+          <Button variant="contained">Confirmar</Button>
 
           <ModalBase
             leftButtonTitle={'cancelar'}
@@ -366,7 +370,7 @@ const Superpave_Step11_ConfirmCompaction = ({
             oneButton={true}
             onCancel={() => setModalIsOpen(false)}
             open={modalIsOpen}
-            size={'large'}
+            size={'larger'}
             title={''}
             onSubmit={handleGmmSubmit}
             singleButtonTitle={t('asphalt.dosages.superpave.confirm')}
@@ -379,13 +383,14 @@ const Superpave_Step11_ConfirmCompaction = ({
                 onChange={(e) => setData({ step: 10, key: 'gmm', value: e.target.value })}
               />
 
-              <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
+              <Box sx={{ display: 'flex', width: '100%', flexDirection: 'row', gap: '2rem' }}>
                 {gmmInputs.map((input) => (
                   <InputEndAdornment
                     key={input.key}
                     adornment={input.adornment}
                     placeholder={input.placeHolder}
                     value={input.value}
+                    fullWidth
                     onChange={(e) => {
                       const prevData = { ...data.riceTest };
                       prevData[input.key] = e.target.value;

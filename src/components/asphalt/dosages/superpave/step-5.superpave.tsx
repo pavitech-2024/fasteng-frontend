@@ -33,14 +33,9 @@ const Superpave_Step5_InitialBinder = ({
       value: 0,
     }))
   );
-  console.log('🚀 ~ binderInput:', binderInput);
 
-  const { user } = useAuth();
-
-  // const [binderData, setBinderData] = useState<AsphaltMaterialData>();
   const [rows, setRows] = useState([]);
   const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
-  console.log('🚀 ~ estimatedPercentageRows:', estimatedPercentageRows);
   const compositions = ['inferior', 'intermediaria', 'superior'];
   const [materialNames, setMaterialNames] = useState<{ _id: string; name: string; type: string }[]>([]);
   const [activateSecondFetch, setActivateSecondFetch] = useState(false);
@@ -625,11 +620,12 @@ const Superpave_Step5_InitialBinder = ({
                   adornment="%"
                   value={binderInput?.find((obj) => obj.curve === curve).value || ''}
                   placeholder={t('asphalt.dosages.superpave.initial_binder')}
+                  type='number'
                   fullWidth
                   onChange={(e) => {
                     const prevData = [...binderInput];
                     const index = prevData.findIndex((obj) => obj.curve === curve);
-                    prevData[index].value = Number(e.target.value);
+                    prevData[index].value = Number(e.target.value.replace(',', '.'));
                     setBinderInput(prevData);
                     setData({
                       step: 4,

@@ -601,44 +601,6 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  // getStepFirstCurvePercentages = async (
-  //   generalData: SuperpaveData['generalData'],
-  //   step3Data: SuperpaveData['granulometryCompositionData'],
-  //   step4Data: SuperpaveData['initialBinderData'],
-  //   step5Data: SuperpaveData['firstCompressionData'],
-  //   isConsult?
-  // ): Promise<any> => {
-  //   try {
-  //     const { nominalSize, chosenCurves, porcentagesPassantsN200, percentageInputs } = step3Data;
-  //     const { turnNumber, binderSpecificMass, granulometryComposition: binderCompositions } = step4Data;
-  //     const { riceTest, inferiorRows, intermediariaRows, superiorRows, maximumDensity } = step5Data;
-  //     const { trafficVolume } = generalData;
-
-  //     const compositions = [inferiorRows, intermediariaRows, superiorRows];
-  //     const densities = [maximumDensity.lower, maximumDensity.average, maximumDensity.higher];
-
-  //     const response = await Api.post(`${this.info.backend_path}/step-5-parameters`, {
-  //       granulometryComposition: compositions,
-  //       trafficVolume,
-  //       nominalSize,
-  //       turnNumber,
-  //       chosenCurves,
-  //       binderSpecificGravity: binderSpecificMass,
-  //       porcentagesPassantsN200,
-  //       riceTest,
-  //       maximumDensity: densities,
-  //       binderCompositions,
-  //       percentageInputs,
-  //     });
-
-  //     const { data, success, error } = response.data;
-
-  //     if (success === false) throw error.name;
-
-  //     return { data, success, error };
-  //   } catch (error) {}
-  // };
-
   getStepFirstCurvePercentages = async (
     generalData: SuperpaveData['generalData'],
     step3Data: SuperpaveData['granulometryCompositionData'],
@@ -677,6 +639,7 @@ class Superpave_SERVICE implements IEssayService {
       return { data, success, error };
     } catch (error) {}
   };
+
 
   submitPercentsOfChosenCurve = async (
     data: SuperpaveData,
@@ -744,7 +707,7 @@ class Superpave_SERVICE implements IEssayService {
         percentsOfDosage = percentageInputs[2];
       }
 
-      const response = await Api.post(`${this.info.backend_path}/step-7-parameters`, {
+      const response = await Api.post(`${this.info.backend_path}/calculate-chosen-curve-percentages`, {
         curve,
         trafficVolume,
         percentsOfDosage,
