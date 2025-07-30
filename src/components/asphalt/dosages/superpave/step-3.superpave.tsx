@@ -11,7 +11,7 @@ import AsphaltGranulometry_resultsTable from '../../essays/granulometry/tables/r
 import { useEffect, useState } from 'react';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 
-const Superpave_Step3 = ({
+const Superpave_Step3_GranulometryResults = ({
   setNextDisabled,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const { granulometryResultsData: data } = useSuperpaveStore();
@@ -208,4 +208,4 @@ const Superpave_Step3 = ({
   );
 };
 
-export default Superpave_Step3;
+export default Superpave_Step3_GranulometryResults;

@@ -11,7 +11,7 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const Superpave_Step5 = ({
+const Superpave_Step5_InitialBinder = ({
   nextDisabled,
   setNextDisabled,
   superpave,
@@ -33,14 +33,9 @@ const Superpave_Step5 = ({
       value: 0,
     }))
   );
-  console.log('🚀 ~ binderInput:', binderInput);
 
-  const { user } = useAuth();
-
-  // const [binderData, setBinderData] = useState<AsphaltMaterialData>();
   const [rows, setRows] = useState([]);
   const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
-  console.log('🚀 ~ estimatedPercentageRows:', estimatedPercentageRows);
   const compositions = ['inferior', 'intermediaria', 'superior'];
   const [materialNames, setMaterialNames] = useState<{ _id: string; name: string; type: string }[]>([]);
   const [activateSecondFetch, setActivateSecondFetch] = useState(false);
@@ -587,11 +582,11 @@ const Superpave_Step5 = ({
                   fullWidth
                   onChange={(e) => {
                     const materialIndex = data.materials?.findIndex((i) => i.type === 'asphaltBinder' || 'CAP');
-                    const newData = [...data?.materials];
-                    newData[materialIndex].realSpecificMass = parseFloat(e.target.value.replace(',', '.'));
+                    const newData = {...data}
+                    newData.materials[materialIndex].realSpecificMass = parseFloat(e.target.value.replace(',', '.'));
+                    newData.binderSpecificMass = parseFloat(e.target.value.replace(',', '.'));
                     setData({
                       step: 4,
-                      key: `materials`,
                       value: newData,
                     });
                   }}
@@ -625,11 +620,12 @@ const Superpave_Step5 = ({
                   adornment="%"
                   value={binderInput?.find((obj) => obj.curve === curve).value || ''}
                   placeholder={t('asphalt.dosages.superpave.initial_binder')}
+                  type='number'
                   fullWidth
                   onChange={(e) => {
                     const prevData = [...binderInput];
                     const index = prevData.findIndex((obj) => obj.curve === curve);
-                    prevData[index].value = Number(e.target.value);
+                    prevData[index].value = Number(e.target.value.replace(',', '.'));
                     setBinderInput(prevData);
                     setData({
                       step: 4,
@@ -647,4 +643,4 @@ const Superpave_Step5 = ({
   );
 };
 
-export default Superpave_Step5;
+export default Superpave_Step5_InitialBinder;

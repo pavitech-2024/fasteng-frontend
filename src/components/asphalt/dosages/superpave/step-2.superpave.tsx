@@ -11,9 +11,8 @@ import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { toast } from 'react-toastify';
 import GranulometryRow from './functionalComponents/granulometryTableRow';
 
-const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const data = useSuperpaveStore((state) => state.granulometryEssayData);
-  console.log('🚀 ~ constSuperpave_Step2= ~ data:', data);
   const setData = useSuperpaveStore((state) => state.setData);
   const myRef = useRef<any>({});
 
@@ -279,13 +278,11 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
     },
   ];
 
-  console.log('🚀 ~ constSuperpave_Step2= ~ binderColumns:', binderColumns);
-
   useEffect(() => {
     setNextDisabled(true);
-    const hasCoarseAggregate = data.materials.some((material) => material.type === 'coarseAggregate');
-    const hasFineAggregate = data.materials.some((material) => material.type === 'fineAggregate');
-    const hasBinder = data.materials.some((material) => material.type === 'asphaltBinder' || material.type === 'CAP');
+    const hasCoarseAggregate = data.materials?.some((material) => material.type === 'coarseAggregate');
+    const hasFineAggregate = data.materials?.some((material) => material.type === 'fineAggregate');
+    const hasBinder = data.materials?.some((material) => material.type === 'asphaltBinder' || material.type === 'CAP');
 
     if (hasCoarseAggregate && hasFineAggregate && hasBinder) setNextDisabled(false);
   }, [data.materials]);
@@ -340,7 +337,7 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
       />
 
       {aggregatesRows.length > 0 &&
-        data.materials.length > 0 &&
+        data.materials?.length > 0 &&
         aggregatesRows?.map((row, idx) => (
           <GranulometryRow
             key={idx}
@@ -390,4 +387,4 @@ const Superpave_Step2 = ({ setNextDisabled }: EssayPageProps & { superpave: Supe
   );
 };
 
-export default Superpave_Step2;
+export default Superpave_Step2_GranulometryEssay;

@@ -7,6 +7,8 @@
   "superpave.step-7-description": "Esses são os parâmetros da primeira compactação. Altere-os conforme necessário.",
   "superpave.step-8-description": "Essas são as porcentagens da curva escolhida.",
   "superpave.step-9-description": "Insira os valores da segunda compactação para calcular a densidade máxima real ou utilize os botões de densidade máxima medida disponíveis ao final da tela.",
+  "superpave.step-10-description": "Esses são os parâmetros da segunda compactação.",
+  "superpave.step-11-description": "Insira os dados de compactação e realize o Rice Test para calcular a Densidade Máxima da Mistura. Após preencher os campos clique em confirmar para continuar.",
   "superpave.step-12-description": "Esses são os resultados da sua dosagem Superpave. Não se esqueça de salvar para acessá-las mais tarde.",
 
   "superpave.step-12": "Resultados",
@@ -145,6 +147,8 @@
   "asphalt.dosages.superpave.asphalt-mass-quantitative": "Quantitativo para 1 metro cúbico de massa asfáltica",
 
   "asphalt.dosages.superpave.mechanic-volumetric-params": "Parâmetros volumétricos e mecânicos da mistura no teor ótimo de ligante asfáltico",
+
+  "asphalt.dosages.superpave.optimum-binder": "Teor ótimo de ligante asfáltico (%)",
 
   "asphalt.dosages.superpave.step-3.lower": "Inferior",
   "asphalt.dosages.superpave.step-3.higher": "Superior",

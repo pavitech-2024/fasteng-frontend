@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import GraphStep6 from './graphs/step6Graph';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 
-const Superpave_Step7 = ({
+const Superpave_Step7_FirstCompactionParams = ({
   nextDisabled,
   setNextDisabled,
   superpave,
@@ -39,6 +39,7 @@ const Superpave_Step7 = ({
   }, [data?.table3]);
 
   const table2Arr = [data.table2?.table2Lower, data.table2?.table2Average, data.table2?.table2Higher];
+  console.log("🚀 ~ Superpave_Step7_FirstCompactionParams ~ table2Arr:", table2Arr)
 
   useEffect(() => {
     toast.promise(
@@ -412,4 +413,4 @@ const Superpave_Step7 = ({
   );
 };
 
-export default Superpave_Step7;
+export default Superpave_Step7_FirstCompactionParams;

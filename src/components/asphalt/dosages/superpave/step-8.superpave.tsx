@@ -9,7 +9,7 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const Superpave_Step8 = ({
+const Superpave_Step8_ChosenCurvePercents = ({
   nextDisabled,
   setNextDisabled,
   superpave,
@@ -23,6 +23,7 @@ const Superpave_Step8 = ({
     granulometryEssayData,
     chosenCurvePercentagesData: data,
   } = useSuperpaveStore();
+    console.log("🚀 ~ Superpave_Step8_ChosenCurvePercents ~ data:", data)
 
   const materials = granulometryEssayData.materials.filter((material) => material.type.includes('Aggregate') || material.type.includes('filler'));
 
@@ -162,4 +163,4 @@ const Superpave_Step8 = ({
   );
 };
 
-export default Superpave_Step8;
+export default Superpave_Step8_ChosenCurvePercents;

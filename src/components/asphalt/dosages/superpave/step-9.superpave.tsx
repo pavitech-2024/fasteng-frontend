@@ -12,7 +12,7 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const Superpave_Step9 = ({ setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const {
     secondCompressionData: data,
@@ -508,7 +508,7 @@ const Superpave_Step9 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
                   </Box>
                   {Object.values(riceTestModalIsOpen).some((item) => item === true) && (
                     <ModalBase
-                      title={'Calcular por Rice Test'}
+                      title={t('asphalt.dosages.superpave.calculate-rice-test')}
                       leftButtonTitle={'cancelar'}
                       rightButtonTitle={'confirmar'}
                       onCancel={() => setRiceTestModalIsOpen({ ...riceTestModalIsOpen, [idx]: false })}
@@ -528,8 +528,6 @@ const Superpave_Step9 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
                             const prevData = [...data.maximumDensities];
                             const newData = { ...prevData[idx], insertedGmm: parseFloat(value) };
                             prevData[idx] = newData;
-                            console.log('🚀 ~ prevData:', prevData);
-
                             setData({ step: 8, value: { ...data, maximumDensities: prevData } });
                           }}
                         />
@@ -593,4 +591,4 @@ const Superpave_Step9 = ({ setNextDisabled, superpave }: EssayPageProps & { supe
   );
 };
 
-export default Superpave_Step9;
+export default Superpave_Step9_SecondCompaction;

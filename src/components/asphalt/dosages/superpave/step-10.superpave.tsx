@@ -10,7 +10,7 @@ import { t } from 'i18next';
 import { DataGrid, GridColumnGroupingModel } from '@mui/x-data-grid';
 import MiniGraphics from '../marshall/graphs/miniGraph';
 
-const Superpave_Step10 = ({
+const Superpave_Step10_SecondCompactionParams = ({
   nextDisabled,
   setNextDisabled,
   superpave,
@@ -25,10 +25,10 @@ const Superpave_Step10 = ({
     granulometryEssayData,
   } = useSuperpaveStore();
 
-  const aggregateMaterials = granulometryEssayData[0].materials?.filter(
+  const aggregateMaterials = granulometryEssayData?.materials?.filter(
     ({ type }) => type.includes('Aggregate') || type.includes('filler')
   );
-  
+
   const [expectedVolumetricParamsRows, setExpectedVolumetricParamsRows] = useState([]);
 
   useEffect(() => {
@@ -40,6 +40,10 @@ const Superpave_Step10 = ({
             success,
             error,
           } = await superpave.getSecondCompressionPercentages(firstCurvePercentagesData, secondCompressionData);
+
+          console.log('🚀 ~ Superpave_Step10_ ~ error:', error);
+          console.log('🚀 ~ Superpave_Step10_ ~ success:', success);
+          console.log('🚀 ~ Superpave_Step10_ ~ resData:', resData);
 
           if (success) {
             const newData = { ...data, ...resData };
@@ -91,11 +95,12 @@ const Superpave_Step10 = ({
                 ? secondCompressionData.composition[indexName]?.RBV?.toFixed(2)
                 : '---',
             pa:
-              secondCompressionData.composition[indexName]?.indirectTensileStrength !== null
-                ? secondCompressionData.composition[indexName]?.indirectTensileStrength?.toFixed(2)
+              secondCompressionData.composition[indexName]?.ratioDustAsphalt !== null
+                ? secondCompressionData.composition[indexName]?.ratioDustAsphalt?.toFixed(2)
                 : '---',
             specificMass: secondCompressionData.composition[indexName]?.specifiesMass?.toFixed(2),
             absorbedWater: secondCompressionData.composition[indexName]?.projectN.percentWaterAbs?.toFixed(2),
+            rt: secondCompressionData.composition[indexName]?.indirectTensileStrength?.toFixed(2),
           };
         })
         .filter((row) => row !== null);
@@ -179,24 +184,21 @@ const Superpave_Step10 = ({
     },
   ];
 
-  const finalProportionsCols = [];
-
-  secondCompressionData.ponderatedPercentsOfDosage?.forEach((value, idx) => {
-    finalProportionsCols.push({
-      field: `material_${aggregateMaterials[idx]._id}_${idx + 1}`,
-      headerName: ``,
-      valueFormatter: ({ value }) => `${value}`,
-      width: 240,
-    });
-  });
-
-  const finalProportionsRows = aggregateMaterials.map((material, index) => ({
-    id: index + 1,
-    [`material_${material._id}_${index + 1}`]:
-      secondCompressionData.ponderatedPercentsOfDosage !== null
-        ? secondCompressionData.ponderatedPercentsOfDosage[index]?.toFixed(2)
-        : '---',
+  const finalProportionsCols = secondCompressionData.ponderatedPercentsOfDosage?.map((value, idx) => ({
+    field: `material_${aggregateMaterials[idx]?._id}_${idx + 1}`,
+    headerName: `${aggregateMaterials[idx]?.name}`,
+    valueFormatter: ({ value }) => `${value}`,
   }));
+
+  const finalProportionsRows = [
+    secondCompressionData.ponderatedPercentsOfDosage?.reduce((prev: Record<string, string | number>, value, index) => {
+      return {
+        ...prev,
+        [`material_${aggregateMaterials[index]?._id}_${index + 1}`]: value?.toFixed(2) || '---',
+        id: 1,
+      };
+    }, {} as Record<string, string | number>),
+  ];
 
   nextDisabled && setNextDisabled(false);
 
@@ -209,7 +211,7 @@ const Superpave_Step10 = ({
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '10px',
+            gap: '2rem',
           }}
         >
           {typeof data?.optimumContent !== 'string' && (
@@ -222,40 +224,62 @@ const Superpave_Step10 = ({
             disableColumnFilter
             experimentalFeatures={{ columnGrouping: true }}
             columnGroupingModel={expectedVolumetricParamsGroupings}
-            columns={expectedVolumetricParamsCols}
+            columns={expectedVolumetricParamsCols.map((column) => ({
+              ...column,
+              disableColumnMenu: true,
+              sortable: false,
+              align: 'center',
+              headerAlign: 'center',
+              minWidth: 100,
+              flex: 1,
+            }))}
             rows={expectedVolumetricParamsRows}
           />
 
-          <Typography>Proporções finais dos materiais (%)</Typography>
+          <Box>
+            <Typography variant="h6" sx={{ textAlign: 'center' }}>
+              Proporções finais dos materiais (%)
+            </Typography>
 
-          <DataGrid
-            hideFooter
-            disableColumnMenu
-            disableColumnFilter
-            experimentalFeatures={{ columnGrouping: true }}
-            columnGroupingModel={[]}
-            columns={finalProportionsCols}
-            rows={finalProportionsRows}
-          />
+            <DataGrid
+              hideFooter
+              disableColumnMenu
+              disableColumnFilter
+              experimentalFeatures={{ columnGrouping: true }}
+              columnGroupingModel={[]}
+              columns={finalProportionsCols.map((column) => ({
+                ...column,
+                disableColumnMenu: true,
+                sortable: false,
+                align: 'center',
+                headerAlign: 'center',
+                minWidth: 100,
+                flex: 1,
+              }))}
+              rows={finalProportionsRows}
+            />
+          </Box>
 
-          <MiniGraphics data={data.graphs.graphVv} type="Vv" nameEixoY={'Vv (%)'} />
+          <Box sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <MiniGraphics data={data.graphs?.graphVv} type="Vv" nameEixoY={'Vv (%)'} />
 
-          <MiniGraphics nameEixoY="GMB (g/cm³)" type="GMB" data={data.graphs.graphGmb} />
+            <MiniGraphics nameEixoY="GMB (g/cm³)" type="GMB" data={data.graphs?.graphGmb} />
 
-          <MiniGraphics nameEixoY="GMM (g/cm³)" type="GMM" data={data.graphs.graphGmm} />
+            <MiniGraphics nameEixoY="GMM (g/cm³)" type="GMM" data={data.graphs?.graphGmm} />
 
-          {data.graphs.graphRBV.flat().every((e) => e !== null) && (
-            <MiniGraphics nameEixoY="RBV (g/cm³)" type="RBV" data={data.graphs.graphRBV} />
-          )}
-          <MiniGraphics nameEixoY="VAM (g/cm³)" type="Vam" data={data.graphs.graphVam} />
+            {data.graphs?.graphRBV.flat().every((e) => e !== null) && (
+              <MiniGraphics nameEixoY="RBV (g/cm³)" type="RBV" data={data.graphs?.graphRBV} />
+            )}
+            <MiniGraphics nameEixoY="VAM (g/cm³)" type="Vam" data={data.graphs?.graphVam} />
 
-          {isValid && <MiniGraphics nameEixoY="RT (MPa)" type="RT" data={data.graphs.graphRT} />}
+            {isValid && <MiniGraphics nameEixoY="RT (MPa)" type="RT" data={data.graphs?.graphRT} />}
 
-          <MiniGraphics nameEixoY="PA" type="Relação pó/asfalto" data={data.graphs.graphPA} />
+            <MiniGraphics nameEixoY="PA" type="Relação pó/asfalto" data={data.graphs?.graphPA} />
+          </Box>
         </Box>
       )}
     </>
   );
 };
 
-export default Superpave_Step10;
+export default Superpave_Step10_SecondCompactionParams;
