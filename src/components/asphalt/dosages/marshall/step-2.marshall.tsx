@@ -26,7 +26,7 @@ const Marshall_Step2 = ({
     toast.promise(
       async () => {
         try {
-          const data = await marshall.getmaterialsByUserId(user._id);
+          const data : any = await marshall.getmaterialsByUserId(user._id);
 
           let newMaterials: AsphaltMaterial[] = [];
 
