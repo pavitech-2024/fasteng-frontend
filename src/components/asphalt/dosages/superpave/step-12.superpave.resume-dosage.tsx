@@ -29,24 +29,24 @@ const Superpave_Step12_ResumeDosage = ({
     dosageResume: data,
     setData,
   } = useSuperpaveStore();
+    console.log("🚀 ~ Superpave_Step12_ResumeDosage ~ granulometryEssayData:", granulometryEssayData)
   console.log('🚀 ~ Superpave_Step12_ResumeDosage ~ data:', data);
 
   const [finalProportionsRows, setFinalProportionsRows] = useState([]);
   const [quantitativeRows, setQuantitativeRows] = useState([]);
-  const [quantitativeCols, setQuantitativeCols] = useState([]);
   const [dosage, setDosage] = useState(null);
   const store = JSON.parse(sessionStorage.getItem('asphalt-superpave-store'));
   const dosageId = store?.state._id ? store?.state._id : store.state.undefined._id;
 
   const finalProportionsCols = granulometryEssayData.materials
-    .filter((material) => material.type !== 'asphaltBinder' && material.type !== 'CAP')
+    ?.filter((material) => material.type !== 'asphaltBinder' && material.type !== 'CAP')
     .map((material) => ({
       field: material.name,
       headerName: material.name,
       valueFormatter: ({ value }) => `${value}`,
     }));
 
-  finalProportionsCols.unshift({
+  finalProportionsCols?.unshift({
     field: 'optimumBinder',
     headerName: t('asphalt.dosages.superpave.optimum-binder'),
     valueFormatter: ({ value }) => `${value}`,
@@ -93,7 +93,7 @@ const Superpave_Step12_ResumeDosage = ({
           : '---',
       };
 
-      data.ponderatedPercentsOfDosage.forEach((materialPercent, index) => {
+      data.ponderatedPercentsOfDosage?.forEach((materialPercent, index) => {
         const materialName = granulometryEssayData.materials[index]?.name;
         prevRowsData[materialName] = materialPercent;
       });
@@ -105,7 +105,7 @@ const Superpave_Step12_ResumeDosage = ({
   useEffect(() => {
     if (data?.quantitative?.length > 0) {
       const arr = { id: 1 };
-      data.quantitative.forEach((material, index) => {
+      data.quantitative?.forEach((material, index) => {
         const materialName = granulometryEssayData.materials[index - 1]?.name;
         if (index > 0) {
           arr[materialName] = material.toFixed(2);
@@ -173,11 +173,11 @@ const Superpave_Step12_ResumeDosage = ({
             <Box id="general-results" sx={{ width: '100%', overflowX: 'auto' }}>
               <ResultSubTitle title={t('superpave.step-12')} sx={{ margin: '.65rem' }} />
 
-              <DataGrid
+              {/* <DataGrid
                 hideFooter
                 disableColumnMenu
                 disableColumnFilter
-                columns={finalProportionsCols.map((column) => ({
+                columns={finalProportionsCols?.map((column) => ({
                   ...column,
                   disableColumnMenu: true,
                   sortable: false,
@@ -187,7 +187,7 @@ const Superpave_Step12_ResumeDosage = ({
                   flex: 1,
                 }))}
                 rows={finalProportionsRows}
-              />
+              /> */}
             </Box>
 
             <Box sx={{ width: '100%', overflowX: 'auto' }}>
@@ -195,11 +195,11 @@ const Superpave_Step12_ResumeDosage = ({
                 title={t('asphalt.dosages.superpave.asphalt-mass-quantitative')}
                 sx={{ margin: '.65rem' }}
               />
-              <DataGrid
+              {/* <DataGrid
                 hideFooter
                 disableColumnMenu
                 disableColumnFilter
-                columns={finalProportionsCols.map((col) => ({
+                columns={finalProportionsCols?.map((col) => ({
                   ...col,
                   flex: 1,
                   width: 200,
@@ -210,7 +210,7 @@ const Superpave_Step12_ResumeDosage = ({
                 sx={{
                   minWidth: '800px',
                 }}
-              />
+              /> */}
             </Box>
 
             <ResultSubTitle
@@ -231,7 +231,7 @@ const Superpave_Step12_ResumeDosage = ({
                 justifyContent: { mobile: 'center', notebook: 'flex-start' },
               }}
             >
-              {resultCards.map((card) => {
+              {resultCards?.map((card) => {
                 if (card.value !== undefined) {
                   return (
                     <Result_Card
