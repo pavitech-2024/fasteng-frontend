@@ -73,9 +73,10 @@ class Superpave_SERVICE implements IEssayService {
         case 1:
           await this.validateGranulometryEssayData(data as SuperpaveData);
           await this.calculateGranulometryEssayData(data as SuperpaveData, isConsult);
+          await this.submitGranulometryEssayData(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 2:
-          await this.submitGranulometryEssayData(data as SuperpaveData, this.userId, null, isConsult);
+          await this.submitGranulometryEssayResults(data as SuperpaveData, this.userId, null, isConsult);
         case 3:
           await this.getGranulometricCompositionData(data as SuperpaveData, this.userId, isConsult);
           break;
@@ -250,7 +251,7 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  submitGranulometryEssayData = async (
+    submitGranulometryEssayData = async (
     data: SuperpaveData,
     userId: string,
     user?: string,
@@ -261,8 +262,37 @@ class Superpave_SERVICE implements IEssayService {
         const { name } = data.generalData;
         const userData = userId ? userId : user;
 
-        const response = await Api.post(`${this.info.backend_path}/save-granulometry-essay-step/${userData}`, {
+        const response = await Api.post(`${this.info.backend_path}/save-granulometry-essay-data/${userData}`, {
           granulometryEssayData: {
+            name,
+            data: data.granulometryEssayData,
+          },
+        });
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        throw error;
+      }
+    } else {
+      this.store_actions.setAllData(data);
+    }
+  };
+
+  submitGranulometryEssayResults = async (
+    data: SuperpaveData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
+      try {
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
+
+        const response = await Api.post(`${this.info.backend_path}/save-granulometry-essay-results/${userData}`, {
+          granulometryEssayResults: {
             name,
             data: data.granulometryEssayData,
             results: data.granulometryResultsData,
@@ -279,50 +309,6 @@ class Superpave_SERVICE implements IEssayService {
       this.store_actions.setAllData(data);
     }
   };
-
-  // send the selected materials to backend
-  // submitGranulometricComposition = async (
-  //   data: SuperpaveData,
-  //   userId: string,
-  //   user?: string,
-  //   isConsult?: boolean
-  // ): Promise<void> => {
-  //   if (!isConsult) {
-  //     try {
-  //       const { aggregates, binder } = data.materialSelectionData;
-  //       const { name } = data.generalData;
-  //       const userData = userId ? userId : user;
-
-  //       if (!aggregates) throw t('errors.empty-aggregates');
-  //       if (!binder) throw t('errors.empty-binder');
-
-  //       const materialSelectionData = {
-  //         name,
-  //         aggregates,
-  //         binder,
-  //         isConsult: null,
-  //       };
-
-  //       if (isConsult) materialSelectionData.isConsult = isConsult;
-
-  //       const response = await Api.post(`${this.info.backend_path}/save-material-selection-step/${userData}`, {
-  //         materialSelectionData: {
-  //           name,
-  //           aggregates,
-  //           binder,
-  //         },
-  //       });
-
-  //       const { success, error } = response.data;
-
-  //       if (success === false) throw error.name;
-  //     } catch (error) {
-  //       throw error;
-  //     }
-  //   } else {
-  //     this.store_actions.setAllData(data);
-  //   }
-  // };
 
   getGranulometricCompositionData = async (
     dosageData: SuperpaveData,

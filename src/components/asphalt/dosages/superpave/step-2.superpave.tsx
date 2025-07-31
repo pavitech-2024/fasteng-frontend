@@ -20,7 +20,7 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
     ({ material }) => material.type !== 'asphaltBinder' && material.type !== 'CAP' && material.type !== 'other'
   );
 
-  const [materialMassInputs, setMaterialMassInputs] = useState(aggregatesRows.map((row) => row.material_mass || 0));
+  const [materialMassInputs, setMaterialMassInputs] = useState(aggregatesRows?.map((row) => row.material_mass || 0));
 
   const initialRows = useMemo(() => {
     if (!data.viscosity?.dataPoints) return [];
