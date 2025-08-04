@@ -23,7 +23,6 @@ const Superpave_Step8_ChosenCurvePercents = ({
     granulometryEssayData,
     chosenCurvePercentagesData: data,
   } = useSuperpaveStore();
-    console.log("🚀 ~ Superpave_Step8_ChosenCurvePercents ~ data:", data)
 
   const materials = granulometryEssayData.data?.materials?.filter((material) => material.type.includes('Aggregate') || material.type.includes('filler'));
 

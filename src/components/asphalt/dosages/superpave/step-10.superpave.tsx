@@ -41,10 +41,6 @@ const Superpave_Step10_SecondCompactionParams = ({
             error,
           } = await superpave.getSecondCompressionPercentages(firstCurvePercentagesData, secondCompressionData);
 
-          console.log('🚀 ~ Superpave_Step10_ ~ error:', error);
-          console.log('🚀 ~ Superpave_Step10_ ~ success:', success);
-          console.log('🚀 ~ Superpave_Step10_ ~ resData:', resData);
-
           if (success) {
             const newData = { ...data, ...resData };
             setData({

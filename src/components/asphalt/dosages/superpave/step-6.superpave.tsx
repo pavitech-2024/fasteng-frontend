@@ -431,11 +431,9 @@ const Superpave_Step6_FirstCompaction = ({
   useEffect(() => {
     // Verifica se o Rice Test/GMM foi gerado para cada curva
     const isRiceTestFinished = data.riceTest.length > 0 && data.riceTest?.every(({ gmm }) => gmm !== 0);
-    console.log("🚀 ~ isRiceTestFinished:", isRiceTestFinished)
 
     // Verifica se todos os inputs das tabelas de todas as curvas foram preenchidos
     const isCurvesComplete = data.riceTest.length === granulometryCompositionData.chosenCurves.length;
-    console.log("🚀 ~ isCurvesComplete:", isCurvesComplete)
 
     // Atualiza o estado de nextDisabled se uma das condições acima for verdadeira
     setNextDisabled(!(isRiceTestFinished && isCurvesComplete));
