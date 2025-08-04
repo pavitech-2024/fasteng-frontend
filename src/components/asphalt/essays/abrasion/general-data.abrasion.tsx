@@ -24,9 +24,7 @@ const Abrasion_GeneralData = ({
     toast.promise(
       async () => {
         const data = await abrasion.getmaterialsByUserId(user._id);
-
-        const filteredMaterials = data[0].filter((material) => material.type === 'coarseAggregate');
-
+        const filteredMaterials = data[0].materials.filter((material) => material.type === 'coarseAggregate' || material.type === 'fineAggregate');
         setMaterials(filteredMaterials);
         setLoading(false);
       },
@@ -50,11 +48,8 @@ const Abrasion_GeneralData = ({
   // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
   inputs.every(({ required, value }) => {
     if (!required) return true;
-
     if (value === null) return false;
-
     if (typeof value === 'string' && value.trim() === '') return false;
-
     return true;
   }) &&
     nextDisabled &&

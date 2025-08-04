@@ -23,8 +23,9 @@ const Superpave_Step8_ChosenCurvePercents = ({
     granulometryEssayData,
     chosenCurvePercentagesData: data,
   } = useSuperpaveStore();
+    console.log("🚀 ~ Superpave_Step8_ChosenCurvePercents ~ granulometryEssayData:", granulometryEssayData)
 
-  const materials = granulometryEssayData.data?.materials?.filter((material) => material.type.includes('Aggregate') || material.type.includes('filler'));
+  const materials = granulometryEssayData?.materials?.filter((material) => material.type.includes('Aggregate') || material.type.includes('filler'));
 
   const [vv, setVv] = useState();
   const [extimatedBinderMaterialsPercentsRows, setExtimatedBinderMaterialsPercentsRows] = useState<any[]>([]);
@@ -73,7 +74,7 @@ const Superpave_Step8_ChosenCurvePercents = ({
       headerName: `${t('asphalt.dosages.superpave.estimated-percentages-binder-vv')} = ${vv} %`,
       children: [
         { field: 'binder' },
-        ...materials.map((material, index) => ({
+        ...materials?.map((material, index) => ({
           field: `material_${material._id}_${index + 1}`,
         }))
       ],

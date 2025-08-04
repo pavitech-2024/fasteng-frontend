@@ -12,6 +12,7 @@ class Superpave_SERVICE implements IEssayService {
     return getSuperpaveStore.getState();
   }
 
+
   info = {
     key: 'superpave',
     icon: SuperpaveIcon,
@@ -177,13 +178,13 @@ class Superpave_SERVICE implements IEssayService {
   validateGranulometryEssayData = async (data: SuperpaveData): Promise<void> => {
     // Verify if the material mass is not empty or negative
 
-    data.granulometryEssayData?.data.granulometrys?.forEach((material, i) => {
+    data.granulometryEssayData?.granulometrys?.forEach((material, i) => {
       if (!material.material_mass) throw t('errors.empty-material-mass');
       if (material.material_mass < 0) throw t('errors.negative-material-mass');
     });
 
     // Verify if all the passant percentages are not empty or negative
-    data.granulometryEssayData?.data.granulometrys?.forEach((material) => {
+    data.granulometryEssayData?.granulometrys?.forEach((material) => {
       material.table_data.forEach((row) => {
         if (row.passant === null) throw t('errors.empty-passant') + row.sieve_label;
         if (row.passant < 0) throw t('errors.negative-passant') + row.sieve_label;
@@ -193,13 +194,13 @@ class Superpave_SERVICE implements IEssayService {
     // Verify if the sum of the masses (retained + bottom) equals the material mass
     let retained = 0.0;
 
-    data.granulometryEssayData?.data.granulometrys?.forEach((material) => {
+    data.granulometryEssayData?.granulometrys?.forEach((material) => {
       material.table_data.forEach((row) => {
         retained += row.retained;
       });
     });
 
-    data.granulometryEssayData?.data.viscosity?.dataPoints?.forEach((point, index) => {
+    data.granulometryEssayData?.viscosity?.dataPoints?.forEach((point, index) => {
       if (!point.viscosity) throw `${t('errors.empty-viscosity')} + ${index}`;
       if (point.viscosity < 1) throw t('errors.zero-viscosity');
     });
@@ -216,8 +217,8 @@ class Superpave_SERVICE implements IEssayService {
     if (!isConsult) {
       try {
         const granulometryEssayData = {
-          granulometrys: data.granulometryEssayData.data.granulometrys,
-          viscosity: data.granulometryEssayData.data.viscosity,
+          granulometrys: data.granulometryEssayData.granulometrys,
+          viscosity: data.granulometryEssayData.viscosity,
         };
 
         const response = await Api.post(
@@ -261,11 +262,14 @@ class Superpave_SERVICE implements IEssayService {
       try {
         const { name } = data.generalData;
         const userData = userId ? userId : user;
+        const { materials, granulometrys, viscosity } = data.granulometryEssayData;
 
         const response = await Api.post(`${this.info.backend_path}/save-granulometry-essay-data/${userData}`, {
           granulometryEssayData: {
             name,
-            data: data.granulometryEssayData,
+            materials,
+            granulometrys,
+            viscosity,
           },
         });
 
@@ -290,12 +294,13 @@ class Superpave_SERVICE implements IEssayService {
       try {
         const { name } = data.generalData;
         const userData = userId ? userId : user;
+        const { granulometrys, viscosity } = data.granulometryResultsData;
 
         const response = await Api.post(`${this.info.backend_path}/save-granulometry-essay-results/${userData}`, {
           granulometryEssayResults: {
             name,
-            data: data.granulometryEssayData,
-            results: data.granulometryResultsData,
+            granulometrys,
+            viscosity,
           },
         });
 
@@ -320,8 +325,7 @@ class Superpave_SERVICE implements IEssayService {
       try {
         const { dnitBand } = dosageData.generalData;
         const { granulometrys: resultsData } = dosageData.granulometryResultsData;
-        const { data: essayStep } = dosageData.granulometryEssayData;
-        const essayData = essayStep.granulometrys;
+        const { granulometrys: essayData } = dosageData.granulometryEssayData;
 
         let aggregates = essayData.map((item) => {
           return {
@@ -375,7 +379,7 @@ class Superpave_SERVICE implements IEssayService {
     try {
       const { percentageInputs, nominalSize, percentsToList } = granulometryCompositionData;
       const { dnitBand } = generalData;
-      const aggregates = granulometryEssayData.data.materials;
+      const aggregates = granulometryEssayData.materials;
 
       const response = await Api.post(`${this.info.backend_path}/calculate-granulometric-composition-data`, {
         chosenCurves,
@@ -439,7 +443,7 @@ class Superpave_SERVICE implements IEssayService {
     granulometryEssayData: SuperpaveData['granulometryEssayData']
   ): Promise<any> => {
     try {
-      const { materials } = granulometryEssayData.data;
+      const { materials } = granulometryEssayData;
 
       const response = await Api.post(`${this.info.backend_path}/step-5-specific-masses`, {
         materials,
