@@ -40,7 +40,7 @@ const Superpave_Step4_GranulometryComposition = ({ setNextDisabled, superpave }:
   const tableCompositionInputsAverage = {};
   const tableCompositionInputsHigher = {};
 
-  const selectedMaterials = granulometryEssayData?.data.materials
+  const selectedMaterials = granulometryEssayData?.materials
     ?.map((material) => {
       if (material.type !== 'asphaltBinder' && material.type !== 'CAP') {
         return {

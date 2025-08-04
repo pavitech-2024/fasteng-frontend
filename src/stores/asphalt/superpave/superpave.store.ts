@@ -16,23 +16,21 @@ interface SuperpaveGeneralData {
 }
 
 interface SuperpaveGranulometryEssayData {
-  data: {
-    materials: AsphaltMaterial[];
-    granulometrys: {
-      material: AsphaltMaterial;
-      material_mass: number;
-      table_data: { sieve_label: string; sieve_value: number; passant: number; retained: number }[];
-      sieve_series: { label: string; value: number }[];
-      bottom: number;
+  materials: AsphaltMaterial[];
+  granulometrys: {
+    material: AsphaltMaterial;
+    material_mass: number;
+    table_data: { sieve_label: string; sieve_value: number; passant: number; retained: number }[];
+    sieve_series: { label: string; value: number }[];
+    bottom: number;
+  }[];
+  viscosity: {
+    material: AsphaltMaterial;
+    dataPoints: {
+      id: number;
+      temperature: number;
+      viscosity: number;
     }[];
-    viscosity: {
-      material: AsphaltMaterial;
-      dataPoints: {
-        id: number;
-        temperature: number;
-        viscosity: number;
-      }[];
-    };
   };
 }
 
@@ -503,11 +501,9 @@ const initialState = {
     step: 0,
   },
   granulometryEssayData: {
-    data: {
-      materials: [],
-      granulometrys: [],
-      viscosity: null,
-    },
+    materials: [],
+    granulometrys: [],
+    viscosity: null,
   },
   granulometryResultsData: {
     granulometrys: [],

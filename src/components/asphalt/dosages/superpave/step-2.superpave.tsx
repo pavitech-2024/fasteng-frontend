@@ -3,7 +3,6 @@ import { Box, Button, Typography } from '@mui/material';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import CreateMaterialDosageTable from './tables/createMaterialDosageTable';
-import AsphaltGranulometry_step2Table from '../../essays/granulometry/tables/step2-table.granulometry';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
@@ -13,39 +12,41 @@ import GranulometryRow from './functionalComponents/granulometryTableRow';
 
 const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const data = useSuperpaveStore((state) => state.granulometryEssayData);
+  console.log("🚀 ~ Superpave_Step2_GranulometryEssay ~ data:", data)
   const setData = useSuperpaveStore((state) => state.setData);
   const myRef = useRef<any>({});
 
-  const aggregatesRows = data.data.granulometrys?.filter(
+  const aggregatesRows = data.granulometrys?.filter(
     ({ material }) => material.type !== 'asphaltBinder' && material.type !== 'CAP' && material.type !== 'other'
   );
 
+  
   const [materialMassInputs, setMaterialMassInputs] = useState(aggregatesRows?.map((row) => row.material_mass || 0));
 
   const initialRows = useMemo(() => {
-    if (!data.data.viscosity?.dataPoints) return [];
-    return data.data.viscosity.dataPoints.map((point) => ({
+    if (!data.viscosity?.dataPoints) return [];
+    return data.viscosity.dataPoints.map((point) => ({
       id: point.id,
       temperature: point.temperature,
       viscosity: point.viscosity,
     }));
-  }, [data.data.viscosity?.dataPoints]);
+  }, [data.viscosity?.dataPoints]);
 
   const [binderInputs, setBinderInputs] = useState([]);
 
   useEffect(() => {
-    if (data.data.viscosity?.dataPoints?.length) {
+    if (data.viscosity?.dataPoints?.length) {
       setBinderInputs(
-        data.data.viscosity.dataPoints.map((point) => ({
+        data.viscosity.dataPoints.map((point) => ({
           id: point.id,
           viscosity: point.viscosity,
         }))
       );
     }
-  }, [data.data.viscosity?.dataPoints]);
+  }, [data.viscosity?.dataPoints]);
 
   const binderRows = useMemo(() => {
-    return data.data.viscosity?.dataPoints?.map((point) => {
+    return data.viscosity?.dataPoints?.map((point) => {
       const localInput = binderInputs?.find((input) => input.id === point.id);
       return {
         id: point.id,
@@ -53,7 +54,7 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
         viscosity: localInput?.viscosity ?? point.viscosity,
       };
     });
-  }, [data.data.viscosity?.dataPoints]);
+  }, [data.viscosity?.dataPoints]);
 
   const aggregatesColumns: GridColDef[] = [
     {
@@ -67,7 +68,7 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
       renderCell: ({ row }) => {
         if (!aggregatesRows) return;
         const { sieve_label, material } = row;
-        const rowIndex = data.data.materials.findIndex((mat) => mat._id === material?._id);
+        const rowIndex = data.materials.findIndex((mat) => mat._id === material?._id);
         const sieve_index = aggregatesRows[rowIndex]?.table_data.findIndex((r) => r.sieve_label === sieve_label);
         return (
           <InputEndAdornment
@@ -80,7 +81,7 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
             onChange={(e) => {
               if (e.target.value === null) return;
               const newRows = [...aggregatesRows];
-              const mass = data.data.granulometrys[rowIndex]?.material_mass;
+              const mass = data.granulometrys[rowIndex]?.material_mass;
               const validMass = isNaN(mass) ? 0 : mass;
               const input_passant = isNaN(Number(e.target.value)) ? 0 : Number(e.target.value);
 
@@ -149,7 +150,7 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
       renderCell: ({ row }) => {
         if (!aggregatesRows) return;
         const { sieve_label, material } = row;
-        const rowIndex = data.data.materials.findIndex((mat) => mat._id === material?._id);
+        const rowIndex = data.materials.findIndex((mat) => mat._id === material?._id);
         const sieve_index = aggregatesRows[rowIndex]?.table_data.findIndex((r) => r.sieve_label === sieve_label);
         return (
           <InputEndAdornment
@@ -166,7 +167,7 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
             onChange={(e) => {
               if (e.target.value === null) return;
               const newRows = [...aggregatesRows];
-              const mass = data.data.granulometrys[rowIndex].material_mass;
+              const mass = data.granulometrys[rowIndex].material_mass;
               const current_retained = Number(e.target.value);
               const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
               const initial_retained = current_retained;
@@ -233,7 +234,7 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
               const newRows = [...binderRows];
               if (index !== -1) {
                 newRows[index].temperature = Number(e.target.value);
-                setData({ step: 1, key: 'viscosity', value: { ...data.data.viscosity, dataPoints: newRows } });
+                setData({ step: 1, key: 'viscosity', value: { ...data.viscosity, dataPoints: newRows } });
               }
             }}
             adornment={'°C'}
@@ -260,13 +261,13 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
             }}
             onBlur={(e) => {
               const value = Number(e.target.value);
-              const updatedDataPoints = data.data.viscosity.dataPoints?.map((dp) =>
+              const updatedDataPoints = data.viscosity.dataPoints?.map((dp) =>
                 dp.id === row.id ? { ...dp, viscosity: value } : dp
               );
               setData({
                 step: 1,
                 key: 'viscosity',
-                value: { ...data.data.viscosity, dataPoints: updatedDataPoints },
+                value: { ...data.viscosity, dataPoints: updatedDataPoints },
               });
             }}
             adornment="Poise"
@@ -280,17 +281,17 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
 
   useEffect(() => {
     setNextDisabled(true);
-    const hasCoarseAggregate = data.data.materials?.some((material) => material.type === 'coarseAggregate');
-    const hasFineAggregate = data.data.materials?.some((material) => material.type === 'fineAggregate');
-    const hasBinder = data.data.materials?.some((material) => material.type === 'asphaltBinder' || material.type === 'CAP');
+    const hasCoarseAggregate = data.materials?.some((material) => material.type === 'coarseAggregate');
+    const hasFineAggregate = data.materials?.some((material) => material.type === 'fineAggregate');
+    const hasBinder = data.materials?.some((material) => material.type === 'asphaltBinder' || material.type === 'CAP');
 
     if (hasCoarseAggregate && hasFineAggregate && hasBinder) setNextDisabled(false);
-  }, [data.data.materials]);
+  }, [data.materials]);
 
   const handleErase = () => {
     try {
       if (binderRows.length > 1) {
-        const prevBinderRows = { ...data.data.viscosity };
+        const prevBinderRows = { ...data.viscosity };
         prevBinderRows.dataPoints.pop();
         setData({ step: 1, key: 'viscosity', value: prevBinderRows });
       } else throw t('saybolt-furol.error.minValue');
@@ -300,7 +301,7 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
   };
 
   const handleAdd = () => {
-    const prevBinderRows = { ...data.data.viscosity };
+    const prevBinderRows = { ...data.viscosity };
     prevBinderRows.dataPoints.push({
       id: binderRows.length,
       temperature: null,
@@ -337,7 +338,7 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
       />
 
       {aggregatesRows.length > 0 &&
-        data.data.materials?.length > 0 &&
+        data.materials?.length > 0 &&
         aggregatesRows?.map((row, idx) => (
           <GranulometryRow
             key={idx}
@@ -354,15 +355,15 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
           />
         ))}
 
-      {data?.data.viscosity?.dataPoints?.length > 0 && initialRows?.length > 0 && binderColumns?.length > 0 && (
+      {data?.viscosity?.dataPoints?.length > 0 && initialRows?.length > 0 && binderColumns?.length > 0 && (
         <Box
           sx={{ marginY: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}
           ref={(el) => {
-            if (el) myRef.current[data.data.viscosity.material.name] = el;
+            if (el) myRef.current[data.viscosity.material.name] = el;
           }}
         >
           <Typography variant="h5">
-            {data.data.viscosity.material.name} | {t('asphalt.materials.' + data.data.viscosity.material.type)}
+            {data.viscosity.material.name} | {t('asphalt.materials.' + data.viscosity.material.type)}
           </Typography>
           <DataGrid
             sx={{ mt: '1rem', borderRadius: '10px' }}

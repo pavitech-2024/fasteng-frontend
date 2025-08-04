@@ -11,7 +11,6 @@ import GraphStep6 from './graphs/step6Graph';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 
 const Superpave_Step7_FirstCompactionParams = ({
-  nextDisabled,
   setNextDisabled,
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
