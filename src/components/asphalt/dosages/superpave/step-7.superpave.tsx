@@ -56,10 +56,13 @@ const Superpave_Step7_FirstCompactionParams = ({
             firstCompressionData
           );
 
+          const newData = {selectedCurve: data.selectedCurve, ...resData};
+          console.log("🚀 ~ Superpave_Step7_FirstCompactionParams ~ newData:", newData)
+
           if (success) {
             setData({
               step: 6,
-              value: resData,
+              value: newData,
             });
           } else {
             console.error(`${error}`);
@@ -402,8 +405,8 @@ const Superpave_Step7_FirstCompactionParams = ({
               size="medium"
               variant="standard"
               value={{
-                value: data.selectedCurve,
-                label: `${data.selectedCurve === null ? 'Selecionar' : data.selectedCurve}`,
+                value: data.selectedCurve ? data.selectedCurve : null,
+                label: `${data.selectedCurve === undefined ? 'Selecionar' : data.selectedCurve}`,
               }}
             />
           </Box>

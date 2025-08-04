@@ -29,14 +29,14 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
     const prevData = { ...data };
 
     const updatedMaterials = prevData[0]?.materials.filter((material) => material._id !== id);
-    const updatedGranulometrys = prevData.granulometrys.filter((gran) => gran.material._id !== id);
+    const updatedGranulometrys = prevData.data.granulometrys.filter((gran) => gran.material._id !== id);
     const updatedViscosity = null;
     try {
       await materialsService.deleteMaterial(id);
 
       setData({ step: 1, key: 'materials', value: updatedMaterials });
       setData({ step: 1, key: 'granulometrys', value: updatedGranulometrys });
-      if (prevData.viscosity?.material._id === id) {
+      if (prevData.data.viscosity?.material._id === id) {
         setData({ step: 1, key: 'viscosity', value: updatedViscosity});
       }
     } catch (error) {
@@ -46,11 +46,11 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
         setData({ step: 1, key: 'materials', value: updatedMaterials });
       }
 
-      if (prevData.granulometrys.some((gran) => gran.material._id === id)) {
+      if (prevData.data.granulometrys.some((gran) => gran.material._id === id)) {
         setData({ step: 1, key: 'granulometrys', value: updatedGranulometrys });
       }
 
-      if (prevData.viscosity?.material?._id === id) {
+      if (prevData.data.viscosity?.material?._id === id) {
         setData({ step: 1, key: 'viscosity', value: updatedViscosity});
       }
     }
@@ -80,7 +80,7 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
       newSieveSeries.push({ label: s.label, value: s.value });
     });
 
-    const prevMaterialsData = [...data.materials];
+    const prevMaterialsData = [...data.data.materials];
 
     if (material.type === 'asphaltBinder' || material.type === 'CAP') {
       // Verifica se já existe um material do mesmo tipo
@@ -109,7 +109,7 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
         bottom: 0,
       };
 
-      const prevGranulData = [...data.granulometrys];
+      const prevGranulData = [...data.data.granulometrys];
       prevGranulData.push(newGranul);
 
       setData({ step: 1, key: 'granulometrys', value: prevGranulData });
@@ -194,8 +194,8 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
   ];
 
   useEffect(() => {
-    if (data.materials?.length > 0) {
-      const rows = data.materials.map((material) => ({
+    if (data.data.materials?.length > 0) {
+      const rows = data.data.materials.map((material) => ({
         id: material._id,
         name: material.name,
         type: t('asphalt.materials.' + material.type),
@@ -218,7 +218,7 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
         filler: minimunFillerAggrIsPresent,
       });
     }
-  }, [data.materials]);
+  }, [data.data.materials]);
 
   return (
     <Box>
@@ -230,7 +230,7 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
         <AddIcon /> Novo Material
       </Button>
 
-      {data.materials?.length > 0 && (
+      {data.data.materials?.length > 0 && (
         <DataGrid
           columns={columns.map((column) => ({ ...column, flex: 1, headerAlign: 'center', align: 'center' }))}
           rows={rows}
@@ -249,10 +249,10 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
       <CreateEditMaterialModal
         openModal={modalIsOpen}
         handleCloseModal={() => setModalIsOpen(false)}
-        materials={data.materials}
+        materials={data.data.materials}
         isEdit={false}
         createdMaterial={(material: AsphaltMaterial) => {
-          const updatedMaterials = [...data.materials, material];
+          const updatedMaterials = [...data.data.materials, material];
           setData({ step: 1, key: 'materials', value: updatedMaterials });
 
           // chama o addNewMaterial imediatamente após inserir
