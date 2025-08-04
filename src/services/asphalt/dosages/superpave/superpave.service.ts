@@ -595,7 +595,6 @@ class Superpave_SERVICE implements IEssayService {
     step5Data: SuperpaveData['firstCompressionData'],
     isConsult?
   ): Promise<any> => {
-    console.log('🚀 ~ Superpave_SERVICE ~ step4Data:', step4Data);
     try {
       const { nominalSize, chosenCurves, porcentagesPassantsN200, percentageInputs } = step3Data;
       const { turnNumber, binderSpecificMass, granulometryComposition: binderCompositions } = step4Data;
@@ -959,7 +958,6 @@ class Superpave_SERVICE implements IEssayService {
     confirmationCompressionData: SuperpaveData['confirmationCompressionData'],
     isConsult?: boolean
   ) => {
-    console.log("🚀 ~ Superpave_SERVICE ~ confirmationCompressionData:", confirmationCompressionData)
     if (!isConsult) {
       try {
         const { table, gmm } = confirmationCompressionData;
