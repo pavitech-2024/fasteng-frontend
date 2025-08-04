@@ -199,8 +199,6 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
       ],
       headerAlign: 'center',
     }));
-    console.log("🚀 ~ materialGroupings ~ materialGroupings:", materialGroupings)
-    console.log("tipo ~ materialGroupings ~ materialGroupings:", typeof materialGroupings)
 
     if (materialGroupings) {
       return materialGroupings;

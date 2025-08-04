@@ -38,7 +38,7 @@ const Superpave_Step12_ResumeDosage = ({
   const store = JSON.parse(sessionStorage.getItem('asphalt-superpave-store'));
   const dosageId = store?.state._id ? store?.state._id : store.state.undefined._id;
 
-  const finalProportionsCols = granulometryEssayData.materials
+  const finalProportionsCols = granulometryEssayData.data?.materials
     ?.filter((material) => material.type !== 'asphaltBinder' && material.type !== 'CAP')
     .map((material) => ({
       field: material.name,
@@ -94,7 +94,7 @@ const Superpave_Step12_ResumeDosage = ({
       };
 
       data.ponderatedPercentsOfDosage?.forEach((materialPercent, index) => {
-        const materialName = granulometryEssayData.materials[index]?.name;
+        const materialName = granulometryEssayData.data?.materials[index]?.name;
         prevRowsData[materialName] = materialPercent;
       });
 
@@ -106,7 +106,7 @@ const Superpave_Step12_ResumeDosage = ({
     if (data?.quantitative?.length > 0) {
       const arr = { id: 1 };
       data.quantitative?.forEach((material, index) => {
-        const materialName = granulometryEssayData.materials[index - 1]?.name;
+        const materialName = granulometryEssayData.data?.materials[index - 1]?.name;
         if (index > 0) {
           arr[materialName] = material.toFixed(2);
         }
