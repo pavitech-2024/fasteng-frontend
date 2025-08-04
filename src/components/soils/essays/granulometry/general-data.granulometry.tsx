@@ -24,7 +24,6 @@ const SoilsGranulometry_GeneralData = ({
     toast.promise(
       async () => {
         const samples = await granulometry.getSamplesByUserId(user._id);
-        console.log("🚀 ~ samples:", samples)
 
         setSamples(samples[0].materials);
         setLoading(false);

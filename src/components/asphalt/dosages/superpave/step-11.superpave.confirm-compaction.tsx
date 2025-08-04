@@ -19,8 +19,6 @@ const Superpave_Step11_ConfirmCompaction = ({
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { confirmationCompressionData: data, setData } = useSuperpaveStore();
-  console.log('🚀 ~ Superpave_Step11_ConfirmCompaction ~ data:', data);
-
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const { user } = useAuth();
@@ -289,7 +287,6 @@ const Superpave_Step11_ConfirmCompaction = ({
               async () => {
                 try {
                   const { data: resData, success, error } = await superpave.calculateRiceTestStep9(data);
-                  console.log('🚀 ~ handleGmmSubmit ~ resData:', resData);
 
                   if (success) {
                     setData({
@@ -319,7 +316,6 @@ const Superpave_Step11_ConfirmCompaction = ({
 
   useEffect(() => {
     const tableHasNullVales = data.table.some((item) => item.averageDiammeter === null);
-    console.log('🚀 ~ tableHasNullVales:', tableHasNullVales);
     if (!tableHasNullVales && data.gmm) {
       setNextDisabled(false);
     } else {

@@ -177,13 +177,13 @@ class Superpave_SERVICE implements IEssayService {
   validateGranulometryEssayData = async (data: SuperpaveData): Promise<void> => {
     // Verify if the material mass is not empty or negative
 
-    data.granulometryEssayData?.granulometrys?.forEach((material, i) => {
+    data.granulometryEssayData?.data.granulometrys?.forEach((material, i) => {
       if (!material.material_mass) throw t('errors.empty-material-mass');
       if (material.material_mass < 0) throw t('errors.negative-material-mass');
     });
 
     // Verify if all the passant percentages are not empty or negative
-    data.granulometryEssayData?.granulometrys?.forEach((material) => {
+    data.granulometryEssayData?.data.granulometrys?.forEach((material) => {
       material.table_data.forEach((row) => {
         if (row.passant === null) throw t('errors.empty-passant') + row.sieve_label;
         if (row.passant < 0) throw t('errors.negative-passant') + row.sieve_label;
@@ -193,13 +193,13 @@ class Superpave_SERVICE implements IEssayService {
     // Verify if the sum of the masses (retained + bottom) equals the material mass
     let retained = 0.0;
 
-    data.granulometryEssayData?.granulometrys?.forEach((material) => {
+    data.granulometryEssayData?.data.granulometrys?.forEach((material) => {
       material.table_data.forEach((row) => {
         retained += row.retained;
       });
     });
 
-    data.granulometryEssayData?.viscosity?.dataPoints?.forEach((point, index) => {
+    data.granulometryEssayData?.data.viscosity?.dataPoints?.forEach((point, index) => {
       if (!point.viscosity) throw `${t('errors.empty-viscosity')} + ${index}`;
       if (point.viscosity < 1) throw t('errors.zero-viscosity');
     });
@@ -216,8 +216,8 @@ class Superpave_SERVICE implements IEssayService {
     if (!isConsult) {
       try {
         const granulometryEssayData = {
-          granulometrys: data.granulometryEssayData.granulometrys,
-          viscosity: data.granulometryEssayData.viscosity,
+          granulometrys: data.granulometryEssayData.data.granulometrys,
+          viscosity: data.granulometryEssayData.data.viscosity,
         };
 
         const response = await Api.post(
@@ -320,7 +320,8 @@ class Superpave_SERVICE implements IEssayService {
       try {
         const { dnitBand } = dosageData.generalData;
         const { granulometrys: resultsData } = dosageData.granulometryResultsData;
-        const { granulometrys: essayData } = dosageData.granulometryEssayData;
+        const { data: essayStep } = dosageData.granulometryEssayData;
+        const essayData = essayStep.granulometrys;
 
         let aggregates = essayData.map((item) => {
           return {
@@ -374,7 +375,7 @@ class Superpave_SERVICE implements IEssayService {
     try {
       const { percentageInputs, nominalSize, percentsToList } = granulometryCompositionData;
       const { dnitBand } = generalData;
-      const aggregates = granulometryEssayData.materials;
+      const aggregates = granulometryEssayData.data.materials;
 
       const response = await Api.post(`${this.info.backend_path}/calculate-granulometric-composition-data`, {
         chosenCurves,
@@ -438,7 +439,7 @@ class Superpave_SERVICE implements IEssayService {
     granulometryEssayData: SuperpaveData['granulometryEssayData']
   ): Promise<any> => {
     try {
-      const { materials } = granulometryEssayData;
+      const { materials } = granulometryEssayData.data;
 
       const response = await Api.post(`${this.info.backend_path}/step-5-specific-masses`, {
         materials,
@@ -594,7 +595,6 @@ class Superpave_SERVICE implements IEssayService {
     step5Data: SuperpaveData['firstCompressionData'],
     isConsult?
   ): Promise<any> => {
-    console.log('🚀 ~ Superpave_SERVICE ~ step4Data:', step4Data);
     try {
       const { nominalSize, chosenCurves, porcentagesPassantsN200, percentageInputs } = step3Data;
       const { turnNumber, binderSpecificMass, granulometryComposition: binderCompositions } = step4Data;
@@ -958,7 +958,6 @@ class Superpave_SERVICE implements IEssayService {
     confirmationCompressionData: SuperpaveData['confirmationCompressionData'],
     isConsult?: boolean
   ) => {
-    console.log("🚀 ~ Superpave_SERVICE ~ confirmationCompressionData:", confirmationCompressionData)
     if (!isConsult) {
       try {
         const { table, gmm } = confirmationCompressionData;

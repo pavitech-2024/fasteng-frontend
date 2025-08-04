@@ -46,7 +46,7 @@ const Superpave_Step5_InitialBinder = ({
     toast.promise(
       async () => {
         try {
-          const aggregateMaterials = granulometryEssayData.materials.map(({ _id, name, type }, index) => ({
+          const aggregateMaterials = granulometryEssayData.data.materials.map(({ _id, name, type }, index) => ({
             name,
             type,
             realSpecificMass: data.materials[index]?.realSpecificMass ?? null,
@@ -296,7 +296,7 @@ const Superpave_Step5_InitialBinder = ({
       },
     ];
 
-    const aggregateMaterials = granulometryEssayData.materials?.filter(
+    const aggregateMaterials = granulometryEssayData.data.materials?.filter(
       ({ type }) => type.includes('Aggregate') || type.includes('filler')
     );
 
@@ -321,7 +321,7 @@ const Superpave_Step5_InitialBinder = ({
   const createEstimatedPercentageGroupingModel = (): GridColumnGroupingModel => {
     const baseColumnChildren = [{ field: 'granulometricComposition' }, { field: 'initialBinder' }];
 
-    const aggregateMaterials = granulometryEssayData.materials?.filter(({ type }) =>
+    const aggregateMaterials = granulometryEssayData.data.materials?.filter(({ type }) =>
       ['Aggregate', 'Filler'].some((materialType) => type.includes(materialType))
     );
 

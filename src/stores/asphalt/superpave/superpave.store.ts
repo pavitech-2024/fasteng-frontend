@@ -16,21 +16,23 @@ interface SuperpaveGeneralData {
 }
 
 interface SuperpaveGranulometryEssayData {
-  materials: AsphaltMaterial[];
-  granulometrys: {
-    material: AsphaltMaterial;
-    material_mass: number;
-    table_data: { sieve_label: string; sieve_value: number; passant: number; retained: number }[];
-    sieve_series: { label: string; value: number }[];
-    bottom: number;
-  }[];
-  viscosity: {
-    material: AsphaltMaterial;
-    dataPoints: {
-      id: number;
-      temperature: number;
-      viscosity: number;
+  data: {
+    materials: AsphaltMaterial[];
+    granulometrys: {
+      material: AsphaltMaterial;
+      material_mass: number;
+      table_data: { sieve_label: string; sieve_value: number; passant: number; retained: number }[];
+      sieve_series: { label: string; value: number }[];
+      bottom: number;
     }[];
+    viscosity: {
+      material: AsphaltMaterial;
+      dataPoints: {
+        id: number;
+        temperature: number;
+        viscosity: number;
+      }[];
+    };
   };
 }
 
@@ -129,7 +131,7 @@ interface SuperpaveInitialBinderData {
     percentsOfDosageWithBinder: number[];
     curve: string;
   }[];
-  binderInput: {curve: string, value: number}[];
+  binderInput: { curve: string; value: number }[];
   turnNumber: {
     initialN: number;
     maxN: number;
@@ -501,9 +503,11 @@ const initialState = {
     step: 0,
   },
   granulometryEssayData: {
-    materials: [],
-    granulometrys: [],
-    viscosity: null,
+    data: {
+      materials: [],
+      granulometrys: [],
+      viscosity: null,
+    },
   },
   granulometryResultsData: {
     granulometrys: [],
@@ -555,7 +559,7 @@ const initialState = {
         gse: null,
         pli: null,
         percentsOfDosageWithBinder: [],
-        curve: null
+        curve: null,
       },
     ],
     binderInput: [],

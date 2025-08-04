@@ -405,10 +405,19 @@ const Superpave_Step6_FirstCompaction = ({
 
     if (!prevData.find((obj) => obj.curve === curve)) {
       if (prevData.some((obj) => obj.curve === null)) {
+        console.log('entrou no if');
         const index = prevData.findIndex((obj) => obj.curve === null);
         prevData[index] = { ...prevData[index], curve: curve };
       } else {
-        const newData = { ...prevData[0], curve: curve };
+        console.log('entrou no else');
+        const newData = {
+          curve: curve,
+          drySampleMass: null,
+          waterSampleMass: null,
+          waterSampleContainerMass: null,
+          gmm: null,
+          temperatureOfWater: null,
+        };
         prevData.push(newData);
       }
 
@@ -420,16 +429,14 @@ const Superpave_Step6_FirstCompaction = ({
   };
 
   useEffect(() => {
-    // Verifica se todos os valores de GMM foram preenchidos pelo Rice Test
-    const isRiceTestFinished = data.riceTest?.every(({ gmm }) => gmm !== 0);
+    // Verifica se o Rice Test/GMM foi gerado para cada curva
+    const isRiceTestFinished = data.riceTest.length > 0 && data.riceTest?.every(({ gmm }) => gmm !== 0);
 
-    // Verifica se todos os inputs de todas as curvas foram preenchidos
-    const isCurvesComplete = [data.inferiorRows, data.intermediariaRows, data.superiorRows].every((rows) =>
-      rows?.every(({ dryMass }) => dryMass !== null)
-    );
+    // Verifica se todos os inputs das tabelas de todas as curvas foram preenchidos
+    const isCurvesComplete = data.riceTest.length === granulometryCompositionData.chosenCurves.length;
 
     // Atualiza o estado de nextDisabled se uma das condições acima for verdadeira
-    setNextDisabled(!(isRiceTestFinished || isCurvesComplete));
+    setNextDisabled(!(isRiceTestFinished && isCurvesComplete));
   }, [data.inferiorRows, data.intermediariaRows, data.riceTest, data.superiorRows]);
 
   return (
