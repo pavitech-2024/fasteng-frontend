@@ -17,13 +17,24 @@ const ConcreteGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPage
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [dropdownDefaultValue, setDropdownDefaultValue] = useState({ label: '', value: [] });
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (data.material_mass != null && data.table_data?.length > 0) {
       const totalRetained = data.table_data.reduce((sum, row) => sum + row.retained, 0);
       const remaining = data.material_mass - totalRetained;
       setData({ step: 1, key: 'bottom', value: remaining });
     }
-  }, [data.material_mass, data.table_data]);
+  }, [data.material_mass, data.table_data]);*/
+
+  useEffect(() => {
+  if (data.material_mass != null && data.table_data?.length > 0) {
+    const totalRetained = data.table_data.reduce((sum, row) => sum + row.retained, 0);
+    const remaining = data.material_mass - totalRetained;
+
+    const arredondado = Math.round((remaining + Number.EPSILON) * 100) / 100;
+
+    setData({ step: 1, key: 'bottom', value: arredondado });
+  }
+}, [data.material_mass, data.table_data]);
 
   if (data.sieve_series && data.table_data && data.table_data.length == 0) {
     const table_data = [];
@@ -337,7 +348,14 @@ const ConcreteGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPage
         <Box key={'bottom'}>
           <InputEndAdornment
             label={t('granulometry-concrete.bottom')}
-            value={data.bottom}
+            //value={data.bottom}
+            value={
+              data.bottom != null
+              ? Number(data.bottom).toFixed(2)
+              : ''
+
+}
+
             variant={'filled'}
             key="bottom"
             onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
