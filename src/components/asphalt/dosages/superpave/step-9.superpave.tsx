@@ -12,7 +12,10 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+const Superpave_Step9_SecondCompaction = ({
+  setNextDisabled,
+  superpave,
+}: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const {
     secondCompressionData: data,
@@ -22,6 +25,7 @@ const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayP
     chosenCurvePercentagesData,
     firstCurvePercentagesData,
   } = useSuperpaveStore();
+  console.log('🚀 ~ Superpave_Step9_SecondCompaction ~ chosenCurvePercentagesData:', chosenCurvePercentagesData);
 
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState({
     0: false,
@@ -278,92 +282,130 @@ const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayP
     );
   };
 
-  const maximumDensitiesContainers = [
-    {
-      id: 0,
-      adornment: '',
-      label: 'Teor de:',
-      value: chosenCurvePercentagesData.listOfPlis[0],
-      insertedGmm: null,
-      riceTest: {
-        sampleAirDryMass: null,
-        containerMassWaterSample: null,
-        containerWaterMass: null,
-        waterTemperatureCorrection: null,
-      },
+  // const maximumDensitiesContainers = [
+  //   {
+  //     id: 0,
+  //     adornment: '',
+  //     label: 'Teor de:',
+  //     value: chosenCurvePercentagesData.listOfPlis[0] ? chosenCurvePercentagesData.listOfPlis[0] : null,
+  //     insertedGmm: null,
+  //     riceTest: {
+  //       sampleAirDryMass: null,
+  //       containerMassWaterSample: null,
+  //       containerWaterMass: null,
+  //       waterTemperatureCorrection: null,
+  //     },
+  //   },
+  //   {
+  //     id: 1,
+  //     adornment: '',
+  //     label: 'Teor de:',
+  //     value: chosenCurvePercentagesData.listOfPlis[1],
+  //     insertedGmm: null,
+  //     riceTest: {
+  //       sampleAirDryMass: null,
+  //       containerMassWaterSample: null,
+  //       containerWaterMass: null,
+  //       waterTemperatureCorrection: null,
+  //     },
+  //   },
+  //   {
+  //     id: 2,
+  //     adornment: '',
+  //     label: 'Teor de:',
+  //     value: chosenCurvePercentagesData.listOfPlis[2],
+  //     insertedGmm: null,
+  //     riceTest: {
+  //       sampleAirDryMass: null,
+  //       containerMassWaterSample: null,
+  //       containerWaterMass: null,
+  //       waterTemperatureCorrection: null,
+  //     },
+  //   },
+  //   {
+  //     id: 3,
+  //     adornment: '',
+  //     label: 'Teor de:',
+  //     value: chosenCurvePercentagesData.listOfPlis[3],
+  //     insertedGmm: null,
+  //     riceTest: {
+  //       sampleAirDryMass: null,
+  //       containerMassWaterSample: null,
+  //       containerWaterMass: null,
+  //       waterTemperatureCorrection: null,
+  //     },
+  //   },
+  // ];
+
+  const maximumDensitiesContainers = Array.from({ length: 4 }, (_, idx) => ({
+    id: idx,
+    adornment: '',
+    label: 'Teor de:',
+    value: chosenCurvePercentagesData?.listOfPlis?.[idx] ?? null,
+    insertedGmm: null,
+    riceTest: {
+      sampleAirDryMass: null,
+      containerMassWaterSample: null,
+      containerWaterMass: null,
+      waterTemperatureCorrection: null,
     },
-    {
-      id: 1,
-      adornment: '',
-      label: 'Teor de:',
-      value: chosenCurvePercentagesData.listOfPlis[1],
-      insertedGmm: null,
-      riceTest: {
-        sampleAirDryMass: null,
-        containerMassWaterSample: null,
-        containerWaterMass: null,
-        waterTemperatureCorrection: null,
-      },
-    },
-    {
-      id: 2,
-      adornment: '',
-      label: 'Teor de:',
-      value: chosenCurvePercentagesData.listOfPlis[2],
-      insertedGmm: null,
-      riceTest: {
-        sampleAirDryMass: null,
-        containerMassWaterSample: null,
-        containerWaterMass: null,
-        waterTemperatureCorrection: null,
-      },
-    },
-    {
-      id: 3,
-      adornment: '',
-      label: 'Teor de:',
-      value: chosenCurvePercentagesData.listOfPlis[3],
-      insertedGmm: null,
-      riceTest: {
-        sampleAirDryMass: null,
-        containerMassWaterSample: null,
-        containerWaterMass: null,
-        waterTemperatureCorrection: null,
-      },
-    },
-  ];
+  }));
 
-  const confirmBtn = () => {
-    toast.promise(
-      async () => {
-        try {
-          console.log('chegou aqui');
-          const response = await superpave.confirmSecondCompression(
-            data,
-            granulometryCompositionData,
-            initialBinderData,
-            firstCurvePercentagesData
-          );
+  // const confirmBtn = () => {
+  //   toast.promise(
+  //     async () => {
+  //       try {
+  //         console.log('chegou aqui');
+  //         const response = await superpave.confirmSecondCompression(
+  //           data,
+  //           granulometryCompositionData,
+  //           initialBinderData,
+  //           firstCurvePercentagesData
+  //         );
 
-          const value = response;
+  //         const value = response;
 
-          let prevData = { ...data };
+  //         let prevData = { ...data };
 
-          prevData = { ...prevData, ...value };
+  //         prevData = { ...prevData, ...value };
 
-          setData({ step: 8, value: prevData });
-          //setLoading(false);
-        } catch (error) {
-          //setLoading(false);
-          throw error;
-        }
-      },
-      {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
-      }
-    );
+  //         setData({ step: 8, value: prevData });
+  //         //setLoading(false);
+  //       } catch (error) {
+  //         //setLoading(false);
+  //         throw error;
+  //       }
+  //     },
+  //     {
+  //       pending: t('loading.materials.pending'),
+  //       success: t('loading.materials.success'),
+  //       error: t('loading.materials.error'),
+  //     }
+  //   );
+  // };
+
+  const confirmBtn = async () => {
+    const toastId = toast.loading(t('loading.materials.pending'));
+
+    try {
+      const response = await superpave.confirmSecondCompression(
+        data,
+        granulometryCompositionData,
+        initialBinderData,
+        firstCurvePercentagesData
+      );
+
+      let prevData = { ...data, ...response };
+
+      setData({ step: 8, value: prevData });
+
+      toast.dismiss(toastId);
+      toast.success(t('loading.materials.success'));
+    } catch (error: any) {
+      toast.dismiss(toastId);
+      const message = error?.message || t('loading.materials.error');
+      toast.error(message);
+    }
   };
 
   useEffect(() => {
@@ -395,8 +437,11 @@ const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayP
           <Box>
             <Typography variant="h6" style={{ textAlign: 'center' }}>
               Porcentagem dos materiais a partir do teor de ligante estimado para Vv:{' '}
-              {`${chosenCurvePercentagesData.listOfPlis[0].toFixed(2)}`}
+              {chosenCurvePercentagesData?.listOfPlis?.[0] != null
+                ? `${chosenCurvePercentagesData.listOfPlis[0].toFixed(2)}`
+                : '--'}
             </Typography>
+
             {nProjectPercentsRows_halfLess?.length > 0 && (
               <DataGrid
                 disableColumnMenu
@@ -421,8 +466,11 @@ const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayP
           <Box>
             <Typography variant="h6" style={{ textAlign: 'center' }}>
               Porcentagem dos materiais a partir do teor de ligante estimado para Vv:{' '}
-              {`${chosenCurvePercentagesData.listOfPlis[1].toFixed(2)}`}
+              {chosenCurvePercentagesData?.listOfPlis?.[1] != null
+                ? `${chosenCurvePercentagesData.listOfPlis[1].toFixed(2)}`
+                : '--'}
             </Typography>
+
             <DataGrid
               disableColumnMenu
               disableColumnFilter
@@ -444,9 +492,12 @@ const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayP
 
           <Box>
             <Typography variant="h6" style={{ textAlign: 'center' }}>
-              Porcentagem dos materiais a partir do teor de ligante estimado para Vv:
-              {`${chosenCurvePercentagesData.listOfPlis[2].toFixed(2)}`}
+              Porcentagem dos materiais a partir do teor de ligante estimado para Vv:{' '}
+              {chosenCurvePercentagesData?.listOfPlis?.[2] != null
+                ? `${chosenCurvePercentagesData.listOfPlis[2].toFixed(2)}`
+                : '--'}
             </Typography>
+
             <DataGrid
               disableColumnMenu
               disableColumnFilter
@@ -468,9 +519,12 @@ const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayP
 
           <Box>
             <Typography variant="h6" style={{ textAlign: 'center' }}>
-              Porcentagem dos materiais a partir do teor de ligante estimado para Vv:
-              {`${chosenCurvePercentagesData.listOfPlis[3].toFixed(2)}`}
+              Porcentagem dos materiais a partir do teor de ligante estimado para Vv:{' '}
+              {chosenCurvePercentagesData?.listOfPlis?.[3] != null
+                ? `${chosenCurvePercentagesData.listOfPlis[3].toFixed(2)}`
+                : '--'}
             </Typography>
+
             <DataGrid
               disableColumnMenu
               disableColumnFilter
@@ -499,7 +553,7 @@ const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayP
                 <>
                   <Box style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <Typography style={{ textAlign: 'center' }}>
-                      {item.label} {item.value.toFixed(2)}
+                      {item.label} {item?.value?.toFixed(2) != null ? `${item.value.toFixed(2)}` : '--'}
                     </Typography>
                     <Button
                       variant="outlined"

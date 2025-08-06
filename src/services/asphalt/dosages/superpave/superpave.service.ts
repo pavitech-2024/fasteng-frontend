@@ -12,7 +12,6 @@ class Superpave_SERVICE implements IEssayService {
     return getSuperpaveStore.getState();
   }
 
-
   info = {
     key: 'superpave',
     icon: SuperpaveIcon,
@@ -252,7 +251,7 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-    submitGranulometryEssayData = async (
+  submitGranulometryEssayData = async (
     data: SuperpaveData,
     userId: string,
     user?: string,
@@ -630,7 +629,6 @@ class Superpave_SERVICE implements IEssayService {
     } catch (error) {}
   };
 
-
   submitPercentsOfChosenCurve = async (
     data: SuperpaveData,
     userId: string,
@@ -816,6 +814,18 @@ class Superpave_SERVICE implements IEssayService {
     const percentsOfDosageValues = Object.values(selectedPercentsOfDosage).map((value) => Number(value));
 
     try {
+      for (const [key, samples] of Object.entries(composition)) {
+        for (let index = 0; index < samples.length; index++) {
+          const sample = samples[index];
+          if (sample.drySurfaceSaturatedMass <= sample.submergedMass) {
+            throw new Error(
+              `Erro de massa: Em "${key}" (índice ${index}), a massa saturada com superfície seca (${sample.drySurfaceSaturatedMass}) ` +
+                `é menor do que a massa submersa (${sample.submergedMass}), o que é fisicamente impossível.`
+            );
+          }
+        }
+      }
+
       const response = await Api.post(`${this.info.backend_path}/confirm-second-compression-data`, {
         composition,
         binderSpecificGravity: binderSpecificMass,
@@ -970,7 +980,7 @@ class Superpave_SERVICE implements IEssayService {
         const { binderSpecificMass, materials } = step3Data;
         const { selectedCurve, table3 } = step5Data;
 
-        const dataCopy: any = {...confirmationCompressionData};
+        const dataCopy: any = { ...confirmationCompressionData };
         const samplesData = table ? table : dataCopy.samplesData;
 
         let choosenGranulometryComposition;
@@ -995,7 +1005,6 @@ class Superpave_SERVICE implements IEssayService {
           ...choosenGranulometryComposition,
           percentsOfDosage: percentsOfDosageValues,
         };
-        
 
         const response = await Api.post(`${this.info.backend_path}/calculate-dosage-equation`, {
           samplesData: samplesData ? samplesData : confirmationCompressionData.table,

@@ -24,6 +24,7 @@ const Superpave_Step10_SecondCompactionParams = ({
     chosenCurvePercentagesData,
     granulometryEssayData,
   } = useSuperpaveStore();
+    console.log("🚀 ~ Superpave_Step10_SecondCompactionParams ~ chosenCurvePercentagesData:", chosenCurvePercentagesData)
 
   const aggregateMaterials = granulometryEssayData?.materials?.filter(
     ({ type }) => type.includes('Aggregate') || type.includes('filler')
@@ -82,7 +83,7 @@ const Superpave_Step10_SecondCompactionParams = ({
           if (!indexName) return null; // Ignora iterações onde indexName é uma string vazia
           return {
             id: idx,
-            binder: chosenCurvePercentagesData.listOfPlis[idx]?.toFixed(2),
+            binder: chosenCurvePercentagesData.listOfPlis[idx]?.toFixed(2) ?? "---",
             gmmNproject: secondCompressionData.composition[indexName]?.projectN.percentageGmm?.toFixed(2),
             vv: secondCompressionData.composition[indexName]?.Vv?.toFixed(2),
             vam: secondCompressionData.composition[indexName]?.ratioDustAsphalt?.toFixed(2),
