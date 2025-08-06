@@ -63,8 +63,6 @@ const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayP
     });
   });
 
-  const { user } = useAuth();
-
   useEffect(() => {
     if (data?.halfLess?.length > 0) setNProjectPercentsRows_halfLess(data.halfLess);
     if (data?.halfPlus?.length > 0) setNProjectPercentsRows_halfPlus(data.halfPlus);
@@ -373,10 +371,14 @@ const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayP
       table.every((row) => Object.values(row).every((value) => value !== null))
     );
 
-    if (allTablesAreComplete) {
+    const maximumDensitiesAreComplete = data.maximumDensities.every((container) => container.insertedGmm !== null);
+
+    if (allTablesAreComplete && maximumDensitiesAreComplete) {
       setNextDisabled(false);
+    } else {
+      setNextDisabled(true);
     }
-  }, [data]);
+  }, []);
 
   return (
     <>

@@ -316,7 +316,9 @@ const Superpave_Step11_ConfirmCompaction = ({
 
   useEffect(() => {
     const tableHasNullVales = data.table.some((item) => item.averageDiammeter === null);
-    if (!tableHasNullVales && data.gmm) {
+          console.log("🚀 ~ !tableHasNullVales && data.gmm:", !tableHasNullVales && data.gmm !== null)
+
+    if (!tableHasNullVales && data.gmm !== null) {
       setNextDisabled(false);
     } else {
       setNextDisabled(true);

@@ -23,11 +23,12 @@ const Superpave_Step8_ChosenCurvePercents = ({
     granulometryEssayData,
     chosenCurvePercentagesData: data,
   } = useSuperpaveStore();
-    console.log("🚀 ~ Superpave_Step8_ChosenCurvePercents ~ granulometryEssayData:", granulometryEssayData)
 
-  const materials = granulometryEssayData?.materials?.filter((material) => material.type.includes('Aggregate') || material.type.includes('filler'));
+  const materials = granulometryEssayData?.materials?.filter(
+    (material) => material.type.includes('Aggregate') || material.type.includes('filler')
+  );
 
-  const [vv, setVv] = useState();
+  const [vv, setVv] = useState<number>(0);
   const [extimatedBinderMaterialsPercentsRows, setExtimatedBinderMaterialsPercentsRows] = useState<any[]>([]);
 
   useEffect(() => {
@@ -76,7 +77,7 @@ const Superpave_Step8_ChosenCurvePercents = ({
         { field: 'binder' },
         ...materials?.map((material, index) => ({
           field: `material_${material._id}_${index + 1}`,
-        }))
+        })),
       ],
       headerAlign: 'center',
     },
@@ -88,7 +89,7 @@ const Superpave_Step8_ChosenCurvePercents = ({
       materialPercents[`material_${materials[j]._id}_${j + 1}`] = e[i].toFixed(2);
     }
     return materialPercents;
-  }
+  };
 
   useEffect(() => {
     if (data?.porcentageAggregate?.length > 1) {
