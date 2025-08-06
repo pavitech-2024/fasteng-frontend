@@ -79,12 +79,12 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitGranulometryEssayResults(data as SuperpaveData, this.userId, null, isConsult);
         case 3:
           await this.getGranulometricCompositionData(data as SuperpaveData, this.userId, isConsult);
+          await this.submitGranulometryComposition(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 4:
           if (isConsult) {
             // await this.getGranulometricCompositionData(data as SuperpaveData, this.userId, isConsult);
           }
-          await this.submitGranulometryComposition(data as SuperpaveData, this.userId, null, isConsult);
           await this.submitInitialBinder(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 5:
@@ -152,8 +152,6 @@ class Superpave_SERVICE implements IEssayService {
       }
     }
   };
-
-  /** @materialSelection Methods for material-selection-data (step === 1, page 2) */
 
   // get all materials from user, that have the dosage essays
   getmaterialsByUserId = async (userId: string): Promise<AsphaltMaterial> => {
@@ -534,16 +532,10 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  calculateGmm = async (setp5Data: SuperpaveData['firstCompressionData']): Promise<any> => {
+  calculateGmm_RiceTest = async (curveData: any): Promise<any> => {
     try {
-      const { riceTest } = setp5Data;
-
-      const riceTestData = riceTest.filter((e) => {
-        return !Object.values(e).some((value) => value === null);
-      });
-
-      const response = await Api.post(`${this.info.backend_path}/calculate-gmm`, {
-        riceTest: riceTestData,
+      const response = await Api.post(`${this.info.backend_path}/calculate-gmm-rice-test`, {
+        riceTest: curveData,
       });
 
       const { data, success, error } = response.data;
@@ -1020,7 +1012,7 @@ class Superpave_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
 
-        this.store_actions.setData({  step: 11, value: data });
+        this.store_actions.setData({ step: 11, value: data });
       } catch (error) {
         throw error;
       }
@@ -1088,17 +1080,9 @@ class Superpave_SERVICE implements IEssayService {
           },
         });
 
-        const { data, success, error } = response.data;
+        const { success, error } = response.data;
 
         if (success === false) throw error.name;
-
-        this.store_actions.setData({
-          step: 10,
-          value: {
-            ...superpaveData,
-            dosageResume: data.dosageResume,
-          },
-        });
       } catch (error) {
         throw error;
       }

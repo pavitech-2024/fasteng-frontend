@@ -316,6 +316,14 @@ const Superpave_Step6_FirstCompaction = ({
     }
   };
 
+  /**
+   * @function readExcel
+   * @description Lê um arquivo Excel (.xlsx) e o processa para uma tabela no estado da aplicação.
+   * @param {FileList} file Arquivo Excel a ser lido.
+   * @param {String} tableName Nome da tabela no estado que receberá os dados lidos.
+   * @param {Number} index Indice da linha da tabela que receberá os dados lidos.
+   * @returns {Promise} Uma promessa que resolve os dados lidos.
+   */
   const readExcel = (file, tableName, index) => {
     const promise = new Promise((resolve, reject) => {
       file = file[0];
@@ -323,6 +331,13 @@ const Superpave_Step6_FirstCompaction = ({
       const fileReader = new FileReader();
       fileReader.readAsArrayBuffer(file);
 
+      /**
+       * Handles the `load` event of the `FileReader`, reads the content of the Excel file,
+       * and converts it to JSON format.
+       *
+       * @param {ProgressEvent<FileReader>} e - The load event of the `FileReader`.
+       * @returns {void} - Resolves with the JSON data extracted from the Excel sheet.
+       */
       fileReader.onload = (e) => {
         const bufferArray = e.target.result;
         const wb = XLSX.read(bufferArray, { type: 'buffer' });
@@ -367,25 +382,31 @@ const Superpave_Step6_FirstCompaction = ({
 
   const addPlanilha = (tableName, index, e) => {
     const file = e.target.files;
-
     readExcel(file, tableName, index);
   };
 
-  const calculateRiceTest = () => {
+  /**
+   * Calculates the maximum density of the mixture using the Rice Test method.
+   * @param {string} curve - The curve for which the maximum density will be calculated.
+   * @returns {Promise<void>} - A promise that resolves when the calculation is finished.
+   */
+  const calculateRiceTest = (curve: string) => {
     toast.promise(
       async () => {
         try {
-          const response = await superpave.calculateGmm(data);
+          const riceTestData = data.riceTest.find((item) => item.curve === curve);
+          const calculatedGmm = await superpave.calculateGmm_RiceTest(riceTestData);
 
-          //todo: tipar esse any
-          Object.values(response).forEach((e: any, i) => {
-            if (e.gmm !== 0) {
-              const index = data.riceTest.findIndex((e) => e.curve === Object.keys(response)[i]);
-              const arr = [...data.riceTest];
-              arr[index].gmm = e.gmm;
-              setData({ step: 5, value: { ...data, riceTest: arr } });
-            }
-          });
+          const updatedRiceTest = data.riceTest.map((item) =>
+            item.curve === curve ? { ...item, gmm: calculatedGmm } : item
+          );
+          setData({ step: 5, key: 'riceTest', value: updatedRiceTest });
+
+          const updatedMaximumDensity = {
+            ...data.maximumDensity,
+            [curve]: { ...data.maximumDensity[curve], gmm: calculatedGmm },
+          };
+          setData({ step: 5, key: 'maximumDensity', value: updatedMaximumDensity });
 
           setRiceTestModalIsOpen(false);
         } catch (error) {
@@ -400,30 +421,32 @@ const Superpave_Step6_FirstCompaction = ({
     );
   };
 
-  const showModal = (curve: string) => {
-    const prevData = [...data.riceTest];
+  /**
+   * Displays the Rice Test modal for the specified curve.
+   * If the curve data does not exist, it initializes the data for the curve.
+   *
+   * @param {string} curve - The curve identifier for which the Rice Test modal will be shown.
+   * @returns {void}
+   */
+  const showRiceTestModal = (curve: string) => {
+    const riceTestData = [...data.riceTest];
 
-    if (!prevData.find((obj) => obj.curve === curve)) {
-      if (prevData.some((obj) => obj.curve === null)) {
-        console.log('entrou no if');
-        const index = prevData.findIndex((obj) => obj.curve === null);
-        prevData[index] = { ...prevData[index], curve: curve };
-      } else {
-        console.log('entrou no else');
-        const newData = {
-          curve: curve,
-          drySampleMass: null,
-          waterSampleMass: null,
-          waterSampleContainerMass: null,
-          gmm: null,
-          temperatureOfWater: null,
-        };
-        prevData.push(newData);
-      }
+    const existingCurveIndex = riceTestData.findIndex((item) => item.curve === curve);
 
-      setData({ step: 5, value: { ...data, riceTest: prevData } });
+    if (existingCurveIndex === -1) {
+      const newCurveData = {
+        curve,
+        drySampleMass: null,
+        waterSampleMass: null,
+        waterSampleContainerMass: null,
+        gmm: null,
+        temperatureOfWater: null,
+      };
+
+      riceTestData.push(newCurveData);
     }
 
+    setData({ step: 5, key: 'riceTest', value: riceTestData });
     setActualCurve(curve);
     setRiceTestModalIsOpen(true);
   };
@@ -513,7 +536,7 @@ const Superpave_Step6_FirstCompaction = ({
                     }}
                   >
                     <Typography>{t(`asphalt.dosages.superpave.${curve}-curve`)}</Typography>
-                    <Button onClick={() => showModal(curve)} variant="outlined">
+                    <Button onClick={() => showRiceTestModal(curve)} variant="outlined">
                       {t('asphalt.dosages.superpave.calculate-max-density')}
                     </Button>
                   </Box>
@@ -536,7 +559,7 @@ const Superpave_Step6_FirstCompaction = ({
             open={riceTestModalIsOpen}
             size={'larger'}
             onSubmit={() => {
-              calculateRiceTest();
+              calculateRiceTest(data.riceTest.find((obj) => obj.curve === actualCurve)?.curve);
             }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%' }}>
