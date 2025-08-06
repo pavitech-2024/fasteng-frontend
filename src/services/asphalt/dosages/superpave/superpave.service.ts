@@ -1020,7 +1020,7 @@ class Superpave_SERVICE implements IEssayService {
 
         if (success === false) throw error.name;
 
-        return data;
+        this.store_actions.setData({  step: 11, value: data });
       } catch (error) {
         throw error;
       }

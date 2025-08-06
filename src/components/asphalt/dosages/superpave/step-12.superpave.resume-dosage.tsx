@@ -29,6 +29,7 @@ const Superpave_Step12_ResumeDosage = ({
     dosageResume: data,
     setData,
   } = useSuperpaveStore();
+    console.log("🚀 ~ Superpave_Step12_ResumeDosage ~ data:", data)
 
   const [finalProportionsRows, setFinalProportionsRows] = useState([]);
   const [quantitativeRows, setQuantitativeRows] = useState([]);
@@ -50,45 +51,48 @@ const Superpave_Step12_ResumeDosage = ({
     valueFormatter: ({ value }) => `${value}`,
   });
 
-  useEffect(() => {
-    const fetchDosage = async () => {
-      try {
-        const response = await superpave.calculateDosageEquation(
-          granulometryCompositionData,
-          initialBinderData,
-          firstCurvePercentagesData,
-          secondCompressionPercentagesData,
-          confirmationCompressionData
-        );
+  // useEffect(() => {
+  //   const fetchDosage = async () => {
+  //     try {
+  //       const response = await superpave.calculateDosageEquation(
+  //         granulometryCompositionData,
+  //         initialBinderData,
+  //         firstCurvePercentagesData,
+  //         secondCompressionPercentagesData,
+  //         confirmationCompressionData
+  //       );
 
-        const foundDosage = await superpaveDosageService.getSuperpaveDosage(dosageId);
+  //       const foundDosage = await superpaveDosageService.getSuperpaveDosage(dosageId);
 
-        setDosage(foundDosage.data.dosage);
-        const newData = { ...data, ...response };
+  //       setDosage(foundDosage.data.dosage);
+  //       const newData = { ...data, ...response };
 
-        setData({
-          step: 11,
-          value: newData,
-        });
-      } catch (error) {
-        throw error;
-      }
-    };
+  //       setData({
+  //         step: 11,
+  //         value: newData,
+  //       });
+  //     } catch (error) {
+  //       throw error;
+  //     }
+  //   };
 
-    toast.promise(fetchDosage(), {
-      pending: t('loading.dosages.pending'),
-      success: t('loading.dosages.success'),
-      error: t('loading.dosages.error'),
-    });
-  }, []);
+  //   toast.promise(fetchDosage(), {
+  //     pending: t('loading.dosages.pending'),
+  //     success: t('loading.dosages.success'),
+  //     error: t('loading.dosages.error'),
+  //   });
+  // }, []);
 
   useEffect(() => {
     if (data?.ponderatedPercentsOfDosage?.length > 0) {
       const prevRowsData = {
         id: 0,
-        optimumBinder: secondCompressionPercentagesData.optimumContent
-          ? secondCompressionPercentagesData.optimumContent
-          : '---',
+        optimumBinder:
+          typeof secondCompressionPercentagesData.optimumContent === 'number'
+            ? secondCompressionPercentagesData.optimumContent
+            : secondCompressionPercentagesData.optimumContent === 'No Real Roots'
+            ? t('superpave-results-noRealRoots')
+            : null,
       };
 
       data.ponderatedPercentsOfDosage?.forEach((materialPercent, index) => {
@@ -102,7 +106,10 @@ const Superpave_Step12_ResumeDosage = ({
 
   useEffect(() => {
     if (data?.quantitative?.length > 0) {
-      const arr = { id: 1 };
+      const arr = {
+        id: 1,
+        optimumBinder: data.quantitative[0] ? data.quantitative[0].toFixed(2) : t('superpave-results-noRoots'),
+      };
       data.quantitative?.forEach((material, index) => {
         const materialName = granulometryEssayData?.materials[index - 1]?.name;
         if (index > 0) {
@@ -157,7 +164,7 @@ const Superpave_Step12_ResumeDosage = ({
       {loading ? (
         <Loading />
       ) : (
-        <FlexColumnBorder open={true} title={t('superpave.results')}>
+        <FlexColumnBorder open={true} title={t('superpave.step-12')}>
           <GenerateSuperpaveDosagePDF dosage={dosage} />
           <Box
             sx={{

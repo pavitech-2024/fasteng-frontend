@@ -18,7 +18,14 @@ const Superpave_Step11_ConfirmCompaction = ({
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { confirmationCompressionData: data, setData } = useSuperpaveStore();
+  const {
+    confirmationCompressionData: data,
+    setData,
+    granulometryCompositionData,
+    initialBinderData,
+    firstCurvePercentagesData,
+    secondCompressionPercentagesData,
+  } = useSuperpaveStore();
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const { user } = useAuth();
@@ -314,10 +321,38 @@ const Superpave_Step11_ConfirmCompaction = ({
     }
   };
 
+  const handleSubmit = async () => {
+    for (let i = 0; i < data.table.length; i++) {
+      if (data.table[i].drySurfaceSaturatedMass <= data.table[i].submergedMass) {
+        toast.error(t('asphalt.dosages.superpave.dry-surface-saturated-mass-error'));
+        return;
+      }
+    }
+
+    toast.promise(
+      async () => {
+        try {
+          await superpave.calculateDosageEquation(
+            granulometryCompositionData,
+            initialBinderData,
+            firstCurvePercentagesData,
+            secondCompressionPercentagesData,
+            data
+          );
+        } catch (error) {
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      }
+    );
+  };
+
   useEffect(() => {
     const tableHasNullVales = data.table.some((item) => item.averageDiammeter === null);
-          console.log("🚀 ~ !tableHasNullVales && data.gmm:", !tableHasNullVales && data.gmm !== null)
-
     if (!tableHasNullVales && data.gmm !== null) {
       setNextDisabled(false);
     } else {
@@ -360,7 +395,9 @@ const Superpave_Step11_ConfirmCompaction = ({
             slots={{ footer: () => ExpansionToolbar() }}
           />
 
-          <Button variant="contained">Confirmar</Button>
+          <Button variant="contained" onClick={() => handleSubmit()}>
+            Confirmar
+          </Button>
 
           <ModalBase
             leftButtonTitle={'cancelar'}

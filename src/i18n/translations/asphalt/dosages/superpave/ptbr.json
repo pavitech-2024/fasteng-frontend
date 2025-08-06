@@ -157,5 +157,11 @@
   "errors.empty-material-mass": "A massa total de cada agregado deve ser preenchida",
 
   "superpave.error.minReads": "Não é possível excluir. Mínimo de linhas atingido.",
-  "superpave.common.type": "Tipo"
+  "superpave.common.type": "Tipo",
+
+  "asphalt.dosages.superpave.dry-surface-saturated-mass-error": "A massa saturada com superfície seca deve ser maior que a massa submersa",
+  "asphalt.dosages.superpave.confirm-compaction-table-success": "Dados confirmados com sucesso.",
+
+  "superpave-results-noRealRoots": "Sem raiz real. Revise os dados da primeira compactação.",
+  "superpave-results-noRoots": "Sem raizes. Revise os dados da primeira compactação."
 }
