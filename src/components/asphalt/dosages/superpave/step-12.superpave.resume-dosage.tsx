@@ -29,7 +29,7 @@ const Superpave_Step12_ResumeDosage = ({
     dosageResume: data,
     setData,
   } = useSuperpaveStore();
-    console.log("🚀 ~ Superpave_Step12_ResumeDosage ~ data:", data)
+  console.log('🚀 ~ Superpave_Step12_ResumeDosage ~ data:', data);
 
   const [finalProportionsRows, setFinalProportionsRows] = useState([]);
   const [quantitativeRows, setQuantitativeRows] = useState([]);
@@ -50,38 +50,6 @@ const Superpave_Step12_ResumeDosage = ({
     headerName: t('asphalt.dosages.superpave.optimum-binder'),
     valueFormatter: ({ value }) => `${value}`,
   });
-
-  // useEffect(() => {
-  //   const fetchDosage = async () => {
-  //     try {
-  //       const response = await superpave.calculateDosageEquation(
-  //         granulometryCompositionData,
-  //         initialBinderData,
-  //         firstCurvePercentagesData,
-  //         secondCompressionPercentagesData,
-  //         confirmationCompressionData
-  //       );
-
-  //       const foundDosage = await superpaveDosageService.getSuperpaveDosage(dosageId);
-
-  //       setDosage(foundDosage.data.dosage);
-  //       const newData = { ...data, ...response };
-
-  //       setData({
-  //         step: 11,
-  //         value: newData,
-  //       });
-  //     } catch (error) {
-  //       throw error;
-  //     }
-  //   };
-
-  //   toast.promise(fetchDosage(), {
-  //     pending: t('loading.dosages.pending'),
-  //     success: t('loading.dosages.success'),
-  //     error: t('loading.dosages.error'),
-  //   });
-  // }, []);
 
   useEffect(() => {
     if (data?.ponderatedPercentsOfDosage?.length > 0) {
@@ -137,8 +105,11 @@ const Superpave_Step12_ResumeDosage = ({
     },
     {
       label: t('Vazios do agregado mineral (VAM):'),
-      value: data?.Vam,
-      unity: '%',
+      value:
+        typeof secondCompressionPercentagesData.optimumContent === 'number'
+          ? data?.Vam
+          : 'Revisar dados da primeira compactação',
+      unity: typeof secondCompressionPercentagesData.optimumContent === 'number' ? '%' : '',
     },
     {
       label: t('asphalt.dosages.rbv') + ' (RBV):',
@@ -218,36 +189,38 @@ const Superpave_Step12_ResumeDosage = ({
               />
             </Box>
 
-            <ResultSubTitle
-              title={t('asphalt.dosages.superpave.mechanic-volumetric-params')}
-              sx={{
-                maxWidth: '103%',
-                wordWrap: 'break-word',
-                margin: '.65rem',
-              }}
-            />
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <ResultSubTitle
+                title={t('asphalt.dosages.superpave.mechanic-volumetric-params')}
+                sx={{
+                  maxWidth: '103%',
+                  wordWrap: 'break-word',
+                  margin: '.65rem',
+                }}
+              />
 
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: { mobile: 'column', notebook: 'row' },
-                gap: '10px',
-                alignItems: { mobile: 'center', notebook: 'flex-start' },
-                justifyContent: { mobile: 'center', notebook: 'flex-start' },
-              }}
-            >
-              {resultCards?.map((card) => {
-                if (card.value !== undefined) {
-                  return (
-                    <Result_Card
-                      key={card.label}
-                      label={card.label}
-                      value={card.value?.toFixed(2).toString()}
-                      unity={card.unity}
-                    />
-                  );
-                }
-              })}
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: { mobile: 'column', notebook: 'row' },
+                  gap: '10px',
+                  alignItems: { mobile: 'center', notebook: 'flex-start' },
+                  justifyContent: { mobile: 'center', notebook: 'flex-start' },
+                }}
+              >
+                {resultCards?.map((card) => {
+                  if (card.value !== undefined) {
+                    return (
+                      <Result_Card
+                        key={card.label}
+                        label={card.label}
+                        value={typeof card.value === 'string' ? card.value : card.value?.toFixed(2).toString()}
+                        unity={card.unity}
+                      />
+                    );
+                  }
+                })}
+              </Box>
             </Box>
           </Box>
         </FlexColumnBorder>
