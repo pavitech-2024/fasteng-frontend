@@ -191,6 +191,66 @@ interface FirstCompressionData {
   }[];
 }
 
+type Table2_Data = {
+  percentWaterAbs: number;
+  percentageGmmInitialN: number;
+  percentageGmmMaxN: number;
+  percentageGmmProjectN: number;
+  porcentageVam: number;
+  porcentageVv: number;
+  ratioDustAsphalt: number;
+  specificMass: number;
+};
+
+type FirstCurvePercentages_Table2 = {
+  table2Lower?: Table2_Data;
+  table2Average?: Table2_Data;
+  table2Higher?: Table2_Data;
+};
+
+type Table3_LowerData = {
+  expectedPercentageGmmInitialNLower: number;
+  expectedPercentageGmmMaxNLower: number;
+  expectedPliLower: number;
+  expectedVamLower: number;
+  expectedRBVLower: number;
+  expectedRatioDustAsphaltLower: number;
+};
+
+type Table3_AverageData = {
+  expectedPercentageGmmInitialNAverage: number;
+  expectedPercentageGmmMaxNAverage: number;
+  expectedPliAverage: number;
+  expectedVamAverage: number;
+  expectedRBVAverage: number;
+  expectedRatioDustAsphaltAverage: number;
+};
+
+type Table3_HigherData = {
+  expectedPercentageGmmInitialNHigher: number;
+  expectedPercentageGmmMaxNHigher: number;
+  expectedPliHigher: number;
+  expectedVamHigher: number;
+  expectedRBVHigher: number;
+  expectedRatioDustAsphaltHigher: number;
+};
+
+type FirstCurvePercentages_Table3 = {
+  table3Lower?: Table3_LowerData;
+  table3Average?: Table3_AverageData;
+  table3Higher?: Table3_HigherData;
+};
+
+type Table4_Data = {
+  data: any[];
+};
+
+type FirstCurvePercentages_Table4 = {
+  table4Lower?: Table4_Data;
+  table4Average?: Table4_Data;
+  table4Higher?: Table4_Data;
+};
+
 interface FirstCurvePercentagesData {
   table1: {
     expectedPorcentageGmmInitialN: number;
@@ -202,75 +262,9 @@ interface FirstCurvePercentagesData {
     nominalSize: number;
     trafficVolume: string;
   };
-  table2: {
-    table2Lower: {
-      percentWaterAbs: null;
-      percentageGmmInitialN: null;
-      percentageGmmMaxN: null;
-      percentageGmmProjectN: null;
-      porcentageVam: null;
-      porcentageVv: null;
-      ratioDustAsphalt: null;
-      specificMass: null;
-    };
-    table2Average: {
-      percentWaterAbs: null;
-      percentageGmmInitialN: null;
-      percentageGmmMaxN: null;
-      percentageGmmProjectN: null;
-      porcentageVam: null;
-      porcentageVv: null;
-      ratioDustAsphalt: null;
-      specificMass: null;
-    };
-    table2Higher: {
-      percentWaterAbs: null;
-      percentageGmmInitialN: null;
-      percentageGmmMaxN: null;
-      percentageGmmProjectN: null;
-      porcentageVam: null;
-      porcentageVv: null;
-      ratioDustAsphalt: null;
-      specificMass: null;
-    };
-  };
-  table3: {
-    table3Lower: {
-      expectedPercentageGmmInitialNLower: number;
-      expectedPercentageGmmMaxNLower: number;
-      expectedPliLower: number;
-      expectedVamLower: number;
-      expectedRBVLower: number;
-      expectedRatioDustAsphaltLower: number;
-    };
-    table3Average: {
-      expectedPercentageGmmInitialNAverage: number;
-      expectedPercentageGmmMaxNAverage: number;
-      expectedPliAverage: number;
-      expectedVamAverage: number;
-      expectedRBVAverage: number;
-      expectedRatioDustAsphaltAverage: number;
-    };
-    table3Higher: {
-      expectedPercentageGmmInitialNHigher: number;
-      expectedPercentageGmmMaxNHigher: number;
-      expectedPliHigher: number;
-      expectedVamHigher: number;
-      expectedRBVHigher: number;
-      expectedRatioDustAsphaltHigher: number;
-    };
-  };
-  table4: {
-    table4Lower: {
-      data: any[];
-    };
-    table4Average: {
-      data: any[];
-    };
-    table4Higher: {
-      data: any[];
-    };
-  };
+  table2: FirstCurvePercentages_Table2 | null;
+  table3: FirstCurvePercentages_Table3 | null;
+  table4: FirstCurvePercentages_Table4 | null;
   selectedCurve: string;
 }
 interface ChosenCurvePercentagesData {
@@ -628,75 +622,9 @@ const initialState = {
       trafficVolume: null,
       expectedVam: null,
     },
-    table2: {
-      table2Lower: {
-        percentWaterAbs: null,
-        percentageGmmInitialN: null,
-        percentageGmmMaxN: null,
-        percentageGmmProjectN: null,
-        porcentageVam: null,
-        porcentageVv: null,
-        ratioDustAsphalt: null,
-        specificMass: null,
-      },
-      table2Average: {
-        percentWaterAbs: null,
-        percentageGmmInitialN: null,
-        percentageGmmMaxN: null,
-        percentageGmmProjectN: null,
-        porcentageVam: null,
-        porcentageVv: null,
-        ratioDustAsphalt: null,
-        specificMass: null,
-      },
-      table2Higher: {
-        percentWaterAbs: null,
-        percentageGmmInitialN: null,
-        percentageGmmMaxN: null,
-        percentageGmmProjectN: null,
-        porcentageVam: null,
-        porcentageVv: null,
-        ratioDustAsphalt: null,
-        specificMass: null,
-      },
-    },
-    table3: {
-      table3Lower: {
-        expectedPercentageGmmInitialNLower: null,
-        expectedPercentageGmmMaxNLower: null,
-        expectedPliLower: null,
-        expectedVamLower: null,
-        expectedRBVLower: null,
-        expectedRatioDustAsphaltLower: null,
-      },
-      table3Average: {
-        expectedPercentageGmmInitialNAverage: null,
-        expectedPercentageGmmMaxNAverage: null,
-        expectedPliAverage: null,
-        expectedVamAverage: null,
-        expectedRBVAverage: null,
-        expectedRatioDustAsphaltAverage: null,
-      },
-      table3Higher: {
-        expectedPercentageGmmInitialNHigher: null,
-        expectedPercentageGmmMaxNHigher: null,
-        expectedPliHigher: null,
-        expectedVamHigher: null,
-        expectedRBVHigher: null,
-        expectedRatioDustAsphaltHigher: null,
-      },
-    },
-    table4: {
-      table4Lower: {
-        data: [],
-      },
-      table4Average: {
-        data: [],
-      },
-      table4Higher: {
-        data: [],
-      },
-    },
+    table2: null,
+    table3: null,
+    table4: null,
     selectedCurve: null,
   },
   chosenCurvePercentagesData: {

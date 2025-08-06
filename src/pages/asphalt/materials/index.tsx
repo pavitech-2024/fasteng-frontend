@@ -41,6 +41,7 @@ const Materials = () => {
     materialsService
       .getMaterialsByUserId(user._id)
       .then((response) => {
+        console.log("🚀 ~ Materials ~ response:", response)
         setMaterials(response.data);
         setLoading(false);
         setFwdEssays(response.data[0].fwdEssays);
@@ -52,7 +53,8 @@ const Materials = () => {
       .catch((error) => {
         console.error('Failed to load materials:', error);
       });
-  }, [user]);
+      console.log("Aquiiii")
+  }, []);
 
   const types: DropDownOption[] = Object.values(AsphaltMaterialTypesEnum).map((value) => ({
     label: t(`asphalt.materials.${value}`),

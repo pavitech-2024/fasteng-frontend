@@ -99,21 +99,19 @@ const MaterialsTemplate = ({
     { id: 'actions', label: t('materials.template.actions'), width: '25%' },
   ];
 
- 
- const options = [
-  { label: t('materials.template.name'), value: 'name' },
-  { label: t('materials.template.type'), value: 'type' },
-];
+  const options = [
+    { label: t('materials.template.name'), value: 'name' },
+    { label: t('materials.template.type'), value: 'type' },
+  ];
 
-// Adiciona apenas uma vez, se o path tiver "asphalt"
-const isAsphaltPath = path?.includes('asphalt');
-if (isAsphaltPath) {
-  options.push(
-    { label: t('materials.template.mix'), value: 'mix' },
-    { label: t('materials.template.stretch'), value: 'stretch' },
-  );
-}
-
+  // Adiciona apenas uma vez, se o path tiver "asphalt"
+  const isAsphaltPath = path?.includes('asphalt');
+  if (isAsphaltPath) {
+    options.push(
+      { label: t('materials.template.mix'), value: 'mix' },
+      { label: t('materials.template.stretch'), value: 'stretch' }
+    );
+  }
 
   /*******  b8f77572-72b8-4e11-aeb0-6b9fe12308cf  *******/
   const translateType = (type: string) => {
@@ -193,40 +191,21 @@ if (isAsphaltPath) {
   }));
 
   useEffect(() => {
-  let newData: any[] = [];
+    console.log('Effect 1');
+    let newData: any[] = [];
 
-  if (searchBy === 'stretch') {
-    newData = [...fwdEssaysData, ...iggEssaysData];
-  } else if (searchBy === 'mix') {
-    newData = [...rtcdEssaysData, ...dduiEssaysData];
-  } else if (searchBy === 'name') {
-    newData = [...filteredData, ...fwdEssaysData, ...iggEssaysData, ...rtcdEssaysData, ...dduiEssaysData];
-  } else {
-    newData = filteredData;
-  }
-
-  setTableData(newData);
-}, [searchBy, filteredData, fwdEssaysData, iggEssaysData, rtcdEssaysData, dduiEssaysData]);
-
-    //let newData: any[] = [];
-    /*if (searchBy === 'stretch') {
-      // Combina FWD e IGG quando "stretch" for selecionado
-      setTableData([...fwdEssaysData, ...iggEssaysData]);
+    if (searchBy === 'stretch') {
+      newData = [...fwdEssaysData, ...iggEssaysData];
     } else if (searchBy === 'mix') {
-      setTableData([...rtcdEssaysData, ...dduiEssaysData]); // Mostra SOMENTE ensaios RTCD e DDUI (mistura)
+      newData = [...rtcdEssaysData, ...dduiEssaysData];
     } else if (searchBy === 'name') {
-      // Mostra TUDO (materiais + todos ensaios)
-      const newData =
-        fwdEssaysData?.length > 0 && iggEssaysData.length > 0 && rtcdEssaysData && dduiEssaysData
-          ? [...filteredData, ...fwdEssaysData, ...iggEssaysData, ...rtcdEssaysData, ...dduiEssaysData]
-          : filteredData;
-      setTableData(newData);
+      newData = [...filteredData, ...fwdEssaysData, ...iggEssaysData, ...rtcdEssaysData, ...dduiEssaysData];
     } else {
-      // Caso padrão (nome ou tipo)
-      setTableData(filteredData);
-    }*/
-    //setTableData(newData);
-  //}, [searchBy]);
+      newData = filteredData;
+    }
+
+    setTableData(newData);
+  }, [searchBy]);
 
   const handleEditMaterial = (rowId: string) => {
     editMaterial(rowId);

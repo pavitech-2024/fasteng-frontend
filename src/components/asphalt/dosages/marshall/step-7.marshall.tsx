@@ -84,6 +84,7 @@ const Marshall_Step7 = ({
   // Preparando os dados points para o componente GraficoPage7N
   const points = data?.optimumBinder?.pointsOfCurveDosage;
   points.unshift(['', '', '']);
+  console.log("🚀 ~ Marshall_Step7 ~ points:", points)
 
   const expectedParametersColumns: GridColDef[] = [
     {
@@ -217,10 +218,10 @@ const Marshall_Step7 = ({
     {
       id: 2,
       binder: 'Gmb (g/cm³)',
-      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.apparentBulkSpecificGravity.toFixed(
+      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.apparentBulkSpecificGravity?.toFixed(
         2
       ),
-      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.apparentBulkSpecificGravity.toFixed(
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.apparentBulkSpecificGravity?.toFixed(
         2
       ),
     },

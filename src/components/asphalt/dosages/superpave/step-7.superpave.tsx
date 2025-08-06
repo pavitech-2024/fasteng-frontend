@@ -23,6 +23,7 @@ const Superpave_Step7_FirstCompactionParams = ({
     firstCompressionData,
     setData,
   } = useSuperpaveStore();
+  console.log('🚀 ~ Superpave_Step7_FirstCompactionParams ~ data:', data);
 
   const [renderTable3, setRenderTable3] = useState(false);
 
@@ -34,8 +35,6 @@ const Superpave_Step7_FirstCompactionParams = ({
       }
     }
   }, [data?.table3]);
-
-  const table2Arr = [data.table2?.table2Lower, data.table2?.table2Average, data.table2?.table2Higher];
 
   useEffect(() => {
     toast.promise(
@@ -52,7 +51,7 @@ const Superpave_Step7_FirstCompactionParams = ({
             firstCompressionData
           );
 
-          const newData = {selectedCurve: data.selectedCurve, ...resData};
+          const newData = { selectedCurve: data.selectedCurve, ...resData };
 
           if (success) {
             setData({
@@ -203,50 +202,56 @@ const Superpave_Step7_FirstCompactionParams = ({
     },
   ];
 
-  const calculatedCurvesRows = table2Arr.map((arr, idx) => ({
-    id: idx,
-    mixture: idx === 0 ? 'Inferior' : idx === 1 ? 'Intermediária' : idx === 2 ? 'Superior' : '',
-    gmmInitialN: arr?.percentageGmmInitialN,
-    gmmNMax: Number(arr?.percentageGmmMaxN).toFixed(2),
-    gmmNProj: arr?.percentageGmmProjectN,
-    expectedVam: Number(arr?.porcentageVam).toFixed(2),
-    p_a: Number(arr?.ratioDustAsphalt).toFixed(2),
-    specificMass: Number(arr?.specificMass).toFixed(2),
-    absorbedWater: Number(arr?.percentWaterAbs).toFixed(2),
-  }));
+  const expectedParamsRows = Object.entries(data.table3).map(([key, value], idx) => {
+    const mixture = key.includes('Lower')
+      ? 'Inferior'
+      : key.includes('Average')
+      ? 'Intermediária'
+      : key.includes('Higher')
+      ? 'Superior'
+      : '';
 
-  const expectedParamsRows = [
-    {
-      id: 0,
-      mixture: 'Inferior',
-      expectedPli: data.table3?.table3Lower.expectedPliLower?.toFixed(2),
-      expectedPercentageGmmInitialN: data.table3?.table3Lower.expectedPercentageGmmInitialNLower?.toFixed(2),
-      expectedPercentageGmmMaxN: data.table3?.table3Lower.expectedPercentageGmmMaxNLower?.toFixed(2),
-      expectedRBV: data.table3?.table3Lower.expectedRBVLower?.toFixed(2),
-      expectedVam: data.table3?.table3Lower.expectedVamLower?.toFixed(2),
-      p_a: data.table3?.table3Lower.expectedRatioDustAsphaltLower,
-    },
-    {
-      id: 1,
-      mixture: 'Intermediária',
-      expectedPli: data.table3?.table3Average.expectedPliAverage?.toFixed(2),
-      expectedPercentageGmmInitialN: data.table3?.table3Average.expectedPercentageGmmInitialNAverage?.toFixed(2),
-      expectedPercentageGmmMaxN: data.table3?.table3Average.expectedPercentageGmmMaxNAverage?.toFixed(2),
-      expectedRBV: data.table3?.table3Average.expectedRBVAverage?.toFixed(2),
-      expectedVam: data.table3?.table3Average.expectedVamAverage?.toFixed(2),
-      p_a: data.table3?.table3Average.expectedRatioDustAsphaltAverage,
-    },
-    {
-      id: 2,
-      mixture: 'Superior',
-      expectedPli: data.table3?.table3Higher.expectedPliHigher?.toFixed(2),
-      expectedPercentageGmmInitialN: data.table3?.table3Higher.expectedPercentageGmmInitialNHigher?.toFixed(2),
-      expectedPercentageGmmMaxN: data.table3?.table3Higher.expectedPercentageGmmMaxNHigher?.toFixed(2),
-      expectedRBV: data.table3?.table3Higher.expectedRBVHigher?.toFixed(2),
-      expectedVam: data.table3?.table3Higher.expectedVamHigher?.toFixed(2),
-      p_a: data.table3?.table3Higher.expectedRatioDustAsphaltHigher,
-    },
-  ];
+    const curve = key.includes('Lower')
+      ? 'Lower'
+      : key.includes('Average')
+      ? 'Average'
+      : key.includes('Higher')
+      ? 'Higher'
+      : '';
+
+    return {
+      id: idx,
+      mixture,
+      expectedPli: value?.[`expectedPli${curve}`]?.toFixed(2),
+      expectedPercentageGmmInitialN: value?.[`expectedPercentageGmmInitialN${curve}`]?.toFixed(2),
+      expectedPercentageGmmMaxN: value?.[`expectedPercentageGmmMaxN${curve}`]?.toFixed(2),
+      expectedRBV: value?.[`expectedRBV${curve}`]?.toFixed(2),
+      expectedVam: value?.[`expectedVam${curve}`]?.toFixed(2),
+      p_a: value?.[`expectedRatioDustAsphalt${curve}`],
+    };
+  });
+
+  const calculatedCurvesRows = Object.entries(data.table2).map(([key, value], idx) => {
+    const mixture = key.includes('Lower')
+      ? 'Inferior'
+      : key.includes('Average')
+      ? 'Intermediária'
+      : key.includes('Higher')
+      ? 'Superior'
+      : '';
+
+    return {
+      id: idx,
+      mixture,
+      gmmInitialN: value?.percentageGmmInitialN?.toFixed(2),
+      gmmNProj: value?.percentageGmmProjectN?.toFixed(2),
+      gmmNMax: value?.percentageGmmMaxN?.toFixed(2),
+      expectedVam: value?.porcentageVam?.toFixed(2),
+      p_a: value?.ratioDustAsphalt?.toFixed(2),
+      specificMass: value?.specificMass?.toFixed(2),
+      absorbedWater: value?.percentWaterAbs?.toFixed(2),
+    };
+  });
 
   const expectedParamsCols = [
     {
@@ -370,14 +375,23 @@ const Superpave_Step7_FirstCompactionParams = ({
               {t('asphalt.dosages.superpave.volumetric-graphs')}
             </Typography>
 
-            <Typography variant="h6">{t('asphalt.dosages.superpave.lower-curve')}</Typography>
-            <GraphStep6 data={data.table4?.table4Lower.data} />
-
-            <Typography variant="h6">{t('asphalt.dosages.superpave.average-curve')}</Typography>
-            <GraphStep6 data={data.table4?.table4Average.data} />
-
-            <Typography variant="h6">{t('asphalt.dosages.superpave.higher-curve')}</Typography>
-            <GraphStep6 data={data.table4?.table4Higher.data} />
+            {['table4Lower', 'table4Average', 'table4Higher'].map((key, index) => {
+              const curveData = data.table4[key]?.data;
+              if (curveData?.length > 0) {
+                const curveLabel = [
+                  t('asphalt.dosages.superpave.lower-curve'),
+                  t('asphalt.dosages.superpave.average-curve'),
+                  t('asphalt.dosages.superpave.higher-curve'),
+                ][index];
+                return (
+                  <Box key={key}>
+                    <Typography variant="h6">{curveLabel}</Typography>
+                    <GraphStep6 data={curveData} />
+                  </Box>
+                );
+              }
+              return null;
+            })}
 
             <DataGrid
               hideFooter

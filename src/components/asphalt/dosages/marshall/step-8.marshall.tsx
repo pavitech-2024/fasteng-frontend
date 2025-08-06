@@ -242,7 +242,7 @@ const Marshall_Step8 = ({
     {
       groupId: 'binder',
       headerAlign: 'center',
-      headerName: `${optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2)}%`,
+      headerName: `${optimumBinderContentData?.optimumBinder?.optimumContent?.toFixed(2)}%`,
       children: [
         { field: 'diammeter' },
         { field: 'height' },

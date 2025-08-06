@@ -171,13 +171,13 @@ const Marshall_Step9 = ({
   const createOptimumContentRows = () => {
     let rowsObj: RowsObj = {
       id: 0,
-      optimumBinder: Number(optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2)),
+      optimumBinder: Number(optimumBinderContentData?.optimumBinder?.optimumContent?.toFixed(2)),
     };
 
     materialSelectionData.aggregates.forEach((material, idx) => {
       rowsObj = {
         ...rowsObj,
-        [material._id]: Number(optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage[idx].toFixed(2)),
+        [material._id]: Number(optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage[idx]?.toFixed(2)),
       };
     });
 
@@ -356,47 +356,47 @@ const Marshall_Step9 = ({
   const volumetricMechanicParams = [
     {
       label: t('asphalt.dosages.optimum-binder'),
-      value: optimumBinderContentData.optimumBinder.optimumContent.toFixed(2).toString(),
+      value: optimumBinderContentData.optimumBinder.optimumContent?.toFixed(2).toString(),
       unity: '%',
     },
     {
       label: t('asphalt.dosages.dmt'),
-      value: data?.confirmedSpecificGravity?.result.toFixed(2).toString(),
+      value: data?.confirmedSpecificGravity?.result?.toFixed(2).toString(),
       unity: 'g/cm³',
     },
     {
       label: t('asphalt.dosages.gmb'),
-      value: data?.confirmedVolumetricParameters?.values?.apparentBulkSpecificGravity.toFixed(2).toString(),
+      value: data?.confirmedVolumetricParameters?.values?.apparentBulkSpecificGravity?.toFixed(2).toString(),
       unity: 'g/cm³',
     },
     {
       label: t('asphalt.dosages.vv'),
-      value: (data?.confirmedVolumetricParameters?.values?.aggregateVolumeVoids * 100).toFixed(2),
+      value: (data?.confirmedVolumetricParameters?.values?.aggregateVolumeVoids * 100)?.toFixed(2),
       unity: '%',
     },
     {
       label: t('asphalt.dosages.vam'),
-      value: data?.confirmedVolumetricParameters?.values?.voidsFilledAsphalt.toFixed(2).toString(),
+      value: data?.confirmedVolumetricParameters?.values?.voidsFilledAsphalt?.toFixed(2).toString(),
       unity: '%',
     },
     {
       label: t('asphalt.dosages.rbv') + ' (RBV)',
-      value: (data?.confirmedVolumetricParameters?.values?.ratioBitumenVoid * 100).toFixed(2),
+      value: (data?.confirmedVolumetricParameters?.values?.ratioBitumenVoid * 100)?.toFixed(2),
       unity: '%',
     },
     {
       label: t('asphalt.dosages.marshall-stability'),
-      value: data?.confirmedVolumetricParameters?.values?.stability.toFixed(2).toString(),
+      value: data?.confirmedVolumetricParameters?.values?.stability?.toFixed(2).toString(),
       unity: 'N',
     },
     {
       label: t('asphalt.dosages.fluency'),
-      value: data?.confirmedVolumetricParameters?.values?.fluency.toFixed(2).toString(),
+      value: data?.confirmedVolumetricParameters?.values?.fluency?.toFixed(2).toString(),
       unity: 'mm',
     },
     {
       label: t('asphalt.dosages.indirect-tensile-strength'),
-      value: data?.confirmedVolumetricParameters?.values?.indirectTensileStrength.toFixed(2).toString(),
+      value: data?.confirmedVolumetricParameters?.values?.indirectTensileStrength?.toFixed(2).toString(),
       unity: 'MPa',
     },
   ];
