@@ -23,7 +23,7 @@ const Superpave_Step9_SecondCompaction = ({
     granulometryCompositionData,
     initialBinderData,
     chosenCurvePercentagesData,
-    firstCurvePercentagesData,
+    firstCompressionParamsData,
   } = useSuperpaveStore();
   console.log('🚀 ~ Superpave_Step9_SecondCompaction ~ chosenCurvePercentagesData:', chosenCurvePercentagesData);
 
@@ -360,7 +360,7 @@ const Superpave_Step9_SecondCompaction = ({
   //           data,
   //           granulometryCompositionData,
   //           initialBinderData,
-  //           firstCurvePercentagesData
+  //           firstCompressionParamsData
   //         );
 
   //         const value = response;
@@ -392,7 +392,7 @@ const Superpave_Step9_SecondCompaction = ({
         data,
         granulometryCompositionData,
         initialBinderData,
-        firstCurvePercentagesData
+        firstCompressionParamsData
       );
 
       let prevData = { ...data, ...response };

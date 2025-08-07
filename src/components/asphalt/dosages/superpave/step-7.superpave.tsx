@@ -19,37 +19,31 @@ const Superpave_Step7_FirstCompactionParams = ({
     granulometryCompositionData,
     initialBinderData,
     generalData,
-    firstCurvePercentagesData: data,
+    firstCompressionParamsData: data,
     firstCompressionData,
     setData,
   } = useSuperpaveStore();
-    console.log("🚀 ~ Superpave_Step7_FirstCompactionParams ~ data:", data)
+  console.log('🚀 ~ Superpave_Step7_FirstCompactionParams ~ data:', data);
 
   const [renderTable3, setRenderTable3] = useState(false);
-
-  useEffect(() => {
-    if (data.table3) {
-      const table3Arr = Object.values(data.table3);
-      if (table3Arr.some((e) => e !== null)) {
-        setRenderTable3(true);
-      }
-    }
-  }, [data?.table3]);
 
   useEffect(() => {
     toast.promise(
       async () => {
         try {
-          const {
-            data: resData,
-            success,
-            error,
-          } = await superpave.getStepFirstCurvePercentages(
+          const response = await superpave.getStepFirstCurvePercentages(
             generalData,
             granulometryCompositionData,
             initialBinderData,
             firstCompressionData
           );
+          console.log("🚀 ~ Superpave_Step7_FirstCompactionParams ~ response:", response)
+
+          const {
+            data: resData,
+            success,
+            error,
+          } = response;
 
           const newData = { selectedCurve: data.selectedCurve, ...resData };
 
@@ -72,6 +66,15 @@ const Superpave_Step7_FirstCompactionParams = ({
       }
     );
   }, []);
+
+  useEffect(() => {
+    if (data.table3) {
+      const table3Arr = Object.values(data.table3);
+      if (table3Arr.some((e) => e !== null)) {
+        setRenderTable3(true);
+      }
+    }
+  }, [data?.table3]);
 
   const paramsCols = [
     {
@@ -202,7 +205,7 @@ const Superpave_Step7_FirstCompactionParams = ({
     },
   ];
 
-  const expectedParamsRows = Object.entries(data.table3).map(([key, value], idx) => {
+  const expectedParamsRows = data.table3 ? Object.entries(data.table3).map(([key, value], idx) => {
     const mixture = key.includes('Lower')
       ? 'Inferior'
       : key.includes('Average')
@@ -229,9 +232,9 @@ const Superpave_Step7_FirstCompactionParams = ({
       expectedVam: value?.[`expectedVam${curve}`]?.toFixed(2),
       p_a: value?.[`expectedRatioDustAsphalt${curve}`],
     };
-  });
+  }) : [];
 
-  const calculatedCurvesRows = Object.entries(data.table2).map(([key, value], idx) => {
+  const calculatedCurvesRows = data.table2 ? Object.entries(data.table2).map(([key, value], idx) => {
     const mixture = key.includes('Lower')
       ? 'Inferior'
       : key.includes('Average')
@@ -251,7 +254,7 @@ const Superpave_Step7_FirstCompactionParams = ({
       specificMass: value?.specificMass?.toFixed(2),
       absorbedWater: value?.percentWaterAbs?.toFixed(2),
     };
-  });
+  }) : [];
 
   const expectedParamsCols = [
     {
@@ -375,7 +378,7 @@ const Superpave_Step7_FirstCompactionParams = ({
               {t('asphalt.dosages.superpave.volumetric-graphs')}
             </Typography>
 
-            {['table4Lower', 'table4Average', 'table4Higher'].map((key, index) => {
+            {data.table4 && ['table4Lower', 'table4Average', 'table4Higher'].map((key, index) => {
               const curveData = data.table4[key]?.data;
               if (curveData?.length > 0) {
                 const curveLabel = [

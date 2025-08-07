@@ -24,7 +24,7 @@ const Superpave_Step12_ResumeDosage = ({
     granulometryEssayData,
     granulometryCompositionData,
     initialBinderData,
-    firstCurvePercentagesData,
+    firstCompressionParamsData,
     secondCompressionPercentagesData,
     dosageResume: data,
     setData,

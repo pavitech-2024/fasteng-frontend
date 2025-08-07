@@ -251,7 +251,7 @@ type FirstCurvePercentages_Table4 = {
   table4Higher?: Table4_Data;
 };
 
-interface FirstCurvePercentagesData {
+interface firstCompressionParamsData {
   table1: {
     expectedPorcentageGmmInitialN: number;
     expectedPorcentageGmmMaxN: number;
@@ -448,7 +448,7 @@ export type SuperpaveData = {
   granulometryCompositionData: SuperpaveGranulometryCompositionData;
   initialBinderData: SuperpaveInitialBinderData;
   firstCompressionData: FirstCompressionData;
-  firstCurvePercentagesData: FirstCurvePercentagesData;
+  firstCompressionParamsData: firstCompressionParamsData;
   chosenCurvePercentagesData: ChosenCurvePercentagesData;
   secondCompressionData: SecondCompressionData;
   secondCompressionPercentagesData: SecondCompressionPercentagesData;
@@ -473,7 +473,7 @@ const stepVariant = {
   3: 'granulometryCompositionData',
   4: 'initialBinderData',
   5: 'firstCompressionData',
-  6: 'firstCurvePercentagesData',
+  6: 'firstCompressionParamsData',
   7: 'chosenCurvePercentagesData',
   8: 'secondCompressionData',
   9: 'secondCompressionPercentagesData',
@@ -611,7 +611,7 @@ const initialState = {
     },
     riceTest: [],
   },
-  firstCurvePercentagesData: {
+  firstCompressionParamsData: {
     table1: {
       expectedPorcentageGmmInitialN: null,
       expectedPorcentageGmmMaxN: null,

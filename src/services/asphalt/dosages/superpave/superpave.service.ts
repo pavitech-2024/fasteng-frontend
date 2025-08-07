@@ -93,6 +93,7 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitFirstCompression(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 6:
+          this.submitFirstCompressionParamsData(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 7:
           const { generalData, initialBinderData, granulometryCompositionData, firstCompressionData } =
@@ -105,8 +106,8 @@ class Superpave_SERVICE implements IEssayService {
             isConsult
           );
           // await this.submitPercentsOfChosenCurve(data as SuperpaveData, this.userId, null, isConsult);
-          const { firstCurvePercentagesData } = data as SuperpaveData;
-          await this.getChosenCurvePercentages(generalData, granulometryCompositionData, firstCurvePercentagesData);
+          const { firstCompressionParamsData } = data as SuperpaveData;
+          await this.getChosenCurvePercentages(generalData, granulometryCompositionData, firstCompressionParamsData);
           break;
         case 8:
           await this.submitChosenCurvePercentages(data as SuperpaveData, this.userId, null, isConsult);
@@ -583,6 +584,41 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
+  submitFirstCompressionParamsData = async (
+    data: SuperpaveData,
+    userId: string,
+    user?: string,
+    isConsult?: boolean
+  ): Promise<void> => {
+    if (!isConsult) {
+      try {
+        const { name } = data.generalData;
+        const userData = userId ? userId : user;
+
+        const firstCompressionParamsData = {
+          ...data.firstCompressionParamsData,
+          name,
+          isConsult: null,
+        };
+
+        if (isConsult) firstCompressionParamsData.isConsult = isConsult;
+
+        const response = await Api.post(`${this.info.backend_path}/save-first-compression-params/${userData}`, {
+          firstCompressionData: {
+            ...data.firstCompressionData,
+            name,
+          },
+        });
+
+        const { success, error } = response.data;
+
+        if (success === false) throw error.name;
+      } catch (error) {
+        throw error;
+      }
+    }
+  };
+
   getStepFirstCurvePercentages = async (
     generalData: SuperpaveData['generalData'],
     step3Data: SuperpaveData['granulometryCompositionData'],
@@ -631,20 +667,20 @@ class Superpave_SERVICE implements IEssayService {
       try {
         const { name } = data.generalData;
         const userData = userId ? userId : user;
-        const { selectedCurve } = data.firstCurvePercentagesData;
+        const { selectedCurve } = data.firstCompressionParamsData;
 
-        const firstCurvePercentagesData = {
-          ...data.firstCurvePercentagesData,
+        const firstCompressionParamsData = {
+          ...data.firstCompressionParamsData,
           name,
           selectedCurve,
           isConsult: null,
         };
 
-        if (isConsult) firstCurvePercentagesData.isConsult = isConsult;
+        if (isConsult) firstCompressionParamsData.isConsult = isConsult;
 
         const response = await Api.post(`${this.info.backend_path}/save-percents-of-chosen-curve-step/${userData}`, {
-          firstCurvePercentagesData: {
-            ...data.firstCurvePercentagesData,
+          firstCompressionParamsData: {
+            ...data.firstCompressionParamsData,
             selectedCurve,
             name,
           },
@@ -662,7 +698,7 @@ class Superpave_SERVICE implements IEssayService {
   getChosenCurvePercentages = async (
     generalData: SuperpaveData['generalData'],
     step3Data: SuperpaveData['granulometryCompositionData'],
-    step6Data: SuperpaveData['firstCurvePercentagesData']
+    step6Data: SuperpaveData['firstCompressionParamsData']
   ): Promise<any> => {
     try {
       const { percentageInputs } = step3Data;
@@ -765,7 +801,7 @@ class Superpave_SERVICE implements IEssayService {
     step7Data: SuperpaveData['secondCompressionData'],
     step3Data: SuperpaveData['granulometryCompositionData'],
     initialBinderData: SuperpaveData['initialBinderData'],
-    step5Data: SuperpaveData['firstCurvePercentagesData']
+    step5Data: SuperpaveData['firstCompressionParamsData']
   ): Promise<any> => {
     const { halfLess, halfPlus, normal, onePlus, maximumDensities } = step7Data;
     const { binderSpecificMass, granulometryComposition } = initialBinderData;
@@ -875,11 +911,11 @@ class Superpave_SERVICE implements IEssayService {
   };
 
   getSecondCompressionPercentages = async (
-    firstCurvePercentagesData: SuperpaveData['firstCurvePercentagesData'],
+    firstCompressionParamsData: SuperpaveData['firstCompressionParamsData'],
     secondCompressionData: SuperpaveData['secondCompressionData']
   ): Promise<any> => {
     try {
-      const { selectedCurve, table3 } = firstCurvePercentagesData;
+      const { selectedCurve, table3 } = firstCompressionParamsData;
       const { composition } = secondCompressionData;
 
       const expectedPli =
@@ -959,7 +995,7 @@ class Superpave_SERVICE implements IEssayService {
   calculateDosageEquation = async (
     step2Data: SuperpaveData['granulometryCompositionData'],
     step3Data: SuperpaveData['initialBinderData'],
-    step5Data: SuperpaveData['firstCurvePercentagesData'],
+    step5Data: SuperpaveData['firstCompressionParamsData'],
     step8Data: SuperpaveData['secondCompressionPercentagesData'],
     confirmationCompressionData: SuperpaveData['confirmationCompressionData'],
     isConsult?: boolean

@@ -19,7 +19,7 @@ const Superpave_Step8_ChosenCurvePercents = ({
     setData,
     generalData,
     granulometryCompositionData,
-    firstCurvePercentagesData,
+    firstCompressionParamsData,
     granulometryEssayData,
     chosenCurvePercentagesData: data,
   } = useSuperpaveStore();
@@ -33,13 +33,13 @@ const Superpave_Step8_ChosenCurvePercents = ({
 
   useEffect(() => {
     if (data.listOfPlis?.length > 0) {
-      const curve = firstCurvePercentagesData.selectedCurve;
+      const curve = firstCompressionParamsData.selectedCurve;
       if (curve === 'lower') {
-        setVv(firstCurvePercentagesData.table2.table2Lower.porcentageVv);
+        setVv(firstCompressionParamsData.table2.table2Lower.porcentageVv);
       } else if (curve === 'average') {
-        setVv(firstCurvePercentagesData.table2.table2Average.porcentageVv);
+        setVv(firstCompressionParamsData.table2.table2Average.porcentageVv);
       } else if (curve === 'higher') {
-        setVv(firstCurvePercentagesData.table2.table2Higher.porcentageVv);
+        setVv(firstCompressionParamsData.table2.table2Higher.porcentageVv);
       }
     }
   }, [data]);
@@ -51,7 +51,7 @@ const Superpave_Step8_ChosenCurvePercents = ({
           const { data, success } = await superpave.getChosenCurvePercentages(
             generalData,
             granulometryCompositionData,
-            firstCurvePercentagesData
+            firstCompressionParamsData
           );
 
           if (success) {

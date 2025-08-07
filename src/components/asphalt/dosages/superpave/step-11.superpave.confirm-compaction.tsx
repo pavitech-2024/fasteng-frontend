@@ -23,7 +23,7 @@ const Superpave_Step11_ConfirmCompaction = ({
     setData,
     granulometryCompositionData,
     initialBinderData,
-    firstCurvePercentagesData,
+    firstCompressionParamsData,
     secondCompressionPercentagesData,
   } = useSuperpaveStore();
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -335,7 +335,7 @@ const Superpave_Step11_ConfirmCompaction = ({
           await superpave.calculateDosageEquation(
             granulometryCompositionData,
             initialBinderData,
-            firstCurvePercentagesData,
+            firstCompressionParamsData,
             secondCompressionPercentagesData,
             data
           );
