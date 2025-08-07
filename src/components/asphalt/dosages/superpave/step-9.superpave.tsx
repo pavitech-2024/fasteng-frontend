@@ -25,7 +25,6 @@ const Superpave_Step9_SecondCompaction = ({
     chosenCurvePercentagesData,
     firstCompressionParamsData,
   } = useSuperpaveStore();
-  console.log('🚀 ~ Superpave_Step9_SecondCompaction ~ chosenCurvePercentagesData:', chosenCurvePercentagesData);
 
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState({
     0: false,
@@ -282,61 +281,6 @@ const Superpave_Step9_SecondCompaction = ({
     );
   };
 
-  // const maximumDensitiesContainers = [
-  //   {
-  //     id: 0,
-  //     adornment: '',
-  //     label: 'Teor de:',
-  //     value: chosenCurvePercentagesData.listOfPlis[0] ? chosenCurvePercentagesData.listOfPlis[0] : null,
-  //     insertedGmm: null,
-  //     riceTest: {
-  //       sampleAirDryMass: null,
-  //       containerMassWaterSample: null,
-  //       containerWaterMass: null,
-  //       waterTemperatureCorrection: null,
-  //     },
-  //   },
-  //   {
-  //     id: 1,
-  //     adornment: '',
-  //     label: 'Teor de:',
-  //     value: chosenCurvePercentagesData.listOfPlis[1],
-  //     insertedGmm: null,
-  //     riceTest: {
-  //       sampleAirDryMass: null,
-  //       containerMassWaterSample: null,
-  //       containerWaterMass: null,
-  //       waterTemperatureCorrection: null,
-  //     },
-  //   },
-  //   {
-  //     id: 2,
-  //     adornment: '',
-  //     label: 'Teor de:',
-  //     value: chosenCurvePercentagesData.listOfPlis[2],
-  //     insertedGmm: null,
-  //     riceTest: {
-  //       sampleAirDryMass: null,
-  //       containerMassWaterSample: null,
-  //       containerWaterMass: null,
-  //       waterTemperatureCorrection: null,
-  //     },
-  //   },
-  //   {
-  //     id: 3,
-  //     adornment: '',
-  //     label: 'Teor de:',
-  //     value: chosenCurvePercentagesData.listOfPlis[3],
-  //     insertedGmm: null,
-  //     riceTest: {
-  //       sampleAirDryMass: null,
-  //       containerMassWaterSample: null,
-  //       containerWaterMass: null,
-  //       waterTemperatureCorrection: null,
-  //     },
-  //   },
-  // ];
-
   const maximumDensitiesContainers = Array.from({ length: 4 }, (_, idx) => ({
     id: idx,
     adornment: '',
@@ -351,39 +295,6 @@ const Superpave_Step9_SecondCompaction = ({
     },
   }));
 
-  // const confirmBtn = () => {
-  //   toast.promise(
-  //     async () => {
-  //       try {
-  //         console.log('chegou aqui');
-  //         const response = await superpave.confirmSecondCompression(
-  //           data,
-  //           granulometryCompositionData,
-  //           initialBinderData,
-  //           firstCompressionParamsData
-  //         );
-
-  //         const value = response;
-
-  //         let prevData = { ...data };
-
-  //         prevData = { ...prevData, ...value };
-
-  //         setData({ step: 8, value: prevData });
-  //         //setLoading(false);
-  //       } catch (error) {
-  //         //setLoading(false);
-  //         throw error;
-  //       }
-  //     },
-  //     {
-  //       pending: t('loading.materials.pending'),
-  //       success: t('loading.materials.success'),
-  //       error: t('loading.materials.error'),
-  //     }
-  //   );
-  // };
-
   const confirmBtn = async () => {
     const toastId = toast.loading(t('loading.materials.pending'));
 
@@ -394,6 +305,7 @@ const Superpave_Step9_SecondCompaction = ({
         initialBinderData,
         firstCompressionParamsData
       );
+      console.log('🚀 ~ confirmBtn ~ response:', response);
 
       let prevData = { ...data, ...response };
 
@@ -406,6 +318,26 @@ const Superpave_Step9_SecondCompaction = ({
       const message = error?.message || t('loading.materials.error');
       toast.error(message);
     }
+  };
+
+  const calculateMaximumDensity = async (index: number) => {
+    toast.promise(
+      async () => {
+        const response = await superpave.calculateRiceTest(data.maximumDensities[index]);
+
+        if (response.success) {
+          const maximumDensities = [...data.maximumDensities];
+          maximumDensities[index].insertedGmm = response.data.toFixed(2);
+
+          setData({ step: 8, key: 'maximumDensities', value: maximumDensities });
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      }
+    );
   };
 
   useEffect(() => {
@@ -569,10 +501,13 @@ const Superpave_Step9_SecondCompaction = ({
                       rightButtonTitle={'confirmar'}
                       onCancel={() => setRiceTestModalIsOpen({ ...riceTestModalIsOpen, [idx]: false })}
                       open={riceTestModalIsOpen[idx]}
-                      size={'large'}
-                      onSubmit={() => setRiceTestModalIsOpen({ ...riceTestModalIsOpen, [idx]: false })}
+                      size={'larger'}
+                      onSubmit={() => {
+                        calculateMaximumDensity(idx);
+                        setRiceTestModalIsOpen({ ...riceTestModalIsOpen, [idx]: false });
+                      }}
                     >
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%' }}>
                         <InputEndAdornment
                           adornment=""
                           type="number"
@@ -588,17 +523,17 @@ const Superpave_Step9_SecondCompaction = ({
                           }}
                         />
 
-                        <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem', width: '100%' }}>
                           {Object.keys(item.riceTest)
                             .filter((key) => key !== 'waterTemperatureCorrection')
                             .map((key) => (
                               <InputEndAdornment
                                 key={key}
                                 adornment={item.adornment}
-                                label={key}
+                                label={t('asphalt.dosages.superpave.' + key)}
                                 type="number"
                                 value={data.maximumDensities[idx]?.riceTest[key] || ''}
-                                sx={{ width: '15rem' }}
+                                sx={{ width: '19rem' }}
                                 onChange={(e) => {
                                   const value = e.target.value;
                                   const prevData = [...data.maximumDensities];
@@ -628,7 +563,11 @@ const Superpave_Step9_SecondCompaction = ({
                             setData({ step: 8, value: { ...data, maximumDensities: prevData } });
                           }}
                           size="medium"
-                          sx={{ width: '20rem' }}
+                          sx={{ width: '100%' }}
+                          value={{
+                            label: data.maximumDensities[idx].riceTest.waterTemperatureCorrection?.toString(),
+                            value: data.maximumDensities[idx].riceTest.waterTemperatureCorrection,
+                          }}
                         />
                       </Box>
                     </ModalBase>

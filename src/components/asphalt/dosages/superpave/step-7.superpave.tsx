@@ -23,7 +23,6 @@ const Superpave_Step7_FirstCompactionParams = ({
     firstCompressionData,
     setData,
   } = useSuperpaveStore();
-  console.log('🚀 ~ Superpave_Step7_FirstCompactionParams ~ data:', data);
 
   const [renderTable3, setRenderTable3] = useState(false);
 
@@ -37,7 +36,6 @@ const Superpave_Step7_FirstCompactionParams = ({
             initialBinderData,
             firstCompressionData
           );
-          console.log("🚀 ~ Superpave_Step7_FirstCompactionParams ~ response:", response)
 
           const {
             data: resData,

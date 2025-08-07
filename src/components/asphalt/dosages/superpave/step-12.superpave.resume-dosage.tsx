@@ -29,7 +29,6 @@ const Superpave_Step12_ResumeDosage = ({
     dosageResume: data,
     setData,
   } = useSuperpaveStore();
-  console.log('🚀 ~ Superpave_Step12_ResumeDosage ~ data:', data);
 
   const [finalProportionsRows, setFinalProportionsRows] = useState([]);
   const [quantitativeRows, setQuantitativeRows] = useState([]);

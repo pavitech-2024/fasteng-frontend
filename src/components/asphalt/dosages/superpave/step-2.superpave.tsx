@@ -12,7 +12,6 @@ import GranulometryRow from './functionalComponents/granulometryTableRow';
 
 const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const data = useSuperpaveStore((state) => state.granulometryEssayData);
-  console.log("🚀 ~ Superpave_Step2_GranulometryEssay ~ data:", data)
   const setData = useSuperpaveStore((state) => state.setData);
   const myRef = useRef<any>({});
 

@@ -107,15 +107,14 @@ class Superpave_SERVICE implements IEssayService {
           );
           const { firstCompressionParamsData } = data as SuperpaveData;
           await this.getChosenCurvePercentages(generalData, granulometryCompositionData, firstCompressionParamsData);
+          await this.submitChosenCurvePercentages(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 8:
-          await this.submitChosenCurvePercentages(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 9:
           await this.submitSecondCompressionData(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 10:
-          // await this.submitSecondCompressionParams(data as SuperpaveData, this.userId, null, isConsult);
           await this.submitConfirmattionCompression(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 11:
@@ -607,8 +606,8 @@ class Superpave_SERVICE implements IEssayService {
         if (isConsult) firstCompressionParamsData.isConsult = isConsult;
 
         const response = await Api.post(`${this.info.backend_path}/save-first-compression-params/${userData}`, {
-          firstCompressionData: {
-            ...data.firstCompressionData,
+          firstCompressionParamsData: {
+            ...data.firstCompressionParamsData,
             name,
           },
         });
@@ -746,8 +745,8 @@ class Superpave_SERVICE implements IEssayService {
     user?: string,
     isConsult?: boolean
   ): Promise<void> => {
+    console.log('entrou no savedo chosen curves');
     if (!isConsult) {
-      console.log('entrou no savedo chosen curves');
       try {
         const { name } = data.generalData;
         const userData = userId ? userId : user;
@@ -783,19 +782,17 @@ class Superpave_SERVICE implements IEssayService {
     }
   };
 
-  calculateRiceTest = async (step7Data: SuperpaveData['secondCompressionData'], idx: number): Promise<any> => {
-    const { maximumDensities } = step7Data;
-
-    const maximumDensity = maximumDensities[idx].riceTest;
-
+  calculateRiceTest = async (riceTestData: SuperpaveData['secondCompressionData']['maximumDensities'][number]): Promise<any> => {
+    const { riceTest } = riceTestData;
     try {
-      const response = await Api.post(`${this.info.backend_path}/calculate-step-7-rice-test`, maximumDensity);
+      const response = await Api.post(`${this.info.backend_path}/calculate-second-compression-rice-test`, riceTest);
+      console.log("🚀 ~ Superpave_SERVICE ~ response:", response)
 
       const { data, success, error } = response.data;
 
       if (success === false) throw error.name;
 
-      return data;
+      return {data, success};
     } catch (error) {
       throw error;
     }

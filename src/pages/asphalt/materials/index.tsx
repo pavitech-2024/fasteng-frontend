@@ -41,7 +41,6 @@ const Materials = () => {
     materialsService
       .getMaterialsByUserId(user._id)
       .then((response) => {
-        console.log("🚀 ~ Materials ~ response:", response)
         setMaterials(response.data);
         setLoading(false);
         setFwdEssays(response.data[0].fwdEssays);

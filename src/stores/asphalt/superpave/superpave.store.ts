@@ -317,6 +317,7 @@ interface SecondCompressionData {
   maximumDensities: {
     insertedGmm: number;
     riceTest: {
+      calculatedGmm: number;
       sampleAirDryMass: number;
       containerMassWaterSample: number;
       containerWaterMass: number;
@@ -686,6 +687,7 @@ const initialState = {
         id: 0,
         insertedGmm: null,
         riceTest: {
+          calculatedGmm: null,
           sampleAirDryMass: null,
           containerMassWaterSample: null,
           containerWaterMass: null,
@@ -696,6 +698,7 @@ const initialState = {
         id: 1,
         insertedGmm: null,
         riceTest: {
+          calculatedGmm: null,
           sampleAirDryMass: null,
           containerMassWaterSample: null,
           containerWaterMass: null,
@@ -706,6 +709,7 @@ const initialState = {
         id: 2,
         insertedGmm: null,
         riceTest: {
+          calculatedGmm: null,
           sampleAirDryMass: null,
           containerMassWaterSample: null,
           containerWaterMass: null,
@@ -716,6 +720,7 @@ const initialState = {
         id: 3,
         insertedGmm: null,
         riceTest: {
+          calculatedGmm: null,
           sampleAirDryMass: null,
           containerMassWaterSample: null,
           containerWaterMass: null,
