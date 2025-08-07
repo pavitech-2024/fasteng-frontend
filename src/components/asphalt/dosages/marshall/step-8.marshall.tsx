@@ -175,7 +175,7 @@ const Marshall_Step8 = ({
     },
     {
       field: 'stability',
-      headerName: t('asphalt.dosages.marshall-stability') + '(N)',
+      headerName: t('asphalt.dosages.stability') + ' (N)',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data.optimumBinder.findIndex((r) => r.id === id);
@@ -196,7 +196,7 @@ const Marshall_Step8 = ({
     },
     {
       field: 'fluency',
-      headerName: t('asphalt.dosages.fluency') + '(mm)',
+      headerName: t('asphalt.dosages.marshall.fluency') + ' (mm)',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data.optimumBinder.findIndex((r) => r.id === id);

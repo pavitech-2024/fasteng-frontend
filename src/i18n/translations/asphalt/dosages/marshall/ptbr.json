@@ -6,6 +6,9 @@
   "marshall.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica, garantindo que o total seja 100%.",
   "marshall.step-4-description": "Insira o teor inicial de ligante.",
   "marshall.step-5-description": "Insira os dados de densidade máxima real ou teórica da mistura e o fator de correção para a temperatura da água.",
+  "marshall.step-6-description": "Selecione os teores de ligante desejados e preencha os campos para cada corpo de prova. Após clique no botãqo de calcular.",
+  "marshall.step-7-description": "Confira os dados de teor ligante ótimo gerados.",
+  "marshall.step-8-description": "Selecione o método de cálculo da densidade da mistura, preencha os campos da tabela abaixo para cada corpo de prova e confirme para realizar o cálculo.",
   "marshall.step-9-description": "Esses são os resultados da sua dosagem Marshall. Lembre-se de salvar o projeto para garantir o acesso a ele no futuro.",
 
   "marshall.general-results": "Resultados Gerais",

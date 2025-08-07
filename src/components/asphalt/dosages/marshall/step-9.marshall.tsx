@@ -385,12 +385,12 @@ const Marshall_Step9 = ({
       unity: '%',
     },
     {
-      label: t('asphalt.dosages.marshall-stability'),
+      label: t('asphalt.dosages.marshall.stability'),
       value: data?.confirmedVolumetricParameters?.values?.stability?.toFixed(2).toString(),
       unity: 'N',
     },
     {
-      label: t('asphalt.dosages.fluency'),
+      label: t('asphalt.dosages.marshall.fluency'),
       value: data?.confirmedVolumetricParameters?.values?.fluency?.toFixed(2).toString(),
       unity: 'mm',
     },

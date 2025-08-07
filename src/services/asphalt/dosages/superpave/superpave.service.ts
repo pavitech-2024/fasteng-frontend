@@ -93,7 +93,7 @@ class Superpave_SERVICE implements IEssayService {
           await this.submitFirstCompression(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 6:
-          this.submitFirstCompressionParamsData(data as SuperpaveData, this.userId, null, isConsult);
+          await this.submitFirstCompressionParamsData(data as SuperpaveData, this.userId, null, isConsult);
           break;
         case 7:
           const { generalData, initialBinderData, granulometryCompositionData, firstCompressionData } =
@@ -105,7 +105,6 @@ class Superpave_SERVICE implements IEssayService {
             firstCompressionData,
             isConsult
           );
-          // await this.submitPercentsOfChosenCurve(data as SuperpaveData, this.userId, null, isConsult);
           const { firstCompressionParamsData } = data as SuperpaveData;
           await this.getChosenCurvePercentages(generalData, granulometryCompositionData, firstCompressionParamsData);
           break;
@@ -590,7 +589,11 @@ class Superpave_SERVICE implements IEssayService {
     user?: string,
     isConsult?: boolean
   ): Promise<void> => {
+    console.log('entrou no save do params data');
+
     if (!isConsult) {
+      console.log('entrou no if do params data');
+
       try {
         const { name } = data.generalData;
         const userData = userId ? userId : user;
@@ -744,6 +747,7 @@ class Superpave_SERVICE implements IEssayService {
     isConsult?: boolean
   ): Promise<void> => {
     if (!isConsult) {
+      console.log('entrou no savedo chosen curves');
       try {
         const { name } = data.generalData;
         const userData = userId ? userId : user;

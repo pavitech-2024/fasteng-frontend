@@ -6,6 +6,7 @@
   "marshall.step-3-description": "Insert the percentages of each aggregate in the granulometric composition, ensuring that the total is 100%.",
   "marshall.step-4-description": "Enter the binder trial content.",
   "marshall.step-5-description": "Enter the actual or theoretical maximum density data for the mixture and the correction factor for water temperature.",
+  "marshall.step-8-description": "Select the method of mixture density calculation, fill in the table below for each test body and confirm to perform the calculation.",
   "marshall.step-9-description": "These are the results of your Marshall dosage. Remember to save the project to ensure access to it in the future.",
 
   "marshall.general-results": "General Results",

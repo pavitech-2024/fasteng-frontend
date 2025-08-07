@@ -72,7 +72,7 @@ const Superpave_Step8_ChosenCurvePercents = ({
   const extimatedBinderMaterialsPercentsGroupings: GridColumnGroupingModel = [
     {
       groupId: 'extimatedBinderMaterialsPercents',
-      headerName: `${t('asphalt.dosages.superpave.estimated-percentages-binder-vv')} = ${vv} %`,
+      headerName: `${t('asphalt.dosages.superpave.estimated-percentages-binder-vv')} = ${vv.toFixed(2)} %`,
       children: [
         { field: 'binder' },
         ...materials?.map((material, index) => ({
