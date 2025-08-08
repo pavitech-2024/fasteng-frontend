@@ -344,15 +344,17 @@ const Superpave_Step9_SecondCompaction = ({
     const allTablesAreComplete = [data.halfLess, data.halfPlus, data.onePlus, data.normal].every((table) =>
       table.every((row) => Object.values(row).every((value) => value !== null))
     );
+    console.log("🚀 ~ allTablesAreComplete:", allTablesAreComplete)
 
     const maximumDensitiesAreComplete = data.maximumDensities.every((container) => container.insertedGmm !== null);
+    console.log("🚀 ~ maximumDensitiesAreComplete:", maximumDensitiesAreComplete)
 
     if (allTablesAreComplete && maximumDensitiesAreComplete) {
       setNextDisabled(false);
     } else {
       setNextDisabled(true);
     }
-  }, []);
+  }, [data]);
 
   return (
     <>

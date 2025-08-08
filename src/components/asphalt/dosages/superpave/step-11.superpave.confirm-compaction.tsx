@@ -26,6 +26,7 @@ const Superpave_Step11_ConfirmCompaction = ({
     firstCompressionParamsData,
     secondCompressionPercentagesData,
   } = useSuperpaveStore();
+    console.log("🚀 ~ Superpave_Step11_ConfirmCompaction ~ data:", data)
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const { user } = useAuth();
@@ -358,7 +359,7 @@ const Superpave_Step11_ConfirmCompaction = ({
     } else {
       setNextDisabled(true);
     }
-  }, []);
+  }, [data]);
 
   return (
     <>
@@ -440,6 +441,7 @@ const Superpave_Step11_ConfirmCompaction = ({
                 variant="standard"
                 label={'Selecione o fator de correção para a temperatura da água'}
                 options={waterTemperatureList}
+                value={{ label: data.riceTest.temperatureOfWater.toString(), value: data.riceTest.temperatureOfWater }}
                 callback={(selectedValue) => {
                   let prevData = { ...data.riceTest };
                   const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };

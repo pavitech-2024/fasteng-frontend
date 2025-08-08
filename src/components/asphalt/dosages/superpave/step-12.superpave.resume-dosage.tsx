@@ -4,14 +4,12 @@ import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import GenerateSuperpaveDosagePDF from '@/components/generatePDF/dosages/asphalt/superpave/generatePDFSuperpave';
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
-import superpaveDosageService from '@/services/asphalt/dosages/superpave/superpave.consult.service';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 const Superpave_Step12_ResumeDosage = ({
   nextDisabled,
@@ -20,11 +18,7 @@ const Superpave_Step12_ResumeDosage = ({
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const {
-    confirmationCompressionData,
     granulometryEssayData,
-    granulometryCompositionData,
-    initialBinderData,
-    firstCompressionParamsData,
     secondCompressionPercentagesData,
     dosageResume: data,
     setData,
@@ -33,8 +27,14 @@ const Superpave_Step12_ResumeDosage = ({
   const [finalProportionsRows, setFinalProportionsRows] = useState([]);
   const [quantitativeRows, setQuantitativeRows] = useState([]);
   const [dosage, setDosage] = useState(null);
-  const store = JSON.parse(sessionStorage.getItem('asphalt-superpave-store'));
-  const dosageId = store?.state._id ? store?.state._id : store.state.undefined._id;
+  console.log("🚀 ~ Superpave_Step12_ResumeDosage ~ dosage:", dosage)
+  const {state: storedDosage} = JSON.parse(sessionStorage.getItem('asphalt-superpave-store'));
+
+  useEffect(()=> {
+    if (storedDosage) {
+      setDosage(storedDosage);
+    }
+  },[])
 
   const finalProportionsCols = granulometryEssayData?.materials
     ?.filter((material) => material.type !== 'asphaltBinder' && material.type !== 'CAP')
@@ -56,7 +56,7 @@ const Superpave_Step12_ResumeDosage = ({
         id: 0,
         optimumBinder:
           typeof secondCompressionPercentagesData.optimumContent === 'number'
-            ? secondCompressionPercentagesData.optimumContent
+            ? secondCompressionPercentagesData.optimumContent.toFixed(2)
             : secondCompressionPercentagesData.optimumContent === 'No Real Roots'
             ? t('superpave-results-noRealRoots')
             : null,
@@ -64,7 +64,7 @@ const Superpave_Step12_ResumeDosage = ({
 
       data.ponderatedPercentsOfDosage?.forEach((materialPercent, index) => {
         const materialName = granulometryEssayData?.materials[index]?.name;
-        prevRowsData[materialName] = materialPercent;
+        prevRowsData[materialName] = materialPercent.toFixed(2);
       });
 
       setFinalProportionsRows([prevRowsData]);
@@ -89,7 +89,7 @@ const Superpave_Step12_ResumeDosage = ({
       setQuantitativeRows(newRowsData);
       setLoading(false);
     }
-  }, [data?.quantitative]);
+  }, []);
 
   const resultCards = [
     {

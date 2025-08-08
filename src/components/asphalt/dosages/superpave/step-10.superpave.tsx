@@ -24,6 +24,7 @@ const Superpave_Step10_SecondCompactionParams = ({
     chosenCurvePercentagesData,
     granulometryEssayData,
   } = useSuperpaveStore();
+  console.log('🚀 ~ Superpave_Step10_SecondCompactionParams ~ data:', data);
 
   const aggregateMaterials = granulometryEssayData?.materials?.filter(
     ({ type }) => type.includes('Aggregate') || type.includes('filler')
@@ -82,7 +83,7 @@ const Superpave_Step10_SecondCompactionParams = ({
           if (!indexName) return null; // Ignora iterações onde indexName é uma string vazia
           return {
             id: idx,
-            binder: chosenCurvePercentagesData.listOfPlis[idx]?.toFixed(2) ?? "---",
+            binder: chosenCurvePercentagesData.listOfPlis[idx]?.toFixed(2) ?? '---',
             gmmNproject: secondCompressionData.composition[indexName]?.projectN.percentageGmm?.toFixed(2),
             vv: secondCompressionData.composition[indexName]?.Vv?.toFixed(2),
             vam: secondCompressionData.composition[indexName]?.ratioDustAsphalt?.toFixed(2),
@@ -232,45 +233,57 @@ const Superpave_Step10_SecondCompactionParams = ({
             rows={expectedVolumetricParamsRows}
           />
 
-          <Box>
-            <Typography variant="h6" sx={{ textAlign: 'center' }}>
-              Proporções finais dos materiais (%)
-            </Typography>
-
-            <DataGrid
-              hideFooter
-              disableColumnMenu
-              disableColumnFilter
-              experimentalFeatures={{ columnGrouping: true }}
-              columnGroupingModel={[]}
-              columns={finalProportionsCols.map((column) => ({
-                ...column,
-                disableColumnMenu: true,
-                sortable: false,
-                align: 'center',
-                headerAlign: 'center',
-                minWidth: 100,
-                flex: 1,
-              }))}
-              rows={finalProportionsRows}
-            />
-          </Box>
+          {finalProportionsRows?.length > 0 && finalProportionsCols?.length > 0 && (
+            <Box>
+              <Typography variant="h6" sx={{ textAlign: 'center' }}>
+                Proporções finais dos materiais (%)
+              </Typography>
+              <DataGrid
+                hideFooter
+                disableColumnMenu
+                disableColumnFilter
+                experimentalFeatures={{ columnGrouping: true }}
+                columnGroupingModel={[]}
+                columns={finalProportionsCols?.map((column) => ({
+                  ...column,
+                  disableColumnMenu: true,
+                  sortable: false,
+                  align: 'center',
+                  headerAlign: 'center',
+                  minWidth: 100,
+                  flex: 1,
+                }))}
+                rows={finalProportionsRows}
+              />
+            </Box>
+          )}
 
           <Box sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-            <MiniGraphics data={data.graphs?.graphVv} type="Vv" nameEixoY={'Vv (%)'} />
+            {data.graphs?.graphVv.length > 0 && (
+              <MiniGraphics data={data.graphs?.graphVv} type="Vv" nameEixoY={'Vv (%)'} />
+            )}
 
-            <MiniGraphics nameEixoY="GMB (g/cm³)" type="GMB" data={data.graphs?.graphGmb} />
+            {data.graphs?.graphGmb.length > 0 && (
+              <MiniGraphics nameEixoY="GMB (g/cm³)" type="GMB" data={data.graphs?.graphGmb} />
+            )}
 
-            <MiniGraphics nameEixoY="GMM (g/cm³)" type="GMM" data={data.graphs?.graphGmm} />
+            {data.graphs?.graphGmm.length > 0 && (
+              <MiniGraphics nameEixoY="GMM (g/cm³)" type="GMM" data={data.graphs?.graphGmm} />
+            )}
 
-            {data.graphs?.graphRBV.flat().every((e) => e !== null) && (
+            {data.graphs?.graphRBV.length > 0 && (
               <MiniGraphics nameEixoY="RBV (g/cm³)" type="RBV" data={data.graphs?.graphRBV} />
             )}
-            <MiniGraphics nameEixoY="VAM (g/cm³)" type="Vam" data={data.graphs?.graphVam} />
 
-            {isValid && <MiniGraphics nameEixoY="RT (MPa)" type="RT" data={data.graphs?.graphRT} />}
+            {data.graphs?.graphVam.length > 0 && (
+              <MiniGraphics nameEixoY="VAM (g/cm³)" type="VAM" data={data.graphs?.graphVam} />
+            )}
 
-            <MiniGraphics nameEixoY="PA" type="Relação pó/asfalto" data={data.graphs?.graphPA} />
+            {isValid && data.graphs?.graphRT.length > 0 && <MiniGraphics nameEixoY="RT (MPa)" type="RT" data={data.graphs?.graphRT} />}
+
+            {data.graphs?.graphPA.length > 0 && (
+              <MiniGraphics nameEixoY="PA (MPa)" type="PA" data={data.graphs?.graphPA} />
+            )}
           </Box>
         </Box>
       )}

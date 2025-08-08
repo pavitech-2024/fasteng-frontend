@@ -68,10 +68,10 @@ export const Footer = ({
         disabled={nextDisabled}
         onClick={handleNextClick}
         sx={{
-          bgcolor: nextText === buttonText ? 'secondaryTons.orange' : 'secondaryTons.blue',
+          bgcolor: (nextText === buttonText) || (isDosage && buttonText === 'Nova dosagem') ? 'secondaryTons.orange' : 'secondaryTons.blue',
           color: 'primaryTons.white',
           height: '32px',
-          width: '140px',
+          width: isDosage ? 'fit-content' : '140px',
           fontSize: '1rem',
 
           ':hover': {

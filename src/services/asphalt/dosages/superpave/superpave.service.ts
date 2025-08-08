@@ -293,7 +293,7 @@ class Superpave_SERVICE implements IEssayService {
         const { granulometrys, viscosity } = data.granulometryResultsData;
 
         const response = await Api.post(`${this.info.backend_path}/save-granulometry-essay-results/${userData}`, {
-          granulometryEssayResults: {
+          granulometryResultsData: {
             name,
             granulometrys,
             viscosity,

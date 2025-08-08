@@ -49,6 +49,7 @@ export const addSummary = (
   aggregates: any,
   dosageType: string
 ) => {
+  console.log("🚀 ~ addSummary ~ aggregates:", aggregates)
   const docWidth = doc.internal.pageSize.getWidth();
   const docMargins = (docWidth * 0.2) / 2;
   let currentY = 40;
@@ -282,7 +283,7 @@ export const addCapa = (
 
   const dosageDescription = {
     ['marshall']: t('asphalt.dosages.marshall.project.description.text'),
-    ['superpave']: t('asphalt.dosages.superpave.project.description.text'),
+    ['superpave']: t('superpave.dosage.description-text'),
     ['abcp']: t('asphalt.dosages.abcp.project.description.text'),
   };
 
