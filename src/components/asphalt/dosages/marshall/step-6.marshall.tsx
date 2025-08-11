@@ -20,7 +20,6 @@ import { EssayPageProps } from '@/components/templates/essay';
  */
 const Marshall_Step6 = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   // Estados locais
-  const [loading, setLoading] = useState(false);
   const { volumetricParametersData: data, binderTrialData, maximumMixtureDensityData, setData } = useMarshallStore();
   const [tableIsDisabled, setTableIsDisabled] = useState({
     lessOne: true,
@@ -312,9 +311,7 @@ const Marshall_Step6 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
   );
 
   // Renderização do componente principal
-  return loading ? (
-    <Loading />
-  ) : (
+  return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>
       {renderDataGrid('lessOne', data.lessOne, 0)}
       {renderDataGrid('lessHalf', data.lessHalf, 1)}
