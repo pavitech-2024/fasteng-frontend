@@ -513,15 +513,15 @@ const Marshall_Step8 = ({
           />
 
           {maximumMixtureDensityData?.maxSpecificGravity?.method === 'DMT' ? (
-            <Typography>
+            <Typography variant='h6'>
               {t('asphalt.dosages.marshall.binder-trial-dmt') +
                 `${data?.confirmedSpecificGravity?.result?.toFixed(2)} g/cm³`}
             </Typography>
           ) : (
-            <Box>
-              <Typography>{t('asphalt.dosages.marshall.insert-gmm')}</Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <Typography variant='h6'>{t('asphalt.dosages.marshall.insert-gmm')}</Typography>
               <Typography>
-                {t('asphalt.dosages.marshall.gmm-calculated-rice-test') + `${data?.confirmedSpecificGravity?.result}`}
+                {t('asphalt.dosages.marshall.gmm-calculated-rice-test') + ` ${data?.confirmedSpecificGravity?.result ? ` ${data?.confirmedSpecificGravity?.result.toFixed(2)}  g/cm³` : ' ---'}`}
               </Typography>
               <InputEndAdornment
                 adornment={'g/cm³'}
@@ -533,7 +533,7 @@ const Marshall_Step8 = ({
                   setData({ step: 7, value: newData });
                 }}
               />
-              <Button onClick={() => setRiceTestModalIsOpen(true)}>{t('asphalt.dosages.marshall.rice-test')}</Button>
+              <Button sx={{ width: '100%' }} variant="outlined" onClick={() => setRiceTestModalIsOpen(true)}>{t('asphalt.dosages.marshall.rice-test')}</Button>
             </Box>
           )}
 
@@ -565,7 +565,7 @@ const Marshall_Step8 = ({
             rightButtonTitle={t('asphalt.dosages.marshall.confirm')}
             onCancel={() => setDMTModalISOpen(false)}
             open={DMTModalIsOpen}
-            size={'large'}
+            size={'larger'}
             onSubmit={() => handleSubmitDmt()}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginY: '2rem' }}>
@@ -596,16 +596,16 @@ const Marshall_Step8 = ({
             rightButtonTitle={t('asphalt.dosages.marshall.confirm')}
             onCancel={() => setRiceTestModalIsOpen(false)}
             open={riceTestModalIsOpen}
-            size={'large'}
+            size={'larger'}
             onSubmit={() => {
               calculateRiceTest();
             }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
               <DataGrid
-                columns={riceTestColumns.map((col) => ({
+                columns={riceTestColumns.map((col, idx) => ({
                   ...col,
-                  flex: 1,
+                  flex: idx === 0 ? 0.5 : 1,
                   width: 200,
                   headerAlign: 'center',
                   align: 'center',

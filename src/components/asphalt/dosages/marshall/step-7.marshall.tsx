@@ -285,7 +285,7 @@ const Marshall_Step7 = ({
     },
     {
       id: 6,
-      binder: t('asphalt.dosages.fluency') + '(mm)',
+      binder: t('asphalt.dosages.marshall.fluency') + ' (mm)',
       col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.fluency.toFixed(2),
       col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.fluency.toFixed(2),
     },
@@ -395,27 +395,37 @@ const Marshall_Step7 = ({
               marginTop: '20px',
             }}
           >
-            <MiniGraphics data={data?.graphics?.gmb} type={'gmb'} nameEixoY={t('asphalt.dosages.gmb') + '(g/cm³)'} />
+            {data.graphics?.gmb?.length > 0 && (
+              <MiniGraphics data={data?.graphics?.gmb} type={'gmb'} nameEixoY={t('asphalt.dosages.gmb') + '(g/cm³)'} />
+            )}
 
-            <MiniGraphics
-              data={data?.graphics?.sg}
-              type={maximumMixtureDensityData.maxSpecificGravity.method}
-              nameEixoY={
-                maximumMixtureDensityData.maxSpecificGravity.method === 'DMT'
-                  ? 'Massa específica máxima teórica (g/cm³)'
-                  : 'Massa específica máxima medida (g/cm³)'
-              }
-            />
+            {data.graphics?.sg?.length > 0 && (
+              <MiniGraphics
+                data={data?.graphics?.sg}
+                type={maximumMixtureDensityData.maxSpecificGravity.method}
+                nameEixoY={
+                  maximumMixtureDensityData.maxSpecificGravity.method === 'DMT'
+                    ? 'Massa específica máxima teórica (g/cm³)'
+                    : 'Massa específica máxima medida (g/cm³)'
+                }
+              />
+            )}
 
-            <MiniGraphics data={data?.graphics?.vv} type={'Vv'} nameEixoY={t('asphalt.dosages.vv') + '(%)'} />
+            {data.graphics?.vv?.length > 0 && (
+              <MiniGraphics data={data?.graphics?.vv} type={'Vv'} nameEixoY={t('asphalt.dosages.vv') + '(%)'} />
+            )}
 
-            <MiniGraphics data={data?.graphics?.rbv} type={'Rbv'} nameEixoY={t('asphalt.dosages.rbv') + '(%)'} />
+            {data.graphics?.vam?.length > 0 && (
+              <MiniGraphics data={data?.graphics?.vam} type={'Vam'} nameEixoY={t('asphalt.dosages.vam') + '(%)'} />
+            )}
 
-            <MiniGraphics
-              data={data?.graphics?.stability}
-              type={'Estabilidade'}
-              nameEixoY={t('asphalt.dosages.stability') + '(N)'}
-            />
+            {data.graphics?.stability?.length > 0 && (
+              <MiniGraphics
+                data={data?.graphics?.stability}
+                type={'Estabilidade'}
+                nameEixoY={t('asphalt.dosages.stability') + '(N)'}
+              />
+            )}
           </Box>
         </Box>
       )}

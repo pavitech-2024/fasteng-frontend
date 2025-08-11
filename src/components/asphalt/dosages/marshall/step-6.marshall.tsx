@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import debounce from 'lodash/debounce';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
@@ -19,11 +18,7 @@ import { EssayPageProps } from '@/components/templates/essay';
  * @param setNextDisabled - Função para definir o estado do botão "Próximo".
  * @param marshall - Serviço Marshall para manipulação dos parâmetros volumétricos.
  */
-const Marshall_Step6 = ({
-  nextDisabled,
-  setNextDisabled,
-  marshall,
-}: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+const Marshall_Step6 = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   // Estados locais
   const [loading, setLoading] = useState(false);
   const { volumetricParametersData: data, binderTrialData, maximumMixtureDensityData, setData } = useMarshallStore();
@@ -45,18 +40,20 @@ const Marshall_Step6 = ({
   }, [data]);
 
   /**
-   * Função para lidar com a alteração dos inputs, com debounce para otimização.
+   * Handles input changes for volumetric parameter fields and updates the state.
    *
-   * @param tenor - Tipo de dosagem (lessOne, lessHalf, normal, plusHalf, plusOne).
-   * @param index - Índice do item a ser atualizado.
-   * @param field - Campo a ser atualizado.
+   * @param tenor - The type of dosage, used as a key to access the correct data array.
+   * @param index - The index of the item in the data array to update.
+   * @param field - The specific field of the item to update.
+   * @returns A function that handles the change event of an input element.
    */
-  const handleInputChange = (tenor: string, index: number, field: string) => debounce((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    const newState = [...data[tenor]];
-    newState[index] = { ...newState[index], [field]: value };
-    setData({ step: 5, value: { ...data, [tenor]: newState } });
-  }, 300);
+  const handleInputChange =
+    (tenor: string, index: number, field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      const newState = [...data[tenor]];
+      newState[index] = { ...newState[index], [field]: value };
+      setData({ step: 5, value: { ...data, [tenor]: newState } });
+    };
 
   /**
    * Gera as colunas para o DataGrid com base no tipo de dosagem.
@@ -65,14 +62,86 @@ const Marshall_Step6 = ({
    * @returns Array de definições de colunas.
    */
   const generateColumns = (tenor: string): GridColDef[] => [
-    { field: 'diammeter', headerName: t('asphalt.dosages.marshall.diammeter', 'Diametro'), flex: 1, headerAlign: 'center', align: 'center', width: 115, renderCell: ({ row }) => renderInputCell(tenor, row, 'diammeter') },
-    { field: 'height', headerName: t('asphalt.dosages.marshall.height', 'Altura'), flex: 1, headerAlign: 'center', align: 'center', width: 115, renderCell: ({ row }) => renderInputCell(tenor, row, 'height') },
-    { field: 'dryMass', headerName: t('asphalt.dosages.marshall.dry-mass', 'Massa seca'), width: 120, flex: 1, headerAlign: 'center', align: 'center', renderCell: ({ row }) => renderInputCell(tenor, row, 'dryMass') },
-    { field: 'submergedMass', headerName: t('asphalt.dosages.marshall.submerged-mass', 'Massa submersa'), width: 150, flex: 1, headerAlign: 'center', align: 'center', renderCell: ({ row }) => renderInputCell(tenor, row, 'submergedMass') },
-    { field: 'drySurfaceSaturatedMass', headerName: t('asphalt.dosages.marshall.dry-surface-saturated-mass', 'Massa saturada com superfície seca'), width: 150, flex: 1, headerAlign: 'center', align: 'center', renderCell: ({ row }) => renderInputCell(tenor, row, 'drySurfaceSaturatedMass') },
-    { field: 'stability', headerName: t('asphalt.dosages.marshall.stability', 'Estabilidade Marshall'), width: 125, flex: 1, headerAlign: 'center', align: 'center', renderCell: ({ row }) => renderInputCell(tenor, row, 'stability') },
-    { field: 'fluency', headerName: t('asphalt.dosages.marshall.fluency', 'Fluência'), width: 150, flex: 1, headerAlign: 'center', align: 'center', renderCell: ({ row }) => renderInputCell(tenor, row, 'fluency') },
-    { field: 'diametricalCompressionStrength', headerName: t('asphalt.dosages.indirect-tensile-strength', 'Resistência à tração por compressão diametral'), width: 150, flex: 1, headerAlign: 'center', align: 'center', renderCell: ({ row }) => renderInputCell(tenor, row, 'diametricalCompressionStrength') },
+    {
+      field: 'diammeter',
+      headerName: t('asphalt.dosages.marshall.diammeter', 'Diametro'),
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
+      width: 115,
+      type: 'number',
+      renderCell: ({ row }) => renderInputCell(tenor, row, 'diammeter'),
+    },
+    {
+      field: 'height',
+      headerName: t('asphalt.dosages.marshall.height', 'Altura'),
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
+      width: 115,
+      type: 'number',
+      renderCell: ({ row }) => renderInputCell(tenor, row, 'height'),
+    },
+    {
+      field: 'dryMass',
+      headerName: t('asphalt.dosages.marshall.dry-mass', 'Massa seca'),
+      width: 120,
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
+      type: 'number',
+      renderCell: ({ row }) => renderInputCell(tenor, row, 'dryMass'),
+    },
+    {
+      field: 'submergedMass',
+      headerName: t('asphalt.dosages.marshall.submerged-mass', 'Massa submersa'),
+      width: 150,
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
+      type: 'number',
+      renderCell: ({ row }) => renderInputCell(tenor, row, 'submergedMass'),
+    },
+    {
+      field: 'drySurfaceSaturatedMass',
+      headerName: t('asphalt.dosages.marshall.dry-surface-saturated-mass', 'Massa saturada com superfície seca'),
+      width: 150,
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
+      type: 'number',
+      renderCell: ({ row }) => renderInputCell(tenor, row, 'drySurfaceSaturatedMass'),
+    },
+    {
+      field: 'stability',
+      headerName: t('asphalt.dosages.marshall.stability', 'Estabilidade Marshall'),
+      width: 125,
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
+      type: 'number',
+      renderCell: ({ row }) => renderInputCell(tenor, row, 'stability'),
+    },
+    {
+      field: 'fluency',
+      headerName: t('asphalt.dosages.marshall.fluency', 'Fluência'),
+      width: 150,
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
+      type: 'number',
+      renderCell: ({ row }) => renderInputCell(tenor, row, 'fluency'),
+    },
+    {
+      field: 'diametricalCompressionStrength',
+      headerName: t('asphalt.dosages.indirect-tensile-strength', 'Resistência à tração por compressão diametral'),
+      width: 150,
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
+      type: 'number',
+      renderCell: ({ row }) => renderInputCell(tenor, row, 'diametricalCompressionStrength'),
+    },
   ];
 
   /**
@@ -106,7 +175,16 @@ const Marshall_Step6 = ({
   const generateColumnGroupingModel = (tenor: string, index: number): GridColumnGroupingModel => [
     {
       groupId: `${binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][index].value},00 %`,
-      children: ['diammeter', 'height', 'dryMass', 'submergedMass', 'drySurfaceSaturatedMass', 'stability', 'fluency', 'diametricalCompressionStrength'].map(field => ({ field })),
+      children: [
+        'diammeter',
+        'height',
+        'dryMass',
+        'submergedMass',
+        'drySurfaceSaturatedMass',
+        'stability',
+        'fluency',
+        'diametricalCompressionStrength',
+      ].map((field) => ({ field })),
       headerAlign: 'center',
       renderHeaderGroup: (params) => (
         <Box sx={{ display: 'flex', gap: '2rem' }}>
@@ -145,17 +223,20 @@ const Marshall_Step6 = ({
    * @param type - Tipo de dosagem.
    */
   const handleAdd = (type: string) => {
-    const newRows = [...data[type], {
-      id: data[type].length,
-      diammeter: null,
-      height: null,
-      dryMass: null,
-      submergedMass: null,
-      drySurfaceSaturatedMass: null,
-      stability: null,
-      fluency: null,
-      diametricalCompressionStrength: null,
-    }];
+    const newRows = [
+      ...data[type],
+      {
+        id: data[type].length,
+        diammeter: null,
+        height: null,
+        dryMass: null,
+        submergedMass: null,
+        drySurfaceSaturatedMass: null,
+        stability: null,
+        fluency: null,
+        diametricalCompressionStrength: null,
+      },
+    ];
     setData({ step: 5, value: { ...data, [type]: newRows } });
   };
 
@@ -183,7 +264,12 @@ const Marshall_Step6 = ({
     toast.promise(
       async () => {
         try {
-          const volumetricParams = await marshall.setVolumetricParametersData(data, binderTrialData, maximumMixtureDensityData);
+          const volumetricParams = await marshall.setVolumetricParametersData(
+            data,
+            binderTrialData,
+            maximumMixtureDensityData
+          );
+          console.log("🚀 ~ setVolumetricParams ~ volumetricParams:", volumetricParams)
           setData({ step: 5, value: { ...data, ...volumetricParams } });
         } catch (error) {
           throw error;
@@ -227,7 +313,9 @@ const Marshall_Step6 = ({
   );
 
   // Renderização do componente principal
-  return loading ? <Loading /> : (
+  return loading ? (
+    <Loading />
+  ) : (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>
       {renderDataGrid('lessOne', data.lessOne, 0)}
       {renderDataGrid('lessHalf', data.lessHalf, 1)}

@@ -415,10 +415,10 @@ class Marshall_SERVICE implements IEssayService {
   calculateMaximumMixtureDensityDMT = async (
     step2Data: MarshallData['materialSelectionData'],
     step4Data: MarshallData['binderTrialData'],
-    step5Data: MarshallData['maximumMixtureDensityData']
+    maximumMixtureDensityData: MarshallData['maximumMixtureDensityData']
   ): Promise<any> => {
     const { aggregates } = step2Data;
-    const { missingSpecificMass } = step5Data;
+    const { missingSpecificMass } = maximumMixtureDensityData;
     const { newPercentOfDosage, trial } = step4Data;
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-dmt-data`, {
@@ -438,8 +438,8 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  calculateRiceTest = async (step5Data: MarshallData['maximumMixtureDensityData']): Promise<any> => {
-    const { riceTest, temperatureOfWater } = step5Data;
+  calculateRiceTest = async (maximumMixtureDensityData: MarshallData['maximumMixtureDensityData']): Promise<any> => {
+    const { riceTest, temperatureOfWater } = maximumMixtureDensityData;
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-rice-test`, {
         riceTest,
@@ -451,7 +451,7 @@ class Marshall_SERVICE implements IEssayService {
       if (success === false) throw error.name;
 
       const result = {
-        ...step5Data,
+        ...maximumMixtureDensityData,
         ...data,
       };
 
@@ -463,9 +463,9 @@ class Marshall_SERVICE implements IEssayService {
 
   calculateGmmData = async (
     step2Data: MarshallData['materialSelectionData'],
-    step5Data: MarshallData['maximumMixtureDensityData']
+    maximumMixtureDensityData: MarshallData['maximumMixtureDensityData']
   ): Promise<any> => {
-    const { gmm, temperatureOfWater } = step5Data;
+    const { gmm, temperatureOfWater } = maximumMixtureDensityData;
     const { aggregates } = step2Data;
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-gmm-data`, {
@@ -479,7 +479,7 @@ class Marshall_SERVICE implements IEssayService {
       if (success === false) throw error.name;
 
       const result = {
-        ...step5Data,
+        ...maximumMixtureDensityData,
         ...data,
       };
 
@@ -530,12 +530,13 @@ class Marshall_SERVICE implements IEssayService {
   setVolumetricParametersData = async (
     step6Data: MarshallData['volumetricParametersData'],
     step4Data: MarshallData['binderTrialData'],
-    step5Data: MarshallData['maximumMixtureDensityData'],
+    maximumMixtureDensityData: MarshallData['maximumMixtureDensityData'],
     isConsult?: boolean
   ): Promise<any> => {
     const volumetricParametersData = step6Data;
     const { percentsOfDosage, trial } = step4Data;
-    const { maxSpecificGravity, temperatureOfWater } = step5Data;
+    const { maxSpecificGravity, temperatureOfWater } = maximumMixtureDensityData;
+    console.log("🚀 ~ Marshall_SERVICE ~ maxSpecificGravity:", maxSpecificGravity)
 
     const { volumetricParameters, ...formattedVolumetricParameters } = volumetricParametersData;
 
@@ -656,12 +657,12 @@ class Marshall_SERVICE implements IEssayService {
 
   setOptimumBinderExpectedParameters = async (
     step3Data: MarshallData['granulometryCompositionData'],
-    step5Data: MarshallData['maximumMixtureDensityData'],
+    maximumMixtureDensityData: MarshallData['maximumMixtureDensityData'],
     step4Data: MarshallData['binderTrialData'],
     step7Data: MarshallData['optimumBinderContentData']
   ): Promise<any> => {
     const { percentageInputs } = step3Data;
-    const { maxSpecificGravity, listOfSpecificGravities } = step5Data;
+    const { maxSpecificGravity, listOfSpecificGravities } = maximumMixtureDensityData;
     const { trial } = step4Data;
     const { curveVv, curveRBV } = step7Data.optimumBinder;
     const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
@@ -735,13 +736,13 @@ class Marshall_SERVICE implements IEssayService {
 
   confirmSpecificGravity = async (
     step3Data: MarshallData['granulometryCompositionData'],
-    step5Data: MarshallData['maximumMixtureDensityData'],
+    maximumMixtureDensityData: MarshallData['maximumMixtureDensityData'],
     step7Data: MarshallData['optimumBinderContentData'],
     step8Data: MarshallData['confirmationCompressionData'],
     isRiceTest: boolean
   ): Promise<any> => {
     const { percentageInputs } = step3Data;
-    const { listOfSpecificGravities } = step5Data;
+    const { listOfSpecificGravities } = maximumMixtureDensityData;
     const { gmm, riceTest } = step8Data;
     const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
     let method;
@@ -750,7 +751,7 @@ class Marshall_SERVICE implements IEssayService {
     if (isRiceTest) {
       method = 'GMM';
     } else {
-      method = step5Data.maxSpecificGravity.method;
+      method = maximumMixtureDensityData.maxSpecificGravity.method;
     }
 
     try {
@@ -779,11 +780,11 @@ class Marshall_SERVICE implements IEssayService {
   };
 
   confirmVolumetricParameters = async (
-    step5Data: MarshallData['maximumMixtureDensityData'],
+    maximumMixtureDensityData: MarshallData['maximumMixtureDensityData'],
     step7Data: MarshallData['optimumBinderContentData'],
     step8Data: MarshallData['confirmationCompressionData']
   ): Promise<any> => {
-    const { temperatureOfWater, listOfSpecificGravities } = step5Data;
+    const { temperatureOfWater, listOfSpecificGravities } = maximumMixtureDensityData;
     const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
     const { optimumBinder } = step8Data;
     const { result: resultNumber } = step8Data.confirmedSpecificGravity;
