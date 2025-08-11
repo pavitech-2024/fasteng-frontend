@@ -184,7 +184,6 @@ class CONCRETE_RT_SERVICE implements IEssayService {
 
   // verify inputs from ConcreteRt page (step === 4, page 4)
   submitStep3Data = async (concreteRtStep3: ConcreteRtData['step3Data']): Promise<void> => {
-    console.log("🚀 ~ CONCRETE_RT_SERVICE ~ concreteRtStep3:", concreteRtStep3)
     try {
       // verify if press_constant is not empty
       // if (!concreteRtStep2.pressConstant) throw t('errors.empty-press-constant');

@@ -54,6 +54,14 @@ class Rtcd_SERVICE implements IEssayService {
     }
   };
 
+  deleteRtcdEssay = async (id: string): Promise<void> => {
+    try {
+      await Api.delete(`${this.info.backend_path}/delete-essay/${id}`);
+    } catch (error) {
+      throw error;
+    }
+  };
+
   /** @generalData Methods for general-data (step === 0, page 1) */
 
   // get all materials from user from backend
