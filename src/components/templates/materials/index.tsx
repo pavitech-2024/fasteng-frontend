@@ -31,6 +31,9 @@ import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
 import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 
+export type FilterTypes = 'name' | 'type' | 'mix' | 'stretch';
+export type essayTypes = 'rtcd' | 'ddui' | 'fwd' | 'igg';
+
 interface MaterialsTemplateProps {
   materials: any[] | undefined;
   fwdEssays?: FwdData[] | undefined;
@@ -42,7 +45,7 @@ interface MaterialsTemplateProps {
   path?: string;
   //Modal
   handleOpenModal: () => void;
-  deleteMaterial: (id: string) => void;
+  deleteMaterial: (id: string, filter: FilterTypes, essayTypes?: essayTypes) => void;
   editMaterial: (materiaId: string) => void;
   modal: JSX.Element;
 }
@@ -77,9 +80,10 @@ const MaterialsTemplate = ({
   const app = useRouter().pathname.split('/')[1];
   let samplesOrMaterials: string;
 
+  const [filteredData, setFilteredData] = useState<DataToFilter[]>([]);
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
-  const [searchBy, setSearchBy] = useState<string>('name');
+  const [searchBy, setSearchBy] = useState<FilterTypes>('name');
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchString, setSearchString] = useState<string>('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -113,7 +117,6 @@ const MaterialsTemplate = ({
     );
   }
 
-  /*******  b8f77572-72b8-4e11-aeb0-6b9fe12308cf  *******/
   const translateType = (type: string) => {
     switch (type) {
       case 'inorganicSoil':
@@ -143,24 +146,28 @@ const MaterialsTemplate = ({
     setSearchValue('');
   }, [searchBy]);
 
-  const filteredData = (Array.isArray(materials[0].materials) ? materials[0].materials : [])
-    .map(({ _id, name, type, createdAt }) => ({
-      _id,
-      name,
-      type,
-      createdAt: createdAt instanceof Date ? createdAt : new Date(createdAt),
-    }))
-    .filter((material) => {
-      if (!searchValue) return true;
+  useEffect(() => {
+    const data = (Array.isArray(materials[0].materials) ? materials[0].materials : [])
+      .map(({ _id, name, type, createdAt }) => ({
+        _id,
+        name,
+        type,
+        createdAt: createdAt instanceof Date ? createdAt : new Date(createdAt),
+      }))
+      .filter((material) => {
+        if (!searchValue) return true;
 
-      if (searchBy === 'name') {
-        return material.name.toLowerCase().includes(searchValue.toLowerCase());
-      }
-      if (searchBy === 'type') {
-        return material.type === searchValue;
-      }
-      return true;
-    });
+        if (searchBy === 'name') {
+          return material.name.toLowerCase().includes(searchValue.toLowerCase());
+        }
+        if (searchBy === 'type') {
+          return material.type === searchValue;
+        }
+        return true;
+      });
+
+    setFilteredData(data);
+  }, [searchValue, searchBy]);
 
   const fwdEssaysData = fwdEssays?.map(({ _id, generalData }) => ({
     name: generalData.name,
@@ -191,7 +198,6 @@ const MaterialsTemplate = ({
   }));
 
   useEffect(() => {
-    console.log('Effect 1');
     let newData: any[] = [];
 
     if (searchBy === 'stretch') {
@@ -205,7 +211,7 @@ const MaterialsTemplate = ({
     }
 
     setTableData(newData);
-  }, [searchBy]);
+  }, [searchBy, rtcdEssays, dduiEssays, fwdEssays, iggEssays, filteredData]);
 
   const handleEditMaterial = (rowId: string) => {
     editMaterial(rowId);
@@ -256,8 +262,9 @@ const MaterialsTemplate = ({
                 width: '40%',
               }}
               onClick={() => {
+                const selectedType = tableData.find((material) => material._id === RowToDelete?._id)?.type;
                 try {
-                  toast.promise(async () => await deleteMaterial(RowToDelete?._id), {
+                  toast.promise(async () => await deleteMaterial(RowToDelete?._id, searchBy, selectedType), {
                     pending: t('materials.template.toast.delete.pending') + RowToDelete?.name + '...',
                     success: RowToDelete?.name + t('materials.template.toast.delete.sucess'),
                     error: t('materials.template.toast.delete.error') + RowToDelete?.name + '.',

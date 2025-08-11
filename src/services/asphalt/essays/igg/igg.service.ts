@@ -58,6 +58,14 @@ class Igg_SERVICE implements IEssayService {
     }
   };
 
+  deleteIggEssay = async (id: string): Promise<void> => {
+    try {
+      await Api.delete(`${this.info.backend_path}/delete-essay/${id}`);
+    } catch (error) {
+      throw error;
+    }
+  };
+
   /** @generalData Methods for general-data (step === 0, page 1) */
 
   // get essay from user _id
