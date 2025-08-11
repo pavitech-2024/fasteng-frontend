@@ -16,6 +16,7 @@ interface ConcreteGranulometry_step2Data {
   table_data: { sieve: string; passant: number; retained: number }[];
   sieve_series: { label: string; value: number }[];
   bottom: number;
+  decimalPlaces: number;
 }
 
 interface ConcreteGranulometry_results {
@@ -61,6 +62,7 @@ const initialState = {
     table_data: null,
     sieve_series: null,
     bottom: null,
+    decimalPlaces: null,
   },
   results: {
     accumulated_retained: [],

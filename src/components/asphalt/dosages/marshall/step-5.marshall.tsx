@@ -324,19 +324,14 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
         tenor.massOfDrySample > tenor.massOfContainerWaterSample ||
         tenor.massOfContainerWater > tenor.massOfContainerWaterSample
     );
-
     if (hasNullValues) errorMsg = 'errors.rice-test-empty-fields';
     if (!errorMsg && invalidValues) {
-      if (
-        invalidValues.massOfDrySample > invalidValues.massOfContainerWater ||
-        invalidValues.massOfDrySample > invalidValues.massOfContainerWaterSample
-      ) {
-        errorMsg = 'errors.invalid-gmm-mass-value';
-      } else if (invalidValues.massOfContainerWater > invalidValues.massOfContainerWaterSample) {
+    if (invalidValues.massOfContainerWaterSample <= invalidValues.massOfDrySample) {
+      errorMsg = 'errors.invalid-gmm-mass-value';
+    } else if (invalidValues.massOfContainerWater > invalidValues.massOfContainerWaterSample) {
         errorMsg = 'errors.invalid-gmm-container-mass-value';
       }
     }
-
     toast.promise(
       async () => {
         if (errorMsg) throw new Error(errorMsg);

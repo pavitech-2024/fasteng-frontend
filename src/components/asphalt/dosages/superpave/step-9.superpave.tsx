@@ -3,7 +3,6 @@ import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
-import useAuth from '@/contexts/auth';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { Box, Button, Typography } from '@mui/material';
@@ -12,15 +11,17 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
-  const [loading, setLoading] = useState<boolean>(false);
+const Superpave_Step9_SecondCompaction = ({
+  setNextDisabled,
+  superpave,
+}: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const {
     secondCompressionData: data,
     setData,
     granulometryCompositionData,
     initialBinderData,
     chosenCurvePercentagesData,
-    firstCurvePercentagesData,
+    firstCompressionParamsData,
   } = useSuperpaveStore();
 
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState({
@@ -62,8 +63,6 @@ const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayP
       value: list[key],
     });
   });
-
-  const { user } = useAuth();
 
   useEffect(() => {
     if (data?.halfLess?.length > 0) setNProjectPercentsRows_halfLess(data.halfLess);
@@ -280,84 +279,54 @@ const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayP
     );
   };
 
-  const maximumDensitiesContainers = [
-    {
-      id: 0,
-      adornment: '',
-      label: 'Teor de:',
-      value: chosenCurvePercentagesData.listOfPlis[0],
-      insertedGmm: null,
-      riceTest: {
-        sampleAirDryMass: null,
-        containerMassWaterSample: null,
-        containerWaterMass: null,
-        waterTemperatureCorrection: null,
-      },
+  const maximumDensitiesContainers = Array.from({ length: 4 }, (_, idx) => ({
+    id: idx,
+    adornment: '',
+    label: 'Teor de:',
+    value: chosenCurvePercentagesData?.listOfPlis?.[idx] ?? null,
+    insertedGmm: null,
+    riceTest: {
+      sampleAirDryMass: null,
+      containerMassWaterSample: null,
+      containerWaterMass: null,
+      waterTemperatureCorrection: null,
     },
-    {
-      id: 1,
-      adornment: '',
-      label: 'Teor de:',
-      value: chosenCurvePercentagesData.listOfPlis[1],
-      insertedGmm: null,
-      riceTest: {
-        sampleAirDryMass: null,
-        containerMassWaterSample: null,
-        containerWaterMass: null,
-        waterTemperatureCorrection: null,
-      },
-    },
-    {
-      id: 2,
-      adornment: '',
-      label: 'Teor de:',
-      value: chosenCurvePercentagesData.listOfPlis[2],
-      insertedGmm: null,
-      riceTest: {
-        sampleAirDryMass: null,
-        containerMassWaterSample: null,
-        containerWaterMass: null,
-        waterTemperatureCorrection: null,
-      },
-    },
-    {
-      id: 3,
-      adornment: '',
-      label: 'Teor de:',
-      value: chosenCurvePercentagesData.listOfPlis[3],
-      insertedGmm: null,
-      riceTest: {
-        sampleAirDryMass: null,
-        containerMassWaterSample: null,
-        containerWaterMass: null,
-        waterTemperatureCorrection: null,
-      },
-    },
-  ];
+  }));
 
-  const confirmBtn = () => {
+  const confirmBtn = async () => {
+    const toastId = toast.loading(t('loading.materials.pending'));
+
+    try {
+      const response = await superpave.confirmSecondCompression(
+        data,
+        granulometryCompositionData,
+        initialBinderData,
+        firstCompressionParamsData
+      );
+
+      const prevData = { ...data, ...response };
+
+      setData({ step: 8, value: prevData });
+
+      toast.dismiss(toastId);
+      toast.success(t('loading.materials.success'));
+    } catch (error: any) {
+      toast.dismiss(toastId);
+      const message = error?.message || t('loading.materials.error');
+      toast.error(message);
+    }
+  };
+
+  const calculateMaximumDensity = async (index: number) => {
     toast.promise(
       async () => {
-        try {
-          console.log('chegou aqui');
-          const response = await superpave.confirmSecondCompression(
-            data,
-            granulometryCompositionData,
-            initialBinderData,
-            firstCurvePercentagesData
-          );
+        const response = await superpave.calculateRiceTest(data.maximumDensities[index]);
 
-          const value = response;
+        if (response.success) {
+          const maximumDensities = [...data.maximumDensities];
+          maximumDensities[index].insertedGmm = response.data.toFixed(2);
 
-          let prevData = { ...data };
-
-          prevData = { ...prevData, ...value };
-
-          setData({ step: 8, value: prevData });
-          //setLoading(false);
-        } catch (error) {
-          //setLoading(false);
-          throw error;
+          setData({ step: 8, key: 'maximumDensities', value: maximumDensities });
         }
       },
       {
@@ -373,60 +342,39 @@ const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayP
       table.every((row) => Object.values(row).every((value) => value !== null))
     );
 
-    if (allTablesAreComplete) {
+    const maximumDensitiesAreComplete = data.maximumDensities.every((container) => container.insertedGmm !== null);
+
+    if (allTablesAreComplete && maximumDensitiesAreComplete) {
       setNextDisabled(false);
+    } else {
+      setNextDisabled(true);
     }
   }, [data]);
 
   return (
     <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '2rem',
-          }}
-        >
-          <Box>
-            <Typography variant="h6" style={{ textAlign: 'center' }}>
-              Porcentagem dos materiais a partir do teor de ligante estimado para Vv:{' '}
-              {`${chosenCurvePercentagesData.listOfPlis[0].toFixed(2)}`}
-            </Typography>
-            {nProjectPercentsRows_halfLess?.length > 0 && (
-              <DataGrid
-                disableColumnMenu
-                disableColumnFilter
-                experimentalFeatures={{ columnGrouping: true }}
-                columnGroupingModel={nProjectPercentsGroupings}
-                columns={generateColumns('halfLess').map((column) => ({
-                  ...column,
-                  disableColumnMenu: true,
-                  sortable: false,
-                  align: 'center',
-                  headerAlign: 'center',
-                  minWidth: 100,
-                  flex: 1,
-                }))}
-                rows={nProjectPercentsRows_halfLess}
-                slots={{ footer: () => ExpansionToolbar('halfLess') }}
-              />
-            )}
-          </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '2rem',
+        }}
+      >
+        <Box>
+          <Typography variant="h6" style={{ textAlign: 'center' }}>
+            Porcentagem dos materiais a partir do teor de ligante estimado para Vv:{' '}
+            {chosenCurvePercentagesData?.listOfPlis?.[0] != null
+              ? `${chosenCurvePercentagesData.listOfPlis[0].toFixed(2)}`
+              : '--'}
+          </Typography>
 
-          <Box>
-            <Typography variant="h6" style={{ textAlign: 'center' }}>
-              Porcentagem dos materiais a partir do teor de ligante estimado para Vv:{' '}
-              {`${chosenCurvePercentagesData.listOfPlis[1].toFixed(2)}`}
-            </Typography>
+          {nProjectPercentsRows_halfLess?.length > 0 && (
             <DataGrid
               disableColumnMenu
               disableColumnFilter
               experimentalFeatures={{ columnGrouping: true }}
               columnGroupingModel={nProjectPercentsGroupings}
-              columns={generateColumns('halfPlus').map((column) => ({
+              columns={generateColumns('halfLess').map((column) => ({
                 ...column,
                 disableColumnMenu: true,
                 sortable: false,
@@ -435,158 +383,198 @@ const Superpave_Step9_SecondCompaction = ({ setNextDisabled, superpave }: EssayP
                 minWidth: 100,
                 flex: 1,
               }))}
-              rows={nProjectPercentsRows_halfPlus}
-              slots={{ footer: () => ExpansionToolbar('halfPlus') }}
+              rows={nProjectPercentsRows_halfLess}
+              slots={{ footer: () => ExpansionToolbar('halfLess') }}
             />
-          </Box>
-
-          <Box>
-            <Typography variant="h6" style={{ textAlign: 'center' }}>
-              Porcentagem dos materiais a partir do teor de ligante estimado para Vv:
-              {`${chosenCurvePercentagesData.listOfPlis[2].toFixed(2)}`}
-            </Typography>
-            <DataGrid
-              disableColumnMenu
-              disableColumnFilter
-              experimentalFeatures={{ columnGrouping: true }}
-              columnGroupingModel={nProjectPercentsGroupings}
-              columns={generateColumns('normal').map((column) => ({
-                ...column,
-                disableColumnMenu: true,
-                sortable: false,
-                align: 'center',
-                headerAlign: 'center',
-                minWidth: 100,
-                flex: 1,
-              }))}
-              rows={nProjectPercentsRows_normal}
-              slots={{ footer: () => ExpansionToolbar('normal') }}
-            />
-          </Box>
-
-          <Box>
-            <Typography variant="h6" style={{ textAlign: 'center' }}>
-              Porcentagem dos materiais a partir do teor de ligante estimado para Vv:
-              {`${chosenCurvePercentagesData.listOfPlis[3].toFixed(2)}`}
-            </Typography>
-            <DataGrid
-              disableColumnMenu
-              disableColumnFilter
-              experimentalFeatures={{ columnGrouping: true }}
-              columnGroupingModel={nProjectPercentsGroupings}
-              columns={generateColumns('onePlus').map((column) => ({
-                ...column,
-                disableColumnMenu: true,
-                sortable: false,
-                align: 'center',
-                headerAlign: 'center',
-                minWidth: 100,
-                flex: 1,
-              }))}
-              rows={nProjectPercentsRows_onePlus}
-              slots={{ footer: () => ExpansionToolbar('onePlus') }}
-            />
-          </Box>
-
-          <Box style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <Typography variant="h6" style={{ textAlign: 'center' }}>
-              Densidade máxima medida
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
-              {maximumDensitiesContainers.map((item, idx) => (
-                <>
-                  <Box style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <Typography style={{ textAlign: 'center' }}>
-                      {item.label} {item.value.toFixed(2)}
-                    </Typography>
-                    <Button
-                      variant="outlined"
-                      onClick={() => setRiceTestModalIsOpen({ ...riceTestModalIsOpen, [idx]: true })}
-                    >
-                      Calcular densidade máxima da mistura
-                    </Button>
-                  </Box>
-                  {Object.values(riceTestModalIsOpen).some((item) => item === true) && (
-                    <ModalBase
-                      title={t('asphalt.dosages.superpave.calculate-rice-test')}
-                      leftButtonTitle={'cancelar'}
-                      rightButtonTitle={'confirmar'}
-                      onCancel={() => setRiceTestModalIsOpen({ ...riceTestModalIsOpen, [idx]: false })}
-                      open={riceTestModalIsOpen[idx]}
-                      size={'large'}
-                      onSubmit={() => setRiceTestModalIsOpen({ ...riceTestModalIsOpen, [idx]: false })}
-                    >
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-                        <InputEndAdornment
-                          adornment=""
-                          type="number"
-                          label="Inserir Gmm"
-                          sx={{ width: '20rem' }}
-                          value={data.maximumDensities[idx].insertedGmm}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            const prevData = [...data.maximumDensities];
-                            const newData = { ...prevData[idx], insertedGmm: parseFloat(value) };
-                            prevData[idx] = newData;
-                            setData({ step: 8, value: { ...data, maximumDensities: prevData } });
-                          }}
-                        />
-
-                        <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
-                          {Object.keys(item.riceTest)
-                            .filter((key) => key !== 'waterTemperatureCorrection')
-                            .map((key) => (
-                              <InputEndAdornment
-                                key={key}
-                                adornment={item.adornment}
-                                label={key}
-                                type="number"
-                                value={data.maximumDensities[idx]?.riceTest[key] || ''}
-                                sx={{ width: '15rem' }}
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  const prevData = [...data.maximumDensities];
-                                  const newRiceTest = { ...prevData[idx].riceTest, [key]: Number(value) };
-                                  prevData[idx] = { ...prevData[idx], riceTest: newRiceTest };
-                                  setData({ step: 8, value: { ...data, maximumDensities: prevData } });
-                                }}
-                              />
-                            ))}
-                        </Box>
-
-                        <DropDown
-                          key={'water'}
-                          variant="standard"
-                          label={'Selecione o fator de correção para a temperatura da água'}
-                          options={waterTemperatureList}
-                          callback={(selectedValue) => {
-                            const prevData = [...data.maximumDensities];
-
-                            const newRiceTest = {
-                              ...prevData[idx].riceTest,
-                              waterTemperatureCorrection: Number(selectedValue),
-                            };
-
-                            prevData[idx] = { ...prevData[idx], riceTest: newRiceTest };
-
-                            setData({ step: 8, value: { ...data, maximumDensities: prevData } });
-                          }}
-                          size="medium"
-                          sx={{ width: '20rem' }}
-                        />
-                      </Box>
-                    </ModalBase>
-                  )}
-                </>
-              ))}
-            </Box>
-
-            <Button onClick={() => confirmBtn()} variant="outlined" sx={{ width: '100%' }}>
-              {t('asphalt.dosages.superpave.confirm')}
-            </Button>
-          </Box>
+          )}
         </Box>
-      )}
+
+        <Box>
+          <Typography variant="h6" style={{ textAlign: 'center' }}>
+            Porcentagem dos materiais a partir do teor de ligante estimado para Vv:{' '}
+            {chosenCurvePercentagesData?.listOfPlis?.[1] != null
+              ? `${chosenCurvePercentagesData.listOfPlis[1].toFixed(2)}`
+              : '--'}
+          </Typography>
+
+          <DataGrid
+            disableColumnMenu
+            disableColumnFilter
+            experimentalFeatures={{ columnGrouping: true }}
+            columnGroupingModel={nProjectPercentsGroupings}
+            columns={generateColumns('halfPlus').map((column) => ({
+              ...column,
+              disableColumnMenu: true,
+              sortable: false,
+              align: 'center',
+              headerAlign: 'center',
+              minWidth: 100,
+              flex: 1,
+            }))}
+            rows={nProjectPercentsRows_halfPlus}
+            slots={{ footer: () => ExpansionToolbar('halfPlus') }}
+          />
+        </Box>
+
+        <Box>
+          <Typography variant="h6" style={{ textAlign: 'center' }}>
+            Porcentagem dos materiais a partir do teor de ligante estimado para Vv:{' '}
+            {chosenCurvePercentagesData?.listOfPlis?.[2] != null
+              ? `${chosenCurvePercentagesData.listOfPlis[2].toFixed(2)}`
+              : '--'}
+          </Typography>
+
+          <DataGrid
+            disableColumnMenu
+            disableColumnFilter
+            experimentalFeatures={{ columnGrouping: true }}
+            columnGroupingModel={nProjectPercentsGroupings}
+            columns={generateColumns('normal').map((column) => ({
+              ...column,
+              disableColumnMenu: true,
+              sortable: false,
+              align: 'center',
+              headerAlign: 'center',
+              minWidth: 100,
+              flex: 1,
+            }))}
+            rows={nProjectPercentsRows_normal}
+            slots={{ footer: () => ExpansionToolbar('normal') }}
+          />
+        </Box>
+
+        <Box>
+          <Typography variant="h6" style={{ textAlign: 'center' }}>
+            Porcentagem dos materiais a partir do teor de ligante estimado para Vv:{' '}
+            {chosenCurvePercentagesData?.listOfPlis?.[3] != null
+              ? `${chosenCurvePercentagesData.listOfPlis[3].toFixed(2)}`
+              : '--'}
+          </Typography>
+
+          <DataGrid
+            disableColumnMenu
+            disableColumnFilter
+            experimentalFeatures={{ columnGrouping: true }}
+            columnGroupingModel={nProjectPercentsGroupings}
+            columns={generateColumns('onePlus').map((column) => ({
+              ...column,
+              disableColumnMenu: true,
+              sortable: false,
+              align: 'center',
+              headerAlign: 'center',
+              minWidth: 100,
+              flex: 1,
+            }))}
+            rows={nProjectPercentsRows_onePlus}
+            slots={{ footer: () => ExpansionToolbar('onePlus') }}
+          />
+        </Box>
+
+        <Box style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <Typography variant="h6" style={{ textAlign: 'center' }}>
+            Densidade máxima medida
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
+            {maximumDensitiesContainers.map((item, idx) => (
+              <>
+                <Box style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <Typography style={{ textAlign: 'center' }}>
+                    {item.label} {item?.value?.toFixed(2) != null ? `${item.value.toFixed(2)}` : '--'}
+                  </Typography>
+                  <Button
+                    variant="outlined"
+                    onClick={() => setRiceTestModalIsOpen({ ...riceTestModalIsOpen, [idx]: true })}
+                  >
+                    Calcular densidade máxima da mistura
+                  </Button>
+                </Box>
+                {Object.values(riceTestModalIsOpen).some((item) => item === true) && (
+                  <ModalBase
+                    title={t('asphalt.dosages.superpave.calculate-rice-test')}
+                    leftButtonTitle={'cancelar'}
+                    rightButtonTitle={'confirmar'}
+                    onCancel={() => setRiceTestModalIsOpen({ ...riceTestModalIsOpen, [idx]: false })}
+                    open={riceTestModalIsOpen[idx]}
+                    size={'larger'}
+                    onSubmit={() => {
+                      calculateMaximumDensity(idx);
+                      setRiceTestModalIsOpen({ ...riceTestModalIsOpen, [idx]: false });
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%' }}>
+                      <InputEndAdornment
+                        adornment=""
+                        type="number"
+                        label="Inserir Gmm"
+                        sx={{ width: '20rem' }}
+                        value={data.maximumDensities[idx].insertedGmm}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          const prevData = [...data.maximumDensities];
+                          const newData = { ...prevData[idx], insertedGmm: parseFloat(value) };
+                          prevData[idx] = newData;
+                          setData({ step: 8, value: { ...data, maximumDensities: prevData } });
+                        }}
+                      />
+
+                      <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem', width: '100%' }}>
+                        {Object.keys(item.riceTest)
+                          .filter((key) => key !== 'waterTemperatureCorrection')
+                          .map((key) => (
+                            <InputEndAdornment
+                              key={key}
+                              adornment={item.adornment}
+                              label={t('asphalt.dosages.superpave.' + key)}
+                              type="number"
+                              value={data.maximumDensities[idx]?.riceTest[key] || ''}
+                              sx={{ width: '19rem' }}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                const prevData = [...data.maximumDensities];
+                                const newRiceTest = { ...prevData[idx].riceTest, [key]: Number(value) };
+                                prevData[idx] = { ...prevData[idx], riceTest: newRiceTest };
+                                setData({ step: 8, value: { ...data, maximumDensities: prevData } });
+                              }}
+                            />
+                          ))}
+                      </Box>
+
+                      <DropDown
+                        key={'water'}
+                        variant="standard"
+                        label={'Selecione o fator de correção para a temperatura da água'}
+                        options={waterTemperatureList}
+                        callback={(selectedValue) => {
+                          const prevData = [...data.maximumDensities];
+
+                          const newRiceTest = {
+                            ...prevData[idx].riceTest,
+                            waterTemperatureCorrection: Number(selectedValue),
+                          };
+
+                          prevData[idx] = { ...prevData[idx], riceTest: newRiceTest };
+
+                          setData({ step: 8, value: { ...data, maximumDensities: prevData } });
+                        }}
+                        size="medium"
+                        sx={{ width: '100%' }}
+                        value={{
+                          label: data.maximumDensities[idx].riceTest.waterTemperatureCorrection?.toString(),
+                          value: data.maximumDensities[idx].riceTest.waterTemperatureCorrection,
+                        }}
+                      />
+                    </Box>
+                  </ModalBase>
+                )}
+              </>
+            ))}
+          </Box>
+
+          <Button onClick={() => confirmBtn()} variant="outlined" sx={{ width: '100%' }}>
+            {t('asphalt.dosages.superpave.confirm')}
+          </Button>
+        </Box>
+      </Box>
     </>
   );
 };

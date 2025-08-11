@@ -8,7 +8,6 @@ import { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
 import logo from '@/assets/fasteng/LogoBlack.png';
 import {
   addCapa,
-  addChart,
   addImageProcess,
   addSection,
   addSummary,
@@ -585,7 +584,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
               variant="contained"
               color="primary"
               disabled={!dosage?.confirmationCompressionData || !isDesktop}
-              sx={{ minWidth: '200px', minHeight: '2rem' }}
+              sx={{ minWidth: '200px', minHeight: '2rem', maxHeight: '2.5rem' }}
             >
               {loading ? <Loading size={25} color={'inherit'} /> : t('generate.dosage.button')}
             </Button>

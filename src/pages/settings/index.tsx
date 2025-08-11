@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import useAuth from '@/contexts/auth';
-import { Avatar, Box, Button, Grid, IconButton, Tooltip, Typography } from '@mui/material';
-import Header from '@/components/organisms/header';
+import { Avatar, Box, Button, IconButton, Tooltip, Typography } from '@mui/material';
 import i18next, { t } from 'i18next';
 import ModalBase from '@/components/molecules/modals/modal';
 import DropDown from '@/components/atoms/inputs/dropDown';
@@ -11,25 +10,16 @@ import { toast } from 'react-toastify';
 import Api from '../../api';
 import { DeleteIcon } from '../../assets';
 import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
-import UploadIcon from '@mui/icons-material/Upload';
 import { TextField } from '@mui/material';
-import { red } from '@mui/material/colors';
 import { nameMask } from '@/utils/masks/nameMask/nameMask.mask';
 import { phoneMask } from '@/utils/masks/phoneMask/phoneMask.mask';
 import { validateEmail } from '@/utils/validators/emailValidator';
 import { validateName } from '@/utils/validators/nameValidator';
 import { validatePhone } from '@/utils/validators/phoneValidator';
-import { fontGrid } from '@mui/material/styles/cssUtils';
-import Cookies from 'js-cookie';
-import PersonIcon from '@mui/icons-material/Person';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 
 export const getStaticProps = async () => {
   const avatares: string[] = [
-    //'https://thumbs.dreamstime.com/z/vetor-de-%C3%ADcone-perfil-do-avatar-padr%C3%A3o-foto-usu%C3%A1rio-m%C3%ADdia-social-183042379.jpg',
-
-    //'https://www.svgrepo.com/show/535711/user.svg',
-
     'https://i.pinimg.com/736x/e8/d7/d0/e8d7d05f392d9c2cf0285ce928fb9f4a.jpg',
   ];
 

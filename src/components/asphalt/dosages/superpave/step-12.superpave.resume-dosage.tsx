@@ -4,14 +4,12 @@ import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import GenerateSuperpaveDosagePDF from '@/components/generatePDF/dosages/asphalt/superpave/generatePDFSuperpave';
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
-import superpaveDosageService from '@/services/asphalt/dosages/superpave/superpave.consult.service';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 const Superpave_Step12_ResumeDosage = ({
   nextDisabled,
@@ -20,11 +18,7 @@ const Superpave_Step12_ResumeDosage = ({
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const {
-    confirmationCompressionData,
     granulometryEssayData,
-    granulometryCompositionData,
-    initialBinderData,
-    firstCurvePercentagesData,
     secondCompressionPercentagesData,
     dosageResume: data,
     setData,
@@ -33,8 +27,13 @@ const Superpave_Step12_ResumeDosage = ({
   const [finalProportionsRows, setFinalProportionsRows] = useState([]);
   const [quantitativeRows, setQuantitativeRows] = useState([]);
   const [dosage, setDosage] = useState(null);
-  const store = JSON.parse(sessionStorage.getItem('asphalt-superpave-store'));
-  const dosageId = store?.state._id ? store?.state._id : store.state.undefined._id;
+  const {state: storedDosage} = JSON.parse(sessionStorage.getItem('asphalt-superpave-store'));
+
+  useEffect(()=> {
+    if (storedDosage) {
+      setDosage(storedDosage);
+    }
+  },[])
 
   const finalProportionsCols = granulometryEssayData?.materials
     ?.filter((material) => material.type !== 'asphaltBinder' && material.type !== 'CAP')
@@ -51,49 +50,20 @@ const Superpave_Step12_ResumeDosage = ({
   });
 
   useEffect(() => {
-    const fetchDosage = async () => {
-      try {
-        const response = await superpave.calculateDosageEquation(
-          granulometryCompositionData,
-          initialBinderData,
-          firstCurvePercentagesData,
-          secondCompressionPercentagesData,
-          confirmationCompressionData
-        );
-
-        const foundDosage = await superpaveDosageService.getSuperpaveDosage(dosageId);
-
-        setDosage(foundDosage.data.dosage);
-        const newData = { ...data, ...response };
-
-        setData({
-          step: 11,
-          value: newData,
-        });
-      } catch (error) {
-        throw error;
-      }
-    };
-
-    toast.promise(fetchDosage(), {
-      pending: t('loading.dosages.pending'),
-      success: t('loading.dosages.success'),
-      error: t('loading.dosages.error'),
-    });
-  }, []);
-
-  useEffect(() => {
     if (data?.ponderatedPercentsOfDosage?.length > 0) {
       const prevRowsData = {
         id: 0,
-        optimumBinder: secondCompressionPercentagesData.optimumContent
-          ? secondCompressionPercentagesData.optimumContent
-          : '---',
+        optimumBinder:
+          typeof secondCompressionPercentagesData.optimumContent === 'number'
+            ? secondCompressionPercentagesData.optimumContent.toFixed(2)
+            : secondCompressionPercentagesData.optimumContent === 'No Real Roots'
+            ? t('superpave-results-noRealRoots')
+            : null,
       };
 
       data.ponderatedPercentsOfDosage?.forEach((materialPercent, index) => {
         const materialName = granulometryEssayData?.materials[index]?.name;
-        prevRowsData[materialName] = materialPercent;
+        prevRowsData[materialName] = materialPercent.toFixed(2);
       });
 
       setFinalProportionsRows([prevRowsData]);
@@ -102,7 +72,10 @@ const Superpave_Step12_ResumeDosage = ({
 
   useEffect(() => {
     if (data?.quantitative?.length > 0) {
-      const arr = { id: 1 };
+      const arr = {
+        id: 1,
+        optimumBinder: data.quantitative[0] ? data.quantitative[0].toFixed(2) : t('superpave-results-noRoots'),
+      };
       data.quantitative?.forEach((material, index) => {
         const materialName = granulometryEssayData?.materials[index - 1]?.name;
         if (index > 0) {
@@ -115,7 +88,7 @@ const Superpave_Step12_ResumeDosage = ({
       setQuantitativeRows(newRowsData);
       setLoading(false);
     }
-  }, [data?.quantitative]);
+  }, []);
 
   const resultCards = [
     {
@@ -130,8 +103,11 @@ const Superpave_Step12_ResumeDosage = ({
     },
     {
       label: t('Vazios do agregado mineral (VAM):'),
-      value: data?.Vam,
-      unity: '%',
+      value:
+        typeof secondCompressionPercentagesData.optimumContent === 'number'
+          ? data?.Vam
+          : 'Revisar dados da primeira compactação',
+      unity: typeof secondCompressionPercentagesData.optimumContent === 'number' ? '%' : '',
     },
     {
       label: t('asphalt.dosages.rbv') + ' (RBV):',
@@ -157,7 +133,7 @@ const Superpave_Step12_ResumeDosage = ({
       {loading ? (
         <Loading />
       ) : (
-        <FlexColumnBorder open={true} title={t('superpave.results')}>
+        <FlexColumnBorder open={true} title={t('superpave.step-12')}>
           <GenerateSuperpaveDosagePDF dosage={dosage} />
           <Box
             sx={{
@@ -211,36 +187,38 @@ const Superpave_Step12_ResumeDosage = ({
               />
             </Box>
 
-            <ResultSubTitle
-              title={t('asphalt.dosages.superpave.mechanic-volumetric-params')}
-              sx={{
-                maxWidth: '103%',
-                wordWrap: 'break-word',
-                margin: '.65rem',
-              }}
-            />
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <ResultSubTitle
+                title={t('asphalt.dosages.superpave.mechanic-volumetric-params')}
+                sx={{
+                  maxWidth: '103%',
+                  wordWrap: 'break-word',
+                  margin: '.65rem',
+                }}
+              />
 
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: { mobile: 'column', notebook: 'row' },
-                gap: '10px',
-                alignItems: { mobile: 'center', notebook: 'flex-start' },
-                justifyContent: { mobile: 'center', notebook: 'flex-start' },
-              }}
-            >
-              {resultCards?.map((card) => {
-                if (card.value !== undefined) {
-                  return (
-                    <Result_Card
-                      key={card.label}
-                      label={card.label}
-                      value={card.value?.toFixed(2).toString()}
-                      unity={card.unity}
-                    />
-                  );
-                }
-              })}
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: { mobile: 'column', notebook: 'row' },
+                  gap: '10px',
+                  alignItems: { mobile: 'center', notebook: 'flex-start' },
+                  justifyContent: { mobile: 'center', notebook: 'flex-start' },
+                }}
+              >
+                {resultCards?.map((card) => {
+                  if (card.value !== undefined) {
+                    return (
+                      <Result_Card
+                        key={card.label}
+                        label={card.label}
+                        value={typeof card.value === 'string' ? card.value : card.value?.toFixed(2).toString()}
+                        unity={card.unity}
+                      />
+                    );
+                  }
+                })}
+              </Box>
             </Box>
           </Box>
         </FlexColumnBorder>

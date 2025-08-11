@@ -24,7 +24,6 @@ const Superpave_Step5_InitialBinder = ({
     generalData,
     setData,
   } = useSuperpaveStore();
-    console.log("🚀 ~ Superpave_Step5_InitialBinder ~ granulometryEssayData:", granulometryEssayData)
 
   const [specificMassModalIsOpen, setSpecificMassModalIsOpen] = useState(true);
   const [newInitialBinderModalIsOpen, setNewInitialBinderModalIsOpen] = useState(false);
@@ -53,7 +52,6 @@ const Superpave_Step5_InitialBinder = ({
               apparentSpecificMass: data.materials[index]?.apparentSpecificMass ?? null,
               absorption: data.materials[index]?.absorption ?? null,
             }));
-            console.log("🚀 ~ Superpave_Step5_InitialBinder ~ aggregateMaterials:", aggregateMaterials)
 
             setData({
               step: 4,

@@ -83,38 +83,43 @@ const Marshall_Step7 = ({
 
   // Preparando os dados points para o componente GraficoPage7N
   const points = data?.optimumBinder?.pointsOfCurveDosage;
-  points.unshift(['', '', '']);
+  points?.unshift(['', '', '']);
 
   const expectedParametersColumns: GridColDef[] = [
     {
       field: 'vv',
       headerName: 'Vv (%)',
       valueFormatter: ({ value }) => `${value}`,
-      width: 200,
+      flex: 1,
+      minWidth: 150,
     },
     {
       field: 'rbv',
       headerName: 'Rbv (%)',
       valueFormatter: ({ value }) => `${value}`,
-      width: 200,
+      flex: 1,
+      minWidth: 150,
     },
     {
       field: 'vam',
       headerName: 'Vam (%)',
       valueFormatter: ({ value }) => `${value}`,
-      width: 200,
+      flex: 1,
+      minWidth: 150,
     },
     {
       field: 'gmb',
       headerName: 'Gmb (g/cm³)',
       valueFormatter: ({ value }) => `${value}`,
-      width: 200,
+      flex: 1,
+      minWidth: 150,
     },
     {
       field: 'dmt',
       headerName: 'DMT (g/cm³)',
       valueFormatter: ({ value }) => `${value}`,
-      width: 200,
+      flex: 1,
+      minWidth: 150,
     },
   ];
 
@@ -136,9 +141,9 @@ const Marshall_Step7 = ({
   const expectedParametersRows = [
     {
       id: 1,
-      vv: formatData.vv.toFixed(2),
-      rbv: formatData.rbv.toFixed(2),
-      vam: formatData.vam.toFixed(2),
+      vv: formatData.vv?.toFixed(2),
+      rbv: formatData.rbv?.toFixed(2),
+      vam: formatData.vam?.toFixed(2),
       gmb: data?.expectedParameters?.expectedParameters.Gmb?.toFixed(2),
       dmt: data?.expectedParameters?.expectedParameters.newMaxSpecificGravity?.toFixed(2),
     },
@@ -152,7 +157,8 @@ const Marshall_Step7 = ({
         field: `${material._id}`,
         headerName: `${material.name} (%)`,
         valueFormatter: ({ value }) => `${value}`,
-        width: 300,
+        flex: 1,
+        minWidth: 200,
       };
       cols.push(materialCol);
     });
@@ -185,19 +191,22 @@ const Marshall_Step7 = ({
       field: 'binder',
       headerName: t('asphalt.dosages.marshall.binder-percentage'),
       valueFormatter: ({ value }) => `${value}`,
-      width: 300,
+      flex: 1,
+      minWidth: 250,
     },
     {
       field: 'col1',
       headerName: `${volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.asphaltContent} (%)`,
       valueFormatter: ({ value }) => `${value}`,
-      width: 300,
+      flex: 1,
+      minWidth: 200,
     },
     {
       field: 'col2',
       headerName: `${volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.asphaltContent} (%)`,
       valueFormatter: ({ value }) => `${value}`,
-      width: 300,
+      flex: 1,
+      minWidth: 200,
     },
   ];
 
@@ -217,10 +226,10 @@ const Marshall_Step7 = ({
     {
       id: 2,
       binder: 'Gmb (g/cm³)',
-      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.apparentBulkSpecificGravity.toFixed(
+      col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.apparentBulkSpecificGravity?.toFixed(
         2
       ),
-      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.apparentBulkSpecificGravity.toFixed(
+      col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.apparentBulkSpecificGravity?.toFixed(
         2
       ),
     },
@@ -276,7 +285,7 @@ const Marshall_Step7 = ({
     },
     {
       id: 6,
-      binder: t('asphalt.dosages.fluency') + '(mm)',
+      binder: t('asphalt.dosages.marshall.fluency') + ' (mm)',
       col1: volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.fluency.toFixed(2),
       col2: volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.fluency.toFixed(2),
     },
@@ -319,49 +328,62 @@ const Marshall_Step7 = ({
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '10px',
+            gap: '20px',
+            padding: '20px',
           }}
         >
           {points?.length > 0 && <GraficoPage7N data={points} />}
 
           {!Object.values(data?.expectedParameters?.expectedParameters).some((item) => item === null) && (
-            <DataGrid
-              columns={expectedParametersColumns.map((col) => ({
-                ...col,
-                flex: 1,
-                width: 200,
-                headerAlign: 'center',
-                align: 'center',
-              }))}
-              rows={expectedParametersRows}
-              hideFooter
-              disableColumnMenu
-              sx={{ width: 'fit-content', marginX: 'auto' }}
-            />
+            <Box sx={{ width: '100%', overflow: 'auto' }}>
+              <DataGrid
+                columns={expectedParametersColumns}
+                rows={expectedParametersRows}
+                hideFooter
+                disableColumnMenu
+                autoHeight
+                sx={{
+                  '& .MuiDataGrid-cell': {
+                    padding: '8px 16px',
+                  },
+                  minWidth: '800px',
+                }}
+              />
+            </Box>
           )}
 
-          <DataGrid
-            columns={percentsCols.map((col) => ({
-              ...col,
-              flex: 1,
-              width: 200,
-              headerAlign: 'center',
-              align: 'center',
-            }))}
-            rows={percentRows}
-            hideFooter
-            disableColumnMenu
-            sx={{ width: 'fit-content', marginX: 'auto' }}
-          />
-
-          {data?.optimumBinder.optimumContent !== null && (
+          <Box sx={{ width: '100%', overflow: 'auto' }}>
             <DataGrid
-              columns={finalProportionCols()}
-              rows={finalProportionsRows()}
+              columns={percentsCols}
+              rows={percentRows}
               hideFooter
               disableColumnMenu
-              sx={{ width: 'fit-content', marginX: 'auto' }}
+              autoHeight
+              sx={{
+                '& .MuiDataGrid-cell': {
+                  padding: '8px 16px',
+                },
+                minWidth: '700px',
+              }}
             />
+          </Box>
+
+          {data?.optimumBinder.optimumContent !== null && (
+            <Box sx={{ width: '100%', overflow: 'auto' }}>
+              <DataGrid
+                columns={finalProportionCols()}
+                rows={finalProportionsRows()}
+                hideFooter
+                disableColumnMenu
+                autoHeight
+                sx={{
+                  '& .MuiDataGrid-cell': {
+                    padding: '8px 16px',
+                  },
+                  minWidth: '600px',
+                }}
+              />
+            </Box>
           )}
 
           <Box
@@ -369,30 +391,41 @@ const Marshall_Step7 = ({
               display: 'flex',
               flexDirection: 'row',
               flexWrap: 'wrap',
-              gap: '10px',
+              gap: '20px',
+              marginTop: '20px',
             }}
           >
-            <MiniGraphics data={data?.graphics?.gmb} type={'gmb'} nameEixoY={t('asphalt.dosages.gmb') + '(g/cm³)'} />
+            {data.graphics?.gmb?.length > 0 && (
+              <MiniGraphics data={data?.graphics?.gmb} type={'gmb'} nameEixoY={t('asphalt.dosages.gmb') + '(g/cm³)'} />
+            )}
 
-            <MiniGraphics
-              data={data?.graphics?.sg}
-              type={maximumMixtureDensityData.maxSpecificGravity.method}
-              nameEixoY={
-                maximumMixtureDensityData.maxSpecificGravity.method === 'DMT'
-                  ? 'Massa específica máxima teórica (g/cm³)'
-                  : 'Massa específica máxima medida (g/cm³)'
-              }
-            />
+            {data.graphics?.sg?.length > 0 && (
+              <MiniGraphics
+                data={data?.graphics?.sg}
+                type={maximumMixtureDensityData.maxSpecificGravity.method}
+                nameEixoY={
+                  maximumMixtureDensityData.maxSpecificGravity.method === 'DMT'
+                    ? 'Massa específica máxima teórica (g/cm³)'
+                    : 'Massa específica máxima medida (g/cm³)'
+                }
+              />
+            )}
 
-            <MiniGraphics data={data?.graphics?.vv} type={'Vv'} nameEixoY={t('asphalt.dosages.vv') + '(%)'} />
+            {data.graphics?.vv?.length > 0 && (
+              <MiniGraphics data={data?.graphics?.vv} type={'Vv'} nameEixoY={t('asphalt.dosages.vv') + '(%)'} />
+            )}
 
-            <MiniGraphics data={data?.graphics?.rbv} type={'Rbv'} nameEixoY={t('asphalt.dosages.rbv') + '(%)'} />
+            {data.graphics?.vam?.length > 0 && (
+              <MiniGraphics data={data?.graphics?.vam} type={'Vam'} nameEixoY={t('asphalt.dosages.vam') + '(%)'} />
+            )}
 
-            <MiniGraphics
-              data={data?.graphics?.stability}
-              type={'Estabilidade'}
-              nameEixoY={t('asphalt.dosages.stability') + '(N)'}
-            />
+            {data.graphics?.stability?.length > 0 && (
+              <MiniGraphics
+                data={data?.graphics?.stability}
+                type={'Estabilidade'}
+                nameEixoY={t('asphalt.dosages.stability') + '(N)'}
+              />
+            )}
           </Box>
         </Box>
       )}

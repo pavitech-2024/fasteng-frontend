@@ -1,10 +1,8 @@
 import {
-  addCenteredText,
   addImageProcess,
   addCapa,
   SummaryItem,
   addSummary,
-  addHeader,
   handleAddPage,
   formatDate,
   getCurrentDateFormatted,
@@ -16,9 +14,7 @@ import jsPDF from 'jspdf';
 import logo from '@/assets/fasteng/LogoBlack.png';
 import { SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
 import autoTable, { Color } from 'jspdf-autotable';
-import materialsService from '@/services/asphalt/asphalt-materials.service';
-import { AsphaltMaterial } from '@/interfaces/asphalt';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Loading from '@/components/molecules/loading';
 
 interface IGeneratedPDF {
@@ -27,28 +23,13 @@ interface IGeneratedPDF {
 
 const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
   const { user } = useAuth();
-  const [materialsData, setMaterialsData] = useState<AsphaltMaterial[]>([]);
-  const [materialsEssays, setMaterialsEssays] = useState<any[]>([]);
+  const materialsData = dosage?.granulometryEssayData.materials;
+  const materialsEssays = dosage?.granulometryResultsData;
   const [loading, setLoading] = useState<boolean>(false);
   const [openTooltip, setOpenTooltip] = useState(false);
 
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up(theme.breakpoints.values.notebook));
-
-  // useEffect(() => {
-  //   const handleGetMaterialsData = async () => {
-  //     try {
-  //       const materialsIds = dosage.materialSelectionData.aggregates.map((material) => material._id);
-  //       materialsIds.unshift(dosage.materialSelectionData.binder);
-  //       const response = await materialsService.getMaterials(materialsIds);
-  //       setMaterialsData(response.data.materials);
-  //       setMaterialsEssays(response.data.essays);
-  //     } catch (error) {
-  //       console.error('Failed to get materials data:', error);
-  //     }
-  //   };
-  //   handleGetMaterialsData();
-  // }, [dosage]);
 
   const generatePDF = async () => {
     setLoading(true);
@@ -92,10 +73,7 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
       },
     ];
 
-    // const materialNames = dosage.materialSelectionData.aggregates.map((material) => material.name);
-    const materialNames = [];
-
-    const materialNamesWithBinder = [...materialNames, materialsEssays[0][0].data.generalData.material.name].join(', ');
+    const materialNames = materialsData.map((material) => material.name).join(', ');
 
     const userData = [
       {
@@ -119,7 +97,7 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
       {
         key: 'usedMaterials',
         label: t('asphalt.used-materials'),
-        value: materialNamesWithBinder,
+        value: materialNames,
       },
       {
         key: 'dnitBand',
@@ -149,7 +127,6 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
       {
         key: 'initialBinder',
         label: t('asphalt.dosages.marshall.initial_binder'),
-        // value: dosage.binderTrialData.trial,
         value: '---',
       },
       {
@@ -197,57 +174,36 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
       },
     ];
 
-    const materialsArray = materialsData.map((material, idx) => ({
+    const isBinderOrCAP = (type) => type === 'asphaltBinder' || type === 'CAP';
+
+    const prioritized = materialsData.filter((material) => isBinderOrCAP(material.type));
+
+    const others = materialsData.filter((material) => !isBinderOrCAP(material.type));
+
+    const formatMaterial = (material) => ({
       name: material.name,
       type: material.type,
       creationDate: formatDate(material.createdAt.toString()),
       source: material.description.source ? material.description.source : '---',
       receivedDate: material.description.recieveDate
-        ? formatDate(material.description.recieveDate?.toString())
+        ? formatDate(material.description.recieveDate.toString())
         : '--/--/----',
       classification: '?',
-    }));
+    });
 
-    const essaysResults = materialsEssays
-      .flatMap((essay) => {
-        if (essay[0].data?.generalData.material.type !== 'asphaltBinder') {
-          const granulometryIndex = essay.findIndex((item) => item.essayName === 'granulometry');
-          if (granulometryIndex !== -1) {
-            return {
-              granulometry: {
-                results: {
-                  essayName: essay[granulometryIndex].data.generalData.name,
-                  nominalSize: essay[granulometryIndex].data?.results.nominal_size,
-                  nominalDiammeter: essay[granulometryIndex].data?.results.nominal_diameter,
-                  finenessModule: essay[granulometryIndex].data?.results.fineness_module,
-                },
-              },
-            };
-          }
-        } else {
-          return {
-            viscosityRotational: {
-              machiningTemperatureRange: {
-                higher: essay.find((item) => item.essayName === 'viscosityRotational').data.results
-                  .machiningTemperatureRange.higher,
-                lower: essay.find((item) => item.essayName === 'viscosityRotational').data.results
-                  .machiningTemperatureRange.lower,
-                average: essay.find((item) => item.essayName === 'viscosityRotational').data.results
-                  .machiningTemperatureRange.average,
-              },
-            },
-          };
-        }
-      })
-      .filter((item) => item);
+    const materialsArray = [...prioritized.map(formatMaterial), ...others.map(formatMaterial)];
 
-    // addSummary(
-    //   doc,
-    //   summaryItems,
-    //   materialsEssays[0][0].data.generalData.material.name,
-    //   dosage.materialSelectionData.aggregates,
-    //   t('superpave.dosage-pdf-title')
-    // );
+    addSummary(
+      doc,
+      summaryItems,
+      materialsData.find((material) => material.type === 'asphaltBinder' || material.type === 'CAP').name,
+      materialsData.filter(
+        (material) => material.type.toLowerCase().includes('aggregate') || material.type.toLowerCase() === 'filler'
+      ),
+      t('superpave.dosage-pdf-title')
+    );
+
+    const essayResults = { ...materialsEssays.granulometrys, ...materialsEssays.viscosity };
 
     handleAddPage(doc, image, 30, t('superpave.dosage-pdf-title'));
 
@@ -312,26 +268,6 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
       doc.setFontSize(12);
       doc.text(`Propriedades`.toUpperCase(), 10, currentY);
       currentY += 10;
-
-      Object.entries(essaysResults[idx]).forEach(([key, value]) => {
-        doc.setFontSize(12);
-        doc.text(`${t(`asphalt.essays.${key}`)}:`, 10, currentY);
-
-        Object.entries(value).forEach(([subKey, subValue]) => {
-          doc.text(`${t(`asphalt.essays.${key}.${subKey}`)}:`, 20, (currentY += 5));
-
-          Object.entries(subValue).forEach(([subSubKey, subSubValue]) => {
-            doc.setFontSize(10);
-            doc.text(
-              `${t(`asphalt.essays.${key}.${subKey}.${subSubKey}`)}: ${
-                !isNaN(Number(subSubValue)) ? Number(subSubValue).toFixed(2) : subSubValue
-              }`,
-              30,
-              (currentY += 5)
-            );
-          });
-        });
-      });
 
       handleAddPage(doc, image, 30, t('superpave.dosage-pdf-title'));
     });
@@ -462,7 +398,7 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
               variant="contained"
               color="primary"
               disabled={!dosage?.confirmationCompressionData || !isDesktop}
-              sx={{ minWidth: '200px', minHeight: '2rem' }}
+              sx={{ minWidth: '200px', minHeight: '2rem', maxHeight: '2.5rem' }}
             >
               {loading ? <Loading size={25} color={'inherit'} /> : t('generate.dosage.button')}
             </Button>

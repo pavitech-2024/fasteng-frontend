@@ -18,7 +18,14 @@ const Superpave_Step11_ConfirmCompaction = ({
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { confirmationCompressionData: data, setData } = useSuperpaveStore();
+  const {
+    confirmationCompressionData: data,
+    setData,
+    granulometryCompositionData,
+    initialBinderData,
+    firstCompressionParamsData,
+    secondCompressionPercentagesData,
+  } = useSuperpaveStore();
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const { user } = useAuth();
@@ -314,14 +321,44 @@ const Superpave_Step11_ConfirmCompaction = ({
     }
   };
 
+  const handleSubmit = async () => {
+    for (let i = 0; i < data.table.length; i++) {
+      if (data.table[i].drySurfaceSaturatedMass <= data.table[i].submergedMass) {
+        toast.error(t('asphalt.dosages.superpave.dry-surface-saturated-mass-error'));
+        return;
+      }
+    }
+
+    toast.promise(
+      async () => {
+        try {
+          await superpave.calculateDosageEquation(
+            granulometryCompositionData,
+            initialBinderData,
+            firstCompressionParamsData,
+            secondCompressionPercentagesData,
+            data
+          );
+        } catch (error) {
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      }
+    );
+  };
+
   useEffect(() => {
     const tableHasNullVales = data.table.some((item) => item.averageDiammeter === null);
-    if (!tableHasNullVales && data.gmm) {
+    if (!tableHasNullVales && data.gmm !== null) {
       setNextDisabled(false);
     } else {
       setNextDisabled(true);
     }
-  }, []);
+  }, [data]);
 
   return (
     <>
@@ -358,7 +395,9 @@ const Superpave_Step11_ConfirmCompaction = ({
             slots={{ footer: () => ExpansionToolbar() }}
           />
 
-          <Button variant="contained">Confirmar</Button>
+          <Button variant="contained" onClick={() => handleSubmit()}>
+            Confirmar
+          </Button>
 
           <ModalBase
             leftButtonTitle={'cancelar'}
@@ -401,6 +440,7 @@ const Superpave_Step11_ConfirmCompaction = ({
                 variant="standard"
                 label={'Selecione o fator de correção para a temperatura da água'}
                 options={waterTemperatureList}
+                value={{ label: data.riceTest.temperatureOfWater.toString(), value: data.riceTest.temperatureOfWater }}
                 callback={(selectedValue) => {
                   let prevData = { ...data.riceTest };
                   const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };

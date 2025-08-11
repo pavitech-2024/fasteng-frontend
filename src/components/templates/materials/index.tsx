@@ -191,25 +191,21 @@ const MaterialsTemplate = ({
   }));
 
   useEffect(() => {
-    console.log('searchBy', searchBy);
+    console.log('Effect 1');
+    let newData: any[] = [];
+
     if (searchBy === 'stretch') {
-      // Combina FWD e IGG quando "stretch" for selecionado
-      setTableData([...fwdEssaysData, ...iggEssaysData]);
+      newData = [...fwdEssaysData, ...iggEssaysData];
     } else if (searchBy === 'mix') {
-      setTableData([...rtcdEssaysData, ...dduiEssaysData]); // Mostra SOMENTE ensaios RTCD e DDUI (mistura)
+      newData = [...rtcdEssaysData, ...dduiEssaysData];
     } else if (searchBy === 'name') {
-      // Mostra TUDO (materiais + todos ensaios)
-      const newData =
-        fwdEssaysData?.length > 0 && iggEssaysData.length > 0 && rtcdEssaysData && dduiEssaysData
-          ? [...filteredData, ...fwdEssaysData, ...iggEssaysData, ...rtcdEssaysData, ...dduiEssaysData]
-          : filteredData;
-      setTableData(newData);
+      newData = [...filteredData, ...fwdEssaysData, ...iggEssaysData, ...rtcdEssaysData, ...dduiEssaysData];
     } else {
-      // Caso padrão (nome ou tipo)
-      setTableData(filteredData);
+      newData = filteredData;
     }
-    //setTableData(newData);
-  }, [searchBy, searchValue, materials]);
+
+    setTableData(newData);
+  }, [searchBy]);
 
   const handleEditMaterial = (rowId: string) => {
     editMaterial(rowId);

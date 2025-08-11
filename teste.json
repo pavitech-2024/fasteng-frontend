@@ -1282,7 +1282,7 @@
         }
       ]
     },
-    "firstCurvePercentagesData": {
+    "firstCompressionParamsData": {
       "table1": {
         "expectedPorcentageGmmInitialN": null,
         "expectedPorcentageGmmMaxN": null,
@@ -1735,7 +1735,7 @@
           }
         ]
       },
-      "firstCurvePercentagesData": {
+      "firstCompressionParamsData": {
         "table1": {
           "expectedPorcentageGmmInitialN": null,
           "expectedPorcentageGmmMaxN": null,

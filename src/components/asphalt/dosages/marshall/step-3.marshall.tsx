@@ -22,6 +22,9 @@ const Marshall_Step3 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
   const [rows, setRows] = useState([]);
   const [columnGrouping, setColumnGroupings] = useState([]);
   const [columns, setColumns] = useState<GridColDef[]>([]);
+  let setSpecificationRows;
+  let setSpecificationColumns: GridColDef[] | undefined;
+  let setSpecificationColumnsGroupings;
 
   useEffect(() => {
     toast.promise(
@@ -132,13 +135,9 @@ const Marshall_Step3 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
     });
   });
 
-  const [specificationRows, setSpecificationRows] = useState([]);
-  const [specificationColumns, setSpecificationColumns] = useState<GridColDef[]>([]);
-  const [specificationColumnsGroupings, setSpecificationColumnsGroupings] = useState([]);
-
   useEffect(() => {
     if (data?.sumOfPercents?.length > 0) {
-      setSpecificationColumns([
+      setSpecificationColumns = [
         {
           field: 'label',
           headerName: t('asphalt.dosages.marshall.sieve'),
@@ -159,9 +158,9 @@ const Marshall_Step3 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
           headerName: '',
           valueFormatter: ({ value }) => `${value}`,
         },
-      ]);
+      ];
 
-      setSpecificationColumnsGroupings([
+      setSpecificationColumnsGroupings = [
         {
           groupId: 'projeto',
           children: [{ field: 'projeto' }],
@@ -178,10 +177,9 @@ const Marshall_Step3 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
           ],
           headerAlign: 'center',
         },
-      ]);
+      ];
     }
 
-    setSpecificationRows([]);
 
     if (data?.projections.length > 0) {
       const newArray = [];
@@ -195,7 +193,7 @@ const Marshall_Step3 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
         });
       }
 
-      setSpecificationRows([...newArray]);
+      setSpecificationRows = [...newArray];
     }
   }, [data.sumOfPercents, data.bands]);
 

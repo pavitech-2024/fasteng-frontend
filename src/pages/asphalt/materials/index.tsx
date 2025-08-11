@@ -52,7 +52,8 @@ const Materials = () => {
       .catch((error) => {
         console.error('Failed to load materials:', error);
       });
-  }, [user]);
+      console.log("Aquiiii")
+  }, []);
 
   const types: DropDownOption[] = Object.values(AsphaltMaterialTypesEnum).map((value) => ({
     label: t(`asphalt.materials.${value}`),

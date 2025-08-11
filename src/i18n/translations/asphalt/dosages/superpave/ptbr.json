@@ -98,8 +98,11 @@
   "asphalt.dosages.superpave.confirm": "Confirmar",
   "asphalt.dosages.superpave.water-temperature-dropdown": "Selecione o fator de correção para a temperatura da água",
   "asphalt.dosages.superpave.dry-sample-mass": "Massa da amostra seca em ar",
+  "asphalt.dosages.superpave.sampleAirDryMass": "Massa da amostra seca em ar",
   "asphalt.dosages.superpave.water-sample-container-mass": "Massa do recipiente + água",
+  "asphalt.dosages.superpave.containerMassWaterSample": "Massa do recipiente + amostra",
   "asphalt.dosages.superpave.water-sample-mass": "Massa do recipiente + amostra + água",
+  "asphalt.dosages.superpave.containerWaterMass": "Massa do recipiente + amostra + água",
   "asphalt.dosages.superpave.insert-gmm": "Inserir gmm",
   "asphalt.dosages.superpave.calculate-rice-test": "Calcular por Rice Test",
   "asphalt.dosages.superpave.calculate-max-density": "Calcular densidade máxima",
@@ -153,9 +156,15 @@
   "asphalt.dosages.superpave.step-3.lower": "Inferior",
   "asphalt.dosages.superpave.step-3.higher": "Superior",
   "asphalt.dosages.superpave.step-3.average": "Intermediária",
-  "marshall.dosage-pdf-title": "Relatório de Dosagem Superpave",
+  "superpave.dosage-pdf-title": "Relatório de Dosagem Superpave",
   "errors.empty-material-mass": "A massa total de cada agregado deve ser preenchida",
 
   "superpave.error.minReads": "Não é possível excluir. Mínimo de linhas atingido.",
-  "superpave.common.type": "Tipo"
+  "superpave.common.type": "Tipo",
+
+  "asphalt.dosages.superpave.dry-surface-saturated-mass-error": "A massa saturada com superfície seca deve ser maior que a massa submersa",
+  "asphalt.dosages.superpave.confirm-compaction-table-success": "Dados confirmados com sucesso.",
+
+  "superpave-results-noRealRoots": "Sem raiz real. Revise os dados da primeira compactação.",
+  "superpave-results-noRoots": "Sem raizes. Revise os dados da primeira compactação."
 }

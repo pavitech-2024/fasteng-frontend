@@ -137,8 +137,14 @@
   "asphalt.dosages.superpave.step-3.lower": "Inferior",
   "asphalt.dosages.superpave.step-3.higher": "Superior",
   "asphalt.dosages.superpave.step-3.average": "Average",
-  "marshall.dosage-pdf-title": "Superpave dosage report",
+  "superpave.dosage-pdf-title": "Superpave dosage report",
   "errors.empty-material-mass": "Each aggregates total mass must be filled",
   "superpave.error.minReads": "It is not possible to delete. Minimum number of lines reached.",
-  "superpave.common.type": "Type"
+  "superpave.common.type": "Type",
+
+  "asphalt.dosages.superpave.dry-surface-saturated-mass-error": "The saturated mass with dry surface must be greater than the submerged mass",
+  "asphalt.dosages.superpave.confirm-compaction-table-success": "Data confirmed successfully.",
+
+  "superpave-results-noRealRoots": "No real roots. Review the data of the first compaction.",
+  "superpave-results-noRoots": "No roots. Review the data of the first compaction."
 }

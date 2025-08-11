@@ -37,6 +37,8 @@ import asphaltPDFPTBR from './translations/asphalt/pdf/ptbr.json';
 import asphaltPDFENG from './translations/asphalt/pdf/en.json';
 import commmonPDFPTBR from './translations/asphalt/pdf/common/ptbr.json';
 import commmonPDFENG from './translations/asphalt/pdf/common/en.json';
+import superpavePDF_PTBR from './translations/asphalt/pdf/superpave/ptbr.json'; 
+import superpavePDF_ENG from './translations/asphalt/pdf/superpave/en.json';
 // materials
 import asphaltMaterialsPTBR from './translations/asphalt/materials/ptbr.json';
 import asphaltMaterialsENG from './translations/asphalt/materials/en.json';
@@ -253,6 +255,7 @@ i18n.use(initReactI18next).init({
         ...commonMaterialsPTBR,
         /**@pdf */
         ...commmonPDFPTBR,
+        ...superpavePDF_PTBR,
       },
     },
     en: {
@@ -319,6 +322,7 @@ i18n.use(initReactI18next).init({
         ...commonMaterialsENG,
         /** @pdf */
         ...commmonPDFENG,
+        ...superpavePDF_ENG,
       },
     },
   },

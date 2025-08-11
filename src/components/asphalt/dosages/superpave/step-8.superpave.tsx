@@ -1,6 +1,5 @@
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
-import useAuth from '@/contexts/auth';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { Box } from '@mui/material';
@@ -19,26 +18,27 @@ const Superpave_Step8_ChosenCurvePercents = ({
     setData,
     generalData,
     granulometryCompositionData,
-    firstCurvePercentagesData,
+    firstCompressionParamsData,
     granulometryEssayData,
     chosenCurvePercentagesData: data,
   } = useSuperpaveStore();
-    console.log("🚀 ~ Superpave_Step8_ChosenCurvePercents ~ granulometryEssayData:", granulometryEssayData)
 
-  const materials = granulometryEssayData?.materials?.filter((material) => material.type.includes('Aggregate') || material.type.includes('filler'));
+  const materials = granulometryEssayData?.materials?.filter(
+    (material) => material.type.includes('Aggregate') || material.type.includes('filler')
+  );
 
-  const [vv, setVv] = useState();
+  const [vv, setVv] = useState<number>(0);
   const [extimatedBinderMaterialsPercentsRows, setExtimatedBinderMaterialsPercentsRows] = useState<any[]>([]);
 
   useEffect(() => {
     if (data.listOfPlis?.length > 0) {
-      const curve = firstCurvePercentagesData.selectedCurve;
+      const curve = firstCompressionParamsData.selectedCurve;
       if (curve === 'lower') {
-        setVv(firstCurvePercentagesData.table2.table2Lower.porcentageVv);
+        setVv(firstCompressionParamsData.table2.table2Lower.porcentageVv);
       } else if (curve === 'average') {
-        setVv(firstCurvePercentagesData.table2.table2Average.porcentageVv);
+        setVv(firstCompressionParamsData.table2.table2Average.porcentageVv);
       } else if (curve === 'higher') {
-        setVv(firstCurvePercentagesData.table2.table2Higher.porcentageVv);
+        setVv(firstCompressionParamsData.table2.table2Higher.porcentageVv);
       }
     }
   }, [data]);
@@ -50,7 +50,7 @@ const Superpave_Step8_ChosenCurvePercents = ({
           const { data, success } = await superpave.getChosenCurvePercentages(
             generalData,
             granulometryCompositionData,
-            firstCurvePercentagesData
+            firstCompressionParamsData
           );
 
           if (success) {
@@ -71,12 +71,12 @@ const Superpave_Step8_ChosenCurvePercents = ({
   const extimatedBinderMaterialsPercentsGroupings: GridColumnGroupingModel = [
     {
       groupId: 'extimatedBinderMaterialsPercents',
-      headerName: `${t('asphalt.dosages.superpave.estimated-percentages-binder-vv')} = ${vv} %`,
+      headerName: `${t('asphalt.dosages.superpave.estimated-percentages-binder-vv')} = ${vv.toFixed(2)} %`,
       children: [
         { field: 'binder' },
         ...materials?.map((material, index) => ({
           field: `material_${material._id}_${index + 1}`,
-        }))
+        })),
       ],
       headerAlign: 'center',
     },
@@ -88,7 +88,7 @@ const Superpave_Step8_ChosenCurvePercents = ({
       materialPercents[`material_${materials[j]._id}_${j + 1}`] = e[i].toFixed(2);
     }
     return materialPercents;
-  }
+  };
 
   useEffect(() => {
     if (data?.porcentageAggregate?.length > 1) {
