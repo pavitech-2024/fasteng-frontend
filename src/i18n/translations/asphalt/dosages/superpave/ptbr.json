@@ -156,7 +156,7 @@
   "asphalt.dosages.superpave.step-3.lower": "Inferior",
   "asphalt.dosages.superpave.step-3.higher": "Superior",
   "asphalt.dosages.superpave.step-3.average": "Intermediária",
-  "marshall.dosage-pdf-title": "Relatório de Dosagem Superpave",
+  "superpave.dosage-pdf-title": "Relatório de Dosagem Superpave",
   "errors.empty-material-mass": "A massa total de cada agregado deve ser preenchida",
 
   "superpave.error.minReads": "Não é possível excluir. Mínimo de linhas atingido.",

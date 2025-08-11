@@ -266,7 +266,6 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
       async () => {
         try {
           const gmm = await marshall.calculateGmmData(materialSelectionData, data);
-          console.log("🚀 ~ calculateGmmData ~ gmm:", gmm)
 
           const newData = {
             ...data,
@@ -339,7 +338,6 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
 
         try {
           const riceTest = await marshall.calculateRiceTest(data);
-          console.log("🚀 ~ calculateRiceTest ~ riceTest:", riceTest)
           setRiceTestModalIsOpen(false);
 
           const formattedGmm = riceTest?.maxSpecificGravity.map(({ id, Teor, GMM }) => ({ id, Teor, GMM }));

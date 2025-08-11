@@ -27,7 +27,6 @@ const Superpave_Step12_ResumeDosage = ({
   const [finalProportionsRows, setFinalProportionsRows] = useState([]);
   const [quantitativeRows, setQuantitativeRows] = useState([]);
   const [dosage, setDosage] = useState(null);
-  console.log("🚀 ~ Superpave_Step12_ResumeDosage ~ dosage:", dosage)
   const {state: storedDosage} = JSON.parse(sessionStorage.getItem('asphalt-superpave-store'));
 
   useEffect(()=> {

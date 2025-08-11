@@ -536,8 +536,6 @@ class Marshall_SERVICE implements IEssayService {
     const volumetricParametersData = step6Data;
     const { percentsOfDosage, trial } = step4Data;
     const { maxSpecificGravity, temperatureOfWater } = maximumMixtureDensityData;
-    console.log("🚀 ~ Marshall_SERVICE ~ maxSpecificGravity:", maxSpecificGravity)
-
     const { volumetricParameters, ...formattedVolumetricParameters } = volumetricParametersData;
 
     if (!isConsult) {

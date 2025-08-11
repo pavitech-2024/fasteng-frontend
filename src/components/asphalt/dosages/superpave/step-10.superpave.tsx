@@ -24,7 +24,6 @@ const Superpave_Step10_SecondCompactionParams = ({
     chosenCurvePercentagesData,
     granulometryEssayData,
   } = useSuperpaveStore();
-  console.log('🚀 ~ Superpave_Step10_SecondCompactionParams ~ data:', data);
 
   const aggregateMaterials = granulometryEssayData?.materials?.filter(
     ({ type }) => type.includes('Aggregate') || type.includes('filler')

@@ -29,9 +29,6 @@ const Marshall_Step8 = ({
 
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
-  const materials = materialSelectionData.aggregates.map((item) => item.name);
-  const [methodGmm, setMethodGmm] = useState(false);
-  const [methodDmt, setMethodDmt] = useState(false);
   const [method, setMethod] = useState('');
   const optimumBinderRows = data?.optimumBinder;
 
@@ -327,8 +324,6 @@ const Marshall_Step8 = ({
   ];
 
   const handleSubmitDmt = async () => {
-    setMethodDmt(true);
-    setMethodGmm(false);
     toast.promise(
       async () => {
         try {
@@ -503,7 +498,6 @@ const Marshall_Step8 = ({
                 setDMTModalISOpen(true);
               } else if (selectedOption === 'GMM - Densidade máxima medida') {
                 setMethod('GMM');
-                setMethodGmm(true);
               } else {
                 setMethod('');
               }

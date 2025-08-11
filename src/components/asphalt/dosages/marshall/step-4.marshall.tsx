@@ -1,7 +1,5 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
-import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
-import useAuth from '@/contexts/auth';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { Box, Button } from '@mui/material';

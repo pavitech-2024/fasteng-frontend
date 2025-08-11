@@ -49,7 +49,6 @@ export const addSummary = (
   aggregates: any,
   dosageType: string
 ) => {
-  console.log("🚀 ~ addSummary ~ aggregates:", aggregates)
   const docWidth = doc.internal.pageSize.getWidth();
   const docMargins = (docWidth * 0.2) / 2;
   let currentY = 40;

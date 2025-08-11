@@ -26,7 +26,6 @@ const Superpave_Step11_ConfirmCompaction = ({
     firstCompressionParamsData,
     secondCompressionPercentagesData,
   } = useSuperpaveStore();
-    console.log("🚀 ~ Superpave_Step11_ConfirmCompaction ~ data:", data)
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const { user } = useAuth();

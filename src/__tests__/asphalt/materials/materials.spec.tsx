@@ -1,5 +1,6 @@
+import '@testing-library/jest-dom';
 import { render, waitFor, screen } from '@testing-library/react';
-import Materials from '../index';
+import Materials from '../../../pages/asphalt/materials/index';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
 import useAuth from '@/contexts/auth';
 

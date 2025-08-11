@@ -44,7 +44,6 @@
     "react-toastify": "^9.1.2",
     "sharp": "^0.32.0",
     "styled-components": "^5.3.9",
-    "typescript": "4.9.5",
     "xlsx": "^0.18.5",
     "zustand": "^4.3.9"
   },
@@ -52,6 +51,8 @@
     "@nestjs/common": "^10.4.13",
     "@svgr/webpack": "^7.0.0",
     "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/d3-dsv": "^3.0.7",
     "@types/google.visualization": "^0.0.74",
     "@types/jest": "^30.0.0",
@@ -63,6 +64,10 @@
     "babel-plugin-inline-react-svg": "^2.0.2",
     "eslint-config-prettier": "^8.7.0",
     "husky": "^9.1.7",
-    "prettier": "^2.8.4"
+    "ignore-loader": "^0.1.2",
+    "jest": "^30.0.5",
+    "prettier": "^2.8.4",
+    "ts-jest": "^29.4.1",
+    "typescript": "^5.9.2"
   }
 }

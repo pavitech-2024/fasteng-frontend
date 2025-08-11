@@ -269,7 +269,6 @@ const Marshall_Step6 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
             binderTrialData,
             maximumMixtureDensityData
           );
-          console.log("🚀 ~ setVolumetricParams ~ volumetricParams:", volumetricParams)
           setData({ step: 5, value: { ...data, ...volumetricParams } });
         } catch (error) {
           throw error;

@@ -786,7 +786,6 @@ class Superpave_SERVICE implements IEssayService {
     const { riceTest } = riceTestData;
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-second-compression-rice-test`, riceTest);
-      console.log("🚀 ~ Superpave_SERVICE ~ response:", response)
 
       const { data, success, error } = response.data;
 

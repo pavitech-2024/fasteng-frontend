@@ -60,7 +60,6 @@ const Marshall_Step9 = ({
             optimumBinderContentData,
             data
           );
-          console.log("🚀 ~ Marshall_Step9 ~ response:", response)
 
           newData = {
             ...data,
