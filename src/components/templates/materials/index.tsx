@@ -146,27 +146,34 @@ const MaterialsTemplate = ({
     setSearchValue('');
   }, [searchBy]);
 
+  /**
+   * Effect hook to filter materials based on search criteria.
+   * It transforms and filters the materials list according to the
+   * search value and search criteria (either by name or type).
+   * 
+   * Dependencies:
+   * - `searchValue`: The value to search for within the materials.
+   * - `searchBy`: The criteria to filter by, either 'name' or 'type'.
+   */
   useEffect(() => {
-    const data = (Array.isArray(materials[0].materials) ? materials[0].materials : [])
-      .map(({ _id, name, type, createdAt }) => ({
+    const data = (Array.isArray(materials[0].materials) ? materials[0].materials : []).map(
+      ({ _id, name, type, createdAt }) => ({
         _id,
         name,
         type,
         createdAt: createdAt instanceof Date ? createdAt : new Date(createdAt),
-      }))
-      .filter((material) => {
-        if (!searchValue) return true;
+      })
+    );
 
-        if (searchBy === 'name') {
-          return material.name.toLowerCase().includes(searchValue.toLowerCase());
-        }
-        if (searchBy === 'type') {
-          return material.type === searchValue;
-        }
-        return true;
-      });
+    const filteredData = data.filter((material) =>
+      searchValue
+        ? searchBy === 'name'
+          ? material.name.toLowerCase().includes(searchValue.toLowerCase())
+          : material.type === searchValue
+        : true
+    );
 
-    setFilteredData(data);
+    setFilteredData(filteredData);
   }, [searchValue, searchBy]);
 
   const fwdEssaysData = fwdEssays?.map(({ _id, generalData }) => ({
@@ -217,16 +224,15 @@ const MaterialsTemplate = ({
     editMaterial(rowId);
   };
 
-  const handleStringSearch = () => {
-    const newData = [];
-    if (Array.isArray(filteredData)) {
-      Object.values(filteredData).forEach((material: AsphaltMaterial) => {
-        if (material?.name?.toLowerCase().includes(searchString.toLowerCase())) {
-          newData.push(material);
-        }
-      });
-      setTableData(newData);
-    }
+  /**
+   * Filtra a tabela de materiais pelo nome, considerando a string inserida pelo usuário.
+   * A filtragem é case-insensitive.
+   */
+  const filterByString = () => {
+    const newData = filteredData.filter(
+      (material: AsphaltMaterial) => material.name?.toLowerCase().includes(searchString.toLowerCase())
+    );
+    setTableData(newData);
   };
 
   return (
@@ -330,7 +336,7 @@ const MaterialsTemplate = ({
                 }}
                 value={searchString}
                 setValue={setSearchString}
-                handleSubmit={handleStringSearch}
+                handleSubmit={filterByString}
               />
             )}
             {searchBy === 'type' && (
