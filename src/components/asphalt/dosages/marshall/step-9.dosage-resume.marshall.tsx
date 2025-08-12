@@ -19,7 +19,7 @@ export type RowsObj = {
   optimumBinder: number;
 };
 
-const Marshall_Step9 = ({
+const Marshall_Step9_ResumeDosage = ({
   nextDisabled,
   setNextDisabled,
   marshall,
@@ -581,4 +581,4 @@ const Marshall_Step9 = ({
   );
 };
 
-export default Marshall_Step9;
+export default Marshall_Step9_ResumeDosage;

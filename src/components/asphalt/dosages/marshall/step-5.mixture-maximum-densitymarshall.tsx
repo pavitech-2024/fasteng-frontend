@@ -43,7 +43,7 @@ type GmmTableRows = {
   Teor: number;
 };
 
-const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+const Marshall_Step5_MixtureMaximumDensity = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
   const [enableRiceTest, setEnableRiceTest] = useState(false);
@@ -657,4 +657,4 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
   );
 };
 
-export default Marshall_Step5;
+export default Marshall_Step5_MixtureMaximumDensity;

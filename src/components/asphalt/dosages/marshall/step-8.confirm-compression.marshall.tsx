@@ -11,7 +11,7 @@ import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const Marshall_Step8 = ({
+const Marshall_Step8_ConfirmCompression = ({
   nextDisabled,
   setNextDisabled,
   marshall,
@@ -615,4 +615,4 @@ const Marshall_Step8 = ({
   );
 };
 
-export default Marshall_Step8;
+export default Marshall_Step8_ConfirmCompression;

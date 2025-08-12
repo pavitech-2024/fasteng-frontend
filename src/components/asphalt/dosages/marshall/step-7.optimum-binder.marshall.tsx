@@ -10,7 +10,7 @@ import { t } from 'i18next';
 import GraficoPage7N from './graphs/page-7-graph';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
-const Marshall_Step7 = ({
+const Marshall_Step7_OptimumBinder = ({
   nextDisabled,
   setNextDisabled,
   marshall,
@@ -433,4 +433,4 @@ const Marshall_Step7 = ({
   );
 };
 
-export default Marshall_Step7;
+export default Marshall_Step7_OptimumBinder;

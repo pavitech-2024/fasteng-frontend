@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 import MaterialSelectionTable from './tables/step-2-table';
 import { GridColDef } from '@mui/x-data-grid';
 
-const Marshall_Step2 = ({
+const Marshall_Step2_MaterialSelection = ({
   nextDisabled,
   setNextDisabled,
   marshall,
@@ -62,7 +62,7 @@ const Marshall_Step2 = ({
         error: t('loading.materials.error'),
       }
     );
-  }, [marshall, user]);
+  }, []);
 
   const aggregateRows = materials
     .map(({ _id, name, type }) => ({
@@ -158,4 +158,4 @@ const Marshall_Step2 = ({
   );
 };
 
-export default Marshall_Step2;
+export default Marshall_Step2_MaterialSelection;
