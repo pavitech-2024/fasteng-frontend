@@ -18,7 +18,7 @@ import { EssayPageProps } from '@/components/templates/essay';
  * @param setNextDisabled - Função para definir o estado do botão "Próximo".
  * @param marshall - Serviço Marshall para manipulação dos parâmetros volumétricos.
  */
-const Marshall_Step6 = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+const Marshall_Step6_VolumetricParams = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   // Estados locais
   const { volumetricParametersData: data, binderTrialData, maximumMixtureDensityData, setData } = useMarshallStore();
   const [tableIsDisabled, setTableIsDisabled] = useState({
@@ -325,4 +325,4 @@ const Marshall_Step6 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
   );
 };
 
-export default Marshall_Step6;
+export default Marshall_Step6_VolumetricParams;

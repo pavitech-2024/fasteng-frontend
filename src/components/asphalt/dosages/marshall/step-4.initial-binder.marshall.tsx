@@ -7,11 +7,19 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 
-const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+const Marshall_Step4_InitialBinder = ({
+  setNextDisabled,
+  marshall,
+}: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const { binderTrialData, granulometryCompositionData, materialSelectionData, setData } = useMarshallStore();
 
   const { calculateBinderTrialData } = marshall;
 
+  /**
+   * Asynchronously calculates the binder trial data using the provided trial,
+   * granulometry composition, and material selection data. Updates the store
+   * with the calculated result if a trial exists in the binder trial data.
+   */
   const handleCalculate = async () => {
     if (binderTrialData.trial !== null) {
       const response = await calculateBinderTrialData(
@@ -196,7 +204,7 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
             label={t('asphalt.dosages.marshall.initial-binder')}
             value={binderTrialData.trial}
             onChange={(e) => setData({ step: 3, key: 'trial', value: Number(e.target.value) })}
-            adornment={'g'}
+            adornment={'%'}
             type="number"
             inputProps={{ min: 0 }}
             required
@@ -273,4 +281,4 @@ const Marshall_Step4 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
   );
 };
 
-export default Marshall_Step4;
+export default Marshall_Step4_InitialBinder;
