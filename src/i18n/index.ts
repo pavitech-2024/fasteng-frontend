@@ -37,7 +37,7 @@ import asphaltPDFPTBR from './translations/asphalt/pdf/ptbr.json';
 import asphaltPDFENG from './translations/asphalt/pdf/en.json';
 import commmonPDFPTBR from './translations/asphalt/pdf/common/ptbr.json';
 import commmonPDFENG from './translations/asphalt/pdf/common/en.json';
-import superpavePDF_PTBR from './translations/asphalt/pdf/superpave/ptbr.json'; 
+import superpavePDF_PTBR from './translations/asphalt/pdf/superpave/ptbr.json';
 import superpavePDF_ENG from './translations/asphalt/pdf/superpave/en.json';
 // materials
 import asphaltMaterialsPTBR from './translations/asphalt/materials/ptbr.json';
@@ -112,6 +112,9 @@ import fwdENG from './translations/asphalt/essays/fwd/en.json';
 // superpave tooltips
 import superpaveTooltipsPTBR from './translations/asphalt/dosages/tooltips/superpave/ptbr.json';
 import superpaveTooltipsENG from './translations/asphalt/dosages/tooltips/superpave/en.json';
+// standards
+import asphaltStandardsPTBR from './translations/asphalt/standards/ptbr.json';
+import asphaltStandardsENG from './translations/asphalt/standards/en.json';
 
 /**@soils */
 // samples
@@ -227,7 +230,7 @@ i18n.use(initReactI18next).init({
         ...fwdPTBR,
         ...viscosityRotationalPTBR,
         ...superpaveTooltipsPTBR,
-        ...superpaveTooltipsENG,
+        ...asphaltStandardsPTBR,
         /**@soils */
         ...samplesPTBR,
         ...soilsEssaysPTBR,
@@ -295,6 +298,8 @@ i18n.use(initReactI18next).init({
         ...iggENG,
         ...fwdENG,
         ...viscosityRotationalENG,
+        ...superpaveTooltipsENG,
+        ...asphaltStandardsENG,
         /**@soils */
         ...samplesENG,
         ...soilsEssaysENG,
