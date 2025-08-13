@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky install",
-    "test": "jest"
+    "test": "jest",
+    "prepush": "npm run test && npm run build"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -64,7 +65,7 @@
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "babel-plugin-inline-react-svg": "^2.0.2",
     "eslint-config-prettier": "^8.7.0",
-    "husky": "^9.1.7",
+    "husky": "^8.0.0",
     "ignore-loader": "^0.1.2",
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",

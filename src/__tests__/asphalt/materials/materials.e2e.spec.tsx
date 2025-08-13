@@ -1,24 +1,22 @@
 import '@testing-library/jest-dom';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Materials from '../../../pages/asphalt/materials/index';
 import useAuth from '@/contexts/auth';
 import { useRouter } from 'next/router';
 
-// Mock do useRouter antes de qualquer teste rodar
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
-// Mock do auth context para fornecer o usuário
 jest.mock('@/contexts/auth');
 
 const mockUserId = process.env.NEXT_PUBLIC_TEST_USER_ID;
-
 const mockUser = { _id: mockUserId };
+const MATERIAL_NAME = 'cap 09';
 
 describe('Materials page', () => {
   beforeEach(() => {
-    // Configura o mock do useRouter
     (useRouter as jest.Mock).mockReturnValue({
       pathname: '/asphalt/materials',
       query: {},
@@ -27,19 +25,43 @@ describe('Materials page', () => {
       prefetch: jest.fn().mockResolvedValue(undefined),
     });
 
-    // Configura o mock do auth
     (useAuth as jest.Mock).mockReturnValue({ user: mockUser });
   });
 
-  it('should fetch real data from backend and render materials', async () => {
-    render(<Materials />);
+  it(
+    'should fetch real data from backend and find material even if paginated',
+    async () => {
+      render(<Materials />);
+      const user = userEvent.setup();
 
-    await waitFor(
-      async () => {
-        const materialFound = await screen.findByText('material teste (não excluir)');
-        expect(materialFound).toBeInTheDocument();
-      },
-      { timeout: 10000 } // 10 segundos para waitFor
-    );
-  }, 20000); // 20 segundos para o teste inteiro
+      // Aguarda a paginação aparecer
+      await screen.findByRole('navigation');
+
+      // Coleta botões de página
+      const pageButtons = screen
+        .getAllByRole('button')
+        .filter((btn) => btn.getAttribute('aria-label')?.match(/go to page/i));
+
+      let found = false;
+
+      for (const btn of pageButtons) {
+        await user.click(btn);
+
+        // Aguarda até que o material apareça na tabela, se existir
+        const matchingCells = await screen.findAllByText(
+          (content, element) =>
+            element?.tagName === 'TD' && content.trim() === MATERIAL_NAME, undefined,
+          { timeout: 5000 }
+        ).catch(() => []);
+
+        if (matchingCells.length > 0) {
+          found = true;
+          break;
+        }
+      }
+
+      expect(found).toBe(true);
+    },
+    20000
+  );
 });
