@@ -13,7 +13,8 @@ jest.mock('next/router', () => ({
 jest.mock('@/services/asphalt/asphalt-materials.service');
 jest.mock('@/contexts/auth');
 
-const mockUser = { _id: 'user123' };
+const mockUserId = process.env.NEXT_PUBLIC_TEST_USER_ID;
+const mockUser = { _id: mockUserId };
 
 const mockResponse = {
   data: [
@@ -78,7 +79,7 @@ describe('Materials page', () => {
     render(<Materials />);
 
     await waitFor(() => {
-      expect(materialsService.getMaterialsByUserId).toHaveBeenCalledWith('user123');
+      expect(materialsService.getMaterialsByUserId).toHaveBeenCalledWith(mockUserId);
     });
 
     // Verifica se o nome do material aparece na tela
