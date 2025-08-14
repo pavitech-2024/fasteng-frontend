@@ -15,7 +15,7 @@ const mockUserId = process.env.NEXT_PUBLIC_TEST_USER_ID;
 const mockUser = { _id: mockUserId };
 const MATERIAL_NAME = 'material teste (não excluir)';
 
-describe.skip('Materials page E2E', () => {
+describe('Materials page E2E', () => {
   beforeEach(() => {
     (useRouter as jest.Mock).mockReturnValue({
       pathname: '/asphalt/materials',
@@ -28,40 +28,46 @@ describe.skip('Materials page E2E', () => {
     (useAuth as jest.Mock).mockReturnValue({ user: mockUser });
   });
 
-  it(
-    'should fetch real data from backend and find material even if paginated',
-    async () => {
-      render(<Materials />);
-      const user = userEvent.setup();
+  it('should fetch real data from backend and find material even if paginated', async () => {
+    render(<Materials />);
+    const user = userEvent.setup();
 
-      // Aguarda a paginação aparecer
-      await screen.findByRole('navigation');
+    // Aguarda a paginação aparecer
+    await screen.findByRole('navigation');
 
-      // Coleta botões de página
-      const pageButtons = screen
-        .getAllByRole('button')
-        .filter((btn) => btn.getAttribute('aria-label')?.match(/go to page/i));
+    // Coleta botões de página
+    // Aguarda até que haja pelo menos um botão "go to page"
+    const pageButtons = await screen.findAllByRole('button', { name: /go to page/i }).catch(() => []);
 
-      let found = false;
+    // Primeiro, tenta achar na página inicial
+    let matchingCells = await screen
+      .findAllByText((content, element) => element?.tagName === 'TD' && content.trim() === MATERIAL_NAME, undefined, {
+        timeout: 5000,
+      })
+      .catch(() => []);
 
+    let found = matchingCells.length > 0;
+
+    // Se não encontrou, então tenta nas outras páginas
+    if (!found) {
       for (const btn of pageButtons) {
         await user.click(btn);
-
-        // Aguarda até que o material apareça na tabela, se existir
-        const matchingCells = await screen.findAllByText(
-          (content, element) =>
-            element?.tagName === 'TD' && content.trim() === MATERIAL_NAME, undefined,
-          { timeout: 5000 }
-        ).catch(() => []);
-
+        matchingCells = await screen
+          .findAllByText(
+            (content, element) => element?.tagName === 'TD' && content.trim() === MATERIAL_NAME,
+            undefined,
+            {
+              timeout: 5000,
+            }
+          )
+          .catch(() => []);
         if (matchingCells.length > 0) {
           found = true;
           break;
         }
       }
+    }
 
-      expect(found).toBe(true);
-    },
-    20000
-  );
+    expect(found).toBe(true);
+  }, 60000);
 });
