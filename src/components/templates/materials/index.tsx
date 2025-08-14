@@ -3,7 +3,6 @@ import { JSX, useEffect, useState } from 'react';
 import {
   Box,
   Button,
-  Dialog,
   Pagination,
   Paper,
   Table,
@@ -13,15 +12,11 @@ import {
   TableHead,
   TableRow,
   Typography,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
 } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import Search from '@/components/atoms/inputs/search';
 import { AddIcon, DeleteIcon, NextIcon } from '@/assets';
 import { formatDate } from '@/utils/format';
-import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import Link from 'next/link';
 import { Edit } from '@mui/icons-material';
@@ -30,6 +25,7 @@ import { IggData } from '@/stores/asphalt/igg/igg.store';
 import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
 import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
+import DeleteMaterialModal from '../modals/deleteMaterialModal';
 
 export type FilterTypes = 'name' | 'type' | 'mix' | 'stretch';
 export type essayTypes = 'rtcd' | 'ddui' | 'fwd' | 'igg';
@@ -150,7 +146,7 @@ const MaterialsTemplate = ({
    * Effect hook to filter materials based on search criteria.
    * It transforms and filters the materials list according to the
    * search value and search criteria (either by name or type).
-   * 
+   *
    * Dependencies:
    * - `searchValue`: The value to search for within the materials.
    * - `searchBy`: The criteria to filter by, either 'name' or 'type'.
@@ -174,7 +170,7 @@ const MaterialsTemplate = ({
     );
 
     setFilteredData(filteredData);
-  }, [searchValue, searchBy]);
+  }, [searchValue, searchBy, materials]);
 
   const fwdEssaysData = fwdEssays?.map(({ _id, generalData }) => ({
     name: generalData.name,
@@ -224,8 +220,8 @@ const MaterialsTemplate = ({
         const dateA = a.createdAt instanceof Date ? a.createdAt : new Date(a.createdAt);
         const dateB = b.createdAt instanceof Date ? b.createdAt : new Date(b.createdAt);
         return dateB.getTime() - dateA.getTime();
-      })
-      
+      });
+
       newData = allData;
     } else {
       newData = filteredData;
@@ -243,16 +239,25 @@ const MaterialsTemplate = ({
    * A filtragem é case-insensitive.
    */
   const filterByString = () => {
-    const newData = filteredData.filter(
-      (material: AsphaltMaterial) => material.name?.toLowerCase().includes(searchString.toLowerCase())
+    const newData = filteredData.filter((material: AsphaltMaterial) =>
+      material.name?.toLowerCase().includes(searchString.toLowerCase())
     );
     setTableData(newData);
   };
 
   return (
     <>
+      <DeleteMaterialModal
+        isOpen={isDeleteModalOpen}
+        deleteMaterial={deleteMaterial}
+        setIsOpen={setIsDeleteModalOpen}
+        rowToDelete={RowToDelete}
+        tableData={tableData}
+        searchBy={searchBy}
+      />
+
       {/*Delete Modal */}
-      <Dialog open={isDeleteModalOpen}>
+      {/* <Dialog open={isDeleteModalOpen}>
         <DialogTitle sx={{ fontSize: '1rem', textTransform: 'uppercase', fontWeight: 700 }} color="secondary">
           {t('materials.template.deleteTitle')}
         </DialogTitle>
@@ -299,7 +304,7 @@ const MaterialsTemplate = ({
             </Button>
           </Box>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
       {/*Create new  Modal */}
       {modal}
 

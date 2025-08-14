@@ -95,7 +95,7 @@ const Materials = () => {
         default:
           break;
       }
-      loadMaterials(user._id);
+      await loadMaterials(user._id);
     } catch (error) {
       console.error('Failed to delete material:', error);
     }

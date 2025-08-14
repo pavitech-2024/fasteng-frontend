@@ -24,6 +24,7 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
   });
 
   const [rows, setRows] = useState([]);
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
   const handleDeleteMaterial = async (id: string) => {
     const prevData = { ...data };
@@ -185,7 +186,7 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
                 },
               }}
               color="error"
-              onClick={() => handleDeleteMaterial(index)}
+              onClick={() => setDeleteModalIsOpen(true)}
             />
           </Box>
         );
