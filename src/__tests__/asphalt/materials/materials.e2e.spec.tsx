@@ -13,9 +13,9 @@ jest.mock('@/contexts/auth');
 
 const mockUserId = process.env.NEXT_PUBLIC_TEST_USER_ID;
 const mockUser = { _id: mockUserId };
-const MATERIAL_NAME = 'cap 09';
+const MATERIAL_NAME = 'material teste (não excluir)';
 
-describe('Materials page', () => {
+describe('Materials page E2E', () => {
   beforeEach(() => {
     (useRouter as jest.Mock).mockReturnValue({
       pathname: '/asphalt/materials',

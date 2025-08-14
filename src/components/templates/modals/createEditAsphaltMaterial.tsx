@@ -9,6 +9,7 @@ import { Box, TextField } from '@mui/material';
 import { Sieve } from '@/interfaces/common';
 import { useRouter } from 'next/router';
 import { MaterialsProps } from '@/pages/asphalt/materials';
+import useAuth from '@/contexts/auth';
 
 interface CreateEditMaterialModalProps {
   openModal: boolean;
@@ -49,6 +50,8 @@ const CreateEditMaterialModal = ({
 
   const [material, setMaterial] = useState<AsphaltMaterialData>(initialMaterialState);
   const { pathname } = useRouter();
+  const { user } = useAuth();
+  const userId = user._id;
 
   const resetMaterial = () => {
     setMaterial(initialMaterialState);
@@ -159,7 +162,9 @@ const CreateEditMaterialModal = ({
     try {
       validateMaterialData();
 
-      const response = await materialsService.createMaterial(material);
+      const materialWithUserId = { ...material, userId };
+
+      const response = await materialsService.createMaterial(materialWithUserId);
 
       if (pathname.includes('superpave')) {
         createdMaterial(response.data);

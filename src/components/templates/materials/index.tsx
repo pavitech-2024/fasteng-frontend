@@ -212,7 +212,13 @@ const MaterialsTemplate = ({
     } else if (searchBy === 'mix') {
       newData = [...rtcdEssaysData, ...dduiEssaysData];
     } else if (searchBy === 'name') {
-      newData = [...filteredData, ...fwdEssaysData, ...iggEssaysData, ...rtcdEssaysData, ...dduiEssaysData];
+      const allData = [];
+      if (rtcdEssaysData) allData.push(...rtcdEssaysData);
+      if (dduiEssaysData) allData.push(...dduiEssaysData);
+      if (fwdEssaysData) allData.push(...fwdEssaysData);
+      if (iggEssaysData) allData.push(...iggEssaysData);
+      if (filteredData) allData.push(...filteredData);
+      newData = allData;
     } else {
       newData = filteredData;
     }
