@@ -7,4 +7,6 @@ export type PromedinaDataFilter = {
     zone: string;
     highway: string;
   };
+  updatedAt?: string;   
+  createdAt?: string;   
 };
