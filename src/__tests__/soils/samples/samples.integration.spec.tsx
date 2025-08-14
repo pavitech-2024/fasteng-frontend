@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { render, waitFor, screen, within } from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
 import Samples from '../../../pages/soils/samples/index';
 import samplesService from '@/services/soils/soils-samples.service';
 import useAuth from '@/contexts/auth';
