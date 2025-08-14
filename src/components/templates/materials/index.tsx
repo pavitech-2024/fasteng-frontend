@@ -218,6 +218,14 @@ const MaterialsTemplate = ({
       if (fwdEssaysData) allData.push(...fwdEssaysData);
       if (iggEssaysData) allData.push(...iggEssaysData);
       if (filteredData) allData.push(...filteredData);
+
+      // Ordenar filteredData por ordem de createdAt
+      allData.sort((a, b) => {
+        const dateA = a.createdAt instanceof Date ? a.createdAt : new Date(a.createdAt);
+        const dateB = b.createdAt instanceof Date ? b.createdAt : new Date(b.createdAt);
+        return dateB.getTime() - dateA.getTime();
+      })
+      
       newData = allData;
     } else {
       newData = filteredData;
@@ -342,6 +350,13 @@ const MaterialsTemplate = ({
                 }}
                 value={searchString}
                 setValue={setSearchString}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    if (searchBy === 'name') {
+                      filterByString();
+                    }
+                  }
+                }}
                 handleSubmit={filterByString}
               />
             )}
