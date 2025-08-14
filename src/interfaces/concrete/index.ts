@@ -5,6 +5,7 @@ export type ConcreteMaterialTypes = 'fineAggregate' | 'coarseAggregate' | 'cemen
 export type ConcreteMaterialData = {
   name: string;
   type: ConcreteMaterialTypes;
+  userId: string;
   description?: {
     source?: string;
     responsible?: string;
@@ -33,10 +34,10 @@ export type ConcreteMaterialData = {
 };
 
 export class ConcreteMaterial {
-  _id: string;
+  _id?: string;
   name: string;
   type: ConcreteMaterialTypes;
-  createdAt: Date;
+  createdAt?: Date;
   userId: string;
   description: {
     source?: string;

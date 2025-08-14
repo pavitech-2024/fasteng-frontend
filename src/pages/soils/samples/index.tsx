@@ -32,6 +32,7 @@ const Samples: NextPage = () => {
     samplesService
       .getSamplesByUserId(user._id)
       .then((response) => {
+        console.log("🚀 ~ Samples ~ response:", response)
         setSamples(response.data);
         setLoading(false);
       })

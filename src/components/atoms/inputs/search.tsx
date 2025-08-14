@@ -7,10 +7,11 @@ interface SearchProps {
   placeholder?: string;
   value: string;
   setValue: (value: string) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   handleSubmit?: () => void;
 }
 
-const Search = ({ sx, placeholder, value, setValue, handleSubmit }: SearchProps) => {
+const Search = ({ sx, placeholder, value, setValue, onKeyDown, handleSubmit }: SearchProps) => {
   return (
     <Paper
       component="div"
@@ -29,6 +30,7 @@ const Search = ({ sx, placeholder, value, setValue, handleSubmit }: SearchProps)
         placeholder={placeholder ? placeholder : t('materials.template.search.label')}
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        onKeyDown={onKeyDown}
       />
       <SearchIcon sx={{ p: '10px', ':hover': { cursor: 'pointer' } }} onClick={handleSubmit} />
     </Paper>
