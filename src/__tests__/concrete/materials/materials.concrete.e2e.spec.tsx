@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Materials from '../../../pages/asphalt/materials/index';
 import useAuth from '@/contexts/auth';
 import { useRouter } from 'next/router';
+import ConcreteMaterials from '@/pages/concrete/materials';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -13,14 +13,14 @@ jest.mock('@/contexts/auth');
 
 const mockUserId = process.env.NEXT_PUBLIC_TEST_USER_ID;
 const mockUser = { _id: mockUserId };
-const MATERIAL_NAME = 'material teste (não excluir)';
+const SAMPLE_NAME = 'material teste (não excluir)';
 
-describe('Materials page E2E', () => {
+describe('Concrete materials page E2E', () => {
   beforeEach(() => {
     (useRouter as jest.Mock).mockReturnValue({
-      pathname: '/asphalt/materials',
+      pathname: '/concrete/materials',
       query: {},
-      asPath: '/asphalt/materials',
+      asPath: '/concrete/materials',
       push: jest.fn(),
       prefetch: jest.fn().mockResolvedValue(undefined),
     });
@@ -28,8 +28,8 @@ describe('Materials page E2E', () => {
     (useAuth as jest.Mock).mockReturnValue({ user: mockUser });
   });
 
-  it('should fetch real data from backend and find material even if paginated', async () => {
-    render(<Materials />);
+  it('should fetch real materials from backend and find a material even if paginated', async () => {
+    render(<ConcreteMaterials />);
     const user = userEvent.setup();
 
     // Aguarda a paginação aparecer
@@ -41,7 +41,7 @@ describe('Materials page E2E', () => {
 
     // Primeiro, tenta achar na página inicial
     let matchingCells = await screen
-      .findAllByText((content, element) => element?.tagName === 'TD' && content.trim() === MATERIAL_NAME, undefined, {
+      .findAllByText((content, element) => element?.tagName === 'TD' && content.trim() === SAMPLE_NAME, undefined, {
         timeout: 5000,
       })
       .catch(() => []);
@@ -53,13 +53,9 @@ describe('Materials page E2E', () => {
       for (const btn of pageButtons) {
         await user.click(btn);
         matchingCells = await screen
-          .findAllByText(
-            (content, element) => element?.tagName === 'TD' && content.trim() === MATERIAL_NAME,
-            undefined,
-            {
-              timeout: 5000,
-            }
-          )
+          .findAllByText((content, element) => element?.tagName === 'TD' && content.trim() === SAMPLE_NAME, undefined, {
+            timeout: 5000,
+          })
           .catch(() => []);
         if (matchingCells.length > 0) {
           found = true;
@@ -69,5 +65,5 @@ describe('Materials page E2E', () => {
     }
 
     expect(found).toBe(true);
-  }, 60000);
+  }, 30000);
 });

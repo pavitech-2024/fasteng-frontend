@@ -13,9 +13,9 @@ jest.mock('@/contexts/auth');
 
 const mockUserId = process.env.NEXT_PUBLIC_TEST_USER_ID;
 const mockUser = { _id: mockUserId };
-const SAMPLE_NAME = 'material teste (não excluir)';
+const SAMPLE_NAME = 'amostra teste (não excluir)';
 
-describe.skip('Samples page E2E', () => {
+describe('Samples page E2E', () => {
   beforeEach(() => {
     (useRouter as jest.Mock).mockReturnValue({
       pathname: '/soils/samples',
@@ -35,25 +35,32 @@ describe.skip('Samples page E2E', () => {
     // Aguarda a paginação aparecer
     await screen.findByRole('navigation');
 
-    const pageButtons = screen
-      .getAllByRole('button')
-      .filter((btn) => btn.getAttribute('aria-label')?.match(/go to page/i));
+    // Coleta botões de página
+    // Aguarda até que haja pelo menos um botão "go to page"
+    const pageButtons = await screen.findAllByRole('button', { name: /go to page/i }).catch(() => []);
 
-    let found = false;
+    // Primeiro, tenta achar na página inicial
+    let matchingCells = await screen
+      .findAllByText((content, element) => element?.tagName === 'TD' && content.trim() === SAMPLE_NAME, undefined, {
+        timeout: 5000,
+      })
+      .catch(() => []);
 
-    for (const btn of pageButtons) {
-      await user.click(btn);
+    let found = matchingCells.length > 0;
 
-      // Procura qualquer elemento visível com o nome do sample
-      const sampleElement = await screen
-        .findAllByText((content, element) => element?.tagName === 'TD' && content.trim() === SAMPLE_NAME, undefined, {
-          timeout: 5000,
-        })
-        .catch(() => []);
-
-      if (sampleElement.length > 0) {
-        found = true;
-        break;
+    // Se não encontrou, então tenta nas outras páginas
+    if (!found) {
+      for (const btn of pageButtons) {
+        await user.click(btn);
+        matchingCells = await screen
+          .findAllByText((content, element) => element?.tagName === 'TD' && content.trim() === SAMPLE_NAME, undefined, {
+            timeout: 5000,
+          })
+          .catch(() => []);
+        if (matchingCells.length > 0) {
+          found = true;
+          break;
+        }
       }
     }
 
