@@ -73,7 +73,6 @@ const MaterialsTemplate = ({
   editMaterial,
   modal,
 }: MaterialsTemplateProps) => {
-  console.log("🚀 ~ MaterialsTemplate ~ materials:", materials)
   const app = useRouter().pathname.split('/')[1];
   let samplesOrMaterials: string;
 
