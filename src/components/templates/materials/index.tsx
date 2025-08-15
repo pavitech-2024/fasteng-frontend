@@ -256,58 +256,6 @@ const MaterialsTemplate = ({
         searchBy={searchBy}
       />
 
-      {/*Delete Modal */}
-      {/* <Dialog open={isDeleteModalOpen}>
-        <DialogTitle sx={{ fontSize: '1rem', textTransform: 'uppercase', fontWeight: 700 }} color="secondary">
-          {t('materials.template.deleteTitle')}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText sx={{ textTransform: 'uppercase', fontSize: '14px' }}>
-            {t('materials.template.deleteText')} <span style={{ fontWeight: 700 }}>{RowToDelete?.name}</span>?
-          </DialogContentText>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: '1.3rem' }}>
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{
-                fontWeight: 700,
-                fontSize: { mobile: '11px', notebook: '13px' },
-                width: '40%',
-              }}
-              onClick={() => setIsDeleteModalOpen(false)}
-            >
-              {t('materials.template.cancel')}
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                fontWeight: 700,
-                fontSize: { mobile: '11px', notebook: '13px' },
-                color: 'primaryTons.white',
-                width: '40%',
-              }}
-              onClick={() => {
-                const selectedType = tableData.find((material) => material._id === RowToDelete?._id)?.type;
-                try {
-                  toast.promise(async () => await deleteMaterial(RowToDelete?._id, searchBy, selectedType), {
-                    pending: t('materials.template.toast.delete.pending') + RowToDelete?.name + '...',
-                    success: RowToDelete?.name + t('materials.template.toast.delete.sucess'),
-                    error: t('materials.template.toast.delete.error') + RowToDelete?.name + '.',
-                  });
-                  setIsDeleteModalOpen(false);
-                } catch (error) {
-                  throw error;
-                }
-              }}
-            >
-              {t('materials.template.delete')}
-            </Button>
-          </Box>
-        </DialogContent>
-      </Dialog> */}
-      {/*Create new  Modal */}
-      {modal}
-
       {/*Page */}
       <Box
         sx={{

@@ -18,6 +18,7 @@ interface CreateEditMaterialModalProps {
   isEdit: boolean;
   materialToEdit?: AsphaltMaterial;
   updateMaterials?: () => void;
+  updatedMaterial?: (material: AsphaltMaterial) => void;
   createdMaterial?: (material: AsphaltMaterial) => void;
 }
 
@@ -28,6 +29,7 @@ const CreateEditMaterialModal = ({
   materials,
   materialToEdit,
   isEdit,
+  updatedMaterial,
   createdMaterial,
 }: CreateEditMaterialModalProps) => {
   const initialMaterialState: AsphaltMaterialData = {
@@ -155,25 +157,19 @@ const CreateEditMaterialModal = ({
   };
 
   const handleCreateMaterial = async () => {
-    console.log("entrou na função")
     const createMaterialToastId = toast.loading(t('asphalt.materials.creatingMaterial'), {
       autoClose: 5000,
     });
 
     try {
-      const isValid = validateMaterialData();
-      console.log("🚀 ~ handleCreateMaterial ~ isValid:", isValid)
-
+      validateMaterialData();
       const materialWithUserId = { ...material, userId };
 
       const response = await materialsService.createMaterial(materialWithUserId);
-      console.log("🚀 ~ handleCreateMaterial ~ response:", response)
 
       if (pathname.includes('superpave')) {
-        console.log("🚀 ~ handleCreateMaterial ~ pathname.includes('superpave'):", pathname.includes('superpave'))
         createdMaterial(response.data);
       } else {
-        console.log("entrou no else")
         await updateMaterials();
       }
 
@@ -206,22 +202,20 @@ const CreateEditMaterialModal = ({
   const validateMaterialData = () => {
     if (material.name === '') throw 'Material name cannot be empty';
     if (material.type === null) throw 'Material type cannot be empty';
-    // if (!material.name) throw 'A material with the same name already exists!';
     if (material.type === 'CAP' && material.description.classification_CAP === null)
       throw 'CAP classification cannot be empty';
     if (material.type === 'asphaltBinder' && material.description.classification_AMP === null)
       throw 'AMP classification cannot be empty';
-
-    return true;
   };
 
   const handleEditMaterial = async () => {
     const toastId = toast.loading('Editando material...', { autoClose: 5000 });
-
     try {
       validateMaterialData();
 
-      await materialsService.editMaterial(materialToEdit._id, material);
+      const { data } = await materialsService.editMaterial(materialToEdit._id, material);
+      
+      updatedMaterial(data);
 
       await updateMaterials();
 
