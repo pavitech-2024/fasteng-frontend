@@ -35,18 +35,18 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
    * @param {boolean} hasHydrated - Whether the store has been hydrated.
    */
   useEffect(() => {
-    if (!hasHydrated) return;
+    // if (!hasHydrated) return;
 
-    const essayKeys = Object.keys(sessionStorage)
-      .filter((key) => key.includes('-store'))
-      .map((key) => key.split('-')[1]);
+    // const essayKeys = Object.keys(sessionStorage)
+    //   .filter((key) => key.includes('-store'))
+    //   .map((key) => key.split('-')[1]);
 
-    const currentEssay = essayKeys.find((essay) => pathname.includes(essay));
+    // const currentEssay = essayKeys.find((essay) => pathname.includes(essay));
 
-    if (!currentEssay) {
-      resetStores();
-      sessionStorage.clear();
-    }
+    // if (!currentEssay) {
+    //   resetStores();
+    //   sessionStorage.clear();
+    // }
   }, [pathname]);
 
   return (

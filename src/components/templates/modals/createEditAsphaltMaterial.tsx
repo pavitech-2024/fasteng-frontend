@@ -155,20 +155,25 @@ const CreateEditMaterialModal = ({
   };
 
   const handleCreateMaterial = async () => {
+    console.log("entrou na função")
     const createMaterialToastId = toast.loading(t('asphalt.materials.creatingMaterial'), {
       autoClose: 5000,
     });
 
     try {
-      validateMaterialData();
+      const isValid = validateMaterialData();
+      console.log("🚀 ~ handleCreateMaterial ~ isValid:", isValid)
 
       const materialWithUserId = { ...material, userId };
 
       const response = await materialsService.createMaterial(materialWithUserId);
+      console.log("🚀 ~ handleCreateMaterial ~ response:", response)
 
       if (pathname.includes('superpave')) {
+        console.log("🚀 ~ handleCreateMaterial ~ pathname.includes('superpave'):", pathname.includes('superpave'))
         createdMaterial(response.data);
       } else {
+        console.log("entrou no else")
         await updateMaterials();
       }
 
@@ -206,6 +211,8 @@ const CreateEditMaterialModal = ({
       throw 'CAP classification cannot be empty';
     if (material.type === 'asphaltBinder' && material.description.classification_AMP === null)
       throw 'AMP classification cannot be empty';
+
+    return true;
   };
 
   const handleEditMaterial = async () => {

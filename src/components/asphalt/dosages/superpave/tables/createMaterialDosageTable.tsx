@@ -5,17 +5,20 @@ import { AllSievesSuperpaveUpdatedAstm } from '@/interfaces/common';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { Box, Button } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
 import { t } from 'i18next';
+import DeleteMaterialModal from '@/components/templates/modals/deleteMaterialModal';
+import { DataToFilter } from '@/components/templates/materials';
 
 interface ICreateMaterialDosageTable {
   onRowClick: (row: any) => void;
 }
 
-const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => {
+const CreateMaterialDosageTable = ({ onRowClick }: ICreateMaterialDosageTable) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const { granulometryEssayData: data, setData } = useSuperpaveStore();
+  console.log('🚀 ~ CreateMaterialDosageTable ~ data:', data);
 
   const [minimumAggrPresent, setMinimumAggrPresent] = useState({
     fineAggr: false,
@@ -25,20 +28,27 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
 
   const [rows, setRows] = useState([]);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const handleDeleteMaterial = async (id: string) => {
     const prevData = { ...data };
-
-    const updatedMaterials = prevData[0]?.materials.filter((material) => material._id !== id);
-    const updatedGranulometrys = prevData.granulometrys.filter((gran) => gran.material._id !== id);
+    console.log('🚀 ~ handleDeleteMaterial ~ prevData:', prevData);
     const updatedViscosity = null;
+    const updatedGranulometrys = prevData.granulometrys.filter((gran) => gran.material._id !== id);
+    const updatedMaterials = prevData?.materials.filter((material) => material._id !== id);
+    console.log('🚀 ~ handleDeleteMaterial ~ updatedMaterials:', updatedMaterials);
+
     try {
-      await materialsService.deleteMaterial(id);
+      console.log('entrou no delete');
+      const response = await materialsService.deleteMaterial(id);
+      console.log('🚀 ~ handleDeleteMaterial ~ response:', response);
+
+      console.log('🚀 ~ handleDeleteMaterial ~ updatedMaterials:', updatedMaterials);
 
       setData({ step: 1, key: 'materials', value: updatedMaterials });
       setData({ step: 1, key: 'granulometrys', value: updatedGranulometrys });
       if (prevData.viscosity?.material._id === id) {
-        setData({ step: 1, key: 'viscosity', value: updatedViscosity});
+        setData({ step: 1, key: 'viscosity', value: updatedViscosity });
       }
     } catch (error) {
       console.error('Failed to delete material:', error);
@@ -52,12 +62,13 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
       }
 
       if (prevData.viscosity?.material?._id === id) {
-        setData({ step: 1, key: 'viscosity', value: updatedViscosity});
+        setData({ step: 1, key: 'viscosity', value: updatedViscosity });
       }
     }
   };
 
   const addNewMaterial = (material: AsphaltMaterial) => {
+    console.log('entrou no addNewMaterial');
     const newMaterial = {
       _id: material._id,
       createdAt: material.createdAt,
@@ -151,16 +162,6 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
       field: 'actions',
       headerName: 'Ações',
       renderCell: ({ row }) => {
-        const index = row.id;
-        const iconStyle = {
-          width: '2rem',
-          cursor: 'pointer',
-          ':hover': {
-            color: 'secondaryTons.green',
-            transform: 'scale(1.2)',
-            transition: 'transform 0.2s ease-in-out',
-          },
-        };
         return (
           <Box sx={{ display: 'flex' }}>
             <EditIcon
@@ -186,7 +187,10 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
                 },
               }}
               color="error"
-              onClick={() => setDeleteModalIsOpen(true)}
+              onClick={() => {
+                setSelectedRow(row);
+                setDeleteModalIsOpen(true);
+              }}
             />
           </Box>
         );
@@ -223,6 +227,16 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
 
   return (
     <Box>
+      <DeleteMaterialModal
+        isOpen={deleteModalIsOpen}
+        setIsOpen={setDeleteModalIsOpen}
+        rowToDelete={selectedRow}
+        tableData={rows}
+        deleteMaterial={async () => {
+          await handleDeleteMaterial(selectedRow.id);
+        }}
+        searchBy={'name'}
+      />
       <Button
         onClick={() => setModalIsOpen(true)}
         variant="contained"
@@ -253,11 +267,18 @@ const CreateMaterialDosageTable = ({onRowClick}: ICreateMaterialDosageTable) => 
         materials={data.materials}
         isEdit={false}
         createdMaterial={(material: AsphaltMaterial) => {
+          console.log('🚀 ~ material:', material);
+          console.log('🚀 ~ data.materials:', data.materials);
+
           const updatedMaterials = [...data.materials, material];
+          console.log('🚀 ~ updatedMaterials:', updatedMaterials);
           setData({ step: 1, key: 'materials', value: updatedMaterials });
+
+          console.log('🚀 ~ updatedMaterials ,aterials:', data.materials);
 
           // chama o addNewMaterial imediatamente após inserir
           setTimeout(() => {
+            console.log('entrou no setTimeout');
             addNewMaterial(material); // <-- safe para evitar race conditions do React
           }, 0);
         }}
