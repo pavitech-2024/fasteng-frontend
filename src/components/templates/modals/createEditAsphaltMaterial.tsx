@@ -18,6 +18,7 @@ interface CreateEditMaterialModalProps {
   isEdit: boolean;
   materialToEdit?: AsphaltMaterial;
   updateMaterials?: () => void;
+  updatedMaterial?: (material: AsphaltMaterial) => void;
   createdMaterial?: (material: AsphaltMaterial) => void;
 }
 
@@ -28,6 +29,7 @@ const CreateEditMaterialModal = ({
   materials,
   materialToEdit,
   isEdit,
+  updatedMaterial,
   createdMaterial,
 }: CreateEditMaterialModalProps) => {
   const initialMaterialState: AsphaltMaterialData = {
@@ -161,7 +163,6 @@ const CreateEditMaterialModal = ({
 
     try {
       validateMaterialData();
-
       const materialWithUserId = { ...material, userId };
 
       const response = await materialsService.createMaterial(materialWithUserId);
@@ -201,7 +202,6 @@ const CreateEditMaterialModal = ({
   const validateMaterialData = () => {
     if (material.name === '') throw 'Material name cannot be empty';
     if (material.type === null) throw 'Material type cannot be empty';
-    // if (!material.name) throw 'A material with the same name already exists!';
     if (material.type === 'CAP' && material.description.classification_CAP === null)
       throw 'CAP classification cannot be empty';
     if (material.type === 'asphaltBinder' && material.description.classification_AMP === null)
@@ -210,11 +210,12 @@ const CreateEditMaterialModal = ({
 
   const handleEditMaterial = async () => {
     const toastId = toast.loading('Editando material...', { autoClose: 5000 });
-
     try {
       validateMaterialData();
 
-      await materialsService.editMaterial(materialToEdit._id, material);
+      const { data } = await materialsService.editMaterial(materialToEdit._id, material);
+      
+      updatedMaterial(data);
 
       await updateMaterials();
 
