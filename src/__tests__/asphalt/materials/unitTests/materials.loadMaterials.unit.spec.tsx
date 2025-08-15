@@ -47,7 +47,7 @@ function useMaterials() {
   return { materials, fwdEssays, iggEssays, rtcdEssays, dduiEssays, loading };
 }
 
-describe('useMaterials hook (unit test)', () => {
+describe('loadMaterials hook (unit test)', () => {
   beforeEach(() => {
     (useAuth as jest.Mock).mockReturnValue({ user: mockUser });
     (materialsService.getMaterialsByUserId as jest.Mock).mockResolvedValue(mockResponse);

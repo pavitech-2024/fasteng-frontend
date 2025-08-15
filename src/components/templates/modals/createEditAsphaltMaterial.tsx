@@ -32,6 +32,7 @@ const CreateEditMaterialModal = ({
   updatedMaterial,
   createdMaterial,
 }: CreateEditMaterialModalProps) => {
+  console.log("🚀 ~ CreateEditMaterialModal ~ openModal:", openModal)
   const initialMaterialState: AsphaltMaterialData = {
     name: '',
     type: null,
@@ -65,7 +66,7 @@ const CreateEditMaterialModal = ({
     if (isEdit && materialToEdit) {
       setMaterial(materialToEdit);
     }
-  }, [materialToEdit]);
+  }, [materialToEdit, materials]);
 
   const getInputs = () => {
     const inputs = [

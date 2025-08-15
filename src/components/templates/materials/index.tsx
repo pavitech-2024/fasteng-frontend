@@ -73,6 +73,7 @@ const MaterialsTemplate = ({
   editMaterial,
   modal,
 }: MaterialsTemplateProps) => {
+  console.log("🚀 ~ MaterialsTemplate ~ materials:", materials)
   const app = useRouter().pathname.split('/')[1];
   let samplesOrMaterials: string;
 
@@ -152,14 +153,12 @@ const MaterialsTemplate = ({
    * - `searchBy`: The criteria to filter by, either 'name' or 'type'.
    */
   useEffect(() => {
-    const data = (Array.isArray(materials[0].materials) ? materials[0].materials : []).map(
-      ({ _id, name, type, createdAt }) => ({
-        _id,
-        name,
-        type,
-        createdAt: createdAt instanceof Date ? createdAt : new Date(createdAt),
-      })
-    );
+    const data = (Array.isArray(materials) ? materials : []).map(({ _id, name, type, createdAt }) => ({
+      _id,
+      name,
+      type,
+      createdAt: createdAt instanceof Date ? createdAt : new Date(createdAt),
+    }));
 
     const filteredData = data.filter((material) =>
       searchValue
@@ -255,6 +254,9 @@ const MaterialsTemplate = ({
         tableData={tableData}
         searchBy={searchBy}
       />
+
+      {/*Create and Edit Material Modal */}
+      {modal}
 
       {/*Page */}
       <Box
