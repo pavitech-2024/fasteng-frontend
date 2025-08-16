@@ -8,7 +8,7 @@ import Loading from '@/components/molecules/loading';
 import { Box, TextField } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 
-const Superpave_Step1 = ({
+const Superpave_Step1_GeneralData = ({
   nextDisabled,
   setNextDisabled,
   superpave,
@@ -163,4 +163,4 @@ const Superpave_Step1 = ({
   );
 };
 
-export default Superpave_Step1;
+export default Superpave_Step1_GeneralData;

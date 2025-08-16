@@ -7,15 +7,19 @@ import materialsService from '@/services/asphalt/asphalt-materials.service';
 import ModalBase from '@/components/molecules/modals/modal';
 import { Box, TextField } from '@mui/material';
 import { Sieve } from '@/interfaces/common';
+import { useRouter } from 'next/router';
 import { MaterialsProps } from '@/pages/asphalt/materials';
+import useAuth from '@/contexts/auth';
 
 interface CreateEditMaterialModalProps {
   openModal: boolean;
   handleCloseModal: () => void;
-  updateMaterials: () => void;
-  materials: MaterialsProps[];
-  materialToEdit?: AsphaltMaterial;
+  materials: MaterialsProps[] | AsphaltMaterial[];
   isEdit: boolean;
+  materialToEdit?: AsphaltMaterial;
+  updateMaterials?: () => void;
+  updatedMaterial?: (material: AsphaltMaterial) => void;
+  createdMaterial?: (material: AsphaltMaterial) => void;
 }
 
 const CreateEditMaterialModal = ({
@@ -25,6 +29,8 @@ const CreateEditMaterialModal = ({
   materials,
   materialToEdit,
   isEdit,
+  updatedMaterial,
+  createdMaterial,
 }: CreateEditMaterialModalProps) => {
   const initialMaterialState: AsphaltMaterialData = {
     name: '',
@@ -45,6 +51,9 @@ const CreateEditMaterialModal = ({
   };
 
   const [material, setMaterial] = useState<AsphaltMaterialData>(initialMaterialState);
+  const { pathname } = useRouter();
+  const { user } = useAuth();
+  const userId = user._id;
 
   const resetMaterial = () => {
     setMaterial(initialMaterialState);
@@ -154,10 +163,15 @@ const CreateEditMaterialModal = ({
 
     try {
       validateMaterialData();
+      const materialWithUserId = { ...material, userId };
 
-      await materialsService.createMaterial(material);
+      const response = await materialsService.createMaterial(materialWithUserId);
 
-      await updateMaterials();
+      if (pathname.includes('superpave')) {
+        createdMaterial(response.data);
+      } else {
+        await updateMaterials();
+      }
 
       handleCloseModal();
 
@@ -168,9 +182,15 @@ const CreateEditMaterialModal = ({
         autoClose: 5000,
         closeButton: true,
       });
-    } catch (error) {
+    } catch (error: any) {
+      const backendMessage = error?.response?.data?.message;
+      const validationMessage: string = error?.message;
+      const isBackendAlreadyExistsError: boolean = backendMessage?.includes('already exists') || backendMessage?.includes('Server');
       toast.update(createMaterialToastId, {
-        render: t('asphalt.materials.errorCreatingMaterial'),
+        render:
+          (isBackendAlreadyExistsError
+            ? 'Já existe um material cadastrado com esse nome!'
+            : backendMessage ?? t('asphalt.materials.errorCreatingMaterial')),
         type: 'error',
         isLoading: false,
         autoClose: 5000,
@@ -182,7 +202,6 @@ const CreateEditMaterialModal = ({
   const validateMaterialData = () => {
     if (material.name === '') throw 'Material name cannot be empty';
     if (material.type === null) throw 'Material type cannot be empty';
-    if (materials[0].materials.find((m) => m.name === material.name)) throw 'A material with the same name already exists!';
     if (material.type === 'CAP' && material.description.classification_CAP === null)
       throw 'CAP classification cannot be empty';
     if (material.type === 'asphaltBinder' && material.description.classification_AMP === null)
@@ -191,11 +210,12 @@ const CreateEditMaterialModal = ({
 
   const handleEditMaterial = async () => {
     const toastId = toast.loading('Editando material...', { autoClose: 5000 });
-
     try {
       validateMaterialData();
 
-      await materialsService.editMaterial(materialToEdit._id, material);
+      const { data } = await materialsService.editMaterial(materialToEdit._id, material);
+      
+      updatedMaterial(data);
 
       await updateMaterials();
 

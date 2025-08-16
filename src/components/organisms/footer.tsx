@@ -19,6 +19,10 @@ export const Footer = ({
   nextDisabled,
   handleNextClick,
 }: FooterProps) => {
+
+  const isDosage = window.location.pathname.includes('dosages/');
+  const buttonText = isDosage ? t('footer.newDosage') : t('footer.newEssay');
+
   return (
     <Box
       sx={{
@@ -58,21 +62,21 @@ export const Footer = ({
 
       <Button
         endIcon={
-          nextText === t('footer.next') ? <NextIcon /> : nextText === t('footer.newEssay') ? <></> : <SaveIcon />
+          nextText === t('footer.next') ? <NextIcon /> : nextText === buttonText ? <></> : <SaveIcon />
         }
         variant="contained"
         disabled={nextDisabled}
         onClick={handleNextClick}
         sx={{
-          bgcolor: nextText === t('footer.newEssay') ? 'secondaryTons.orange' : 'secondaryTons.blue',
+          bgcolor: (nextText === buttonText) || (isDosage && buttonText === 'Nova dosagem') ? 'secondaryTons.orange' : 'secondaryTons.blue',
           color: 'primaryTons.white',
           height: '32px',
-          width: '140px',
+          width: isDosage ? 'fit-content' : '140px',
           fontSize: '1rem',
 
           ':hover': {
             transition: 'all 0.1s ease-in-out',
-            bgcolor: nextText === t('footer.newEssay') ? 'primary.main opacity: 0.8' : 'secondaryTons.blueDisabled',
+            bgcolor: nextText === buttonText ? 'primary.main opacity: 0.8' : 'secondaryTons.blueDisabled',
           },
 
           ':active': {

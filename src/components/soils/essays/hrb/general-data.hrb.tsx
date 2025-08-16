@@ -24,8 +24,7 @@ const HRB_GeneralData = ({ nextDisabled, setNextDisabled, hrb }: EssayPageProps 
       async () => {
         const samples = await hrb.getSamplesByUserId(user._id);
 
-        setSamples(samples[0].materials);
-        setLoading(false);
+        setSamples(samples[0].materials);        setLoading(false);
       },
       {
         pending: t('loading.samples.pending'),

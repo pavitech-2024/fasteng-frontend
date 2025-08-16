@@ -24,7 +24,6 @@ const SandEquivalent_GeneralData = ({
     toast.promise(
       async () => {
         const data = await sandEquivalent.getmaterialsByUserId(user._id);
-        console.log("🚀 ~ data:", data)
 
         const filteredMaterials = data[0].materials.filter(
           (material) => material.type === 'coarseAggregate' || material.type === 'fineAggregate'

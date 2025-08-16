@@ -43,7 +43,7 @@ type GmmTableRows = {
   Teor: number;
 };
 
-const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+const Marshall_Step5_MixtureMaximumDensity = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
   const [enableRiceTest, setEnableRiceTest] = useState(false);
@@ -324,19 +324,14 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
         tenor.massOfDrySample > tenor.massOfContainerWaterSample ||
         tenor.massOfContainerWater > tenor.massOfContainerWaterSample
     );
-
     if (hasNullValues) errorMsg = 'errors.rice-test-empty-fields';
     if (!errorMsg && invalidValues) {
-      if (
-        invalidValues.massOfDrySample > invalidValues.massOfContainerWater ||
-        invalidValues.massOfDrySample > invalidValues.massOfContainerWaterSample
-      ) {
-        errorMsg = 'errors.invalid-gmm-mass-value';
-      } else if (invalidValues.massOfContainerWater > invalidValues.massOfContainerWaterSample) {
+    if (invalidValues.massOfContainerWaterSample <= invalidValues.massOfDrySample) {
+      errorMsg = 'errors.invalid-gmm-mass-value';
+    } else if (invalidValues.massOfContainerWater > invalidValues.massOfContainerWaterSample) {
         errorMsg = 'errors.invalid-gmm-container-mass-value';
       }
     }
-
     toast.promise(
       async () => {
         if (errorMsg) throw new Error(errorMsg);
@@ -662,4 +657,4 @@ const Marshall_Step5 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
   );
 };
 
-export default Marshall_Step5;
+export default Marshall_Step5_MixtureMaximumDensity;

@@ -18,11 +18,11 @@ const GraphStep6: React.FC<GraphProps> = ({ data }) => {
     width: 0,
     height: 0,
     selectionMode: 'multiple',
-    animation: {
-      duration: 500,
-      easing: 'linear',
-      startup: true,
-    },
+    // animation: {
+    //   duration: 500,
+    //   easing: 'linear',
+    //   startup: true,
+    // },
     chartArea: {
       width: '80%',
       height: '80%',
@@ -30,7 +30,7 @@ const GraphStep6: React.FC<GraphProps> = ({ data }) => {
     hAxis: {
       title: 'Nº de Giros',
       titleTextStyle: { italic: false },
-      maxValue: data.length + 4,
+      maxValue: data?.length + 4,
     },
     series: {
       0: {

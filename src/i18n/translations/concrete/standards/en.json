@@ -1,7 +1,7 @@
 {
-  "granulometry": "Granulometry by Sifting",
-  "chapman": "Specific Mass - Chapman's Flask",
-  "unitMass": "Unit Mass",
-  "sandIncrease": "Sand Increase",
-  "coarseAggregate": "Specific Mass of Coarse Aggregate"
+  "granulometry": "Granulometry by Sifting - DNIT - ME 083/98",
+  "chapman": "Specific Mass - Chapman's Flask - DNIT - ME 194/98",
+  "unitMass": "Unit Mass - DNIT 437/2022 - ME",
+  "sandIncrease": "Sand Increase - DNIT - ME 192/97",
+  "coarseAggregate": "Specific Mass of Coarse Aggregate - DNIT - ME 195/97"
 }

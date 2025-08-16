@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 
-type modalSize = 'small' | 'medium' | 'large';
+type modalSize = 'small' | 'medium' | 'large' | 'larger';
 interface IModalBase {
   title: string;
   children: JSX.Element | React.ReactNode;
@@ -14,7 +14,7 @@ interface IModalBase {
   onCancel?: (event?: any, reason?: string) => void;
   open: boolean;
   size: modalSize;
-  onSubmit?: () => void;
+  onSubmit?: (e?: any) => void;
   disableSubmit?: boolean;
   oneButton?: boolean;
   buttonSize?: 'small' | 'medium' | 'large';
@@ -45,6 +45,9 @@ const ModalBase = ({
       case 'large': {
         return '60%';
       }
+      case 'larger': {
+        return '80%';
+      }
     }
   };
 
@@ -65,7 +68,7 @@ const ModalBase = ({
           borderRadius: '10px',
           maxHeight: '80%',
           scrollbarWidth: 'thin',
-          scrollbarColor: '#121212 #f1c40f',
+          scrollbarColor: '#121212 #dba169',
           overflowY: {
             mobile: 'scroll',
             notebook: 'auto',

@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 const SuperpaveDosageConsult = () => {
-  const { setData } = useSuperpaveStore();
+  const { setAllData } = useSuperpaveStore();
   const { handleNext } = new Superpave_SERVICE();
   const [dosages, setDosages] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -45,28 +45,32 @@ const SuperpaveDosageConsult = () => {
     id: row._id,
   }));
 
+  /**
+   * Effect hook to fetch and load Superpave dosages.
+   *
+   * Fetches the Superpave dosages for the current user and updates the state.
+   * Displays a toast notification for the loading status.
+   */
   useEffect(() => {
     toast.promise(
       async () => {
         try {
-          superpaveDosageService.getSuperpaveDosagesByUserId(user._id).then((response) => {
-            const data = response.data;
-            dosages.push(data);
+          const response = await superpaveDosageService.getSuperpaveDosagesByUserId(user._id);
+          const data = response.data;
+          dosages.push(data);
 
-            const rows = dosages[0]?.map((row) => ({
-              name: row.generalData?.name,
-              progress: `(${row.generalData?.step + 1}/11) - ${progressTextMap[row.generalData?.step]}`,
-              start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
-              finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
-              id: row._id,
-            }));
+          const rows = dosages[0]?.map((row) => ({
+            name: row.generalData?.name,
+            progress: `(${row.generalData?.step + 1}/11) - ${progressTextMap[row.generalData?.step]}`,
+            start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
+            finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
+            id: row._id,
+          }));
 
-            const arraysMenores = dividirArrayEmArraysMenores(rows, rowsPerPage);
+          const arraysMenores = dividirArrayEmArraysMenores(rows, rowsPerPage);
 
-            setDosageArrays(arraysMenores);
-
-            setLoading(false);
-          });
+          setDosageArrays(arraysMenores);
+          setLoading(false);
         } catch (error) {
           setDosages([]);
           setLoading(false);
@@ -100,11 +104,21 @@ const SuperpaveDosageConsult = () => {
     }
   }, []);
 
+  /**
+   * Handles the deletion of a dosage.
+   *
+   * Deletes the dosage with the given `id` and reloads the list of dosages.
+   * The list of dosages and the `dosageArrays` state are updated.
+   *
+   * @param id - The ID of the dosage to delete.
+   */
   const handleDeleteDosage = async (id: string) => {
     try {
       await superpaveDosageService.deleteSuperpaveDosage(id);
-      // Recarregar a lista de dosagens após a exclusão
+
       const response = await superpaveDosageService.getSuperpaveDosagesByUserId(user._id);
+
+      // Map the response data to the desired format
       const updatedDosages = response.data.map((row) => ({
         name: row.generalData?.name,
         progress: `(${row.generalData?.step}/11) - ${progressTextMap[row.generalData?.step]}`,
@@ -113,10 +127,9 @@ const SuperpaveDosageConsult = () => {
         id: row._id,
       }));
 
-      // Atualizar dosages e dosageArrays
       setDosages(updatedDosages);
 
-      // Recalcular os arrays menores
+      // Split the updated dosages into smaller arrays for pagination
       const arraysMenores = dividirArrayEmArraysMenores(updatedDosages, rowsPerPage);
       setDosageArrays(arraysMenores);
     } catch (error) {
@@ -124,22 +137,30 @@ const SuperpaveDosageConsult = () => {
     }
   };
 
-  const handleVisualizeDosage = (id: string) => {
+  const handleVisualizeDosage = async (id: string) => {
     const dosage = dosages[0]?.find((dosage) => {
       return dosage._id === id;
     });
+
     const step = dosage?.generalData.step;
 
     if (dosage) {
-      setData({
-        step: 12,
-        value: dosage,
+      setAllData(dosage);
+
+      await new Promise((resolve) => {
+        requestAnimationFrame(() => setTimeout(resolve, 0));
       });
     }
+
     sessionStorage.setItem('superpave-step', step?.toString());
+
     handleNext(step, dosage, true);
-    if (step === 5) router.push(`/asphalt/dosages/superpave/create?consult=true`);
-    router.push(`/asphalt/dosages/superpave/create`);
+
+    if (step === 5) {
+      router.push(`/asphalt/dosages/superpave/create?consult=true`);
+    } else {
+      router.push(`/asphalt/dosages/superpave/create`);
+    }
   };
 
   const columns: GridColDef[] = [
@@ -162,6 +183,12 @@ const SuperpaveDosageConsult = () => {
     {
       field: 'options',
       headerName: t('superpave.dosage-consult.options'),
+      /**
+       * Function to render cell content for the "options" column.
+       * Shows two buttons: one for deleting the dosage and one for visualizing it.
+       * @param {GridCellParams} params - Parameters for the cell being rendered.
+       * @returns {ReactNode} JSX for the cell content.
+       */
       renderCell: (params) => (
         <>
           <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)} size="large">

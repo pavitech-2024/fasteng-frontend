@@ -6,7 +6,6 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
 import { t } from 'i18next';
 import { toast } from 'react-toastify';
-import { useEffect } from 'react';
 
 const Compression_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { hygroscopicData: data, setData } = useCompressionStore();

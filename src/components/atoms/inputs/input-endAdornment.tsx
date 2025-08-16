@@ -2,6 +2,7 @@ import { FormControl, Input, InputLabel, InputAdornment } from '@mui/material';
 import React from 'react';
 
 interface Props {
+  onBlur?: (e) => void;
   variant?: 'standard' | 'outlined' | 'filled';
   key?: string;
   label?: string;
@@ -26,6 +27,7 @@ const InputEndAdornment = ({
   adornment,
   value,
   onChange,
+  onBlur,
   type,
   inputProps,
   required,
@@ -39,6 +41,7 @@ const InputEndAdornment = ({
       {label ? <InputLabel htmlFor={`outlined-adornment-${key}`}>{label}</InputLabel> : <></>}
       <Input
         fullWidth={fullWidth}
+        onBlur={onBlur}
         required={required}
         placeholder={placeholder}
         id={`outlined-adornment-${key}`}
@@ -54,4 +57,4 @@ const InputEndAdornment = ({
   );
 };
 
-export default InputEndAdornment;
+export default React.memo(InputEndAdornment);

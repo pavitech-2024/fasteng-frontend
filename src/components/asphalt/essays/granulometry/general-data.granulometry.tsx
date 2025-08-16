@@ -26,7 +26,7 @@ const AsphaltGranulometry_GeneralData = ({
         const data = await granulometry.getmaterialsByUserId(user._id);
         
 
-        const filteredMaterials = data[0].materials.filter(
+        const filteredMaterials = materials.filter(
           (material) => material.type === 'coarseAggregate' || material.type === 'fineAggregate' || 'filler'
         );
 
@@ -40,8 +40,6 @@ const AsphaltGranulometry_GeneralData = ({
         error: t('loading.materials.error'),
       }
     );
-    // se não deixar o array vazio ele vai ficar fazendo requisições infinitas
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const inputs = [
