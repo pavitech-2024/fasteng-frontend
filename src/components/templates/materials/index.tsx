@@ -403,7 +403,7 @@ const MaterialsTemplate = ({
               </TableHead>
               <TableBody>
                 {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row._id} data-row-id={row._id}>
                     {columns.map((column) => (
                       <TableCell key={column.id} align="center">
                         {column.id === 'name' && row.name}
@@ -423,6 +423,7 @@ const MaterialsTemplate = ({
                             <Link href={`/${path}/${row._id}`}>
                               <Button
                                 variant="contained"
+                                data-testid={`edit-${row._id}`}
                                 sx={{
                                   height: { mobile: '18px', notebook: '25px' },
                                   borderRadius: { mobile: '50%', notebook: '20px' },
@@ -449,6 +450,9 @@ const MaterialsTemplate = ({
                             </Link>
                             <Button
                               variant="text"
+                              aria-label="Excluir"
+                              name="delete"
+                              data-testid={`delete-${row._id}`}
                               color="error"
                               sx={{ p: 0, width: '30px', minWidth: '35px' }}
                               onClick={() => {

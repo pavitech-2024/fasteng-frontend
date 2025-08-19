@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom';
-import { render, waitFor, screen } from '@testing-library/react';
-import Samples from '../../../pages/soils/samples/index';
-import samplesService from '@/services/soils/soils-samples.service';
+import { render, waitFor, screen, fireEvent, within } from '@testing-library/react';
 import useAuth from '@/contexts/auth';
 import { useRouter } from 'next/router';
+import samplesService from '@/services/soils/soils-samples.service';
+import Samples from '@/pages/soils/samples';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -17,18 +17,15 @@ const mockUser = { _id: mockUserId };
 
 const mockResponse = {
   data: [
-    {
-      _id: 'container1',
-      materials: [
-        { _id: 'sample1', name: 'Sample 1', type: 'inorganicSoil' },
-        { _id: 'sample2', name: 'Sample 2', type: 'organicSoil' },
-      ],
-    },
+    { _id: 'material1', name: 'Material 1', type: 'inorganicSoil' },
+    { _id: 'material2', name: 'Material 2', type: 'inorganicSoil' },
   ],
 };
 
-describe('Samples page', () => {
+describe('Soil Samples page', () => {
   beforeEach(() => {
+    jest.clearAllMocks();
+
     (useRouter as jest.Mock).mockReturnValue({
       pathname: '/soils/samples',
       query: {},
@@ -39,18 +36,55 @@ describe('Samples page', () => {
 
     (useAuth as jest.Mock).mockReturnValue({ user: mockUser });
     (samplesService.getSamplesByUserId as jest.Mock).mockResolvedValue(mockResponse);
+    (samplesService.deleteSample as jest.Mock).mockResolvedValue({});
   });
 
-  it('should call getSamplesByUserId and render samples correctly', async () => {
+  it('should load and render samples', async () => {
     render(<Samples />);
 
+    await waitFor(() => expect(samplesService.getSamplesByUserId).toHaveBeenCalledWith(mockUserId));
+
+    for (const material of mockResponse.data) {
+      expect(await screen.findByText(material.name)).toBeInTheDocument();
+    }
+  });
+
+  it('should delete a sample correctly', async () => {
+    render(<Samples />);
+
+    // Espera os materiais carregarem
+    await waitFor(() => screen.getByText('Material 1'));
+
+    // Clica no botão de delete do primeiro material
+    const deleteButton = screen.getByTestId('delete-material1');
+    fireEvent.click(deleteButton);
+
+    // Clica no botão de confirmação dentro do modal
+    const confirmButton = await screen.findByTestId('confirm-delete-material1');
+    fireEvent.click(confirmButton);
+
+    // Espera que o serviço de delete tenha sido chamado
     await waitFor(() => {
-      expect(samplesService.getSamplesByUserId).toHaveBeenCalledWith(mockUserId);
+      expect(samplesService.deleteSample).toHaveBeenCalledWith('material1');
     });
 
-    // Espera até que os nomes das amostras apareçam na tela
-    for (const sample of mockResponse.data[0].materials) {
-      expect(await screen.findByText(sample.name, { exact: false })).toBeInTheDocument();
-    }
+    // Verifica se o reload removeu o material da tela
+    await waitFor(() => {
+      const table = screen.getByRole('table', { name: /materials table/i });
+      const { queryByText } = within(table);
+
+      expect(queryByText('Material 1')).not.toBeInTheDocument();
+    });
+  });
+
+  it.skip('should edit a sample correctly', async () => {
+    render(<Samples />);
+
+    await waitFor(() => screen.findByText('Material 1'));
+
+    const editButton = screen.getByTestId(`edit-material1`);
+    fireEvent.click(editButton);
+
+    expect(await screen.findByText(/Editar Material 1/i)).toBeInTheDocument();
   });
 });

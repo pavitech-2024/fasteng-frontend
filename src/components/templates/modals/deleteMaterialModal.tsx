@@ -44,6 +44,7 @@ const DeleteMaterialModal = ({
           </Button>
           <Button
             variant="contained"
+            data-testid={rowToDelete ? `confirm-delete-${rowToDelete._id}` : undefined}
             sx={{
               fontWeight: 700,
               fontSize: { mobile: '11px', notebook: '13px' },

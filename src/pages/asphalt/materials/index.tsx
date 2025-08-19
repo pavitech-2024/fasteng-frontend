@@ -12,7 +12,7 @@ import { FwdData } from '@/stores/asphalt/fwd/fwd.store';
 import { IggData } from '@/stores/asphalt/igg/igg.store';
 import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
 import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
-import useMaterials from '@/utils/hooks/asphalt/materials.hooks';
+import { useMaterials } from '@/utils/hooks/asphalt/materials.hooks';
 
 export interface MaterialsProps {
   materials: AsphaltMaterial[];
@@ -41,7 +41,7 @@ const Materials = () => {
     setMaterialToEdit,
     openModal,
     setOpenModal
-  } = useMaterials();
+  } = useMaterials("asphalt");
 
   useEffect(() => {
     loadMaterials();

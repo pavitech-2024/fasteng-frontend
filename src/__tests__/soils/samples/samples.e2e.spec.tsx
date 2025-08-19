@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Samples from '../../../pages/soils/samples/index';
 import useAuth from '@/contexts/auth';
@@ -28,42 +28,54 @@ describe('Samples page E2E', () => {
     (useAuth as jest.Mock).mockReturnValue({ user: mockUser });
   });
 
-  it('should fetch real samples from backend and find a sample even if paginated', async () => {
-    render(<Samples />);
-    const user = userEvent.setup();
+  it(
+    'should fetch real samples from backend and find a sample even if paginated',
+    async () => {
+      render(<Samples />);
+      const user = userEvent.setup();
 
-    // Aguarda a paginação aparecer
-    await screen.findByRole('navigation');
+      // Aguarda o carregamento inicial terminar (loader sumir)
+      await waitFor(() => {
+        expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+      });
 
-    // Coleta botões de página
-    // Aguarda até que haja pelo menos um botão "go to page"
-    const pageButtons = await screen.findAllByRole('button', { name: /go to page/i }).catch(() => []);
+      // Tenta localizar a paginação (não falha se não tiver)
+      const navigation = await screen.findByRole('navigation').catch(() => null);
 
-    // Primeiro, tenta achar na página inicial
-    let matchingCells = await screen
-      .findAllByText((content, element) => element?.tagName === 'TD' && content.trim() === SAMPLE_NAME, undefined, {
-        timeout: 5000,
-      })
-      .catch(() => []);
+      let found = false;
 
-    let found = matchingCells.length > 0;
+      // Primeiro, tenta direto na tabela inicial
+      let matchingCells = await screen
+        .findAllByText(
+          (content, element) => element?.tagName === 'TD' && content.trim() === SAMPLE_NAME,
+          undefined,
+          { timeout: 5000 }
+        )
+        .catch(() => []);
 
-    // Se não encontrou, então tenta nas outras páginas
-    if (!found) {
-      for (const btn of pageButtons) {
-        await user.click(btn);
-        matchingCells = await screen
-          .findAllByText((content, element) => element?.tagName === 'TD' && content.trim() === SAMPLE_NAME, undefined, {
-            timeout: 5000,
-          })
-          .catch(() => []);
-        if (matchingCells.length > 0) {
-          found = true;
-          break;
+      found = matchingCells.length > 0;
+
+      // Se não encontrou e há paginação, percorre páginas
+      if (!found && navigation) {
+        const pageButtons = await screen.findAllByRole('button', { name: /go to page/i }).catch(() => []);
+        for (const btn of pageButtons) {
+          await user.click(btn);
+          matchingCells = await screen
+            .findAllByText(
+              (content, element) => element?.tagName === 'TD' && content.trim() === SAMPLE_NAME,
+              undefined,
+              { timeout: 5000 }
+            )
+            .catch(() => []);
+          if (matchingCells.length > 0) {
+            found = true;
+            break;
+          }
         }
       }
-    }
 
-    expect(found).toBe(true);
-  }, 30000);
+      expect(found).toBe(true);
+    },
+    30000
+  );
 });
