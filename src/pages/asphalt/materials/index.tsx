@@ -40,8 +40,8 @@ const Materials = () => {
     setIsEdit,
     setMaterialToEdit,
     openModal,
-    setOpenModal
-  } = useMaterials("asphalt");
+    setOpenModal,
+  } = useMaterials('asphalt');
 
   useEffect(() => {
     loadMaterials();
@@ -67,7 +67,13 @@ const Materials = () => {
           dduiEssays={dduiEssays}
           types={types}
           title={t('asphalt.materials.title')}
-          handleOpenModal={() => setOpenModal(true)}
+          handleOpenModal={(row?: any) => {
+            if (row) {
+              setIsEdit(false);
+              setMaterialToEdit(row);
+            }
+            setOpenModal(true);
+          }}
           deleteMaterial={handleDeleteMaterial}
           editMaterial={handleEditMaterial}
           path="asphalt/materials/material"

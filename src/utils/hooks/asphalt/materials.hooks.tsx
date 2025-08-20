@@ -75,26 +75,15 @@ export const useMaterials = (domain: 'asphalt' | 'soils' | 'concrete') => {
   }, [domain, user?._id]);
 
   const handleDeleteMaterial = useCallback(
-    async (id: string, filter?: FilterTypes, essayType?: EssayTypes) => {
+    async (id: string, _filter?: string, essayType?: EssayTypes) => {
+      const formattedEssayType = essayType?.toLowerCase().trim() as EssayTypes || '';
       try {
         if (domain === 'asphalt') {
-          switch (filter?.toLowerCase()) {
-            case 'name':
-            case 'type':
-              await service.deleteById(id);
-              break;
-            case 'mix':
-              if (essayType === 'rtcd') await deleteRtcdEssay(id);
-              else if (essayType === 'ddui') await deleteDduiEssay(id);
-              break;
-            case 'stretch':
-              if (essayType === 'fwd') await deleteFwdEssay(id);
-              else if (essayType === 'igg') await deleteIggEssay(id);
-              break;
-            default:
-              console.warn('Unknown filter for asphalt deletion:', filter);
-              break;
-          }
+          if (formattedEssayType === 'rtcd') await deleteRtcdEssay(id);
+          else if (formattedEssayType === 'ddui') await deleteDduiEssay(id);
+          else if (formattedEssayType === 'fwd') await deleteFwdEssay(id);
+          else if (formattedEssayType === 'igg') await deleteIggEssay(id);
+          else await service.deleteById(id); // caso seja material "normal"
         } else {
           // soils ou concrete
           await service.deleteById(id);
@@ -136,7 +125,8 @@ export const useMaterials = (domain: 'asphalt' | 'soils' | 'concrete') => {
   const handleEditMaterial = useCallback(
     (materialId: string) => {
       try {
-        const selectedMaterial = materials.find((m) => m._id === materialId) || null;
+        const allMaterials = materials.concat(fwdEssays, iggEssays, rtcdEssays, dduiEssays);
+        const selectedMaterial = allMaterials.find((m) => m._id === materialId) || null;
         setMaterialToEdit(selectedMaterial);
         setIsEdit(true);
         setOpenModal(true);

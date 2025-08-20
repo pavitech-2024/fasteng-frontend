@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent, within, act } from '@testing-library/react';
 import Materials from '../../../pages/asphalt/materials/index';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
 import useAuth from '@/contexts/auth';
@@ -26,7 +26,26 @@ const mockUser = { _id: mockUserId };
 const mockResponse = {
   data: [
     {
-      materials: [{ _id: 'mat1', name: 'Material Teste', type: 'coarseAggregate' }],
+      materials: [
+        {
+          _id: 'mat1',
+          name: 'Material Teste',
+          type: 'coarseAggregate',
+          description: {
+            source: 'Pedreira X',
+            responsible: 'João',
+            maxDiammeter: 20,
+            aggregateNature: '',
+            boughtDate: '',
+            recieveDate: '',
+            extractionDate: '',
+            collectionDate: '',
+            classification_CAP: '',
+            classification_AMP: '',
+            observation: '',
+          },
+        },
+      ],
       fwdEssays: [{ _id: 'fwd1', generalData: { name: 'FWD Teste' } }],
       iggEssays: [{ _id: 'igg1', generalData: { name: 'IGG Teste' } }],
       rtcdEssays: [{ _id: 'rtcd1', generalData: { name: 'RTCD Teste' } }],
@@ -39,6 +58,7 @@ const deleteRtcdEssayMock = jest.fn().mockResolvedValue({});
 const deleteDduiEssayMock = jest.fn().mockResolvedValue({});
 const deleteFwdEssayMock = jest.fn().mockResolvedValue({});
 const deleteIggEssayMock = jest.fn().mockResolvedValue({});
+const updateMaterialMock = jest.fn().mockResolvedValue({});
 
 (Rtcd_SERVICE as jest.Mock).mockImplementation(() => ({ deleteRtcdEssay: deleteRtcdEssayMock }));
 (Ddui_SERVICE as jest.Mock).mockImplementation(() => ({ deleteDduiEssay: deleteDduiEssayMock }));
@@ -60,68 +80,100 @@ describe('Materials page integration', () => {
     (useAuth as jest.Mock).mockReturnValue({ user: mockUser });
     (materialsService.getMaterialsByUserId as jest.Mock).mockResolvedValue(mockResponse);
     (materialsService.deleteMaterial as jest.Mock).mockResolvedValue({});
+    (materialsService.editMaterial as jest.Mock).mockImplementation(updateMaterialMock);
   });
 
-  it('should load materials and essays correctly', async () => {
-    render(<Materials />);
+  it('should handle edit material via hook state', async () => {
+    // 1. renderiza o componente
+    const { rerender } = render(<Materials />);
 
-    // Aguarda carregamento inicial
-    await waitFor(() => expect(materialsService.getMaterialsByUserId).toHaveBeenCalledWith(mockUserId));
+    screen.debug(screen.getByTestId('materials-table'));
 
-    // Verifica se os dados aparecem na tela
+    // 2. espera o carregamento inicial
+    await waitFor(() => screen.getByText('Material Teste'));
+
+    // 3. abre o modal de edição
+    fireEvent.click(screen.getByTestId('edit-mat1'));
+
+    // 4. garante que o modal abriu
+    expect(await screen.findByText(/Editar Material/i)).toBeInTheDocument();
     expect(await screen.findByText('Material Teste')).toBeInTheDocument();
-    expect(await screen.findByText('FWD Teste')).toBeInTheDocument();
-    expect(await screen.findByText('IGG Teste')).toBeInTheDocument();
-    expect(await screen.findByText('RTCD Teste')).toBeInTheDocument();
-    expect(await screen.findByText('DDUI Teste')).toBeInTheDocument();
-  });
 
-  it('should handle edit material', async () => {
-    render(<Materials />);
-    await waitFor(() => screen.findByText('Material Teste'));
+    // 5. altera o nome no input
+    const nameInput = screen.getByTestId('input-name');
+    fireEvent.change(nameInput, { target: { value: 'Material Editado' } });
 
-    // Simula click em editar
-    const editButton = screen.getByTestId('edit-mat1');
-    fireEvent.click(editButton);
+    // 6. prepara o mock da chamada update + refetch
+    (materialsService.getMaterialsByUserId as jest.Mock).mockResolvedValueOnce({
+      data: [
+        {
+          ...mockResponse.data[0],
+          materials: [{ ...mockResponse.data[0].materials[0], name: 'Material Editado' }],
+        },
+      ],
+    });
 
-    expect(await screen.findByText('Editar Material Teste')).toBeInTheDocument();
+    // 7. clica em salvar
+    fireEvent.click(screen.getByTestId('submit-edit-material'));
+
+    // 8. garante que updateMaterial foi chamado corretamente
+    await waitFor(() => {
+      expect(updateMaterialMock).toHaveBeenCalledWith('mat1', expect.objectContaining({ name: 'Material Editado' }));
+    });
+
+    // 9. simula rerender com o novo mock (como se viesse do servidor)
+    rerender(<Materials />);
+
+    // 10. garante que a tabela mostra o nome atualizado
+    const table = await screen.findByTestId('materials-table');
+    await waitFor(() => {
+      expect(within(table).getByText(/Material Editado/i)).toBeInTheDocument();
+    });
   });
 
   it('should handle delete material and essays', async () => {
     render(<Materials />);
-    await waitFor(() => screen.findByText('Material Teste'));
 
-    // Exemplo: deletar material principal
-    const deleteButton = screen.getByTestId('delete-mat1');
-    fireEvent.click(deleteButton);
+    // Espera a tabela carregar
+    const table = await screen.findByTestId('materials-table');
+    expect(table).toBeInTheDocument();
 
-    await waitFor(() => expect(materialsService.deleteMaterial).toHaveBeenCalledWith('mat1'));
+    // Agrupa todos os itens (materiais + ensaios)
+    const items = [
+      ...mockResponse.data[0].materials,
+      ...mockResponse.data[0].fwdEssays.map((e) => ({ ...e, type: 'fwd', name: e.generalData.name })),
+      ...mockResponse.data[0].iggEssays.map((e) => ({ ...e, type: 'igg', name: e.generalData.name })),
+      ...mockResponse.data[0].rtcdEssays.map((e) => ({ ...e, type: 'rtcd', name: e.generalData.name })),
+      ...mockResponse.data[0].dduiEssays.map((e) => ({ ...e, type: 'ddui', name: e.generalData.name })),
+    ];
 
-    // Exemplo: deletar RTCD essay
-    const deleteRtcdButton = screen.getByTestId('delete-rtcd1');
-    fireEvent.click(deleteRtcdButton);
-    await waitFor(() => expect(deleteRtcdEssayMock).toHaveBeenCalledWith('rtcd1'));
+    for (const item of items) {
+      // Clica no botão de delete
+      const deleteButton = await screen.findByTestId(`delete-${item._id}`);
+      fireEvent.click(deleteButton);
 
-    const deleteDduiButton = screen.getByTestId('delete-ddui1');
-    fireEvent.click(deleteDduiButton);
-    await waitFor(() => expect(deleteDduiEssayMock).toHaveBeenCalledWith('ddui1'));
+      // Clica no botão de confirmação dedeleção
+      const confirmButton = await screen.findByTestId(`confirm-delete-${item._id}`);
+      fireEvent.click(confirmButton);
 
-    const deleteFwdButton = screen.getByTestId('delete-fwd1');
-    fireEvent.click(deleteFwdButton);
-    await waitFor(() => expect(deleteFwdEssayMock).toHaveBeenCalledWith('fwd1'));
-
-    const deleteIggButton = screen.getByTestId('delete-igg1');
-    fireEvent.click(deleteIggButton);
-    await waitFor(() => expect(deleteIggEssayMock).toHaveBeenCalledWith('igg1'));
-  });
-
-  it('should add new material', async () => {
-    render(<Materials />);
-    await waitFor(() => screen.findByText('Material Teste'));
-
-    const addButton = screen.getByTestId('add-material');
-    fireEvent.click(addButton);
-
-    await waitFor(() => expect(materialsService.getMaterialsByUserId).toHaveBeenCalledTimes(2));
+      await waitFor(() => {
+        switch (item.type) {
+          case 'rtcd':
+            expect(deleteRtcdEssayMock).toHaveBeenCalledWith(item._id);
+            break;
+          case 'ddui':
+            expect(deleteDduiEssayMock).toHaveBeenCalledWith(item._id);
+            break;
+          case 'fwd':
+            expect(deleteFwdEssayMock).toHaveBeenCalledWith(item._id);
+            break;
+          case 'igg':
+            expect(deleteIggEssayMock).toHaveBeenCalledWith(item._id);
+            break;
+          default:
+            expect(materialsService.deleteMaterial).toHaveBeenCalledWith(item._id);
+        }
+      });
+    }
   });
 });

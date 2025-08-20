@@ -10,6 +10,7 @@ interface IModalBase {
   children: JSX.Element | React.ReactNode;
   leftButtonTitle: string;
   rightButtonTitle: string;
+  rightButtonProps?: { 'data-testid': string };
   singleButtonTitle?: string;
   onCancel?: (event?: any, reason?: string) => void;
   open: boolean;
@@ -26,6 +27,7 @@ const ModalBase = ({
   children,
   leftButtonTitle,
   rightButtonTitle,
+  rightButtonProps,
   onCancel,
   size,
   onSubmit,
@@ -122,6 +124,7 @@ const ModalBase = ({
             <Button
               size={buttonSize}
               onClick={onSubmit}
+              data-testid={rightButtonProps?.['data-testid']}
               variant="contained"
               disabled={disableSubmit}
               sx={{
