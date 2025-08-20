@@ -4,10 +4,8 @@ import { EssayPageProps } from '@/components/templates/essay';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { Box, Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/material';
-import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import Chart from 'react-google-charts';
-import AsphaltGranulometry_resultsTable from '../../essays/granulometry/tables/results-table.granulometry';
 import { useEffect, useState } from 'react';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 
@@ -89,7 +87,7 @@ const Superpave_Step3_GranulometryResults = ({
             <FormControlLabel
               key={index}
               control={<Checkbox onClick={() => handleCheckboxClick(item)} />}
-              label={`${item.name} | ${item.type}`}
+              label={`${item.name} | ` + t(`asphalt.materials.${item.type}`)}
             />
           ))}
         </FormGroup>
@@ -99,7 +97,7 @@ const Superpave_Step3_GranulometryResults = ({
             return null;
           } else {
             return (
-              <FlexColumnBorder key={index} title={`${item.material?.name} | ${item.material?.type}`} open={true}>
+              <FlexColumnBorder key={index} title={`${item.material?.name} | ` + t(`asphalt.materials.${item.material?.type}`)} open={true}>
                 <Box
                   sx={{
                     width: '100%',

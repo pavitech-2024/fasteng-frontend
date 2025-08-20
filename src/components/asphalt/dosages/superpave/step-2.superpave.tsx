@@ -19,7 +19,6 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
     ({ material }) => material.type !== 'asphaltBinder' && material.type !== 'CAP' && material.type !== 'other'
   );
 
-  
   const [materialMassInputs, setMaterialMassInputs] = useState(aggregatesRows?.map((row) => row.material_mass || 0));
 
   const initialRows = useMemo(() => {
@@ -44,16 +43,15 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
     }
   }, [data.viscosity?.dataPoints]);
 
-  const binderRows = useMemo(() => {
-    return data.viscosity?.dataPoints?.map((point) => {
+  const binderRows =
+    data.viscosity?.dataPoints?.map((point) => {
       const localInput = binderInputs?.find((input) => input.id === point.id);
       return {
         id: point.id,
         temperature: point.temperature,
         viscosity: localInput?.viscosity ?? point.viscosity,
       };
-    });
-  }, [data.viscosity?.dataPoints]);
+    }) || [];
 
   const aggregatesColumns: GridColDef[] = [
     {
