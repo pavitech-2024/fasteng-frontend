@@ -146,5 +146,6 @@
   "asphalt.dosages.superpave.confirm-compaction-table-success": "Data confirmed successfully.",
 
   "superpave-results-noRealRoots": "No real roots. Review the data of the first compaction.",
-  "superpave-results-noRoots": "No roots. Review the data of the first compaction."
+  "superpave-results-noRoots": "No roots. Review the data of the first compaction.",
+  "errors.empty-viscosity": "The viscosity must be filled"
 }
