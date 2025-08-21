@@ -1,9 +1,11 @@
+// Este teste verifica se a página de amostras de solo carrega os dados do backend e consegue localizar uma amostra específica, mesmo que ela esteja em outra página da tabela paginada.
+
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Samples from '../../../pages/soils/samples/index';
 import useAuth from '@/contexts/auth';
 import { useRouter } from 'next/router';
+import Samples from '@/pages/soils/samples';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -15,7 +17,7 @@ const mockUserId = process.env.NEXT_PUBLIC_TEST_USER_ID;
 const mockUser = { _id: mockUserId };
 const SAMPLE_NAME = 'amostra teste (não excluir)';
 
-describe('Samples page E2E', () => {
+describe('Soils Samples page E2E', () => {
   beforeEach(() => {
     (useRouter as jest.Mock).mockReturnValue({
       pathname: '/soils/samples',

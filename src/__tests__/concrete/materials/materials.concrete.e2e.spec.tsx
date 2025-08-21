@@ -1,3 +1,5 @@
+// Este teste verifica se a página de materiais de concreto carrega os dados do backend e consegue localizar um material específico, mesmo que ele esteja em outra página da tabela paginada.
+
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

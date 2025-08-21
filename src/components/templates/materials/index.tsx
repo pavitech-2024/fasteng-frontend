@@ -19,7 +19,7 @@ import { AddIcon, DeleteIcon, NextIcon } from '@/assets';
 import { formatDate } from '@/utils/format';
 import { t } from 'i18next';
 import Link from 'next/link';
-import { Edit } from '@mui/icons-material';
+import { Edit, ModeEdit, Visibility } from '@mui/icons-material';
 import { FwdData } from '@/stores/asphalt/fwd/fwd.store';
 import { IggData } from '@/stores/asphalt/igg/igg.store';
 import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
@@ -40,7 +40,7 @@ interface MaterialsTemplateProps {
   title: 'Amostras Cadastradas' | 'Materiais Cadastrados';
   path?: string;
   //Modal
-  handleOpenModal: () => void;
+  handleOpenModal: (row?: any) => void;
   deleteMaterial: (id: string, filter: FilterTypes, essayTypes?: essayTypes) => void;
   editMaterial: (materiaId: string) => void;
   modal: JSX.Element;
@@ -152,14 +152,12 @@ const MaterialsTemplate = ({
    * - `searchBy`: The criteria to filter by, either 'name' or 'type'.
    */
   useEffect(() => {
-    const data = (Array.isArray(materials[0].materials) ? materials[0].materials : []).map(
-      ({ _id, name, type, createdAt }) => ({
-        _id,
-        name,
-        type,
-        createdAt: createdAt instanceof Date ? createdAt : new Date(createdAt),
-      })
-    );
+    const data = (Array.isArray(materials) ? materials : []).map(({ _id, name, type, createdAt }) => ({
+      _id,
+      name,
+      type,
+      createdAt: createdAt instanceof Date ? createdAt : new Date(createdAt),
+    }));
 
     const filteredData = data.filter((material) =>
       searchValue
@@ -195,7 +193,7 @@ const MaterialsTemplate = ({
 
   const dduiEssaysData = dduiEssays?.map((essay) => ({
     name: essay.generalData.name,
-    type: 'FWD',
+    type: 'DDUI',
     createdAt: essay.createdAt,
     _id: essay._id,
   }));
@@ -255,6 +253,9 @@ const MaterialsTemplate = ({
         tableData={tableData}
         searchBy={searchBy}
       />
+
+      {/*Create and Edit Material Modal */}
+      {modal}
 
       {/*Page */}
       <Box
@@ -381,7 +382,11 @@ const MaterialsTemplate = ({
           }}
         >
           <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'hidden' }}>
-            <Table sx={{ width: '100%', tableLayout: 'fixed' }} aria-label="materials table">
+            <Table
+              sx={{ width: '100%', tableLayout: 'fixed' }}
+              aria-label="materials table"
+              data-testid="materials-table"
+            >
               <TableHead>
                 <TableRow>
                   {columns.map((column) => (
@@ -402,7 +407,7 @@ const MaterialsTemplate = ({
               </TableHead>
               <TableBody>
                 {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row._id} data-row-id={row._id}>
                     {columns.map((column) => (
                       <TableCell key={column.id} align="center">
                         {column.id === 'name' && row.name}
@@ -421,33 +426,42 @@ const MaterialsTemplate = ({
                           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Link href={`/${path}/${row._id}`}>
                               <Button
-                                variant="contained"
+                                data-testid={`view-${row._id}`}
                                 sx={{
                                   height: { mobile: '18px', notebook: '25px' },
                                   borderRadius: { mobile: '50%', notebook: '20px' },
-                                  p: { mobile: 0, notebook: '6px 12px' },
-                                  minWidth: { mobile: '18px', notebook: '25px' },
-                                  bgcolor: 'secondaryTons.blue',
-                                  color: 'primaryTons.white',
-
-                                  ':hover': {
-                                    bgcolor: 'secondaryTons.blueDisabled',
-                                  },
-
-                                  ':active': {
-                                    bgcolor: 'secondaryTons.blueClick',
-                                  },
+                                  p: { mobile: 0, notebook: '6px 6px' },
+                                  minWidth: { mobile: '18px', notebook: '30px' },
+                                  bgcolor: 'white',
+                                  color: 'secondaryTons.blue',
                                 }}
                               >
-                                <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
-                                  {t('materials.template.visualize')}
-                                </Typography>
-                                <Edit sx={{ display: { mobile: 'none', notebook: 'none' }, fontSize: '1rem' }} />
-                                <NextIcon sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
+                                <Visibility sx={{ fontSize: '1.30rem' }} />
                               </Button>
                             </Link>
                             <Button
+                              data-testid={`edit-${row._id}`}
+                              aria-label="Editar"
+                              disabled={
+                                row.type === 'FWD' || row.type === 'IGG' || row.type === 'RTCD' || row.type === 'DDUI'
+                              }
+                              onClick={() => handleEditMaterial(row._id)}
+                              sx={{
+                                height: { mobile: '18px', notebook: '25px' },
+                                borderRadius: { mobile: '50%', notebook: '20px' },
+                                p: { mobile: 0, notebook: '6px 6px' },
+                                minWidth: { mobile: '18px', notebook: '25px' },
+                                bgcolor: 'white',
+                                color: 'secondaryTons.primary',
+                              }}
+                            >
+                              <ModeEdit />
+                            </Button>
+                            <Button
                               variant="text"
+                              aria-label="Excluir"
+                              name="delete"
+                              data-testid={`delete-${row._id}`}
                               color="error"
                               sx={{ p: 0, width: '30px', minWidth: '35px' }}
                               onClick={() => {

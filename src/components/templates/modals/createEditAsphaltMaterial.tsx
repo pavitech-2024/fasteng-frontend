@@ -34,19 +34,19 @@ const CreateEditMaterialModal = ({
 }: CreateEditMaterialModalProps) => {
   const initialMaterialState: AsphaltMaterialData = {
     name: '',
-    type: null,
+    type: '',
     description: {
-      source: null,
-      responsible: null,
-      maxDiammeter: null,
-      aggregateNature: null,
-      boughtDate: null,
-      recieveDate: null,
-      extractionDate: null,
-      collectionDate: null,
-      classification_CAP: null,
-      classification_AMP: null,
-      observation: null,
+      source: '',
+      responsible: '',
+      maxDiammeter: { label: '', value: 0 },
+      aggregateNature: '',
+      boughtDate: '',
+      recieveDate: '',
+      extractionDate: '',
+      collectionDate: '',
+      classification_CAP: '',
+      classification_AMP: '',
+      observation: '',
     },
   };
 
@@ -65,43 +65,43 @@ const CreateEditMaterialModal = ({
     if (isEdit && materialToEdit) {
       setMaterial(materialToEdit);
     }
-  }, [materialToEdit]);
+  }, [materialToEdit, isEdit]);
 
   const getInputs = () => {
     const inputs = [
-      { label: t('samples.name'), value: material.name, key: 'name' },
-      { label: t('asphalt.materials.type'), value: material.type, key: 'type' },
-      { label: t('asphalt.materials.source'), value: material.description.source, key: 'source' },
-      { label: t('asphalt.materials.responsible'), value: material.description.responsible, key: 'responsible' },
-      { label: t('asphalt.materials.maxDiammeter'), value: material.description.maxDiammeter, key: 'maxDiammeter' },
+      { label: t('samples.name'), value: material.name ?? '', key: 'name' },
+      { label: t('asphalt.materials.type'), value: material.type ?? '', key: 'type' },
+      { label: t('asphalt.materials.source'), value: material.description?.source ?? '', key: 'source' },
+      { label: t('asphalt.materials.responsible'), value: material.description?.responsible ?? '', key: 'responsible' },
+      { label: t('asphalt.materials.maxDiammeter'), value: material.description?.maxDiammeter ?? '', key: 'maxDiammeter' },
       {
         label: t('asphalt.materials.aggregateNature'),
-        value: material.description.aggregateNature,
+        value: material.description?.aggregateNature ?? '',
         key: 'aggregateNature',
       },
-      { label: t('asphalt.materials.boughtDate'), value: material.description.boughtDate, key: 'boughtDate' },
-      { label: t('asphalt.materials.recieveDate'), value: material.description.recieveDate, key: 'recieveDate' },
+      { label: t('asphalt.materials.boughtDate'), value: material.description?.boughtDate ?? '', key: 'boughtDate' },
+      { label: t('asphalt.materials.recieveDate'), value: material.description?.recieveDate ?? '', key: 'recieveDate' },
       {
         label: t('asphalt.materials.extractionDate'),
-        value: material.description.extractionDate,
+        value: material.description?.extractionDate ?? '',
         key: 'extractionDate',
       },
       {
         label: t('asphalt.materials.collectionDate'),
-        value: material.description.collectionDate,
+        value: material.description?.collectionDate ?? '',
         key: 'collectionDate',
       },
       {
         label: t('asphalt.materials.classification_CAP'),
-        value: material.description.classification_CAP,
+        value: material.description?.classification_CAP ?? '',
         key: 'classification_CAP',
       },
       {
         label: t('asphalt.materials.classification_AMP'),
-        value: material.description.classification_AMP,
+        value: material.description?.classification_AMP ?? '',
         key: 'classification_AMP',
       },
-      { label: t('asphalt.materials.observation'), value: material.description.observation, key: 'observation' },
+      { label: t('asphalt.materials.observation'), value: material.description?.observation ?? '', key: 'observation' },
     ];
 
     const WhiteList: string[] = ['name', 'type', 'source', 'responsible'];
@@ -109,7 +109,7 @@ const CreateEditMaterialModal = ({
     switch (material.type) {
       case 'coarseAggregate':
       case 'fineAggregate':
-        WhiteList.push('maxDiameter', 'aggregateNature', 'extrationDate', 'collectionDate');
+        WhiteList.push('maxDiammeter', 'aggregateNature', 'extractionDate', 'collectionDate');
         break;
 
       case 'filler':
@@ -275,6 +275,7 @@ const CreateEditMaterialModal = ({
       leftButtonTitle={t('samples.cancel')}
       rightButtonTitle={isEdit ? t('samples.edit') : t('samples.register')}
       size="medium"
+      rightButtonProps={{ 'data-testid': 'submit-edit-material' }}
       onSubmit={() => {
         if (isEdit) {
           handleEditMaterial();
@@ -343,6 +344,7 @@ const CreateEditMaterialModal = ({
                   value={input.value}
                   required={input.key === 'name'}
                   onChange={(e) => changeMaterial(input.key, e.target.value)}
+                  inputProps={{ 'data-testid': `input-${input.key}` }}
                 />
               );
             }
