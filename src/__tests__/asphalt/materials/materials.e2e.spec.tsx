@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Materials from '../../../pages/asphalt/materials/index';
 import useAuth from '@/contexts/auth';
 import { useRouter } from 'next/router';
+import Materials from '@/pages/asphalt/materials';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
