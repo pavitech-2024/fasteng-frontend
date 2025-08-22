@@ -22,7 +22,6 @@ const MarshallDosageConsult = () => {
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
   const [dosageArrays, setDosageArrays] = useState([]);
-  console.log("🚀 ~ MarshallDosageConsult ~ dosageArrays:", dosageArrays)
 
   const progressTextMap = {
     1: t('general data'),
