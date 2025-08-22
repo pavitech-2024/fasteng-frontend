@@ -43,9 +43,13 @@ type GmmTableRows = {
   Teor: number;
 };
 
-const Marshall_Step5_MixtureMaximumDensity = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+const Marshall_Step5_MixtureMaximumDensity = ({
+  setNextDisabled,
+  marshall,
+}: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
+  console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ binderTrialData:', binderTrialData);
   const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
@@ -204,22 +208,19 @@ const Marshall_Step5_MixtureMaximumDensity = ({ setNextDisabled, marshall }: Ess
     );
   };
 
+
   /**
-   * Creates a table with GMM data from the dosage calculation results.
-   * The table rows are created from the dosage calculation results, with the
-   * GMM values rendered as input fields.
-   * The table columns are created using the dosage calculation results, with
-   * the Teor and GMM values being rendered.
+   * useEffect hook that runs when the `data.gmm` changes.
+   * It extracts the GMM and Teor values from the `data.gmm` array and stores them in the `gmmRows` state.
+   * It also generates the DataGrid columns and stores them in the `gmmColumns` state.
    *
-   * @param {GmmData[]} data.gmm - The dosage calculation results.
-   * @param {number[][]} binderTrialData.percentsOfDosage - The binder trial data.
+   * @param {Object} data - The dosage calculation results.
    */
   useEffect(() => {
-    const gmmRows = data?.gmm?.map(({ id, value: GMM }, index) => ({
-      id,
-      GMM,
-      Teor: binderTrialData.percentsOfDosage[2][index]?.value,
-    }));
+    const gmmRows = data?.gmm?.map(({ id, value: GMM }, index) => {
+      const teor = binderTrialData.trial + (index - 2) * 0.5;
+      return { id, GMM, Teor: teor };
+    });
 
     setGmmRows(gmmRows);
     setGmmColumns([
@@ -326,9 +327,9 @@ const Marshall_Step5_MixtureMaximumDensity = ({ setNextDisabled, marshall }: Ess
     );
     if (hasNullValues) errorMsg = 'errors.rice-test-empty-fields';
     if (!errorMsg && invalidValues) {
-    if (invalidValues.massOfContainerWaterSample <= invalidValues.massOfDrySample) {
-      errorMsg = 'errors.invalid-gmm-mass-value';
-    } else if (invalidValues.massOfContainerWater > invalidValues.massOfContainerWaterSample) {
+      if (invalidValues.massOfContainerWaterSample <= invalidValues.massOfDrySample) {
+        errorMsg = 'errors.invalid-gmm-mass-value';
+      } else if (invalidValues.massOfContainerWater > invalidValues.massOfContainerWaterSample) {
         errorMsg = 'errors.invalid-gmm-container-mass-value';
       }
     }
