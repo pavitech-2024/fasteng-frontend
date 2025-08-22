@@ -184,7 +184,6 @@ const CreateEditMaterialModal = ({
       });
     } catch (error: any) {
       const backendMessage = error?.response?.data?.message;
-      const validationMessage: string = error?.message;
       const isBackendAlreadyExistsError: boolean = backendMessage?.includes('already exists') || backendMessage?.includes('Server');
       toast.update(createMaterialToastId, {
         render:

@@ -95,13 +95,20 @@ class Marshall_SERVICE implements IEssayService {
 
         if (!name) throw t('errors.empty-project-name');
 
-        const response = await Api.post(`${this.info.backend_path}/verify-init/${user}`, data.generalData);
+        const dataWithDosageId = {
+          generalData: data.generalData,
+          _id: data._id,
+        }
+
+        const response = await Api.post(`${this.info.backend_path}/verify-init/${user}`, dataWithDosageId);
 
         const { success, dosage, error } = response.data;
 
         if (!success) throw error.name;
 
-        this.store_actions.setData({ step: 10, value: { ...data, ...dosage } });
+        const newGeralData = data.generalData
+
+        this.store_actions.setData({ step: 10, value: {...dosage, generalData: newGeralData}  });
       } catch (error) {
         throw error;
       }

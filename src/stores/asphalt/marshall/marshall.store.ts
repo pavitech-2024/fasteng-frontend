@@ -235,6 +235,7 @@ interface ConfirmationCompressionData {
 }
 
 export type MarshallData = {
+  _id?: string;
   generalData: MarhsallGeneralData;
   materialSelectionData: MarshallMaterialSelectionData;
   granulometryCompositionData: MarshallGranulometryCompositionData;
