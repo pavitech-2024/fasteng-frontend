@@ -19,6 +19,10 @@ const ConcreteMaterials = () => {
 
   const { user } = useAuth();
 
+  /**
+   * Carrega os materiais e ensaios durante a criação do componente.
+   * @effect
+   */
   useEffect(() => {
     concreteMaterialService
       .getMaterialsByUserId(user._id)
@@ -33,6 +37,10 @@ const ConcreteMaterials = () => {
 
   const types: DropDownOption[] = [{ label: t('samples.all'), value: '' }];
 
+  /**
+   * Deleta os materiais a partir do ID.
+   * @param id 
+   */
   const handleDeleteMaterial = async (id: string) => {
     try {
       await concreteMaterialService.deleteMaterial(id);
@@ -43,6 +51,9 @@ const ConcreteMaterials = () => {
     }
   };
 
+  /**
+   * Adiciona um novo material e atualiza o estado local.
+   */
   const addNewMaterial = () => {
     setLoading(true);
     concreteMaterialService

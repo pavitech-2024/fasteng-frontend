@@ -24,6 +24,16 @@ export interface MaterialsProps {
   dduiEssays: DduiData[];
 }
 
+
+/**
+ * Pagina principal, permitindo:
+ *  - Listar os materiais que já estão cadastrados;
+ *  - Criar um novo material;
+ *  - Editar os materiais que já foram cadastrados anteriormente;
+ *  - Excluir materiais.
+ * @component
+ * @returns {JSX.Element}
+ */
 const Materials = () => {
   const [openModal, setOpenModal] = useState(false);
   const [materials, setMaterials] = useState<MaterialsProps[]>([]);
@@ -37,6 +47,11 @@ const Materials = () => {
   const [dduiEssays, setDduiEssays] = useState<DduiData[]>([]);
   const { user } = useAuth();
 
+
+  /**
+   * Carrega os materiais e ensaios durante a criação do componente.
+   * @effect
+   */
   useEffect(() => {
     materialsService
       .getMaterialsByUserId(user._id)
@@ -59,6 +74,14 @@ const Materials = () => {
     value: value,
   }));
 
+
+  /**
+   * Exclui material e atualiza o estado local.
+   * @async
+   * @function
+   * @param id 
+   * @returns {void}
+   */
   const handleDeleteMaterial = async (id: string) => {
     try {
       await materialsService.deleteMaterial(id);
@@ -72,6 +95,12 @@ const Materials = () => {
     }
   };
 
+  /**
+   * Busca novamente os materiais do usuário e atualiza o estado local, encerrando o estado de carregamento apos a criação do material.
+   * 
+   * @function
+   * @returns {void}
+   */
   const addNewMaterial = () => {
     setLoading(true);
     materialsService
@@ -85,6 +114,14 @@ const Materials = () => {
       });
   };
 
+
+  /**
+   * Utiliza o ID para localizar o material a ser editado e seta o estado local para edição.
+   * @param materialId 
+   * @returns {void}
+   * @async
+   * @function
+   */
   const handleEditMaterial = async (materialId: string) => {
     try {
       const selectedMaterialToEdit = materials[0].materials.find((material) => material._id === materialId);
