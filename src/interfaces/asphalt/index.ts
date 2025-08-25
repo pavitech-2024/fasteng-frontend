@@ -27,7 +27,7 @@ export type AsphaltMaterialData = {
   description?: {
     source?: string;
     responsible?: string;
-    maxDiammeter?: Sieve | {label: ''; value: 0};
+    maxDiameter?: Sieve | {label: ''; value: 0};
     aggregateNature?: string;
     boughtDate?: string;
     recieveDate?: string;

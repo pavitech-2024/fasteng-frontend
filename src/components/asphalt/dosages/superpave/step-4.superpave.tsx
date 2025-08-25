@@ -8,7 +8,8 @@ import { AllSievesSuperpaveUpdatedAstm } from '@/interfaces/common';
 import CurvesTable from './tables/curvesTable';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
-import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
+import Graph from '@/services/asphalt/dosages/marshall/graph/marshal-granulometry-graph';
+import GranulometricCurvesGraph from './graphs/granulometricCurvesGraph';
 
 const Superpave_Step4_GranulometryComposition = ({ setNextDisabled, superpave }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -460,7 +461,7 @@ const Superpave_Step4_GranulometryComposition = ({ setNextDisabled, superpave }:
               }
             })}
 
-          {data?.pointsOfCurve?.length > 0 && <Graph data={data?.pointsOfCurve} />}
+          {data?.pointsOfCurve?.length > 0 && <GranulometricCurvesGraph data={data?.pointsOfCurve} />}
         </Box>
       )}
     </>

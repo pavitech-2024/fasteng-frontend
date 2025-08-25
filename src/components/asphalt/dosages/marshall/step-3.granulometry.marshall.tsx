@@ -7,7 +7,7 @@ import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Step3Table from './tables/step-3-table';
-import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
+import Graph from '@/services/asphalt/dosages/marshall/graph/marshal-granulometry-graph';
 import useAuth from '@/contexts/auth';
 import { toast } from 'react-toastify';
 import Loading from '@/components/molecules/loading';
