@@ -38,7 +38,7 @@ const CreateEditMaterialModal = ({
     description: {
       source: '',
       responsible: '',
-      maxDiammeter: { label: '', value: 0 },
+      maxDiameter: { label: '', value: 0 },
       aggregateNature: '',
       boughtDate: '',
       recieveDate: '',
@@ -73,7 +73,7 @@ const CreateEditMaterialModal = ({
       { label: t('asphalt.materials.type'), value: material.type ?? '', key: 'type' },
       { label: t('asphalt.materials.source'), value: material.description?.source ?? '', key: 'source' },
       { label: t('asphalt.materials.responsible'), value: material.description?.responsible ?? '', key: 'responsible' },
-      { label: t('asphalt.materials.maxDiammeter'), value: material.description?.maxDiammeter ?? '', key: 'maxDiammeter' },
+      { label: t('asphalt.materials.maxDiammeter'), value: material.description?.maxDiameter ?? '', key: 'maxDiammeter' },
       {
         label: t('asphalt.materials.aggregateNature'),
         value: material.description?.aggregateNature ?? '',
