@@ -131,13 +131,11 @@ class Ddui_SERVICE implements IEssayService {
       dduiStep3: store.dduiStep3,
     };
     try {
-      console.log('🚀 ~ Ddui_SERVICE ~ store.dduiStep3:', store.dduiStep3);
 
       // Verifica se há valores true e false em ddui_data.condicionamento;
       const hasConditionedData =
         store.dduiStep3.ddui_data.some((item1) => item1.condicionamento) &&
         store.dduiStep3.ddui_data.some((item2) => !item2.condicionamento);
-      console.log('🚀 ~ Ddui_SERVICE ~ hasConditionedData:', hasConditionedData);
 
       if (!hasConditionedData) throw t('ddui.error.invalid-conditioning');
 
