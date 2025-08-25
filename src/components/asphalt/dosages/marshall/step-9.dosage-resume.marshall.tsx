@@ -3,7 +3,7 @@ import Result_Card from '@/components/atoms/containers/result-card';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import GenerateMarshallDosagePDF from '@/components/generatePDF/dosages/asphalt/marshall/generatePDFMarshall';
 import { EssayPageProps } from '@/components/templates/essay';
-import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
+import Graph from '@/services/asphalt/dosages/marshall/graph/marshal-granulometry-graph';
 import marshallDosageService from '@/services/asphalt/dosages/marshall/marshall.consult.service';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
