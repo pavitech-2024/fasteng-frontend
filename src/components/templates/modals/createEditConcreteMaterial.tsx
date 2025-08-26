@@ -33,7 +33,7 @@ const CreateEditConcreteMaterialModal = ({
     description: {
       source: null,
       responsible: null,
-      maxDiammeter: null,
+      maxDiameter: null,
       aggregateNature: null,
       boughtDate: null,
       recieveDate: null,
@@ -91,9 +91,9 @@ const CreateEditConcreteMaterialModal = ({
         required: false,
       },
       {
-        label: t('concrete.materials.maxDiammeter'),
-        value: material.description.maxDiammeter,
-        key: 'maxDiammeter',
+        label: t('concrete.materials.maxDiameter'),
+        value: material.description.maxDiameter,
+        key: 'maxDiameter',
         required: false,
       },
       {
@@ -162,10 +162,10 @@ const CreateEditConcreteMaterialModal = ({
 
     switch (material.type) {
       case 'coarseAggregate':
-        WhiteList.push('maxDiammeter', 'aggregateNature', 'extractionDate', 'collectionDate');
+        WhiteList.push('maxDiameter', 'aggregateNature', 'extractionDate', 'collectionDate');
         break;
       case 'fineAggregate':
-        WhiteList.push('maxDiammeter', 'aggregateNature', 'extractionDate', 'collectionDate');
+        WhiteList.push('maxDiameter', 'aggregateNature', 'extractionDate', 'collectionDate');
         break;
       case 'cement':
         WhiteList.push('cementType', 'collectionDate', 'resistance');

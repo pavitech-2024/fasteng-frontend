@@ -57,6 +57,8 @@ export const useMaterials = (domain: 'asphalt' | 'soils' | 'concrete') => {
 
       if (domain === 'asphalt') {
         // asphalt retorna um objeto { materials, fwdEssays, iggEssays, rtcdEssays, dduiEssays }
+
+        console.log("Entrou no loadMaterials")
         const data = response.data[0];
         setMaterials(data.materials);
         setFwdEssays(data.fwdEssays);
@@ -106,6 +108,7 @@ export const useMaterials = (domain: 'asphalt' | 'soils' | 'concrete') => {
       const response = await service.getByUserId(user._id);
 
       if (domain === 'asphalt') {
+        console.log("entrou no addNewMaterial")
         const data = response.data[0];
         setMaterials(data.materials);
         setFwdEssays(data.fwdEssays);
@@ -125,6 +128,7 @@ export const useMaterials = (domain: 'asphalt' | 'soils' | 'concrete') => {
   const handleEditMaterial = useCallback(
     (materialId: string) => {
       try {
+        console.log("entrou no handleEditMaterial")
         const allMaterials = materials.concat(fwdEssays, iggEssays, rtcdEssays, dduiEssays);
         const selectedMaterial = allMaterials.find((m) => m._id === materialId) || null;
         setMaterialToEdit(selectedMaterial);

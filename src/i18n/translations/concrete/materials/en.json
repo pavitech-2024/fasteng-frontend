@@ -19,7 +19,7 @@
   "concrete.materials.cap": "CAP",
   "concrete.materials.other": "Other",
   "concrete.materials.comments": "Comments",
-  "concrete.materials.maxDiammeter": "Maximum Diameter",
+  "concrete.materials.maxDiameter": "Maximum Diameter",
   "concrete.materials.resistance": "Resistance",
   "concrete.materials.cementType": "Cement Type",
   "concrete.materials.cementType.other": "Other"

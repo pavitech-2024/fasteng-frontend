@@ -25,7 +25,7 @@
   "loading.marshall.pending": "Carregando...",
   "loading.marshall.success": "Dosagens carregadas com sucesso",
   "loading.marshall.error": "Erro ao carregar as dosagens",
-  "asphalt.materials.maxDiammeter": "Diâmetro Máximo",
+  "asphalt.materials.maxDiameter": "Diâmetro Máximo",
   "asphalt.materials.extractionDate": "Data de Extração",
 
   "asphalt.dosages.superpave.material_selection": "Seleção de Materiais",
