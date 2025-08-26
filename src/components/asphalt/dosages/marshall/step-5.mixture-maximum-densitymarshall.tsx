@@ -49,7 +49,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
-  console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ binderTrialData:', binderTrialData);
   const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
@@ -208,7 +207,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
     );
   };
 
-
   /**
    * useEffect hook that runs when the `data.gmm` changes.
    * It extracts the GMM and Teor values from the `data.gmm` array and stores them in the `gmmRows` state.
@@ -333,6 +331,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
         errorMsg = 'errors.invalid-gmm-container-mass-value';
       }
     }
+
     toast.promise(
       async () => {
         if (errorMsg) throw new Error(errorMsg);
@@ -372,9 +371,19 @@ const Marshall_Step5_MixtureMaximumDensity = ({
   useEffect(() => {
     if (data.riceTest?.length > 0) {
       const newRiceTestRows = binderTrialData.percentsOfDosage[2]?.map((e, i) => {
+        const teor =
+          i === 0
+            ? binderTrialData.trial - 1
+            : i === 1
+            ? binderTrialData.trial - 0.5
+            : i === 2
+            ? binderTrialData.trial
+            : i === 3
+            ? binderTrialData.trial + 0.5
+            : binderTrialData.trial + 1;
         return {
           id: i + 1,
-          teor: e.value,
+          teor: teor,
           massOfDrySample: data.riceTest[i]?.massOfDrySample,
           massOfContainerWaterSample: data?.riceTest[i]?.massOfContainerWaterSample,
           massOfContainerWater: data?.riceTest[i]?.massOfContainerWater,
@@ -402,12 +411,14 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           const index = data?.riceTest?.findIndex((r) => r.id === id);
           return (
             <InputEndAdornment
-              adornment={'g'}
+              adornment="g"
               type="number"
-              value={data.riceTest[index]?.massOfDrySample}
+              value={data.riceTest[index]?.massOfDrySample ?? ''}
+              inputProps={{ step: 'any' }}
               onChange={(e) => {
                 const newData = [...data.riceTest];
-                newData[index].massOfDrySample = Number(e.target.value);
+                const value = e.target.value;
+                newData[index].massOfDrySample = value === '' ? null : parseFloat(value);
                 newData[index].teor = teor;
                 setData({ step: 4, value: { ...data, riceTest: newData } });
               }}
@@ -429,7 +440,8 @@ const Marshall_Step5_MixtureMaximumDensity = ({
               value={data.riceTest[index]?.massOfContainerWaterSample}
               onChange={(e) => {
                 const newData = [...data.riceTest];
-                newData[index].massOfContainerWaterSample = Number(e.target.value);
+                const value = e.target.value;
+                newData[index].massOfContainerWaterSample = value === '' ? null : parseFloat(value);
                 newData[index].teor = teor;
                 setData({ step: 4, value: { ...data, riceTest: newData } });
               }}
@@ -451,7 +463,8 @@ const Marshall_Step5_MixtureMaximumDensity = ({
               value={data.riceTest[index]?.massOfContainerWater}
               onChange={(e) => {
                 const newData = [...data.riceTest];
-                newData[index].massOfContainerWater = Number(e.target.value);
+                const value = e.target.value;
+                newData[index].massOfContainerWater = value === '' ? null : parseFloat(e.target.value);
                 newData[index].teor = teor;
                 setData({ step: 4, value: { ...data, riceTest: newData } });
               }}
