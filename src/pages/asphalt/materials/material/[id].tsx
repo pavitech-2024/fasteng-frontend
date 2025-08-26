@@ -12,7 +12,7 @@ import { SpecifyMassData } from '@/stores/asphalt/specifyMass/specifyMass.store'
 import { Box } from '@mui/material';
 import { t } from 'i18next';
 import { useRouter } from 'next/router';
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ElongatedParticlesMaterialView from '@/components/asphalt/material/elongatedParticesMaterialView';
 import { AdhesivenessData } from '@/stores/asphalt/adhesiveness/adhesiveness.store';
 import AdhesivenessMaterialView from '@/components/asphalt/material/adhesivenessMaterialView';
@@ -84,6 +84,24 @@ const Material = () => {
   const [rtfoData, setRtfoData] = useState<RtfoData>();
   const [elasticRecoveryData, setElasticRecoveryData] = useState<ElasticRecoveryData>();
   const [type, setType] = useState('');
+
+  const hasContent = [
+    granulometryData,
+    specificMassData,
+    shapeIndexData,
+    elongatedParticlesData,
+    adhesivenessData,
+    losAngelesAbrasionData,
+    sandEquivalentData,
+    angularityData,
+    viscosityRotationalData,
+    penetrationData,
+    softeningPointData,
+    flashPointData,
+    ductilityData,
+    rtfoData,
+    elasticRecoveryData,
+  ].some(Boolean);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -174,32 +192,29 @@ const Material = () => {
                 marginTop: '5rem',
               }}
             >
-              <Box
-                sx={{
-                  width: 'fit-content',
-                  padding: '0 0 2rem 0',
-                }}
-              >
-                <GeneratePDF
-                  name={material.material.name}
-                  type={type}
-                  granulometryData={granulometryData}
-                  specificMassData={specificMassData}
-                  shapeIndexData={shapeIndexData}
-                  elongatedParticlesData={elongatedParticlesData}
-                  adhesivenessData={adhesivenessData}
-                  losAngelesAbrasionData={losAngelesAbrasionData}
-                  sandEquivalentData={sandEquivalentData}
-                  angularityData={angularityData}
-                  viscosityRotationalData={viscosityRotationalData}
-                  penetrationData={penetrationData}
-                  softeningPointData={softeningPointData}
-                  flashPointData={flashPointData}
-                  ductilityData={ductilityData}
-                  rtfoData={rtfoData}
-                  elasticRecoveryData={elasticRecoveryData}
-                />
-              </Box>
+              {hasContent && (
+                <Box sx={{ width: 'fit-content', padding: '0 0 2rem 0' }}>
+                  <GeneratePDF
+                    name={material.material.name}
+                    type={type}
+                    granulometryData={granulometryData}
+                    specificMassData={specificMassData}
+                    shapeIndexData={shapeIndexData}
+                    elongatedParticlesData={elongatedParticlesData}
+                    adhesivenessData={adhesivenessData}
+                    losAngelesAbrasionData={losAngelesAbrasionData}
+                    sandEquivalentData={sandEquivalentData}
+                    angularityData={angularityData}
+                    viscosityRotationalData={viscosityRotationalData}
+                    penetrationData={penetrationData}
+                    softeningPointData={softeningPointData}
+                    flashPointData={flashPointData}
+                    ductilityData={ductilityData}
+                    rtfoData={rtfoData}
+                    elasticRecoveryData={elasticRecoveryData}
+                  />
+                </Box>
+              )}
 
               <MaterialResume data={materialResumeData} />
 

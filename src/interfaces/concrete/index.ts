@@ -9,7 +9,7 @@ export type ConcreteMaterialData = {
   description?: {
     source?: string;
     responsible?: string;
-    maxDiammeter?: Sieve;
+    maxDiameter?: Sieve;
     aggregateNature?: string;
     boughtDate?: string;
     recieveDate?: string;
@@ -42,7 +42,7 @@ export class ConcreteMaterial {
   description: {
     source?: string;
     responsible?: string;
-    maxDiammeter?: Sieve;
+    maxDiameter?: Sieve;
     aggregateNature?: string;
     boughtDate?: string;
     recieveDate?: string;
