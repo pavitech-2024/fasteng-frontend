@@ -71,18 +71,22 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       {
         title: t('asphalt.dosages.marshall.general-data'),
         page: 3,
+        key: 'generalData',
       },
       {
         title: t('asphalt.dosages.marshall.materials-caracterization'),
         page: 4,
+        key: 'materialsCaracterization',
       },
       {
         title: t('asphalt.dosages.marshall.granulometry_composition'),
         page: 5,
+        key: 'granulometryComposition',
       },
       {
         title: t('asphalt.dosages.marshall.dosage_resume'),
         page: 3,
+        key: 'dosageResume',
       },
     ];
 
@@ -157,7 +161,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     const materialsArray = materialsData.map((material, idx) => ({
       name: material.name,
-      type: material.type,
+      type: t(`asphalt.dosages.marshall.${material.type}`),
       creationDate: formatDate(material.createdAt.toString()),
       source: material.description.source ? material.description.source : '---',
       receivedDate: material.description.recieveDate
