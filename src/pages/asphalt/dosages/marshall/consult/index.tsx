@@ -162,11 +162,11 @@ const MarshallDosageConsult = () => {
       renderCell: (params) => (
         <>
           <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)} size="large">
-            <DeleteIcon />
+            <DeleteIcon color='error' />
           </IconButton>
 
           <IconButton aria-label="Visualizar" onClick={() => handleVisualizeDosage(params.row.id)} size="large">
-            <NextIcon />
+            <NextIcon sx={{ color: 'secondaryTons.blue' }} />
           </IconButton>
         </>
       ),

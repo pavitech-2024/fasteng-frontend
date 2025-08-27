@@ -49,6 +49,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
+  console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ data:', data.gmm);
   const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
@@ -84,11 +85,13 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           };
 
           const gmmData = [];
-          for (let i = 1; i <= 5; i++) {
-            gmmData.push({ id: i, insert: true, value: null });
-          }
 
-          newData.gmm = gmmData;
+          if (data.gmm.some((item) => item.value === null)) {
+            for (let i = 1; i <= 5; i++) {
+              gmmData.push({ id: i, insert: true, value: null });
+            }
+            newData.gmm = gmmData;
+          }
 
           newData.riceTest =
             newData.riceTest ||
