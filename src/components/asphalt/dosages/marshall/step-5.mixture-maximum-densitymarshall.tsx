@@ -392,7 +392,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 
       setRiceTestTableRows(newRiceTestRows);
     }
-  }, [binderTrialData.percentsOfDosage, data.riceTest]);
+  }, [binderTrialData.percentsOfDosage, data]);
 
   useEffect(() => {
     setRiceTestTableColumns([
