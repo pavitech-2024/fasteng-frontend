@@ -84,11 +84,13 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           };
 
           const gmmData = [];
-          for (let i = 1; i <= 5; i++) {
-            gmmData.push({ id: i, insert: true, value: null });
-          }
 
-          newData.gmm = gmmData;
+          if (data.gmm.some((item) => item.value === null)) {
+            for (let i = 1; i <= 5; i++) {
+              gmmData.push({ id: i, insert: true, value: null });
+            }
+            newData.gmm = gmmData;
+          }
 
           newData.riceTest =
             newData.riceTest ||
@@ -392,7 +394,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 
       setRiceTestTableRows(newRiceTestRows);
     }
-  }, [binderTrialData.percentsOfDosage, data.riceTest]);
+  }, [binderTrialData.percentsOfDosage, data]);
 
   useEffect(() => {
     setRiceTestTableColumns([

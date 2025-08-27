@@ -5,7 +5,7 @@
   "asphalt.essays.project.description.title": "ENSAIO",
   "asphalt.essays.project.description.text": "Descrição: este documento corresponde ao relatório referente aos ensaios relacionados ao",
 
-  "asphalt.dosages.marshall.project.description.text": "Descrição: Este documento corresponde ao relatório referente à dosagem Marshall. Neste relatório são apresentados os resultados da dosagem Marshall realizada na mistura",
+  "asphalt.dosages.marshall.project.description.text": "Este documento apresenta o relatório da dosagem Marshall, contendo os resultados obtidos a partir dos ensaios realizados na mistura.",
   "asphalt.dosages.abcp.project.description.text": "Descrição: Este documento corresponde ao relatório referente ao relatório de dosagem ABCP. Neste relatório é apresentado os resultados da dosagem ABCP realizada na mistura",
 
   "asphalt.essays.project.summary": "SUMÁRIO",
@@ -16,7 +16,10 @@
   "asphalt.essays.project-laboratory": "Laboratório responsável",
 
   "asphalt.dosages.marshall.general-data": "Dados gerais do projeto de dosagem",
-  "asphalt.dosages.marshall.asphalt-binder": "Ligante asfáltico",
+  "asphalt.dosages.marshall.asphaltBinder": "Ligante asfáltico",
+  "asphalt.dosages.marshall.coarseAggregate": "Agregado graúdo",
+  "asphalt.dosages.marshall.fineAggregate": "Agregado miúdo",
+  "asphalt.dosages.marshall.filler": "Fíller",
 
   "asphalt.dosages.marshall.generated-by": "Gerado por",
   "asphalt.dosages.marshall.email": "E-mail",

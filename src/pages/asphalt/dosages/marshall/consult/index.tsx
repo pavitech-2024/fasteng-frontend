@@ -123,9 +123,9 @@ const MarshallDosageConsult = () => {
   };
 
   const handleVisualizeDosage = (id: string) => {
-    const dosage = dosages[0]?.find((dosage) => {
+    const dosage = dosages.length === 1 ? dosages[0]?.find((dosage) => {
       return dosage._id === id;
-    });
+    }) : dosages.find((dosages) => dosages.find((dosage) => dosage._id === id));
     const step = dosage.generalData.step - 1;
     if (dosage) {
       setData({
@@ -162,11 +162,11 @@ const MarshallDosageConsult = () => {
       renderCell: (params) => (
         <>
           <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)} size="large">
-            <DeleteIcon />
+            <DeleteIcon color="error" />
           </IconButton>
 
           <IconButton aria-label="Visualizar" onClick={() => handleVisualizeDosage(params.row.id)} size="large">
-            <NextIcon />
+            <NextIcon sx={{ color: 'secondaryTons.blue' }} />
           </IconButton>
         </>
       ),

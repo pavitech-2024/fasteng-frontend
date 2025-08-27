@@ -30,6 +30,7 @@ const Marshall_Step8_ConfirmCompression = ({
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [method, setMethod] = useState('');
+  const [isConfirmed, setIsConfirmed] = useState(false);
   const optimumBinderRows = data?.optimumBinder;
 
   useEffect(() => {
@@ -75,11 +76,11 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'cm'}
             value={data?.optimumBinder[index]?.diammeter}
-            type="number"
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value;
               const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], diammeter: value };
+              const typeCheck = isNaN(parseFloat(value)) ? null : parseFloat(value);
+              newState[index] = { ...newState[index], diammeter: typeCheck };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -96,11 +97,11 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'cm'}
             value={data?.optimumBinder[index]?.height}
-            type="number"
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value;
               const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], height: value };
+              const typeCheck = isNaN(parseFloat(value)) ? null : parseFloat(value);
+              newState[index] = { ...newState[index], height: typeCheck };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -117,11 +118,11 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'g'}
             value={data?.optimumBinder[index]?.dryMass}
-            type="number"
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value;
               const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], dryMass: value };
+              const typeCheck = isNaN(parseFloat(value)) ? null : parseFloat(value);
+              newState[index] = { ...newState[index], dryMass: typeCheck };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -138,11 +139,11 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'g'}
             value={data?.optimumBinder[index]?.submergedMass}
-            type="number"
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value;
               const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], submergedMass: value };
+              const typeCheck = isNaN(parseFloat(value)) ? null : parseFloat(value);
+              newState[index] = { ...newState[index], submergedMass: typeCheck };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -159,11 +160,11 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'g'}
             value={data?.optimumBinder[index]?.drySurfaceSaturatedMass}
-            type="number"
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value;
               const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], drySurfaceSaturatedMass: value };
+              const typeCheck = isNaN(parseFloat(value)) ? null : parseFloat(value);
+              newState[index] = { ...newState[index], drySurfaceSaturatedMass: typeCheck };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -180,11 +181,11 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'N'}
             value={data?.optimumBinder[index]?.stability}
-            type="number"
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value;
               const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], stability: value };
+              const typeCheck = isNaN(parseFloat(value)) ? null : parseFloat(value);
+              newState[index] = { ...newState[index], stability: typeCheck };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -201,11 +202,11 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'mm'}
             value={data?.optimumBinder[index]?.fluency}
-            type="number"
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value;
               const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], fluency: value };
+              const typeCheck = isNaN(parseFloat(value)) ? null : parseFloat(value);
+              newState[index] = { ...newState[index], fluency: typeCheck };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -222,11 +223,11 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'cm'}
             value={data?.optimumBinder[index]?.diametricalCompressionStrength}
-            type="number"
             onChange={(e) => {
-              const value = Number(e.target.value);
+              const value = e.target.value;
               const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], diametricalCompressionStrength: value };
+              const typeCheck = isNaN(parseFloat(value)) ? null : parseFloat(value);
+              newState[index] = { ...newState[index], diametricalCompressionStrength: typeCheck };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -324,34 +325,37 @@ const Marshall_Step8_ConfirmCompression = ({
   ];
 
   const handleSubmitDmt = async () => {
+    const hasNullValues = maximumMixtureDensityData.listOfSpecificGravities.some((g) => !g);
+
+    if (hasNullValues) {
+      toast.error(t('loading.data.nullValuesError')); // 👈 mensagem exclusiva
+      return;
+    }
+
     toast.promise(
       async () => {
-        try {
-          const dmt = await marshall.calculateMaximumMixtureDensityDMT(
-            materialSelectionData,
-            binderTrialData,
-            maximumMixtureDensityData
-          );
+        const dmt = await marshall.calculateMaximumMixtureDensityDMT(
+          materialSelectionData,
+          binderTrialData,
+          maximumMixtureDensityData
+        );
 
-          const newData = {
-            ...data,
-            maxSpecificGravity: {
-              result: dmt.maxSpecificGravity,
-              method: dmt.method,
-            },
-            listOfSpecificGravities: dmt.listOfSpecificGravities,
-          };
+        const newData = {
+          ...data,
+          maxSpecificGravity: {
+            result: dmt.maxSpecificGravity,
+            method: dmt.method,
+          },
+          listOfSpecificGravities: dmt.listOfSpecificGravities,
+        };
 
-          setData({ step: 4, value: newData });
-          setDMTModalISOpen(false);
-        } catch (error) {
-          throw error;
-        }
+        setData({ step: 4, value: newData });
+        setDMTModalISOpen(false);
       },
       {
         pending: t('loading.data.pending'),
         success: t('loading.data.success'),
-        error: t('loading.data.error'),
+        error: t('loading.data.error'), // 👈 aqui só cai para erro de requisição
       }
     );
   };
@@ -405,6 +409,7 @@ const Marshall_Step8_ConfirmCompression = ({
             ...confirmVP,
           };
 
+          setIsConfirmed(true);
           setData({ step: 7, value: newData });
         } catch (error) {
           throw error;
@@ -459,7 +464,33 @@ const Marshall_Step8_ConfirmCompression = ({
     );
   };
 
-  nextDisabled && setNextDisabled(false);
+  useEffect(() => {
+    if (method === 'DMT') {
+      const prevState = { ...data };
+      prevState.dmt = true;
+      prevState.gmm = false;
+      setData({ step: 7, value: prevState });
+    } else if (method === 'GMM') {
+      const prevState = { ...data };
+      prevState.dmt = false;
+      prevState.gmm = true;
+      setData({ step: 7, value: prevState });
+    }
+  }, [method]);
+
+  /**
+   * Verifica se a próxima página pode ser acessada,
+   * verifica se o método foi selecionado, se o botão de confirmação já foi clicado
+   *  e se todos os campos
+   * da tabela de compressão estão preenchidos.
+   */
+  useEffect(() => {
+    const isConfirmed = data.confirmedSpecificGravity.result !== null && data.confirmedSpecificGravity.type !== null;
+    const hasNullValues = data.optimumBinder.some((row) => Object.values(row).some((value) => value === null));
+    const methodIsSelected = data.dmt || data.gmm;
+
+    setNextDisabled(!methodIsSelected || hasNullValues || !isConfirmed);
+  }, [data, method, isConfirmed]);
 
   return (
     <>
@@ -479,18 +510,8 @@ const Marshall_Step8_ConfirmCompression = ({
             label={t('asphalt.dosages.marshall.select-mixture-density-method')}
             options={calcMethodOptions}
             value={{
-              label:
-                method === 'DMT'
-                  ? 'DMT - Densidade máxima teórica'
-                  : method === 'GMM'
-                  ? 'GMM - Densidade máxima medida'
-                  : '',
-              value:
-                method === 'DMT'
-                  ? 'DMT - Densidade máxima teórica'
-                  : method === 'GMM'
-                  ? 'GMM - Densidade máxima medida'
-                  : '',
+              label: data.dmt ? 'DMT - Densidade máxima teórica' : data.gmm ? 'GMM - Densidade máxima medida' : '',
+              value: data.dmt ? 'DMT - Densidade máxima teórica' : data.gmm ? 'GMM - Densidade máxima medida' : '',
             }}
             callback={(selectedOption) => {
               if (selectedOption === 'DMT - Densidade máxima teórica') {
@@ -503,31 +524,39 @@ const Marshall_Step8_ConfirmCompression = ({
               }
             }}
             size="medium"
-            sx={{ width: '75%', marginX: 'auto' }}
+            sx={{ width: '50%', marginX: 'auto' }}
           />
 
           {maximumMixtureDensityData?.maxSpecificGravity?.method === 'DMT' ? (
-            <Typography variant='h6'>
+            <Typography variant="h6">
               {t('asphalt.dosages.marshall.binder-trial-dmt') +
-                `${data?.confirmedSpecificGravity?.result?.toFixed(2)} g/cm³`}
+                `   ${data?.confirmedSpecificGravity?.result?.toFixed(2)} g/cm³`}
             </Typography>
           ) : (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <Typography variant='h6'>{t('asphalt.dosages.marshall.insert-gmm')}</Typography>
+              <Typography variant="h6">{t('asphalt.dosages.marshall.insert-gmm')}</Typography>
               <Typography>
-                {t('asphalt.dosages.marshall.gmm-calculated-rice-test') + ` ${data?.confirmedSpecificGravity?.result ? ` ${data?.confirmedSpecificGravity?.result.toFixed(2)}  g/cm³` : ' ---'}`}
+                {t('asphalt.dosages.marshall.gmm-calculated-rice-test') +
+                  ` ${
+                    data?.confirmedSpecificGravity?.result
+                      ? ` ${data?.confirmedSpecificGravity?.result.toFixed(2)}  g/cm³`
+                      : ' ---'
+                  }`}
               </Typography>
               <InputEndAdornment
                 adornment={'g/cm³'}
                 label={t('asphalt.dosages.marshall.binder-trial-gmm')}
                 value={data?.gmm}
+                sx={{ width: '40%' }}
                 onChange={(e) => {
                   const prevData: MarshallData['confirmationCompressionData'] = data;
                   const newData = { ...prevData, gmm: e.target.value };
                   setData({ step: 7, value: newData });
                 }}
               />
-              <Button sx={{ width: '100%' }} variant="outlined" onClick={() => setRiceTestModalIsOpen(true)}>{t('asphalt.dosages.marshall.rice-test')}</Button>
+              <Button sx={{ width: '100%' }} variant="outlined" onClick={() => setRiceTestModalIsOpen(true)}>
+                {t('asphalt.dosages.marshall.rice-test')}
+              </Button>
             </Box>
           )}
 
@@ -559,28 +588,23 @@ const Marshall_Step8_ConfirmCompression = ({
             rightButtonTitle={t('asphalt.dosages.marshall.confirm')}
             onCancel={() => setDMTModalISOpen(false)}
             open={DMTModalIsOpen}
-            size={'larger'}
+            size={'medium'}
             onSubmit={() => handleSubmitDmt()}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginY: '2rem' }}>
-              {maximumMixtureDensityData.missingSpecificMass &&
-                maximumMixtureDensityData.missingSpecificMass.map((material) => (
-                  <InputEndAdornment
-                    key={material._id}
-                    adornment={'g/cm³'}
-                    label={material.name}
-                    value={material.value}
-                    onChange={(e) => {
-                      const prevState = maximumMixtureDensityData;
-                      const prevDmt = maximumMixtureDensityData.missingSpecificMass;
-                      const newState = {
-                        ...prevState,
-                        missingSpecificMass: { ...prevDmt, [material.name]: e.target.value },
-                      };
-                      setData({ step: 7, value: newState });
-                    }}
-                  />
-                ))}
+              {materialSelectionData.aggregates.map((material, index) => (
+                <InputEndAdornment
+                  key={material._id}
+                  adornment={'g/cm³'}
+                  label={material.name}
+                  value={maximumMixtureDensityData.listOfSpecificGravities[index]}
+                  onChange={(e) => {
+                    const prevState = { ...maximumMixtureDensityData };
+                    prevState.listOfSpecificGravities[index] = e.target.value;
+                    setData({ step: 4, value: prevState });
+                  }}
+                />
+              ))}
             </Box>
           </ModalBase>
 

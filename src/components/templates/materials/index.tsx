@@ -87,7 +87,6 @@ const MaterialsTemplate = ({
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
   const [searchBy, setSearchBy] = useState<FilterTypes>('name');
-  console.log("🚀 ~ MaterialsTemplate ~ searchBy:", searchBy)
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchString, setSearchString] = useState<string>('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
