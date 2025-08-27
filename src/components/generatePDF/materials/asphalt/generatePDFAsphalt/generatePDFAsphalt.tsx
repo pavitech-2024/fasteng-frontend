@@ -283,6 +283,7 @@ const GeneratePDF = ({
     {
       condition: true, // Sempre incluir esta seção
       title: 'Informações do Usuário',
+      key: 'userInformation',
       content: (doc, currentY) => {
         // Função para adicionar texto à margem esquerda
         const addTextToLeftMargin = (doc, text, x, y) => {
@@ -299,6 +300,7 @@ const GeneratePDF = ({
     {
       condition: granulometryRows.length > 0,
       title: t('asphalt.essays.granulometry'),
+      key: 'granulometry',
       content: async (doc, currentY) => {
         const image = (await addImageProcess(logo.src)) as HTMLImageElement;
         addTable(doc, granulometryRows, granulometryColumns, currentY);
@@ -316,6 +318,7 @@ const GeneratePDF = ({
     {
       condition: granulometryResults.length > 0,
       title: t('asphalt.essays.granulometryResults'),
+      key: 'granulometryResults',
       content: (doc, currentY) => {
         currentY += 5;
         granulometryResults.forEach((item) => {
@@ -328,6 +331,7 @@ const GeneratePDF = ({
     {
       condition: dataSpecificMass.specificMassContainer.length > 0,
       title: t('asphalt.essays.specifyMass'),
+      key: 'specificMass',
       content: (doc, currentY) => {
         currentY += 5;
         dataSpecificMass.specificMassContainer.forEach((item) => {
@@ -340,6 +344,7 @@ const GeneratePDF = ({
     {
       condition: dataShape.shapeIndexContainer.length > 0,
       title: t('asphalt.essays.shapeIndex'),
+      key: 'shapeIndex',
       content: (doc, currentY) => {
         dataShape.shapeIndexContainer.forEach((item) => {
           addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
@@ -351,6 +356,7 @@ const GeneratePDF = ({
     {
       condition: elongatedParticlesRows,
       title: t('asphalt.essays.elongatedParticles'),
+      key: 'elongatedParticles',
       content: (doc, currentY) => {
         addTable(doc, elongatedParticlesRows, elongatedParticlesColumns, currentY);
         const tableHeight = (doc as any).lastAutoTable.finalY - currentY;
@@ -360,6 +366,7 @@ const GeneratePDF = ({
     {
       condition: filmDisplacement,
       title: t('adhesiveness.step2'),
+      key: 'filmDisplacement',
       content: (doc, currentY) => {
         addTextToLeftMargin(doc, `${t('adhesiveness.chosen-filmDisplacement')}: ${filmDisplacement}`, 10, currentY);
         return currentY + 5;
@@ -368,6 +375,7 @@ const GeneratePDF = ({
     {
       condition: dataLosAngeles,
       title: t('asphalt.essays.abrasion'),
+      key: 'abrasion',
       content: (doc, currentY) => {
         addTextToLeftMargin(
           doc,
@@ -381,6 +389,7 @@ const GeneratePDF = ({
     {
       condition: dataSand,
       title: t('asphalt.essays.sandEquivalent'),
+      key: 'sandEquivalent',
       content: (doc, currentY) => {
         addTextToLeftMargin(doc, `${t('sandEquivalent-sand-equivalent')}: ${dataSand.sandEquivalent}%`, 10, currentY);
         return currentY + 5;
@@ -389,6 +398,7 @@ const GeneratePDF = ({
     {
       condition: dataAngularity.container_other_data.length > 0,
       title: t('asphalt.essays.angularity'),
+      key: 'angularity',
       content: (doc, currentY) => {
         dataAngularity.container_other_data.forEach((item) => {
           addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
@@ -405,6 +415,7 @@ const GeneratePDF = ({
     {
       condition: dataViscosity,
       title: t('asphalt.essays.viscosityRotational'),
+      key: 'viscosityRotational',
       content: async (doc, currentY) => {
         addTextToLeftMargin(doc, `${t('saybolt-furol.compression-temperature')}`, 10, currentY);
         currentY += 5;
@@ -461,6 +472,7 @@ const GeneratePDF = ({
     {
       condition: dataPenetration,
       title: t('asphalt.essays.penetration-asphalt'),
+      key: 'penetration',
       content: (doc, currentY) => {
         addTextToLeftMargin(
           doc,
@@ -474,6 +486,7 @@ const GeneratePDF = ({
     {
       condition: dataSoftening,
       title: t('asphalt.essays.softeningPoint'),
+      key: 'softeningPoint',
       content: (doc, currentY) => {
         addTextToLeftMargin(doc, `${t('softeningPoint-result')}: ${dataSoftening.softeningPoint}°C`, 10, currentY);
         return currentY + 5;
@@ -482,6 +495,7 @@ const GeneratePDF = ({
     {
       condition: dataFlash.container_other_data.length > 0,
       title: t('asphalt.essays.flashPoint'),
+      key: 'flashPoint',
       content: (doc, currentY) => {
         dataFlash.container_other_data.forEach((item) => {
           addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
@@ -493,6 +507,7 @@ const GeneratePDF = ({
     {
       condition: dataDuctility.container_other_data.length > 0,
       title: t('asphalt.essays.ductility'),
+      key: 'ductility',
       content: (doc, currentY) => {
         dataDuctility.container_other_data.forEach((item) => {
           addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
@@ -504,6 +519,7 @@ const GeneratePDF = ({
     {
       condition: dataRtfo,
       title: t('asphalt.essays.rtfo'),
+      key: 'rtfo',
       content: (doc, currentY) => {
         addTextToLeftMargin(doc, `${t('rtfo-weight-loss-average')}: ${dataRtfo.weightLossAverage} %`, 10, currentY);
         if (rtfoRows) {
@@ -517,6 +533,7 @@ const GeneratePDF = ({
     {
       condition: dataElastic.container_other_data.length > 0,
       title: t('asphalt.essays.elasticRecovery'),
+      key: 'elasticRecovery',
       content: (doc, currentY) => {
         dataElastic.container_other_data.forEach((item) => {
           addTextToLeftMargin(doc, `${item.label}: ${item.value} ${item.unity}`, 10, currentY);
@@ -724,7 +741,7 @@ const GeneratePDF = ({
 
         currentY = await section.content(doc, currentY);
         const pageIndex = doc.internal.pages.length - 1;
-        summaryItems.push({ title: section.title, page: pageIndex });
+        summaryItems.push({ title: section.title, page: pageIndex, key: section.key });
       }
     }
 
