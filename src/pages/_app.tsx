@@ -28,7 +28,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   /**
    * Resets stores and clears session storage when navigating to a different essay.
    * This is necessary because Next.js does not clear session storage when navigating
-   * between pages, and some stores are not designed to be reset. So, this will reset 
+   * between pages, and some stores are not designed to be reset. So, this will reset
    * any essay or dosage in case the user navigates to a different essay or homepage.
    *
    * @param {string} pathname - The current pathname.
@@ -40,8 +40,8 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     const essayKeys = Object.keys(sessionStorage)
       .filter((key) => key.includes('-store'))
       .map((key) => {
-    return key.split('-')[1];
-});
+        return key.split('-')[1];
+      });
 
     const currentEssay = essayKeys.find((essay) => pathname.includes(essay));
 
