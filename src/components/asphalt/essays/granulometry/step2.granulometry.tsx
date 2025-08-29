@@ -25,16 +25,16 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
     }
   }, [data.material_mass, data.table_data]);*/
 
- useEffect(() => {
-  if (data.material_mass != null && data.table_data?.length > 0) {
-    const totalRetained = data.table_data.reduce((sum, row) => sum + row.retained, 0);
-    const remaining = data.material_mass - totalRetained;
+  useEffect(() => {
+    if (data.material_mass != null && data.table_data?.length > 0) {
+      const totalRetained = data.table_data.reduce((sum, row) => sum + row.retained, 0);
+      const remaining = data.material_mass - totalRetained;
 
-    const arredondado = Math.round((remaining + Number.EPSILON) * 100) / 100;
+      const arredondado = Math.round((remaining + Number.EPSILON) * 100) / 100;
 
-    setData({ step: 1, key: 'bottom', value: arredondado });
-  }
-}, [data.material_mass, data.table_data]);
+      setData({ step: 1, key: 'bottom', value: arredondado });
+    }
+  }, [data.material_mass, data.table_data]);
 
   const sievesSeries = [
     getSieveSeries(0),
@@ -75,9 +75,9 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
           <InputEndAdornment
             fullWidth
             adornment="%"
-            type="number"
+            type="text"
             inputProps={{ min: 0 }}
-            value={rows[sieve_index]?.passant}
+            value={rows[sieve_index]?.passant ?? ''}
             required
             onChange={(e) => {
               if (e.target.value === null) return;
@@ -342,13 +342,7 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
             label={t('granulometry-asphalt.bottom')}
             variant={'filled'}
             key="bottom"
-            //value={data.bottom}
-            value={
-              data.bottom != null
-              ? Number(data.bottom).toFixed(2)
-              : ''
-
-}
+            value={data.bottom != null ? Number(data.bottom).toFixed(2) : ''}
             onChange={(e) => setData({ step: 1, key: 'bottom', value: Number(e.target.value) })}
             adornment={'g'}
             type="number"

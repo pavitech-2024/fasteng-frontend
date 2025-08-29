@@ -1,6 +1,5 @@
 import Api from '@/api';
 import { MarshallIconPng } from '@/assets';
-import MaterialSelectionTable from '@/components/concrete/dosages/abcp/tables/material-selection-table';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { MarshallActions, MarshallData } from '@/stores/asphalt/marshall/marshall.store';
@@ -232,7 +231,7 @@ class Marshall_SERVICE implements IEssayService {
       // Verificamos se a soma total é 100.
       if (inputsSum !== 100) throw t('errors.invalid-inputs-sum');
 
-      const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {
+      const response = await Api.post(`${this.info.backend_path}/calculate-granulometry`, {
         dnitBands: dnitBandLetter,
         percentageInputs,
         tableRows: table_data.table_rows,
@@ -425,7 +424,7 @@ class Marshall_SERVICE implements IEssayService {
     maximumMixtureDensityData: MarshallData['maximumMixtureDensityData']
   ): Promise<any> => {
     const { aggregates } = step2Data;
-    const { missingSpecificMass } = maximumMixtureDensityData;
+    const { missingSpecificMass, listOfSpecificGravities } = maximumMixtureDensityData;
     const { newPercentOfDosage, trial } = step4Data;
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-dmt-data`, {
@@ -433,6 +432,7 @@ class Marshall_SERVICE implements IEssayService {
         percentsOfDosage: newPercentOfDosage,
         trial,
         missingSpecificGravity: missingSpecificMass,
+        listOfSpecificGravities
       });
 
       const { data, success, error } = response.data;

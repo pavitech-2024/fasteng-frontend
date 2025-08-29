@@ -34,22 +34,22 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
    * @param {string} pathname - The current pathname.
    * @param {boolean} hasHydrated - Whether the store has been hydrated.
    */
-  useEffect(() => {
-    if (!hasHydrated) return;
+  // useEffect(() => {
+  //   if (!hasHydrated) return;
 
-    const essayKeys = Object.keys(sessionStorage)
-      .filter((key) => key.includes('-store'))
-      .map((key) => {
-        return key.split('-')[1];
-      });
+  //   const essayKeys = Object.keys(sessionStorage)
+  //     .filter((key) => key.includes('-store'))
+  //     .map((key) => {
+  //       return key.split('-')[1];
+  //     });
 
-    const currentEssay = essayKeys.find((essay) => pathname.includes(essay));
+  //   const currentEssay = essayKeys.find((essay) => pathname.includes(essay));
 
-    if (!currentEssay) {
-      resetStores();
-      sessionStorage.clear();
-    }
-  }, [pathname]);
+  //   if (!currentEssay) {
+  //     resetStores();
+  //     sessionStorage.clear();
+  //   }
+  // }, [pathname]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>

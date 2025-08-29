@@ -31,7 +31,6 @@ const Marshall_Step2_MaterialSelection = ({
           let newMaterials: AsphaltMaterial[] = [];
 
           if (Array.isArray(data)) {
-            // Pode ser [ { materials: [...] } ]
             if (Array.isArray(data[0]?.materials)) {
               newMaterials = data[0].materials;
             } else if (
