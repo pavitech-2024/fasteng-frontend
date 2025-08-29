@@ -456,7 +456,7 @@ const MaterialsTemplate = ({
                                   borderRadius: { mobile: '50%', notebook: '20px' },
                                   p: { mobile: 0, notebook: '6px 6px' },
                                   minWidth: { mobile: '18px', notebook: '30px' },
-                                  bgcolor: 'white',
+                                  bgcolor: 'transparent',
                                   color: 'secondaryTons.blue',
                                 }}
                               >
@@ -475,7 +475,7 @@ const MaterialsTemplate = ({
                                 borderRadius: { mobile: '50%', notebook: '20px' },
                                 p: { mobile: 0, notebook: '6px 6px' },
                                 minWidth: { mobile: '18px', notebook: '25px' },
-                                bgcolor: 'white',
+                                bgcolor: 'transparent',
                                 color: 'secondaryTons.primary',
                               }}
                             >

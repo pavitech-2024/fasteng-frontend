@@ -49,9 +49,12 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
+  console.log("🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ data:", data)
   const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
+  const [dmtRows, setDmtRows] = useState<{ id: number; DMT: number; Teor: number }[]>([]);
+  const [dmtColumns, setDmtColumns] = useState<GridColDef[]>([]);
   const [selectedMethod, setSelectedMethod] = useState({
     dmt: data?.method === 'DMT',
     gmm: data?.method === 'GMM',
@@ -61,6 +64,14 @@ const Marshall_Step5_MixtureMaximumDensity = ({
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
   const [gmmErrorMsg, setGmmErrorMsg] = useState('');
+
+  const materials = [];
+
+  for (let i = 0; i < materialSelectionData.aggregates.length; i++) {
+    materials.push({ label: materialSelectionData.aggregates[i].name, value: materialSelectionData.aggregates[i]._id });
+  }
+
+  materials.push({ label: materialSelectionData.binder.name, value: materialSelectionData.binder._id });
 
   /**
    * This useEffect is responsible for calculating the indexes of missing specific
@@ -77,13 +88,16 @@ const Marshall_Step5_MixtureMaximumDensity = ({
       async () => {
         try {
           const response = await marshall.getIndexesOfMissesSpecificGravity(materialSelectionData);
+          console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ response:', response);
 
           const newData = {
             ...data,
             missingSpecificMass: response,
           };
+          console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ newData:', newData);
 
           const gmmData = [];
+          
 
           if (data.gmm.some((item) => item.value === null)) {
             for (let i = 1; i <= 5; i++) {
@@ -91,6 +105,8 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             }
             newData.gmm = gmmData;
           }
+
+          console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ gmmData:', gmmData);
 
           newData.riceTest =
             newData.riceTest ||
@@ -101,6 +117,8 @@ const Marshall_Step5_MixtureMaximumDensity = ({
               massOfContainerWaterSample: null,
               massOfContainerWater: null,
             }));
+
+          console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ newData 22222:', newData);
 
           setData({ step: 4, value: newData });
 
@@ -148,24 +166,33 @@ const Marshall_Step5_MixtureMaximumDensity = ({
     '30°C': 0.9956,
   }).map(([label, value]) => ({ label, value }));
 
-  const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => ({
-    id: index + 1,
-    DMT: data?.maxSpecificGravity?.result?.lessOne?.toFixed(2),
-    Teor: item.value,
-  }));
+  useEffect(() => {
+    let dmtRows;
+    let dmtColumns: GridColDef[];
+    if (binderTrialData.percentsOfDosage.some((item) => item.value !== null)) {
+      dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => ({
+        id: index + 1,
+        DMT: data?.maxSpecificGravity?.result?.lessOne?.toFixed(2),
+        Teor: item.value,
+      }));
 
-  const dmtColumns: GridColDef[] = [
-    {
-      field: 'Teor',
-      headerName: t('asphalt.dosages.marshall.tenor'),
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'DMT',
-      headerName: 'DMT',
-      valueFormatter: ({ value }) => `${value}`,
-    },
-  ];
+      dmtColumns = [
+        {
+          field: 'Teor',
+          headerName: t('asphalt.dosages.marshall.tenor'),
+          valueFormatter: ({ value }) => `${value}`,
+        },
+        {
+          field: 'DMT',
+          headerName: 'DMT',
+          valueFormatter: ({ value }) => `${value}`,
+        },
+      ];
+
+      setDmtRows(dmtRows);
+      setDmtColumns(dmtColumns);
+    }
+  }, [binderTrialData.percentsOfDosage]);
 
   /**
    * Handles the submission process for calculating the maximum mixture density (DMT).
@@ -186,13 +213,18 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             data
           );
 
+          const prevListOfSpecificGravities = [...data?.listOfSpecificGravities];
+          prevListOfSpecificGravities.map((item, index) => {
+            if (item.value === null) item.value = dmtResult.listOfSpecificGravities[index];
+          });
+
           const updatedData = {
             ...data,
             maxSpecificGravity: {
               result: dmtResult.maxSpecificGravity,
               method: dmtResult.method,
             },
-            listOfSpecificGravities: dmtResult.listOfSpecificGravities,
+            listOfSpecificGravities: prevListOfSpecificGravities,
           };
 
           setData({ step: 4, value: updatedData });
@@ -576,7 +608,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             </Box>
           )}
 
-          {selectedMethod.dmt && !DMTModalIsOpen && !dmtRows.some((e) => !e.Teor) && (
+          {selectedMethod.dmt && !DMTModalIsOpen && !dmtRows.some((e) => !e.DMT) && (
             <DataGrid
               columns={dmtColumns.map((col) => ({
                 ...col,
@@ -604,18 +636,33 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             onSubmit={() => handleSubmitDmt()}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-around' }}>
-              {data.missingSpecificMass?.length > 0 &&
-                data.missingSpecificMass?.map((material, index) => (
+              {materials.length > 0 &&
+                materials?.map((material, index) => (
                   <InputEndAdornment
                     key={`${index}`}
                     adornment={'g/cm³'}
-                    label={material.name}
-                    value={material.value}
+                    label={material.label}
+                    placeholder={material.label}
+                    type="text"
+                    inputProps={{ inputMode: 'decimal' }}
+                    value={data.listOfSpecificGravities[index] ?? ''}
                     onChange={(e) => {
-                      const prevState = [...data.missingSpecificMass];
-                      const index = prevState.findIndex((idx) => idx.name === material.name);
-                      prevState[index] = { ...prevState[index], value: Number(e.target.value) };
-                      setData({ step: 4, value: { ...data, missingSpecificMass: prevState } });
+                      const rawValue = e.target.value.replace(',', '.'); // normaliza vírgula
+                      const prevState = [...data.listOfSpecificGravities];
+                      prevState[index] = rawValue; // mantém string enquanto digita
+                      setData({
+                        step: 4,
+                        value: { ...data, listOfSpecificGravities: prevState },
+                      });
+                    }}
+                    onBlur={() => {
+                      // Converter para number
+                      const prevState = [...data.listOfSpecificGravities];
+                      prevState[index] = prevState[index] === '' ? null : parseFloat(prevState[index]);
+                      setData({
+                        step: 4,
+                        value: { ...data, listOfSpecificGravities: prevState },
+                      });
                     }}
                   />
                 ))}

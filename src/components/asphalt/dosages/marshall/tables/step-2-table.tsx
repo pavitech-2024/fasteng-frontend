@@ -45,7 +45,8 @@ const Step2Table = ({ rows, columns, header }: Step2Props & { marshall: Marshall
                 rowSelection.shift();
               }
 
-              const binder = rowSelection.length > 0 ? rows[rowSelection[0]]._id : null;
+              const binder =
+                rowSelection.length > 0 ? { name: rows[rowSelection[0]].name, _id: rows[rowSelection[0]]._id } : null;
 
               setData({ step: 1, key: 'binder', value: binder });
             } else {

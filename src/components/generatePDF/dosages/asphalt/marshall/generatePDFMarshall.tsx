@@ -38,7 +38,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     const handleGetMaterialsData = async () => {
       try {
         const materialsIds = dosage.materialSelectionData.aggregates.map((material) => material._id);
-        materialsIds.unshift(dosage.materialSelectionData.binder);
+        materialsIds.unshift(dosage.materialSelectionData.binder._id);
         const response = await materialsService.getMaterials(materialsIds);
         setMaterialsData(response.data.materials);
         setMaterialsEssays(response.data.essays);

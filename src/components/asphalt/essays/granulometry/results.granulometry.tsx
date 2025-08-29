@@ -14,7 +14,6 @@ import AsphaltGranulometry_resultsTable from './tables/results-table.granulometr
 const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: granulometry_results, step2Data, generalData } = useAsphaltGranulometryStore();
-  console.log("🚀 ~ AsphaltGranulometry_Results ~ granulometry_results:", granulometry_results)
 
   const data = {
     container_other_data: [],
@@ -61,10 +60,6 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
   ];
 
   const rows = [];
-
-    console.log("🚀 ~ AsphaltGranulometry_Results ~ step2Data:", step2Data.table_data.length)
-        console.log("🚀 ~ AsphaltGranulometry_Results ~ granulometry_results:", granulometry_results.passant.length)
-
 
   step2Data.table_data.map((value, index) => {
     rows.push({

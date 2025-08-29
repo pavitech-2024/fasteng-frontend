@@ -180,7 +180,7 @@ const Marshall_Step7_OptimumBinder = ({
 
     obj = {
       ...obj,
-      [materialSelectionData.binder]: data.optimumBinder.confirmedPercentsOfDosage[count].toFixed(2),
+      [materialSelectionData.binder._id]: data.optimumBinder.confirmedPercentsOfDosage[count].toFixed(2),
     };
 
     return [obj];
