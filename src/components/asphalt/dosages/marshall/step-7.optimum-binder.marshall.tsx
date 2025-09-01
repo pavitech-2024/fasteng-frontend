@@ -85,6 +85,8 @@ const Marshall_Step7_OptimumBinder = ({
   const points = data?.optimumBinder?.pointsOfCurveDosage;
   points?.unshift(['', '', '']);
 
+  console.log('🚀 ~ Marshall_Step7_OptimumBinder ~ points:', points);
+
   const expectedParametersColumns: GridColDef[] = [
     {
       field: 'vv',

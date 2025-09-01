@@ -26,10 +26,12 @@ const Marshall_Step8_ConfirmCompression = ({
     granulometryCompositionData,
     setData,
   } = useMarshallStore();
+    console.log("🚀 ~ Marshall_Step8_ConfirmCompression ~ maximumMixtureDensityData:", maximumMixtureDensityData)
 
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [method, setMethod] = useState('');
+  console.log("🚀 ~ Marshall_Step8_ConfirmCompression ~ method:", method)
   const [isConfirmed, setIsConfirmed] = useState(false);
   const optimumBinderRows = data?.optimumBinder;
 
@@ -527,7 +529,7 @@ const Marshall_Step8_ConfirmCompression = ({
             sx={{ width: '50%', marginX: 'auto' }}
           />
 
-          {maximumMixtureDensityData?.maxSpecificGravity?.method === 'DMT' ? (
+          {maximumMixtureDensityData?.maxSpecificGravity?.method === 'DMT' && method === 'DMT' ? (
             <Typography variant="h6">
               {t('asphalt.dosages.marshall.binder-trial-dmt') +
                 `   ${data?.confirmedSpecificGravity?.result?.toFixed(2)} g/cm³`}
@@ -539,14 +541,14 @@ const Marshall_Step8_ConfirmCompression = ({
                 {t('asphalt.dosages.marshall.gmm-calculated-rice-test') +
                   ` ${
                     data?.confirmedSpecificGravity?.result
-                      ? ` ${data?.confirmedSpecificGravity?.result.toFixed(2)}  g/cm³`
+                      ? ` ${data?.confirmedSpecificGravity?.result?.toFixed(2)}  g/cm³`
                       : ' ---'
                   }`}
               </Typography>
               <InputEndAdornment
                 adornment={'g/cm³'}
                 label={t('asphalt.dosages.marshall.binder-trial-gmm')}
-                value={data?.gmm}
+                value={data?.confirmedSpecificGravity?.result?.toFixed(2)}
                 sx={{ width: '40%' }}
                 onChange={(e) => {
                   const prevData: MarshallData['confirmationCompressionData'] = data;
