@@ -49,6 +49,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
+  console.log("🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ data:", data)
   const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
@@ -91,18 +92,19 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           const newData = {
             ...data,
             missingSpecificMass: response,
+            gmm: null,
           };
 
-          const gmmData = [];
-          
+          console.log('aqui', newData);
 
-          if (data.gmm.some((item) => item.value === null)) {
-            for (let i = 1; i <= 5; i++) {
-              gmmData.push({ id: i, insert: true, value: null });
-            }
-            newData.gmm = gmmData;
+          const gmmData = [];
+
+          for (let i = 0; i < newData.missingSpecificMass.length; i++) {
+            console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ i:', i);
+            gmmData.push({ id: i, insert: true, value: null });
           }
           
+          newData.gmm = gmmData;
 
           newData.riceTest =
             newData.riceTest ||
@@ -113,6 +115,8 @@ const Marshall_Step5_MixtureMaximumDensity = ({
               massOfContainerWaterSample: null,
               massOfContainerWater: null,
             }));
+
+          console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ newData:', newData);
 
           setData({ step: 4, value: newData });
 
@@ -125,7 +129,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
       {
         pending: t('loading.data.pending'),
         success: t('loading.data.success'),
-        error: t('loading.data.error'),
+        error: t('testeee'),
       }
     );
   }, []);
@@ -265,7 +269,8 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             value={row.GMM}
             onChange={(e) => {
               const newData = [...data.gmm];
-              newData[row.id - 1].value = Number(e.target.value);
+              console.log("🚀 ~ newData:", newData[row.id])
+              newData[row.id].value = Number(e.target.value);
               setData({ step: 4, value: { ...data, gmm: newData } });
             }}
           />

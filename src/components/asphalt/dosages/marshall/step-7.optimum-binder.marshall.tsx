@@ -82,8 +82,10 @@ const Marshall_Step7_OptimumBinder = ({
   }, []);
 
   // Preparando os dados points para o componente GraficoPage7N
-  const points = data?.optimumBinder?.pointsOfCurveDosage;
-  points?.unshift(['', '', '']);
+  const points = data?.optimumBinder?.pointsOfCurveDosage ?? [];
+
+  // Cria um novo array: primeiro a linha extra, depois os dados recebidos
+  const preparedPoints = [['', '', ''], ...points];
 
   const expectedParametersColumns: GridColDef[] = [
     {
@@ -244,7 +246,7 @@ const Marshall_Step7_OptimumBinder = ({
             padding: '20px',
           }}
         >
-          {points?.length > 0 && <GraficoPage7N data={points} />}
+          {preparedPoints?.length > 0 && <GraficoPage7N data={preparedPoints} />}
 
           {!Object.values(data?.expectedParameters?.expectedParameters).some((item) => item === null) && (
             <Box sx={{ width: '100%', overflow: 'auto' }}>
