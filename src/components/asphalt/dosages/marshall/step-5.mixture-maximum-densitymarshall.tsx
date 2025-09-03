@@ -49,7 +49,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
-  console.log("🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ data:", data)
   const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
@@ -88,13 +87,11 @@ const Marshall_Step5_MixtureMaximumDensity = ({
       async () => {
         try {
           const response = await marshall.getIndexesOfMissesSpecificGravity(materialSelectionData);
-          console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ response:', response);
 
           const newData = {
             ...data,
             missingSpecificMass: response,
           };
-          console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ newData:', newData);
 
           const gmmData = [];
           
@@ -105,8 +102,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             }
             newData.gmm = gmmData;
           }
-
-          console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ gmmData:', gmmData);
+          
 
           newData.riceTest =
             newData.riceTest ||
@@ -117,8 +113,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
               massOfContainerWaterSample: null,
               massOfContainerWater: null,
             }));
-
-          console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ newData 22222:', newData);
 
           setData({ step: 4, value: newData });
 
