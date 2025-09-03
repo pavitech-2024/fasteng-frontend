@@ -26,12 +26,10 @@ const Marshall_Step8_ConfirmCompression = ({
     granulometryCompositionData,
     setData,
   } = useMarshallStore();
-    console.log("🚀 ~ Marshall_Step8_ConfirmCompression ~ maximumMixtureDensityData:", maximumMixtureDensityData)
 
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [method, setMethod] = useState('');
-  console.log("🚀 ~ Marshall_Step8_ConfirmCompression ~ method:", method)
   const [isConfirmed, setIsConfirmed] = useState(false);
   const optimumBinderRows = data?.optimumBinder;
 
@@ -357,7 +355,7 @@ const Marshall_Step8_ConfirmCompression = ({
       {
         pending: t('loading.data.pending'),
         success: t('loading.data.success'),
-        error: t('loading.data.error'), // 👈 aqui só cai para erro de requisição
+        error: t('loading.data.error'),
       }
     );
   };
