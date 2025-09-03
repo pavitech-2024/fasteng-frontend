@@ -235,7 +235,7 @@ const Marshall_Step9_ResumeDosage = ({
     materialSelectionData.aggregates.forEach((material, idx) => {
       rowsObj = {
         ...rowsObj,
-        [material._id]: data?.confirmedVolumetricParameters?.quantitative[idx].toFixed(2),
+        [material._id]: data?.confirmedVolumetricParameters?.quantitative[idx]?.toFixed(2),
       };
     });
 

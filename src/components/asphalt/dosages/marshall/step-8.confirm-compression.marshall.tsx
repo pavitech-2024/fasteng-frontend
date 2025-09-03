@@ -26,12 +26,16 @@ const Marshall_Step8_ConfirmCompression = ({
     granulometryCompositionData,
     setData,
   } = useMarshallStore();
+    console.log("🚀 ~ Marshall_Step8_ConfirmCompression ~ maximumMixtureDensityData:", maximumMixtureDensityData)
+    console.log("🚀 ~ Marshall_Step8_ConfirmCompression ~ data:", data)
 
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [method, setMethod] = useState('');
   const [isConfirmed, setIsConfirmed] = useState(false);
   const optimumBinderRows = data?.optimumBinder;
+
+  const allMaterials = [...materialSelectionData.aggregates, materialSelectionData.binder];
 
   useEffect(() => {
     toast.promise(
@@ -328,7 +332,7 @@ const Marshall_Step8_ConfirmCompression = ({
     const hasNullValues = maximumMixtureDensityData.listOfSpecificGravities.some((g) => !g);
 
     if (hasNullValues) {
-      toast.error(t('loading.data.nullValuesError')); // 👈 mensagem exclusiva
+      toast.error(t('loading.data.nullValuesError'));
       return;
     }
 
@@ -339,6 +343,7 @@ const Marshall_Step8_ConfirmCompression = ({
           binderTrialData,
           maximumMixtureDensityData
         );
+        console.log("🚀 ~ handleSubmitDmt ~ dmt:", dmt)
 
         const newData = {
           ...data,
@@ -535,14 +540,17 @@ const Marshall_Step8_ConfirmCompression = ({
           ) : (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <Typography variant="h6">{t('asphalt.dosages.marshall.insert-gmm')}</Typography>
-              <Typography>
-                {t('asphalt.dosages.marshall.gmm-calculated-rice-test') +
-                  ` ${
-                    data?.confirmedSpecificGravity?.result
-                      ? ` ${data?.confirmedSpecificGravity?.result?.toFixed(2)}  g/cm³`
-                      : ' ---'
-                  }`}
-              </Typography>
+              {data?.confirmedSpecificGravity?.result && (
+                <Typography>
+                  {t('asphalt.dosages.marshall.gmm-calculated-rice-test') +
+                    ` ${
+                      data?.confirmedSpecificGravity?.result
+                        ? ` ${data?.confirmedSpecificGravity?.result?.toFixed(2)}  g/cm³`
+                        : ' ---'
+                    }`}
+                </Typography>
+              )}
+
               <InputEndAdornment
                 adornment={'g/cm³'}
                 label={t('asphalt.dosages.marshall.binder-trial-gmm')}
@@ -592,7 +600,7 @@ const Marshall_Step8_ConfirmCompression = ({
             onSubmit={() => handleSubmitDmt()}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginY: '2rem' }}>
-              {materialSelectionData.aggregates.map((material, index) => (
+              {allMaterials.map((material, index) => (
                 <InputEndAdornment
                   key={material._id}
                   adornment={'g/cm³'}

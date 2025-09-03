@@ -55,11 +55,11 @@ class Marshall_SERVICE implements IEssayService {
           await this.submitGranulometryComposition(data as MarshallData, this.userId, null, isConsult);
           break;
         case 3:
-          this.calculateBinderTrialData(
-            data as MarshallData['binderTrialData'],
-            data as MarshallData['granulometryCompositionData'],
-            data as MarshallData['materialSelectionData']
-          );
+          // this.calculateBinderTrialData(
+          //   data as MarshallData['binderTrialData'],
+          //   data as MarshallData['granulometryCompositionData'],
+          //   data as MarshallData['materialSelectionData']
+          // );
           await this.submitBinderTrialData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 4:
