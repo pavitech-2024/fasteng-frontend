@@ -427,7 +427,7 @@ class Marshall_SERVICE implements IEssayService {
     const { missingSpecificMass, listOfSpecificGravities } = maximumMixtureDensityData;
     const { newPercentOfDosage, trial } = step4Data;
     try {
-      const response = await Api.post(`${this.info.backend_path}/calculate-step-5-dmt-data`, {
+      const response = await Api.post(`${this.info.backend_path}/confirm-specific-gravity`, {
         aggregates,
         percentsOfDosage: newPercentOfDosage,
         trial,

@@ -37,37 +37,37 @@ const Marshall_Step8_ConfirmCompression = ({
 
   const allMaterials = [...materialSelectionData.aggregates, materialSelectionData.binder];
 
-  useEffect(() => {
-    toast.promise(
-      async () => {
-        try {
-          let newData = {};
-          const response = await marshall.confirmSpecificGravity(
-            granulometryCompositionData,
-            maximumMixtureDensityData,
-            optimumBinderContentData,
-            data,
-            false
-          );
+  // useEffect(() => {
+  //   toast.promise(
+  //     async () => {
+  //       try {
+  //         let newData = {};
+  //         const response = await marshall.confirmSpecificGravity(
+  //           granulometryCompositionData,
+  //           maximumMixtureDensityData,
+  //           optimumBinderContentData,
+  //           data,
+  //           false
+  //         );
 
-          newData = {
-            ...data,
-            ...response,
-          };
+  //         newData = {
+  //           ...data,
+  //           ...response,
+  //         };
 
-          setData({ step: 7, value: newData });
-        } catch (error) {
-          setLoading(false);
-          throw error;
-        }
-      },
-      {
-        pending: t('loading.data.pending'),
-        success: t('loading.data.success'),
-        error: t('loading.data.error'),
-      }
-    );
-  }, []);
+  //         setData({ step: 7, value: newData });
+  //       } catch (error) {
+  //         setLoading(false);
+  //         throw error;
+  //       }
+  //     },
+  //     {
+  //       pending: t('loading.data.pending'),
+  //       success: t('loading.data.success'),
+  //       error: t('loading.data.error'),
+  //     }
+  //   );
+  // }, []);
 
   const generateColumns: GridColDef[] = [
     {
@@ -354,7 +354,7 @@ const Marshall_Step8_ConfirmCompression = ({
           listOfSpecificGravities: dmt.listOfSpecificGravities,
         };
 
-        setData({ step: 4, value: newData });
+        setData({ step: 7, value: newData });
         setDMTModalISOpen(false);
       },
       {
@@ -532,12 +532,12 @@ const Marshall_Step8_ConfirmCompression = ({
             sx={{ width: '50%', marginX: 'auto' }}
           />
 
-          {maximumMixtureDensityData?.maxSpecificGravity?.method === 'DMT' && method === 'DMT' ? (
+          {data.dmt ? (
             <Typography variant="h6">
               {t('asphalt.dosages.marshall.binder-trial-dmt') +
                 `   ${data?.confirmedSpecificGravity?.result?.toFixed(2)} g/cm³`}
             </Typography>
-          ) : (
+          ) : data.gmm ? (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <Typography variant="h6">{t('asphalt.dosages.marshall.insert-gmm')}</Typography>
               {data?.confirmedSpecificGravity?.result && (
@@ -566,7 +566,7 @@ const Marshall_Step8_ConfirmCompression = ({
                 {t('asphalt.dosages.marshall.rice-test')}
               </Button>
             </Box>
-          )}
+          ) : null}
 
           <DataGrid
             key={'optimumBinder'}
@@ -594,7 +594,10 @@ const Marshall_Step8_ConfirmCompression = ({
             title={t('asphalt.dosages.marshall.insert-real-specific-mass')}
             leftButtonTitle={t('asphalt.dosages.marshall.cancel')}
             rightButtonTitle={t('asphalt.dosages.marshall.confirm')}
-            onCancel={() => setDMTModalISOpen(false)}
+            onCancel={() => {
+              setData({ step: 7, key: 'dmt', value: false });
+              setDMTModalISOpen(false)
+            }}
             open={DMTModalIsOpen}
             size={'medium'}
             onSubmit={() => handleSubmitDmt()}
