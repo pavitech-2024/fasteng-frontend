@@ -26,7 +26,6 @@ const Marshall_Step8_ConfirmCompression = ({
     granulometryCompositionData,
     setData,
   } = useMarshallStore();
-    console.log("🚀 ~ Marshall_Step8_ConfirmCompression ~ maximumMixtureDensityData:", maximumMixtureDensityData)
     console.log("🚀 ~ Marshall_Step8_ConfirmCompression ~ data:", data)
 
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
@@ -36,38 +35,6 @@ const Marshall_Step8_ConfirmCompression = ({
   const optimumBinderRows = data?.optimumBinder;
 
   const allMaterials = [...materialSelectionData.aggregates, materialSelectionData.binder];
-
-  // useEffect(() => {
-  //   toast.promise(
-  //     async () => {
-  //       try {
-  //         let newData = {};
-  //         const response = await marshall.confirmSpecificGravity(
-  //           granulometryCompositionData,
-  //           maximumMixtureDensityData,
-  //           optimumBinderContentData,
-  //           data,
-  //           false
-  //         );
-
-  //         newData = {
-  //           ...data,
-  //           ...response,
-  //         };
-
-  //         setData({ step: 7, value: newData });
-  //       } catch (error) {
-  //         setLoading(false);
-  //         throw error;
-  //       }
-  //     },
-  //     {
-  //       pending: t('loading.data.pending'),
-  //       success: t('loading.data.success'),
-  //       error: t('loading.data.error'),
-  //     }
-  //   );
-  // }, []);
 
   const generateColumns: GridColDef[] = [
     {
@@ -326,7 +293,7 @@ const Marshall_Step8_ConfirmCompression = ({
         );
       },
     },
-  ];
+  ]
 
   const handleSubmitDmt = async () => {
     const hasNullValues = maximumMixtureDensityData.listOfSpecificGravities.some((g) => !g);
@@ -338,21 +305,18 @@ const Marshall_Step8_ConfirmCompression = ({
 
     toast.promise(
       async () => {
-        const dmt = await marshall.calculateMaximumMixtureDensityDMT(
-          materialSelectionData,
-          binderTrialData,
-          maximumMixtureDensityData
-        );
+        const dmt = await marshall.confirmSpecificGravity(granulometryCompositionData, maximumMixtureDensityData, optimumBinderContentData, data, false);
         console.log("🚀 ~ handleSubmitDmt ~ dmt:", dmt)
 
         const newData = {
           ...data,
-          maxSpecificGravity: {
-            result: dmt.maxSpecificGravity,
-            method: dmt.method,
+          confirmedSpecificGravity: {
+            result: dmt.confirmedSpecificGravity?.result,
+            method: dmt.confirmedSpecificGravity?.type,
           },
           listOfSpecificGravities: dmt.listOfSpecificGravities,
         };
+        console.log("🚀 ~ handleSubmitDmt ~ newData:", newData)
 
         setData({ step: 7, value: newData });
         setDMTModalISOpen(false);

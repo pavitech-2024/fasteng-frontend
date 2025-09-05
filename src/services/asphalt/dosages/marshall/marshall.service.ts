@@ -427,15 +427,17 @@ class Marshall_SERVICE implements IEssayService {
     const { missingSpecificMass, listOfSpecificGravities } = maximumMixtureDensityData;
     const { newPercentOfDosage, trial } = step4Data;
     try {
-      const response = await Api.post(`${this.info.backend_path}/confirm-specific-gravity`, {
+      const response = await Api.post(`${this.info.backend_path}/calculate-step-5-dmt-data`, {
         aggregates,
         percentsOfDosage: newPercentOfDosage,
         trial,
         missingSpecificGravity: missingSpecificMass,
         listOfSpecificGravities
       });
+      console.log("🚀 ~ Marshall_SERVICE ~ response:", response)
 
       const { data, success, error } = response.data;
+      console.log("🚀 ~ Marshall_SERVICE ~ data:", data)
 
       if (success === false) throw error.name;
 
