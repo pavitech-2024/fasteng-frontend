@@ -434,8 +434,10 @@ class Marshall_SERVICE implements IEssayService {
         missingSpecificGravity: missingSpecificMass,
         listOfSpecificGravities
       });
+      console.log("🚀 ~ Marshall_SERVICE ~ response:", response)
 
       const { data, success, error } = response.data;
+      console.log("🚀 ~ Marshall_SERVICE ~ data:", data)
 
       if (success === false) throw error.name;
 

@@ -49,11 +49,12 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
-  console.log("🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ data:", data)
+  console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ data:', data);
   const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [dmtRows, setDmtRows] = useState<{ id: number; DMT: number; Teor: number }[]>([]);
+  console.log("🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ dmtRows:", dmtRows)
   const [dmtColumns, setDmtColumns] = useState<GridColDef[]>([]);
   const [selectedMethod, setSelectedMethod] = useState({
     dmt: data?.method === 'DMT',
@@ -64,6 +65,12 @@ const Marshall_Step5_MixtureMaximumDensity = ({
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
   const [gmmErrorMsg, setGmmErrorMsg] = useState('');
+
+  const methodOptions = [
+    { label: t('asphalt.dosages.marshall.dmt'), value: 'DMT' },
+    { label: t('asphalt.dosages.marshall.gmm'), value: 'GMM' },
+    { label: null, value: null },
+  ];
 
   const materials = [];
 
@@ -103,7 +110,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ i:', i);
             gmmData.push({ id: i, insert: true, value: null });
           }
-          
+
           newData.gmm = gmmData;
 
           newData.riceTest =
@@ -168,11 +175,14 @@ const Marshall_Step5_MixtureMaximumDensity = ({
     let dmtRows;
     let dmtColumns: GridColDef[];
     if (binderTrialData.percentsOfDosage.some((item) => item.value !== null)) {
-      dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => ({
-        id: index + 1,
-        DMT: data?.maxSpecificGravity?.result?.lessOne?.toFixed(2),
-        Teor: item.value,
-      }));
+      dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => {
+        const maxSpecificGravitiesArray = Object.values(data?.maxSpecificGravity?.result ?? {});
+        return {
+          id: index + 1,
+          DMT: maxSpecificGravitiesArray[index]?.toFixed(2),
+          Teor: item.value,
+        }
+      });
 
       dmtColumns = [
         {
@@ -190,7 +200,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
       setDmtRows(dmtRows);
       setDmtColumns(dmtColumns);
     }
-  }, [binderTrialData.percentsOfDosage]);
+  }, [binderTrialData.percentsOfDosage, data?.maxSpecificGravity?.result]);
 
   /**
    * Handles the submission process for calculating the maximum mixture density (DMT).
@@ -210,6 +220,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             binderTrialData,
             data
           );
+          console.log("🚀 ~ handleSubmitDmt ~ dmtResult:", dmtResult)
 
           const prevListOfSpecificGravities = [...data?.listOfSpecificGravities];
           prevListOfSpecificGravities.map((item, index) => {
@@ -269,7 +280,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             value={row.GMM}
             onChange={(e) => {
               const newData = [...data.gmm];
-              console.log("🚀 ~ newData:", newData[row.id])
+              console.log('🚀 ~ newData:', newData[row.id]);
               newData[row.id].value = Number(e.target.value);
               setData({ step: 4, value: { ...data, gmm: newData } });
             }}
@@ -545,17 +556,18 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             options={methodDropdownValues}
             callback={(selectedOption) => {
               if (selectedOption === 'DMT') {
+                setData({ step: 4, key: 'method', value: 'DMT' });
                 setDMTModalISOpen(true);
                 setSelectedMethod({ dmt: true, gmm: false });
               } else if (selectedOption === 'GMM') {
+                setData({ step: 4, key: 'method', value: 'GMM' });
                 setSelectedMethod({ dmt: false, gmm: true });
                 setEnableRiceTest(true);
               }
             }}
-            value={{
-              label: selectedMethod.dmt ? t('asphalt.dosages.dmt') : t('asphalt.dosages.gmm'),
-              value: selectedMethod.dmt ? 'DMT' : 'GMM',
-            }}
+            value={
+              data.method === null ? methodOptions[2] : data.method === 'DMT' ? methodOptions[0] : methodOptions[1]
+            }
             size="medium"
             sx={{ width: '75%', marginX: 'auto' }}
           />
@@ -607,7 +619,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             </Box>
           )}
 
-          {selectedMethod.dmt && !DMTModalIsOpen && !dmtRows.some((e) => !e.DMT) && (
+          {data.method === 'DMT' && !DMTModalIsOpen && !dmtRows.some((e) => !e.DMT) && (
             <DataGrid
               columns={dmtColumns.map((col) => ({
                 ...col,
