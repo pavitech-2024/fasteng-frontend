@@ -662,6 +662,7 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
+
   setOptimumBinderExpectedParameters = async (
     step3Data: MarshallData['granulometryCompositionData'],
     maximumMixtureDensityData: MarshallData['maximumMixtureDensityData'],
@@ -750,7 +751,7 @@ class Marshall_SERVICE implements IEssayService {
   ): Promise<any> => {
     const { percentageInputs } = step3Data;
     const { listOfSpecificGravities } = maximumMixtureDensityData;
-    const { gmm, riceTest } = step8Data;
+    const { gmmInput, riceTest } = step8Data;
     const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
     let method;
     let result;
@@ -768,7 +769,7 @@ class Marshall_SERVICE implements IEssayService {
         percentsOfDosage: percentageInputs,
         confirmedPercentsOfDosage,
         optimumContent,
-        gmm,
+        gmm: gmmInput,
         valuesOfSpecificGravity: riceTest,
       });
 

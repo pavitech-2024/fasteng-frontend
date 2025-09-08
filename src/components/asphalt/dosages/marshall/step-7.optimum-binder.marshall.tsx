@@ -26,6 +26,7 @@ const Marshall_Step7_OptimumBinder = ({
     granulometryCompositionData,
     setData,
   } = useMarshallStore();
+  
 
   useEffect(() => {
     toast.promise(
@@ -230,6 +231,7 @@ const Marshall_Step7_OptimumBinder = ({
 
     return row;
   });
+
 
   nextDisabled && setNextDisabled(false);
 

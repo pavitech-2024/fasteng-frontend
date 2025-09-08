@@ -277,10 +277,9 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           <InputEndAdornment
             adornment={''}
             type="number"
-            value={row.GMM}
+            value={row.GMM?.toFixed(2)}
             onChange={(e) => {
               const newData = [...data.gmm];
-              console.log('🚀 ~ newData:', newData[row.id]);
               newData[row.id].value = Number(e.target.value);
               setData({ step: 4, value: { ...data, gmm: newData } });
             }}
@@ -314,7 +313,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             ...data,
             listOfSpecificGravities: gmm.listOfSpecificGravities,
             maxSpecificGravity: {
-              results: gmm.maxSpecificGravity,
+              result: gmm.maxSpecificGravity,
               method: gmm.method,
             },
           };

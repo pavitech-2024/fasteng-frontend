@@ -196,6 +196,7 @@ interface OptimumBinderContentData {
 interface ConfirmationCompressionData {
   dmt: boolean;
   gmm: boolean;
+  gmmInput: number;
   confirmedSpecificGravity: {
     result: number;
     type: string;
@@ -501,6 +502,7 @@ const initialState = {
   confirmationCompressionData: {
     dmt: false,
     gmm: false,
+    gmmInput: null,
     confirmedSpecificGravity: {
       result: null,
       type: null,
