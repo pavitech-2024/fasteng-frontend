@@ -49,7 +49,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
-  console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ data:', data);
   const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
@@ -100,14 +99,10 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             missingSpecificMass: response,
             gmm: null,
           };
-          console.log("🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ newData:", newData)
-
-          console.log('aqui', newData);
 
           const gmmData = [];
 
           for (let i = 0; i < 5; i++) {
-            console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ i:', i);
             gmmData.push({ id: i, insert: true, value: null });
           }
 
@@ -122,8 +117,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
               massOfContainerWaterSample: null,
               massOfContainerWater: null,
             }));
-
-          console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ newData:', newData);
 
           setData({ step: 4, value: newData });
 
@@ -220,7 +213,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             binderTrialData,
             data
           );
-          console.log("🚀 ~ handleSubmitDmt ~ dmtResult:", dmtResult)
 
           const prevListOfSpecificGravities = [...data?.listOfSpecificGravities];
           prevListOfSpecificGravities.map((item, index) => {
@@ -321,7 +313,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           setData({ step: 4, value: newData });
 
           const newGmmRows = gmmRows.map((item) => {
-            console.log("🚀 ~ calculateGmmData ~ item:", item)
             if (item.id === 0) item.GMM = gmm.maxSpecificGravity.lessOne;
             if (item.id === 1) item.GMM = gmm.maxSpecificGravity.lessHalf;
             if (item.id === 2) item.GMM = gmm.maxSpecificGravity.normal;
