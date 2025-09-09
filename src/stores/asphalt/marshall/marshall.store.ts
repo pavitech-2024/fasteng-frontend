@@ -203,14 +203,14 @@ interface ConfirmationCompressionData {
   };
   optimumBinder: {
     id: number;
-    diammeter: number;
-    height: number;
-    dryMass: number;
-    submergedMass: number;
-    drySurfaceSaturatedMass: number;
-    stability: number;
-    fluency: number;
-    diametricalCompressionStrength: number;
+    diammeter: string;
+    height: string;
+    dryMass: string;
+    submergedMass: string;
+    drySurfaceSaturatedMass: string;
+    stability: string;
+    fluency: string;
+    diametricalCompressionStrength: string;
   }[];
   riceTest: {
     teor: string;

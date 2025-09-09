@@ -226,7 +226,7 @@ const Marshall_Step7_OptimumBinder = ({
 
     volumetricParametersData?.volumetricParameters?.volumetricParameters.forEach((material) => {
       row[material.asphaltContent] =
-        material.values[param.key] !== undefined ? material.values[param.key].toFixed(2) : undefined;
+        material.values[param.key] !== undefined ? material.values[param.key]?.toFixed(2) : undefined;
     });
 
     return row;
