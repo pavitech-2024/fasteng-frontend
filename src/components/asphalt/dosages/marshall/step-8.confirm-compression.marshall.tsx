@@ -22,11 +22,9 @@ const Marshall_Step8_ConfirmCompression = ({
     confirmationCompressionData: data,
     maximumMixtureDensityData,
     optimumBinderContentData,
-    binderTrialData,
     granulometryCompositionData,
     setData,
   } = useMarshallStore();
-    console.log("🚀 ~ Marshall_Step8_ConfirmCompression ~ data:", data)
 
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
@@ -293,7 +291,7 @@ const Marshall_Step8_ConfirmCompression = ({
         );
       },
     },
-  ]
+  ];
 
   const handleSubmitDmt = async () => {
     const hasNullValues = maximumMixtureDensityData.listOfSpecificGravities.some((g) => !g);
@@ -305,8 +303,13 @@ const Marshall_Step8_ConfirmCompression = ({
 
     toast.promise(
       async () => {
-        const dmt = await marshall.confirmSpecificGravity(granulometryCompositionData, maximumMixtureDensityData, optimumBinderContentData, data, false);
-        console.log("🚀 ~ handleSubmitDmt ~ dmt:", dmt)
+        const dmt = await marshall.confirmSpecificGravity(
+          granulometryCompositionData,
+          maximumMixtureDensityData,
+          optimumBinderContentData,
+          data,
+          false
+        );
 
         const newData = {
           ...data,
@@ -316,7 +319,6 @@ const Marshall_Step8_ConfirmCompression = ({
           },
           listOfSpecificGravities: dmt.listOfSpecificGravities,
         };
-        console.log("🚀 ~ handleSubmitDmt ~ newData:", newData)
 
         setData({ step: 7, value: newData });
         setDMTModalISOpen(false);
@@ -341,6 +343,7 @@ const Marshall_Step8_ConfirmCompression = ({
             data,
             true
           );
+          console.log("🚀 ~ calculateRiceTest ~ riceTest:", riceTest)
 
           newData = {
             ...data,
@@ -508,7 +511,7 @@ const Marshall_Step8_ConfirmCompression = ({
                 <Typography>
                   {t('asphalt.dosages.marshall.gmm-calculated-rice-test') +
                     ` ${
-                      data?.confirmedSpecificGravity?.result
+                      data?.confirmedSpecificGravity?.result 
                         ? ` ${data?.confirmedSpecificGravity?.result?.toFixed(2)}  g/cm³`
                         : ' ---'
                     }`}
@@ -518,11 +521,11 @@ const Marshall_Step8_ConfirmCompression = ({
               <InputEndAdornment
                 adornment={'g/cm³'}
                 label={t('asphalt.dosages.marshall.binder-trial-gmm')}
-                value={data?.confirmedSpecificGravity?.result?.toFixed(2)}
+                value={data.gmmInput}
                 sx={{ width: '40%' }}
                 onChange={(e) => {
                   const prevData: MarshallData['confirmationCompressionData'] = data;
-                  const newData = { ...prevData, gmm: e.target.value };
+                  const newData = { ...prevData, gmmInput: e.target.value };
                   setData({ step: 7, value: newData });
                 }}
               />
@@ -560,7 +563,7 @@ const Marshall_Step8_ConfirmCompression = ({
             rightButtonTitle={t('asphalt.dosages.marshall.confirm')}
             onCancel={() => {
               setData({ step: 7, key: 'dmt', value: false });
-              setDMTModalISOpen(false)
+              setDMTModalISOpen(false);
             }}
             open={DMTModalIsOpen}
             size={'medium'}
