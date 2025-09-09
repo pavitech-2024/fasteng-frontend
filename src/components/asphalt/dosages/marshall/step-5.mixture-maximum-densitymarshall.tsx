@@ -54,7 +54,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
   const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [dmtRows, setDmtRows] = useState<{ id: number; DMT: number; Teor: number }[]>([]);
-  console.log("🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ dmtRows:", dmtRows)
   const [dmtColumns, setDmtColumns] = useState<GridColDef[]>([]);
   const [selectedMethod, setSelectedMethod] = useState({
     dmt: data?.method === 'DMT',
@@ -101,12 +100,13 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             missingSpecificMass: response,
             gmm: null,
           };
+          console.log("🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ newData:", newData)
 
           console.log('aqui', newData);
 
           const gmmData = [];
 
-          for (let i = 0; i < newData.missingSpecificMass.length; i++) {
+          for (let i = 0; i < 5; i++) {
             console.log('🚀 ~ Marshall_Step5_MixtureMaximumDensity ~ i:', i);
             gmmData.push({ id: i, insert: true, value: null });
           }
@@ -321,11 +321,12 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           setData({ step: 4, value: newData });
 
           const newGmmRows = gmmRows.map((item) => {
-            if (item.id === 1) item.GMM = gmm.maxSpecificGravity.lessOne;
-            if (item.id === 2) item.GMM = gmm.maxSpecificGravity.lessHalf;
-            if (item.id === 3) item.GMM = gmm.maxSpecificGravity.normal;
-            if (item.id === 4) item.GMM = gmm.maxSpecificGravity.plusHalf;
-            if (item.id === 5) item.GMM = gmm.maxSpecificGravity.plusOne;
+            console.log("🚀 ~ calculateGmmData ~ item:", item)
+            if (item.id === 0) item.GMM = gmm.maxSpecificGravity.lessOne;
+            if (item.id === 1) item.GMM = gmm.maxSpecificGravity.lessHalf;
+            if (item.id === 2) item.GMM = gmm.maxSpecificGravity.normal;
+            if (item.id === 3) item.GMM = gmm.maxSpecificGravity.plusHalf;
+            if (item.id === 4) item.GMM = gmm.maxSpecificGravity.plusOne;
             return item;
           });
 

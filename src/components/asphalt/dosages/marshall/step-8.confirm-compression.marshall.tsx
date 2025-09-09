@@ -343,7 +343,6 @@ const Marshall_Step8_ConfirmCompression = ({
             data,
             true
           );
-          console.log("🚀 ~ calculateRiceTest ~ riceTest:", riceTest)
 
           newData = {
             ...data,
