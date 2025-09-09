@@ -47,9 +47,10 @@ const Marshall_Step8_ConfirmCompression = ({
             value={data?.optimumBinder[index]?.diammeter}
             onChange={(e) => {
               const value = e.target.value;
+
+              // Atualiza o estado com a string diretamente
               const newState = [...data.optimumBinder];
-              const typeCheck = isNaN(parseFloat(value)) ? null : parseFloat(value);
-              newState[index] = { ...newState[index], diammeter: typeCheck };
+              newState[index] = { ...newState[index], diammeter: value };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -68,9 +69,10 @@ const Marshall_Step8_ConfirmCompression = ({
             value={data?.optimumBinder[index]?.height}
             onChange={(e) => {
               const value = e.target.value;
+
+              // Atualiza o estado com a string diretamente
               const newState = [...data.optimumBinder];
-              const typeCheck = isNaN(parseFloat(value)) ? null : parseFloat(value);
-              newState[index] = { ...newState[index], height: typeCheck };
+              newState[index] = { ...newState[index], height: value };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -89,9 +91,10 @@ const Marshall_Step8_ConfirmCompression = ({
             value={data?.optimumBinder[index]?.dryMass}
             onChange={(e) => {
               const value = e.target.value;
+
+              // Atualiza o estado com a string diretamente
               const newState = [...data.optimumBinder];
-              const typeCheck = isNaN(parseFloat(value)) ? null : parseFloat(value);
-              newState[index] = { ...newState[index], dryMass: typeCheck };
+              newState[index] = { ...newState[index], dryMass: value };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -110,9 +113,10 @@ const Marshall_Step8_ConfirmCompression = ({
             value={data?.optimumBinder[index]?.submergedMass}
             onChange={(e) => {
               const value = e.target.value;
+
+              // Atualiza o estado com a string diretamente
               const newState = [...data.optimumBinder];
-              const typeCheck = isNaN(parseFloat(value)) ? null : parseFloat(value);
-              newState[index] = { ...newState[index], submergedMass: typeCheck };
+              newState[index] = { ...newState[index], submergedMass: value };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -131,9 +135,10 @@ const Marshall_Step8_ConfirmCompression = ({
             value={data?.optimumBinder[index]?.drySurfaceSaturatedMass}
             onChange={(e) => {
               const value = e.target.value;
+
+              // Atualiza o estado com a string diretamente
               const newState = [...data.optimumBinder];
-              const typeCheck = isNaN(parseFloat(value)) ? null : parseFloat(value);
-              newState[index] = { ...newState[index], drySurfaceSaturatedMass: typeCheck };
+              newState[index] = { ...newState[index], drySurfaceSaturatedMass: value };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -152,9 +157,10 @@ const Marshall_Step8_ConfirmCompression = ({
             value={data?.optimumBinder[index]?.stability}
             onChange={(e) => {
               const value = e.target.value;
+
+              // Atualiza o estado com a string diretamente
               const newState = [...data.optimumBinder];
-              const typeCheck = isNaN(parseFloat(value)) ? null : parseFloat(value);
-              newState[index] = { ...newState[index], stability: typeCheck };
+              newState[index] = { ...newState[index], stability: value };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -173,9 +179,10 @@ const Marshall_Step8_ConfirmCompression = ({
             value={data?.optimumBinder[index]?.fluency}
             onChange={(e) => {
               const value = e.target.value;
+
+              // Atualiza o estado com a string diretamente
               const newState = [...data.optimumBinder];
-              const typeCheck = isNaN(parseFloat(value)) ? null : parseFloat(value);
-              newState[index] = { ...newState[index], fluency: typeCheck };
+              newState[index] = { ...newState[index], fluency: value };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -194,9 +201,10 @@ const Marshall_Step8_ConfirmCompression = ({
             value={data?.optimumBinder[index]?.diametricalCompressionStrength}
             onChange={(e) => {
               const value = e.target.value;
+
+              // Atualiza o estado com a string diretamente
               const newState = [...data.optimumBinder];
-              const typeCheck = isNaN(parseFloat(value)) ? null : parseFloat(value);
-              newState[index] = { ...newState[index], diametricalCompressionStrength: typeCheck };
+              newState[index] = { ...newState[index], diametricalCompressionStrength: value };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -343,6 +351,7 @@ const Marshall_Step8_ConfirmCompression = ({
             data,
             true
           );
+          console.log("🚀 ~ calculateRiceTest ~ riceTest:", riceTest)
 
           newData = {
             ...data,
@@ -458,9 +467,9 @@ const Marshall_Step8_ConfirmCompression = ({
   useEffect(() => {
     const isConfirmed = data.confirmedSpecificGravity.result !== null && data.confirmedSpecificGravity.type !== null;
     const hasNullValues = data.optimumBinder.some((row) => Object.values(row).some((value) => value === null));
-    const methodIsSelected = data.dmt || data.gmm;
+    const methodIsSelected = Boolean(data.dmt) || Boolean(data.gmm);
 
-    setNextDisabled(!methodIsSelected || hasNullValues || !isConfirmed);
+    setNextDisabled(!methodIsSelected && hasNullValues && isConfirmed);
   }, [data, method, isConfirmed]);
 
   return (
@@ -510,7 +519,7 @@ const Marshall_Step8_ConfirmCompression = ({
                 <Typography>
                   {t('asphalt.dosages.marshall.gmm-calculated-rice-test') +
                     ` ${
-                      data?.confirmedSpecificGravity?.result 
+                      data?.confirmedSpecificGravity?.result
                         ? ` ${data?.confirmedSpecificGravity?.result?.toFixed(2)}  g/cm³`
                         : ' ---'
                     }`}
