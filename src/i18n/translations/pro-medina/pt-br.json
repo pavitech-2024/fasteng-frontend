@@ -1,9 +1,10 @@
 {
   "home.pm": "Pro-Medina",
-  "home.pm.description": "O Pró MeDiNa foi desenvolvido para registro de materiais utilizados na calibração do MeDiNa. Ele permite cadastrar e consultar informações de forma estruturada, facilitando o gerenciamento dos dados e a exportação para análise. Com uma interface intuitiva, a ferramenta otimiza o processo de calibração, tornando-o mais eficiente e preciso.",
+  "home.pm.description": "Breve texto introdutório do objetivo do pro-medina e como ele funciona, especificando as quatro áreas de abordagem abaixo. Qual aplicação você deseja utilizar agora?",
   "home.pm.granular": "Camadas Granulares",
   "home.pm.stabilized": "Camadas Estabilizadas",
   "home.pm.asphalt": "Ligante e Concreto Asfálticos",
+  "home.pm.fwd": "FWD",
   "welcome.step.granular-layers.register.1": "Clique em Cadastro de novas amostras",
   "welcome.step.granular-layers.register.2": "Registre dados obrigatórios do material",
   "welcome.step.granular-layers.register.3": "Registre dados sobre o pavimento em que o material está inserido",
@@ -35,7 +36,7 @@
   "pm.granular-layers-register": "Cadastro de amostras em Camadas Granulares",
   "pm.stabilized-layers-register": "Cadastro de amostras em Camadas Estabilizadas",
   "promedina.essays.granularLayers": "Cadastro de amostras em Camadas Granulares",
-  "promedina.essays.stabilized-layers": "Cadastro de amostras em Camadas Estabilizadas",
+  "promedina.essays.stabilizedLayers": "Cadastro de amostras em Camadas Estabilizadas",
   "pm.binderAsphaltConcrete.highway": "Rodovia",
   "pm.general.data": "Dados Gerais",
   "pm.granularLayer.identification": "Identificação",
@@ -63,7 +64,6 @@
   "pm.structural.composition": "Composição estrutural",
   "register.step-2-description": "Preencha todos os dados relacionados ao pavimento!",
   "pm.resilience.module": "Módulo de Resiliência - 28 dias (MPa)",
-  "pm.granularLayers.resilience.module": "Módulo de Resiliência",
   "pm.permanent.deformation": "Deformação Permanente",
   "pm.granularLayer.mctCoefficientC": "MCT-Coeficiente c'",
   "pm.granularLayer.mctIndexE": "MCT-Índice e'",
@@ -195,9 +195,7 @@
   "pm.granularLayer.highway": "Rodovia",
   "promedina.essays.stabilizedLayersView": "Amostras cadastradas em Camadas estabilizadas",
   "promedina.essays.binderAsphaltConcreteView": "Amostras cadastradas em Ligante e Concreto asfálticos",
-  "register.step-4-description": "Este é o resumo da sua amostra. Não esqueça de salvar os dados para poder acessá-los mais tarde.",
-  "register.step-5-description": "Esse é o resumo da sua amostra.",
-  "pm.pavement.resume": "Resumo da amostra",
+  "register.step-4-description": "Preencha todos os dados obrigatórios.",
   "pm.granularLayer.stabilizer": "Estabilizante",
   "pm.granularLayer.asphaltTenor": "Teor",
   "pm.granularLayer.rcs": "RCS, 28 dias (MPa)",
@@ -221,10 +219,5 @@
   "pm-tooltip-filter-highway": "Você digitou um filtro por rodovia",
   "pm-tooltip-del-sample": "Deletar amostra",
   "pm-datasheet": "Ficha técnica",
-  "pm-type-of-section": "Tipo de seção",
-  "pm.granularLayer.especific.mass": "Massa específica",
-
-  "pm.generate-pdf-button": "Gerar PDF",
-
-  "pm.register.resume": "Resumo"
+  "pm-type-of-section": "Tipo de seção"
 }
