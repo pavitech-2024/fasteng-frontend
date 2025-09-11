@@ -58,7 +58,7 @@ const fwdAnalysisService = {
     Api.post(`fwd-analysis/${analysisId}/process`),
 
   // Buscar análises com filtro
-  getFilteredAnalyses: (params: any, page: number = 1, limit: number = 10, need_count: boolean = true) => {
+  getFilteredAnalyses: (params: any, page = 1, limit = 10, need_count = true) => {
     const filterParams = JSON.stringify(params);
     return Api.get(
       `fwd-analysis/filter/?filter=${filterParams}&limit=${limit}&need_count=${need_count}&page=${page}`

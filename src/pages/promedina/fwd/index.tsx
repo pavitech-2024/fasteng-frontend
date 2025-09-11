@@ -144,7 +144,7 @@ function processarSubtrechos(dados: FWDData[]) {
   const { media: media_d0, std: std_d0 } = rollingWindow(d0Arr, janela);
   const cv_d0 = std_d0.map((s, i) => (media_d0[i] ? s / media_d0[i] * 100 : 0));
   const quebra = cv_d0.map(cv => cv > limiar_cv);
-  let subtrechos: Subtrecho[] = [];
+  const subtrechos: Subtrecho[] = [];
   let atual = 0;
   let inicio = ordered[0]?.stationNumber ?? 0;
   
@@ -772,7 +772,7 @@ const FWDPage = () => {
               
               {fwdAnalysis.length === 0 ? (
                 <Alert severity="info">
-                  Nenhuma análise criada ainda. Vá para a aba "Criar Análise" para começar.
+                  <p>Nenhuma análise criada ainda. Vá para a aba "Criar Análise" para começar.</p>
                 </Alert>
               ) : (
                 <Grid container spacing={2}>
@@ -838,7 +838,7 @@ const FWDPage = () => {
             
             {fwdAnalysis.length === 0 ? (
               <Alert severity="info">
-                Nenhuma análise disponível. Crie uma análise primeiro na aba "Criar Análise".
+                <p>Nenhuma análise disponível. Crie uma análise primeiro na aba "Criar Análise".</p>
               </Alert>
             ) : !selectedAnalysis ? (
               <Alert severity="info">
