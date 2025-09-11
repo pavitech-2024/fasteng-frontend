@@ -463,7 +463,7 @@ const FWDPage = () => {
     }
   };
 
-  const d0ChartData = procResult && procResult.ordered
+  const d0ChartData = procResult && procResult.ordered && procResult.ordered.length > 0
   ? {
       labels: procResult.ordered.map((r: FWDData) => r.stationNumber),
       datasets: [
@@ -493,12 +493,19 @@ const FWDPage = () => {
     }
   : undefined;
 
-  const baciaChartData = procResult && procResult.subtrechos
+  const baciaChartData = procResult && 
+                       procResult.subtrechos && 
+                       Array.isArray(procResult.subtrechos) && 
+                       procResult.subtrechos.length > 0
   ? {
       labels: pos_sensores.map((x) => `${x} cm`),
-      datasets: procResult.subtrechos.map((sub: Subtrecho, i: number) => ({
+      datasets: procResult.subtrechos.map((sub: any, i: number) => ({
         label: `Subtrecho ${i + 1}: Est. ${sub['Início (Estaca)']}–${sub['Fim (Estaca)']}`,
-        data: pos_sensores.map((p) => sub[`d${p}`]),
+        data: pos_sensores.map((p) => {
+          // Verifica se a propriedade existe e é um número
+          const value = sub[`d${p}`];
+          return typeof value === 'number' ? value : 0;
+        }),
         fill: false,
         borderWidth: 2,
         borderColor: `hsl(${(i * 77) % 360}, 64%, 54%)`,
@@ -507,7 +514,10 @@ const FWDPage = () => {
         pointBorderWidth: 2,
       })),
     }
-  : undefined;
+  : {
+      labels: pos_sensores.map((x) => `${x} cm`),
+      datasets: []
+    };
 
   const generateAnalysisChart = (analysis: FWDAnalysis) => {
     const colors = [
@@ -875,18 +885,18 @@ const FWDPage = () => {
                 {procResult && (
                   <>
                     <Card sx={{ mb: 3 }}>
-                      <CardContent>
-                        <Typography variant="h6" gutterBottom>
-                          {selectedAnalysis.name} - Bacias de Deflexão
-                        </Typography>
-                        <Box sx={{ height: 400 }}>
-                          <Line 
-                            data={generateAnalysisChart(selectedAnalysis).data} 
-                            options={generateAnalysisChart(selectedAnalysis).options} 
-                          />
-                        </Box>
-                      </CardContent>
-                    </Card>
+  <CardContent>
+    <Typography variant="h6" gutterBottom>
+      {selectedAnalysis.name} - Bacias de Deflexão
+    </Typography>
+    <Box sx={{ height: 400 }}>
+      <Line 
+        data={generateAnalysisChart(selectedAnalysis).data} 
+        options={generateAnalysisChart(selectedAnalysis).options} 
+      />
+    </Box>
+  </CardContent>
+</Card>
 
                     <Typography variant="h6" gutterBottom>
                       Análise de Subtrechos Homogêneos
@@ -932,54 +942,40 @@ const FWDPage = () => {
                         </TableBody>
                       </Table>
                     </TableContainer>
-
-                    {/* Gráfico d0 */}
-                    <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 1 }}>
-                      Gráfico da Deflexão d0 ao longo das estacas
-                    </Typography>
-                    <Box sx={{ width: '100%', maxWidth: 800, mx: 'auto', mb: 5, background: "#fff", borderRadius: 3, p: 2 }}>
-                      <Line
-                        data={d0ChartData}
-                        options={{
-                          responsive: true,
-                          plugins: {
-                            legend: { display: true, position: 'top' as const },
-                            title: { display: true, text: 'Deflexão Máxima (d0) por Estaca' },
-                          },
-                          scales: {
-                            x: { title: { display: true, text: 'Estaca' } },
-                            y: { title: { display: true, text: 'Deflexão d0 (µm)' }},
-                          },
-                        }}
-                      />
-                    </Box>
+                    
+                    
 
                     {/* Bacia de Deflexão */}
                     <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 1 }}>
                       Bacias de Deflexão Características por Subtrecho
                     </Typography>
-                    {baciaChartData && baciaChartData.labels && baciaChartData.datasets ? (
-                    <Box sx={{ width: '100%', maxWidth: 800, mx: 'auto', background: "#fff", borderRadius: 3, p: 2 }}>
-                        <Line
-                        data={baciaChartData}
-                        options={{
-                            responsive: true,
-                            plugins: {
-                            legend: { display: true, position: 'top' as const },
-                            title: { display: true, text: 'Bacias de Deflexão Características' },
-                            },
-                            scales: {
-                            x: { title: { display: true, text: 'Distância do sensor (cm)' } },
-                            y: { title: { display: true, text: 'Deflexão característica (µm)' }, reverse: true },
-                            },
-                        }}
-                        />
-                    </Box>
-                    ) : (
-                    <Alert severity="info" sx={{ mb: 3 }}>
-                        Não há dados suficientes para gerar o gráfico de bacias de deflexão.
-                    </Alert>
-                    )}
+                    {baciaChartData && baciaChartData.labels && baciaChartData.labels.length > 0 ? (
+  <Box sx={{ width: '100%', maxWidth: 800, mx: 'auto', background: "#fff", borderRadius: 3, p: 2 }}>
+    <Line
+      data={baciaChartData}
+      options={{
+        responsive: true,
+        plugins: {
+          legend: { display: true, position: 'top' as const },
+          title: { display: true, text: 'Bacias de Deflexão Características' },
+        },
+        scales: {
+          x: { 
+            title: { display: true, text: 'Distância do Centro (cm)' } 
+          },
+          y: { 
+            title: { display: true, text: 'Deflexão característica (µm)' }, 
+            reverse: true 
+          },
+        },
+      }}
+    />
+  </Box>
+) : (
+  <Alert severity="info" sx={{ mb: 3 }}>
+    Não há dados suficientes para gerar o gráfico de bacias de deflexão.
+  </Alert>
+)}
                                     </>
                                     )}
                                 </Box>
