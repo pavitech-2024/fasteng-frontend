@@ -772,7 +772,9 @@ const FWDPage = () => {
               
               {fwdAnalysis.length === 0 ? (
                 <Alert severity="info">
-                  <p>Nenhuma análise criada ainda. Vá para a aba "Criar Análise" para começar.</p>
+                  <p>
+                  Nenhuma análise criada ainda. Vá para a aba &quot;Criar Análise&quot; para começar.
+                </p>
                 </Alert>
               ) : (
                 <Grid container spacing={2}>
@@ -838,7 +840,7 @@ const FWDPage = () => {
             
             {fwdAnalysis.length === 0 ? (
               <Alert severity="info">
-                <p>Nenhuma análise disponível. Crie uma análise primeiro na aba "Criar Análise".</p>
+                <p>Nenhuma análise disponível. Crie uma análise primeiro na aba &quot;Criar Análise&quot;.</p>
               </Alert>
             ) : !selectedAnalysis ? (
               <Alert severity="info">
