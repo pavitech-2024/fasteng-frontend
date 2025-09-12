@@ -25,6 +25,7 @@ const Marshall_Step8_ConfirmCompression = ({
     granulometryCompositionData,
     setData,
   } = useMarshallStore();
+  console.log('🚀 ~ Marshall_Step8_ConfirmCompression ~ data:', data);
 
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
@@ -45,12 +46,13 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'cm'}
             value={data?.optimumBinder[index]?.diammeter}
+            type='number'
             onChange={(e) => {
               const value = e.target.value;
 
               // Atualiza o estado com a string diretamente
               const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], diammeter: value };
+              newState[index] = { ...newState[index], diammeter: parseFloat(value) };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -66,13 +68,14 @@ const Marshall_Step8_ConfirmCompression = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
+            type='number'
             value={data?.optimumBinder[index]?.height}
             onChange={(e) => {
               const value = e.target.value;
 
               // Atualiza o estado com a string diretamente
               const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], height: value };
+              newState[index] = { ...newState[index], height: parseFloat(value) };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -89,12 +92,13 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'g'}
             value={data?.optimumBinder[index]?.dryMass}
+            type='number'
             onChange={(e) => {
               const value = e.target.value;
 
               // Atualiza o estado com a string diretamente
               const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], dryMass: value };
+              newState[index] = { ...newState[index], dryMass: parseFloat(value) };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -111,12 +115,13 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'g'}
             value={data?.optimumBinder[index]?.submergedMass}
+            type='number'
             onChange={(e) => {
               const value = e.target.value;
 
               // Atualiza o estado com a string diretamente
               const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], submergedMass: value };
+              newState[index] = { ...newState[index], submergedMass: parseFloat(value) };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -133,12 +138,13 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'g'}
             value={data?.optimumBinder[index]?.drySurfaceSaturatedMass}
+            type='number'
             onChange={(e) => {
               const value = e.target.value;
 
               // Atualiza o estado com a string diretamente
               const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], drySurfaceSaturatedMass: value };
+              newState[index] = { ...newState[index], drySurfaceSaturatedMass: parseFloat(value) };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -155,12 +161,13 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'N'}
             value={data?.optimumBinder[index]?.stability}
+            type='number'
             onChange={(e) => {
               const value = e.target.value;
 
               // Atualiza o estado com a string diretamente
               const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], stability: value };
+              newState[index] = { ...newState[index], stability: parseFloat(value) };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -177,12 +184,13 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'mm'}
             value={data?.optimumBinder[index]?.fluency}
+            type='number'
             onChange={(e) => {
               const value = e.target.value;
 
               // Atualiza o estado com a string diretamente
               const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], fluency: value };
+              newState[index] = { ...newState[index], fluency: parseFloat(value) };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -198,13 +206,14 @@ const Marshall_Step8_ConfirmCompression = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
+            type='number'
             value={data?.optimumBinder[index]?.diametricalCompressionStrength}
             onChange={(e) => {
               const value = e.target.value;
 
               // Atualiza o estado com a string diretamente
               const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], diametricalCompressionStrength: value };
+              newState[index] = { ...newState[index], diametricalCompressionStrength: parseFloat(value) };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -351,7 +360,7 @@ const Marshall_Step8_ConfirmCompression = ({
             data,
             true
           );
-          console.log("🚀 ~ calculateRiceTest ~ riceTest:", riceTest)
+          console.log('🚀 ~ calculateRiceTest ~ riceTest:', riceTest);
 
           newData = {
             ...data,
@@ -388,6 +397,16 @@ const Marshall_Step8_ConfirmCompression = ({
             ...data,
             ...confirmVP,
           };
+
+          if (!data.confirmedSpecificGravity.result && data.gmmInput) {
+            newData = {
+              ...newData,
+              confirmedSpecificGravity: {
+                result: parseFloat(data.gmmInput.replace(",", ".")),
+                method: 'GMM',
+              },
+            };
+          }
 
           setIsConfirmed(true);
           setData({ step: 7, value: newData });
