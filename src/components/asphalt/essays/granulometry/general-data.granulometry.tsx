@@ -17,7 +17,6 @@ const AsphaltGranulometry_GeneralData = ({
 }: EssayPageProps & { granulometry: AsphaltGranulometry_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
-  console.log("🚀 ~ AsphaltGranulometry_GeneralData ~ materials:", materials)
   const { user } = useAuth();
   const { generalData, setData } = useAsphaltGranulometryStore();
 
@@ -25,12 +24,10 @@ const AsphaltGranulometry_GeneralData = ({
     toast.promise(
       async () => {
         const data = await granulometry.getmaterialsByUserId(user._id);        
-        console.log("🚀 ~ AsphaltGranulometry_GeneralData ~ data:", data)
 
         const filteredMaterials = data[0].materials.filter(
           (material) => material.type === 'coarseAggregate' || material.type === 'fineAggregate' || material.type === 'filler'
         );
-        console.log("🚀 ~ AsphaltGranulometry_GeneralData ~ filteredMaterials:", filteredMaterials)
 
         setMaterials(filteredMaterials);
         setLoading(false);

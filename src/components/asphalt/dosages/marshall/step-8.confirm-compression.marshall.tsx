@@ -25,7 +25,6 @@ const Marshall_Step8_ConfirmCompression = ({
     granulometryCompositionData,
     setData,
   } = useMarshallStore();
-  console.log('🚀 ~ Marshall_Step8_ConfirmCompression ~ data:', data);
 
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
@@ -360,7 +359,6 @@ const Marshall_Step8_ConfirmCompression = ({
             data,
             true
           );
-          console.log('🚀 ~ calculateRiceTest ~ riceTest:', riceTest);
 
           newData = {
             ...data,

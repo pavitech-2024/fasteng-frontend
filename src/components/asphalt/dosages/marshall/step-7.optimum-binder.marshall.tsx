@@ -25,9 +25,7 @@ const Marshall_Step7_OptimumBinder = ({
     materialSelectionData,
     granulometryCompositionData,
     setData,
-  } = useMarshallStore();
-    console.log("🚀 ~ Marshall_Step7_OptimumBinder ~ data:", data)
-  
+  } = useMarshallStore();  
 
   useEffect(() => {
     toast.promise(
@@ -88,7 +86,6 @@ const Marshall_Step7_OptimumBinder = ({
 
   // Cria um novo array: primeiro a linha extra, depois os dados recebidos
   const preparedPoints = [['', '', ''], ...points];
-  console.log("🚀 ~ Marshall_Step7_OptimumBinder ~ preparedPoints:", preparedPoints)
 
   const expectedParametersColumns: GridColDef[] = [
     {

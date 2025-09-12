@@ -33,7 +33,6 @@ const Marshall_Step9_ResumeDosage = ({
     confirmationCompressionData: data,
     setData,
   } = useMarshallStore();
-    console.log("🚀 ~ Marshall_Step9_ResumeDosage ~ data:", data);
 
   const [dosage, setDosage] = useState(null);
   const store = JSON.parse(sessionStorage.getItem('asphalt-marshall-store'));
@@ -239,10 +238,6 @@ const Marshall_Step9_ResumeDosage = ({
         [material._id]: data?.confirmedVolumetricParameters?.quantitative[idx]?.toFixed(2),
       };
     });
-        console.log("🚀 ~ getQuantitativeRows ~ data?.confirmedVolumetricParameters?.quantitative:", data?.confirmedVolumetricParameters?.quantitative)
-
-        console.log("🚀 ~ getQuantitativeRows ~ rowsObj:", rowsObj)
-
 
     setQuantitativeRows([rowsObj]);
   };
