@@ -51,7 +51,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
   const [enableRiceTest, setEnableRiceTest] = useState(false);
   const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
-  const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
+  // const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [dmtRows, setDmtRows] = useState<{ id: number; DMT: number; Teor: number }[]>([]);
   const [dmtColumns, setDmtColumns] = useState<GridColDef[]>([]);
   const [selectedMethod, setSelectedMethod] = useState({
@@ -174,7 +174,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           id: index + 1,
           DMT: maxSpecificGravitiesArray[index]?.toFixed(2),
           Teor: item.value,
-        }
+        };
       });
 
       dmtColumns = [
@@ -242,6 +242,30 @@ const Marshall_Step5_MixtureMaximumDensity = ({
     );
   };
 
+  const gmmColumns: GridColDef[] = [
+    {
+      field: 'Teor',
+      headerName: t('asphalt.dosages.marshall.tenor'),
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'GMM',
+      headerName: 'GMM',
+      renderCell: ({ row }) => (
+        <InputEndAdornment
+          adornment={''}
+          type="number"
+          value={row.GMM}
+          onChange={(e) => {
+            const newData = [...data.gmm];
+            newData[row.id].value = Number(e.target.value);
+            setData({ step: 4, value: { ...data, gmm: newData } });
+          }}
+        />
+      ),
+    },
+  ];
+
   /**
    * useEffect hook that runs when the `data.gmm` changes.
    * It extracts the GMM and Teor values from the `data.gmm` array and stores them in the `gmmRows` state.
@@ -256,29 +280,29 @@ const Marshall_Step5_MixtureMaximumDensity = ({
     });
 
     setGmmRows(gmmRows);
-    setGmmColumns([
-      {
-        field: 'Teor',
-        headerName: t('asphalt.dosages.marshall.tenor'),
-        valueFormatter: ({ value }) => `${value}`,
-      },
-      {
-        field: 'GMM',
-        headerName: 'GMM',
-        renderCell: ({ row }) => (
-          <InputEndAdornment
-            adornment={''}
-            type="number"
-            value={row.GMM?.toFixed(2)}
-            onChange={(e) => {
-              const newData = [...data.gmm];
-              newData[row.id].value = Number(e.target.value);
-              setData({ step: 4, value: { ...data, gmm: newData } });
-            }}
-          />
-        ),
-      },
-    ]);
+    // setGmmColumns([
+    //   {
+    //     field: 'Teor',
+    //     headerName: t('asphalt.dosages.marshall.tenor'),
+    //     valueFormatter: ({ value }) => `${value}`,
+    //   },
+    //   {
+    //     field: 'GMM',
+    //     headerName: 'GMM',
+    //     renderCell: ({ row }) => (
+    //       <InputEndAdornment
+    //         adornment={''}
+    //         type="number"
+    //         value={row.GMM?.toFixed(2)}
+    //         onChange={(e) => {
+    //           const newData = [...data.gmm];
+    //           newData[row.id].value = Number(e.target.value);
+    //           setData({ step: 4, value: { ...data, gmm: newData } });
+    //         }}
+    //       />
+    //     ),
+    //   },
+    // ]);
   }, [data.gmm]);
 
   /**

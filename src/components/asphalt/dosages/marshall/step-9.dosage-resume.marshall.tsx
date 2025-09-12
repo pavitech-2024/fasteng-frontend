@@ -238,10 +238,6 @@ const Marshall_Step9_ResumeDosage = ({
         [material._id]: data?.confirmedVolumetricParameters?.quantitative[idx]?.toFixed(2),
       };
     });
-        console.log("🚀 ~ getQuantitativeRows ~ data?.confirmedVolumetricParameters?.quantitative:", data?.confirmedVolumetricParameters?.quantitative)
-
-        console.log("🚀 ~ getQuantitativeRows ~ rowsObj:", rowsObj)
-
 
     setQuantitativeRows([rowsObj]);
   };

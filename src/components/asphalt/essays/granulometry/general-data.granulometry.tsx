@@ -26,7 +26,7 @@ const AsphaltGranulometry_GeneralData = ({
         const data = await granulometry.getmaterialsByUserId(user._id);        
 
         const filteredMaterials = data[0].materials.filter(
-          (material) => material.type === 'coarseAggregate' || material.type === 'fineAggregate' || 'filler'
+          (material) => material.type === 'coarseAggregate' || material.type === 'fineAggregate' || material.type === 'filler'
         );
 
         setMaterials(filteredMaterials);

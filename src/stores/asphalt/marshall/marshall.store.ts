@@ -196,21 +196,21 @@ interface OptimumBinderContentData {
 interface ConfirmationCompressionData {
   dmt: boolean;
   gmm: boolean;
-  gmmInput: number;
+  gmmInput: string;
   confirmedSpecificGravity: {
     result: number;
     type: string;
   };
   optimumBinder: {
     id: number;
-    diammeter: string;
-    height: string;
-    dryMass: string;
-    submergedMass: string;
-    drySurfaceSaturatedMass: string;
-    stability: string;
-    fluency: string;
-    diametricalCompressionStrength: string;
+    diammeter: number;
+    height: number;
+    dryMass: number;
+    submergedMass: number;
+    drySurfaceSaturatedMass: number;
+    stability: number;
+    fluency: number;
+    diametricalCompressionStrength: number;
   }[];
   riceTest: {
     teor: string;

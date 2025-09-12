@@ -75,9 +75,9 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
           <InputEndAdornment
             fullWidth
             adornment="%"
-            type="text"
+            type="number"
             inputProps={{ min: 0 }}
-            value={rows[sieve_index]?.passant ?? ''}
+            value={rows[sieve_index]?.passant}
             required
             onChange={(e) => {
               if (e.target.value === null) return;

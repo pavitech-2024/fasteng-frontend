@@ -25,8 +25,7 @@ const Marshall_Step7_OptimumBinder = ({
     materialSelectionData,
     granulometryCompositionData,
     setData,
-  } = useMarshallStore();
-  
+  } = useMarshallStore();  
 
   useEffect(() => {
     toast.promise(
