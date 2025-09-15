@@ -1,44 +1,43 @@
-import { useState, useEffect } from 'react';
-import {
-  Typography,
-  Box,
-  Tabs,
-  Tab,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-  Button,
-  Chip,
-  IconButton,
-  Alert,
-  Stack,
-  useMediaQuery,
-  useTheme,
-  Divider,
-  Card,
-  CardContent,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Select,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  CircularProgress,
-  Snackbar,
-  Container,
-  Grid // Adicionado Grid na importação em bloco
-} from '@mui/material';
-import Container from '@mui/material/Container';
 import { Delete, Add, Assessment, ExpandMore } from '@mui/icons-material';
 import { Line } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import Api from '@/api';
+import {
+  Tab,
+  Tabs,
+  CircularProgress,
+  useMediaQuery,
+  Typography,
+  Paper,
+  Alert,
+  Grid,
+  TextField,
+  Divider,
+  Button,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  IconButton,
+  Card,
+  CardContent,
+  Chip,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Snackbar,
+  Box,
+  Stack
+} from '@mui/material';
+import { Container } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { useTheme } from '@mui/material/styles';
 
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -107,10 +106,33 @@ type Subtrecho = {
 };
 
 const coef_K: Record<number, number> = {
-  4: 3.00, 5: 1.55, 6: 1.41, 7: 1.36, 8: 1.31, 9: 1.25, 10: 1.21,
-  11: 1.20, 12: 1.16, 13: 1.13, 14: 1.11, 15: 1.10, 16: 1.08, 17: 1.06,
-  18: 1.05, 19: 1.04, 20: 1.02, 21: 1.01, 22: 1.00, 23: 1.00, 24: 1.00,
-  25: 1.00, 26: 1.00, 27: 1.00, 28: 1.00, 29: 1.00, 30: 1.00,
+  4: 3.0,
+  5: 1.55,
+  6: 1.41,
+  7: 1.36,
+  8: 1.31,
+  9: 1.25,
+  10: 1.21,
+  11: 1.2,
+  12: 1.16,
+  13: 1.13,
+  14: 1.11,
+  15: 1.1,
+  16: 1.08,
+  17: 1.06,
+  18: 1.05,
+  19: 1.04,
+  20: 1.02,
+  21: 1.01,
+  22: 1.0,
+  23: 1.0,
+  24: 1.0,
+  25: 1.0,
+  26: 1.0,
+  27: 1.0,
+  28: 1.0,
+  29: 1.0,
+  30: 1.0,
 };
 
 function getCoefK(n: number) {
@@ -141,14 +163,14 @@ function processarSubtrechos(dados: FWDData[]) {
   const janela = 5;
   const limiar_cv = 30;
   const ordered = [...dados].sort((a, b) => a.stationNumber - b.stationNumber);
-  const d0Arr = ordered.map(r => r.d0);
+  const d0Arr = ordered.map((r) => r.d0);
   const { media: media_d0, std: std_d0 } = rollingWindow(d0Arr, janela);
-  const cv_d0 = std_d0.map((s, i) => (media_d0[i] ? s / media_d0[i] * 100 : 0));
-  const quebra = cv_d0.map(cv => cv > limiar_cv);
+  const cv_d0 = std_d0.map((s, i) => (media_d0[i] ? (s / media_d0[i]) * 100 : 0));
+  const quebra = cv_d0.map((cv) => cv > limiar_cv);
   const subtrechos: Subtrecho[] = [];
   let atual = 0;
   let inicio = ordered[0]?.stationNumber ?? 0;
-  
+
   for (let i = 1; i < ordered.length; i++) {
     const comprimento_estacas = ordered[i].stationNumber - ordered[atual].stationNumber;
     if (quebra[i] || comprimento_estacas >= max_len) {
@@ -158,8 +180,8 @@ function processarSubtrechos(dados: FWDData[]) {
         const trecho = ordered.slice(atual, i);
         const medias: Record<string, number> = {};
         const desvios: Record<string, number> = {};
-        colDef.forEach(col => {
-          const vals = trecho.map(x => x[col]);
+        colDef.forEach((col) => {
+          const vals = trecho.map((x) => x[col]);
           const m = vals.reduce((a, b) => a + b, 0) / vals.length;
           const s = Math.sqrt(vals.reduce((a, b) => a + (b - m) * (b - m), 0) / vals.length);
           medias[col] = m;
@@ -167,7 +189,7 @@ function processarSubtrechos(dados: FWDData[]) {
         });
         const K = getCoefK(n_amostras);
         const deflexoes_char: Record<string, number> = {};
-        colDef.forEach(col => {
+        colDef.forEach((col) => {
           deflexoes_char[col] = Number((medias[col] + K * desvios[col]).toFixed(1));
         });
         subtrechos.push({
@@ -182,7 +204,7 @@ function processarSubtrechos(dados: FWDData[]) {
       inicio = ordered[i].stationNumber;
     }
   }
-  
+
   // Último subtrecho
   const fim = ordered[ordered.length - 1]?.stationNumber ?? 0;
   const comprimento_final = fim - inicio;
@@ -191,8 +213,8 @@ function processarSubtrechos(dados: FWDData[]) {
     const trecho = ordered.slice(atual);
     const medias: Record<string, number> = {};
     const desvios: Record<string, number> = {};
-    colDef.forEach(col => {
-      const vals = trecho.map(x => x[col]);
+    colDef.forEach((col) => {
+      const vals = trecho.map((x) => x[col]);
       const m = vals.reduce((a, b) => a + b, 0) / vals.length;
       const s = Math.sqrt(vals.reduce((a, b) => a + (b - m) * (b - m), 0) / vals.length);
       medias[col] = m;
@@ -200,7 +222,7 @@ function processarSubtrechos(dados: FWDData[]) {
     });
     const K = getCoefK(n_amostras);
     const deflexoes_char: Record<string, number> = {};
-    colDef.forEach(col => {
+    colDef.forEach((col) => {
       deflexoes_char[col] = Number((medias[col] + K * desvios[col]).toFixed(1));
     });
     subtrechos.push({
@@ -209,7 +231,7 @@ function processarSubtrechos(dados: FWDData[]) {
       'Comprimento (m)': Number(((fim - inicio) * estaca_para_metros).toFixed(1)),
       'N Amostras': n_amostras,
       ...deflexoes_char,
-        } as Subtrecho);
+    } as Subtrecho);
   }
   return { subtrechos, media_d0, std_d0, cv_d0, quebra, ordered };
 }
@@ -232,11 +254,19 @@ const FWDPage = () => {
   const [selectedAnalysis, setSelectedAnalysis] = useState<FWDAnalysis | null>(null);
   const [newAnalysis, setNewAnalysis] = useState({
     name: '',
-    description: ''
+    description: '',
   });
   const [currentSample, setCurrentSample] = useState<Partial<FWDData>>({
     stationNumber: 0,
-    d0: 0, d20: 0, d30: 0, d45: 0, d60: 0, d90: 0, d120: 0, d150: 0, d180: 0,
+    d0: 0,
+    d20: 0,
+    d30: 0,
+    d45: 0,
+    d60: 0,
+    d90: 0,
+    d120: 0,
+    d150: 0,
+    d180: 0,
   });
   const [samples, setSamples] = useState<FWDData[]>([]);
   const [error, setError] = useState('');
@@ -257,7 +287,7 @@ const FWDPage = () => {
     try {
       const response = await fwdAnalysisService.getAnalyses();
       const backendAnalyses = response.data;
-      
+
       // Converter do formato do backend para o formato do frontend
       const frontendAnalyses = backendAnalyses.map((analysis: any) => ({
         id: analysis._id,
@@ -278,12 +308,12 @@ const FWDPage = () => {
           date: sample.date,
           airTemperature: sample.airTemperature,
           pavementTemperature: sample.pavementTemperature,
-          appliedLoad: sample.appliedLoad
+          appliedLoad: sample.appliedLoad,
         })),
         createdAt: analysis.createdAt ? analysis.createdAt.split('T')[0] : new Date().toISOString().split('T')[0],
-        status: analysis.status || 'active'
+        status: analysis.status || 'active',
       }));
-      
+
       setFwdAnalysis(frontendAnalyses);
       if (frontendAnalyses.length > 0 && !selectedAnalysis) {
         setSelectedAnalysis(frontendAnalyses[0]);
@@ -301,7 +331,7 @@ const FWDPage = () => {
   };
 
   const handleInputChange = (field: keyof FWDData, value: string | number) => {
-    setCurrentSample(prev => ({
+    setCurrentSample((prev) => ({
       ...prev,
       [field]: typeof value === 'string' ? parseFloat(value) || 0 : value,
     }));
@@ -314,23 +344,31 @@ const FWDPage = () => {
     }
 
     const newSample: FWDData = {
-      ...currentSample as FWDData,
+      ...(currentSample as FWDData),
       id: samples.length + 1,
     };
 
-    setSamples(prev => [...prev, newSample]);
-    
+    setSamples((prev) => [...prev, newSample]);
+
     // Prepara próximo número de estaca
     setCurrentSample({
       stationNumber: (newSample.stationNumber || 0) + 4,
-      d0: 0, d20: 0, d30: 0, d45: 0, d60: 0, d90: 0, d120: 0, d150: 0, d180: 0,
+      d0: 0,
+      d20: 0,
+      d30: 0,
+      d45: 0,
+      d60: 0,
+      d90: 0,
+      d120: 0,
+      d150: 0,
+      d180: 0,
     });
-    
+
     setError('');
   };
 
   const handleDeleteSample = (id: number) => {
-    setSamples(prev => prev.filter(s => s.id !== id));
+    setSamples((prev) => prev.filter((s) => s.id !== id));
   };
 
   const handleCreateAnalysis = async () => {
@@ -350,7 +388,7 @@ const FWDPage = () => {
       const backendData = {
         name: newAnalysis.name,
         description: newAnalysis.description,
-        samples: samples.map(sample => ({
+        samples: samples.map((sample) => ({
           stationNumber: sample.stationNumber,
           d0: sample.d0,
           d20: sample.d20,
@@ -364,9 +402,9 @@ const FWDPage = () => {
           date: sample.date,
           airTemperature: sample.airTemperature,
           pavementTemperature: sample.pavementTemperature,
-          appliedLoad: sample.appliedLoad
+          appliedLoad: sample.appliedLoad,
         })),
-        status: 'active'
+        status: 'active',
       };
 
       console.log('Dados enviados para o backend:', JSON.stringify(backendData, null, 2));
@@ -394,23 +432,33 @@ const FWDPage = () => {
           date: sample.date,
           airTemperature: sample.airTemperature,
           pavementTemperature: sample.pavementTemperature,
-          appliedLoad: sample.appliedLoad
+          appliedLoad: sample.appliedLoad,
         })),
-        createdAt: createdAnalysis.createdAt ? createdAnalysis.createdAt.split('T')[0] : new Date().toISOString().split('T')[0],
-        status: createdAnalysis.status || 'active'
+        createdAt: createdAnalysis.createdAt
+          ? createdAnalysis.createdAt.split('T')[0]
+          : new Date().toISOString().split('T')[0],
+        status: createdAnalysis.status || 'active',
       };
 
-      setFwdAnalysis(prev => [...prev, frontendAnalysis]);
+      setFwdAnalysis((prev) => [...prev, frontendAnalysis]);
       setSelectedAnalysis(frontendAnalysis);
-      
+
       // Reset form
       setNewAnalysis({ name: '', description: '' });
       setSamples([]);
       setCurrentSample({
         stationNumber: 0,
-        d0: 0, d20: 0, d30: 0, d45: 0, d60: 0, d90: 0, d120: 0, d150: 0, d180: 0,
+        d0: 0,
+        d20: 0,
+        d30: 0,
+        d45: 0,
+        d60: 0,
+        d90: 0,
+        d120: 0,
+        d150: 0,
+        d180: 0,
       });
-      
+
       setError('');
       setTabValue(2);
       setSnackbar({ open: true, message: 'Análise criada com sucesso!', severity: 'success' });
@@ -427,9 +475,9 @@ const FWDPage = () => {
     setLoading(true);
     try {
       await fwdAnalysisService.deleteAnalysis(id);
-      setFwdAnalysis(prev => prev.filter(a => a.id !== id));
+      setFwdAnalysis((prev) => prev.filter((a) => a.id !== id));
       if (selectedAnalysis?.id === id) {
-        setSelectedAnalysis(fwdAnalysis.find(a => a.id !== id) || null);
+        setSelectedAnalysis(fwdAnalysis.find((a) => a.id !== id) || null);
       }
       setSnackbar({ open: true, message: 'Análise deletada com sucesso!', severity: 'success' });
     } catch (err) {
@@ -463,74 +511,90 @@ const FWDPage = () => {
     }
   };
 
-  const d0ChartData = procResult && procResult.ordered && procResult.ordered.length > 0
-  ? {
-      labels: procResult.ordered.map((r: FWDData) => r.stationNumber),
-      datasets: [
-        {
-          label: 'd0 (Deflexão Máxima)',
-          data: procResult.ordered.map((r: FWDData) => r.d0),
-          borderColor: theme.palette.primary.main,
-          backgroundColor: theme.palette.primary.light,
-          borderWidth: 2,
-          pointRadius: 3,
-          fill: false,
-          tension: 0.2,
-        },
-        {
-          label: 'Quebra (CV > 30%)',
-          data: procResult.ordered.map((_: any, i: number) =>
-            procResult.quebra && procResult.quebra[i] ? procResult.ordered[i].d0 : null
-          ),
-          borderColor: 'red',
-          backgroundColor: 'red',
-          borderWidth: 0,
-          pointRadius: 6,
-          type: 'scatter' as const,
-          showLine: false,
-        },
-      ],
-    }
-  : undefined;
+  const d0ChartData =
+    procResult && procResult.ordered && procResult.ordered.length > 0
+      ? {
+          labels: procResult.ordered.map((r: FWDData) => r.stationNumber),
+          datasets: [
+            {
+              label: 'd0 (Deflexão Máxima)',
+              data: procResult.ordered.map((r: FWDData) => r.d0),
+              borderColor: theme.palette.primary.main,
+              backgroundColor: theme.palette.primary.light,
+              borderWidth: 2,
+              pointRadius: 3,
+              fill: false,
+              tension: 0.2,
+            },
+            {
+              label: 'Quebra (CV > 30%)',
+              data: procResult.ordered.map((_: any, i: number) =>
+                procResult.quebra && procResult.quebra[i] ? procResult.ordered[i].d0 : null
+              ),
+              borderColor: 'red',
+              backgroundColor: 'red',
+              borderWidth: 0,
+              pointRadius: 6,
+              type: 'scatter' as const,
+              showLine: false,
+            },
+          ],
+        }
+      : undefined;
 
-  const baciaChartData = procResult && 
-                       procResult.subtrechos && 
-                       Array.isArray(procResult.subtrechos) && 
-                       procResult.subtrechos.length > 0
-  ? {
-      labels: pos_sensores.map((x) => `${x} cm`),
-      datasets: procResult.subtrechos.map((sub: any, i: number) => ({
-        label: `Subtrecho ${i + 1}: Est. ${sub['Início (Estaca)']}–${sub['Fim (Estaca)']}`,
-        data: pos_sensores.map((p) => {
-          const value = sub[`d${p}`];
-          return typeof value === 'number' ? value : 0;
-        }),
-        fill: false,
-        borderWidth: 2,
-        borderColor: `hsl(${(i * 77) % 360}, 64%, 54%)`,
-        backgroundColor: `hsl(${(i * 77) % 360}, 64%, 54%)`,
-        pointRadius: 5,
-        pointBorderWidth: 2,
-      })),
-    }
-  : {
-      labels: pos_sensores.map((x) => `${x} cm`),
-      datasets: []
-    };
+  const baciaChartData =
+    procResult && procResult.subtrechos && Array.isArray(procResult.subtrechos) && procResult.subtrechos.length > 0
+      ? {
+          labels: pos_sensores.map((x) => `${x} cm`),
+          datasets: procResult.subtrechos.map((sub: any, i: number) => ({
+            label: `Subtrecho ${i + 1}: Est. ${sub['Início (Estaca)']}–${sub['Fim (Estaca)']}`,
+            data: pos_sensores.map((p) => {
+              const value = sub[`d${p}`];
+              return typeof value === 'number' ? value : 0;
+            }),
+            fill: false,
+            borderWidth: 2,
+            borderColor: `hsl(${(i * 77) % 360}, 64%, 54%)`,
+            backgroundColor: `hsl(${(i * 77) % 360}, 64%, 54%)`,
+            pointRadius: 5,
+            pointBorderWidth: 2,
+          })),
+        }
+      : {
+          labels: pos_sensores.map((x) => `${x} cm`),
+          datasets: [],
+        };
 
   const generateAnalysisChart = (analysis: FWDAnalysis) => {
     const colors = [
-      '#FF6B6B', '#4ECDC4', '#45B7D1', '#F9A826', '#6A0572', 
-      '#AB83A1', '#4CAF50', '#FF9800', '#795548', '#607D8B'
+      '#FF6B6B',
+      '#4ECDC4',
+      '#45B7D1',
+      '#F9A826',
+      '#6A0572',
+      '#AB83A1',
+      '#4CAF50',
+      '#FF9800',
+      '#795548',
+      '#607D8B',
     ];
 
     return {
       data: {
-        labels: pos_sensores.map(pos => `${pos} cm`),
+        labels: pos_sensores.map((pos) => `${pos} cm`),
         datasets: analysis.samples.slice(0, 10).map((sample, index) => ({
           label: `Estaca ${sample.stationNumber}`,
-          data: [sample.d0, sample.d20, sample.d30, sample.d45, sample.d60, 
-                 sample.d90, sample.d120, sample.d150, sample.d180],
+          data: [
+            sample.d0,
+            sample.d20,
+            sample.d30,
+            sample.d45,
+            sample.d60,
+            sample.d90,
+            sample.d120,
+            sample.d150,
+            sample.d180,
+          ],
           borderColor: colors[index % colors.length],
           backgroundColor: colors[index % colors.length] + '20',
           borderWidth: 2,
@@ -555,7 +619,7 @@ const FWDPage = () => {
             beginAtZero: true,
           },
         },
-      }
+      },
     };
   };
 
@@ -570,7 +634,7 @@ const FWDPage = () => {
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'grey.50', pt: 12, pb: 6 }}>
-      <Container sx={{ maxWidth: 'lg' }}>
+      <Container style={{ maxWidth: '100%' }}>
         <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
             <Box>
@@ -600,42 +664,41 @@ const FWDPage = () => {
               <Typography variant="h6" gutterBottom>
                 Criar Nova Análise FWD
               </Typography>
-              
+
               <Paper variant="outlined" sx={{ p: 3, mb: 3 }}>
                 <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
+                  <Grid item>
                     <TextField
                       fullWidth
                       label="Nome da Análise FWD *"
                       value={newAnalysis.name}
-                      onChange={(e) => setNewAnalysis({...newAnalysis, name: e.target.value})}
+                      onChange={(e) => setNewAnalysis({ ...newAnalysis, name: e.target.value })}
                       required
                     />
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item>
                     <TextField
                       fullWidth
                       label="Descrição"
                       value={newAnalysis.description}
-                      onChange={(e) => setNewAnalysis({...newAnalysis, description: e.target.value})}
+                      onChange={(e) => setNewAnalysis({ ...newAnalysis, description: e.target.value })}
                     />
                   </Grid>
 
-                  <Grid item xs={12}>
+                  <Grid item>
                     <Divider sx={{ my: 2 }} />
                     <Typography variant="subtitle1" gutterBottom>
                       Adicionar Amostras ({samples.length} adicionadas)
                     </Typography>
-                    
+
                     <Alert severity={samples.length >= 5 ? 'success' : 'warning'} sx={{ mb: 2 }}>
-                      {samples.length >= 5 
+                      {samples.length >= 5
                         ? 'Análise completa (mínimo 5 amostras atingido)'
-                        : `Atenção: necessário ${5 - samples.length} amostras para análise completa`
-                      }
+                        : `Atenção: necessário ${5 - samples.length} amostras para análise completa`}
                     </Alert>
 
                     <Grid container spacing={2}>
-                      <Grid item xs={12} sm={6} md={3}>
+                      <Grid item>
                         <TextField
                           fullWidth
                           label="Estaca *"
@@ -645,9 +708,9 @@ const FWDPage = () => {
                           required
                         />
                       </Grid>
-                      
+
                       {[0, 20, 30, 45, 60, 90, 120, 150, 180].map((distance) => (
-                        <Grid item xs={6} sm={4} md={2} key={distance}>
+                        <Grid item key={distance}>
                           <TextField
                             fullWidth
                             label={`d${distance} (µm)`}
@@ -657,19 +720,19 @@ const FWDPage = () => {
                           />
                         </Grid>
                       ))}
-                      
-                      <Grid item xs={12} sm={6}>
+
+                      <Grid item>
                         <TextField
                           fullWidth
                           label="Data"
                           type="date"
                           InputLabelProps={{ shrink: true }}
                           value={currentSample.date || ''}
-                          onChange={(e) => setCurrentSample({...currentSample, date: e.target.value})}
+                          onChange={(e) => setCurrentSample({ ...currentSample, date: e.target.value })}
                         />
                       </Grid>
-                      
-                      <Grid item xs={12} sm={6}>
+
+                      <Grid item>
                         <TextField
                           fullWidth
                           label="Temp. Pavimento (°C)"
@@ -678,14 +741,9 @@ const FWDPage = () => {
                           onChange={(e) => handleInputChange('pavementTemperature', e.target.value)}
                         />
                       </Grid>
-                      
-                      <Grid item xs={12}>
-                        <Button
-                          variant="outlined"
-                          startIcon={<Add />}
-                          onClick={handleAddSample}
-                          sx={{ mt: 1 }}
-                        >
+
+                      <Grid item>
+                        <Button variant="outlined" startIcon={<Add />} onClick={handleAddSample} sx={{ mt: 1 }}>
                           Adicionar Amostra
                         </Button>
                       </Grid>
@@ -693,7 +751,7 @@ const FWDPage = () => {
                   </Grid>
 
                   {samples.length > 0 && (
-                    <Grid item xs={12}>
+                    <Grid item>
                       <Accordion>
                         <AccordionSummary expandIcon={<ExpandMore />}>
                           <Typography>Amostras Adicionadas ({samples.length})</Typography>
@@ -748,7 +806,7 @@ const FWDPage = () => {
                     </Grid>
                   )}
 
-                  <Grid item xs={12}>
+                  <Grid item>
                     <Button
                       variant="contained"
                       onClick={handleCreateAnalysis}
@@ -768,7 +826,7 @@ const FWDPage = () => {
               <Typography variant="h6" gutterBottom>
                 Análises FWD Existentes
               </Typography>
-              
+
               {fwdAnalysis.length === 0 ? (
                 <Alert severity="info">
                   Nenhuma análise criada ainda. Vá para a aba Criar `&quot;`Análise para começar.`&quot;`
@@ -776,13 +834,14 @@ const FWDPage = () => {
               ) : (
                 <Grid container spacing={2}>
                   {fwdAnalysis.map((analysis) => (
-                    <Grid item xs={12} md={6} key={analysis.id}>
-                      <Card 
+                    <Grid item key={analysis.id}>
+                      <Card
                         variant={selectedAnalysis?.id === analysis.id ? 'elevation' : 'outlined'}
                         elevation={selectedAnalysis?.id === analysis.id ? 3 : 0}
-                        sx={{ 
+                        sx={{
                           cursor: 'pointer',
-                          border: selectedAnalysis?.id === analysis.id ? `2px solid ${theme.palette.primary.main}` : 'none',
+                          border:
+                            selectedAnalysis?.id === analysis.id ? `2px solid ${theme.palette.primary.main}` : 'none',
                         }}
                         onClick={() => setSelectedAnalysis(analysis)}
                       >
@@ -797,14 +856,14 @@ const FWDPage = () => {
                             {analysis.samples.length} amostras - Criada em: {analysis.createdAt}
                           </Typography>
                           <Box sx={{ mt: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                            <Chip 
-                              label={analysis.samples.length >= 5 ? 'Completa' : 'Incompleta'} 
-                              color={analysis.samples.length >= 5 ? 'success' : 'warning'} 
+                            <Chip
+                              label={analysis.samples.length >= 5 ? 'Completa' : 'Incompleta'}
+                              color={analysis.samples.length >= 5 ? 'success' : 'warning'}
                               size="small"
                             />
-                            <Chip 
-                              label={analysis.status === 'completed' ? 'Finalizada' : 'Em andamento'} 
-                              variant="outlined" 
+                            <Chip
+                              label={analysis.status === 'completed' ? 'Finalizada' : 'Em andamento'}
+                              variant="outlined"
                               size="small"
                             />
                           </Box>
@@ -834,15 +893,13 @@ const FWDPage = () => {
             <Typography variant="h6" gutterBottom>
               Resultados e Gráficos
             </Typography>
-            
+
             {fwdAnalysis.length === 0 ? (
               <Alert severity="info">
                 Nenhuma análise disponível. Crie uma análise primeiro na aba `&quot;`Criar Análise.`&quot;`
               </Alert>
             ) : !selectedAnalysis ? (
-              <Alert severity="info">
-                Selecione uma análise para visualizar os gráficos
-              </Alert>
+              <Alert severity="info">Selecione uma análise para visualizar os gráficos</Alert>
             ) : selectedAnalysis.samples.length < 5 ? (
               <Alert severity="warning" sx={{ mb: 2 }}>
                 Análise incompleta. Mínimo 5 amostras necessárias para resultados confiáveis.
@@ -855,7 +912,7 @@ const FWDPage = () => {
                     <Select
                       value={selectedAnalysis?.id || ''}
                       onChange={(e) => {
-                        const analysis = fwdAnalysis.find(a => a.id === e.target.value);
+                        const analysis = fwdAnalysis.find((a) => a.id === e.target.value);
                         if (analysis) setSelectedAnalysis(analysis);
                       }}
                       label="Selecionar Análise"
@@ -879,7 +936,11 @@ const FWDPage = () => {
                   {loading ? <CircularProgress size={24} /> : 'Processar Análise'}
                 </Button>
 
-                {procError && <Alert severity="error" sx={{ mb: 2 }}>{procError}</Alert>}
+                {procError && (
+                  <Alert severity="error" sx={{ mb: 2 }}>
+                    {procError}
+                  </Alert>
+                )}
 
                 {procResult && (
                   <>
@@ -889,9 +950,9 @@ const FWDPage = () => {
                           {selectedAnalysis.name} - Bacias de Deflexão
                         </Typography>
                         <Box sx={{ height: 400 }}>
-                          <Line 
-                            data={generateAnalysisChart(selectedAnalysis).data} 
-                            options={generateAnalysisChart(selectedAnalysis).options} 
+                          <Line
+                            data={generateAnalysisChart(selectedAnalysis).data}
+                            options={generateAnalysisChart(selectedAnalysis).options}
                           />
                         </Box>
                       </CardContent>
@@ -900,7 +961,7 @@ const FWDPage = () => {
                     <Typography variant="h6" gutterBottom>
                       Análise de Subtrechos Homogêneos
                     </Typography>
-                    
+
                     <TableContainer component={Paper} sx={{ mb: 3 }}>
                       <Table size="small">
                         <TableHead>
@@ -921,63 +982,62 @@ const FWDPage = () => {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                        {procResult.subtrechos && procResult.subtrechos.map((sub: Subtrecho, i: number) => (
-                            <TableRow key={i}>
-                              <TableCell>{sub['Início (Estaca)']}</TableCell>
-                              <TableCell>{sub['Fim (Estaca)']}</TableCell>
-                              <TableCell>{sub['Comprimento (m)']}</TableCell>
-                              <TableCell>{sub['N Amostras']}</TableCell>
-                              <TableCell>{sub.d0}</TableCell>
-                              <TableCell>{sub.d20}</TableCell>
-                              <TableCell>{sub.d30}</TableCell>
-                              <TableCell>{sub.d45}</TableCell>
-                              <TableCell>{sub.d60}</TableCell>
-                              <TableCell>{sub.d90}</TableCell>
-                              <TableCell>{sub.d120}</TableCell>
-                              <TableCell>{sub.d150}</TableCell>
-                              <TableCell>{sub.d180}</TableCell>
-                            </TableRow>
-                          ))}
+                          {procResult.subtrechos &&
+                            procResult.subtrechos.map((sub: Subtrecho, i: number) => (
+                              <TableRow key={i}>
+                                <TableCell>{sub['Início (Estaca)']}</TableCell>
+                                <TableCell>{sub['Fim (Estaca)']}</TableCell>
+                                <TableCell>{sub['Comprimento (m)']}</TableCell>
+                                <TableCell>{sub['N Amostras']}</TableCell>
+                                <TableCell>{sub.d0}</TableCell>
+                                <TableCell>{sub.d20}</TableCell>
+                                <TableCell>{sub.d30}</TableCell>
+                                <TableCell>{sub.d45}</TableCell>
+                                <TableCell>{sub.d60}</TableCell>
+                                <TableCell>{sub.d90}</TableCell>
+                                <TableCell>{sub.d120}</TableCell>
+                                <TableCell>{sub.d150}</TableCell>
+                                <TableCell>{sub.d180}</TableCell>
+                              </TableRow>
+                            ))}
                         </TableBody>
                       </Table>
                     </TableContainer>
-                    
-                    
 
                     {/* Bacia de Deflexão */}
                     <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 1 }}>
                       Bacias de Deflexão Características por Subtrecho
                     </Typography>
                     {baciaChartData && baciaChartData.labels && baciaChartData.labels.length > 0 ? (
-  <Box sx={{ width: '100%', maxWidth: 800, mx: 'auto', background: "#fff", borderRadius: 3, p: 2 }}>
-    <Line
-      data={baciaChartData}
-      options={{
-        responsive: true,
-        plugins: {
-          legend: { display: true, position: 'top' as const },
-          title: { display: true, text: 'Bacias de Deflexão Características' },
-        },
-        scales: {
-          x: { 
-            title: { display: true, text: 'Distância do Centro (cm)' } 
-          },
-          y: { 
-            title: { display: true, text: 'Deflexão característica (µm)' }, 
-            reverse: true 
-          },
-        },
-      }}
-    />
-  </Box>
-) : (
-  <Alert severity="info" sx={{ mb: 3 }}>
-    Não há dados suficientes para gerar o gráfico de bacias de deflexão.
-  </Alert>
-)}
-                                    </>
-                                    )}
-                                </Box>
+                      <Box sx={{ width: '100%', maxWidth: 800, mx: 'auto', background: '#fff', borderRadius: 3, p: 2 }}>
+                        <Line
+                          data={baciaChartData}
+                          options={{
+                            responsive: true,
+                            plugins: {
+                              legend: { display: true, position: 'top' as const },
+                              title: { display: true, text: 'Bacias de Deflexão Características' },
+                            },
+                            scales: {
+                              x: {
+                                title: { display: true, text: 'Distância do Centro (cm)' },
+                              },
+                              y: {
+                                title: { display: true, text: 'Deflexão característica (µm)' },
+                                reverse: true,
+                              },
+                            },
+                          }}
+                        />
+                      </Box>
+                    ) : (
+                      <Alert severity="info" sx={{ mb: 3 }}>
+                        Não há dados suficientes para gerar o gráfico de bacias de deflexão.
+                      </Alert>
+                    )}
+                  </>
+                )}
+              </Box>
             )}
           </TabPanel>
         </Paper>
