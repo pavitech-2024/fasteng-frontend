@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import {
   Typography,
-  Container,
   Box,
   Tabs,
   Tab,
@@ -16,7 +15,6 @@ import {
   Button,
   Chip,
   IconButton,
-  Grid,
   Alert,
   Stack,
   useMediaQuery,
@@ -33,6 +31,8 @@ import {
   AccordionDetails,
   CircularProgress,
   Snackbar,
+  Container,
+  Grid // Adicionado Grid na importação em bloco
 } from '@mui/material';
 import { Delete, Add, Assessment, ExpandMore } from '@mui/icons-material';
 import { Line } from 'react-chartjs-2';
@@ -63,7 +63,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 interface FWDData {
-  id?: number; // ID opcional (apenas para uso interno no frontend)
+  id?: number;
   stationNumber: number;
   d0: number;
   d20: number;
@@ -247,7 +247,6 @@ const FWDPage = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery('(max-width:600px)');
 
-
   useEffect(() => {
     loadAnalyses();
   }, []);
@@ -264,7 +263,7 @@ const FWDPage = () => {
         name: analysis.name,
         description: analysis.description || '',
         samples: analysis.samples.map((sample: any, index: number) => ({
-          id: index + 1, // ID apenas para uso interno no frontend
+          id: index + 1,
           stationNumber: sample.stationNumber,
           d0: sample.d0,
           d20: sample.d20,
@@ -315,7 +314,7 @@ const FWDPage = () => {
 
     const newSample: FWDData = {
       ...currentSample as FWDData,
-      id: samples.length + 1, // ID apenas para uso interno no frontend
+      id: samples.length + 1,
     };
 
     setSamples(prev => [...prev, newSample]);
@@ -351,7 +350,6 @@ const FWDPage = () => {
         name: newAnalysis.name,
         description: newAnalysis.description,
         samples: samples.map(sample => ({
-          // NÃO enviar nenhum campo de ID (nem 'id' nem '_id')
           stationNumber: sample.stationNumber,
           d0: sample.d0,
           d20: sample.d20,
@@ -381,7 +379,7 @@ const FWDPage = () => {
         name: createdAnalysis.name,
         description: createdAnalysis.description || '',
         samples: createdAnalysis.samples.map((sample: any, index: number) => ({
-          id: index + 1, // ID apenas para uso interno no frontend
+          id: index + 1,
           stationNumber: sample.stationNumber,
           d0: sample.d0,
           d20: sample.d20,
@@ -503,7 +501,6 @@ const FWDPage = () => {
       datasets: procResult.subtrechos.map((sub: any, i: number) => ({
         label: `Subtrecho ${i + 1}: Est. ${sub['Início (Estaca)']}–${sub['Fim (Estaca)']}`,
         data: pos_sensores.map((p) => {
-          // Verifica se a propriedade existe e é um número
           const value = sub[`d${p}`];
           return typeof value === 'number' ? value : 0;
         }),
@@ -572,7 +569,7 @@ const FWDPage = () => {
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'grey.50', pt: 12, pb: 6 }}>
-      <Container maxWidth="lg">
+      <Container sx={{ maxWidth: 'lg' }}>
         <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
             <Box>
@@ -773,9 +770,7 @@ const FWDPage = () => {
               
               {fwdAnalysis.length === 0 ? (
                 <Alert severity="info">
-                  <p>
-                  Nenhuma análise criada ainda. Vá para a aba &quot;Criar Análise&quot; para começar.
-                </p>
+                  Nenhuma análise criada ainda. Vá para a aba Criar `&quot;`Análise para começar.`&quot;`
                 </Alert>
               ) : (
                 <Grid container spacing={2}>
@@ -841,7 +836,7 @@ const FWDPage = () => {
             
             {fwdAnalysis.length === 0 ? (
               <Alert severity="info">
-                <p>Nenhuma análise disponível. Crie uma análise primeiro na aba &quot;Criar Análise&quot;.</p>
+                Nenhuma análise disponível. Crie uma análise primeiro na aba `&quot;`Criar Análise.`&quot;`
               </Alert>
             ) : !selectedAnalysis ? (
               <Alert severity="info">
@@ -888,18 +883,18 @@ const FWDPage = () => {
                 {procResult && (
                   <>
                     <Card sx={{ mb: 3 }}>
-  <CardContent>
-    <Typography variant="h6" gutterBottom>
-      {selectedAnalysis.name} - Bacias de Deflexão
-    </Typography>
-    <Box sx={{ height: 400 }}>
-      <Line 
-        data={generateAnalysisChart(selectedAnalysis).data} 
-        options={generateAnalysisChart(selectedAnalysis).options} 
-      />
-    </Box>
-  </CardContent>
-</Card>
+                      <CardContent>
+                        <Typography variant="h6" gutterBottom>
+                          {selectedAnalysis.name} - Bacias de Deflexão
+                        </Typography>
+                        <Box sx={{ height: 400 }}>
+                          <Line 
+                            data={generateAnalysisChart(selectedAnalysis).data} 
+                            options={generateAnalysisChart(selectedAnalysis).options} 
+                          />
+                        </Box>
+                      </CardContent>
+                    </Card>
 
                     <Typography variant="h6" gutterBottom>
                       Análise de Subtrechos Homogêneos
