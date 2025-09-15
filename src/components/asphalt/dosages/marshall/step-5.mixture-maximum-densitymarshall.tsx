@@ -100,14 +100,10 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             gmm: null,
           };
 
-          let gmmData = [];
+          const gmmData = [];
 
-          if (data.gmm.some((gmm) => !gmm.value)) {
-            for (let i = 0; i < 5; i++) {
-              gmmData.push({ id: i, insert: true, value: null });
-            }
-          } else {
-            gmmData = data.gmm;
+          for (let i = 0; i < 5; i++) {
+            gmmData.push({ id: i, insert: true, value: null });
           }
 
           newData.gmm = gmmData;
@@ -550,9 +546,8 @@ const Marshall_Step5_MixtureMaximumDensity = ({
       setNextDisabled(hasNullValue || data.temperatureOfWater === null);
     } else if (selectedMethod.gmm) {
       const hasNullValue = data.gmm?.some((e) => e.value === null);
-      console.log('🚀 ~ hasNullValue:', hasNullValue);
-      const specifcGravitiesHasNullValues = Object.values(data.maxSpecificGravity.result).some((e) => e === null);
-      setNextDisabled(hasNullValue || data.temperatureOfWater === null || specifcGravitiesHasNullValues);
+      console.log("🚀 ~ hasNullValue:", hasNullValue)
+      setNextDisabled(hasNullValue || data.temperatureOfWater === null);
     }
   }, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows]);
 
