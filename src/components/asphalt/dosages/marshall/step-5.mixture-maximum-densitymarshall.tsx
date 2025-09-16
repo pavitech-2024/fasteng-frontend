@@ -324,6 +324,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
       async () => {
         try {
           const gmm = await marshall.calculateGmmData(materialSelectionData, data);
+          console.log("🚀 ~ calculateGmmData ~ gmm:", gmm)
 
           const newData = {
             ...data,
@@ -546,7 +547,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
       setNextDisabled(hasNullValue || data.temperatureOfWater === null);
     } else if (selectedMethod.gmm) {
       const hasNullValue = data.gmm?.some((e) => e.value === null);
-      console.log("🚀 ~ hasNullValue:", hasNullValue)
       setNextDisabled(hasNullValue || data.temperatureOfWater === null);
     }
   }, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows]);

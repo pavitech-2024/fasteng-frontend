@@ -152,13 +152,13 @@ const Marshall_Step8_ConfirmCompression = ({
     },
     {
       field: 'stability',
-      headerName: t('asphalt.dosages.stability') + ' (N)',
+      headerName: t('asphalt.dosages.stability') + ' (kgf)',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data.optimumBinder.findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'N'}
+            adornment={'kgf'}
             value={data?.optimumBinder[index]?.stability}
             type='number'
             onChange={(e) => {
@@ -204,7 +204,7 @@ const Marshall_Step8_ConfirmCompression = ({
         const index = data?.optimumBinder.findIndex((r) => r.id === id);
         return (
           <InputEndAdornment
-            adornment={'cm'}
+            adornment={'Mpa'}
             type='number'
             value={data?.optimumBinder[index]?.diametricalCompressionStrength}
             onChange={(e) => {
