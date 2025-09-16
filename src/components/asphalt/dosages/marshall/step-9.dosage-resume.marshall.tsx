@@ -33,6 +33,7 @@ const Marshall_Step9_ResumeDosage = ({
     confirmationCompressionData: data,
     setData,
   } = useMarshallStore();
+    console.log("🚀 ~ Marshall_Step9_ResumeDosage ~ granulometryCompositionData:", granulometryCompositionData)
 
   const [dosage, setDosage] = useState(null);
   const store = JSON.parse(sessionStorage.getItem('asphalt-marshall-store'));
@@ -207,7 +208,7 @@ const Marshall_Step9_ResumeDosage = ({
     const binderObj = {
       field: 'binder',
       width: 250,
-      headerName: t('asphalt.dosages.marshall.asphaltic-binder') + '(kg)',
+      headerName: t('asphalt.dosages.marshall.asphaltic-binder') + '(m³)',
       valueFormatter: ({ value }) => `${value}`,
     };
 
@@ -235,7 +236,7 @@ const Marshall_Step9_ResumeDosage = ({
     materialSelectionData.aggregates.forEach((material, idx) => {
       rowsObj = {
         ...rowsObj,
-        [material._id]: data?.confirmedVolumetricParameters?.quantitative[idx]?.toFixed(2),
+        [material._id]: data?.confirmedVolumetricParameters?.quantitative[idx + 1]?.toFixed(2),
       };
     });
 
@@ -293,14 +294,14 @@ const Marshall_Step9_ResumeDosage = ({
     {
       id: 1,
       param: t('asphalt.dosages.rbv'),
-      unity: `${data.confirmedVolumetricParameters?.values?.ratioBitumenVoid?.toFixed(2).toString()}` + ' (%)',
+      unity: `${(data.confirmedVolumetricParameters?.values?.ratioBitumenVoid * 100)?.toFixed(2).toString()}` + ' (%)',
       bearingLayer: '75 - 82',
       bondingLayer: '65 - 72',
     },
     {
       id: 2,
       param: t('asphalt.dosages.mixture-voids'),
-      unity: `${data.confirmedVolumetricParameters?.values?.aggregateVolumeVoids?.toFixed(2).toString()}` + ' (%)',
+      unity: `${(data.confirmedVolumetricParameters?.values?.aggregateVolumeVoids * 100)?.toFixed(2).toString()}` + ' (%)',
       bearingLayer: '3 - 5',
       bondingLayer: '4 - 6',
     },
@@ -360,7 +361,7 @@ const Marshall_Step9_ResumeDosage = ({
       unity: '%',
     },
     {
-      label: t('asphalt.dosages.dmt'),
+      label: data.confirmedSpecificGravity?.type === 'dmt' ? t('asphalt.dosages.dmt') : t('asphalt.dosages.gmm'),
       value: data?.confirmedSpecificGravity?.result?.toFixed(2).toString(),
       unity: 'g/cm³',
     },
@@ -376,7 +377,7 @@ const Marshall_Step9_ResumeDosage = ({
     },
     {
       label: t('asphalt.dosages.vam'),
-      value: data?.confirmedVolumetricParameters?.values?.voidsFilledAsphalt?.toFixed(2).toString(),
+      value: (data?.confirmedVolumetricParameters?.values?.voidsFilledAsphalt * 100)?.toFixed(2).toString(),
       unity: '%',
     },
     {
@@ -387,7 +388,7 @@ const Marshall_Step9_ResumeDosage = ({
     {
       label: t('asphalt.dosages.marshall.stability'),
       value: data?.confirmedVolumetricParameters?.values?.stability?.toFixed(2).toString(),
-      unity: 'N',
+      unity: 'kgf',
     },
     {
       label: t('asphalt.dosages.marshall.fluency'),

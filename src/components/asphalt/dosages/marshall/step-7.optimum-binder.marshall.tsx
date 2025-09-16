@@ -25,7 +25,7 @@ const Marshall_Step7_OptimumBinder = ({
     materialSelectionData,
     granulometryCompositionData,
     setData,
-  } = useMarshallStore();  
+  } = useMarshallStore();
 
   useEffect(() => {
     toast.promise(
@@ -175,7 +175,7 @@ const Marshall_Step7_OptimumBinder = ({
     for (let i = 0; i < data.optimumBinder.confirmedPercentsOfDosage.length; i++) {
       obj = {
         ...obj,
-        [materialSelectionData.aggregates[i]._id]: data.optimumBinder.confirmedPercentsOfDosage[i].toFixed(2),
+        [materialSelectionData.aggregates[i]?._id]: data.optimumBinder.confirmedPercentsOfDosage[i].toFixed(2),
       };
       count = i;
     }
@@ -224,13 +224,21 @@ const Marshall_Step7_OptimumBinder = ({
     };
 
     volumetricParametersData?.volumetricParameters?.volumetricParameters.forEach((material) => {
-      row[material.asphaltContent] =
-        material.values[param.key] !== undefined ? material.values[param.key]?.toFixed(2) : undefined;
+      let value = material.values[param.key];
+
+      if (value !== undefined) {
+        // Multiplica por 100 se for volumeVoids, Vcb, Vam ou Rbv
+        if (['volumeVoids', 'voidsFilledAsphalt', 'aggregateVolumeVoids', 'ratioBitumenVoid'].includes(param.key)) {
+          value = value * 100;
+        }
+        row[material.asphaltContent] = value.toFixed(2);
+      } else {
+        row[material.asphaltContent] = undefined;
+      }
     });
 
     return row;
   });
-
 
   nextDisabled && setNextDisabled(false);
 
