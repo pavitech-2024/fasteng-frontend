@@ -197,6 +197,7 @@ interface ConfirmationCompressionData {
   dmt: boolean;
   gmm: boolean;
   gmmInput: string;
+  temperatureOfWater: number;
   confirmedSpecificGravity: {
     result: number;
     type: string;
@@ -503,6 +504,7 @@ const initialState = {
     dmt: false,
     gmm: false,
     gmmInput: null,
+    temperatureOfWater: null,
     confirmedSpecificGravity: {
       result: null,
       type: null,

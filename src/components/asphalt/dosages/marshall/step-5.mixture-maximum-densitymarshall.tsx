@@ -5,6 +5,7 @@ import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
+import { waterTemperatureList } from '@/utils/waterTemperatureList';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
@@ -144,25 +145,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
       value: 'GMM',
     },
   ];
-
-  const waterTemperatureList = Object.entries({
-    '15°C': 0.9991,
-    '16°C': 0.9989,
-    '17°C': 0.9988,
-    '18°C': 0.9986,
-    '19°C': 0.9984,
-    '20°C': 0.9982,
-    '21°C': 0.998,
-    '22°C': 0.9978,
-    '23°C': 0.9975,
-    '24°C': 0.9973,
-    '25°C': 0.997,
-    '26°C': 0.9968,
-    '27°C': 0.9965,
-    '28°C': 0.9962,
-    '29°C': 0.9959,
-    '30°C': 0.9956,
-  }).map(([label, value]) => ({ label, value }));
 
   useEffect(() => {
     let dmtRows;
