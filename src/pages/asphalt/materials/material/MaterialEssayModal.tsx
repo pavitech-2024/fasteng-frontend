@@ -1,22 +1,22 @@
-// components/organisms/essay-modal/EssayModal.tsx
+// components/organisms/material-essay-modal/MaterialEssayModal.tsx
 import { Modal, Box, Button, Typography } from '@mui/material';
-import { GranulometryEssay } from './types/asphalt-granulometry.types';
+import { GranulometryEssay } from './types/material.types';
 import ExperimentResume from '@/components/molecules/boxes/experiment-resume';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import Result_Card from '@/components/atoms/containers/result-card';
 import Chart from 'react-google-charts';
 import Loading from '@/components/molecules/loading';
-import AsphaltGranulometry_resultsTable from './tables/results-table.granulometry';
+import AsphaltGranulometry_resultsTable from '@/components/asphalt/essays/granulometry/tables/results-table.granulometry';
 import { t } from 'i18next';
-import { useEssayModalData } from './hooks/useEssayModalData';
+import { useEssayModalData } from '@/components/asphalt/essays/granulometry/hooks/useEssayModalData';
 
-interface EssayModalProps {
+interface MaterialEssayModalProps {
   essay: GranulometryEssay;
   open: boolean;
   onClose: () => void;
 }
 
-export const EssayModal = ({ essay, open, onClose }: EssayModalProps) => {
+export const MaterialEssayModal = ({ essay, open, onClose }: MaterialEssayModalProps) => {
   const { modalData, modalExperimentResumeData, modalGraphData, modalRows, modalColumns } = useEssayModalData(essay);
 
   return (
@@ -44,7 +44,9 @@ export const EssayModal = ({ essay, open, onClose }: EssayModalProps) => {
               <Result_Card
                 key={index}
                 label={item.label}
-                value={Array.isArray(item.value) ? JSON.stringify(item.value) : String(item.value)}
+                value={
+                  Array.isArray(item.value) ? item.value[0]?.[1]?.toString?.() ?? '' : item.value?.toString?.() ?? ''
+                }
                 unity={item.unity || ''}
               />
             ))}

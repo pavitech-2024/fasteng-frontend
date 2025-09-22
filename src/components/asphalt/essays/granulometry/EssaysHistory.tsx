@@ -1,6 +1,6 @@
 // components/organisms/essays-history/EssaysHistory.tsx
 import { Box, Pagination, Typography, Button } from '@mui/material';
-import { GranulometryEssay } from '../types/asphalt-granulometry.types';
+import { GranulometryEssay } from './types/asphalt-granulometry.types';
 import Result_Card from '@/components/atoms/containers/result-card';
 import Loading from '@/components/molecules/loading';
 import { t } from 'i18next';
@@ -34,35 +34,32 @@ export const EssaysHistory = ({
             <Box>
               <Typography variant="h6">{essay.generalData.name}</Typography>
               <Typography variant="body2">
-                Material: {essay.generalData.material.name} | 
-                Data: {new Date(essay.generalData.createdAt).toLocaleDateString()}
+                Material: {essay.generalData.material.name} | Data:{' '}
+                {new Date(essay.generalData.createdAt).toLocaleDateString()}
               </Typography>
             </Box>
-            <Button 
-              variant="outlined" 
-              onClick={() => onEssayClick(essay)}
-            >
+            <Button variant="outlined" onClick={() => onEssayClick(essay)}>
               Ver Ensaio Completo
             </Button>
           </Box>
-          
+
           <Box sx={{ display: 'flex', gap: '10px', flexWrap: 'wrap', mt: 1 }}>
-            <Result_Card label="M. Finura" value={essay.results.fineness_module} unity="%" />
-            <Result_Card label="Tam. Nominal" value={essay.results.nominal_size} unity="mm" />
-            <Result_Card label="CC" value={essay.results.cc} unity="" />
-            <Result_Card label="CNU" value={essay.results.cnu} unity="" />
-            <Result_Card label="Erro" value={essay.results.error} unity="%" />
+            <Result_Card label="M. Finura" value={essay.results.fineness_module?.toString() ?? 'N/A'} unity="%" />
+            <Result_Card label="Tam. Nominal" value={essay.results.nominal_size?.toString() ?? 'N/A'} unity="mm" />
+            <Result_Card label="CC" value={essay.results.cc?.toString() ?? 'N/A'} unity="" />
+            <Result_Card label="CNU" value={essay.results.cnu?.toString() ?? 'N/A'} unity="" />
+            <Result_Card label="Erro" value={essay.results.error?.toString() ?? 'N/A'} unity="%" />
           </Box>
         </Box>
       ))}
 
       {totalPages > 1 && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-          <Pagination 
-            count={totalPages} 
+          <Pagination
+            count={totalPages}
             page={currentPage}
             onChange={(event, page) => onPageChange(page)}
-            color="primary" 
+            color="primary"
           />
         </Box>
       )}

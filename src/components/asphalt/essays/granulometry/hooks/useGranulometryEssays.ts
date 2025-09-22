@@ -18,7 +18,7 @@ useEffect(() => {
       const granulometryService = new AsphaltGranulometry_SERVICE();
       const response = await granulometryService.getAllEssaysByUser(user._id);
       console.log('Dados da API:', response); // 👈 ADICIONE ESTE LOG
-      setAllEssays(Array.isArray(response) ? response : (response.data || []));
+      setAllEssays(Array.isArray(response) ? response : (response || []));
     } catch (error) {
       console.error('Erro ao buscar ensaios:', error);
       setAllEssays([]);
