@@ -10,13 +10,22 @@ import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import Chart from 'react-google-charts';
 import AsphaltGranulometry_resultsTable from './tables/results-table.granulometry';
+import { useMemo } from 'react';
+import { useSmoothedGranulometry } from '@/components/util/granulometry/hooks/useSmoothedGranulometry';
 
 const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
   nextDisabled && setNextDisabled(false);
   const { results: granulometry_results, step2Data, generalData } = useAsphaltGranulometryStore();
 
+  // Aplicar suavização aos dados do gráfico usando o hook das utils
+  const smoothedGraphData = useSmoothedGranulometry(
+    granulometry_results?.graph_data || [], 
+    'cubic', // 👈 Método cúbico para melhor suavização
+    0.3 // Tensão da curva
+  );
+
   const data = {
-    container_other_data: [],
+    container_other_data: [] as Array<{label: string, value: any, unity?: string}>,
   };
 
   if (granulometry_results) {
@@ -48,7 +57,6 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
     );
   }
 
-  // criando o objeto que será passado para o componente ExperimentResume
   const experimentResumeData: ExperimentResumeData = {
     experimentName: generalData.name,
     materials: [{ name: generalData.material.name, type: generalData.material.type }],
@@ -56,21 +64,17 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
 
   const graph_data = [
     [t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')],
-    ...granulometry_results.graph_data,
+    ...smoothedGraphData, // 👈 Dados suavizados importados das utils
   ];
 
-  const rows = [];
-
-  step2Data.table_data.map((value, index) => {
-    rows.push({
-      sieve: value.sieve_label,
-      passant_porcentage: value.passant,
-      passant: granulometry_results.passant[index][1],
-      retained_porcentage: granulometry_results.retained_porcentage[index][1],
-      retained: value.retained,
-      accumulated_retained: granulometry_results.accumulated_retained[index][1],
-    });
-  });
+  const rows = granulometry_results ? step2Data.table_data.map((value, index) => ({
+    sieve: value.sieve_label,
+    passant_porcentage: value.passant,
+    passant: granulometry_results.passant[index][1],
+    retained_porcentage: granulometry_results.retained_porcentage[index][1],
+    retained: value.retained,
+    accumulated_retained: granulometry_results.accumulated_retained[index][1],
+  })) : [];
 
   const columns: GridColDef[] = [
     {
@@ -116,6 +120,7 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
             display: 'flex',
             gap: '10px',
             mt: '20px',
+            flexWrap: 'wrap',
           }}
         >
           {data.container_other_data.map((item, index) => {
@@ -126,29 +131,37 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
             }
           })}
         </Box>
-        <Chart
-          chartType="LineChart"
-          width={'100%'}
-          height={'400px'}
-          loader={<Loading />}
-          data={graph_data}
-          options={{
-            title: t('granulometry-asphalt.granulometry'),
-            backgroundColor: 'transparent',
-            pointSize: '5',
-            hAxis: {
-              title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
-              type: 'number',
-              scaleType: 'log',
-            },
-            vAxis: {
-              title: `${t('granulometry-asphalt.passant') + ' (%)'}`,
-              minValue: '0',
-              maxValue: '105',
-            },
-            legend: 'none',
-          }}
-        />
+        
+        {granulometry_results && (
+          <Chart
+            chartType="LineChart"
+            width={'100%'}
+            height={'400px'}
+            loader={<Loading />}
+            data={graph_data}
+            options={{
+              title: t('granulometry-asphalt.granulometry'),
+              backgroundColor: 'transparent',
+              pointSize: 5,
+              lineWidth: 2,
+              hAxis: {
+                title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
+                type: 'number',
+                scaleType: 'log',
+                logScale: true,
+              },
+              vAxis: {
+                title: `${t('granulometry-asphalt.passant') + ' (%)'}`,
+                minValue: 0,
+                maxValue: 105,
+              },
+              legend: 'none',
+              curveType: 'function',
+              interpolation: 'catmull-rom',
+            }}
+          />
+        )}
+        
         <AsphaltGranulometry_resultsTable rows={rows} columns={columns} />
       </FlexColumnBorder>
     </>

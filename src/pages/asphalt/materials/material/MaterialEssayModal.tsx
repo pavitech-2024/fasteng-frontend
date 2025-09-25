@@ -8,7 +8,8 @@ import Chart from 'react-google-charts';
 import Loading from '@/components/molecules/loading';
 import AsphaltGranulometry_resultsTable from '@/components/asphalt/essays/granulometry/tables/results-table.granulometry';
 import { t } from 'i18next';
-import { useEssayModalData } from '@/components/asphalt/essays/granulometry/hooks/useEssayModalData';
+import { useEssayModalData } from './hook/useEssayModalData';
+import { useSmoothedGranulometry } from '@/components/util/granulometry/hooks/useSmoothedGranulometry'; // 👈 IMPORT DA SUAVIZAÇÃO
 
 interface MaterialEssayModalProps {
   essay: GranulometryEssay;
@@ -17,7 +18,20 @@ interface MaterialEssayModalProps {
 }
 
 export const MaterialEssayModal = ({ essay, open, onClose }: MaterialEssayModalProps) => {
-  const { modalData, modalExperimentResumeData, modalGraphData, modalRows, modalColumns } = useEssayModalData(essay);
+  const { modalData, modalExperimentResumeData, modalRows, modalColumns } = useEssayModalData(essay);
+  
+  // 👇 APLICAR SUAVIZAÇÃO AOS DADOS DO GRÁFICO
+  const smoothedGraphData = useSmoothedGranulometry(
+    essay.results.graph_data || [],
+    'cubic',
+    0.3
+  );
+
+  // 👇 DADOS DO GRÁFICO SUAVIZADOS
+  const modalGraphData = [
+    [t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')],
+    ...smoothedGraphData,
+  ];
 
   return (
     <Modal open={open} onClose={onClose} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -52,6 +66,7 @@ export const MaterialEssayModal = ({ essay, open, onClose }: MaterialEssayModalP
             ))}
           </Box>
 
+          {/* 👇 GRÁFICO COM SUAVIZAÇÃO APLICADA */}
           <Chart
             chartType="LineChart"
             width={'100%'}
@@ -62,13 +77,21 @@ export const MaterialEssayModal = ({ essay, open, onClose }: MaterialEssayModalP
               title: t('granulometry-asphalt.granulometry'),
               backgroundColor: 'transparent',
               pointSize: 5,
+              lineWidth: 2, // 👈 LINHA MAIS GROSSA
               hAxis: {
                 title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
                 type: 'number',
                 scaleType: 'log',
+                logScale: true,
               },
-              vAxis: { title: `${t('granulometry-asphalt.passant') + ' (%)'}`, minValue: 0, maxValue: 105 },
+              vAxis: { 
+                title: `${t('granulometry-asphalt.passant') + ' (%)'}`, 
+                minValue: 0, 
+                maxValue: 105 
+              },
               legend: 'none',
+              curveType: 'function', // 👈 ATIVA CURVAS SUAVES
+              interpolation: 'catmull-rom', // 👈 INTERPOLAÇÃO SUAVE
             }}
           />
 

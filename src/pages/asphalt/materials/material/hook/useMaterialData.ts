@@ -75,7 +75,7 @@ export const useMaterialData = () => {
       { essayName: 'rtfo', materialTypes: ['asphaltBinder', 'CAP'], setter: 'rtfoData' },
       { essayName: 'elasticRecovery', materialTypes: ['CAP'], setter: 'elasticRecoveryData' },
     ];
-
+/*
     essayConfigs.forEach(({ essayName, materialTypes, setter }) => {
       if (materialTypes.includes(materialType)) {
         const essay = material.essays.find(e => e.essayName === essayName);
@@ -83,8 +83,22 @@ export const useMaterialData = () => {
           newState[setter as keyof MaterialState] = essay.data;
         }
       }
-    });
+    });*/
+    
+//sem grafico sobrepondo  
+  essayConfigs.forEach(({ essayName, materialTypes, setter }) => {
+  if (materialTypes.includes(materialType)) {
+    const essay = material.essays.find(e => e.essayName === essayName);
 
+    if (essay) {
+      const essayData = (essay.data as any)[setter]; // acesso seguro dinâmico
+
+      if (essayData) {
+        newState[setter as keyof MaterialState] = essayData;
+      }
+    }
+  }
+}); 
     setMaterialState(newState);
   }, [material]);
 
