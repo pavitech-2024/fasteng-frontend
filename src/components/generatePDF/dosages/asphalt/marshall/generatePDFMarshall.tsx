@@ -228,7 +228,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       {
         label: t('asphalt.dosages.vv'),
         value: (
-          dosage?.confirmationCompressionData.confirmedVolumetricParameters?.values?.aggregateVolumeVoids * 100
+          dosage?.confirmationCompressionData.confirmedVolumetricParameters?.values?.volumeVoids * 100
         ).toFixed(2),
         unity: '%',
       },
