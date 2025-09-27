@@ -533,10 +533,10 @@ const Marshall_Step8_ConfirmCompression = ({
             callback={(selectedValue) => {
               const prevData = data;
               const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
-              setData({ step: 4, value: newData });
+              setData({ step: 7, value: newData });
             }}
             value={{
-              label: '',
+              label: waterTemperatureList.find((item) => item.value === data.temperatureOfWater)?.label,
               value: data.temperatureOfWater,
             }}
             size="medium"
@@ -619,7 +619,7 @@ const Marshall_Step8_ConfirmCompression = ({
                   key={material._id}
                   adornment={'g/cm³'}
                   label={material.name}
-                  value={maximumMixtureDensityData.listOfSpecificGravities[index]}
+                  value={maximumMixtureDensityData.listOfSpecificGravities?.length > 0 ? maximumMixtureDensityData.listOfSpecificGravities[index] : []}
                   onChange={(e) => {
                     const prevState = { ...maximumMixtureDensityData };
                     prevState.listOfSpecificGravities[index] = e.target.value;
