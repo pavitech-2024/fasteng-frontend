@@ -33,7 +33,7 @@ const Marshall_Step9_ResumeDosage = ({
     confirmationCompressionData: data,
     setData,
   } = useMarshallStore();
-    console.log("🚀 ~ Marshall_Step9_ResumeDosage ~ granulometryCompositionData:", granulometryCompositionData)
+    console.log("🚀 ~ Marshall_Step9_ResumeDosage ~ data:", data);
 
   const [dosage, setDosage] = useState(null);
   const store = JSON.parse(sessionStorage.getItem('asphalt-marshall-store'));
@@ -301,7 +301,7 @@ const Marshall_Step9_ResumeDosage = ({
     {
       id: 2,
       param: t('asphalt.dosages.mixture-voids'),
-      unity: `${(data.confirmedVolumetricParameters?.values?.aggregateVolumeVoids * 100)?.toFixed(2).toString()}` + ' (%)',
+      unity: `${(data.confirmedVolumetricParameters?.values?.vam * 100)?.toFixed(2).toString()}` + ' (%)',
       bearingLayer: '3 - 5',
       bondingLayer: '4 - 6',
     },
@@ -372,12 +372,17 @@ const Marshall_Step9_ResumeDosage = ({
     },
     {
       label: t('asphalt.dosages.vv'),
-      value: (data?.confirmedVolumetricParameters?.values?.aggregateVolumeVoids * 100)?.toFixed(2),
+      value: (data?.confirmedVolumetricParameters?.values?.volumeVoids * 100)?.toFixed(2),
       unity: '%',
     },
     {
-      label: t('asphalt.dosages.vam'),
-      value: (data?.confirmedVolumetricParameters?.values?.voidsFilledAsphalt * 100)?.toFixed(2).toString(),
+      label: t('asphalt.dosages.vam'), // em VAM deve estar o valor que está em volumeVouids (aggregateVolumeVoids )
+      value: (data?.confirmedVolumetricParameters?.values?.vam * 100)?.toFixed(2).toString(),
+      unity: '%',
+    },
+    {
+      label: t('asphalt.dosages.vcb'),
+      value: (data?.confirmedVolumetricParameters?.values?.vcb * 100)?.toFixed(2),
       unity: '%',
     },
     {

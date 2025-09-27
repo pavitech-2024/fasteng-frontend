@@ -790,10 +790,11 @@ class Marshall_SERVICE implements IEssayService {
     step7Data: MarshallData['optimumBinderContentData'],
     step8Data: MarshallData['confirmationCompressionData']
   ): Promise<any> => {
-    const { temperatureOfWater, listOfSpecificGravities } = maximumMixtureDensityData;
+    const { listOfSpecificGravities } = maximumMixtureDensityData;
     const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
     const { optimumBinder } = step8Data;
     const { result: resultNumber } = step8Data.confirmedSpecificGravity;
+    const {  temperatureOfWater } = step8Data;
     let result;
 
     const confirmVolumetricParameters = {

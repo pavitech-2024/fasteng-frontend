@@ -5,6 +5,7 @@ import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
+import { waterTemperatureList } from '@/utils/waterTemperatureList';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
@@ -37,12 +38,6 @@ export type RiceTestRows = {
   massOfContainerWater: number;
 };
 
-type GmmTableRows = {
-  id: number;
-  GMM: number;
-  Teor: number;
-};
-
 const Marshall_Step5_MixtureMaximumDensity = ({
   setNextDisabled,
   marshall,
@@ -50,8 +45,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
   const [enableRiceTest, setEnableRiceTest] = useState(false);
-  const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
-  // const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [dmtRows, setDmtRows] = useState<{ id: number; DMT: number; Teor: number }[]>([]);
   const [dmtColumns, setDmtColumns] = useState<GridColDef[]>([]);
   const [selectedMethod, setSelectedMethod] = useState({
@@ -78,16 +71,29 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 
   materials.push({ label: materialSelectionData.binder.name, value: materialSelectionData.binder._id });
 
-  /**
-   * This useEffect is responsible for calculating the indexes of missing specific
-   * gravity values in the GMM table and setting the initial values of the rice
-   * test table.
-   *
-   * If the GMM table is completed, the function will return and do nothing.
-   *
-   * After the calculation is done, the function will update the data in the store
-   * with the new values and set the loading state to false.
-   */
+  // inicializa GMM se for o método selecionado e não houver valores
+  useEffect(() => {
+    if (data.method === 'GMM' && (!data.gmm || data.gmm.length === 0)) {
+      const gmmData = Array.from({ length: 5 }, (_, i) => {
+        const teor =
+          i === 0
+            ? binderTrialData.trial - 1
+            : i === 1
+            ? binderTrialData.trial - 0.5
+            : i === 2
+            ? binderTrialData.trial
+            : i === 3
+            ? binderTrialData.trial + 0.5
+            : binderTrialData.trial + 1;
+
+        return { id: i + 1, Teor: teor, GMM: null };
+      });
+
+      setData({ step: 4, value: { ...data, gmm: gmmData } });
+    }
+  }, [data.method, data.gmm, binderTrialData.trial, setData]);
+
+  // efeito que chama o backend
   useEffect(() => {
     toast.promise(
       async () => {
@@ -97,29 +103,21 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           const newData = {
             ...data,
             missingSpecificMass: response,
-            gmm: null,
+            // mantém gmm se já existir; senão inicializa vazio
+            gmm: data.gmm && data.gmm.length > 0 ? data.gmm : [],
+            riceTest:
+              data.riceTest && data.riceTest.length > 0
+                ? data.riceTest
+                : Array.from({ length: 5 }, (_, i) => ({
+                    id: i + 1,
+                    teor: null,
+                    massOfDrySample: null,
+                    massOfContainerWaterSample: null,
+                    massOfContainerWater: null,
+                  })),
           };
 
-          const gmmData = [];
-
-          for (let i = 0; i < 5; i++) {
-            gmmData.push({ id: i, insert: true, value: null });
-          }
-
-          newData.gmm = gmmData;
-
-          newData.riceTest =
-            newData.riceTest ||
-            Array.from({ length: 5 }, (_, i) => ({
-              id: i + 1,
-              teor: null,
-              massOfDrySample: null,
-              massOfContainerWaterSample: null,
-              massOfContainerWater: null,
-            }));
-
           setData({ step: 4, value: newData });
-
           setLoading(false);
         } catch (error) {
           setLoading(false);
@@ -144,25 +142,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
       value: 'GMM',
     },
   ];
-
-  const waterTemperatureList = Object.entries({
-    '15°C': 0.9991,
-    '16°C': 0.9989,
-    '17°C': 0.9988,
-    '18°C': 0.9986,
-    '19°C': 0.9984,
-    '20°C': 0.9982,
-    '21°C': 0.998,
-    '22°C': 0.9978,
-    '23°C': 0.9975,
-    '24°C': 0.9973,
-    '25°C': 0.997,
-    '26°C': 0.9968,
-    '27°C': 0.9965,
-    '28°C': 0.9962,
-    '29°C': 0.9959,
-    '30°C': 0.9956,
-  }).map(([label, value]) => ({ label, value }));
 
   useEffect(() => {
     let dmtRows;
@@ -258,52 +237,14 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           value={row.GMM}
           onChange={(e) => {
             const newData = [...data.gmm];
-            newData[row.id].value = Number(e.target.value);
+            const idx = newData.findIndex((r) => r.id === row.id);
+            newData[idx].GMM = Number(e.target.value);
             setData({ step: 4, value: { ...data, gmm: newData } });
           }}
         />
       ),
     },
   ];
-
-  /**
-   * useEffect hook that runs when the `data.gmm` changes.
-   * It extracts the GMM and Teor values from the `data.gmm` array and stores them in the `gmmRows` state.
-   * It also generates the DataGrid columns and stores them in the `gmmColumns` state.
-   *
-   * @param {Object} data - The dosage calculation results.
-   */
-  useEffect(() => {
-    const gmmRows = data?.gmm?.map(({ id, value: GMM }, index) => {
-      const teor = binderTrialData.trial + (index - 2) * 0.5;
-      return { id, GMM, Teor: teor };
-    });
-
-    setGmmRows(gmmRows);
-    // setGmmColumns([
-    //   {
-    //     field: 'Teor',
-    //     headerName: t('asphalt.dosages.marshall.tenor'),
-    //     valueFormatter: ({ value }) => `${value}`,
-    //   },
-    //   {
-    //     field: 'GMM',
-    //     headerName: 'GMM',
-    //     renderCell: ({ row }) => (
-    //       <InputEndAdornment
-    //         adornment={''}
-    //         type="number"
-    //         value={row.GMM?.toFixed(2)}
-    //         onChange={(e) => {
-    //           const newData = [...data.gmm];
-    //           newData[row.id].value = Number(e.target.value);
-    //           setData({ step: 4, value: { ...data, gmm: newData } });
-    //         }}
-    //       />
-    //     ),
-    //   },
-    // ]);
-  }, [data.gmm]);
 
   /**
    * Calculates the GMM data using the dosage calculation results.
@@ -326,27 +267,26 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           const gmm = await marshall.calculateGmmData(materialSelectionData, data);
           console.log("🚀 ~ calculateGmmData ~ gmm:", gmm)
 
-          const newData = {
+          const newGmmRows = data.gmm.map((item) => {
+            if (item.id === 1) item.GMM = gmm.maxSpecificGravity.lessOne;
+            if (item.id === 2) item.GMM = gmm.maxSpecificGravity.lessHalf;
+            if (item.id === 3) item.GMM = gmm.maxSpecificGravity.normal;
+            if (item.id === 4) item.GMM = gmm.maxSpecificGravity.plusHalf;
+            if (item.id === 5) item.GMM = gmm.maxSpecificGravity.plusOne;
+            return item;
+          });
+
+          const updatedData = {
             ...data,
             listOfSpecificGravities: gmm.listOfSpecificGravities,
             maxSpecificGravity: {
               result: gmm.maxSpecificGravity,
               method: gmm.method,
             },
+            gmm: newGmmRows,
           };
 
-          setData({ step: 4, value: newData });
-
-          const newGmmRows = gmmRows.map((item) => {
-            if (item.id === 0) item.GMM = gmm.maxSpecificGravity.lessOne;
-            if (item.id === 1) item.GMM = gmm.maxSpecificGravity.lessHalf;
-            if (item.id === 2) item.GMM = gmm.maxSpecificGravity.normal;
-            if (item.id === 3) item.GMM = gmm.maxSpecificGravity.plusHalf;
-            if (item.id === 4) item.GMM = gmm.maxSpecificGravity.plusOne;
-            return item;
-          });
-
-          setGmmRows(newGmmRows);
+          setData({ step: 4, value: updatedData });
         } catch (error) {
           console.error(error);
         }
@@ -401,19 +341,13 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           setRiceTestModalIsOpen(false);
 
           const formattedGmm = riceTest?.maxSpecificGravity.map(({ id, Teor, GMM }) => ({ id, Teor, GMM }));
-          const formattedGmmData = riceTest?.maxSpecificGravity.map((item, i) => ({
-            id: i + 1,
-            insert: false,
-            value: item.GMM,
-          }));
 
-          setGmmRows(formattedGmm);
           setData({
             step: 4,
             value: {
               ...data,
               ...riceTest,
-              gmm: formattedGmmData,
+              gmm: formattedGmm,
             },
           });
         } catch (error) {
@@ -546,10 +480,11 @@ const Marshall_Step5_MixtureMaximumDensity = ({
       const hasNullValue = dmtRows?.some((e) => Object.values(e).includes(null));
       setNextDisabled(hasNullValue || data.temperatureOfWater === null);
     } else if (selectedMethod.gmm) {
-      const hasNullValue = data.gmm?.some((e) => e.value === null);
+      const hasNullValue = data.gmm?.some((e) => e.GMM === null);
+      console.log('🚀 ~ hasNullValue:', hasNullValue);
       setNextDisabled(hasNullValue || data.temperatureOfWater === null);
     }
-  }, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows]);
+  }, [data.temperatureOfWater, selectedMethod, dmtRows, data.gmm]);
 
   return (
     <>
@@ -624,7 +559,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
                   headerAlign: 'center',
                   align: 'center',
                 }))}
-                rows={gmmRows}
+                rows={data.gmm}
                 hideFooter
                 sx={{ marginY: '2rem' }}
               />
@@ -672,7 +607,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
                     placeholder={material.label}
                     type="text"
                     inputProps={{ inputMode: 'decimal' }}
-                    value={data.listOfSpecificGravities[index] ?? ''}
+                    value={data.listOfSpecificGravities ? data.listOfSpecificGravities[index] : ''}
                     onChange={(e) => {
                       const rawValue = e.target.value.replace(',', '.'); // normaliza vírgula
                       const prevState = [...data.listOfSpecificGravities];

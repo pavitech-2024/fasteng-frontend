@@ -73,7 +73,7 @@ const CreateEditMaterialModal = ({
       { label: t('asphalt.materials.type'), value: material.type ?? '', key: 'type' },
       { label: t('asphalt.materials.source'), value: material.description?.source ?? '', key: 'source' },
       { label: t('asphalt.materials.responsible'), value: material.description?.responsible ?? '', key: 'responsible' },
-      { label: t('asphalt.materials.maxDiameter'), value: material.description?.maxDiameter ?? '', key: 'maxDiameter' },
+      // { label: t('asphalt.materials.maxDiameter'), value: material.description?.maxDiameter ?? '', key: 'maxDiameter' },
       {
         label: t('asphalt.materials.aggregateNature'),
         value: material.description?.aggregateNature ?? '',
