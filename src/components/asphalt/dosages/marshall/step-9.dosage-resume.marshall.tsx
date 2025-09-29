@@ -33,7 +33,6 @@ const Marshall_Step9_ResumeDosage = ({
     confirmationCompressionData: data,
     setData,
   } = useMarshallStore();
-    console.log("🚀 ~ Marshall_Step9_ResumeDosage ~ data:", data);
 
   const [dosage, setDosage] = useState(null);
   const store = JSON.parse(sessionStorage.getItem('asphalt-marshall-store'));
