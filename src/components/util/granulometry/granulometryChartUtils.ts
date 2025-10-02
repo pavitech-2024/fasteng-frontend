@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
+
 export const createGranulometryCurve = (
   data: [number, number][], 
 ): [number, number][] => {
   if (!data || data.length < 2) return data || [];
-  
   // APENAS OS PONTOS ORIGINAIS - SEM PONTOS EXTRAS!
   return [...data].sort((a, b) => a[0] - b[0]);
 };
@@ -18,13 +18,10 @@ export const useGranulometryCurve = (
   }, [graphData]);
 };
 
-// 👇 CORRIGINDO AS FUNÇÕES ANTIGAS
-
 // Função antiga CORRIGIDA
 export const smoothGranulometryData = (
   data: [number, number][], 
-  tension =  0.4, // 👈 PARÂMETRO NÃO USADO (mantido para compatibilidade)
-  samples =  100  // 👈 PARÂMETRO NÃO USADO
+  // eslint-disable-line @typescript-eslint/no-unused-vars
 ): [number, number][] => {
   if (!data || data.length < 2) return data || [];
   return createGranulometryCurve(data); // 👈 SÓ 1 ARGUMENTO!
@@ -33,8 +30,7 @@ export const smoothGranulometryData = (
 // Hook antigo CORRIGIDO
 export const useSmoothedGranulometry = (
   graphData: [number, number][], 
-  smoothingMethod: 'cubic' | 'rolling' = 'cubic', // 👈 PARÂMETRO NÃO USADO
-  tension = 0.4 // 👈 PARÂMETRO NÃO USADO
+  // eslint-disable-line @typescript-eslint/no-unused-vars
 ) => {
   return useGranulometryCurve(graphData); // 👈 SÓ 1 ARGUMENTO!
 };
