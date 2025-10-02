@@ -69,6 +69,7 @@
   "asphalt.dosages.gmb": "Massa específica aparente (GMB)",
   "asphalt.dosages.dmt": "Densidade máximo teórica (DMT)",
   "asphalt.dosages.gmm": "Densidade máxima medida (GMM)",
+  "asphalt.dosages.vcb": "(VCB)",
 
   "asphalt.dosages.optimum-binder": "Teor ótimo de ligante asfáltico",
   "asphalt.dosages.binder-volumetric-mechanic-params": "Parametros volumétricos e mecanicos da mistura no teor ótimo de ligante asfáltico",

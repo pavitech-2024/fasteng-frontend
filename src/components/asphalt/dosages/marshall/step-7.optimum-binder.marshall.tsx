@@ -325,9 +325,9 @@ const Marshall_Step7_OptimumBinder = ({
             {data.graphics?.sg?.length > 0 && (
               <MiniGraphics
                 data={data?.graphics?.sg}
-                type={maximumMixtureDensityData.maxSpecificGravity.method}
+                type={maximumMixtureDensityData.maxSpecificGravity?.method}
                 nameEixoY={
-                  maximumMixtureDensityData.maxSpecificGravity.method === 'DMT'
+                  maximumMixtureDensityData.maxSpecificGravity?.method === 'DMT'
                     ? 'Massa específica máxima teórica (g/cm³)'
                     : 'Massa específica máxima medida (g/cm³)'
                 }

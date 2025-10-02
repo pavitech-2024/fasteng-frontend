@@ -5,6 +5,7 @@ import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore, { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
+import { waterTemperatureList } from '@/utils/waterTemperatureList';
 import { Box, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 import { t } from 'i18next';
@@ -45,7 +46,7 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'cm'}
             value={data?.optimumBinder[index]?.diammeter}
-            type='number'
+            type="number"
             onChange={(e) => {
               const value = e.target.value;
 
@@ -67,7 +68,7 @@ const Marshall_Step8_ConfirmCompression = ({
         return (
           <InputEndAdornment
             adornment={'cm'}
-            type='number'
+            type="number"
             value={data?.optimumBinder[index]?.height}
             onChange={(e) => {
               const value = e.target.value;
@@ -91,7 +92,7 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'g'}
             value={data?.optimumBinder[index]?.dryMass}
-            type='number'
+            type="number"
             onChange={(e) => {
               const value = e.target.value;
 
@@ -114,7 +115,7 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'g'}
             value={data?.optimumBinder[index]?.submergedMass}
-            type='number'
+            type="number"
             onChange={(e) => {
               const value = e.target.value;
 
@@ -137,7 +138,7 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'g'}
             value={data?.optimumBinder[index]?.drySurfaceSaturatedMass}
-            type='number'
+            type="number"
             onChange={(e) => {
               const value = e.target.value;
 
@@ -160,7 +161,7 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'kgf'}
             value={data?.optimumBinder[index]?.stability}
-            type='number'
+            type="number"
             onChange={(e) => {
               const value = e.target.value;
 
@@ -183,7 +184,7 @@ const Marshall_Step8_ConfirmCompression = ({
           <InputEndAdornment
             adornment={'mm'}
             value={data?.optimumBinder[index]?.fluency}
-            type='number'
+            type="number"
             onChange={(e) => {
               const value = e.target.value;
 
@@ -205,7 +206,7 @@ const Marshall_Step8_ConfirmCompression = ({
         return (
           <InputEndAdornment
             adornment={'Mpa'}
-            type='number'
+            type="number"
             value={data?.optimumBinder[index]?.diametricalCompressionStrength}
             onChange={(e) => {
               const value = e.target.value;
@@ -400,7 +401,7 @@ const Marshall_Step8_ConfirmCompression = ({
             newData = {
               ...newData,
               confirmedSpecificGravity: {
-                result: parseFloat(data.gmmInput.replace(",", ".")),
+                result: parseFloat(data.gmmInput.replace(',', '.')),
                 method: 'GMM',
               },
             };
@@ -524,6 +525,24 @@ const Marshall_Step8_ConfirmCompression = ({
             sx={{ width: '50%', marginX: 'auto' }}
           />
 
+          <DropDown
+            key={'water'}
+            variant="standard"
+            label={t('asphalt.dosages.marshall.water-temperature')}
+            options={waterTemperatureList}
+            callback={(selectedValue) => {
+              const prevData = data;
+              const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
+              setData({ step: 7, value: newData });
+            }}
+            value={{
+              label: waterTemperatureList.find((item) => item.value === data.temperatureOfWater)?.label,
+              value: data.temperatureOfWater,
+            }}
+            size="medium"
+            sx={{ width: '50%', marginX: 'auto' }}
+          />
+
           {data.dmt ? (
             <Typography variant="h6">
               {t('asphalt.dosages.marshall.binder-trial-dmt') +
@@ -600,7 +619,7 @@ const Marshall_Step8_ConfirmCompression = ({
                   key={material._id}
                   adornment={'g/cm³'}
                   label={material.name}
-                  value={maximumMixtureDensityData.listOfSpecificGravities[index]}
+                  value={maximumMixtureDensityData.listOfSpecificGravities?.length > 0 ? maximumMixtureDensityData.listOfSpecificGravities[index] : []}
                   onChange={(e) => {
                     const prevState = { ...maximumMixtureDensityData };
                     prevState.listOfSpecificGravities[index] = e.target.value;

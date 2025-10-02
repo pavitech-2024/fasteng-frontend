@@ -3,8 +3,8 @@ import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
 export type GmmRows = {
   id: number;
-  insert: boolean;
-  value: number;
+  Teor: number;
+  GMM: number;
 };
 
 interface MarhsallGeneralData {
@@ -197,6 +197,7 @@ interface ConfirmationCompressionData {
   dmt: boolean;
   gmm: boolean;
   gmmInput: string;
+  temperatureOfWater: number;
   confirmedSpecificGravity: {
     result: number;
     type: string;
@@ -225,8 +226,8 @@ interface ConfirmationCompressionData {
     values: {
       volumeVoids: number;
       apparentBulkSpecificGravity: number;
-      voidsFilledAsphalt: number;
-      aggregateVolumeVoids: number;
+      vcb: number;
+      vam: number;
       ratioBitumenVoid: number;
       stability: number;
       fluency: number;
@@ -323,33 +324,7 @@ const initialState = {
   maximumMixtureDensityData: {
     method: null,
     dmt: [],
-    gmm: [
-      {
-        id: 1,
-        insert: true,
-        value: null,
-      },
-      {
-        id: 2,
-        insert: true,
-        value: null,
-      },
-      {
-        id: 3,
-        insert: true,
-        value: null,
-      },
-      {
-        id: 4,
-        insert: true,
-        value: null,
-      },
-      {
-        id: 5,
-        insert: true,
-        value: null,
-      },
-    ],
+    gmm: [],
     missingSpecificMass: [],
     temperatureOfWater: null,
     maxSpecificGravity: {
@@ -503,6 +478,7 @@ const initialState = {
     dmt: false,
     gmm: false,
     gmmInput: null,
+    temperatureOfWater: null,
     confirmedSpecificGravity: {
       result: null,
       type: null,
@@ -534,8 +510,8 @@ const initialState = {
       values: {
         volumeVoids: null,
         apparentBulkSpecificGravity: null,
-        voidsFilledAsphalt: null,
-        aggregateVolumeVoids: null,
+        vcb: null,
+        vam: null,
         ratioBitumenVoid: null,
         stability: null,
         fluency: null,
