@@ -3,8 +3,7 @@ import { useMemo } from 'react';
 export const createGranulometryCurve = (
   data: [number, number][], 
 ): [number, number][] => {
-  if (!data || data.length < 2) return data || [];
-  // APENAS OS PONTOS ORIGINAIS - SEM PONTOS EXTRAS!
+  if (data.length < 2) return [];
   return [...data].sort((a, b) => a[0] - b[0]);
 };
 
@@ -21,24 +20,22 @@ export const useGranulometryCurve = (
 // Função antiga CORRIGIDA
 export const smoothGranulometryData = (
   data: [number, number][], 
-  // eslint-disable-line @typescript-eslint/no-unused-vars
 ): [number, number][] => {
-  if (!data || data.length < 2) return data || [];
-  return createGranulometryCurve(data); // 👈 SÓ 1 ARGUMENTO!
+  if (!data || data.length < 2) return [];
+  return createGranulometryCurve(data); // Sem parâmetro 'tension' aqui
 };
 
 // Hook antigo CORRIGIDO
 export const useSmoothedGranulometry = (
   graphData: [number, number][], 
-  // eslint-disable-line @typescript-eslint/no-unused-vars
 ) => {
-  return useGranulometryCurve(graphData); // 👈 SÓ 1 ARGUMENTO!
+  return useGranulometryCurve(graphData); // Apenas um argumento necessário
 };
 
-// Funções auxiliares (se ainda precisar)
+// Funções auxiliares
 export const smoothWithRollingWindow = (
   data: [number, number][], 
-  windowSize: number = 2
+  windowSize = 2
 ): [number, number][] => {
   if (!data) return [];
   const xValues = data.map(d => d[0]);
@@ -52,8 +49,6 @@ export const smoothWithRollingWindow = (
 export const rollingWindow = (arr: number[], window: number) => {
   const media: number[] = [];
   const std: number[] = [];
-  
-  if (!arr) return { media: [], std: [] };
   
   for (let i = 0; i < arr.length; i++) {
     const start = Math.max(0, i - window + 1);
