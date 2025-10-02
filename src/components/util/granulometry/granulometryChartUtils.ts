@@ -23,8 +23,8 @@ export const useGranulometryCurve = (
 // Função antiga CORRIGIDA
 export const smoothGranulometryData = (
   data: [number, number][], 
-  tension: number = 0.4, // 👈 PARÂMETRO NÃO USADO (mantido para compatibilidade)
-  samples: number = 100  // 👈 PARÂMETRO NÃO USADO
+  tension =  0.4, // 👈 PARÂMETRO NÃO USADO (mantido para compatibilidade)
+  samples =  100  // 👈 PARÂMETRO NÃO USADO
 ): [number, number][] => {
   if (!data || data.length < 2) return data || [];
   return createGranulometryCurve(data); // 👈 SÓ 1 ARGUMENTO!
