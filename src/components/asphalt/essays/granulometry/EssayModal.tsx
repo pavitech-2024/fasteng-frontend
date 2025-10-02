@@ -32,7 +32,11 @@ export const EssayModal = ({ essay, open, onClose }: EssayModalProps) => {
           width: '1200px',
         }}
       >
-        <Typography variant="h5" gutterBottom>
+         <Typography
+          variant="h5"
+          gutterBottom
+          sx={{ position: 'relative', top: -10 }} 
+        >
           Ensaio: {essay.generalData.name}
         </Typography>
 

@@ -18,7 +18,7 @@ interface MaterialEssayModalProps {
 
 export const MaterialEssayModal = ({ essay, open, onClose }: MaterialEssayModalProps) => {
   const { modalData, modalExperimentResumeData, modalRows, modalColumns } = useEssayModalData(essay);
-  
+
   // 👇 DADOS ORIGINAIS - SIMPLES E DIRETO
   const modalGraphData = [
     [t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')],
@@ -38,7 +38,11 @@ export const MaterialEssayModal = ({ essay, open, onClose }: MaterialEssayModalP
           width: '1200px',
         }}
       >
-        <Typography variant="h5" gutterBottom>
+        <Typography
+          variant="h5"
+          gutterBottom
+          sx={{ position: 'relative', top: -10 }} 
+        >
           Ensaio: {essay.generalData.name}
         </Typography>
 
@@ -75,10 +79,10 @@ export const MaterialEssayModal = ({ essay, open, onClose }: MaterialEssayModalP
                 type: 'number',
                 scaleType: 'log',
               },
-              vAxis: { 
-                title: `${t('granulometry-asphalt.passant') + ' (%)'}`, 
-                minValue: 0, 
-                maxValue: 105 
+              vAxis: {
+                title: `${t('granulometry-asphalt.passant') + ' (%)'}`,
+                minValue: 0,
+                maxValue: 105,
               },
               legend: 'none',
               curveType: 'function', // 👈 CURVA SUAVE NATURAL
