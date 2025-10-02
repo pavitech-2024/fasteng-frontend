@@ -1,4 +1,3 @@
-// hooks/useGranulometryEssays.ts
 import { useState, useEffect } from 'react';
 import { GranulometryEssay } from '../types/asphalt-granulometry.types';
 import AsphaltGranulometry_SERVICE from '@/services/asphalt/essays/granulometry/granulometry.service';

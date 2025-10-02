@@ -1,53 +1,50 @@
-// utils/granulometryChartUtils.ts
-
-// Função para suavizar os dados de granulometria
-export const smoothGranulometryData = (
+import { useMemo } from 'react';
+export const createGranulometryCurve = (
   data: [number, number][], 
-  tension: number = 0.4,
-  samples: number = 100
 ): [number, number][] => {
-  if (data.length < 2) return data;
-
-  // Ordenar por diâmetro (eixo X)
-  const sortedData = [...data].sort((a, b) => a[0] - b[0]);
+  if (!data || data.length < 2) return data || [];
   
-  // Aplicar interpolação cúbica para suavização
-  const smoothed: [number, number][] = [];
-  
-  // Gerar mais pontos para curva suave
-  for (let i = 0; i < samples; i++) {
-    const t = i / (samples - 1);
-    const logX = Math.log10(sortedData[0][0]) + 
-                 t * (Math.log10(sortedData[sortedData.length - 1][0]) - Math.log10(sortedData[0][0]));
-    const x = Math.pow(10, logX);
-    
-    // Interpolação linear em escala logarítmica
-    let y = 0;
-    for (let j = 0; j < sortedData.length - 1; j++) {
-      if (x >= sortedData[j][0] && x <= sortedData[j + 1][0]) {
-        const logX1 = Math.log10(sortedData[j][0]);
-        const logX2 = Math.log10(sortedData[j + 1][0]);
-        const logXCurrent = Math.log10(x);
-        const tLocal = (logXCurrent - logX1) / (logX2 - logX1);
-        
-        // Suavização com tensão (similar ao tension do Chart.js)
-        y = sortedData[j][1] + (sortedData[j + 1][1] - sortedData[j][1]) * 
-            (tLocal + tension * Math.sin(tLocal * Math.PI));
-        break;
-      }
-    }
-    
-    smoothed.push([x, y]);
-  }
-  
-  return smoothed;
+  // APENAS OS PONTOS ORIGINAIS - SEM PONTOS EXTRAS!
+  return [...data].sort((a, b) => a[0] - b[0]);
 };
 
-// Versão simplificada usando média móvel (rolling window)
+// Hook SIMPLES
+export const useGranulometryCurve = (
+  graphData: [number, number][], 
+) => {
+  return useMemo(() => {
+    if (!graphData || graphData.length < 2) return graphData || [];
+    return createGranulometryCurve(graphData);
+  }, [graphData]);
+};
+
+// 👇 CORRIGINDO AS FUNÇÕES ANTIGAS
+
+// Função antiga CORRIGIDA
+export const smoothGranulometryData = (
+  data: [number, number][], 
+  tension: number = 0.4, // 👈 PARÂMETRO NÃO USADO (mantido para compatibilidade)
+  samples: number = 100  // 👈 PARÂMETRO NÃO USADO
+): [number, number][] => {
+  if (!data || data.length < 2) return data || [];
+  return createGranulometryCurve(data); // 👈 SÓ 1 ARGUMENTO!
+};
+
+// Hook antigo CORRIGIDO
+export const useSmoothedGranulometry = (
+  graphData: [number, number][], 
+  smoothingMethod: 'cubic' | 'rolling' = 'cubic', // 👈 PARÂMETRO NÃO USADO
+  tension: number = 0.4 // 👈 PARÂMETRO NÃO USADO
+) => {
+  return useGranulometryCurve(graphData); // 👈 SÓ 1 ARGUMENTO!
+};
+
+// Funções auxiliares (se ainda precisar)
 export const smoothWithRollingWindow = (
   data: [number, number][], 
   windowSize: number = 2
 ): [number, number][] => {
+  if (!data) return [];
   const xValues = data.map(d => d[0]);
   const yValues = data.map(d => d[1]);
   
@@ -56,10 +53,11 @@ export const smoothWithRollingWindow = (
   return xValues.map((x, i) => [x, smoothedY[i]]);
 };
 
-// Sua função rollingWindow adaptada
 export const rollingWindow = (arr: number[], window: number) => {
   const media: number[] = [];
   const std: number[] = [];
+  
+  if (!arr) return { media: [], std: [] };
   
   for (let i = 0; i < arr.length; i++) {
     const start = Math.max(0, i - window + 1);
