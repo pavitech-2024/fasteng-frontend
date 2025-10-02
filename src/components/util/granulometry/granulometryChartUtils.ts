@@ -34,7 +34,7 @@ export const smoothGranulometryData = (
 export const useSmoothedGranulometry = (
   graphData: [number, number][], 
   smoothingMethod: 'cubic' | 'rolling' = 'cubic', // 👈 PARÂMETRO NÃO USADO
-  tension: number = 0.4 // 👈 PARÂMETRO NÃO USADO
+  tension = 0.4 // 👈 PARÂMETRO NÃO USADO
 ) => {
   return useGranulometryCurve(graphData); // 👈 SÓ 1 ARGUMENTO!
 };

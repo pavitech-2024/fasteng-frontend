@@ -5,7 +5,7 @@ import { smoothGranulometryData, smoothWithRollingWindow } from '../granulometry
 export const useSmoothedGranulometry = (
   graphData: [number, number][], 
   smoothingMethod: 'cubic' | 'rolling' = 'cubic',
-  tension: number = 0.4
+  tension =  0.4
 ) => {
   const smoothedData = useMemo(() => {
     if (!graphData || graphData.length < 3) return graphData;
