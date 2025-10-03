@@ -26,46 +26,54 @@ const Superpave_Step3_GranulometryResults = ({
   useEffect(() => {
     const newGranulometryData = data.granulometrys?.map((gran) => ({
       material: gran.material,
-      graph: [[t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')], ...gran.result?.graph_data],
+      graph: [
+        [t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')],
+        ...(gran.result?.graph_data ?? []),
+      ],
       data: [
         {
           label: t('granulometry-asphalt.accumulated-retained'),
-          value: gran.result.accumulated_retained,
+          value: gran.result?.accumulated_retained ?? 0, // Verificando se 'result' é válido
           unity: '%',
         },
-        { label: t('granulometry-asphalt.total-retained'), value: gran.result.total_retained, unity: 'g' },
+        {
+          label: t('granulometry-asphalt.total-retained'),
+          value: gran.result?.total_retained ?? 0, // Verificando se 'result' é válido
+          unity: 'g',
+        },
         {
           label: t('asphalt.essays.granulometry.results.nominalSize'),
-          value: gran.result.nominal_size,
+          value: gran.result?.nominal_size ?? 0, // Verificando se 'result' é válido
           unity: 'mm',
         },
         {
           label: t('asphalt.essays.granulometry.results.nominalDiammeter'),
-          value: gran.result.nominal_diameter,
+          value: gran.result?.nominal_diameter ?? 0, // Verificando se 'result' é válido
           unity: 'mm',
         },
         {
           label: t('asphalt.dosages.superpave.granulometry-fineness-module'),
-          value: gran.result.fineness_module,
+          value: gran.result?.fineness_module ?? 0, // Verificando se 'result' é válido
           unity: '%',
         },
         {
           label: t('asphalt.dosages.superpave.granulometry-cc'),
-          value: gran.result.cc,
+          value: gran.result?.cc ?? 0, // Verificando se 'result' é válido
           unity: '%',
         },
         {
           label: t('asphalt.dosages.superpave.granulometry-cnu'),
-          value: gran.result.cnu,
+          value: gran.result?.cnu ?? 0, // Verificando se 'result' é válido
           unity: '%',
         },
         {
           label: t('asphalt.dosages.superpave.granulometry-error'),
-          value: gran.result.error,
+          value: gran.result?.error ?? 0, // Verificando se 'result' é válido
           unity: '%',
         },
       ],
     }));
+
     setGranulometryData(newGranulometryData);
   }, []);
 
@@ -97,7 +105,11 @@ const Superpave_Step3_GranulometryResults = ({
             return null;
           } else {
             return (
-              <FlexColumnBorder key={index} title={`${item.material?.name} | ` + t(`asphalt.materials.${item.material?.type}`)} open={true}>
+              <FlexColumnBorder
+                key={index}
+                title={`${item.material?.name} | ` + t(`asphalt.materials.${item.material?.type}`)}
+                open={true}
+              >
                 <Box
                   sx={{
                     width: '100%',
@@ -148,21 +160,21 @@ const Superpave_Step3_GranulometryResults = ({
         {materialsToShow.find((item) => item === data.viscosity.material.name) && data.viscosity.result && (
           <FlexColumnBorder title={`${data.viscosity.material.name} | ${data.viscosity.material.type}`} open={true}>
             <Typography variant="h6">{t('viscosity-rotational.compression-temperature')}</Typography>
-            <Result_CardContainer sx={{ marginBottom: '2rem'}}>
+            <Result_CardContainer sx={{ marginBottom: '2rem' }}>
               {Object.entries(data.viscosity.result.result.compressionTemperatureRange).map(([key, value], index) => (
                 <Result_Card key={index} label={key} value={value.toFixed(2).toString()} unity={'°C'} />
               ))}
             </Result_CardContainer>
 
             <Typography variant="h6">{t('viscosity-rotational.aggregate-temperature')}</Typography>
-            <Result_CardContainer sx={{ marginBottom: '2rem'}}>
+            <Result_CardContainer sx={{ marginBottom: '2rem' }}>
               {Object.entries(data.viscosity.result.result.aggregateTemperatureRange).map(([key, value], index) => (
                 <Result_Card key={index} label={key} value={value.toFixed(2).toString()} unity={'°C'} />
               ))}
             </Result_CardContainer>
 
             <Typography variant="h6">{t('viscosity-rotational.machining-temperature')}</Typography>
-            <Result_CardContainer sx={{ marginBottom: '2rem'}}>
+            <Result_CardContainer sx={{ marginBottom: '2rem' }}>
               {Object.entries(data.viscosity.result.result.machiningTemperatureRange).map(([key, value], index) => (
                 <Result_Card key={index} label={key} value={value.toFixed(2).toString()} unity={'°C'} />
               ))}
