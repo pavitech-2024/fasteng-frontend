@@ -50,6 +50,14 @@ interface SuperpaveGranulometryResults {
       cnu: number;
       error: number;
     };
+  }[] & {
+    data?: { 
+      material: AsphaltMaterial;
+      material_mass: number;
+      table_data: { sieve_label: string; sieve_value: number; passant: number; retained: number }[];
+      sieve_series: { label: string; value: number }[];
+      bottom: number;
+    };
   }[];
   viscosity: {
     material: AsphaltMaterial;
@@ -79,6 +87,12 @@ interface SuperpaveGranulometryResults {
       };
     };
   };
+  aggregatesData?: any[];
+  percentsToList?: any[];
+  nominalSize?: {
+    value: number;
+  };
+  porcentagesPassantsN200?: number[];
 }
 
 interface SuperpaveGranulometryCompositionData {
