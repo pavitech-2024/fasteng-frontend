@@ -350,6 +350,7 @@ class Superpave_SERVICE implements IEssayService {
             ...data,
           },
         });
+        return data;
       } catch (error) {
         throw error;
       }

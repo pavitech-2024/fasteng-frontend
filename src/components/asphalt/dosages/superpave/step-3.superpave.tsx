@@ -37,6 +37,93 @@ const Superpave_Step3_GranulometryResults = ({
     });
   }
 
+
+useEffect(() => {
+  const saveGranulometryDataForComposition = async () => {
+    try {
+      if (!storeData.granulometrys || storeData.granulometrys.length === 0) return;
+
+      console.log('💾 Salvando dados para composição granulométrica...');
+      
+      // Extrair percentsToList dos resultados
+      const percentsToList = storeData.granulometrys.map((gran: any) => {
+        if (gran.result?.passant_porcentage) {
+          return gran.result.passant_porcentage;
+        }
+        return [];
+      });
+
+      // Calcular/extrair nominalSize (pegar do primeiro material)
+      const nominalSize = storeData.granulometrys[0]?.result?.nominal_size || 19.1;
+
+      // Determinar bands baseado no nominalSize
+      const bands = calculateBands(nominalSize);
+
+      console.log('📊 Dados salvos para etapa 4:', {
+        percentsToList: percentsToList.length,
+        nominalSize,
+        bands: bands.letter
+      });
+
+      // ⬇️⬇️⬇️ SALVAR NO STORE PARA ETAPA 4 USAR ⬇️⬇️⬇️
+      useSuperpaveStore.getState().setData({
+        step: 3,
+        value: {
+          ...useSuperpaveStore.getState().granulometryCompositionData,
+          percentsToList,
+          nominalSize: { value: nominalSize },
+          bands,
+          porcentagesPassantsN200: percentsToList.map((material: any[]) => {
+            const n200 = material.find((item: any[]) => 
+              item[0]?.includes('200') || item[0]?.includes('0.075')
+            );
+            return n200 ? n200[1] : 0;
+          })
+        }
+      });
+
+    } catch (error) {
+      console.error('❌ Erro ao salvar dados para composição:', error);
+    }
+  };
+
+  // Executar quando os dados estiverem disponíveis
+  if (storeData.granulometrys?.some((gran: any) => gran.result)) {
+    saveGranulometryDataForComposition();
+  }
+}, [storeData.granulometrys]);
+
+
+
+
+const calculateBands = (nominalSize: number) => {
+  if (nominalSize >= 37.5) {
+    return {
+      letter: 'A',
+      higher: [100, 100, 90, null, null, null, null, 45, null, null, null, null, 7],
+      lower: [100, 90, 75, 58, 48, 35, 29, 19, 13, 9, 5, 2, 1]
+    };
+  } else if (nominalSize >= 25) {
+    return {
+      letter: 'B', 
+      higher: [null, 100, 100, 90, null, null, null, 49, null, null, null, null, 8],
+      lower: [null, 100, 90, null, null, null, null, 23, null, null, null, null, 2]
+    };
+  } else if (nominalSize >= 19) {
+    return {
+      letter: 'C',
+      higher: [null, null, 100, 100, 90, null, null, 58, null, null, null, null, 10],
+      lower: [null, null, 100, 90, null, null, null, 28, null, null, null, null, 2]
+    };
+  } else {
+    return {
+      letter: 'D',
+      higher: [null, null, null, 100, 100, 90, null, 67, null, null, null, null, 12],
+      lower: [null, null, null, 100, 90, null, null, 32, null, null, null, null, 2]
+    };
+  }
+};
+
   useEffect(() => {
     const newGranulometryData =
       storeData.granulometrys?.map((gran: any) => {

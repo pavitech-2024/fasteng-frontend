@@ -32,6 +32,20 @@ interface SuperpaveGranulometryEssayData {
       viscosity: number;
     }[];
   };
+  // ⬇️⬇️⬇️ ADICIONE ESTAS PROPRIEDADES ⬇️⬇️⬇️
+  percentsToList?: any[];
+  nominalSize?: { 
+    value: number; 
+    controlPoints?: any;
+    restrictedZone?: any;
+    curve?: any[];
+  };
+  bands?: { 
+    letter: string; 
+    higher: number[]; 
+    lower: number[];
+  };
+  porcentagesPassantsN200?: number[];
 }
 
 interface SuperpaveGranulometryResults {
@@ -123,6 +137,7 @@ interface SuperpaveGranulometryCompositionData {
     lower: any[];
     letter: string;
   };
+   dnitBand?: string; 
   porcentagesPassantsN200: any;
 }
 
