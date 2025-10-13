@@ -48,18 +48,19 @@ import { useTheme, createTheme, ThemeProvider } from '@mui/material/styles';
 // Chart.js registration
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-// Custom theme following PRO-MEDINA style with smaller elements
 const proMedinaTheme = createTheme({
   palette: {
     primary: {
       main: '#ff6b35',
       light: '#ff8a65',
       dark: '#d84315',
+      contrastText: '#ffffff',
     },
     secondary: {
       main: '#4caf50',
       light: '#81c784',
       dark: '#388e3c',
+      contrastText: '#ffffff',
     },
     background: {
       default: '#f5f5f5',
@@ -1250,8 +1251,8 @@ const FWDPage = () => {
                   </Typography>
                   {fwdAnalysis.length === 0 ? (
                     <Alert severity="info" sx={{ borderRadius: 1, fontSize: '0.85rem' }}>
-                      Nenhuma análise criada ainda. Vá para "Dados Gerais" para criar uma nova análise.
-                    </Alert>
+                    Nenhuma análise criada ainda. Vá para &quot;Dados Gerais&quot; para criar uma nova análise.
+                  </Alert>
                   ) : (
                     <Grid container spacing={2} justifyContent="center">
                       {fwdAnalysis.map((analysis) => (
