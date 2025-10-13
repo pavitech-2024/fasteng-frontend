@@ -4,13 +4,11 @@ import ProvSoils1Icon from '@/components/atoms/icons/provSoils1Icon';
 import ProvSoils2Icon from '@/components/atoms/icons/provSoils2Icon';
 import ProvSoils3Icon from '@/components/atoms/icons/provSoils3Icon';
 import { LoginImage } from '@/components/styles/styleds/login';
-import { Container, Box, Typography, CardMedia } from '@mui/material';
+import { Container, Box, Typography } from '@mui/material';
+import { Analytics } from '@mui/icons-material'; // Ícone do Material-UI para FWD
 import { t } from 'i18next';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import granularLayersImage from '../../assets/pro-medina/granularLayers/granular-layers-image.png';
-import stabilizedLayersImage from '../../assets/pro-medina/stabilizedLayers/stabilized-layers-image.png';
-import concreteBinderAsphaltImage from '../../assets/pro-medina/concreteBinderAsphalt/concrete-binder-asphalt-image.png';
 
 const Promedina: NextPage = () => {
   const Router = useRouter();
@@ -18,46 +16,23 @@ const Promedina: NextPage = () => {
   const Applications = [
     {
       name: t('home.pm.granular'),
-      icon: (
-        <CardMedia
-          component="img"
-          image={granularLayersImage.src}
-          sx={{
-            width: '100%',
-            height: '100%',
-          }}
-        />
-      ),
-      // icon: <ProvSoils1Icon width="100%" height="100%" />,
+      icon: <ProvSoils1Icon width="100%" height="100%" />,
       path: '/promedina/granular-layers',
     },
     {
       name: t('home.pm.stabilized'),
-      icon: (
-        <CardMedia
-          component="img"
-          image={stabilizedLayersImage.src}
-          sx={{
-            width: '100%',
-            height: '100%',
-          }}
-        />
-      ),
+      icon: <ProvSoils2Icon width="100%" height="100%" />,
       path: '/promedina/stabilized-layers',
     },
     {
       name: t('home.pm.asphalt'),
-      icon: (
-        <CardMedia
-          component="img"
-          image={concreteBinderAsphaltImage.src}
-          sx={{
-            width: '100%',
-            height: '100%',
-          }}
-        />
-      ),
+      icon: <ProvSoils3Icon width="100%" height="100%" />,
       path: '/promedina/binder-asphalt-concrete',
+    },
+    {
+      name: t('home.pm.fwd'),
+      icon: <Analytics sx={{ width: '100%', height: '100%' }} />, // Ícone do Material-UI
+      path: '/promedina/fwd',
     },
   ];
 
