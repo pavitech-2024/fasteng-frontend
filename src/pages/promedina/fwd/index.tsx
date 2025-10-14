@@ -48,87 +48,39 @@ import { useTheme, createTheme, ThemeProvider } from '@mui/material/styles';
 // Chart.js registration
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-// Definindo as cores principais como constantes para reutilização
-const PRO_MEDINA_COLORS = {
-  primary: {
-    main: '#ff6b35',
-    light: '#ff8a65',
-    dark: '#d84315',
-    contrastText: '#ffffff',
-  },
-  secondary: {
-    main: '#4caf50',
-    light: '#81c784',
-    dark: '#388e3c',
-    contrastText: '#ffffff',
-  }
-};
-
-// Extendendo a interface PaletteOptions para incluir as propriedades personalizadas
-declare module '@mui/material/styles' {
-  interface PaletteOptions {
-    primaryTons?: {
-      main: string;
-      light: string;
-      dark: string;
-      contrastText: string;
-    };
-    secondaryTons?: {
-      main: string;
-      light: string;
-      dark: string;
-      contrastText: string;
-    };
-  }
-
-  interface Palette {
-    primaryTons: {
-      main: string;
-      light: string;
-      dark: string;
-      contrastText: string;
-    };
-    secondaryTons: {
-      main: string;
-      light: string;
-      dark: string;
-      contrastText: string;
-    };
-  }
-}
-
+// Definir o tema PRO-MEDINA
 const proMedinaTheme = createTheme({
   palette: {
-    primary: PRO_MEDINA_COLORS.primary,
-    secondary: PRO_MEDINA_COLORS.secondary,
+    primary: {
+      main: '#ff6b35',
+      light: '#ff8a65',
+      dark: '#c53d13',
+      contrastText: '#ffffff',
+    },
+    secondary: {
+      main: '#2c3e50',
+      light: '#546e7a',
+      dark: '#1a252f',
+      contrastText: '#ffffff',
+    },
     background: {
-      default: '#f5f5f5',
+      default: '#f5f7fa',
       paper: '#ffffff',
     },
-    text: {
-      primary: '#333333',
-      secondary: '#666666',
-    },
-    // Adicionando as propriedades personalizadas
-    primaryTons: PRO_MEDINA_COLORS.primary,
-    secondaryTons: PRO_MEDINA_COLORS.secondary,
   },
   typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: "'Roboto', 'Segoe UI', sans-serif",
     h4: {
       fontWeight: 700,
-      color: '#333333',
-      fontSize: '1.5rem',
+      fontSize: '1.75rem',
     },
     h5: {
       fontWeight: 700,
-      color: '#333333',
-      fontSize: '1.25rem',
+      fontSize: '1.5rem',
     },
     h6: {
       fontWeight: 600,
-      color: '#333333',
-      fontSize: '1.1rem',
+      fontSize: '1.25rem',
     },
     body1: {
       fontSize: '0.9rem',
@@ -141,47 +93,55 @@ const proMedinaTheme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 6,
+          borderRadius: '8px',
           textTransform: 'none',
           fontWeight: 600,
           fontSize: '0.85rem',
-          padding: '6px 16px',
         },
         contained: {
           background: 'linear-gradient(45deg, #ff6b35 30%, #ff8a65 90%)',
-          boxShadow: '0 2px 4px rgba(255, 107, 53, .3)',
-        },
-      },
-    },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-          boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+          boxShadow: '0 2px 4px rgba(255, 107, 53, 0.3)',
+          '&:hover': {
+            background: 'linear-gradient(45deg, #e55a2b 30%, #e5735d 90%)',
+          },
         },
       },
     },
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: 8,
+          borderRadius: '8px',
         },
       },
     },
-    MuiTextField: {
+    MuiCard: {
       styleOverrides: {
         root: {
-          '& .MuiInputBase-root': {
-            fontSize: '0.85rem',
-          },
-          '& .MuiInputLabel-root': {
-            fontSize: '0.85rem',
-          },
+          borderRadius: '8px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         },
       },
     },
   },
 });
+
+// Cores PRO-MEDINA para uso direto
+const PRO_MEDINA_COLORS = {
+  primary: {
+    main: '#ff6b35',
+    light: '#ff8a65',
+    dark: '#c53d13',
+  },
+  secondary: {
+    main: '#2c3e50',
+    light: '#546e7a',
+    dark: '#1a252f',
+  },
+  background: {
+    main: '#f5f7fa',
+    light: '#ffffff',
+  }
+};
 
 // Types
 interface TabPanelProps {
@@ -392,7 +352,6 @@ const FWDPage = () => {
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     loadAnalyses();
@@ -633,7 +592,7 @@ const FWDPage = () => {
       const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
       // CABEÇALHO NA LINHA 5
-      const headerRow: string[] = rows[4].map((cell: string) => cell?.toString().trim());
+      const headerRow: string[] = (rows[4] as any[])?.map((cell: any) => cell?.toString().trim()) || [];
       const colIndices: Record<string, number> = {
         stationNumber: headerRow.findIndex(h => h === 'Estaca - Número'),
         d0: headerRow.findIndex(h => h === 'd0'),
@@ -684,7 +643,7 @@ const FWDPage = () => {
     reader.readAsBinaryString(file);
   };
 
-  // Chart Data
+  // Chart Data - CORRIGIDO
   const d0ChartData =
     procResult && procResult.ordered && procResult.ordered.length > 0
       ? {
@@ -703,14 +662,15 @@ const FWDPage = () => {
             {
               label: 'Quebra (CV > 30%)',
               data: procResult.ordered.map((_: any, i: number) =>
-                procResult.quebra && procResult.quebra[i] ? procResult.ordered[i].d0 : null
+                procResult.quebra && procResult.quebra[i] ? procResult.ordered[i].d0 : NaN
               ),
               borderColor: 'red',
               backgroundColor: 'red',
               borderWidth: 0,
               pointRadius: 6,
-              type: 'scatter' as const,
-              showLine: false,
+              pointBackgroundColor: 'red',
+              // REMOVIDO: type: 'scatter' as const, - Causa conflito
+              // REMOVIDO: showLine: false, - Causa conflito
             },
           ],
         }
@@ -810,7 +770,14 @@ const FWDPage = () => {
           </Toolbar>
         </AppBar>
 
-        <Container maxWidth="xl" sx={{ py: 2 }}>
+        <Container 
+          maxWidth={false} 
+          sx={{ 
+            py: 2, 
+            maxWidth: '1800px',
+            margin: '0 auto'
+          }}
+        >
           {/* Title section */}
           <Box sx={{ textAlign: 'center', mb: 2 }}>
             <Typography
@@ -954,110 +921,16 @@ const FWDPage = () => {
                     Dados Gerais
                   </Typography>
                   
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
-                      <TextField
-                        fullWidth
-                        label="Nome *"
-                        value={newAnalysis.name}
-                        onChange={(e) => setNewAnalysis({ ...newAnalysis, name: e.target.value })}
-                        required
-                        size="small"
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: 1,
-                            '&:hover fieldset': {
-                              borderColor: PRO_MEDINA_COLORS.primary.main,
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: PRO_MEDINA_COLORS.primary.main,
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <TextField
-                        fullWidth
-                        label="Local *"
-                        placeholder="Localização do projeto"
-                        size="small"
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: 1,
-                            '&:hover fieldset': {
-                              borderColor: PRO_MEDINA_COLORS.primary.main,
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: PRO_MEDINA_COLORS.primary.main,
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <TextField
-                        fullWidth
-                        label="Rodovia *"
-                        placeholder="Nome da rodovia"
-                        size="small"
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: 1,
-                            '&:hover fieldset': {
-                              borderColor: PRO_MEDINA_COLORS.primary.main,
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: PRO_MEDINA_COLORS.primary.main,
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <TextField
-                        fullWidth
-                        label="Camada *"
-                        placeholder="Tipo de camada"
-                        size="small"
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: 1,
-                            '&:hover fieldset': {
-                              borderColor: PRO_MEDINA_COLORS.primary.main,
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: PRO_MEDINA_COLORS.primary.main,
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <TextField
-                        fullWidth
-                        label="Município/Estado *"
-                        placeholder="Município e Estado"
-                        size="small"
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: 1,
-                            '&:hover fieldset': {
-                              borderColor: PRO_MEDINA_COLORS.primary.main,
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: PRO_MEDINA_COLORS.primary.main,
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  {/* CORREÇÃO: Substituindo Grid por Box com flexbox */}
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                      <Box sx={{ flex: '1 1 300px' }}>
                         <TextField
                           fullWidth
-                          label="Velocidade diretriz da via"
-                          type="number"
+                          label="Nome *"
+                          value={newAnalysis.name}
+                          onChange={(e) => setNewAnalysis({ ...newAnalysis, name: e.target.value })}
+                          required
                           size="small"
                           sx={{
                             '& .MuiOutlinedInput-root': {
@@ -1071,12 +944,116 @@ const FWDPage = () => {
                             },
                           }}
                         />
-                        <Typography variant="body2" sx={{ color: 'text.secondary', minWidth: 'fit-content', fontSize: '0.8rem' }}>
-                          km/h
-                        </Typography>
                       </Box>
-                    </Grid>
-                    <Grid item xs={12}>
+                      <Box sx={{ flex: '1 1 300px' }}>
+                        <TextField
+                          fullWidth
+                          label="Local *"
+                          placeholder="Localização do projeto"
+                          size="small"
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: 1,
+                              '&:hover fieldset': {
+                                borderColor: PRO_MEDINA_COLORS.primary.main,
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: PRO_MEDINA_COLORS.primary.main,
+                              },
+                            },
+                          }}
+                        />
+                      </Box>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                      <Box sx={{ flex: '1 1 300px' }}>
+                        <TextField
+                          fullWidth
+                          label="Rodovia *"
+                          placeholder="Nome da rodovia"
+                          size="small"
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: 1,
+                              '&:hover fieldset': {
+                                borderColor: PRO_MEDINA_COLORS.primary.main,
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: PRO_MEDINA_COLORS.primary.main,
+                              },
+                            },
+                          }}
+                        />
+                      </Box>
+                      <Box sx={{ flex: '1 1 300px' }}>
+                        <TextField
+                          fullWidth
+                          label="Camada *"
+                          placeholder="Tipo de camada"
+                          size="small"
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: 1,
+                              '&:hover fieldset': {
+                                borderColor: PRO_MEDINA_COLORS.primary.main,
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: PRO_MEDINA_COLORS.primary.main,
+                              },
+                            },
+                          }}
+                        />
+                      </Box>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                      <Box sx={{ flex: '1 1 300px' }}>
+                        <TextField
+                          fullWidth
+                          label="Município/Estado *"
+                          placeholder="Município e Estado"
+                          size="small"
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: 1,
+                              '&:hover fieldset': {
+                                borderColor: PRO_MEDINA_COLORS.primary.main,
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: PRO_MEDINA_COLORS.primary.main,
+                              },
+                            },
+                          }}
+                        />
+                      </Box>
+                      <Box sx={{ flex: '1 1 300px' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <TextField
+                            fullWidth
+                            label="Velocidade diretriz da via"
+                            type="number"
+                            size="small"
+                            sx={{
+                              '& .MuiOutlinedInput-root': {
+                                borderRadius: 1,
+                                '&:hover fieldset': {
+                                  borderColor: PRO_MEDINA_COLORS.primary.main,
+                                },
+                                '&.Mui-focused fieldset': {
+                                  borderColor: PRO_MEDINA_COLORS.primary.main,
+                                },
+                              },
+                            }}
+                          />
+                          <Typography variant="body2" sx={{ color: 'text.secondary', minWidth: 'fit-content', fontSize: '0.8rem' }}>
+                            km/h
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    <Box>
                       <TextField
                         fullWidth
                         multiline
@@ -1097,8 +1074,9 @@ const FWDPage = () => {
                           },
                         }}
                       />
-                    </Grid>
-                    <Grid item xs={12}>
+                    </Box>
+
+                    <Box>
                       <Divider sx={{ my: 1, borderColor: PRO_MEDINA_COLORS.secondary.main }} />
                       <Button
                         variant="outlined"
@@ -1138,8 +1116,10 @@ const FWDPage = () => {
                           ? 'Análise completa (mínimo 5 amostras atingido)'
                           : `Atenção: necessário ${5 - samples.length} amostras para análise completa`}
                       </Alert>
-                      <Grid container spacing={1}>
-                        <Grid item xs={12} sm={2}>
+                      
+                      {/* Grid para amostras usando Box */}
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                        <Box sx={{ flex: '1 1 120px', minWidth: '120px' }}>
                           <TextField
                             fullWidth
                             label="Estaca *"
@@ -1149,9 +1129,9 @@ const FWDPage = () => {
                             required
                             size="small"
                           />
-                        </Grid>
+                        </Box>
                         {[0, 20, 30, 45, 60, 90, 120, 150, 180].map((distance) => (
-                          <Grid item xs={6} sm={1} key={distance}>
+                          <Box sx={{ flex: '1 1 80px', minWidth: '80px' }} key={distance}>
                             <TextField
                               fullWidth
                               label={`d${distance}`}
@@ -1160,9 +1140,9 @@ const FWDPage = () => {
                               onChange={(e) => handleInputChange(`d${distance}` as keyof FWDData, e.target.value)}
                               size="small"
                             />
-                          </Grid>
+                          </Box>
                         ))}
-                        <Grid item xs={12} sm={2}>
+                        <Box sx={{ flex: '1 1 120px', minWidth: '120px' }}>
                           <TextField
                             fullWidth
                             label="Data"
@@ -1172,8 +1152,8 @@ const FWDPage = () => {
                             onChange={(e) => setCurrentSample({ ...currentSample, date: e.target.value })}
                             size="small"
                           />
-                        </Grid>
-                        <Grid item xs={12} sm={2}>
+                        </Box>
+                        <Box sx={{ flex: '1 1 140px', minWidth: '140px' }}>
                           <TextField
                             fullWidth
                             label="Temp. Pavimento (°C)"
@@ -1182,8 +1162,8 @@ const FWDPage = () => {
                             onChange={(e) => handleInputChange('pavementTemperature', e.target.value)}
                             size="small"
                           />
-                        </Grid>
-                        <Grid item xs={12} sm={2}>
+                        </Box>
+                        <Box sx={{ flex: '1 1 120px', minWidth: '120px' }}>
                           <Button 
                             variant="outlined" 
                             startIcon={<Add />} 
@@ -1197,11 +1177,12 @@ const FWDPage = () => {
                           >
                             Adicionar
                           </Button>
-                        </Grid>
-                      </Grid>
-                    </Grid>
+                        </Box>
+                      </Box>
+                    </Box>
+
                     {samples.length > 0 && (
-                      <Grid item xs={12}>
+                      <Box>
                         <Accordion sx={{ borderRadius: 1, border: `1px solid ${PRO_MEDINA_COLORS.secondary.main}` }}>
                           <AccordionSummary expandIcon={<ExpandMore />} sx={{ minHeight: '40px', '& .MuiAccordionSummary-content': { margin: '8px 0' } }}>
                             <Typography sx={{ fontWeight: 600, fontSize: '0.9rem' }}>Amostras Adicionadas ({samples.length})</Typography>
@@ -1253,26 +1234,25 @@ const FWDPage = () => {
                             </TableContainer>
                           </AccordionDetails>
                         </Accordion>
-                      </Grid>
-                    )}
-                    <Grid item xs={12}>
-                      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                        <Button
-                          variant="contained"
-                          onClick={handleCreateAnalysis}
-                          disabled={samples.length < 5 || !newAnalysis.name || loading}
-                          sx={{ 
-                            px: 3,
-                            py: 1,
-                            fontSize: '0.9rem',
-                            fontWeight: 700,
-                          }}
-                        >
-                          {loading ? <CircularProgress size={20} /> : 'Criar Análise FWD'}
-                        </Button>
                       </Box>
-                    </Grid>
-                  </Grid>
+                    )}
+
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                      <Button
+                        variant="contained"
+                        onClick={handleCreateAnalysis}
+                        disabled={samples.length < 5 || !newAnalysis.name || loading}
+                        sx={{ 
+                          px: 3,
+                          py: 1,
+                          fontSize: '0.9rem',
+                          fontWeight: 700,
+                        }}
+                      >
+                        {loading ? <CircularProgress size={20} /> : 'Criar Análise FWD'}
+                      </Button>
+                    </Box>
+                  </Box>
                 </Paper>
               </TabPanel>
 
@@ -1296,9 +1276,9 @@ const FWDPage = () => {
                     Nenhuma análise criada ainda. Vá para &quot;Dados Gerais&quot; para criar uma nova análise.
                   </Alert>
                   ) : (
-                    <Grid container spacing={2} justifyContent="center">
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'center' }}>
                       {fwdAnalysis.map((analysis) => (
-                        <Grid item key={analysis.id}>
+                        <Box key={analysis.id} sx={{ flex: '0 1 280px' }}>
                           <Card
                             variant={selectedAnalysis?.id === analysis.id ? 'elevation' : 'outlined'}
                             elevation={selectedAnalysis?.id === analysis.id ? 6 : 2}
@@ -1377,9 +1357,9 @@ const FWDPage = () => {
                               </Button>
                             </CardContent>
                           </Card>
-                        </Grid>
+                        </Box>
                       ))}
-                    </Grid>
+                    </Box>
                   )}
                 </Box>
               </TabPanel>
@@ -1473,7 +1453,7 @@ const FWDPage = () => {
                                 {selectedAnalysis.name} - Gráfico Deflexão d0
                               </Typography>
                               <Box sx={{ height: 300 }}>
-                                <Line
+                              <Line
                                   data={d0ChartData}
                                   options={{
                                     responsive: true,
@@ -1482,7 +1462,11 @@ const FWDPage = () => {
                                       legend: { 
                                         display: true, 
                                         position: 'top' as const,
-                                        labels: { fontSize: 10 }
+                                        labels: { 
+                                          font: {
+                                            size: 10
+                                          }
+                                        }
                                       },
                                       title: { 
                                         display: true, 
@@ -1588,7 +1572,7 @@ const FWDPage = () => {
                               }}
                             >
                               <Box sx={{ height: 300 }}>
-                                <Line
+                              <Line
                                   data={baciaChartData}
                                   options={{
                                     responsive: true,
@@ -1597,7 +1581,11 @@ const FWDPage = () => {
                                       legend: { 
                                         display: true, 
                                         position: 'top' as const,
-                                        labels: { fontSize: 10 }
+                                        labels: { 
+                                          font: {
+                                            size: 10
+                                          }
+                                        }
                                       },
                                       title: { 
                                         display: true, 
