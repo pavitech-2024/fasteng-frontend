@@ -312,52 +312,99 @@ class Superpave_SERVICE implements IEssayService {
   };
 
   getGranulometricCompositionData = async (
-    dosageData: SuperpaveData,
-    user: string,
-    isConsult?: boolean
-  ): Promise<any> => {
-    const step = dosageData.generalData.step;
-    if (!isConsult || (isConsult && step === 2)) {
-      try {
-        const { dnitBand } = dosageData.generalData;
-        const { granulometrys: resultsData } = dosageData.granulometryResultsData;
-        const { granulometrys: essayData } = dosageData.granulometryEssayData;
+  dosageData: SuperpaveData,
+  user: string,
+  isConsult?: boolean
+): Promise<any> => {
+  const step = dosageData.generalData.step;
+  if (!isConsult || (isConsult && step === 2)) {
+    try {
+    //  console.log('🔄 SERVICE: Iniciando processamento...');
+      //console.log('📦 SERVICE - dosageData recebido:', dosageData);
+      
+      const { dnitBand } = dosageData.generalData;
+      
+      // ⚠️ CORREÇÃO: Pegar os dados da estrutura correta
+      const resultsData = dosageData.granulometryResultsData?.granulometrys || [];
+      const essayData = dosageData.granulometryEssayData?.granulometrys || [];
 
-        let aggregates = essayData.map((item) => {
-          return {
-            data: item,
-            results: resultsData.find((result) => result.material.name === item.material.name),
-          };
-        });
+      //console.log('📊 SERVICE - resultsData (CORRETO):', resultsData);
+      //console.log('📊 SERVICE - essayData (CORRETO):', essayData);
 
-        aggregates = aggregates.filter(
-          (agg) => agg.data.material.type !== 'asphaltBinder' && agg.data.material.type !== 'CAP'
-        );
-
-        const response = await Api.post(`${this.info.backend_path}/get-granulometric-composition-data`, {
-          dnitBand: dnitBand,
-          aggregates: aggregates,
-        });
-
-        const { data, success, error } = response.data;
-
-        if (success === false) throw error.name;
-
-        this.store_actions.setData({
-          step: 3,
-          value: {
-            ...dosageData.granulometryCompositionData,
-            ...data,
-          },
-        });
-        return data;
-      } catch (error) {
-        throw error;
+      // ⚠️ CORREÇÃO: Verificar se tem dados
+      if (essayData.length === 0) {
+        console.error('❌ SERVICE: essayData está vazio!');
+        throw new Error('Dados de ensaio não encontrados');
       }
-    } else {
-      this.store_actions.setData({ step, value: dosageData });
+
+      if (resultsData.length === 0) {
+        console.error('❌ SERVICE: resultsData está vazio!');
+        throw new Error('Dados de resultados não encontrados');
+      }
+
+      let aggregates = essayData.map((item) => {
+        const correspondingResult = resultsData.find((result) => 
+          result.material?.name === item.material?.name
+        );
+        
+        return {
+          data: item,
+          results: correspondingResult
+        };
+      });
+
+      aggregates = aggregates.filter(
+        (agg) => agg.data?.material?.type !== 'asphaltBinder' && agg.data?.material?.type !== 'CAP'
+      );
+
+      //console.log('🚀 SERVICE - Enviando para backend, aggregates:', aggregates);
+
+      if (aggregates.length === 0) {
+        console.error('❌ SERVICE: Nenhum aggregate válido após filtro');
+        throw new Error('Nenhum material válido para composição');
+      }
+
+      const response = await Api.post(`${this.info.backend_path}/get-granulometric-composition-data`, {
+        dnitBand: dnitBand,
+        aggregates: aggregates,
+      });
+
+      //console.log('✅ SERVICE - Resposta completa do backend:', response);
+      
+      // ⚠️ CORREÇÃO: Verificar se a resposta tem dados
+      if (!response.data || response.data === '') {
+        console.error('❌ SERVICE: Backend retornou resposta vazia');
+        throw new Error('Backend retornou resposta vazia');
+      }
+
+      const { data, success, error } = response.data;
+
+      if (success === false) {
+        console.error('❌ SERVICE: Backend retornou erro:', error);
+        throw new Error(error?.name || 'Erro no backend');
+      }
+
+      //console.log('💾 SERVICE - Salvando na store, data:', data);
+
+      this.store_actions.setData({
+        step: 3,
+        value: {
+          ...dosageData.granulometryCompositionData,
+          ...data,
+        },
+      });
+      
+      console.log('🎉 SERVICE - Retornando data:', data);
+      return data;
+    } catch (error) {
+      console.error('❌ SERVICE - Erro:', error);
+      throw error;
     }
-  };
+  } else {
+    //console.log('⏭️ SERVICE - Pulando (isConsult mode)');
+    this.store_actions.setData({ step, value: dosageData });
+  }
+};
 
   /**
    * Calculates the granulometry composition based on the user's input.

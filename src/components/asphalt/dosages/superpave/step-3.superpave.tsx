@@ -1,24 +1,28 @@
+
 import Result_Card, { Result_CardContainer } from '@/components/atoms/containers/result-card';
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
-import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
+import useSuperpaveStore, { SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
 import { Box, Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/material';
 import { t } from 'i18next';
 import Chart from 'react-google-charts';
 import { useEffect, useState } from 'react';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import useAuth from '@/contexts/auth';
 //import {AsphaltMaterial, GranulometryResult, ViscosityResult, GranulometryItem} from '@/components/asphalt/dosages/superpave/types/results-gr';
 
 const Superpave_Step3_GranulometryResults = ({
-  setNextDisabled,
+  setNextDisabled, superpave
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const { granulometryResultsData: data } = useSuperpaveStore();
   const [granulometryData, setGranulometryData] = useState<any[]>([]);
   const [materialsToShow, setMaterialToShow] = useState<string[]>([]);
+  const [hasProcessed, setHasProcessed] = useState(false);
+   const compositionData = useSuperpaveStore((state) => state.granulometryCompositionData);
+  const { user } = useAuth();
 
-  // VALIDAÇÃO: Verificar se data existe
-  if (!data) {
+ if (!data) {
     return <div>Dados não disponíveis</div>;
   }
 
@@ -39,63 +43,308 @@ const Superpave_Step3_GranulometryResults = ({
 
 
 useEffect(() => {
+ // console.log('🔍 ESTRUTURA REAL DOS DADOS:');
+  //storeData.granulometrys.forEach((gran, index) => {
+    //console.log(`Material ${index} (${gran.material.name}):`, gran);
+    //console.log(`- Tem data?`, !!gran.data);
+    //console.log(`- Data completo:`, gran.data);
+    //console.log(`- Tem result?`, !!gran.result);
+  //});
+    if (hasProcessed || !storeData.granulometrys || storeData.granulometrys.length === 0) {
+      return;
+    }
   const saveGranulometryDataForComposition = async () => {
     try {
-      if (!storeData.granulometrys || storeData.granulometrys.length === 0) return;
-
-      console.log('💾 Salvando dados para composição granulométrica...');
+     // console.log('🎯 FRONTEND: Iniciando processamento...');
+     
+      setHasProcessed(true);
       
-      // Extrair percentsToList dos resultados
-      const percentsToList = storeData.granulometrys.map((gran: any) => {
-        if (gran.result?.passant_porcentage) {
-          return gran.result.passant_porcentage;
-        }
-        return [];
-      });
+      if (!storeData.granulometrys || storeData.granulometrys.length === 0) {
+       // console.log('❌ FRONTEND: Nenhum dado de granulometria');
+        return;
+      }
 
-      // Calcular/extrair nominalSize (pegar do primeiro material)
-      const nominalSize = storeData.granulometrys[0]?.result?.nominal_size || 19.1;
+      // CORREÇÃO: Incluir todas as propriedades obrigatórias
+      const superpaveData: SuperpaveData = {
+        generalData: {
+          ...storeData.generalData,
+          userId: storeData.generalData?.userId || user._id,
+          name: storeData.generalData?.name || 'Composição Granulométrica',
+          trafficVolume: storeData.generalData?.trafficVolume || 'medium',
+          objective: storeData.generalData?.objective || 'bearing',
+          dnitBand: storeData.generalData?.dnitBand || 'C',
+          step: 3
+        },
+        
+        // ⚠️ CORREÇÃO: Incluir todas as propriedades de SuperpaveGranulometryEssayData
+        granulometryEssayData: {
+          materials: storeData.granulometrys.map(gran => gran.material), // ✅ Obrigatório
+          granulometrys: storeData.granulometrys.map(gran => {
+            // Converter result para essayData
+            const passantPorcentage = gran.result.passant_porcentage;
+            const graphData = gran.result.graph_data;
+            
+            return {
+              material: gran.material,
+              material_mass: 100, // Valor padrão para cálculo
+              table_data: passantPorcentage.map((item, index) => ({
+                sieve_label: item[0], // Ex: "1 1/2 pol - 38,1mm"
+                sieve_value: graphData[index]?.[0] || 0, // Pega o valor do graph_data
+                passant: item[1], // Percentual que passa
+                retained: 0 // Não temos este dado, mas o backend pode calcular
+              })),
+              sieve_series: graphData.map(item => ({
+                label: `${item[0]}mm`, // Converte para label
+                value: item[0] // Valor numérico
+              })),
+              bottom: 0 // Valor padrão
+            };
+          }),
+          viscosity: storeData.granulometryEssayData?.viscosity || null // ✅ Obrigatório
+        },
+        
+        // ⚠️ CORREÇÃO: Incluir todas as propriedades de SuperpaveGranulometryResults
+        granulometryResultsData: {
+          granulometrys: storeData.granulometrys.map(gran => ({
+            material: gran.material,
+            result: gran.result
+          })),
+          viscosity: storeData.granulometryResultsData?.viscosity || null // ✅ Obrigatório
+        },
+        
+        granulometryCompositionData: storeData.granulometryCompositionData || {
+          percentageInputs: [],
+          graphData: [],
+          percentsToList: [],
+          lowerComposition: { percentsOfMaterials: [[], []], sumOfPercents: [] },
+          averageComposition: { percentsOfMaterials: [[], []], sumOfPercents: [] },
+          higherComposition: { percentsOfMaterials: [[], []], sumOfPercents: [] },
+          nominalSize: { value: null },
+          pointsOfCurve: [],
+          chosenCurves: [],
+          bands: { higher: [], lower: [], letter: null },
+          porcentagesPassantsN200: null
+        },
+        
+        initialBinderData: storeData.initialBinderData || {
+          materials: [{
+            name: null,
+            realSpecificMass: null,
+            apparentSpecificMass: null,
+            absorption: null,
+            type: null,
+          }],
+          binderSpecificMass: null,
+          granulometryComposition: [{
+            combinedGsa: null,
+            combinedGsb: null,
+            gse: null,
+            pli: null,
+            percentsOfDosageWithBinder: [],
+            curve: null,
+          }],
+          binderInput: [],
+          turnNumber: {
+            initialN: null,
+            maxN: null,
+            projectN: null,
+            tex: null,
+          }
+        },
+        
+        firstCompressionData: storeData.firstCompressionData || {
+          inferiorRows: [{
+            id: 0,
+            diammeter: null,
+            dryMass: null,
+            submergedMass: null,
+            drySurfaceSaturatedMass: null,
+            waterTemperatureCorrection: null,
+            document: null,
+          }],
+          intermediariaRows: [{
+            id: 0,
+            diammeter: null,
+            dryMass: null,
+            submergedMass: null,
+            drySurfaceSaturatedMass: null,
+            waterTemperatureCorrection: null,
+            document: null,
+          }],
+          superiorRows: [{
+            id: 0,
+            diammeter: null,
+            dryMass: null,
+            submergedMass: null,
+            drySurfaceSaturatedMass: null,
+            waterTemperatureCorrection: null,
+            document: null,
+          }],
+          spreadSheetTemplate: null,
+          maximumDensity: {
+            lower: { gmm: null, gmb: null },
+            average: { gmm: null, gmb: null },
+            higher: { gmm: null, gmb: null },
+          },
+          riceTest: [],
+        },
+        
+        firstCompressionParamsData: storeData.firstCompressionParamsData || {
+          table1: {
+            expectedPorcentageGmmInitialN: null,
+            expectedPorcentageGmmMaxN: null,
+            expectedPorcentageGmmProjectN: null,
+            expectedVam: null,
+            expectedRBV_Higher: null,
+            expectedRBV_Lower: null,
+            nominalSize: null,
+            trafficVolume: null,
+          },
+          table2: null,
+          table3: null,
+          table4: null,
+          selectedCurve: null,
+        },
+        
+        chosenCurvePercentagesData: storeData.chosenCurvePercentagesData || {
+          listOfPlis: [],
+          porcentageAggregate: [[]],
+          trafficVolume: null,
+        },
+        
+        secondCompressionData: storeData.secondCompressionData || {
+          halfLess: [{
+            id: 0,
+            averageDiammeter: null,
+            averageHeight: null,
+            dryMass: null,
+            submergedMass: null,
+            drySurfaceSaturatedMass: null,
+            waterTemperatureCorrection: null,
+            diametralTractionResistance: null,
+          }],
+          halfPlus: [{
+            id: 0,
+            averageDiammeter: null,
+            averageHeight: null,
+            dryMass: null,
+            submergedMass: null,
+            drySurfaceSaturatedMass: null,
+            waterTemperatureCorrection: null,
+            diametralTractionResistance: null,
+          }],
+          normal: [{
+            id: 0,
+            averageDiammeter: null,
+            averageHeight: null,
+            dryMass: null,
+            submergedMass: null,
+            drySurfaceSaturatedMass: null,
+            waterTemperatureCorrection: null,
+            diametralTractionResistance: null,
+          }],
+          onePlus: [{
+            id: 0,
+            averageDiammeter: null,
+            averageHeight: null,
+            dryMass: null,
+            submergedMass: null,
+            drySurfaceSaturatedMass: null,
+            waterTemperatureCorrection: null,
+            diametralTractionResistance: null,
+          }],
+          maximumDensities: [],
+          composition: {
+            halfLess: {
+              projectN: { samplesData: null, gmb: null, percentWaterAbs: null, percentageGmm: null },
+              specifiesMass: null, gmm: null, Vv: null, Vam: null, expectedPli: null, RBV: null, ratioDustAsphalt: null, indirectTensileStrength: null,
+            },
+            normal: {
+              projectN: { samplesData: null, gmb: null, percentWaterAbs: null, percentageGmm: null },
+              specifiesMass: null, gmm: null, Vv: null, Vam: null, RBV: null, ratioDustAsphalt: null, indirectTensileStrength: null,
+            },
+            halfPlus: {
+              projectN: { samplesData: null, gmb: null, percentWaterAbs: null, percentageGmm: null },
+              specifiesMass: null, gmm: null, Vv: null, Vam: null, RBV: null, ratioDustAsphalt: null, indirectTensileStrength: null,
+            },
+            onePlus: {
+              projectN: { samplesData: null, gmb: null, percentWaterAbs: null, percentageGmm: null },
+              specifiesMass: null, gmm: null, Vv: null, Vam: null, RBV: null, ratioDustAsphalt: null, indirectTensileStrength: null,
+            },
+          },
+          expectedPli: null,
+          combinedGsb: null,
+          percentsOfDosage: null,
+          Gse: null,
+          ponderatedPercentsOfDosage: null,
+        },
+        
+        secondCompressionPercentagesData: storeData.secondCompressionPercentagesData || {
+          optimumContent: null,
+          graphs: {
+            graphVv: [], graphVam: [], graphGmb: [], graphGmm: [], graphRBV: [], graphPA: [], graphRT: [],
+          },
+        },
+        
+        confirmationCompressionData: storeData.confirmationCompressionData || {
+          table: [{
+            id: 1,
+            averageDiammeter: null,
+            averageHeight: null,
+            dryMass: null,
+            submergedMass: null,
+            drySurfaceSaturatedMass: null,
+            waterTemperatureCorrection: null,
+            diametralTractionResistance: null,
+          }],
+          gmm: null,
+          riceTest: {
+            sampleAirDryMass: null,
+            containerSampleWaterMass: null,
+            containerWaterMass: null,
+            temperatureOfWater: null,
+          },
+        },
+        
+        dosageResume: storeData.dosageResume || {
+          Gmb: null, Gmm: null, RBV: null, Vam: null, Vv: null,
+          diametralTractionResistance: null, gmm: null, percentWaterAbs: null,
+          ponderatedPercentsOfDosage: [], quantitative: [],
+          ratioDustAsphalt: null, specifiesMass: null,
+        },
+        
+        createdAt: storeData.createdAt || new Date()
+      };
 
-      // Determinar bands baseado no nominalSize
-      const bands = calculateBands(nominalSize);
+     // console.log('🔄 FRONTEND: Chamando service...');
+      const response = await superpave.getGranulometricCompositionData(superpaveData, user._id);
 
-      console.log('📊 Dados salvos para etapa 4:', {
-        percentsToList: percentsToList.length,
-        nominalSize,
-        bands: bands.letter
-      });
 
-      // ⬇️⬇️⬇️ SALVAR NO STORE PARA ETAPA 4 USAR ⬇️⬇️⬇️
-      useSuperpaveStore.getState().setData({
-        step: 3,
-        value: {
-          ...useSuperpaveStore.getState().granulometryCompositionData,
-          percentsToList,
-          nominalSize: { value: nominalSize },
-          bands,
-          porcentagesPassantsN200: percentsToList.map((material: any[]) => {
-            const n200 = material.find((item: any[]) => 
-              item[0]?.includes('200') || item[0]?.includes('0.075')
-            );
-            return n200 ? n200[1] : 0;
-          })
-        }
-      });
+      
+      console.log('✅ FRONTEND: Resposta do service:', response);
+
+      if (response) {
+        useSuperpaveStore.getState().setData({
+          step: 3,
+          value: {
+            ...storeData.granulometryCompositionData,
+            ...response
+          }
+        });
+        console.log('🎉 FRONTEND: Dados salvos com sucesso!');
+      }
 
     } catch (error) {
-      console.error('❌ Erro ao salvar dados para composição:', error);
+      console.error('❌ FRONTEND: Erro no processamento:', error);
+      setHasProcessed(false);
     }
   };
 
-  // Executar quando os dados estiverem disponíveis
-  if (storeData.granulometrys?.some((gran: any) => gran.result)) {
+  if (storeData.granulometrys && storeData.granulometrys.length > 0) {
     saveGranulometryDataForComposition();
   }
-}, [storeData.granulometrys]);
-
-
-
-
+}, [storeData, superpave, user._id, hasProcessed]);
+/*
 const calculateBands = (nominalSize: number) => {
   if (nominalSize >= 37.5) {
     return {
@@ -123,6 +372,8 @@ const calculateBands = (nominalSize: number) => {
     };
   }
 };
+*/
+
 
   useEffect(() => {
     const newGranulometryData =

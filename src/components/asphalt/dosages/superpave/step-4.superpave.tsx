@@ -14,6 +14,8 @@ import { calculateBands } from './utils/calculateBands';
 import useAuth from '@/contexts/auth'; 
 
 
+
+
 const Superpave_Step4_GranulometryComposition = ({
   setNextDisabled,
   superpave,
@@ -39,20 +41,32 @@ const Superpave_Step4_GranulometryComposition = ({
     return { peneira: peneira.label };
   });
 
-  if (!data) {
-    console.log('❌ data está undefined no Step 4');
-    return (
-      <Box>
-        <Typography>Dados de composição granulométrica não disponíveis</Typography>
-      </Box>
-    );
-  }
+// NO STEP 4 - Adicionar este debug no início
+console.log('=== DEBUG STEP 4 - O QUE CHEGOU ===');
+console.log('granulometryCompositionData:', data);
+console.log('Tem percentsToList?', !!data?.percentsToList);
+console.log('percentsToList length:', data?.percentsToList?.length);
+console.log('Tem nominalSize?', !!data?.nominalSize);
+console.log('Tem bands?', !!data?.bands);
 
-  console.log('=== DEBUG STEP 4 ===');
-  console.log('data:', data);
-  console.log('percentsToList:', data.percentsToList);
-  console.log('bands:', data.bands);
-  console.log('nominalSize:', data.nominalSize);
+if (!data?.percentsToList || data.percentsToList.length === 0) {
+  return (
+    <Box>
+      <Typography variant="h6" color="error">
+        Dados não carregados - Volte para Step 3
+      </Typography>
+      <Button onClick={() => window.history.back()} variant="contained">
+        Voltar para Etapa 3
+      </Button>
+    </Box>
+  );
+}
+
+  //console.log('=== DEBUG STEP 4 ===');
+  //console.log('data:', data);
+  //console.log('percentsToList:', data.percentsToList);
+  //console.log('bands:', data.bands);
+  //console.log('nominalSize:', data.nominalSize);
 
   const arrayResponse = data?.percentsToList;
   const bandsHigher = data?.bands?.higher;
@@ -79,7 +93,7 @@ const Superpave_Step4_GranulometryComposition = ({
       })
       .filter((material) => material !== null) || [];
 
-  console.log('Selected materials:', selectedMaterials);
+  //console.log('Selected materials:', selectedMaterials);
 
   const checkBoxes = [
     {
@@ -366,10 +380,10 @@ const Superpave_Step4_GranulometryComposition = ({
   };
 
   const calculate = async (curves: string[]) => {
-    console.log('=== CALCULATE STEP 4 ===');
-    console.log('Curves selecionadas:', curves);
-    console.log('Data completo:', data);
-    console.log('DnitBand:', dnitBand);
+   // console.log('=== CALCULATE STEP 4 ===');
+    //console.log('Curves selecionadas:', curves);
+    //console.log('Data completo:', data);
+    //console.log('DnitBand:', dnitBand);
 
     // 1️⃣ Calcular bandas com base no nominalSize
     let bands = { letter: dnitBand, lower: [], higher: [] };
@@ -403,7 +417,7 @@ const Superpave_Step4_GranulometryComposition = ({
       })
       .filter((index) => index !== -1);
 
-    console.log('Indexes calculados:', indexes);
+    //console.log('Indexes calculados:', indexes);
 
     // 4️⃣ Verificar se há inputs válidos
     const validIndexes = indexes.filter(
