@@ -48,20 +48,26 @@ import { useTheme, createTheme, ThemeProvider } from '@mui/material/styles';
 // Chart.js registration
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
+// Definindo as cores principais como constantes para reutilização
+const PRO_MEDINA_COLORS = {
+  primary: {
+    main: '#ff6b35',
+    light: '#ff8a65',
+    dark: '#d84315',
+    contrastText: '#ffffff',
+  },
+  secondary: {
+    main: '#4caf50',
+    light: '#81c784',
+    dark: '#388e3c',
+    contrastText: '#ffffff',
+  }
+};
+
 const proMedinaTheme = createTheme({
   palette: {
-    primary: {
-      main: '#ff6b35',
-      light: '#ff8a65',
-      dark: '#d84315',
-      contrastText: '#ffffff',
-    },
-    secondary: {
-      main: '#4caf50',
-      light: '#81c784',
-      dark: '#388e3c',
-      contrastText: '#ffffff',
-    },
+    primary: PRO_MEDINA_COLORS.primary,
+    secondary: PRO_MEDINA_COLORS.secondary,
     background: {
       default: '#f5f5f5',
       paper: '#ffffff',
@@ -651,8 +657,8 @@ const FWDPage = () => {
             {
               label: 'd0 (Deflexão Máxima)',
               data: procResult.ordered.map((r: FWDData) => r.d0),
-              borderColor: proMedinaTheme.palette.primary.main,
-              backgroundColor: proMedinaTheme.palette.primary.light,
+              borderColor: PRO_MEDINA_COLORS.primary.main,
+              backgroundColor: PRO_MEDINA_COLORS.primary.light,
               borderWidth: 2,
               pointRadius: 3,
               fill: false,
@@ -714,7 +720,7 @@ const FWDPage = () => {
             background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
           }}
         >
-          <CircularProgress size={50} sx={{ color: proMedinaTheme.palette.primary.main }} />
+          <CircularProgress size={50} sx={{ color: PRO_MEDINA_COLORS.primary.main }} />
           <Typography sx={{ mt: 2, fontWeight: 600, color: 'grey.600', fontSize: '1rem' }}>
             Carregando...
           </Typography>
@@ -804,10 +810,10 @@ const FWDPage = () => {
                       sx: {
                         fontSize: '1.2rem',
                         '&.Mui-active': {
-                          color: proMedinaTheme.palette.primary.main,
+                          color: PRO_MEDINA_COLORS.primary.main,
                         },
                         '&.Mui-completed': {
-                          color: proMedinaTheme.palette.secondary.main,
+                          color: PRO_MEDINA_COLORS.secondary.main,
                         },
                       },
                     }}
@@ -816,7 +822,7 @@ const FWDPage = () => {
                       variant="body2" 
                       sx={{ 
                         fontWeight: tabValue === index ? 600 : 400,
-                        color: tabValue === index ? proMedinaTheme.palette.primary.main : 'text.secondary',
+                        color: tabValue === index ? PRO_MEDINA_COLORS.primary.main : 'text.secondary',
                         fontSize: '0.8rem'
                       }}
                     >
@@ -835,11 +841,11 @@ const FWDPage = () => {
               borderRadius: 2,
               overflow: 'hidden',
               background: 'linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)',
-              border: `2px solid ${proMedinaTheme.palette.secondary.main}`,
+              border: `2px solid ${PRO_MEDINA_COLORS.secondary.main}`,
             }}
           >
             {/* Tabs */}
-            <Box sx={{ borderBottom: `1px solid ${proMedinaTheme.palette.secondary.main}`, background: '#f8f9fa' }}>
+            <Box sx={{ borderBottom: `1px solid ${PRO_MEDINA_COLORS.secondary.main}`, background: '#f8f9fa' }}>
               <Tabs
                 value={tabValue}
                 onChange={handleTabChange}
@@ -854,12 +860,12 @@ const FWDPage = () => {
                     minHeight: '40px',
                     py: 1,
                     '&.Mui-selected': {
-                      color: proMedinaTheme.palette.primary.main,
+                      color: PRO_MEDINA_COLORS.primary.main,
                       fontWeight: 700,
                     }
                   },
                   '& .MuiTabs-indicator': {
-                    backgroundColor: proMedinaTheme.palette.primary.main,
+                    backgroundColor: PRO_MEDINA_COLORS.primary.main,
                     height: 2,
                   }
                 }}
@@ -893,7 +899,7 @@ const FWDPage = () => {
                 <Paper 
                   sx={{ 
                     p: 3, 
-                    border: `2px solid ${proMedinaTheme.palette.secondary.main}`,
+                    border: `2px solid ${PRO_MEDINA_COLORS.secondary.main}`,
                     borderRadius: 2,
                     background: 'linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)',
                   }}
@@ -925,10 +931,10 @@ const FWDPage = () => {
                           '& .MuiOutlinedInput-root': {
                             borderRadius: 1,
                             '&:hover fieldset': {
-                              borderColor: proMedinaTheme.palette.primary.main,
+                              borderColor: PRO_MEDINA_COLORS.primary.main,
                             },
                             '&.Mui-focused fieldset': {
-                              borderColor: proMedinaTheme.palette.primary.main,
+                              borderColor: PRO_MEDINA_COLORS.primary.main,
                             },
                           },
                         }}
@@ -944,10 +950,10 @@ const FWDPage = () => {
                           '& .MuiOutlinedInput-root': {
                             borderRadius: 1,
                             '&:hover fieldset': {
-                              borderColor: proMedinaTheme.palette.primary.main,
+                              borderColor: PRO_MEDINA_COLORS.primary.main,
                             },
                             '&.Mui-focused fieldset': {
-                              borderColor: proMedinaTheme.palette.primary.main,
+                              borderColor: PRO_MEDINA_COLORS.primary.main,
                             },
                           },
                         }}
@@ -963,10 +969,10 @@ const FWDPage = () => {
                           '& .MuiOutlinedInput-root': {
                             borderRadius: 1,
                             '&:hover fieldset': {
-                              borderColor: proMedinaTheme.palette.primary.main,
+                              borderColor: PRO_MEDINA_COLORS.primary.main,
                             },
                             '&.Mui-focused fieldset': {
-                              borderColor: proMedinaTheme.palette.primary.main,
+                              borderColor: PRO_MEDINA_COLORS.primary.main,
                             },
                           },
                         }}
@@ -982,10 +988,10 @@ const FWDPage = () => {
                           '& .MuiOutlinedInput-root': {
                             borderRadius: 1,
                             '&:hover fieldset': {
-                              borderColor: proMedinaTheme.palette.primary.main,
+                              borderColor: PRO_MEDINA_COLORS.primary.main,
                             },
                             '&.Mui-focused fieldset': {
-                              borderColor: proMedinaTheme.palette.primary.main,
+                              borderColor: PRO_MEDINA_COLORS.primary.main,
                             },
                           },
                         }}
@@ -1001,10 +1007,10 @@ const FWDPage = () => {
                           '& .MuiOutlinedInput-root': {
                             borderRadius: 1,
                             '&:hover fieldset': {
-                              borderColor: proMedinaTheme.palette.primary.main,
+                              borderColor: PRO_MEDINA_COLORS.primary.main,
                             },
                             '&.Mui-focused fieldset': {
-                              borderColor: proMedinaTheme.palette.primary.main,
+                              borderColor: PRO_MEDINA_COLORS.primary.main,
                             },
                           },
                         }}
@@ -1021,10 +1027,10 @@ const FWDPage = () => {
                             '& .MuiOutlinedInput-root': {
                               borderRadius: 1,
                               '&:hover fieldset': {
-                                borderColor: proMedinaTheme.palette.primary.main,
+                                borderColor: PRO_MEDINA_COLORS.primary.main,
                               },
                               '&.Mui-focused fieldset': {
-                                borderColor: proMedinaTheme.palette.primary.main,
+                                borderColor: PRO_MEDINA_COLORS.primary.main,
                               },
                             },
                           }}
@@ -1047,17 +1053,17 @@ const FWDPage = () => {
                           '& .MuiOutlinedInput-root': {
                             borderRadius: 1,
                             '&:hover fieldset': {
-                              borderColor: proMedinaTheme.palette.primary.main,
+                              borderColor: PRO_MEDINA_COLORS.primary.main,
                             },
                             '&.Mui-focused fieldset': {
-                              borderColor: proMedinaTheme.palette.primary.main,
+                              borderColor: PRO_MEDINA_COLORS.primary.main,
                             },
                           },
                         }}
                       />
                     </Grid>
                     <Grid item xs={12}>
-                      <Divider sx={{ my: 1, borderColor: proMedinaTheme.palette.secondary.main }} />
+                      <Divider sx={{ my: 1, borderColor: PRO_MEDINA_COLORS.secondary.main }} />
                       <Button
                         variant="outlined"
                         component="label"
@@ -1065,10 +1071,10 @@ const FWDPage = () => {
                         size="small"
                         sx={{ 
                           mb: 2,
-                          borderColor: proMedinaTheme.palette.secondary.main,
-                          color: proMedinaTheme.palette.secondary.main,
+                          borderColor: PRO_MEDINA_COLORS.secondary.main,
+                          color: PRO_MEDINA_COLORS.secondary.main,
                           '&:hover': {
-                            borderColor: proMedinaTheme.palette.secondary.dark,
+                            borderColor: PRO_MEDINA_COLORS.secondary.dark,
                             backgroundColor: 'rgba(76, 175, 80, 0.04)',
                           }
                         }}
@@ -1149,8 +1155,8 @@ const FWDPage = () => {
                             size="small"
                             sx={{ 
                               mt: 0.5,
-                              borderColor: proMedinaTheme.palette.secondary.main,
-                              color: proMedinaTheme.palette.secondary.main,
+                              borderColor: PRO_MEDINA_COLORS.secondary.main,
+                              color: PRO_MEDINA_COLORS.secondary.main,
                             }}
                           >
                             Adicionar
@@ -1160,7 +1166,7 @@ const FWDPage = () => {
                     </Grid>
                     {samples.length > 0 && (
                       <Grid item xs={12}>
-                        <Accordion sx={{ borderRadius: 1, border: `1px solid ${proMedinaTheme.palette.secondary.main}` }}>
+                        <Accordion sx={{ borderRadius: 1, border: `1px solid ${PRO_MEDINA_COLORS.secondary.main}` }}>
                           <AccordionSummary expandIcon={<ExpandMore />} sx={{ minHeight: '40px', '& .MuiAccordionSummary-content': { margin: '8px 0' } }}>
                             <Typography sx={{ fontWeight: 600, fontSize: '0.9rem' }}>Amostras Adicionadas ({samples.length})</Typography>
                           </AccordionSummary>
@@ -1265,8 +1271,8 @@ const FWDPage = () => {
                               minWidth: 240,
                               maxWidth: 280,
                               border: selectedAnalysis?.id === analysis.id 
-                                ? `2px solid ${proMedinaTheme.palette.primary.main}` 
-                                : `1px solid ${proMedinaTheme.palette.secondary.main}`,
+                                ? `2px solid ${PRO_MEDINA_COLORS.primary.main}` 
+                                : `1px solid ${PRO_MEDINA_COLORS.secondary.main}`,
                               borderRadius: 2,
                               transition: 'all 0.2s ease',
                               '&:hover': {
@@ -1285,7 +1291,7 @@ const FWDPage = () => {
                                 fontWeight={700}
                                 sx={{ 
                                   color: selectedAnalysis?.id === analysis.id 
-                                    ? proMedinaTheme.palette.primary.main 
+                                    ? PRO_MEDINA_COLORS.primary.main 
                                     : '#2c3e50',
                                   mb: 0.5,
                                   fontSize: '1rem'
@@ -1385,7 +1391,7 @@ const FWDPage = () => {
                               borderRadius: 1,
                               fontSize: '0.85rem',
                               '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: proMedinaTheme.palette.secondary.main,
+                                borderColor: PRO_MEDINA_COLORS.secondary.main,
                               },
                             }}
                           >
@@ -1422,7 +1428,7 @@ const FWDPage = () => {
                           <Card 
                             sx={{ 
                               mb: 2,
-                              border: `1px solid ${proMedinaTheme.palette.secondary.main}`,
+                              border: `1px solid ${PRO_MEDINA_COLORS.secondary.main}`,
                               borderRadius: 2,
                             }}
                           >
@@ -1480,7 +1486,7 @@ const FWDPage = () => {
                             component={Paper} 
                             sx={{ 
                               mb: 2,
-                              border: `1px solid ${proMedinaTheme.palette.secondary.main}`,
+                              border: `1px solid ${PRO_MEDINA_COLORS.secondary.main}`,
                               borderRadius: 2,
                             }}
                           >
@@ -1541,7 +1547,7 @@ const FWDPage = () => {
                               sx={{ 
                                 p: 2, 
                                 borderRadius: 2,
-                                border: `1px solid ${proMedinaTheme.palette.secondary.main}`,
+                                border: `1px solid ${PRO_MEDINA_COLORS.secondary.main}`,
                                 background: 'linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)',
                               }}
                             >
