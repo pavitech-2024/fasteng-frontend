@@ -64,6 +64,39 @@ const PRO_MEDINA_COLORS = {
   }
 };
 
+// Extendendo a interface PaletteOptions para incluir as propriedades personalizadas
+declare module '@mui/material/styles' {
+  interface PaletteOptions {
+    primaryTons?: {
+      main: string;
+      light: string;
+      dark: string;
+      contrastText: string;
+    };
+    secondaryTons?: {
+      main: string;
+      light: string;
+      dark: string;
+      contrastText: string;
+    };
+  }
+
+  interface Palette {
+    primaryTons: {
+      main: string;
+      light: string;
+      dark: string;
+      contrastText: string;
+    };
+    secondaryTons: {
+      main: string;
+      light: string;
+      dark: string;
+      contrastText: string;
+    };
+  }
+}
+
 const proMedinaTheme = createTheme({
   palette: {
     primary: PRO_MEDINA_COLORS.primary,
@@ -76,6 +109,9 @@ const proMedinaTheme = createTheme({
       primary: '#333333',
       secondary: '#666666',
     },
+    // Adicionando as propriedades personalizadas
+    primaryTons: PRO_MEDINA_COLORS.primary,
+    secondaryTons: PRO_MEDINA_COLORS.secondary,
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
