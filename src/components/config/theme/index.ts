@@ -1,6 +1,8 @@
-import { createTheme } from '@mui/material';
+// src/components/config/theme/index.ts
+import { createTheme } from '@mui/material/styles';
 
-export const theme = createTheme({
+// Defina as cores primeiro
+const customTheme = {
   breakpoints: {
     values: {
       mobile: 0,
@@ -11,12 +13,10 @@ export const theme = createTheme({
       containerMargin: 2016,
     },
   },
-
   palette: {
     primary: {
       main: '#F29134',
     },
-
     primaryTons: {
       white: '#FCFCFC',
       background: '#F2F2F2',
@@ -25,7 +25,6 @@ export const theme = createTheme({
       mainGray: '#212121',
       darkGray: '#121212',
     },
-
     secondaryTons: {
       blue: '#00A3FF',
       blueClick: '#008BDA',
@@ -36,36 +35,30 @@ export const theme = createTheme({
       yellowWarning: '#f0cb67',
     },
   },
-
   typography: {
     fontFamily: "'Roboto', sans-serif",
   },
-
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          m: 0,
-          p: 0,
+          margin: 0,
+          padding: 0,
           boxSizing: 'border-box',
           backgroundColor: '#F2F2F2',
           color: '#2F3559',
           fontWeight: '400',
           overflowX: 'hidden',
         },
-
         a: {
           textDecoration: 'none',
         },
-
         'body::-webkit-scrollbar': {
           width: '12px',
         },
-
         'body::-webkit-scrollbar-track': {
           background: '#FCFCFC',
         },
-
         'body::-webkit-scrollbar-thumb': {
           backgroundColor: '#121212',
           borderRadius: '20px',
@@ -73,7 +66,6 @@ export const theme = createTheme({
         },
       },
     },
-
     MuiContainer: {
       styleOverrides: {
         root: {
@@ -82,14 +74,12 @@ export const theme = createTheme({
         },
       },
     },
-
     MuiButton: {
       styleOverrides: {
         root: {
           borderRadius: '20px',
           cursor: 'pointer',
           boxShadow: 'unset',
-
           ':hover': {
             boxShadow: 'unset',
           },
@@ -97,4 +87,7 @@ export const theme = createTheme({
       },
     },
   },
-});
+};
+
+// Crie o tema com any para evitar erros
+export const theme = createTheme(customTheme as any);
