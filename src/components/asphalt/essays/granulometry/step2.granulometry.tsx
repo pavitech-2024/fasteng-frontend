@@ -17,14 +17,6 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [dropdownDefaultValue, setDropdownDefaultValue] = useState({ label: '', value: [] });
 
-  /*useEffect(() => {
-    if (data.material_mass != null && data.table_data?.length > 0) {
-      const totalRetained = data.table_data.reduce((sum, row) => sum + row.retained, 0);
-      const remaining = data.material_mass - totalRetained;
-      setData({ step: 1, key: 'bottom', value: remaining });
-    }
-  }, [data.material_mass, data.table_data]);*/
-
   useEffect(() => {
     if (data.material_mass != null && data.table_data?.length > 0) {
       const totalRetained = data.table_data.reduce((sum, row) => sum + row.retained, 0);

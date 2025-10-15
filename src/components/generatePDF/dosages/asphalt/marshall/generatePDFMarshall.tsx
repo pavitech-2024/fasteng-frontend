@@ -28,7 +28,6 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
   const { user } = useAuth();
   const [materialsData, setMaterialsData] = useState<AsphaltMaterial[]>([]);
   const [materialsEssays, setMaterialsEssays] = useState<any[]>([]);
-  console.log("🚀 ~ GenerateMarshallDosagePDF ~ materialsEssays:", materialsEssays)
   const [loading, setLoading] = useState<boolean>(false);
   const [openTooltip, setOpenTooltip] = useState(false);
 
@@ -205,7 +204,6 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
         }
       })
       .filter((item) => item);
-    console.log("🚀 ~ generatePDF ~ essaysResults:", essaysResults)
 
     const volumetricMechanicParams = [
       {

@@ -279,8 +279,11 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
   useEffect(() => {
     setNextDisabled(true);
     const hasCoarseAggregate = data.materials?.some((material) => material.type === 'coarseAggregate');
+    console.log("🚀 ~ hasCoarseAggregate:", hasCoarseAggregate)
     const hasFineAggregate = data.materials?.some((material) => material.type === 'fineAggregate');
+    console.log("🚀 ~ hasFineAggregate:", hasFineAggregate)
     const hasBinder = data.materials?.some((material) => material.type === 'asphaltBinder' || material.type === 'CAP');
+    console.log("🚀 ~ hasBinder:", hasBinder)
 
     if (hasCoarseAggregate && hasFineAggregate && hasBinder) setNextDisabled(false);
   }, [data.materials]);
