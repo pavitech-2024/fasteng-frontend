@@ -33,6 +33,7 @@ const Marshall_Step9_ResumeDosage = ({
     confirmationCompressionData: data,
     setData,
   } = useMarshallStore();
+    console.log("🚀 ~ Marshall_Step9_ResumeDosage ~ granulometryCompositionData:", granulometryCompositionData)
 
   const [dosage, setDosage] = useState(null);
   const store = JSON.parse(sessionStorage.getItem('asphalt-marshall-store'));
@@ -207,7 +208,7 @@ const Marshall_Step9_ResumeDosage = ({
     const binderObj = {
       field: 'binder',
       width: 250,
-      headerName: t('asphalt.dosages.marshall.asphaltic-binder') + '(m³)',
+      headerName: t('asphalt.dosages.marshall.asphaltic-binder') + ' (t)',
       valueFormatter: ({ value }) => `${value}`,
     };
 
@@ -215,7 +216,7 @@ const Marshall_Step9_ResumeDosage = ({
       const col: GridColDef = {
         field: `${material._id}`,
         width: 250,
-        headerName: `${material.name} (m³)`,
+        headerName: `${material.name} (t)`,
         valueFormatter: ({ value }) => `${value}`,
       };
       newCols.push(col);
