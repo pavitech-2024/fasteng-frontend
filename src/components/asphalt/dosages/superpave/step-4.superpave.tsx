@@ -23,7 +23,6 @@ const Superpave_Step4_GranulometryComposition = ({
     setData,
   } = useSuperpaveStore();
 
-  // ⚠️ CORREÇÃO: useRef para evitar loops
   const hasInitializedRef = useRef(false);
   const isCalculatingRef = useRef(false);
 
@@ -33,48 +32,66 @@ const Superpave_Step4_GranulometryComposition = ({
   const [average, setAverage] = useState(false);
   const [higher, setHigher] = useState(false);
 
-  // ⚠️ CORREÇÃO: Estado local para inputs
   const [percentageInputs, setPercentageInputs] = useState<Record<string, any>[]>([{}, {}, {}]);
 
   const peneiras = AllSievesSuperpaveUpdatedAstm.map((peneira) => {
     return { peneira: peneira.label };
   });
 
-  // ⚠️ CORREÇÃO: Debug seguro
-  useEffect(() => {
-    console.log('=== DEBUG STEP 4 - O QUE CHEGOU ===');
-    console.log('Tem percentsToList?', !!data?.percentsToList);
-    console.log('percentsToList length:', data?.percentsToList?.length);
-    console.log('Tem nominalSize?', !!data?.nominalSize);
-    console.log('Tem bands?', !!data?.bands);
-    console.log('Banda DNIT:', dnitBand);
-  }, [data, dnitBand]);
+  const selectedMaterials =
+    granulometryEssayData?.materials
+      ?.map((material) => {
+        if (material?.type !== 'asphaltBinder' && material?.type !== 'CAP') {
+          return {
+            name: material?.name || 'Material',
+            _id: material?._id || `temp_${Date.now()}`,
+          };
+        }
+        return null;
+      })
+      .filter((material) => material !== null) || [];
 
-  // ⚠️ CORREÇÃO: Inicialização segura uma única vez
   useEffect(() => {
-    if (hasInitializedRef.current || !data) return;
+    if (hasInitializedRef.current || !data || !selectedMaterials.length) return;
 
-    // Inicializar percentageInputs se necessário
-    if (data.percentageInputs && Array.isArray(data.percentageInputs)) {
-      setPercentageInputs([...data.percentageInputs]);
+    console.log('🔄 STEP 4 - Inicializando dados...');
+    
+    if (data.percentageInputs && Array.isArray(data.percentageInputs) && data.percentageInputs.length > 0) {
+      console.log('📥 Carregando inputs existentes:', data.percentageInputs);
+      setPercentageInputs(data.percentageInputs);
+      hasInitializedRef.current = true;
     } else {
-      // Inicializar com objetos vazios
-      const initialInputs = Array(3).fill({}).map(() => ({}));
-      setPercentageInputs(initialInputs);
-      
-      // Salvar na store apenas uma vez
-      if (!hasInitializedRef.current) {
-        setData({
-          step: 4,
-          value: {
-            ...data,
-            percentageInputs: initialInputs
+      console.log('🆕 Criando novos inputs');
+      const initialInputs = Array(3).fill({}).map(() => {
+        const inputs: Record<string, string> = {};
+        selectedMaterials.forEach((material, index) => {
+          if (material && material._id) {
+            const fieldKey = `material_${material._id}_${index + 1}`;
+            inputs[fieldKey] = '';
           }
         });
-        hasInitializedRef.current = true;
-      }
+        return inputs;
+      });
+
+      console.log('🆕 Inputs inicializados:', initialInputs);
+      setPercentageInputs(initialInputs);
+      
+      setData({
+        step: 4,
+        value: {
+          ...data,
+          percentageInputs: initialInputs
+        }
+      });
+      hasInitializedRef.current = true;
     }
-  }, [data, setData]);
+  }, [data, selectedMaterials, setData]);
+
+  useEffect(() => {
+    if (data?.percentageInputs && Array.isArray(data.percentageInputs)) {
+      setPercentageInputs(data.percentageInputs);
+    }
+  }, [data?.percentageInputs]);
 
   if (!data?.percentsToList || data.percentsToList.length === 0) {
     return (
@@ -93,18 +110,7 @@ const Superpave_Step4_GranulometryComposition = ({
   const bandsHigher = data.bands?.higher || [];
   const bandsLower = data.bands?.lower || [];
 
-  const selectedMaterials =
-    granulometryEssayData?.materials
-      ?.map((material) => {
-        if (material?.type !== 'asphaltBinder' && material?.type !== 'CAP') {
-          return {
-            name: material?.name || 'Material',
-            _id: material?._id || `temp_${Date.now()}`,
-          };
-        }
-        return null;
-      })
-      .filter((material) => material !== null) || [];
+ 
 
   const checkBoxes = [
     {
@@ -140,7 +146,6 @@ const Superpave_Step4_GranulometryComposition = ({
     }
   };
 
-  // ⚠️ CORREÇÃO: Funções auxiliares com validação
   const convertNumber = (value: any): number => {
     if (value === null || value === undefined) return 0;
     
@@ -166,7 +171,6 @@ const Superpave_Step4_GranulometryComposition = ({
     return '';
   };
 
-  // ⚠️ CORREÇÃO: Processamento de dados seguro
   const setPercentsToListTotal = (peneiras: { peneira: string }[], percentsToList: any[][]) => {
     if (!percentsToList || !Array.isArray(percentsToList)) return [];
 
@@ -225,42 +229,66 @@ const Superpave_Step4_GranulometryComposition = ({
 
   const tableData = setBandsHigherLower(tableDataAux, bandsHigher, bandsLower);
 
-  // ⚠️ CORREÇÃO: Função onChangeInputsTables corrigida
-  const onChangeInputsTables = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, 
-    tableName: string, 
-    materialIndex: number
-  ) => {
-    const value = e.target.value;
+const onChangeInputsTables = (
+  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, 
+  tableName: string, 
+  materialIndex: number
+) => {
+  try {
+    const value = String(e.target?.value || '');
+    const fieldName = String((e.target as any)?.dataset?.fieldMaterial || '');
     
-    // Determinar índice da tabela
+    console.log('📝 onChangeInputsTables (SAFE):', { fieldName, value, tableName, materialIndex });
+
+    if (!fieldName) {
+      console.error('❌ fieldName não encontrado no dataset!');
+      return;
+    }
+
     const tableIndex = tableName === 'lowerComposition' ? 0 : 
                       tableName === 'averageComposition' ? 1 : 2;
 
-    // Atualizar estado local
-    const updatedInputs = [...percentageInputs];
+    const updatedInputs = percentageInputs.map(input => 
+      input ? { ...input } : {}
+    );
+    
     if (!updatedInputs[tableIndex]) {
       updatedInputs[tableIndex] = {};
     }
     
-    updatedInputs[tableIndex] = {
-      ...updatedInputs[tableIndex],
-      [`input${materialIndex}`]: value,
-    };
+    updatedInputs[tableIndex][fieldName] = value;
 
     setPercentageInputs(updatedInputs);
 
-    // Atualizar store de forma segura
+    const simpleDataForStore = {
+      ...data,
+      percentageInputs: updatedInputs.map(input => 
+        input ? { ...input } : {}
+      )
+    };
+
+    setData({
+      step: 4,
+      value: simpleDataForStore
+    });
+
+    console.log('💾 Inputs atualizados com sucesso!');
+
+  } catch (error) {
+    console.error('❌ Erro em onChangeInputsTables:', error);
+    
+    const cleanInputs = Array(3).fill({}).map(() => ({}));
+    setPercentageInputs(cleanInputs);
     setData({
       step: 4,
       value: {
         ...data,
-        percentageInputs: updatedInputs
+        percentageInputs: cleanInputs
       }
     });
-  };
+  }
+};
 
-  // ⚠️ CORREÇÃO: Função clearTable corrigida
   const clearTable = (index: number) => {
     const clearedInputs = { ...percentageInputs[index] };
     
@@ -281,7 +309,6 @@ const Superpave_Step4_GranulometryComposition = ({
         percentageInputs: updatedInputs,
         graphData: [],
         pointsOfCurve: [],
-        // Limpar composições específicas
         ...(index === 0 && { lowerComposition: null }),
         ...(index === 1 && { averageComposition: null }),
         ...(index === 2 && { higherComposition: null }),
@@ -305,156 +332,150 @@ const Superpave_Step4_GranulometryComposition = ({
     });
   };
 
-  // ⚠️ CORREÇÃO: Função calculate com proteção contra múltiplas execuções
-  const calculate = async (curves: string[]) => {
-    if (isCalculatingRef.current) {
-      console.log('⚠️ Cálculo já em andamento...');
+const calculate = async (curves: string[]) => {
+  if (isCalculatingRef.current) {
+    console.log('⚠️ Cálculo já em andamento...');
+    return;
+  }
+
+  isCalculatingRef.current = true;
+  setLoading(true);
+
+  try {
+    console.log('=== CALCULATE STEP 4 ===');
+    console.log('Curves selecionadas:', curves);
+
+    // 1️⃣ Validar dados antes do cálculo
+    if (!data || !data.percentageInputs) {
+      toast.error(t('asphalt.dosages.superpave.empty-granulometry-values'));
       return;
     }
 
-    isCalculatingRef.current = true;
-    setLoading(true);
+    const indexes = curves
+      .map((item) => {
+        if (item === 'lower') return 0;
+        if (item === 'average') return 1;
+        if (item === 'higher') return 2;
+        return -1;
+      })
+      .filter((index) => index !== -1);
 
-    try {
-      console.log('=== CALCULATE STEP 4 ===');
-      console.log('Curves selecionadas:', curves);
+    const validIndexes = indexes.filter(
+      (index) => data.percentageInputs[index] && Object.keys(data.percentageInputs[index]).length > 0
+    );
 
-      // 1️⃣ Validar dados antes do cálculo
-      if (!data || !percentageInputs) {
-        toast.error(t('asphalt.dosages.superpave.empty-granulometry-values'));
-        return;
-      }
-
-      // 2️⃣ Determinar índices com base nas curvas selecionadas
-      const indexes = curves
-        .map((item) => {
-          if (item === 'lower') return 0;
-          if (item === 'average') return 1;
-          if (item === 'higher') return 2;
-          return -1;
-        })
-        .filter((index) => index !== -1);
-
-      // 3️⃣ Verificar se há inputs válidos
-      const validIndexes = indexes.filter(
-        (index) => percentageInputs[index] && Object.keys(percentageInputs[index]).length > 0
-      );
-
-      if (validIndexes.length === 0) {
-        toast.error(t('asphalt.dosages.superpave.empty-granulometry-values'));
-        return;
-      }
-
-      // 4️⃣ Somar valores e verificar se cada curva soma 100%
-      const valueCounts = validIndexes.map((index) => {
-        const sum = Object.values(percentageInputs[index]).reduce((acc: number, item: any) => {
-          const num = convertNumber(item);
-          return acc + num;
-        }, 0);
-        console.log(`Soma para índice ${index}:`, sum);
-        return sum;
-      });
-
-      const valueIsValid = valueCounts.every((v) => Math.abs(v - 100) < 0.01);
-
-      const noEmptyInputs = validIndexes.every((index) =>
-        Object.values(percentageInputs[index]).some((value) => {
-          const numericValue = convertNumber(value);
-          return numericValue > 0;
-        })
-      );
-
-      console.log('Value isValid:', valueIsValid);
-      console.log('No empty inputs:', noEmptyInputs);
-
-      if (!valueIsValid || !noEmptyInputs) {
-        if (!noEmptyInputs) {
-          toast.error(t('asphalt.dosages.superpave.empty-granulometry-values'));
-        } else {
-          toast.error(t('asphalt.dosages.superpave.invalid-granulometry-values'));
-        }
-        return;
-      }
-
-      // 5️⃣ Calcular bandas
-      let bands = { letter: dnitBand, lower: [], higher: [] };
-      if (data?.nominalSize?.value) {
-        bands = calculateBands(data.nominalSize.value);
-      }
-
-      const bandLetter = bands.letter || dnitBand;
-
-      // 6️⃣ Montar dados para o cálculo
-      const calculationData: any = {
-        chosenCurves: curves,
-        percentageInputs: percentageInputs,
-        percentsToList: data.percentsToList || [],
-        dnitBand: bandLetter,
-        bands,
-        materials: granulometryEssayData?.materials || [],
-        nominalSize: data.nominalSize || { value: 19.1 },
-        graphData: data.graphData || [],
-        pointsOfCurve: data.pointsOfCurve || [],
-        lowerComposition: data.lowerComposition || null,
-        averageComposition: data.averageComposition || null,
-        higherComposition: data.higherComposition || null,
-      };
-
-      console.log('📤 Dados enviados para cálculo:', calculationData);
-
-      // 7️⃣ Executar cálculo
-      await toast.promise(
-        async () => {
-          const response = await (superpave as any).calculateGranulometryComposition(
-            calculationData,
-            granulometryEssayData,
-            generalData,
-            curves
-          );
-
-          console.log('📥 Resposta do cálculo:', response);
-
-          if (response && response.data) {
-            const graphData =
-              response.data.pointsOfCurve?.map((row: any) => 
-                row.map((val: any) => (val === null ? 0 : val))
-              ) || [];
-
-            setData({
-              step: 4,
-              value: {
-                ...data,
-                ...response.data,
-                graphData,
-                pointsOfCurve: response.data.pointsOfCurve || data.pointsOfCurve,
-              },
-            });
-
-            if (response.data.pointsOfCurve) {
-              updateGraph(response.data.pointsOfCurve);
-            }
-          } else {
-            console.error('❌ Resposta sem dados:', response);
-            throw new Error('Resposta sem dados do cálculo');
-          }
-        },
-        {
-          pending: t('loading.materials.pending'),
-          success: t('loading.materials.success'),
-          error: t('loading.materials.error'),
-        }
-      );
-
-    } catch (error) {
-      console.error('❌ Erro no cálculo:', error);
-      toast.error('Erro ao calcular composição granulométrica');
-    } finally {
-      isCalculatingRef.current = false;
-      setLoading(false);
+    if (validIndexes.length === 0) {
+      toast.error(t('asphalt.dosages.superpave.empty-granulometry-values'));
+      return;
     }
-  };
+const valueCounts = validIndexes.map((index) => {
+  const sum = Object.values(data.percentageInputs[index]).reduce((acc: number, item: any) => {
+    const num = typeof item === 'string' ? parseFloat(item.replace(',', '.')) : Number(item);
 
-  // ⚠️ CORREÇÃO: Atualização segura do nextDisabled
+    return acc + (isNaN(num) ? 0 : num);
+  }, 0); 
+
+  console.log(`Soma para índice ${index}:`, sum);
+  return sum;
+});
+
+const valueIsValid = valueCounts.every((v) => {
+  const num = typeof v === 'number' ? v : 0;
+  return Math.abs(num - 100) < 0.01;
+});
+
+    const noEmptyInputs = validIndexes.every((index) =>
+      Object.values(data.percentageInputs[index]).some((value) => {
+        let numericValue = typeof value === 'string' ? parseFloat(value.replace(',', '.')) : Number(value);
+        return !isNaN(numericValue) && numericValue > 0;
+      })
+    );
+
+    console.log('Value isValid:', valueIsValid);
+    console.log('No empty inputs:', noEmptyInputs);
+
+    if (!valueIsValid || !noEmptyInputs) {
+      if (!noEmptyInputs) {
+        toast.error(t('asphalt.dosages.superpave.empty-granulometry-values'));
+      } else {
+        toast.error(t('asphalt.dosages.superpave.invalid-granulometry-values'));
+        console.log('Somas inválidas:', valueCounts);
+      }
+      return;
+    }
+
+    let bands = { letter: dnitBand, lower: [], higher: [] };
+    if (data?.nominalSize?.value) {
+      bands = calculateBands(data.nominalSize.value);
+    }
+
+    const bandLetter = bands.letter || dnitBand;
+
+    const calculationData: any = {
+      chosenCurves: curves,
+      percentageInputs: data.percentageInputs,
+      percentsToList: data.percentsToList || [],
+      dnitBand: bandLetter,
+      bands,
+      materials: granulometryEssayData?.materials || [],
+      nominalSize: data.nominalSize || { value: 19.1 },
+      graphData: data.graphData || [],
+      pointsOfCurve: data.pointsOfCurve || [],
+      lowerComposition: data.lowerComposition || null,
+      averageComposition: data.averageComposition || null,
+      higherComposition: data.higherComposition || null,
+    };
+
+    console.log('📤 Dados enviados para cálculo:', calculationData);
+
+    await toast.promise(
+      async () => {
+        const response = await (superpave as any).calculateGranulometryComposition(
+          calculationData,
+          granulometryEssayData,
+          curves 
+        );
+
+        console.log('📥 Resposta do cálculo:', response);
+
+        if (response && response.data) {
+          const graphData =
+            response.data.pointsOfCurve?.map((row: any) => row.map((val: any) => (val === null ? 0 : val))) || [];
+
+          setData({
+            step: 4,
+            value: {
+              ...data,
+              ...response.data,
+              graphData,
+              pointsOfCurve: response.data.pointsOfCurve || data.pointsOfCurve,
+            },
+          });
+
+          if (response.data.pointsOfCurve) {
+            updateGraph(response.data.pointsOfCurve);
+          }
+        } else {
+          console.error('❌ Resposta sem dados:', response);
+          throw new Error('Resposta sem dados do cálculo');
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      }
+    );
+
+  } catch (error) {
+    console.error('❌ Erro no cálculo:', error);
+    toast.error('Erro ao calcular composição granulométrica');
+  } finally {
+    isCalculatingRef.current = false;
+    setLoading(false);
+  }
+};
+
   useEffect(() => {
     if (data?.pointsOfCurve?.length > 0) {
       setNextDisabled(false);

@@ -111,7 +111,7 @@ interface SuperpaveGranulometryResults {
 
 interface SuperpaveGranulometryCompositionData {
   percentageInputs: {
-    [key: string]: number;
+    [key: string]:  string | number;
   }[];
   graphData: any[];
   percentsToList: any[];
