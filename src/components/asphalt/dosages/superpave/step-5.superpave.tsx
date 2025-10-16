@@ -27,18 +27,31 @@ const Superpave_Step5_InitialBinder = ({
 
   const [specificMassModalIsOpen, setSpecificMassModalIsOpen] = useState(true);
   const [newInitialBinderModalIsOpen, setNewInitialBinderModalIsOpen] = useState(false);
-  const [binderInput, setBinderInput] = useState(
-    granulometryCompositionData.chosenCurves.map((curve) => ({
-      curve,
-      value: 0,
-    }))
-  );
+  
+  // ✅ CORREÇÃO: Inicialize como array vazio
+  const [binderInput, setBinderInput] = useState<{curve: string; value: number}[]>([]);
 
   const [rows, setRows] = useState([]);
   const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
   const compositions = ['inferior', 'intermediaria', 'superior'];
   const [activateSecondFetch, setActivateSecondFetch] = useState(false);
   const [shouldRenderTable1, setShouldRenderTable1] = useState(false);
+
+  // ✅ CORREÇÃO: Use useEffect para inicializar quando chosenCurves estiver disponível
+  useEffect(() => {
+    console.log('🔍 Step5 - chosenCurves:', granulometryCompositionData.chosenCurves);
+    
+    // Só inicialize se chosenCurves existir E binderInput estiver vazio
+    if (granulometryCompositionData.chosenCurves && granulometryCompositionData.chosenCurves.length > 0 && binderInput.length === 0) {
+      const initialBinderInput = granulometryCompositionData.chosenCurves.map((curve) => ({
+        curve,
+        value: 0,
+      }));
+      
+      console.log('🔄 Inicializando binderssInput:', initialBinderInput);
+      setBinderInput(initialBinderInput);
+    }
+  }, [granulometryCompositionData.chosenCurves, binderInput.length]);
 
   useEffect(() => {
     if (!activateSecondFetch) {
@@ -610,27 +623,29 @@ const Superpave_Step5_InitialBinder = ({
         oneButton={false}
       >
         <Box style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {granulometryCompositionData.chosenCurves.map((curve, idx) => {
+          {granulometryCompositionData.chosenCurves?.map((curve, idx) => { // ✅ Adicione ?.
             const curveName = curve === 'lower' ? 'inferior' : curve === 'average' ? 'intermediária' : 'superior';
             return (
               <Box key={idx}>
                 <Typography>{'Curva' + ' ' + curveName}</Typography>
                 <InputEndAdornment
                   adornment="%"
-                  value={binderInput?.find((obj) => obj.curve === curve).value || ''}
+                  value={binderInput?.find((obj) => obj.curve === curve)?.value || ''}
                   placeholder={t('asphalt.dosages.superpave.initial_binder')}
                   type="number"
                   fullWidth
                   onChange={(e) => {
                     const prevData = [...binderInput];
                     const index = prevData.findIndex((obj) => obj.curve === curve);
-                    prevData[index].value = Number(e.target.value.replace(',', '.'));
-                    setBinderInput(prevData);
-                    setData({
-                      step: 4,
-                      key: `binderInput`,
-                      value: prevData,
-                    });
+                    if (index !== -1) {
+                      prevData[index].value = Number(e.target.value.replace(',', '.'));
+                      setBinderInput(prevData);
+                      setData({
+                        step: 4,
+                        key: `binderInput`,
+                        value: prevData,
+                      });
+                    }
                   }}
                 />
               </Box>
