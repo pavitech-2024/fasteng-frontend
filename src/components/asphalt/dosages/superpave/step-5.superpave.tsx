@@ -40,6 +40,43 @@ const Superpave_Step5_InitialBinder = ({
   const [activateSecondFetch, setActivateSecondFetch] = useState(false);
   const [shouldRenderTable1, setShouldRenderTable1] = useState(false);
 
+  //melhora p validar os valores e ativ o estado do botao
+  const areAllEstimatedPercentagesFilled = () => {
+    if (estimatedPercentageRows.length === 0) return false;
+    
+    return estimatedPercentageRows.every(row => {
+      return Object.entries(row).every(([key, value]) => {
+        if (key === 'id' || key === 'granulometricComposition') return true;
+        
+        const numericValue = Number(value);
+        return !isNaN(numericValue) && numericValue > 0;
+      });
+    });
+  };
+
+  useEffect(() => {
+    const isReady = areAllEstimatedPercentagesFilled();
+    console.log('EstimatedPercentageRows:', estimatedPercentageRows);
+    console.log('Is ready?', isReady);
+    setNextDisabled(!isReady);
+  }, [estimatedPercentageRows, setNextDisabled]);
+
+  useEffect(() => {
+    if (newInitialBinderModalIsOpen && estimatedPercentageRows.length > 0) {
+      const initialValues = granulometryCompositionData.chosenCurves.map((curve) => {
+        const curveName = curve === 'lower' ? 'inferior' : curve === 'average' ? 'intermediaria' : 'superior';
+        const existingRow = estimatedPercentageRows.find(row => row.granulometricComposition === curveName);
+        
+        return {
+          curve,
+          value: existingRow?.initialBinder ? Number(existingRow.initialBinder) : 0,
+        };
+      });
+      
+      setBinderInput(initialValues);
+    }
+  }, [newInitialBinderModalIsOpen, estimatedPercentageRows, granulometryCompositionData.chosenCurves]);
+
   useEffect(() => {
     if (!activateSecondFetch) {
       toast.promise(
@@ -183,16 +220,6 @@ const Superpave_Step5_InitialBinder = ({
     data.materials?.filter((material) => material?.type?.includes('Aggregate') || material?.type?.includes('filler'))
   );
 
-  /**
-   * Handles the submission process for calculating the maximum mixture density (DMT) and
-   * the maximum compacted density (DMM) for the asphalt mixture. It triggers a toast
-   * notification indicating the status of the calculation process. On successful
-   * calculation, it updates the data store with the new maximum specific gravity and a
-   * list of specific gravities, and closes the DMT modal.
-   *
-   * @async
-   * @throws Will throw an error if the calculation fails.
-   */
   const handleSubmitSpecificMasses = () => {
     toast.promise(
       async () => {
@@ -311,12 +338,6 @@ const Superpave_Step5_InitialBinder = ({
 
   const estimatedPercentageCols = createEstimatedPercentageColumns();
 
-  /**
-   * Creates a grouping model for the estimated percentage table columns.
-   * This function is used to group the columns into a single group with the header
-   * "Materials Estimated Percentage".
-   * @returns {GridColumnGroupingModel} The grouping model for the estimated percentage table columns.
-   */
   const createEstimatedPercentageGroupingModel = (): GridColumnGroupingModel => {
     const baseColumnChildren = [{ field: 'granulometricComposition' }, { field: 'initialBinder' }];
 
@@ -402,13 +423,9 @@ const Superpave_Step5_InitialBinder = ({
     }
   }, [data.materials]);
 
-  /**
-   * Updates the estimated percentage rows and granulometry composition data
-   * with the specified initial binder values.
-   *
-   * @param {{ curve: string; value: number }[]} initialBinderValues - The initial binder values to be set for each row.
-   */
   const updateRowsWithInitialBinderValues = (initialBinderValues: { curve: string; value: number }[]) => {
+    console.log('Updating rows with:', initialBinderValues);
+    
     const newRowData = estimatedPercentageRows.map((row) => {
       const curveName =
         row.granulometricComposition === 'inferior'
@@ -416,14 +433,17 @@ const Superpave_Step5_InitialBinder = ({
           : row.granulometricComposition === 'intermediaria'
           ? 'average'
           : 'higher';
-      const initialBinderValue = initialBinderValues.find((obj) => obj.curve === curveName)?.value ?? '---';
+      const initialBinderValue = initialBinderValues.find((obj) => obj.curve === curveName)?.value ?? 0;
 
       return {
         ...row,
-        initialBinder: initialBinderValue,
+        initialBinder: initialBinderValue.toFixed(2),
       };
     });
+    
+    console.log('New row data:', newRowData);
     setEstimatedPercentageRows(newRowData);
+    
     setData({
       step: 4,
       key: 'granulometryComposition',
@@ -436,11 +456,10 @@ const Superpave_Step5_InitialBinder = ({
 
   const handleInitialBinderSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log('Submitting binder values:', binderInput);
     updateRowsWithInitialBinderValues(binderInput);
     setNewInitialBinderModalIsOpen(false);
   };
-
-  nextDisabled && setNextDisabled(false);
 
   return (
     <>
@@ -617,20 +636,17 @@ const Superpave_Step5_InitialBinder = ({
                 <Typography>{'Curva' + ' ' + curveName}</Typography>
                 <InputEndAdornment
                   adornment="%"
-                  value={binderInput?.find((obj) => obj.curve === curve).value || ''}
+                  value={binderInput?.find((obj) => obj.curve === curve)?.value || ''}
                   placeholder={t('asphalt.dosages.superpave.initial_binder')}
                   type="number"
                   fullWidth
                   onChange={(e) => {
                     const prevData = [...binderInput];
                     const index = prevData.findIndex((obj) => obj.curve === curve);
-                    prevData[index].value = Number(e.target.value.replace(',', '.'));
-                    setBinderInput(prevData);
-                    setData({
-                      step: 4,
-                      key: `binderInput`,
-                      value: prevData,
-                    });
+                    if (index !== -1) {
+                      prevData[index].value = Number(e.target.value.replace(',', '.'));
+                      setBinderInput(prevData);
+                    }
                   }}
                 />
               </Box>
@@ -641,5 +657,6 @@ const Superpave_Step5_InitialBinder = ({
     </>
   );
 };
+
 
 export default Superpave_Step5_InitialBinder;
