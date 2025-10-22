@@ -70,46 +70,6 @@ const Superpave_Step4_GranulometryComposition = ({ setNextDisabled, superpave }:
     },
   ];
 
-  /**
-   * Hydrates the store with the data from the backend.
-   * If the data is already present in the store, it doesn't do anything.
-   */
-  // useEffect(() => {
-  //   if (!hasHydrated) return;
-
-  //   if (data.percentsToList.length > 0) {
-  //     setLoading(false);
-  //     return;
-  //   }
-
-  //   toast.promise(
-  //     async () => {
-  //       try {
-  //         const storeState = useSuperpaveStore.getState();
-  //         const response = await superpave.getGranulometricCompositionData(storeState, user._id);
-
-  //         setData({
-  //           step: 2,
-  //           value: {
-  //             ...storeState.granulometryCompositionData,
-  //             ...response,
-  //           },
-  //         });
-
-  //         setLoading(false);
-  //       } catch (error) {
-  //         setLoading(false);
-  //         throw error;
-  //       }
-  //     },
-  //     {
-  //       pending: t('loading.data.pending'),
-  //       success: t('loading.data.success'),
-  //       error: t('loading.data.error'),
-  //     }
-  //   );
-  // }, [hasHydrated]);
-
   const toggleSelectedCurve = (label: string) => {
     switch (label) {
       case 'lower':
