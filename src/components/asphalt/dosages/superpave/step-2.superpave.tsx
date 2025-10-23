@@ -67,12 +67,15 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
         const { sieve_label, material } = row;
         const rowIndex = data.materials.findIndex((mat) => mat._id === material?._id);
         const sieve_index = aggregatesRows[rowIndex]?.table_data.findIndex((r) => r.sieve_label === sieve_label);
+        const materialMass = data.granulometrys[rowIndex]?.material_mass;
+        const disabled = !materialMass || isNaN(materialMass) || Number(materialMass) <= 0;
         return (
           <InputEndAdornment
             fullWidth
             adornment="%"
             type="number"
             inputProps={{ min: 0 }}
+            disabled={disabled}
             value={aggregatesRows[rowIndex]?.table_data[sieve_index]?.passant}
             required
             onChange={(e) => {
@@ -149,12 +152,15 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
         const { sieve_label, material } = row;
         const rowIndex = data.materials.findIndex((mat) => mat._id === material?._id);
         const sieve_index = aggregatesRows[rowIndex]?.table_data.findIndex((r) => r.sieve_label === sieve_label);
+        const materialMass = data.granulometrys[rowIndex]?.material_mass;
+        const disabled = !materialMass || isNaN(materialMass) || Number(materialMass) <= 0;
         return (
           <InputEndAdornment
             fullWidth
             adornment="g"
             type="number"
             inputProps={{ min: 0 }}
+            disabled={disabled} 
             value={
               isNaN(aggregatesRows[rowIndex]?.table_data[sieve_index]?.retained)
                 ? 'erro'
@@ -281,6 +287,7 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
     const hasCoarseAggregate = data.materials?.some((material) => material.type === 'coarseAggregate');
     const hasFineAggregate = data.materials?.some((material) => material.type === 'fineAggregate');
     const hasBinder = data.materials?.some((material) => material.type === 'asphaltBinder' || material.type === 'CAP');
+    
 
     if (hasCoarseAggregate && hasFineAggregate && hasBinder) setNextDisabled(false);
   }, [data.materials]);
