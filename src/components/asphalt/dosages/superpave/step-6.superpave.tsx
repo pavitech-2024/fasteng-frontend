@@ -450,18 +450,22 @@ const Superpave_Step6_FirstCompaction = ({
     setActualCurve(curve);
     setRiceTestModalIsOpen(true);
   };
+useEffect(() => {
+  // Verifica se o Rice Test/GMM foi gerado para cada curva
+  const isRiceTestFinished = data.riceTest.length > 0 && data.riceTest?.every(({ gmm }) => gmm !== 0 && gmm !== null);
 
-  useEffect(() => {
-    // Verifica se o Rice Test/GMM foi gerado para cada curva
-    const isRiceTestFinished = data.riceTest.length > 0 && data.riceTest?.every(({ gmm }) => gmm !== 0);
+  // Verifica se todos os inputs das tabelas de todas as curvas foram preenchidos
+  const isCurvesComplete = data.riceTest.length === granulometryCompositionData.chosenCurves.length;
 
-    // Verifica se todos os inputs das tabelas de todas as curvas foram preenchidos
-    const isCurvesComplete = data.riceTest.length === granulometryCompositionData.chosenCurves.length;
+  // Verifica se uma planilha modelo foi adicionada para cada curva
+  const hasSpreadsheetForAllCurves = granulometryCompositionData.chosenCurves.every((curve) => {
+    const curveName = curve === 'lower' ? 'inferiorRows' : curve === 'average' ? 'intermediariaRows' : 'superiorRows';
+    return data[curveName]?.some(row => row.document && row.document !== '');
+  });
 
-    // Atualiza o estado de nextDisabled se uma das condições acima for verdadeira
-    setNextDisabled(!(isRiceTestFinished && isCurvesComplete));
-  }, [data.inferiorRows, data.intermediariaRows, data.riceTest, data.superiorRows]);
-
+  // Atualiza o estado de nextDisabled - só habilita quando TODAS as condições forem verdadeiras
+  setNextDisabled(!(isRiceTestFinished && isCurvesComplete && hasSpreadsheetForAllCurves));
+}, [data.inferiorRows, data.intermediariaRows, data.riceTest, data.superiorRows, granulometryCompositionData.chosenCurves]);
   return (
     <>
       {loading ? (
