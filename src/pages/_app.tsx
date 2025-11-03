@@ -14,13 +14,39 @@ import 'dayjs/locale/en';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useRouter } from 'next/router';
 import useResetStores from '@/utils/hooks/useResetStores';
+import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { i18n } = useTranslation();
   const locale = i18n.language === 'en' ? 'en' : 'en-gb';
-
+ const { hasHydrated } = useSuperpaveStore();
   const { pathname } = useRouter();
   const resetStores = useResetStores();
+  /**
+   * Resets stores and clears session storage when navigating to a different essay.
+   * This is necessary because Next.js does not clear session storage when navigating
+   * between pages, and some stores are not designed to be reset. So, this will reset
+   * any essay or dosage in case the user navigates to a different essay or homepage.
+   *
+   * @param {string} pathname - The current pathname.
+   * @param {boolean} hasHydrated - Whether the store has been hydrated.
+   */
+  // useEffect(() => {
+  //   if (!hasHydrated) return;
+
+  //   const essayKeys = Object.keys(sessionStorage)
+  //     .filter((key) => key.includes('-store'))
+  //     .map((key) => {
+  //       return key.split('-')[1];
+  //     });
+
+  //   const currentEssay = essayKeys.find((essay) => pathname.includes(essay));
+
+  //   if (!currentEssay) {
+  //     resetStores();
+  //     sessionStorage.clear();
+  //   }
+  // }, [pathname]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>

@@ -54,22 +54,27 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
       {
         title: t('dosages.report.general-data'),
         page: 3,
+        key: 'generalData',
       },
       {
         title: t('dosages.report.materials-caracterization'),
         page: 4,
+        key: 'materialsCaracterization',
       },
       {
         title: t('dosages.report.results'),
         page: 3,
+        key: 'results',
       },
       {
         title: t('asphalt.dosages.superpave.asphalt-mass-quantitative'),
         page: 3,
+        key: 'asphaltMassQuantitative',
       },
       {
         title: t('asphalt.dosages.binder-volumetric-mechanic-params'),
         page: 3,
+        key: 'binderVolumetricMechanicParams',
       },
     ];
 

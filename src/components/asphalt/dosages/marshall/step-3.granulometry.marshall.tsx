@@ -13,7 +13,10 @@ import { toast } from 'react-toastify';
 import Loading from '@/components/molecules/loading';
 import { isNumber } from '@mui/x-data-grid/internals';
 
-const Marshall_Step3_Granulometry = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+const Marshall_Step3_Granulometry = ({
+  setNextDisabled,
+  marshall,
+}: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const { calculateGranulometryComposition } = new Marshall_SERVICE();
   const { granulometryCompositionData: data, materialSelectionData, setData, generalData } = useMarshallStore();
 
@@ -180,7 +183,6 @@ const Marshall_Step3_Granulometry = ({ setNextDisabled, marshall }: EssayPagePro
       ];
     }
 
-
     if (data?.projections.length > 0) {
       const newArray = [];
 
@@ -279,14 +281,16 @@ const Marshall_Step3_Granulometry = ({ setNextDisabled, marshall }: EssayPagePro
             renderHeader: () => (
               <InputEndAdornment
                 adornment="%"
+                type='number'
                 value={
                   data?.percentageInputs && data.percentageInputs[0]
                     ? data.percentageInputs[0][`percentage_${_id}`] || ''
                     : ''
                 }
                 onChange={(e) => {
+                  const inputValue = e.target.value.replace(',', '.');
                   const prevData = [...data?.percentageInputs];
-                  prevData[0][`percentage_${_id}`] = Number(e.target.value);
+                  prevData[0][`percentage_${_id}`] = inputValue === '' ? NaN : parseFloat(inputValue);
                   setData({ step: 2, value: { ...data, percentageInputs: prevData } });
                 }}
               />
