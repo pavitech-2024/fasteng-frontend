@@ -1,7 +1,7 @@
 import jsPDF from 'jspdf';
 import React from 'react';
 import autoTable from 'jspdf-autotable';
-import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
+import { EssaysData } from '@/components/asphalt/material/types/material.types';
 import html2canvas from 'html2canvas';
 import { t } from 'i18next';
 import { Box, Button } from '@mui/material';

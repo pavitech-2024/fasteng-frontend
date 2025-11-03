@@ -137,6 +137,7 @@ const Superpave_Step3_GranulometryResults = ({
                         maxValue: '105',
                       },
                       legend: 'none',
+                      curveType: 'function', // 👈 SUAVIZAÇÃO ADICIONADA AQUI!
                     }}
                   />
                 </Box>
@@ -178,10 +179,10 @@ const Superpave_Step3_GranulometryResults = ({
               options={{
                 backgroundColor: 'transparent',
                 hAxis: {
-                  title: `${t('asphalt.essays.viscosityRotational.temperature')} C`, // Umidade %
+                  title: `${t('asphalt.essays.viscosityRotational.temperature')} C`,
                 },
                 vAxis: {
-                  title: `${t('asphalt.essays.viscosityRotational.viscosity')} (SSF)`, // Densidade do solo seco - g/cm³
+                  title: `${t('asphalt.essays.viscosityRotational.viscosity')} (SSF)`,
                   maxValue: '1.5',
                 },
                 explorer: {
@@ -197,6 +198,7 @@ const Superpave_Step3_GranulometryResults = ({
                     labelInLegend: 'curva',
                   },
                 },
+                curveType: 'function', // 👈 SUAVIZAÇÃO ADICIONADA AQUI TAMBÉM!
               }}
             />
           </FlexColumnBorder>

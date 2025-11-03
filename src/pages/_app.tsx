@@ -1,8 +1,7 @@
 import type { AppProps } from 'next/app';
 import Pages from '@/components/config/pages';
 import { AuthProvider } from '@/contexts/auth';
-import { ThemeProvider as MuiTheme } from '@mui/material';
-import { ThemeProvider as StyledTheme } from 'styled-components';
+import { ThemeProvider } from '@mui/material';
 import { theme } from '@/components/config/theme';
 import { ToastContainer } from 'react-toastify';
 import '../i18n';
@@ -20,11 +19,9 @@ import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { i18n } = useTranslation();
   const locale = i18n.language === 'en' ? 'en' : 'en-gb';
-
+ const { hasHydrated } = useSuperpaveStore();
   const { pathname } = useRouter();
   const resetStores = useResetStores();
-  const { hasHydrated } = useSuperpaveStore();
-
   /**
    * Resets stores and clears session storage when navigating to a different essay.
    * This is necessary because Next.js does not clear session storage when navigating
@@ -54,17 +51,15 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
       <AuthProvider>
-        <MuiTheme theme={theme}>
-          <StyledTheme theme={theme}>
-            <Pages>
-              <>
-                <ToastContainer position="top-right" autoClose={5000} closeOnClick theme="colored" />
-                <CssBaseline />
-                <Component {...pageProps} />
-              </>
-            </Pages>
-          </StyledTheme>
-        </MuiTheme>
+        <ThemeProvider theme={theme}>
+          <Pages>
+            <>
+              <ToastContainer position="top-right" autoClose={5000} closeOnClick theme="colored" />
+              <CssBaseline />
+              <Component {...pageProps} />
+            </>
+          </Pages>
+        </ThemeProvider>
       </AuthProvider>
     </LocalizationProvider>
   );
