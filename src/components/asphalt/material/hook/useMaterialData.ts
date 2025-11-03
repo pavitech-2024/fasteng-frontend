@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { MaterialData, MaterialState, GranulometryEssay } from '@/pages/asphalt/materials/material/types/material.types';
+import { MaterialData, MaterialState, GranulometryEssay } from '@/components/asphalt/material/types/material.types';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
 import AsphaltGranulometry_SERVICE from '@/services/asphalt/essays/granulometry/granulometry.service';
 import { t } from 'i18next';

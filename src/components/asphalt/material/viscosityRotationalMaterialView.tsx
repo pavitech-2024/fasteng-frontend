@@ -5,7 +5,7 @@ import Result_Card, {
 } from '@/components/atoms/containers/result-card';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import Loading from '@/components/molecules/loading';
-import { EssaysData } from '@/pages/asphalt/materials/material/types/material.types';
+import { EssaysData } from '@/components/asphalt/material/types/material.types';
 import { t } from 'i18next';
 import Chart from 'react-google-charts';
 

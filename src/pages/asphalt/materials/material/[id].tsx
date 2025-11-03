@@ -21,8 +21,8 @@ import FlashPointMaterialView from '@/components/asphalt/material/flashPointMate
 import DuctilityMaterialView from '@/components/asphalt/material/ductilityMaterialView';
 import RtfoMaterialView from '@/components/asphalt/material/rtfoMaterialView';
 import ElasticRecoveryMaterialView from '@/components/asphalt/material/elasticRecoveryMaterialView';
-import { MaterialEssaysHistory } from './history/MaterialEssaysHistory';
-import { useMaterialData } from './hook/useMaterialData';
+import { MaterialEssaysHistory } from '../../../../components/asphalt/material/history/MaterialEssaysHistory';
+import { useMaterialData } from '../../../../components/asphalt/material/hook/useMaterialData';
 
 const Material = () => {
   const { loading, material, materialState, materialType, granulometryEssays, hasContent } = useMaterialData();

@@ -1,5 +1,5 @@
 import { Modal, Box, Button, Typography } from '@mui/material';
-import { GranulometryEssay } from './types/material.types';
+import { GranulometryEssay } from '@/components/asphalt/material/types/material.types';
 import ExperimentResume from '@/components/molecules/boxes/experiment-resume';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import Result_Card from '@/components/atoms/containers/result-card';

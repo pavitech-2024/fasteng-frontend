@@ -5,7 +5,7 @@ import StepDescription from '@/components/atoms/titles/step-description';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
 import Angularity_resultsTable from '../essays/angularity/tables/results-table.angularity';
-import { EssaysData } from '@/pages/asphalt/materials/material/types/material.types';
+import { EssaysData } from '@/components/asphalt/material/types/material.types';
 import { row_results } from '@/stores/asphalt/angularity/angularity.store';
 import { GridColDef } from '@mui/x-data-grid';
 
