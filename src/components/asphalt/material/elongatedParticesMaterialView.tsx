@@ -2,7 +2,7 @@ import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-bor
 import { Box } from '@mui/material';
 import { t } from 'i18next';
 import ElongatedParticles_results_Dimensions_Table from '../essays/elongatedParticles/tables/results-dimensions-table.elongatedParticles';
-import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
+import { EssaysData } from '@/pages/asphalt/materials/material/types/material.types';
 import { GridColDef } from '@mui/x-data-grid';
 
 export interface IElongatedParticlesMaterialView {

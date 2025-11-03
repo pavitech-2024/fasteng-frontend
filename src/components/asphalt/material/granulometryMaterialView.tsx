@@ -3,7 +3,7 @@ import Loading from '@/components/molecules/loading';
 import { t } from 'i18next';
 import Chart from 'react-google-charts';
 import AsphaltgranulometryDataTable from '../essays/granulometry/tables/results-table.granulometry';
-import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
+import { EssaysData } from '@/pages/asphalt/materials/material/types/material.types';
 import { GridColDef } from '@mui/x-data-grid';
 import Result_Card, { Result_CardContainer } from '@/components/atoms/containers/result-card';
 import { isArray } from 'util';
