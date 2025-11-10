@@ -5,7 +5,7 @@ import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
@@ -23,8 +23,15 @@ const Superpave_Step6_FirstCompaction = ({
 
   const [stepStatus, setStepStatus] = useState('');
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
+  const [columnModalIsOpen, setColumnModalIsOpen] = useState(false);
+  const [availableColumns, setAvailableColumns] = useState<string[]>([]);
+  const [columnMapping, setColumnMapping] = useState({
+    giros: '',
+    altura: ''
+  });
+  const [currentFile, setCurrentFile] = useState<{ file: FileList; tableName: string; index: number } | null>(null);
 
-  //Water temperature list;
+  // Water temperature list
   const list = {
     '15°C - 0.9991': 0.9991,
     '16°C - 0.9989': 0.9989,
@@ -44,14 +51,10 @@ const Superpave_Step6_FirstCompaction = ({
     '30°C - 0.9956': 0.9956,
   };
 
-  const waterTemperatureList = [];
-
-  const formatedWaterTempList = Object.keys(list).forEach((key) => {
-    waterTemperatureList.push({
-      label: key,
-      value: list[key],
-    });
-  });
+  const waterTemperatureList = Object.keys(list).map((key) => ({
+    label: key,
+    value: list[key],
+  }));
 
   const [inferiorRows, setInferiorRows] = useState([]);
   const [intermediariaRows, setIntermediariaRows] = useState([]);
@@ -86,13 +89,17 @@ const Superpave_Step6_FirstCompaction = ({
   ];
 
   useEffect(() => {
-    if (data.inferiorRows?.length !== inferiorRows?.length) {
+    if (data.inferiorRows && Array.isArray(data.inferiorRows) && data.inferiorRows.length !== inferiorRows?.length) {
       setInferiorRows(data.inferiorRows);
     }
-    if (data.intermediariaRows?.length !== intermediariaRows?.length) {
+    if (
+      data.intermediariaRows &&
+      Array.isArray(data.intermediariaRows) &&
+      data.intermediariaRows.length !== intermediariaRows?.length
+    ) {
       setIntermediariaRows(data.intermediariaRows);
     }
-    if (data.superiorRows?.length !== superiorRows?.length) {
+    if (data.superiorRows && Array.isArray(data.superiorRows) && data.superiorRows.length !== superiorRows?.length) {
       setSuperiorRows(data.superiorRows);
     }
   }, [data]);
@@ -318,33 +325,35 @@ const Superpave_Step6_FirstCompaction = ({
 
   /**
    * @function readExcel
-   * @description Lê um arquivo Excel (.xlsx) e o processa para uma tabela no estado da aplicação.
-   * @param {FileList} file Arquivo Excel a ser lido.
-   * @param {String} tableName Nome da tabela no estado que receberá os dados lidos.
-   * @param {Number} index Indice da linha da tabela que receberá os dados lidos.
-   * @returns {Promise} Uma promessa que resolve os dados lidos.
+   * @description Lê um arquivo Excel (.xlsx) e mapeia as colunas para os nomes que o sistema reconhece
    */
-  const readExcel = (file, tableName, index) => {
+  const readExcel = (file, tableName, index, mapping: { giros: string; altura: string }) => {
     const promise = new Promise((resolve, reject) => {
       file = file[0];
 
       const fileReader = new FileReader();
       fileReader.readAsArrayBuffer(file);
 
-      /**
-       * Handles the `load` event of the `FileReader`, reads the content of the Excel file,
-       * and converts it to JSON format.
-       *
-       * @param {ProgressEvent<FileReader>} e - The load event of the `FileReader`.
-       * @returns {void} - Resolves with the JSON data extracted from the Excel sheet.
-       */
       fileReader.onload = (e) => {
         const bufferArray = e.target.result;
         const wb = XLSX.read(bufferArray, { type: 'buffer' });
         const wsname = wb.SheetNames[0];
         const ws = wb.Sheets[wsname];
-        const data = XLSX.utils.sheet_to_json(ws);
-        resolve(data);
+        const allData = XLSX.utils.sheet_to_json(ws);
+
+        console.log('📊 DADOS ORIGINAIS (primeira linha):', allData[0]);
+        console.log('🗺️ MAPEAMENTO:', mapping);
+
+        // Mapeia as colunas para os nomes que o sistema reconhece
+        const mappedData = allData.map((row) => {
+          return {
+            N_Giros: row[mapping.giros],
+            Altura_mm: row[mapping.altura]
+          };
+        });
+
+        console.log('🎯 DADOS MAPEADOS (primeiras 5 linhas):', mappedData.slice(0, 5));
+        resolve(mappedData);
       };
 
       fileReader.onerror = (error) => {
@@ -380,16 +389,67 @@ const Superpave_Step6_FirstCompaction = ({
     });
   };
 
-  const addPlanilha = (tableName, index, e) => {
-    const file = e.target.files;
-    readExcel(file, tableName, index);
+  /**
+   * @function getAvailableColumns
+   * @description Obtém as colunas disponíveis no arquivo Excel
+   */
+  const getAvailableColumns = (file: FileList): Promise<string[]> => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsArrayBuffer(file[0]);
+
+      fileReader.onload = (e) => {
+        const bufferArray = e.target.result;
+        const wb = XLSX.read(bufferArray, { type: 'buffer' });
+        const wsname = wb.SheetNames[0];
+        const ws = wb.Sheets[wsname];
+        const sampleData = XLSX.utils.sheet_to_json(ws, { header: 1, range: 'A1:Z1' });
+
+        const columns = (sampleData[0] as string[]) || [];
+        console.log('🔍 COLUNAS DETECTADAS:', columns);
+        resolve(columns);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
   };
 
-  /**
-   * Calculates the maximum density of the mixture using the Rice Test method.
-   * @param {string} curve - The curve for which the maximum density will be calculated.
-   * @returns {Promise<void>} - A promise that resolves when the calculation is finished.
-   */
+  const addPlanilha = async (tableName, index, e) => {
+    const file = e.target.files;
+
+    if (!file || file.length === 0) return;
+
+    try {
+      // Primeiro, obter as colunas disponíveis
+      const columns = await getAvailableColumns(file);
+      setAvailableColumns(columns);
+      
+      // Resetar o mapeamento
+      setColumnMapping({
+        giros: columns[0] || '', // Primeira coluna como giros por padrão
+        altura: columns[1] || ''  // Segunda coluna como altura por padrão
+      });
+      
+      setCurrentFile({ file, tableName, index });
+      setColumnModalIsOpen(true);
+    } catch (error) {
+      toast.error('Erro ao ler o arquivo');
+      console.error('Erro:', error);
+    }
+  };
+
+  const handleColumnMappingConfirm = () => {
+    if (currentFile && columnMapping.giros && columnMapping.altura) {
+      readExcel(currentFile.file, currentFile.tableName, currentFile.index, columnMapping);
+      setColumnModalIsOpen(false);
+      setCurrentFile(null);
+    } else {
+      toast.error('Selecione as colunas para Giros e Altura');
+    }
+  };
+
   const calculateRiceTest = (curve: string) => {
     toast.promise(
       async () => {
@@ -421,13 +481,6 @@ const Superpave_Step6_FirstCompaction = ({
     );
   };
 
-  /**
-   * Displays the Rice Test modal for the specified curve.
-   * If the curve data does not exist, it initializes the data for the curve.
-   *
-   * @param {string} curve - The curve identifier for which the Rice Test modal will be shown.
-   * @returns {void}
-   */
   const showRiceTestModal = (curve: string) => {
     const riceTestData = [...data.riceTest];
 
@@ -450,22 +503,33 @@ const Superpave_Step6_FirstCompaction = ({
     setActualCurve(curve);
     setRiceTestModalIsOpen(true);
   };
-useEffect(() => {
-  // Verifica se o Rice Test/GMM foi gerado para cada curva
-  const isRiceTestFinished = data.riceTest.length > 0 && data.riceTest?.every(({ gmm }) => gmm !== 0 && gmm !== null);
 
-  // Verifica se todos os inputs das tabelas de todas as curvas foram preenchidos
-  const isCurvesComplete = data.riceTest.length === granulometryCompositionData.chosenCurves.length;
+  useEffect(() => {
+    const isRiceTestFinished =
+      data.riceTest &&
+      Array.isArray(data.riceTest) &&
+      data.riceTest.length > 0 &&
+      data.riceTest.every(({ gmm }) => gmm !== 0 && gmm !== null);
 
-  // Verifica se uma planilha modelo foi adicionada para cada curva
-  const hasSpreadsheetForAllCurves = granulometryCompositionData.chosenCurves.every((curve) => {
-    const curveName = curve === 'lower' ? 'inferiorRows' : curve === 'average' ? 'intermediariaRows' : 'superiorRows';
-    return data[curveName]?.some(row => row.document && row.document !== '');
-  });
+    const isCurvesComplete =
+      data.riceTest &&
+      Array.isArray(data.riceTest) &&
+      data.riceTest.length === granulometryCompositionData.chosenCurves.length;
 
-  // Atualiza o estado de nextDisabled - só habilita quando TODAS as condições forem verdadeiras
-  setNextDisabled(!(isRiceTestFinished && isCurvesComplete && hasSpreadsheetForAllCurves));
-}, [data.inferiorRows, data.intermediariaRows, data.riceTest, data.superiorRows, granulometryCompositionData.chosenCurves]);
+    const hasSpreadsheetForAllCurves = granulometryCompositionData.chosenCurves.every((curve) => {
+      const curveName = curve === 'lower' ? 'inferiorRows' : curve === 'average' ? 'intermediariaRows' : 'superiorRows';
+      return data[curveName]?.some((row) => row.document && row.document !== '');
+    });
+
+    setNextDisabled(!(isRiceTestFinished && isCurvesComplete && hasSpreadsheetForAllCurves));
+  }, [
+    data.inferiorRows,
+    data.intermediariaRows,
+    data.riceTest,
+    data.superiorRows,
+    granulometryCompositionData.chosenCurves,
+  ]);
+
   return (
     <>
       {loading ? (
@@ -549,6 +613,74 @@ useEffect(() => {
             </Box>
           </Box>
 
+          {/* Modal para MAPEAMENTO de colunas - CORRIGIDO */}
+          <ModalBase
+            title="Mapear Colunas da Planilha"
+            leftButtonTitle={t('materials.template.cancel')}
+            rightButtonTitle={t('asphalt.dosages.superpave.confirm')}
+            onCancel={() => {
+              setColumnModalIsOpen(false);
+              setCurrentFile(null);
+            }}
+            open={columnModalIsOpen}
+            size={'medium'}
+            onSubmit={handleColumnMappingConfirm}
+          >
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '3rem', width: '100%' }}>
+              <Typography variant="h6" sx={{ textAlign: 'center' }}>
+                Selecione qual coluna corresponde a cada dado:
+              </Typography>
+
+              <FormControl fullWidth>
+                <InputLabel>Coluna de Número de Giros</InputLabel>
+                <Select
+                  value={columnMapping.giros}
+                  label="Coluna de Número de Giros"
+                  onChange={(e) => setColumnMapping(prev => ({ ...prev, giros: e.target.value }))}
+                >
+                  <MenuItem value="">Selecione uma coluna</MenuItem>
+                  {availableColumns.map((column) => (
+                    <MenuItem key={column} value={column}>
+                      {column}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth>
+                <InputLabel>Coluna de Altura (mm)</InputLabel>
+                <Select
+                  value={columnMapping.altura}
+                  label="Coluna de Altura (mm)"
+                  onChange={(e) => setColumnMapping(prev => ({ ...prev, altura: e.target.value }))}
+                >
+                  <MenuItem value="">Selecione uma coluna</MenuItem>
+                  {availableColumns.map((column) => (
+                    <MenuItem key={column} value={column}>
+                      {column}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <Box sx={{ p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
+                <Typography variant="body2" color="textSecondary">
+                  <strong>Como funciona:</strong><br/>
+                  1. Selecione qual coluna da sua planilha contém o <strong>Número de Giros</strong><br/>
+                  2. Selecione qual coluna contém a <strong>Altura em mm</strong><br/>
+                  3. O sistema irá renomear essas colunas para os nomes que ele reconhece
+                </Typography>
+              </Box>
+
+              {columnMapping.giros && columnMapping.altura && (
+                <Typography variant="body2" color="primary" sx={{ textAlign: 'center' }}>
+                  ✅ Mapeamento: <strong>{columnMapping.giros}</strong> → N_Giros | <strong>{columnMapping.altura}</strong> → Altura_mm
+                </Typography>
+              )}
+            </Box>
+          </ModalBase>
+
+          {/* Modal do Rice Test (existente) */}
           <ModalBase
             title={t('asphalt.dosages.superpave.calculate-rice-test')}
             leftButtonTitle={t('materials.template.cancel')}

@@ -1,0 +1,41 @@
+*   [33m208fb90d[m[33m ([m[1;31morigin/superpave-ajustes-hyago-client[m[33m)[m Merge branch 'test' into superpave-ajustes-hyago-client
+[31m|[m[32m\[m  
+* [32m|[m [33ma7fe5820[m fix: botao habilitado apenas quando as planilhas forem inseridas no step7
+* [32m|[m   [33m9e9176ae[m Merge branch 'superpave-versao-carlos-frontend' of https://github.com/pavitech-2024/fasteng-frontend into superpave-ajustes-hyago-client
+[33m|[m[34m\[m [32m\[m  
+[33m|[m * [32m|[m [33md773f369[m[33m ([m[1;31morigin/superpave-versao-carlos-frontend[m[33m)[m ajustes
+* [34m|[m [32m|[m [33ma8b3a20d[m fix: correcao no estado do botao proximo do step5
+[34m|[m * [32m|[m   [33mc8b9a994[m Merge branch 'superpave-ajustes-hyago-client' of https://github.com/pavitech-2024/fasteng-frontend into superpave-versao-carlos-frontend
+[34m|[m [35m|[m[34m\[m [32m\[m  
+[34m|[m [35m|[m[34m/[m [32m/[m  
+[34m|[m[34m/[m[35m|[m [32m|[m   
+[34m|[m * [32m|[m [33mad55c504[m disabled na tabela de granulometria
+* [36m|[m [32m|[m [33mafeb3c0f[m feat: reimplementação essays/correção no acomplamento
+* [36m|[m [32m|[m [33m26c56ca3[m feat: implementacao das funcoes de ensaios por usuario
+[36m|[m[36m/[m [32m/[m  
+[36m|[m *   [33m2aa1d40e[m[33m ([m[1;31morigin/test[m[33m, [m[1;31morigin/ajustes-marshall-27/08/25-frontend[m[33m)[m Merge pull request #208 from pavitech-2024/ajustes-marshall-27/08/25-frontend
+[36m|[m [1;31m|[m[1;32m\[m  
+[36m|[m [1;31m|[m *   [33mf81e9c2c[m Merge branch 'test' of https://github.com/pavitech-2024/fasteng-frontend into ajustes-marshall-27/08/25-frontend
+[36m|[m [1;31m|[m [1;33m|[m[1;31m\[m  
+[36m|[m [1;31m|[m [1;33m|[m[1;31m/[m  
+[36m|[m [1;31m|[m[1;31m/[m[1;33m|[m   
+[36m|[m [1;31m|[m * [33m926c7165[m semi finalizacao da marshall
+[36m|[m [1;31m|[m * [33mb065c9c9[m superpave ajustado pontos de controle
+[36m|[m * [1;34m|[m [33maedf9c48[m Merge pull request #204 from pavitech-2024/ajustes-marshall-27/08/25-frontend
+[36m|[m [1;35m|[m[1;34m\[m[1;34m|[m 
+[36m|[m [1;35m|[m * [33md45a022e[m erros de build
+[36m|[m [1;35m|[m * [33m5160cf7c[m erros de build
+[36m|[m [1;35m|[m * [33mb02dbb9e[m dando skip nos testes
+[36m|[m [1;35m|[m * [33m5e65be87[m dando skip nos testes
+[36m|[m [1;35m|[m *   [33mef013c75[m Merge branch 'test' of https://github.com/pavitech-2024/fasteng-frontend into ajustes-marshall-27/08/25-frontend
+[36m|[m [1;35m|[m [31m|[m[1;35m\[m  
+[36m|[m [1;35m|[m [31m|[m[1;35m/[m  
+[36m|[m [1;35m|[m[1;35m/[m[31m|[m   
+[36m|[m [1;35m|[m * [33m7375ccd0[m ajustes dos cards de resultados
+[36m|[m [1;35m|[m * [33m5b23d0fc[m dropdown de  tempereatura da agua
+[36m|[m * [32m|[m [33m0b5fd0f0[m[33m ([m[1;32mtest[m[33m)[m Merge pull request #202 from pavitech-2024/ajustes-marshall-27/08/25-frontend
+[36m|[m [33m|[m[32m\[m[32m|[m 
+[36m|[m [33m|[m * [33m25af966f[m ultimos ajustes 4
+[36m|[m * [34m|[m [33mdda5a8da[m Merge pull request #201 from pavitech-2024/ajustes-marshall-27/08/25-frontend
+[36m|[m [35m|[m[34m\[m[34m|[m 
+[36m|[m [35m|[m * [33md694bba2[m ultimos ajustes 3
