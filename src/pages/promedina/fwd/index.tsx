@@ -579,71 +579,133 @@ const FWDPage = () => {
     }
   };
 
-  // UPLOAD DE PLANILHA
+  // UPLOAD DE PLANILHA - VERSÃO CORRIGIDA PARA SUA PLANILHA
   const handleUploadExcel = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    
     const reader = new FileReader();
     reader.onload = (evt) => {
-      const data = evt.target?.result;
-      const workbook = XLSX.read(data, { type: 'binary' });
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+      try {
+        const data = evt.target?.result;
+        const workbook = XLSX.read(data, { type: 'binary' });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-      // CABEÇALHO NA LINHA 5
-      const headerRow: string[] = (rows[4] as any[])?.map((cell: any) => cell?.toString().trim()) || [];
-      const colIndices: Record<string, number> = {
-        stationNumber: headerRow.findIndex(h => h === 'Estaca - Número'),
-        d0: headerRow.findIndex(h => h === 'd0'),
-        d20: headerRow.findIndex(h => h === 'd20'),
-        d30: headerRow.findIndex(h => h === 'd30'),
-        d45: headerRow.findIndex(h => h === 'd45'),
-        d60: headerRow.findIndex(h => h === 'd60'),
-        d90: headerRow.findIndex(h => h === 'd90'),
-        d120: headerRow.findIndex(h => h === 'd120'),
-        d150: headerRow.findIndex(h => h === 'd150'),
-        d180: headerRow.findIndex(h => h === 'd180'),
-      };
+        // ENCONTRAR A LINHA ONDE COMEÇAM OS DADOS REAIS
+        let dataStartRow = -1;
+        for (let i = 0; i < Math.min(10, rows.length); i++) {
+          const row = rows[i] as any[];
+          if (row && row[0] && (
+            row[0].toString().toUpperCase().includes('ESTACA') || 
+            row[0].toString().toUpperCase().includes('DATA')
+          )) {
+            dataStartRow = i;
+            break;
+          }
+        }
 
-      const dataRows = rows.slice(5); // dados começam na linha 6
-      const loadedSamples: FWDData[] = [];
-      for (const row of dataRows) {
-        const stationNumber = Number(row[colIndices.stationNumber]);
-        const d0 = Number(row[colIndices.d0]);
-        if (isNaN(stationNumber) || isNaN(d0)) continue;
-        loadedSamples.push({
-          id: loadedSamples.length + 1,
-          stationNumber,
-          d0: Number(row[colIndices.d0]) || 0,
-          d20: Number(row[colIndices.d20]) || 0,
-          d30: Number(row[colIndices.d30]) || 0,
-          d45: Number(row[colIndices.d45]) || 0,
-          d60: Number(row[colIndices.d60]) || 0,
-          d90: Number(row[colIndices.d90]) || 0,
-          d120: Number(row[colIndices.d120]) || 0,
-          d150: Number(row[colIndices.d150]) || 0,
-          d180: Number(row[colIndices.d180]) || 0,
-        });
-      }
+        if (dataStartRow === -1) {
+          setError('Estrutura da planilha não reconhecida. Cabeçalho não encontrado.');
+          return;
+        }
 
-      if (loadedSamples.length > 0) {
-        setSamples(loadedSamples);
-        setError('');
-        setSnackbar({
-          open: true,
-          message: `Planilha carregada: ${loadedSamples.length} amostras`,
-          severity: loadedSamples.length >= 5 ? 'success' : 'warning',
-        });
-      } else {
-        setError('Nenhuma amostra válida encontrada na planilha');
+        // CABEÇALHO NA LINHA ENCONTRADA
+        const headerRow: string[] = (rows[dataStartRow] as any[])?.map((cell: any) => 
+          cell?.toString().trim().toUpperCase() || ''
+        ) || [];
+
+        // MAPEAMENTO CORRETO DAS COLUNAS PARA SUA PLANILHA FWD
+        const colIndices: Record<string, number> = {
+          date: headerRow.findIndex(h => h.includes('DATA')),
+          airTemperature: headerRow.findIndex(h => h.includes('TEMP. DO AR') || h.includes('TEMP DO AR')),
+          pavementTemperature: headerRow.findIndex(h => h.includes('TEMP. DO PAVIMENTO') || h.includes('TEMP DO PAVIMENTO')),
+          appliedLoad: headerRow.findIndex(h => h.includes('CARGA')),
+          stationNumber: headerRow.findIndex(h => h.includes('ESTACA – NÚMERO') || h.includes('ESTACA-NÚMERO') || h.includes('ESTACA NÚMERO')),
+          d0: headerRow.findIndex(h => h.includes('D0') || h === 'D0'),
+          d20: headerRow.findIndex(h => h.includes('D20') || h === 'D20'),
+          d30: headerRow.findIndex(h => h.includes('D30') || h === 'D30'),
+          d45: headerRow.findIndex(h => h.includes('D45') || h === 'D45'),
+          d60: headerRow.findIndex(h => h.includes('D60') || h === 'D60'),
+          d90: headerRow.findIndex(h => h.includes('D90') || h === 'D90'),
+          d120: headerRow.findIndex(h => h.includes('D120') || h === 'D120'),
+          d150: headerRow.findIndex(h => h.includes('D150') || h === 'D150'),
+          d180: headerRow.findIndex(h => h.includes('D180') || h === 'D180'),
+        };
+
+        // Verificar se encontrou as colunas essenciais
+        if (colIndices.stationNumber === -1 || colIndices.d0 === -1) {
+          setError('Colunas essenciais (Estaca – Número e d0) não encontradas na planilha');
+          console.log('Cabeçalhos encontrados:', headerRow);
+          console.log('Índices mapeados:', colIndices);
+          return;
+        }
+
+        // Dados começam na próxima linha após o cabeçalho
+        const dataRows = rows.slice(dataStartRow + 1);
+        const loadedSamples: FWDData[] = [];
+        
+        for (const row of dataRows) {
+          // Adicione uma verificação de tipo para garantir que row é um array
+          if (!row || !Array.isArray(row) || row.length < 2) continue;
+
+          const stationNumber = Number(row[colIndices.stationNumber]);
+          const d0 = Number(row[colIndices.d0]);
+          
+          // Pular linhas inválidas ou vazias
+          if (isNaN(stationNumber) || isNaN(d0) || stationNumber === 0) continue;
+
+          // Converter valores para número, tratando células vazias
+          const sample: FWDData = {
+            id: loadedSamples.length + 1,
+            stationNumber,
+            d0: d0 || 0,
+            d20: Number(row[colIndices.d20]) || 0,
+            d30: Number(row[colIndices.d30]) || 0,
+            d45: Number(row[colIndices.d45]) || 0,
+            d60: Number(row[colIndices.d60]) || 0,
+            d90: Number(row[colIndices.d90]) || 0,
+            d120: Number(row[colIndices.d120]) || 0,
+            d150: Number(row[colIndices.d150]) || 0,
+            d180: Number(row[colIndices.d180]) || 0,
+            date: row[colIndices.date] ? new Date((row[colIndices.date] - 25569) * 86400 * 1000).toISOString().split('T')[0] : undefined,
+            airTemperature: Number(row[colIndices.airTemperature]) || undefined,
+            pavementTemperature: Number(row[colIndices.pavementTemperature]) || undefined,
+            appliedLoad: Number(row[colIndices.appliedLoad]) || undefined,
+          };
+
+          // Verificar se é um dado válido (pelo menos d0 tem valor)
+          if (sample.d0 > 0) {
+            loadedSamples.push(sample);
+          }
+        }
+
+        if (loadedSamples.length > 0) {
+          setSamples(loadedSamples);
+          setError('');
+          setSnackbar({
+            open: true,
+            message: `Planilha carregada: ${loadedSamples.length} amostras válidas`,
+            severity: loadedSamples.length >= 5 ? 'success' : 'warning',
+          });
+          
+          // Log para debug
+          console.log('Amostras carregadas:', loadedSamples);
+        } else {
+          setError('Nenhuma amostra válida encontrada na planilha. Verifique o formato dos dados.');
+          setSamples([]);
+        }
+      } catch (error) {
+        console.error('Erro ao processar planilha:', error);
+        setError('Erro ao processar o arquivo Excel. Verifique o formato.');
         setSamples([]);
       }
     };
     reader.readAsBinaryString(file);
   };
 
-  // Chart Data - CORRIGIDO
+  // Chart Data
   const d0ChartData =
     procResult && procResult.ordered && procResult.ordered.length > 0
       ? {
@@ -669,8 +731,6 @@ const FWDPage = () => {
               borderWidth: 0,
               pointRadius: 6,
               pointBackgroundColor: 'red',
-              // REMOVIDO: type: 'scatter' as const, - Causa conflito
-              // REMOVIDO: showLine: false, - Causa conflito
             },
           ],
         }
@@ -921,7 +981,6 @@ const FWDPage = () => {
                     Dados Gerais
                   </Typography>
                   
-                  {/* CORREÇÃO: Substituindo Grid por Box com flexbox */}
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
                       <Box sx={{ flex: '1 1 300px' }}>
