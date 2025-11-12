@@ -647,7 +647,8 @@ const FWDPage = () => {
         const loadedSamples: FWDData[] = [];
         
         for (const row of dataRows) {
-          if (!row || row.length < 2) continue;
+          // Adicione uma verificação de tipo para garantir que row é um array
+          if (!row || !Array.isArray(row) || row.length < 2) continue;
 
           const stationNumber = Number(row[colIndices.stationNumber]);
           const d0 = Number(row[colIndices.d0]);
