@@ -35,12 +35,12 @@ const Superpave_Step3_GranulometryResults = ({
         },
         { label: t('granulometry-asphalt.total-retained'), value: gran.result.total_retained, unity: 'g' },
         {
-          label: t('asphalt.essays.granulometry.results.nominalSize'),
+          label: 'Tamanho Máximo',
           value: gran.result.nominal_size,
           unity: 'mm',
         },
         {
-          label: t('asphalt.essays.granulometry.results.nominalDiammeter'),
+          label: 'Tamanho Nominal Máximo (TNM)',
           value: gran.result.nominal_diameter,
           unity: 'mm',
         },
@@ -97,7 +97,11 @@ const Superpave_Step3_GranulometryResults = ({
             return null;
           } else {
             return (
-              <FlexColumnBorder key={index} title={`${item.material?.name} | ` + t(`asphalt.materials.${item.material?.type}`)} open={true}>
+              <FlexColumnBorder
+                key={index}
+                title={`${item.material?.name} | ` + t(`asphalt.materials.${item.material?.type}`)}
+                open={true}
+              >
                 <Box
                   sx={{
                     width: '100%',
@@ -126,6 +130,7 @@ const Superpave_Step3_GranulometryResults = ({
                       title: t('granulometry-asphalt.granulometry'),
                       backgroundColor: 'transparent',
                       pointSize: '5',
+                      curveType: 'function', // ← ADICIONE ESTA LINHA
                       hAxis: {
                         title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
                         type: 'number',
@@ -137,7 +142,6 @@ const Superpave_Step3_GranulometryResults = ({
                         maxValue: '105',
                       },
                       legend: 'none',
-                      curveType: 'function', // 👈 SUAVIZAÇÃO ADICIONADA AQUI!
                     }}
                   />
                 </Box>
@@ -149,21 +153,21 @@ const Superpave_Step3_GranulometryResults = ({
         {materialsToShow.find((item) => item === data.viscosity.material.name) && data.viscosity.result && (
           <FlexColumnBorder title={`${data.viscosity.material.name} | ${data.viscosity.material.type}`} open={true}>
             <Typography variant="h6">{t('viscosity-rotational.compression-temperature')}</Typography>
-            <Result_CardContainer sx={{ marginBottom: '2rem'}}>
+            <Result_CardContainer sx={{ marginBottom: '2rem' }}>
               {Object.entries(data.viscosity.result.result.compressionTemperatureRange).map(([key, value], index) => (
                 <Result_Card key={index} label={key} value={value.toFixed(2).toString()} unity={'°C'} />
               ))}
             </Result_CardContainer>
 
             <Typography variant="h6">{t('viscosity-rotational.aggregate-temperature')}</Typography>
-            <Result_CardContainer sx={{ marginBottom: '2rem'}}>
+            <Result_CardContainer sx={{ marginBottom: '2rem' }}>
               {Object.entries(data.viscosity.result.result.aggregateTemperatureRange).map(([key, value], index) => (
                 <Result_Card key={index} label={key} value={value.toFixed(2).toString()} unity={'°C'} />
               ))}
             </Result_CardContainer>
 
             <Typography variant="h6">{t('viscosity-rotational.machining-temperature')}</Typography>
-            <Result_CardContainer sx={{ marginBottom: '2rem'}}>
+            <Result_CardContainer sx={{ marginBottom: '2rem' }}>
               {Object.entries(data.viscosity.result.result.machiningTemperatureRange).map(([key, value], index) => (
                 <Result_Card key={index} label={key} value={value.toFixed(2).toString()} unity={'°C'} />
               ))}
@@ -179,10 +183,10 @@ const Superpave_Step3_GranulometryResults = ({
               options={{
                 backgroundColor: 'transparent',
                 hAxis: {
-                  title: `${t('asphalt.essays.viscosityRotational.temperature')} C`,
+                  title: `${t('asphalt.essays.viscosityRotational.temperature')} C`, // Umidade %
                 },
                 vAxis: {
-                  title: `${t('asphalt.essays.viscosityRotational.viscosity')} (SSF)`,
+                  title: `${t('asphalt.essays.viscosityRotational.viscosity')} (SSF)`, // Densidade do solo seco - g/cm³
                   maxValue: '1.5',
                 },
                 explorer: {
@@ -198,7 +202,6 @@ const Superpave_Step3_GranulometryResults = ({
                     labelInLegend: 'curva',
                   },
                 },
-                curveType: 'function', // 👈 SUAVIZAÇÃO ADICIONADA AQUI TAMBÉM!
               }}
             />
           </FlexColumnBorder>

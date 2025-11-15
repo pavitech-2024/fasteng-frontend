@@ -327,67 +327,80 @@ const Superpave_Step6_FirstCompaction = ({
    * @function readExcel
    * @description Lê um arquivo Excel (.xlsx) e mapeia as colunas para os nomes que o sistema reconhece
    */
-  const readExcel = (file, tableName, index, mapping: { giros: string; altura: string }) => {
-    const promise = new Promise((resolve, reject) => {
-      file = file[0];
+const readExcel = (file, tableName, index, mapping: { giros: string; altura: string }) => {
+  const promise = new Promise((resolve, reject) => {
+    file = file[0];
 
-      const fileReader = new FileReader();
-      fileReader.readAsArrayBuffer(file);
+    const fileReader = new FileReader();
+    fileReader.readAsArrayBuffer(file);
 
-      fileReader.onload = (e) => {
-        const bufferArray = e.target.result;
-        const wb = XLSX.read(bufferArray, { type: 'buffer' });
-        const wsname = wb.SheetNames[0];
-        const ws = wb.Sheets[wsname];
-        const allData = XLSX.utils.sheet_to_json(ws);
+    fileReader.onload = (e) => {
+      const bufferArray = e.target.result;
+      const wb = XLSX.read(bufferArray, { type: 'buffer' });
+      const wsname = wb.SheetNames[0];
+      const ws = wb.Sheets[wsname];
+      
+      const allData = XLSX.utils.sheet_to_json(ws) as any[];
 
-        console.log('📊 DADOS ORIGINAIS (primeira linha):', allData[0]);
-        console.log('🗺️ MAPEAMENTO:', mapping);
+      // 🎯 DEBUG DETALHADO
+      console.log('🟡🟡🟡 DEBUG PLANILHA 🟡🟡🟡');
+      console.log('📊 TOTAL LINHAS:', allData.length);
+      console.log('📋 PRIMEIRA LINHA:', allData[0]);
+      console.log('📋 ÚLTIMA LINHA:', allData[allData.length - 1]);
+      console.log('🔍 TODAS AS COLUNAS:', Object.keys(allData[0] || {}));
+      console.log('🗺️ MAPEAMENTO USADO:', mapping);
 
-        // Mapeia as colunas para os nomes que o sistema reconhece
-        const mappedData = allData.map((row) => {
-          return {
-            N_Giros: row[mapping.giros],
-            Altura_mm: row[mapping.altura]
-          };
-        });
-
-        console.log('🎯 DADOS MAPEADOS (primeiras 5 linhas):', mappedData.slice(0, 5));
-        resolve(mappedData);
-      };
-
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-
-    const prevData = [...data[tableName]];
-    prevData[index].document = file.name;
-
-    setData({ step: 5, value: { ...data, [tableName]: prevData } });
-
-    promise.then((d: any[]) => {
-      const arrayAux = data[tableName];
-      if (initialBinderData.turnNumber) {
-        if (initialBinderData.turnNumber.maxN == d.length) {
-          arrayAux[index].planilha = d;
-          setData({ step: 5, value: { ...data, [tableName]: arrayAux } });
-          setStepStatus(t('asphalt.dosages.superpave.processing'));
-          toast.success(t('asphalt.dosages.superpave.chosen-sheet-toast'));
-        } else {
-          setStepStatus('error');
-          toast.error(
-            `Número de Giros inválido. Para um trânsito ${initialBinderData.turnNumber.tex} é necessário uma Planilha contendo ${initialBinderData.turnNumber.maxN} Giros.`
-          );
+      const mappedData = allData.map((row: any) => {
+        const newRow = { ...row };
+        
+        if (mapping.giros && row[mapping.giros] !== undefined) {
+          newRow.N_Giros = row[mapping.giros];
+          console.log(`🎯 GIROS: ${row[mapping.giros]} → ${newRow.N_Giros}`);
         }
-      } else {
+        if (mapping.altura && row[mapping.altura] !== undefined) {
+          newRow.Altura_mm = row[mapping.altura];
+          console.log(`📏 ALTURA: ${row[mapping.altura]} → ${newRow.Altura_mm}`);
+        }
+        
+        return newRow;
+      });
+
+      console.log('✅ DADOS FINAIS (3 primeiras):', mappedData.slice(0, 3));
+      resolve(mappedData);
+    };
+
+    fileReader.onerror = (error) => {
+      reject(error);
+    };
+  });
+
+  const prevData = [...data[tableName]];
+  prevData[index].document = file.name;
+
+  setData({ step: 5, value: { ...data, [tableName]: prevData } });
+
+  promise.then((d: any[]) => {
+    const arrayAux = data[tableName];
+    if (initialBinderData.turnNumber) {
+      if (initialBinderData.turnNumber.maxN == d.length) {
         arrayAux[index].planilha = d;
         setData({ step: 5, value: { ...data, [tableName]: arrayAux } });
         setStepStatus(t('asphalt.dosages.superpave.processing'));
         toast.success(t('asphalt.dosages.superpave.chosen-sheet-toast'));
+      } else {
+        setStepStatus('error');
+        toast.error(
+          `Número de Giros inválido. Para um trânsito ${initialBinderData.turnNumber.tex} é necessário uma Planilha contendo ${initialBinderData.turnNumber.maxN} Giros.`
+        );
       }
-    });
-  };
+    } else {
+      arrayAux[index].planilha = d;
+      setData({ step: 5, value: { ...data, [tableName]: arrayAux } });
+      setStepStatus(t('asphalt.dosages.superpave.processing'));
+      toast.success(t('asphalt.dosages.superpave.chosen-sheet-toast'));
+    }
+  });
+};
 
   /**
    * @function getAvailableColumns
