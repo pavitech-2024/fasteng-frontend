@@ -40,14 +40,13 @@ const Superpave_Step5_InitialBinder = ({
   const [activateSecondFetch, setActivateSecondFetch] = useState(false);
   const [shouldRenderTable1, setShouldRenderTable1] = useState(false);
 
-  //melhora p validar os valores e ativ o estado do botao
   const areAllEstimatedPercentagesFilled = () => {
     if (estimatedPercentageRows.length === 0) return false;
-    
-    return estimatedPercentageRows.every(row => {
+
+    return estimatedPercentageRows.every((row) => {
       return Object.entries(row).every(([key, value]) => {
         if (key === 'id' || key === 'granulometricComposition') return true;
-        
+
         const numericValue = Number(value);
         return !isNaN(numericValue) && numericValue > 0;
       });
@@ -65,14 +64,14 @@ const Superpave_Step5_InitialBinder = ({
     if (newInitialBinderModalIsOpen && estimatedPercentageRows.length > 0) {
       const initialValues = granulometryCompositionData.chosenCurves.map((curve) => {
         const curveName = curve === 'lower' ? 'inferior' : curve === 'average' ? 'intermediaria' : 'superior';
-        const existingRow = estimatedPercentageRows.find(row => row.granulometricComposition === curveName);
-        
+        const existingRow = estimatedPercentageRows.find((row) => row.granulometricComposition === curveName);
+
         return {
           curve,
           value: existingRow?.initialBinder ? Number(existingRow.initialBinder) : 0,
         };
       });
-      
+
       setBinderInput(initialValues);
     }
   }, [newInitialBinderModalIsOpen, estimatedPercentageRows, granulometryCompositionData.chosenCurves]);
@@ -114,10 +113,7 @@ const Superpave_Step5_InitialBinder = ({
 
   useEffect(() => {
     const hasSomeNullValue = Object.values(rows).some((e) => e === null);
-    if (
-      // activateSecondFetch &&
-      hasSomeNullValue
-    ) {
+    if (hasSomeNullValue) {
       toast.promise(
         async () => {
           try {
@@ -145,7 +141,6 @@ const Superpave_Step5_InitialBinder = ({
                 step: 4,
                 value: prevData,
               });
-              // setActivateSecondFetch(false);
             } else {
               let count = 0;
               data.materials.forEach((e) => {
@@ -169,7 +164,6 @@ const Superpave_Step5_InitialBinder = ({
                 step: 4,
                 value: prevData,
               });
-              // setActivateSecondFetch(false);
             }
           } catch (error) {
             throw error;
@@ -185,39 +179,51 @@ const Superpave_Step5_InitialBinder = ({
   }, [rows]);
 
   const generateMaterialInputs = (materials) => {
-    return materials?.map((material, index) => [
-      {
-        key: 'realSpecificMass',
-        label: t('asphalt.dosages.superpave.real-specific-mass'),
-        placeHolder: 'Massa específica real',
-        adornment: 'g/cm²',
-        value: material.realSpecificMass,
-        materialIndex: index + 1,
-        name: material.name,
-      },
-      {
-        key: 'apparentSpecificMass',
-        label: t('asphalt.dosages.superpave.apparent-specific-mass'),
-        placeHolder: 'Massa específica aparente',
-        adornment: 'g/cm²',
-        value: material.apparentSpecificMass,
-        materialIndex: index + 1,
-        name: material.name,
-      },
-      {
-        key: 'absorption',
-        label: t('asphalt.dosages.superpave.absorption'),
-        placeHolder: 'Absorção',
-        adornment: '%',
-        value: material.absorption,
-        materialIndex: index + 1,
-        name: material.name,
-      },
-    ]);
+    return materials?.map((material, index) => {
+      // Para agregados, manter os 3 campos, so o lignt q n tem
+      if (material?.type?.includes('Aggregate') || material?.type?.includes('filler')) {
+        return [
+          {
+            key: 'realSpecificMass',
+            label: t('asphalt.dosages.superpave.real-specific-mass'),
+            placeHolder: 'Massa específica real',
+            adornment: 'g/cm³',
+            value: material.realSpecificMass,
+            materialIndex: index + 1,
+            name: material.name,
+          },
+          {
+            key: 'apparentSpecificMass',
+            label: t('asphalt.dosages.superpave.apparent-specific-mass'),
+            placeHolder: 'Massa específica aparente',
+            adornment: 'g/cm³',
+            value: material.apparentSpecificMass,
+            materialIndex: index + 1,
+            name: material.name,
+          },
+          {
+            key: 'absorption',
+            label: t('asphalt.dosages.superpave.absorption'),
+            placeHolder: 'Absorção',
+            adornment: '%',
+            value: material.absorption,
+            materialIndex: index + 1,
+            name: material.name,
+          },
+        ];
+      }
+      return [];
+    });
   };
 
   const modalMaterialInputs = generateMaterialInputs(
-    data.materials?.filter((material) => material?.type?.includes('Aggregate') || material?.type?.includes('filler'))
+    data.materials?.filter(
+      (material) =>
+        (material?.type?.includes('Aggregate') || material?.type?.includes('filler')) &&
+        // FILTRAR p fora so o ligant 
+        !material?.type?.includes('asphaltBinder') &&
+        !material?.type?.includes('CAP')
+    )
   );
 
   const handleSubmitSpecificMasses = () => {
@@ -425,7 +431,7 @@ const Superpave_Step5_InitialBinder = ({
 
   const updateRowsWithInitialBinderValues = (initialBinderValues: { curve: string; value: number }[]) => {
     console.log('Updating rows with:', initialBinderValues);
-    
+
     const newRowData = estimatedPercentageRows.map((row) => {
       const curveName =
         row.granulometricComposition === 'inferior'
@@ -440,10 +446,10 @@ const Superpave_Step5_InitialBinder = ({
         initialBinder: initialBinderValue.toFixed(2),
       };
     });
-    
+
     console.log('New row data:', newRowData);
     setEstimatedPercentageRows(newRowData);
-    
+
     setData({
       step: 4,
       key: 'granulometryComposition',
@@ -543,39 +549,48 @@ const Superpave_Step5_InitialBinder = ({
         >
           <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1rem', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', gap: '1rem', flexDirection: 'column', marginBottom: '2rem' }}>
-              {modalMaterialInputs?.map((materialInputs, idx) => (
-                <>
-                  <Typography component={'h3'} sx={{ marginTop: '2rem' }}>
-                    {data.materials[idx].name}
-                  </Typography>
+              {/* AGREGADOS - 3 CAMPOS CADA */}
+              {modalMaterialInputs?.map((materialInputs, idx) => {
+               
+                const aggregateMaterials = data.materials?.filter(
+                  (material) => material?.type?.includes('Aggregate') || material?.type?.includes('filler')
+                );
 
-                  <Box key={idx} sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                    {materialInputs?.map((input) => (
-                      <InputEndAdornment
-                        key={`${input.materialIndex}_${input.key}`}
-                        adornment={input.adornment}
-                        type="number"
-                        value={input.value}
-                        label={input.label}
-                        placeholder={input.placeHolder}
-                        fullWidth
-                        onChange={(e) => {
-                          const materialIndex = data.materials.findIndex((i) => i.name === input.name);
-                          const newData = [...data.materials];
-                          newData[materialIndex][input.key] = e.target.value.replace(',', '.');
+                return (
+                  <>
+                    <Typography component={'h3'} sx={{ marginTop: '2rem' }}>
+                      {aggregateMaterials[idx]?.name} {/* PEGAR APENAS DOS AGREGADOS */}
+                    </Typography>
 
-                          setData({
-                            step: 4,
-                            key: `materials`,
-                            value: newData,
-                          });
-                        }}
-                      />
-                    ))}
-                  </Box>
-                </>
-              ))}
+                    <Box key={idx} sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                      {materialInputs?.map((input) => (
+                        <InputEndAdornment
+                          key={`${input.materialIndex}_${input.key}`}
+                          adornment={input.adornment}
+                          type="number"
+                          value={input.value}
+                          label={input.label}
+                          placeholder={input.placeHolder}
+                          fullWidth
+                          onChange={(e) => {
+                            const materialIndex = data.materials.findIndex((i) => i.name === input.name);
+                            const newData = [...data.materials];
+                            newData[materialIndex][input.key] = e.target.value.replace(',', '.');
 
+                            setData({
+                              step: 4,
+                              key: `materials`,
+                              value: newData,
+                            });
+                          }}
+                        />
+                      ))}
+                    </Box>
+                  </>
+                );
+              })}
+
+              {/* LIGANTE - APENAS 1 CAMPO */}
               <Box>
                 <Typography component={'h3'} sx={{ marginTop: '2rem' }}>
                   {
@@ -585,7 +600,7 @@ const Superpave_Step5_InitialBinder = ({
                 </Typography>
                 <InputEndAdornment
                   type="number"
-                  adornment="g/cm2"
+                  adornment="g/cm³"
                   value={
                     data.materials?.find((material) => material.type === 'asphaltBinder' || material.type === 'CAP')
                       ?.realSpecificMass !== 0 ||
@@ -596,10 +611,12 @@ const Superpave_Step5_InitialBinder = ({
                       : '1,03'
                   }
                   label="Massa especifica do ligante"
-                  placeholder="Insira a massa específicia do ligante"
+                  placeholder="Insira a massa específica do ligante"
                   fullWidth
                   onChange={(e) => {
-                    const materialIndex = data.materials?.findIndex((i) => i.type === 'asphaltBinder' || 'CAP');
+                    const materialIndex = data.materials?.findIndex(
+                      (i) => i.type === 'asphaltBinder' || i.type === 'CAP'
+                    );
                     const newData = { ...data };
                     newData.materials[materialIndex].realSpecificMass = parseFloat(e.target.value.replace(',', '.'));
                     newData.binderSpecificMass = parseFloat(e.target.value.replace(',', '.'));
@@ -657,6 +674,5 @@ const Superpave_Step5_InitialBinder = ({
     </>
   );
 };
-
 
 export default Superpave_Step5_InitialBinder;
