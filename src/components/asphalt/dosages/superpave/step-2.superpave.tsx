@@ -64,9 +64,14 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
       headerName: t('granulometry-asphalt.passant'),
       renderCell: ({ row }) => {
         if (!aggregatesRows) return;
-        const { sieve_label, material } = row;
-        const rowIndex = data.materials.findIndex((mat) => mat._id === material?._id);
-        const sieve_index = aggregatesRows[rowIndex]?.table_data.findIndex((r) => r.sieve_label === sieve_label);
+        
+        // CORREÇÃO MÍNIMA: Encontrar o índice correto usando aggregatesRows
+        const rowIndex = aggregatesRows.findIndex(aggRow => 
+          aggRow.material?._id === row.material?._id
+        );
+        if (rowIndex === -1) return;
+        
+        const sieve_index = aggregatesRows[rowIndex]?.table_data.findIndex((r) => r.sieve_label === row.sieve_label);
         const materialMass = data.granulometrys[rowIndex]?.material_mass;
         const disabled = !materialMass || isNaN(materialMass) || Number(materialMass) <= 0;
         return (
@@ -149,9 +154,14 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
       headerName: t('granulometry-asphalt.retained'),
       renderCell: ({ row }) => {
         if (!aggregatesRows) return;
-        const { sieve_label, material } = row;
-        const rowIndex = data.materials.findIndex((mat) => mat._id === material?._id);
-        const sieve_index = aggregatesRows[rowIndex]?.table_data.findIndex((r) => r.sieve_label === sieve_label);
+        
+        // CORREÇÃO MÍNIMA: Encontrar o índice correto usando aggregatesRows
+        const rowIndex = aggregatesRows.findIndex(aggRow => 
+          aggRow.material?._id === row.material?._id
+        );
+        if (rowIndex === -1) return;
+        
+        const sieve_index = aggregatesRows[rowIndex]?.table_data.findIndex((r) => r.sieve_label === row.sieve_label);
         const materialMass = data.granulometrys[rowIndex]?.material_mass;
         const disabled = !materialMass || isNaN(materialMass) || Number(materialMass) <= 0;
         return (
@@ -287,7 +297,6 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
     const hasCoarseAggregate = data.materials?.some((material) => material.type === 'coarseAggregate');
     const hasFineAggregate = data.materials?.some((material) => material.type === 'fineAggregate');
     const hasBinder = data.materials?.some((material) => material.type === 'asphaltBinder' || material.type === 'CAP');
-    
 
     if (hasCoarseAggregate && hasFineAggregate && hasBinder) setNextDisabled(false);
   }, [data.materials]);
