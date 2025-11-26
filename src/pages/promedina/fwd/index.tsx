@@ -1,4 +1,4 @@
-import { Delete, Add, Assessment, ExpandMore, FileUpload } from '@mui/icons-material';
+import { Delete, Add, Assessment, ExpandMore, FileUpload, Edit, Visibility } from '@mui/icons-material';
 import { Line } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import Api from '@/api';
@@ -350,6 +350,8 @@ const FWDPage = () => {
   const [procError, setProcError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [editingAnalysis, setEditingAnalysis] = useState<FWDAnalysis | null>(null);
+  const [showAllAnalyses, setShowAllAnalyses] = useState(false);
 
   const theme = useTheme();
 
@@ -533,6 +535,100 @@ const FWDPage = () => {
     }
   };
 
+  const handleEditAnalysis = async (analysis: FWDAnalysis) => {
+    setEditingAnalysis(analysis);
+    setNewAnalysis({
+      name: analysis.name,
+      description: analysis.description,
+    });
+    setSamples(analysis.samples);
+    setTabValue(0);
+  };
+
+  const handleUpdateAnalysis = async () => {
+    if (!editingAnalysis || !newAnalysis.name) {
+      setError('Nome da análise é obrigatório');
+      return;
+    }
+
+    if (samples.length < 5) {
+      setError('Mínimo de 5 amostras necessárias para atualizar a análise');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const backendData = {
+        name: newAnalysis.name,
+        description: newAnalysis.description,
+        samples: samples.map((sample) => ({
+          stationNumber: sample.stationNumber,
+          d0: sample.d0,
+          d20: sample.d20,
+          d30: sample.d30,
+          d45: sample.d45,
+          d60: sample.d60,
+          d90: sample.d90,
+          d120: sample.d120,
+          d150: sample.d150,
+          d180: sample.d180,
+          date: sample.date,
+          airTemperature: sample.airTemperature,
+          pavementTemperature: sample.pavementTemperature,
+          appliedLoad: sample.appliedLoad,
+        })),
+        status: 'active',
+      };
+
+      await fwdAnalysisService.updateAnalysis(editingAnalysis.id, backendData);
+      
+      await loadAnalyses();
+      
+      setEditingAnalysis(null);
+      setNewAnalysis({ name: '', description: '' });
+      setSamples([]);
+      setCurrentSample({
+        stationNumber: 0,
+        d0: 0,
+        d20: 0,
+        d30: 0,
+        d45: 0,
+        d60: 0,
+        d90: 0,
+        d120: 0,
+        d150: 0,
+        d180: 0,
+      });
+
+      setError('');
+      setSnackbar({ open: true, message: 'Análise atualizada com sucesso!', severity: 'success' });
+    } catch (err) {
+      setError('Erro ao atualizar análise');
+      setSnackbar({ open: true, message: 'Erro ao atualizar análise', severity: 'error' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingAnalysis(null);
+    setNewAnalysis({ name: '', description: '' });
+    setSamples([]);
+    setCurrentSample({
+      stationNumber: 0,
+      d0: 0,
+      d20: 0,
+      d30: 0,
+      d45: 0,
+      d60: 0,
+      d90: 0,
+      d120: 0,
+      d150: 0,
+      d180: 0,
+    });
+    setError('');
+  };
+
   const handleDeleteAnalysis = async (id: string) => {
     setLoading(true);
     try {
@@ -566,7 +662,7 @@ const FWDPage = () => {
         throw new Error('Resultado inválido');
       }
     } catch (err) {
-      setProcError('Erro ao processar análise. Processando localmente...');
+      // Processamento local sem mensagem de erro
       const proc = processarSubtrechos(selectedAnalysis.samples);
       if (proc && proc.ordered && proc.ordered.length > 0) {
         setProcResult(proc);
@@ -957,7 +1053,7 @@ const FWDPage = () => {
                 </Alert>
               )}
 
-              {/* Tab 0 - Dados Gerais (Criar análise) */}
+              {/* Tab 0 - Dados Gerais (Criar/Editar análise) */}
               <TabPanel value={tabValue} index={0}>
                 <Paper 
                   sx={{ 
@@ -967,19 +1063,32 @@ const FWDPage = () => {
                     background: 'linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)',
                   }}
                 >
-                  <Typography 
-                    variant="h5" 
-                    sx={{ 
-                      fontWeight: 700, 
-                      mb: 2, 
-                      color: '#2c3e50',
-                      textAlign: 'center',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.3px'
-                    }}
-                  >
-                    Dados Gerais
-                  </Typography>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                    <Typography 
+                      variant="h5" 
+                      sx={{ 
+                        fontWeight: 700, 
+                        color: '#2c3e50',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.3px'
+                      }}
+                    >
+                      {editingAnalysis ? 'Editar Análise' : 'Dados Gerais'}
+                    </Typography>
+                    {editingAnalysis && (
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={handleCancelEdit}
+                        sx={{ 
+                          fontSize: '0.8rem',
+                          fontWeight: 600,
+                        }}
+                      >
+                        Cancelar Edição
+                      </Button>
+                    )}
+                  </Box>
                   
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
@@ -1296,20 +1405,50 @@ const FWDPage = () => {
                       </Box>
                     )}
 
-                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                      <Button
-                        variant="contained"
-                        onClick={handleCreateAnalysis}
-                        disabled={samples.length < 5 || !newAnalysis.name || loading}
-                        sx={{ 
-                          px: 3,
-                          py: 1,
-                          fontSize: '0.9rem',
-                          fontWeight: 700,
-                        }}
-                      >
-                        {loading ? <CircularProgress size={20} /> : 'Criar Análise FWD'}
-                      </Button>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, gap: 2 }}>
+                      {editingAnalysis ? (
+                        <>
+                          <Button
+                            variant="outlined"
+                            onClick={handleCancelEdit}
+                            sx={{ 
+                              px: 3,
+                              py: 1,
+                              fontSize: '0.9rem',
+                              fontWeight: 700,
+                            }}
+                          >
+                            Cancelar
+                          </Button>
+                          <Button
+                            variant="contained"
+                            onClick={handleUpdateAnalysis}
+                            disabled={samples.length < 5 || !newAnalysis.name || loading}
+                            sx={{ 
+                              px: 3,
+                              py: 1,
+                              fontSize: '0.9rem',
+                              fontWeight: 700,
+                            }}
+                          >
+                            {loading ? <CircularProgress size={20} /> : 'Atualizar Análise'}
+                          </Button>
+                        </>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          onClick={handleCreateAnalysis}
+                          disabled={samples.length < 5 || !newAnalysis.name || loading}
+                          sx={{ 
+                            px: 3,
+                            py: 1,
+                            fontSize: '0.9rem',
+                            fontWeight: 700,
+                          }}
+                        >
+                          {loading ? <CircularProgress size={20} /> : 'Criar Análise FWD'}
+                        </Button>
+                      )}
                     </Box>
                   </Box>
                 </Paper>
@@ -1318,23 +1457,140 @@ const FWDPage = () => {
               {/* Tab 1 - Gerenciar análises */}
               <TabPanel value={tabValue} index={1}>
                 <Box sx={{ textAlign: 'center' }}>
-                  <Typography 
-                    variant="h5" 
-                    sx={{ 
-                      fontWeight: 700, 
-                      mb: 2, 
-                      color: '#2c3e50',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.3px'
-                    }}
-                  >
-                    Análises FWD Existentes
-                  </Typography>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                    <Typography 
+                      variant="h5" 
+                      sx={{ 
+                        fontWeight: 700, 
+                        color: '#2c3e50',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.3px'
+                      }}
+                    >
+                      Análises FWD Existentes
+                    </Typography>
+                    <Button
+                      variant="outlined"
+                      startIcon={<Visibility />}
+                      onClick={() => setShowAllAnalyses(!showAllAnalyses)}
+                      sx={{ 
+                        fontSize: '0.8rem',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {showAllAnalyses ? 'Ocultar Detalhes' : 'Ver Todas as Análises'}
+                    </Button>
+                  </Box>
                   {fwdAnalysis.length === 0 ? (
                     <Alert severity="info" sx={{ borderRadius: 1, fontSize: '0.85rem' }}>
-                    Nenhuma análise criada ainda. Vá para &quot;Dados Gerais&quot; para criar uma nova análise.
-                  </Alert>
+                      Nenhuma análise criada ainda. Vá para &quot;Dados Gerais&quot; para criar uma nova análise.
+                    </Alert>
+                  ) : showAllAnalyses ? (
+                    // Visualização detalhada de todas as análises
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      {fwdAnalysis.map((analysis) => (
+                        <Card
+                          key={analysis.id}
+                          sx={{
+                            border: selectedAnalysis?.id === analysis.id 
+                              ? `2px solid ${PRO_MEDINA_COLORS.primary.main}` 
+                              : `1px solid ${PRO_MEDINA_COLORS.secondary.main}`,
+                            borderRadius: 2,
+                            background: selectedAnalysis?.id === analysis.id 
+                              ? 'linear-gradient(145deg, #fff5f0 0%, #ffffff 100%)'
+                              : 'linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)',
+                          }}
+                        >
+                          <CardContent sx={{ p: 2 }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                              <Box>
+                                <Typography 
+                                  variant="h6" 
+                                  fontWeight={700}
+                                  sx={{ 
+                                    color: selectedAnalysis?.id === analysis.id 
+                                      ? PRO_MEDINA_COLORS.primary.main 
+                                      : '#2c3e50',
+                                    mb: 0.5,
+                                    fontSize: '1rem'
+                                  }}
+                                >
+                                  {analysis.name}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                                  {analysis.description}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', gap: 0.5 }}>
+                                <IconButton
+                                  size="small"
+                                  color="primary"
+                                  onClick={() => handleEditAnalysis(analysis)}
+                                  sx={{ 
+                                    backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                                    '&:hover': {
+                                      backgroundColor: 'rgba(255, 107, 53, 0.2)',
+                                    }
+                                  }}
+                                >
+                                  <Edit fontSize="small" />
+                                </IconButton>
+                                <IconButton
+                                  size="small"
+                                  color="error"
+                                  onClick={() => handleDeleteAnalysis(analysis.id)}
+                                  sx={{ 
+                                    backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                                    '&:hover': {
+                                      backgroundColor: 'rgba(211, 47, 47, 0.2)',
+                                    }
+                                  }}
+                                >
+                                  <Delete fontSize="small" />
+                                </IconButton>
+                              </Box>
+                            </Box>
+                            
+                            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+                              <Chip
+                                label={`${analysis.samples.length} amostras`}
+                                variant="outlined"
+                                size="small"
+                                sx={{ fontWeight: 600, fontSize: '0.7rem' }}
+                              />
+                              <Chip
+                                label={analysis.samples.length >= 5 ? 'Completa' : 'Incompleta'}
+                                color={analysis.samples.length >= 5 ? 'success' : 'warning'}
+                                size="small"
+                                sx={{ fontWeight: 600, fontSize: '0.7rem' }}
+                              />
+                              <Chip
+                                label={`Criada em: ${analysis.createdAt}`}
+                                variant="outlined"
+                                size="small"
+                                sx={{ fontWeight: 600, fontSize: '0.7rem' }}
+                              />
+                            </Box>
+
+                            <Button
+                              fullWidth
+                              variant={selectedAnalysis?.id === analysis.id ? "contained" : "outlined"}
+                              onClick={() => setSelectedAnalysis(analysis)}
+                              size="small"
+                              sx={{ 
+                                borderRadius: 1,
+                                fontWeight: 600,
+                                fontSize: '0.75rem',
+                              }}
+                            >
+                              {selectedAnalysis?.id === analysis.id ? 'Selecionada' : 'Selecionar para Análise'}
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </Box>
                   ) : (
+                    // Visualização em cards (original)
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'center' }}>
                       {fwdAnalysis.map((analysis) => (
                         <Box key={analysis.id} sx={{ flex: '0 1 280px' }}>
@@ -1394,26 +1650,45 @@ const FWDPage = () => {
                                   sx={{ fontWeight: 600, fontSize: '0.7rem' }}
                                 />
                               </Box>
-                              <Button
-                                size="small"
-                                color="error"
-                                variant="outlined"
-                                disabled={loading}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteAnalysis(analysis.id);
-                                }}
-                                sx={{ 
-                                  width: '100%', 
-                                  mt: 0.5,
-                                  borderRadius: 1,
-                                  fontWeight: 600,
-                                  fontSize: '0.75rem',
-                                  py: 0.5,
-                                }}
-                              >
-                                {loading ? <CircularProgress size={14} /> : 'Excluir Análise'}
-                              </Button>
+                              <Box sx={{ display: 'flex', gap: 1 }}>
+                                <Button
+                                  size="small"
+                                  variant="outlined"
+                                  startIcon={<Edit />}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleEditAnalysis(analysis);
+                                  }}
+                                  sx={{ 
+                                    flex: 1,
+                                    borderRadius: 1,
+                                    fontWeight: 600,
+                                    fontSize: '0.75rem',
+                                    py: 0.5,
+                                  }}
+                                >
+                                  Editar
+                                </Button>
+                                <Button
+                                  size="small"
+                                  color="error"
+                                  variant="outlined"
+                                  disabled={loading}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteAnalysis(analysis.id);
+                                  }}
+                                  sx={{ 
+                                    flex: 1,
+                                    borderRadius: 1,
+                                    fontWeight: 600,
+                                    fontSize: '0.75rem',
+                                    py: 0.5,
+                                  }}
+                                >
+                                  {loading ? <CircularProgress size={14} /> : 'Excluir'}
+                                </Button>
+                              </Box>
                             </CardContent>
                           </Card>
                         </Box>
