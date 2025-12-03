@@ -84,6 +84,7 @@ interface Step3Data {
   k2: string;
   k3: string;
   k4: string;
+  r2: string;
   // Permanent deformation
   k1psi1: string;
   k2psi2: string;

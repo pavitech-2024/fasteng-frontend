@@ -41,6 +41,7 @@ const BinderAsphaltConcrete = () => {
       essayInfo={binderAsphaltConcrete.info}
       nextCallback={binderAsphaltConcrete.handleNext}
       childrens={childrens}
+      startAtStep={0}
     />
   );
 };

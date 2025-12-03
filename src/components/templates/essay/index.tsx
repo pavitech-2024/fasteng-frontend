@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Stepper } from '../../atoms/stepper';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
@@ -16,6 +16,7 @@ interface EssayTemplateProps {
   essayInfo: IEssayService['info'];
   childrens: { step: number; children: JSX.Element; data: any }[];
   nextCallback: (step: number, data: unknown) => Promise<void>;
+  startAtStep?: number;
 }
 
 // interface that export the props of the childrens
@@ -28,14 +29,19 @@ const EssayTemplate = ({
   essayInfo: { stepperData, icon, key, standard },
   childrens,
   nextCallback,
+  startAtStep = 0,
+
 }: EssayTemplateProps) => {
   const router = useRouter();
   const app = router.pathname.split('/')[1];
   const essay = router.pathname.split('/')[3];
 
   // persiste the active step in the sessionStorage, if the user reload the page, the active step will be the same  example: cbr-{step}
-  const step = parseInt(sessionStorage.getItem(essay + '-step')) || 0;
-  const [activeStep, setActiveStep] = useSessionStorage({ key: essay + '-step', initialValue: step });
+
+  const [activeStep, setActiveStep] = useSessionStorage({
+    key: essay + '-step',
+    initialValue: startAtStep,
+  })
 
   const [nextDisabled, setNextDisabled] = React.useState(true);
 

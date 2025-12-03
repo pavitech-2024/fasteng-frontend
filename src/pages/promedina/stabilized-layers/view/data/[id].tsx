@@ -1155,7 +1155,7 @@ const SpecificSample_StabilizedLayers = () => {
             }}
           >
             <Link
-              href="/promedina/granular-layers/view"
+              href="/promedina/stabilized-layers/view"
               style={{
                 backgroundColor: '#00A3FF',
                 color: '#FFFFFF',
