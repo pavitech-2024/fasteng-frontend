@@ -94,6 +94,65 @@ const Superpave_Step4_GranulometryComposition = ({ setNextDisabled, superpave }:
     return parseFloat(aux);
   };
 
+const addProperHeaders = (data) => {
+  if (!data || data.length === 0) return data;
+
+  const headers = [
+    'Peneira',
+    'Pontos Inferior', 
+    'Pontos Superior',  
+    'Zona Inf',
+    'Zona Sup',
+    'Densidade',
+    'Faixa Superior',
+    'Faixa Inferior',
+    'Curva Lower',
+    'Curva Average',
+    'Curva Higher'
+  ];
+
+  const convertValue = (val) => {
+    if (val === null || val === undefined) return NaN;
+    return Number(val);
+  };
+
+  // ✅ PONTOS DE CONTROLE APENAS EM PENEIRAS ESPECÍFICAS
+  // Normalmente: 4.75mm, 2.36mm, 0.075mm, 0.300mm (ajuste conforme sua norma)
+  const pontosControleIndices = [3, 7, 12]; // Exemplo: índices 3, 7 e 12
+
+  const formattedData = data.map((point, index) => [
+    convertValue(point[0]), // X
+    
+    // ✅ PONTOS INFERIOR: Apenas nos índices específicos
+    pontosControleIndices.includes(index) ? convertValue(point[7]) : NaN,
+    
+    // ✅ PONTOS SUPERIOR: Apenas nos índices específicos  
+    pontosControleIndices.includes(index) ? convertValue(point[6]) : NaN,
+    
+    convertValue(point[3]),
+    convertValue(point[4]),
+    convertValue(point[5]),
+    convertValue(point[6]), // Faixa Superior (área)
+    convertValue(point[7]), // Faixa Inferior (área)
+    convertValue(point[8]),
+    convertValue(point[9]),
+    convertValue(point[10])
+  ]);
+
+  const result = [headers, ...formattedData];
+  
+  console.log('🎯 PONTOS DE CONTROLE REAIS:', {
+    indices: pontosControleIndices,
+    pontos: pontosControleIndices.map(idx => ({
+      peneira: result[idx+1][0],
+      inferior: result[idx+1][1],
+      superior: result[idx+1][2]
+    }))
+  });
+  
+  return result;
+};
+
   const validateNumber = (value) => {
     const auxValue = convertNumber(value);
     if (!isNaN(auxValue) && typeof auxValue === 'number') {
@@ -282,10 +341,12 @@ const Superpave_Step4_GranulometryComposition = ({ setNextDisabled, superpave }:
    * Recebe um array de pontos de curva e o atualiza no estado.
    * @param {number[][]} points - Os pontos da curva do gráfico a serem atualizados.
    */
-  const updateGraph = (points) => {
-    const pointsOfCurve = addEmptyTitles(points);
-    setData({ step: 3, key: 'pointsOfCurve', value: pointsOfCurve });
-  };
+const updateGraph = (points) => {
+  console.log('Points do backend:', points);
+  const pointsOfCurve = addProperHeaders(points); // ← AQUI, use addProperHeaders
+  console.log('Points com headers corretos:', pointsOfCurve);
+  setData({ step: 3, key: 'pointsOfCurve', value: pointsOfCurve });
+};
 
   /**
    * Calcula a composição granulométrica com base nas curvas selecionadas.

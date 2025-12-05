@@ -49,14 +49,10 @@ const Superpave_Step11_ConfirmCompaction = ({
     '30°C - 0.9956': 0.9956,
   };
 
-  const waterTemperatureList = [];
-
-  const formatedWaterTempList = Object.keys(list).forEach((key) => {
-    waterTemperatureList.push({
-      label: key,
-      value: list[key],
-    });
-  });
+  const waterTemperatureList = Object.keys(list).map((key) => ({
+    label: key,
+    value: list[key],
+  }));
 
   const confirmationCompressionCols = [
     {
@@ -222,19 +218,19 @@ const Superpave_Step11_ConfirmCompaction = ({
   const gmmInputs = [
     {
       key: 'sampleAirDryMass',
-      value: data.riceTest.sampleAirDryMass,
+      value: data?.riceTest?.sampleAirDryMass, // ✅ Apenas dados reais
       adornment: 'g',
       placeHolder: 'Massa da amostra seca ao ar',
     },
     {
       key: 'containerSampleWaterMass',
-      value: data.riceTest.containerSampleWaterMass,
+      value: data?.riceTest?.containerSampleWaterMass, // ✅ Apenas dados reais
       adornment: 'g',
       placeHolder: 'Massa do recipiente + amostra + água (g)',
     },
     {
       key: 'containerWaterMass',
-      value: data.riceTest.containerWaterMass,
+      value: data?.riceTest?.containerWaterMass, // ✅ Apenas dados reais
       adornment: 'g',
       placeHolder: 'Massa do recipiente + água (g)',
     },
@@ -281,7 +277,7 @@ const Superpave_Step11_ConfirmCompaction = ({
   };
 
   const handleGmmSubmit = () => {
-    if (data.gmm) {
+    if (data.gmm != null) {
       setData({ step: 10, key: 'gmm', value: data.gmm });
       setModalIsOpen(false);
     } else {
@@ -351,9 +347,37 @@ const Superpave_Step11_ConfirmCompaction = ({
     );
   };
 
+  // ✅ CORREÇÃO: Sincronizar dados do riceTest do step 6
   useEffect(() => {
-    const tableHasNullVales = data.table.some((item) => item.averageDiammeter === null);
-    if (!tableHasNullVales && data.gmm !== null) {
+    const store = useSuperpaveStore.getState();
+    const step6RiceTest = store.firstCompressionData?.riceTest?.[0];
+
+    console.log('🔍 Dados do Step 6:', {
+      step6RiceTest: step6RiceTest,
+      temperature: step6RiceTest?.temperatureOfWater,
+    });
+
+    if (step6RiceTest && step6RiceTest.temperatureOfWater) {
+      console.log('🔄 Sincronizando dados do step 6 para step 11');
+
+      setData({
+        step: 10,
+        value: {
+          ...data,
+          riceTest: {
+            ...data.riceTest,
+            ...step6RiceTest,
+          },
+        },
+      });
+    }
+  }, []);
+
+  // ✅ CORREÇÃO: Verificação de dados para habilitar/desabilitar next
+  useEffect(() => {
+    const tableHasNullValues = data.table.some((item) => item.averageDiammeter === null);
+
+    if (!tableHasNullValues && data.gmm !== null) {
       setNextDisabled(false);
     } else {
       setNextDisabled(true);
@@ -424,11 +448,11 @@ const Superpave_Step11_ConfirmCompaction = ({
                     key={input.key}
                     adornment={input.adornment}
                     placeholder={input.placeHolder}
-                    value={input.value}
+                    value={input.value != null ? input.value : ''} // ✅ Apenas para display, não fallback
                     fullWidth
                     onChange={(e) => {
                       const prevData = { ...data.riceTest };
-                      prevData[input.key] = e.target.value;
+                      prevData[input.key] = e.target.value ? parseFloat(e.target.value) : null; // ✅ Converter para número
                       setData({ step: 10, value: { ...data, riceTest: prevData } });
                     }}
                   />
@@ -440,12 +464,17 @@ const Superpave_Step11_ConfirmCompaction = ({
                 variant="standard"
                 label={'Selecione o fator de correção para a temperatura da água'}
                 options={waterTemperatureList}
-                value={{ label: data.riceTest.temperatureOfWater.toString(), value: data.riceTest.temperatureOfWater }}
+                value={{
+                  label:
+                    data?.riceTest?.temperatureOfWater != null
+                      ? data.riceTest.temperatureOfWater.toString()
+                      : 'Selecione a temperatura',
+                  value: data?.riceTest?.temperatureOfWater != null ? data.riceTest.temperatureOfWater : '',
+                }}
                 callback={(selectedValue) => {
-                  let prevData = { ...data.riceTest };
+                  const prevData = { ...data.riceTest };
                   const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
-                  prevData = newData;
-                  setData({ step: 10, value: { ...data, riceTest: prevData } });
+                  setData({ step: 10, value: { ...data, riceTest: newData } });
                 }}
                 size="medium"
                 sx={{ width: '100%' }}

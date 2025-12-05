@@ -463,6 +463,8 @@ const readExcel = (file, tableName, index, mapping: { giros: string; altura: str
     }
   };
 
+  
+
   const calculateRiceTest = (curve: string) => {
     toast.promise(
       async () => {
@@ -542,6 +544,8 @@ const readExcel = (file, tableName, index, mapping: { giros: string; altura: str
     data.superiorRows,
     granulometryCompositionData.chosenCurves,
   ]);
+
+  
 
   return (
     <>
@@ -749,24 +753,27 @@ const readExcel = (file, tableName, index, mapping: { giros: string; altura: str
                 ))}
               </Box>
 
-              <DropDown
-                key={'water'}
-                variant="standard"
-                label={t('asphalt.dosages.superpave.water-temperature-dropdown')}
-                options={waterTemperatureList}
-                value={{
-                  value: data.riceTest?.find((obj) => obj.curve === actualCurve)?.temperatureOfWater,
-                  label: '',
-                }}
-                callback={(selectedValue) => {
-                  const prevData = [...data.riceTest];
-                  const index = prevData.findIndex((obj) => obj.curve === actualCurve);
-                  const newData = { ...prevData[index], temperatureOfWater: Number(selectedValue) };
-                  prevData[index] = newData;
-                  setData({ step: 5, value: { ...data, riceTest: prevData } });
-                }}
-                sx={{ width: '50%' }}
-              />
+             <DropDown
+  key={'water'}
+  variant="standard"
+  label={t('asphalt.dosages.superpave.water-temperature-dropdown')}
+  options={waterTemperatureList}
+  value={{
+    value: data.riceTest?.find((obj) => obj.curve === actualCurve)?.temperatureOfWater || '',
+    label: data.riceTest?.find((obj) => obj.curve === actualCurve)?.temperatureOfWater?.toString() || 'Selecione a temperatura',
+  }}
+  callback={(selectedValue) => {
+    const prevData = [...data.riceTest];
+    const index = prevData.findIndex((obj) => obj.curve === actualCurve);
+    const newData = { 
+      ...prevData[index], 
+      temperatureOfWater: Number(selectedValue) 
+    };
+    prevData[index] = newData;
+    setData({ step: 5, value: { ...data, riceTest: prevData } });
+  }}
+  sx={{ width: '50%' }}
+/>
             </Box>
           </ModalBase>
         </>
