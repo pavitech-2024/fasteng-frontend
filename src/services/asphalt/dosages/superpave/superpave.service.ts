@@ -83,7 +83,13 @@ class Superpave_SERVICE implements IEssayService {
           break;
         case 4:
           if (isConsult) {
-            // await this.getGranulometricCompositionData(data as SuperpaveData, this.userId, isConsult);
+            await this.getGranulometricCompositionData(data as SuperpaveData, this.userId, isConsult);
+          } else {
+            const { initialBinderData } = data as SuperpaveData;
+            const hasInitialBinder = initialBinderData.granulometryComposition.every((item) => item.pli && item.pli > 0);
+            if (!hasInitialBinder) {
+              throw new Error('É necessário preencher o teor de ligante inicial para cada curva escolhida.');
+            }
           }
           await this.submitInitialBinder(data as SuperpaveData, this.userId, null, isConsult);
           break;

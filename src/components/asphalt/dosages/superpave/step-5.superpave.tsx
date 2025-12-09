@@ -259,7 +259,7 @@ const Superpave_Step5_InitialBinder = ({
             const row: Record<string, string | number> = {
               id: index,
               granulometricComposition: compositions[index],
-              initialBinder: composition.pli?.toFixed(2),
+              initialBinder: '',
             };
 
             composition.percentsOfDosageWithBinder.forEach((percent, materialIndex) => {
@@ -462,7 +462,12 @@ const Superpave_Step5_InitialBinder = ({
 
   const handleInitialBinderSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Submitting binder values:', binderInput);
+
+    const hasEmptyValue = binderInput.some((item) => !item.value || item.value <= 0);
+    if (hasEmptyValue) {
+      toast.error('Por favor, preencha todos os valores iniciais de ligante com valores maiores que 0.');
+      return;
+    }
     updateRowsWithInitialBinderValues(binderInput);
     setNewInitialBinderModalIsOpen(false);
   };
