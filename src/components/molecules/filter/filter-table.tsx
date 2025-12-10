@@ -41,6 +41,7 @@ interface PromedinaMaterialsTemplateProps {
   onSearchParamsChange: (params: any) => void;
   onPageChange: (page: number) => void;
   setData: any;
+  resetStore: () => void;
 }
 
 interface MaterialsColumn {
@@ -66,6 +67,7 @@ const PromedinaMaterialsTemplate = ({
   onSearchParamsChange,
   onPageChange,
   setData,
+  resetStore,
 }: PromedinaMaterialsTemplateProps) => {
   const [materialsData, setMaterialsData] = useState(materials);
   const [page, setPage] = useState<number>(1);
@@ -401,42 +403,42 @@ const PromedinaMaterialsTemplate = ({
               )}
             </Box>
 
-            <Link
-              href={`/promedina/${area}/register`}
-              style={{
-                color: '#FFFFFF',
-                backgroundColor: '#1DD010',
-                height: '28px',
-                width: 'fit-content',
-                borderRadius: '20px',
-                padding: '0 10px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: '700',
-                marginLeft: '2px',
-                cursor: 'pointer',
-              }}
-            >
-              <Tooltip title={t('pm.tooltip-register-new-sample')}>
-                <AddIcon sx={{ fontSize: '1.15rem', fontWeight: 700 }} />
-              </Tooltip>
 
-              <Tooltip title={t('pm.tooltip-register-new-sample')}>
-                <Typography
-                  sx={{
-                    display: 'flex',
-                    fontSize: { mobile: '10px', notebook: '1rem' },
-                    fontWeight: { mobile: 500, notebook: 700 },
-                    lineHeight: { mobile: 'none', notebook: '1.1rem' },
-                    ml: '4px',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  {t('pm-button-new-sample')}
-                </Typography>
-              </Tooltip>
-            </Link>
+            <Button onClick={(e) =>{
+              e.preventDefault();
+              resetStore();
+              sessionStorage.removeItem(`${area}-step`);
+              push(`/promedina/${area}/register`)
+            }}
+                    sx={{
+                      color: '#FFFFFF',
+                      backgroundColor: '#1DD010',
+                      height: '28px',
+                      width: 'fit-content',
+                      borderRadius: '20px',
+                      padding: '0 10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: '700',
+                      marginLeft: '2px',
+                      cursor: 'pointer',
+                      textTransform: 'uppercase',
+                    }}
+            >
+              <AddIcon sx={{ fontSize: '1.15rem', fontWeight: 700 }} />
+              <Typography
+                sx={{
+                  display: 'flex',
+                  fontSize: { mobile: '10px', notebook: '1rem' },
+                  fontWeight: { mobile: 500, notebook: 700 },
+                  ml: '4px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {t('pm-button-new-sample')}
+              </Typography>
+            </Button>
           </Box>
 
           {/** TAGS */}

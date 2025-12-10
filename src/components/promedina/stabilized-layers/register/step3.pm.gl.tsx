@@ -42,8 +42,15 @@ const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
   const inputsResilienceModule = [
     { label: t('pm.granularLayer.rs.initial'), value: step3Data.rsInitial, key: 'rsInitial', required: true },
     { label: t('pm.granularLayer.rs.final'), value: step3Data.rsFinal, key: 'rsFinal', required: true },
-    { label: t('pm.granularLayer.constant.A'), value: step3Data.constantA, key: 'constantA', required: true },
+    { label: t('pm.granularLayer.constant.A'), value:  step3Data.constantA, key: 'constantA', required: true },
     { label: t('pm.granularLayer.constant.B'), value: step3Data.constantB, key: 'constantB', required: true },
+  ];
+
+  const inputsResilienceModule2 = [
+    { label: t('pm.stabilized-layers-register-r2'), value: step3Data.r2, key: 'r2', required: true },
+    { label: t('pm.stabilized-layers-register-k1'), value: step3Data.k1, key: 'k1', required: true },
+    { label: t('pm.stabilized-layers-register-k2'), value: step3Data.k2, key: 'k2', required: true },
+    { label: t('pm.stabilized-layers-register-k3'), value: step3Data.k3, key: 'k3', required: true },
   ];
 
   const inputsMaterialFatigue = [
@@ -134,7 +141,46 @@ const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title={t('pm.material.fatigue')} open={true} theme={'#07B811'}>
+      <FlexColumnBorder
+        title={t('pm.stabilized-layers.resilience.module')}
+        open={true}
+        theme={'#07B811'}
+        sx_title={{ whiteSpace: 'wrap' }}
+      >
+        <Box
+          sx={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'grid',
+              width: '100%',
+              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
+              gap: '10px 20px',
+              paddingBottom: '20px',
+            }}
+          >
+            {inputsResilienceModule2.map((input) => {
+              return (
+                <TextField
+                  key={input.key}
+                  variant="standard"
+                  label={input.label}
+                  value={input.value}
+                  required={input.required}
+                  onChange={(e) => setData({ step: 2, key: input.key, value: e.target.value })}
+                />
+              );
+            })}
+          </Box>
+        </Box>
+      </FlexColumnBorder>
+
+      <FlexColumnBorder title={t('pm.material-fadigue')} open={true} theme={'#07B811'}>
         <Box
           sx={{
             width: '100%',

@@ -84,6 +84,7 @@ interface Step3Data {
   k2: string;
   k3: string;
   k4: string;
+  r2: string;
   // Permanent deformation
   k1psi1: string;
   k2psi2: string;
@@ -133,6 +134,7 @@ export type StabilizedLayersData = {
 export type StabilizedLayersActions = {
   setData: ({ step, key, value }: setDataType) => void;
   clearStore: () => void;
+  reset:() => void;
 };
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data' };
@@ -219,6 +221,7 @@ const initialState = {
     k1: null,
     k2: null,
     k3: null,
+    r2: null,
     k4: null,
     // Permanent deformation
     k1psi1: null,
@@ -283,12 +286,7 @@ const useStabilizedLayersStore = create<StabilizedLayersData & StabilizedLayersA
             }
           }),
 
-        reset: ({ step }) => {
-          set(initialState);
-          return {
-            [stepVariant[step]]: null,
-          };
-        },
+        reset: () => set(initialState),
 
         clearStore: () => {
           sessionStorage.clear();

@@ -18,7 +18,7 @@ const BinderAsphaltConcrete_view = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
-  const { setData } = useBinderAsphaltConcreteStore();
+  const { setData, reset } = useBinderAsphaltConcreteStore();
 
   const [searchParams, setSearchParams] = useState({
     _id: '',
@@ -114,6 +114,7 @@ const BinderAsphaltConcrete_view = () => {
                   onSearchParamsChange={setSearchParams}
                   onPageChange={setPage}
                   area={'binder-asphalt-concrete'}
+                  resetStore={reset}
                 />
               )}
             </Box>

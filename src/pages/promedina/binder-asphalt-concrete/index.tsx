@@ -8,8 +8,13 @@ import { NextPage } from 'next';
 import { useState } from 'react';
 import { PMCardMenuOptions } from '@/components/atoms/cards/view-register-card';
 import concreteBinderAsphalt from '../../../assets/pro-medina/concreteBinderAsphalt/concrete-binder-asphalt-image.png';
+import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
+import { useRouter } from 'next/router';
+
+
 
 const BinderAsphaltConcrete: NextPage = () => {
+  const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
 
   const stepperDataView: StepperData[] = [
@@ -218,9 +223,36 @@ const BinderAsphaltConcrete: NextPage = () => {
             },
           }}
         >
-          {welcomeData.map((option: WelcomeData) => (
-            <PMCardMenuOptions key={option.name} {...option} />
-          ))}
+          {welcomeData.map((option: WelcomeData) => {
+            const isRegister = option.path.includes('/register');
+
+            if (isRegister) {
+              return (
+                <div
+
+                  key={option.name}
+                  onClick={() => {
+
+                    useBinderAsphaltConcreteStore.getState().clearStore();
+
+                    sessionStorage.removeItem('binder-asphalt-concrete-step');
+
+                    router.push(option.path);
+                  }}
+                  style={{ width: '100%', display:'flex'}}
+                >
+
+                  <PMCardMenuOptions {...option} />
+                </div>
+              );
+            }
+
+            return(
+              <div key={option.name} style={{ width: '100%', display: 'flex' }}>
+                <PMCardMenuOptions key={option.name} {...option} />;
+              </div>
+            );
+          })}
         </Box>
       </Box>
     </Container>
