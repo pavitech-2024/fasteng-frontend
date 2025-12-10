@@ -88,6 +88,7 @@ export type GranularLayersData = {
 export type GranularLayersActions = {
   setData: ({ step, key, value }: setDataType) => void;
   clearStore: () => void;
+  reset: () => void;
 };
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data' };
@@ -165,7 +166,7 @@ const useGranularLayersStore = create<GranularLayersData & GranularLayersActions
     persist(
       (set) => ({
         ...initialState,
-        setData: ({ step, key, value }) =>
+        setData: ({ step, key, value }) => {
           set((state) => {
             if (step === 3) {
               return value; // Substitui o estado inteiro pelo novo valor
@@ -182,14 +183,10 @@ const useGranularLayersStore = create<GranularLayersData & GranularLayersActions
                 return { ...state, [stepVariant[step]]: value };
               }
             }
-          }),
-
-        reset: ({ step }) => {
-          set(initialState);
-          return {
-            [stepVariant[step]]: null,
-          };
+          });
         },
+
+        reset: () => set(initialState),
 
         clearStore: () => {
           sessionStorage.clear();

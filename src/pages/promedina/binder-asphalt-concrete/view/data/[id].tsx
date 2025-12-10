@@ -600,7 +600,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
             }}
           >
             <Link
-              href="/promedina/granular-layers/view"
+              href="/promedina/binder-asphalt-concrete/view"
               style={{
                 backgroundColor: '#00A3FF',
                 color: '#FFFFFF',

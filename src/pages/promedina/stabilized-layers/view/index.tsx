@@ -15,7 +15,7 @@ const StabilizedLayers_view = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
-  const { setData } = useStabilizedLayersStore();
+  const { setData, reset } = useStabilizedLayersStore();
 
   const [searchParams, setSearchParams] = useState({
     _id: '',
@@ -111,6 +111,7 @@ const StabilizedLayers_view = () => {
                 setData={setData}
                 onSearchParamsChange={setSearchParams}
                 onPageChange={setPage}
+                resetStore={reset}
               />
             </Box>
           </Box>

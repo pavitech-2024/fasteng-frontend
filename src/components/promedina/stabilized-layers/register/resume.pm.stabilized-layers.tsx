@@ -219,8 +219,8 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
       value: samples?.step3Data?.k3,
     },
     {
-      title: 'k4',
-      value: samples?.step3Data?.k4,
+      title: 'R²',
+      value: samples?.step3Data?.r2,
     },
   ];
 
