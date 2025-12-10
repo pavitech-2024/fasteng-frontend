@@ -68,63 +68,61 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
             fullWidth
             adornment="%"
             type="number"
-            inputProps={{ min: 0 }}
+            inputProps={{ min: 0, max: 100, step: 0.01 }}
             value={rows[sieve_index]?.passant}
             required
             onChange={(e) => {
-              if (e.target.value === null) return;
+              if (e.target.value === null || e.target.value === '') return;
+              
               const newRows = [...rows];
-              const mass = data.material_mass;
-              const current_passant = Number(e.target.value);
+              const mass = data.material_mass || 0;
+              let current_passant = parseFloat(e.target.value);
 
-              const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
-              const initial_retained = 0;
-              const accumulative_retained = currentRows.reduce(
-                (accumulator: number, current_value) => accumulator + current_value.retained,
-                initial_retained
-              );
+              // Validar entrada
+              if (isNaN(current_passant) || current_passant < 0) current_passant = 0;
+              if (current_passant > 100) current_passant = 100;
 
-              const current_retained =
-                Math.round(100 * (mass !== 0 ? ((100 - current_passant) / 100) * mass - accumulative_retained : 0)) /
-                100;
+              // Passante não pode ser maior que o da peneira anterior
+              const previousPassant = sieve_index > 0 ? newRows[sieve_index - 1].passant : 100;
+              if (current_passant > previousPassant) {
+                current_passant = previousPassant;
+              }
 
+              // Calcular retido para ESTA peneira
+              const previousRetainedSum = sieve_index > 0 ? 
+                newRows.slice(0, sieve_index).reduce((sum, r) => sum + r.retained, 0) : 0;
+              
+              // Retido = massa * (passante_anterior - passante_atual) / 100
+              const current_retained = mass * (previousPassant - current_passant) / 100;
+              
+              // Arredondar para 2 casas decimais
+              const roundedRetained = Math.round(current_retained * 100) / 100;
+
+              // Atualizar esta linha
               newRows[sieve_index].passant = current_passant;
-              newRows[sieve_index].retained = current_retained;
-              setData({ step: 1, key: 'passant', value: newRows });
-              setData({ step: 1, key: 'retained', value: newRows });
+              newRows[sieve_index].retained = Math.max(0, roundedRetained);
 
-              const nextRows = sieve_index > 0 ? newRows.slice(sieve_index) : [...rows];
-
-              const new_current_accumulative_retained = accumulative_retained;
-
-              nextRows.map(function (item, index) {
-                const row = item;
-
-                if (index > 0) {
-                  const currentRows = nextRows.slice(0, index + 1);
-
-                  const initial_retained = new_current_accumulative_retained;
-                  const accumulative_retained = currentRows.reduce(
-                    (accumulator: number, current_value) => accumulator + current_value.retained,
-                    initial_retained
-                  );
-
-                  const retained =
-                    Math.round(100 * (mass !== 0 ? ((100 - row.passant) / 100) * mass - accumulative_retained : 0)) /
-                    100;
-
-                  const passant =
-                    Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
-
-                  newRows.map((e) => {
-                    if (e.sieve_label === row.sieve_label) {
-                      e.passant = passant;
-                    }
-                  });
+              // Recalcular peneiras seguintes
+              let accumulatedRetained = previousRetainedSum + newRows[sieve_index].retained;
+              
+              for (let i = sieve_index + 1; i < newRows.length; i++) {
+                // Se o passante atual for maior que o anterior, ajustar
+                if (newRows[i].passant > newRows[i - 1].passant) {
+                  newRows[i].passant = newRows[i - 1].passant;
                 }
-              });
+                
+                // Calcular retido baseado na diferença de passantes
+                const retained_i = mass * (newRows[i - 1].passant - newRows[i].passant) / 100;
+                newRows[i].retained = Math.max(0, Math.round(retained_i * 100) / 100);
+                accumulatedRetained += newRows[i].retained;
+              }
+
+              // Calcular fundo
+              const bottom = mass - accumulatedRetained;
+              const roundedBottom = Math.round(bottom * 100) / 100;
 
               setData({ step: 1, key: 'table_data', value: newRows });
+              setData({ step: 1, key: 'bottom', value: roundedBottom });
             }}
           />
         );
@@ -145,57 +143,72 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
             fullWidth
             adornment="g"
             type="number"
-            inputProps={{ min: 0 }}
+            inputProps={{ min: 0, step: 0.01 }}
             value={rows[sieve_index]?.retained}
             required
             onChange={(e) => {
-              if (e.target.value === null) return;
+              if (e.target.value === null || e.target.value === '') return;
+              
               const newRows = [...rows];
-              const mass = data.material_mass;
-              const current_retained = Number(e.target.value);
+              const mass = data.material_mass || 0;
+              let current_retained = parseFloat(e.target.value);
 
-              const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
-              const initial_retained = current_retained;
-              const current_accumulative_retained = currentRows.reduce(
-                (accumulator: number, current_value) => accumulator + current_value.retained,
-                initial_retained
-              );
+              // Validar entrada
+              if (isNaN(current_retained) || current_retained < 0) current_retained = 0;
+              
+              // Não pode exceder a massa restante
+              const previousRetainedSum = sieve_index > 0 ? 
+                newRows.slice(0, sieve_index).reduce((sum, r) => sum + r.retained, 0) : 0;
+              const maxAllowed = mass - previousRetainedSum;
+              
+              if (current_retained > maxAllowed) {
+                current_retained = maxAllowed;
+              }
 
-              const current_passant =
-                Math.round(100 * (mass !== 0 ? (100 * (mass - current_accumulative_retained)) / mass : 0)) / 100;
-              newRows[sieve_index].retained = current_retained;
-              newRows[sieve_index].passant = current_passant;
-              setData({ step: 1, key: 'retained', value: newRows });
-              setData({ step: 1, key: 'passant', value: newRows });
+              // Calcular passante para ESTA peneira
+              const previousPassant = sieve_index > 0 ? newRows[sieve_index - 1].passant : 100;
+              
+              // Passante = 100 - (retido_acumulado * 100 / massa)
+              const accumulatedRetained = previousRetainedSum + current_retained;
+              const current_passant = mass > 0 ? 
+                Math.round((100 * (mass - accumulatedRetained) / mass) * 100) / 100 : 0;
+              
+              // Garantir que passante não seja negativo
+              const validPassant = Math.max(0, Math.min(100, current_passant));
 
-              const nextRows = sieve_index > 0 ? newRows.slice(sieve_index) : [...rows];
+              // Atualizar esta linha
+              newRows[sieve_index].retained = Math.round(current_retained * 100) / 100;
+              newRows[sieve_index].passant = validPassant;
 
-              const new_current_accumulative_retained = current_accumulative_retained - current_retained;
-
-              nextRows.map(function (item, index) {
-                const row = item;
-
-                if (index > 0) {
-                  const currentRows = nextRows.slice(0, index + 1);
-
-                  const initial_retained = new_current_accumulative_retained;
-                  const accumulative_retained = currentRows.reduce(
-                    (accumulator: number, current_value) => accumulator + current_value.retained,
-                    initial_retained
-                  );
-
-                  const passant =
-                    Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
-
-                  newRows.map((e) => {
-                    if (e.sieve_label === row.sieve_label) {
-                      e.passant = passant;
-                    }
-                  });
+              // Recalcular peneiras seguintes
+              let currentAccumulated = accumulatedRetained;
+              
+              for (let i = sieve_index + 1; i < newRows.length; i++) {
+                // Calcular passante baseado no retido acumulado
+                const passant_i = mass > 0 ? 
+                  Math.round((100 * (mass - currentAccumulated) / mass) * 100) / 100 : 0;
+                
+                // Se o passante calculado for maior que o anterior, ajustar
+                if (passant_i > newRows[i - 1].passant) {
+                  // Ajustar retido para manter consistência
+                  const retained_i = mass * (newRows[i - 1].passant - passant_i) / 100;
+                  newRows[i].retained = Math.max(0, Math.round(retained_i * 100) / 100);
+                  currentAccumulated += newRows[i].retained;
+                  newRows[i].passant = newRows[i - 1].passant;
+                } else {
+                  // Manter o retido existente e recalcular passante
+                  currentAccumulated += newRows[i].retained;
+                  newRows[i].passant = Math.max(0, Math.round(passant_i * 100) / 100);
                 }
-              });
+              }
+
+              // Calcular fundo
+              const totalRetained = newRows.reduce((sum, r) => sum + r.retained, 0);
+              const bottom = mass - totalRetained;
+              const roundedBottom = Math.round(bottom * 100) / 100;
 
               setData({ step: 1, key: 'table_data', value: newRows });
+              setData({ step: 1, key: 'bottom', value: roundedBottom });
             }}
           />
         );
@@ -248,13 +261,24 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
     }
   };
 
-  if (
-    nextDisabled &&
-    data.material_mass != null &&
-    data.bottom != null &&
-    data.table_data.every((row) => row.passant !== null && row.retained !== null)
-  )
-    setNextDisabled(false);
+  // Validar se pode avançar
+  useEffect(() => {
+    if (data.material_mass != null && 
+        data.bottom != null && 
+        data.table_data?.length > 0 &&
+        data.table_data.every((row) => row.passant !== null && row.retained !== null)) {
+      
+      const totalRetained = data.table_data.reduce((sum, row) => sum + row.retained, 0);
+      const calculatedBottom = data.material_mass - totalRetained;
+      const bottomDifference = Math.abs(calculatedBottom - data.bottom);
+      
+      // Permitir avançar se os cálculos estão consistentes (com margem de erro pequena)
+      const isValid = bottomDifference < 0.01;
+      setNextDisabled(!isValid);
+    } else {
+      setNextDisabled(true);
+    }
+  }, [data.material_mass, data.bottom, data.table_data, setNextDisabled]);
 
   return (
     <Box>
@@ -272,35 +296,39 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
           label={t('granulometry-asphalt.material_mass')}
           value={data.material_mass}
           onChange={(e) => {
-            if (e.target.value === null) return;
-            const mass = Number(e.target.value);
+            if (e.target.value === null || e.target.value === '') return;
+            
+            const mass = parseFloat(e.target.value);
+            if (isNaN(mass) || mass < 0) return;
 
             setData({ step: 1, key: 'material_mass', value: mass });
 
-            if (rows === null) return;
+            if (!rows || rows.length === 0) return;
 
-            const newRows = [];
+            const newRows = [...rows];
+            let accumulatedRetained = 0;
 
-            rows.map(function (item, index) {
-              const row = item;
+            // Recalcular todos os retidos baseados nos passantes
+            for (let i = 0; i < newRows.length; i++) {
+              const previousPassant = i > 0 ? newRows[i - 1].passant : 100;
+              const currentPassant = newRows[i].passant;
+              
+              // Calcular retido para esta peneira
+              const retained = mass * (previousPassant - currentPassant) / 100;
+              newRows[i].retained = Math.max(0, Math.round(retained * 100) / 100);
+              accumulatedRetained += newRows[i].retained;
+            }
 
-              const currentRows = index > 0 ? newRows.slice(0, index) : [];
-              const initial_retained = 0;
-              const acumulative_retained = currentRows.reduce(
-                (accumulator: number, current_value) => accumulator + current_value.retained,
-                initial_retained
-              );
+            // Calcular fundo
+            const bottom = mass - accumulatedRetained;
+            const roundedBottom = Math.round(bottom * 100) / 100;
 
-              row.retained =
-                Math.round(100 * (mass !== 0 ? ((100 - row.passant) / 100) * mass - acumulative_retained : 0)) / 100;
-
-              newRows.push({ ...row });
-            });
             setData({ step: 1, key: 'table_data', value: newRows });
+            setData({ step: 1, key: 'bottom', value: roundedBottom });
           }}
           adornment={'g'}
           type="number"
-          inputProps={{ min: 0 }}
+          inputProps={{ min: 0, step: 0.01 }}
           required
         />
 
@@ -313,7 +341,9 @@ const AsphaltGranulometry_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageP
             return { label: sieveSeries.label, value: sieveSeries.sieves };
           })}
           callback={(value: Sieve[], index?: number) => {
-            handleSelectSeries(value, index);
+            if (index !== undefined) {
+              handleSelectSeries(value, index);
+            }
           }}
           size="medium"
           required
