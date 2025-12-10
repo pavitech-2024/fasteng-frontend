@@ -1,5 +1,6 @@
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import ModalBase from '@/components/molecules/modals/modal';
+import useAuth from '@/contexts/auth';
 import { Sieve } from '@/interfaces/common';
 import { ConcreteMaterial, ConcreteMaterialData } from '@/interfaces/concrete';
 import concreteMaterialService from '@/services/concrete/concrete-materials.service';
@@ -28,10 +29,11 @@ const CreateEditConcreteMaterialModal = ({
   const initialMaterialState: ConcreteMaterialData = {
     name: '',
     type: null,
+    userId: '',
     description: {
       source: null,
       responsible: null,
-      maxDiammeter: null,
+      maxDiameter: null,
       aggregateNature: null,
       boughtDate: null,
       recieveDate: null,
@@ -46,6 +48,9 @@ const CreateEditConcreteMaterialModal = ({
   };
 
   const [material, setMaterial] = useState<ConcreteMaterialData>(initialMaterialState);
+
+  const { user } = useAuth();
+  const userId = user._id;
 
   const modalTitle = isEdit ? 'Editar material' : 'Cadastrar material';
 
@@ -86,9 +91,9 @@ const CreateEditConcreteMaterialModal = ({
         required: false,
       },
       {
-        label: t('concrete.materials.maxDiammeter'),
-        value: material.description.maxDiammeter,
-        key: 'maxDiammeter',
+        label: t('concrete.materials.maxDiameter'),
+        value: material.description.maxDiameter,
+        key: 'maxDiameter',
         required: false,
       },
       {
@@ -157,10 +162,10 @@ const CreateEditConcreteMaterialModal = ({
 
     switch (material.type) {
       case 'coarseAggregate':
-        WhiteList.push('maxDiammeter', 'aggregateNature', 'extractionDate', 'collectionDate');
+        WhiteList.push('maxDiameter', 'aggregateNature', 'extractionDate', 'collectionDate');
         break;
       case 'fineAggregate':
-        WhiteList.push('maxDiammeter', 'aggregateNature', 'extractionDate', 'collectionDate');
+        WhiteList.push('maxDiameter', 'aggregateNature', 'extractionDate', 'collectionDate');
         break;
       case 'cement':
         WhiteList.push('cementType', 'collectionDate', 'resistance');
@@ -239,7 +244,11 @@ const CreateEditConcreteMaterialModal = ({
     try {
       validateMaterialData();
 
-      await concreteMaterialService.createMaterial(material);
+      const formattedMaterial: ConcreteMaterial = { ...material, userId, description: material.description || {} };
+      delete formattedMaterial.createdAt;
+      delete formattedMaterial._id;
+
+      await concreteMaterialService.createMaterial(formattedMaterial);
 
       await updateMaterials();
 
@@ -260,6 +269,8 @@ const CreateEditConcreteMaterialModal = ({
         autoClose: 5000,
         closeButton: true,
       });
+      toast.dismiss();
+      handleCloseModal();
     }
   };
 

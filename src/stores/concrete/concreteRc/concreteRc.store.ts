@@ -1,16 +1,10 @@
 import { ConcreteMaterial } from '@/interfaces/concrete';
-import Samples from '@/pages/soils/samples';
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
 type TimeObject = {
   hours: number;
   minutes: number;
-};
-
-type ToleranceObject = {
-  data: number;
-  isPermited: boolean;
 };
 
 type RuptureObject = {

@@ -14,10 +14,10 @@ export type SampleData = {
   };
 };
 export class SoilSample {
-  _id: string;
+  _id?: string;
   name: string;
   type: SampleTypes;
-  createdAt: Date;
+  createdAt?: Date;
   userId: string;
   description: {
     construction?: string;

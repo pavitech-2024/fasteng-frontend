@@ -1,318 +1,200 @@
-import DropDown from '@/components/atoms/inputs/dropDown';
-import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
-import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
-import { Box, Button, Typography } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
-import { t } from 'i18next';
-import { useState } from 'react';
+import { Box, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { t } from 'i18next';
+import { DataGrid, GridColumnGroupingModel } from '@mui/x-data-grid';
+import MiniGraphics from '../marshall/graphs/miniGraph';
 
-const Superpave_Step10 = ({
+const Superpave_Step10_SecondCompactionParams = ({
   nextDisabled,
   setNextDisabled,
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { materialSelectionData, confirmationCompressionData: data, setData } = useSuperpaveStore();
+  const {
+    firstCompressionParamsData,
+    secondCompressionData,
+    secondCompressionPercentagesData: data,
+    setData,
+    chosenCurvePercentagesData,
+    granulometryEssayData,
+  } = useSuperpaveStore();
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const aggregateMaterials = granulometryEssayData?.materials?.filter(
+    ({ type }) => type.includes('Aggregate') || type.includes('filler')
+  );
 
-  const { user } = useAuth();
+  const [expectedVolumetricParamsRows, setExpectedVolumetricParamsRows] = useState([]);
 
-  const list = {
-    '15°C - 0.9991': 0.9991,
-    '16°C - 0.9989': 0.9989,
-    '17°C - 0.9988': 0.9988,
-    '18°C - 0.9986': 0.9986,
-    '19°C - 0.9984': 0.9984,
-    '20°C - 0.9982': 0.9982,
-    '21°C - 0.9980': 0.998,
-    '22°C - 0.9978': 0.9978,
-    '23°C - 0.9975': 0.9975,
-    '24°C - 0.9973': 0.9973,
-    '25°C - 0.9970': 0.997,
-    '26°C - 0.9968': 0.9968,
-    '27°C - 0.9965': 0.9965,
-    '28°C - 0.9962': 0.9962,
-    '29°C - 0.9959': 0.9959,
-    '30°C - 0.9956': 0.9956,
-  };
+  useEffect(() => {
+    toast.promise(
+      async () => {
+        try {
+          const {
+            data: resData,
+            success,
+            error,
+          } = await superpave.getSecondCompressionPercentages(firstCompressionParamsData, secondCompressionData);
 
-  const waterTemperatureList = [];
+          if (success) {
+            const newData = { ...data, ...resData };
+            setData({
+              step: 9,
+              value: newData,
+            });
+          } else {
+            console.error(`${error}`);
+          }
+        } catch (error) {
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
+      }
+    );
+  }, []);
 
-  const formatedWaterTempList = Object.keys(list).forEach((key) => {
-    waterTemperatureList.push({
-      label: key,
-      value: list[key],
-    });
+  let isValid = false;
+  let nullCount = 0;
+
+  data.graphs?.graphRT.forEach((row, i) => {
+    if (row[1] === null) {
+      nullCount++;
+    }
   });
 
-  const confirmationCompressionCols = [
-    {
-      field: 'averageDiammeter',
-      headerName: 'Diâmetro médio (cm)',
-      width: 160,
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data.table.findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="text"
-            value={data.table[index]?.averageDiammeter}
-            onChange={(e) => {
-              const prevData = [...data.table];
-              prevData[index].averageDiammeter = parseFloat(e.target.value);
-              setData({ step: 9, value: { ...data, table: prevData } });
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'averageHeight',
-      headerName: 'Altura média (cm)',
-      width: 150,
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data.table.findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="number"
-            value={data.table[index]?.averageHeight}
-            onChange={(e) => {
-              const prevData = [...data.table];
-              prevData[index].averageHeight = parseFloat(e.target.value);
-              setData({ step: 7, value: { ...data, table: prevData } });
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'dryMass',
-      headerName: 'Massa seca (g)',
-      width: 150,
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data.table.findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'g'}
-            type="number"
-            value={data.table[index]?.dryMass}
-            onChange={(e) => {
-              const prevData = [...data.table];
-              prevData[index].dryMass = parseFloat(e.target.value);
-              setData({ step: 7, value: { ...data, table: prevData } });
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'submergedMass',
-      headerName: 'Massa submersa (g)',
-      width: 150,
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data.table.findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="number"
-            value={data.table[index]?.submergedMass}
-            onChange={(e) => {
-              const prevData = [...data.table];
-              prevData[index].submergedMass = parseFloat(e.target.value);
-              setData({ step: 7, value: { ...data, table: prevData } });
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'drySurfaceSaturatedMass',
-      headerName: 'Massa saturada com superfície seca (g)',
-      width: 150,
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data.table.findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="number"
-            value={data.table[index]?.drySurfaceSaturatedMass}
-            onChange={(e) => {
-              const prevData = [...data.table];
-              prevData[index].drySurfaceSaturatedMass = parseFloat(e.target.value);
-              setData({ step: 7, value: { ...data, table: prevData } });
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'waterTemperatureCorrection',
-      headerName: 'Fator de correção da temperatura da água (N)',
-      width: 150,
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data.table.findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="number"
-            value={data.table[index]?.waterTemperatureCorrection}
-            onChange={(e) => {
-              const prevData = [...data.table];
-              prevData[index].waterTemperatureCorrection = parseFloat(e.target.value);
-              setData({ step: 7, value: { ...data, table: prevData } });
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'diametralTractionResistance',
-      headerName: 'Resistência à tração por compressão diametral (MPa)',
-      width: 150,
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = data.table.findIndex((r) => r.id === id);
-        return (
-          <InputEndAdornment
-            adornment={'cm'}
-            type="number"
-            value={data.table[index]?.diametralTractionResistance}
-            onChange={(e) => {
-              const prevData = [...data.table];
-              prevData[index].diametralTractionResistance = parseFloat(e.target.value);
-              setData({ step: 7, value: { ...data, table: prevData } });
-            }}
-          />
-        );
-      },
-    },
-  ];
+  isValid = nullCount < 4;
 
-  const confirmationCompressionRows = [
-    {
-      id: data.table[0].id,
-      averageDiammeter: data.table[0].averageDiammeter,
-      averageHeight: data.table[0].averageHeight,
-      dryMass: data.table[0].dryMass,
-      submergedMass: data.table[0].submergedMass,
-      drySurfaceSaturatedMass: data.table[0].drySurfaceSaturatedMass,
-      waterTemperatureCorrection: data.table[0].waterTemperatureCorrection,
-      diametralTractionResistance: data.table[0].diametralTractionResistance,
-    },
-  ];
-
-  const gmmInputs = [
-    {
-      key: 'sampleAirDryMass',
-      value: data.riceTest.sampleAirDryMass,
-      adornment: 'g',
-      placeHolder: 'Massa da amostra seca ao ar',
-    },
-    {
-      key: 'containerSampleWaterMass',
-      value: data.riceTest.containerSampleWaterMass,
-      adornment: 'g',
-      placeHolder: 'Massa do recipiente + amostra + água (g)',
-    },
-    {
-      key: 'containerWaterMass',
-      value: data.riceTest.containerWaterMass,
-      adornment: 'g',
-      placeHolder: 'Massa do recipiente + água (g)',
-    },
-  ];
-
-  const handleErase = () => {
-    try {
-      if (data.table.length > 1) {
-        const newRows = [...data.table];
-        newRows.pop();
-        setData({ step: 7, value: { ...data, table: newRows } });
-      } else throw t('superpave.error.minReads');
-    } catch (error) {
-      toast.error(error);
+  useEffect(() => {
+    if (data.graphs?.graphGmb.length > 0) {
+      const newRows = data.graphs?.graphGmb
+        .map((e, idx) => {
+          const indexName =
+            idx === 0 ? 'halfLess' : idx === 1 ? 'normal' : idx === 2 ? 'halfPlus' : idx === 3 ? 'onePlus' : '';
+          if (!indexName) return null; // Ignora iterações onde indexName é uma string vazia
+          return {
+            id: idx,
+            binder: chosenCurvePercentagesData.listOfPlis[idx]?.toFixed(2) ?? '---',
+            gmmNproject: secondCompressionData.composition[indexName]?.projectN.percentageGmm?.toFixed(2),
+            vv: secondCompressionData.composition[indexName]?.Vv?.toFixed(2),
+            vam: secondCompressionData.composition[indexName]?.ratioDustAsphalt?.toFixed(2),
+            rbv:
+              secondCompressionData.composition[indexName]?.RBV !== null
+                ? secondCompressionData.composition[indexName]?.RBV?.toFixed(2)
+                : '---',
+            pa:
+              secondCompressionData.composition[indexName]?.ratioDustAsphalt !== null
+                ? secondCompressionData.composition[indexName]?.ratioDustAsphalt?.toFixed(2)
+                : '---',
+            specificMass: secondCompressionData.composition[indexName]?.specifiesMass?.toFixed(2),
+            absorbedWater: secondCompressionData.composition[indexName]?.projectN.percentWaterAbs?.toFixed(2),
+            rt: secondCompressionData.composition[indexName]?.indirectTensileStrength?.toFixed(2),
+          };
+        })
+        .filter((row) => row !== null);
+      setExpectedVolumetricParamsRows(newRows);
     }
-  };
+  }, [data.graphs, chosenCurvePercentagesData.listOfPlis, secondCompressionData.composition]);
 
-  const handleAdd = () => {
-    const newRows = [...data.table];
-    newRows.push({
-      id: data.table.length,
-      averageDiammeter: null,
-      averageHeight: null,
-      dryMass: null,
-      submergedMass: null,
-      drySurfaceSaturatedMass: null,
-      waterTemperatureCorrection: null,
-      diametralTractionResistance: null,
-    });
-    setData({ step: 7, value: { ...data, table: newRows } });
-  };
+  const expectedVolumetricParamsCols = [
+    {
+      field: 'binder',
+      headerName: 'Teor de ligante (%)',
+      valueFormatter: ({ value }) => `${value}`,
+      width: 125,
+    },
+    {
+      field: 'gmmNproject',
+      headerName: `Gmm Nproject (%)`,
+      valueFormatter: ({ value }) => `${value}`,
+      width: 125,
+    },
+    {
+      field: 'vv',
+      headerName: `Vv (%)`,
+      valueFormatter: ({ value }) => `${value}`,
+      width: 125,
+    },
+    {
+      field: 'vam',
+      headerName: `VAM (%)`,
+      valueFormatter: ({ value }) => `${value}`,
+      width: 80,
+    },
+    {
+      field: 'rbv',
+      headerName: `RBV (%)`,
+      valueFormatter: ({ value }) => `${value}`,
+      width: 80,
+    },
+    {
+      field: 'pa',
+      headerName: `P/A (%)`,
+      valueFormatter: ({ value }) => `${value}`,
+      width: 80,
+    },
+    {
+      field: 'specificMass',
+      headerName: `Massa específica (g/cm³)`,
+      valueFormatter: ({ value }) => `${value}`,
+      width: 125,
+    },
+    {
+      field: 'absorbedWater',
+      headerName: `Água absorvida (%)`,
+      valueFormatter: ({ value }) => `${value}`,
+      width: 125,
+    },
+    {
+      field: 'rt',
+      headerName: `RT (MPa)`,
+      valueFormatter: ({ value }) => `${value}`,
+      width: 125,
+    },
+  ];
 
-  const ExpansionToolbar = () => {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
-        <Button sx={{ color: 'secondaryTons.red' }} onClick={() => handleErase()}>
-          {t('erase')}
-        </Button>
-        <Button sx={{ color: 'secondaryTons.green' }} onClick={() => handleAdd()}>
-          {t('add')}
-        </Button>
-      </Box>
-    );
-  };
+  const expectedVolumetricParamsGroupings: GridColumnGroupingModel = [
+    {
+      groupId: 'expectedVolumetricParams',
+      headerName: `Parâmetros volumétricos estimados`,
+      children: [
+        { field: 'binder' },
+        { field: 'gmmNproject' },
+        { field: 'vv' },
+        { field: 'vam' },
+        { field: 'rbv' },
+        { field: 'pa' },
+        { field: 'specificMass' },
+        { field: 'absorbedWater' },
+        { field: 'rt' },
+      ],
+      headerAlign: 'center',
+    },
+  ];
 
-  const handleGmmSubmit = () => {
-    const { temperatureOfWater, ...riceTestWithoutWaterTemp } = data.riceTest;
-    const riceTestHasValues = Object.values(riceTestWithoutWaterTemp).some((item) => item !== null);
-    if (riceTestHasValues) {
-      toast.error(t('asphalt.dosages.superpave.rice-test-empty-values'));
-    } else if (!riceTestHasValues && data.gmm === null) {
-      toast.error(t('asphalt.dosages.superpave.gmm-empty'));
-    } else if (!riceTestHasValues && data.gmm !== null && data.riceTest.temperatureOfWater === null) {
-      toast.error(t('asphalt.dosages.superpave.water-temperature-empty'));
-    } else {
-      toast.promise(
-        async () => {
-          try {
-            const { data: resData, success, error } = await superpave.calculateRiceTestStep9(data);
+  const finalProportionsCols = secondCompressionData.ponderatedPercentsOfDosage?.map((value, idx) => ({
+    field: `material_${aggregateMaterials[idx]?._id}_${idx + 1}`,
+    headerName: `${aggregateMaterials[idx]?.name}`,
+    valueFormatter: ({ value }) => `${value}`,
+  }));
 
-            if (success) {
-              const newData = { ...data, ...resData };
-              setData({
-                step: 9,
-                value: newData,
-              });
-              setModalIsOpen(false);
-            } else {
-              console.error(`${error}`);
-            }
-          } catch (error) {
-            throw error;
-          }
-        },
-        {
-          pending: t('loading.materials.pending'),
-          success: t('loading.materials.success'),
-          error: t('loading.materials.error'),
-        }
-      );
-    }
-  };
+  const finalProportionsRows = [
+    secondCompressionData.ponderatedPercentsOfDosage?.reduce((prev: Record<string, string | number>, value, index) => {
+      return {
+        ...prev,
+        [`material_${aggregateMaterials[index]?._id}_${index + 1}`]: value?.toFixed(2) || '---',
+        id: 1,
+      };
+    }, {} as Record<string, string | number>),
+  ];
 
   nextDisabled && setNextDisabled(false);
 
@@ -325,80 +207,87 @@ const Superpave_Step10 = ({
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '10px',
+            gap: '2rem',
           }}
         >
-          <Typography>Gmm do teor de ligante asfaltico ótimo: {data.gmm}</Typography>
-
-          <Button variant="outlined" onClick={() => setModalIsOpen(true)}>
-            Calcular densidade máxima da mistura
-          </Button>
+          {typeof data?.optimumContent !== 'string' && (
+            <Typography>Teor de ligante ótimo estimado (%): {data?.optimumContent?.toFixed(2)}</Typography>
+          )}
 
           <DataGrid
             hideFooter
             disableColumnMenu
             disableColumnFilter
             experimentalFeatures={{ columnGrouping: true }}
-            columns={confirmationCompressionCols}
-            rows={confirmationCompressionRows}
-            slots={{ footer: ExpansionToolbar }}
+            columnGroupingModel={expectedVolumetricParamsGroupings}
+            columns={expectedVolumetricParamsCols.map((column) => ({
+              ...column,
+              disableColumnMenu: true,
+              sortable: false,
+              align: 'center',
+              headerAlign: 'center',
+              minWidth: 100,
+              flex: 1,
+            }))}
+            rows={expectedVolumetricParamsRows}
           />
 
-          <ModalBase
-            leftButtonTitle={'cancelar'}
-            rightButtonTitle={'confirmar'}
-            oneButton={true}
-            onCancel={() => setModalIsOpen(false)}
-            open={modalIsOpen}
-            size={'large'}
-            title={''}
-            onSubmit={handleGmmSubmit}
-            singleButtonTitle={t('asphalt.dosages.superpave.confirm')}
-          >
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-              <InputEndAdornment
-                adornment={''}
-                label={t('asphalt.dosages.superpave.insert-gmm')}
-                value={data.gmm}
-                onChange={(e) => setData({ step: 9, key: 'gmm', value: e.target.value })}
-              />
-
-              <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2rem' }}>
-                {gmmInputs.map((input) => (
-                  <InputEndAdornment
-                    key={input.key}
-                    adornment={input.adornment}
-                    placeholder={input.placeHolder}
-                    value={input.value}
-                    onChange={(e) => {
-                      const prevData = { ...data.riceTest };
-                      prevData[input.key] = e.target.value;
-                      setData({ step: 9, value: { ...data, riceTest: prevData } });
-                    }}
-                  />
-                ))}
-              </Box>
-
-              <DropDown
-                key={'water'}
-                variant="standard"
-                label={'Selecione o fator de correção para a temperatura da água'}
-                options={waterTemperatureList}
-                callback={(selectedValue) => {
-                  let prevData = { ...data.riceTest };
-                  const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
-                  prevData = newData;
-                  setData({ step: 9, value: { ...data, riceTest: prevData } });
-                }}
-                size="medium"
-                sx={{ width: '100%' }}
+          {finalProportionsRows?.length > 0 && finalProportionsCols?.length > 0 && (
+            <Box>
+              <Typography variant="h6" sx={{ textAlign: 'center' }}>
+                Proporções finais dos materiais (%)
+              </Typography>
+              <DataGrid
+                hideFooter
+                disableColumnMenu
+                disableColumnFilter
+                experimentalFeatures={{ columnGrouping: true }}
+                columnGroupingModel={[]}
+                columns={finalProportionsCols?.map((column) => ({
+                  ...column,
+                  disableColumnMenu: true,
+                  sortable: false,
+                  align: 'center',
+                  headerAlign: 'center',
+                  minWidth: 100,
+                  flex: 1,
+                }))}
+                rows={finalProportionsRows}
               />
             </Box>
-          </ModalBase>
+          )}
+
+          <Box sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            {data.graphs?.graphVv.length > 0 && (
+              <MiniGraphics data={data.graphs?.graphVv} type="Vv" nameEixoY={'Vv (%)'} />
+            )}
+
+            {data.graphs?.graphGmb.length > 0 && (
+              <MiniGraphics nameEixoY="GMB (g/cm³)" type="GMB" data={data.graphs?.graphGmb} />
+            )}
+
+            {data.graphs?.graphGmm.length > 0 && (
+              <MiniGraphics nameEixoY="GMM (g/cm³)" type="GMM" data={data.graphs?.graphGmm} />
+            )}
+
+            {data.graphs?.graphRBV.length > 0 && (
+              <MiniGraphics nameEixoY="RBV (g/cm³)" type="RBV" data={data.graphs?.graphRBV} />
+            )}
+
+            {data.graphs?.graphVam.length > 0 && (
+              <MiniGraphics nameEixoY="VAM (g/cm³)" type="VAM" data={data.graphs?.graphVam} />
+            )}
+
+            {isValid && data.graphs?.graphRT.length > 0 && <MiniGraphics nameEixoY="RT (MPa)" type="RT" data={data.graphs?.graphRT} />}
+
+            {data.graphs?.graphPA.length > 0 && (
+              <MiniGraphics nameEixoY="PA (MPa)" type="PA" data={data.graphs?.graphPA} />
+            )}
+          </Box>
         </Box>
       )}
     </>
   );
 };
 
-export default Superpave_Step10;
+export default Superpave_Step10_SecondCompactionParams;

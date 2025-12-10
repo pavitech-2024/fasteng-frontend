@@ -1,10 +1,7 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
-import useSuperpaveStore, { SuperpaveData } from '@/stores/asphalt/superpave/superpave.store';
-import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
+import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { t } from 'i18next';
-import { styled } from '@mui/material/styles';
 import { StyledDataGrid } from '@/components/molecules/tables/styledDataGrid';
 
 interface Props {
@@ -55,8 +52,8 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
       columnsKeys: ['peneira'],
     };
 
-    selectedMaterials.forEach((item, i) => {
-      newTable.columnsHeaderTop.push({ header: item.name, type: 'colsSpan' });
+    selectedMaterials?.forEach((item, i) => {
+      newTable.columnsHeaderTop.push({ header: item?.name, type: 'colsSpan' });
       newTable.columnsHeader.push('Total passante (%)');
       newTable.columnsHeader.push('%');
       newTable.columnsKeys.push('keyTotal' + i);
@@ -74,10 +71,11 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
   };
 
   const generateMaterialColumns = (data, materialIndex) => {
-    return materials
-      .map((material, index) => {
-        const fieldTotalPassant = `totalPassant_${index + 1}`;
-        const fieldMaterial = `material_${index + 1}`;
+    console.log("🚀 ~ generateMaterialColumns ~ data:", data)
+    const columns = materials
+      ?.map((material, index) => {
+        const fieldTotalPassant = `totalPassant_${material._id}_${index + 1}`;
+        const fieldMaterial = `material_${material._id}_${index + 1}`;
 
         return [
           {
@@ -94,12 +92,13 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
             renderHeader: () => (
               <InputEndAdornment
                 adornment="%"
-                value={data?.percentageInputs[materialIndex][fieldMaterial] || ''}
+                value={data?.percentageInputs[materialIndex]?.[fieldMaterial] || ''}
                 onChange={(e) => {
                   const prevData = [...data?.percentageInputs];
                   const newData = { ...prevData[materialIndex], [fieldMaterial]: e.target.value };
-                  const updatedData = prevData.map((item, idx) => (idx === materialIndex ? newData : item));
-                  setData({ step: 2, value: { ...data, percentageInputs: updatedData } });
+                  prevData[materialIndex] = newData;
+                  const updatedData = [...prevData];
+                  setData({ step: 3, key: 'percentageInputs', value: updatedData });
                 }}
               />
             ),
@@ -107,6 +106,12 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
         ];
       })
       .flat();
+
+    if (Array.isArray(columns)) {
+      return columns;
+    } else {
+      return [];
+    }
   };
 
   const columns = [
@@ -147,24 +152,28 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
    * @returns An object with formatted field values for each material.
    */
   const generateMaterialRows = (data, tableName, idx, row) => {
-    const rowsData = materials.reduce((acc, material, index) => {
-      const fieldTotalPassant = `totalPassant_${index + 1}`;
-      const fieldMaterial = `material_${index + 1}`;
+    let rowsData = materials?.reduce((acc, material, index) => {
+      const fieldTotalPassant = `totalPassant_${material._id}_${index + 1}`;
+      const fieldMaterial = `material_${material._id}_${index + 1}`;
       return {
         ...acc,
         [fieldTotalPassant]: row[`keyTotal${index}`],
         [fieldMaterial]:
-          data[tableName].percentsOfMaterials !== null
-            ? data[tableName].percentsOfMaterials[index][idx]?.toFixed(2) ?? '---'
+          data[tableName]?.percentsOfMaterials !== null
+            ? data[tableName]?.percentsOfMaterials[index][idx]?.toFixed(2) ?? '---'
             : '',
       };
     }, {});
 
-    Object.entries(rowsData).forEach(([key, value], idx) => {
-      if (value === undefined) {
-        rowsData[key] = '---';
-      }
-    });
+    if (rowsData) {
+      Object.entries(rowsData).forEach(([key, value], idx) => {
+        if (value === undefined) {
+          rowsData[key] = '---';
+        }
+      });
+    } else {
+      rowsData = {};
+    }
 
     return rowsData;
   };
@@ -175,29 +184,32 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
       id: idx,
       peneira: e.peneira,
       ...rowsData,
-      project: data[tableName].sumOfPercents !== null ? data[tableName].sumOfPercents[idx]?.toFixed(2) : '',
+      project: data[tableName]?.sumOfPercents?.length > 0 ? data[tableName]?.sumOfPercents[idx]?.toFixed(2) : '',
       band1: e.bandsCol1,
       band2: e.bandsCol2,
     };
   });
 
-  const generateMaterialGroupings = (materials) => {
-    return materials.map((material, index) => {
-      const materialId = `material_${index + 1}`;
-      const totalPassantField = `totalPassant_${index + 1}`;
-      const materialField = `material_${index + 1}`;
+  const createMaterialGroupings = (materials) => {
+    const materialGroupings = materials?.map((material, index) => ({
+      groupId: `material_${material._id}_${index + 1}`,
+      headerName: material.name,
+      children: [
+        { field: `totalPassant_${material._id}_${index + 1}` },
+        { field: `material_${material._id}_${index + 1}` },
+      ],
+      headerAlign: 'center',
+    }));
 
-      return {
-        groupId: materialId,
-        headerName: material.name,
-        children: [{ field: totalPassantField }, { field: materialField }],
-        headerAlign: 'center',
-      };
-    });
+    if (materialGroupings) {
+      return materialGroupings;
+    } else {
+      return [];
+    }
   };
 
   const groupings = [
-    ...generateMaterialGroupings(materials),
+    ...createMaterialGroupings(materials),
     {
       groupId: 'specification',
       headerName: 'Especificação',

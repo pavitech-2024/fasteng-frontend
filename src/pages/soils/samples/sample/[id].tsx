@@ -6,7 +6,7 @@ import CompressionSampleView from '@/components/soils/samples/compressionSampleV
 import HrbSampleView from '@/components/soils/samples/hrbSampleView';
 import GranulometrySampleView from '@/components/soils/samples/soilsGranulometryMaterialView';
 import SucsSampleView from '@/components/soils/samples/sucsSampleView';
-import { SampleData, SampleTypes } from '@/interfaces/soils';
+import { SampleData } from '@/interfaces/soils';
 import samplesService from '@/services/soils/soils-samples.service';
 import { CbrData } from '@/stores/soils/cbr/cbr.store';
 import { CompressionData } from '@/stores/soils/compression/compression.store';

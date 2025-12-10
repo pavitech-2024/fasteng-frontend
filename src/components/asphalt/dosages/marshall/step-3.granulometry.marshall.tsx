@@ -7,13 +7,16 @@ import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Step3Table from './tables/step-3-table';
-import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
+import Graph from '@/services/asphalt/dosages/marshall/graph/marshal-granulometry-graph';
 import useAuth from '@/contexts/auth';
 import { toast } from 'react-toastify';
 import Loading from '@/components/molecules/loading';
 import { isNumber } from '@mui/x-data-grid/internals';
 
-const Marshall_Step3 = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+const Marshall_Step3_Granulometry = ({
+  setNextDisabled,
+  marshall,
+}: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const { calculateGranulometryComposition } = new Marshall_SERVICE();
   const { granulometryCompositionData: data, materialSelectionData, setData, generalData } = useMarshallStore();
 
@@ -22,6 +25,9 @@ const Marshall_Step3 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
   const [rows, setRows] = useState([]);
   const [columnGrouping, setColumnGroupings] = useState([]);
   const [columns, setColumns] = useState<GridColDef[]>([]);
+  let setSpecificationRows;
+  let setSpecificationColumns: GridColDef[] | undefined;
+  let setSpecificationColumnsGroupings;
 
   useEffect(() => {
     toast.promise(
@@ -132,13 +138,9 @@ const Marshall_Step3 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
     });
   });
 
-  const [specificationRows, setSpecificationRows] = useState([]);
-  const [specificationColumns, setSpecificationColumns] = useState<GridColDef[]>([]);
-  const [specificationColumnsGroupings, setSpecificationColumnsGroupings] = useState([]);
-
   useEffect(() => {
     if (data?.sumOfPercents?.length > 0) {
-      setSpecificationColumns([
+      setSpecificationColumns = [
         {
           field: 'label',
           headerName: t('asphalt.dosages.marshall.sieve'),
@@ -159,9 +161,9 @@ const Marshall_Step3 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
           headerName: '',
           valueFormatter: ({ value }) => `${value}`,
         },
-      ]);
+      ];
 
-      setSpecificationColumnsGroupings([
+      setSpecificationColumnsGroupings = [
         {
           groupId: 'projeto',
           children: [{ field: 'projeto' }],
@@ -178,10 +180,8 @@ const Marshall_Step3 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
           ],
           headerAlign: 'center',
         },
-      ]);
+      ];
     }
-
-    setSpecificationRows([]);
 
     if (data?.projections.length > 0) {
       const newArray = [];
@@ -195,7 +195,7 @@ const Marshall_Step3 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
         });
       }
 
-      setSpecificationRows([...newArray]);
+      setSpecificationRows = [...newArray];
     }
   }, [data.sumOfPercents, data.bands]);
 
@@ -281,14 +281,16 @@ const Marshall_Step3 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
             renderHeader: () => (
               <InputEndAdornment
                 adornment="%"
+                type='number'
                 value={
                   data?.percentageInputs && data.percentageInputs[0]
                     ? data.percentageInputs[0][`percentage_${_id}`] || ''
                     : ''
                 }
                 onChange={(e) => {
+                  const inputValue = e.target.value.replace(',', '.');
                   const prevData = [...data?.percentageInputs];
-                  prevData[0][`percentage_${_id}`] = Number(e.target.value);
+                  prevData[0][`percentage_${_id}`] = inputValue === '' ? NaN : parseFloat(inputValue);
                   setData({ step: 2, value: { ...data, percentageInputs: prevData } });
                 }}
               />
@@ -379,4 +381,4 @@ const Marshall_Step3 = ({ setNextDisabled, marshall }: EssayPageProps & { marsha
   );
 };
 
-export default Marshall_Step3;
+export default Marshall_Step3_Granulometry;

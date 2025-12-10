@@ -1,0 +1,230 @@
+import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import Result_Card from '@/components/atoms/containers/result-card';
+import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
+import GenerateSuperpaveDosagePDF from '@/components/generatePDF/dosages/asphalt/superpave/generatePDFSuperpave';
+import Loading from '@/components/molecules/loading';
+import { EssayPageProps } from '@/components/templates/essay';
+import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
+import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
+import { Box } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import { t } from 'i18next';
+import { useEffect, useState } from 'react';
+
+const Superpave_Step12_ResumeDosage = ({
+  nextDisabled,
+  setNextDisabled,
+  superpave,
+}: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const {
+    granulometryEssayData,
+    secondCompressionPercentagesData,
+    dosageResume: data,
+    setData,
+  } = useSuperpaveStore();
+
+  const [finalProportionsRows, setFinalProportionsRows] = useState([]);
+  const [quantitativeRows, setQuantitativeRows] = useState([]);
+  const [dosage, setDosage] = useState(null);
+  const {state: storedDosage} = JSON.parse(sessionStorage.getItem('asphalt-superpave-store'));
+
+  useEffect(()=> {
+    if (storedDosage) {
+      setDosage(storedDosage);
+    }
+  },[])
+
+  const finalProportionsCols = granulometryEssayData?.materials
+    ?.filter((material) => material.type !== 'asphaltBinder' && material.type !== 'CAP')
+    .map((material) => ({
+      field: material.name,
+      headerName: material.name,
+      valueFormatter: ({ value }) => `${value}`,
+    }));
+
+  finalProportionsCols?.unshift({
+    field: 'optimumBinder',
+    headerName: t('asphalt.dosages.superpave.optimum-binder'),
+    valueFormatter: ({ value }) => `${value}`,
+  });
+
+  useEffect(() => {
+    if (data?.ponderatedPercentsOfDosage?.length > 0) {
+      const prevRowsData = {
+        id: 0,
+        optimumBinder:
+          typeof secondCompressionPercentagesData.optimumContent === 'number'
+            ? secondCompressionPercentagesData.optimumContent.toFixed(2)
+            : secondCompressionPercentagesData.optimumContent === 'No Real Roots'
+            ? t('superpave-results-noRealRoots')
+            : null,
+      };
+
+      data.ponderatedPercentsOfDosage?.forEach((materialPercent, index) => {
+        const materialName = granulometryEssayData?.materials[index]?.name;
+        prevRowsData[materialName] = materialPercent.toFixed(2);
+      });
+
+      setFinalProportionsRows([prevRowsData]);
+    }
+  }, [data.ponderatedPercentsOfDosage]);
+
+  useEffect(() => {
+    if (data?.quantitative?.length > 0) {
+      const arr = {
+        id: 1,
+        optimumBinder: data.quantitative[0] ? data.quantitative[0].toFixed(2) : t('superpave-results-noRoots'),
+      };
+      data.quantitative?.forEach((material, index) => {
+        const materialName = granulometryEssayData?.materials[index - 1]?.name;
+        if (index > 0) {
+          arr[materialName] = material.toFixed(2);
+        }
+      });
+
+      const newRowsData = [arr];
+
+      setQuantitativeRows(newRowsData);
+      setLoading(false);
+    }
+  }, []);
+
+  const resultCards = [
+    {
+      label: t('asphalt.dosages.superpave.apparent-specific-mass') + ' (Gmb):',
+      value: data?.Gmb,
+      unity: 'g/cm3',
+    },
+    {
+      label: t('asphalt.dosages.superpave.void-volume') + ' (Vv):',
+      value: data?.Vv * 100,
+      unity: '%',
+    },
+    {
+      label: t('Vazios do agregado mineral (VAM):'),
+      value:
+        typeof secondCompressionPercentagesData.optimumContent === 'number'
+          ? data?.Vam
+          : 'Revisar dados da primeira compactação',
+      unity: typeof secondCompressionPercentagesData.optimumContent === 'number' ? '%' : '',
+    },
+    {
+      label: t('asphalt.dosages.rbv') + ' (RBV):',
+      value: data?.RBV * 100,
+      unity: '%',
+    },
+    {
+      label: t('asphalt.dosages.absorbed-water'),
+      value: data?.percentWaterAbs,
+      unity: '%',
+    },
+    {
+      label: t('asphalt.dosages.superpave.specific-mass'),
+      value: data?.specifiesMass,
+      unity: 'g/cm',
+    },
+  ];
+
+  nextDisabled && setNextDisabled(false);
+
+  return (
+    <>
+      {loading ? (
+        <Loading />
+      ) : (
+        <FlexColumnBorder open={true} title={t('superpave.step-12')}>
+          <GenerateSuperpaveDosagePDF dosage={dosage} />
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: { mobile: '5px', notebook: '4rem' },
+              marginY: '20px',
+            }}
+          >
+            <Box id="general-results" sx={{ width: '100%', overflowX: 'auto' }}>
+              <ResultSubTitle title={t('superpave.step-12')} sx={{ margin: '.65rem' }} />
+
+              <DataGrid
+                hideFooter
+                disableColumnMenu
+                disableColumnFilter
+                columns={finalProportionsCols?.map((column) => ({
+                  ...column,
+                  disableColumnMenu: true,
+                  sortable: false,
+                  align: 'center',
+                  headerAlign: 'center',
+                  minWidth: 100,
+                  flex: 1,
+                }))}
+                rows={finalProportionsRows}
+              />
+            </Box>
+
+            <Box sx={{ width: '100%', overflowX: 'auto' }}>
+              <ResultSubTitle
+                title={t('asphalt.dosages.superpave.asphalt-mass-quantitative')}
+                sx={{ margin: '.65rem' }}
+              />
+              <DataGrid
+                hideFooter
+                disableColumnMenu
+                disableColumnFilter
+                columns={finalProportionsCols?.map((col) => ({
+                  ...col,
+                  flex: 1,
+                  width: 200,
+                  headerAlign: 'center',
+                  align: 'center',
+                }))}
+                rows={quantitativeRows}
+                sx={{
+                  minWidth: '800px',
+                }}
+              />
+            </Box>
+
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <ResultSubTitle
+                title={t('asphalt.dosages.superpave.mechanic-volumetric-params')}
+                sx={{
+                  maxWidth: '103%',
+                  wordWrap: 'break-word',
+                  margin: '.65rem',
+                }}
+              />
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: { mobile: 'column', notebook: 'row' },
+                  gap: '10px',
+                  alignItems: { mobile: 'center', notebook: 'flex-start' },
+                  justifyContent: { mobile: 'center', notebook: 'flex-start' },
+                }}
+              >
+                {resultCards?.map((card) => {
+                  if (card.value !== undefined) {
+                    return (
+                      <Result_Card
+                        key={card.label}
+                        label={card.label}
+                        value={typeof card.value === 'string' ? card.value : card.value?.toFixed(2).toString()}
+                        unity={card.unity}
+                      />
+                    );
+                  }
+                })}
+              </Box>
+            </Box>
+          </Box>
+        </FlexColumnBorder>
+      )}
+    </>
+  );
+};
+
+export default Superpave_Step12_ResumeDosage;

@@ -18,21 +18,22 @@
   "asphalt.materials.coarseAggregate": "Agregado Graúdo",
   "asphalt.materials.fineAggregate": "Agregado Miúdo",
   "asphalt.materials.filler": "Fíler",
-  "asphalt.materials.cap": "Ligante Asfáltico Modificado (CAP)",
-  "asphalt.materials.CAP": "Ligante Asfáltico Modificado (CAP)",
-
+  "asphalt.materials.cap": "CAP",
+  "asphalt.materials.CAP": "CAP",
   "asphalt.materials.other": "Outro",
   "asphalt.materials.comments": "Comentários",
-
   "loading.marshall.pending": "Carregando...",
   "loading.marshall.success": "Dosagens carregadas com sucesso",
   "loading.marshall.error": "Erro ao carregar as dosagens",
+  "asphalt.materials.maxDiameter": "Diâmetro Máximo",
+  "asphalt.materials.extractionDate": "Data de Extração",
 
   "asphalt.dosages.superpave.material_selection": "Seleção de Materiais",
   "asphalt.materials.edit.title": "Editar Material",
 
   "asphalt.materials.materialCreated": "Material cadastrado com sucesso",
   "asphalt.materials.errorCreatingMaterial": "Erro ao cadastrar material",
+  "asphalt.materials.materialWithSameName": "Material com o mesmo nome já cadastrado",
   "asphalt.materials.creatingMaterial": "Cadastrando material...",
 
   "asphalt.materialName": "Nome do Material",

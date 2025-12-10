@@ -1,6 +1,5 @@
 import { t } from 'i18next';
 import { StaticImageData } from 'next/image';
-import { StoreActions } from './stores/storeActions.interface';
 
 export interface StandardData {
   name: string;
@@ -96,6 +95,61 @@ export const AllSieves: Sieve[] = [
   {
     label: 'Nº100 - 0,15mm',
     value: 0.15, // mm
+  },
+  {
+    label: 'Nº200 - 0,075mm',
+    value: 0.075, // mm
+  },
+];
+
+export const AllSievesSuperpaveUpdatedAstm: Sieve[] = [
+  {
+    label: '1 1/2 pol - 38,1mm',
+    value: 38.1, // mm
+  },
+  {
+    label: '1 pol - 25,4mm',
+    value: 25.4, // mm
+  },
+  {
+    label: '3/4 pol - 19,1mm',
+    value: 19.1, // mm
+  },
+  {
+    label: '1/2 pol - 12,7mm',
+    value: 12.7, // mm
+  },
+  {
+    label: '3/8 pol - 9,5mm',
+    value: 9.5, // mm
+  },
+  {
+    label: '1/4 pol - 6,3mm',
+    value: 6.3, // mm
+  },
+  {
+    label: 'Nº4 - 4,8mm',
+    value: 4.8, // mm
+  },
+  {
+    label: 'Nº8 - 2,36mm',
+    value: 2.36, // mm
+  },
+  {
+    label: 'Nº16 - 1,18mm',
+    value: 1.18, // mm
+  },
+  {
+    label: 'Nº30 - 0,6mm',
+    value: 0.6, // mm
+  },
+  {
+    label: 'Nº50 - 0,3mm',
+    value: 0.3, // mm
+  },
+  {
+    label: 'Nº100 - 0,15mm',
+    value: 0.150, // mm
   },
   {
     label: 'Nº200 - 0,075mm',

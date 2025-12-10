@@ -8,7 +8,6 @@ import { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
 import logo from '@/assets/fasteng/LogoBlack.png';
 import {
   addCapa,
-  addChart,
   addImageProcess,
   addSection,
   addSummary,
@@ -39,7 +38,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     const handleGetMaterialsData = async () => {
       try {
         const materialsIds = dosage.materialSelectionData.aggregates.map((material) => material._id);
-        materialsIds.unshift(dosage.materialSelectionData.binder);
+        materialsIds.unshift(dosage.materialSelectionData.binder._id);
         const response = await materialsService.getMaterials(materialsIds);
         setMaterialsData(response.data.materials);
         setMaterialsEssays(response.data.essays);
@@ -72,18 +71,22 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       {
         title: t('asphalt.dosages.marshall.general-data'),
         page: 3,
+        key: 'generalData',
       },
       {
         title: t('asphalt.dosages.marshall.materials-caracterization'),
         page: 4,
+        key: 'materialsCaracterization',
       },
       {
         title: t('asphalt.dosages.marshall.granulometry_composition'),
         page: 5,
+        key: 'granulometryComposition',
       },
       {
         title: t('asphalt.dosages.marshall.dosage_resume'),
         page: 3,
+        key: 'dosageResume',
       },
     ];
 
@@ -158,7 +161,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     const materialsArray = materialsData.map((material, idx) => ({
       name: material.name,
-      type: material.type,
+      type: t(`asphalt.dosages.marshall.${material.type}`),
       creationDate: formatDate(material.createdAt.toString()),
       source: material.description.source ? material.description.source : '---',
       receivedDate: material.description.recieveDate
@@ -223,13 +226,13 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       {
         label: t('asphalt.dosages.vv'),
         value: (
-          dosage?.confirmationCompressionData.confirmedVolumetricParameters?.values?.aggregateVolumeVoids * 100
+          dosage?.confirmationCompressionData.confirmedVolumetricParameters?.values?.volumeVoids * 100
         ).toFixed(2),
         unity: '%',
       },
       {
         label: t('asphalt.dosages.vam'),
-        value: dosage?.confirmationCompressionData.confirmedVolumetricParameters?.values?.voidsFilledAsphalt
+        value: dosage?.confirmationCompressionData.confirmedVolumetricParameters?.values?.vam
           .toFixed(2)
           .toString(),
         unity: '%',
@@ -585,7 +588,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
               variant="contained"
               color="primary"
               disabled={!dosage?.confirmationCompressionData || !isDesktop}
-              sx={{ minWidth: '200px', minHeight: '2rem' }}
+              sx={{ minWidth: '200px', minHeight: '2rem', maxHeight: '2.5rem' }}
             >
               {loading ? <Loading size={25} color={'inherit'} /> : t('generate.dosage.button')}
             </Button>

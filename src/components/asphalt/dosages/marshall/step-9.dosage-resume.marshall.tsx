@@ -3,7 +3,7 @@ import Result_Card from '@/components/atoms/containers/result-card';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import GenerateMarshallDosagePDF from '@/components/generatePDF/dosages/asphalt/marshall/generatePDFMarshall';
 import { EssayPageProps } from '@/components/templates/essay';
-import Graph from '@/services/asphalt/dosages/marshall/graph/graph';
+import Graph from '@/services/asphalt/dosages/marshall/graph/marshal-granulometry-graph';
 import marshallDosageService from '@/services/asphalt/dosages/marshall/marshall.consult.service';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
@@ -19,7 +19,7 @@ export type RowsObj = {
   optimumBinder: number;
 };
 
-const Marshall_Step9 = ({
+const Marshall_Step9_ResumeDosage = ({
   nextDisabled,
   setNextDisabled,
   marshall,
@@ -33,6 +33,7 @@ const Marshall_Step9 = ({
     confirmationCompressionData: data,
     setData,
   } = useMarshallStore();
+    console.log("🚀 ~ Marshall_Step9_ResumeDosage ~ granulometryCompositionData:", granulometryCompositionData)
 
   const [dosage, setDosage] = useState(null);
   const store = JSON.parse(sessionStorage.getItem('asphalt-marshall-store'));
@@ -66,7 +67,7 @@ const Marshall_Step9 = ({
             ...response,
           };
 
-          setData({ step: 7, value: newData });
+          setData({ step: 8, value: newData });
         } catch (error) {
           throw error;
         }
@@ -171,13 +172,13 @@ const Marshall_Step9 = ({
   const createOptimumContentRows = () => {
     let rowsObj: RowsObj = {
       id: 0,
-      optimumBinder: Number(optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2)),
+      optimumBinder: Number(optimumBinderContentData?.optimumBinder?.optimumContent?.toFixed(2)),
     };
 
     materialSelectionData.aggregates.forEach((material, idx) => {
       rowsObj = {
         ...rowsObj,
-        [material._id]: Number(optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage[idx].toFixed(2)),
+        [material._id]: Number(optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage[idx]?.toFixed(2)),
       };
     });
 
@@ -207,7 +208,7 @@ const Marshall_Step9 = ({
     const binderObj = {
       field: 'binder',
       width: 250,
-      headerName: t('asphalt.dosages.marshall.asphaltic-binder') + '(kg)',
+      headerName: t('asphalt.dosages.marshall.asphaltic-binder') + ' (t)',
       valueFormatter: ({ value }) => `${value}`,
     };
 
@@ -215,7 +216,7 @@ const Marshall_Step9 = ({
       const col: GridColDef = {
         field: `${material._id}`,
         width: 250,
-        headerName: `${material.name} (m³)`,
+        headerName: `${material.name} (t)`,
         valueFormatter: ({ value }) => `${value}`,
       };
       newCols.push(col);
@@ -235,7 +236,7 @@ const Marshall_Step9 = ({
     materialSelectionData.aggregates.forEach((material, idx) => {
       rowsObj = {
         ...rowsObj,
-        [material._id]: data?.confirmedVolumetricParameters?.quantitative[idx].toFixed(2),
+        [material._id]: data?.confirmedVolumetricParameters?.quantitative[idx + 1]?.toFixed(2),
       };
     });
 
@@ -286,28 +287,28 @@ const Marshall_Step9 = ({
     {
       id: 0,
       param: t('asphalt.dosages.stability'),
-      unity: 'Kgf',
+      unity: `${data.confirmedVolumetricParameters?.values.stability?.toFixed(2).toString()}` + ' Kgf',
       bearingLayer: '≥500',
       bondingLayer: '≥500',
     },
     {
       id: 1,
       param: t('asphalt.dosages.rbv'),
-      unity: '%',
+      unity: `${(data.confirmedVolumetricParameters?.values?.ratioBitumenVoid * 100)?.toFixed(2).toString()}` + ' (%)',
       bearingLayer: '75 - 82',
       bondingLayer: '65 - 72',
     },
     {
       id: 2,
       param: t('asphalt.dosages.mixture-voids'),
-      unity: '%',
+      unity: `${(data.confirmedVolumetricParameters?.values?.vam * 100)?.toFixed(2).toString()}` + ' (%)',
       bearingLayer: '3 - 5',
       bondingLayer: '4 - 6',
     },
     {
       id: 3,
       param: `${t('asphalt.dosages.indirect-tensile-strength')}` + `(25 °C)`,
-      unity: 'MPa',
+      unity: `${data.confirmedVolumetricParameters?.values?.indirectTensileStrength?.toFixed(2).toString()}` + ' MPa',
       bearingLayer: '≥ 0,65',
       bondingLayer: '≥ 0,65',
     },
@@ -356,47 +357,52 @@ const Marshall_Step9 = ({
   const volumetricMechanicParams = [
     {
       label: t('asphalt.dosages.optimum-binder'),
-      value: optimumBinderContentData.optimumBinder.optimumContent.toFixed(2).toString(),
+      value: optimumBinderContentData.optimumBinder.optimumContent?.toFixed(2).toString(),
       unity: '%',
     },
     {
-      label: t('asphalt.dosages.dmt'),
-      value: data?.confirmedSpecificGravity?.result.toFixed(2).toString(),
+      label: data.confirmedSpecificGravity?.type === 'dmt' ? t('asphalt.dosages.dmt') : t('asphalt.dosages.gmm'),
+      value: data?.confirmedSpecificGravity?.result?.toFixed(2).toString(),
       unity: 'g/cm³',
     },
     {
       label: t('asphalt.dosages.gmb'),
-      value: data?.confirmedVolumetricParameters?.values?.apparentBulkSpecificGravity.toFixed(2).toString(),
+      value: data?.confirmedVolumetricParameters?.values?.apparentBulkSpecificGravity?.toFixed(2).toString(),
       unity: 'g/cm³',
     },
     {
       label: t('asphalt.dosages.vv'),
-      value: (data?.confirmedVolumetricParameters?.values?.aggregateVolumeVoids * 100).toFixed(2),
+      value: (data?.confirmedVolumetricParameters?.values?.volumeVoids * 100)?.toFixed(2),
       unity: '%',
     },
     {
-      label: t('asphalt.dosages.vam'),
-      value: data?.confirmedVolumetricParameters?.values?.voidsFilledAsphalt.toFixed(2).toString(),
+      label: t('asphalt.dosages.vam'), // em VAM deve estar o valor que está em volumeVouids (aggregateVolumeVoids )
+      value: (data?.confirmedVolumetricParameters?.values?.vam * 100)?.toFixed(2).toString(),
+      unity: '%',
+    },
+    {
+      label: t('asphalt.dosages.vcb'),
+      value: (data?.confirmedVolumetricParameters?.values?.vcb * 100)?.toFixed(2),
       unity: '%',
     },
     {
       label: t('asphalt.dosages.rbv') + ' (RBV)',
-      value: (data?.confirmedVolumetricParameters?.values?.ratioBitumenVoid * 100).toFixed(2),
+      value: (data?.confirmedVolumetricParameters?.values?.ratioBitumenVoid * 100)?.toFixed(2),
       unity: '%',
     },
     {
-      label: t('asphalt.dosages.marshall-stability'),
-      value: data?.confirmedVolumetricParameters?.values?.stability.toFixed(2).toString(),
-      unity: 'N',
+      label: t('asphalt.dosages.marshall.stability'),
+      value: data?.confirmedVolumetricParameters?.values?.stability?.toFixed(2).toString(),
+      unity: 'kgf',
     },
     {
-      label: t('asphalt.dosages.fluency'),
-      value: data?.confirmedVolumetricParameters?.values?.fluency.toFixed(2).toString(),
+      label: t('asphalt.dosages.marshall.fluency'),
+      value: data?.confirmedVolumetricParameters?.values?.fluency?.toFixed(2).toString(),
       unity: 'mm',
     },
     {
       label: t('asphalt.dosages.indirect-tensile-strength'),
-      value: data?.confirmedVolumetricParameters?.values?.indirectTensileStrength.toFixed(2).toString(),
+      value: data?.confirmedVolumetricParameters?.values?.indirectTensileStrength?.toFixed(2).toString(),
       unity: 'MPa',
     },
   ];
@@ -416,8 +422,9 @@ const Marshall_Step9 = ({
             marginY: '20px',
           }}
         >
-          <ResultSubTitle title={t('marshall.general-results')} sx={{ margin: '.65rem' }} />
           <Box id="general-results" sx={{ width: '100%', overflowX: 'auto' }}>
+            <ResultSubTitle title={t('marshall.general-results')} sx={{ margin: '.65rem' }} />
+
             {optimumContentCols.length > 0 && optimumContentRows.length > 0 && optimumContentGroupings.length > 0 && (
               <DataGrid
                 key={'optimumContent'}
@@ -440,8 +447,11 @@ const Marshall_Step9 = ({
             )}
           </Box>
 
-          <ResultSubTitle title={t('asphalt.dosages.marshall.asphalt-mass-quantitative')} sx={{ marginX: '.65rem' }} />
           <Box id="asphalt-mass-quantitative" sx={{ width: '100%', overflowX: 'auto' }}>
+            <ResultSubTitle
+              title={t('asphalt.dosages.marshall.asphalt-mass-quantitative')}
+              sx={{ marginX: '.65rem' }}
+            />
             <DataGrid
               columns={quantitativeCols.map((col) => ({
                 ...col,
@@ -577,4 +587,4 @@ const Marshall_Step9 = ({
   );
 };
 
-export default Marshall_Step9;
+export default Marshall_Step9_ResumeDosage;

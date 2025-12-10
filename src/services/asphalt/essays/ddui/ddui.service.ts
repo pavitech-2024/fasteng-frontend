@@ -54,6 +54,14 @@ class Ddui_SERVICE implements IEssayService {
     }
   };
 
+  deleteDduiEssay = async (id: string): Promise<void> => {
+    try {
+      await Api.delete(`${this.info.backend_path}/delete-essay/${id}`);
+    } catch (error) {
+      throw error;
+    }
+  };
+
   /** @generalData Methods for general-data (step === 0, page 1) */
 
   // get all materials from user from backend
@@ -123,6 +131,7 @@ class Ddui_SERVICE implements IEssayService {
       dduiStep3: store.dduiStep3,
     };
     try {
+
       // Verifica se há valores true e false em ddui_data.condicionamento;
       const hasConditionedData =
         store.dduiStep3.ddui_data.some((item1) => item1.condicionamento) &&
@@ -153,6 +162,7 @@ class Ddui_SERVICE implements IEssayService {
           userId: this.userId,
         },
         dduiStep2: store.dduiStep2,
+        dduiStep3: store.dduiStep3,
         results: store.results,
       });
 

@@ -12,5 +12,6 @@
   "loading.data.error": "Erro ao carregar os dados",
   "submiting.data.success": "Dados enviados com sucesso",
   "submiting.data.error": "Erro ao enviar os dados",
-  "submiting.data.pending": "Enviando dados"
+  "submiting.data.pending": "Enviando dados",
+  "loading.data.nullValuesError": "Preencha todos os campos"
 }

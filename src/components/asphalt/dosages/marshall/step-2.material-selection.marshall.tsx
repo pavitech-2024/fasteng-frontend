@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 import MaterialSelectionTable from './tables/step-2-table';
 import { GridColDef } from '@mui/x-data-grid';
 
-const Marshall_Step2 = ({
+const Marshall_Step2_MaterialSelection = ({
   nextDisabled,
   setNextDisabled,
   marshall,
@@ -26,8 +26,28 @@ const Marshall_Step2 = ({
     toast.promise(
       async () => {
         try {
-          const data = await marshall.getmaterialsByUserId(user._id);
-          setMaterials(data[0].materials);
+          const data : any = await marshall.getmaterialsByUserId(user._id);
+
+          let newMaterials: AsphaltMaterial[] = [];
+
+          if (Array.isArray(data)) {
+            if (Array.isArray(data[0]?.materials)) {
+              newMaterials = data[0].materials;
+            } else if (
+              data.length > 0 &&
+              data.every(item => item._id && item.name && item.type)
+            ) {
+              // Pode ser um array já de materiais, sem 'materials' wrapper
+              newMaterials = data;
+            }
+          } else if (Array.isArray(data?.materials)) {
+            newMaterials = data.materials;
+          } else if (data && data._id && data.name && data.type) {
+            // Caso seja um único material
+            newMaterials = [data];
+          }
+
+          setMaterials(newMaterials);
           setLoading(false);
         } catch (error) {
           setMaterials([]);
@@ -50,7 +70,12 @@ const Marshall_Step2 = ({
       type,
     }))
     .filter(({ type }) => {
-      return type === 'coarseAggregate' || type === 'fineAggregate' || type === 'filler' || type === 'other';
+      return (
+        type === 'coarseAggregate' ||
+        type === 'fineAggregate' ||
+        type === 'filler' ||
+        type === 'other'
+      );
     });
 
   const aggregateColumns: GridColDef[] = [
@@ -91,7 +116,16 @@ const Marshall_Step2 = ({
     },
   ];
 
-  materialSelectionData.binder && materialSelectionData.aggregates.length > 0 && nextDisabled && setNextDisabled(false);
+  useEffect(() => {
+    if (
+      materialSelectionData.binder &&
+      materialSelectionData.aggregates &&
+      materialSelectionData.aggregates.length > 0 &&
+      nextDisabled
+    ) {
+      setNextDisabled(false);
+    }
+  }, [materialSelectionData, nextDisabled, setNextDisabled]);
 
   return (
     <>
@@ -123,4 +157,4 @@ const Marshall_Step2 = ({
   );
 };
 
-export default Marshall_Step2;
+export default Marshall_Step2_MaterialSelection;

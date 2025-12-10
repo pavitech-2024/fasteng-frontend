@@ -5,6 +5,7 @@ import html2canvas from 'html2canvas';
 export interface SummaryItem {
   title: string;
   page: number;
+  key: string;
 }
 
 export const addHeader = (doc: jsPDF, image: HTMLImageElement) => {
@@ -81,6 +82,10 @@ export const addSummary = (
 
     doc.text(externalNumber + '. ' + title, currentX, currentY);
     doc.text(line, 10 + titleWidth + currentX, currentY);
+
+    if (item.key === 'dosageResume') {
+      page += 1;
+    }
 
     doc.text(page.toString(), totalWidth, currentY);
 
@@ -282,7 +287,7 @@ export const addCapa = (
 
   const dosageDescription = {
     ['marshall']: t('asphalt.dosages.marshall.project.description.text'),
-    ['superpave']: t('asphalt.dosages.superpave.project.description.text'),
+    ['superpave']: t('superpave.dosage.description-text'),
     ['abcp']: t('asphalt.dosages.abcp.project.description.text'),
   };
 

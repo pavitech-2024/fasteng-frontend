@@ -2,10 +2,15 @@
   "marshall.dosage-title": "Dosagem Marshall",
   "marshall.dosage-pdf-title": "Relatório de Dosagem Marshall",
 
+  "marshall.dosage-consult.no-dosages": "Nenhuma dosagem encontrada.",
+
   "marshall.step-2-description": "Selecione os agregados e o cimento para a dosagem. Apenas materiais cadastrados com ensaios de granulometria para agregados e viscosidade rotacional para ligantes asfálticos serão exibidos.",
-  "marshall.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica da mistura.",
+  "marshall.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica, garantindo que o total seja 100%.",
   "marshall.step-4-description": "Insira o teor inicial de ligante.",
   "marshall.step-5-description": "Insira os dados de densidade máxima real ou teórica da mistura e o fator de correção para a temperatura da água.",
+  "marshall.step-6-description": "Selecione os teores de ligante desejados e preencha os campos para cada corpo de prova. Após clique no botão de calcular.",
+  "marshall.step-7-description": "Confira os dados de teor ligante ótimo gerados.",
+  "marshall.step-8-description": "Selecione o método de cálculo da densidade da mistura, preencha os campos da tabela abaixo para cada corpo de prova e confirme para realizar o cálculo.",
   "marshall.step-9-description": "Esses são os resultados da sua dosagem Marshall. Lembre-se de salvar o projeto para garantir o acesso a ele no futuro.",
 
   "marshall.general-results": "Resultados Gerais",
@@ -44,7 +49,7 @@
   "asphalt.project_name": "Nome do Projeto",
   "asphalt.laboratory_name": "Nome do Laboratório",
   "asphalt.choose_objective": "Escolha o Objetivo da Mistura",
-  "asphalt.objective": "Escolha o Objetivo da Mistura",
+  "asphalt.objective": "Objetivo da Mistura",
   "asphalt.choose_dnit_track": "Escolha a Faixa do DNIT",
 
   "asphalt.used-materials": "Materiais utilizados",
@@ -61,9 +66,10 @@
   "asphalt.dosages.rbv": "Relação betume-vazios",
   "asphalt.dosages.vam": "Vazios do agregado mineral (VAM)",
   "asphalt.dosages.vv": "Volume de vazios",
-  "asphalt.dosages.gmb": "Massa específica aparente",
+  "asphalt.dosages.gmb": "Massa específica aparente (GMB)",
   "asphalt.dosages.dmt": "Densidade máximo teórica (DMT)",
   "asphalt.dosages.gmm": "Densidade máxima medida (GMM)",
+  "asphalt.dosages.vcb": "(VCB)",
 
   "asphalt.dosages.optimum-binder": "Teor ótimo de ligante asfáltico",
   "asphalt.dosages.binder-volumetric-mechanic-params": "Parametros volumétricos e mecanicos da mistura no teor ótimo de ligante asfáltico",
@@ -83,7 +89,7 @@
   "asphalt.dosages.marshall.rice-test": "Rice Test",
   "asphalt.dosages.marshall.gmm-calculated-rice-test": "Gmm calculada pelo Rice Test:",
   "asphalt.dosages.marshall.binder-trial-gmm": "Gmm do teor de ligante asfáltico:",
-  "asphalt.dosages.marshall.insert-gmm": "Insira a Gmm ou calcule pelo Rice Test",
+  "asphalt.dosages.marshall.insert-gmm": "Insira o Gmm ou calcule pelo Rice Test",
   "asphalt.dosages.marshall.binder-trial-dmt": "DMT do teor de ligante ótimo:",
   "asphalt.dosages.marshall.select-mixture-density-method": "Selecione o método de cálculo da densidade da mistura",
   "asphalt.dosages.marshall.water-temperature": "Selecione o fator de correção para a temperatura da água",

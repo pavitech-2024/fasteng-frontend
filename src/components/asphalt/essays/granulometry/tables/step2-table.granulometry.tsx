@@ -1,7 +1,9 @@
+import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { GridColDef, DataGrid } from '@mui/x-data-grid';
+import React from 'react';
 
 interface step2GranulometryProps {
-  rows: { sieve_label: string; sieve_value: number; passant: number; retained: number }[];
+  rows: { sieve_label: string; sieve_value: number; passant: number; retained: number, material?: AsphaltMaterial }[];
   columns: GridColDef[];
 }
 
@@ -11,6 +13,7 @@ const AsphaltGranulometry_step2Table = ({ rows, columns }: step2GranulometryProp
       sx={{ mt: '1rem', borderRadius: '10px' }}
       density="compact"
       hideFooter
+      getRowId={(row) => row.sieve_label}
       showCellVerticalBorder
       showColumnVerticalBorder
       experimentalFeatures={{ columnGrouping: true }}

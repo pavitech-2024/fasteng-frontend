@@ -1,5 +1,4 @@
 import { AsphaltMaterial } from '@/interfaces/asphalt';
-import { StoreActions } from '@/interfaces/common/stores/storeActions.interface';
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 

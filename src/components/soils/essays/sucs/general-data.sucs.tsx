@@ -24,8 +24,7 @@ const SUCS_GeneralData = ({ nextDisabled, setNextDisabled, sucs }: EssayPageProp
       async () => {
         const samples = await sucs.getSamplesByUserId(user._id);
 
-        setSamples(samples[0].materials);
-        setLoading(false);
+        setSamples(samples[0].materials);        setLoading(false);
       },
       {
         pending: t('loading.samples.pending'),

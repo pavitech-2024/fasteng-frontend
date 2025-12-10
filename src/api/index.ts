@@ -1,12 +1,16 @@
 import Axios from 'axios';
 
-//.env 'https://oyster-app-nekyt.ondigitalocean.app'
-const isLocalHost = process.env.NODE_ENV === 'development';
+//.env
+export const isLocalHost = process.env.NEXT_PUBLIC_ENV === 'development';
+export const isTest = process.env.NEXT_PUBLIC_ENV === 'test';
 
-const [localhost, test] = ['http://localhost:8080', 'https://fasteng-backend.vercel.app/'];
+const [localhost, prod] = [
+  'http://localhost:8080',
+  'https://fasteng-backend.vercel.app/',
+];
 
 const Api = Axios.create({
-  baseURL: isLocalHost ? localhost : test,
+  baseURL: isLocalHost || isTest ? localhost : prod,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',

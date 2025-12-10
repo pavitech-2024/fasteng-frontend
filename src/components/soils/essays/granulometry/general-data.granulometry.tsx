@@ -115,7 +115,7 @@ const SoilsGranulometry_GeneralData = ({
                     key={input.key}
                     variant="standard"
                     label={input.label}
-                    options={samples.map((sample: SoilSample) => {
+                    options={samples?.map((sample: SoilSample) => {
                       return { label: sample.name + ' | ' + t(`${'samples.' + sample.type}`), value: sample };
                     })}
                     value={defaultValue}
