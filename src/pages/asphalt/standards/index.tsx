@@ -133,16 +133,17 @@ const AsphaltStandards: NextPage = () => {
     {
       title: t('asphalt.standards.drop-weight-deflectometer'),
       icon: FwdIcon,
-      key: 'fwd',
+      key: 'fallingWeightDeflectometer',
       standard: 'DNIT - PRO 273/96',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/procedimento-de-ensaio-pro/dnit-pro-273-96.pdf',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_184_2018_me-1.pdf',
+
       type: 'asphaltMix',
     },
     {
       title: t('asphalt.standards.flow-number'),
       icon: FlowNumberIcon,
       key: 'flowNumber',
-      standard: 'DNIT 184/2018 - ME',
+      standard: 'DNIT 184/2018',
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_184_2018_me-1.pdf',
       type: 'asphaltMix',
     },
@@ -157,7 +158,7 @@ const AsphaltStandards: NextPage = () => {
     {
       title: t('asphalt.standards.sieving-granulometry'),
       icon: GranulometryIcon,
-      key: 'granulometry',
+      key: 'granulometry-asphalt',
       standard: 'DNIT - ME 083/98',
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dner-me083-98.pdf',
       type: 'aggregates',
@@ -226,7 +227,7 @@ const AsphaltStandards: NextPage = () => {
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_130_2010_me.pdf',
       type: 'asphaltBinder',
     },
-    { 
+    {
       title: t('asphalt.standards.tensile.strength.by.diametral.compression'),
       icon: RtcdIcon,
       key: 'rtcd',
@@ -238,8 +239,8 @@ const AsphaltStandards: NextPage = () => {
       title: t('asphalt.standards.rice-method'),
       icon: RiceTestIcon,
       key: 'rice',
-      standard: 'DNIT 179/2018 - ME',
-      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_179_2018_me.pdf',
+      standard: 'DNIT 136/2018 - ME',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_136_2018_me-1.pdf',
       type: 'asphaltMix',
     },
     {
