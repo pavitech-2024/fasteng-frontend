@@ -562,7 +562,7 @@ const Superpave_Step5_InitialBinder = ({
                 );
 
                 return (
-                  <>
+                  <div key={idx}>
                     <Typography component={'h3'} sx={{ marginTop: '2rem' }}>
                       {aggregateMaterials[idx]?.name} {/* PEGAR APENAS DOS AGREGADOS */}
                     </Typography>
@@ -591,7 +591,7 @@ const Superpave_Step5_InitialBinder = ({
                         />
                       ))}
                     </Box>
-                  </>
+                  </div>
                 );
               })}
 

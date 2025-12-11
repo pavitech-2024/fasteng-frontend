@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Superpave_Step5_InitialBinder from '@/components/asphalt/dosages/superpave/step-5.superpave';
@@ -24,8 +25,9 @@ jest.mock('@/contexts/auth', () => ({
   }),
 }));
 
-const mockSuperpaveService = new Superpave_SERVICE() as jest.Mocked<Superpave_SERVICE>;
+
 const mockUseSuperpaveStore = useSuperpaveStore as jest.MockedFunction<typeof useSuperpaveStore>;
+const SuperpaveServiceMock = Superpave_SERVICE as jest.MockedClass<typeof Superpave_SERVICE>;
 
 const mockSetData = jest.fn();
 
@@ -53,6 +55,7 @@ const initialStoreState = {
       { name: 'Agregado 2', type: 'Aggregate', realSpecificMass: null, apparentSpecificMass: null, absorption: null },
       { name: 'Ligante 1', type: 'asphaltBinder', realSpecificMass: 1.03 },
     ],
+    granulometryComposition: [],
     turnNumber: {
         initialN: 0,
         maxN: 0,
@@ -65,11 +68,17 @@ const initialStoreState = {
 
 describe('Superpave_Step5_InitialBinder', () => {
   let setNextDisabled: jest.Mock;
+  let superpaveServiceInstance: jest.Mocked<Superpave_SERVICE>;
 
   beforeEach(() => {
     setNextDisabled = jest.fn();
     mockUseSuperpaveStore.mockReturnValue(initialStoreState);
     (toast.promise as jest.Mock).mockImplementation((promise) => promise());
+    
+    superpaveServiceInstance = {
+      calculateStep5Data: jest.fn(),
+      chosenCurses: ['lower', 'average'],
+    } as unknown as jest.Mocked<Superpave_SERVICE>;
   });
 
   afterEach(() => {
@@ -79,19 +88,22 @@ describe('Superpave_Step5_InitialBinder', () => {
   test('1. should disable the next button on initial render', () => {
     render(
       <Superpave_Step5_InitialBinder
-        nextDisabled={true}
         setNextDisabled={setNextDisabled}
-        superpave={mockSuperpaveService}
+        superpave={superpaveServiceInstance}
       />
     );
     expect(setNextDisabled).toHaveBeenCalledWith(true);
   });
 
+  
+  // Divide between two tests to keep them simpler
+
+
   test('2. should enable the next button after filling the binder content', async () => {
     const user = userEvent.setup();
 
     // Mock service response
-    mockSuperpaveService.calculateStep5Data.mockResolvedValue({
+    superpaveServiceInstance.calculateStep5Data.mockResolvedValue({
       granulometryComposition: [
         { curve: 'lower', combinedGsb: 2.7, combinedGsa: 2.8, gse: 2.9, percentsOfDosageWithBinder: [50, 50] },
         { curve: 'average', combinedGsb: 2.7, combinedGsa: 2.8, gse: 2.9, percentsOfDosageWithBinder: [40, 60] },
@@ -101,9 +113,8 @@ describe('Superpave_Step5_InitialBinder', () => {
 
     render(
       <Superpave_Step5_InitialBinder
-        nextDisabled={true}
         setNextDisabled={setNextDisabled}
-        superpave={mockSuperpaveService}
+        superpave={superpaveServiceInstance}
       />
     );
     
@@ -115,7 +126,7 @@ describe('Superpave_Step5_InitialBinder', () => {
     await user.click(confirmMassesButton);
 
     await waitFor(() => {
-        expect(mockSuperpaveService.calculateStep5Data).toHaveBeenCalled();
+        expect(superpaveServiceInstance.calculateStep5Data).toHaveBeenCalled();
     });
 
     // It should still be disabled because binder content is not filled yet
