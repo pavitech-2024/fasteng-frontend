@@ -1,3 +1,9 @@
+# Fasteng client-side
+
+## Links
+
+[Estrutra de pasta e configuração do TypeScript](./structure.md)
+
 ### Important for FASTENG new Devs
 
 After clone this project, please run
