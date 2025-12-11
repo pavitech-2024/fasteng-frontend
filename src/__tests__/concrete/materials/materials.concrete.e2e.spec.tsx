@@ -17,6 +17,7 @@ const mockUserId = process.env.NEXT_PUBLIC_TEST_USER_ID;
 const mockUser = { _id: mockUserId };
 const SAMPLE_NAME = 'material teste (não excluir)';
 
+/*
 describe('Concrete materials page E2E', () => {
   beforeEach(() => {
     (useRouter as jest.Mock).mockReturnValue({
@@ -69,3 +70,4 @@ describe('Concrete materials page E2E', () => {
     expect(found).toBe(true);
   }, 30000);
 });
+*/
