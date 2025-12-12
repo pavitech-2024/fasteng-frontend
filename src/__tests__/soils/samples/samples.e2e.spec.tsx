@@ -7,19 +7,18 @@ import useAuth from '@/contexts/auth';
 import { useRouter } from 'next/router';
 import Samples from '@/pages/soils/samples';
 
-// jest.mock('next/router', () => ({
-//   useRouter: jest.fn(),
-// }));
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(),
+}));
 
-// jest.mock('@/contexts/auth');
+jest.mock('@/contexts/auth');
 
-// const mockUserId = process.env.NEXT_PUBLIC_TEST_USER_ID;
-// const mockUser = { _id: mockUserId };
-// const SAMPLE_NAME = 'amostra teste (não excluir)';
+const mockUserId = process.env.NEXT_PUBLIC_TEST_USER_ID;
+const mockUser = { _id: mockUserId };
+const SAMPLE_NAME = 'amostra teste (não excluir)';
 
 
 describe.skip('Soils Samples page E2E', () => {
-  /* TODO: NESCESITA DE CORRECAO (ou pode ser testado a integracao em um arquivo)
   beforeEach(() => {
     (useRouter as jest.Mock).mockReturnValue({
       pathname: '/soils/samples',
@@ -28,10 +27,12 @@ describe.skip('Soils Samples page E2E', () => {
       push: jest.fn(),
       prefetch: jest.fn().mockResolvedValue(undefined),
     });
-
+    
     (useAuth as jest.Mock).mockReturnValue({ user: mockUser });
   });
-
+  
+  
+  // TODO: NESCESITA DE CORRECAO (ou pode ser testado a integracao em um arquivo)
   it('should fetch real samples from backend and find a sample even if paginated', async () => {
     render(<Samples />);
     const user = userEvent.setup();
@@ -70,5 +71,4 @@ describe.skip('Soils Samples page E2E', () => {
 
     expect(found).toBe(true);
   }, 30000);
-  */
 });

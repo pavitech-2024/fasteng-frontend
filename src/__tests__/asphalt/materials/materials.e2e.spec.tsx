@@ -16,7 +16,7 @@ const mockUser = { _id: mockUserId };
 const MATERIAL_NAME = 'material teste (não excluir)';
 
 describe.skip('Materials page E2E', () => {
-  /* TODO: NESCESITA DE CORRECAO
+  // TODO: NECESSITA DE CORRECAO (ou pode ser testado a integracao em um arquivo)
   beforeEach(() => {
     (useRouter as jest.Mock).mockReturnValue({
       pathname: '/asphalt/materials',
@@ -71,5 +71,4 @@ describe.skip('Materials page E2E', () => {
 
     expect(found).toBe(true);
   }, 60000);
-  */
 });

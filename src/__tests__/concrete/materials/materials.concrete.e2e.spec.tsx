@@ -19,7 +19,7 @@ const SAMPLE_NAME = 'material teste (não excluir)';
 
 
 describe.skip('Concrete materials page E2E', () => {
-  /* TODO: NESCESITA DE CORRECAO
+  // TODO: NESCESITA DE CORRECAO
   beforeEach(() => {
     (useRouter as jest.Mock).mockReturnValue({
       pathname: '/concrete/materials',
@@ -70,5 +70,4 @@ describe.skip('Concrete materials page E2E', () => {
 
     expect(found).toBe(true);
   }, 30000);
-  */
 });
