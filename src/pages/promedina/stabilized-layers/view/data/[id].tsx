@@ -237,8 +237,8 @@ const SpecificSample_StabilizedLayers = () => {
       value: samples?.step3Data?.k3,
     },
     {
-      title: 'k4',
-      value: samples?.step3Data?.k4,
+      title: 'R²',
+      value: samples?.step3Data?.r2,
     },
   ];
 
@@ -874,7 +874,7 @@ const SpecificSample_StabilizedLayers = () => {
 
             {/**  MÓDULO DE RESILIÊNCIA */}
             <Box id="resilience-module-2" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-              {samples?.step3Data?.k1 && samples?.step3Data?.k2 && samples?.step3Data?.k3 && samples?.step3Data?.k4 && (
+              {samples?.step3Data?.k1 && samples?.step3Data?.k2 && samples?.step3Data?.k3 && samples?.step3Data?.r2 && (
                 <FlexColumnBorder title={t('pm.resilience.module')} open={true} theme={'#07B811'}>
                   <Box
                     sx={{
@@ -1155,7 +1155,7 @@ const SpecificSample_StabilizedLayers = () => {
             }}
           >
             <Link
-              href="/promedina/granular-layers/view"
+              href="/promedina/stabilized-layers/view"
               style={{
                 backgroundColor: '#00A3FF',
                 color: '#FFFFFF',

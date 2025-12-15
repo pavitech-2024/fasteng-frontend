@@ -17,7 +17,7 @@ const GranularLayers_view = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
-  const { setData } = useGranularLayersStore();
+  const { setData, reset } = useGranularLayersStore();
 
   const [searchParams, setSearchParams] = useState({
     _id: '',
@@ -113,6 +113,7 @@ const GranularLayers_view = () => {
                   onSearchParamsChange={setSearchParams}
                   onPageChange={setPage}
                   area={'granular-layers'}
+                  resetStore={reset}
                 />
               )}
             </Box>
