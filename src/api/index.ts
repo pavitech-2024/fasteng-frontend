@@ -6,7 +6,7 @@ export const isTest = process.env.NEXT_PUBLIC_ENV === 'test';
 
 const [localhost, test, prod] = [
   'http://localhost:8080',
-  'https://fasteng-backend.vercel.app/',
+  'https://fasteng-backend.vercel.app',
   'https://fasteng-backend-eocdo.ondigitalocean.app/'
 ];
 
