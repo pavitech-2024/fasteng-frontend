@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import Result_Card from '@/components/atoms/containers/result-card';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
@@ -56,20 +57,22 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
 
   const graph_data = [
     [t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')],
-    ...granulometry_results.graph_data,
+    ...(granulometry_results?.graph_data || []),
   ];
 
   const rows = [];
 
-  step2Data.table_data.map((value, index) => {
-    rows.push({
-      sieve: value.sieve_label,
-      passant_porcentage: value.passant,
-      passant: granulometry_results.passant[index][1],
-      retained_porcentage: granulometry_results.retained_porcentage[index][1],
-      retained: value.retained,
-      accumulated_retained: granulometry_results.accumulated_retained[index][1],
-    });
+  step2Data?.table_data?.forEach((value, index) => {
+    if (granulometry_results?.passant?.[index]) {
+      rows.push({
+        sieve: value.sieve_label,
+        passant_porcentage: value.passant,
+        passant: granulometry_results.passant[index][1],
+        retained_porcentage: granulometry_results.retained_porcentage?.[index]?.[1] || 0,
+        retained: value.retained,
+        accumulated_retained: granulometry_results.accumulated_retained?.[index]?.[1] || 0,
+      });
+    }
   });
 
   const columns: GridColDef[] = [
@@ -81,27 +84,27 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
     {
       field: 'passant_porcentage',
       headerName: t('granulometry-asphalt.passant') + ' (%)',
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => `${Number(value).toFixed(2)}`,
     },
     {
       field: 'passant',
       headerName: t('granulometry-asphalt.passant') + ' (g)',
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => `${Number(value).toFixed(2)}`,
     },
     {
       field: 'retained_porcentage',
       headerName: t('granulometry-asphalt.retained') + ' (%)',
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => `${Number(value).toFixed(2)}`,
     },
     {
       field: 'retained',
       headerName: t('granulometry-asphalt.retained') + ' (g)',
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => `${Number(value).toFixed(2)}`,
     },
     {
       field: 'accumulated_retained',
       headerName: t('granulometry-asphalt.accumulated-retained') + ' (%)',
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => `${Number(value).toFixed(2)}`,
     },
   ];
 
@@ -116,6 +119,7 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
             display: 'flex',
             gap: '10px',
             mt: '20px',
+            flexWrap: 'wrap',
           }}
         >
           {data.container_other_data.map((item, index) => {
@@ -129,24 +133,47 @@ const AsphaltGranulometry_Results = ({ setNextDisabled, nextDisabled }: EssayPag
         <Chart
           chartType="LineChart"
           width={'100%'}
-          height={'400px'}
+          height={'500px'}
           loader={<Loading />}
           data={graph_data}
           options={{
             title: t('granulometry-asphalt.granulometry'),
             backgroundColor: 'transparent',
-            pointSize: '5',
+            curveType: 'function', // APENAS ISSO para suavizar a conexão ENTRE os pontos
+            pointSize: 8, // Pontos maiores para destacar os valores reais
+            lineWidth: 2,
+            colors: ['#1976d2'],
             hAxis: {
               title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
               type: 'number',
               scaleType: 'log',
+              logScale: true,
+              format: '####',
             },
             vAxis: {
               title: `${t('granulometry-asphalt.passant') + ' (%)'}`,
-              minValue: '0',
-              maxValue: '105',
+              minValue: 0,
+              maxValue: 105,
+              format: '##',
             },
             legend: 'none',
+            chartArea: {
+              width: '85%',
+              height: '80%',
+            },
+            // Destacar os pontos reais (que são os únicos que existem)
+            series: {
+              0: {
+                pointShape: 'circle',
+                pointSize: 8,
+                lineWidth: 2,
+              },
+            },
+            // Opcional: Adicionar tooltips mais informativos
+            tooltip: {
+              isHtml: true,
+              trigger: 'both', // Mostra ao passar mouse sobre pontos e linha
+            },
           }}
         />
         <AsphaltGranulometry_resultsTable rows={rows} columns={columns} />
