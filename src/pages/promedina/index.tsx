@@ -5,7 +5,7 @@ import ProvSoils2Icon from '@/components/atoms/icons/provSoils2Icon';
 import ProvSoils3Icon from '@/components/atoms/icons/provSoils3Icon';
 import { LoginImage } from '@/components/styles/styleds/login';
 import { Container, Box, Typography } from '@mui/material';
-import { Analytics } from '@mui/icons-material'; // Ícone do Material-UI para FWD
+import { Analytics, Assessment } from '@mui/icons-material';
 import { t } from 'i18next';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -31,8 +31,13 @@ const Promedina: NextPage = () => {
     },
     {
       name: t('home.pm.fwd'),
-      icon: <Analytics sx={{ width: '100%', height: '100%' }} />, // Ícone do Material-UI
+      icon: <Analytics sx={{ width: '100%', height: '100%' }} />,
       path: '/promedina/fwd',
+    },
+    {
+      name: 'Avaliação de Pavimentos',
+      icon: <Assessment sx={{ width: '100%', height: '100%' }} />,
+      path: '/promedina/IGG',
     },
   ];
 
@@ -120,9 +125,10 @@ const Promedina: NextPage = () => {
           minWidth: 'fit-content',
           maxWidth: '1400px',
           pt: '2vh',
+          flexWrap: 'wrap', // Adicionado para melhor responsividade com mais itens
 
           '@media only screen and (min-width: 1024px)': {
-            width: '60%',
+            width: '70%', // Aumentei um pouco para acomodar mais itens
           },
         }}
       >
