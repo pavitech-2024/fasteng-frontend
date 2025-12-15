@@ -81,7 +81,7 @@
             "description": {
               "source": null,
               "responsible": null,
-              "maxDiammeter": null,
+              "maxDiameter": null,
               "aggregateNature": null,
               "boughtDate": null,
               "recieveDate": null,
@@ -240,7 +240,7 @@
             "description": {
               "source": null,
               "responsible": null,
-              "maxDiammeter": null,
+              "maxDiameter": null,
               "aggregateNature": null,
               "boughtDate": null,
               "recieveDate": null,
@@ -399,7 +399,7 @@
             "description": {
               "source": null,
               "responsible": null,
-              "maxDiammeter": null,
+              "maxDiameter": null,
               "aggregateNature": null,
               "boughtDate": null,
               "recieveDate": null,
@@ -559,7 +559,7 @@
           "description": {
             "source": null,
             "responsible": null,
-            "maxDiammeter": null,
+            "maxDiameter": null,
             "aggregateNature": null,
             "boughtDate": null,
             "recieveDate": null,
@@ -602,7 +602,7 @@
             "description": {
               "source": null,
               "responsible": null,
-              "maxDiammeter": null,
+              "maxDiameter": null,
               "aggregateNature": null,
               "boughtDate": null,
               "recieveDate": null,
@@ -709,7 +709,7 @@
             "description": {
               "source": null,
               "responsible": null,
-              "maxDiammeter": null,
+              "maxDiameter": null,
               "aggregateNature": null,
               "boughtDate": null,
               "recieveDate": null,
@@ -816,7 +816,7 @@
             "description": {
               "source": null,
               "responsible": null,
-              "maxDiammeter": null,
+              "maxDiameter": null,
               "aggregateNature": null,
               "boughtDate": null,
               "recieveDate": null,
@@ -924,7 +924,7 @@
           "description": {
             "source": null,
             "responsible": null,
-            "maxDiammeter": null,
+            "maxDiameter": null,
             "aggregateNature": null,
             "boughtDate": null,
             "recieveDate": null,

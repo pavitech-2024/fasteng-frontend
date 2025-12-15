@@ -34,7 +34,7 @@ const mockResponse = {
           description: {
             source: 'Pedreira X',
             responsible: 'João',
-            maxDiammeter: 20,
+            maxDiameter: 20,
             aggregateNature: '',
             boughtDate: '',
             recieveDate: '',

@@ -85,6 +85,7 @@ const Materials = () => {
                 setIsEdit(false);
                 setMaterialToEdit(undefined);
               }}
+              updatedMaterial={addNewMaterial}
               updateMaterials={addNewMaterial}
               materials={materials}
               materialToEdit={materialToEdit ? materialToEdit : undefined}

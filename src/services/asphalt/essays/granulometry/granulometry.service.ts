@@ -174,6 +174,26 @@ class AsphaltGranulometry_SERVICE implements IEssayService {
       throw error;
     }
   };
+
+getAllEssaysByUser = async (userId: string): Promise<any[]> => {
+    try {
+      const response = await Api.get(`${this.info.backend_path}/user/${userId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /**Busca ensaios por material */
+getEssaysByMaterialId = async (materialId: string): Promise<any[]> => {
+  try {
+    const response = await Api.get(`${this.info.backend_path}/material/${materialId}`);
+    return response.data.data || response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 }
 
 export default AsphaltGranulometry_SERVICE;

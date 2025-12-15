@@ -3,6 +3,7 @@ import { JSX, useEffect, useState } from 'react';
 import {
   Box,
   Button,
+  ButtonProps,
   Pagination,
   Paper,
   Table,
@@ -11,6 +12,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
@@ -59,6 +61,11 @@ export interface DataToFilter {
   createdAt: Date;
 }
 
+interface ConditionalTooltipButtonProps extends ButtonProps {
+  tooltip: string;
+  showTooltip?: boolean;
+}
+
 const MaterialsTemplate = ({
   materials,
   fwdEssays,
@@ -80,6 +87,7 @@ const MaterialsTemplate = ({
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
   const [searchBy, setSearchBy] = useState<FilterTypes>('name');
+  console.log("🚀 ~ MaterialsTemplate ~ searchBy:", searchBy)
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchString, setSearchString] = useState<string>('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -241,6 +249,23 @@ const MaterialsTemplate = ({
       material.name?.toLowerCase().includes(searchString.toLowerCase())
     );
     setTableData(newData);
+  };
+
+  const ConditionalTooltipButton: React.FC<ConditionalTooltipButtonProps> = ({
+    tooltip,
+    showTooltip = false,
+    children,
+    ...buttonProps
+  }) => {
+    const button = <Button {...buttonProps}>{children}</Button>;
+
+    return showTooltip ? (
+      <Tooltip title={tooltip} placement="top" arrow>
+        <span>{button}</span>
+      </Tooltip>
+    ) : (
+      button
+    );
   };
 
   return (
@@ -439,12 +464,12 @@ const MaterialsTemplate = ({
                                 <Visibility sx={{ fontSize: '1.30rem' }} />
                               </Button>
                             </Link>
-                            <Button
+                            <ConditionalTooltipButton
+                              tooltip="Este ensaio não pode ser editado."
+                              showTooltip={['FWD', 'IGG', 'RTCD', 'DDUI'].includes(row.type)}
                               data-testid={`edit-${row._id}`}
                               aria-label="Editar"
-                              disabled={
-                                row.type === 'FWD' || row.type === 'IGG' || row.type === 'RTCD' || row.type === 'DDUI'
-                              }
+                              disabled={['FWD', 'IGG', 'RTCD', 'DDUI'].includes(row.type)}
                               onClick={() => handleEditMaterial(row._id)}
                               sx={{
                                 height: { mobile: '18px', notebook: '25px' },
@@ -456,7 +481,8 @@ const MaterialsTemplate = ({
                               }}
                             >
                               <ModeEdit />
-                            </Button>
+                            </ConditionalTooltipButton>
+
                             <Button
                               variant="text"
                               aria-label="Excluir"

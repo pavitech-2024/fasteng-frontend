@@ -38,11 +38,15 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
     const image = (await addImageProcess(logo.src)) as HTMLImageElement;
     let currentY = 30;
 
+    // ✅ CORREÇÃO: Verificar se createdAt existe antes de usar toString()
+    const createdAt = dosage.createdAt ? dosage.createdAt.toString() : new Date().toString();
+    const initialDate = dosage.createdAt ? formatDate(dosage.createdAt.toString()) : '---';
+
     addCapa(
       doc,
       image,
       'superpave',
-      dosage.createdAt.toString(),
+      createdAt,
       dosage.generalData.name,
       dosage.generalData.operator,
       dosage.generalData.laboratory
@@ -107,7 +111,7 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
       {
         key: 'initialDate',
         label: t('asphalt.project-initial-date'),
-        value: formatDate(dosage.createdAt.toString()),
+        value: initialDate,
       },
       {
         key: 'pdfGenerationDate',
@@ -141,38 +145,39 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
       },
     ];
 
-    const volumetricsBody = [
+    // ✅ CORREÇÃO: Verificar se dosageResume existe antes de acessar propriedades
+    const volumetricsBody = dosage.dosageResume ? [
       {
         label: t('asphalt.dosages.superpave.apparent-specific-mass') + ' (Gmb)',
-        value: dosage.dosageResume.Gmb.toFixed(2).toString(),
+        value: dosage.dosageResume.Gmb?.toFixed(2) || '---',
         unity: 'g/cm3',
       },
       {
         label: t('asphalt.dosages.superpave.void-volume') + ' (Vv)',
-        value: (dosage.dosageResume.Vv * 100).toFixed(2).toString(),
+        value: dosage.dosageResume.Vv ? (dosage.dosageResume.Vv * 100).toFixed(2) : '---',
         unity: '%',
       },
       {
         label: t('Vazios do agregado mineral (VAM)'),
-        value: dosage.dosageResume.Vam?.toFixed(2).toString(),
+        value: dosage.dosageResume.Vam?.toFixed(2) || '---',
         unity: '%',
       },
       {
         label: t('asphalt.dosages.rbv') + ' (RBV)',
-        value: (dosage.dosageResume.RBV * 100).toFixed(2).toString(),
+        value: dosage.dosageResume.RBV ? (dosage.dosageResume.RBV * 100).toFixed(2) : '---',
         unity: '%',
       },
       {
         label: t('asphalt.dosages.absorbed-water'),
-        value: dosage.dosageResume.percentWaterAbs.toFixed(2).toString(),
+        value: dosage.dosageResume.percentWaterAbs?.toFixed(2) || '---',
         unity: '%',
       },
       {
         label: t('asphalt.dosages.superpave.specific-mass'),
-        value: dosage.dosageResume.specifiesMass.toFixed(2).toString(),
+        value: dosage.dosageResume.specifiesMass?.toFixed(2) || '---',
         unity: 'g/cm',
       },
-    ];
+    ] : [];
 
     const isBinderOrCAP = (type) => type === 'asphaltBinder' || type === 'CAP';
 
@@ -180,10 +185,11 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     const others = materialsData.filter((material) => !isBinderOrCAP(material.type));
 
+    // ✅ CORREÇÃO: Verificar se material.createdAt existe
     const formatMaterial = (material) => ({
       name: material.name,
       type: material.type,
-      creationDate: formatDate(material.createdAt.toString()),
+      creationDate: material.createdAt ? formatDate(material.createdAt.toString()) : '---',
       source: material.description.source ? material.description.source : '---',
       receivedDate: material.description.recieveDate
         ? formatDate(material.description.recieveDate.toString())
@@ -196,7 +202,7 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
     addSummary(
       doc,
       summaryItems,
-      materialsData.find((material) => material.type === 'asphaltBinder' || material.type === 'CAP').name,
+      materialsData.find((material) => material.type === 'asphaltBinder' || material.type === 'CAP')?.name || '---',
       materialsData.filter(
         (material) => material.type.toLowerCase().includes('aggregate') || material.type.toLowerCase() === 'filler'
       ),
@@ -283,9 +289,28 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
     const optimumBinder = [];
     let index = 0;
 
+    // ✅ CORREÇÃO: Verificar se optimumContent é um número antes de usar toFixed()
     materialsData.forEach((material) => {
       if (material.type !== 'asphaltBinder') {
-        optimumBinder.push(Number(dosage.secondCompressionPercentagesData?.optimumContent?.toFixed(2)));
+        const optimumContent = dosage.secondCompressionPercentagesData?.optimumContent;
+        
+        // Converter para número se for string ou usar valor direto se for número
+        let contentValue: number | null = null;
+        
+        if (optimumContent != null) {
+          if (typeof optimumContent === 'string') {
+            contentValue = parseFloat(optimumContent);
+          } else if (typeof optimumContent === 'number') {
+            contentValue = optimumContent;
+          }
+        }
+        
+        // Só adicionar se for um número válido
+        if (contentValue != null && !isNaN(contentValue)) {
+          optimumBinder.push(Number(contentValue.toFixed(2)));
+        } else {
+          optimumBinder.push('---');
+        }
         index++;
       }
     });
@@ -301,18 +326,21 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
     );
     currentY += 10;
 
+    // ✅ CORREÇÃO: Verificar se ponderatedPercentsOfDosage existe
     const finalProportionsBody =
-      dosage?.dosageResume?.ponderatedPercentsOfDosage?.map((percent) => percent.toFixed(2)) || [];
+      dosage?.dosageResume?.ponderatedPercentsOfDosage?.map((percent) => 
+        percent != null ? percent.toFixed(2) : '---'
+      ) || [];
 
     autoTable(doc, {
       head: [materials],
       body: [finalProportionsBody],
       columnStyles: {
-        0: { width: 100 } as any, // largura da coluna
+        0: { width: 100 } as any,
       },
       styles: {
-        fillColor: '#F29134', // cor laranja
-        textColor: [0, 0, 0], // cor preta para o texto
+        fillColor: '#F29134',
+        textColor: [0, 0, 0],
         fontSize: 12,
       },
       startY: currentY,
@@ -332,17 +360,20 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     currentY += 15;
 
-    const quantitativesBody = dosage.dosageResume.quantitative.map((item) => item.toFixed(2));
+    // ✅ CORREÇÃO: Verificar se quantitative existe
+    const quantitativesBody = dosage.dosageResume?.quantitative?.map((item) => 
+      item != null ? item.toFixed(2) : '---'
+    ) || [];
 
     autoTable(doc, {
       head: [materials],
       body: [quantitativesBody],
       columnStyles: {
-        0: { width: 100 } as any, // largura da coluna
+        0: { width: 100 } as any,
       },
       styles: {
-        fillColor: '#F29134', // cor laranja
-        textColor: [0, 0, 0] as Color, // cor preta para o texto
+        fillColor: '#F29134',
+        textColor: [0, 0, 0] as Color,
         fontSize: 12,
       },
       startY: currentY,

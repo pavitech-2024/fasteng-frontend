@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
 import ModalBase from '@/components/molecules/modals/modal';
 import { Box, TextField } from '@mui/material';
-import { Sieve } from '@/interfaces/common';
+import { AllSieveSeries, Sieve } from '@/interfaces/common';
 import { useRouter } from 'next/router';
 import { MaterialsProps } from '@/pages/asphalt/materials';
 import useAuth from '@/contexts/auth';
@@ -32,6 +32,7 @@ const CreateEditMaterialModal = ({
   updatedMaterial,
   createdMaterial,
 }: CreateEditMaterialModalProps) => {
+  console.log('🚀 ~ CreateEditMaterialModal ~ materialToEdit:', materialToEdit);
   const initialMaterialState: AsphaltMaterialData = {
     name: '',
     type: '',
@@ -73,7 +74,7 @@ const CreateEditMaterialModal = ({
       { label: t('asphalt.materials.type'), value: material.type ?? '', key: 'type' },
       { label: t('asphalt.materials.source'), value: material.description?.source ?? '', key: 'source' },
       { label: t('asphalt.materials.responsible'), value: material.description?.responsible ?? '', key: 'responsible' },
-      { label: t('asphalt.materials.maxDiammeter'), value: material.description?.maxDiameter ?? '', key: 'maxDiammeter' },
+      { label: t('asphalt.materials.maxDiameter'), value: material.description?.maxDiameter ?? '', key: 'maxDiameter' },
       {
         label: t('asphalt.materials.aggregateNature'),
         value: material.description?.aggregateNature ?? '',
@@ -109,7 +110,7 @@ const CreateEditMaterialModal = ({
     switch (material.type) {
       case 'coarseAggregate':
       case 'fineAggregate':
-        WhiteList.push('maxDiammeter', 'aggregateNature', 'extractionDate', 'collectionDate');
+        WhiteList.push('maxDiameter', 'aggregateNature', 'extractionDate', 'collectionDate');
         break;
 
       case 'filler':
@@ -184,12 +185,12 @@ const CreateEditMaterialModal = ({
       });
     } catch (error: any) {
       const backendMessage = error?.response?.data?.message;
-      const isBackendAlreadyExistsError: boolean = backendMessage?.includes('already exists') || backendMessage?.includes('Server');
+      const isBackendAlreadyExistsError: boolean =
+        backendMessage?.includes('already exists') || backendMessage?.includes('Server');
       toast.update(createMaterialToastId, {
-        render:
-          (isBackendAlreadyExistsError
-            ? 'Já existe um material cadastrado com esse nome!'
-            : backendMessage ?? t('asphalt.materials.errorCreatingMaterial')),
+        render: isBackendAlreadyExistsError
+          ? 'Já existe um material cadastrado com esse nome!'
+          : backendMessage ?? t('asphalt.materials.errorCreatingMaterial'),
         type: 'error',
         isLoading: false,
         autoClose: 5000,
@@ -213,13 +214,14 @@ const CreateEditMaterialModal = ({
       validateMaterialData();
 
       const { data } = await materialsService.editMaterial(materialToEdit._id, material);
-      
+
       updatedMaterial(data);
 
       await updateMaterials();
 
       handleCloseModal();
 
+      toast.dismiss(toastId);
       toast.update(toastId, {
         render: 'Material editado com sucesso!',
         type: 'success',
@@ -314,6 +316,15 @@ const CreateEditMaterialModal = ({
               input.key === 'classification_CAP' ||
               input.key === 'classification_AMP'
             ) {
+              const options =
+                input.key === 'type'
+                  ? types
+                  : material.type.includes('Aggregate') && input.key === 'maxDiameter'
+                  ? AllSieveSeries[0].sieves.map((sieveSeries) => ({ label: sieveSeries.label, value: sieveSeries.value }))
+                  : input.key === 'classification_CAP' && !isEdit
+                  ? classification_CAP_options
+                  : classification_AMP_options;
+
               return (
                 <DropDown
                   key={input.key}
@@ -323,13 +334,7 @@ const CreateEditMaterialModal = ({
                   value={defaultDropDownValue(input.key, input.value)}
                   size="medium"
                   isEdit={isEdit}
-                  options={
-                    input.key === 'type'
-                      ? types
-                      : input.key === 'classification_CAP'
-                      ? classification_CAP_options
-                      : classification_AMP_options
-                  }
+                  options={options}
                   callback={(value: string) => changeMaterial(input.key, value)}
                   required
                 />

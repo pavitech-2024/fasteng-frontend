@@ -26,6 +26,27 @@ const Superpave_Step7_FirstCompactionParams = ({
 
   const [renderTable3, setRenderTable3] = useState(false);
 
+  // NO SUPERPAVE_STEP7 - Coloca isso no início do componente
+useEffect(() => {
+  console.log('🟢🟢🟢 DEBUG COMPLETO STEP 7 🟢🟢🟢');
+  console.log('1️⃣ DATA COMPLETA:', data);
+  console.log('2️⃣ TABLE1:', data.table1);
+  console.log('3️⃣ TABLE2:', data.table2);
+  console.log('4️⃣ TABLE3:', data.table3);
+  console.log('5️⃣ TABLE4:', data.table4);
+  
+  // Verifica os dados das curvas
+  if (data.table4) {
+    console.log('6️⃣ TABLE4 LOWER:', data.table4.table4Lower?.data);
+    console.log('7️⃣ TABLE4 AVERAGE:', data.table4.table4Average?.data);
+    console.log('8️⃣ TABLE4 HIGHER:', data.table4.table4Higher?.data);
+  }
+  
+  console.log('9️⃣ GRANULOMETRIA:', granulometryCompositionData);
+  console.log('🔟 ASFALTO:', initialBinderData);
+  console.log('1️⃣1️⃣ COMPACTAÇÃO:', firstCompressionData);
+}, [data]);
+
   useEffect(() => {
     toast.promise(
       async () => {

@@ -32,7 +32,7 @@
   "asphalt.materials.creatingMaterial": "Creating material...",
   "asphalt.materials.materialWithSameName": "A material with the same name already exists!",
 
-  "asphalt.materials.maxDiammeter": "Diâmetro Máximo",
+  "asphalt.materials.maxDiameter": "Diâmetro Máximo",
   "asphalt.materials.extractionDate": "Data de Extração",
 
   "asphalt.materialName": "Material Name",
