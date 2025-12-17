@@ -21,7 +21,7 @@
   "topbar.register": "Cadastro de novas amostras",
   "topbar.binder-asphalt-concrete": "Ligante e concreto asfálticos",
   "topbar.ddui": "Determinação de Dano por Umidade Induzida",
-  "topbar.softening-point": "Ponto de amolecimento",
+  "topbar.softeningpoint": "Ponto de amolecimento",
   "topbar.penetration": "Penetração",
   "topbar.saybolt-furol": "Viscosidade Saybolt-Furol",
   "topbar.granulometry-asphalt": "Granulometria",
@@ -35,5 +35,11 @@
   "topbar.ductility": "Ductilidade",
   "topbar.angularity": "Angularidade",
   "topbar.shapeindex": "Índice de Forma",
-  "topbar.elongatedparticles": "Partículas Alongadas"
+  "topbar.elongatedparticles": "Partículas Alongadas",
+  "topbar.abrasion": "Abrasão 'Los Angeles'",
+  "topbar.adhesiveness": "Adesividade",
+  "topbar.rtfo":"Envelhecimento à Curto Prazo - RTFO",
+  "topbar.sandequivalent":"Equivalente Areia",
+  "topbar.sayboltfurol":"Viscosidade Saybolt-Furol",
+  "topbar.maintenance": "Em Manutenção"
 }

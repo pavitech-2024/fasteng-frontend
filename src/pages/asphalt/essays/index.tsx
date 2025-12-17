@@ -172,7 +172,9 @@ const AsphaltEssays: NextPage = () => {
       title: t('asphalt.essays.igg'),
       icon: IggIcon,
       key: 'igg',
-      link: '/asphalt/essays/igg',
+      //Redirecionamento para página de manutenção
+      link:'/maintenance',
+      //link: '/asphalt/essays/igg',
       type: 'asphaltMix',
     },
   ];

@@ -136,7 +136,8 @@ import coarseAggregateENG from './translations/concrete/essays/coarseAggregate/e
 // abcp
 import concreteABCPPTBR from './translations/concrete/dosages/abcp/ptbr.json';
 import concreteABCPENG from './translations/concrete/dosages/abcp/en.json';
-
+//Maintenance
+import maintenance from './translations/maintenance/ptbr.json';
 i18n.use(initReactI18next).init({
   fallbackLng: 'ptBR',
   interpolation: {
@@ -192,6 +193,8 @@ i18n.use(initReactI18next).init({
         ...concreteGranulometryPTBR,
         ...coarseAggregatePTBR,
         ...concreteABCPPTBR,
+        /**@maintenance*/
+        ...maintenance
       },
     },
     en: {
