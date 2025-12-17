@@ -27,6 +27,80 @@ const Marshall_Step3_Granulometry = ({ setNextDisabled, marshall }: EssayPagePro
   let setSpecificationColumnsGroupings;
 
   useEffect(() => {
+  toast.promise(
+    async () => {
+      try {
+        console.log('🔄 Buscando dados de granulometria...');
+        console.log('generalData:', generalData);
+        console.log('materialSelectionData:', materialSelectionData);
+        console.log('user._id:', user._id);
+        
+        // Fetch step 3 data using the marshall service with necessary parameters.
+        const result = await marshall.getStep3Data(
+          generalData,
+          materialSelectionData,
+          user._id,
+          null
+        );
+
+        console.log('📦 Resultado COMPLETO do getStep3Data:', result);
+        console.log('Tipo:', typeof result);
+        
+        if (!result) {
+          console.error('❌ Resultado é undefined!');
+          throw new Error('Nenhum dado retornado do servidor');
+        }
+
+        const { table_data, dnitBands } = result;
+        
+        console.log('📊 table_data:', table_data);
+        console.log('📊 table_rows length:', table_data?.table_rows?.length || 0);
+        console.log('📊 dnitBands:', dnitBands);
+        console.log('📊 dnitBands.higher:', dnitBands?.higher?.length || 0);
+        console.log('📊 dnitBands.lower:', dnitBands?.lower?.length || 0);
+
+        if (!table_data || !dnitBands) {
+          console.error('❌ Dados incompletos!');
+          throw new Error('Dados incompletos do servidor');
+        }
+
+        if (!table_data.table_rows || table_data.table_rows.length === 0) {
+          console.warn('⚠️ table_rows está vazio!');
+          console.log('table_column_headers:', table_data.table_column_headers);
+          
+          // Mostra quais agregados estão sendo buscados
+          console.log('🔍 Agregados sendo buscados:', materialSelectionData.aggregates);
+        }
+
+        // Create a copy of the current data state to update with new fetched data.
+        const prevData = { ...data };
+
+        // Update the copied data with fetched table data and dnit bands.
+        prevData.table_data = table_data;
+        prevData.dnitBands = dnitBands;
+
+        // Set the new data state with the updated information.
+        setData({
+          step: 2,
+          value: prevData,
+        });
+
+        console.log('✅ Dados atualizados no store');
+
+      } catch (error) {
+        console.error('💥 Erro no getStep3Data:', error);
+        throw error;
+      }
+    },
+    {
+      pending: t('loading.materials.pending'),
+      success: t('loading.materials.success'),
+      error: t('loading.materials.error'),
+    }
+  );
+}, []);
+
+  useEffect(() => {
     toast.promise(
       async () => {
         try {

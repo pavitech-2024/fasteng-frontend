@@ -22,47 +22,68 @@ const Marshall_Step2_MaterialSelection = ({
 
   const { user } = useAuth();
 
-  useEffect(() => {
-    toast.promise(
-      async () => {
-        try {
-          const data : any = await marshall.getmaterialsByUserId(user._id);
+ useEffect(() => {
+  toast.promise(
+    async () => {
+      try {
+        console.log('🔄 Buscando materiais para user:', user._id);
+        
+        const data : any = await marshall.getmaterialsByUserId(user._id);
+        
+        console.log('📦 Dados retornados do backend:', data);
+        console.log('Tipo dos dados:', typeof data);
+        console.log('É array?', Array.isArray(data));
+        
+        let newMaterials: AsphaltMaterial[] = [];
 
-          let newMaterials: AsphaltMaterial[] = [];
-
-          if (Array.isArray(data)) {
-            // Pode ser [ { materials: [...] } ]
-            if (Array.isArray(data[0]?.materials)) {
-              newMaterials = data[0].materials;
-            } else if (
-              data.length > 0 &&
-              data.every(item => item._id && item.name && item.type)
-            ) {
-              // Pode ser um array já de materiais, sem 'materials' wrapper
-              newMaterials = data;
-            }
-          } else if (Array.isArray(data?.materials)) {
-            newMaterials = data.materials;
-          } else if (data && data._id && data.name && data.type) {
-            // Caso seja um único material
-            newMaterials = [data];
+        if (Array.isArray(data)) {
+          console.log('✅ É um array');
+          console.log('Primeiro elemento:', data[0]);
+          console.log('Tem propriedade materials?', data[0]?.materials);
+          
+          if (Array.isArray(data[0]?.materials)) {
+            console.log('📊 Usando data[0].materials');
+            newMaterials = data[0].materials;
+          } else if (
+            data.length > 0 &&
+            data.every(item => item._id && item.name && item.type)
+          ) {
+            console.log('📊 Usando array direto de materiais');
+            newMaterials = data;
+          } else {
+            console.log('⚠️ Array mas estrutura desconhecida');
+            console.log('Estrutura do primeiro item:', data[0]);
           }
-
-          setMaterials(newMaterials);
-          setLoading(false);
-        } catch (error) {
-          setMaterials([]);
-          setLoading(false);
-          throw error;
+        } else if (Array.isArray(data?.materials)) {
+          console.log('📊 Usando data.materials');
+          newMaterials = data.materials;
+        } else if (data && data._id && data.name && data.type) {
+          console.log('📊 Usando material único');
+          newMaterials = [data];
+        } else {
+          console.log('❌ Nenhum caso atendido, dados:', data);
         }
-      },
-      {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
+
+        console.log('🎯 Materiais finais:', newMaterials);
+        console.log('Quantidade:', newMaterials.length);
+        
+        setMaterials(newMaterials);
+        setLoading(false);
+        
+      } catch (error) {
+        console.error('💥 Erro ao buscar materiais:', error);
+        setMaterials([]);
+        setLoading(false);
+        throw error;
       }
-    );
-  }, []);
+    },
+    {
+      pending: t('loading.materials.pending'),
+      success: t('loading.materials.success'),
+      error: t('loading.materials.error'),
+    }
+  );
+}, []);
 
   const aggregateRows = materials
     .map(({ _id, name, type }) => ({
