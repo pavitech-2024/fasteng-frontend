@@ -308,6 +308,10 @@ const Marshall_Step5_MixtureMaximumDensity = ({
    * @throws Will throw an error if the calculation fails.
    */
   const calculateRiceTest = () => {
+     console.log('=== DEBUG RICE TEST ===');
+  console.log('data.riceTest:', data.riceTest);
+  console.log('binderTrialData:', binderTrialData);
+
     let errorMsg = '';
     let errorIndex;
 
@@ -363,7 +367,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
       {
         pending: t('submiting.data.pending'),
         success: t('submiting.data.success'),
-        error: `${t('errors.rice-test-empty-fields')}${binderTrialData.percentsOfDosage[2][errorIndex]?.value}%`,
+        error: `${t('errors.rice-test-empty-fields')}${binderTrialData.percentsOfDosage?.[2]?.[errorIndex]?.value ?? ''}%`,
       }
     );
   };

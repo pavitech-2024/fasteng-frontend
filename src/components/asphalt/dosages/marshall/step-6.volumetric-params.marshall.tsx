@@ -5,21 +5,12 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
-import Loading from '@/components/molecules/loading';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { EssayPageProps } from '@/components/templates/essay';
+import { VolumetricParametersData } from '@/stores/asphalt/marshall/marshall.store'; 
 
-/**
- * Componente para a etapa 6 do ensaio Marshall.
- * Renderiza tabelas editáveis com parâmetros volumétricos para diferentes dosagens de ligante.
- *
- * @param nextDisabled - Estado que indica se o botão "Próximo" está desabilitado.
- * @param setNextDisabled - Função para definir o estado do botão "Próximo".
- * @param marshall - Serviço Marshall para manipulação dos parâmetros volumétricos.
- */
 const Marshall_Step6_VolumetricParams = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
-  // Estados locais
   const { volumetricParametersData: data, binderTrialData, maximumMixtureDensityData, setData } = useMarshallStore();
   const [tableIsDisabled, setTableIsDisabled] = useState({
     lessOne: true,
@@ -29,37 +20,21 @@ const Marshall_Step6_VolumetricParams = ({ setNextDisabled, marshall }: EssayPag
     plusOne: true,
   });
 
-  /**
-   * Efeito para verificar se há arrays vazios nos dados volumétricos,
-   * e definir o estado do botão "Próximo" com base nisso.
-   */
   useEffect(() => {
     const hasEmptyArrays = Object.values(data.volumetricParameters).some((arr) => arr.length < 1);
     setNextDisabled(hasEmptyArrays);
   }, [data]);
 
-  /**
-   * Handles input changes for volumetric parameter fields and updates the state.
-   *
-   * @param tenor - The type of dosage, used as a key to access the correct data array.
-   * @param index - The index of the item in the data array to update.
-   * @param field - The specific field of the item to update.
-   * @returns A function that handles the change event of an input element.
-   */
   const handleInputChange =
     (tenor: string, index: number, field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
+      const processedValue = value === '' ? null : value;
+      
       const newState = [...data[tenor]];
-      newState[index] = { ...newState[index], [field]: value };
+      newState[index] = { ...newState[index], [field]: processedValue };
       setData({ step: 5, value: { ...data, [tenor]: newState } });
     };
 
-  /**
-   * Gera as colunas para o DataGrid com base no tipo de dosagem.
-   *
-   * @param tenor - Tipo de dosagem.
-   * @returns Array de definições de colunas.
-   */
   const generateColumns = (tenor: string): GridColDef[] => [
     {
       field: 'diammeter',
@@ -143,34 +118,21 @@ const Marshall_Step6_VolumetricParams = ({ setNextDisabled, marshall }: EssayPag
     },
   ];
 
-  /**
-   * Renderiza uma célula de entrada de dados no DataGrid.
-   *
-   * @param tenor - Tipo de dosagem.
-   * @param row - Linha de dados.
-   * @param field - Campo a ser renderizado.
-   * @returns Componente de entrada de dados.
-   */
   const renderInputCell = (tenor: string, row: any, field: string) => {
     const { id } = row;
     const index = data[tenor]?.findIndex((r) => r.id === id);
+    const value = data[tenor][index]?.[field];
+    
     return (
       <InputEndAdornment
         adornment=""
         type="number"
-        value={data[tenor][index]?.[field]}
+        value={value === null ? '' : value}
         onChange={handleInputChange(tenor, index, field)}
       />
     );
   };
 
-  /**
-   * Gera o modelo de agrupamento de colunas para o DataGrid.
-   *
-   * @param tenor - Tipo de dosagem.
-   * @param index - Índice da dosagem no array de percentuais.
-   * @returns Modelo de agrupamento de colunas.
-   */
   const generateColumnGroupingModel = (tenor: string, index: number): GridColumnGroupingModel => [
     {
       groupId: `${binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][index].value},00 %`,
@@ -201,11 +163,6 @@ const Marshall_Step6_VolumetricParams = ({ setNextDisabled, marshall }: EssayPag
     },
   ];
 
-  /**
-   * Handle para remover a última linha de dados de um tipo específico.
-   *
-   * @param type - Tipo de dosagem.
-   */
   const handleErase = (type: string) => {
     const newRows = [...data[type]];
     if (newRows.length > 1) {
@@ -216,11 +173,6 @@ const Marshall_Step6_VolumetricParams = ({ setNextDisabled, marshall }: EssayPag
     }
   };
 
-  /**
-   * Handle para adicionar uma nova linha de dados a um tipo específico.
-   *
-   * @param type - Tipo de dosagem.
-   */
   const handleAdd = (type: string) => {
     const newRows = [
       ...data[type],
@@ -239,12 +191,6 @@ const Marshall_Step6_VolumetricParams = ({ setNextDisabled, marshall }: EssayPag
     setData({ step: 5, value: { ...data, [type]: newRows } });
   };
 
-  /**
-   * Componente de barra de ferramentas para expansão do DataGrid.
-   *
-   * @param type - Tipo de dosagem.
-   * @returns Componente de barra de ferramentas.
-   */
   const ExpansionToolbar = (type: string) => (
     <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
       <Button sx={{ color: 'secondaryTons.red' }} disabled={tableIsDisabled[type]} onClick={() => handleErase(type)}>
@@ -256,20 +202,110 @@ const Marshall_Step6_VolumetricParams = ({ setNextDisabled, marshall }: EssayPag
     </Box>
   );
 
-  /**
-   * Função para definir os parâmetros volumétricos.
-   */
+  // Botão para habilitar todas as tabelas
+  const enableAllTables = () => {
+    setTableIsDisabled({
+      lessOne: false,
+      lessHalf: false,
+      normal: false,
+      plusHalf: false,
+      plusOne: false,
+    });
+    toast.info('Todas as tabelas habilitadas! Agora adicione linhas e preencha.');
+  };
+
   const setVolumetricParams = () => {
     toast.promise(
       async () => {
         try {
+          // Verifica se há pelo menos um array completamente preenchido
+          const arraysWithCompleteData = ['lessOne', 'lessHalf', 'normal', 'plusHalf', 'plusOne']
+            .filter(key => {
+              const array = data[key];
+              if (!array || array.length === 0) return false;
+              
+              return array.every(item => 
+                item.diammeter !== null && item.diammeter !== '' &&
+                item.height !== null && item.height !== '' &&
+                item.dryMass !== null && item.dryMass !== '' &&
+                item.submergedMass !== null && item.submergedMass !== '' &&
+                item.drySurfaceSaturatedMass !== null && item.drySurfaceSaturatedMass !== '' &&
+                item.stability !== null && item.stability !== '' &&
+                item.fluency !== null && item.fluency !== '' &&
+                item.diametricalCompressionStrength !== null && item.diametricalCompressionStrength !== ''
+              );
+            });
+          
+          if (arraysWithCompleteData.length === 0) {
+            toast.error('Preencha pelo menos UM teor completamente (todos os 8 campos)');
+            return;
+          }
+          
+          // Verifica arrays com dados parciais
+          const arraysWithPartialData = ['lessOne', 'lessHalf', 'normal', 'plusHalf', 'plusOne']
+            .filter(key => {
+              const array = data[key];
+              if (!array || array.length === 0) return false;
+              
+              const hasSomeData = array.some(item => 
+                item.diammeter !== null || item.height !== null || 
+                item.dryMass !== null || item.submergedMass !== null ||
+                item.drySurfaceSaturatedMass !== null || item.stability !== null ||
+                item.fluency !== null || item.diametricalCompressionStrength !== null
+              );
+              
+              const allFieldsFilled = array.every(item => 
+                item.diammeter !== null && item.height !== null && 
+                item.dryMass !== null && item.submergedMass !== null &&
+                item.drySurfaceSaturatedMass !== null && item.stability !== null &&
+                item.fluency !== null && item.diametricalCompressionStrength !== null
+              );
+              
+              return hasSomeData && !allFieldsFilled;
+            });
+          
+          if (arraysWithPartialData.length > 0) {
+            toast.error(`Complete TODOS os campos ou apague os dados nos teores: ${arraysWithPartialData.join(', ')}`);
+            return;
+          }
+          
+          // Pega o teor normal
+          if (!binderTrialData.percentsOfDosage || binderTrialData.percentsOfDosage.length === 0) {
+            throw new Error('Dados dos percentuais não encontrados');
+          }
+          
+          const lastArray = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1];
+          const normalTrialData = lastArray.find(p => p.trial === 'normal');
+          
+          if (!normalTrialData) {
+            throw new Error('Teor normal não encontrado');
+          }
+          
+          const step6Data: VolumetricParametersData = {
+            lessOne: data.lessOne,
+            lessHalf: data.lessHalf,
+            normal: data.normal,
+            plusHalf: data.plusHalf,
+            plusOne: data.plusOne,
+            volumetricParameters: data.volumetricParameters || {
+              pointsOfCurveDosageRBV: [],
+              pointsOfCurveDosageVv: [],
+              volumetricParameters: []
+            }
+          };
+          
           const volumetricParams = await marshall.setVolumetricParametersData(
-            data,
+            step6Data,
             binderTrialData,
-            maximumMixtureDensityData
+            maximumMixtureDensityData,
+            false
           );
+          
           setData({ step: 5, value: { ...data, ...volumetricParams } });
+          
         } catch (error) {
+          console.error('Erro:', error);
+          toast.error(`Erro: ${error.message}`);
           throw error;
         }
       },
@@ -281,14 +317,6 @@ const Marshall_Step6_VolumetricParams = ({ setNextDisabled, marshall }: EssayPag
     );
   };
 
-  /**
-   * Renderiza o componente DataGrid para um tipo específico de dosagem.
-   *
-   * @param tenor - Tipo de dosagem.
-   * @param rows - Linhas de dados.
-   * @param index - Índice da dosagem no array de percentuais.
-   * @returns Componente DataGrid.
-   */
   const renderDataGrid = (tenor: string, rows: any[], index: number) => (
     <DataGrid
       key={tenor}
@@ -310,15 +338,29 @@ const Marshall_Step6_VolumetricParams = ({ setNextDisabled, marshall }: EssayPag
     />
   );
 
-  // Renderização do componente principal
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <Button 
+        onClick={enableAllTables}
+        variant="contained"
+        color="primary"
+        startIcon={<LockOpenIcon />}
+        sx={{ alignSelf: 'flex-start' }}
+      >
+        Habilitar Todas as Tabelas
+      </Button>
+      
       {renderDataGrid('lessOne', data.lessOne, 0)}
       {renderDataGrid('lessHalf', data.lessHalf, 1)}
       {renderDataGrid('normal', data.normal, 2)}
       {renderDataGrid('plusHalf', data.plusHalf, 3)}
       {renderDataGrid('plusOne', data.plusOne, 4)}
-      <Button onClick={setVolumetricParams} variant="outlined">
+      
+      <Button 
+        onClick={setVolumetricParams} 
+        variant="contained"
+        color="primary"
+      >
         {t('asphalt.dosages.marshall.confirm')}
       </Button>
     </Box>
