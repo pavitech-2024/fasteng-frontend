@@ -103,7 +103,7 @@ interface MarshallMaximumMixtureDensityData {
   listOfSpecificGravities: any[];
 }
 
-interface VolumetricParametersData {
+export interface VolumetricParametersData {
   lessOne: {
     id: number;
     diammeter: number;
