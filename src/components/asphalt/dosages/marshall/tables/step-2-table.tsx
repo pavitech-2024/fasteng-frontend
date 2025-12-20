@@ -15,10 +15,16 @@ interface Step2Props {
 
 const Step2Table = ({ rows, columns, header }: Step2Props & { marshall: Marshall_SERVICE }) => {
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
+  const [currentToastId, setCurrentToastId] = useState<number | string | null>(null);
   const { materialSelectionData, setData } = useMarshallStore();
 
   // Função para mostrar aviso quando seleciona material
   const showTestWarning = (materialType: string, materialName: string) => {
+    // Fecha o toast anterior se existir
+    if (currentToastId) {
+      toast.dismiss(currentToastId);
+    }
+    
     let missingTests = '';
     
     if (['coarseAggregate', 'fineAggregate', 'filler'].includes(materialType)) {
@@ -28,16 +34,23 @@ const Step2Table = ({ rows, columns, header }: Step2Props & { marshall: Marshall
     }
     
     if (missingTests) {
-      toast.warning(
+      const toastId = toast.warning(
         `⚠️ ${materialName}\n` +
         `Verifique se possui:\n${missingTests}\n` +
         'Sem esses ensaios, serão usados valores padrão.',
         {
           autoClose: 7000,
-          position: 'top-center',
-          style: { whiteSpace: 'pre-line' }
+          position: 'top-right',
+          style: { 
+            whiteSpace: 'pre-line',
+            minWidth: '300px',
+            maxWidth: '400px'
+          },
+          toastId: `material-${materialName}`,
         }
       );
+      
+      setCurrentToastId(toastId);
     }
   };
 

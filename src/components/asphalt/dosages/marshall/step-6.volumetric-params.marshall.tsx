@@ -202,7 +202,6 @@ const Marshall_Step6_VolumetricParams = ({ setNextDisabled, marshall }: EssayPag
     </Box>
   );
 
-  // Botão para habilitar todas as tabelas
   const enableAllTables = () => {
     setTableIsDisabled({
       lessOne: false,
@@ -214,108 +213,115 @@ const Marshall_Step6_VolumetricParams = ({ setNextDisabled, marshall }: EssayPag
     toast.info('Todas as tabelas habilitadas! Agora adicione linhas e preencha.');
   };
 
-  const setVolumetricParams = () => {
-    toast.promise(
-      async () => {
-        try {
-          // Verifica se há pelo menos um array completamente preenchido
-          const arraysWithCompleteData = ['lessOne', 'lessHalf', 'normal', 'plusHalf', 'plusOne']
-            .filter(key => {
-              const array = data[key];
-              if (!array || array.length === 0) return false;
-              
-              return array.every(item => 
-                item.diammeter !== null && item.diammeter !== '' &&
-                item.height !== null && item.height !== '' &&
-                item.dryMass !== null && item.dryMass !== '' &&
-                item.submergedMass !== null && item.submergedMass !== '' &&
-                item.drySurfaceSaturatedMass !== null && item.drySurfaceSaturatedMass !== '' &&
-                item.stability !== null && item.stability !== '' &&
-                item.fluency !== null && item.fluency !== '' &&
-                item.diametricalCompressionStrength !== null && item.diametricalCompressionStrength !== ''
-              );
-            });
-          
-          if (arraysWithCompleteData.length === 0) {
-            toast.error('Preencha pelo menos UM teor completamente (todos os 8 campos)');
-            return;
-          }
-          
-          // Verifica arrays com dados parciais
-          const arraysWithPartialData = ['lessOne', 'lessHalf', 'normal', 'plusHalf', 'plusOne']
-            .filter(key => {
-              const array = data[key];
-              if (!array || array.length === 0) return false;
-              
-              const hasSomeData = array.some(item => 
-                item.diammeter !== null || item.height !== null || 
-                item.dryMass !== null || item.submergedMass !== null ||
-                item.drySurfaceSaturatedMass !== null || item.stability !== null ||
-                item.fluency !== null || item.diametricalCompressionStrength !== null
-              );
-              
-              const allFieldsFilled = array.every(item => 
-                item.diammeter !== null && item.height !== null && 
-                item.dryMass !== null && item.submergedMass !== null &&
-                item.drySurfaceSaturatedMass !== null && item.stability !== null &&
-                item.fluency !== null && item.diametricalCompressionStrength !== null
-              );
-              
-              return hasSomeData && !allFieldsFilled;
-            });
-          
-          if (arraysWithPartialData.length > 0) {
-            toast.error(`Complete TODOS os campos ou apague os dados nos teores: ${arraysWithPartialData.join(', ')}`);
-            return;
-          }
-          
-          // Pega o teor normal
-          if (!binderTrialData.percentsOfDosage || binderTrialData.percentsOfDosage.length === 0) {
-            throw new Error('Dados dos percentuais não encontrados');
-          }
-          
-          const lastArray = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1];
-          const normalTrialData = lastArray.find(p => p.trial === 'normal');
-          
-          if (!normalTrialData) {
-            throw new Error('Teor normal não encontrado');
-          }
-          
-          const step6Data: VolumetricParametersData = {
-            lessOne: data.lessOne,
-            lessHalf: data.lessHalf,
-            normal: data.normal,
-            plusHalf: data.plusHalf,
-            plusOne: data.plusOne,
-            volumetricParameters: data.volumetricParameters || {
-              pointsOfCurveDosageRBV: [],
-              pointsOfCurveDosageVv: [],
-              volumetricParameters: []
-            }
-          };
-          
-          const volumetricParams = await marshall.setVolumetricParametersData(
-            step6Data,
-            binderTrialData,
-            maximumMixtureDensityData,
-            false
-          );
-          
-          setData({ step: 5, value: { ...data, ...volumetricParams } });
-          
-        } catch (error) {
-          console.error('Erro:', error);
-          toast.error(`Erro: ${error.message}`);
-          throw error;
+const setVolumetricParams = () => {
+  toast.promise(
+    async () => {
+      try {
+        // 1. Verifica dados completos
+        const arraysWithCompleteData = ['lessOne', 'lessHalf', 'normal', 'plusHalf', 'plusOne']
+          .filter(key => {
+            const array = data[key];
+            if (!array || array.length === 0) return false;
+            
+            return array.every(item => 
+              item.diammeter !== null && item.diammeter !== '' &&
+              item.height !== null && item.height !== '' &&
+              item.dryMass !== null && item.dryMass !== '' &&
+              item.submergedMass !== null && item.submergedMass !== '' &&
+              item.drySurfaceSaturatedMass !== null && item.drySurfaceSaturatedMass !== '' &&
+              item.stability !== null && item.stability !== '' &&
+              item.fluency !== null && item.fluency !== '' &&
+              item.diametricalCompressionStrength !== null && item.diametricalCompressionStrength !== ''
+            );
+          });
+        
+        if (arraysWithCompleteData.length === 0) {
+          toast.error('Preencha pelo menos UM teor completamente');
+          return;
         }
-      },
-      {
-        pending: t('loading.data.pending'),
-        success: t('loading.data.success'),
-        error: t('loading.data.error'),
+        
+        // 2. Verifica dados parciais
+        const arraysWithPartialData = ['lessOne', 'lessHalf', 'normal', 'plusHalf', 'plusOne']
+          .filter(key => {
+            const array = data[key];
+            if (!array || array.length === 0) return false;
+            
+            const hasSomeData = array.some(item => 
+              item.diammeter !== null || item.height !== null || 
+              item.dryMass !== null || item.submergedMass !== null ||
+              item.drySurfaceSaturatedMass !== null || item.stability !== null ||
+              item.fluency !== null || item.diametricalCompressionStrength !== null
+            );
+            
+            const allFieldsFilled = array.every(item => 
+              item.diammeter !== null && item.height !== null && 
+              item.dryMass !== null && item.submergedMass !== null &&
+              item.drySurfaceSaturatedMass !== null && item.stability !== null &&
+              item.fluency !== null && item.diametricalCompressionStrength !== null
+            );
+            
+            return hasSomeData && !allFieldsFilled;
+          });
+        
+        if (arraysWithPartialData.length > 0) {
+          toast.error(`Complete TODOS os campos ou apague os dados nos teores: ${arraysWithPartialData.join(', ')}`);
+          return;
+        }
+        
+        // 3. DEBUG FINAL antes de enviar
+        console.log('🚀 DADOS FINAIS PARA ENVIAR:');
+        console.log('   - Trial:', binderTrialData.trial); // 32
+        console.log('   - Method:', maximumMixtureDensityData?.maxSpecificGravity?.method); // DMT
+        console.log('   - Arrays completos:', arraysWithCompleteData.length);
+        console.log('   - Temperature:', maximumMixtureDensityData?.temperatureOfWater); // 0.9984
+        
+        // 4. Prepara dados
+        const step6Data: VolumetricParametersData = {
+          lessOne: data.lessOne,
+          lessHalf: data.lessHalf,
+          normal: data.normal,
+          plusHalf: data.plusHalf,
+          plusOne: data.plusOne,
+          volumetricParameters: data.volumetricParameters || {
+            pointsOfCurveDosageRBV: [],
+            pointsOfCurveDosageVv: [],
+            volumetricParameters: []
+          }
+        };
+        
+        // 5. Chama o serviço ORIGINAL (que já existe)
+        console.log('📤 Chamando marshall.setVolumetricParametersData...');
+        
+        const volumetricParams = await marshall.setVolumetricParametersData(
+          step6Data,
+          binderTrialData,
+          maximumMixtureDensityData,
+          false
+        );
+        
+        console.log('✅ Resposta do serviço:', volumetricParams);
+        
+        setData({ step: 5, value: { ...data, ...volumetricParams } });
+        
+      } catch (error) {
+        console.error('💥 ERRO NO FRONTEND ao chamar serviço:', error);
+        
+        // O erro está vindo do BACKEND!
+        if (error.response?.data?.message) {
+          console.error('❌ Mensagem do backend:', error.response.data.message);
+        }
+        
+        toast.error(error.message || 'Erro ao processar dados');
+        throw error;
       }
-    );
-  };
+    },
+    {
+      pending: t('loading.data.pending'),
+      success: t('loading.data.success'),
+      error: t('loading.data.error'),
+    }
+  );
+};
 
   const renderDataGrid = (tenor: string, rows: any[], index: number) => (
     <DataGrid
