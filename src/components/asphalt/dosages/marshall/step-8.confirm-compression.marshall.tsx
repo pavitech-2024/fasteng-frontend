@@ -252,7 +252,11 @@ const Marshall_Step8_ConfirmCompression = ({
     {
       field: 'Teor',
       headerName: t('asphalt.dosages.marshall.tenor'),
-      valueFormatter: () => `${optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2)}%`,
+     // Linha 268 - adicione verificação
+valueFormatter: () => {
+  const content = optimumBinderContentData?.optimumBinder?.optimumContent;
+  return content ? `${content.toFixed(2)}%` : '---';
+},
     },
     {
       field: 'massOfDrySample',

@@ -22,34 +22,57 @@ const Marshall_Step2_MaterialSelection = ({
 
   const { user } = useAuth();
 
+  // Função para verificar se material tem ensaios (baseado na lógica do backend)
+  const checkMaterialTests = (material: AsphaltMaterial): boolean => {
+    // Se o material tiver algum ensaio cadastrado (ajuste conforme sua estrutura real)
+    // Você pode verificar se há propriedades específicas ou fazer uma requisição
+    // Por enquanto, vamos assumir que todos têm ensaios ou o backend vai lidar
+    return true; // Temporário - ajuste conforme sua lógica
+  };
+
   useEffect(() => {
     toast.promise(
       async () => {
         try {
+          console.log('🔄 Buscando materiais para user:', user._id);
+          
           const data : any = await marshall.getmaterialsByUserId(user._id);
-
+          
+          console.log('📦 Dados retornados do backend:', data);
+          console.log('Tipo dos dados:', typeof data);
+          console.log('É array?', Array.isArray(data));
+          
           let newMaterials: AsphaltMaterial[] = [];
 
           if (Array.isArray(data)) {
+            console.log('✅ É um array');
+            
             if (Array.isArray(data[0]?.materials)) {
+              console.log('📊 Usando data[0].materials');
               newMaterials = data[0].materials;
             } else if (
               data.length > 0 &&
               data.every(item => item._id && item.name && item.type)
             ) {
-              // Pode ser um array já de materiais, sem 'materials' wrapper
+              console.log('📊 Usando array direto de materiais');
               newMaterials = data;
             }
           } else if (Array.isArray(data?.materials)) {
+            console.log('📊 Usando data.materials');
             newMaterials = data.materials;
           } else if (data && data._id && data.name && data.type) {
-            // Caso seja um único material
+            console.log('📊 Usando material único');
             newMaterials = [data];
           }
 
+          console.log('🎯 Materiais finais:', newMaterials);
+          console.log('Quantidade:', newMaterials.length);
+          
           setMaterials(newMaterials);
           setLoading(false);
+            
         } catch (error) {
+          console.error('💥 Erro ao buscar materiais:', error);
           setMaterials([]);
           setLoading(false);
           throw error;
