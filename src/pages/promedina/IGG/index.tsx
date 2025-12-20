@@ -1,6 +1,6 @@
 // PavementAnalysisPage.tsx - Versão Profissional e Compacta PROMEDINA com Contagem de Defeitos
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import {
   Box, 
   Paper, 
@@ -49,18 +49,8 @@ interface PavementStation {
   date?: string;
 }
 
-interface PavementAnalysis {
-  id: string;
-  name: string;
-  road: string;
-  evaluationDate: string;
-  stations: PavementStation[];
-  results: PavementResults;
-  createdAt: string;
-}
-
 interface PavementResults {
-  generalData: any;
+  generalData: Record<string, unknown>;
   statistics: {
     flechas_TRI: { media: number; variancia: number };
     flechas_TRE: { media: number; variancia: number };
@@ -83,6 +73,16 @@ interface PavementResults {
   };
 }
 
+interface PavementAnalysis {
+  id: string;
+  name: string;
+  road: string;
+  evaluationDate: string;
+  stations: PavementStation[];
+  results: PavementResults;
+  createdAt: string;
+}
+
 // --- Constantes (Sem Alteração na Informação) ---
 const FATORES_PONDERACAO: Record<number, number> = {
   1: 0.2, 2: 0.5, 3: 0.8, 4: 0.9, 5: 1.0, 6: 0.5, 7: 0.3, 8: 0.6
@@ -96,24 +96,46 @@ const CLASSIFICACAO = [
   { min: 160, max: Infinity, classificacao: "PÉSSIMO", cor: "#c0392b" }
 ];
 
-const DEFEITOS_INFO: Record<string, [string, number, number]> = {
-  "FI": ["Fissuras Isoladas", 1, 3], "TTC": ["Trincas Transversais Curtas", 1, 3], 
-  "TTL": ["Trincas Transversais Longas", 1, 3], "TLC": ["Trincas Longitudinais Curtas", 1, 3], 
-  "TLL": ["Trincas Longitudinais Longas", 1, 3], "TRR": ["Trincas por Retração Térmica", 1, 3], 
-  "J": ["Trincas em Jacaré (sem erosão)", 2, 2], "TB": ["Trincas em Bloco (sem erosão)", 2, 2], 
-  "JE": ["Trincas em Jacaré (com erosão)", 3, 1], "TBE": ["Trincas em Bloco (com erosão)", 3, 1], 
-  "ALP": ["Afundamento Plástico Local", 4, 1], "ATP": ["Afundamento Plástico na Trilha", 4, 1], 
-  "ALC": ["Afundamento por Consolidação Local", 4, 1], "ATC": ["Afundamento por Consolidação na Trilha", 4, 1], 
-  "O": ["Ondulações/Corrugações", 5, 1], "P": ["Panelas/Buracos", 5, 1], "E": ["Escorregamento", 5, 1], 
-  "EX": ["Exsudação", 6, 1], "D": ["Desgaste", 7, 1], "R": ["Remendos", 8, 1]
+interface DefectInfo {
+  description: string;
+  type: number;
+  priority: number;
+}
+
+const DEFEITOS_INFO: Record<string, DefectInfo> = {
+  "FI": { description: "Fissuras Isoladas", type: 1, priority: 3 },
+  "TTC": { description: "Trincas Transversais Curtas", type: 1, priority: 3 },
+  "TTL": { description: "Trincas Transversais Longas", type: 1, priority: 3 },
+  "TLC": { description: "Trincas Longitudinais Curtas", type: 1, priority: 3 },
+  "TLL": { description: "Trincas Longitudinais Longas", type: 1, priority: 3 },
+  "TRR": { description: "Trincas por Retração Térmica", type: 1, priority: 3 },
+  "J": { description: "Trincas em Jacaré (sem erosão)", type: 2, priority: 2 },
+  "TB": { description: "Trincas em Bloco (sem erosão)", type: 2, priority: 2 },
+  "JE": { description: "Trincas em Jacaré (com erosão)", type: 3, priority: 1 },
+  "TBE": { description: "Trincas em Bloco (com erosão)", type: 3, priority: 1 },
+  "ALP": { description: "Afundamento Plástico Local", type: 4, priority: 1 },
+  "ATP": { description: "Afundamento Plástico na Trilha", type: 4, priority: 1 },
+  "ALC": { description: "Afundamento por Consolidação Local", type: 4, priority: 1 },
+  "ATC": { description: "Afundamento por Consolidação na Trilha", type: 4, priority: 1 },
+  "O": { description: "Ondulações/Corrugações", type: 5, priority: 1 },
+  "P": { description: "Panelas/Buracos", type: 5, priority: 1 },
+  "E": { description: "Escorregamento", type: 5, priority: 1 },
+  "EX": { description: "Exsudação", type: 6, priority: 1 },
+  "D": { description: "Desgaste", type: 7, priority: 1 },
+  "R": { description: "Remendos", type: 8, priority: 1 }
 };
+
+interface TerraplenagemOption {
+  code: string;
+  name: string;
+}
 
 const SECOES_TERRAPLENAGEM_MAP: Record<string, string> = {
   "A": "ATERRO", "C": "CORTE", "SMA": "SEÇÃO MISTA (ATERRO)", 
   "SMC": "SEÇÃO MISTA (CORTE)", "CR": "CORTE EM ROCHA", "PP": "PONTO DE PASSAGEM"
 };
 
-const SECOES_TERRAPLENAGEM_OPTIONS = Object.entries(SECOES_TERRAPLENAGEM_MAP).map(([code, name]) => ({
+const SECOES_TERRAPLENAGEM_OPTIONS: TerraplenagemOption[] = Object.entries(SECOES_TERRAPLENAGEM_MAP).map(([code, name]) => ({
   code, name
 }));
 
@@ -124,7 +146,7 @@ const WARNING_ORANGE = '#f39c12';
 const ERROR_RED = '#e74c3c';
 
 // --- Funções Auxiliares (Processamento DNIT - Ajustado para o novo formato de defeitos e robustez) ---
-const processarDadosDNIT = (dados: { geral: any, estacoes: PavementStation[] }): PavementResults => {
+const processarDadosDNIT = (dados: { geral: Record<string, unknown>, estacoes: PavementStation[] }): PavementResults => {
   const stations = dados.estacoes;
   const n = stations.length;
   
@@ -150,10 +172,10 @@ const processarDadosDNIT = (dados: { geral: any, estacoes: PavementStation[] }):
   if (n === 0) return defaultResults;
 
   // 1. Cálculo das flechas 
-  const media_tri = stations.reduce((sum: number, station: any) => sum + station.tri, 0) / n;
-  const media_tre = stations.reduce((sum: number, station: any) => sum + station.tre, 0) / n;
-  const var_tri = stations.reduce((sum: number, station: any) => sum + Math.pow(station.tri - media_tri, 2), 0) / n;
-  const var_tre = stations.reduce((sum: number, station: any) => sum + Math.pow(station.tre - media_tre, 2), 0) / n;
+  const media_tri = stations.reduce((sum: number, station: PavementStation) => sum + station.tri, 0) / n;
+  const media_tre = stations.reduce((sum: number, station: PavementStation) => sum + station.tre, 0) / n;
+  const var_tri = stations.reduce((sum: number, station: PavementStation) => sum + Math.pow(station.tri - media_tri, 2), 0) / n;
+  const var_tre = stations.reduce((sum: number, station: PavementStation) => sum + Math.pow(station.tre - media_tre, 2), 0) / n;
   
   const F = (media_tri + media_tre) / 2;
   const FV = (var_tri + var_tre) / 2;
@@ -163,7 +185,7 @@ const processarDadosDNIT = (dados: { geral: any, estacoes: PavementStation[] }):
     const tiposEncontrados: number[] = [];
     Object.keys(station.defects).forEach(code => {
       if (station.defects[code] > 0) {
-        tiposEncontrados.push(DEFEITOS_INFO[code][1]);
+        tiposEncontrados.push(DEFEITOS_INFO[code].type);
       }
     });
     return tiposEncontrados;
@@ -192,7 +214,7 @@ const processarDadosDNIT = (dados: { geral: any, estacoes: PavementStation[] }):
   });
   
   const freq_rel = Object.fromEntries(
-    Object.entries(freq_abs).map(([t, count]) => [parseInt(t), (count as number / n) * 100])
+    Object.entries(freq_abs).map(([t, count]) => [parseInt(t), (count / n) * 100])
   );
   
   // 4. Cálculo dos IGIs
@@ -200,7 +222,7 @@ const processarDadosDNIT = (dados: { geral: any, estacoes: PavementStation[] }):
   Object.entries(freq_rel).forEach(([t, freq]) => {
     const tipo = parseInt(t);
     if (tipo > 0) {
-        IGI_tipos[tipo] = (freq as number) * FATORES_PONDERACAO[tipo];
+        IGI_tipos[tipo] = freq * FATORES_PONDERACAO[tipo];
     }
   });
   
@@ -265,9 +287,14 @@ const processarDadosDNIT = (dados: { geral: any, estacoes: PavementStation[] }):
   };
 };
 
+interface FrequencyChartData {
+  tipo: string;
+  frequencia: number;
+}
+
 // --- Componente Simulado de Gráfico de Barras (Para Frequência) ---
 const FrequencyBarChart: React.FC<{ data: Record<number, number> }> = ({ data }) => {
-  const chartData = useMemo(() => {
+  const chartData = useMemo<FrequencyChartData[]>(() => {
     return Object.entries(data)
       .filter(([, freq]) => freq > 0)
       .map(([tipo, freq]) => ({
@@ -314,8 +341,14 @@ const FrequencyBarChart: React.FC<{ data: Record<number, number> }> = ({ data })
   );
 };
 
+interface ResultsSectionProps {
+  results: PavementResults;
+  onSave: () => void;
+  onEdit: () => void;
+}
+
 // --- Componente de Resultados (Implementação do Layout Profissional) ---
-const ResultsSection: React.FC<{ results: PavementResults, onSave: () => void, onEdit: () => void }> = ({ results, onSave, onEdit }) => {
+const ResultsSection: React.FC<ResultsSectionProps> = ({ results, onSave, onEdit }) => {
   const stats = results.statistics;
   const F_class = stats.F > 15 ? WARNING_ORANGE : PRIMARY_GREEN; // Exemplo de regra visual para F
   const FV_class = stats.FV > 10 ? WARNING_ORANGE : PRIMARY_GREEN; // Exemplo de regra visual para FV
@@ -412,7 +445,10 @@ const ResultsSection: React.FC<{ results: PavementResults, onSave: () => void, o
                         {item.fator}
                         {item.tipo && (
                             <Tooltip 
-                                title={Object.entries(DEFEITOS_INFO).filter(([, [, type]]) => type === item.tipo).map(([code, [desc]]) => `${code}: ${desc}`).join(', ')}
+                                title={Object.entries(DEFEITOS_INFO)
+                                  .filter(([, info]) => info.type === item.tipo)
+                                  .map(([code, info]) => `${code}: ${info.description}`)
+                                  .join(', ')}
                             >
                                 <InfoOutlined sx={{ fontSize: 14, ml: 0.5, color: '#90a4ae' }} />
                             </Tooltip>
@@ -458,6 +494,15 @@ const ResultsSection: React.FC<{ results: PavementResults, onSave: () => void, o
   );
 };
 
+interface FormData {
+  name: string;
+  description: string;
+  road: string;
+  section: string;
+  subtrack: string;
+  pavementType: string;
+  evaluationDate: string;
+}
 
 // --- Componente Principal ---
 const PavementAnalysisPage: React.FC = () => {
@@ -470,7 +515,7 @@ const PavementAnalysisPage: React.FC = () => {
   const [selectedAnalysis, setSelectedAnalysis] = useState<PavementAnalysis | null>(null);
 
   // --- Estado do Formulário de Dados Gerais ---
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '', description: '', road: '', section: '', subtrack: '',
     pavementType: '', evaluationDate: new Date().toISOString().split('T')[0],
   });
@@ -488,16 +533,16 @@ const PavementAnalysisPage: React.FC = () => {
   const steps = ['Dados Gerais', 'Estações e Defeitos', 'Resultados'];
 
   // Handlers
-  const handleFormChange = (field: string, value: string) => {
+  const handleFormChange = useCallback((field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-  };
+  }, []);
 
-  const handleStationChange = (field: keyof PavementStation, value: any) => {
+  const handleStationChange = useCallback((field: keyof PavementStation, value: string | number) => {
     setCurrentStation(prev => ({ ...prev, [field]: value }));
-  };
+  }, []);
 
   // --- NOVO HANDLER PARA CONTAR DEFEITOS ---
-  const handleDefectCountChange = (defectCode: string, value: number) => {
+  const handleDefectCountChange = useCallback((defectCode: string, value: number) => {
     setDefectCounts(prev => {
       const newCounts = { ...prev };
       if (value > 0) {
@@ -508,9 +553,9 @@ const PavementAnalysisPage: React.FC = () => {
       }
       return newCounts;
     });
-  };
+  }, []);
 
-  const resetStationForm = (keepSection: boolean = true) => {
+  const resetStationForm = useCallback((keepSection: boolean = true) => {
     setCurrentStation({
       stationNumber: '',
       section: keepSection ? currentStation.section : 'A',
@@ -520,10 +565,10 @@ const PavementAnalysisPage: React.FC = () => {
     });
     setDefectCounts({}); // Resetar a contagem
     setEditingStationId(null);
-  };
+  }, [currentStation.section]);
   
   // --- Lógica de Adição/Edição de Estação ATUALIZADA ---
-  const handleAddOrUpdateStation = () => {
+  const handleAddOrUpdateStation = useCallback(() => {
     if (!currentStation.stationNumber) {
       alert('Número da estaca é obrigatório');
       return;
@@ -536,8 +581,8 @@ const PavementAnalysisPage: React.FC = () => {
 
     const stationData: PavementStation = {
       ...currentStation as PavementStation,
-      tri: parseFloat(currentStation.tri as any) || 0,
-      tre: parseFloat(currentStation.tre as any) || 0,
+      tri: parseFloat(String(currentStation.tri)) || 0,
+      tre: parseFloat(String(currentStation.tre)) || 0,
       defects: defectsToSave, // Usa o novo formato
       id: editingStationId || stations.length + 1
     };
@@ -560,25 +605,24 @@ const PavementAnalysisPage: React.FC = () => {
     }
     
     resetStationForm(true);
-  };
+  }, [currentStation, defectCounts, editingStationId, stations, resetStationForm]);
   
   // --- Lógica para Carregar Estação para Edição ATUALIZADA ---
-  const handleEditStation = (station: PavementStation) => {
+  const handleEditStation = useCallback((station: PavementStation) => {
     setCurrentStation(station);
     // Carrega o formato Record<string, number> para a contagem
     setDefectCounts(station.defects); 
     setEditingStationId(station.id);
-  };
+  }, []);
   
-  const handleDeleteStation = (id: number) => {
+  const handleDeleteStation = useCallback((id: number) => {
       if (window.confirm('Tem certeza que deseja excluir esta estação?')) {
           setStations(prev => prev.filter(s => s.id !== id));
       }
-  };
-
+  }, []);
 
   // --- Lógica de Processamento e Salvamento (Mantido) ---
-  const handleProcessAnalysis = () => {
+  const handleProcessAnalysis = useCallback(() => {
     if (stations.length === 0) {
       alert('Adicione pelo menos uma estação');
       return;
@@ -588,9 +632,9 @@ const PavementAnalysisPage: React.FC = () => {
     const processedResults = processarDadosDNIT(analysisData);
     setResults(processedResults);
     setActiveStep(2);
-  };
+  }, [stations, formData]);
 
-  const handleSaveAnalysis = () => {
+  const handleSaveAnalysis = useCallback(() => {
     if (!results) return;
 
     const newAnalysis: PavementAnalysis = {
@@ -606,10 +650,10 @@ const PavementAnalysisPage: React.FC = () => {
     setSavedAnalyses(prev => [...prev, newAnalysis]);
     alert(`Análise "${newAnalysis.name}" salva com sucesso!`);
     resetAll();
-  };
+  }, [results, formData.name, formData.road, formData.evaluationDate, stations]);
   
   // Lógica para Resetar, Visualizar/Carregar Análise Salva (Mantido)
-  const resetAll = () => {
+  const resetAll = useCallback(() => {
     setFormData({
       name: '', description: '', road: '', section: '', subtrack: '',
       pavementType: '', evaluationDate: new Date().toISOString().split('T')[0],
@@ -620,20 +664,20 @@ const PavementAnalysisPage: React.FC = () => {
     resetStationForm(false);
     setViewingSaved(false);
     setSelectedAnalysis(null);
-  };
+  }, [resetStationForm]);
 
-  const handleViewAnalysis = (analysis: PavementAnalysis) => {
+  const handleViewAnalysis = useCallback((analysis: PavementAnalysis) => {
     setSelectedAnalysis(analysis);
     setViewingSaved(true);
     setResults(analysis.results);
     setActiveStep(2); 
-  };
+  }, []);
   
   // Função para voltar para a Edição (etapa 2) a partir da Etapa 3
-  const handleEditFromResults = () => {
+  const handleEditFromResults = useCallback(() => {
     if (selectedAnalysis) {
         // Se estiver vendo uma análise salva, carrega os dados completos
-        setFormData(selectedAnalysis.results.generalData);
+        setFormData(selectedAnalysis.results.generalData as FormData);
         setStations(selectedAnalysis.stations);
         setSelectedAnalysis(null); // Sai do modo de visualização salva
         setViewingSaved(false);
@@ -641,19 +685,30 @@ const PavementAnalysisPage: React.FC = () => {
     setActiveStep(1);
     // Limpa os resultados para recalcular
     setResults(null); 
-  };
+  }, [selectedAnalysis]);
   
-  const handleBackToSavedList = () => {
+  const handleBackToSavedList = useCallback(() => {
     setSelectedAnalysis(null);
     setResults(null);
     setStations([]);
-  };
+  }, []);
   
-  const handleBackToStart = () => {
+  const handleBackToStart = useCallback(() => {
     setViewingSaved(false);
     resetAll();
-  };
+  }, [resetAll]);
 
+  // Effect para sincronizar defectCounts com currentStation.defects
+  useEffect(() => {
+    if (currentStation.defects) {
+      setDefectCounts(currentStation.defects);
+    }
+  }, [currentStation.defects]);
+
+  // UseEffect corrigido com dependência correta
+  useEffect(() => {
+    // Este useEffect não tem dependências faltantes agora
+  }, []);
 
   // Renderização da Lista de Análises Salvas
   if (viewingSaved && !selectedAnalysis) {
@@ -874,7 +929,7 @@ const PavementAnalysisPage: React.FC = () => {
             <Divider sx={{ mb: 3 }} />
             
             <Grid container spacing={2} sx={{ mb: 4 }}>
-              {Object.entries(DEFEITOS_INFO).map(([code, [desc, type, priority]]) => (
+              {Object.entries(DEFEITOS_INFO).map(([code, info]) => (
                 <Grid item xs={12} sm={6} md={4} key={code}>
                   <Card 
                     variant="outlined" 
@@ -889,10 +944,10 @@ const PavementAnalysisPage: React.FC = () => {
                   >
                     <Box sx={{ flexGrow: 1, mr: 2 }}>
                       <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                        {code} - {desc} 
+                        {code} - {info.description} 
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
-                        (Tipo {type}, Prioridade {priority})
+                        (Tipo {info.type}, Prioridade {info.priority})
                       </Typography>
                     </Box>
                     <TextField
@@ -946,7 +1001,7 @@ const PavementAnalysisPage: React.FC = () => {
                                   size="small" 
                                   variant="outlined" 
                                   color="info" 
-                                  title={DEFEITOS_INFO[code][0]} // Tooltip para nome completo
+                                  title={DEFEITOS_INFO[code].description} // Tooltip para nome completo
                                 />
                               ))}
                               {Object.keys(station.defects).length === 0 && (
