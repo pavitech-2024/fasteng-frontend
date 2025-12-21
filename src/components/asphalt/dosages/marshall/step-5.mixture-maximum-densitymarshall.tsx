@@ -500,15 +500,24 @@ useEffect(() => {
    * The nextDisabled state is used to disable the next button
    * if the user has not filled all the required data.
    */
-  useEffect(() => {
-    if (selectedMethod.dmt) {
-      const hasNullValue = dmtRows?.some((e) => Object.values(e).includes(null));
-      setNextDisabled(hasNullValue || data.temperatureOfWater === null);
-    } else if (selectedMethod.gmm) {
-      const hasNullValue = data.gmm?.some((e) => e.value === null);
-      setNextDisabled(hasNullValue || data.temperatureOfWater === null);
-    }
-  }, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows]);
+ useEffect(() => {
+  if (selectedMethod.dmt) {
+    const hasNullValue = dmtRows?.some((e) => {
+      // Sem tipos, só JavaScript
+      const values = Object.values(e);
+      return values.includes(null) || values.includes(undefined);
+    });
+    setNextDisabled(hasNullValue || data.temperatureOfWater === null);
+  } else if (selectedMethod.gmm) {
+   
+   const hasNullValue = 
+  data.gmm?.some(item => item && item.value === null) ||
+  gmmRows?.some(item => item && item.GMM === null);
+    
+    
+    setNextDisabled(hasNullValue || data.temperatureOfWater === null);
+  }
+}, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows]);
 
   return (
     <>
