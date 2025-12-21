@@ -214,37 +214,51 @@ const Marshall_Step5_MixtureMaximumDensity = ({
    *
    * @param {Object} data - The dosage calculation results.
    */
-  useEffect(() => {
-    const gmmRows = data?.gmm?.map(({ id, value: GMM }, index) => {
-      const teor = binderTrialData.trial + (index - 2) * 0.5;
-      return { id, GMM, Teor: teor };
-    });
+useEffect(() => {
+  if (!data?.gmm) {
+    setGmmRows([]);
+    return;
+  }
 
-    setGmmRows(gmmRows);
-    setGmmColumns([
-      {
-        field: 'Teor',
-        headerName: t('asphalt.dosages.marshall.tenor'),
-        valueFormatter: ({ value }) => `${value}`,
-      },
-      {
-        field: 'GMM',
-        headerName: 'GMM',
-        renderCell: ({ row }) => (
-          <InputEndAdornment
-            adornment={''}
-            type="number"
-            value={row.GMM}
-            onChange={(e) => {
-              const newData = [...data.gmm];
-              newData[row.id - 1].value = Number(e.target.value);
+  const gmmRows = data.gmm.map((gmmItem, index) => {
+    // Type assertion para acessar value
+    const item = gmmItem as any;
+    const teor = binderTrialData.trial + (index - 2) * 0.5;
+    return {
+      id: item.id || index + 1,
+      GMM: item.value ?? null,
+      Teor: teor
+    };
+  });
+
+  setGmmRows(gmmRows);
+  setGmmColumns([
+    {
+      field: 'Teor',
+      headerName: t('asphalt.dosages.marshall.tenor'),
+      valueFormatter: ({ value }) => `${value}`,
+    },
+    {
+      field: 'GMM',
+      headerName: 'GMM',
+      renderCell: ({ row }) => (
+        <InputEndAdornment
+          adornment={''}
+          type="number"
+          value={row.GMM ?? ''}
+          onChange={(e) => {
+            const newData = [...(data.gmm || [])];
+            const itemIndex = row.id - 1;
+            if (newData[itemIndex]) {
+              (newData[itemIndex] as any).value = e.target.value === '' ? null : Number(e.target.value);
               setData({ step: 4, value: { ...data, gmm: newData } });
-            }}
-          />
-        ),
-      },
-    ]);
-  }, [data.gmm]);
+            }
+          }}
+        />
+      ),
+    },
+  ]);
+}, [data?.gmm, binderTrialData.trial]);
 
   /**
    * Calculates the GMM data using the dosage calculation results.
