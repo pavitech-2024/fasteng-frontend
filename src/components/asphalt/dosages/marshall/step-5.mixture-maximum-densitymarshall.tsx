@@ -226,25 +226,6 @@ const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosag
     );
   };
 
-  useEffect(() => {
-  // Se for DMT
-  if (selectedMethod.dmt) {
-    const hasNullValue = dmtRows?.some(e => !e.DMT || e.DMT === '');
-    const hasTemp = data.temperatureOfWater !== null;
-    setNextDisabled(hasNullValue || !hasTemp);
-  } 
-  // Se for GMM
-  else if (selectedMethod.gmm) {
-    // Verifica se tem valores no gmm OU se já calculou pelo Rice Test
-    const hasGmmValues = data.gmm?.some(e => e.value !== null);
-    const hasCalculatedGmm = data.maxSpecificGravity?.method === 'GMM';
-    const hasTemp = data.temperatureOfWater !== null;
-    
-    // Pode avançar se: tem valores no GMM OU já calculou GMM E tem temperatura
-    const canProceed = (hasGmmValues || hasCalculatedGmm) && hasTemp;
-    setNextDisabled(!canProceed);
-  }
-}, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows, data.gmm, data.maxSpecificGravity]);
 
 
 useEffect(() => {
