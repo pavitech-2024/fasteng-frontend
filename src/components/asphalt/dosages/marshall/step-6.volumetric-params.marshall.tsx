@@ -138,7 +138,7 @@ const Marshall_Step6_VolumetricParams = ({
 
   const generateColumnGroupingModel = (tenor: string, index: number): GridColumnGroupingModel => [
     {
-      groupId: `${binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][index].value},00 %`,
+      groupId: `${binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1][index].value} %`,
       children: [
         'diammeter',
         'height',
@@ -204,6 +204,7 @@ const Marshall_Step6_VolumetricParams = ({
       </Button>
     </Box>
   );
+  
 
   const enableAllTables = () => {
     setTableIsDisabled({
