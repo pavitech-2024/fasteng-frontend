@@ -41,6 +41,7 @@ type GmmTableRows = {
   id: number;
   GMM: number;
   Teor: number;
+  value?: number; 
 };
 
 const Marshall_Step5_MixtureMaximumDensity = ({
