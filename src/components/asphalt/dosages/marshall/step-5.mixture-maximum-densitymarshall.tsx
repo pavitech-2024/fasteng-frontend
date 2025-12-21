@@ -39,18 +39,20 @@ export type RiceTestRows = {
 
 // TIPOS CORRETOS DEFINIDOS
 
-type GmmDataItem = {
+// TIPOS - Use apenas UM tipo que combine tudo
+// REMOVA seus tipos locais e use o do store
+export type GmmRows = {
   id: number;
-  value?: number | null;
-  GMM?: number | null;
-  teor?: number | null;
+  insert: boolean; // OBRIGATÓRIO!
+  value: number; // OBRIGATÓRIO!
 };
 
 type GmmTableRows = {
   id: number;
-  GMM: number | null;
+  GMM: number | null; // Apenas para exibição na tabela
   Teor: number;
-  value?: number | null;
+  value?: number; // Opcional aqui
+  insert?: boolean; // Opcional aqui
 };
 const Marshall_Step5_MixtureMaximumDensity = ({
   setNextDisabled,
@@ -92,17 +94,17 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             missingSpecificMass: response,
           };
 
-          const gmmData: GmmDataItem[] = [];
-for (let i = 1; i <= 5; i++) {
-  gmmData.push({ 
-    id: i, 
-    value: null, 
-    GMM: null, // Adiciona GMM também
-    teor: null // Adiciona teor
-  });
-}
+          const gmmData: GmmRows[] = []; // Use GmmRows do store
+          for (let i = 1; i <= 5; i++) {
+            gmmData.push({
+              id: i,
+              insert: true, // OBRIGATÓRIO!
+              value: null as any, // O store espera number, mas inicialmente é null
+            });
+          }
+          newData.gmm = gmmData; // Sem "as any" agora!
 
-       newData.gmm = gmmData as any; 
+          newData.gmm = gmmData as any;
 
           newData.riceTest =
             newData.riceTest ||
@@ -164,17 +166,17 @@ for (let i = 1; i <= 5; i++) {
   const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => {
     const keys = ['lessOne', 'lessHalf', 'normal', 'plusHalf', 'plusOne'];
     const key = keys[index];
-    
+
     // Type assertion para lidar com ambos os formatos
     const gravityData = data?.maxSpecificGravity as any;
-    
+
     let gravity;
     if (gravityData?.result?.[key] !== undefined) {
       gravity = gravityData.result[key]; // DMT format
     } else if (gravityData?.results?.[key] !== undefined) {
       gravity = gravityData.results[key]; // GMM format
     }
-    
+
     return {
       id: index + 1,
       DMT: gravity?.toFixed(2) || '',
@@ -244,17 +246,19 @@ for (let i = 1; i <= 5; i++) {
    *
    * @param {Object} data - The dosage calculation results.
    */
- useEffect(() => {
-  const gmmRows = data?.gmm?.map((item: GmmDataItem, index) => {
-    const teor = binderTrialData.trial + (index - 2) * 0.5;
-    return { 
-      id: item.id, 
-      GMM: item.value ?? item.GMM ?? null, // Tenta value primeiro, depois GMM
-      Teor: teor 
-    };
-  });
+  useEffect(() => {
+    const gmmRows = data?.gmm?.map((item: GmmRows, index) => {
+      const teor = binderTrialData.trial + (index - 2) * 0.5;
+      return {
+        id: item.id,
+        GMM: item.value ?? null, // item.value é do store
+        Teor: teor,
+        value: item.value, // Mantém compatibilidade
+        insert: item.insert, // Mantém compatibilidade
+      };
+    });
 
-  setGmmRows(gmmRows || []);
+    setGmmRows(gmmRows || []);
     setGmmColumns([
       {
         field: 'Teor',
@@ -273,10 +277,11 @@ for (let i = 1; i <= 5; i++) {
               const newData = [...(data?.gmm || [])];
               const itemIndex = row.id - 1;
               if (newData[itemIndex]) {
-                // Atualiza o valor no array gmm
+                // ATUALIZE VALUE (não GMM!) - o store espera "value"
                 newData[itemIndex] = {
                   ...newData[itemIndex],
-                  value: Number(e.target.value),
+                  value: e.target.value === '' ? null : Number(e.target.value), // VALUE!
+                  insert: newData[itemIndex].insert, // Mantém o insert
                 };
                 setData({ step: 4, value: { ...data, gmm: newData } });
               }
@@ -352,9 +357,9 @@ for (let i = 1; i <= 5; i++) {
    * @throws Will throw an error if the calculation fails.
    */
   const calculateRiceTest = () => {
-     console.log('=== DEBUG RICE TEST ===');
-  console.log('data.riceTest:', data?.riceTest);
-  console.log('binderTrialData:', binderTrialData);
+    console.log('=== DEBUG RICE TEST ===');
+    console.log('data.riceTest:', data?.riceTest);
+    console.log('binderTrialData:', binderTrialData);
 
     let errorMsg = '';
     let errorIndex: number | undefined;
@@ -389,10 +394,10 @@ for (let i = 1; i <= 5; i++) {
           setRiceTestModalIsOpen(false);
 
           const formattedGmm = riceTest?.maxSpecificGravity.map(({ id, Teor, GMM }) => ({ id, Teor, GMM }));
-          const formattedGmmData: GmmDataItem[] = riceTest?.maxSpecificGravity.map((item, i) => ({
+          const formattedGmmData: GmmRows[] = riceTest?.maxSpecificGravity.map((item, i) => ({
             id: i + 1,
-            insert: false,
-            value: item.GMM,
+            insert: false, // OBRIGATÓRIO!
+            value: item.GMM, // Armazena em "value"
           }));
 
           setGmmRows(formattedGmm || []);
@@ -405,8 +410,8 @@ for (let i = 1; i <= 5; i++) {
               // GARANTE que maxSpecificGravity tenha method: 'GMM'
               maxSpecificGravity: {
                 results: riceTest.maxSpecificGravity,
-                method: 'GMM'
-              }
+                method: 'GMM',
+              },
             },
           });
         } catch (error: any) {
@@ -416,7 +421,9 @@ for (let i = 1; i <= 5; i++) {
       {
         pending: t('submiting.data.pending'),
         success: t('submiting.data.success'),
-        error: `${t('errors.rice-test-empty-fields')}${binderTrialData.percentsOfDosage?.[2]?.[errorIndex || 0]?.value ?? ''}%`,
+        error: `${t('errors.rice-test-empty-fields')}${
+          binderTrialData.percentsOfDosage?.[2]?.[errorIndex || 0]?.value ?? ''
+        }%`,
       }
     );
   };
@@ -554,40 +561,47 @@ for (let i = 1; i <= 5; i++) {
     console.log('  - Método selecionado:', selectedMethod);
     console.log('  - Temperatura água:', data?.temperatureOfWater);
     console.log('  - maxSpecificGravity:', data?.maxSpecificGravity);
-    
+
     if (selectedMethod.dmt) {
       // DMT: precisa ter TODOS os valores DMT preenchidos E temperatura
-      const hasAllDmtValues = dmtRows?.every(row => row.DMT && row.DMT !== '');
+      const hasAllDmtValues = dmtRows?.every((row) => row.DMT && row.DMT !== '');
       const hasTemp = data?.temperatureOfWater !== null;
       const disabled = !hasAllDmtValues || !hasTemp;
-      
+
       console.log('  - DMT - hasAllDmtValues:', hasAllDmtValues, 'hasTemp:', hasTemp, 'disabled:', disabled);
       setNextDisabled(disabled);
-    } 
-    else if (selectedMethod.gmm) {
+    } else if (selectedMethod.gmm) {
       // GMM: pode avançar se:
       // 1. Tem valores no GMM (pelo menos um) OU já calculou pelo Rice Test
       // 2. E tem temperatura preenchida
-      
+
       // Verifica se tem pelo menos UM valor no GMM
-     const hasGmmValues = data?.gmm?.some((item: GmmDataItem) => {
-  return (item.value !== null && item.value !== undefined);
-});
-      
+      const hasGmmValues = data?.gmm?.some((item: GmmRows) => {
+        // Verifica value (não GMM)
+        return item.value !== null && item.value !== undefined;
+      });
+
       // Verifica se já calculou GMM pelo Rice Test
       const hasCalculatedGmm = data?.maxSpecificGravity?.method === 'GMM';
       const hasTemp = data?.temperatureOfWater !== null;
-      
+
       // Pode avançar se: (tem valores no GMM OU já calculou GMM) E tem temperatura
       const canProceed = (hasGmmValues || hasCalculatedGmm) && hasTemp;
       const disabled = !canProceed;
-      
-      console.log('  - GMM - hasGmmValues:', hasGmmValues, 
-                 'hasCalculatedGmm:', hasCalculatedGmm,
-                 'hasTemp:', hasTemp,
-                 'canProceed:', canProceed,
-                 'disabled:', disabled);
-      
+
+      console.log(
+        '  - GMM - hasGmmValues:',
+        hasGmmValues,
+        'hasCalculatedGmm:',
+        hasCalculatedGmm,
+        'hasTemp:',
+        hasTemp,
+        'canProceed:',
+        canProceed,
+        'disabled:',
+        disabled
+      );
+
       setNextDisabled(disabled);
     } else {
       // Nenhum método selecionado
@@ -707,7 +721,8 @@ for (let i = 1; i <= 5; i++) {
             onSubmit={() => handleSubmitDmt()}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-around' }}>
-              {data?.missingSpecificMass && data?.missingSpecificMass?.length > 0 &&
+              {data?.missingSpecificMass &&
+                data?.missingSpecificMass?.length > 0 &&
                 data?.missingSpecificMass?.map((material, index) => (
                   <InputEndAdornment
                     key={`${index}`}
