@@ -4,7 +4,7 @@ import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
-import useMarshallStore, { GmmRows as StoreGmmRows } from '@/stores/asphalt/marshall/marshall.store';
+import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
@@ -37,13 +37,10 @@ export type RiceTestRows = {
   massOfContainerWater: number;
 };
 
-// TIPO PARA A TABELA - TEM GMM E Teor
-type TableGmmRow = {
+type GmmTableRows = {
   id: number;
-  GMM: number | null;
+  GMM: number;
   Teor: number;
-  value?: number;
-  insert?: boolean;
 };
 
 const Marshall_Step5_MixtureMaximumDensity = ({
@@ -53,7 +50,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
   const [enableRiceTest, setEnableRiceTest] = useState(false);
-  const [gmmRows, setGmmRows] = useState<TableGmmRow[]>([]);
+  const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [selectedMethod, setSelectedMethod] = useState({
     dmt: data?.method === 'DMT',
@@ -69,6 +66,11 @@ const Marshall_Step5_MixtureMaximumDensity = ({
    * This useEffect is responsible for calculating the indexes of missing specific
    * gravity values in the GMM table and setting the initial values of the rice
    * test table.
+   *
+   * If the GMM table is completed, the function will return and do nothing.
+   *
+   * After the calculation is done, the function will update the data in the store
+   * with the new values and set the loading state to false.
    */
   useEffect(() => {
     toast.promise(
@@ -81,13 +83,10 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             missingSpecificMass: response,
           };
 
-          const gmmData = [
-            { id: 1, insert: true, value: null },
-            { id: 2, insert: true, value: null },
-            { id: 3, insert: true, value: null },
-            { id: 4, insert: true, value: null },
-            { id: 5, insert: true, value: null },
-          ] as unknown as any[]; // ← FORÇA O TIPO
+          const gmmData = [];
+          for (let i = 1; i <= 5; i++) {
+            gmmData.push({ id: i, insert: true, value: null });
+          }
 
           newData.gmm = gmmData;
 
@@ -102,6 +101,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             }));
 
           setData({ step: 4, value: newData });
+
           setLoading(false);
         } catch (error) {
           setLoading(false);
@@ -146,26 +146,11 @@ const Marshall_Step5_MixtureMaximumDensity = ({
     '30°C': 0.9956,
   }).map(([label, value]) => ({ label, value }));
 
-  // DMT ROWS - Mostra cada teor com seu valor correto
-  const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => {
-    const keys = ['lessOne', 'lessHalf', 'normal', 'plusHalf', 'plusOne'];
-    const key = keys[index];
-
-    const gravityData = data?.maxSpecificGravity as any;
-
-    let gravity;
-    if (gravityData?.result?.[key] !== undefined) {
-      gravity = gravityData.result[key];
-    } else if (gravityData?.results?.[key] !== undefined) {
-      gravity = gravityData.results[key];
-    }
-
-    return {
-      id: index + 1,
-      DMT: gravity?.toFixed(2) || '',
-      Teor: item.value,
-    };
-  });
+  const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => ({
+    id: index + 1,
+    DMT: data?.maxSpecificGravity?.result?.lessOne?.toFixed(2),
+    Teor: item.value,
+  }));
 
   const dmtColumns: GridColDef[] = [
     {
@@ -182,6 +167,12 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 
   /**
    * Handles the submission process for calculating the maximum mixture density (DMT).
+   * It triggers a toast notification indicating the status of the calculation process.
+   * On successful calculation, it updates the data store with the new maximum specific gravity
+   * and a list of specific gravities, and closes the DMT modal.
+   *
+   * @async
+   * @throws Will throw an error if the calculation fails.
    */
   const handleSubmitDmt = async () => {
     toast.promise(
@@ -218,20 +209,18 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 
   /**
    * useEffect hook that runs when the `data.gmm` changes.
+   * It extracts the GMM and Teor values from the `data.gmm` array and stores them in the `gmmRows` state.
+   * It also generates the DataGrid columns and stores them in the `gmmColumns` state.
+   *
+   * @param {Object} data - The dosage calculation results.
    */
   useEffect(() => {
-    const gmmRows = data?.gmm?.map((item: StoreGmmRows, index) => {
+    const gmmRows = data?.gmm?.map(({ id, value: GMM }, index) => {
       const teor = binderTrialData.trial + (index - 2) * 0.5;
-      return {
-        id: item.id,
-        GMM: item.value ?? null,
-        Teor: teor,
-        value: item.value,
-        insert: item.insert,
-      } as TableGmmRow;
+      return { id, GMM, Teor: teor };
     });
 
-    setGmmRows(gmmRows || []);
+    setGmmRows(gmmRows);
     setGmmColumns([
       {
         field: 'Teor',
@@ -245,30 +234,28 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           <InputEndAdornment
             adornment={''}
             type="number"
-            value={row.GMM ?? ''}
+            value={row.GMM}
             onChange={(e) => {
-              const newData = [...(data?.gmm || [])];
-              const itemIndex = row.id - 1;
-              if (newData[itemIndex]) {
-                newData[itemIndex] = {
-                  ...newData[itemIndex],
-                  value: e.target.value === '' ? null : Number(e.target.value),
-                  insert: newData[itemIndex].insert,
-                };
-                setData({ step: 4, value: { ...data, gmm: newData } });
-              }
+              const newData = [...data.gmm];
+              newData[row.id - 1].value = Number(e.target.value);
+              setData({ step: 4, value: { ...data, gmm: newData } });
             }}
           />
         ),
       },
     ]);
-  }, [data?.gmm, binderTrialData.trial]);
+  }, [data.gmm]);
 
   /**
    * Calculates the GMM data using the dosage calculation results.
+   * If the dosage calculation results are invalid, it will throw an error.
+   * If the dosage calculation results are valid, it will update the data store with the new GMM data.
+   *
+   * @async
+   * @throws Will throw an error if the calculation fails.
    */
   const calculateGmmData = async () => {
-    if (data?.temperatureOfWater === null) {
+    if (data.temperatureOfWater === null) {
       setGmmErrorMsg('errors.empty-water-temperature');
       toast.error(t('errors.empty-water-temperature'));
       return;
@@ -291,19 +278,17 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           setData({ step: 4, value: newData });
 
           const newGmmRows = gmmRows.map((item) => {
-            const gmmValue = gmm.maxSpecificGravity as Record<string, number>;
-            if (item.id === 1) return { ...item, GMM: gmmValue.lessOne };
-            if (item.id === 2) return { ...item, GMM: gmmValue.lessHalf };
-            if (item.id === 3) return { ...item, GMM: gmmValue.normal };
-            if (item.id === 4) return { ...item, GMM: gmmValue.plusHalf };
-            if (item.id === 5) return { ...item, GMM: gmmValue.plusOne };
+            if (item.id === 1) item.GMM = gmm.maxSpecificGravity.lessOne;
+            if (item.id === 2) item.GMM = gmm.maxSpecificGravity.lessHalf;
+            if (item.id === 3) item.GMM = gmm.maxSpecificGravity.normal;
+            if (item.id === 4) item.GMM = gmm.maxSpecificGravity.plusHalf;
+            if (item.id === 5) item.GMM = gmm.maxSpecificGravity.plusOne;
             return item;
           });
 
           setGmmRows(newGmmRows);
         } catch (error) {
           console.error(error);
-          throw error;
         }
       },
       {
@@ -315,29 +300,33 @@ const Marshall_Step5_MixtureMaximumDensity = ({
   };
 
   /**
-   * Calculates the rice test data.
+   * Calculates the rice test data using the dosage calculation results.
+   * If the dosage calculation results are invalid, it will throw an error.
+   * If the dosage calculation results are valid, it will update the data store with the new rice test data.
+   *
+   * @async
+   * @throws Will throw an error if the calculation fails.
    */
   const calculateRiceTest = () => {
-    console.log('=== DEBUG RICE TEST ===');
-    console.log('data.riceTest:', data?.riceTest);
-    console.log('binderTrialData:', binderTrialData);
+     console.log('=== DEBUG RICE TEST ===');
+  console.log('data.riceTest:', data.riceTest);
+  console.log('binderTrialData:', binderTrialData);
 
     let errorMsg = '';
-    let errorIndex: number | undefined;
+    let errorIndex;
 
-    const hasNullValues = data?.riceTest?.some((tenor, idx) => {
+    const hasNullValues = data.riceTest.some((tenor, idx) => {
       const isInvalid = Object.values(tenor).some((value) => value === null || value < 1);
       if (isInvalid) errorIndex = idx;
       return isInvalid;
     });
 
-    const invalidValues = data?.riceTest?.find(
+    const invalidValues = data.riceTest.find(
       (tenor) =>
         tenor.massOfDrySample > tenor.massOfContainerWater ||
         tenor.massOfDrySample > tenor.massOfContainerWaterSample ||
         tenor.massOfContainerWater > tenor.massOfContainerWaterSample
     );
-
     if (hasNullValues) errorMsg = 'errors.rice-test-empty-fields';
     if (!errorMsg && invalidValues) {
       if (invalidValues.massOfContainerWaterSample <= invalidValues.massOfDrySample) {
@@ -355,52 +344,37 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           const riceTest = await marshall.calculateRiceTest(data);
           setRiceTestModalIsOpen(false);
 
-          const formattedGmm = riceTest?.maxSpecificGravity.map(
-            ({ id, Teor, GMM }) =>
-              ({
-                id,
-                GMM,
-                Teor,
-                value: GMM,
-                insert: false,
-              } as TableGmmRow)
-          );
-
-          const formattedGmmData: StoreGmmRows[] = riceTest?.maxSpecificGravity.map((item, i) => ({
+          const formattedGmm = riceTest?.maxSpecificGravity.map(({ id, Teor, GMM }) => ({ id, Teor, GMM }));
+          const formattedGmmData = riceTest?.maxSpecificGravity.map((item, i) => ({
             id: i + 1,
             insert: false,
             value: item.GMM,
           }));
 
-          setGmmRows(formattedGmm || []);
+          setGmmRows(formattedGmm);
           setData({
             step: 4,
             value: {
               ...data,
               ...riceTest,
               gmm: formattedGmmData,
-              maxSpecificGravity: {
-                results: riceTest.maxSpecificGravity,
-                method: 'GMM',
-              },
             },
           });
-        } catch (error: any) {
+          setNextDisabled(false);
+        } catch (error) {
           throw new Error(error.message || 'errors.general');
         }
       },
       {
         pending: t('submiting.data.pending'),
         success: t('submiting.data.success'),
-        error: `${t('errors.rice-test-empty-fields')}${
-          binderTrialData.percentsOfDosage?.[2]?.[errorIndex || 0]?.value ?? ''
-        }%`,
+        error: `${t('errors.rice-test-empty-fields')}${binderTrialData.percentsOfDosage?.[2]?.[errorIndex]?.value ?? ''}%`,
       }
     );
   };
 
   useEffect(() => {
-    if (data?.riceTest?.length > 0) {
+    if (data.riceTest?.length > 0) {
       const newRiceTestRows = binderTrialData.percentsOfDosage[2]?.map((e, i) => {
         const teor =
           i === 0
@@ -415,15 +389,15 @@ const Marshall_Step5_MixtureMaximumDensity = ({
         return {
           id: i + 1,
           teor: teor,
-          massOfDrySample: data.riceTest[i]?.massOfDrySample || 0,
-          massOfContainerWaterSample: data?.riceTest[i]?.massOfContainerWaterSample || 0,
-          massOfContainerWater: data?.riceTest[i]?.massOfContainerWater || 0,
+          massOfDrySample: data.riceTest[i]?.massOfDrySample,
+          massOfContainerWaterSample: data?.riceTest[i]?.massOfContainerWaterSample,
+          massOfContainerWater: data?.riceTest[i]?.massOfContainerWater,
         };
       });
 
-      setRiceTestTableRows(newRiceTestRows || []);
+      setRiceTestTableRows(newRiceTestRows);
     }
-  }, [binderTrialData.percentsOfDosage, data?.riceTest]);
+  }, [binderTrialData.percentsOfDosage, data.riceTest]);
 
   useEffect(() => {
     setRiceTestTableColumns([
@@ -444,19 +418,14 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             <InputEndAdornment
               adornment="g"
               type="number"
-              value={data?.riceTest?.[index || 0]?.massOfDrySample ?? ''}
+              value={data.riceTest[index]?.massOfDrySample ?? ''}
               inputProps={{ step: 'any' }}
               onChange={(e) => {
-                const newData = [...(data?.riceTest || [])];
+                const newData = [...data.riceTest];
                 const value = e.target.value;
-                if (index !== undefined && index >= 0) {
-                  newData[index] = {
-                    ...newData[index],
-                    massOfDrySample: value === '' ? null : parseFloat(value),
-                    teor: teor,
-                  };
-                  setData({ step: 4, value: { ...data, riceTest: newData } });
-                }
+                newData[index].massOfDrySample = value === '' ? null : parseFloat(value);
+                newData[index].teor = teor;
+                setData({ step: 4, value: { ...data, riceTest: newData } });
               }}
             />
           );
@@ -473,18 +442,13 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             <InputEndAdornment
               adornment={'g'}
               type="number"
-              value={data?.riceTest?.[index || 0]?.massOfContainerWaterSample || ''}
+              value={data.riceTest[index]?.massOfContainerWaterSample}
               onChange={(e) => {
-                const newData = [...(data?.riceTest || [])];
+                const newData = [...data.riceTest];
                 const value = e.target.value;
-                if (index !== undefined && index >= 0) {
-                  newData[index] = {
-                    ...newData[index],
-                    massOfContainerWaterSample: value === '' ? null : parseFloat(value),
-                    teor: teor,
-                  };
-                  setData({ step: 4, value: { ...data, riceTest: newData } });
-                }
+                newData[index].massOfContainerWaterSample = value === '' ? null : parseFloat(value);
+                newData[index].teor = teor;
+                setData({ step: 4, value: { ...data, riceTest: newData } });
               }}
             />
           );
@@ -501,50 +465,36 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             <InputEndAdornment
               adornment={'g'}
               type="number"
-              value={data?.riceTest?.[index || 0]?.massOfContainerWater || ''}
+              value={data.riceTest[index]?.massOfContainerWater}
               onChange={(e) => {
-                const newData = [...(data?.riceTest || [])];
+                const newData = [...data.riceTest];
                 const value = e.target.value;
-                if (index !== undefined && index >= 0) {
-                  newData[index] = {
-                    ...newData[index],
-                    massOfContainerWater: value === '' ? null : parseFloat(value),
-                    teor: teor,
-                  };
-                  setData({ step: 4, value: { ...data, riceTest: newData } });
-                }
+                newData[index].massOfContainerWater = value === '' ? null : parseFloat(e.target.value);
+                newData[index].teor = teor;
+                setData({ step: 4, value: { ...data, riceTest: newData } });
               }}
             />
           );
         },
       },
     ]);
-  }, [data?.riceTest]);
+  }, [data.riceTest]);
 
   /**
    * Effect that checks if there is any null value in the data.
+   * If there is, it sets the nextDisabled state to true.
+   * The nextDisabled state is used to disable the next button
+   * if the user has not filled all the required data.
    */
   useEffect(() => {
     if (selectedMethod.dmt) {
-      const hasAllDmtValues = dmtRows?.every((row) => row.DMT && row.DMT !== '');
-      const hasTemp = data?.temperatureOfWater !== null;
-      const disabled = !hasAllDmtValues || !hasTemp;
-      setNextDisabled(disabled);
+      const hasNullValue = dmtRows?.some((e) => Object.values(e).includes(null));
+      setNextDisabled(hasNullValue || data.temperatureOfWater === null);
     } else if (selectedMethod.gmm) {
-      const hasGmmValues = data?.gmm?.some((item: StoreGmmRows) => {
-        return item.value !== null && item.value !== undefined;
-      });
-
-      const hasCalculatedGmm = data?.maxSpecificGravity?.method === 'GMM';
-      const hasTemp = data?.temperatureOfWater !== null;
-
-      const canProceed = (hasGmmValues || hasCalculatedGmm) && hasTemp;
-      const disabled = !canProceed;
-      setNextDisabled(disabled);
-    } else {
-      setNextDisabled(true);
+      const hasNullValue = data.gmm?.some((e) => e.value === null);
+      setNextDisabled(hasNullValue || data.temperatureOfWater === null);
     }
-  }, [data?.temperatureOfWater, selectedMethod, dmtRows, data?.gmm, data?.maxSpecificGravity]);
+  }, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows]);
 
   return (
     <>
@@ -593,7 +543,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             }}
             value={{
               label: '',
-              value: data?.temperatureOfWater,
+              value: data.temperatureOfWater,
             }}
             size="medium"
             sx={{ width: '75%', marginX: 'auto' }}
@@ -614,7 +564,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
                   disableColumnMenu: true,
                   sortable: false,
                   flex: 1,
-                  minWidth: 100,
+                  moinWidth: 100,
                   headerAlign: 'center',
                   align: 'center',
                 }))}
@@ -657,16 +607,15 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             onSubmit={() => handleSubmitDmt()}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-around' }}>
-              {data?.missingSpecificMass &&
-                data?.missingSpecificMass?.length > 0 &&
-                data?.missingSpecificMass?.map((material, index) => (
+              {data.missingSpecificMass?.length > 0 &&
+                data.missingSpecificMass?.map((material, index) => (
                   <InputEndAdornment
                     key={`${index}`}
                     adornment={'g/cm³'}
                     label={material.name}
-                    value={material.value || ''}
+                    value={material.value}
                     onChange={(e) => {
-                      const prevState = [...(data?.missingSpecificMass || [])];
+                      const prevState = [...data.missingSpecificMass];
                       const index = prevState.findIndex((idx) => idx.name === material.name);
                       prevState[index] = { ...prevState[index], value: Number(e.target.value) };
                       setData({ step: 4, value: { ...data, missingSpecificMass: prevState } });
@@ -714,7 +663,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
                 }}
                 value={{
                   label: '',
-                  value: data?.temperatureOfWater,
+                  value: data.temperatureOfWater,
                 }}
                 size="medium"
                 sx={{ width: '75%', marginX: 'auto' }}
