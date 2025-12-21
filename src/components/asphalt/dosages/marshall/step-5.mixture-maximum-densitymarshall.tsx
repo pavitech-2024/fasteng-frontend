@@ -116,6 +116,8 @@ const Marshall_Step5_MixtureMaximumDensity = ({
     );
   }, []);
 
+  
+
   const methodDropdownValues = [
     {
       label: t('asphalt.dosages.dmt'),
@@ -146,11 +148,27 @@ const Marshall_Step5_MixtureMaximumDensity = ({
     '30°C': 0.9956,
   }).map(([label, value]) => ({ label, value }));
 
-  const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => ({
+// Substitua a linha 97-100 por:
+const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => {
+  const keys = ['lessOne', 'lessHalf', 'normal', 'plusHalf', 'plusOne'];
+  const key = keys[index];
+  
+  // Type assertion para lidar com ambos os formatos
+  const gravityData = data?.maxSpecificGravity as any;
+  
+  let gravity;
+  if (gravityData?.result?.[key] !== undefined) {
+    gravity = gravityData.result[key]; // DMT format
+  } else if (gravityData?.results?.[key] !== undefined) {
+    gravity = gravityData.results[key]; // GMM format
+  }
+  
+  return {
     id: index + 1,
-    DMT: data?.maxSpecificGravity?.result?.lessOne?.toFixed(2),
+    DMT: gravity?.toFixed(2) || '',
     Teor: item.value,
-  }));
+  };
+});
 
   const dmtColumns: GridColDef[] = [
     {
@@ -165,6 +183,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
     },
   ];
 
+  
   /**
    * Handles the submission process for calculating the maximum mixture density (DMT).
    * It triggers a toast notification indicating the status of the calculation process.
@@ -206,6 +225,63 @@ const Marshall_Step5_MixtureMaximumDensity = ({
       }
     );
   };
+
+  useEffect(() => {
+  // Se for DMT
+  if (selectedMethod.dmt) {
+    const hasNullValue = dmtRows?.some(e => !e.DMT || e.DMT === '');
+    const hasTemp = data.temperatureOfWater !== null;
+    setNextDisabled(hasNullValue || !hasTemp);
+  } 
+  // Se for GMM
+  else if (selectedMethod.gmm) {
+    // Verifica se tem valores no gmm OU se já calculou pelo Rice Test
+    const hasGmmValues = data.gmm?.some(e => e.value !== null);
+    const hasCalculatedGmm = data.maxSpecificGravity?.method === 'GMM';
+    const hasTemp = data.temperatureOfWater !== null;
+    
+    // Pode avançar se: tem valores no GMM OU já calculou GMM E tem temperatura
+    const canProceed = (hasGmmValues || hasCalculatedGmm) && hasTemp;
+    setNextDisabled(!canProceed);
+  }
+}, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows, data.gmm, data.maxSpecificGravity]);
+
+
+useEffect(() => {
+  console.log('🔍 DEBUG NEXT DISABLED:');
+  console.log('  - Método:', selectedMethod);
+  console.log('  - maxSpecificGravity:', data.maxSpecificGravity);
+  console.log('  - gmm values:', data.gmm?.map(g => g.value));
+  console.log('  - temperatura:', data.temperatureOfWater);
+  
+  if (selectedMethod.dmt) {
+    const hasNullValue = dmtRows?.some(e => !e.DMT || e.DMT === '');
+    const hasTemp = data.temperatureOfWater !== null;
+    console.log('  - DMT: hasNullValue=', hasNullValue, 'hasTemp=', hasTemp);
+    setNextDisabled(hasNullValue || !hasTemp);
+  } 
+  else if (selectedMethod.gmm) {
+  const hasGmmValues = data.gmm?.some(
+    e => e.value !== null
+  );
+
+  const hasCalculatedGmm = data.maxSpecificGravity?.method === 'GMM';
+  const hasTemp = data.temperatureOfWater !== null;
+
+  const canProceed = (hasGmmValues || hasCalculatedGmm) && hasTemp;
+
+  console.log(
+    '  - GMM:',
+    'hasGmmValues=', hasGmmValues,
+    'hasCalculatedGmm=', hasCalculatedGmm,
+    'hasTemp=', hasTemp,
+    'canProceed=', canProceed
+  );
+
+  setNextDisabled(!canProceed);
+}
+
+}, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows, data.gmm, data.maxSpecificGravity]);
 
   /**
    * useEffect hook that runs when the `data.gmm` changes.
@@ -485,15 +561,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
    * The nextDisabled state is used to disable the next button
    * if the user has not filled all the required data.
    */
-  useEffect(() => {
-    if (selectedMethod.dmt) {
-      const hasNullValue = dmtRows?.some((e) => Object.values(e).includes(null));
-      setNextDisabled(hasNullValue || data.temperatureOfWater === null);
-    } else if (selectedMethod.gmm) {
-      const hasNullValue = data.gmm?.some((e) => e.value === null);
-      setNextDisabled(hasNullValue || data.temperatureOfWater === null);
-    }
-  }, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows]);
+  
 
   return (
     <>
