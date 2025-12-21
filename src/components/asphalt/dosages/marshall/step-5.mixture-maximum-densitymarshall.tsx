@@ -37,14 +37,8 @@ export type RiceTestRows = {
   massOfContainerWater: number;
 };
 
-// TIPOS LOCAIS - Não exporte para evitar conflitos
-type LocalGmmRows = {
-  id: number;
-  GMM: number | null;
-  Teor: number;
-  value?: number | null;
-  insert?: boolean;
-};
+
+
 
 const Marshall_Step5_MixtureMaximumDensity = ({
   setNextDisabled,
@@ -53,7 +47,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
   const [enableRiceTest, setEnableRiceTest] = useState(false);
-  const [gmmRows, setGmmRows] = useState<LocalGmmRows[]>([]);
+  const [gmmRows, setGmmRows] = useState<StoreGmmRows[]>([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [selectedMethod, setSelectedMethod] = useState({
     dmt: data?.method === 'DMT',
@@ -235,7 +229,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
         Teor: teor,
         value: item.value,
         insert: item.insert,
-      } as LocalGmmRows;
+      } as StoreGmmRows;
     });
 
     setGmmRows(gmmRows || []);
@@ -372,7 +366,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
                 GMM,
                 value: GMM,
                 insert: false,
-              } as LocalGmmRows)
+              } as StoreGmmRows)
           );
 
           const formattedGmmData: StoreGmmRows[] = riceTest?.maxSpecificGravity.map((item, i) => ({
