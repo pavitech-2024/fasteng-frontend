@@ -116,8 +116,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
     );
   }, []);
 
-  
-
   const methodDropdownValues = [
     {
       label: t('asphalt.dosages.dmt'),
@@ -148,27 +146,27 @@ const Marshall_Step5_MixtureMaximumDensity = ({
     '30°C': 0.9956,
   }).map(([label, value]) => ({ label, value }));
 
-// Substitua a linha 97-100 por:
-const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => {
-  const keys = ['lessOne', 'lessHalf', 'normal', 'plusHalf', 'plusOne'];
-  const key = keys[index];
-  
-  // Type assertion para lidar com ambos os formatos
-  const gravityData = data?.maxSpecificGravity as any;
-  
-  let gravity;
-  if (gravityData?.result?.[key] !== undefined) {
-    gravity = gravityData.result[key]; // DMT format
-  } else if (gravityData?.results?.[key] !== undefined) {
-    gravity = gravityData.results[key]; // GMM format
-  }
-  
-  return {
-    id: index + 1,
-    DMT: gravity?.toFixed(2) || '',
-    Teor: item.value,
-  };
-});
+  // DMT ROWS CORRIGIDO - Mostra cada teor com seu valor correto
+  const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => {
+    const keys = ['lessOne', 'lessHalf', 'normal', 'plusHalf', 'plusOne'];
+    const key = keys[index];
+    
+    // Type assertion para lidar com ambos os formatos
+    const gravityData = data?.maxSpecificGravity as any;
+    
+    let gravity;
+    if (gravityData?.result?.[key] !== undefined) {
+      gravity = gravityData.result[key]; // DMT format
+    } else if (gravityData?.results?.[key] !== undefined) {
+      gravity = gravityData.results[key]; // GMM format
+    }
+    
+    return {
+      id: index + 1,
+      DMT: gravity?.toFixed(2) || '',
+      Teor: item.value,
+    };
+  });
 
   const dmtColumns: GridColDef[] = [
     {
@@ -183,7 +181,6 @@ const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosag
     },
   ];
 
-  
   /**
    * Handles the submission process for calculating the maximum mixture density (DMT).
    * It triggers a toast notification indicating the status of the calculation process.
@@ -226,44 +223,6 @@ const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosag
     );
   };
 
-
-
-useEffect(() => {
-  console.log('🔍 DEBUG NEXT DISABLED:');
-  console.log('  - Método:', selectedMethod);
-  console.log('  - maxSpecificGravity:', data.maxSpecificGravity);
-  console.log('  - gmm values:', data.gmm?.map(g => g.value));
-  console.log('  - temperatura:', data.temperatureOfWater);
-  
-  if (selectedMethod.dmt) {
-    const hasNullValue = dmtRows?.some(e => !e.DMT || e.DMT === '');
-    const hasTemp = data.temperatureOfWater !== null;
-    console.log('  - DMT: hasNullValue=', hasNullValue, 'hasTemp=', hasTemp);
-    setNextDisabled(hasNullValue || !hasTemp);
-  } 
-  else if (selectedMethod.gmm) {
-  const hasGmmValues = data.gmm?.some(
-    e => e.value !== null
-  );
-
-  const hasCalculatedGmm = data.maxSpecificGravity?.method === 'GMM';
-  const hasTemp = data.temperatureOfWater !== null;
-
-  const canProceed = (hasGmmValues || hasCalculatedGmm) && hasTemp;
-
-  console.log(
-    '  - GMM:',
-    'hasGmmValues=', hasGmmValues,
-    'hasCalculatedGmm=', hasCalculatedGmm,
-    'hasTemp=', hasTemp,
-    'canProceed=', canProceed
-  );
-
-  setNextDisabled(!canProceed);
-}
-
-}, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows, data.gmm, data.maxSpecificGravity]);
-
   /**
    * useEffect hook that runs when the `data.gmm` changes.
    * It extracts the GMM and Teor values from the `data.gmm` array and stores them in the `gmmRows` state.
@@ -277,7 +236,7 @@ useEffect(() => {
       return { id, GMM, Teor: teor };
     });
 
-    setGmmRows(gmmRows);
+    setGmmRows(gmmRows || []);
     setGmmColumns([
       {
         field: 'Teor',
@@ -293,7 +252,7 @@ useEffect(() => {
             type="number"
             value={row.GMM}
             onChange={(e) => {
-              const newData = [...data.gmm];
+              const newData = [...(data.gmm || [])];
               newData[row.id - 1].value = Number(e.target.value);
               setData({ step: 4, value: { ...data, gmm: newData } });
             }}
@@ -301,7 +260,7 @@ useEffect(() => {
         ),
       },
     ]);
-  }, [data.gmm]);
+  }, [data.gmm, binderTrialData.trial]);
 
   /**
    * Calculates the GMM data using the dosage calculation results.
@@ -408,13 +367,18 @@ useEffect(() => {
             value: item.GMM,
           }));
 
-          setGmmRows(formattedGmm);
+          setGmmRows(formattedGmm || []);
           setData({
             step: 4,
             value: {
               ...data,
               ...riceTest,
               gmm: formattedGmmData,
+              // GARANTE que maxSpecificGravity tenha method: 'GMM'
+              maxSpecificGravity: {
+                results: riceTest.maxSpecificGravity,
+                method: 'GMM'
+              }
             },
           });
         } catch (error) {
@@ -542,7 +506,53 @@ useEffect(() => {
    * The nextDisabled state is used to disable the next button
    * if the user has not filled all the required data.
    */
-  
+  useEffect(() => {
+    console.log('🔍 VERIFICANDO NEXT DISABLED:');
+    console.log('  - Método selecionado:', selectedMethod);
+    console.log('  - Temperatura água:', data.temperatureOfWater);
+    console.log('  - maxSpecificGravity:', data.maxSpecificGravity);
+    
+    if (selectedMethod.dmt) {
+      // DMT: precisa ter TODOS os valores DMT preenchidos E temperatura
+      const hasAllDmtValues = dmtRows?.every(row => row.DMT && row.DMT !== '');
+      const hasTemp = data.temperatureOfWater !== null;
+      const disabled = !hasAllDmtValues || !hasTemp;
+      
+      console.log('  - DMT - hasAllDmtValues:', hasAllDmtValues, 'hasTemp:', hasTemp, 'disabled:', disabled);
+      setNextDisabled(disabled);
+    } 
+    else if (selectedMethod.gmm) {
+      // GMM: pode avançar se:
+      // 1. Tem valores no GMM (pelo menos um) OU já calculou pelo Rice Test
+      // 2. E tem temperatura preenchida
+      
+      // Verifica se tem pelo menos UM valor no GMM
+      const hasGmmValues = data.gmm?.some((item: any) => {
+        return (item.value !== null && item.value !== undefined && item.value !== '') ||
+               (item.GMM !== null && item.GMM !== undefined && item.GMM !== '');
+      });
+      
+      // Verifica se já calculou GMM pelo Rice Test
+      const hasCalculatedGmm = data.maxSpecificGravity?.method === 'GMM';
+      const hasTemp = data.temperatureOfWater !== null;
+      
+      // Pode avançar se: (tem valores no GMM OU já calculou GMM) E tem temperatura
+      const canProceed = (hasGmmValues || hasCalculatedGmm) && hasTemp;
+      const disabled = !canProceed;
+      
+      console.log('  - GMM - hasGmmValues:', hasGmmValues, 
+                 'hasCalculatedGmm:', hasCalculatedGmm,
+                 'hasTemp:', hasTemp,
+                 'canProceed:', canProceed,
+                 'disabled:', disabled);
+      
+      setNextDisabled(disabled);
+    } else {
+      // Nenhum método selecionado
+      console.log('  - Nenhum método selecionado, disabled: true');
+      setNextDisabled(true);
+    }
+  }, [data.temperatureOfWater, selectedMethod, dmtRows, data.gmm, data.maxSpecificGravity]);
 
   return (
     <>
@@ -612,7 +622,7 @@ useEffect(() => {
                   disableColumnMenu: true,
                   sortable: false,
                   flex: 1,
-                  moinWidth: 100,
+                  minWidth: 100,
                   headerAlign: 'center',
                   align: 'center',
                 }))}
