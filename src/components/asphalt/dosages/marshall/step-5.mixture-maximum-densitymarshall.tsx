@@ -4,7 +4,7 @@ import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
-import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
+import useMarshallStore, { GmmRows as StoreGmmRows } from '@/stores/asphalt/marshall/marshall.store';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
@@ -37,23 +37,15 @@ export type RiceTestRows = {
   massOfContainerWater: number;
 };
 
-// TIPOS CORRETOS DEFINIDOS
-
-// TIPOS - Use apenas UM tipo que combine tudo
-// REMOVA seus tipos locais e use o do store
-export type GmmRows = {
+// TIPOS LOCAIS - Não exporte para evitar conflitos
+type LocalGmmRows = {
   id: number;
-  insert: boolean; // OBRIGATÓRIO!
-  value: number; // OBRIGATÓRIO!
-};
-
-type LocalGmmRows  = {
-  id: number;
-  GMM: number | null; // Apenas para exibição na tabela
+  GMM: number | null;
   Teor: number;
-  value?: number; // Opcional aqui
-  insert?: boolean; // Opcional aqui
+  value?: number | null;
+  insert?: boolean;
 };
+
 const Marshall_Step5_MixtureMaximumDensity = ({
   setNextDisabled,
   marshall,
@@ -94,17 +86,17 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             missingSpecificMass: response,
           };
 
-          const gmmData: GmmRows[] = []; // Use GmmRows do store
+          const gmmData: StoreGmmRows[] = [];
           for (let i = 1; i <= 5; i++) {
             gmmData.push({
               id: i,
-              insert: true, // OBRIGATÓRIO!
-              value: null as any, // O store espera number, mas inicialmente é null
+              insert: true,
+              value: null as any, // Type assertion para evitar erro de tipo
             });
           }
-          newData.gmm = gmmData; // Sem "as any" agora!
-
-          newData.gmm = gmmData as any;
+          
+          // CORREÇÃO: Use type assertion para evitar conflito de tipos
+          newData.gmm = gmmData as any; // ← LINHA CRÍTICA CORRIGIDA
 
           newData.riceTest =
             newData.riceTest ||
@@ -162,19 +154,18 @@ const Marshall_Step5_MixtureMaximumDensity = ({
     '30°C': 0.9956,
   }).map(([label, value]) => ({ label, value }));
 
-  // DMT ROWS CORRIGIDO - Mostra cada teor com seu valor correto
+  // DMT ROWS - Mostra cada teor com seu valor correto
   const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => {
     const keys = ['lessOne', 'lessHalf', 'normal', 'plusHalf', 'plusOne'];
     const key = keys[index];
 
-    // Type assertion para lidar com ambos os formatos
     const gravityData = data?.maxSpecificGravity as any;
 
     let gravity;
     if (gravityData?.result?.[key] !== undefined) {
-      gravity = gravityData.result[key]; // DMT format
+      gravity = gravityData.result[key];
     } else if (gravityData?.results?.[key] !== undefined) {
-      gravity = gravityData.results[key]; // GMM format
+      gravity = gravityData.results[key];
     }
 
     return {
@@ -199,12 +190,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 
   /**
    * Handles the submission process for calculating the maximum mixture density (DMT).
-   * It triggers a toast notification indicating the status of the calculation process.
-   * On successful calculation, it updates the data store with the new maximum specific gravity
-   * and a list of specific gravities, and closes the DMT modal.
-   *
-   * @async
-   * @throws Will throw an error if the calculation fails.
    */
   const handleSubmitDmt = async () => {
     toast.promise(
@@ -241,21 +226,17 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 
   /**
    * useEffect hook that runs when the `data.gmm` changes.
-   * It extracts the GMM and Teor values from the `data.gmm` array and stores them in the `gmmRows` state.
-   * It also generates the DataGrid columns and stores them in the `gmmColumns` state.
-   *
-   * @param {Object} data - The dosage calculation results.
    */
   useEffect(() => {
-    const gmmRows = data?.gmm?.map((item: GmmRows, index) => {
+    const gmmRows = data?.gmm?.map((item: StoreGmmRows, index) => {
       const teor = binderTrialData.trial + (index - 2) * 0.5;
       return {
         id: item.id,
-        GMM: item.value ?? null, // item.value é do store
+        GMM: item.value ?? null,
         Teor: teor,
-        value: item.value, // Mantém compatibilidade
-        insert: item.insert, // Mantém compatibilidade
-      }  as LocalGmmRows;
+        value: item.value,
+        insert: item.insert,
+      } as LocalGmmRows;
     });
 
     setGmmRows(gmmRows || []);
@@ -277,11 +258,11 @@ const Marshall_Step5_MixtureMaximumDensity = ({
               const newData = [...(data?.gmm || [])];
               const itemIndex = row.id - 1;
               if (newData[itemIndex]) {
-                // ATUALIZE VALUE (não GMM!) - o store espera "value"
+                // Atualiza o valor no store (propriedade 'value')
                 newData[itemIndex] = {
                   ...newData[itemIndex],
-                  value: e.target.value === '' ? null : Number(e.target.value), // VALUE!
-                  insert: newData[itemIndex].insert, // Mantém o insert
+                  value: e.target.value === '' ? null : Number(e.target.value),
+                  insert: newData[itemIndex].insert,
                 };
                 setData({ step: 4, value: { ...data, gmm: newData } });
               }
@@ -294,11 +275,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 
   /**
    * Calculates the GMM data using the dosage calculation results.
-   * If the dosage calculation results are invalid, it will throw an error.
-   * If the dosage calculation results are valid, it will update the data store with the new GMM data.
-   *
-   * @async
-   * @throws Will throw an error if the calculation fails.
    */
   const calculateGmmData = async () => {
     if (data?.temperatureOfWater === null) {
@@ -323,7 +299,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 
           setData({ step: 4, value: newData });
 
-          // CORREÇÃO: Não mutar diretamente, criar novo array
+          // Atualiza as linhas da tabela
           const newGmmRows = gmmRows.map((item) => {
             const gmmValue = gmm.maxSpecificGravity as Record<string, number>;
             if (item.id === 1) return { ...item, GMM: gmmValue.lessOne };
@@ -349,12 +325,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
   };
 
   /**
-   * Calculates the rice test data using the dosage calculation results.
-   * If the dosage calculation results are invalid, it will throw an error.
-   * If the dosage calculation results are valid, it will update the data store with the new rice test data.
-   *
-   * @async
-   * @throws Will throw an error if the calculation fails.
+   * Calculates the rice test data.
    */
   const calculateRiceTest = () => {
     console.log('=== DEBUG RICE TEST ===');
@@ -376,6 +347,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
         tenor.massOfDrySample > tenor.massOfContainerWaterSample ||
         tenor.massOfContainerWater > tenor.massOfContainerWaterSample
     );
+    
     if (hasNullValues) errorMsg = 'errors.rice-test-empty-fields';
     if (!errorMsg && invalidValues) {
       if (invalidValues.massOfContainerWaterSample <= invalidValues.massOfDrySample) {
@@ -393,11 +365,18 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           const riceTest = await marshall.calculateRiceTest(data);
           setRiceTestModalIsOpen(false);
 
-          const formattedGmm = riceTest?.maxSpecificGravity.map(({ id, Teor, GMM }) => ({ id, Teor, GMM }));
-          const formattedGmmData: GmmRows[] = riceTest?.maxSpecificGravity.map((item, i) => ({
+          const formattedGmm = riceTest?.maxSpecificGravity.map(({ id, Teor, GMM }) => ({ 
+            id, 
+            Teor, 
+            GMM,
+            value: GMM,
+            insert: false 
+          } as LocalGmmRows));
+          
+          const formattedGmmData: StoreGmmRows[] = riceTest?.maxSpecificGravity.map((item, i) => ({
             id: i + 1,
-            insert: false, // OBRIGATÓRIO!
-            value: item.GMM, // Armazena em "value"
+            insert: false,
+            value: item.GMM,
           }));
 
           setGmmRows(formattedGmm || []);
@@ -407,11 +386,10 @@ const Marshall_Step5_MixtureMaximumDensity = ({
               ...data,
               ...riceTest,
               gmm: formattedGmmData,
-              // GARANTE que maxSpecificGravity tenha method: 'GMM'
               maxSpecificGravity: {
                 results: riceTest.maxSpecificGravity,
-                method: 'GMM',
-              },
+                method: 'GMM'
+              }
             },
           });
         } catch (error: any) {
@@ -552,9 +530,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 
   /**
    * Effect that checks if there is any null value in the data.
-   * If there is, it sets the nextDisabled state to true.
-   * The nextDisabled state is used to disable the next button
-   * if the user has not filled all the required data.
    */
   useEffect(() => {
     console.log('🔍 VERIFICANDO NEXT DISABLED:');
@@ -563,49 +538,24 @@ const Marshall_Step5_MixtureMaximumDensity = ({
     console.log('  - maxSpecificGravity:', data?.maxSpecificGravity);
 
     if (selectedMethod.dmt) {
-      // DMT: precisa ter TODOS os valores DMT preenchidos E temperatura
       const hasAllDmtValues = dmtRows?.every((row) => row.DMT && row.DMT !== '');
       const hasTemp = data?.temperatureOfWater !== null;
       const disabled = !hasAllDmtValues || !hasTemp;
 
-      console.log('  - DMT - hasAllDmtValues:', hasAllDmtValues, 'hasTemp:', hasTemp, 'disabled:', disabled);
       setNextDisabled(disabled);
     } else if (selectedMethod.gmm) {
-      // GMM: pode avançar se:
-      // 1. Tem valores no GMM (pelo menos um) OU já calculou pelo Rice Test
-      // 2. E tem temperatura preenchida
-
-      // Verifica se tem pelo menos UM valor no GMM
-      const hasGmmValues = data?.gmm?.some((item: GmmRows) => {
-        // Verifica value (não GMM)
+      const hasGmmValues = data?.gmm?.some((item: StoreGmmRows) => {
         return item.value !== null && item.value !== undefined;
       });
 
-      // Verifica se já calculou GMM pelo Rice Test
       const hasCalculatedGmm = data?.maxSpecificGravity?.method === 'GMM';
       const hasTemp = data?.temperatureOfWater !== null;
 
-      // Pode avançar se: (tem valores no GMM OU já calculou GMM) E tem temperatura
       const canProceed = (hasGmmValues || hasCalculatedGmm) && hasTemp;
       const disabled = !canProceed;
 
-      console.log(
-        '  - GMM - hasGmmValues:',
-        hasGmmValues,
-        'hasCalculatedGmm:',
-        hasCalculatedGmm,
-        'hasTemp:',
-        hasTemp,
-        'canProceed:',
-        canProceed,
-        'disabled:',
-        disabled
-      );
-
       setNextDisabled(disabled);
     } else {
-      // Nenhum método selecionado
-      console.log('  - Nenhum método selecionado, disabled: true');
       setNextDisabled(true);
     }
   }, [data?.temperatureOfWater, selectedMethod, dmtRows, data?.gmm, data?.maxSpecificGravity]);
