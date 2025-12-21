@@ -37,8 +37,14 @@ export type RiceTestRows = {
   massOfContainerWater: number;
 };
 
-
-
+// TIPO PARA A TABELA - TEM GMM E Teor
+type TableGmmRow = {
+  id: number;
+  GMM: number | null;
+  Teor: number;
+  value?: number;
+  insert?: boolean;
+};
 
 const Marshall_Step5_MixtureMaximumDensity = ({
   setNextDisabled,
@@ -47,7 +53,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
   const [enableRiceTest, setEnableRiceTest] = useState(false);
-  const [gmmRows, setGmmRows] = useState<StoreGmmRows[]>([]);
+  const [gmmRows, setGmmRows] = useState<TableGmmRow[]>([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [selectedMethod, setSelectedMethod] = useState({
     dmt: data?.method === 'DMT',
@@ -63,11 +69,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
    * This useEffect is responsible for calculating the indexes of missing specific
    * gravity values in the GMM table and setting the initial values of the rice
    * test table.
-   *
-   * If the GMM table is completed, the function will return and do nothing.
-   *
-   * After the calculation is done, the function will update the data in the store
-   * with the new values and set the loading state to false.
    */
   useEffect(() => {
     toast.promise(
@@ -80,16 +81,16 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             missingSpecificMass: response,
           };
 
-          const gmmData: StoreGmmRows[] = [];
-          for (let i = 1; i <= 5; i++) {
-            gmmData.push({
-              id: i,
-              insert: true,
-              value: null as any,
-            } as StoreGmmRows); 
-          }
+          // SOLUÇÃO DEFINITIVA: Crie o array e force o tipo
+          const gmmData = [
+            { id: 1, insert: true, value: null },
+            { id: 2, insert: true, value: null },
+            { id: 3, insert: true, value: null },
+            { id: 4, insert: true, value: null },
+            { id: 5, insert: true, value: null },
+          ] as unknown as StoreGmmRows[];
 
-          newData.gmm = gmmData as any; 
+          newData.gmm = gmmData;
 
           newData.riceTest =
             newData.riceTest ||
@@ -102,7 +103,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             }));
 
           setData({ step: 4, value: newData });
-
           setLoading(false);
         } catch (error) {
           setLoading(false);
@@ -229,7 +229,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
         Teor: teor,
         value: item.value,
         insert: item.insert,
-      } as StoreGmmRows;
+      } as TableGmmRow;
     });
 
     setGmmRows(gmmRows || []);
@@ -251,7 +251,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
               const newData = [...(data?.gmm || [])];
               const itemIndex = row.id - 1;
               if (newData[itemIndex]) {
-                // Atualiza o valor no store (propriedade 'value')
                 newData[itemIndex] = {
                   ...newData[itemIndex],
                   value: e.target.value === '' ? null : Number(e.target.value),
@@ -292,7 +291,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 
           setData({ step: 4, value: newData });
 
-          // Atualiza as linhas da tabela
           const newGmmRows = gmmRows.map((item) => {
             const gmmValue = gmm.maxSpecificGravity as Record<string, number>;
             if (item.id === 1) return { ...item, GMM: gmmValue.lessOne };
@@ -362,11 +360,11 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             ({ id, Teor, GMM }) =>
               ({
                 id,
-                Teor,
                 GMM,
+                Teor,
                 value: GMM,
                 insert: false,
-              } as StoreGmmRows)
+              } as TableGmmRow)
           );
 
           const formattedGmmData: StoreGmmRows[] = riceTest?.maxSpecificGravity.map((item, i) => ({
@@ -528,16 +526,10 @@ const Marshall_Step5_MixtureMaximumDensity = ({
    * Effect that checks if there is any null value in the data.
    */
   useEffect(() => {
-    console.log('🔍 VERIFICANDO NEXT DISABLED:');
-    console.log('  - Método selecionado:', selectedMethod);
-    console.log('  - Temperatura água:', data?.temperatureOfWater);
-    console.log('  - maxSpecificGravity:', data?.maxSpecificGravity);
-
     if (selectedMethod.dmt) {
       const hasAllDmtValues = dmtRows?.every((row) => row.DMT && row.DMT !== '');
       const hasTemp = data?.temperatureOfWater !== null;
       const disabled = !hasAllDmtValues || !hasTemp;
-
       setNextDisabled(disabled);
     } else if (selectedMethod.gmm) {
       const hasGmmValues = data?.gmm?.some((item: StoreGmmRows) => {
@@ -549,7 +541,6 @@ const Marshall_Step5_MixtureMaximumDensity = ({
 
       const canProceed = (hasGmmValues || hasCalculatedGmm) && hasTemp;
       const disabled = !canProceed;
-
       setNextDisabled(disabled);
     } else {
       setNextDisabled(true);
