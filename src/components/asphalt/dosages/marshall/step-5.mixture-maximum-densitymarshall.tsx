@@ -47,7 +47,7 @@ export type GmmRows = {
   value: number; // OBRIGATÓRIO!
 };
 
-type GmmTableRows = {
+type LocalGmmRows  = {
   id: number;
   GMM: number | null; // Apenas para exibição na tabela
   Teor: number;
@@ -61,7 +61,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
   const [loading, setLoading] = useState<boolean>(false);
   const { materialSelectionData, maximumMixtureDensityData: data, binderTrialData, setData } = useMarshallStore();
   const [enableRiceTest, setEnableRiceTest] = useState(false);
-  const [gmmRows, setGmmRows] = useState<GmmTableRows[]>([]);
+  const [gmmRows, setGmmRows] = useState<LocalGmmRows[]>([]);
   const [gmmColumns, setGmmColumns] = useState<GridColDef[]>([]);
   const [selectedMethod, setSelectedMethod] = useState({
     dmt: data?.method === 'DMT',
@@ -255,7 +255,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
         Teor: teor,
         value: item.value, // Mantém compatibilidade
         insert: item.insert, // Mantém compatibilidade
-      };
+      }  as LocalGmmRows;
     });
 
     setGmmRows(gmmRows || []);
