@@ -91,12 +91,11 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             gmmData.push({
               id: i,
               insert: true,
-              value: null as any, // Type assertion para evitar erro de tipo
-            });
+              value: null as any,
+            } as StoreGmmRows); 
           }
-          
-          // CORREÇÃO: Use type assertion para evitar conflito de tipos
-          newData.gmm = gmmData as any; // ← LINHA CRÍTICA CORRIGIDA
+
+          newData.gmm = gmmData as any; 
 
           newData.riceTest =
             newData.riceTest ||
@@ -347,7 +346,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
         tenor.massOfDrySample > tenor.massOfContainerWaterSample ||
         tenor.massOfContainerWater > tenor.massOfContainerWaterSample
     );
-    
+
     if (hasNullValues) errorMsg = 'errors.rice-test-empty-fields';
     if (!errorMsg && invalidValues) {
       if (invalidValues.massOfContainerWaterSample <= invalidValues.massOfDrySample) {
@@ -365,14 +364,17 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           const riceTest = await marshall.calculateRiceTest(data);
           setRiceTestModalIsOpen(false);
 
-          const formattedGmm = riceTest?.maxSpecificGravity.map(({ id, Teor, GMM }) => ({ 
-            id, 
-            Teor, 
-            GMM,
-            value: GMM,
-            insert: false 
-          } as LocalGmmRows));
-          
+          const formattedGmm = riceTest?.maxSpecificGravity.map(
+            ({ id, Teor, GMM }) =>
+              ({
+                id,
+                Teor,
+                GMM,
+                value: GMM,
+                insert: false,
+              } as LocalGmmRows)
+          );
+
           const formattedGmmData: StoreGmmRows[] = riceTest?.maxSpecificGravity.map((item, i) => ({
             id: i + 1,
             insert: false,
@@ -388,8 +390,8 @@ const Marshall_Step5_MixtureMaximumDensity = ({
               gmm: formattedGmmData,
               maxSpecificGravity: {
                 results: riceTest.maxSpecificGravity,
-                method: 'GMM'
-              }
+                method: 'GMM',
+              },
             },
           });
         } catch (error: any) {
