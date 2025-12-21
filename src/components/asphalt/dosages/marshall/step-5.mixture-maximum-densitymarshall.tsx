@@ -81,14 +81,13 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             missingSpecificMass: response,
           };
 
-          // SOLUÇÃO DEFINITIVA: Crie o array e force o tipo
           const gmmData = [
             { id: 1, insert: true, value: null },
             { id: 2, insert: true, value: null },
             { id: 3, insert: true, value: null },
             { id: 4, insert: true, value: null },
             { id: 5, insert: true, value: null },
-          ] as unknown as StoreGmmRows[];
+          ] as unknown as any[]; // ← FORÇA O TIPO
 
           newData.gmm = gmmData;
 
