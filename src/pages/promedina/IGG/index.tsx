@@ -193,7 +193,9 @@ const processarDadosDNIT = (dados: { geral: Record<string, unknown>, estacoes: P
   
   const tiposPriorizados = tiposDefeitos.map((tipos: number[]) => {
     // Implementação simplificada da priorização DNIT (o maior tipo tem prioridade)
-    const tiposUnicos = [...new Set(tipos)].sort((a, b) => b - a);
+    // CORREÇÃO: Converter Set para Array de forma compatível
+    const tiposSet = new Set<number>(tipos);
+    const tiposUnicos = Array.from(tiposSet).sort((a, b) => b - a);
     
     if (tiposUnicos.includes(3)) {
         return tiposUnicos.filter(t => t >= 3);
@@ -207,7 +209,11 @@ const processarDadosDNIT = (dados: { geral: Record<string, unknown>, estacoes: P
   // 3. Frequências Absolutas e Relativas
   const freq_abs: Record<number, number> = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0};
   tiposPriorizados.forEach((tipos: number[]) => {
-    [...new Set(tipos)].forEach(t => { 
+    // CORREÇÃO: Converter Set para Array de forma compatível
+    const tiposUnicosSet = new Set<number>(tipos);
+    const tiposUnicos = Array.from(tiposUnicosSet);
+    
+    tiposUnicos.forEach(t => { 
       // Conta se o TIPO (já priorizado) está presente na estaca
       freq_abs[t]++; 
     });
@@ -313,11 +319,11 @@ const FrequencyBarChart: React.FC<{ data: Record<number, number> }> = ({ data })
     <Box sx={{ p: 2, height: 250, display: 'flex', flexDirection: 'column', gap: 1 }}>
       <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>Distribuição de Frequência Relativa de Tipos de Defeito (IGG)</Typography>
       {chartData.map(item => (
-        <Grid container key={item.tipo} alignItems="center" spacing={1}>
-          <Grid item xs={3}>
+        <Box key={item.tipo} sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+          <Box sx={{ width: '25%', minWidth: 80 }}>
             <Typography variant="caption" noWrap>{item.tipo}</Typography>
-          </Grid>
-          <Grid item xs={8}>
+          </Box>
+          <Box sx={{ width: '70%' }}>
             <Box 
               sx={{ 
                 height: 18, 
@@ -334,8 +340,8 @@ const FrequencyBarChart: React.FC<{ data: Record<number, number> }> = ({ data })
                 {item.frequencia}%
               </Typography>
             </Box>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       ))}
     </Box>
   );
@@ -360,9 +366,9 @@ const ResultsSection: React.FC<ResultsSectionProps> = ({ results, onSave, onEdit
       </Typography>
       <Divider sx={{ mb: 3, borderColor: PRIMARY_GREEN }} />
 
-      <Grid container spacing={3}>
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3 }}>
         {/* COLUNA 1: Destaque IGG e Indicadores Chave */}
-        <Grid item xs={12} md={5}>
+        <Box sx={{ width: { xs: '100%', md: '40%' } }}>
           <Card 
             variant="outlined" 
             sx={{ 
@@ -418,11 +424,10 @@ const ResultsSection: React.FC<ResultsSectionProps> = ({ results, onSave, onEdit
               Estaca **{stats.estacao_critica.stationNumber}** (Seção {stats.estacao_critica.section}). Registrou o maior número de ocorrências de defeitos (**{Object.values(stats.estacao_critica.defects).reduce((sum, count) => sum + count, 0)}**).
             </Alert>
           )}
-
-        </Grid>
+        </Box>
 
         {/* COLUNA 2: Composição do IGG e Frequência de Defeitos */}
-        <Grid item xs={12} md={7}>
+        <Box sx={{ width: { xs: '100%', md: '60%' } }}>
           
           {/* Composição do IGG (Tabela de Contribuição) */}
           <Paper variant="outlined" sx={{ p: 2, mb: 3 }}>
@@ -472,9 +477,8 @@ const ResultsSection: React.FC<ResultsSectionProps> = ({ results, onSave, onEdit
           <Paper variant="outlined" sx={{ p: 2 }}>
             <FrequencyBarChart data={stats.frequencias_relativas} />
           </Paper>
-
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
       
       {/* Ações Finais */}
       <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mt: 4 }}>
@@ -494,7 +498,8 @@ const ResultsSection: React.FC<ResultsSectionProps> = ({ results, onSave, onEdit
   );
 };
 
-interface FormData {
+// CORREÇÃO: Adicionar assinatura de índice à interface FormData
+interface FormData extends Record<string, unknown> {
   name: string;
   description: string;
   road: string;
@@ -532,7 +537,7 @@ const PavementAnalysisPage: React.FC = () => {
 
   const steps = ['Dados Gerais', 'Estações e Defeitos', 'Resultados'];
 
-  // Handlers
+  // Primeiro declare todas as funções que não têm dependências circulares
   const handleFormChange = useCallback((field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   }, []);
@@ -541,76 +546,20 @@ const PavementAnalysisPage: React.FC = () => {
     setCurrentStation(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  // --- NOVO HANDLER PARA CONTAR DEFEITOS ---
   const handleDefectCountChange = useCallback((defectCode: string, value: number) => {
     setDefectCounts(prev => {
       const newCounts = { ...prev };
       if (value > 0) {
         newCounts[defectCode] = value;
       } else {
-        // Remove da lista se a contagem for 0 ou menos
         delete newCounts[defectCode];
       }
       return newCounts;
     });
   }, []);
 
-  const resetStationForm = useCallback((keepSection: boolean = true) => {
-    setCurrentStation({
-      stationNumber: '',
-      section: keepSection ? currentStation.section : 'A',
-      tri: 0,
-      tre: 0,
-      defects: {}
-    });
-    setDefectCounts({}); // Resetar a contagem
-    setEditingStationId(null);
-  }, [currentStation.section]);
-  
-  // --- Lógica de Adição/Edição de Estação ATUALIZADA ---
-  const handleAddOrUpdateStation = useCallback(() => {
-    if (!currentStation.stationNumber) {
-      alert('Número da estaca é obrigatório');
-      return;
-    }
-    
-    // Filtra defeitos com contagem > 0 antes de salvar
-    const defectsToSave: Record<string, number> = Object.entries(defectCounts)
-      .filter(([, count]) => count > 0)
-      .reduce((acc, [code, count]) => ({ ...acc, [code]: count }), {});
-
-    const stationData: PavementStation = {
-      ...currentStation as PavementStation,
-      tri: parseFloat(String(currentStation.tri)) || 0,
-      tre: parseFloat(String(currentStation.tre)) || 0,
-      defects: defectsToSave, // Usa o novo formato
-      id: editingStationId || stations.length + 1
-    };
-    
-    if (Object.keys(defectsToSave).length === 0) {
-      const confirm = window.confirm("Nenhum defeito foi registrado para esta estaca. Deseja adicionar mesmo assim?");
-      if (!confirm) return;
-    }
-
-    if (editingStationId) {
-      // Atualizar estação existente
-      setStations(prev => 
-        prev.map(s => s.id === editingStationId ? stationData : s)
-      );
-    } else {
-      // Adicionar nova estação
-      // Garante que o ID é único (embora o stations.length + 1 já ajude)
-      const newId = stations.length > 0 ? Math.max(...stations.map(s => s.id)) + 1 : 1;
-      setStations(prev => [...prev, {...stationData, id: newId}]);
-    }
-    
-    resetStationForm(true);
-  }, [currentStation, defectCounts, editingStationId, stations, resetStationForm]);
-  
-  // --- Lógica para Carregar Estação para Edição ATUALIZADA ---
   const handleEditStation = useCallback((station: PavementStation) => {
     setCurrentStation(station);
-    // Carrega o formato Record<string, number> para a contagem
     setDefectCounts(station.defects); 
     setEditingStationId(station.id);
   }, []);
@@ -621,7 +570,13 @@ const PavementAnalysisPage: React.FC = () => {
       }
   }, []);
 
-  // --- Lógica de Processamento e Salvamento (Mantido) ---
+  const handleViewAnalysis = useCallback((analysis: PavementAnalysis) => {
+    setSelectedAnalysis(analysis);
+    setViewingSaved(true);
+    setResults(analysis.results);
+    setActiveStep(2); 
+  }, []);
+
   const handleProcessAnalysis = useCallback(() => {
     if (stations.length === 0) {
       alert('Adicione pelo menos uma estação');
@@ -634,6 +589,70 @@ const PavementAnalysisPage: React.FC = () => {
     setActiveStep(2);
   }, [stations, formData]);
 
+  // Agora declare resetStationForm (não depende de outras funções)
+  const resetStationForm = useCallback((keepSection = true) => {
+    setCurrentStation({
+      stationNumber: '',
+      section: keepSection ? currentStation.section : 'A',
+      tri: 0,
+      tre: 0,
+      defects: {}
+    });
+    setDefectCounts({});
+    setEditingStationId(null);
+  }, [currentStation.section]);
+
+  // Agora declare resetAll (depende de resetStationForm)
+  const resetAll = useCallback(() => {
+    setFormData({
+      name: '', description: '', road: '', section: '', subtrack: '',
+      pavementType: '', evaluationDate: new Date().toISOString().split('T')[0],
+    });
+    setStations([]);
+    setResults(null);
+    setActiveStep(0);
+    resetStationForm(false);
+    setViewingSaved(false);
+    setSelectedAnalysis(null);
+  }, [resetStationForm]);
+
+  // Agora declare handleAddOrUpdateStation (depende de resetStationForm)
+  const handleAddOrUpdateStation = useCallback(() => {
+    if (!currentStation.stationNumber) {
+      alert('Número da estaca é obrigatório');
+      return;
+    }
+    
+    const defectsToSave: Record<string, number> = Object.entries(defectCounts)
+      .filter(([, count]) => count > 0)
+      .reduce((acc, [code, count]) => ({ ...acc, [code]: count }), {});
+
+    const stationData: PavementStation = {
+      ...currentStation as PavementStation,
+      tri: parseFloat(String(currentStation.tri)) || 0,
+      tre: parseFloat(String(currentStation.tre)) || 0,
+      defects: defectsToSave,
+      id: editingStationId || stations.length + 1
+    };
+    
+    if (Object.keys(defectsToSave).length === 0) {
+      const confirm = window.confirm("Nenhum defeito foi registrado para esta estaca. Deseja adicionar mesmo assim?");
+      if (!confirm) return;
+    }
+
+    if (editingStationId) {
+      setStations(prev => 
+        prev.map(s => s.id === editingStationId ? stationData : s)
+      );
+    } else {
+      const newId = stations.length > 0 ? Math.max(...stations.map(s => s.id)) + 1 : 1;
+      setStations(prev => [...prev, {...stationData, id: newId}]);
+    }
+    
+    resetStationForm(true);
+  }, [currentStation, defectCounts, editingStationId, stations, resetStationForm]);
+
+  // Agora declare as funções que dependem de resetAll
   const handleSaveAnalysis = useCallback(() => {
     if (!results) return;
 
@@ -650,41 +669,26 @@ const PavementAnalysisPage: React.FC = () => {
     setSavedAnalyses(prev => [...prev, newAnalysis]);
     alert(`Análise "${newAnalysis.name}" salva com sucesso!`);
     resetAll();
-  }, [results, formData.name, formData.road, formData.evaluationDate, stations]);
+  }, [results, formData.name, formData.road, formData.evaluationDate, stations, resetAll]);
   
-  // Lógica para Resetar, Visualizar/Carregar Análise Salva (Mantido)
-  const resetAll = useCallback(() => {
-    setFormData({
-      name: '', description: '', road: '', section: '', subtrack: '',
-      pavementType: '', evaluationDate: new Date().toISOString().split('T')[0],
-    });
-    setStations([]);
-    setResults(null);
-    setActiveStep(0);
-    resetStationForm(false);
-    setViewingSaved(false);
-    setSelectedAnalysis(null);
-  }, [resetStationForm]);
-
-  const handleViewAnalysis = useCallback((analysis: PavementAnalysis) => {
-    setSelectedAnalysis(analysis);
-    setViewingSaved(true);
-    setResults(analysis.results);
-    setActiveStep(2); 
-  }, []);
-  
-  // Função para voltar para a Edição (etapa 2) a partir da Etapa 3
   const handleEditFromResults = useCallback(() => {
     if (selectedAnalysis) {
-        // Se estiver vendo uma análise salva, carrega os dados completos
-        setFormData(selectedAnalysis.results.generalData as FormData);
+        const generalData = selectedAnalysis.results.generalData;
+        setFormData({
+          name: String(generalData.name || ''),
+          description: String(generalData.description || ''),
+          road: String(generalData.road || ''),
+          section: String(generalData.section || ''),
+          subtrack: String(generalData.subtrack || ''),
+          pavementType: String(generalData.pavementType || ''),
+          evaluationDate: String(generalData.evaluationDate || new Date().toISOString().split('T')[0]),
+        });
         setStations(selectedAnalysis.stations);
-        setSelectedAnalysis(null); // Sai do modo de visualização salva
+        setSelectedAnalysis(null);
         setViewingSaved(false);
     }
     setActiveStep(1);
-    // Limpa os resultados para recalcular
-    setResults(null); 
+    setResults(null);
   }, [selectedAnalysis]);
   
   const handleBackToSavedList = useCallback(() => {
@@ -705,11 +709,6 @@ const PavementAnalysisPage: React.FC = () => {
     }
   }, [currentStation.defects]);
 
-  // UseEffect corrigido com dependência correta
-  useEffect(() => {
-    // Este useEffect não tem dependências faltantes agora
-  }, []);
-
   // Renderização da Lista de Análises Salvas
   if (viewingSaved && !selectedAnalysis) {
       return (
@@ -723,32 +722,31 @@ const PavementAnalysisPage: React.FC = () => {
                   {savedAnalyses.length === 0 ? (
                       <Alert severity="info">Nenhuma análise salva ainda.</Alert>
                   ) : (
-                      <Grid container spacing={3}>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }, gap: 3 }}>
                           {savedAnalyses.map(analysis => (
-                              <Grid item xs={12} sm={6} md={4} key={analysis.id}>
-                                  <Card 
-                                    variant="outlined" 
-                                    sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
-                                  >
-                                      <CardContent>
-                                          <Typography variant="body1" sx={{ fontWeight: 'bold', color: PRIMARY_GREEN, mb: 1 }}>{analysis.name}</Typography>
-                                          <Typography variant="body2" color="text.secondary">Rodovia: **{analysis.road}**</Typography>
-                                          <Typography variant="body2" color="text.secondary">Data: {new Date(analysis.evaluationDate).toLocaleDateString()}</Typography>
-                                          <Typography variant="body2">Estações: {analysis.stations.length}</Typography>
-                                          <Chip 
-                                            label={`IGG: ${analysis.results.statistics.IGG.toFixed(1)} (${analysis.results.statistics.classificacao})`}
-                                            sx={{ mt: 1, backgroundColor: analysis.results.statistics.cor_classificacao, color: 'white', fontWeight: 'bold' }}
-                                          />
-                                      </CardContent>
-                                      <Box sx={{ p: 2, pt: 0, textAlign: 'right' }}>
-                                          <Button size="small" onClick={() => handleViewAnalysis(analysis)} startIcon={<Assessment />}>
-                                              Visualizar
-                                          </Button>
-                                      </Box>
-                                  </Card>
-                              </Grid>
+                              <Card 
+                                key={analysis.id}
+                                variant="outlined" 
+                                sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+                              >
+                                  <CardContent>
+                                      <Typography variant="body1" sx={{ fontWeight: 'bold', color: PRIMARY_GREEN, mb: 1 }}>{analysis.name}</Typography>
+                                      <Typography variant="body2" color="text.secondary">Rodovia: **{analysis.road}**</Typography>
+                                      <Typography variant="body2" color="text.secondary">Data: {new Date(analysis.evaluationDate).toLocaleDateString()}</Typography>
+                                      <Typography variant="body2">Estações: {analysis.stations.length}</Typography>
+                                      <Chip 
+                                        label={`IGG: ${analysis.results.statistics.IGG.toFixed(1)} (${analysis.results.statistics.classificacao})`}
+                                        sx={{ mt: 1, backgroundColor: analysis.results.statistics.cor_classificacao, color: 'white', fontWeight: 'bold' }}
+                                      />
+                                  </CardContent>
+                                  <Box sx={{ p: 2, pt: 0, textAlign: 'right' }}>
+                                      <Button size="small" onClick={() => handleViewAnalysis(analysis)} startIcon={<Assessment />}>
+                                          Visualizar
+                                      </Button>
+                                  </Box>
+                              </Card>
                           ))}
-                      </Grid>
+                      </Box>
                   )}
                   
                   <Box sx={{ mt: 4, textAlign: 'center' }}>
@@ -840,15 +838,17 @@ const PavementAnalysisPage: React.FC = () => {
               DADOS GERAIS DO TRECHO
             </Typography>
 
-            <Grid container spacing={3} sx={{ mt: 2 }}> 
-              <Grid item xs={12} md={4}><TextField fullWidth label="Nome da Análise *" value={formData.name} onChange={(e) => handleFormChange('name', e.target.value)} required /></Grid>
-              <Grid item xs={12} md={4}><TextField fullWidth label="Rodovia *" value={formData.road} onChange={(e) => handleFormChange('road', e.target.value)} required /></Grid>
-              <Grid item xs={12} md={4}><TextField fullWidth label="Trecho/Local *" value={formData.section} onChange={(e) => handleFormChange('section', e.target.value)} required /></Grid>
-              <Grid item xs={12} md={4}><TextField fullWidth label="Subtramo" value={formData.subtrack} onChange={(e) => handleFormChange('subtrack', e.target.value)} /></Grid>
-              <Grid item xs={12} md={4}><TextField fullWidth label="Tipo de Revestimento *" value={formData.pavementType} onChange={(e) => handleFormChange('pavementType', e.target.value)} required /></Grid>
-              <Grid item xs={12} md={4}><TextField fullWidth label="Data da Avaliação *" type="date" value={formData.evaluationDate} onChange={(e) => handleFormChange('evaluationDate', e.target.value)} InputLabelProps={{ shrink: true }} required /></Grid>
-              <Grid item xs={12}><TextField fullWidth multiline rows={2} label="Observações" value={formData.description} onChange={(e) => handleFormChange('description', e.target.value)} /></Grid>
-            </Grid>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 3, mt: 2 }}>
+              <TextField fullWidth label="Nome da Análise *" value={formData.name} onChange={(e) => handleFormChange('name', e.target.value)} required />
+              <TextField fullWidth label="Rodovia *" value={formData.road} onChange={(e) => handleFormChange('road', e.target.value)} required />
+              <TextField fullWidth label="Trecho/Local *" value={formData.section} onChange={(e) => handleFormChange('section', e.target.value)} required />
+              <TextField fullWidth label="Subtramo" value={formData.subtrack} onChange={(e) => handleFormChange('subtrack', e.target.value)} />
+              <TextField fullWidth label="Tipo de Revestimento *" value={formData.pavementType} onChange={(e) => handleFormChange('pavementType', e.target.value)} required />
+              <TextField fullWidth label="Data da Avaliação *" type="date" value={formData.evaluationDate} onChange={(e) => handleFormChange('evaluationDate', e.target.value)} InputLabelProps={{ shrink: true }} required />
+              <Box sx={{ gridColumn: { xs: 'span 1', md: 'span 3' } }}>
+                <TextField fullWidth multiline rows={2} label="Observações" value={formData.description} onChange={(e) => handleFormChange('description', e.target.value)} />
+              </Box>
+            </Box>
             
             <Box sx={{ mt: 4, textAlign: 'right' }}>
               <Button 
@@ -877,11 +877,9 @@ const PavementAnalysisPage: React.FC = () => {
             </Alert>
             
             {/* Formulário de Adição/Edição de Estação */}
-            <Grid container spacing={3} component={Paper} sx={{ p: 3, mb: 3, border: `1px solid ${LIGHT_GREEN_BG}` }}> 
-              <Grid item xs={12} md={3}>
+            <Paper sx={{ p: 3, mb: 3, border: `1px solid ${LIGHT_GREEN_BG}` }}>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr 1fr 1fr' }, gap: 3 }}>
                 <TextField fullWidth label="Estaca/Quilômetro *" value={currentStation.stationNumber} onChange={(e) => handleStationChange('stationNumber', e.target.value)} required />
-              </Grid>
-              <Grid item xs={12} md={3}>
                 <FormControl fullWidth>
                   <InputLabel>Seção *</InputLabel>
                   <Select
@@ -894,14 +892,8 @@ const PavementAnalysisPage: React.FC = () => {
                     ))}
                   </Select>
                 </FormControl>
-              </Grid>
-              <Grid item xs={12} md={2}>
                 <TextField fullWidth label="Flecha TRI (mm) *" type="number" value={currentStation.tri === 0 ? '' : currentStation.tri} onChange={(e) => handleStationChange('tri', parseFloat(e.target.value) || 0)} inputProps={{ min: 0, step: 0.1 }} required />
-              </Grid>
-              <Grid item xs={12} md={2}>
                 <TextField fullWidth label="Flecha TRE (mm) *" type="number" value={currentStation.tre === 0 ? '' : currentStation.tre} onChange={(e) => handleStationChange('tre', parseFloat(e.target.value) || 0)} inputProps={{ min: 0, step: 0.1 }} required />
-              </Grid>
-              <Grid item xs={12} md={2}>
                 <Button 
                   variant="contained" 
                   startIcon={editingStationId ? <Save /> : <Add />}
@@ -910,17 +902,17 @@ const PavementAnalysisPage: React.FC = () => {
                   disabled={!currentStation.stationNumber}
                   sx={{ height: '56px', backgroundColor: editingStationId ? WARNING_ORANGE : PRIMARY_GREEN, '&:hover': { backgroundColor: editingStationId ? '#e67e22' : '#2e7d32' } }}
                 >
-                  {editingStationId ? 'Salvar Edição' : 'Adicionar Estação'}
+                  {editingStationId ? 'Salvar Edição' : 'Adicionar'}
                 </Button>
-              </Grid>
+              </Box>
               {editingStationId && (
-                <Grid item xs={12} sx={{ pt: 0, textAlign: 'right' }}>
+                <Box sx={{ pt: 2, textAlign: 'right' }}>
                     <Button variant="text" color="inherit" onClick={() => resetStationForm(true)} startIcon={<Close />}>
                         Cancelar Edição
                     </Button>
-                </Grid>
+                </Box>
               )}
-            </Grid>
+            </Paper>
 
             {/* SELEÇÃO E CONTAGEM DE DEFEITOS */}
             <Typography variant="h6" gutterBottom sx={{ mt: 4, fontWeight: 600, color: PRIMARY_GREEN }}>
@@ -928,41 +920,40 @@ const PavementAnalysisPage: React.FC = () => {
             </Typography>
             <Divider sx={{ mb: 3 }} />
             
-            <Grid container spacing={2} sx={{ mb: 4 }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }, gap: 2, mb: 4 }}>
               {Object.entries(DEFEITOS_INFO).map(([code, info]) => (
-                <Grid item xs={12} sm={6} md={4} key={code}>
-                  <Card 
-                    variant="outlined" 
-                    sx={{ 
-                      p: 1.5, 
-                      display: 'flex', 
-                      justifyContent: 'space-between', 
-                      alignItems: 'center',
-                      backgroundColor: defectCounts[code] > 0 ? LIGHT_GREEN_BG : 'white',
-                      border: defectCounts[code] > 0 ? `1px solid ${PRIMARY_GREEN}` : '1px solid #e0e0e0'
-                    }}
-                  >
-                    <Box sx={{ flexGrow: 1, mr: 2 }}>
-                      <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                        {code} - {info.description} 
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        (Tipo {info.type}, Prioridade {info.priority})
-                      </Typography>
-                    </Box>
-                    <TextField
-                      label="Qtd."
-                      type="number"
-                      size="small"
-                      value={defectCounts[code] || ''}
-                      onChange={(e) => handleDefectCountChange(code, parseInt(e.target.value) || 0)}
-                      inputProps={{ min: 0, max: 99, style: { textAlign: 'center' } }}
-                      sx={{ width: 80 }}
-                    />
-                  </Card>
-                </Grid>
+                <Card 
+                  key={code}
+                  variant="outlined" 
+                  sx={{ 
+                    p: 1.5, 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center',
+                    backgroundColor: defectCounts[code] > 0 ? LIGHT_GREEN_BG : 'white',
+                    border: defectCounts[code] > 0 ? `1px solid ${PRIMARY_GREEN}` : '1px solid #e0e0e0'
+                  }}
+                >
+                  <Box sx={{ flexGrow: 1, mr: 2 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                      {code} - {info.description} 
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      (Tipo {info.type}, Prioridade {info.priority})
+                    </Typography>
+                  </Box>
+                  <TextField
+                    label="Qtd."
+                    type="number"
+                    size="small"
+                    value={defectCounts[code] || ''}
+                    onChange={(e) => handleDefectCountChange(code, parseInt(e.target.value) || 0)}
+                    inputProps={{ min: 0, max: 99, style: { textAlign: 'center' } }}
+                    sx={{ width: 80 }}
+                  />
+                </Card>
               ))}
-            </Grid>
+            </Box>
 
             {/* Lista de Estações (Tabela ATUALIZADA) */}
             {stations.length > 0 && (
@@ -996,12 +987,11 @@ const PavementAnalysisPage: React.FC = () => {
                               {Object.entries(station.defects).map(([code, count]) => (
                                 <Chip 
                                   key={code} 
-                                  // AGORA MOSTRA O CÓDIGO E A QUANTIDADE
                                   label={`${code} (${count})`} 
                                   size="small" 
                                   variant="outlined" 
                                   color="info" 
-                                  title={DEFEITOS_INFO[code].description} // Tooltip para nome completo
+                                  title={DEFEITOS_INFO[code].description}
                                 />
                               ))}
                               {Object.keys(station.defects).length === 0 && (
