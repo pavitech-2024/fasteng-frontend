@@ -1,8 +1,13 @@
 import LogoBlack from '@/assets/pro-medina/LogoBlack.png';
 import { CardPromedinaApp } from '@/components/atoms/cards/promedinaCard';
-import ProvSoils1Icon from '@/components/atoms/icons/provSoils1Icon';
-import ProvSoils2Icon from '@/components/atoms/icons/provSoils2Icon';
-import ProvSoils3Icon from '@/components/atoms/icons/provSoils3Icon';
+import Image from 'next/image';
+import concreteBinderAsphalt from '@/assets/pro-medina/concreteBinderAsphalt/concrete-binder-asphalt-image.png';
+import granularLayersImage from '@/assets/pro-medina/granularLayers/granular-layers-image.png';
+import stabilizedLayersImage from '@/assets/pro-medina/stabilizedLayers/stabilized-layers-image.png';
+
+//import ProvSoils1Icon from '@/components/atoms/icons/provSoils1Icon';
+// ProvSoils2Icon from '@/components/atoms/icons/provSoils2Icon';
+//import ProvSoils3Icon from '@/components/atoms/icons/provSoils3Icon';
 import { LoginImage } from '@/components/styles/styleds/login';
 import { Container, Box, Typography } from '@mui/material';
 import { Analytics, Assessment } from '@mui/icons-material';
@@ -16,17 +21,71 @@ const Promedina: NextPage = () => {
   const Applications = [
     {
       name: t('home.pm.granular'),
-      icon: <ProvSoils1Icon width="100%" height="100%" />,
+      icon: (
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <Image
+            src={stabilizedLayersImage}
+            alt="Asphalt"
+            width={200}
+            height={200}
+            style={{ objectFit: 'contain' }}
+          />
+        </Box>
+      ),
       path: '/promedina/granular-layers',
     },
     {
       name: t('home.pm.stabilized'),
-      icon: <ProvSoils2Icon width="100%" height="100%" />,
+      icon: (
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <Image
+            src={granularLayersImage}
+            alt="Asphalt"
+            width={200}
+            height={200}
+            style={{ objectFit: 'contain' }}
+          />
+        </Box>
+      ),
       path: '/promedina/stabilized-layers',
     },
     {
       name: t('home.pm.asphalt'),
-      icon: <ProvSoils3Icon width="100%" height="100%" />,
+      icon: (
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <Image
+            src={concreteBinderAsphalt}
+            alt="Asphalt"
+            width={200}
+            height={200}
+            style={{ objectFit: 'contain' }}
+          />
+        </Box>
+      ),
       path: '/promedina/binder-asphalt-concrete',
     },
     {
