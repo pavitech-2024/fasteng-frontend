@@ -91,9 +91,7 @@ const Promedina: NextPage = () => {
     {
       name: t('home.pm.fwd'),
       icon: <Analytics sx={{ width: '100%', height: '100%' }} />, // Ícone do Material-UI
-      //redirecionamento temporario para manutenção
-      path:'/maintenance'
-      //path: '/promedina/fwd',
+      path: '/promedina/fwd',
     },
     {
       name: 'Avaliação de Pavimentos',
