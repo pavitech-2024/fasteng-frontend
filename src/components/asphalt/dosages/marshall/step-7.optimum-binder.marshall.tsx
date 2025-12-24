@@ -49,62 +49,82 @@ console.log('🔍 maxSpecificGravity.method:', maximumMixtureDensityData?.maxSpe
 
 
 useEffect(() => {
-  // Evita execução múltipla
-  if (loading) return;
-  
-  setLoading(true);
-  
   toast.promise(
     async () => {
       try {
-        console.log('🔍 [1/2] Chamando setOptimumBinderContentData...');
+        console.log('🔍 [1/2] Iniciando carregamento de gráficos...');
         
-        // DEBUG: Estrutura dos dados (apenas uma vez)
-        console.log('🔍 volumetricParametersData.volumetricParameters:', volumetricParametersData?.volumetricParameters);
+        // DEBUG: Verifica os dados antes de enviar
+        console.log('🔍 volumetricParametersData:', {
+          temDados: !!volumetricParametersData,
+          temVolumetricParameters: !!volumetricParametersData?.volumetricParameters,
+          temArray: !!volumetricParametersData?.volumetricParameters?.volumetricParameters,
+          arrayLength: volumetricParametersData?.volumetricParameters?.volumetricParameters?.length,
+          primeiroItem: volumetricParametersData?.volumetricParameters?.volumetricParameters?.[0]
+        });
         
-        // Chame a função com os 4 parâmetros
+        let newData;
         const graphics = await marshall.setOptimumBinderContentData(
-          generalData,                    // parâmetro 1
-          granulometryCompositionData,    // parâmetro 2
-          volumetricParametersData,       // parâmetro 3
-          binderTrialData                 // parâmetro 4
-        );
-
-        console.log('🔍 [1/2] Resposta:', graphics);
-        
-        if (!graphics) {
-          console.error('🔍 [1/2] graphics é null/undefined!');
-          throw new Error('API retornou dados vazios');
-        }
-
-        console.log('🔍 [2/2] Chamando setOptimumBinderExpectedParameters...');
-        
-        const expectedParameters = await marshall.setOptimumBinderExpectedParameters(
+          generalData,
           granulometryCompositionData,
-          maximumMixtureDensityData,
-          binderTrialData,
-          data
+          volumetricParametersData,
+          binderTrialData
         );
 
-        console.log('🔍 [2/2] Resposta:', expectedParameters);
+        console.log('🔍 [1/2] Resposta da API (graphics):', graphics);
 
-        const newData = {
+        newData = {
           ...data,
-          graphics: graphics.optimumBinder || graphics,
-          optimumBinder: graphics.dosageGraph || graphics,
-          expectedParameters,
+          graphics: graphics?.optimumBinder || graphics,
+          optimumBinder: graphics?.dosageGraph || graphics,
         };
 
-        console.log('🔍 Salvando no store:', newData);
-        
-        setData({ step: 6, value: newData });
-        setLoading(false);
-        
+        if (graphics) {
+          try {
+            console.log('🔍 [2/2] Buscando parâmetros esperados...');
+            const expectedParameters = await marshall.setOptimumBinderExpectedParameters(
+              granulometryCompositionData,
+              maximumMixtureDensityData,
+              binderTrialData,
+              data
+            );
+
+            console.log('🔍 [2/2] Parâmetros esperados:', expectedParameters);
+
+            newData = {
+              ...newData,
+              expectedParameters,
+            };
+
+            console.log('🔍 Salvando dados no store:', {
+              temGraphics: !!newData.graphics,
+              tipoGraphics: typeof newData.graphics,
+              optimumBinder: newData.optimumBinder,
+              expectedParameters: newData.expectedParameters
+            });
+
+            setData({ step: 6, value: newData });
+            setLoading(false);
+          } catch (error) {
+            console.error('❌ Erro ao buscar parâmetros esperados:', error);
+            setLoading(false);
+            throw error;
+          }
+        } else {
+          console.error('❌ API não retornou gráficos!');
+          throw new Error('API não retornou dados de gráficos');
+        }
       } catch (error) {
-        console.error('💥 ERRO COMPLETO NO STEP 7:');
-        console.error('💥 Mensagem:', error.message);
-        console.error('💥 Stack:', error.stack);
-        
+        console.error('❌ Erro completo no STEP 7:', {
+          mensagem: error.message,
+          stack: error.stack,
+          dadosEnviados: {
+            generalData: !!generalData,
+            granulometryData: !!granulometryCompositionData,
+            volumetricData: !!volumetricParametersData,
+            binderData: !!binderTrialData
+          }
+        });
         setLoading(false);
         throw error;
       }
@@ -115,11 +135,7 @@ useEffect(() => {
       error: t('loading.data.error'),
     }
   );
-}, [
-  // Reduza as dependências ao mínimo necessário
-  marshall, 
-  // Adicione apenas dados essenciais que devem disparar recálculo
-]);
+}, []);
 
 useEffect(() => {
   // Corrige binder se for objeto (só GMM)
@@ -143,7 +159,7 @@ useEffect(() => {
   }
 }, [materialSelectionData.binder, maximumMixtureDensityData.method]);
 
-  // Preparando os dados points para o componente GraficoPage7N
+  // Preparando os dados points para o componente GraficoPage7NA
   const points = data?.optimumBinder?.pointsOfCurveDosage;
   points?.unshift(['', '', '']);
 
@@ -211,6 +227,58 @@ useEffect(() => {
       dmt: (data?.expectedParameters?.expectedParameters.newMaxSpecificGravity || 0).toFixed(2),
     },
   ];
+
+  const createBackendRequestBody = () => {
+  // Extração segura dos dados
+  const rawData = volumetricParametersData?.volumetricParameters?.volumetricParameters;
+  
+  if (!rawData || !Array.isArray(rawData)) {
+    console.error('❌ Dados volumétricos não encontrados ou formato inválido');
+    return { volumetricParameters: [] };
+  }
+  
+  // Mapeia para o formato esperado pelo backend
+  const volumetricParameters = rawData.map((item, index) => {
+    if (!item || typeof item !== 'object') {
+      console.warn(`⚠️ Item ${index} inválido, usando defaults`);
+      return {
+        asphaltContent: 0,
+        values: {
+          ratioBitumenVoid: 0,
+          volumeVoids: 0,
+          maxSpecificGravity: 0,
+          apparentBulkSpecificGravity: 0,
+          stability: 0,
+          aggregateVolumeVoids: 0,
+        }
+      };
+    }
+    
+    return {
+      asphaltContent: Number(item.asphaltContent) || 0,
+      values: {
+        ratioBitumenVoid: Number(item.values?.ratioBitumenVoid) || 0,
+        volumeVoids: Number(item.values?.volumeVoids) || 0,
+        maxSpecificGravity: Number(item.values?.maxSpecificGravity) || 0,
+        apparentBulkSpecificGravity: Number(item.values?.apparentBulkSpecificGravity) || 0,
+        stability: Number(item.values?.stability) || 0,
+        aggregateVolumeVoids: Number(item.values?.aggregateVolumeVoids) || 0,
+        // Inclua todos os campos que o backend espera
+        fluency: Number(item.values?.fluency) || 0,
+        diametricalCompressionStrength: Number(item.values?.diametricalCompressionStrength) || 0,
+        voidsFilledAsphalt: Number(item.values?.voidsFilledAsphalt) || 0,
+      }
+    };
+  });
+  
+  console.log('✅ Dados preparados para backend:', {
+    itemCount: volumetricParameters.length,
+    firstItem: volumetricParameters[0],
+    asphaltContents: volumetricParameters.map(item => item.asphaltContent)
+  });
+  
+  return { volumetricParameters };
+};
 
   const finalProportionCols = () => {
     const cols: GridColDef[] = [];
