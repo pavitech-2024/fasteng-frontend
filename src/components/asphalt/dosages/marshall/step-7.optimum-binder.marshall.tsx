@@ -27,109 +27,134 @@ const Marshall_Step7_OptimumBinder = ({
     setData,
   } = useMarshallStore();
 
-    console.log('🔍 STEP 7 - materialSelectionData:', materialSelectionData);
+  console.log('🔍 STEP 7 - materialSelectionData:', materialSelectionData);
   console.log('🔍 STEP 7 - binder value:', materialSelectionData?.binder);
   console.log('🔍 STEP 7 - binder type:', typeof materialSelectionData?.binder);
   console.log('🔍 STEP 7 - binder is null?', materialSelectionData?.binder === null);
   console.log('🔍 STEP 7 - binder is undefined?', materialSelectionData?.binder === undefined);
   console.log('🔍 STEP 7 - binder string:', String(materialSelectionData?.binder));
-  
+
   console.log('🔍 STEP 7 - maximumMixtureDensityData.method:', maximumMixtureDensityData?.method);
   console.log('🔍 STEP 7 - is GMM?', maximumMixtureDensityData?.method === 'GMM');
-  
+
   console.log('🔍 STEP 7 - data.optimumBinder:', data?.optimumBinder);
   console.log('🔍 STEP 7 - confirmedPercentsOfDosage:', data?.optimumBinder?.confirmedPercentsOfDosage);
   console.log('🔍 STEP 7 - confirmedPercentsOfDosage length:', data?.optimumBinder?.confirmedPercentsOfDosage?.length);
 
-
   console.log('🔍 maximumMixtureDensityData completo:', maximumMixtureDensityData);
-console.log('🔍 maxSpecificGravity:', maximumMixtureDensityData?.maxSpecificGravity);
-console.log('🔍 maxSpecificGravity.method:', maximumMixtureDensityData?.maxSpecificGravity?.method);
+  console.log('🔍 maxSpecificGravity:', maximumMixtureDensityData?.maxSpecificGravity);
+  console.log('🔍 maxSpecificGravity.method:', maximumMixtureDensityData?.maxSpecificGravity?.method);
 
-
-
-useEffect(() => {
-  toast.promise(
-    async () => {
-      try {
-        console.log('🔍 Carregando dados do STEP 7...');
-        
-        // 1. Busca os gráficos (essencial)
-        const graphics = await marshall.setOptimumBinderContentData(
-          generalData,
-          granulometryCompositionData,
-          volumetricParametersData,
-          binderTrialData
-        );
-
-        // 2. Prepara os dados
-        const newData = {
-          ...data,
-          graphics: graphics?.optimumBinder || graphics,
-          optimumBinder: graphics?.dosageGraph || graphics,
-        };
-
-        // 3. Tenta buscar parâmetros (se falhar, usa null)
+  useEffect(() => {
+    toast.promise(
+      async () => {
         try {
-          const expectedParameters = await marshall.setOptimumBinderExpectedParameters(
+          console.log('🔍 [1/2] Iniciando carregamento de gráficos...');
+
+          // DEBUG: Verifica os dados antes de enviar
+          console.log('🔍 volumetricParametersData:', {
+            temDados: !!volumetricParametersData,
+            temVolumetricParameters: !!volumetricParametersData?.volumetricParameters,
+            temArray: !!volumetricParametersData?.volumetricParameters?.volumetricParameters,
+            arrayLength: volumetricParametersData?.volumetricParameters?.volumetricParameters?.length,
+            primeiroItem: volumetricParametersData?.volumetricParameters?.volumetricParameters?.[0],
+          });
+
+          let newData;
+          const graphics = await marshall.setOptimumBinderContentData(
+            generalData,
             granulometryCompositionData,
-            maximumMixtureDensityData,
-            binderTrialData,
-            data
+            volumetricParametersData,
+            binderTrialData
           );
-          newData.expectedParameters = expectedParameters;
+
+          console.log('🔍 [1/2] Resposta da API (graphics):', graphics);
+
+          newData = {
+            ...data,
+            graphics: graphics?.optimumBinder || graphics,
+            optimumBinder: graphics?.dosageGraph || graphics,
+          };
+
+          if (graphics) {
+            try {
+              console.log('🔍 [2/2] Buscando parâmetros esperados...');
+              const expectedParameters = await marshall.setOptimumBinderExpectedParameters(
+                granulometryCompositionData,
+                maximumMixtureDensityData,
+                binderTrialData,
+                newData
+              );
+
+              console.log('🔍 [2/2] Parâmetros esperados:', expectedParameters);
+
+              newData = {
+                ...newData,
+                expectedParameters,
+              };
+
+              console.log('🔍 Salvando dados no store:', {
+                temGraphics: !!newData.graphics,
+                tipoGraphics: typeof newData.graphics,
+                optimumBinder: newData.optimumBinder,
+                expectedParameters: newData.expectedParameters,
+              });
+
+              setData({ step: 6, value: newData });
+              setLoading(false);
+            } catch (error) {
+              console.error('❌ Erro ao buscar parâmetros esperados:', error);
+              setLoading(false);
+              throw error;
+            }
+          } else {
+            console.error('❌ API não retornou gráficos!');
+            throw new Error('API não retornou dados de gráficos');
+          }
         } catch (error) {
-          console.log('⚠️ Parâmetros não carregados:', error.message);
-          newData.expectedParameters = null;
+          console.error('❌ Erro completo no STEP 7:', {
+            mensagem: error.message,
+            stack: error.stack,
+            dadosEnviados: {
+              generalData: !!generalData,
+              granulometryData: !!granulometryCompositionData,
+              volumetricData: !!volumetricParametersData,
+              binderData: !!binderTrialData,
+            },
+          });
+          setLoading(false);
+          throw error;
         }
-
-        // 4. Salva no store
-        setData({ step: 6, value: newData });
-        setLoading(false);
-        
-      } catch (error) {
-        console.error('Erro no STEP 7:', error);
-        setLoading(false);
-        throw error;
+      },
+      {
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
       }
-    },
-    {
-      pending: t('loading.data.pending'),
-      success: t('loading.data.success'),
-      error: t('loading.data.error'),
-    }
-  );
-}, []);
+    );
+  }, []);
 
-useEffect(() => {
-  // Corrige binder se for objeto (só GMM)
-  if (materialSelectionData.binder && 
+  useEffect(() => {
+    // Corrige binder se for objeto (só GMM)
+    if (
+      materialSelectionData.binder &&
       typeof materialSelectionData.binder === 'object' &&
-      maximumMixtureDensityData.method === 'GMM') {
-    
-    console.log('🔍 CORRIGINDO binder de objeto para string');
-    
-    const newBinder = (materialSelectionData.binder as any)._id || 
-                      (materialSelectionData.binder as any).name || 
-                      'binder';
-    
-    setData({
-      step: 1,
-      value: {
-        ...materialSelectionData,
-        binder: newBinder
-      }
-    });
-  }
-}, [materialSelectionData.binder, maximumMixtureDensityData.method]);
+      maximumMixtureDensityData.method === 'GMM'
+    ) {
+      console.log('🔍 CORRIGINDO binder de objeto para string');
 
+      const newBinder =
+        (materialSelectionData.binder as any)._id || (materialSelectionData.binder as any).name || 'binder';
 
-
-
-
-
-
-
+      setData({
+        step: 1,
+        value: {
+          ...materialSelectionData,
+          binder: newBinder,
+        },
+      });
+    }
+  }, [materialSelectionData.binder, maximumMixtureDensityData.method]);
 
   // Preparando os dados points para o componente GraficoPage7NA
   const points = data?.optimumBinder?.pointsOfCurveDosage;
@@ -201,56 +226,56 @@ useEffect(() => {
   ];
 
   const createBackendRequestBody = () => {
-  // Extração segura dos dados
-  const rawData = volumetricParametersData?.volumetricParameters?.volumetricParameters;
-  
-  if (!rawData || !Array.isArray(rawData)) {
-    console.error('❌ Dados volumétricos não encontrados ou formato inválido');
-    return { volumetricParameters: [] };
-  }
-  
-  // Mapeia para o formato esperado pelo backend
-  const volumetricParameters = rawData.map((item, index) => {
-    if (!item || typeof item !== 'object') {
-      console.warn(`⚠️ Item ${index} inválido, usando defaults`);
-      return {
-        asphaltContent: 0,
-        values: {
-          ratioBitumenVoid: 0,
-          volumeVoids: 0,
-          maxSpecificGravity: 0,
-          apparentBulkSpecificGravity: 0,
-          stability: 0,
-          aggregateVolumeVoids: 0,
-        }
-      };
+    // Extração segura dos dados
+    const rawData = volumetricParametersData?.volumetricParameters?.volumetricParameters;
+
+    if (!rawData || !Array.isArray(rawData)) {
+      console.error('❌ Dados volumétricos não encontrados ou formato inválido');
+      return { volumetricParameters: [] };
     }
-    
-    return {
-      asphaltContent: Number(item.asphaltContent) || 0,
-      values: {
-        ratioBitumenVoid: Number(item.values?.ratioBitumenVoid) || 0,
-        volumeVoids: Number(item.values?.volumeVoids) || 0,
-        maxSpecificGravity: Number(item.values?.maxSpecificGravity) || 0,
-        apparentBulkSpecificGravity: Number(item.values?.apparentBulkSpecificGravity) || 0,
-        stability: Number(item.values?.stability) || 0,
-        aggregateVolumeVoids: Number(item.values?.aggregateVolumeVoids) || 0,
-        // Inclua todos os campos que o backend espera
-        fluency: Number(item.values?.fluency) || 0,
-        diametricalCompressionStrength: Number(item.values?.diametricalCompressionStrength) || 0,
-        voidsFilledAsphalt: Number(item.values?.voidsFilledAsphalt) || 0,
+
+    // Mapeia para o formato esperado pelo backend
+    const volumetricParameters = rawData.map((item, index) => {
+      if (!item || typeof item !== 'object') {
+        console.warn(`⚠️ Item ${index} inválido, usando defaults`);
+        return {
+          asphaltContent: 0,
+          values: {
+            ratioBitumenVoid: 0,
+            volumeVoids: 0,
+            maxSpecificGravity: 0,
+            apparentBulkSpecificGravity: 0,
+            stability: 0,
+            aggregateVolumeVoids: 0,
+          },
+        };
       }
-    };
-  });
-  
-  console.log('✅ Dados preparados para backend:', {
-    itemCount: volumetricParameters.length,
-    firstItem: volumetricParameters[0],
-    asphaltContents: volumetricParameters.map(item => item.asphaltContent)
-  });
-  
-  return { volumetricParameters };
-};
+
+      return {
+        asphaltContent: Number(item.asphaltContent) || 0,
+        values: {
+          ratioBitumenVoid: Number(item.values?.ratioBitumenVoid) || 0,
+          volumeVoids: Number(item.values?.volumeVoids) || 0,
+          maxSpecificGravity: Number(item.values?.maxSpecificGravity) || 0,
+          apparentBulkSpecificGravity: Number(item.values?.apparentBulkSpecificGravity) || 0,
+          stability: Number(item.values?.stability) || 0,
+          aggregateVolumeVoids: Number(item.values?.aggregateVolumeVoids) || 0,
+          // Inclua todos os campos que o backend espera
+          fluency: Number(item.values?.fluency) || 0,
+          diametricalCompressionStrength: Number(item.values?.diametricalCompressionStrength) || 0,
+          voidsFilledAsphalt: Number(item.values?.voidsFilledAsphalt) || 0,
+        },
+      };
+    });
+
+    console.log('✅ Dados preparados para backend:', {
+      itemCount: volumetricParameters.length,
+      firstItem: volumetricParameters[0],
+      asphaltContents: volumetricParameters.map((item) => item.asphaltContent),
+    });
+
+    return { volumetricParameters };
+  };
 
   const finalProportionCols = () => {
     const cols: GridColDef[] = [];
@@ -269,59 +294,58 @@ useEffect(() => {
     return cols;
   };
 
-const finalProportionsRows = () => {
-  console.log('🔍 FINAL PROPORTIONS - binder completo:', materialSelectionData.binder);
-  
-  const obj = { id: 1 };
-  
-  // VERIFICAÇÃO CORRIGIDA PARA GMM
-  if (!data?.optimumBinder?.confirmedPercentsOfDosage || 
-      data.optimumBinder.confirmedPercentsOfDosage.length === 0) {
-    console.log('🔍 SEM confirmedPercentsOfDosage ou array vazio');
-    return [obj];
-  }
+  const finalProportionsRows = () => {
+    console.log('🔍 FINAL PROPORTIONS - binder completo:', materialSelectionData.binder);
 
-  // CORREÇÃO: Verifica se binder existe
-  if (!materialSelectionData.binder) {
-    console.log('🔍 binder é null/undefined');
-    return [obj];
-  }
+    const obj = { id: 1 };
 
-  // CORREÇÃO: Se binder for objeto, extrai o ID
-  let binderKey: string;
-  const binder = materialSelectionData.binder;
-  
-  if (typeof binder === 'object' && binder !== null) {
-    // É objeto - pega _id ou name
-    const binderObj = binder as any;
-    binderKey = binderObj._id || binderObj.name || 'binder';
-    console.log('🔍 GMM - binder é objeto, usando chave:', binderKey);
-  } else if (typeof binder === 'string') {
-    // É string - usa direto
-    binderKey = binder;
-    console.log('🔍 DMT - binder é string, usando:', binderKey);
-  } else {
-    // Fallback
-    binderKey = 'binder';
-    console.log('🔍 Fallback - binder inválido, usando:', binderKey);
-  }
-
-  // Adiciona aggregates
-  materialSelectionData.aggregates.forEach((agg, i) => {
-    if (data.optimumBinder.confirmedPercentsOfDosage[i] !== undefined && agg?._id) {
-      obj[agg._id] = (data.optimumBinder.confirmedPercentsOfDosage[i] || 0).toFixed(2);
+    // VERIFICAÇÃO CORRIGIDA PARA GMM
+    if (!data?.optimumBinder?.confirmedPercentsOfDosage || data.optimumBinder.confirmedPercentsOfDosage.length === 0) {
+      console.log('🔍 SEM confirmedPercentsOfDosage ou array vazio');
+      return [obj];
     }
-  });
 
-  // Adiciona binder (último item)
-  const lastIndex = data.optimumBinder.confirmedPercentsOfDosage.length - 1;
-  if (lastIndex >= 0) {
-    obj[binderKey] = (data.optimumBinder.confirmedPercentsOfDosage[lastIndex] || 0).toFixed(2);
-  }
+    // CORREÇÃO: Verifica se binder existe
+    if (!materialSelectionData.binder) {
+      console.log('🔍 binder é null/undefined');
+      return [obj];
+    }
 
-  console.log('🔍 OBJETO FINAL:', obj);
-  return [obj];
-};
+    // CORREÇÃO: Se binder for objeto, extrai o ID
+    let binderKey: string;
+    const binder = materialSelectionData.binder;
+
+    if (typeof binder === 'object' && binder !== null) {
+      // É objeto - pega _id ou name
+      const binderObj = binder as any;
+      binderKey = binderObj._id || binderObj.name || 'binder';
+      console.log('🔍 GMM - binder é objeto, usando chave:', binderKey);
+    } else if (typeof binder === 'string') {
+      // É string - usa direto
+      binderKey = binder;
+      console.log('🔍 DMT - binder é string, usando:', binderKey);
+    } else {
+      // Fallback
+      binderKey = 'binder';
+      console.log('🔍 Fallback - binder inválido, usando:', binderKey);
+    }
+
+    // Adiciona aggregates
+    materialSelectionData.aggregates.forEach((agg, i) => {
+      if (data.optimumBinder.confirmedPercentsOfDosage[i] !== undefined && agg?._id) {
+        obj[agg._id] = (data.optimumBinder.confirmedPercentsOfDosage[i] || 0).toFixed(2);
+      }
+    });
+
+    // Adiciona binder (último item)
+    const lastIndex = data.optimumBinder.confirmedPercentsOfDosage.length - 1;
+    if (lastIndex >= 0) {
+      obj[binderKey] = (data.optimumBinder.confirmedPercentsOfDosage[lastIndex] || 0).toFixed(2);
+    }
+
+    console.log('🔍 OBJETO FINAL:', obj);
+    return [obj];
+  };
   const percentsCols: GridColDef[] = [
     {
       field: 'binder',
@@ -353,41 +377,63 @@ const finalProportionsRows = () => {
       binder: 'Vv (%)',
       col1:
         volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.volumeVoids !== undefined
-          ? ((volumetricParametersData.volumetricParameters.volumetricParameters[0]?.values.volumeVoids || 0) * 100).toFixed(2)
+          ? (
+              (volumetricParametersData.volumetricParameters.volumetricParameters[0]?.values.volumeVoids || 0) * 100
+            ).toFixed(2)
           : '0.00',
       col2:
         volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.volumeVoids !== undefined
-          ? ((volumetricParametersData.volumetricParameters.volumetricParameters[1]?.values.volumeVoids || 0) * 100).toFixed(2)
+          ? (
+              (volumetricParametersData.volumetricParameters.volumetricParameters[1]?.values.volumeVoids || 0) * 100
+            ).toFixed(2)
           : '0.00',
     },
     {
       id: 2,
       binder: 'Gmb (g/cm³)',
-      col1: (volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.apparentBulkSpecificGravity || 0).toFixed(2),
-      col2: (volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.apparentBulkSpecificGravity || 0).toFixed(2),
+      col1: (
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.apparentBulkSpecificGravity || 0
+      ).toFixed(2),
+      col2: (
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.apparentBulkSpecificGravity || 0
+      ).toFixed(2),
     },
     {
       id: 3,
       binder: 'Vcb (%)',
       col1:
         volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.voidsFilledAsphalt !== undefined
-          ? ((volumetricParametersData.volumetricParameters.volumetricParameters[0]?.values.voidsFilledAsphalt || 0) * 100).toFixed(2)
+          ? (
+              (volumetricParametersData.volumetricParameters.volumetricParameters[0]?.values.voidsFilledAsphalt || 0) *
+              100
+            ).toFixed(2)
           : '0.00',
       col2:
         volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.voidsFilledAsphalt !== undefined
-          ? ((volumetricParametersData.volumetricParameters.volumetricParameters[1]?.values.voidsFilledAsphalt || 0) * 100).toFixed(2)
+          ? (
+              (volumetricParametersData.volumetricParameters.volumetricParameters[1]?.values.voidsFilledAsphalt || 0) *
+              100
+            ).toFixed(2)
           : '0.00',
     },
     {
       id: 4,
       binder: 'Vam (%)',
       col1:
-        volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.aggregateVolumeVoids !== undefined
-          ? ((volumetricParametersData.volumetricParameters.volumetricParameters[0]?.values.aggregateVolumeVoids || 0) * 100).toFixed(2)
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.aggregateVolumeVoids !==
+        undefined
+          ? (
+              (volumetricParametersData.volumetricParameters.volumetricParameters[0]?.values.aggregateVolumeVoids ||
+                0) * 100
+            ).toFixed(2)
           : '0.00',
       col2:
-        volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.aggregateVolumeVoids !== undefined
-          ? ((volumetricParametersData.volumetricParameters.volumetricParameters[1]?.values.aggregateVolumeVoids || 0) * 100).toFixed(2)
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.aggregateVolumeVoids !==
+        undefined
+          ? (
+              (volumetricParametersData.volumetricParameters.volumetricParameters[1]?.values.aggregateVolumeVoids ||
+                0) * 100
+            ).toFixed(2)
           : '0.00',
     },
     {
@@ -395,11 +441,17 @@ const finalProportionsRows = () => {
       binder: 'Rbv (%)',
       col1:
         volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.ratioBitumenVoid !== undefined
-          ? ((volumetricParametersData.volumetricParameters.volumetricParameters[0]?.values.ratioBitumenVoid || 0) * 100).toFixed(2)
+          ? (
+              (volumetricParametersData.volumetricParameters.volumetricParameters[0]?.values.ratioBitumenVoid || 0) *
+              100
+            ).toFixed(2)
           : '0.00',
       col2:
         volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.ratioBitumenVoid !== undefined
-          ? ((volumetricParametersData.volumetricParameters.volumetricParameters[1]?.values.ratioBitumenVoid || 0) * 100).toFixed(2)
+          ? (
+              (volumetricParametersData.volumetricParameters.volumetricParameters[1]?.values.ratioBitumenVoid || 0) *
+              100
+            ).toFixed(2)
           : '0.00',
     },
     {
@@ -417,14 +469,24 @@ const finalProportionsRows = () => {
     {
       id: 8,
       binder: t('asphalt.dosages.indirect-tensile-strength') + '(MPa)',
-      col1: (volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.diametricalCompressionStrength || 0).toFixed(2),
-      col2: (volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.diametricalCompressionStrength || 0).toFixed(2),
+      col1: (
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values
+          .diametricalCompressionStrength || 0
+      ).toFixed(2),
+      col2: (
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values
+          .diametricalCompressionStrength || 0
+      ).toFixed(2),
     },
     {
       id: 9,
       binder: 'DMT (g/cm³)',
-      col1: (volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.maxSpecificGravity || 0).toFixed(3),
-      col2: (volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.maxSpecificGravity || 0).toFixed(3),
+      col1: (
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.maxSpecificGravity || 0
+      ).toFixed(3),
+      col2: (
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.maxSpecificGravity || 0
+      ).toFixed(3),
     },
   ];
 
