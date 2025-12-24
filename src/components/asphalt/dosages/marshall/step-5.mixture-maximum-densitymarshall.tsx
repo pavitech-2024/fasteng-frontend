@@ -146,11 +146,18 @@ const Marshall_Step5_MixtureMaximumDensity = ({
     '30°C': 0.9956,
   }).map(([label, value]) => ({ label, value }));
 
-  const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => ({
+ const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => {
+  const lessOneValue = data?.maxSpecificGravity?.result?.lessOne;
+  let dmtValue = '';
+  if (lessOneValue !== null && lessOneValue !== undefined) {
+    dmtValue = lessOneValue.toFixed(2);
+  }
+  return {
     id: index + 1,
-    DMT: data?.maxSpecificGravity?.result?.lessOne?.toFixed(2),
+    DMT: dmtValue,
     Teor: item.value,
-  }));
+  };
+});
 
   const dmtColumns: GridColDef[] = [
     {
