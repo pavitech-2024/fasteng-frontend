@@ -674,31 +674,54 @@ class Marshall_SERVICE implements IEssayService {
     const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
     let result;
 
-    try {
-      const response = await Api.post(`${this.info.backend_path}/step-7-get-expected-parameters`, {
-        percentsOfDosage: percentageInputs,
-        maxSpecificGravity,
-        listOfSpecificGravities,
-        trial,
-        confirmedPercentsOfDosage,
-        curveVv,
-        curveRBV,
-        optimumContent,
-      });
-
-      const { data, success, error } = response.data;
-
-      if (success === false) throw error.name;
-
-      result = {
-        ...data,
-      };
-
-      return result;
-    } catch (error) {
-      throw error;
-    }
-  };
+   console.log('🔍 [SERVICE] Iniciando chamada para expected parameters');
+  
+  try {
+    const url = `${this.info.backend_path}/step-7-get-expected-parameters`;
+    console.log('🔍 [SERVICE] URL completa:', url);
+    
+    const payload = {
+      percentsOfDosage: percentageInputs,
+      maxSpecificGravity,
+      listOfSpecificGravities,
+      trial,
+      confirmedPercentsOfDosage,
+      curveVv,
+      curveRBV,
+      optimumContent,
+    };
+    
+    console.log('🔍 [SERVICE] Payload enviado:', JSON.stringify(payload, null, 2));
+    
+    const response = await Api.post(url, payload);
+    console.log('🔍 [SERVICE] Resposta recebida:', response.data);
+    
+    return response.data;
+    
+  } catch (serviceError) {
+    console.error('❌ [SERVICE] Erro COMPLETO:', {
+      name: serviceError.name,
+      message: serviceError.message,
+      stack: serviceError.stack,
+      isAxiosError: serviceError.isAxiosError,
+      
+      // Axios specific
+      response: {
+        data: serviceError.response?.data,
+        status: serviceError.response?.status,
+        headers: serviceError.response?.headers,
+      },
+      request: serviceError.request,
+      config: serviceError.config,
+      
+      // Network errors
+      code: serviceError.code,
+    });
+    
+    // Joga um erro com MENSAGEM CLARA
+    throw new Error(`Falha no cálculo de parâmetros: ${serviceError.message || 'Erro desconhecido'}`);
+  }
+};
 
   submitOptimumBinderContentData = async (
     data: MarshallData,
