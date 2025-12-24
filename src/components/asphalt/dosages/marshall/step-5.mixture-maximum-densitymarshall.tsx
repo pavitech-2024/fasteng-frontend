@@ -146,18 +146,30 @@ const Marshall_Step5_MixtureMaximumDensity = ({
     '30°C': 0.9956,
   }).map(([label, value]) => ({ label, value }));
 
- const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => {
-  const lessOneValue = data?.maxSpecificGravity?.result?.lessOne;
-  let dmtValue = '';
-  if (lessOneValue !== null && lessOneValue !== undefined) {
-    dmtValue = lessOneValue.toFixed(2);
-  }
+  // Função helper pra pegar gravityData de qualquer jeito
+  const getGravityData = (maxSpecificGravity) => {
+    if (!maxSpecificGravity) return null;
+    return maxSpecificGravity.result || maxSpecificGravity.results || null;
+  };
+
+  // No dmtRows:
+const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => {
+  // Agora só tem 'results', não tem mais 'result'!
+  const gravityData = data?.maxSpecificGravity?.results;
+  const lessOneValue = gravityData?.lessOne;
+  
   return {
     id: index + 1,
-    DMT: dmtValue,
+    DMT: lessOneValue !== null && lessOneValue !== undefined ? lessOneValue.toFixed(2) : '',
     Teor: item.value,
   };
 });
+
+useEffect(() => {
+  console.log('DEBUG - data.maxSpecificGravity:', data?.maxSpecificGravity);
+  console.log('DEBUG - data.maxSpecificGravity?.results:', data?.maxSpecificGravity?.results);
+  console.log('DEBUG - data.maxSpecificGravity?.result:', data?.maxSpecificGravity?.results);
+}, [data]);
 
   const dmtColumns: GridColDef[] = [
     {
@@ -194,7 +206,7 @@ const Marshall_Step5_MixtureMaximumDensity = ({
           const updatedData = {
             ...data,
             maxSpecificGravity: {
-              result: dmtResult.maxSpecificGravity,
+              results: dmtResult.maxSpecificGravity, // MUDA: de 'result' para 'results'
               method: dmtResult.method,
             },
             listOfSpecificGravities: dmtResult.listOfSpecificGravities,
@@ -221,51 +233,51 @@ const Marshall_Step5_MixtureMaximumDensity = ({
    *
    * @param {Object} data - The dosage calculation results.
    */
-useEffect(() => {
-  if (!data?.gmm) {
-    setGmmRows([]);
-    return;
-  }
+  useEffect(() => {
+    if (!data?.gmm) {
+      setGmmRows([]);
+      return;
+    }
 
-  const gmmRows = data.gmm.map((gmmItem, index) => {
-    // Type assertion para acessar value
-    const item = gmmItem as any;
-    const teor = binderTrialData.trial + (index - 2) * 0.5;
-    return {
-      id: item.id || index + 1,
-      GMM: item.value ?? null,
-      Teor: teor
-    };
-  });
+    const gmmRows = data.gmm.map((gmmItem, index) => {
+      // Type assertion para acessar value
+      const item = gmmItem as any;
+      const teor = binderTrialData.trial + (index - 2) * 0.5;
+      return {
+        id: item.id || index + 1,
+        GMM: item.value ?? null,
+        Teor: teor,
+      };
+    });
 
-  setGmmRows(gmmRows);
-  setGmmColumns([
-    {
-      field: 'Teor',
-      headerName: t('asphalt.dosages.marshall.tenor'),
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'GMM',
-      headerName: 'GMM',
-      renderCell: ({ row }) => (
-        <InputEndAdornment
-          adornment={''}
-          type="number"
-          value={row.GMM ?? ''}
-          onChange={(e) => {
-            const newData = [...(data.gmm || [])];
-            const itemIndex = row.id - 1;
-            if (newData[itemIndex]) {
-              (newData[itemIndex] as any).value = e.target.value === '' ? null : Number(e.target.value);
-              setData({ step: 4, value: { ...data, gmm: newData } });
-            }
-          }}
-        />
-      ),
-    },
-  ]);
-}, [data?.gmm, binderTrialData.trial]);
+    setGmmRows(gmmRows);
+    setGmmColumns([
+      {
+        field: 'Teor',
+        headerName: t('asphalt.dosages.marshall.tenor'),
+        valueFormatter: ({ value }) => `${value}`,
+      },
+      {
+        field: 'GMM',
+        headerName: 'GMM',
+        renderCell: ({ row }) => (
+          <InputEndAdornment
+            adornment={''}
+            type="number"
+            value={row.GMM ?? ''}
+            onChange={(e) => {
+              const newData = [...(data.gmm || [])];
+              const itemIndex = row.id - 1;
+              if (newData[itemIndex]) {
+                (newData[itemIndex] as any).value = e.target.value === '' ? null : Number(e.target.value);
+                setData({ step: 4, value: { ...data, gmm: newData } });
+              }
+            }}
+          />
+        ),
+      },
+    ]);
+  }, [data?.gmm, binderTrialData.trial]);
 
   /**
    * Calculates the GMM data using the dosage calculation results.
@@ -329,9 +341,9 @@ useEffect(() => {
    * @throws Will throw an error if the calculation fails.
    */
   const calculateRiceTest = () => {
-     console.log('=== DEBUG RICE TEST ===');
-  console.log('data.riceTest:', data.riceTest);
-  console.log('binderTrialData:', binderTrialData);
+    console.log('=== DEBUG RICE TEST ===');
+    console.log('data.riceTest:', data.riceTest);
+    console.log('binderTrialData:', binderTrialData);
 
     let errorMsg = '';
     let errorIndex;
@@ -389,7 +401,9 @@ useEffect(() => {
       {
         pending: t('submiting.data.pending'),
         success: t('submiting.data.success'),
-        error: `${t('errors.rice-test-empty-fields')}${binderTrialData.percentsOfDosage?.[2]?.[errorIndex]?.value ?? ''}%`,
+        error: `${t('errors.rice-test-empty-fields')}${
+          binderTrialData.percentsOfDosage?.[2]?.[errorIndex]?.value ?? ''
+        }%`,
       }
     );
   };
@@ -507,22 +521,20 @@ useEffect(() => {
    * The nextDisabled state is used to disable the next button
    * if the user has not filled all the required data.
    */
- useEffect(() => {
-  if (selectedMethod.dmt) {
-    const hasNullValue = dmtRows?.some((e) => {
-      // Sem tipos, só JavaScript
-      const values = Object.values(e);
-      return values.includes(null) || values.includes(undefined);
-    });
-    setNextDisabled(hasNullValue || data.temperatureOfWater === null);
-  } else if (selectedMethod.gmm) {
-   
-  const hasNullValue = data.gmm?.some((e: any) => e.value === null);
-    
-    
-    setNextDisabled(hasNullValue || data.temperatureOfWater === null);
-  }
-}, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows]);
+  useEffect(() => {
+    if (selectedMethod.dmt) {
+      const hasNullValue = dmtRows?.some((e) => {
+        // Sem tipos, só JavaScript
+        const values = Object.values(e);
+        return values.includes(null) || values.includes(undefined);
+      });
+      setNextDisabled(hasNullValue || data.temperatureOfWater === null);
+    } else if (selectedMethod.gmm) {
+      const hasNullValue = data.gmm?.some((e: any) => e.value === null);
+
+      setNextDisabled(hasNullValue || data.temperatureOfWater === null);
+    }
+  }, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows]);
 
   return (
     <>
