@@ -167,26 +167,40 @@ const Marshall_Step7_OptimumBinder = ({
     return cols;
   };
 
-  // CORREÇÃO: .toFixed() protegidos
-  const finalProportionsRows = () => {
-    let obj = { id: 1 };
-    let count = 0;
+const finalProportionsRows = () => {
+  let obj = { id: 1 };
+  let count = 0;
 
-    for (let i = 0; i < data.optimumBinder.confirmedPercentsOfDosage.length; i++) {
+  // VERIFICAÇÃO EXTRA: se binder é null ou undefined
+  if (!materialSelectionData.binder) {
+    return [obj];
+  }
+
+  // Verifica se há dados
+  if (!data.optimumBinder || !data.optimumBinder.confirmedPercentsOfDosage) {
+    return [obj];
+  }
+
+  for (let i = 0; i < data.optimumBinder.confirmedPercentsOfDosage.length; i++) {
+    // Verifica se tem aggregates na posição i
+    if (materialSelectionData.aggregates[i]) {
       obj = {
         ...obj,
         [materialSelectionData.aggregates[i]._id]: (data.optimumBinder.confirmedPercentsOfDosage[i] || 0).toFixed(2),
       };
       count = i;
     }
+  }
 
-    obj = {
-      ...obj,
-      [materialSelectionData.binder]: (data.optimumBinder.confirmedPercentsOfDosage[count] || 0).toFixed(2),
-    };
-
-    return [obj];
+  // CORREÇÃO: binder é string, mas pode ser null no início
+  const binderKey = materialSelectionData.binder || 'binder';
+  obj = {
+    ...obj,
+    [binderKey]: (data.optimumBinder.confirmedPercentsOfDosage[count] || 0).toFixed(2),
   };
+
+  return [obj];
+};
 
   const percentsCols: GridColDef[] = [
     {
