@@ -213,7 +213,7 @@ useEffect(() => {
 const finalProportionsRows = () => {
   console.log('🔍 FINAL PROPORTIONS - binder completo:', materialSelectionData.binder);
   
-  let obj = { id: 1 };
+  const obj = { id: 1 };
   
   // VERIFICAÇÃO CORRIGIDA PARA GMM
   if (!data?.optimumBinder?.confirmedPercentsOfDosage || 
