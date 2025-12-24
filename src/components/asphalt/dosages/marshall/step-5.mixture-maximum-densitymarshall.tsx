@@ -194,37 +194,40 @@ useEffect(() => {
    * @throws Will throw an error if the calculation fails.
    */
   const handleSubmitDmt = async () => {
-    toast.promise(
-      async () => {
-        try {
-          const dmtResult = await marshall.calculateMaximumMixtureDensityDMT(
-            materialSelectionData,
-            binderTrialData,
-            data
-          );
+  toast.promise(
+    async () => {
+      try {
+        const dmtResult = await marshall.calculateMaximumMixtureDensityDMT(
+          materialSelectionData,
+          binderTrialData,
+          data
+        );
 
-          const updatedData = {
-            ...data,
-            maxSpecificGravity: {
-              results: dmtResult.maxSpecificGravity, // MUDA: de 'result' para 'results'
-              method: dmtResult.method,
-            },
-            listOfSpecificGravities: dmtResult.listOfSpecificGravities,
-          };
+        const updatedData = {
+          ...data,
+          method: 'DMT', // <--- ADICIONE ESTA LINHA TAMBÉM!
+          maxSpecificGravity: {
+            results: dmtResult.maxSpecificGravity,
+            method: dmtResult.method,
+          },
+          listOfSpecificGravities: dmtResult.listOfSpecificGravities,
+        };
 
-          setData({ step: 4, value: updatedData });
-          setDMTModalISOpen(false);
-        } catch (error) {
-          throw error;
-        }
-      },
-      {
-        pending: t('loading.data.pending'),
-        success: t('loading.data.success'),
-        error: t('loading.data.error'),
+        console.log('🔍 DMT - Salvando data com method:', updatedData.method); // Log
+
+        setData({ step: 4, value: updatedData });
+        setDMTModalISOpen(false);
+      } catch (error) {
+        throw error;
       }
-    );
-  };
+    },
+    {
+      pending: t('loading.data.pending'),
+      success: t('loading.data.success'),
+      error: t('loading.data.error'),
+    }
+  );
+};
 
   /**
    * useEffect hook that runs when the `data.gmm` changes.
@@ -288,49 +291,52 @@ useEffect(() => {
    * @throws Will throw an error if the calculation fails.
    */
   const calculateGmmData = async () => {
-    if (data.temperatureOfWater === null) {
-      setGmmErrorMsg('errors.empty-water-temperature');
-      toast.error(t('errors.empty-water-temperature'));
-      return;
-    }
+  if (data.temperatureOfWater === null) {
+    setGmmErrorMsg('errors.empty-water-temperature');
+    toast.error(t('errors.empty-water-temperature'));
+    return;
+  }
 
-    toast.promise(
-      async () => {
-        try {
-          const gmm = await marshall.calculateGmmData(materialSelectionData, data);
+  toast.promise(
+    async () => {
+      try {
+        const gmm = await marshall.calculateGmmData(materialSelectionData, data);
 
-          const newData = {
-            ...data,
-            listOfSpecificGravities: gmm.listOfSpecificGravities,
-            maxSpecificGravity: {
-              results: gmm.maxSpecificGravity,
-              method: gmm.method,
-            },
-          };
+        const newData = {
+          ...data,
+          method: 'GMM', // <--- ADICIONE ESTA LINHA!
+          listOfSpecificGravities: gmm.listOfSpecificGravities,
+          maxSpecificGravity: {
+            results: gmm.maxSpecificGravity,
+            method: gmm.method,
+          },
+        };
 
-          setData({ step: 4, value: newData });
+        console.log('🔍 GMM - Salvando data com method:', newData.method); // Log
 
-          const newGmmRows = gmmRows.map((item) => {
-            if (item.id === 1) item.GMM = gmm.maxSpecificGravity.lessOne;
-            if (item.id === 2) item.GMM = gmm.maxSpecificGravity.lessHalf;
-            if (item.id === 3) item.GMM = gmm.maxSpecificGravity.normal;
-            if (item.id === 4) item.GMM = gmm.maxSpecificGravity.plusHalf;
-            if (item.id === 5) item.GMM = gmm.maxSpecificGravity.plusOne;
-            return item;
-          });
+        setData({ step: 4, value: newData });
 
-          setGmmRows(newGmmRows);
-        } catch (error) {
-          console.error(error);
-        }
-      },
-      {
-        pending: t('submiting.data.pending'),
-        success: t('submiting.data.success'),
-        error: t('submiting.data.error'),
+        const newGmmRows = gmmRows.map((item) => {
+          if (item.id === 1) item.GMM = gmm.maxSpecificGravity.lessOne;
+          if (item.id === 2) item.GMM = gmm.maxSpecificGravity.lessHalf;
+          if (item.id === 3) item.GMM = gmm.maxSpecificGravity.normal;
+          if (item.id === 4) item.GMM = gmm.maxSpecificGravity.plusHalf;
+          if (item.id === 5) item.GMM = gmm.maxSpecificGravity.plusOne;
+          return item;
+        });
+
+        setGmmRows(newGmmRows);
+      } catch (error) {
+        console.error(error);
       }
-    );
-  };
+    },
+    {
+      pending: t('submiting.data.pending'),
+      success: t('submiting.data.success'),
+      error: t('submiting.data.error'),
+    }
+  );
+};
 
   /**
    * Calculates the rice test data using the dosage calculation results.

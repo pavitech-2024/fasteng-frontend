@@ -27,6 +27,25 @@ const Marshall_Step7_OptimumBinder = ({
     setData,
   } = useMarshallStore();
 
+    console.log('🔍 STEP 7 - materialSelectionData:', materialSelectionData);
+  console.log('🔍 STEP 7 - binder value:', materialSelectionData?.binder);
+  console.log('🔍 STEP 7 - binder type:', typeof materialSelectionData?.binder);
+  console.log('🔍 STEP 7 - binder is null?', materialSelectionData?.binder === null);
+  console.log('🔍 STEP 7 - binder is undefined?', materialSelectionData?.binder === undefined);
+  console.log('🔍 STEP 7 - binder string:', String(materialSelectionData?.binder));
+  
+  console.log('🔍 STEP 7 - maximumMixtureDensityData.method:', maximumMixtureDensityData?.method);
+  console.log('🔍 STEP 7 - is GMM?', maximumMixtureDensityData?.method === 'GMM');
+  
+  console.log('🔍 STEP 7 - data.optimumBinder:', data?.optimumBinder);
+  console.log('🔍 STEP 7 - confirmedPercentsOfDosage:', data?.optimumBinder?.confirmedPercentsOfDosage);
+  console.log('🔍 STEP 7 - confirmedPercentsOfDosage length:', data?.optimumBinder?.confirmedPercentsOfDosage?.length);
+
+
+  console.log('🔍 maximumMixtureDensityData completo:', maximumMixtureDensityData);
+console.log('🔍 maxSpecificGravity:', maximumMixtureDensityData?.maxSpecificGravity);
+console.log('🔍 maxSpecificGravity.method:', maximumMixtureDensityData?.maxSpecificGravity?.method);
+
   useEffect(() => {
     toast.promise(
       async () => {
