@@ -383,16 +383,30 @@ useEffect(() => {
             insert: false,
             value: item.GMM,
           }));
+          const maxSpecificGravityObj = {
+        results: {
+          lessOne: riceTest.maxSpecificGravity[0]?.GMM || null,
+          lessHalf: riceTest.maxSpecificGravity[1]?.GMM || null,
+          normal: riceTest.maxSpecificGravity[2]?.GMM || null,
+          plusHalf: riceTest.maxSpecificGravity[3]?.GMM || null,
+          plusOne: riceTest.maxSpecificGravity[4]?.GMM || null,
+        },
+        method: 'GMM'
+      };
+
 
           setGmmRows(formattedGmm);
           setData({
-            step: 4,
-            value: {
-              ...data,
-              ...riceTest,
-              gmm: formattedGmmData,
-            },
-          });
+  step: 4,
+  value: {
+    ...data,
+    // Especifica apenas os campos que quer do riceTest
+    listOfSpecificGravities: riceTest.listOfSpecificGravities,
+    maxSpecificGravity: maxSpecificGravityObj,  // <-- Objeto convertido
+    riceTest: riceTest.riceTest || data.riceTest, // Mantém o riceTest se vier
+    gmm: formattedGmmData,
+  },
+});
           setNextDisabled(false);
         } catch (error) {
           throw new Error(error.message || 'errors.general');
