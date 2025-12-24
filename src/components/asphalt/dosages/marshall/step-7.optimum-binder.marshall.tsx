@@ -48,59 +48,78 @@ console.log('🔍 maxSpecificGravity.method:', maximumMixtureDensityData?.maxSpe
 
 
 
-  useEffect(() => {
-    toast.promise(
-      async () => {
-        try {
-          let newData;
-          const graphics = await marshall.setOptimumBinderContentData(
-            generalData,
-            granulometryCompositionData,
-            volumetricParametersData,
-            binderTrialData
-          );
+useEffect(() => {
+  // Evita execução múltipla
+  if (loading) return;
+  
+  setLoading(true);
+  
+  toast.promise(
+    async () => {
+      try {
+        console.log('🔍 [1/2] Chamando setOptimumBinderContentData...');
+        
+        // DEBUG: Estrutura dos dados (apenas uma vez)
+        console.log('🔍 volumetricParametersData.volumetricParameters:', volumetricParametersData?.volumetricParameters);
+        
+        // Chame a função com os 4 parâmetros
+        const graphics = await marshall.setOptimumBinderContentData(
+          generalData,                    // parâmetro 1
+          granulometryCompositionData,    // parâmetro 2
+          volumetricParametersData,       // parâmetro 3
+          binderTrialData                 // parâmetro 4
+        );
 
-          newData = {
-            ...data,
-            graphics: graphics.optimumBinder,
-            optimumBinder: graphics.dosageGraph,
-          };
-
-          if (graphics) {
-            try {
-              const expectedParameters = await marshall.setOptimumBinderExpectedParameters(
-                granulometryCompositionData,
-                maximumMixtureDensityData,
-                binderTrialData,
-                data
-              );
-
-              newData = {
-                ...newData,
-                expectedParameters,
-              };
-
-              setData({ step: 6, value: newData });
-              setLoading(false);
-            } catch (error) {
-              setLoading(false);
-              throw error;
-            }
-          } else {
-            console.error(`Não deu certo!`);
-          }
-        } catch (error) {
-          setLoading(false);
-          throw error;
+        console.log('🔍 [1/2] Resposta:', graphics);
+        
+        if (!graphics) {
+          console.error('🔍 [1/2] graphics é null/undefined!');
+          throw new Error('API retornou dados vazios');
         }
-      },
-      {
-        pending: t('loading.data.pending'),
-        success: t('loading.data.success'),
-        error: t('loading.data.error'),
+
+        console.log('🔍 [2/2] Chamando setOptimumBinderExpectedParameters...');
+        
+        const expectedParameters = await marshall.setOptimumBinderExpectedParameters(
+          granulometryCompositionData,
+          maximumMixtureDensityData,
+          binderTrialData,
+          data
+        );
+
+        console.log('🔍 [2/2] Resposta:', expectedParameters);
+
+        const newData = {
+          ...data,
+          graphics: graphics.optimumBinder || graphics,
+          optimumBinder: graphics.dosageGraph || graphics,
+          expectedParameters,
+        };
+
+        console.log('🔍 Salvando no store:', newData);
+        
+        setData({ step: 6, value: newData });
+        setLoading(false);
+        
+      } catch (error) {
+        console.error('💥 ERRO COMPLETO NO STEP 7:');
+        console.error('💥 Mensagem:', error.message);
+        console.error('💥 Stack:', error.stack);
+        
+        setLoading(false);
+        throw error;
       }
-    );
-  }, []);
+    },
+    {
+      pending: t('loading.data.pending'),
+      success: t('loading.data.success'),
+      error: t('loading.data.error'),
+    }
+  );
+}, [
+  // Reduza as dependências ao mínimo necessário
+  marshall, 
+  // Adicione apenas dados essenciais que devem disparar recálculo
+]);
 
 useEffect(() => {
   // Corrige binder se for objeto (só GMM)
