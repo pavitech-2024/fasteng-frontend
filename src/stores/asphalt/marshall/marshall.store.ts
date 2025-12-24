@@ -84,7 +84,7 @@ interface MarshallMaximumMixtureDensityData {
     value: number;
   }[];
   maxSpecificGravity: {
-    result: {
+    results: {
       lessOne: number;
       lessHalf: number;
       normal: number;
@@ -352,7 +352,7 @@ const initialState = {
     missingSpecificMass: [],
     temperatureOfWater: null,
     maxSpecificGravity: {
-      result: {
+      results: {
         lessOne: null,
         lessHalf: null,
         normal: null,
