@@ -20,6 +20,7 @@ const Superpave_Step4_GranulometryComposition = ({ setNextDisabled, superpave }:
     setData,
     hasHydrated,
   } = useSuperpaveStore();
+    console.log("🚀 ~ Superpave_Step4_GranulometryComposition ~ data:", data)
 
   const [lower, setLower] = useState(false);
   const [average, setAverage] = useState(false);

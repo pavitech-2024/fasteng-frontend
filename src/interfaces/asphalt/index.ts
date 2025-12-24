@@ -61,8 +61,7 @@ export class AsphaltMaterial {
 }
 
 export type Materials = {
-  materials: AsphaltMaterial[] | AsphaltMaterial[][];
-  dduiEssays: DduiData[];
+  materials: AsphaltMaterial[]
   fwdEssays: FwdData[];
   iggEssays: IggData[];
   rtcdEssays: RtcdData[];

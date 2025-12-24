@@ -1,5 +1,5 @@
 import { GranulometryIcon } from '@/assets';
-import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { AsphaltMaterial, Materials } from '@/interfaces/asphalt';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import {
   AsphaltGranulometryActions,
@@ -56,7 +56,7 @@ class AsphaltGranulometry_SERVICE implements IEssayService {
   /** @generalData Methods for general-data (step === 0, page 1) */
 
   // get all materials from user from backend
-  getmaterialsByUserId = async (userId: string): Promise<AsphaltMaterial> => {
+  getmaterialsByUserId = async (userId: string): Promise<Materials[]> => {
     try {
       // get all materials from user from backend
       const response = await Api.get(`asphalt/materials/all/${userId}`);
@@ -139,6 +139,7 @@ class AsphaltGranulometry_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
         step2Data: store.step2Data,
+        isSuperpave: false
       });
 
       const { success, error, result } = response.data;
