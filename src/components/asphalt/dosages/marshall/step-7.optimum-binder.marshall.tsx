@@ -171,18 +171,17 @@ const finalProportionsRows = () => {
   let obj = { id: 1 };
   let count = 0;
 
-  // VERIFICAÇÃO EXTRA: se binder é null ou undefined
-  if (!materialSelectionData.binder) {
+  // VERIFICAÇÃO RÍGIDA
+  if (!materialSelectionData.binder || 
+      typeof materialSelectionData.binder !== 'string' ||
+      !data?.optimumBinder?.confirmedPercentsOfDosage) {
     return [obj];
   }
 
-  // Verifica se há dados
-  if (!data.optimumBinder || !data.optimumBinder.confirmedPercentsOfDosage) {
-    return [obj];
-  }
+  // Garante que binder é string
+  const binderKey: string = materialSelectionData.binder;
 
   for (let i = 0; i < data.optimumBinder.confirmedPercentsOfDosage.length; i++) {
-    // Verifica se tem aggregates na posição i
     if (materialSelectionData.aggregates[i]) {
       obj = {
         ...obj,
@@ -192,8 +191,6 @@ const finalProportionsRows = () => {
     }
   }
 
-  // CORREÇÃO: binder é string, mas pode ser null no início
-  const binderKey = materialSelectionData.binder || 'binder';
   obj = {
     ...obj,
     [binderKey]: (data.optimumBinder.confirmedPercentsOfDosage[count] || 0).toFixed(2),
