@@ -52,18 +52,9 @@ useEffect(() => {
   toast.promise(
     async () => {
       try {
-        console.log('🔍 [1/2] Iniciando carregamento de gráficos...');
+        console.log('🔍 Carregando dados do STEP 7...');
         
-        // DEBUG: Verifica os dados antes de enviar
-        console.log('🔍 volumetricParametersData:', {
-          temDados: !!volumetricParametersData,
-          temVolumetricParameters: !!volumetricParametersData?.volumetricParameters,
-          temArray: !!volumetricParametersData?.volumetricParameters?.volumetricParameters,
-          arrayLength: volumetricParametersData?.volumetricParameters?.volumetricParameters?.length,
-          primeiroItem: volumetricParametersData?.volumetricParameters?.volumetricParameters?.[0]
-        });
-        
-        let newData;
+        // 1. Busca os gráficos (essencial)
         const graphics = await marshall.setOptimumBinderContentData(
           generalData,
           granulometryCompositionData,
@@ -71,60 +62,33 @@ useEffect(() => {
           binderTrialData
         );
 
-        console.log('🔍 [1/2] Resposta da API (graphics):', graphics);
-
-        newData = {
+        // 2. Prepara os dados
+        const newData = {
           ...data,
           graphics: graphics?.optimumBinder || graphics,
           optimumBinder: graphics?.dosageGraph || graphics,
         };
 
-        if (graphics) {
-          try {
-            console.log('🔍 [2/2] Buscando parâmetros esperados...');
-            const expectedParameters = await marshall.setOptimumBinderExpectedParameters(
-              granulometryCompositionData,
-              maximumMixtureDensityData,
-              binderTrialData,
-              data
-            );
-
-            console.log('🔍 [2/2] Parâmetros esperados:', expectedParameters);
-
-            newData = {
-              ...newData,
-              expectedParameters,
-            };
-
-            console.log('🔍 Salvando dados no store:', {
-              temGraphics: !!newData.graphics,
-              tipoGraphics: typeof newData.graphics,
-              optimumBinder: newData.optimumBinder,
-              expectedParameters: newData.expectedParameters
-            });
-
-            setData({ step: 6, value: newData });
-            setLoading(false);
-          } catch (error) {
-            console.error('❌ Erro ao buscar parâmetros esperados:', error);
-            setLoading(false);
-            throw error;
-          }
-        } else {
-          console.error('❌ API não retornou gráficos!');
-          throw new Error('API não retornou dados de gráficos');
+        // 3. Tenta buscar parâmetros (se falhar, usa null)
+        try {
+          const expectedParameters = await marshall.setOptimumBinderExpectedParameters(
+            granulometryCompositionData,
+            maximumMixtureDensityData,
+            binderTrialData,
+            data
+          );
+          newData.expectedParameters = expectedParameters;
+        } catch (error) {
+          console.log('⚠️ Parâmetros não carregados:', error.message);
+          newData.expectedParameters = null;
         }
+
+        // 4. Salva no store
+        setData({ step: 6, value: newData });
+        setLoading(false);
+        
       } catch (error) {
-        console.error('❌ Erro completo no STEP 7:', {
-          mensagem: error.message,
-          stack: error.stack,
-          dadosEnviados: {
-            generalData: !!generalData,
-            granulometryData: !!granulometryCompositionData,
-            volumetricData: !!volumetricParametersData,
-            binderData: !!binderTrialData
-          }
-        });
+        console.error('Erro no STEP 7:', error);
         setLoading(false);
         throw error;
       }
@@ -158,6 +122,14 @@ useEffect(() => {
     });
   }
 }, [materialSelectionData.binder, maximumMixtureDensityData.method]);
+
+
+
+
+
+
+
+
 
   // Preparando os dados points para o componente GraficoPage7NA
   const points = data?.optimumBinder?.pointsOfCurveDosage;
