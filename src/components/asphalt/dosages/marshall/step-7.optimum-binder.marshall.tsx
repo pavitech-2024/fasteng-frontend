@@ -46,6 +46,8 @@ const Marshall_Step7_OptimumBinder = ({
 console.log('🔍 maxSpecificGravity:', maximumMixtureDensityData?.maxSpecificGravity);
 console.log('🔍 maxSpecificGravity.method:', maximumMixtureDensityData?.maxSpecificGravity?.method);
 
+
+
   useEffect(() => {
     toast.promise(
       async () => {
@@ -99,6 +101,28 @@ console.log('🔍 maxSpecificGravity.method:', maximumMixtureDensityData?.maxSpe
       }
     );
   }, []);
+
+useEffect(() => {
+  // Corrige binder se for objeto (só GMM)
+  if (materialSelectionData.binder && 
+      typeof materialSelectionData.binder === 'object' &&
+      maximumMixtureDensityData.method === 'GMM') {
+    
+    console.log('🔍 CORRIGINDO binder de objeto para string');
+    
+    const newBinder = (materialSelectionData.binder as any)._id || 
+                      (materialSelectionData.binder as any).name || 
+                      'binder';
+    
+    setData({
+      step: 1,
+      value: {
+        ...materialSelectionData,
+        binder: newBinder
+      }
+    });
+  }
+}, [materialSelectionData.binder, maximumMixtureDensityData.method]);
 
   // Preparando os dados points para o componente GraficoPage7N
   const points = data?.optimumBinder?.pointsOfCurveDosage;
@@ -187,37 +211,58 @@ console.log('🔍 maxSpecificGravity.method:', maximumMixtureDensityData?.maxSpe
   };
 
 const finalProportionsRows = () => {
+  console.log('🔍 FINAL PROPORTIONS - binder completo:', materialSelectionData.binder);
+  
   let obj = { id: 1 };
-  let count = 0;
-
-  // VERIFICAÇÃO RÍGIDA
-  if (!materialSelectionData.binder || 
-      typeof materialSelectionData.binder !== 'string' ||
-      !data?.optimumBinder?.confirmedPercentsOfDosage) {
+  
+  // VERIFICAÇÃO CORRIGIDA PARA GMM
+  if (!data?.optimumBinder?.confirmedPercentsOfDosage || 
+      data.optimumBinder.confirmedPercentsOfDosage.length === 0) {
+    console.log('🔍 SEM confirmedPercentsOfDosage ou array vazio');
     return [obj];
   }
 
-  // Garante que binder é string
-  const binderKey: string = materialSelectionData.binder;
-
-  for (let i = 0; i < data.optimumBinder.confirmedPercentsOfDosage.length; i++) {
-    if (materialSelectionData.aggregates[i]) {
-      obj = {
-        ...obj,
-        [materialSelectionData.aggregates[i]._id]: (data.optimumBinder.confirmedPercentsOfDosage[i] || 0).toFixed(2),
-      };
-      count = i;
-    }
+  // CORREÇÃO: Verifica se binder existe
+  if (!materialSelectionData.binder) {
+    console.log('🔍 binder é null/undefined');
+    return [obj];
   }
 
-  obj = {
-    ...obj,
-    [binderKey]: (data.optimumBinder.confirmedPercentsOfDosage[count] || 0).toFixed(2),
-  };
+  // CORREÇÃO: Se binder for objeto, extrai o ID
+  let binderKey: string;
+  const binder = materialSelectionData.binder;
+  
+  if (typeof binder === 'object' && binder !== null) {
+    // É objeto - pega _id ou name
+    const binderObj = binder as any;
+    binderKey = binderObj._id || binderObj.name || 'binder';
+    console.log('🔍 GMM - binder é objeto, usando chave:', binderKey);
+  } else if (typeof binder === 'string') {
+    // É string - usa direto
+    binderKey = binder;
+    console.log('🔍 DMT - binder é string, usando:', binderKey);
+  } else {
+    // Fallback
+    binderKey = 'binder';
+    console.log('🔍 Fallback - binder inválido, usando:', binderKey);
+  }
 
+  // Adiciona aggregates
+  materialSelectionData.aggregates.forEach((agg, i) => {
+    if (data.optimumBinder.confirmedPercentsOfDosage[i] !== undefined && agg?._id) {
+      obj[agg._id] = (data.optimumBinder.confirmedPercentsOfDosage[i] || 0).toFixed(2);
+    }
+  });
+
+  // Adiciona binder (último item)
+  const lastIndex = data.optimumBinder.confirmedPercentsOfDosage.length - 1;
+  if (lastIndex >= 0) {
+    obj[binderKey] = (data.optimumBinder.confirmedPercentsOfDosage[lastIndex] || 0).toFixed(2);
+  }
+
+  console.log('🔍 OBJETO FINAL:', obj);
   return [obj];
 };
-
   const percentsCols: GridColDef[] = [
     {
       field: 'binder',
