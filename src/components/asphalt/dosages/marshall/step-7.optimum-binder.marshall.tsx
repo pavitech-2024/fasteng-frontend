@@ -82,10 +82,8 @@ const Marshall_Step7_OptimumBinder = ({
   }, []);
 
   // Preparando os dados points para o componente GraficoPage7N
-  const points = data?.optimumBinder?.pointsOfCurveDosage ?? [];
-
-  // Cria um novo array: primeiro a linha extra, depois os dados recebidos
-  const preparedPoints = [['', '', ''], ...points];
+  const points = data?.optimumBinder?.pointsOfCurveDosage;
+  points?.unshift(['', '', '']);
 
   const expectedParametersColumns: GridColDef[] = [
     {
@@ -140,14 +138,15 @@ const Marshall_Step7_OptimumBinder = ({
         : undefined,
   };
 
+  // CORREÇÃO: Todos os .toFixed() protegidos com || 0
   const expectedParametersRows = [
     {
       id: 1,
-      vv: formatData.vv?.toFixed(2),
-      rbv: formatData.rbv?.toFixed(2),
-      vam: formatData.vam?.toFixed(2),
-      gmb: data?.expectedParameters?.expectedParameters.Gmb?.toFixed(2),
-      dmt: data?.expectedParameters?.expectedParameters.newMaxSpecificGravity?.toFixed(2),
+      vv: (formatData.vv || 0).toFixed(2),
+      rbv: (formatData.rbv || 0).toFixed(2),
+      vam: (formatData.vam || 0).toFixed(2),
+      gmb: (data?.expectedParameters?.expectedParameters.Gmb || 0).toFixed(2),
+      dmt: (data?.expectedParameters?.expectedParameters.newMaxSpecificGravity || 0).toFixed(2),
     },
   ];
 
@@ -168,6 +167,7 @@ const Marshall_Step7_OptimumBinder = ({
     return cols;
   };
 
+  // CORREÇÃO: .toFixed() protegidos
   const finalProportionsRows = () => {
     let obj = { id: 1 };
     let count = 0;
@@ -175,14 +175,14 @@ const Marshall_Step7_OptimumBinder = ({
     for (let i = 0; i < data.optimumBinder.confirmedPercentsOfDosage.length; i++) {
       obj = {
         ...obj,
-        [materialSelectionData.aggregates[i]?._id]: data.optimumBinder.confirmedPercentsOfDosage[i].toFixed(2),
+        [materialSelectionData.aggregates[i]._id]: (data.optimumBinder.confirmedPercentsOfDosage[i] || 0).toFixed(2),
       };
       count = i;
     }
 
     obj = {
       ...obj,
-      [materialSelectionData.binder._id]: data.optimumBinder.confirmedPercentsOfDosage[count].toFixed(2),
+      [materialSelectionData.binder]: (data.optimumBinder.confirmedPercentsOfDosage[count] || 0).toFixed(2),
     };
 
     return [obj];
@@ -196,49 +196,103 @@ const Marshall_Step7_OptimumBinder = ({
       flex: 1,
       minWidth: 250,
     },
-    ...volumetricParametersData?.volumetricParameters?.volumetricParameters.map((material) => ({
-      field: `${material.asphaltContent}`,
-      headerName: `${material.asphaltContent} (%)`,
+    {
+      field: 'col1',
+      headerName: `${volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.asphaltContent} (%)`,
       valueFormatter: ({ value }) => `${value}`,
       flex: 1,
       minWidth: 200,
-    })),
+    },
+    {
+      field: 'col2',
+      headerName: `${volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.asphaltContent} (%)`,
+      valueFormatter: ({ value }) => `${value}`,
+      flex: 1,
+      minWidth: 200,
+    },
   ];
 
-  const volumetricParameters = [
-    { key: 'volumeVoids', label: 'Vv (%)' },
-    { key: 'apparentBulkSpecificGravity', label: 'Gmb (g/m³)' },
-    { key: 'voidsFilledAsphalt', label: 'Vcb (%)' },
-    { key: 'aggregateVolumeVoids', label: 'Vam (%)' },
-    { key: 'ratioBitumenVoid', label: 'Rbv (%)' },
-    { key: 'fluency', label: t('asphalt.dosages.marshall.fluency') + ' (mm)' },
-    { key: 'stability', label: t('asphalt.dosages.stability') + '(N)' },
-    { key: 'diametricalCompressionStrength', label: t('asphalt.dosages.indirect-tensile-strength') + '(MPa)' },
-    { key: 'maxSpecificGravity', label: 'DMT (g/cm³)' },
+  // CORREÇÃO: Todos os .toFixed() no percentRows protegidos
+  const percentRows = [
+    {
+      id: 1,
+      binder: 'Vv (%)',
+      col1:
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.volumeVoids !== undefined
+          ? ((volumetricParametersData.volumetricParameters.volumetricParameters[0]?.values.volumeVoids || 0) * 100).toFixed(2)
+          : '0.00',
+      col2:
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.volumeVoids !== undefined
+          ? ((volumetricParametersData.volumetricParameters.volumetricParameters[1]?.values.volumeVoids || 0) * 100).toFixed(2)
+          : '0.00',
+    },
+    {
+      id: 2,
+      binder: 'Gmb (g/cm³)',
+      col1: (volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.apparentBulkSpecificGravity || 0).toFixed(2),
+      col2: (volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.apparentBulkSpecificGravity || 0).toFixed(2),
+    },
+    {
+      id: 3,
+      binder: 'Vcb (%)',
+      col1:
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.voidsFilledAsphalt !== undefined
+          ? ((volumetricParametersData.volumetricParameters.volumetricParameters[0]?.values.voidsFilledAsphalt || 0) * 100).toFixed(2)
+          : '0.00',
+      col2:
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.voidsFilledAsphalt !== undefined
+          ? ((volumetricParametersData.volumetricParameters.volumetricParameters[1]?.values.voidsFilledAsphalt || 0) * 100).toFixed(2)
+          : '0.00',
+    },
+    {
+      id: 4,
+      binder: 'Vam (%)',
+      col1:
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.aggregateVolumeVoids !== undefined
+          ? ((volumetricParametersData.volumetricParameters.volumetricParameters[0]?.values.aggregateVolumeVoids || 0) * 100).toFixed(2)
+          : '0.00',
+      col2:
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.aggregateVolumeVoids !== undefined
+          ? ((volumetricParametersData.volumetricParameters.volumetricParameters[1]?.values.aggregateVolumeVoids || 0) * 100).toFixed(2)
+          : '0.00',
+    },
+    {
+      id: 5,
+      binder: 'Rbv (%)',
+      col1:
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.ratioBitumenVoid !== undefined
+          ? ((volumetricParametersData.volumetricParameters.volumetricParameters[0]?.values.ratioBitumenVoid || 0) * 100).toFixed(2)
+          : '0.00',
+      col2:
+        volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.ratioBitumenVoid !== undefined
+          ? ((volumetricParametersData.volumetricParameters.volumetricParameters[1]?.values.ratioBitumenVoid || 0) * 100).toFixed(2)
+          : '0.00',
+    },
+    {
+      id: 6,
+      binder: t('asphalt.dosages.marshall.fluency') + ' (mm)',
+      col1: (volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.fluency || 0).toFixed(2),
+      col2: (volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.fluency || 0).toFixed(2),
+    },
+    {
+      id: 7,
+      binder: t('asphalt.dosages.stability') + '(N)',
+      col1: (volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.stability || 0).toFixed(2),
+      col2: (volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.stability || 0).toFixed(2),
+    },
+    {
+      id: 8,
+      binder: t('asphalt.dosages.indirect-tensile-strength') + '(MPa)',
+      col1: (volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.diametricalCompressionStrength || 0).toFixed(2),
+      col2: (volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.diametricalCompressionStrength || 0).toFixed(2),
+    },
+    {
+      id: 9,
+      binder: 'DMT (g/cm³)',
+      col1: (volumetricParametersData?.volumetricParameters?.volumetricParameters[0]?.values.maxSpecificGravity || 0).toFixed(3),
+      col2: (volumetricParametersData?.volumetricParameters?.volumetricParameters[1]?.values.maxSpecificGravity || 0).toFixed(3),
+    },
   ];
-
-  const percentRows = volumetricParameters.map((param, rowIndex) => {
-    const row: Record<string, any> = {
-      id: rowIndex + 1,
-      binder: param.label,
-    };
-
-    volumetricParametersData?.volumetricParameters?.volumetricParameters.forEach((material) => {
-      let value = material.values[param.key];
-
-      if (value !== undefined) {
-        // Multiplica por 100 se for volumeVoids, Vcb, Vam ou Rbv
-        if (['volumeVoids', 'voidsFilledAsphalt', 'aggregateVolumeVoids', 'ratioBitumenVoid'].includes(param.key)) {
-          value = value * 100;
-        }
-        row[material.asphaltContent] = value.toFixed(2);
-      } else {
-        row[material.asphaltContent] = undefined;
-      }
-    });
-
-    return row;
-  });
 
   nextDisabled && setNextDisabled(false);
 
@@ -255,7 +309,7 @@ const Marshall_Step7_OptimumBinder = ({
             padding: '20px',
           }}
         >
-          {preparedPoints?.length > 0 && <GraficoPage7N data={preparedPoints} />}
+          {points?.length > 0 && <GraficoPage7N data={points} />}
 
           {!Object.values(data?.expectedParameters?.expectedParameters).some((item) => item === null) && (
             <Box sx={{ width: '100%', overflow: 'auto' }}>
@@ -325,9 +379,9 @@ const Marshall_Step7_OptimumBinder = ({
             {data.graphics?.sg?.length > 0 && (
               <MiniGraphics
                 data={data?.graphics?.sg}
-                type={maximumMixtureDensityData.maxSpecificGravity?.method}
+                type={maximumMixtureDensityData.maxSpecificGravity.method}
                 nameEixoY={
-                  maximumMixtureDensityData.maxSpecificGravity?.method === 'DMT'
+                  maximumMixtureDensityData.maxSpecificGravity.method === 'DMT'
                     ? 'Massa específica máxima teórica (g/cm³)'
                     : 'Massa específica máxima medida (g/cm³)'
                 }
