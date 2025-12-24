@@ -383,16 +383,16 @@ useEffect(() => {
             insert: false,
             value: item.GMM,
           }));
-          const maxSpecificGravityObj = {
-        results: {
-          lessOne: riceTest.maxSpecificGravity[0]?.GMM || null,
-          lessHalf: riceTest.maxSpecificGravity[1]?.GMM || null,
-          normal: riceTest.maxSpecificGravity[2]?.GMM || null,
-          plusHalf: riceTest.maxSpecificGravity[3]?.GMM || null,
-          plusOne: riceTest.maxSpecificGravity[4]?.GMM || null,
-        },
-        method: 'GMM'
-      };
+         const maxSpecificGravityObj = {
+  results: {
+    lessOne: riceTest.maxSpecificGravity[0]?.GMM || 0,  
+    lessHalf: riceTest.maxSpecificGravity[1]?.GMM || 0,
+    normal: riceTest.maxSpecificGravity[2]?.GMM || 0,
+    plusHalf: riceTest.maxSpecificGravity[3]?.GMM || 0,
+    plusOne: riceTest.maxSpecificGravity[4]?.GMM || 0,
+  },
+  method: 'GMM'
+};
 
 
           setGmmRows(formattedGmm);

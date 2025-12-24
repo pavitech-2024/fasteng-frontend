@@ -121,6 +121,8 @@ const Marshall_Step6_VolumetricParams = ({
     },
   ];
 
+  
+
   const renderInputCell = (tenor: string, row: any, field: string) => {
     const { id } = row;
     const index = data[tenor]?.findIndex((r) => r.id === id);
