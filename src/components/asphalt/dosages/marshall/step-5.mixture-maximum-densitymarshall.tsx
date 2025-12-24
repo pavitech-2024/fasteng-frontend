@@ -510,9 +510,7 @@ useEffect(() => {
     setNextDisabled(hasNullValue || data.temperatureOfWater === null);
   } else if (selectedMethod.gmm) {
    
-   const hasNullValue = 
-  data.gmm?.some(item => item && item.value === null) ||
-  gmmRows?.some(item => item && item.GMM === null);
+  const hasNullValue = data.gmm?.some((e: any) => e.value === null);
     
     
     setNextDisabled(hasNullValue || data.temperatureOfWater === null);
