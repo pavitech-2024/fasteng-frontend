@@ -6,6 +6,7 @@ import { IEssayService } from '@/interfaces/common/essay/essay-service.interface
 import { MarshallActions, MarshallData } from '@/stores/asphalt/marshall/marshall.store';
 import { t } from 'i18next';
 //tst
+//tst
 class Marshall_SERVICE implements IEssayService {
   info = {
     key: 'marshall',

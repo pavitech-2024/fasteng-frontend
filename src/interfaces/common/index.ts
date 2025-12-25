@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 import { StaticImageData } from 'next/image';
-
+//tst
 export interface StandardData {
   name: string;
   link: string;

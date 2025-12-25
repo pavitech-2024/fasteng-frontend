@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import GraficoPage7N from './graphs/page-7-graph';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-
+//tst
 const Marshall_Step7_OptimumBinder = ({
   nextDisabled,
   setNextDisabled,
