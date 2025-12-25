@@ -106,10 +106,10 @@ const GenerateAbcpDosagePDF = ({ dosage }: IGeneratedPDF) => {
     handleAddPage(doc, image, currentY, t('concrete.dosage-pdf-title'));
 
     const summaryItems: SummaryItem[] = [
-      { title: t('abcp.general-results'), page: 3 },
-      { title: t('results'), page: 3 },
-      { title: t('abcp.results.coefficients'), page: 3 },
-      { title: t('abcp.result.graph'), page: 4 },
+      { title: t('abcp.general-results'), page: 3, key: 'generalResults' },
+      { title: t('results'), page: 3, key: 'results' },
+      { title: t('abcp.results.coefficients'), page: 3, key: 'coefficients' },
+      { title: t('abcp.result.graph'), page: 4, key: 'graph' },
     ];
 
     addSummary(doc, image, summaryItems);

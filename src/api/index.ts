@@ -1,27 +1,25 @@
-import Axios from 'axios';
+import axios from 'axios';  
 
-//.env
+// .env
 export const isLocalHost = process.env.NEXT_PUBLIC_ENV === 'development';
 export const isTest = process.env.NEXT_PUBLIC_ENV === 'test';
 
-
-//corrigi url
+// Corrigindo a URL (removendo barra extra no final)
 const [localhost, prod] = [
   'http://localhost:8080',
   'https://fasteng-backend.vercel.app',
 ];
 
-
 /*
-const [localhost, test, prod] = [
-  'http://localhost:8080',
-  'https://fasteng-backend.vercel.app/',
-  'https://fasteng-backend-ecodigta.ocean.app/',
-];
+  Caso precise de mais um ambiente (como o teste), adicione aqui:
+  const [localhost, test, prod] = [
+    'http://localhost:8080',
+    'https://fasteng-backend.vercel.app/',
+    'https://fasteng-backend-ecodigta.ocean.app/',
+  ];
 */
 
-
-const Api = Axios.create({
+const Api = axios.create({
   baseURL: isLocalHost || isTest ? localhost : prod,
   headers: {
     Accept: 'application/json',
