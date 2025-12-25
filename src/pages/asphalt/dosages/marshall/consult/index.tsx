@@ -5,7 +5,7 @@ import useAuth from '@/contexts/auth';
 import marshallDosageService from '@/services/asphalt/dosages/marshall/marshall.consult.service';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
-import { IconButton, Container, Box, Pagination, Typography } from '@mui/material';
+import { IconButton, Container, Box, Pagination } from '@mui/material';
 import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useRouter } from 'next/router';
@@ -123,24 +123,21 @@ const MarshallDosageConsult = () => {
   };
 
   const handleVisualizeDosage = (id: string) => {
-    const dosage =
-      dosages.length === 1
-        ? dosages[0]?.find((dosage) => {
-            return dosage._id === id;
-          })
-        : dosages.find((dosages) => dosages.find((dosage) => dosage._id === id));
-    const step = dosage.generalData.step - 1;
-    if (dosage) {
-      setData({
-        step: 10,
-        value: dosage,
-      });
-    }
-    sessionStorage.setItem('marshall-step', step.toString());
-    handleNext(step, dosage, true);
-    if (step === 9) router.push(`/asphalt/dosages/marshall/create?consult=true`);
-    router.push(`/asphalt/dosages/marshall/create`);
-  };
+  const dosage = dosages[0]?.find((d) => d._id === id);
+  if (!dosage) return;
+
+  // carrega tudo no store
+  setData({
+    step: 10, // estado especial: dados completos carregados
+    value: dosage,
+  });
+
+  // SEMPRE ir direto pro resumo (índice 8)
+  sessionStorage.setItem('marshall-step', '8');
+
+  router.push('/asphalt/dosages/marshall/create?consult=true');
+};
+
 
   const columns: GridColDef[] = [
     {
@@ -165,11 +162,11 @@ const MarshallDosageConsult = () => {
       renderCell: (params) => (
         <>
           <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)} size="large">
-            <DeleteIcon color="error" />
+            <DeleteIcon />
           </IconButton>
 
           <IconButton aria-label="Visualizar" onClick={() => handleVisualizeDosage(params.row.id)} size="large">
-            <NextIcon sx={{ color: 'secondaryTons.blue' }} />
+            <NextIcon />
           </IconButton>
         </>
       ),
@@ -200,15 +197,14 @@ const MarshallDosageConsult = () => {
               >
                 <Box
                   sx={{
-                    width: '100%',
-                    maxWidth: '90vw',
+                    width: { mobile: '90%', notebook: '80%' },
+                    maxWidth: '2200px',
                     padding: '2rem',
                     borderRadius: '20px',
                     bgcolor: 'primaryTons.white',
                     border: '1px solid',
                     borderColor: 'primaryTons.border',
                     marginBottom: '1rem',
-                    marginLeft: { mobile: '0', notebook: '2.5rem' },
                   }}
                 >
                   {dosageArrays.length > 0 && (
@@ -216,29 +212,23 @@ const MarshallDosageConsult = () => {
                       rows={dosageArrays.length > 0 ? dosageArrays[page] : []}
                       pagination
                       hideFooter
-                      columns={columns.map((column, index) => ({
+                      columns={columns.map((column) => ({
                         ...column,
                         disableColumnMenu: true,
                         sortable: false,
                         align: 'center',
                         headerAlign: 'center',
                         minWidth: 100,
-                        flex: index !== 0 && index !== 1 ? 1 : 2,
+                        flex: 1,
                       }))}
                     />
                   )}
                   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
-                    {dosageArrays.length > 0 ? (
-                      <Pagination
-                        count={dosageArrays.length}
-                        size="small"
-                        onChange={(event, value) => setPage(value - 1)}
-                      />
-                    ) : (
-                      <Typography variant="h6" sx={{ color: 'primaryTons.gray' }}>
-                        {t('marshall.dosage-consult.no-dosages')}
-                      </Typography>
-                    )}
+                    <Pagination
+                      count={dosageArrays.length}
+                      size="small"
+                      onChange={(event, value) => setPage(value - 1)}
+                    />
                   </Box>
                 </Box>
               </Box>
