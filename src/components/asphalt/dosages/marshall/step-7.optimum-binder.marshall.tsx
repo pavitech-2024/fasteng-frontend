@@ -46,93 +46,86 @@ const Marshall_Step7_OptimumBinder = ({
   console.log('🔍 maxSpecificGravity.method:', maximumMixtureDensityData?.maxSpecificGravity?.method);
 
   useEffect(() => {
-    toast.promise(
-      async () => {
-        try {
-          console.log('🔍 [1/2] Iniciando carregamento de gráficos...');
+  toast.promise(
+    async () => {
+      try {
+        console.log('🔍 [1/2] Iniciando carregamento de gráficos...');
+        
+        let newData;
+        const graphics = await marshall.setOptimumBinderContentData(
+          generalData,
+          granulometryCompositionData,
+          volumetricParametersData,
+          binderTrialData
+        );
 
-          // DEBUG: Verifica os dados antes de enviar
-          console.log('🔍 volumetricParametersData:', {
-            temDados: !!volumetricParametersData,
-            temVolumetricParameters: !!volumetricParametersData?.volumetricParameters,
-            temArray: !!volumetricParametersData?.volumetricParameters?.volumetricParameters,
-            arrayLength: volumetricParametersData?.volumetricParameters?.volumetricParameters?.length,
-            primeiroItem: volumetricParametersData?.volumetricParameters?.volumetricParameters?.[0],
-          });
+        console.log('🔍 [1/2] Resposta da API (graphics):', graphics);
 
-          let newData;
-          const graphics = await marshall.setOptimumBinderContentData(
-            generalData,
-            granulometryCompositionData,
-            volumetricParametersData,
-            binderTrialData
-          );
+        // Monta newData com os gráficos
+        newData = {
+          ...data,
+          graphics: graphics?.optimumBinder || graphics,
+          optimumBinder: graphics?.dosageGraph || graphics,
+        };
 
-          console.log('🔍 [1/2] Resposta da API (graphics):', graphics);
+        if (graphics) {
+          try {
+            console.log('🔍 [2/2] Buscando parâmetros esperados...');
+            
+            const expectedParameters = await marshall.setOptimumBinderExpectedParameters(
+              granulometryCompositionData,
+              maximumMixtureDensityData,
+              binderTrialData,
+              newData  
+            );
 
-          newData = {
-            ...data,
-            graphics: graphics?.optimumBinder || graphics,
-            optimumBinder: graphics?.dosageGraph || graphics,
-          };
+            console.log('🔍 [2/2] Parâmetros esperados:', expectedParameters);
 
-          if (graphics) {
-            try {
-              console.log('🔍 [2/2] Buscando parâmetros esperados...');
-              const expectedParameters = await marshall.setOptimumBinderExpectedParameters(
-                granulometryCompositionData,
-                maximumMixtureDensityData,
-                binderTrialData,
-                data
-              );
+            newData = {
+              ...newData,
+              expectedParameters,
+            };
 
-              console.log('🔍 [2/2] Parâmetros esperados:', expectedParameters);
+            console.log('🔍 Salvando dados no store:', {
+              temGraphics: !!newData.graphics,
+              tipoGraphics: typeof newData.graphics,
+              optimumBinder: newData.optimumBinder,
+              expectedParameters: newData.expectedParameters
+            });
 
-              newData = {
-                ...newData,
-                expectedParameters,
-              };
-
-              console.log('🔍 Salvando dados no store:', {
-                temGraphics: !!newData.graphics,
-                tipoGraphics: typeof newData.graphics,
-                optimumBinder: newData.optimumBinder,
-                expectedParameters: newData.expectedParameters,
-              });
-
-              setData({ step: 6, value: newData });
-              setLoading(false);
-            } catch (error) {
-              console.error('❌ Erro ao buscar parâmetros esperados:', error);
-              setLoading(false);
-              throw error;
-            }
-          } else {
-            console.error('❌ API não retornou gráficos!');
-            throw new Error('API não retornou dados de gráficos');
+            setData({ step: 6, value: newData });
+            setLoading(false);
+          } catch (error) {
+            console.error('❌ Erro ao buscar parâmetros esperados:', error);
+            setLoading(false);
+            throw error;
           }
-        } catch (error) {
-          console.error('❌ Erro completo no STEP 7:', {
-            mensagem: error.message,
-            stack: error.stack,
-            dadosEnviados: {
-              generalData: !!generalData,
-              granulometryData: !!granulometryCompositionData,
-              volumetricData: !!volumetricParametersData,
-              binderData: !!binderTrialData,
-            },
-          });
-          setLoading(false);
-          throw error;
+        } else {
+          console.error('❌ API não retornou gráficos!');
+          throw new Error('API não retornou dados de gráficos');
         }
-      },
-      {
-        pending: t('loading.data.pending'),
-        success: t('loading.data.success'),
-        error: t('loading.data.error'),
+      } catch (error) {
+        console.error('❌ Erro completo no STEP 7:', {
+          mensagem: error.message,
+          stack: error.stack,
+          dadosEnviados: {
+            generalData: !!generalData,
+            granulometryData: !!granulometryCompositionData,
+            volumetricData: !!volumetricParametersData,
+            binderData: !!binderTrialData
+          }
+        });
+        setLoading(false);
+        throw error;
       }
-    );
-  }, []);
+    },
+    {
+      pending: t('loading.data.pending'),
+      success: t('loading.data.success'),
+      error: t('loading.data.error'),
+    }
+  );
+}, []);
 
   useEffect(() => {
     // Corrige binder se for objeto (só GMM)
