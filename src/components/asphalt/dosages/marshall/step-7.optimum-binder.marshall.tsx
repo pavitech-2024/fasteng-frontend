@@ -51,6 +51,15 @@ const Marshall_Step7_OptimumBinder = ({
         try {
           console.log('🔍 [1/2] Iniciando carregamento de gráficos...');
 
+          // DEBUG: Verifica os dados antes de enviar
+          console.log('🔍 volumetricParametersData:', {
+            temDados: !!volumetricParametersData,
+            temVolumetricParameters: !!volumetricParametersData?.volumetricParameters,
+            temArray: !!volumetricParametersData?.volumetricParameters?.volumetricParameters,
+            arrayLength: volumetricParametersData?.volumetricParameters?.volumetricParameters?.length,
+            primeiroItem: volumetricParametersData?.volumetricParameters?.volumetricParameters?.[0],
+          });
+
           let newData;
           const graphics = await marshall.setOptimumBinderContentData(
             generalData,
@@ -61,123 +70,58 @@ const Marshall_Step7_OptimumBinder = ({
 
           console.log('🔍 [1/2] Resposta da API (graphics):', graphics);
 
-          // CORREÇÃO FUDIDA AQUI ↓↓↓
           newData = {
             ...data,
-            // optimumBinder SÃO OS GRÁFICOS (arrays gmb, vv, etc.)
             graphics: graphics?.optimumBinder || graphics,
-            // dosageGraph TEM OS DADOS DE CÁLCULO (optimumContent, confirmedPercents)
             optimumBinder: graphics?.dosageGraph || graphics,
           };
 
-          // DEBUG PRA VER SE TA CERTO
-          console.log('🔍 ESTRUTURA CORRIGIDA:', {
-            temGraphics: !!newData.graphics,
-            graphicsTemGmb: !!newData.graphics?.gmb,
-            graphicsTemVv: !!newData.graphics?.vv,
-            temOptimumBinder: !!newData.optimumBinder,
-            optimumContent: newData.optimumBinder?.optimumContent,
-            temPoints: !!newData.optimumBinder?.pointsOfCurveDosage,
-          });
-
           if (graphics) {
-            console.log('🔍 [2/2] Calculando parâmetros LOCALMENTE...');
+            try {
+              console.log('🔍 [2/2] Buscando parâmetros esperados...');
+              const expectedParameters = await marshall.setOptimumBinderExpectedParameters(
+                granulometryCompositionData,
+                maximumMixtureDensityData,
+                binderTrialData,
+                data
+              );
 
-            // FUNÇÃO DE CÁLCULO LOCAL (AGORA USA optimumBinder QUE TEM OS ARRAYS)
-            const calculateLocalExpected = (graphicsData, optimumBinderData, maxSpecificGravity) => {
-              if (!optimumBinderData || !optimumBinderData.optimumContent) {
-                return {
-                  expectedParameters: {
-                    Gmb: 0,
-                    RBV: 0,
-                    Vam: 0,
-                    Vv: 0,
-                    newMaxSpecificGravity: maxSpecificGravity?.results?.normal || 2,
-                  },
-                };
-              }
+              console.log('🔍 [2/2] Parâmetros esperados:', expectedParameters);
 
-              const teorOtimo = optimumBinderData.optimumContent;
-
-              // Função para extrair valor - USA graphicsData (que tem os arrays!)
-              const extractValue = (dataArray) => {
-                if (!dataArray || !Array.isArray(dataArray) || dataArray.length < 2) {
-                  console.warn('⚠️ Array inválido para extração:', dataArray);
-                  return 0;
-                }
-
-                console.log(`🔍 Extraindo valor para teor ${teorOtimo} do array:`, dataArray);
-
-                // Pega apenas os pontos de dados (ignora cabeçalho)
-                const dataPoints = dataArray.slice(1);
-
-                // 1. Tenta encontrar valor exato
-                for (const [teor, valor] of dataPoints) {
-                  if (teor === teorOtimo && valor !== null && valor !== undefined) {
-                    console.log(`✅ Valor exato: ${valor} no teor ${teor}`);
-                    return valor;
-                  }
-                }
-
-                // 2. Se não achou, pega o primeiro valor não-nulo (FODA-SE INTERPOLAÇÃO)
-                for (const [teor, valor] of dataPoints) {
-                  if (valor !== null && valor !== undefined && valor !== 0) {
-                    console.log(`↘️ Usando valor disponível: ${valor} no teor ${teor}`);
-                    return valor;
-                  }
-                }
-
-                return 0;
+              newData = {
+                ...newData,
+                expectedParameters,
               };
 
-              const result = {
-                expectedParameters: {
-                  // USA graphicsData.gmb (NÃO optimumBinderData.gmb!)
-                  Gmb: extractValue(graphicsData?.gmb),
-                  RBV: extractValue(graphicsData?.rbv),
-                  Vam: extractValue(graphicsData?.vam),
-                  Vv: extractValue(graphicsData?.vv),
-                  newMaxSpecificGravity: maxSpecificGravity?.results?.normal || 2,
-                },
-              };
+              console.log('🔍 Salvando dados no store:', {
+                temGraphics: !!newData.graphics,
+                tipoGraphics: typeof newData.graphics,
+                optimumBinder: newData.optimumBinder,
+                expectedParameters: newData.expectedParameters,
+              });
 
-              console.log('🔍 Parâmetros calculados localmente:', result);
-              return result;
-            };
-
-            // CALCULA LOCALMENTE - PASSA OS DOIS!
-            const localExpected = calculateLocalExpected(
-              newData.graphics, // ← TEM OS ARRAYS gmb, vv, etc.
-              newData.optimumBinder, // ← TEM optimumContent
-              maximumMixtureDensityData.maxSpecificGravity
-            );
-
-            newData = {
-              ...newData,
-              expectedParameters: localExpected,
-            };
-
-            console.log('🔍 Dados FINAIS no store:', {
-              // PARA GRÁFICOS:
-              graphicsKeys: newData.graphics ? Object.keys(newData.graphics) : [],
-              gmbArray: newData.graphics?.gmb,
-              vvArray: newData.graphics?.vv,
-
-              // PARA CÁLCULO:
-              optimumContent: newData.optimumBinder?.optimumContent,
-
-              // RESULTADO:
-              expectedValues: newData.expectedParameters?.expectedParameters,
-            });
-
-            setData({ step: 6, value: newData });
-            setLoading(false);
+              setData({ step: 6, value: newData });
+              setLoading(false);
+            } catch (error) {
+              console.error('❌ Erro ao buscar parâmetros esperados:', error);
+              setLoading(false);
+              throw error;
+            }
           } else {
             console.error('❌ API não retornou gráficos!');
             throw new Error('API não retornou dados de gráficos');
           }
         } catch (error) {
-          console.error('❌ Erro completo no STEP 7:', error);
+          console.error('❌ Erro completo no STEP 7:', {
+            mensagem: error.message,
+            stack: error.stack,
+            dadosEnviados: {
+              generalData: !!generalData,
+              granulometryData: !!granulometryCompositionData,
+              volumetricData: !!volumetricParametersData,
+              binderData: !!binderTrialData,
+            },
+          });
           setLoading(false);
           throw error;
         }
@@ -211,6 +155,14 @@ const Marshall_Step7_OptimumBinder = ({
       });
     }
   }, [materialSelectionData.binder, maximumMixtureDensityData.method]);
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (!data?.graphics || !data?.optimumBinder) {
+    return <Loading />;
+  }
 
   // Preparando os dados points para o componente GraficoPage7NA
   const points = data?.optimumBinder?.pointsOfCurveDosage;
@@ -628,54 +580,12 @@ const Marshall_Step7_OptimumBinder = ({
               <MiniGraphics data={data.graphics.gmb} type={'gmb'} nameEixoY={t('asphalt.dosages.gmb') + '(g/cm³)'} />
             )}
 
-            {data.graphics?.sg?.length > 0 && (
-              <MiniGraphics
-                data={data?.graphics?.sg}
-                type={maximumMixtureDensityData.maxSpecificGravity.method}
-                nameEixoY={
-                  maximumMixtureDensityData.maxSpecificGravity.method === 'DMT'
-                    ? 'Massa específica máxima teórica (g/cm³)'
-                    : 'Massa específica máxima medida (g/cm³)'
-                }
-              />
-            )}
-
-            {data.graphics?.vv?.length > 0 && (
-              <MiniGraphics data={data?.graphics?.vv} type={'Vv'} nameEixoY={t('asphalt.dosages.vv') + '(%)'} />
-            )}
-
-            {data.graphics?.vam?.length > 0 && (
-              <MiniGraphics data={data?.graphics?.vam} type={'Vam'} nameEixoY={t('asphalt.dosages.vam') + '(%)'} />
-            )}
-
-            {data.graphics?.stability?.length > 0 && (
-              <MiniGraphics
-                data={data?.graphics?.stability}
-                type={'Estabilidade'}
-                nameEixoY={t('asphalt.dosages.stability') + '(N)'}
-              />
-            )}
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              gap: '20px',
-              marginTop: '20px',
-            }}
-          >
-            {/* VERIFICA SE TEM DADOS ANTES DE RENDERIZAR */}
-            {data?.graphics?.gmb && Array.isArray(data.graphics.gmb) && data.graphics.gmb.length > 1 && (
-              <MiniGraphics data={data.graphics.gmb} type={'gmb'} nameEixoY={t('asphalt.dosages.gmb') + '(g/cm³)'} />
-            )}
-
             {data?.graphics?.sg && Array.isArray(data.graphics.sg) && data.graphics.sg.length > 1 && (
               <MiniGraphics
                 data={data.graphics.sg}
-                type={maximumMixtureDensityData.maxSpecificGravity?.method || 'GMM'}
+                type={maximumMixtureDensityData?.maxSpecificGravity?.method || 'GMM'}
                 nameEixoY={
-                  maximumMixtureDensityData.maxSpecificGravity?.method === 'DMT'
+                  maximumMixtureDensityData?.maxSpecificGravity?.method === 'DMT'
                     ? 'Massa específica máxima teórica (g/cm³)'
                     : 'Massa específica máxima medida (g/cm³)'
                 }
