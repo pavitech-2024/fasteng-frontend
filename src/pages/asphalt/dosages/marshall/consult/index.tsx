@@ -123,21 +123,21 @@ const MarshallDosageConsult = () => {
   };
 
   const handleVisualizeDosage = (id: string) => {
-    const dosage = dosages[0]?.find((dosage) => {
-      return dosage._id === id;
-    });
-    const step = dosage.generalData.step - 1;
-    if (dosage) {
-      setData({
-        step: 10,
-        value: dosage,
-      });
-    }
-    sessionStorage.setItem('marshall-step', step.toString());
-    handleNext(step, dosage, true);
-    if (step === 9) router.push(`/asphalt/dosages/marshall/create?consult=true`);
-    router.push(`/asphalt/dosages/marshall/create`);
-  };
+  const dosage = dosages[0]?.find((d) => d._id === id);
+  if (!dosage) return;
+
+  // carrega tudo no store
+  setData({
+    step: 10, // estado especial: dados completos carregados
+    value: dosage,
+  });
+
+  // SEMPRE ir direto pro resumo (índice 8)
+  sessionStorage.setItem('marshall-step', '8');
+
+  router.push('/asphalt/dosages/marshall/create?consult=true');
+};
+
 
   const columns: GridColDef[] = [
     {

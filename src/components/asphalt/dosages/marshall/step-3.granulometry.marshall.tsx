@@ -90,6 +90,8 @@ const Marshall_Step3_Granulometry = ({ setNextDisabled, marshall }: EssayPagePro
       } catch (error) {
         console.error('💥 Erro no getStep3Data:', error);
         throw error;
+      }finally {
+        setLoading(false);
       }
     },
     {
@@ -100,46 +102,12 @@ const Marshall_Step3_Granulometry = ({ setNextDisabled, marshall }: EssayPagePro
   );
 }, []);
 
-  useEffect(() => {
-    toast.promise(
-      async () => {
-        try {
-          // Fetch step 3 data using the marshall service with necessary parameters.
-          const { table_data, dnitBands } = await marshall.getStep3Data(
-            generalData,
-            materialSelectionData,
-            user._id,
-            null
-          );
 
-          // Create a copy of the current data state to update with new fetched data.
-          const prevData = { ...data };
-
-          // Update the copied data with fetched table data and dnit bands.
-          prevData.table_data = table_data;
-          prevData.dnitBands = dnitBands;
-
-          // Set the new data state with the updated information.
-          setData({
-            step: 2,
-            value: prevData,
-          });
-        } catch (error) {
-          throw error;
-        }
-      },
-      {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
-      }
-    );
-  }, []);
 
   // Tabela de inputs
   // Definindo a row e as colunas para a tabela de inputs
   const inputRows: { [key: string]: number }[] = data?.percentageInputs;
-
+useEffect(() => {
   if (data?.percentageInputs && data?.percentageInputs?.length === 0) {
     const table_data = [];
 
@@ -154,7 +122,7 @@ const Marshall_Step3_Granulometry = ({ setNextDisabled, marshall }: EssayPagePro
 
     setData({ step: 2, key: 'percentageInputs', value: table_data });
   }
-
+}, [data?.percentageInputs]);
   useEffect(() => {
     if (data?.dnitBands?.higher?.length > 0) {
       const newHigherSpec = [];
@@ -408,7 +376,7 @@ const Marshall_Step3_Granulometry = ({ setNextDisabled, marshall }: EssayPagePro
     });
     setColumns(newCols);
     setColumnGroupings(newColsGrouping);
-    setLoading(false);
+    
   }, [data.table_data?.table_column_headers, data.percentageInputs.length > 0]);
 
   useEffect(() => {
