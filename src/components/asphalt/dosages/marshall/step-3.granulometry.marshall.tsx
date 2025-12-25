@@ -249,40 +249,47 @@ const Marshall_Step3_Granulometry = ({
       async () => {
         const results = await calculateGranulometryComposition(data, generalData);
 
-        const newPointsOfCurve =
-          results.pointsOfCurve[0]?.length > 2
-            ? [...results.pointsOfCurve]
-            : [
-                [
-                  t('asphalt.dosages.marshall.sieve_mm'),
-                  t('asphalt.dosages.marshall.dnit-track'),
-                  'Faixa de trabalho',
-                  'Mistura de projeto',
-                  'Faixa de trabalho',
-                  'Faixa do DNIT',
-                ],
-                ...results.pointsOfCurve,
-              ];
+        const newPointsOfCurve = [...results.pointsOfCurve];
+
+        newPointsOfCurve.unshift([
+          t('asphalt.dosages.marshall.sieve_mm'),
+          t('asphalt.dosages.marshall.dnit-track'),
+          'Faixa de trabalho',
+          'Mistura de projeto',
+          'Faixa de trabalho',
+          'Faixa do DNIT',
+        ]);
 
         const { projections } = results;
 
-        const newTable = results.table_data.table_rows.map((tableRow) => ({
+        const newTableRows = results.table_data.table_rows.map((tableRow) => ({
           ...tableRow,
-          projections: projections.find((proj) => proj.label === tableRow.sieve_label).value,
-          band1: results.dnitBands.higher.find((band) => band[0] === tableRow.sieve_label)?.[1],
-          band2: results.dnitBands.lower.find((band) => band[0] === tableRow.sieve_label)?.[1],
+          projections: projections.find((proj) => proj.label === tableRow.sieve_label)?.value ?? null,
+          band1: results.dnitBands.higher.find((band) => band[0] === tableRow.sieve_label)?.[1] ?? null,
+          band2: results.dnitBands.lower.find((band) => band[0] === tableRow.sieve_label)?.[1] ?? null,
         }));
 
         const newResults = {
           ...results,
           table_data: {
             ...results.table_data,
-            table_rows: [...results.table_data.table_rows, newTable],
+            table_rows: newTableRows, // ✅ ARRAY PLANO
           },
           graphData: newPointsOfCurve,
         };
 
-        setRows(newTable);
+        setRows(newTableRows);
+
+        setData({
+          step: 2,
+          value: {
+            ...data,
+            ...newResults,
+          },
+        });
+
+        setRows(newTableRows);
+
         setData({
           step: 2,
           value: {
@@ -331,9 +338,20 @@ const Marshall_Step3_Granulometry = ({
                     : ''
                 }
                 onChange={(e) => {
-                  const prevData = [...data?.percentageInputs];
-                  prevData[0][`percentage_${_id}`] = Number(e.target.value);
-                  setData({ step: 2, value: { ...data, percentageInputs: prevData } });
+                  const newPercentageInputs = [
+                    {
+                      ...data.percentageInputs[0],
+                      [`percentage_${_id}`]: Number(e.target.value),
+                    },
+                  ];
+
+                  setData({
+                    step: 2,
+                    value: {
+                      ...data,
+                      percentageInputs: newPercentageInputs,
+                    },
+                  });
                 }}
               />
             ),
