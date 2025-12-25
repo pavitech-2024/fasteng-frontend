@@ -13,7 +13,10 @@ import { toast } from 'react-toastify';
 import Loading from '@/components/molecules/loading';
 import { isNumber } from '@mui/x-data-grid/internals';
 
-const Marshall_Step3_Granulometry = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+const Marshall_Step3_Granulometry = ({
+  setNextDisabled,
+  marshall,
+}: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const { calculateGranulometryComposition } = new Marshall_SERVICE();
   const { granulometryCompositionData: data, materialSelectionData, setData, generalData } = useMarshallStore();
 
@@ -27,102 +30,94 @@ const Marshall_Step3_Granulometry = ({ setNextDisabled, marshall }: EssayPagePro
   let setSpecificationColumnsGroupings;
 
   useEffect(() => {
-  toast.promise(
-    async () => {
-      try {
-        console.log('🔄 Buscando dados de granulometria...');
-        console.log('generalData:', generalData);
-        console.log('materialSelectionData:', materialSelectionData);
-        console.log('user._id:', user._id);
-        
-        // Fetch step 3 data using the marshall service with necessary parameters.
-        const result = await marshall.getStep3Data(
-          generalData,
-          materialSelectionData,
-          user._id,
-          null
-        );
+    toast.promise(
+      async () => {
+        try {
+          console.log('🔄 Buscando dados de granulometria...');
+          console.log('generalData:', generalData);
+          console.log('materialSelectionData:', materialSelectionData);
+          console.log('user._id:', user._id);
 
-        console.log('📦 Resultado COMPLETO do getStep3Data:', result);
-        console.log('Tipo:', typeof result);
-        
-        if (!result) {
-          console.error('❌ Resultado é undefined!');
-          throw new Error('Nenhum dado retornado do servidor');
+          // Fetch step 3 data using the marshall service with necessary parameters.
+          const result = await marshall.getStep3Data(generalData, materialSelectionData, user._id, null);
+
+          console.log('📦 Resultado COMPLETO do getStep3Data:', result);
+          console.log('Tipo:', typeof result);
+
+          if (!result) {
+            console.error('❌ Resultado é undefined!');
+            throw new Error('Nenhum dado retornado do servidor');
+          }
+
+          const { table_data, dnitBands } = result;
+
+          console.log('📊 table_data:', table_data);
+          console.log('📊 table_rows length:', table_data?.table_rows?.length || 0);
+          console.log('📊 dnitBands:', dnitBands);
+          console.log('📊 dnitBands.higher:', dnitBands?.higher?.length || 0);
+          console.log('📊 dnitBands.lower:', dnitBands?.lower?.length || 0);
+
+          if (!table_data || !dnitBands) {
+            console.error('❌ Dados incompletos!');
+            throw new Error('Dados incompletos do servidor');
+          }
+
+          if (!table_data.table_rows || table_data.table_rows.length === 0) {
+            console.warn('⚠️ table_rows está vazio!');
+            console.log('table_column_headers:', table_data.table_column_headers);
+
+            // Mostra quais agregados estão sendo buscados
+            console.log('🔍 Agregados sendo buscados:', materialSelectionData.aggregates);
+          }
+
+          // Create a copy of the current data state to update with new fetched data.
+          const prevData = { ...data };
+
+          // Update the copied data with fetched table data and dnit bands.
+          prevData.table_data = table_data;
+          prevData.dnitBands = dnitBands;
+
+          // Set the new data state with the updated information.
+          setData({
+            step: 2,
+            value: prevData,
+          });
+
+          console.log('✅ Dados atualizados no store');
+        } catch (error) {
+          console.error('💥 Erro no getStep3Data:', error);
+          throw error;
+        } finally {
+          setLoading(false);
         }
-
-        const { table_data, dnitBands } = result;
-        
-        console.log('📊 table_data:', table_data);
-        console.log('📊 table_rows length:', table_data?.table_rows?.length || 0);
-        console.log('📊 dnitBands:', dnitBands);
-        console.log('📊 dnitBands.higher:', dnitBands?.higher?.length || 0);
-        console.log('📊 dnitBands.lower:', dnitBands?.lower?.length || 0);
-
-        if (!table_data || !dnitBands) {
-          console.error('❌ Dados incompletos!');
-          throw new Error('Dados incompletos do servidor');
-        }
-
-        if (!table_data.table_rows || table_data.table_rows.length === 0) {
-          console.warn('⚠️ table_rows está vazio!');
-          console.log('table_column_headers:', table_data.table_column_headers);
-          
-          // Mostra quais agregados estão sendo buscados
-          console.log('🔍 Agregados sendo buscados:', materialSelectionData.aggregates);
-        }
-
-        // Create a copy of the current data state to update with new fetched data.
-        const prevData = { ...data };
-
-        // Update the copied data with fetched table data and dnit bands.
-        prevData.table_data = table_data;
-        prevData.dnitBands = dnitBands;
-
-        // Set the new data state with the updated information.
-        setData({
-          step: 2,
-          value: prevData,
-        });
-
-        console.log('✅ Dados atualizados no store');
-
-      } catch (error) {
-        console.error('💥 Erro no getStep3Data:', error);
-        throw error;
-      }finally {
-        setLoading(false);
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
       }
-    },
-    {
-      pending: t('loading.materials.pending'),
-      success: t('loading.materials.success'),
-      error: t('loading.materials.error'),
-    }
-  );
-}, []);
-
-
+    );
+  }, []);
 
   // Tabela de inputs
   // Definindo a row e as colunas para a tabela de inputs
   const inputRows: { [key: string]: number }[] = data?.percentageInputs;
-useEffect(() => {
-  if (data?.percentageInputs && data?.percentageInputs?.length === 0) {
-    const table_data = [];
+  useEffect(() => {
+    if (data?.percentageInputs && data?.percentageInputs?.length === 0) {
+      const table_data = [];
 
-    const aggregates_percentages = {};
+      const aggregates_percentages = {};
 
-    materialSelectionData.aggregates.forEach((aggregate) => {
-      const { _id } = aggregate;
-      aggregates_percentages['percentage_'.concat(_id)] = null;
-    });
+      materialSelectionData.aggregates.forEach((aggregate) => {
+        const { _id } = aggregate;
+        aggregates_percentages['percentage_'.concat(_id)] = null;
+      });
 
-    table_data?.push({ ...aggregates_percentages });
+      table_data?.push({ ...aggregates_percentages });
 
-    setData({ step: 2, key: 'percentageInputs', value: table_data });
-  }
-}, [data?.percentageInputs]);
+      setData({ step: 2, key: 'percentageInputs', value: table_data });
+    }
+  }, [data?.percentageInputs]);
   useEffect(() => {
     if (data?.dnitBands?.higher?.length > 0) {
       const newHigherSpec = [];
@@ -222,7 +217,6 @@ useEffect(() => {
       ];
     }
 
-
     if (data?.projections.length > 0) {
       const newArray = [];
 
@@ -255,16 +249,20 @@ useEffect(() => {
       async () => {
         const results = await calculateGranulometryComposition(data, generalData);
 
-        const newPointsOfCurve = [...results.pointsOfCurve];
-
-        newPointsOfCurve.unshift([
-          t('asphalt.dosages.marshall.sieve_mm'),
-          t('asphalt.dosages.marshall.dnit-track'),
-          'Faixa de trabalho',
-          'Mistura de projeto',
-          'Faixa de trabalho',
-          'Faixa do DNIT',
-        ]);
+        const newPointsOfCurve =
+          results.pointsOfCurve[0]?.length > 2
+            ? [...results.pointsOfCurve]
+            : [
+                [
+                  t('asphalt.dosages.marshall.sieve_mm'),
+                  t('asphalt.dosages.marshall.dnit-track'),
+                  'Faixa de trabalho',
+                  'Mistura de projeto',
+                  'Faixa de trabalho',
+                  'Faixa do DNIT',
+                ],
+                ...results.pointsOfCurve,
+              ];
 
         const { projections } = results;
 
@@ -285,7 +283,13 @@ useEffect(() => {
         };
 
         setRows(newTable);
-        setData({ step: 2, value: newResults });
+        setData({
+          step: 2,
+          value: {
+            ...data,
+            ...newResults,
+          },
+        });
       },
       {
         pending: t('loading.calculating.pending'),
@@ -376,15 +380,19 @@ useEffect(() => {
     });
     setColumns(newCols);
     setColumnGroupings(newColsGrouping);
-    
   }, [data.table_data?.table_column_headers, data.percentageInputs.length > 0]);
 
   useEffect(() => {
-    const shouldDisableNext =
-      !data.percentageInputs.some((e) => Object.values(e).some((value) => value === null || value === 0)) &&
-      data.graphData.length > 0;
+    if (!data?.percentageInputs?.length) {
+      setNextDisabled(true);
+      return;
+    }
 
-    setNextDisabled(!shouldDisableNext);
+    const hasNull = Object.values(data.percentageInputs[0]).some((value) => value === null || value === undefined);
+
+    const hasGraph = data?.graphData?.length > 1;
+
+    setNextDisabled(hasNull || !hasGraph);
   }, [data.percentageInputs, data.graphData]);
 
   return (
