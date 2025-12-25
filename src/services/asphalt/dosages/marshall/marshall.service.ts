@@ -55,20 +55,14 @@ class Marshall_SERVICE implements IEssayService {
         case 2:
           await this.submitGranulometryComposition(data as MarshallData, this.userId, null, isConsult);
           break;
-        case 3: {
-          const typedData = data as MarshallData;
-
-          const calculatedBinderTrialData = await this.calculateBinderTrialData(
-            typedData.binderTrialData,
-            typedData.granulometryCompositionData,
-            typedData.materialSelectionData
+        case 3:
+          this.calculateBinderTrialData(
+            data as MarshallData['binderTrialData'],
+            data as MarshallData['granulometryCompositionData'],
+            data as MarshallData['materialSelectionData']
           );
-
-          typedData.binderTrialData = calculatedBinderTrialData;
-
-          await this.submitBinderTrialData(typedData, this.userId, null, isConsult);
+          await this.submitBinderTrialData(data as MarshallData, this.userId, null, isConsult);
           break;
-        }
         case 4:
           await this.submitMaximumMixtureDensityData(data as MarshallData, this.userId, null, isConsult);
           break;
@@ -104,7 +98,7 @@ class Marshall_SERVICE implements IEssayService {
         const dataWithDosageId = {
           generalData: data.generalData,
           _id: data._id,
-        };
+        }
 
         const response = await Api.post(`${this.info.backend_path}/verify-init/${user}`, dataWithDosageId);
 
@@ -112,9 +106,9 @@ class Marshall_SERVICE implements IEssayService {
 
         if (!success) throw error.name;
 
-        const newGeralData = data.generalData;
+        const newGeralData = data.generalData
 
-        this.store_actions.setData({ step: 10, value: { ...dosage, generalData: newGeralData } });
+        this.store_actions.setData({ step: 10, value: {...dosage, generalData: newGeralData}  });
       } catch (error) {
         throw error;
       }
