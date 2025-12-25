@@ -2,6 +2,7 @@ import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-bor
 import Result_Card from '@/components/atoms/containers/result-card';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 import GenerateMarshallDosagePDF from '@/components/generatePDF/dosages/asphalt/marshall/generatePDFMarshall';
+import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import Graph from '@/services/asphalt/dosages/marshall/graph/marshal-granulometry-graph';
 import marshallDosageService from '@/services/asphalt/dosages/marshall/marshall.consult.service';
@@ -35,8 +36,10 @@ const Marshall_Step9_ResumeDosage = ({
   } = useMarshallStore();
 
   const [dosage, setDosage] = useState(null);
-  const store = JSON.parse(sessionStorage.getItem('asphalt-marshall-store'));
-  const dosageId = store.state._id;
+
+  const storeRaw = sessionStorage.getItem('asphalt-marshall-store');
+  const store = storeRaw ? JSON.parse(storeRaw) : null;
+  const dosageId = store?.state?._id;
 
   const [optimumContentRows, setOptimumContentRows] = useState([]);
   const [optimumContentCols, setOptimumContentCols] = useState([]);
@@ -80,6 +83,16 @@ const Marshall_Step9_ResumeDosage = ({
   }, []);
 
   useEffect(() => {
+    if (
+      !materialSelectionData ||
+      !materialSelectionData.aggregates ||
+      !optimumBinderContentData ||
+      !data ||
+      !data.confirmedVolumetricParameters
+    ) {
+      return;
+    }
+
     createOptimumContentRows();
     createOptimumContentColumns();
     createOptimumContentGroupings();
@@ -87,7 +100,7 @@ const Marshall_Step9_ResumeDosage = ({
     getQuantitativeCols();
     getQuantitativeRows();
     getQuantitativeGroupings();
-  }, []);
+  }, [materialSelectionData, optimumBinderContentData, data]);
 
   const granulometricCompTableColumns: GridColDef[] = [
     {
@@ -229,7 +242,10 @@ const Marshall_Step9_ResumeDosage = ({
   const getQuantitativeRows = () => {
     let rowsObj = {
       id: 0,
-      binder: data?.confirmedVolumetricParameters?.quantitative[0].toFixed(2),
+      binder:
+        data?.confirmedVolumetricParameters?.quantitative?.[0] != null
+          ? data.confirmedVolumetricParameters.quantitative[0].toFixed(2)
+          : '-',
     };
 
     materialSelectionData.aggregates.forEach((material, idx) => {
@@ -401,7 +417,12 @@ const Marshall_Step9_ResumeDosage = ({
     },
   ];
 
-  nextDisabled && setNextDisabled(false);
+ useEffect(() => {
+  if (nextDisabled) {
+    setNextDisabled(false);
+  }
+}, [nextDisabled, setNextDisabled]);
+
 
   return (
     <>
