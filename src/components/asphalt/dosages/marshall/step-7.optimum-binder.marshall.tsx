@@ -45,151 +45,150 @@ const Marshall_Step7_OptimumBinder = ({
   console.log('🔍 maxSpecificGravity:', maximumMixtureDensityData?.maxSpecificGravity);
   console.log('🔍 maxSpecificGravity.method:', maximumMixtureDensityData?.maxSpecificGravity?.method);
 
-useEffect(() => {
-  toast.promise(
-    async () => {
-      try {
-        console.log('🔍 [1/2] Iniciando carregamento de gráficos...');
+  useEffect(() => {
+    toast.promise(
+      async () => {
+        try {
+          console.log('🔍 [1/2] Iniciando carregamento de gráficos...');
 
-        let newData;
-        const graphics = await marshall.setOptimumBinderContentData(
-          generalData,
-          granulometryCompositionData,
-          volumetricParametersData,
-          binderTrialData
-        );
-
-        console.log('🔍 [1/2] Resposta da API (graphics):', graphics);
-
-        // CORREÇÃO FUDIDA AQUI ↓↓↓
-        newData = {
-          ...data,
-          // optimumBinder SÃO OS GRÁFICOS (arrays gmb, vv, etc.)
-          graphics: graphics?.optimumBinder || graphics,  
-          // dosageGraph TEM OS DADOS DE CÁLCULO (optimumContent, confirmedPercents)
-          optimumBinder: graphics?.dosageGraph || graphics,
-        };
-
-        // DEBUG PRA VER SE TA CERTO
-        console.log('🔍 ESTRUTURA CORRIGIDA:', {
-          temGraphics: !!newData.graphics,
-          graphicsTemGmb: !!newData.graphics?.gmb,
-          graphicsTemVv: !!newData.graphics?.vv,
-          temOptimumBinder: !!newData.optimumBinder,
-          optimumContent: newData.optimumBinder?.optimumContent,
-          temPoints: !!newData.optimumBinder?.pointsOfCurveDosage,
-        });
-
-        if (graphics) {
-          console.log('🔍 [2/2] Calculando parâmetros LOCALMENTE...');
-          
-          // FUNÇÃO DE CÁLCULO LOCAL (AGORA USA optimumBinder QUE TEM OS ARRAYS)
-          const calculateLocalExpected = (graphicsData, optimumBinderData, maxSpecificGravity) => {
-            if (!optimumBinderData || !optimumBinderData.optimumContent) {
-              return {
-                expectedParameters: {
-                  Gmb: 0,
-                  RBV: 0,
-                  Vam: 0,
-                  Vv: 0,
-                  newMaxSpecificGravity: maxSpecificGravity?.results?.normal || 2
-                }
-              };
-            }
-            
-            const teorOtimo = optimumBinderData.optimumContent;
-            
-            // Função para extrair valor - USA graphicsData (que tem os arrays!)
-            const extractValue = (dataArray) => {
-              if (!dataArray || !Array.isArray(dataArray) || dataArray.length < 2) {
-                console.warn('⚠️ Array inválido para extração:', dataArray);
-                return 0;
-              }
-              
-              console.log(`🔍 Extraindo valor para teor ${teorOtimo} do array:`, dataArray);
-              
-              // Pega apenas os pontos de dados (ignora cabeçalho)
-              const dataPoints = dataArray.slice(1);
-              
-              // 1. Tenta encontrar valor exato
-              for (const [teor, valor] of dataPoints) {
-                if (teor === teorOtimo && valor !== null && valor !== undefined) {
-                  console.log(`✅ Valor exato: ${valor} no teor ${teor}`);
-                  return valor;
-                }
-              }
-              
-              // 2. Se não achou, pega o primeiro valor não-nulo (FODA-SE INTERPOLAÇÃO)
-              for (const [teor, valor] of dataPoints) {
-                if (valor !== null && valor !== undefined && valor !== 0) {
-                  console.log(`↘️ Usando valor disponível: ${valor} no teor ${teor}`);
-                  return valor;
-                }
-              }
-              
-              return 0;
-            };
-            
-            const result = {
-              expectedParameters: {
-                // USA graphicsData.gmb (NÃO optimumBinderData.gmb!)
-                Gmb: extractValue(graphicsData?.gmb),
-                RBV: extractValue(graphicsData?.rbv),
-                Vam: extractValue(graphicsData?.vam),
-                Vv: extractValue(graphicsData?.vv),
-                newMaxSpecificGravity: maxSpecificGravity?.results?.normal || 2
-              }
-            };
-            
-            console.log('🔍 Parâmetros calculados localmente:', result);
-            return result;
-          };
-          
-          // CALCULA LOCALMENTE - PASSA OS DOIS!
-          const localExpected = calculateLocalExpected(
-            newData.graphics,          // ← TEM OS ARRAYS gmb, vv, etc.
-            newData.optimumBinder,     // ← TEM optimumContent
-            maximumMixtureDensityData.maxSpecificGravity
+          let newData;
+          const graphics = await marshall.setOptimumBinderContentData(
+            generalData,
+            granulometryCompositionData,
+            volumetricParametersData,
+            binderTrialData
           );
-          
+
+          console.log('🔍 [1/2] Resposta da API (graphics):', graphics);
+
+          // CORREÇÃO FUDIDA AQUI ↓↓↓
           newData = {
-            ...newData,
-            expectedParameters: localExpected,
+            ...data,
+            // optimumBinder SÃO OS GRÁFICOS (arrays gmb, vv, etc.)
+            graphics: graphics?.optimumBinder || graphics,
+            // dosageGraph TEM OS DADOS DE CÁLCULO (optimumContent, confirmedPercents)
+            optimumBinder: graphics?.dosageGraph || graphics,
           };
 
-          console.log('🔍 Dados FINAIS no store:', {
-            // PARA GRÁFICOS:
-            graphicsKeys: newData.graphics ? Object.keys(newData.graphics) : [],
-            gmbArray: newData.graphics?.gmb,
-            vvArray: newData.graphics?.vv,
-            
-            // PARA CÁLCULO:
+          // DEBUG PRA VER SE TA CERTO
+          console.log('🔍 ESTRUTURA CORRIGIDA:', {
+            temGraphics: !!newData.graphics,
+            graphicsTemGmb: !!newData.graphics?.gmb,
+            graphicsTemVv: !!newData.graphics?.vv,
+            temOptimumBinder: !!newData.optimumBinder,
             optimumContent: newData.optimumBinder?.optimumContent,
-            
-            // RESULTADO:
-            expectedValues: newData.expectedParameters?.expectedParameters
+            temPoints: !!newData.optimumBinder?.pointsOfCurveDosage,
           });
 
-          setData({ step: 6, value: newData });
+          if (graphics) {
+            console.log('🔍 [2/2] Calculando parâmetros LOCALMENTE...');
+
+            // FUNÇÃO DE CÁLCULO LOCAL (AGORA USA optimumBinder QUE TEM OS ARRAYS)
+            const calculateLocalExpected = (graphicsData, optimumBinderData, maxSpecificGravity) => {
+              if (!optimumBinderData || !optimumBinderData.optimumContent) {
+                return {
+                  expectedParameters: {
+                    Gmb: 0,
+                    RBV: 0,
+                    Vam: 0,
+                    Vv: 0,
+                    newMaxSpecificGravity: maxSpecificGravity?.results?.normal || 2,
+                  },
+                };
+              }
+
+              const teorOtimo = optimumBinderData.optimumContent;
+
+              // Função para extrair valor - USA graphicsData (que tem os arrays!)
+              const extractValue = (dataArray) => {
+                if (!dataArray || !Array.isArray(dataArray) || dataArray.length < 2) {
+                  console.warn('⚠️ Array inválido para extração:', dataArray);
+                  return 0;
+                }
+
+                console.log(`🔍 Extraindo valor para teor ${teorOtimo} do array:`, dataArray);
+
+                // Pega apenas os pontos de dados (ignora cabeçalho)
+                const dataPoints = dataArray.slice(1);
+
+                // 1. Tenta encontrar valor exato
+                for (const [teor, valor] of dataPoints) {
+                  if (teor === teorOtimo && valor !== null && valor !== undefined) {
+                    console.log(`✅ Valor exato: ${valor} no teor ${teor}`);
+                    return valor;
+                  }
+                }
+
+                // 2. Se não achou, pega o primeiro valor não-nulo (FODA-SE INTERPOLAÇÃO)
+                for (const [teor, valor] of dataPoints) {
+                  if (valor !== null && valor !== undefined && valor !== 0) {
+                    console.log(`↘️ Usando valor disponível: ${valor} no teor ${teor}`);
+                    return valor;
+                  }
+                }
+
+                return 0;
+              };
+
+              const result = {
+                expectedParameters: {
+                  // USA graphicsData.gmb (NÃO optimumBinderData.gmb!)
+                  Gmb: extractValue(graphicsData?.gmb),
+                  RBV: extractValue(graphicsData?.rbv),
+                  Vam: extractValue(graphicsData?.vam),
+                  Vv: extractValue(graphicsData?.vv),
+                  newMaxSpecificGravity: maxSpecificGravity?.results?.normal || 2,
+                },
+              };
+
+              console.log('🔍 Parâmetros calculados localmente:', result);
+              return result;
+            };
+
+            // CALCULA LOCALMENTE - PASSA OS DOIS!
+            const localExpected = calculateLocalExpected(
+              newData.graphics, // ← TEM OS ARRAYS gmb, vv, etc.
+              newData.optimumBinder, // ← TEM optimumContent
+              maximumMixtureDensityData.maxSpecificGravity
+            );
+
+            newData = {
+              ...newData,
+              expectedParameters: localExpected,
+            };
+
+            console.log('🔍 Dados FINAIS no store:', {
+              // PARA GRÁFICOS:
+              graphicsKeys: newData.graphics ? Object.keys(newData.graphics) : [],
+              gmbArray: newData.graphics?.gmb,
+              vvArray: newData.graphics?.vv,
+
+              // PARA CÁLCULO:
+              optimumContent: newData.optimumBinder?.optimumContent,
+
+              // RESULTADO:
+              expectedValues: newData.expectedParameters?.expectedParameters,
+            });
+
+            setData({ step: 6, value: newData });
+            setLoading(false);
+          } else {
+            console.error('❌ API não retornou gráficos!');
+            throw new Error('API não retornou dados de gráficos');
+          }
+        } catch (error) {
+          console.error('❌ Erro completo no STEP 7:', error);
           setLoading(false);
-          
-        } else {
-          console.error('❌ API não retornou gráficos!');
-          throw new Error('API não retornou dados de gráficos');
+          throw error;
         }
-      } catch (error) {
-        console.error('❌ Erro completo no STEP 7:', error);
-        setLoading(false);
-        throw error;
+      },
+      {
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
       }
-    },
-    {
-      pending: t('loading.data.pending'),
-      success: t('loading.data.success'),
-      error: t('loading.data.error'),
-    }
-  );
-}, []);
+    );
+  }, []);
 
   useEffect(() => {
     // Corrige binder se for objeto (só GMM)
@@ -625,8 +624,8 @@ useEffect(() => {
               marginTop: '20px',
             }}
           >
-            {data.graphics?.gmb?.length > 0 && (
-              <MiniGraphics data={data?.graphics?.gmb} type={'gmb'} nameEixoY={t('asphalt.dosages.gmb') + '(g/cm³)'} />
+            {data?.graphics?.gmb && Array.isArray(data.graphics.gmb) && data.graphics.gmb.length > 1 && (
+              <MiniGraphics data={data.graphics.gmb} type={'gmb'} nameEixoY={t('asphalt.dosages.gmb') + '(g/cm³)'} />
             )}
 
             {data.graphics?.sg?.length > 0 && (
@@ -658,51 +657,49 @@ useEffect(() => {
             )}
           </Box>
           <Box
-  sx={{
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: '20px',
-    marginTop: '20px',
-  }}
->
-  {/* VERIFICA SE TEM DADOS ANTES DE RENDERIZAR */}
-  {data?.graphics?.gmb && Array.isArray(data.graphics.gmb) && data.graphics.gmb.length > 1 && (
-    <MiniGraphics 
-      data={data.graphics.gmb} 
-      type={'gmb'} 
-      nameEixoY={t('asphalt.dosages.gmb') + '(g/cm³)'} 
-    />
-  )}
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              gap: '20px',
+              marginTop: '20px',
+            }}
+          >
+            {/* VERIFICA SE TEM DADOS ANTES DE RENDERIZAR */}
+            {data?.graphics?.gmb && Array.isArray(data.graphics.gmb) && data.graphics.gmb.length > 1 && (
+              <MiniGraphics data={data.graphics.gmb} type={'gmb'} nameEixoY={t('asphalt.dosages.gmb') + '(g/cm³)'} />
+            )}
 
-  {data?.graphics?.sg && Array.isArray(data.graphics.sg) && data.graphics.sg.length > 1 && (
-    <MiniGraphics
-      data={data.graphics.sg}
-      type={maximumMixtureDensityData.maxSpecificGravity?.method || 'GMM'}
-      nameEixoY={
-        maximumMixtureDensityData.maxSpecificGravity?.method === 'DMT'
-          ? 'Massa específica máxima teórica (g/cm³)'
-          : 'Massa específica máxima medida (g/cm³)'
-      }
-    />
-  )}
+            {data?.graphics?.sg && Array.isArray(data.graphics.sg) && data.graphics.sg.length > 1 && (
+              <MiniGraphics
+                data={data.graphics.sg}
+                type={maximumMixtureDensityData.maxSpecificGravity?.method || 'GMM'}
+                nameEixoY={
+                  maximumMixtureDensityData.maxSpecificGravity?.method === 'DMT'
+                    ? 'Massa específica máxima teórica (g/cm³)'
+                    : 'Massa específica máxima medida (g/cm³)'
+                }
+              />
+            )}
 
-  {data?.graphics?.vv && Array.isArray(data.graphics.vv) && data.graphics.vv.length > 1 && (
-    <MiniGraphics data={data.graphics.vv} type={'Vv'} nameEixoY={t('asphalt.dosages.vv') + '(%)'} />
-  )}
+            {data?.graphics?.vv && Array.isArray(data.graphics.vv) && data.graphics.vv.length > 1 && (
+              <MiniGraphics data={data.graphics.vv} type={'Vv'} nameEixoY={t('asphalt.dosages.vv') + '(%)'} />
+            )}
 
-  {data?.graphics?.vam && Array.isArray(data.graphics.vam) && data.graphics.vam.length > 1 && (
-    <MiniGraphics data={data.graphics.vam} type={'Vam'} nameEixoY={t('asphalt.dosages.vam') + '(%)'} />
-  )}
+            {data?.graphics?.vam && Array.isArray(data.graphics.vam) && data.graphics.vam.length > 1 && (
+              <MiniGraphics data={data.graphics.vam} type={'Vam'} nameEixoY={t('asphalt.dosages.vam') + '(%)'} />
+            )}
 
-  {data?.graphics?.stability && Array.isArray(data.graphics.stability) && data.graphics.stability.length > 1 && (
-    <MiniGraphics
-      data={data.graphics.stability}
-      type={'Estabilidade'}
-      nameEixoY={t('asphalt.dosages.stability') + '(N)'}
-    />
-  )}
-</Box>
+            {data?.graphics?.stability &&
+              Array.isArray(data.graphics.stability) &&
+              data.graphics.stability.length > 1 && (
+                <MiniGraphics
+                  data={data.graphics.stability}
+                  type={'Estabilidade'}
+                  nameEixoY={t('asphalt.dosages.stability') + '(N)'}
+                />
+              )}
+          </Box>
         </Box>
       )}
     </>
