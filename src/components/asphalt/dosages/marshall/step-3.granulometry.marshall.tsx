@@ -25,9 +25,35 @@ const Marshall_Step3_Granulometry = ({
   const [rows, setRows] = useState([]);
   const [columnGrouping, setColumnGroupings] = useState([]);
   const [columns, setColumns] = useState<GridColDef[]>([]);
+  const [percentageInputs, setPercentageInputs] = useState<{ [key: string]: number | null }>({});
+  
   let setSpecificationRows;
   let setSpecificationColumns: GridColDef[] | undefined;
   let setSpecificationColumnsGroupings;
+
+  // Inicializar percentageInputs
+  useEffect(() => {
+    if (data?.percentageInputs?.[0]) {
+      setPercentageInputs(data.percentageInputs[0]);
+    }
+  }, [data?.percentageInputs]);
+
+  // Função para atualizar um valor específico
+  const updatePercentageInput = (_id: string, value: number | null) => {
+    const newInputs = {
+      ...percentageInputs,
+      [`percentage_${_id}`]: value
+    };
+    
+    setPercentageInputs(newInputs);
+    setData({
+      step: 2,
+      value: {
+        ...data,
+        percentageInputs: [newInputs]
+      }
+    });
+  };
 
   useEffect(() => {
     toast.promise(
@@ -70,18 +96,31 @@ const Marshall_Step3_Granulometry = ({
             console.log('🔍 Agregados sendo buscados:', materialSelectionData.aggregates);
           }
 
+          // Inicializar inputs de porcentagem
+          const initialPercentageInputs = {};
+          if (materialSelectionData.aggregates && materialSelectionData.aggregates.length > 0) {
+            materialSelectionData.aggregates.forEach((aggregate) => {
+              const { _id } = aggregate;
+              initialPercentageInputs[`percentage_${_id}`] = null;
+            });
+          }
+
           // Create a copy of the current data state to update with new fetched data.
           const prevData = { ...data };
 
           // Update the copied data with fetched table data and dnit bands.
           prevData.table_data = table_data;
           prevData.dnitBands = dnitBands;
+          prevData.percentageInputs = [initialPercentageInputs];
 
           // Set the new data state with the updated information.
           setData({
             step: 2,
             value: prevData,
           });
+
+          // Atualizar o estado local dos inputs
+          setPercentageInputs(initialPercentageInputs);
 
           console.log('✅ Dados atualizados no store');
         } catch (error) {
@@ -102,22 +141,21 @@ const Marshall_Step3_Granulometry = ({
   // Tabela de inputs
   // Definindo a row e as colunas para a tabela de inputs
   const inputRows: { [key: string]: number }[] = data?.percentageInputs;
+  
   useEffect(() => {
-    if (data?.percentageInputs && data?.percentageInputs?.length === 0) {
-      const table_data = [];
-
+    if (data?.percentageInputs && data?.percentageInputs?.length === 0 && materialSelectionData.aggregates) {
       const aggregates_percentages = {};
 
       materialSelectionData.aggregates.forEach((aggregate) => {
         const { _id } = aggregate;
-        aggregates_percentages['percentage_'.concat(_id)] = null;
+        aggregates_percentages[`percentage_${_id}`] = null;
       });
 
-      table_data?.push({ ...aggregates_percentages });
-
-      setData({ step: 2, key: 'percentageInputs', value: table_data });
+      setData({ step: 2, key: 'percentageInputs', value: [aggregates_percentages] });
+      setPercentageInputs(aggregates_percentages);
     }
-  }, [data?.percentageInputs]);
+  }, [data?.percentageInputs, materialSelectionData.aggregates]);
+
   useEffect(() => {
     if (data?.dnitBands?.higher?.length > 0) {
       const newHigherSpec = [];
@@ -151,20 +189,25 @@ const Marshall_Step3_Granulometry = ({
       headerName: name,
       valueFormatter: ({ value }) => `${value}`,
       renderCell: ({ row }) => {
-        if (!inputRows) {
-          return;
-        }
-
         return (
           <InputEndAdornment
             adornment={'%'}
             type="number"
-            value={inputRows[0] ? inputRows[0]['percentage_'.concat(_id)] : ''}
+            value={percentageInputs[`percentage_${_id}`] ?? ''}
             onChange={(e) => {
-              if (e.target.value === null) return;
-              const newRows = [...inputRows];
-              newRows[0]['percentage_'.concat(_id)] = Number(e.target.value);
-              setData({ step: 2, key: 'percentageInputs', value: newRows });
+              const value = e.target.value === '' ? null : Number(e.target.value);
+              updatePercentageInput(_id, value);
+            }}
+            inputProps={{
+              min: 0,
+              max: 100,
+              step: 0.1,
+            }}
+            sx={{
+              '& .MuiInputBase-input': {
+                textAlign: 'center',
+                padding: '8px',
+              }
             }}
           />
         );
@@ -236,8 +279,10 @@ const Marshall_Step3_Granulometry = ({
   const calculateGranulometricComposition = async () => {
     let sumOfInputs = 0;
 
-    Object.values(data.percentageInputs[0]).forEach((input) => {
-      sumOfInputs += input as unknown as number;
+    Object.values(percentageInputs).forEach((input) => {
+      if (input !== null && input !== undefined) {
+        sumOfInputs += input;
+      }
     });
 
     if (sumOfInputs !== 100) {
@@ -287,16 +332,6 @@ const Marshall_Step3_Granulometry = ({
             ...newResults,
           },
         });
-
-        setRows(newTableRows);
-
-        setData({
-          step: 2,
-          value: {
-            ...data,
-            ...newResults,
-          },
-        });
       },
       {
         pending: t('loading.calculating.pending'),
@@ -308,110 +343,127 @@ const Marshall_Step3_Granulometry = ({
   useEffect(() => {
     const newCols: GridColDef[] = [];
     const newColsGrouping = [];
-    data?.table_data?.table_column_headers?.forEach((header, idx) => {
-      if (header === 'sieve_label') {
-        newCols.push({
-          field: 'sieve_label',
-          headerName: t('granulometry-asphalt.sieves'),
-          valueFormatter: ({ value }) => `${value}`,
-        });
-      } else {
-        if (header.startsWith('total_passant')) {
+    
+    if (data?.table_data?.table_column_headers) {
+      data.table_data.table_column_headers.forEach((header, idx) => {
+        if (header === 'sieve_label') {
           newCols.push({
-            field: header,
-            headerName: t('granulometry-asphalt.total_passant'),
-            valueFormatter: ({ value }) => (value && isNumber(value) ? `${Number(value).toFixed(2)}%` : '---'),
+            field: 'sieve_label',
+            headerName: t('granulometry-asphalt.sieves'),
+            valueFormatter: ({ value }) => `${value}`,
+            width: 150,
           });
         } else {
-          const _id = header.replace('passant_', '');
-          const name = materialSelectionData.aggregates.find((aggregate) => aggregate._id === _id)?.name;
-          newCols.push({
-            field: header,
-            headerName: t('granulometry-asphalt.passant'),
-            valueFormatter: ({ value }) => (value && isNumber(value) ? `${Number(value).toFixed(2)}%` : '---'),
-            renderHeader: () => (
-              <InputEndAdornment
-                adornment="%"
-                value={
-                  data?.percentageInputs && data.percentageInputs[0]
-                    ? data.percentageInputs[0][`percentage_${_id}`] || ''
-                    : ''
-                }
-                onChange={(e) => {
-                  const newPercentageInputs = [
-                    {
-                      ...data.percentageInputs[0],
-                      [`percentage_${_id}`]: Number(e.target.value),
-                    },
-                  ];
-
-                  setData({
-                    step: 2,
-                    value: {
-                      ...data,
-                      percentageInputs: newPercentageInputs,
-                    },
-                  });
-                }}
-              />
-            ),
-          });
-          newColsGrouping.push({
-            groupId: name,
-            children: [{ field: 'total_passant_'.concat(_id) }, { field: 'passant_'.concat(_id) }],
-            headerAlign: 'center',
-          });
+          if (header.startsWith('total_passant')) {
+            newCols.push({
+              field: header,
+              headerName: t('granulometry-asphalt.total_passant'),
+              valueFormatter: ({ value }) => (value && isNumber(value) ? `${Number(value).toFixed(2)}%` : '---'),
+              width: 120,
+            });
+          } else {
+            const _id = header.replace('passant_', '');
+            const name = materialSelectionData.aggregates.find((aggregate) => aggregate._id === _id)?.name;
+            newCols.push({
+              field: header,
+              headerName: t('granulometry-asphalt.passant'),
+              valueFormatter: ({ value }) => (value && isNumber(value) ? `${Number(value).toFixed(2)}%` : '---'),
+              width: 120,
+              renderHeader: () => {
+                const aggregate = materialSelectionData.aggregates.find((agg) => agg._id === _id);
+                return aggregate ? (
+                  <Box sx={{ textAlign: 'center', padding: '4px' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 'bold' }}>{aggregate.name}</div>
+                    <InputEndAdornment
+                      adornment="%"
+                      type="number"
+                      value={percentageInputs[`percentage_${_id}`] ?? ''}
+                      onChange={(e) => {
+                        const value = e.target.value === '' ? null : Number(e.target.value);
+                        updatePercentageInput(_id, value);
+                      }}
+                      inputProps={{
+                        min: 0,
+                        max: 100,
+                        step: 0.1,
+                      }}
+                      sx={{
+                        width: '80px',
+                        margin: '0 auto',
+                        '& .MuiInputBase-input': {
+                          padding: '6px 8px',
+                          fontSize: '12px',
+                          height: '24px',
+                        }
+                      }}
+                    />
+                  </Box>
+                ) : null;
+              },
+            });
+            
+            if (name) {
+              newColsGrouping.push({
+                groupId: name,
+                children: [{ field: `total_passant_${_id}` }, { field: `passant_${_id}` }],
+                headerAlign: 'center',
+              });
+            }
+          }
         }
-      }
-    });
+      });
 
-    newCols.push({
-      field: 'projections',
-      headerName: t('asphalt.dosages.marshall.projections'),
-      valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}` : ''),
-    });
+      newCols.push({
+        field: 'projections',
+        headerName: t('asphalt.dosages.marshall.projections'),
+        valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}` : ''),
+        width: 120,
+      });
 
-    newCols.push(
-      {
-        field: 'band1',
-        headerName: '',
-        valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
-      },
-      {
-        field: 'band2',
-        headerName: '',
-        valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
-      }
-    );
-
-    newColsGrouping.push({
-      groupId: 'Specification',
-      headerName: t('asphalt.dosages.marshall.specification'),
-      headerAlign: 'center',
-      children: [
+      newCols.push(
         {
-          groupId: t('asphalt.dosages.marshall.band') + ` ${generalData.dnitBand}`,
-          headerAlign: 'center',
-          children: [{ field: 'band1' }, { field: 'band2' }],
+          field: 'band1',
+          headerName: '',
+          valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
+          width: 100,
         },
-      ],
-    });
+        {
+          field: 'band2',
+          headerName: '',
+          valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
+          width: 100,
+        }
+      );
+
+      newColsGrouping.push({
+        groupId: 'Specification',
+        headerName: t('asphalt.dosages.marshall.specification'),
+        headerAlign: 'center',
+        children: [
+          {
+            groupId: t('asphalt.dosages.marshall.band') + ` ${generalData.dnitBand}`,
+            headerAlign: 'center',
+            children: [{ field: 'band1' }, { field: 'band2' }],
+          },
+        ],
+      });
+    }
+    
     setColumns(newCols);
     setColumnGroupings(newColsGrouping);
-  }, [data.table_data?.table_column_headers, data.percentageInputs.length > 0]);
+  }, [data.table_data?.table_column_headers, percentageInputs, materialSelectionData.aggregates]);
 
   useEffect(() => {
-    if (!data?.percentageInputs?.length) {
+    if (!percentageInputs || Object.keys(percentageInputs).length === 0) {
       setNextDisabled(true);
       return;
     }
 
-    const hasNull = Object.values(data.percentageInputs[0]).some((value) => value === null || value === undefined);
-
+    const hasNull = Object.values(percentageInputs).some((value) => value === null || value === undefined);
     const hasGraph = data?.graphData?.length > 1;
 
     setNextDisabled(hasNull || !hasGraph);
-  }, [data.percentageInputs, data.graphData]);
+  }, [percentageInputs, data.graphData]);
 
   return (
     <>
@@ -425,13 +477,19 @@ const Marshall_Step3_Granulometry = ({
             gap: '10px',
           }}
         >
-          {data.percentageInputs.length > 0 && Object.entries(data.percentageInputs[0])?.length > 0 && (
+          {percentageInputs && Object.keys(percentageInputs).length > 0 && (
             <>
               <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
 
               <Button
-                sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
+                sx={{ 
+                  color: 'secondaryTons.orange', 
+                  border: '1px solid rgba(224, 224, 224, 1)',
+                  marginTop: '20px',
+                  alignSelf: 'flex-start'
+                }}
                 onClick={calculateGranulometricComposition}
+                variant="outlined"
               >
                 {t('asphalt.dosages.marshall.calculate')}
               </Button>
