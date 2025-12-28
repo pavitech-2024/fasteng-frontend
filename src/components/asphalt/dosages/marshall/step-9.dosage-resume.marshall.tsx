@@ -239,24 +239,26 @@ const Marshall_Step9_ResumeDosage = ({
     setQuantitativeCols(newCols);
   };
 
-  const getQuantitativeRows = () => {
-    let rowsObj = {
-      id: 0,
-      binder:
-        data?.confirmedVolumetricParameters?.quantitative?.[0] != null
-          ? data.confirmedVolumetricParameters.quantitative[0].toFixed(2)
-          : '-',
-    };
-
-    materialSelectionData.aggregates.forEach((material, idx) => {
-      rowsObj = {
-        ...rowsObj,
-        [material._id]: data?.confirmedVolumetricParameters?.quantitative[idx].toFixed(2),
-      };
-    });
-
-    setQuantitativeRows([rowsObj]);
+ const getQuantitativeRows = () => {
+  let rowsObj = {
+    id: 0,
+    binder:
+      data?.confirmedVolumetricParameters?.quantitative?.[0] != null
+        ? data.confirmedVolumetricParameters.quantitative[0].toFixed(2)
+        : '-',
   };
+
+  materialSelectionData.aggregates.forEach((material, idx) => {
+    const value = data?.confirmedVolumetricParameters?.quantitative?.[idx];
+    rowsObj = {
+      ...rowsObj,
+      [material._id]: typeof value === 'number' ? value.toFixed(2) : '-',
+    };
+  });
+
+  setQuantitativeRows([rowsObj]);
+};
+
 
   const getQuantitativeGroupings = () => {
     const quantitativeGroupArr: GridColumnGroupingModel = [
@@ -377,7 +379,10 @@ const Marshall_Step9_ResumeDosage = ({
     },
     {
       label: t('asphalt.dosages.dmt'),
-      value: data?.confirmedSpecificGravity?.result?.toFixed(2).toString(),
+      value: typeof data?.confirmedSpecificGravity?.result === 'number'
+  ? data.confirmedSpecificGravity.result.toFixed(2)
+  : '---',
+
       unity: 'g/cm³',
     },
     {

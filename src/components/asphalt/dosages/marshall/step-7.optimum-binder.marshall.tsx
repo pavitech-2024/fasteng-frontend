@@ -77,7 +77,7 @@ const Marshall_Step7_OptimumBinder = ({
             graphicsTemVv: !!newData.graphics?.vv,
             temOptimumBinder: !!newData.optimumBinder,
             optimumContent: newData.optimumBinder?.optimumContent,
-            temPoints: !!newData.optimumBinder?.pointsOfCurveDosage,
+            temPoints: !!newData.optimumBinder?.pointsOfCurveDosaage,
           });
 
           if (graphics) {

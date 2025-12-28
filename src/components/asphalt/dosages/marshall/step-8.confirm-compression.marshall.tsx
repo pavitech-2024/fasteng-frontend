@@ -449,6 +449,15 @@ valueFormatter: () => {
     });
     setData({ step: 7, value: { ...data, optimumBinder: newRows } });
   };
+  console.log('data:', data);
+console.log('data.confirmedSpecificGravity:', data?.confirmedSpecificGravity);
+console.log('data.confirmedSpecificGravity.result:', data?.confirmedSpecificGravity?.result);
+
+console.log('optimumBinderContentData:', optimumBinderContentData);
+console.log('optimumBinderContentData.optimumBinder:', optimumBinderContentData?.optimumBinder);
+console.log('optimumBinderContentData.optimumBinder.optimumContent:', optimumBinderContentData?.optimumBinder?.optimumContent);
+console.log('quantitative do backend', data.confirmedVolumetricParameters.quantitative);
+
 
   const ExpansionToolbar = () => {
     return (
@@ -519,7 +528,12 @@ valueFormatter: () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <Typography variant='h6'>{t('asphalt.dosages.marshall.insert-gmm')}</Typography>
               <Typography>
-                {t('asphalt.dosages.marshall.gmm-calculated-rice-test') + ` ${data?.confirmedSpecificGravity?.result ? ` ${data?.confirmedSpecificGravity?.result.toFixed(2)}  g/cm³` : ' ---'}`}
+              {t('asphalt.dosages.marshall.gmm-calculated-rice-test') + ` ${
+  !isNaN(Number(data?.confirmedSpecificGravity?.result))
+    ? `${Number(data.confirmedSpecificGravity.result).toFixed(2)} g/cm³`
+    : '---'
+}`}
+
               </Typography>
               <InputEndAdornment
                 adornment={'g/cm³'}
