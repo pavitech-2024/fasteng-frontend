@@ -8,7 +8,7 @@ export const isTest = process.env.NEXT_PUBLIC_ENV === 'test';
 //corrigi url
 const [localhost, prod] = [
   'http://localhost:8080',
-  'https://fasteng-backend.vercel.app',
+  'https://fasteng-backend-teste.vercel.app',
 ];
 
 
