@@ -22,53 +22,96 @@ const Marshall_Step2_MaterialSelection = ({
 
   const { user } = useAuth();
 
-  // Função para verificar se material tem ensaios (baseado na lógica do backend)
-  const checkMaterialTests = (material: AsphaltMaterial): boolean => {
-    // Se o material tiver algum ensaio cadastrado (ajuste conforme sua estrutura real)
-    // Você pode verificar se há propriedades específicas ou fazer uma requisição
-    // Por enquanto, vamos assumir que todos têm ensaios ou o backend vai lidar
-    return true; // Temporário - ajuste conforme sua lógica
-  };
-
   useEffect(() => {
     toast.promise(
       async () => {
         try {
           console.log('🔄 Buscando materiais para user:', user._id);
           
-          const data : any = await marshall.getmaterialsByUserId(user._id);
+          const response = await marshall.getmaterialsByUserId(user._id);
           
-          console.log('📦 Dados retornados do backend:', data);
-          console.log('Tipo dos dados:', typeof data);
-          console.log('É array?', Array.isArray(data));
+          console.log('📦 Resposta completa:', response);
+          console.log('Tipo:', typeof response);
+          console.log('É array?', Array.isArray(response));
           
-          let newMaterials: AsphaltMaterial[] = [];
+          let extractedMaterials: AsphaltMaterial[] = [];
 
-          if (Array.isArray(data)) {
-            console.log('✅ É um array');
+          // Função para verificar se é um AsphaltMaterial
+          const isAsphaltMaterial = (obj: any): boolean => {
+            return obj && 
+                   typeof obj === 'object' &&
+                   obj._id && 
+                   obj.name && 
+                   obj.type && 
+                   obj.userId;
+          };
+
+          // CASO 1: Resposta já é um array de AsphaltMaterial (como no seu log)
+          if (Array.isArray(response)) {
+            console.log('✅ Resposta é um array');
             
-            if (Array.isArray(data[0]?.materials)) {
-              console.log('📊 Usando data[0].materials');
-              newMaterials = data[0].materials;
-            } else if (
-              data.length > 0 &&
-              data.every(item => item._id && item.name && item.type)
-            ) {
-              console.log('📊 Usando array direto de materiais');
-              newMaterials = data;
+            if (response.length > 0) {
+              // Verifica se o primeiro item é um AsphaltMaterial
+              if (isAsphaltMaterial(response[0])) {
+                console.log('📊 Array direto de AsphaltMaterial');
+                extractedMaterials = response as AsphaltMaterial[];
+              }
+              // Verifica se há uma propriedade aninhada (possivelmente .materials ou outra)
+              else if (response[0] && typeof response[0] === 'object') {
+                // Procura por qualquer propriedade que seja array
+                const firstItem = response[0];
+                const objectKeys = Object.keys(firstItem);
+                
+                for (const key of objectKeys) {
+                  const value = firstItem[key];
+                  if (Array.isArray(value) && value.length > 0 && isAsphaltMaterial(value[0])) {
+                    console.log(`📊 Materiais encontrados na propriedade: ${key}`);
+                    extractedMaterials = value as AsphaltMaterial[];
+                    break;
+                  }
+                }
+              }
             }
-          } else if (Array.isArray(data?.materials)) {
-            console.log('📊 Usando data.materials');
-            newMaterials = data.materials;
-          } else if (data && data._id && data.name && data.type) {
-            console.log('📊 Usando material único');
-            newMaterials = [data];
+          }
+          // CASO 2: Resposta é um objeto
+          else if (response && typeof response === 'object') {
+            console.log('✅ Resposta é um objeto');
+            
+            // Verifica se é um único AsphaltMaterial
+            if (isAsphaltMaterial(response)) {
+              console.log('📊 Único AsphaltMaterial');
+              extractedMaterials = [response as AsphaltMaterial];
+            }
+            // Procura por propriedades que contenham array de materiais
+            else {
+              const objectKeys = Object.keys(response);
+              
+              for (const key of objectKeys) {
+                const value = (response as any)[key];
+                if (Array.isArray(value) && value.length > 0 && isAsphaltMaterial(value[0])) {
+                  console.log(`📊 Materiais encontrados na propriedade: ${key}`);
+                  extractedMaterials = value as AsphaltMaterial[];
+                  break;
+                }
+              }
+            }
           }
 
-          console.log('🎯 Materiais finais:', newMaterials);
-          console.log('Quantidade:', newMaterials.length);
+          console.log('🎯 Materiais extraídos:', extractedMaterials);
+          console.log('Quantidade:', extractedMaterials.length);
           
-          setMaterials(newMaterials);
+          // DEBUG: Mostrar a estrutura se estiver vazio
+          if (extractedMaterials.length === 0) {
+            console.warn('⚠ Nenhum material extraído. Estrutura da resposta:');
+            console.warn('Resposta:', response);
+            console.warn('Tipo:', typeof response);
+            
+            if (response && typeof response === 'object') {
+              console.warn('Chaves do objeto:', Object.keys(response));
+            }
+          }
+
+          setMaterials(extractedMaterials);
           setLoading(false);
             
         } catch (error) {
@@ -84,8 +127,9 @@ const Marshall_Step2_MaterialSelection = ({
         error: t('loading.materials.error'),
       }
     );
-  }, []);
+  }, [user._id, marshall]);
 
+  // Resto do seu código permanece igual...
   const aggregateRows = materials
     .map(({ _id, name, type }) => ({
       _id,
