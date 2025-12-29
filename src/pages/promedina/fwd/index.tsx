@@ -3,6 +3,9 @@ import { Line } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import Api from '@/api';
 import * as XLSX from 'xlsx';
+import Dialog from '@mui/material/Dialog';
+
+
 import {
   Tab,
   Tabs,
@@ -40,7 +43,6 @@ import {
   Stepper,
   Step,
   StepLabel,
-  Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
@@ -134,6 +136,8 @@ const proMedinaTheme = createTheme({
   },
 });
 
+
+
 // Cores PRO-MEDINA para uso direto
 const PRO_MEDINA_COLORS = {
   primary: {
@@ -221,6 +225,32 @@ type Subtrecho = {
   d120: number;
   d150: number;
   d180: number;
+};
+
+interface ProcessResult {
+  subtrechos: Subtrecho[];
+  ordered: FWDData[];
+  media_d0: number[];
+  std_d0: number[];
+  cv_d0: number[];
+  quebra: boolean[];
+}
+
+// Helper para converter status de string para tipo correto
+const normalizeStatus = (status: string): 'active' | 'completed' | 'draft' => {
+  if (status === 'active' || status === 'completed' || status === 'draft') {
+    return status;
+  }
+  // Se o status for 'finalizado', converte para 'completed'
+  if (status === 'finalizado' || status === 'finished') {
+    return 'completed';
+  }
+  // Se o status for 'rascunho', converte para 'draft'
+  if (status === 'rascunho') {
+    return 'draft';
+  }
+  // Default para 'active'
+  return 'active';
 };
 
 // Helpers
@@ -343,6 +373,39 @@ const fwdAnalysisService = {
   getDrafts: () => Api.get('fwd-analysis/drafts'),
 };
 
+interface BackendSample {
+  stationNumber: number;
+  d0: number;
+  d20: number;
+  d30: number;
+  d45: number;
+  d60: number;
+  d90: number;
+  d120: number;
+  d150: number;
+  d180: number;
+  date?: string;
+  airTemperature?: number;
+  pavementTemperature?: number;
+  appliedLoad?: number;
+}
+
+interface BackendAnalysis {
+  _id: string;
+  name: string;
+  description: string;
+  samples: BackendSample[];
+  createdAt: string;
+  updatedAt?: string;
+  status: string;
+  location?: string;
+  highway?: string;
+  layerType?: string;
+  cityState?: string;
+  speedLimit?: number;
+  notes?: string;
+}
+
 const FWDPage = () => {
   const [tabValue, setTabValue] = useState(0);
   const [fwdAnalysis, setFwdAnalysis] = useState<FWDAnalysis[]>([]);
@@ -372,7 +435,7 @@ const FWDPage = () => {
   });
   const [samples, setSamples] = useState<FWDData[]>([]);
   const [error, setError] = useState('');
-  const [procResult, setProcResult] = useState<any>(null);
+  const [procResult, setProcResult] = useState<ProcessResult | null>(null);
   const [procError, setProcError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
@@ -393,12 +456,12 @@ const FWDPage = () => {
     setLoading(true);
     try {
       const response = await fwdAnalysisService.getAnalyses();
-      const backendAnalyses = response.data;
-      const frontendAnalyses = backendAnalyses.map((analysis: any) => ({
+      const backendAnalyses = response.data as BackendAnalysis[];
+      const frontendAnalyses: FWDAnalysis[] = backendAnalyses.map((analysis) => ({
         id: analysis._id,
         name: analysis.name,
         description: analysis.description || '',
-        samples: analysis.samples.map((sample: any, index: number) => ({
+        samples: analysis.samples.map((sample, index) => ({
           id: index + 1,
           stationNumber: sample.stationNumber,
           d0: sample.d0,
@@ -417,7 +480,7 @@ const FWDPage = () => {
         })),
         createdAt: analysis.createdAt ? analysis.createdAt.split('T')[0] : new Date().toISOString().split('T')[0],
         updatedAt: analysis.updatedAt ? analysis.updatedAt.split('T')[0] : undefined,
-        status: analysis.status || 'active',
+        status: normalizeStatus(analysis.status),
         location: analysis.location || '',
         highway: analysis.highway || '',
         layerType: analysis.layerType || '',
@@ -440,12 +503,12 @@ const FWDPage = () => {
   const loadDrafts = async () => {
     try {
       const response = await fwdAnalysisService.getDrafts();
-      const backendDrafts = response.data;
-      const frontendDrafts = backendDrafts.map((draft: any) => ({
+      const backendDrafts = response.data as BackendAnalysis[];
+      const frontendDrafts: FWDAnalysis[] = backendDrafts.map((draft) => ({
         id: draft._id,
         name: draft.name || 'Rascunho Sem Nome',
         description: draft.description || '',
-        samples: draft.samples.map((sample: any, index: number) => ({
+        samples: draft.samples.map((sample, index) => ({
           id: index + 1,
           stationNumber: sample.stationNumber,
           d0: sample.d0,
@@ -521,7 +584,7 @@ const FWDPage = () => {
     setSamples((prev) => prev.filter((s) => s.id !== id));
   };
 
-  const handleSaveAnalysis = async (asDraft: boolean = false) => {
+  const handleSaveAnalysis = async (asDraft = false) => {
     if (!newAnalysis.name && !asDraft) {
       setError('Nome da análise é obrigatório');
       return;
@@ -571,12 +634,12 @@ const FWDPage = () => {
         response = await fwdAnalysisService.createAnalysis(backendData);
       }
 
-      const createdAnalysis = response.data;
+      const createdAnalysis = response.data as BackendAnalysis;
       const frontendAnalysis: FWDAnalysis = {
         id: createdAnalysis._id,
         name: createdAnalysis.name,
         description: createdAnalysis.description || '',
-        samples: createdAnalysis.samples.map((sample: any, index: number) => ({
+        samples: createdAnalysis.samples.map((sample, index) => ({
           id: index + 1,
           stationNumber: sample.stationNumber,
           d0: sample.d0,
@@ -599,7 +662,7 @@ const FWDPage = () => {
         updatedAt: createdAnalysis.updatedAt
           ? createdAnalysis.updatedAt.split('T')[0]
           : undefined,
-        status: createdAnalysis.status || (asDraft ? 'draft' : 'active'),
+        status: normalizeStatus(createdAnalysis.status),
         location: createdAnalysis.location || '',
         highway: createdAnalysis.highway || '',
         layerType: createdAnalysis.layerType || '',
@@ -755,7 +818,7 @@ const FWDPage = () => {
     setSaveAsNew(false);
   };
 
-  const handleDeleteAnalysis = async (id: string, isDraft: boolean = false) => {
+  const handleDeleteAnalysis = async (id: string, isDraft = false) => {
     setLoading(true);
     try {
       await fwdAnalysisService.deleteAnalysis(id);
@@ -827,12 +890,12 @@ const FWDPage = () => {
         const workbook = XLSX.read(data, { type: 'binary' });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
-        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as any[][];
 
         // ENCONTRAR A LINHA ONDE COMEÇAM OS DADOS REAIS
         let dataStartRow = -1;
         for (let i = 0; i < Math.min(10, rows.length); i++) {
-          const row = rows[i] as any[];
+          const row = rows[i];
           if (row && row[0] && (
             row[0].toString().toUpperCase().includes('ESTACA') || 
             row[0].toString().toUpperCase().includes('DATA')
@@ -945,11 +1008,11 @@ const FWDPage = () => {
   const d0ChartData =
     procResult && procResult.ordered && procResult.ordered.length > 0
       ? {
-          labels: procResult.ordered.map((r: FWDData) => r.stationNumber),
+          labels: procResult.ordered.map((r) => r.stationNumber),
           datasets: [
             {
               label: 'd0 (Deflexão Máxima)',
-              data: procResult.ordered.map((r: FWDData) => r.d0),
+              data: procResult.ordered.map((r) => r.d0),
               borderColor: PRO_MEDINA_COLORS.primary.main,
               backgroundColor: PRO_MEDINA_COLORS.primary.light,
               borderWidth: 2,
@@ -959,7 +1022,7 @@ const FWDPage = () => {
             },
             {
               label: 'Quebra (CV > 30%)',
-              data: procResult.ordered.map((_: any, i: number) =>
+              data: procResult.ordered.map((_, i) =>
                 procResult.quebra && procResult.quebra[i] ? procResult.ordered[i].d0 : NaN
               ),
               borderColor: 'red',
@@ -976,7 +1039,7 @@ const FWDPage = () => {
     procResult && procResult.subtrechos && Array.isArray(procResult.subtrechos) && procResult.subtrechos.length > 0
       ? {
           labels: pos_sensores.map((x) => `${x} cm`),
-          datasets: procResult.subtrechos.map((sub: any, i: number) => ({
+          datasets: procResult.subtrechos.map((sub, i) => ({
             label: `Subtrecho ${i + 1}: Est. ${sub['Início (Estaca)']}–${sub['Fim (Estaca)']}`,
             data: pos_sensores.map((p) => {
               const value = sub[`d${p}`];
@@ -2238,7 +2301,7 @@ const FWDPage = () => {
                               </TableHead>
                               <TableBody>
                                 {procResult.subtrechos &&
-                                  procResult.subtrechos.map((sub: Subtrecho, i: number) => (
+                                  procResult.subtrechos.map((sub, i) => (
                                     <TableRow key={i} sx={{ '&:nth-of-type(odd)': { backgroundColor: '#f8f9fa' } }}>
                                       <TableCell sx={{ fontSize: '0.8rem', p: 1 }}>{sub['Início (Estaca)']}</TableCell>
                                       <TableCell sx={{ fontSize: '0.8rem', p: 1 }}>{sub['Fim (Estaca)']}</TableCell>
@@ -2340,9 +2403,12 @@ const FWDPage = () => {
       <Dialog
         open={showAnalysesDialog}
         onClose={() => setShowAnalysesDialog(false)}
-        maxWidth="md"
+        maxWidth={false}
         fullWidth
       >
+
+
+
         <DialogTitle sx={{ backgroundColor: PRO_MEDINA_COLORS.primary.main, color: 'white' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography variant="h6" sx={{ fontWeight: 700 }}>
@@ -2525,11 +2591,12 @@ const FWDPage = () => {
 
       {/* Diálogo para salvar análise */}
       <Dialog
-        open={showSaveDialog}
-        onClose={() => setShowSaveDialog(false)}
-        maxWidth="sm"
+        open={showAnalysesDialog}
+        onClose={() => setShowAnalysesDialog(false)}
+        maxWidth={false}
         fullWidth
       >
+
         <DialogTitle sx={{ backgroundColor: PRO_MEDINA_COLORS.primary.main, color: 'white' }}>
           <Typography variant="h6" sx={{ fontWeight: 700 }}>
             Salvar Análise
