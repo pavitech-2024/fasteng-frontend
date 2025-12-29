@@ -1,16 +1,13 @@
 import { Delete, Add, Assessment, ExpandMore, FileUpload, Edit, Visibility, Save } from '@mui/icons-material';
 import { Line } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-import Api from '@/api';
 import * as XLSX from 'xlsx';
 import Dialog from '@mui/material/Dialog';
-
 
 import {
   Tab,
   Tabs,
   CircularProgress,
-  useMediaQuery,
   Typography,
   Paper,
   Alert,
@@ -136,8 +133,6 @@ const proMedinaTheme = createTheme({
   },
 });
 
-
-
 // Cores PRO-MEDINA para uso direto
 const PRO_MEDINA_COLORS = {
   primary: {
@@ -241,15 +236,12 @@ const normalizeStatus = (status: string): 'active' | 'completed' | 'draft' => {
   if (status === 'active' || status === 'completed' || status === 'draft') {
     return status;
   }
-  // Se o status for 'finalizado', converte para 'completed'
   if (status === 'finalizado' || status === 'finished') {
     return 'completed';
   }
-  // Se o status for 'rascunho', converte para 'draft'
   if (status === 'rascunho') {
     return 'draft';
   }
-  // Default para 'active'
   return 'active';
 };
 
@@ -361,50 +353,95 @@ function processarSubtrechos(dados: FWDData[]) {
 
 const pos_sensores = [0, 20, 30, 45, 60, 90, 120, 150, 180];
 
-// Serviço de análises FWD
+// Serviço de análises FWD usando localStorage
 const fwdAnalysisService = {
-  createAnalysis: (analysisData: any) => Api.post('fwd-analysis/save', analysisData),
-  getAnalyses: () => Api.get('fwd-analysis/all'),
-  getAnalysis: (analysisId: string) => Api.get(`fwd-analysis/${analysisId}`),
-  updateAnalysis: (analysisId: string, analysisData: any) => Api.put(`fwd-analysis/${analysisId}`, analysisData),
-  deleteAnalysis: (analysisId: string) => Api.delete(`fwd-analysis/${analysisId}`),
-  processAnalysis: (analysisId: string) => Api.post(`fwd-analysis/${analysisId}/process`),
-  saveDraft: (analysisData: any) => Api.post('fwd-analysis/draft', analysisData),
-  getDrafts: () => Api.get('fwd-analysis/drafts'),
+  // Chave para localStorage
+  STORAGE_KEY: 'fwd-analyses',
+
+  // Carregar todas as análises
+  getAnalyses: (): FWDAnalysis[] => {
+    try {
+      const data = localStorage.getItem(fwdAnalysisService.STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    } catch (error) {
+      console.error('Erro ao carregar análises do localStorage:', error);
+      return [];
+    }
+  },
+
+  // Salvar todas as análises
+  saveAnalyses: (analyses: FWDAnalysis[]): void => {
+    try {
+      localStorage.setItem(fwdAnalysisService.STORAGE_KEY, JSON.stringify(analyses));
+    } catch (error) {
+      console.error('Erro ao salvar análises no localStorage:', error);
+    }
+  },
+
+  // Criar nova análise
+  createAnalysis: (analysisData: Omit<FWDAnalysis, 'id' | 'createdAt' | 'updatedAt'>): FWDAnalysis => {
+    const analyses = fwdAnalysisService.getAnalyses();
+    const newAnalysis: FWDAnalysis = {
+      ...analysisData,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString().split('T')[0],
+      updatedAt: undefined,
+    };
+    
+    analyses.push(newAnalysis);
+    fwdAnalysisService.saveAnalyses(analyses);
+    return newAnalysis;
+  },
+
+  // Atualizar análise existente
+  updateAnalysis: (analysisId: string, analysisData: Partial<FWDAnalysis>): FWDAnalysis | null => {
+    const analyses = fwdAnalysisService.getAnalyses();
+    const index = analyses.findIndex(a => a.id === analysisId);
+    
+    if (index === -1) return null;
+    
+    const updatedAnalysis: FWDAnalysis = {
+      ...analyses[index],
+      ...analysisData,
+      updatedAt: new Date().toISOString().split('T')[0],
+    };
+    
+    analyses[index] = updatedAnalysis;
+    fwdAnalysisService.saveAnalyses(analyses);
+    return updatedAnalysis;
+  },
+
+  // Deletar análise
+  deleteAnalysis: (analysisId: string): boolean => {
+    const analyses = fwdAnalysisService.getAnalyses();
+    const filteredAnalyses = analyses.filter(a => a.id !== analysisId);
+    
+    if (filteredAnalyses.length === analyses.length) return false;
+    
+    fwdAnalysisService.saveAnalyses(filteredAnalyses);
+    return true;
+  },
+
+  // Obter análise específica
+  getAnalysis: (analysisId: string): FWDAnalysis | null => {
+    const analyses = fwdAnalysisService.getAnalyses();
+    return analyses.find(a => a.id === analysisId) || null;
+  },
+
+  // Obter rascunhos
+  getDrafts: (): FWDAnalysis[] => {
+    const analyses = fwdAnalysisService.getAnalyses();
+    return analyses.filter(a => a.status === 'draft');
+  },
+
+  // Processar análise (local)
+  processAnalysis: (analysisId: string): ProcessResult | null => {
+    const analysis = fwdAnalysisService.getAnalysis(analysisId);
+    if (!analysis || analysis.samples.length < 5) return null;
+    
+    return processarSubtrechos(analysis.samples);
+  }
 };
-
-interface BackendSample {
-  stationNumber: number;
-  d0: number;
-  d20: number;
-  d30: number;
-  d45: number;
-  d60: number;
-  d90: number;
-  d120: number;
-  d150: number;
-  d180: number;
-  date?: string;
-  airTemperature?: number;
-  pavementTemperature?: number;
-  appliedLoad?: number;
-}
-
-interface BackendAnalysis {
-  _id: string;
-  name: string;
-  description: string;
-  samples: BackendSample[];
-  createdAt: string;
-  updatedAt?: string;
-  status: string;
-  location?: string;
-  highway?: string;
-  layerType?: string;
-  cityState?: string;
-  speedLimit?: number;
-  notes?: string;
-}
 
 const FWDPage = () => {
   const [tabValue, setTabValue] = useState(0);
@@ -452,46 +489,14 @@ const FWDPage = () => {
     loadDrafts();
   }, []);
 
-  const loadAnalyses = async () => {
+  const loadAnalyses = () => {
     setLoading(true);
     try {
-      const response = await fwdAnalysisService.getAnalyses();
-      const backendAnalyses = response.data as BackendAnalysis[];
-      const frontendAnalyses: FWDAnalysis[] = backendAnalyses.map((analysis) => ({
-        id: analysis._id,
-        name: analysis.name,
-        description: analysis.description || '',
-        samples: analysis.samples.map((sample, index) => ({
-          id: index + 1,
-          stationNumber: sample.stationNumber,
-          d0: sample.d0,
-          d20: sample.d20,
-          d30: sample.d30,
-          d45: sample.d45,
-          d60: sample.d60,
-          d90: sample.d90,
-          d120: sample.d120,
-          d150: sample.d150,
-          d180: sample.d180,
-          date: sample.date,
-          airTemperature: sample.airTemperature,
-          pavementTemperature: sample.pavementTemperature,
-          appliedLoad: sample.appliedLoad,
-        })),
-        createdAt: analysis.createdAt ? analysis.createdAt.split('T')[0] : new Date().toISOString().split('T')[0],
-        updatedAt: analysis.updatedAt ? analysis.updatedAt.split('T')[0] : undefined,
-        status: normalizeStatus(analysis.status),
-        location: analysis.location || '',
-        highway: analysis.highway || '',
-        layerType: analysis.layerType || '',
-        cityState: analysis.cityState || '',
-        speedLimit: analysis.speedLimit || undefined,
-        notes: analysis.notes || '',
-      }));
-
-      setFwdAnalysis(frontendAnalyses);
-      if (frontendAnalyses.length > 0 && !selectedAnalysis) {
-        setSelectedAnalysis(frontendAnalyses[0]);
+      const analyses = fwdAnalysisService.getAnalyses();
+      setFwdAnalysis(analyses.filter(a => a.status !== 'draft'));
+      
+      if (analyses.length > 0 && !selectedAnalysis) {
+        setSelectedAnalysis(analyses[0]);
       }
     } catch (err) {
       setSnackbar({ open: true, message: 'Erro ao carregar análises', severity: 'error' });
@@ -500,43 +505,10 @@ const FWDPage = () => {
     }
   };
 
-  const loadDrafts = async () => {
+  const loadDrafts = () => {
     try {
-      const response = await fwdAnalysisService.getDrafts();
-      const backendDrafts = response.data as BackendAnalysis[];
-      const frontendDrafts: FWDAnalysis[] = backendDrafts.map((draft) => ({
-        id: draft._id,
-        name: draft.name || 'Rascunho Sem Nome',
-        description: draft.description || '',
-        samples: draft.samples.map((sample, index) => ({
-          id: index + 1,
-          stationNumber: sample.stationNumber,
-          d0: sample.d0,
-          d20: sample.d20,
-          d30: sample.d30,
-          d45: sample.d45,
-          d60: sample.d60,
-          d90: sample.d90,
-          d120: sample.d120,
-          d150: sample.d150,
-          d180: sample.d180,
-          date: sample.date,
-          airTemperature: sample.airTemperature,
-          pavementTemperature: sample.pavementTemperature,
-          appliedLoad: sample.appliedLoad,
-        })),
-        createdAt: draft.createdAt ? draft.createdAt.split('T')[0] : new Date().toISOString().split('T')[0],
-        updatedAt: draft.updatedAt ? draft.updatedAt.split('T')[0] : undefined,
-        status: 'draft',
-        location: draft.location || '',
-        highway: draft.highway || '',
-        layerType: draft.layerType || '',
-        cityState: draft.cityState || '',
-        speedLimit: draft.speedLimit || undefined,
-        notes: draft.notes || '',
-      }));
-
-      setDrafts(frontendDrafts);
+      const drafts = fwdAnalysisService.getDrafts();
+      setDrafts(drafts);
     } catch (err) {
       console.error('Erro ao carregar rascunhos:', err);
     }
@@ -584,7 +556,7 @@ const FWDPage = () => {
     setSamples((prev) => prev.filter((s) => s.id !== id));
   };
 
-  const handleSaveAnalysis = async (asDraft = false) => {
+  const handleSaveAnalysis = (asDraft = false) => {
     if (!newAnalysis.name && !asDraft) {
       setError('Nome da análise é obrigatório');
       return;
@@ -599,7 +571,8 @@ const FWDPage = () => {
     try {
       const analysisName = asDraft ? (newAnalysis.name || 'Rascunho Sem Nome') : newAnalysis.name;
       
-      const backendData = {
+      // CORREÇÃO: Removido a propriedade createdAt que não deveria estar aqui
+      const analysisData: Omit<FWDAnalysis, 'id' | 'createdAt' | 'updatedAt'> = {
         name: analysisName,
         description: newAnalysis.description,
         location: newAnalysis.location,
@@ -608,7 +581,7 @@ const FWDPage = () => {
         cityState: newAnalysis.cityState,
         speedLimit: newAnalysis.speedLimit ? parseInt(newAnalysis.speedLimit) : undefined,
         notes: newAnalysis.notes,
-        samples: samples.map((sample) => ({
+        samples: samples.map(sample => ({
           stationNumber: sample.stationNumber,
           d0: sample.d0,
           d20: sample.d20,
@@ -627,117 +600,80 @@ const FWDPage = () => {
         status: asDraft ? 'draft' : 'active',
       };
 
-      let response;
+      let result;
       if (editingAnalysis && !saveAsNew) {
-        response = await fwdAnalysisService.updateAnalysis(editingAnalysis.id, backendData);
+        result = fwdAnalysisService.updateAnalysis(editingAnalysis.id, analysisData);
       } else {
-        response = await fwdAnalysisService.createAnalysis(backendData);
+        result = fwdAnalysisService.createAnalysis(analysisData);
       }
 
-      const createdAnalysis = response.data as BackendAnalysis;
-      const frontendAnalysis: FWDAnalysis = {
-        id: createdAnalysis._id,
-        name: createdAnalysis.name,
-        description: createdAnalysis.description || '',
-        samples: createdAnalysis.samples.map((sample, index) => ({
-          id: index + 1,
-          stationNumber: sample.stationNumber,
-          d0: sample.d0,
-          d20: sample.d20,
-          d30: sample.d30,
-          d45: sample.d45,
-          d60: sample.d60,
-          d90: sample.d90,
-          d120: sample.d120,
-          d150: sample.d150,
-          d180: sample.d180,
-          date: sample.date,
-          airTemperature: sample.airTemperature,
-          pavementTemperature: sample.pavementTemperature,
-          appliedLoad: sample.appliedLoad,
-        })),
-        createdAt: createdAnalysis.createdAt
-          ? createdAnalysis.createdAt.split('T')[0]
-          : new Date().toISOString().split('T')[0],
-        updatedAt: createdAnalysis.updatedAt
-          ? createdAnalysis.updatedAt.split('T')[0]
-          : undefined,
-        status: normalizeStatus(createdAnalysis.status),
-        location: createdAnalysis.location || '',
-        highway: createdAnalysis.highway || '',
-        layerType: createdAnalysis.layerType || '',
-        cityState: createdAnalysis.cityState || '',
-        speedLimit: createdAnalysis.speedLimit || undefined,
-        notes: createdAnalysis.notes || '',
-      };
+      if (result) {
+        if (asDraft) {
+          setDrafts(prev => {
+            const existingIndex = prev.findIndex(d => d.id === result.id);
+            if (existingIndex >= 0) {
+              const newDrafts = [...prev];
+              newDrafts[existingIndex] = result;
+              return newDrafts;
+            }
+            return [...prev, result];
+          });
+        } else {
+          setFwdAnalysis(prev => {
+            if (editingAnalysis && !saveAsNew) {
+              return prev.map(a => a.id === editingAnalysis.id ? result : a);
+            }
+            return [...prev, result];
+          });
+          setSelectedAnalysis(result);
+        }
 
-      // Atualizar lista de análises
-      if (asDraft) {
-        setDrafts(prev => {
-          const existingIndex = prev.findIndex(d => d.id === frontendAnalysis.id);
-          if (existingIndex >= 0) {
-            const newDrafts = [...prev];
-            newDrafts[existingIndex] = frontendAnalysis;
-            return newDrafts;
-          }
-          return [...prev, frontendAnalysis];
+        if (!editingAnalysis || saveAsNew) {
+          setNewAnalysis({
+            name: '',
+            description: '',
+            location: '',
+            highway: '',
+            layerType: '',
+            cityState: '',
+            speedLimit: '',
+            notes: '',
+          });
+          setSamples([]);
+          setCurrentSample({
+            stationNumber: 0,
+            d0: 0,
+            d20: 0,
+            d30: 0,
+            d45: 0,
+            d60: 0,
+            d90: 0,
+            d120: 0,
+            d150: 0,
+            d180: 0,
+          });
+        }
+
+        setEditingAnalysis(null);
+        setSaveAsNew(false);
+        setShowSaveDialog(false);
+        setError('');
+
+        const message = asDraft ? 'Rascunho salvo com sucesso!' : 
+          editingAnalysis ? 'Análise atualizada com sucesso!' : 'Análise criada com sucesso!';
+        
+        setSnackbar({ 
+          open: true, 
+          message: message, 
+          severity: 'success' 
         });
-      } else {
-        setFwdAnalysis(prev => {
-          if (editingAnalysis && !saveAsNew) {
-            return prev.map(a => a.id === editingAnalysis.id ? frontendAnalysis : a);
-          }
-          return [...prev, frontendAnalysis];
-        });
-        setSelectedAnalysis(frontendAnalysis);
+
+        if (!asDraft) {
+          setTabValue(2);
+        }
       }
-
-      // Limpar formulário se não estiver editando
-      if (!editingAnalysis || saveAsNew) {
-        setNewAnalysis({
-          name: '',
-          description: '',
-          location: '',
-          highway: '',
-          layerType: '',
-          cityState: '',
-          speedLimit: '',
-          notes: '',
-        });
-        setSamples([]);
-        setCurrentSample({
-          stationNumber: 0,
-          d0: 0,
-          d20: 0,
-          d30: 0,
-          d45: 0,
-          d60: 0,
-          d90: 0,
-          d120: 0,
-          d150: 0,
-          d180: 0,
-        });
-      }
-
-      setEditingAnalysis(null);
-      setSaveAsNew(false);
-      setShowSaveDialog(false);
-      setError('');
-
-      const message = asDraft ? 'Rascunho salvo com sucesso!' : 
-        editingAnalysis ? 'Análise atualizada com sucesso!' : 'Análise criada com sucesso!';
-      
-      setSnackbar({ 
-        open: true, 
-        message: message, 
-        severity: 'success' 
-      });
-
-      if (!asDraft) {
-        setTabValue(2);
-      }
-
     } catch (err) {
+      console.error('Erro ao salvar análise:', err);
       setError('Erro ao salvar análise');
       setSnackbar({ 
         open: true, 
@@ -749,15 +685,15 @@ const FWDPage = () => {
     }
   };
 
-  const handleCreateAnalysis = async () => {
-    await handleSaveAnalysis(false);
+  const handleCreateAnalysis = () => {
+    handleSaveAnalysis(false);
   };
 
-  const handleSaveDraft = async () => {
-    await handleSaveAnalysis(true);
+  const handleSaveDraft = () => {
+    handleSaveAnalysis(true);
   };
 
-  const handleEditAnalysis = async (analysis: FWDAnalysis) => {
+  const handleEditAnalysis = (analysis: FWDAnalysis) => {
     setEditingAnalysis(analysis);
     setNewAnalysis({
       name: analysis.name,
@@ -774,19 +710,19 @@ const FWDPage = () => {
     setShowSaveDialog(false);
   };
 
-  const handleLoadAnalysis = async (analysis: FWDAnalysis) => {
+  const handleLoadAnalysis = (analysis: FWDAnalysis) => {
     setSelectedAnalysis(analysis);
     setShowAnalysesDialog(false);
     setTabValue(2);
   };
 
-  const handleLoadDraft = async (draft: FWDAnalysis) => {
-    await handleEditAnalysis(draft);
+  const handleLoadDraft = (draft: FWDAnalysis) => {
+    handleEditAnalysis(draft);
     setShowAnalysesDialog(false);
   };
 
-  const handleUpdateAnalysis = async () => {
-    await handleSaveAnalysis(false);
+  const handleUpdateAnalysis = () => {
+    handleSaveAnalysis(false);
   };
 
   const handleCancelEdit = () => {
@@ -818,25 +754,33 @@ const FWDPage = () => {
     setSaveAsNew(false);
   };
 
-  const handleDeleteAnalysis = async (id: string, isDraft = false) => {
+  const handleDeleteAnalysis = (id: string, isDraft = false) => {
     setLoading(true);
     try {
-      await fwdAnalysisService.deleteAnalysis(id);
+      const success = fwdAnalysisService.deleteAnalysis(id);
       
-      if (isDraft) {
-        setDrafts(prev => prev.filter((d) => d.id !== id));
-      } else {
-        setFwdAnalysis(prev => prev.filter((a) => a.id !== id));
-        if (selectedAnalysis?.id === id) {
-          setSelectedAnalysis(fwdAnalysis.find((a) => a.id !== id) || null);
+      if (success) {
+        if (isDraft) {
+          setDrafts(prev => prev.filter((d) => d.id !== id));
+        } else {
+          setFwdAnalysis(prev => prev.filter((a) => a.id !== id));
+          if (selectedAnalysis?.id === id) {
+            setSelectedAnalysis(fwdAnalysis.find((a) => a.id !== id) || null);
+          }
         }
+        
+        setSnackbar({ 
+          open: true, 
+          message: isDraft ? 'Rascunho deletado com sucesso!' : 'Análise deletada com sucesso!', 
+          severity: 'success' 
+        });
+      } else {
+        setSnackbar({ 
+          open: true, 
+          message: 'Análise não encontrada', 
+          severity: 'error' 
+        });
       }
-      
-      setSnackbar({ 
-        open: true, 
-        message: isDraft ? 'Rascunho deletado com sucesso!' : 'Análise deletada com sucesso!', 
-        severity: 'success' 
-      });
     } catch (err) {
       setSnackbar({ 
         open: true, 
@@ -848,7 +792,7 @@ const FWDPage = () => {
     }
   };
 
-  const handleProcessar = async () => {
+  const handleProcessar = () => {
     setProcError(null);
     if (!selectedAnalysis || selectedAnalysis.samples.length < 5) {
       setProcError('Selecione uma análise com ao menos 5 amostras para processar.');
@@ -858,27 +802,21 @@ const FWDPage = () => {
 
     setLoading(true);
     try {
-      const response = await fwdAnalysisService.processAnalysis(selectedAnalysis.id);
-      if (response.data && response.data.ordered && response.data.ordered.length > 0) {
-        setProcResult(response.data);
+      const result = fwdAnalysisService.processAnalysis(selectedAnalysis.id);
+      if (result) {
+        setProcResult(result);
       } else {
-        throw new Error('Resultado inválido');
+        setProcError('Falha ao processar os dados da análise.');
+        setProcResult(null);
       }
     } catch (err) {
-      // Processamento local sem mensagem de erro
-      const proc = processarSubtrechos(selectedAnalysis.samples);
-      if (proc && proc.ordered && proc.ordered.length > 0) {
-        setProcResult(proc);
-      } else {
-        setProcResult(null);
-        setProcError('Falha ao processar os dados da análise.');
-      }
+      setProcResult(null);
+      setProcError('Falha ao processar os dados da análise.');
     } finally {
       setLoading(false);
     }
   };
 
-  // UPLOAD DE PLANILHA - VERSÃO CORRIGIDA PARA SUA PLANILHA
   const handleUploadExcel = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -892,7 +830,6 @@ const FWDPage = () => {
         const sheet = workbook.Sheets[sheetName];
         const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as any[][];
 
-        // ENCONTRAR A LINHA ONDE COMEÇAM OS DADOS REAIS
         let dataStartRow = -1;
         for (let i = 0; i < Math.min(10, rows.length); i++) {
           const row = rows[i];
@@ -910,12 +847,10 @@ const FWDPage = () => {
           return;
         }
 
-        // CABEÇALHO NA LINHA ENCONTRADA
         const headerRow: string[] = (rows[dataStartRow] as any[])?.map((cell: any) => 
           cell?.toString().trim().toUpperCase() || ''
         ) || [];
 
-        // MAPEAMENTO CORRETO DAS COLUNAS PARA SUA PLANILHA FWD
         const colIndices: Record<string, number> = {
           date: headerRow.findIndex(h => h.includes('DATA')),
           airTemperature: headerRow.findIndex(h => h.includes('TEMP. DO AR') || h.includes('TEMP DO AR')),
@@ -933,29 +868,22 @@ const FWDPage = () => {
           d180: headerRow.findIndex(h => h.includes('D180') || h === 'D180'),
         };
 
-        // Verificar se encontrou as colunas essenciais
         if (colIndices.stationNumber === -1 || colIndices.d0 === -1) {
           setError('Colunas essenciais (Estaca – Número e d0) não encontradas na planilha');
-          console.log('Cabeçalhos encontrados:', headerRow);
-          console.log('Índices mapeados:', colIndices);
           return;
         }
 
-        // Dados começam na próxima linha após o cabeçalho
         const dataRows = rows.slice(dataStartRow + 1);
         const loadedSamples: FWDData[] = [];
         
         for (const row of dataRows) {
-          // Adicione uma verificação de tipo para garantir que row é um array
           if (!row || !Array.isArray(row) || row.length < 2) continue;
 
           const stationNumber = Number(row[colIndices.stationNumber]);
           const d0 = Number(row[colIndices.d0]);
           
-          // Pular linhas inválidas ou vazias
           if (isNaN(stationNumber) || isNaN(d0) || stationNumber === 0) continue;
 
-          // Converter valores para número, tratando células vazias
           const sample: FWDData = {
             id: loadedSamples.length + 1,
             stationNumber,
@@ -974,7 +902,6 @@ const FWDPage = () => {
             appliedLoad: Number(row[colIndices.appliedLoad]) || undefined,
           };
 
-          // Verificar se é um dado válido (pelo menos d0 tem valor)
           if (sample.d0 > 0) {
             loadedSamples.push(sample);
           }
@@ -988,9 +915,6 @@ const FWDPage = () => {
             message: `Planilha carregada: ${loadedSamples.length} amostras válidas`,
             severity: loadedSamples.length >= 5 ? 'success' : 'warning',
           });
-          
-          // Log para debug
-          console.log('Amostras carregadas:', loadedSamples);
         } else {
           setError('Nenhuma amostra válida encontrada na planilha. Verifique o formato dos dados.');
           setSamples([]);
@@ -1004,64 +928,59 @@ const FWDPage = () => {
     reader.readAsBinaryString(file);
   };
 
-  // Chart Data
-  const d0ChartData =
-    procResult && procResult.ordered && procResult.ordered.length > 0
-      ? {
-          labels: procResult.ordered.map((r) => r.stationNumber),
-          datasets: [
-            {
-              label: 'd0 (Deflexão Máxima)',
-              data: procResult.ordered.map((r) => r.d0),
-              borderColor: PRO_MEDINA_COLORS.primary.main,
-              backgroundColor: PRO_MEDINA_COLORS.primary.light,
-              borderWidth: 2,
-              pointRadius: 3,
-              fill: false,
-              tension: 0.2,
-            },
-            {
-              label: 'Quebra (CV > 30%)',
-              data: procResult.ordered.map((_, i) =>
-                procResult.quebra && procResult.quebra[i] ? procResult.ordered[i].d0 : NaN
-              ),
-              borderColor: 'red',
-              backgroundColor: 'red',
-              borderWidth: 0,
-              pointRadius: 6,
-              pointBackgroundColor: 'red',
-            },
-          ],
-        }
-      : undefined;
-
-  const baciaChartData =
-    procResult && procResult.subtrechos && Array.isArray(procResult.subtrechos) && procResult.subtrechos.length > 0
-      ? {
-          labels: pos_sensores.map((x) => `${x} cm`),
-          datasets: procResult.subtrechos.map((sub, i) => ({
-            label: `Subtrecho ${i + 1}: Est. ${sub['Início (Estaca)']}–${sub['Fim (Estaca)']}`,
-            data: pos_sensores.map((p) => {
-              const value = sub[`d${p}`];
-              return typeof value === 'number' ? value : 0;
-            }),
-            fill: false,
+  const d0ChartData = procResult && procResult.ordered && procResult.ordered.length > 0
+    ? {
+        labels: procResult.ordered.map((r) => r.stationNumber),
+        datasets: [
+          {
+            label: 'd0 (Deflexão Máxima)',
+            data: procResult.ordered.map((r) => r.d0),
+            borderColor: PRO_MEDINA_COLORS.primary.main,
+            backgroundColor: PRO_MEDINA_COLORS.primary.light,
             borderWidth: 2,
-            borderColor: `hsl(${(i * 77) % 360}, 64%, 54%)`,
-            backgroundColor: `hsl(${(i * 77) % 360}, 64%, 54%)`,
-            pointRadius: 5,
-            pointBorderWidth: 2,
-          })),
-        }
-      : {
-          labels: pos_sensores.map((x) => `${x} cm`),
-          datasets: [],
-        };
+            pointRadius: 3,
+            fill: false,
+            tension: 0.2,
+          },
+          {
+            label: 'Quebra (CV > 30%)',
+            data: procResult.ordered.map((_, i) =>
+              procResult.quebra && procResult.quebra[i] ? procResult.ordered[i].d0 : NaN
+            ),
+            borderColor: 'red',
+            backgroundColor: 'red',
+            borderWidth: 0,
+            pointRadius: 6,
+            pointBackgroundColor: 'red',
+          },
+        ],
+      }
+    : undefined;
 
-  // Steps for the stepper
+  const baciaChartData = procResult && procResult.subtrechos && Array.isArray(procResult.subtrechos) && procResult.subtrechos.length > 0
+    ? {
+        labels: pos_sensores.map((x) => `${x} cm`),
+        datasets: procResult.subtrechos.map((sub, i) => ({
+          label: `Subtrecho ${i + 1}: Est. ${sub['Início (Estaca)']}–${sub['Fim (Estaca)']}`,
+          data: pos_sensores.map((p) => {
+            const value = sub[`d${p}`];
+            return typeof value === 'number' ? value : 0;
+          }),
+          fill: false,
+          borderWidth: 2,
+          borderColor: `hsl(${(i * 77) % 360}, 64%, 54%)`,
+          backgroundColor: `hsl(${(i * 77) % 360}, 64%, 54%)`,
+          pointRadius: 5,
+          pointBorderWidth: 2,
+        })),
+      }
+    : {
+        labels: pos_sensores.map((x) => `${x} cm`),
+        datasets: [],
+      };
+
   const steps = ['Dados Gerais', 'Gerenciar Análises', 'Resultados e Gráficos'];
 
-  // Loading
   if (loading && tabValue !== 2) {
     return (
       <ThemeProvider theme={proMedinaTheme}>
@@ -1084,11 +1003,9 @@ const FWDPage = () => {
     );
   }
 
-  // Main layout following PRO-MEDINA style
   return (
     <ThemeProvider theme={proMedinaTheme}>
       <Box sx={{ minHeight: '100vh', background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
-        {/* Header similar to PRO-MEDINA */}
         <AppBar 
           position="static" 
           sx={{ 
@@ -1165,7 +1082,6 @@ const FWDPage = () => {
             margin: '0 auto'
           }}
         >
-          {/* Title section */}
           <Box sx={{ textAlign: 'center', mb: 2 }}>
             <Typography
               variant="h4"
@@ -1190,7 +1106,6 @@ const FWDPage = () => {
             </Typography>
           </Box>
 
-          {/* Steps indicator */}
           <Box sx={{ mb: 2 }}>
             <Stepper activeStep={tabValue} alternativeLabel>
               {steps.map((label, index) => (
@@ -1224,7 +1139,6 @@ const FWDPage = () => {
             </Stepper>
           </Box>
 
-          {/* Main content card */}
           <Paper 
             elevation={6} 
             sx={{ 
@@ -1234,7 +1148,6 @@ const FWDPage = () => {
               border: `2px solid ${PRO_MEDINA_COLORS.secondary.main}`,
             }}
           >
-            {/* Tabs */}
             <Box sx={{ borderBottom: `1px solid ${PRO_MEDINA_COLORS.secondary.main}`, background: '#f8f9fa' }}>
               <Tabs
                 value={tabValue}
@@ -1284,7 +1197,7 @@ const FWDPage = () => {
                 </Alert>
               )}
 
-              {/* Tab 0 - Dados Gerais (Criar/Editar análise) */}
+              {/* Tab 0 - Dados Gerais */}
               <TabPanel value={tabValue} index={0}>
                 <Paper 
                   sx={{ 
@@ -1540,7 +1453,6 @@ const FWDPage = () => {
                           : `Atenção: necessário ${5 - samples.length} amostras para análise completa`}
                       </Alert>
                       
-                      {/* Grid para amostras usando Box */}
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
                         <Box sx={{ flex: '1 1 120px', minWidth: '120px' }}>
                           <TextField
@@ -1724,9 +1636,7 @@ const FWDPage = () => {
                       Nenhuma análise criada ainda. Vá para &quot;Dados Gerais&quot; para criar uma nova análise.
                     </Alert>
                   ) : showAllAnalyses ? (
-                    // Visualização detalhada de todas as análises
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                      {/* Rascunhos */}
                       {drafts.length > 0 && (
                         <Box>
                           <Typography variant="h6" sx={{ fontWeight: 600, color: '#ff6b35', mb: 1, textAlign: 'left' }}>
@@ -1816,7 +1726,6 @@ const FWDPage = () => {
                         </Box>
                       )}
 
-                      {/* Análises completas */}
                       {fwdAnalysis.length > 0 && (
                         <Box>
                           <Typography variant="h6" sx={{ fontWeight: 600, color: '#2c3e50', mb: 1, textAlign: 'left', mt: drafts.length > 0 ? 2 : 0 }}>
@@ -1927,7 +1836,6 @@ const FWDPage = () => {
                       )}
                     </Box>
                   ) : (
-                    // Visualização em cards (original)
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'center' }}>
                       {drafts.map((draft) => (
                         <Box key={draft.id} sx={{ flex: '0 1 280px' }}>
@@ -2406,9 +2314,6 @@ const FWDPage = () => {
         maxWidth={false}
         fullWidth
       >
-
-
-
         <DialogTitle sx={{ backgroundColor: PRO_MEDINA_COLORS.primary.main, color: 'white' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography variant="h6" sx={{ fontWeight: 700 }}>
@@ -2426,7 +2331,6 @@ const FWDPage = () => {
         </DialogTitle>
         <DialogContent dividers sx={{ p: 0 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            {/* Rascunhos */}
             {drafts.length > 0 && (
               <Box sx={{ borderBottom: `1px solid ${PRO_MEDINA_COLORS.secondary.light}` }}>
                 <Box sx={{ p: 2, backgroundColor: '#fff5f0' }}>
@@ -2492,7 +2396,6 @@ const FWDPage = () => {
               </Box>
             )}
 
-            {/* Análises completas */}
             {fwdAnalysis.length > 0 && (
               <Box>
                 <Box sx={{ p: 2, backgroundColor: '#f5f7fa' }}>
@@ -2591,12 +2494,11 @@ const FWDPage = () => {
 
       {/* Diálogo para salvar análise */}
       <Dialog
-        open={showAnalysesDialog}
-        onClose={() => setShowAnalysesDialog(false)}
+        open={showSaveDialog}
+        onClose={() => setShowSaveDialog(false)}
         maxWidth={false}
         fullWidth
       >
-
         <DialogTitle sx={{ backgroundColor: PRO_MEDINA_COLORS.primary.main, color: 'white' }}>
           <Typography variant="h6" sx={{ fontWeight: 700 }}>
             Salvar Análise
