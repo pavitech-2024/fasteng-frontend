@@ -1,8 +1,11 @@
-import { Delete, Add, Assessment, ExpandMore, FileUpload, Edit, Visibility } from '@mui/icons-material';
+import { Delete, Add, Assessment, ExpandMore, FileUpload, Edit, Visibility, Save } from '@mui/icons-material';
 import { Line } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import Api from '@/api';
 import * as XLSX from 'xlsx';
+import Dialog from '@mui/material/Dialog';
+
+
 import {
   Tab,
   Tabs,
@@ -39,7 +42,15 @@ import {
   Toolbar,
   Stepper,
   Step,
-  StepLabel
+  StepLabel,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  ListItemSecondaryAction
 } from '@mui/material';
 import { Container } from '@mui/material';
 import { useState, useEffect, ChangeEvent } from 'react';
@@ -125,6 +136,8 @@ const proMedinaTheme = createTheme({
   },
 });
 
+
+
 // Cores PRO-MEDINA para uso direto
 const PRO_MEDINA_COLORS = {
   primary: {
@@ -188,7 +201,14 @@ interface FWDAnalysis {
   description: string;
   samples: FWDData[];
   createdAt: string;
-  status: 'active' | 'completed';
+  updatedAt?: string;
+  status: 'active' | 'completed' | 'draft';
+  location?: string;
+  highway?: string;
+  layerType?: string;
+  cityState?: string;
+  speedLimit?: number;
+  notes?: string;
 }
 
 type Subtrecho = {
@@ -205,6 +225,32 @@ type Subtrecho = {
   d120: number;
   d150: number;
   d180: number;
+};
+
+interface ProcessResult {
+  subtrechos: Subtrecho[];
+  ordered: FWDData[];
+  media_d0: number[];
+  std_d0: number[];
+  cv_d0: number[];
+  quebra: boolean[];
+}
+
+// Helper para converter status de string para tipo correto
+const normalizeStatus = (status: string): 'active' | 'completed' | 'draft' => {
+  if (status === 'active' || status === 'completed' || status === 'draft') {
+    return status;
+  }
+  // Se o status for 'finalizado', converte para 'completed'
+  if (status === 'finalizado' || status === 'finished') {
+    return 'completed';
+  }
+  // Se o status for 'rascunho', converte para 'draft'
+  if (status === 'rascunho') {
+    return 'draft';
+  }
+  // Default para 'active'
+  return 'active';
 };
 
 // Helpers
@@ -315,6 +361,7 @@ function processarSubtrechos(dados: FWDData[]) {
 
 const pos_sensores = [0, 20, 30, 45, 60, 90, 120, 150, 180];
 
+// Serviço de análises FWD
 const fwdAnalysisService = {
   createAnalysis: (analysisData: any) => Api.post('fwd-analysis/save', analysisData),
   getAnalyses: () => Api.get('fwd-analysis/all'),
@@ -322,15 +369,57 @@ const fwdAnalysisService = {
   updateAnalysis: (analysisId: string, analysisData: any) => Api.put(`fwd-analysis/${analysisId}`, analysisData),
   deleteAnalysis: (analysisId: string) => Api.delete(`fwd-analysis/${analysisId}`),
   processAnalysis: (analysisId: string) => Api.post(`fwd-analysis/${analysisId}/process`),
+  saveDraft: (analysisData: any) => Api.post('fwd-analysis/draft', analysisData),
+  getDrafts: () => Api.get('fwd-analysis/drafts'),
 };
+
+interface BackendSample {
+  stationNumber: number;
+  d0: number;
+  d20: number;
+  d30: number;
+  d45: number;
+  d60: number;
+  d90: number;
+  d120: number;
+  d150: number;
+  d180: number;
+  date?: string;
+  airTemperature?: number;
+  pavementTemperature?: number;
+  appliedLoad?: number;
+}
+
+interface BackendAnalysis {
+  _id: string;
+  name: string;
+  description: string;
+  samples: BackendSample[];
+  createdAt: string;
+  updatedAt?: string;
+  status: string;
+  location?: string;
+  highway?: string;
+  layerType?: string;
+  cityState?: string;
+  speedLimit?: number;
+  notes?: string;
+}
 
 const FWDPage = () => {
   const [tabValue, setTabValue] = useState(0);
   const [fwdAnalysis, setFwdAnalysis] = useState<FWDAnalysis[]>([]);
+  const [drafts, setDrafts] = useState<FWDAnalysis[]>([]);
   const [selectedAnalysis, setSelectedAnalysis] = useState<FWDAnalysis | null>(null);
   const [newAnalysis, setNewAnalysis] = useState({
     name: '',
     description: '',
+    location: '',
+    highway: '',
+    layerType: '',
+    cityState: '',
+    speedLimit: '',
+    notes: '',
   });
   const [currentSample, setCurrentSample] = useState<Partial<FWDData>>({
     stationNumber: 0,
@@ -346,29 +435,33 @@ const FWDPage = () => {
   });
   const [samples, setSamples] = useState<FWDData[]>([]);
   const [error, setError] = useState('');
-  const [procResult, setProcResult] = useState<any>(null);
+  const [procResult, setProcResult] = useState<ProcessResult | null>(null);
   const [procError, setProcError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [editingAnalysis, setEditingAnalysis] = useState<FWDAnalysis | null>(null);
   const [showAllAnalyses, setShowAllAnalyses] = useState(false);
+  const [showAnalysesDialog, setShowAnalysesDialog] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [saveAsNew, setSaveAsNew] = useState(false);
 
   const theme = useTheme();
 
   useEffect(() => {
     loadAnalyses();
+    loadDrafts();
   }, []);
 
   const loadAnalyses = async () => {
     setLoading(true);
     try {
       const response = await fwdAnalysisService.getAnalyses();
-      const backendAnalyses = response.data;
-      const frontendAnalyses = backendAnalyses.map((analysis: any) => ({
+      const backendAnalyses = response.data as BackendAnalysis[];
+      const frontendAnalyses: FWDAnalysis[] = backendAnalyses.map((analysis) => ({
         id: analysis._id,
         name: analysis.name,
         description: analysis.description || '',
-        samples: analysis.samples.map((sample: any, index: number) => ({
+        samples: analysis.samples.map((sample, index) => ({
           id: index + 1,
           stationNumber: sample.stationNumber,
           d0: sample.d0,
@@ -386,7 +479,14 @@ const FWDPage = () => {
           appliedLoad: sample.appliedLoad,
         })),
         createdAt: analysis.createdAt ? analysis.createdAt.split('T')[0] : new Date().toISOString().split('T')[0],
-        status: analysis.status || 'active',
+        updatedAt: analysis.updatedAt ? analysis.updatedAt.split('T')[0] : undefined,
+        status: normalizeStatus(analysis.status),
+        location: analysis.location || '',
+        highway: analysis.highway || '',
+        layerType: analysis.layerType || '',
+        cityState: analysis.cityState || '',
+        speedLimit: analysis.speedLimit || undefined,
+        notes: analysis.notes || '',
       }));
 
       setFwdAnalysis(frontendAnalyses);
@@ -397,6 +497,48 @@ const FWDPage = () => {
       setSnackbar({ open: true, message: 'Erro ao carregar análises', severity: 'error' });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadDrafts = async () => {
+    try {
+      const response = await fwdAnalysisService.getDrafts();
+      const backendDrafts = response.data as BackendAnalysis[];
+      const frontendDrafts: FWDAnalysis[] = backendDrafts.map((draft) => ({
+        id: draft._id,
+        name: draft.name || 'Rascunho Sem Nome',
+        description: draft.description || '',
+        samples: draft.samples.map((sample, index) => ({
+          id: index + 1,
+          stationNumber: sample.stationNumber,
+          d0: sample.d0,
+          d20: sample.d20,
+          d30: sample.d30,
+          d45: sample.d45,
+          d60: sample.d60,
+          d90: sample.d90,
+          d120: sample.d120,
+          d150: sample.d150,
+          d180: sample.d180,
+          date: sample.date,
+          airTemperature: sample.airTemperature,
+          pavementTemperature: sample.pavementTemperature,
+          appliedLoad: sample.appliedLoad,
+        })),
+        createdAt: draft.createdAt ? draft.createdAt.split('T')[0] : new Date().toISOString().split('T')[0],
+        updatedAt: draft.updatedAt ? draft.updatedAt.split('T')[0] : undefined,
+        status: 'draft',
+        location: draft.location || '',
+        highway: draft.highway || '',
+        layerType: draft.layerType || '',
+        cityState: draft.cityState || '',
+        speedLimit: draft.speedLimit || undefined,
+        notes: draft.notes || '',
+      }));
+
+      setDrafts(frontendDrafts);
+    } catch (err) {
+      console.error('Erro ao carregar rascunhos:', err);
     }
   };
 
@@ -442,22 +584,30 @@ const FWDPage = () => {
     setSamples((prev) => prev.filter((s) => s.id !== id));
   };
 
-  const handleCreateAnalysis = async () => {
-    if (!newAnalysis.name) {
+  const handleSaveAnalysis = async (asDraft = false) => {
+    if (!newAnalysis.name && !asDraft) {
       setError('Nome da análise é obrigatório');
       return;
     }
 
-    if (samples.length < 5) {
-      setError('Mínimo de 5 amostras necessárias para criar uma análise');
+    if (samples.length < 5 && !asDraft) {
+      setError('Mínimo de 5 amostras necessárias para criar uma análise completa');
       return;
     }
 
     setLoading(true);
     try {
+      const analysisName = asDraft ? (newAnalysis.name || 'Rascunho Sem Nome') : newAnalysis.name;
+      
       const backendData = {
-        name: newAnalysis.name,
+        name: analysisName,
         description: newAnalysis.description,
+        location: newAnalysis.location,
+        highway: newAnalysis.highway,
+        layerType: newAnalysis.layerType,
+        cityState: newAnalysis.cityState,
+        speedLimit: newAnalysis.speedLimit ? parseInt(newAnalysis.speedLimit) : undefined,
+        notes: newAnalysis.notes,
         samples: samples.map((sample) => ({
           stationNumber: sample.stationNumber,
           d0: sample.d0,
@@ -474,16 +624,22 @@ const FWDPage = () => {
           pavementTemperature: sample.pavementTemperature,
           appliedLoad: sample.appliedLoad,
         })),
-        status: 'active',
+        status: asDraft ? 'draft' : 'active',
       };
 
-      const response = await fwdAnalysisService.createAnalysis(backendData);
-      const createdAnalysis = response.data;
+      let response;
+      if (editingAnalysis && !saveAsNew) {
+        response = await fwdAnalysisService.updateAnalysis(editingAnalysis.id, backendData);
+      } else {
+        response = await fwdAnalysisService.createAnalysis(backendData);
+      }
+
+      const createdAnalysis = response.data as BackendAnalysis;
       const frontendAnalysis: FWDAnalysis = {
         id: createdAnalysis._id,
         name: createdAnalysis.name,
         description: createdAnalysis.description || '',
-        samples: createdAnalysis.samples.map((sample: any, index: number) => ({
+        samples: createdAnalysis.samples.map((sample, index) => ({
           id: index + 1,
           stationNumber: sample.stationNumber,
           d0: sample.d0,
@@ -503,36 +659,102 @@ const FWDPage = () => {
         createdAt: createdAnalysis.createdAt
           ? createdAnalysis.createdAt.split('T')[0]
           : new Date().toISOString().split('T')[0],
-        status: createdAnalysis.status || 'active',
+        updatedAt: createdAnalysis.updatedAt
+          ? createdAnalysis.updatedAt.split('T')[0]
+          : undefined,
+        status: normalizeStatus(createdAnalysis.status),
+        location: createdAnalysis.location || '',
+        highway: createdAnalysis.highway || '',
+        layerType: createdAnalysis.layerType || '',
+        cityState: createdAnalysis.cityState || '',
+        speedLimit: createdAnalysis.speedLimit || undefined,
+        notes: createdAnalysis.notes || '',
       };
 
-      setFwdAnalysis((prev) => [...prev, frontendAnalysis]);
-      setSelectedAnalysis(frontendAnalysis);
+      // Atualizar lista de análises
+      if (asDraft) {
+        setDrafts(prev => {
+          const existingIndex = prev.findIndex(d => d.id === frontendAnalysis.id);
+          if (existingIndex >= 0) {
+            const newDrafts = [...prev];
+            newDrafts[existingIndex] = frontendAnalysis;
+            return newDrafts;
+          }
+          return [...prev, frontendAnalysis];
+        });
+      } else {
+        setFwdAnalysis(prev => {
+          if (editingAnalysis && !saveAsNew) {
+            return prev.map(a => a.id === editingAnalysis.id ? frontendAnalysis : a);
+          }
+          return [...prev, frontendAnalysis];
+        });
+        setSelectedAnalysis(frontendAnalysis);
+      }
 
-      setNewAnalysis({ name: '', description: '' });
-      setSamples([]);
-      setCurrentSample({
-        stationNumber: 0,
-        d0: 0,
-        d20: 0,
-        d30: 0,
-        d45: 0,
-        d60: 0,
-        d90: 0,
-        d120: 0,
-        d150: 0,
-        d180: 0,
+      // Limpar formulário se não estiver editando
+      if (!editingAnalysis || saveAsNew) {
+        setNewAnalysis({
+          name: '',
+          description: '',
+          location: '',
+          highway: '',
+          layerType: '',
+          cityState: '',
+          speedLimit: '',
+          notes: '',
+        });
+        setSamples([]);
+        setCurrentSample({
+          stationNumber: 0,
+          d0: 0,
+          d20: 0,
+          d30: 0,
+          d45: 0,
+          d60: 0,
+          d90: 0,
+          d120: 0,
+          d150: 0,
+          d180: 0,
+        });
+      }
+
+      setEditingAnalysis(null);
+      setSaveAsNew(false);
+      setShowSaveDialog(false);
+      setError('');
+
+      const message = asDraft ? 'Rascunho salvo com sucesso!' : 
+        editingAnalysis ? 'Análise atualizada com sucesso!' : 'Análise criada com sucesso!';
+      
+      setSnackbar({ 
+        open: true, 
+        message: message, 
+        severity: 'success' 
       });
 
-      setError('');
-      setTabValue(2);
-      setSnackbar({ open: true, message: 'Análise criada com sucesso!', severity: 'success' });
+      if (!asDraft) {
+        setTabValue(2);
+      }
+
     } catch (err) {
-      setError('Erro ao criar análise');
-      setSnackbar({ open: true, message: 'Erro ao criar análise', severity: 'error' });
+      setError('Erro ao salvar análise');
+      setSnackbar({ 
+        open: true, 
+        message: 'Erro ao salvar análise', 
+        severity: 'error' 
+      });
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCreateAnalysis = async () => {
+    await handleSaveAnalysis(false);
+  };
+
+  const handleSaveDraft = async () => {
+    await handleSaveAnalysis(true);
   };
 
   const handleEditAnalysis = async (analysis: FWDAnalysis) => {
@@ -540,79 +762,45 @@ const FWDPage = () => {
     setNewAnalysis({
       name: analysis.name,
       description: analysis.description,
+      location: analysis.location || '',
+      highway: analysis.highway || '',
+      layerType: analysis.layerType || '',
+      cityState: analysis.cityState || '',
+      speedLimit: analysis.speedLimit?.toString() || '',
+      notes: analysis.notes || '',
     });
     setSamples(analysis.samples);
     setTabValue(0);
+    setShowSaveDialog(false);
+  };
+
+  const handleLoadAnalysis = async (analysis: FWDAnalysis) => {
+    setSelectedAnalysis(analysis);
+    setShowAnalysesDialog(false);
+    setTabValue(2);
+  };
+
+  const handleLoadDraft = async (draft: FWDAnalysis) => {
+    await handleEditAnalysis(draft);
+    setShowAnalysesDialog(false);
   };
 
   const handleUpdateAnalysis = async () => {
-    if (!editingAnalysis || !newAnalysis.name) {
-      setError('Nome da análise é obrigatório');
-      return;
-    }
-
-    if (samples.length < 5) {
-      setError('Mínimo de 5 amostras necessárias para atualizar a análise');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const backendData = {
-        name: newAnalysis.name,
-        description: newAnalysis.description,
-        samples: samples.map((sample) => ({
-          stationNumber: sample.stationNumber,
-          d0: sample.d0,
-          d20: sample.d20,
-          d30: sample.d30,
-          d45: sample.d45,
-          d60: sample.d60,
-          d90: sample.d90,
-          d120: sample.d120,
-          d150: sample.d150,
-          d180: sample.d180,
-          date: sample.date,
-          airTemperature: sample.airTemperature,
-          pavementTemperature: sample.pavementTemperature,
-          appliedLoad: sample.appliedLoad,
-        })),
-        status: 'active',
-      };
-
-      await fwdAnalysisService.updateAnalysis(editingAnalysis.id, backendData);
-      
-      await loadAnalyses();
-      
-      setEditingAnalysis(null);
-      setNewAnalysis({ name: '', description: '' });
-      setSamples([]);
-      setCurrentSample({
-        stationNumber: 0,
-        d0: 0,
-        d20: 0,
-        d30: 0,
-        d45: 0,
-        d60: 0,
-        d90: 0,
-        d120: 0,
-        d150: 0,
-        d180: 0,
-      });
-
-      setError('');
-      setSnackbar({ open: true, message: 'Análise atualizada com sucesso!', severity: 'success' });
-    } catch (err) {
-      setError('Erro ao atualizar análise');
-      setSnackbar({ open: true, message: 'Erro ao atualizar análise', severity: 'error' });
-    } finally {
-      setLoading(false);
-    }
+    await handleSaveAnalysis(false);
   };
 
   const handleCancelEdit = () => {
     setEditingAnalysis(null);
-    setNewAnalysis({ name: '', description: '' });
+    setNewAnalysis({
+      name: '',
+      description: '',
+      location: '',
+      highway: '',
+      layerType: '',
+      cityState: '',
+      speedLimit: '',
+      notes: '',
+    });
     setSamples([]);
     setCurrentSample({
       stationNumber: 0,
@@ -627,19 +815,34 @@ const FWDPage = () => {
       d180: 0,
     });
     setError('');
+    setSaveAsNew(false);
   };
 
-  const handleDeleteAnalysis = async (id: string) => {
+  const handleDeleteAnalysis = async (id: string, isDraft = false) => {
     setLoading(true);
     try {
       await fwdAnalysisService.deleteAnalysis(id);
-      setFwdAnalysis((prev) => prev.filter((a) => a.id !== id));
-      if (selectedAnalysis?.id === id) {
-        setSelectedAnalysis(fwdAnalysis.find((a) => a.id !== id) || null);
+      
+      if (isDraft) {
+        setDrafts(prev => prev.filter((d) => d.id !== id));
+      } else {
+        setFwdAnalysis(prev => prev.filter((a) => a.id !== id));
+        if (selectedAnalysis?.id === id) {
+          setSelectedAnalysis(fwdAnalysis.find((a) => a.id !== id) || null);
+        }
       }
-      setSnackbar({ open: true, message: 'Análise deletada com sucesso!', severity: 'success' });
+      
+      setSnackbar({ 
+        open: true, 
+        message: isDraft ? 'Rascunho deletado com sucesso!' : 'Análise deletada com sucesso!', 
+        severity: 'success' 
+      });
     } catch (err) {
-      setSnackbar({ open: true, message: 'Erro ao deletar análise', severity: 'error' });
+      setSnackbar({ 
+        open: true, 
+        message: 'Erro ao deletar', 
+        severity: 'error' 
+      });
     } finally {
       setLoading(false);
     }
@@ -687,12 +890,12 @@ const FWDPage = () => {
         const workbook = XLSX.read(data, { type: 'binary' });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
-        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as any[][];
 
         // ENCONTRAR A LINHA ONDE COMEÇAM OS DADOS REAIS
         let dataStartRow = -1;
         for (let i = 0; i < Math.min(10, rows.length); i++) {
-          const row = rows[i] as any[];
+          const row = rows[i];
           if (row && row[0] && (
             row[0].toString().toUpperCase().includes('ESTACA') || 
             row[0].toString().toUpperCase().includes('DATA')
@@ -805,11 +1008,11 @@ const FWDPage = () => {
   const d0ChartData =
     procResult && procResult.ordered && procResult.ordered.length > 0
       ? {
-          labels: procResult.ordered.map((r: FWDData) => r.stationNumber),
+          labels: procResult.ordered.map((r) => r.stationNumber),
           datasets: [
             {
               label: 'd0 (Deflexão Máxima)',
-              data: procResult.ordered.map((r: FWDData) => r.d0),
+              data: procResult.ordered.map((r) => r.d0),
               borderColor: PRO_MEDINA_COLORS.primary.main,
               backgroundColor: PRO_MEDINA_COLORS.primary.light,
               borderWidth: 2,
@@ -819,7 +1022,7 @@ const FWDPage = () => {
             },
             {
               label: 'Quebra (CV > 30%)',
-              data: procResult.ordered.map((_: any, i: number) =>
+              data: procResult.ordered.map((_, i) =>
                 procResult.quebra && procResult.quebra[i] ? procResult.ordered[i].d0 : NaN
               ),
               borderColor: 'red',
@@ -836,7 +1039,7 @@ const FWDPage = () => {
     procResult && procResult.subtrechos && Array.isArray(procResult.subtrechos) && procResult.subtrechos.length > 0
       ? {
           labels: pos_sensores.map((x) => `${x} cm`),
-          datasets: procResult.subtrechos.map((sub: any, i: number) => ({
+          datasets: procResult.subtrechos.map((sub, i) => ({
             label: `Subtrecho ${i + 1}: Est. ${sub['Início (Estaca)']}–${sub['Fim (Estaca)']}`,
             data: pos_sensores.map((p) => {
               const value = sub[`d${p}`];
@@ -920,9 +1123,37 @@ const FWDPage = () => {
                 </Typography>
               </Box>
             </Box>
-            <Typography variant="body2" sx={{ color: 'white', fontWeight: 600, fontSize: '0.8rem' }}>
-              SISTEMA DE ANÁLISE
-            </Typography>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={<Visibility />}
+                onClick={() => setShowAnalysesDialog(true)}
+                sx={{ 
+                  color: 'white',
+                  borderColor: 'rgba(255,255,255,0.3)',
+                  fontSize: '0.7rem',
+                  '&:hover': {
+                    borderColor: 'white',
+                    backgroundColor: 'rgba(255,255,255,0.1)',
+                  }
+                }}
+              >
+                Ver Análises
+              </Button>
+              <Button
+                variant="contained"
+                size="small"
+                startIcon={<Save />}
+                onClick={() => setShowSaveDialog(true)}
+                sx={{ 
+                  fontSize: '0.7rem',
+                  background: 'linear-gradient(45deg, #ff6b35 30%, #ff8a65 90%)',
+                }}
+              >
+                Salvar
+              </Button>
+            </Box>
           </Toolbar>
         </AppBar>
 
@@ -1073,21 +1304,35 @@ const FWDPage = () => {
                         letterSpacing: '0.3px'
                       }}
                     >
-                      {editingAnalysis ? 'Editar Análise' : 'Dados Gerais'}
+                      {editingAnalysis ? `Editar Análise: ${editingAnalysis.name}` : 'Dados Gerais'}
                     </Typography>
-                    {editingAnalysis && (
+                    <Box sx={{ display: 'flex', gap: 1 }}>
                       <Button
                         variant="outlined"
                         color="secondary"
-                        onClick={handleCancelEdit}
+                        onClick={() => setShowAnalysesDialog(true)}
+                        startIcon={<Visibility />}
                         sx={{ 
                           fontSize: '0.8rem',
                           fontWeight: 600,
                         }}
                       >
-                        Cancelar Edição
+                        Ver Análises
                       </Button>
-                    )}
+                      {editingAnalysis && (
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          onClick={handleCancelEdit}
+                          sx={{ 
+                            fontSize: '0.8rem',
+                            fontWeight: 600,
+                          }}
+                        >
+                          Cancelar
+                        </Button>
+                      )}
+                    </Box>
                   </Box>
                   
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -1095,7 +1340,7 @@ const FWDPage = () => {
                       <Box sx={{ flex: '1 1 300px' }}>
                         <TextField
                           fullWidth
-                          label="Nome *"
+                          label="Nome da Análise *"
                           value={newAnalysis.name}
                           onChange={(e) => setNewAnalysis({ ...newAnalysis, name: e.target.value })}
                           required
@@ -1118,6 +1363,8 @@ const FWDPage = () => {
                           fullWidth
                           label="Local *"
                           placeholder="Localização do projeto"
+                          value={newAnalysis.location}
+                          onChange={(e) => setNewAnalysis({ ...newAnalysis, location: e.target.value })}
                           size="small"
                           sx={{
                             '& .MuiOutlinedInput-root': {
@@ -1140,6 +1387,8 @@ const FWDPage = () => {
                           fullWidth
                           label="Rodovia *"
                           placeholder="Nome da rodovia"
+                          value={newAnalysis.highway}
+                          onChange={(e) => setNewAnalysis({ ...newAnalysis, highway: e.target.value })}
                           size="small"
                           sx={{
                             '& .MuiOutlinedInput-root': {
@@ -1159,6 +1408,8 @@ const FWDPage = () => {
                           fullWidth
                           label="Camada *"
                           placeholder="Tipo de camada"
+                          value={newAnalysis.layerType}
+                          onChange={(e) => setNewAnalysis({ ...newAnalysis, layerType: e.target.value })}
                           size="small"
                           sx={{
                             '& .MuiOutlinedInput-root': {
@@ -1181,6 +1432,8 @@ const FWDPage = () => {
                           fullWidth
                           label="Município/Estado *"
                           placeholder="Município e Estado"
+                          value={newAnalysis.cityState}
+                          onChange={(e) => setNewAnalysis({ ...newAnalysis, cityState: e.target.value })}
                           size="small"
                           sx={{
                             '& .MuiOutlinedInput-root': {
@@ -1201,6 +1454,8 @@ const FWDPage = () => {
                             fullWidth
                             label="Velocidade diretriz da via"
                             type="number"
+                            value={newAnalysis.speedLimit}
+                            onChange={(e) => setNewAnalysis({ ...newAnalysis, speedLimit: e.target.value })}
                             size="small"
                             sx={{
                               '& .MuiOutlinedInput-root': {
@@ -1227,8 +1482,8 @@ const FWDPage = () => {
                         multiline
                         rows={2}
                         label="Observações"
-                        value={newAnalysis.description}
-                        onChange={(e) => setNewAnalysis({ ...newAnalysis, description: e.target.value })}
+                        value={newAnalysis.notes}
+                        onChange={(e) => setNewAnalysis({ ...newAnalysis, notes: e.target.value })}
                         size="small"
                         sx={{
                           '& .MuiOutlinedInput-root': {
@@ -1406,49 +1661,32 @@ const FWDPage = () => {
                     )}
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, gap: 2 }}>
-                      {editingAnalysis ? (
-                        <>
-                          <Button
-                            variant="outlined"
-                            onClick={handleCancelEdit}
-                            sx={{ 
-                              px: 3,
-                              py: 1,
-                              fontSize: '0.9rem',
-                              fontWeight: 700,
-                            }}
-                          >
-                            Cancelar
-                          </Button>
-                          <Button
-                            variant="contained"
-                            onClick={handleUpdateAnalysis}
-                            disabled={samples.length < 5 || !newAnalysis.name || loading}
-                            sx={{ 
-                              px: 3,
-                              py: 1,
-                              fontSize: '0.9rem',
-                              fontWeight: 700,
-                            }}
-                          >
-                            {loading ? <CircularProgress size={20} /> : 'Atualizar Análise'}
-                          </Button>
-                        </>
-                      ) : (
-                        <Button
-                          variant="contained"
-                          onClick={handleCreateAnalysis}
-                          disabled={samples.length < 5 || !newAnalysis.name || loading}
-                          sx={{ 
-                            px: 3,
-                            py: 1,
-                            fontSize: '0.9rem',
-                            fontWeight: 700,
-                          }}
-                        >
-                          {loading ? <CircularProgress size={20} /> : 'Criar Análise FWD'}
-                        </Button>
-                      )}
+                      <Button
+                        variant="outlined"
+                        onClick={handleSaveDraft}
+                        disabled={samples.length === 0}
+                        sx={{ 
+                          px: 3,
+                          py: 1,
+                          fontSize: '0.9rem',
+                          fontWeight: 700,
+                        }}
+                      >
+                        Salvar como Rascunho
+                      </Button>
+                      <Button
+                        variant="contained"
+                        onClick={editingAnalysis ? handleUpdateAnalysis : handleCreateAnalysis}
+                        disabled={samples.length < 5 || !newAnalysis.name || loading}
+                        sx={{ 
+                          px: 3,
+                          py: 1,
+                          fontSize: '0.9rem',
+                          fontWeight: 700,
+                        }}
+                      >
+                        {loading ? <CircularProgress size={20} /> : editingAnalysis ? 'Atualizar Análise' : 'Criar Análise FWD'}
+                      </Button>
                     </Box>
                   </Box>
                 </Paper>
@@ -1481,117 +1719,311 @@ const FWDPage = () => {
                       {showAllAnalyses ? 'Ocultar Detalhes' : 'Ver Todas as Análises'}
                     </Button>
                   </Box>
-                  {fwdAnalysis.length === 0 ? (
+                  {fwdAnalysis.length === 0 && drafts.length === 0 ? (
                     <Alert severity="info" sx={{ borderRadius: 1, fontSize: '0.85rem' }}>
                       Nenhuma análise criada ainda. Vá para &quot;Dados Gerais&quot; para criar uma nova análise.
                     </Alert>
                   ) : showAllAnalyses ? (
                     // Visualização detalhada de todas as análises
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                      {fwdAnalysis.map((analysis) => (
-                        <Card
-                          key={analysis.id}
-                          sx={{
-                            border: selectedAnalysis?.id === analysis.id 
-                              ? `2px solid ${PRO_MEDINA_COLORS.primary.main}` 
-                              : `1px solid ${PRO_MEDINA_COLORS.secondary.main}`,
-                            borderRadius: 2,
-                            background: selectedAnalysis?.id === analysis.id 
-                              ? 'linear-gradient(145deg, #fff5f0 0%, #ffffff 100%)'
-                              : 'linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)',
-                          }}
-                        >
-                          <CardContent sx={{ p: 2 }}>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                              <Box>
-                                <Typography 
-                                  variant="h6" 
-                                  fontWeight={700}
-                                  sx={{ 
-                                    color: selectedAnalysis?.id === analysis.id 
-                                      ? PRO_MEDINA_COLORS.primary.main 
-                                      : '#2c3e50',
-                                    mb: 0.5,
-                                    fontSize: '1rem'
-                                  }}
-                                >
-                                  {analysis.name}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
-                                  {analysis.description}
-                                </Typography>
-                              </Box>
-                              <Box sx={{ display: 'flex', gap: 0.5 }}>
-                                <IconButton
-                                  size="small"
-                                  color="primary"
-                                  onClick={() => handleEditAnalysis(analysis)}
-                                  sx={{ 
-                                    backgroundColor: 'rgba(255, 107, 53, 0.1)',
-                                    '&:hover': {
-                                      backgroundColor: 'rgba(255, 107, 53, 0.2)',
-                                    }
-                                  }}
-                                >
-                                  <Edit fontSize="small" />
-                                </IconButton>
-                                <IconButton
-                                  size="small"
-                                  color="error"
-                                  onClick={() => handleDeleteAnalysis(analysis.id)}
-                                  sx={{ 
-                                    backgroundColor: 'rgba(211, 47, 47, 0.1)',
-                                    '&:hover': {
-                                      backgroundColor: 'rgba(211, 47, 47, 0.2)',
-                                    }
-                                  }}
-                                >
-                                  <Delete fontSize="small" />
-                                </IconButton>
-                              </Box>
-                            </Box>
-                            
-                            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                              <Chip
-                                label={`${analysis.samples.length} amostras`}
-                                variant="outlined"
-                                size="small"
-                                sx={{ fontWeight: 600, fontSize: '0.7rem' }}
-                              />
-                              <Chip
-                                label={analysis.samples.length >= 5 ? 'Completa' : 'Incompleta'}
-                                color={analysis.samples.length >= 5 ? 'success' : 'warning'}
-                                size="small"
-                                sx={{ fontWeight: 600, fontSize: '0.7rem' }}
-                              />
-                              <Chip
-                                label={`Criada em: ${analysis.createdAt}`}
-                                variant="outlined"
-                                size="small"
-                                sx={{ fontWeight: 600, fontSize: '0.7rem' }}
-                              />
-                            </Box>
-
-                            <Button
-                              fullWidth
-                              variant={selectedAnalysis?.id === analysis.id ? "contained" : "outlined"}
-                              onClick={() => setSelectedAnalysis(analysis)}
-                              size="small"
-                              sx={{ 
-                                borderRadius: 1,
-                                fontWeight: 600,
-                                fontSize: '0.75rem',
+                      {/* Rascunhos */}
+                      {drafts.length > 0 && (
+                        <Box>
+                          <Typography variant="h6" sx={{ fontWeight: 600, color: '#ff6b35', mb: 1, textAlign: 'left' }}>
+                            Rascunhos ({drafts.length})
+                          </Typography>
+                          {drafts.map((draft) => (
+                            <Card
+                              key={draft.id}
+                              sx={{
+                                border: `2px solid #ff6b35`,
+                                borderRadius: 2,
+                                background: 'linear-gradient(145deg, #fff5f0 0%, #ffffff 100%)',
+                                mb: 1,
                               }}
                             >
-                              {selectedAnalysis?.id === analysis.id ? 'Selecionada' : 'Selecionar para Análise'}
-                            </Button>
-                          </CardContent>
-                        </Card>
-                      ))}
+                              <CardContent sx={{ p: 2 }}>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                                  <Box>
+                                    <Typography 
+                                      variant="h6" 
+                                      fontWeight={700}
+                                      sx={{ 
+                                        color: '#ff6b35',
+                                        mb: 0.5,
+                                        fontSize: '1rem'
+                                      }}
+                                    >
+                                      {draft.name}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                                      {draft.description}
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ display: 'flex', gap: 0.5 }}>
+                                    <IconButton
+                                      size="small"
+                                      color="primary"
+                                      onClick={() => handleLoadDraft(draft)}
+                                      sx={{ 
+                                        backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                                        '&:hover': {
+                                          backgroundColor: 'rgba(255, 107, 53, 0.2)',
+                                        }
+                                      }}
+                                    >
+                                      <Edit fontSize="small" />
+                                    </IconButton>
+                                    <IconButton
+                                      size="small"
+                                      color="error"
+                                      onClick={() => handleDeleteAnalysis(draft.id, true)}
+                                      sx={{ 
+                                        backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                                        '&:hover': {
+                                          backgroundColor: 'rgba(211, 47, 47, 0.2)',
+                                        }
+                                      }}
+                                    >
+                                      <Delete fontSize="small" />
+                                    </IconButton>
+                                  </Box>
+                                </Box>
+                                
+                                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+                                  <Chip
+                                    label={`${draft.samples.length} amostras`}
+                                    variant="outlined"
+                                    size="small"
+                                    sx={{ fontWeight: 600, fontSize: '0.7rem' }}
+                                  />
+                                  <Chip
+                                    label="Rascunho"
+                                    color="warning"
+                                    size="small"
+                                    sx={{ fontWeight: 600, fontSize: '0.7rem' }}
+                                  />
+                                  <Chip
+                                    label={`Criado em: ${draft.createdAt}`}
+                                    variant="outlined"
+                                    size="small"
+                                    sx={{ fontWeight: 600, fontSize: '0.7rem' }}
+                                  />
+                                </Box>
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </Box>
+                      )}
+
+                      {/* Análises completas */}
+                      {fwdAnalysis.length > 0 && (
+                        <Box>
+                          <Typography variant="h6" sx={{ fontWeight: 600, color: '#2c3e50', mb: 1, textAlign: 'left', mt: drafts.length > 0 ? 2 : 0 }}>
+                            Análises Completas ({fwdAnalysis.length})
+                          </Typography>
+                          {fwdAnalysis.map((analysis) => (
+                            <Card
+                              key={analysis.id}
+                              sx={{
+                                border: selectedAnalysis?.id === analysis.id 
+                                  ? `2px solid ${PRO_MEDINA_COLORS.primary.main}` 
+                                  : `1px solid ${PRO_MEDINA_COLORS.secondary.main}`,
+                                borderRadius: 2,
+                                background: selectedAnalysis?.id === analysis.id 
+                                  ? 'linear-gradient(145deg, #fff5f0 0%, #ffffff 100%)'
+                                  : 'linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)',
+                                mb: 1,
+                              }}
+                            >
+                              <CardContent sx={{ p: 2 }}>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                                  <Box>
+                                    <Typography 
+                                      variant="h6" 
+                                      fontWeight={700}
+                                      sx={{ 
+                                        color: selectedAnalysis?.id === analysis.id 
+                                          ? PRO_MEDINA_COLORS.primary.main 
+                                          : '#2c3e50',
+                                        mb: 0.5,
+                                        fontSize: '1rem'
+                                      }}
+                                    >
+                                      {analysis.name}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                                      {analysis.description}
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ display: 'flex', gap: 0.5 }}>
+                                    <IconButton
+                                      size="small"
+                                      color="primary"
+                                      onClick={() => handleEditAnalysis(analysis)}
+                                      sx={{ 
+                                        backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                                        '&:hover': {
+                                          backgroundColor: 'rgba(255, 107, 53, 0.2)',
+                                        }
+                                      }}
+                                    >
+                                      <Edit fontSize="small" />
+                                    </IconButton>
+                                    <IconButton
+                                      size="small"
+                                      color="error"
+                                      onClick={() => handleDeleteAnalysis(analysis.id)}
+                                      sx={{ 
+                                        backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                                        '&:hover': {
+                                          backgroundColor: 'rgba(211, 47, 47, 0.2)',
+                                        }
+                                      }}
+                                    >
+                                      <Delete fontSize="small" />
+                                    </IconButton>
+                                  </Box>
+                                </Box>
+                                
+                                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+                                  <Chip
+                                    label={`${analysis.samples.length} amostras`}
+                                    variant="outlined"
+                                    size="small"
+                                    sx={{ fontWeight: 600, fontSize: '0.7rem' }}
+                                  />
+                                  <Chip
+                                    label={analysis.samples.length >= 5 ? 'Completa' : 'Incompleta'}
+                                    color={analysis.samples.length >= 5 ? 'success' : 'warning'}
+                                    size="small"
+                                    sx={{ fontWeight: 600, fontSize: '0.7rem' }}
+                                  />
+                                  <Chip
+                                    label={`Criada em: ${analysis.createdAt}`}
+                                    variant="outlined"
+                                    size="small"
+                                    sx={{ fontWeight: 600, fontSize: '0.7rem' }}
+                                  />
+                                </Box>
+
+                                <Button
+                                  fullWidth
+                                  variant={selectedAnalysis?.id === analysis.id ? "contained" : "outlined"}
+                                  onClick={() => setSelectedAnalysis(analysis)}
+                                  size="small"
+                                  sx={{ 
+                                    borderRadius: 1,
+                                    fontWeight: 600,
+                                    fontSize: '0.75rem',
+                                  }}
+                                >
+                                  {selectedAnalysis?.id === analysis.id ? 'Selecionada' : 'Selecionar para Análise'}
+                                </Button>
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </Box>
+                      )}
                     </Box>
                   ) : (
                     // Visualização em cards (original)
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'center' }}>
+                      {drafts.map((draft) => (
+                        <Box key={draft.id} sx={{ flex: '0 1 280px' }}>
+                          <Card
+                            sx={{
+                              cursor: 'pointer',
+                              minWidth: 240,
+                              maxWidth: 280,
+                              border: `2px solid #ff6b35`,
+                              borderRadius: 2,
+                              transition: 'all 0.2s ease',
+                              '&:hover': {
+                                transform: 'translateY(-2px)',
+                                boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+                              },
+                              background: 'linear-gradient(145deg, #fff5f0 0%, #ffffff 100%)',
+                            }}
+                            onClick={() => handleLoadDraft(draft)}
+                          >
+                            <CardContent sx={{ p: 2 }}>
+                              <Typography 
+                                variant="h6" 
+                                fontWeight={700}
+                                sx={{ 
+                                  color: '#ff6b35',
+                                  mb: 0.5,
+                                  fontSize: '1rem'
+                                }}
+                              >
+                                {draft.name}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary" gutterBottom sx={{ fontSize: '0.8rem' }}>
+                                {draft.description}
+                              </Typography>
+                              <Typography variant="body2" sx={{ mb: 1.5, fontWeight: 500, fontSize: '0.8rem' }}>
+                                {draft.samples.length} amostras - Rascunho
+                              </Typography>
+                              <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mb: 1.5 }}>
+                                <Chip
+                                  label="Rascunho"
+                                  color="warning"
+                                  size="small"
+                                  sx={{ fontWeight: 600, fontSize: '0.7rem' }}
+                                />
+                                <Chip
+                                  label={`Criado: ${draft.createdAt}`}
+                                  variant="outlined"
+                                  size="small"
+                                  sx={{ fontWeight: 600, fontSize: '0.7rem' }}
+                                />
+                              </Box>
+                              <Box sx={{ display: 'flex', gap: 1 }}>
+                                <Button
+                                  size="small"
+                                  variant="outlined"
+                                  startIcon={<Edit />}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleLoadDraft(draft);
+                                  }}
+                                  sx={{ 
+                                    flex: 1,
+                                    borderRadius: 1,
+                                    fontWeight: 600,
+                                    fontSize: '0.75rem',
+                                    py: 0.5,
+                                    borderColor: '#ff6b35',
+                                    color: '#ff6b35',
+                                  }}
+                                >
+                                  Editar
+                                </Button>
+                                <Button
+                                  size="small"
+                                  color="error"
+                                  variant="outlined"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteAnalysis(draft.id, true);
+                                  }}
+                                  sx={{ 
+                                    flex: 1,
+                                    borderRadius: 1,
+                                    fontWeight: 600,
+                                    fontSize: '0.75rem',
+                                    py: 0.5,
+                                  }}
+                                >
+                                  Excluir
+                                </Button>
+                              </Box>
+                            </CardContent>
+                          </Card>
+                        </Box>
+                      ))}
+                      
                       {fwdAnalysis.map((analysis) => (
                         <Box key={analysis.id} sx={{ flex: '0 1 280px' }}>
                           <Card
@@ -1713,7 +2145,7 @@ const FWDPage = () => {
                   >
                     Resultados e Gráficos
                   </Typography>
-                  {fwdAnalysis.length === 0 ? (
+                  {fwdAnalysis.length === 0 && drafts.length === 0 ? (
                     <Alert severity="info" sx={{ borderRadius: 1, fontSize: '0.85rem' }}>
                       Nenhuma análise disponível. Crie uma análise primeiro na aba Dados Gerais.
                     </Alert>
@@ -1733,7 +2165,7 @@ const FWDPage = () => {
                           <Select
                             value={selectedAnalysis?.id || ''}
                             onChange={(e) => {
-                              const analysis = fwdAnalysis.find((a) => a.id === e.target.value);
+                              const analysis = [...fwdAnalysis, ...drafts].find((a) => a.id === e.target.value);
                               if (analysis) setSelectedAnalysis(analysis);
                             }}
                             label="Selecionar Análise"
@@ -1748,6 +2180,11 @@ const FWDPage = () => {
                             {fwdAnalysis.map((analysis) => (
                               <MenuItem key={analysis.id} value={analysis.id} sx={{ fontSize: '0.85rem' }}>
                                 {analysis.name} ({analysis.samples.length} amostras)
+                              </MenuItem>
+                            ))}
+                            {drafts.map((draft) => (
+                              <MenuItem key={draft.id} value={draft.id} sx={{ fontSize: '0.85rem', color: '#ff6b35' }}>
+                                {draft.name} ({draft.samples.length} amostras) - Rascunho
                               </MenuItem>
                             ))}
                           </Select>
@@ -1787,7 +2224,7 @@ const FWDPage = () => {
                                 {selectedAnalysis.name} - Gráfico Deflexão d0
                               </Typography>
                               <Box sx={{ height: 300 }}>
-                              <Line
+                                <Line
                                   data={d0ChartData}
                                   options={{
                                     responsive: true,
@@ -1864,7 +2301,7 @@ const FWDPage = () => {
                               </TableHead>
                               <TableBody>
                                 {procResult.subtrechos &&
-                                  procResult.subtrechos.map((sub: Subtrecho, i: number) => (
+                                  procResult.subtrechos.map((sub, i) => (
                                     <TableRow key={i} sx={{ '&:nth-of-type(odd)': { backgroundColor: '#f8f9fa' } }}>
                                       <TableCell sx={{ fontSize: '0.8rem', p: 1 }}>{sub['Início (Estaca)']}</TableCell>
                                       <TableCell sx={{ fontSize: '0.8rem', p: 1 }}>{sub['Fim (Estaca)']}</TableCell>
@@ -1906,7 +2343,7 @@ const FWDPage = () => {
                               }}
                             >
                               <Box sx={{ height: 300 }}>
-                              <Line
+                                <Line
                                   data={baciaChartData}
                                   options={{
                                     responsive: true,
@@ -1961,12 +2398,346 @@ const FWDPage = () => {
           </Paper>
         </Container>
       </Box>
+
+      {/* Diálogo para visualizar análises salvas */}
+      <Dialog
+        open={showAnalysesDialog}
+        onClose={() => setShowAnalysesDialog(false)}
+        maxWidth={false}
+        fullWidth
+      >
+
+
+
+        <DialogTitle sx={{ backgroundColor: PRO_MEDINA_COLORS.primary.main, color: 'white' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="h6" sx={{ fontWeight: 700 }}>
+              Análises Salvas
+            </Typography>
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={() => setShowAnalysesDialog(false)}
+              aria-label="close"
+            >
+              <Delete fontSize="small" />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent dividers sx={{ p: 0 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            {/* Rascunhos */}
+            {drafts.length > 0 && (
+              <Box sx={{ borderBottom: `1px solid ${PRO_MEDINA_COLORS.secondary.light}` }}>
+                <Box sx={{ p: 2, backgroundColor: '#fff5f0' }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 700, color: PRO_MEDINA_COLORS.primary.main }}>
+                    Rascunhos ({drafts.length})
+                  </Typography>
+                </Box>
+                <List sx={{ p: 0 }}>
+                  {drafts.map((draft) => (
+                    <ListItem
+                      key={draft.id}
+                      divider
+                      sx={{
+                        '&:hover': {
+                          backgroundColor: '#fff5f0',
+                        },
+                      }}
+                    >
+                      <ListItemIcon>
+                        <Edit sx={{ color: PRO_MEDINA_COLORS.primary.main }} />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={
+                          <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                            {draft.name}
+                          </Typography>
+                        }
+                        secondary={
+                          <>
+                            <Typography variant="body2" color="text.secondary">
+                              {draft.description || 'Sem descrição'}
+                            </Typography>
+                            <Typography variant="caption" display="block">
+                              {draft.samples.length} amostras • Criado em: {draft.createdAt}
+                            </Typography>
+                          </>
+                        }
+                      />
+                      <ListItemSecondaryAction sx={{ display: 'flex', gap: 1 }}>
+                        <IconButton
+                          edge="end"
+                          size="small"
+                          onClick={() => {
+                            handleLoadDraft(draft);
+                            setShowAnalysesDialog(false);
+                          }}
+                          sx={{ color: PRO_MEDINA_COLORS.primary.main }}
+                        >
+                          <Edit fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          edge="end"
+                          size="small"
+                          onClick={() => handleDeleteAnalysis(draft.id, true)}
+                          sx={{ color: '#e53935' }}
+                        >
+                          <Delete fontSize="small" />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            )}
+
+            {/* Análises completas */}
+            {fwdAnalysis.length > 0 && (
+              <Box>
+                <Box sx={{ p: 2, backgroundColor: '#f5f7fa' }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 700, color: PRO_MEDINA_COLORS.secondary.main }}>
+                    Análises Completas ({fwdAnalysis.length})
+                  </Typography>
+                </Box>
+                <List sx={{ p: 0 }}>
+                  {fwdAnalysis.map((analysis) => (
+                    <ListItem
+                      key={analysis.id}
+                      divider
+                      sx={{
+                        '&:hover': {
+                          backgroundColor: '#f5f7fa',
+                        },
+                      }}
+                    >
+                      <ListItemIcon>
+                        <Assessment sx={{ color: PRO_MEDINA_COLORS.secondary.main }} />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={
+                          <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                            {analysis.name}
+                          </Typography>
+                        }
+                        secondary={
+                          <>
+                            <Typography variant="body2" color="text.secondary">
+                              {analysis.description || 'Sem descrição'}
+                            </Typography>
+                            <Typography variant="caption" display="block">
+                              {analysis.samples.length} amostras • Criada em: {analysis.createdAt}
+                              {analysis.updatedAt && ` • Atualizada: ${analysis.updatedAt}`}
+                            </Typography>
+                          </>
+                        }
+                      />
+                      <ListItemSecondaryAction sx={{ display: 'flex', gap: 1 }}>
+                        <IconButton
+                          edge="end"
+                          size="small"
+                          onClick={() => {
+                            handleLoadAnalysis(analysis);
+                            setShowAnalysesDialog(false);
+                          }}
+                          sx={{ color: PRO_MEDINA_COLORS.secondary.main }}
+                        >
+                          <Visibility fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          edge="end"
+                          size="small"
+                          onClick={() => {
+                            handleEditAnalysis(analysis);
+                            setShowAnalysesDialog(false);
+                          }}
+                          sx={{ color: PRO_MEDINA_COLORS.primary.main }}
+                        >
+                          <Edit fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          edge="end"
+                          size="small"
+                          onClick={() => handleDeleteAnalysis(analysis.id)}
+                          sx={{ color: '#e53935' }}
+                        >
+                          <Delete fontSize="small" />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            )}
+
+            {fwdAnalysis.length === 0 && drafts.length === 0 && (
+              <Box sx={{ p: 4, textAlign: 'center' }}>
+                <Typography variant="body1" color="text.secondary">
+                  Nenhuma análise salva ainda.
+                </Typography>
+              </Box>
+            )}
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button
+            onClick={() => setShowAnalysesDialog(false)}
+            sx={{ color: PRO_MEDINA_COLORS.secondary.main }}
+          >
+            Fechar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Diálogo para salvar análise */}
+      <Dialog
+        open={showAnalysesDialog}
+        onClose={() => setShowAnalysesDialog(false)}
+        maxWidth={false}
+        fullWidth
+      >
+
+        <DialogTitle sx={{ backgroundColor: PRO_MEDINA_COLORS.primary.main, color: 'white' }}>
+          <Typography variant="h6" sx={{ fontWeight: 700 }}>
+            Salvar Análise
+          </Typography>
+        </DialogTitle>
+        <DialogContent dividers sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {editingAnalysis && (
+              <FormControl>
+                <Typography variant="body1" sx={{ fontWeight: 600, mb: 1 }}>
+                  Você está editando: {editingAnalysis.name}
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      setSaveAsNew(true);
+                      setNewAnalysis({
+                        ...newAnalysis,
+                        name: `${editingAnalysis.name} (Cópia)`,
+                      });
+                    }}
+                    sx={{ justifyContent: 'flex-start' }}
+                  >
+                    Salvar como nova análise
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      setSaveAsNew(false);
+                    }}
+                    sx={{ justifyContent: 'flex-start' }}
+                  >
+                    Atualizar análise existente
+                  </Button>
+                </Box>
+              </FormControl>
+            )}
+
+            <TextField
+              fullWidth
+              label="Nome da análise *"
+              value={newAnalysis.name}
+              onChange={(e) => setNewAnalysis({ ...newAnalysis, name: e.target.value })}
+              required
+              size="small"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 1,
+                  '&:hover fieldset': {
+                    borderColor: PRO_MEDINA_COLORS.primary.main,
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: PRO_MEDINA_COLORS.primary.main,
+                  },
+                },
+              }}
+            />
+
+            <TextField
+              fullWidth
+              multiline
+              rows={2}
+              label="Descrição"
+              value={newAnalysis.description}
+              onChange={(e) => setNewAnalysis({ ...newAnalysis, description: e.target.value })}
+              size="small"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 1,
+                  '&:hover fieldset': {
+                    borderColor: PRO_MEDINA_COLORS.primary.main,
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: PRO_MEDINA_COLORS.primary.main,
+                  },
+                },
+              }}
+            />
+
+            <Alert 
+              severity={samples.length >= 5 ? 'success' : 'warning'} 
+              sx={{ borderRadius: 1 }}
+            >
+              {samples.length >= 5
+                ? 'Análise completa (mínimo 5 amostras atingido)'
+                : `Atenção: necessário ${5 - samples.length} amostras para análise completa`}
+            </Alert>
+
+            <Typography variant="body2" color="text.secondary">
+              Total de amostras: {samples.length}
+            </Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button
+            onClick={() => setShowSaveDialog(false)}
+            sx={{ color: PRO_MEDINA_COLORS.secondary.main }}
+          >
+            Cancelar
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleSaveDraft}
+            disabled={samples.length === 0}
+            sx={{ 
+              backgroundColor: PRO_MEDINA_COLORS.secondary.main,
+              '&:hover': {
+                backgroundColor: PRO_MEDINA_COLORS.secondary.dark,
+              }
+            }}
+          >
+            Salvar como Rascunho
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleCreateAnalysis}
+            disabled={samples.length < 5 || !newAnalysis.name}
+            sx={{ 
+              background: 'linear-gradient(45deg, #ff6b35 30%, #ff8a65 90%)',
+            }}
+          >
+            Salvar Análise Completa
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
-        message={snackbar.message}
-      />
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={() => setSnackbar({ ...snackbar, open: false })} 
+          severity={snackbar.severity as any}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </ThemeProvider>
   );
 };
