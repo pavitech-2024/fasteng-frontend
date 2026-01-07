@@ -4,7 +4,8 @@ import Image from 'next/image';
 import concreteBinderAsphalt from '@/assets/pro-medina/concreteBinderAsphalt/concrete-binder-asphalt-image.png';
 import granularLayersImage from '@/assets/pro-medina/granularLayers/granular-layers-image.png';
 import stabilizedLayersImage from '@/assets/pro-medina/stabilizedLayers/stabilized-layers-image.png';
-
+import Iggicon from '@/assets/asphalt/essays/Igg.png';
+import FWDicon from '@/assets/asphalt/essays/FWD.png';
 //import ProvSoils1Icon from '@/components/atoms/icons/provSoils1Icon';
 // ProvSoils2Icon from '@/components/atoms/icons/provSoils2Icon';
 //import ProvSoils3Icon from '@/components/atoms/icons/provSoils3Icon';
@@ -90,12 +91,46 @@ const Promedina: NextPage = () => {
     },
     {
       name: t('home.pm.fwd'),
-      icon: <Analytics sx={{ width: '100%', height: '100%' }} />, // Ícone do Material-UI
+      icon:(<Box
+        sx={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Image
+          src = {FWDicon}
+          alt="Asphalt"
+          width={150}
+          height={150}
+          style={{ objectFit: 'contain' }}
+        />
+      </Box>
+      ),
       path: '/promedina/fwd',
     },
     {
       name: 'Avaliação de Pavimentos',
-      icon: <Assessment sx={{ width: '100%', height: '100%' }} />,
+      icon:(<Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <Image
+            src = {Iggicon}
+            alt="Asphalt"
+            width={150}
+            height={150}
+            style={{ objectFit: 'contain' }}
+          />
+        </Box>
+      ),
       path: '/promedina/IGG',
     },
   ];

@@ -38,7 +38,7 @@ const Home: NextPage = () => {
 
   const Promedina = [
     {
-      name: 'Pro-Medina',
+      name: 'Pro-MeDiNa',
       icon: <PromedinaProvIcon />,
       path: '/promedina',
     },
