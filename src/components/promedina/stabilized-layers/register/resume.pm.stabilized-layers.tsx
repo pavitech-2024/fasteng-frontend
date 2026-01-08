@@ -710,6 +710,61 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
               )}
           </Box>
 
+          <Box id="resilience-module2" sx={{paddingTop: '1rem', paddingX: '6rem'}}>
+            {samples?.step3Data?.rsInitial &&
+              samples?.step3Data?.k1 &&
+              samples?.step3Data?.k2 &&
+              samples?.step3Data?.k3 &&
+              samples?.step3Data?.r2 && (
+                <FlexColumnBorder title={t('pm.stabilized-layers.resilience.module')} open={true} theme={'#07B811'}>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: {mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr'},
+                      justifyItems: 'center',
+                      alignItems: 'center',
+                      gap: '1rem',
+                      justifyContent: 'space-evenly',
+                      marginBottom: '0.5rem',
+                      }}
+                    >
+                      {resilienceModule.map((item, idx) => (
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '0.3rem',
+                            alignItems: 'center'
+                          }}
+                            key={idx}
+                          >
+                            {item.value && (
+                              <>
+                                <Typography
+                                  sx={{fontWeight: 'normal', fontSize: '14px', color: 'gray'}}>
+                                  {item.title}
+                                </Typography>
+                                <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                                  <Typography
+                                    sx={{
+                                      display: 'flex',
+                                      fontWeight: 'bold',
+                                      fontSize: '14px',
+                                      color: 'black'
+                                      }}
+                                    >
+                                      {item.value}
+                                  </Typography>
+                                </Box>
+                              </>
+                            )}
+                          </Box>
+                        ))}
+                      </Box>
+                    </FlexColumnBorder>
+                  )}
+            </Box>
+
           {/** DADOS TÉCNICOS DA AMOSTRA */}
           <Box id="technical-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
             {samples?.step3Data?.mctGroup &&
