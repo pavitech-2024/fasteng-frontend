@@ -146,30 +146,11 @@ const Marshall_Step5_MixtureMaximumDensity = ({
     '30°C': 0.9956,
   }).map(([label, value]) => ({ label, value }));
 
-  // Função helper pra pegar gravityData de qualquer jeito
-  const getGravityData = (maxSpecificGravity) => {
-    if (!maxSpecificGravity) return null;
-    return maxSpecificGravity.result || maxSpecificGravity.results || null;
-  };
-
-  // No dmtRows:
-const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => {
-  // Agora só tem 'results', não tem mais 'result'!
-  const gravityData = data?.maxSpecificGravity?.results;
-  const lessOneValue = gravityData?.lessOne;
-  
-  return {
+  const dmtRows = binderTrialData.percentsOfDosage[binderTrialData.percentsOfDosage.length - 1].map((item, index) => ({
     id: index + 1,
-    DMT: lessOneValue !== null && lessOneValue !== undefined ? lessOneValue.toFixed(2) : '',
+    DMT: data?.maxSpecificGravity?.result?.lessOne?.toFixed(2),
     Teor: item.value,
-  };
-});
-
-useEffect(() => {
-  console.log('DEBUG - data.maxSpecificGravity:', data?.maxSpecificGravity);
-  console.log('DEBUG - data.maxSpecificGravity?.results:', data?.maxSpecificGravity?.results);
-  console.log('DEBUG - data.maxSpecificGravity?.result:', data?.maxSpecificGravity?.results);
-}, [data]);
+  }));
 
   const dmtColumns: GridColDef[] = [
     {
@@ -194,40 +175,37 @@ useEffect(() => {
    * @throws Will throw an error if the calculation fails.
    */
   const handleSubmitDmt = async () => {
-  toast.promise(
-    async () => {
-      try {
-        const dmtResult = await marshall.calculateMaximumMixtureDensityDMT(
-          materialSelectionData,
-          binderTrialData,
-          data
-        );
+    toast.promise(
+      async () => {
+        try {
+          const dmtResult = await marshall.calculateMaximumMixtureDensityDMT(
+            materialSelectionData,
+            binderTrialData,
+            data
+          );
 
-        const updatedData = {
-          ...data,
-          method: 'DMT', // <--- ADICIONE ESTA LINHA TAMBÉM!
-          maxSpecificGravity: {
-            results: dmtResult.maxSpecificGravity,
-            method: dmtResult.method,
-          },
-          listOfSpecificGravities: dmtResult.listOfSpecificGravities,
-        };
+          const updatedData = {
+            ...data,
+            maxSpecificGravity: {
+              result: dmtResult.maxSpecificGravity,
+              method: dmtResult.method,
+            },
+            listOfSpecificGravities: dmtResult.listOfSpecificGravities,
+          };
 
-        console.log('🔍 DMT - Salvando data com method:', updatedData.method); // Log
-
-        setData({ step: 4, value: updatedData });
-        setDMTModalISOpen(false);
-      } catch (error) {
-        throw error;
+          setData({ step: 4, value: updatedData });
+          setDMTModalISOpen(false);
+        } catch (error) {
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
       }
-    },
-    {
-      pending: t('loading.data.pending'),
-      success: t('loading.data.success'),
-      error: t('loading.data.error'),
-    }
-  );
-};
+    );
+  };
 
   /**
    * useEffect hook that runs when the `data.gmm` changes.
@@ -237,20 +215,9 @@ useEffect(() => {
    * @param {Object} data - The dosage calculation results.
    */
   useEffect(() => {
-    if (!data?.gmm) {
-      setGmmRows([]);
-      return;
-    }
-
-    const gmmRows = data.gmm.map((gmmItem, index) => {
-      // Type assertion para acessar value
-      const item = gmmItem as any;
+    const gmmRows = data?.gmm?.map(({ id, value: GMM }, index) => {
       const teor = binderTrialData.trial + (index - 2) * 0.5;
-      return {
-        id: item.id || index + 1,
-        GMM: item.value ?? null,
-        Teor: teor,
-      };
+      return { id, GMM, Teor: teor };
     });
 
     setGmmRows(gmmRows);
@@ -267,20 +234,17 @@ useEffect(() => {
           <InputEndAdornment
             adornment={''}
             type="number"
-            value={row.GMM ?? ''}
+            value={row.GMM}
             onChange={(e) => {
-              const newData = [...(data.gmm || [])];
-              const itemIndex = row.id - 1;
-              if (newData[itemIndex]) {
-                (newData[itemIndex] as any).value = e.target.value === '' ? null : Number(e.target.value);
-                setData({ step: 4, value: { ...data, gmm: newData } });
-              }
+              const newData = [...data.gmm];
+              newData[row.id - 1].value = Number(e.target.value);
+              setData({ step: 4, value: { ...data, gmm: newData } });
             }}
           />
         ),
       },
     ]);
-  }, [data?.gmm, binderTrialData.trial]);
+  }, [data.gmm]);
 
   /**
    * Calculates the GMM data using the dosage calculation results.
@@ -291,52 +255,49 @@ useEffect(() => {
    * @throws Will throw an error if the calculation fails.
    */
   const calculateGmmData = async () => {
-  if (data.temperatureOfWater === null) {
-    setGmmErrorMsg('errors.empty-water-temperature');
-    toast.error(t('errors.empty-water-temperature'));
-    return;
-  }
-
-  toast.promise(
-    async () => {
-      try {
-        const gmm = await marshall.calculateGmmData(materialSelectionData, data);
-
-        const newData = {
-          ...data,
-          method: 'GMM', // <--- ADICIONE ESTA LINHA!
-          listOfSpecificGravities: gmm.listOfSpecificGravities,
-          maxSpecificGravity: {
-            results: gmm.maxSpecificGravity,
-            method: gmm.method,
-          },
-        };
-
-        console.log('🔍 GMM - Salvando data com method:', newData.method); // Log
-
-        setData({ step: 4, value: newData });
-
-        const newGmmRows = gmmRows.map((item) => {
-          if (item.id === 1) item.GMM = gmm.maxSpecificGravity.lessOne;
-          if (item.id === 2) item.GMM = gmm.maxSpecificGravity.lessHalf;
-          if (item.id === 3) item.GMM = gmm.maxSpecificGravity.normal;
-          if (item.id === 4) item.GMM = gmm.maxSpecificGravity.plusHalf;
-          if (item.id === 5) item.GMM = gmm.maxSpecificGravity.plusOne;
-          return item;
-        });
-
-        setGmmRows(newGmmRows);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    {
-      pending: t('submiting.data.pending'),
-      success: t('submiting.data.success'),
-      error: t('submiting.data.error'),
+    if (data.temperatureOfWater === null) {
+      setGmmErrorMsg('errors.empty-water-temperature');
+      toast.error(t('errors.empty-water-temperature'));
+      return;
     }
-  );
-};
+
+    toast.promise(
+      async () => {
+        try {
+          const gmm = await marshall.calculateGmmData(materialSelectionData, data);
+
+          const newData = {
+            ...data,
+            listOfSpecificGravities: gmm.listOfSpecificGravities,
+            maxSpecificGravity: {
+              results: gmm.maxSpecificGravity,
+              method: gmm.method,
+            },
+          };
+
+          setData({ step: 4, value: newData });
+
+          const newGmmRows = gmmRows.map((item) => {
+            if (item.id === 1) item.GMM = gmm.maxSpecificGravity.lessOne;
+            if (item.id === 2) item.GMM = gmm.maxSpecificGravity.lessHalf;
+            if (item.id === 3) item.GMM = gmm.maxSpecificGravity.normal;
+            if (item.id === 4) item.GMM = gmm.maxSpecificGravity.plusHalf;
+            if (item.id === 5) item.GMM = gmm.maxSpecificGravity.plusOne;
+            return item;
+          });
+
+          setGmmRows(newGmmRows);
+        } catch (error) {
+          console.error(error);
+        }
+      },
+      {
+        pending: t('submiting.data.pending'),
+        success: t('submiting.data.success'),
+        error: t('submiting.data.error'),
+      }
+    );
+  };
 
   /**
    * Calculates the rice test data using the dosage calculation results.
@@ -347,10 +308,6 @@ useEffect(() => {
    * @throws Will throw an error if the calculation fails.
    */
   const calculateRiceTest = () => {
-    console.log('=== DEBUG RICE TEST ===');
-    console.log('data.riceTest:', data.riceTest);
-    console.log('binderTrialData:', binderTrialData);
-
     let errorMsg = '';
     let errorIndex;
 
@@ -389,31 +346,16 @@ useEffect(() => {
             insert: false,
             value: item.GMM,
           }));
-         const maxSpecificGravityObj = {
-  results: {
-    lessOne: riceTest.maxSpecificGravity[0]?.GMM || 0,  
-    lessHalf: riceTest.maxSpecificGravity[1]?.GMM || 0,
-    normal: riceTest.maxSpecificGravity[2]?.GMM || 0,
-    plusHalf: riceTest.maxSpecificGravity[3]?.GMM || 0,
-    plusOne: riceTest.maxSpecificGravity[4]?.GMM || 0,
-  },
-  method: 'GMM'
-};
-
 
           setGmmRows(formattedGmm);
           setData({
-  step: 4,
-  value: {
-    ...data,
-    // Especifica apenas os campos que quer do riceTest
-    listOfSpecificGravities: riceTest.listOfSpecificGravities,
-    maxSpecificGravity: maxSpecificGravityObj,  // <-- Objeto convertido
-    riceTest: riceTest.riceTest || data.riceTest, // Mantém o riceTest se vier
-    gmm: formattedGmmData,
-  },
-});
-          setNextDisabled(false);
+            step: 4,
+            value: {
+              ...data,
+              ...riceTest,
+              gmm: formattedGmmData,
+            },
+          });
         } catch (error) {
           throw new Error(error.message || 'errors.general');
         }
@@ -421,9 +363,7 @@ useEffect(() => {
       {
         pending: t('submiting.data.pending'),
         success: t('submiting.data.success'),
-        error: `${t('errors.rice-test-empty-fields')}${
-          binderTrialData.percentsOfDosage?.[2]?.[errorIndex]?.value ?? ''
-        }%`,
+        error: `${t('errors.rice-test-empty-fields')}${binderTrialData.percentsOfDosage[2][errorIndex]?.value}%`,
       }
     );
   };
@@ -543,15 +483,10 @@ useEffect(() => {
    */
   useEffect(() => {
     if (selectedMethod.dmt) {
-      const hasNullValue = dmtRows?.some((e) => {
-        // Sem tipos, só JavaScript
-        const values = Object.values(e);
-        return values.includes(null) || values.includes(undefined);
-      });
+      const hasNullValue = dmtRows?.some((e) => Object.values(e).includes(null));
       setNextDisabled(hasNullValue || data.temperatureOfWater === null);
     } else if (selectedMethod.gmm) {
-      const hasNullValue = data.gmm?.some((e: any) => e.value === null);
-
+      const hasNullValue = data.gmm?.some((e) => e.value === null);
       setNextDisabled(hasNullValue || data.temperatureOfWater === null);
     }
   }, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows]);

@@ -255,20 +255,20 @@ const Marshall_Step3_Granulometry = ({ setNextDisabled, marshall }: EssayPagePro
     }
 
 
-    if (data?.projections.length > 0) {
-      const newArray = [];
+      if (data?.projections.length > 0 && data?.bands) {
+  const newArray = [];
 
-      for (let i = 0; i < data?.sumOfPercents.length; i++) {
-        newArray.push({
-          label: data.projections[i]?.label,
-          value: data.projections[i]?.value,
-          band_1: data.dnitBands?.lower[i] !== null ? data.bands?.lowerBand[i] : '',
-          band_2: data.dnitBands?.higher[i] !== null ? data.bands?.higherBand[i] : '',
-        });
-      }
+  for (let i = 0; i < data.projections.length; i++) {
+    newArray.push({
+      label: data.projections[i]?.label,
+      value: data.projections[i]?.value,
+      band_1: data.bands?.lowerBand[i] !== null ? data.bands.lowerBand[i] : '',  // ← USA data.bands!
+      band_2: data.bands?.higherBand[i] !== null ? data.bands.higherBand[i] : '', // ← USA data.bands!
+    });
+  }
 
-      setSpecificationRows = [...newArray];
-    }
+  setSpecificationRows = [...newArray];
+}
   }, [data.sumOfPercents, data.bands]);
 
   const calculateGranulometricComposition = async () => {

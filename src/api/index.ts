@@ -6,9 +6,8 @@ export const isTest = process.env.NEXT_PUBLIC_ENV === 'test';
 
 
 //corrigi url
-const [localhost, prod] = [
+const [localhost] = [
   'http://localhost:8080',
-  'https://fasteng-backend.vercel.app',
 ];
 
 
@@ -22,7 +21,7 @@ const [localhost, test, prod] = [
 
 
 const Api = Axios.create({
-  baseURL: isLocalHost || isTest ? localhost : prod,
+  baseURL: localhost,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
