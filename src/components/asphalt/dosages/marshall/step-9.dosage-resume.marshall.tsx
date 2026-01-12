@@ -50,10 +50,6 @@ const Marshall_Step9_ResumeDosage = ({
   const [quantitativeCols, setQuantitativeCols] = useState([]);
   const [quantitativeGroupings, setQuantitativeGroupings] = useState<GridColumnGroupingModel>([]);
 
-
-
-  
-
   // LOG 1: Estado inicial
   console.log('🔍 [RESUME] Estado inicial:');
   console.log('1. dosageId:', dosageId);
@@ -63,110 +59,15 @@ const Marshall_Step9_ResumeDosage = ({
   console.log('5. maximumMixtureDensityData:', maximumMixtureDensityData);
 
   useEffect(() => {
-  console.log('=== GRANULOMETRY DATA DEBUG ===');
-  console.log('Tem tableWithBands?', !!granulometryCompositionData?.tableWithBands);
-  console.log('tableWithBands:', granulometryCompositionData?.tableWithBands);
-  console.log('Tem bands?', !!granulometryCompositionData?.bands);
-  console.log('bands.lowerBand:', granulometryCompositionData?.bands?.lowerBand);
-  console.log('bands.higherBand:', granulometryCompositionData?.bands?.higherBand);
-  console.log('Tem projections?', !!granulometryCompositionData?.projections);
-  console.log('projections:', granulometryCompositionData?.projections);
-}, [granulometryCompositionData]);
-
-  // Verificar dados da composição granulométrica
-useEffect(() => {
-  console.log('🔄 [RESUME] useEffect principal executando');
-  
-  const fetchData = async () => {
-    try {
-      let newData = {};
-
-      // Tentar buscar dosagem, mas não bloquear se falhar
-      if (dosageId) {
-        try {
-          console.log('📋 [RESUME] Buscando dosagem:', dosageId);
-          const foundDosage = await marshallDosageService.getMarshallDosage(dosageId);
-          console.log('✅ [RESUME] Dosagem encontrada:', foundDosage);
-          setDosage(foundDosage.data.dosage);
-        } catch (dosageError) {
-          console.warn('⚠ [RESUME] Não foi possível buscar a dosagem, continuando...', dosageError);
-        }
-      }
-
-      // ⚠️ CORREÇÃO: Preparar dados corretos baseados no método (DMT vs GMM)
-      console.log('🔍 [RESUME] Método detectado:', maximumMixtureDensityData?.method);
-      
-      let response;
-      
-      if (maximumMixtureDensityData?.method === 'GMM') {
-        console.log('🔍 [RESUME] Processando GMM...');
-        
-        // Para GMM, precisamos extrair o valor correto do confirmedSpecificGravity
-        let confirmedSpecificGravityValue;
-        
-        // Verificar diferentes formatos possíveis
-        if (data?.confirmedSpecificGravity?.result) {
-          confirmedSpecificGravityValue = data.confirmedSpecificGravity.result;
-        } else if (data?.confirmedSpecificGravity?.result) {
-          confirmedSpecificGravityValue = data.confirmedSpecificGravity.result;
-        } else if (maximumMixtureDensityData?.maxSpecificGravity?.result?.normal) {
-          confirmedSpecificGravityValue = maximumMixtureDensityData.maxSpecificGravity.result.normal;
-        } else {
-          // Fallback: pegar o primeiro valor de GMM da tabela
-          const gmmTable = maximumMixtureDensityData?.gmm || [];
-          const middleIndex = Math.floor(gmmTable.length / 2); // Teor normal está no meio
-          confirmedSpecificGravityValue = gmmTable[middleIndex]?.value || 0;
-        }
-        
-        console.log('🔍 [RESUME] GMM - confirmedSpecificGravityValue:', confirmedSpecificGravityValue);
-        
-        // Criar dados corrigidos para GMM
-        const correctedData = {
-          ...data,
-          confirmedSpecificGravity: {
-            result: confirmedSpecificGravityValue
-          }
-        };
-        
-        response = await marshall.confirmVolumetricParameters(
-          maximumMixtureDensityData,
-          optimumBinderContentData,
-          correctedData
-        );
-        
-      } else {
-        // Para DMT, usar dados normais
-        console.log('🔍 [RESUME] Processando DMT...');
-        response = await marshall.confirmVolumetricParameters(
-          maximumMixtureDensityData,
-          optimumBinderContentData,
-          data
-        );
-      }
-
-      console.log('✅ [RESUME] Resposta do confirmVolumetricParameters:', response);
-
-      newData = {
-        ...data,
-        ...response,
-      };
-
-      console.log('📋 [RESUME] Setando novos dados:', newData);
-      setData({ step: 8, value: newData });
-      setLoading(false);
-    } catch (error) {
-      console.error('💥 [RESUME] Erro no useEffect principal:', error);
-      setLoading(false);
-      throw error;
-    }
-  };
-
-  toast.promise(fetchData, {
-    pending: t('loading.dosage.pending'),
-    success: t('loading.dosage.success'),
-    error: t('loading.dosage.error'),
-  });
-}, []);
+    console.log('=== GRANULOMETRY DATA DEBUG ===');
+    console.log('Tem tableWithBands?', !!granulometryCompositionData?.tableWithBands);
+    console.log('tableWithBands:', granulometryCompositionData?.tableWithBands);
+    console.log('Tem bands?', !!granulometryCompositionData?.bands);
+    console.log('bands.lowerBand:', granulometryCompositionData?.bands?.lowerBand);
+    console.log('bands.higherBand:', granulometryCompositionData?.bands?.higherBand);
+    console.log('Tem projections?', !!granulometryCompositionData?.projections);
+    console.log('projections:', granulometryCompositionData?.projections);
+  }, [granulometryCompositionData]);
 
   useEffect(() => {
     console.log('🔄 [RESUME] useEffect principal executando');
@@ -187,13 +88,72 @@ useEffect(() => {
           }
         }
 
-        // Confirmar parâmetros volumétricos
-        console.log('📋 [RESUME] Confirmando parâmetros volumétricos...');
-        const response = await marshall.confirmVolumetricParameters(
-          maximumMixtureDensityData,
-          optimumBinderContentData,
-          data
-        );
+        // ⚠️ CORREÇÃO: Preparar dados corretos baseados no método (DMT vs GMM)
+        console.log('🔍 [RESUME] Método detectado:', maximumMixtureDensityData?.method);
+        
+        let response;
+        
+        if (maximumMixtureDensityData?.method === 'GMM') {
+          console.log('🔍 [RESUME] Processando GMM...');
+          
+          // Para GMM, precisamos extrair o valor correto do confirmedSpecificGravity
+          let confirmedSpecificGravityValue: number;
+          
+          // Verificar diferentes formatos possíveis
+          if (data?.confirmedSpecificGravity?.result !== undefined) {
+            confirmedSpecificGravityValue = typeof data.confirmedSpecificGravity.result === 'string' 
+              ? parseFloat(data.confirmedSpecificGravity.result)
+              : data.confirmedSpecificGravity.result;
+          } else if (maximumMixtureDensityData?.maxSpecificGravity?.result?.normal) {
+            confirmedSpecificGravityValue = typeof maximumMixtureDensityData.maxSpecificGravity.result.normal === 'string'
+              ? parseFloat(maximumMixtureDensityData.maxSpecificGravity.result.normal)
+              : maximumMixtureDensityData.maxSpecificGravity.result.normal;
+          } else {
+            // Fallback: pegar o primeiro valor de GMM da tabela
+            const gmmTable = maximumMixtureDensityData?.gmm || [];
+            const middleIndex = Math.floor(gmmTable.length / 2); // Teor normal está no meio
+            const gmmValue = gmmTable[middleIndex]?.value || 0;
+            confirmedSpecificGravityValue = typeof gmmValue === 'string' ? parseFloat(gmmValue) : gmmValue;
+          }
+          
+          console.log('🔍 [RESUME] GMM - confirmedSpecificGravityValue:', confirmedSpecificGravityValue);
+          
+          // Criar dados corrigidos para GMM
+          const correctedData = {
+            ...data,
+            confirmedSpecificGravity: {
+              result: confirmedSpecificGravityValue,
+              type: 'GMM' // Adicionando a propriedade type que estava faltando
+            }
+          };
+          
+          response = await marshall.confirmVolumetricParameters(
+            maximumMixtureDensityData,
+            optimumBinderContentData,
+            correctedData
+          );
+          
+        } else {
+          // Para DMT, usar dados normais
+          console.log('🔍 [RESUME] Processando DMT...');
+          
+          // Garantir que confirmedSpecificGravity tenha a propriedade type
+          const dmtData = {
+            ...data,
+            confirmedSpecificGravity: {
+              ...(data?.confirmedSpecificGravity || {}),
+              result: data?.confirmedSpecificGravity?.result || 0,
+              type: 'DMT' // Adicionando a propriedade type que estava faltando
+            }
+          };
+          
+          response = await marshall.confirmVolumetricParameters(
+            maximumMixtureDensityData,
+            optimumBinderContentData,
+            dmtData
+          );
+        }
+
         console.log('✅ [RESUME] Resposta do confirmVolumetricParameters:', response);
 
         newData = {
@@ -211,14 +171,11 @@ useEffect(() => {
       }
     };
 
-    toast.promise(
-      fetchData,
-      {
-        pending: t('loading.dosage.pending'),
-        success: t('loading.dosage.success'),
-        error: t('loading.dosage.error'),
-      }
-    );
+    toast.promise(fetchData, {
+      pending: t('loading.dosage.pending'),
+      success: t('loading.dosage.success'),
+      error: t('loading.dosage.error'),
+    });
   }, []);
 
   useEffect(() => {
@@ -257,18 +214,21 @@ useEffect(() => {
   }, [materialSelectionData, optimumBinderContentData, data]);
 
   // CORREÇÃO: Função para calcular valores quantitativos
-  const calculateQuantitativeValues = () => {
+  const calculateQuantitativeValues = (): string[] | null => {
     if (!data?.confirmedVolumetricParameters?.quantitative) {
       console.log('📊 [CALC] Nenhum dado quantitativo disponível');
       return null;
     }
 
     // Se o array quantitative tem valores nulos, vamos calcular baseado nas porcentagens
-    const quantitative = data.confirmedVolumetricParameters.quantitative;
-    console.log('📊 [CALC] Quantitative array original:', quantitative);
+    const quantitative = data.confirmedVolumetricParameters.quantitative.map(val => 
+      typeof val === 'string' ? parseFloat(val) : val
+    );
+    
+    console.log('📊 [CALC] Quantitative array original convertido:', quantitative);
 
     // Se apenas o binder tem valor, vamos calcular os agregados
-    if (quantitative[0] && materialSelectionData?.aggregates) {
+    if (quantitative[0] !== null && quantitative[0] !== undefined && materialSelectionData?.aggregates) {
       const binderValue = quantitative[0];
       const totalPercent = optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage?.reduce((sum, percent) => sum + percent, 0) || 100;
       
@@ -280,7 +240,8 @@ useEffect(() => {
       });
     }
 
-    return quantitative.slice(1); // Retorna todos menos o binder
+    // Retorna todos menos o binder, convertendo para string
+    return quantitative.slice(1).map(val => val?.toFixed(2) || '0.00');
   };
 
   const granulometricCompTableColumns: GridColDef[] = [
@@ -302,41 +263,43 @@ useEffect(() => {
     },
   ];
 
- // Mapeamento por label → band index
-const sieveToBandIndex = {
-  '3/4 pol - 19mm': 6,
-  '3/8 pol - 9,5mm': 8,
-  'Nº4 - 4,8mm': 10,
-  'Nº8 - 2,4mm': 12,
-  'Nº16 - 1,2mm': 14,
-  'Nº30 - 0,6mm': 15,    
-  'Nº50 - 0,3mm': 17,    
-  'Nº100 - 0,15mm': 19,  
-};
-
-const granulometricCompTableRows = granulometryCompositionData?.projections?.map((row, i) => {
-  const sieveLabel = row.label;
-  const bandIndex = sieveToBandIndex[sieveLabel];
-  
-  let lowerBandValue = null;
-  let higherBandValue = null;
-  
-  if (bandIndex !== undefined) {
-    const lower = granulometryCompositionData.bands?.lowerBand?.[bandIndex];
-    const higher = granulometryCompositionData.bands?.higherBand?.[bandIndex];
-    
-    lowerBandValue = lower !== null && lower !== undefined ? lower.toFixed(2) : null;
-    higherBandValue = higher !== null && higher !== undefined ? higher.toFixed(2) : null;
-  }
-    console.log(`${sieveLabel} → bandIndex: ${bandIndex}, lower: ${lowerBandValue}, higher: ${higherBandValue}`);
-  return {
-    id: i,
-    sieve_label: sieveLabel,
-    projections: row.value,
-    lowerBand: lowerBandValue,
-    higherBand: higherBandValue,
+  // Mapeamento por label → band index
+  const sieveToBandIndex: { [key: string]: number } = {
+    '3/4 pol - 19mm': 6,
+    '3/8 pol - 9,5mm': 8,
+    'Nº4 - 4,8mm': 10,
+    'Nº8 - 2,4mm': 12,
+    'Nº16 - 1,2mm': 14,
+    'Nº30 - 0,6mm': 15,
+    'Nº50 - 0,3mm': 17,
+    'Nº100 - 0,15mm': 19,
   };
-}) || [];
+
+  const granulometricCompTableRows = granulometryCompositionData?.projections?.map((row, i) => {
+    const sieveLabel = row.label;
+    const bandIndex = sieveToBandIndex[sieveLabel];
+    
+    let lowerBandValue = null;
+    let higherBandValue = null;
+    
+    if (bandIndex !== undefined) {
+      const lower = granulometryCompositionData.bands?.lowerBand?.[bandIndex];
+      const higher = granulometryCompositionData.bands?.higherBand?.[bandIndex];
+      
+      lowerBandValue = lower !== null && lower !== undefined ? lower.toFixed(2) : null;
+      higherBandValue = higher !== null && higher !== undefined ? higher.toFixed(2) : null;
+    }
+    
+    console.log(`${sieveLabel} → bandIndex: ${bandIndex}, lower: ${lowerBandValue}, higher: ${higherBandValue}`);
+    
+    return {
+      id: i,
+      sieve_label: sieveLabel,
+      projections: row.value,
+      lowerBand: lowerBandValue,
+      higherBand: higherBandValue,
+    };
+  }) || [];
 
   const granulometricCompTableGroupings: GridColumnGroupingModel = [
     {
@@ -357,7 +320,7 @@ const granulometricCompTableRows = granulometryCompositionData?.projections?.map
         field: 'optimumBinder',
         width: 250,
         headerName: t('asphalt.dosages.optimum-binder'),
-        valueFormatter: ({ value }) => value?.toFixed(2),
+        valueFormatter: ({ value }) => typeof value === 'number' ? value.toFixed(2) : value,
       },
     ];
 
@@ -367,7 +330,7 @@ const granulometricCompTableRows = granulometryCompositionData?.projections?.map
         field: material._id,
         width: 250,
         headerName: material.name,
-        valueFormatter: ({ value }) => value?.toFixed(2),
+        valueFormatter: ({ value }) => typeof value === 'number' ? value.toFixed(2) : value,
       };
       columns.push(column);
     });
@@ -426,7 +389,7 @@ const granulometricCompTableRows = granulometryCompositionData?.projections?.map
     
     const newCols: GridColDef[] = [];
 
-    const binderObj = {
+    const binderObj: GridColDef = {
       field: 'binder',
       width: 250,
       headerName: t('asphalt.dosages.marshall.asphaltic-binder') + '(kg)',
@@ -474,7 +437,11 @@ const granulometricCompTableRows = granulometryCompositionData?.projections?.map
       } else {
         // Fallback: tentar obter do array original
         const originalValue = data?.confirmedVolumetricParameters?.quantitative?.[idx + 1];
-        value = typeof originalValue === 'number' ? originalValue.toFixed(2) : '-';
+        if (typeof originalValue === 'number') {
+          value = originalValue.toFixed(2);
+        } else if (originalValue !== null && originalValue !== undefined) {
+          value = String(originalValue);
+        }
       }
       
       console.log(`📝 Agregado ${idx} (${material.name}): value = ${value}`);
@@ -604,64 +571,66 @@ const granulometricCompTableRows = granulometryCompositionData?.projections?.map
   ];
 
   // CORREÇÃO: Adicionar validações nos valores
-  const volumetricMechanicParams = [
-    {
-      label: t('asphalt.dosages.optimum-binder'),
-      value: optimumBinderContentData?.optimumBinder?.optimumContent?.toFixed(2) || '0.00',
-      unity: '%',
-      isValid: true
-    },
-    {
-      label: t('asphalt.dosages.dmt'),
-      value: data?.confirmedSpecificGravity?.result && data.confirmedSpecificGravity.result !== '43' 
-        ? data.confirmedSpecificGravity.result 
-        : '---',
-      unity: 'g/cm³',
-      isValid: true
-    },
-    {
-      label: t('asphalt.dosages.gmb'),
-      value: data?.confirmedVolumetricParameters?.values?.apparentBulkSpecificGravity?.toFixed(2) || '---',
-      unity: 'g/cm³',
-      isValid: true
-    },
-    {
-      label: t('asphalt.dosages.vv'),
-      value: ((data?.confirmedVolumetricParameters?.values?.aggregateVolumeVoids || 0) * 100)?.toFixed(2),
-      unity: '%',
-      isValid: true
-    },
-    {
-      label: t('asphalt.dosages.vam'),
-      value: (data?.confirmedVolumetricParameters?.values?.voidsFilledAsphalt || 0)?.toFixed(2),
-      unity: '%',
-      isValid: true
-    },
-    {
-      label: t('asphalt.dosages.rbv') + ' (RBV)',
-      value: ((data?.confirmedVolumetricParameters?.values?.ratioBitumenVoid || 0) * 100)?.toFixed(2),
-      unity: '%',
-      isValid: true
-    },
-    {
-      label: t('asphalt.dosages.marshall.stability'),
-      value: data?.confirmedVolumetricParameters?.values?.stability?.toFixed(2) || '0.00',
-      unity: 'N',
-      isValid: true
-    },
-    {
-      label: t('asphalt.dosages.marshall.fluency'),
-      value: data?.confirmedVolumetricParameters?.values?.fluency?.toFixed(2) || '0.00',
-      unity: 'mm',
-      isValid: true
-    },
-    {
-      label: t('asphalt.dosages.indirect-tensile-strength'),
-      value: data?.confirmedVolumetricParameters?.values?.indirectTensileStrength?.toFixed(2) || '0.00',
-      unity: 'MPa',
-      isValid: true
-    },
-  ];
+ const volumetricMechanicParams = [
+  {
+    label: t('asphalt.dosages.optimum-binder'),
+    value: optimumBinderContentData?.optimumBinder?.optimumContent?.toFixed(2) || '0.00',
+    unity: '%',
+    isValid: true
+  },
+  {
+    label: t('asphalt.dosages.dmt'),
+    // CORREÇÃO: Comparar com número, não string
+    value: data?.confirmedSpecificGravity?.result !== undefined && 
+           data.confirmedSpecificGravity.result !== 43 && // ← número 43, não string '43'
+           typeof data.confirmedSpecificGravity.result === 'number' ? 
+           data.confirmedSpecificGravity.result.toFixed(2) : '---',
+    unity: 'g/cm³',
+    isValid: true
+  },
+  {
+    label: t('asphalt.dosages.gmb'),
+    value: data?.confirmedVolumetricParameters?.values?.apparentBulkSpecificGravity?.toFixed(2) || '---',
+    unity: 'g/cm³',
+    isValid: true
+  },
+  {
+    label: t('asphalt.dosages.vv'),
+    value: ((data?.confirmedVolumetricParameters?.values?.aggregateVolumeVoids || 0) * 100)?.toFixed(2),
+    unity: '%',
+    isValid: true
+  },
+  {
+    label: t('asphalt.dosages.vam'),
+    value: (data?.confirmedVolumetricParameters?.values?.voidsFilledAsphalt || 0)?.toFixed(2),
+    unity: '%',
+    isValid: true
+  },
+  {
+    label: t('asphalt.dosages.rbv') + ' (RBV)',
+    value: ((data?.confirmedVolumetricParameters?.values?.ratioBitumenVoid || 0) * 100)?.toFixed(2),
+    unity: '%',
+    isValid: true
+  },
+  {
+    label: t('asphalt.dosages.marshall.stability'),
+    value: data?.confirmedVolumetricParameters?.values?.stability?.toFixed(2) || '0.00',
+    unity: 'N',
+    isValid: true
+  },
+  {
+    label: t('asphalt.dosages.marshall.fluency'),
+    value: data?.confirmedVolumetricParameters?.values?.fluency?.toFixed(2) || '0.00',
+    unity: 'mm',
+    isValid: true
+  },
+  {
+    label: t('asphalt.dosages.indirect-tensile-strength'),
+    value: data?.confirmedVolumetricParameters?.values?.indirectTensileStrength?.toFixed(2) || '0.00',
+    unity: 'MPa',
+    isValid: true
+  },
+];
 
   useEffect(() => {
     if (nextDisabled) {
@@ -669,16 +638,12 @@ const granulometricCompTableRows = granulometryCompositionData?.projections?.map
     }
   }, [nextDisabled, setNextDisabled]);
 
-  
- 
-
   if (loading) {
     return <Loading />;
   }
 
   return (
     <>
-   
       <FlexColumnBorder title={t('results')} open={true}>
         {/* CORREÇÃO: Adicionar verificação para evitar erro no PDF */}
         {dosage && <GenerateMarshallDosagePDF dosage={dosage} />}
@@ -782,8 +747,24 @@ const granulometricCompTableRows = granulometryCompositionData?.projections?.map
               }}
             >
               {volumetricMechanicParams.map((item) => {
-                if (item.value && item.value !== 'NaN' && item.value !== 'undefined' && item.value !== '---') {
-                  return <Result_Card key={item.label} label={item.label} value={item.value} unity={item.unity} />;
+                // FIX: Corrigir a verificação de valor válido
+                const isValidValue = item.value && 
+                  item.value !== 'NaN' && 
+                  item.value !== 'undefined' && 
+                  item.value !== '---' &&
+                  item.value !== 'null' &&
+                  !isNaN(parseFloat(item.value));
+                
+                if (isValidValue) {
+                  // FIX: Converter value para string para evitar erro de tipo
+                  return (
+                    <Result_Card 
+                      key={item.label} 
+                      label={item.label} 
+                      value={String(item.value)} 
+                      unity={item.unity} 
+                    />
+                  );
                 }
                 return null;
               })}
