@@ -8,9 +8,7 @@ export const isProd = process.env.NEXT_PUBLIC_ENV === 'production';
 // URLs por ambiente
 const BASE_URL = isLocalHost
   ? 'http://localhost:8080'
-  : isTest
-  ? 'https://fasteng-backend-teste.vercel.app'
-  : 'https://fasteng-backend-ecodigta.ocean.app';
+  : 'https://fasteng-backend-teste.vercel.app';
 
 const Api = Axios.create({
   baseURL: BASE_URL,
