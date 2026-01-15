@@ -1,5 +1,6 @@
 import DropDown from '@/components/atoms/inputs/dropDown';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import InputNumberBrProps from '@/components/atoms/inputs/inputNumberBr';
 import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
@@ -231,13 +232,12 @@ const Marshall_Step5_MixtureMaximumDensity = ({
         field: 'GMM',
         headerName: 'GMM',
         renderCell: ({ row }) => (
-          <InputEndAdornment
+          <InputNumberBrProps
             adornment={''}
-            type="number"
             value={row.GMM}
-            onChange={(e) => {
+            onChange={(value: number | null) => {
               const newData = [...data.gmm];
-              newData[row.id - 1].value = Number(e.target.value);
+              newData[row.id - 1].value = value;
               setData({ step: 4, value: { ...data, gmm: newData } });
             }}
           />
@@ -395,85 +395,78 @@ const Marshall_Step5_MixtureMaximumDensity = ({
   }, [binderTrialData.percentsOfDosage, data.riceTest]);
 
   useEffect(() => {
-    setRiceTestTableColumns([
-      {
-        field: 'teor',
-        headerName: t('asphalt.dosages.marshall.tenor'),
-        valueFormatter: ({ value }) => `${value}`,
-        width: 50,
+  setRiceTestTableColumns([
+    {
+      field: 'teor',
+      headerName: t('asphalt.dosages.marshall.tenor'),
+      valueFormatter: ({ value }) => `${value}`,
+      width: 50,
+    },
+    {
+      field: 'massOfDrySample',
+      headerName: t('asphalt.dosages.marshall.dry-sample-mass'),
+      width: 200,
+      renderCell: ({ row }) => {
+        const { id, teor } = row;
+        const index = data?.riceTest?.findIndex((r) => r.id === id);
+        return (
+          <InputNumberBrProps
+            adornment="g"
+            value={data.riceTest[index]?.massOfDrySample}
+            onChange={(value: number | null) => {
+              const newData = [...data.riceTest];
+              newData[index].massOfDrySample = value;
+              newData[index].teor = teor;
+              setData({ step: 4, value: { ...data, riceTest: newData } });
+            }}
+          />
+        );
       },
-      {
-        field: 'massOfDrySample',
-        headerName: t('asphalt.dosages.marshall.dry-sample-mass'),
-        width: 200,
-        renderCell: ({ row }) => {
-          const { id, teor } = row;
-          const index = data?.riceTest?.findIndex((r) => r.id === id);
-          return (
-            <InputEndAdornment
-              adornment="g"
-              type="number"
-              value={data.riceTest[index]?.massOfDrySample ?? ''}
-              inputProps={{ step: 'any' }}
-              onChange={(e) => {
-                const newData = [...data.riceTest];
-                const value = e.target.value;
-                newData[index].massOfDrySample = value === '' ? null : parseFloat(value);
-                newData[index].teor = teor;
-                setData({ step: 4, value: { ...data, riceTest: newData } });
-              }}
-            />
-          );
-        },
+    },
+    {
+      field: 'massOfContainerWaterSample',
+      headerName: t('asphalt.dosages.marshall.container-sample-water-mass'),
+      width: 220,
+      renderCell: ({ row }) => {
+        const { id, teor } = row;
+        const index = data?.riceTest?.findIndex((r) => r.id === id);
+        return (
+          <InputNumberBrProps
+            adornment={'g'}
+            value={data.riceTest[index]?.massOfContainerWaterSample} // ← CORRIGIDO
+            onChange={(value: number | null) => {
+              const newData = [...data.riceTest];
+              newData[index].massOfContainerWaterSample = value; // ← CORRIGIDO
+              newData[index].teor = teor;
+              setData({ step: 4, value: { ...data, riceTest: newData } });
+            }}
+          />
+        );
       },
-      {
-        field: 'massOfContainerWaterSample',
-        headerName: t('asphalt.dosages.marshall.container-sample-water-mass'),
-        width: 220,
-        renderCell: ({ row }) => {
-          const { id, teor } = row;
-          const index = data?.riceTest?.findIndex((r) => r.id === id);
-          return (
-            <InputEndAdornment
-              adornment={'g'}
-              type="number"
-              value={data.riceTest[index]?.massOfContainerWaterSample}
-              onChange={(e) => {
-                const newData = [...data.riceTest];
-                const value = e.target.value;
-                newData[index].massOfContainerWaterSample = value === '' ? null : parseFloat(value);
-                newData[index].teor = teor;
-                setData({ step: 4, value: { ...data, riceTest: newData } });
-              }}
-            />
-          );
-        },
+    },
+    {
+      field: 'massOfContainerWater',
+      headerName: t('asphalt.dosages.marshall.container-water-mass'),
+      width: 210,
+      renderCell: ({ row }) => {
+        const { id, teor } = row;
+        const index = data?.riceTest?.findIndex((r) => r.id === id);
+        return (
+          <InputNumberBrProps
+            adornment={'g'}
+            value={data.riceTest[index]?.massOfContainerWater}
+            onChange={(value: number | null) => {
+              const newData = [...data.riceTest];
+              newData[index].massOfContainerWater = value;
+              newData[index].teor = teor;
+              setData({ step: 4, value: { ...data, riceTest: newData } });
+            }}
+          />
+        );
       },
-      {
-        field: 'massOfContainerWater',
-        headerName: t('asphalt.dosages.marshall.container-water-mass'),
-        width: 210,
-        renderCell: ({ row }) => {
-          const { id, teor } = row;
-          const index = data?.riceTest?.findIndex((r) => r.id === id);
-          return (
-            <InputEndAdornment
-              adornment={'g'}
-              type="number"
-              value={data.riceTest[index]?.massOfContainerWater}
-              onChange={(e) => {
-                const newData = [...data.riceTest];
-                const value = e.target.value;
-                newData[index].massOfContainerWater = value === '' ? null : parseFloat(e.target.value);
-                newData[index].teor = teor;
-                setData({ step: 4, value: { ...data, riceTest: newData } });
-              }}
-            />
-          );
-        },
-      },
-    ]);
-  }, [data.riceTest]);
+    },
+  ]);
+}, [data.riceTest]);
 
   /**
    * Effect that checks if there is any null value in the data.
@@ -604,15 +597,15 @@ const Marshall_Step5_MixtureMaximumDensity = ({
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-around' }}>
               {data.missingSpecificMass?.length > 0 &&
                 data.missingSpecificMass?.map((material, index) => (
-                  <InputEndAdornment
+                  <InputNumberBrProps
                     key={`${index}`}
                     adornment={'g/cm³'}
                     label={material.name}
                     value={material.value}
-                    onChange={(e) => {
+                    onChange={(value: number | null) => {
                       const prevState = [...data.missingSpecificMass];
                       const index = prevState.findIndex((idx) => idx.name === material.name);
-                      prevState[index] = { ...prevState[index], value: Number(e.target.value) };
+                      prevState[index] = { ...prevState[index], value: value };
                       setData({ step: 4, value: { ...data, missingSpecificMass: prevState } });
                     }}
                   />

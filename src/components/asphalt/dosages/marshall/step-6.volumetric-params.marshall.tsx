@@ -5,6 +5,7 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import InputNumberBrProps from '@/components/atoms/inputs/inputNumberBr';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { EssayPageProps } from '@/components/templates/essay';
@@ -121,19 +122,20 @@ const Marshall_Step6_VolumetricParams = ({
     },
   ];
 
-  
-
   const renderInputCell = (tenor: string, row: any, field: string) => {
     const { id } = row;
     const index = data[tenor]?.findIndex((r) => r.id === id);
     const value = data[tenor][index]?.[field];
 
     return (
-      <InputEndAdornment
+      <InputNumberBrProps
         adornment=""
-        type="number"
-        value={value === null ? '' : value}
-        onChange={handleInputChange(tenor, index, field)}
+        value={value}
+        onChange={(numericValue: number | null) => {
+          const newState = [...data[tenor]];
+          newState[index] = { ...newState[index], [field]: numericValue };
+          setData({ step: 5, value: { ...data, [tenor]: newState } });
+        }}
       />
     );
   };

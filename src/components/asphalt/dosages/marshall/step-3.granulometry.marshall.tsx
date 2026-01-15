@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import InputNumberBrProps from '@/components/atoms/inputs/inputNumberBr';
 import Step3Table from './tables/step-3-table';
 import Graph from '@/services/asphalt/dosages/marshall/graph/marshal-granulometry-graph';
 import useAuth from '@/contexts/auth';
@@ -13,7 +14,10 @@ import { toast } from 'react-toastify';
 import Loading from '@/components/molecules/loading';
 import { isNumber } from '@mui/x-data-grid/internals';
 //tst
-const Marshall_Step3_Granulometry = ({ setNextDisabled, marshall }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+const Marshall_Step3_Granulometry = ({
+  setNextDisabled,
+  marshall,
+}: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const { calculateGranulometryComposition } = new Marshall_SERVICE();
   const { granulometryCompositionData: data, materialSelectionData, setData, generalData } = useMarshallStore();
 
@@ -27,78 +31,72 @@ const Marshall_Step3_Granulometry = ({ setNextDisabled, marshall }: EssayPagePro
   let setSpecificationColumnsGroupings;
 
   useEffect(() => {
-  toast.promise(
-    async () => {
-      try {
-        console.log('🔄 Buscando dados de granulometria...');
-        console.log('generalData:', generalData);
-        console.log('materialSelectionData:', materialSelectionData);
-        console.log('user._id:', user._id);
-        
-        // Fetch step 3 data using the marshall service with necessary parameters.
-        const result = await marshall.getStep3Data(
-          generalData,
-          materialSelectionData,
-          user._id,
-          null
-        );
+    toast.promise(
+      async () => {
+        try {
+          console.log('🔄 Buscando dados de granulometria...');
+          console.log('generalData:', generalData);
+          console.log('materialSelectionData:', materialSelectionData);
+          console.log('user._id:', user._id);
 
-        console.log('📦 Resultado COMPLETO do getStep3Data:', result);
-        console.log('Tipo:', typeof result);
-        
-        if (!result) {
-          console.error('❌ Resultado é undefined!');
-          throw new Error('Nenhum dado retornado do servidor');
+          // Fetch step 3 data using the marshall service with necessary parameters.
+          const result = await marshall.getStep3Data(generalData, materialSelectionData, user._id, null);
+
+          console.log('📦 Resultado COMPLETO do getStep3Data:', result);
+          console.log('Tipo:', typeof result);
+
+          if (!result) {
+            console.error('❌ Resultado é undefined!');
+            throw new Error('Nenhum dado retornado do servidor');
+          }
+
+          const { table_data, dnitBands } = result;
+
+          console.log('📊 table_data:', table_data);
+          console.log('📊 table_rows length:', table_data?.table_rows?.length || 0);
+          console.log('📊 dnitBands:', dnitBands);
+          console.log('📊 dnitBands.higher:', dnitBands?.higher?.length || 0);
+          console.log('📊 dnitBands.lower:', dnitBands?.lower?.length || 0);
+
+          if (!table_data || !dnitBands) {
+            console.error('❌ Dados incompletos!');
+            throw new Error('Dados incompletos do servidor');
+          }
+
+          if (!table_data.table_rows || table_data.table_rows.length === 0) {
+            console.warn('⚠️ table_rows está vazio!');
+            console.log('table_column_headers:', table_data.table_column_headers);
+
+            // Mostra quais agregados estão sendo buscados
+            console.log('🔍 Agregados sendo buscados:', materialSelectionData.aggregates);
+          }
+
+          // Create a copy of the current data state to update with new fetched data.
+          const prevData = { ...data };
+
+          // Update the copied data with fetched table data and dnit bands.
+          prevData.table_data = table_data;
+          prevData.dnitBands = dnitBands;
+
+          // Set the new data state with the updated information.
+          setData({
+            step: 2,
+            value: prevData,
+          });
+
+          console.log('✅ Dados atualizados no store');
+        } catch (error) {
+          console.error('💥 Erro no getStep3Data:', error);
+          throw error;
         }
-
-        const { table_data, dnitBands } = result;
-        
-        console.log('📊 table_data:', table_data);
-        console.log('📊 table_rows length:', table_data?.table_rows?.length || 0);
-        console.log('📊 dnitBands:', dnitBands);
-        console.log('📊 dnitBands.higher:', dnitBands?.higher?.length || 0);
-        console.log('📊 dnitBands.lower:', dnitBands?.lower?.length || 0);
-
-        if (!table_data || !dnitBands) {
-          console.error('❌ Dados incompletos!');
-          throw new Error('Dados incompletos do servidor');
-        }
-
-        if (!table_data.table_rows || table_data.table_rows.length === 0) {
-          console.warn('⚠️ table_rows está vazio!');
-          console.log('table_column_headers:', table_data.table_column_headers);
-          
-          // Mostra quais agregados estão sendo buscados
-          console.log('🔍 Agregados sendo buscados:', materialSelectionData.aggregates);
-        }
-
-        // Create a copy of the current data state to update with new fetched data.
-        const prevData = { ...data };
-
-        // Update the copied data with fetched table data and dnit bands.
-        prevData.table_data = table_data;
-        prevData.dnitBands = dnitBands;
-
-        // Set the new data state with the updated information.
-        setData({
-          step: 2,
-          value: prevData,
-        });
-
-        console.log('✅ Dados atualizados no store');
-
-      } catch (error) {
-        console.error('💥 Erro no getStep3Data:', error);
-        throw error;
+      },
+      {
+        pending: t('loading.materials.pending'),
+        success: t('loading.materials.success'),
+        error: t('loading.materials.error'),
       }
-    },
-    {
-      pending: t('loading.materials.pending'),
-      success: t('loading.materials.success'),
-      error: t('loading.materials.error'),
-    }
-  );
-}, []);
+    );
+  }, []);
 
   useEffect(() => {
     toast.promise(
@@ -193,14 +191,14 @@ const Marshall_Step3_Granulometry = ({ setNextDisabled, marshall }: EssayPagePro
         }
 
         return (
-          <InputEndAdornment
+          <InputNumberBrProps
             adornment={'%'}
-            type="number"
             value={inputRows[0] ? inputRows[0]['percentage_'.concat(_id)] : ''}
-            onChange={(e) => {
-              if (e.target.value === null) return;
+            onChange={(numericValue: number | null) => {
+              // ← MUDOU AQUI
+              // numericValue já é number ou null
               const newRows = [...inputRows];
-              newRows[0]['percentage_'.concat(_id)] = Number(e.target.value);
+              newRows[0]['percentage_'.concat(_id)] = numericValue || 0; // ← MUDOU AQUI
               setData({ step: 2, key: 'percentageInputs', value: newRows });
             }}
           />
@@ -254,21 +252,20 @@ const Marshall_Step3_Granulometry = ({ setNextDisabled, marshall }: EssayPagePro
       ];
     }
 
+    if (data?.projections.length > 0 && data?.bands) {
+      const newArray = [];
 
-      if (data?.projections.length > 0 && data?.bands) {
-  const newArray = [];
+      for (let i = 0; i < data.projections.length; i++) {
+        newArray.push({
+          label: data.projections[i]?.label,
+          value: data.projections[i]?.value,
+          band_1: data.bands?.lowerBand[i] !== null ? data.bands.lowerBand[i] : '', // ← USA data.bands!
+          band_2: data.bands?.higherBand[i] !== null ? data.bands.higherBand[i] : '', // ← USA data.bands!
+        });
+      }
 
-  for (let i = 0; i < data.projections.length; i++) {
-    newArray.push({
-      label: data.projections[i]?.label,
-      value: data.projections[i]?.value,
-      band_1: data.bands?.lowerBand[i] !== null ? data.bands.lowerBand[i] : '',  // ← USA data.bands!
-      band_2: data.bands?.higherBand[i] !== null ? data.bands.higherBand[i] : '', // ← USA data.bands!
-    });
-  }
-
-  setSpecificationRows = [...newArray];
-}
+      setSpecificationRows = [...newArray];
+    }
   }, [data.sumOfPercents, data.bands]);
 
   const calculateGranulometricComposition = async () => {
