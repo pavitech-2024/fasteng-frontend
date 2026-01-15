@@ -1,5 +1,5 @@
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
-import InputNumberBr from '@/components/atoms/inputs/inputNumberBr'; // Corrigido o nome
+import InputNumberBr from '@/components/atoms/inputs/inputNumberBr';
 import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
@@ -31,6 +31,101 @@ const Marshall_Step8_ConfirmCompression = ({
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [method, setMethod] = useState('');
   const optimumBinderRows = data?.optimumBinder || [];
+
+  // Função para verificar se TODOS os campos estão preenchidos
+  const checkAllFieldsComplete = () => {
+    console.log('🔍 Verificando se todos os campos estão preenchidos...');
+    
+    // 1. Verificar se o método foi selecionado
+    if (!method) {
+      console.log('❌ Método não selecionado');
+      return false;
+    }
+
+    // 2. Verificar se a temperatura da água está preenchida
+    if (maximumMixtureDensityData?.temperatureOfWater === null || 
+        maximumMixtureDensityData?.temperatureOfWater === undefined) {
+      console.log('❌ Temperatura da água não preenchida');
+      return false;
+    }
+
+    // 3. Verificar se todos os campos da tabela optimumBinder estão preenchidos
+    if (!optimumBinderRows || optimumBinderRows.length === 0) {
+      console.log('❌ Tabela optimumBinder vazia');
+      return false;
+    }
+
+    const hasEmptyFieldsInTable = optimumBinderRows.some(row => {
+      const isEmpty = (
+        row.diammeter === null || row.diammeter === undefined ||
+        row.height === null || row.height === undefined ||
+        row.dryMass === null || row.dryMass === undefined ||
+        row.submergedMass === null || row.submergedMass === undefined ||
+        row.drySurfaceSaturatedMass === null || row.drySurfaceSaturatedMass === undefined ||
+        row.stability === null || row.stability === undefined ||
+        row.fluency === null || row.fluency === undefined ||
+        row.diametricalCompressionStrength === null || row.diametricalCompressionStrength === undefined
+      );
+      return isEmpty;
+    });
+
+    if (hasEmptyFieldsInTable) {
+      console.log('❌ Campos da tabela optimumBinder não estão todos preenchidos');
+      return false;
+    }
+
+    // 4. Verificar DMT ou GMM específico
+    if (method === 'DMT') {
+      // Para DMT: verificar se confirmedSpecificGravity está preenchido
+      if (data?.confirmedSpecificGravity?.result === null || 
+          data?.confirmedSpecificGravity?.result === undefined) {
+        console.log('❌ DMT: confirmedSpecificGravity não preenchido');
+        return false;
+      }
+    } else if (method === 'GMM') {
+      // Para GMM: verificar se tem gmm OU riceTest completo
+      //const hasGmmValue = data?.gmm !== null && data?.gmm !== undefined && data?.gmm !== '';
+      const hasGmmValue = data?.gmm !== null && data?.gmm !== undefined;
+      
+      const hasRiceTestComplete = data?.riceTest && 
+        data.riceTest.massOfDrySample !== null &&
+        data.riceTest.massOfDrySample !== undefined &&
+        data.riceTest.massOfContainerWaterSample !== null &&
+        data.riceTest.massOfContainerWaterSample !== undefined &&
+        data.riceTest.massOfContainerWater !== null &&
+        data.riceTest.massOfContainerWater !== undefined;
+      
+      console.log('📊 GMM check:', { hasGmmValue, hasRiceTestComplete });
+      
+      if (!hasGmmValue && !hasRiceTestComplete) {
+        console.log('❌ GMM: nem gmm nem riceTest estão preenchidos');
+        return false;
+      }
+    }
+
+    console.log('✅ Todos os campos estão preenchidos!');
+    return true;
+  };
+
+  // Efeito para controlar o botão "Próximo"
+  useEffect(() => {
+    const complete = checkAllFieldsComplete();
+    
+    // Atualizar botão "Próximo"
+    if (setNextDisabled) {
+      setNextDisabled(!complete);
+      console.log(`🔄 Botão "Próximo" ${complete ? 'HABILITADO' : 'DESABILITADO'}`);
+    }
+  }, [
+    method,
+    maximumMixtureDensityData?.temperatureOfWater,
+    data?.optimumBinder,
+    data?.confirmedSpecificGravity,
+    data?.gmm,
+    data?.riceTest,
+    optimumBinderRows,
+    setNextDisabled
+  ]);
 
   useEffect(() => {
     toast.promise(
@@ -372,6 +467,15 @@ const Marshall_Step8_ConfirmCompression = ({
   };
 
   const handleConfirm = () => {
+    console.log('🔄 Iniciando cálculo de parâmetros volumétricos...');
+    console.log('📊 Dados enviados:', {
+      optimumBinderRows,
+      method,
+      temperature: maximumMixtureDensityData?.temperatureOfWater,
+      confirmedSpecificGravity: data?.confirmedSpecificGravity,
+      gmm: data?.gmm
+    });
+
     toast.promise(
       async () => {
         try {
@@ -382,6 +486,8 @@ const Marshall_Step8_ConfirmCompression = ({
             data
           );
 
+          console.log('✅ Resposta do backend:', confirmVP);
+
           newData = {
             ...data,
             ...confirmVP,
@@ -389,6 +495,7 @@ const Marshall_Step8_ConfirmCompression = ({
 
           setData({ step: 7, value: newData });
         } catch (error) {
+          console.error('💥 Erro no handleConfirm:', error);
           throw error;
         }
       },
@@ -441,9 +548,10 @@ const Marshall_Step8_ConfirmCompression = ({
     );
   };
 
-  if (nextDisabled && setNextDisabled) {
-    setNextDisabled(false);
-  }
+  // Remover esta linha que estava forçando o botão próximo a ficar habilitado
+  // if (nextDisabled && setNextDisabled) {
+  //   setNextDisabled(false);
+  // }
 
   return (
     <>
