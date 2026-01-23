@@ -1,6 +1,6 @@
 {
   "home.pm": "Pro-MeDiNa",
-  "home.pm.description": "Breve texto introdutório do objetivo do pro-medina e como ele funciona, especificando as quatro áreas de abordagem abaixo. Qual aplicação você deseja utilizar agora?",
+  "home.pm.description": "O Pró MeDiNa foi desenvolvido para registro de materiais utilizados na calibração do MeDiNa. Ele permite cadastrar e consultar informações de forma estruturada, facilitando o gerenciamento dos dados e a exportação para análise. Com uma interface intuitiva, a ferramenta otimiza o processo de calibração, tornando-o mais eficiente e preciso.",
   "home.pm.granular": "Camadas Granulares",
   "home.pm.stabilized": "Camadas Estabilizadas",
   "home.pm.asphalt": "Ligante e Concreto Asfálticos",
