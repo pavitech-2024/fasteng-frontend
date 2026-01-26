@@ -247,73 +247,70 @@ const Marshall_Step9_ResumeDosage = ({
   }, [materialSelectionData, optimumBinderContentData, data]);
 
   const calculateQuantitativeValues = (): string[] | null => {
-    if (!data?.confirmedVolumetricParameters?.values) {
-      console.log('📊 [CALC] Nenhum dado volumétrico disponível');
-      return null;
-    }
+  if (!data?.confirmedVolumetricParameters?.values) {
+    console.log('📊 [CALC] Nenhum dado volumétrico disponível');
+    return null;
+  }
 
-    // 1. Pegar VV CORRETO
-    const VV_percent = correctedValues?.vvCalculated || 0; // VV em %
+  // 1. Pegar VV CORRETO
+  const VV_percent = correctedValues?.vvCalculated || 0; // VV em %
 
-    // 2. Pegar Gmm
-    const Gmm = data?.confirmedSpecificGravity?.result || 0; // g/cm³
+  // 2. Pegar Gmm
+  const Gmm = data?.confirmedSpecificGravity?.result || 0; // g/cm³
 
-    // ✅ CORREÇÃO: Fórmula correta para massa total em ton/m³
-    // Massa Total (ton/m³) = (100 - VV)/100 × Gmm
-    // Onde: (100 - VV)/100 = fração sólida da mistura
-    //        Gmm = densidade máxima em g/cm³ = ton/m³
-    const massaTotalTon = ((100 - VV_percent) / 100) * Gmm; // ton/m³
+  // ✅ Fórmula correta para massa total em ton/m³
+  const massaTotalTon = ((100 - VV_percent) / 100) * Gmm; // ton/m³
 
-    console.log('🔍 CÁLCULO MASSA TOTAL CORRIGIDO:', {
-      VV: VV_percent.toFixed(2) + '%',
-      Gmm: Gmm.toFixed(3) + ' g/cm³',
-      'Fração sólida': `(100 - ${VV_percent.toFixed(2)})/100 = ${((100 - VV_percent) / 100).toFixed(3)}`,
-      'Massa Total': massaTotalTon.toFixed(4) + ' ton/m³',
-      'Massa Total em kg': (massaTotalTon * 1000).toFixed(2) + ' kg/m³',
+  console.log('🔍 CÁLCULO MASSA TOTAL CORRIGIDO:', {
+    VV: VV_percent.toFixed(2) + '%',
+    Gmm: Gmm.toFixed(3) + ' g/cm³',
+    'Massa Total': massaTotalTon.toFixed(4) + ' ton/m³',
+    'Massa Total em kg': (massaTotalTon * 1000).toFixed(2) + ' kg/m³',
+  });
+
+  // 3. Calcular MASSA DO LIGANTE em TONELADAS
+  const teorLigante = optimumBinderContentData?.optimumBinder?.optimumContent || 0; // %
+  const massaLiganteTon = (teorLigante / 100) * massaTotalTon; // ton/m³
+
+  console.log('🔍 CÁLCULO LIGANTE:', {
+    'Teor ligante': teorLigante.toFixed(2) + '%',
+    'Massa Ligante (ton)': massaLiganteTon.toFixed(4) + ' ton/m³',
+    'Massa Ligante (kg)': (massaLiganteTon * 1000).toFixed(2) + ' kg/m³',
+  });
+
+  // 4. Calcular MASSA TOTAL DOS AGREGADOS em TONELADAS
+  const massaTotalAgregadosTon = massaTotalTon - massaLiganteTon; // ton/m³
+
+  console.log('🔍 MASSA TOTAL AGREGADOS:', {
+    'Massa Total Agregados (ton)': massaTotalAgregadosTon.toFixed(4) + ' ton/m³',
+    'Massa Total Agregados (kg)': (massaTotalAgregadosTon * 1000).toFixed(2) + ' kg/m³',
+  });
+
+  // 5. Distribuir MASSA DOS AGREGADOS
+  if (!materialSelectionData?.aggregates) {
+    console.log('📊 [CALC] Nenhum agregado disponível');
+    return null;
+  }
+
+  const percentuaisAgregados = optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage || [];
+
+  return materialSelectionData.aggregates.map((material, idx) => {
+    const percentual = percentuaisAgregados[idx] || 0; // %
+
+    // Massa do agregado individual em TONELADAS
+    const massaAgregadoTon = (percentual / 100) * massaTotalAgregadosTon; // ton/m³
+
+    console.log(`🔍 Agregado ${material.name}:`, {
+      Percentual: percentual.toFixed(2) + '%',
+      'Massa (ton)': massaAgregadoTon.toFixed(4) + ' ton/m³',
+      'Massa (kg)': (massaAgregadoTon * 1000).toFixed(2) + ' kg/m³',
     });
 
-    // 3. Calcular MASSA DO LIGANTE em TONELADAS
-    const teorLigante = optimumBinderContentData?.optimumBinder?.optimumContent || 0; // %
-    const massaLiganteTon = (teorLigante / 100) * massaTotalTon; // ton/m³
+    // ✅ CORREÇÃO: Retornar em TONELADAS (sem multiplicar por 1000)
+    return massaAgregadoTon.toFixed(4); // ton/m³
+  });
+};
 
-    console.log('🔍 CÁLCULO LIGANTE:', {
-      'Teor ligante': teorLigante.toFixed(2) + '%',
-      'Massa Ligante (ton)': massaLiganteTon.toFixed(4) + ' ton/m³',
-      'Massa Ligante (kg)': (massaLiganteTon * 1000).toFixed(2) + ' kg/m³',
-    });
-
-    // 4. Calcular MASSA TOTAL DOS AGREGADOS em TONELADAS
-    const massaTotalAgregadosTon = massaTotalTon - massaLiganteTon; // ton/m³
-
-    console.log('🔍 MASSA TOTAL AGREGADOS:', {
-      'Massa Total Agregados (ton)': massaTotalAgregadosTon.toFixed(4) + ' ton/m³',
-      'Massa Total Agregados (kg)': (massaTotalAgregadosTon * 1000).toFixed(2) + ' kg/m³',
-    });
-
-    // 5. Distribuir MASSA DOS AGREGADOS
-    if (!materialSelectionData?.aggregates) {
-      console.log('📊 [CALC] Nenhum agregado disponível');
-      return null;
-    }
-
-    const percentuaisAgregados = optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage || [];
-
-    return materialSelectionData.aggregates.map((material, idx) => {
-      const percentual = percentuaisAgregados[idx] || 0; // %
-
-      // Massa do agregado individual em TONELADAS
-      const massaAgregadoTon = (percentual / 100) * massaTotalAgregadosTon; // ton/m³
-
-      console.log(`🔍 Agregado ${material.name}:`, {
-        Percentual: percentual.toFixed(2) + '%',
-        'Massa (ton)': massaAgregadoTon.toFixed(4) + ' ton/m³',
-        'Massa (kg)': (massaAgregadoTon * 1000).toFixed(2) + ' kg/m³',
-      });
-
-      // Retornar em kg (sem a unidade, só o número)
-      return (massaAgregadoTon * 1000).toFixed(2);
-    });
-  };
 
   const granulometricCompTableColumns: GridColDef[] = [
     {
@@ -445,85 +442,88 @@ const Marshall_Step9_ResumeDosage = ({
     setOptimumContentGroupings(groupings);
   };
 
-  const getQuantitativeCols = () => {
-    console.log('📐 [RESUME] Criando colunas quantitativas');
+ const getQuantitativeCols = () => {
+  console.log('📐 [RESUME] Criando colunas quantitativas EM TONELADAS');
 
-    const newCols: GridColDef[] = [];
+  const newCols: GridColDef[] = [];
 
-    const binderObj: GridColDef = {
-      field: 'binder',
+  const binderObj: GridColDef = {
+    field: 'binder',
+    width: 250,
+    headerName: t('asphalt.dosages.marshall.asphaltic-binder') + ' (ton/m³)', // ✅ Alterado para ton/m³
+    valueFormatter: ({ value }) => `${value}`,
+  };
+
+  materialSelectionData.aggregates.forEach((material) => {
+    const col: GridColDef = {
+      field: `${material._id}`,
       width: 250,
-      headerName: t('asphalt.dosages.marshall.asphaltic-binder') + '(kg)',
+      headerName: `${material.name} (ton/m³)`, // ✅ Alterado para ton/m³
       valueFormatter: ({ value }) => `${value}`,
     };
+    newCols.push(col);
+  });
 
-    materialSelectionData.aggregates.forEach((material) => {
-      const col: GridColDef = {
-        field: `${material._id}`,
-        width: 250,
-        headerName: `${material.name} (m³)`,
-        valueFormatter: ({ value }) => `${value}`,
-      };
-      newCols.push(col);
-    });
-
-    newCols.unshift(binderObj);
-    setQuantitativeCols(newCols);
-  };
+  newCols.unshift(binderObj);
+  setQuantitativeCols(newCols);
+};
 
   const getQuantitativeRows = () => {
-    console.log('📝 [RESUME] Criando linhas quantitativas CORRIGIDAS');
+  console.log('📝 [RESUME] Criando linhas quantitativas EM TONELADAS');
 
-    // Calcular usando a função corrigida
-    const aggregateValues = calculateQuantitativeValues();
+  // Calcular usando a função corrigida (agora retorna ton/m³)
+  const aggregateValues = calculateQuantitativeValues();
 
-    // Calcular massa do ligante separadamente
-    const VV_percent = correctedValues?.vvCalculated || 0;
-    const Gmm = data?.confirmedSpecificGravity?.result || 0;
+  // Calcular massa do ligante separadamente EM TONELADAS
+  const VV_percent = correctedValues?.vvCalculated || 0;
+  const Gmm = data?.confirmedSpecificGravity?.result || 0;
 
-    // ✅ CORREÇÃO: Usar fórmula corrigida
-    const massaTotalTon = ((100 - VV_percent) / 100) * Gmm;
-    const teorLigante = optimumBinderContentData?.optimumBinder?.optimumContent || 0;
-    const massaLiganteTon = (teorLigante / 100) * massaTotalTon;
-    const massaLiganteKg = (massaLiganteTon * 1000).toFixed(2);
+  // Fórmula correta para massa total em ton/m³
+  const massaTotalTon = ((100 - VV_percent) / 100) * Gmm;
+  const teorLigante = optimumBinderContentData?.optimumBinder?.optimumContent || 0;
+  const massaLiganteTon = (teorLigante / 100) * massaTotalTon;
+  
+  // ✅ AGORA EM TONELADAS
+  const massaLiganteParaMostrar = massaLiganteTon.toFixed(4); // 0.1272 ton/m³
 
-    let rowsObj: any = {
-      id: 0,
-      binder: massaLiganteKg,
-    };
-
-    materialSelectionData.aggregates.forEach((material, idx) => {
-      let value = '-';
-
-      if (aggregateValues && aggregateValues[idx] !== undefined) {
-        value = aggregateValues[idx];
-      } else {
-        // Fallback
-        const originalValue = data?.confirmedVolumetricParameters?.quantitative?.[idx + 1];
-        if (typeof originalValue === 'number') {
-          value = originalValue.toFixed(2);
-        } else {
-          value = '-';
-        }
-      }
-
-      rowsObj = {
-        ...rowsObj,
-        [material._id]: value,
-      };
-    });
-
-    console.log('📊 RESUMO FINAL QUANTITATIVO CORRIGIDO:', {
-      'VV usado': VV_percent.toFixed(2) + '%',
-      'Gmm usado': Gmm.toFixed(3) + ' g/cm³',
-      'Massa Total corrigida': massaTotalTon.toFixed(4) + ' ton/m³',
-      'Teor ligante': teorLigante.toFixed(2) + '%',
-      'Massa Ligante corrigida': massaLiganteKg + ' kg',
-      'Valores calculados': rowsObj,
-    });
-
-    setQuantitativeRows([rowsObj]);
+  let rowsObj: any = {
+    id: 0,
+    binder: massaLiganteParaMostrar, // ✅ EM TONELADAS
   };
+
+  materialSelectionData.aggregates.forEach((material, idx) => {
+    let value = '-';
+
+    if (aggregateValues && aggregateValues[idx] !== undefined) {
+      value = aggregateValues[idx]; // ✅ JÁ EM TONELADAS (0.8980, 0.6735, etc.)
+    } else {
+      // Fallback - se vier do backend, converter de kg para ton
+      const originalValue = data?.confirmedVolumetricParameters?.quantitative?.[idx + 1];
+      if (typeof originalValue === 'number') {
+        value = (originalValue / 1000).toFixed(4); // ✅ CONVERTE kg para ton
+      } else {
+        value = '-';
+      }
+    }
+
+    rowsObj = {
+      ...rowsObj,
+      [material._id]: value,
+    };
+  });
+
+  console.log('📊 RESUMO FINAL QUANTITATIVO EM TON/m³:', {
+    'VV usado': VV_percent.toFixed(2) + '%',
+    'Gmm usado': Gmm.toFixed(3) + ' g/cm³',
+    'Massa Total': massaTotalTon.toFixed(4) + ' ton/m³',
+    'Teor ligante': teorLigante.toFixed(2) + '%',
+    'Massa Ligante': massaLiganteTon.toFixed(4) + ' ton/m³',
+    'Valores calculados (ton/m³)': rowsObj,
+  });
+
+  setQuantitativeRows([rowsObj]);
+};
+
   const getQuantitativeGroupings = () => {
     console.log('📊 [RESUME] Criando agrupamentos quantitativos');
 
