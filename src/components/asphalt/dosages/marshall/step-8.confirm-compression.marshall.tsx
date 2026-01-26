@@ -33,9 +33,10 @@ const Marshall_Step8_ConfirmCompression = ({
   const optimumBinderRows = data?.optimumBinder || [];
 
   // Função para verificar se TODOS os campos estão preenchidos
+  // Função para verificar se TODOS os campos estão preenchidos
   const checkAllFieldsComplete = () => {
     console.log('🔍 Verificando se todos os campos estão preenchidos...');
-    
+
     // 1. Verificar se o método foi selecionado
     if (!method) {
       console.log('❌ Método não selecionado');
@@ -43,8 +44,10 @@ const Marshall_Step8_ConfirmCompression = ({
     }
 
     // 2. Verificar se a temperatura da água está preenchida
-    if (maximumMixtureDensityData?.temperatureOfWater === null || 
-        maximumMixtureDensityData?.temperatureOfWater === undefined) {
+    if (
+      maximumMixtureDensityData?.temperatureOfWater === null ||
+      maximumMixtureDensityData?.temperatureOfWater === undefined
+    ) {
       console.log('❌ Temperatura da água não preenchida');
       return false;
     }
@@ -55,17 +58,24 @@ const Marshall_Step8_ConfirmCompression = ({
       return false;
     }
 
-    const hasEmptyFieldsInTable = optimumBinderRows.some(row => {
-      const isEmpty = (
-        row.diammeter === null || row.diammeter === undefined ||
-        row.height === null || row.height === undefined ||
-        row.dryMass === null || row.dryMass === undefined ||
-        row.submergedMass === null || row.submergedMass === undefined ||
-        row.drySurfaceSaturatedMass === null || row.drySurfaceSaturatedMass === undefined ||
-        row.stability === null || row.stability === undefined ||
-        row.fluency === null || row.fluency === undefined ||
-        row.diametricalCompressionStrength === null || row.diametricalCompressionStrength === undefined
-      );
+    const hasEmptyFieldsInTable = optimumBinderRows.some((row) => {
+      const isEmpty =
+        row.diammeter === null ||
+        row.diammeter === undefined ||
+        row.height === null ||
+        row.height === undefined ||
+        row.dryMass === null ||
+        row.dryMass === undefined ||
+        row.submergedMass === null ||
+        row.submergedMass === undefined ||
+        row.drySurfaceSaturatedMass === null ||
+        row.drySurfaceSaturatedMass === undefined ||
+        row.stability === null ||
+        row.stability === undefined ||
+        row.fluency === null ||
+        row.fluency === undefined ||
+        row.diametricalCompressionStrength === null ||
+        row.diametricalCompressionStrength === undefined;
       return isEmpty;
     });
 
@@ -77,30 +87,32 @@ const Marshall_Step8_ConfirmCompression = ({
     // 4. Verificar DMT ou GMM específico
     if (method === 'DMT') {
       // Para DMT: verificar se confirmedSpecificGravity está preenchido
-      if (data?.confirmedSpecificGravity?.result === null || 
-          data?.confirmedSpecificGravity?.result === undefined) {
+      if (data?.confirmedSpecificGravity?.result === null || data?.confirmedSpecificGravity?.result === undefined) {
         console.log('❌ DMT: confirmedSpecificGravity não preenchido');
         return false;
       }
     } else if (method === 'GMM') {
-      // Para GMM: verificar se tem gmm OU riceTest completo
-      //const hasGmmValue = data?.gmm !== null && data?.gmm !== undefined && data?.gmm !== '';
+      // ✅ CORREÇÃO: Para GMM, verificar se TEM PELO MENOS UM dos dois:
+      // - GMM inserido manualmente (data.gmm) OU
+      // - Rice Test calculado (data.confirmedSpecificGravity.result)
+
       const hasGmmValue = data?.gmm !== null && data?.gmm !== undefined;
-      
-      const hasRiceTestComplete = data?.riceTest && 
-        data.riceTest.massOfDrySample !== null &&
-        data.riceTest.massOfDrySample !== undefined &&
-        data.riceTest.massOfContainerWaterSample !== null &&
-        data.riceTest.massOfContainerWaterSample !== undefined &&
-        data.riceTest.massOfContainerWater !== null &&
-        data.riceTest.massOfContainerWater !== undefined;
-      
-      console.log('📊 GMM check:', { hasGmmValue, hasRiceTestComplete });
-      
-      if (!hasGmmValue && !hasRiceTestComplete) {
-        console.log('❌ GMM: nem gmm nem riceTest estão preenchidos');
+      const hasRiceTestValue =
+        data?.confirmedSpecificGravity?.result !== null && data?.confirmedSpecificGravity?.result !== undefined;
+
+      console.log('📊 GMM check:', {
+        hasGmmValue,
+        gmmValue: data?.gmm,
+        hasRiceTestValue,
+        riceTestValue: data?.confirmedSpecificGravity?.result,
+      });
+
+      if (!hasGmmValue && !hasRiceTestValue) {
+        console.log('❌ GMM: nem gmm inserido nem riceTest calculado');
         return false;
       }
+
+      console.log('✅ GMM: Valor válido encontrado (inserido ou calculado)');
     }
 
     console.log('✅ Todos os campos estão preenchidos!');
@@ -110,7 +122,7 @@ const Marshall_Step8_ConfirmCompression = ({
   // Efeito para controlar o botão "Próximo"
   useEffect(() => {
     const complete = checkAllFieldsComplete();
-    
+
     // Atualizar botão "Próximo"
     if (setNextDisabled) {
       setNextDisabled(!complete);
@@ -124,7 +136,7 @@ const Marshall_Step8_ConfirmCompression = ({
     data?.gmm,
     data?.riceTest,
     optimumBinderRows,
-    setNextDisabled
+    setNextDisabled,
   ]);
 
   useEffect(() => {
@@ -473,17 +485,34 @@ const Marshall_Step8_ConfirmCompression = ({
       method,
       temperature: maximumMixtureDensityData?.temperatureOfWater,
       confirmedSpecificGravity: data?.confirmedSpecificGravity,
-      gmm: data?.gmm
+      gmm: data?.gmm,
+      // ✅ LOG para verificar qual valor será usado
+      gmmValueToUse:
+        method === 'GMM' ? data?.gmm || data?.confirmedSpecificGravity?.result : data?.confirmedSpecificGravity?.result,
     });
 
     toast.promise(
       async () => {
         try {
           let newData = {};
+
+          const dataToSend = {
+            ...data,
+            confirmedSpecificGravity: {
+              result:
+                method === 'GMM'
+                  ? data?.gmm || data?.confirmedSpecificGravity?.result || 0 // ✅ Usa gmm inserido OU rice test
+                  : data?.confirmedSpecificGravity?.result || 0, // DMT usa confirmedSpecificGravity
+              type: method, // ✅ 'DMT' ou 'GMM'
+            },
+          };
+
+          console.log('📤 Dados enviados para confirmVolumetricParameters:', dataToSend);
+
           const confirmVP = await marshall.confirmVolumetricParameters(
             maximumMixtureDensityData,
             optimumBinderContentData,
-            data
+            dataToSend // ✅ Usar dados corrigidos
           );
 
           console.log('✅ Resposta do backend:', confirmVP);
@@ -491,6 +520,10 @@ const Marshall_Step8_ConfirmCompression = ({
           newData = {
             ...data,
             ...confirmVP,
+            confirmedSpecificGravity: {
+              result: confirmVP?.confirmedSpecificGravity?.result || dataToSend.confirmedSpecificGravity.result,
+              type: method, // ✅ Garantir que o tipo é preservado
+            },
           };
 
           setData({ step: 7, value: newData });
@@ -548,7 +581,6 @@ const Marshall_Step8_ConfirmCompression = ({
     );
   };
 
-  // Remover esta linha que estava forçando o botão próximo a ficar habilitado
   // if (nextDisabled && setNextDisabled) {
   //   setNextDisabled(false);
   // }
@@ -597,7 +629,6 @@ const Marshall_Step8_ConfirmCompression = ({
             size="medium"
             sx={{ width: '75%', marginX: 'auto' }}
           />
-
           {maximumMixtureDensityData?.maxSpecificGravity?.method === 'DMT' ? (
             <Typography variant="h6">
               {t('asphalt.dosages.marshall.binder-trial-dmt') +
@@ -607,11 +638,14 @@ const Marshall_Step8_ConfirmCompression = ({
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <Typography variant="h6">{t('asphalt.dosages.marshall.insert-gmm')}</Typography>
               <Typography>
-                {t('asphalt.dosages.marshall.gmm-calculated-rice-test') + ` ${
-                  data?.confirmedSpecificGravity?.result
-                    ? `${Number(data.confirmedSpecificGravity.result).toFixed(2)} g/cm³`
-                    : '---'
-                }`}
+                {t('asphalt.dosages.marshall.gmm-calculated-rice-test') +
+                  ` ${
+                    data?.gmm
+                      ? `${Number(data.gmm).toFixed(2)} g/cm³` // Valor inserido manualmente
+                      : data?.confirmedSpecificGravity?.result
+                      ? `${Number(data.confirmedSpecificGravity.result).toFixed(2)} g/cm³` // Valor calculado pelo Rice Test
+                      : '---'
+                  }`}
               </Typography>
               <InputNumberBr
                 adornment={'g/cm³'}
@@ -619,7 +653,15 @@ const Marshall_Step8_ConfirmCompression = ({
                 value={data?.gmm}
                 onChange={(value: number | null) => {
                   const prevData: MarshallData['confirmationCompressionData'] = data;
-                  const newData = { ...prevData, gmm: value };
+                  const newData = {
+                    ...prevData,
+                    gmm: value,
+                    // ✅ Se o usuário inserir um valor manual, podemos limpar o rice test
+                    confirmedSpecificGravity:
+                      value !== null && value !== undefined
+                        ? undefined // Limpa o valor calculado se inserir manualmente
+                        : prevData.confirmedSpecificGravity,
+                  };
                   setData({ step: 7, value: newData });
                 }}
               />
@@ -628,7 +670,6 @@ const Marshall_Step8_ConfirmCompression = ({
               </Button>
             </Box>
           )}
-
           <DataGrid
             key={'optimumBinder'}
             columns={generateColumns.map((col) => ({
@@ -646,11 +687,9 @@ const Marshall_Step8_ConfirmCompression = ({
             disableColumnSelector
             slots={{ footer: () => ExpansionToolbar() }}
           />
-
           <Button onClick={handleConfirm} variant="outlined">
             {t('asphalt.dosages.marshall.confirm')}
           </Button>
-
           <ModalBase
             title={t('asphalt.dosages.marshall.insert-real-specific-mass')}
             leftButtonTitle={t('asphalt.dosages.marshall.cancel')}
@@ -672,7 +711,7 @@ const Marshall_Step8_ConfirmCompression = ({
                       const prevState = { ...maximumMixtureDensityData };
                       const updatedMissingMass = [...(prevState.missingSpecificMass || [])];
                       const index = updatedMissingMass.findIndex((item) => item._id === material._id);
-                      
+
                       if (index !== -1) {
                         updatedMissingMass[index] = { ...updatedMissingMass[index], value };
                         const newState = {
@@ -686,7 +725,6 @@ const Marshall_Step8_ConfirmCompression = ({
                 ))}
             </Box>
           </ModalBase>
-
           <ModalBase
             title={t('asphalt.dosages.marshall.rice-test-data')}
             leftButtonTitle={t('asphalt.dosages.marshall.cancel')}
