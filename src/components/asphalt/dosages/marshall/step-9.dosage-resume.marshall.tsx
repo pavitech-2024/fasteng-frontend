@@ -53,7 +53,7 @@ const Marshall_Step9_ResumeDosage = ({
   // Função para determinar o método REAL (DMT ou GMM)
   const getRealMethod = (): 'DMT' | 'GMM' => {
     console.log('🔍 Detectando método REAL:');
-    
+
     // Prioridade 1: Verificar no confirmedSpecificGravity (mais confiável)
     if (data?.confirmedSpecificGravity?.type) {
       const type = data.confirmedSpecificGravity.type;
@@ -63,13 +63,13 @@ const Marshall_Step9_ResumeDosage = ({
         return type;
       }
     }
-    
+
     // Prioridade 2: Verificar se tem GMM específico
     if (data?.gmm !== null && data?.gmm !== undefined && data.gmm > 0) {
       console.log('✅ Método detectado: GMM (has gmm value)');
       return 'GMM';
     }
-    
+
     // Prioridade 3: Verificar no maximumMixtureDensityData
     if (maximumMixtureDensityData?.method) {
       const method = maximumMixtureDensityData.method;
@@ -78,7 +78,7 @@ const Marshall_Step9_ResumeDosage = ({
         return method as 'DMT' | 'GMM';
       }
     }
-    
+
     // Prioridade 4: Verificar no maxSpecificGravity
     if (maximumMixtureDensityData?.maxSpecificGravity?.method) {
       const method = maximumMixtureDensityData.maxSpecificGravity.method;
@@ -87,7 +87,7 @@ const Marshall_Step9_ResumeDosage = ({
         return method as 'DMT' | 'GMM';
       }
     }
-    
+
     // Default para DMT
     console.log('⚠️ Método não detectado, default para DMT');
     return 'DMT';
@@ -98,50 +98,25 @@ const Marshall_Step9_ResumeDosage = ({
     if (!data?.confirmedVolumetricParameters?.values) return null;
 
     const values = data.confirmedVolumetricParameters.values;
-    
-    console.log('🔍 VALORES DO BACKEND PARA CÁLCULO:', {
-      'aggregateVolumeVoids (provavelmente VAM)': values.aggregateVolumeVoids,
-      'apparentBulkSpecificGravity (Gmb)': values.apparentBulkSpecificGravity,
-      'ratioBitumenVoid (RBV)': values.ratioBitumenVoid,
-      'voidsFilledAsphalt': values.voidsFilledAsphalt
-    });
-    
+
     // ⚠️ SUPOSIÇÃO BASEADA NOS DADOS:
     // aggregateVolumeVoids do backend = VAM (Volume do Agregado de Vazios)
     const VAM_decimal = values.aggregateVolumeVoids || 0;
     const VAM = VAM_decimal * 100; // Converter para %
-    
+
     // Cálculo de VBC (Vazios com Betume)
     const Gmb = values.apparentBulkSpecificGravity || 0;
     const teorLigante = optimumBinderContentData?.optimumBinder?.optimumContent || 0;
     const Gb = 1.027; // Massa específica do betume
     const VBC = (Gmb * teorLigante) / Gb;
-    
+
     // ⚠️ CÁLCULO CORRETO: VV (Volume de Vazios) = VAM - VBC
     const VV = VAM - VBC;
-    
-    // RBV pode ser do backend ou calculado
-    const RBV_backend = values.ratioBitumenVoid ? values.ratioBitumenVoid * 100 : 0;
-    const RBV_calculado = VAM > 0 ? (VBC / VAM) * 100 : 0;
-    const RBV = values.ratioBitumenVoid !== undefined ? RBV_backend : RBV_calculado;
-    
-    console.log('🎯 CÁLCULOS CORRIGIDOS:', {
-      'VAM (Volume do Agregado de Vazios) [do backend]': VAM.toFixed(2) + '%',
-      'VBC (Vazios com Betume) [calculado]': VBC.toFixed(2) + '%',
-      'VV (Volume de Vazios) [calculado: VAM - VBC]': VV.toFixed(2) + '%',
-      'RBV (Relação Betume-Vazios)': RBV.toFixed(2) + '%',
-      'Fórmulas usadas': {
-        'VBC': '(Gmb × teor) / 1.027',
-        'VV': 'VAM - VBC',
-        'RBV': '(VBC / VAM) × 100'
-      }
-    });
-    
+
     return {
-      vamCalculated: VAM,         // Volume do Agregado de Vazios (em %)
-      vbcCalculated: VBC,         // Vazios com Betume (em %)
-      vvCalculated: VV,           // Volume de Vazios (em %) - VAM - VBC
-      ratioBitumenVoid: RBV,      // Relação Betume-Vazios (em %)
+      vamCalculated: VAM, // Volume do Agregado de Vazios (em %)
+      vbcCalculated: VBC, // Vazios com Betume (em %)
+      vvCalculated: VV, // Volume de Vazios (em %) - VAM - VBC
     };
   };
 
@@ -155,7 +130,7 @@ const Marshall_Step9_ResumeDosage = ({
 
   useEffect(() => {
     console.log('🔄 [RESUME] useEffect principal executando');
-    
+
     const fetchData = async () => {
       try {
         let newData = {};
@@ -173,45 +148,44 @@ const Marshall_Step9_ResumeDosage = ({
 
         const realMethod = getRealMethod();
         console.log('🎯 Método REAL para processamento:', realMethod);
-        
+
         let response;
-        
+
         if (realMethod === 'GMM') {
           console.log('🔍 [RESUME] Processando como GMM...');
-          
+
           // Para GMM, criar objeto com tipo correto
           const gmmData = {
             ...data,
             confirmedSpecificGravity: {
               // Garantir que result existe
               result: data?.confirmedSpecificGravity?.result || 0,
-              type: 'GMM' as const // Usar 'as const' para garantir o tipo literal
-            }
+              type: 'GMM' as const, // Usar 'as const' para garantir o tipo literal
+            },
           };
-          
+
           console.log('📤 Enviando dados GMM para confirmVolumetricParameters:', gmmData);
-          
+
           response = await marshall.confirmVolumetricParameters(
             maximumMixtureDensityData,
             optimumBinderContentData,
             gmmData
           );
-          
         } else {
           // Para DMT
           console.log('🔍 [RESUME] Processando como DMT...');
-          
+
           const dmtData = {
             ...data,
             confirmedSpecificGravity: {
               // Garantir que result existe
               result: data?.confirmedSpecificGravity?.result || 0,
-              type: 'DMT' as const // Usar 'as const' para garantir o tipo literal
-            }
+              type: 'DMT' as const, // Usar 'as const' para garantir o tipo literal
+            },
           };
-          
+
           console.log('📤 Enviando dados DMT para confirmVolumetricParameters:', dmtData);
-          
+
           response = await marshall.confirmVolumetricParameters(
             maximumMixtureDensityData,
             optimumBinderContentData,
@@ -227,13 +201,9 @@ const Marshall_Step9_ResumeDosage = ({
           ...response,
           // Garantir que confirmedSpecificGravity tem a estrutura correta
           confirmedSpecificGravity: {
-            result: response?.confirmedSpecificGravity?.result || 
-                    data?.confirmedSpecificGravity?.result || 
-                    0,
-            type: response?.confirmedSpecificGravity?.type || 
-                  data?.confirmedSpecificGravity?.type || 
-                  realMethod
-          }
+            result: response?.confirmedSpecificGravity?.result || data?.confirmedSpecificGravity?.result || 0,
+            type: response?.confirmedSpecificGravity?.type || data?.confirmedSpecificGravity?.type || realMethod,
+          },
         };
 
         console.log('📋 [RESUME] Setando novos dados:', newData);
@@ -255,7 +225,7 @@ const Marshall_Step9_ResumeDosage = ({
 
   useEffect(() => {
     console.log('🔧 [RESUME] useEffect secundário executando');
-    
+
     if (
       !materialSelectionData ||
       !materialSelectionData.aggregates ||
@@ -277,69 +247,73 @@ const Marshall_Step9_ResumeDosage = ({
   }, [materialSelectionData, optimumBinderContentData, data]);
 
   const calculateQuantitativeValues = (): string[] | null => {
-  if (!data?.confirmedVolumetricParameters?.values) {
-    console.log('📊 [CALC] Nenhum dado volumétrico disponível');
-    return null;
-  }
+    if (!data?.confirmedVolumetricParameters?.values) {
+      console.log('📊 [CALC] Nenhum dado volumétrico disponível');
+      return null;
+    }
 
-  // 1. Pegar VV CORRETO
-  const VV_percent = correctedValues?.vvCalculated || 0; // VV em %
-  
-  // 2. Pegar Gmm
-  const Gmm = data?.confirmedSpecificGravity?.result || 0; // g/cm³
-  
-  // 3. Calcular MASSA TOTAL da mistura em TONELADAS/m³
-  // Fórmula: Massa Total (ton/m³) = (100 - VV) × Gmm × 10 / 1000
-  // Onde: ×10 converte g/cm³ para kg/m³, ÷1000 converte kg para toneladas
-  const massaTotalTon = ((100 - VV_percent) * Gmm * 10) / 1000; // ton/m³
-  
-  console.log('🔍 CÁLCULO MASSA TOTAL:', {
-    'VV': VV_percent.toFixed(2) + '%',
-    'Gmm': Gmm.toFixed(3) + ' g/cm³',
-    'Fórmula': `((100 - ${VV_percent.toFixed(2)}) × ${Gmm.toFixed(3)} × 10) / 1000`,
-    'Massa Total': massaTotalTon.toFixed(4) + ' ton/m³',
-    'Massa Total em kg': (massaTotalTon * 1000).toFixed(2) + ' kg/m³'
-  });
+    // 1. Pegar VV CORRETO
+    const VV_percent = correctedValues?.vvCalculated || 0; // VV em %
 
-  // 4. Calcular MASSA DO LIGANTE em TONELADAS
-  const teorLigante = optimumBinderContentData?.optimumBinder?.optimumContent || 0; // %
-  const massaLiganteTon = (teorLigante / 100) * massaTotalTon; // ton/m³
-  
-  console.log('🔍 CÁLCULO LIGANTE:', {
-    'Teor ligante': teorLigante.toFixed(2) + '%',
-    'Massa Ligante (ton)': massaLiganteTon.toFixed(4) + ' ton/m³',
-    'Massa Ligante (kg)': (massaLiganteTon * 1000).toFixed(2) + ' kg/m³',
-    'Fórmula': `(${teorLigante.toFixed(2)} / 100) × ${massaTotalTon.toFixed(4)}`
-  });
+    // 2. Pegar Gmm
+    const Gmm = data?.confirmedSpecificGravity?.result || 0; // g/cm³
 
-  // 5. Calcular MASSA TOTAL DOS AGREGADOS em TONELADAS
-  const massaTotalAgregadosTon = massaTotalTon - massaLiganteTon; // ton/m³
-  
-  // 6. Distribuir MASSA DOS AGREGADOS
-  if (!materialSelectionData?.aggregates) {
-    console.log('📊 [CALC] Nenhum agregado disponível');
-    return null;
-  }
+    // ✅ CORREÇÃO: Fórmula correta para massa total em ton/m³
+    // Massa Total (ton/m³) = (100 - VV)/100 × Gmm
+    // Onde: (100 - VV)/100 = fração sólida da mistura
+    //        Gmm = densidade máxima em g/cm³ = ton/m³
+    const massaTotalTon = ((100 - VV_percent) / 100) * Gmm; // ton/m³
 
-  const percentuaisAgregados = optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage || [];
-  
-  return materialSelectionData.aggregates.map((material, idx) => {
-    const percentual = percentuaisAgregados[idx] || 0; // %
-    
-    // Massa do agregado individual em TONELADAS
-    const massaAgregadoTon = (percentual / 100) * massaTotalAgregadosTon; // ton/m³
-    
-    console.log(`🔍 Agregado ${material.name}:`, {
-      'Percentual': percentual.toFixed(2) + '%',
-      'Massa (ton)': massaAgregadoTon.toFixed(4) + ' ton/m³',
-      'Massa (kg)': (massaAgregadoTon * 1000).toFixed(2) + ' kg/m³',
-      'Fórmula': `(${percentual.toFixed(2)} / 100) × ${massaTotalAgregadosTon.toFixed(4)}`
+    console.log('🔍 CÁLCULO MASSA TOTAL CORRIGIDO:', {
+      VV: VV_percent.toFixed(2) + '%',
+      Gmm: Gmm.toFixed(3) + ' g/cm³',
+      'Fração sólida': `(100 - ${VV_percent.toFixed(2)})/100 = ${((100 - VV_percent) / 100).toFixed(3)}`,
+      'Massa Total': massaTotalTon.toFixed(4) + ' ton/m³',
+      'Massa Total em kg': (massaTotalTon * 1000).toFixed(2) + ' kg/m³',
     });
-    
-    // Retornar em kg (sem a unidade, só o número)
-    return (massaAgregadoTon * 1000).toFixed(2);
-  });
-};
+
+    // 3. Calcular MASSA DO LIGANTE em TONELADAS
+    const teorLigante = optimumBinderContentData?.optimumBinder?.optimumContent || 0; // %
+    const massaLiganteTon = (teorLigante / 100) * massaTotalTon; // ton/m³
+
+    console.log('🔍 CÁLCULO LIGANTE:', {
+      'Teor ligante': teorLigante.toFixed(2) + '%',
+      'Massa Ligante (ton)': massaLiganteTon.toFixed(4) + ' ton/m³',
+      'Massa Ligante (kg)': (massaLiganteTon * 1000).toFixed(2) + ' kg/m³',
+    });
+
+    // 4. Calcular MASSA TOTAL DOS AGREGADOS em TONELADAS
+    const massaTotalAgregadosTon = massaTotalTon - massaLiganteTon; // ton/m³
+
+    console.log('🔍 MASSA TOTAL AGREGADOS:', {
+      'Massa Total Agregados (ton)': massaTotalAgregadosTon.toFixed(4) + ' ton/m³',
+      'Massa Total Agregados (kg)': (massaTotalAgregadosTon * 1000).toFixed(2) + ' kg/m³',
+    });
+
+    // 5. Distribuir MASSA DOS AGREGADOS
+    if (!materialSelectionData?.aggregates) {
+      console.log('📊 [CALC] Nenhum agregado disponível');
+      return null;
+    }
+
+    const percentuaisAgregados = optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage || [];
+
+    return materialSelectionData.aggregates.map((material, idx) => {
+      const percentual = percentuaisAgregados[idx] || 0; // %
+
+      // Massa do agregado individual em TONELADAS
+      const massaAgregadoTon = (percentual / 100) * massaTotalAgregadosTon; // ton/m³
+
+      console.log(`🔍 Agregado ${material.name}:`, {
+        Percentual: percentual.toFixed(2) + '%',
+        'Massa (ton)': massaAgregadoTon.toFixed(4) + ' ton/m³',
+        'Massa (kg)': (massaAgregadoTon * 1000).toFixed(2) + ' kg/m³',
+      });
+
+      // Retornar em kg (sem a unidade, só o número)
+      return (massaAgregadoTon * 1000).toFixed(2);
+    });
+  };
 
   const granulometricCompTableColumns: GridColDef[] = [
     {
@@ -371,29 +345,30 @@ const Marshall_Step9_ResumeDosage = ({
     'Nº100 - 0,15mm': 19,
   };
 
-  const granulometricCompTableRows = granulometryCompositionData?.projections?.map((row, i) => {
-    const sieveLabel = row.label;
-    const bandIndex = sieveToBandIndex[sieveLabel];
-    
-    let lowerBandValue = null;
-    let higherBandValue = null;
-    
-    if (bandIndex !== undefined) {
-      const lower = granulometryCompositionData.bands?.lowerBand?.[bandIndex];
-      const higher = granulometryCompositionData.bands?.higherBand?.[bandIndex];
-      
-      lowerBandValue = lower !== null && lower !== undefined ? lower.toFixed(2) : null;
-      higherBandValue = higher !== null && higher !== undefined ? higher.toFixed(2) : null;
-    }
-    
-    return {
-      id: i,
-      sieve_label: sieveLabel,
-      projections: row.value,
-      lowerBand: lowerBandValue,
-      higherBand: higherBandValue,
-    };
-  }) || [];
+  const granulometricCompTableRows =
+    granulometryCompositionData?.projections?.map((row, i) => {
+      const sieveLabel = row.label;
+      const bandIndex = sieveToBandIndex[sieveLabel];
+
+      let lowerBandValue = null;
+      let higherBandValue = null;
+
+      if (bandIndex !== undefined) {
+        const lower = granulometryCompositionData.bands?.lowerBand?.[bandIndex];
+        const higher = granulometryCompositionData.bands?.higherBand?.[bandIndex];
+
+        lowerBandValue = lower !== null && lower !== undefined ? lower.toFixed(2) : null;
+        higherBandValue = higher !== null && higher !== undefined ? higher.toFixed(2) : null;
+      }
+
+      return {
+        id: i,
+        sieve_label: sieveLabel,
+        projections: row.value,
+        lowerBand: lowerBandValue,
+        higherBand: higherBandValue,
+      };
+    }) || [];
 
   const granulometricCompTableGroupings: GridColumnGroupingModel = [
     {
@@ -408,13 +383,13 @@ const Marshall_Step9_ResumeDosage = ({
 
   const createOptimumContentColumns = () => {
     console.log('📐 [RESUME] Criando colunas de conteúdo ótimo');
-    
+
     const columns: GridColDef[] = [
       {
         field: 'optimumBinder',
         width: 250,
         headerName: t('asphalt.dosages.optimum-binder'),
-        valueFormatter: ({ value }) => typeof value === 'number' ? value.toFixed(2) : value,
+        valueFormatter: ({ value }) => (typeof value === 'number' ? value.toFixed(2) : value),
       },
     ];
 
@@ -423,7 +398,7 @@ const Marshall_Step9_ResumeDosage = ({
         field: material._id,
         width: 250,
         headerName: material.name,
-        valueFormatter: ({ value }) => typeof value === 'number' ? value.toFixed(2) : value,
+        valueFormatter: ({ value }) => (typeof value === 'number' ? value.toFixed(2) : value),
       };
       columns.push(column);
     });
@@ -433,7 +408,7 @@ const Marshall_Step9_ResumeDosage = ({
 
   const createOptimumContentRows = () => {
     console.log('📝 [RESUME] Criando linhas de conteúdo ótimo');
-    
+
     let rowsObj: RowsObj = {
       id: 0,
       optimumBinder: Number(optimumBinderContentData?.optimumBinder?.optimumContent?.toFixed(2)) || 0,
@@ -441,7 +416,7 @@ const Marshall_Step9_ResumeDosage = ({
 
     materialSelectionData.aggregates.forEach((material, idx) => {
       const percent = optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage?.[idx];
-      
+
       rowsObj = {
         ...rowsObj,
         [material._id]: percent ? Number(percent.toFixed(2)) : 0,
@@ -453,7 +428,7 @@ const Marshall_Step9_ResumeDosage = ({
 
   const createOptimumContentGroupings = () => {
     console.log('📊 [RESUME] Criando agrupamentos de conteúdo ótimo');
-    
+
     const groupings: GridColumnGroupingModel = [
       {
         groupId: 'optimumContent',
@@ -472,7 +447,7 @@ const Marshall_Step9_ResumeDosage = ({
 
   const getQuantitativeCols = () => {
     console.log('📐 [RESUME] Criando colunas quantitativas');
-    
+
     const newCols: GridColDef[] = [];
 
     const binderObj: GridColDef = {
@@ -496,54 +471,62 @@ const Marshall_Step9_ResumeDosage = ({
     setQuantitativeCols(newCols);
   };
 
-const getQuantitativeRows = () => {
-  console.log('📝 [RESUME] Criando linhas quantitativas');
-  
-  // Calcular usando a função corrigida
-  const aggregateValues = calculateQuantitativeValues();
-  
-  // Calcular massa do ligante separadamente
-  const VV_percent = correctedValues?.vvCalculated || 0;
-  const Gmm = data?.confirmedSpecificGravity?.result || 0;
-  const massaTotalTon = ((100 - VV_percent) * Gmm * 10) / 1000;
-  const teorLigante = optimumBinderContentData?.optimumBinder?.optimumContent || 0;
-  const massaLiganteTon = (teorLigante / 100) * massaTotalTon;
-  const massaLiganteKg = (massaLiganteTon * 1000).toFixed(2);
-  
-  let rowsObj: any = {
-    id: 0,
-    binder: massaLiganteKg, // ✅ APENAS O NÚMERO, sem "kg"
-  };
+  const getQuantitativeRows = () => {
+    console.log('📝 [RESUME] Criando linhas quantitativas CORRIGIDAS');
 
-  materialSelectionData.aggregates.forEach((material, idx) => {
-    let value = '-';
-    
-    if (aggregateValues && aggregateValues[idx] !== undefined) {
-      // ✅ APENAS O NÚMERO, sem "kg"
-      value = aggregateValues[idx];
-    } else {
-      // Fallback
-      const originalValue = data?.confirmedVolumetricParameters?.quantitative?.[idx + 1];
-      if (typeof originalValue === 'number') {
-        value = originalValue.toFixed(2); // ✅ APENAS O NÚMERO
-      } else {
-        value = '-';
-      }
-    }
-    
-    rowsObj = {
-      ...rowsObj,
-      [material._id]: value,
+    // Calcular usando a função corrigida
+    const aggregateValues = calculateQuantitativeValues();
+
+    // Calcular massa do ligante separadamente
+    const VV_percent = correctedValues?.vvCalculated || 0;
+    const Gmm = data?.confirmedSpecificGravity?.result || 0;
+
+    // ✅ CORREÇÃO: Usar fórmula corrigida
+    const massaTotalTon = ((100 - VV_percent) / 100) * Gmm;
+    const teorLigante = optimumBinderContentData?.optimumBinder?.optimumContent || 0;
+    const massaLiganteTon = (teorLigante / 100) * massaTotalTon;
+    const massaLiganteKg = (massaLiganteTon * 1000).toFixed(2);
+
+    let rowsObj: any = {
+      id: 0,
+      binder: massaLiganteKg,
     };
-  });
 
-  console.log('📊 RESUMO FINAL QUANTITATIVO (valores numéricos):', rowsObj);
+    materialSelectionData.aggregates.forEach((material, idx) => {
+      let value = '-';
 
-  setQuantitativeRows([rowsObj]);
-};
+      if (aggregateValues && aggregateValues[idx] !== undefined) {
+        value = aggregateValues[idx];
+      } else {
+        // Fallback
+        const originalValue = data?.confirmedVolumetricParameters?.quantitative?.[idx + 1];
+        if (typeof originalValue === 'number') {
+          value = originalValue.toFixed(2);
+        } else {
+          value = '-';
+        }
+      }
+
+      rowsObj = {
+        ...rowsObj,
+        [material._id]: value,
+      };
+    });
+
+    console.log('📊 RESUMO FINAL QUANTITATIVO CORRIGIDO:', {
+      'VV usado': VV_percent.toFixed(2) + '%',
+      'Gmm usado': Gmm.toFixed(3) + ' g/cm³',
+      'Massa Total corrigida': massaTotalTon.toFixed(4) + ' ton/m³',
+      'Teor ligante': teorLigante.toFixed(2) + '%',
+      'Massa Ligante corrigida': massaLiganteKg + ' kg',
+      'Valores calculados': rowsObj,
+    });
+
+    setQuantitativeRows([rowsObj]);
+  };
   const getQuantitativeGroupings = () => {
     console.log('📊 [RESUME] Criando agrupamentos quantitativos');
-    
+
     const quantitativeGroupArr: GridColumnGroupingModel = [
       {
         groupId: 'quantitativeGrouping',
@@ -597,18 +580,17 @@ const getQuantitativeRows = () => {
     {
       id: 1,
       param: t('asphalt.dosages.rbv'),
-      unity: data?.confirmedVolumetricParameters?.values?.ratioBitumenVoid !== undefined
-        ? `${(data.confirmedVolumetricParameters.values.ratioBitumenVoid * 100).toFixed(2)}%`
-        : '---',
+      unity:
+        data?.confirmedVolumetricParameters?.values?.ratioBitumenVoid !== undefined
+          ? `${(data.confirmedVolumetricParameters.values.ratioBitumenVoid * 100).toFixed(2)}%`
+          : '---',
       bearingLayer: '75 - 82',
       bondingLayer: '65 - 72',
     },
     {
       id: 2,
       param: t('asphalt.dosages.mixture-voids'),
-      unity: correctedValues?.vvCalculated !== undefined
-        ? `${correctedValues.vvCalculated.toFixed(2)}%`
-        : '---',
+      unity: correctedValues?.vvCalculated !== undefined ? `${correctedValues.vvCalculated.toFixed(2)}%` : '---',
       bearingLayer: '3 - 5',
       bondingLayer: '4 - 6',
     },
@@ -671,83 +653,83 @@ const getQuantitativeRows = () => {
       label: t('asphalt.dosages.optimum-binder'),
       value: optimumBinderContentData?.optimumBinder?.optimumContent?.toFixed(2) || '0.00',
       unity: '%',
-      isValid: true
+      isValid: true,
     },
     {
       // Usar método REAL para mostrar DMT ou GMM
-      label: realMethod === 'GMM' 
-        ? t('asphalt.dosages.gmm')  // "Densidade máxima medida (GMM)"
-        : t('asphalt.dosages.dmt'), // "Densidade máxima teórica (DMT)"
-      
+      label:
+        realMethod === 'GMM'
+          ? t('asphalt.dosages.gmm') // "Densidade máxima medida (GMM)"
+          : t('asphalt.dosages.dmt'), // "Densidade máxima teórica (DMT)"
+
       // Usar valor do confirmedSpecificGravity ou valor apropriado
-      value: data?.confirmedSpecificGravity?.result !== undefined 
-        ? data.confirmedSpecificGravity.result.toFixed(2)
-        : (realMethod === 'GMM' && maximumMixtureDensityData?.gmm?.[2]?.value 
-            ? maximumMixtureDensityData.gmm[2].value.toFixed(2)
-            : '---'),
-      
+      value:
+        data?.confirmedSpecificGravity?.result !== undefined
+          ? data.confirmedSpecificGravity.result.toFixed(2)
+          : realMethod === 'GMM' && maximumMixtureDensityData?.gmm?.[2]?.value
+          ? maximumMixtureDensityData.gmm[2].value.toFixed(2)
+          : '---',
+
       unity: 'g/cm³',
-      isValid: true
+      isValid: true,
     },
     {
       label: t('asphalt.dosages.gmb'),
       value: data?.confirmedVolumetricParameters?.values?.apparentBulkSpecificGravity?.toFixed(2) || '---',
       unity: 'g/cm³',
-      isValid: true
+      isValid: true,
     },
     {
       // ✅ CORRIGIDO: Volume de Vazios (VV) - calculado como VAM - VBC
       label: t('asphalt.dosages.vv') + ' (VV)',
-      value: correctedValues?.vvCalculated !== undefined 
-        ? correctedValues.vvCalculated.toFixed(2)
-        : '---',
+      value: correctedValues?.vvCalculated !== undefined ? correctedValues.vvCalculated.toFixed(2) : '---',
       unity: '%',
-      isValid: true
+      isValid: true,
     },
     {
       // ✅ CORRIGIDO: Volume do Agregado de Vazios (VAM) - do backend
       label: t('asphalt.dosages.vam') + ' (VAM)',
-      value: data?.confirmedVolumetricParameters?.values?.aggregateVolumeVoids !== undefined
-        ? (data.confirmedVolumetricParameters.values.aggregateVolumeVoids * 100).toFixed(2)
-        : '---',
+      value:
+        data?.confirmedVolumetricParameters?.values?.aggregateVolumeVoids !== undefined
+          ? (data.confirmedVolumetricParameters.values.aggregateVolumeVoids * 100).toFixed(2)
+          : '---',
       unity: '%',
-      isValid: true
+      isValid: true,
     },
     {
       // ✅ NOVO: Vazios com Betume (VBC) - calculado
       label: 'VBC (Vazios com Betume)',
-      value: correctedValues?.vbcCalculated !== undefined
-        ? correctedValues.vbcCalculated.toFixed(2)
-        : '---',
+      value: correctedValues?.vbcCalculated !== undefined ? correctedValues.vbcCalculated.toFixed(2) : '---',
       unity: '%',
-      isValid: true
+      isValid: true,
     },
     {
       // ✅ CORRIGIDO: Relação Betume-Vazios (RBV) - do backend
       label: t('asphalt.dosages.rbv') + ' (RBV)',
-      value: data?.confirmedVolumetricParameters?.values?.ratioBitumenVoid !== undefined
-        ? (data.confirmedVolumetricParameters.values.ratioBitumenVoid * 100).toFixed(2)
-        : '---',
+      value:
+        data?.confirmedVolumetricParameters?.values?.ratioBitumenVoid !== undefined
+          ? (data.confirmedVolumetricParameters.values.ratioBitumenVoid * 100).toFixed(2)
+          : '---',
       unity: '%',
-      isValid: true
+      isValid: true,
     },
     {
       label: t('asphalt.dosages.marshall.stability'),
       value: data?.confirmedVolumetricParameters?.values?.stability?.toFixed(2) || '0.00',
       unity: 'N',
-      isValid: true
+      isValid: true,
     },
     {
       label: t('asphalt.dosages.marshall.fluency'),
       value: data?.confirmedVolumetricParameters?.values?.fluency?.toFixed(2) || '0.00',
       unity: 'mm',
-      isValid: true
+      isValid: true,
     },
     {
       label: t('asphalt.dosages.indirect-tensile-strength'),
       value: data?.confirmedVolumetricParameters?.values?.indirectTensileStrength?.toFixed(2) || '0.00',
       unity: 'MPa',
-      isValid: true
+      isValid: true,
     },
   ];
 
@@ -767,7 +749,8 @@ const getQuantitativeRows = () => {
         {/* Informação do método usado */}
         <Box sx={{ p: 1, bgcolor: 'info.light', borderRadius: 1, mb: 2 }}>
           <Typography variant="body2" color="info.contrastText">
-            Método de densidade: <strong>{realMethod === 'GMM' ? 'GMM - Densidade máxima medida' : 'DMT - Densidade máxima teórica'}</strong>
+            Método de densidade:{' '}
+            <strong>{realMethod === 'GMM' ? 'GMM - Densidade máxima medida' : 'DMT - Densidade máxima teórica'}</strong>
           </Typography>
         </Box>
 
@@ -783,7 +766,7 @@ const getQuantitativeRows = () => {
         >
           <Box id="general-results" sx={{ width: '100%', overflowX: 'auto' }}>
             <ResultSubTitle title={t('marshall.general-results')} sx={{ margin: '.65rem' }} />
-            
+
             {optimumContentCols.length > 0 && optimumContentRows.length > 0 && optimumContentGroupings.length > 0 ? (
               <DataGrid
                 key={'optimumContent'}
@@ -805,9 +788,7 @@ const getQuantitativeRows = () => {
               />
             ) : (
               <Box sx={{ p: 2, bgcolor: 'error.light', color: 'error.contrastText', borderRadius: 1 }}>
-                <Typography variant="body2">
-                  ⚠ Tabela não disponível
-                </Typography>
+                <Typography variant="body2">⚠ Tabela não disponível</Typography>
               </Box>
             )}
           </Box>
@@ -817,7 +798,7 @@ const getQuantitativeRows = () => {
               title={t('asphalt.dosages.marshall.asphalt-mass-quantitative')}
               sx={{ marginX: '.65rem' }}
             />
-            
+
             {quantitativeRows.length > 0 && quantitativeCols.length > 0 && quantitativeGroupings.length > 0 ? (
               <DataGrid
                 columns={quantitativeCols.map((col) => ({
@@ -839,9 +820,7 @@ const getQuantitativeRows = () => {
               />
             ) : (
               <Box sx={{ p: 2, bgcolor: 'warning.light', color: 'warning.contrastText', borderRadius: 1 }}>
-                <Typography variant="body2">
-                  ⚠ Tabela quantitativa não disponível
-                </Typography>
+                <Typography variant="body2">⚠ Tabela quantitativa não disponível</Typography>
               </Box>
             )}
           </Box>
@@ -868,21 +847,17 @@ const getQuantitativeRows = () => {
               }}
             >
               {volumetricMechanicParams.map((item) => {
-                const isValidValue = item.value && 
-                  item.value !== 'NaN' && 
-                  item.value !== 'undefined' && 
+                const isValidValue =
+                  item.value &&
+                  item.value !== 'NaN' &&
+                  item.value !== 'undefined' &&
                   item.value !== '---' &&
                   item.value !== 'null' &&
                   !isNaN(parseFloat(item.value));
-                
+
                 if (isValidValue) {
                   return (
-                    <Result_Card 
-                      key={item.label} 
-                      label={item.label} 
-                      value={String(item.value)} 
-                      unity={item.unity} 
-                    />
+                    <Result_Card key={item.label} label={item.label} value={String(item.value)} unity={item.unity} />
                   );
                 }
                 return null;
@@ -891,10 +866,7 @@ const getQuantitativeRows = () => {
           </Box>
 
           <Box id="volumetric-params" sx={{ width: '100%', overflowX: 'auto' }}>
-            <ResultSubTitle
-              title={t('asphalt.dosages.volumetric-params')}
-              sx={{ margin: '.65rem' }}
-            />
+            <ResultSubTitle title={t('asphalt.dosages.volumetric-params')} sx={{ margin: '.65rem' }} />
             {data?.confirmedVolumetricParameters?.values ? (
               <DataGrid
                 rows={volumetricParamsRows}
@@ -914,18 +886,13 @@ const getQuantitativeRows = () => {
               />
             ) : (
               <Box sx={{ p: 2, bgcolor: 'warning.light', color: 'warning.contrastText', borderRadius: 1 }}>
-                <Typography variant="body2">
-                  ⚠ Parâmetros volumétricos não disponíveis
-                </Typography>
+                <Typography variant="body2">⚠ Parâmetros volumétricos não disponíveis</Typography>
               </Box>
             )}
           </Box>
 
           <Box id="mineral-aggregate-voids" sx={{ width: '100%', overflowX: 'auto' }}>
-            <ResultSubTitle
-              title={t('asphalt.dosages.mineral-aggregate-voids')}
-              sx={{ margin: '.65rem' }}
-            />
+            <ResultSubTitle title={t('asphalt.dosages.mineral-aggregate-voids')} sx={{ margin: '.65rem' }} />
             <DataGrid
               rows={mineralAggregateVoidsRows}
               columns={mineralAggregateVoidsCols.map((column) => ({
