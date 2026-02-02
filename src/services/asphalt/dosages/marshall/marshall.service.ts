@@ -233,7 +233,7 @@ class Marshall_SERVICE implements IEssayService {
       // Verificamos se a soma total é 100.
       if (inputsSum !== 100) throw t('errors.invalid-inputs-sum');
 
-      const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {
+      const response = await Api.post(`${this.info.backend_path}/calculate-stepv-3-data`, {
         dnitBands: dnitBandLetter,
         percentageInputs,
         tableRows: table_data.table_rows,
