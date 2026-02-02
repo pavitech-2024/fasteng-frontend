@@ -10,7 +10,7 @@ const BASE_URL = isLocalHost
   ? 'http://localhost:8080'
   : 'https://fasteng-backend.vercel.app';
 
-const Api = Axios.create({S
+const Api = Axios.create({
   baseURL: BASE_URL,
   headers: {
     Accept: 'application/json',
