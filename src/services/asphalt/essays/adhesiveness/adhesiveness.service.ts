@@ -1,4 +1,4 @@
-import { SpecifyMassIcon } from '@/assets';
+import { AdhesivenessIcon } from '@/assets';
 import { AsphaltMaterial, Materials } from '@/interfaces/asphalt';
 import { AdhesivenessActions, AdhesivenessData } from '@/stores/asphalt/adhesiveness/adhesiveness.store';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
@@ -8,7 +8,7 @@ import { t } from 'i18next';
 class ADHESIVENESS_SERVICE implements IEssayService {
   info = {
     key: 'adhesiveness',
-    icon: SpecifyMassIcon,
+    icon:AdhesivenessIcon,
     title: t('asphalt.essays.adhesiveness'),
     path: '/asphalt/essays/adhesiveness',
     steps: 3,
