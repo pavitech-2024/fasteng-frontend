@@ -1,14 +1,28 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // ✅ Adicionar useEffect
 
 type Props = {
   title: string;
   fields: { name: string; label: string }[];
+  initialValues?: Record<string, string>; // ✅ NOVO: valores iniciais
   onConfirm: (data: Record<string, string>) => void;
 };
 
-const FatigueOrResilienceCard = ({ title, fields, onConfirm }: Props) => {
+const FatigueOrResilienceCard = ({ title, fields, initialValues = {}, onConfirm }: Props) => {
   const [values, setValues] = useState<Record<string, string>>({});
+
+  // ✅ NOVO: Carregar valores iniciais
+  useEffect(() => {
+    if (initialValues && Object.keys(initialValues).length > 0) {
+      const formattedValues: Record<string, string> = {};
+      Object.entries(initialValues).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          formattedValues[key] = String(value);
+        }
+      });
+      setValues(formattedValues);
+    }
+  }, [initialValues]);
 
   const handleChange = (name: string, value: string) => {
     setValues((prev) => ({ ...prev, [name]: value }));
