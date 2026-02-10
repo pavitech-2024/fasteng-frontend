@@ -1,6 +1,6 @@
 import { Box, Typography, Stack } from '@mui/material';
 import { StepperData, StepperWelcome as Stepper } from '@/components/atoms/stepper';
-import { CardMenuOptions as Card } from '@/components/styles/muis/welcome';
+import { CardMenuOptions} from '@/components/styles/muis/welcome';
 import { t } from 'i18next';
 import { useRouter } from 'next/router';
 import { ReactNode, useState } from 'react';
@@ -188,7 +188,7 @@ const WelcomeTemplate = ({ welcomeData, stepperData, icon }: WelcomeTemplateProp
           }}
         >
           {welcomeData.map((option: WelcomeData) => (
-            <Card key={option.name} {...option} />
+            <CardMenuOptions key={option.name} {...option} />
           ))}
         </Box>
       </Box>

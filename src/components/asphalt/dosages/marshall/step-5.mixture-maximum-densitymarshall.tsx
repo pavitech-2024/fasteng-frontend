@@ -505,8 +505,8 @@ useEffect(() => {
       const hasNullValue = dmtRows?.some((e) => Object.values(e).includes(null));
       setNextDisabled(hasNullValue || data.temperatureOfWater === null);
     } else if (selectedMethod.gmm) {
-      const hasNullValue = data.gmm?.some((e) => e.value === null);
-      setNextDisabled(hasNullValue || data.temperatureOfWater === null);
+        const hasNullValue = data.gmm?.some((e: any) => e.value === null);
+        setNextDisabled(hasNullValue || data.temperatureOfWater === null);
     }
   }, [data.temperatureOfWater, selectedMethod, gmmRows, dmtRows]);
 
