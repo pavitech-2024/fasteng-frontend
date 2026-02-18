@@ -1,451 +1,214 @@
-import { EssayPageProps } from '@/components/templates/essay';
-import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
-import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
-import { Box, Button } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { GridColDef } from '@mui/x-data-grid';
-import { t } from 'i18next';
-import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
-import InputNumberBrProps from '@/components/atoms/inputs/inputNumberBr';
-import Step3Table from './tables/step-3-table';
-import Graph from '@/services/asphalt/dosages/marshall/graph/marshal-granulometry-graph';
-import useAuth from '@/contexts/auth';
-import { toast } from 'react-toastify';
+import Result_Card, { Result_CardContainer } from '@/components/atoms/containers/result-card';
 import Loading from '@/components/molecules/loading';
-import { isNumber } from '@mui/x-data-grid/internals';
-//tst
-const Marshall_Step3_Granulometry = ({
+import { EssayPageProps } from '@/components/templates/essay';
+import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
+import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
+import { Box, Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/material';
+import { t } from 'i18next';
+import Chart from 'react-google-charts';
+import { useEffect, useState } from 'react';
+import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+
+const Superpave_Step3_GranulometryResults = ({
   setNextDisabled,
-  marshall,
-}: EssayPageProps & { marshall: Marshall_SERVICE }) => {
-  const { calculateGranulometryComposition } = new Marshall_SERVICE();
-  const { granulometryCompositionData: data, materialSelectionData, setData, generalData } = useMarshallStore();
+}: EssayPageProps & { superpave: Superpave_SERVICE }) => {
+  const { granulometryResultsData: data } = useSuperpaveStore();
+  const [granulometryData, setGranulometryData] = useState([]);
+  const [materialsToShow, setMaterialToShow] = useState([]);
 
-  const { user } = useAuth();
-  const [loading, setLoading] = useState(true);
-  const [rows, setRows] = useState([]);
-  const [columnGrouping, setColumnGroupings] = useState([]);
-  const [columns, setColumns] = useState<GridColDef[]>([]);
-  let setSpecificationRows;
-  let setSpecificationColumns: GridColDef[] | undefined;
-  let setSpecificationColumnsGroupings;
+  const aggregatesCheckboxes = data.granulometrys?.map((gran) => ({
+    name: gran.material.name,
+    type: gran.material.type,
+  }));
+
+  aggregatesCheckboxes?.push({ name: data.viscosity?.material.name, type: data.viscosity?.material.type });
 
   useEffect(() => {
-    toast.promise(
-      async () => {
-        try {
-          console.log('🔄 Buscando dados de granulometria...');
-          console.log('generalData:', generalData);
-          console.log('materialSelectionData:', materialSelectionData);
-          console.log('user._id:', user._id);
-
-          // Fetch step 3 data using the marshall service with necessary parameters.
-          const result = await marshall.getStep3Data(generalData, materialSelectionData, user._id, null);
-
-          console.log('📦 Resultado COMPLETO do getStep3Data:', result);
-          console.log('Tipo:', typeof result);
-
-          if (!result) {
-            console.error('❌ Resultado é undefined!');
-            throw new Error('Nenhum dado retornado do servidor');
-          }
-
-          const { table_data, dnitBands } = result;
-
-          console.log('📊 table_data:', table_data);
-          console.log('📊 table_rows length:', table_data?.table_rows?.length || 0);
-          console.log('📊 dnitBands:', dnitBands);
-          console.log('📊 dnitBands.higher:', dnitBands?.higher?.length || 0);
-          console.log('📊 dnitBands.lower:', dnitBands?.lower?.length || 0);
-
-          if (!table_data || !dnitBands) {
-            console.error('❌ Dados incompletos!');
-            throw new Error('Dados incompletos do servidor');
-          }
-
-          if (!table_data.table_rows || table_data.table_rows.length === 0) {
-            console.warn('⚠️ table_rows está vazio!');
-            console.log('table_column_headers:', table_data.table_column_headers);
-
-            // Mostra quais agregados estão sendo buscados
-            console.log('🔍 Agregados sendo buscados:', materialSelectionData.aggregates);
-          }
-
-          // Create a copy of the current data state to update with new fetched data.
-          const prevData = { ...data };
-
-          // Update the copied data with fetched table data and dnit bands.
-          prevData.table_data = table_data;
-          prevData.dnitBands = dnitBands;
-
-          // Set the new data state with the updated information.
-          setData({
-            step: 2,
-            value: prevData,
-          });
-
-          console.log('✅ Dados atualizados no store');
-        } catch (error) {
-          console.error('💥 Erro no getStep3Data:', error);
-          throw error;
-        }
-      },
-      {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
-      }
-    );
-  }, []);
-
-  useEffect(() => {
-    toast.promise(
-      async () => {
-        try {
-          // Fetch step 3 data using the marshall service with necessary parameters.
-          const { table_data, dnitBands } = await marshall.getStep3Data(
-            generalData,
-            materialSelectionData,
-            user._id,
-            null
-          );
-
-          // Create a copy of the current data state to update with new fetched data.
-          const prevData = { ...data };
-
-          // Update the copied data with fetched table data and dnit bands.
-          prevData.table_data = table_data;
-          prevData.dnitBands = dnitBands;
-
-          // Set the new data state with the updated information.
-          setData({
-            step: 2,
-            value: prevData,
-          });
-        } catch (error) {
-          throw error;
-        }
-      },
-      {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
-      }
-    );
-  }, []);
-
-  // Tabela de inputs
-  // Definindo a row e as colunas para a tabela de inputs
-  const inputRows: { [key: string]: number }[] = data?.percentageInputs;
-
-  if (data?.percentageInputs && data?.percentageInputs?.length === 0) {
-    const table_data = [];
-
-    const aggregates_percentages = {};
-
-    materialSelectionData.aggregates.forEach((aggregate) => {
-      const { _id } = aggregate;
-      aggregates_percentages['percentage_'.concat(_id)] = null;
-    });
-
-    table_data?.push({ ...aggregates_percentages });
-
-    setData({ step: 2, key: 'percentageInputs', value: table_data });
-  }
-
-  useEffect(() => {
-    if (data?.dnitBands?.higher?.length > 0) {
-      const newHigherSpec = [];
-
-      data?.dnitBands?.higher.forEach((element) => {
-        if (data?.table_data?.table_rows) {
-          for (let i = 0; i < data?.table_data?.table_rows.length; i++) {
-            if (element[0] === data?.table_data?.table_rows[i]?.sieve_label) {
-              const newRow = {
-                ...data?.table_data?.table_rows[i],
-                band1: element[1],
-                band2: data.dnitBands.lower[i][1],
-              };
-              newHigherSpec.push(newRow);
-            }
-          }
-        }
-      });
-
-      setRows(newHigherSpec);
-    }
-  }, [data?.dnitBands?.higher]);
-
-  const inputColumns: GridColDef[] = [];
-
-  materialSelectionData.aggregates.forEach((aggregate) => {
-    const { _id, name } = aggregate;
-
-    inputColumns.push({
-      field: 'percentage_'.concat(_id),
-      headerName: name,
-      valueFormatter: ({ value }) => `${value}`,
-      renderCell: ({ row }) => {
-        if (!inputRows) {
-          return;
-        }
-
-        return (
-          <InputNumberBrProps
-            adornment={'%'}
-            value={inputRows[0] ? inputRows[0]['percentage_'.concat(_id)] : ''}
-            onChange={(numericValue: number | null) => {
-              // ← MUDOU AQUI
-              // numericValue já é number ou null
-              const newRows = [...inputRows];
-              newRows[0]['percentage_'.concat(_id)] = numericValue || 0; // ← MUDOU AQUI
-              setData({ step: 2, key: 'percentageInputs', value: newRows });
-            }}
-          />
-        );
-      },
-    });
-  });
-
-  useEffect(() => {
-    if (data?.sumOfPercents?.length > 0) {
-      setSpecificationColumns = [
+    const newGranulometryData = data.granulometrys?.map((gran) => ({
+      material: gran.material,
+      graph: [[t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')], ...gran.result?.graph_data],
+      data: [
         {
-          field: 'label',
-          headerName: t('asphalt.dosages.marshall.sieve'),
-          valueFormatter: ({ value }) => `${value}`,
+          label: t('granulometry-asphalt.accumulated-retained'),
+          value: gran.result.accumulated_retained,
+          unity: '%',
+        },
+        { label: t('granulometry-asphalt.total-retained'), value: gran.result.total_retained, unity: 'g' },
+        {
+          label: 'Tamanho Máximo',
+          value: gran.result.nominal_size,
+          unity: 'mm',
         },
         {
-          field: 'value',
-          headerName: t('asphalt.dosages.marshall.project'),
-          valueFormatter: ({ value }) => `${value}`,
+          label: 'Tamanho Nominal Máximo (TNM)',
+          value: gran.result.nominal_diameter,
+          unity: 'mm',
         },
         {
-          field: 'band1',
-          headerName: '',
-          valueFormatter: ({ value }) => `${value}`,
+          label: t('asphalt.dosages.superpave.granulometry-fineness-module'),
+          value: gran.result.fineness_module,
+          unity: '%',
         },
         {
-          field: 'band2',
-          headerName: '',
-          valueFormatter: ({ value }) => `${value}`,
-        },
-      ];
-
-      setSpecificationColumnsGroupings = [
-        {
-          groupId: 'projeto',
-          children: [{ field: 'projeto' }],
-          headerAlign: 'center',
+          label: t('asphalt.dosages.superpave.granulometry-cc'),
+          value: gran.result.cc,
+          unity: '%',
         },
         {
-          groupId: 'Especificação',
-          children: [
-            {
-              groupId: `Banda ${generalData.dnitBand}`,
-              headerAlign: 'center',
-              children: [{ field: 'band_1' }, { field: 'band_2' }],
-            },
-          ],
-          headerAlign: 'center',
+          label: t('asphalt.dosages.superpave.granulometry-cnu'),
+          value: gran.result.cnu,
+          unity: '%',
         },
-      ];
-    }
-
-    if (data?.projections.length > 0 && data?.bands) {
-      const newArray = [];
-
-      for (let i = 0; i < data.projections.length; i++) {
-        newArray.push({
-          label: data.projections[i]?.label,
-          value: data.projections[i]?.value,
-          band_1: data.bands?.lowerBand[i] !== null ? data.bands.lowerBand[i] : '', // ← USA data.bands!
-          band_2: data.bands?.higherBand[i] !== null ? data.bands.higherBand[i] : '', // ← USA data.bands!
-        });
-      }
-
-      setSpecificationRows = [...newArray];
-    }
-  }, [data.sumOfPercents, data.bands]);
-
-  const calculateGranulometricComposition = async () => {
-    let sumOfInputs = 0;
-
-    Object.values(data.percentageInputs[0]).forEach((input) => {
-      sumOfInputs += input as unknown as number;
-    });
-
-    if (sumOfInputs !== 100) {
-      toast.error(`${t('asphalt.dosages.inputs-sum-invalid')} (${sumOfInputs}%)`);
-      return;
-    }
-
-    toast.promise(
-      async () => {
-        const results = await calculateGranulometryComposition(data, generalData);
-
-        const newPointsOfCurve = [...results.pointsOfCurve];
-
-        newPointsOfCurve.unshift([
-          t('asphalt.dosages.marshall.sieve_mm'),
-          t('asphalt.dosages.marshall.dnit-track'),
-          'Faixa de trabalho',
-          'Mistura de projeto',
-          'Faixa de trabalho',
-          'Faixa do DNIT',
-        ]);
-
-        const { projections } = results;
-
-        const newTable = results.table_data.table_rows.map((tableRow) => ({
-          ...tableRow,
-          projections: projections.find((proj) => proj.label === tableRow.sieve_label).value,
-          band1: results.dnitBands.higher.find((band) => band[0] === tableRow.sieve_label)?.[1],
-          band2: results.dnitBands.lower.find((band) => band[0] === tableRow.sieve_label)?.[1],
-        }));
-
-        const newResults = {
-          ...results,
-          table_data: {
-            ...results.table_data,
-            table_rows: [...results.table_data.table_rows, newTable],
-          },
-          graphData: newPointsOfCurve,
-        };
-
-        setRows(newTable);
-        setData({ step: 2, value: newResults });
-      },
-      {
-        pending: t('loading.calculating.pending'),
-        success: t('loading.calculating.success'),
-      }
-    );
-  };
-
-  useEffect(() => {
-    const newCols: GridColDef[] = [];
-    const newColsGrouping = [];
-    data?.table_data?.table_column_headers?.forEach((header, idx) => {
-      if (header === 'sieve_label') {
-        newCols.push({
-          field: 'sieve_label',
-          headerName: t('granulometry-asphalt.sieves'),
-          valueFormatter: ({ value }) => `${value}`,
-        });
-      } else {
-        if (header.startsWith('total_passant')) {
-          newCols.push({
-            field: header,
-            headerName: t('granulometry-asphalt.total_passant'),
-            valueFormatter: ({ value }) => (value && isNumber(value) ? `${Number(value).toFixed(2)}%` : '---'),
-          });
-        } else {
-          const _id = header.replace('passant_', '');
-          const name = materialSelectionData.aggregates.find((aggregate) => aggregate._id === _id)?.name;
-          newCols.push({
-            field: header,
-            headerName: t('granulometry-asphalt.passant'),
-            valueFormatter: ({ value }) => (value && isNumber(value) ? `${Number(value).toFixed(2)}%` : '---'),
-            renderHeader: () => (
-              <InputEndAdornment
-                adornment="%"
-                value={
-                  data?.percentageInputs && data.percentageInputs[0]
-                    ? data.percentageInputs[0][`percentage_${_id}`] || ''
-                    : ''
-                }
-                onChange={(e) => {
-                  const prevData = [...data?.percentageInputs];
-                  prevData[0][`percentage_${_id}`] = Number(e.target.value);
-                  setData({ step: 2, value: { ...data, percentageInputs: prevData } });
-                }}
-              />
-            ),
-          });
-          newColsGrouping.push({
-            groupId: name,
-            children: [{ field: 'total_passant_'.concat(_id) }, { field: 'passant_'.concat(_id) }],
-            headerAlign: 'center',
-          });
-        }
-      }
-    });
-
-    newCols.push({
-      field: 'projections',
-      headerName: t('asphalt.dosages.marshall.projections'),
-      valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}` : ''),
-    });
-
-    newCols.push(
-      {
-        field: 'band1',
-        headerName: '',
-        valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
-      },
-      {
-        field: 'band2',
-        headerName: '',
-        valueFormatter: ({ value }) => (value ? `${Number(value).toFixed(2)}%` : ''),
-      }
-    );
-
-    newColsGrouping.push({
-      groupId: 'Specification',
-      headerName: t('asphalt.dosages.marshall.specification'),
-      headerAlign: 'center',
-      children: [
         {
-          groupId: t('asphalt.dosages.marshall.band') + ` ${generalData.dnitBand}`,
-          headerAlign: 'center',
-          children: [{ field: 'band1' }, { field: 'band2' }],
+          label: t('asphalt.dosages.superpave.granulometry-error'),
+          value: gran.result.error,
+          unity: '%',
         },
       ],
-    });
-    setColumns(newCols);
-    setColumnGroupings(newColsGrouping);
-    setLoading(false);
-  }, [data.table_data?.table_column_headers, data.percentageInputs.length > 0]);
+    }));
+    setGranulometryData(newGranulometryData);
+  }, []);
 
-  useEffect(() => {
-    const shouldDisableNext =
-      !data.percentageInputs.some((e) => Object.values(e).some((value) => value === null || value === 0)) &&
-      data.graphData.length > 0;
+  const handleCheckboxClick = (item: { name: string; type: string }) => {
+    if (materialsToShow.find((material) => material === item.name)) {
+      setMaterialToShow(materialsToShow.filter((material) => material !== item.name));
+    } else {
+      setMaterialToShow([...materialsToShow, item.name]);
+    }
+  };
 
-    setNextDisabled(!shouldDisableNext);
-  }, [data.percentageInputs, data.graphData]);
+  setNextDisabled(false);
 
   return (
     <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '10px',
-          }}
-        >
-          {data.percentageInputs.length > 0 && Object.entries(data.percentageInputs[0])?.length > 0 && (
-            <>
-              <Step3Table rows={rows} columns={columns} columnGrouping={columnGrouping} marshall={marshall} />
+      <Box>
+        <FormGroup sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          {aggregatesCheckboxes?.map((item, index) => (
+            <FormControlLabel
+              key={index}
+              control={<Checkbox onClick={() => handleCheckboxClick(item)} />}
+              label={`${item.name} | ` + t(`asphalt.materials.${item.type}`)}
+            />
+          ))}
+        </FormGroup>
 
-              <Button
-                sx={{ color: 'secondaryTons.orange', border: '1px solid rgba(224, 224, 224, 1)' }}
-                onClick={calculateGranulometricComposition}
+        {granulometryData?.map((item, index) => {
+          if (!materialsToShow.find((material) => material === item.material?.name)) {
+            return null;
+          } else {
+            return (
+              <FlexColumnBorder
+                key={index}
+                title={`${item.material?.name} | ` + t(`asphalt.materials.${item.material?.type}`)}
+                open={true}
               >
-                {t('asphalt.dosages.marshall.calculate')}
-              </Button>
-            </>
-          )}
+                <Box
+                  sx={{
+                    width: '100%',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '10px',
+                    mt: '20px',
+                  }}
+                  key={index}
+                >
+                  {item.data.map((item, index) => {
+                    if (Array.isArray(item.value)) {
+                      return null;
+                    } else {
+                      return <Result_Card key={index} label={item.label} value={item.value} unity={item.unity} />;
+                    }
+                  })}
 
-          {data?.graphData?.length > 1 && <Graph data={data?.graphData} />}
-        </Box>
-      )}
+                  <Chart
+                    chartType="LineChart"
+                    width={'100%'}
+                    height={'400px'}
+                    loader={<Loading />}
+                    data={item.graph}
+                    options={{
+                      title: t('granulometry-asphalt.granulometry'),
+                      backgroundColor: 'transparent',
+                      pointSize: '5',
+                      curveType: 'function', // ← ADICIONE ESTA LINHA
+                      hAxis: {
+                        title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
+                        type: 'number',
+                        scaleType: 'log',
+                      },
+                      vAxis: {
+                        title: `${t('granulometry-asphalt.passant') + ' (%)'}`,
+                        minValue: '0',
+                        maxValue: '105',
+                      },
+                      legend: 'none',
+                    }}
+                  />
+                </Box>
+              </FlexColumnBorder>
+            );
+          }
+        })}
+
+        {materialsToShow.find((item) => item === data.viscosity.material.name) && data.viscosity.result && (
+          <FlexColumnBorder title={`${data.viscosity.material.name} | ${data.viscosity.material.type}`} open={true}>
+            <Typography variant="h6">{t('viscosity-rotational.compression-temperature')}</Typography>
+            <Result_CardContainer sx={{ marginBottom: '2rem' }}>
+              {Object.entries(data.viscosity.result.result.compressionTemperatureRange).map(([key, value], index) => (
+                <Result_Card key={index} label={key} value={value.toFixed(2).toString()} unity={'°C'} />
+              ))}
+            </Result_CardContainer>
+
+            <Typography variant="h6">{t('viscosity-rotational.aggregate-temperature')}</Typography>
+            <Result_CardContainer sx={{ marginBottom: '2rem' }}>
+              {Object.entries(data.viscosity.result.result.aggregateTemperatureRange).map(([key, value], index) => (
+                <Result_Card key={index} label={key} value={value.toFixed(2).toString()} unity={'°C'} />
+              ))}
+            </Result_CardContainer>
+
+            <Typography variant="h6">{t('viscosity-rotational.machining-temperature')}</Typography>
+            <Result_CardContainer sx={{ marginBottom: '2rem' }}>
+              {Object.entries(data.viscosity.result.result.machiningTemperatureRange).map(([key, value], index) => (
+                <Result_Card key={index} label={key} value={value.toFixed(2).toString()} unity={'°C'} />
+              ))}
+            </Result_CardContainer>
+
+            <Typography variant="h6">{t('asphalt.essays.viscosityRotational.graph')}</Typography>
+            <Chart
+              chartType="LineChart"
+              width={'100%'}
+              height={'400px'}
+              loader={<Loading />}
+              data={data.viscosity.result.result.curvePoints}
+              options={{
+                backgroundColor: 'transparent',
+                hAxis: {
+                  title: `${t('asphalt.essays.viscosityRotational.temperature')} C`, // Umidade %
+                },
+                vAxis: {
+                  title: `${t('asphalt.essays.viscosityRotational.viscosity')} (SSF)`, // Densidade do solo seco - g/cm³
+                  maxValue: '1.5',
+                },
+                explorer: {
+                  actions: ['dragToZoom', 'rightClickToReset'],
+                  axis: 'vertical',
+                },
+                legend: 'none',
+                trendlines: {
+                  0: {
+                    type: 'polynomial',
+                    degree: 4,
+                    visibleInLegend: true,
+                    labelInLegend: 'curva',
+                  },
+                },
+              }}
+            />
+          </FlexColumnBorder>
+        )}
+      </Box>
     </>
   );
 };
 
-export default Marshall_Step3_Granulometry;
+export default Superpave_Step3_GranulometryResults;
