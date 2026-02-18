@@ -32,7 +32,22 @@ const Marshall_Step8_ConfirmCompression = ({
   const [method, setMethod] = useState('');
   const optimumBinderRows = data?.optimumBinder || [];
 
-  // Função para verificar se TODOS os campos estão preenchidos
+  // 🔥 LOG para debug e inicialização do method
+  useEffect(() => {
+    console.log('📊 Dados carregados na step 8:', {
+      gmm: data?.gmm,
+      confirmedSpecificGravity: data?.confirmedSpecificGravity,
+      riceTest: data?.riceTest,
+      method: data?.confirmedSpecificGravity?.type
+    });
+    
+    if (data?.confirmedSpecificGravity?.type === 'DMT') {
+      setMethod('DMT');
+    } else if (data?.confirmedSpecificGravity?.type === 'GMM' || data?.gmm) {
+      setMethod('GMM');
+    }
+  }, [data?.confirmedSpecificGravity, data?.gmm, data?.riceTest]);
+
   // Função para verificar se TODOS os campos estão preenchidos
   const checkAllFieldsComplete = () => {
     console.log('🔍 Verificando se todos os campos estão preenchidos...');
@@ -92,10 +107,6 @@ const Marshall_Step8_ConfirmCompression = ({
         return false;
       }
     } else if (method === 'GMM') {
-      // ✅ CORREÇÃO: Para GMM, verificar se TEM PELO MENOS UM dos dois:
-      // - GMM inserido manualmente (data.gmm) OU
-      // - Rice Test calculado (data.confirmedSpecificGravity.result)
-
       const hasGmmValue = data?.gmm !== null && data?.gmm !== undefined;
       const hasRiceTestValue =
         data?.confirmedSpecificGravity?.result !== null && data?.confirmedSpecificGravity?.result !== undefined;
@@ -123,7 +134,6 @@ const Marshall_Step8_ConfirmCompression = ({
   useEffect(() => {
     const complete = checkAllFieldsComplete();
 
-    // Atualizar botão "Próximo"
     if (setNextDisabled) {
       setNextDisabled(!complete);
       console.log(`🔄 Botão "Próximo" ${complete ? 'HABILITADO' : 'DESABILITADO'}`);
@@ -430,9 +440,14 @@ const Marshall_Step8_ConfirmCompression = ({
               method: dmt.method,
             },
             listOfSpecificGravities: dmt.listOfSpecificGravities,
+            // 🔥 SALVA O RESULTADO NO confirmedSpecificGravity
+            confirmedSpecificGravity: {
+              result: dmt.maxSpecificGravity,
+              type: 'DMT'
+            }
           };
 
-          setData({ step: 4, value: newData });
+          setData({ step: 7, value: newData });
           setDMTModalISOpen(false);
         } catch (error) {
           throw error;
@@ -462,6 +477,11 @@ const Marshall_Step8_ConfirmCompression = ({
           newData = {
             ...data,
             ...riceTest,
+            // 🔥 GARANTE QUE O RESULTADO VAI PRO confirmedSpecificGravity
+            confirmedSpecificGravity: {
+              result: riceTest?.confirmedSpecificGravity?.result,
+              type: 'GMM'
+            }
           };
 
           setRiceTestModalIsOpen(false);
@@ -486,7 +506,6 @@ const Marshall_Step8_ConfirmCompression = ({
       temperature: maximumMixtureDensityData?.temperatureOfWater,
       confirmedSpecificGravity: data?.confirmedSpecificGravity,
       gmm: data?.gmm,
-      // ✅ LOG para verificar qual valor será usado
       gmmValueToUse:
         method === 'GMM' ? data?.gmm || data?.confirmedSpecificGravity?.result : data?.confirmedSpecificGravity?.result,
     });
@@ -501,9 +520,9 @@ const Marshall_Step8_ConfirmCompression = ({
             confirmedSpecificGravity: {
               result:
                 method === 'GMM'
-                  ? data?.gmm || data?.confirmedSpecificGravity?.result || 0 // ✅ Usa gmm inserido OU rice test
-                  : data?.confirmedSpecificGravity?.result || 0, // DMT usa confirmedSpecificGravity
-              type: method, // ✅ 'DMT' ou 'GMM'
+                  ? data?.gmm || data?.confirmedSpecificGravity?.result || 0
+                  : data?.confirmedSpecificGravity?.result || 0,
+              type: method,
             },
           };
 
@@ -512,7 +531,7 @@ const Marshall_Step8_ConfirmCompression = ({
           const confirmVP = await marshall.confirmVolumetricParameters(
             maximumMixtureDensityData,
             optimumBinderContentData,
-            dataToSend // ✅ Usar dados corrigidos
+            dataToSend
           );
 
           console.log('✅ Resposta do backend:', confirmVP);
@@ -520,9 +539,11 @@ const Marshall_Step8_ConfirmCompression = ({
           newData = {
             ...data,
             ...confirmVP,
+            // 🔥 MANTÉM O GMM TAMBÉM
+            gmm: data?.gmm,
             confirmedSpecificGravity: {
               result: confirmVP?.confirmedSpecificGravity?.result || dataToSend.confirmedSpecificGravity.result,
-              type: method, // ✅ Garantir que o tipo é preservado
+              type: method,
             },
           };
 
@@ -581,10 +602,6 @@ const Marshall_Step8_ConfirmCompression = ({
     );
   };
 
-  // if (nextDisabled && setNextDisabled) {
-  //   setNextDisabled(false);
-  // }
-
   return (
     <>
       {loading ? (
@@ -641,9 +658,9 @@ const Marshall_Step8_ConfirmCompression = ({
                 {t('asphalt.dosages.marshall.gmm-calculated-rice-test') +
                   ` ${
                     data?.gmm
-                      ? `${Number(data.gmm).toFixed(2)} g/cm³` // Valor inserido manualmente
+                      ? `${Number(data.gmm).toFixed(2)} g/cm³`
                       : data?.confirmedSpecificGravity?.result
-                      ? `${Number(data.confirmedSpecificGravity.result).toFixed(2)} g/cm³` // Valor calculado pelo Rice Test
+                      ? `${Number(data.confirmedSpecificGravity.result).toFixed(2)} g/cm³`
                       : '---'
                   }`}
               </Typography>
@@ -656,11 +673,11 @@ const Marshall_Step8_ConfirmCompression = ({
                   const newData = {
                     ...prevData,
                     gmm: value,
-                    // ✅ Se o usuário inserir um valor manual, podemos limpar o rice test
-                    confirmedSpecificGravity:
-                      value !== null && value !== undefined
-                        ? undefined // Limpa o valor calculado se inserir manualmente
-                        : prevData.confirmedSpecificGravity,
+                    // 🔥 QUANDO DIGITA MANUAL, TAMBÉM ATUALIZA O confirmedSpecificGravity
+                    confirmedSpecificGravity: {
+                      result: value,
+                      type: 'GMM'
+                    }
                   };
                   setData({ step: 7, value: newData });
                 }}

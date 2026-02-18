@@ -71,6 +71,7 @@ const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, t
   };
 
   const generateMaterialColumns = (data, materialIndex) => {
+    console.log("🚀 ~ generateMaterialColumns ~ data:", data)
     const columns = materials
       ?.map((material, index) => {
         const fieldTotalPassant = `totalPassant_${material._id}_${index + 1}`;

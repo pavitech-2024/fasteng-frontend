@@ -5,7 +5,7 @@ import useAuth from '@/contexts/auth';
 import marshallDosageService from '@/services/asphalt/dosages/marshall/marshall.consult.service';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
-import { IconButton, Container, Box, Pagination } from '@mui/material';
+import { IconButton, Container, Box, Pagination, Typography } from '@mui/material';
 import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useRouter } from 'next/router';
@@ -123,9 +123,12 @@ const MarshallDosageConsult = () => {
   };
 
   const handleVisualizeDosage = (id: string) => {
-    const dosage = dosages[0]?.find((dosage) => {
-      return dosage._id === id;
-    });
+    const dosage =
+      dosages.length === 1
+        ? dosages[0]?.find((dosage) => {
+            return dosage._id === id;
+          })
+        : dosages.find((dosages) => dosages.find((dosage) => dosage._id === id));
     const step = dosage.generalData.step - 1;
     if (dosage) {
       setData({
@@ -162,11 +165,11 @@ const MarshallDosageConsult = () => {
       renderCell: (params) => (
         <>
           <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)} size="large">
-            <DeleteIcon />
+            <DeleteIcon color="error" />
           </IconButton>
 
           <IconButton aria-label="Visualizar" onClick={() => handleVisualizeDosage(params.row.id)} size="large">
-            <NextIcon />
+            <NextIcon sx={{ color: 'secondaryTons.blue' }} />
           </IconButton>
         </>
       ),
@@ -197,14 +200,15 @@ const MarshallDosageConsult = () => {
               >
                 <Box
                   sx={{
-                    width: { mobile: '90%', notebook: '80%' },
-                    maxWidth: '2200px',
+                    width: '100%',
+                    maxWidth: '90vw',
                     padding: '2rem',
                     borderRadius: '20px',
                     bgcolor: 'primaryTons.white',
                     border: '1px solid',
                     borderColor: 'primaryTons.border',
                     marginBottom: '1rem',
+                    marginLeft: { mobile: '0', notebook: '2.5rem' },
                   }}
                 >
                   {dosageArrays.length > 0 && (
@@ -212,23 +216,29 @@ const MarshallDosageConsult = () => {
                       rows={dosageArrays.length > 0 ? dosageArrays[page] : []}
                       pagination
                       hideFooter
-                      columns={columns.map((column) => ({
+                      columns={columns.map((column, index) => ({
                         ...column,
                         disableColumnMenu: true,
                         sortable: false,
                         align: 'center',
                         headerAlign: 'center',
                         minWidth: 100,
-                        flex: 1,
+                        flex: index !== 0 && index !== 1 ? 1 : 2,
                       }))}
                     />
                   )}
                   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
-                    <Pagination
-                      count={dosageArrays.length}
-                      size="small"
-                      onChange={(event, value) => setPage(value - 1)}
-                    />
+                    {dosageArrays.length > 0 ? (
+                      <Pagination
+                        count={dosageArrays.length}
+                        size="small"
+                        onChange={(event, value) => setPage(value - 1)}
+                      />
+                    ) : (
+                      <Typography variant="h6" sx={{ color: 'primaryTons.gray' }}>
+                        {t('marshall.dosage-consult.no-dosages')}
+                      </Typography>
+                    )}
                   </Box>
                 </Box>
               </Box>

@@ -9,7 +9,7 @@ const marshallDosageService = {
 
   getMarshallDosagesByUserId: (userId: string) => Api.get(`asphalt/dosages/marshall/all/${userId}`),
 
-  getMarshallDosage: (dosageId: string) => Api.get(`asphalt/dosages/marshall/${dosageId}`),
+  getMarshallDosage: (dosageId: string) => Api.get(`asphalt/dosages/marshall/by-id/${dosageId}`),
 };
 
 export default marshallDosageService;
