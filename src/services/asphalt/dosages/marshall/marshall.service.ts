@@ -1,5 +1,6 @@
 import Api from '@/api';
 import { MarshallIconPng } from '@/assets';
+import MaterialSelectionTable from '@/components/concrete/dosages/abcp/tables/material-selection-table';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { MarshallActions, MarshallData } from '@/stores/asphalt/marshall/marshall.store';
@@ -56,11 +57,11 @@ class Marshall_SERVICE implements IEssayService {
           await this.submitGranulometryComposition(data as MarshallData, this.userId, null, isConsult);
           break;
         case 3:
-          // this.calculateBinderTrialData(
-          //   data as MarshallData['binderTrialData'],
-          //   data as MarshallData['granulometryCompositionData'],
-          //   data as MarshallData['materialSelectionData']
-          // );
+          this.calculateBinderTrialData(
+            data as MarshallData['binderTrialData'],
+            data as MarshallData['granulometryCompositionData'],
+            data as MarshallData['materialSelectionData']
+          );
           await this.submitBinderTrialData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 4:
@@ -232,7 +233,7 @@ class Marshall_SERVICE implements IEssayService {
       // Verificamos se a soma total é 100.
       if (inputsSum !== 100) throw t('errors.invalid-inputs-sum');
 
-      const response = await Api.post(`${this.info.backend_path}/calculate-granulometry`, {
+      const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {
         dnitBands: dnitBandLetter,
         percentageInputs,
         tableRows: table_data.table_rows,
@@ -425,7 +426,7 @@ class Marshall_SERVICE implements IEssayService {
     maximumMixtureDensityData: MarshallData['maximumMixtureDensityData']
   ): Promise<any> => {
     const { aggregates } = step2Data;
-    const { missingSpecificMass, listOfSpecificGravities } = maximumMixtureDensityData;
+    const { missingSpecificMass } = maximumMixtureDensityData;
     const { newPercentOfDosage, trial } = step4Data;
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-dmt-data`, {
@@ -433,7 +434,6 @@ class Marshall_SERVICE implements IEssayService {
         percentsOfDosage: newPercentOfDosage,
         trial,
         missingSpecificGravity: missingSpecificMass,
-        listOfSpecificGravities
       });
 
       const { data, success, error } = response.data;
@@ -661,7 +661,6 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-
   setOptimumBinderExpectedParameters = async (
     step3Data: MarshallData['granulometryCompositionData'],
     maximumMixtureDensityData: MarshallData['maximumMixtureDensityData'],
@@ -750,7 +749,7 @@ class Marshall_SERVICE implements IEssayService {
   ): Promise<any> => {
     const { percentageInputs } = step3Data;
     const { listOfSpecificGravities } = maximumMixtureDensityData;
-    const { gmmInput, riceTest } = step8Data;
+    const { gmm, riceTest } = step8Data;
     const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
     let method;
     let result;
@@ -768,7 +767,7 @@ class Marshall_SERVICE implements IEssayService {
         percentsOfDosage: percentageInputs,
         confirmedPercentsOfDosage,
         optimumContent,
-        gmm: gmmInput,
+        gmm,
         valuesOfSpecificGravity: riceTest,
       });
 
@@ -791,11 +790,10 @@ class Marshall_SERVICE implements IEssayService {
     step7Data: MarshallData['optimumBinderContentData'],
     step8Data: MarshallData['confirmationCompressionData']
   ): Promise<any> => {
-    const { listOfSpecificGravities } = maximumMixtureDensityData;
+    const { temperatureOfWater, listOfSpecificGravities } = maximumMixtureDensityData;
     const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
     const { optimumBinder } = step8Data;
     const { result: resultNumber } = step8Data.confirmedSpecificGravity;
-    const {  temperatureOfWater } = step8Data;
     let result;
 
     const confirmVolumetricParameters = {
@@ -899,7 +897,8 @@ class Marshall_SERVICE implements IEssayService {
         throw error;
       }
     }
-  };saveFatigueCurve = async (data: { dosageId: string; ncp?: string; k1?: string; k2?: string; r2?: string; obs?: string }) => {
+  };
+  ;saveFatigueCurve = async (data: { dosageId: string; ncp?: string; k1?: string; k2?: string; r2?: string; obs?: string }) => {
   try {
     
     const { dosageId, ncp, k1, k2, r2, obs } = data;
@@ -1005,7 +1004,6 @@ saveResilienceModule = async (data: { dosageId: string; k1?: string; k2?: string
     throw new Error(`Falha ao salvar módulo de resiliência: ${error.message}`);
   }
 };
-
 }
 
 export default Marshall_SERVICE;
