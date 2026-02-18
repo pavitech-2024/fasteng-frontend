@@ -70,23 +70,28 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
 
     const summaryItems: SummaryItem[] = [
-      {
-        title: t('asphalt.dosages.marshall.general-data'),
-        page: 3,
-      },
-      {
-        title: t('asphalt.dosages.marshall.materials-caracterization'),
-        page: 4,
-      },
-      {
-        title: t('asphalt.dosages.marshall.granulometry_composition'),
-        page: 5,
-      },
-      {
-        title: t('asphalt.dosages.marshall.dosage_resume'),
-        page: 3,
-      },
-    ];
+  {
+    key: 'generalData',
+    title: t('asphalt.dosages.marshall.general-data'),
+    page: 3,
+  },
+  {
+    key: 'materialsCharacterization',
+    title: t('asphalt.dosages.marshall.materials-caracterization'),
+    page: 4,
+  },
+  {
+    key: 'granulometryComposition',
+    title: t('asphalt.dosages.marshall.granulometry_composition'),
+    page: 5,
+  },
+  {
+    key: 'dosageResume',
+    title: t('asphalt.dosages.marshall.dosage_resume'),
+    page: 3,
+  },
+];
+
 
     const materialNames = dosage.materialSelectionData.aggregates.map((material) => material.name);
     const materialNamesWithBinder = [...materialNames, materialsEssays[0][0].data.generalData.material.name].join(', ');
