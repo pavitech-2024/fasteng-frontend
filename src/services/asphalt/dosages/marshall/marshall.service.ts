@@ -897,8 +897,7 @@ class Marshall_SERVICE implements IEssayService {
         throw error;
       }
     }
-  };
-  ;saveFatigueCurve = async (data: { dosageId: string; ncp?: string; k1?: string; k2?: string; r2?: string; obs?: string }) => {
+  };saveFatigueCurve = async (data: { dosageId: string; ncp?: string; k1?: string; k2?: string; r2?: string; obs?: string }) => {
   try {
     
     const { dosageId, ncp, k1, k2, r2, obs } = data;
@@ -1004,6 +1003,7 @@ saveResilienceModule = async (data: { dosageId: string; k1?: string; k2?: string
     throw new Error(`Falha ao salvar módulo de resiliência: ${error.message}`);
   }
 };
+
 }
 
 export default Marshall_SERVICE;
