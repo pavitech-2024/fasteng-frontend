@@ -133,12 +133,10 @@ const Marshall_Step9_ResumeDosage = ({
             const dosageFromDB = foundDosage.data.dosage;
 
             if (dosageFromDB?.fatigueCurveData) {
-              console.log('✅ Dados de fadiga carregados do banco:', dosageFromDB.fatigueCurveData);
               setFatigueData(dosageFromDB.fatigueCurveData);
             }
 
             if (dosageFromDB?.resilienceModuleData) {
-              console.log('✅ Dados de resiliência carregados do banco:', dosageFromDB.resilienceModuleData);
               setResilienceData(dosageFromDB.resilienceModuleData);
             }
           } catch (dosageError) {
@@ -925,9 +923,6 @@ const Marshall_Step9_ResumeDosage = ({
             ]}
             initialValues={getFatigueInitialValues()} // ✅ Adicionado aqui
             onConfirm={(values) => {
-              console.log('🎯 [STEP 9 - FATIGUE] Botão Confirmar clicado');
-              console.log('📦 [STEP 9 - FATIGUE] Valores recebidos:', values);
-              console.log('🆔 [STEP 9 - FATIGUE] DosageId:', dosageId);
 
               if (!dosageId) {
                 console.error('❌ [STEP 9 - FATIGUE] dosageId não encontrado!');
@@ -942,7 +937,6 @@ const Marshall_Step9_ResumeDosage = ({
                 return;
               }
 
-              console.log('🚀 [STEP 9 - FATIGUE] Chamando saveFatigueCurve...');
 
               marshall
                 .saveFatigueCurve({
@@ -950,7 +944,6 @@ const Marshall_Step9_ResumeDosage = ({
                   ...values,
                 })
                 .then((response) => {
-                  console.log('✅ [STEP 9 - FATIGUE] Sucesso! Resposta:', response);
                   toast.success('Curva de fadiga salva com sucesso!');
 
                   // ✅ Atualizar dados locais após salvar
@@ -975,9 +968,6 @@ const Marshall_Step9_ResumeDosage = ({
             ]}
             initialValues={getResilienceInitialValues()} // ✅ Adicionado aqui
             onConfirm={(values) => {
-              console.log('🎯 [STEP 9 - RESILIENCE] Botão Confirmar clicado');
-              console.log('📦 [STEP 9 - RESILIENCE] Valores recebidos:', values);
-              console.log('🆔 [STEP 9 - RESILIENCE] DosageId:', dosageId);
 
               if (!dosageId) {
                 console.error('❌ [STEP 9 - RESILIENCE] dosageId não encontrado!');
@@ -992,7 +982,6 @@ const Marshall_Step9_ResumeDosage = ({
                 return;
               }
 
-              console.log('🚀 [STEP 9 - RESILIENCE] Chamando saveResilienceModule...');
 
               marshall
                 .saveResilienceModule({
@@ -1000,7 +989,6 @@ const Marshall_Step9_ResumeDosage = ({
                   ...values,
                 })
                 .then((response) => {
-                  console.log('✅ [STEP 9 - RESILIENCE] Sucesso! Resposta:', response);
                   toast.success('Módulo de resiliência salvo com sucesso!');
 
                   // ✅ Atualizar dados locais após salvar
