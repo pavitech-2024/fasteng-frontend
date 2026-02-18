@@ -24,6 +24,7 @@ interface MarshallMaterialSelectionData {
   binder: { _id: string, name: string};
 }
 
+// Atualize a interface MarshallGranulometryCompositionData
 interface MarshallGranulometryCompositionData {
   table_data: {
     table_rows: {
@@ -41,11 +42,23 @@ interface MarshallGranulometryCompositionData {
   percentageInputs: { [key: string]: number }[];
   sumOfPercents: number[];
   dnitBands: { higher: [string, number][]; lower: [string, number][] };
-  bands: { higherBand: [number]; lowerBand: [number]; letter };
+  bands: { 
+    higherBand: number[];  // ← Corrigido: não é [number], é number[]
+    lowerBand: number[];   // ← Corrigido: não é [number], é number[]
+    letter?: string;       // ← Adicionado opcional
+  };
   pointsOfCurve: any[];
   percentsOfMaterials: any[];
   graphData: any[];
   projections: any[];
+  
+  // 🟡 ADICIONE ESTA LINHA:
+  tableWithBands?: Array<{
+    sieve_label: string;
+    projection: string;
+    inferior: string;
+    superior: string;
+  }>;
 }
 
 interface MarshallBinderTrialData {
@@ -103,7 +116,7 @@ interface MarshallMaximumMixtureDensityData {
   listOfSpecificGravities: any[];
 }
 
-interface VolumetricParametersData {
+export interface VolumetricParametersData {
   lessOne: {
     id: number;
     diammeter: number;

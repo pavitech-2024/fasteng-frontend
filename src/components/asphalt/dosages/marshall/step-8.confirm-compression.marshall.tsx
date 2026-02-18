@@ -1,11 +1,10 @@
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
-import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import InputNumberBr from '@/components/atoms/inputs/inputNumberBr';
 import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore, { MarshallData } from '@/stores/asphalt/marshall/marshall.store';
-import { waterTemperatureList } from '@/utils/waterTemperatureList';
 import { Box, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 import { t } from 'i18next';
@@ -23,6 +22,7 @@ const Marshall_Step8_ConfirmCompression = ({
     confirmationCompressionData: data,
     maximumMixtureDensityData,
     optimumBinderContentData,
+    binderTrialData,
     granulometryCompositionData,
     setData,
   } = useMarshallStore();
@@ -30,10 +30,156 @@ const Marshall_Step8_ConfirmCompression = ({
   const [DMTModalIsOpen, setDMTModalISOpen] = useState(false);
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [method, setMethod] = useState('');
-  const [isConfirmed, setIsConfirmed] = useState(false);
-  const optimumBinderRows = data?.optimumBinder;
+  const optimumBinderRows = data?.optimumBinder || [];
 
-  const allMaterials = [...materialSelectionData.aggregates, materialSelectionData.binder];
+  // 🔥 LOG para debug e inicialização do method
+  useEffect(() => {
+    console.log('📊 Dados carregados na step 8:', {
+      gmm: data?.gmm,
+      confirmedSpecificGravity: data?.confirmedSpecificGravity,
+      riceTest: data?.riceTest,
+      method: data?.confirmedSpecificGravity?.type
+    });
+    
+    if (data?.confirmedSpecificGravity?.type === 'DMT') {
+      setMethod('DMT');
+    } else if (data?.confirmedSpecificGravity?.type === 'GMM' || data?.gmm) {
+      setMethod('GMM');
+    }
+  }, [data?.confirmedSpecificGravity, data?.gmm, data?.riceTest]);
+
+  // Função para verificar se TODOS os campos estão preenchidos
+  const checkAllFieldsComplete = () => {
+    console.log('🔍 Verificando se todos os campos estão preenchidos...');
+
+    // 1. Verificar se o método foi selecionado
+    if (!method) {
+      console.log('❌ Método não selecionado');
+      return false;
+    }
+
+    // 2. Verificar se a temperatura da água está preenchida
+    if (
+      maximumMixtureDensityData?.temperatureOfWater === null ||
+      maximumMixtureDensityData?.temperatureOfWater === undefined
+    ) {
+      console.log('❌ Temperatura da água não preenchida');
+      return false;
+    }
+
+    // 3. Verificar se todos os campos da tabela optimumBinder estão preenchidos
+    if (!optimumBinderRows || optimumBinderRows.length === 0) {
+      console.log('❌ Tabela optimumBinder vazia');
+      return false;
+    }
+
+    const hasEmptyFieldsInTable = optimumBinderRows.some((row) => {
+      const isEmpty =
+        row.diammeter === null ||
+        row.diammeter === undefined ||
+        row.height === null ||
+        row.height === undefined ||
+        row.dryMass === null ||
+        row.dryMass === undefined ||
+        row.submergedMass === null ||
+        row.submergedMass === undefined ||
+        row.drySurfaceSaturatedMass === null ||
+        row.drySurfaceSaturatedMass === undefined ||
+        row.stability === null ||
+        row.stability === undefined ||
+        row.fluency === null ||
+        row.fluency === undefined ||
+        row.diametricalCompressionStrength === null ||
+        row.diametricalCompressionStrength === undefined;
+      return isEmpty;
+    });
+
+    if (hasEmptyFieldsInTable) {
+      console.log('❌ Campos da tabela optimumBinder não estão todos preenchidos');
+      return false;
+    }
+
+    // 4. Verificar DMT ou GMM específico
+    if (method === 'DMT') {
+      // Para DMT: verificar se confirmedSpecificGravity está preenchido
+      if (data?.confirmedSpecificGravity?.result === null || data?.confirmedSpecificGravity?.result === undefined) {
+        console.log('❌ DMT: confirmedSpecificGravity não preenchido');
+        return false;
+      }
+    } else if (method === 'GMM') {
+      const hasGmmValue = data?.gmm !== null && data?.gmm !== undefined;
+      const hasRiceTestValue =
+        data?.confirmedSpecificGravity?.result !== null && data?.confirmedSpecificGravity?.result !== undefined;
+
+      console.log('📊 GMM check:', {
+        hasGmmValue,
+        gmmValue: data?.gmm,
+        hasRiceTestValue,
+        riceTestValue: data?.confirmedSpecificGravity?.result,
+      });
+
+      if (!hasGmmValue && !hasRiceTestValue) {
+        console.log('❌ GMM: nem gmm inserido nem riceTest calculado');
+        return false;
+      }
+
+      console.log('✅ GMM: Valor válido encontrado (inserido ou calculado)');
+    }
+
+    console.log('✅ Todos os campos estão preenchidos!');
+    return true;
+  };
+
+  // Efeito para controlar o botão "Próximo"
+  useEffect(() => {
+    const complete = checkAllFieldsComplete();
+
+    if (setNextDisabled) {
+      setNextDisabled(!complete);
+      console.log(`🔄 Botão "Próximo" ${complete ? 'HABILITADO' : 'DESABILITADO'}`);
+    }
+  }, [
+    method,
+    maximumMixtureDensityData?.temperatureOfWater,
+    data?.optimumBinder,
+    data?.confirmedSpecificGravity,
+    data?.gmm,
+    data?.riceTest,
+    optimumBinderRows,
+    setNextDisabled,
+  ]);
+
+  useEffect(() => {
+    toast.promise(
+      async () => {
+        try {
+          let newData = {};
+          const response = await marshall.confirmSpecificGravity(
+            granulometryCompositionData,
+            maximumMixtureDensityData,
+            optimumBinderContentData,
+            data,
+            false
+          );
+
+          newData = {
+            ...data,
+            ...response,
+          };
+
+          setData({ step: 7, value: newData });
+        } catch (error) {
+          setLoading(false);
+          throw error;
+        }
+      },
+      {
+        pending: t('loading.data.pending'),
+        success: t('loading.data.success'),
+        error: t('loading.data.error'),
+      }
+    );
+  }, []);
 
   const generateColumns: GridColDef[] = [
     {
@@ -41,18 +187,14 @@ const Marshall_Step8_ConfirmCompression = ({
       headerName: t('asphalt.dosages.marshall.diammeter') + '(cm)',
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data?.optimumBinder.findIndex((r) => r.id === id);
+        const index = data?.optimumBinder?.findIndex((r) => r.id === id) || 0;
         return (
-          <InputEndAdornment
+          <InputNumberBr
             adornment={'cm'}
-            value={data?.optimumBinder[index]?.diammeter}
-            type="number"
-            onChange={(e) => {
-              const value = e.target.value;
-
-              // Atualiza o estado com a string diretamente
-              const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], diammeter: parseFloat(value) };
+            value={data?.optimumBinder?.[index]?.diammeter}
+            onChange={(value: number | null) => {
+              const newState = [...(data.optimumBinder || [])];
+              newState[index] = { ...newState[index], diammeter: value };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -64,18 +206,14 @@ const Marshall_Step8_ConfirmCompression = ({
       headerName: t('asphalt.dosages.marshall.height') + '(cm)',
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data?.optimumBinder.findIndex((r) => r.id === id);
+        const index = data?.optimumBinder?.findIndex((r) => r.id === id) || 0;
         return (
-          <InputEndAdornment
+          <InputNumberBr
             adornment={'cm'}
-            type="number"
-            value={data?.optimumBinder[index]?.height}
-            onChange={(e) => {
-              const value = e.target.value;
-
-              // Atualiza o estado com a string diretamente
-              const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], height: parseFloat(value) };
+            value={data?.optimumBinder?.[index]?.height}
+            onChange={(value: number | null) => {
+              const newState = [...(data.optimumBinder || [])];
+              newState[index] = { ...newState[index], height: value };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -87,18 +225,14 @@ const Marshall_Step8_ConfirmCompression = ({
       headerName: t('asphalt.dosages.marshall.dry-mass') + '(g)',
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data?.optimumBinder.findIndex((r) => r.id === id);
+        const index = data?.optimumBinder?.findIndex((r) => r.id === id) || 0;
         return (
-          <InputEndAdornment
+          <InputNumberBr
             adornment={'g'}
-            value={data?.optimumBinder[index]?.dryMass}
-            type="number"
-            onChange={(e) => {
-              const value = e.target.value;
-
-              // Atualiza o estado com a string diretamente
-              const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], dryMass: parseFloat(value) };
+            value={data?.optimumBinder?.[index]?.dryMass}
+            onChange={(value: number | null) => {
+              const newState = [...(data.optimumBinder || [])];
+              newState[index] = { ...newState[index], dryMass: value };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -110,18 +244,14 @@ const Marshall_Step8_ConfirmCompression = ({
       headerName: t('asphalt.dosages.marshall.submerged-mass') + '(g)',
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data.optimumBinder.findIndex((r) => r.id === id);
+        const index = data?.optimumBinder?.findIndex((r) => r.id === id) || 0;
         return (
-          <InputEndAdornment
+          <InputNumberBr
             adornment={'g'}
-            value={data?.optimumBinder[index]?.submergedMass}
-            type="number"
-            onChange={(e) => {
-              const value = e.target.value;
-
-              // Atualiza o estado com a string diretamente
-              const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], submergedMass: parseFloat(value) };
+            value={data?.optimumBinder?.[index]?.submergedMass}
+            onChange={(value: number | null) => {
+              const newState = [...(data.optimumBinder || [])];
+              newState[index] = { ...newState[index], submergedMass: value };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -133,18 +263,14 @@ const Marshall_Step8_ConfirmCompression = ({
       headerName: t('asphalt.dosages.marshall.dry-surface-saturated-mass') + '(g)',
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data?.optimumBinder.findIndex((r) => r.id === id);
+        const index = data?.optimumBinder?.findIndex((r) => r.id === id) || 0;
         return (
-          <InputEndAdornment
+          <InputNumberBr
             adornment={'g'}
-            value={data?.optimumBinder[index]?.drySurfaceSaturatedMass}
-            type="number"
-            onChange={(e) => {
-              const value = e.target.value;
-
-              // Atualiza o estado com a string diretamente
-              const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], drySurfaceSaturatedMass: parseFloat(value) };
+            value={data?.optimumBinder?.[index]?.drySurfaceSaturatedMass}
+            onChange={(value: number | null) => {
+              const newState = [...(data.optimumBinder || [])];
+              newState[index] = { ...newState[index], drySurfaceSaturatedMass: value };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -153,21 +279,17 @@ const Marshall_Step8_ConfirmCompression = ({
     },
     {
       field: 'stability',
-      headerName: t('asphalt.dosages.stability') + ' (kgf)',
+      headerName: t('asphalt.dosages.stability') + ' (N)',
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data.optimumBinder.findIndex((r) => r.id === id);
+        const index = data?.optimumBinder?.findIndex((r) => r.id === id) || 0;
         return (
-          <InputEndAdornment
-            adornment={'kgf'}
-            value={data?.optimumBinder[index]?.stability}
-            type="number"
-            onChange={(e) => {
-              const value = e.target.value;
-
-              // Atualiza o estado com a string diretamente
-              const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], stability: parseFloat(value) };
+          <InputNumberBr
+            adornment={'N'}
+            value={data?.optimumBinder?.[index]?.stability}
+            onChange={(value: number | null) => {
+              const newState = [...(data.optimumBinder || [])];
+              newState[index] = { ...newState[index], stability: value };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -179,18 +301,14 @@ const Marshall_Step8_ConfirmCompression = ({
       headerName: t('asphalt.dosages.marshall.fluency') + ' (mm)',
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data.optimumBinder.findIndex((r) => r.id === id);
+        const index = data?.optimumBinder?.findIndex((r) => r.id === id) || 0;
         return (
-          <InputEndAdornment
+          <InputNumberBr
             adornment={'mm'}
-            value={data?.optimumBinder[index]?.fluency}
-            type="number"
-            onChange={(e) => {
-              const value = e.target.value;
-
-              // Atualiza o estado com a string diretamente
-              const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], fluency: parseFloat(value) };
+            value={data?.optimumBinder?.[index]?.fluency}
+            onChange={(value: number | null) => {
+              const newState = [...(data.optimumBinder || [])];
+              newState[index] = { ...newState[index], fluency: value };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -202,18 +320,14 @@ const Marshall_Step8_ConfirmCompression = ({
       headerName: t('asphalt.dosages.indirect-tensile-strength') + '(MPa)',
       renderCell: ({ row }) => {
         const { id } = row;
-        const index = data?.optimumBinder.findIndex((r) => r.id === id);
+        const index = data?.optimumBinder?.findIndex((r) => r.id === id) || 0;
         return (
-          <InputEndAdornment
-            adornment={'Mpa'}
-            type="number"
-            value={data?.optimumBinder[index]?.diametricalCompressionStrength}
-            onChange={(e) => {
-              const value = e.target.value;
-
-              // Atualiza o estado com a string diretamente
-              const newState = [...data.optimumBinder];
-              newState[index] = { ...newState[index], diametricalCompressionStrength: parseFloat(value) };
+          <InputNumberBr
+            adornment={'MPa'}
+            value={data?.optimumBinder?.[index]?.diametricalCompressionStrength}
+            onChange={(value: number | null) => {
+              const newState = [...(data.optimumBinder || [])];
+              newState[index] = { ...newState[index], diametricalCompressionStrength: value };
               setData({ step: 7, value: { ...data, optimumBinder: newState } });
             }}
           />
@@ -226,7 +340,7 @@ const Marshall_Step8_ConfirmCompression = ({
     {
       groupId: 'binder',
       headerAlign: 'center',
-      headerName: `${optimumBinderContentData?.optimumBinder?.optimumContent?.toFixed(2)}%`,
+      headerName: `${optimumBinderContentData?.optimumBinder?.optimumContent?.toFixed(2) || '0.00'}%`,
       children: [
         { field: 'diammeter' },
         { field: 'height' },
@@ -240,32 +354,33 @@ const Marshall_Step8_ConfirmCompression = ({
     },
   ];
 
-  // Method option dropdown;
   const calcMethodOptions: DropDownOption[] = [
     { label: 'DMT - Densidade máxima teórica', value: 'DMT - Densidade máxima teórica' },
     { label: 'GMM - Densidade máxima medida', value: 'GMM - Densidade máxima medida' },
   ];
 
-  const riceTestRows = [data?.riceTest];
+  const riceTestRows = data?.riceTest ? [data.riceTest] : [];
 
   const riceTestColumns: GridColDef[] = [
     {
       field: 'Teor',
       headerName: t('asphalt.dosages.marshall.tenor'),
-      valueFormatter: () => `${optimumBinderContentData?.optimumBinder?.optimumContent.toFixed(2)}%`,
+      valueFormatter: () => {
+        const content = optimumBinderContentData?.optimumBinder?.optimumContent;
+        return content ? `${content.toFixed(2)}%` : '---';
+      },
     },
     {
       field: 'massOfDrySample',
       headerName: t('asphalt.dosages.marshall.dry-sample-mass'),
       renderCell: () => {
         return (
-          <InputEndAdornment
+          <InputNumberBr
             adornment={'g'}
-            type="number"
             value={data?.riceTest?.massOfDrySample}
-            onChange={(e) => {
-              const prevData = data.riceTest;
-              const newData = { ...prevData, massOfDrySample: e.target.value };
+            onChange={(value: number | null) => {
+              const prevData = data.riceTest || {};
+              const newData = { ...prevData, massOfDrySample: value };
               setData({ step: 7, value: { ...data, riceTest: newData } });
             }}
           />
@@ -277,13 +392,12 @@ const Marshall_Step8_ConfirmCompression = ({
       headerName: t('asphalt.dosages.marshall.container-sample-water-mass'),
       renderCell: () => {
         return (
-          <InputEndAdornment
+          <InputNumberBr
             adornment={'g'}
-            type="text"
             value={data?.riceTest?.massOfContainerWaterSample}
-            onChange={(e) => {
-              const prevData = data.riceTest;
-              const newData = { ...prevData, massOfContainerWaterSample: e.target.value };
+            onChange={(value: number | null) => {
+              const prevData = data.riceTest || {};
+              const newData = { ...prevData, massOfContainerWaterSample: value };
               setData({ step: 7, value: { ...data, riceTest: newData } });
             }}
           />
@@ -295,13 +409,12 @@ const Marshall_Step8_ConfirmCompression = ({
       headerName: t('asphalt.dosages.marshall.container-water-mass'),
       renderCell: () => {
         return (
-          <InputEndAdornment
+          <InputNumberBr
             adornment={'g'}
-            type="text"
             value={data?.riceTest?.massOfContainerWater}
-            onChange={(e) => {
-              const prevData = data.riceTest;
-              const newData = { ...prevData, massOfContainerWater: e.target.value };
+            onChange={(value: number | null) => {
+              const prevData = data.riceTest || {};
+              const newData = { ...prevData, massOfContainerWater: value };
               setData({ step: 7, value: { ...data, riceTest: newData } });
             }}
           />
@@ -311,34 +424,34 @@ const Marshall_Step8_ConfirmCompression = ({
   ];
 
   const handleSubmitDmt = async () => {
-    const hasNullValues = maximumMixtureDensityData.listOfSpecificGravities.some((g) => !g);
-
-    if (hasNullValues) {
-      toast.error(t('loading.data.nullValuesError'));
-      return;
-    }
-
     toast.promise(
       async () => {
-        const dmt = await marshall.confirmSpecificGravity(
-          granulometryCompositionData,
-          maximumMixtureDensityData,
-          optimumBinderContentData,
-          data,
-          false
-        );
+        try {
+          const dmt = await marshall.calculateMaximumMixtureDensityDMT(
+            materialSelectionData,
+            binderTrialData,
+            maximumMixtureDensityData
+          );
 
-        const newData = {
-          ...data,
-          confirmedSpecificGravity: {
-            result: dmt.confirmedSpecificGravity?.result,
-            method: dmt.confirmedSpecificGravity?.type,
-          },
-          listOfSpecificGravities: dmt.listOfSpecificGravities,
-        };
+          const newData = {
+            ...data,
+            maxSpecificGravity: {
+              result: dmt.maxSpecificGravity,
+              method: dmt.method,
+            },
+            listOfSpecificGravities: dmt.listOfSpecificGravities,
+            // 🔥 SALVA O RESULTADO NO confirmedSpecificGravity
+            confirmedSpecificGravity: {
+              result: dmt.maxSpecificGravity,
+              type: 'DMT'
+            }
+          };
 
-        setData({ step: 7, value: newData });
-        setDMTModalISOpen(false);
+          setData({ step: 7, value: newData });
+          setDMTModalISOpen(false);
+        } catch (error) {
+          throw error;
+        }
       },
       {
         pending: t('loading.data.pending'),
@@ -364,10 +477,14 @@ const Marshall_Step8_ConfirmCompression = ({
           newData = {
             ...data,
             ...riceTest,
+            // 🔥 GARANTE QUE O RESULTADO VAI PRO confirmedSpecificGravity
+            confirmedSpecificGravity: {
+              result: riceTest?.confirmedSpecificGravity?.result,
+              type: 'GMM'
+            }
           };
 
           setRiceTestModalIsOpen(false);
-
           setData({ step: 7, value: newData });
         } catch (error) {
           throw error;
@@ -382,34 +499,57 @@ const Marshall_Step8_ConfirmCompression = ({
   };
 
   const handleConfirm = () => {
+    console.log('🔄 Iniciando cálculo de parâmetros volumétricos...');
+    console.log('📊 Dados enviados:', {
+      optimumBinderRows,
+      method,
+      temperature: maximumMixtureDensityData?.temperatureOfWater,
+      confirmedSpecificGravity: data?.confirmedSpecificGravity,
+      gmm: data?.gmm,
+      gmmValueToUse:
+        method === 'GMM' ? data?.gmm || data?.confirmedSpecificGravity?.result : data?.confirmedSpecificGravity?.result,
+    });
+
     toast.promise(
       async () => {
         try {
           let newData = {};
+
+          const dataToSend = {
+            ...data,
+            confirmedSpecificGravity: {
+              result:
+                method === 'GMM'
+                  ? data?.gmm || data?.confirmedSpecificGravity?.result || 0
+                  : data?.confirmedSpecificGravity?.result || 0,
+              type: method,
+            },
+          };
+
+          console.log('📤 Dados enviados para confirmVolumetricParameters:', dataToSend);
+
           const confirmVP = await marshall.confirmVolumetricParameters(
             maximumMixtureDensityData,
             optimumBinderContentData,
-            data
+            dataToSend
           );
+
+          console.log('✅ Resposta do backend:', confirmVP);
 
           newData = {
             ...data,
             ...confirmVP,
+            // 🔥 MANTÉM O GMM TAMBÉM
+            gmm: data?.gmm,
+            confirmedSpecificGravity: {
+              result: confirmVP?.confirmedSpecificGravity?.result || dataToSend.confirmedSpecificGravity.result,
+              type: method,
+            },
           };
 
-          if (!data.confirmedSpecificGravity.result && data.gmmInput) {
-            newData = {
-              ...newData,
-              confirmedSpecificGravity: {
-                result: parseFloat(data.gmmInput.replace(',', '.')),
-                method: 'GMM',
-              },
-            };
-          }
-
-          setIsConfirmed(true);
           setData({ step: 7, value: newData });
         } catch (error) {
+          console.error('💥 Erro no handleConfirm:', error);
           throw error;
         }
       },
@@ -423,20 +563,20 @@ const Marshall_Step8_ConfirmCompression = ({
 
   const handleErase = () => {
     try {
-      if (data?.optimumBinder.length > 1) {
-        const newRows = [...data?.optimumBinder];
+      if (data?.optimumBinder && data.optimumBinder.length > 1) {
+        const newRows = [...data.optimumBinder];
         newRows.pop();
         setData({ step: 7, value: { ...data, optimumBinder: newRows } });
       } else throw t('ddui.error.minReads');
     } catch (error) {
-      toast.error(error);
+      toast.error(error as string);
     }
   };
 
   const handleAdd = () => {
-    const newRows = [...data?.optimumBinder];
+    const newRows = [...(data?.optimumBinder || [])];
     newRows.push({
-      id: data?.optimumBinder.length,
+      id: newRows.length,
       diammeter: null,
       height: null,
       dryMass: null,
@@ -462,34 +602,6 @@ const Marshall_Step8_ConfirmCompression = ({
     );
   };
 
-  useEffect(() => {
-    if (method === 'DMT') {
-      const prevState = { ...data };
-      prevState.dmt = true;
-      prevState.gmm = false;
-      setData({ step: 7, value: prevState });
-    } else if (method === 'GMM') {
-      const prevState = { ...data };
-      prevState.dmt = false;
-      prevState.gmm = true;
-      setData({ step: 7, value: prevState });
-    }
-  }, [method]);
-
-  /**
-   * Verifica se a próxima página pode ser acessada,
-   * verifica se o método foi selecionado, se o botão de confirmação já foi clicado
-   *  e se todos os campos
-   * da tabela de compressão estão preenchidos.
-   */
-  useEffect(() => {
-    const isConfirmed = data.confirmedSpecificGravity.result !== null && data.confirmedSpecificGravity.type !== null;
-    const hasNullValues = data.optimumBinder.some((row) => Object.values(row).some((value) => value === null));
-    const methodIsSelected = Boolean(data.dmt) || Boolean(data.gmm);
-
-    setNextDisabled(!methodIsSelected && hasNullValues && isConfirmed);
-  }, [data, method, isConfirmed]);
-
   return (
     <>
       {loading ? (
@@ -508,8 +620,18 @@ const Marshall_Step8_ConfirmCompression = ({
             label={t('asphalt.dosages.marshall.select-mixture-density-method')}
             options={calcMethodOptions}
             value={{
-              label: data.dmt ? 'DMT - Densidade máxima teórica' : data.gmm ? 'GMM - Densidade máxima medida' : '',
-              value: data.dmt ? 'DMT - Densidade máxima teórica' : data.gmm ? 'GMM - Densidade máxima medida' : '',
+              label:
+                method === 'DMT'
+                  ? 'DMT - Densidade máxima teórica'
+                  : method === 'GMM'
+                  ? 'GMM - Densidade máxima medida'
+                  : '',
+              value:
+                method === 'DMT'
+                  ? 'DMT - Densidade máxima teórica'
+                  : method === 'GMM'
+                  ? 'GMM - Densidade máxima medida'
+                  : '',
             }}
             callback={(selectedOption) => {
               if (selectedOption === 'DMT - Densidade máxima teórica') {
@@ -522,54 +644,41 @@ const Marshall_Step8_ConfirmCompression = ({
               }
             }}
             size="medium"
-            sx={{ width: '50%', marginX: 'auto' }}
+            sx={{ width: '75%', marginX: 'auto' }}
           />
-
-          <DropDown
-            key={'water'}
-            variant="standard"
-            label={t('asphalt.dosages.marshall.water-temperature')}
-            options={waterTemperatureList}
-            callback={(selectedValue) => {
-              const prevData = data;
-              const newData = { ...prevData, temperatureOfWater: Number(selectedValue) };
-              setData({ step: 7, value: newData });
-            }}
-            value={{
-              label: waterTemperatureList.find((item) => item.value === data.temperatureOfWater)?.label,
-              value: data.temperatureOfWater,
-            }}
-            size="medium"
-            sx={{ width: '50%', marginX: 'auto' }}
-          />
-
-          {data.dmt ? (
+          {maximumMixtureDensityData?.maxSpecificGravity?.method === 'DMT' ? (
             <Typography variant="h6">
               {t('asphalt.dosages.marshall.binder-trial-dmt') +
-                `   ${data?.confirmedSpecificGravity?.result?.toFixed(2)} g/cm³`}
+                `${data?.confirmedSpecificGravity?.result?.toFixed(2) || '0.00'} g/cm³`}
             </Typography>
-          ) : data.gmm ? (
+          ) : (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <Typography variant="h6">{t('asphalt.dosages.marshall.insert-gmm')}</Typography>
-              {data?.confirmedSpecificGravity?.result && (
-                <Typography>
-                  {t('asphalt.dosages.marshall.gmm-calculated-rice-test') +
-                    ` ${
-                      data?.confirmedSpecificGravity?.result
-                        ? ` ${data?.confirmedSpecificGravity?.result?.toFixed(2)}  g/cm³`
-                        : ' ---'
-                    }`}
-                </Typography>
-              )}
-
-              <InputEndAdornment
+              <Typography>
+                {t('asphalt.dosages.marshall.gmm-calculated-rice-test') +
+                  ` ${
+                    data?.gmm
+                      ? `${Number(data.gmm).toFixed(2)} g/cm³`
+                      : data?.confirmedSpecificGravity?.result
+                      ? `${Number(data.confirmedSpecificGravity.result).toFixed(2)} g/cm³`
+                      : '---'
+                  }`}
+              </Typography>
+              <InputNumberBr
                 adornment={'g/cm³'}
                 label={t('asphalt.dosages.marshall.binder-trial-gmm')}
-                value={data.gmmInput}
-                sx={{ width: '40%' }}
-                onChange={(e) => {
+                value={data?.gmm}
+                onChange={(value: number | null) => {
                   const prevData: MarshallData['confirmationCompressionData'] = data;
-                  const newData = { ...prevData, gmmInput: e.target.value };
+                  const newData = {
+                    ...prevData,
+                    gmm: value,
+                    // 🔥 QUANDO DIGITA MANUAL, TAMBÉM ATUALIZA O confirmedSpecificGravity
+                    confirmedSpecificGravity: {
+                      result: value,
+                      type: 'GMM'
+                    }
+                  };
                   setData({ step: 7, value: newData });
                 }}
               />
@@ -577,8 +686,7 @@ const Marshall_Step8_ConfirmCompression = ({
                 {t('asphalt.dosages.marshall.rice-test')}
               </Button>
             </Box>
-          ) : null}
-
+          )}
           <DataGrid
             key={'optimumBinder'}
             columns={generateColumns.map((col) => ({
@@ -596,40 +704,44 @@ const Marshall_Step8_ConfirmCompression = ({
             disableColumnSelector
             slots={{ footer: () => ExpansionToolbar() }}
           />
-
           <Button onClick={handleConfirm} variant="outlined">
             {t('asphalt.dosages.marshall.confirm')}
           </Button>
-
           <ModalBase
             title={t('asphalt.dosages.marshall.insert-real-specific-mass')}
             leftButtonTitle={t('asphalt.dosages.marshall.cancel')}
             rightButtonTitle={t('asphalt.dosages.marshall.confirm')}
-            onCancel={() => {
-              setData({ step: 7, key: 'dmt', value: false });
-              setDMTModalISOpen(false);
-            }}
+            onCancel={() => setDMTModalISOpen(false)}
             open={DMTModalIsOpen}
-            size={'medium'}
+            size={'larger'}
             onSubmit={() => handleSubmitDmt()}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginY: '2rem' }}>
-              {allMaterials.map((material, index) => (
-                <InputEndAdornment
-                  key={material._id}
-                  adornment={'g/cm³'}
-                  label={material.name}
-                  value={maximumMixtureDensityData.listOfSpecificGravities?.length > 0 ? maximumMixtureDensityData.listOfSpecificGravities[index] : []}
-                  onChange={(e) => {
-                    const prevState = { ...maximumMixtureDensityData };
-                    prevState.listOfSpecificGravities[index] = e.target.value;
-                    setData({ step: 4, value: prevState });
-                  }}
-                />
-              ))}
+              {maximumMixtureDensityData.missingSpecificMass &&
+                maximumMixtureDensityData.missingSpecificMass.map((material) => (
+                  <InputNumberBr
+                    key={material._id}
+                    adornment={'g/cm³'}
+                    label={material.name}
+                    value={material.value}
+                    onChange={(value: number | null) => {
+                      const prevState = { ...maximumMixtureDensityData };
+                      const updatedMissingMass = [...(prevState.missingSpecificMass || [])];
+                      const index = updatedMissingMass.findIndex((item) => item._id === material._id);
+
+                      if (index !== -1) {
+                        updatedMissingMass[index] = { ...updatedMissingMass[index], value };
+                        const newState = {
+                          ...prevState,
+                          missingSpecificMass: updatedMissingMass,
+                        };
+                        setData({ step: 4, value: newState });
+                      }
+                    }}
+                  />
+                ))}
             </Box>
           </ModalBase>
-
           <ModalBase
             title={t('asphalt.dosages.marshall.rice-test-data')}
             leftButtonTitle={t('asphalt.dosages.marshall.cancel')}

@@ -1,4 +1,5 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import InputNumberBrProps from '@/components/atoms/inputs/inputNumberBr';
 import { EssayPageProps } from '@/components/templates/essay';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
@@ -200,15 +201,14 @@ const Marshall_Step4_InitialBinder = ({
         }}
       >
         <Box key={'initial_binder'} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <InputEndAdornment
-            label={t('asphalt.dosages.marshall.initial-binder')}
-            value={binderTrialData.trial}
-            onChange={(e) => setData({ step: 3, key: 'trial', value: Number(e.target.value) })}
-            adornment={'%'}
-            type="number"
-            inputProps={{ min: 0 }}
-            required
-          />
+          <InputNumberBrProps
+  label={t('asphalt.dosages.marshall.initial-binder')}
+  value={binderTrialData.trial}
+  onChange={(value: number | null) => setData({ step: 3, key: 'trial', value: value || 0 })}
+  adornment={'%'}
+  decimalPlaces={2}
+  required
+/>
         </Box>
         <Button
           onClick={handleCalculate}
