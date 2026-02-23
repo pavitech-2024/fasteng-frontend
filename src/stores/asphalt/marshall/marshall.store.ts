@@ -4,7 +4,7 @@ import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 export type GmmRows = {
   id: number;
   insert: boolean;
-  value: number;
+  value: number | null;
 };
 
 interface MarhsallGeneralData {
@@ -85,12 +85,12 @@ interface MarshallBinderTrialData {
 }
 
 interface MarshallMaximumMixtureDensityData {
-  method: string;
+  method: string | null;
   dmt: {
     [key: string]: number;
   }[];
   gmm: GmmRows[];
-  temperatureOfWater: number;
+  temperatureOfWater: number | null;
   missingSpecificMass: {
     name: string;
     _id: string;
