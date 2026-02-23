@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+// No EssayTemplate.tsx - versão RADICAL (SEM TIMEOUT)
+
+import React, { useState, useEffect } from 'react';
 import { Stepper } from '../../atoms/stepper';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
@@ -12,19 +14,22 @@ import Footer from '@/components/organisms/footer';
 import BodyEssay from '@/components/organisms/bodyEssay';
 import { useSessionStorage } from '../../../utils/hooks/useSessionStorage';
 
-
-
 export interface EssayTemplateProps {
-
   essayInfo: IEssayService['info'];
   childrens: { step: number; children: JSX.Element; data: unknown }[];
   nextCallback: (step: number, data: unknown) => Promise<void>;
 }
 
-// interface that export the props of the childrens
 export interface EssayPageProps {
   nextDisabled?: boolean;
   setNextDisabled?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+// 🔥 FLAG GLOBAL NO WINDOW (imune a reset)
+declare global {
+  interface Window {
+    __MARSHALL_REDIRECTED__?: boolean;
+  }
 }
 
 const EssayTemplate = ({
@@ -36,26 +41,23 @@ const EssayTemplate = ({
   const app = router.pathname.split('/')[1];
   const essay = router.pathname.split('/')[3];
 
-  const isIGG = essay === 'igg'; // Condicional para alterar somente o titulo do igg sem afetar o titulo dos outros ensaios
-
+  const isIGG = essay === 'igg';
   const isSuperpavePage = router.pathname.includes('superpave');
 
-  // persiste the active step in the sessionStorage, if the user reload the page, the active step will be the same  example: cbr-{step}
   const step = parseInt(sessionStorage.getItem(essay + '-step')) || 0;
   const [activeStep, setActiveStep] = useSessionStorage({ key: essay + '-step', initialValue: step });
   const [isEssaySaved, setIsEssaySaved] = useState(false);
   const [nextDisabled, setNextDisabled] = useState(true);
 
-  /**
-   * Function to handle the click event of the next button.
-   * If the user is in the last step, it will save the essay and in the next click it will reset the essay.
-   * If the user is not in the last step, it will call the nextCallback function with the current step and data.
-   * If the nextCallback function is successful, it will go to the next step and thenext button will change to save essay and if the user save the essay the button will change to reset essay.
-   * If the nextCallback function fails, it will show an error toast.
-   *
-   * @remarks
-   * This function is used in the EssayTemplate component.
-   */
+  // 🔥 Inicializa a flag global se não existir
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (window.__MARSHALL_REDIRECTED__ === undefined) {
+        window.__MARSHALL_REDIRECTED__ = false;
+      }
+    }
+  }, []);
+
   async function handleNextClick() {
     if (isEssaySaved && childrens.length - 1 === activeStep) {
       childrens.forEach(({ children }) => {
@@ -67,22 +69,24 @@ const EssayTemplate = ({
       sessionStorage.clear();
       setIsEssaySaved(false);
       setActiveStep(0);
+      // 🔥 Reseta flag global
+      if (typeof window !== 'undefined') {
+        window.__MARSHALL_REDIRECTED__ = false;
+      }
       return;
     }
 
-    // to check if the button is saving or going to the next step
     const isSaving = childrens.length - 1 === activeStep;
 
-    // create a loading toast
     const nextToast = toast.loading(isSaving ? t('loading.save.pending') : t('loading.nextStep.pending'), {
       autoClose: 5000,
     });
 
     try {
-      // check if the activeStep is the same as the step of the current child
       if (activeStep !== childrens[activeStep]?.step) throw t('loading.invalid-step');
-      // call and wait the callback function
+      
       await nextCallback(activeStep, childrens[activeStep]['data']);
+      
       toast.update(nextToast, {
         autoClose: 5000,
         type: 'success',
@@ -91,12 +95,37 @@ const EssayTemplate = ({
         closeButton: true,
       });
 
+      // 🔥 CASO ESPECIAL: MARSHALL STEP 7 - COM FLAG GLOBAL
+      if (essay === 'marshall' && activeStep === 7) {
+        console.log('🔸 Marshall Step 7 - hasRedirected (global):', window.__MARSHALL_REDIRECTED__);
+        
+        if (!window.__MARSHALL_REDIRECTED__) {
+          console.log('🔸 PRIMEIRA E ÚNICA VEZ - Vai redirecionar');
+          
+          window.__MARSHALL_REDIRECTED__ = true;
+          setActiveStep(activeStep + 1);
+          setNextDisabled(true);
+          
+          // 🔥 REDIRECIONAMENTO IMEDIATO - SEM TIMEOUT
+          console.log('🔸 Redirecionando para consulta');
+          router.push('/asphalt/dosages/marshall/consult');
+          
+          return;
+        } else {
+          console.log('🔸 Já redirecionou - só avança normal sem redirecionar');
+          setActiveStep(activeStep + 1);
+          setNextDisabled(true);
+          
+          // 🔥 IMPORTANTE: NÃO redireciona!
+          return;
+        }
+      }
+
+      // FLUXO NORMAL PARA OUTROS STEPS
       if (isSaving) {
         setIsEssaySaved(true);
       } else {
-        // if the callback function is successful, go to the next step
         setActiveStep(activeStep + 1);
-        // disable the next step button
         setNextDisabled(true);
       }
     } catch (error) {
@@ -148,7 +177,6 @@ const EssayTemplate = ({
         >
           {activeStep !== 0 && <StepDescription text={t(`${essay}.step-${activeStep + 1}-description`)} />}
           {
-            // to render the childrens with the props [ nextDisabled and setNextDisabled ]
             activeStep === childrens[activeStep]?.step ? (
               React.Children.map(childrens[activeStep].children, (child) => {
                 try {
@@ -156,11 +184,8 @@ const EssayTemplate = ({
                     nextDisabled,
                     setNextDisabled,
                   };
-                  // check if the child is a valid element
                   if (React.isValidElement(child))
-                    // clone the element and pass the props
                     return React.cloneElement(child, PROPS_TO_EXTEND);
-                  // if not, throw an error
                   else throw new Error('Invalid element');
                 } catch (error) {
                   toast.error(`${error}`);

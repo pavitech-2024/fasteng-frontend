@@ -1,9 +1,11 @@
 import Api from '@/api';
 import { MarshallIconPng } from '@/assets';
+import MaterialSelectionTable from '@/components/concrete/dosages/abcp/tables/material-selection-table';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { MarshallActions, MarshallData } from '@/stores/asphalt/marshall/marshall.store';
 import { t } from 'i18next';
+
 
 class Marshall_SERVICE implements IEssayService {
   info = {
@@ -55,11 +57,11 @@ class Marshall_SERVICE implements IEssayService {
           await this.submitGranulometryComposition(data as MarshallData, this.userId, null, isConsult);
           break;
         case 3:
-          // this.calculateBinderTrialData(
-          //   data as MarshallData['binderTrialData'],
-          //   data as MarshallData['granulometryCompositionData'],
-          //   data as MarshallData['materialSelectionData']
-          // );
+          this.calculateBinderTrialData(
+            data as MarshallData['binderTrialData'],
+            data as MarshallData['granulometryCompositionData'],
+            data as MarshallData['materialSelectionData']
+          );
           await this.submitBinderTrialData(data as MarshallData, this.userId, null, isConsult);
           break;
         case 4:
@@ -231,7 +233,7 @@ class Marshall_SERVICE implements IEssayService {
       // Verificamos se a soma total é 100.
       if (inputsSum !== 100) throw t('errors.invalid-inputs-sum');
 
-      const response = await Api.post(`${this.info.backend_path}/calculate-granulometry`, {
+      const response = await Api.post(`${this.info.backend_path}/calculate-step-3-data`, {
         dnitBands: dnitBandLetter,
         percentageInputs,
         tableRows: table_data.table_rows,
@@ -424,7 +426,7 @@ class Marshall_SERVICE implements IEssayService {
     maximumMixtureDensityData: MarshallData['maximumMixtureDensityData']
   ): Promise<any> => {
     const { aggregates } = step2Data;
-    const { missingSpecificMass, listOfSpecificGravities } = maximumMixtureDensityData;
+    const { missingSpecificMass } = maximumMixtureDensityData;
     const { newPercentOfDosage, trial } = step4Data;
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-dmt-data`, {
@@ -432,7 +434,6 @@ class Marshall_SERVICE implements IEssayService {
         percentsOfDosage: newPercentOfDosage,
         trial,
         missingSpecificGravity: missingSpecificMass,
-        listOfSpecificGravities
       });
 
       const { data, success, error } = response.data;
@@ -660,7 +661,6 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-
   setOptimumBinderExpectedParameters = async (
     step3Data: MarshallData['granulometryCompositionData'],
     maximumMixtureDensityData: MarshallData['maximumMixtureDensityData'],
@@ -749,7 +749,7 @@ class Marshall_SERVICE implements IEssayService {
   ): Promise<any> => {
     const { percentageInputs } = step3Data;
     const { listOfSpecificGravities } = maximumMixtureDensityData;
-    const { gmmInput, riceTest } = step8Data;
+    const { gmm, riceTest } = step8Data;
     const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
     let method;
     let result;
@@ -767,7 +767,7 @@ class Marshall_SERVICE implements IEssayService {
         percentsOfDosage: percentageInputs,
         confirmedPercentsOfDosage,
         optimumContent,
-        gmm: gmmInput,
+        gmm,
         valuesOfSpecificGravity: riceTest,
       });
 
@@ -790,11 +790,10 @@ class Marshall_SERVICE implements IEssayService {
     step7Data: MarshallData['optimumBinderContentData'],
     step8Data: MarshallData['confirmationCompressionData']
   ): Promise<any> => {
-    const { listOfSpecificGravities } = maximumMixtureDensityData;
+    const { temperatureOfWater, listOfSpecificGravities } = maximumMixtureDensityData;
     const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
     const { optimumBinder } = step8Data;
     const { result: resultNumber } = step8Data.confirmedSpecificGravity;
-    const {  temperatureOfWater } = step8Data;
     let result;
 
     const confirmVolumetricParameters = {
@@ -898,7 +897,113 @@ class Marshall_SERVICE implements IEssayService {
         throw error;
       }
     }
-  };
+  };saveFatigueCurve = async (data: { dosageId: string; ncp?: string; k1?: string; k2?: string; r2?: string; obs?: string }) => {
+  try {
+    
+    const { dosageId, ncp, k1, k2, r2, obs } = data;
+    
+    // 1. Verifique e limpe o ID
+    if (!dosageId || dosageId.trim() === '') {
+      throw new Error('ID da dosagem não fornecido');
+    }
+    
+    // 2. Encode o ID para URL
+    const encodedId = encodeURIComponent(dosageId.trim());
+    
+    // 3. Prepare os dados
+    const fatigueData = {
+      ncp: ncp && ncp.trim() !== '' ? Number(ncp) : undefined,
+      k1: k1 && k1.trim() !== '' ? Number(k1) : undefined,
+      k2: k2 && k2.trim() !== '' ? Number(k2) : undefined,
+      r2: r2 && r2.trim() !== '' ? Number(r2) : undefined,
+      observations: obs && obs.trim() !== '' ? obs.trim() : undefined,
+    };
+    
+    
+    // 4. Construa a URL
+    const basePath = this.info.backend_path; // 'asphalt/dosages/marshall'
+    const url = `${basePath}/${encodedId}/fatigue-curve`;
+    
+    // 5. Faça a requisição
+    const response = await Api.patch(url, fatigueData);
+    
+    
+    const { success, error } = response.data;
+    
+    if (!success) {
+      console.error('❌ Erro do backend:', error);
+      throw error?.message || error?.name || 'Erro ao salvar curva de fadiga';
+    }
+    
+    return response.data;
+    
+  } catch (error: any) {
+    console.error('💥 ERRO CRÍTICO ao salvar curva de fadiga:', error);
+    console.error('💥 Mensagem:', error.message);
+    console.error('💥 Stack:', error.stack);
+    
+    // Para erros de rede/404
+    if (error.response) {
+      console.error('💥 Status:', error.response.status);
+      console.error('💥 Data:', error.response.data);
+    }
+    
+    throw new Error(`Falha ao salvar curva de fadiga: ${error.message}`);
+  }
+};
+
+saveResilienceModule = async (data: { dosageId: string; k1?: string; k2?: string; k3?: string; r2?: string }) => {
+  try {
+    
+    const { dosageId, k1, k2, k3, r2 } = data;
+    
+    // 1. Verifique e limpe o ID
+    if (!dosageId || dosageId.trim() === '') {
+      throw new Error('ID da dosagem não fornecido');
+    }
+    
+    // 2. Encode o ID para URL
+    const encodedId = encodeURIComponent(dosageId.trim());
+    
+    // 3. Prepare os dados
+    const resilienceData = {
+      k1: k1 && k1.trim() !== '' ? Number(k1) : undefined,
+      k2: k2 && k2.trim() !== '' ? Number(k2) : undefined,
+      k3: k3 && k3.trim() !== '' ? Number(k3) : undefined,
+      r2: r2 && r2.trim() !== '' ? Number(r2) : undefined,
+    };
+    
+    
+    // 4. Construa a URL
+    const basePath = this.info.backend_path; // 'asphalt/dosages/marshall'
+    const url = `${basePath}/${encodedId}/resilience-module`;
+    
+    // 5. Faça a requisição
+    const response = await Api.patch(url, resilienceData);
+    
+    
+    const { success, error } = response.data;
+    
+    if (!success) {
+      console.error('❌ Erro do backend:', error);
+      throw error?.message || error?.name || 'Erro ao salvar módulo de resiliência';
+    }
+    
+    return response.data;
+    
+  } catch (error: any) {
+    console.error('💥 ERRO CRÍTICO ao salvar módulo de resiliência:', error);
+    console.error('💥 Mensagem:', error.message);
+    
+    if (error.response) {
+      console.error('💥 Status:', error.response.status);
+      console.error('💥 Data:', error.response.data);
+    }
+    
+    throw new Error(`Falha ao salvar módulo de resiliência: ${error.message}`);
+  }
+};
+
 }
 
 export default Marshall_SERVICE;

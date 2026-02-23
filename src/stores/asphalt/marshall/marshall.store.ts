@@ -3,8 +3,8 @@ import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
 export type GmmRows = {
   id: number;
-  Teor: number;
-  GMM: number;
+  insert: boolean;
+  value: number | null;
 };
 
 interface MarhsallGeneralData {
@@ -21,9 +21,10 @@ interface MarhsallGeneralData {
 
 interface MarshallMaterialSelectionData {
   aggregates: { _id: string; name: string }[];
-  binder: { _id: string, name: string};
+  binder: string;
 }
 
+// Atualize a interface MarshallGranulometryCompositionData
 interface MarshallGranulometryCompositionData {
   table_data: {
     table_rows: {
@@ -41,11 +42,23 @@ interface MarshallGranulometryCompositionData {
   percentageInputs: { [key: string]: number }[];
   sumOfPercents: number[];
   dnitBands: { higher: [string, number][]; lower: [string, number][] };
-  bands: { higherBand: [number]; lowerBand: [number]; letter };
+  bands: { 
+    higherBand: number[];  // ← Corrigido: não é [number], é number[]
+    lowerBand: number[];   // ← Corrigido: não é [number], é number[]
+    letter?: string;       // ← Adicionado opcional
+  };
   pointsOfCurve: any[];
   percentsOfMaterials: any[];
   graphData: any[];
   projections: any[];
+  
+  // 🟡 ADICIONE ESTA LINHA:
+  tableWithBands?: Array<{
+    sieve_label: string;
+    projection: string;
+    inferior: string;
+    superior: string;
+  }>;
 }
 
 interface MarshallBinderTrialData {
@@ -72,12 +85,12 @@ interface MarshallBinderTrialData {
 }
 
 interface MarshallMaximumMixtureDensityData {
-  method: string;
+  method: string | null;
   dmt: {
     [key: string]: number;
   }[];
   gmm: GmmRows[];
-  temperatureOfWater: number;
+  temperatureOfWater: number | null;
   missingSpecificMass: {
     name: string;
     _id: string;
@@ -194,10 +207,8 @@ interface OptimumBinderContentData {
 }
 
 interface ConfirmationCompressionData {
-  dmt: boolean;
-  gmm: boolean;
-  gmmInput: string;
-  temperatureOfWater: number;
+  dmt: number;
+  gmm: number;
   confirmedSpecificGravity: {
     result: number;
     type: string;
@@ -226,8 +237,8 @@ interface ConfirmationCompressionData {
     values: {
       volumeVoids: number;
       apparentBulkSpecificGravity: number;
-      vcb: number;
-      vam: number;
+      voidsFilledAsphalt: number;
+      aggregateVolumeVoids: number;
       ratioBitumenVoid: number;
       stability: number;
       fluency: number;
@@ -324,7 +335,33 @@ const initialState = {
   maximumMixtureDensityData: {
     method: null,
     dmt: [],
-    gmm: [],
+    gmm: [
+      {
+        id: 1,
+        insert: true,
+        value: null,
+      },
+      {
+        id: 2,
+        insert: true,
+        value: null,
+      },
+      {
+        id: 3,
+        insert: true,
+        value: null,
+      },
+      {
+        id: 4,
+        insert: true,
+        value: null,
+      },
+      {
+        id: 5,
+        insert: true,
+        value: null,
+      },
+    ],
     missingSpecificMass: [],
     temperatureOfWater: null,
     maxSpecificGravity: {
@@ -475,10 +512,8 @@ const initialState = {
     },
   },
   confirmationCompressionData: {
-    dmt: false,
-    gmm: false,
-    gmmInput: null,
-    temperatureOfWater: null,
+    dmt: null,
+    gmm: null,
     confirmedSpecificGravity: {
       result: null,
       type: null,
@@ -510,8 +545,8 @@ const initialState = {
       values: {
         volumeVoids: null,
         apparentBulkSpecificGravity: null,
-        vcb: null,
-        vam: null,
+        voidsFilledAsphalt: null,
+        aggregateVolumeVoids: null,
         ratioBitumenVoid: null,
         stability: null,
         fluency: null,

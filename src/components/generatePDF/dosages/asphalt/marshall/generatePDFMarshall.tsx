@@ -38,7 +38,9 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     const handleGetMaterialsData = async () => {
       try {
         const materialsIds = dosage.materialSelectionData.aggregates.map((material) => material._id);
-        materialsIds.unshift(dosage.materialSelectionData.binder._id);
+
+        materialsIds.unshift(dosage.materialSelectionData.binder);
+        materialsIds.unshift(dosage.materialSelectionData.binder);
         const response = await materialsService.getMaterials(materialsIds);
         setMaterialsData(response.data.materials);
         setMaterialsEssays(response.data.essays);
@@ -68,27 +70,28 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     handleAddPage(doc, image, currentY, t('marshall.dosage-pdf-title'));
 
     const summaryItems: SummaryItem[] = [
-      {
-        title: t('asphalt.dosages.marshall.general-data'),
-        page: 3,
-        key: 'generalData',
-      },
-      {
-        title: t('asphalt.dosages.marshall.materials-caracterization'),
-        page: 4,
-        key: 'materialsCaracterization',
-      },
-      {
-        title: t('asphalt.dosages.marshall.granulometry_composition'),
-        page: 5,
-        key: 'granulometryComposition',
-      },
-      {
-        title: t('asphalt.dosages.marshall.dosage_resume'),
-        page: 3,
-        key: 'dosageResume',
-      },
-    ];
+  {
+    key: 'generalData',
+    title: t('asphalt.dosages.marshall.general-data'),
+    page: 3,
+  },
+  {
+    key: 'materialsCharacterization',
+    title: t('asphalt.dosages.marshall.materials-caracterization'),
+    page: 4,
+  },
+  {
+    key: 'granulometryComposition',
+    title: t('asphalt.dosages.marshall.granulometry_composition'),
+    page: 5,
+  },
+  {
+    key: 'dosageResume',
+    title: t('asphalt.dosages.marshall.dosage_resume'),
+    page: 3,
+  },
+];
+
 
     const materialNames = dosage.materialSelectionData.aggregates.map((material) => material.name);
     const materialNamesWithBinder = [...materialNames, materialsEssays[0][0].data.generalData.material.name].join(', ');
@@ -161,7 +164,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     const materialsArray = materialsData.map((material, idx) => ({
       name: material.name,
-      type: t(`asphalt.dosages.marshall.${material.type}`),
+      type: material.type,
       creationDate: formatDate(material.createdAt.toString()),
       source: material.description.source ? material.description.source : '---',
       receivedDate: material.description.recieveDate
@@ -226,13 +229,13 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       {
         label: t('asphalt.dosages.vv'),
         value: (
-          dosage?.confirmationCompressionData.confirmedVolumetricParameters?.values?.volumeVoids * 100
+          dosage?.confirmationCompressionData.confirmedVolumetricParameters?.values?.aggregateVolumeVoids * 100
         ).toFixed(2),
         unity: '%',
       },
       {
         label: t('asphalt.dosages.vam'),
-        value: dosage?.confirmationCompressionData.confirmedVolumetricParameters?.values?.vam
+        value: dosage?.confirmationCompressionData.confirmedVolumetricParameters?.values?.voidsFilledAsphalt
           .toFixed(2)
           .toString(),
         unity: '%',
