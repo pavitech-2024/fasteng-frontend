@@ -14,8 +14,8 @@ class ADHESIVENESS_SERVICE implements IEssayService {
     steps: 3,
     backend_path: 'asphalt/essays/adhesiveness',
     standard: {
-      name: 'DNIT-ME 078/94',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/AdesividadeDnitme07894.b8c14e56.pdf',
+      name: 'DNIT-ME 452/2024',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_452_2024_me.pdf',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },
