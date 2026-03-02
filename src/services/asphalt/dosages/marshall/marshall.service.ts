@@ -868,39 +868,57 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  submitMarshalDosageData = async (
-    data: MarshallData,
-    userId: string,
-    user?: string,
-    isConsult?: boolean
-  ): Promise<void> => {
-    if (!isConsult) {
-      try {
-        const userData = userId ? userId : user;
+ submitMarshalDosageData = async (
+  data: MarshallData,
+  userId: string,
+  user?: string,
+  isConsult?: boolean
+): Promise<void> => {
+  console.log('🔵 submitMarshalDosageData CHAMADO!');
+  console.log('🔵 isConsult:', isConsult);
+  console.log('🔵 userId:', userId);
+  console.log('🔵 user:', user);
+  console.log('🔵 data:', data);
 
-        const marshallDosageData = {
-          ...data,
-          isConsult: null,
-        };
+  if (!isConsult) {
+    try {
+      const userData = userId ? userId : user;
+      console.log('🔵 userData:', userData);
+      
+      // 🔥 USA O NOVO ENDPOINT COMPLETE
+      console.log('🔵 Fazendo POST para:', `${this.info.backend_path}/complete/${userData}`);
+      
+      const response = await Api.post(
+        `${this.info.backend_path}/complete/${userData}`,
+        data
+      );
 
-        if (isConsult) marshallDosageData.isConsult = isConsult;
+      console.log('🔵 Resposta do backend:', response.data);
 
-        const response = await Api.post(
-          `${this.info.backend_path}/save-marshall-dosage/${userData}`,
-          marshallDosageData
-        );
-
-        const { success, error } = response.data;
-
-        if (success === false) throw error.name;
-      } catch (error) {
-        throw error;
+      const { success, error } = response.data;
+      if (!success) {
+        console.error('❌ Erro do backend:', error);
+        throw error?.name || 'Erro ao salvar dosagem completa';
       }
+      
+      console.log('✅ Dosagem salva com sucesso via complete!');
+    } catch (error) {
+      console.error('❌ Erro ao salvar dosagem completa:', error);
+      throw error;
     }
-  };saveFatigueCurve = async (data: { dosageId: string; ncp?: string; k1?: string; k2?: string; r2?: string; obs?: string }) => {
+  } else {
+    console.log('🟡 isConsult é true, não salvando');
+  }
+};
+saveFatigueCurve = async (data: { 
+  dosageId: string; 
+  k1?: number;  // ✅ Agora é number
+  k2?: number;  // ✅ Agora é number
+  observacoes?: string;
+}) => {
   try {
     
-    const { dosageId, ncp, k1, k2, r2, obs } = data;
+    const { dosageId, k1, k2, observacoes } = data;
     
     // 1. Verifique e limpe o ID
     if (!dosageId || dosageId.trim() === '') {
@@ -910,23 +928,19 @@ class Marshall_SERVICE implements IEssayService {
     // 2. Encode o ID para URL
     const encodedId = encodeURIComponent(dosageId.trim());
     
-    // 3. Prepare os dados
+    // 3. Prepare os dados - SEM TRIM() PARA NÚMEROS!
     const fatigueData = {
-      ncp: ncp && ncp.trim() !== '' ? Number(ncp) : undefined,
-      k1: k1 && k1.trim() !== '' ? Number(k1) : undefined,
-      k2: k2 && k2.trim() !== '' ? Number(k2) : undefined,
-      r2: r2 && r2.trim() !== '' ? Number(r2) : undefined,
-      observations: obs && obs.trim() !== '' ? obs.trim() : undefined,
+      k1: k1 !== undefined && !isNaN(k1) ? k1 : undefined,  // ✅ Verifica se é número válido
+      k2: k2 !== undefined && !isNaN(k2) ? k2 : undefined,  // ✅ Verifica se é número válido
+      observacoes: observacoes && observacoes.trim() !== '' ? observacoes.trim() : undefined, // ✅ trim() só em string
     };
     
-    
     // 4. Construa a URL
-    const basePath = this.info.backend_path; // 'asphalt/dosages/marshall'
+    const basePath = this.info.backend_path;
     const url = `${basePath}/${encodedId}/fatigue-curve`;
     
     // 5. Faça a requisição
     const response = await Api.patch(url, fatigueData);
-    
     
     const { success, error } = response.data;
     
@@ -939,23 +953,20 @@ class Marshall_SERVICE implements IEssayService {
     
   } catch (error: any) {
     console.error('💥 ERRO CRÍTICO ao salvar curva de fadiga:', error);
-    console.error('💥 Mensagem:', error.message);
-    console.error('💥 Stack:', error.stack);
-    
-    // Para erros de rede/404
-    if (error.response) {
-      console.error('💥 Status:', error.response.status);
-      console.error('💥 Data:', error.response.data);
-    }
-    
     throw new Error(`Falha ao salvar curva de fadiga: ${error.message}`);
   }
 };
 
-saveResilienceModule = async (data: { dosageId: string; k1?: string; k2?: string; k3?: string; r2?: string }) => {
+// Módulo de Resiliência - CORRIGIDO (agora com números)
+saveResilienceModule = async (data: { 
+  dosageId: string; 
+  moduloMedio?: number;      // ✅ Agora é number
+  moduloInstantaneo?: number; // ✅ Agora é number
+  observacoes?: string;
+}) => {
   try {
     
-    const { dosageId, k1, k2, k3, r2 } = data;
+    const { dosageId, moduloMedio, moduloInstantaneo, observacoes } = data;
     
     // 1. Verifique e limpe o ID
     if (!dosageId || dosageId.trim() === '') {
@@ -965,22 +976,19 @@ saveResilienceModule = async (data: { dosageId: string; k1?: string; k2?: string
     // 2. Encode o ID para URL
     const encodedId = encodeURIComponent(dosageId.trim());
     
-    // 3. Prepare os dados
+    // 3. Prepare os dados - SEM TRIM() PARA NÚMEROS!
     const resilienceData = {
-      k1: k1 && k1.trim() !== '' ? Number(k1) : undefined,
-      k2: k2 && k2.trim() !== '' ? Number(k2) : undefined,
-      k3: k3 && k3.trim() !== '' ? Number(k3) : undefined,
-      r2: r2 && r2.trim() !== '' ? Number(r2) : undefined,
+      moduloMedio: moduloMedio !== undefined && !isNaN(moduloMedio) ? moduloMedio : undefined,  // ✅ Verifica se é número válido
+      moduloInstantaneo: moduloInstantaneo !== undefined && !isNaN(moduloInstantaneo) ? moduloInstantaneo : undefined, // ✅ Verifica se é número válido
+      observacoes: observacoes && observacoes.trim() !== '' ? observacoes.trim() : undefined, // ✅ trim() só em string
     };
     
-    
     // 4. Construa a URL
-    const basePath = this.info.backend_path; // 'asphalt/dosages/marshall'
+    const basePath = this.info.backend_path;
     const url = `${basePath}/${encodedId}/resilience-module`;
     
     // 5. Faça a requisição
     const response = await Api.patch(url, resilienceData);
-    
     
     const { success, error } = response.data;
     
@@ -993,13 +1001,6 @@ saveResilienceModule = async (data: { dosageId: string; k1?: string; k2?: string
     
   } catch (error: any) {
     console.error('💥 ERRO CRÍTICO ao salvar módulo de resiliência:', error);
-    console.error('💥 Mensagem:', error.message);
-    
-    if (error.response) {
-      console.error('💥 Status:', error.response.status);
-      console.error('💥 Data:', error.response.data);
-    }
-    
     throw new Error(`Falha ao salvar módulo de resiliência: ${error.message}`);
   }
 };

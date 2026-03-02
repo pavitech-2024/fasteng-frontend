@@ -279,7 +279,7 @@ const Marshall_Step8_ConfirmCompression = ({
     },
     {
       field: 'stability',
-      headerName: t('asphalt.dosages.stability') + ' (N)',
+      headerName: t('asphalt.dosages.stability') + ' (kgf)',
       renderCell: ({ row }) => {
         const { id } = row;
         const index = data?.optimumBinder?.findIndex((r) => r.id === id) || 0;

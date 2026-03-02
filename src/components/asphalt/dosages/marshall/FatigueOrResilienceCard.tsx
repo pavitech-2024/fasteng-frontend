@@ -1,17 +1,34 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
-import { useState, useEffect } from 'react'; // ✅ Adicionar useEffect
+import { useState, useEffect } from 'react';
+
+// ✅ Definir tipos localmente se não quiser importar
+type FatigueCurveData = {
+  k1?: number;
+  k2?: number;
+  observacoes?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
+type ResilienceModuleData = {
+  moduloMedio?: number;
+  moduloInstantaneo?: number;
+  observacoes?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
 
 type Props = {
   title: string;
-  fields: { name: string; label: string }[];
-  initialValues?: Record<string, string>; // ✅ NOVO: valores iniciais
+  fields: { name: keyof FatigueCurveData | keyof ResilienceModuleData; label: string }[];
+  initialValues?: Record<string, any>;
   onConfirm: (data: Record<string, string>) => void;
 };
 
 const FatigueOrResilienceCard = ({ title, fields, initialValues = {}, onConfirm }: Props) => {
+  // ... resto do componente igual
   const [values, setValues] = useState<Record<string, string>>({});
 
-  // ✅ NOVO: Carregar valores iniciais
   useEffect(() => {
     if (initialValues && Object.keys(initialValues).length > 0) {
       const formattedValues: Record<string, string> = {};
@@ -69,17 +86,28 @@ const FatigueOrResilienceCard = ({ title, fields, initialValues = {}, onConfirm 
           gap: '16px',
         }}
       >
-        {fields.map((field) => (
-          <TextField
-            key={field.name}
-            label={field.label}
-            variant="standard"
-            fullWidth
-            value={values[field.name] || ''}
-            onChange={(e) => handleChange(field.name, e.target.value)}
-            type={['ncp', 'k1', 'k2', 'k3', 'r2'].includes(field.name) ? 'number' : 'text'}
-          />
-        ))}
+        {fields.map((field) => {
+          let inputType = 'text';
+          if (field.name === 'k1' || field.name === 'k2' || 
+              field.name === 'moduloMedio' || field.name === 'moduloInstantaneo') {
+            inputType = 'number';
+          }
+
+          return (
+            <TextField
+              key={String(field.name)}
+              label={field.label}
+              variant="standard"
+              fullWidth
+              value={values[String(field.name)] || ''}
+              onChange={(e) => handleChange(String(field.name), e.target.value)}
+              type={inputType}
+              multiline={field.name === 'observacoes'}
+              rows={field.name === 'observacoes' ? 3 : 1}
+              inputProps={inputType === 'number' ? { step: 'any' } : undefined}
+            />
+          );
+        })}
       </Box>
 
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>

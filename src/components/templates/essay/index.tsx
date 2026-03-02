@@ -1,4 +1,4 @@
-// No EssayTemplate.tsx - versão RADICAL (SEM TIMEOUT)
+// No EssayTemplate.tsx - ATUALIZADO
 
 import React, { useState, useEffect } from 'react';
 import { Stepper } from '../../atoms/stepper';
@@ -13,11 +13,15 @@ import Header from '@/components/organisms/header';
 import Footer from '@/components/organisms/footer';
 import BodyEssay from '@/components/organisms/bodyEssay';
 import { useSessionStorage } from '../../../utils/hooks/useSessionStorage';
+import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 
 export interface EssayTemplateProps {
   essayInfo: IEssayService['info'];
   childrens: { step: number; children: JSX.Element; data: unknown }[];
   nextCallback: (step: number, data: unknown) => Promise<void>;
+  // 🔥 NOVAS PROPS
+  marshallService?: Marshall_SERVICE;
+  userId?: string;
 }
 
 export interface EssayPageProps {
@@ -25,17 +29,12 @@ export interface EssayPageProps {
   setNextDisabled?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-// 🔥 FLAG GLOBAL NO WINDOW (imune a reset)
-declare global {
-  interface Window {
-    __MARSHALL_REDIRECTED__?: boolean;
-  }
-}
-
 const EssayTemplate = ({
   essayInfo: { stepperData, icon, key, standard },
   childrens,
   nextCallback,
+  marshallService, // 👈 RECEBE
+  userId, // 👈 RECEBE
 }: EssayTemplateProps) => {
   const router = useRouter();
   const app = router.pathname.split('/')[1];
@@ -49,15 +48,6 @@ const EssayTemplate = ({
   const [isEssaySaved, setIsEssaySaved] = useState(false);
   const [nextDisabled, setNextDisabled] = useState(true);
 
-  // 🔥 Inicializa a flag global se não existir
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if (window.__MARSHALL_REDIRECTED__ === undefined) {
-        window.__MARSHALL_REDIRECTED__ = false;
-      }
-    }
-  }, []);
-
   async function handleNextClick() {
     if (isEssaySaved && childrens.length - 1 === activeStep) {
       childrens.forEach(({ children }) => {
@@ -69,10 +59,6 @@ const EssayTemplate = ({
       sessionStorage.clear();
       setIsEssaySaved(false);
       setActiveStep(0);
-      // 🔥 Reseta flag global
-      if (typeof window !== 'undefined') {
-        window.__MARSHALL_REDIRECTED__ = false;
-      }
       return;
     }
 
@@ -95,34 +81,17 @@ const EssayTemplate = ({
         closeButton: true,
       });
 
-      // 🔥 CASO ESPECIAL: MARSHALL STEP 7 - COM FLAG GLOBAL
-      if (essay === 'marshall' && activeStep === 7) {
-        console.log('🔸 Marshall Step 7 - hasRedirected (global):', window.__MARSHALL_REDIRECTED__);
-        
-        if (!window.__MARSHALL_REDIRECTED__) {
-          console.log('🔸 PRIMEIRA E ÚNICA VEZ - Vai redirecionar');
-          
-          window.__MARSHALL_REDIRECTED__ = true;
-          setActiveStep(activeStep + 1);
-          setNextDisabled(true);
-          
-          // 🔥 REDIRECIONAMENTO IMEDIATO - SEM TIMEOUT
-          console.log('🔸 Redirecionando para consulta');
-          router.push('/asphalt/dosages/marshall/consult');
-          
-          return;
-        } else {
-          console.log('🔸 Já redirecionou - só avança normal sem redirecionar');
-          setActiveStep(activeStep + 1);
-          setNextDisabled(true);
-          
-          // 🔥 IMPORTANTE: NÃO redireciona!
-          return;
-        }
-      }
-
-      // FLUXO NORMAL PARA OUTROS STEPS
+      // 🔥 AQUI - Se for o último passo (isSaving = true)
       if (isSaving) {
+        // Pega os dados COMPLETOS
+        const completeData = childrens[activeStep]['data'];
+        
+        // 👇 CHAMA A ROTA NOVA (se for Marshall)
+        if (essay === 'marshall' && marshallService && userId) {
+          console.log('🔸 Salvando dosagem completa...');
+          await marshallService.submitMarshalDosageData(completeData as any, userId);
+        }
+        
         setIsEssaySaved(true);
       } else {
         setActiveStep(activeStep + 1);
