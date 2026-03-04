@@ -54,28 +54,33 @@ const GenerateSuperpaveDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     handleAddPage(doc, image, 30, t('superpave.dosage-pdf-title'));
 
-    const summaryItems: SummaryItem[] = [
-      {
-        title: t('dosages.report.general-data'),
-        page: 3,
-      },
-      {
-        title: t('dosages.report.materials-caracterization'),
-        page: 4,
-      },
-      {
-        title: t('dosages.report.results'),
-        page: 3,
-      },
-      {
-        title: t('asphalt.dosages.superpave.asphalt-mass-quantitative'),
-        page: 3,
-      },
-      {
-        title: t('asphalt.dosages.binder-volumetric-mechanic-params'),
-        page: 3,
-      },
-    ];
+   const summaryItems: SummaryItem[] = [
+  {
+    key: 'generalData',
+    title: t('dosages.report.general-data'),
+    page: 3,
+  },
+  {
+    key: 'materialsCharacterization',
+    title: t('dosages.report.materials-caracterization'),
+    page: 4,
+  },
+  {
+    key: 'results',
+    title: t('dosages.report.results'),
+    page: 5,
+  },
+  {
+    key: 'asphaltMassQuantitative',
+    title: t('asphalt.dosages.superpave.asphalt-mass-quantitative'),
+    page: 6,
+  },
+  {
+    key: 'binderVolumetricParams',
+    title: t('asphalt.dosages.binder-volumetric-mechanic-params'),
+    page: 7,
+  },
+];
 
     const materialNames = materialsData.map((material) => material.name).join(', ');
 
