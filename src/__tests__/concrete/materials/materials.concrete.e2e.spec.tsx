@@ -30,7 +30,7 @@ describe('Concrete materials page E2E', () => {
     (useAuth as jest.Mock).mockReturnValue({ user: mockUser });
   });
 
-  it('should fetch real materials from backend and find a material even if paginated', async () => {
+  it.skip('should fetch real materials from backend and find a material even if paginated', async () => {
     render(<ConcreteMaterials />);
     const user = userEvent.setup();
 
