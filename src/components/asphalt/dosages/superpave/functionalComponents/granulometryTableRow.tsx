@@ -2,6 +2,23 @@ import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import AsphaltGranulometry_step2Table from '@/components/asphalt/essays/granulometry/tables/step2-table.granulometry';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { Sieve } from '@/interfaces/common';
+
+interface TableDataRow {
+  passant: number;
+  retained: number;
+  sieve_label: string;
+  sieve_value: number;
+}
+
+interface AggregateRows {
+  bottom: number;
+  material: AsphaltMaterial;
+  material_mass: number;
+  sieve_series: Sieve[];
+  table_data: TableDataRow[]
+}
 
 const GranulometryRow = ({
   idx,
@@ -15,6 +32,7 @@ const GranulometryRow = ({
   t,
   aggregatesColumns,
 }) => {
+
   const tableRows = useMemo(() => {
     return (
       aggregatesRows[idx]?.table_data.map((row) => ({

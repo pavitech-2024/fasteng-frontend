@@ -215,6 +215,7 @@ class Superpave_SERVICE implements IEssayService {
         const granulometryEssayData = {
           granulometrys: data.granulometryEssayData.granulometrys,
           viscosity: data.granulometryEssayData.viscosity,
+          isSuperpave: true,
         };
 
         const response = await Api.post(
