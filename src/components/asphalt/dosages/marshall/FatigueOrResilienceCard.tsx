@@ -1,7 +1,7 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
 
-// ✅ Definir tipos localmente se não quiser importar
+// ✅ Definir tipos localmente
 type FatigueCurveData = {
   k1?: number;
   k2?: number;
@@ -26,9 +26,9 @@ type Props = {
 };
 
 const FatigueOrResilienceCard = ({ title, fields, initialValues = {}, onConfirm }: Props) => {
-  // ... resto do componente igual
   const [values, setValues] = useState<Record<string, string>>({});
 
+  // Carregar valores iniciais
   useEffect(() => {
     if (initialValues && Object.keys(initialValues).length > 0) {
       const formattedValues: Record<string, string> = {};
@@ -42,13 +42,19 @@ const FatigueOrResilienceCard = ({ title, fields, initialValues = {}, onConfirm 
   }, [initialValues]);
 
   const handleChange = (name: string, value: string) => {
-    setValues((prev) => ({ ...prev, [name]: value }));
+    setValues((prev) => {
+      const newValues = { ...prev, [name]: value };
+      return newValues;
+    });
   };
 
   const handleConfirm = () => {
+    
     const hasValues = Object.values(values).some(value => value && value.trim() !== '');
+    
     if (hasValues) {
       onConfirm(values);
+    } else {
     }
   };
 
@@ -87,6 +93,7 @@ const FatigueOrResilienceCard = ({ title, fields, initialValues = {}, onConfirm 
         }}
       >
         {fields.map((field) => {
+          // Determinar o tipo de input baseado no nome do campo
           let inputType = 'text';
           if (field.name === 'k1' || field.name === 'k2' || 
               field.name === 'moduloMedio' || field.name === 'moduloInstantaneo') {

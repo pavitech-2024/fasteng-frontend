@@ -912,95 +912,150 @@ class Marshall_SERVICE implements IEssayService {
 };
 saveFatigueCurve = async (data: { 
   dosageId: string; 
-  k1?: number;  // ✅ Agora é number
-  k2?: number;  // ✅ Agora é number
+  k1?: number;
+  k2?: number;
   observacoes?: string;
 }) => {
+  console.log('🔵 [FATIGUE SERVICE] INÍCIO - dados recebidos:', JSON.stringify(data, null, 2));
+  
   try {
-    
     const { dosageId, k1, k2, observacoes } = data;
+    
+    console.log('🟡 [FATIGUE SERVICE] dosageId:', dosageId);
+    console.log('🟡 [FATIGUE SERVICE] k1:', k1, '| tipo:', typeof k1);
+    console.log('🟡 [FATIGUE SERVICE] k2:', k2, '| tipo:', typeof k2);
+    console.log('🟡 [FATIGUE SERVICE] observacoes:', observacoes, '| tipo:', typeof observacoes);
     
     // 1. Verifique e limpe o ID
     if (!dosageId || dosageId.trim() === '') {
+      console.error('🔴 [FATIGUE SERVICE] dosageId inválido:', dosageId);
       throw new Error('ID da dosagem não fornecido');
     }
     
     // 2. Encode o ID para URL
     const encodedId = encodeURIComponent(dosageId.trim());
+    console.log('🟡 [FATIGUE SERVICE] encodedId:', encodedId);
     
-    // 3. Prepare os dados - SEM TRIM() PARA NÚMEROS!
+    // 3. Prepare os dados
     const fatigueData = {
-      k1: k1 !== undefined && !isNaN(k1) ? k1 : undefined,  // ✅ Verifica se é número válido
-      k2: k2 !== undefined && !isNaN(k2) ? k2 : undefined,  // ✅ Verifica se é número válido
-      observacoes: observacoes && observacoes.trim() !== '' ? observacoes.trim() : undefined, // ✅ trim() só em string
+      k1: k1 !== undefined && !isNaN(k1) ? k1 : undefined,
+      k2: k2 !== undefined && !isNaN(k2) ? k2 : undefined,
+      observacoes: observacoes && observacoes.trim() !== '' ? observacoes.trim() : undefined,
     };
+    
+    console.log('🟡 [FATIGUE SERVICE] fatigueData preparado:', JSON.stringify(fatigueData, null, 2));
     
     // 4. Construa a URL
     const basePath = this.info.backend_path;
     const url = `${basePath}/${encodedId}/fatigue-curve`;
     
+    console.log('🟡 [FATIGUE SERVICE] URL completa:', url);
+    console.log('🟢 [FATIGUE SERVICE] Enviando requisição PATCH...');
+    
     // 5. Faça a requisição
     const response = await Api.patch(url, fatigueData);
+    
+    console.log('🟢 [FATIGUE SERVICE] Resposta recebida - status:', response.status);
+    console.log('🟢 [FATIGUE SERVICE] Dados da resposta:', JSON.stringify(response.data, null, 2));
     
     const { success, error } = response.data;
     
     if (!success) {
-      console.error('❌ Erro do backend:', error);
+      console.error('🔴 [FATIGUE SERVICE] Erro do backend:', error);
       throw error?.message || error?.name || 'Erro ao salvar curva de fadiga';
     }
     
+    console.log('✅ [FATIGUE SERVICE] Sucesso!');
     return response.data;
     
   } catch (error: any) {
-    console.error('💥 ERRO CRÍTICO ao salvar curva de fadiga:', error);
+    console.error('💥 [FATIGUE SERVICE] ERRO CRÍTICO:');
+    console.error('💥 Mensagem:', error.message);
+    console.error('💥 Stack:', error.stack);
+    
+    if (error.response) {
+      console.error('💥 Status da resposta:', error.response.status);
+      console.error('💥 Dados da resposta:', error.response.data);
+      console.error('💥 Headers:', error.response.headers);
+    }
+    
+    if (error.request) {
+      console.error('💥 Request foi feito mas sem resposta:', error.request);
+    }
+    
     throw new Error(`Falha ao salvar curva de fadiga: ${error.message}`);
   }
 };
 
-// Módulo de Resiliência - CORRIGIDO (agora com números)
+// Módulo de Resiliência - COM LOGS
 saveResilienceModule = async (data: { 
   dosageId: string; 
-  moduloMedio?: number;      // ✅ Agora é number
-  moduloInstantaneo?: number; // ✅ Agora é number
+  moduloMedio?: number;
+  moduloInstantaneo?: number;
   observacoes?: string;
 }) => {
+  console.log('🔵 [RESILIENCE SERVICE] INÍCIO - dados recebidos:', JSON.stringify(data, null, 2));
+  
   try {
-    
     const { dosageId, moduloMedio, moduloInstantaneo, observacoes } = data;
+    
+    console.log('🟡 [RESILIENCE SERVICE] dosageId:', dosageId);
+    console.log('🟡 [RESILIENCE SERVICE] moduloMedio:', moduloMedio, '| tipo:', typeof moduloMedio);
+    console.log('🟡 [RESILIENCE SERVICE] moduloInstantaneo:', moduloInstantaneo, '| tipo:', typeof moduloInstantaneo);
+    console.log('🟡 [RESILIENCE SERVICE] observacoes:', observacoes, '| tipo:', typeof observacoes);
     
     // 1. Verifique e limpe o ID
     if (!dosageId || dosageId.trim() === '') {
+      console.error('🔴 [RESILIENCE SERVICE] dosageId inválido:', dosageId);
       throw new Error('ID da dosagem não fornecido');
     }
     
     // 2. Encode o ID para URL
     const encodedId = encodeURIComponent(dosageId.trim());
+    console.log('🟡 [RESILIENCE SERVICE] encodedId:', encodedId);
     
-    // 3. Prepare os dados - SEM TRIM() PARA NÚMEROS!
+    // 3. Prepare os dados
     const resilienceData = {
-      moduloMedio: moduloMedio !== undefined && !isNaN(moduloMedio) ? moduloMedio : undefined,  // ✅ Verifica se é número válido
-      moduloInstantaneo: moduloInstantaneo !== undefined && !isNaN(moduloInstantaneo) ? moduloInstantaneo : undefined, // ✅ Verifica se é número válido
-      observacoes: observacoes && observacoes.trim() !== '' ? observacoes.trim() : undefined, // ✅ trim() só em string
+      moduloMedio: moduloMedio !== undefined && !isNaN(moduloMedio) ? moduloMedio : undefined,
+      moduloInstantaneo: moduloInstantaneo !== undefined && !isNaN(moduloInstantaneo) ? moduloInstantaneo : undefined,
+      observacoes: observacoes && observacoes.trim() !== '' ? observacoes.trim() : undefined,
     };
+    
+    console.log('🟡 [RESILIENCE SERVICE] resilienceData preparado:', JSON.stringify(resilienceData, null, 2));
     
     // 4. Construa a URL
     const basePath = this.info.backend_path;
     const url = `${basePath}/${encodedId}/resilience-module`;
     
+    console.log('🟡 [RESILIENCE SERVICE] URL completa:', url);
+    console.log('🟢 [RESILIENCE SERVICE] Enviando requisição PATCH...');
+    
     // 5. Faça a requisição
     const response = await Api.patch(url, resilienceData);
+    
+    console.log('🟢 [RESILIENCE SERVICE] Resposta recebida - status:', response.status);
+    console.log('🟢 [RESILIENCE SERVICE] Dados da resposta:', JSON.stringify(response.data, null, 2));
     
     const { success, error } = response.data;
     
     if (!success) {
-      console.error('❌ Erro do backend:', error);
+      console.error('🔴 [RESILIENCE SERVICE] Erro do backend:', error);
       throw error?.message || error?.name || 'Erro ao salvar módulo de resiliência';
     }
     
+    console.log('✅ [RESILIENCE SERVICE] Sucesso!');
     return response.data;
     
   } catch (error: any) {
-    console.error('💥 ERRO CRÍTICO ao salvar módulo de resiliência:', error);
+    console.error('💥 [RESILIENCE SERVICE] ERRO CRÍTICO:');
+    console.error('💥 Mensagem:', error.message);
+    console.error('💥 Stack:', error.stack);
+    
+    if (error.response) {
+      console.error('💥 Status da resposta:', error.response.status);
+      console.error('💥 Dados da resposta:', error.response.data);
+    }
+    
     throw new Error(`Falha ao salvar módulo de resiliência: ${error.message}`);
   }
 };
