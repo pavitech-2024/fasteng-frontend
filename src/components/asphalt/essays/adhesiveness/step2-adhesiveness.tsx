@@ -39,12 +39,6 @@ const ADHESIVENESS_Step2 = ({
 
   const [inputs, setInputs] = useState([
     {
-      label: t('adhesiveness.binders'),
-      key: 'binder',
-      value: null as null | string,
-      required: true,
-    },
-    {
       label: t('adhesiveness.filmDisplacement'),
       key: 'filmDisplacement',
       value: null as boolean | null,
@@ -125,7 +119,7 @@ const ADHESIVENESS_Step2 = ({
                 }
                 required={input.required}
                 size="medium"
-                callback={(value: string | boolean) => {
+                callback={(value: boolean) => {
                   setData({ step: 1, key: input.key, value: input.key === 'binder' ? value : value });
                   const updatedInputs = [...inputs];
                   updatedInputs[index].value = value;
