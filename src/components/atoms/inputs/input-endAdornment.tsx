@@ -40,7 +40,7 @@ const InputEndAdornment = ({
 }: Props) => {
   return (
     <FormControl focused={focused} variant={variant} key={key} fullWidth={fullWidth}>
-      {label ? <InputLabel htmlFor={`outlined-adornment-${key}`}>{label}</InputLabel> : <></>}
+      {label && <InputLabel htmlFor={`outlined-adornment-${key}`}>{label}</InputLabel>}
       <Input
         fullWidth={fullWidth}
         onBlur={onBlur}

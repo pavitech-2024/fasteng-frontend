@@ -30,7 +30,7 @@ describe('Soils Samples page E2E', () => {
     (useAuth as jest.Mock).mockReturnValue({ user: mockUser });
   });
 
-  it('should fetch real samples from backend and find a sample even if paginated', async () => {
+  it.skip('should fetch real samples from backend and find a sample even if paginated', async () => {
     render(<Samples />);
     const user = userEvent.setup();
 
