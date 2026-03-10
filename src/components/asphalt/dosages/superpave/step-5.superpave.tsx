@@ -280,13 +280,13 @@ const recalculatePercentagesWithNewBinder = (
             data
           );
 
-          const updatedRows = response.granulometryComposition.map((composition, index) => ({
-            id: index,
-            granulometricComposition: compositions[index],
-            combinedGsb: composition.combinedGsb ? composition.combinedGsb.toFixed(2) : '',
-            combinedGsa: composition.combinedGsa ? composition.combinedGsa.toFixed(2) : '',
-            gse: composition.gse || composition.gse === 0 ? composition.gse.toFixed(2) : '',
-          }));
+        const updatedRows = response.granulometryComposition.map((composition, index) => ({
+  id: index,
+  granulometricComposition: compositions[index],
+  combinedGsb: composition.combinedGsb ? composition.combinedGsb.toFixed(3) : '', // 3 casas decimais
+  combinedGsa: composition.combinedGsa ? composition.combinedGsa.toFixed(3) : '', // 3 casas decimais
+  gse: composition.gse || composition.gse === 0 ? composition.gse.toFixed(3) : '', // 3 casas decimais
+}));
 
           setRows(updatedRows);
 
