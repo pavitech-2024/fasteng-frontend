@@ -79,6 +79,28 @@ const Superpave_Step3_GranulometryResults = ({
 
   setNextDisabled(false);
 
+  // Função para organizar os dados de temperatura na ordem correta
+  const getTemperatureDataInOrder = (temperatureData: any) => {
+    const orderedData = [];
+    
+    // Primeiro Lower (Inferior)
+    if (temperatureData.lower !== undefined) {
+      orderedData.push({ key: 'Inferior', value: temperatureData.lower });
+    }
+    
+    // Depois Average (Média)
+    if (temperatureData.average !== undefined) {
+      orderedData.push({ key: 'Média', value: temperatureData.average });
+    }
+    
+    // Por último Higher (Superior)
+    if (temperatureData.higher !== undefined) {
+      orderedData.push({ key: 'Superior', value: temperatureData.higher });
+    }
+    
+    return orderedData;
+  };
+
   return (
     <>
       <Box>
@@ -130,7 +152,7 @@ const Superpave_Step3_GranulometryResults = ({
                       title: t('granulometry-asphalt.granulometry'),
                       backgroundColor: 'transparent',
                       pointSize: '5',
-                      curveType: 'function', // ← ADICIONE ESTA LINHA
+                      curveType: 'function',
                       hAxis: {
                         title: `${t('granulometry-asphalt.sieve-openness') + ' (mm)'}`,
                         type: 'number',
@@ -152,24 +174,25 @@ const Superpave_Step3_GranulometryResults = ({
 
         {materialsToShow.find((item) => item === data.viscosity.material.name) && data.viscosity.result && (
           <FlexColumnBorder title={`${data.viscosity.material.name} | ${data.viscosity.material.type}`} open={true}>
-            <Typography variant="h6">{t('viscosity-rotational.compression-temperature')}</Typography>
+            {/* Mudamos o TÍTULO para "Temperatura de Compactação" mas mantivemos a propriedade compressionTemperatureRange */}
+            <Typography variant="h6">Temperatura de Compactação</Typography>
             <Result_CardContainer sx={{ marginBottom: '2rem' }}>
-              {Object.entries(data.viscosity.result.result.compressionTemperatureRange).map(([key, value], index) => (
-                <Result_Card key={index} label={key} value={value.toFixed(2).toString()} unity={'°C'} />
+              {getTemperatureDataInOrder(data.viscosity.result.result.compressionTemperatureRange).map((item, index) => (
+                <Result_Card key={index} label={item.key} value={item.value.toFixed(2).toString()} unity={'°C'} />
               ))}
             </Result_CardContainer>
 
             <Typography variant="h6">{t('viscosity-rotational.aggregate-temperature')}</Typography>
             <Result_CardContainer sx={{ marginBottom: '2rem' }}>
-              {Object.entries(data.viscosity.result.result.aggregateTemperatureRange).map(([key, value], index) => (
-                <Result_Card key={index} label={key} value={value.toFixed(2).toString()} unity={'°C'} />
+              {getTemperatureDataInOrder(data.viscosity.result.result.aggregateTemperatureRange).map((item, index) => (
+                <Result_Card key={index} label={item.key} value={item.value.toFixed(2).toString()} unity={'°C'} />
               ))}
             </Result_CardContainer>
 
             <Typography variant="h6">{t('viscosity-rotational.machining-temperature')}</Typography>
             <Result_CardContainer sx={{ marginBottom: '2rem' }}>
-              {Object.entries(data.viscosity.result.result.machiningTemperatureRange).map(([key, value], index) => (
-                <Result_Card key={index} label={key} value={value.toFixed(2).toString()} unity={'°C'} />
+              {getTemperatureDataInOrder(data.viscosity.result.result.machiningTemperatureRange).map((item, index) => (
+                <Result_Card key={index} label={item.key} value={item.value.toFixed(2).toString()} unity={'°C'} />
               ))}
             </Result_CardContainer>
 
@@ -183,10 +206,10 @@ const Superpave_Step3_GranulometryResults = ({
               options={{
                 backgroundColor: 'transparent',
                 hAxis: {
-                  title: `${t('asphalt.essays.viscosityRotational.temperature')} C`, // Umidade %
+                  title: `${t('asphalt.essays.viscosityRotational.temperature')} C`,
                 },
                 vAxis: {
-                  title: `${t('asphalt.essays.viscosityRotational.viscosity')} (SSF)`, // Densidade do solo seco - g/cm³
+                  title: `${t('asphalt.essays.viscosityRotational.viscosity')} (SSF)`,
                   maxValue: '1.5',
                 },
                 explorer: {

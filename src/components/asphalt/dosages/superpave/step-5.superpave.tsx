@@ -226,6 +226,49 @@ const Superpave_Step5_InitialBinder = ({
     )
   );
 
+const recalculatePercentagesWithNewBinder = (
+  percentsWithBinder: number[], // porcentagens que JÁ INCLUEM o ligante
+  currentBinderPercent: number, // teor de ligante atual
+  newBinderPercent: number      // novo teor de ligante desejado
+): number[] => {
+  
+  // 1. Primeiro, extrai apenas as porcentagens dos agregados (sem o ligante)
+  const aggregatePercents = percentsWithBinder.map(p => p); // cópia do array
+  
+  // 2. Calcula a soma atual dos agregados (deve ser 100 - binder%)
+  const currentAggregatesSum = aggregatePercents.reduce((sum, p) => sum + p, 0);
+  const expectedSum = 100 - currentBinderPercent;
+  
+  console.log('Debug recálculo:', {
+    percentsWithBinder,
+    currentBinderPercent,
+    currentAggregatesSum,
+    expectedSum,
+    difference: Math.abs(currentAggregatesSum - expectedSum)
+  });
+  
+  // Se a diferença for muito grande, algo está errado
+  if (Math.abs(currentAggregatesSum - expectedSum) > 0.1) {
+    console.warn('Soma dos agregados não corresponde a 100 - binder%');
+  }
+  
+  // 3. Calcula a nova soma desejada para agregados
+  const newAggregatesSum = 100 - newBinderPercent;
+  
+  // 4. Redistribui proporcionalmente
+  const newAggregatePercents = aggregatePercents.map(percentage => 
+    Number(((percentage / currentAggregatesSum) * newAggregatesSum).toFixed(2))
+  );
+  
+  console.log('Resultado:', {
+    novoBinder: newBinderPercent,
+    novosAgregados: newAggregatePercents,
+    somaTotal: newAggregatePercents.reduce((a, b) => a + b, 0) + newBinderPercent
+  });
+  
+  return newAggregatePercents;
+};
+
   const handleSubmitSpecificMasses = () => {
     toast.promise(
       async () => {
@@ -430,42 +473,91 @@ const Superpave_Step5_InitialBinder = ({
   }, [data.materials]);
 
   const updateRowsWithInitialBinderValues = (initialBinderValues: { curve: string; value: number }[]) => {
-    console.log('Updating rows with:', initialBinderValues);
+  console.log('Updating rows with:', initialBinderValues);
 
-    const newRowData = estimatedPercentageRows.map((row) => {
-      const curveName =
-        row.granulometricComposition === 'inferior'
-          ? 'lower'
-          : row.granulometricComposition === 'intermediaria'
-          ? 'average'
-          : 'higher';
-      const initialBinderValue = initialBinderValues.find((obj) => obj.curve === curveName)?.value ?? 0;
+  const newRowData = estimatedPercentageRows.map((row) => {
+    const curveName =
+      row.granulometricComposition === 'inferior'
+        ? 'lower'
+        : row.granulometricComposition === 'intermediaria'
+        ? 'average'
+        : 'higher';
+    
+    const initialBinderValue = initialBinderValues.find((obj) => obj.curve === curveName)?.value ?? 0;
+    
+    // Encontra a composição correspondente nos dados atualizados
+    const updatedComposition = data.granulometryComposition.find(
+      comp => comp.curve === curveName
+    );
+    
+    // Cria o novo objeto da linha
+    const newRow: Record<string, string | number> = {
+      id: row.id,
+      granulometricComposition: row.granulometricComposition,
+      initialBinder: initialBinderValue.toFixed(2),
+    };
+    
+    // Adiciona as novas porcentagens dos agregados
+    if (updatedComposition?.percentsOfDosageWithBinder) {
+      updatedComposition.percentsOfDosageWithBinder.forEach((percent, materialIndex) => {
+        newRow[`material_${materialIndex + 1}`] = percent?.toFixed(2);
+      });
+    }
+    
+    return newRow;
+  });
 
-      return {
-        ...row,
-        initialBinder: initialBinderValue.toFixed(2),
-      };
+  console.log('New row data:', newRowData);
+  setEstimatedPercentageRows(newRowData);
+};
+
+const handleInitialBinderSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  console.log('Submitting binder values:', binderInput);
+  
+  const updatedGranulometryComposition = data.granulometryComposition.map((composition) => {
+    const newBinderValue = binderInput.find(obj => obj.curve === composition.curve)?.value;
+    
+    if (!newBinderValue) return composition;
+    
+    // PASSA O TEOR ATUAL E O NOVO!
+    const newAggregatePercents = recalculatePercentagesWithNewBinder(
+      composition.percentsOfDosageWithBinder, // [36.47, 45.59, 9.12]
+      composition.pli, // 3.65 (teor atual)
+      newBinderValue   // 2.00 (novo teor)
+    );
+    
+    return {
+      ...composition,
+      pli: newBinderValue,
+      percentsOfDosageWithBinder: newAggregatePercents,
+    };
+  });
+  
+  setData({
+    step: 4,
+    key: 'granulometryComposition',
+    value: updatedGranulometryComposition,
+  });
+  
+  // Atualiza as linhas da tabela
+  const newRowData = updatedGranulometryComposition.map((composition, index) => {
+    const row: Record<string, string | number> = {
+      id: index,
+      granulometricComposition: compositions[index],
+      initialBinder: composition.pli?.toFixed(2),
+    };
+
+    composition.percentsOfDosageWithBinder.forEach((percent, materialIndex) => {
+      row[`material_${materialIndex + 1}`] = percent?.toFixed(2);
     });
 
-    console.log('New row data:', newRowData);
-    setEstimatedPercentageRows(newRowData);
-
-    setData({
-      step: 4,
-      key: 'granulometryComposition',
-      value: data.granulometryComposition.map((row) => ({
-        ...row,
-        pli: initialBinderValues.find((obj) => obj.curve === row.curve)?.value,
-      })),
-    });
-  };
-
-  const handleInitialBinderSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log('Submitting binder values:', binderInput);
-    updateRowsWithInitialBinderValues(binderInput);
-    setNewInitialBinderModalIsOpen(false);
-  };
+    return row;
+  });
+  
+  setEstimatedPercentageRows(newRowData);
+  setNewInitialBinderModalIsOpen(false);
+};
 
   return (
     <>

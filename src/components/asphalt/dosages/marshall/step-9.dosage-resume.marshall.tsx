@@ -46,6 +46,7 @@ const Marshall_Step9_ResumeDosage = ({
   const [optimumContentRows, setOptimumContentRows] = useState([]);
   const [optimumContentCols, setOptimumContentCols] = useState([]);
   const [optimumContentGroupings, setOptimumContentGroupings] = useState<GridColumnGroupingModel>([]);
+    const [initialLoadDone, setInitialLoadDone] = useState(false);
 
   const [quantitativeRows, setQuantitativeRows] = useState([]);
   const [quantitativeCols, setQuantitativeCols] = useState([]);
@@ -117,7 +118,7 @@ const Marshall_Step9_ResumeDosage = ({
     };
   };
 
-  useEffect(() => {
+   useEffect(() => {
     const fetchData = async () => {
       try {
         let newData = {};
@@ -126,18 +127,22 @@ const Marshall_Step9_ResumeDosage = ({
         if (dosageId) {
           try {
             const foundDosage = await marshallDosageService.getMarshallDosage(dosageId);
-
             setDosage(foundDosage.data.dosage);
 
-            // ✅ NOVO: Extrair dados de fadiga e resiliência do banco
             const dosageFromDB = foundDosage.data.dosage;
 
-            if (dosageFromDB?.fatigueCurveData) {
-              setFatigueData(dosageFromDB.fatigueCurveData);
-            }
+            // ✅ SÓ CARREGA DO BANCO SE AINDA NÃO CARREGOU
+            if (!initialLoadDone) {
+              if (dosageFromDB?.fatigueCurveData) {
+                setFatigueData(dosageFromDB.fatigueCurveData);
+              }
 
-            if (dosageFromDB?.resilienceModuleData) {
-              setResilienceData(dosageFromDB.resilienceModuleData);
+              if (dosageFromDB?.resilienceModuleData) {
+                setResilienceData(dosageFromDB.resilienceModuleData);
+              }
+              
+              // ✅ MARCA QUE JÁ CARREGOU
+              setInitialLoadDone(true);
             }
           } catch (dosageError) {
             console.warn('⚠ Não foi possível buscar a dosagem:', dosageError);
@@ -260,26 +265,25 @@ const Marshall_Step9_ResumeDosage = ({
     });
   };
 
+  // ✅ ATUALIZADO: Função para valores iniciais da Curva de Fadiga
   const getFatigueInitialValues = () => {
     if (!fatigueData) return {};
 
     return {
-      ncp: fatigueData.ncp?.toString() || '',
       k1: fatigueData.k1?.toString() || '',
       k2: fatigueData.k2?.toString() || '',
-      r2: fatigueData.r2?.toString() || '',
-      obs: fatigueData.observations || fatigueData.obs || '',
+      observacoes: fatigueData.observacoes || fatigueData.observations || '',
     };
   };
 
+  // ✅ ATUALIZADO: Função para valores iniciais do Módulo de Resiliência
   const getResilienceInitialValues = () => {
     if (!resilienceData) return {};
 
     return {
-      k1: resilienceData.k1?.toString() || '',
-      k2: resilienceData.k2?.toString() || '',
-      k3: resilienceData.k3?.toString() || '',
-      r2: resilienceData.r2?.toString() || '',
+      moduloMedio: resilienceData.moduloMedio?.toString() || '',
+      moduloInstantaneo: resilienceData.moduloInstantaneo?.toString() || '',
+      observacoes: resilienceData.observacoes || '',
     };
   };
 
@@ -413,7 +417,7 @@ const Marshall_Step9_ResumeDosage = ({
     const binderObj: GridColDef = {
       field: 'binder',
       width: 250,
-      headerName: t('asphalt.dosages.marshall.asphaltic-binder') + ' (ton/m³)', // ✅ Alterado para ton/m³
+      headerName: t('asphalt.dosages.marshall.asphaltic-binder') + ' (t/m³)', // ✅ Alterado para ton/m³
       valueFormatter: ({ value }) => `${value}`,
     };
 
@@ -421,7 +425,7 @@ const Marshall_Step9_ResumeDosage = ({
       const col: GridColDef = {
         field: `${material._id}`,
         width: 250,
-        headerName: `${material.name} (ton/m³)`, // ✅ Alterado para ton/m³
+        headerName: `${material.name} (t/m³)`, // ✅ Alterado para ton/m³
         valueFormatter: ({ value }) => `${value}`,
       };
       newCols.push(col);
@@ -912,63 +916,80 @@ const Marshall_Step9_ResumeDosage = ({
               </Box>
             )}
           </Box>
+
+          {/* ✅ CARD ATUALIZADO - Curva de Fadiga */}
           <FatigueOrResilienceCard
             title="Curva de Fadiga à Compressão Diametral"
             fields={[
-              { name: 'ncp', label: 'Nº CPs' },
-              { name: 'k1', label: 'k1' },
-              { name: 'k2', label: 'k2' },
-              { name: 'r2', label: 'R²' },
-              { name: 'obs', label: 'Observações' },
+              { name: 'k1', label: 'K1' },
+              { name: 'k2', label: 'K2' },
+              { name: 'observacoes', label: 'Observações' },
             ]}
-            initialValues={getFatigueInitialValues()} // ✅ Adicionado aqui
-            onConfirm={(values) => {
+            initialValues={getFatigueInitialValues()}
+           onConfirm={(values) => {
+  console.log('🔵 [FRONTEND] ===== INÍCIO onConfirm FATIGUE =====');
+  console.log('🔵 [FRONTEND] dosageId:', dosageId);
+  console.log('🔵 [FRONTEND] values RECEBIDOS DO CARD:', JSON.stringify(values, null, 2));
+  
+  if (!dosageId) {
+    console.error('❌ [FRONTEND] dosageId não encontrado!');
+    toast.error('ID da dosagem não encontrado');
+    return;
+  }
 
-              if (!dosageId) {
-                console.error('❌ [STEP 9 - FATIGUE] dosageId não encontrado!');
-                toast.error('ID da dosagem não encontrado');
-                return;
-              }
+  const hasValues = Object.values(values).some((value) => value && value.trim() !== '');
+  console.log('🟡 [FRONTEND] hasValues:', hasValues);
+  
+  if (!hasValues) {
+    console.warn('⚠️ [FRONTEND] Nenhum valor preenchido!');
+    toast.warning('Preencha pelo menos um campo para salvar');
+    return;
+  }
 
-              const hasValues = Object.values(values).some((value) => value && value.trim() !== '');
-              if (!hasValues) {
-                console.warn('⚠️ [STEP 9 - FATIGUE] Nenhum valor preenchido!');
-                toast.warning('Preencha pelo menos um campo para salvar');
-                return;
-              }
+  // CONVERTER PARA NÚMERO ANTES DE ENVIAR!
+  const formattedValues = {
+    k1: values.k1 ? parseFloat(values.k1) : undefined,
+    k2: values.k2 ? parseFloat(values.k2) : undefined,
+    observacoes: values.observacoes,
+  };
+  console.log('🟢 [FRONTEND] formattedValues PARA ENVIAR:', JSON.stringify(formattedValues, null, 2));
 
-
-              marshall
-                .saveFatigueCurve({
-                  dosageId,
-                  ...values,
-                })
-                .then((response) => {
-                  toast.success('Curva de fadiga salva com sucesso!');
-
-                  // ✅ Atualizar dados locais após salvar
-                  if (response.dosage?.fatigueCurveData) {
-                    setFatigueData(response.dosage.fatigueCurveData);
-                  }
-                })
-                .catch((error) => {
-                  console.error('❌ [STEP 9 - FATIGUE] Erro ao salvar:', error);
-                  toast.error(`Erro ao salvar fadiga: ${error.message}`);
-                });
-            }}
+  console.log('🟢 [FRONTEND] Chamando marshall.saveFatigueCurve...');
+  
+  marshall
+    .saveFatigueCurve({
+      dosageId,
+      ...formattedValues,
+    })
+    .then((response) => {
+      console.log('✅ [FRONTEND] RESPOSTA DO BACKEND:', JSON.stringify(response, null, 2));
+      toast.success('Curva de fadiga salva com sucesso!');
+      if (response.dosage?.fatigueCurveData) {
+        console.log('📦 [FRONTEND] Atualizando fatigueData com:', JSON.stringify(response.dosage.fatigueCurveData, null, 2));
+        setFatigueData(response.dosage.fatigueCurveData);
+      } else {
+        console.warn('⚠️ [FRONTEND] response.dosage?.fatigueCurveData não existe!');
+      }
+    })
+    .catch((error) => {
+      console.error('❌ [FRONTEND] ERRO:', error);
+      console.error('❌ [FRONTEND] error.response:', error.response?.data);
+      console.error('❌ [FRONTEND] error.status:', error.response?.status);
+      toast.error(`Erro ao salvar fadiga: ${error.response?.data?.message || error.message}`);
+    });
+}}
           />
 
+          {/* ✅ CARD ATUALIZADO - Módulo de Resiliência */}
           <FatigueOrResilienceCard
             title="Módulo de Resiliência"
             fields={[
-              { name: 'k1', label: 'k1' },
-              { name: 'k2', label: 'k2' },
-              { name: 'k3', label: 'k3' },
-              { name: 'r2', label: 'R²' },
+              { name: 'moduloMedio', label: 'Módulo Médio (MPa)' },
+              { name: 'moduloInstantaneo', label: 'Módulo Instantâneo (MPa)' },
+              { name: 'observacoes', label: 'Observações' },
             ]}
-            initialValues={getResilienceInitialValues()} // ✅ Adicionado aqui
+            initialValues={getResilienceInitialValues()}
             onConfirm={(values) => {
-
               if (!dosageId) {
                 console.error('❌ [STEP 9 - RESILIENCE] dosageId não encontrado!');
                 toast.error('ID da dosagem não encontrado');
@@ -982,16 +1003,20 @@ const Marshall_Step9_ResumeDosage = ({
                 return;
               }
 
+              // ✅ CONVERTER PARA NÚMERO ANTES DE ENVIAR!
+              const formattedValues = {
+                moduloMedio: values.moduloMedio ? parseFloat(values.moduloMedio) : undefined,
+                moduloInstantaneo: values.moduloInstantaneo ? parseFloat(values.moduloInstantaneo) : undefined,
+                observacoes: values.observacoes,
+              };
 
               marshall
                 .saveResilienceModule({
                   dosageId,
-                  ...values,
+                  ...formattedValues, // Agora moduloMedio e moduloInstantaneo são números
                 })
                 .then((response) => {
                   toast.success('Módulo de resiliência salvo com sucesso!');
-
-                  // ✅ Atualizar dados locais após salvar
                   if (response.dosage?.resilienceModuleData) {
                     setResilienceData(response.dosage.resilienceModuleData);
                   }
