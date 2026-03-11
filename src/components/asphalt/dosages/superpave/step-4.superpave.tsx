@@ -3,7 +3,7 @@ import { EssayPageProps } from '@/components/templates/essay';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { Box, Button, Checkbox, FormControlLabel, TableContainer, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AllSievesSuperpaveUpdatedAstm } from '@/interfaces/common';
 import CurvesTable from './tables/curvesTable';
 import { toast } from 'react-toastify';
@@ -87,6 +87,29 @@ const Superpave_Step4_GranulometryComposition = ({ setNextDisabled, superpave }:
     }
   };
 
+  useEffect(() => {
+  if (data?.pointsOfCurve?.length > 0 && data?.nominalSize && data?.bands) {
+    // Força recálculo dos pontos de curva com os dados atuais
+    const enabledCurves = data?.chosenCurves || ['lower', 'average', 'higher'];
+    
+    superpave.calculateGranulometryComposition(
+      data,
+      granulometryEssayData,
+      generalData,
+      enabledCurves
+    ).then((response) => {
+      if (response?.pointsOfCurve) {
+        const formatted = addProperHeaders(response.pointsOfCurve);
+        setData({ step: 3, key: 'pointsOfCurve', value: formatted });
+      }
+    }).catch(() => {
+      // silencia erro, só não atualiza o gráfico
+    });
+  }
+}, []); // roda só uma vez ao montar
+
+
+
   const convertNumber = (value) => {
     let aux = value;
     if (typeof aux !== 'number' && aux !== null && aux !== undefined && aux.includes(','))
@@ -116,43 +139,28 @@ const addProperHeaders = (data) => {
     return Number(val);
   };
 
-  // ✅ PONTOS DE CONTROLE APENAS EM PENEIRAS ESPECÍFICAS
-  // Normalmente: 4.75mm, 2.36mm, 0.075mm, 0.300mm (ajuste conforme sua norma)
-  const pontosControleIndices = [3, 7, 12]; // Exemplo: índices 3, 7 e 12
+  const pontosControleIndices = [3, 7, 12];
 
   const formattedData = data.map((point, index) => [
-    convertValue(point[0]), // X
-    
-    // ✅ PONTOS INFERIOR: Apenas nos índices específicos
+    convertValue(point[0]),
     pontosControleIndices.includes(index) ? convertValue(point[7]) : NaN,
-    
-    // ✅ PONTOS SUPERIOR: Apenas nos índices específicos  
     pontosControleIndices.includes(index) ? convertValue(point[6]) : NaN,
-    
     convertValue(point[3]),
     convertValue(point[4]),
     convertValue(point[5]),
-    convertValue(point[6]), // Faixa Superior (área)
-    convertValue(point[7]), // Faixa Inferior (área)
+    convertValue(point[6]),
+    convertValue(point[7]),
     convertValue(point[8]),
     convertValue(point[9]),
     convertValue(point[10])
   ]);
 
-  const result = [headers, ...formattedData];
-  
-  console.log('🎯 PONTOS DE CONTROLE REAIS:', {
-    indices: pontosControleIndices,
-    pontos: pontosControleIndices.map(idx => ({
-      peneira: result[idx+1][0],
-      inferior: result[idx+1][1],
-      superior: result[idx+1][2]
-    }))
-  });
-  
-  return result;
+  return [headers, ...formattedData];
 };
 
+// FORA da função, antes do return do componente:
+const isRawData = data?.pointsOfCurve?.length > 0 && typeof data.pointsOfCurve[0][0] === 'number';
+const graphData = isRawData ? addProperHeaders(data.pointsOfCurve) : data.pointsOfCurve;
   const validateNumber = (value) => {
     const auxValue = convertNumber(value);
     if (!isNaN(auxValue) && typeof auxValue === 'number') {
@@ -483,7 +491,7 @@ const updateGraph = (points) => {
               }
             })}
 
-          {data?.pointsOfCurve?.length > 0 && <GranulometricCurvesGraph data={data?.pointsOfCurve} />}
+          {data?.pointsOfCurve?.length > 0 && <GranulometricCurvesGraph data={graphData} />}
         </Box>
       )}
     </>
