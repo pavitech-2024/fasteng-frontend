@@ -107,7 +107,20 @@ const Superpave_Step4_GranulometryComposition = ({ setNextDisabled, superpave }:
     });
   }
 }, []); // roda só uma vez ao montar
+useEffect(() => {
+  console.log('DATA DO STORE:', {
+    pointsOfCurve: data?.pointsOfCurve?.length,
+    pointsOfCurve_0: data?.pointsOfCurve?.[0],
+    nominalSize: data?.nominalSize,
+    chosenCurves: data?.chosenCurves,
+    bands: data?.bands,
+    percentageInputs: data?.percentageInputs,
+  });
+}, []);
 
+useEffect(() => {
+  setData({ step: 3, key: 'pointsOfCurve', value: [] });
+}, []);
 
 
   const convertNumber = (value) => {

@@ -20,7 +20,7 @@ const Superpave_Step6_FirstCompaction = ({
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { granulometryCompositionData, initialBinderData, firstCompressionData: data, setData } = useSuperpaveStore();
-
+const [currentFile, setCurrentFile] = useState<CurrentFile | null>(null);
   const [stepStatus, setStepStatus] = useState('');
   const [riceTestModalIsOpen, setRiceTestModalIsOpen] = useState(false);
   const [columnModalIsOpen, setColumnModalIsOpen] = useState(false);
@@ -29,7 +29,6 @@ const Superpave_Step6_FirstCompaction = ({
     giros: '',
     altura: ''
   });
-  const [currentFile, setCurrentFile] = useState<{ file: FileList; tableName: string; index: number } | null>(null);
 
   // Water temperature list
   const list = {
@@ -50,6 +49,13 @@ const Superpave_Step6_FirstCompaction = ({
     '29°C - 0.9959': 0.9959,
     '30°C - 0.9956': 0.9956,
   };
+
+  interface CurrentFile {
+  file: FileList;
+  tableName: string;
+  index: number;
+  fileName: string;
+}
 
   const waterTemperatureList = Object.keys(list).map((key) => ({
     label: key,
@@ -329,44 +335,96 @@ const Superpave_Step6_FirstCompaction = ({
    */
 const readExcel = (file, tableName, index, mapping: { giros: string; altura: string }) => {
   const promise = new Promise((resolve, reject) => {
-    file = file[0];
-
+    const fileObj = file[0];
+    
     const fileReader = new FileReader();
-    fileReader.readAsArrayBuffer(file);
+    fileReader.readAsText(fileObj);
 
     fileReader.onload = (e) => {
-      const bufferArray = e.target.result;
-      const wb = XLSX.read(bufferArray, { type: 'buffer' });
-      const wsname = wb.SheetNames[0];
-      const ws = wb.Sheets[wsname];
+      const content = e.target.result as string;
+      const lines = content.split('\n');
       
-      const allData = XLSX.utils.sheet_to_json(ws) as any[];
+      console.log('📄 ARQUIVO COMPLETO (primeiras 20 linhas):', lines.slice(0, 20));
 
-      // 🎯 DEBUG DETALHADO
-      console.log('🟡🟡🟡 DEBUG PLANILHA 🟡🟡🟡');
-      console.log('📊 TOTAL LINHAS:', allData.length);
-      console.log('📋 PRIMEIRA LINHA:', allData[0]);
-      console.log('📋 ÚLTIMA LINHA:', allData[allData.length - 1]);
-      console.log('🔍 TODAS AS COLUNAS:', Object.keys(allData[0] || {}));
-      console.log('🗺️ MAPEAMENTO USADO:', mapping);
+      // 🔍 PROCURAR A LINHA QUE CONTÉM "Gyration Number"
+      let headerLineIndex = -1;
+      let headerLine = '';
 
-      const mappedData = allData.map((row: any) => {
-        const newRow = { ...row };
-        
-        if (mapping.giros && row[mapping.giros] !== undefined) {
-          newRow.N_Giros = row[mapping.giros];
-          console.log(`🎯 GIROS: ${row[mapping.giros]} → ${newRow.N_Giros}`);
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].includes('Gyration Number') && lines[i].includes('Height (mm)')) {
+          headerLineIndex = i;
+          headerLine = lines[i];
+          console.log(`✅ CABEÇALHO ENCONTRADO na linha ${i + 1}:`, headerLine);
+          break;
         }
-        if (mapping.altura && row[mapping.altura] !== undefined) {
-          newRow.Altura_mm = row[mapping.altura];
-          console.log(`📏 ALTURA: ${row[mapping.altura]} → ${newRow.Altura_mm}`);
-        }
-        
-        return newRow;
-      });
+      }
 
-      console.log('✅ DADOS FINAIS (3 primeiras):', mappedData.slice(0, 3));
-      resolve(mappedData);
+      if (headerLineIndex === -1) {
+        reject(new Error('Não foi possível encontrar a linha com "Gyration Number" e "Height (mm)"'));
+        return;
+      }
+
+      // Processar o cabeçalho para saber índices das colunas
+      const headers = headerLine.split(',').map(h => h.trim());
+      console.log('📊 COLUNAS:', headers);
+
+      const gyrationIndex = headers.findIndex(h => h.includes('Gyration Number'));
+      const heightIndex = headers.findIndex(h => h.includes('Height (mm)'));
+
+      console.log(`📌 Índices - Gyration: ${gyrationIndex}, Height: ${heightIndex}`);
+
+      if (gyrationIndex === -1 || heightIndex === -1) {
+        reject(new Error('Colunas necessárias não encontradas no cabeçalho'));
+        return;
+      }
+
+      // Processar as linhas de dados (após o cabeçalho)
+      const processedData = [];
+
+      for (let i = headerLineIndex + 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+
+        const values = line.split(',').map(v => v.trim());
+        
+        if (values.length <= Math.max(gyrationIndex, heightIndex)) continue;
+
+        let girosValue = values[gyrationIndex];
+        let alturaValue = values[heightIndex];
+
+        let giros: number;
+        let altura: number;
+
+        if (typeof girosValue === 'string') {
+          giros = parseFloat(girosValue.replace(',', '.'));
+        } else {
+          giros = parseFloat(girosValue);
+        }
+
+        if (typeof alturaValue === 'string') {
+          altura = parseFloat(alturaValue.replace(',', '.'));
+        } else {
+          altura = parseFloat(alturaValue);
+        }
+
+        if (!isNaN(giros) && !isNaN(altura)) {
+          processedData.push({
+            N_Giros: giros,
+            Altura_mm: altura,
+            linha: i + 1
+          });
+        }
+      }
+
+      console.log(`✅ DADOS PROCESSADOS: ${processedData.length} linhas`);
+      console.log('📈 Primeiras 10:', processedData.slice(0, 10));
+
+      if (processedData.length === 0) {
+        reject(new Error('Nenhum dado válido encontrado'));
+        return;
+      }
+
+      resolve(processedData);
     };
 
     fileReader.onerror = (error) => {
@@ -374,31 +432,50 @@ const readExcel = (file, tableName, index, mapping: { giros: string; altura: str
     };
   });
 
-  const prevData = [...data[tableName]];
-  prevData[index].document = file.name;
-
-  setData({ step: 5, value: { ...data, [tableName]: prevData } });
+  // PEGAR O NOME DO ARQUIVO
+  const fileName = file[0]?.name || currentFile?.fileName;
+  console.log('📄 Nome do arquivo:', fileName);
 
   promise.then((d: any[]) => {
-    const arrayAux = data[tableName];
+    // PEGAR O STATE ATUAL DIRETO DO STORE
+    const currentState = useSuperpaveStore.getState();
+    const currentData = currentState.firstCompressionData;
+    
+    // CRIAR CÓPIA ATUALIZADA
+    const updatedData = {
+      ...currentData,
+      [tableName]: currentData[tableName].map((row: any, i: number) => {
+        if (i === index) {
+          return {
+            ...row,
+            document: fileName,
+            planilha: d
+          };
+        }
+        return row;
+      })
+    };
+
+    // SALVAR NO STORE
+    setData({ step: 5, value: updatedData });
+    
     if (initialBinderData.turnNumber) {
-      if (initialBinderData.turnNumber.maxN == d.length) {
-        arrayAux[index].planilha = d;
-        setData({ step: 5, value: { ...data, [tableName]: arrayAux } });
+      if (initialBinderData.turnNumber.maxN === d.length) {
         setStepStatus(t('asphalt.dosages.superpave.processing'));
         toast.success(t('asphalt.dosages.superpave.chosen-sheet-toast'));
       } else {
         setStepStatus('error');
         toast.error(
-          `Número de Giros inválido. Para um trânsito ${initialBinderData.turnNumber.tex} é necessário uma Planilha contendo ${initialBinderData.turnNumber.maxN} Giros.`
+          `Número de Giros inválido. Para um trânsito ${initialBinderData.turnNumber.tex} é necessário uma Planilha contendo ${initialBinderData.turnNumber.maxN} Giros. (Foram encontrados ${d.length} giros)`
         );
       }
     } else {
-      arrayAux[index].planilha = d;
-      setData({ step: 5, value: { ...data, [tableName]: arrayAux } });
       setStepStatus(t('asphalt.dosages.superpave.processing'));
       toast.success(t('asphalt.dosages.superpave.chosen-sheet-toast'));
     }
+  }).catch((error) => {
+    toast.error(`Erro ao processar arquivo: ${error.message}`);
+    console.error('Erro:', error);
   });
 };
 
@@ -406,53 +483,81 @@ const readExcel = (file, tableName, index, mapping: { giros: string; altura: str
    * @function getAvailableColumns
    * @description Obtém as colunas disponíveis no arquivo Excel
    */
-  const getAvailableColumns = (file: FileList): Promise<string[]> => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsArrayBuffer(file[0]);
-
-      fileReader.onload = (e) => {
-        const bufferArray = e.target.result;
-        const wb = XLSX.read(bufferArray, { type: 'buffer' });
-        const wsname = wb.SheetNames[0];
-        const ws = wb.Sheets[wsname];
-        const sampleData = XLSX.utils.sheet_to_json(ws, { header: 1, range: 'A1:Z1' });
-
-        const columns = (sampleData[0] as string[]) || [];
-        console.log('🔍 COLUNAS DETECTADAS:', columns);
-        resolve(columns);
-      };
-
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
-
-  const addPlanilha = async (tableName, index, e) => {
-    const file = e.target.files;
-
-    if (!file || file.length === 0) return;
-
-    try {
-      // Primeiro, obter as colunas disponíveis
-      const columns = await getAvailableColumns(file);
-      setAvailableColumns(columns);
-      
-      // Resetar o mapeamento
-      setColumnMapping({
-        giros: columns[0] || '', // Primeira coluna como giros por padrão
-        altura: columns[1] || ''  // Segunda coluna como altura por padrão
-      });
-      
-      setCurrentFile({ file, tableName, index });
-      setColumnModalIsOpen(true);
-    } catch (error) {
-      toast.error('Erro ao ler o arquivo');
-      console.error('Erro:', error);
+ const getAvailableColumns = (file: File | FileList): Promise<string[]> => {
+  return new Promise((resolve, reject) => {
+    let fileToRead: File;
+    
+    if (file instanceof File) {
+      fileToRead = file;
+    } else {
+      fileToRead = file[0];
     }
-  };
 
+    const fileReader = new FileReader();
+    fileReader.readAsText(fileToRead);
+
+    fileReader.onload = (e) => {
+      const content = e.target.result as string;
+      const lines = content.split('\n');
+      
+      let headerLine = '';
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].includes('Gyration Number')) {
+          headerLine = lines[i];
+          break;
+        }
+      }
+
+      if (!headerLine) {
+        headerLine = lines.find(line => line.trim() !== '') || '';
+      }
+
+      const columns = headerLine.split(',').map(col => col.trim()).filter(col => col);
+      resolve(columns);
+    };
+
+    fileReader.onerror = (error) => {
+      reject(error);
+    };
+  });
+};
+
+const addPlanilha = async (tableName, index, e) => {
+  const fileList = e.target.files;
+  
+  if (!fileList || fileList.length === 0) return;
+
+  const file = fileList[0];
+  console.log('📁 Arquivo selecionado:', file.name);
+
+  try {
+    // Salvar o nome do arquivo IMEDIATAMENTE
+    const prevData = [...data[tableName]];
+    prevData[index].document = file.name;
+    prevData[index].planilha = [];
+    setData({ step: 5, value: { ...data, [tableName]: prevData } });
+
+    // Para o getAvailableColumns, passar o arquivo diretamente
+    const columns = await getAvailableColumns(file); // Vamos modificar essa função
+    setAvailableColumns(columns);
+    
+    setColumnMapping({
+      giros: columns[0] || '',
+      altura: columns[1] || ''
+    });
+    
+    setCurrentFile({ 
+      file: fileList,
+      tableName, 
+      index,
+      fileName: file.name
+    });
+    setColumnModalIsOpen(true);
+  } catch (error) {
+    toast.error('Erro ao ler o arquivo');
+    console.error('Erro:', error);
+  }
+};
   const handleColumnMappingConfirm = () => {
     if (currentFile && columnMapping.giros && columnMapping.altura) {
       readExcel(currentFile.file, currentFile.tableName, currentFile.index, columnMapping);
@@ -519,31 +624,43 @@ const readExcel = (file, tableName, index, mapping: { giros: string; altura: str
     setRiceTestModalIsOpen(true);
   };
 
-  useEffect(() => {
-    const isRiceTestFinished =
-      data.riceTest &&
-      Array.isArray(data.riceTest) &&
-      data.riceTest.length > 0 &&
-      data.riceTest.every(({ gmm }) => gmm !== 0 && gmm !== null);
+ useEffect(() => {
+  // Verificar Rice Test
+  const isRiceTestFinished =
+    data.riceTest &&
+    Array.isArray(data.riceTest) &&
+    data.riceTest.length > 0 &&
+    data.riceTest.every(({ gmm }) => gmm !== 0 && gmm !== null);
+  
+ 
 
-    const isCurvesComplete =
-      data.riceTest &&
-      Array.isArray(data.riceTest) &&
-      data.riceTest.length === granulometryCompositionData.chosenCurves.length;
+  // Verificar Curvas Complete
+  const isCurvesComplete =
+    data.riceTest &&
+    Array.isArray(data.riceTest) &&
+    data.riceTest.length === granulometryCompositionData.chosenCurves.length;
+ 
 
-    const hasSpreadsheetForAllCurves = granulometryCompositionData.chosenCurves.every((curve) => {
-      const curveName = curve === 'lower' ? 'inferiorRows' : curve === 'average' ? 'intermediariaRows' : 'superiorRows';
-      return data[curveName]?.some((row) => row.document && row.document !== '');
-    });
+  // Verificar Planilhas
+  const hasSpreadsheetForAllCurves = granulometryCompositionData.chosenCurves.every((curve) => {
+    const curveName = curve === 'lower' ? 'inferiorRows' : curve === 'average' ? 'intermediariaRows' : 'superiorRows';
+    const hasDoc = data[curveName]?.some((row) => row.document && row.document !== '');
+   
+    return hasDoc;
+  });
 
-    setNextDisabled(!(isRiceTestFinished && isCurvesComplete && hasSpreadsheetForAllCurves));
-  }, [
-    data.inferiorRows,
-    data.intermediariaRows,
-    data.riceTest,
-    data.superiorRows,
-    granulometryCompositionData.chosenCurves,
-  ]);
+
+  const nextDisabled = !(isRiceTestFinished && isCurvesComplete && hasSpreadsheetForAllCurves);
+  console.log('🚦 Botão Próximo:', nextDisabled ? 'DESABILITADO' : 'HABILITADO');
+  
+  setNextDisabled(nextDisabled);
+}, [
+  data.inferiorRows,
+  data.intermediariaRows,
+  data.riceTest,
+  data.superiorRows,
+  granulometryCompositionData.chosenCurves,
+]);
 
   
 
