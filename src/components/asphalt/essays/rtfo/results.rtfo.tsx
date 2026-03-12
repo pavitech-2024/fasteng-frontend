@@ -20,6 +20,10 @@ const Rtfo_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
 
   const columns: GridColDef[] = [
     {
+      field:'SampleNumber',
+      headerName: t('rtfo.sample.number'),
+    },
+    {
       field: 'weightLoss',
       headerName: t('rtfo.weight-loss'),
     },
@@ -27,6 +31,7 @@ const Rtfo_Results = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
 
   const rows = data.list.map((item, index) => ({
     id: index + 1,
+    SampleNumber: index + 1,
     weightLoss: item.weightLoss.toFixed(2),
   }));
 

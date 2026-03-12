@@ -2,9 +2,8 @@ import { WelcomeData } from '@/components/templates/welcome';
 import { Card, Box } from '@mui/material';
 import Link from 'next/link';
 
-export const CardMenuOptions = ({ path, icon, name }: WelcomeData, key: string) => (
+export const CardMenuOptions = ({ path, icon, name }: WelcomeData) => (
   <Card
-    key={key}
     sx={{
       height: '75px',
       width: { mobile: '300px', notebook: '325px', desktop: '300px' },
@@ -20,6 +19,7 @@ export const CardMenuOptions = ({ path, icon, name }: WelcomeData, key: string) 
       },
     }}
   >
+
     <Link href={path} style={{ textDecoration: 'none', display: 'flex', height: '100%', width: '100%' }}>
       <Box
         sx={{

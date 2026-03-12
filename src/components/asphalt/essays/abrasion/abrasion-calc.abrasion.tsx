@@ -52,6 +52,7 @@ const Abrasion_Calc = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
         size="medium"
         label={t('asphalt.essays.abrasion.graduation')}
         options={graduations.map((grad) => ({ label: grad, value: grad }))}
+        value={data.graduation ? {label: data.graduation, value: data.graduation} : undefined}
         callback={(value) => {
           setData({ step: 1, key: 'graduation', value });
         }}
