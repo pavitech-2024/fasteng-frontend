@@ -389,8 +389,8 @@ const readExcel = (file, tableName, index, mapping: { giros: string; altura: str
         
         if (values.length <= Math.max(gyrationIndex, heightIndex)) continue;
 
-        let girosValue = values[gyrationIndex];
-        let alturaValue = values[heightIndex];
+        const girosValue = values[gyrationIndex];
+        const alturaValue = values[heightIndex];
 
         let giros: number;
         let altura: number;
