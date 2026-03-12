@@ -92,7 +92,7 @@ const ViscosityRotational_Calc = ({ nextDisabled, setNextDisabled }: EssayPagePr
               newRows[index].viscosity = Number(e.target.value);
               setData({ step: 1, key: 'viscosity', value: newRows });
             }}
-            adornment={'SSF'}
+            adornment={'cP'}
           />
         );
       },

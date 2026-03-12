@@ -227,7 +227,7 @@ const AsphaltStandards: NextPage = () => {
       link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_130_2010_me.pdf',
       type: 'asphaltBinder',
     },
-    { 
+    {
       title: t('asphalt.standards.tensile.strength.by.diametral.compression'),
       icon: RtcdIcon,
       key: 'rtcd',

@@ -24,7 +24,7 @@ const Abrasion_GeneralData = ({
     toast.promise(
       async () => {
         const data = await abrasion.getmaterialsByUserId(user._id);
-        const filteredMaterials = data[0].materials.filter((material) => material.type === 'coarseAggregate' || material.type === 'fineAggregate');
+        const filteredMaterials = data[0].materials.filter((material) => material.type === 'coarseAggregate');
         setMaterials(filteredMaterials);
         setLoading(false);
       },
