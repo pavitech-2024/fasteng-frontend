@@ -42,16 +42,16 @@ interface MarshallGranulometryCompositionData {
   percentageInputs: { [key: string]: number }[];
   sumOfPercents: number[];
   dnitBands: { higher: [string, number][]; lower: [string, number][] };
-  bands: { 
-    higherBand: number[];  // ← Corrigido: não é [number], é number[]
-    lowerBand: number[];   // ← Corrigido: não é [number], é number[]
-    letter?: string;       // ← Adicionado opcional
+  bands: {
+    higherBand: number[]; // ← Corrigido: não é [number], é number[]
+    lowerBand: number[]; // ← Corrigido: não é [number], é number[]
+    letter?: string; // ← Adicionado opcional
   };
   pointsOfCurve: any[];
   percentsOfMaterials: any[];
   graphData: any[];
   projections: any[];
-  
+
   // 🟡 ADICIONE ESTA LINHA:
   tableWithBands?: Array<{
     sieve_label: string;
@@ -567,7 +567,12 @@ const useMarshallStore = create<MarshallData & MarshallActions>()(
         setData: ({ step, key, value }) =>
           set((state) => {
             if (step === 10) {
-              return value; // Substitui o estado inteiro pelo novo valor
+              return {
+                ...initialState, // começa do zero
+                ...(value as object), // sobrescreve com os dados da dosagem
+                fatigueCurveData: undefined,
+                resilienceModuleData: undefined,
+              };
             } else {
               if (key) {
                 return {

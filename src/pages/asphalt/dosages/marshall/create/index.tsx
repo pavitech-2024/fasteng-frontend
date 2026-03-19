@@ -11,26 +11,33 @@ import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore, { MarshallActions } from '@/stores/asphalt/marshall/marshall.store';
-//tst
-const Marshall = () => {
-  // start an instance of the service
-  const marshall = new Marshall_SERVICE();
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
-  // get the userId
+const Marshall = () => {
+  const marshall = new Marshall_SERVICE();
+    const router = useRouter();
+
   const {
     user: { _id: userId },
   } = useAuth();
 
-  // get the store, could be empty or not ( in case of refresh page for example)
   const store = useMarshallStore();
 
-  // set the userId to the service
-  marshall.userId = userId;
+ useEffect(() => {
+  // Só limpa se NÃO vier de uma consulta (consulta seta o step via sessionStorage)
+  const isComingFromConsult = sessionStorage.getItem('marshall-step') !== null;
+  
+  if (!isComingFromConsult) {
+    store.reset();
+    sessionStorage.removeItem('asphalt-marshall-store');
+    sessionStorage.removeItem('marshall-last-saved-id');
+  }
+}, []);
 
-  // set the store to the service
+  marshall.userId = userId;
   marshall.store_actions = store as MarshallActions;
 
-  // inform the childrens with the step of the children and the part of the store that they will use
   const childrens = [
     { step: 0, children: <Marshall_Step1_GeneralData marshall={marshall} />, data: store },
     { step: 1, children: <Marshall_Step2_MaterialSelection marshall={marshall} />, data: store },
