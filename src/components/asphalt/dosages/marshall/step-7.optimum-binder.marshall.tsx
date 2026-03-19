@@ -549,161 +549,136 @@ const Marshall_Step7_OptimumBinder = ({
   nextDisabled && setNextDisabled(false);
 
   return (
-    <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '20px',
-            padding: '20px',
-          }}
-        >
-          {points?.length > 0 && <GraficoPage7N data={points} />}
+  <>
+    {loading ? (
+      <Loading />
+    ) : (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '20px',
+          padding: '20px',
+        }}
+      >
+        {points?.length > 0 && <GraficoPage7N data={points} />}
 
-          {!Object.values(data?.expectedParameters?.expectedParameters).some((item) => item === null) && (
-            <Box sx={{ width: '100%', overflow: 'auto' }}>
-              <DataGrid
-                columns={expectedParametersColumns}
-                rows={expectedParametersRows}
-                hideFooter
-                disableColumnMenu
-                autoHeight
-                sx={{
-                  '& .MuiDataGrid-cell': {
-                    padding: '8px 16px',
-                  },
-                  minWidth: '800px',
-                }}
-              />
-            </Box>
-          )}
-
+        {!Object.values(data?.expectedParameters?.expectedParameters).some((item) => item === null) && (
           <Box sx={{ width: '100%', overflow: 'auto' }}>
             <DataGrid
-              columns={percentsCols}
-              rows={percentRows}
+              columns={expectedParametersColumns}
+              rows={expectedParametersRows}
               hideFooter
               disableColumnMenu
               autoHeight
               sx={{
-                '& .MuiDataGrid-cell': {
-                  padding: '8px 16px',
-                },
-                minWidth: '700px',
+                '& .MuiDataGrid-cell': { padding: '8px 16px' },
+                minWidth: '800px',
               }}
             />
           </Box>
+        )}
 
-          {data?.optimumBinder.optimumContent !== null && (
-            <Box sx={{ width: '100%', overflow: 'auto' }}>
-              <DataGrid
-                columns={finalProportionCols()}
-                rows={finalProportionsRows()}
-                hideFooter
-                disableColumnMenu
-                autoHeight
-                sx={{
-                  '& .MuiDataGrid-cell': {
-                    padding: '8px 16px',
-                  },
-                  minWidth: '600px',
-                }}
-              />
-            </Box>
+        <Box sx={{ width: '100%', overflow: 'auto' }}>
+          <DataGrid
+            columns={percentsCols}
+            rows={percentRows}
+            hideFooter
+            disableColumnMenu
+            autoHeight
+            sx={{
+              '& .MuiDataGrid-cell': { padding: '8px 16px' },
+              minWidth: '700px',
+            }}
+          />
+        </Box>
+
+        {data?.optimumBinder.optimumContent !== null && (
+          <Box sx={{ width: '100%', overflow: 'auto' }}>
+            <DataGrid
+              columns={finalProportionCols()}
+              rows={finalProportionsRows()}
+              hideFooter
+              disableColumnMenu
+              autoHeight
+              sx={{
+                '& .MuiDataGrid-cell': { padding: '8px 16px' },
+                minWidth: '600px',
+              }}
+            />
+          </Box>
+        )}
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: '20px',
+            marginTop: '20px',
+          }}
+        >
+          {data?.graphics?.gmb && Array.isArray(data.graphics.gmb) && data.graphics.gmb.length > 1 && (
+            <MiniGraphics data={data.graphics.gmb} type={'gmb'} nameEixoY={t('asphalt.dosages.gmb') + '(g/cm³)'} />
+          )}
+          {data?.graphics?.sg && Array.isArray(data.graphics.sg) && data.graphics.sg.length > 1 && (
+            <MiniGraphics
+              data={data.graphics.sg}
+              type={maximumMixtureDensityData.maxSpecificGravity?.method || 'GMM'}
+              nameEixoY={
+                maximumMixtureDensityData.maxSpecificGravity?.method === 'DMT'
+                  ? 'Massa específica máxima teórica (g/cm³)'
+                  : 'Massa específica máxima medida (g/cm³)'
+              }
+            />
+          )}
+          {data?.graphics?.vv && Array.isArray(data.graphics.vv) && data.graphics.vv.length > 1 && (
+            <MiniGraphics data={data.graphics.vv} type={'Vv'} nameEixoY={t('asphalt.dosages.vv') + '(%)'} />
+          )}
+          {data?.graphics?.vam && Array.isArray(data.graphics.vam) && data.graphics.vam.length > 1 && (
+            <MiniGraphics data={data.graphics.vam} type={'Vam'} nameEixoY={t('asphalt.dosages.vam') + '(%)'} />
+          )}
+          {data?.graphics?.stability && Array.isArray(data.graphics.stability) && data.graphics.stability.length > 1 && (
+            <MiniGraphics
+              data={data.graphics.stability}
+              type={'Estabilidade'}
+              nameEixoY={t('asphalt.dosages.stability') + '(N)'}
+            />
           )}
 
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              gap: '20px',
-              marginTop: '20px',
-            }}
-          >
-            {data?.graphics?.gmb && Array.isArray(data.graphics.gmb) && data.graphics.gmb.length > 1 && (
-              <MiniGraphics data={data.graphics.gmb} type={'gmb'} nameEixoY={t('asphalt.dosages.gmb') + '(g/cm³)'} />
-            )}
-
-            {data.graphics?.sg?.length > 0 && (
-              <MiniGraphics
-                data={data?.graphics?.sg}
-                type={maximumMixtureDensityData.maxSpecificGravity.method}
-                nameEixoY={
-                  maximumMixtureDensityData.maxSpecificGravity.method === 'DMT'
-                    ? 'Massa específica máxima teórica (g/cm³)'
-                    : 'Massa específica máxima medida (g/cm³)'
-                }
-              />
-            )}
-
-            {data.graphics?.vv?.length > 0 && (
-              <MiniGraphics data={data?.graphics?.vv} type={'Vv'} nameEixoY={t('asphalt.dosages.vv') + '(%)'} />
-            )}
-
-            {data.graphics?.vam?.length > 0 && (
-              <MiniGraphics data={data?.graphics?.vam} type={'Vam'} nameEixoY={t('asphalt.dosages.vam') + '(%)'} />
-            )}
-
-            {data.graphics?.stability?.length > 0 && (
-              <MiniGraphics
-                data={data?.graphics?.stability}
-                type={'Estabilidade'}
-                nameEixoY={t('asphalt.dosages.stability') + '(N)'}
-              />
-            )}
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              gap: '20px',
-              marginTop: '20px',
-            }}
-          >
-            {/* VERIFICA SE TEM DADOS ANTES DE RENDERIZAR */}
-            {data?.graphics?.gmb && Array.isArray(data.graphics.gmb) && data.graphics.gmb.length > 1 && (
-              <MiniGraphics data={data.graphics.gmb} type={'gmb'} nameEixoY={t('asphalt.dosages.gmb') + '(g/cm³)'} />
-            )}
-
-            {data?.graphics?.sg && Array.isArray(data.graphics.sg) && data.graphics.sg.length > 1 && (
-              <MiniGraphics
-                data={data.graphics.sg}
-                type={maximumMixtureDensityData.maxSpecificGravity?.method || 'GMM'}
-                nameEixoY={
-                  maximumMixtureDensityData.maxSpecificGravity?.method === 'DMT'
-                    ? 'Massa específica máxima teórica (g/cm³)'
-                    : 'Massa específica máxima medida (g/cm³)'
-                }
-              />
-            )}
-
-            {data?.graphics?.vv && Array.isArray(data.graphics.vv) && data.graphics.vv.length > 1 && (
-              <MiniGraphics data={data.graphics.vv} type={'Vv'} nameEixoY={t('asphalt.dosages.vv') + '(%)'} />
-            )}
-
-            {data?.graphics?.vam && Array.isArray(data.graphics.vam) && data.graphics.vam.length > 1 && (
-              <MiniGraphics data={data.graphics.vam} type={'Vam'} nameEixoY={t('asphalt.dosages.vam') + '(%)'} />
-            )}
-
-            {data?.graphics?.stability &&
-              Array.isArray(data.graphics.stability) &&
-              data.graphics.stability.length > 1 && (
-                <MiniGraphics
-                  data={data.graphics.stability}
-                  type={'Estabilidade'}
-                  nameEixoY={t('asphalt.dosages.stability') + '(N)'}
-                />
-              )}
-          </Box>
+          {/* SEGUNDO SET - DUPLICATA */}
+          {data?.graphics?.gmb && Array.isArray(data.graphics.gmb) && data.graphics.gmb.length > 1 && (
+            <MiniGraphics data={data.graphics.gmb} type={'gmb'} nameEixoY={t('asphalt.dosages.gmb') + '(g/cm³)'} />
+          )}
+          {data?.graphics?.sg && Array.isArray(data.graphics.sg) && data.graphics.sg.length > 1 && (
+            <MiniGraphics
+              data={data.graphics.sg}
+              type={maximumMixtureDensityData.maxSpecificGravity?.method || 'GMM'}
+              nameEixoY={
+                maximumMixtureDensityData.maxSpecificGravity?.method === 'DMT'
+                  ? 'Massa específica máxima teórica (g/cm³)'
+                  : 'Massa específica máxima medida (g/cm³)'
+              }
+            />
+          )}
+          {data?.graphics?.vv && Array.isArray(data.graphics.vv) && data.graphics.vv.length > 1 && (
+            <MiniGraphics data={data.graphics.vv} type={'Vv'} nameEixoY={t('asphalt.dosages.vv') + '(%)'} />
+          )}
+          {data?.graphics?.vam && Array.isArray(data.graphics.vam) && data.graphics.vam.length > 1 && (
+            <MiniGraphics data={data.graphics.vam} type={'Vam'} nameEixoY={t('asphalt.dosages.vam') + '(%)'} />
+          )}
+          {data?.graphics?.stability && Array.isArray(data.graphics.stability) && data.graphics.stability.length > 1 && (
+            <MiniGraphics
+              data={data.graphics.stability}
+              type={'Estabilidade'}
+              nameEixoY={t('asphalt.dosages.stability') + '(N)'}
+            />
+          )}
         </Box>
-      )}
-    </>
-  );
+      </Box>
+    )}
+  </>
+);
 };
 
 export default Marshall_Step7_OptimumBinder;
