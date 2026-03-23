@@ -873,7 +873,7 @@ class Marshall_SERVICE implements IEssayService {
   userId: string,
   user?: string,
   isConsult?: boolean
-): Promise<void> => {
+): Promise<any> => {
   console.log('🔵 submitMarshalDosageData CHAMADO!');
   console.log('🔵 isConsult:', isConsult);
   console.log('🔵 userId:', userId);
