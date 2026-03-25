@@ -570,37 +570,63 @@ const addPlanilha = async (tableName, index, e) => {
 
   
 
-  const calculateRiceTest = (curve: string) => {
-    toast.promise(
-      async () => {
-        try {
-          const riceTestData = data.riceTest.find((item) => item.curve === curve);
-          const calculatedGmm = await superpave.calculateGmm_RiceTest(riceTestData);
+const calculateRiceTest = (curve: string) => {
+  const riceTestData = data.riceTest.find((item) => item.curve === curve);
+  
+  // ✅ Se já tem um valor manual no GMM, apenas salva e fecha
+  if (riceTestData?.gmm && riceTestData.gmm !== null && riceTestData.gmm !== 0) {
+    setRiceTestModalIsOpen(false);
+    toast.success(`GMM salvo: ${riceTestData.gmm}`);
+    return;
+  }
+  
+  // ✅ Se não tem valor manual, verifica os campos para cálculo
+  const missingFields = [];
+  if (!riceTestData?.drySampleMass) missingFields.push('Massa amostra seca');
+  if (!riceTestData?.waterSampleContainerMass) missingFields.push('Massa recipiente + água');
+  if (!riceTestData?.waterSampleMass) missingFields.push('Massa recipiente + amostra + água');
+  if (!riceTestData?.temperatureOfWater) missingFields.push('Temperatura da água');
+  
+  if (missingFields.length > 0) {
+    toast.error(`Preencha os campos para calcular: ${missingFields.join(', ')}`);
+    return;
+  }
+  
+  // ✅ Faz o cálculo
+  toast.promise(
+    async () => {
+      try {
+        const calculatedGmm = await superpave.calculateGmm_RiceTest(riceTestData);
 
-          const updatedRiceTest = data.riceTest.map((item) =>
-            item.curve === curve ? { ...item, gmm: calculatedGmm } : item
-          );
-          setData({ step: 5, key: 'riceTest', value: updatedRiceTest });
-
-          const updatedMaximumDensity = {
-            ...data.maximumDensity,
-            [curve]: { ...data.maximumDensity[curve], gmm: calculatedGmm },
-          };
-          setData({ step: 5, key: 'maximumDensity', value: updatedMaximumDensity });
-
-          setRiceTestModalIsOpen(false);
-        } catch (error) {
-          throw error;
+        if (!calculatedGmm || isNaN(calculatedGmm)) {
+          throw new Error('Cálculo retornou valor inválido');
         }
-      },
-      {
-        pending: t('loading.materials.pending'),
-        success: t('asphalt.dosages.superpave.rice-test-success-toast'),
-        error: t('asphalt.dosages.superpave.rice-test-error-toast'),
-      }
-    );
-  };
 
+        const updatedRiceTest = data.riceTest.map((item) =>
+          item.curve === curve ? { ...item, gmm: calculatedGmm } : item
+        );
+        setData({ step: 5, key: 'riceTest', value: updatedRiceTest });
+
+        const updatedMaximumDensity = {
+          ...data.maximumDensity,
+          [curve]: { ...data.maximumDensity[curve], gmm: calculatedGmm },
+        };
+        setData({ step: 5, key: 'maximumDensity', value: updatedMaximumDensity });
+
+        setRiceTestModalIsOpen(false);
+        toast.success(`GMM calculado: ${calculatedGmm.toFixed(3)}`);
+      } catch (error) {
+        console.error('Erro no cálculo do GMM:', error);
+        toast.error(error.message || 'Erro ao calcular GMM');
+      }
+    },
+    {
+      pending: 'Calculando GMM...',
+      success: 'GMM calculado com sucesso!',
+      error: 'Erro ao calcular GMM',
+    }
+  );
+};
   const showRiceTestModal = (curve: string) => {
     const riceTestData = [...data.riceTest];
 
