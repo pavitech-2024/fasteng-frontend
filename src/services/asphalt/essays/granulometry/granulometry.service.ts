@@ -186,11 +186,24 @@ getAllEssaysByUser = async (userId: string): Promise<any[]> => {
   };
 
   /**Busca ensaios por material */
+/**Busca ensaios por material */
 getEssaysByMaterialId = async (materialId: string): Promise<any[]> => {
+  
   try {
-    const response = await Api.get(`${this.info.backend_path}/material/${materialId}`);
-    return response.data.data || response.data;
+    // CORREÇÃO: Usar o endpoint correto de materiais
+    const response = await Api.get(`asphalt/materials/${materialId}`);
+    
+    // O backend retorna { material, essays }
+    if (response.data && response.data.essays) {
+      return response.data.essays;
+    } else {
+      return [];
+    }
   } catch (error) {
+    console.error('Error getting essays by material:');
+    console.error('Error message:', error.message);
+    console.error('Error response:', error.response?.data);
+    console.error('Error status:', error.response?.status);
     throw error;
   }
 };
