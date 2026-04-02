@@ -14,8 +14,8 @@ const Rtfo = () => {
   const {
     user: { _id: userId },
   } = useAuth();
-
-  // get the store, could be empty or not ( in case of refresh page for example)
+  //
+  //   // get the store, could be empty or not ( in case of refresh page for example)
   const store = useRtfoStore();
 
   // set the userId to the service
