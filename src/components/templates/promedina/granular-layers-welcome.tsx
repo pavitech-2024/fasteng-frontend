@@ -15,7 +15,7 @@ export interface WelcomeData {
 }
 
 interface WelcomeTemplateProps {
-  icon: JSX.Element;
+  icon: ReactNode;
   welcomeData: WelcomeData[];
   stepperData: StepperData[];
 }

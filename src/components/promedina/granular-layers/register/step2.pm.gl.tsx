@@ -68,13 +68,6 @@ return (
 );
 };
 
-// Opções para TIPO DE SEÇÃO
-const tipoSecaoOptions = [
-{ value: 'Experimental', label: 'Experimental' },
-{ value: 'Controle', label: 'Controle' },
-{ value: 'Referência', label: 'Referência' },
-];
-
 // Opções para ESTRUTURA
 const estruturaOptions = [
 { value: 'Flexível', label: 'Flexível' },
@@ -90,7 +83,7 @@ const fonteMonitoramentoOptions = [
 { value: 'Consultoria', label: 'Consultoria' },
 ];
 
-// DADOS DO PAVIMENTO
+// DADOS DO PAVIMENTO - CORRIGIDO: removido tipoSecao que pertence ao generalData
 const inputsPavimentData = [
 {
 label: t('pm.granularLayer.identification'),
@@ -98,14 +91,6 @@ value: step2Data?.identification,
 key: 'identification',
 required: true,
 type: 'text',
-},
-{
-label: t('pm.granularLayer.tipoSecao'),
-value: step2Data?.tipoSecao,
-key: 'tipoSecao',
-required: true,
-type: 'select',
-options: tipoSecaoOptions,
 },
 {
 label: t('pm.granularLayer.estrutura'),

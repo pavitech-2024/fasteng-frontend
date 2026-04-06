@@ -1,5 +1,5 @@
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
-import { Box, Typography, Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import GeneratePDF_ProMedina from '@/components/generatePDF/promedina/granularLayers/generatePDF.promedina';
@@ -45,41 +45,51 @@ const GranularLayersResume = ({ setNextDisabled, onSave }: EssayPageProps & { on
   // ==================== STEP 2 - DADOS DO PAVIMENTO ====================
   const pavementDataFields = [
     { label: t('pm.granularLayer.identification'), key: 'identification', value: step2Data?.identification },
-    { label: t('pm.granularLayer.tipoSecao'), key: 'tipoSecao', value: step2Data?.tipoSecao },
-    { label: t('pm.granularLayer.estrutura'), key: 'estrutura', value: step2Data?.estrutura },
-    { label: t('pm.granularLayer.material'), key: 'material', value: step2Data?.material },
-    { label: t('pm.granularLayer.longitude'), key: 'longitude', value: step2Data?.longitude },
-    { label: t('pm.granularLayer.latitude'), key: 'latitude', value: step2Data?.latitude },
-    { label: t('pm.granularLayer.altitude'), key: 'altitude', value: step2Data?.altitude ? `${step2Data.altitude} m` : '-' },
-    { label: t('pm.granularLayer.fonteMonitoramento'), key: 'fonteMonitoramento', value: step2Data?.fonteMonitoramento },
-    { label: t('pm.granularLayer.longitudeFora'), key: 'longitudeFora', value: step2Data?.longitudeFora },
-    { label: t('pm.granularLayer.latitudeFora'), key: 'latitudeFora', value: step2Data?.latitudeFora },
+    { label: t('pm.granularLayer.sectionType'), key: 'sectionType', value: step2Data?.sectionType },
+    { label: t('pm.granularLayer.extension'), key: 'extension', value: step2Data?.extension ? `${step2Data.extension} m` : '-' },
+    { label: t('pm.granularLayer.initialStakeMeters'), key: 'initialStakeMeters', value: step2Data?.initialStakeMeters },
+    { label: t('pm.granularLayer.latitudeI'), key: 'latitudeI', value: step2Data?.latitudeI },
+    { label: t('pm.granularLayer.longitudeI'), key: 'longitudeI', value: step2Data?.longitudeI },
+    { label: t('pm.granularLayer.finalStakeMeters'), key: 'finalStakeMeters', value: step2Data?.finalStakeMeters },
+    { label: t('pm.granularLayer.latitudeF'), key: 'latitudeF', value: step2Data?.latitudeF },
+    { label: t('pm.granularLayer.longitudeF'), key: 'longitudeF', value: step2Data?.longitudeF },
+    { label: t('pm.granularLayer.monitoringPhase'), key: 'monitoringPhase', value: step2Data?.monitoringPhase },
+    { label: t('pm.granularLayer.trafficLiberation'), key: 'trafficLiberation', value: step2Data?.trafficLiberation },
+    { label: t('pm.granularLayer.averageAltitude'), key: 'averageAltitude', value: step2Data?.averageAltitude ? `${step2Data.averageAltitude} m` : '-' },
+    { label: t('pm.granularLayer.numberOfTracks'), key: 'numberOfTracks', value: step2Data?.numberOfTracks },
+    { label: t('pm.granularLayer.monitoredTrack'), key: 'monitoredTrack', value: step2Data?.monitoredTrack },
+    { label: t('pm.granularLayer.trackWidth'), key: 'trackWidth', value: step2Data?.trackWidth ? `${step2Data.trackWidth} m` : '-' },
   ];
 
   // Preparo do pavimento
   const preparationFields = [
-    { label: t('pm.granularLayer.pregoeiro'), key: 'pregoeiro', value: step2Data?.pregoeiro },
-    { label: t('pm.granularLayer.informacaoBase'), key: 'informacaoBase', value: step2Data?.informacaoBase },
-    { label: t('pm.granularLayer.pontoLigacao'), key: 'pontoLigacao', value: step2Data?.pontoLigacao },
-    { label: t('pm.granularLayer.ultimaAtualizacao'), key: 'ultimaAtualizacao', value: step2Data?.ultimaAtualizacao },
+    { label: t('pm.granularLayer.milling'), key: 'milling', value: step2Data?.milling },
+    { label: t('pm.granularLayer.interventionAtTheBase'), key: 'interventionAtTheBase', value: step2Data?.interventionAtTheBase },
+    { label: t('pm.granularLayer.sami'), key: 'sami', value: step2Data?.sami },
+    { label: t('pm.granularLayer.bondingPaint'), key: 'bondingPaint', value: step2Data?.bondingPaint },
+    { label: t('pm.granularLayer.priming'), key: 'priming', value: step2Data?.priming },
+    { label: t('pm.granularLayer.lastUpdate'), key: 'lastUpdate', value: step2Data?.lastUpdate },
   ];
 
   // Características da via
   const characteristicsFields = [
-    { label: t('pm.granularLayer.local'), key: 'local', value: step2Data?.local },
-    { label: t('pm.granularLayer.municipioEstado'), key: 'municipioEstado', value: step2Data?.municipioEstado },
-    { label: t('pm.granularLayer.extensao'), key: 'extensao', value: step2Data?.extensao ? `${step2Data.extensao} m` : '-' },
-    { label: t('pm.granularLayer.velocidadeDiretaVia'), key: 'velocidadeDiretaVia', value: step2Data?.velocidadeDiretaVia ? `${step2Data.velocidadeDiretaVia} km/h` : '-' },
-    { label: t('pm.granularLayer.larguraFaixa'), key: 'larguraFaixa', value: step2Data?.larguraFaixa ? `${step2Data.larguraFaixa} m` : '-' },
+    { label: t('pm.granularLayer.highway'), key: 'highway', value: generalData?.highway },
+    { label: t('pm.granularLayer.name'), key: 'name', value: generalData?.name },
+    { label: t('pm.granularLayer.zone'), key: 'zone', value: generalData?.zone },
+    { label: t('pm.granularLayer.layer'), key: 'layer', value: generalData?.layer },
+    { label: t('pm.granularLayer.cityState'), key: 'cityState', value: generalData?.cityState },
+    { label: t('pm.granularLayer.guideLineSpeed'), key: 'guideLineSpeed', value: generalData?.guideLineSpeed ? `${generalData.guideLineSpeed} km/h` : '-' },
   ];
 
   // Coordenadas
   const coordinatesFields = [
-    { label: t('pm.granularLayer.inicioEstaca'), key: 'inicioEstaca', value: step2Data?.inicioEstaca },
-    { label: t('pm.granularLayer.inicioLatitude'), key: 'inicioLatitude', value: step2Data?.inicioLatitude },
-    { label: t('pm.granularLayer.fimMetros'), key: 'fimMetros', value: step2Data?.fimMetros },
-    { label: t('pm.granularLayer.fimLongitude'), key: 'fimLongitude', value: step2Data?.fimLongitude },
-    { label: t('pm.granularLayer.altitudeMedia'), key: 'altitudeMedia', value: step2Data?.altitudeMedia ? `${step2Data.altitudeMedia} m` : '-' },
+    { label: t('pm.granularLayer.initialStakeMeters'), key: 'initialStakeMeters', value: step2Data?.initialStakeMeters },
+    { label: t('pm.granularLayer.latitudeI'), key: 'latitudeI', value: step2Data?.latitudeI },
+    { label: t('pm.granularLayer.longitudeI'), key: 'longitudeI', value: step2Data?.longitudeI },
+    { label: t('pm.granularLayer.finalStakeMeters'), key: 'finalStakeMeters', value: step2Data?.finalStakeMeters },
+    { label: t('pm.granularLayer.latitudeF'), key: 'latitudeF', value: step2Data?.latitudeF },
+    { label: t('pm.granularLayer.longitudeF'), key: 'longitudeF', value: step2Data?.longitudeF },
+    { label: t('pm.granularLayer.averageAltitude'), key: 'averageAltitude', value: step2Data?.averageAltitude ? `${step2Data.averageAltitude} m` : '-' },
   ];
 
   // ==================== STEP 3 - CAMADAS ====================
@@ -129,17 +139,14 @@ const GranularLayersResume = ({ setNextDisabled, onSave }: EssayPageProps & { on
   const handleSave = async (forceOverwrite = false) => {
     setIsSaving(true);
     try {
-      // Chama a função de save passando o parâmetro forceOverwrite
       const result = await onSave?.();
       
       if (result?.duplicate && !forceOverwrite) {
-        // Se for duplicata e não for força, mostra o diálogo
         setDuplicateDialogOpen(true);
         setIsSaving(false);
         return;
       }
       
-      // Sucesso
       toast.success('Cadastro salvo com sucesso!');
       resetStore();
       router.push('/promedina/granular-layers');
@@ -150,18 +157,25 @@ const GranularLayersResume = ({ setNextDisabled, onSave }: EssayPageProps & { on
     }
   };
 
-  // Função para confirmar sobrescrita
   const handleConfirmOverwrite = async () => {
     setDuplicateDialogOpen(false);
     await handleSave(true);
   };
 
-  // Função para renderizar um grupo de campos
+  // FUNÇÃO CORRIGIDA - usando Box com flexbox em vez de Grid
   const renderFieldGroup = (fields: Array<{ label: string; value: any }>, columns = 4) => (
-    <Grid container spacing={2} sx={{ padding: '1rem' }}>
+    <Box sx={{ 
+      padding: '1rem',
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: '20px'
+    }}>
       {fields.map((field, idx) => (
         field.value !== undefined && field.value !== null && field.value !== '' && (
-          <Grid item xs={12} sm={6} md={12/columns} key={idx}>
+          <Box key={idx} sx={{ 
+            flex: `0 0 calc(${100/columns}% - 20px)`,
+            minWidth: '200px'
+          }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
               <Typography sx={{ fontWeight: 'normal', fontSize: '12px', color: 'gray' }}>
                 {field.label}
@@ -170,13 +184,12 @@ const GranularLayersResume = ({ setNextDisabled, onSave }: EssayPageProps & { on
                 {field.value === '-' ? '-' : field.value}
               </Typography>
             </Box>
-          </Grid>
+          </Box>
         )
       ))}
-    </Grid>
+    </Box>
   );
 
-  // Função para renderizar uma camada completa
   const renderLayerSection = (layerId: string, layerLabel: string, layerData: any) => {
     if (!layerData) return null;
 
@@ -239,7 +252,6 @@ const GranularLayersResume = ({ setNextDisabled, onSave }: EssayPageProps & { on
         >
           <GeneratePDF_ProMedina sample={samples} sections={sections} />
 
-          {/* Botão de Salvar com tratamento de duplicata */}
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: '1rem' }}>
             <Button 
               variant="contained" 
@@ -251,14 +263,14 @@ const GranularLayersResume = ({ setNextDisabled, onSave }: EssayPageProps & { on
             </Button>
           </Box>
 
-          {/* ==================== STEP 1 - IDENTIFICAÇÃO ==================== */}
+          {/* STEP 1 - IDENTIFICAÇÃO */}
           <Box id="identification" sx={{ paddingTop: '1rem', paddingX: '2rem' }}>
             <FlexColumnBorder title="Identificação" open={true} theme={'#07B811'}>
               {renderFieldGroup(identificationFields, 3)}
             </FlexColumnBorder>
           </Box>
 
-          {/* ==================== STEP 2 - DADOS DO PAVIMENTO ==================== */}
+          {/* STEP 2 - DADOS DO PAVIMENTO */}
           <Box id="pavement-data" sx={{ paddingTop: '1rem', paddingX: '2rem' }}>
             <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFieldGroup(pavementDataFields, 3)}
@@ -286,7 +298,7 @@ const GranularLayersResume = ({ setNextDisabled, onSave }: EssayPageProps & { on
             </FlexColumnBorder>
           </Box>
 
-          {/* ==================== STEP 3 - CAMADAS ==================== */}
+          {/* STEP 3 - CAMADAS */}
           {layers.map(layer => renderLayerSection(layer.id, layer.label, step3Data?.[layer.id]))}
 
           {/* Observações Gerais do Step 3 */}
@@ -302,7 +314,7 @@ const GranularLayersResume = ({ setNextDisabled, onSave }: EssayPageProps & { on
             </Box>
           )}
 
-          {/* ==================== COMPOSIÇÃO ESTRUTURAL ==================== */}
+          {/* COMPOSIÇÃO ESTRUTURAL */}
           <Box id="structural-composition" sx={{ paddingTop: '1rem', paddingX: '2rem' }}>
             <FlexColumnBorder title={t('pm.structural.composition')} open={true} theme={'#07B811'}>
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', padding: '1rem' }}>
@@ -338,7 +350,6 @@ const GranularLayersResume = ({ setNextDisabled, onSave }: EssayPageProps & { on
         </Box>
       </Box>
 
-      {/* Dialog de confirmação de sobrescrita */}
       <Dialog open={duplicateDialogOpen} onClose={() => setDuplicateDialogOpen(false)}>
         <DialogTitle>Nome duplicado</DialogTitle>
         <DialogContent>

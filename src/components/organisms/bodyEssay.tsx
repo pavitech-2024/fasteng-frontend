@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 
 interface BodyEssayProps {
-  children: React.ReactNode | JSX.Element;
+  children: React.ReactNode;
 }
 
 export const BodyEssay = ({ children }: BodyEssayProps) => {

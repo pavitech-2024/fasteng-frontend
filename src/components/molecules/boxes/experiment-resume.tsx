@@ -19,7 +19,7 @@ export interface ExperimentResumeData {
 }
 
 interface TextBoxProps {
-  children: JSX.Element | ReactNode;
+  children: ReactNode;
 }
 
 const ExperimentResume = ({ data }: ExperimentResumeProps) => {

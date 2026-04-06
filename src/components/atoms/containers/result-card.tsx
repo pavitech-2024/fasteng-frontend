@@ -3,7 +3,7 @@ import ResultSubTitle from '../titles/result-sub-title';
 
 interface Result_CardContainerProps {
   title?: string;
-  children: JSX.Element | React.ReactNode;
+  children: React.ReactNode;
   hideBorder?: boolean;
   mt?: string;
 }
@@ -123,8 +123,8 @@ export const Result_Container_NoChildren = ({
       sx={{
         border: hideBorder ? 'none' : '1px solid',
         transform: { mobile: 'translateY(-35px)', notebook: 'translateY(-15px)' },
-        borderColor: borderColor ? borderColor : 'primaryTons.border',
-        padding: padding ? padding : '10px',
+        borderColor: borderColor || 'primaryTons.border',
+        padding: padding || '10px',
         zIndex: 2,
         mt: mt || '1.5rem',
         borderRadius: '10px',

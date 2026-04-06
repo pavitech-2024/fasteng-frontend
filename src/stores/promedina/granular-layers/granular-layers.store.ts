@@ -9,6 +9,13 @@ interface GeneralData {
   highway: string;
   guideLineSpeed: string;
   observations?: string;
+  // NOVAS PROPRIEDADES PARA O STEP 1
+  tipoSecao: string;
+  faseMonitoramento: string;
+  liberacaoTrafico: string;
+  utilizadaMeDiNa: string;
+  utilizadaLVECD: string;
+  dadosConfirmadosICT: string;
 }
 
 interface Step2Data {
@@ -46,6 +53,37 @@ interface Step2Data {
     material: string;
     thickness: string;
   }[];
+  
+  // NOVAS PROPRIEDADES ADICIONADAS
+  tipoSecao: string; // Tipo de Seção
+  estrutura: string; // Estrutura (Flexível, Semi-rígida, Rígida)
+  material: string; // Material
+  longitude: string; // Longitude
+  latitude: string; // Latitude
+  altitude: string; // Altitude
+  fonteMonitoramento: string; // Fonte de Monitoramento
+  longitudeFora: string; // Longitude Fora
+  latitudeFora: string; // Latitude Fora
+  
+  // Preparo do Pavimento
+  pregoeiro: string;
+  informacaoBase: string;
+  pontoLigacao: string;
+  ultimaAtualizacao: string;
+  
+  // Características da Via
+  local: string;
+  municipioEstado: string;
+  extensao: string;
+  velocidadeDiretaVia: string;
+  larguraFaixa: string;
+  
+  // Coordenadas
+  inicioEstaca: string;
+  inicioLatitude: string;
+  fimMetros: string;
+  fimLongitude: string;
+  altitudeMedia: string;
 }
 
 export type StructuralCompositionTable = {
@@ -89,6 +127,7 @@ export type GranularLayersActions = {
   setData: ({ step, key, value }: setDataType) => void;
   clearStore: () => void;
   reset: () => void;
+  resetStore: () => void;
 };
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data' };
@@ -104,6 +143,12 @@ const initialState = {
     cityState: null,
     guideLineSpeed: null,
     observations: null,
+    tipoSecao: null,
+    faseMonitoramento: null,
+    liberacaoTrafico: null,
+    utilizadaMeDiNa: null,
+    utilizadaLVECD: null,
+    dadosConfirmadosICT: null,
   },
   step2Data: {
     identification: null,
@@ -138,6 +183,30 @@ const initialState = {
         thickness: null,
       },
     ],
+    // NOVAS PROPRIEDADES INICIALIZADAS
+    tipoSecao: null,
+    estrutura: null,
+    material: null,
+    longitude: null,
+    latitude: null,
+    altitude: null,
+    fonteMonitoramento: null,
+    longitudeFora: null,
+    latitudeFora: null,
+    pregoeiro: null,
+    informacaoBase: null,
+    pontoLigacao: null,
+    ultimaAtualizacao: null,
+    local: null,
+    municipioEstado: null,
+    extensao: null,
+    velocidadeDiretaVia: null,
+    larguraFaixa: null,
+    inicioEstaca: null,
+    inicioLatitude: null,
+    fimMetros: null,
+    fimLongitude: null,
+    altitudeMedia: null,
   },
   step3Data: {
     mctGroup: null,
@@ -169,7 +238,7 @@ const useGranularLayersStore = create<GranularLayersData & GranularLayersActions
         setData: ({ step, key, value }) => {
           set((state) => {
             if (step === 3) {
-              return value; // Substitui o estado inteiro pelo novo valor
+              return value;
             } else {
               if (key) {
                 return {
@@ -187,6 +256,8 @@ const useGranularLayersStore = create<GranularLayersData & GranularLayersActions
         },
 
         reset: () => set(initialState),
+        
+        resetStore: () => set(initialState),
 
         clearStore: () => {
           sessionStorage.clear();
@@ -194,7 +265,6 @@ const useGranularLayersStore = create<GranularLayersData & GranularLayersActions
         },
       }),
       {
-        // name data store e config no session storage
         name: 'granularLayers-store',
         storage: createJSONStorage(() => sessionStorage),
       }

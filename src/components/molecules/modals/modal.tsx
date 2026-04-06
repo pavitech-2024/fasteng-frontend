@@ -7,7 +7,7 @@ import Modal from '@mui/material/Modal';
 type modalSize = 'small' | 'medium' | 'large';
 interface IModalBase {
   title: string;
-  children: JSX.Element | React.ReactNode;
+  children: React.ReactNode;
   leftButtonTitle?: string;
   rightButtonTitle?: string;
   onCancel: () => void;

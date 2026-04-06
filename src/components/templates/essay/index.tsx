@@ -14,7 +14,7 @@ import { useSessionStorage } from '../../../utils/hooks/useSessionStorage';
 
 interface EssayTemplateProps {
   essayInfo: IEssayService['info'];
-  childrens: { step: number; children: JSX.Element; data: any }[];
+  childrens: { step: number; children: React.ReactElement; data: any }[]; // ALTERADO: JSX.Element -> React.ReactElement
   nextCallback: (step: number, data: unknown) => Promise<void>;
   startAtStep?: number;
 }

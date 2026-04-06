@@ -2,12 +2,12 @@ import { Box, Typography } from '@mui/material';
 import { t } from 'i18next';
 
 interface FlexColumnBorderProps {
-  children: React.ReactNode | JSX.Element;
+  children: React.ReactNode;
   title?: string;
   flexDirection?: 'column' | 'row';
   hideBorder?: boolean;
   sx?: React.CSSProperties;
-  sx_title?: { [key: string]: unknown };
+  sx_title?: React.CSSProperties;
   open?: boolean;
   generalData?: boolean;
   theme?: string;
@@ -31,7 +31,7 @@ const FlexColumnBorder = ({
         display: 'flex',
         flexDirection: flexDirection || 'column',
         border: hideBorder ? 'none' : '2px solid',
-        borderColor: theme ? theme : 'primary.main',
+        borderColor: theme || 'primary.main',
         padding: '10px',
         zIndex: 2,
         mt: generalData ? 0 : '2rem',
