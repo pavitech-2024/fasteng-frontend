@@ -25,7 +25,8 @@ const ElongatedParticles_GeneralData = ({
       async () => {
         const data = await elongatedParticles.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        //setMaterials(materials);
+        setMaterials(data[0].materials);
         setLoading(false);
       },
       {
