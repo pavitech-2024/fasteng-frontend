@@ -1,5 +1,4 @@
 import { EssayPageProps } from '../../../templates/essay';
-import { t } from 'i18next';
 import { Box, TextField, Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
@@ -122,7 +121,7 @@ const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
   };
 
   // Renderizar campo
-  const renderField = (fieldKey: string, label: string, layerId: string, value: any, type: string = 'text') => {
+  const renderField = (fieldKey: string, label: string, layerId: string, value: any, type = 'text') => {
     // Garante que value nunca seja null (sempre string vazia)
     const safeValue = value === undefined || value === null ? '' : value;
     
