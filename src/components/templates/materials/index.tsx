@@ -3,7 +3,7 @@ import { JSX, useEffect, useState } from 'react';
 import {
   Box,
   Button,
-  Dialog,
+  ButtonProps,
   Pagination,
   Paper,
   Table,
@@ -12,24 +12,25 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
 } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 import Search from '@/components/atoms/inputs/search';
 import { AddIcon, DeleteIcon, NextIcon } from '@/assets';
 import { formatDate } from '@/utils/format';
-import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import Link from 'next/link';
-import { Edit } from '@mui/icons-material';
+import { Edit, ModeEdit, Visibility } from '@mui/icons-material';
 import { FwdData } from '@/stores/asphalt/fwd/fwd.store';
 import { IggData } from '@/stores/asphalt/igg/igg.store';
 import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
 import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
+import { AsphaltMaterial } from '@/interfaces/asphalt';
+import DeleteMaterialModal from '../modals/deleteMaterialModal';
 
+export type FilterTypes = 'name' | 'type' | 'mix' | 'stretch';
+export type essayTypes = 'rtcd' | 'ddui' | 'fwd' | 'igg';
 
 interface MaterialsTemplateProps {
   materials: any[] | undefined;
@@ -41,8 +42,8 @@ interface MaterialsTemplateProps {
   title: 'Amostras Cadastradas' | 'Materiais Cadastrados';
   path?: string;
   //Modal
-  handleOpenModal: () => void;
-  deleteMaterial: (id: string) => void;
+  handleOpenModal: (row?: any) => void;
+  deleteMaterial: (id: string, filter: FilterTypes, essayTypes?: essayTypes) => void;
   editMaterial: (materiaId: string) => void;
   modal: JSX.Element;
 }
@@ -58,6 +59,11 @@ export interface DataToFilter {
   name: string;
   type: string;
   createdAt: Date;
+}
+
+interface ConditionalTooltipButtonProps extends ButtonProps {
+  tooltip: string;
+  showTooltip?: boolean;
 }
 
 const MaterialsTemplate = ({
@@ -77,11 +83,12 @@ const MaterialsTemplate = ({
   const app = useRouter().pathname.split('/')[1];
   let samplesOrMaterials: string;
 
-
+  const [filteredData, setFilteredData] = useState<DataToFilter[]>([]);
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
-  const [searchBy, setSearchBy] = useState<string>('name');
+  const [searchBy, setSearchBy] = useState<FilterTypes>('name');
   const [searchValue, setSearchValue] = useState<string>('');
+  const [searchString, setSearchString] = useState<string>('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [RowToDelete, setRowToDelete] = useState<DataToFilter>();
   const [tableData, setTableData] = useState<any[]>([]);
@@ -99,23 +106,21 @@ const MaterialsTemplate = ({
     { id: 'actions', label: t('materials.template.actions'), width: '25%' },
   ];
 
-    const options = [
-  { label: t('materials.template.name'), value: 'name' },
-  { label: t('materials.template.type'), value: 'type' },
-];
+  const options = [
+    { label: t('materials.template.name'), value: 'name' },
+    { label: t('materials.template.type'), value: 'type' },
+  ];
 
-// Adiciona apenas uma vez, se o path tiver "asphalt"
-const isAsphaltPath = path?.includes('asphalt');
-if (isAsphaltPath) {
-  options.push(
-    { label: t('materials.template.mix'), value: 'mix' },
-    { label: t('materials.template.stretch'), value: 'stretch' },
-  );
-}
+  // Adiciona apenas uma vez, se o path tiver "asphalt"
+  const isAsphaltPath = path?.includes('asphalt');
+  if (isAsphaltPath) {
+    options.push(
+      { label: t('materials.template.mix'), value: 'mix' },
+      { label: t('materials.template.stretch'), value: 'stretch' }
+    );
+  }
 
-
-/*******  b8f77572-72b8-4e11-aeb0-6b9fe12308cf  *******/
- const translateType = (type: string) => {
+  const translateType = (type: string) => {
     switch (type) {
       case 'inorganicSoil':
         return t('samples.inorganicSoil');
@@ -144,153 +149,147 @@ if (isAsphaltPath) {
     setSearchValue('');
   }, [searchBy]);
 
-  const filteredData = (Array.isArray(materials[0].materials) ? materials[0].materials : [])
-  .map(({ _id, name, type, createdAt }) => ({
-    _id,
-    name,
-    type,
-    createdAt: createdAt instanceof Date ? createdAt : new Date(createdAt) 
-  }))
-  .filter((material) => {
-    if (!searchValue) return true;
-    
-    if (searchBy === 'name') {
-      return material.name.toLowerCase().includes(searchValue.toLowerCase());
-    }
-    if (searchBy === 'type') {
-      return material.type === searchValue;
-    }
-    return true;
-  });
+  /**
+   * Effect hook to filter materials based on search criteria.
+   * It transforms and filters the materials list according to the
+   * search value and search criteria (either by name or type).
+   *
+   * Dependencies:
+   * - `searchValue`: The value to search for within the materials.
+   * - `searchBy`: The criteria to filter by, either 'name' or 'type'.
+   */
+  useEffect(() => {
+    const data = (Array.isArray(materials) ? materials : []).map(({ _id, name, type, createdAt }) => ({
+      _id,
+      name,
+      type,
+      createdAt: createdAt instanceof Date ? createdAt : new Date(createdAt),
+    }));
 
-  console.log("Testando filtro de nome", filteredData);
+    const filteredData = data.filter((material) =>
+      searchValue
+        ? searchBy === 'name'
+          ? material.name.toLowerCase().includes(searchValue.toLowerCase())
+          : material.type === searchValue
+        : true
+    );
 
-  const fwdEssaysData = fwdEssays?.map(({_id, generalData }) => ({
+    setFilteredData(filteredData);
+  }, [searchValue, searchBy, materials]);
+
+  const fwdEssaysData = fwdEssays?.map(({ _id, generalData }) => ({
     name: generalData.name,
     type: 'FWD',
-    //createdAt: generalData.createdAt,
     createdAt: generalData.createdAt instanceof Date ? generalData.createdAt : new Date(generalData.createdAt),
-    _id: _id
-  }))
-  console.log("testando o fwdEssayData", fwdEssaysData);
+    _id: _id,
+  }));
 
-  const iggEssaysData = (Array.isArray(iggEssays) ? iggEssays: []).map(({_id, generalData}) =>
-  ({
+  const iggEssaysData = (Array.isArray(iggEssays) ? iggEssays : []).map(({ _id, generalData }) => ({
     name: generalData.name,
     type: 'IGG',
     createdAt: generalData.createdAt,
-    _id: _id
-  }))
+    _id: _id,
+  }));
 
-  const rtcdEssaysData = rtcdEssays?.map((essay)=> ({
-  _id: essay._id,
-  name: essay.generalData.name,
-  type: 'RTCD',
-  createdAt: essay.createdAt
-}));
-
-
-const dduiEssaysData = dduiEssays?.map((essay) => ({
+  const rtcdEssaysData = rtcdEssays?.map((essay) => ({
+    _id: essay._id,
     name: essay.generalData.name,
-    type: 'FWD',
+    type: 'RTCD',
     createdAt: essay.createdAt,
-    _id: essay._id
-  }))
+  }));
+
+  const dduiEssaysData = dduiEssays?.map((essay) => ({
+    name: essay.generalData.name,
+    type: 'DDUI',
+    createdAt: essay.createdAt,
+    _id: essay._id,
+  }));
 
   useEffect(() => {
-    console.log("Testando o searchBy", searchBy);
-    console.log("Testando o filteredData", filteredData);
-    if (searchBy === 'stretch') {
-      // Combina FWD e IGG quando "stretch" for selecionado
-      setTableData([...fwdEssaysData, ...iggEssaysData]);
-    } else if (searchBy === 'mix') {
-      setTableData([...rtcdEssaysData, ...dduiEssaysData]);  // Mostra SOMENTE ensaios RTCD e DDUI (mistura)
-    } else if (searchBy === 'name') {
-      // Mostra TUDO (materiais + todos ensaios)
-      const newData = fwdEssaysData || iggEssaysData.length > 0 || rtcdEssaysData || dduiEssaysData ? 
-       [...filteredData, ...fwdEssaysData, ...iggEssaysData, ...rtcdEssaysData, ...dduiEssaysData] : filteredData;
-       console.log("Testando o newData", newData);
-    setTableData(
-      newData
-    );
-    }
-    else {
-      // Caso padrão (nome ou tipo)
-      setTableData(filteredData);
-    }
-    //setTableData(newData);
-  }, [searchBy, materials]);
+    let newData: any[] = [];
 
-    console.log("Filtro exemplo",filteredData);
-    console.log("Teste" ,materials)
+    if (searchBy === 'stretch') {
+      newData = [...fwdEssaysData, ...iggEssaysData];
+    } else if (searchBy === 'mix') {
+      newData = [...rtcdEssaysData, ...dduiEssaysData];
+    } else if (searchBy === 'name') {
+      const allData = [];
+      if (rtcdEssaysData) allData.push(...rtcdEssaysData);
+      if (dduiEssaysData) allData.push(...dduiEssaysData);
+      if (fwdEssaysData) allData.push(...fwdEssaysData);
+      if (iggEssaysData) allData.push(...iggEssaysData);
+      if (filteredData) allData.push(...filteredData);
+
+      // Ordenar filteredData por ordem de createdAt
+      allData.sort((a, b) => {
+        const dateA = a.createdAt instanceof Date ? a.createdAt : new Date(a.createdAt);
+        const dateB = b.createdAt instanceof Date ? b.createdAt : new Date(b.createdAt);
+        return dateB.getTime() - dateA.getTime();
+      });
+
+      newData = allData;
+    } else {
+      newData = filteredData;
+    }
+
+    setTableData(newData);
+  }, [searchBy, rtcdEssays, dduiEssays, fwdEssays, iggEssays, filteredData]);
+
   const handleEditMaterial = (rowId: string) => {
     editMaterial(rowId);
   };
 
-  
+  /**
+   * Filtra a tabela de materiais pelo nome, considerando a string inserida pelo usuário.
+   * A filtragem é case-insensitive.
+   */
+  const filterByString = () => {
+    const newData = filteredData.filter((material: AsphaltMaterial) =>
+      material.name?.toLowerCase().includes(searchString.toLowerCase())
+    );
+    setTableData(newData);
+  };
+
+  const ConditionalTooltipButton: React.FC<ConditionalTooltipButtonProps> = ({
+    tooltip,
+    showTooltip = false,
+    children,
+    ...buttonProps
+  }) => {
+    const button = <Button {...buttonProps}>{children}</Button>;
+
+    return showTooltip ? (
+      <Tooltip title={tooltip} placement="top" arrow>
+        <span>{button}</span>
+      </Tooltip>
+    ) : (
+      button
+    );
+  };
 
   return (
     <>
-      {/*Delete Modal */}
-      <Dialog open={isDeleteModalOpen}>
-        <DialogTitle sx={{ fontSize: '1rem', textTransform: 'uppercase', fontWeight: 700 }} color="secondary">
-          {t('materials.template.deleteTitle')}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText sx={{ textTransform: 'uppercase', fontSize: '14px' }}>
-            {t('materials.template.deleteText')} <span style={{ fontWeight: 700 }}>{RowToDelete?.name}</span>?
-          </DialogContentText>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: '1.3rem' }}>
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{
-                fontWeight: 700,
-                fontSize: { mobile: '11px', notebook: '13px' },
-                width: '40%',
-              }}
-              onClick={() => setIsDeleteModalOpen(false)}
-            >
-              {t('materials.template.cancel')}
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                fontWeight: 700,
-                fontSize: { mobile: '11px', notebook: '13px' },
-                color: 'primaryTons.white',
-                width: '40%',
-              }}
-              onClick={() => {
-                try {
-                  toast.promise(async () => await deleteMaterial(RowToDelete?._id), {
-                    pending: t('materials.template.toast.delete.pending') + RowToDelete?.name + '...',
-                    success: RowToDelete?.name + t('materials.template.toast.delete.sucess'),
-                    error: t('materials.template.toast.delete.error') + RowToDelete?.name + '.',
-                  });
-                  setIsDeleteModalOpen(false);
-                } catch (error) {
-                  throw error;
-                }
-              }}
-            >
-              {t('materials.template.delete')}
-            </Button>
-          </Box>
-        </DialogContent>
-      </Dialog>
-      {/*Create new  Modal */}
+      <DeleteMaterialModal
+        isOpen={isDeleteModalOpen}
+        deleteMaterial={deleteMaterial}
+        setIsOpen={setIsDeleteModalOpen}
+        rowToDelete={RowToDelete}
+        tableData={tableData}
+        searchBy={searchBy}
+      />
+
+      {/*Create and Edit Material Modal */}
       {modal}
 
       {/*Page */}
-      {/**Coloquei o header abaixo como comentário para remover o título "Materiais cadastrados"*/}
-      {/*<Header title={`${title}`} />*/}
-      <Box sx={{ 
-          //p: { mobile: '0 4vw', notebook: '0 6vw' }, 
+      <Box
+        sx={{
           p: { mobile: '2rem 4vw 0', notebook: '2rem 6vw 0' },
-          mb: '4vw', 
-          width: '100%', 
-          maxWidth: '1800px' }}>
+          mb: '4vw',
+          width: '100%',
+          maxWidth: '1800px',
+        }}
+      >
         <Box
           sx={{
             display: 'flex',
@@ -309,21 +308,14 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
               width: '55%',
             }}
           >
-
-          <DropDown
-            label={t('materials.template.searchBy')}
-            /*/*tions={[
-              { label: t('materials.template.name'), value: 'name' },
-              { label: t('materials.template.type'), value: 'type' },
-              { label: t('materials.template.mix'), value: 'mix' },
-              { label: t('materials.template.stretch'), value: 'stretch' },
-            ]}*/
-            options={options}
-            callback={setSearchBy}
-            size="small"
-            sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
-            value={options.find(option => option.value === searchBy) || options[0]} // Dinâmico baseado em searchBy
-          />
+            <DropDown
+              label={t('materials.template.searchBy')}
+              options={options}
+              callback={setSearchBy}
+              size="small"
+              sx={{ width: { mobile: '50%', notebook: '35%' }, minWidth: '120px', maxWidth: '150px', bgcolor: 'white' }}
+              value={options.find((option) => option.value === searchBy) || options[0]}
+            />
             {searchBy === 'name' && (
               <Search
                 sx={{
@@ -334,8 +326,16 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
                     fontSize: '45px',
                   },
                 }}
-                value={searchValue}
-                setValue={setSearchValue}
+                value={searchString}
+                setValue={setSearchString}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    if (searchBy === 'name') {
+                      filterByString();
+                    }
+                  }
+                }}
+                handleSubmit={filterByString}
               />
             )}
             {searchBy === 'type' && (
@@ -348,6 +348,7 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
                 size="small"
                 callback={setSearchValue}
                 options={types}
+                value={{ label: searchValue, value: searchValue }}
               />
             )}
           </Box>
@@ -405,7 +406,11 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
           }}
         >
           <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'hidden' }}>
-            <Table sx={{ width: '100%', tableLayout: 'fixed' }} aria-label="materials table">
+            <Table
+              sx={{ width: '100%', tableLayout: 'fixed' }}
+              aria-label="materials table"
+              data-testid="materials-table"
+            >
               <TableHead>
                 <TableRow>
                   {columns.map((column) => (
@@ -426,59 +431,62 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
               </TableHead>
               <TableBody>
                 {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row._id} data-row-id={row._id}>
                     {columns.map((column) => (
                       <TableCell key={column.id} align="center">
                         {column.id === 'name' && row.name}
                         {column.id === 'type' && (
-                           <>
-                          {row.type === 'FWD' && 'FWD'}
-                          {row.type === 'IGG' && 'IGG'}
-                          {row.type === 'RTCD' && 'RTCD'}
-                          {row.type === 'DDUI' && 'DDUI'}
-                          {!['FWD', 'IGG', 'RTCD', 'DDUI'].includes(row.type) && translateType(row.type)}
+                          <>
+                            {row.type === 'FWD' && 'FWD'}
+                            {row.type === 'IGG' && 'IGG'}
+                            {row.type === 'RTCD' && 'RTCD'}
+                            {row.type === 'DDUI' && 'DDUI'}
+                            {!['FWD', 'IGG', 'RTCD', 'DDUI'].includes(row.type) && translateType(row.type)}
                           </>
                         )}
-                       {/* {column.id === 'type' && (
-                          <>
-                            {row.type === 'FWD'}
-                            {row.type === 'IGG'}
-                            {!['FWD', 'IGG'].includes(row.type) && translateType(row.type)}
-                          </>
-                        )*/}
 
                         {column.id === 'createdAt' && formatDate(row.createdAt)}
                         {column.id === 'actions' && (
                           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Link href={`/${path}/${row._id}`}>
                               <Button
-                                variant="contained"
+                                data-testid={`view-${row._id}`}
                                 sx={{
                                   height: { mobile: '18px', notebook: '25px' },
                                   borderRadius: { mobile: '50%', notebook: '20px' },
-                                  p: { mobile: 0, notebook: '6px 12px' },
-                                  minWidth: { mobile: '18px', notebook: '25px' },
-                                  bgcolor: 'secondaryTons.blue',
-                                  color: 'primaryTons.white',
-
-                                  ':hover': {
-                                    bgcolor: 'secondaryTons.blueDisabled',
-                                  },
-
-                                  ':active': {
-                                    bgcolor: 'secondaryTons.blueClick',
-                                  },
+                                  p: { mobile: 0, notebook: '6px 6px' },
+                                  minWidth: { mobile: '18px', notebook: '30px' },
+                                  bgcolor: 'transparent',
+                                  color: 'secondaryTons.blue',
                                 }}
                               >
-                                <Typography sx={{ display: { mobile: 'none', notebook: 'flex' }, fontSize: '.95rem' }}>
-                                  {t('materials.template.visualize')}
-                                </Typography>
-                                <Edit sx={{ display: { mobile: 'none', notebook: 'none' }, fontSize: '1rem' }} />
-                                <NextIcon sx={{ display: { mobile: 'flex', notebook: 'none' }, fontSize: '1rem' }} />
+                                <Visibility sx={{ fontSize: '1.30rem' }} />
                               </Button>
                             </Link>
+                            <ConditionalTooltipButton
+                              tooltip="Este ensaio não pode ser editado."
+                              showTooltip={['FWD', 'IGG', 'RTCD', 'DDUI'].includes(row.type)}
+                              data-testid={`edit-${row._id}`}
+                              aria-label="Editar"
+                              disabled={['FWD', 'IGG', 'RTCD', 'DDUI'].includes(row.type)}
+                              onClick={() => handleEditMaterial(row._id)}
+                              sx={{
+                                height: { mobile: '18px', notebook: '25px' },
+                                borderRadius: { mobile: '50%', notebook: '20px' },
+                                p: { mobile: 0, notebook: '6px 6px' },
+                                minWidth: { mobile: '18px', notebook: '25px' },
+                                bgcolor: 'transparent',
+                                color: 'secondaryTons.primary',
+                              }}
+                            >
+                              <ModeEdit />
+                            </ConditionalTooltipButton>
+
                             <Button
                               variant="text"
+                              aria-label="Excluir"
+                              name="delete"
+                              data-testid={`delete-${row._id}`}
                               color="error"
                               sx={{ p: 0, width: '30px', minWidth: '35px' }}
                               onClick={() => {
@@ -499,9 +507,9 @@ const dduiEssaysData = dduiEssays?.map((essay) => ({
           </TableContainer>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
             <Pagination
-              count={Math.ceil(tableData.length / rowsPerPage)}  // Usa tableData em vez de filteredData
+              count={Math.ceil(tableData.length / rowsPerPage)} // Usa tableData em vez de filteredData
               size="small"
-              disabled={tableData.length <= rowsPerPage}  // Desabilita se houver apenas 1 pág
+              disabled={tableData.length <= rowsPerPage} // Desabilita se houver apenas 1 pág
               onChange={(event, value) => setPage(value - 1)}
             />
           </Box>

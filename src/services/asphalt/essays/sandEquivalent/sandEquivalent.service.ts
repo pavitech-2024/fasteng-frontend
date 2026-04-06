@@ -4,6 +4,7 @@ import { IEssayService } from '@/interfaces/common/essay/essay-service.interface
 import { SandEquivalentActions, SandEquivalentData } from '@/stores/asphalt/sandEquivalent/sandEquivalent.store';
 import { t } from 'i18next';
 import Api from '@/api';
+import { MaterialsProps } from '@/pages/asphalt/materials';
 
 class SandEquivalent_SERVICE implements IEssayService {
   info = {
@@ -53,7 +54,7 @@ class SandEquivalent_SERVICE implements IEssayService {
   /** @generalData Methods for general-data (step === 0, page 1) */
 
   // get all materials from user from backend
-  getmaterialsByUserId = async (userId: string): Promise<AsphaltMaterial> => {
+  getmaterialsByUserId = async (userId: string): Promise<MaterialsProps[]> => {
     try {
       // get all materials from user from backend
       const response = await Api.get(`asphalt/materials/all/${userId}`);

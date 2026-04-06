@@ -1,7 +1,6 @@
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import { Box, Fade, IconButton } from '@mui/material';
 import { t } from 'i18next';
-import { useRouter } from 'next/router';
 import useAuth from '@/contexts/auth';
 import React, { ReactNode } from 'react';
 import { CloseIcon, ArrowDownIcon } from '../../../assets';
@@ -33,7 +32,6 @@ const MaterialResume = ({ data }: MaterialResumeProps) => {
     </Box>
   );
 
-  const router = useRouter();
   const { user } = useAuth();
   const [open, setOpen] = React.useState(true);
 
@@ -44,15 +42,17 @@ const MaterialResume = ({ data }: MaterialResumeProps) => {
   ];
 
   return (
-    <FlexColumnBorder title={t('general data of essay')} open={open} generalData={true}>
+    <FlexColumnBorder title={t('general data of essay')} open={open} generalData={true} sx={{ position: 'relative' }}>
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'end',
           transform: { mobile: 'translate(10px, -60px)', notebook: 'translateY(-45px)' },
+          position: 'absolute',
+          right: { mobile: '10px', notebook: '15px' },
         }}
       >
-        <IconButton size="large">
+        <IconButton size="small" sx={{ hover: { color: 'primary.main', cursor: 'pointer' } }}>
           {open ? (
             <CloseIcon onClick={() => setOpen((prev) => !prev)} />
           ) : (
@@ -71,6 +71,7 @@ const MaterialResume = ({ data }: MaterialResumeProps) => {
             alignItems: 'flex-start',
             flexDirection: 'column',
             gap: '10px',
+            marginTop: '2rem',
           }}
         >
           {texts.map((item, index) => (

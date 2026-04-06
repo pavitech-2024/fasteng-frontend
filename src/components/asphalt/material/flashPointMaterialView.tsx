@@ -1,7 +1,7 @@
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import Result_Card from '@/components/atoms/containers/result-card';
 import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
-import { EssaysData } from '@/pages/asphalt/materials/material/[id]';
+import { EssaysData } from '@/components/asphalt/material/types/material.types';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
 

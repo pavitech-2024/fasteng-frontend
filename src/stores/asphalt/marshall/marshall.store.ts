@@ -4,7 +4,7 @@ import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 export type GmmRows = {
   id: number;
   insert: boolean;
-  value: number;
+  value: number | null;
 };
 
 interface MarhsallGeneralData {
@@ -24,6 +24,7 @@ interface MarshallMaterialSelectionData {
   binder: string;
 }
 
+// Atualize a interface MarshallGranulometryCompositionData
 interface MarshallGranulometryCompositionData {
   table_data: {
     table_rows: {
@@ -41,11 +42,23 @@ interface MarshallGranulometryCompositionData {
   percentageInputs: { [key: string]: number }[];
   sumOfPercents: number[];
   dnitBands: { higher: [string, number][]; lower: [string, number][] };
-  bands: { higherBand: [number]; lowerBand: [number]; letter };
+  bands: {
+    higherBand: number[]; // ← Corrigido: não é [number], é number[]
+    lowerBand: number[]; // ← Corrigido: não é [number], é number[]
+    letter?: string; // ← Adicionado opcional
+  };
   pointsOfCurve: any[];
   percentsOfMaterials: any[];
   graphData: any[];
   projections: any[];
+
+  // 🟡 ADICIONE ESTA LINHA:
+  tableWithBands?: Array<{
+    sieve_label: string;
+    projection: string;
+    inferior: string;
+    superior: string;
+  }>;
 }
 
 interface MarshallBinderTrialData {
@@ -72,12 +85,12 @@ interface MarshallBinderTrialData {
 }
 
 interface MarshallMaximumMixtureDensityData {
-  method: string;
+  method: string | null;
   dmt: {
     [key: string]: number;
   }[];
   gmm: GmmRows[];
-  temperatureOfWater: number;
+  temperatureOfWater: number | null;
   missingSpecificMass: {
     name: string;
     _id: string;
@@ -103,7 +116,7 @@ interface MarshallMaximumMixtureDensityData {
   listOfSpecificGravities: any[];
 }
 
-interface VolumetricParametersData {
+export interface VolumetricParametersData {
   lessOne: {
     id: number;
     diammeter: number;
@@ -235,6 +248,7 @@ interface ConfirmationCompressionData {
 }
 
 export type MarshallData = {
+  _id?: string;
   generalData: MarhsallGeneralData;
   materialSelectionData: MarshallMaterialSelectionData;
   granulometryCompositionData: MarshallGranulometryCompositionData;
@@ -553,7 +567,12 @@ const useMarshallStore = create<MarshallData & MarshallActions>()(
         setData: ({ step, key, value }) =>
           set((state) => {
             if (step === 10) {
-              return value; // Substitui o estado inteiro pelo novo valor
+              return {
+                ...initialState, // começa do zero
+                ...(value as object), // sobrescreve com os dados da dosagem
+                fatigueCurveData: undefined,
+                resilienceModuleData: undefined,
+              };
             } else {
               if (key) {
                 return {

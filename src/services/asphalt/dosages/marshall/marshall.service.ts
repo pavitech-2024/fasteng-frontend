@@ -6,6 +6,7 @@ import { IEssayService } from '@/interfaces/common/essay/essay-service.interface
 import { MarshallActions, MarshallData } from '@/stores/asphalt/marshall/marshall.store';
 import { t } from 'i18next';
 
+
 class Marshall_SERVICE implements IEssayService {
   info = {
     key: 'marshall',
@@ -95,13 +96,20 @@ class Marshall_SERVICE implements IEssayService {
 
         if (!name) throw t('errors.empty-project-name');
 
-        const response = await Api.post(`${this.info.backend_path}/verify-init/${user}`, data.generalData);
+        const dataWithDosageId = {
+          generalData: data.generalData,
+          _id: data._id,
+        }
+
+        const response = await Api.post(`${this.info.backend_path}/verify-init/${user}`, dataWithDosageId);
 
         const { success, dosage, error } = response.data;
 
         if (!success) throw error.name;
 
-        this.store_actions.setData({ step: 10, value: { ...data, ...dosage } });
+        const newGeralData = data.generalData
+
+        this.store_actions.setData({ step: 10, value: {...dosage, generalData: newGeralData}  });
       } catch (error) {
         throw error;
       }
@@ -415,10 +423,10 @@ class Marshall_SERVICE implements IEssayService {
   calculateMaximumMixtureDensityDMT = async (
     step2Data: MarshallData['materialSelectionData'],
     step4Data: MarshallData['binderTrialData'],
-    step5Data: MarshallData['maximumMixtureDensityData']
+    maximumMixtureDensityData: MarshallData['maximumMixtureDensityData']
   ): Promise<any> => {
     const { aggregates } = step2Data;
-    const { missingSpecificMass } = step5Data;
+    const { missingSpecificMass } = maximumMixtureDensityData;
     const { newPercentOfDosage, trial } = step4Data;
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-dmt-data`, {
@@ -438,8 +446,8 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  calculateRiceTest = async (step5Data: MarshallData['maximumMixtureDensityData']): Promise<any> => {
-    const { riceTest, temperatureOfWater } = step5Data;
+  calculateRiceTest = async (maximumMixtureDensityData: MarshallData['maximumMixtureDensityData']): Promise<any> => {
+    const { riceTest, temperatureOfWater } = maximumMixtureDensityData;
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-rice-test`, {
         riceTest,
@@ -451,7 +459,7 @@ class Marshall_SERVICE implements IEssayService {
       if (success === false) throw error.name;
 
       const result = {
-        ...step5Data,
+        ...maximumMixtureDensityData,
         ...data,
       };
 
@@ -463,9 +471,9 @@ class Marshall_SERVICE implements IEssayService {
 
   calculateGmmData = async (
     step2Data: MarshallData['materialSelectionData'],
-    step5Data: MarshallData['maximumMixtureDensityData']
+    maximumMixtureDensityData: MarshallData['maximumMixtureDensityData']
   ): Promise<any> => {
-    const { gmm, temperatureOfWater } = step5Data;
+    const { gmm, temperatureOfWater } = maximumMixtureDensityData;
     const { aggregates } = step2Data;
     try {
       const response = await Api.post(`${this.info.backend_path}/calculate-step-5-gmm-data`, {
@@ -479,7 +487,7 @@ class Marshall_SERVICE implements IEssayService {
       if (success === false) throw error.name;
 
       const result = {
-        ...step5Data,
+        ...maximumMixtureDensityData,
         ...data,
       };
 
@@ -530,13 +538,12 @@ class Marshall_SERVICE implements IEssayService {
   setVolumetricParametersData = async (
     step6Data: MarshallData['volumetricParametersData'],
     step4Data: MarshallData['binderTrialData'],
-    step5Data: MarshallData['maximumMixtureDensityData'],
+    maximumMixtureDensityData: MarshallData['maximumMixtureDensityData'],
     isConsult?: boolean
   ): Promise<any> => {
     const volumetricParametersData = step6Data;
     const { percentsOfDosage, trial } = step4Data;
-    const { maxSpecificGravity, temperatureOfWater } = step5Data;
-
+    const { maxSpecificGravity, temperatureOfWater } = maximumMixtureDensityData;
     const { volumetricParameters, ...formattedVolumetricParameters } = volumetricParametersData;
 
     if (!isConsult) {
@@ -656,12 +663,12 @@ class Marshall_SERVICE implements IEssayService {
 
   setOptimumBinderExpectedParameters = async (
     step3Data: MarshallData['granulometryCompositionData'],
-    step5Data: MarshallData['maximumMixtureDensityData'],
+    maximumMixtureDensityData: MarshallData['maximumMixtureDensityData'],
     step4Data: MarshallData['binderTrialData'],
     step7Data: MarshallData['optimumBinderContentData']
   ): Promise<any> => {
     const { percentageInputs } = step3Data;
-    const { maxSpecificGravity, listOfSpecificGravities } = step5Data;
+    const { maxSpecificGravity, listOfSpecificGravities } = maximumMixtureDensityData;
     const { trial } = step4Data;
     const { curveVv, curveRBV } = step7Data.optimumBinder;
     const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
@@ -735,13 +742,13 @@ class Marshall_SERVICE implements IEssayService {
 
   confirmSpecificGravity = async (
     step3Data: MarshallData['granulometryCompositionData'],
-    step5Data: MarshallData['maximumMixtureDensityData'],
+    maximumMixtureDensityData: MarshallData['maximumMixtureDensityData'],
     step7Data: MarshallData['optimumBinderContentData'],
     step8Data: MarshallData['confirmationCompressionData'],
     isRiceTest: boolean
   ): Promise<any> => {
     const { percentageInputs } = step3Data;
-    const { listOfSpecificGravities } = step5Data;
+    const { listOfSpecificGravities } = maximumMixtureDensityData;
     const { gmm, riceTest } = step8Data;
     const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
     let method;
@@ -750,7 +757,7 @@ class Marshall_SERVICE implements IEssayService {
     if (isRiceTest) {
       method = 'GMM';
     } else {
-      method = step5Data.maxSpecificGravity.method;
+      method = maximumMixtureDensityData.maxSpecificGravity.method;
     }
 
     try {
@@ -779,11 +786,11 @@ class Marshall_SERVICE implements IEssayService {
   };
 
   confirmVolumetricParameters = async (
-    step5Data: MarshallData['maximumMixtureDensityData'],
+    maximumMixtureDensityData: MarshallData['maximumMixtureDensityData'],
     step7Data: MarshallData['optimumBinderContentData'],
     step8Data: MarshallData['confirmationCompressionData']
   ): Promise<any> => {
-    const { temperatureOfWater, listOfSpecificGravities } = step5Data;
+    const { temperatureOfWater, listOfSpecificGravities } = maximumMixtureDensityData;
     const { optimumContent, confirmedPercentsOfDosage } = step7Data.optimumBinder;
     const { optimumBinder } = step8Data;
     const { result: resultNumber } = step8Data.confirmedSpecificGravity;
@@ -861,36 +868,198 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  submitMarshalDosageData = async (
-    data: MarshallData,
-    userId: string,
-    user?: string,
-    isConsult?: boolean
-  ): Promise<void> => {
-    if (!isConsult) {
-      try {
-        const userData = userId ? userId : user;
+ submitMarshalDosageData = async (
+  data: MarshallData,
+  userId: string,
+  user?: string,
+  isConsult?: boolean
+): Promise<any> => {
+  console.log('🔵 submitMarshalDosageData CHAMADO!');
+  console.log('🔵 isConsult:', isConsult);
+  console.log('🔵 userId:', userId);
+  console.log('🔵 user:', user);
+  console.log('🔵 data:', data);
 
-        const marshallDosageData = {
-          ...data,
-          isConsult: null,
-        };
+  if (!isConsult) {
+    try {
+      const userData = userId ? userId : user;
+      console.log('🔵 userData:', userData);
+      
+      // 🔥 USA O NOVO ENDPOINT COMPLETE
+      console.log('🔵 Fazendo POST para:', `${this.info.backend_path}/complete/${userData}`);
+      
+      const response = await Api.post(
+        `${this.info.backend_path}/complete/${userData}`,
+        data
+      );
 
-        if (isConsult) marshallDosageData.isConsult = isConsult;
+      console.log('🔵 Resposta do backend:', response.data);
 
-        const response = await Api.post(
-          `${this.info.backend_path}/save-marshall-dosage/${userData}`,
-          marshallDosageData
-        );
-
-        const { success, error } = response.data;
-
-        if (success === false) throw error.name;
-      } catch (error) {
-        throw error;
+      const { success, error } = response.data;
+      if (!success) {
+        console.error('❌ Erro do backend:', error);
+        throw error?.name || 'Erro ao salvar dosagem completa';
       }
+      
+      console.log('✅ Dosagem salva com sucesso via complete!');
+    } catch (error) {
+      console.error('❌ Erro ao salvar dosagem completa:', error);
+      throw error;
     }
-  };
+  } else {
+    console.log('🟡 isConsult é true, não salvando');
+  }
+};
+saveFatigueCurve = async (data: { 
+  dosageId: string; 
+  k1?: number;
+  k2?: number;
+  observacoes?: string;
+}) => {
+  console.log('🔵 [FATIGUE SERVICE] INÍCIO - dados recebidos:', JSON.stringify(data, null, 2));
+  
+  try {
+    const { dosageId, k1, k2, observacoes } = data;
+    
+    console.log('🟡 [FATIGUE SERVICE] dosageId:', dosageId);
+    console.log('🟡 [FATIGUE SERVICE] k1:', k1, '| tipo:', typeof k1);
+    console.log('🟡 [FATIGUE SERVICE] k2:', k2, '| tipo:', typeof k2);
+    console.log('🟡 [FATIGUE SERVICE] observacoes:', observacoes, '| tipo:', typeof observacoes);
+    
+    // 1. Verifique e limpe o ID
+    if (!dosageId || dosageId.trim() === '') {
+      console.error('🔴 [FATIGUE SERVICE] dosageId inválido:', dosageId);
+      throw new Error('ID da dosagem não fornecido');
+    }
+    
+    // 2. Encode o ID para URL
+    const encodedId = encodeURIComponent(dosageId.trim());
+    console.log('🟡 [FATIGUE SERVICE] encodedId:', encodedId);
+    
+    // 3. Prepare os dados
+    const fatigueData = {
+      k1: k1 !== undefined && !isNaN(k1) ? k1 : undefined,
+      k2: k2 !== undefined && !isNaN(k2) ? k2 : undefined,
+      observacoes: observacoes && observacoes.trim() !== '' ? observacoes.trim() : undefined,
+    };
+    
+    console.log('🟡 [FATIGUE SERVICE] fatigueData preparado:', JSON.stringify(fatigueData, null, 2));
+    
+    // 4. Construa a URL
+    const basePath = this.info.backend_path;
+    const url = `${basePath}/${encodedId}/fatigue-curve`;
+    
+    console.log('🟡 [FATIGUE SERVICE] URL completa:', url);
+    console.log('🟢 [FATIGUE SERVICE] Enviando requisição PATCH...');
+    
+    // 5. Faça a requisição
+    const response = await Api.patch(url, fatigueData);
+    
+    console.log('🟢 [FATIGUE SERVICE] Resposta recebida - status:', response.status);
+    console.log('🟢 [FATIGUE SERVICE] Dados da resposta:', JSON.stringify(response.data, null, 2));
+    
+    const { success, error } = response.data;
+    
+    if (!success) {
+      console.error('🔴 [FATIGUE SERVICE] Erro do backend:', error);
+      throw error?.message || error?.name || 'Erro ao salvar curva de fadiga';
+    }
+    
+    console.log('✅ [FATIGUE SERVICE] Sucesso!');
+    return response.data;
+    
+  } catch (error: any) {
+    console.error('💥 [FATIGUE SERVICE] ERRO CRÍTICO:');
+    console.error('💥 Mensagem:', error.message);
+    console.error('💥 Stack:', error.stack);
+    
+    if (error.response) {
+      console.error('💥 Status da resposta:', error.response.status);
+      console.error('💥 Dados da resposta:', error.response.data);
+      console.error('💥 Headers:', error.response.headers);
+    }
+    
+    if (error.request) {
+      console.error('💥 Request foi feito mas sem resposta:', error.request);
+    }
+    
+    throw new Error(`Falha ao salvar curva de fadiga: ${error.message}`);
+  }
+};
+
+// Módulo de Resiliência - COM LOGS
+saveResilienceModule = async (data: { 
+  dosageId: string; 
+  moduloMedio?: number;
+  moduloInstantaneo?: number;
+  observacoes?: string;
+}) => {
+  console.log('🔵 [RESILIENCE SERVICE] INÍCIO - dados recebidos:', JSON.stringify(data, null, 2));
+  
+  try {
+    const { dosageId, moduloMedio, moduloInstantaneo, observacoes } = data;
+    
+    console.log('🟡 [RESILIENCE SERVICE] dosageId:', dosageId);
+    console.log('🟡 [RESILIENCE SERVICE] moduloMedio:', moduloMedio, '| tipo:', typeof moduloMedio);
+    console.log('🟡 [RESILIENCE SERVICE] moduloInstantaneo:', moduloInstantaneo, '| tipo:', typeof moduloInstantaneo);
+    console.log('🟡 [RESILIENCE SERVICE] observacoes:', observacoes, '| tipo:', typeof observacoes);
+    
+    // 1. Verifique e limpe o ID
+    if (!dosageId || dosageId.trim() === '') {
+      console.error('🔴 [RESILIENCE SERVICE] dosageId inválido:', dosageId);
+      throw new Error('ID da dosagem não fornecido');
+    }
+    
+    // 2. Encode o ID para URL
+    const encodedId = encodeURIComponent(dosageId.trim());
+    console.log('🟡 [RESILIENCE SERVICE] encodedId:', encodedId);
+    
+    // 3. Prepare os dados
+    const resilienceData = {
+      moduloMedio: moduloMedio !== undefined && !isNaN(moduloMedio) ? moduloMedio : undefined,
+      moduloInstantaneo: moduloInstantaneo !== undefined && !isNaN(moduloInstantaneo) ? moduloInstantaneo : undefined,
+      observacoes: observacoes && observacoes.trim() !== '' ? observacoes.trim() : undefined,
+    };
+    
+    console.log('🟡 [RESILIENCE SERVICE] resilienceData preparado:', JSON.stringify(resilienceData, null, 2));
+    
+    // 4. Construa a URL
+    const basePath = this.info.backend_path;
+    const url = `${basePath}/${encodedId}/resilience-module`;
+    
+    console.log('🟡 [RESILIENCE SERVICE] URL completa:', url);
+    console.log('🟢 [RESILIENCE SERVICE] Enviando requisição PATCH...');
+    
+    // 5. Faça a requisição
+    const response = await Api.patch(url, resilienceData);
+    
+    console.log('🟢 [RESILIENCE SERVICE] Resposta recebida - status:', response.status);
+    console.log('🟢 [RESILIENCE SERVICE] Dados da resposta:', JSON.stringify(response.data, null, 2));
+    
+    const { success, error } = response.data;
+    
+    if (!success) {
+      console.error('🔴 [RESILIENCE SERVICE] Erro do backend:', error);
+      throw error?.message || error?.name || 'Erro ao salvar módulo de resiliência';
+    }
+    
+    console.log('✅ [RESILIENCE SERVICE] Sucesso!');
+    return response.data;
+    
+  } catch (error: any) {
+    console.error('💥 [RESILIENCE SERVICE] ERRO CRÍTICO:');
+    console.error('💥 Mensagem:', error.message);
+    console.error('💥 Stack:', error.stack);
+    
+    if (error.response) {
+      console.error('💥 Status da resposta:', error.response.status);
+      console.error('💥 Dados da resposta:', error.response.data);
+    }
+    
+    throw new Error(`Falha ao salvar módulo de resiliência: ${error.message}`);
+  }
+};
+
 }
 
 export default Marshall_SERVICE;

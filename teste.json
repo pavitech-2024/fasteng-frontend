@@ -1,0 +1,2039 @@
+{
+  "state": {
+    "generalData": {
+      "userId": null,
+      "name": "teste 01/07 2",
+      "laboratory": null,
+      "operator": null,
+      "calculist": null,
+      "trafficVolume": "low",
+      "objective": "bonding",
+      "dnitBand": "A",
+      "description": null,
+      "step": 0
+    },
+    "granulometryEssayData": {
+      "materials": [
+        {
+          "_id": "68644ec2ce09f44ff888d0ef",
+          "createdAt": "2025-07-01T21:10:26.403Z",
+          "userId": "60f4d01a-9f80-417d-a7cd-cc30e440d15f",
+          "description": {
+            "source": null,
+            "responsible": null,
+            "aggregateNature": null,
+            "boughtDate": null,
+            "observation": null
+          },
+          "name": "brita 19 2 01/07",
+          "type": "coarseAggregate"
+        },
+        {
+          "_id": "68644efdce09f44ff888d0f2",
+          "createdAt": "2025-07-01T21:11:25.930Z",
+          "userId": "60f4d01a-9f80-417d-a7cd-cc30e440d15f",
+          "description": {
+            "source": null,
+            "responsible": null,
+            "aggregateNature": null,
+            "boughtDate": null,
+            "observation": null
+          },
+          "name": "brita 12 2 01/07",
+          "type": "coarseAggregate"
+        },
+        {
+          "_id": "68644f0ace09f44ff888d0f5",
+          "createdAt": "2025-07-01T21:11:38.751Z",
+          "userId": "60f4d01a-9f80-417d-a7cd-cc30e440d15f",
+          "description": {
+            "source": null,
+            "responsible": null,
+            "aggregateNature": null,
+            "boughtDate": null,
+            "observation": null
+          },
+          "name": "areia 2 01/07",
+          "type": "fineAggregate"
+        },
+        {
+          "_id": "68644f31ce09f44ff888d0f8",
+          "createdAt": "2025-07-01T21:12:17.658Z",
+          "userId": "60f4d01a-9f80-417d-a7cd-cc30e440d15f",
+          "description": {
+            "source": null,
+            "responsible": null,
+            "aggregateNature": null,
+            "boughtDate": null,
+            "observation": null
+          },
+          "name": "cap 2 01/07",
+          "type": "CAP"
+        }
+      ],
+      "granulometrys": [
+        {
+          "material": {
+            "name": "brita 19 2 01/07",
+            "type": "coarseAggregate",
+            "userId": "60f4d01a-9f80-417d-a7cd-cc30e440d15f",
+            "createdAt": "2025-07-01T21:10:26.403Z",
+            "description": {
+              "source": null,
+              "responsible": null,
+              "maxDiameter": null,
+              "aggregateNature": null,
+              "boughtDate": null,
+              "recieveDate": null,
+              "extractionDate": null,
+              "collectionDate": null,
+              "classification_CAP": null,
+              "classification_AMP": null,
+              "observation": null
+            },
+            "_id": "68644ec2ce09f44ff888d0ef",
+            "__v": 0
+          },
+          "material_mass": 5000.12,
+          "table_data": [
+            {
+              "sieve_label": "1 1/2 pol - 38,1mm",
+              "sieve_value": 38.1,
+              "passant": 100,
+              "retained": 0
+            },
+            {
+              "sieve_label": "1 pol - 25,4mm",
+              "sieve_value": 25.4,
+              "passant": 100,
+              "retained": 0
+            },
+            {
+              "sieve_label": "3/4 pol - 19,1mm",
+              "sieve_value": 19.1,
+              "passant": 96.29,
+              "retained": 185.5
+            },
+            {
+              "sieve_label": "1/2 pol - 12,7mm",
+              "sieve_value": 12.7,
+              "passant": 19.46,
+              "retained": 3841.6
+            },
+            {
+              "sieve_label": "3/8 pol - 9,5mm",
+              "sieve_value": 9.5,
+              "passant": 0.88,
+              "retained": 929.02
+            },
+            {
+              "sieve_label": "1/4 pol - 6,3mm",
+              "sieve_value": 6.3,
+              "passant": 0.1,
+              "retained": 39
+            },
+            {
+              "sieve_label": "Nº4 - 4,8mm",
+              "sieve_value": 4.8,
+              "passant": 0.1,
+              "retained": 0
+            },
+            {
+              "sieve_label": "Nº8 - 2,36mm",
+              "sieve_value": 2.36,
+              "passant": 0.1,
+              "retained": 0
+            },
+            {
+              "sieve_label": "Nº16 - 1,18mm",
+              "sieve_value": 1.18,
+              "passant": 0.1,
+              "retained": 0
+            },
+            {
+              "sieve_label": "Nº30 - 0,6mm",
+              "sieve_value": 0.6,
+              "passant": 0.1,
+              "retained": 0
+            },
+            {
+              "sieve_label": "Nº50 - 0,3mm",
+              "sieve_value": 0.3,
+              "passant": 0.1,
+              "retained": 0
+            },
+            {
+              "sieve_label": "Nº100 - 0,15mm",
+              "sieve_value": 0.15,
+              "passant": 0.1,
+              "retained": 0
+            },
+            {
+              "sieve_label": "Nº200 - 0,075mm",
+              "sieve_value": 0.075,
+              "passant": 0.08,
+              "retained": 1
+            }
+          ],
+          "sieve_series": [
+            {
+              "label": "1 1/2 pol - 38,1mm",
+              "value": 38.1
+            },
+            {
+              "label": "1 pol - 25,4mm",
+              "value": 25.4
+            },
+            {
+              "label": "3/4 pol - 19,1mm",
+              "value": 19.1
+            },
+            {
+              "label": "1/2 pol - 12,7mm",
+              "value": 12.7
+            },
+            {
+              "label": "3/8 pol - 9,5mm",
+              "value": 9.5
+            },
+            {
+              "label": "1/4 pol - 6,3mm",
+              "value": 6.3
+            },
+            {
+              "label": "Nº4 - 4,8mm",
+              "value": 4.8
+            },
+            {
+              "label": "Nº8 - 2,36mm",
+              "value": 2.36
+            },
+            {
+              "label": "Nº16 - 1,18mm",
+              "value": 1.18
+            },
+            {
+              "label": "Nº30 - 0,6mm",
+              "value": 0.6
+            },
+            {
+              "label": "Nº50 - 0,3mm",
+              "value": 0.3
+            },
+            {
+              "label": "Nº100 - 0,15mm",
+              "value": 0.15
+            },
+            {
+              "label": "Nº200 - 0,075mm",
+              "value": 0.075
+            }
+          ],
+          "bottom": 4
+        },
+        {
+          "material": {
+            "name": "brita 12 2 01/07",
+            "type": "coarseAggregate",
+            "userId": "60f4d01a-9f80-417d-a7cd-cc30e440d15f",
+            "createdAt": "2025-07-01T21:11:25.930Z",
+            "description": {
+              "source": null,
+              "responsible": null,
+              "maxDiameter": null,
+              "aggregateNature": null,
+              "boughtDate": null,
+              "recieveDate": null,
+              "extractionDate": null,
+              "collectionDate": null,
+              "classification_CAP": null,
+              "classification_AMP": null,
+              "observation": null
+            },
+            "_id": "68644efdce09f44ff888d0f2",
+            "__v": 0
+          },
+          "material_mass": 2000.21,
+          "table_data": [
+            {
+              "sieve_label": "1 1/2 pol - 38,1mm",
+              "sieve_value": 38.1,
+              "passant": 100,
+              "retained": 0
+            },
+            {
+              "sieve_label": "1 pol - 25,4mm",
+              "sieve_value": 25.4,
+              "passant": 100,
+              "retained": 0
+            },
+            {
+              "sieve_label": "3/4 pol - 19,1mm",
+              "sieve_value": 19.1,
+              "passant": 100,
+              "retained": 0
+            },
+            {
+              "sieve_label": "1/2 pol - 12,7mm",
+              "sieve_value": 12.7,
+              "passant": 100,
+              "retained": 0
+            },
+            {
+              "sieve_label": "3/8 pol - 9,5mm",
+              "sieve_value": 9.5,
+              "passant": 94.23,
+              "retained": 115.41
+            },
+            {
+              "sieve_label": "1/4 pol - 6,3mm",
+              "sieve_value": 6.3,
+              "passant": 61.07,
+              "retained": 663.27
+            },
+            {
+              "sieve_label": "Nº4 - 4,8mm",
+              "sieve_value": 4.8,
+              "passant": 25.21,
+              "retained": 717.28
+            },
+            {
+              "sieve_label": "Nº8 - 2,36mm",
+              "sieve_value": 2.36,
+              "passant": 1.58,
+              "retained": 472.65
+            },
+            {
+              "sieve_label": "Nº16 - 1,18mm",
+              "sieve_value": 1.18,
+              "passant": 1.03,
+              "retained": 11
+            },
+            {
+              "sieve_label": "Nº30 - 0,6mm",
+              "sieve_value": 0.6,
+              "passant": 0.9,
+              "retained": 2.6
+            },
+            {
+              "sieve_label": "Nº50 - 0,3mm",
+              "sieve_value": 0.3,
+              "passant": 0.85,
+              "retained": 1
+            },
+            {
+              "sieve_label": "Nº100 - 0,15mm",
+              "sieve_value": 0.15,
+              "passant": 0.76,
+              "retained": 1.8
+            },
+            {
+              "sieve_label": "Nº200 - 0,075mm",
+              "sieve_value": 0.075,
+              "passant": 0.61,
+              "retained": 3
+            }
+          ],
+          "sieve_series": [
+            {
+              "label": "1 1/2 pol - 38,1mm",
+              "value": 38.1
+            },
+            {
+              "label": "1 pol - 25,4mm",
+              "value": 25.4
+            },
+            {
+              "label": "3/4 pol - 19,1mm",
+              "value": 19.1
+            },
+            {
+              "label": "1/2 pol - 12,7mm",
+              "value": 12.7
+            },
+            {
+              "label": "3/8 pol - 9,5mm",
+              "value": 9.5
+            },
+            {
+              "label": "1/4 pol - 6,3mm",
+              "value": 6.3
+            },
+            {
+              "label": "Nº4 - 4,8mm",
+              "value": 4.8
+            },
+            {
+              "label": "Nº8 - 2,36mm",
+              "value": 2.36
+            },
+            {
+              "label": "Nº16 - 1,18mm",
+              "value": 1.18
+            },
+            {
+              "label": "Nº30 - 0,6mm",
+              "value": 0.6
+            },
+            {
+              "label": "Nº50 - 0,3mm",
+              "value": 0.3
+            },
+            {
+              "label": "Nº100 - 0,15mm",
+              "value": 0.15
+            },
+            {
+              "label": "Nº200 - 0,075mm",
+              "value": 0.075
+            }
+          ],
+          "bottom": 12.2
+        },
+        {
+          "material": {
+            "name": "areia 2 01/07",
+            "type": "fineAggregate",
+            "userId": "60f4d01a-9f80-417d-a7cd-cc30e440d15f",
+            "createdAt": "2025-07-01T21:11:38.751Z",
+            "description": {
+              "source": null,
+              "responsible": null,
+              "maxDiameter": null,
+              "aggregateNature": null,
+              "boughtDate": null,
+              "recieveDate": null,
+              "extractionDate": null,
+              "collectionDate": null,
+              "classification_CAP": null,
+              "classification_AMP": null,
+              "observation": null
+            },
+            "_id": "68644f0ace09f44ff888d0f5",
+            "__v": 0
+          },
+          "material_mass": 1011.48,
+          "table_data": [
+            {
+              "sieve_label": "1 1/2 pol - 38,1mm",
+              "sieve_value": 38.1,
+              "passant": 100,
+              "retained": 0
+            },
+            {
+              "sieve_label": "1 pol - 25,4mm",
+              "sieve_value": 25.4,
+              "passant": 100,
+              "retained": 0
+            },
+            {
+              "sieve_label": "3/4 pol - 19,1mm",
+              "sieve_value": 19.1,
+              "passant": 100,
+              "retained": 0
+            },
+            {
+              "sieve_label": "1/2 pol - 12,7mm",
+              "sieve_value": 12.7,
+              "passant": 100,
+              "retained": 0
+            },
+            {
+              "sieve_label": "3/8 pol - 9,5mm",
+              "sieve_value": 9.5,
+              "passant": 100,
+              "retained": 0
+            },
+            {
+              "sieve_label": "1/4 pol - 6,3mm",
+              "sieve_value": 6.3,
+              "passant": 100,
+              "retained": 0
+            },
+            {
+              "sieve_label": "Nº4 - 4,8mm",
+              "sieve_value": 4.8,
+              "passant": 99.38,
+              "retained": 6.27
+            },
+            {
+              "sieve_label": "Nº8 - 2,36mm",
+              "sieve_value": 2.36,
+              "passant": 84.23,
+              "retained": 153.24
+            },
+            {
+              "sieve_label": "Nº16 - 1,18mm",
+              "sieve_value": 1.18,
+              "passant": 63.69,
+              "retained": 207.76
+            },
+            {
+              "sieve_label": "Nº30 - 0,6mm",
+              "sieve_value": 0.6,
+              "passant": 45.36,
+              "retained": 185.4
+            },
+            {
+              "sieve_label": "Nº50 - 0,3mm",
+              "sieve_value": 0.3,
+              "passant": 31.28,
+              "retained": 142.42
+            },
+            {
+              "sieve_label": "Nº100 - 0,15mm",
+              "sieve_value": 0.15,
+              "passant": 17.56,
+              "retained": 138.77
+            },
+            {
+              "sieve_label": "Nº200 - 0,075mm",
+              "sieve_value": 0.075,
+              "passant": 10.58,
+              "retained": 70.61
+            }
+          ],
+          "sieve_series": [
+            {
+              "label": "1 1/2 pol - 38,1mm",
+              "value": 38.1
+            },
+            {
+              "label": "1 pol - 25,4mm",
+              "value": 25.4
+            },
+            {
+              "label": "3/4 pol - 19,1mm",
+              "value": 19.1
+            },
+            {
+              "label": "1/2 pol - 12,7mm",
+              "value": 12.7
+            },
+            {
+              "label": "3/8 pol - 9,5mm",
+              "value": 9.5
+            },
+            {
+              "label": "1/4 pol - 6,3mm",
+              "value": 6.3
+            },
+            {
+              "label": "Nº4 - 4,8mm",
+              "value": 4.8
+            },
+            {
+              "label": "Nº8 - 2,36mm",
+              "value": 2.36
+            },
+            {
+              "label": "Nº16 - 1,18mm",
+              "value": 1.18
+            },
+            {
+              "label": "Nº30 - 0,6mm",
+              "value": 0.6
+            },
+            {
+              "label": "Nº50 - 0,3mm",
+              "value": 0.3
+            },
+            {
+              "label": "Nº100 - 0,15mm",
+              "value": 0.15
+            },
+            {
+              "label": "Nº200 - 0,075mm",
+              "value": 0.075
+            }
+          ],
+          "bottom": 107.01
+        }
+      ],
+      "viscosity": {
+        "material": {
+          "name": "cap 2 01/07",
+          "type": "CAP",
+          "userId": "60f4d01a-9f80-417d-a7cd-cc30e440d15f",
+          "createdAt": "2025-07-01T21:12:17.658Z",
+          "description": {
+            "source": null,
+            "responsible": null,
+            "maxDiameter": null,
+            "aggregateNature": null,
+            "boughtDate": null,
+            "recieveDate": null,
+            "extractionDate": null,
+            "collectionDate": null,
+            "classification_CAP": "CAP 50/70",
+            "classification_AMP": null,
+            "observation": null
+          },
+          "_id": "68644f31ce09f44ff888d0f8",
+          "__v": 0
+        },
+        "dataPoints": [
+          {
+            "id": 0,
+            "temperature": 135,
+            "viscosity": 358.67
+          },
+          {
+            "id": 1,
+            "temperature": 150,
+            "viscosity": 227.79
+          },
+          {
+            "id": 2,
+            "temperature": 177,
+            "viscosity": 83.09
+          }
+        ]
+      }
+    },
+    "granulometryResultsData": {
+      "granulometrys": [
+        {
+          "material": {
+            "name": "brita 19 2 01/07",
+            "type": "coarseAggregate",
+            "userId": "60f4d01a-9f80-417d-a7cd-cc30e440d15f",
+            "createdAt": "2025-07-01T21:10:26.403Z",
+            "description": {
+              "source": null,
+              "responsible": null,
+              "maxDiameter": null,
+              "aggregateNature": null,
+              "boughtDate": null,
+              "recieveDate": null,
+              "extractionDate": null,
+              "collectionDate": null,
+              "classification_CAP": null,
+              "classification_AMP": null,
+              "observation": null
+            },
+            "_id": "68644ec2ce09f44ff888d0ef",
+            "__v": 0
+          },
+          "result": {
+            "accumulated_retained": [
+              ["1 1/2 pol - 38,1mm", 0],
+              ["1 pol - 25,4mm", 0],
+              ["3/4 pol - 19,1mm", 3.71],
+              ["1/2 pol - 12,7mm", 80.54],
+              ["3/8 pol - 9,5mm", 99.12],
+              ["1/4 pol - 6,3mm", 99.9],
+              ["Nº4 - 4,8mm", 99.9],
+              ["Nº8 - 2,36mm", 99.9],
+              ["Nº16 - 1,18mm", 99.9],
+              ["Nº30 - 0,6mm", 99.9],
+              ["Nº50 - 0,3mm", 99.9],
+              ["Nº100 - 0,15mm", 99.9],
+              ["Nº200 - 0,075mm", 99.92]
+            ],
+            "graph_data": [
+              [38.1, 100],
+              [25.4, 100],
+              [19.1, 96.29],
+              [12.7, 19.46],
+              [9.5, 0.88],
+              [6.3, 0.1],
+              [4.8, 0.1],
+              [2.36, 0.1],
+              [1.18, 0.1],
+              [0.6, 0.1],
+              [0.3, 0.1],
+              [0.15, 0.1],
+              [0.075, 0.08]
+            ],
+            "passant": [
+              ["1 1/2 pol - 38,1mm", 5000.12],
+              ["1 pol - 25,4mm", 5000.12],
+              ["3/4 pol - 19,1mm", 4814.62],
+              ["1/2 pol - 12,7mm", 973.02],
+              ["3/8 pol - 9,5mm", 44],
+              ["1/4 pol - 6,3mm", 5],
+              ["Nº4 - 4,8mm", 5],
+              ["Nº8 - 2,36mm", 5],
+              ["Nº16 - 1,18mm", 5],
+              ["Nº30 - 0,6mm", 5],
+              ["Nº50 - 0,3mm", 5],
+              ["Nº100 - 0,15mm", 5],
+              ["Nº200 - 0,075mm", 4]
+            ],
+            "retained_porcentage": [
+              ["1 1/2 pol - 38,1mm", 0],
+              ["1 pol - 25,4mm", 0],
+              ["3/4 pol - 19,1mm", 3.71],
+              ["1/2 pol - 12,7mm", 76.83],
+              ["3/8 pol - 9,5mm", 18.58],
+              ["1/4 pol - 6,3mm", 0.78],
+              ["Nº4 - 4,8mm", 0],
+              ["Nº8 - 2,36mm", 0],
+              ["Nº16 - 1,18mm", 0],
+              ["Nº30 - 0,6mm", 0],
+              ["Nº50 - 0,3mm", 0],
+              ["Nº100 - 0,15mm", 0],
+              ["Nº200 - 0,075mm", 0.02]
+            ],
+            "passant_porcentage": [
+              ["1 1/2 pol - 38,1mm", 100],
+              ["1 pol - 25,4mm", 100],
+              ["3/4 pol - 19,1mm", 96.29],
+              ["1/2 pol - 12,7mm", 19.46],
+              ["3/8 pol - 9,5mm", 0.88],
+              ["1/4 pol - 6,3mm", 0.1],
+              ["Nº4 - 4,8mm", 0.1],
+              ["Nº8 - 2,36mm", 0.1],
+              ["Nº16 - 1,18mm", 0.1],
+              ["Nº30 - 0,6mm", 0.1],
+              ["Nº50 - 0,3mm", 0.1],
+              ["Nº100 - 0,15mm", 0.1],
+              ["Nº200 - 0,075mm", 0.08]
+            ],
+            "total_retained": 4996.12,
+            "nominal_diameter": 25.4,
+            "nominal_size": 25.4,
+            "fineness_module": 9.83,
+            "cc": 1.58,
+            "cnu": 6.56,
+            "error": 0
+          }
+        },
+        {
+          "material": {
+            "name": "brita 12 2 01/07",
+            "type": "coarseAggregate",
+            "userId": "60f4d01a-9f80-417d-a7cd-cc30e440d15f",
+            "createdAt": "2025-07-01T21:11:25.930Z",
+            "description": {
+              "source": null,
+              "responsible": null,
+              "maxDiameter": null,
+              "aggregateNature": null,
+              "boughtDate": null,
+              "recieveDate": null,
+              "extractionDate": null,
+              "collectionDate": null,
+              "classification_CAP": null,
+              "classification_AMP": null,
+              "observation": null
+            },
+            "_id": "68644efdce09f44ff888d0f2",
+            "__v": 0
+          },
+          "result": {
+            "accumulated_retained": [
+              ["1 1/2 pol - 38,1mm", 0],
+              ["1 pol - 25,4mm", 0],
+              ["3/4 pol - 19,1mm", 0],
+              ["1/2 pol - 12,7mm", 0],
+              ["3/8 pol - 9,5mm", 5.77],
+              ["1/4 pol - 6,3mm", 38.93],
+              ["Nº4 - 4,8mm", 74.79],
+              ["Nº8 - 2,36mm", 98.42],
+              ["Nº16 - 1,18mm", 98.97],
+              ["Nº30 - 0,6mm", 99.1],
+              ["Nº50 - 0,3mm", 99.15],
+              ["Nº100 - 0,15mm", 99.24],
+              ["Nº200 - 0,075mm", 99.39]
+            ],
+            "graph_data": [
+              [38.1, 100],
+              [25.4, 100],
+              [19.1, 100],
+              [12.7, 100],
+              [9.5, 94.23],
+              [6.3, 61.07],
+              [4.8, 25.21],
+              [2.36, 1.58],
+              [1.18, 1.03],
+              [0.6, 0.9],
+              [0.3, 0.85],
+              [0.15, 0.76],
+              [0.075, 0.61]
+            ],
+            "passant": [
+              ["1 1/2 pol - 38,1mm", 2000.21],
+              ["1 pol - 25,4mm", 2000.21],
+              ["3/4 pol - 19,1mm", 2000.21],
+              ["1/2 pol - 12,7mm", 2000.21],
+              ["3/8 pol - 9,5mm", 1884.8],
+              ["1/4 pol - 6,3mm", 1221.53],
+              ["Nº4 - 4,8mm", 504.25],
+              ["Nº8 - 2,36mm", 31.6],
+              ["Nº16 - 1,18mm", 20.6],
+              ["Nº30 - 0,6mm", 18],
+              ["Nº50 - 0,3mm", 17],
+              ["Nº100 - 0,15mm", 15.2],
+              ["Nº200 - 0,075mm", 12.2]
+            ],
+            "retained_porcentage": [
+              ["1 1/2 pol - 38,1mm", 0],
+              ["1 pol - 25,4mm", 0],
+              ["3/4 pol - 19,1mm", 0],
+              ["1/2 pol - 12,7mm", 0],
+              ["3/8 pol - 9,5mm", 5.77],
+              ["1/4 pol - 6,3mm", 33.16],
+              ["Nº4 - 4,8mm", 35.86],
+              ["Nº8 - 2,36mm", 23.63],
+              ["Nº16 - 1,18mm", 0.55],
+              ["Nº30 - 0,6mm", 0.13],
+              ["Nº50 - 0,3mm", 0.05],
+              ["Nº100 - 0,15mm", 0.09],
+              ["Nº200 - 0,075mm", 0.15]
+            ],
+            "passant_porcentage": [
+              ["1 1/2 pol - 38,1mm", 100],
+              ["1 pol - 25,4mm", 100],
+              ["3/4 pol - 19,1mm", 100],
+              ["1/2 pol - 12,7mm", 100],
+              ["3/8 pol - 9,5mm", 94.23],
+              ["1/4 pol - 6,3mm", 61.07],
+              ["Nº4 - 4,8mm", 25.21],
+              ["Nº8 - 2,36mm", 1.58],
+              ["Nº16 - 1,18mm", 1.03],
+              ["Nº30 - 0,6mm", 0.9],
+              ["Nº50 - 0,3mm", 0.85],
+              ["Nº100 - 0,15mm", 0.76],
+              ["Nº200 - 0,075mm", 0.61]
+            ],
+            "total_retained": 1988.01,
+            "nominal_diameter": 12.7,
+            "nominal_size": 12.7,
+            "fineness_module": 7.14,
+            "cc": 1.58,
+            "cnu": 6.56,
+            "error": 0
+          }
+        },
+        {
+          "material": {
+            "name": "areia 2 01/07",
+            "type": "fineAggregate",
+            "userId": "60f4d01a-9f80-417d-a7cd-cc30e440d15f",
+            "createdAt": "2025-07-01T21:11:38.751Z",
+            "description": {
+              "source": null,
+              "responsible": null,
+              "maxDiameter": null,
+              "aggregateNature": null,
+              "boughtDate": null,
+              "recieveDate": null,
+              "extractionDate": null,
+              "collectionDate": null,
+              "classification_CAP": null,
+              "classification_AMP": null,
+              "observation": null
+            },
+            "_id": "68644f0ace09f44ff888d0f5",
+            "__v": 0
+          },
+          "result": {
+            "accumulated_retained": [
+              ["1 1/2 pol - 38,1mm", 0],
+              ["1 pol - 25,4mm", 0],
+              ["3/4 pol - 19,1mm", 0],
+              ["1/2 pol - 12,7mm", 0],
+              ["3/8 pol - 9,5mm", 0],
+              ["1/4 pol - 6,3mm", 0],
+              ["Nº4 - 4,8mm", 0.62],
+              ["Nº8 - 2,36mm", 15.77],
+              ["Nº16 - 1,18mm", 36.31],
+              ["Nº30 - 0,6mm", 54.64],
+              ["Nº50 - 0,3mm", 68.72],
+              ["Nº100 - 0,15mm", 82.44],
+              ["Nº200 - 0,075mm", 89.42]
+            ],
+            "graph_data": [
+              [38.1, 100],
+              [25.4, 100],
+              [19.1, 100],
+              [12.7, 100],
+              [9.5, 100],
+              [6.3, 100],
+              [4.8, 99.38],
+              [2.36, 84.23],
+              [1.18, 63.69],
+              [0.6, 45.36],
+              [0.3, 31.28],
+              [0.15, 17.56],
+              [0.075, 10.58]
+            ],
+            "passant": [
+              ["1 1/2 pol - 38,1mm", 1011.48],
+              ["1 pol - 25,4mm", 1011.48],
+              ["3/4 pol - 19,1mm", 1011.48],
+              ["1/2 pol - 12,7mm", 1011.48],
+              ["3/8 pol - 9,5mm", 1011.48],
+              ["1/4 pol - 6,3mm", 1011.48],
+              ["Nº4 - 4,8mm", 1005.21],
+              ["Nº8 - 2,36mm", 851.97],
+              ["Nº16 - 1,18mm", 644.21],
+              ["Nº30 - 0,6mm", 458.81],
+              ["Nº50 - 0,3mm", 316.39],
+              ["Nº100 - 0,15mm", 177.62],
+              ["Nº200 - 0,075mm", 107.01]
+            ],
+            "retained_porcentage": [
+              ["1 1/2 pol - 38,1mm", 0],
+              ["1 pol - 25,4mm", 0],
+              ["3/4 pol - 19,1mm", 0],
+              ["1/2 pol - 12,7mm", 0],
+              ["3/8 pol - 9,5mm", 0],
+              ["1/4 pol - 6,3mm", 0],
+              ["Nº4 - 4,8mm", 0.62],
+              ["Nº8 - 2,36mm", 15.15],
+              ["Nº16 - 1,18mm", 20.54],
+              ["Nº30 - 0,6mm", 18.33],
+              ["Nº50 - 0,3mm", 14.08],
+              ["Nº100 - 0,15mm", 13.72],
+              ["Nº200 - 0,075mm", 6.98]
+            ],
+            "passant_porcentage": [
+              ["1 1/2 pol - 38,1mm", 100],
+              ["1 pol - 25,4mm", 100],
+              ["3/4 pol - 19,1mm", 100],
+              ["1/2 pol - 12,7mm", 100],
+              ["3/8 pol - 9,5mm", 100],
+              ["1/4 pol - 6,3mm", 100],
+              ["Nº4 - 4,8mm", 99.38],
+              ["Nº8 - 2,36mm", 84.23],
+              ["Nº16 - 1,18mm", 63.69],
+              ["Nº30 - 0,6mm", 45.36],
+              ["Nº50 - 0,3mm", 31.28],
+              ["Nº100 - 0,15mm", 17.56],
+              ["Nº200 - 0,075mm", 10.58]
+            ],
+            "total_retained": 904.47,
+            "nominal_diameter": 4.8,
+            "nominal_size": 6.3,
+            "fineness_module": 3.48,
+            "cc": -0.09,
+            "cnu": -0.38,
+            "error": 0
+          }
+        }
+      ],
+      "viscosity": {
+        "material": {
+          "name": "cap 2 01/07",
+          "type": "CAP",
+          "userId": "60f4d01a-9f80-417d-a7cd-cc30e440d15f",
+          "createdAt": "2025-07-01T21:12:17.658Z",
+          "description": {
+            "source": null,
+            "responsible": null,
+            "maxDiameter": null,
+            "aggregateNature": null,
+            "boughtDate": null,
+            "recieveDate": null,
+            "extractionDate": null,
+            "collectionDate": null,
+            "classification_CAP": "CAP 50/70",
+            "classification_AMP": null,
+            "observation": null
+          },
+          "_id": "68644f31ce09f44ff888d0f8",
+          "__v": 0
+        },
+        "result": {
+          "success": true,
+          "result": {
+            "graph": "",
+            "machiningTemperatureRange": {
+              "lower": 153.90204828210722,
+              "higher": 160.6324350379072,
+              "average": 157.2672416600072
+            },
+            "compressionTemperatureRange": {
+              "lower": 139.96378556510496,
+              "higher": 146.08836894106523,
+              "average": 143.02607725308508
+            },
+            "aggregateTemperatureRange": {
+              "higher": 175.6324350379072,
+              "average": 172.2672416600072,
+              "lower": 168.90204828210722
+            },
+            "curvePoints": [
+              [
+                "Temperatura (ºC)",
+                "Viscosidade (SSF)",
+                "Faixa de usinagem",
+                "Faixa de usinagem",
+                "Faixa de compactação",
+                "Faixa de compactação"
+              ],
+              [120, 625.0006174796018, 150, 190, 250, 310],
+              [121, 603.4299877252785, 150, 190, 250, 310],
+              [122, 582.6038245442428, 150, 190, 250, 310],
+              [123, 562.4964341813729, 150, 190, 250, 310],
+              [124, 543.0830096494366, 150, 190, 250, 310],
+              [125, 524.3396001240943, 150, 190, 250, 310],
+              [126, 506.24308139517325, 150, 190, 250, 310],
+              [127, 488.77112733775226, 150, 190, 250, 310],
+              [128, 471.9021823678694, 150, 190, 250, 310],
+              [129, 455.61543484886073, 150, 190, 250, 310],
+              [130, 439.8907914155271, 150, 190, 250, 310],
+              [131, 424.7088521844505, 150, 190, 250, 310],
+              [132, 410.05088681987434, 150, 190, 250, 310],
+              [133, 395.898811425625, 150, 190, 250, 310],
+              [134, 382.235166234558, 150, 190, 250, 310],
+              [135, 369.0430940680097, 150, 190, 250, 310],
+              [136, 356.30631953867766, 150, 190, 250, 310],
+              [137, 344.00912897126915, 150, 190, 250, 310],
+              [138, 332.1363510161515, 150, 190, 250, 310],
+              [139, 320.6733379320797, 150, 190, 250, 310],
+              [140, 309.6059475149145, 150, 190, 250, 310],
+              [141, 298.9205256500331, 150, 190, 250, 310],
+              [142, 288.6038894669096, 150, 190, 250, 310],
+              [143, 278.64331107507826, 150, 190, 250, 310],
+              [144, 269.0265018614208, 150, 190, 250, 310],
+              [145, 259.74159732939756, 150, 190, 250, 310],
+              [146, 250.77714246152377, 150, 190, 250, 310],
+              [147, 242.12207758702976, 150, 190, 250, 310],
+              [148, 233.7657247372696, 150, 190, 250, 310],
+              [149, 225.69777447204697, 150, 190, 250, 310],
+              [150, 217.90827316060174, 150, 190, 250, 310],
+              [151, 210.3876107015685, 150, 190, 250, 310],
+              [152, 203.1265086667557, 150, 190, 250, 310],
+              [153, 196.1160088541184, 150, 190, 250, 310],
+              [154, 189.3474622358009, 150, 190, 250, 310],
+              [155, 182.81251828761734, 150, 190, 250, 310],
+              [156, 176.50311468680175, 150, 190, 250, 310],
+              [157, 170.41146736532008, 150, 190, 250, 310],
+              [158, 164.53006090647244, 150, 190, 250, 310],
+              [159, 158.85163927293587, 150, 190, 250, 310],
+              [160, 153.36919685481175, 150, 190, 250, 310],
+              [161, 148.07596982663023, 150, 190, 250, 310],
+              [162, 142.96542780265062, 150, 190, 250, 310],
+              [163, 138.03126578016258, 150, 190, 250, 310],
+              [164, 133.26739636084676, 150, 190, 250, 310],
+              [165, 128.6679422406012, 150, 190, 250, 310],
+              [166, 124.2272289585646, 150, 190, 250, 310],
+              [167, 119.93977789639298, 150, 190, 250, 310],
+              [168, 115.80029951915232, 150, 190, 250, 310],
+              [169, 111.80368684948725, 150, 190, 250, 310],
+              [170, 107.945009167017, 150, 190, 250, 310],
+              [171, 104.21950592518247, 150, 190, 250, 310],
+              [172, 100.62258087804193, 150, 190, 250, 310],
+              [173, 97.14979640976802, 150, 190, 250, 310],
+              [174, 93.796868059851, 150, 190, 250, 310],
+              [175, 90.55965923725289, 150, 190, 250, 310],
+              [176, 87.43417611699296, 150, 190, 250, 310],
+              [177, 84.41656271286611, 150, 190, 250, 310],
+              [178, 81.50309612021695, 150, 190, 250, 310],
+              [179, 78.6901819229, 150, 190, 250, 310],
+              [180, 75.9743497587587, 150, 190, 250, 310],
+              [181, 73.35224903815391, 150, 190, 250, 310],
+              [182, 70.82064481025789, 150, 190, 250, 310],
+              [183, 68.37641377201508, 150, 190, 250, 310],
+              [184, 66.0165404148456, 150, 190, 250, 310],
+              [185, 63.738113304337276, 150, 190, 250, 310],
+              [186, 61.53832148833657, 150, 190, 250, 310],
+              [187, 59.41445102900732, 150, 190, 250, 310],
+              [188, 57.36388165457792, 150, 190, 250, 310],
+              [189, 55.384083526647046, 150, 190, 250, 310],
+              [190, 53.472614119059116, 150, 190, 250, 310],
+              [191, 51.627115204498914, 150, 190, 250, 310],
+              [192, 49.84530994508823, 150, 190, 250, 310],
+              [193, 48.1250000833942, 150, 190, 250, 310],
+              [194, 46.46406323038446, 150, 190, 250, 310],
+              [195, 44.8604502469832, 150, 190, 250, 310],
+              [196, 43.312182715997075, 150, 190, 250, 310],
+              [197, 41.81735050129307, 150, 190, 250, 310],
+              [198, 40.37410939121588, 150, 190, 250, 310],
+              [199, 38.980678823338216, 150, 190, 250, 310],
+              [200, 37.635339687736696, 150, 190, 250, 310],
+              [201, 36.336432206083074, 150, 190, 250, 310],
+              [202, 35.082353883934715, 150, 190, 250, 310],
+              [203, 33.87155753369714, 150, 190, 250, 310],
+              [204, 32.7025493658204, 150, 190, 250, 310],
+              [205, 31.573887145873652, 150, 190, 250, 310],
+              [206, 30.48417841522482, 150, 190, 250, 310],
+              [207, 29.43207877312962, 150, 190, 250, 310],
+              [208, 28.416290218111115, 150, 190, 250, 310],
+              [209, 27.43555954658294, 150, 190, 250, 310],
+              [210, 26.488676806740905, 150, 190, 250, 310],
+              [211, 25.574473805815405, 150, 190, 250, 310],
+              [212, 24.69182266884288, 150, 190, 250, 310],
+              [213, 23.839634447178575, 150, 190, 250, 310],
+              [214, 23.016857775033447, 150, 190, 250, 310],
+              [215, 22.22247757237807, 150, 190, 250, 310],
+              [216, 21.455513792613196, 150, 190, 250, 310],
+              [217, 20.7150202134619, 150, 190, 250, 310],
+              [218, 20.000083269591588, 150, 190, 250, 310],
+              [219, 19.309820925525845, 150, 190, 250, 310],
+              [220, 18.643381587455252, 150, 190, 250, 310],
+              [221, 17.999943052605, 150, 190, 250, 310],
+              [222, 17.378711494862866, 150, 190, 250, 310],
+              [223, 16.778920485416165, 150, 190, 250, 310],
+              [224, 16.19983004718957, 150, 190, 250, 310],
+              [225, 15.640725741916938, 150, 190, 250, 310],
+              [226, 15.100917788721075, 150, 190, 250, 310],
+              [227, 14.579740213113942, 150, 190, 250, 310],
+              [228, 14.076550025367316, 150, 190, 250, 310],
+              [229, 13.59072642724052, 150, 190, 250, 310],
+              [230, 13.12167004608603, 150, 190, 250, 310],
+              [231, 12.668802195388635, 150, 190, 250, 310],
+              [232, 12.23156416082556, 150, 190, 250, 310],
+              [233, 11.809416510966566, 150, 190, 250, 310],
+              [234, 11.40183843176416, 150, 190, 250, 310],
+              [235, 11.008327084012206, 150, 190, 250, 310],
+              [236, 10.628396982980778, 150, 190, 250, 310],
+              [237, 10.261579399461624, 150, 190, 250, 310],
+              [238, 9.907421781485168, 150, 190, 250, 310],
+              [239, 9.56548719599604, 150, 190, 250, 310]
+            ],
+            "equation": {
+              "aIndex": -0.03512261429263647,
+              "bIndex": 42296.78480551607
+            }
+          }
+        }
+      }
+    },
+    "granulometryCompositionData": {
+      "nominalSize": {
+        "controlPoints": {
+          "lower": [100, 90, null, null, null, null, null, 15, null, null, null, null, 0],
+          "higher": [100, 90, null, null, null, null, null, 41, null, null, null, null, 6]
+        },
+        "restrictedZone": {
+          "lower": [null, null, null, null, null, null, 34.7, 23.3, 15.5, 11.7, 10, null, null],
+          "higher": [null, null, null, null, null, null, 34.7, 27.3, 21.5, 15.7, 10, null, null]
+        },
+        "curve": [100, null, null, null, null, null, null, null, null, null, null, null, 0],
+        "value": 25.4
+      },
+      "percentsToList": [
+        [
+          ["1 1/2 pol - 38,1mm", 100],
+          ["1 pol - 25,4mm", 100],
+          ["3/4 pol - 19,1mm", 96.29],
+          ["1/2 pol - 12,7mm", 19.46],
+          ["3/8 pol - 9,5mm", 0.88],
+          ["1/4 pol - 6,3mm", 0.1],
+          ["Nº4 - 4,8mm", 0.1],
+          ["Nº8 - 2,36mm", 0.1],
+          ["Nº16 - 1,18mm", 0.1],
+          ["Nº30 - 0,6mm", 0.1],
+          ["Nº50 - 0,3mm", 0.1],
+          ["Nº100 - 0,15mm", 0.1],
+          ["Nº200 - 0,075mm", 0.08]
+        ],
+        [
+          ["1 1/2 pol - 38,1mm", 100],
+          ["1 pol - 25,4mm", 100],
+          ["3/4 pol - 19,1mm", 100],
+          ["1/2 pol - 12,7mm", 100],
+          ["3/8 pol - 9,5mm", 94.23],
+          ["1/4 pol - 6,3mm", 61.07],
+          ["Nº4 - 4,8mm", 25.21],
+          ["Nº8 - 2,36mm", 1.58],
+          ["Nº16 - 1,18mm", 1.03],
+          ["Nº30 - 0,6mm", 0.9],
+          ["Nº50 - 0,3mm", 0.85],
+          ["Nº100 - 0,15mm", 0.76],
+          ["Nº200 - 0,075mm", 0.61]
+        ],
+        [
+          ["1 1/2 pol - 38,1mm", 100],
+          ["1 pol - 25,4mm", 100],
+          ["3/4 pol - 19,1mm", 100],
+          ["1/2 pol - 12,7mm", 100],
+          ["3/8 pol - 9,5mm", 100],
+          ["1/4 pol - 6,3mm", 100],
+          ["Nº4 - 4,8mm", 99.38],
+          ["Nº8 - 2,36mm", 84.23],
+          ["Nº16 - 1,18mm", 63.69],
+          ["Nº30 - 0,6mm", 45.36],
+          ["Nº50 - 0,3mm", 31.28],
+          ["Nº100 - 0,15mm", 17.56],
+          ["Nº200 - 0,075mm", 10.58]
+        ]
+      ],
+      "porcentagesPassantsN200": [0.1, 25.21, 99.38],
+      "bands": {
+        "letter": "A",
+        "higher": [100, 100, 89, 78, 71, 61, 55, 45, 36, 28, 21, 14, 7],
+        "lower": [100, 90, 75, 58, 48, 35, 29, 19, 13, 9, 5, 2, 1],
+        "lowerComposition": {
+          "percentsOfMaterials": null,
+          "sumOfPercents": null
+        },
+        "averageComposition": {
+          "percentsOfMaterials": null,
+          "sumOfPercents": null
+        },
+        "higherComposition": {
+          "percentsOfMaterials": null,
+          "sumOfPercents": null
+        }
+      },
+      "percentageInputs": [],
+      "pointsOfCurve": [],
+      "chosenCurves": {
+        "lower": null,
+        "average": null,
+        "higher": null
+      }
+    },
+    "initialBinderData": {
+      "materials": [
+        {
+          "name": null,
+          "realSpecificMass": null,
+          "apparentSpecificMass": null,
+          "absorption": null,
+          "type": null
+        }
+      ],
+      "binderSpecificMass": null,
+      "granulometryComposition": [
+        {
+          "combinedGsa": null,
+          "combinedGsb": null,
+          "gse": null,
+          "pli": null,
+          "percentsOfDosageWithBinder": []
+        },
+        {
+          "combinedGsa": null,
+          "combinedGsb": null,
+          "gse": null,
+          "pli": null,
+          "percentsOfDosageWithBinder": []
+        },
+        {
+          "combinedGsa": null,
+          "combinedGsb": null,
+          "gse": null,
+          "pli": null,
+          "percentsOfDosageWithBinder": []
+        }
+      ],
+      "binderInput": null,
+      "turnNumber": {
+        "initialN": null,
+        "maxN": null,
+        "projectN": null,
+        "tex": null
+      }
+    },
+    "firstCompressionData": {
+      "inferiorRows": [
+        {
+          "id": 0,
+          "diammeter": null,
+          "dryMass": null,
+          "submergedMass": null,
+          "drySurfaceSaturatedMass": null,
+          "waterTemperatureCorrection": null,
+          "document": null
+        }
+      ],
+      "intermediariaRows": [
+        {
+          "id": 0,
+          "diammeter": null,
+          "dryMass": null,
+          "submergedMass": null,
+          "drySurfaceSaturatedMass": null,
+          "waterTemperatureCorrection": null,
+          "document": null
+        }
+      ],
+      "superiorRows": [
+        {
+          "id": 0,
+          "diammeter": null,
+          "dryMass": null,
+          "submergedMass": null,
+          "drySurfaceSaturatedMass": null,
+          "waterTemperatureCorrection": null,
+          "document": null
+        }
+      ],
+      "spreadSheetTemplate": null,
+      "maximumDensity": {
+        "lower": {
+          "gmm": null,
+          "gmb": null
+        },
+        "average": {
+          "gmm": null,
+          "gmb": null
+        },
+        "higher": {
+          "gmm": null,
+          "gmb": null
+        }
+      },
+      "riceTest": [
+        {
+          "curve": null,
+          "drySampleMass": null,
+          "waterSampleMass": null,
+          "waterSampleContainerMass": null,
+          "gmm": 0,
+          "temperatureOfWater": null
+        }
+      ]
+    },
+    "firstCompressionParamsData": {
+      "table1": {
+        "expectedPorcentageGmmInitialN": null,
+        "expectedPorcentageGmmMaxN": null,
+        "expectedPorcentageGmmProjectN": null,
+        "expectedRBV_Higher": null,
+        "expectedRBV_Lower": null,
+        "nominalSize": null,
+        "trafficVolume": null,
+        "expectedVam": null
+      },
+      "table2": {
+        "table2Lower": {
+          "percentWaterAbs": null,
+          "percentageGmmInitialN": null,
+          "percentageGmmMaxN": null,
+          "percentageGmmProjectN": null,
+          "porcentageVam": null,
+          "porcentageVv": null,
+          "ratioDustAsphalt": null,
+          "specificMass": null
+        },
+        "table2Average": {
+          "percentWaterAbs": null,
+          "percentageGmmInitialN": null,
+          "percentageGmmMaxN": null,
+          "percentageGmmProjectN": null,
+          "porcentageVam": null,
+          "porcentageVv": null,
+          "ratioDustAsphalt": null,
+          "specificMass": null
+        },
+        "table2Higher": {
+          "percentWaterAbs": null,
+          "percentageGmmInitialN": null,
+          "percentageGmmMaxN": null,
+          "percentageGmmProjectN": null,
+          "porcentageVam": null,
+          "porcentageVv": null,
+          "ratioDustAsphalt": null,
+          "specificMass": null
+        }
+      },
+      "table3": {
+        "table3Lower": {
+          "expectedPercentageGmmInitialNLower": null,
+          "expectedPercentageGmmMaxNLower": null,
+          "expectedPliLower": null,
+          "expectedVamLower": null,
+          "expectedRBVLower": null,
+          "expectedRatioDustAsphaltLower": null
+        },
+        "table3Average": {
+          "expectedPercentageGmmInitialNAverage": null,
+          "expectedPercentageGmmMaxNAverage": null,
+          "expectedPliAverage": null,
+          "expectedVamAverage": null,
+          "expectedRBVAverage": null,
+          "expectedRatioDustAsphaltAverage": null
+        },
+        "table3Higher": {
+          "expectedPercentageGmmInitialNHigher": null,
+          "expectedPercentageGmmMaxNHigher": null,
+          "expectedPliHigher": null,
+          "expectedVamHigher": null,
+          "expectedRBVHigher": null,
+          "expectedRatioDustAsphaltHigher": null
+        }
+      },
+      "table4": {
+        "table4Lower": {
+          "data": []
+        },
+        "table4Average": {
+          "data": []
+        },
+        "table4Higher": {
+          "data": []
+        }
+      },
+      "selectedCurve": null
+    },
+    "chosenCurvePercentagesData": {
+      "listOfPlis": [],
+      "porcentageAggregate": [[]],
+      "trafficVolume": null
+    },
+    "secondCompressionData": {
+      "halfLess": [
+        {
+          "id": 0,
+          "averageDiammeter": null,
+          "averageHeight": null,
+          "dryMass": null,
+          "submergedMass": null,
+          "drySurfaceSaturatedMass": null,
+          "waterTemperatureCorrection": null,
+          "diametralTractionResistance": null
+        }
+      ],
+      "halfPlus": [
+        {
+          "id": 0,
+          "averageDiammeter": null,
+          "averageHeight": null,
+          "dryMass": null,
+          "submergedMass": null,
+          "drySurfaceSaturatedMass": null,
+          "waterTemperatureCorrection": null,
+          "diametralTractionResistance": null
+        }
+      ],
+      "normal": [
+        {
+          "id": 0,
+          "averageDiammeter": null,
+          "averageHeight": null,
+          "dryMass": null,
+          "submergedMass": null,
+          "drySurfaceSaturatedMass": null,
+          "waterTemperatureCorrection": null,
+          "diametralTractionResistance": null
+        }
+      ],
+      "onePlus": [
+        {
+          "id": 0,
+          "averageDiammeter": null,
+          "averageHeight": null,
+          "dryMass": null,
+          "submergedMass": null,
+          "drySurfaceSaturatedMass": null,
+          "waterTemperatureCorrection": null,
+          "diametralTractionResistance": null
+        }
+      ],
+      "maximumDensities": [
+        {
+          "id": 0,
+          "insertedGmm": null,
+          "riceTest": {
+            "sampleAirDryMass": null,
+            "containerMassWaterSample": null,
+            "containerWaterMass": null,
+            "waterTemperatureCorrection": null
+          }
+        },
+        {
+          "id": 1,
+          "insertedGmm": null,
+          "riceTest": {
+            "sampleAirDryMass": null,
+            "containerMassWaterSample": null,
+            "containerWaterMass": null,
+            "waterTemperatureCorrection": null
+          }
+        },
+        {
+          "id": 2,
+          "insertedGmm": null,
+          "riceTest": {
+            "sampleAirDryMass": null,
+            "containerMassWaterSample": null,
+            "containerWaterMass": null,
+            "waterTemperatureCorrection": null
+          }
+        },
+        {
+          "id": 3,
+          "insertedGmm": null,
+          "riceTest": {
+            "sampleAirDryMass": null,
+            "containerMassWaterSample": null,
+            "containerWaterMass": null,
+            "waterTemperatureCorrection": null
+          }
+        }
+      ],
+      "composition": {
+        "halfLess": {
+          "projectN": {
+            "samplesData": null,
+            "gmb": null,
+            "percentWaterAbs": null,
+            "percentageGmm": null
+          },
+          "specifiesMass": null,
+          "gmm": null,
+          "Vv": null,
+          "Vam": null,
+          "expectedPli": null,
+          "RBV": null,
+          "ratioDustAsphalt": null,
+          "indirectTensileStrength": null
+        },
+        "normal": {
+          "projectN": {
+            "samplesData": null,
+            "gmb": null,
+            "percentWaterAbs": null,
+            "percentageGmm": null
+          },
+          "specifiesMass": null,
+          "gmm": null,
+          "Vv": null,
+          "Vam": null,
+          "RBV": null,
+          "ratioDustAsphalt": null,
+          "indirectTensileStrength": null
+        },
+        "halfPlus": {
+          "projectN": {
+            "samplesData": null,
+            "gmb": null,
+            "percentWaterAbs": null,
+            "percentageGmm": null
+          },
+          "specifiesMass": null,
+          "gmm": null,
+          "Vv": null,
+          "Vam": null,
+          "RBV": null,
+          "ratioDustAsphalt": null,
+          "indirectTensileStrength": null
+        },
+        "onePlus": {
+          "projectN": {
+            "samplesData": null,
+            "gmb": null,
+            "percentWaterAbs": null,
+            "percentageGmm": null
+          },
+          "specifiesMass": null,
+          "gmm": null,
+          "Vv": null,
+          "Vam": null,
+          "RBV": null,
+          "ratioDustAsphalt": null,
+          "indirectTensileStrength": null
+        }
+      },
+      "expectedPli": null,
+      "combinedGsb": null,
+      "percentsOfDosage": null,
+      "Gse": null,
+      "ponderatedPercentsOfDosage": null
+    },
+    "secondCompressionPercentagesData": {
+      "optimumContent": null,
+      "graphs": {
+        "graphVv": [],
+        "graphVam": [],
+        "graphGmb": [],
+        "graphGmm": [],
+        "graphRBV": [],
+        "graphPA": [],
+        "graphRT": []
+      }
+    },
+    "confirmationCompressionData": {
+      "table": [
+        {
+          "id": 1,
+          "averageDiammeter": null,
+          "averageHeight": null,
+          "dryMass": null,
+          "submergedMass": null,
+          "drySurfaceSaturatedMass": null,
+          "waterTemperatureCorrection": null,
+          "diametralTractionResistance": null
+        }
+      ],
+      "gmm": null,
+      "riceTest": {
+        "sampleAirDryMass": null,
+        "containerSampleWaterMass": null,
+        "containerWaterMass": null,
+        "temperatureOfWater": null
+      }
+    },
+    "dosageResume": {
+      "Gmb": null,
+      "Gmm": null,
+      "RBV": null,
+      "Vam": null,
+      "Vv": null,
+      "diametralTractionResistance": null,
+      "gmm": null,
+      "percentWaterAbs": null,
+      "ponderatedPercentsOfDosage": [],
+      "quantitative": [],
+      "ratioDustAsphalt": null,
+      "specifiesMass": null
+    },
+    "createdAt": null,
+    "updatedAt": null,
+    "hasHydrated": true,
+    "undefined": {
+      "generalData": {
+        "userId": "60f4d01a-9f80-417d-a7cd-cc30e440d15f",
+        "name": "teste 01/07 2",
+        "laboratory": null,
+        "operator": null,
+        "calculist": null,
+        "trafficVolume": "low",
+        "objective": "bonding",
+        "dnitBand": "A",
+        "description": null,
+        "step": 0
+      },
+      "granulometryEssayData": {
+        "materials": [],
+        "granulometrys": [],
+        "viscosity": null
+      },
+      "granulometryResultsData": {
+        "granulometrys": [],
+        "viscosity": null
+      },
+      "granulometryCompositionData": {
+        "porcentagesPassantsN200": null,
+        "graphData": [],
+        "lowerComposition": {
+          "percentsOfMaterials": null,
+          "sumOfPercents": null
+        },
+        "averageComposition": {
+          "percentsOfMaterials": null,
+          "sumOfPercents": null
+        },
+        "higherComposition": {
+          "percentsOfMaterials": null,
+          "sumOfPercents": null
+        },
+        "percentageInputs": [],
+        "percentsToList": [],
+        "nominalSize": {
+          "value": null
+        },
+        "pointsOfCurve": [],
+        "chosenCurves": {
+          "lower": null,
+          "average": null,
+          "higher": null
+        },
+        "bands": {
+          "higher": [],
+          "lower": [],
+          "letter": null
+        }
+      },
+      "initialBinderData": {
+        "materials": [
+          {
+            "name": null,
+            "realSpecificMass": null,
+            "apparentSpecificMass": null,
+            "absorption": null,
+            "type": null
+          }
+        ],
+        "binderSpecificMass": null,
+        "granulometryComposition": [
+          {
+            "combinedGsa": null,
+            "combinedGsb": null,
+            "gse": null,
+            "pli": null,
+            "percentsOfDosageWithBinder": []
+          },
+          {
+            "combinedGsa": null,
+            "combinedGsb": null,
+            "gse": null,
+            "pli": null,
+            "percentsOfDosageWithBinder": []
+          },
+          {
+            "combinedGsa": null,
+            "combinedGsb": null,
+            "gse": null,
+            "pli": null,
+            "percentsOfDosageWithBinder": []
+          }
+        ],
+        "binderInput": null,
+        "turnNumber": {
+          "initialN": null,
+          "maxN": null,
+          "projectN": null,
+          "tex": null
+        }
+      },
+      "firstCompressionData": {
+        "inferiorRows": [
+          {
+            "id": 0,
+            "diammeter": null,
+            "dryMass": null,
+            "submergedMass": null,
+            "drySurfaceSaturatedMass": null,
+            "waterTemperatureCorrection": null,
+            "document": null
+          }
+        ],
+        "intermediariaRows": [
+          {
+            "id": 0,
+            "diammeter": null,
+            "dryMass": null,
+            "submergedMass": null,
+            "drySurfaceSaturatedMass": null,
+            "waterTemperatureCorrection": null,
+            "document": null
+          }
+        ],
+        "superiorRows": [
+          {
+            "id": 0,
+            "diammeter": null,
+            "dryMass": null,
+            "submergedMass": null,
+            "drySurfaceSaturatedMass": null,
+            "waterTemperatureCorrection": null,
+            "document": null
+          }
+        ],
+        "spreadSheetTemplate": null,
+        "maximumDensity": {
+          "lower": {
+            "gmm": null,
+            "gmb": null
+          },
+          "average": {
+            "gmm": null,
+            "gmb": null
+          },
+          "higher": {
+            "gmm": null,
+            "gmb": null
+          }
+        },
+        "riceTest": [
+          {
+            "curve": null,
+            "drySampleMass": null,
+            "waterSampleMass": null,
+            "waterSampleContainerMass": null,
+            "gmm": 0,
+            "temperatureOfWater": null
+          }
+        ]
+      },
+      "firstCompressionParamsData": {
+        "table1": {
+          "expectedPorcentageGmmInitialN": null,
+          "expectedPorcentageGmmMaxN": null,
+          "expectedPorcentageGmmProjectN": null,
+          "expectedRBV_Higher": null,
+          "expectedRBV_Lower": null,
+          "nominalSize": null,
+          "trafficVolume": null,
+          "expectedVam": null
+        },
+        "table2": {
+          "table2Lower": {
+            "percentWaterAbs": null,
+            "percentageGmmInitialN": null,
+            "percentageGmmMaxN": null,
+            "percentageGmmProjectN": null,
+            "porcentageVam": null,
+            "porcentageVv": null,
+            "ratioDustAsphalt": null,
+            "specificMass": null
+          },
+          "table2Average": {
+            "percentWaterAbs": null,
+            "percentageGmmInitialN": null,
+            "percentageGmmMaxN": null,
+            "percentageGmmProjectN": null,
+            "porcentageVam": null,
+            "porcentageVv": null,
+            "ratioDustAsphalt": null,
+            "specificMass": null
+          },
+          "table2Higher": {
+            "percentWaterAbs": null,
+            "percentageGmmInitialN": null,
+            "percentageGmmMaxN": null,
+            "percentageGmmProjectN": null,
+            "porcentageVam": null,
+            "porcentageVv": null,
+            "ratioDustAsphalt": null,
+            "specificMass": null
+          }
+        },
+        "table3": {
+          "table3Lower": {
+            "expectedPercentageGmmInitialNLower": null,
+            "expectedPercentageGmmMaxNLower": null,
+            "expectedPliLower": null,
+            "expectedVamLower": null,
+            "expectedRBVLower": null,
+            "expectedRatioDustAsphaltLower": null
+          },
+          "table3Average": {
+            "expectedPercentageGmmInitialNAverage": null,
+            "expectedPercentageGmmMaxNAverage": null,
+            "expectedPliAverage": null,
+            "expectedVamAverage": null,
+            "expectedRBVAverage": null,
+            "expectedRatioDustAsphaltAverage": null
+          },
+          "table3Higher": {
+            "expectedPercentageGmmInitialNHigher": null,
+            "expectedPercentageGmmMaxNHigher": null,
+            "expectedPliHigher": null,
+            "expectedVamHigher": null,
+            "expectedRBVHigher": null,
+            "expectedRatioDustAsphaltHigher": null
+          }
+        },
+        "table4": {
+          "table4Lower": {
+            "data": []
+          },
+          "table4Average": {
+            "data": []
+          },
+          "table4Higher": {
+            "data": []
+          }
+        },
+        "selectedCurve": null
+      },
+      "chosenCurvePercentagesData": {
+        "listOfPlis": [],
+        "porcentageAggregate": [[]],
+        "trafficVolume": null
+      },
+      "secondCompressionData": {
+        "halfLess": [
+          {
+            "id": 0,
+            "averageDiammeter": null,
+            "averageHeight": null,
+            "dryMass": null,
+            "submergedMass": null,
+            "drySurfaceSaturatedMass": null,
+            "waterTemperatureCorrection": null,
+            "diametralTractionResistance": null
+          }
+        ],
+        "halfPlus": [
+          {
+            "id": 0,
+            "averageDiammeter": null,
+            "averageHeight": null,
+            "dryMass": null,
+            "submergedMass": null,
+            "drySurfaceSaturatedMass": null,
+            "waterTemperatureCorrection": null,
+            "diametralTractionResistance": null
+          }
+        ],
+        "normal": [
+          {
+            "id": 0,
+            "averageDiammeter": null,
+            "averageHeight": null,
+            "dryMass": null,
+            "submergedMass": null,
+            "drySurfaceSaturatedMass": null,
+            "waterTemperatureCorrection": null,
+            "diametralTractionResistance": null
+          }
+        ],
+        "onePlus": [
+          {
+            "id": 0,
+            "averageDiammeter": null,
+            "averageHeight": null,
+            "dryMass": null,
+            "submergedMass": null,
+            "drySurfaceSaturatedMass": null,
+            "waterTemperatureCorrection": null,
+            "diametralTractionResistance": null
+          }
+        ],
+        "maximumDensities": [
+          {
+            "id": 0,
+            "insertedGmm": null,
+            "riceTest": {
+              "sampleAirDryMass": null,
+              "containerMassWaterSample": null,
+              "containerWaterMass": null,
+              "waterTemperatureCorrection": null
+            }
+          },
+          {
+            "id": 1,
+            "insertedGmm": null,
+            "riceTest": {
+              "sampleAirDryMass": null,
+              "containerMassWaterSample": null,
+              "containerWaterMass": null,
+              "waterTemperatureCorrection": null
+            }
+          },
+          {
+            "id": 2,
+            "insertedGmm": null,
+            "riceTest": {
+              "sampleAirDryMass": null,
+              "containerMassWaterSample": null,
+              "containerWaterMass": null,
+              "waterTemperatureCorrection": null
+            }
+          },
+          {
+            "id": 3,
+            "insertedGmm": null,
+            "riceTest": {
+              "sampleAirDryMass": null,
+              "containerMassWaterSample": null,
+              "containerWaterMass": null,
+              "waterTemperatureCorrection": null
+            }
+          }
+        ],
+        "composition": {
+          "halfLess": {
+            "projectN": {
+              "samplesData": null,
+              "gmb": null,
+              "percentWaterAbs": null,
+              "percentageGmm": null
+            },
+            "specifiesMass": null,
+            "gmm": null,
+            "Vv": null,
+            "Vam": null,
+            "expectedPli": null,
+            "RBV": null,
+            "ratioDustAsphalt": null,
+            "indirectTensileStrength": null
+          },
+          "normal": {
+            "projectN": {
+              "samplesData": null,
+              "gmb": null,
+              "percentWaterAbs": null,
+              "percentageGmm": null
+            },
+            "specifiesMass": null,
+            "gmm": null,
+            "Vv": null,
+            "Vam": null,
+            "RBV": null,
+            "ratioDustAsphalt": null,
+            "indirectTensileStrength": null
+          },
+          "halfPlus": {
+            "projectN": {
+              "samplesData": null,
+              "gmb": null,
+              "percentWaterAbs": null,
+              "percentageGmm": null
+            },
+            "specifiesMass": null,
+            "gmm": null,
+            "Vv": null,
+            "Vam": null,
+            "RBV": null,
+            "ratioDustAsphalt": null,
+            "indirectTensileStrength": null
+          },
+          "onePlus": {
+            "projectN": {
+              "samplesData": null,
+              "gmb": null,
+              "percentWaterAbs": null,
+              "percentageGmm": null
+            },
+            "specifiesMass": null,
+            "gmm": null,
+            "Vv": null,
+            "Vam": null,
+            "RBV": null,
+            "ratioDustAsphalt": null,
+            "indirectTensileStrength": null
+          }
+        },
+        "expectedPli": null,
+        "combinedGsb": null,
+        "percentsOfDosage": null,
+        "Gse": null,
+        "ponderatedPercentsOfDosage": null
+      },
+      "secondCompressionPercentagesData": {
+        "optimumContent": null,
+        "graphs": {
+          "graphVv": [],
+          "graphVam": [],
+          "graphGmb": [],
+          "graphGmm": [],
+          "graphRBV": [],
+          "graphPA": [],
+          "graphRT": []
+        }
+      },
+      "confirmationCompressionData": {
+        "table": [
+          {
+            "id": 1,
+            "averageDiammeter": null,
+            "averageHeight": null,
+            "dryMass": null,
+            "submergedMass": null,
+            "drySurfaceSaturatedMass": null,
+            "waterTemperatureCorrection": null,
+            "diametralTractionResistance": null
+          }
+        ],
+        "gmm": null,
+        "riceTest": {
+          "sampleAirDryMass": null,
+          "containerSampleWaterMass": null,
+          "containerWaterMass": null,
+          "temperatureOfWater": null
+        }
+      },
+      "dosageResume": {
+        "Gmb": null,
+        "Gmm": null,
+        "RBV": null,
+        "Vam": null,
+        "Vv": null,
+        "diametralTractionResistance": null,
+        "gmm": null,
+        "percentWaterAbs": null,
+        "ponderatedPercentsOfDosage": [],
+        "quantitative": [],
+        "ratioDustAsphalt": null,
+        "specifiesMass": null
+      },
+      "createdAt": "2025-07-01T21:10:05.889Z",
+      "updatedAt": "2025-07-01T21:10:05.889Z",
+      "hasHydrated": true,
+      "_id": "68644eadce09f44ff888d0eb"
+    }
+  },
+  "version": 0
+}

@@ -57,7 +57,7 @@ class ConcreteGranulometry_SERVICE implements IEssayService {
   /** @generalData Methods for general-data (step === 0, page 1) */
 
   // get all materials from user from backend
-  getmaterialsByUserId = async (userId: string): Promise<ConcreteMaterial> => {
+  getmaterialsByUserId = async (userId: string): Promise<{materials: ConcreteMaterial[]}> => {
     try {
       // get all materials from user from backend
       const response = await Api.get(`concrete/materials/all/${userId}`);

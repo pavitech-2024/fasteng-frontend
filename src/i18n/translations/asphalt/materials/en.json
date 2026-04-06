@@ -14,7 +14,9 @@
   "asphalt.materials.coarseAggregate": "Coarse Aggregate",
   "asphalt.materials.fineAggregate": "Fine Aggregate",
   "asphalt.materials.filler": "Filler",
-  "asphalt.materials.CAP": "Modified Asphalt Binder (CAP",
+  "asphalt.materials.CAP": "Modified Asphalt Binder (CAP)",
+  "asphalt.materials.cap": "Modified Asphalt Binder (CAP",
+
   "asphalt.materials.other": "Other",
   "asphalt.materials.comments": "Comments",
 
@@ -28,6 +30,10 @@
   "asphalt.materials.materialCreated": "Material created successfully",
   "asphalt.materials.errorCreatingMaterial": "Error creating material",
   "asphalt.materials.creatingMaterial": "Creating material...",
+  "asphalt.materials.materialWithSameName": "A material with the same name already exists!",
+
+  "asphalt.materials.maxDiameter": "Diâmetro Máximo",
+  "asphalt.materials.extractionDate": "Data de Extração",
 
   "asphalt.materialName": "Material Name",
   "asphalt.materialType": "Material Type",

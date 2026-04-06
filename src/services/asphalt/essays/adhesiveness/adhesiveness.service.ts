@@ -1,4 +1,4 @@
-import { SpecifyMassIcon } from '@/assets';
+import { AdhesivenessIcon } from '@/assets';
 import { AsphaltMaterial, Materials } from '@/interfaces/asphalt';
 import { AdhesivenessActions, AdhesivenessData } from '@/stores/asphalt/adhesiveness/adhesiveness.store';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
@@ -8,14 +8,14 @@ import { t } from 'i18next';
 class ADHESIVENESS_SERVICE implements IEssayService {
   info = {
     key: 'adhesiveness',
-    icon: SpecifyMassIcon,
+    icon:AdhesivenessIcon,
     title: t('asphalt.essays.adhesiveness'),
     path: '/asphalt/essays/adhesiveness',
     steps: 3,
     backend_path: 'asphalt/essays/adhesiveness',
     standard: {
-      name: 'DNIT-ME 078/94',
-      link: 'https://smartdoser.fastengapp.com.br/static/media/AdesividadeDnitme07894.b8c14e56.pdf',
+      name: 'DNIT-ME 452/2024',
+      link: 'https://www.gov.br/dnit/pt-br/assuntos/planejamento-e-pesquisa/ipr/coletanea-de-normas/coletanea-de-normas/metodo-de-ensaio-me/dnit_452_2024_me.pdf',
     },
     stepperData: [
       { step: 0, description: t('general data'), path: 'general-data' },

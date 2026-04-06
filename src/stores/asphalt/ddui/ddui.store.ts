@@ -47,7 +47,7 @@ export type DduiData = {
   dduiStep2: DduiStep2;
   dduiStep3: DduiStep3;
   results: Ddui_results;
-  _id: string;
+  _id?: string;
   createdAt: string;
 };
 

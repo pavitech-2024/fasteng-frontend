@@ -7,6 +7,8 @@ import ModalBase from '../../molecules/modals/modal';
 import { toast } from 'react-toastify';
 import samplesService from '@/services/soils/soils-samples.service';
 import { t } from 'i18next';
+import { useRouter } from 'next/router';
+import useAuth from '@/contexts/auth';
 
 interface CreateEditSoilSampleModalProps {
   openModal: boolean;
@@ -14,6 +16,7 @@ interface CreateEditSoilSampleModalProps {
   updateSamples: () => void;
   samples: SoilSample[];
   sampleToEdit?: SoilSample;
+  createdSample?: (material: SoilSample) => void;
   isEdit: boolean;
 }
 
@@ -24,6 +27,7 @@ export const CreateEditSoilSampleModal = ({
   samples,
   sampleToEdit,
   isEdit,
+  createdSample,
 }: CreateEditSoilSampleModalProps) => {
   const initialSampleState: SoilSample = {
     name: '',
@@ -39,12 +43,13 @@ export const CreateEditSoilSampleModal = ({
       collectionDate: null,
       observation: null,
     },
-    _id: '',
-    createdAt: undefined,
     userId: '',
   };
 
   const [sample, setSample] = useState<SoilSample>(initialSampleState);
+
+  const { user } = useAuth();
+  const userId = user._id;
 
   const resetSample = () => {
     setSample(initialSampleState);
@@ -90,10 +95,16 @@ export const CreateEditSoilSampleModal = ({
       if (sample.description.depth < 0) throw 'Profundidade não pode ser negativa!';
       if (samples.find((s) => s.name === sample.name)) throw 'Já existe uma amostra com esse nome!';
 
-      await samplesService.createSample(sample);
+      const formattedSample: SoilSample = { ...sample, userId };
+      delete formattedSample.createdAt;
+      delete formattedSample._id;
+
+      await samplesService.createSample(formattedSample);
 
       await updateSamples();
+
       handleCloseModal();
+
       toast.update(CreateEditMaterialToast, {
         render: 'Amostra cadastrada com sucesso!',
         type: 'success',
@@ -109,6 +120,8 @@ export const CreateEditSoilSampleModal = ({
         autoClose: 5000,
         closeButton: true,
       });
+      toast.dismiss()
+      handleCloseModal();
     }
   };
 
@@ -155,7 +168,7 @@ export const CreateEditSoilSampleModal = ({
       open={openModal}
       leftButtonTitle={t('samples.cancel')}
       rightButtonTitle={isEdit ? t('samples.edit') : t('samples.register')}
-      size="medium"
+      size="large"
       onSubmit={() => {
         if (isEdit) {
           handleEditSample();
@@ -169,7 +182,7 @@ export const CreateEditSoilSampleModal = ({
       }}
       disableSubmit={sample.name === ''}
     >
-      <Box sx={{ mb: '1rem' }}>
+      <Box>
         <Box
           sx={{
             display: 'grid',
@@ -179,7 +192,7 @@ export const CreateEditSoilSampleModal = ({
             },
             gap: {
               mobile: '.6rem .8rem',
-              notebook: '1.2rem .8rem',
+              notebook: '0.5rem 1.5rem',
             },
           }}
         >
@@ -188,7 +201,7 @@ export const CreateEditSoilSampleModal = ({
               {input.key === 'type' && (
                 <DropDown
                   key={input.key}
-                  sx={{ minWidth: '120px', bgcolor: 'white' }}
+                  sx={{ minWidth: '120px', bgcolor: 'white', width: '100%' }}
                   label={t('samples.type')}
                   variant="standard"
                   size="medium"
@@ -200,7 +213,7 @@ export const CreateEditSoilSampleModal = ({
                 />
               )}
               {input.key === 'depth' && (
-                <FormControl variant="standard" key={input.key}>
+                <FormControl variant="standard" key={input.key} sx={{ minWidth: '120px', width: '100%' }}>
                   <InputLabel htmlFor="outlined-adornment-depth">{t('samples.depth')}</InputLabel>
                   <Input
                     id="outlined-adornment-depth"
@@ -218,6 +231,7 @@ export const CreateEditSoilSampleModal = ({
                   label={input.label}
                   variant="standard"
                   value={input.value}
+                  sx={{ minWidth: '120px', width: '100%' }}
                   required={input.key === 'name'}
                   onChange={(e) => changeSample(input.key, e.target.value)}
                 />

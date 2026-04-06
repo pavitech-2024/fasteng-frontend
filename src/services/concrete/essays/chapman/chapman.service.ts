@@ -54,7 +54,6 @@ class CHAPMAN_SERVICE implements IEssayService {
     try {
       const { data } = await Api.get(`/concrete/materials/all/${userId}`);
       
-      console.log("🚀 ~ CHAPMAN_SERVICE ~ getmaterialsByUserId= ~ data:", data)
       return data;
     } catch (error) {
       throw error;

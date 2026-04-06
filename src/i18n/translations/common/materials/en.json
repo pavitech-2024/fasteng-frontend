@@ -10,5 +10,6 @@
   "loading.data.error": "Error on loading data",
   "submiting.data.success": "Data submitted",
   "submiting.data.error": "Error on submitting data",
-  "submiting.data.pending": "Submitting data"
+  "submiting.data.pending": "Submitting data",
+  "loading.data.nullValuesError": "Fill all fields"
 }

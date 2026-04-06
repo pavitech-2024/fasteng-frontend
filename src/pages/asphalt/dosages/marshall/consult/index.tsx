@@ -35,87 +35,87 @@ const MarshallDosageConsult = () => {
     9: t('asphalt.dosages.marshall.dosage_resume'),
   };
 
-  const rows = dosages.map((row) => ({
-    name: row.generalData?.name,
-    progress: `(${row.generalData?.step}/9) - ${progressTextMap[row.generalData?.step]}`,
-    start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
-    finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
-    id: row._id,
-  }));
-
-  useEffect(() => {
-    toast.promise(
-      async () => {
-        try {
-          marshallDosageService.getMarshallDosagesByUserId(user._id).then((response) => {
-            const data = response.data;
-            dosages.push(data);
-
-            const rows = dosages[0]?.map((row) => ({
-              name: row.generalData?.name,
-              progress: `(${row.generalData?.step}/9) - ${progressTextMap[row.generalData?.step]}`,
-              start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
-              finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
-              id: row._id,
-            }));
-
-            const arraysMenores = dividirArrayEmArraysMenores(rows, rowsPerPage);
-
-            setDosageArrays(arraysMenores);
-
-            setLoading(false);
-          });
-        } catch (error) {
-          setDosages([]);
-          setLoading(false);
-          throw error;
+useEffect(() => {
+  if (!user?._id) return;
+  
+  toast.promise(
+    async () => {
+      setLoading(true);
+      const response = await marshallDosageService.getMarshallDosagesByUserId(user._id);
+      const data = response.data;
+      
+      // 🔥 CORRIGE O STEP NO FRONTEND MESMO
+      const correctedData = data.map(dosage => {
+        // Se tem dados do último passo, step = 9
+        if (dosage.confirmationCompressionData && dosage.generalData?.step !== 9) {
+          return {
+            ...dosage,
+            generalData: {
+              ...dosage.generalData,
+              step: 9
+            }
+          };
         }
-      },
-      {
-        pending: t('loading.marshall.pending'),
-        success: t('loading.marshall.success'),
-        error: t('loading.marshall.error'),
-      }
-    );
-  }, []);
+        return dosage;
+      });
+      
+      setDosages(correctedData);
+      
+      const rows = correctedData.map((row) => ({
+        name: row.generalData?.name,
+        progress: `(${row.generalData?.step || 0}/9) - ${
+          row.generalData?.step === 9 
+            ? t('asphalt.dosages.marshall.dosage_resume')
+            : progressTextMap[row.generalData?.step] || 'undefined'
+        }`,
+        start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
+        finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
+        id: row._id,
+      }));
+
+      const arraysMenores = dividirArrayEmArraysMenores(rows, rowsPerPage);
+      setDosageArrays(arraysMenores);
+      setLoading(false);
+    },
+    {
+      pending: t('loading.marshall.pending'),
+      success: t('loading.marshall.success'),
+      error: t('loading.marshall.error'),
+    }
+  );
+}, [user?._id]);
 
   function dividirArrayEmArraysMenores(array, tamanho) {
     const arraysMenores = [];
-
     for (let i = 0; i < array.length; i += tamanho) {
       const arrayMenor = array.slice(i, i + tamanho).map((item) => ({ ...item }));
       arraysMenores.push(arrayMenor);
     }
-
     return arraysMenores;
   }
-
-  useEffect(() => {
-    if (rows.length > 0) {
-      const arraysMenores = dividirArrayEmArraysMenores(rows, rowsPerPage);
-      setDosageArrays(arraysMenores);
-      setLoading(false);
-    }
-  }, []);
 
   const handleDeleteDosage = async (id: string) => {
     try {
       await marshallDosageService.deleteMarshallDosage(id);
       // Recarregar a lista de dosagens após a exclusão
       const response = await marshallDosageService.getMarshallDosagesByUserId(user._id);
-      const updatedDosages = response.data.map((row) => ({
+      const data = response.data;
+      
+      setDosages(data);
+      
+      const rows = data.map((row) => ({
         name: row.generalData?.name,
-        progress: `(${row.generalData?.step}/9) - ${progressTextMap[row.generalData?.step]}`,
+        progress: `(${row.generalData?.step || 0}/9) - ${
+          row.generalData?.step === 9 
+            ? t('asphalt.dosages.marshall.dosage_resume')
+            : progressTextMap[row.generalData?.step] || 'undefined'
+        }`,
         start: row.createdAt ? new Date(row.createdAt).toLocaleString() : '---',
         finish: row.updatedAt ? new Date(row.updatedAt).toLocaleString() : '---',
         id: row._id,
       }));
 
-      // Atualizar dosages e dosageArrays
-      setDosages(updatedDosages);
-
-      // Recalcular os arrays menores
-      const arraysMenores = dividirArrayEmArraysMenores(updatedDosages, rowsPerPage);
+      const arraysMenores = dividirArrayEmArraysMenores(rows, rowsPerPage);
       setDosageArrays(arraysMenores);
     } catch (error) {
       console.error('Failed to delete dosage:', error);
@@ -123,19 +123,13 @@ const MarshallDosageConsult = () => {
   };
 
   const handleVisualizeDosage = (id: string) => {
-    const dosage = dosages[0]?.find((dosage) => {
-      return dosage._id === id;
-    });
+    const dosage = dosages.find((dosage) => dosage._id === id); // 👈 CORRIGIDO: remove o [0]
+    if (!dosage) return;
+    
     const step = dosage.generalData.step - 1;
-    if (dosage) {
-      setData({
-        step: 10,
-        value: dosage,
-      });
-    }
+    setData({ step: 10, value: dosage });
     sessionStorage.setItem('marshall-step', step.toString());
     handleNext(step, dosage, true);
-    if (step === 9) router.push(`/asphalt/dosages/marshall/create?consult=true`);
     router.push(`/asphalt/dosages/marshall/create`);
   };
 
@@ -164,7 +158,6 @@ const MarshallDosageConsult = () => {
           <IconButton aria-label="Excluir" onClick={() => handleDeleteDosage(params.row.id)} size="large">
             <DeleteIcon />
           </IconButton>
-
           <IconButton aria-label="Visualizar" onClick={() => handleVisualizeDosage(params.row.id)} size="large">
             <NextIcon />
           </IconButton>
@@ -179,61 +172,55 @@ const MarshallDosageConsult = () => {
         <Loading />
       ) : (
         <Container>
-          {loading ? (
-            <p>Carregando...</p>
-          ) : (
-            <Container>
-              <Box sx={{ margin: '3rem' }}>
-                <Header title={t('marshall.dosage-title')} image={MarshallIconPng} />
+          <Box sx={{ margin: '3rem' }}>
+            <Header title={t('marshall.dosage-title')} image={MarshallIconPng} />
+          </Box>
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              pt: { mobile: 0, notebook: '0.5vh' },
+            }}
+          >
+            <Box
+              sx={{
+                width: { mobile: '90%', notebook: '80%' },
+                maxWidth: '2200px',
+                padding: '2rem',
+                borderRadius: '20px',
+                bgcolor: 'primaryTons.white',
+                border: '1px solid',
+                borderColor: 'primaryTons.border',
+                marginBottom: '1rem',
+              }}
+            >
+              {dosageArrays.length > 0 && (
+                <DataGrid
+                  rows={dosageArrays.length > 0 ? dosageArrays[page] : []}
+                  pagination
+                  hideFooter
+                  columns={columns.map((column) => ({
+                    ...column,
+                    disableColumnMenu: true,
+                    sortable: false,
+                    align: 'center',
+                    headerAlign: 'center',
+                    minWidth: 100,
+                    flex: 1,
+                  }))}
+                />
+              )}
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
+                <Pagination
+                  count={dosageArrays.length}
+                  size="small"
+                  onChange={(event, value) => setPage(value - 1)}
+                />
               </Box>
-              <Box
-                sx={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  justifyContent: 'center',
-                  pt: { mobile: 0, notebook: '0.5vh' },
-                }}
-              >
-                <Box
-                  sx={{
-                    width: { mobile: '90%', notebook: '80%' },
-                    maxWidth: '2200px',
-                    padding: '2rem',
-                    borderRadius: '20px',
-                    bgcolor: 'primaryTons.white',
-                    border: '1px solid',
-                    borderColor: 'primaryTons.border',
-                    marginBottom: '1rem',
-                  }}
-                >
-                  {dosageArrays.length > 0 && (
-                    <DataGrid
-                      rows={dosageArrays.length > 0 ? dosageArrays[page] : []}
-                      pagination
-                      hideFooter
-                      columns={columns.map((column) => ({
-                        ...column,
-                        disableColumnMenu: true,
-                        sortable: false,
-                        align: 'center',
-                        headerAlign: 'center',
-                        minWidth: 100,
-                        flex: 1,
-                      }))}
-                    />
-                  )}
-                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
-                    <Pagination
-                      count={dosageArrays.length}
-                      size="small"
-                      onChange={(event, value) => setPage(value - 1)}
-                    />
-                  </Box>
-                </Box>
-              </Box>
-            </Container>
-          )}
+            </Box>
+          </Box>
         </Container>
       )}
     </>

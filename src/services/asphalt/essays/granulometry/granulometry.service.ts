@@ -1,5 +1,5 @@
 import { GranulometryIcon } from '@/assets';
-import { AsphaltMaterial } from '@/interfaces/asphalt';
+import { AsphaltMaterial, Materials } from '@/interfaces/asphalt';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import {
   AsphaltGranulometryActions,
@@ -56,7 +56,7 @@ class AsphaltGranulometry_SERVICE implements IEssayService {
   /** @generalData Methods for general-data (step === 0, page 1) */
 
   // get all materials from user from backend
-  getmaterialsByUserId = async (userId: string): Promise<AsphaltMaterial> => {
+  getmaterialsByUserId = async (userId: string): Promise<Materials[]> => {
     try {
       // get all materials from user from backend
       const response = await Api.get(`asphalt/materials/all/${userId}`);
@@ -139,6 +139,7 @@ class AsphaltGranulometry_SERVICE implements IEssayService {
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.generalData,
         step2Data: store.step2Data,
+        isSuperpave: false
       });
 
       const { success, error, result } = response.data;
@@ -174,6 +175,39 @@ class AsphaltGranulometry_SERVICE implements IEssayService {
       throw error;
     }
   };
+
+getAllEssaysByUser = async (userId: string): Promise<any[]> => {
+    try {
+      const response = await Api.get(`${this.info.backend_path}/user/${userId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /**Busca ensaios por material */
+/**Busca ensaios por material */
+getEssaysByMaterialId = async (materialId: string): Promise<any[]> => {
+  
+  try {
+    // CORREÇÃO: Usar o endpoint correto de materiais
+    const response = await Api.get(`asphalt/materials/${materialId}`);
+    
+    // O backend retorna { material, essays }
+    if (response.data && response.data.essays) {
+      return response.data.essays;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error('Error getting essays by material:');
+    console.error('Error message:', error.message);
+    console.error('Error response:', error.response?.data);
+    console.error('Error status:', error.response?.status);
+    throw error;
+  }
+};
+
 }
 
 export default AsphaltGranulometry_SERVICE;

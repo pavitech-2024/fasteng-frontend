@@ -31,9 +31,9 @@
   "aggregates": "Agregados",
   "asphalt.mixtures": "Misturas Asfálticas",
   "asphalt.binder": "Ligante Asfáltico",
-  "cbr": "California Bearing Ratio - CBR",
+  "cbr": "California Bearing Ratio - CBR - DNIT 172/2016 - ME",
   "hrb": "Classificação Rodoviária - HRB",
   "sucs": "Classificação Unificada - SUCS",
-  "compression": "Ensaio de Compactação",
-  "granulometry": "Granulometria por Peneiramento"
+  "compression": "Ensaio de Compactação - DNIT - ME 162/94",
+  "granulometry-standard": "Granulometria por Peneiramento - DNIT - ME 083/98"
 }

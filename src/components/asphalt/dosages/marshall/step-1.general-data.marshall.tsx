@@ -5,7 +5,7 @@ import { t } from 'i18next';
 import { Box, TextField } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
 
-const Marshall_Step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
+const Marshall_Step1_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const { generalData, setData } = useMarshallStore();
 
   const inputs = [
@@ -124,4 +124,4 @@ const Marshall_Step1 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { ma
   );
 };
 
-export default Marshall_Step1;
+export default Marshall_Step1_GeneralData;

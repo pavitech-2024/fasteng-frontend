@@ -24,7 +24,6 @@ const CHAPMAN_GeneralData = ({
     toast.promise(
       async () => {
         const data = await chapman.getmaterialsByUserId(user._id);
-        console.log("🚀 ~ data:", data)
 
         setMaterials(data[0].materials);
         setLoading(false);

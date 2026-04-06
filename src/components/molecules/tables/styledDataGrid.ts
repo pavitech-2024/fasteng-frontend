@@ -6,11 +6,11 @@ export const StyledDataGrid = styled(DataGrid)({
     width: '5px',
   },
   '& ::-webkit-scrollbar-track': {
-    background: '#f1c40f',
+    background: '#e1cab3',
     borderRadius: '10px',
   },
   '& ::-webkit-scrollbar-thumb': {
-    background: '#121212',
+    background: '#f29134',
     borderRadius: '10px',
   },
 });

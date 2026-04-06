@@ -6,16 +6,20 @@ import { toast } from 'react-toastify';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
 import ModalBase from '@/components/molecules/modals/modal';
 import { Box, TextField } from '@mui/material';
-import { Sieve } from '@/interfaces/common';
+import { AllSieveSeries, Sieve } from '@/interfaces/common';
+import { useRouter } from 'next/router';
 import { MaterialsProps } from '@/pages/asphalt/materials';
+import useAuth from '@/contexts/auth';
 
 interface CreateEditMaterialModalProps {
   openModal: boolean;
   handleCloseModal: () => void;
-  updateMaterials: () => void;
-  materials: MaterialsProps[];
-  materialToEdit?: AsphaltMaterial;
+  materials: MaterialsProps[] | AsphaltMaterial[];
   isEdit: boolean;
+  materialToEdit?: AsphaltMaterial;
+  updateMaterials?: () => void;
+  updatedMaterial?: (material: AsphaltMaterial) => void;
+  createdMaterial?: (material: AsphaltMaterial) => void;
 }
 
 const CreateEditMaterialModal = ({
@@ -25,26 +29,31 @@ const CreateEditMaterialModal = ({
   materials,
   materialToEdit,
   isEdit,
+  updatedMaterial,
+  createdMaterial,
 }: CreateEditMaterialModalProps) => {
   const initialMaterialState: AsphaltMaterialData = {
     name: '',
-    type: null,
+    type: '',
     description: {
-      source: null,
-      responsible: null,
-      maxDiammeter: null,
-      aggregateNature: null,
-      boughtDate: null,
-      recieveDate: null,
-      extractionDate: null,
-      collectionDate: null,
-      classification_CAP: null,
-      classification_AMP: null,
-      observation: null,
+      source: '',
+      responsible: '',
+      maxDiameter: { label: '', value: 0 },
+      aggregateNature: '',
+      boughtDate: '',
+      recieveDate: '',
+      extractionDate: '',
+      collectionDate: '',
+      classification_CAP: '',
+      classification_AMP: '',
+      observation: '',
     },
   };
 
   const [material, setMaterial] = useState<AsphaltMaterialData>(initialMaterialState);
+  const { pathname } = useRouter();
+  const { user } = useAuth();
+  const userId = user._id;
 
   const resetMaterial = () => {
     setMaterial(initialMaterialState);
@@ -56,43 +65,43 @@ const CreateEditMaterialModal = ({
     if (isEdit && materialToEdit) {
       setMaterial(materialToEdit);
     }
-  }, [materialToEdit]);
+  }, [materialToEdit, isEdit]);
 
   const getInputs = () => {
     const inputs = [
-      { label: t('samples.name'), value: material.name, key: 'name' },
-      { label: t('asphalt.materials.type'), value: material.type, key: 'type' },
-      { label: t('asphalt.materials.source'), value: material.description.source, key: 'source' },
-      { label: t('asphalt.materials.responsible'), value: material.description.responsible, key: 'responsible' },
-      { label: t('asphalt.materials.maxDiammeter'), value: material.description.maxDiammeter, key: 'maxDiammeter' },
+      { label: t('samples.name'), value: material.name ?? '', key: 'name' },
+      { label: t('asphalt.materials.type'), value: material.type ?? '', key: 'type' },
+      { label: t('asphalt.materials.source'), value: material.description?.source ?? '', key: 'source' },
+      { label: t('asphalt.materials.responsible'), value: material.description?.responsible ?? '', key: 'responsible' },
+      // { label: t('asphalt.materials.maxDiameter'), value: material.description?.maxDiameter ?? '', key: 'maxDiameter' },
       {
         label: t('asphalt.materials.aggregateNature'),
-        value: material.description.aggregateNature,
+        value: material.description?.aggregateNature ?? '',
         key: 'aggregateNature',
       },
-      { label: t('asphalt.materials.boughtDate'), value: material.description.boughtDate, key: 'boughtDate' },
-      { label: t('asphalt.materials.recieveDate'), value: material.description.recieveDate, key: 'recieveDate' },
+      { label: t('asphalt.materials.boughtDate'), value: material.description?.boughtDate ?? '', key: 'boughtDate' },
+      { label: t('asphalt.materials.recieveDate'), value: material.description?.recieveDate ?? '', key: 'recieveDate' },
       {
         label: t('asphalt.materials.extractionDate'),
-        value: material.description.extractionDate,
+        value: material.description?.extractionDate ?? '',
         key: 'extractionDate',
       },
       {
         label: t('asphalt.materials.collectionDate'),
-        value: material.description.collectionDate,
+        value: material.description?.collectionDate ?? '',
         key: 'collectionDate',
       },
       {
         label: t('asphalt.materials.classification_CAP'),
-        value: material.description.classification_CAP,
+        value: material.description?.classification_CAP ?? '',
         key: 'classification_CAP',
       },
       {
         label: t('asphalt.materials.classification_AMP'),
-        value: material.description.classification_AMP,
+        value: material.description?.classification_AMP ?? '',
         key: 'classification_AMP',
       },
-      { label: t('asphalt.materials.observation'), value: material.description.observation, key: 'observation' },
+      { label: t('asphalt.materials.observation'), value: material.description?.observation ?? '', key: 'observation' },
     ];
 
     const WhiteList: string[] = ['name', 'type', 'source', 'responsible'];
@@ -100,7 +109,7 @@ const CreateEditMaterialModal = ({
     switch (material.type) {
       case 'coarseAggregate':
       case 'fineAggregate':
-        WhiteList.push('maxDiameter', 'aggregateNature', 'extrationDate', 'collectionDate');
+        WhiteList.push('maxDiameter', 'aggregateNature', 'extractionDate', 'collectionDate');
         break;
 
       case 'filler':
@@ -154,10 +163,15 @@ const CreateEditMaterialModal = ({
 
     try {
       validateMaterialData();
+      const materialWithUserId = { ...material, userId };
 
-      await materialsService.createMaterial(material);
+      const response = await materialsService.createMaterial(materialWithUserId);
 
-      await updateMaterials();
+      if (pathname.includes('superpave')) {
+        createdMaterial(response.data);
+      } else {
+        await updateMaterials();
+      }
 
       handleCloseModal();
 
@@ -168,9 +182,14 @@ const CreateEditMaterialModal = ({
         autoClose: 5000,
         closeButton: true,
       });
-    } catch (error) {
+    } catch (error: any) {
+      const backendMessage = error?.response?.data?.message;
+      const isBackendAlreadyExistsError: boolean =
+        backendMessage?.includes('already exists') || backendMessage?.includes('Server');
       toast.update(createMaterialToastId, {
-        render: t('asphalt.materials.errorCreatingMaterial'),
+        render: isBackendAlreadyExistsError
+          ? 'Já existe um material cadastrado com esse nome!'
+          : backendMessage ?? t('asphalt.materials.errorCreatingMaterial'),
         type: 'error',
         isLoading: false,
         autoClose: 5000,
@@ -182,7 +201,6 @@ const CreateEditMaterialModal = ({
   const validateMaterialData = () => {
     if (material.name === '') throw 'Material name cannot be empty';
     if (material.type === null) throw 'Material type cannot be empty';
-    if (materials[0].materials.find((m) => m.name === material.name)) throw 'A material with the same name already exists!';
     if (material.type === 'CAP' && material.description.classification_CAP === null)
       throw 'CAP classification cannot be empty';
     if (material.type === 'asphaltBinder' && material.description.classification_AMP === null)
@@ -191,16 +209,18 @@ const CreateEditMaterialModal = ({
 
   const handleEditMaterial = async () => {
     const toastId = toast.loading('Editando material...', { autoClose: 5000 });
-
     try {
       validateMaterialData();
 
-      await materialsService.editMaterial(materialToEdit._id, material);
+      const { data } = await materialsService.editMaterial(materialToEdit._id, material);
+
+      updatedMaterial(data);
 
       await updateMaterials();
 
       handleCloseModal();
 
+      toast.dismiss(toastId);
       toast.update(toastId, {
         render: 'Material editado com sucesso!',
         type: 'success',
@@ -255,6 +275,7 @@ const CreateEditMaterialModal = ({
       leftButtonTitle={t('samples.cancel')}
       rightButtonTitle={isEdit ? t('samples.edit') : t('samples.register')}
       size="medium"
+      rightButtonProps={{ 'data-testid': 'submit-edit-material' }}
       onSubmit={() => {
         if (isEdit) {
           handleEditMaterial();
@@ -294,6 +315,15 @@ const CreateEditMaterialModal = ({
               input.key === 'classification_CAP' ||
               input.key === 'classification_AMP'
             ) {
+              const options =
+                input.key === 'type'
+                  ? types
+                  : material.type.includes('Aggregate') && input.key === 'maxDiameter'
+                  ? AllSieveSeries[0].sieves.map((sieveSeries) => ({ label: sieveSeries.label, value: sieveSeries.value }))
+                  : input.key === 'classification_CAP' && !isEdit
+                  ? classification_CAP_options
+                  : classification_AMP_options;
+
               return (
                 <DropDown
                   key={input.key}
@@ -303,13 +333,7 @@ const CreateEditMaterialModal = ({
                   value={defaultDropDownValue(input.key, input.value)}
                   size="medium"
                   isEdit={isEdit}
-                  options={
-                    input.key === 'type'
-                      ? types
-                      : input.key === 'classification_CAP'
-                      ? classification_CAP_options
-                      : classification_AMP_options
-                  }
+                  options={options}
                   callback={(value: string) => changeMaterial(input.key, value)}
                   required
                 />
@@ -323,6 +347,7 @@ const CreateEditMaterialModal = ({
                   value={input.value}
                   required={input.key === 'name'}
                   onChange={(e) => changeMaterial(input.key, e.target.value)}
+                  inputProps={{ 'data-testid': `input-${input.key}` }}
                 />
               );
             }

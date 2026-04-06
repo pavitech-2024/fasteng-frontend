@@ -1,13 +1,27 @@
 {
-  "superpave.step-2-description": "Selecione os agregados e o cimento para a dosagem. Apenas materiais cadastrados com ensaios de granulometria para agregados e viscosidade rotacional para ligantes asfálticos serão exibidos.",
-  "superpave.step-3-description": "Insira as porcentagens de cada agregado na composição granulométrica da mistura",
-  "superpave.step-11-description": "Esses são os resultados da sua dosagem Superpave. Não se esqueça de salvar para acessá-las mais tarde.",
+  "superpave.step-2-description": "Crie os materiais para a dosagem, incluindo pelo menos um agregado graúdo, um miúdo com seus dados de granulometria, além de ao menos um ligante com os dados de viscosidade rotacional.",
+  "superpave.step-3-description": "Clique no material testado para ver o resultado dos ensaios de granulometria (agregados) e viscosidade rotacional (ligantes).",
+  "superpave.step-4-description": "Escolha a curva granulométrica desejada e insira as porcentagens dos agregados, garantindo um total de 100%.",
+  "superpave.step-5-description": "Confira o teor de ligante inicial e altere-o, se necessário.",
+  "superpave.step-6-description": "Faça o download da planilha modelo, insira os dados gerados pelo compactador e faça o upload da planilha preenchida para cada curva selecionada.",
+  "superpave.step-7-description": "Esses são os parâmetros da primeira compactação. Altere-os conforme necessário.",
+  "superpave.step-8-description": "Essas são as porcentagens da curva escolhida.",
+  "superpave.step-9-description": "Insira os valores da segunda compactação para calcular a densidade máxima real ou utilize os botões de densidade máxima medida disponíveis ao final da tela.",
+  "superpave.step-10-description": "Esses são os parâmetros da segunda compactação.",
+  "superpave.step-11-description": "Insira os dados de compactação e realize o Rice Test para calcular a Densidade Máxima da Mistura. Após preencher os campos clique em confirmar para continuar.",
+  "superpave.step-12-description": "Esses são os resultados da sua dosagem Superpave. Não se esqueça de salvar para acessá-las mais tarde.",
 
-  "superpave.step-11": "Resultados",
+  "superpave.step-12": "Resultados",
 
   "asphalt.dosages.superpave": "Dosagem Superpave",
   "topbar.superpave": "Superpave",
 
+  "viscosity-rotational.compression-temperature": "Temperatura de compressão",
+  "viscosity-rotational.aggregate-temperature": "Temperatura do agregado",
+  "viscosity-rotational.machining-temperature": "Temperatura de usinagem",
+
+  "asphalt.dosages.superpave.granulometry_essay": "Ensaio de Granulometria",
+  "asphalt.dosages.superpave.granulometry_essay_result": "Resultados da Granulometria",
   "asphalt.dosages.superpave.material_selection": "Seleção de Materiais",
   "asphalt.dosages.superpave.granulometry_composition": "Composição Granulométrica",
   "asphalt.dosages.superpave.initial_binder": "Teor de Ligante Inicial",
@@ -41,10 +55,14 @@
   "asphalt.dosages.superpave.calculate-lower-curve": "Calcular curva inferior",
   "asphalt.dosages.superpave.calculate-average-curve": "Calcular curva intermediária",
   "asphalt.dosages.superpave.calculate-higher-curve": "Calcular curva superior",
+  "asphalt.dosages.superpave.granulometry-fineness-module": "Módulo de finura",
   "asphalt.dosages.superpave.maximum-nominal-size": "Tamanho nominal máximo",
+  "asphalt.dosages.superpave.granulometry-cc": "CC",
+  "asphalt.dosages.superpave.granulometry-cnu": "CNU",
+  "asphalt.dosages.superpave.granulometry-error": "Erro",
   "asphalt.dosages.superpave.sieve": "Peneira",
   "asphalt.dosages.superpave.project": "Projeto",
-  "asphalt.dosages.superpave.total-passant": "Passante total (%)",
+  "asphalt.dosages.superpave.total-passant": "Passante total %",
   "asphalt.dosages.superpave.specification": "Especificação",
   "asphalt.dosages.superpave.specific-mass-modal-title": "Insira as massas específicas dos materiais",
 
@@ -68,6 +86,7 @@
   "asphalt.dosages.superpave.combined-gsa": "Gsa combinado (g/cm³)",
   "asphalt.dosages.superpave.gse": "Gse (g/cm³)",
   "asphalt.dosages.superpave.initial-binder": "Teor de ligante inicial",
+  "asphalt.dosages.superpave.materials-estimated-percentage": "Porcentagem estimada de materiais",
 
   "asphalt.dosages.superpave.initial-n": "Ninicial",
   "asphalt.dosages.superpave.project-n": "Nprojeto",
@@ -79,8 +98,11 @@
   "asphalt.dosages.superpave.confirm": "Confirmar",
   "asphalt.dosages.superpave.water-temperature-dropdown": "Selecione o fator de correção para a temperatura da água",
   "asphalt.dosages.superpave.dry-sample-mass": "Massa da amostra seca em ar",
+  "asphalt.dosages.superpave.sampleAirDryMass": "Massa da amostra seca em ar",
   "asphalt.dosages.superpave.water-sample-container-mass": "Massa do recipiente + água",
+  "asphalt.dosages.superpave.containerMassWaterSample": "Massa do recipiente + amostra",
   "asphalt.dosages.superpave.water-sample-mass": "Massa do recipiente + amostra + água",
+  "asphalt.dosages.superpave.containerWaterMass": "Massa do recipiente + amostra + água",
   "asphalt.dosages.superpave.insert-gmm": "Inserir gmm",
   "asphalt.dosages.superpave.calculate-rice-test": "Calcular por Rice Test",
   "asphalt.dosages.superpave.calculate-max-density": "Calcular densidade máxima",
@@ -129,8 +151,21 @@
 
   "asphalt.dosages.superpave.mechanic-volumetric-params": "Parâmetros volumétricos e mecânicos da mistura no teor ótimo de ligante asfáltico",
 
+  "asphalt.dosages.superpave.optimum-binder": "Teor ótimo de ligante asfáltico (%)",
+
   "asphalt.dosages.superpave.step-3.lower": "Inferior",
   "asphalt.dosages.superpave.step-3.higher": "Superior",
   "asphalt.dosages.superpave.step-3.average": "Intermediária",
-  "marshall.dosage-pdf-title": "Relatório de Dosagem Superpave"
+  "superpave.dosage-pdf-title": "Relatório de Dosagem Superpave",
+  "errors.empty-material-mass": "A massa total de cada agregado deve ser preenchida",
+
+  "superpave.error.minReads": "Não é possível excluir. Mínimo de linhas atingido.",
+  "superpave.common.type": "Tipo",
+
+  "asphalt.dosages.superpave.dry-surface-saturated-mass-error": "A massa saturada com superfície seca deve ser maior que a massa submersa",
+  "asphalt.dosages.superpave.confirm-compaction-table-success": "Dados confirmados com sucesso.",
+
+  "superpave-results-noRealRoots": "Sem raiz real. Revise os dados da primeira compactação.",
+  "superpave-results-noRoots": "Sem raizes. Revise os dados da primeira compactação.",
+  "errors.empty-viscosity": "A viscosidade deve ser preenchida"
 }

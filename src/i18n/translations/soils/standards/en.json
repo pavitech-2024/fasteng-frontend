@@ -34,6 +34,6 @@
   "cbr": "California Bearing Ratio - CBR",
   "hrb": "Road Classification - HRB",
   "sucs": "Unified Classification - SUCS",
-  "compression": "Compression Test",
-  "granulometry": "Granulometry by Sieving"
+  "compression": "Compression Test - DNIT - ME 162/94",
+  "granulometry-standard": "Granulometry - DNIT - ME 083/98"
 }

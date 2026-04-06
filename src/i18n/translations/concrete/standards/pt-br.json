@@ -1,7 +1,7 @@
 {
-  "granulometry": "Granulometria por Peneiramento",
-  "chapman": "Massa Específica - Frasco de Chapman",
-  "unitMass": "Massa Unitária",
-  "sandIncrease": "Inchamento da Areia",
-  "coarseAggregate": "Massa Específica de Agregado Graúdo"
+  "granulometry": "Granulometria por Peneiramento - DNIT - ME 083/98",
+  "chapman": "Massa Específica - Frasco de Chapman - DNIT - ME 194/98",
+  "unitMass": "Massa Unitária - DNIT 437/2022 - ME",
+  "sandIncrease": "Inchamento de Areia - DNIT - ME 192/97",
+  "coarseAggregate": "Massa Específica de Agregrado Graúdo - DNIT - ME 195/97"
 }

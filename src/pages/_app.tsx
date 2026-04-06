@@ -1,8 +1,7 @@
 import type { AppProps } from 'next/app';
 import Pages from '@/components/config/pages';
 import { AuthProvider } from '@/contexts/auth';
-import { ThemeProvider as MuiTheme, Theme, StyledEngineProvider } from '@mui/material';
-import { ThemeProvider as StyledTheme } from 'styled-components';
+import { ThemeProvider } from '@mui/material';
 import { theme } from '@/components/config/theme';
 import { ToastContainer } from 'react-toastify';
 import '../i18n';
@@ -15,47 +14,52 @@ import 'dayjs/locale/en';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useRouter } from 'next/router';
 import useResetStores from '@/utils/hooks/useResetStores';
+import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { i18n } = useTranslation();
   const locale = i18n.language === 'en' ? 'en' : 'en-gb';
-
+ const { hasHydrated } = useSuperpaveStore();
   const { pathname } = useRouter();
   const resetStores = useResetStores();
-
   /**
-   * This useEffect hook iterates through sessionStorage keys in reverse order.
-   * It checks if the current pathname includes a specific key substring.
-   * If not, it clears the sessionStorage and resets stores.
+   * Resets stores and clears session storage when navigating to a different essay.
+   * This is necessary because Next.js does not clear session storage when navigating
+   * between pages, and some stores are not designed to be reset. So, this will reset
+   * any essay or dosage in case the user navigates to a different essay or homepage.
+   *
+   * @param {string} pathname - The current pathname.
+   * @param {boolean} hasHydrated - Whether the store has been hydrated.
    */
-  useEffect(() => {
-    for (let i = sessionStorage.length - 1; i >= 0; i--) {
-      const key = sessionStorage.key(i);
-      if (key) {
-        const keyString = key.split('-')[1];
+  // useEffect(() => {
+  //   if (!hasHydrated) return;
 
-        if (!pathname.includes(keyString)) {
-          sessionStorage.clear();
-          resetStores();
-        }
-      }
-    }
-  }, [pathname]);
+  //   const essayKeys = Object.keys(sessionStorage)
+  //     .filter((key) => key.includes('-store'))
+  //     .map((key) => {
+  //       return key.split('-')[1];
+  //     });
+
+  //   const currentEssay = essayKeys.find((essay) => pathname.includes(essay));
+
+  //   if (!currentEssay) {
+  //     resetStores();
+  //     sessionStorage.clear();
+  //   }
+  // }, [pathname]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
       <AuthProvider>
-        <MuiTheme theme={theme}>
-          <StyledTheme theme={theme}>
-            <Pages>
-              <>
-                <ToastContainer position="top-right" autoClose={5000} closeOnClick theme="colored" />
-                <CssBaseline />
-                <Component {...pageProps} />
-              </>
-            </Pages>
-          </StyledTheme>
-        </MuiTheme>
+        <ThemeProvider theme={theme}>
+          <Pages>
+            <>
+              <ToastContainer position="top-right" autoClose={5000} closeOnClick theme="colored" />
+              <CssBaseline />
+              <Component {...pageProps} />
+            </>
+          </Pages>
+        </ThemeProvider>
       </AuthProvider>
     </LocalizationProvider>
   );

@@ -98,7 +98,6 @@ const ADHESIVENESS_GeneralData = ({
                   label: '',
                   value: '',
                 };
-
                 let material;
 
                 // se existir uma material no store, seta ela como default
