@@ -9,23 +9,25 @@ import { useEffect } from 'react';
 const BinderAsphaltConcrete_step1 = ({ setNextDisabled }: EssayPageProps) => {
   const { generalData, setData } = useBinderAsphaltConcreteStore();
 
+  // DADOS GERAIS
   const inputs = [
-    { label: t('pm.binderAsphaltConcrete.name'), value: generalData?.name, key: 'name', required: true },
-    { label: t('pm.binderAsphaltConcrete.zone'), value: generalData?.zone, key: 'zone', required: true },
-    { label: t('pm.binderAsphaltConcrete.highway'), value: generalData?.highway, key: 'highway', required: true },
-    { label: t('pm.binderAsphaltConcrete.layer'), value: generalData?.layer, key: 'layer', required: true },
-    { label: t('pm.binderAsphaltConcrete.cityState'), value: generalData?.cityState, key: 'cityState', required: true },
+    { label: 'NOME', value: generalData?.name, key: 'name', required: true },
+    { label: 'RODOVIA', value: generalData?.highway, key: 'highway', required: true },
+    { label: 'MUNICÍPIO/ESTADO', value: generalData?.cityState, key: 'cityState', required: true },
+    { label: 'OBSERVAÇÕES', value: generalData?.observations, key: 'observations', required: false },
+  ];
+
+  // LOCAL E CAMADA
+  const locationInputs = [
+    { label: 'LOCAL', value: generalData?.zone, key: 'zone', required: true },
+    { label: 'CAMADA', value: generalData?.layer, key: 'layer', required: true },
     {
-      label: t('pm.granularLayer.guideLineSpeed'),
+      label: 'VELOCIDADE DIRETRIZ DA VIA',
       value: generalData?.guideLineSpeed,
       key: 'guideLineSpeed',
       required: true,
-    },
-    {
-      label: t('pm.binderAsphaltConcrete.observations'),
-      value: generalData?.observations,
-      key: 'observations',
-      required: false,
+      adornment: 'km/h',
+      type: 'number'
     },
   ];
 
@@ -36,7 +38,8 @@ const BinderAsphaltConcrete_step1 = ({ setNextDisabled }: EssayPageProps) => {
 
   return (
     <>
-      <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
+      {/* DADOS GERAIS */}
+      <FlexColumnBorder title="DADOS GERAIS" open={true} theme={'#07B811'}>
         <Box
           sx={{
             width: '100%',
@@ -59,13 +62,67 @@ const BinderAsphaltConcrete_step1 = ({ setNextDisabled }: EssayPageProps) => {
             }}
           >
             {inputs?.map((input) => {
+              if (input.key === 'observations') {
+                return (
+                  <TextField
+                    key={input.key}
+                    variant="standard"
+                    label={input.label}
+                    value={input.value || ''}
+                    sx={{ width: '100%' }}
+                    multiline
+                    required={input.required}
+                    onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  />
+                );
+              } else {
+                return (
+                  <TextField
+                    key={input.key}
+                    variant="standard"
+                    label={input.label}
+                    value={input.value || ''}
+                    required={input.required}
+                    onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                  />
+                );
+              }
+            })}
+          </Box>
+        </Box>
+      </FlexColumnBorder>
+
+      {/* LOCAL E CAMADA */}
+      <FlexColumnBorder title="LOCAL E CAMADA" open={true} theme={'#07B811'}>
+        <Box
+          sx={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              width: '100%',
+              flexWrap: 'wrap',
+              '& > *': {
+                width: 'calc(50% - 10px)',
+              },
+              gap: '5px 20px',
+              marginBottom: '10px',
+              marginTop: '-20px',
+            }}
+          >
+            {locationInputs?.map((input) => {
               if (input.key === 'guideLineSpeed') {
                 return (
                   <InputEndAdornment
-                    adornment={'km/h'}
-                    type="number"
+                    adornment={input.adornment || ''}
+                    type={input.type || 'text'}
                     key={input.key}
-                    value={generalData?.guideLineSpeed?.toString()}
+                    value={generalData?.guideLineSpeed?.toString() || ''}
                     label={input.label}
                     required={input.required}
                     onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
@@ -77,9 +134,7 @@ const BinderAsphaltConcrete_step1 = ({ setNextDisabled }: EssayPageProps) => {
                     key={input.key}
                     variant="standard"
                     label={input.label}
-                    value={input.value}
-                    sx={input.key === 'observations' && { width: '100%' }}
-                    multiline={input.key === 'observations'}
+                    value={input.value || ''}
                     required={input.required}
                     onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
                   />

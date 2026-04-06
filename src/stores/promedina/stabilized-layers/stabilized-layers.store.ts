@@ -9,6 +9,19 @@ interface GeneralData {
   cityState: string;
   guideLineSpeed: string;
   observations?: string;
+  // NOVOS CAMPOS
+  companyResponsible?: string;      // EMPRESA RESPONSÁVEL PELO SERVIÇO
+  coatingType?: string;              // TIPO DE REVESTIMENTO
+  serviceOrder?: string;             // ORDEM DE SERVIÇO / CONTRATO
+  layerNumber?: string;              // NÚMERO DA CAMADA
+  subgradeClass?: string;            // CLASSE DE REFORÇO DO SUBLEITO
+  subgradeThickness?: string;        // ESPESSURA DO REFORÇO DO SUBLEITO
+  granularBaseThickness?: string;    // ESPESSURA DA BASE GRANULAR
+  stabilizedLayerThickness?: string; // ESPESSURA DA CAMADA ESTABILIZADA
+  subgradeObs?: string;              // OBSERVAÇÕES DO SUBLEITO
+  startDate?: string;                // DATA DE INÍCIO
+  endDate?: string;                  // DATA DE TÉRMINO
+  weather?: string;                  // CLIMA / TEMPERATURA MÉDIA
 }
 
 interface Step2Data {
@@ -45,6 +58,17 @@ interface Step2Data {
     material: string;
     thickness: string;
   }[];
+  
+  // NOVAS PROPRIEDADES ADICIONADAS
+  iriPrerehabilitation?: string;     // IRI (m/km) PRÉ-REABILITAÇÃO
+  atPrerehabilitation?: string;      // AT (%) PRÉ-REABILITAÇÃO
+  millingThickness?: string;         // ESPESSURA FRESADA (cm)
+  roadName?: string;                 // RODOVIA/AVENIDA/RUA
+  cityState?: string;                // CIDADE/ESTADO
+  experimentalLength?: string;       // EXTENSÃO DA SEÇÃO EXPERIMENTAL (m)
+  guideSpeed?: string;               // VELOCIDADE DIRETRIZ (km/h)
+  serviceTimeYears?: string;         // TEMPO EM SERVIÇO (ANOS)
+  serviceTimeMonths?: string;        // TEMPO EM SERVIÇO (MESES)
 }
 
 interface Step3Data {
@@ -137,7 +161,7 @@ export type StabilizedLayersActions = {
   reset:() => void;
 };
 
-const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data' };
+const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data', 3: 'step4Data' };
 
 export type setDataType = { step: number; key?: string; value: unknown };
 
@@ -150,6 +174,19 @@ const initialState = {
     cityState: null,
     guideLineSpeed: null,
     observations: null,
+    // NOVOS CAMPOS
+    companyResponsible: null,
+    coatingType: null,
+    serviceOrder: null,
+    layerNumber: null,
+    subgradeClass: null,
+    subgradeThickness: null,
+    granularBaseThickness: null,
+    stabilizedLayerThickness: null,
+    subgradeObs: null,
+    startDate: null,
+    endDate: null,
+    weather: null,
   },
   step2Data: {
     identification: null,
@@ -184,6 +221,16 @@ const initialState = {
         thickness: null,
       },
     ],
+    // NOVAS PROPRIEDADES INICIALIZADAS
+    iriPrerehabilitation: null,
+    atPrerehabilitation: null,
+    millingThickness: null,
+    roadName: null,
+    cityState: null,
+    experimentalLength: null,
+    guideSpeed: null,
+    serviceTimeYears: null,
+    serviceTimeMonths: null,
   },
   step3Data: {
     // Paviment Data

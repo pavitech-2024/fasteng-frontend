@@ -45,6 +45,17 @@ interface Step2Data {
     material: string;
     thickness: string;
   }[];
+  
+  // NOVAS PROPRIEDADES ADICIONADAS
+  roadName?: string;              // LOCAL
+  cityState?: string;             // MUNICÍPIO/ESTADO
+  experimentalLength?: string;    // EXTENSÃO (m)
+  guideSpeed?: string;            // VELOCIDADE DIRETRIZ DA VIA (km/h)
+  iriPrerehabilitation?: string;  // IRI (m/km) PRÉ-REABILITAÇÃO
+  atPrerehabilitation?: string;   // AT (%) PRÉ-REABILITAÇÃO
+  millingThickness?: string;      // FRESAGEM (cm)
+  serviceTimeYears?: string;      // TEMPO EM SERVIÇO (ANOS)
+  serviceTimeMonths?: string;     // TEMPO EM SERVIÇO (MESES)
 }
 
 interface Step3Data {
@@ -147,6 +158,16 @@ const initialState = {
         thickness: null,
       },
     ],
+    // NOVAS PROPRIEDADES INICIALIZADAS
+    roadName: null,
+    cityState: null,
+    experimentalLength: null,
+    guideSpeed: null,
+    iriPrerehabilitation: null,
+    atPrerehabilitation: null,
+    millingThickness: null,
+    serviceTimeYears: null,
+    serviceTimeMonths: null,
   },
   step3Data: {
     refinery: null,

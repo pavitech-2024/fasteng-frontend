@@ -270,13 +270,20 @@ function rollingWindow(arr: number[], window: number) {
   }
   return { media, std };
 }
+
+// Função processarSubtrechos corrigida conforme solicitação:
+// - Considerar limite máximo de 7000 metros
+// - CV > 30% como critério de quebra
+// - Desconsiderar limite mínimo
 function processarSubtrechos(dados: FWDData[]) {
   const colDef = ['d0', 'd20', 'd30', 'd45', 'd60', 'd90', 'd120', 'd150', 'd180'] as const;
   const estaca_para_metros = 20;
-  const min_len = 200 / estaca_para_metros;
-  const max_len = 5000 / estaca_para_metros;
+  // Limite máximo de 7000 metros convertido para estacas
+  const max_len_estacas = 7000 / estaca_para_metros; // 350 estacas
   const janela = 5;
-  const limiar_cv = 30;
+  const limiar_cv = 30; // CV > 30% como critério de quebra
+  // Desconsiderar limite mínimo - removido min_len
+  
   const ordered = [...dados].sort((a, b) => a.stationNumber - b.stationNumber);
   const d0Arr = ordered.map((r) => r.d0);
   const { media: media_d0, std: std_d0 } = rollingWindow(d0Arr, janela);
@@ -288,66 +295,66 @@ function processarSubtrechos(dados: FWDData[]) {
 
   for (let i = 1; i < ordered.length; i++) {
     const comprimento_estacas = ordered[i].stationNumber - ordered[atual].stationNumber;
-    if (quebra[i] || comprimento_estacas >= max_len) {
+    // Critério de quebra: CV > 30% OU comprimento máximo atingido (7000m)
+    if (quebra[i] || comprimento_estacas >= max_len_estacas) {
       const fim = ordered[i - 1].stationNumber;
       const n_amostras = i - atual;
-      if (comprimento_estacas >= min_len) {
-        const trecho = ordered.slice(atual, i);
-        const medias: Record<string, number> = {};
-        const desvios: Record<string, number> = {};
-        colDef.forEach((col) => {
-          const vals = trecho.map((x) => x[col]);
-          const m = vals.reduce((a, b) => a + b, 0) / vals.length;
-          const s = Math.sqrt(vals.reduce((a, b) => a + (b - m) * (b - m), 0) / vals.length);
-          medias[col] = m;
-          desvios[col] = s;
-        });
-        const K = getCoefK(n_amostras);
-        const deflexoes_char: Record<string, number> = {};
-        colDef.forEach((col) => {
-          deflexoes_char[col] = Number((medias[col] + K * desvios[col]).toFixed(1));
-        });
-        subtrechos.push({
-          'Início (Estaca)': inicio,
-          'Fim (Estaca)': fim,
-          'Comprimento (m)': Number(((fim - inicio) * estaca_para_metros).toFixed(1)),
-          'N Amostras': n_amostras,
-          ...deflexoes_char,
-        } as Subtrecho);
-      }
+      // Desconsiderar limite mínimo - sempre criar subtrecho mesmo se pequeno
+      const trecho = ordered.slice(atual, i);
+      const medias: Record<string, number> = {};
+      const desvios: Record<string, number> = {};
+      colDef.forEach((col) => {
+        const vals = trecho.map((x) => x[col]);
+        const m = vals.reduce((a, b) => a + b, 0) / vals.length;
+        const s = Math.sqrt(vals.reduce((a, b) => a + (b - m) * (b - m), 0) / vals.length);
+        medias[col] = m;
+        desvios[col] = s;
+      });
+      const K = getCoefK(n_amostras);
+      const deflexoes_char: Record<string, number> = {};
+      colDef.forEach((col) => {
+        deflexoes_char[col] = Number((medias[col] + K * desvios[col]).toFixed(1));
+      });
+      subtrechos.push({
+        'Início (Estaca)': inicio,
+        'Fim (Estaca)': fim,
+        'Comprimento (m)': Number(((fim - inicio) * estaca_para_metros).toFixed(1)),
+        'N Amostras': n_amostras,
+        ...deflexoes_char,
+      } as Subtrecho);
+      
       atual = i;
       inicio = ordered[i].stationNumber;
     }
   }
 
-  // Último subtrecho
+  // Último subtrecho - sempre adicionar, desconsiderando limite mínimo
   const fim = ordered[ordered.length - 1]?.stationNumber ?? 0;
-  const comprimento_final = fim - inicio;
   const n_amostras = ordered.length - atual;
-  if (comprimento_final >= min_len) {
-    const trecho = ordered.slice(atual);
-    const medias: Record<string, number> = {};
-    const desvios: Record<string, number> = {};
-    colDef.forEach((col) => {
-      const vals = trecho.map((x) => x[col]);
-      const m = vals.reduce((a, b) => a + b, 0) / vals.length;
-      const s = Math.sqrt(vals.reduce((a, b) => a + (b - m) * (b - m), 0) / vals.length);
-      medias[col] = m;
-      desvios[col] = s;
-    });
-    const K = getCoefK(n_amostras);
-    const deflexoes_char: Record<string, number> = {};
-    colDef.forEach((col) => {
-      deflexoes_char[col] = Number((medias[col] + K * desvios[col]).toFixed(1));
-    });
-    subtrechos.push({
-      'Início (Estaca)': inicio,
-      'Fim (Estaca)': fim,
-      'Comprimento (m)': Number(((fim - inicio) * estaca_para_metros).toFixed(1)),
-      'N Amostras': n_amostras,
-      ...deflexoes_char,
-    } as Subtrecho);
-  }
+  // Sempre criar o último subtrecho, independente do comprimento
+  const trecho = ordered.slice(atual);
+  const medias: Record<string, number> = {};
+  const desvios: Record<string, number> = {};
+  colDef.forEach((col) => {
+    const vals = trecho.map((x) => x[col]);
+    const m = vals.reduce((a, b) => a + b, 0) / vals.length;
+    const s = Math.sqrt(vals.reduce((a, b) => a + (b - m) * (b - m), 0) / vals.length);
+    medias[col] = m;
+    desvios[col] = s;
+  });
+  const K = getCoefK(n_amostras);
+  const deflexoes_char: Record<string, number> = {};
+  colDef.forEach((col) => {
+    deflexoes_char[col] = Number((medias[col] + K * desvios[col]).toFixed(1));
+  });
+  subtrechos.push({
+    'Início (Estaca)': inicio,
+    'Fim (Estaca)': fim,
+    'Comprimento (m)': Number(((fim - inicio) * estaca_para_metros).toFixed(1)),
+    'N Amostras': n_amostras,
+    ...deflexoes_char,
+  } as Subtrecho);
+  
   return { subtrechos, media_d0, std_d0, cv_d0, quebra, ordered };
 }
 
