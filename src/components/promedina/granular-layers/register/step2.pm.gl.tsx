@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EssayPageProps } from '../../../templates/essay';
-import { t } from 'i18next';
 import { Box, TextField, Button, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
@@ -29,20 +28,20 @@ setImages(step2Data?.images);
 }
 }, [step2Data?.images]);
 
-// Remover mais uma linha de determinado valor
+// REMOVER MAIS UMA LINHA DE DETERMINADO VALOR
 const handleErase = () => {
 try {
 if (rows.length > 1) {
 const newRows = [...rows];
 newRows.pop();
 setData({ step: 1, key: 'structuralComposition', value: newRows });
-} else throw t('compression.error.minValue');
+} else throw new Error("Valor mínimo atingido");
 } catch (error) {
 toast.error(error as string);
 }
 };
 
-// Adicionar mais uma linha de determinado valor
+// ADICIONAR MAIS UMA LINHA DE DETERMINADO VALOR
 const handleAdd = () => {
 const newRows = [...rows];
 newRows.push({
@@ -59,23 +58,30 @@ const ExpansionToolbar = () => {
 return (
 <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
 <Button sx={{ color: 'secondaryTons.red' }} onClick={handleErase}>
-{t('erase')}
+REMOVER
 </Button>
 <Button sx={{ color: 'secondaryTons.green' }} onClick={handleAdd}>
-{t('add')}
+ADICIONAR
 </Button>
 </Box>
 );
 };
 
-// Opções para ESTRUTURA
+// OPÇÕES PARA TIPO DE SEÇÃO
+const tipoSecaoOptions = [
+{ value: 'Experimental', label: 'Experimental' },
+{ value: 'Controle', label: 'Controle' },
+{ value: 'Referência', label: 'Referência' },
+];
+
+// OPÇÕES PARA ESTRUTURA
 const estruturaOptions = [
 { value: 'Flexível', label: 'Flexível' },
 { value: 'Semi-rígida', label: 'Semi-rígida' },
 { value: 'Rígida', label: 'Rígida' },
 ];
 
-// Opções para FONTE DE MONITORAMENTO
+// OPÇÕES PARA FONTE DE MONITORAMENTO
 const fonteMonitoramentoOptions = [
 { value: 'DNIT', label: 'DNIT' },
 { value: 'Concessionária', label: 'Concessionária' },
@@ -83,17 +89,25 @@ const fonteMonitoramentoOptions = [
 { value: 'Consultoria', label: 'Consultoria' },
 ];
 
-// DADOS DO PAVIMENTO - CORRIGIDO: removido tipoSecao que pertence ao generalData
+// DADOS DO PAVIMENTO
 const inputsPavimentData = [
 {
-label: t('pm.granularLayer.identification'),
+label: 'IDENTIFICAÇÃO',
 value: step2Data?.identification,
 key: 'identification',
 required: true,
 type: 'text',
 },
 {
-label: t('pm.granularLayer.estrutura'),
+label: 'TIPO DE SEÇÃO',
+value: step2Data?.tipoSecao,
+key: 'tipoSecao',
+required: true,
+type: 'select',
+options: tipoSecaoOptions,
+},
+{
+label: 'ESTRUTURA',
 value: step2Data?.estrutura,
 key: 'estrutura',
 required: true,
@@ -101,35 +115,35 @@ type: 'select',
 options: estruturaOptions,
 },
 {
-label: t('pm.granularLayer.material'),
+label: 'MATERIAL',
 value: step2Data?.material,
 key: 'material',
 required: true,
 type: 'text',
 },
 {
-label: t('pm.granularLayer.longitude'),
+label: 'LONGITUDE',
 value: step2Data?.longitude,
 key: 'longitude',
 required: true,
 type: 'text',
 },
 {
-label: t('pm.granularLayer.latitude'),
+label: 'LATITUDE',
 value: step2Data?.latitude,
 key: 'latitude',
 required: true,
 type: 'text',
 },
 {
-label: t('pm.granularLayer.altitude'),
+label: 'ALTITUDE',
 value: step2Data?.altitude,
 key: 'altitude',
 required: true,
 type: 'number',
 },
 {
-label: t('pm.granularLayer.fonteMonitoramento'),
+label: 'FONTE DE MONITORAMENTO',
 value: step2Data?.fonteMonitoramento,
 key: 'fonteMonitoramento',
 required: true,
@@ -137,14 +151,14 @@ type: 'select',
 options: fonteMonitoramentoOptions,
 },
 {
-label: t('pm.granularLayer.longitudeFora'),
+label: 'LONGITUDE FORA',
 value: step2Data?.longitudeFora,
 key: 'longitudeFora',
 required: false,
 type: 'text',
 },
 {
-label: t('pm.granularLayer.latitudeFora'),
+label: 'LATITUDE FORA',
 value: step2Data?.latitudeFora,
 key: 'latitudeFora',
 required: false,
@@ -155,28 +169,28 @@ type: 'text',
 // PREPARO DO PAVIMENTO
 const inputsPavimentPreparation = [
 { 
-label: t('pm.granularLayer.pregoeiro'), 
+label: 'PREGOEIRO', 
 value: step2Data?.pregoeiro, 
 key: 'pregoeiro', 
 required: true,
 type: 'text',
 },
 {
-label: t('pm.granularLayer.informacaoBase'),
+label: 'INFORMAÇÃO BASE',
 value: step2Data?.informacaoBase,
 key: 'informacaoBase',
 required: true,
 type: 'text',
 },
 {
-label: t('pm.granularLayer.pontoLigacao'),
+label: 'PONTO DE LIGAÇÃO',
 value: step2Data?.pontoLigacao,
 key: 'pontoLigacao',
 required: true,
 type: 'text',
 },
 {
-label: t('pm.granularLayer.ultimaAtualizacao'),
+label: 'ÚLTIMA ATUALIZAÇÃO',
 value: step2Data?.ultimaAtualizacao,
 key: 'ultimaAtualizacao',
 required: true,
@@ -187,35 +201,35 @@ type: 'date',
 // CARACTERÍSTICAS DA VIA
 const inputsCaracteristicasVia = [
 {
-label: t('pm.granularLayer.local'),
+label: 'LOCAL',
 value: step2Data?.local,
 key: 'local',
 required: true,
 type: 'text',
 },
 {
-label: t('pm.granularLayer.municipioEstado'),
+label: 'MUNICÍPIO/ESTADO',
 value: step2Data?.municipioEstado,
 key: 'municipioEstado',
 required: true,
 type: 'text',
 },
 {
-label: t('pm.granularLayer.extensao'),
+label: 'EXTENSÃO',
 value: step2Data?.extensao,
 key: 'extensao',
 required: true,
 type: 'number',
 },
 {
-label: t('pm.granularLayer.velocidadeDiretaVia'),
+label: 'VELOCIDADE DIRETA DA VIA',
 value: step2Data?.velocidadeDiretaVia,
 key: 'velocidadeDiretaVia',
 required: true,
 type: 'number',
 },
 {
-label: t('pm.granularLayer.larguraFaixa'),
+label: 'LARGURA DA FAIXA',
 value: step2Data?.larguraFaixa,
 key: 'larguraFaixa',
 required: true,
@@ -226,35 +240,35 @@ type: 'number',
 // COORDENADAS
 const inputsCoordenadas = [
 {
-label: t('pm.granularLayer.inicioEstaca'),
+label: 'INÍCIO ESTACA',
 value: step2Data?.inicioEstaca,
 key: 'inicioEstaca',
 required: true,
 type: 'text',
 },
 {
-label: t('pm.granularLayer.inicioLatitude'),
+label: 'INÍCIO LATITUDE',
 value: step2Data?.inicioLatitude,
 key: 'inicioLatitude',
 required: true,
 type: 'text',
 },
 {
-label: t('pm.granularLayer.fimMetros'),
+label: 'FIM METROS',
 value: step2Data?.fimMetros,
 key: 'fimMetros',
 required: true,
 type: 'text',
 },
 {
-label: t('pm.granularLayer.fimLongitude'),
+label: 'FIM LONGITUDE',
 value: step2Data?.fimLongitude,
 key: 'fimLongitude',
 required: true,
 type: 'text',
 },
 {
-label: t('pm.granularLayer.altitudeMedia'),
+label: 'ALTITUDE MÉDIA',
 value: step2Data?.altitudeMedia,
 key: 'altitudeMedia',
 required: true,
@@ -265,7 +279,7 @@ type: 'number',
 const columns: GridColDef[] = [
 {
 field: 'layer',
-headerName: t('pm.granularLayer.layer'),
+headerName: 'CAMADA',
 flex: 1,
 minWidth: 200,
 renderCell: ({ row }) => {
@@ -274,7 +288,7 @@ return <EditableCell row={row} field="layer" rows={rows} setData={setData} adorn
 },
 {
 field: 'material',
-headerName: t('pm.granularLayer.material'),
+headerName: 'MATERIAL',
 flex: 1,
 minWidth: 200,
 renderCell: ({ row }) => {
@@ -283,7 +297,7 @@ return <EditableCell row={row} field="material" rows={rows} setData={setData} ad
 },
 {
 field: 'thickness',
-headerName: t('pm.granularLayer.thickness'),
+headerName: 'ESPESSURA',
 flex: 1,
 minWidth: 200,
 renderCell: ({ row }) => {
@@ -365,13 +379,13 @@ onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
 );
 };
 
-// Desabilita o botão próximo (ajuste conforme necessidade)
+// DESABILITA O BOTÃO PRÓXIMO (AJUSTE CONFORME NECESSIDADE)
 setNextDisabled(false);
 
 return (
 <>
 {/* DADOS DO PAVIMENTO */}
-<FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+<FlexColumnBorder title="DADOS DO PAVIMENTO" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
 <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
 {inputsPavimentData.map((input) => renderField(input))}
@@ -380,7 +394,7 @@ return (
 </FlexColumnBorder>
 
 {/* PREPARO DO PAVIMENTO */}
-<FlexColumnBorder title={t('pm.paviment.preparation')} open={true} theme={'#07B811'}>
+<FlexColumnBorder title="PREPARO DO PAVIMENTO" open={true} theme={'#07B811'}>
 <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' }, gap: '5px 20px', paddingBottom: '20px' }}>
 {inputsPavimentPreparation.map((input) => renderField(input))}
@@ -389,7 +403,7 @@ return (
 </FlexColumnBorder>
 
 {/* CARACTERÍSTICAS DA VIA */}
-<FlexColumnBorder title={t('pm.paviment.characteristics')} open={true} theme={'#07B811'}>
+<FlexColumnBorder title="CARACTERÍSTICAS DA VIA" open={true} theme={'#07B811'}>
 <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' }, gap: '5px 20px', paddingBottom: '20px' }}>
 {inputsCaracteristicasVia.map((input) => renderField(input))}
@@ -398,7 +412,7 @@ return (
 </FlexColumnBorder>
 
 {/* COORDENADAS */}
-<FlexColumnBorder title={t('pm.paviment.coordinates')} open={true} theme={'#07B811'}>
+<FlexColumnBorder title="COORDENADAS" open={true} theme={'#07B811'}>
 <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' }, gap: '5px 20px', paddingBottom: '20px' }}>
 {inputsCoordenadas.map((input) => renderField(input))}
@@ -407,7 +421,7 @@ return (
 </FlexColumnBorder>
 
 {/* COMPOSIÇÃO ESTRUTURAL */}
-<FlexColumnBorder title={t('pm.structural.composition')} open={true} theme={'#07B811'}>
+<FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#07B811'}>
 {rows?.length > 0 && columns?.length > 0 && (
 <DataGrid
 sx={{ mt: '1rem', borderRadius: '10px' }}
@@ -432,7 +446,7 @@ headerAlign: 'center',
 variant="standard"
 sx={{ width: 'fit-content', marginX: 'auto' }}
 type="string"
-label={t('pm-estructural-composition-image-date')}
+label="DATA DA IMAGEM"
 placeholder="_ _/_ _/_ _ _ _"
 value={dateFormatter(step2Data?.imagesDate)}
 style={{ display: 'block' }}
