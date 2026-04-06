@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { Sample } from '@/interfaces/soils';
 import Header from '@/components/organisms/header';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ReactNode } from 'react';
 import {
   Box,
   Button,
@@ -35,7 +35,7 @@ interface MaterialsTemplateProps {
   //Modal
   handleOpenModal: () => void;
   handleDeleteMaterial: (id: string) => void;
-  modal: JSX.Element;
+  modal: ReactNode;
 }
 
 interface MaterialsColumn {

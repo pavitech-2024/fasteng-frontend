@@ -1,7 +1,8 @@
 import { Container } from '@mui/material';
+import { ReactNode } from 'react';
 
 interface PageProps {
-  children?: React.ReactNode | JSX.Element;
+  children?: React.ReactNode;
 }
 
 export const PageGenericContainer = ({ children }: PageProps) => (

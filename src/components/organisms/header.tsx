@@ -1,14 +1,15 @@
 import { Box, Typography } from '@mui/material';
 import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
+import { ReactNode } from 'react'; 
 
 interface HeaderProps {
   title: string;
   subTitle?: string;
   link?: string;
-  icon?: JSX.Element;
+  icon?: ReactNode;
   image?: StaticImageData;
-  children?: React.ReactNode | JSX.Element;
+  children?: React.ReactNode;
   sx?: { [key: string]: string | number | { [key: string]: string | number } };
 }
 

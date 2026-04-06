@@ -16,7 +16,7 @@ interface IGenerateGranularLayersPDF {
 }
 
 const GeneratePDF_ProMedina = ({ sample, sections }: IGenerateGranularLayersPDF) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(false);
 
   const theme = useTheme();
@@ -25,88 +25,99 @@ const GeneratePDF_ProMedina = ({ sample, sections }: IGenerateGranularLayersPDF)
   const addSection = async (sectionElement: HTMLDivElement, doc: jsPDF, currentY: number): Promise<number> => {
     if (!sectionElement) return currentY;
 
-    const canvas = await html2canvas(sectionElement);
-    const imgData = canvas.toDataURL('image/png');
-    const imgProps = doc.getImageProperties(imgData);
-    const pdfWidth = doc.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    const pageHeight = doc.internal.pageSize.getHeight();
-    const xPosition = (doc.internal.pageSize.getWidth() - pdfWidth) / 2;
+    try {
+      const canvas = await html2canvas(sectionElement, {
+        scale: 2, // Melhor qualidade
+        logging: false,
+        useCORS: true // Para imagens externas
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const xPosition = (doc.internal.pageSize.getWidth() - pdfWidth) / 2;
 
-    if (currentY + pdfHeight > pageHeight - 10) {
-      doc.addPage();
-      currentY = 5;
+      if (currentY + pdfHeight > pageHeight - 10) {
+        doc.addPage();
+        currentY = 5;
+      }
+
+      doc.addImage(imgData, 'PNG', xPosition, currentY, pdfWidth, pdfHeight);
+      return currentY + pdfHeight + 5;
+    } catch (error) {
+      console.error('Erro ao adicionar seção:', error);
+      return currentY;
     }
-
-    doc.addImage(imgData, 'PNG', xPosition, currentY, pdfWidth, pdfHeight);
-
-    return currentY + pdfHeight + 5;
   };
 
   const generatePDF = async () => {
     setLoading(true);
-    const doc = new jsPDF('p', 'mm', 'a4');
-    const image = (await addImageProcess(logo.src)) as HTMLImageElement;
-    const imageWidth = image.width;
-    const imageHeight = image.height;
+    
+    try {
+      const doc = new jsPDF('p', 'mm', 'a4');
+      const image = (await addImageProcess(logo.src)) as HTMLImageElement;
+      const imageWidth = image.width;
+      const imageHeight = image.height;
 
-    let currentY = 20;
+      let currentY = 20;
 
-    // Mantendo proporção ao definir o width no PDF
-    const pdfWidth = 100; // Largura desejada no PDF
-    const pdfHeight = (pdfWidth * imageHeight) / imageWidth; // Mantém proporção
+      // Mantendo proporção ao definir o width no PDF
+      const pdfWidth = 100; // Largura desejada no PDF
+      const pdfHeight = (pdfWidth * imageHeight) / imageWidth; // Mantém proporção
 
-    doc.addImage(image, 'PNG', 20, currentY, pdfWidth, pdfHeight);
+      doc.addImage(image, 'PNG', 20, currentY, pdfWidth, pdfHeight);
+      currentY += 15;
 
-    currentY += 15;
-
-    for (const sectionId of sections) {
-      const section = document.getElementById(sectionId) as HTMLDivElement;
-      if (section) {
-        currentY = await addSection(section, doc, currentY);
+      for (const sectionId of sections) {
+        const section = document.getElementById(sectionId) as HTMLDivElement;
+        if (section) {
+          currentY = await addSection(section, doc, currentY);
+        }
       }
-    }
 
-    doc.save(`Amostra_${sample.generalData.name}.pdf`);
-    setLoading(false);
+      doc.save(`Amostra_${sample.generalData.name}.pdf`);
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <>
-      <Tooltip
-        title={isDesktop ? t('dosages.tooltips.save-dosage') : t('asphalt.tooltips.disabled-pdf-generator')}
-        placement="top"
-        leaveTouchDelay={5000}
-        open={!isDesktop && openTooltip}
-        onClose={() => setOpenTooltip(false)}
+    <Tooltip
+      title={isDesktop ? t('dosages.tooltips.save-dosage') : t('asphalt.tooltips.disabled-pdf-generator')}
+      placement="top"
+      leaveTouchDelay={5000}
+      open={!isDesktop && openTooltip}
+      onClose={() => setOpenTooltip(false)}
+    >
+      <Box
+        sx={{ width: 'fit-content', paddingX: '6rem' }}
+        onClick={() => {
+          if (sample && isDesktop) {
+            generatePDF();
+          } else {
+            setOpenTooltip(true);
+          }
+        }}
       >
-        <Box
-          sx={{ width: 'fit-content', paddingX: '6rem' }}
-          onClick={() => {
-            if (sample && isDesktop) {
-              generatePDF();
-            } else {
-              setOpenTooltip(true);
-            }
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={!sample || !isDesktop}
+          sx={{
+            minWidth: '8rem',
+            minHeight: '2rem',
+            color: 'white',
+            backgroundColor: '#07B811',
+            '&:hover': { bgcolor: '#05990E' },
           }}
         >
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={!sample || !isDesktop}
-            sx={{
-              minWidth: '8rem',
-              minHeight: '2rem',
-              color: 'white',
-              backgroundColor: '#07B811', // Cor de fundo
-              '&:hover': { bgcolor: '#05990E' },
-            }}
-          >
-            {loading ? <Loading size={25} color={'inherit'} /> : t('pm.generate-pdf-button')}
-          </Button>
-        </Box>
-      </Tooltip>
-    </>
+          {loading ? <Loading size={25} color={'inherit'} /> : t('pm.generate-pdf-button')}
+        </Button>
+      </Box>
+    </Tooltip>
   );
 };
 
