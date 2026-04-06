@@ -1,5 +1,5 @@
 import { EssayPageProps } from '../../../templates/essay';
-import { Box, TextField, Button, IconButton, Card, CardContent, Typography, Grid } from '@mui/material';
+import { Box, TextField, Button, IconButton, Card, CardContent, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
@@ -183,9 +183,19 @@ const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
                 onChange={(e) => updateCardField(card.id, 'title', e.target.value)}
                 sx={{ mb: 3 }}
               />
-              <Grid container spacing={2}>
+              <Box 
+                sx={{ 
+                  display: 'grid',
+                  gridTemplateColumns: {
+                    xs: '1fr',
+                    sm: 'repeat(2, 1fr)',
+                    md: 'repeat(3, 1fr)'
+                  },
+                  gap: 2
+                }}
+              >
                 {layerFields.map((field) => (
-                  <Grid item xs={12} sm={6} md={4} key={field.key}>
+                  <Box key={field.key}>
                     <TextField
                       fullWidth
                       variant="standard"
@@ -195,9 +205,9 @@ const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
                         updateCardField(card.id, field.key as keyof LayerCard, e.target.value)
                       }
                     />
-                  </Grid>
+                  </Box>
                 ))}
-              </Grid>
+              </Box>
             </CardContent>
           </Card>
         ))}
