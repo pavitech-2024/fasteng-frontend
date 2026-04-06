@@ -102,7 +102,7 @@ const ElongatedParticles_GeneralData = ({
                 let material;
 
                 // se existir um material no store, seta ele como default
-                if (input.value) {
+                if (input.value) { 
                   material = materials.find((material) => material._id == input.value['_id'] && material.type === 'coarseAggregate');
                 }
 
