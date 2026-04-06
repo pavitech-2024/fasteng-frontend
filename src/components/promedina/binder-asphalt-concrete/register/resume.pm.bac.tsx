@@ -19,159 +19,140 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
   };
 
   const columns: GridColDef[] = [
-    { field: 'layer', headerName: t('materials.template.layer') },
-    { field: 'material', headerName: t('pm.binderAsphaltConcrete.material') },
-    { field: 'thickness', headerName: t('pm.binderAsphaltConcrete.thickness') },
+    { field: 'layer', headerName: 'CAMADA' },
+    { field: 'material', headerName: 'MATERIAL' },
+    { field: 'thickness', headerName: 'ESPESSURA (mm)' },
   ];
 
-  const rows = samples?.step2Data.structuralComposition.map((item, index) => ({
+  const rows = samples?.step2Data.structuralComposition?.map((item, index) => ({
     id: index,
     layer: item.layer,
     material: item.material,
-    thickness: `${item.thickness} mm`,
+    thickness: item.thickness ? `${item.thickness} mm` : '-',
   }));
 
-  const fieldKeys = ['name', 'zone', 'layer', 'cityState', 'highway', 'guideLineSpeed', 'observations'];
+  // DADOS GERAIS
+  const generalDataFields = [
+    { title: 'NOME', value: samples?.generalData?.name },
+    { title: 'LOCAL', value: samples?.generalData?.zone },
+    { title: 'CAMADA', value: samples?.generalData?.layer },
+    { title: 'MUNICÍPIO/ESTADO', value: samples?.generalData?.cityState },
+    { title: 'RODOVIA', value: samples?.generalData?.highway },
+    { title: 'VELOCIDADE DIRETRIZ', value: samples?.generalData?.guideLineSpeed ? `${samples?.generalData?.guideLineSpeed} km/h` : '-' },
+    { title: 'OBSERVAÇÕES', value: samples?.generalData?.observations },
+  ];
 
-  const generalData = fieldKeys.map((key) => ({
-    title: t(`pm.granularLayer.${key}`),
-    value: key === 'guideLineSpeed' ? `${samples?.generalData[key]} km/h` : samples?.generalData[key],
-  }));
+  // CARACTERÍSTICAS
+  const characteristicsFields = [
+    { title: 'LOCAL', value: step2Data?.roadName || step2Data?.identification },
+    { title: 'MUNICÍPIO/ESTADO', value: step2Data?.cityState },
+    { title: 'EXTENSÃO (m)', value: step2Data?.experimentalLength || step2Data?.extension },
+    { title: 'VELOCIDADE DIRETRIZ DA VIA (km/h)', value: step2Data?.guideSpeed },
+  ];
+
+  // COORDENADAS
+  const coordinatesFields = [
+    { title: 'ESTACA/METROS INICIAL', value: step2Data?.initialStakeMeters },
+    { title: 'LATITUDE INICIAL', value: step2Data?.latitudeI },
+    { title: 'LONGITUDE INICIAL', value: step2Data?.longitudeI },
+    { title: 'ESTACA/METROS FINAL', value: step2Data?.finalStakeMeters },
+    { title: 'LATITUDE FINAL', value: step2Data?.latitudeF },
+    { title: 'LONGITUDE FINAL', value: step2Data?.longitudeF },
+  ];
+
+  // DADOS DO PAVIMENTO
+  const pavimentDataFields = [
+    { title: 'IDENTIFICAÇÃO', value: step2Data?.identification },
+    { title: 'TIPO DE SEÇÃO', value: step2Data?.sectionType },
+    { title: 'FASE DE MONITORAMENTO', value: step2Data?.monitoringPhase },
+    { title: 'LIBERAÇÃO AO TRÁFEGO', value: step2Data?.trafficLiberation },
+    { title: 'ALTITUDE MÉDIA (m)', value: step2Data?.averageAltitude },
+    { title: 'NÚMERO DE FAIXAS', value: step2Data?.numberOfTracks },
+    { title: 'FAIXA MONITORADA', value: step2Data?.monitoredTrack },
+    { title: 'LARGURA DA FAIXA (m)', value: step2Data?.trackWidth },
+    { title: 'OBSERVAÇÕES', value: step2Data?.observation },
+  ];
+
+  // PREPARO DO PAVIMENTO
+  const pavimentPreparationFields = [
+    { title: 'IRI (m/km) PRÉ-REABILITAÇÃO', value: step2Data?.iriPrerehabilitation },
+    { title: 'AT (%) PRÉ-REABILITAÇÃO', value: step2Data?.atPrerehabilitation },
+    { title: 'FRESAGEM (cm)', value: step2Data?.millingThickness },
+    { title: 'INTERVENÇÃO NA BASE', value: step2Data?.interventionAtTheBase },
+    { title: 'SAMI', value: step2Data?.sami },
+    { title: 'PINTURA DE LIGAÇÃO', value: step2Data?.bondingPaint },
+    { title: 'IMPRIMAÇÃO', value: step2Data?.priming },
+  ];
+
+  // TEMPO EM SERVIÇO
+  const serviceTimeFields = [
+    { title: 'TEMPO EM SERVIÇO (ANOS)', value: step2Data?.serviceTimeYears },
+    { title: 'TEMPO EM SERVIÇO (MESES)', value: step2Data?.serviceTimeMonths },
+  ];
+
+  // DATA DA ÚLTIMA ATUALIZAÇÃO
+  const lastUpdateField = { title: 'DATA DA ÚLTIMA ATUALIZAÇÃO', value: step2Data?.lastUpdate };
+
+  // DADOS DO MATERIAL (STEP3)
+  const materialDataFields = [
+    { title: 'REFINARIA', value: step3Data?.refinery },
+    { title: 'EMPRESA', value: step3Data?.company },
+    { title: 'DATA DO CARREGAMENTO', value: step3Data?.collectionDate },
+    { title: 'NÚMERO DA NOTA FISCAL', value: step3Data?.invoiceNumber },
+    { title: 'DATA DA NOTA FISCAL', value: step3Data?.dataInvoice },
+    { title: 'DATA DO CERTIFICADO', value: step3Data?.certificateDate },
+    { title: 'NÚMERO DO CERTIFICADO', value: step3Data?.certificateNumber },
+    { title: 'TIPO DE CAP', value: step3Data?.capType },
+    { title: 'PERFORMANCE GRADE (PG)', value: step3Data?.performanceGrade },
+    { title: 'PENETRAÇÃO - 25°C (mm)', value: step3Data?.penetration },
+    { title: 'PONTO DE AMOLECIMENTO (°C)', value: step3Data?.softeningPoint },
+    { title: 'RECUPERAÇÃO ELÁSTICA - 25°C (%)', value: step3Data?.elasticRecovery },
+  ];
+
+  // VISCOSIDADE BROOKFIELD
+  const brookfieldFields = [
+    { title: '135°C (SP21, 20rpm)', value: step3Data?.vb_sp21_20 },
+    { title: '150°C (SP21, 50rpm)', value: step3Data?.vb_sp21_50 },
+    { title: '177°C (SP21, 100rpm)', value: step3Data?.vb_sp21_100 },
+    { title: 'OBSERVAÇÕES', value: step3Data?.observations },
+  ];
+
+  // DADOS TÉCNICOS (STEP4)
+  const techDataFields = [
+    { title: 'FAIXA GRANULOMÉTRICA', value: step4Data?.granulometricRange },
+    { title: 'TMN', value: step4Data?.tmn },
+    { title: 'TEOR DE ASFALTO', value: step4Data?.asphaltTenor },
+    { title: 'MASSA ESPECÍFICA (g/cm³)', value: step4Data?.specificMass },
+    { title: 'VOLUME DE VAZIOS (%)', value: step4Data?.volumeVoids },
+    { title: 'ABRASÃO LA', value: step4Data?.abrasionLA },
+    { title: 'RT', value: step4Data?.rt },
+    { title: 'FLOW NUMBER', value: step4Data?.flowNumber },
+    { title: 'MR', value: step4Data?.mr },
+    { title: 'OBSERVAÇÕES', value: step4Data?.observations },
+  ];
+
+  // CURVA DE FADIGA À COMPRESSÃO DIAMETRAL
+  const fatigueCurveFields = [
+    { title: 'N° CPs', value: step4Data?.fatigueCurve_n_cps },
+    { title: 'k1', value: step4Data?.fatigueCurve_k1 },
+    { title: 'k2', value: step4Data?.fatigueCurve_k2 },
+    { title: 'R²', value: step4Data?.fatigueCurve_r2 },
+  ];
 
   const sections = [
     'general-data',
+    'characteristics',
+    'coordinates',
     'paviment-data',
     'paviment-preparation',
-    'technical-data',
-    'paviment-preparation',
-    'technical-data',
-    'diametral-compression',
-    'diametral-compression',
+    'service-time',
+    'last-update',
+    'material-data',
     'brookfield-viscosity',
-    'material-info',
+    'technical-data',
+    'diametral-compression',
     'structural-composition',
   ];
-
-  const pavimentFields = [
-    { title: t('pm-type-of-section'), key: 'sectionType' },
-    { title: t('pm.binderAsphaltConcrete.extension'), key: 'extension' },
-    { title: t('pm.binderAsphaltConcrete.identification'), key: 'identification' },
-    { title: t('pm.binderAsphaltConcrete.initialStakeMeters'), key: 'initialStakeMeters' },
-    { title: t('pm.binderAsphaltConcrete.finalStakeMeters'), key: 'finalStakeMeters' },
-    { title: t('pm.binderAsphaltConcrete.latitudeI'), key: 'latitudeI' },
-    { title: t('pm.binderAsphaltConcrete.longitudeI'), key: 'longitudeI' },
-    { title: t('pm.binderAsphaltConcrete.latitudeF'), key: 'latitudeF' },
-    { title: t('pm.binderAsphaltConcrete.longitudeF'), key: 'longitudeF' },
-    { title: t('pm.binderAsphaltConcrete.averageAltitude'), key: 'averageAltitude' },
-    { title: t('pm.binderAsphaltConcrete.monitoring.phase'), key: 'monitoringPhase' },
-    { title: t('pm.binderAsphaltConcrete.trackWidth'), key: 'trackWidth' },
-    { title: t('pm.binderAsphaltConcrete.monitoredTrack'), key: 'monitoredTrack' },
-    { title: t('pm.binderAsphaltConcrete.numberOfTracks'), key: 'numberOfTracks' },
-    { title: t('pm.binderAsphaltConcrete.trafficLiberation'), key: 'trafficLiberation' },
-    { title: t('pm.binderAsphaltConcrete.mf.observations'), key: 'observation' },
-  ];
-
-  const pavimentData = pavimentFields.map((field) => ({
-    title: field.title,
-    value:
-      field.key === 'averageAltitude' || field.key === 'trackWidth' || field.key === 'extension'
-        ? `${samples?.step2Data[field.key]} m`
-        : `${samples?.step2Data[field.key]}`,
-  }));
-
-  const fatigueCurveFields = [
-    { title: 'N° CPs', key: 'fatigueCurve_n_cps' },
-    { title: 'k1', key: 'fatigueCurve_k1' },
-    { title: 'k2', key: 'fatigueCurve_k2' },
-    { title: 'R²', key: 'fatigueCurve_r2' },
-  ];
-
-  const fadigueCurveCD = fatigueCurveFields.map((field) => ({
-    title: field.title,
-    value: samples?.step4Data?.[field.key],
-  }));
-
-  const pavimentPreparationFields = [
-    { title: t('pm.binderAsphaltConcrete.milling'), key: 'milling' },
-    { title: t('pm.binderAsphaltConcrete.intervention.at.the.base'), key: 'interventionAtTheBase' },
-    { title: 'SAMI', key: 'sami' },
-    { title: t('pm.binderAsphaltConcrete.bonding.paint'), key: 'bondingPaint' },
-    { title: t('pm.binderAsphaltConcrete.priming'), key: 'priming' },
-  ];
-
-  const pavimentPreparation = pavimentPreparationFields.map((field) => ({
-    title: field.title,
-    value: samples?.step2Data?.[field.key],
-  }));
-
-  const brookfieldFields = [
-    { title: t('pm.binderAsphaltConcrete.vb_sp21_20'), key: 'vb_sp21_20' },
-    { title: t('pm.binderAsphaltConcrete.vb_sp21_50'), key: 'vb_sp21_50' },
-    { title: t('pm.binderAsphaltConcrete.vb_sp21_100'), key: 'vb_sp21_100' },
-    { title: t('pm.binderAsphaltConcrete.observations'), key: 'observations' },
-  ];
-
-  const brookfield = brookfieldFields.map((field) => ({
-    title: field.title,
-    value: samples?.step3Data?.[field.key],
-  }));
-
-  const sampleDataFields = [
-    { title: t('pm.binderAsphaltConcrete.refinery'), key: 'refinery' },
-    { title: t('pm.binderAsphaltConcrete.company'), key: 'company' },
-    { title: t('pm.binderAsphaltConcrete.collectionDate'), key: 'collectionDate' },
-    { title: t('pm.binderAsphaltConcrete.invoiceNumber'), key: 'invoiceNumber' },
-    { title: t('pm.binderAsphaltConcrete.dataInvoice'), key: 'dataInvoice' },
-    { title: t('pm.binderAsphaltConcrete.certificateDate'), key: 'certificateDate' },
-    { title: t('pm.binderAsphaltConcrete.certificateNumber'), key: 'certificateNumber' },
-    { title: t('pm.binderAsphaltConcrete.capType'), key: 'capType' },
-    { title: t('pm.binderAsphaltConcrete.performanceGrade'), key: 'performanceGrade' },
-    { title: t('pm.binderAsphaltConcrete.penetration'), key: 'penetration' },
-    { title: t('pm.binderAsphaltConcrete.softeningPoint'), key: 'softeningPoint' },
-    { title: t('pm.binderAsphaltConcrete.elasticRecovery'), key: 'elasticRecovery' },
-  ];
-
-  const sampleData = sampleDataFields.map((field) => ({
-    title: field.title,
-    value: samples?.step3Data?.[field.key],
-  }));
-
-  const techData = [
-    'granulometricRange',
-    'abrasionLA',
-    'tmn',
-    'volumeVoids',
-    'rt',
-    'flowNumber',
-    'mr',
-    'specificMass',
-    'asphaltTenor',
-  ].map((key) => ({
-    title: t(`pm.binderAsphaltConcrete.${key}`),
-    value: key.includes(key) ? samples?.step4Data?.[key] : samples?.step3Data?.[key],
-  }));
-
-  techData.push({
-    title: t('pm.binderAsphaltConcrete.mf.observations'),
-    value: samples?.step3Data?.observations,
-  });
-
-  const materialFatigue = ['k1psi1', 'k2psi2'].map((key) => ({
-    title: t(`pm.binderAsphaltConcrete.${key.replace('psi', '.k')}`),
-    value: samples?.step3Data?.[`fatigue${key}`],
-  }));
-
-  materialFatigue.push({
-    title: t('pm.binderAsphaltConcrete.mf.observations'),
-    value: samples?.step3Data?.observations,
-  });
-
-  const resilienceModuleKeys = ['rsInitial', 'rsFinal', 'constantA', 'constantB'];
-
-  const resilienceModuleStabilized = resilienceModuleKeys.map((key) => ({
-    title: t(`pm.binderAsphaltConcrete.${key.replace(/([A-Z])/g, '.$1').toLowerCase()}`),
-    value: samples?.step3Data?.[key],
-  }));
 
   setNextDisabled(false);
 
@@ -193,12 +174,12 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
         >
           <GeneratePDF_ProMedina sample={samples} sections={sections} />
 
+          {/* DADOS GERAIS */}
           <Box id="general-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
+            <FlexColumnBorder title="DADOS GERAIS" open={true} theme={'#07B811'}>
               <Box
                 sx={{
-                  display: { mobile: 'flex', notebook: 'grid' },
-                  flexDirection: 'column',
+                  display: 'grid',
                   gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
                   justifyItems: 'center',
                   alignItems: 'center',
@@ -206,16 +187,9 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
                   justifyContent: 'space-evenly',
                 }}
               >
-                {generalData.map((item, idx) => (
+                {generalDataFields.map((item, idx) => (
                   <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.3rem',
-                      alignItems: 'center',
-                      alignSelf: 'start',
-                      textAlign: 'center',
-                    }}
+                    sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }}
                     key={idx}
                   >
                     {item.value && (
@@ -223,20 +197,9 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
                         <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
                           {item.title}
                         </Typography>
-                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                          <Typography
-                            sx={{
-                              display: 'flex',
-                              fontWeight: 'bold',
-                              fontSize: '14px',
-                              wordBreak: 'break-all',
-                              whiteSpace: 'pre-wrap',
-                              color: 'black',
-                            }}
-                          >
-                            {item.value === null ? '-' : item.value}
-                          </Typography>
-                        </Box>
+                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                          {item.value === null || item.value === '' ? '-' : item.value}
+                        </Typography>
                       </>
                     )}
                   </Box>
@@ -245,103 +208,9 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
             </FlexColumnBorder>
           </Box>
 
-          {/** DADOS DO PAVIMENTO NO QUAL O MATERIAL ESTÁ INSERIDO */}
-          <Box id="paviment-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder
-              title={t('pm.paviment.data')}
-              open={true}
-              theme={'#07B811'}
-              sx_title={{ whiteSpace: 'wrap' }}
-            >
-              <Box
-                sx={{
-                  display: { mobile: 'flex', notebook: 'grid' },
-                  flexDirection: 'column',
-                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr 1fr' },
-                  justifyItems: 'center',
-                  alignItems: 'center',
-                  gap: '1rem',
-                  justifyContent: 'space-evenly',
-                }}
-              >
-                {pavimentData.map((item, idx) => (
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.3rem',
-                      alignItems: 'center',
-                      alignSelf: 'start',
-                      textAlign: 'center',
-                    }}
-                    key={idx}
-                  >
-                    <>
-                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                        {item.title}
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                          {item.value === undefined || item.value === null || item.value === 'null' ? '-' : item.value}
-                        </Typography>
-                      </Box>
-                    </>
-                  </Box>
-                ))}
-              </Box>
-            </FlexColumnBorder>
-          </Box>
-
-          {/**  PREPARO DO PAVIMENTO */}
-          <Box id="paviment-preparation" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title={t('pm.paviment.preparation')} open={true} theme={'#07B811'}>
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr 1fr' },
-                  justifyItems: 'center',
-                  alignItems: 'center',
-                  gap: '1rem',
-                  justifyContent: 'space-evenly',
-                  marginBottom: '0.5rem',
-                }}
-              >
-                {pavimentPreparation.map((item, idx) => (
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.3rem',
-                      alignItems: 'center',
-                      alignSelf: 'start',
-                      textAlign: 'center',
-                    }}
-                    key={idx}
-                  >
-                    <>
-                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                        {item.title}
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                          {item.value === null ? '-' : item.value}
-                        </Typography>
-                      </Box>
-                    </>
-                  </Box>
-                ))}
-              </Box>
-            </FlexColumnBorder>
-          </Box>
-
-          {/** DADOS TÉCNICOS DA AMOSTRA */}
-          <Box id="technical-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder
-              title={t('pm.sample-data')}
-              open={true}
-              theme={'#07B811'}
-              sx_title={{ whiteSpace: 'wrap' }}
-            >
+          {/* CARACTERÍSTICAS */}
+          <Box id="characteristics" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="CARACTERÍSTICAS" open={true} theme={'#07B811'}>
               <Box
                 sx={{
                   display: 'grid',
@@ -349,216 +218,291 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
                   justifyItems: 'center',
                   alignItems: 'center',
                   gap: '1rem',
-                  justifyContent: 'space-evenly',
-                  marginBottom: '0.5rem',
                 }}
               >
-                {techData.map((item, idx) => (
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.3rem',
-                      alignItems: 'center',
-                      alignSelf: 'start',
-                      textAlign: 'center',
-                    }}
-                    key={idx}
-                  >
-                    <>
-                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                        {item.title}
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                          {item.value === null ? '-' : item.value}
-                        </Typography>
-                      </Box>
-                    </>
-                  </Box>
-                ))}
-              </Box>
-            </FlexColumnBorder>
-          </Box>
-
-          {/** CURVA DE FADIGA À COMPRESSÃO DIAMETRAL */}
-          <Box id="diametral-compression" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder
-              title={t('pm.diametral.compression.fatigue.curve')}
-              open={true}
-              theme={'#07B811'}
-              sx_title={{ whiteSpace: 'wrap' }}
-            >
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
-                  justifyItems: 'center',
-                  alignItems: 'center',
-                  gap: '1rem',
-                  justifyContent: 'space-evenly',
-                }}
-              >
-                {fadigueCurveCD.map((item, idx) => (
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.3rem',
-                      alignItems: 'center',
-                      alignSelf: 'start',
-                      textAlign: 'center',
-                    }}
-                    key={idx}
-                  >
-                    <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                        {item.value === null ? '-' : item.value}
-                      </Typography>
-                    </Box>
-                  </Box>
-                ))}
-              </Box>
-            </FlexColumnBorder>
-          </Box>
-
-          {/** VISCOSIDADE BROOKFIELD */}
-          <Box id="brookfield-viscosity" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title={t('pm.brookfield.viscosity')} open={true} theme={'#07B811'}>
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
-                  justifyItems: 'center',
-                  alignItems: 'center',
-                  gap: '1rem',
-                  justifyContent: 'space-evenly',
-                  marginBottom: '0.5rem',
-                }}
-              >
-                {brookfield.map((item, idx) => (
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.3rem',
-                      alignItems: 'center',
-                      alignSelf: 'start',
-                      textAlign: 'center',
-                    }}
-                    key={idx}
-                  >
-                    <>
-                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                        {item.title}
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                {characteristicsFields.map((item, idx) => (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                    {item.value && (
+                      <>
+                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
                           {item.value === null || item.value === '' ? '-' : item.value}
                         </Typography>
-                      </Box>
-                    </>
+                      </>
+                    )}
                   </Box>
                 ))}
               </Box>
             </FlexColumnBorder>
           </Box>
 
-          {/** OUTRAS INFORMAÇÕES SOBRE O MATERIAL */}
-          <Box id="material-info" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder
-              title={t('pm.sample-data')}
-              open={true}
-              theme={'#07B811'}
-              sx_title={{ whiteSpace: 'wrap' }}
-            >
+          {/* COORDENADAS */}
+          <Box id="coordinates" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="COORDENADAS" open={true} theme={'#07B811'}>
               <Box
                 sx={{
                   display: 'grid',
-                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr 1fr' },
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr' },
                   justifyItems: 'center',
                   alignItems: 'center',
                   gap: '1rem',
-                  justifyContent: 'space-evenly',
-                  marginBottom: '0.5rem',
                 }}
               >
-                {sampleData.map((item, idx) => (
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.3rem',
-                      alignItems: 'center',
-                      alignSelf: 'start',
-                      textAlign: 'center',
-                    }}
-                    key={idx}
-                  >
-                    <>
-                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                        {item.title}
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                          {item.value === null ? '-' : item.value}
+                {coordinatesFields.map((item, idx) => (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                    {item.value && (
+                      <>
+                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                          {item.value === null || item.value === '' ? '-' : item.value}
                         </Typography>
-                      </Box>
-                    </>
+                      </>
+                    )}
                   </Box>
                 ))}
               </Box>
             </FlexColumnBorder>
           </Box>
 
-          {/** COMPOSIÇÃO ESTRUTURAL  */}
-          <Box id="structural-composition" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder
-              title={t('pm.structural.composition')}
-              open={true}
-              theme={'#07B811'}
-              sx_title={{ whiteSpace: 'wrap' }}
-            >
+          {/* DADOS DO PAVIMENTO */}
+          <Box id="paviment-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="DADOS DO PAVIMENTO" open={true} theme={'#07B811'}>
               <Box
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr' },
+                  justifyItems: 'center',
                   alignItems: 'center',
                   gap: '1rem',
                 }}
               >
+                {pavimentDataFields.map((item, idx) => (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                    {item.value && (
+                      <>
+                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                          {item.value === null || item.value === '' ? '-' : item.value}
+                        </Typography>
+                      </>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            </FlexColumnBorder>
+          </Box>
+
+          {/* PREPARO DO PAVIMENTO */}
+          <Box id="paviment-preparation" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="PREPARO DO PAVIMENTO" open={true} theme={'#07B811'}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr' },
+                  justifyItems: 'center',
+                  alignItems: 'center',
+                  gap: '1rem',
+                }}
+              >
+                {pavimentPreparationFields.map((item, idx) => (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                    {item.value && (
+                      <>
+                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                          {item.value === null || item.value === '' ? '-' : item.value}
+                        </Typography>
+                      </>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            </FlexColumnBorder>
+          </Box>
+
+          {/* TEMPO EM SERVIÇO */}
+          <Box id="service-time" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="TEMPO EM SERVIÇO" open={true} theme={'#07B811'}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr' },
+                  justifyItems: 'center',
+                  alignItems: 'center',
+                  gap: '1rem',
+                }}
+              >
+                {serviceTimeFields.map((item, idx) => (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                    {item.value && (
+                      <>
+                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                          {item.value === null || item.value === '' ? '-' : item.value}
+                        </Typography>
+                      </>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            </FlexColumnBorder>
+          </Box>
+
+          {/* DATA DA ÚLTIMA ATUALIZAÇÃO */}
+          <Box id="last-update" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="DATA DA ÚLTIMA ATUALIZAÇÃO" open={true} theme={'#07B811'}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem' }}>
+                {lastUpdateField.value && (
+                  <>
+                    <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{lastUpdateField.title}</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>{lastUpdateField.value}</Typography>
+                  </>
+                )}
+              </Box>
+            </FlexColumnBorder>
+          </Box>
+
+          {/* DADOS DO MATERIAL */}
+          <Box id="material-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="DADOS DO MATERIAL" open={true} theme={'#07B811'}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                  justifyItems: 'center',
+                  alignItems: 'center',
+                  gap: '1rem',
+                }}
+              >
+                {materialDataFields.map((item, idx) => (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                    {item.value && (
+                      <>
+                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                          {item.value === null || item.value === '' ? '-' : item.value}
+                        </Typography>
+                      </>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            </FlexColumnBorder>
+          </Box>
+
+          {/* VISCOSIDADE BROOKFIELD */}
+          <Box id="brookfield-viscosity" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="VISCOSIDADE BROOKFIELD" open={true} theme={'#07B811'}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                  justifyItems: 'center',
+                  alignItems: 'center',
+                  gap: '1rem',
+                }}
+              >
+                {brookfieldFields.map((item, idx) => (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                    {item.value && (
+                      <>
+                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                          {item.value === null || item.value === '' ? '-' : item.value}
+                        </Typography>
+                      </>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            </FlexColumnBorder>
+          </Box>
+
+          {/* DADOS TÉCNICOS */}
+          <Box id="technical-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="DADOS TÉCNICOS" open={true} theme={'#07B811'}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr' },
+                  justifyItems: 'center',
+                  alignItems: 'center',
+                  gap: '1rem',
+                }}
+              >
+                {techDataFields.map((item, idx) => (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                    {item.value && (
+                      <>
+                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                          {item.value === null || item.value === '' ? '-' : item.value}
+                        </Typography>
+                      </>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            </FlexColumnBorder>
+          </Box>
+
+          {/* CURVA DE FADIGA À COMPRESSÃO DIAMETRAL */}
+          <Box id="diametral-compression" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="CURVA DE FADIGA À COMPRESSÃO DIAMETRAL" open={true} theme={'#07B811'}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                  justifyItems: 'center',
+                  alignItems: 'center',
+                  gap: '1rem',
+                }}
+              >
+                {fatigueCurveFields.map((item, idx) => (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                    {item.value && (
+                      <>
+                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                          {item.value === null || item.value === '' ? '-' : item.value}
+                        </Typography>
+                      </>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            </FlexColumnBorder>
+          </Box>
+
+          {/* COMPOSIÇÃO ESTRUTURAL */}
+          <Box id="structural-composition" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#07B811'}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
                 <div style={{ height: 'fit-content', width: '100%' }}>
-                  <DataGrid
-                    rows={rows}
-                    hideFooter
-                    disableColumnMenu
-                    disableColumnFilter
-                    columns={columns.map((column) => ({
-                      ...column,
-                      disableColumnMenu: true,
-                      sortable: false,
-                      align: 'center',
-                      headerAlign: 'center',
-                      minWidth: 100,
-                      flex: 1,
-                    }))}
-                  />
+                  {rows && rows.length > 0 && (
+                    <DataGrid
+                      rows={rows}
+                      hideFooter
+                      disableColumnMenu
+                      disableColumnFilter
+                      columns={columns.map((column) => ({
+                        ...column,
+                        disableColumnMenu: true,
+                        sortable: false,
+                        align: 'center',
+                        headerAlign: 'center',
+                        minWidth: 100,
+                        flex: 1,
+                      }))}
+                    />
+                  )}
                 </div>
               </Box>
 
               {samples.step2Data.images && (
-                <Box
-                  sx={{
-                    marginBottom: '1rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '1rem',
-                  }}
-                >
+                <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
                   <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem', color: 'black' }}>
-                    {t('pm-image-structural-composition')}
+                    IMAGEM DA COMPOSIÇÃO ESTRUTURAL
                   </Typography>
                   <Box
                     sx={{
@@ -573,14 +517,14 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
                   >
                     <img
                       src={samples?.step2Data.images}
-                      alt={t('pm-image-structural-composition')}
+                      alt="Imagem da composição estrutural"
                       width={'250px'}
                       height={'250px'}
                       style={{ borderRadius: '8px' }}
                     />
                   </Box>
-                  <Typography sx={{ color: 'gray' }}>{t('pm-estructural-composition-image-date')}</Typography>
-                  <Typography sx={{ color: 'black' }}>{samples?.step2Data.imagesDate}</Typography>
+                  <Typography sx={{ color: 'gray' }}>DATA DA IMAGEM</Typography>
+                  <Typography sx={{ color: 'black' }}>{samples?.step2Data.imagesDate || '-'}</Typography>
                 </Box>
               )}
             </FlexColumnBorder>
