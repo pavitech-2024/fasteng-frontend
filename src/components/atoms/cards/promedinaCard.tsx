@@ -1,10 +1,11 @@
 import { Card, Box } from '@mui/material';
 import { NextPage } from 'next';
+import { ReactElement } from 'react'; // Add this import
 
 interface Props {
   element: {
     name: string;
-    icon: JSX.Element;
+    icon: ReactElement; // Change from JSX.Element to ReactElement
     path: string;
   };
   onClick: () => Promise<boolean>;

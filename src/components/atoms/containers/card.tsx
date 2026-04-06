@@ -3,9 +3,10 @@ import { Essay, Standard } from '@/interfaces/common';
 import Image from 'next/image';
 import Link from 'next/link';
 import { PDFIcon } from '@/assets';
+import { ReactNode } from 'react'; // ADICIONE ESTA LINHA
 
 interface CardContainerProps {
-  children: JSX.Element | React.ReactNode;
+  children: ReactNode; // REMOVA JSX.Element e use apenas ReactNode
 }
 
 export const CardContainer = ({ children }: CardContainerProps) => {
@@ -32,6 +33,7 @@ export const CardContainer = ({ children }: CardContainerProps) => {
     </Container>
   );
 };
+
 interface CardProps {
   data: Essay | Standard;
   type: 'essay' | 'standard';

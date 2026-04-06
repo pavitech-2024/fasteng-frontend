@@ -1,10 +1,11 @@
 import { Card, Box } from '@mui/material';
 import { NextPage } from 'next';
+import { ReactNode } from 'react'; // Adicione esta importação
 
 interface Props {
   element: {
     name: string;
-    icon: JSX.Element;
+    icon: ReactNode; // Alterado de JSX.Element para ReactNode
     path: string;
   };
   onClick: () => Promise<boolean>;

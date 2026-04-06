@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EssayPageProps } from '../../../templates/essay';
 import { t } from 'i18next';
-import { Box, TextField, Button } from '@mui/material';
+import { Box, TextField, Button, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import { toast } from 'react-toastify';
@@ -14,7 +14,7 @@ import EditableCell from '@/utils/hooks/editableTableCell';
 
 const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useGranularLayersStore();
-  const rows = step2Data?.structuralComposition;
+  const rows = step2Data?.structuralComposition || [];
   const [images, setImages] = useState<string>(step2Data?.images ? step2Data?.images : '');
 
   useEffect(() => {
@@ -33,13 +33,12 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
   const handleErase = () => {
     try {
       if (rows.length > 1) {
-        // O mínimo é um valor de cada
         const newRows = [...rows];
         newRows.pop();
         setData({ step: 1, key: 'structuralComposition', value: newRows });
       } else throw t('compression.error.minValue');
     } catch (error) {
-      toast.error(error);
+      toast.error(error as string);
     }
   };
 
@@ -69,6 +68,29 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
     );
   };
 
+  // Opções para Tipo de Seção
+  const tipoSecaoOptions = [
+    { value: 'Experimental', label: 'Experimental' },
+    { value: 'Controle', label: 'Controle' },
+    { value: 'Referência', label: 'Referência' },
+  ];
+
+  // Opções para Estrutura
+  const estruturaOptions = [
+    { value: 'Flexível', label: 'Flexível' },
+    { value: 'Semi-rígida', label: 'Semi-rígida' },
+    { value: 'Rígida', label: 'Rígida' },
+  ];
+
+  // Opções para Fonte de monitoramento
+  const fonteMonitoramentoOptions = [
+    { value: 'DNIT', label: 'DNIT' },
+    { value: 'Concessionária', label: 'Concessionária' },
+    { value: 'Universidade', label: 'Universidade' },
+    { value: 'Consultoria', label: 'Consultoria' },
+  ];
+
+  // Dados do pavimento
   const inputsPavimentData = [
     {
       label: t('pm.granularLayer.identification'),
@@ -78,127 +100,180 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
       type: 'text',
     },
     {
-      label: t('pm.granularLayer.section.type'),
-      value: step2Data?.sectionType,
-      key: 'sectionType',
+      label: t('pm.granularLayer.tipoSecao'),
+      value: step2Data?.tipoSecao,
+      key: 'tipoSecao',
+      required: true,
+      type: 'select',
+      options: tipoSecaoOptions,
+    },
+    {
+      label: t('pm.granularLayer.estrutura'),
+      value: step2Data?.estrutura,
+      key: 'estrutura',
+      required: true,
+      type: 'select',
+      options: estruturaOptions,
+    },
+    {
+      label: t('pm.granularLayer.material'),
+      value: step2Data?.material,
+      key: 'material',
       required: true,
       type: 'text',
     },
     {
-      label: t('pm.granularLayer.extension'),
-      value: step2Data?.extension,
-      key: 'extension',
+      label: t('pm.granularLayer.longitude'),
+      value: step2Data?.longitude,
+      key: 'longitude',
+      required: true,
+      type: 'text',
+    },
+    {
+      label: t('pm.granularLayer.latitude'),
+      value: step2Data?.latitude,
+      key: 'latitude',
+      required: true,
+      type: 'text',
+    },
+    {
+      label: t('pm.granularLayer.altitude'),
+      value: step2Data?.altitude,
+      key: 'altitude',
       required: true,
       type: 'number',
     },
     {
-      label: t('pm.granularLayer.initialStakeMeters'),
-      value: step2Data?.initialStakeMeters,
-      key: 'initialStakeMeters',
+      label: t('pm.granularLayer.fonteMonitoramento'),
+      value: step2Data?.fonteMonitoramento,
+      key: 'fonteMonitoramento',
       required: true,
+      type: 'select',
+      options: fonteMonitoramentoOptions,
+    },
+    {
+      label: t('pm.granularLayer.longitudeFora'),
+      value: step2Data?.longitudeFora,
+      key: 'longitudeFora',
+      required: false,
       type: 'text',
     },
     {
-      label: t('pm.granularLayer.latitudeI'),
-      value: step2Data?.latitudeI,
-      key: 'latitudeI',
-      required: true,
-      type: 'text',
-    },
-    {
-      label: t('pm.granularLayer.longitudeI'),
-      value: step2Data?.longitudeI,
-      key: 'longitudeI',
-      required: true,
-      type: 'text',
-    },
-    {
-      label: t('pm.granularLayer.finalStakeMeters'),
-      value: step2Data?.finalStakeMeters,
-      key: 'finalStakeMeters',
-      required: true,
-      type: 'text',
-    },
-    {
-      label: t('pm.granularLayer.latitudeF'),
-      value: step2Data?.latitudeF,
-      key: 'latitudeF',
-      required: true,
-      type: 'text',
-    },
-    {
-      label: t('pm.granularLayer.longitudeF'),
-      value: step2Data?.longitudeF,
-      key: 'longitudeF',
-      required: true,
-      type: 'text',
-    },
-    {
-      label: t('pm.granularLayer.monitoringPhase'),
-      value: step2Data?.monitoringPhase,
-      key: 'monitoringPhase',
-      required: true,
-      type: 'text',
-    },
-    {
-      label: t('pm.granularLayer.trafficLiberation'),
-      value: dateFormatter(step2Data?.trafficLiberation),
-      key: 'trafficLiberation',
-      required: true,
-      type: 'text',
-    },
-    {
-      label: t('pm.granularLayer.averageAltitude'),
-      value: step2Data?.averageAltitude,
-      key: 'averageAltitude',
-      required: true,
-      type: 'number',
-    },
-    {
-      label: t('pm.granularLayer.numberOfTracks'),
-      value: step2Data?.numberOfTracks,
-      key: 'numberOfTracks',
-      required: true,
-      type: 'number',
-    },
-    {
-      label: t('pm.granularLayer.monitoredTrack'),
-      value: step2Data?.monitoredTrack,
-      key: 'monitoredTrack',
-      required: true,
-      type: 'text',
-    },
-    {
-      label: t('pm.granularLayer.trackWidth'),
-      value: step2Data?.trackWidth,
-      key: 'trackWidth',
-      required: true,
-      type: 'number',
-    },
-    {
-      label: t('pm.granularLayer.observations'),
-      value: step2Data?.observation,
-      key: 'observation',
+      label: t('pm.granularLayer.latitudeFora'),
+      value: step2Data?.latitudeFora,
+      key: 'latitudeFora',
       required: false,
       type: 'text',
     },
   ];
 
+  // Preparo do pavimento
   const inputsPavimentPreparation = [
-    { label: t('pm.granularLayer.milling'), value: step2Data?.milling, key: 'milling', required: true },
-    {
-      label: t('pm.granularLayer.intervention.at.the.base'),
-      value: step2Data?.interventionAtTheBase,
-      key: 'interventionAtTheBase',
+    { 
+      label: t('pm.granularLayer.pregoeiro'), 
+      value: step2Data?.pregoeiro, 
+      key: 'pregoeiro', 
       required: true,
+      type: 'text',
     },
-    { label: t('pm.granularLayer.sami'), value: step2Data?.sami, key: 'sami', required: true },
-    { label: t('pm.granularLayer.bonding.paint'), value: step2Data?.bondingPaint, key: 'bondingPaint', required: true },
     {
-      label: t('pm.granularLayer.priming'),
-      value: step2Data?.priming,
-      key: 'priming',
+      label: t('pm.granularLayer.informacaoBase'),
+      value: step2Data?.informacaoBase,
+      key: 'informacaoBase',
       required: true,
+      type: 'text',
+    },
+    {
+      label: t('pm.granularLayer.pontoLigacao'),
+      value: step2Data?.pontoLigacao,
+      key: 'pontoLigacao',
+      required: true,
+      type: 'text',
+    },
+    {
+      label: t('pm.granularLayer.ultimaAtualizacao'),
+      value: step2Data?.ultimaAtualizacao,
+      key: 'ultimaAtualizacao',
+      required: true,
+      type: 'date',
+    },
+  ];
+
+  // Características da via
+  const inputsCaracteristicasVia = [
+    {
+      label: t('pm.granularLayer.local'),
+      value: step2Data?.local,
+      key: 'local',
+      required: true,
+      type: 'text',
+    },
+    {
+      label: t('pm.granularLayer.municipioEstado'),
+      value: step2Data?.municipioEstado,
+      key: 'municipioEstado',
+      required: true,
+      type: 'text',
+    },
+    {
+      label: t('pm.granularLayer.extensao'),
+      value: step2Data?.extensao,
+      key: 'extensao',
+      required: true,
+      type: 'number',
+    },
+    {
+      label: t('pm.granularLayer.velocidadeDiretaVia'),
+      value: step2Data?.velocidadeDiretaVia,
+      key: 'velocidadeDiretaVia',
+      required: true,
+      type: 'number',
+    },
+    {
+      label: t('pm.granularLayer.larguraFaixa'),
+      value: step2Data?.larguraFaixa,
+      key: 'larguraFaixa',
+      required: true,
+      type: 'number',
+    },
+  ];
+
+  // Coordenadas
+  const inputsCoordenadas = [
+    {
+      label: t('pm.granularLayer.inicioEstaca'),
+      value: step2Data?.inicioEstaca,
+      key: 'inicioEstaca',
+      required: true,
+      type: 'text',
+    },
+    {
+      label: t('pm.granularLayer.inicioLatitude'),
+      value: step2Data?.inicioLatitude,
+      key: 'inicioLatitude',
+      required: true,
+      type: 'text',
+    },
+    {
+      label: t('pm.granularLayer.fimMetros'),
+      value: step2Data?.fimMetros,
+      key: 'fimMetros',
+      required: true,
+      type: 'text',
+    },
+    {
+      label: t('pm.granularLayer.fimLongitude'),
+      value: step2Data?.fimLongitude,
+      key: 'fimLongitude',
+      required: true,
+      type: 'text',
+    },
+    {
+      label: t('pm.granularLayer.altitudeMedia'),
+      value: step2Data?.altitudeMedia,
+      key: 'altitudeMedia',
+      required: true,
+      type: 'number',
     },
   ];
 
@@ -206,6 +281,8 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
     {
       field: 'layer',
       headerName: t('pm.granularLayer.layer'),
+      flex: 1,
+      minWidth: 200,
       renderCell: ({ row }) => {
         return <EditableCell row={row} field="layer" rows={rows} setData={setData} adornment={''} />;
       },
@@ -213,6 +290,8 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
     {
       field: 'material',
       headerName: t('pm.granularLayer.material'),
+      flex: 1,
+      minWidth: 200,
       renderCell: ({ row }) => {
         return <EditableCell row={row} field="material" rows={rows} setData={setData} adornment={''} />;
       },
@@ -220,132 +299,130 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
     {
       field: 'thickness',
       headerName: t('pm.granularLayer.thickness'),
+      flex: 1,
+      minWidth: 200,
       renderCell: ({ row }) => {
         return <EditableCell row={row} field="thickness" rows={rows} setData={setData} adornment={'mm'} />;
       },
     },
   ];
 
+  const renderField = (input: any) => {
+    if (input.type === 'select') {
+      return (
+        <FormControl variant="standard" fullWidth required={input.required} key={input.key}>
+          <InputLabel>{input.label}</InputLabel>
+          <Select
+            value={input.value || ''}
+            label={input.label}
+            onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+          >
+            {input.options.map((option: any) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      );
+    }
+
+    if (input.type === 'date') {
+      return (
+        <TextField
+          key={input.key}
+          variant="standard"
+          type="date"
+          label={input.label}
+          value={input.value || ''}
+          required={input.required}
+          InputLabelProps={{ shrink: true }}
+          onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+        />
+      );
+    }
+
+    if (input.type === 'number') {
+      let adornment = '';
+      if (input.key === 'extensao' || input.key === 'altitude' || input.key === 'altitudeMedia') {
+        adornment = 'm';
+      } else if (input.key === 'velocidadeDiretaVia') {
+        adornment = 'km/h';
+      } else if (input.key === 'larguraFaixa') {
+        adornment = 'm';
+      }
+      
+      return (
+        <InputEndAdornment
+          key={input.key}
+          adornment={adornment}
+          type="number"
+          variant="standard"
+          label={input.label}
+          value={input.value?.toString() || ''}
+          required={input.required}
+          onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+        />
+      );
+    }
+
+    return (
+      <TextField
+        key={input.key}
+        variant="standard"
+        type={input.type}
+        multiline={input.key === 'observation'}
+        sx={input.key === 'observations' && { width: '100%' }}
+        label={input.label}
+        value={input.value || ''}
+        required={input.required}
+        onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
+      />
+    );
+  };
+
+  // Desabilita o botão próximo (ajuste conforme necessidade)
   setNextDisabled(false);
 
   return (
     <>
+      {/* Dados do pavimento */}
       <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
-        <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Box
-            sx={{
-              display: 'grid',
-              width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
-              gap: '10px 20px',
-              paddingBottom: '20px',
-            }}
-          >
-            {inputsPavimentData.map((input) => {
-              if (input.key === 'extension' || input.key === 'averageAltitude' || input.key === 'trackWidth') {
-                return (
-                  <InputEndAdornment
-                    adornment={'m'}
-                    type={input.type}
-                    key={input.key}
-                    variant="standard"
-                    label={input.label}
-                    value={input.value?.toString()}
-                    required={input.required}
-                    onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
-                  />
-                );
-              } else {
-                return (
-                  <TextField
-                    key={input.key}
-                    variant={'standard'}
-                    type={input.type}
-                    multiline={input.key === 'observation' ? true : false}
-                    sx={input.key === 'observations' && { width: '100%' }}
-                    label={input.label}
-                    value={input.value}
-                    required={input.required}
-                    onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
-                  />
-                );
-              }
-            })}
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
+            {inputsPavimentData.map((input) => renderField(input))}
           </Box>
         </Box>
       </FlexColumnBorder>
 
+      {/* Preparo do pavimento */}
       <FlexColumnBorder title={t('pm.paviment.preparation')} open={true} theme={'#07B811'}>
-        <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Box
-            sx={{
-              display: 'grid',
-              width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
-              gap: '5px 20px',
-              paddingBottom: '20px',
-            }}
-          >
-            {inputsPavimentPreparation.map((input) => {
-              return (
-                <TextField
-                  key={input.key}
-                  variant="standard"
-                  label={input.label}
-                  value={input.value}
-                  required={input.required}
-                  onChange={(e) => setData({ step: 1, key: input.key, value: e.target.value })}
-                />
-              );
-            })}
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' }, gap: '5px 20px', paddingBottom: '20px' }}>
+            {inputsPavimentPreparation.map((input) => renderField(input))}
           </Box>
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title={t('pm.paviment.lastUpdate')} open={true} theme={'#07B811'}>
-        <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Box
-            sx={{
-              display: 'grid',
-              width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
-              gap: '5px 20px',
-              paddingBottom: '20px',
-            }}
-          >
-            <TextField
-              key={'lastUpdate'}
-              variant="filled"
-              type="date"
-              value={step2Data?.lastUpdate}
-              required
-              onChange={(e) => setData({ step: 1, key: 'lastUpdate', value: e.target.value })}
-            />
+      {/* Características da Via */}
+      <FlexColumnBorder title={t('pm.paviment.characteristics')} open={true} theme={'#07B811'}>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' }, gap: '5px 20px', paddingBottom: '20px' }}>
+            {inputsCaracteristicasVia.map((input) => renderField(input))}
           </Box>
         </Box>
       </FlexColumnBorder>
 
+      {/* Coordenadas */}
+      <FlexColumnBorder title={t('pm.paviment.coordinates')} open={true} theme={'#07B811'}>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' }, gap: '5px 20px', paddingBottom: '20px' }}>
+            {inputsCoordenadas.map((input) => renderField(input))}
+          </Box>
+        </Box>
+      </FlexColumnBorder>
+
+      {/* Composição Estrutural */}
       <FlexColumnBorder title={t('pm.structural.composition')} open={true} theme={'#07B811'}>
         {rows?.length > 0 && columns?.length > 0 && (
           <DataGrid
@@ -355,28 +432,17 @@ const GranularLayers_step2 = ({ setNextDisabled }: EssayPageProps) => {
             showColumnVerticalBorder
             slots={{ footer: ExpansionToolbar }}
             rows={rows?.map((row, index) => ({ ...row, id: index }))}
-            columns={columns?.map((column) => ({
+            columns={columns.map((column) => ({
               ...column,
               sortable: false,
               disableColumnMenu: true,
               align: 'center',
               headerAlign: 'center',
-              minWidth: 200,
-              flex: 1,
             }))}
           />
         )}
 
-        <Box
-          id="upload-images"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '2rem',
-            width: '100%',
-            paddingBottom: '20px',
-          }}
-        >
+        <Box id="upload-images" sx={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%', paddingBottom: '20px' }}>
           <UploadImages editarImages={step2Data?.images} onImagesUpdate={(images: string) => setImages(images)} />
           <TextField
             variant="standard"

@@ -1,42 +1,174 @@
 import { EssayPageProps } from '../../../templates/essay';
 import { t } from 'i18next';
-import { Box, TextField } from '@mui/material';
+import { Box, TextField, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
-import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { useEffect } from 'react';
 
 const GranularLayers_step1 = ({ setNextDisabled }: EssayPageProps) => {
   const { generalData, setData } = useGranularLayersStore();
 
+  // Opções para campos do tipo Sim/Não
+  const simNaoOptions = [
+    { value: 'Sim', label: 'SIM' },
+    { value: 'Não', label: 'NÃO' },
+  ];
+
+  // Opções para Tipo de Seção
+  const tipoSecaoOptions = [
+    { value: 'Experimental', label: 'EXPERIMENTAL' },
+    { value: 'Controle', label: 'CONTROLE' },
+    { value: 'Referência', label: 'REFERÊNCIA' },
+  ];
+
+  // Opções para Fase de Monitoramento
+  const faseMonitoramentoOptions = [
+    { value: 'Pré-Execução', label: 'PRÉ-EXECUÇÃO' },
+    { value: 'Execução', label: 'EXECUÇÃO' },
+    { value: 'Pós-Execução', label: 'PÓS-EXECUÇÃO' },
+  ];
+
   const inputs = [
-    { label: t('pm.granularLayer.name'), value: generalData.name, key: 'name', required: true },
-    { label: t('pm.granularLayer.zone'), value: generalData.zone, key: 'zone', required: true },
-    { label: t('pm.granularLayer.highway'), value: generalData.highway, key: 'highway', required: true },
-    { label: t('pm.granularLayer.layer'), value: generalData.layer, key: 'layer', required: true },
-    { label: t('pm.granularLayer.cityState'), value: generalData.cityState, key: 'cityState', required: true },
     {
-      label: t('pm.granularLayer.guideLineSpeed'),
-      value: generalData.guideLineSpeed,
-      key: 'guideLineSpeed',
+      label: 'TIPO DE SEÇÃO',
+      value: generalData.tipoSecao,
+      key: 'tipoSecao',
       required: true,
+      type: 'select',
+      options: tipoSecaoOptions,
     },
     {
-      label: t('pm.granularLayer.observations'),
+      label: 'FASE DE MONITORAMENTO',
+      value: generalData.faseMonitoramento,
+      key: 'faseMonitoramento',
+      required: true,
+      type: 'select',
+      options: faseMonitoramentoOptions,
+    },
+    {
+      label: 'LIBERAÇÃO AO TRÁFEGO',
+      value: generalData.liberacaoTrafico,
+      key: 'liberacaoTrafico',
+      required: true,
+      type: 'date',
+    },
+    {
+      label: 'UTILIZADA NA CALIBRAÇÃO DO MEDINA',
+      value: generalData.utilizadaMeDiNa,
+      key: 'utilizadaMeDiNa',
+      required: true,
+      type: 'select',
+      options: simNaoOptions,
+    },
+    {
+      label: 'UTILIZADA NA CALIBRAÇÃO DO LVECD',
+      value: generalData.utilizadaLVECD,
+      key: 'utilizadaLVECD',
+      required: true,
+      type: 'select',
+      options: simNaoOptions,
+    },
+    {
+      label: 'DADOS CONFIRMADOS PELA ICT',
+      value: generalData.dadosConfirmadosICT,
+      key: 'dadosConfirmadosICT',
+      required: true,
+      type: 'select',
+      options: simNaoOptions,
+    },
+    {
+      label: 'OBSERVAÇÕES',
       value: generalData.observations,
       key: 'observations',
       required: false,
+      type: 'text',
     },
   ];
 
+  // Valida todos os campos obrigatórios
   useEffect(() => {
-    if (generalData?.name !== null && generalData?.name !== '') setNextDisabled(false);
-    else setNextDisabled(true);
-  }, [generalData.name]);
+    const requiredFields = [
+      'tipoSecao',
+      'faseMonitoramento',
+      'liberacaoTrafico',
+      'utilizadaMeDiNa',
+      'utilizadaLVECD',
+      'dadosConfirmadosICT',
+    ];
+    const allRequiredFilled = requiredFields.every((field) => {
+      const value = generalData[field];
+      return value !== null && value !== undefined && value.toString().trim() !== '';
+    });
+    setNextDisabled(!allRequiredFilled);
+  }, [
+    generalData.tipoSecao,
+    generalData.faseMonitoramento,
+    generalData.liberacaoTrafico,
+    generalData.utilizadaMeDiNa,
+    generalData.utilizadaLVECD,
+    generalData.dadosConfirmadosICT,
+    setNextDisabled,
+  ]);
+
+  const renderInput = (input: any) => {
+    if (input.type === 'select') {
+      return (
+        <FormControl variant="standard" fullWidth required={input.required}>
+          <InputLabel sx={{ textTransform: 'uppercase', fontWeight: 'bold' }}>{input.label}</InputLabel>
+          <Select
+            value={input.value || ''}
+            label={input.label}
+            onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+          >
+            {input.options.map((option: any) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      );
+    }
+
+    if (input.type === 'date') {
+      return (
+        <TextField
+          key={input.key}
+          variant="standard"
+          type="date"
+          label={input.label}
+          value={input.value || ''}
+          required={input.required}
+          InputLabelProps={{ shrink: true }}
+          onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+          InputProps={{
+            inputProps: { style: { textTransform: 'uppercase' } }
+          }}
+        />
+      );
+    }
+
+    // Texto padrão (incluindo observations)
+    return (
+      <TextField
+        key={input.key}
+        variant="standard"
+        multiline={input.key === 'observations'}
+        label={input.label}
+        sx={input.key === 'observations' && { width: '100%' }}
+        value={input.value || ''}
+        required={input.required}
+        onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+        InputProps={{
+          inputProps: { style: { textTransform: 'uppercase' } }
+        }}
+      />
+    );
+  };
 
   return (
     <>
-      <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
+      <FlexColumnBorder title="IDENTIFICAÇÃO" open={true} theme={'#07B811'}>
         <Box
           sx={{
             width: '100%',
@@ -58,35 +190,7 @@ const GranularLayers_step1 = ({ setNextDisabled }: EssayPageProps) => {
               marginTop: '-20px',
             }}
           >
-            {inputs.map((input) => {
-              if (input.key === 'guideLineSpeed') {
-                return (
-                  <InputEndAdornment
-                    adornment={'km/h'}
-                    type="number"
-                    variant="standard"
-                    key={input.key}
-                    value={generalData.guideLineSpeed?.toString()}
-                    label={input.label}
-                    required={input.required}
-                    onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
-                  />
-                );
-              } else {
-                return (
-                  <TextField
-                    key={input.key}
-                    variant="standard"
-                    multiline={input.key === 'observations'}
-                    label={input.label}
-                    sx={input.key === 'observations' && { width: '100%' }}
-                    value={input.value}
-                    required={input.required}
-                    onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
-                  />
-                );
-              }
-            })}
+            {inputs.map((input) => renderInput(input))}
           </Box>
         </Box>
       </FlexColumnBorder>
