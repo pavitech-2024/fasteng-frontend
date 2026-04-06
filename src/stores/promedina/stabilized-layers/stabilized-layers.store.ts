@@ -1,150 +1,203 @@
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
+// ================== DEFINIÇÃO DO TIPO DE CADA CAMADA ==================
+export interface LayerCard {
+  id: string;
+  title: string; // Título livre digitado pelo usuário
+  grupoMCT: string;
+  coeficienteC: string;
+  indiceE: string;
+  massaEspecifica: string;
+  umidadeOtima: string;
+  energiaCompactacao: string;
+  moduloResiliencia: string;
+  coeficienteK1: string;
+  coeficienteK2: string;
+  coeficienteK3: string;
+  coeficienteK4: string;
+  deformacaoPermanente: string;
+  coeficienteK1Psi: string;
+  coeficienteK2Psi: string;
+  coeficienteK3Psi: string;
+  coeficienteK4Psi: string;
+}
+
+// ================== INTERFACES DOS DADOS ==================
 interface GeneralData {
-  name: string;
-  zone: string;
-  layer: string;
-  highway: string;
-  cityState: string;
-  guideLineSpeed: string;
-  observations?: string;
-  // NOVOS CAMPOS
-  companyResponsible?: string;      // EMPRESA RESPONSÁVEL PELO SERVIÇO
-  coatingType?: string;              // TIPO DE REVESTIMENTO
-  serviceOrder?: string;             // ORDEM DE SERVIÇO / CONTRATO
-  layerNumber?: string;              // NÚMERO DA CAMADA
-  subgradeClass?: string;            // CLASSE DE REFORÇO DO SUBLEITO
-  subgradeThickness?: string;        // ESPESSURA DO REFORÇO DO SUBLEITO
-  granularBaseThickness?: string;    // ESPESSURA DA BASE GRANULAR
-  stabilizedLayerThickness?: string; // ESPESSURA DA CAMADA ESTABILIZADA
-  subgradeObs?: string;              // OBSERVAÇÕES DO SUBLEITO
-  startDate?: string;                // DATA DE INÍCIO
-  endDate?: string;                  // DATA DE TÉRMINO
-  weather?: string;                  // CLIMA / TEMPERATURA MÉDIA
+  name: string | null;
+  zone: string | null;
+  layer: string | null;
+  highway: string | null;
+  cityState: string | null;
+  guideLineSpeed: string | null;
+  observations?: string | null;
+  companyResponsible?: string | null;
+  coatingType?: string | null;
+  serviceOrder?: string | null;
+  layerNumber?: string | null;
+  subgradeClass?: string | null;
+  subgradeThickness?: string | null;
+  granularBaseThickness?: string | null;
+  stabilizedLayerThickness?: string | null;
+  subgradeObs?: string | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  weather?: string | null;
+  identification?: string | null;
+  tipoSecao?: string | null;
+  faseMonitoramento?: string | null;
+  liberacaoTrafico?: string | null;
+  utilizadaMedina?: string | null;
+  utilizadaLvec?: string | null;
+  dadosConfirmadosICT?: string | null;
+  iriPreReabilitacao?: string | null;
+  atPreReabilitacao?: string | null;
+  fresagem?: string | null;
+  espessuraFresagem?: string | null;
+  intervencaoBase?: string | null;
+  sami?: string | null;
+  pinturaLigacao?: string | null;
+  imprimacao?: string | null;
+  dataUltimaAtualizacao?: string | null;
+  tempoServicoAnos?: string | null;
+  tempoServicoMeses?: string | null;
+  local?: string | null;
+  municipioEstado?: string | null;
+  extensao?: string | null;
+  velocidadeDiretriz?: string | null;
+  kmInicial?: string | null;
+  kmFinal?: string | null;
+  inicioEstaca?: string | null;
+  inicioMetros?: string | null;
+  fimEstaca?: string | null;
+  fimMetros?: string | null;
+  altitudeMedia?: string | null;
+  numeroFaixas?: string | null;
+  faixaMonitorada?: string | null;
+  larguraFaixa?: string | null;
+  capaMaterial?: string | null;
+  capaEspessura?: string | null;
+  binderMaterial?: string | null;
+  binderEspessura?: string | null;
+  tsdMaterial?: string | null;
+  tsdEspessura?: string | null;
+  baseMaterial?: string | null;
+  baseEspessura?: string | null;
+  subBaseMaterial?: string | null;
+  subBaseEspessura?: string | null;
+  reforcoSubleitoMaterial?: string | null;
+  reforcoSubleitoEspessura?: string | null;
 }
 
 interface Step2Data {
-  // PavimentData
-  identification: string;
-  sectionType: string;
-  extension: string;
-  initialStakeMeters: string;
-  latitudeI: string;
-  longitudeI: string;
-  finalStakeMeters: string;
-  latitudeF: string;
-  longitudeF: string;
-  monitoringPhase: string;
-  observation: string;
-  trafficLiberation: string;
-  averageAltitude: string;
-  numberOfTracks: string;
-  monitoredTrack: string;
-  lastUpdate: string;
-  trackWidth: string;
-  // Paviment Preparation
-  milling: string;
-  interventionAtTheBase: string;
-  sami: string;
-  bondingPaint: string;
-  priming: string;
-  images: string;
-  imagesDate: string;
-  // Structural Composition
+  identification: string | null;
+  sectionType: string | null;
+  extension: string | null;
+  initialStakeMeters: string | null;
+  latitudeI: string | null;
+  longitudeI: string | null;
+  finalStakeMeters: string | null;
+  latitudeF: string | null;
+  longitudeF: string | null;
+  monitoringPhase: string | null;
+  observation: string | null;
+  trafficLiberation: string | null;
+  averageAltitude: string | null;
+  numberOfTracks: string | null;
+  monitoredTrack: string | null;
+  lastUpdate: string | null;
+  trackWidth: string | null;
+  milling: string | null;
+  interventionAtTheBase: string | null;
+  sami: string | null;
+  bondingPaint: string | null;
+  priming: string | null;
+  images: string | null;
+  imagesDate: string | null;
   structuralComposition: {
     id: number;
-    layer: string;
-    material: string;
-    thickness: string;
+    layer: string | null;
+    material: string | null;
+    thickness: string | null;
   }[];
-  
-  // NOVAS PROPRIEDADES ADICIONADAS
-  iriPrerehabilitation?: string;     // IRI (m/km) PRÉ-REABILITAÇÃO
-  atPrerehabilitation?: string;      // AT (%) PRÉ-REABILITAÇÃO
-  millingThickness?: string;         // ESPESSURA FRESADA (cm)
-  roadName?: string;                 // RODOVIA/AVENIDA/RUA
-  cityState?: string;                // CIDADE/ESTADO
-  experimentalLength?: string;       // EXTENSÃO DA SEÇÃO EXPERIMENTAL (m)
-  guideSpeed?: string;               // VELOCIDADE DIRETRIZ (km/h)
-  serviceTimeYears?: string;         // TEMPO EM SERVIÇO (ANOS)
-  serviceTimeMonths?: string;        // TEMPO EM SERVIÇO (MESES)
+  iriPrerehabilitation?: string | null;
+  atPrerehabilitation?: string | null;
+  millingThickness?: string | null;
+  roadName?: string | null;
+  cityState?: string | null;
+  experimentalLength?: string | null;
+  guideSpeed?: string | null;
+  serviceTimeYears?: string | null;
+  serviceTimeMonths?: string | null;
 }
 
 interface Step3Data {
-  // Paviment Data
-  stabilizer: string;
-  tenor: string;
-  especificMass: string;
-  compressionEnergy: string;
-  rtcd: string;
-  rtf: string;
-  rcs: string;
-  granulometricRange: string;
-  optimalHumidity: string;
-  // Resilience module
-  rsInitial: string;
-  rsFinal: string;
-  constantA: string;
-  constantB: string;
-  // Material fatigue
-  fatiguek1psi1: string;
-  fatiguek2psi2: string;
-  observations: string;
-  // Brookfield viscosity
-  vb_sp21_20: string;
-  vb_sp21_50: string;
-  vb_sp21_100: string;
-  //Sample data
-  refinery: string;
-  company: string;
-  collectionDate: string;
-  invoiceNumber: string;
-  dataInvoice: string;
-  certificateDate: string;
-  certificateNumber: string;
-  // Resilience module
-  k1: string;
-  k2: string;
-  k3: string;
-  k4: string;
-  r2: string;
-  // Permanent deformation
-  k1psi1: string;
-  k2psi2: string;
-  k3psi3: string;
-  k4psi4: string;
-  // Tech data
-  mctGroup: string;
-  mctGroupmctCoefficientC: string;
-  mctIndexE: string;
-  abrasionLA: string;
-  capType: string;
-  performanceGrade: string;
-  penetration: string;
-  softeningPoint: string;
-  elasticRecovery: string;
+  stabilizer: string | null;
+  tenor: string | null;
+  especificMass: string | null;
+  compressionEnergy: string | null;
+  rtcd: string | null;
+  rtf: string | null;
+  rcs: string | null;
+  granulometricRange: string | null;
+  optimalHumidity: string | null;
+  rsInitial: string | null;
+  rsFinal: string | null;
+  constantA: string | null;
+  constantB: string | null;
+  fatiguek1psi1: string | null;
+  fatiguek2psi2: string | null;
+  observations: string | null;
+  vb_sp21_20: string | null;
+  vb_sp21_50: string | null;
+  vb_sp21_100: string | null;
+  refinery: string | null;
+  company: string | null;
+  collectionDate: string | null;
+  invoiceNumber: string | null;
+  dataInvoice: string | null;
+  certificateDate: string | null;
+  certificateNumber: string | null;
+  k1: string | null;
+  k2: string | null;
+  k3: string | null;
+  r2: string | null;
+  k4: string | null;
+  k1psi1: string | null;
+  k2psi2: string | null;
+  k3psi3: string | null;
+  k4psi4: string | null;
+  mctGroup: string | null;
+  mctGroupmctCoefficientC: string | null;
+  mctIndexE: string | null;
+  abrasionLA: string | null;
+  capType: string | null;
+  performanceGrade: string | null;
+  penetration: string | null;
+  softeningPoint: string | null;
+  elasticRecovery: string | null;
+  // 🆕 Lista dinâmica de camadas
+  layers: LayerCard[];
 }
 
 interface Step4Data {
-  // Fatigue curve CD
-  fatigueCurve_n_cps: string;
-  fatigueCurve_k1: string;
-  fatigueCurve_k2: string;
-  fatigueCurve_r2: string;
-  // Tech data
-  tmn: string;
-  volumeVoids: string;
-  rt: string;
-  flowNumber: string;
-  mr: string;
-  specificMass: string;
-  asphaltTenor: string;
-  stabilizer: string;
-  tenor: string;
-  rtcd: string;
-  rtf: string;
-  rcs: string;
+  fatigueCurve_n_cps: string | null;
+  fatigueCurve_k1: string | null;
+  fatigueCurve_k2: string | null;
+  fatigueCurve_r2: string | null;
+  tmn: string | null;
+  volumeVoids: string | null;
+  rt: string | null;
+  flowNumber: string | null;
+  mr: string | null;
+  specificMass: string | null;
+  asphaltTenor: string | null;
+  stabilizer: string | null;
+  tenor: string | null;
+  rtcd: string | null;
+  rtf: string | null;
+  rcs: string | null;
 }
 
 export type StabilizedLayersData = {
@@ -158,7 +211,7 @@ export type StabilizedLayersData = {
 export type StabilizedLayersActions = {
   setData: ({ step, key, value }: setDataType) => void;
   clearStore: () => void;
-  reset:() => void;
+  reset: () => void;
 };
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data', 3: 'step4Data' };
@@ -167,14 +220,13 @@ export type setDataType = { step: number; key?: string; value: unknown };
 
 const initialState = {
   generalData: {
-    highway: null,
     name: null,
     zone: null,
     layer: null,
+    highway: null,
     cityState: null,
     guideLineSpeed: null,
     observations: null,
-    // NOVOS CAMPOS
     companyResponsible: null,
     coatingType: null,
     serviceOrder: null,
@@ -187,6 +239,50 @@ const initialState = {
     startDate: null,
     endDate: null,
     weather: null,
+    identification: null,
+    tipoSecao: null,
+    faseMonitoramento: null,
+    liberacaoTrafico: null,
+    utilizadaMedina: null,
+    utilizadaLvec: null,
+    dadosConfirmadosICT: null,
+    iriPreReabilitacao: null,
+    atPreReabilitacao: null,
+    fresagem: null,
+    espessuraFresagem: null,
+    intervencaoBase: null,
+    sami: null,
+    pinturaLigacao: null,
+    imprimacao: null,
+    dataUltimaAtualizacao: null,
+    tempoServicoAnos: null,
+    tempoServicoMeses: null,
+    local: null,
+    municipioEstado: null,
+    extensao: null,
+    velocidadeDiretriz: null,
+    kmInicial: null,
+    kmFinal: null,
+    inicioEstaca: null,
+    inicioMetros: null,
+    fimEstaca: null,
+    fimMetros: null,
+    altitudeMedia: null,
+    numeroFaixas: null,
+    faixaMonitorada: null,
+    larguraFaixa: null,
+    capaMaterial: null,
+    capaEspessura: null,
+    binderMaterial: null,
+    binderEspessura: null,
+    tsdMaterial: null,
+    tsdEspessura: null,
+    baseMaterial: null,
+    baseEspessura: null,
+    subBaseMaterial: null,
+    subBaseEspessura: null,
+    reforcoSubleitoMaterial: null,
+    reforcoSubleitoEspessura: null,
   },
   step2Data: {
     identification: null,
@@ -213,15 +309,7 @@ const initialState = {
     numberOfTracks: null,
     monitoredTrack: null,
     trackWidth: null,
-    structuralComposition: [
-      {
-        id: 0,
-        layer: null,
-        material: null,
-        thickness: null,
-      },
-    ],
-    // NOVAS PROPRIEDADES INICIALIZADAS
+    structuralComposition: [{ id: 0, layer: null, material: null, thickness: null }],
     iriPrerehabilitation: null,
     atPrerehabilitation: null,
     millingThickness: null,
@@ -233,7 +321,6 @@ const initialState = {
     serviceTimeMonths: null,
   },
   step3Data: {
-    // Paviment Data
     stabilizer: null,
     tenor: null,
     especificMass: null,
@@ -243,20 +330,16 @@ const initialState = {
     rcs: null,
     granulometricRange: null,
     optimalHumidity: null,
-    // Resilience module
     rsInitial: null,
     rsFinal: null,
     constantA: null,
     constantB: null,
-    // Material fatigue
     fatiguek1psi1: null,
     fatiguek2psi2: null,
     observations: null,
-    // Brookfield viscosity
     vb_sp21_20: null,
     vb_sp21_50: null,
     vb_sp21_100: null,
-    //Sample data
     refinery: null,
     company: null,
     collectionDate: null,
@@ -264,18 +347,15 @@ const initialState = {
     dataInvoice: null,
     certificateDate: null,
     certificateNumber: null,
-    // Resilience module
     k1: null,
     k2: null,
     k3: null,
     r2: null,
     k4: null,
-    // Permanent deformation
     k1psi1: null,
     k2psi2: null,
     k3psi3: null,
     k4psi4: null,
-    // Tech data
     mctGroup: null,
     mctGroupmctCoefficientC: null,
     mctIndexE: null,
@@ -285,14 +365,13 @@ const initialState = {
     penetration: null,
     softeningPoint: null,
     elasticRecovery: null,
+    layers: [], // ✅ Array de camadas dinâmicas
   },
   step4Data: {
-    // Fatigue curve CD
     fatigueCurve_n_cps: null,
     fatigueCurve_k1: null,
     fatigueCurve_k2: null,
     fatigueCurve_r2: null,
-    // Tech data
     tmn: null,
     volumeVoids: null,
     rt: null,
@@ -317,7 +396,7 @@ const useStabilizedLayersStore = create<StabilizedLayersData & StabilizedLayersA
         setData: ({ step, key, value }) =>
           set((state) => {
             if (step === 3) {
-              return value; // Substitui o estado inteiro pelo novo valor
+              return value as any;
             } else {
               if (key) {
                 return {
@@ -332,16 +411,13 @@ const useStabilizedLayersStore = create<StabilizedLayersData & StabilizedLayersA
               }
             }
           }),
-
         reset: () => set(initialState),
-
         clearStore: () => {
           sessionStorage.clear();
           set(initialState);
         },
       }),
       {
-        // name data store e config no session storage
         name: 'stabilized-layers-store',
         storage: createJSONStorage(() => sessionStorage),
       }

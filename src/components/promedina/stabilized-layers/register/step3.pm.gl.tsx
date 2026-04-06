@@ -1,163 +1,216 @@
 import { EssayPageProps } from '../../../templates/essay';
-import { Box, TextField } from '@mui/material';
+import { Box, TextField, Button, IconButton, Card, CardContent, Typography, Grid } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
+import { useState, useEffect } from 'react';
+
+// Definição do tipo para cada card (camada)
+interface LayerCard {
+  id: string;
+  title: string; // Título livre, digitado pelo usuário
+  grupoMCT: string;
+  coeficienteC: string;
+  indiceE: string;
+  massaEspecifica: string;
+  umidadeOtima: string;
+  energiaCompactacao: string;
+  moduloResiliencia: string;
+  coeficienteK1: string;
+  coeficienteK2: string;
+  coeficienteK3: string;
+  coeficienteK4: string;
+  deformacaoPermanente: string;
+  coeficienteK1Psi: string;
+  coeficienteK2Psi: string;
+  coeficienteK3Psi: string;
+  coeficienteK4Psi: string;
+}
+
+// Todos os campos de parâmetros (conforme solicitado)
+const layerFields = [
+  { key: 'grupoMCT', label: 'Grupo MCT', required: false },
+  { key: 'coeficienteC', label: 'MCT - Coeficiente c\' *', required: false },
+  { key: 'indiceE', label: 'MCT - Índice e\' *', required: false },
+  { key: 'massaEspecifica', label: 'Massa Específica (g/cm³) *', required: false },
+  { key: 'umidadeOtima', label: 'Umidade Ótima (%) *', required: false },
+  { key: 'energiaCompactacao', label: 'Energia de Compactação *', required: false },
+  { key: 'moduloResiliencia', label: 'Módulo de Resiliência (MPa)', required: false },
+  { key: 'coeficienteK1', label: 'Coeficiente de Regressão (k1) *', required: false },
+  { key: 'coeficienteK2', label: 'Coeficiente de Regressão (k2) *', required: false },
+  { key: 'coeficienteK3', label: 'Coeficiente de Regressão (k3) *', required: false },
+  { key: 'coeficienteK4', label: 'Coeficiente de Regressão (k4) *', required: false },
+  { key: 'deformacaoPermanente', label: 'Deformação Permanente', required: false },
+  { key: 'coeficienteK1Psi', label: 'Coeficiente de Regressão (k1 ou psi) *', required: false },
+  { key: 'coeficienteK2Psi', label: 'Coeficiente de Regressão (k2 ou psi) *', required: false },
+  { key: 'coeficienteK3Psi', label: 'Coeficiente de Regressão (k3 ou psi) *', required: false },
+  { key: 'coeficienteK4Psi', label: 'Coeficiente de Regressão (k4 ou psi) *', required: false },
+];
 
 const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
   const { step3Data, setData } = useStabilizedLayersStore();
 
-  // Seção 1: PARÂMETROS E DADOS DO MATERIAL
-  const inputsMaterialParams = [
-    { label: 'ESTABILIZANTE', value: step3Data.stabilizer, key: 'stabilizer', required: true },
-    { label: 'TEOR', value: step3Data.tenor, key: 'tenor', required: true },
-    { label: 'RTCD, 28 DIAS (MPa)', value: step3Data.rtcd, key: 'rtcd', required: true },
-    { label: 'RTF, 28 DIAS (MPa)', value: step3Data.rtf, key: 'rtf', required: true },
-    { label: 'RCS, 28 DIAS (MPa)', value: step3Data.rcs, key: 'rcs', required: true },
-    { label: 'FAIXA GRANULOMÉTRICA', value: step3Data.granulometricRange, key: 'granulometricRange', required: true },
-    { label: 'MASSA ESPECÍFICA (g/cm³)', value: step3Data.especificMass, key: 'especificMass', required: true },
-    { label: 'UMIDADE ÓTIMA (%)', value: step3Data.optimalHumidity, key: 'optimalHumidity', required: true },
-    { label: 'ENERGIA DE COMPACTAÇÃO', value: step3Data.compressionEnergy, key: 'compressionEnergy', required: true },
-  ];
+  // Inicializa os cards: se houver dados salvos, usa-os; senão, cria um card com título vazio
+  const [cards, setCards] = useState<LayerCard[]>(() => {
+    if (step3Data.layers && Array.isArray(step3Data.layers) && step3Data.layers.length > 0) {
+      return step3Data.layers;
+    }
+    return [
+      {
+        id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
+        title: '', // ← NENHUM TÍTULO FIXO, usuário digita
+        grupoMCT: '',
+        coeficienteC: '',
+        indiceE: '',
+        massaEspecifica: '',
+        umidadeOtima: '',
+        energiaCompactacao: '',
+        moduloResiliencia: '',
+        coeficienteK1: '',
+        coeficienteK2: '',
+        coeficienteK3: '',
+        coeficienteK4: '',
+        deformacaoPermanente: '',
+        coeficienteK1Psi: '',
+        coeficienteK2Psi: '',
+        coeficienteK3Psi: '',
+        coeficienteK4Psi: '',
+      },
+    ];
+  });
 
-  // Seção 2: MÓDULO DE RESISTÊNCIA (MPa)
-  const inputsResilienceModule = [
-    { label: 'INICIAL (EI)', value: step3Data.rsInitial, key: 'rsInitial', required: true },
-    { label: 'FINAL (EF)', value: step3Data.rsFinal, key: 'rsFinal', required: true },
-    { label: 'CONSTANTE A', value: step3Data.constantA, key: 'constantA', required: true },
-    { label: 'CONSTANTE B', value: step3Data.constantB, key: 'constantB', required: true },
-  ];
+  // Salva os cards no store sempre que houver alteração e habilita o botão "Próximo"
+  useEffect(() => {
+    setData({ step: 2, key: 'layers', value: cards });
+    setNextDisabled(false); // sem validação obrigatória
+  }, [cards, setData, setNextDisabled]);
 
-  // Seção 3: FADIGA DO MATERIAL, 28 DIAS
-  const inputsMaterialFatigue = [
-    { label: 'K1 OU PSI1', value: step3Data.fatiguek1psi1, key: 'fatiguek1psi1', required: true },
-    { label: 'K2 OU PSI2', value: step3Data.fatiguek2psi2, key: 'fatiguek2psi2', required: true },
-    { label: 'OBSERVAÇÕES', value: step3Data.observations, key: 'observations', required: false },
-  ];
+  // Adiciona um novo card com todos os campos vazios
+  const addCard = () => {
+    const newCard: LayerCard = {
+      id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
+      title: '',
+      grupoMCT: '',
+      coeficienteC: '',
+      indiceE: '',
+      massaEspecifica: '',
+      umidadeOtima: '',
+      energiaCompactacao: '',
+      moduloResiliencia: '',
+      coeficienteK1: '',
+      coeficienteK2: '',
+      coeficienteK3: '',
+      coeficienteK4: '',
+      deformacaoPermanente: '',
+      coeficienteK1Psi: '',
+      coeficienteK2Psi: '',
+      coeficienteK3Psi: '',
+      coeficienteK4Psi: '',
+    };
+    setCards(prev => [...prev, newCard]);
+  };
 
-  setNextDisabled(false);
+  // Remove um card (se for o último, apenas limpa os campos)
+  const removeCard = (id: string) => {
+    if (cards.length === 1) {
+      setCards(prev =>
+        prev.map(card =>
+          card.id === id
+            ? {
+                ...card,
+                title: '',
+                grupoMCT: '',
+                coeficienteC: '',
+                indiceE: '',
+                massaEspecifica: '',
+                umidadeOtima: '',
+                energiaCompactacao: '',
+                moduloResiliencia: '',
+                coeficienteK1: '',
+                coeficienteK2: '',
+                coeficienteK3: '',
+                coeficienteK4: '',
+                deformacaoPermanente: '',
+                coeficienteK1Psi: '',
+                coeficienteK2Psi: '',
+                coeficienteK3Psi: '',
+                coeficienteK4Psi: '',
+              }
+            : card
+        )
+      );
+    } else {
+      setCards(prev => prev.filter(card => card.id !== id));
+    }
+  };
+
+  // Atualiza um campo específico de um card
+  const updateCardField = (id: string, field: keyof LayerCard, value: string) => {
+    setCards(prev =>
+      prev.map(card =>
+        card.id === id ? { ...card, [field]: value } : card
+      )
+    );
+  };
 
   return (
-    <>
-      {/* Seção 1: PARÂMETROS E DADOS DO MATERIAL */}
-      <FlexColumnBorder 
-        title="PARÂMETROS E DADOS DO MATERIAL" 
-        open={true} 
-        theme={'#07B811'} 
-        sx_title={{ whiteSpace: 'wrap', fontWeight: 'bold' }}
-      >
-        <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
+    <FlexColumnBorder
+      title="CAMADAS ESTABILIZADAS – PARÂMETROS DO MATERIAL"
+      open={true}
+      theme={'#07B811'}
+      sx_title={{ whiteSpace: 'wrap', fontWeight: 'bold' }}
+    >
+      <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 3 }}>
+        {cards.map((card) => (
+          <Card key={card.id} variant="outlined" sx={{ p: 2, position: 'relative' }}>
+            <IconButton
+              aria-label="remover"
+              onClick={() => removeCard(card.id)}
+              sx={{ position: 'absolute', top: 8, right: 8 }}
+            >
+              <DeleteIcon />
+            </IconButton>
+            <CardContent>
+              <Typography variant="subtitle1" fontWeight="bold" mb={1}>
+                Nome da Camada / Material
+              </Typography>
+              <TextField
+                fullWidth
+                variant="standard"
+                placeholder="Ex: Subleito, Aterro, Base Granular, etc."
+                value={card.title}
+                onChange={(e) => updateCardField(card.id, 'title', e.target.value)}
+                sx={{ mb: 3 }}
+              />
+              <Grid container spacing={2}>
+                {layerFields.map((field) => (
+                  <Grid item xs={12} sm={6} md={4} key={field.key}>
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      label={field.label}
+                      value={card[field.key as keyof LayerCard] || ''}
+                      onChange={(e) =>
+                        updateCardField(card.id, field.key as keyof LayerCard, e.target.value)
+                      }
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </CardContent>
+          </Card>
+        ))}
+        <Button
+          variant="outlined"
+          startIcon={<AddIcon />}
+          onClick={addCard}
+          sx={{ alignSelf: 'flex-start', mt: 1 }}
         >
-          <Box
-            sx={{
-              display: 'grid',
-              width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
-              gap: '10px 20px',
-              paddingBottom: '20px',
-            }}
-          >
-            {inputsMaterialParams.map((input) => {
-              return (
-                <TextField
-                  key={input.key}
-                  variant="standard"
-                  label={input.label}
-                  value={input.value || ''}
-                  required={input.required}
-                  onChange={(e) => setData({ step: 2, key: input.key, value: e.target.value })}
-                />
-              );
-            })}
-          </Box>
-        </Box>
-      </FlexColumnBorder>
-
-      {/* Seção 2: MÓDULO DE RESISTÊNCIA (MPa) */}
-      <FlexColumnBorder
-        title="MÓDULO DE RESISTÊNCIA (MPa)"
-        open={true}
-        theme={'#07B811'}
-        sx_title={{ whiteSpace: 'wrap', fontWeight: 'bold' }}
-      >
-        <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Box
-            sx={{
-              display: 'grid',
-              width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
-              gap: '10px 20px',
-              paddingBottom: '20px',
-            }}
-          >
-            {inputsResilienceModule.map((input) => {
-              return (
-                <TextField
-                  key={input.key}
-                  variant="standard"
-                  label={input.label}
-                  value={input.value || ''}
-                  required={input.required}
-                  onChange={(e) => setData({ step: 2, key: input.key, value: e.target.value })}
-                />
-              );
-            })}
-          </Box>
-        </Box>
-      </FlexColumnBorder>
-
-      {/* Seção 3: FADIGA DO MATERIAL, 28 DIAS */}
-      <FlexColumnBorder 
-        title="FADIGA DO MATERIAL, 28 DIAS" 
-        open={true} 
-        theme={'#07B811'}
-        sx_title={{ fontWeight: 'bold' }}
-      >
-        <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Box
-            sx={{
-              display: 'grid',
-              width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' },
-              gap: '10px 20px',
-              paddingBottom: '20px',
-            }}
-          >
-            {inputsMaterialFatigue.map((input) => {
-              return (
-                <TextField
-                  key={input.key}
-                  variant="standard"
-                  label={input.label}
-                  value={input.value || ''}
-                  required={input.required}
-                  onChange={(e) => setData({ step: 2, key: input.key, value: e.target.value })}
-                />
-              );
-            })}
-          </Box>
-        </Box>
-      </FlexColumnBorder>
-    </>
+          Adicionar camada / material
+        </Button>
+      </Box>
+    </FlexColumnBorder>
   );
 };
 

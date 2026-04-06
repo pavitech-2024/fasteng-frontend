@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
 interface GeneralData {
+  // Campos já existentes
   name: string;
   zone: string;
   layer: string;
@@ -9,17 +10,60 @@ interface GeneralData {
   highway: string;
   guideLineSpeed: string;
   observations?: string;
-  // NOVAS PROPRIEDADES PARA O STEP 1
   tipoSecao: string;
   faseMonitoramento: string;
   liberacaoTrafico: string;
   utilizadaMeDiNa: string;
   utilizadaLVECD: string;
   dadosConfirmadosICT: string;
+
+  // NOVOS CAMPOS - PREPARO DO PAVIMENTO
+  ir1PreReabilitacao: string;
+  atPreReabilitacao: string;
+  fresagem: string;
+  espessuraFresagem: string;
+  intervencaoBase: string;
+  sami: string;
+  pinturaLigacao: string;
+  imprimacao: string;
+
+  // NOVOS CAMPOS - DATA DA ÚLTIMA ATUALIZAÇÃO
+  dataUltimaAtualizacao: string;
+  tempoServicoAnos: string;
+  tempoServicoMeses: string;
+
+  // NOVOS CAMPOS - CARACTERÍSTICAS
+  local: string;
+  municipioEstado: string;
+  extensao: string;
+  velocidadeDiretriz: string;
+  kmInicial: string;
+  kmFinal: string;
+  inicioEstaca: string;
+  inicioMetros: string;
+  fimEstaca: string;
+  fimMetros: string;
+  altitudeMedia: string;
+  numeroFaixas: string;
+  faixaMonitorada: string;
+  larguraFaixa: string;
+
+  // NOVOS CAMPOS - COMPOSIÇÃO ESTRUTURAL
+  capaMaterial: string;
+  capaEspessura: string;
+  binderMaterial: string;
+  binderEspessura: string;
+  tsdMaterial: string;
+  tsdEspessura: string;
+  baseMaterial: string;
+  baseEspessura: string;
+  subBaseMaterial: string;
+  subBaseEspessura: string;
+  reforcoSubleitoMaterial: string;
+  reforcoSubleitoEspessura: string;
 }
 
 interface Step2Data {
-  // PavimentData
   identification: string;
   sectionType: string;
   extension: string;
@@ -36,7 +80,6 @@ interface Step2Data {
   numberOfTracks: string;
   monitoredTrack: string;
   trackWidth: string;
-  // Paviment Preparation
   milling: string;
   interventionAtTheBase: string;
   sami: string;
@@ -44,41 +87,31 @@ interface Step2Data {
   priming: string;
   images: string;
   imagesDate: string;
-  // Last Update
   lastUpdate: string;
-  // Structural Composition
   structuralComposition: {
     id: number;
     layer: string;
     material: string;
     thickness: string;
   }[];
-  
-  // NOVAS PROPRIEDADES ADICIONADAS
-  tipoSecao: string; // Tipo de Seção
-  estrutura: string; // Estrutura (Flexível, Semi-rígida, Rígida)
-  material: string; // Material
-  longitude: string; // Longitude
-  latitude: string; // Latitude
-  altitude: string; // Altitude
-  fonteMonitoramento: string; // Fonte de Monitoramento
-  longitudeFora: string; // Longitude Fora
-  latitudeFora: string; // Latitude Fora
-  
-  // Preparo do Pavimento
+  tipoSecao: string;
+  estrutura: string;
+  material: string;
+  longitude: string;
+  latitude: string;
+  altitude: string;
+  fonteMonitoramento: string;
+  longitudeFora: string;
+  latitudeFora: string;
   pregoeiro: string;
   informacaoBase: string;
   pontoLigacao: string;
   ultimaAtualizacao: string;
-  
-  // Características da Via
   local: string;
   municipioEstado: string;
   extensao: string;
   velocidadeDiretaVia: string;
   larguraFaixa: string;
-  
-  // Coordenadas
   inicioEstaca: string;
   inicioLatitude: string;
   fimMetros: string;
@@ -94,7 +127,6 @@ export type StructuralCompositionTable = {
 };
 
 interface Step3Data {
-  // Paviment Data
   mctGroup: string;
   mctCoefficientC: string;
   mctIndexE: string;
@@ -103,12 +135,10 @@ interface Step3Data {
   granulometricRange: string;
   optimalHumidity: string;
   abrasionLA: string;
-  // Resilience module
   k1: string;
   k2: string;
   k3: string;
   k4: string;
-  // Permanent deformation
   k1psi1: string;
   k2psi2: string;
   k3psi3: string;
@@ -149,6 +179,51 @@ const initialState = {
     utilizadaMeDiNa: null,
     utilizadaLVECD: null,
     dadosConfirmadosICT: null,
+
+    // Preparo do Pavimento
+    ir1PreReabilitacao: null,
+    atPreReabilitacao: null,
+    fresagem: null,
+    espessuraFresagem: null,
+    intervencaoBase: null,
+    sami: null,
+    pinturaLigacao: null,
+    imprimacao: null,
+
+    // Data da última atualização
+    dataUltimaAtualizacao: null,
+    tempoServicoAnos: null,
+    tempoServicoMeses: null,
+
+    // Características
+    local: null,
+    municipioEstado: null,
+    extensao: null,
+    velocidadeDiretriz: null,
+    kmInicial: null,
+    kmFinal: null,
+    inicioEstaca: null,
+    inicioMetros: null,
+    fimEstaca: null,
+    fimMetros: null,
+    altitudeMedia: null,
+    numeroFaixas: null,
+    faixaMonitorada: null,
+    larguraFaixa: null,
+
+    // Composição Estrutural
+    capaMaterial: null,
+    capaEspessura: null,
+    binderMaterial: null,
+    binderEspessura: null,
+    tsdMaterial: null,
+    tsdEspessura: null,
+    baseMaterial: null,
+    baseEspessura: null,
+    subBaseMaterial: null,
+    subBaseEspessura: null,
+    reforcoSubleitoMaterial: null,
+    reforcoSubleitoEspessura: null,
   },
   step2Data: {
     identification: null,
@@ -183,7 +258,6 @@ const initialState = {
         thickness: null,
       },
     ],
-    // NOVAS PROPRIEDADES INICIALIZADAS
     tipoSecao: null,
     estrutura: null,
     material: null,
