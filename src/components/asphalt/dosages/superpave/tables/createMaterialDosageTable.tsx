@@ -71,6 +71,8 @@ const CreateMaterialDosageTable = ({ onRowClick }: ICreateMaterialDosageTable) =
       },
       name: material.name,
       type: material.type,
+      data: [],
+      materials: [],
     };
 
     const newTableData = [];
