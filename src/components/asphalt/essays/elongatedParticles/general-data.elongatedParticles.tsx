@@ -25,7 +25,8 @@ const ElongatedParticles_GeneralData = ({
       async () => {
         const data = await elongatedParticles.getmaterialsByUserId(user._id);
 
-        setMaterials(materials);
+        //setMaterials(materials);
+        setMaterials(data[0].materials);
         setLoading(false);
       },
       {
@@ -101,8 +102,8 @@ const ElongatedParticles_GeneralData = ({
                 let material;
 
                 // se existir um material no store, seta ele como default
-                if (input.value) {
-                  material = materials.find((material) => material._id == input.value['_id']);
+                if (input.value) { 
+                  material = materials.find((material) => material._id == input.value['_id'] && material.type === 'coarseAggregate');
                 }
 
                 if (material) {
@@ -115,9 +116,16 @@ const ElongatedParticles_GeneralData = ({
                     key={input.key}
                     variant="standard"
                     label={input.label}
-                    options={materials.map((material: AsphaltMaterial) => {
+                    /*options={materials.map((material: AsphaltMaterial) => {
                       return { label: material.name + ' | ' + t(`${'materials.' + material.type}`), value: material };
-                    })}
+                    })}*/
+                   options={materials
+                  .filter((material: AsphaltMaterial) => material.type === 'coarseAggregate')
+                  .map((material: AsphaltMaterial) => ({
+                  label: material.name + ' | ' + t(`${'materials.' + material.type}`),
+                  value: material,
+                }))}
+              
                     value={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
                     size="medium"
