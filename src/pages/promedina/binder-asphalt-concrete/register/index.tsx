@@ -1304,5 +1304,5 @@ const BinderAsphaltConcrete = () => {
     </div>
   );
 };
-
+  
 export default BinderAsphaltConcrete;
