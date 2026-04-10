@@ -56,6 +56,14 @@ import { useTheme, createTheme, ThemeProvider } from '@mui/material/styles';
 // Chart.js registration
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
+// Configurações do sistema
+const CONFIG = {
+  CV_LIMIAR: 30,           // Coeficiente de Variação (%) para quebra
+  COMPRIMENTO_MAX: 7000,   // Metros máximo por subtrecho
+  ESTACA_METROS: 20,       // Conversão estaca para metros
+  JANELA: 5,               // Tamanho da janela móvel
+};
+
 // Definir o tema PRO-MEDINA
 const proMedinaTheme = createTheme({
   palette: {
@@ -272,37 +280,38 @@ function rollingWindow(arr: number[], window: number) {
 }
 
 // Função processarSubtrechos corrigida conforme solicitação:
-// - Considerar limite máximo de 7000 metros
 // - CV > 30% como critério de quebra
-// - Desconsiderar limite mínimo
+// - Último subtrecho SEM restrição de comprimento mínimo
+// - Limite máximo de 7000 metros
 function processarSubtrechos(dados: FWDData[]) {
   const colDef = ['d0', 'd20', 'd30', 'd45', 'd60', 'd90', 'd120', 'd150', 'd180'] as const;
-  const estaca_para_metros = 20;
-  // Limite máximo de 7000 metros convertido para estacas
-  const max_len_estacas = 7000 / estaca_para_metros; // 350 estacas
-  const janela = 5;
-  const limiar_cv = 30; // CV > 30% como critério de quebra
-  // Desconsiderar limite mínimo - removido min_len
+  const estaca_para_metros = CONFIG.ESTACA_METROS;
+  const max_len_estacas = CONFIG.COMPRIMENTO_MAX / estaca_para_metros;
+  const janela = CONFIG.JANELA;
+  const limiar_cv = CONFIG.CV_LIMIAR;
   
   const ordered = [...dados].sort((a, b) => a.stationNumber - b.stationNumber);
   const d0Arr = ordered.map((r) => r.d0);
   const { media: media_d0, std: std_d0 } = rollingWindow(d0Arr, janela);
   const cv_d0 = std_d0.map((s, i) => (media_d0[i] ? (s / media_d0[i]) * 100 : 0));
   const quebra = cv_d0.map((cv) => cv > limiar_cv);
+  
   const subtrechos: Subtrecho[] = [];
   let atual = 0;
   let inicio = ordered[0]?.stationNumber ?? 0;
 
   for (let i = 1; i < ordered.length; i++) {
     const comprimento_estacas = ordered[i].stationNumber - ordered[atual].stationNumber;
+    
     // Critério de quebra: CV > 30% OU comprimento máximo atingido (7000m)
     if (quebra[i] || comprimento_estacas >= max_len_estacas) {
       const fim = ordered[i - 1].stationNumber;
       const n_amostras = i - atual;
-      // Desconsiderar limite mínimo - sempre criar subtrecho mesmo se pequeno
+      
       const trecho = ordered.slice(atual, i);
       const medias: Record<string, number> = {};
       const desvios: Record<string, number> = {};
+      
       colDef.forEach((col) => {
         const vals = trecho.map((x) => x[col]);
         const m = vals.reduce((a, b) => a + b, 0) / vals.length;
@@ -310,11 +319,13 @@ function processarSubtrechos(dados: FWDData[]) {
         medias[col] = m;
         desvios[col] = s;
       });
+      
       const K = getCoefK(n_amostras);
       const deflexoes_char: Record<string, number> = {};
       colDef.forEach((col) => {
         deflexoes_char[col] = Number((medias[col] + K * desvios[col]).toFixed(1));
       });
+      
       subtrechos.push({
         'Início (Estaca)': inicio,
         'Fim (Estaca)': fim,
@@ -328,13 +339,14 @@ function processarSubtrechos(dados: FWDData[]) {
     }
   }
 
-  // Último subtrecho - sempre adicionar, desconsiderando limite mínimo
+  // ÚLTIMO SUBTRECHO - SEM restrição de comprimento mínimo
   const fim = ordered[ordered.length - 1]?.stationNumber ?? 0;
   const n_amostras = ordered.length - atual;
-  // Sempre criar o último subtrecho, independente do comprimento
+  
   const trecho = ordered.slice(atual);
   const medias: Record<string, number> = {};
   const desvios: Record<string, number> = {};
+  
   colDef.forEach((col) => {
     const vals = trecho.map((x) => x[col]);
     const m = vals.reduce((a, b) => a + b, 0) / vals.length;
@@ -342,11 +354,13 @@ function processarSubtrechos(dados: FWDData[]) {
     medias[col] = m;
     desvios[col] = s;
   });
+  
   const K = getCoefK(n_amostras);
   const deflexoes_char: Record<string, number> = {};
   colDef.forEach((col) => {
     deflexoes_char[col] = Number((medias[col] + K * desvios[col]).toFixed(1));
   });
+  
   subtrechos.push({
     'Início (Estaca)': inicio,
     'Fim (Estaca)': fim,
@@ -362,10 +376,8 @@ const pos_sensores = [0, 20, 30, 45, 60, 90, 120, 150, 180];
 
 // Serviço de análises FWD usando localStorage
 const fwdAnalysisService = {
-  // Chave para localStorage
   STORAGE_KEY: 'fwd-analyses',
 
-  // Carregar todas as análises
   getAnalyses: (): FWDAnalysis[] => {
     try {
       const data = localStorage.getItem(fwdAnalysisService.STORAGE_KEY);
@@ -376,7 +388,6 @@ const fwdAnalysisService = {
     }
   },
 
-  // Salvar todas as análises
   saveAnalyses: (analyses: FWDAnalysis[]): void => {
     try {
       localStorage.setItem(fwdAnalysisService.STORAGE_KEY, JSON.stringify(analyses));
@@ -385,7 +396,6 @@ const fwdAnalysisService = {
     }
   },
 
-  // Criar nova análise
   createAnalysis: (analysisData: Omit<FWDAnalysis, 'id' | 'createdAt' | 'updatedAt'>): FWDAnalysis => {
     const analyses = fwdAnalysisService.getAnalyses();
     const newAnalysis: FWDAnalysis = {
@@ -400,7 +410,6 @@ const fwdAnalysisService = {
     return newAnalysis;
   },
 
-  // Atualizar análise existente
   updateAnalysis: (analysisId: string, analysisData: Partial<FWDAnalysis>): FWDAnalysis | null => {
     const analyses = fwdAnalysisService.getAnalyses();
     const index = analyses.findIndex(a => a.id === analysisId);
@@ -418,7 +427,6 @@ const fwdAnalysisService = {
     return updatedAnalysis;
   },
 
-  // Deletar análise
   deleteAnalysis: (analysisId: string): boolean => {
     const analyses = fwdAnalysisService.getAnalyses();
     const filteredAnalyses = analyses.filter(a => a.id !== analysisId);
@@ -429,19 +437,16 @@ const fwdAnalysisService = {
     return true;
   },
 
-  // Obter análise específica
   getAnalysis: (analysisId: string): FWDAnalysis | null => {
     const analyses = fwdAnalysisService.getAnalyses();
     return analyses.find(a => a.id === analysisId) || null;
   },
 
-  // Obter rascunhos
   getDrafts: (): FWDAnalysis[] => {
     const analyses = fwdAnalysisService.getAnalyses();
     return analyses.filter(a => a.status === 'draft');
   },
 
-  // Processar análise (local)
   processAnalysis: (analysisId: string): ProcessResult | null => {
     const analysis = fwdAnalysisService.getAnalysis(analysisId);
     if (!analysis || analysis.samples.length < 5) return null;
@@ -563,6 +568,67 @@ const FWDPage = () => {
     setSamples((prev) => prev.filter((s) => s.id !== id));
   };
 
+  // Função para exportar subtrechos para Excel
+  const handleExportSubtrechos = () => {
+    if (!procResult || !procResult.subtrechos || procResult.subtrechos.length === 0) {
+      setSnackbar({ 
+        open: true, 
+        message: 'Nenhum subtrecho para exportar. Processe a análise primeiro.', 
+        severity: 'warning' 
+      });
+      return;
+    }
+
+    try {
+      const exportData = procResult.subtrechos.map((sub, index) => ({
+        'Subtrecho': index + 1,
+        'Início (Estaca)': sub['Início (Estaca)'],
+        'Fim (Estaca)': sub['Fim (Estaca)'],
+        'Comprimento (m)': sub['Comprimento (m)'],
+        'N Amostras': sub['N Amostras'],
+        'd0 (µm)': sub.d0,
+        'd20 (µm)': sub.d20,
+        'd30 (µm)': sub.d30,
+        'd45 (µm)': sub.d45,
+        'd60 (µm)': sub.d60,
+        'd90 (µm)': sub.d90,
+        'd120 (µm)': sub.d120,
+        'd150 (µm)': sub.d150,
+        'd180 (µm)': sub.d180,
+      }));
+
+      const ws = XLSX.utils.json_to_sheet(exportData);
+      
+      const colWidths = [
+        { wch: 12 }, { wch: 18 }, { wch: 18 }, { wch: 16 }, { wch: 12 },
+        { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 12 },
+        { wch: 12 }, { wch: 14 }, { wch: 14 }, { wch: 14 },
+      ];
+      ws['!cols'] = colWidths;
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Subtrechos_Homogeneos');
+      
+      const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+      const fileName = `subtrechos_fwd_${selectedAnalysis?.name || 'analise'}_${timestamp}.xlsx`;
+      
+      XLSX.writeFile(wb, fileName);
+      
+      setSnackbar({ 
+        open: true, 
+        message: 'Planilha exportada com sucesso!', 
+        severity: 'success' 
+      });
+    } catch (error) {
+      console.error('Erro ao exportar planilha:', error);
+      setSnackbar({ 
+        open: true, 
+        message: 'Erro ao exportar planilha', 
+        severity: 'error' 
+      });
+    }
+  };
+
   const handleSaveAnalysis = (asDraft = false) => {
     if (!newAnalysis.name && !asDraft) {
       setError('Nome da análise é obrigatório');
@@ -578,7 +644,6 @@ const FWDPage = () => {
     try {
       const analysisName = asDraft ? (newAnalysis.name || 'Rascunho Sem Nome') : newAnalysis.name;
       
-      // CORREÇÃO: Removido a propriedade createdAt que não deveria estar aqui
       const analysisData: Omit<FWDAnalysis, 'id' | 'createdAt' | 'updatedAt'> = {
         name: analysisName,
         description: newAnalysis.description,
@@ -863,20 +928,20 @@ const FWDPage = () => {
           airTemperature: headerRow.findIndex(h => h.includes('TEMP. DO AR') || h.includes('TEMP DO AR')),
           pavementTemperature: headerRow.findIndex(h => h.includes('TEMP. DO PAVIMENTO') || h.includes('TEMP DO PAVIMENTO')),
           appliedLoad: headerRow.findIndex(h => h.includes('CARGA')),
-          stationNumber: headerRow.findIndex(h => h.includes('ESTACA – NÚMERO') || h.includes('ESTACA-NÚMERO') || h.includes('ESTACA NÚMERO')),
-          d0: headerRow.findIndex(h => h.includes('D0') || h === 'D0'),
-          d20: headerRow.findIndex(h => h.includes('D20') || h === 'D20'),
-          d30: headerRow.findIndex(h => h.includes('D30') || h === 'D30'),
-          d45: headerRow.findIndex(h => h.includes('D45') || h === 'D45'),
-          d60: headerRow.findIndex(h => h.includes('D60') || h === 'D60'),
-          d90: headerRow.findIndex(h => h.includes('D90') || h === 'D90'),
-          d120: headerRow.findIndex(h => h.includes('D120') || h === 'D120'),
-          d150: headerRow.findIndex(h => h.includes('D150') || h === 'D150'),
-          d180: headerRow.findIndex(h => h.includes('D180') || h === 'D180'),
+          stationNumber: headerRow.findIndex(h => h.includes('ESTACA') && (h.includes('NÚMERO') || h.includes('NUMERO'))),
+          d0: headerRow.findIndex(h => h === 'D0' || h === 'D0 (µm)'),
+          d20: headerRow.findIndex(h => h === 'D20' || h === 'D20 (µm)'),
+          d30: headerRow.findIndex(h => h === 'D30' || h === 'D30 (µm)'),
+          d45: headerRow.findIndex(h => h === 'D45' || h === 'D45 (µm)'),
+          d60: headerRow.findIndex(h => h === 'D60' || h === 'D60 (µm)'),
+          d90: headerRow.findIndex(h => h === 'D90' || h === 'D90 (µm)'),
+          d120: headerRow.findIndex(h => h === 'D120' || h === 'D120 (µm)'),
+          d150: headerRow.findIndex(h => h === 'D150' || h === 'D150 (µm)'),
+          d180: headerRow.findIndex(h => h === 'D180' || h === 'D180 (µm)'),
         };
 
         if (colIndices.stationNumber === -1 || colIndices.d0 === -1) {
-          setError('Colunas essenciais (Estaca – Número e d0) não encontradas na planilha');
+          setError('Colunas essenciais (Estaca e d0) não encontradas na planilha');
           return;
         }
 
@@ -2105,21 +2170,41 @@ const FWDPage = () => {
                           </Select>
                         </FormControl>
                       </Box>
-                      <Button
-                        onClick={handleProcessar}
-                        startIcon={<Assessment />}
-                        variant="contained"
-                        disabled={loading}
-                        sx={{ 
-                          mb: 2,
-                          px: 3,
-                          py: 1,
-                          fontSize: '0.9rem',
-                          fontWeight: 700,
-                        }}
-                      >
-                        {loading ? <CircularProgress size={20} /> : 'Processar Análise'}
-                      </Button>
+                      
+                      <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mb: 2 }}>
+                        <Button
+                          onClick={handleProcessar}
+                          startIcon={<Assessment />}
+                          variant="contained"
+                          disabled={loading}
+                          sx={{ 
+                            px: 3,
+                            py: 1,
+                            fontSize: '0.9rem',
+                            fontWeight: 700,
+                          }}
+                        >
+                          {loading ? <CircularProgress size={20} /> : 'Processar Análise'}
+                        </Button>
+                        
+                        <Button
+                          onClick={handleExportSubtrechos}
+                          startIcon={<FileUpload />}
+                          variant="outlined"
+                          disabled={!procResult || procResult.subtrechos?.length === 0}
+                          sx={{ 
+                            px: 3,
+                            py: 1,
+                            fontSize: '0.9rem',
+                            fontWeight: 700,
+                            borderColor: PRO_MEDINA_COLORS.secondary.main,
+                            color: PRO_MEDINA_COLORS.secondary.main,
+                          }}
+                        >
+                          Exportar Planilha
+                        </Button>
+                      </Box>
+                      
                       {procError && (
                         <Alert severity="error" sx={{ mb: 2, borderRadius: 1, fontSize: '0.85rem' }}>
                           {procError}
@@ -2302,7 +2387,7 @@ const FWDPage = () => {
                         </>
                       ) : (
                         <Alert severity="info" sx={{ borderRadius: 1, fontSize: '0.85rem' }}>
-                          Nenhum dado para gerar gráfico.
+                          Clique em &quot;Processar Análise&quot; para visualizar os resultados.
                         </Alert>
                       )}
                     </Box>
