@@ -10,7 +10,7 @@ import GRANULARLAYERS_SERVICE from '@/services/promedina/granular-layers/granula
 import GranularLayersResume from '@/components/promedina/granular-layers/register/resume.pm.gl';
 
 const GranularLayers = () => {
-  // start an instance of the service
+  // start an instance of the 
   const granularLayers = new GRANULARLAYERS_SERVICE();
 
   // get the userId
