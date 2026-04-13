@@ -1497,3 +1497,4 @@ const BinderAsphaltConcrete = () => {
 };
   
 export default BinderAsphaltConcrete;
+

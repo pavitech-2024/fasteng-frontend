@@ -33,8 +33,8 @@ const Promedina: NextPage = () => {
           }}
         >
           <Image
-            src={stabilizedLayersImage}
-            alt="Asphalt"
+            src={granularLayersImage} // TROCADO: Agora usa granularLayersImage
+            alt="Granular Layers"
             width={200}
             height={200}
             style={{ objectFit: 'contain' }}
@@ -56,8 +56,8 @@ const Promedina: NextPage = () => {
           }}
         >
           <Image
-            src={granularLayersImage}
-            alt="Asphalt"
+            src={stabilizedLayersImage} // TROCADO: Agora usa stabilizedLayersImage
+            alt="Stabilized Layers"
             width={200}
             height={200}
             style={{ objectFit: 'contain' }}
@@ -102,7 +102,7 @@ const Promedina: NextPage = () => {
       >
         <Image
           src = {FWDicon}
-          alt="Asphalt"
+          alt="FWD"
           width={150}
           height={150}
           style={{ objectFit: 'contain' }}
@@ -124,7 +124,7 @@ const Promedina: NextPage = () => {
         >
           <Image
             src = {Iggicon}
-            alt="Asphalt"
+            alt="IGG"
             width={150}
             height={150}
             style={{ objectFit: 'contain' }}
@@ -219,10 +219,10 @@ const Promedina: NextPage = () => {
           minWidth: 'fit-content',
           maxWidth: '1400px',
           pt: '2vh',
-          flexWrap: 'wrap', // Adicionado para melhor responsividade com mais itens
+          flexWrap: 'wrap',
 
           '@media only screen and (min-width: 1024px)': {
-            width: '70%', // Aumentei um pouco para acomodar mais itens
+            width: '70%',
           },
         }}
       >
