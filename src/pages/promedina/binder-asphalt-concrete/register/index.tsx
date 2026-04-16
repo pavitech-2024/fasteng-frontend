@@ -2,297 +2,111 @@ import useAuth from '@/contexts/auth';
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 import React, { useState } from 'react';
+import {
+  Box,
+  Container,
+  Paper,
+  Typography,
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Switch,
+  FormControlLabel,
+  Stack,
+  Stepper,
+  Step,
+  StepLabel,
+  Snackbar,
+  Alert,
+  CircularProgress,
+  AppBar,
+  Toolbar,
+  IconButton,
+} from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Save, Delete, Add } from '@mui/icons-material';
+import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 
 // ============================================
-// STYLES (CSS puro)
+// TEMA PRO-MEDINA (VERDE)
 // ============================================
 
-const styles = {
-  container: {
-    minHeight: '100vh',
-    background: '#f0f2f5',
+const proMedinaTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#07B811',
+      light: '#4caf50',
+      dark: '#05990e',
+      contrastText: '#ffffff',
+    },
+    secondary: {
+      main: '#1a237e',
+      light: '#283593',
+      dark: '#0d1757',
+      contrastText: '#ffffff',
+    },
+    background: {
+      default: '#F2F2F2',
+      paper: '#ffffff',
+    },
   },
-  header: {
-    background: '#001529',
-    padding: '0 24px',
-    color: 'white',
+  typography: {
+    fontFamily: "'Roboto', 'Segoe UI', sans-serif",
+    h4: {
+      fontWeight: 700,
+      fontSize: '1.75rem',
+    },
+    h5: {
+      fontWeight: 700,
+      fontSize: '1.5rem',
+    },
+    h6: {
+      fontWeight: 600,
+      fontSize: '1.25rem',
+    },
+    body1: {
+      fontSize: '0.9rem',
+    },
+    body2: {
+      fontSize: '0.8rem',
+    },
   },
-  headerTitle: {
-    margin: '16px 0',
-    fontSize: '20px',
-    fontWeight: 'bold',
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: '8px',
+          textTransform: 'uppercase',
+          fontWeight: 600,
+          fontSize: '0.8rem',
+        },
+        containedPrimary: {
+          background: '#07B811',
+          boxShadow: 'none',
+          '&:hover': {
+            background: '#05990e',
+          },
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: '8px',
+          boxShadow: 'none',
+          border: '1px solid #e0e0e0',
+        },
+      },
+    },
   },
-  content: {
-    padding: '24px',
-  },
-  card: {
-    background: 'white',
-    borderRadius: '8px',
-    padding: '24px',
-    marginBottom: '24px',
-    boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
-    border: '1px solid #f0f0f0',
-  },
-  cardTitle: {
-    fontSize: '18px',
-    fontWeight: 'bold',
-    marginBottom: '16px',
-    paddingBottom: '12px',
-    borderBottom: '1px solid #f0f0f0',
-  },
-  sectionTitle: {
-    fontSize: '16px',
-    fontWeight: 'bold',
-    marginBottom: '16px',
-    marginTop: '8px',
-    color: '#1677ff',
-  },
-  formRow: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-    gap: '16px',
-    marginBottom: '16px',
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-  },
-  label: {
-    marginBottom: '8px',
-    fontWeight: 500,
-    fontSize: '14px',
-    color: '#333',
-  },
-  input: {
-    padding: '8px 12px',
-    border: '1px solid #d9d9d9',
-    borderRadius: '6px',
-    fontSize: '14px',
-    outline: 'none',
-  },
-  select: {
-    padding: '8px 12px',
-    border: '1px solid #d9d9d9',
-    borderRadius: '6px',
-    fontSize: '14px',
-    backgroundColor: 'white',
-    cursor: 'pointer',
-  },
-  textarea: {
-    padding: '8px 12px',
-    border: '1px solid #d9d9d9',
-    borderRadius: '6px',
-    fontSize: '14px',
-    fontFamily: 'inherit',
-    resize: 'vertical' as const,
-  },
-  switch: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-  },
-  switchButton: {
-    width: '44px',
-    height: '22px',
-    backgroundColor: '#ccc',
-    borderRadius: '22px',
-    position: 'relative' as const,
-    cursor: 'pointer',
-    transition: '0.3s',
-  },
-  switchButtonActive: {
-    backgroundColor: '#1677ff',
-  },
-  switchKnob: {
-    width: '18px',
-    height: '18px',
-    backgroundColor: 'white',
-    borderRadius: '50%',
-    position: 'absolute' as const,
-    top: '2px',
-    left: '2px',
-    transition: '0.3s',
-  },
-  switchKnobActive: {
-    left: '24px',
-  },
-  button: {
-    padding: '8px 16px',
-    borderRadius: '6px',
-    fontSize: '14px',
-    fontWeight: 500,
-    cursor: 'pointer',
-    border: 'none',
-  },
-  buttonPrimary: {
-    backgroundColor: '#1677ff',
-    color: 'white',
-  },
-  buttonDefault: {
-    backgroundColor: 'white',
-    color: '#333',
-    border: '1px solid #d9d9d9',
-  },
-  buttonDanger: {
-    backgroundColor: '#ff4d4f',
-    color: 'white',
-  },
-  stepsContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '32px',
-    borderBottom: '1px solid #f0f0f0',
-    paddingBottom: '16px',
-  },
-  step: {
-    flex: 1,
-    textAlign: 'center' as const,
-    padding: '8px',
-    color: '#999',
-    cursor: 'pointer',
-  },
-  stepActive: {
-    color: '#1677ff',
-    fontWeight: 'bold',
-    borderBottom: '2px solid #1677ff',
-    marginBottom: '-17px',
-  },
-  stepCompleted: {
-    color: '#52c41a',
-  },
-  flexBetween: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: '24px',
-  },
-  grid2: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: '16px',
-    marginBottom: '16px',
-  },
-  grid3: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
-    gap: '16px',
-    marginBottom: '16px',
-  },
-  grid4: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: '16px',
-    marginBottom: '16px',
-  },
-  divider: {
-    height: '1px',
-    backgroundColor: '#f0f0f0',
-    margin: '24px 0',
-  },
-  subCard: {
-    border: '1px solid #f0f0f0',
-    borderRadius: '8px',
-    padding: '16px',
-    marginBottom: '16px',
-  },
-  addButton: {
-    width: '100%',
-    padding: '12px',
-    border: '1px dashed #d9d9d9',
-    backgroundColor: '#fafafa',
-    borderRadius: '6px',
-    cursor: 'pointer',
-    textAlign: 'center' as const,
-    color: '#1677ff',
-  },
-  removeButton: {
-    padding: '6px 12px',
-    backgroundColor: '#ff4d4f',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '12px',
-  },
-  pre: {
-    background: '#f5f5f5',
-    padding: '16px',
-    borderRadius: '8px',
-    overflow: 'auto',
-    maxHeight: '600px',
-    fontSize: '12px',
-  },
-  summarySection: {
-    marginBottom: '24px',
-  },
-  summarySubtitle: {
-    fontSize: '16px',
-    fontWeight: 'bold',
-    marginBottom: '12px',
-    paddingBottom: '8px',
-    borderBottom: '1px solid #e8e8e8',
-    color: '#1677ff',
-  },
-  summaryGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-    gap: '12px',
-    marginBottom: '16px',
-  },
-  summaryItem: {
-    display: 'flex',
-    padding: '8px 0',
-    borderBottom: '1px solid #f5f5f5',
-  },
-  summaryLabel: {
-    width: '180px',
-    fontWeight: 500,
-    color: '#666',
-    fontSize: '13px',
-  },
-  summaryValue: {
-    flex: 1,
-    color: '#333',
-    fontSize: '13px',
-    wordBreak: 'break-word' as const,
-  },
-  summaryEmpty: {
-    color: '#999',
-    fontStyle: 'italic',
-  },
-  summaryCard: {
-    background: '#fafafa',
-    borderRadius: '6px',
-    padding: '12px',
-    marginBottom: '12px',
-  },
-  layerCard: {
-    background: '#f5f5f5',
-    borderRadius: '6px',
-    padding: '10px',
-    marginBottom: '8px',
-    borderLeft: '3px solid #1677ff',
-  },
-  twoColumnGrid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '16px',
-  },
-};
+});
 
 // ============================================
-// STORE
+// STORE (ZUSTAND) - COMPLETO
 // ============================================
-
-interface GeneralData {
-  // Dados Gerais (mantido para compatibilidade)
-  name: string;
-  zone: string;
-  layer: string;
-  cityState: string;
-  highway: string;
-  guideLineSpeed: string;
-  observations?: string;
-}
 
 interface StructuralCompositionItem {
   id: number;
@@ -344,7 +158,9 @@ interface Step2Data {
   // COMPOSIÇÃO ESTRUTURAL
   structuralComposition: StructuralCompositionItem[];
   
-  // Campos antigos mantidos para compatibilidade
+  // ============================================
+  // CAMPOS ANTIGOS - COMPATIBILIDADE
+  // ============================================
   identification: string;
   sectionType: string;
   extension: string;
@@ -368,94 +184,95 @@ interface Step2Data {
   priming: string;
   images: string;
   imagesDate: string;
-  roadName?: string;
-  cityState?: string;
-  experimentalLength?: string;
-  guideSpeed?: string;
-  millingThickness?: string;
-  serviceTimeYears?: string;
-  serviceTimeMonths?: string;
-  localConfirmado?: boolean;
-  tipoTratamento?: string;
-  tipoEmulsao?: string;
-  taxaEmulsao?: string;
-  taxaAgregados?: string;
-  faixaGranulometrica?: string;
-  abrasaoLosAngeles?: string;
-  massaEspecifica?: string;
-  referenciaComercial?: string;
-  refinaria?: string;
-  empresaDistribuidora?: string;
-  dataCarregamento?: string;
-  numeroNotaFiscal?: string;
-  dataNotaFiscal?: string;
-  numeroCertificado?: string;
-  dataCertificado?: string;
-  viscosidade?: string;
-  peneiracao?: string;
-  residuo?: string;
-  cargaParticula?: string;
-  penetracao?: string;
-  recuperacaoElastica?: string;
-  pontoAmolecimento?: string;
-  binder_tipoCAP?: string;
-  binder_massaEspecifica?: string;
-  binder_resistenciaTracao?: string;
-  binder_teorAsfalto?: string;
-  binder_volumeVazios?: string;
-  binder_tmn?: string;
-  binder_abrasaoLA?: string;
-  binder_curvasMestras_a?: string;
-  binder_curvasMestras_b?: string;
-  binder_curvasMestras_d?: string;
-  binder_curvasMestras_g?: string;
-  binder_curvasMestras_a1?: string;
-  binder_curvasMestras_a2?: string;
-  binder_curvasMestras_a3?: string;
-  binder_parametroAlfa?: string;
-  binder_curvaDano_numAmostras?: string;
-  binder_curvaDano_potencia?: string;
-  binder_curvaDano_exponencial?: string;
-  binder_curvaDano_c10?: string;
-  binder_curvaDano_c12?: string;
-  binder_curvaDano_a?: string;
-  binder_curvaDano_b?: string;
-  binder_curvaDano_y?: string;
-  binder_curvaDano_delta?: string;
-  binder_curvaFadiga_numAmostras?: string;
-  binder_curvaFadiga_k1?: string;
-  binder_curvaFadiga_k2?: string;
-  binder_curvaFadiga_r2?: string;
-  capa_tipoCAP?: string;
-  capa_massaEspecifica?: string;
-  capa_resistenciaTracao?: string;
-  capa_teorAsfalto?: string;
-  capa_volumeVazios?: string;
-  capa_tmn?: string;
-  capa_abrasaoLA?: string;
-  capa_curvasMestras_a?: string;
-  capa_curvasMestras_b?: string;
-  capa_curvasMestras_d?: string;
-  capa_curvasMestras_g?: string;
-  capa_parametroAlfa?: string;
-  capa_curvaFadiga_numAmostras?: string;
-  capa_curvaFadiga_k1?: string;
-  capa_curvaFadiga_k2?: string;
-  capa_curvaFadiga_r2?: string;
-  ligante_original_penetracao?: string;
-  ligante_original_pontoAmolecimento?: string;
-  ligante_original_viscosidadeBrookfield?: string;
-  ligante_original_recuperacaoElastica?: string;
-  ligante_original_dsr?: string;
-  ligante_rtfot_dsr?: string;
-  ligante_rtfot_msnrJnr?: string;
-  ligante_rtfot_msnrJnrDiff?: string;
-  ligante_rtfot_las?: string;
-  ligante_pav_bbrModuloRigidez?: string;
-  ligante_pav_bbrCoeficienteAngular?: string;
-  ligante_obs_af?: string;
-  ligante_obs_ffl?: string;
-  ligante_obs_nf?: string;
+  roadName: string;
+  cityState: string;
+  experimentalLength: string;
+  guideSpeed: string;
+  millingThickness: string;
+  serviceTimeYears: string;
+  serviceTimeMonths: string;
+  localConfirmado: boolean;
+  tipoTratamento: string;
+  tipoEmulsao: string;
+  taxaEmulsao: string;
+  taxaAgregados: string;
+  faixaGranulometrica: string;
+  abrasaoLosAngeles: string;
+  massaEspecifica: string;
+  referenciaComercial: string;
+  refinaria: string;
+  empresaDistribuidora: string;
+  dataCarregamento: string;
+  numeroNotaFiscal: string;
+  dataNotaFiscal: string;
+  numeroCertificado: string;
+  dataCertificado: string;
+  viscosidade: string;
+  peneiracao: string;
+  residuo: string;
+  cargaParticula: string;
+  penetracao: string;
+  recuperacaoElastica: string;
+  pontoAmolecimento: string;
+  binder_tipoCAP: string;
+  binder_massaEspecifica: string;
+  binder_resistenciaTracao: string;
+  binder_teorAsfalto: string;
+  binder_volumeVazios: string;
+  binder_tmn: string;
+  binder_abrasaoLA: string;
+  binder_curvasMestras_a: string;
+  binder_curvasMestras_b: string;
+  binder_curvasMestras_d: string;
+  binder_curvasMestras_g: string;
+  binder_curvasMestras_a1: string;
+  binder_curvasMestras_a2: string;
+  binder_curvasMestras_a3: string;
+  binder_parametroAlfa: string;
+  binder_curvaDano_numAmostras: string;
+  binder_curvaDano_potencia: string;
+  binder_curvaDano_exponencial: string;
+  binder_curvaDano_c10: string;
+  binder_curvaDano_c12: string;
+  binder_curvaDano_a: string;
+  binder_curvaDano_b: string;
+  binder_curvaDano_y: string;
+  binder_curvaDano_delta: string;
+  binder_curvaFadiga_numAmostras: string;
+  binder_curvaFadiga_k1: string;
+  binder_curvaFadiga_k2: string;
+  binder_curvaFadiga_r2: string;
+  capa_tipoCAP: string;
+  capa_massaEspecifica: string;
+  capa_resistenciaTracao: string;
+  capa_teorAsfalto: string;
+  capa_volumeVazios: string;
+  capa_tmn: string;
+  capa_abrasaoLA: string;
+  capa_curvasMestras_a: string;
+  capa_curvasMestras_b: string;
+  capa_curvasMestras_d: string;
+  capa_curvasMestras_g: string;
+  capa_parametroAlfa: string;
+  capa_curvaFadiga_numAmostras: string;
+  capa_curvaFadiga_k1: string;
+  capa_curvaFadiga_k2: string;
+  capa_curvaFadiga_r2: string;
+  ligante_original_penetracao: string;
+  ligante_original_pontoAmolecimento: string;
+  ligante_original_viscosidadeBrookfield: string;
+  ligante_original_recuperacaoElastica: string;
+  ligante_original_dsr: string;
+  ligante_rtfot_dsr: string;
+  ligante_rtfot_msnrJnr: string;
+  ligante_rtfot_msnrJnrDiff: string;
+  ligante_rtfot_las: string;
+  ligante_pav_bbrModuloRigidez: string;
+  ligante_pav_bbrCoeficienteAngular: string;
+  ligante_obs_af: string;
+  ligante_obs_ffl: string;
+  ligante_obs_nf: string;
+  [key: string]: any;
 }
 
 interface Step3Data {
@@ -475,6 +292,7 @@ interface Step3Data {
   vb_sp21_50: string;
   vb_sp21_100: string;
   observations: string;
+  [key: string]: any;
 }
 
 interface Step4Data {
@@ -492,25 +310,24 @@ interface Step4Data {
   fatigueCurve_k2: string;
   fatigueCurve_r2: string;
   observations: string;
+  [key: string]: any;
 }
 
-export type BinderAsphaltConcreteData = {
-  generalData: GeneralData;
+interface BinderAsphaltConcreteData {
+  generalData: any;
   step2Data: Step2Data;
   step3Data: Step3Data;
   step4Data: Step4Data;
   _id?: string;
-};
+}
 
-export type BinderAsphaltConcreteActions = {
-  setData: ({ step, key, value }: setDataType) => void;
-  clearStore: () => void;
+interface BinderAsphaltConcreteActions {
+  setData: ({ step, key, value }: { step: number; key?: string; value: unknown }) => void;
   reset: () => void;
-};
+  clearStore: () => void;
+}
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data', 3: 'step4Data' };
-
-export type setDataType = { step: number; key?: string; value: unknown };
 
 const initialState = {
   generalData: {
@@ -523,7 +340,6 @@ const initialState = {
     observations: '',
   },
   step2Data: {
-    // IDENTIFICAÇÃO
     tipoSecao: '',
     faseMonitoramento: '',
     liberacaoTrafego: '',
@@ -531,8 +347,6 @@ const initialState = {
     utilizadaLvec: false,
     dadosConfirmadosICT: false,
     observacoes: '',
-    
-    // PREPARO DO PAVIMENTO
     iriPrerehabilitation: '',
     atPrerehabilitation: '',
     fresagem: false,
@@ -541,12 +355,8 @@ const initialState = {
     sami: false,
     pinturaLigacao: false,
     imprimacao: false,
-    
-    // DATA DA ÚLTIMA ATUALIZAÇÃO
     dataUltimaAtualizacao: '',
     tempoServicoMeses: '',
-    
-    // CARACTERÍSTICAS
     local: '',
     municipioEstado: '',
     extensao: '',
@@ -561,8 +371,6 @@ const initialState = {
     numeroFaixas: '',
     faixaMonitorada: '',
     larguraFaixa: '',
-    
-    // COMPOSIÇÃO ESTRUTURAL
     structuralComposition: [
       { id: 0, layer: 'Capa', material: '', thickness: '' },
       { id: 1, layer: 'Binder', material: '', thickness: '' },
@@ -571,8 +379,7 @@ const initialState = {
       { id: 4, layer: 'Sub-base', material: '', thickness: '' },
       { id: 5, layer: 'Reforço do Subleito', material: '', thickness: '' },
     ],
-    
-    // Campos antigos (compatibilidade)
+    // Campos antigos
     identification: '',
     sectionType: '',
     extension: '',
@@ -753,25 +560,7 @@ const useBinderAsphaltConcreteStore = create<BinderAsphaltConcreteData & BinderA
 );
 
 // ============================================
-// SWITCH COMPONENT
-// ============================================
-
-const SwitchComponent = ({ checked, onChange, label }: { checked: boolean; onChange: (checked: boolean) => void; label?: string }) => {
-  return (
-    <div style={styles.switch}>
-      {label && <label style={styles.label}>{label}</label>}
-      <div
-        style={{ ...styles.switchButton, ...(checked ? styles.switchButtonActive : {}) }}
-        onClick={() => onChange(!checked)}
-      >
-        <div style={{ ...styles.switchKnob, ...(checked ? styles.switchKnobActive : {}) }} />
-      </div>
-    </div>
-  );
-};
-
-// ============================================
-// STEP 1 - PAVIMENT DATA (conforme as imagens)
+// STEP 1 - PAVIMENTAÇÃO (COMPLETO)
 // ============================================
 
 const Step1PavimentData = () => {
@@ -779,368 +568,296 @@ const Step1PavimentData = () => {
   const step = 1;
   const data = store.step2Data;
 
+  const simNaoOptions = [
+    { value: 'Sim', label: 'SIM' },
+    { value: 'Não', label: 'NÃO' },
+  ];
+
+  const tipoSecaoOptions = [
+    { value: 'Pavimento Novo', label: 'PAVIMENTO NOVO' },
+    { value: 'Reabilitacao', label: 'REABILITAÇÃO' },
+  ];
+
+  const faseMonitoramentoOptions = [
+    { value: 'Pre-Execucao', label: 'PRÉ-EXECUÇÃO' },
+    { value: 'Execucao', label: 'EXECUÇÃO' },
+    { value: 'Pos-Execucao', label: 'PÓS-EXECUÇÃO' },
+  ];
+
+  const tipoCamadaOptions = [
+    { value: 'Capa', label: 'CAPA' },
+    { value: 'Binder', label: 'BINDER' },
+    { value: 'TSD', label: 'TSD' },
+    { value: 'Base', label: 'BASE' },
+    { value: 'Sub-base', label: 'SUB-BASE' },
+    { value: 'Reforço do Subleito', label: 'REFORÇO DO SUBLEITO' },
+  ];
+
   const handleChange = (key: string, value: any) => {
     store.setData({ step, key, value });
   };
 
-  const handleStructuralCompositionChange = (index: number, field: string, value: string) => {
-    const newComposition = [...data.structuralComposition];
-    newComposition[index] = { ...newComposition[index], [field]: value };
-    handleChange('structuralComposition', newComposition);
+  const renderTextField = (key: string, label: string, value: any, type = 'text', multiline = false) => (
+    <TextField
+      variant="standard"
+      type={type}
+      label={label}
+      value={value || ''}
+      multiline={multiline}
+      rows={multiline ? 3 : 1}
+      InputLabelProps={type === 'date' ? { shrink: true } : undefined}
+      onChange={(e) => handleChange(key, e.target.value)}
+      InputProps={{
+        inputProps: { style: { textTransform: 'uppercase' } }
+      }}
+      sx={{ width: 'calc(50% - 10px)' }}
+    />
+  );
+
+  const renderSelect = (key: string, label: string, value: any, options: { value: string; label: string }[]) => (
+    <FormControl variant="standard" sx={{ width: 'calc(50% - 10px)' }}>
+      <InputLabel sx={{ textTransform: 'uppercase', fontWeight: 'bold' }}>{label}</InputLabel>
+      <Select
+        value={value || ''}
+        label={label}
+        onChange={(e) => handleChange(key, e.target.value)}
+      >
+        {options.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+
+  const renderSwitch = (key: string, label: string, value: boolean) => (
+    <FormControlLabel
+      control={
+        <Switch
+          checked={value || false}
+          onChange={(e) => handleChange(key, e.target.checked)}
+          sx={{
+            '& .MuiSwitch-switchBase.Mui-checked': {
+              color: '#07B811',
+              '&:hover': { backgroundColor: 'rgba(7, 184, 17, 0.08)' },
+            },
+            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+              backgroundColor: '#07B811',
+            },
+          }}
+        />
+      }
+      label={label}
+      sx={{ width: 'calc(50% - 10px)' }}
+    />
+  );
+
+  // Funções para composição estrutural
+  const adicionarCamada = () => {
+    const camadasAtuais = [...data.structuralComposition];
+    const novaCamada = { id: Date.now(), layer: '', material: '', thickness: '' };
+    handleChange('structuralComposition', [...camadasAtuais, novaCamada]);
+  };
+
+  const removerCamada = (index: number) => {
+    const camadasAtuais = [...data.structuralComposition];
+    camadasAtuais.splice(index, 1);
+    handleChange('structuralComposition', camadasAtuais);
+  };
+
+  const atualizarCamada = (index: number, campo: string, valor: string) => {
+    const camadasAtuais = [...data.structuralComposition];
+    camadasAtuais[index] = { ...camadasAtuais[index], [campo]: valor };
+    handleChange('structuralComposition', camadasAtuais);
   };
 
   return (
-    <div>
-      {/* ============================================ */}
-      {/* IDENTIFICAÇÃO */}
-      {/* ============================================ */}
-      <div style={styles.card}>
-        <h2 style={styles.cardTitle}>IDENTIFICAÇÃO</h2>
-        
-        <div style={styles.formGroup}>
-          <label style={styles.label}>TIPO DE SEÇÃO</label>
-          <select 
-            style={styles.select} 
-            value={data.tipoSecao || ''} 
-            onChange={(e) => handleChange('tipoSecao', e.target.value)}
-          >
-            <option value="">Selecione</option>
-            <option value="Pavimento Novo">Pavimento Novo</option>
-            <option value="Reabilitacao">Reabilitação</option>
-          </select>
-        </div>
+    <Stack spacing={3}>
+      {/* CARD 1: IDENTIFICAÇÃO */}
+      <FlexColumnBorder title="IDENTIFICAÇÃO" open={true} theme="#07B811">
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', mb: 2 }}>
+          {renderSelect('tipoSecao', 'TIPO DE SEÇÃO', data.tipoSecao, tipoSecaoOptions)}
+          {renderSelect('faseMonitoramento', 'FASE DE MONITORAMENTO', data.faseMonitoramento, faseMonitoramentoOptions)}
+          {renderTextField('liberacaoTrafego', 'LIBERAÇÃO AO TRÁFEGO', data.liberacaoTrafego, 'date')}
+          {renderSwitch('utilizadaMedina', 'UTILIZADA NA CALIBRAÇÃO DO MeDiNa', data.utilizadaMedina)}
+          {renderSwitch('utilizadaLvec', 'UTILIZADA NA CALIBRAÇÃO DO LVECD', data.utilizadaLvec)}
+          {renderSwitch('dadosConfirmadosICT', 'DADOS CONFIRMADOS PELA ICT', data.dadosConfirmadosICT)}
+          {renderTextField('observacoes', 'OBSERVAÇÕES', data.observacoes, 'text', true)}
+          
+          {/* Campos antigos de compatibilidade */}
+          {renderTextField('identification', 'INSTITUIÇÃO + NÚMERO DO TRECHO', data.identification)}
+          {renderSelect('sectionType', 'TIPO DE SEÇÃO (ANTIGO)', data.sectionType, tipoSecaoOptions)}
+          {renderSelect('monitoringPhase', 'FASE DE MONITORAMENTO (ANTIGO)', data.monitoringPhase, faseMonitoramentoOptions)}
+          {renderTextField('trafficLiberation', 'LIBERAÇÃO AO TRÁFEGO (ANTIGO)', data.trafficLiberation, 'date')}
+          {renderTextField('observation', 'OBSERVAÇÕES (ANTIGO)', data.observation, 'text', true)}
+        </Box>
+      </FlexColumnBorder>
 
-        <div style={{ ...styles.grid2, marginTop: '16px', marginBottom: '16px' }}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>FASE DE MONITORAMENTO</label>
-            <select 
-              style={styles.select} 
-              value={data.faseMonitoramento || ''} 
-              onChange={(e) => handleChange('faseMonitoramento', e.target.value)}
-            >
-              <option value="">Selecione</option>
-              <option value="Pre-Execucao">Pré-Execução</option>
-              <option value="Execucao">Execução</option>
-              <option value="Pos-Execucao">Pós-Execução</option>
-            </select>
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>LIBERAÇÃO AO TRÁFEGO</label>
-            <input 
-              type="date" 
-              style={styles.input} 
-              value={data.liberacaoTrafego || ''} 
-              onChange={(e) => handleChange('liberacaoTrafego', e.target.value)} 
-            />
-          </div>
-        </div>
+      {/* CARD 2: PREPARO DO PAVIMENTO */}
+      <FlexColumnBorder title="PREPARO DO PAVIMENTO" open={true} theme="#07B811">
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', mb: 2 }}>
+          {renderTextField('iriPrerehabilitation', 'IRI (m/km) Pré-Reabilitação', data.iriPrerehabilitation, 'number')}
+          {renderTextField('atPrerehabilitation', 'AT (%) Pré-Reabilitação', data.atPrerehabilitation, 'number')}
+          {renderSwitch('fresagem', 'FRESAGEM', data.fresagem)}
+          {data.fresagem && renderTextField('espessuraFresagem', 'ESPESSURA FRESADA (mm)', data.espessuraFresagem, 'number')}
+          {renderSwitch('intervencaoBase', 'INTERVENÇÃO NA BASE', data.intervencaoBase)}
+          {renderSwitch('sami', 'SAMI', data.sami)}
+          {renderSwitch('pinturaLigacao', 'PINTURA DE LIGAÇÃO', data.pinturaLigacao)}
+          {renderSwitch('imprimacao', 'IMPRIMAÇÃO', data.imprimacao)}
+          
+          {/* Campos antigos */}
+          {renderSelect('milling', 'FRESAGEM (ANTIGO)', data.milling, simNaoOptions)}
+          {data.milling === 'Sim' && renderTextField('millingThickness', 'ESPESSURA FRESADA (mm) ANTIGO', data.millingThickness, 'number')}
+          {renderSelect('interventionAtTheBase', 'INTERVENÇÃO NA BASE (ANTIGO)', data.interventionAtTheBase, simNaoOptions)}
+          {renderSelect('bondingPaint', 'PINTURA DE LIGAÇÃO (ANTIGO)', data.bondingPaint, simNaoOptions)}
+          {renderSelect('priming', 'IMPRIMAÇÃO (ANTIGO)', data.priming, simNaoOptions)}
+        </Box>
+      </FlexColumnBorder>
 
-        <div style={{ ...styles.grid3, marginBottom: '16px' }}>
-          <SwitchComponent
-            checked={data.utilizadaMedina || false}
-            onChange={(checked) => handleChange('utilizadaMedina', checked)}
-            label="UTILIZADA NA CALIBRAÇÃO DO MeDiNa"
-          />
-          <SwitchComponent
-            checked={data.utilizadaLvec || false}
-            onChange={(checked) => handleChange('utilizadaLvec', checked)}
-            label="UTILIZADA NA CALIBRAÇÃO DO LVECD"
-          />
-          <SwitchComponent
-            checked={data.dadosConfirmadosICT || false}
-            onChange={(checked) => handleChange('dadosConfirmadosICT', checked)}
-            label="DADOS CONFIRMADOS PELA ICT"
-          />
-        </div>
+      {/* CARD 3: DATA DA ÚLTIMA ATUALIZAÇÃO */}
+      <FlexColumnBorder title="DATA DA ÚLTIMA ATUALIZAÇÃO" open={true} theme="#07B811">
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', mb: 2 }}>
+          {renderTextField('dataUltimaAtualizacao', 'DATA DA ÚLTIMA ATUALIZAÇÃO', data.dataUltimaAtualizacao, 'date')}
+          {renderTextField('tempoServicoMeses', 'TEMPO EM SERVIÇO (meses)', data.tempoServicoMeses, 'number')}
+          
+          {/* Campos antigos */}
+          {renderTextField('lastUpdate', 'DATA DA ÚLTIMA ATUALIZAÇÃO (ANTIGO)', data.lastUpdate, 'date')}
+          {renderTextField('serviceTimeYears', 'TEMPO EM SERVIÇO (anos)', data.serviceTimeYears, 'number')}
+          {renderTextField('serviceTimeMonths', 'TEMPO EM SERVIÇO (meses) ANTIGO', data.serviceTimeMonths, 'number')}
+        </Box>
+      </FlexColumnBorder>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>OBSERVAÇÕES</label>
-          <textarea 
-            style={styles.textarea} 
-            rows={3} 
-            value={data.observacoes || ''} 
-            onChange={(e) => handleChange('observacoes', e.target.value)} 
-            placeholder="Observações..." 
-          />
-        </div>
-      </div>
+      {/* CARD 4: CARACTERÍSTICAS */}
+      <FlexColumnBorder title="CARACTERÍSTICAS" open={true} theme="#07B811">
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', mb: 2 }}>
+          {renderTextField('local', 'LOCAL (rodovia/avenida)', data.local)}
+          {renderTextField('municipioEstado', 'MUNICÍPIO/ESTADO', data.municipioEstado)}
+          {renderTextField('extensao', 'EXTENSÃO (m)', data.extensao, 'number')}
+          {renderTextField('velocidadeDiretriz', 'VELOCIDADE DIRETRIZ (km/h)', data.velocidadeDiretriz, 'number')}
+          {renderTextField('kmInicial', 'KM INICIAL', data.kmInicial)}
+          {renderTextField('kmFinal', 'KM FINAL', data.kmFinal)}
+          {renderTextField('inicioEstaca', 'INÍCIO - ESTACA', data.inicioEstaca)}
+          {renderTextField('inicioMetros', 'INÍCIO - METROS', data.inicioMetros, 'number')}
+          {renderTextField('fimEstaca', 'FIM - ESTACA', data.fimEstaca)}
+          {renderTextField('fimMetros', 'FIM - METROS', data.fimMetros, 'number')}
+          {renderTextField('altitudeMedia', 'ALTITUDE MÉDIA (m)', data.altitudeMedia, 'number')}
+          {renderTextField('numeroFaixas', 'NÚMERO DE FAIXAS', data.numeroFaixas, 'number')}
+          {renderTextField('faixaMonitorada', 'FAIXA MONITORADA', data.faixaMonitorada)}
+          {renderTextField('larguraFaixa', 'LARGURA DA FAIXA (m)', data.larguraFaixa, 'number')}
+          
+          {/* Campos antigos */}
+          {renderTextField('roadName', 'LOCAL (rodovia/avenida) ANTIGO', data.roadName)}
+          {renderTextField('cityState', 'MUNICÍPIO/ESTADO (ANTIGO)', data.cityState)}
+          {renderTextField('experimentalLength', 'EXTENSÃO (m) ANTIGO', data.experimentalLength, 'number')}
+          {renderTextField('guideSpeed', 'VELOCIDADE DIRETRIZ (km/h) ANTIGO', data.guideSpeed, 'number')}
+          {renderTextField('initialStakeMeters', 'ESTACA INICIAL (m)', data.initialStakeMeters, 'number')}
+          {renderTextField('finalStakeMeters', 'ESTACA FINAL (m)', data.finalStakeMeters, 'number')}
+          {renderTextField('latitudeI', 'LATITUDE INICIAL', data.latitudeI)}
+          {renderTextField('longitudeI', 'LONGITUDE INICIAL', data.longitudeI)}
+          {renderTextField('latitudeF', 'LATITUDE FINAL', data.latitudeF)}
+          {renderTextField('longitudeF', 'LONGITUDE FINAL', data.longitudeF)}
+          {renderTextField('averageAltitude', 'ALTITUDE MÉDIA (m) ANTIGO', data.averageAltitude, 'number')}
+          {renderTextField('numberOfTracks', 'NÚMERO DE FAIXAS (ANTIGO)', data.numberOfTracks, 'number')}
+          {renderTextField('monitoredTrack', 'FAIXA MONITORADA (ANTIGO)', data.monitoredTrack)}
+          {renderTextField('trackWidth', 'LARGURA DA FAIXA (m) ANTIGO', data.trackWidth, 'number')}
+          {renderSwitch('localConfirmado', 'LOCAL CONFIRMADO', data.localConfirmado)}
+        </Box>
+      </FlexColumnBorder>
 
-      {/* ============================================ */}
-      {/* PREPARO DO PAVIMENTO */}
-      {/* ============================================ */}
-      <div style={styles.card}>
-        <h2 style={styles.cardTitle}>PREPARO DO PAVIMENTO</h2>
-        
-        <div style={styles.grid2}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>IRI (m/km) Pré-Reabilitação</label>
-            <input 
-              type="number" 
-              style={styles.input} 
-              value={data.iriPrerehabilitation || ''} 
-              onChange={(e) => handleChange('iriPrerehabilitation', e.target.value)} 
-              placeholder="Valor do IRI" 
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>AT (%) Pré-Reabilitação</label>
-            <input 
-              type="number" 
-              style={styles.input} 
-              value={data.atPrerehabilitation || ''} 
-              onChange={(e) => handleChange('atPrerehabilitation', e.target.value)} 
-              placeholder="Valor do AT" 
-            />
-          </div>
-        </div>
+      {/* CARD 5: COMPOSIÇÃO ESTRUTURAL */}
+      <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme="#07B811">
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ 
+            display: 'grid', 
+            gridTemplateColumns: '2fr 2fr 1fr 50px',
+            gap: '10px',
+            fontWeight: 'bold',
+            borderBottom: '2px solid #07B811',
+            pb: 1,
+            textTransform: 'uppercase'
+          }}>
+            <Box>CAMADA</Box>
+            <Box>MATERIAL</Box>
+            <Box>ESPESSURA (mm)</Box>
+            <Box>AÇÕES</Box>
+          </Box>
 
-        <div style={{ ...styles.grid2, marginTop: '16px' }}>
-          <div>
-            <SwitchComponent
-              checked={data.fresagem || false}
-              onChange={(checked) => handleChange('fresagem', checked)}
-              label="FRESAGEM"
-            />
-            {data.fresagem && (
-              <input 
-                style={{ ...styles.input, marginTop: '8px' }} 
-                placeholder="Espessura fresada (mm)" 
-                value={data.espessuraFresagem || ''} 
-                onChange={(e) => handleChange('espessuraFresagem', e.target.value)} 
+          {data.structuralComposition.map((camada, index) => (
+            <Box key={camada.id} sx={{ 
+              display: 'grid', 
+              gridTemplateColumns: '2fr 2fr 1fr 50px',
+              gap: '10px',
+              alignItems: 'center'
+            }}>
+              <Select
+                variant="standard"
+                value={camada.layer || ''}
+                onChange={(e) => atualizarCamada(index, 'layer', e.target.value)}
+                displayEmpty
+                sx={{ textTransform: 'uppercase' }}
+              >
+                <MenuItem value="" disabled>SELECIONE A CAMADA</MenuItem>
+                {tipoCamadaOptions.map((opt) => (
+                  <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
+                ))}
+              </Select>
+
+              <TextField
+                variant="standard"
+                placeholder="MATERIAL"
+                value={camada.material || ''}
+                onChange={(e) => atualizarCamada(index, 'material', e.target.value)}
+                InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
               />
-            )}
-          </div>
-          <SwitchComponent
-            checked={data.intervencaoBase || false}
-            onChange={(checked) => handleChange('intervencaoBase', checked)}
-            label="INTERVENÇÃO NA BASE"
-          />
-          <SwitchComponent
-            checked={data.sami || false}
-            onChange={(checked) => handleChange('sami', checked)}
-            label="SAMI"
-          />
-          <SwitchComponent
-            checked={data.pinturaLigacao || false}
-            onChange={(checked) => handleChange('pinturaLigacao', checked)}
-            label="PINTURA DE LIGAÇÃO"
-          />
-          <SwitchComponent
-            checked={data.imprimacao || false}
-            onChange={(checked) => handleChange('imprimacao', checked)}
-            label="IMPRIMAÇÃO"
-          />
-        </div>
-      </div>
 
-      {/* ============================================ */}
-      {/* DATA DA ÚLTIMA ATUALIZAÇÃO */}
-      {/* ============================================ */}
-      <div style={styles.card}>
-        <h2 style={styles.cardTitle}>DATA DA ÚLTIMA ATUALIZAÇÃO</h2>
-        
-        <div style={styles.grid2}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Data da última atualização</label>
-            <input 
-              type="date" 
-              style={styles.input} 
-              value={data.dataUltimaAtualizacao || ''} 
-              onChange={(e) => handleChange('dataUltimaAtualizacao', e.target.value)} 
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Tempo em Serviço (meses)</label>
-            <input 
-              type="number" 
-              style={styles.input} 
-              value={data.tempoServicoMeses || ''} 
-              onChange={(e) => handleChange('tempoServicoMeses', e.target.value)} 
-              placeholder="Meses" 
-            />
-          </div>
-        </div>
-      </div>
+              <TextField
+                variant="standard"
+                type="number"
+                placeholder="ESPESSURA"
+                value={camada.thickness || ''}
+                onChange={(e) => atualizarCamada(index, 'thickness', e.target.value)}
+              />
 
-      {/* ============================================ */}
-      {/* CARACTERÍSTICAS */}
-      {/* ============================================ */}
-      <div style={styles.card}>
-        <h2 style={styles.cardTitle}>CARACTERÍSTICAS</h2>
-        
-        <div style={styles.grid2}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Local (rodovia/avenida)</label>
-            <input 
-              style={styles.input} 
-              value={data.local || ''} 
-              onChange={(e) => handleChange('local', e.target.value)} 
-              placeholder="Nome da via" 
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Município/Estado</label>
-            <input 
-              style={styles.input} 
-              value={data.municipioEstado || ''} 
-              onChange={(e) => handleChange('municipioEstado', e.target.value)} 
-              placeholder="Cidade/UF" 
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Extensão (m)</label>
-            <input 
-              type="number" 
-              style={styles.input} 
-              value={data.extensao || ''} 
-              onChange={(e) => handleChange('extensao', e.target.value)} 
-              placeholder="Extensão em metros" 
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Velocidade Diretriz da Via (km/h)</label>
-            <input 
-              type="number" 
-              style={styles.input} 
-              value={data.velocidadeDiretriz || ''} 
-              onChange={(e) => handleChange('velocidadeDiretriz', e.target.value)} 
-              placeholder="Velocidade" 
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>km Inicial</label>
-            <input 
-              style={styles.input} 
-              value={data.kmInicial || ''} 
-              onChange={(e) => handleChange('kmInicial', e.target.value)} 
-              placeholder="km inicial" 
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>km Final</label>
-            <input 
-              style={styles.input} 
-              value={data.kmFinal || ''} 
-              onChange={(e) => handleChange('kmFinal', e.target.value)} 
-              placeholder="km final" 
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Início - Estaca</label>
-            <input 
-              style={styles.input} 
-              value={data.inicioEstaca || ''} 
-              onChange={(e) => handleChange('inicioEstaca', e.target.value)} 
-              placeholder="Estaca" 
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Início - Metros</label>
-            <input 
-              style={styles.input} 
-              value={data.inicioMetros || ''} 
-              onChange={(e) => handleChange('inicioMetros', e.target.value)} 
-              placeholder="Metros" 
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Fim - Estaca</label>
-            <input 
-              style={styles.input} 
-              value={data.fimEstaca || ''} 
-              onChange={(e) => handleChange('fimEstaca', e.target.value)} 
-              placeholder="Estaca final" 
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Fim - Metros</label>
-            <input 
-              style={styles.input} 
-              value={data.fimMetros || ''} 
-              onChange={(e) => handleChange('fimMetros', e.target.value)} 
-              placeholder="Metros finais" 
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Altitude Média (m) (NORTE/SUL / LESTE/OESTE)</label>
-            <input 
-              type="number" 
-              style={styles.input} 
-              value={data.altitudeMedia || ''} 
-              onChange={(e) => handleChange('altitudeMedia', e.target.value)} 
-              placeholder="Altitude" 
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Número de Faixas</label>
-            <input 
-              type="number" 
-              style={styles.input} 
-              value={data.numeroFaixas || ''} 
-              onChange={(e) => handleChange('numeroFaixas', e.target.value)} 
-              placeholder="Nº faixas" 
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Faixa Monitorada</label>
-            <input 
-              style={styles.input} 
-              value={data.faixaMonitorada || ''} 
-              onChange={(e) => handleChange('faixaMonitorada', e.target.value)} 
-              placeholder="Faixa" 
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Largura da Faixa (m)</label>
-            <input 
-              type="number" 
-              style={styles.input} 
-              value={data.larguraFaixa || ''} 
-              onChange={(e) => handleChange('larguraFaixa', e.target.value)} 
-              placeholder="Largura" 
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* ============================================ */}
-      {/* COMPOSIÇÃO ESTRUTURAL */}
-      {/* ============================================ */}
-      <div style={styles.card}>
-        <h2 style={styles.cardTitle}>COMPOSIÇÃO ESTRUTURAL</h2>
-        
-        <div style={styles.grid2}>
-          {data.structuralComposition.map((layer, index) => (
-            <div key={layer.id} style={styles.subCard}>
-              <div style={styles.formGroup}>
-                <label style={styles.label}>{layer.layer} - Material</label>
-                <input 
-                  style={styles.input} 
-                  value={layer.material || ''} 
-                  onChange={(e) => handleStructuralCompositionChange(index, 'material', e.target.value)} 
-                  placeholder="Material" 
-                />
-              </div>
-              <div style={{ ...styles.formGroup, marginTop: '8px' }}>
-                <label style={styles.label}>{layer.layer} - Espessura (mm)</label>
-                <input 
-                  type="number" 
-                  style={styles.input} 
-                  value={layer.thickness || ''} 
-                  onChange={(e) => handleStructuralCompositionChange(index, 'thickness', e.target.value)} 
-                  placeholder="Espessura" 
-                />
-              </div>
-            </div>
+              <IconButton onClick={() => removerCamada(index)} color="error" size="small">
+                <Delete />
+              </IconButton>
+            </Box>
           ))}
-        </div>
-      </div>
-    </div>
+
+          <Button
+            variant="outlined"
+            startIcon={<Add />}
+            onClick={adicionarCamada}
+            sx={{
+              borderColor: '#07B811',
+              color: '#07B811',
+              textTransform: 'uppercase',
+              mt: 1,
+              '&:hover': {
+                borderColor: '#05990e',
+                backgroundColor: 'rgba(7, 184, 17, 0.04)'
+              }
+            }}
+          >
+            ADICIONAR CAMADA
+          </Button>
+        </Box>
+      </FlexColumnBorder>
+
+      {/* CARD 6: IMAGENS */}
+      <FlexColumnBorder title="IMAGENS" open={true} theme="#07B811">
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', mb: 2 }}>
+          {renderTextField('images', 'URL DA IMAGEM', data.images)}
+          {renderTextField('imagesDate', 'DATA DAS IMAGENS', data.imagesDate, 'date')}
+        </Box>
+      </FlexColumnBorder>
+    </Stack>
   );
 };
 
 // ============================================
-// STEP 2 - LIGANTE ASFÁLTICO (antigo step3)
+// STEP 2 - LIGANTE ASFÁLTICO (COMPLETO)
 // ============================================
 
 const Step2LiganteAsfaltico = () => {
@@ -1152,69 +869,54 @@ const Step2LiganteAsfaltico = () => {
     store.setData({ step, key, value });
   };
 
+  const renderTextField = (key: string, label: string, value: any, type = 'text') => (
+    <TextField
+      variant="standard"
+      type={type}
+      label={label}
+      value={value || ''}
+      InputLabelProps={type === 'date' ? { shrink: true } : undefined}
+      onChange={(e) => handleChange(key, e.target.value)}
+      InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
+      sx={{ width: 'calc(33.33% - 14px)' }}
+    />
+  );
+
   return (
-    <div style={styles.card}>
-      <h2 style={styles.cardTitle}>Ligante Asfáltico - Revestimento</h2>
-      <div style={styles.grid3}>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Refinaria</label>
-          <input style={styles.input} value={data.refinery || ''} onChange={(e) => handleChange('refinery', e.target.value)} placeholder="Refinaria" />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Empresa Distribuidora</label>
-          <input style={styles.input} value={data.company || ''} onChange={(e) => handleChange('company', e.target.value)} placeholder="Distribuidora" />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Data do Carregamento</label>
-          <input type="date" style={styles.input} value={data.collectionDate || ''} onChange={(e) => handleChange('collectionDate', e.target.value)} />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Número da Nota Fiscal</label>
-          <input style={styles.input} value={data.invoiceNumber || ''} onChange={(e) => handleChange('invoiceNumber', e.target.value)} placeholder="NF" />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Data da Nota Fiscal</label>
-          <input type="date" style={styles.input} value={data.dataInvoice || ''} onChange={(e) => handleChange('dataInvoice', e.target.value)} />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Número do Certificado</label>
-          <input style={styles.input} value={data.certificateNumber || ''} onChange={(e) => handleChange('certificateNumber', e.target.value)} placeholder="Certificado" />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Data do Certificado</label>
-          <input type="date" style={styles.input} value={data.certificateDate || ''} onChange={(e) => handleChange('certificateDate', e.target.value)} />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Tipo de CAP</label>
-          <input style={styles.input} value={data.capType || ''} onChange={(e) => handleChange('capType', e.target.value)} placeholder="Tipo de CAP" />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Performance Grade (PG)</label>
-          <input style={styles.input} value={data.performanceGrade || ''} onChange={(e) => handleChange('performanceGrade', e.target.value)} placeholder="PG" />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Penetração (mm) - 25°C</label>
-          <input type="number" step="0.1" style={styles.input} value={data.penetration || ''} onChange={(e) => handleChange('penetration', e.target.value)} placeholder="mm" />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Ponto de amolecimento (°C)</label>
-          <input type="number" step="0.1" style={styles.input} value={data.softeningPoint || ''} onChange={(e) => handleChange('softeningPoint', e.target.value)} placeholder="°C" />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Recuperação elástica (%)</label>
-          <input type="number" step="0.1" style={styles.input} value={data.elasticRecovery || ''} onChange={(e) => handleChange('elasticRecovery', e.target.value)} placeholder="%" />
-        </div>
-      </div>
-      <div style={styles.formGroup}>
-        <label style={styles.label}>Observações</label>
-        <textarea style={styles.textarea} rows={3} value={data.observations || ''} onChange={(e) => handleChange('observations', e.target.value)} placeholder="Observações..." />
-      </div>
-    </div>
+    <FlexColumnBorder title="LIGANTE ASFÁLTICO - REVESTIMENTO" open={true} theme="#07B811">
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', mb: 2 }}>
+        {renderTextField('refinery', 'REFINARIA', data.refinery)}
+        {renderTextField('company', 'EMPRESA DISTRIBUIDORA', data.company)}
+        {renderTextField('collectionDate', 'DATA DO CARREGAMENTO', data.collectionDate, 'date')}
+        {renderTextField('invoiceNumber', 'NÚMERO DA NOTA FISCAL', data.invoiceNumber)}
+        {renderTextField('dataInvoice', 'DATA DA NOTA FISCAL', data.dataInvoice, 'date')}
+        {renderTextField('certificateNumber', 'NÚMERO DO CERTIFICADO', data.certificateNumber)}
+        {renderTextField('certificateDate', 'DATA DO CERTIFICADO', data.certificateDate, 'date')}
+        {renderTextField('capType', 'TIPO DE CAP', data.capType)}
+        {renderTextField('performanceGrade', 'PERFORMANCE GRADE (PG)', data.performanceGrade)}
+        {renderTextField('penetration', 'PENETRAÇÃO (mm) - 25°C', data.penetration, 'number')}
+        {renderTextField('softeningPoint', 'PONTO DE AMOLECIMENTO (°C)', data.softeningPoint, 'number')}
+        {renderTextField('elasticRecovery', 'RECUPERAÇÃO ELÁSTICA (%)', data.elasticRecovery, 'number')}
+        {renderTextField('vb_sp21_20', 'VB SP21 20°C', data.vb_sp21_20, 'number')}
+        {renderTextField('vb_sp21_50', 'VB SP21 50°C', data.vb_sp21_50, 'number')}
+        {renderTextField('vb_sp21_100', 'VB SP21 100°C', data.vb_sp21_100, 'number')}
+      </Box>
+      <TextField
+        variant="standard"
+        multiline
+        rows={3}
+        label="OBSERVAÇÕES"
+        value={data.observations || ''}
+        onChange={(e) => handleChange('observations', e.target.value)}
+        InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
+        fullWidth
+      />
+    </FlexColumnBorder>
   );
 };
 
 // ============================================
-// STEP 3 - CONCRETO ASFÁLTICO (antigo step4)
+// STEP 3 - CONCRETO ASFÁLTICO (COMPLETO)
 // ============================================
 
 const Step3ConcretoAsfaltico = () => {
@@ -1226,45 +928,51 @@ const Step3ConcretoAsfaltico = () => {
     store.setData({ step, key, value });
   };
 
+  const renderTextField = (key: string, label: string, value: any, type = 'text') => (
+    <TextField
+      variant="standard"
+      type={type}
+      label={label}
+      value={value || ''}
+      onChange={(e) => handleChange(key, e.target.value)}
+      InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
+      sx={{ width: 'calc(33.33% - 14px)' }}
+    />
+  );
+
   return (
-    <div style={styles.card}>
-      <h2 style={styles.cardTitle}>Concreto Asfáltico</h2>
-      <div style={styles.grid3}>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Faixa Granulométrica</label>
-          <input style={styles.input} value={data.granulometricRange || ''} onChange={(e) => handleChange('granulometricRange', e.target.value)} placeholder="Faixa" />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Tamanho Máximo Nominal (mm)</label>
-          <input type="number" style={styles.input} value={data.tmn || ''} onChange={(e) => handleChange('tmn', e.target.value)} placeholder="TMN" />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Teor de Asfalto (%)</label>
-          <input type="number" step="0.1" style={styles.input} value={data.asphaltTenor || ''} onChange={(e) => handleChange('asphaltTenor', e.target.value)} placeholder="%" />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Massa Específica (g/cm³)</label>
-          <input type="number" step="0.01" style={styles.input} value={data.specificMass || ''} onChange={(e) => handleChange('specificMass', e.target.value)} placeholder="g/cm³" />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Volume de Vazios (%)</label>
-          <input type="number" step="0.1" style={styles.input} value={data.volumeVoids || ''} onChange={(e) => handleChange('volumeVoids', e.target.value)} placeholder="%" />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Abrasão Los Angeles (%)</label>
-          <input type="number" style={styles.input} value={data.abrasionLA || ''} onChange={(e) => handleChange('abrasionLA', e.target.value)} placeholder="%" />
-        </div>
-      </div>
-      <div style={styles.formGroup}>
-        <label style={styles.label}>Observações</label>
-        <textarea style={styles.textarea} rows={3} value={data.observations || ''} onChange={(e) => handleChange('observations', e.target.value)} placeholder="Observações..." />
-      </div>
-    </div>
+    <FlexColumnBorder title="CONCRETO ASFÁLTICO" open={true} theme="#07B811">
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', mb: 2 }}>
+        {renderTextField('granulometricRange', 'FAIXA GRANULOMÉTRICA', data.granulometricRange)}
+        {renderTextField('tmn', 'TAMANHO MÁXIMO NOMINAL (mm)', data.tmn, 'number')}
+        {renderTextField('asphaltTenor', 'TEOR DE ASFALTO (%)', data.asphaltTenor, 'number')}
+        {renderTextField('specificMass', 'MASSA ESPECÍFICA (g/cm³)', data.specificMass, 'number')}
+        {renderTextField('volumeVoids', 'VOLUME DE VAZIOS (%)', data.volumeVoids, 'number')}
+        {renderTextField('abrasionLA', 'ABRASÃO LOS ANGELES (%)', data.abrasionLA, 'number')}
+        {renderTextField('rt', 'RT (RESISTÊNCIA À TRAÇÃO)', data.rt, 'number')}
+        {renderTextField('flowNumber', 'FLOW NUMBER', data.flowNumber, 'number')}
+        {renderTextField('mr', 'MÓDULO DE RESILIÊNCIA (MPa)', data.mr, 'number')}
+        {renderTextField('fatigueCurve_n_cps', 'CURVA DE FADIGA - N (CPS)', data.fatigueCurve_n_cps, 'number')}
+        {renderTextField('fatigueCurve_k1', 'CURVA DE FADIGA - K1', data.fatigueCurve_k1, 'number')}
+        {renderTextField('fatigueCurve_k2', 'CURVA DE FADIGA - K2', data.fatigueCurve_k2, 'number')}
+        {renderTextField('fatigueCurve_r2', 'CURVA DE FADIGA - R²', data.fatigueCurve_r2, 'number')}
+      </Box>
+      <TextField
+        variant="standard"
+        multiline
+        rows={3}
+        label="OBSERVAÇÕES"
+        value={data.observations || ''}
+        onChange={(e) => handleChange('observations', e.target.value)}
+        InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
+        fullWidth
+      />
+    </FlexColumnBorder>
   );
 };
 
 // ============================================
-// STEP 4 - RESUMO (VERSÃO ORGANIZADA)
+// STEP 4 - RESUMO (COMPLETO)
 // ============================================
 
 const Step4Resumo = () => {
@@ -1273,152 +981,186 @@ const Step4Resumo = () => {
 
   const formatValue = (value: any): string => {
     if (value === undefined || value === null || value === '') return '—';
-    if (typeof value === 'boolean') return value ? 'Sim' : 'Não';
-    return String(value);
+    if (typeof value === 'boolean') return value ? 'SIM' : 'NÃO';
+    return String(value).toUpperCase();
   };
 
-  const renderSummarySection = (title: string, data: Record<string, any>, fieldsToShow: string[], labels: Record<string, string>) => {
-    const hasData = fieldsToShow.some(field => data[field] && data[field] !== '' && data[field] !== false);
-    
+  const renderSection = (title: string, data: Record<string, any>, fields: { key: string; label: string }[]) => {
+    const hasData = fields.some(f => data[f.key] && data[f.key] !== '');
     if (!hasData) return null;
 
     return (
-      <div style={styles.summarySection}>
-        <h3 style={styles.summarySubtitle}>{title}</h3>
-        <div style={styles.summaryGrid}>
-          {fieldsToShow.map((field) => {
-            const value = data[field];
-            if (value === undefined || value === null || value === '' || value === false) return null;
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#07B811', mb: 1, borderBottom: '2px solid #07B811', pb: 0.5 }}>
+          {title}
+        </Typography>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px' }}>
+          {fields.map(({ key, label }) => {
+            const value = data[key];
+            if (value === undefined || value === null || value === '') return null;
             return (
-              <div key={field} style={styles.summaryItem}>
-                <div style={styles.summaryLabel}>{labels[field] || field}:</div>
-                <div style={styles.summaryValue}>{formatValue(value)}</div>
-              </div>
+              <Box key={key} sx={{ width: 'calc(50% - 10px)', display: 'flex', borderBottom: '1px solid #f0f0f0', py: 0.5 }}>
+                <Typography variant="body2" sx={{ width: 250, fontWeight: 500, color: '#666' }}>{label}:</Typography>
+                <Typography variant="body2" sx={{ flex: 1, color: '#333', fontWeight: 'bold' }}>{formatValue(value)}</Typography>
+              </Box>
             );
           })}
-        </div>
-      </div>
+        </Box>
+      </Box>
     );
   };
 
   // Definição dos campos para cada seção
   const identificacaoFields = [
-    'tipoSecao', 'faseMonitoramento', 'liberacaoTrafego',
-    'utilizadaMedina', 'utilizadaLvec', 'dadosConfirmadosICT', 'observacoes'
+    { key: 'tipoSecao', label: 'TIPO DE SEÇÃO' },
+    { key: 'faseMonitoramento', label: 'FASE DE MONITORAMENTO' },
+    { key: 'liberacaoTrafego', label: 'LIBERAÇÃO AO TRÁFEGO' },
+    { key: 'utilizadaMedina', label: 'UTILIZADA NO MeDiNa' },
+    { key: 'utilizadaLvec', label: 'UTILIZADA NO LVECD' },
+    { key: 'dadosConfirmadosICT', label: 'DADOS CONFIRMADOS PELA ICT' },
+    { key: 'observacoes', label: 'OBSERVAÇÕES' },
+    { key: 'identification', label: 'INSTITUIÇÃO + NÚMERO DO TRECHO' },
+    { key: 'monitoringPhase', label: 'FASE DE MONITORAMENTO (ANTIGO)' },
+    { key: 'observation', label: 'OBSERVAÇÕES (ANTIGO)' },
   ];
-
-  const identificacaoLabels = {
-    tipoSecao: 'Tipo de Seção', faseMonitoramento: 'Fase de Monitoramento',
-    liberacaoTrafego: 'Liberação ao Tráfego', utilizadaMedina: 'Utilizada no MeDiNa',
-    utilizadaLvec: 'Utilizada no LVECD', dadosConfirmadosICT: 'Dados Confirmados pela ICT',
-    observacoes: 'Observações'
-  };
 
   const preparoFields = [
-    'iriPrerehabilitation', 'atPrerehabilitation', 'fresagem', 'espessuraFresagem',
-    'intervencaoBase', 'sami', 'pinturaLigacao', 'imprimacao'
+    { key: 'iriPrerehabilitation', label: 'IRI PRÉ-REABILITAÇÃO (m/km)' },
+    { key: 'atPrerehabilitation', label: 'AT PRÉ-REABILITAÇÃO (%)' },
+    { key: 'fresagem', label: 'FRESAGEM' },
+    { key: 'espessuraFresagem', label: 'ESPESSURA FRESAGEM (mm)' },
+    { key: 'intervencaoBase', label: 'INTERVENÇÃO NA BASE' },
+    { key: 'sami', label: 'SAMI' },
+    { key: 'pinturaLigacao', label: 'PINTURA DE LIGAÇÃO' },
+    { key: 'imprimacao', label: 'IMPRIMAÇÃO' },
+    { key: 'milling', label: 'FRESAGEM (ANTIGO)' },
+    { key: 'millingThickness', label: 'ESPESSURA FRESADA (mm) ANTIGO' },
+    { key: 'interventionAtTheBase', label: 'INTERVENÇÃO NA BASE (ANTIGO)' },
+    { key: 'bondingPaint', label: 'PINTURA DE LIGAÇÃO (ANTIGO)' },
+    { key: 'priming', label: 'IMPRIMAÇÃO (ANTIGO)' },
   ];
 
-  const preparoLabels = {
-    iriPrerehabilitation: 'IRI Pré-Reabilitação (m/km)', atPrerehabilitation: 'AT Pré-Reabilitação (%)',
-    fresagem: 'Fresagem', espessuraFresagem: 'Espessura Fresagem (mm)',
-    intervencaoBase: 'Intervenção na Base', sami: 'SAMI',
-    pinturaLigacao: 'Pintura de Ligação', imprimacao: 'Imprimação'
-  };
-
-  const atualizacaoFields = ['dataUltimaAtualizacao', 'tempoServicoMeses'];
-
-  const atualizacaoLabels = {
-    dataUltimaAtualizacao: 'Data da Última Atualização', tempoServicoMeses: 'Tempo em Serviço (meses)'
-  };
+  const atualizacaoFields = [
+    { key: 'dataUltimaAtualizacao', label: 'DATA DA ÚLTIMA ATUALIZAÇÃO' },
+    { key: 'tempoServicoMeses', label: 'TEMPO EM SERVIÇO (meses)' },
+    { key: 'lastUpdate', label: 'DATA DA ÚLTIMA ATUALIZAÇÃO (ANTIGO)' },
+    { key: 'serviceTimeYears', label: 'TEMPO EM SERVIÇO (anos)' },
+    { key: 'serviceTimeMonths', label: 'TEMPO EM SERVIÇO (meses) ANTIGO' },
+  ];
 
   const caracteristicasFields = [
-    'local', 'municipioEstado', 'extensao', 'velocidadeDiretriz',
-    'kmInicial', 'kmFinal', 'inicioEstaca', 'inicioMetros', 'fimEstaca', 'fimMetros',
-    'altitudeMedia', 'numeroFaixas', 'faixaMonitorada', 'larguraFaixa'
+    { key: 'local', label: 'LOCAL' },
+    { key: 'municipioEstado', label: 'MUNICÍPIO/ESTADO' },
+    { key: 'extensao', label: 'EXTENSÃO (m)' },
+    { key: 'velocidadeDiretriz', label: 'VELOCIDADE DIRETRIZ (km/h)' },
+    { key: 'kmInicial', label: 'KM INICIAL' },
+    { key: 'kmFinal', label: 'KM FINAL' },
+    { key: 'inicioEstaca', label: 'INÍCIO - ESTACA' },
+    { key: 'inicioMetros', label: 'INÍCIO - METROS' },
+    { key: 'fimEstaca', label: 'FIM - ESTACA' },
+    { key: 'fimMetros', label: 'FIM - METROS' },
+    { key: 'altitudeMedia', label: 'ALTITUDE MÉDIA (m)' },
+    { key: 'numeroFaixas', label: 'NÚMERO DE FAIXAS' },
+    { key: 'faixaMonitorada', label: 'FAIXA MONITORADA' },
+    { key: 'larguraFaixa', label: 'LARGURA DA FAIXA (m)' },
+    { key: 'roadName', label: 'LOCAL (ANTIGO)' },
+    { key: 'cityState', label: 'MUNICÍPIO/ESTADO (ANTIGO)' },
+    { key: 'experimentalLength', label: 'EXTENSÃO (m) ANTIGO' },
+    { key: 'guideSpeed', label: 'VELOCIDADE DIRETRIZ (km/h) ANTIGO' },
+    { key: 'averageAltitude', label: 'ALTITUDE MÉDIA (m) ANTIGO' },
+    { key: 'numberOfTracks', label: 'NÚMERO DE FAIXAS (ANTIGO)' },
+    { key: 'monitoredTrack', label: 'FAIXA MONITORADA (ANTIGO)' },
+    { key: 'trackWidth', label: 'LARGURA DA FAIXA (m) ANTIGO' },
+    { key: 'localConfirmado', label: 'LOCAL CONFIRMADO' },
   ];
-
-  const caracteristicasLabels = {
-    local: 'Local', municipioEstado: 'Município/Estado', extensao: 'Extensão (m)',
-    velocidadeDiretriz: 'Velocidade Diretriz (km/h)', kmInicial: 'km Inicial',
-    kmFinal: 'km Final', inicioEstaca: 'Início - Estaca', inicioMetros: 'Início - Metros',
-    fimEstaca: 'Fim - Estaca', fimMetros: 'Fim - Metros', altitudeMedia: 'Altitude Média (m)',
-    numeroFaixas: 'Número de Faixas', faixaMonitorada: 'Faixa Monitorada', larguraFaixa: 'Largura da Faixa (m)'
-  };
 
   const liganteFields = [
-    'refinery', 'company', 'collectionDate', 'invoiceNumber', 'dataInvoice',
-    'certificateNumber', 'certificateDate', 'capType', 'performanceGrade',
-    'penetration', 'softeningPoint', 'elasticRecovery', 'observations'
+    { key: 'refinery', label: 'REFINARIA' },
+    { key: 'company', label: 'EMPRESA DISTRIBUIDORA' },
+    { key: 'collectionDate', label: 'DATA DO CARREGAMENTO' },
+    { key: 'invoiceNumber', label: 'NÚMERO DA NOTA FISCAL' },
+    { key: 'dataInvoice', label: 'DATA DA NOTA FISCAL' },
+    { key: 'certificateNumber', label: 'NÚMERO DO CERTIFICADO' },
+    { key: 'certificateDate', label: 'DATA DO CERTIFICADO' },
+    { key: 'capType', label: 'TIPO DE CAP' },
+    { key: 'performanceGrade', label: 'PERFORMANCE GRADE (PG)' },
+    { key: 'penetration', label: 'PENETRAÇÃO (mm) - 25°C' },
+    { key: 'softeningPoint', label: 'PONTO DE AMOLECIMENTO (°C)' },
+    { key: 'elasticRecovery', label: 'RECUPERAÇÃO ELÁSTICA (%)' },
+    { key: 'vb_sp21_20', label: 'VB SP21 20°C' },
+    { key: 'vb_sp21_50', label: 'VB SP21 50°C' },
+    { key: 'vb_sp21_100', label: 'VB SP21 100°C' },
+    { key: 'observations', label: 'OBSERVAÇÕES' },
   ];
-
-  const liganteLabels = {
-    refinery: 'Refinaria', company: 'Empresa Distribuidora', collectionDate: 'Data do Carregamento',
-    invoiceNumber: 'Número da Nota Fiscal', dataInvoice: 'Data da Nota Fiscal',
-    certificateNumber: 'Número do Certificado', certificateDate: 'Data do Certificado',
-    capType: 'Tipo de CAP', performanceGrade: 'Performance Grade (PG)',
-    penetration: 'Penetração (mm) - 25°C', softeningPoint: 'Ponto de Amolecimento (°C)',
-    elasticRecovery: 'Recuperação Elástica (%)', observations: 'Observações'
-  };
 
   const concretoFields = [
-    'granulometricRange', 'tmn', 'asphaltTenor', 'specificMass', 'volumeVoids', 'abrasionLA', 'observations'
+    { key: 'granulometricRange', label: 'FAIXA GRANULOMÉTRICA' },
+    { key: 'tmn', label: 'TMN (mm)' },
+    { key: 'asphaltTenor', label: 'TEOR DE ASFALTO (%)' },
+    { key: 'specificMass', label: 'MASSA ESPECÍFICA (g/cm³)' },
+    { key: 'volumeVoids', label: 'VOLUME DE VAZIOS (%)' },
+    { key: 'abrasionLA', label: 'ABRASÃO LOS ANGELES (%)' },
+    { key: 'rt', label: 'RT (RESISTÊNCIA À TRAÇÃO)' },
+    { key: 'flowNumber', label: 'FLOW NUMBER' },
+    { key: 'mr', label: 'MÓDULO DE RESILIÊNCIA (MPa)' },
+    { key: 'fatigueCurve_n_cps', label: 'CURVA DE FADIGA - N (CPS)' },
+    { key: 'fatigueCurve_k1', label: 'CURVA DE FADIGA - K1' },
+    { key: 'fatigueCurve_k2', label: 'CURVA DE FADIGA - K2' },
+    { key: 'fatigueCurve_r2', label: 'CURVA DE FADIGA - R²' },
+    { key: 'observations', label: 'OBSERVAÇÕES' },
   ];
 
-  const concretoLabels = {
-    granulometricRange: 'Faixa Granulométrica', tmn: 'TMN (mm)', asphaltTenor: 'Teor de Asfalto (%)',
-    specificMass: 'Massa Específica (g/cm³)', volumeVoids: 'Volume de Vazios (%)',
-    abrasionLA: 'Abrasão Los Angeles (%)', observations: 'Observações'
-  };
+  const hasAnyData = step2Data?.tipoSecao || step2Data?.identification || step3Data?.refinery || step4Data?.granulometricRange;
 
   return (
-    <div style={styles.card}>
-      <h2 style={styles.cardTitle}>Resumo do Cadastro</h2>
-      
-      {/* IDENTIFICAÇÃO */}
-      {renderSummarySection('🔖 IDENTIFICAÇÃO', step2Data, identificacaoFields, identificacaoLabels)}
-      
-      {/* PREPARO DO PAVIMENTO */}
-      {renderSummarySection('🔧 PREPARO DO PAVIMENTO', step2Data, preparoFields, preparoLabels)}
-      
-      {/* DATA DA ÚLTIMA ATUALIZAÇÃO */}
-      {renderSummarySection('📅 DATA DA ÚLTIMA ATUALIZAÇÃO', step2Data, atualizacaoFields, atualizacaoLabels)}
-      
-      {/* CARACTERÍSTICAS */}
-      {renderSummarySection('📍 CARACTERÍSTICAS', step2Data, caracteristicasFields, caracteristicasLabels)}
-      
-      {/* COMPOSIÇÃO ESTRUTURAL */}
-      {step2Data.structuralComposition && step2Data.structuralComposition.some(l => l.material || l.thickness) && (
-        <div style={styles.summarySection}>
-          <h3 style={styles.summarySubtitle}>🏗️ COMPOSIÇÃO ESTRUTURAL</h3>
-          {step2Data.structuralComposition.map((layer, idx) => (
-            (layer.material || layer.thickness) && (
-              <div key={idx} style={styles.layerCard}>
-                <div style={styles.summaryItem}>
-                  <div style={styles.summaryLabel}>{layer.layer}:</div>
-                  <div style={styles.summaryValue}>
-                    {layer.material || '—'} {layer.thickness ? `(${layer.thickness} mm)` : ''}
-                  </div>
-                </div>
-              </div>
-            )
-          ))}
-        </div>
+    <FlexColumnBorder title="RESUMO DO CADASTRO" open={true} theme="#07B811">
+      {!hasAnyData ? (
+        <Box sx={{ textAlign: 'center', py: 6 }}>
+          <Typography variant="body1" color="text.secondary">NENHUM DADO CADASTRADO AINDA.</Typography>
+          <Typography variant="body2" color="text.secondary">PREENCHA OS FORMULÁRIOS PARA VER O RESUMO.</Typography>
+        </Box>
+      ) : (
+        <>
+          {renderSection('🔖 IDENTIFICAÇÃO', step2Data || {}, identificacaoFields)}
+          {renderSection('🔧 PREPARO DO PAVIMENTO', step2Data || {}, preparoFields)}
+          {renderSection('📅 DATA DA ÚLTIMA ATUALIZAÇÃO', step2Data || {}, atualizacaoFields)}
+          {renderSection('📍 CARACTERÍSTICAS', step2Data || {}, caracteristicasFields)}
+          
+          {step2Data?.structuralComposition && step2Data.structuralComposition.some(l => l.material || l.thickness) && (
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#07B811', mb: 1, borderBottom: '2px solid #07B811', pb: 0.5 }}>
+                🏗️ COMPOSIÇÃO ESTRUTURAL
+              </Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                {step2Data.structuralComposition.map((layer, idx) => (
+                  (layer.material || layer.thickness) && (
+                    <Paper key={idx} sx={{ p: 1.5, bgcolor: '#f5f5f5', borderLeft: `3px solid #07B811`, flex: '1 1 200px' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: '#1a237e' }}>{layer.layer?.toUpperCase()}</Typography>
+                      <Typography variant="body2">{layer.material?.toUpperCase() || '—'} {layer.thickness ? `(${layer.thickness} mm)` : ''}</Typography>
+                    </Paper>
+                  )
+                ))}
+              </Box>
+            </Box>
+          )}
+          
+          {step2Data?.images && (
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#07B811', mb: 1, borderBottom: '2px solid #07B811', pb: 0.5 }}>
+                🖼️ IMAGENS
+              </Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                <Typography variant="body2">URL: {step2Data.images}</Typography>
+                {step2Data.imagesDate && <Typography variant="body2">DATA: {step2Data.imagesDate}</Typography>}
+              </Box>
+            </Box>
+          )}
+          
+          {renderSection('🛢️ LIGANTE ASFÁLTICO', step3Data || {}, liganteFields)}
+          {renderSection('🪨 CONCRETO ASFÁLTICO', step4Data || {}, concretoFields)}
+        </>
       )}
-      
-      {/* LIGANTE ASFÁLTICO */}
-      {renderSummarySection('🛢️ LIGANTE ASFÁLTICO', step3Data, liganteFields, liganteLabels)}
-      
-      {/* CONCRETO ASFÁLTICO */}
-      {renderSummarySection('🪨 CONCRETO ASFÁLTICO', step4Data, concretoFields, concretoLabels)}
-      
-      {/* Indicador de dados vazios */}
-      {!step2Data.tipoSecao && !step3Data.refinery && !step4Data.granulometricRange && (
-        <div style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
-          Nenhum dado cadastrado ainda. Preencha os formulários para ver o resumo.
-        </div>
-      )}
-    </div>
+    </FlexColumnBorder>
   );
 };
 
@@ -1430,20 +1172,26 @@ const BinderAsphaltConcrete = () => {
   const { user } = useAuth();
   const store = useBinderAsphaltConcreteStore();
   const [currentStep, setCurrentStep] = useState(0);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
+  const [loading, setLoading] = useState(false);
 
   const steps = [
-    { title: 'Pavimentação', content: <Step1PavimentData /> },
-    { title: 'Ligante Asfáltico', content: <Step2LiganteAsfaltico /> },
-    { title: 'Concreto Asfáltico', content: <Step3ConcretoAsfaltico /> },
-    { title: 'Resumo', content: <Step4Resumo /> },
+    { title: 'PAVIMENTAÇÃO', content: <Step1PavimentData /> },
+    { title: 'LIGANTE ASFÁLTICO', content: <Step2LiganteAsfaltico /> },
+    { title: 'CONCRETO ASFÁLTICO', content: <Step3ConcretoAsfaltico /> },
+    { title: 'RESUMO', content: <Step4Resumo /> },
   ];
 
   const next = () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      alert('Cadastro salvo com sucesso! Verifique o console para ver os dados.');
-      console.log('Dados salvos:', store);
+      setLoading(true);
+      setTimeout(() => {
+        console.log('Dados salvos:', store);
+        setSnackbar({ open: true, message: 'CADASTRO SALVO COM SUCESSO!', severity: 'success' });
+        setLoading(false);
+      }, 500);
     }
   };
 
@@ -1454,47 +1202,62 @@ const BinderAsphaltConcrete = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h1 style={styles.headerTitle}>Cadastro de Pavimentação</h1>
-      </div>
-      <div style={styles.content}>
-        <div style={styles.card}>
-          <div style={styles.stepsContainer}>
-            {steps.map((step, index) => (
-              <div
-                key={step.title}
-                style={{
-                  ...styles.step,
-                  ...(currentStep === index ? styles.stepActive : {}),
-                  ...(currentStep > index ? styles.stepCompleted : {}),
-                }}
-                onClick={() => setCurrentStep(index)}
-              >
-                {step.title}
-              </div>
-            ))}
-          </div>
-          {steps[currentStep].content}
-          <div style={styles.flexBetween}>
-            <button
-              style={{ ...styles.button, ...styles.buttonDefault, visibility: currentStep === 0 ? 'hidden' : 'visible' }}
-              onClick={prev}
-            >
-              Anterior
-            </button>
-            <button
-              style={{ ...styles.button, ...styles.buttonPrimary }}
-              onClick={next}
-            >
-              {currentStep === steps.length - 1 ? 'Salvar' : 'Próximo'}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <ThemeProvider theme={proMedinaTheme}>
+      <Box sx={{ minHeight: '100vh', bgcolor: '#F2F2F2' }}>
+        <AppBar position="static" elevation={0} sx={{ bgcolor: '#07B811' }}>
+          <Toolbar sx={{ justifyContent: 'space-between', py: 0.5, minHeight: '48px !important' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Box sx={{ width: 32, height: 32, bgcolor: '#ffffff', borderRadius: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#07B811', fontWeight: 'bold', fontSize: '0.9rem' }}>CA</Box>
+              <Box>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: 'white', fontSize: '1rem' }}>PRO-MEDINA</Typography>
+                <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.7rem' }}>CONCRETO ASFÁLTICO</Typography>
+              </Box>
+            </Box>
+            <Button variant="contained" size="small" startIcon={<Save />} onClick={next} disabled={loading} sx={{ bgcolor: '#ffffff', color: '#07B811', fontSize: '0.7rem', '&:hover': { bgcolor: '#f0f0f0' } }}>
+              {loading ? <CircularProgress size={20} sx={{ color: '#07B811' }} /> : (currentStep === steps.length - 1 ? 'SALVAR' : 'PRÓXIMO')}
+            </Button>
+          </Toolbar>
+        </AppBar>
+
+        <Container maxWidth={false} sx={{ py: 3, maxWidth: '1400px', margin: '0 auto' }}>
+          <Box sx={{ textAlign: 'center', mb: 3 }}>
+            <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a237e', mb: 1, textTransform: 'uppercase', letterSpacing: '0.5px' }}>CADASTRO DE PAVIMENTAÇÃO</Typography>
+            <Typography variant="body1" sx={{ color: '#666', fontWeight: 400 }}>Concreto Asfáltico - Ligante e Composição Estrutural</Typography>
+          </Box>
+
+          <Box sx={{ mb: 3 }}>
+            <Stepper activeStep={currentStep} alternativeLabel connector={null}>
+              {steps.map((step, index) => (
+                <Step key={step.title}>
+                  <StepLabel StepIconProps={{ sx: { fontSize: '1.2rem', '&.Mui-active': { color: '#07B811' }, '&.Mui-completed': { color: '#07B811' } } }}>
+                    <Typography variant="body2" sx={{ fontWeight: currentStep === index ? 600 : 400, color: currentStep === index ? '#07B811' : '#999', fontSize: '0.8rem' }}>{step.title}</Typography>
+                  </StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          </Box>
+
+          <Paper elevation={0} sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid #e0e0e0' }}>
+            <Box sx={{ p: 3 }}>
+              {steps[currentStep].content}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
+                <Button variant="outlined" onClick={prev} disabled={currentStep === 0} sx={{ visibility: currentStep === 0 ? 'hidden' : 'visible', borderColor: '#07B811', color: '#07B811', '&:hover': { borderColor: '#05990e', backgroundColor: 'rgba(7, 184, 17, 0.04)' } }}>
+                  ANTERIOR
+                </Button>
+                <Button variant="contained" onClick={next} disabled={loading} sx={{ px: 4, bgcolor: '#07B811', '&:hover': { bgcolor: '#05990e' } }}>
+                  {loading ? <CircularProgress size={20} color="inherit" /> : (currentStep === steps.length - 1 ? 'SALVAR' : 'PRÓXIMO')}
+                </Button>
+              </Box>
+            </Box>
+          </Paper>
+        </Container>
+      </Box>
+
+      <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({ ...snackbar, open: false })} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>{snackbar.message}</Alert>
+      </Snackbar>
+    </ThemeProvider>
   );
 };
-  
-export default BinderAsphaltConcrete;
 
+export default BinderAsphaltConcrete;
