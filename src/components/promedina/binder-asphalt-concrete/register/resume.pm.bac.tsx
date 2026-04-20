@@ -1,6 +1,5 @@
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import { Box, Typography } from '@mui/material';
-import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import GeneratePDF_ProMedina from '@/components/generatePDF/promedina/granularLayers/generatePDF.promedina';
 import { EssayPageProps } from '@/components/templates/essay';
@@ -18,140 +17,161 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
     _id,
   };
 
-  const columns: GridColDef[] = [
-    { field: 'layer', headerName: 'CAMADA' },
-    { field: 'material', headerName: 'MATERIAL' },
-    { field: 'thickness', headerName: 'ESPESSURA (mm)' },
+  // ==================== STEP 2 - TRATAMENTO SUPERFICIAL ====================
+  const tratamentoFields = [
+    { title: 'Tipo de Tratamento', value: step2Data?.tipoTratamento },
+    { title: 'Tipo de Emulsão', value: step2Data?.tipoEmulsao },
+    { title: 'Taxa de Emulsão (l/m²)', value: step2Data?.taxaEmulsao },
+    { title: 'Taxa de Agregados (kg/m²)', value: step2Data?.taxaAgregados },
+    { title: 'Faixa Granulométrica', value: step2Data?.faixaGranulometrica },
+    { title: 'Abrasão Los Angeles (%)', value: step2Data?.abrasaoLosAngeles },
+    { title: 'Massa Específica (g/cm³)', value: step2Data?.massaEspecifica },
   ];
 
-  const rows = samples?.step2Data.structuralComposition?.map((item, index) => ({
-    id: index,
-    layer: item.layer,
-    material: item.material,
-    thickness: item.thickness ? `${item.thickness} mm` : '-',
-  }));
-
-  // DADOS GERAIS
-  const generalDataFields = [
-    { title: 'NOME', value: samples?.generalData?.name },
-    { title: 'LOCAL', value: samples?.generalData?.zone },
-    { title: 'CAMADA', value: samples?.generalData?.layer },
-    { title: 'MUNICÍPIO/ESTADO', value: samples?.generalData?.cityState },
-    { title: 'RODOVIA', value: samples?.generalData?.highway },
-    { title: 'VELOCIDADE DIRETRIZ', value: samples?.generalData?.guideLineSpeed ? `${samples?.generalData?.guideLineSpeed} km/h` : '-' },
-    { title: 'OBSERVAÇÕES', value: samples?.generalData?.observations },
+  const emulsaoFields = [
+    { title: 'Referência Comercial', value: step2Data?.referenciaComercial },
+    { title: 'Refinaria', value: step2Data?.refinaria },
+    { title: 'Empresa Distribuidora', value: step2Data?.empresaDistribuidora },
+    { title: 'Data do Carregamento', value: step2Data?.dataCarregamento },
+    { title: 'Número da Nota Fiscal', value: step2Data?.numeroNotaFiscal },
+    { title: 'Data da Nota Fiscal', value: step2Data?.dataNotaFiscal },
+    { title: 'Número do Certificado', value: step2Data?.numeroCertificado },
+    { title: 'Data do Certificado', value: step2Data?.dataCertificado },
   ];
 
-  // CARACTERÍSTICAS
-  const characteristicsFields = [
-    { title: 'LOCAL', value: step2Data?.roadName || step2Data?.identification },
-    { title: 'MUNICÍPIO/ESTADO', value: step2Data?.cityState },
-    { title: 'EXTENSÃO (m)', value: step2Data?.experimentalLength || step2Data?.extension },
-    { title: 'VELOCIDADE DIRETRIZ DA VIA (km/h)', value: step2Data?.guideSpeed },
+  const parametrosFields = [
+    { title: 'Viscosidade (SSF)', value: step2Data?.viscosidadeSSF },
+    { title: 'Peneiração (%)', value: step2Data?.peneiracao },
+    { title: 'Resíduo (%)', value: step2Data?.residuo },
+    { title: 'Carga de Partícula', value: step2Data?.cargaParticula },
+    { title: 'Penetração (mm)', value: step2Data?.penetracao },
+    { title: 'Recuperação Elástica (%)', value: step2Data?.recuperacaoElastica },
+    { title: 'Ponto de Amolecimento (°C)', value: step2Data?.pontoAmolecimento },
   ];
 
-  // COORDENADAS
-  const coordinatesFields = [
-    { title: 'ESTACA/METROS INICIAL', value: step2Data?.initialStakeMeters },
-    { title: 'LATITUDE INICIAL', value: step2Data?.latitudeI },
-    { title: 'LONGITUDE INICIAL', value: step2Data?.longitudeI },
-    { title: 'ESTACA/METROS FINAL', value: step2Data?.finalStakeMeters },
-    { title: 'LATITUDE FINAL', value: step2Data?.latitudeF },
-    { title: 'LONGITUDE FINAL', value: step2Data?.longitudeF },
+  // ==================== STEP 3 - LIGANTE ASFÁLTICO ====================
+  const comerciaisFields = [
+    { title: 'Referência Comercial', value: step3Data?.referenciaComercial },
+    { title: 'Refinaria', value: step3Data?.refinaria },
+    { title: 'Empresa Distribuidora', value: step3Data?.empresaDistribuidora },
+    { title: 'Data do Carregamento', value: step3Data?.dataCarregamento },
+    { title: 'Número da Nota Fiscal', value: step3Data?.numeroNotaFiscal },
+    { title: 'Data da Nota Fiscal', value: step3Data?.dataNotaFiscal },
+    { title: 'Número do Certificado', value: step3Data?.numeroCertificado },
+    { title: 'Data do Certificado', value: step3Data?.dataCertificado },
   ];
 
-  // DADOS DO PAVIMENTO
-  const pavimentDataFields = [
-    { title: 'IDENTIFICAÇÃO', value: step2Data?.identification },
-    { title: 'TIPO DE SEÇÃO', value: step2Data?.sectionType },
-    { title: 'FASE DE MONITORAMENTO', value: step2Data?.monitoringPhase },
-    { title: 'LIBERAÇÃO AO TRÁFEGO', value: step2Data?.trafficLiberation },
-    { title: 'ALTITUDE MÉDIA (m)', value: step2Data?.averageAltitude },
-    { title: 'NÚMERO DE FAIXAS', value: step2Data?.numberOfTracks },
-    { title: 'FAIXA MONITORADA', value: step2Data?.monitoredTrack },
-    { title: 'LARGURA DA FAIXA (m)', value: step2Data?.trackWidth },
-    { title: 'OBSERVAÇÕES', value: step2Data?.observation },
+  const originalFields = [
+    { title: 'Tipo de CAP', value: step3Data?.tipoCAP },
+    { title: 'Performance Grade (PG)', value: step3Data?.performanceGrade },
+    { title: 'Penetração (mm) - 25°C', value: step3Data?.penetracao25 },
+    { title: 'Ponto de Amolecimento (°C)', value: step3Data?.pontoAmolecimento },
+    { title: 'Viscosidade Brookfield 135°C (cP)', value: step3Data?.viscosidadeBrookfield_135 },
+    { title: 'Viscosidade Brookfield 150°C (cP)', value: step3Data?.viscosidadeBrookfield_150 },
+    { title: 'Viscosidade Brookfield 177°C (cP)', value: step3Data?.viscosidadeBrookfield_177 },
+    { title: 'Recuperação Elástica (%)', value: step3Data?.recuperacaoElastica },
   ];
 
-  // PREPARO DO PAVIMENTO
-  const pavimentPreparationFields = [
-    { title: 'IRI (m/km) PRÉ-REABILITAÇÃO', value: step2Data?.iriPrerehabilitation },
-    { title: 'AT (%) PRÉ-REABILITAÇÃO', value: step2Data?.atPrerehabilitation },
-    { title: 'FRESAGEM (cm)', value: step2Data?.millingThickness },
-    { title: 'INTERVENÇÃO NA BASE', value: step2Data?.interventionAtTheBase },
-    { title: 'SAMI', value: step2Data?.sami },
-    { title: 'PINTURA DE LIGAÇÃO', value: step2Data?.bondingPaint },
-    { title: 'IMPRIMAÇÃO', value: step2Data?.priming },
+  const dsrOriginalFields = [
+    { title: 'DSR - G*/sen(δ) (MPa)', value: step3Data?.dsr_original_G_sen },
+    { title: 'Temperatura do Teste (°C)', value: step3Data?.dsr_original_temp },
   ];
 
-  // TEMPO EM SERVIÇO
-  const serviceTimeFields = [
-    { title: 'TEMPO EM SERVIÇO (ANOS)', value: step2Data?.serviceTimeYears },
-    { title: 'TEMPO EM SERVIÇO (MESES)', value: step2Data?.serviceTimeMonths },
+  const dsrRtfotFields = [
+    { title: 'DSR RTFOT - G*/sen(δ) (MPa)', value: step3Data?.dsr_rtfot_G_sen },
+    { title: 'Temperatura do Teste (°C)', value: step3Data?.dsr_rtfot_temp },
   ];
 
-  // DATA DA ÚLTIMA ATUALIZAÇÃO
-  const lastUpdateField = { title: 'DATA DA ÚLTIMA ATUALIZAÇÃO', value: step2Data?.lastUpdate };
-
-  // DADOS DO MATERIAL (STEP3)
-  const materialDataFields = [
-    { title: 'REFINARIA', value: step3Data?.refinery },
-    { title: 'EMPRESA', value: step3Data?.company },
-    { title: 'DATA DO CARREGAMENTO', value: step3Data?.collectionDate },
-    { title: 'NÚMERO DA NOTA FISCAL', value: step3Data?.invoiceNumber },
-    { title: 'DATA DA NOTA FISCAL', value: step3Data?.dataInvoice },
-    { title: 'DATA DO CERTIFICADO', value: step3Data?.certificateDate },
-    { title: 'NÚMERO DO CERTIFICADO', value: step3Data?.certificateNumber },
-    { title: 'TIPO DE CAP', value: step3Data?.capType },
-    { title: 'PERFORMANCE GRADE (PG)', value: step3Data?.performanceGrade },
-    { title: 'PENETRAÇÃO - 25°C (mm)', value: step3Data?.penetration },
-    { title: 'PONTO DE AMOLECIMENTO (°C)', value: step3Data?.softeningPoint },
-    { title: 'RECUPERAÇÃO ELÁSTICA - 25°C (%)', value: step3Data?.elasticRecovery },
+  const mscrFields = [
+    { title: 'MSCR - Jnr 3,2 (1/kPa)', value: step3Data?.mscr_Jnr_3_2 },
+    { title: 'MSCR - Jndiff (%)', value: step3Data?.mscr_Jndiff },
   ];
 
-  // VISCOSIDADE BROOKFIELD
-  const brookfieldFields = [
-    { title: '135°C (SP21, 20rpm)', value: step3Data?.vb_sp21_20 },
-    { title: '150°C (SP21, 50rpm)', value: step3Data?.vb_sp21_50 },
-    { title: '177°C (SP21, 100rpm)', value: step3Data?.vb_sp21_100 },
-    { title: 'OBSERVAÇÕES', value: step3Data?.observations },
+  const lasFields = [
+    { title: 'LAS - Strain 1,25% - Nº', value: step3Data?.las_strain_1_25 },
+    { title: 'LAS - Strain 2,5% - Nº', value: step3Data?.las_strain_2_5 },
+    { title: 'LAS - Strain 5% - Nº', value: step3Data?.las_strain_5 },
+    { title: 'LAS - af (comprimento na trinca)', value: step3Data?.las_af },
+    { title: 'LAS - FFL (Fator de fadiga)', value: step3Data?.las_FFL },
+    { title: 'LAS - D³', value: step3Data?.las_D },
   ];
 
-  // DADOS TÉCNICOS (STEP4)
-  const techDataFields = [
-    { title: 'FAIXA GRANULOMÉTRICA', value: step4Data?.granulometricRange },
-    { title: 'TMN', value: step4Data?.tmn },
-    { title: 'TEOR DE ASFALTO', value: step4Data?.asphaltTenor },
-    { title: 'MASSA ESPECÍFICA (g/cm³)', value: step4Data?.specificMass },
-    { title: 'VOLUME DE VAZIOS (%)', value: step4Data?.volumeVoids },
-    { title: 'ABRASÃO LA', value: step4Data?.abrasionLA },
-    { title: 'RT', value: step4Data?.rt },
-    { title: 'FLOW NUMBER', value: step4Data?.flowNumber },
-    { title: 'MR', value: step4Data?.mr },
-    { title: 'OBSERVAÇÕES', value: step4Data?.observations },
+  const bbrFields = [
+    { title: 'BBR - Módulo de rigidez S (MPa)', value: step3Data?.bbr_S },
+    { title: 'BBR - Coeficiente angular m (MPa)', value: step3Data?.bbr_m },
+    { title: 'Temperatura do Teste (°C)', value: step3Data?.bbr_temp },
   ];
 
-  // CURVA DE FADIGA À COMPRESSÃO DIAMETRAL
-  const fatigueCurveFields = [
-    { title: 'N° CPs', value: step4Data?.fatigueCurve_n_cps },
-    { title: 'k1', value: step4Data?.fatigueCurve_k1 },
-    { title: 'k2', value: step4Data?.fatigueCurve_k2 },
-    { title: 'R²', value: step4Data?.fatigueCurve_r2 },
+  // ==================== STEP 4 - CONCRETO ASFÁLTICO ====================
+  const geraisFields = [
+    { title: 'Tipo de CAP', value: step4Data?.tipoCAP },
+    { title: 'Massa Específica (g/cm³)', value: step4Data?.massaEspecifica },
+    { title: 'Resistência à Tração (MPa)', value: step4Data?.resistenciaTracao },
+    { title: 'Teor de Asfalto (%)', value: step4Data?.teorAsfalto },
+    { title: 'Volume de Vazios (%)', value: step4Data?.volumeVazios },
+    { title: 'Faixa Granulométrica', value: step4Data?.faixaGranulometrica },
+    { title: 'TMN (mm)', value: step4Data?.tmn },
+    { title: 'Abrasão Los Angeles (%)', value: step4Data?.abrasaoLosAngeles },
+    { title: 'Flow Number (FN)', value: step4Data?.flowNumber },
+    { title: 'Módulo de Resiliência 25°C (MPa)', value: step4Data?.moduloResiliencia },
+  ];
+
+  const curvaFadigaFields = [
+    { title: 'Nº de Amostras (CPs)', value: step4Data?.curvaFadiga_n_cps },
+    { title: 'Coeficiente de Regressão (k1)', value: step4Data?.curvaFadiga_k1 },
+    { title: 'Coeficiente de Regressão (k2)', value: step4Data?.curvaFadiga_k2 },
+    { title: 'Coef. de Determinação (R²)', value: step4Data?.curvaFadiga_r2 },
+  ];
+
+  const sigmoidalFields = [
+    { title: 'Coeficiente a', value: step4Data?.sigmoidal_a },
+    { title: 'Coeficiente b', value: step4Data?.sigmoidal_b },
+    { title: 'Coeficiente d', value: step4Data?.sigmoidal_d },
+    { title: 'Coeficiente g', value: step4Data?.sigmoidal_g },
+    { title: 'Coeficiente a1', value: step4Data?.sigmoidal_a1 },
+    { title: 'Coeficiente a2', value: step4Data?.sigmoidal_a2 },
+    { title: 'Coeficiente a3', value: step4Data?.sigmoidal_a3 },
+  ];
+
+  const danoFields = [
+    { title: 'Parâmetro "α" de evolução do dano', value: step4Data?.parametro_alfa },
+    { title: 'C₁₀', value: step4Data?.dano_C10 },
+    { title: 'C₁₁', value: step4Data?.dano_C11 },
+    { title: 'C₁₂', value: step4Data?.dano_C12 },
+    { title: 'a', value: step4Data?.dano_a },
+    { title: 'b', value: step4Data?.dano_b },
+    { title: 'Y', value: step4Data?.dano_Y },
+    { title: 'Δ', value: step4Data?.dano_Delta },
+  ];
+
+  const shiftModelFields = [
+    { title: 'Nº de Amostras (CPs)', value: step4Data?.shiftModel_n_cps },
+    { title: 'ε₀', value: step4Data?.shiftModel_ε0 },
+    { title: 'N1', value: step4Data?.shiftModel_N1 },
+    { title: 'β', value: step4Data?.shiftModel_β },
+    { title: 'p1', value: step4Data?.shiftModel_p1 },
+    { title: 'p2', value: step4Data?.shiftModel_p2 },
+    { title: 'd1', value: step4Data?.shiftModel_d1 },
+    { title: 'd2', value: step4Data?.shiftModel_d2 },
   ];
 
   const sections = [
-    'general-data',
-    'characteristics',
-    'coordinates',
-    'paviment-data',
-    'paviment-preparation',
-    'service-time',
-    'last-update',
-    'material-data',
-    'brookfield-viscosity',
-    'technical-data',
-    'diametral-compression',
-    'structural-composition',
+    'step2-tratamento',
+    'step2-emulsao',
+    'step2-parametros',
+    'step3-comerciais',
+    'step3-original',
+    'step3-dsr-original',
+    'step3-rtfot',
+    'step3-mscr',
+    'step3-las',
+    'step3-bbr',
+    'step4-gerais',
+    'step4-fadiga',
+    'step4-sigmoidal',
+    'step4-dano',
+    'step4-prony',
+    'step4-shift',
   ];
 
   setNextDisabled(false);
@@ -174,9 +194,9 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
         >
           <GeneratePDF_ProMedina sample={samples} sections={sections} />
 
-          {/* DADOS GERAIS */}
-          <Box id="general-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="DADOS GERAIS" open={true} theme={'#07B811'}>
+          {/* STEP 2 - TRATAMENTO SUPERFICIAL */}
+          <Box id="step2-tratamento" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="TRATAMENTO SUPERFICIAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
               <Box
                 sx={{
                   display: 'grid',
@@ -187,30 +207,27 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
                   justifyContent: 'space-evenly',
                 }}
               >
-                {generalDataFields.map((item, idx) => (
-                  <Box
-                    sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }}
-                    key={idx}
-                  >
-                    {item.value && (
-                      <>
-                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                          {item.title}
-                        </Typography>
-                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                          {item.value === null || item.value === '' ? '-' : item.value}
-                        </Typography>
-                      </>
-                    )}
-                  </Box>
+                {tratamentoFields.map((item, idx) => (
+                  item.value && (
+                    <Box
+                      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }}
+                      key={idx}
+                    >
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                        {item.title}
+                      </Typography>
+                      <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                        {item.value === null || item.value === '' ? '-' : item.value}
+                      </Typography>
+                    </Box>
+                  )
                 ))}
               </Box>
             </FlexColumnBorder>
           </Box>
 
-          {/* CARACTERÍSTICAS */}
-          <Box id="characteristics" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="CARACTERÍSTICAS" open={true} theme={'#07B811'}>
+          <Box id="step2-emulsao" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="EMULSÃO ASFÁLTICA" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
               <Box
                 sx={{
                   display: 'grid',
@@ -220,109 +237,98 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
                   gap: '1rem',
                 }}
               >
-                {characteristicsFields.map((item, idx) => (
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
-                    {item.value && (
-                      <>
-                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
-                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                          {item.value === null || item.value === '' ? '-' : item.value}
-                        </Typography>
-                      </>
-                    )}
-                  </Box>
+                {emulsaoFields.map((item, idx) => (
+                  item.value && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                      <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                        {item.value === null || item.value === '' ? '-' : item.value}
+                      </Typography>
+                    </Box>
+                  )
                 ))}
               </Box>
             </FlexColumnBorder>
           </Box>
 
-          {/* COORDENADAS */}
-          <Box id="coordinates" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="COORDENADAS" open={true} theme={'#07B811'}>
+          <Box id="step2-parametros" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="PARÂMETROS DO MATERIAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
               <Box
                 sx={{
                   display: 'grid',
-                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr' },
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
                   justifyItems: 'center',
                   alignItems: 'center',
                   gap: '1rem',
                 }}
               >
-                {coordinatesFields.map((item, idx) => (
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
-                    {item.value && (
-                      <>
-                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
-                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                          {item.value === null || item.value === '' ? '-' : item.value}
-                        </Typography>
-                      </>
-                    )}
-                  </Box>
+                {parametrosFields.map((item, idx) => (
+                  item.value && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                      <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                        {item.value === null || item.value === '' ? '-' : item.value}
+                      </Typography>
+                    </Box>
+                  )
                 ))}
               </Box>
             </FlexColumnBorder>
           </Box>
 
-          {/* DADOS DO PAVIMENTO */}
-          <Box id="paviment-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="DADOS DO PAVIMENTO" open={true} theme={'#07B811'}>
+          {/* STEP 3 - LIGANTE ASFÁLTICO */}
+          <Box id="step3-comerciais" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="DADOS COMERCIAIS" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
               <Box
                 sx={{
                   display: 'grid',
-                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr' },
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
                   justifyItems: 'center',
                   alignItems: 'center',
                   gap: '1rem',
                 }}
               >
-                {pavimentDataFields.map((item, idx) => (
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
-                    {item.value && (
-                      <>
-                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
-                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                          {item.value === null || item.value === '' ? '-' : item.value}
-                        </Typography>
-                      </>
-                    )}
-                  </Box>
+                {comerciaisFields.map((item, idx) => (
+                  item.value && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                      <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                        {item.value === null || item.value === '' ? '-' : item.value}
+                      </Typography>
+                    </Box>
+                  )
                 ))}
               </Box>
             </FlexColumnBorder>
           </Box>
 
-          {/* PREPARO DO PAVIMENTO */}
-          <Box id="paviment-preparation" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="PREPARO DO PAVIMENTO" open={true} theme={'#07B811'}>
+          <Box id="step3-original" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="LIGANTE ORIGINAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
               <Box
                 sx={{
                   display: 'grid',
-                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr' },
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
                   justifyItems: 'center',
                   alignItems: 'center',
                   gap: '1rem',
                 }}
               >
-                {pavimentPreparationFields.map((item, idx) => (
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
-                    {item.value && (
-                      <>
-                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
-                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                          {item.value === null || item.value === '' ? '-' : item.value}
-                        </Typography>
-                      </>
-                    )}
-                  </Box>
+                {originalFields.map((item, idx) => (
+                  item.value && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                      <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                        {item.value === null || item.value === '' ? '-' : item.value}
+                      </Typography>
+                    </Box>
+                  )
                 ))}
               </Box>
             </FlexColumnBorder>
           </Box>
 
-          {/* TEMPO EM SERVIÇO */}
-          <Box id="service-time" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="TEMPO EM SERVIÇO" open={true} theme={'#07B811'}>
+          <Box id="step3-dsr-original" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="DSR - LIGANTE ORIGINAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
               <Box
                 sx={{
                   display: 'grid',
@@ -332,95 +338,72 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
                   gap: '1rem',
                 }}
               >
-                {serviceTimeFields.map((item, idx) => (
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
-                    {item.value && (
-                      <>
-                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
-                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                          {item.value === null || item.value === '' ? '-' : item.value}
-                        </Typography>
-                      </>
-                    )}
-                  </Box>
+                {dsrOriginalFields.map((item, idx) => (
+                  item.value && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                      <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                        {item.value === null || item.value === '' ? '-' : item.value}
+                      </Typography>
+                    </Box>
+                  )
                 ))}
               </Box>
             </FlexColumnBorder>
           </Box>
 
-          {/* DATA DA ÚLTIMA ATUALIZAÇÃO */}
-          <Box id="last-update" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="DATA DA ÚLTIMA ATUALIZAÇÃO" open={true} theme={'#07B811'}>
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem' }}>
-                {lastUpdateField.value && (
-                  <>
-                    <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{lastUpdateField.title}</Typography>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>{lastUpdateField.value}</Typography>
-                  </>
-                )}
-              </Box>
-            </FlexColumnBorder>
-          </Box>
-
-          {/* DADOS DO MATERIAL */}
-          <Box id="material-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="DADOS DO MATERIAL" open={true} theme={'#07B811'}>
+          <Box id="step3-rtfot" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="LIGANTE ENVELHECIDO RTFOT" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
               <Box
                 sx={{
                   display: 'grid',
-                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr' },
                   justifyItems: 'center',
                   alignItems: 'center',
                   gap: '1rem',
                 }}
               >
-                {materialDataFields.map((item, idx) => (
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
-                    {item.value && (
-                      <>
-                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
-                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                          {item.value === null || item.value === '' ? '-' : item.value}
-                        </Typography>
-                      </>
-                    )}
-                  </Box>
+                {dsrRtfotFields.map((item, idx) => (
+                  item.value && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                      <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                        {item.value === null || item.value === '' ? '-' : item.value}
+                      </Typography>
+                    </Box>
+                  )
                 ))}
               </Box>
             </FlexColumnBorder>
           </Box>
 
-          {/* VISCOSIDADE BROOKFIELD */}
-          <Box id="brookfield-viscosity" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="VISCOSIDADE BROOKFIELD" open={true} theme={'#07B811'}>
+          <Box id="step3-mscr" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="MSCR" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
               <Box
                 sx={{
                   display: 'grid',
-                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr' },
                   justifyItems: 'center',
                   alignItems: 'center',
                   gap: '1rem',
                 }}
               >
-                {brookfieldFields.map((item, idx) => (
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
-                    {item.value && (
-                      <>
-                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
-                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                          {item.value === null || item.value === '' ? '-' : item.value}
-                        </Typography>
-                      </>
-                    )}
-                  </Box>
+                {mscrFields.map((item, idx) => (
+                  item.value && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                      <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                        {item.value === null || item.value === '' ? '-' : item.value}
+                      </Typography>
+                    </Box>
+                  )
                 ))}
               </Box>
             </FlexColumnBorder>
           </Box>
 
-          {/* DADOS TÉCNICOS */}
-          <Box id="technical-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="DADOS TÉCNICOS" open={true} theme={'#07B811'}>
+          <Box id="step3-las" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="LAS" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
               <Box
                 sx={{
                   display: 'grid',
@@ -430,25 +413,73 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
                   gap: '1rem',
                 }}
               >
-                {techDataFields.map((item, idx) => (
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
-                    {item.value && (
-                      <>
-                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
-                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                          {item.value === null || item.value === '' ? '-' : item.value}
-                        </Typography>
-                      </>
-                    )}
-                  </Box>
+                {lasFields.map((item, idx) => (
+                  item.value && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                      <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                        {item.value === null || item.value === '' ? '-' : item.value}
+                      </Typography>
+                    </Box>
+                  )
                 ))}
               </Box>
             </FlexColumnBorder>
           </Box>
 
-          {/* CURVA DE FADIGA À COMPRESSÃO DIAMETRAL */}
-          <Box id="diametral-compression" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="CURVA DE FADIGA À COMPRESSÃO DIAMETRAL" open={true} theme={'#07B811'}>
+          <Box id="step3-bbr" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="BBR (RTFOT + PAV)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr' },
+                  justifyItems: 'center',
+                  alignItems: 'center',
+                  gap: '1rem',
+                }}
+              >
+                {bbrFields.map((item, idx) => (
+                  item.value && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                      <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                        {item.value === null || item.value === '' ? '-' : item.value}
+                      </Typography>
+                    </Box>
+                  )
+                ))}
+              </Box>
+            </FlexColumnBorder>
+          </Box>
+
+          {/* STEP 4 - CONCRETO ASFÁLTICO */}
+          <Box id="step4-gerais" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="PROPRIEDADES GERAIS" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr' },
+                  justifyItems: 'center',
+                  alignItems: 'center',
+                  gap: '1rem',
+                }}
+              >
+                {geraisFields.map((item, idx) => (
+                  item.value && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                      <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                        {item.value === null || item.value === '' ? '-' : item.value}
+                      </Typography>
+                    </Box>
+                  )
+                ))}
+              </Box>
+            </FlexColumnBorder>
+          </Box>
+
+          <Box id="step4-fadiga" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="CURVA DE FADIGA (COMPRESSÃO DIAMETRAL)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
               <Box
                 sx={{
                   display: 'grid',
@@ -458,77 +489,156 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
                   gap: '1rem',
                 }}
               >
-                {fatigueCurveFields.map((item, idx) => (
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
-                    {item.value && (
-                      <>
-                        <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
-                        <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                          {item.value === null || item.value === '' ? '-' : item.value}
-                        </Typography>
-                      </>
-                    )}
+                {curvaFadigaFields.map((item, idx) => (
+                  item.value && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                      <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                        {item.value === null || item.value === '' ? '-' : item.value}
+                      </Typography>
+                    </Box>
+                  )
+                ))}
+              </Box>
+            </FlexColumnBorder>
+          </Box>
+
+          <Box id="step4-sigmoidal" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="CURVAS-MESTRAS (FUNÇÃO SIGMOIDAL)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                  justifyItems: 'center',
+                  alignItems: 'center',
+                  gap: '1rem',
+                }}
+              >
+                {sigmoidalFields.map((item, idx) => (
+                  item.value && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                      <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                        {item.value === null || item.value === '' ? '-' : item.value}
+                      </Typography>
+                    </Box>
+                  )
+                ))}
+              </Box>
+            </FlexColumnBorder>
+          </Box>
+
+          <Box id="step4-dano" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="COEFICIENTES DE REGRESSÃO (G²)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                  justifyItems: 'center',
+                  alignItems: 'center',
+                  gap: '1rem',
+                }}
+              >
+                {danoFields.map((item, idx) => (
+                  item.value && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                      <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                        {item.value === null || item.value === '' ? '-' : item.value}
+                      </Typography>
+                    </Box>
+                  )
+                ))}
+              </Box>
+            </FlexColumnBorder>
+          </Box>
+
+          <Box id="step4-prony" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="MÓDULOS DE RELAXAÇÃO (PRONY)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr' },
+                  justifyItems: 'center',
+                  alignItems: 'center',
+                  gap: '1rem',
+                }}
+              >
+                {step4Data?.einf && (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }}>
+                    <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>Einf (kPa)</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>{step4Data.einf}</Typography>
+                  </Box>
+                )}
+                {(step4Data?.prony_pi || []).map((pi, index) => (
+                  <Box key={index} sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }}>
+                    <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>pi (s) - {index + 1}</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>{pi}</Typography>
+                    <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>Ei (kPa)</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>{step4Data?.prony_Ei?.[index]}</Typography>
                   </Box>
                 ))}
               </Box>
             </FlexColumnBorder>
           </Box>
 
-          {/* COMPOSIÇÃO ESTRUTURAL */}
-          <Box id="structural-composition" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#07B811'}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                <div style={{ height: 'fit-content', width: '100%' }}>
-                  {rows && rows.length > 0 && (
-                    <DataGrid
-                      rows={rows}
-                      hideFooter
-                      disableColumnMenu
-                      disableColumnFilter
-                      columns={columns.map((column) => ({
-                        ...column,
-                        disableColumnMenu: true,
-                        sortable: false,
-                        align: 'center',
-                        headerAlign: 'center',
-                        minWidth: 100,
-                        flex: 1,
-                      }))}
-                    />
-                  )}
-                </div>
+          <Box id="step4-shift" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="COEFICIENTES DE REGRESSÃO DO SHIFT MODEL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                  justifyItems: 'center',
+                  alignItems: 'center',
+                  gap: '1rem',
+                }}
+              >
+                {shiftModelFields.map((item, idx) => (
+                  item.value && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }} key={idx}>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
+                      <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                        {item.value === null || item.value === '' ? '-' : item.value}
+                      </Typography>
+                    </Box>
+                  )
+                ))}
               </Box>
-
-              {samples.step2Data.images && (
-                <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                  <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem', color: 'black' }}>
-                    IMAGEM DA COMPOSIÇÃO ESTRUTURAL
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: { mobile: 'column', desktop: 'row' },
-                      gap: '1rem',
-                      alignItems: 'center',
-                      border: '2px solid #07B811',
-                      borderRadius: '10px',
-                      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                    }}
-                  >
-                    <img
-                      src={samples?.step2Data.images}
-                      alt="Imagem da composição estrutural"
-                      width={'250px'}
-                      height={'250px'}
-                      style={{ borderRadius: '8px' }}
-                    />
-                  </Box>
-                  <Typography sx={{ color: 'gray' }}>DATA DA IMAGEM</Typography>
-                  <Typography sx={{ color: 'black' }}>{samples?.step2Data.imagesDate || '-'}</Typography>
-                </Box>
-              )}
             </FlexColumnBorder>
           </Box>
+
+          {/* OBSERVAÇÕES */}
+          {(step2Data?.observacoes || step3Data?.observacoes || step4Data?.observacoes) && (
+            <Box id="observacoes" sx={{ paddingTop: '1rem', paddingX: '6rem', paddingBottom: '2rem' }}>
+              <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr',
+                    justifyItems: 'center',
+                    alignItems: 'center',
+                    gap: '1rem',
+                  }}
+                >
+                  {step2Data?.observacoes && (
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                      Tratamento Superficial: {step2Data.observacoes}
+                    </Typography>
+                  )}
+                  {step3Data?.observacoes && (
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                      Ligante Asfáltico: {step3Data.observacoes}
+                    </Typography>
+                  )}
+                  {step4Data?.observacoes && (
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                      Concreto Asfáltico: {step4Data.observacoes}
+                    </Typography>
+                  )}
+                </Box>
+              </FlexColumnBorder>
+            </Box>
+          )}
         </Box>
       </Box>
     </>

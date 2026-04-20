@@ -1,6 +1,148 @@
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
+// ==================== STEP 2: TRATAMENTO SUPERFICIAL ====================
+interface Step2Data {
+  // Tratamento Superficial
+  tipoTratamento: string;
+  tipoEmulsao: string;
+  taxaEmulsao: string;        // l/m²
+  taxaAgregados: string;      // kg/m² por camada
+  faixaGranulometrica: string;
+  abrasaoLosAngeles: string;  // %
+  massaEspecifica: string;    // g/cm³
+  
+  // Emulsão Asfáltica
+  referenciaComercial: string;
+  refinaria: string;
+  empresaDistribuidora: string;
+  dataCarregamento: string;
+  numeroNotaFiscal: string;
+  dataNotaFiscal: string;
+  numeroCertificado: string;
+  dataCertificado: string;
+  
+  // Parâmetros do Material
+  viscosidadeSSF: string;
+  peneiracao: string;         // %
+  residuo: string;            // %
+  cargaParticula: string;
+  penetracao: string;         // mm
+  recuperacaoElastica: string; // %
+  pontoAmolecimento: string;   // °C
+  
+  observacoes: string;
+}
+
+// ==================== STEP 3: LIGANTE ASFÁLTICO ====================
+interface Step3Data {
+  // Dados Comerciais
+  referenciaComercial: string;
+  refinaria: string;
+  empresaDistribuidora: string;
+  dataCarregamento: string;
+  numeroNotaFiscal: string;
+  dataNotaFiscal: string;
+  numeroCertificado: string;
+  dataCertificado: string;
+  
+  // Ligante Original
+  tipoCAP: string;
+  performanceGrade: string;
+  penetracao25: string;       // mm
+  pontoAmolecimento: string;   // °C
+  viscosidadeBrookfield_135: string;  // cP (SP21, 20rpm)
+  viscosidadeBrookfield_150: string;  // cP (SP21, 50rpm)
+  viscosidadeBrookfield_177: string;  // cP (SP21, 100rpm)
+  recuperacaoElastica: string; // %
+  dsr_original_G_sen: string;  // DSR - G*/sen(δ) (MPa)
+  dsr_original_temp: string;    // Temperatura do teste (°C)
+  
+  // Ligante Envelhecido RTFOT
+  dsr_rtfot_G_sen: string;     // DSR - G*/sen(δ) (MPa)
+  dsr_rtfot_temp: string;       // Temperatura do teste (°C)
+  
+  // MSCR (Multiple Stress Creep Recovery)
+  mscr_Jnr_3_2: string;        // Jnr 3,2 (1/kPa)
+  mscr_Jndiff: string;         // Jndiff (%)
+  
+  // LAS (Linear Amplitude Sweep)
+  las_strain_1_25: string;     // Strain 1,25% - Nº
+  las_strain_2_5: string;      // Strain 2,5% - Nº
+  las_strain_5: string;        // Strain 5% - Nº
+  las_af: string;              // af - comprimento na trinca
+  las_FFL: string;             // FFL - Fator de fadiga de ligante
+  las_D: string;               // D³
+  
+  // Ligante Envelhecido RTFOT + PAV
+  bbr_S: string;               // Módulo de rigidez S (MPa)
+  bbr_m: string;               // Coeficiente angular m (MPa)
+  bbr_temp: string;            // Temperatura do teste (°C)
+  
+  observacoes: string;
+}
+
+// ==================== STEP 4: CONCRETO ASFÁLTICO ====================
+interface Step4Data {
+  // Propriedades Gerais
+  tipoCAP: string;
+  massaEspecifica: string;     // g/cm³
+  resistenciaTracao: string;   // MPa
+  teorAsfalto: string;         // %
+  volumeVazios: string;        // %
+  faixaGranulometrica: string;
+  tmn: string;                 // Tamanho Máximo Nominal (mm)
+  abrasaoLosAngeles: string;   // %
+  flowNumber: string;          // FN
+  moduloResiliencia: string;   // Módulo de Resiliência 25°C (MPa)
+  
+  // Curva de Fadiga (Compressão Diametral)
+  curvaFadiga_n_cps: string;   // Nº de Amostras (CPs)
+  curvaFadiga_k1: string;      // Coeficiente de Regressão (k1)
+  curvaFadiga_k2: string;      // Coeficiente de Regressão (k2)
+  curvaFadiga_r2: string;      // Coef. de Determinação (R²)
+  
+  // Curvas-Mestras e Coeficientes
+  sigmoidal_a: string;
+  sigmoidal_b: string;
+  sigmoidal_d: string;
+  sigmoidal_g: string;
+  sigmoidal_a1: string;
+  sigmoidal_a2: string;
+  sigmoidal_a3: string;
+  
+  // Parâmetro α de evolução do dano
+  parametro_alfa: string;
+  
+  // Coeficientes de regressão das curvas características de dano (G²)
+  dano_C10: string;
+  dano_C11: string;
+  dano_C12: string;
+  dano_a: string;
+  dano_b: string;
+  dano_Y: string;
+  dano_Delta: string;
+  
+  // Einf
+  einf: string;                // kPa
+  
+  // Módulos de Relaxação (Prony)
+  prony_pi: string[];          // array de tempos (s)
+  prony_Ei: string[];          // array de módulos (kPa)
+  
+  // Coeficientes de regressão do shift model
+  shiftModel_n_cps: string;    // Nº de Amostras (CPs)
+  shiftModel_ε0: string;
+  shiftModel_N1: string;
+  shiftModel_β: string;
+  shiftModel_p1: string;
+  shiftModel_p2: string;
+  shiftModel_d1: string;
+  shiftModel_d2: string;
+  
+  observacoes: string;
+}
+
 interface GeneralData {
   name: string;
   zone: string;
@@ -9,92 +151,6 @@ interface GeneralData {
   highway: string;
   guideLineSpeed: string;
   observations?: string;
-}
-
-interface Step2Data {
-  // PavimentData
-  identification: string;
-  sectionType: string;
-  extension: string;
-  initialStakeMeters: string;
-  latitudeI: string;
-  longitudeI: string;
-  finalStakeMeters: string;
-  latitudeF: string;
-  longitudeF: string;
-  monitoringPhase: string;
-  observation: string;
-  trafficLiberation: string;
-  averageAltitude: string;
-  numberOfTracks: string;
-  monitoredTrack: string;
-  lastUpdate: string;
-  trackWidth: string;
-  // Paviment Preparation
-  milling: string;
-  interventionAtTheBase: string;
-  sami: string;
-  bondingPaint: string;
-  priming: string;
-  images: string;
-  imagesDate: string;
-  // Structural Composition
-  structuralComposition: {
-    id: number;
-    layer: string;
-    material: string;
-    thickness: string;
-  }[];
-  
-  // NOVAS PROPRIEDADES ADICIONADAS
-  roadName?: string;              // LOCAL
-  cityState?: string;             // MUNICÍPIO/ESTADO
-  experimentalLength?: string;    // EXTENSÃO (m)
-  guideSpeed?: string;            // VELOCIDADE DIRETRIZ DA VIA (km/h)
-  iriPrerehabilitation?: string;  // IRI (m/km) PRÉ-REABILITAÇÃO
-  atPrerehabilitation?: string;   // AT (%) PRÉ-REABILITAÇÃO
-  millingThickness?: string;      // FRESAGEM (cm)
-  serviceTimeYears?: string;      // TEMPO EM SERVIÇO (ANOS)
-  serviceTimeMonths?: string;     // TEMPO EM SERVIÇO (MESES)
-}
-
-interface Step3Data {
-  // PavimentData
-  refinery: string; // Refinaria
-  company: string; // Empresa
-  collectionDate: string; // Data do carregamento
-  invoiceNumber: string; // Número da nota fiscal
-  dataInvoice: string; // Data da nota fiscal
-  certificateDate: string; // Data do certificado
-  certificateNumber: string; // Número do certificado
-  capType: string; // Tipo de CAP
-  performanceGrade: string; // Performance grade (PG)
-  penetration: string; // Penetração - 25°C (mm)
-  softeningPoint: string; // Ponto de amolecimento (°C)
-  elasticRecovery: string; // Recuperação elástica - 25°C (%)
-  // Viscosidade Brookfield
-  vb_sp21_20: string; // 135°C (SP21, 20rpm)
-  vb_sp21_50: string; // 150°C (SP21, 50rpm)
-  vb_sp21_100: string; // 177°C (SP21, 100rpm)
-  observations: string; // Observações
-}
-
-interface Step4Data {
-  granulometricRange: string;
-  tmn: string;
-  asphaltTenor: string;
-  specificMass: string;
-  volumeVoids: string;
-  abrasionLA: string;
-  rt: string;
-  flowNumber: string;
-  mr: string;
-  // Diametral Compression Fatigue Curve
-  fatigueCurve_n_cps: string;
-  fatigueCurve_k1: string;
-  fatigueCurve_k2: string;
-  fatigueCurve_r2: string;
-  observations: string;
 }
 
 export type BinderAsphaltConcreteData = {
@@ -108,7 +164,7 @@ export type BinderAsphaltConcreteData = {
 export type BinderAsphaltConcreteActions = {
   setData: ({ step, key, value }: setDataType) => void;
   clearStore: () => void;
-  reset:() => void;
+  reset: () => void;
 };
 
 const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data', 3: 'step4Data' };
@@ -126,82 +182,106 @@ const initialState = {
     observations: null,
   },
   step2Data: {
-    identification: null,
-    sectionType: null,
-    extension: null,
-    initialStakeMeters: null,
-    latitudeI: null,
-    longitudeI: null,
-    finalStakeMeters: null,
-    latitudeF: null,
-    longitudeF: null,
-    monitoringPhase: null,
-    observation: null,
-    milling: null,
-    interventionAtTheBase: null,
-    sami: null,
-    bondingPaint: null,
-    priming: null,
-    images: null,
-    imagesDate: null,
-    trafficLiberation: null,
-    lastUpdate: null,
-    averageAltitude: null,
-    numberOfTracks: null,
-    monitoredTrack: null,
-    trackWidth: null,
-    structuralComposition: [
-      {
-        id: 0,
-        layer: null,
-        material: null,
-        thickness: null,
-      },
-    ],
-    // NOVAS PROPRIEDADES INICIALIZADAS
-    roadName: null,
-    cityState: null,
-    experimentalLength: null,
-    guideSpeed: null,
-    iriPrerehabilitation: null,
-    atPrerehabilitation: null,
-    millingThickness: null,
-    serviceTimeYears: null,
-    serviceTimeMonths: null,
+    tipoTratamento: null,
+    tipoEmulsao: null,
+    taxaEmulsao: null,
+    taxaAgregados: null,
+    faixaGranulometrica: null,
+    abrasaoLosAngeles: null,
+    massaEspecifica: null,
+    referenciaComercial: null,
+    refinaria: null,
+    empresaDistribuidora: null,
+    dataCarregamento: null,
+    numeroNotaFiscal: null,
+    dataNotaFiscal: null,
+    numeroCertificado: null,
+    dataCertificado: null,
+    viscosidadeSSF: null,
+    peneiracao: null,
+    residuo: null,
+    cargaParticula: null,
+    penetracao: null,
+    recuperacaoElastica: null,
+    pontoAmolecimento: null,
+    observacoes: null,
   },
   step3Data: {
-    refinery: null,
-    company: null,
-    collectionDate: null,
-    invoiceNumber: null,
-    dataInvoice: null,
-    certificateDate: null,
-    certificateNumber: null,
-    capType: null,
+    referenciaComercial: null,
+    refinaria: null,
+    empresaDistribuidora: null,
+    dataCarregamento: null,
+    numeroNotaFiscal: null,
+    dataNotaFiscal: null,
+    numeroCertificado: null,
+    dataCertificado: null,
+    tipoCAP: null,
     performanceGrade: null,
-    penetration: null,
-    softeningPoint: null,
-    elasticRecovery: null,
-    vb_sp21_20: null,
-    vb_sp21_50: null,
-    vb_sp21_100: null,
-    observations: null,
+    penetracao25: null,
+    pontoAmolecimento: null,
+    viscosidadeBrookfield_135: null,
+    viscosidadeBrookfield_150: null,
+    viscosidadeBrookfield_177: null,
+    recuperacaoElastica: null,
+    dsr_original_G_sen: null,
+    dsr_original_temp: null,
+    dsr_rtfot_G_sen: null,
+    dsr_rtfot_temp: null,
+    mscr_Jnr_3_2: null,
+    mscr_Jndiff: null,
+    las_strain_1_25: null,
+    las_strain_2_5: null,
+    las_strain_5: null,
+    las_af: null,
+    las_FFL: null,
+    las_D: null,
+    bbr_S: null,
+    bbr_m: null,
+    bbr_temp: null,
+    observacoes: null,
   },
   step4Data: {
-    granulometricRange: null,
+    tipoCAP: null,
+    massaEspecifica: null,
+    resistenciaTracao: null,
+    teorAsfalto: null,
+    volumeVazios: null,
+    faixaGranulometrica: null,
     tmn: null,
-    asphaltTenor: null,
-    specificMass: null,
-    volumeVoids: null,
-    abrasionLA: null,
-    rt: null,
+    abrasaoLosAngeles: null,
     flowNumber: null,
-    mr: null,
-    fatigueCurve_n_cps: null,
-    fatigueCurve_k1: null,
-    fatigueCurve_k2: null,
-    fatigueCurve_r2: null,
-    observations: null,
+    moduloResiliencia: null,
+    curvaFadiga_n_cps: null,
+    curvaFadiga_k1: null,
+    curvaFadiga_k2: null,
+    curvaFadiga_r2: null,
+    sigmoidal_a: null,
+    sigmoidal_b: null,
+    sigmoidal_d: null,
+    sigmoidal_g: null,
+    sigmoidal_a1: null,
+    sigmoidal_a2: null,
+    sigmoidal_a3: null,
+    parametro_alfa: null,
+    dano_C10: null,
+    dano_C11: null,
+    dano_C12: null,
+    dano_a: null,
+    dano_b: null,
+    dano_Y: null,
+    dano_Delta: null,
+    einf: null,
+    prony_pi: [],
+    prony_Ei: [],
+    shiftModel_n_cps: null,
+    shiftModel_ε0: null,
+    shiftModel_N1: null,
+    shiftModel_β: null,
+    shiftModel_p1: null,
+    shiftModel_p2: null,
+    shiftModel_d1: null,
+    shiftModel_d2: null,
+    observacoes: null,
   },
   _id: null,
 };
@@ -214,7 +294,7 @@ const useBinderAsphaltConcreteStore = create<BinderAsphaltConcreteData & BinderA
         setData: ({ step, key, value }) =>
           set((state) => {
             if (step === 3) {
-              return value; // Substitui o estado inteiro pelo novo valor
+              return value;
             } else {
               if (key) {
                 return {
@@ -229,16 +309,13 @@ const useBinderAsphaltConcreteStore = create<BinderAsphaltConcreteData & BinderA
               }
             }
           }),
-
         reset: () => set(initialState),
-
         clearStore: () => {
           sessionStorage.clear();
           set(initialState);
         },
       }),
       {
-        // name data store e config no session storage
         name: 'binder-concrete-asphalt-store',
         storage: createJSONStorage(() => sessionStorage),
       }
