@@ -4,6 +4,7 @@ import BinderAsphaltConcrete_step1 from '@/components/promedina/binder-asphalt-c
 import BinderAsphaltConcrete_step2 from '@/components/promedina/binder-asphalt-concrete/register/step2.pm.bac';
 import BinderAsphaltConcrete_step3 from '@/components/promedina/binder-asphalt-concrete/register/step3.pm.bac';
 import BinderAsphaltConcrete_step4 from '@/components/promedina/binder-asphalt-concrete/register/step4.pm.bac';
+import BinderAsphaltConcrete_step5 from '@/components/promedina/binder-asphalt-concrete/register/step5.pm.bac';
 import useBinderAsphaltConcreteStore, {
   BinderAsphaltConcreteActions,
 } from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
@@ -33,7 +34,8 @@ const BinderAsphaltConcrete = () => {
     { step: 1, children: <BinderAsphaltConcrete_step2 />, data: store },
     { step: 2, children: <BinderAsphaltConcrete_step3 />, data: store },
     { step: 3, children: <BinderAsphaltConcrete_step4 />, data: store },
-    { step: 4, children: <BinderAsphaltConcreteResume />, data: store },
+    { step: 4, children: <BinderAsphaltConcrete_step5 />, data: store },
+    { step: 5, children: <BinderAsphaltConcreteResume />, data: store },
   ];
 
   return (

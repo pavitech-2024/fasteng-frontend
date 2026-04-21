@@ -1,172 +1,142 @@
 import { EssayPageProps } from '../../../templates/essay';
-import { t } from 'i18next';
 import { Box, TextField } from '@mui/material';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
 
 const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
   const { step3Data, setData } = useBinderAsphaltConcreteStore();
 
-  const inputsPavimentData = [
-    { label: t('pm.binderAsphaltConcrete.refinery'), value: step3Data.refinery, key: 'refinery', required: true },
-    { label: t('pm.binderAsphaltConcrete.company'), value: step3Data.company, key: 'company', required: true },
-    {
-      label: t('pm.binderAsphaltConcrete.collectionDate'),
-      value: step3Data.collectionDate,
-      key: 'collectionDate',
-      required: true,
-    },
-    {
-      label: t('pm.binderAsphaltConcrete.invoiceNumber'),
-      value: step3Data.invoiceNumber,
-      key: 'invoiceNumber',
-      required: true,
-    },
-    {
-      label: t('pm.binderAsphaltConcrete.dataInvoice'),
-      value: step3Data.dataInvoice,
-      key: 'dataInvoice',
-      required: true,
-    },
-    {
-      label: t('pm.binderAsphaltConcrete.certificateDate'),
-      value: step3Data.certificateDate,
-      key: 'certificateDate',
-      required: true,
-    },
-    {
-      label: t('pm.binderAsphaltConcrete.certificateNumber'),
-      value: step3Data.certificateNumber,
-      key: 'certificateNumber',
-      required: true,
-    },
-    {
-      label: t('pm.binderAsphaltConcrete.capType'),
-      value: step3Data.capType,
-      key: 'capType',
-      required: true,
-    },
-    {
-      label: t('pm.binderAsphaltConcrete.performanceGrade'),
-      value: step3Data.performanceGrade,
-      key: 'performanceGrade',
-      required: true,
-    },
-    {
-      label: t('pm.binderAsphaltConcrete.penetration'),
-      value: step3Data.penetration,
-      key: 'penetration',
-      required: true,
-    },
-    {
-      label: t('pm.binderAsphaltConcrete.softeningPoint'),
-      value: step3Data.softeningPoint,
-      key: 'softeningPoint',
-      required: true,
-    },
-    {
-      label: t('pm.binderAsphaltConcrete.elasticRecovery'),
-      value: step3Data.elasticRecovery,
-      key: 'elasticRecovery',
-      required: true,
-    },
+  // Helper para renderizar campos com placeholder grande
+  const renderTextField = (
+    key: string,
+    label: string,
+    value: any,
+    type = 'text',
+    required = false,
+    adornment?: string
+  ) => {
+    if (adornment) {
+      return (
+        <InputEndAdornment
+          key={key}
+          adornment={adornment}
+          type={type}
+          variant="standard"
+          label={label}
+          placeholder={label}
+          value={value?.toString() || ''}
+          required={required}
+          onChange={(e) => setData({ step: 2, key, value: e.target.value })}
+          sx={{
+            '& .MuiInputLabel-root': { fontSize: '0.9rem', fontWeight: 500 },
+            '& .MuiInputBase-input': { fontSize: '1rem', padding: '8px 0' },
+            '& .MuiInputBase-input::placeholder': { fontSize: '1rem', opacity: 0.7, color: '#666' },
+          }}
+        />
+      );
+    }
+
+    return (
+      <TextField
+        key={key}
+        variant="standard"
+        type={type}
+        label={label}
+        placeholder={label}
+        value={value || ''}
+        required={required}
+        InputLabelProps={type === 'date' ? { shrink: true } : undefined}
+        onChange={(e) => setData({ step: 2, key, value: e.target.value })}
+        sx={{
+          '& .MuiInputLabel-root': { fontSize: '0.9rem', fontWeight: 500 },
+          '& .MuiInputBase-input': { fontSize: '1rem', padding: '8px 0' },
+          '& .MuiInputBase-input::placeholder': { fontSize: '1rem', opacity: 0.7, color: '#666' },
+        }}
+      />
+    );
+  };
+
+  // TRATAMENTO SUPERFICIAL - Adicionado type: 'text' para todos
+  const tratamentoInputs = [
+    { label: 'TIPO DE TRATAMENTO', key: 'tipoTratamento', required: true, type: 'text', value: step3Data?.tipoTratamento },
+    { label: 'TIPO DE EMULSÃO', key: 'tipoEmulsao', required: true, type: 'text', value: step3Data?.tipoEmulsao },
+    { label: 'TAXA DE EMULSÃO (l/m²)', key: 'taxaEmulsao', required: true, type: 'text', adornment: 'l/m²', value: step3Data?.taxaEmulsao },
+    { label: 'TAXA DE AGREGADOS POR CAMADA (kg/m²)', key: 'taxaAgregados', required: true, type: 'text', adornment: 'kg/m²', value: step3Data?.taxaAgregados },
+    { label: 'FAIXA GRANULOMÉTRICA', key: 'faixaGranulometrica', required: true, type: 'text', value: step3Data?.faixaGranulometrica },
+    { label: 'ABRASÃO LOS ANGELES (%)', key: 'abrasaoLosAngeles', required: true, type: 'text', adornment: '%', value: step3Data?.abrasaoLosAngeles },
+    { label: 'MASSA ESPECÍFICA (g/cm³)', key: 'massaEspecifica', required: true, type: 'text', adornment: 'g/cm³', value: step3Data?.massaEspecifica },
   ];
 
-  const inputsBrookfieldViscosity = [
-    {
-      label: t('pm.binderAsphaltConcrete.vb_sp21_20'),
-      value: step3Data.vb_sp21_20,
-      key: 'vb_sp21_20',
-      required: true,
-    },
-    {
-      label: t('pm.binderAsphaltConcrete.vb_sp21_50'),
-      value: step3Data.vb_sp21_50,
-      key: 'vb_sp21_50',
-      required: true,
-    },
-    {
-      label: t('pm.binderAsphaltConcrete.vb_sp21_100'),
-      value: step3Data.vb_sp21_100,
-      key: 'vb_sp21_100',
-      required: true,
-    },
-    {
-      label: t('pm.binderAsphaltConcrete.observations'),
-      value: step3Data.observations,
-      key: 'observations',
-      required: false,
-    },
+  // EMULSÃO ASFÁLTICA - Adicionado type: 'text' ou 'date' conforme necessário
+  const emulsaoInputs = [
+    { label: 'REFERÊNCIA COMERCIAL', key: 'referenciaComercial', required: true, type: 'text', value: step3Data?.referenciaComercial },
+    { label: 'REFINARIA', key: 'refinaria', required: true, type: 'text', value: step3Data?.refinaria },
+    { label: 'EMPRESA DISTRIBUIDORA', key: 'empresaDistribuidora', required: true, type: 'text', value: step3Data?.empresaDistribuidora },
+    { label: 'DATA DO CARREGAMENTO', key: 'dataCarregamento', required: true, type: 'date', value: step3Data?.dataCarregamento },
+    { label: 'NÚMERO DA NOTA FISCAL', key: 'numeroNotaFiscal', required: true, type: 'text', value: step3Data?.numeroNotaFiscal },
+    { label: 'DATA DA NOTA FISCAL', key: 'dataNotaFiscal', required: true, type: 'date', value: step3Data?.dataNotaFiscal },
+    { label: 'NÚMERO DO CERTIFICADO', key: 'numeroCertificado', required: true, type: 'text', value: step3Data?.numeroCertificado },
+    { label: 'DATA DO CERTIFICADO', key: 'dataCertificado', required: true, type: 'date', value: step3Data?.dataCertificado },
+  ];
+
+  // PARÂMETROS DO MATERIAL - Adicionado type: 'text' para todos
+  const parametrosInputs = [
+    { label: 'VISCOSIDADE (SSF)', key: 'viscosidadeSSF', required: true, type: 'text', value: step3Data?.viscosidadeSSF },
+    { label: 'PENEIRAÇÃO (%)', key: 'peneiracao', required: true, type: 'text', adornment: '%', value: step3Data?.peneiracao },
+    { label: 'RESÍDUO (%)', key: 'residuo', required: true, type: 'text', adornment: '%', value: step3Data?.residuo },
+    { label: 'CARGA DE PARTÍCULA', key: 'cargaParticula', required: true, type: 'text', value: step3Data?.cargaParticula },
+    { label: 'PENETRAÇÃO (mm)', key: 'penetracao', required: true, type: 'text', adornment: 'mm', value: step3Data?.penetracao },
+    { label: 'RECUPERAÇÃO ELÁSTICA (%)', key: 'recuperacaoElastica', required: true, type: 'text', adornment: '%', value: step3Data?.recuperacaoElastica },
+    { label: 'PONTO DE AMOLECIMENTO (°C)', key: 'pontoAmolecimento', required: true, type: 'text', adornment: '°C', value: step3Data?.pontoAmolecimento },
   ];
 
   setNextDisabled(false);
 
   return (
     <>
-      <FlexColumnBorder title={t('pm.paviment.data')} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
-        <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Box
-            sx={{
-              display: 'grid',
-              width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
-              gap: '10px 20px',
-              paddingBottom: '20px',
-            }}
-          >
-            {inputsPavimentData.map((input) => {
-              return (
-                <TextField
-                  key={input.key}
-                  variant="standard"
-                  label={input.label}
-                  value={input.value}
-                  required={input.required}
-                  onChange={(e) => setData({ step: 2, key: input.key, value: e.target.value })}
-                />
-              );
-            })}
+      <FlexColumnBorder title="TRATAMENTO SUPERFICIAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
+            {tratamentoInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.required, input.adornment))}
           </Box>
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title={t('pm.brookfield.viscosity')} open={true} theme={'#07B811'}>
-        <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Box
-            sx={{
-              display: 'grid',
-              width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
-              gap: '10px 20px',
-              paddingBottom: '20px',
-            }}
-          >
-            {inputsBrookfieldViscosity.map((input) => {
-              return (
-                <TextField
-                  key={input.key}
-                  variant="standard"
-                  label={input.label}
-                  value={input.value}
-                  required={input.required}
-                  onChange={(e) => setData({ step: 2, key: input.key, value: e.target.value })}
-                />
-              );
-            })}
+      <FlexColumnBorder title="EMULSÃO ASFÁLTICA" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
+            {emulsaoInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.required))}
+          </Box>
+        </Box>
+      </FlexColumnBorder>
+
+      <FlexColumnBorder title="PARÂMETROS DO MATERIAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
+            {parametrosInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.required, input.adornment))}
+          </Box>
+        </Box>
+      </FlexColumnBorder>
+
+      <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: '1fr', gap: '10px 20px', paddingBottom: '20px' }}>
+            <TextField
+              fullWidth
+              multiline
+              rows={4}
+              variant="outlined"
+              label="OBSERVAÇÕES"
+              placeholder="DIGITE SUAS OBSERVAÇÕES AQUI"
+              value={step3Data?.observacoes || ''}
+              onChange={(e) => setData({ step: 2, key: 'observacoes', value: e.target.value })}
+              sx={{
+                '& .MuiInputLabel-root': { fontSize: '0.9rem', fontWeight: 500 },
+                '& .MuiInputBase-input': { fontSize: '1rem' },
+                '& .MuiInputBase-input::placeholder': { fontSize: '1rem', opacity: 0.7, color: '#666' },
+              }}
+            />
           </Box>
         </Box>
       </FlexColumnBorder>
