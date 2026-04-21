@@ -19,6 +19,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
     const fetchData = async () => {
       try {
         const response = await samplesService.getSample(query.id);
+        console.log('Dados completos:', response.data);
         setSamples(response.data);
         setLoading(false);
       } catch (error) {
@@ -51,7 +52,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
     
     const hasData = fields.some(field => {
       const value = data[field.key];
-      return value && value !== '-' && value !== '---' && value !== null && value !== '';
+      return value && value !== null && value !== '';
     });
     
     if (!hasData) return null;
@@ -71,7 +72,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
           >
             {fields.map((field, idx) => {
               const value = data[field.key];
-              if (!value || value === '-' || value === '---' || value === null || value === '') return null;
+              if (value === undefined || value === null || value === '') return null;
               
               return (
                 <Box
@@ -99,10 +100,10 @@ const SpecificSample_BinderAsphaltConcrete = () => {
     );
   };
 
-  // ==================== STEP 1 - DADOS GERAIS ====================
+  // ==================== STEP 1 - DADOS GERAIS (generalData) ====================
   const generalDataFields = [
     { label: 'NOME', key: 'name' },
-    { label: 'LOCAL', key: 'zone' },
+    { label: 'ZONA', key: 'zone' },
     { label: 'CAMADA', key: 'layer' },
     { label: 'MUNICÍPIO/ESTADO', key: 'cityState' },
     { label: 'RODOVIA', key: 'highway' },
@@ -110,7 +111,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
     { label: 'OBSERVAÇÕES', key: 'observations' },
   ];
 
-  // ==================== STEP 2 - CARACTERÍSTICAS ====================
+  // ==================== STEP 2 - CARACTERÍSTICAS (step2Data) ====================
   const characteristicsFields = [
     { label: 'LOCAL', key: 'roadName' },
     { label: 'MUNICÍPIO/ESTADO', key: 'cityState' },
@@ -139,22 +140,25 @@ const SpecificSample_BinderAsphaltConcrete = () => {
     { label: 'OBSERVAÇÕES', key: 'observation' },
   ];
 
-  const pavimentPreparationFields = [
-    { label: 'IRI (m/km) PRÉ-REABILITAÇÃO', key: 'iriPrerehabilitation', suffix: ' m/km' },
-    { label: 'AT (%) PRÉ-REABILITAÇÃO', key: 'atPrerehabilitation', suffix: ' %' },
-    { label: 'FRESAGEM (cm)', key: 'millingThickness', suffix: ' cm' },
-    { label: 'INTERVENÇÃO NA BASE', key: 'interventionAtTheBase' },
+  // 🔥 CORRIGIDO: PREPARO DO PAVIMENTO - LENDO DO generalData (onde os dados realmente estão)
+  const pavimentPreparationFieldsFromGeneralData = [
+    { label: 'IRI (m/km) PRÉ-REABILITAÇÃO', key: 'iriPreReabilitacao', suffix: ' m/km' },
+    { label: 'AT (%) PRÉ-REABILITAÇÃO', key: 'atPreReabilitacao', suffix: ' %' },
+    { label: 'FRESAGEM', key: 'fresagem' },
+    { label: 'ESPESSURA FRESAGEM (cm)', key: 'espessuraFresagem', suffix: ' cm' },
+    { label: 'INTERVENÇÃO NA BASE', key: 'intervencaoBase' },
     { label: 'SAMI', key: 'sami' },
-    { label: 'PINTURA DE LIGAÇÃO', key: 'bondingPaint' },
-    { label: 'IMPRIMAÇÃO', key: 'priming' },
+    { label: 'PINTURA DE LIGAÇÃO', key: 'pinturaLigacao' },
+    { label: 'IMPRIMAÇÃO', key: 'imprimacao' },
   ];
 
-  const serviceTimeFields = [
-    { label: 'TEMPO EM SERVIÇO (ANOS)', key: 'serviceTimeYears', suffix: ' anos' },
-    { label: 'TEMPO EM SERVIÇO (MESES)', key: 'serviceTimeMonths', suffix: ' meses' },
+  // 🔥 CORRIGIDO: TEMPO EM SERVIÇO - LENDO DO generalData
+  const serviceTimeFieldsFromGeneralData = [
+    { label: 'TEMPO EM SERVIÇO (ANOS)', key: 'tempoServicoAnos', suffix: ' anos' },
+    { label: 'TEMPO EM SERVIÇO (MESES)', key: 'tempoServicoMeses', suffix: ' meses' },
   ];
 
-  // ==================== STEP 3 - TRATAMENTO SUPERFICIAL ====================
+  // ==================== STEP 3 - TRATAMENTO SUPERFICIAL (step3Data) ====================
   const tratamentoFields = [
     { label: 'Tipo de Tratamento', key: 'tipoTratamento' },
     { label: 'Tipo de Emulsão', key: 'tipoEmulsao' },
@@ -186,7 +190,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
     { label: 'Ponto de Amolecimento (°C)', key: 'pontoAmolecimento', suffix: ' °C' },
   ];
 
-  // ==================== STEP 4 - LIGANTE ASFÁLTICO ====================
+  // ==================== STEP 4 - LIGANTE ASFÁLTICO (step4Data) ====================
   const comerciaisFields = [
     { label: 'Referência Comercial', key: 'referenciaComercial' },
     { label: 'Refinaria', key: 'refinaria' },
@@ -239,7 +243,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
     { label: 'Temperatura do Teste (°C)', key: 'bbr_temp', suffix: ' °C' },
   ];
 
-  // ==================== STEP 5 - CONCRETO ASFÁLTICO ====================
+  // ==================== STEP 5 - CONCRETO ASFÁLTICO (step5Data) ====================
   const geraisFields = [
     { label: 'Tipo de CAP', key: 'tipoCAP' },
     { label: 'Massa Específica (g/cm³)', key: 'massaEspecifica', suffix: ' g/cm³' },
@@ -396,11 +400,11 @@ const SpecificSample_BinderAsphaltConcrete = () => {
         {/* STEP 2 - DADOS DO PAVIMENTO */}
         {renderSection('DADOS DO PAVIMENTO', samples?.step2Data, pavimentDataFields)}
 
-        {/* STEP 2 - PREPARO DO PAVIMENTO */}
-        {renderSection('PREPARO DO PAVIMENTO', samples?.step2Data, pavimentPreparationFields)}
+        {/* 🔥 CORRIGIDO: PREPARO DO PAVIMENTO - lendo do generalData */}
+        {renderSection('PREPARO DO PAVIMENTO', samples?.generalData, pavimentPreparationFieldsFromGeneralData)}
 
-        {/* STEP 2 - TEMPO EM SERVIÇO */}
-        {renderSection('TEMPO EM SERVIÇO', samples?.step2Data, serviceTimeFields)}
+        {/* 🔥 CORRIGIDO: TEMPO EM SERVIÇO - lendo do generalData */}
+        {renderSection('TEMPO EM SERVIÇO', samples?.generalData, serviceTimeFieldsFromGeneralData)}
 
         {/* STEP 2 - DATA DA ÚLTIMA ATUALIZAÇÃO */}
         {samples?.step2Data?.lastUpdate && samples.step2Data.lastUpdate !== '-' && (
