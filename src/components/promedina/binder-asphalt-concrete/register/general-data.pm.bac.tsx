@@ -96,29 +96,36 @@ const BinderAsphaltConcrete_step1 = ({ setNextDisabled }: EssayPageProps) => {
   }, [setNextDisabled]);
 
   // Helper para renderizar campos comuns
-  const renderTextField = (
-    key: string,
-    label: string,
-    value: any,
-    type = 'text',
-    required = false,
-    multiline = false
-  ) => (
-    <TextField
-      key={key}
-      variant="standard"
-      type={type}
-      label={label}
-      value={value || ''}
-      required={required}
-      multiline={multiline}
-      InputLabelProps={type === 'date' ? { shrink: true } : undefined}
-      onChange={(e) => setData({ step: 0, key, value: e.target.value })}
-      InputProps={{
-        inputProps: { style: { textTransform: 'uppercase' } }
-      }}
-    />
-  );
+ // Modifique o renderTextField para aceitar um callback opcional
+const renderTextField = (
+  key: string,
+  label: string,
+  value: any,
+  type = 'text',
+  required = false,
+  multiline = false,
+  onChangeCallback?: (value: string) => void  // ← NOVO PARÂMETRO
+) => (
+  <TextField
+    key={key}
+    variant="standard"
+    type={type}
+    label={label}
+    value={value || ''}
+    required={required}
+    multiline={multiline}
+    InputLabelProps={type === 'date' ? { shrink: true } : undefined}
+    onChange={(e) => {
+      setData({ step: 0, key, value: e.target.value });
+      if (onChangeCallback) {
+        onChangeCallback(e.target.value);
+      }
+    }}
+    InputProps={{
+      inputProps: { style: { textTransform: 'uppercase' } }
+    }}
+  />
+);
 
   const renderSelect = (
     key: string,
@@ -195,39 +202,53 @@ const BinderAsphaltConcrete_step1 = ({ setNextDisabled }: EssayPageProps) => {
   return (
     <>
       {/* CARD 1: IDENTIFICAÇÃO */}
-      <FlexColumnBorder title="IDENTIFICAÇÃO" open={true} theme={'#07B811'}>
-        <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              width: '100%',
-              flexWrap: 'wrap',
-              '& > *': {
-                width: 'calc(50% - 10px)',
-              },
-              gap: '5px 20px',
-              marginBottom: '10px',
-              marginTop: '-20px',
-            }}
-          >
-            {renderTextField('identification', 'INSTITUIÇÃO + NÚMERO DO TRECHO + TIPO DE EXECUÇÃO + ANO DE IMPLANTAÇÃO', extendedGeneralData.identification)}
-            {renderSelect('tipoSecao', 'TIPO DE SEÇÃO', extendedGeneralData.tipoSecao, tipoSecaoOptions)}
-            {renderSelect('faseMonitoramento', 'FASE DE MONITORAMENTO', extendedGeneralData.faseMonitoramento, faseMonitoramentoOptions)}
-            {renderTextField('liberacaoTrafico', 'LIBERAÇÃO AO TRÁFEGO', extendedGeneralData.liberacaoTrafico, 'date')}
-            {renderSelect('utilizadaMedina', 'UTILIZADA NA CALIBRAÇÃO DO MEDINA', extendedGeneralData.utilizadaMedina, simNaoOptions)}
-            {renderSelect('utilizadaLvec', 'UTILIZADA NA CALIBRAÇÃO DO LVECD', extendedGeneralData.utilizadaLvec, simNaoOptions)}
-            {renderSelect('dadosConfirmadosICT', 'DADOS CONFIRMADOS PELA ICT', extendedGeneralData.dadosConfirmadosICT, simNaoOptions)}
-            {renderTextField('observations', 'OBSERVAÇÕES', extendedGeneralData.observations, 'text', false, true)}
-          </Box>
-        </Box>
-      </FlexColumnBorder>
+    <FlexColumnBorder title="IDENTIFICAÇÃO" open={true} theme={'#07B811'}>
+  <Box
+    sx={{
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    }}
+  >
+    <Box
+      sx={{
+        display: 'flex',
+        width: '100%',
+        flexWrap: 'wrap',
+        '& > *': {
+          width: 'calc(50% - 10px)',
+        },
+        gap: '5px 20px',
+        marginBottom: '10px',
+        marginTop: '-20px',
+      }}
+    >
+      <TextField
+        key="identification"
+        variant="standard"
+        type="text"
+        label="INSTITUIÇÃO + NÚMERO DO TRECHO + TIPO DE EXECUÇÃO + ANO DE IMPLANTAÇÃO"
+        value={extendedGeneralData.identification || ''}
+        onChange={(e) => {
+          setData({ step: 0, key: 'identification', value: e.target.value });
+          setData({ step: 0, key: 'name', value: e.target.value });
+        }}
+        InputProps={{
+          inputProps: { style: { textTransform: 'uppercase' } }
+        }}
+      />
+      
+      {renderSelect('tipoSecao', 'TIPO DE SEÇÃO', extendedGeneralData.tipoSecao, tipoSecaoOptions)}
+      {renderSelect('faseMonitoramento', 'FASE DE MONITORAMENTO', extendedGeneralData.faseMonitoramento, faseMonitoramentoOptions)}
+      {renderTextField('liberacaoTrafico', 'LIBERAÇÃO AO TRÁFEGO', extendedGeneralData.liberacaoTrafico, 'date')}
+      {renderSelect('utilizadaMedina', 'UTILIZADA NA CALIBRAÇÃO DO MEDINA', extendedGeneralData.utilizadaMedina, simNaoOptions)}
+      {renderSelect('utilizadaLvec', 'UTILIZADA NA CALIBRAÇÃO DO LVECD', extendedGeneralData.utilizadaLvec, simNaoOptions)}
+      {renderSelect('dadosConfirmadosICT', 'DADOS CONFIRMADOS PELA ICT', extendedGeneralData.dadosConfirmadosICT, simNaoOptions)}
+      {renderTextField('observations', 'OBSERVAÇÕES', extendedGeneralData.observations, 'text', false, true)}
+    </Box>
+  </Box>
+</FlexColumnBorder>
 
       {/* CARD 2: PREPARO DO PAVIMENTO */}
       <FlexColumnBorder title="PREPARO DO PAVIMENTO" open={true} theme={'#07B811'}>

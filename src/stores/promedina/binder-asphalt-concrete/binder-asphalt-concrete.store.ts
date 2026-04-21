@@ -1,16 +1,16 @@
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
-// ==================== STEP 2: TRATAMENTO SUPERFICIAL ====================
-interface Step2Data {
+// ==================== STEP 3: TRATAMENTO SUPERFICIAL (NOVO) ====================
+interface Step3Data {
   // Tratamento Superficial
   tipoTratamento: string;
   tipoEmulsao: string;
-  taxaEmulsao: string;        // l/m²
-  taxaAgregados: string;      // kg/m² por camada
+  taxaEmulsao: string;
+  taxaAgregados: string;
   faixaGranulometrica: string;
-  abrasaoLosAngeles: string;  // %
-  massaEspecifica: string;    // g/cm³
+  abrasaoLosAngeles: string;
+  massaEspecifica: string;
   
   // Emulsão Asfáltica
   referenciaComercial: string;
@@ -24,18 +24,18 @@ interface Step2Data {
   
   // Parâmetros do Material
   viscosidadeSSF: string;
-  peneiracao: string;         // %
-  residuo: string;            // %
+  peneiracao: string;
+  residuo: string;
   cargaParticula: string;
-  penetracao: string;         // mm
-  recuperacaoElastica: string; // %
-  pontoAmolecimento: string;   // °C
+  penetracao: string;
+  recuperacaoElastica: string;
+  pontoAmolecimento: string;
   
   observacoes: string;
 }
 
-// ==================== STEP 3: LIGANTE ASFÁLTICO ====================
-interface Step3Data {
+// ==================== STEP 4: LIGANTE ASFÁLTICO (NOVO) ====================
+interface Step4Data {
   // Dados Comerciais
   referenciaComercial: string;
   refinaria: string;
@@ -49,60 +49,60 @@ interface Step3Data {
   // Ligante Original
   tipoCAP: string;
   performanceGrade: string;
-  penetracao25: string;       // mm
-  pontoAmolecimento: string;   // °C
-  viscosidadeBrookfield_135: string;  // cP (SP21, 20rpm)
-  viscosidadeBrookfield_150: string;  // cP (SP21, 50rpm)
-  viscosidadeBrookfield_177: string;  // cP (SP21, 100rpm)
-  recuperacaoElastica: string; // %
-  dsr_original_G_sen: string;  // DSR - G*/sen(δ) (MPa)
-  dsr_original_temp: string;    // Temperatura do teste (°C)
+  penetracao25: string;
+  pontoAmolecimento: string;
+  viscosidadeBrookfield_135: string;
+  viscosidadeBrookfield_150: string;
+  viscosidadeBrookfield_177: string;
+  recuperacaoElastica: string;
+  dsr_original_G_sen: string;
+  dsr_original_temp: string;
   
   // Ligante Envelhecido RTFOT
-  dsr_rtfot_G_sen: string;     // DSR - G*/sen(δ) (MPa)
-  dsr_rtfot_temp: string;       // Temperatura do teste (°C)
+  dsr_rtfot_G_sen: string;
+  dsr_rtfot_temp: string;
   
-  // MSCR (Multiple Stress Creep Recovery)
-  mscr_Jnr_3_2: string;        // Jnr 3,2 (1/kPa)
-  mscr_Jndiff: string;         // Jndiff (%)
+  // MSCR
+  mscr_Jnr_3_2: string;
+  mscr_Jndiff: string;
   
-  // LAS (Linear Amplitude Sweep)
-  las_strain_1_25: string;     // Strain 1,25% - Nº
-  las_strain_2_5: string;      // Strain 2,5% - Nº
-  las_strain_5: string;        // Strain 5% - Nº
-  las_af: string;              // af - comprimento na trinca
-  las_FFL: string;             // FFL - Fator de fadiga de ligante
-  las_D: string;               // D³
+  // LAS
+  las_strain_1_25: string;
+  las_strain_2_5: string;
+  las_strain_5: string;
+  las_af: string;
+  las_FFL: string;
+  las_D: string;
   
-  // Ligante Envelhecido RTFOT + PAV
-  bbr_S: string;               // Módulo de rigidez S (MPa)
-  bbr_m: string;               // Coeficiente angular m (MPa)
-  bbr_temp: string;            // Temperatura do teste (°C)
+  // BBR
+  bbr_S: string;
+  bbr_m: string;
+  bbr_temp: string;
   
   observacoes: string;
 }
 
-// ==================== STEP 4: CONCRETO ASFÁLTICO ====================
-interface Step4Data {
+// ==================== STEP 5: CONCRETO ASFÁLTICO (NOVO) ====================
+interface Step5Data {
   // Propriedades Gerais
   tipoCAP: string;
-  massaEspecifica: string;     // g/cm³
-  resistenciaTracao: string;   // MPa
-  teorAsfalto: string;         // %
-  volumeVazios: string;        // %
+  massaEspecifica: string;
+  resistenciaTracao: string;
+  teorAsfalto: string;
+  volumeVazios: string;
   faixaGranulometrica: string;
-  tmn: string;                 // Tamanho Máximo Nominal (mm)
-  abrasaoLosAngeles: string;   // %
-  flowNumber: string;          // FN
-  moduloResiliencia: string;   // Módulo de Resiliência 25°C (MPa)
+  tmn: string;
+  abrasaoLosAngeles: string;
+  flowNumber: string;
+  moduloResiliencia: string;
   
-  // Curva de Fadiga (Compressão Diametral)
-  curvaFadiga_n_cps: string;   // Nº de Amostras (CPs)
-  curvaFadiga_k1: string;      // Coeficiente de Regressão (k1)
-  curvaFadiga_k2: string;      // Coeficiente de Regressão (k2)
-  curvaFadiga_r2: string;      // Coef. de Determinação (R²)
+  // Curva de Fadiga
+  curvaFadiga_n_cps: string;
+  curvaFadiga_k1: string;
+  curvaFadiga_k2: string;
+  curvaFadiga_r2: string;
   
-  // Curvas-Mestras e Coeficientes
+  // Curvas-Mestras
   sigmoidal_a: string;
   sigmoidal_b: string;
   sigmoidal_d: string;
@@ -111,10 +111,10 @@ interface Step4Data {
   sigmoidal_a2: string;
   sigmoidal_a3: string;
   
-  // Parâmetro α de evolução do dano
+  // Parâmetro α
   parametro_alfa: string;
   
-  // Coeficientes de regressão das curvas características de dano (G²)
+  // Coeficientes G²
   dano_C10: string;
   dano_C11: string;
   dano_C12: string;
@@ -124,14 +124,14 @@ interface Step4Data {
   dano_Delta: string;
   
   // Einf
-  einf: string;                // kPa
+  einf: string;
   
-  // Módulos de Relaxação (Prony)
-  prony_pi: string[];          // array de tempos (s)
-  prony_Ei: string[];          // array de módulos (kPa)
+  // Prony
+  prony_pi: string[];
+  prony_Ei: string[];
   
-  // Coeficientes de regressão do shift model
-  shiftModel_n_cps: string;    // Nº de Amostras (CPs)
+  // Shift Model
+  shiftModel_n_cps: string;
   shiftModel_ε0: string;
   shiftModel_N1: string;
   shiftModel_β: string;
@@ -143,6 +143,7 @@ interface Step4Data {
   observacoes: string;
 }
 
+// ==================== STEPS ORIGINAIS (JÁ EXISTEM) ====================
 interface GeneralData {
   name: string;
   zone: string;
@@ -153,11 +154,55 @@ interface GeneralData {
   observations?: string;
 }
 
+interface Step2Data {
+  identification: string;
+  sectionType: string;
+  extension: string;
+  initialStakeMeters: string;
+  latitudeI: string;
+  longitudeI: string;
+  finalStakeMeters: string;
+  latitudeF: string;
+  longitudeF: string;
+  monitoringPhase: string;
+  observation: string;
+  trafficLiberation: string;
+  averageAltitude: string;
+  numberOfTracks: string;
+  monitoredTrack: string;
+  lastUpdate: string;
+  trackWidth: string;
+  milling: string;
+  interventionAtTheBase: string;
+  sami: string;
+  bondingPaint: string;
+  priming: string;
+  images: string;
+  imagesDate: string;
+  structuralComposition: {
+    id: number;
+    layer: string;
+    material: string;
+    thickness: string;
+  }[];
+  roadName?: string;
+  cityState?: string;
+  experimentalLength?: string;
+  guideSpeed?: string;
+  iriPrerehabilitation?: string;
+  atPrerehabilitation?: string;
+  millingThickness?: string;
+  serviceTimeYears?: string;
+  serviceTimeMonths?: string;
+}
+
+// ==================== EXPORT TYPES ====================
 export type BinderAsphaltConcreteData = {
   generalData: GeneralData;
   step2Data: Step2Data;
-  step3Data: Step3Data;
-  step4Data: Step4Data;
+  step3Data: Step3Data;  // NOVO
+  step4Data: Step4Data;  // NOVO
+  step5Data: Step5Data;  // NOVO
   _id?: string;
 };
 
@@ -167,10 +212,17 @@ export type BinderAsphaltConcreteActions = {
   reset: () => void;
 };
 
-const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data', 3: 'step4Data' };
+const stepVariant = { 
+  0: 'generalData', 
+  1: 'step2Data', 
+  2: 'step3Data',  // NOVO
+  3: 'step4Data',  // NOVO
+  4: 'step5Data'   // NOVO
+};
 
 export type setDataType = { step: number; key?: string; value: unknown };
 
+// ==================== INITIAL STATE ====================
 const initialState = {
   generalData: {
     name: null,
@@ -182,6 +234,50 @@ const initialState = {
     observations: null,
   },
   step2Data: {
+    identification: null,
+    sectionType: null,
+    extension: null,
+    initialStakeMeters: null,
+    latitudeI: null,
+    longitudeI: null,
+    finalStakeMeters: null,
+    latitudeF: null,
+    longitudeF: null,
+    monitoringPhase: null,
+    observation: null,
+    milling: null,
+    interventionAtTheBase: null,
+    sami: null,
+    bondingPaint: null,
+    priming: null,
+    images: null,
+    imagesDate: null,
+    trafficLiberation: null,
+    lastUpdate: null,
+    averageAltitude: null,
+    numberOfTracks: null,
+    monitoredTrack: null,
+    trackWidth: null,
+    structuralComposition: [
+      {
+        id: 0,
+        layer: null,
+        material: null,
+        thickness: null,
+      },
+    ],
+    roadName: null,
+    cityState: null,
+    experimentalLength: null,
+    guideSpeed: null,
+    iriPrerehabilitation: null,
+    atPrerehabilitation: null,
+    millingThickness: null,
+    serviceTimeYears: null,
+    serviceTimeMonths: null,
+  },
+  // ==================== NOVOS STEPS ====================
+  step3Data: {
     tipoTratamento: null,
     tipoEmulsao: null,
     taxaEmulsao: null,
@@ -206,7 +302,7 @@ const initialState = {
     pontoAmolecimento: null,
     observacoes: null,
   },
-  step3Data: {
+  step4Data: {
     referenciaComercial: null,
     refinaria: null,
     empresaDistribuidora: null,
@@ -240,7 +336,7 @@ const initialState = {
     bbr_temp: null,
     observacoes: null,
   },
-  step4Data: {
+  step5Data: {
     tipoCAP: null,
     massaEspecifica: null,
     resistenciaTracao: null,
@@ -286,6 +382,7 @@ const initialState = {
   _id: null,
 };
 
+// ==================== STORE ====================
 const useBinderAsphaltConcreteStore = create<BinderAsphaltConcreteData & BinderAsphaltConcreteActions>()(
   devtools(
     persist(
@@ -293,7 +390,7 @@ const useBinderAsphaltConcreteStore = create<BinderAsphaltConcreteData & BinderA
         ...initialState,
         setData: ({ step, key, value }) =>
           set((state) => {
-            if (step === 3) {
+            if (step === 4) { // Agora step 4 = step5Data (último)
               return value;
             } else {
               if (key) {
