@@ -145,6 +145,7 @@ interface Step5Data {
 
 // ==================== STEPS ORIGINAIS (JÁ EXISTEM) ====================
 interface GeneralData {
+  identification?: string; 
   name: string;
   zone: string;
   layer: string;
@@ -200,9 +201,9 @@ interface Step2Data {
 export type BinderAsphaltConcreteData = {
   generalData: GeneralData;
   step2Data: Step2Data;
-  step3Data: Step3Data;  // NOVO
-  step4Data: Step4Data;  // NOVO
-  step5Data: Step5Data;  // NOVO
+  step3Data: Step3Data;
+  step4Data: Step4Data;
+  step5Data: Step5Data;
   _id?: string;
 };
 
@@ -215,9 +216,9 @@ export type BinderAsphaltConcreteActions = {
 const stepVariant = { 
   0: 'generalData', 
   1: 'step2Data', 
-  2: 'step3Data',  // NOVO
-  3: 'step4Data',  // NOVO
-  4: 'step5Data'   // NOVO
+  2: 'step3Data',
+  3: 'step4Data',
+  4: 'step5Data'
 };
 
 export type setDataType = { step: number; key?: string; value: unknown };
@@ -276,7 +277,6 @@ const initialState = {
     serviceTimeYears: null,
     serviceTimeMonths: null,
   },
-  // ==================== NOVOS STEPS ====================
   step3Data: {
     tipoTratamento: null,
     tipoEmulsao: null,
@@ -382,28 +382,30 @@ const initialState = {
   _id: null,
 };
 
-// ==================== STORE ====================
+// ==================== STORE CORRIGIDO ====================
 const useBinderAsphaltConcreteStore = create<BinderAsphaltConcreteData & BinderAsphaltConcreteActions>()(
   devtools(
     persist(
       (set) => ({
         ...initialState,
+        // 🔥 CORREÇÃO AQUI - Removeu o if(step === 4) que quebrava o store
         setData: ({ step, key, value }) =>
           set((state) => {
-            if (step === 4) { // Agora step 4 = step5Data (último)
-              return value;
+            if (key) {
+              // Atualiza apenas o campo específico
+              return {
+                ...state,
+                [stepVariant[step]]: {
+                  ...state[stepVariant[step]],
+                  [key]: value,
+                },
+              };
             } else {
-              if (key) {
-                return {
-                  ...state,
-                  [stepVariant[step]]: {
-                    ...state[stepVariant[step]],
-                    [key]: value,
-                  },
-                };
-              } else {
-                return { ...state, [stepVariant[step]]: value };
-              }
+              // Substitui o objeto inteiro do step
+              return {
+                ...state,
+                [stepVariant[step]]: value,
+              };
             }
           }),
         reset: () => set(initialState),

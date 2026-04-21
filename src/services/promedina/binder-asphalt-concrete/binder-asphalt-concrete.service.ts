@@ -14,7 +14,7 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
     icon: concreteBinderAsphaltImage,
     title: t('pm.binder-asphalt-concrete-register'),
     path: '/promedina/binder-asphalt-concrete',
-    steps: 5,
+    steps: 6,
     backend_path: 'promedina/binder-asphalt-concrete/binder-asphalt-concrete-samples',
     standard: {
       name: '',
@@ -25,44 +25,44 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
       { step: 1, description: t('pm.pavement.specific.data'), path: 'step2' },
       { step: 2, description: t('pm.pavement.specific.data'), path: 'step3' },
       { step: 3, description: t('pm.pavement.specific.data'), path: 'step4' },
-      { step: 4, description: t('pm.pavement.resume'), path: 'resume' },
+      { step: 4, description: t('pm.pavement.specific.data'), path: 'step5' },
+      { step: 5, description: t('pm.pavement.resume'), path: 'resume' },
     ],
   };
 
   store_actions: BinderAsphaltConcreteActions;
   userId: string;
 
-  /** @handleNext Receives the step and data from the form and calls the respective method */
   handleNext = async (step: number, data: unknown): Promise<void> => {
-  try {
-    switch (step) {
-      case 0:
-        await this.submitGeneralData(data as BinderAsphaltConcreteData['generalData']);
-        break;
-      case 1:
-        await this.submitStep2Data(data as BinderAsphaltConcreteData['step2Data']);
-        break;
-      case 2:
-        await this.submitStep3Data(data as BinderAsphaltConcreteData['step3Data']);
-        break;
-      case 3:
-        await this.submitStep4Data(data as BinderAsphaltConcreteData['step4Data']);
-        break;
-      case 4:
-        // 🔥 SALVA E NÃO LANÇA ERRO
-        await this.saveSample(data as BinderAsphaltConcreteData);
-        break;
-      default:
-        throw t('errors.invalid-step');
+    try {
+      switch (step) {
+        case 0:
+          await this.submitGeneralData(data as BinderAsphaltConcreteData['generalData']);
+          break;
+        case 1:
+          await this.submitStep2Data(data as BinderAsphaltConcreteData['step2Data']);
+          break;
+        case 2:
+          await this.submitStep3Data(data as BinderAsphaltConcreteData['step3Data']);
+          break;
+        case 3:
+          await this.submitStep4Data(data as BinderAsphaltConcreteData['step4Data']);
+          break;
+        case 4:
+          await this.submitStep5Data(data as BinderAsphaltConcreteData['step5Data']);
+          break;
+        case 5:
+          await this.saveSample(data as BinderAsphaltConcreteData);
+          break;
+        default:
+          throw t('errors.invalid-step');
+      }
+    } catch (error) {
+      throw error;
     }
-  } catch (error) {
-    console.error('Erro no handleNext:', error);
-    throw error;
-  }
-};
+  };
 
   submitGeneralData = async (generalData: BinderAsphaltConcreteData['generalData']): Promise<void> => {
-    // Apenas atualiza o store, não salva no backend
     this.store_actions.setData({ step: 0, key: 'generalData', value: generalData });
   };
 
@@ -78,116 +78,148 @@ class BINDER_ASPHALT_CONCRETE_SERVICE implements IEssayService {
     this.store_actions.setData({ step: 3, key: 'step4Data', value: step4Data });
   };
 
-  // save essay
- saveSample = async (store: BinderAsphaltConcreteData): Promise<void> => {
-  const { _id } = store;
-  
-  // Garante que generalData.name tenha o valor da identificação
-  const fixedStore = {
-    ...store,
-    generalData: {
-      ...store.generalData,
-      name: store.step2Data?.identification || store.generalData?.name || `Amostra_${Date.now()}`
-    }
+  submitStep5Data = async (step5Data: BinderAsphaltConcreteData['step5Data']): Promise<void> => {
+    this.store_actions.setData({ step: 4, key: 'step5Data', value: step5Data });
   };
-  
-  console.log('=== SAVE SAMPLE ===');
-  console.log('ID:', _id);
-  console.log('Identification:', fixedStore.step2Data?.identification);
-  console.log('Name:', fixedStore.generalData?.name);
 
-  const replaceNullValues = (data: BinderAsphaltConcreteData): BinderAsphaltConcreteData => {
-    const newData = { ...data };
-    const recursiveReplaceNull = (obj: Record<string, any>) => {
-      for (const key in obj) {
-        if (key === '_id') continue;
-        
-        if (obj[key] === null) {
-          obj[key] = '-';
-        } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-          recursiveReplaceNull(obj[key]);
-        }
+  saveSample = async (store: BinderAsphaltConcreteData): Promise<void> => {
+    const { _id } = store;
+    
+    // 🔥 PRIORIDADE 1: generalData.identification (do step1)
+    // 🔥 PRIORIDADE 2: step2Data.identification
+    // 🔥 PRIORIDADE 3: generalData.name
+    const correctIdentification = 
+      store.generalData?.identification || 
+      store.step2Data?.identification || 
+      store.generalData?.name;
+    
+    console.log('=== SAVE SAMPLE ===');
+    console.log('ID:', _id);
+    console.log('✅ Identificação encontrada:', correctIdentification);
+    
+    // 🔥 VALIDAÇÃO OBRIGATÓRIA
+    if (!correctIdentification || correctIdentification === '-' || correctIdentification === '---' || correctIdentification === 'null' || correctIdentification === '') {
+      throw new Error('❌ Por favor, preencha a IDENTIFICAÇÃO no primeiro passo! O campo "INSTITUIÇÃO + NÚMERO DO TRECHO + TIPO DE EXECUÇÃO + ANO DE IMPLANTAÇÃO" é obrigatório.');
+    }
+    
+    // 🔥 FORÇA o valor correto em TODOS os lugares
+    const fixedStore = {
+      ...store,
+      generalData: {
+        ...store.generalData,
+        identification: correctIdentification,
+        name: correctIdentification,
+      },
+      step2Data: {
+        ...store.step2Data,
+        identification: correctIdentification,
       }
     };
-    recursiveReplaceNull(newData);
-    return newData;
-  };
-
-  const updatedData = replaceNullValues(fixedStore);
-  updatedData._id = _id;
-  
-  const { generalData, step2Data, step3Data, step4Data, step5Data } = updatedData;
-
-  try {
-    let response;
-    let savedId = _id;
-
-    if (!_id || _id === '---' || _id === '-') {
-      console.log('CRIANDO nova amostra');
-      const { _id, ...storeWithoutId } = fixedStore;
-      response = await samplesService.saveSample({ 
-        ...storeWithoutId, 
-        generalData, 
-        step2Data, 
-        step3Data, 
-        step4Data,
-        step5Data 
-      });
-    } else {
-      console.log('ATUALIZANDO amostra existente:', _id);
-      response = await samplesService.updateSample(_id, { 
-        ...fixedStore, 
-        generalData, 
-        step2Data, 
-        step3Data, 
-        step4Data,
-        step5Data 
-      });
-    }
-
-    console.log('Resposta do backend:', response.data);
-
-    // 🔥 CORREÇÃO: Verifica se a resposta tem _id (criado/atualizado com sucesso)
-    const responseData = response.data;
     
-    // Se a resposta tem _id, significa que salvou com sucesso
-    if (responseData && responseData._id) {
-      console.log('✅ Salvo com sucesso! ID:', responseData._id);
+    console.log('📝 Dados fixados:', {
+      generalData_name: fixedStore.generalData?.name,
+      generalData_identification: fixedStore.generalData?.identification,
+      step2Data_identification: fixedStore.step2Data?.identification
+    });
+    
+    // 🔥 Substitui null por '-', mas NUNCA nos campos de identificação
+    const replaceNullValues = (data: BinderAsphaltConcreteData): BinderAsphaltConcreteData => {
+      const newData = JSON.parse(JSON.stringify(data));
       
-      // Atualiza o store com o _id retornado
-      this.store_actions.setData({ step: 0, key: '_id', value: responseData._id });
+      const recursiveReplaceNull = (obj: Record<string, any>) => {
+        for (const key in obj) {
+          if (key === '_id') continue;
+          
+          // 🔥 PULA campos de identificação - eles NUNCA devem virar "-"
+          if (key === 'identification' || key === 'name') {
+            if (obj[key] === null || obj[key] === undefined || obj[key] === '') {
+              obj[key] = correctIdentification;
+            }
+            continue;
+          }
+          
+          if (obj[key] === null || obj[key] === undefined) {
+            obj[key] = '-';
+          } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+            recursiveReplaceNull(obj[key]);
+          }
+        }
+      };
       
-      // Sucesso! Não lança erro
-      return;
-    }
+      recursiveReplaceNull(newData);
+      return newData;
+    };
     
-    // Se tem success: false, é erro
-    if (responseData.success === false) {
-      console.log('Erro do backend:', responseData.error);
-      throw new Error(responseData.error?.message || 'Erro ao salvar');
-    }
+    const updatedData = replaceNullValues(fixedStore);
+    updatedData._id = _id;
     
-    // Se chegou aqui e não tem _id nem success, algo está errado
-    if (!responseData._id && responseData.success !== false) {
-      console.warn('Resposta inesperada do backend:', responseData);
-      // Se criou mas veio sem _id, tenta pegar de outro lugar
-      if (responseData.data?._id) {
-        this.store_actions.setData({ step: 0, key: '_id', value: responseData.data._id });
+    const { generalData, step2Data, step3Data, step4Data, step5Data } = updatedData;
+    
+    console.log('🚀 Enviando para o backend:', {
+      generalData_name: generalData?.name,
+      step2Data_identification: step2Data?.identification
+    });
+    
+    try {
+      let response;
+      
+      if (!_id || _id === '---' || _id === '-') {
+        console.log('📦 CRIANDO nova amostra com nome:', generalData?.name);
+        const { _id, ...storeWithoutId } = fixedStore;
+        response = await samplesService.saveSample({ 
+          ...storeWithoutId, 
+          generalData, 
+          step2Data, 
+          step3Data, 
+          step4Data,
+          step5Data 
+        });
+      } else {
+        console.log('✏️ ATUALIZANDO amostra existente:', _id);
+        response = await samplesService.updateSample(_id, { 
+          ...fixedStore, 
+          generalData, 
+          step2Data, 
+          step3Data, 
+          step4Data,
+          step5Data 
+        });
+      }
+      
+      console.log('📨 Resposta do backend:', response.data);
+      
+      const responseData = response.data;
+      
+      if (responseData && responseData._id) {
+        console.log('✅ Salvo com sucesso! ID:', responseData._id);
+        this.store_actions.setData({ step: 0, key: '_id', value: responseData._id });
         return;
       }
-      throw new Error('Resposta inválida do servidor');
+      
+      if (responseData.success === false) {
+        console.log('❌ Erro do backend:', responseData.error);
+        throw new Error(responseData.error?.message || 'Erro ao salvar');
+      }
+      
+      if (!responseData._id && responseData.success !== false) {
+        console.warn('⚠️ Resposta inesperada do backend:', responseData);
+        if (responseData.data?._id) {
+          this.store_actions.setData({ step: 0, key: '_id', value: responseData.data._id });
+          return;
+        }
+        throw new Error('Resposta inválida do servidor');
+      }
+      
+    } catch (error) {
+      console.error('💥 Erro no saveSample:', error);
+      
+      if (error.response?.status === 413) {
+        throw new Error(t('pm.register.payload-too-large-error'));
+      }
+      
+      throw error;
     }
-    
-  } catch (error) {
-    console.error('Erro no saveSample:', error);
-    
-    if (error.response?.status === 413) {
-      throw new Error(t('pm.register.payload-too-large-error'));
-    }
-    
-    throw error;
-  }
-};
+  };
 }
 
 export default BINDER_ASPHALT_CONCRETE_SERVICE;

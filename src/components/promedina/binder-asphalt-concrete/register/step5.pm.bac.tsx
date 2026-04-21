@@ -7,7 +7,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
 
 const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
-  const { step5Data, setData } = useBinderAsphaltConcreteStore();
+ 
+    const { step5Data, setData } = useBinderAsphaltConcreteStore();
 
   // PROPRIEDADES GERAIS
   const geraisInputs = [
