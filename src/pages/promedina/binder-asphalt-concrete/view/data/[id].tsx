@@ -136,14 +136,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
     { label: 'LARGURA DA FAIXA (m)', key: 'larguraFaixa' },
   ];
 
-  // STEP 2 - CARACTERÍSTICAS
-  const characteristicsFields = [
-    { label: 'LOCAL', key: 'roadName' },
-    { label: 'MUNICÍPIO/ESTADO', key: 'cityState' },
-    { label: 'EXTENSÃO (m)', key: 'experimentalLength', suffix: ' m' },
-    { label: 'VELOCIDADE DIRETRIZ DA VIA (km/h)', key: 'guideSpeed', suffix: ' km/h' },
-  ];
-
+  // STEP 2 - COORDENADAS
   const coordinatesFields = [
     { label: 'ESTACA/METROS INICIAL', key: 'initialStakeMeters' },
     { label: 'LATITUDE INICIAL', key: 'latitudeI' },
@@ -151,33 +144,6 @@ const SpecificSample_BinderAsphaltConcrete = () => {
     { label: 'ESTACA/METROS FINAL', key: 'finalStakeMeters' },
     { label: 'LATITUDE FINAL', key: 'latitudeF' },
     { label: 'LONGITUDE FINAL', key: 'longitudeF' },
-  ];
-
-  const pavimentDataFields = [
-    { label: 'IDENTIFICAÇÃO', key: 'identification' },
-    { label: 'TIPO DE SEÇÃO', key: 'sectionType' },
-    { label: 'FASE DE MONITORAMENTO', key: 'monitoringPhase' },
-    { label: 'LIBERAÇÃO AO TRÁFEGO', key: 'trafficLiberation' },
-    { label: 'ALTITUDE MÉDIA (m)', key: 'averageAltitude', suffix: ' m' },
-    { label: 'NÚMERO DE FAIXAS', key: 'numberOfTracks' },
-    { label: 'FAIXA MONITORADA', key: 'monitoredTrack' },
-    { label: 'LARGURA DA FAIXA (m)', key: 'trackWidth', suffix: ' m' },
-    { label: 'OBSERVAÇÕES', key: 'observation' },
-  ];
-
-  const pavimentPreparationFields = [
-    { label: 'IRI (m/km) PRÉ-REABILITAÇÃO', key: 'iriPrerehabilitation', suffix: ' m/km' },
-    { label: 'AT (%) PRÉ-REABILITAÇÃO', key: 'atPrerehabilitation', suffix: ' %' },
-    { label: 'FRESAGEM (cm)', key: 'millingThickness', suffix: ' cm' },
-    { label: 'INTERVENÇÃO NA BASE', key: 'interventionAtTheBase' },
-    { label: 'SAMI', key: 'sami' },
-    { label: 'PINTURA DE LIGAÇÃO', key: 'bondingPaint' },
-    { label: 'IMPRIMAÇÃO', key: 'priming' },
-  ];
-
-  const serviceTimeFields = [
-    { label: 'TEMPO EM SERVIÇO (ANOS)', key: 'serviceTimeYears', suffix: ' anos' },
-    { label: 'TEMPO EM SERVIÇO (MESES)', key: 'serviceTimeMonths', suffix: ' meses' },
   ];
 
   const tratamentoFields = [
@@ -311,7 +277,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
 
   // ==================== SEÇÕES ESPECIAIS ====================
 
-  // DSR dinâmico (recebe o array dsr_original ou dsr_rtfot)
+  // DSR dinâmico
   const renderDsrSection = (title: string, dsrArray: { temp: string; G_sen: string }[] | undefined) => {
     if (!dsrArray || dsrArray.length === 0) return null;
     return (
@@ -387,12 +353,11 @@ const SpecificSample_BinderAsphaltConcrete = () => {
   // Observações
   const renderObservacoesSection = () => {
     const obs1 = samples?.generalData?.observations;
-    const obs2 = samples?.step2Data?.observation;
     const obs3 = samples?.step3Data?.observacoes;
     const obs4 = samples?.step4Data?.observacoes;
     const obs5 = samples?.step5Data?.observacoes;
     
-    const hasObs = obs1 || obs2 || obs3 || obs4 || obs5;
+    const hasObs = obs1 || obs3 || obs4 || obs5;
     if (!hasObs) return null;
     
     return (
@@ -403,12 +368,6 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               <Box>
                 <Typography sx={{ fontWeight: 'bold', color: 'gray' }}>IDENTIFICAÇÃO</Typography>
                 <Typography>{obs1}</Typography>
-              </Box>
-            )}
-            {obs2 && (
-              <Box>
-                <Typography sx={{ fontWeight: 'bold', color: 'gray' }}>DADOS DO PAVIMENTO</Typography>
-                <Typography>{obs2}</Typography>
               </Box>
             )}
             {obs3 && (
@@ -509,33 +468,8 @@ const SpecificSample_BinderAsphaltConcrete = () => {
           </Box>
         )}
 
-        {/* STEP 2 - CARACTERÍSTICAS */}
-        {renderSection('CARACTERÍSTICAS', samples?.step2Data, characteristicsFields)}
-
         {/* STEP 2 - COORDENADAS */}
         {renderSection('COORDENADAS', samples?.step2Data, coordinatesFields, '1fr 1fr 1fr')}
-
-        {/* STEP 2 - DADOS DO PAVIMENTO */}
-        {renderSection('DADOS DO PAVIMENTO', samples?.step2Data, pavimentDataFields, '1fr 1fr 1fr')}
-
-        {/* STEP 2 - PREPARO DO PAVIMENTO */}
-        {renderSection('PREPARO DO PAVIMENTO', samples?.step2Data, pavimentPreparationFields, '1fr 1fr 1fr')}
-
-        {/* STEP 2 - TEMPO EM SERVIÇO */}
-        {renderSection('TEMPO EM SERVIÇO', samples?.step2Data, serviceTimeFields, '1fr 1fr')}
-
-        {/* STEP 2 - DATA DA ÚLTIMA ATUALIZAÇÃO */}
-        {samples?.step2Data?.lastUpdate && samples.step2Data.lastUpdate !== '-' && (
-          <Box sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-            <FlexColumnBorder title="DATA DA ÚLTIMA ATUALIZAÇÃO" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', paddingBottom: '1rem' }}>
-                <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                  {samples.step2Data.lastUpdate}
-                </Typography>
-              </Box>
-            </FlexColumnBorder>
-          </Box>
-        )}
 
         {/* STEP 2 - COMPOSIÇÃO ESTRUTURAL */}
         {samples?.step2Data?.structuralComposition && samples.step2Data.structuralComposition.length > 0 && (

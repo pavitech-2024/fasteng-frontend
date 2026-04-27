@@ -19,25 +19,56 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
     _id,
   };
 
-  // ==================== STEP 1 - DADOS GERAIS ====================
-  const generalDataFields = [
-    { title: 'NOME', value: generalData?.name },
-    { title: 'LOCAL', value: generalData?.zone },
-    { title: 'CAMADA', value: generalData?.layer },
-    { title: 'MUNICÍPIO/ESTADO', value: generalData?.cityState },
-    { title: 'RODOVIA', value: generalData?.highway },
-    { title: 'VELOCIDADE DIRETRIZ', value: generalData?.guideLineSpeed ? `${generalData?.guideLineSpeed} km/h` : null },
+  // ==================== STEP 1 - IDENTIFICAÇÃO ====================
+  const identificacaoFields = [
+    { title: 'IDENTIFICAÇÃO', value: generalData?.identification || generalData?.name },
+    { title: 'TIPO DE SEÇÃO', value: generalData?.tipoSecao },
+    { title: 'FASE DE MONITORAMENTO', value: generalData?.faseMonitoramento },
+    { title: 'LIBERAÇÃO AO TRÁFEGO', value: generalData?.liberacaoTrafico },
+    { title: 'UTILIZADA NA CALIBRAÇÃO DO MEDINA', value: generalData?.utilizadaMedina },
+    { title: 'UTILIZADA NA CALIBRAÇÃO DO LVECD', value: generalData?.utilizadaLvec },
+    { title: 'DADOS CONFIRMADOS PELA ICT', value: generalData?.dadosConfirmadosICT },
     { title: 'OBSERVAÇÕES', value: generalData?.observations },
   ];
 
-  // ==================== STEP 2 ====================
-  const characteristicsFields = [
-    { title: 'LOCAL', value: step2Data?.roadName || step2Data?.identification },
-    { title: 'MUNICÍPIO/ESTADO', value: step2Data?.cityState },
-    { title: 'EXTENSÃO (m)', value: step2Data?.experimentalLength || step2Data?.extension },
-    { title: 'VELOCIDADE DIRETRIZ DA VIA (km/h)', value: step2Data?.guideSpeed },
+  // ==================== STEP 1 - PREPARO DO PAVIMENTO ====================
+  const preparoPavimentoFields = [
+    { title: 'IRI (m/km) PRÉ-REABILITAÇÃO', value: generalData?.iriPreReabilitacao },
+    { title: 'AT (%) PRÉ-REABILITAÇÃO', value: generalData?.atPreReabilitacao },
+    { title: 'FRESAGEM', value: generalData?.fresagem },
+    { title: 'ESPESSURA FRESADA (mm)', value: generalData?.espessuraFresagem },
+    { title: 'INTERVENÇÃO NA BASE', value: generalData?.intervencaoBase },
+    { title: 'SAMI', value: generalData?.sami },
+    { title: 'PINTURA DE LIGAÇÃO', value: generalData?.pinturaLigacao },
+    { title: 'IMPRIMAÇÃO', value: generalData?.imprimacao },
   ];
 
+  // ==================== STEP 1 - DATA ÚLTIMA ATUALIZAÇÃO ====================
+  const dataAtualizacaoFields = [
+    { title: 'DATA DA ÚLTIMA ATUALIZAÇÃO', value: generalData?.dataUltimaAtualizacao },
+    { title: 'TEMPO EM SERVIÇO (ANOS)', value: generalData?.tempoServicoAnos },
+    { title: 'TEMPO EM SERVIÇO (MESES)', value: generalData?.tempoServicoMeses },
+  ];
+
+  // ==================== STEP 1 - CARACTERÍSTICAS ====================
+  const caracteristicasFields = [
+    { title: 'LOCAL (RODOVIA/AVENIDA)', value: generalData?.local },
+    { title: 'MUNICÍPIO/ESTADO', value: generalData?.municipioEstado },
+    { title: 'EXTENSÃO (m)', value: generalData?.extensao },
+    { title: 'VELOCIDADE DIRETRIZ DA VIA (km/h)', value: generalData?.velocidadeDiretriz },
+    { title: 'KM INICIAL', value: generalData?.kmInicial },
+    { title: 'KM FINAL', value: generalData?.kmFinal },
+    { title: 'INÍCIO - ESTACA', value: generalData?.inicioEstaca },
+    { title: 'INÍCIO - METROS', value: generalData?.inicioMetros },
+    { title: 'FIM - ESTACA', value: generalData?.fimEstaca },
+    { title: 'FIM - METROS', value: generalData?.fimMetros },
+    { title: 'ALTITUDE MÉDIA (m)', value: generalData?.altitudeMedia },
+    { title: 'NÚMERO DE FAIXAS', value: generalData?.numeroFaixas },
+    { title: 'FAIXA MONITORADA', value: generalData?.faixaMonitorada },
+    { title: 'LARGURA DA FAIXA (m)', value: generalData?.larguraFaixa },
+  ];
+
+  // ==================== STEP 2 - COORDENADAS ====================
   const coordinatesFields = [
     { title: 'ESTACA/METROS INICIAL', value: step2Data?.initialStakeMeters },
     { title: 'LATITUDE INICIAL', value: step2Data?.latitudeI },
@@ -47,35 +78,7 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
     { title: 'LONGITUDE FINAL', value: step2Data?.longitudeF },
   ];
 
-  const pavimentDataFields = [
-    { title: 'IDENTIFICAÇÃO', value: step2Data?.identification },
-    { title: 'TIPO DE SEÇÃO', value: step2Data?.sectionType },
-    { title: 'FASE DE MONITORAMENTO', value: step2Data?.monitoringPhase },
-    { title: 'LIBERAÇÃO AO TRÁFEGO', value: step2Data?.trafficLiberation },
-    { title: 'ALTITUDE MÉDIA (m)', value: step2Data?.averageAltitude },
-    { title: 'NÚMERO DE FAIXAS', value: step2Data?.numberOfTracks },
-    { title: 'FAIXA MONITORADA', value: step2Data?.monitoredTrack },
-    { title: 'LARGURA DA FAIXA (m)', value: step2Data?.trackWidth },
-    { title: 'OBSERVAÇÕES', value: step2Data?.observation },
-  ];
-
-  const pavimentPreparationFields = [
-    { title: 'IRI (m/km) PRÉ-REABILITAÇÃO', value: step2Data?.iriPrerehabilitation },
-    { title: 'AT (%) PRÉ-REABILITAÇÃO', value: step2Data?.atPrerehabilitation },
-    { title: 'FRESAGEM (cm)', value: step2Data?.millingThickness },
-    { title: 'INTERVENÇÃO NA BASE', value: step2Data?.interventionAtTheBase },
-    { title: 'SAMI', value: step2Data?.sami },
-    { title: 'PINTURA DE LIGAÇÃO', value: step2Data?.bondingPaint },
-    { title: 'IMPRIMAÇÃO', value: step2Data?.priming },
-  ];
-
-  const serviceTimeFields = [
-    { title: 'TEMPO EM SERVIÇO (ANOS)', value: step2Data?.serviceTimeYears },
-    { title: 'TEMPO EM SERVIÇO (MESES)', value: step2Data?.serviceTimeMonths },
-  ];
-
-  const lastUpdateField = { title: 'DATA DA ÚLTIMA ATUALIZAÇÃO', value: step2Data?.lastUpdate };
-
+  // ==================== STEP 2 - COMPOSIÇÃO ESTRUTURAL ====================
   const columns: GridColDef[] = [
     { field: 'layer', headerName: 'CAMADA' },
     { field: 'material', headerName: 'MATERIAL' },
@@ -91,113 +94,113 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
 
   // ==================== STEP 3 ====================
   const tratamentoFields = [
-    { title: 'Tipo de Tratamento', value: step3Data?.tipoTratamento },
-    { title: 'Tipo de Emulsão', value: step3Data?.tipoEmulsao },
-    { title: 'Taxa de Emulsão (l/m²)', value: step3Data?.taxaEmulsao },
-    { title: 'Taxa de Agregados por Camada (kg/m²)', value: step3Data?.taxaAgregados },
-    { title: 'Faixa Granulométrica', value: step3Data?.faixaGranulometrica },
-    { title: 'Abrasão Los Angeles (%)', value: step3Data?.abrasaoLosAngeles },
-    { title: 'Massa Específica (g/cm³)', value: step3Data?.massaEspecifica },
+    { title: 'TIPO DE TRATAMENTO', value: step3Data?.tipoTratamento },
+    { title: 'TIPO DE EMULSÃO', value: step3Data?.tipoEmulsao },
+    { title: 'TAXA DE EMULSÃO (l/m²)', value: step3Data?.taxaEmulsao },
+    { title: 'TAXA DE AGREGADOS POR CAMADA (kg/m²)', value: step3Data?.taxaAgregados },
+    { title: 'FAIXA GRANULOMÉTRICA', value: step3Data?.faixaGranulometrica },
+    { title: 'ABRASÃO LOS ANGELES (%)', value: step3Data?.abrasaoLosAngeles },
+    { title: 'MASSA ESPECÍFICA (g/cm³)', value: step3Data?.massaEspecifica },
   ];
 
   const emulsaoFields = [
-    { title: 'Referência Comercial', value: step3Data?.referenciaComercial },
-    { title: 'Refinaria', value: step3Data?.refinaria },
-    { title: 'Empresa Distribuidora', value: step3Data?.empresaDistribuidora },
-    { title: 'Data do Carregamento', value: step3Data?.dataCarregamento },
-    { title: 'Número da Nota Fiscal', value: step3Data?.numeroNotaFiscal },
-    { title: 'Data da Nota Fiscal', value: step3Data?.dataNotaFiscal },
-    { title: 'Número do Certificado', value: step3Data?.numeroCertificado },
-    { title: 'Data do Certificado', value: step3Data?.dataCertificado },
+    { title: 'REFERÊNCIA COMERCIAL', value: step3Data?.referenciaComercial },
+    { title: 'REFINARIA', value: step3Data?.refinaria },
+    { title: 'EMPRESA DISTRIBUIDORA', value: step3Data?.empresaDistribuidora },
+    { title: 'DATA DO CARREGAMENTO', value: step3Data?.dataCarregamento },
+    { title: 'NÚMERO DA NOTA FISCAL', value: step3Data?.numeroNotaFiscal },
+    { title: 'DATA DA NOTA FISCAL', value: step3Data?.dataNotaFiscal },
+    { title: 'NÚMERO DO CERTIFICADO', value: step3Data?.numeroCertificado },
+    { title: 'DATA DO CERTIFICADO', value: step3Data?.dataCertificado },
   ];
 
   const parametrosFields = [
-    { title: 'Viscosidade (SSF)', value: step3Data?.viscosidadeSSF },
-    { title: 'Peneiração (%)', value: step3Data?.peneiracao },
-    { title: 'Resíduo (%)', value: step3Data?.residuo },
-    { title: 'Carga de Partícula', value: step3Data?.cargaParticula },
-    { title: 'Penetração (mm)', value: step3Data?.penetracao },
-    { title: 'Recuperação Elástica (%)', value: step3Data?.recuperacaoElastica },
-    { title: 'Ponto de Amolecimento (°C)', value: step3Data?.pontoAmolecimento },
+    { title: 'VISCOSIDADE (SSF)', value: step3Data?.viscosidadeSSF },
+    { title: 'PENEIRAÇÃO (%)', value: step3Data?.peneiracao },
+    { title: 'RESÍDUO (%)', value: step3Data?.residuo },
+    { title: 'CARGA DE PARTÍCULA', value: step3Data?.cargaParticula },
+    { title: 'PENETRAÇÃO (mm)', value: step3Data?.penetracao },
+    { title: 'RECUPERAÇÃO ELÁSTICA (%)', value: step3Data?.recuperacaoElastica },
+    { title: 'PONTO DE AMOLECIMENTO (°C)', value: step3Data?.pontoAmolecimento },
   ];
 
   // ==================== STEP 4 ====================
   const comerciaisFields = [
-    { title: 'Referência Comercial', value: step4Data?.referenciaComercial },
-    { title: 'Refinaria', value: step4Data?.refinaria },
-    { title: 'Empresa Distribuidora', value: step4Data?.empresaDistribuidora },
-    { title: 'Data do Carregamento', value: step4Data?.dataCarregamento },
-    { title: 'Número da Nota Fiscal', value: step4Data?.numeroNotaFiscal },
-    { title: 'Data da Nota Fiscal', value: step4Data?.dataNotaFiscal },
-    { title: 'Número do Certificado', value: step4Data?.numeroCertificado },
-    { title: 'Data do Certificado', value: step4Data?.dataCertificado },
+    { title: 'REFERÊNCIA COMERCIAL', value: step4Data?.referenciaComercial },
+    { title: 'REFINARIA', value: step4Data?.refinaria },
+    { title: 'EMPRESA DISTRIBUIDORA', value: step4Data?.empresaDistribuidora },
+    { title: 'DATA DO CARREGAMENTO', value: step4Data?.dataCarregamento },
+    { title: 'NÚMERO DA NOTA FISCAL', value: step4Data?.numeroNotaFiscal },
+    { title: 'DATA DA NOTA FISCAL', value: step4Data?.dataNotaFiscal },
+    { title: 'NÚMERO DO CERTIFICADO', value: step4Data?.numeroCertificado },
+    { title: 'DATA DO CERTIFICADO', value: step4Data?.dataCertificado },
   ];
 
   const originalFields = [
-    { title: 'Tipo de CAP', value: step4Data?.tipoCAP },
-    { title: 'Performance Grade (PG)', value: step4Data?.performanceGrade },
-    { title: 'Penetração (mm) - 25°C', value: step4Data?.penetracao25 },
-    { title: 'Ponto de Amolecimento (°C)', value: step4Data?.pontoAmolecimento },
-    { title: 'Viscosidade Brookfield 135°C (cP)', value: step4Data?.viscosidadeBrookfield_135 },
-    { title: 'Viscosidade Brookfield 150°C (cP)', value: step4Data?.viscosidadeBrookfield_150 },
-    { title: 'Viscosidade Brookfield 177°C (cP)', value: step4Data?.viscosidadeBrookfield_177 },
-    { title: 'Recuperação Elástica (%)', value: step4Data?.recuperacaoElastica },
+    { title: 'TIPO DE CAP', value: step4Data?.tipoCAP },
+    { title: 'PERFORMANCE GRADE (PG)', value: step4Data?.performanceGrade },
+    { title: 'PENETRAÇÃO (mm) - 25°C', value: step4Data?.penetracao25 },
+    { title: 'PONTO DE AMOLECIMENTO (°C)', value: step4Data?.pontoAmolecimento },
+    { title: 'VISCOSIDADE BROOKFIELD 135°C (cP)', value: step4Data?.viscosidadeBrookfield_135 },
+    { title: 'VISCOSIDADE BROOKFIELD 150°C (cP)', value: step4Data?.viscosidadeBrookfield_150 },
+    { title: 'VISCOSIDADE BROOKFIELD 177°C (cP)', value: step4Data?.viscosidadeBrookfield_177 },
+    { title: 'RECUPERAÇÃO ELÁSTICA (%)', value: step4Data?.recuperacaoElastica },
   ];
 
   const mscrFields = [
-    { title: 'MSCR - Jnr 3,2 (1/kPa)', value: step4Data?.mscr_Jnr_3_2 },
-    { title: 'MSCR - Jndiff (%)', value: step4Data?.mscr_Jndiff },
+    { title: 'MSCR - JNR 3,2 (1/KPA)', value: step4Data?.mscr_Jnr_3_2 },
+    { title: 'MSCR - JNDIFF (%)', value: step4Data?.mscr_Jndiff },
   ];
 
   const lasFields = [
-    { title: 'Temperatura do Teste (°C)', value: step4Data?.las_temperatura },
-    { title: 'LAS - Strain 1,25% - Nº', value: step4Data?.las_strain_1_25 },
-    { title: 'LAS - Strain 2,5% - Nº', value: step4Data?.las_strain_2_5 },
-    { title: 'LAS - Strain 5% - Nº', value: step4Data?.las_strain_5 },
-    { title: 'LAS - af (comprimento na trinca)', value: step4Data?.las_af },
-    { title: 'LAS - FFL (Fator de fadiga)', value: step4Data?.las_FFL },
+    { title: 'TEMPERATURA DO TESTE (°C)', value: step4Data?.las_temperatura },
+    { title: 'LAS - STRAIN 1,25% - Nº', value: step4Data?.las_strain_1_25 },
+    { title: 'LAS - STRAIN 2,5% - Nº', value: step4Data?.las_strain_2_5 },
+    { title: 'LAS - STRAIN 5% - Nº', value: step4Data?.las_strain_5 },
+    { title: 'LAS - AF (COMPRIMENTO NA TRINCA)', value: step4Data?.las_af },
+    { title: 'LAS - FFL (FATOR DE FADIGA)', value: step4Data?.las_FFL },
     { title: 'LAS - D³', value: step4Data?.las_D },
   ];
 
   const bbrFields = [
-    { title: 'BBR - Módulo de rigidez S (MPa)', value: step4Data?.bbr_S },
-    { title: 'BBR - Coeficiente angular m (MPa)', value: step4Data?.bbr_m },
-    { title: 'Temperatura do Teste (°C)', value: step4Data?.bbr_temp },
+    { title: 'BBR - MÓDULO DE RIGIDEZ S (MPa)', value: step4Data?.bbr_S },
+    { title: 'BBR - COEFICIENTE ANGULAR M (MPa)', value: step4Data?.bbr_m },
+    { title: 'TEMPERATURA DO TESTE (°C)', value: step4Data?.bbr_temp },
   ];
 
   // ==================== STEP 5 ====================
   const geraisFields = [
-    { title: 'Tipo de CAP', value: step5Data?.tipoCAP },
-    { title: 'Massa Específica (g/cm³)', value: step5Data?.massaEspecifica },
-    { title: 'Resistência à Tração (MPa)', value: step5Data?.resistenciaTracao },
-    { title: 'Teor de Asfalto (%)', value: step5Data?.teorAsfalto },
-    { title: 'Volume de Vazios (%)', value: step5Data?.volumeVazios },
-    { title: 'Faixa Granulométrica', value: step5Data?.faixaGranulometrica },
+    { title: 'TIPO DE CAP', value: step5Data?.tipoCAP },
+    { title: 'MASSA ESPECÍFICA (g/cm³)', value: step5Data?.massaEspecifica },
+    { title: 'RESISTÊNCIA À TRAÇÃO (MPa)', value: step5Data?.resistenciaTracao },
+    { title: 'TEOR DE ASFALTO (%)', value: step5Data?.teorAsfalto },
+    { title: 'VOLUME DE VAZIOS (%)', value: step5Data?.volumeVazios },
+    { title: 'FAIXA GRANULOMÉTRICA', value: step5Data?.faixaGranulometrica },
     { title: 'TMN (mm)', value: step5Data?.tmn },
-    { title: 'Abrasão Los Angeles (%)', value: step5Data?.abrasaoLosAngeles },
-    { title: 'Flow Number (FN)', value: step5Data?.flowNumber },
-    { title: 'Módulo de Resiliência 25°C (MPa)', value: step5Data?.moduloResiliencia },
+    { title: 'ABRASÃO LOS ANGELES (%)', value: step5Data?.abrasaoLosAngeles },
+    { title: 'FLOW NUMBER (FN)', value: step5Data?.flowNumber },
+    { title: 'MÓDULO DE RESILIÊNCIA 25°C (MPa)', value: step5Data?.moduloResiliencia },
   ];
 
   const curvaFadigaFields = [
-    { title: 'Nº de Amostras (CPs)', value: step5Data?.curvaFadiga_n_cps },
-    { title: 'Coeficiente de Regressão (k1)', value: step5Data?.curvaFadiga_k1 },
-    { title: 'Coeficiente de Regressão (k2)', value: step5Data?.curvaFadiga_k2 },
-    { title: 'Coef. de Determinação (R²)', value: step5Data?.curvaFadiga_r2 },
+    { title: 'Nº DE AMOSTRAS (CPs) CONSIDERADAS', value: step5Data?.curvaFadiga_n_cps },
+    { title: 'COEFICIENTE DE REGRESSÃO (k1)', value: step5Data?.curvaFadiga_k1 },
+    { title: 'COEFICIENTE DE REGRESSÃO (k2)', value: step5Data?.curvaFadiga_k2 },
+    { title: 'COEF. DE DETERMINAÇÃO DO AJUSTE (R²)', value: step5Data?.curvaFadiga_r2 },
   ];
 
   const sigmoidalFields = [
-    { title: 'Coeficiente a', value: step5Data?.sigmoidal_a },
-    { title: 'Coeficiente b', value: step5Data?.sigmoidal_b },
-    { title: 'Coeficiente d', value: step5Data?.sigmoidal_d },
-    { title: 'Coeficiente g', value: step5Data?.sigmoidal_g },
-    { title: 'Coeficiente a1', value: step5Data?.sigmoidal_a1 },
-    { title: 'Coeficiente a2', value: step5Data?.sigmoidal_a2 },
-    { title: 'Coeficiente a3', value: step5Data?.sigmoidal_a3 },
+    { title: 'COEFICIENTE a', value: step5Data?.sigmoidal_a },
+    { title: 'COEFICIENTE b', value: step5Data?.sigmoidal_b },
+    { title: 'COEFICIENTE d', value: step5Data?.sigmoidal_d },
+    { title: 'COEFICIENTE g', value: step5Data?.sigmoidal_g },
+    { title: 'COEFICIENTE a1', value: step5Data?.sigmoidal_a1 },
+    { title: 'COEFICIENTE a2', value: step5Data?.sigmoidal_a2 },
+    { title: 'COEFICIENTE a3', value: step5Data?.sigmoidal_a3 },
   ];
 
   const danoFields = [
-    { title: 'Parâmetro "α" de evolução do dano', value: step5Data?.parametro_alfa },
+    { title: 'PARÂMETRO "α" DE EVOLUÇÃO DO DANO', value: step5Data?.parametro_alfa },
     { title: 'C₁₀', value: step5Data?.dano_C10 },
     { title: 'C₁₁', value: step5Data?.dano_C11 },
     { title: 'C₁₂', value: step5Data?.dano_C12 },
@@ -208,7 +211,7 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
   ];
 
   const shiftModelFields = [
-    { title: 'Nº de Amostras (CPs)', value: step5Data?.shiftModel_n_cps },
+    { title: 'Nº DE AMOSTRAS (CPs) CONSIDERADAS', value: step5Data?.shiftModel_n_cps },
     { title: 'ε₀', value: step5Data?.shiftModel_ε0 },
     { title: 'N1', value: step5Data?.shiftModel_N1 },
     { title: 'β', value: step5Data?.shiftModel_β },
@@ -219,9 +222,9 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
   ];
 
   const sections = [
-    'general-data', 'step2-characteristics', 'step2-coordinates', 'step2-paviment-data',
-    'step2-paviment-preparation', 'step2-service-time', 'step2-last-update',
-    'step2-structural-composition', 'step3-tratamento', 'step3-emulsao', 'step3-parametros',
+    'step1-identificacao', 'step1-preparo', 'step1-data', 'step1-caracteristicas',
+    'step2-coordinates', 'step2-structural-composition',
+    'step3-tratamento', 'step3-emulsao', 'step3-parametros',
     'step4-comerciais', 'step4-original', 'step4-dsr-original', 'step4-rtfot',
     'step4-mscr', 'step4-las', 'step4-bbr',
     'step5-gerais', 'step5-fadiga', 'step5-sigmoidal', 'step5-dano', 'step5-prony', 'step5-shift',
@@ -269,59 +272,72 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
         >
           <GeneratePDF_ProMedina sample={samples} sections={sections} />
 
-          {/* STEP 1 - DADOS GERAIS */}
-          <Box id="general-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="DADOS GERAIS" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
-              {renderFields(generalDataFields)}
+          {/* STEP 1 - IDENTIFICAÇÃO */}
+          <Box id="step1-identificacao" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="IDENTIFICAÇÃO" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+              {renderFields(identificacaoFields)}
             </FlexColumnBorder>
           </Box>
 
-          {/* STEP 2 - CARACTERÍSTICAS */}
-          <Box id="step2-characteristics" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="CARACTERÍSTICAS" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
-              {renderFields(characteristicsFields)}
+          {/* STEP 1 - PREPARO DO PAVIMENTO */}
+          <Box id="step1-preparo" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="PREPARO DO PAVIMENTO" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+              {renderFields(preparoPavimentoFields)}
             </FlexColumnBorder>
           </Box>
+
+          {/* STEP 1 - DATA DA ÚLTIMA ATUALIZAÇÃO */}
+          <Box id="step1-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="DATA DA ÚLTIMA ATUALIZAÇÃO" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+              {renderFields(dataAtualizacaoFields, '1fr 1fr')}
+            </FlexColumnBorder>
+          </Box>
+
+          {/* STEP 1 - CARACTERÍSTICAS */}
+          <Box id="step1-caracteristicas" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+            <FlexColumnBorder title="CARACTERÍSTICAS" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+              {renderFields(caracteristicasFields)}
+            </FlexColumnBorder>
+          </Box>
+
+          {/* STEP 1 - COMPOSIÇÃO ESTRUTURAL */}
+          {(generalData?.camadasEstruturais && generalData.camadasEstruturais.length > 0) && (
+            <Box id="step1-composicao" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+              <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+                  <DataGrid
+                    rows={generalData.camadasEstruturais.map((item: any, index: number) => ({
+                      id: index,
+                      layer: item.tipo || '-',
+                      material: item.material || '-',
+                      thickness: item.espessura ? `${item.espessura} mm` : '-',
+                    }))}
+                    hideFooter
+                    disableColumnMenu
+                    disableColumnFilter
+                    columns={[
+                      { field: 'layer', headerName: 'CAMADA', flex: 1, headerAlign: 'center', align: 'center' },
+                      { field: 'material', headerName: 'MATERIAL', flex: 1, headerAlign: 'center', align: 'center' },
+                      { field: 'thickness', headerName: 'ESPESSURA (mm)', flex: 1, headerAlign: 'center', align: 'center' },
+                    ]}
+                  />
+                </Box>
+                {generalData?.imagemEstrutural && (
+                  <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', marginTop: '2rem' }}>
+                    <Typography sx={{ fontWeight: 'bold', color: 'black' }}>IMAGEM DA COMPOSIÇÃO ESTRUTURAL</Typography>
+                    <img src={generalData.imagemEstrutural} alt="Estrutura" width="250px" height="250px" style={{ borderRadius: '8px' }} />
+                    <Typography sx={{ color: 'gray' }}>DATA DA IMAGEM</Typography>
+                    <Typography sx={{ color: 'black' }}>{generalData?.dataImagens || '-'}</Typography>
+                  </Box>
+                )}
+              </FlexColumnBorder>
+            </Box>
+          )}
 
           {/* STEP 2 - COORDENADAS */}
           <Box id="step2-coordinates" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
             <FlexColumnBorder title="COORDENADAS" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(coordinatesFields, '1fr 1fr 1fr')}
-            </FlexColumnBorder>
-          </Box>
-
-          {/* STEP 2 - DADOS DO PAVIMENTO */}
-          <Box id="step2-paviment-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="DADOS DO PAVIMENTO" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
-              {renderFields(pavimentDataFields, '1fr 1fr 1fr')}
-            </FlexColumnBorder>
-          </Box>
-
-          {/* STEP 2 - PREPARO DO PAVIMENTO */}
-          <Box id="step2-paviment-preparation" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="PREPARO DO PAVIMENTO" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
-              {renderFields(pavimentPreparationFields, '1fr 1fr 1fr')}
-            </FlexColumnBorder>
-          </Box>
-
-          {/* STEP 2 - TEMPO EM SERVIÇO */}
-          <Box id="step2-service-time" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="TEMPO EM SERVIÇO" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
-              {renderFields(serviceTimeFields, '1fr 1fr')}
-            </FlexColumnBorder>
-          </Box>
-
-          {/* STEP 2 - DATA DA ÚLTIMA ATUALIZAÇÃO */}
-          <Box id="step2-last-update" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="DATA DA ÚLTIMA ATUALIZAÇÃO" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem' }}>
-                {lastUpdateField.value && (
-                  <>
-                    <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{lastUpdateField.title}</Typography>
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>{lastUpdateField.value}</Typography>
-                  </>
-                )}
-              </Box>
             </FlexColumnBorder>
           </Box>
 
@@ -348,8 +364,8 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
                 )}
               </Box>
               {step2Data?.images && (
-                <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                  <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem', color: 'black' }}>IMAGEM DA COMPOSIÇÃO ESTRUTURAL</Typography>
+                <Box sx={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', marginTop: '2rem' }}>
+                  <Typography sx={{ fontWeight: 'bold', color: 'black' }}>IMAGEM DA COMPOSIÇÃO ESTRUTURAL</Typography>
                   <img src={step2Data.images} alt="Estrutura" width="250px" height="250px" style={{ borderRadius: '8px' }} />
                   <Typography sx={{ color: 'gray' }}>DATA DA IMAGEM</Typography>
                   <Typography sx={{ color: 'black' }}>{step2Data?.imagesDate || '-'}</Typography>
@@ -407,7 +423,7 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
                   {(step4Data?.dsr_original || []).map((item, index) => (
                     <Box key={index} sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }}>
                       <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                        Temperatura {index + 1} (°C)
+                        TEMPERATURA {index + 1} (°C)
                       </Typography>
                       <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>{item.temp || '-'}</Typography>
                       <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
@@ -439,7 +455,7 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
                   {(step4Data?.dsr_rtfot || []).map((item, index) => (
                     <Box key={index} sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }}>
                       <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                        Temperatura {index + 1} (°C)
+                        TEMPERATURA {index + 1} (°C)
                       </Typography>
                       <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>{item.temp || '-'}</Typography>
                       <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
@@ -518,7 +534,7 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
               >
                 {step5Data?.einf && (
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }}>
-                    <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>Einf (kPa)</Typography>
+                    <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>EINF (kPa)</Typography>
                     <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>{step5Data.einf}</Typography>
                   </Box>
                 )}
@@ -542,23 +558,28 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
           </Box>
 
           {/* OBSERVAÇÕES */}
-          {(step3Data?.observacoes || step4Data?.observacoes || step5Data?.observacoes) && (
+          {(generalData?.observations || step3Data?.observacoes || step4Data?.observacoes || step5Data?.observacoes) && (
             <Box id="observacoes" sx={{ paddingTop: '1rem', paddingX: '6rem', paddingBottom: '2rem' }}>
               <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
                 <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', justifyItems: 'center', alignItems: 'center', gap: '1rem' }}>
+                  {generalData?.observations && (
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+                      IDENTIFICAÇÃO: {generalData.observations}
+                    </Typography>
+                  )}
                   {step3Data?.observacoes && (
                     <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                      Tratamento Superficial: {step3Data.observacoes}
+                      TRATAMENTO SUPERFICIAL: {step3Data.observacoes}
                     </Typography>
                   )}
                   {step4Data?.observacoes && (
                     <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                      Ligante Asfáltico: {step4Data.observacoes}
+                      LIGANTE ASFÁLTICO: {step4Data.observacoes}
                     </Typography>
                   )}
                   {step5Data?.observacoes && (
                     <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                      Concreto Asfáltico: {step5Data.observacoes}
+                      CONCRETO ASFÁLTICO: {step5Data.observacoes}
                     </Typography>
                   )}
                 </Box>
