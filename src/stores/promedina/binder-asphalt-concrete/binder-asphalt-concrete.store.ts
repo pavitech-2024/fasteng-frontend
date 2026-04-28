@@ -135,6 +135,10 @@ interface GeneralData {
   highway: string;
   guideLineSpeed: string;
   observations?: string;
+  latitudeI?: string; // NOVO
+  longitudeI?: string; // NOVO
+  latitudeF?: string; // NOVO
+  longitudeF?: string;
 }
 
 interface Step2Data {
@@ -215,6 +219,10 @@ const initialState = {
     highway: null,
     guideLineSpeed: null,
     observations: null,
+    latitudeI: null,
+    longitudeI: null,
+    latitudeF: null,
+    longitudeF: null,
   },
   step2Data: {
     identification: null,

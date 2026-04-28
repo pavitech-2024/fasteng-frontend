@@ -5,12 +5,15 @@ import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import { t } from 'i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { NextIcon } from '@/assets';
 import Loading from '@/components/molecules/loading';
 import Link from 'next/link';
+import GeneratePDF_ProMedina from '@/components/generatePDF/promedina/granularLayers/generatePDF.promedina';
 
 const SpecificSample_GranularLayers = () => {
   const [samples, setSamples] = useState<any>();
   const [loading, setLoading] = useState(true);
+  const [isLegacyFormat, setIsLegacyFormat] = useState(false);
   const router = useRouter();
   const query = router.query as any;
 
@@ -18,51 +21,94 @@ const SpecificSample_GranularLayers = () => {
     const fetchData = async () => {
       try {
         const response = await samplesService.getSample(query.id);
-        setSamples(response.data);
+        const data = response.data;
+        setSamples(data);
+
+        // 🔍 DETECÇÃO PRECISA DO FORMATO
+        // Formato NOVO: generalData contém 'tipoSecao', 'faseMonitoramento', 'roadName', 'liberacaoTrafico'
+        // Formato ANTIGO: generalData contém 'name', 'zone', 'layer', 'cityState', 'highway'
+        const hasNewFields =
+          data?.generalData?.tipoSecao !== undefined ||
+          data?.generalData?.faseMonitoramento !== undefined ||
+          data?.generalData?.roadName !== undefined ||
+          data?.generalData?.liberacaoTrafico !== undefined;
+
+        const hasLegacyFields =
+          data?.generalData?.name !== undefined ||
+          data?.generalData?.zone !== undefined ||
+          data?.generalData?.layer !== undefined ||
+          data?.generalData?.highway !== undefined;
+
+        // Só é legacy se NÃO tem campos novos E tem campos legacy
+        setIsLegacyFormat(!hasNewFields && hasLegacyFields);
         setLoading(false);
       } catch (error) {
         console.error('Failed to load samples:', error);
+        setLoading(false);
       }
     };
     if (query.id) fetchData();
   }, [query.id]);
 
+  // ==================== COLUNAS COMUNS ====================
   const columns: GridColDef[] = [
     { field: 'layer', headerName: 'CAMADA', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'material', headerName: 'MATERIAL', flex: 1, headerAlign: 'center', align: 'center' },
     { field: 'thickness', headerName: 'ESPESSURA (mm)', flex: 1, headerAlign: 'center', align: 'center' },
   ];
 
-  // Composição estrutural do generalData
-  const structuralRows = samples?.generalData?.structuralComposition?.map((item: any, index: number) => ({
-    id: index,
-    layer: item.layer || '-',
-    material: item.material || '-',
-    thickness: item.thickness ? `${item.thickness} mm` : '-',
-  })) || [];
+  // ==================== HELPERS (VERSÃO NOVA) ====================
+  const renderFields = (fields: { title: string; value: any }[], cols = '1fr 1fr 1fr 1fr') => {
+    const validFields = fields.filter((item) => item.value !== undefined && item.value !== null && item.value !== '');
+    if (validFields.length === 0) return null;
 
-  // Camadas dinâmicas do step2Data
-  const layers = samples?.step2Data?.layers || [];
-
-  const renderFields = (fields: { title: string; value: any }[], cols = '1fr 1fr 1fr 1fr') => (
-    <Box sx={{ display: 'grid', gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: cols }, justifyItems: 'center', alignItems: 'center', gap: '1rem' }}>
-      {fields.map((item, idx) =>
-        item.value ? (
-          <Box key={idx} sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center', textAlign: 'center' }}>
-            <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>{item.title}</Typography>
-            <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>{item.value}</Typography>
+    return (
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: cols },
+          justifyItems: 'center',
+          alignItems: 'center',
+          gap: '1rem',
+        }}
+      >
+        {validFields.map((item, idx) => (
+          <Box
+            key={idx}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.3rem',
+              alignItems: 'center',
+              textAlign: 'center',
+            }}
+          >
+            <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+              {item.title}
+            </Typography>
+            <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
+              {item.value}
+            </Typography>
           </Box>
-        ) : null
-      )}
-    </Box>
-  );
+        ))}
+      </Box>
+    );
+  };
 
-  if (loading) return <Loading size={30} color={'secondary'} />;
+  // ==================== RENDER NOVA VERSÃO ====================
+  const renderNewView = () => {
+    const structuralRows =
+      samples?.generalData?.structuralComposition?.map((item: any, index: number) => ({
+        id: index,
+        layer: item.layer || '-',
+        material: item.material || '-',
+        thickness: item.thickness ? `${item.thickness} mm` : '-',
+      })) || [];
 
-  return (
-    <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column', marginTop: '3rem' }}>
-      <Box sx={{ width: { mobile: '90%', notebook: '80%' }, maxWidth: '2200px', padding: '2rem', borderRadius: '20px', bgcolor: 'primaryTons.white', border: '1px solid', borderColor: 'primaryTons.border', margin: '1rem' }}>
-        
+    const layers = samples?.step2Data?.layers || [];
+
+    return (
+      <>
         {/* IDENTIFICAÇÃO */}
         <Box sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
           <FlexColumnBorder title="IDENTIFICAÇÃO" open={true} theme={'#07B811'}>
@@ -140,13 +186,38 @@ const SpecificSample_GranularLayers = () => {
         {structuralRows.length > 0 && (
           <Box sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
             <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#07B811'}>
-              <DataGrid rows={structuralRows} hideFooter disableColumnMenu disableColumnFilter columns={columns} sx={{ borderRadius: '10px' }} />
+              <DataGrid
+                rows={structuralRows}
+                hideFooter
+                disableColumnMenu
+                disableColumnFilter
+                columns={columns}
+                sx={{ borderRadius: '10px' }}
+              />
               {samples?.generalData?.images && (
-                <Box sx={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                  <Typography sx={{ fontWeight: 'bold', color: 'black' }}>IMAGEM DA COMPOSIÇÃO ESTRUTURAL</Typography>
-                  <img src={samples.generalData.images} alt="Estrutura" width="250px" height="250px" style={{ borderRadius: '8px' }} />
+                <Box
+                  sx={{
+                    marginTop: '2rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '1rem',
+                  }}
+                >
+                  <Typography sx={{ fontWeight: 'bold', color: 'black' }}>
+                    IMAGEM DA COMPOSIÇÃO ESTRUTURAL
+                  </Typography>
+                  <img
+                    src={samples.generalData.images}
+                    alt="Estrutura"
+                    width="250px"
+                    height="250px"
+                    style={{ borderRadius: '8px' }}
+                  />
                   <Typography sx={{ color: 'gray' }}>DATA DA IMAGEM</Typography>
-                  <Typography sx={{ color: 'black' }}>{samples?.generalData?.imagesDate || '-'}</Typography>
+                  <Typography sx={{ color: 'black' }}>
+                    {samples?.generalData?.imagesDate || '-'}
+                  </Typography>
                 </Box>
               )}
             </FlexColumnBorder>
@@ -159,36 +230,52 @@ const SpecificSample_GranularLayers = () => {
           if (!hasData) return null;
 
           return (
-            <Box key={layer.id || index} sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-              <FlexColumnBorder title={`GRUPO MCT${layers.length > 1 ? ` - CAMADA ${index + 1}` : ''}`} open={true} theme={'#07B811'}>
-                {renderFields([
-                  { title: "COEFICIENTE c'", value: layer.mctCoefficientC },
-                  { title: "ÍNDICE e'", value: layer.mctIndexE },
-                  { title: 'MASSA ESPECÍFICA (g/cm³)', value: layer.especificMass },
-                  { title: 'UMIDADE ÓTIMA (%)', value: layer.optimalHumidity },
-                  { title: 'ENERGIA DE COMPACTAÇÃO', value: layer.compressionEnergy },
-                ], '1fr 1fr 1fr')}
+            <Box
+              key={layer.id || index}
+              sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}
+            >
+              <FlexColumnBorder
+                title={`GRUPO MCT${layers.length > 1 ? ` - CAMADA ${index + 1}` : ''}`}
+                open={true}
+                theme={'#07B811'}
+              >
+                {renderFields(
+                  [
+                    { title: "COEFICIENTE c'", value: layer.mctCoefficientC },
+                    { title: "ÍNDICE e'", value: layer.mctIndexE },
+                    { title: 'MASSA ESPECÍFICA (g/cm³)', value: layer.especificMass },
+                    { title: 'UMIDADE ÓTIMA (%)', value: layer.optimalHumidity },
+                    { title: 'ENERGIA DE COMPACTAÇÃO', value: layer.compressionEnergy },
+                  ],
+                  '1fr 1fr 1fr'
+                )}
               </FlexColumnBorder>
 
               <Box sx={{ paddingTop: '1rem' }}>
                 <FlexColumnBorder title="MÓDULO DE RESILIÊNCIA" open={true} theme={'#07B811'}>
-                  {renderFields([
-                    { title: 'k1', value: layer.k1 },
-                    { title: 'k2', value: layer.k2 },
-                    { title: 'k3', value: layer.k3 },
-                    { title: 'k4', value: layer.k4 },
-                  ], '1fr 1fr 1fr 1fr')}
+                  {renderFields(
+                    [
+                      { title: 'k1', value: layer.k1 },
+                      { title: 'k2', value: layer.k2 },
+                      { title: 'k3', value: layer.k3 },
+                      { title: 'k4', value: layer.k4 },
+                    ],
+                    '1fr 1fr 1fr 1fr'
+                  )}
                 </FlexColumnBorder>
               </Box>
 
               <Box sx={{ paddingTop: '1rem' }}>
                 <FlexColumnBorder title="DEFORMAÇÃO PERMANENTE" open={true} theme={'#07B811'}>
-                  {renderFields([
-                    { title: 'k1/psi', value: layer.k1psi1 },
-                    { title: 'k2/psi', value: layer.k2psi2 },
-                    { title: 'k3/psi', value: layer.k3psi3 },
-                    { title: 'k4/psi', value: layer.k4psi4 },
-                  ], '1fr 1fr 1fr 1fr')}
+                  {renderFields(
+                    [
+                      { title: 'k1/psi', value: layer.k1psi1 },
+                      { title: 'k2/psi', value: layer.k2psi2 },
+                      { title: 'k3/psi', value: layer.k3psi3 },
+                      { title: 'k4/psi', value: layer.k4psi4 },
+                    ],
+                    '1fr 1fr 1fr 1fr'
+                  )}
                 </FlexColumnBorder>
               </Box>
             </Box>
@@ -199,18 +286,651 @@ const SpecificSample_GranularLayers = () => {
         {samples?.step2Data?.observations && (
           <Box sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
             <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#07B811'}>
-              <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black', textAlign: 'center' }}>
+              <Typography
+                sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black', textAlign: 'center' }}
+              >
                 {samples.step2Data.observations}
               </Typography>
             </FlexColumnBorder>
           </Box>
         )}
-      </Box>
+      </>
+    );
+  };
 
-      <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: { mobile: '4vh 4vw', notebook: '3vh 6vw' } }}>
-        <Link href="/promedina/granular-layers/view" style={{ backgroundColor: '#00A3FF', color: '#FFFFFF', height: '32px', width: '140px', fontSize: '1.2rem', alignItems: 'center', border: 'none', borderRadius: '30px', textAlign: 'center', fontWeight: 'bold', paddingTop: '0.2rem', textDecoration: 'none', display: 'inline-block' }}>
-          {t('button-previous')}
-        </Link>
+  // ==================== RENDER LEGACY (VERSÃO ANTIGA) ====================
+  const renderLegacyView = () => {
+    const sections = [
+      'first-section',
+      'pavement-data',
+      'pavement-preparation',
+      'technical-data',
+      'permanent-deformation',
+      'resilience-module',
+      'structural-composition',
+    ];
+
+    const rows =
+      samples?.step2Data?.structuralComposition?.map((item: any, index: number) => ({
+        id: index,
+        layer: item.layer,
+        material: item.material,
+        thickness: `${item.thickness} mm`,
+      })) || [];
+
+    const generalDataFieldKeys = [
+      'name',
+      'zone',
+      'layer',
+      'cityState',
+      'highway',
+      'guideLineSpeed',
+      'observations',
+    ];
+
+    const generalData = generalDataFieldKeys.map((key) => ({
+      title: t(`pm.granularLayer.${key}`),
+      value:
+        key === 'guideLineSpeed'
+          ? `${samples?.generalData[key]} km/h`
+          : samples?.generalData[key],
+    }));
+
+    const pavimentDataFieldKeys = [
+      'sectionType',
+      'extension',
+      'identification',
+      'initialStakeMeters',
+      'finalStakeMeters',
+      'latitudeI',
+      'longitudeI',
+      'latitudeF',
+      'longitudeF',
+      'averageAltitude',
+      'monitoringPhase',
+      'trackWidth',
+      'monitoredTrack',
+      'numberOfTracks',
+      'trafficLiberation',
+      'observation',
+    ];
+
+    const pavimentData = pavimentDataFieldKeys
+      .filter((key) => samples?.step2Data?.[key] !== undefined)
+      .map((key) => ({
+        title: t(`pm.granularLayer.${key}`),
+        value:
+          key === 'averageAltitude' || key === 'trackWidth' || key === 'extension'
+            ? `${samples?.step2Data[key]} m`
+            : `${samples?.step2Data[key]}`,
+      }));
+
+    const preparationFields = [
+      { title: t('pm.granularLayer.milling'), key: 'milling' },
+      { title: t('pm.granularLayer.intervention.at.the.base'), key: 'interventionAtTheBase' },
+      { title: 'SAMI', key: 'sami' },
+      { title: t('pm.granularLayer.bonding.paint'), key: 'bondingPaint' },
+      { title: t('pm.granularLayer.priming'), key: 'priming' },
+    ];
+
+    const pavimentPreparation = preparationFields.map((field) => ({
+      title: field.title,
+      value: samples?.step2Data?.[field.key],
+    }));
+
+    const resilienceModuleFields = [
+      { title: 'k1', key: 'k1' },
+      { title: 'k2', key: 'k2' },
+      { title: 'k3', key: 'k3' },
+      { title: 'k4', key: 'k4' },
+    ];
+
+    const resilienceModule = resilienceModuleFields.map((field) => ({
+      title: field.title,
+      value: samples?.step3Data?.[field.key],
+    }));
+
+    const deformationFields = [
+      { title: t('pm.granularLayer.k1.psi1'), key: 'k1psi1' },
+      { title: t('pm.granularLayer.k2.psi2'), key: 'k2psi2' },
+      { title: t('pm.granularLayer.k3.psi3'), key: 'k3psi3' },
+      { title: t('pm.granularLayer.k4.psi4'), key: 'k4psi4' },
+      { title: t('pm.granularLayer.mf.observations'), key: 'observations' },
+    ];
+
+    const permanentDeformation = deformationFields.map((field) => ({
+      title: field.title,
+      value: samples?.step3Data?.[field.key],
+    }));
+
+    const techFields = [
+      { title: t('pm.granularLayer.mctGroup'), key: 'mctGroup' },
+      { title: t('pm.granularLayer.mctCoefficientC'), key: 'mctCoefficientC' },
+      { title: t('pm.granularLayer.mctIndexE'), key: 'mctIndexE' },
+      { title: t('pm.granularLayer.specificMass'), key: 'especificMass' },
+      { title: t('pm.granularLayer.compressionEnergy'), key: 'compressionEnergy' },
+      { title: t('pm.granularLayer.granulometric.range'), key: 'granulometricRange' },
+      { title: t('pm.granularLayer.optimal.humidity'), key: 'optimalHumidity' },
+      { title: t('pm.granularLayer.abrasionLA'), key: 'abrasionLA' },
+      { title: t('pm.granularLayer.mf.observations'), key: 'observations' },
+    ];
+
+    const techData = techFields.map((field) => ({
+      title: field.title,
+      value: samples?.step3Data?.[field.key],
+    }));
+
+    return (
+      <>
+        <GeneratePDF_ProMedina sample={samples} sections={sections} />
+
+        {/* DADOS GERAIS */}
+        <Box id="first-section" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+          <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
+            <Box
+              sx={{
+                display: { mobile: 'flex', notebook: 'grid' },
+                flexDirection: 'column',
+                gridTemplateColumns: {
+                  mobile: '1fr',
+                  tablet: '1fr 1fr',
+                  desktop: '1fr 1fr 1fr 1fr',
+                },
+                justifyItems: 'center',
+                alignItems: 'center',
+                gap: '1rem',
+                justifyContent: 'space-evenly',
+              }}
+            >
+              {generalData.map((item, idx) => (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.3rem',
+                    alignSelf: 'start',
+                    textAlign: 'center',
+                  }}
+                  key={idx}
+                >
+                  <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                    {item.title}
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography
+                      sx={{
+                        display: 'flex',
+                        fontWeight: 'bold',
+                        fontSize: { mobile: '13px', notebook: '14px' },
+                        color: 'black',
+                      }}
+                    >
+                      {item.value === null ? '-' : item.value}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          </FlexColumnBorder>
+        </Box>
+
+        {/* DADOS DO PAVIMENTO */}
+        <Box id="pavement-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+          <FlexColumnBorder
+            title={t('pm.paviment.data')}
+            open={true}
+            theme={'#07B811'}
+            sx_title={{ whiteSpace: 'wrap' }}
+          >
+            <Box
+              sx={{
+                display: { mobile: 'flex', notebook: 'grid' },
+                flexDirection: 'column',
+                gridTemplateColumns: {
+                  mobile: '1fr',
+                  tablet: '1fr 1fr',
+                  desktop: '1fr 1fr 1fr 1fr 1fr',
+                },
+                justifyItems: 'center',
+                alignItems: 'center',
+                gap: '1rem',
+                justifyContent: 'space-evenly',
+              }}
+            >
+              {pavimentData.map((item, idx) => (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.3rem',
+                    alignItems: 'center',
+                    alignSelf: 'start',
+                    textAlign: 'center',
+                  }}
+                  key={idx}
+                >
+                  {item.value !== undefined && (
+                    <>
+                      <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                        {item.title}
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Typography
+                          sx={{
+                            display: 'flex',
+                            fontWeight: 'bold',
+                            fontSize: '14px',
+                            color: 'black',
+                          }}
+                        >
+                          {item.value === undefined ||
+                          item.value === null ||
+                          item.value === 'null'
+                            ? '-'
+                            : item.value}
+                        </Typography>
+                      </Box>
+                    </>
+                  )}
+                </Box>
+              ))}
+            </Box>
+          </FlexColumnBorder>
+        </Box>
+
+        {/* PREPARO DO PAVIMENTO */}
+        <Box
+          id="pavement-preparation"
+          sx={{ paddingTop: '1rem', paddingX: '6rem' }}
+          className="third-section"
+        >
+          <FlexColumnBorder
+            title={t('pm.paviment.preparation')}
+            open={true}
+            theme={'#07B811'}
+          >
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: {
+                  mobile: '1fr',
+                  tablet: '1fr 1fr',
+                  desktop: '1fr 1fr 1fr 1fr 1fr',
+                },
+                justifyItems: 'center',
+                alignItems: 'center',
+                gap: '1rem',
+                justifyContent: 'space-evenly',
+                marginBottom: '0.5rem',
+              }}
+            >
+              {pavimentPreparation.map((item, idx) => (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.3rem',
+                    alignItems: 'center',
+                    alignSelf: 'start',
+                    textAlign: 'center',
+                  }}
+                  key={idx}
+                >
+                  <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                    {item.title}
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography
+                      sx={{
+                        display: 'flex',
+                        fontWeight: 'bold',
+                        fontSize: '14px',
+                        color: 'black',
+                      }}
+                    >
+                      {item.value === null ? '-' : item.value}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          </FlexColumnBorder>
+        </Box>
+
+        {/* DADOS TÉCNICOS DA AMOSTRA */}
+        <Box
+          id="technical-data"
+          sx={{ paddingTop: '1rem', paddingX: '6rem' }}
+          className="fourth-section"
+        >
+          <FlexColumnBorder
+            title={t('pm.sample-data')}
+            open={true}
+            theme={'#07B811'}
+            sx_title={{ whiteSpace: 'wrap' }}
+          >
+            <Box
+              sx={{
+                display: { mobile: 'flex', notebook: 'grid' },
+                flexDirection: 'column',
+                gridTemplateColumns: {
+                  mobile: '1fr',
+                  tablet: '1fr 1fr',
+                  desktop: '1fr 1fr 1fr 1fr',
+                },
+                justifyItems: 'center',
+                alignItems: 'center',
+                gap: '1rem',
+                justifyContent: 'space-evenly',
+                marginBottom: '0.5rem',
+              }}
+            >
+              {techData.map((item, idx) => (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.3rem',
+                    alignItems: 'center',
+                    alignSelf: 'start',
+                    textAlign: 'center',
+                  }}
+                  key={idx}
+                >
+                  <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                    {item.title}
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography
+                      sx={{
+                        display: 'flex',
+                        fontWeight: 'bold',
+                        fontSize: '14px',
+                        color: 'black',
+                      }}
+                    >
+                      {item.value === null ? '-' : item.value}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          </FlexColumnBorder>
+        </Box>
+
+        {/* DEFORMAÇÃO PERMANENTE */}
+        <Box id="permanent-deformation" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+          <FlexColumnBorder
+            title={t('pm.permanent.deformation')}
+            open={true}
+            theme={'#07B811'}
+          >
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: {
+                  mobile: '1fr',
+                  tablet: '1fr 1fr',
+                  desktop: '1fr 1fr 1fr 1fr',
+                },
+                justifyItems: 'center',
+                alignItems: 'center',
+                gap: '1rem',
+                justifyContent: 'space-evenly',
+                marginBottom: '0.5rem',
+              }}
+            >
+              {permanentDeformation.map((item, idx) => (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.3rem',
+                    alignItems: 'center',
+                    alignSelf: 'start',
+                    textAlign: 'center',
+                  }}
+                  key={idx}
+                >
+                  <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                    {item.title}
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography
+                      sx={{
+                        display: 'flex',
+                        fontWeight: 'bold',
+                        fontSize: '14px',
+                        color: 'black',
+                      }}
+                    >
+                      {item.value === null ? '-' : item.value}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          </FlexColumnBorder>
+        </Box>
+
+        {/* MÓDULO DE RESILIÊNCIA */}
+        <Box id="resilience-module" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+          <FlexColumnBorder
+            title={t('pm.granularLayers.resilience.module')}
+            open={true}
+            theme={'#07B811'}
+            sx_title={{ whiteSpace: 'wrap' }}
+          >
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: {
+                  mobile: '1fr',
+                  tablet: '1fr 1fr',
+                  desktop: '1fr 1fr 1fr 1fr',
+                },
+                justifyItems: 'center',
+                alignItems: 'center',
+                gap: '1rem',
+                justifyContent: 'space-evenly',
+                marginBottom: '0.5rem',
+              }}
+            >
+              {resilienceModule.map((item, idx) => (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.3rem',
+                    alignItems: 'center',
+                    alignSelf: 'start',
+                    textAlign: 'center',
+                  }}
+                  key={idx}
+                >
+                  <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
+                    {item.title}
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography
+                      sx={{
+                        display: 'flex',
+                        fontWeight: 'bold',
+                        fontSize: '14px',
+                        color: 'black',
+                      }}
+                    >
+                      {item.value === null ? '-' : item.value}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          </FlexColumnBorder>
+        </Box>
+
+        {/* COMPOSIÇÃO ESTRUTURAL */}
+        <Box id="structural-composition" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+          <FlexColumnBorder
+            title={t('pm.structural.composition')}
+            open={true}
+            theme={'#07B811'}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '1rem',
+              }}
+            >
+              <div style={{ height: 'fit-content', width: '100%' }}>
+                {rows.length > 0 && (
+                  <DataGrid
+                    rows={rows}
+                    hideFooter
+                    columns={columns.map((column) => ({
+                      ...column,
+                      disableColumnMenu: true,
+                      sortable: false,
+                      align: 'center',
+                      headerAlign: 'center',
+                      minWidth: 100,
+                      flex: 1,
+                    }))}
+                  />
+                )}
+              </div>
+            </Box>
+            {samples?.step2Data?.images && (
+              <Box
+                sx={{
+                  marginBottom: '1rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '1rem',
+                  marginTop: '1rem',
+                }}
+              >
+                <Typography sx={{ fontWeight: 'bold', marginTop: '0.5rem', color: 'black' }}>
+                  {t('pm-image-structural-composition')}
+                </Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: { mobile: 'column', desktop: 'row' },
+                    gap: '1rem',
+                    alignItems: 'center',
+                    border: '2px solid #07B811',
+                    borderRadius: '10px',
+                    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                  }}
+                >
+                  <img
+                    src={samples?.step2Data.images}
+                    alt={t('pm-image-structural-composition')}
+                    width={'250px'}
+                    height={'250px'}
+                    style={{ borderRadius: '8px' }}
+                  />
+                </Box>
+                <Typography sx={{ color: 'gray' }}>
+                  {t('pm-estructural-composition-image-date')}
+                </Typography>
+                <Typography sx={{ color: 'black' }}>
+                  {samples?.step2Data.imagesDate}
+                </Typography>
+              </Box>
+            )}
+          </FlexColumnBorder>
+        </Box>
+
+        {/* FOOTER LEGACY */}
+        <Box
+          sx={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            p: { mobile: '4vh 4vw', notebook: '3vh 6vw' },
+          }}
+        >
+          <Link
+            href="/promedina/granular-layers/view"
+            style={{
+              backgroundColor: '#00A3FF',
+              color: '#FFFFFF',
+              height: '32px',
+              width: '140px',
+              fontSize: '1.2rem',
+              alignItems: 'center',
+              border: '#00A3FF',
+              borderRadius: '30px',
+              textAlign: 'center',
+              fontWeight: 'bold',
+              paddingTop: '0.2rem',
+            }}
+          >
+            {t('button-previous')}
+          </Link>
+
+          <Button
+            endIcon={<NextIcon />}
+            variant="contained"
+            disabled
+            sx={{
+              bgcolor: 'secondaryTons.blue',
+              color: 'primaryTons.white',
+              height: '32px',
+              width: '140px',
+              fontSize: '1rem',
+              display: 'none',
+
+              ':hover': {
+                transition: 'all 0.1s ease-in-out',
+                bgcolor: 'secondaryTons.blueDisabled',
+              },
+
+              ':active': {
+                transition: 'all 0.1s ease-in-out',
+                bgcolor: 'secondaryTons.blueClick',
+              },
+            }}
+          >
+            {t('button-next')}
+          </Button>
+        </Box>
+      </>
+    );
+  };
+
+  // ==================== RENDER PRINCIPAL ====================
+  if (loading) return <Loading size={30} color={'secondary'} />;
+
+  return (
+    <Box
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        marginTop: '3rem',
+      }}
+    >
+      <Box
+        sx={{
+          width: { mobile: '90%', notebook: '80%' },
+          maxWidth: '2200px',
+          padding: '2rem',
+          borderRadius: '20px',
+          bgcolor: 'primaryTons.white',
+          border: '1px solid',
+          borderColor: 'primaryTons.border',
+          margin: '1rem',
+        }}
+      >
+        {/* 🎯 RENDERIZAÇÃO CONDICIONAL BASEADA NA DETECÇÃO */}
+        {isLegacyFormat ? renderLegacyView() : renderNewView()}
       </Box>
     </Box>
   );
