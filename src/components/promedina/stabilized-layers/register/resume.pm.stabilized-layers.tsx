@@ -8,23 +8,19 @@ import { EssayPageProps } from '@/components/templates/essay';
 import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 
 const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
-  const { generalData: data, step2Data, step3Data } = useStabilizedLayersStore();
-  const samples = { generalData: { ...data }, step2Data, step3Data };
+  const { generalData: data, step2Data } = useStabilizedLayersStore();
+  const samples = { generalData: { ...data }, step2Data };
 
-  const layers = step3Data?.layers || [];
+  const layers = step2Data?.layers || [];
 
   const sections = [
-    'general-data',
     'identification',
     'preparo-pavimento',
     'data-atualizacao',
     'caracteristicas',
+    'coordenadas',
     'composicao-estrutural',
-    'step2-coordinates',
-    'step2-pavement-data',
-    'step2-pavement-preparation',
-    'step2-structural-composition',
-    'step3-layers',
+    'step2-layers',
     'observations',
   ];
 
@@ -68,46 +64,65 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
     );
   };
 
-  // ==================== STEP 1 - CAMPOS ====================
+  // ==================== STEP 1 - IDENTIFICAÇÃO ====================
   const identificacaoFields = [
-    { title: 'IDENTIFICAÇÃO', value: data?.name },
-    { title: 'ZONA', value: data?.zone },
-    { title: 'CAMADA', value: data?.layer },
-    { title: 'MUNICÍPIO/ESTADO', value: data?.cityState },
-    { title: 'RODOVIA', value: data?.highway },
-    { title: 'VELOCIDADE DIRETRIZ', value: data?.guideLineSpeed ? `${data.guideLineSpeed} km/h` : '' },
+   { title: 'IDENTIFICAÇÃO', value: data?.name },,
+    { title: 'TIPO DE SEÇÃO', value: data?.tipoSecao },
+    { title: 'FASE DE MONITORAMENTO', value: data?.faseMonitoramento },
+    { title: 'LIBERAÇÃO AO TRÁFEGO', value: data?.liberacaoTrafico },
+    { title: 'UTILIZADA MEDINA', value: data?.utilizadaMedina },
+    { title: 'UTILIZADA LVECD', value: data?.utilizadaLvec },
+    { title: 'DADOS CONFIRMADOS ICT', value: data?.dadosConfirmadosICT },
     { title: 'OBSERVAÇÕES', value: data?.observations },
   ];
 
+  // ==================== STEP 1 - PREPARO DO PAVIMENTO ====================
+  const preparoPavimentoFields = [
+    { title: 'IRI (m/km) PRÉ-REABILITAÇÃO', value: data?.iriPreReabilitacao },
+    { title: 'AT (%) PRÉ-REABILITAÇÃO', value: data?.atPreReabilitacao },
+    { title: 'FRESAGEM', value: data?.fresagem },
+    { title: 'ESPESSURA FRESADA (mm)', value: data?.espessuraFresagem },
+    { title: 'INTERVENÇÃO NA BASE', value: data?.intervencaoBase },
+    { title: 'SAMI', value: data?.sami },
+    { title: 'PINTURA DE LIGAÇÃO', value: data?.pinturaLigacao },
+    { title: 'IMPRIMAÇÃO', value: data?.imprimacao },
+  ];
+
+  // ==================== STEP 1 - DATA ATUALIZAÇÃO ====================
+  const dataAtualizacaoFields = [
+    { title: 'DATA DA ÚLTIMA ATUALIZAÇÃO', value: data?.dataUltimaAtualizacao },
+    { title: 'TEMPO EM SERVIÇO (ANOS)', value: data?.tempoServicoAnos },
+    { title: 'TEMPO EM SERVIÇO (MESES)', value: data?.tempoServicoMeses },
+  ];
+
+  // ==================== STEP 1 - CARACTERÍSTICAS ====================
   const caracteristicasFields = [
-    { title: 'LOCAL', value: data?.local },
+    { title: 'LOCAL (RODOVIA/AVENIDA)', value: data?.local },
     { title: 'MUNICÍPIO/ESTADO', value: data?.municipioEstado },
     { title: 'EXTENSÃO (m)', value: data?.extensao },
     { title: 'VELOCIDADE DIRETRIZ (km/h)', value: data?.velocidadeDiretriz },
     { title: 'KM INICIAL', value: data?.kmInicial },
     { title: 'KM FINAL', value: data?.kmFinal },
-    { title: 'INÍCIO ESTACA', value: data?.inicioEstaca },
-    { title: 'INÍCIO METROS', value: data?.inicioMetros },
-    { title: 'FIM ESTACA', value: data?.fimEstaca },
-    { title: 'FIM METROS', value: data?.fimMetros },
-    { title: 'ALTITUDE MÉDIA (m)', value: data?.altitudeMedia },
     { title: 'NÚMERO DE FAIXAS', value: data?.numeroFaixas },
     { title: 'FAIXA MONITORADA', value: data?.faixaMonitorada },
     { title: 'LARGURA DA FAIXA (m)', value: data?.larguraFaixa },
   ];
 
-  // STEP 2 - COORDENADAS
+  // ==================== STEP 1 - COORDENADAS ====================
   const coordinatesFields = [
-    { title: 'ESTACA/METROS INICIAL', value: step2Data?.initialStakeMeters },
-    { title: 'LATITUDE INICIAL', value: step2Data?.latitudeI },
-    { title: 'LONGITUDE INICIAL', value: step2Data?.longitudeI },
-    { title: 'ESTACA/METROS FINAL', value: step2Data?.finalStakeMeters },
-    { title: 'LATITUDE FINAL', value: step2Data?.latitudeF },
-    { title: 'LONGITUDE FINAL', value: step2Data?.longitudeF },
+    { title: 'INÍCIO - ESTACA', value: data?.inicioEstaca },
+    { title: 'INÍCIO - METROS', value: data?.inicioMetros },
+    { title: 'LATITUDE INICIAL', value: data?.latitudeI },
+    { title: 'LONGITUDE INICIAL', value: data?.longitudeI },
+    { title: 'FIM - ESTACA', value: data?.fimEstaca },
+    { title: 'FIM - METROS', value: data?.fimMetros },
+    { title: 'LATITUDE FINAL', value: data?.latitudeF },
+    { title: 'LONGITUDE FINAL', value: data?.longitudeF },
+    { title: 'ALTITUDE MÉDIA (m)', value: data?.altitudeMedia },
   ];
 
-  // STEP 2 - COMPOSIÇÃO ESTRUTURAL
-  const structuralRows = step2Data?.structuralComposition?.map((item: any, index: number) => ({
+  // ==================== STEP 1 - COMPOSIÇÃO ESTRUTURAL ====================
+  const structuralRows = data?.structuralComposition?.map((item: any, index: number) => ({
     id: index,
     layer: item.layer || '-',
     material: item.material || '-',
@@ -130,42 +145,47 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
           margin: '1rem',
         }}
       >
-        <GeneratePDF_ProMedina sample={samples} sections={sections} />
+        <GeneratePDF_ProMedina sample={samples as any} sections={sections} />
 
         {/* STEP 1 - IDENTIFICAÇÃO */}
         {renderSection('identification', 'IDENTIFICAÇÃO', identificacaoFields)}
 
+        {/* STEP 1 - PREPARO DO PAVIMENTO */}
+        {renderSection('preparo-pavimento', 'PREPARO DO PAVIMENTO', preparoPavimentoFields)}
+
+        {/* STEP 1 - DATA DA ÚLTIMA ATUALIZAÇÃO */}
+        {renderSection('data-atualizacao', 'DATA DA ÚLTIMA ATUALIZAÇÃO', dataAtualizacaoFields, '1fr 1fr')}
+
         {/* STEP 1 - CARACTERÍSTICAS */}
         {renderSection('caracteristicas', 'CARACTERÍSTICAS', caracteristicasFields)}
 
-        {/* STEP 2 - COORDENADAS */}
-        {renderSection('step2-coordinates', 'COORDENADAS', coordinatesFields, '1fr 1fr 1fr')}
+        {/* STEP 1 - COORDENADAS */}
+        {renderSection('coordenadas', 'COORDENADAS', coordinatesFields, '1fr 1fr 1fr')}
 
-        {/* STEP 2 - COMPOSIÇÃO ESTRUTURAL */}
+        {/* STEP 1 - COMPOSIÇÃO ESTRUTURAL */}
         {structuralRows.length > 0 && (
-          <Box id="step2-structural-composition" sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
+          <Box id="composicao-estrutural" sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
             <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
               <DataGrid rows={structuralRows} hideFooter disableColumnMenu disableColumnFilter columns={columns} sx={{ borderRadius: '10px' }} />
-              {step2Data?.images && (
+              {data?.imagemEstrutural && (
                 <Box sx={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
                   <Typography sx={{ fontWeight: 'bold', color: 'black' }}>{t('pm-image-structural-composition')}</Typography>
-                  <img src={step2Data.images} alt="Estrutura" width="250px" height="250px" style={{ borderRadius: '8px' }} />
-                  <Typography sx={{ color: 'gray' }}>{t('pm-estructural-composition-image-date')}</Typography>
-                  <Typography sx={{ color: 'black' }}>{step2Data?.imagesDate || '-'}</Typography>
+                  <img src={data.imagemEstrutural} alt="Estrutura" width="250px" height="250px" style={{ borderRadius: '8px' }} />
+                  <Typography sx={{ color: 'gray' }}>DATA DA IMAGEM</Typography>
+                  <Typography sx={{ color: 'black' }}>{data?.dataImagens || '-'}</Typography>
                 </Box>
               )}
             </FlexColumnBorder>
           </Box>
         )}
 
-        {/* STEP 3 - CAMADAS DINÂMICAS */}
+        {/* STEP 2 - CAMADAS DINÂMICAS */}
         {layers.map((layer: any, index: number) => {
           const hasData = Object.values(layer).some((v: any) => v && v !== '');
           if (!hasData) return null;
 
           return (
-            <Box key={layer.id || index} id="step3-layers" sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-              {/* PARÂMETROS DO MATERIAL */}
+            <Box key={layer.id || index} id="step2-layers" sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
               <FlexColumnBorder title={`PARÂMETROS DO MATERIAL${layers.length > 1 ? ` - CAMADA ${index + 1}` : ''}`} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
                 {renderFields([
                   { title: 'TEOR ÓTIMO DE CIMENTO (%)', value: layer.teorCimento },
@@ -179,7 +199,6 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
                 ], '1fr 1fr 1fr')}
               </FlexColumnBorder>
 
-              {/* MÓDULO DE RESILIÊNCIA (MPa) */}
               <Box sx={{ paddingTop: '1rem' }}>
                 <FlexColumnBorder title="MÓDULO DE RESILIÊNCIA (MPa)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
                   {renderFields([
@@ -191,7 +210,6 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
                 </FlexColumnBorder>
               </Box>
 
-              {/* FADIGA DO MATERIAL */}
               <Box sx={{ paddingTop: '1rem' }}>
                 <FlexColumnBorder title="FADIGA DO MATERIAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
                   {renderFields([
@@ -205,11 +223,11 @@ const StabilizedLayersResume = ({ setNextDisabled }: EssayPageProps) => {
         })}
 
         {/* OBSERVAÇÕES */}
-        {step3Data?.observations && (
+        {step2Data?.observations && (
           <Box id="observations" sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
             <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
               <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black', textAlign: 'center' }}>
-                {step3Data.observations}
+                {step2Data.observations}
               </Typography>
             </FlexColumnBorder>
           </Box>

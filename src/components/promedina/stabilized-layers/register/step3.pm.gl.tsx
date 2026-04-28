@@ -10,7 +10,6 @@ import { LayerCard } from '@/stores/promedina/stabilized-layers/stabilized-layer
 const createEmptyLayer = (): LayerCard => ({
   id: crypto.randomUUID(),
   title: '',
-
   teorCimento: '',
   rt: '',
   rtcd: '',
@@ -19,60 +18,50 @@ const createEmptyLayer = (): LayerCard => ({
   massaEspecifica: '',
   umidadeOtima: '',
   energiaCompactacao: '',
-
   ei: '',
   ef: '',
   constanteA: '',
   constanteB: '',
-
   k1: '',
   k2: '',
 });
 
 const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
-  const { step3Data, setData } = useStabilizedLayersStore();
+  const { step2Data, setData } = useStabilizedLayersStore();
 
   const [layers, setLayers] = useState<LayerCard[]>(
-    step3Data.layers?.length ? step3Data.layers : [createEmptyLayer()]
+    step2Data.layers?.length ? step2Data.layers : [createEmptyLayer()]
   );
 
   const hasMultipleLayers = layers.length > 1;
 
   useEffect(() => {
-    setData({ step: 2, key: 'layers', value: layers });
+    setData({ step: 1, key: 'layers', value: layers });
     setNextDisabled(false);
   }, [layers, setData, setNextDisabled]);
 
   const updateLayer = (id: string, key: keyof LayerCard, value: string) => {
-    setLayers(prev =>
-      prev.map(l => (l.id === id ? { ...l, [key]: value } : l))
-    );
+    setLayers(prev => prev.map(l => (l.id === id ? { ...l, [key]: value } : l)));
   };
 
   const addLayer = () => setLayers(prev => [...prev, createEmptyLayer()]);
 
   const removeLayer = (id: string) => {
     setLayers(prev => {
-      if (prev.length === 1) return prev; // não deixa remover tudo
+      if (prev.length === 1) return prev;
       return prev.filter(l => l.id !== id);
     });
   };
 
-  const renderField = (
-    layerId: string,
-    key: keyof LayerCard,
-    label: string,
-    value: string
-  ) => (
+  const renderField = (layerId: string, key: keyof LayerCard, label: string, value: string) => (
     <TextField
       key={`${layerId}-${key}`}
       variant="standard"
+      type="text"
       label={label}
       value={value || ''}
       onChange={(e) => updateLayer(layerId, key, e.target.value)}
-      InputProps={{
-        inputProps: { style: { textTransform: 'uppercase' } }
-      }}
+      InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
     />
   );
 
@@ -80,27 +69,12 @@ const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
     <>
       {layers.map((layer, index) => (
         <Box key={layer.id} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-
-          {/* HEADER DA CAMADA */}
           {hasMultipleLayers && (
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Box sx={{ fontWeight: 600 }}>
-                CAMADA {index + 1}
-              </Box>
-
-              <Button
-                variant="outlined"
-                color="error"
-                size="small"
-                startIcon={<DeleteIcon />}
-                onClick={() => removeLayer(layer.id)}
-              >
-                REMOVER
-              </Button>
+              <Box sx={{ fontWeight: 600, textTransform: 'uppercase' }}>CAMADA {index + 1}</Box>
+              <Button variant="outlined" color="error" size="small" startIcon={<DeleteIcon />} onClick={() => removeLayer(layer.id)}>REMOVER</Button>
             </Box>
           )}
-
-          {/* PARÂMETROS */}
           <FlexColumnBorder title="PARÂMETROS DO MATERIAL" open theme={'#07B811'}>
             <Box sx={{ display: 'grid', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: 2 }}>
               {renderField(layer.id, 'teorCimento', 'TEOR ÓTIMO DE CIMENTO (%)', layer.teorCimento)}
@@ -113,8 +87,6 @@ const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
               {renderField(layer.id, 'energiaCompactacao', 'ENERGIA DE COMPACTAÇÃO', layer.energiaCompactacao)}
             </Box>
           </FlexColumnBorder>
-
-          {/* RESILIÊNCIA */}
           <FlexColumnBorder title="MÓDULO DE RESILIÊNCIA (MPa)" open theme={'#07B811'}>
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2 }}>
               {renderField(layer.id, 'ei', 'Ei', layer.ei)}
@@ -123,15 +95,12 @@ const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
               {renderField(layer.id, 'constanteB', 'CONSTANTE B', layer.constanteB)}
             </Box>
           </FlexColumnBorder>
-
-          {/* FADIGA */}
           <FlexColumnBorder title="FADIGA DO MATERIAL" open theme={'#07B811'}>
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2 }}>
               {renderField(layer.id, 'k1', 'K1 (PSI1)', layer.k1)}
               {renderField(layer.id, 'k2', 'K2 (PSI2)', layer.k2)}
             </Box>
           </FlexColumnBorder>
-
         </Box>
       ))}
     </>
@@ -140,34 +109,16 @@ const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
   return (
     <>
       {hasMultipleLayers ? (
-        <FlexColumnBorder open theme={'#07B811'}>
-          {renderLayers()}
-        </FlexColumnBorder>
+        <FlexColumnBorder open theme={'#07B811'}>{renderLayers()}</FlexColumnBorder>
       ) : (
         renderLayers()
       )}
-
-      <Button
-        variant="outlined"
-        startIcon={<AddIcon />}
-        onClick={addLayer}
-        sx={{ mt: 2 }}
-      >
-        ADICIONAR CAMADA
-      </Button>
-
-      {/* OBS */}
+      <Button variant="outlined" startIcon={<AddIcon />} onClick={addLayer} sx={{ mt: 2, textTransform: 'uppercase' }}>ADICIONAR CAMADA</Button>
       <FlexColumnBorder title="OBSERVAÇÕES" open theme={'#07B811'}>
         <TextField
-          fullWidth
-          multiline
-          rows={4}
-          variant="outlined"
-          label="OBSERVAÇÕES"
-          value={step3Data?.observations || ''}
-          onChange={(e) =>
-            setData({ step: 2, key: 'observations', value: e.target.value })
-          }
+          fullWidth multiline rows={4} variant="outlined" label="OBSERVAÇÕES"
+          value={step2Data?.observations || ''}
+          onChange={(e) => setData({ step: 1, key: 'observations', value: e.target.value })}
         />
       </FlexColumnBorder>
     </>

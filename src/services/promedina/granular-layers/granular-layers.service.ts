@@ -11,25 +11,22 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
     icon: granularLayersImage,
     title: t('pm.granular-layers-register'),
     path: '/promedina/granular-layers',
-    steps: 4,
+    steps: 3,
     backend_path: 'promedina/granular-layers/granular-layers-samples',
     standard: {
       name: '',
       link: '',
     },
     stepperData: [
-      { step: 0, description: t('general data'), path: 'generalData' },
+      { step: 0, description: t('pm.general.data'), path: 'generalData' },
       { step: 1, description: t('pm.pavement.specific.data'), path: 'step2' },
-      { step: 2, description: t('pm.pavement.specific.data'), path: 'step3' },
-      { step: 3, description: t('pm.register.resume'), path: 'resume' },
+      { step: 2, description: t('pm.register.resume'), path: 'resume' },
     ],
   };
 
   store_actions: GranularLayersActions;
   userId: string;
 
-  //   /** @handleNext Receives the step and data from the form and calls the respective method */
-  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleNext = async (step: number, data: unknown): Promise<void> => {
     try {
       switch (step) {
@@ -40,9 +37,6 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
           await this.submitStep2Data(data as GranularLayersData['step2Data']);
           break;
         case 2:
-          await this.submitStep3Data(data as GranularLayersData['step3Data']);
-          break;
-        case 3:
           await this.saveSample(data as GranularLayersData);
           break;
         default:
@@ -54,43 +48,19 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
   };
 
   submitGeneralData = async (generalData: GranularLayersData['generalData']): Promise<void> => {
-    // const data = generalData;
-    // for (const key in data) {
-    //   if (data[key] === null) {
-    //     data[key] = '---';
-    //   }
-    // }
-    // this.store_actions.setData({ step: 0, key: 'generalData', value: data });
+    // Dados salvos no store automaticamente
   };
 
   submitStep2Data = async (step2Data: GranularLayersData['step2Data']): Promise<void> => {
-    // const data = step2Data;
-    // for (const key in data) {
-    //   if (data[key] === null) {
-    //     data[key] = '---';
-    //   }
-    // }
-    // this.store_actions.setData({ step: 1, key: 'step2Data', value: data });
+    // Dados salvos no store automaticamente
   };
 
-  submitStep3Data = async (step3Data: GranularLayersData['step3Data']): Promise<void> => {
-    // const data = step3Data;
-    // for (const key in data) {
-    //   if (data[key] === null) {
-    //     data[key] = '---';
-    //   }
-    // }
-    // this.store_actions.setData({ step: 2, key: 'step3Data', value: data });
-  };
-
-  // save essay
   saveSample = async (store: GranularLayersData): Promise<void> => {
     const { _id } = store;
 
     const replaceNullValues = (data: GranularLayersData): GranularLayersData => {
       const newData = { ...data };
 
-      // Função para inserir '-' em todos os inputs que ficaram vazios;
       const recursiveReplaceNull = (obj: Record<string, any>) => {
         for (const key in obj) {
           if (obj[key] === null) {
@@ -107,16 +77,16 @@ class GRANULARLAYERS_SERVICE implements IEssayService {
 
     const updatedData = replaceNullValues(store);
 
-    const { generalData, step2Data, step3Data } = updatedData;
+    const { generalData, step2Data } = updatedData;
 
     try {
       let response;
 
       if (!_id || _id === '---') {
         const { _id, ...storeWithoutId } = store;
-        response = await samplesService.saveSample({ ...storeWithoutId, generalData, step2Data, step3Data });
+        response = await samplesService.saveSample({ ...storeWithoutId, generalData, step2Data });
       } else {
-        response = await samplesService.updateSample(_id, { ...store, generalData, step2Data, step3Data });
+        response = await samplesService.updateSample(_id, { ...store, generalData, step2Data });
       }
 
       const { success, error } = response.data;
