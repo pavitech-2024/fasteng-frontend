@@ -1,8 +1,39 @@
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
+/* =========================
+   STEP 3 (CAMADAS)
+========================= */
+
+interface Step3Layer {
+  mctCoefficientC: string;
+  mctIndexE: string;
+  especificMass: string;
+  optimalHumidity: string;
+  compressionEnergy: string;
+  k1: string;
+  k2: string;
+  k3: string;
+  k4: string;
+  k1psi1: string;
+  k2psi2: string;
+  k3psi3: string;
+  k4psi4: string;
+}
+
+interface Step3Data {
+  subleito: Step3Layer;
+  aterro: Step3Layer;
+  subBaseGranular: Step3Layer;
+  baseGranular: Step3Layer;
+  observations: string;
+}
+
+/* =========================
+   STEP 1
+========================= */
+
 interface GeneralData {
-  // Campos já existentes
   name: string;
   zone: string;
   layer: string;
@@ -17,7 +48,6 @@ interface GeneralData {
   utilizadaLVECD: string;
   dadosConfirmadosICT: string;
 
-  // NOVOS CAMPOS - PREPARO DO PAVIMENTO
   ir1PreReabilitacao: string;
   atPreReabilitacao: string;
   fresagem: string;
@@ -27,12 +57,10 @@ interface GeneralData {
   pinturaLigacao: string;
   imprimacao: string;
 
-  // NOVOS CAMPOS - DATA DA ÚLTIMA ATUALIZAÇÃO
   dataUltimaAtualizacao: string;
   tempoServicoAnos: string;
   tempoServicoMeses: string;
 
-  // NOVOS CAMPOS - CARACTERÍSTICAS
   local: string;
   municipioEstado: string;
   extensao: string;
@@ -48,7 +76,6 @@ interface GeneralData {
   faixaMonitorada: string;
   larguraFaixa: string;
 
-  // NOVOS CAMPOS - COMPOSIÇÃO ESTRUTURAL
   capaMaterial: string;
   capaEspessura: string;
   binderMaterial: string;
@@ -62,6 +89,10 @@ interface GeneralData {
   reforcoSubleitoMaterial: string;
   reforcoSubleitoEspessura: string;
 }
+
+/* =========================
+   STEP 2
+========================= */
 
 interface Step2Data {
   identification: string;
@@ -88,12 +119,14 @@ interface Step2Data {
   images: string;
   imagesDate: string;
   lastUpdate: string;
+
   structuralComposition: {
     id: number;
     layer: string;
     material: string;
     thickness: string;
   }[];
+
   tipoSecao: string;
   estrutura: string;
   material: string;
@@ -119,219 +152,206 @@ interface Step2Data {
   altitudeMedia: string;
 }
 
-export type StructuralCompositionTable = {
-  id: number;
-  layer: string;
-  material: string;
-  thickness: number;
+/* =========================
+   FACTORIES (🔥 ESSENCIAL)
+========================= */
+
+const createEmptyLayer = (): Step3Layer => ({
+  mctCoefficientC: '',
+  mctIndexE: '',
+  especificMass: '',
+  optimalHumidity: '',
+  compressionEnergy: '',
+  k1: '',
+  k2: '',
+  k3: '',
+  k4: '',
+  k1psi1: '',
+  k2psi2: '',
+  k3psi3: '',
+  k4psi4: '',
+});
+
+const createStep3Data = (): Step3Data => ({
+  subleito: createEmptyLayer(),
+  aterro: createEmptyLayer(),
+  subBaseGranular: createEmptyLayer(),
+  baseGranular: createEmptyLayer(),
+  observations: '',
+});
+
+const createGeneralData = (): GeneralData => ({
+  name: '',
+  zone: '',
+  layer: '',
+  cityState: '',
+  highway: '',
+  guideLineSpeed: '',
+  observations: '',
+  tipoSecao: '',
+  faseMonitoramento: '',
+  liberacaoTrafico: '',
+  utilizadaMeDiNa: '',
+  utilizadaLVECD: '',
+  dadosConfirmadosICT: '',
+
+  ir1PreReabilitacao: '',
+  atPreReabilitacao: '',
+  fresagem: '',
+  espessuraFresagem: '',
+  intervencaoBase: '',
+  sami: '',
+  pinturaLigacao: '',
+  imprimacao: '',
+
+  dataUltimaAtualizacao: '',
+  tempoServicoAnos: '',
+  tempoServicoMeses: '',
+
+  local: '',
+  municipioEstado: '',
+  extensao: '',
+  velocidadeDiretriz: '',
+  kmInicial: '',
+  kmFinal: '',
+  inicioEstaca: '',
+  inicioMetros: '',
+  fimEstaca: '',
+  fimMetros: '',
+  altitudeMedia: '',
+  numeroFaixas: '',
+  faixaMonitorada: '',
+  larguraFaixa: '',
+
+  capaMaterial: '',
+  capaEspessura: '',
+  binderMaterial: '',
+  binderEspessura: '',
+  tsdMaterial: '',
+  tsdEspessura: '',
+  baseMaterial: '',
+  baseEspessura: '',
+  subBaseMaterial: '',
+  subBaseEspessura: '',
+  reforcoSubleitoMaterial: '',
+  reforcoSubleitoEspessura: '',
+});
+
+const createStep2Data = (): Step2Data => ({
+  identification: '',
+  sectionType: '',
+  extension: '',
+  initialStakeMeters: '',
+  latitudeI: '',
+  longitudeI: '',
+  finalStakeMeters: '',
+  latitudeF: '',
+  longitudeF: '',
+  monitoringPhase: '',
+  observation: '',
+  trafficLiberation: '',
+  averageAltitude: '',
+  numberOfTracks: '',
+  monitoredTrack: '',
+  trackWidth: '',
+  milling: '',
+  interventionAtTheBase: '',
+  sami: '',
+  bondingPaint: '',
+  priming: '',
+  images: '',
+  imagesDate: '',
+  lastUpdate: '',
+
+  structuralComposition: [
+    { id: 0, layer: '', material: '', thickness: '' }
+  ],
+
+  tipoSecao: '',
+  estrutura: '',
+  material: '',
+  longitude: '',
+  latitude: '',
+  altitude: '',
+  fonteMonitoramento: '',
+  longitudeFora: '',
+  latitudeFora: '',
+  pregoeiro: '',
+  informacaoBase: '',
+  pontoLigacao: '',
+  ultimaAtualizacao: '',
+  local: '',
+  municipioEstado: '',
+  extensao: '',
+  velocidadeDiretaVia: '',
+  larguraFaixa: '',
+  inicioEstaca: '',
+  inicioLatitude: '',
+  fimMetros: '',
+  fimLongitude: '',
+  altitudeMedia: '',
+});
+
+/* =========================
+   STORE
+========================= */
+
+const stepVariant = {
+  0: 'generalData',
+  1: 'step2Data',
+  2: 'step3Data',
+} as const;
+
+type setDataType = {
+  step: number;
+  key?: string;
+  value: unknown;
 };
 
-interface Step3Data {
-  mctGroup: string;
-  mctCoefficientC: string;
-  mctIndexE: string;
-  especificMass: string;
-  compressionEnergy: string;
-  granulometricRange: string;
-  optimalHumidity: string;
-  abrasionLA: string;
-  k1: string;
-  k2: string;
-  k3: string;
-  k4: string;
-  k1psi1: string;
-  k2psi2: string;
-  k3psi3: string;
-  k4psi4: string;
-  observations: string;
-}
-
-export type GranularLayersData = {
+type Store = {
   generalData: GeneralData;
   step2Data: Step2Data;
   step3Data: Step3Data;
   _id?: string;
-};
 
-export type GranularLayersActions = {
-  setData: ({ step, key, value }: setDataType) => void;
-  clearStore: () => void;
+  setData: (data: setDataType) => void;
   reset: () => void;
-  resetStore: () => void;
+  clearStore: () => void;
 };
-
-const stepVariant = { 0: 'generalData', 1: 'step2Data', 2: 'step3Data' };
-
-export type setDataType = { step: number; key?: string; value: unknown };
 
 const initialState = {
-  generalData: {
-    highway: null,
-    name: null,
-    zone: null,
-    layer: null,
-    cityState: null,
-    guideLineSpeed: null,
-    observations: null,
-    tipoSecao: null,
-    faseMonitoramento: null,
-    liberacaoTrafico: null,
-    utilizadaMeDiNa: null,
-    utilizadaLVECD: null,
-    dadosConfirmadosICT: null,
-
-    // Preparo do Pavimento
-    ir1PreReabilitacao: null,
-    atPreReabilitacao: null,
-    fresagem: null,
-    espessuraFresagem: null,
-    intervencaoBase: null,
-    sami: null,
-    pinturaLigacao: null,
-    imprimacao: null,
-
-    // Data da última atualização
-    dataUltimaAtualizacao: null,
-    tempoServicoAnos: null,
-    tempoServicoMeses: null,
-
-    // Características
-    local: null,
-    municipioEstado: null,
-    extensao: null,
-    velocidadeDiretriz: null,
-    kmInicial: null,
-    kmFinal: null,
-    inicioEstaca: null,
-    inicioMetros: null,
-    fimEstaca: null,
-    fimMetros: null,
-    altitudeMedia: null,
-    numeroFaixas: null,
-    faixaMonitorada: null,
-    larguraFaixa: null,
-
-    // Composição Estrutural
-    capaMaterial: null,
-    capaEspessura: null,
-    binderMaterial: null,
-    binderEspessura: null,
-    tsdMaterial: null,
-    tsdEspessura: null,
-    baseMaterial: null,
-    baseEspessura: null,
-    subBaseMaterial: null,
-    subBaseEspessura: null,
-    reforcoSubleitoMaterial: null,
-    reforcoSubleitoEspessura: null,
-  },
-  step2Data: {
-    identification: null,
-    sectionType: null,
-    extension: null,
-    initialStakeMeters: null,
-    latitudeI: null,
-    longitudeI: null,
-    finalStakeMeters: null,
-    latitudeF: null,
-    longitudeF: null,
-    monitoringPhase: null,
-    observation: null,
-    milling: null,
-    interventionAtTheBase: null,
-    sami: null,
-    bondingPaint: null,
-    priming: null,
-    images: null,
-    imagesDate: null,
-    trafficLiberation: null,
-    lastUpdate: null,
-    averageAltitude: null,
-    numberOfTracks: null,
-    monitoredTrack: null,
-    trackWidth: null,
-    structuralComposition: [
-      {
-        id: 0,
-        layer: null,
-        material: null,
-        thickness: null,
-      },
-    ],
-    tipoSecao: null,
-    estrutura: null,
-    material: null,
-    longitude: null,
-    latitude: null,
-    altitude: null,
-    fonteMonitoramento: null,
-    longitudeFora: null,
-    latitudeFora: null,
-    pregoeiro: null,
-    informacaoBase: null,
-    pontoLigacao: null,
-    ultimaAtualizacao: null,
-    local: null,
-    municipioEstado: null,
-    extensao: null,
-    velocidadeDiretaVia: null,
-    larguraFaixa: null,
-    inicioEstaca: null,
-    inicioLatitude: null,
-    fimMetros: null,
-    fimLongitude: null,
-    altitudeMedia: null,
-  },
-  step3Data: {
-    mctGroup: null,
-    mctCoefficientC: null,
-    mctIndexE: null,
-    especificMass: null,
-    compressionEnergy: null,
-    granulometricRange: null,
-    optimalHumidity: null,
-    abrasionLA: null,
-    k1: null,
-    k2: null,
-    k3: null,
-    k4: null,
-    k1psi1: null,
-    k2psi2: null,
-    k3psi3: null,
-    k4psi4: null,
-    observations: null,
-  },
-  _id: null,
+  generalData: createGeneralData(),
+  step2Data: createStep2Data(),
+  step3Data: createStep3Data(),
+  _id: undefined,
 };
 
-const useGranularLayersStore = create<GranularLayersData & GranularLayersActions>()(
+const useGranularLayersStore = create<Store>()(
   devtools(
     persist(
       (set) => ({
         ...initialState,
+
         setData: ({ step, key, value }) => {
           set((state) => {
-            if (step === 3) {
-              return value;
-            } else {
-              if (key) {
-                return {
-                  ...state,
-                  [stepVariant[step]]: {
-                    ...state[stepVariant[step]],
-                    [key]: value,
-                  },
-                };
-              } else {
-                return { ...state, [stepVariant[step]]: value };
-              }
+            if (!key) {
+              return {
+                ...state,
+                [stepVariant[step]]: value,
+              };
             }
+
+            return {
+              ...state,
+              [stepVariant[step]]: {
+                ...state[stepVariant[step]],
+                [key]: value,
+              },
+            };
           });
         },
 
         reset: () => set(initialState),
-        
-        resetStore: () => set(initialState),
 
         clearStore: () => {
           sessionStorage.clear();

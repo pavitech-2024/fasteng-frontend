@@ -1,28 +1,31 @@
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
-
+//
 // ================== DEFINIÇÃO DO TIPO DE CADA CAMADA ==================
 export interface LayerCard {
   id: string;
-  title: string; // Título livre digitado pelo usuário
-  grupoMCT: string;
-  coeficienteC: string;
-  indiceE: string;
+  title: string;
+
+  // PARÂMETROS DO MATERIAL
+  teorCimento: string;
+  rt: string;
+  rtcd: string;
+  rcs: string;
+  faixaGranulometrica: string;
   massaEspecifica: string;
   umidadeOtima: string;
   energiaCompactacao: string;
-  moduloResiliencia: string;
-  coeficienteK1: string;
-  coeficienteK2: string;
-  coeficienteK3: string;
-  coeficienteK4: string;
-  deformacaoPermanente: string;
-  coeficienteK1Psi: string;
-  coeficienteK2Psi: string;
-  coeficienteK3Psi: string;
-  coeficienteK4Psi: string;
-}
 
+  // MÓDULO DE RESILIÊNCIA
+  ei: string;
+  ef: string;
+  constanteA: string;
+  constanteB: string;
+
+  // FADIGA
+  k1: string;
+  k2: string;
+}
 // ================== INTERFACES DOS DADOS ==================
 interface GeneralData {
   name: string | null;

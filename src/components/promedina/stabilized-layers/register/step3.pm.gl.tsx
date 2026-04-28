@@ -1,226 +1,176 @@
 import { EssayPageProps } from '../../../templates/essay';
-import { Box, TextField, Button, IconButton, Card, CardContent, Typography } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, TextField, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 import { useState, useEffect } from 'react';
+import { LayerCard } from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 
-// Definição do tipo para cada card (camada)
-interface LayerCard {
-  id: string;
-  title: string; // Título livre, digitado pelo usuário
-  grupoMCT: string;
-  coeficienteC: string;
-  indiceE: string;
-  massaEspecifica: string;
-  umidadeOtima: string;
-  energiaCompactacao: string;
-  moduloResiliencia: string;
-  coeficienteK1: string;
-  coeficienteK2: string;
-  coeficienteK3: string;
-  coeficienteK4: string;
-  deformacaoPermanente: string;
-  coeficienteK1Psi: string;
-  coeficienteK2Psi: string;
-  coeficienteK3Psi: string;
-  coeficienteK4Psi: string;
-}
+const createEmptyLayer = (): LayerCard => ({
+  id: crypto.randomUUID(),
+  title: '',
 
-// Todos os campos de parâmetros (conforme solicitado)
-const layerFields = [
-  { key: 'grupoMCT', label: 'Grupo MCT', required: false },
-  { key: 'coeficienteC', label: 'MCT - Coeficiente c\' *', required: false },
-  { key: 'indiceE', label: 'MCT - Índice e\' *', required: false },
-  { key: 'massaEspecifica', label: 'Massa Específica (g/cm³) *', required: false },
-  { key: 'umidadeOtima', label: 'Umidade Ótima (%) *', required: false },
-  { key: 'energiaCompactacao', label: 'Energia de Compactação *', required: false },
-  { key: 'moduloResiliencia', label: 'Módulo de Resiliência (MPa)', required: false },
-  { key: 'coeficienteK1', label: 'Coeficiente de Regressão (k1) *', required: false },
-  { key: 'coeficienteK2', label: 'Coeficiente de Regressão (k2) *', required: false },
-  { key: 'coeficienteK3', label: 'Coeficiente de Regressão (k3) *', required: false },
-  { key: 'coeficienteK4', label: 'Coeficiente de Regressão (k4) *', required: false },
-  { key: 'deformacaoPermanente', label: 'Deformação Permanente', required: false },
-  { key: 'coeficienteK1Psi', label: 'Coeficiente de Regressão (k1 ou psi) *', required: false },
-  { key: 'coeficienteK2Psi', label: 'Coeficiente de Regressão (k2 ou psi) *', required: false },
-  { key: 'coeficienteK3Psi', label: 'Coeficiente de Regressão (k3 ou psi) *', required: false },
-  { key: 'coeficienteK4Psi', label: 'Coeficiente de Regressão (k4 ou psi) *', required: false },
-];
+  teorCimento: '',
+  rt: '',
+  rtcd: '',
+  rcs: '',
+  faixaGranulometrica: '',
+  massaEspecifica: '',
+  umidadeOtima: '',
+  energiaCompactacao: '',
+
+  ei: '',
+  ef: '',
+  constanteA: '',
+  constanteB: '',
+
+  k1: '',
+  k2: '',
+});
 
 const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
   const { step3Data, setData } = useStabilizedLayersStore();
 
-  // Inicializa os cards: se houver dados salvos, usa-os; senão, cria um card com título vazio
-  const [cards, setCards] = useState<LayerCard[]>(() => {
-    if (step3Data.layers && Array.isArray(step3Data.layers) && step3Data.layers.length > 0) {
-      return step3Data.layers;
-    }
-    return [
-      {
-        id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
-        title: '', // ← NENHUM TÍTULO FIXO, usuário digita
-        grupoMCT: '',
-        coeficienteC: '',
-        indiceE: '',
-        massaEspecifica: '',
-        umidadeOtima: '',
-        energiaCompactacao: '',
-        moduloResiliencia: '',
-        coeficienteK1: '',
-        coeficienteK2: '',
-        coeficienteK3: '',
-        coeficienteK4: '',
-        deformacaoPermanente: '',
-        coeficienteK1Psi: '',
-        coeficienteK2Psi: '',
-        coeficienteK3Psi: '',
-        coeficienteK4Psi: '',
-      },
-    ];
-  });
+  const [layers, setLayers] = useState<LayerCard[]>(
+    step3Data.layers?.length ? step3Data.layers : [createEmptyLayer()]
+  );
 
-  // Salva os cards no store sempre que houver alteração e habilita o botão "Próximo"
+  const hasMultipleLayers = layers.length > 1;
+
   useEffect(() => {
-    setData({ step: 2, key: 'layers', value: cards });
-    setNextDisabled(false); // sem validação obrigatória
-  }, [cards, setData, setNextDisabled]);
+    setData({ step: 2, key: 'layers', value: layers });
+    setNextDisabled(false);
+  }, [layers, setData, setNextDisabled]);
 
-  // Adiciona um novo card com todos os campos vazios
-  const addCard = () => {
-    const newCard: LayerCard = {
-      id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
-      title: '',
-      grupoMCT: '',
-      coeficienteC: '',
-      indiceE: '',
-      massaEspecifica: '',
-      umidadeOtima: '',
-      energiaCompactacao: '',
-      moduloResiliencia: '',
-      coeficienteK1: '',
-      coeficienteK2: '',
-      coeficienteK3: '',
-      coeficienteK4: '',
-      deformacaoPermanente: '',
-      coeficienteK1Psi: '',
-      coeficienteK2Psi: '',
-      coeficienteK3Psi: '',
-      coeficienteK4Psi: '',
-    };
-    setCards(prev => [...prev, newCard]);
-  };
-
-  // Remove um card (se for o último, apenas limpa os campos)
-  const removeCard = (id: string) => {
-    if (cards.length === 1) {
-      setCards(prev =>
-        prev.map(card =>
-          card.id === id
-            ? {
-                ...card,
-                title: '',
-                grupoMCT: '',
-                coeficienteC: '',
-                indiceE: '',
-                massaEspecifica: '',
-                umidadeOtima: '',
-                energiaCompactacao: '',
-                moduloResiliencia: '',
-                coeficienteK1: '',
-                coeficienteK2: '',
-                coeficienteK3: '',
-                coeficienteK4: '',
-                deformacaoPermanente: '',
-                coeficienteK1Psi: '',
-                coeficienteK2Psi: '',
-                coeficienteK3Psi: '',
-                coeficienteK4Psi: '',
-              }
-            : card
-        )
-      );
-    } else {
-      setCards(prev => prev.filter(card => card.id !== id));
-    }
-  };
-
-  // Atualiza um campo específico de um card
-  const updateCardField = (id: string, field: keyof LayerCard, value: string) => {
-    setCards(prev =>
-      prev.map(card =>
-        card.id === id ? { ...card, [field]: value } : card
-      )
+  const updateLayer = (id: string, key: keyof LayerCard, value: string) => {
+    setLayers(prev =>
+      prev.map(l => (l.id === id ? { ...l, [key]: value } : l))
     );
   };
 
-  return (
-    <FlexColumnBorder
-      title="CAMADAS ESTABILIZADAS – PARÂMETROS DO MATERIAL"
-      open={true}
-      theme={'#07B811'}
-      sx_title={{ whiteSpace: 'wrap', fontWeight: 'bold' }}
-    >
-      <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 3 }}>
-        {cards.map((card) => (
-          <Card key={card.id} variant="outlined" sx={{ p: 2, position: 'relative' }}>
-            <IconButton
-              aria-label="remover"
-              onClick={() => removeCard(card.id)}
-              sx={{ position: 'absolute', top: 8, right: 8 }}
-            >
-              <DeleteIcon />
-            </IconButton>
-            <CardContent>
-              <Typography variant="subtitle1" fontWeight="bold" mb={1}>
-                Nome da Camada / Material
-              </Typography>
-              <TextField
-                fullWidth
-                variant="standard"
-                placeholder="Ex: Subleito, Aterro, Base Granular, etc."
-                value={card.title}
-                onChange={(e) => updateCardField(card.id, 'title', e.target.value)}
-                sx={{ mb: 3 }}
-              />
-              <Box 
-                sx={{ 
-                  display: 'grid',
-                  gridTemplateColumns: {
-                    xs: '1fr',
-                    sm: 'repeat(2, 1fr)',
-                    md: 'repeat(3, 1fr)'
-                  },
-                  gap: 2
-                }}
-              >
-                {layerFields.map((field) => (
-                  <Box key={field.key}>
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      label={field.label}
-                      value={card[field.key as keyof LayerCard] || ''}
-                      onChange={(e) =>
-                        updateCardField(card.id, field.key as keyof LayerCard, e.target.value)
-                      }
-                    />
-                  </Box>
-                ))}
+  const addLayer = () => setLayers(prev => [...prev, createEmptyLayer()]);
+
+  const removeLayer = (id: string) => {
+    setLayers(prev => {
+      if (prev.length === 1) return prev; // não deixa remover tudo
+      return prev.filter(l => l.id !== id);
+    });
+  };
+
+  const renderField = (
+    layerId: string,
+    key: keyof LayerCard,
+    label: string,
+    value: string
+  ) => (
+    <TextField
+      key={`${layerId}-${key}`}
+      variant="standard"
+      label={label}
+      value={value || ''}
+      onChange={(e) => updateLayer(layerId, key, e.target.value)}
+      InputProps={{
+        inputProps: { style: { textTransform: 'uppercase' } }
+      }}
+    />
+  );
+
+  const renderLayers = () => (
+    <>
+      {layers.map((layer, index) => (
+        <Box key={layer.id} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+
+          {/* HEADER DA CAMADA */}
+          {hasMultipleLayers && (
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Box sx={{ fontWeight: 600 }}>
+                CAMADA {index + 1}
               </Box>
-            </CardContent>
-          </Card>
-        ))}
-        <Button
+
+              <Button
+                variant="outlined"
+                color="error"
+                size="small"
+                startIcon={<DeleteIcon />}
+                onClick={() => removeLayer(layer.id)}
+              >
+                REMOVER
+              </Button>
+            </Box>
+          )}
+
+          {/* PARÂMETROS */}
+          <FlexColumnBorder title="PARÂMETROS DO MATERIAL" open theme={'#07B811'}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: 2 }}>
+              {renderField(layer.id, 'teorCimento', 'TEOR ÓTIMO DE CIMENTO (%)', layer.teorCimento)}
+              {renderField(layer.id, 'rt', 'RESISTÊNCIA À TRAÇÃO (MPa)', layer.rt)}
+              {renderField(layer.id, 'rtcd', 'RTCD (MPa)', layer.rtcd)}
+              {renderField(layer.id, 'rcs', 'RCS (MPa)', layer.rcs)}
+              {renderField(layer.id, 'faixaGranulometrica', 'FAIXA GRANULOMÉTRICA', layer.faixaGranulometrica)}
+              {renderField(layer.id, 'massaEspecifica', 'MASSA ESPECÍFICA (g/cm³)', layer.massaEspecifica)}
+              {renderField(layer.id, 'umidadeOtima', 'UMIDADE ÓTIMA (%)', layer.umidadeOtima)}
+              {renderField(layer.id, 'energiaCompactacao', 'ENERGIA DE COMPACTAÇÃO', layer.energiaCompactacao)}
+            </Box>
+          </FlexColumnBorder>
+
+          {/* RESILIÊNCIA */}
+          <FlexColumnBorder title="MÓDULO DE RESILIÊNCIA (MPa)" open theme={'#07B811'}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2 }}>
+              {renderField(layer.id, 'ei', 'Ei', layer.ei)}
+              {renderField(layer.id, 'ef', 'Ef', layer.ef)}
+              {renderField(layer.id, 'constanteA', 'CONSTANTE A', layer.constanteA)}
+              {renderField(layer.id, 'constanteB', 'CONSTANTE B', layer.constanteB)}
+            </Box>
+          </FlexColumnBorder>
+
+          {/* FADIGA */}
+          <FlexColumnBorder title="FADIGA DO MATERIAL" open theme={'#07B811'}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2 }}>
+              {renderField(layer.id, 'k1', 'K1 (PSI1)', layer.k1)}
+              {renderField(layer.id, 'k2', 'K2 (PSI2)', layer.k2)}
+            </Box>
+          </FlexColumnBorder>
+
+        </Box>
+      ))}
+    </>
+  );
+
+  return (
+    <>
+      {hasMultipleLayers ? (
+        <FlexColumnBorder open theme={'#07B811'}>
+          {renderLayers()}
+        </FlexColumnBorder>
+      ) : (
+        renderLayers()
+      )}
+
+      <Button
+        variant="outlined"
+        startIcon={<AddIcon />}
+        onClick={addLayer}
+        sx={{ mt: 2 }}
+      >
+        ADICIONAR CAMADA
+      </Button>
+
+      {/* OBS */}
+      <FlexColumnBorder title="OBSERVAÇÕES" open theme={'#07B811'}>
+        <TextField
+          fullWidth
+          multiline
+          rows={4}
           variant="outlined"
-          startIcon={<AddIcon />}
-          onClick={addCard}
-          sx={{ alignSelf: 'flex-start', mt: 1 }}
-        >
-          Adicionar camada / material
-        </Button>
-      </Box>
-    </FlexColumnBorder>
+          label="OBSERVAÇÕES"
+          value={step3Data?.observations || ''}
+          onChange={(e) =>
+            setData({ step: 2, key: 'observations', value: e.target.value })
+          }
+        />
+      </FlexColumnBorder>
+    </>
   );
 };
 

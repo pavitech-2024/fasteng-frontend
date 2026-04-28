@@ -9,7 +9,7 @@ import { NextIcon } from '@/assets';
 import Loading from '@/components/molecules/loading';
 import Link from 'next/link';
 import GeneratePDF_ProMedina from '@/components/generatePDF/promedina/granularLayers/generatePDF.promedina';
-
+//TEST
 const SpecificSample_StabilizedLayers = () => {
   const [samples, setSamples] = useState<any>();
   const [loading, setLoading] = useState(true);
@@ -623,147 +623,72 @@ const SpecificSample_StabilizedLayers = () => {
                 )}
             </Box>
 
-            {/** DADOS DO MATERIAL */}
-            <Box id="material-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-              <FlexColumnBorder title={t('pm.material-data')} open={true} theme={'#07B811'}>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
-                    justifyItems: 'center',
-                    alignItems: 'center',
-                    gap: '1rem',
-                    justifyContent: 'space-evenly',
-                    marginBottom: '0.5rem',
-                  }}
-                >
-                  {materialData.map((item, idx) => (
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.3rem',
-                        alignItems: 'center',
-                        alignSelf: 'start',
-                        textAlign: 'center',
-                      }}
-                      key={idx}
-                    >
-                      {item.value && (
-                        <>
-                          <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                            {item.title}
-                          </Typography>
-                          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <Typography sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}>
-                              {item.value}
-                            </Typography>
-                          </Box>
-                        </>
-                      )}
-                    </Box>
-                  ))}
-                </Box>
-              </FlexColumnBorder>
-            </Box>
-
-            {/** FADIGUA DO MATERIAL */}
-            <Box id="material-fatigue" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-              {samples?.step3Data?.fatiguek1psi1 && samples?.step3Data?.fatiguek2psi2 && (
-                <FlexColumnBorder title={t('pm.material-permanentDeformation')} open={true} theme={'#07B811'}>
-                  <Box
-                    sx={{
-                      display: 'grid',
-                      gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
-                      justifyItems: 'center',
-                      alignItems: 'center',
-                      gap: '1rem',
-                      justifyContent: 'space-evenly',
-                      marginBottom: '0.5rem',
-                    }}
-                  >
-                    {materialFatigue.map((item, idx) => (
+            {/* CAMADAS ESTABILIZADAS */}
+            <Box id="stabilized-layers" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
+              {samples?.step3Data?.layers?.length > 0 && (
+                <FlexColumnBorder title="CAMADAS ESTABILIZADAS" open theme={'#07B811'}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    {samples.step3Data.layers.map((layer: any, index: number) => (
                       <Box
+                        key={layer.id || index}
                         sx={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: '0.3rem',
-                          alignItems: 'center',
-                          alignSelf: 'start',
-                          textAlign: 'center',
+                          border: '1px solid #07B811',
+                          borderRadius: '10px',
+                          padding: '1rem',
                         }}
-                        key={idx}
                       >
-                        {item.value && (
-                          <>
-                            <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                              {item.title}
-                            </Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                              <Typography
-                                sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
-                              >
-                                {item.value}
-                              </Typography>
-                            </Box>
-                          </>
-                        )}
+                        {/* TÍTULO */}
+                        <Typography sx={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>CAMADA {index + 1}</Typography>
+
+                        {/* PARÂMETROS */}
+                        <FlexColumnBorder title="PARÂMETROS DO MATERIAL" open theme={'#07B811'}>
+                          <Box
+                            sx={{
+                              display: 'grid',
+                              gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
+                              gap: '1rem',
+                            }}
+                          >
+                            {layer.teorCimento && <Typography>TEOR: {layer.teorCimento}%</Typography>}
+                            {layer.rt && <Typography>RT: {layer.rt} MPa</Typography>}
+                            {layer.rtcd && <Typography>RTCD: {layer.rtcd} MPa</Typography>}
+                            {layer.rcs && <Typography>RCS: {layer.rcs} MPa</Typography>}
+                            {layer.faixaGranulometrica && <Typography>FAIXA: {layer.faixaGranulometrica}</Typography>}
+                            {layer.massaEspecifica && <Typography>MASSA: {layer.massaEspecifica}</Typography>}
+                            {layer.umidadeOtima && <Typography>UMIDADE: {layer.umidadeOtima}%</Typography>}
+                            {layer.energiaCompactacao && <Typography>ENERGIA: {layer.energiaCompactacao}</Typography>}
+                          </Box>
+                        </FlexColumnBorder>
+
+                        {/* RESILIÊNCIA */}
+                        <FlexColumnBorder title="MÓDULO DE RESILIÊNCIA" open theme={'#07B811'}>
+                          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
+                            {layer.ei && <Typography>Ei: {layer.ei}</Typography>}
+                            {layer.ef && <Typography>Ef: {layer.ef}</Typography>}
+                            {layer.constanteA && <Typography>A: {layer.constanteA}</Typography>}
+                            {layer.constanteB && <Typography>B: {layer.constanteB}</Typography>}
+                          </Box>
+                        </FlexColumnBorder>
+
+                        {/* FADIGA */}
+                        <FlexColumnBorder title="FADIGA" open theme={'#07B811'}>
+                          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                            {layer.k1 && <Typography>K1: {layer.k1}</Typography>}
+                            {layer.k2 && <Typography>K2: {layer.k2}</Typography>}
+                          </Box>
+                        </FlexColumnBorder>
                       </Box>
                     ))}
+
+                    {/* OBSERVAÇÕES */}
+                    {samples?.step3Data?.observations && (
+                      <FlexColumnBorder title="OBSERVAÇÕES" open theme={'#07B811'}>
+                        <Typography>{samples.step3Data.observations}</Typography>
+                      </FlexColumnBorder>
+                    )}
                   </Box>
                 </FlexColumnBorder>
               )}
-            </Box>
-
-            {/** MÓDULO DE RESILIÊNCIA */}
-            <Box id="resilience-module" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-              {samples?.step3Data?.rsInitial &&
-                samples?.step3Data?.rsFinal &&
-                samples?.step3Data?.constantA &&
-                samples?.step3Data?.constantB && (
-                  <FlexColumnBorder title={t('pm.resilience.module')} open={true} theme={'#07B811'}>
-                    <Box
-                      sx={{
-                        display: 'grid',
-                        gridTemplateColumns: { mobile: '1fr', tablet: '1fr 1fr', desktop: '1fr 1fr 1fr 1fr' },
-                        justifyItems: 'center',
-                        alignItems: 'center',
-                        gap: '1rem',
-                        justifyContent: 'space-evenly',
-                        marginBottom: '0.5rem',
-                      }}
-                    >
-                      {resilienceModuleStabilized.map((item, idx) => (
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '0.3rem',
-                            alignItems: 'center',
-                            alignSelf: 'start',
-                            textAlign: 'center',
-                          }}
-                          key={idx}
-                        >
-                          {item.value && (
-                            <>
-                              <Typography sx={{ fontWeight: 'normal', fontSize: '14px', color: 'gray' }}>
-                                {item.title}
-                              </Typography>
-                              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                <Typography
-                                  sx={{ display: 'flex', fontWeight: 'bold', fontSize: '14px', color: 'black' }}
-                                >
-                                  {item.value}
-                                </Typography>
-                              </Box>
-                            </>
-                          )}
-                        </Box>
-                      ))}
-                    </Box>
-                  </FlexColumnBorder>
-                )}
             </Box>
 
             {/** DADOS TÉCNICOS DA AMOSTRA */}
