@@ -28,11 +28,6 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
           value={value?.toString() || ''}
           required={required}
           onChange={(e) => setData({ step: 2, key, value: e.target.value })}
-          sx={{
-            '& .MuiInputLabel-root': { fontSize: '0.9rem', fontWeight: 500 },
-            '& .MuiInputBase-input': { fontSize: '1rem', padding: '8px 0' },
-            '& .MuiInputBase-input::placeholder': { fontSize: '1rem', opacity: 0.7, color: '#666' },
-          }}
         />
       );
     }
@@ -48,10 +43,8 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
         required={required}
         InputLabelProps={type === 'date' ? { shrink: true } : undefined}
         onChange={(e) => setData({ step: 2, key, value: e.target.value })}
-        sx={{
-          '& .MuiInputLabel-root': { fontSize: '0.9rem', fontWeight: 500 },
-          '& .MuiInputBase-input': { fontSize: '1rem', padding: '8px 0' },
-          '& .MuiInputBase-input::placeholder': { fontSize: '1rem', opacity: 0.7, color: '#666' },
+        InputProps={{
+          inputProps: { style: { textTransform: 'uppercase' } }
         }}
       />
     );
@@ -131,10 +124,8 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
               placeholder="DIGITE SUAS OBSERVAÇÕES AQUI"
               value={step3Data?.observacoes || ''}
               onChange={(e) => setData({ step: 2, key: 'observacoes', value: e.target.value })}
-              sx={{
-                '& .MuiInputLabel-root': { fontSize: '0.9rem', fontWeight: 500 },
-                '& .MuiInputBase-input': { fontSize: '1rem' },
-                '& .MuiInputBase-input::placeholder': { fontSize: '1rem', opacity: 0.7, color: '#666' },
+              InputProps={{
+                inputProps: { style: { textTransform: 'uppercase' } }
               }}
             />
           </Box>

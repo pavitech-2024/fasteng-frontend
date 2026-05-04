@@ -1,221 +1,226 @@
 import { EssayPageProps } from '../../../templates/essay';
-import { Box, TextField, Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
+import {
+  Box,
+  TextField,
+  Button,
+  IconButton
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
-import { useCallback, useEffect, useState } from 'react';
+import useGranularLayersStore from '@/stores/promedina/granular-layers/granular-layers.store';
+import { useEffect, useState } from 'react';
+
+type Layer = {
+  id: string;
+  name: string;
+
+  mctCoefficientC: string;
+  mctIndexE: string;
+  especificMass: string;
+  optimalHumidity: string;
+  compressionEnergy: string;
+
+  k1: string;
+  k2: string;
+  k3: string;
+  k4: string;
+
+  k1psi1: string;
+  k2psi2: string;
+  k3psi3: string;
+  k4psi4: string;
+};
+
+const createEmptyLayer = (): Layer => ({
+  id: crypto.randomUUID(),
+  name: '',
+
+  mctCoefficientC: '',
+  mctIndexE: '',
+  especificMass: '',
+  optimalHumidity: '',
+  compressionEnergy: '',
+
+  k1: '',
+  k2: '',
+  k3: '',
+  k4: '',
+
+  k1psi1: '',
+  k2psi2: '',
+  k3psi3: '',
+  k4psi4: '',
+});
 
 const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
-  const { step3Data, setData } = useGranularLayersStore();
-  const [isValid, setIsValid] = useState(false);
+  const { step2Data, setData } = useGranularLayersStore();
 
-  // Configuração das camadas
-  const layers = [
-    { id: 'subleito', label: 'Subleito' },
-    { id: 'aterro', label: 'Aterro' },
-    { id: 'subBaseGranular', label: 'Sub-base Granular' },
-    { id: 'baseGranular', label: 'Base Granular' }
-  ];
+  const [layers, setLayers] = useState<Layer[]>(
+    step2Data.layers?.length ? step2Data.layers : [createEmptyLayer()]
+  );
 
-  // Todos os campos obrigatórios
-  const allRequiredFields = [
-    'mctCoefficientC', 'mctIndexE', 'especificMass', 'optimalHumidity', 'compressionEnergy',
-    'k1', 'k2', 'k3', 'k4',
-    'k1psi1', 'k2psi2', 'k3psi3', 'k4psi4'
-  ];
+  const hasMultipleLayers = layers.length > 1;
 
-  // Inicializar dados da camada se não existirem
-  const initializeLayerIfNeeded = useCallback((layerId: string) => {
-    const layerData = step3Data?.[layerId];
-    
-    if (!layerData) {
-      // Criar objeto vazio para a camada
-      setData({
-        step: 2,
-        key: layerId,
-        value: {}
-      });
-      return false;
-    }
-    
-    // Verificar se algum campo obrigatório está faltando e inicializar com string vazia
-    let needsUpdate = false;
-    const updatedData = { ...layerData };
-    
-    for (const field of allRequiredFields) {
-      if (updatedData[field] === undefined || updatedData[field] === null) {
-        updatedData[field] = '';
-        needsUpdate = true;
-      }
-    }
-    
-    if (needsUpdate) {
-      setData({
-        step: 2,
-        key: layerId,
-        value: updatedData
-      });
-    }
-    
-    return true;
-  }, [step3Data, setData]);
-
-  // Inicializar todas as camadas na primeira renderização
+  // salvar no store
   useEffect(() => {
-    for (const layer of layers) {
-      initializeLayerIfNeeded(layer.id);
-    }
-  }, [initializeLayerIfNeeded]);
+    setData({ step: 1, key: 'layers', value: layers });
+  }, [layers]);
 
-  // Função para verificar se uma camada está completa
-  const isLayerComplete = useCallback((layerId: string) => {
-    const layerData = step3Data?.[layerId];
-    
-    if (!layerData) {
-      console.log(`Camada ${layerId} não existe`);
-      return false;
-    }
-    
-    // Verifica cada campo obrigatório
-    for (const field of allRequiredFields) {
-      const value = layerData[field];
-      // Verifica se é null, undefined, string vazia ou apenas espaços
-      if (value === undefined || value === null || value === '' || (typeof value === 'string' && value.trim() === '')) {
-        console.log(`❌ Campo faltando em ${layerId}: ${field} (valor: ${value})`);
-        return false;
-      }
-    }
-    
-    console.log(`✅ Camada ${layerId} completa`);
-    return true;
-  }, [step3Data]);
-
-  // Verificar se todas as camadas estão preenchidas
+  // validação
   useEffect(() => {
-    let allComplete = true;
-    
-    for (const layer of layers) {
-      if (!isLayerComplete(layer.id)) {
-        allComplete = false;
-        break;
-      }
-    }
-    
-    console.log('📊 Validação step3 - Todas camadas completas:', allComplete);
-    setIsValid(allComplete);
-    setNextDisabled(!allComplete);
-  }, [step3Data, setNextDisabled, isLayerComplete]);
+    const isValid = layers.every(layer =>
+      Object.entries(layer).every(([key, value]) => {
+        if (key === 'id') return true;
+        return value !== '';
+      })
+    );
 
-  // Função para atualizar dados aninhados
-  const setNestedData = (layerId: string, fieldKey: string, value: string) => {
-    const currentLayerData = step3Data?.[layerId] || {};
-    
-    setData({
-      step: 2,
-      key: layerId,
-      value: {
-        ...currentLayerData,
-        [fieldKey]: value
-      }
-    });
-  };
+    setNextDisabled(!isValid);
+  }, [layers, setNextDisabled]);
 
-  // Renderizar campo
-  const renderField = (fieldKey: string, label: string, layerId: string, value: any, type = 'text') => {
-    // Garante que value nunca seja null (sempre string vazia)
-    const safeValue = value === undefined || value === null ? '' : value;
-    
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setNestedData(layerId, fieldKey, e.target.value);
-    };
-
-    // Para campos com unidade, mostrar no label
-    let labelWithUnit = label;
-    if (fieldKey === 'especificMass') labelWithUnit = `${label} (g/cm³)`;
-    if (fieldKey === 'optimalHumidity') labelWithUnit = `${label} (%)`;
-
-    return (
-      <TextField
-        key={`${layerId}-${fieldKey}`}
-        variant="standard"
-        type={type}
-        label={labelWithUnit}
-        value={safeValue}
-        required={true}
-        onChange={handleChange}
-        fullWidth
-      />
+  const updateLayer = (id: string, key: keyof Layer, value: string) => {
+    setLayers(prev =>
+      prev.map(l => (l.id === id ? { ...l, [key]: value } : l))
     );
   };
 
+  const addLayer = () => {
+    setLayers(prev => [...prev, createEmptyLayer()]);
+  };
+
+  const removeLayer = (id: string) => {
+    setLayers(prev => prev.filter(l => l.id !== id));
+  };
+
+  const renderField = (
+    layerId: string,
+    key: keyof Layer,
+    label: string,
+    value: string,
+    type = 'text'
+  ) => (
+    <TextField
+      key={`${layerId}-${key}`}
+      variant="standard"
+      type={type}
+      label={label}
+      value={value || ''}
+      onChange={(e) => updateLayer(layerId, key, e.target.value)}
+      fullWidth
+      InputProps={{
+        inputProps: { style: { textTransform: 'uppercase' } }
+      }}
+    />
+  );
+
+  const renderLayers = () => (
+    <>
+      {layers.map((layer, index) => (
+        <Box
+          key={layer.id}
+          sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
+        >
+          {/* HEADER */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}
+          >
+            <TextField
+              variant="standard"
+              label={`NOME DA CAMADA ${index + 1}`}
+              value={layer.name}
+              onChange={(e) =>
+                updateLayer(layer.id, 'name', e.target.value)
+              }
+              InputProps={{
+                inputProps: { style: { textTransform: 'uppercase' } }
+              }}
+            />
+
+            {hasMultipleLayers && (
+              <IconButton
+                color="error"
+                onClick={() => removeLayer(layer.id)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            )}
+          </Box>
+
+          {/* MCT */}
+          <FlexColumnBorder title="GRUPO MCT" open theme={'#07B811'}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 2 }}>
+              {renderField(layer.id, 'mctCoefficientC', "COEFICIENTE c'", layer.mctCoefficientC)}
+              {renderField(layer.id, 'mctIndexE', "ÍNDICE e'", layer.mctIndexE)}
+              {renderField(layer.id, 'especificMass', 'MASSA ESPECÍFICA (g/cm³)', layer.especificMass, 'number')}
+              {renderField(layer.id, 'optimalHumidity', 'UMIDADE ÓTIMA (%)', layer.optimalHumidity, 'number')}
+              {renderField(layer.id, 'compressionEnergy', 'ENERGIA DE COMPACTAÇÃO', layer.compressionEnergy)}
+            </Box>
+          </FlexColumnBorder>
+
+          {/* RESILIÊNCIA */}
+          <FlexColumnBorder title="MÓDULO DE RESILIÊNCIA" open theme={'#07B811'}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2 }}>
+              {renderField(layer.id, 'k1', 'k1', layer.k1, 'number')}
+              {renderField(layer.id, 'k2', 'k2', layer.k2, 'number')}
+              {renderField(layer.id, 'k3', 'k3', layer.k3, 'number')}
+              {renderField(layer.id, 'k4', 'k4', layer.k4, 'number')}
+            </Box>
+          </FlexColumnBorder>
+
+          {/* DEFORMAÇÃO */}
+          <FlexColumnBorder title="DEFORMAÇÃO PERMANENTE" open theme={'#07B811'}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2 }}>
+              {renderField(layer.id, 'k1psi1', 'k1/psi', layer.k1psi1, 'number')}
+              {renderField(layer.id, 'k2psi2', 'k2/psi', layer.k2psi2, 'number')}
+              {renderField(layer.id, 'k3psi3', 'k3/psi', layer.k3psi3, 'number')}
+              {renderField(layer.id, 'k4psi4', 'k4/psi', layer.k4psi4, 'number')}
+            </Box>
+          </FlexColumnBorder>
+        </Box>
+      ))}
+    </>
+  );
+
   return (
     <>
-      <FlexColumnBorder title="Parâmetros e dados do material" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap', fontWeight: 'bold' }}>
-        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
-          {layers.map((layer) => {
-            const layerData = step3Data?.[layer.id] || {};
-            
-            return (
-              <Accordion key={layer.id} defaultExpanded>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#07B811' }}>
-                    {layer.label}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  {/* Grupo MCT */}
-                  <FlexColumnBorder title="Grupo MCT" open={true} theme={'#07B811'}>
-                    <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
-                      {renderField('mctCoefficientC', 'MCT - Coeficiente c\'', layer.id, layerData.mctCoefficientC, 'text')}
-                      {renderField('mctIndexE', 'MCT - Índice e\'', layer.id, layerData.mctIndexE, 'text')}
-                      {renderField('especificMass', 'Massa Específica', layer.id, layerData.especificMass, 'number')}
-                      {renderField('optimalHumidity', 'Umidade Ótima', layer.id, layerData.optimalHumidity, 'number')}
-                      {renderField('compressionEnergy', 'Energia de Compactação', layer.id, layerData.compressionEnergy, 'text')}
-                    </Box>
-                  </FlexColumnBorder>
+      {hasMultipleLayers ? (
+        <FlexColumnBorder open theme={'#07B811'}>
+          {renderLayers()}
+        </FlexColumnBorder>
+      ) : (
+        renderLayers()
+      )}
 
-                  {/* Módulo de Resiliência */}
-                  <FlexColumnBorder title="Módulo de Resiliência (MPa)" open={true} theme={'#07B811'}>
-                    <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
-                      {renderField('k1', 'Coeficiente de Regressão (k1)', layer.id, layerData.k1, 'number')}
-                      {renderField('k2', 'Coeficiente de Regressão (k2)', layer.id, layerData.k2, 'number')}
-                      {renderField('k3', 'Coeficiente de Regressão (k3)', layer.id, layerData.k3, 'number')}
-                      {renderField('k4', 'Coeficiente de Regressão (k4)', layer.id, layerData.k4, 'number')}
-                    </Box>
-                  </FlexColumnBorder>
+      <Button
+        variant="outlined"
+        startIcon={<AddIcon />}
+        onClick={addLayer}
+        sx={{ mt: 2, textTransform: 'uppercase' }}
+      >
+        ADICIONAR CAMADA
+      </Button>
 
-                  {/* Deformação Permanente */}
-                  <FlexColumnBorder title="Deformação Permanente" open={true} theme={'#07B811'}>
-                    <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
-                      {renderField('k1psi1', 'Coeficiente de Regressão (k1 ou psi)', layer.id, layerData.k1psi1, 'number')}
-                      {renderField('k2psi2', 'Coeficiente de Regressão (k2 ou psi)', layer.id, layerData.k2psi2, 'number')}
-                      {renderField('k3psi3', 'Coeficiente de Regressão (k3 ou psi)', layer.id, layerData.k3psi3, 'number')}
-                      {renderField('k4psi4', 'Coeficiente de Regressão (k4 ou psi)', layer.id, layerData.k4psi4, 'number')}
-                    </Box>
-                  </FlexColumnBorder>
-                </AccordionDetails>
-              </Accordion>
-            );
-          })}
-        </Box>
-      </FlexColumnBorder>
-
-      {/* Observações */}
-      <FlexColumnBorder title="Observações" open={true} theme={'#07B811'}>
-        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <TextField
-            variant="standard"
-            multiline
-            rows={4}
-            fullWidth
-            label="Observações"
-            value={step3Data?.observations || ''}
-            onChange={(e) => setData({ step: 2, key: 'observations', value: e.target.value })}
-          />
-        </Box>
-      </FlexColumnBorder>
+      {/* OBS */}
+   <FlexColumnBorder title="OBSERVAÇÕES" open theme={'#07B811'}>
+  <TextField
+    fullWidth
+    multiline
+    rows={4}
+    variant="outlined"
+    label="OBSERVAÇÕES"
+    value={step2Data?.observations || ''}
+    onChange={(e) =>
+      setData({ step: 1, key: 'observations', value: e.target.value })
+    }
+  />
+</FlexColumnBorder>
     </>
   );
 };
 
-export default GranularLayers_step3; 
+export default GranularLayers_step3;

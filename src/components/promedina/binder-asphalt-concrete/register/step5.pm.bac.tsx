@@ -12,40 +12,40 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
 
   // PROPRIEDADES GERAIS
   const geraisInputs = [
-    { label: 'Tipo de CAP', value: step5Data?.tipoCAP, key: 'tipoCAP', required: true },
-    { label: 'Massa Específica (g/cm³)', value: step5Data?.massaEspecifica, key: 'massaEspecifica', required: true, adornment: 'g/cm³' },
-    { label: 'Resistência à Tração (MPa)', value: step5Data?.resistenciaTracao, key: 'resistenciaTracao', required: true, adornment: 'MPa' },
-    { label: 'Teor de Asfalto (%)', value: step5Data?.teorAsfalto, key: 'teorAsfalto', required: true, adornment: '%' },
-    { label: 'Volume de Vazios (%)', value: step5Data?.volumeVazios, key: 'volumeVazios', required: true, adornment: '%' },
-    { label: 'Faixa Granulométrica', value: step5Data?.faixaGranulometrica, key: 'faixaGranulometrica', required: true },
+    { label: 'TIPO DE CAP', value: step5Data?.tipoCAP, key: 'tipoCAP', required: true },
+    { label: 'MASSA ESPECÍFICA (g/cm³)', value: step5Data?.massaEspecifica, key: 'massaEspecifica', required: true, adornment: 'g/cm³' },
+    { label: 'RESISTÊNCIA À TRAÇÃO (MPa)', value: step5Data?.resistenciaTracao, key: 'resistenciaTracao', required: true, adornment: 'MPa' },
+    { label: 'TEOR DE ASFALTO (%)', value: step5Data?.teorAsfalto, key: 'teorAsfalto', required: true, adornment: '%' },
+    { label: 'VOLUME DE VAZIOS (%)', value: step5Data?.volumeVazios, key: 'volumeVazios', required: true, adornment: '%' },
+    { label: 'FAIXA GRANULOMÉTRICA', value: step5Data?.faixaGranulometrica, key: 'faixaGranulometrica', required: true },
     { label: 'TMN (mm)', value: step5Data?.tmn, key: 'tmn', required: true, adornment: 'mm' },
-    { label: 'Abrasão Los Angeles (%)', value: step5Data?.abrasaoLosAngeles, key: 'abrasaoLosAngeles', required: true, adornment: '%' },
-    { label: 'Flow Number (FN)', value: step5Data?.flowNumber, key: 'flowNumber', required: true },
-    { label: 'Módulo de Resiliência 25°C (MPa)', value: step5Data?.moduloResiliencia, key: 'moduloResiliencia', required: true, adornment: 'MPa' },
+    { label: 'ABRASÃO LOS ANGELES (%)', value: step5Data?.abrasaoLosAngeles, key: 'abrasaoLosAngeles', required: true, adornment: '%' },
+    { label: 'FLOW NUMBER (FN)', value: step5Data?.flowNumber, key: 'flowNumber', required: true },
+    { label: 'MÓDULO DE RESILIÊNCIA 25°C (MPa)', value: step5Data?.moduloResiliencia, key: 'moduloResiliencia', required: true, adornment: 'MPa' },
   ];
 
   // CURVA DE FADIGA
   const curvaFadigaInputs = [
-    { label: 'Nº de Amostras (CPs) Consideradas', value: step5Data?.curvaFadiga_n_cps, key: 'curvaFadiga_n_cps', required: true },
-    { label: 'Coeficiente de Regressão (k1)', value: step5Data?.curvaFadiga_k1, key: 'curvaFadiga_k1', required: true },
-    { label: 'Coeficiente de Regressão (k2)', value: step5Data?.curvaFadiga_k2, key: 'curvaFadiga_k2', required: true },
-    { label: 'Coef. de Determinação do Ajuste (R²)', value: step5Data?.curvaFadiga_r2, key: 'curvaFadiga_r2', required: true },
+    { label: 'Nº DE AMOSTRAS (CPs) CONSIDERADAS', value: step5Data?.curvaFadiga_n_cps, key: 'curvaFadiga_n_cps', required: true },
+    { label: 'COEFICIENTE DE REGRESSÃO (k1)', value: step5Data?.curvaFadiga_k1, key: 'curvaFadiga_k1', required: true },
+    { label: 'COEFICIENTE DE REGRESSÃO (k2)', value: step5Data?.curvaFadiga_k2, key: 'curvaFadiga_k2', required: true },
+    { label: 'COEF. DE DETERMINAÇÃO DO AJUSTE (R²)', value: step5Data?.curvaFadiga_r2, key: 'curvaFadiga_r2', required: true },
   ];
 
   // CURVAS-MESTRAS
   const sigmoidalInputs = [
-    { label: 'Coeficiente a', value: step5Data?.sigmoidal_a, key: 'sigmoidal_a', required: true },
-    { label: 'Coeficiente b', value: step5Data?.sigmoidal_b, key: 'sigmoidal_b', required: true },
-    { label: 'Coeficiente d', value: step5Data?.sigmoidal_d, key: 'sigmoidal_d', required: true },
-    { label: 'Coeficiente g', value: step5Data?.sigmoidal_g, key: 'sigmoidal_g', required: true },
-    { label: 'Coeficiente a1', value: step5Data?.sigmoidal_a1, key: 'sigmoidal_a1', required: true },
-    { label: 'Coeficiente a2', value: step5Data?.sigmoidal_a2, key: 'sigmoidal_a2', required: true },
-    { label: 'Coeficiente a3', value: step5Data?.sigmoidal_a3, key: 'sigmoidal_a3', required: true },
+    { label: 'COEFICIENTE a', value: step5Data?.sigmoidal_a, key: 'sigmoidal_a', required: true },
+    { label: 'COEFICIENTE b', value: step5Data?.sigmoidal_b, key: 'sigmoidal_b', required: true },
+    { label: 'COEFICIENTE d', value: step5Data?.sigmoidal_d, key: 'sigmoidal_d', required: true },
+    { label: 'COEFICIENTE g', value: step5Data?.sigmoidal_g, key: 'sigmoidal_g', required: true },
+    { label: 'COEFICIENTE a1', value: step5Data?.sigmoidal_a1, key: 'sigmoidal_a1', required: true },
+    { label: 'COEFICIENTE a2', value: step5Data?.sigmoidal_a2, key: 'sigmoidal_a2', required: true },
+    { label: 'COEFICIENTE a3', value: step5Data?.sigmoidal_a3, key: 'sigmoidal_a3', required: true },
   ];
 
   // PARÂMETRO α
   const parametroAlfaInputs = [
-    { label: 'Parâmetro "α" de evolução do dano', value: step5Data?.parametro_alfa, key: 'parametro_alfa', required: true },
+    { label: 'PARÂMETRO "α" DE EVOLUÇÃO DO DANO', value: step5Data?.parametro_alfa, key: 'parametro_alfa', required: true },
   ];
 
   // COEFICIENTES G²
@@ -61,7 +61,7 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
 
   // EINF
   const einfInputs = [
-    { label: 'Einf (kPa)', value: step5Data?.einf, key: 'einf', required: true, adornment: 'kPa' },
+    { label: 'EINF (kPa)', value: step5Data?.einf, key: 'einf', required: true, adornment: 'kPa' },
   ];
 
   // PRONY
@@ -83,7 +83,7 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
 
   // SHIFT MODEL
   const shiftModelInputs = [
-    { label: 'Nº de Amostras (CPs) Consideradas', value: step5Data?.shiftModel_n_cps, key: 'shiftModel_n_cps', required: true },
+    { label: 'Nº DE AMOSTRAS (CPs) CONSIDERADAS', value: step5Data?.shiftModel_n_cps, key: 'shiftModel_n_cps', required: true },
     { label: 'ε₀', value: step5Data?.shiftModel_ε0, key: 'shiftModel_ε0', required: true },
     { label: 'N1', value: step5Data?.shiftModel_N1, key: 'shiftModel_N1', required: true },
     { label: 'β', value: step5Data?.shiftModel_β, key: 'shiftModel_β', required: true },
@@ -121,6 +121,9 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
                   value={input.value || ''}
                   required={input.required}
                   onChange={(e) => setData({ step: 4, key: input.key, value: e.target.value })}
+                  InputProps={{
+                    inputProps: { style: { textTransform: 'uppercase' } }
+                  }}
                 />
               )
             ))}
@@ -140,6 +143,9 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
                 value={input.value || ''}
                 required={input.required}
                 onChange={(e) => setData({ step: 4, key: input.key, value: e.target.value })}
+                InputProps={{
+                  inputProps: { style: { textTransform: 'uppercase' } }
+                }}
               />
             ))}
           </Box>
@@ -158,6 +164,9 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
                 value={input.value || ''}
                 required={input.required}
                 onChange={(e) => setData({ step: 4, key: input.key, value: e.target.value })}
+                InputProps={{
+                  inputProps: { style: { textTransform: 'uppercase' } }
+                }}
               />
             ))}
           </Box>
@@ -176,6 +185,9 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
                 value={input.value || ''}
                 required={input.required}
                 onChange={(e) => setData({ step: 4, key: input.key, value: e.target.value })}
+                InputProps={{
+                  inputProps: { style: { textTransform: 'uppercase' } }
+                }}
               />
             ))}
           </Box>
@@ -194,6 +206,9 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
                 value={input.value || ''}
                 required={input.required}
                 onChange={(e) => setData({ step: 4, key: input.key, value: e.target.value })}
+                InputProps={{
+                  inputProps: { style: { textTransform: 'uppercase' } }
+                }}
               />
             ))}
           </Box>
@@ -222,13 +237,13 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
       <FlexColumnBorder title="MÓDULOS DE RELAXAÇÃO (PRONY)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', mb: 2 }}>
-            <Button startIcon={<AddIcon />} onClick={handleAddProny} variant="outlined" size="small">
-              Adicionar Par
+            <Button startIcon={<AddIcon />} onClick={handleAddProny} variant="outlined" size="small" sx={{ textTransform: 'uppercase' }}>
+              ADICIONAR PAR
             </Button>
           </Box>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: '1fr 1fr auto', gap: '10px', alignItems: 'center', paddingBottom: '20px' }}>
-            <Box sx={{ fontWeight: 'bold' }}>pi (s)</Box>
-            <Box sx={{ fontWeight: 'bold' }}>Ei (kPa)</Box>
+            <Box sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>pi (s)</Box>
+            <Box sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Ei (kPa)</Box>
             <Box />
             {(step5Data?.prony_pi || []).map((_, index) => (
               <>
@@ -242,6 +257,9 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
                     newPi[index] = e.target.value;
                     setData({ step: 4, key: 'prony_pi', value: newPi });
                   }}
+                  InputProps={{
+                    inputProps: { style: { textTransform: 'uppercase' } }
+                  }}
                 />
                 <TextField
                   key={`Ei-${index}`}
@@ -252,6 +270,9 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
                     const newEi = [...(step5Data?.prony_Ei || [])];
                     newEi[index] = e.target.value;
                     setData({ step: 4, key: 'prony_Ei', value: newEi });
+                  }}
+                  InputProps={{
+                    inputProps: { style: { textTransform: 'uppercase' } }
                   }}
                 />
                 <IconButton onClick={() => handleRemoveProny(index)} color="error">
@@ -275,6 +296,9 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
                 value={input.value || ''}
                 required={input.required}
                 onChange={(e) => setData({ step: 4, key: input.key, value: e.target.value })}
+                InputProps={{
+                  inputProps: { style: { textTransform: 'uppercase' } }
+                }}
               />
             ))}
           </Box>
@@ -289,9 +313,13 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
               multiline
               rows={4}
               variant="outlined"
-              label="Observações"
+              label="OBSERVAÇÕES"
+              placeholder="DIGITE SUAS OBSERVAÇÕES AQUI"
               value={step5Data?.observacoes || ''}
               onChange={(e) => setData({ step: 4, key: 'observacoes', value: e.target.value })}
+              InputProps={{
+                inputProps: { style: { textTransform: 'uppercase' } }
+              }}
             />
           </Box>
         </Box>

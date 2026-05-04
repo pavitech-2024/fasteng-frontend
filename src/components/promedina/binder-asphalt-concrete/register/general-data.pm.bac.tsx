@@ -52,6 +52,10 @@ interface ExtendedGeneralData {
   camadasEstruturais?: CamadaEstrutural[];
   imagemEstrutural?: string | null;
   dataImagens?: string;
+   latitudeI?: string;    // NOVO
+  longitudeI?: string;   // NOVO
+  latitudeF?: string;    // NOVO
+  longitudeF?: string; 
 }
 
 const BinderAsphaltConcrete_step1 = ({ setNextDisabled }: EssayPageProps) => {
@@ -293,6 +297,16 @@ const renderTextField = (
           {renderTextField('larguraFaixa', 'Largura da Faixa (m)', extendedGeneralData.larguraFaixa, 'number')}
         </Box>
       </FlexColumnBorder>
+
+      {/* CARD 5: COORDENADAS */}
+<FlexColumnBorder title="COORDENADAS" open={true} theme={'#07B811'}>
+  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', '& > *': { width: 'calc(50% - 10px)' } }}>
+    {renderTextField('latitudeI', 'LATITUDE INICIAL', extendedGeneralData.latitudeI)}
+    {renderTextField('longitudeI', 'LONGITUDE INICIAL', extendedGeneralData.longitudeI)}
+    {renderTextField('latitudeF', 'LATITUDE FINAL', extendedGeneralData.latitudeF)}
+    {renderTextField('longitudeF', 'LONGITUDE FINAL', extendedGeneralData.longitudeF)}
+  </Box>
+</FlexColumnBorder>
 
       {/* CARD 5: COMPOSIÇÃO ESTRUTURAL */}
       <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#07B811'}>

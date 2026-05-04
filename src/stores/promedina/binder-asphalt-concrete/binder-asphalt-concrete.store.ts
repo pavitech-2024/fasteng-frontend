@@ -1,9 +1,8 @@
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
-// ==================== STEP 3: TRATAMENTO SUPERFICIAL (NOVO) ====================
+// ==================== STEP 3: TRATAMENTO SUPERFICIAL ====================
 interface Step3Data {
-  // Tratamento Superficial
   tipoTratamento: string;
   tipoEmulsao: string;
   taxaEmulsao: string;
@@ -11,8 +10,6 @@ interface Step3Data {
   faixaGranulometrica: string;
   abrasaoLosAngeles: string;
   massaEspecifica: string;
-  
-  // Emulsão Asfáltica
   referenciaComercial: string;
   refinaria: string;
   empresaDistribuidora: string;
@@ -21,8 +18,6 @@ interface Step3Data {
   dataNotaFiscal: string;
   numeroCertificado: string;
   dataCertificado: string;
-  
-  // Parâmetros do Material
   viscosidadeSSF: string;
   peneiracao: string;
   residuo: string;
@@ -30,11 +25,15 @@ interface Step3Data {
   penetracao: string;
   recuperacaoElastica: string;
   pontoAmolecimento: string;
-  
   observacoes: string;
 }
 
-// ==================== STEP 4: LIGANTE ASFÁLTICO (NOVO) ====================
+// ==================== STEP 4: LIGANTE ASFÁLTICO ====================
+export interface DsrEntry {
+  temp: string;
+  G_sen: string;
+}
+
 interface Step4Data {
   // Dados Comerciais
   referenciaComercial: string;
@@ -45,7 +44,7 @@ interface Step4Data {
   dataNotaFiscal: string;
   numeroCertificado: string;
   dataCertificado: string;
-  
+
   // Ligante Original
   tipoCAP: string;
   performanceGrade: string;
@@ -55,36 +54,34 @@ interface Step4Data {
   viscosidadeBrookfield_150: string;
   viscosidadeBrookfield_177: string;
   recuperacaoElastica: string;
-  dsr_original_G_sen: string;
-  dsr_original_temp: string;
-  
-  // Ligante Envelhecido RTFOT
-  dsr_rtfot_G_sen: string;
-  dsr_rtfot_temp: string;
-  
+
+  // DSR - arrays dinâmicos
+  dsr_original: DsrEntry[];
+  dsr_rtfot: DsrEntry[];
+
   // MSCR
   mscr_Jnr_3_2: string;
   mscr_Jndiff: string;
-  
+
   // LAS
+  las_temperatura: string;
   las_strain_1_25: string;
   las_strain_2_5: string;
   las_strain_5: string;
   las_af: string;
   las_FFL: string;
   las_D: string;
-  
+
   // BBR
   bbr_S: string;
   bbr_m: string;
   bbr_temp: string;
-  
+
   observacoes: string;
 }
 
-// ==================== STEP 5: CONCRETO ASFÁLTICO (NOVO) ====================
+// ==================== STEP 5: CONCRETO ASFÁLTICO ====================
 interface Step5Data {
-  // Propriedades Gerais
   tipoCAP: string;
   massaEspecifica: string;
   resistenciaTracao: string;
@@ -95,14 +92,10 @@ interface Step5Data {
   abrasaoLosAngeles: string;
   flowNumber: string;
   moduloResiliencia: string;
-  
-  // Curva de Fadiga
   curvaFadiga_n_cps: string;
   curvaFadiga_k1: string;
   curvaFadiga_k2: string;
   curvaFadiga_r2: string;
-  
-  // Curvas-Mestras
   sigmoidal_a: string;
   sigmoidal_b: string;
   sigmoidal_d: string;
@@ -110,11 +103,7 @@ interface Step5Data {
   sigmoidal_a1: string;
   sigmoidal_a2: string;
   sigmoidal_a3: string;
-  
-  // Parâmetro α
   parametro_alfa: string;
-  
-  // Coeficientes G²
   dano_C10: string;
   dano_C11: string;
   dano_C12: string;
@@ -122,15 +111,9 @@ interface Step5Data {
   dano_b: string;
   dano_Y: string;
   dano_Delta: string;
-  
-  // Einf
   einf: string;
-  
-  // Prony
   prony_pi: string[];
   prony_Ei: string[];
-  
-  // Shift Model
   shiftModel_n_cps: string;
   shiftModel_ε0: string;
   shiftModel_N1: string;
@@ -139,13 +122,12 @@ interface Step5Data {
   shiftModel_p2: string;
   shiftModel_d1: string;
   shiftModel_d2: string;
-  
   observacoes: string;
 }
 
-// ==================== STEPS ORIGINAIS (JÁ EXISTEM) ====================
+// ==================== STEPS ORIGINAIS ====================
 interface GeneralData {
-  identification?: string; 
+  identification?: string;
   name: string;
   zone: string;
   layer: string;
@@ -153,6 +135,10 @@ interface GeneralData {
   highway: string;
   guideLineSpeed: string;
   observations?: string;
+  latitudeI?: string; // NOVO
+  longitudeI?: string; // NOVO
+  latitudeF?: string; // NOVO
+  longitudeF?: string;
 }
 
 interface Step2Data {
@@ -213,12 +199,12 @@ export type BinderAsphaltConcreteActions = {
   reset: () => void;
 };
 
-const stepVariant = { 
-  0: 'generalData', 
-  1: 'step2Data', 
+const stepVariant = {
+  0: 'generalData',
+  1: 'step2Data',
   2: 'step3Data',
   3: 'step4Data',
-  4: 'step5Data'
+  4: 'step5Data',
 };
 
 export type setDataType = { step: number; key?: string; value: unknown };
@@ -233,6 +219,10 @@ const initialState = {
     highway: null,
     guideLineSpeed: null,
     observations: null,
+    latitudeI: null,
+    longitudeI: null,
+    latitudeF: null,
+    longitudeF: null,
   },
   step2Data: {
     identification: null,
@@ -319,12 +309,11 @@ const initialState = {
     viscosidadeBrookfield_150: null,
     viscosidadeBrookfield_177: null,
     recuperacaoElastica: null,
-    dsr_original_G_sen: null,
-    dsr_original_temp: null,
-    dsr_rtfot_G_sen: null,
-    dsr_rtfot_temp: null,
+    dsr_original: [],
+    dsr_rtfot: [],
     mscr_Jnr_3_2: null,
     mscr_Jndiff: null,
+    las_temperatura: null,
     las_strain_1_25: null,
     las_strain_2_5: null,
     las_strain_5: null,
@@ -382,17 +371,15 @@ const initialState = {
   _id: null,
 };
 
-// ==================== STORE CORRIGIDO ====================
+// ==================== STORE ====================
 const useBinderAsphaltConcreteStore = create<BinderAsphaltConcreteData & BinderAsphaltConcreteActions>()(
   devtools(
     persist(
       (set) => ({
         ...initialState,
-        // 🔥 CORREÇÃO AQUI - Removeu o if(step === 4) que quebrava o store
         setData: ({ step, key, value }) =>
           set((state) => {
             if (key) {
-              // Atualiza apenas o campo específico
               return {
                 ...state,
                 [stepVariant[step]]: {
@@ -401,7 +388,6 @@ const useBinderAsphaltConcreteStore = create<BinderAsphaltConcreteData & BinderA
                 },
               };
             } else {
-              // Substitui o objeto inteiro do step
               return {
                 ...state,
                 [stepVariant[step]]: value,
