@@ -5,7 +5,7 @@ import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
-
+//ts
 const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
   const { step4Data, setData } = useBinderAsphaltConcreteStore();
 
