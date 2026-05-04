@@ -164,7 +164,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
           </Box>
           {(step4Data?.dsr_original || []).length === 0 && (
             <Typography sx={{ textAlign: 'center', color: 'gray', fontSize: '0.9rem', pb: 2 }}>
-              Nenhuma temperatura cadastrada. Clique em "Adicionar Temperatura" para incluir.
+            Nenhuma temperatura cadastrada. Clique em &quot;Adicionar Temperatura&quot; para incluir.
             </Typography>
           )}
           {(step4Data?.dsr_original || []).length > 0 && (
@@ -220,7 +220,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
           </Box>
           {(step4Data?.dsr_rtfot || []).length === 0 && (
             <Typography sx={{ textAlign: 'center', color: 'gray', fontSize: '0.9rem', pb: 2 }}>
-              Nenhuma temperatura cadastrada. Clique em "Adicionar Temperatura" para incluir.
+             Nenhuma temperatura cadastrada. Clique em &quot;Adicionar Temperatura&quot; para incluir.
             </Typography>
           )}
           {(step4Data?.dsr_rtfot || []).length > 0 && (

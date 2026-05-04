@@ -62,7 +62,7 @@ const BinderAsphaltConcrete_step1 = ({ setNextDisabled }: EssayPageProps) => {
   const { generalData, setData } = useBinderAsphaltConcreteStore();
   
   // Type assertion para estender o tipo generalData
-  const extendedGeneralData = generalData as ExtendedGeneralData;
+  const extendedGeneralData = generalData as unknown as ExtendedGeneralData;
 
   // Opções fixas
   const simNaoOptions = [
