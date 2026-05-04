@@ -1,7 +1,17 @@
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
+
+export interface CamadaEstrutural {
+  id: number;
+  tipo: string;
+  material: string;
+  espessura: string;
+}
+
 // ==================== STEP 3: TRATAMENTO SUPERFICIAL ====================
+
+
 interface Step3Data {
   tipoTratamento: string;
   tipoEmulsao: string;
@@ -126,19 +136,67 @@ interface Step5Data {
 }
 
 // ==================== STEPS ORIGINAIS ====================
+// ==================== STEPS ORIGINAIS ====================
 interface GeneralData {
-  identification?: string;
+  // Campos antigos (legacy)
   name: string;
   zone: string;
   layer: string;
   cityState: string;
   highway: string;
   guideLineSpeed: string;
+  
+  // Campos comuns (usados em ambos)
   observations?: string;
-  latitudeI?: string; // NOVO
-  longitudeI?: string; // NOVO
-  latitudeF?: string; // NOVO
+  latitudeI?: string;
+  longitudeI?: string;
+  latitudeF?: string;
   longitudeF?: string;
+  
+  // Campos NOVOS - Identificação
+  identification?: string;
+  tipoSecao?: string;
+  faseMonitoramento?: string;
+  liberacaoTrafico?: string;
+  utilizadaMedina?: string;
+  utilizadaLvec?: string;
+  dadosConfirmadosICT?: string;
+  
+  // Campos NOVOS - Preparo do Pavimento
+  iriPreReabilitacao?: string;
+  atPreReabilitacao?: string;
+  fresagem?: string;
+  espessuraFresagem?: string;
+  intervencaoBase?: string;
+  sami?: string;
+  pinturaLigacao?: string;
+  imprimacao?: string;
+  
+  // Campos NOVOS - Data da Última Atualização
+  dataUltimaAtualizacao?: string;
+  tempoServicoAnos?: string;
+  tempoServicoMeses?: string;
+  
+  // Campos NOVOS - Características
+  local?: string;
+  municipioEstado?: string;
+  extensao?: string;
+  velocidadeDiretriz?: string;
+  kmInicial?: string;
+  kmFinal?: string;
+  inicioEstaca?: string;
+  inicioMetros?: string;
+  fimEstaca?: string;
+  fimMetros?: string;
+  altitudeMedia?: string;
+  numeroFaixas?: string;
+  faixaMonitorada?: string;
+  larguraFaixa?: string;
+  
+  // Campos NOVOS - Composição Estrutural
+  camadasEstruturais?: CamadaEstrutural[];  // 👈 USA A INTERFACE CORRETA
+  imagemEstrutural?: string | null;
+  dataImagens?: string;
 }
 
 interface Step2Data {
@@ -211,19 +269,65 @@ export type setDataType = { step: number; key?: string; value: unknown };
 
 // ==================== INITIAL STATE ====================
 const initialState = {
-  generalData: {
-    name: null,
-    zone: null,
-    layer: null,
-    cityState: null,
-    highway: null,
-    guideLineSpeed: null,
-    observations: null,
-    latitudeI: null,
-    longitudeI: null,
-    latitudeF: null,
-    longitudeF: null,
-  },
+ generalData: {
+  // Campos antigos
+  name: null,
+  zone: null,
+  layer: null,
+  cityState: null,
+  highway: null,
+  guideLineSpeed: null,
+  observations: null,
+  latitudeI: null,
+  longitudeI: null,
+  latitudeF: null,
+  longitudeF: null,
+  
+  // Campos NOVOS - Identificação
+  identification: null,
+  tipoSecao: null,
+  faseMonitoramento: null,
+  liberacaoTrafico: null,
+  utilizadaMedina: null,
+  utilizadaLvec: null,
+  dadosConfirmadosICT: null,
+  
+  // Campos NOVOS - Preparo do Pavimento
+  iriPreReabilitacao: null,
+  atPreReabilitacao: null,
+  fresagem: null,
+  espessuraFresagem: null,
+  intervencaoBase: null,
+  sami: null,
+  pinturaLigacao: null,
+  imprimacao: null,
+  
+  // Campos NOVOS - Data da Última Atualização
+  dataUltimaAtualizacao: null,
+  tempoServicoAnos: null,
+  tempoServicoMeses: null,
+  
+  // Campos NOVOS - Características
+  local: null,
+  municipioEstado: null,
+  extensao: null,
+  velocidadeDiretriz: null,
+  kmInicial: null,
+  kmFinal: null,
+  inicioEstaca: null,
+  inicioMetros: null,
+  fimEstaca: null,
+  fimMetros: null,
+  altitudeMedia: null,
+  numeroFaixas: null,
+  faixaMonitorada: null,
+  larguraFaixa: null,
+  
+  // Campos NOVOS - Composição Estrutural
+  camadasEstruturais: [],
+  imagemEstrutural: null,
+  dataImagens: null,
+},
   step2Data: {
     identification: null,
     sectionType: null,
