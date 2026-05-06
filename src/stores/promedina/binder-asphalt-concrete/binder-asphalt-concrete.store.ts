@@ -72,6 +72,7 @@ interface Step4Data {
   // MSCR
   mscr_Jnr_3_2: string;
   mscr_Jndiff: string;
+  critérioRuptura: string;
 
   // LAS
   las_temperatura: string;
@@ -417,6 +418,7 @@ const initialState = {
     dsr_rtfot: [],
     mscr_Jnr_3_2: null,
     mscr_Jndiff: null,
+    critérioRuptura: null,
     las_temperatura: null,
     las_strain_1_25: null,
     las_strain_2_5: null,

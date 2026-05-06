@@ -29,6 +29,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
     recuperacaoElastica: 'Percentual de recuperação elástica do ligante (%)',
     mscr_Jnr_3_2: '1/kPa',
     mscr_Jndiff: 'Diferença percentual entre os valores de Jnr medidos a 3,2kPa e 1kPa',
+    critérioRuptura: 'Preencher com: da/dN; PSE ou outro/especificar',
     las_strain_1_25: 'Ver nota nas observações da caixa',
     las_strain_2_5: 'Ver nota nas observações da caixa',
     las_strain_5: 'Ver nota nas observações da caixa',
@@ -46,7 +47,6 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
     label: string,
     value: any,
     type = 'text',
-    required = false,
     adornment?: string
   ) => {
     if (adornment) {
@@ -57,9 +57,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
             type={type}
             variant="standard"
             label={label}
-            placeholder={label}
             value={value?.toString() || ''}
-            required={required}
             onChange={(e) => setData({ step: 3, key, value: e.target.value })}
             sx={{ flex: 1 }}
           />
@@ -77,9 +75,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
           variant="standard"
           type={type}
           label={label}
-          placeholder={label}
           value={value || ''}
-          required={required}
           InputLabelProps={type === 'date' ? { shrink: true } : undefined}
           onChange={(e) => setData({ step: 3, key, value: e.target.value })}
           InputProps={{
@@ -119,45 +115,45 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
   };
 
   const comerciaisInputs = [
-    { label: 'REFERÊNCIA COMERCIAL', key: 'referenciaComercial', required: true, type: 'text', value: step4Data?.referenciaComercial },
-    { label: 'REFINARIA', key: 'refinaria', required: true, type: 'text', value: step4Data?.refinaria },
-    { label: 'EMPRESA DISTRIBUIDORA', key: 'empresaDistribuidora', required: true, type: 'text', value: step4Data?.empresaDistribuidora },
-    { label: 'DATA DO CARREGAMENTO', key: 'dataCarregamento', required: true, type: 'date', value: step4Data?.dataCarregamento },
-    { label: 'NÚMERO DA NOTA FISCAL', key: 'numeroNotaFiscal', required: true, type: 'text', value: step4Data?.numeroNotaFiscal },
-    { label: 'DATA DA NOTA FISCAL', key: 'dataNotaFiscal', required: true, type: 'date', value: step4Data?.dataNotaFiscal },
-    { label: 'NÚMERO DO CERTIFICADO', key: 'numeroCertificado', required: true, type: 'text', value: step4Data?.numeroCertificado },
-    { label: 'DATA DO CERTIFICADO', key: 'dataCertificado', required: true, type: 'date', value: step4Data?.dataCertificado },
+    { label: 'REFERÊNCIA COMERCIAL', key: 'referenciaComercial', type: 'text', value: step4Data?.referenciaComercial },
+    { label: 'REFINARIA', key: 'refinaria', type: 'text', value: step4Data?.refinaria },
+    { label: 'EMPRESA DISTRIBUIDORA', key: 'empresaDistribuidora', type: 'text', value: step4Data?.empresaDistribuidora },
+    { label: 'DATA DO CARREGAMENTO', key: 'dataCarregamento', type: 'date', value: step4Data?.dataCarregamento },
+    { label: 'NÚMERO DA NOTA FISCAL', key: 'numeroNotaFiscal', type: 'text', value: step4Data?.numeroNotaFiscal },
+    { label: 'DATA DA NOTA FISCAL', key: 'dataNotaFiscal', type: 'date', value: step4Data?.dataNotaFiscal },
+    { label: 'NÚMERO DO CERTIFICADO', key: 'numeroCertificado', type: 'text', value: step4Data?.numeroCertificado },
+    { label: 'DATA DO CERTIFICADO', key: 'dataCertificado', type: 'date', value: step4Data?.dataCertificado },
   ];
 
   const originalInputs = [
-    { label: 'TIPO DE CAP', key: 'tipoCAP', required: true, type: 'text', value: step4Data?.tipoCAP },
-    { label: 'PERFORMANCE GRADE (PG)', key: 'performanceGrade', required: true, type: 'text', value: step4Data?.performanceGrade },
-    { label: 'PENETRAÇÃO (mm) - 25°C', key: 'penetracao25', required: true, type: 'text', adornment: 'mm', value: step4Data?.penetracao25 },
-    { label: 'PONTO DE AMOLECIMENTO (°C)', key: 'pontoAmolecimento', required: true, type: 'text', adornment: '°C', value: step4Data?.pontoAmolecimento },
-    { label: 'VISCOSIDADE BROOKFIELD 135°C (cP)', key: 'viscosidadeBrookfield_135', required: true, type: 'text', adornment: 'cP', value: step4Data?.viscosidadeBrookfield_135 },
-    { label: 'VISCOSIDADE BROOKFIELD 150°C (cP)', key: 'viscosidadeBrookfield_150', required: true, type: 'text', adornment: 'cP', value: step4Data?.viscosidadeBrookfield_150 },
-    { label: 'VISCOSIDADE BROOKFIELD 177°C (cP)', key: 'viscosidadeBrookfield_177', required: true, type: 'text', adornment: 'cP', value: step4Data?.viscosidadeBrookfield_177 },
-    { label: 'RECUPERAÇÃO ELÁSTICA (%)', key: 'recuperacaoElastica', required: true, type: 'text', adornment: '%', value: step4Data?.recuperacaoElastica },
+    { label: 'TIPO DE CAP', key: 'tipoCAP', type: 'text', value: step4Data?.tipoCAP },
+    { label: 'PERFORMANCE GRADE (PG)', key: 'performanceGrade', type: 'text', value: step4Data?.performanceGrade },
+    { label: 'PENETRAÇÃO (mm) - 25°C', key: 'penetracao25', type: 'text', adornment: 'mm', value: step4Data?.penetracao25 },
+    { label: 'PONTO DE AMOLECIMENTO (°C)', key: 'pontoAmolecimento', type: 'text', adornment: '°C', value: step4Data?.pontoAmolecimento },
+    { label: 'VISCOSIDADE BROOKFIELD 135°C (cP)', key: 'viscosidadeBrookfield_135', type: 'text', adornment: 'cP', value: step4Data?.viscosidadeBrookfield_135 },
+    { label: 'VISCOSIDADE BROOKFIELD 150°C (cP)', key: 'viscosidadeBrookfield_150', type: 'text', adornment: 'cP', value: step4Data?.viscosidadeBrookfield_150 },
+    { label: 'VISCOSIDADE BROOKFIELD 177°C (cP)', key: 'viscosidadeBrookfield_177', type: 'text', adornment: 'cP', value: step4Data?.viscosidadeBrookfield_177 },
+    { label: 'RECUPERAÇÃO ELÁSTICA (%)', key: 'recuperacaoElastica', type: 'text', adornment: '%', value: step4Data?.recuperacaoElastica },
   ];
 
   const mscrInputs = [
-    { label: 'MSCR - JNR 3,2 (1/KPA)', key: 'mscr_Jnr_3_2', required: true, type: 'text', adornment: '1/kPa', value: step4Data?.mscr_Jnr_3_2 },
-    { label: 'MSCR - JNDIFF (%)', key: 'mscr_Jndiff', required: true, type: 'text', adornment: '%', value: step4Data?.mscr_Jndiff },
+    { label: 'MSCR - JNR 3,2 (1/KPA)', key: 'mscr_Jnr_3_2', type: 'text', adornment: '1/kPa', value: step4Data?.mscr_Jnr_3_2 },
+    { label: 'MSCR - JNDIFF (%)', key: 'mscr_Jndiff', type: 'text', adornment: '%', value: step4Data?.mscr_Jndiff },
   ];
 
   const lasInputs = [
-    { label: 'LAS - STRAIN 1,25% - Nf³', key: 'las_strain_1_25', required: true, type: 'text', value: step4Data?.las_strain_1_25 },
-    { label: 'LAS - STRAIN 2,5% - Nf³', key: 'las_strain_2_5', required: true, type: 'text', value: step4Data?.las_strain_2_5 },
-    { label: 'LAS - STRAIN 5% - Nf³', key: 'las_strain_5', required: true, type: 'text', value: step4Data?.las_strain_5 },
-    { label: 'LAS - af ¹', key: 'las_af', required: true, type: 'text', value: step4Data?.las_af },
-    { label: 'LAS - FFL ²', key: 'las_FFL', required: true, type: 'text', value: step4Data?.las_FFL },
-    { label: 'LAS - DR', key: 'las_D', required: true, type: 'text', value: step4Data?.las_D },
+    { label: 'LAS - STRAIN 1,25% - Nf³', key: 'las_strain_1_25', type: 'text', value: step4Data?.las_strain_1_25 },
+    { label: 'LAS - STRAIN 2,5% - Nf³', key: 'las_strain_2_5', type: 'text', value: step4Data?.las_strain_2_5 },
+    { label: 'LAS - STRAIN 5% - Nf³', key: 'las_strain_5', type: 'text', value: step4Data?.las_strain_5 },
+    { label: 'LAS - af ¹', key: 'las_af', type: 'text', value: step4Data?.las_af },
+    { label: 'LAS - FFL ²', key: 'las_FFL', type: 'text', value: step4Data?.las_FFL },
+    { label: 'LAS - DR', key: 'las_D', type: 'text', value: step4Data?.las_D },
   ];
 
   const bbrInputs = [
-    { label: 'BBR - MÓDULO DE RIGIDEZ S (MPa)', key: 'bbr_S', required: true, type: 'text', adornment: 'MPa', value: step4Data?.bbr_S },
-    { label: 'BBR - COEFICIENTE ANGULAR m (MPa)', key: 'bbr_m', required: true, type: 'text', adornment: 'MPa', value: step4Data?.bbr_m },
-    { label: 'TEMPERATURA DO TESTE (°C)', key: 'bbr_temp', required: true, type: 'text', adornment: '°C', value: step4Data?.bbr_temp },
+    { label: 'BBR - MÓDULO DE RIGIDEZ S (MPa)', key: 'bbr_S', type: 'text', adornment: 'MPa', value: step4Data?.bbr_S },
+    { label: 'BBR - COEFICIENTE ANGULAR m (MPa)', key: 'bbr_m', type: 'text', adornment: 'MPa', value: step4Data?.bbr_m },
+    { label: 'TEMPERATURA DO TESTE (°C)', key: 'bbr_temp', type: 'text', adornment: '°C', value: step4Data?.bbr_temp },
   ];
 
   const dsrTableHeaderSx = {
@@ -176,7 +172,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
       <FlexColumnBorder title="DADOS COMERCIAIS" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
-            {comerciaisInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.required))}
+            {comerciaisInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type))}
           </Box>
         </Box>
       </FlexColumnBorder>
@@ -184,7 +180,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
       <FlexColumnBorder title="LIGANTE ORIGINAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
-            {originalInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.required, input.adornment))}
+            {originalInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.adornment))}
           </Box>
         </Box>
       </FlexColumnBorder>
@@ -217,7 +213,6 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <TextField
                       variant="standard"
-                      placeholder="Temperatura (°C)"
                       value={item.temp || ''}
                       onChange={(e) => handleDsrChange('dsr_original', index, 'temp', e.target.value)}
                       InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
@@ -232,7 +227,6 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <TextField
                       variant="standard"
-                      placeholder="│G*│/sen(δ) (MPa)"
                       value={item.G_sen || ''}
                       onChange={(e) => handleDsrChange('dsr_original', index, 'G_sen', e.target.value)}
                       InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
@@ -282,7 +276,6 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <TextField
                       variant="standard"
-                      placeholder="Temperatura (°C)"
                       value={item.temp || ''}
                       onChange={(e) => handleDsrChange('dsr_rtfot', index, 'temp', e.target.value)}
                       InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
@@ -297,7 +290,6 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <TextField
                       variant="standard"
-                      placeholder="│G*│/sen(δ) (MPa)"
                       value={item.G_sen || ''}
                       onChange={(e) => handleDsrChange('dsr_rtfot', index, 'G_sen', e.target.value)}
                       InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
@@ -322,10 +314,10 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
       <FlexColumnBorder title="MSCR (MULTIPLE STRESS CREEP RECOVERY)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
-            {mscrInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.required, input.adornment))}
+            {mscrInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.adornment))}
           </Box>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
-            {renderTextField('critérioRuptura', 'CRITÉRIO DE RUPTURA - da/dN (mm/cycle)', step4Data?.critérioRuptura, 'text', true)}
+            {renderTextField('critérioRuptura', 'CRITÉRIO DE RUPTURA - da/dN (mm/cycle)', step4Data?.critérioRuptura, 'text')}
           </Box>
         </Box>
       </FlexColumnBorder>
@@ -333,10 +325,10 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
       <FlexColumnBorder title="LAS (LINEAR AMPLITUDE SWEEP)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '10px' }}>
-            {renderTextField('las_temperatura', 'TEMPERATURA DO TESTE (°C)', step4Data?.las_temperatura, 'text', true, '°C')}
+            {renderTextField('las_temperatura', 'TEMPERATURA DO TESTE (°C)', step4Data?.las_temperatura, 'text', '°C')}
           </Box>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
-            {lasInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.required))}
+            {lasInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type))}
           </Box>
         </Box>
       </FlexColumnBorder>
@@ -344,7 +336,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
       <FlexColumnBorder title="LIGANTE ENVELHECIDO NO RTFOT + PAV (20 HORAS, 100°C)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
-            {bbrInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.required, input.adornment))}
+            {bbrInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.adornment))}
           </Box>
         </Box>
       </FlexColumnBorder>
@@ -359,7 +351,6 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
                 rows={4}
                 variant="outlined"
                 label="OBSERVAÇÕES"
-                placeholder="DIGITE SUAS OBSERVAÇÕES AQUI"
                 value={step4Data?.observacoes || ''}
                 onChange={(e) => setData({ step: 3, key: 'observacoes', value: e.target.value })}
                 InputProps={{

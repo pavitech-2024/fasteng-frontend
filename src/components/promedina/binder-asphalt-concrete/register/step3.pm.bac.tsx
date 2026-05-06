@@ -38,7 +38,6 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
     label: string,
     value: any,
     type = 'text',
-    required = false,
     adornment?: string
   ) => {
     if (adornment) {
@@ -49,9 +48,8 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
             type={type}
             variant="standard"
             label={label}
-            placeholder={label}
+            placeholder={adornment ? `Ex: ${adornment}` : ''}
             value={value?.toString() || ''}
-            required={required}
             onChange={(e) => setData({ step: 2, key, value: e.target.value })}
             sx={{ flex: 1 }}
           />
@@ -70,9 +68,7 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
           variant="standard"
           type={type}
           label={label}
-          placeholder={label}
           value={value || ''}
-          required={required}
           InputLabelProps={type === 'date' ? { shrink: true } : undefined}
           onChange={(e) => setData({ step: 2, key, value: e.target.value })}
           InputProps={{
@@ -90,34 +86,34 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
   };
 
   const tratamentoInputs = [
-    { label: 'TIPO DE TRATAMENTO', key: 'tipoTratamento', required: true, type: 'text', value: step3Data?.tipoTratamento },
-    { label: 'TIPO DE EMULSÃO', key: 'tipoEmulsao', required: true, type: 'text', value: step3Data?.tipoEmulsao },
-    { label: 'TAXA DE EMULSÃO (l/m²)', key: 'taxaEmulsao', required: true, type: 'text', adornment: 'l/m²', value: step3Data?.taxaEmulsao },
-    { label: 'TAXA DE AGREGADOS POR CAMADA (kg/m²)', key: 'taxaAgregados', required: true, type: 'text', adornment: 'kg/m²', value: step3Data?.taxaAgregados },
-    { label: 'FAIXA GRANULOMÉTRICA', key: 'faixaGranulometrica', required: true, type: 'text', value: step3Data?.faixaGranulometrica },
-    { label: 'ABRASÃO LOS ANGELES (%)', key: 'abrasaoLosAngeles', required: true, type: 'text', adornment: '%', value: step3Data?.abrasaoLosAngeles },
-    { label: 'MASSA ESPECÍFICA (g/cm³)', key: 'massaEspecifica', required: true, type: 'text', adornment: 'g/cm³', value: step3Data?.massaEspecifica },
+    { label: 'TIPO DE TRATAMENTO', key: 'tipoTratamento', type: 'text', value: step3Data?.tipoTratamento },
+    { label: 'TIPO DE EMULSÃO', key: 'tipoEmulsao', type: 'text', value: step3Data?.tipoEmulsao },
+    { label: 'TAXA DE EMULSÃO (l/m²)', key: 'taxaEmulsao', type: 'text', adornment: 'l/m²', value: step3Data?.taxaEmulsao },
+    { label: 'TAXA DE AGREGADOS POR CAMADA (kg/m²)', key: 'taxaAgregados', type: 'text', adornment: 'kg/m²', value: step3Data?.taxaAgregados },
+    { label: 'FAIXA GRANULOMÉTRICA', key: 'faixaGranulometrica', type: 'text', value: step3Data?.faixaGranulometrica },
+    { label: 'ABRASÃO LOS ANGELES (%)', key: 'abrasaoLosAngeles', type: 'text', adornment: '%', value: step3Data?.abrasaoLosAngeles },
+    { label: 'MASSA ESPECÍFICA (g/cm³)', key: 'massaEspecifica', type: 'text', adornment: 'g/cm³', value: step3Data?.massaEspecifica },
   ];
 
   const emulsaoInputs = [
-    { label: 'REFERÊNCIA COMERCIAL', key: 'referenciaComercial', required: true, type: 'text', value: step3Data?.referenciaComercial },
-    { label: 'REFINARIA', key: 'refinaria', required: true, type: 'text', value: step3Data?.refinaria },
-    { label: 'EMPRESA DISTRIBUIDORA', key: 'empresaDistribuidora', required: true, type: 'text', value: step3Data?.empresaDistribuidora },
-    { label: 'DATA DO CARREGAMENTO', key: 'dataCarregamento', required: true, type: 'date', value: step3Data?.dataCarregamento },
-    { label: 'NÚMERO DA NOTA FISCAL', key: 'numeroNotaFiscal', required: true, type: 'text', value: step3Data?.numeroNotaFiscal },
-    { label: 'DATA DA NOTA FISCAL', key: 'dataNotaFiscal', required: true, type: 'date', value: step3Data?.dataNotaFiscal },
-    { label: 'NÚMERO DO CERTIFICADO', key: 'numeroCertificado', required: true, type: 'text', value: step3Data?.numeroCertificado },
-    { label: 'DATA DO CERTIFICADO', key: 'dataCertificado', required: true, type: 'date', value: step3Data?.dataCertificado },
+    { label: 'REFERÊNCIA COMERCIAL', key: 'referenciaComercial', type: 'text', value: step3Data?.referenciaComercial },
+    { label: 'REFINARIA', key: 'refinaria', type: 'text', value: step3Data?.refinaria },
+    { label: 'EMPRESA DISTRIBUIDORA', key: 'empresaDistribuidora', type: 'text', value: step3Data?.empresaDistribuidora },
+    { label: 'DATA DO CARREGAMENTO', key: 'dataCarregamento', type: 'date', value: step3Data?.dataCarregamento },
+    { label: 'NÚMERO DA NOTA FISCAL', key: 'numeroNotaFiscal', type: 'text', value: step3Data?.numeroNotaFiscal },
+    { label: 'DATA DA NOTA FISCAL', key: 'dataNotaFiscal', type: 'date', value: step3Data?.dataNotaFiscal },
+    { label: 'NÚMERO DO CERTIFICADO', key: 'numeroCertificado', type: 'text', value: step3Data?.numeroCertificado },
+    { label: 'DATA DO CERTIFICADO', key: 'dataCertificado', type: 'date', value: step3Data?.dataCertificado },
   ];
 
   const parametrosInputs = [
-    { label: 'VISCOSIDADE (SSF)', key: 'viscosidadeSSF', required: true, type: 'text', value: step3Data?.viscosidadeSSF },
-    { label: 'PENEIRAÇÃO (%)', key: 'peneiracao', required: true, type: 'text', adornment: '%', value: step3Data?.peneiracao },
-    { label: 'RESÍDUO (%)', key: 'residuo', required: true, type: 'text', adornment: '%', value: step3Data?.residuo },
-    { label: 'CARGA DE PARTÍCULA', key: 'cargaParticula', required: true, type: 'text', value: step3Data?.cargaParticula },
-    { label: 'PENETRAÇÃO (mm)', key: 'penetracao', required: true, type: 'text', adornment: 'mm', value: step3Data?.penetracao },
-    { label: 'RECUPERAÇÃO ELÁSTICA (%)', key: 'recuperacaoElastica', required: true, type: 'text', adornment: '%', value: step3Data?.recuperacaoElastica },
-    { label: 'PONTO DE AMOLECIMENTO (°C)', key: 'pontoAmolecimento', required: true, type: 'text', adornment: '°C', value: step3Data?.pontoAmolecimento },
+    { label: 'VISCOSIDADE (SSF)', key: 'viscosidadeSSF', type: 'text', value: step3Data?.viscosidadeSSF },
+    { label: 'PENEIRAÇÃO (%)', key: 'peneiracao', type: 'text', adornment: '%', value: step3Data?.peneiracao },
+    { label: 'RESÍDUO (%)', key: 'residuo', type: 'text', adornment: '%', value: step3Data?.residuo },
+    { label: 'CARGA DE PARTÍCULA', key: 'cargaParticula', type: 'text', value: step3Data?.cargaParticula },
+    { label: 'PENETRAÇÃO (mm)', key: 'penetracao', type: 'text', adornment: 'mm', value: step3Data?.penetracao },
+    { label: 'RECUPERAÇÃO ELÁSTICA (%)', key: 'recuperacaoElastica', type: 'text', adornment: '%', value: step3Data?.recuperacaoElastica },
+    { label: 'PONTO DE AMOLECIMENTO (°C)', key: 'pontoAmolecimento', type: 'text', adornment: '°C', value: step3Data?.pontoAmolecimento },
   ];
 
   setNextDisabled(false);
@@ -127,7 +123,7 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
       <FlexColumnBorder title="TRATAMENTO SUPERFICIAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
-            {tratamentoInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.required, input.adornment))}
+            {tratamentoInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.adornment))}
           </Box>
         </Box>
       </FlexColumnBorder>
@@ -135,7 +131,7 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
       <FlexColumnBorder title="EMULSÃO ASFÁLTICA" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
-            {emulsaoInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.required))}
+            {emulsaoInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type))}
           </Box>
         </Box>
       </FlexColumnBorder>
@@ -143,7 +139,7 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
       <FlexColumnBorder title="PARÂMETROS DO MATERIAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
-            {parametrosInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.required, input.adornment))}
+            {parametrosInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.adornment))}
           </Box>
         </Box>
       </FlexColumnBorder>
@@ -158,7 +154,6 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
                 rows={4}
                 variant="outlined"
                 label="OBSERVAÇÕES"
-                placeholder="DIGITE SUAS OBSERVAÇÕES AQUI"
                 value={step3Data?.observacoes || ''}
                 onChange={(e) => setData({ step: 2, key: 'observacoes', value: e.target.value })}
                 InputProps={{
