@@ -1,15 +1,46 @@
 import { EssayPageProps } from '../../../templates/essay';
-import { Box, TextField, Button, IconButton, Typography } from '@mui/material';
+import { Box, TextField, Button, IconButton, Typography, Tooltip } from '@mui/material';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
-//ts
+
 const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
   const { step4Data, setData } = useBinderAsphaltConcreteStore();
 
-  // ==================== HELPER ====================
+  const tooltips: Record<string, string> = {
+    referenciaComercial: 'Referência comercial do ligante asfáltico',
+    refinaria: 'Nome da refinaria fornecedora do CAP',
+    empresaDistribuidora: 'Nome da empresa distribuidora do ligante',
+    dataCarregamento: 'Data de carregamento do material',
+    numeroNotaFiscal: 'Número da nota fiscal do produto',
+    dataNotaFiscal: 'Data de emissão da nota fiscal',
+    numeroCertificado: 'Número do certificado de qualidade do ligante',
+    dataCertificado: 'Data de emissão do certificado de qualidade',
+    tipoCAP: 'Tipo de Cimento Asfáltico de Petróleo (ex: CAP 50/70)',
+    performanceGrade: 'Grau de Desempenho (PG) do ligante conforme especificação SUPERPAVE',
+    penetracao25: 'Penetração a 25°C (mm) conforme norma',
+    pontoAmolecimento: 'Temperatura de ponto de amolecimento (°C)',
+    viscosidadeBrookfield_135: 'centipoise (cP) - SP21, 20rpm',
+    viscosidadeBrookfield_150: 'centipoise (cP) - SP21, 50rpm',
+    viscosidadeBrookfield_177: 'centipoise (cP) - SP21, 100rpm',
+    recuperacaoElastica: 'Percentual de recuperação elástica do ligante (%)',
+    mscr_Jnr_3_2: '1/kPa',
+    mscr_Jndiff: 'Diferença percentual entre os valores de Jnr medidos a 3,2kPa e 1kPa',
+    las_strain_1_25: 'Ver nota nas observações da caixa',
+    las_strain_2_5: 'Ver nota nas observações da caixa',
+    las_strain_5: 'Ver nota nas observações da caixa',
+    las_af: 'Ver nota nas observações da caixa',
+    las_FFL: 'Ver nota nas observações da caixa',
+    las_D: 'Critério de falha do modelo S-VECD do ligante asfáltico',
+    las_temperatura: 'Temperatura de realização do ensaio LAS (°C)',
+    bbr_S: 'MPa',
+    bbr_m: 'MPa',
+    bbr_temp: 'Temperatura de realização do ensaio BBR (°C)',
+  };
+
   const renderTextField = (
     key: string,
     label: string,
@@ -20,38 +51,51 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
   ) => {
     if (adornment) {
       return (
-        <InputEndAdornment
-          key={key}
-          adornment={adornment}
-          type={type}
-          variant="standard"
-          label={label}
-          placeholder={label}
-          value={value?.toString() || ''}
-          required={required}
-          onChange={(e) => setData({ step: 3, key, value: e.target.value })}
-        />
+        <Box key={key} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <InputEndAdornment
+            adornment={adornment}
+            type={type}
+            variant="standard"
+            label={label}
+            placeholder={label}
+            value={value?.toString() || ''}
+            required={required}
+            onChange={(e) => setData({ step: 3, key, value: e.target.value })}
+            sx={{ flex: 1 }}
+          />
+          <Tooltip title={tooltips[key] || 'Preencher conforme especificação'} arrow>
+            <IconButton size="small" sx={{ color: '#07B811' }}>
+              <HelpOutlineIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Box>
       );
     }
     return (
-      <TextField
-        key={key}
-        variant="standard"
-        type={type}
-        label={label}
-        placeholder={label}
-        value={value || ''}
-        required={required}
-        InputLabelProps={type === 'date' ? { shrink: true } : undefined}
-        onChange={(e) => setData({ step: 3, key, value: e.target.value })}
-        InputProps={{
-          inputProps: { style: { textTransform: 'uppercase' } }
-        }}
-      />
+      <Box key={key} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <TextField
+          variant="standard"
+          type={type}
+          label={label}
+          placeholder={label}
+          value={value || ''}
+          required={required}
+          InputLabelProps={type === 'date' ? { shrink: true } : undefined}
+          onChange={(e) => setData({ step: 3, key, value: e.target.value })}
+          InputProps={{
+            inputProps: { style: { textTransform: 'uppercase' } }
+          }}
+          sx={{ flex: 1 }}
+        />
+        <Tooltip title={tooltips[key] || 'Preencher conforme especificação'} arrow>
+          <IconButton size="small" sx={{ color: '#07B811' }}>
+            <HelpOutlineIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </Box>
     );
   };
 
-  // ==================== DSR HANDLERS ====================
   const handleAddDsr = (type: 'dsr_original' | 'dsr_rtfot') => {
     const current = step4Data?.[type] || [];
     setData({ step: 3, key: type, value: [...current, { temp: '', G_sen: '' }] });
@@ -74,7 +118,6 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
     setData({ step: 3, key: type, value: current });
   };
 
-  // ==================== INPUTS ====================
   const comerciaisInputs = [
     { label: 'REFERÊNCIA COMERCIAL', key: 'referenciaComercial', required: true, type: 'text', value: step4Data?.referenciaComercial },
     { label: 'REFINARIA', key: 'refinaria', required: true, type: 'text', value: step4Data?.refinaria },
@@ -103,17 +146,17 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
   ];
 
   const lasInputs = [
-    { label: 'LAS - STRAIN 1,25% - Nº', key: 'las_strain_1_25', required: true, type: 'text', value: step4Data?.las_strain_1_25 },
-    { label: 'LAS - STRAIN 2,5% - Nº', key: 'las_strain_2_5', required: true, type: 'text', value: step4Data?.las_strain_2_5 },
-    { label: 'LAS - STRAIN 5% - Nº', key: 'las_strain_5', required: true, type: 'text', value: step4Data?.las_strain_5 },
-    { label: 'LAS - AF (COMPRIMENTO NA TRINCA)', key: 'las_af', required: true, type: 'text', value: step4Data?.las_af },
-    { label: 'LAS - FFL (FATOR DE FADIGA)', key: 'las_FFL', required: true, type: 'text', value: step4Data?.las_FFL },
-    { label: 'LAS - D³', key: 'las_D', required: true, type: 'text', value: step4Data?.las_D },
+    { label: 'LAS - STRAIN 1,25% - Nf³', key: 'las_strain_1_25', required: true, type: 'text', value: step4Data?.las_strain_1_25 },
+    { label: 'LAS - STRAIN 2,5% - Nf³', key: 'las_strain_2_5', required: true, type: 'text', value: step4Data?.las_strain_2_5 },
+    { label: 'LAS - STRAIN 5% - Nf³', key: 'las_strain_5', required: true, type: 'text', value: step4Data?.las_strain_5 },
+    { label: 'LAS - af ¹', key: 'las_af', required: true, type: 'text', value: step4Data?.las_af },
+    { label: 'LAS - FFL ²', key: 'las_FFL', required: true, type: 'text', value: step4Data?.las_FFL },
+    { label: 'LAS - DR', key: 'las_D', required: true, type: 'text', value: step4Data?.las_D },
   ];
 
   const bbrInputs = [
     { label: 'BBR - MÓDULO DE RIGIDEZ S (MPa)', key: 'bbr_S', required: true, type: 'text', adornment: 'MPa', value: step4Data?.bbr_S },
-    { label: 'BBR - COEFICIENTE ANGULAR M (MPa)', key: 'bbr_m', required: true, type: 'text', adornment: 'MPa', value: step4Data?.bbr_m },
+    { label: 'BBR - COEFICIENTE ANGULAR m (MPa)', key: 'bbr_m', required: true, type: 'text', adornment: 'MPa', value: step4Data?.bbr_m },
     { label: 'TEMPERATURA DO TESTE (°C)', key: 'bbr_temp', required: true, type: 'text', adornment: '°C', value: step4Data?.bbr_temp },
   ];
 
@@ -130,7 +173,6 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
 
   return (
     <>
-      {/* DADOS COMERCIAIS */}
       <FlexColumnBorder title="DADOS COMERCIAIS" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
@@ -139,7 +181,6 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      {/* LIGANTE ORIGINAL */}
       <FlexColumnBorder title="LIGANTE ORIGINAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
@@ -148,7 +189,6 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      {/* DSR - LIGANTE ORIGINAL (dinâmico) */}
       <FlexColumnBorder title="DSR - LIGANTE ORIGINAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%' }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
@@ -170,41 +210,50 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
           {(step4Data?.dsr_original || []).length > 0 && (
             <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '10px', alignItems: 'center', pb: '20px' }}>
               <Box sx={dsrTableHeaderSx}>Temperatura do Teste (°C)</Box>
-              <Box sx={dsrTableHeaderSx}>G*/sen(δ) (MPa)</Box>
+              <Box sx={dsrTableHeaderSx}>│G*│/sen(δ) (MPa)</Box>
               <Box />
               {(step4Data?.dsr_original || []).map((item, index) => (
-                <>
-                  <TextField
-                    key={`dsr_orig_temp_${index}`}
-                    variant="standard"
-                    placeholder="Temperatura (°C)"
-                    value={item.temp || ''}
-                    onChange={(e) => handleDsrChange('dsr_original', index, 'temp', e.target.value)}
-                    InputProps={{
-                      inputProps: { style: { textTransform: 'uppercase' } }
-                    }}
-                  />
-                  <TextField
-                    key={`dsr_orig_G_${index}`}
-                    variant="standard"
-                    placeholder="G*/sen(δ) (MPa)"
-                    value={item.G_sen || ''}
-                    onChange={(e) => handleDsrChange('dsr_original', index, 'G_sen', e.target.value)}
-                    InputProps={{
-                      inputProps: { style: { textTransform: 'uppercase' } }
-                    }}
-                  />
+                <Box key={`dsr_orig_row_${index}`} sx={{ display: 'contents' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <TextField
+                      variant="standard"
+                      placeholder="Temperatura (°C)"
+                      value={item.temp || ''}
+                      onChange={(e) => handleDsrChange('dsr_original', index, 'temp', e.target.value)}
+                      InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
+                      sx={{ flex: 1 }}
+                    />
+                    <Tooltip title="Temperatura do teste DSR (°C)" arrow>
+                      <IconButton size="small" sx={{ color: '#07B811' }}>
+                        <HelpOutlineIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <TextField
+                      variant="standard"
+                      placeholder="│G*│/sen(δ) (MPa)"
+                      value={item.G_sen || ''}
+                      onChange={(e) => handleDsrChange('dsr_original', index, 'G_sen', e.target.value)}
+                      InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
+                      sx={{ flex: 1 }}
+                    />
+                    <Tooltip title="kPa" arrow>
+                      <IconButton size="small" sx={{ color: '#07B811' }}>
+                        <HelpOutlineIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
                   <IconButton onClick={() => handleRemoveDsr('dsr_original', index)} color="error" size="small">
                     <DeleteIcon />
                   </IconButton>
-                </>
+                </Box>
               ))}
             </Box>
           )}
         </Box>
       </FlexColumnBorder>
 
-      {/* LIGANTE ENVELHECIDO NO RTFOT (dinâmico) */}
       <FlexColumnBorder title="LIGANTE ENVELHECIDO NO RTFOT (75 MIN, 163°C)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%' }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
@@ -226,64 +275,72 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
           {(step4Data?.dsr_rtfot || []).length > 0 && (
             <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '10px', alignItems: 'center', pb: '20px' }}>
               <Box sx={dsrTableHeaderSx}>Temperatura do Teste (°C)</Box>
-              <Box sx={dsrTableHeaderSx}>G*/sen(δ) (MPa)</Box>
+              <Box sx={dsrTableHeaderSx}>│G*│/sen(δ) (MPa)</Box>
               <Box />
               {(step4Data?.dsr_rtfot || []).map((item, index) => (
-                <>
-                  <TextField
-                    key={`dsr_rtfot_temp_${index}`}
-                    variant="standard"
-                    placeholder="Temperatura (°C)"
-                    value={item.temp || ''}
-                    onChange={(e) => handleDsrChange('dsr_rtfot', index, 'temp', e.target.value)}
-                    InputProps={{
-                      inputProps: { style: { textTransform: 'uppercase' } }
-                    }}
-                  />
-                  <TextField
-                    key={`dsr_rtfot_G_${index}`}
-                    variant="standard"
-                    placeholder="G*/sen(δ) (MPa)"
-                    value={item.G_sen || ''}
-                    onChange={(e) => handleDsrChange('dsr_rtfot', index, 'G_sen', e.target.value)}
-                    InputProps={{
-                      inputProps: { style: { textTransform: 'uppercase' } }
-                    }}
-                  />
+                <Box key={`dsr_rtfot_row_${index}`} sx={{ display: 'contents' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <TextField
+                      variant="standard"
+                      placeholder="Temperatura (°C)"
+                      value={item.temp || ''}
+                      onChange={(e) => handleDsrChange('dsr_rtfot', index, 'temp', e.target.value)}
+                      InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
+                      sx={{ flex: 1 }}
+                    />
+                    <Tooltip title="Temperatura do teste DSR após RTFOT (°C)" arrow>
+                      <IconButton size="small" sx={{ color: '#07B811' }}>
+                        <HelpOutlineIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <TextField
+                      variant="standard"
+                      placeholder="│G*│/sen(δ) (MPa)"
+                      value={item.G_sen || ''}
+                      onChange={(e) => handleDsrChange('dsr_rtfot', index, 'G_sen', e.target.value)}
+                      InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
+                      sx={{ flex: 1 }}
+                    />
+                    <Tooltip title="kPa" arrow>
+                      <IconButton size="small" sx={{ color: '#07B811' }}>
+                        <HelpOutlineIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
                   <IconButton onClick={() => handleRemoveDsr('dsr_rtfot', index)} color="error" size="small">
                     <DeleteIcon />
                   </IconButton>
-                </>
+                </Box>
               ))}
             </Box>
           )}
         </Box>
       </FlexColumnBorder>
 
-      {/* MSCR */}
       <FlexColumnBorder title="MSCR (MULTIPLE STRESS CREEP RECOVERY)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
             {mscrInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.required, input.adornment))}
           </Box>
+          <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
+            {renderTextField('critérioRuptura', 'CRITÉRIO DE RUPTURA - da/dN (mm/cycle)', step4Data?.critérioRuptura, 'text', true)}
+          </Box>
         </Box>
       </FlexColumnBorder>
 
-      {/* LAS */}
       <FlexColumnBorder title="LAS (LINEAR AMPLITUDE SWEEP)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {/* Temperatura do teste - campo separado em linha própria */}
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '10px' }}>
             {renderTextField('las_temperatura', 'TEMPERATURA DO TESTE (°C)', step4Data?.las_temperatura, 'text', true, '°C')}
           </Box>
-          {/* Demais campos LAS */}
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
             {lasInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.required))}
           </Box>
         </Box>
       </FlexColumnBorder>
 
-      {/* BBR */}
       <FlexColumnBorder title="LIGANTE ENVELHECIDO NO RTFOT + PAV (20 HORAS, 100°C)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
@@ -292,25 +349,31 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      {/* OBSERVAÇÕES */}
       <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: '1fr', gap: '10px 20px', paddingBottom: '20px' }}>
-            <TextField
-              fullWidth
-              multiline
-              rows={4}
-              variant="outlined"
-              label="OBSERVAÇÕES"
-              placeholder="DIGITE SUAS OBSERVAÇÕES AQUI"
-              value={step4Data?.observacoes || ''}
-              onChange={(e) => setData({ step: 3, key: 'observacoes', value: e.target.value })}
-              InputProps={{
-                inputProps: { style: { textTransform: 'uppercase' } }
-              }}
-            />
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+              <TextField
+                fullWidth
+                multiline
+                rows={4}
+                variant="outlined"
+                label="OBSERVAÇÕES"
+                placeholder="DIGITE SUAS OBSERVAÇÕES AQUI"
+                value={step4Data?.observacoes || ''}
+                onChange={(e) => setData({ step: 3, key: 'observacoes', value: e.target.value })}
+                InputProps={{
+                  inputProps: { style: { textTransform: 'uppercase' } }
+                }}
+              />
+              <Tooltip title="Caso necessário, utilizar o espaço para alguma anotação que facilite a compreensão dos dados" arrow>
+                <IconButton size="small" sx={{ color: '#07B811', mt: 1 }}>
+                  <HelpOutlineIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            </Box>
             <Typography variant="caption" color="textSecondary" sx={{ fontSize: '0.8rem' }}>
-              AF: COMPRIMENTO NA TRINCA - CRITÉRIO DE FALHA PROPOSTO POR HINTZ E BAHIA (2013); FFL: FATOR DE FADIGA DE LIGANTE - CRITÉRIO PROPOSTO POR NASCIMENTO (2015)
+              ¹af: comprimento na trinca - critério de falha proposto por Hintz e Bahia (2013); ²FFL: Fator de fadiga de ligante - critério proposto por Nascimento (2015); ³Nf: ESALs (indicador de volume de tráfego)
             </Typography>
           </Box>
         </Box>

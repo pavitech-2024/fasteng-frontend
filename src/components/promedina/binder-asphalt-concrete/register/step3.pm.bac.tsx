@@ -1,13 +1,38 @@
 import { EssayPageProps } from '../../../templates/essay';
-import { Box, TextField } from '@mui/material';
+import { Box, TextField, Tooltip, IconButton } from '@mui/material';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import useBinderAsphaltConcreteStore from '@/stores/promedina/binder-asphalt-concrete/binder-asphalt-concrete.store';
 
 const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
   const { step3Data, setData } = useBinderAsphaltConcreteStore();
 
-  // Helper para renderizar campos com placeholder grande
+  const tooltips: Record<string, string> = {
+    tipoTratamento: 'Preencher com Simples, Duplo ou Triplo',
+    tipoEmulsao: 'Preencher com o tipo de emulsão utilizada no tratamento',
+    taxaEmulsao: 'Taxa de emulsão aplicada em l/m²',
+    taxaAgregados: 'Taxa de agregados por camada em kg/m²',
+    faixaGranulometrica: 'Faixa granulométrica do agregado utilizado',
+    abrasaoLosAngeles: 'Referente aos agregados',
+    massaEspecifica: 'Massa específica aparente seca do material obtido no ensaio de Compactação do DNIT',
+    referenciaComercial: 'Referência comercial do produto',
+    refinaria: 'Nome da refinaria fornecedora',
+    empresaDistribuidora: 'Nome da empresa distribuidora',
+    dataCarregamento: 'Data de carregamento do material',
+    numeroNotaFiscal: 'Número da nota fiscal',
+    dataNotaFiscal: 'Data de emissão da nota fiscal',
+    numeroCertificado: 'Número do certificado de qualidade',
+    dataCertificado: 'Data de emissão do certificado',
+    viscosidadeSSF: 'Viscosidade Saybolt Furol (SSF) da emulsão',
+    peneiracao: 'Percentual retido na peneiração (%)',
+    residuo: 'Teor de resíduo da emulsão (%)',
+    cargaParticula: 'Preencher com Catiônica, Aniônica, Não-iônica ou Anfotérica',
+    penetracao: 'Valor de penetração do resíduo (mm)',
+    recuperacaoElastica: 'Percentual de recuperação elástica (%)',
+    pontoAmolecimento: 'Temperatura de ponto de amolecimento (°C)',
+  };
+
   const renderTextField = (
     key: string,
     label: string,
@@ -18,39 +43,52 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
   ) => {
     if (adornment) {
       return (
-        <InputEndAdornment
-          key={key}
-          adornment={adornment}
-          type={type}
-          variant="standard"
-          label={label}
-          placeholder={label}
-          value={value?.toString() || ''}
-          required={required}
-          onChange={(e) => setData({ step: 2, key, value: e.target.value })}
-        />
+        <Box key={key} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <InputEndAdornment
+            adornment={adornment}
+            type={type}
+            variant="standard"
+            label={label}
+            placeholder={label}
+            value={value?.toString() || ''}
+            required={required}
+            onChange={(e) => setData({ step: 2, key, value: e.target.value })}
+            sx={{ flex: 1 }}
+          />
+          <Tooltip title={tooltips[key] || 'Preencher conforme especificação'} arrow>
+            <IconButton size="small" sx={{ color: '#07B811' }}>
+              <HelpOutlineIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Box>
       );
     }
 
     return (
-      <TextField
-        key={key}
-        variant="standard"
-        type={type}
-        label={label}
-        placeholder={label}
-        value={value || ''}
-        required={required}
-        InputLabelProps={type === 'date' ? { shrink: true } : undefined}
-        onChange={(e) => setData({ step: 2, key, value: e.target.value })}
-        InputProps={{
-          inputProps: { style: { textTransform: 'uppercase' } }
-        }}
-      />
+      <Box key={key} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <TextField
+          variant="standard"
+          type={type}
+          label={label}
+          placeholder={label}
+          value={value || ''}
+          required={required}
+          InputLabelProps={type === 'date' ? { shrink: true } : undefined}
+          onChange={(e) => setData({ step: 2, key, value: e.target.value })}
+          InputProps={{
+            inputProps: { style: { textTransform: 'uppercase' } }
+          }}
+          sx={{ flex: 1 }}
+        />
+        <Tooltip title={tooltips[key] || 'Preencher conforme especificação'} arrow>
+          <IconButton size="small" sx={{ color: '#07B811' }}>
+            <HelpOutlineIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </Box>
     );
   };
 
-  // TRATAMENTO SUPERFICIAL - Adicionado type: 'text' para todos
   const tratamentoInputs = [
     { label: 'TIPO DE TRATAMENTO', key: 'tipoTratamento', required: true, type: 'text', value: step3Data?.tipoTratamento },
     { label: 'TIPO DE EMULSÃO', key: 'tipoEmulsao', required: true, type: 'text', value: step3Data?.tipoEmulsao },
@@ -61,7 +99,6 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
     { label: 'MASSA ESPECÍFICA (g/cm³)', key: 'massaEspecifica', required: true, type: 'text', adornment: 'g/cm³', value: step3Data?.massaEspecifica },
   ];
 
-  // EMULSÃO ASFÁLTICA - Adicionado type: 'text' ou 'date' conforme necessário
   const emulsaoInputs = [
     { label: 'REFERÊNCIA COMERCIAL', key: 'referenciaComercial', required: true, type: 'text', value: step3Data?.referenciaComercial },
     { label: 'REFINARIA', key: 'refinaria', required: true, type: 'text', value: step3Data?.refinaria },
@@ -73,7 +110,6 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
     { label: 'DATA DO CERTIFICADO', key: 'dataCertificado', required: true, type: 'date', value: step3Data?.dataCertificado },
   ];
 
-  // PARÂMETROS DO MATERIAL - Adicionado type: 'text' para todos
   const parametrosInputs = [
     { label: 'VISCOSIDADE (SSF)', key: 'viscosidadeSSF', required: true, type: 'text', value: step3Data?.viscosidadeSSF },
     { label: 'PENEIRAÇÃO (%)', key: 'peneiracao', required: true, type: 'text', adornment: '%', value: step3Data?.peneiracao },
@@ -115,19 +151,26 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
       <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: '1fr', gap: '10px 20px', paddingBottom: '20px' }}>
-            <TextField
-              fullWidth
-              multiline
-              rows={4}
-              variant="outlined"
-              label="OBSERVAÇÕES"
-              placeholder="DIGITE SUAS OBSERVAÇÕES AQUI"
-              value={step3Data?.observacoes || ''}
-              onChange={(e) => setData({ step: 2, key: 'observacoes', value: e.target.value })}
-              InputProps={{
-                inputProps: { style: { textTransform: 'uppercase' } }
-              }}
-            />
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+              <TextField
+                fullWidth
+                multiline
+                rows={4}
+                variant="outlined"
+                label="OBSERVAÇÕES"
+                placeholder="DIGITE SUAS OBSERVAÇÕES AQUI"
+                value={step3Data?.observacoes || ''}
+                onChange={(e) => setData({ step: 2, key: 'observacoes', value: e.target.value })}
+                InputProps={{
+                  inputProps: { style: { textTransform: 'uppercase' } }
+                }}
+              />
+              <Tooltip title="Caso necessário, utilizar o espaço para alguma anotação que facilite a compreensão dos dados" arrow>
+                <IconButton size="small" sx={{ color: '#07B811', mt: 1 }}>
+                  <HelpOutlineIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Box>
         </Box>
       </FlexColumnBorder>
