@@ -1,7 +1,8 @@
 import { EssayPageProps } from '../../../templates/essay';
-import { Box, TextField, Button } from '@mui/material';
+import { Box, TextField, Button, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import useStabilizedLayersStore from '@/stores/promedina/stabilized-layers/stabilized-layers.store';
 import { useState, useEffect } from 'react';
@@ -25,6 +26,23 @@ const createEmptyLayer = (): LayerCard => ({
   k1: '',
   k2: '',
 });
+
+const tooltips: Record<string, string> = {
+  teorCimento: 'Teor ótimo de cimento da mistura estabilizada (%)',
+  rt: 'Resistência à Tração da camada estabilizada (MPa)',
+  rtcd: 'Resistência à Tração por Compressão Diametral - RTCD (MPa)',
+  rcs: 'Resistência à Compressão Simples - RCS (MPa)',
+  faixaGranulometrica: 'Faixa granulométrica do material estabilizado',
+  massaEspecifica: 'Massa específica aparente seca do material obtido no ensaio de Compactação do DNIT',
+  umidadeOtima: 'Umidade ótima de compactação (%)',
+  energiaCompactacao: 'Preencher com normal, intermediária ou modificada',
+  ei: 'Preencher os Ajustes conforme Modelo Sigmoidal: MR = MRmín + ((MRmáx - MRmín) / (1 + e^(-4 + 14 * Di)))',
+  ef: 'Preencher os Ajustes conforme Modelo Sigmoidal: MR = MRmín + ((MRmáx - MRmín) / (1 + e^(-4 + 14 * Di)))',
+  constanteA: 'Em caso de inexistência da informação, usar valor padrão: -4,00',
+  constanteB: 'Em caso de inexistência da informação, usar valor padrão: 14,00',
+  k1: 'Modelo Utilizado: 10 ^ (k1 + %RF * k2)',
+  k2: 'Modelo Utilizado: 10 ^ (k1 + %RF * k2)',
+};
 
 const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
   const { step2Data, setData } = useStabilizedLayersStore();
@@ -54,15 +72,22 @@ const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
   };
 
   const renderField = (layerId: string, key: keyof LayerCard, label: string, value: string) => (
-    <TextField
-      key={`${layerId}-${key}`}
-      variant="standard"
-      type="text"
-      label={label}
-      value={value || ''}
-      onChange={(e) => updateLayer(layerId, key, e.target.value)}
-      InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
-    />
+    <Box key={`${layerId}-${key}`} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <TextField
+        variant="standard"
+        type="text"
+        label={label}
+        value={value || ''}
+        onChange={(e) => updateLayer(layerId, key, e.target.value)}
+        InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
+        sx={{ flex: 1 }}
+      />
+      <Tooltip title={tooltips[key] || 'Preencher conforme especificação'} arrow>
+        <IconButton size="small" sx={{ color: '#07B811' }}>
+          <HelpOutlineIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
+    </Box>
   );
 
   const renderLayers = () => (
@@ -89,8 +114,8 @@ const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
           </FlexColumnBorder>
           <FlexColumnBorder title="MÓDULO DE RESILIÊNCIA (MPa)" open theme={'#07B811'}>
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2 }}>
-              {renderField(layer.id, 'ei', 'Ei', layer.ei)}
-              {renderField(layer.id, 'ef', 'Ef', layer.ef)}
+              {renderField(layer.id, 'ei', 'Ei (Módulo Inicial)', layer.ei)}
+              {renderField(layer.id, 'ef', 'Ef (Módulo Final)', layer.ef)}
               {renderField(layer.id, 'constanteA', 'CONSTANTE A', layer.constanteA)}
               {renderField(layer.id, 'constanteB', 'CONSTANTE B', layer.constanteB)}
             </Box>
@@ -115,11 +140,18 @@ const StabilizedLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
       )}
       <Button variant="outlined" startIcon={<AddIcon />} onClick={addLayer} sx={{ mt: 2, textTransform: 'uppercase' }}>ADICIONAR CAMADA</Button>
       <FlexColumnBorder title="OBSERVAÇÕES" open theme={'#07B811'}>
-        <TextField
-          fullWidth multiline rows={4} variant="outlined" label="OBSERVAÇÕES"
-          value={step2Data?.observations || ''}
-          onChange={(e) => setData({ step: 1, key: 'observations', value: e.target.value })}
-        />
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+          <TextField
+            fullWidth multiline rows={4} variant="outlined" label="OBSERVAÇÕES"
+            value={step2Data?.observations || ''}
+            onChange={(e) => setData({ step: 1, key: 'observations', value: e.target.value })}
+          />
+          <Tooltip title="Caso necessário, utilizar o espaço para alguma anotação que facilite a compreensão dos dados" arrow>
+            <IconButton size="small" sx={{ color: '#07B811', mt: 1 }}>
+              <HelpOutlineIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Box>
       </FlexColumnBorder>
     </>
   );
