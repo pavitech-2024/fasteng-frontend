@@ -66,26 +66,6 @@ const getTooltips = (layerName: string): Record<string, string> => {
     k4psi4: 'Modelo Constituinte: εp = ψ1 x (σ3^ψ2) x (σd^ψ3) x (N^ψ4)',
   };
 
-  if (layerName.toLowerCase().includes('aterro')) {
-    return {
-      ...baseTooltips,
-      especificMass: 'Massa específica aparente seca do material obtido no ensaio de Compactação do DNIT',
-      compressionEnergy: 'Preencher com normal, intermediária ou modificada',
-    };
-  }
-  if (layerName.toLowerCase().includes('sub-base')) {
-    return {
-      ...baseTooltips,
-      especificMass: 'Massa específica aparente seca do material obtido no ensaio de Compactação do DNIT',
-    };
-  }
-  if (layerName.toLowerCase().includes('base')) {
-    return {
-      ...baseTooltips,
-      especificMass: 'Massa específica aparente seca do material obtido no ensaio de Compactação do DNIT',
-      compressionEnergy: 'Preencher com normal, intermediária ou modificada',
-    };
-  }
   return baseTooltips;
 };
 
@@ -103,13 +83,7 @@ const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
   }, [layers]);
 
   useEffect(() => {
-    const isValid = layers.every(layer =>
-      Object.entries(layer).every(([key, value]) => {
-        if (key === 'id') return true;
-        return value !== '';
-      })
-    );
-    setNextDisabled(!isValid);
+    setNextDisabled(false);
   }, [layers, setNextDisabled]);
 
   const updateLayer = (id: string, key: keyof Layer, value: string) => {
