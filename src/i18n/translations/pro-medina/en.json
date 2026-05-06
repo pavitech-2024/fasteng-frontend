@@ -4,6 +4,8 @@
   "home.pm.granular": "Granular Layers",
   "home.pm.stabilized": "Stabilized Layers",
   "home.pm.asphalt": "Asphalt Binder and Concrete",
+  "home.pm.fwd": "FWD",
+  "home.pm.igg": "Pavement Evaluation",
   "welcome.step.granular-layers.register.1": "Click on Register new samples",
   "welcome.step.granular-layers.register.2": "Register mandatory material data",
   "welcome.step.granular-layers.register.3": "Record data about the pavement on which the material is inserted",

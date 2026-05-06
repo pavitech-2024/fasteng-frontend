@@ -58,55 +58,108 @@ class STABILIZEDLAYERS_SERVICE implements IEssayService {
   };
 
   saveSample = async (store: StabilizedLayersData): Promise<void> => {
-    const { _id } = store;
+  console.log("🚀 [saveSample] INÍCIO");
+  console.log("📦 STORE ORIGINAL:", store);
 
-    const replaceNullValues = (data: StabilizedLayersData): StabilizedLayersData => {
-      const newData = { ...data };
+  const { _id } = store;
+  console.log("🆔 ID:", _id);
 
-      const recursiveReplaceNull = (obj: Record<string, any>) => {
-        for (const key in obj) {
-          if (obj[key] === null) {
-            obj[key] = '-';
-          } else if (typeof obj[key] === 'object') {
-            recursiveReplaceNull(obj[key]);
-          }
+  const replaceNullValues = (data: StabilizedLayersData): StabilizedLayersData => {
+    const newData = { ...data };
+
+    const recursiveReplaceNull = (obj: Record<string, any>, path = '') => {
+      for (const key in obj) {
+        const fullPath = path ? `${path}.${key}` : key;
+
+        if (obj[key] === null) {
+          console.log(`⚠️ NULL encontrado em: ${fullPath}`);
+          obj[key] = '-';
+        } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+          recursiveReplaceNull(obj[key], fullPath);
         }
-      };
-
-      recursiveReplaceNull(newData);
-      return newData;
+      }
     };
 
-    const updatedData = replaceNullValues(store);
-
-    const { generalData, step2Data } = updatedData;
-
-    try {
-      let response;
-
-      if (!_id || _id === '---') {
-        const { _id, ...storeWithoutId } = store;
-        response = await samplesService.saveSample({ ...storeWithoutId, generalData, step2Data });
-      } else {
-        response = await samplesService.updateSample(_id, { ...store, generalData, step2Data });
-      }
-
-      const { success, error } = response.data;
-
-      if (!success) {
-        if (error && error.name === 'SampleCreationError') {
-          throw new Error(t('pm.register.already-exists-error'));
-        }
-      }
-    } catch (error) {
-      console.log('🚀 ~ STABILIZEDLAYERS_SERVICE ~ saveSample= ~ error:', error);
-      if (error.response?.status === 413) {
-        throw new Error(t('pm.register.payload-too-large-error'));
-      }
-
-      throw error;
-    }
+    recursiveReplaceNull(newData);
+    return newData;
   };
+
+  console.log("🔧 Normalizando nulls...");
+  const updatedData = replaceNullValues(store);
+  console.log("✅ DATA APÓS NORMALIZAÇÃO:", updatedData);
+
+  const { generalData, step2Data } = updatedData;
+
+  console.log("📄 GENERAL DATA:", generalData);
+  console.log("📄 STEP2 DATA:", step2Data);
+
+  try {
+    let response;
+
+    if (!_id || _id === '---') {
+      console.log("🆕 MODO: CREATE");
+
+      const { _id, ...storeWithoutId } = store;
+
+      console.log("📤 PAYLOAD CREATE:", {
+        ...storeWithoutId,
+        generalData,
+        step2Data
+      });
+
+      response = await samplesService.saveSample({
+        ...storeWithoutId,
+        generalData,
+        step2Data
+      });
+
+    } else {
+      console.log("✏️ MODO: UPDATE");
+
+      console.log("📤 PAYLOAD UPDATE:", {
+        ...store,
+        generalData,
+        step2Data
+      });
+
+      response = await samplesService.updateSample(_id, {
+        ...store,
+        generalData,
+        step2Data
+      });
+    }
+
+    console.log("📥 RESPONSE RECEBIDA:", response);
+
+    const { success, error } = response.data;
+
+    console.log("📊 SUCCESS:", success);
+    console.log("📊 ERROR:", error);
+
+    if (!success) {
+      console.log("❌ BACKEND RETORNOU ERRO");
+
+      if (error && error.name === 'SampleCreationError') {
+        throw new Error(t('pm.register.already-exists-error'));
+      }
+    }
+
+    console.log("🎉 FINALIZADO COM SUCESSO");
+
+  } catch (error: any) {
+    console.log("💥 ERRO CAPTURADO:", error);
+
+    console.log("📡 STATUS:", error?.response?.status);
+    console.log("📡 DATA:", error?.response?.data);
+
+    if (error?.response?.status === 413) {
+      console.log("🚨 PAYLOAD MUITO GRANDE");
+      throw new Error(t('pm.register.payload-too-large-error'));
+    }
+
+    throw error;
+  }
+};
 }
 
 export default STABILIZEDLAYERS_SERVICE;
