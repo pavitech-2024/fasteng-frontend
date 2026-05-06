@@ -112,7 +112,7 @@ const Promedina: NextPage = () => {
       path: '/promedina/fwd',
     },
     {
-      name: 'Avaliação de Pavimentos',
+      name: t('home.pm.igg'),
       icon:(<Box
           sx={{
             width: '100%',
