@@ -13,6 +13,7 @@ export interface IggStation {
   section: string;
   tri: number;
   tre: number;
+totalDefeitos?: number;
   defects: IggDefect[];
   date?: string;
 }

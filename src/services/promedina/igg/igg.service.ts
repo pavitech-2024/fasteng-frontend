@@ -2,7 +2,7 @@ import { t } from 'i18next';
 import { IEssayService } from '@/interfaces/common/essay/essay-service.interface';
 import { IggAnalysisData, IggAnalysisActions } from '@/stores/promedina/igg/igg.store';
 import iggAnalysisService from './igg-view.service';
-import iggImage from '../../../assets/pro-medina/igg/igg.png'
+import Iggicon from '@/assets/asphalt/essays/Igg.png';
 
 // Constantes do DNIT (copiadas do componente original)
 const FATORES_PONDERACAO: Record<number, number> = {
@@ -43,7 +43,7 @@ const DEFEITOS_INFO: Record<string, { description: string; type: number; priorit
 class IGG_SERVICE implements IEssayService {
   info = {
     key: 'igg',
-    icon: iggImage,
+    icon: Iggicon,
     title: t('pm.igg-register'),
     path: '/promedina/igg',
     steps: 3,
@@ -123,234 +123,200 @@ class IGG_SERVICE implements IEssayService {
 
   // ✅ Função de cálculo do IGG (adaptada do componente original)
   calcularIGG = (generalData: any, stations: any[]) => {
-    const n = stations.length;
+  const n = stations.length;
 
-    // Cálculo das flechas
-    const media_tri = stations.reduce((sum, s) => sum + s.tri, 0) / n;
-    const media_tre = stations.reduce((sum, s) => sum + s.tre, 0) / n;
-    const var_tri = stations.reduce((sum, s) => sum + Math.pow(s.tri - media_tri, 2), 0) / n;
-    const var_tre = stations.reduce((sum, s) => sum + Math.pow(s.tre - media_tre, 2), 0) / n;
+  // Cálculo das flechas
+  const media_tri = stations.reduce((sum, s) => sum + s.tri, 0) / n;
+  const media_tre = stations.reduce((sum, s) => sum + s.tre, 0) / n;
+  const var_tri = stations.reduce((sum, s) => sum + Math.pow(s.tri - media_tri, 2), 0) / n;
+  const var_tre = stations.reduce((sum, s) => sum + Math.pow(s.tre - media_tre, 2), 0) / n;
+  
+  const F = (media_tri + media_tre) / 2;
+  const FV = (var_tri + var_tre) / 2;
+  
+  // ✅ CORREÇÃO: Frequências - conta POR ESTAÇÃO (não por tipo único)
+  const freq_abs: Record<number, number> = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0};
+  
+  stations.forEach(station => {
+    const tiposNaEstacao = new Set<number>();
     
-    const F = (media_tri + media_tre) / 2;
-    const FV = (var_tri + var_tre) / 2;
-    
-    // Processamento de defeitos
-    const tiposDefeitos = stations.map(station => {
-      const tiposEncontrados: number[] = [];
-      Object.keys(station.defects).forEach(code => {
-        if (station.defects[code] > 0 && DEFEITOS_INFO[code]) {
-          tiposEncontrados.push(DEFEITOS_INFO[code].type);
-        }
-      });
-      return tiposEncontrados;
+    Object.keys(station.defects).forEach(code => {
+      if (station.defects[code] > 0 && DEFEITOS_INFO[code]) {
+        tiposNaEstacao.add(DEFEITOS_INFO[code].type);
+      }
     });
     
-    const tiposPriorizados = tiposDefeitos.map(tipos => {
-      const tiposUnicos = Array.from(new Set(tipos)).sort((a, b) => b - a);
-      if (tiposUnicos.includes(3)) return tiposUnicos.filter(t => t >= 3);
-      if (tiposUnicos.includes(2)) return tiposUnicos.filter(t => t >= 2);
-      return tiposUnicos;
-    });
+    // ✅ CONTAGEM CORRETA: conta o tipo de maior prioridade por estação
+    const tiposArray = Array.from(tiposNaEstacao).sort((a, b) => b - a);
     
-    const freq_abs: Record<number, number> = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0};
-    tiposPriorizados.forEach(tipos => {
-      Array.from(new Set(tipos)).forEach(t => { freq_abs[t]++; });
-    });
-    
-    const freq_rel = Object.fromEntries(
-      Object.entries(freq_abs).map(([t, count]) => [parseInt(t), (count / n) * 100])
-    );
-    
-    const IGI_tipos: Record<number, number> = {};
-    Object.entries(freq_rel).forEach(([t, freq]) => {
-      const tipo = parseInt(t);
-      IGI_tipos[tipo] = freq * FATORES_PONDERACAO[tipo];
-    });
-    
-    const IGI_F = F <= 30 ? F * (4/3) : 40;
-    const IGI_FV = FV <= 50 ? FV : 50;
-    const IGG = Object.values(IGI_tipos).reduce((a, b) => a + b, 0) + IGI_F + IGI_FV;
-    
-    const classificacaoObj = CLASSIFICACAO.find(c => IGG >= c.min && IGG < c.max) || CLASSIFICACAO[CLASSIFICACAO.length - 1];
-    
-    const estacaoCritica = stations.reduce((critica, station) => {
-      const totalAtual = Object.values(station.defects).reduce((sum: number, count: any) => sum + count, 0);
-      const totalCritica = Object.values(critica.defects).reduce((sum: number, count: any) => sum + count, 0);
-      return totalAtual > totalCritica ? station : critica;
-    }, stations[0]);
-    
-    const total_defeitos = stations.reduce((sum, s) => 
-      sum + Object.values(s.defects).reduce((s2: number, count: any) => s2 + count, 0), 0
-    );
-
-    const composicao_igg = [
-      ...Object.entries(IGI_tipos)
-        .filter(([, valor]) => valor > 0.01)
-        .map(([tipo, valor]) => ({ fator: `IGI Tipo ${tipo}`, valor, tipo: parseInt(tipo) })),
-      { fator: "IGI Flechas (F)", valor: IGI_F },
-      { fator: "IGI Variância (FV)", valor: IGI_FV },
-    ].sort((a, b) => b.valor - a.valor);
-
-    return {
-      generalData,
-      statistics: {
-        flechas_TRI: { media: media_tri, variancia: var_tri },
-        flechas_TRE: { media: media_tre, variancia: var_tre },
-        F, FV,
-        frequencias_absolutas: freq_abs,
-        frequencias_relativas: freq_rel,
-        IGI_tipos, IGI_F, IGI_FV, IGG,
-        classificacao: classificacaoObj.classificacao,
-        cor_classificacao: classificacaoObj.cor,
-        estacao_critica: estacaoCritica,
-        total_defeitos,
-        composicao_igg,
-        total_estacoes: n
+    if (tiposArray.length > 0) {
+      // Se tem tipo 3, conta só tipos >= 3
+      if (tiposArray.includes(3)) {
+        tiposArray.filter(t => t >= 3).forEach(t => { freq_abs[t]++; });
       }
-    };
-  };
-
-  saveAnalysis = async (store: IggAnalysisData): Promise<void> => {
-    console.log("🚀 [saveIGGAnalysis] INÍCIO");
-    console.log("📦 STORE ORIGINAL:", store);
-
-    const { _id } = store;
-    console.log("🆔 ID:", _id);
-
-    // Normalização de valores null
-    const replaceNullValues = (data: any): any => {
-      const newData = { ...data };
-
-      const recursiveReplaceNull = (obj: Record<string, any>, path = '') => {
-        for (const key in obj) {
-          const fullPath = path ? `${path}.${key}` : key;
-
-          if (obj[key] === null) {
-            console.log(`⚠️ NULL encontrado em: ${fullPath}`);
-            obj[key] = '-';
-          } else if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
-            recursiveReplaceNull(obj[key], fullPath);
-          } else if (Array.isArray(obj[key])) {
-            obj[key].forEach((item: any, index: number) => {
-              if (typeof item === 'object' && item !== null) {
-                recursiveReplaceNull(item, `${fullPath}[${index}]`);
-              }
-            });
-          }
-        }
-      };
-
-      recursiveReplaceNull(newData);
-      return newData;
-    };
-
-    console.log("🔧 Normalizando nulls...");
-    const updatedData = replaceNullValues(store);
-    console.log("✅ DATA APÓS NORMALIZAÇÃO:", updatedData);
-
-    const { name, description, road, section, subtrack, pavementType, evaluationDate, stations, results, status, userId } = updatedData;
-
-    console.log("📄 NAME:", name);
-    console.log("📄 ROAD:", road);
-    console.log("📄 STATIONS:", stations?.length);
-
-    try {
-      let response;
-
-      if (!_id || _id === '---') {
-        console.log("🆕 MODO: CREATE");
-
-        const { _id, ...storeWithoutId } = store;
-
-        console.log("📤 PAYLOAD CREATE:", {
-          name,
-          description,
-          road,
-          section,
-          subtrack,
-          pavementType,
-          evaluationDate,
-          stations,
-          results,
-          status,
-          userId,
-        });
-
-        response = await iggAnalysisService.saveAnalysis({
-          name,
-          description,
-          road,
-          section,
-          subtrack,
-          pavementType,
-          evaluationDate,
-          stations,
-          results,
-          status: status || 'draft',
-          userId,
-        });
-
-      } else {
-        console.log("✏️ MODO: UPDATE");
-
-        console.log("📤 PAYLOAD UPDATE:", {
-          name,
-          description,
-          road,
-          section,
-          subtrack,
-          pavementType,
-          evaluationDate,
-          stations,
-          results,
-          status,
-        });
-
-        response = await iggAnalysisService.updateAnalysis(_id, {
-          name,
-          description,
-          road,
-          section,
-          subtrack,
-          pavementType,
-          evaluationDate,
-          stations,
-          results,
-          status,
-        });
+      // Se tem tipo 2 (e não tem 3), conta tipos >= 2
+      else if (tiposArray.includes(2)) {
+        tiposArray.filter(t => t >= 2).forEach(t => { freq_abs[t]++; });
       }
-
-      console.log("📥 RESPONSE RECEBIDA:", response);
-
-      const { data } = response;
-
-      console.log("📊 DATA:", data);
-
-      if (data && data._id) {
-        console.log("🎉 ANÁLISE IGG SALVA COM SUCESSO! ID:", data._id);
+      // Se só tem tipo 1, conta tipo 1
+      else {
+        freq_abs[1]++;
       }
+    }
+  });
+  
+  // Frequências relativas (%)
+  const freq_rel: Record<number, number> = {};
+  Object.entries(freq_abs).forEach(([t, count]) => {
+    const tipo = parseInt(t);
+    freq_rel[tipo] = (count / n) * 100;
+  });
+  
+  // Resto do cálculo...
+  const IGI_tipos: Record<number, number> = {};
+  Object.entries(freq_rel).forEach(([t, freq]) => {
+    const tipo = parseInt(t);
+    IGI_tipos[tipo] = freq * FATORES_PONDERACAO[tipo];
+  });
+  
+  const IGI_F = F <= 30 ? F * (4/3) : 40;
+  const IGI_FV = FV <= 50 ? FV : 50;
+  const IGG = Object.values(IGI_tipos).reduce((a, b) => a + b, 0) + IGI_F + IGI_FV;
+  
+  const classificacaoObj = CLASSIFICACAO.find(c => IGG >= c.min && IGG < c.max) || CLASSIFICACAO[CLASSIFICACAO.length - 1];
+  
+  // ✅ CORREÇÃO: Estação crítica com contagem de defeitos
+  const estacaoCritica = stations.reduce((critica, station) => {
+    const totalAtual = Object.values(station.defects).reduce((sum: number, count: any) => sum + (count || 0), 0);
+    const totalCritica = Object.values(critica.defects).reduce((sum: number, count: any) => sum + (count || 0), 0);
+    return totalAtual > totalCritica ? station : critica;
+  }, stations[0]);
+  
+  const total_defeitos = stations.reduce((sum, s) => 
+    sum + Object.values(s.defects).reduce((s2: number, count: any) => s2 + (count || 0), 0), 0
+  );
 
-      console.log("🎉 FINALIZADO COM SUCESSO");
+  // Total de defeitos da estação crítica
+  const totalDefeitosCritica = Object.values(estacaoCritica.defects).reduce((sum: number, count: any) => sum + (count || 0), 0);
 
-    } catch (error: any) {
-      console.log("💥 ERRO CAPTURADO:", error);
+  const composicao_igg = [
+    ...Object.entries(IGI_tipos)
+      .filter(([, valor]) => valor > 0.01)
+      .map(([tipo, valor]) => ({ fator: `IGI Tipo ${tipo}`, valor, tipo: parseInt(tipo) })),
+    { fator: "IGI Flechas (F)", valor: IGI_F },
+    { fator: "IGI Variância (FV)", valor: IGI_FV },
+  ].sort((a, b) => b.valor - a.valor);
 
-      console.log("📡 STATUS:", error?.response?.status);
-      console.log("📡 DATA:", error?.response?.data);
-
-      if (error?.response?.status === 413) {
-        console.log("🚨 PAYLOAD MUITO GRANDE");
-        throw new Error(t('pm.register.payload-too-large-error'));
-      }
-
-      if (error?.response?.status === 409) {
-        console.log("🚨 ANÁLISE JÁ EXISTE");
-        throw new Error(t('pm.register.already-exists-error'));
-      }
-
-      throw error;
+  return {
+    generalData,
+    statistics: {
+      flechas_TRI: { media: media_tri, variancia: var_tri },
+      flechas_TRE: { media: media_tre, variancia: var_tre },
+      F, FV,
+      frequencias_absolutas: freq_abs,
+      frequencias_relativas: freq_rel,
+      IGI_tipos, IGI_F, IGI_FV, IGG,
+      classificacao: classificacaoObj.classificacao,
+      cor_classificacao: classificacaoObj.cor,
+      estacao_critica: {
+        ...estacaoCritica,
+        totalDefeitos: totalDefeitosCritica // ✅ Adiciona total de defeitos
+      },
+      total_defeitos,
+      composicao_igg,
+      total_estacoes: n
     }
   };
+};
+
+ // services/promedina/igg/igg.service.ts
+
+saveAnalysis = async (store: IggAnalysisData): Promise<void> => {
+  console.log("🚀 [saveIGGAnalysis] INÍCIO");
+  console.log("📦 store.generalData:", store.generalData);
+  console.log("📦 store.generalData?.name:", store.generalData?.name);
+
+  const { _id } = store;
+  
+  // ✅ DEBUG: Verifica o que está chegando
+  console.log("🆔 _id:", _id);
+  console.log("🔑 store keys:", Object.keys(store));
+
+  // ✅ Garante que generalData existe
+  const generalData = store.generalData || (store as any)?.generalData;
+  
+  if (!generalData) {
+    console.error("❌ generalData NÃO ENCONTRADO no store!");
+    throw new Error("Dados gerais não encontrados");
+  }
+
+  const stations = store.stations || [];
+  const results = store.results;
+  const status = store.status || 'draft';
+
+  console.log("📄 name:", generalData.name);
+  console.log("📄 road:", generalData.road);
+  console.log("📄 stations:", stations.length);
+
+  try {
+    let response;
+
+    // ✅ Payload LIMPO
+    const payload = {
+      name: generalData.name || '',
+      description: generalData.description || '',
+      road: generalData.road || '',
+      section: generalData.section || '',
+      subtrack: generalData.subtrack || '',
+      pavementType: generalData.pavementType || '',
+      evaluationDate: generalData.evaluationDate || '',
+      stations: stations,
+      results: results || null,
+      status: status,
+      userId: this.userId || '',
+    };
+
+    console.log("📤 PAYLOAD:", JSON.stringify({
+      name: payload.name,
+      road: payload.road,
+      section: payload.section,
+      pavementType: payload.pavementType,
+      evaluationDate: payload.evaluationDate,
+      stationsCount: payload.stations?.length,
+      hasResults: !!payload.results,
+      status: payload.status,
+      userId: payload.userId,
+    }));
+
+    if (!_id || _id === '---') {
+      console.log("🆕 MODO: CREATE");
+      response = await iggAnalysisService.saveAnalysis(payload);
+    } else {
+      console.log("✏️ MODO: UPDATE");
+      response = await iggAnalysisService.updateAnalysis(_id, payload);
+    }
+
+    console.log("📥 RESPONSE:", response?.data);
+
+    if (response?.data?._id) {
+      this.store_actions.setData({ _id: response.data._id } as Partial<IggAnalysisData>);
+      console.log("🎉 SALVO! ID:", response.data._id);
+    }
+
+  } catch (error: any) {
+    console.error("💥 ERRO:", error?.response?.status, JSON.stringify(error?.response?.data));
+    
+    if (error?.response?.status === 413) {
+      throw new Error(t('pm.register.payload-too-large-error'));
+    }
+    if (error?.response?.status === 409) {
+      throw new Error(t('pm.register.already-exists-error'));
+    }
+    
+    throw error;
+  }
+};
 }
+;
 
 export default IGG_SERVICE;
