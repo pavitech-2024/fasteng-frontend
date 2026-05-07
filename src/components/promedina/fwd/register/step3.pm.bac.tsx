@@ -18,7 +18,8 @@ const FWD_step3 = ({ setNextDisabled }: EssayPageProps) => {
     selectedAnalysis,
     procResult, procError,
     loading, error, setError,
-    processAnalysis, fetchAnalyses,
+    processAnalysisLocally, // ⭐ Alterado de processAnalysis para processAnalysisLocally
+    setProcError,
   } = useFWDStore();
 
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' | 'warning' });
@@ -27,8 +28,34 @@ const FWD_step3 = ({ setNextDisabled }: EssayPageProps) => {
     setNextDisabled?.(false);
   }, []);
 
-  const handleProcessar = async () => {
-    await processAnalysis();
+  // ⭐ Processamento LOCAL (sem chamar API)
+  const handleProcessar = () => {
+    setProcError(null);
+    
+    if (!selectedAnalysis) {
+      setProcError('Nenhuma análise selecionada.');
+      return;
+    }
+
+    if (!selectedAnalysis.samples || selectedAnalysis.samples.length < 5) {
+      setProcError('Mínimo de 5 amostras necessário para processamento.');
+      return;
+    }
+
+    try {
+      const result = processAnalysisLocally(); // ⭐ Chama processamento local
+      if (result) {
+        setSnackbar({ 
+          open: true, 
+          message: `${result.subtrechos?.length || 0} subtrechos gerados com sucesso!`, 
+          severity: 'success' 
+        });
+      } else {
+        setProcError('Falha ao processar os dados da análise.');
+      }
+    } catch (err: any) {
+      setProcError(err?.message || 'Erro ao processar análise.');
+    }
   };
 
   const handleExportSubtrechos = () => {
@@ -130,7 +157,7 @@ const FWD_step3 = ({ setNextDisabled }: EssayPageProps) => {
 
           {!selectedAnalysis ? (
             <Alert severity="info" sx={{ width: '100%' }}>
-              Nenhuma análise selecionada. Vá para a aba "Gerenciar Análises" e selecione uma.
+              Nenhuma análise selecionada. Vá para o passo "Gerenciar Análises" e selecione uma.
             </Alert>
           ) : selectedAnalysis.samples?.length < 5 ? (
             <Alert severity="warning" sx={{ width: '100%' }}>
@@ -152,7 +179,7 @@ const FWD_step3 = ({ setNextDisabled }: EssayPageProps) => {
                   variant="outlined" 
                   sx={{ fontWeight: 600 }}
                 />
-                {selectedAnalysis.status === 'completed' && (
+                {procResult && (
                   <Chip 
                     label="Processada" 
                     color="info" 
@@ -215,7 +242,7 @@ const FWD_step3 = ({ setNextDisabled }: EssayPageProps) => {
 
       {/* ERRO DE PROCESSAMENTO */}
       {procError && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => useFWDStore.getState().setProcError(null)}>
+        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setProcError(null)}>
           {procError}
         </Alert>
       )}
@@ -281,7 +308,8 @@ const FWD_step3 = ({ setNextDisabled }: EssayPageProps) => {
                   <TableBody>
                     {procResult.subtrechos?.map((sub, i) => {
                       const compMetros = sub['Comprimento (m)'];
-                      const isForaPadrao = compMetros < 200 && i < (procResult.subtrechos?.length || 0) - 1;
+                      const isUltimo = i === (procResult.subtrechos?.length || 0) - 1;
+                      const isForaPadrao = !isUltimo && compMetros < 200;
                       
                       return (
                         <TableRow 
@@ -296,6 +324,9 @@ const FWD_step3 = ({ setNextDisabled }: EssayPageProps) => {
                           <TableCell>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                               {compMetros}
+                              {isUltimo && compMetros < 200 && (
+                                <Chip label="Último" size="small" color="info" sx={{ height: 18, fontSize: '0.6rem' }} />
+                              )}
                               {isForaPadrao && (
                                 <Chip label="Atenção" size="small" color="warning" sx={{ height: 18, fontSize: '0.6rem' }} />
                               )}
@@ -314,7 +345,10 @@ const FWD_step3 = ({ setNextDisabled }: EssayPageProps) => {
                 </Table>
               </TableContainer>
 
-              {procResult.subtrechos?.some((s, i) => s['Comprimento (m)'] < 200 && i < procResult.subtrechos.length - 1) && (
+              {procResult.subtrechos?.some((s, i) => {
+                const isUltimo = i === (procResult.subtrechos?.length || 0) - 1;
+                return !isUltimo && s['Comprimento (m)'] < 200;
+              }) && (
                 <Alert severity="warning" sx={{ mt: 2 }}>
                   Alguns subtrechos estão abaixo de 200m. Apenas o último subtrecho pode ter comprimento inferior ao mínimo.
                 </Alert>
@@ -387,7 +421,7 @@ const FWD_step3 = ({ setNextDisabled }: EssayPageProps) => {
                 sx={{ fontWeight: 600 }}
               />
               <Chip 
-                label={`Quebras: ${procResult.quebra?.filter(q => q).length || 0}`} 
+                label={`Quebras por CV: ${procResult.quebra?.filter(q => q).length || 0}`} 
                 variant="outlined" 
                 color="error" 
                 sx={{ fontWeight: 600 }}

@@ -6,7 +6,7 @@ import FWD_step3 from '@/components/promedina/fwd/register/step3.pm.bac';
 import FWDResume from '@/components/promedina/fwd/register/resume.pm.bac';
 import useFWDStore from '@/stores/promedina/fwd/fwd.store';
 import FWD_SERVICE from '@/services/promedina/fwd/fwd.service';
-import { FWDStoreActions } from '@/services/promedina/fwd/fwd.service';
+import type { FWDStoreActions } from '@/services/promedina/fwd/fwd.service';
 
 const FWD = () => {
   const fwdService = new FWD_SERVICE();
@@ -18,7 +18,7 @@ const FWD = () => {
   const store = useFWDStore();
 
   fwdService.userId = userId;
-  fwdService.store_actions = store as FWDStoreActions;
+  fwdService.store_actions = store as unknown as FWDStoreActions;
 
   const childrens = [
     { step: 0, children: <FWD_step1 />, data: { ...store.analysisData, samples: store.samples } },
@@ -28,7 +28,11 @@ const FWD = () => {
   ];
 
   return (
-    <EssayTemplate essayInfo={fwdService.info} nextCallback={fwdService.handleNext.bind(fwdService)} childrens={childrens} />
+    <EssayTemplate 
+      essayInfo={fwdService.info} 
+      nextCallback={fwdService.handleNext}  // ⭐ Sem bind!
+      childrens={childrens} 
+    />
   );
 };
 
