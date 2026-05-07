@@ -157,7 +157,7 @@ const FWD_step3 = ({ setNextDisabled }: EssayPageProps) => {
 
           {!selectedAnalysis ? (
             <Alert severity="info" sx={{ width: '100%' }}>
-              Nenhuma análise selecionada. Vá para o passo &quot;Gerenciar Análises&quot; e selecione uma.
+              Nenhuma análise selecionada. Vá para o passo "Gerenciar Análises" e selecione uma.
             </Alert>
           ) : selectedAnalysis.samples?.length < 5 ? (
             <Alert severity="warning" sx={{ width: '100%' }}>
@@ -440,7 +440,7 @@ const FWD_step3 = ({ setNextDisabled }: EssayPageProps) => {
               Pronto para Processar
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Clique em &quot;PROCESSAR ANÁLISE&quot; para gerar os subtrechos homogêneos e visualizar os gráficos de deflexão.
+              Clique em "PROCESSAR ANÁLISE" para gerar os subtrechos homogêneos e visualizar os gráficos de deflexão.
             </Typography>
           </Box>
         </FlexColumnBorder>
@@ -450,7 +450,7 @@ const FWD_step3 = ({ setNextDisabled }: EssayPageProps) => {
         open={snackbar.open}
         autoHideDuration={4000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity}>
           {snackbar.message}
