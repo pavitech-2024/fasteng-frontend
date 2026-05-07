@@ -22,7 +22,7 @@ export interface FWDAnalysisData {
   name: string;
   description: string;
   samples: FWDData[];
-  status: 'active' | 'completed';
+  status: 'active' | 'completed' | 'draft';
   userId?: string;
 }
 
