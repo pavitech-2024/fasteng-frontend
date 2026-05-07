@@ -1,4 +1,4 @@
-// pages/promedina/IGG.tsx
+// pages/promedina/IGG/index.tsx
 import EssayTemplate from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import IggGeneralData from '@/components/promedina/IGG/register/general-data.pm.gl';
@@ -9,11 +9,7 @@ import IGG_SERVICE from '@/services/promedina/igg/igg.service';
 
 const IGG = () => {
   const iggService = new IGG_SERVICE();
-
-  const {
-    user: { _id: userId },
-  } = useAuth();
-
+  const { user: { _id: userId } } = useAuth();
   const store = useIggStore();
 
   iggService.userId = userId;
@@ -21,7 +17,7 @@ const IGG = () => {
 
   const childrens = [
     { step: 0, children: <IggGeneralData />, data: store.generalData },
-    { step: 1, children: <IggStationsDefects />, data: store.stations },
+    { step: 1, children: <IggStationsDefects />, data: store }, // ✅ MUDA PRA store INTEIRO!
     { step: 2, children: <IggResults />, data: store },
   ];
 
