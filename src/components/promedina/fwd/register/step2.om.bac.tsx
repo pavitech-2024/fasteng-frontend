@@ -24,7 +24,7 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
 
   const handleSelect = (analysis: FWDAnalysis) => {
     setSelectedAnalysis(analysis);
-    setSnackbar({ open: true, message: `Análise "${analysis.name}" selecionada!`, severity: 'success' });
+    setSnackbar({ open: true, message: `Análise &quot;${analysis.name}&quot; selecionada!`, severity: 'success' });
   };
 
   const handleEdit = (analysis: FWDAnalysis) => {
@@ -252,7 +252,7 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
       >
         {analyses.length === 0 ? (
           <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
-            Nenhuma análise completa encontrada. Crie uma nova análise na aba "Dados Gerais".
+            Nenhuma análise completa encontrada. Crie uma nova análise na aba &quot;Dados Gerais&quot;.
           </Typography>
         ) : (
           <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -404,7 +404,7 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
         open={snackbar.open} 
         autoHideDuration={4000} 
         onClose={() => setSnackbar({ ...snackbar, open: false })}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
         <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity}>
           {snackbar.message}
