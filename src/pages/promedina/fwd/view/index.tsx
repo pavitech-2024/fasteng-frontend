@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Paper, Typography, Card, CardContent, Chip, Button, Alert, Divider, CircularProgress } from '@mui/material';
-import { Assessment, ArrowBack, Storage, Speed } from '@mui/icons-material';
+import { Box, Paper, Typography, Card, CardContent, Chip, Button, Alert, Divider, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Assessment, ArrowBack, Storage, Speed, Delete } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import fwdAnalysisService from '@/services/promedina/fwd/fwdApi';
 
@@ -12,6 +12,8 @@ const FwdViewPage: React.FC = () => {
   const [analyses, setAnalyses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [analysisToDelete, setAnalysisToDelete] = useState<any | null>(null);
 
   useEffect(() => {
     loadAnalyses();
@@ -37,6 +39,33 @@ const FwdViewPage: React.FC = () => {
 
   const handleBackToWelcome = () => {
     router.push('/promedina/fwd');
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent, analysis: any) => {
+    e.stopPropagation();
+    setAnalysisToDelete(analysis);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!analysisToDelete) return;
+
+    try {
+      await fwdAnalysisService.deleteAnalysis(analysisToDelete._id);
+      setAnalyses(analyses.filter(a => a._id !== analysisToDelete._id));
+      setDeleteDialogOpen(false);
+      setAnalysisToDelete(null);
+    } catch (err: any) {
+      console.error('Erro ao deletar análise:', err);
+      setError('Erro ao deletar análise');
+      setDeleteDialogOpen(false);
+      setAnalysisToDelete(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteDialogOpen(false);
+    setAnalysisToDelete(null);
   };
 
   const formatDate = (dateStr: string) => {
@@ -188,15 +217,50 @@ const FwdViewPage: React.FC = () => {
                     )}
                   </Box>
                 </CardContent>
-                <Box sx={{ p: 2, pt: 0, textAlign: 'right' }}>
-                  <Button size="small" startIcon={<Assessment />} sx={{ color: BORDER_GREEN }}>
+                <Box sx={{ p: 2, pt: 0, display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                  <Button 
+                    size="small" 
+                    startIcon={<Assessment />} 
+                    sx={{ color: BORDER_GREEN }}
+                  >
                     Visualizar
+                  </Button>
+                  <Button 
+                    size="small" 
+                    startIcon={<Delete />}
+                    onClick={(e) => handleDeleteClick(e, analysis)}
+                    sx={{ color: '#ff1744' }}
+                  >
+                    Remover
                   </Button>
                 </Box>
               </Card>
             ))}
           </Box>
         )}
+        
+        <Dialog open={deleteDialogOpen} onClose={handleCancelDelete}>
+          <DialogTitle sx={{ fontWeight: 700, color: BORDER_GREEN }}>
+            Remover Análise?
+          </DialogTitle>
+          <DialogContent>
+            <Typography variant="body2" sx={{ mt: 1 }}>
+              Tem certeza que deseja remover a análise <strong>"{analysisToDelete?.name}"</strong>? Esta ação não pode ser desfeita.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCancelDelete} sx={{ color: 'text.secondary' }}>
+              Cancelar
+            </Button>
+            <Button 
+              onClick={handleConfirmDelete} 
+              variant="contained" 
+              sx={{ backgroundColor: '#ff1744', '&:hover': { backgroundColor: '#d50a2a' } }}
+            >
+              Remover
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Paper>
     </Box>
   );
