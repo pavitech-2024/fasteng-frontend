@@ -3,7 +3,7 @@ import { Box, TextField, Tooltip, IconButton, Typography, Button, TableContainer
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { Delete, Add, FileUpload, ExpandMore } from '@mui/icons-material';
+import { Delete, Add, FileUpload, ExpandMore, Download } from '@mui/icons-material';
 import * as XLSX from 'xlsx';
 import { useState, ChangeEvent, useEffect } from 'react';
 import useFWDStore, { FWDData } from '@/stores/promedina/fwd/fwd.store';
@@ -27,7 +27,6 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
 
   useEffect(() => {
     setNextDisabled?.(false);
-    // Carregar dados da análise se estiver editando
     if (editingId) {
       fetchAnalysis(editingId).then(analysis => {
         if (analysis) {
@@ -40,6 +39,22 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
       });
     }
   }, []);
+
+  // ⭐ Função para baixar a planilha padrão
+  const handleDownloadModelo = () => {
+    const link = document.createElement('a');
+    link.href = '/assets/promedina/fwd/modelo-bacias-fwd.xlsx';
+    link.download = 'Modelo_Planilha_FWD_Bacias.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    setSnackbar({ 
+      open: true, 
+      message: 'Download da planilha padrão iniciado!', 
+      severity: 'success' 
+    });
+  };
 
   const tooltips: Record<string, string> = {
     fwdName: 'Nome descritivo para a análise FWD',
@@ -70,6 +85,7 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
             type={type}
             variant="standard"
             label={label}
+            placeholder={adornment ? `Ex: ${adornment}` : ''}
             value={value?.toString() || ''}
             onChange={(e) => onChange(e.target.value)}
             sx={{ flex: 1 }}
@@ -210,6 +226,14 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
     }
   };
 
+  // ⭐ Mensagem dinâmica de amostras faltantes
+  const amostrasFaltantes = Math.max(0, 5 - samples.length);
+  const mensagemAmostras = samples.length >= 5 
+    ? '✅ Análise completa (mínimo 5 amostras atingido)'
+    : amostrasFaltantes === 1
+      ? `⚠️ Atenção: falta ${amostrasFaltantes} amostra para análise completa`
+      : `⚠️ Atenção: faltam ${amostrasFaltantes} amostras para análise completa`;
+
   return (
     <>
       {error && <Alert severity="error" onClose={() => setError(null)} sx={{ mb: 2 }}>{error}</Alert>}
@@ -253,8 +277,35 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
               IMPORTAR EXCEL
               <input type="file" accept=".xls,.xlsx" hidden onChange={handleImportExcel} />
             </Button>
+            
+            <Button 
+              variant="outlined" 
+              startIcon={<Download />}
+              onClick={handleDownloadModelo}
+              sx={{ 
+                color: '#07B811', 
+                borderColor: '#07B811', 
+                '&:hover': { borderColor: '#05a00e', backgroundColor: 'rgba(7,184,17,0.04)' } 
+              }}
+            >
+              BAIXAR MODELO PADRÃO
+            </Button>
+            
             <Chip label={`${samples.length} AMOSTRAS`} color={samples.length >= 5 ? 'success' : 'warning'} variant="outlined" sx={{ fontWeight: 600 }} />
           </Box>
+
+          {/* ⭐ ALERTA COM MENSAGEM DINÂMICA DE AMOSTRAS FALTANTES */}
+          <Alert 
+            severity={samples.length >= 5 ? 'success' : 'warning'} 
+            sx={{ 
+              mb: 2, 
+              width: '100%',
+              borderRadius: 1,
+              fontSize: '0.85rem',
+            }}
+          >
+            {mensagemAmostras}
+          </Alert>
 
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr 1fr' }, gap: '10px 20px', pb: 2 }}>
             {renderTextField('stationNumber', 'ESTACA *', currentSample.stationNumber?.toString(), (val) => setCurrentSample({...currentSample, stationNumber: Number(val)}))}
