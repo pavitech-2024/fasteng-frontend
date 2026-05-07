@@ -1,10 +1,11 @@
+// src/services/promedina/igg/igg-view.service.ts
 import Api from '@/api';
 
 const iggAnalysisService = {
   saveAnalysis: (analysisData: any) =>
     Api.post(`promedina/igg/igg-analysis/save`, analysisData),
     
-  getAnalyses: (page: number = 1, limit: number = 10) =>
+  getAnalyses: (page = 1, limit = 10) =>
     Api.get(`promedina/igg/igg-analysis/all?limit=${limit}&page=${page}`),
     
   getAnalysis: (analysisId: string) =>
