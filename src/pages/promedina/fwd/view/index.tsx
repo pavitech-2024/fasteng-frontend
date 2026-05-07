@@ -7,13 +7,23 @@ import fwdAnalysisService from '@/services/promedina/fwd/fwdApi';
 const PRIMARY_GREEN = '#07B811';
 const BORDER_GREEN = '#07B811';
 
+interface FWDAnalysis {
+  _id: string;
+  name: string;
+  description?: string;
+  status: 'completed' | 'active' | 'draft';
+  samples?: Array<{ [key: string]: unknown }>;
+  createdAt: string;
+  updatedAt?: string;
+}
+
 const FwdViewPage: React.FC = () => {
   const router = useRouter();
-  const [analyses, setAnalyses] = useState<any[]>([]);
+  const [analyses, setAnalyses] = useState<FWDAnalysis[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [analysisToDelete, setAnalysisToDelete] = useState<any | null>(null);
+  const [analysisToDelete, setAnalysisToDelete] = useState<FWDAnalysis | null>(null);
 
   useEffect(() => {
     loadAnalyses();
@@ -25,9 +35,10 @@ const FwdViewPage: React.FC = () => {
       const response = await fwdAnalysisService.getAnalyses();
       const data = response.data?.data || response.data?.docs || response.data || [];
       setAnalyses(Array.isArray(data) ? data : []);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
       console.error('Erro ao carregar análises:', err);
-      setError(err?.response?.data?.message || 'Erro ao carregar análises');
+      setError(error?.response?.data?.message || 'Erro ao carregar análises');
     } finally {
       setLoading(false);
     }
@@ -41,7 +52,7 @@ const FwdViewPage: React.FC = () => {
     router.push('/promedina/fwd');
   };
 
-  const handleDeleteClick = (e: React.MouseEvent, analysis: any) => {
+  const handleDeleteClick = (e: React.MouseEvent, analysis: FWDAnalysis) => {
     e.stopPropagation();
     setAnalysisToDelete(analysis);
     setDeleteDialogOpen(true);
@@ -55,7 +66,7 @@ const FwdViewPage: React.FC = () => {
       setAnalyses(analyses.filter(a => a._id !== analysisToDelete._id));
       setDeleteDialogOpen(false);
       setAnalysisToDelete(null);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Erro ao deletar análise:', err);
       setError('Erro ao deletar análise');
       setDeleteDialogOpen(false);
@@ -146,7 +157,7 @@ const FwdViewPage: React.FC = () => {
           <Alert severity="info">Nenhuma análise FWD salva ainda.</Alert>
         ) : (
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }, gap: 3 }}>
-            {analyses.map((analysis: any) => (
+            {analyses.map((analysis: FWDAnalysis) => (
               <Card 
                 key={analysis._id}
                 variant="outlined" 
@@ -245,7 +256,7 @@ const FwdViewPage: React.FC = () => {
           </DialogTitle>
           <DialogContent>
             <Typography variant="body2" sx={{ mt: 1 }}>
-              Tem certeza que deseja remover a análise <strong>"{analysisToDelete?.name}"</strong>? Esta ação não pode ser desfeita.
+              Tem certeza que deseja remover a análise <strong>&quot;{analysisToDelete?.name}&quot;</strong>? Esta ação não pode ser desfeita.
             </Typography>
           </DialogContent>
           <DialogActions>
