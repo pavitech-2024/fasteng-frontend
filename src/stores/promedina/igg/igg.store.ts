@@ -72,6 +72,7 @@ export interface IggAnalysisActions {
 }
 
 const initialState: IggAnalysisData = {
+  _id: undefined,
   generalData: {
     name: '',
     description: '',
