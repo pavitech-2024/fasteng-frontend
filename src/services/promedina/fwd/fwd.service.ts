@@ -49,7 +49,7 @@ export interface FWDStoreActions {
 }
 
 class FWD_SERVICE {
-  userId: string = '';
+  userId = '';
   store_actions!: FWDStoreActions;
 
   // ⭐ info como PROPRIEDADE (igual IGG)

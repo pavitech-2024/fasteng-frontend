@@ -157,7 +157,7 @@ const FWD_step3 = ({ setNextDisabled }: EssayPageProps) => {
 
           {!selectedAnalysis ? (
             <Alert severity="info" sx={{ width: '100%' }}>
-              Nenhuma análise selecionada. Vá para o passo "Gerenciar Análises" e selecione uma.
+              Nenhuma análise selecionada. Vá para o passo &quot;Gerenciar Análises&quot; e selecione uma.
             </Alert>
           ) : selectedAnalysis.samples?.length < 5 ? (
             <Alert severity="warning" sx={{ width: '100%' }}>
