@@ -33,8 +33,9 @@ const EssayTemplate = ({
 
 }: EssayTemplateProps) => {
   const router = useRouter();
-  const app = router.pathname.split('/')[1];
-  const essay = router.pathname.split('/')[3];
+  const pathSegments = router.pathname.split('/').filter(Boolean);
+  const app = pathSegments[0];
+  const essay = app === 'promedina' && pathSegments.length === 2 ? 'register' : pathSegments[2];
 
   // persiste the active step in the sessionStorage, if the user reload the page, the active step will be the same  example: cbr-{step}
 

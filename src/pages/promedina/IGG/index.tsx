@@ -1,1063 +1,248 @@
-// PavementAnalysisPage.tsx - Versão Profissional e Compacta PROMEDINA com Contagem de Defeitos
+import { ArrowDownIcon, MaterialsIcon, MarshallIcon } from '@/assets';
+import Image from 'next/image';
+import { WelcomeData } from '@/components/templates/welcome';
+import { Container, Box, Typography, Stack } from '@mui/material';
+import { StepperData, StepperWelcome as Stepper } from '@/components/atoms/stepper';
+import { t } from 'i18next';
+import { NextPage } from 'next';
+import { useState } from 'react';
+import { PMCardMenuOptions } from '@/components/atoms/cards/view-register-card';
+import Iggicon from '@/assets/asphalt/essays/Igg.png';
+import { useIggStore } from '@/stores/promedina/igg/igg.store';
+import { useRouter } from 'next/router';
 
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import {
-  Box, 
-  Paper, 
-  Typography, 
-  TextField, 
-  Button, 
-  Grid, 
-  Card, 
-  CardContent,
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableContainer, 
-  TableHead, 
-  TableRow,
-  Chip, 
-  FormControl, 
-  InputLabel, 
-  Select, 
-  MenuItem, 
-  Alert,
-  IconButton, 
-  Divider, 
-  SelectChangeEvent,
-  Stepper,
-  Step,
-  StepLabel,
-  Tooltip
-} from '@mui/material';
-import { 
-  Add, Delete, Assessment, Edit, Save, 
-  ArrowBack, TrendingUp, Storage, History, 
-  Speed, Warning, BarChart, InfoOutlined, 
-  CheckCircleOutline, Close
-} from '@mui/icons-material';
+const IGG: NextPage = () => {
+  const router = useRouter();
+  const [modalOpen, setModalOpen] = useState(false);
 
-// --- Interfaces ATUALIZADAS ---
-interface PavementStation {
-  id: number;
-  stationNumber: string;
-  section: string;
-  tri: number;
-  tre: number;
-  // AGORA ARMAZENA O CÓDIGO DO DEFEITO E A QUANTIDADE
-  defects: Record<string, number>; // Ex: { "FI": 3, "J": 1 }
-  date?: string;
-}
+  const stepperDataView: StepperData[] = [
+    {
+      step: 1,
+      description: t('welcome.step.igg.view.1'),
+    },
+    {
+      step: 2,
+      description: t('welcome.step.igg.view.2'),
+    },
+  ];
 
-interface PavementResults {
-  generalData: Record<string, unknown>;
-  statistics: {
-    flechas_TRI: { media: number; variancia: number };
-    flechas_TRE: { media: number; variancia: number };
-    F: number;
-    FV: number;
-    frequencias_absolutas: Record<number, number>;
-    frequencias_relativas: Record<number, number>;
-    IGI_tipos: Record<number, number>;
-    IGI_F: number;
-    IGI_FV: number;
-    IGG: number;
-    classificacao: string;
-    cor_classificacao: string;
-    // O estacao_critica deve ser atualizado para o novo formato de defeitos
-    estacao_critica: PavementStation | null; 
-    total_defeitos: number;
-    // Adicionado para exibir a composição do IGG
-    composicao_igg: { fator: string; valor: number; tipo?: number }[];
-    total_estacoes: number;
-  };
-}
+  const stepperDataRegister: StepperData[] = [
+    {
+      step: 1,
+      description: t('welcome.step.igg.register.1'),
+    },
+    {
+      step: 2,
+      description: t('welcome.step.igg.register.2'),
+    },
+    {
+      step: 3,
+      description: t('welcome.step.igg.register.3'),
+    },
+  ];
 
-interface PavementAnalysis {
-  id: string;
-  name: string;
-  road: string;
-  evaluationDate: string;
-  stations: PavementStation[];
-  results: PavementResults;
-  createdAt: string;
-}
+  const welcomeData: WelcomeData[] = [
+    {
+      name: t('pm.register'),
+      icon: <MaterialsIcon width="30px" height="35px" />,
+      description: t('pm.register'),
+      path: '/promedina/IGG/register',
+    },
+    {
+      name: t('pm.view'),
+      icon: <MarshallIcon width="30px" height="35px" />,
+      description: t('pm.view'),
+      path: '/promedina/IGG/view',
+    },
+  ];
 
-// --- Constantes (Sem Alteração na Informação) ---
-const FATORES_PONDERACAO: Record<number, number> = {
-  1: 0.2, 2: 0.5, 3: 0.8, 4: 0.9, 5: 1.0, 6: 0.5, 7: 0.3, 8: 0.6
-};
-
-const CLASSIFICACAO = [
-  { min: 0, max: 20, classificacao: "ÓTIMO", cor: "#2ecc71" },
-  { min: 20, max: 40, classificacao: "BOM", cor: "#3498db" },
-  { min: 40, max: 80, classificacao: "REGULAR", cor: "#f39c12" },
-  { min: 80, max: 160, classificacao: "RUIM", cor: "#e74c3c" },
-  { min: 160, max: Infinity, classificacao: "PÉSSIMO", cor: "#c0392b" }
-];
-
-interface DefectInfo {
-  description: string;
-  type: number;
-  priority: number;
-}
-
-const DEFEITOS_INFO: Record<string, DefectInfo> = {
-  "FI": { description: "Fissuras Isoladas", type: 1, priority: 3 },
-  "TTC": { description: "Trincas Transversais Curtas", type: 1, priority: 3 },
-  "TTL": { description: "Trincas Transversais Longas", type: 1, priority: 3 },
-  "TLC": { description: "Trincas Longitudinais Curtas", type: 1, priority: 3 },
-  "TLL": { description: "Trincas Longitudinais Longas", type: 1, priority: 3 },
-  "TRR": { description: "Trincas por Retração Térmica", type: 1, priority: 3 },
-  "J": { description: "Trincas em Jacaré (sem erosão)", type: 2, priority: 2 },
-  "TB": { description: "Trincas em Bloco (sem erosão)", type: 2, priority: 2 },
-  "JE": { description: "Trincas em Jacaré (com erosão)", type: 3, priority: 1 },
-  "TBE": { description: "Trincas em Bloco (com erosão)", type: 3, priority: 1 },
-  "ALP": { description: "Afundamento Plástico Local", type: 4, priority: 1 },
-  "ATP": { description: "Afundamento Plástico na Trilha", type: 4, priority: 1 },
-  "ALC": { description: "Afundamento por Consolidação Local", type: 4, priority: 1 },
-  "ATC": { description: "Afundamento por Consolidação na Trilha", type: 4, priority: 1 },
-  "O": { description: "Ondulações/Corrugações", type: 5, priority: 1 },
-  "P": { description: "Panelas/Buracos", type: 5, priority: 1 },
-  "E": { description: "Escorregamento", type: 5, priority: 1 },
-  "EX": { description: "Exsudação", type: 6, priority: 1 },
-  "D": { description: "Desgaste", type: 7, priority: 1 },
-  "R": { description: "Remendos", type: 8, priority: 1 }
-};
-
-interface TerraplenagemOption {
-  code: string;
-  name: string;
-}
-
-const SECOES_TERRAPLENAGEM_MAP: Record<string, string> = {
-  "A": "ATERRO", "C": "CORTE", "SMA": "SEÇÃO MISTA (ATERRO)", 
-  "SMC": "SEÇÃO MISTA (CORTE)", "CR": "CORTE EM ROCHA", "PP": "PONTO DE PASSAGEM"
-};
-
-const SECOES_TERRAPLENAGEM_OPTIONS: TerraplenagemOption[] = Object.entries(SECOES_TERRAPLENAGEM_MAP).map(([code, name]) => ({
-  code, name
-}));
-
-// Cores PROMEDINA
-const PRIMARY_GREEN = '#388e3c'; 
-const LIGHT_GREEN_BG = '#e8f5e9'; 
-const WARNING_ORANGE = '#f39c12'; 
-const ERROR_RED = '#e74c3c';
-
-// --- Funções Auxiliares (Processamento DNIT - Ajustado para o novo formato de defeitos e robustez) ---
-const processarDadosDNIT = (dados: { geral: Record<string, unknown>, estacoes: PavementStation[] }): PavementResults => {
-  const stations = dados.estacoes;
-  const n = stations.length;
-  
-  // Objeto de retorno inicial com valores seguros (default)
-  const defaultResults: PavementResults = {
-    generalData: dados.geral,
-    statistics: {
-      flechas_TRI: { media: 0, variancia: 0 },
-      flechas_TRE: { media: 0, variancia: 0 },
-      F: 0, FV: 0,
-      frequencias_absolutas: {},
-      frequencias_relativas: {},
-      IGI_tipos: {}, IGI_F: 0, IGI_FV: 0, IGG: 0,
-      classificacao: CLASSIFICACAO[0].classificacao, // ÓTIMO (Default)
-      cor_classificacao: CLASSIFICACAO[0].cor,
-      estacao_critica: null, 
-      total_defeitos: 0,
-      composicao_igg: [], // Inicializa composicao_igg como um array vazio
-      total_estacoes: n
-    }
-  };
-
-  if (n === 0) return defaultResults;
-
-  // 1. Cálculo das flechas 
-  const media_tri = stations.reduce((sum: number, station: PavementStation) => sum + station.tri, 0) / n;
-  const media_tre = stations.reduce((sum: number, station: PavementStation) => sum + station.tre, 0) / n;
-  const var_tri = stations.reduce((sum: number, station: PavementStation) => sum + Math.pow(station.tri - media_tri, 2), 0) / n;
-  const var_tre = stations.reduce((sum: number, station: PavementStation) => sum + Math.pow(station.tre - media_tre, 2), 0) / n;
-  
-  const F = (media_tri + media_tre) / 2;
-  const FV = (var_tri + var_tre) / 2;
-  
-  // 2. Processamento de defeitos (Priorização e Tipos)
-  const tiposDefeitos = stations.map((station: PavementStation) => {
-    const tiposEncontrados: number[] = [];
-    Object.keys(station.defects).forEach(code => {
-      if (station.defects[code] > 0) {
-        tiposEncontrados.push(DEFEITOS_INFO[code].type);
-      }
-    });
-    return tiposEncontrados;
-  });
-  
-  const tiposPriorizados = tiposDefeitos.map((tipos: number[]) => {
-    // Implementação simplificada da priorização DNIT (o maior tipo tem prioridade)
-    // CORREÇÃO: Converter Set para Array de forma compatível
-    const tiposSet = new Set<number>(tipos);
-    const tiposUnicos = Array.from(tiposSet).sort((a, b) => b - a);
-    
-    if (tiposUnicos.includes(3)) {
-        return tiposUnicos.filter(t => t >= 3);
-    }
-    if (tiposUnicos.includes(2)) {
-        return tiposUnicos.filter(t => t >= 2);
-    }
-    return tiposUnicos;
-  });
-  
-  // 3. Frequências Absolutas e Relativas
-  const freq_abs: Record<number, number> = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0};
-  tiposPriorizados.forEach((tipos: number[]) => {
-    // CORREÇÃO: Converter Set para Array de forma compatível
-    const tiposUnicosSet = new Set<number>(tipos);
-    const tiposUnicos = Array.from(tiposUnicosSet);
-    
-    tiposUnicos.forEach(t => { 
-      // Conta se o TIPO (já priorizado) está presente na estaca
-      freq_abs[t]++; 
-    });
-  });
-  
-  const freq_rel = Object.fromEntries(
-    Object.entries(freq_abs).map(([t, count]) => [parseInt(t), (count / n) * 100])
-  );
-  
-  // 4. Cálculo dos IGIs
-  const IGI_tipos: Record<number, number> = {};
-  Object.entries(freq_rel).forEach(([t, freq]) => {
-    const tipo = parseInt(t);
-    if (tipo > 0) {
-        IGI_tipos[tipo] = freq * FATORES_PONDERACAO[tipo];
-    }
-  });
-  
-  // Fórmulas IGI_F e IGI_FV
-  const IGI_F = F <= 30 ? F * (4/3) : 40;
-  const IGI_FV = FV <= 50 ? FV : 50;
-  
-  // 5. Cálculo do IGG
-  const IGG = Object.values(IGI_tipos).reduce((a, b) => a + b, 0) + IGI_F + IGI_FV;
-  
-  // 6. Classificação
-  const classificacaoObj = CLASSIFICACAO.find(c => IGG >= c.min && IGG < c.max) || CLASSIFICACAO[CLASSIFICACAO.length - 1];
-  
-  // 7. Estação crítica (Baseado no número total de ocorrências de defeitos)
-  const estacaoCritica: PavementStation | null = stations.length > 0 
-    ? stations.reduce((critica: PavementStation, station: PavementStation) => {
-        const totalDefeitosStation = Object.values(station.defects).reduce((sum, count) => sum + count, 0);
-        const totalDefeitosCritica = Object.values(critica.defects).reduce((sum, count) => sum + count, 0);
-        // Se a contagem é maior, ou se é a primeira iteração, atualiza
-        if (totalDefeitosStation > totalDefeitosCritica || critica.id === 0) {
-            return station;
-        }
-        return critica;
-      }, { // Inicialização para o reduce
-          id: 0, stationNumber: '', section: '', tri: 0, tre: 0, defects: {}
-      } as PavementStation)
-    : null;
-    
-  const total_defeitos_geral = stations.reduce((sum: number, station: PavementStation) => 
-    sum + Object.values(station.defects).reduce((s, count) => s + count, 0), 0
-  );
-
-  // 8. Composição do IGG para o gráfico de resultados
-  const composicao_igg = [
-    ...Object.entries(IGI_tipos)
-        .filter(([, valor]) => valor > 0.01) // Ignora valores muito pequenos
-        .map(([tipo, valor]) => ({ 
-            fator: `IGI Tipo ${tipo}`, 
-            valor: valor, 
-            tipo: parseInt(tipo) 
-        })),
-    { fator: "IGI Flechas (F)", valor: IGI_F },
-    { fator: "IGI Variância (FV)", valor: IGI_FV },
-  ].sort((a, b) => b.valor - a.valor); // Ordena por maior contribuição
-  
-  return {
-    generalData: dados.geral,
-    statistics: {
-      flechas_TRI: { media: media_tri, variancia: var_tri },
-      flechas_TRE: { media: media_tre, variancia: var_tre },
-      F, FV,
-      frequencias_absolutas: freq_abs,
-      frequencias_relativas: freq_rel,
-      IGI_tipos, IGI_F, IGI_FV, IGG,
-      classificacao: classificacaoObj.classificacao,
-      cor_classificacao: classificacaoObj.cor,
-      estacao_critica: estacaoCritica,
-      total_defeitos: total_defeitos_geral,
-      composicao_igg,
-      total_estacoes: n
-    }
-  };
-};
-
-interface FrequencyChartData {
-  tipo: string;
-  frequencia: number;
-}
-
-// --- Componente Simulado de Gráfico de Barras (Para Frequência) ---
-const FrequencyBarChart: React.FC<{ data: Record<number, number> }> = ({ data }) => {
-  const chartData = useMemo<FrequencyChartData[]>(() => {
-    return Object.entries(data)
-      .filter(([, freq]) => freq > 0)
-      .map(([tipo, freq]) => ({
-        tipo: `Tipo ${tipo}`,
-        frequencia: parseFloat(freq.toFixed(1))
-      }));
-  }, [data]);
-
-  if (chartData.length === 0) {
-    return <Alert severity="warning" icon={<InfoOutlined />}>Nenhuma frequência de defeito significativa registrada.</Alert>;
-  }
-
-  const maxFreq = Math.max(...chartData.map(d => d.frequencia)) * 1.1 || 100;
-  
   return (
-    <Box sx={{ p: 2, height: 250, display: 'flex', flexDirection: 'column', gap: 1 }}>
-      <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>Distribuição de Frequência Relativa de Tipos de Defeito (IGG)</Typography>
-      {chartData.map(item => (
-        <Box key={item.tipo} sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-          <Box sx={{ width: '25%', minWidth: 80 }}>
-            <Typography variant="caption" noWrap>{item.tipo}</Typography>
-          </Box>
-          <Box sx={{ width: '70%' }}>
-            <Box 
-              sx={{ 
-                height: 18, 
-                backgroundColor: PRIMARY_GREEN, 
-                width: `${(item.frequencia / maxFreq) * 100}%`, 
-                borderRadius: 0.5,
+    <Container>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'start',
+          alignItems: 'center',
+          marginTop: '3rem',
+          pt: { mobile: 0, desktop: '4vh' },
+          '@media only screen and (min-width: 1024px)': {
+            flexDirection: 'row',
+            justifyContent: 'center',
+          },
+        }}
+      >
+        <Box
+          sx={{
+            width: '100%',
+            maxWidth: '900px',
+            pt: { mobile: '2vh', desktop: '1vh' },
+            '@media only screen and (min-width: 1024px)': {
+              width: '60%',
+            },
+            '@media only screen and (min-width: 1366px)': {
+              width: '40%',
+            },
+          }}
+        >
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Box
+              sx={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'flex-end',
-                pr: 1
+                justifyContent: 'center',
+                width: '90%',
+                m: { mobile: '2vh 0 4vh', desktop: '1vh 0 2vh' },
               }}
             >
-              <Typography variant="caption" sx={{ color: 'white', fontWeight: 'bold' }}>
-                {item.frequencia}%
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Image alt="IGG icon" src={Iggicon.src} width={100} height={90} />
+              </Box>
+              <Box
+                color="primary"
+                sx={{
+                  textTransform: 'uppercase',
+                  fontWeight: 700,
+                  fontSize: { mobile: '1.45rem', notebook: '2rem' },
+                  lineHeight: { mobile: '1.5rem', notebook: '2.05rem' },
+                  textAlign: 'center',
+                  pl: '15px',
+                  color: '#07B811',
+                  div: { color: 'primaryTons.darkGray' },
+                }}
+              >
+                <div>{t('welcome.title')}</div>
+                {t('home.pm.igg')}
+              </Box>
+            </Box>
+
+            <Box
+              sx={{
+                bgcolor: 'primaryTons.white',
+                borderRadius: '10px',
+                p: modalOpen ? { mobile: '3vh 4vw', notebook: '25px' } : '2vh',
+                width: { mobile: '90vw', notebook: '500px', desktop: '550px' },
+                border: '1px solid',
+                borderColor: 'primaryTons.border',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: modalOpen ? 'center' : { mobile: 'flex-start', notebook: 'center' },
+                justifyContent: 'center',
+                position: 'relative',
+                transition: '0.5s ease-out',
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: { mobile: 700, desktop: 500 },
+                  fontSize: { mobile: '1.25rem', desktop: '1.5rem' },
+                  color: 'primaryTons.mainGray',
+                  mb: modalOpen ? { mobile: '3vh', notebook: '25px' } : { mobile: 0, notebook: '25px' },
+                  transition: '0.5s ease-out',
+                }}
+              >
+                {t('welcome.how it works')}
               </Typography>
+              <Typography sx={{ marginBottom: '1rem' }}>{t('pm.igg.works.register')}</Typography>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '2vh',
+                  right: '2vh',
+                  transform: modalOpen ? 'rotate(0.5turn)' : 'none',
+                  transition: '0.5s ease-out',
+                  display: { mobile: 'flex', notebook: 'none' },
+                }}
+              >
+                <ArrowDownIcon onClick={() => setModalOpen((prev) => !prev)} />
+              </Box>
+
+              <Stack
+                sx={{
+                  display: modalOpen ? 'flex' : { mobile: 'none', notebook: 'flex' },
+                  transition: '0.5s ease-out',
+                }}
+              >
+                <Stepper stepperData={stepperDataRegister} variant="multicolor" />
+              </Stack>
+              <Typography sx={{ marginTop: '2rem', marginBottom: '1rem' }}>{t('pm.igg.works.view')}</Typography>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '2vh',
+                  right: '2vh',
+                  transform: modalOpen ? 'rotate(0.5turn)' : 'none',
+                  transition: '0.5s ease-out',
+                  display: { mobile: 'flex', notebook: 'none' },
+                }}
+              >
+                <ArrowDownIcon onClick={() => setModalOpen((prev) => !prev)} />
+              </Box>
+
+              <Stack
+                sx={{
+                  display: modalOpen ? 'flex' : { mobile: 'none', notebook: 'flex' },
+                  transition: '0.5s ease-out',
+                  marginBottom: '1rem',
+                }}
+              >
+                <Stepper stepperData={stepperDataView} variant="multicolor" />
+              </Stack>
             </Box>
           </Box>
         </Box>
-      ))}
-    </Box>
-  );
-};
 
-interface ResultsSectionProps {
-  results: PavementResults;
-  onSave: () => void;
-  onEdit: () => void;
-}
-
-// --- Componente de Resultados (Implementação do Layout Profissional) ---
-const ResultsSection: React.FC<ResultsSectionProps> = ({ results, onSave, onEdit }) => {
-  const stats = results.statistics;
-  const F_class = stats.F > 15 ? WARNING_ORANGE : PRIMARY_GREEN; // Exemplo de regra visual para F
-  const FV_class = stats.FV > 10 ? WARNING_ORANGE : PRIMARY_GREEN; // Exemplo de regra visual para FV
-  
-  return (
-    <Box>
-      <Typography variant="h5" gutterBottom sx={{ color: PRIMARY_GREEN, fontWeight: 600 }}>
-        <CheckCircleOutline sx={{ mr: 1 }} /> RESULTADOS DA ANÁLISE
-      </Typography>
-      <Divider sx={{ mb: 3, borderColor: PRIMARY_GREEN }} />
-
-      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3 }}>
-        {/* COLUNA 1: Destaque IGG e Indicadores Chave */}
-        <Box sx={{ width: { xs: '100%', md: '40%' } }}>
-          <Card 
-            variant="outlined" 
-            sx={{ 
-              backgroundColor: stats.cor_classificacao, 
-              color: 'white', 
-              textAlign: 'center', 
-              mb: 3, 
-              boxShadow: '0 6px 15px rgba(0,0,0,0.2)' 
-            }}
-          >
-            <CardContent>
-              <Typography variant="caption" sx={{ opacity: 0.8 }}>ÍNDICE DE GRAVIDADE GLOBAL (IGG)</Typography>
-              <Typography variant="h2" sx={{ fontWeight: 800 }}>{stats.IGG.toFixed(2)}</Typography>
-              <Typography variant="h5" sx={{ fontWeight: 700 }}>{stats.classificacao}</Typography>
-            </CardContent>
-          </Card>
-
-          {/* Indicadores & Flechas (Tabela Compacta) */}
-          <Paper variant="outlined" sx={{ p: 2, mb: 3 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1, color: PRIMARY_GREEN }}>
-              <TrendingUp sx={{ mr: 0.5 }} fontSize="small" /> Indicadores de Desempenho
-            </Typography>
-            <Table size="small">
-              <TableBody>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: 'bold' }}>F (Média Flecha)</TableCell>
-                  <TableCell sx={{ color: F_class }}>{stats.F.toFixed(2)} mm</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: 'bold' }}>FV (Variância)</TableCell>
-                  <TableCell sx={{ color: FV_class }}>{stats.FV.toFixed(2)}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Total Estações</TableCell>
-                  <TableCell>{stats.total_estacoes}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Total Defeitos</TableCell>
-                  <TableCell>{stats.total_defeitos}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </Paper>
-
-          {/* Estação Crítica (Alerta) */}
-          {stats.estacao_critica && stats.estacao_critica.id !== 0 && Object.values(stats.estacao_critica.defects).reduce((sum, count) => sum + count, 0) > 0 && (
-            <Alert 
-              severity="error" 
-              icon={<Warning />} 
-              sx={{ mb: 3, border: `1px solid ${ERROR_RED}` }}
-            >
-              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Ponto de Atenção Crítico:</Typography>
-              Estaca **{stats.estacao_critica.stationNumber}** (Seção {stats.estacao_critica.section}). Registrou o maior número de ocorrências de defeitos (**{Object.values(stats.estacao_critica.defects).reduce((sum, count) => sum + count, 0)}**).
-            </Alert>
-          )}
-        </Box>
-
-        {/* COLUNA 2: Composição do IGG e Frequência de Defeitos */}
-        <Box sx={{ width: { xs: '100%', md: '60%' } }}>
-          
-          {/* Composição do IGG (Tabela de Contribuição) */}
-          <Paper variant="outlined" sx={{ p: 2, mb: 3 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1, color: PRIMARY_GREEN }}>
-              <BarChart sx={{ mr: 0.5 }} fontSize="small" /> Composição do IGG (Pontos)
-            </Typography>
-            <TableContainer>
-              <Table size="small">
-                <TableHead>
-                  <TableRow sx={{ backgroundColor: LIGHT_GREEN_BG }}>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Fator Contribuinte</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', width: '20%' }}>Pontos</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', width: '20%' }}>% Total</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {stats.composicao_igg.map((item, index) => (
-                    <TableRow key={index} hover>
-                      <TableCell>
-                        {item.fator}
-                        {item.tipo && (
-                            <Tooltip 
-                                title={Object.entries(DEFEITOS_INFO)
-                                  .filter(([, info]) => info.type === item.tipo)
-                                  .map(([code, info]) => `${code}: ${info.description}`)
-                                  .join(', ')}
-                            >
-                                <InfoOutlined sx={{ fontSize: 14, ml: 0.5, color: '#90a4ae' }} />
-                            </Tooltip>
-                        )}
-                      </TableCell>
-                      <TableCell>{item.valor.toFixed(2)}</TableCell>
-                      <TableCell>{((item.valor / stats.IGG) * 100).toFixed(1)}%</TableCell>
-                    </TableRow>
-                  ))}
-                  <TableRow sx={{ backgroundColor: LIGHT_GREEN_BG }}>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Total IGG</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>{stats.IGG.toFixed(2)}</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>100.0%</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
-
-          {/* Distribuição de Frequência Relativa */}
-          <Paper variant="outlined" sx={{ p: 2 }}>
-            <FrequencyBarChart data={stats.frequencias_relativas} />
-          </Paper>
-        </Box>
-      </Box>
-      
-      {/* Ações Finais */}
-      <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mt: 4 }}>
-        <Button variant="outlined" onClick={onEdit} startIcon={<ArrowBack />}>
-          Voltar e Editar Dados
-        </Button>
-        <Button 
-          variant="contained" 
-          onClick={onSave}
-          startIcon={<Save />}
-          sx={{ backgroundColor: PRIMARY_GREEN, '&:hover': { backgroundColor: '#2e7d32' } }} 
+        <Box
+          sx={{
+            display: 'grid',
+            gap: '20px 0',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            width: '300px',
+            p: { mobile: '4vh 0', desktop: 0 },
+            '@media only screen and (min-width: 768px)': {
+              gridTemplateColumns: '1fr 1fr',
+              justifyItems: 'center',
+              width: '90%',
+            },
+            '@media only screen and (min-width: 1024px)': {
+              gridTemplateColumns: '1fr',
+              width: '325px',
+            },
+          }}
         >
-          SALVAR ANÁLISE
-        </Button>
-      </Box>
-    </Box>
-  );
-};
+          {welcomeData.map((option: WelcomeData) => {
+            const isRegister = option.path.includes('/register');
 
-// CORREÇÃO: Adicionar assinatura de índice à interface FormData
-interface FormData extends Record<string, unknown> {
-  name: string;
-  description: string;
-  road: string;
-  section: string;
-  subtrack: string;
-  pavementType: string;
-  evaluationDate: string;
-}
+            if (isRegister) {
+              return (
+                <div
+                  key={option.name}
+                  onClick={() => {
+                    sessionStorage.clear();
 
-// --- Componente Principal ---
-const PavementAnalysisPage: React.FC = () => {
-  const [activeStep, setActiveStep] = useState(0);
-  const [results, setResults] = useState<PavementResults | null>(null);
-  const [stations, setStations] = useState<PavementStation[]>([]);
-  const [editingStationId, setEditingStationId] = useState<number | null>(null);
-  const [savedAnalyses, setSavedAnalyses] = useState<PavementAnalysis[]>([]);
-  const [viewingSaved, setViewingSaved] = useState(false);
-  const [selectedAnalysis, setSelectedAnalysis] = useState<PavementAnalysis | null>(null);
+                    useIggStore.getState().reset();
 
-  // --- Estado do Formulário de Dados Gerais ---
-  const [formData, setFormData] = useState<FormData>({
-    name: '', description: '', road: '', section: '', subtrack: '',
-    pavementType: '', evaluationDate: new Date().toISOString().split('T')[0],
-  });
-
-  // --- Estado da Estação Atual/Edição ---
-  const initialStation: Partial<PavementStation> = {
-    stationNumber: '', section: 'A', tri: 0, tre: 0, defects: {}
-  };
-  
-  const [currentStation, setCurrentStation] = useState<Partial<PavementStation>>(initialStation);
-  
-  // O estado de 'defectCounts' agora reflete a contagem de defeitos na estação atual.
-  const [defectCounts, setDefectCounts] = useState<Record<string, number>>({});
-
-  const steps = ['Dados Gerais', 'Estações e Defeitos', 'Resultados'];
-
-  // Primeiro declare todas as funções que não têm dependências circulares
-  const handleFormChange = useCallback((field: keyof FormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  }, []);
-
-  const handleStationChange = useCallback((field: keyof PavementStation, value: string | number) => {
-    setCurrentStation(prev => ({ ...prev, [field]: value }));
-  }, []);
-
-  const handleDefectCountChange = useCallback((defectCode: string, value: number) => {
-    setDefectCounts(prev => {
-      const newCounts = { ...prev };
-      if (value > 0) {
-        newCounts[defectCode] = value;
-      } else {
-        delete newCounts[defectCode];
-      }
-      return newCounts;
-    });
-  }, []);
-
-  const handleEditStation = useCallback((station: PavementStation) => {
-    setCurrentStation(station);
-    setDefectCounts(station.defects); 
-    setEditingStationId(station.id);
-  }, []);
-  
-  const handleDeleteStation = useCallback((id: number) => {
-      if (window.confirm('Tem certeza que deseja excluir esta estação?')) {
-          setStations(prev => prev.filter(s => s.id !== id));
-      }
-  }, []);
-
-  const handleViewAnalysis = useCallback((analysis: PavementAnalysis) => {
-    setSelectedAnalysis(analysis);
-    setViewingSaved(true);
-    setResults(analysis.results);
-    setActiveStep(2); 
-  }, []);
-
-  const handleProcessAnalysis = useCallback(() => {
-    if (stations.length === 0) {
-      alert('Adicione pelo menos uma estação');
-      return;
-    }
-
-    const analysisData = { geral: formData, estacoes: stations };
-    const processedResults = processarDadosDNIT(analysisData);
-    setResults(processedResults);
-    setActiveStep(2);
-  }, [stations, formData]);
-
-  // Agora declare resetStationForm (não depende de outras funções)
-  const resetStationForm = useCallback((keepSection = true) => {
-    setCurrentStation({
-      stationNumber: '',
-      section: keepSection ? currentStation.section : 'A',
-      tri: 0,
-      tre: 0,
-      defects: {}
-    });
-    setDefectCounts({});
-    setEditingStationId(null);
-  }, [currentStation.section]);
-
-  // Agora declare resetAll (depende de resetStationForm)
-  const resetAll = useCallback(() => {
-    setFormData({
-      name: '', description: '', road: '', section: '', subtrack: '',
-      pavementType: '', evaluationDate: new Date().toISOString().split('T')[0],
-    });
-    setStations([]);
-    setResults(null);
-    setActiveStep(0);
-    resetStationForm(false);
-    setViewingSaved(false);
-    setSelectedAnalysis(null);
-  }, [resetStationForm]);
-
-  // Agora declare handleAddOrUpdateStation (depende de resetStationForm)
-  const handleAddOrUpdateStation = useCallback(() => {
-    if (!currentStation.stationNumber) {
-      alert('Número da estaca é obrigatório');
-      return;
-    }
-    
-    const defectsToSave: Record<string, number> = Object.entries(defectCounts)
-      .filter(([, count]) => count > 0)
-      .reduce((acc, [code, count]) => ({ ...acc, [code]: count }), {});
-
-    const stationData: PavementStation = {
-      ...currentStation as PavementStation,
-      tri: parseFloat(String(currentStation.tri)) || 0,
-      tre: parseFloat(String(currentStation.tre)) || 0,
-      defects: defectsToSave,
-      id: editingStationId || stations.length + 1
-    };
-    
-    if (Object.keys(defectsToSave).length === 0) {
-      const confirm = window.confirm("Nenhum defeito foi registrado para esta estaca. Deseja adicionar mesmo assim?");
-      if (!confirm) return;
-    }
-
-    if (editingStationId) {
-      setStations(prev => 
-        prev.map(s => s.id === editingStationId ? stationData : s)
-      );
-    } else {
-      const newId = stations.length > 0 ? Math.max(...stations.map(s => s.id)) + 1 : 1;
-      setStations(prev => [...prev, {...stationData, id: newId}]);
-    }
-    
-    resetStationForm(true);
-  }, [currentStation, defectCounts, editingStationId, stations, resetStationForm]);
-
-  // Agora declare as funções que dependem de resetAll
-  const handleSaveAnalysis = useCallback(() => {
-    if (!results) return;
-
-    const newAnalysis: PavementAnalysis = {
-      id: `ANL-${Date.now()}`,
-      name: formData.name || `Análise ${new Date().toLocaleDateString()}`,
-      road: formData.road,
-      evaluationDate: formData.evaluationDate,
-      stations: stations,
-      results: results,
-      createdAt: new Date().toISOString(),
-    };
-    
-    setSavedAnalyses(prev => [...prev, newAnalysis]);
-    alert(`Análise "${newAnalysis.name}" salva com sucesso!`);
-    resetAll();
-  }, [results, formData.name, formData.road, formData.evaluationDate, stations, resetAll]);
-  
-  const handleEditFromResults = useCallback(() => {
-    if (selectedAnalysis) {
-        const generalData = selectedAnalysis.results.generalData;
-        setFormData({
-          name: String(generalData.name || ''),
-          description: String(generalData.description || ''),
-          road: String(generalData.road || ''),
-          section: String(generalData.section || ''),
-          subtrack: String(generalData.subtrack || ''),
-          pavementType: String(generalData.pavementType || ''),
-          evaluationDate: String(generalData.evaluationDate || new Date().toISOString().split('T')[0]),
-        });
-        setStations(selectedAnalysis.stations);
-        setSelectedAnalysis(null);
-        setViewingSaved(false);
-    }
-    setActiveStep(1);
-    setResults(null);
-  }, [selectedAnalysis]);
-  
-  const handleBackToSavedList = useCallback(() => {
-    setSelectedAnalysis(null);
-    setResults(null);
-    setStations([]);
-  }, []);
-  
-  const handleBackToStart = useCallback(() => {
-    setViewingSaved(false);
-    resetAll();
-  }, [resetAll]);
-
-  // Effect para sincronizar defectCounts com currentStation.defects
-  useEffect(() => {
-    if (currentStation.defects) {
-      setDefectCounts(currentStation.defects);
-    }
-  }, [currentStation.defects]);
-
-  // Renderização da Lista de Análises Salvas
-  if (viewingSaved && !selectedAnalysis) {
-      return (
-          <Box sx={{ p: 3, minHeight: '100vh', backgroundColor: '#f0f2f5' }}>
-              <Paper sx={{ p: 4, borderRadius: 2, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
-                  <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, color: PRIMARY_GREEN }}>
-                      <Storage sx={{ mr: 1 }} /> ANÁLISES SALVAS ({savedAnalyses.length})
-                  </Typography>
-                  <Divider sx={{ mb: 3 }} />
-
-                  {savedAnalyses.length === 0 ? (
-                      <Alert severity="info">Nenhuma análise salva ainda.</Alert>
-                  ) : (
-                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }, gap: 3 }}>
-                          {savedAnalyses.map(analysis => (
-                              <Card 
-                                key={analysis.id}
-                                variant="outlined" 
-                                sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
-                              >
-                                  <CardContent>
-                                      <Typography variant="body1" sx={{ fontWeight: 'bold', color: PRIMARY_GREEN, mb: 1 }}>{analysis.name}</Typography>
-                                      <Typography variant="body2" color="text.secondary">Rodovia: **{analysis.road}**</Typography>
-                                      <Typography variant="body2" color="text.secondary">Data: {new Date(analysis.evaluationDate).toLocaleDateString()}</Typography>
-                                      <Typography variant="body2">Estações: {analysis.stations.length}</Typography>
-                                      <Chip 
-                                        label={`IGG: ${analysis.results.statistics.IGG.toFixed(1)} (${analysis.results.statistics.classificacao})`}
-                                        sx={{ mt: 1, backgroundColor: analysis.results.statistics.cor_classificacao, color: 'white', fontWeight: 'bold' }}
-                                      />
-                                  </CardContent>
-                                  <Box sx={{ p: 2, pt: 0, textAlign: 'right' }}>
-                                      <Button size="small" onClick={() => handleViewAnalysis(analysis)} startIcon={<Assessment />}>
-                                          Visualizar
-                                      </Button>
-                                  </Box>
-                              </Card>
-                          ))}
-                      </Box>
-                  )}
-                  
-                  <Box sx={{ mt: 4, textAlign: 'center' }}>
-                      <Button variant="outlined" onClick={handleBackToStart} startIcon={<ArrowBack />}>
-                          Voltar ao Cálculo
-                      </Button>
-                  </Box>
-              </Paper>
-          </Box>
-      );
-  }
-
-  // Se estiver visualizando uma análise salva E já processada, mostra os resultados.
-  if (viewingSaved && selectedAnalysis && results) {
-       return (
-          <Box sx={{ p: 3, backgroundColor: '#f0f2f5', minHeight: '100vh' }}>
-              <Paper sx={{ p: 4, borderRadius: 2, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
-                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                     <Typography variant="h4" sx={{ fontWeight: 700, color: '#2c3e50' }}>
-                         <Assessment sx={{ mr: 1, color: PRIMARY_GREEN }} fontSize="inherit" /> RELATÓRIO: {selectedAnalysis.name}
-                     </Typography>
-                      <Button 
-                          variant="outlined" 
-                          onClick={handleBackToSavedList} 
-                          startIcon={<ArrowBack />}
-                      >
-                          Voltar para Lista
-                      </Button>
-                  </Box>
-                  <Divider sx={{ mb: 4 }} />
-                  <ResultsSection results={results} onSave={() => alert('Esta análise já está salva.')} onEdit={handleEditFromResults} />
-              </Paper>
-          </Box>
-       );
-  }
-
-  // --- Renderização da Página Principal (Passos) ---
-  return (
-    <Box sx={{ p: 3, backgroundColor: '#f0f2f5', minHeight: '100vh' }}>
-      <Paper sx={{ p: 4, borderRadius: 2, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
-        
-        {/* Título e Ações */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <Typography variant="h4" sx={{ fontWeight: 700, color: '#2c3e50' }}>
-                <Assessment sx={{ mr: 1, color: PRIMARY_GREEN }} fontSize="inherit" /> AVALIAÇÃO DE PAVIMENTOS
-            </Typography>
-            <Button 
-                variant="outlined" 
-                onClick={() => setViewingSaved(true)} 
-                startIcon={<History />}
-            >
-                Ver Análises Salvas
-            </Button>
-        </Box>
-
-        <Divider sx={{ mb: 4 }} />
-
-        {/* Stepper */}
-        <Box sx={{ maxWidth: 800, mx: 'auto', mb: 4 }}>
-          <Stepper activeStep={activeStep}>
-            {steps.map((label, index) => (
-              <Step key={label}>
-                <StepLabel 
-                  StepIconProps={{ style: { color: index === activeStep ? PRIMARY_GREEN : '#757575' } }}
-                  sx={{ '& .MuiStepLabel-label': { fontWeight: index === activeStep ? 'bold' : 'normal' } }}
-                >
-                  {label}
-                </StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-        </Box>
-
-        <Divider sx={{ mb: 4 }} />
-
-        {/* ===================================================================== */}
-        {/* Etapa 1: Dados Gerais (Mantido) */}
-        {activeStep === 0 && (
-          <Box 
-            sx={{ border: `1px solid ${PRIMARY_GREEN}`, borderRadius: 1, p: 3, position: 'relative' }}
-          >
-            <Typography 
-              variant="h6" 
-              sx={{ 
-                color: PRIMARY_GREEN, fontWeight: 600, position: 'absolute', top: '-15px',
-                left: '10px', backgroundColor: 'white', px: 1
-              }}
-            >
-              DADOS GERAIS DO TRECHO
-            </Typography>
-
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 3, mt: 2 }}>
-              <TextField fullWidth label="Nome da Análise *" value={formData.name} onChange={(e) => handleFormChange('name', e.target.value)} required />
-              <TextField fullWidth label="Rodovia *" value={formData.road} onChange={(e) => handleFormChange('road', e.target.value)} required />
-              <TextField fullWidth label="Trecho/Local *" value={formData.section} onChange={(e) => handleFormChange('section', e.target.value)} required />
-              <TextField fullWidth label="Subtramo" value={formData.subtrack} onChange={(e) => handleFormChange('subtrack', e.target.value)} />
-              <TextField fullWidth label="Tipo de Revestimento *" value={formData.pavementType} onChange={(e) => handleFormChange('pavementType', e.target.value)} required />
-              <TextField fullWidth label="Data da Avaliação *" type="date" value={formData.evaluationDate} onChange={(e) => handleFormChange('evaluationDate', e.target.value)} InputLabelProps={{ shrink: true }} required />
-              <Box sx={{ gridColumn: { xs: 'span 1', md: 'span 3' } }}>
-                <TextField fullWidth multiline rows={2} label="Observações" value={formData.description} onChange={(e) => handleFormChange('description', e.target.value)} />
-              </Box>
-            </Box>
-            
-            <Box sx={{ mt: 4, textAlign: 'right' }}>
-              <Button 
-                variant="contained" 
-                onClick={() => setActiveStep(1)}
-                disabled={!formData.name || !formData.road || !formData.section || !formData.pavementType}
-                sx={{ backgroundColor: PRIMARY_GREEN, '&:hover': { backgroundColor: '#2e7d32' } }} 
-              >
-                Próximo - Adicionar Estações
-              </Button>
-            </Box>
-          </Box>
-        )}
-
-        {/* ===================================================================== */}
-        {/* Etapa 2: Estações e Defeitos (ATUALIZADA) */}
-        {activeStep === 1 && (
-          <Box>
-            <Typography variant="h5" gutterBottom sx={{ color: PRIMARY_GREEN, fontWeight: 600 }}>
-              <Speed sx={{ mr: 1 }} /> ESTAÇÕES E COLETA DE DADOS
-            </Typography>
-            <Divider sx={{ mb: 3, borderColor: PRIMARY_GREEN }} />
-            
-            <Alert severity="info" sx={{ mb: 3 }}>
-              {editingStationId ? `Editando Estação #${editingStationId} - ${currentStation.stationNumber}` : 'Cadastre uma nova estação de avaliação.'}
-            </Alert>
-            
-            {/* Formulário de Adição/Edição de Estação */}
-            <Paper sx={{ p: 3, mb: 3, border: `1px solid ${LIGHT_GREEN_BG}` }}>
-              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr 1fr 1fr' }, gap: 3 }}>
-                <TextField fullWidth label="Estaca/Quilômetro *" value={currentStation.stationNumber} onChange={(e) => handleStationChange('stationNumber', e.target.value)} required />
-                <FormControl fullWidth>
-                  <InputLabel>Seção *</InputLabel>
-                  <Select
-                    value={currentStation.section || 'A'}
-                    label="Seção *"
-                    onChange={(e: SelectChangeEvent<string>) => handleStationChange('section', e.target.value)}
-                  >
-                    {SECOES_TERRAPLENAGEM_OPTIONS.map(sec => (
-                      <MenuItem key={sec.code} value={sec.code}>{sec.code} - {sec.name}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <TextField fullWidth label="Flecha TRI (mm) *" type="number" value={currentStation.tri === 0 ? '' : currentStation.tri} onChange={(e) => handleStationChange('tri', parseFloat(e.target.value) || 0)} inputProps={{ min: 0, step: 0.1 }} required />
-                <TextField fullWidth label="Flecha TRE (mm) *" type="number" value={currentStation.tre === 0 ? '' : currentStation.tre} onChange={(e) => handleStationChange('tre', parseFloat(e.target.value) || 0)} inputProps={{ min: 0, step: 0.1 }} required />
-                <Button 
-                  variant="contained" 
-                  startIcon={editingStationId ? <Save /> : <Add />}
-                  onClick={handleAddOrUpdateStation}
-                  fullWidth
-                  disabled={!currentStation.stationNumber}
-                  sx={{ height: '56px', backgroundColor: editingStationId ? WARNING_ORANGE : PRIMARY_GREEN, '&:hover': { backgroundColor: editingStationId ? '#e67e22' : '#2e7d32' } }}
-                >
-                  {editingStationId ? 'Salvar Edição' : 'Adicionar'}
-                </Button>
-              </Box>
-              {editingStationId && (
-                <Box sx={{ pt: 2, textAlign: 'right' }}>
-                    <Button variant="text" color="inherit" onClick={() => resetStationForm(true)} startIcon={<Close />}>
-                        Cancelar Edição
-                    </Button>
-                </Box>
-              )}
-            </Paper>
-
-            {/* SELEÇÃO E CONTAGEM DE DEFEITOS */}
-            <Typography variant="h6" gutterBottom sx={{ mt: 4, fontWeight: 600, color: PRIMARY_GREEN }}>
-              <Add sx={{ mr: 1, verticalAlign: 'middle' }} fontSize="small" /> Ocorrência de Defeitos (Contagem)
-            </Typography>
-            <Divider sx={{ mb: 3 }} />
-            
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }, gap: 2, mb: 4 }}>
-              {Object.entries(DEFEITOS_INFO).map(([code, info]) => (
-                <Card 
-                  key={code}
-                  variant="outlined" 
-                  sx={{ 
-                    p: 1.5, 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    alignItems: 'center',
-                    backgroundColor: defectCounts[code] > 0 ? LIGHT_GREEN_BG : 'white',
-                    border: defectCounts[code] > 0 ? `1px solid ${PRIMARY_GREEN}` : '1px solid #e0e0e0'
+                    setTimeout(() => {
+                      router.push(option.path);
+                    }, 100);
                   }}
+                  style={{ width: '100%', display: 'flex', cursor: 'pointer' }}
                 >
-                  <Box sx={{ flexGrow: 1, mr: 2 }}>
-                    <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                      {code} - {info.description} 
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      (Tipo {info.type}, Prioridade {info.priority})
-                    </Typography>
-                  </Box>
-                  <TextField
-                    label="Qtd."
-                    type="number"
-                    size="small"
-                    value={defectCounts[code] || ''}
-                    onChange={(e) => handleDefectCountChange(code, parseInt(e.target.value) || 0)}
-                    inputProps={{ min: 0, max: 99, style: { textAlign: 'center' } }}
-                    sx={{ width: 80 }}
-                  />
-                </Card>
-              ))}
-            </Box>
+                  <PMCardMenuOptions {...option} />
+                </div>
+              );
+            }
 
-            {/* Lista de Estações (Tabela ATUALIZADA) */}
-            {stations.length > 0 && (
-              <Box sx={{ mt: 4 }}>
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-                  Estações Cadastradas ({stations.length})
-                </Typography>
-                <TableContainer component={Paper} sx={{ mb: 3 }}>
-                  <Table size="small">
-                    <TableHead sx={{ backgroundColor: LIGHT_GREEN_BG }}>
-                      <TableRow>
-                        <TableCell sx={{ fontWeight: 'bold', color: PRIMARY_GREEN }}>ID</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold', color: PRIMARY_GREEN }}>Estaca</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold', color: PRIMARY_GREEN }}>Seção</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold', color: PRIMARY_GREEN }}>TRI (mm)</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold', color: PRIMARY_GREEN }}>TRE (mm)</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold', color: PRIMARY_GREEN }}>Defeitos (Qtd.)</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold', color: PRIMARY_GREEN, width: '10%' }}>Ações</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {stations.map((station) => (
-                        <TableRow key={station.id} hover>
-                          <TableCell>{station.id}</TableCell>
-                          <TableCell>{station.stationNumber}</TableCell>
-                          <TableCell>{station.section}</TableCell>
-                          <TableCell>{station.tri.toFixed(1)}</TableCell>
-                          <TableCell>{station.tre.toFixed(1)}</TableCell>
-                          <TableCell>
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                              {Object.entries(station.defects).map(([code, count]) => (
-                                <Chip 
-                                  key={code} 
-                                  label={`${code} (${count})`} 
-                                  size="small" 
-                                  variant="outlined" 
-                                  color="info" 
-                                  title={DEFEITOS_INFO[code].description}
-                                />
-                              ))}
-                              {Object.keys(station.defects).length === 0 && (
-                                <Typography variant="body2" color="text.secondary">
-                                  Nenhum
-                                </Typography>
-                              )}
-                            </Box>
-                          </TableCell>
-                          <TableCell>
-                            <IconButton color="warning" size="small" onClick={() => handleEditStation(station)}>
-                              <Edit fontSize="inherit" />
-                            </IconButton>
-                            <IconButton
-                              color="error"
-                              size="small"
-                              onClick={() => handleDeleteStation(station.id)}
-                            >
-                              <Delete fontSize="inherit" />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Box>
-            )}
-
-            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'space-between', mt: 4 }}>
-              <Button variant="outlined" onClick={() => setActiveStep(0)} startIcon={<ArrowBack />}>
-                Anterior (Dados Gerais)
-              </Button>
-              <Button 
-                variant="contained" 
-                onClick={handleProcessAnalysis}
-                disabled={stations.length === 0}
-                startIcon={<Assessment />}
-                sx={{ backgroundColor: PRIMARY_GREEN, '&:hover': { backgroundColor: '#2e7d32' } }} 
-              >
-                PROCESSAR ANÁLISE
-              </Button>
-            </Box>
-          </Box>
-        )}
-        
-        {/* ===================================================================== */}
-        {/* Etapa 3: Resultados (NOVA E PROFISSIONAL) */}
-        {activeStep === 2 && results && (
-            <ResultsSection 
-                results={results} 
-                onSave={handleSaveAnalysis} 
-                onEdit={handleEditFromResults} 
-            />
-        )}
-        
-        {/* Caso a Etapa 3 seja acessada sem dados */}
-        {activeStep === 2 && !results && (
-            <Alert severity="error">
-                Os resultados não foram processados. Volte para a Etapa 2.
-            </Alert>
-        )}
-
-      </Paper>
-    </Box>
+            return (
+              <div key={option.name} style={{ width: '100%', display: 'flex' }}>
+                <PMCardMenuOptions key={option.name} {...option} />
+              </div>
+            );
+          })}
+        </Box>
+      </Box>
+    </Container>
   );
 };
 
-export default PavementAnalysisPage;
+export default IGG;
