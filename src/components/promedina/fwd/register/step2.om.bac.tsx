@@ -24,7 +24,7 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
 
   const handleSelect = (analysis: FWDAnalysis) => {
     setSelectedAnalysis(analysis);
-    setSnackbar({ open: true, message: `Análise &quot;${analysis.name}&quot; selecionada!`, severity: 'success' });
+    setSnackbar({ open: true, message: `Análise "${analysis.name}" selecionada!`, severity: 'success' });
   };
 
   const handleEdit = (analysis: FWDAnalysis) => {
@@ -404,7 +404,7 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
         open={snackbar.open} 
         autoHideDuration={4000} 
         onClose={() => setSnackbar({ ...snackbar, open: false })}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity}>
           {snackbar.message}
