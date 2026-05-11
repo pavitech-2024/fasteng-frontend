@@ -165,6 +165,28 @@ const PromedinaMaterialsTemplate = ({
     push(`/promedina/${area}/view/data/${id}`);
   };
 
+  const isOldFormat = (sample: any): boolean => {
+    // Verifica se o formato é antigo (legacy)
+    // Formato NOVO: generalData contém 'identification', 'tipoSecao', 'local', 'faseMonitoramento'
+    // Formato ANTIGO: generalData contém 'name', 'zone', 'layer', 'cityState'
+    const generalData = sample?.generalData || {};
+    
+    const hasNewFields =
+      generalData.identification !== undefined ||
+      generalData.tipoSecao !== undefined ||
+      generalData.faseMonitoramento !== undefined ||
+      generalData.local !== undefined;
+
+    const hasLegacyFields =
+      generalData.name !== undefined ||
+      generalData.zone !== undefined ||
+      generalData.layer !== undefined ||
+      generalData.cityState !== undefined;
+
+    // Só é legacy se NÃO tem campos novos E tem campos legacy
+    return !hasNewFields && hasLegacyFields;
+  };
+
   const handleEdit = (id: string) => {
     const sample: any = materialsData.find((sample) => {
       return sample._id === id;
@@ -860,27 +882,60 @@ const PromedinaMaterialsTemplate = ({
                               <VisibilityIcon sx={{ fontSize: 22 }} />
                             </Button>
                           </Tooltip>
-                          <Tooltip title="Editar dados desta amostra">
-                            <Button
-                              onClick={() => handleEdit(row._id)}
-                              sx={{
-                                minWidth: 0,
-                                width: 36,
-                                height: 36,
-                                padding: 0,
-                                borderRadius: '50%',
-                                bgcolor: 'secondaryTons.orange',
-                                color: '#222', // ou 'primaryTons.black' se existir no seu tema
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                transition: 'background 0.2s',
-                                '&:hover': { bgcolor: 'secondaryTons.orangeDisabled' },
-                                '&:active': { bgcolor: 'secondaryTons.orangeClick' },
-                              }}
-                            >
-                              <EditIcon sx={{ fontSize: 22 }} />
-                            </Button>
+                          <Tooltip title={
+                            (() => {
+                              const sample = materialsData.find((m) => m._id === row._id);
+                              return isOldFormat(sample) 
+                                ? 'Esta amostra usa um formato antigo e não pode ser editada. Visualize para mais detalhes.'
+                                : 'Editar dados desta amostra';
+                            })()
+                          }>
+                            <span>
+                              <Button
+                                onClick={() => handleEdit(row._id)}
+                                disabled={(() => {
+                                  const sample = materialsData.find((m) => m._id === row._id);
+                                  return isOldFormat(sample);
+                                })()}
+                                sx={{
+                                  minWidth: 0,
+                                  width: 36,
+                                  height: 36,
+                                  padding: 0,
+                                  borderRadius: '50%',
+                                  bgcolor: (() => {
+                                    const sample = materialsData.find((m) => m._id === row._id);
+                                    return isOldFormat(sample) ? '#d0d0d0' : 'secondaryTons.orange';
+                                  })(),
+                                  color: (() => {
+                                    const sample = materialsData.find((m) => m._id === row._id);
+                                    return isOldFormat(sample) ? '#999' : '#222';
+                                  })(),
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  transition: 'background 0.2s',
+                                  cursor: (() => {
+                                    const sample = materialsData.find((m) => m._id === row._id);
+                                    return isOldFormat(sample) ? 'not-allowed' : 'pointer';
+                                  })(),
+                                  '&:hover': { 
+                                    bgcolor: (() => {
+                                      const sample = materialsData.find((m) => m._id === row._id);
+                                      return isOldFormat(sample) ? '#d0d0d0' : 'secondaryTons.orangeDisabled';
+                                    })(),
+                                  },
+                                  '&:active': { 
+                                    bgcolor: (() => {
+                                      const sample = materialsData.find((m) => m._id === row._id);
+                                      return isOldFormat(sample) ? '#d0d0d0' : 'secondaryTons.orangeClick';
+                                    })(),
+                                  },
+                                }}
+                              >
+                                <EditIcon sx={{ fontSize: 22 }} />
+                              </Button>
+                            </span>
                           </Tooltip>
                           <Tooltip title={t('pm-tooltip-del-sample')}>
                             <Button
