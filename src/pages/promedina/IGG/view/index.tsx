@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Paper, Typography, Card, CardContent, Chip, Button, Alert, Divider, CircularProgress } from '@mui/material';
-import { Assessment, ArrowBack, Storage } from '@mui/icons-material';
+import { Box, Paper, Typography, Card, CardContent, Chip, Button, Alert, Divider, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Assessment, ArrowBack, Storage, Edit, Delete } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import iggAnalysisService from '@/services/promedina/igg/igg-view.service';
 
@@ -12,6 +12,9 @@ const IggViewPage: React.FC = () => {
   const [analyses, setAnalyses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedAnalysisId, setSelectedAnalysisId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     loadAnalyses();
@@ -32,6 +35,38 @@ const IggViewPage: React.FC = () => {
 
   const handleViewAnalysis = (analysisId: string) => {
     router.push(`/promedina/IGG/view/data/${analysisId}`);
+  };
+
+  const handleEditAnalysis = (analysisId: string) => {
+    router.push(`/promedina/IGG/edit/${analysisId}`);
+  };
+
+  const handleDeleteClick = (analysisId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedAnalysisId(analysisId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedAnalysisId) return;
+    
+    try {
+      setDeleting(true);
+      await iggAnalysisService.deleteAnalysis(selectedAnalysisId);
+      setAnalyses(analyses.filter(a => a._id !== selectedAnalysisId));
+      setDeleteDialogOpen(false);
+      setSelectedAnalysisId(null);
+    } catch (err: any) {
+      console.error('Erro ao deletar análise:', err);
+      setError(err?.response?.data?.message || 'Erro ao deletar análise');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteDialogOpen(false);
+    setSelectedAnalysisId(null);
   };
 
   const handleBackToWelcome = () => {
@@ -143,8 +178,31 @@ const IggViewPage: React.FC = () => {
                   )}
                 </CardContent>
                 <Box sx={{ p: 2, pt: 0, textAlign: 'right' }}>
-                  <Button size="small" startIcon={<Assessment />} sx={{ color: BORDER_GREEN }}>
+                  <Button 
+                    size="small" 
+                    startIcon={<Assessment />} 
+                    sx={{ color: BORDER_GREEN, mr: 1 }}
+                  >
                     Visualizar
+                  </Button>
+                  <Button
+                    size="small"
+                    startIcon={<Edit />}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditAnalysis(analysis._id);
+                    }}
+                    sx={{ color: '#1976d2', mr: 1 }}
+                  >
+                    Editar
+                  </Button>
+                  <Button
+                    size="small"
+                    startIcon={<Delete />}
+                    onClick={(e) => handleDeleteClick(analysis._id, e)}
+                    sx={{ color: '#d32f2f' }}
+                  >
+                    Deletar
                   </Button>
                 </Box>
               </Card>
@@ -152,6 +210,35 @@ const IggViewPage: React.FC = () => {
           </Box>
         )}
       </Paper>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={handleCancelDelete}
+        aria-labelledby="alert-dialog-title"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Confirmar Exclusão
+        </DialogTitle>
+        <DialogContent>
+          <Typography>
+            Tem certeza que deseja excluir esta análise IGG? Esta ação não pode ser desfeita.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete} color="primary">
+            Cancelar
+          </Button>
+          <Button 
+            onClick={handleConfirmDelete} 
+            color="error" 
+            variant="contained"
+            disabled={deleting}
+          >
+            {deleting ? 'Deletando...' : 'Deletar'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
