@@ -120,14 +120,18 @@ export const MaterialEssayModal = ({ essay, open, onClose }: MaterialEssayModalP
             </Box>
           )}
 
-          {/* Mensagem para ensaios que não são granulometria */}
-          {essayType !== 'granulometry' && (
+          {/* 
+          
+              {essayType !== 'granulometry' && (
             <Box sx={{ mt: 2, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
               <Typography variant="body2" color="text.secondary">
                 Este ensaio não possui dados de granulometria para exibir gráfico ou tabela detalhada.
               </Typography>
             </Box>
           )}
+          
+          */}
+         
         </FlexColumnBorder>
 
         <Button onClick={onClose} variant="contained" sx={{ mt: 2 }}>
