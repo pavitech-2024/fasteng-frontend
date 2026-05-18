@@ -55,6 +55,16 @@ const ESSAY_NAME_MAP: Record<string, string> = {
 };
 
 export const useEssayModalData = (essay: any) => {
+  // ✅ Função auxiliar para pegar resultados (suporta results.data e results direto)
+  const getResults = () => {
+    if (essay.results?.data) {
+      return essay.results.data;
+    }
+    return essay.results || {};
+  };
+
+  const results = getResults();
+
   // Detectar o tipo de ensaio baseado no essayName ou nas propriedades
   const essayType = useMemo(() => {
     // Primeiro, tenta detectar pelo essayName (se existir)
@@ -64,71 +74,71 @@ export const useEssayModalData = (essay: any) => {
     
     // Se não, tenta pelas propriedades do results
     // Los Angeles Abrasion
-    if (essay.results?.losAngelesAbrasion !== undefined) {
+    if (results?.losAngelesAbrasion !== undefined) {
       return ESSAY_TYPES.LOS_ANGELES_ABRASION;
     }
     // Massa Específica
-    if (essay.results?.bulk_specify_mass !== undefined || essay.results?.apparent_specify_mass !== undefined) {
+    if (results?.bulk_specify_mass !== undefined || results?.apparent_specify_mass !== undefined) {
       return ESSAY_TYPES.SPECIFIC_MASS;
     }
     // Abrasão (fallback)
-    if (essay.results?.abrasion_loss !== undefined || essay.results?.wear_loss !== undefined) {
+    if (results?.abrasion_loss !== undefined || results?.wear_loss !== undefined) {
       return ESSAY_TYPES.ABRASION;
     }
     // Adesividade
-    if (essay.results?.filmDisplacement !== undefined) {
+    if (results?.filmDisplacement !== undefined) {
       return ESSAY_TYPES.ADHESIVENESS;
     }
     // Alongados
-    if (essay.results?.elongated_percentage !== undefined) {
+    if (results?.elongated_percentage !== undefined) {
       return ESSAY_TYPES.ELONGATED_PARTICLES;
     }
     // Índice de Forma
-    if (essay.results?.shape_index !== undefined) {
+    if (results?.shape_index !== undefined) {
       return ESSAY_TYPES.SHAPE_INDEX;
     }
     // Equivalente de Areia
-    if (essay.results?.sand_equivalent !== undefined) {
+    if (results?.sand_equivalent !== undefined) {
       return ESSAY_TYPES.SAND_EQUIVALENT;
     }
     // Angularidade
-    if (essay.results?.angularity !== undefined) {
+    if (results?.angularity !== undefined) {
       return ESSAY_TYPES.ANGULARITY;
     }
     // Ductilidade
-    if (essay.results?.ductility !== undefined) {
+    if (results?.ductility !== undefined) {
       return ESSAY_TYPES.DUCTILITY;
     }
     // Penetração
-    if (essay.results?.penetration !== undefined) {
+    if (results?.penetration !== undefined) {
       return ESSAY_TYPES.PENETRATION;
     }
-    // Ponto de Amolecimento
-    if (essay.results?.softening_point !== undefined) {
+    // ✅ Ponto de Amolecimento - CORRIGIDO
+    if (results?.softeningPoint !== undefined) {
       return ESSAY_TYPES.SOFTENING_POINT;
     }
     // Ponto de Fulgor
-    if (essay.results?.temperature !== undefined && essay.step2Data?.ignition_temperature !== undefined) {
+    if (results?.temperature !== undefined) {
       return ESSAY_TYPES.FLASH_POINT;
     }
     // Viscosidade Rotacional
-    if (essay.results?.viscosity !== undefined) {
+    if (results?.viscosity !== undefined) {
       return ESSAY_TYPES.VISCOSITY_ROTATIONAL;
     }
     // RTFO
-    if (essay.results?.mass_loss !== undefined || essay.results?.rtfo !== undefined) {
+    if (results?.mass_loss !== undefined || results?.rtfo !== undefined) {
       return ESSAY_TYPES.RTFO;
     }
     // Recuperação Elástica
-    if (essay.results?.elastic_recovery !== undefined) {
+    if (results?.elastic_recovery !== undefined) {
       return ESSAY_TYPES.ELASTIC_RECOVERY;
     }
     // Granulometria
-    if (essay.results?.graph_data) {
+    if (results?.graph_data) {
       return ESSAY_TYPES.GRANULOMETRY;
     }
     return 'unknown';
-  }, [essay]);
+  }, [essay, results]);
 
   // Título do ensaio
   const essayTitle = useMemo(() => {
@@ -158,7 +168,7 @@ export const useEssayModalData = (essay: any) => {
   // Dados do experimento (resumo)
   const modalExperimentResumeData: ExperimentResumeData = useMemo(() => ({
     experimentName: essay.generalData?.name || 'Ensaio sem nome',
-    author: essay.generalData?.calculist || essay.generalData?.operator || 'Não informado',
+    author: essay.generalData?.userId || essay.generalData?.calculist || essay.generalData?.operator || 'Não informado',
     materials: essay.generalData?.material ? 
       [{ name: essay.generalData.material.name, type: essay.generalData.material.type }] : 
       [],
@@ -171,9 +181,9 @@ export const useEssayModalData = (essay: any) => {
       case ESSAY_TYPES.SPECIFIC_MASS:
         return {
           results: [
-            { label: 'Massa específica real', value: essay.results?.bulk_specify_mass?.toFixed(2), unit: 'g/cm³' },
-            { label: 'Massa específica aparente', value: essay.results?.apparent_specify_mass?.toFixed(2), unit: 'g/cm³' },
-            { label: 'Absorção', value: essay.results?.absorption?.toFixed(2), unit: '%' },
+            { label: 'Massa específica real', value: results?.bulk_specify_mass?.toFixed(2), unit: 'g/cm³' },
+            { label: 'Massa específica aparente', value: results?.apparent_specify_mass?.toFixed(2), unit: 'g/cm³' },
+            { label: 'Absorção', value: results?.absorption?.toFixed(2), unit: '%' },
           ],
           stepData: [
             { label: 'Massa seca', value: essay.step2Data?.dry_mass, unit: 'g' },
@@ -186,7 +196,7 @@ export const useEssayModalData = (essay: any) => {
       case ESSAY_TYPES.LOS_ANGELES_ABRASION:
         return {
           results: [
-            { label: 'Perda por abrasão', value: essay.results?.losAngelesAbrasion?.toFixed(2) || essay.results?.abrasion_loss?.toFixed(2) || essay.results?.wear_loss?.toFixed(2), unit: '%' },
+            { label: 'Perda por abrasão', value: results?.losAngelesAbrasion?.toFixed(2) || results?.abrasion_loss?.toFixed(2) || results?.wear_loss?.toFixed(2), unit: '%' },
             { label: 'Massa inicial', value: essay.abrasionCalc?.initialMass || essay.step2Data?.initial_mass, unit: 'g' },
             { label: 'Massa final', value: essay.abrasionCalc?.finalMass || essay.step2Data?.final_mass, unit: 'g' },
             { label: 'Graduação', value: essay.abrasionCalc?.graduation || essay.step2Data?.graduation, unit: '' },
@@ -196,7 +206,7 @@ export const useEssayModalData = (essay: any) => {
       case ESSAY_TYPES.ADHESIVENESS:
         return {
           results: [
-            { label: 'Deslocamento do Filme', value: essay.results?.filmDisplacement ? 'Sim' : 'Não', unit: '' },
+            { label: 'Deslocamento do Filme', value: results?.filmDisplacement ? 'Sim' : 'Não', unit: '' },
             { label: 'Ligante', value: essay.adhesiveness?.binder || 'Não informado', unit: '' },
           ],
         };
@@ -204,28 +214,28 @@ export const useEssayModalData = (essay: any) => {
       case ESSAY_TYPES.ELONGATED_PARTICLES:
         return {
           results: [
-            { label: 'Partículas alongadas', value: essay.results?.elongated_percentage?.toFixed(2), unit: '%' },
+            { label: 'Partículas alongadas', value: results?.elongated_percentage?.toFixed(2), unit: '%' },
           ],
         };
 
       case ESSAY_TYPES.SHAPE_INDEX:
         return {
           results: [
-            { label: 'Índice de Forma', value: essay.results?.shape_index?.toFixed(2), unit: '%' },
+            { label: 'Índice de Forma', value: results?.shape_index?.toFixed(2), unit: '%' },
           ],
         };
 
       case ESSAY_TYPES.SAND_EQUIVALENT:
         return {
           results: [
-            { label: 'Equivalente de Areia', value: essay.results?.sand_equivalent?.toFixed(2), unit: '%' },
+            { label: 'Equivalente de Areia', value: results?.sand_equivalent?.toFixed(2), unit: '%' },
           ],
         };
 
       case ESSAY_TYPES.ANGULARITY:
         return {
           results: [
-            { label: 'Angularidade', value: essay.results?.angularity?.toFixed(2), unit: '%' },
+            { label: 'Angularidade', value: results?.angularity?.toFixed(2), unit: '%' },
           ],
         };
 
@@ -233,7 +243,7 @@ export const useEssayModalData = (essay: any) => {
       case ESSAY_TYPES.DUCTILITY:
         return {
           results: [
-            { label: 'Ductilidade', value: essay.results?.ductility?.toFixed(2), unit: 'mm' },
+            { label: 'Ductilidade', value: results?.ductility?.toFixed(2), unit: 'mm' },
             { label: '1ª Ruptura', value: essay.step2Data?.first_rupture_length, unit: 'mm' },
             { label: '2ª Ruptura', value: essay.step2Data?.second_rupture_length, unit: 'mm' },
             { label: '3ª Ruptura', value: essay.step2Data?.third_rupture_length, unit: 'mm' },
@@ -243,8 +253,8 @@ export const useEssayModalData = (essay: any) => {
       case ESSAY_TYPES.PENETRATION:
         return {
           results: [
-            { label: 'Penetração', value: essay.results?.penetration, unit: '0.1mm' },
-            { label: 'Índice de Suscetibilidade', value: essay.results?.indexOfSusceptibility?.toFixed(2), unit: '' },
+            { label: 'Penetração', value: results?.penetration, unit: '0.1mm' },
+            { label: 'Índice de Suscetibilidade', value: results?.indexOfSusceptibility?.toFixed(2), unit: '' },
           ],
           stepData: [
             { label: 'Pontos', value: essay.penetrationCalc?.points?.join(', '), unit: '' },
@@ -252,39 +262,50 @@ export const useEssayModalData = (essay: any) => {
           ]
         };
 
+      // ✅ SOFTENING POINT - CORRIGIDO
       case ESSAY_TYPES.SOFTENING_POINT:
         return {
           results: [
-            { label: 'Ponto de Amolecimento', value: essay.results?.softening_point, unit: '°C' },
+            { label: 'Ponto de Amolecimento', value: results?.softeningPoint?.toString(), unit: '°C' },
+            { label: 'Índice de Suscetibilidade', value: results?.indexOfSusceptibility?.toString(), unit: '' },
+            ...(results?.alerts?.map((alert: string, index: number) => ({
+              label: `Alerta ${index + 1}`,
+              value: alert,
+              unit: ''
+            })) || []),
           ],
+          stepData: [
+            { label: 'Temperatura 1', value: essay.softeningPoint?.temperature1, unit: '°C' },
+            { label: 'Temperatura 2', value: essay.softeningPoint?.temperature2, unit: '°C' },
+          ]
         };
 
       case ESSAY_TYPES.FLASH_POINT:
         return {
           results: [
-            { label: 'Temperatura de Ignição', value: essay.results?.temperature, unit: '°C' },
+            { label: 'Temperatura de Ignição', value: results?.temperature, unit: '°C' },
           ],
         };
 
       case ESSAY_TYPES.VISCOSITY_ROTATIONAL:
         return {
           results: [
-            { label: 'Viscosidade', value: essay.results?.viscosity, unit: 'cP' },
-            { label: 'Temperatura', value: essay.results?.temperature, unit: '°C' },
+            { label: 'Viscosidade', value: results?.viscosity, unit: 'cP' },
+            { label: 'Temperatura', value: results?.temperature, unit: '°C' },
           ],
         };
 
       case ESSAY_TYPES.RTFO:
         return {
           results: [
-            { label: 'Perda de Massa', value: essay.results?.mass_loss?.toFixed(2), unit: '%' },
+            { label: 'Perda de Massa', value: results?.mass_loss?.toFixed(2), unit: '%' },
           ],
         };
 
       case ESSAY_TYPES.ELASTIC_RECOVERY:
         return {
           results: [
-            { label: 'Recuperação Elástica', value: essay.results?.elastic_recovery?.toFixed(2), unit: '%' },
+            { label: 'Recuperação Elástica', value: results?.elastic_recovery?.toFixed(2), unit: '%' },
           ],
         };
 
@@ -292,15 +313,15 @@ export const useEssayModalData = (essay: any) => {
       case ESSAY_TYPES.GRANULOMETRY:
         return {
           results: [
-            { label: 'Módulo de Finura', value: essay.results?.fineness_module?.toFixed(2), unit: '%' },
-            { label: 'Tamanho Nominal', value: essay.results?.nominal_size, unit: 'mm' },
-            { label: 'CC', value: essay.results?.cc?.toFixed(2), unit: '' },
-            { label: 'CNU', value: essay.results?.cnu?.toFixed(2), unit: '' },
-            { label: 'Erro', value: essay.results?.error?.toFixed(2), unit: '%' },
+            { label: 'Módulo de Finura', value: results?.fineness_module?.toFixed(2), unit: '%' },
+            { label: 'Tamanho Nominal', value: results?.nominal_size, unit: 'mm' },
+            { label: 'CC', value: results?.cc?.toFixed(2), unit: '' },
+            { label: 'CNU', value: results?.cnu?.toFixed(2), unit: '' },
+            { label: 'Erro', value: results?.error?.toFixed(2), unit: '%' },
           ],
-          graph_data: essay.results?.graph_data || [],
+          graph_data: results?.graph_data || [],
           table_data: essay.step2Data?.table_data || [],
-          results_data: essay.results || {},
+          results_data: results || {},
         };
 
       // ========== DEFAULTS ==========
@@ -309,7 +330,7 @@ export const useEssayModalData = (essay: any) => {
           results: [],
         };
     }
-  }, [essay, essayType]);
+  }, [essay, essayType, results]);
 
   // Dados do gráfico (apenas para granulometria)
   const modalGraphData = useMemo(() => {
