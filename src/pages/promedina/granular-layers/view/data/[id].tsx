@@ -111,7 +111,7 @@ const SpecificSample_GranularLayers = () => {
       <>
         {/* IDENTIFICAÇÃO */}
         <Box sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-          <FlexColumnBorder title="IDENTIFICAÇÃO" open={true} theme={'#07B811'}>
+          <FlexColumnBorder title="IDENTIFICAÇÃO" open={true} theme={'#0c4d0f'}>
             {renderFields([
               { title: 'NOME', value: samples?.generalData?.name },
               { title: 'TIPO DE SEÇÃO', value: samples?.generalData?.tipoSecao },
@@ -127,7 +127,7 @@ const SpecificSample_GranularLayers = () => {
 
         {/* PREPARO DO PAVIMENTO */}
         <Box sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-          <FlexColumnBorder title="PREPARO DO PAVIMENTO" open={true} theme={'#07B811'}>
+          <FlexColumnBorder title="PREPARO DO PAVIMENTO" open={true} theme={'#0c4d0f'}>
             {renderFields([
               { title: 'IRI (m/km) PRÉ-REABILITAÇÃO', value: samples?.generalData?.iriPrerehabilitation },
               { title: 'AT (%) PRÉ-REABILITAÇÃO', value: samples?.generalData?.atPrerehabilitation },
@@ -143,7 +143,7 @@ const SpecificSample_GranularLayers = () => {
 
         {/* DATA DA ÚLTIMA ATUALIZAÇÃO */}
         <Box sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-          <FlexColumnBorder title="DATA DA ÚLTIMA ATUALIZAÇÃO" open={true} theme={'#07B811'}>
+          <FlexColumnBorder title="DATA DA ÚLTIMA ATUALIZAÇÃO" open={true} theme={'#0c4d0f'}>
             {renderFields([
               { title: 'DATA DA ÚLTIMA ATUALIZAÇÃO', value: samples?.generalData?.lastUpdate },
               { title: 'TEMPO EM SERVIÇO (ANOS)', value: samples?.generalData?.serviceTimeYears },
@@ -154,7 +154,7 @@ const SpecificSample_GranularLayers = () => {
 
         {/* CARACTERÍSTICAS */}
         <Box sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-          <FlexColumnBorder title="CARACTERÍSTICAS" open={true} theme={'#07B811'}>
+          <FlexColumnBorder title="CARACTERÍSTICAS" open={true} theme={'#0c4d0f'}>
             {renderFields([
               { title: 'LOCAL', value: samples?.generalData?.roadName },
               { title: 'MUNICÍPIO/ESTADO', value: samples?.generalData?.cityState },
@@ -171,7 +171,7 @@ const SpecificSample_GranularLayers = () => {
 
         {/* COORDENADAS */}
         <Box sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-          <FlexColumnBorder title="COORDENADAS" open={true} theme={'#07B811'}>
+          <FlexColumnBorder title="COORDENADAS" open={true} theme={'#0c4d0f'}>
             {renderFields([
               { title: 'INÍCIO - ESTACA', value: samples?.generalData?.inicioEstaca },
               { title: 'INÍCIO - METROS', value: samples?.generalData?.inicioMetros },
@@ -185,7 +185,7 @@ const SpecificSample_GranularLayers = () => {
         {/* COMPOSIÇÃO ESTRUTURAL */}
         {structuralRows.length > 0 && (
           <Box sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-            <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#07B811'}>
+            <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#0c4d0f'}>
               <DataGrid
                 rows={structuralRows}
                 hideFooter
@@ -237,7 +237,7 @@ const SpecificSample_GranularLayers = () => {
               <FlexColumnBorder
                 title={`GRUPO MCT${layers.length > 1 ? ` - CAMADA ${index + 1}` : ''}`}
                 open={true}
-                theme={'#07B811'}
+                theme={'#0c4d0f'}
               >
                 {renderFields(
                   [
@@ -252,7 +252,7 @@ const SpecificSample_GranularLayers = () => {
               </FlexColumnBorder>
 
               <Box sx={{ paddingTop: '1rem' }}>
-                <FlexColumnBorder title="MÓDULO DE RESILIÊNCIA" open={true} theme={'#07B811'}>
+                <FlexColumnBorder title="MÓDULO DE RESILIÊNCIA" open={true} theme={'#0c4d0f'}>
                   {renderFields(
                     [
                       { title: 'k1', value: layer.k1 },
@@ -266,7 +266,7 @@ const SpecificSample_GranularLayers = () => {
               </Box>
 
               <Box sx={{ paddingTop: '1rem' }}>
-                <FlexColumnBorder title="DEFORMAÇÃO PERMANENTE" open={true} theme={'#07B811'}>
+                <FlexColumnBorder title="DEFORMAÇÃO PERMANENTE" open={true} theme={'#0c4d0f'}>
                   {renderFields(
                     [
                       { title: 'k1/psi', value: layer.k1psi1 },
@@ -285,7 +285,7 @@ const SpecificSample_GranularLayers = () => {
         {/* OBSERVAÇÕES */}
         {samples?.step2Data?.observations && (
           <Box sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-            <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#07B811'}>
+            <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#0c4d0f'}>
               <Typography
                 sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black', textAlign: 'center' }}
               >
@@ -426,7 +426,7 @@ const SpecificSample_GranularLayers = () => {
 
         {/* DADOS GERAIS */}
         <Box id="first-section" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-          <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
+          <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#0c4d0f'}>
             <Box
               sx={{
                 display: { mobile: 'flex', notebook: 'grid' },
@@ -479,7 +479,7 @@ const SpecificSample_GranularLayers = () => {
           <FlexColumnBorder
             title={t('pm.paviment.data')}
             open={true}
-            theme={'#07B811'}
+            theme={'#0c4d0f'}
             sx_title={{ whiteSpace: 'wrap' }}
           >
             <Box
@@ -547,7 +547,7 @@ const SpecificSample_GranularLayers = () => {
           <FlexColumnBorder
             title={t('pm.paviment.preparation')}
             open={true}
-            theme={'#07B811'}
+            theme={'#0c4d0f'}
           >
             <Box
               sx={{
@@ -606,7 +606,7 @@ const SpecificSample_GranularLayers = () => {
           <FlexColumnBorder
             title={t('pm.sample-data')}
             open={true}
-            theme={'#07B811'}
+            theme={'#0c4d0f'}
             sx_title={{ whiteSpace: 'wrap' }}
           >
             <Box
@@ -663,7 +663,7 @@ const SpecificSample_GranularLayers = () => {
           <FlexColumnBorder
             title={t('pm.permanent.deformation')}
             open={true}
-            theme={'#07B811'}
+            theme={'#0c4d0f'}
           >
             <Box
               sx={{
@@ -718,7 +718,7 @@ const SpecificSample_GranularLayers = () => {
           <FlexColumnBorder
             title={t('pm.granularLayers.resilience.module')}
             open={true}
-            theme={'#07B811'}
+            theme={'#0c4d0f'}
             sx_title={{ whiteSpace: 'wrap' }}
           >
             <Box
@@ -774,7 +774,7 @@ const SpecificSample_GranularLayers = () => {
           <FlexColumnBorder
             title={t('pm.structural.composition')}
             open={true}
-            theme={'#07B811'}
+            theme={'#0c4d0f'}
           >
             <Box
               sx={{
@@ -822,7 +822,7 @@ const SpecificSample_GranularLayers = () => {
                     flexDirection: { mobile: 'column', desktop: 'row' },
                     gap: '1rem',
                     alignItems: 'center',
-                    border: '2px solid #07B811',
+                    border: '2px solid #0c4d0f',
                     borderRadius: '10px',
                     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                   }}
@@ -935,5 +935,5 @@ const SpecificSample_GranularLayers = () => {
     </Box>
   );
 };
-
+//
 export default SpecificSample_GranularLayers;

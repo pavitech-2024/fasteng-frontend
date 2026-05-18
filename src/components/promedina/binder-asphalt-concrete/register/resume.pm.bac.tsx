@@ -274,28 +274,28 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
 
           {/* STEP 1 - IDENTIFICAÇÃO */}
           <Box id="step1-identificacao" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="IDENTIFICAÇÃO" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="IDENTIFICAÇÃO" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(identificacaoFields)}
             </FlexColumnBorder>
           </Box>
 
           {/* STEP 1 - PREPARO DO PAVIMENTO */}
           <Box id="step1-preparo" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="PREPARO DO PAVIMENTO" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="PREPARO DO PAVIMENTO" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(preparoPavimentoFields)}
             </FlexColumnBorder>
           </Box>
 
           {/* STEP 1 - DATA DA ÚLTIMA ATUALIZAÇÃO */}
           <Box id="step1-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="DATA DA ÚLTIMA ATUALIZAÇÃO" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="DATA DA ÚLTIMA ATUALIZAÇÃO" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(dataAtualizacaoFields, '1fr 1fr')}
             </FlexColumnBorder>
           </Box>
 
           {/* STEP 1 - CARACTERÍSTICAS */}
           <Box id="step1-caracteristicas" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="CARACTERÍSTICAS" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="CARACTERÍSTICAS" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(caracteristicasFields)}
             </FlexColumnBorder>
           </Box>
@@ -303,7 +303,7 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
           {/* STEP 1 - COMPOSIÇÃO ESTRUTURAL */}
           {(generalData?.camadasEstruturais && generalData.camadasEstruturais.length > 0) && (
             <Box id="step1-composicao" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-              <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+              <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
                   <DataGrid
                     rows={generalData.camadasEstruturais.map((item: any, index: number) => ({
@@ -336,14 +336,14 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
 
           {/* STEP 2 - COORDENADAS */}
           <Box id="step2-coordinates" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="COORDENADAS" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="COORDENADAS" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(coordinatesFields, '1fr 1fr 1fr')}
             </FlexColumnBorder>
           </Box>
 
           {/* STEP 2 - COMPOSIÇÃO ESTRUTURAL */}
           <Box id="step2-structural-composition" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
                 {rows && rows.length > 0 && (
                   <DataGrid
@@ -376,40 +376,40 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
 
           {/* STEP 3 - TRATAMENTO SUPERFICIAL */}
           <Box id="step3-tratamento" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="TRATAMENTO SUPERFICIAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="TRATAMENTO SUPERFICIAL" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(tratamentoFields)}
             </FlexColumnBorder>
           </Box>
 
           <Box id="step3-emulsao" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="EMULSÃO ASFÁLTICA" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="EMULSÃO ASFÁLTICA" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(emulsaoFields)}
             </FlexColumnBorder>
           </Box>
 
           <Box id="step3-parametros" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="PARÂMETROS DO MATERIAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="PARÂMETROS DO MATERIAL" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(parametrosFields)}
             </FlexColumnBorder>
           </Box>
 
           {/* STEP 4 - DADOS COMERCIAIS */}
           <Box id="step4-comerciais" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="DADOS COMERCIAIS" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="DADOS COMERCIAIS" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(comerciaisFields)}
             </FlexColumnBorder>
           </Box>
 
           {/* STEP 4 - LIGANTE ORIGINAL */}
           <Box id="step4-original" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="LIGANTE ORIGINAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="LIGANTE ORIGINAL" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(originalFields)}
             </FlexColumnBorder>
           </Box>
 
           {/* STEP 4 - DSR ORIGINAL (dinâmico) */}
           <Box id="step4-dsr-original" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="DSR - LIGANTE ORIGINAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="DSR - LIGANTE ORIGINAL" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {(step4Data?.dsr_original || []).length > 0 ? (
                 <Box
                   sx={{
@@ -441,7 +441,7 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
 
           {/* STEP 4 - DSR RTFOT (dinâmico) */}
           <Box id="step4-rtfot" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="LIGANTE ENVELHECIDO RTFOT" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="LIGANTE ENVELHECIDO RTFOT" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {(step4Data?.dsr_rtfot || []).length > 0 ? (
                 <Box
                   sx={{
@@ -473,56 +473,56 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
 
           {/* STEP 4 - MSCR */}
           <Box id="step4-mscr" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="MSCR" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="MSCR" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(mscrFields, '1fr 1fr')}
             </FlexColumnBorder>
           </Box>
 
           {/* STEP 4 - LAS */}
           <Box id="step4-las" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="LAS" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="LAS" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(lasFields, '1fr 1fr 1fr')}
             </FlexColumnBorder>
           </Box>
 
           {/* STEP 4 - BBR */}
           <Box id="step4-bbr" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="BBR (RTFOT + PAV)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="BBR (RTFOT + PAV)" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(bbrFields, '1fr 1fr 1fr')}
             </FlexColumnBorder>
           </Box>
 
           {/* STEP 5 - PROPRIEDADES GERAIS */}
           <Box id="step5-gerais" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="PROPRIEDADES GERAIS" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="PROPRIEDADES GERAIS" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(geraisFields, '1fr 1fr 1fr')}
             </FlexColumnBorder>
           </Box>
 
           {/* STEP 5 - CURVA DE FADIGA */}
           <Box id="step5-fadiga" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="CURVA DE FADIGA (COMPRESSÃO DIAMETRAL)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="CURVA DE FADIGA (COMPRESSÃO DIAMETRAL)" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(curvaFadigaFields)}
             </FlexColumnBorder>
           </Box>
 
           {/* STEP 5 - CURVAS-MESTRAS */}
           <Box id="step5-sigmoidal" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="CURVAS-MESTRAS (FUNÇÃO SIGMOIDAL)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="CURVAS-MESTRAS (FUNÇÃO SIGMOIDAL)" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(sigmoidalFields)}
             </FlexColumnBorder>
           </Box>
 
           {/* STEP 5 - COEFICIENTES G² */}
           <Box id="step5-dano" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="COEFICIENTES DE REGRESSÃO (G²)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="COEFICIENTES DE REGRESSÃO (G²)" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(danoFields)}
             </FlexColumnBorder>
           </Box>
 
           {/* STEP 5 - PRONY */}
           <Box id="step5-prony" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="MÓDULOS DE RELAXAÇÃO (PRONY)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="MÓDULOS DE RELAXAÇÃO (PRONY)" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               <Box
                 sx={{
                   display: 'grid',
@@ -552,7 +552,7 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
 
           {/* STEP 5 - SHIFT MODEL */}
           <Box id="step5-shift" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-            <FlexColumnBorder title="COEFICIENTES DE REGRESSÃO DO SHIFT MODEL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="COEFICIENTES DE REGRESSÃO DO SHIFT MODEL" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
               {renderFields(shiftModelFields)}
             </FlexColumnBorder>
           </Box>
@@ -560,7 +560,7 @@ const BinderAsphaltConcreteResume = ({ setNextDisabled }: EssayPageProps) => {
           {/* OBSERVAÇÕES */}
           {(generalData?.observations || step3Data?.observacoes || step4Data?.observacoes || step5Data?.observacoes) && (
             <Box id="observacoes" sx={{ paddingTop: '1rem', paddingX: '6rem', paddingBottom: '2rem' }}>
-              <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+              <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
                 <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', justifyItems: 'center', alignItems: 'center', gap: '1rem' }}>
                   {generalData?.observations && (
                     <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}>

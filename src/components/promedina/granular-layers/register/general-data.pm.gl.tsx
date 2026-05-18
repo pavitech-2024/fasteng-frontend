@@ -143,7 +143,7 @@ const GranularLayers_step1 = ({ setNextDisabled }: EssayPageProps) => {
 
   return (
     <>
-      <FlexColumnBorder title="IDENTIFICAÇÃO" open={true} theme={'#07B811'}>
+      <FlexColumnBorder title="IDENTIFICAÇÃO" open={true} theme={'#0c4d0f'}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'flex', width: '100%', flexWrap: 'wrap', '& > *': { width: 'calc(50% - 10px)' }, gap: '5px 20px', marginBottom: '10px', marginTop: '-20px' }}>
             {renderTextField('name', 'INSTITUIÇÃO + NÚMERO DO TRECHO + TIPO DE EXECUÇÃO + ANO DE IMPLANTAÇÃO', generalData?.name)}
@@ -158,7 +158,7 @@ const GranularLayers_step1 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="PREPARO DO PAVIMENTO" open={true} theme={'#07B811'}>
+      <FlexColumnBorder title="PREPARO DO PAVIMENTO" open={true} theme={'#0c4d0f'}>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', '& > *': { width: 'calc(50% - 10px)' } }}>
           {renderTextField('iriPrerehabilitation', 'IRI (m/km) PRÉ-REABILITAÇÃO', generalData?.iriPrerehabilitation)}
           {renderTextField('atPrerehabilitation', 'AT (%) PRÉ-REABILITAÇÃO', generalData?.atPrerehabilitation)}
@@ -171,7 +171,7 @@ const GranularLayers_step1 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="DATA DA ÚLTIMA ATUALIZAÇÃO" open={true} theme={'#07B811'}>
+      <FlexColumnBorder title="DATA DA ÚLTIMA ATUALIZAÇÃO" open={true} theme={'#0c4d0f'}>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', '& > *': { width: 'calc(50% - 10px)' } }}>
           {renderTextField('lastUpdate', 'DATA DA ÚLTIMA ATUALIZAÇÃO', generalData?.lastUpdate, 'date')}
           {renderTextField('serviceTimeYears', 'TEMPO EM SERVIÇO (ANOS)', generalData?.serviceTimeYears)}
@@ -179,7 +179,7 @@ const GranularLayers_step1 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="CARACTERÍSTICAS" open={true} theme={'#07B811'}>
+      <FlexColumnBorder title="CARACTERÍSTICAS" open={true} theme={'#0c4d0f'}>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', '& > *': { width: 'calc(50% - 10px)' } }}>
           {renderTextField('roadName', 'LOCAL (RODOVIA/AVENIDA)', generalData?.roadName)}
           {renderTextField('cityState', 'MUNICÍPIO/ESTADO', generalData?.cityState)}
@@ -193,7 +193,7 @@ const GranularLayers_step1 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="COORDENADAS" open={true} theme={'#07B811'}>
+      <FlexColumnBorder title="COORDENADAS" open={true} theme={'#0c4d0f'}>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', '& > *': { width: 'calc(50% - 10px)' } }}>
           {renderTextField('inicioEstaca', 'INÍCIO - ESTACA', generalData?.inicioEstaca)}
           {renderTextField('inicioMetros', 'INÍCIO - METROS', generalData?.inicioMetros)}
@@ -203,10 +203,10 @@ const GranularLayers_step1 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#07B811'}>
+      <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#0c4d0f'}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 2fr 1fr 50px', gap: '10px', fontWeight: 'bold', borderBottom: '2px solid #07B811', paddingBottom: '10px', marginBottom: '10px' }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 2fr 1fr 50px', gap: '10px', fontWeight: 'bold', borderBottom: '2px solid #0c4d0f', paddingBottom: '10px', marginBottom: '10px' }}>
               <Box sx={{ textTransform: 'uppercase' }}>CAMADA</Box>
               <Box sx={{ textTransform: 'uppercase' }}>MATERIAL</Box>
               <Box sx={{ textTransform: 'uppercase' }}>ESPESSURA (mm)</Box>
@@ -228,13 +228,13 @@ const GranularLayers_step1 = ({ setNextDisabled }: EssayPageProps) => {
             ))}
           </Box>
 
-          <Button variant="outlined" startIcon={<AddIcon />} onClick={adicionarCamada} sx={{ borderColor: '#07B811', color: '#07B811', textTransform: 'uppercase', '&:hover': { borderColor: '#05990e', backgroundColor: 'rgba(7, 184, 17, 0.04)' } }}>
+          <Button variant="outlined" startIcon={<AddIcon />} onClick={adicionarCamada} sx={{ borderColor: '#0c4d0f', color: '#0c4d0f', textTransform: 'uppercase', '&:hover': { borderColor: '#0a3a0d', backgroundColor: 'rgba(12, 77, 15, 0.04)' } }}>
             ADICIONAR CAMADA
           </Button>
 
           <Box sx={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px dashed #ccc', display: 'flex', flexDirection: 'column', gap: '15px' }}>
             <Box sx={{ display: 'flex', gap: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
-              <Button variant="contained" component="label" sx={{ backgroundColor: '#07B811', textTransform: 'uppercase', '&:hover': { backgroundColor: '#05990e' } }}>
+              <Button variant="contained" component="label" sx={{ backgroundColor: '#0c4d0f', textTransform: 'uppercase', '&:hover': { backgroundColor: '#0a3a0d' } }}>
                 ADICIONAR IMAGEM
                 <input type="file" hidden accept="image/*" onChange={handleImageUpload} />
               </Button>

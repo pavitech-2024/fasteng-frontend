@@ -206,7 +206,7 @@ const renderTextField = (
   return (
     <>
       {/* CARD 1: IDENTIFICAÇÃO */}
-    <FlexColumnBorder title="IDENTIFICAÇÃO" open={true} theme={'#07B811'}>
+    <FlexColumnBorder title="IDENTIFICAÇÃO" open={true} theme={'#0ab39f'}>
   <Box
     sx={{
       width: '100%',
@@ -255,7 +255,7 @@ const renderTextField = (
 </FlexColumnBorder>
 
       {/* CARD 2: PREPARO DO PAVIMENTO */}
-      <FlexColumnBorder title="PREPARO DO PAVIMENTO" open={true} theme={'#07B811'}>
+      <FlexColumnBorder title="PREPARO DO PAVIMENTO" open={true} theme={'#0ab39f'}>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', '& > *': { width: 'calc(50% - 10px)' } }}>
           {renderTextField('iriPreReabilitacao', 'IRI (m/km) Pré-Reabilitação', extendedGeneralData.iriPreReabilitacao, 'number')}
           {renderTextField('atPreReabilitacao', 'AT (%) Pré-Reabilitação', extendedGeneralData.atPreReabilitacao, 'number')}
@@ -270,7 +270,7 @@ const renderTextField = (
       </FlexColumnBorder>
 
       {/* CARD 3: DATA DA ÚLTIMA ATUALIZAÇÃO */}
-      <FlexColumnBorder title="DATA DA ÚLTIMA ATUALIZAÇÃO" open={true} theme={'#07B811'}>
+      <FlexColumnBorder title="DATA DA ÚLTIMA ATUALIZAÇÃO" open={true} theme={'#0ab39f'}>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', '& > *': { width: 'calc(50% - 10px)' } }}>
           {renderTextField('dataUltimaAtualizacao', 'Data da última atualização', extendedGeneralData.dataUltimaAtualizacao, 'date')}
           {renderTextField('tempoServicoAnos', 'Tempo em Serviço (anos)', extendedGeneralData.tempoServicoAnos, 'number')}
@@ -279,7 +279,7 @@ const renderTextField = (
       </FlexColumnBorder>
 
       {/* CARD 4: CARACTERÍSTICAS */}
-      <FlexColumnBorder title="CARACTERÍSTICAS" open={true} theme={'#07B811'}>
+      <FlexColumnBorder title="CARACTERÍSTICAS" open={true} theme={'#0ab39f'}>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', '& > *': { width: 'calc(50% - 10px)' } }}>
           {renderTextField('local', 'Local (rodovia/avenida)', extendedGeneralData.local)}
           {renderTextField('municipioEstado', 'Município/Estado', extendedGeneralData.municipioEstado)}
@@ -299,7 +299,7 @@ const renderTextField = (
       </FlexColumnBorder>
 
       {/* CARD 5: COORDENADAS */}
-<FlexColumnBorder title="COORDENADAS" open={true} theme={'#07B811'}>
+<FlexColumnBorder title="COORDENADAS" open={true} theme={'#0ab39f'}>
   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', '& > *': { width: 'calc(50% - 10px)' } }}>
     {renderTextField('latitudeI', 'LATITUDE INICIAL', extendedGeneralData.latitudeI)}
     {renderTextField('longitudeI', 'LONGITUDE INICIAL', extendedGeneralData.longitudeI)}
@@ -309,7 +309,7 @@ const renderTextField = (
 </FlexColumnBorder>
 
       {/* CARD 5: COMPOSIÇÃO ESTRUTURAL */}
-      <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#07B811'}>
+      <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#0ab39f'}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
           {/* Tabela de Camadas */}
@@ -320,7 +320,7 @@ const renderTextField = (
               gridTemplateColumns: '2fr 2fr 1fr 50px',
               gap: '10px',
               fontWeight: 'bold',
-              borderBottom: '2px solid #07B811',
+              borderBottom: '2px solid #0ab39f',
               paddingBottom: '10px',
               marginBottom: '10px'
             }}>
@@ -388,8 +388,8 @@ const renderTextField = (
             startIcon={<AddIcon />}
             onClick={adicionarCamada}
             sx={{
-              borderColor: '#07B811',
-              color: '#07B811',
+              borderColor: '#0ab39f',
+              color: '#0ab39f',
               textTransform: 'uppercase',
               '&:hover': {
                 borderColor: '#05990e',
@@ -414,7 +414,7 @@ const renderTextField = (
                 variant="contained"
                 component="label"
                 sx={{
-                  backgroundColor: '#07B811',
+                  backgroundColor: '#0ab39f',
                   textTransform: 'uppercase',
                   '&:hover': { backgroundColor: '#05990e' }
                 }}
