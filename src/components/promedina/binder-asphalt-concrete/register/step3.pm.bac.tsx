@@ -54,7 +54,7 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
             sx={{ flex: 1 }}
           />
           <Tooltip title={tooltips[key] || 'Preencher conforme especificação'} arrow>
-            <IconButton size="small" sx={{ color: '#07B811' }}>
+            <IconButton size="small" sx={{ color: '#0ab39f' }}>
               <HelpOutlineIcon fontSize="small" />
             </IconButton>
           </Tooltip>
@@ -77,7 +77,7 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
           sx={{ flex: 1 }}
         />
         <Tooltip title={tooltips[key] || 'Preencher conforme especificação'} arrow>
-          <IconButton size="small" sx={{ color: '#07B811' }}>
+          <IconButton size="small" sx={{ color: '#0ab39f' }}>
             <HelpOutlineIcon fontSize="small" />
           </IconButton>
         </Tooltip>
@@ -120,7 +120,7 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
 
   return (
     <>
-      <FlexColumnBorder title="TRATAMENTO SUPERFICIAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="TRATAMENTO SUPERFICIAL" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
             {tratamentoInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.adornment))}
@@ -128,7 +128,7 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="EMULSÃO ASFÁLTICA" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="EMULSÃO ASFÁLTICA" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
             {emulsaoInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type))}
@@ -136,7 +136,7 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="PARÂMETROS DO MATERIAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="PARÂMETROS DO MATERIAL" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
             {parametrosInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.adornment))}
@@ -144,7 +144,7 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: '1fr', gap: '10px 20px', paddingBottom: '20px' }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
@@ -161,7 +161,7 @@ const BinderAsphaltConcrete_step3 = ({ setNextDisabled }: EssayPageProps) => {
                 }}
               />
               <Tooltip title="Caso necessário, utilizar o espaço para alguma anotação que facilite a compreensão dos dados" arrow>
-                <IconButton size="small" sx={{ color: '#07B811', mt: 1 }}>
+                <IconButton size="small" sx={{ color: '#0ab39f', mt: 1 }}>
                   <HelpOutlineIcon fontSize="small" />
                 </IconButton>
               </Tooltip>

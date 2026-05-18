@@ -62,7 +62,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
             sx={{ flex: 1 }}
           />
           <Tooltip title={tooltips[key] || 'Preencher conforme especificação'} arrow>
-            <IconButton size="small" sx={{ color: '#07B811' }}>
+            <IconButton size="small" sx={{ color: '#0ab39f' }}>
               <HelpOutlineIcon fontSize="small" />
             </IconButton>
           </Tooltip>
@@ -84,7 +84,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
           sx={{ flex: 1 }}
         />
         <Tooltip title={tooltips[key] || 'Preencher conforme especificação'} arrow>
-          <IconButton size="small" sx={{ color: '#07B811' }}>
+          <IconButton size="small" sx={{ color: '#0ab39f' }}>
             <HelpOutlineIcon fontSize="small" />
           </IconButton>
         </Tooltip>
@@ -169,7 +169,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
 
   return (
     <>
-      <FlexColumnBorder title="DADOS COMERCIAIS" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="DADOS COMERCIAIS" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
             {comerciaisInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type))}
@@ -177,7 +177,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="LIGANTE ORIGINAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="LIGANTE ORIGINAL" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
             {originalInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.adornment))}
@@ -185,7 +185,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="DSR - LIGANTE ORIGINAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="DSR - LIGANTE ORIGINAL" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%' }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
             <Button
@@ -219,7 +219,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
                       sx={{ flex: 1 }}
                     />
                     <Tooltip title="Temperatura do teste DSR (°C)" arrow>
-                      <IconButton size="small" sx={{ color: '#07B811' }}>
+                      <IconButton size="small" sx={{ color: '#0ab39f' }}>
                         <HelpOutlineIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
@@ -233,7 +233,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
                       sx={{ flex: 1 }}
                     />
                     <Tooltip title="kPa" arrow>
-                      <IconButton size="small" sx={{ color: '#07B811' }}>
+                      <IconButton size="small" sx={{ color: '#0ab39f' }}>
                         <HelpOutlineIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
@@ -248,7 +248,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="LIGANTE ENVELHECIDO NO RTFOT (75 MIN, 163°C)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="LIGANTE ENVELHECIDO NO RTFOT (75 MIN, 163°C)" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%' }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
             <Button
@@ -282,7 +282,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
                       sx={{ flex: 1 }}
                     />
                     <Tooltip title="Temperatura do teste DSR após RTFOT (°C)" arrow>
-                      <IconButton size="small" sx={{ color: '#07B811' }}>
+                      <IconButton size="small" sx={{ color: '#0ab39f' }}>
                         <HelpOutlineIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
@@ -296,7 +296,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
                       sx={{ flex: 1 }}
                     />
                     <Tooltip title="kPa" arrow>
-                      <IconButton size="small" sx={{ color: '#07B811' }}>
+                      <IconButton size="small" sx={{ color: '#0ab39f' }}>
                         <HelpOutlineIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
@@ -311,7 +311,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="MSCR (MULTIPLE STRESS CREEP RECOVERY)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="MSCR (MULTIPLE STRESS CREEP RECOVERY)" open={true} theme={ '#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
             {mscrInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.adornment))}
@@ -322,7 +322,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="LAS (LINEAR AMPLITUDE SWEEP)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="LAS (LINEAR AMPLITUDE SWEEP)" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '10px' }}>
             {renderTextField('las_temperatura', 'TEMPERATURA DO TESTE (°C)', step4Data?.las_temperatura, 'text', '°C')}
@@ -333,7 +333,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="LIGANTE ENVELHECIDO NO RTFOT + PAV (20 HORAS, 100°C)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="LIGANTE ENVELHECIDO NO RTFOT + PAV (20 HORAS, 100°C)" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
             {bbrInputs.map((input) => renderTextField(input.key, input.label, input.value, input.type, input.adornment))}
@@ -341,7 +341,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: '1fr', gap: '10px 20px', paddingBottom: '20px' }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
@@ -358,7 +358,7 @@ const BinderAsphaltConcrete_step4 = ({ setNextDisabled }: EssayPageProps) => {
                 }}
               />
               <Tooltip title="Caso necessário, utilizar o espaço para alguma anotação que facilite a compreensão dos dados" arrow>
-                <IconButton size="small" sx={{ color: '#07B811', mt: 1 }}>
+                <IconButton size="small" sx={{ color: '#0ab39f', mt: 1 }}>
                   <HelpOutlineIcon fontSize="small" />
                 </IconButton>
               </Tooltip>

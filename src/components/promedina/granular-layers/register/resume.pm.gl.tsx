@@ -48,7 +48,7 @@ const GranularLayersResume = ({ setNextDisabled }: EssayPageProps) => {
     if (!hasData) return null;
     return (
       <Box id={id} sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-        <FlexColumnBorder title={title} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+        <FlexColumnBorder title={title} open={true} theme={'#0c4d0f'} sx_title={{ whiteSpace: 'wrap' }}>
           {renderFields(fields, cols)}
         </FlexColumnBorder>
       </Box>
@@ -125,7 +125,7 @@ const GranularLayersResume = ({ setNextDisabled }: EssayPageProps) => {
 
         {structuralRows.length > 0 && (
           <Box id="composicao-estrutural" sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-            <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="COMPOSIÇÃO ESTRUTURAL" open={true} theme={'#0c4d0f'} sx_title={{ whiteSpace: 'wrap' }}>
               <DataGrid rows={structuralRows} hideFooter disableColumnMenu disableColumnFilter columns={columns} sx={{ borderRadius: '10px' }} />
               {data?.images && (
                 <Box sx={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
@@ -145,7 +145,7 @@ const GranularLayersResume = ({ setNextDisabled }: EssayPageProps) => {
 
           return (
             <Box key={layer.id || index} id="step2-layers" sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-              <FlexColumnBorder title={`GRUPO MCT${layers.length > 1 ? ` - CAMADA ${index + 1}` : ''}`} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+              <FlexColumnBorder title={`GRUPO MCT${layers.length > 1 ? ` - CAMADA ${index + 1}` : ''}`} open={true} theme={'#0c4d0f'} sx_title={{ whiteSpace: 'wrap' }}>
                 {renderFields([
                   { title: "COEFICIENTE c'", value: layer.mctCoefficientC },
                   { title: "ÍNDICE e'", value: layer.mctIndexE },
@@ -156,7 +156,7 @@ const GranularLayersResume = ({ setNextDisabled }: EssayPageProps) => {
               </FlexColumnBorder>
 
               <Box sx={{ paddingTop: '1rem' }}>
-                <FlexColumnBorder title="MÓDULO DE RESILIÊNCIA" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+                <FlexColumnBorder title="MÓDULO DE RESILIÊNCIA" open={true} theme={'#0c4d0f'} sx_title={{ whiteSpace: 'wrap' }}>
                   {renderFields([
                     { title: 'k1', value: layer.k1 },
                     { title: 'k2', value: layer.k2 },
@@ -167,7 +167,7 @@ const GranularLayersResume = ({ setNextDisabled }: EssayPageProps) => {
               </Box>
 
               <Box sx={{ paddingTop: '1rem' }}>
-                <FlexColumnBorder title="DEFORMAÇÃO PERMANENTE" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+                <FlexColumnBorder title="DEFORMAÇÃO PERMANENTE" open={true} theme={'#0c4d0f'} sx_title={{ whiteSpace: 'wrap' }}>
                   {renderFields([
                     { title: 'k1/psi', value: layer.k1psi1 },
                     { title: 'k2/psi', value: layer.k2psi2 },
@@ -182,7 +182,7 @@ const GranularLayersResume = ({ setNextDisabled }: EssayPageProps) => {
 
         {step2Data?.observations && (
           <Box id="observations" sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-            <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+            <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#0c4d0f'} sx_title={{ whiteSpace: 'wrap' }}>
               <Typography sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black', textAlign: 'center' }}>{step2Data.observations}</Typography>
             </FlexColumnBorder>
           </Box>

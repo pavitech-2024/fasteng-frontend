@@ -119,7 +119,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
     if (!content) return null;
     return (
       <Box sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-        <FlexColumnBorder title={title} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+        <FlexColumnBorder title={title} open={true} theme={ '#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
           {content}
         </FlexColumnBorder>
       </Box>
@@ -315,7 +315,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
     if (!dsrArray || dsrArray.length === 0) return null;
     return (
       <Box sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-        <FlexColumnBorder title={title} open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+        <FlexColumnBorder title={title} open={true} theme={ '#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
           <Box
             sx={{
               display: 'grid',
@@ -367,7 +367,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
         <FlexColumnBorder
           title="MÓDULOS DE RELAXAÇÃO (PRONY)"
           open={true}
-          theme={'#07B811'}
+          theme={ '#0ab39f'}
           sx_title={{ whiteSpace: 'wrap' }}
         >
           <Box
@@ -440,7 +440,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
 
     return (
       <Box sx={{ paddingTop: '1rem', paddingX: { mobile: '1rem', notebook: '6rem' } }}>
-        <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+        <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={ '#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingBottom: '1rem' }}>
             {obs1 && (
               <Box>
@@ -502,7 +502,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
             <FlexColumnBorder
               title="COMPOSIÇÃO ESTRUTURAL"
               open={true}
-              theme={'#07B811'}
+              theme={ '#0ab39f'}
               sx_title={{ whiteSpace: 'wrap' }}
             >
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
@@ -559,7 +559,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
               <FlexColumnBorder
                 title="COMPOSIÇÃO ESTRUTURAL"
                 open={true}
-                theme={'#07B811'}
+                theme={ '#0ab39f'}
                 sx_title={{ whiteSpace: 'wrap' }}
               >
                 <Box
@@ -832,7 +832,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
 
         {/* DADOS GERAIS */}
         <Box id="general-data" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-          <FlexColumnBorder title={t('pm.general.data')} open={true} theme={'#07B811'}>
+          <FlexColumnBorder title={t('pm.general.data')} open={true} theme={ '#0ab39f'}>
             <Box
               sx={{
                 display: { mobile: 'flex', notebook: 'grid' },
@@ -888,7 +888,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
           <FlexColumnBorder
             title={t('pm.paviment.data')}
             open={true}
-            theme={'#07B811'}
+            theme={ '#0ab39f'}
             sx_title={{ whiteSpace: 'wrap' }}
           >
             <Box
@@ -936,7 +936,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
 
         {/* PREPARO DO PAVIMENTO */}
         <Box id="paviment-preparation" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-          <FlexColumnBorder title={t('pm.paviment.preparation')} open={true} theme={'#07B811'}>
+          <FlexColumnBorder title={t('pm.paviment.preparation')} open={true} theme={ '#0ab39f'}>
             <Box
               sx={{
                 display: 'grid',
@@ -983,7 +983,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
           <FlexColumnBorder
             title={t('pm.sample-data')}
             open={true}
-            theme={'#07B811'}
+            theme={ '#0ab39f'}
             sx_title={{ whiteSpace: 'wrap' }}
           >
             <Box
@@ -1032,7 +1032,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
           <FlexColumnBorder
             title={t('pm.diametral.compression.fatigue.curve')}
             open={true}
-            theme={'#07B811'}
+            theme={ '#0ab39f'}
             sx_title={{ whiteSpace: 'wrap' }}
           >
             <Box
@@ -1075,7 +1075,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
 
         {/* VISCOSIDADE BROOKFIELD */}
         <Box id="brookfield-viscosity" sx={{ paddingTop: '1rem', paddingX: '6rem' }}>
-          <FlexColumnBorder title={t('pm.brookfield.viscosity')} open={true} theme={'#07B811'}>
+          <FlexColumnBorder title={t('pm.brookfield.viscosity')} open={true} theme={ '#0ab39f'}>
             <Box
               sx={{
                 display: 'grid',
@@ -1122,7 +1122,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
           <FlexColumnBorder
             title={t('pm.sample-data')}
             open={true}
-            theme={'#07B811'}
+            theme={ '#0ab39f'}
             sx_title={{ whiteSpace: 'wrap' }}
           >
             <Box
@@ -1172,7 +1172,7 @@ const SpecificSample_BinderAsphaltConcrete = () => {
             <FlexColumnBorder
               title={t('pm.structural.composition')}
               open={true}
-              theme={'#07B811'}
+              theme={ '#0ab39f'}
               sx_title={{ whiteSpace: 'wrap' }}
             >
               <Box

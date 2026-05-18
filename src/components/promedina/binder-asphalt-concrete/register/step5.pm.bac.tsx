@@ -71,7 +71,7 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
             sx={{ flex: 1 }}
           />
           <Tooltip title={tooltips[key] || 'Preencher conforme especificação'} arrow>
-            <IconButton size="small" sx={{ color: '#07B811' }}>
+            <IconButton size="small" sx={{ color: '#0ab39f' }}>
               <HelpOutlineIcon fontSize="small" />
             </IconButton>
           </Tooltip>
@@ -92,7 +92,7 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
           sx={{ flex: 1 }}
         />
         <Tooltip title={tooltips[key] || 'Preencher conforme especificação'} arrow>
-          <IconButton size="small" sx={{ color: '#07B811' }}>
+          <IconButton size="small" sx={{ color: '#0ab39f' }}>
             <HelpOutlineIcon fontSize="small" />
           </IconButton>
         </Tooltip>
@@ -179,7 +179,7 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
 
   return (
     <>
-      <FlexColumnBorder title="PROPRIEDADES GERAIS" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="PROPRIEDADES GERAIS" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
             {geraisInputs.map((input) => renderTextField(input.key, input.label, input.value, 'text', input.adornment))}
@@ -187,7 +187,7 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="CURVA DE FADIGA (COMPRESSÃO DIAMETRAL)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="CURVA DE FADIGA (COMPRESSÃO DIAMETRAL)" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
             {curvaFadigaInputs.map((input) => renderTextField(input.key, input.label, input.value, 'text'))}
@@ -195,7 +195,7 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="CURVAS-MESTRAS E COEFICIENTES DE TRANSLAÇÃO" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="CURVAS-MESTRAS E COEFICIENTES DE TRANSLAÇÃO" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
             {sigmoidalInputs.map((input) => renderTextField(input.key, input.label, input.value, 'text'))}
@@ -203,7 +203,7 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="PARÂMETRO α DE EVOLUÇÃO DO DANO" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="PARÂMETRO α DE EVOLUÇÃO DO DANO" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
             {parametroAlfaInputs.map((input) => renderTextField(input.key, input.label, input.value, 'text'))}
@@ -211,7 +211,7 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="COEFICIENTES DE REGRESSÃO DAS CURVAS CARACTERÍSTICAS DE DANO (G²)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="COEFICIENTES DE REGRESSÃO DAS CURVAS CARACTERÍSTICAS DE DANO (G²)" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
             {danoInputs.map((input) => renderTextField(input.key, input.label, input.value, 'text'))}
@@ -219,7 +219,7 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="EINF" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="EINF" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
             {einfInputs.map((input) => renderTextField(input.key, input.label, input.value, 'text', input.adornment))}
@@ -227,7 +227,7 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="MÓDULOS DE RELAXAÇÃO (PRONY)" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="MÓDULOS DE RELAXAÇÃO (PRONY)" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', mb: 2 }}>
             <Button startIcon={<AddIcon />} onClick={handleAddProny} variant="outlined" size="small" sx={{ textTransform: 'uppercase' }}>
@@ -253,7 +253,7 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
                     sx={{ flex: 1 }}
                   />
                   <Tooltip title="Colocar os coeficientes de ajuste do módulo de relaxação. O número de elementos e os tempos adotados na série de Prony pode variar de acordo com a realização do ensaio" arrow>
-                    <IconButton size="small" sx={{ color: '#07B811' }}>
+                    <IconButton size="small" sx={{ color: '#0ab39f' }}>
                       <HelpOutlineIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
@@ -271,7 +271,7 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
                     sx={{ flex: 1 }}
                   />
                   <Tooltip title="Colocar os coeficientes de ajuste do módulo de relaxação. O número de elementos e os tempos adotados na série de Prony pode variar de acordo com a realização do ensaio" arrow>
-                    <IconButton size="small" sx={{ color: '#07B811' }}>
+                    <IconButton size="small" sx={{ color: '#0ab39f' }}>
                       <HelpOutlineIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
@@ -285,7 +285,7 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="COEFICIENTES DE REGRESSÃO DO SHIFT MODEL" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="COEFICIENTES DE REGRESSÃO DO SHIFT MODEL" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
             {shiftModelInputs.map((input) => renderTextField(input.key, input.label, input.value, 'text'))}
@@ -293,7 +293,7 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
+      <FlexColumnBorder title="OBSERVAÇÕES" open={true} theme={'#0ab39f'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: '1fr', gap: '10px 20px', paddingBottom: '20px' }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
@@ -310,7 +310,7 @@ const BinderAsphaltConcrete_step5 = ({ setNextDisabled }: EssayPageProps) => {
                 }}
               />
               <Tooltip title="Caso necessário, utilizar o espaço para alguma anotação que facilite a compreensão dos dados" arrow>
-                <IconButton size="small" sx={{ color: '#07B811', mt: 1 }}>
+                <IconButton size="small" sx={{ color: '#0ab39f', mt: 1 }}>
                   <HelpOutlineIcon fontSize="small" />
                 </IconButton>
               </Tooltip>

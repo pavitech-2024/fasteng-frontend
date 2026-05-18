@@ -124,7 +124,7 @@ const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
           sx={{ flex: 1 }}
         />
         <Tooltip title={tips[key] || 'Preencher conforme especificação'} arrow>
-          <IconButton size="small" sx={{ color: '#07B811' }}>
+          <IconButton size="small" sx={{ color: '#0c4d0f' }}>
             <HelpOutlineIcon fontSize="small" />
           </IconButton>
         </Tooltip>
@@ -147,7 +147,7 @@ const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
                 sx={{ flex: 1 }}
               />
               <Tooltip title="Preencher com: Subleito, Aterro, Sub-base Granular ou Base Granular" arrow>
-                <IconButton size="small" sx={{ color: '#07B811' }}>
+                <IconButton size="small" sx={{ color: '#0c4d0f' }}>
                   <HelpOutlineIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
@@ -159,7 +159,7 @@ const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
             )}
           </Box>
 
-          <FlexColumnBorder title="GRUPO MCT" open theme={'#07B811'}>
+          <FlexColumnBorder title="GRUPO MCT" open theme={'#0c4d0f'}>
             <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 2 }}>
               {renderField(layer.id, layer.name, 'mctCoefficientC', "COEFICIENTE c'", layer.mctCoefficientC)}
               {renderField(layer.id, layer.name, 'mctIndexE', "ÍNDICE e'", layer.mctIndexE)}
@@ -169,7 +169,7 @@ const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
             </Box>
           </FlexColumnBorder>
 
-          <FlexColumnBorder title="MÓDULO DE RESILIÊNCIA" open theme={'#07B811'}>
+          <FlexColumnBorder title="MÓDULO DE RESILIÊNCIA" open theme={'#0c4d0f'}>
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2 }}>
               {renderField(layer.id, layer.name, 'k1', 'k1', layer.k1, 'number')}
               {renderField(layer.id, layer.name, 'k2', 'k2', layer.k2, 'number')}
@@ -178,7 +178,7 @@ const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
             </Box>
           </FlexColumnBorder>
 
-          <FlexColumnBorder title="DEFORMAÇÃO PERMANENTE" open theme={'#07B811'}>
+          <FlexColumnBorder title="DEFORMAÇÃO PERMANENTE" open theme={'#0c4d0f'}>
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2 }}>
               {renderField(layer.id, layer.name, 'k1psi1', 'ψ1', layer.k1psi1, 'number')}
               {renderField(layer.id, layer.name, 'k2psi2', 'ψ2', layer.k2psi2, 'number')}
@@ -194,7 +194,7 @@ const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
   return (
     <>
       {hasMultipleLayers ? (
-        <FlexColumnBorder open theme={'#07B811'}>{renderLayers()}</FlexColumnBorder>
+        <FlexColumnBorder open theme={'#0c4d0f'}>{renderLayers()}</FlexColumnBorder>
       ) : (
         renderLayers()
       )}
@@ -203,7 +203,7 @@ const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
         ADICIONAR CAMADA
       </Button>
 
-      <FlexColumnBorder title="OBSERVAÇÕES" open theme={'#07B811'}>
+      <FlexColumnBorder title="OBSERVAÇÕES" open theme={'#0c4d0f'}>
         <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
           <TextField
             fullWidth multiline rows={4} variant="outlined" label="OBSERVAÇÕES"
@@ -211,7 +211,7 @@ const GranularLayers_step3 = ({ setNextDisabled }: EssayPageProps) => {
             onChange={(e) => setData({ step: 1, key: 'observations', value: e.target.value })}
           />
           <Tooltip title="Caso necessário, utilizar o espaço para alguma anotação que facilite a compreensão dos dados" arrow>
-            <IconButton size="small" sx={{ color: '#07B811', mt: 1 }}>
+            <IconButton size="small" sx={{ color: '#0c4d0f', mt: 1 }}>
               <HelpOutlineIcon fontSize="small" />
             </IconButton>
           </Tooltip>
