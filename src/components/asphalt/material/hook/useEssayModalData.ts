@@ -264,7 +264,7 @@ export const useEssayModalData = (essay: any) => {
         return {
           results: [
             { label: 'Penetração', value: results?.penetration, unit: '0.1mm' },
-            { label: 'Índice de Suscetibilidade', value: results?.indexOfSusceptibility?.toFixed(2), unit: '' },
+            // { label: 'Índice de Suscetibilidade', value: results?.indexOfSusceptibility?.toFixed(2), unit: '' },
           ],
           stepData: [
             { label: 'Pontos', value: essay.penetrationCalc?.points?.join(', '), unit: '' },
@@ -277,7 +277,7 @@ export const useEssayModalData = (essay: any) => {
         return {
           results: [
             { label: 'Ponto de Amolecimento', value: results?.softeningPoint?.toString(), unit: '°C' },
-            { label: 'Índice de Suscetibilidade', value: results?.indexOfSusceptibility?.toString(), unit: '' },
+            // { label: 'Índice de Suscetibilidade', value: results?.indexOfSusceptibility?.toString(), unit: '' },
             ...(results?.alerts?.map((alert: string, index: number) => ({
               label: `Alerta ${index + 1}`,
               value: alert,
