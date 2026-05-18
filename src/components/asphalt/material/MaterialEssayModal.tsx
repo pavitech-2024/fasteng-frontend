@@ -8,6 +8,7 @@ import Loading from '@/components/molecules/loading';
 import AsphaltGranulometry_resultsTable from '@/components/asphalt/essays/granulometry/tables/results-table.granulometry';
 import { t } from 'i18next';
 import { useEssayModalData } from './hook/useEssayModalData';
+import ResultSubTitle from '@/components/atoms/titles/result-sub-title';
 
 interface MaterialEssayModalProps {
   essay: GranulometryEssay;
@@ -24,16 +25,10 @@ export const MaterialEssayModal = ({ essay, open, onClose }: MaterialEssayModalP
     hasGraph,
     hasTable,
     essayType,
-    essayTitle 
+    essayTitle,
+    modalGraphData
   } = useEssayModalData(essay);
 
-  // Dados do gráfico (apenas para granulometria)
-  const modalGraphData = hasGraph && essay.results?.graph_data ? [
-    [t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')],
-    ...essay.results.graph_data,
-  ] : [];
-
-  // Determinar o título do modal baseado no tipo de ensaio
   const modalTitle = essayType === 'granulometry' 
     ? `Ensaio: ${essay.generalData?.name || 'Sem nome'}`
     : `${essayTitle} - ${essay.generalData?.name || 'Ensaio sem nome'}`;
@@ -51,18 +46,14 @@ export const MaterialEssayModal = ({ essay, open, onClose }: MaterialEssayModalP
           width: '1200px',
         }}
       >
-        <Typography
-          variant="h5"
-          gutterBottom
-          sx={{ position: 'relative', top: -10 }} 
-        >
+        <Typography variant="h5" gutterBottom sx={{ position: 'relative', top: -10 }}>
           {modalTitle}
         </Typography>
 
         <ExperimentResume data={modalExperimentResumeData} />
 
         <FlexColumnBorder title={t('results')} open={true}>
-          {/* Cards de resultados - usando Box com flexbox */}
+          {/* Cards de resultados */}
           <Box sx={{ width: '100%', display: 'flex', gap: '10px', mt: '20px', flexWrap: 'wrap' }}>
             {modalData && modalData.length > 0 ? (
               modalData.map((item, index) => (
@@ -82,8 +73,8 @@ export const MaterialEssayModal = ({ essay, open, onClose }: MaterialEssayModalP
             )}
           </Box>
 
-          {/* Gráfico - apenas para granulometria */}
-          {hasGraph && modalGraphData.length > 1 && (
+          {/* ✅ Gráfico - Granulometria */}
+          {essayType === 'granulometry' && modalGraphData.length > 1 && (
             <Box sx={{ mt: 3 }}>
               <Chart
                 chartType="LineChart"
@@ -113,25 +104,51 @@ export const MaterialEssayModal = ({ essay, open, onClose }: MaterialEssayModalP
             </Box>
           )}
 
-          {/* Tabela - apenas para granulometria */}
+{/* ✅ Gráfico - Viscosidade Rotacional */}
+{essayType === 'viscosityRotational' && modalGraphData.length > 1 && (
+  <Box sx={{ mt: 3 }}>
+    <ResultSubTitle 
+      title={t('asphalt.essays.viscosityRotational.graph')} 
+      sx={{ margin: '.65rem' }} 
+    />
+    <Chart
+      chartType="LineChart"
+      width={'100%'}
+      height={'400px'}
+      loader={<Loading />}
+      data={modalGraphData}
+      options={{
+        backgroundColor: 'transparent',
+        hAxis: {
+          title: `${t('asphalt.essays.viscosityRotational.temperature')} C`,
+        },
+        vAxis: {
+          title: `${t('asphalt.essays.viscosityRotational.viscosity')} (SSF)`,
+        },
+        explorer: {
+          actions: ['dragToZoom', 'rightClickToReset'],
+          axis: 'vertical',
+        },
+        legend: 'none',
+        trendlines: {
+          0: {
+            type: 'polynomial',
+            degree: 4,
+            visibleInLegend: true,
+            labelInLegend: 'curva',
+          },
+        },
+      }}
+    />
+  </Box>
+)}
+
+          {/* Tabela - Granulometria */}
           {hasTable && modalRows.length > 0 && (
             <Box sx={{ mt: 3 }}>
               <AsphaltGranulometry_resultsTable rows={modalRows} columns={modalColumns} />
             </Box>
           )}
-
-          {/* 
-          
-              {essayType !== 'granulometry' && (
-            <Box sx={{ mt: 2, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
-              <Typography variant="body2" color="text.secondary">
-                Este ensaio não possui dados de granulometria para exibir gráfico ou tabela detalhada.
-              </Typography>
-            </Box>
-          )}
-          
-          */}
-         
         </FlexColumnBorder>
 
         <Button onClick={onClose} variant="contained" sx={{ mt: 2 }}>

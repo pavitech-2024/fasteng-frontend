@@ -309,6 +309,11 @@ export const useEssayModalData = (essay: any) => {
               unit: '°C',
             },
             {
+              label: 'Temp. Usinagem (média)',
+              value: results?.machiningTemperatureRange?.average?.toFixed(2),
+              unit: '°C',
+            },
+            {
               label: 'Temp. Compactação (mín)',
               value: results?.compressionTemperatureRange?.lower?.toFixed(2),
               unit: '°C',
@@ -318,9 +323,15 @@ export const useEssayModalData = (essay: any) => {
               value: results?.compressionTemperatureRange?.higher?.toFixed(2),
               unit: '°C',
             },
+            {
+              label: 'Temp. Compactação (média)',
+              value: results?.compressionTemperatureRange?.average?.toFixed(2),
+              unit: '°C',
+            },
           ],
+          // ✅ Dados do gráfico
+          graph_data: results?.curvePoints || [],
         };
-
       case ESSAY_TYPES.RTFO:
         return {
           results: [{ label: 'Perda de Massa', value: results?.mass_loss?.toFixed(2), unit: '%' }],
@@ -354,13 +365,18 @@ export const useEssayModalData = (essay: any) => {
     }
   }, [essay, essayType, results]);
 
-  // Dados do gráfico (apenas para granulometria)
-  const modalGraphData = useMemo(() => {
-    if (essayType === ESSAY_TYPES.GRANULOMETRY && modalData.graph_data && modalData.graph_data.length > 0) {
-      return [[t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')], ...modalData.graph_data];
-    }
-    return [];
-  }, [essayType, modalData]);
+ const modalGraphData = useMemo(() => {
+  if (essayType === ESSAY_TYPES.GRANULOMETRY && modalData.graph_data?.length > 0) {
+    return [
+      [t('granulometry-asphalt.passant'), t('granulometry-asphalt.diameter')],
+      ...modalData.graph_data,
+    ];
+  }
+  if (essayType === ESSAY_TYPES.VISCOSITY_ROTATIONAL && modalData.graph_data?.length > 0) {
+    return modalData.graph_data; // Já vem pronto do backend
+  }
+  return [];
+}, [essayType, modalData]);
 
   // Linhas da tabela (apenas para granulometria)
   const modalRows = useMemo(() => {
@@ -408,7 +424,7 @@ export const useEssayModalData = (essay: any) => {
     modalRows,
     modalColumns,
     stepData,
-    hasGraph: essayType === ESSAY_TYPES.GRANULOMETRY && modalGraphData.length > 1,
+    hasGraph: (essayType === ESSAY_TYPES.GRANULOMETRY || essayType === ESSAY_TYPES.VISCOSITY_ROTATIONAL) && modalGraphData.length > 1,
     hasTable: essayType === ESSAY_TYPES.GRANULOMETRY && modalRows.length > 0,
     hasStepData: stepData.length > 0,
     generalData: essay.generalData,
