@@ -155,5 +155,5 @@ class SofteningPoint_SERVICE implements IEssayService {
     }
   };
 }
-
+//tste
 export default SofteningPoint_SERVICE;

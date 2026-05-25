@@ -58,6 +58,8 @@ export class AsphaltMaterial {
     classification_AMP?: 'AMP 50/65' | 'AMP 55/75' | 'AMP 60/85' | 'AMP 65/90'; // for AMP
     observation?: string;
   };
+  data: any;
+  materials: any;
 }
 
 export type Materials = {
