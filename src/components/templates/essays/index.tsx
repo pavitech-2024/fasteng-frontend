@@ -10,6 +10,11 @@ interface EssaysTemplateProps {
   essays: Essay[];
   filterOptions?: FilterOption[];
 }
+// interface that export the props of the childrens
+export interface EssayPageProps {
+  nextDisabled?: boolean;
+  setNextDisabled?: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 export const EssaysTemplate = ({ essays, filterOptions }: EssaysTemplateProps) => {
   const [filters] = useState<string[]>(['all']);

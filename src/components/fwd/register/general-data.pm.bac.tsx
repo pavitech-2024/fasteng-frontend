@@ -1,26 +1,5 @@
-import { EssayPageProps } from '../../../templates/essay';
-import {
-  Box,
-  TextField,
-  Tooltip,
-  IconButton,
-  Typography,
-  Button,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Paper,
-  Alert,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Chip,
-  Snackbar,
-  CircularProgress,
-} from '@mui/material';
+import { EssayPageProps } from '@/components/templates/essays';
+import { Box, TextField, Tooltip, IconButton, Typography, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper, Alert, Accordion, AccordionSummary, AccordionDetails, Chip, Snackbar, CircularProgress } from '@mui/material';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
@@ -31,34 +10,16 @@ import useFWDStore, { FWDData } from '@/stores/asphalt/fwd/fwd.store';
 
 const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
   const {
-    analysisData,
-    setAnalysisData,
-    samples,
-    addSample,
-    removeSample,
-    setSamples,
-    clearSamples,
-    editingId,
-    setEditingId,
-    setActiveTab,
-    loading,
-    error,
-    setError,
-    saveAnalysis,
-    fetchAnalysis,
+    analysisData, setAnalysisData,
+    samples, addSample, removeSample, setSamples, clearSamples,
+    editingId, setEditingId, setActiveTab,
+    loading, error, setError,
+    saveAnalysis, fetchAnalysis,
   } = useFWDStore();
 
   const [currentSample, setCurrentSample] = useState<Partial<FWDData>>({
-    stationNumber: 0,
-    d0: 0,
-    d20: 0,
-    d30: 0,
-    d45: 0,
-    d60: 0,
-    d90: 0,
-    d120: 0,
-    d150: 0,
-    d180: 0,
+    stationNumber: 0, d0: 0, d20: 0, d30: 0, d45: 0, d60: 0,
+    d90: 0, d120: 0, d150: 0, d180: 0,
   });
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
@@ -67,7 +28,7 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
   useEffect(() => {
     setNextDisabled?.(false);
     if (editingId) {
-      fetchAnalysis(editingId).then((analysis) => {
+      fetchAnalysis(editingId).then(analysis => {
         if (analysis) {
           setAnalysisData({
             name: analysis.name || '',
@@ -91,7 +52,7 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
     setSnackbar({
       open: true,
       message: 'Download da planilha padrão iniciado!',
-      severity: 'success',
+      severity: 'success'
     });
   };
 
@@ -115,14 +76,7 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
     d180: 'Deflexão a 180 cm do centro (µm)',
   };
 
-  const renderTextField = (
-    key: string,
-    label: string,
-    value: any,
-    onChange: (value: string) => void,
-    type = 'text',
-    adornment?: string
-  ) => {
+  const renderTextField = (key: string, label: string, value: any, onChange: (value: string) => void, type = 'text', adornment?: string) => {
     if (adornment) {
       return (
         <Box key={key} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -175,15 +129,8 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
     addSample(currentSample as FWDData);
     setCurrentSample({
       stationNumber: (currentSample.stationNumber || 0) + 4,
-      d0: 0,
-      d20: 0,
-      d30: 0,
-      d45: 0,
-      d60: 0,
-      d90: 0,
-      d120: 0,
-      d150: 0,
-      d180: 0,
+      d0: 0, d20: 0, d30: 0, d45: 0, d60: 0,
+      d90: 0, d120: 0, d150: 0, d180: 0,
     });
     setError(null);
   };
@@ -204,11 +151,7 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
         let dataStartRow = -1;
         for (let i = 0; i < Math.min(10, rows.length); i++) {
           const row = rows[i];
-          if (
-            row &&
-            row[0] &&
-            (row[0].toString().toUpperCase().includes('ESTACA') || row[0].toString().toUpperCase().includes('DATA'))
-          ) {
+          if (row && row[0] && (row[0].toString().toUpperCase().includes('ESTACA') || row[0].toString().toUpperCase().includes('DATA'))) {
             dataStartRow = i;
             break;
           }
@@ -219,20 +162,19 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
           return;
         }
 
-        const headerRow: string[] =
-          (rows[dataStartRow] as any[])?.map((cell: any) => cell?.toString().trim().toUpperCase() || '') || [];
+        const headerRow: string[] = (rows[dataStartRow] as any[])?.map((cell: any) => cell?.toString().trim().toUpperCase() || '') || [];
 
         const colIndices: Record<string, number> = {
-          stationNumber: headerRow.findIndex((h) => h.includes('ESTACA')),
-          d0: headerRow.findIndex((h) => h === 'D0' || h === 'D0 (µm)'),
-          d20: headerRow.findIndex((h) => h === 'D20' || h === 'D20 (µm)'),
-          d30: headerRow.findIndex((h) => h === 'D30' || h === 'D30 (µm)'),
-          d45: headerRow.findIndex((h) => h === 'D45' || h === 'D45 (µm)'),
-          d60: headerRow.findIndex((h) => h === 'D60' || h === 'D60 (µm)'),
-          d90: headerRow.findIndex((h) => h === 'D90' || h === 'D90 (µm)'),
-          d120: headerRow.findIndex((h) => h === 'D120' || h === 'D120 (µm)'),
-          d150: headerRow.findIndex((h) => h === 'D150' || h === 'D150 (µm)'),
-          d180: headerRow.findIndex((h) => h === 'D180' || h === 'D180 (µm)'),
+          stationNumber: headerRow.findIndex(h => h.includes('ESTACA')),
+          d0: headerRow.findIndex(h => h === 'D0' || h === 'D0 (µm)'),
+          d20: headerRow.findIndex(h => h === 'D20' || h === 'D20 (µm)'),
+          d30: headerRow.findIndex(h => h === 'D30' || h === 'D30 (µm)'),
+          d45: headerRow.findIndex(h => h === 'D45' || h === 'D45 (µm)'),
+          d60: headerRow.findIndex(h => h === 'D60' || h === 'D60 (µm)'),
+          d90: headerRow.findIndex(h => h === 'D90' || h === 'D90 (µm)'),
+          d120: headerRow.findIndex(h => h === 'D120' || h === 'D120 (µm)'),
+          d150: headerRow.findIndex(h => h === 'D150' || h === 'D150 (µm)'),
+          d180: headerRow.findIndex(h => h === 'D180' || h === 'D180 (µm)'),
         };
 
         if (colIndices.stationNumber === -1 || colIndices.d0 === -1) {
@@ -279,79 +221,43 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
 
   const handleSave = async (asDraft = false) => {
     const result = await saveAnalysis(asDraft);
+    console.log({
+      samples,
+      analysisData,
+      loading,
+    });
     if (result) {
-      setSnackbar({
-        open: true,
-        message: asDraft ? 'Rascunho salvo!' : 'Análise criada com sucesso!',
-        severity: 'success',
-      });
+      setSnackbar({ open: true, message: asDraft ? 'Rascunho salvo!' : 'Análise criada com sucesso!', severity: 'success' });
     }
   };
 
   // ⭐ Mensagem dinâmica de amostras faltantes
   const amostrasFaltantes = Math.max(0, 5 - samples.length);
-  const mensagemAmostras =
-    samples.length >= 5
-      ? '✅ Análise completa (mínimo 5 amostras atingido)'
-      : amostrasFaltantes === 1
+  const mensagemAmostras = samples.length >= 5
+    ? '✅ Análise completa (mínimo 5 amostras atingido)'
+    : amostrasFaltantes === 1
       ? `⚠️ Atenção: falta ${amostrasFaltantes} amostra para análise completa`
       : `⚠️ Atenção: faltam ${amostrasFaltantes} amostras para análise completa`;
 
   return (
     <>
-      {error && (
-        <Alert severity="error" onClose={() => setError(null)} sx={{ mb: 2 }}>
-          {error}
-        </Alert>
-      )}
+      {error && <Alert severity="error" onClose={() => setError(null)} sx={{ mb: 2 }}>{error}</Alert>}
 
       {/* DADOS GERAIS */}
-      <FlexColumnBorder
-        title="DADOS GERAIS DA ANÁLISE FWD"
-        open={true}
-        theme={'#07B811'}
-        sx_title={{ whiteSpace: 'wrap' }}
-      >
+      <FlexColumnBorder title="DADOS GERAIS DA ANÁLISE FWD" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Box
-            sx={{
-              display: 'grid',
-              width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
-              gap: '10px 20px',
-              paddingBottom: '20px',
-            }}
-          >
-            {renderTextField('fwdName', 'NOME DA ANÁLISE *', analysisData.name, (val) =>
-              setAnalysisData({ name: val })
-            )}
-            {renderTextField('fwdLocation', 'LOCAL', analysisData.location, (val) =>
-              setAnalysisData({ location: val })
-            )}
+          <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' }, gap: '10px 20px', paddingBottom: '20px' }}>
+            {renderTextField('fwdName', 'NOME DA ANÁLISE *', analysisData.name, (val) => setAnalysisData({ name: val }))}
+            {renderTextField('fwdLocation', 'LOCAL', analysisData.location, (val) => setAnalysisData({ location: val }))}
             {renderTextField('fwdHighway', 'RODOVIA', analysisData.highway, (val) => setAnalysisData({ highway: val }))}
-            {renderTextField('fwdLayerType', 'CAMADA', analysisData.layerType, (val) =>
-              setAnalysisData({ layerType: val })
-            )}
-            {renderTextField('fwdCityState', 'MUNICÍPIO/ESTADO', analysisData.cityState, (val) =>
-              setAnalysisData({ cityState: val })
-            )}
-            {renderTextField(
-              'fwdSpeedLimit',
-              'VELOCIDADE DIRETRIZ',
-              analysisData.speedLimit,
-              (val) => setAnalysisData({ speedLimit: val }),
-              'text',
-              'km/h'
-            )}
+            {renderTextField('fwdLayerType', 'CAMADA', analysisData.layerType, (val) => setAnalysisData({ layerType: val }))}
+            {renderTextField('fwdCityState', 'MUNICÍPIO/ESTADO', analysisData.cityState, (val) => setAnalysisData({ cityState: val }))}
+            {renderTextField('fwdSpeedLimit', 'VELOCIDADE DIRETRIZ', analysisData.speedLimit, (val) => setAnalysisData({ speedLimit: val }), 'text', 'km/h')}
           </Box>
           <Box sx={{ width: '100%', paddingBottom: '20px' }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
               <TextField
-                fullWidth
-                multiline
-                rows={2}
-                variant="outlined"
-                label="DESCRIÇÃO"
+                fullWidth multiline rows={2} variant="outlined" label="DESCRIÇÃO"
                 value={analysisData.description}
                 onChange={(e) => setAnalysisData({ description: e.target.value })}
                 InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
@@ -369,17 +275,10 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
       {/* AMOSTRAS */}
       <FlexColumnBorder title="AMOSTRAS FWD" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
           <Box sx={{ width: '100%', display: 'flex', gap: 2, pb: 2, flexWrap: 'wrap', alignItems: 'center' }}>
-            <Button
-              variant="outlined"
-              component="label"
-              startIcon={<FileUpload />}
-              sx={{
-                color: '#07B811',
-                borderColor: '#07B811',
-                '&:hover': { borderColor: '#05a00e', backgroundColor: 'rgba(7,184,17,0.04)' },
-              }}
-            >
+            <Button variant="outlined" component="label" startIcon={<FileUpload />}
+              sx={{ color: '#07B811', borderColor: '#07B811', '&:hover': { borderColor: '#05a00e', backgroundColor: 'rgba(7,184,17,0.04)' } }}>
               IMPORTAR EXCEL
               <input type="file" accept=".xls,.xlsx" hidden onChange={handleImportExcel} />
             </Button>
@@ -391,18 +290,13 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
               sx={{
                 color: '#07B811',
                 borderColor: '#07B811',
-                '&:hover': { borderColor: '#05a00e', backgroundColor: 'rgba(7,184,17,0.04)' },
+                '&:hover': { borderColor: '#05a00e', backgroundColor: 'rgba(7,184,17,0.04)' }
               }}
             >
               BAIXAR MODELO PADRÃO
             </Button>
 
-            <Chip
-              label={`${samples.length} AMOSTRAS`}
-              color={samples.length >= 5 ? 'success' : 'warning'}
-              variant="outlined"
-              sx={{ fontWeight: 600 }}
-            />
+            <Chip label={`${samples.length} AMOSTRAS`} color={samples.length >= 5 ? 'success' : 'warning'} variant="outlined" sx={{ fontWeight: 600 }} />
           </Box>
 
           {/* ⭐ ALERTA COM MENSAGEM DINÂMICA DE AMOSTRAS FALTANTES */}
@@ -418,37 +312,18 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
             {mensagemAmostras}
           </Alert>
 
-          <Box
-            sx={{
-              display: 'grid',
-              width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr 1fr' },
-              gap: '10px 20px',
-              pb: 2,
-            }}
-          >
-            {renderTextField('stationNumber', 'ESTACA *', currentSample.stationNumber?.toString(), (val) =>
-              setCurrentSample({ ...currentSample, stationNumber: Number(val) })
-            )}
+          <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr 1fr' }, gap: '10px 20px', pb: 2 }}>
+            {renderTextField('stationNumber', 'ESTACA *', currentSample.stationNumber?.toString(), (val) => setCurrentSample({...currentSample, stationNumber: Number(val)}))}
             {sensoresDeflexao.map((dist) =>
-              renderTextField(
-                `d${dist}`,
-                `d${dist} (µm)`,
-                currentSample[`d${dist}` as keyof FWDData]?.toString(),
-                (val) => {
-                  setCurrentSample({ ...currentSample, [`d${dist}`]: Number(val) });
-                }
-              )
+              renderTextField(`d${dist}`, `d${dist} (µm)`, currentSample[`d${dist}` as keyof FWDData]?.toString(), (val) => {
+                setCurrentSample({...currentSample, [`d${dist}`]: Number(val)});
+              })
             )}
           </Box>
 
           <Box sx={{ width: '100%', display: 'flex', gap: 2, pb: 2 }}>
-            <Button
-              variant="contained"
-              startIcon={<Add />}
-              onClick={handleAddSample}
-              sx={{ backgroundColor: '#07B811', '&:hover': { backgroundColor: '#05a00e' } }}
-            >
+            <Button variant="contained" startIcon={<Add />} onClick={handleAddSample}
+              sx={{ backgroundColor: '#07B811', '&:hover': { backgroundColor: '#05a00e' } }}>
               ADICIONAR AMOSTRA
             </Button>
           </Box>
@@ -465,9 +340,7 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
                       <TableRow>
                         <TableCell sx={{ fontWeight: 700, color: '#07B811' }}>ESTACA</TableCell>
                         {sensoresDeflexao.map((d) => (
-                          <TableCell key={d} sx={{ fontWeight: 700, color: '#07B811' }}>
-                            d{d}
-                          </TableCell>
+                          <TableCell key={d} sx={{ fontWeight: 700, color: '#07B811' }}>d{d}</TableCell>
                         ))}
                         <TableCell sx={{ fontWeight: 700, color: '#07B811' }}>AÇÕES</TableCell>
                       </TableRow>
@@ -494,24 +367,12 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
           )}
 
           <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', gap: 2, mt: 3 }}>
-            <Button
-              variant="outlined"
-              onClick={() => handleSave(true)}
-              disabled={samples.length === 0 || loading}
-              sx={{
-                color: '#07B811',
-                borderColor: '#07B811',
-                '&:hover': { borderColor: '#05a00e', backgroundColor: 'rgba(7,184,17,0.04)' },
-              }}
-            >
+            <Button variant="outlined" onClick={() => handleSave(true)} disabled={samples.length === 0 || loading}
+              sx={{ color: '#07B811', borderColor: '#07B811', '&:hover': { borderColor: '#05a00e', backgroundColor: 'rgba(7,184,17,0.04)' } }}>
               {loading ? <CircularProgress size={20} sx={{ color: '#07B811' }} /> : 'SALVAR COMO RASCUNHO'}
             </Button>
-            <Button
-              variant="contained"
-              onClick={() => handleSave(false)}
-              disabled={samples.length < 5 || !analysisData.name || loading}
-              sx={{ backgroundColor: '#07B811', '&:hover': { backgroundColor: '#05a00e' } }}
-            >
+            <Button variant="contained" onClick={() => handleSave(false)} disabled={samples.length < 5 || !analysisData.name || loading}
+              sx={{ backgroundColor: '#07B811', '&:hover': { backgroundColor: '#05a00e' } }}>
               {loading ? <CircularProgress size={20} sx={{ color: 'white' }} /> : 'SALVAR ANÁLISE'}
             </Button>
           </Box>
@@ -524,11 +385,7 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
           <Box sx={{ display: 'grid', width: '100%', gridTemplateColumns: '1fr', gap: '10px 20px', pb: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
               <TextField
-                fullWidth
-                multiline
-                rows={4}
-                variant="outlined"
-                label="OBSERVAÇÕES"
+                fullWidth multiline rows={4} variant="outlined" label="OBSERVAÇÕES"
                 value={analysisData.notes}
                 onChange={(e) => setAnalysisData({ notes: e.target.value })}
                 InputProps={{ inputProps: { style: { textTransform: 'uppercase' } } }}
@@ -543,12 +400,8 @@ const FWD_step1 = ({ setNextDisabled }: EssayPageProps) => {
         </Box>
       </FlexColumnBorder>
 
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
+      <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
         <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity as any}>
           {snackbar.message}
         </Alert>
