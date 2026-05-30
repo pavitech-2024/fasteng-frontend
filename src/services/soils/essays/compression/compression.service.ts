@@ -52,6 +52,7 @@ class COMPRESSION_SERVICE implements IEssayService {
         //     throw t('errors.invalid-step');
       }
     } catch (error) {
+      console.error('🔴 ERRO NO SERVICE - handleNext:', error);
       throw error;
     }
   };
@@ -76,8 +77,12 @@ class COMPRESSION_SERVICE implements IEssayService {
 
       const { success, error } = response.data;
 
-      if (success === false) throw error.name;
+      if (success === false) {
+        console.error('❌ Erro ao verificar dados iniciais:', error);
+        throw error.message || error.name || JSON.stringify(error);
+      }
     } catch (error) {
+      console.error('❌ ERRO NO submitCompressionGeneralData:', error);
       throw error;
     }
   };
@@ -145,29 +150,76 @@ class COMPRESSION_SERVICE implements IEssayService {
       if (!humidityTable) throw t('errors.empty-humidity-table');
 
       for (let i = 0; i < humidityTable.length; i++) {
-        const { capsules, dryGrossWeightsCapsule, wetGrossWeightsCapsule, capsulesTare } = humidityTable[i];
+        const { 
+          capsules, 
+          dryGrossWeightsCapsule, 
+          wetGrossWeightsCapsule, 
+          wetGrossWeights,
+          capsulesTare 
+        } = humidityTable[i];
 
-        if (!capsulesTare) {
-          throw t('errors-empty-capsules-weights-hum') + ` [ ponto: ${i + 1}]`;
+        // Validar se todos os campos estão preenchidos
+        if (!capsulesTare || capsulesTare === null) {
+          const msg = t('errors-empty-capsules-weights-hum') + ` [ ponto: ${i + 1}]`;
+          console.error('❌ Validação 1 falhou:', msg);
+          throw msg;
+        }
+        if (!wetGrossWeightsCapsule || wetGrossWeightsCapsule === null) {
+          const msg = `Peso bruto da cápsula [úmido] está vazio [ ponto: ${i + 1}]`;
+          console.error('❌ Validação 2 falhou:', msg);
+          throw msg;
+        }
+        if (!wetGrossWeights || wetGrossWeights === null) {
+          const msg = `Peso bruto úmido total está vazio [ ponto: ${i + 1}]`;
+          console.error('❌ Validação 3 falhou:', msg);
+          throw msg;
+        }
+        if (!dryGrossWeightsCapsule || dryGrossWeightsCapsule === null) {
+          const msg = `Peso seco da cápsula está vazio [ ponto: ${i + 1}]`;
+          console.error('❌ Validação 4 falhou:', msg);
+          throw msg;
         }
 
+        // Validações de lógica (mesmas do step3)
+        if (wetGrossWeightsCapsule >= wetGrossWeights) {
+          const msg = `Peso bruto da cápsula (${wetGrossWeightsCapsule}g) ≥ Peso bruto úmido (${wetGrossWeights}g) - O peso bruto da cápsula deve ser MENOR que o peso bruto úmido total [ ponto: ${i + 1}]`;
+          console.error('❌ Validação 5 falhou:', msg);
+          throw msg;
+        }
+        
+        if (wetGrossWeightsCapsule < dryGrossWeightsCapsule) {
+          const msg = `Peso bruto da cápsula [úmido] (${wetGrossWeightsCapsule}g) < Peso seco da cápsula (${dryGrossWeightsCapsule}g) - O peso úmido deve ser MAIOR ou IGUAL ao peso seco [ ponto: ${i + 1}]`;
+          console.error('❌ Validação 6 falhou:', msg);
+          throw msg;
+        }
+        
+        if (wetGrossWeightsCapsule <= capsulesTare) {
+          const msg = `Peso bruto da cápsula (${wetGrossWeightsCapsule}g) ≤ Tara (${capsulesTare}g) - O peso da cápsula com amostra deve ser MAIOR que a tara [ ponto: ${i + 1}]`;
+          console.error('❌ Validação 7 falhou:', msg);
+          throw msg;
+        }
+        
         if (capsulesTare >= dryGrossWeightsCapsule) {
-          if (humidityTable[i].capsules) {
-            throw t('errors.invalid-capsules-number-hum') + ` [ ${humidityTable[i].capsules} ]`;
-          } else {
-            throw t('errors.invalid-capsules-number-hum') + ` [ ponto: ${i + 1} ]`;
-          }
+          const msg = `Tara (${capsulesTare}g) ≥ Peso seco da cápsula (${dryGrossWeightsCapsule}g) - A tara deve ser MENOR que o peso seco [ ponto: ${i + 1}]`;
+          console.error('❌ Validação 8 falhou:', msg);
+          throw msg;
         }
-
-        if (dryGrossWeightsCapsule >= wetGrossWeightsCapsule) {
-          if (humidityTable[i].capsules) {
-            throw t('errors.invalid-dry-weights-capsule-hum') + ` [ ${humidityTable[i].capsules} ]`;
-          } else {
-            throw t('errors.invalid-dry-weights-capsule-hum') + ` [ ponto: ${i + 1} ]`;
-          }
+        
+        if (wetGrossWeights <= capsulesTare) {
+          const msg = `Peso bruto úmido (${wetGrossWeights}g) ≤ Tara (${capsulesTare}g) - O peso bruto úmido deve ser MAIOR que a tara [ ponto: ${i + 1}]`;
+          console.error('❌ Validação 9 falhou:', msg);
+          throw msg;
+        }
+        
+        if (wetGrossWeights < dryGrossWeightsCapsule) {
+          const msg = `Peso bruto úmido (${wetGrossWeights}g) < Peso seco da cápsula (${dryGrossWeightsCapsule}g) - O peso bruto úmido deve ser MAIOR ou IGUAL ao peso seco [ ponto: ${i + 1}]`;
+          console.error('❌ Validação 10 falhou:', msg);
+          throw msg;
         }
       }
+      console.log('✅ Todas as validações passaram!');
     } catch (error) {
+      console.error('❌ ERRO NO submitCompressionHumidityDeterminationData:', error);
       throw error;
     }
   };
@@ -224,18 +276,36 @@ class COMPRESSION_SERVICE implements IEssayService {
 
   calculateResults = async (store: CompressionData): Promise<void> => {
     try {
+      console.log('📤 Enviando dados para calcular resultados...');
+      console.log('Dados:', {
+        generalData: store.compressionGeneralData,
+        hygroscopicData: store.hygroscopicData,
+        humidityDeterminationData: store.humidityDeterminationData,
+      });
+
       const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
         generalData: store.compressionGeneralData,
         hygroscopicData: store.hygroscopicData,
         humidityDeterminationData: store.humidityDeterminationData,
       });
 
+      console.log('📥 Resposta recebida:', response.data);
+
       const { success, error, result } = response.data;
 
-      if (success === false) throw error.name;
+      if (success === false) {
+        console.error('❌ Backend retornou sucesso=false');
+        console.error('Error object:', error);
+        console.error('Error type:', typeof error);
+        console.error('Error.message:', error?.message);
+        console.error('Error.name:', error?.name);
+        throw error?.message || error?.name || JSON.stringify(error) || 'Erro ao calcular resultados';
+      }
 
+      console.log('✅ Resultados calculados com sucesso!');
       this.store_actions.setData({ step: 3, value: result });
     } catch (error) {
+      console.error('❌ ERRO NO calculateResults:', error);
       throw error;
     }
   };

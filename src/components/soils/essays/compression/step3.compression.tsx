@@ -1,14 +1,88 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import useCompressionStore from '@/stores/soils/compression/compression.store';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { toast } from 'react-toastify';
+import { useState, useEffect } from 'react';
 
 const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { humidityDeterminationData: data, setData } = useCompressionStore();
   const rows = data.humidityTable;
+  const [errors, setErrors] = useState<{ [key: number]: string[] }>({});
+
+  // 🔥 VALIDAÇÃO COMPLETA COM EXPLICAÇÕES
+  useEffect(() => {
+    const newErrors: { [key: number]: string[] } = {};
+    
+    rows.forEach((row, index) => {
+      const { capsulesTare, wetGrossWeightsCapsule, wetGrossWeights, dryGrossWeightsCapsule } = row;
+      const rowErrors: string[] = [];
+      
+      if (
+        capsulesTare !== null && capsulesTare !== undefined &&
+        wetGrossWeightsCapsule !== null && wetGrossWeightsCapsule !== undefined &&
+        wetGrossWeights !== null && wetGrossWeights !== undefined &&
+        dryGrossWeightsCapsule !== null && dryGrossWeightsCapsule !== undefined
+      ) {
+        
+        // 🔥 VALIDAÇÃO 1: Peso Bruto Cápsula < Peso Bruto Úmido
+        if (wetGrossWeightsCapsule >= wetGrossWeights) {
+          rowErrors.push(
+            `❌ ERRO: Peso bruto da cápsula (${wetGrossWeightsCapsule}g) é MAIOR ou IGUAL ao Peso bruto úmido (${wetGrossWeights}g). ` +
+            `➡️ O Peso bruto úmido (cápsula + solo úmido) deve ser o MAIOR valor!`
+          );
+        }
+        
+        // 🔥 VALIDAÇÃO 2: Peso Bruto Cápsula >= Peso Seco Cápsula
+        if (wetGrossWeightsCapsule < dryGrossWeightsCapsule) {
+          rowErrors.push(
+            `❌ ERRO: Peso bruto da cápsula (${wetGrossWeightsCapsule}g) é MENOR que o Peso seco da cápsula (${dryGrossWeightsCapsule}g). ` +
+            `➡️ O Peso bruto da cápsula (cápsula + solo seco) deve ser MAIOR ou IGUAL ao Peso seco da cápsula!`
+          );
+        }
+        
+        // 🔥 VALIDAÇÃO 3: Peso Bruto Cápsula > Tara
+        if (wetGrossWeightsCapsule <= capsulesTare) {
+          rowErrors.push(
+            `❌ ERRO: Peso bruto da cápsula (${wetGrossWeightsCapsule}g) é MENOR ou IGUAL à Tara (${capsulesTare}g). ` +
+            `➡️ A Tara (peso da cápsula vazia) deve ser o MENOR valor!`
+          );
+        }
+        
+        // 🔥 VALIDAÇÃO 4: Tara < Peso Seco Cápsula
+        if (capsulesTare >= dryGrossWeightsCapsule) {
+          rowErrors.push(
+            `❌ ERRO: Tara (${capsulesTare}g) é MAIOR ou IGUAL ao Peso seco da cápsula (${dryGrossWeightsCapsule}g). ` +
+            `➡️ A Tara (cápsula vazia) deve ser MENOR que o Peso seco da cápsula!`
+          );
+        }
+        
+        // 🔥 VALIDAÇÃO 5: Peso Bruto Úmido > Tara
+        if (wetGrossWeights <= capsulesTare) {
+          rowErrors.push(
+            `❌ ERRO: Peso bruto úmido (${wetGrossWeights}g) é MENOR ou IGUAL à Tara (${capsulesTare}g). ` +
+            `➡️ O Peso bruto úmido (cápsula + solo úmido) deve ser MAIOR que a Tara!`
+          );
+        }
+        
+        // 🔥 VALIDAÇÃO 6: Peso Bruto Úmido > Peso Seco Cápsula
+        if (wetGrossWeights < dryGrossWeightsCapsule) {
+          rowErrors.push(
+            `❌ ERRO: Peso bruto úmido (${wetGrossWeights}g) é MENOR que o Peso seco da cápsula (${dryGrossWeightsCapsule}g). ` +
+            `➡️ O Peso bruto úmido (cápsula + solo úmido) deve ser MAIOR que o Peso seco da cápsula!`
+          );
+        }
+      }
+      
+      if (rowErrors.length > 0) {
+        newErrors[index] = rowErrors;
+      }
+    });
+    
+    setErrors(newErrors);
+  }, [rows]);
 
   const handleErase = () => {
     try {
@@ -18,7 +92,7 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
         setData({ step: 2, key: 'humidityTable', value: newRows });
       } else throw t('compression.error.minValue');
     } catch (error) {
-      toast.error(error);
+      toast.error(error as string);
     }
   };
 
@@ -66,8 +140,8 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
             value={row.capsules}
             onChange={(e) => {
               const newRows = [...rows];
-              rows[index].capsules = Number(e.target.value);
-              setData({ step: 2, key: 'capsules', value: newRows });
+              newRows[index].capsules = Number(e.target.value);
+              setData({ step: 2, key: 'humidityTable', value: newRows });
             }}
             adornment={''}
           />
@@ -90,8 +164,8 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
             value={row.wetGrossWeights}
             onChange={(e) => {
               const newRows = [...rows];
-              rows[index].wetGrossWeights = Number(e.target.value);
-              setData({ step: 2, key: 'wetGrossWeights', value: newRows });
+              newRows[index].wetGrossWeights = Number(e.target.value);
+              setData({ step: 2, key: 'humidityTable', value: newRows });
             }}
             adornment={''}
           />
@@ -113,8 +187,8 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
             value={row.wetGrossWeightsCapsule}
             onChange={(e) => {
               const newRows = [...rows];
-              rows[index].wetGrossWeightsCapsule = Number(e.target.value);
-              setData({ step: 2, key: 'wetGrossWeightsCapsule', value: newRows });
+              newRows[index].wetGrossWeightsCapsule = Number(e.target.value);
+              setData({ step: 2, key: 'humidityTable', value: newRows });
             }}
             adornment={''}
           />
@@ -136,8 +210,8 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
             value={row.dryGrossWeightsCapsule}
             onChange={(e) => {
               const newRows = [...rows];
-              rows[index].dryGrossWeightsCapsule = Number(e.target.value);
-              setData({ step: 2, key: 'dryGrossWeightsCapsule', value: newRows });
+              newRows[index].dryGrossWeightsCapsule = Number(e.target.value);
+              setData({ step: 2, key: 'humidityTable', value: newRows });
             }}
             adornment={''}
           />
@@ -159,8 +233,8 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
             value={row.capsulesTare}
             onChange={(e) => {
               const newRows = [...rows];
-              rows[index].capsulesTare = Number(e.target.value);
-              setData({ step: 2, key: 'capsulesTare', value: newRows });
+              newRows[index].capsulesTare = Number(e.target.value);
+              setData({ step: 2, key: 'humidityTable', value: newRows });
             }}
             adornment={''}
           />
@@ -169,17 +243,75 @@ const Compression_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) =>
     },
   ];
 
-  if (nextDisabled) {
-    // verifica se todos os campos da tabela estão preenchidos
-    rows.every((row) => {
-      const { capsules, wetGrossWeightsCapsule, wetGrossWeights, dryGrossWeightsCapsule, capsulesTare } = row;
-      return capsules && wetGrossWeightsCapsule && wetGrossWeights && dryGrossWeightsCapsule && capsulesTare >= 0;
-    }) &&
-      // verificar se precisa de mais validações antes de deixar ir para o próximo step
+  // 🔥 VALIDAÇÕES PARA O BOTÃO
+  const hasErrors = Object.keys(errors).length > 0;
+  
+  const allFieldsFilled = rows.every((row) => {
+    const { capsules, wetGrossWeightsCapsule, wetGrossWeights, dryGrossWeightsCapsule, capsulesTare } = row;
+    return (
+      capsules !== null && capsules !== undefined &&
+      wetGrossWeightsCapsule !== null && wetGrossWeightsCapsule !== undefined &&
+      wetGrossWeights !== null && wetGrossWeights !== undefined &&
+      dryGrossWeightsCapsule !== null && dryGrossWeightsCapsule !== undefined &&
+      capsulesTare !== null && capsulesTare !== undefined
+    );
+  });
+
+  // 🔥 LÓGICA BIDIRECIONAL
+  useEffect(() => {
+    if (allFieldsFilled && !hasErrors && nextDisabled) {
       setNextDisabled(false);
-  }
+    } else if ((!allFieldsFilled || hasErrors) && !nextDisabled) {
+      setNextDisabled(true);
+    }
+  }, [allFieldsFilled, hasErrors, nextDisabled, setNextDisabled]);
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      {hasErrors && (
+        <Box 
+          sx={{ 
+            p: 2, 
+            mb: 2, 
+            bgcolor: '#fff3e0', 
+            border: '1px solid #ff9800',
+            borderRadius: 1 
+          }}
+        >
+          <Typography variant="subtitle2" sx={{ color: '#e65100', mb: 1, fontWeight: 'bold' }}>
+            ⚠️ ERROS DE VALIDAÇÃO ENCONTRADOS
+          </Typography>
+          
+          {Object.entries(errors).map(([index, rowErrors]) => (
+            <Box key={index} sx={{ mb: 2, p: 1, bgcolor: '#fff', borderRadius: 1 }}>
+              <Typography variant="body2" sx={{ color: '#bf360c', fontWeight: 'bold', mb: 1 }}>
+                📌 Linha {Number(index) + 1}:
+              </Typography>
+              {rowErrors.map((error, i) => (
+                <Typography key={i} variant="body2" sx={{ color: '#bf360c', ml: 2, mb: 0.5 }}>
+                  {error}
+                </Typography>
+              ))}
+            </Box>
+          ))}
+          
+          <Box sx={{ mt: 2, p: 2, bgcolor: '#e3f2fd', borderRadius: 1 }}>
+            <Typography variant="body2" sx={{ color: '#1565c0', fontWeight: 'bold', mb: 1 }}>
+              💡 ORDEM CORRETA DOS VALORES (DO MENOR PARA O MAIOR):
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#1565c0', mb: 1 }}>
+              <strong>Tara (Peso da cápsula vazia)</strong> {'<'} 
+              <strong> Peso Seco da Cápsula</strong> {'<'} 
+              <strong> Peso Bruto da Cápsula (solo seco + cápsula)</strong> {'<'} 
+              <strong> Peso Bruto Úmido (solo úmido + cápsula)</strong>
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#1565c0', mt: 1, fontStyle: 'italic' }}>
+              📝 Exemplo correto: Tara=40 | Peso Seco=175 | Peso Bruto Cápsula=180 | Peso Bruto Úmido=200
+            </Typography>
+          </Box>
+        </Box>
+      )}
+
       <DataGrid
         sx={{ mt: '1rem', borderRadius: '10px' }}
         density="compact"
