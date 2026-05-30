@@ -209,6 +209,7 @@ interface OptimumBinderContentData {
 interface ConfirmationCompressionData {
   dmt: number;
   gmm: number;
+  method?: string; 
   confirmedSpecificGravity: {
     result: number;
     type: string;
@@ -243,6 +244,7 @@ interface ConfirmationCompressionData {
       stability: number;
       fluency: number;
       indirectTensileStrength: number;
+       bitumenVoids?: number;
     };
   };
 }
