@@ -30,15 +30,24 @@ const UnitMass_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps & { un
     },
   ];
 
+  // 🔥 FORÇA O BOTÃO A FICAR HABILITADO SEMPRE
   useEffect(() => {
-    if (
-      step2Data.containerVolume !== null &&
-      step2Data.containerWeight !== null &&
-      step2Data.sampleContainerWeight !== null
-    ) {
-      nextDisabled && setNextDisabled(false);
+    // Habilita o botão independente dos valores
+    if (nextDisabled) {
+      setNextDisabled(false);
     }
-  }, [step2Data, nextDisabled, setNextDisabled]);
+  }, [nextDisabled, setNextDisabled]);
+
+  // 🔥 COMENTA ESSA VALIDAÇÃO ANTIGA
+  // useEffect(() => {
+  //   if (
+  //     step2Data.containerVolume !== null &&
+  //     step2Data.containerWeight !== null &&
+  //     step2Data.sampleContainerWeight !== null
+  //   ) {
+  //     nextDisabled && setNextDisabled(false);
+  //   }
+  // }, [step2Data, nextDisabled, setNextDisabled]);
 
   return (
     <Box

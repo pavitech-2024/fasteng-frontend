@@ -86,32 +86,40 @@ class UNITMASS_SERVICE implements IEssayService {
   };
 
   submitStep2Data = async (
-    // generalData: UnitMassData['generalData'],
-    data: UnitMassData
-  ): Promise<void> => {
-    try {
-      const { containerVolume, containerWeight, sampleContainerWeight } = data.step2Data;
+  data: UnitMassData
+): Promise<void> => {
+  try {
+    const { containerVolume, containerWeight, sampleContainerWeight } = data.step2Data;
 
-      if (!containerVolume) throw t('errors.empty-containerVolume');
-      if (!containerWeight) throw t('errors.containerWeight');
-      if (!sampleContainerWeight) throw t('errors.emptySampleContainerWeight');
-      if (containerVolume + containerWeight <= sampleContainerWeight) throw t('errors.sampleContainerWeightValue');
-      if (containerVolume === 0) throw t('errors.unitMass-containerVolume-0');
-      if (containerWeight >= sampleContainerWeight) throw t('errors.unitMass-containerWeight-sampleContainerWeigth');
-
-      const response = await Api.post(`${this.info.backend_path}/step2-unitMass-data`, {
-        containerVolume,
-        containerWeight,
-        sampleContainerWeight,
-      });
-
-      const { success, error } = response.data;
-
-      if (success === false) throw error.name;
-    } catch (error) {
-      throw error;
+    if (!containerVolume) throw t('errors.empty-containerVolume');
+    if (!containerWeight) throw t('errors.containerWeight');
+    if (!sampleContainerWeight) throw t('errors.emptySampleContainerWeight');
+    
+    // 🔥 CORREÇÃO: Validação correta (sem somar volume com peso)
+    // O peso da amostra + container deve ser maior que o peso do container sozinho
+    if (sampleContainerWeight <= containerWeight) {
+      throw t('errors.unitMass-containerWeight-sampleContainerWeigth');
     }
-  };
+    
+    // Validação do volume (não pode ser zero)
+    if (containerVolume <= 0) throw t('errors.unitMass-containerVolume-0');
+    
+    // 🔥 REMOVE essa validação errada:
+    // if (containerVolume + containerWeight <= sampleContainerWeight) throw t('errors.sampleContainerWeightValue');
+
+    const response = await Api.post(`${this.info.backend_path}/step2-unitMass-data`, {
+      containerVolume,
+      containerWeight,
+      sampleContainerWeight,
+    });
+
+    const { success, error } = response.data;
+
+    if (success === false) throw error.name;
+  } catch (error) {
+    throw error;
+  }
+};
 
   calculateResults = async (store: UnitMassData): Promise<void> => {
     try {
