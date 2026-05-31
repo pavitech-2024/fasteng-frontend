@@ -32,6 +32,8 @@ interface ConcreteRc_step2Data {
     sampleName: string | null;
     diammeter1: number | null;
     diammeter2: number | null;
+     appliedCharge?: number | null;      // 🔥 ADICIONADO
+    supportDistance?: number | null; 
     height: number | null;
     age: TimeObject;
     tolerance: TimeObject;
@@ -92,6 +94,8 @@ const initialState = {
           minutes: null,
         },
         maximumStrength: null,
+         appliedCharge: null,      // 🔥 ADICIONADO
+         supportDistance: null,
       },
     ],
   },
