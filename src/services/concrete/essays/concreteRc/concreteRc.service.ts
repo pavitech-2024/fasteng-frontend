@@ -41,7 +41,10 @@ class CONCRETE_RC_SERVICE implements IEssayService {
           await this.calculateStep2Data(step2Data);
           break;
         case 2:
-          await this.calculateResults(data as ConcreteRcData);
+          const fullData = data as ConcreteRcData;
+          // 🔥 CORREÇÃO: Passa apenas o step3Data
+          await this.submitStep3Data(fullData.step3Data);
+          await this.calculateResults(fullData);
           break;
         case 3:
           await this.saveEssay(data as ConcreteRcData);
@@ -56,18 +59,25 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
   /** @generalData Methods for general-data (step === 0, page 1) */
 
-  // get all materials from user from backend
-  getmaterialsByUserId = async (userId: string): Promise<ConcreteMaterial> => {
+  getmaterialsByUserId = async (userId: string): Promise<ConcreteMaterial[]> => {
     try {
-      // get all materials from user from backend
-      const response = await Api.get(`concrete/materials/all/${userId}`);
-      return response.data;
+      const response = await Api.get(`/concrete/materials/all/${userId}`);
+      
+      console.log('📦 Materiais ConcreteRc:', response.data);
+      
+      if (Array.isArray(response.data)) {
+        return response.data;
+      }
+      if (response.data && response.data[0] && response.data[0].materials) {
+        return response.data[0].materials;
+      }
+      return [];
     } catch (error) {
+      console.error('❌ Erro ao buscar materiais:', error);
       throw error;
     }
   };
 
-  // get essay from material _id
   getConcreteRcBymaterialId = async (material_id: string) => {
     try {
       const response = await Api.get(`${this.info.backend_path}/get/${material_id}`);
@@ -77,32 +87,41 @@ class CONCRETE_RC_SERVICE implements IEssayService {
     }
   };
 
-  // send general data to backend to verify if there is already a ConcreteRc essay with same name for the material
   submitGeneralData = async (generalData: ConcreteRcData['generalData']): Promise<void> => {
     try {
       const { name } = generalData;
 
-      // verify if there is already a ConcreteRc essay with same name
+      if (!name) throw t('errors.empty-name');
+
       const response = await Api.post(`${this.info.backend_path}/verify-init`, { name });
       const { success, error } = response.data;
 
-      // if there is already a ConcreteRc essay with same name, throw error
       if (success === false) throw error.name;
     } catch (error) {
       throw error;
     }
   };
 
-  /** @ConcreteRc Methods for ConcreteRc page (step === 1, page 2) */
+  /** @step2Data Methods for step2 (step === 1, page 2) */
 
-  // verify inputs from ConcreteRc page (step === 1, page 2)
   submitStep2Data = async (step2Data: ConcreteRcData['step2Data']): Promise<void> => {
     try {
       const { samples } = step2Data;
 
+      if (!samples || samples.length === 0) {
+        throw new Error('Nenhuma amostra encontrada');
+      }
+
       samples.forEach((sample, index) => {
         const { diammeter1, diammeter2, height } = sample;
-        const diammeterHeightRatio = height / (diammeter1 + diammeter2 / 2);
+        
+        if (!diammeter1 || !diammeter2 || !height) {
+          throw new Error(`Amostra ${index + 1}: Dados incompletos`);
+        }
+        
+        const avgDiameter = (diammeter1 + diammeter2) / 2;
+        const diammeterHeightRatio = height / avgDiameter;
+        
         if (diammeterHeightRatio >= 2.06) {
           throw (
             t(`errors.invalid-diammeter-height-ratio`) +
@@ -111,49 +130,128 @@ class CONCRETE_RC_SERVICE implements IEssayService {
           );
         }
       });
+      
+      console.log('✅ Step2Data válido');
     } catch (error) {
       throw error;
     }
   };
 
-  // verify inputs from ConcreteRc page (step === 1, page 2)
   calculateStep2Data = async (step2Data: ConcreteRcData['step2Data']): Promise<void> => {
     try {
+      console.log('🔍 Calculando step2Data...');
     } catch (error) {
       throw error;
     }
   };
 
-  // calculate results from ConcreteRc essay
-  calculateResults = async (store: ConcreteRcData): Promise<void> => {
+  /** @step3Data Methods for step3 (step === 2, page 3) */
+
+  submitStep3Data = async (step3Data: ConcreteRcData['step3Data']): Promise<void> => {
     try {
-      const formattedSamples = store.step2Data.samples.map((sample) => ({
-        ...sample,
-        age: sample.age.hours * 60 + sample.age.minutes,
-        tolerance: sample.tolerance.hours * 60 + sample.tolerance.minutes,
-      }));
-
-      const response = await Api.post(`${this.info.backend_path}/calculate-results`, {
-        generalData: store.generalData,
-        step2Data: formattedSamples,
-        step3Data: store.step3Data,
-      });
-
-      const { success, error, result } = response.data;
-
-      if (success === false) throw error.name;
-
-      this.store_actions.setData({ step: 3, value: result });
+      console.log('🔍 Validando step3Data:', step3Data);
+      
+      if (!step3Data.rupture) {
+        throw new Error('Tipo de ruptura não selecionado');
+      }
+      
+      if (!step3Data.rupture.type || !step3Data.rupture.src) {
+        throw new Error('Tipo de ruptura incompleto');
+      }
+      
+      if (!step3Data.graphImg) {
+        throw new Error('Imagem do gráfico não carregada');
+      }
+      
+      if (!step3Data.graphImg.name || !step3Data.graphImg.src) {
+        throw new Error('Imagem do gráfico incompleta');
+      }
+      
+      console.log('✅ Step3Data válido!');
+      return;
     } catch (error) {
+      console.error('❌ Erro no submitStep3Data:', error);
       throw error;
     }
   };
 
-  /** @Results Methods for Results page (step === 2, page 3) */
+ calculateResults = async (store: ConcreteRcData): Promise<void> => {
+  try {
+    console.log('🔍 Calculando resultados...');
+    console.log('📦 store.step2Data:', JSON.stringify(store.step2Data, null, 2));
+    
+    if (!store.step2Data || !store.step2Data.samples) {
+      throw new Error('Dados do step2 incompletos');
+    }
+    
+    if (!store.step3Data || !store.step3Data.rupture || !store.step3Data.graphImg) {
+      throw new Error('Dados do step3 incompletos');
+    }
+    
+    // 🔥 Formata os samples corretamente
+    const formattedSamples = store.step2Data.samples.map((sample, index) => {
+      console.log(`📊 Sample ${index}:`, sample);
+      
+      // Verifica se age existe e tem hours/minutes
+      let ageInMinutes = 0;
+      if (sample.age && typeof sample.age === 'object') {
+        const hours = sample.age.hours || 0;
+        const minutes = sample.age.minutes || 0;
+        ageInMinutes = (hours * 60) + minutes;
+      }
+      
+      // Verifica se tolerance existe e tem hours/minutes
+      let toleranceInMinutes = 0;
+      if (sample.tolerance && typeof sample.tolerance === 'object') {
+        const hours = sample.tolerance.hours || 0;
+        const minutes = sample.tolerance.minutes || 0;
+        toleranceInMinutes = (hours * 60) + minutes;
+      }
+      
+      return {
+        id: sample.id,
+        sampleName: sample.sampleName,
+        diammeter1: sample.diammeter1,
+        diammeter2: sample.diammeter2,
+        height: sample.height,
+        age: ageInMinutes,
+        tolerance: toleranceInMinutes,
+        maximumStrength: sample.maximumStrength,
+        appliedCharge: sample.appliedCharge,
+        supportDistance: sample.supportDistance
+      };
+    });
 
-  // save essay
+    // 🔥 CORREÇÃO: Envia como objeto com propriedade 'samples', não o array diretamente
+    const payload = {
+      generalData: store.generalData,
+      step2Data: { samples: formattedSamples }, // 👈 Envolve em um objeto com 'samples'
+      step3Data: store.step3Data,
+    };
+
+    console.log('📤 Enviando para API:', payload);
+
+    const response = await Api.post(`${this.info.backend_path}/calculate-results`, payload);
+
+    console.log('📥 Resposta da API:', response.data);
+
+    const { success, error, result } = response.data;
+
+    if (success === false) throw error.name;
+
+    console.log('✅ Resultados calculados:', result);
+    this.store_actions.setData({ step: 3, value: result });
+  } catch (error) {
+    console.error('❌ Erro no calculateResults:', error);
+    throw error;
+  }
+};
+  /** @Results Methods for Results page (step === 3, page 4) */
+
   saveEssay = async (store: ConcreteRcData): Promise<void> => {
     try {
+      console.log('💾 Salvando ensaio...');
+      
       const response = await Api.post(`${this.info.backend_path}/save-essay`, {
         generalData: {
           ...store.generalData,
@@ -167,7 +265,10 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       const { success, error } = response.data;
 
       if (success === false) throw error.name;
+      
+      console.log('✅ Ensaio salvo com sucesso!');
     } catch (error) {
+      console.error('❌ Erro no saveEssay:', error);
       throw error;
     }
   };
