@@ -26,13 +26,9 @@ const Marshall_Step2_MaterialSelection = ({
     toast.promise(
       async () => {
         try {
-          console.log('🔄 Buscando materiais para user:', user._id);
           
           const response = await marshall.getmaterialsByUserId(user._id);
           
-          console.log('📦 Resposta completa:', response);
-          console.log('Tipo:', typeof response);
-          console.log('É array?', Array.isArray(response));
           
           let extractedMaterials: AsphaltMaterial[] = [];
 
@@ -48,12 +44,10 @@ const Marshall_Step2_MaterialSelection = ({
 
           // CASO 1: Resposta já é um array de AsphaltMaterial (como no seu log)
           if (Array.isArray(response)) {
-            console.log('✅ Resposta é um array');
             
             if (response.length > 0) {
               // Verifica se o primeiro item é um AsphaltMaterial
               if (isAsphaltMaterial(response[0])) {
-                console.log('📊 Array direto de AsphaltMaterial');
                 extractedMaterials = response as AsphaltMaterial[];
               }
               // Verifica se há uma propriedade aninhada (possivelmente .materials ou outra)
@@ -65,7 +59,6 @@ const Marshall_Step2_MaterialSelection = ({
                 for (const key of objectKeys) {
                   const value = firstItem[key];
                   if (Array.isArray(value) && value.length > 0 && isAsphaltMaterial(value[0])) {
-                    console.log(`📊 Materiais encontrados na propriedade: ${key}`);
                     extractedMaterials = value as AsphaltMaterial[];
                     break;
                   }
@@ -75,11 +68,9 @@ const Marshall_Step2_MaterialSelection = ({
           }
           // CASO 2: Resposta é um objeto
           else if (response && typeof response === 'object') {
-            console.log('✅ Resposta é um objeto');
             
             // Verifica se é um único AsphaltMaterial
             if (isAsphaltMaterial(response)) {
-              console.log('📊 Único AsphaltMaterial');
               extractedMaterials = [response as AsphaltMaterial];
             }
             // Procura por propriedades que contenham array de materiais
@@ -89,7 +80,6 @@ const Marshall_Step2_MaterialSelection = ({
               for (const key of objectKeys) {
                 const value = (response as any)[key];
                 if (Array.isArray(value) && value.length > 0 && isAsphaltMaterial(value[0])) {
-                  console.log(`📊 Materiais encontrados na propriedade: ${key}`);
                   extractedMaterials = value as AsphaltMaterial[];
                   break;
                 }
@@ -97,8 +87,6 @@ const Marshall_Step2_MaterialSelection = ({
             }
           }
 
-          console.log('🎯 Materiais extraídos:', extractedMaterials);
-          console.log('Quantidade:', extractedMaterials.length);
           
           // DEBUG: Mostrar a estrutura se estiver vazio
           if (extractedMaterials.length === 0) {

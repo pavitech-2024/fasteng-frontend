@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
@@ -20,104 +20,143 @@ const CoarseAggregate_GeneralData = ({
   const [materials, setMaterials] = useState<ConcreteMaterial[]>([]);
   const { user } = useAuth();
   const { generalData, setData } = useCoarseAggregateStore();
+  const hasLoaded = useRef(false);
 
+  // 🔥 CORREÇÃO: Carrega materiais corretamente
   useEffect(() => {
-    toast.promise(
-      async () => {
-        const data = await coarseAggregate.getmaterialsByUserId(user._id);
+    if (hasLoaded.current) return;
+    hasLoaded.current = true;
 
-        setMaterials(data[0].materials);
+    const loadMaterials = async () => {
+      const loadingToast = toast.loading(t('loading.materials.pending'));
+      
+      try {
+        setLoading(true);
+        const data = await coarseAggregate.getmaterialsByUserId(user._id);
+        
+        console.log('📦 Materiais CoarseAggregate:', data);
+        
+        // 🔥 CORREÇÃO: Verifica se data já é o array diretamente
+        if (Array.isArray(data)) {
+          setMaterials(data);
+        } else if (data && data[0] && data[0].materials) {
+          // Fallback para estrutura antiga
+          setMaterials(data[0].materials);
+        } else {
+          setMaterials([]);
+        }
+        
+        toast.update(loadingToast, {
+          render: t('loading.materials.success'),
+          type: 'success',
+          isLoading: false,
+          autoClose: 3000,
+        });
+      } catch (error) {
+        console.error('Erro ao carregar materiais:', error);
+        toast.update(loadingToast, {
+          render: t('loading.materials.error'),
+          type: 'error',
+          isLoading: false,
+          autoClose: 3000,
+        });
+        setMaterials([]);
+      } finally {
         setLoading(false);
-      },
-      {
-        pending: t('loading.materials.pending'),
-        success: t('loading.materials.success'),
-        error: t('loading.materials.error'),
       }
-    );
-    // se não deixar o array vazio ele vai ficar fazendo requisições infinitas
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    };
+
+    loadMaterials();
+  }, [user._id, coarseAggregate]);
 
   const inputs = [
     { label: t('concrete.experimentName'), value: generalData.experimentName, key: 'experimentName', required: true },
     { label: t('concrete.material'), value: generalData.material, key: 'material', required: true },
   ];
 
-  // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
-  inputs.every(({ required, value }) => {
-    if (!required) return true;
+  // 🔥 Verificação de campos preenchidos
+  useEffect(() => {
+    const allRequiredFilled = inputs.every(({ required, value }) => {
+      if (!required) return true;
+      if (value === null || value === undefined) return false;
+      if (typeof value === 'string' && value.trim() === '') return false;
+      return true;
+    });
 
-    if (value === null) return false;
+    if (allRequiredFilled && nextDisabled) {
+      setNextDisabled(false);
+    } else if (!allRequiredFilled && !nextDisabled) {
+      setNextDisabled(true);
+    }
+  }, [generalData.experimentName, generalData.material, nextDisabled, setNextDisabled]);
 
-    if (typeof value === 'string' && value.trim() === '') return false;
+  // 🔥 Encontra o material selecionado
+  const selectedMaterial = generalData.material?._id
+    ? materials.find((m) => m._id === generalData.material?._id)
+    : null;
 
-    return true;
-  }) &&
-    nextDisabled &&
-    setNextDisabled(false);
+  const defaultMaterial = selectedMaterial ? {
+    label: `${selectedMaterial.name} | ${t('materials.' + selectedMaterial.type)}`,
+    value: selectedMaterial,
+  } : { label: '', value: null };
 
-  const defaultMaterial = {
-    label: '',
-    value: '',
-  };
-
-  let material;
-
-  if (inputs[1].value) {
-    material = materials.find((material) => material._id == inputs[1].value['_id']);
-  }
-
-  if (material) {
-    defaultMaterial.label = material.name + ' | ' + t(`${'materials.' + material.type}`);
-    defaultMaterial.value = material;
+  if (loading) {
+    return <Loading />;
   }
 
   return (
-    <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Box
-            sx={{
-              display: 'grid',
-              width: '100%',
-              gridTemplateColumns: '1fr',
-              gap: '5px 20px',
-            }}
-          >
-            <TextField
-              variant="standard"
-              key={inputs[0].key}
-              label={inputs[0].label}
-              value={inputs[0].value}
-              required={inputs[0].required}
-              onChange={(e) => setData({ step: 0, key: inputs[0].key, value: e.target.value })}
-            />
-            <DropDown
-              key={inputs[1].key}
-              variant="standard"
-              label={inputs[1].label}
-              options={materials.map((material: ConcreteMaterial) => {
-                return { label: material.name + ' | ' + t(`${'materials.' + material.type}`), value: material };
-              })}
-              value={defaultMaterial}
-              callback={(value) => setData({ step: 0, key: inputs[1].key, value })}
-              size="medium"
-              required={inputs[1].required}
-            />
-          </Box>
-        </Box>
-      )}
-    </>
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'grid',
+          width: '100%',
+          gridTemplateColumns: '1fr',
+          gap: '5px 20px',
+        }}
+      >
+        <TextField
+          variant="standard"
+          key={inputs[0].key}
+          label={inputs[0].label}
+          value={inputs[0].value || ''}
+          required={inputs[0].required}
+          onChange={(e) => setData({ step: 0, key: inputs[0].key, value: e.target.value })}
+        />
+        
+        {/* 🔥 SÓ RENDERIZA O DROPDOWN SE TIVER MATERIAIS */}
+        {materials && materials.length > 0 ? (
+          <DropDown
+            key={inputs[1].key}
+            variant="standard"
+            label={inputs[1].label}
+            options={materials.map((material: ConcreteMaterial) => ({
+              label: `${material.name} | ${t('materials.' + material.type)}`,
+              value: material,
+            }))}
+            value={defaultMaterial}
+            callback={(value) => setData({ step: 0, key: inputs[1].key, value })}
+            size="medium"
+            required={inputs[1].required}
+          />
+        ) : (
+          <TextField
+            variant="standard"
+            label={inputs[1].label}
+            value="Nenhum material encontrado"
+            disabled
+            error
+            helperText="Cadastre materiais primeiro"
+          />
+        )}
+      </Box>
+    </Box>
   );
 };
 

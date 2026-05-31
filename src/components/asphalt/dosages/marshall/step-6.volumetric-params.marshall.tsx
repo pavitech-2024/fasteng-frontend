@@ -300,8 +300,6 @@ const Marshall_Step6_VolumetricParams = ({
             return;
           }
 
-          console.log('🚀 Teores completos para enviar:', Object.keys(completeTeors));
-          console.log('🚀 Trial:', binderTrialData.trial);
 
           // 4. Prepara dados APENAS com teores completos
           const step6Data: VolumetricParametersData = {
@@ -318,7 +316,6 @@ const Marshall_Step6_VolumetricParams = ({
           };
 
           // 5. Envia APENAS os teores completos
-          console.log('📤 Chamando marshall.setVolumetricParametersData...');
 
           const volumetricParams = await marshall.setVolumetricParametersData(
             step6Data,
@@ -327,7 +324,6 @@ const Marshall_Step6_VolumetricParams = ({
             false
           );
 
-          console.log('✅ Resposta do serviço:', volumetricParams);
 
           setData({ step: 5, value: { ...data, ...volumetricParams } });
         } catch (error) {
@@ -378,7 +374,6 @@ const Marshall_Step6_VolumetricParams = ({
         // Se tem dados parciais, limpa
         if (hasSomeData && !allFieldsFilled) {
           newData[key] = [];
-          console.log(`🧹 Limpando teor ${key} porque tem dados parciais`);
         }
       }
     });
