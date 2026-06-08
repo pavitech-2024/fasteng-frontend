@@ -92,10 +92,10 @@ const Marshall_Step8_ConfirmCompression = ({
         return false;
       }
     } else if (method === 'GMM') {
-      const hasValue = 
-        (data?.gmm !== null && data?.gmm !== undefined) || 
+      const hasValue =
+        (data?.gmm !== null && data?.gmm !== undefined) ||
         (data?.confirmedSpecificGravity?.result !== null && data?.confirmedSpecificGravity?.result !== undefined);
-      
+
       if (!hasValue) {
         return false;
       }
@@ -414,8 +414,8 @@ const Marshall_Step8_ConfirmCompression = ({
             listOfSpecificGravities: dmt.listOfSpecificGravities,
             confirmedSpecificGravity: {
               result: dmt.maxSpecificGravity,
-              type: 'DMT'
-            }
+              type: 'DMT',
+            },
           };
 
           setData({ step: 7, value: newData });
@@ -449,8 +449,8 @@ const Marshall_Step8_ConfirmCompression = ({
             ...riceTest,
             confirmedSpecificGravity: {
               result: riceTest?.confirmedSpecificGravity?.result,
-              type: 'GMM'
-            }
+              type: 'GMM',
+            },
           };
 
           setRiceTestModalIsOpen(false);
@@ -639,11 +639,11 @@ const Marshall_Step8_ConfirmCompression = ({
             size="medium"
             sx={{ width: '75%', marginX: 'auto' }}
           />
-          
+
           {method === 'DMT' ? (
             <Typography variant="h6">
               {t('asphalt.dosages.marshall.binder-trial-dmt') +
-                `${data?.confirmedSpecificGravity?.result?.toFixed(2) || '0.00'} g/cm³`}
+                `${Number(data?.confirmedSpecificGravity?.result)?.toFixed(2) || '0.00'} g/cm³`}
             </Typography>
           ) : (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -669,8 +669,8 @@ const Marshall_Step8_ConfirmCompression = ({
                     gmm: value,
                     confirmedSpecificGravity: {
                       result: value,
-                      type: 'GMM'
-                    }
+                      type: 'GMM',
+                    },
                   };
                   setData({ step: 7, value: newData });
                 }}
@@ -680,7 +680,7 @@ const Marshall_Step8_ConfirmCompression = ({
               </Button>
             </Box>
           )}
-          
+
           <DataGrid
             key={'optimumBinder'}
             columns={generateColumns.map((col) => ({
@@ -698,11 +698,11 @@ const Marshall_Step8_ConfirmCompression = ({
             disableColumnSelector
             slots={{ footer: () => ExpansionToolbar() }}
           />
-          
+
           <Button onClick={handleConfirm} variant="outlined">
             {t('asphalt.dosages.marshall.confirm')}
           </Button>
-          
+
           <ModalBase
             title={t('asphalt.dosages.marshall.insert-real-specific-mass')}
             leftButtonTitle={t('asphalt.dosages.marshall.cancel')}
@@ -738,7 +738,7 @@ const Marshall_Step8_ConfirmCompression = ({
                 ))}
             </Box>
           </ModalBase>
-          
+
           <ModalBase
             title={t('asphalt.dosages.marshall.rice-test-data')}
             leftButtonTitle={t('asphalt.dosages.marshall.cancel')}
