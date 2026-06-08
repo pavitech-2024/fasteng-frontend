@@ -109,7 +109,7 @@ const Marshall_Step9_ResumeDosage = ({
     // VV (Volume de Vazios) em percentual
     const VV_decimal = volumetricValues.aggregateVolumeVoids || 0;
     const VBC = volumetricValues.bitumenVoids || 0;
-    const VV_percent = Math.max(0, (VV_decimal * 100) - VBC);
+    const VV_percent = Math.max(0, VV_decimal * 100 - VBC);
 
     // Gmm
     const Gmm = data.confirmedSpecificGravity.result;
@@ -286,28 +286,29 @@ const Marshall_Step9_ResumeDosage = ({
     })) || []),
   ];
 
-  const quantitativeRows = volumetricValues && data?.confirmedSpecificGravity?.result
-    ? [
-        {
-          id: 0,
-          binder: (() => {
-            const VV_decimal = volumetricValues.aggregateVolumeVoids || 0;
-            const VBC = volumetricValues.bitumenVoids || 0;
-            const VV_percent = Math.max(0, (VV_decimal * 100) - VBC);
-            const Gmm = data.confirmedSpecificGravity.result;
-            const massaTotalTon = ((100 - VV_percent) / 100) * Gmm;
-            const teorLigante = optimumBinderContentData?.optimumBinder?.optimumContent || 0;
-            return ((teorLigante / 100) * massaTotalTon).toFixed(4);
-          })(),
-          ...(materialSelectionData?.aggregates?.reduce((acc, material, idx) => {
-            return {
-              ...acc,
-              [material._id]: quantitativeValues?.[idx] || '-',
-            };
-          }, {}) || {}),
-        },
-      ]
-    : [];
+  const quantitativeRows =
+    volumetricValues && data?.confirmedSpecificGravity?.result
+      ? [
+          {
+            id: 0,
+            binder: (() => {
+              const VV_decimal = volumetricValues.aggregateVolumeVoids || 0;
+              const VBC = volumetricValues.bitumenVoids || 0;
+              const VV_percent = Math.max(0, VV_decimal * 100 - VBC);
+              const Gmm = data.confirmedSpecificGravity.result;
+              const massaTotalTon = ((100 - VV_percent) / 100) * Gmm;
+              const teorLigante = optimumBinderContentData?.optimumBinder?.optimumContent || 0;
+              return ((teorLigante / 100) * massaTotalTon).toFixed(4);
+            })(),
+            ...(materialSelectionData?.aggregates?.reduce((acc, material, idx) => {
+              return {
+                ...acc,
+                [material._id]: quantitativeValues?.[idx] || '-',
+              };
+            }, {}) || {}),
+          },
+        ]
+      : [];
 
   const quantitativeGroupings: GridColumnGroupingModel = [
     {
@@ -372,7 +373,7 @@ const Marshall_Step9_ResumeDosage = ({
           unity: (() => {
             const VAM = volumetricValues.aggregateVolumeVoids || 0;
             const VBC = volumetricValues.bitumenVoids || 0;
-            const VV = (VAM * 100) - VBC;
+            const VV = VAM * 100 - VBC;
             return `${VV.toFixed(2)}%`;
           })(),
           bearingLayer: '3 - 5',
@@ -426,11 +427,11 @@ const Marshall_Step9_ResumeDosage = ({
           isValid: true,
         },
         {
-          label:
-            realMethod === 'GMM'
-              ? t('asphalt.dosages.gmm')
-              : t('asphalt.dosages.dmt'),
-          value: data?.confirmedSpecificGravity?.result?.toFixed(2) || '---',
+          label: realMethod === 'GMM' ? t('asphalt.dosages.gmm') : t('asphalt.dosages.dmt'),
+          value:
+            data?.confirmedSpecificGravity?.result != null
+              ? Number(data.confirmedSpecificGravity.result).toFixed(2)
+              : '---',
           unity: 'g/cm³',
           isValid: true,
         },
@@ -445,7 +446,7 @@ const Marshall_Step9_ResumeDosage = ({
           value: (() => {
             const VAM = volumetricValues.aggregateVolumeVoids || 0;
             const VBC = volumetricValues.bitumenVoids || 0;
-            return ((VAM * 100) - VBC).toFixed(2);
+            return (VAM * 100 - VBC).toFixed(2);
           })(),
           unity: '%',
           isValid: true,
@@ -517,14 +518,12 @@ const Marshall_Step9_ResumeDosage = ({
         <Box sx={{ p: 1, bgcolor: 'info.light', borderRadius: 1, mb: 2 }}>
           <Typography variant="body2" color="info.contrastText">
             Método de densidade:{' '}
-            <strong>
-              {realMethod === 'GMM' ? 'GMM - Densidade máxima medida' : 'DMT - Densidade máxima teórica'}
-            </strong>
+            <strong>{realMethod === 'GMM' ? 'GMM - Densidade máxima medida' : 'DMT - Densidade máxima teórica'}</strong>
           </Typography>
         </Box>
 
         {dosage && <GenerateMarshallDosagePDF dosage={dosage} />}
-        
+
         <Box
           sx={{
             width: '100%',

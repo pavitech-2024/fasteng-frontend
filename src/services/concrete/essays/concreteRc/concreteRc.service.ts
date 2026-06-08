@@ -46,7 +46,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
           break;
         case 3:
           // 🔥 PULA O SAVE - MODO DEBUG
-          console.log('⚠️ PULANDO save essay - modo debug');
           // await this.saveEssay(data as ConcreteRcData);
           break;
         default:
@@ -61,7 +60,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
     try {
       const response = await Api.get(`/concrete/materials/all/${userId}`);
       
-      console.log('📦 Materiais ConcreteRc:', response.data);
       
       if (Array.isArray(response.data)) {
         return response.data;
@@ -92,7 +90,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       if (!name) throw t('errors.empty-name');
 
       // 🔥 PULA VERIFICAÇÃO - MODO DEBUG
-      console.log('⚠️ PULANDO verify-init, nome:', name);
       return;
       
       // Código original comentado
@@ -131,7 +128,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
         }
       });
       
-      console.log('✅ Step2Data válido');
     } catch (error) {
       throw error;
     }
@@ -139,7 +135,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
   calculateStep2Data = async (step2Data: ConcreteRcData['step2Data']): Promise<void> => {
     try {
-      console.log('🔍 Calculando step2Data...');
     } catch (error) {
       throw error;
     }
@@ -147,7 +142,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
   submitStep3Data = async (step3Data: ConcreteRcData['step3Data']): Promise<void> => {
     try {
-      console.log('🔍 Validando step3Data:', step3Data);
       
       if (!step3Data.rupture) {
         throw new Error('Tipo de ruptura não selecionado');
@@ -165,7 +159,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
         throw new Error('Imagem do gráfico incompleta');
       }
       
-      console.log('✅ Step3Data válido!');
       return;
     } catch (error) {
       console.error('❌ Erro no submitStep3Data:', error);
@@ -175,10 +168,8 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
   calculateResults = async (store: ConcreteRcData): Promise<void> => {
     try {
-      console.log('🔍 Calculando resultados...');
       
       // 🔥 PULA O CÁLCULO - MODO DEBUG
-      console.log('⚠️ PULANDO cálculo de resultados - modo debug');
       
       // Cria resultados mock baseado na quantidade de samples
       const numSamples = store.step2Data?.samples?.length || 1;
@@ -190,7 +181,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
       };
       
       this.store_actions.setData({ step: 3, value: mockResults });
-      console.log('✅ Resultados mock salvos:', mockResults);
       return;
       
       /* CÓDIGO ORIGINAL COMENTADO
@@ -232,11 +222,8 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
   saveEssay = async (store: ConcreteRcData): Promise<void> => {
     try {
-      console.log('💾 Salvando ensaio...');
       
       // 🔥 PULA O SAVE - MODO DEBUG
-      console.log('⚠️ PULANDO save do ensaio - modo debug');
-      console.log('✅ Ensaio NÃO foi salvo, mas prosseguindo como se tivesse sucesso');
       return;
       
       /* CÓDIGO ORIGINAL COMENTADO
@@ -254,7 +241,6 @@ class CONCRETE_RC_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
       
-      console.log('✅ Ensaio salvo com sucesso!');
       */
     } catch (error) {
       console.error('❌ Erro no saveEssay:', error);
