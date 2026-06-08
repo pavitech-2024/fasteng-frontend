@@ -535,38 +535,152 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  setVolumetricParametersData = async (
-    step6Data: MarshallData['volumetricParametersData'],
-    step4Data: MarshallData['binderTrialData'],
-    maximumMixtureDensityData: MarshallData['maximumMixtureDensityData'],
-    isConsult?: boolean
-  ): Promise<any> => {
-    const volumetricParametersData = step6Data;
-    const { percentsOfDosage, trial } = step4Data;
-    const { maxSpecificGravity, temperatureOfWater } = maximumMixtureDensityData;
-    const { volumetricParameters, ...formattedVolumetricParameters } = volumetricParametersData;
+setVolumetricParametersData = async (
+  step6Data: MarshallData['volumetricParametersData'],
+  step4Data: MarshallData['binderTrialData'],
+  maximumMixtureDensityData: MarshallData['maximumMixtureDensityData'],
+  isConsult?: boolean
+): Promise<any> => {
+  const volumetricParametersData = step6Data;
+  const { percentsOfDosage, newPercentOfDosage, trial } = step4Data;
+  const { maxSpecificGravity, temperatureOfWater } = maximumMixtureDensityData;
+  const { volumetricParameters, ...formattedVolumetricParameters } = volumetricParametersData;
 
-    if (!isConsult) {
-      try {
-        const response = await Api.post(`${this.info.backend_path}/set-step-6-volumetric-parameters`, {
-          volumetricParametersData: formattedVolumetricParameters,
-          maxSpecificGravity,
-          temperatureOfWater,
-          trial,
-          percentsOfDosage: percentsOfDosage[2],
-        });
+  console.log('📊 [STEP 6] Iniciando setVolumetricParametersData...');
+  console.log('📊 [STEP 6] percentsOfDosage (raw):', percentsOfDosage);
+  console.log('📊 [STEP 6] newPercentOfDosage (raw):', newPercentOfDosage);
+  console.log('📊 [STEP 6] trial:', trial);
 
-        const { data, success, error } = response.data;
+  if (!isConsult) {
+    try {
+      let selectedPercentValues: number[] = [];
 
-        if (success === false) throw error.name;
+      const flattenAndExtractNumbers = (data: any): number[] => {
+        if (!data) return [];
+        if (typeof data === 'number') return [data];
+        if (Array.isArray(data)) {
+          const result: number[] = [];
+          for (const item of data) {
+            if (typeof item === 'number') {
+              result.push(item);
+            } else if (Array.isArray(item)) {
+              result.push(...flattenAndExtractNumbers(item));
+            } else if (item && typeof item === 'object') {
+              if (typeof item.value === 'number') {
+                result.push(item.value);
+              } else if (typeof item.percent === 'number') {
+                result.push(item.percent);
+              }
+            }
+          }
+          return result;
+        }
+        if (typeof data === 'object') {
+          if (typeof data.value === 'number') return [data.value];
+          if (typeof data.percent === 'number') return [data.percent];
+        }
+        return [];
+      };
 
-        return data;
-      } catch (error) {
-        throw error;
+      let extracted = flattenAndExtractNumbers(newPercentOfDosage);
+      if (extracted.length > 0) {
+        selectedPercentValues = extracted;
+        console.log('📊 [STEP 6] Extraído de newPercentOfDosage (achatado):', selectedPercentValues);
       }
-    }
-  };
 
+      if (selectedPercentValues.length === 0 && percentsOfDosage) {
+        extracted = flattenAndExtractNumbers(percentsOfDosage);
+        if (extracted.length > 0) {
+          selectedPercentValues = extracted;
+          console.log('📊 [STEP 6] Extraído de percentsOfDosage (achatado):', selectedPercentValues);
+        }
+      }
+
+      if (selectedPercentValues.length > 0) {
+        selectedPercentValues = [...new Set(selectedPercentValues)].sort((a, b) => a - b);
+        console.log('📊 [STEP 6] Após remover duplicatas e ordenar:', selectedPercentValues);
+      }
+
+      const method = maxSpecificGravity?.method || 'DMT';
+
+      if (method === 'DMT') {
+        if (selectedPercentValues.length > 3) {
+          const trialNum = typeof trial === 'number' ? trial : Number(trial);
+          if (!isNaN(trialNum)) {
+            const expectedValues = [trialNum - 1, trialNum - 0.5, trialNum];
+            selectedPercentValues = expectedValues.filter(v =>
+              selectedPercentValues.some(sv => Math.abs(sv - v) < 0.01)
+            );
+            if (selectedPercentValues.length !== 3) {
+              selectedPercentValues = selectedPercentValues.slice(0, 3);
+            }
+          } else {
+            selectedPercentValues = selectedPercentValues.slice(0, 3);
+          }
+        }
+        console.log('📊 [STEP 6] Modo DMT - usando 3 valores:', selectedPercentValues);
+      } else {
+        if (selectedPercentValues.length > 5) {
+          selectedPercentValues = selectedPercentValues.slice(0, 5);
+        }
+        console.log('📊 [STEP 6] Modo GMM - usando 5 valores:', selectedPercentValues);
+      }
+
+      if (selectedPercentValues.length === 0 && trial !== undefined && trial !== null) {
+        const trialNum = typeof trial === 'number' ? trial : Number(trial);
+        if (!isNaN(trialNum)) {
+          if (method === 'DMT') {
+            selectedPercentValues = [trialNum - 1, trialNum - 0.5, trialNum];
+          } else {
+            selectedPercentValues = [trialNum - 1, trialNum - 0.5, trialNum, trialNum + 0.5, trialNum + 1];
+          }
+          console.log('📊 [STEP 6] Fallback - valores criados do trial:', selectedPercentValues);
+        }
+      }
+
+      if (selectedPercentValues.length === 0) {
+        throw new Error('Dados de percentuais de dosagem inválidos');
+      }
+
+    const rawResult = maxSpecificGravity?.result ?? (maxSpecificGravity as any)?.results;
+
+const maxSpecificGravityToSend = {
+  result: rawResult,
+  method: maxSpecificGravity?.method,
+};
+
+if (!rawResult) {
+  throw new Error('maxSpecificGravity result não encontrado');
+}
+      console.log('📊 [STEP 6] maxSpecificGravity unificado (sempre .result):', maxSpecificGravityToSend);
+
+      const payload = {
+        volumetricParametersData: formattedVolumetricParameters,
+        maxSpecificGravity: maxSpecificGravityToSend,
+        temperatureOfWater,
+        trial: typeof trial === 'number' ? trial : Number(trial),
+        percentsOfDosage: selectedPercentValues,
+      };
+      
+      console.log('🔍 [STEP 6] maxSpecificGravity COMPLETO:', JSON.stringify(maximumMixtureDensityData, null, 2));
+      console.log('📊 [STEP 6] PERCENTS_OF_DOSAGE FINAL (array simples):', selectedPercentValues);
+      console.log('📊 [STEP 6] Payload:', JSON.stringify(payload, null, 2));
+
+      const response = await Api.post(`${this.info.backend_path}/set-step-6-volumetric-parameters`, payload);
+
+      const { data, success, error } = response.data;
+
+      if (success === false) {
+        throw new Error(error?.message || 'Erro ao processar parâmetros volumétricos');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('❌ [STEP 6] Erro:', error);
+      throw error;
+    }
+  }
+};
   submitVolumetricParametersData = async (
     data: MarshallData,
     userId: string,

@@ -1,14 +1,12 @@
 import ImgFileInput from '@/components/atoms/inputs/imgFileInput';
-import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
 import useConcreteRcStore from '@/stores/concrete/concreteRc/concreteRc.store';
 import { Box, Typography } from '@mui/material';
 import { t } from 'i18next';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
   const { step3Data: data, setData } = useConcreteRcStore();
-
   const [selectedRupture, setSelectedRupture] = useState('');
 
   const ruptureImg = [
@@ -84,12 +82,19 @@ const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
     }
   };
 
-  if (
-    nextDisabled &&
-    !Object.values(data.rupture).some((e) => e === null) &&
-    !Object.values(data.graphImg).some((e) => e === null)
-  )
-    setNextDisabled(false);
+  // 🔥 Validação dentro de useEffect
+  useEffect(() => {
+    const hasValidRupture = data.rupture?.type && data.rupture?.type !== null && data.rupture?.type !== '';
+    const hasValidGraphImg = data.graphImg?.name && data.graphImg?.src && data.graphImg?.name !== null && data.graphImg?.src !== null;
+    
+    const isValid = hasValidRupture && hasValidGraphImg;
+    
+    if (isValid && nextDisabled) {
+      setNextDisabled(false);
+    } else if (!isValid && !nextDisabled) {
+      setNextDisabled(true);
+    }
+  }, [data.rupture, data.graphImg, nextDisabled, setNextDisabled]);
 
   return (
     <Box
@@ -116,41 +121,39 @@ const ConcreteRc_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         }}
       >
         {ruptureImg.map((img) => (
-          <>
+          <Box
+            key={img.key}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: { mobile: 'none', notebook: '1rem' },
+              justifyContent: 'space-between',
+              placeItems: 'center',
+              maxWidth: '14rem',
+              minHeight: { mobile: '8rem', notebook: '15rem' },
+              marginTop: '2rem',
+            }}
+          >
+            <Typography>{img.label}</Typography>
             <Box
+              component="img"
+              src={img.src}
+              alt={img.label}
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: { mobile: 'none', notebook: '1rem' },
-                justifyContent: 'space-between',
-                placeItems: 'center',
-                maxWidth: '14rem',
-                minHeight: { mobile: '8rem', notebook: '15rem' },
-                marginTop: '2rem',
+                width: { mobile: '8rem', notebook: '10rem' },
+                height: { mobile: '8rem', notebook: '10rem' },
+                objectFit: 'cover',
+                border: selectedRupture === img.key ? '3px solid orange' : 'none',
+                borderRadius: 2,
+                cursor: 'pointer',
+                transition: 'transform 0.3s ease-in-out',
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                },
               }}
-            >
-              <Typography>{img.label}</Typography>
-              <Box
-                key={img.key}
-                component="img"
-                src={img.src}
-                alt={img.label}
-                sx={{
-                  width: { mobile: '8rem', notebook: '10rem' },
-                  height: { mobile: '8rem', notebook: '10rem' },
-                  objectFit: 'cover',
-                  border: selectedRupture === img.key ? '3px solid orange' : 'none',
-                  borderRadius: 2,
-                  cursor: 'pointer',
-                  transition: 'transform 0.3s ease-in-out',
-                  '&:hover': {
-                    transform: 'scale(1.05)',
-                  },
-                }}
-                onClick={() => handleSelectRupture(img)}
-              />
-            </Box>
-          </>
+              onClick={() => handleSelectRupture(img)}
+            />
+          </Box>
         ))}
       </Box>
 

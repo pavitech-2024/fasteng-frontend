@@ -15,7 +15,7 @@ const ConcreteRt_Step4 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
       placeHolder: t('concrete.essays.compression-charge-placeholder'),
       adornment: 'N',
       type: 'number',
-      value: data.compressionCharge,
+      value: data.compressionCharge || '',
     },
   ];
 

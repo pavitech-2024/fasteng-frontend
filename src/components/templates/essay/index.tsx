@@ -1,6 +1,6 @@
 // No EssayTemplate.tsx - ATUALIZADO
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, JSX } from 'react';
 import { Stepper } from '../../atoms/stepper';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
@@ -98,10 +98,18 @@ const EssayTemplate = ({
         setNextDisabled(true);
       }
     } catch (error) {
+      let errorMessage = t('errors.generic-error');
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+      
       toast.update(nextToast, {
         autoClose: 5000,
         type: 'error',
-        render: t(`${error}`),
+        render: errorMessage,
         isLoading: false,
         closeButton: true,
       });

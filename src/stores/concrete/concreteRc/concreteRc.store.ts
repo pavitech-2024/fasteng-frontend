@@ -3,24 +3,24 @@ import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
 type TimeObject = {
-  hours: number;
-  minutes: number;
+  hours: number | null;
+  minutes: number | null;
 };
 
 type RuptureObject = {
-  type: string;
-  src: string;
+  type: string | null;
+  src: string | null;
 };
 
 type GraphImgObject = {
-  name: string;
-  src: string;
+  name: string | null;
+  src: string | null;
 };
 
 interface ConcreteGeneralData {
-  userId: string;
-  name: string;
-  material: ConcreteMaterial;
+  userId: string | null;
+  name: string | null;
+  material: ConcreteMaterial | null;
   operator?: string;
   calculist?: string;
   description?: string;
@@ -29,13 +29,15 @@ interface ConcreteGeneralData {
 interface ConcreteRc_step2Data {
   samples: {
     id: number;
-    sampleName: string;
-    diammeter1: number;
-    diammeter2: number;
-    height: number;
+    sampleName: string | null;
+    diammeter1: number | null;
+    diammeter2: number | null;
+     appliedCharge?: number | null;      // 🔥 ADICIONADO
+    supportDistance?: number | null; 
+    height: number | null;
     age: TimeObject;
     tolerance: TimeObject;
-    maximumStrength: number;
+    maximumStrength: number | null;
   }[];
 }
 
@@ -45,9 +47,9 @@ interface ConcreteRc_step3Data {
 }
 
 interface ConcreteRc_results {
-  correctionFactors: number[];
-  finalResult: number[];
-  tolerances: number[];
+  correctionFactors: number[] | null;
+  finalResult: number[] | null;
+  tolerances: number[] | null;
 }
 
 export type ConcreteRcData = {
@@ -92,6 +94,8 @@ const initialState = {
           minutes: null,
         },
         maximumStrength: null,
+         appliedCharge: null,      // 🔥 ADICIONADO
+         supportDistance: null,
       },
     ],
   },

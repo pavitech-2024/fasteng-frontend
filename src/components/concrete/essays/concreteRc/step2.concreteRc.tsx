@@ -20,7 +20,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
         return (
           <InputEndAdornment
             type="text"
-            value={data.samples[id - 1].sampleName}
+            value={data.samples[id - 1].sampleName || ''}
             onChange={(e) => {
               const newData = [...data.samples];
               newData[id - 1].sampleName = e.target.value;
@@ -41,7 +41,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           <InputEndAdornment
             adornment="cm"
             type="number"
-            value={data.samples[id - 1].diammeter1}
+            value={data.samples[id - 1].diammeter1 || ''}
             onChange={(e) => {
               const newData = [...data.samples];
               newData[id - 1].diammeter1 = Number(e.target.value);
@@ -61,7 +61,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           <InputEndAdornment
             adornment="cm"
             type="number"
-            value={data.samples[id - 1].diammeter2}
+            value={data.samples[id - 1].diammeter2 || ''}
             onChange={(e) => {
               const newData = [...data.samples];
               newData[id - 1].diammeter2 = Number(e.target.value);
@@ -81,7 +81,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           <InputEndAdornment
             adornment="cm"
             type="number"
-            value={data.samples[id - 1].height}
+            value={data.samples[id - 1].height || ''}
             onChange={(e) => {
               const newData = [...data.samples];
               newData[id - 1].height = Number(e.target.value);
@@ -101,7 +101,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           <InputEndAdornment
             adornment="hr"
             type="number"
-            value={data.samples[id - 1].age.hours}
+            value={data.samples[id - 1].age.hours || ''}
             onChange={(e) => {
               const newData = [...data.samples];
               newData[id - 1].age.hours = Number(e.target.value);
@@ -121,7 +121,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           <InputEndAdornment
             adornment="min"
             type="number"
-            value={data.samples[id - 1].age.minutes}
+            value={data.samples[id - 1].age.minutes || ''}
             onChange={(e) => {
               const newData = [...data.samples];
               newData[id - 1].age.minutes = Number(e.target.value);
@@ -141,7 +141,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           <InputEndAdornment
             adornment="hr"
             type="number"
-            value={data.samples[id - 1].tolerance.hours}
+            value={data.samples[id - 1].tolerance.hours || ''}
             onChange={(e) => {
               const newData = [...data.samples];
               newData[id - 1].tolerance.hours = Number(e.target.value);
@@ -161,7 +161,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           <InputEndAdornment
             adornment="min"
             type="number"
-            value={data.samples[id - 1].tolerance.minutes}
+            value={data.samples[id - 1].tolerance.minutes || ''}
             onChange={(e) => {
               const newData = [...data.samples];
               newData[id - 1].tolerance.minutes = Number(e.target.value);
@@ -181,7 +181,7 @@ const ConcreteRc_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => 
           <InputEndAdornment
             adornment="N"
             type="number"
-            value={data.samples[id - 1].maximumStrength}
+            value={data.samples[id - 1].maximumStrength || ''}
             onChange={(e) => {
               const newData = [...data.samples];
               newData[id - 1].maximumStrength = Number(e.target.value);
