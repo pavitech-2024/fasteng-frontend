@@ -535,38 +535,152 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  setVolumetricParametersData = async (
-    step6Data: MarshallData['volumetricParametersData'],
-    step4Data: MarshallData['binderTrialData'],
-    maximumMixtureDensityData: MarshallData['maximumMixtureDensityData'],
-    isConsult?: boolean
-  ): Promise<any> => {
-    const volumetricParametersData = step6Data;
-    const { percentsOfDosage, trial } = step4Data;
-    const { maxSpecificGravity, temperatureOfWater } = maximumMixtureDensityData;
-    const { volumetricParameters, ...formattedVolumetricParameters } = volumetricParametersData;
+setVolumetricParametersData = async (
+  step6Data: MarshallData['volumetricParametersData'],
+  step4Data: MarshallData['binderTrialData'],
+  maximumMixtureDensityData: MarshallData['maximumMixtureDensityData'],
+  isConsult?: boolean
+): Promise<any> => {
+  const volumetricParametersData = step6Data;
+  const { percentsOfDosage, newPercentOfDosage, trial } = step4Data;
+  const { maxSpecificGravity, temperatureOfWater } = maximumMixtureDensityData;
+  const { volumetricParameters, ...formattedVolumetricParameters } = volumetricParametersData;
 
-    if (!isConsult) {
-      try {
-        const response = await Api.post(`${this.info.backend_path}/set-step-6-volumetric-parameters`, {
-          volumetricParametersData: formattedVolumetricParameters,
-          maxSpecificGravity,
-          temperatureOfWater,
-          trial,
-          percentsOfDosage: percentsOfDosage[2],
-        });
+  console.log('📊 [STEP 6] Iniciando setVolumetricParametersData...');
+  console.log('📊 [STEP 6] percentsOfDosage (raw):', percentsOfDosage);
+  console.log('📊 [STEP 6] newPercentOfDosage (raw):', newPercentOfDosage);
+  console.log('📊 [STEP 6] trial:', trial);
 
-        const { data, success, error } = response.data;
+  if (!isConsult) {
+    try {
+      let selectedPercentValues: number[] = [];
 
-        if (success === false) throw error.name;
+      const flattenAndExtractNumbers = (data: any): number[] => {
+        if (!data) return [];
+        if (typeof data === 'number') return [data];
+        if (Array.isArray(data)) {
+          const result: number[] = [];
+          for (const item of data) {
+            if (typeof item === 'number') {
+              result.push(item);
+            } else if (Array.isArray(item)) {
+              result.push(...flattenAndExtractNumbers(item));
+            } else if (item && typeof item === 'object') {
+              if (typeof item.value === 'number') {
+                result.push(item.value);
+              } else if (typeof item.percent === 'number') {
+                result.push(item.percent);
+              }
+            }
+          }
+          return result;
+        }
+        if (typeof data === 'object') {
+          if (typeof data.value === 'number') return [data.value];
+          if (typeof data.percent === 'number') return [data.percent];
+        }
+        return [];
+      };
 
-        return data;
-      } catch (error) {
-        throw error;
+      let extracted = flattenAndExtractNumbers(newPercentOfDosage);
+      if (extracted.length > 0) {
+        selectedPercentValues = extracted;
+        console.log('📊 [STEP 6] Extraído de newPercentOfDosage (achatado):', selectedPercentValues);
       }
-    }
-  };
 
+      if (selectedPercentValues.length === 0 && percentsOfDosage) {
+        extracted = flattenAndExtractNumbers(percentsOfDosage);
+        if (extracted.length > 0) {
+          selectedPercentValues = extracted;
+          console.log('📊 [STEP 6] Extraído de percentsOfDosage (achatado):', selectedPercentValues);
+        }
+      }
+
+      if (selectedPercentValues.length > 0) {
+        selectedPercentValues = [...new Set(selectedPercentValues)].sort((a, b) => a - b);
+        console.log('📊 [STEP 6] Após remover duplicatas e ordenar:', selectedPercentValues);
+      }
+
+      const method = maxSpecificGravity?.method || 'DMT';
+
+      if (method === 'DMT') {
+        if (selectedPercentValues.length > 3) {
+          const trialNum = typeof trial === 'number' ? trial : Number(trial);
+          if (!isNaN(trialNum)) {
+            const expectedValues = [trialNum - 1, trialNum - 0.5, trialNum];
+            selectedPercentValues = expectedValues.filter(v =>
+              selectedPercentValues.some(sv => Math.abs(sv - v) < 0.01)
+            );
+            if (selectedPercentValues.length !== 3) {
+              selectedPercentValues = selectedPercentValues.slice(0, 3);
+            }
+          } else {
+            selectedPercentValues = selectedPercentValues.slice(0, 3);
+          }
+        }
+        console.log('📊 [STEP 6] Modo DMT - usando 3 valores:', selectedPercentValues);
+      } else {
+        if (selectedPercentValues.length > 5) {
+          selectedPercentValues = selectedPercentValues.slice(0, 5);
+        }
+        console.log('📊 [STEP 6] Modo GMM - usando 5 valores:', selectedPercentValues);
+      }
+
+      if (selectedPercentValues.length === 0 && trial !== undefined && trial !== null) {
+        const trialNum = typeof trial === 'number' ? trial : Number(trial);
+        if (!isNaN(trialNum)) {
+          if (method === 'DMT') {
+            selectedPercentValues = [trialNum - 1, trialNum - 0.5, trialNum];
+          } else {
+            selectedPercentValues = [trialNum - 1, trialNum - 0.5, trialNum, trialNum + 0.5, trialNum + 1];
+          }
+          console.log('📊 [STEP 6] Fallback - valores criados do trial:', selectedPercentValues);
+        }
+      }
+
+      if (selectedPercentValues.length === 0) {
+        throw new Error('Dados de percentuais de dosagem inválidos');
+      }
+
+    const rawResult = maxSpecificGravity?.result ?? (maxSpecificGravity as any)?.results;
+
+const maxSpecificGravityToSend = {
+  result: rawResult,
+  method: maxSpecificGravity?.method,
+};
+
+if (!rawResult) {
+  throw new Error('maxSpecificGravity result não encontrado');
+}
+      console.log('📊 [STEP 6] maxSpecificGravity unificado (sempre .result):', maxSpecificGravityToSend);
+
+      const payload = {
+        volumetricParametersData: formattedVolumetricParameters,
+        maxSpecificGravity: maxSpecificGravityToSend,
+        temperatureOfWater,
+        trial: typeof trial === 'number' ? trial : Number(trial),
+        percentsOfDosage: selectedPercentValues,
+      };
+      
+      console.log('🔍 [STEP 6] maxSpecificGravity COMPLETO:', JSON.stringify(maximumMixtureDensityData, null, 2));
+      console.log('📊 [STEP 6] PERCENTS_OF_DOSAGE FINAL (array simples):', selectedPercentValues);
+      console.log('📊 [STEP 6] Payload:', JSON.stringify(payload, null, 2));
+
+      const response = await Api.post(`${this.info.backend_path}/set-step-6-volumetric-parameters`, payload);
+
+      const { data, success, error } = response.data;
+
+      if (success === false) {
+        throw new Error(error?.message || 'Erro ao processar parâmetros volumétricos');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('❌ [STEP 6] Erro:', error);
+      throw error;
+    }
+  }
+};
   submitVolumetricParametersData = async (
     data: MarshallData,
     userId: string,
@@ -868,136 +982,192 @@ class Marshall_SERVICE implements IEssayService {
     }
   };
 
-  submitMarshalDosageData = async (
-    data: MarshallData,
-    userId: string,
-    user?: string,
-    isConsult?: boolean
-  ): Promise<void> => {
-    if (!isConsult) {
-      try {
-        const userData = userId ? userId : user;
+ submitMarshalDosageData = async (
+  data: MarshallData,
+  userId: string,
+  user?: string,
+  isConsult?: boolean
+): Promise<any> => {
+  console.log('🔵 submitMarshalDosageData CHAMADO!');
+  console.log('🔵 isConsult:', isConsult);
+  console.log('🔵 userId:', userId);
+  console.log('🔵 user:', user);
+  console.log('🔵 data:', data);
 
-        const marshallDosageData = {
-          ...data,
-          isConsult: null,
-        };
+  if (!isConsult) {
+    try {
+      const userData = userId ? userId : user;
+      console.log('🔵 userData:', userData);
+      
+      // 🔥 USA O NOVO ENDPOINT COMPLETE
+      console.log('🔵 Fazendo POST para:', `${this.info.backend_path}/complete/${userData}`);
+      
+      const response = await Api.post(
+        `${this.info.backend_path}/complete/${userData}`,
+        data
+      );
 
-        if (isConsult) marshallDosageData.isConsult = isConsult;
+      console.log('🔵 Resposta do backend:', response.data);
 
-        const response = await Api.post(
-          `${this.info.backend_path}/save-marshall-dosage/${userData}`,
-          marshallDosageData
-        );
-
-        const { success, error } = response.data;
-
-        if (success === false) throw error.name;
-      } catch (error) {
-        throw error;
+      const { success, error } = response.data;
+      if (!success) {
+        console.error('❌ Erro do backend:', error);
+        throw error?.name || 'Erro ao salvar dosagem completa';
       }
+      
+      console.log('✅ Dosagem salva com sucesso via complete!');
+    } catch (error) {
+      console.error('❌ Erro ao salvar dosagem completa:', error);
+      throw error;
     }
-  };saveFatigueCurve = async (data: { dosageId: string; ncp?: string; k1?: string; k2?: string; r2?: string; obs?: string }) => {
+  } else {
+    console.log('🟡 isConsult é true, não salvando');
+  }
+};
+saveFatigueCurve = async (data: { 
+  dosageId: string; 
+  k1?: number;
+  k2?: number;
+  observacoes?: string;
+}) => {
+  console.log('🔵 [FATIGUE SERVICE] INÍCIO - dados recebidos:', JSON.stringify(data, null, 2));
+  
   try {
+    const { dosageId, k1, k2, observacoes } = data;
     
-    const { dosageId, ncp, k1, k2, r2, obs } = data;
+    console.log('🟡 [FATIGUE SERVICE] dosageId:', dosageId);
+    console.log('🟡 [FATIGUE SERVICE] k1:', k1, '| tipo:', typeof k1);
+    console.log('🟡 [FATIGUE SERVICE] k2:', k2, '| tipo:', typeof k2);
+    console.log('🟡 [FATIGUE SERVICE] observacoes:', observacoes, '| tipo:', typeof observacoes);
     
     // 1. Verifique e limpe o ID
     if (!dosageId || dosageId.trim() === '') {
+      console.error('🔴 [FATIGUE SERVICE] dosageId inválido:', dosageId);
       throw new Error('ID da dosagem não fornecido');
     }
     
     // 2. Encode o ID para URL
     const encodedId = encodeURIComponent(dosageId.trim());
+    console.log('🟡 [FATIGUE SERVICE] encodedId:', encodedId);
     
     // 3. Prepare os dados
     const fatigueData = {
-      ncp: ncp && ncp.trim() !== '' ? Number(ncp) : undefined,
-      k1: k1 && k1.trim() !== '' ? Number(k1) : undefined,
-      k2: k2 && k2.trim() !== '' ? Number(k2) : undefined,
-      r2: r2 && r2.trim() !== '' ? Number(r2) : undefined,
-      observations: obs && obs.trim() !== '' ? obs.trim() : undefined,
+      k1: k1 !== undefined && !isNaN(k1) ? k1 : undefined,
+      k2: k2 !== undefined && !isNaN(k2) ? k2 : undefined,
+      observacoes: observacoes && observacoes.trim() !== '' ? observacoes.trim() : undefined,
     };
     
+    console.log('🟡 [FATIGUE SERVICE] fatigueData preparado:', JSON.stringify(fatigueData, null, 2));
     
     // 4. Construa a URL
-    const basePath = this.info.backend_path; // 'asphalt/dosages/marshall'
+    const basePath = this.info.backend_path;
     const url = `${basePath}/${encodedId}/fatigue-curve`;
+    
+    console.log('🟡 [FATIGUE SERVICE] URL completa:', url);
+    console.log('🟢 [FATIGUE SERVICE] Enviando requisição PATCH...');
     
     // 5. Faça a requisição
     const response = await Api.patch(url, fatigueData);
     
+    console.log('🟢 [FATIGUE SERVICE] Resposta recebida - status:', response.status);
+    console.log('🟢 [FATIGUE SERVICE] Dados da resposta:', JSON.stringify(response.data, null, 2));
     
     const { success, error } = response.data;
     
     if (!success) {
-      console.error('❌ Erro do backend:', error);
+      console.error('🔴 [FATIGUE SERVICE] Erro do backend:', error);
       throw error?.message || error?.name || 'Erro ao salvar curva de fadiga';
     }
     
+    console.log('✅ [FATIGUE SERVICE] Sucesso!');
     return response.data;
     
   } catch (error: any) {
-    console.error('💥 ERRO CRÍTICO ao salvar curva de fadiga:', error);
+    console.error('💥 [FATIGUE SERVICE] ERRO CRÍTICO:');
     console.error('💥 Mensagem:', error.message);
     console.error('💥 Stack:', error.stack);
     
-    // Para erros de rede/404
     if (error.response) {
-      console.error('💥 Status:', error.response.status);
-      console.error('💥 Data:', error.response.data);
+      console.error('💥 Status da resposta:', error.response.status);
+      console.error('💥 Dados da resposta:', error.response.data);
+      console.error('💥 Headers:', error.response.headers);
+    }
+    
+    if (error.request) {
+      console.error('💥 Request foi feito mas sem resposta:', error.request);
     }
     
     throw new Error(`Falha ao salvar curva de fadiga: ${error.message}`);
   }
 };
 
-saveResilienceModule = async (data: { dosageId: string; k1?: string; k2?: string; k3?: string; r2?: string }) => {
+// Módulo de Resiliência - COM LOGS
+saveResilienceModule = async (data: { 
+  dosageId: string; 
+  moduloMedio?: number;
+  moduloInstantaneo?: number;
+  observacoes?: string;
+}) => {
+  console.log('🔵 [RESILIENCE SERVICE] INÍCIO - dados recebidos:', JSON.stringify(data, null, 2));
+  
   try {
+    const { dosageId, moduloMedio, moduloInstantaneo, observacoes } = data;
     
-    const { dosageId, k1, k2, k3, r2 } = data;
+    console.log('🟡 [RESILIENCE SERVICE] dosageId:', dosageId);
+    console.log('🟡 [RESILIENCE SERVICE] moduloMedio:', moduloMedio, '| tipo:', typeof moduloMedio);
+    console.log('🟡 [RESILIENCE SERVICE] moduloInstantaneo:', moduloInstantaneo, '| tipo:', typeof moduloInstantaneo);
+    console.log('🟡 [RESILIENCE SERVICE] observacoes:', observacoes, '| tipo:', typeof observacoes);
     
     // 1. Verifique e limpe o ID
     if (!dosageId || dosageId.trim() === '') {
+      console.error('🔴 [RESILIENCE SERVICE] dosageId inválido:', dosageId);
       throw new Error('ID da dosagem não fornecido');
     }
     
     // 2. Encode o ID para URL
     const encodedId = encodeURIComponent(dosageId.trim());
+    console.log('🟡 [RESILIENCE SERVICE] encodedId:', encodedId);
     
     // 3. Prepare os dados
     const resilienceData = {
-      k1: k1 && k1.trim() !== '' ? Number(k1) : undefined,
-      k2: k2 && k2.trim() !== '' ? Number(k2) : undefined,
-      k3: k3 && k3.trim() !== '' ? Number(k3) : undefined,
-      r2: r2 && r2.trim() !== '' ? Number(r2) : undefined,
+      moduloMedio: moduloMedio !== undefined && !isNaN(moduloMedio) ? moduloMedio : undefined,
+      moduloInstantaneo: moduloInstantaneo !== undefined && !isNaN(moduloInstantaneo) ? moduloInstantaneo : undefined,
+      observacoes: observacoes && observacoes.trim() !== '' ? observacoes.trim() : undefined,
     };
     
+    console.log('🟡 [RESILIENCE SERVICE] resilienceData preparado:', JSON.stringify(resilienceData, null, 2));
     
     // 4. Construa a URL
-    const basePath = this.info.backend_path; // 'asphalt/dosages/marshall'
+    const basePath = this.info.backend_path;
     const url = `${basePath}/${encodedId}/resilience-module`;
+    
+    console.log('🟡 [RESILIENCE SERVICE] URL completa:', url);
+    console.log('🟢 [RESILIENCE SERVICE] Enviando requisição PATCH...');
     
     // 5. Faça a requisição
     const response = await Api.patch(url, resilienceData);
     
+    console.log('🟢 [RESILIENCE SERVICE] Resposta recebida - status:', response.status);
+    console.log('🟢 [RESILIENCE SERVICE] Dados da resposta:', JSON.stringify(response.data, null, 2));
     
     const { success, error } = response.data;
     
     if (!success) {
-      console.error('❌ Erro do backend:', error);
+      console.error('🔴 [RESILIENCE SERVICE] Erro do backend:', error);
       throw error?.message || error?.name || 'Erro ao salvar módulo de resiliência';
     }
     
+    console.log('✅ [RESILIENCE SERVICE] Sucesso!');
     return response.data;
     
   } catch (error: any) {
-    console.error('💥 ERRO CRÍTICO ao salvar módulo de resiliência:', error);
+    console.error('💥 [RESILIENCE SERVICE] ERRO CRÍTICO:');
     console.error('💥 Mensagem:', error.message);
+    console.error('💥 Stack:', error.stack);
     
     if (error.response) {
-      console.error('💥 Status:', error.response.status);
-      console.error('💥 Data:', error.response.data);
+      console.error('💥 Status da resposta:', error.response.status);
+      console.error('💥 Dados da resposta:', error.response.data);
     }
     
     throw new Error(`Falha ao salvar módulo de resiliência: ${error.message}`);

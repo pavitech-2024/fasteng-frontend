@@ -25,5 +25,10 @@
   "errors.unitMass-containerVolume-30-50-maxDiameter-75": "Insira um volume do recipiente maior que 30 litros",
   "errors.sieves-sum-not-equal-to-material-mass": "A soma dos valores de retidos nas peneiras não é igual ao total inicial da amostra.",
 
+  "errors.empty-name": "Nome não pode estar vazio!",
+  "errors.empty-sample": "Amostra não pode estar vazia!",
+  "errors.empty-humidity-table": "Tabela de umidade não pode estar vazia!",
+  "errors.generic-error": "Erro ao processar dados!",
+
   "generate.dosage.button": "Gerar PDF"
 }

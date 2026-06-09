@@ -12,12 +12,20 @@ const GranulometricCurvesGraph = ({ data }) => {
       data={data}
       options={{
         title: 'Curvas granulométricas',
+        curveType: 'function',
         selectionMode: 'multiple',
         hAxis: {
           title: '(D/d)^0,45',
           titleTextStyle: { italic: false },
         },
-        chartArea: { width: '100%', height: '80%' },
+   chartArea: {
+  left: 60,
+  right: 40,
+  top: 40,
+  bottom: 60,
+  width: '80%',
+  height: '70%',
+},
         vAxis: { title: 'Porcentagem passante (%)', titleTextStyle: { italic: false } },
         legend: { position: 'bottom', textStyle: { color: 'black', italic: false, fontSize: 12 } },
         trendlines: {

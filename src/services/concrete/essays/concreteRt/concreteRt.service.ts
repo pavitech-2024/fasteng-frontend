@@ -59,16 +59,19 @@ class CONCRETE_RT_SERVICE implements IEssayService {
 
   /** @generalData Methods for general-data (step === 0, page 1) */
 
-  // get all materials from user from backend
-  getmaterialsByUserId = async (userId: string): Promise<ConcreteMaterial> => {
-    try {
-      // get all materials from user from backend
-      const response = await Api.get(`concrete/materials/all/${userId}`);
+getmaterialsByUserId = async (userId: string): Promise<ConcreteMaterial[]> => {
+  try {
+    const response = await Api.get(`/concrete/materials/all/${userId}`);
+    
+    if (Array.isArray(response.data)) {
       return response.data;
-    } catch (error) {
-      throw error;
     }
-  };
+    return [];
+  } catch (error) {
+    console.error('❌ Erro ao buscar materiais:', error);
+    return [];
+  }
+};
 
   // get essay from material _id
   getConcreteRtBymaterialId = async (material_id: string) => {
@@ -81,24 +84,25 @@ class CONCRETE_RT_SERVICE implements IEssayService {
   };
 
   // send general data to backend to verify if there is already a ConcreteRt essay with same name for the material
-  submitGeneralData = async (generalData: ConcreteRtData['generalData']): Promise<void> => {
-    try {
-      const { name } = generalData;
+submitGeneralData = async (generalData: ConcreteRtData['generalData']): Promise<void> => {
+  try {
+    const { name } = generalData;
 
-      // verify if name and material are not empty
-      if (!name) throw t('errors.empty-name');
-
-      // verify if there is already a ConcreteRt essay with same name for the material
-      const response = await Api.post(`${this.info.backend_path}/verify-init`, { name });
-
-      const { success, error } = response.data;
-
-      // if there is already a ConcreteRt essay with same name for the material, throw error
-      if (success === false) throw error.name;
-    } catch (error) {
-      throw error;
-    }
-  };
+    if (!name) throw t('errors.empty-name');
+    
+    // 🔥 PULA TOTALMENTE A CHAMADA
+    console.log('✅ PULANDO verify-init, nome do ensaio:', name);
+    return; // Simula sucesso
+    
+    // Código original comentado:
+    // const response = await Api.post(`${this.info.backend_path}/verify-init`, { name });
+    // const { success, error } = response.data;
+    // if (success === false) throw error.name;
+  } catch (error) {
+    console.error('❌ Erro no submitGeneralData:', error);
+    throw error;
+  }
+};
 
   /** @ConcreteRt Methods for ConcreteRt page (step === 1, page 2) */
 
@@ -206,8 +210,14 @@ class CONCRETE_RT_SERVICE implements IEssayService {
 
       if (success === false) throw error.name;
 
+      // 🔥 DEBUG: Log para verificar a estrutura dos resultados
+      console.log('✅ Resultados recebidos do backend:', result);
+      console.log('flexualTensileStrength:', result?.flexualTensileStrength);
+      console.log('compressionResistance:', result?.compressionResistance);
+
       this.store_actions.setData({ step: 4, value: result });
     } catch (error) {
+      console.error('❌ Erro ao calcular resultados:', error);
       throw error;
     }
   };

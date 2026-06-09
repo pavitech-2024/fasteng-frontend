@@ -225,6 +225,10 @@ const Marshall_Step6_VolumetricParams = ({
     toast.promise(
       async () => {
         try {
+          console.log('📝 [STEP 6 COMPONENT] Iniciando validação e envio de dados...');
+          console.log('📝 [STEP 6 COMPONENT] Data atual:', data);
+          console.log('📝 [STEP 6 COMPONENT] Binder Trial Data:', binderTrialData);
+          
           // 1. Identifica teores COMPLETAMENTE preenchidos
           const completeTeors: Record<string, any[]> = {};
 
@@ -256,6 +260,8 @@ const Marshall_Step6_VolumetricParams = ({
               completeTeors[key] = array;
             }
           });
+
+          console.log('📝 [STEP 6 COMPONENT] Teores completos encontrados:', Object.keys(completeTeors));
 
           // 2. Verifica se tem pelo menos um teor completo
           if (Object.keys(completeTeors).length === 0) {
@@ -300,8 +306,7 @@ const Marshall_Step6_VolumetricParams = ({
             return;
           }
 
-          console.log('🚀 Teores completos para enviar:', Object.keys(completeTeors));
-          console.log('🚀 Trial:', binderTrialData.trial);
+          console.log('📝 [STEP 6 COMPONENT] Validação OK! Preparando payload...');
 
           // 4. Prepara dados APENAS com teores completos
           const step6Data: VolumetricParametersData = {
@@ -317,9 +322,10 @@ const Marshall_Step6_VolumetricParams = ({
             },
           };
 
-          // 5. Envia APENAS os teores completos
-          console.log('📤 Chamando marshall.setVolumetricParametersData...');
+          console.log('📝 [STEP 6 COMPONENT] Step6Data preparado:', step6Data);
+          console.log('📝 [STEP 6 COMPONENT] Chamando marshall.setVolumetricParametersData...');
 
+          // 5. Envia APENAS os teores completos
           const volumetricParams = await marshall.setVolumetricParametersData(
             step6Data,
             binderTrialData,
@@ -327,11 +333,17 @@ const Marshall_Step6_VolumetricParams = ({
             false
           );
 
-          console.log('✅ Resposta do serviço:', volumetricParams);
+          console.log('📝 [STEP 6 COMPONENT] Resposta recebida:', volumetricParams);
 
           setData({ step: 5, value: { ...data, ...volumetricParams } });
+          console.log('✅ [STEP 6 COMPONENT] Dados salvos com sucesso!');
         } catch (error) {
           console.error('💥 ERRO NO FRONTEND:', error);
+          console.error('💥 Detalhes do erro:', {
+            message: error.message,
+            response: error.response?.data,
+            status: error.response?.status,
+          });
           toast.error(error.message || 'Erro ao processar dados');
           throw error;
         }
@@ -378,7 +390,6 @@ const Marshall_Step6_VolumetricParams = ({
         // Se tem dados parciais, limpa
         if (hasSomeData && !allFieldsFilled) {
           newData[key] = [];
-          console.log(`🧹 Limpando teor ${key} porque tem dados parciais`);
         }
       }
     });
