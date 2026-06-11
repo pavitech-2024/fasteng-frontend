@@ -42,6 +42,19 @@ const WelcomeTemplateConcrete = ({ welcomeData, stepperData, icon }: WelcomeTemp
     <Container>
       <Box
         sx={{
+          position: 'absolute',
+          top: '100px',
+          left: 'calc(50% - 720px)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {icon && <Box sx={{ transform: 'scale(2.4)' }}>{icon}</Box>}
+      </Box>
+      <Box
+        sx={{
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'start',
