@@ -2,6 +2,7 @@ import { Library } from '@/interfaces/common';
 import { FilterOption } from '@/components/molecules/buttons/filter';
 import { LibraryTemplate } from '@/components/templates/library';
 import { NextPage } from 'next';
+import { Article } from '@/assets';
 
 const SoilLibrary: NextPage = () => {
   const soilData: Library[] = [
@@ -16,6 +17,13 @@ const SoilLibrary: NextPage = () => {
       link: 'https://www.youtube.com/embed/GBrfPCJByp4',
       type: 'videos',
       key: 'triaxialCompression',
+    },
+    {
+      title: 'Solos Lateríticos',
+      icon: Article,
+      link: 'https://lepufcg.com.br/wp-content/uploads/2025/02/Solos-Lateriticos-LIVRO.pdf',
+      type: 'books',
+      key: 'lateral-soils',
     },
   ];
 
