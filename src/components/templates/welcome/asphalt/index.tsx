@@ -43,7 +43,7 @@ const WelcomeTemplateAsphalt = ({ welcomeData, stepperData, icon }: WelcomeTempl
       <Box
         sx={{
           position: 'absolute',
-          top: '100px',
+          top: '160px',
           left: 'calc(50% - 720px)',
           display: 'flex',
           flexDirection: 'column',
@@ -51,7 +51,7 @@ const WelcomeTemplateAsphalt = ({ welcomeData, stepperData, icon }: WelcomeTempl
           alignItems: 'center',
         }}
       >
-        {icon && <Box sx={{ transform: 'scale(2.4)' }}>{icon}</Box>}
+        {icon && <Box sx={{ transform: 'scale(3.5)' }}>{icon}</Box>}
       </Box>
       <Box
         sx={{
