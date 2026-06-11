@@ -45,11 +45,67 @@ const Marshall_Step9_ResumeDosage = ({
   const [resilienceData, setResilienceData] = useState<any>(null);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
 
-  // 🔥 Simplificado: Pega o método DIRETAMENTE da store
+  // Pega o método diretamente da store
   const realMethod = data?.method || data?.confirmedSpecificGravity?.type || 'DMT';
 
-  // 🔥 Simplificado: Pega os valores volumétricos DIRETAMENTE da store
+  // Pega os valores volumétricos diretamente da store
   const volumetricValues = data?.confirmedVolumetricParameters?.values;
+
+  // ============ CÁLCULOS CORRIGIDOS (versão original) ============
+
+  // Função principal de cálculo — usa Gb = 1.027, igual à versão original
+  const calculateCorrectedVolumetricValues = () => {
+    if (!data?.confirmedVolumetricParameters?.values) return null;
+
+    const values = data.confirmedVolumetricParameters.values;
+
+    const VAM_decimal = values.aggregateVolumeVoids || 0;
+    const VAM = VAM_decimal * 100; // converte para %
+
+    const Gmb = values.apparentBulkSpecificGravity || 0;
+    const teorLigante = optimumBinderContentData?.optimumBinder?.optimumContent || 0;
+    const Gb = 1.027; // massa específica do betume
+    const VBC = (Gmb * teorLigante) / Gb;
+
+    const VV = VAM - VBC; // VV = VAM - VBC
+
+    return {
+      vamCalculated: VAM,
+      vbcCalculated: VBC,
+      vvCalculated: VV,
+    };
+  };
+
+  // Precisa ser declarado antes de calculateQuantitativeValues e quantitativeRows
+  const correctedValues = calculateCorrectedVolumetricValues();
+
+  const calculateQuantitativeValues = (): string[] | null => {
+    if (!volumetricValues || !data?.confirmedSpecificGravity?.result) return null;
+
+    const VV_percent = correctedValues?.vvCalculated || 0;
+    const Gmm = data.confirmedSpecificGravity.result;
+
+    const massaTotalTon = ((100 - VV_percent) / 100) * Gmm;
+
+    const teorLigante = optimumBinderContentData?.optimumBinder?.optimumContent || 0;
+    const massaLiganteTon = (teorLigante / 100) * massaTotalTon;
+    const massaTotalAgregadosTon = massaTotalTon - massaLiganteTon;
+
+    if (!materialSelectionData?.aggregates) return null;
+
+    const percentuaisAgregados =
+      optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage || [];
+
+    return materialSelectionData.aggregates.map((material, idx) => {
+      const percentual = percentuaisAgregados[idx] || 0;
+      const massaAgregadoTon = (percentual / 100) * massaTotalAgregadosTon;
+      return massaAgregadoTon.toFixed(4);
+    });
+  };
+
+  const quantitativeValues = calculateQuantitativeValues();
+
+  // ============ BUSCA DE DADOS ============
 
   // Busca a dosagem do banco (apenas para PDF e dados complementares)
   useEffect(() => {
@@ -83,7 +139,6 @@ const Marshall_Step9_ResumeDosage = ({
   useEffect(() => {
     if (!data || !volumetricValues) {
       setLoading(true);
-      // Tenta carregar os dados se não estiverem disponíveis
       toast.error(
         'Dados volumétricos não encontrados. Por favor, volte para a etapa anterior e confirme os parâmetros.',
         { autoClose: 5000 }
@@ -99,44 +154,7 @@ const Marshall_Step9_ResumeDosage = ({
     }
   }, [nextDisabled, setNextDisabled, data, volumetricValues]);
 
-  // ============ CÁLCULOS DERIVADOS DOS DADOS DA STORE ============
-
-  const calculateQuantitativeValues = (): string[] | null => {
-    if (!volumetricValues || !data?.confirmedSpecificGravity?.result) {
-      return null;
-    }
-
-    // VV (Volume de Vazios) em percentual
-    const VV_decimal = volumetricValues.aggregateVolumeVoids || 0;
-    const VBC = volumetricValues.bitumenVoids || 0;
-    const VV_percent = Math.max(0, VV_decimal * 100 - VBC);
-
-    // Gmm
-    const Gmm = data.confirmedSpecificGravity.result;
-
-    // Massa total em ton/m³
-    const massaTotalTon = ((100 - VV_percent) / 100) * Gmm;
-
-    // Massa do ligante em toneladas
-    const teorLigante = optimumBinderContentData?.optimumBinder?.optimumContent || 0;
-    const massaLiganteTon = (teorLigante / 100) * massaTotalTon;
-
-    // Massa total dos agregados em toneladas
-    const massaTotalAgregadosTon = massaTotalTon - massaLiganteTon;
-
-    // Distribuir massa dos agregados
-    if (!materialSelectionData?.aggregates) {
-      return null;
-    }
-
-    const percentuaisAgregados = optimumBinderContentData?.optimumBinder?.confirmedPercentsOfDosage || [];
-
-    return materialSelectionData.aggregates.map((material, idx) => {
-      const percentual = percentuaisAgregados[idx] || 0;
-      const massaAgregadoTon = (percentual / 100) * massaTotalAgregadosTon;
-      return massaAgregadoTon.toFixed(4);
-    });
-  };
+  // ============ FUNÇÕES AUXILIARES ============
 
   const getFatigueInitialValues = () => {
     if (!fatigueData) return {};
@@ -159,22 +177,10 @@ const Marshall_Step9_ResumeDosage = ({
   // ============ CONFIGURAÇÃO DAS TABELAS ============
 
   const granulometricCompTableColumns: GridColDef[] = [
-    {
-      field: 'sieve_label',
-      headerName: t('granulometry-asphalt.sieves'),
-    },
-    {
-      field: 'projections',
-      headerName: t('asphalt.dosages.marshall.projections'),
-    },
-    {
-      field: 'lowerBand',
-      headerName: t('asphalt.dosages.marshall.inferiorBand'),
-    },
-    {
-      field: 'higherBand',
-      headerName: t('asphalt.dosages.marshall.superiorBand'),
-    },
+    { field: 'sieve_label', headerName: t('granulometry-asphalt.sieves') },
+    { field: 'projections', headerName: t('asphalt.dosages.marshall.projections') },
+    { field: 'lowerBand', headerName: t('asphalt.dosages.marshall.inferiorBand') },
+    { field: 'higherBand', headerName: t('asphalt.dosages.marshall.superiorBand') },
   ];
 
   const sieveToBandIndex: { [key: string]: number } = {
@@ -199,9 +205,8 @@ const Marshall_Step9_ResumeDosage = ({
       if (bandIndex !== undefined) {
         const lower = granulometryCompositionData.bands?.lowerBand?.[bandIndex];
         const higher = granulometryCompositionData.bands?.higherBand?.[bandIndex];
-
-        lowerBandValue = lower !== null && lower !== undefined ? lower.toFixed(2) : null;
-        higherBandValue = higher !== null && higher !== undefined ? higher.toFixed(2) : null;
+        lowerBandValue = lower != null ? lower.toFixed(2) : null;
+        higherBandValue = higher != null ? higher.toFixed(2) : null;
       }
 
       return {
@@ -224,7 +229,7 @@ const Marshall_Step9_ResumeDosage = ({
     },
   ];
 
-  // Configuração da tabela de teor ótimo
+  // Tabela de teor ótimo
   const optimumContentCols: GridColDef[] = [
     {
       field: 'optimumBinder',
@@ -261,16 +266,12 @@ const Marshall_Step9_ResumeDosage = ({
       headerAlign: 'center',
       children: [
         { field: 'optimumBinder' },
-        ...(materialSelectionData?.aggregates?.map((material) => ({
-          field: material._id,
-        })) || []),
+        ...(materialSelectionData?.aggregates?.map((material) => ({ field: material._id })) || []),
       ],
     },
   ];
 
-  // Configuração da tabela quantitativa
-  const quantitativeValues = calculateQuantitativeValues();
-
+  // Tabela quantitativa
   const quantitativeCols: GridColDef[] = [
     {
       field: 'binder',
@@ -292,9 +293,7 @@ const Marshall_Step9_ResumeDosage = ({
           {
             id: 0,
             binder: (() => {
-              const VV_decimal = volumetricValues.aggregateVolumeVoids || 0;
-              const VBC = volumetricValues.bitumenVoids || 0;
-              const VV_percent = Math.max(0, VV_decimal * 100 - VBC);
+              const VV_percent = correctedValues?.vvCalculated || 0;
               const Gmm = data.confirmedSpecificGravity.result;
               const massaTotalTon = ((100 - VV_percent) / 100) * Gmm;
               const teorLigante = optimumBinderContentData?.optimumBinder?.optimumContent || 0;
@@ -317,14 +316,12 @@ const Marshall_Step9_ResumeDosage = ({
       headerAlign: 'center',
       children: [
         { field: 'binder' },
-        ...(materialSelectionData?.aggregates?.map((material) => ({
-          field: `${material._id}`,
-        })) || []),
+        ...(materialSelectionData?.aggregates?.map((material) => ({ field: `${material._id}` })) || []),
       ],
     },
   ];
 
-  // Configuração dos parâmetros volumétricos
+  // Tabela de parâmetros volumétricos
   const volumetricParamsCols: GridColDef[] = [
     {
       field: 'param',
@@ -370,12 +367,10 @@ const Marshall_Step9_ResumeDosage = ({
         {
           id: 2,
           param: t('asphalt.dosages.mixture-voids'),
-          unity: (() => {
-            const VAM = volumetricValues.aggregateVolumeVoids || 0;
-            const VBC = volumetricValues.bitumenVoids || 0;
-            const VV = VAM * 100 - VBC;
-            return `${VV.toFixed(2)}%`;
-          })(),
+          unity:
+            correctedValues?.vvCalculated !== undefined
+              ? `${correctedValues.vvCalculated.toFixed(2)}%`
+              : '---',
           bearingLayer: '3 - 5',
           bondingLayer: '4 - 6',
         },
@@ -390,16 +385,8 @@ const Marshall_Step9_ResumeDosage = ({
     : [];
 
   const mineralAggregateVoidsCols: GridColDef[] = [
-    {
-      field: 'tmn',
-      headerName: 'TMN',
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'vam',
-      headerName: 'Vam (%)',
-      valueFormatter: ({ value }) => `${value}`,
-    },
+    { field: 'tmn', headerName: 'TMN', valueFormatter: ({ value }) => `${value}` },
+    { field: 'vam', headerName: 'Vam (%)', valueFormatter: ({ value }) => `${value}` },
   ];
 
   const mineralAggregateVoidsRows = [
@@ -424,7 +411,6 @@ const Marshall_Step9_ResumeDosage = ({
           label: t('asphalt.dosages.optimum-binder'),
           value: optimumBinderContentData?.optimumBinder?.optimumContent?.toFixed(2) || '0.00',
           unity: '%',
-          isValid: true,
         },
         {
           label: realMethod === 'GMM' ? t('asphalt.dosages.gmm') : t('asphalt.dosages.dmt'),
@@ -433,38 +419,35 @@ const Marshall_Step9_ResumeDosage = ({
               ? Number(data.confirmedSpecificGravity.result).toFixed(2)
               : '---',
           unity: 'g/cm³',
-          isValid: true,
         },
         {
           label: t('asphalt.dosages.gmb'),
           value: volumetricValues.apparentBulkSpecificGravity?.toFixed(2) || '---',
           unity: 'g/cm³',
-          isValid: true,
         },
         {
           label: t('asphalt.dosages.vv') + ' (VV)',
-          value: (() => {
-            const VAM = volumetricValues.aggregateVolumeVoids || 0;
-            const VBC = volumetricValues.bitumenVoids || 0;
-            return (VAM * 100 - VBC).toFixed(2);
-          })(),
+          value:
+            correctedValues?.vvCalculated !== undefined
+              ? correctedValues.vvCalculated.toFixed(2)
+              : '---',
           unity: '%',
-          isValid: true,
         },
         {
           label: t('asphalt.dosages.vam') + ' (VAM)',
           value:
-            volumetricValues.aggregateVolumeVoids !== undefined
-              ? (volumetricValues.aggregateVolumeVoids * 100).toFixed(2)
+            correctedValues?.vamCalculated !== undefined
+              ? correctedValues.vamCalculated.toFixed(2)
               : '---',
           unity: '%',
-          isValid: true,
         },
         {
           label: 'VBC (Vazios com Betume)',
-          value: volumetricValues.bitumenVoids?.toFixed(2) || '---',
+          value:
+            correctedValues?.vbcCalculated !== undefined
+              ? correctedValues.vbcCalculated.toFixed(2)
+              : '---',
           unity: '%',
-          isValid: true,
         },
         {
           label: t('asphalt.dosages.rbv') + ' (RBV)',
@@ -473,25 +456,21 @@ const Marshall_Step9_ResumeDosage = ({
               ? (volumetricValues.ratioBitumenVoid * 100).toFixed(2)
               : '---',
           unity: '%',
-          isValid: true,
         },
         {
           label: t('asphalt.dosages.marshall.stability'),
           value: volumetricValues.stability?.toFixed(2) || '0.00',
           unity: 'N',
-          isValid: true,
         },
         {
           label: t('asphalt.dosages.marshall.fluency'),
           value: volumetricValues.fluency?.toFixed(2) || '0.00',
           unity: 'mm',
-          isValid: true,
         },
         {
           label: t('asphalt.dosages.indirect-tensile-strength'),
           value: volumetricValues.indirectTensileStrength?.toFixed(2) || '0.00',
           unity: 'MPa',
-          isValid: true,
         },
       ]
     : [];
@@ -518,7 +497,9 @@ const Marshall_Step9_ResumeDosage = ({
         <Box sx={{ p: 1, bgcolor: 'info.light', borderRadius: 1, mb: 2 }}>
           <Typography variant="body2" color="info.contrastText">
             Método de densidade:{' '}
-            <strong>{realMethod === 'GMM' ? 'GMM - Densidade máxima medida' : 'DMT - Densidade máxima teórica'}</strong>
+            <strong>
+              {realMethod === 'GMM' ? 'GMM - Densidade máxima medida' : 'DMT - Densidade máxima teórica'}
+            </strong>
           </Typography>
         </Box>
 
@@ -596,11 +577,7 @@ const Marshall_Step9_ResumeDosage = ({
           <Box id="volumetric-mechanic-params">
             <ResultSubTitle
               title={t('asphalt.dosages.binder-volumetric-mechanic-params')}
-              sx={{
-                maxWidth: '103%',
-                wordWrap: 'break-word',
-                marginX: '.65rem',
-              }}
+              sx={{ maxWidth: '103%', wordWrap: 'break-word', marginX: '.65rem' }}
             />
 
             <Box
@@ -756,10 +733,7 @@ const Marshall_Step9_ResumeDosage = ({
               };
 
               marshall
-                .saveFatigueCurve({
-                  dosageId,
-                  ...formattedValues,
-                })
+                .saveFatigueCurve({ dosageId, ...formattedValues })
                 .then((response) => {
                   toast.success('Curva de fadiga salva com sucesso!');
                   if (response.dosage?.fatigueCurveData) {
@@ -800,10 +774,7 @@ const Marshall_Step9_ResumeDosage = ({
               };
 
               marshall
-                .saveResilienceModule({
-                  dosageId,
-                  ...formattedValues,
-                })
+                .saveResilienceModule({ dosageId, ...formattedValues })
                 .then((response) => {
                   toast.success('Módulo de resiliência salvo com sucesso!');
                   if (response.dosage?.resilienceModuleData) {
