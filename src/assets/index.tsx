@@ -95,6 +95,7 @@ import AbcpIcon from './concrete/dosages/abcp.svg';
 import AbcpLogo from './concrete/dosages/abcp-icon.png';
 
 // creators
+// Book/Article icon - Used in library pages (asphalt/library, soils/library) to display PDF book entries
 import Article from './creators/Article.png';
 // export all assets
 export {
