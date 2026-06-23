@@ -1,5 +1,5 @@
 import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
-import { FwdData } from '@/stores/asphalt/fwd/fwd.store';
+import { FWDAnalysis } from '@/stores/asphalt/fwd/fwd.store';
 import { IggData } from '@/stores/asphalt/igg/igg.store';
 import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
 import { Sieve } from '../common';
@@ -64,7 +64,7 @@ export class AsphaltMaterial {
 
 export type Materials = {
   materials: AsphaltMaterial[]
-  fwdEssays: FwdData[];
+  fwdEssays: FWDAnalysis[];
   iggEssays: IggData[];
   rtcdEssays: RtcdData[];
 };

@@ -22,7 +22,7 @@ import { formatDate } from '@/utils/format';
 import { t } from 'i18next';
 import Link from 'next/link';
 import { Edit, ModeEdit, Visibility } from '@mui/icons-material';
-import { FwdData } from '@/stores/asphalt/fwd/fwd.store';
+import { FWDAnalysis } from '@/stores/asphalt/fwd/fwd.store';
 import { IggData } from '@/stores/asphalt/igg/igg.store';
 import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
 import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
@@ -34,7 +34,7 @@ export type essayTypes = 'rtcd' | 'ddui' | 'fwd' | 'igg';
 
 interface MaterialsTemplateProps {
   materials: any[] | undefined;
-  fwdEssays?: FwdData[] | undefined;
+  fwdEssays?: FWDAnalysis[] | undefined;
   iggEssays?: IggData[] | undefined;
   dduiEssays?: DduiData[] | undefined;
   rtcdEssays?: RtcdData[] | undefined;
@@ -177,11 +177,11 @@ const MaterialsTemplate = ({
     setFilteredData(filteredData);
   }, [searchValue, searchBy, materials]);
 
-  const fwdEssaysData = fwdEssays?.map(({ _id, generalData }) => ({
-    name: generalData.name,
+  const fwdEssaysData = (Array.isArray(fwdEssays) ? fwdEssays : []).map(({ _id, name, createdAt }) => ({
+    name,
     type: 'FWD',
-    createdAt: generalData.createdAt instanceof Date ? generalData.createdAt : new Date(generalData.createdAt),
-    _id: _id,
+    createdAt: new Date(createdAt),
+    _id,
   }));
 
   const iggEssaysData = (Array.isArray(iggEssays) ? iggEssays : []).map(({ _id, generalData }) => ({

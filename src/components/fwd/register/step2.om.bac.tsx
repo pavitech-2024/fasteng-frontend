@@ -1,21 +1,5 @@
-import { EssayPageProps } from '../../../templates/essay';
-import {
-  Box,
-  Typography,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  IconButton,
-  Alert,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  CircularProgress,
-  Tooltip,
-  Snackbar,
-} from '@mui/material';
+import { EssayPageProps } from '@/components/templates/essays';
+import { Box, Typography, Button, Card, CardContent, Chip, IconButton, Alert, FormControl, InputLabel, Select, MenuItem, CircularProgress, Tooltip, Snackbar } from '@mui/material';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { Edit, Delete, Visibility } from '@mui/icons-material';
@@ -24,19 +8,11 @@ import useFWDStore, { FWDAnalysis } from '@/stores/asphalt/fwd/fwd.store';
 
 const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
   const {
-    analyses,
-    drafts,
-    selectedAnalysis,
-    setSelectedAnalysis,
-    loading,
-    error,
-    setError,
-    fetchAnalyses,
-    deleteAnalysis,
-    setActiveTab,
-    setEditingId,
-    setAnalysisData,
-    setSamples,
+    analyses, drafts,
+    selectedAnalysis, setSelectedAnalysis,
+    loading, error, setError,
+    fetchAnalyses, deleteAnalysis,
+    setActiveTab, setEditingId, setAnalysisData, setSamples,
   } = useFWDStore();
 
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
@@ -88,37 +64,25 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active':
-        return 'success';
-      case 'completed':
-        return 'info';
-      case 'draft':
-        return 'warning';
-      default:
-        return 'default';
+      case 'active': return 'success';
+      case 'completed': return 'info';
+      case 'draft': return 'warning';
+      default: return 'default';
     }
   };
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'active':
-        return 'Ativa';
-      case 'completed':
-        return 'Finalizada';
-      case 'draft':
-        return 'Rascunho';
-      default:
-        return status;
+      case 'active': return 'Ativa';
+      case 'completed': return 'Finalizada';
+      case 'draft': return 'Rascunho';
+      default: return status;
     }
   };
 
   return (
     <>
-      {error && (
-        <Alert severity="error" onClose={() => setError(null)} sx={{ mb: 2 }}>
-          {error}
-        </Alert>
-      )}
+      {error && <Alert severity="error" onClose={() => setError(null)} sx={{ mb: 2 }}>{error}</Alert>}
 
       {/* SELEÇÃO RÁPIDA */}
       <FlexColumnBorder title="ANÁLISE SELECIONADA" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
@@ -131,7 +95,7 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
                   value={selectedAnalysis?._id || ''}
                   onChange={(e) => {
                     const id = e.target.value as string;
-                    const found = [...analyses, ...drafts].find((a) => a._id === id);
+                    const found = [...analyses, ...drafts].find(a => a._id === id);
                     if (found) handleSelect(found);
                   }}
                   label="SELECIONAR ANÁLISE"
@@ -166,9 +130,9 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
 
           {selectedAnalysis && (
             <Alert severity="success" sx={{ width: '100%' }}>
-              Análise <strong>{selectedAnalysis.name}</strong> selecionada!
-              {selectedAnalysis.samples?.length >= 5
-                ? ' Pronta para processamento.'
+              Análise <strong>{selectedAnalysis.name}</strong> selecionada! 
+              {selectedAnalysis.samples?.length >= 5 
+                ? ' Pronta para processamento.' 
                 : ' Necessário mínimo de 5 amostras.'}
             </Alert>
           )}
@@ -176,10 +140,10 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
       </FlexColumnBorder>
 
       {/* RASCUNHOS */}
-      <FlexColumnBorder
-        title={`RASCUNHOS (${drafts.length})`}
-        open={drafts.length > 0}
-        theme={'#ff6b35'}
+      <FlexColumnBorder 
+        title={`RASCUNHOS (${drafts.length})`} 
+        open={drafts.length > 0} 
+        theme={'#ff6b35'} 
         sx_title={{ whiteSpace: 'wrap' }}
       >
         {drafts.length === 0 ? (
@@ -189,15 +153,14 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
         ) : (
           <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}>
             {drafts.map((draft) => (
-              <Card
-                key={draft._id}
-                sx={{
+              <Card 
+                key={draft._id} 
+                sx={{ 
                   border: selectedAnalysis?._id === draft._id ? '2px solid #ff6b35' : '1px solid #ff6b3580',
                   borderRadius: 1,
-                  background:
-                    selectedAnalysis?._id === draft._id
-                      ? 'linear-gradient(145deg, #fff5f0 0%, #ffffff 100%)'
-                      : '#ffffff',
+                  background: selectedAnalysis?._id === draft._id 
+                    ? 'linear-gradient(145deg, #fff5f0 0%, #ffffff 100%)' 
+                    : '#ffffff',
                   transition: 'all 0.2s',
                   '&:hover': { transform: 'translateY(-2px)', boxShadow: '0 4px 12px rgba(255,107,53,0.15)' },
                 }}
@@ -212,43 +175,41 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
                         {draft.description || 'Sem descrição'}
                       </Typography>
                       <Box sx={{ display: 'flex', gap: 1, mt: 1, flexWrap: 'wrap' }}>
-                        <Chip
-                          label={`${draft.samples?.length || 0} amostras`}
-                          size="small"
-                          color={draft.samples?.length >= 5 ? 'success' : 'warning'}
-                          variant="outlined"
+                        <Chip 
+                          label={`${draft.samples?.length || 0} amostras`} 
+                          size="small" 
+                          color={draft.samples?.length >= 5 ? 'success' : 'warning'} 
+                          variant="outlined" 
                         />
-                        <Chip
-                          label={getStatusLabel(draft.status)}
-                          size="small"
-                          color={getStatusColor(draft.status)}
-                          variant="outlined"
+                        <Chip 
+                          label={getStatusLabel(draft.status)} 
+                          size="small" 
+                          color={getStatusColor(draft.status)} 
+                          variant="outlined" 
                         />
-                        <Chip label={`Criado: ${formatDate(draft.createdAt)}`} size="small" variant="outlined" />
+                        <Chip 
+                          label={`Criado: ${formatDate(draft.createdAt)}`} 
+                          size="small" 
+                          variant="outlined" 
+                        />
                       </Box>
                     </Box>
                     <Box sx={{ display: 'flex', gap: 0.5, ml: 2 }}>
                       <Tooltip title="Editar rascunho">
-                        <IconButton
-                          size="small"
-                          onClick={() => handleEdit(draft)}
-                          sx={{
+                        <IconButton size="small" onClick={() => handleEdit(draft)} 
+                          sx={{ 
                             color: '#ff6b35',
-                            '&:hover': { backgroundColor: 'rgba(255,107,53,0.1)' },
-                          }}
-                        >
+                            '&:hover': { backgroundColor: 'rgba(255,107,53,0.1)' }
+                          }}>
                           <Edit fontSize="small" />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Excluir rascunho">
-                        <IconButton
-                          size="small"
-                          onClick={() => handleDelete(draft._id)}
-                          sx={{
+                        <IconButton size="small" onClick={() => handleDelete(draft._id)} 
+                          sx={{ 
                             color: '#ff1744',
-                            '&:hover': { backgroundColor: 'rgba(255,23,68,0.1)' },
-                          }}
-                        >
+                            '&:hover': { backgroundColor: 'rgba(255,23,68,0.1)' }
+                          }}>
                           <Delete fontSize="small" />
                         </IconButton>
                       </Tooltip>
@@ -259,7 +220,7 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
                       size="small"
                       variant="outlined"
                       onClick={() => handleSelect(draft)}
-                      sx={{
+                      sx={{ 
                         flex: 1,
                         borderRadius: 1,
                         fontWeight: 600,
@@ -269,7 +230,7 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
                         '&:hover': {
                           borderColor: '#e55a2b',
                           backgroundColor: 'rgba(255,107,53,0.04)',
-                        },
+                        }
                       }}
                     >
                       {selectedAnalysis?._id === draft._id ? 'SELECIONADO' : 'SELECIONAR'}
@@ -283,10 +244,10 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
       </FlexColumnBorder>
 
       {/* ANÁLISES COMPLETAS */}
-      <FlexColumnBorder
-        title={`ANÁLISES COMPLETAS (${analyses.length})`}
-        open={true}
-        theme={'#07B811'}
+      <FlexColumnBorder 
+        title={`ANÁLISES COMPLETAS (${analyses.length})`} 
+        open={true} 
+        theme={'#07B811'} 
         sx_title={{ whiteSpace: 'wrap' }}
       >
         {analyses.length === 0 ? (
@@ -296,15 +257,14 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
         ) : (
           <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}>
             {analyses.map((analysis) => (
-              <Card
-                key={analysis._id}
-                sx={{
+              <Card 
+                key={analysis._id} 
+                sx={{ 
                   border: selectedAnalysis?._id === analysis._id ? '2px solid #07B811' : '1px solid #07B81180',
                   borderRadius: 1,
-                  background:
-                    selectedAnalysis?._id === analysis._id
-                      ? 'linear-gradient(145deg, #f0fff0 0%, #ffffff 100%)'
-                      : '#ffffff',
+                  background: selectedAnalysis?._id === analysis._id 
+                    ? 'linear-gradient(145deg, #f0fff0 0%, #ffffff 100%)' 
+                    : '#ffffff',
                   transition: 'all 0.2s',
                   '&:hover': { transform: 'translateY(-2px)', boxShadow: '0 4px 12px rgba(7,184,17,0.15)' },
                 }}
@@ -312,13 +272,10 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
                 <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <Box sx={{ flex: 1 }}>
-                      <Typography
-                        variant="subtitle1"
-                        sx={{
-                          fontWeight: 700,
-                          color: selectedAnalysis?._id === analysis._id ? '#07B811' : '#2c3e50',
-                        }}
-                      >
+                      <Typography variant="subtitle1" sx={{ 
+                        fontWeight: 700, 
+                        color: selectedAnalysis?._id === analysis._id ? '#07B811' : '#2c3e50' 
+                      }}>
                         {selectedAnalysis?._id === analysis._id && '✅ '}
                         {analysis.name}
                       </Typography>
@@ -331,62 +288,57 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
                         </Typography>
                       )}
                       <Box sx={{ display: 'flex', gap: 1, mt: 1, flexWrap: 'wrap' }}>
-                        <Chip
-                          label={`${analysis.samples?.length || 0} amostras`}
-                          size="small"
-                          color={analysis.samples?.length >= 5 ? 'success' : 'warning'}
-                          variant="outlined"
+                        <Chip 
+                          label={`${analysis.samples?.length || 0} amostras`} 
+                          size="small" 
+                          color={analysis.samples?.length >= 5 ? 'success' : 'warning'} 
+                          variant="outlined" 
                         />
-                        <Chip
-                          label={getStatusLabel(analysis.status)}
-                          size="small"
-                          color={getStatusColor(analysis.status)}
-                          variant="outlined"
+                        <Chip 
+                          label={getStatusLabel(analysis.status)} 
+                          size="small" 
+                          color={getStatusColor(analysis.status)} 
+                          variant="outlined" 
                         />
-                        <Chip label={`Criada: ${formatDate(analysis.createdAt)}`} size="small" variant="outlined" />
+                        <Chip 
+                          label={`Criada: ${formatDate(analysis.createdAt)}`} 
+                          size="small" 
+                          variant="outlined" 
+                        />
                         {analysis.updatedAt && (
-                          <Chip
-                            label={`Atualizada: ${formatDate(analysis.updatedAt)}`}
-                            size="small"
-                            variant="outlined"
+                          <Chip 
+                            label={`Atualizada: ${formatDate(analysis.updatedAt)}`} 
+                            size="small" 
+                            variant="outlined" 
                           />
                         )}
                       </Box>
                     </Box>
                     <Box sx={{ display: 'flex', gap: 0.5, ml: 2 }}>
                       <Tooltip title="Visualizar resultados">
-                        <IconButton
-                          size="small"
-                          onClick={() => handleViewResults(analysis)}
-                          sx={{
+                        <IconButton size="small" onClick={() => handleViewResults(analysis)}
+                          sx={{ 
                             color: '#07B811',
-                            '&:hover': { backgroundColor: 'rgba(7,184,17,0.1)' },
-                          }}
-                        >
+                            '&:hover': { backgroundColor: 'rgba(7,184,17,0.1)' }
+                          }}>
                           <Visibility fontSize="small" />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Editar análise">
-                        <IconButton
-                          size="small"
-                          onClick={() => handleEdit(analysis)}
-                          sx={{
+                        <IconButton size="small" onClick={() => handleEdit(analysis)}
+                          sx={{ 
                             color: '#07B811',
-                            '&:hover': { backgroundColor: 'rgba(7,184,17,0.1)' },
-                          }}
-                        >
+                            '&:hover': { backgroundColor: 'rgba(7,184,17,0.1)' }
+                          }}>
                           <Edit fontSize="small" />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Excluir análise">
-                        <IconButton
-                          size="small"
-                          onClick={() => handleDelete(analysis._id)}
-                          sx={{
+                        <IconButton size="small" onClick={() => handleDelete(analysis._id)}
+                          sx={{ 
                             color: '#ff1744',
-                            '&:hover': { backgroundColor: 'rgba(255,23,68,0.1)' },
-                          }}
-                        >
+                            '&:hover': { backgroundColor: 'rgba(255,23,68,0.1)' }
+                          }}>
                           <Delete fontSize="small" />
                         </IconButton>
                       </Tooltip>
@@ -395,17 +347,17 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
                   <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
                     <Button
                       size="small"
-                      variant={selectedAnalysis?._id === analysis._id ? 'contained' : 'outlined'}
+                      variant={selectedAnalysis?._id === analysis._id ? "contained" : "outlined"}
                       onClick={() => handleSelect(analysis)}
-                      sx={{
+                      sx={{ 
                         flex: 1,
                         borderRadius: 1,
                         fontWeight: 600,
                         fontSize: '0.75rem',
-                        ...(selectedAnalysis?._id === analysis._id
-                          ? {
+                        ...(selectedAnalysis?._id === analysis._id 
+                          ? { 
                               backgroundColor: '#07B811',
-                              '&:hover': { backgroundColor: '#05a00e' },
+                              '&:hover': { backgroundColor: '#05a00e' }
                             }
                           : {
                               borderColor: '#07B811',
@@ -413,8 +365,9 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
                               '&:hover': {
                                 borderColor: '#05a00e',
                                 backgroundColor: 'rgba(7,184,17,0.04)',
-                              },
-                            }),
+                              }
+                            }
+                        )
                       }}
                     >
                       {selectedAnalysis?._id === analysis._id ? 'SELECIONADA' : 'SELECIONAR'}
@@ -424,7 +377,7 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
                       variant="outlined"
                       onClick={() => handleViewResults(analysis)}
                       startIcon={<Visibility />}
-                      sx={{
+                      sx={{ 
                         flex: 1,
                         borderRadius: 1,
                         fontWeight: 600,
@@ -434,7 +387,7 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
                         '&:hover': {
                           borderColor: '#05a00e',
                           backgroundColor: 'rgba(7,184,17,0.04)',
-                        },
+                        }
                       }}
                     >
                       RESULTADOS
@@ -447,9 +400,9 @@ const FWD_step2 = ({ setNextDisabled }: EssayPageProps) => {
         )}
       </FlexColumnBorder>
 
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={4000}
+      <Snackbar 
+        open={snackbar.open} 
+        autoHideDuration={4000} 
         onClose={() => setSnackbar({ ...snackbar, open: false })}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
