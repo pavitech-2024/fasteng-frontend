@@ -13,7 +13,9 @@ import { useState } from 'react';
 import Loading from '@/components/molecules/loading';
 import Graph from '@/services/asphalt/dosages/marshall/graph/marshal-granulometry-graph';
 import MiniGraphics from '@/components/asphalt/dosages/marshall/graphs/miniGraph';
-//tst
+// PATCH 1: Import do gráfico principal de dosagem (curva combinada)
+import GraficoPage7N from '@/components/asphalt/dosages/marshall/graphs/page-7-graph';
+
 interface IGeneratedPDF {
   dosage: MarshallData;
 }
@@ -22,8 +24,10 @@ const ORANGE_RGB: Color = [242, 145, 52] as unknown as Color;
 const LIGHT_GRAY: Color = [248, 248, 248] as unknown as Color;
 const INFO_BLUE: Color = [227, 242, 253] as unknown as Color;
 
+// PATCH 2: Adicionado dosageMain aos IDs
 const GRAPH_IDS = {
   granulometric: 'pdf-hidden-graph-granulometric',
+  dosageMain: 'pdf-hidden-graph-dosage-main',
   gmb: 'pdf-hidden-graph-gmb',
   sg: 'pdf-hidden-graph-sg',
   vv: 'pdf-hidden-graph-vv',
@@ -94,6 +98,22 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
   const graphics = dosage.optimumBinderContentData?.graphics;
   const granulometryGraphData = dosage.granulometryCompositionData?.graphData;
+
+  // PATCH 3: Montar os pontos do gráfico principal de dosagem
+  const dosageCurvePointsRaw = dosage.optimumBinderContentData?.optimumBinder?.pointsOfCurveDosage;
+  const dosageCurvePoints =
+  Array.isArray(dosageCurvePointsRaw) && dosageCurvePointsRaw.length > 0
+    ? [
+        ['', '', ''], // header
+        ...dosageCurvePointsRaw.filter((row: any[]) => 
+          row.length >= 3 && 
+          row[0] !== '' && 
+          row[0] !== null && 
+          row[0] !== undefined &&
+          !isNaN(Number(row[0]))
+        )
+      ]
+    : null;
 
   const isValidChartData = (arr: any): boolean =>
     Array.isArray(arr) && arr.length > 1 && Array.isArray(arr[0]) && Array.isArray(arr[1]);
@@ -369,8 +389,10 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     try {
       await waitForGraphsRender();
 
-      const [granulometricImg, gmbImg, sgImg, vvImg, vamImg, rbvImg, stabilityImg] = await Promise.all([
+      // PATCH 4: Capturar dosageMain também
+      const [granulometricImg, dosageMainImg, gmbImg, sgImg, vvImg, vamImg, rbvImg, stabilityImg] = await Promise.all([
         captureElementAsImage(GRAPH_IDS.granulometric),
+        captureElementAsImage(GRAPH_IDS.dosageMain),
         captureElementAsImage(GRAPH_IDS.gmb),
         captureElementAsImage(GRAPH_IDS.sg),
         captureElementAsImage(GRAPH_IDS.vv),
@@ -637,6 +659,13 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       doc.setFont(undefined, 'normal');
       currentY += 8;
 
+      // PATCH 5: Gráfico principal (curva combinada) em largura cheia, antes da grade
+      if (dosageMainImg) {
+        currentY = ensureSpace(doc, image, currentY, 100);
+        const h = addImageFitWidth(doc, dosageMainImg, 10, currentY, 190);
+        currentY += h + 8;
+      }
+
       const dosageGraphs = [gmbImg, sgImg, vvImg, vamImg, rbvImg, stabilityImg].filter(Boolean) as string[];
 
       const colWidth = 90;
@@ -773,6 +802,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     }
   };
 
+
   return (
     <>
       {dosage?.confirmationCompressionData && (
@@ -792,6 +822,15 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
               <ChartErrorBoundary>
                 <Box id={GRAPH_IDS.granulometric} sx={{ width: '750px', height: '480px', padding: '10px' }}>
                   <Graph data={granulometryGraphData} />
+                </Box>
+              </ChartErrorBoundary>
+            )}
+
+            {/* PATCH 6: Caixa do gráfico principal de dosagem (curva combinada) */}
+            {dosageCurvePoints && (
+              <ChartErrorBoundary>
+                <Box id={GRAPH_IDS.dosageMain} sx={{ width: '750px', height: '450px', padding: '10px' }}>
+                  <GraficoPage7N data={dosageCurvePoints} />
                 </Box>
               </ChartErrorBoundary>
             )}
