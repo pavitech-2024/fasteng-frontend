@@ -259,6 +259,20 @@ export type MarshallData = {
   volumetricParametersData: VolumetricParametersData;
   optimumBinderContentData: OptimumBinderContentData;
   confirmationCompressionData: ConfirmationCompressionData;
+  fatigueCurveData?: {
+    k1?: number;
+    k2?: number;
+    observacoes?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+  };
+  resilienceModuleData?: {
+    moduloMedio?: number;
+    moduloInstantaneo?: number;
+    observacoes?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+  };
   createdAt: Date;
   updatedAt: Date;
 };
