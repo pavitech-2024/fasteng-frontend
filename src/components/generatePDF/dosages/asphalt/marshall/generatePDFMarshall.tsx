@@ -70,12 +70,11 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     optimumBinderContentData: storeOptimumBinder,
     binderTrialData: storeBinderTrialData,
   } = useMarshallStore();
-  
+
   const data = dosage.confirmationCompressionData;
 
   const volumetricValues =
-    storeData?.confirmedVolumetricParameters?.values ??
-    data?.confirmedVolumetricParameters?.values;
+    storeData?.confirmedVolumetricParameters?.values ?? data?.confirmedVolumetricParameters?.values;
 
   const realMethod =
     storeData?.method ??
@@ -84,12 +83,9 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     data?.confirmedSpecificGravity?.type ??
     'DMT';
 
-  const densityMethodLabel =
-    realMethod === 'GMM' ? 'GMM - Densidade máxima medida' : 'DMT - Densidade máxima teórica';
+  const densityMethodLabel = realMethod === 'GMM' ? 'GMM - Densidade máxima medida' : 'DMT - Densidade máxima teórica';
 
-  const liveGmm =
-    storeData?.confirmedSpecificGravity?.result ??
-    data?.confirmedSpecificGravity?.result;
+  const liveGmm = storeData?.confirmedSpecificGravity?.result ?? data?.confirmedSpecificGravity?.result;
 
   const teorLigante =
     storeOptimumBinder?.optimumBinder?.optimumContent ??
@@ -102,18 +98,15 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
   // PATCH 3: Montar os pontos do gráfico principal de dosagem
   const dosageCurvePointsRaw = dosage.optimumBinderContentData?.optimumBinder?.pointsOfCurveDosage;
   const dosageCurvePoints =
-  Array.isArray(dosageCurvePointsRaw) && dosageCurvePointsRaw.length > 0
-    ? [
-        ['', '', ''], // header
-        ...dosageCurvePointsRaw.filter((row: any[]) => 
-          row.length >= 3 && 
-          row[0] !== '' && 
-          row[0] !== null && 
-          row[0] !== undefined &&
-          !isNaN(Number(row[0]))
-        )
-      ]
-    : null;
+    Array.isArray(dosageCurvePointsRaw) && dosageCurvePointsRaw.length > 0
+      ? [
+          ['', '', ''], // header
+          ...dosageCurvePointsRaw.filter(
+            (row: any[]) =>
+              row.length >= 3 && row[0] !== '' && row[0] !== null && row[0] !== undefined && !isNaN(Number(row[0]))
+          ),
+        ]
+      : null;
 
   const isValidChartData = (arr: any): boolean =>
     Array.isArray(arr) && arr.length > 1 && Array.isArray(arr[0]) && Array.isArray(arr[1]);
@@ -181,15 +174,11 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
     const rows = trialOrder.map((trial) => {
       const row: string[] = [trialValues[trial].toFixed(2)];
-      const binderEntry = percentsOfDosage
-        .flat()
-        .find((item: any) => item.trial === trial && !item.material);
+      const binderEntry = percentsOfDosage.flat().find((item: any) => item.trial === trial && !item.material);
       row.push(binderEntry ? Number(binderEntry.value).toFixed(2) : '---');
 
       dosage.materialSelectionData.aggregates.forEach((m: any) => {
-        const entry = percentsOfDosage
-          .flat()
-          .find((item: any) => item.trial === trial && item.material === m._id);
+        const entry = percentsOfDosage.flat().find((item: any) => item.trial === trial && item.material === m._id);
         row.push(entry ? Number(entry.value).toFixed(2) : '---');
       });
 
@@ -224,10 +213,8 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
   const granulometricRows =
     dosage.granulometryCompositionData?.projections?.map((row) => {
       const bandIndex = sieveToBandIndex[row.label];
-      const lower =
-        bandIndex !== undefined ? dosage.granulometryCompositionData.bands?.lowerBand?.[bandIndex] : null;
-      const higher =
-        bandIndex !== undefined ? dosage.granulometryCompositionData.bands?.higherBand?.[bandIndex] : null;
+      const lower = bandIndex !== undefined ? dosage.granulometryCompositionData.bands?.lowerBand?.[bandIndex] : null;
+      const higher = bandIndex !== undefined ? dosage.granulometryCompositionData.bands?.higherBand?.[bandIndex] : null;
       return {
         sieve: row.label,
         projection: row.value != null ? Number(row.value).toFixed(2) : '---',
@@ -249,11 +236,16 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
         ['VBC (Vazios com Betume)', `${correctedValues ? correctedValues.vbcCalculated.toFixed(2) : '---'} %`],
         [
           'Relação betume-vazios (RBV)',
-          `${volumetricValues.ratioBitumenVoid != null ? (volumetricValues.ratioBitumenVoid * 100).toFixed(2) : '---'} %`,
+          `${
+            volumetricValues.ratioBitumenVoid != null ? (volumetricValues.ratioBitumenVoid * 100).toFixed(2) : '---'
+          } %`,
         ],
         ['Estabilidade Marshall', `${(volumetricValues.stability || 0).toFixed(2)} N`],
         ['Fluência', `${(volumetricValues.fluency || 0).toFixed(2)} mm`],
-        ['Resistência à tração por compressão diametral', `${(volumetricValues.indirectTensileStrength || 0).toFixed(2)} MPa`],
+        [
+          'Resistência à tração por compressão diametral',
+          `${(volumetricValues.indirectTensileStrength || 0).toFixed(2)} MPa`,
+        ],
       ]
     : [];
 
@@ -309,34 +301,34 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
   const addPageWithoutDate = (doc: jsPDF, image: HTMLImageElement, currentY: number, title: string): number => {
     doc.addPage();
-    
+
     if (image) {
       const maxHeight = 7;
       const maxWidth = 35;
       const ratio = image.naturalWidth && image.naturalHeight ? image.naturalWidth / image.naturalHeight : 2;
       let width = maxHeight * ratio;
-      
+
       if (width > maxWidth) {
         width = maxWidth;
       }
-      
+
       doc.addImage(image, 'PNG', 10, 5, width, maxHeight);
     }
-    
+
     doc.setFontSize(12);
     doc.setFont(undefined, 'bold');
     doc.text(title, 105, 10, { align: 'center' });
     doc.setFont(undefined, 'normal');
-    
+
     doc.setDrawColor(242, 145, 52);
     doc.setLineWidth(0.5);
     doc.line(10, 16, 200, 16);
-    
+
     return 22;
   };
 
   let pageCount = 1;
-  
+
   const ensureSpace = (doc: jsPDF, image: HTMLImageElement, currentY: number, neededHeight: number): number => {
     if (currentY + neededHeight > PAGE_BOTTOM_LIMIT) {
       pageCount++;
@@ -572,7 +564,11 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       currentY = ensureSpace(doc, image, currentY, 40);
       doc.setFontSize(11);
       doc.setFont(undefined, 'bold');
-      doc.text('Tabela 1.3 - Parâmetros volumétricos e mecânicos da mistura no teor ótimo de ligante asfáltico', 10, currentY);
+      doc.text(
+        'Tabela 1.3 - Parâmetros volumétricos e mecânicos da mistura no teor ótimo de ligante asfáltico',
+        10,
+        currentY
+      );
       doc.setFont(undefined, 'normal');
       currentY += 6;
 
@@ -667,36 +663,33 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       }
 
       const dosageGraphs = [gmbImg, sgImg, vvImg, vamImg, rbvImg, stabilityImg].filter(Boolean) as string[];
-
       const colWidth = 90;
       const gap = 10;
-      let col = 0;
-      let rowStartY = currentY;
-      let rowMaxH = 0;
+
+      const firstRowY = currentY - 35;
+      const secondRowY = currentY + 20;
+      const thirdRowY = currentY + 75;
 
       dosageGraphs.forEach((img, idx) => {
+        const col = idx % 2;
         const x = 10 + col * (colWidth + gap);
-        const props = doc.getImageProperties(img);
+
+        const props = doc.getImageProperties(dosageGraphs[0]);
         const ratio = props.height / props.width;
-        const h = colWidth * ratio;
+        const graphHeight = colWidth * ratio;
 
-        if (rowStartY + h > PAGE_BOTTOM_LIMIT) {
-          rowStartY = addPageWithoutDate(doc, image, rowStartY, t('marshall.dosage-pdf-title')) + SECTION_TOP_OFFSET;
-          col = 0;
-        }
+        currentY = thirdRowY + graphHeight + 8;
+        const h = colWidth * ratio; // mantém o tamanho original
 
-        doc.addImage(img, 'PNG', x, rowStartY, colWidth, h);
-        rowMaxH = Math.max(rowMaxH, h);
+        let y = firstRowY;
 
-        col += 1;
-        if (col === 2 || idx === dosageGraphs.length - 1) {
-          rowStartY += rowMaxH + 8;
-          rowMaxH = 0;
-          col = 0;
-        }
+        if (idx >= 2 && idx < 4) y = secondRowY;
+        if (idx >= 4) y = thirdRowY;
+
+        doc.addImage(img, 'PNG', x, y, colWidth, h);
       });
 
-      currentY = rowStartY;
+      currentY = thirdRowY + colWidth * 0.7 + 8;
 
       if (dosageGraphs.length === 0) {
         doc.setFontSize(10);
@@ -713,7 +706,14 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       currentY += 6;
 
       autoTable(doc, {
-        head: [['Parâmetro', 'Unidade', t('asphalt.dosages.marshall.bearing-layer'), t('asphalt.dosages.marshall.bonding-layer')]],
+        head: [
+          [
+            'Parâmetro',
+            'Unidade',
+            t('asphalt.dosages.marshall.bearing-layer'),
+            t('asphalt.dosages.marshall.bonding-layer'),
+          ],
+        ],
         body: [
           [t('asphalt.dosages.stability'), 'Kgf', '≥500', '≥500'],
           [t('asphalt.dosages.rbv'), '%', '75 - 82', '65 - 72'],
@@ -780,7 +780,9 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
           const resilienceRows: string[][] = [
             [
               'Módulo Médio',
-              dosage.resilienceModuleData.moduloMedio != null ? `${dosage.resilienceModuleData.moduloMedio} MPa` : '---',
+              dosage.resilienceModuleData.moduloMedio != null
+                ? `${dosage.resilienceModuleData.moduloMedio} MPa`
+                : '---',
             ],
             [
               'Módulo Instantâneo',
@@ -801,7 +803,6 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       setLoading(false);
     }
   };
-
 
   return (
     <>
