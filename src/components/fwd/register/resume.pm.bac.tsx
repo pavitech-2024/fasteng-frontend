@@ -1,4 +1,4 @@
-import { EssayPageProps } from '@/components/templates/essay';
+import { EssayPageProps } from '@/components/templates/essays';
 import { Box, Typography, Chip, Alert } from '@mui/material';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import useFWDStore from '@/stores/asphalt/fwd/fwd.store';
@@ -17,6 +17,7 @@ const FWDResume = ({ setNextDisabled }: EssayPageProps) => {
     <>
       <FlexColumnBorder title="RESUMO DA ANÁLISE FWD" open={true} theme={'#07B811'} sx_title={{ whiteSpace: 'wrap' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 3 }}>
+          
           {/* DADOS GERAIS */}
           <Box>
             <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#07B811', mb: 1 }}>
@@ -24,49 +25,37 @@ const FWDResume = ({ setNextDisabled }: EssayPageProps) => {
             </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
               <Box sx={{ flex: '1 1 300px' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Nome da Análise
-                </Typography>
+                <Typography variant="body2" color="text.secondary">Nome da Análise</Typography>
                 <Typography variant="body1" sx={{ fontWeight: 600 }}>
                   {store.analysisData.name || 'Não informado'}
                 </Typography>
               </Box>
               <Box sx={{ flex: '1 1 300px' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Local
-                </Typography>
+                <Typography variant="body2" color="text.secondary">Local</Typography>
                 <Typography variant="body1" sx={{ fontWeight: 600 }}>
                   {store.analysisData.location || 'Não informado'}
                 </Typography>
               </Box>
               <Box sx={{ flex: '1 1 300px' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Rodovia
-                </Typography>
+                <Typography variant="body2" color="text.secondary">Rodovia</Typography>
                 <Typography variant="body1" sx={{ fontWeight: 600 }}>
                   {store.analysisData.highway || 'Não informado'}
                 </Typography>
               </Box>
               <Box sx={{ flex: '1 1 300px' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Camada
-                </Typography>
+                <Typography variant="body2" color="text.secondary">Camada</Typography>
                 <Typography variant="body1" sx={{ fontWeight: 600 }}>
                   {store.analysisData.layerType || 'Não informado'}
                 </Typography>
               </Box>
               <Box sx={{ flex: '1 1 300px' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Município/Estado
-                </Typography>
+                <Typography variant="body2" color="text.secondary">Município/Estado</Typography>
                 <Typography variant="body1" sx={{ fontWeight: 600 }}>
                   {store.analysisData.cityState || 'Não informado'}
                 </Typography>
               </Box>
               <Box sx={{ flex: '1 1 300px' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Velocidade Diretriz
-                </Typography>
+                <Typography variant="body2" color="text.secondary">Velocidade Diretriz</Typography>
                 <Typography variant="body1" sx={{ fontWeight: 600 }}>
                   {store.analysisData.speedLimit ? `${store.analysisData.speedLimit} km/h` : 'Não informado'}
                 </Typography>
@@ -74,9 +63,7 @@ const FWDResume = ({ setNextDisabled }: EssayPageProps) => {
             </Box>
             {store.analysisData.description && (
               <Box sx={{ mt: 2 }}>
-                <Typography variant="body2" color="text.secondary">
-                  Descrição
-                </Typography>
+                <Typography variant="body2" color="text.secondary">Descrição</Typography>
                 <Typography variant="body1">{store.analysisData.description}</Typography>
               </Box>
             )}
@@ -88,7 +75,7 @@ const FWDResume = ({ setNextDisabled }: EssayPageProps) => {
               AMOSTRAS
             </Typography>
             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-              <Chip
+              <Chip 
                 icon={store.samples.length >= 5 ? <CheckCircle /> : <Warning />}
                 label={`${store.samples.length} amostras cadastradas`}
                 color={store.samples.length >= 5 ? 'success' : 'warning'}
@@ -97,13 +84,13 @@ const FWDResume = ({ setNextDisabled }: EssayPageProps) => {
               />
               {store.samples.length > 0 && (
                 <>
-                  <Chip
-                    label={`Estaca inicial: ${Math.min(...store.samples.map((s) => s.stationNumber))}`}
+                  <Chip 
+                    label={`Estaca inicial: ${Math.min(...store.samples.map(s => s.stationNumber))}`}
                     variant="outlined"
                     sx={{ fontWeight: 600 }}
                   />
-                  <Chip
-                    label={`Estaca final: ${Math.max(...store.samples.map((s) => s.stationNumber))}`}
+                  <Chip 
+                    label={`Estaca final: ${Math.max(...store.samples.map(s => s.stationNumber))}`}
                     variant="outlined"
                     sx={{ fontWeight: 600 }}
                   />
@@ -124,9 +111,17 @@ const FWDResume = ({ setNextDisabled }: EssayPageProps) => {
                 ANÁLISE SELECIONADA
               </Typography>
               <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                <Chip label={store.selectedAnalysis.name} color="success" sx={{ fontWeight: 600 }} />
-                <Chip label={`Status: ${store.selectedAnalysis.status}`} variant="outlined" sx={{ fontWeight: 600 }} />
-                <Chip
+                <Chip 
+                  label={store.selectedAnalysis.name}
+                  color="success"
+                  sx={{ fontWeight: 600 }}
+                />
+                <Chip 
+                  label={`Status: ${store.selectedAnalysis.status}`}
+                  variant="outlined"
+                  sx={{ fontWeight: 600 }}
+                />
+                <Chip 
                   label={`Criada: ${formatDate(store.selectedAnalysis.createdAt)}`}
                   variant="outlined"
                   sx={{ fontWeight: 600 }}
@@ -142,19 +137,19 @@ const FWDResume = ({ setNextDisabled }: EssayPageProps) => {
                 RESULTADO DO PROCESSAMENTO
               </Typography>
               <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                <Chip
+                <Chip 
                   icon={<Assessment />}
                   label={`${store.procResult.subtrechos?.length || 0} subtrechos homogêneos`}
                   color="success"
                   sx={{ fontWeight: 600 }}
                 />
-                <Chip
+                <Chip 
                   label={`${store.procResult.ordered?.length || 0} amostras processadas`}
                   variant="outlined"
                   sx={{ fontWeight: 600 }}
                 />
-                <Chip
-                  label={`${store.procResult.quebra?.filter((q) => q).length || 0} pontos de quebra`}
+                <Chip 
+                  label={`${store.procResult.quebra?.filter(q => q).length || 0} pontos de quebra`}
                   variant="outlined"
                   color="warning"
                   sx={{ fontWeight: 600 }}
