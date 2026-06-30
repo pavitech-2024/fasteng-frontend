@@ -1,41 +1,254 @@
-import Fwd_GeneralData from '@/components/asphalt/essays/fwd/generalData.fwd';
-import Fwd_Step2 from '@/components/asphalt/essays/fwd/fwd-step2.fwd';
-import Fwd_Step3 from '@/components/asphalt/essays/fwd/fwd-step3.fwd';
-import Fwd_Step4 from '@/components/asphalt/essays/fwd/fwd-step4.fwd';
-import Fwd_Results from '@/components/asphalt/essays/fwd/results.fwd';
-import EssayTemplate from '@/components/templates/essay';
-import useAuth from '@/contexts/auth';
-import Fwd_SERVICE from '@/services/asphalt/essays/fwd/fwd.service';
-import useFwdStore, { FwdActions } from '@/stores/asphalt/fwd/fwd.store';
+import { ArrowDownIcon, MaterialsIcon, MarshallIcon } from '@/assets';
+import Image from 'next/image';
+import { WelcomeData } from '@/components/templates/welcome';
+import { Container, Box, Typography, Stack } from '@mui/material';
+import { StepperData, StepperWelcome as Stepper } from '@/components/atoms/stepper';
+import { t } from 'i18next';
+import { NextPage } from 'next';
+import { useState } from 'react';
+import { PMCardMenuOptions } from '@/components/atoms/Cards/FWDcard';
+import FWDicon from '@/assets/asphalt/essays/FWD.png';
+import useFWDStore from '@/stores/asphalt/fwd/fwd.store';
+import { useRouter } from 'next/router';
 
-const Fwd = () => {
-  // start an instance of the service
-  const fwd = new Fwd_SERVICE();
+const FWD: NextPage = () => {
+  const router = useRouter();
+  const [modalOpen, setModalOpen] = useState(false);
 
-  // get the userId
-  const {
-    user: { _id: userId },
-  } = useAuth();
-
-  // get the store, could be empty or not ( in case of refresh page for example)
-  const store = useFwdStore();
-
-  // set the userId to the service
-  fwd.userId = userId;
-
-  // set the store to the service
-  fwd.store_actions = store as FwdActions;
-
-  // inform the childrens with the step of the children and the part of the store that they will use
-  const childrens = [
-    { step: 0, children: <Fwd_GeneralData fwd={fwd} />, data: store.generalData },
-    { step: 1, children: <Fwd_Step2 />, data: store },
-    { step: 2, children: <Fwd_Step3 />, data: store },
-    { step: 3, children: <Fwd_Step4 />, data: store },
-    { step: 4, children: <Fwd_Results />, data: store },
+  const stepperDataView: StepperData[] = [
+    {
+      step: 1,
+      description: t('welcome.step.fwd.view.1'),
+    },
+    {
+      step: 2,
+      description: t('welcome.step.fwd.view.2'),
+    },
   ];
 
-  return <EssayTemplate essayInfo={fwd.info} childrens={childrens} nextCallback={fwd.handleNext} />;
+  const stepperDataRegister: StepperData[] = [
+    {
+      step: 1,
+      description: t('welcome.step.fwd.register.1'),
+    },
+    {
+      step: 2,
+      description: t('welcome.step.fwd.register.2'),
+    },
+    {
+      step: 3,
+      description: t('welcome.step.fwd.register.3'),
+    },
+    {
+      step: 4,
+      description: t('welcome.step.fwd.register.4'),
+    }
+  ];
+
+  const welcomeData: WelcomeData[] = [
+    {
+      name: t('fwd.register'),
+      icon: <MaterialsIcon width="30px" height="35px" />,
+      description: t('pm.register'),
+      path: '/asphalt/essays/fwd/register',
+    },
+    {
+      name: t('fwd.view'),
+      icon: <MarshallIcon width="30px" height="35px" />,
+      description: t('pm.view'),
+      path: '/asphalt/essays/fwd/view',
+    },
+  ];
+
+  return (
+    <Container>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'start',
+          alignItems: 'center',
+          marginTop: '3rem',
+          pt: { mobile: 0, desktop: '4vh' },
+          '@media only screen and (min-width: 1024px)': {
+            flexDirection: 'row',
+            justifyContent: 'center',
+          },
+        }}
+      >
+        <Box
+          sx={{
+            width: '100%',
+            maxWidth: '900px',
+            pt: { mobile: '2vh', desktop: '1vh' },
+            '@media only screen and (min-width: 1024px)': {
+              width: '60%',
+            },
+            '@media only screen and (min-width: 1366px)': {
+              width: '40%',
+            },
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '90%',
+                m: { mobile: '2vh 0 4vh', desktop: '1vh 0 2vh' },
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Image alt="promedina fwd icon" src={FWDicon.src} width={100} height={90} />
+              </Box>
+              <Box
+                color="primary"
+                sx={{
+                  textTransform: 'uppercase',
+                  fontWeight: 700,
+                  fontSize: { mobile: '1.45rem', notebook: '2rem' },
+                  lineHeight: { mobile: '1.5rem', notebook: '2.05rem' },
+                  textAlign: 'center',
+                  pl: '15px',
+                  color: '#07B811',
+                  div: { color: 'primaryTons.darkGray' },
+                }}
+              >
+                <div>{t('welcome.title')}</div>
+                {t('home.fwd')}
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                bgcolor: 'primaryTons.white',
+                borderRadius: '10px',
+                p: modalOpen ? { mobile: '3vh 4vw', notebook: '25px' } : '2vh',
+                width: { mobile: '90vw', notebook: '500px', desktop: '550px' },
+                border: '1px solid',
+                borderColor: 'primaryTons.border',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: modalOpen ? 'center' : { mobile: 'flex-start', notebook: 'center' },
+                justifyContent: 'center',
+                position: 'relative',
+                transition: '0.5s ease-out',
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: { mobile: 700, desktop: 500 },
+                  fontSize: { mobile: '1.25rem', desktop: '1.5rem' },
+                  color: 'primaryTons.mainGray',
+                  mb: modalOpen ? { mobile: '3vh', notebook: '25px' } : { mobile: 0, notebook: '25px' },
+                  transition: '0.5s ease-out',
+                }}
+              >
+                {t('welcome.how it works')}
+              </Typography>
+              <Typography sx={{ marginBottom: '1rem' }}>{t('fwd.works.register')}</Typography>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '2vh',
+                  right: '2vh',
+                  transform: modalOpen ? 'rotate(0.5turn)' : 'none',
+                  transition: '0.5s ease-out',
+                  display: { mobile: 'flex', notebook: 'none' },
+                }}
+              >
+                <ArrowDownIcon onClick={() => setModalOpen((prev) => !prev)} />
+              </Box>
+
+              <Stack
+                sx={{
+                  display: modalOpen ? 'flex' : { mobile: 'none', notebook: 'flex' },
+                  transition: '0.5s ease-out',
+                }}
+              >
+                <Stepper stepperData={stepperDataRegister} variant="multicolor" />
+              </Stack>
+              <Typography sx={{ marginTop: '2rem', marginBottom: '1rem' }}>{t('fwd.works.view')}</Typography>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '2vh',
+                  right: '2vh',
+                  transform: modalOpen ? 'rotate(0.5turn)' : 'none',
+                  transition: '0.5s ease-out',
+                  display: { mobile: 'flex', notebook: 'none' },
+                }}
+              >
+                <ArrowDownIcon onClick={() => setModalOpen((prev) => !prev)} />
+              </Box>
+
+              <Stack
+                sx={{
+                  display: modalOpen ? 'flex' : { mobile: 'none', notebook: 'flex' },
+                  transition: '0.5s ease-out',
+                  marginBottom: '1rem',
+                }}
+              >
+                <Stepper stepperData={stepperDataView} variant="multicolor" />
+              </Stack>
+            </Box>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            display: 'grid',
+            gap: '20px 0',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            width: '300px',
+            p: { mobile: '4vh 0', desktop: 0 },
+
+            '@media only screen and (min-width: 768px)': {
+              gridTemplateColumns: '1fr 1fr',
+              justifyItems: 'center',
+              width: '90%',
+            },
+
+            '@media only screen and (min-width: 1024px)': {
+              gridTemplateColumns: '1fr',
+              width: '325px',
+            },
+          }}
+        >
+          {welcomeData.map((option: WelcomeData) => {
+            const isRegister = option.path.includes('/register');
+
+            if (isRegister) {
+              return (
+                <div
+                  key={option.name}
+                  onClick={() => {
+                    useFWDStore.getState();
+                    sessionStorage.removeItem('fwd-step');
+                    router.push(option.path);
+                  }}
+                  style={{ width: '100%', display: 'flex' }}
+                >
+                  <PMCardMenuOptions {...option} />
+                </div>
+              );
+            }
+
+            return (
+              <div key={option.name} style={{ width: '100%', display: 'flex' }}>
+                <PMCardMenuOptions key={option.name} {...option} />
+              </div>
+            );
+          })}
+        </Box>
+      </Box>
+    </Container>
+  );
 };
 
-export default Fwd;
+export default FWD;

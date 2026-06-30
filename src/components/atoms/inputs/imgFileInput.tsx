@@ -1,22 +1,34 @@
 import { Button } from '@mui/material';
 import { useRef } from 'react';
 
-const ImgFileInput = ({ onFileChange, file }) => {
-  const fileInputRef = useRef(null);
+interface FileData {
+  name: string | null;
+  src: string | null;
+}
+
+interface ImgFileInputProps {
+  onFileChange: (file: { name: string; src: string }) => void;
+  file: FileData;
+}
+
+const ImgFileInput = ({ onFileChange, file }: ImgFileInputProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const selectedFileName = file?.name;
 
   const handleButtonClick = () => {
-    fileInputRef.current.click();
+    fileInputRef.current?.click();
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
       const fileData = {
         name: file.name,
-        src: reader.result,
+        src: reader.result as string,
       };
       onFileChange(fileData);
     };

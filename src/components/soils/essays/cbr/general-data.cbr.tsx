@@ -1,4 +1,4 @@
-import { Box, TextField } from '@mui/material';
+import { Box, TextField, Typography } from '@mui/material';
 import { t } from 'i18next';
 import DropDown from '@/components/atoms/inputs/dropDown';
 import CBR_SERVICE from '@/services/soils/essays/cbr/cbr.service';
@@ -30,7 +30,6 @@ const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps 
         error: t('loading.samples.error'),
       }
     );
-    // se não deixar o array vazio ele vai ficar fazendo requisições infinitas
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -42,101 +41,108 @@ const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps 
     { label: t('samples.comments'), value: generalData.description, key: 'description', required: false },
   ];
 
-  // verificar se todos os required estão preenchidos, se sim setNextDisabled(false)
-  inputs.every(({ required, value }) => {
+  // Verificar se todos os campos obrigatórios estão preenchidos
+  const allRequiredFilled = inputs.every(({ required, value }) => {
     if (!required) return true;
-
-    if (value === null) return false;
-
+    if (value === null || value === undefined) return false;
     if (typeof value === 'string' && value.trim() === '') return false;
-
     return true;
-  }) &&
-    nextDisabled &&
+  });
+
+  if (allRequiredFilled && nextDisabled) {
     setNextDisabled(false);
+  }
+
+  // Se ainda está carregando
+  if (loading) {
+    return <Loading />;
+  }
+
+  // Se não há amostras disponíveis
+  if (samples.length === 0) {
+    return (
+      <Box sx={{ p: 3, textAlign: 'center' }}>
+        <Typography variant="h6" color="text.secondary">
+          Nenhuma amostra disponível
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          Certifique-se de que existem amostras cadastradas para este usuário.
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
-    <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Box
-            sx={{
-              display: 'grid',
-              width: '100%',
-              gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
-              gap: '5px 20px',
-            }}
-          >
-            {inputs.map((input) => {
-              if (['name', 'operator', 'calculist'].includes(input.key)) {
-                return (
-                  <TextField
-                    variant="standard"
-                    key={input.key}
-                    label={input.label}
-                    value={input.value}
-                    required={input.required}
-                    onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
-                  />
-                );
-              } else if (['sample'].includes(input.key)) {
-                const defaultValue = {
-                  label: '',
-                  value: '',
-                };
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'grid',
+          width: '100%',
+          gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr' },
+          gap: '5px 20px',
+        }}
+      >
+        {inputs.map((input) => {
+          if (['name', 'operator', 'calculist'].includes(input.key)) {
+            return (
+              <TextField
+                variant="standard"
+                key={input.key}
+                label={input.label}
+                value={input.value || ''}
+                required={input.required}
+                onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+              />
+            );
+          } else if (input.key === 'sample') {
+            // Encontra a amostra selecionada na store (se houver)
+            const selectedSample = generalData.sample 
+              ? samples.find((s) => s._id === generalData.sample._id)
+              : null;
 
-                let sample;
-
-                // se existir uma sample no store, seta ela como default
-                if (input.value) {
-                  sample = samples.find((sample) => sample._id == input.value['_id']);
+            const defaultValue = selectedSample
+              ? {
+                  label: selectedSample.name + ' | ' + t(`samples.${selectedSample.type}`),
+                  value: selectedSample,
                 }
+              : { label: '', value: '' };
 
-                if (sample) {
-                  defaultValue.label = sample.name + ' | ' + t(`${'samples.' + sample.type}`);
-                  defaultValue.value = sample;
-                }
-
-                return (
-                  <DropDown
-                    key={input.key}
-                    variant="standard"
-                    label={input.label}
-                   // options={samples.map((sample: SoilSample) => {
-                   options={(samples ?? []).map((sample: SoilSample) => {
-                      return { label: sample.name + ' | ' + t(`${'samples.' + sample.type}`), value: sample };
-                    })}
-                    value={defaultValue}
-                    callback={(value) => setData({ step: 0, key: input.key, value })}
-                    size="medium"
-                    required={input.required}
-                  />
-                );
-              }
-            })}
-          </Box>
-          <TextField
-            variant="standard"
-            fullWidth
-            key={inputs[inputs.length - 1].key}
-            label={inputs[inputs.length - 1].label}
-            value={inputs[inputs.length - 1].value}
-            required={inputs[inputs.length - 1].required}
-            onChange={(e) => setData({ step: 0, key: inputs[inputs.length - 1].key, value: e.target.value })}
-          />
-        </Box>
-      )}
-    </>
+            return (
+              <DropDown
+                key={input.key}
+                variant="standard"
+                label={input.label}
+                options={samples.map((sample) => ({
+                  label: sample.name + ' | ' + t(`samples.${sample.type}`),
+                  value: sample,
+                }))}
+                value={defaultValue}
+                callback={(value) => setData({ step: 0, key: input.key, value })}
+                size="medium"
+                required={input.required}
+              />
+            );
+          }
+          return null;
+        })}
+      </Box>
+      <TextField
+        variant="standard"
+        fullWidth
+        label={inputs[inputs.length - 1].label}
+        value={inputs[inputs.length - 1].value || ''}
+        required={inputs[inputs.length - 1].required}
+        onChange={(e) => setData({ step: 0, key: inputs[inputs.length - 1].key, value: e.target.value })}
+      />
+    </Box>
   );
 };
-
+//tst
 export default CBR_GeneralData;
