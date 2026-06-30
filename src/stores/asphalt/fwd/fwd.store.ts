@@ -1,153 +1,212 @@
-import { StoreActions } from '@/interfaces/common/stores/storeActions.interface';
 import { create } from 'zustand';
-import { devtools, persist, createJSONStorage } from 'zustand/middleware';
+import fwdAnalysisService, { FWDData, FWDAnalysis } from '@/services/asphalt/essays/fwd/fwdApi';
+import { processarSubtrechos, ProcessResult, Subtrecho } from '@/utils/fwdProcessing';
 
-interface FwdGeneralData {
-  userId: string;
-  name: string;
-  createdAt: Date;
-  operator?: string;
-  calculist?: string;
-  description?: string;
+export type { FWDData, FWDAnalysis, ProcessResult, Subtrecho };
+
+interface FWDState {
+  analysisData: {
+    name: string;
+    description: string;
+    location: string;
+    highway: string;
+    layerType: string;
+    cityState: string;
+    speedLimit: string;
+    notes: string;
+  };
+  samples: FWDData[];
+  selectedAnalysis: FWDAnalysis | null;
+  editingId: string | null;
+  analyses: FWDAnalysis[];
+  drafts: FWDAnalysis[];
+  procResult: ProcessResult | null;
+  procError: string | null;
+  loading: boolean;
+  error: string | null;
+  activeTab: number;
+
+  // Simple setters
+  setAnalysisData: (data: Partial<FWDState['analysisData']>) => void;
+  setSamples: (samples: FWDData[]) => void;
+  addSample: (sample: FWDData) => void;
+  removeSample: (index: number) => void;
+  clearSamples: () => void;
+  setSelectedAnalysis: (analysis: FWDAnalysis | null) => void;
+  setEditingId: (id: string | null) => void;
+  setAnalyses: (analyses: FWDAnalysis[]) => void;
+  setDrafts: (drafts: FWDAnalysis[]) => void;
+  setProcResult: (result: ProcessResult | null) => void;
+  setProcError: (error: string | null) => void;
+  setLoading: (loading: boolean) => void;
+  setError: (error: string | null) => void;
+  setActiveTab: (tab: number) => void;
+
+  // Async actions
+  fetchAnalyses: () => Promise<void>;
+  fetchAnalysis: (id: string) => Promise<FWDAnalysis | null>;
+  saveAnalysis: (asDraft?: boolean) => Promise<FWDAnalysis | null>;
+  deleteAnalysis: (id: string) => Promise<boolean>;
+
+  // ⭐ Processamento LOCAL (não chama API)
+  processAnalysisLocally: () => ProcessResult | null;
+
+  resetStore: () => void;
+  reset: () => void;
 }
 
-interface FwdStep2 {
-  work: string;
-  section: string;
-  initialStake: number;
-  initialSide: string;
-  finalStake: number;
-  finalSide: string;
-}
 
-export interface FwdStep3 {
-  spreadsheetData: {
-    hodometro: number;
-    force: number;
-    d1: number;
-    d2: number;
-    d3: number;
-    d4: number;
-    d5: number;
-    d6: number;
-    d7: number;
-    d8: number;
-    d9: number;
-    d10: number;
-    d11: number;
-    d12: number;
-    d13: number;
-  }[];
-}
-
-interface FwdResults {
-  processedData: {
-    hodometro: number;
-    force: number;
-    d1: number;
-    d2: number;
-    d3: number;
-    d4: number;
-    d5: number;
-    d6: number;
-    d7: number;
-    d8: number;
-    d9: number;
-    d10: number;
-    d11: number;
-    d12: number;
-    d13: number;
-    meanDeflection: number;
-    areaBetweenStationCurves: number;
-    cumulativeArea: number;
-    cumulativeDifference: number;
-  }[];
-  graphData: number[][];
-  deletedPositions: number[];
-}
-
-export interface FwdData {
-  generalData: FwdGeneralData;
-  fwdStep2: FwdStep2;
-  fwdStep3: FwdStep3;
-  results: FwdResults;
-  _id?: string;
-}
-
-export interface FwdActions {
-  setData: ({ step, key, value }: setDataType) => void;
-  reset: ({ step }: setDataType) => void;
-}
-
-type setDataType = { step: number; key?: string; value: unknown };
-
-const stepVariant = { 0: 'generalData', 1: 'fwdStep2', 2: 'fwdStep3', 3: 'fwdStep4', 4: 'results' };
-
-const initialState: FwdData = {
-  generalData: {
-    userId: null,
-    name: null,
-    createdAt: new Date(),
-    operator: null,
-    calculist: null,
-    description: null,
+const initialState = {
+  analysisData: {
+    name: '',
+    description: '',
+    location: '',
+    highway: '',
+    layerType: '',
+    cityState: '',
+    speedLimit: '',
+    notes: '',
   },
-  fwdStep2: {
-    work: null,
-    section: null,
-    initialStake: null,
-    initialSide: null,
-    finalStake: null,
-    finalSide: null,
-  },
-  fwdStep3: {
-    spreadsheetData: [],
-  },
-  results: {
-    processedData: [],
-    graphData: [],
-    deletedPositions: [],
-  },
+  samples: [],
+  selectedAnalysis: null,
+  editingId: null,
+  analyses: [],
+  drafts: [],
+  procResult: null,
+  procError: null,
+  loading: false,
+  error: null,
+  activeTab: 0,
 };
 
-const useFwdStore = create<FwdData & StoreActions>()(
-  devtools(
-    persist(
-      (set) => ({
-        ...initialState,
+const useFWDStore = create<FWDState>((set, get) => ({
+  ...initialState,
 
-        /**
-         * Updates the value of the given key in the state of the store for the given step.
-         * If no key is given, the value is set as the whole state of the given step.
-         * @param {{ step: number; key?: string; value: unknown }} data
-         * @param {number} data.step The step of the state to update.
-         * @param {string} [data.key] The key of the value to update in the state of the given step.
-         * If not given, the value is set as the whole state of the given step.
-         * @param {unknown} data.value The new value to set in the state of the given step.
-         */
-        setData: ({ step, key, value }) =>
-          set((state) => {
-            if (key)
-              return {
-                ...state,
-                [stepVariant[step]]: {
-                  ...state[stepVariant[step]],
-                  [key]: value,
-                },
-              };
-            else return { ...state, [stepVariant[step]]: value };
-          }),
+  setAnalysisData: (data) => set((state) => ({ analysisData: { ...state.analysisData, ...data } })),
 
-        reset: () => {
-          set(initialState);
-        },
-      }),
-      {
-        name: 'asphalt-fwd-store',
-        storage: createJSONStorage(() => sessionStorage),
+  setSamples: (samples) => set({ samples }),
+  addSample: (sample) => set((state) => ({ samples: [...state.samples, { ...sample }] })),
+  removeSample: (index) => set((state) => ({ samples: state.samples.filter((_, i) => i !== index) })),
+  clearSamples: () => set({ samples: [] }),
+  setSelectedAnalysis: (analysis) => set({ selectedAnalysis: analysis }),
+  setEditingId: (id) => set({ editingId: id }),
+  setAnalyses: (analyses) => set({ analyses }),
+  setDrafts: (drafts) => set({ drafts }),
+  setProcResult: (result) => set({ procResult: result }),
+  setProcError: (error) => set({ procError: error }),
+  setLoading: (loading) => set({ loading }),
+  setError: (error) => set({ error }),
+  setActiveTab: (activeTab) => set({ activeTab }),
+
+  fetchAnalyses: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await fwdAnalysisService.getAnalyses();
+      const allAnalyses: FWDAnalysis[] = response.data?.data || response.data || [];
+      set({
+        analyses: allAnalyses.filter((a) => a.status !== 'draft'),
+        drafts: allAnalyses.filter((a) => a.status === 'draft'),
+        loading: false,
+      });
+    } catch (err: any) {
+      set({ error: err.response?.data?.message || 'Erro ao carregar análises', loading: false });
+    }
+  },
+
+  fetchAnalysis: async (id: string) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await fwdAnalysisService.getAnalysis(id);
+      const analysis: FWDAnalysis = response.data?.data || response.data;
+      set({ selectedAnalysis: analysis, loading: false });
+      return analysis;
+    } catch (err: any) {
+      set({ error: err.response?.data?.message || 'Erro ao carregar análise', loading: false });
+      return null;
+    }
+  },
+
+  saveAnalysis: async (asDraft = false) => {
+    const { analysisData, samples, editingId } = get();
+    if (!analysisData.name && !asDraft) {
+      set({ error: 'Nome da análise é obrigatório' });
+      return null;
+    }
+    if (samples.length < 5 && !asDraft) {
+      set({ error: 'Mínimo de 5 amostras necessárias' });
+      return null;
+    }
+
+    set({ loading: true, error: null });
+    try {
+      const data: any = {
+        name: analysisData.name || 'Rascunho Sem Nome',
+        description: analysisData.description,
+        samples,
+        status: asDraft ? 'draft' : 'active',
+      };
+
+      let result;
+      if (editingId) {
+        const response = await fwdAnalysisService.updateAnalysis(editingId, data);
+        result = response.data?.data || response.data;
+      } else {
+        const response = await fwdAnalysisService.createAnalysis(data);
+        result = response.data?.data || response.data;
       }
-    )
+
+      set({ editingId: result._id, loading: false });
+      await get().fetchAnalyses();
+      return result;
+    } catch (err: any) {
+      set({ error: err.response?.data?.message || 'Erro ao salvar análise', loading: false });
+      return null;
+    }
+  },
+
+  deleteAnalysis: async (id: string) => {
+    set({ loading: true, error: null });
+    try {
+      await fwdAnalysisService.deleteAnalysis(id);
+      set({ loading: false });
+      await get().fetchAnalyses();
+      return true;
+    } catch (err: any) {
+      set({ error: err.response?.data?.message || 'Erro ao deletar análise', loading: false });
+      return false;
+    }
+  },
+
+  // ⭐ PROCESSAMENTO LOCAL - Não chama API, usa a função processarSubtrechos diretamente
+  processAnalysisLocally: () => {
+    const { selectedAnalysis } = get();
+
+    if (!selectedAnalysis) {
+      set({ procError: 'Nenhuma análise selecionada' });
+      return null;
+    }
+
+    if (!selectedAnalysis.samples || selectedAnalysis.samples.length < 5) {
+      set({ procError: 'Mínimo de 5 amostras necessário para processamento' });
+      return null;
+    }
+
+    set({ loading: true, procError: null });
+
+    try {
+      // ⭐ Chama a função local de processamento
+      const result = processarSubtrechos(selectedAnalysis.samples);
+      set({ procResult: result, loading: false });
+      return result;
+    } catch (err: any) {
+      set({ procError: err.message || 'Erro ao processar análise', loading: false });
+      return null;
+    }
+  },
+
+  resetStore: () => set(initialState),
+  reset:() =>set(initialState),
+    }
   )
 );
-
-export default useFwdStore;
+export default useFWDStore;

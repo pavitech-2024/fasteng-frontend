@@ -8,7 +8,7 @@ import CreateEditMaterialModal from '../../../components/templates/modals/create
 import { PageGenericContainer as Container } from '@/components/organisms/pageContainer';
 import Loading from '@/components/molecules/loading';
 import { Box } from '@mui/material';
-import { FwdData } from '@/stores/asphalt/fwd/fwd.store';
+import { FWDAnalysis } from '@/stores/asphalt/fwd/fwd.store';
 import { IggData } from '@/stores/asphalt/igg/igg.store';
 import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
 import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
@@ -16,7 +16,7 @@ import { useMaterials } from '@/utils/hooks/asphalt/materials.hooks';
 
 export interface MaterialsProps {
   materials: AsphaltMaterial[];
-  fwdEssays: FwdData[];
+  fwdEssays: FWDAnalysis[];
   iggEssays: IggData[];
   rtcdEssays: RtcdData[];
   stretchEssays: any[];
