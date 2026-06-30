@@ -24,7 +24,8 @@ const Compression_GeneralData = ({
       async () => {
         const samples = await compression.getSamplesByUserId(user._id);
 
-        setSamples(samples[0].materials);        setLoading(false);
+        /*setSamples(samples[0].materials);*/
+        setSamples(samples?.[0]?.materials ?? []);        setLoading(false);
       },
       {
         pending: t('loading.samples.pending'),
@@ -116,9 +117,15 @@ const Compression_GeneralData = ({
                     key={input.key}
                     variant="standard"
                     label={input.label}
-                    options={samples.map((sample: SoilSample) => {
+                    /*options={samples.map((sample: SoilSample) => {
                       return { label: sample.name + ' | ' + t(`${'samples.' + sample.type}`), value: sample };
-                    })}
+                    })}*/
+                   options={(samples ?? []).map((sample: SoilSample) => {
+  return {
+    label: sample.name + ' | ' + t(`samples.${sample.type}`),
+    value: sample,
+  };
+})}
                     value={defaultValue}
                     callback={(value) => setData({ step: 0, key: input.key, value })}
                     size="medium"
