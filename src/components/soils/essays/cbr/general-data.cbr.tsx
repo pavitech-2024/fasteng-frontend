@@ -19,46 +19,10 @@ const CBR_GeneralData = ({ nextDisabled, setNextDisabled, cbr }: EssayPageProps 
   useEffect(() => {
     toast.promise(
       async () => {
-        try {
-          // 🔥 Busca as amostras do usuário
-          const response = await cbr.getSamplesByUserId(user._id);
-          
-          console.log('📦 Resposta da API:', response); // Debug: veja a estrutura real
-          
-          // 🔥 Lógica flexível para extrair o array de SoilSample[]
-          let samplesList: SoilSample[] = [];
-          
-          if (!response) {
-            console.warn('⚠️ Resposta vazia');
-            samplesList = [];
-          } else if (Array.isArray(response)) {
-            // Se for array de SoilSample
-            if (response.length > 0) {
-              // Verifica se o primeiro item tem 'materials' (array de objetos com materials)
-              if (response[0]?.materials && Array.isArray(response[0].materials)) {
-                samplesList = response[0].materials;
-              } else {
-                // É um array direto de SoilSample
-                samplesList = response;
-              }
-            }
-          } else if (typeof response === 'object' && 'materials' in response) {
-            // Se for um objeto com propriedade materials
-            const materials = (response as any).materials;
-            if (Array.isArray(materials)) {
-              samplesList = materials;
-            }
-          }
-          
-          console.log('✅ Lista de amostras:', samplesList); // Debug
-          setSamples(samplesList);
-          setLoading(false);
-        } catch (error) {
-          console.error('❌ Erro ao buscar amostras:', error);
-          setSamples([]);
-          setLoading(false);
-          throw error;
-        }
+        const samples = await cbr.getSamplesByUserId(user._id);
+
+        /*setSamples(samples[0].materials);*/
+        setSamples(samples?.[0]?.materials ?? []);        setLoading(false);
       },
       {
         pending: t('loading.samples.pending'),

@@ -22,44 +22,10 @@ const SUCS_GeneralData = ({ nextDisabled, setNextDisabled, sucs }: EssayPageProp
   useEffect(() => {
     toast.promise(
       async () => {
-        try {
-          const response = await sucs.getSamplesByUserId(user._id);
-          
-          console.log('📦 Resposta da API (SUCS):', response); // Debug
-          
-          // 🔥 SOLUÇÃO PADRÃO: Extrair array de SoilSample[] da resposta
-          let samplesList: SoilSample[] = [];
-          
-          if (!response) {
-            console.warn('⚠️ Resposta vazia');
-            samplesList = [];
-          } else if (Array.isArray(response)) {
-            if (response.length > 0) {
-              // Se o primeiro item tem 'materials' (ex: [{ materials: [...] }])
-              if (response[0]?.materials && Array.isArray(response[0].materials)) {
-                samplesList = response[0].materials;
-              } else {
-                // É um array direto de SoilSample
-                samplesList = response;
-              }
-            }
-          } else if (typeof response === 'object' && 'materials' in response) {
-            // Se é um objeto com propriedade materials (ex: { materials: [...] })
-            const materials = (response as any).materials;
-            if (Array.isArray(materials)) {
-              samplesList = materials;
-            }
-          }
-          
-          console.log('✅ Lista de amostras (SUCS):', samplesList);
-          setSamples(samplesList);
-          setLoading(false);
-        } catch (error) {
-          console.error('❌ Erro ao buscar amostras:', error);
-          setSamples([]);
-          setLoading(false);
-          throw error;
-        }
+        const samples = await sucs.getSamplesByUserId(user._id);
+
+        /*setSamples(samples[0].materials);*/
+        setSamples(samples?.[0]?.materials ?? []);        setLoading(false);
       },
       {
         pending: t('loading.samples.pending'),

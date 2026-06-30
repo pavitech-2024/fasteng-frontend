@@ -23,56 +23,10 @@ const Compression_GeneralData = ({
   useEffect(() => {
     toast.promise(
       async () => {
-        try {
-          const response: unknown = await compression.getSamplesByUserId(user._id);
-          
-          console.log('📦 Resposta da API (Compressão):', response);
-          
-          let samplesList: SoilSample[] = [];
-          
-          // 🔥 Detecta automaticamente o formato da resposta
-          if (!response) {
-            console.warn('⚠️ Resposta vazia');
-            samplesList = [];
-          } else if (Array.isArray(response)) {
-            if (response.length === 0) {
-              samplesList = [];
-            }
-            // Verifica se é array direto de SoilSample (tem 'name' e 'type')
-            else if ('name' in response[0] && 'type' in response[0]) {
-              console.log('✅ Array direto de SoilSample');
-              samplesList = response as SoilSample[];
-            }
-            // Verifica se é array com objeto materials (ex: [{ materials: [...] }])
-            else if ('materials' in response[0] && Array.isArray(response[0].materials)) {
-              console.log('✅ Array com objeto materials');
-              samplesList = response[0].materials as SoilSample[];
-            }
-            else {
-              console.warn('⚠️ Array com formato desconhecido:', response[0]);
-              samplesList = [];
-            }
-          } else if (typeof response === 'object' && response !== null && 'materials' in response) {
-            // É um objeto com materials
-            const materials = (response as any).materials;
-            if (Array.isArray(materials)) {
-              console.log('✅ Objeto com materials');
-              samplesList = materials;
-            }
-          } else {
-            console.warn('⚠️ Formato totalmente desconhecido');
-            samplesList = [];
-          }
-          
-          console.log('✅ Lista final de amostras:', samplesList.length);
-          setSamples(samplesList);
-          setLoading(false);
-        } catch (error) {
-          console.error('❌ Erro ao buscar amostras:', error);
-          setSamples([]);
-          setLoading(false);
-          throw error;
-        }
+        const samples = await compression.getSamplesByUserId(user._id);
+
+        /*setSamples(samples[0].materials);*/
+        setSamples(samples?.[0]?.materials ?? []);        setLoading(false);
       },
       {
         pending: t('loading.samples.pending'),
