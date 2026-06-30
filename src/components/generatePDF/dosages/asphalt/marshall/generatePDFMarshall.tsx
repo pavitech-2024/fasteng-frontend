@@ -12,7 +12,6 @@ import { addCapa, addImageProcess, formatDate, getCurrentDateFormatted, handleAd
 import { useState } from 'react';
 import Loading from '@/components/molecules/loading';
 import Graph from '@/services/asphalt/dosages/marshall/graph/marshal-granulometry-graph';
-// ⚠️ ajuste este caminho conforme a localização real do componente no seu projeto
 import MiniGraphics from '@/components/asphalt/dosages/marshall/graphs/miniGraph';
 
 interface IGeneratedPDF {
@@ -25,6 +24,8 @@ const INFO_BLUE: Color = [227, 242, 253] as unknown as Color;
 
 const GRAPH_IDS = {
   granulometric: 'pdf-hidden-graph-granulometric',
+  gmb: 'pdf-hidden-graph-gmb',
+  sg: 'pdf-hidden-graph-sg',
   vv: 'pdf-hidden-graph-vv',
   vam: 'pdf-hidden-graph-vam',
   rbv: 'pdf-hidden-graph-rbv',
@@ -60,7 +61,11 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
   // ===================== CÁLCULOS =====================
 
-  const { confirmationCompressionData: storeData, optimumBinderContentData: storeOptimumBinder } = useMarshallStore();
+  const {
+    confirmationCompressionData: storeData,
+    optimumBinderContentData: storeOptimumBinder,
+    binderTrialData: storeBinderTrialData,
+  } = useMarshallStore();
   
   const data = dosage.confirmationCompressionData;
 
@@ -105,12 +110,9 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
   const correctedValues = calculateCorrectedVolumetricValues();
 
-  // ===================== PATCH 2: QUANTITATIVO USANDO correctedValues =====================
   const calculateQuantitativeValues = (): { binder: string; aggregates: string[]; available: boolean } => {
     const aggregatesPlaceholder = dosage.materialSelectionData.aggregates.map(() => '---');
 
-    // Usa SEMPRE o mesmo VV/cálculo da Tabela 1.3 (correctedValues), garantindo
-    // consistência entre as duas tabelas.
     if (!correctedValues || liveGmm == null) {
       return { binder: '---', aggregates: aggregatesPlaceholder, available: false };
     }
@@ -135,6 +137,58 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
   };
 
   const quantitative = calculateQuantitativeValues();
+
+  const liveBinderTrialData = storeBinderTrialData ?? dosage.binderTrialData;
+
+  const buildBinderTrialTable = () => {
+    const percentsOfDosage = liveBinderTrialData?.percentsOfDosage;
+    if (!Array.isArray(percentsOfDosage) || percentsOfDosage.length === 0) return null;
+
+    const trialOrder = ['oneLess', 'halfLess', 'normal', 'halfPlus', 'onePlus'];
+    const baseTrial = liveBinderTrialData?.trial || 0;
+    const trialValues: Record<string, number> = {
+      oneLess: baseTrial - 1,
+      halfLess: baseTrial - 0.5,
+      normal: baseTrial,
+      halfPlus: baseTrial + 0.5,
+      onePlus: baseTrial + 1,
+    };
+
+    const materialIdToName: Record<string, string> = {};
+    dosage.materialSelectionData.aggregates.forEach((m: any) => {
+      materialIdToName[m._id] = m.name;
+    });
+
+    const rows = trialOrder.map((trial) => {
+      const row: string[] = [trialValues[trial].toFixed(2)];
+      const binderEntry = percentsOfDosage
+        .flat()
+        .find((item: any) => item.trial === trial && !item.material);
+      row.push(binderEntry ? Number(binderEntry.value).toFixed(2) : '---');
+
+      dosage.materialSelectionData.aggregates.forEach((m: any) => {
+        const entry = percentsOfDosage
+          .flat()
+          .find((item: any) => item.trial === trial && item.material === m._id);
+        row.push(entry ? Number(entry.value).toFixed(2) : '---');
+      });
+
+      return row;
+    });
+
+    const headers = [
+      'Teor de ligante asfáltico (%)',
+      'Ligante (%)',
+      ...dosage.materialSelectionData.aggregates.map((m: any) => `${m.name} (%)`),
+    ];
+
+    return { headers, rows };
+  };
+
+  const binderTrialTable = buildBinderTrialTable();
+
+  const machiningTemp = liveBinderTrialData?.bandsOfTemperatures?.machiningTemperatureRange;
+  const compressionTemp = liveBinderTrialData?.bandsOfTemperatures?.compressionTemperatureRange;
 
   const sieveToBandIndex: { [key: string]: number } = {
     '3/4 pol - 19mm': 6,
@@ -233,15 +287,19 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
 
   const PAGE_BOTTOM_LIMIT = 275;
 
-  // PATCH 3: Logo com proporção preservada
   const addPageWithoutDate = (doc: jsPDF, image: HTMLImageElement, currentY: number, title: string): number => {
     doc.addPage();
     
     if (image) {
-      // Preserva a proporção real da imagem em vez de esmagar num box fixo de 20x10
-      const maxHeight = 6;
+      const maxHeight = 7;
+      const maxWidth = 35;
       const ratio = image.naturalWidth && image.naturalHeight ? image.naturalWidth / image.naturalHeight : 2;
-      const width = maxHeight * ratio;
+      let width = maxHeight * ratio;
+      
+      if (width > maxWidth) {
+        width = maxWidth;
+      }
+      
       doc.addImage(image, 'PNG', 10, 5, width, maxHeight);
     }
     
@@ -311,8 +369,10 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     try {
       await waitForGraphsRender();
 
-      const [granulometricImg, vvImg, vamImg, rbvImg, stabilityImg] = await Promise.all([
+      const [granulometricImg, gmbImg, sgImg, vvImg, vamImg, rbvImg, stabilityImg] = await Promise.all([
         captureElementAsImage(GRAPH_IDS.granulometric),
+        captureElementAsImage(GRAPH_IDS.gmb),
+        captureElementAsImage(GRAPH_IDS.sg),
         captureElementAsImage(GRAPH_IDS.vv),
         captureElementAsImage(GRAPH_IDS.vam),
         captureElementAsImage(GRAPH_IDS.rbv),
@@ -401,6 +461,58 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
         startY: currentY,
       });
       currentY = (doc as any).lastAutoTable.finalY + 8;
+
+      // ===== TEORES DE LIGANTE AVALIADOS E TEMPERATURAS (Step 4) =====
+      if (binderTrialTable) {
+        currentY = ensureSpace(doc, image, currentY, 50);
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'bold');
+        doc.text('Teores de ligante avaliados', 10, currentY);
+        doc.setFont(undefined, 'normal');
+        currentY += 6;
+
+        autoTable(doc, {
+          head: [binderTrialTable.headers],
+          body: binderTrialTable.rows,
+          styles: { fontSize: 8 },
+          headStyles: { fillColor: ORANGE_RGB, textColor: [0, 0, 0] },
+          alternateRowStyles: { fillColor: LIGHT_GRAY },
+          startY: currentY,
+        });
+        currentY = (doc as any).lastAutoTable.finalY + 8;
+      }
+
+      if (machiningTemp?.average != null || compressionTemp?.average != null) {
+        currentY = ensureSpace(doc, image, currentY, 50);
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'bold');
+        doc.text('Temperaturas de usinagem e compressão', 10, currentY);
+        doc.setFont(undefined, 'normal');
+        currentY += 6;
+
+        autoTable(doc, {
+          head: [['', 'Mínima', 'Média', 'Máxima']],
+          body: [
+            [
+              'Temperatura de usinagem (°C)',
+              machiningTemp?.lower != null ? machiningTemp.lower.toFixed(2) : '---',
+              machiningTemp?.average != null ? machiningTemp.average.toFixed(2) : '---',
+              machiningTemp?.higher != null ? machiningTemp.higher.toFixed(2) : '---',
+            ],
+            [
+              'Temperatura de compressão (°C)',
+              compressionTemp?.lower != null ? compressionTemp.lower.toFixed(2) : '---',
+              compressionTemp?.average != null ? compressionTemp.average.toFixed(2) : '---',
+              compressionTemp?.higher != null ? compressionTemp.higher.toFixed(2) : '---',
+            ],
+          ],
+          styles: { fontSize: 9 },
+          headStyles: { fillColor: ORANGE_RGB, textColor: [0, 0, 0] },
+          alternateRowStyles: { fillColor: LIGHT_GRAY },
+          startY: currentY,
+        });
+        currentY = (doc as any).lastAutoTable.finalY + 8;
+      }
 
       // ===== TABELA 1.2 - QUANTITATIVO =====
       currentY = ensureSpace(doc, image, currentY, 35);
@@ -525,7 +637,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       doc.setFont(undefined, 'normal');
       currentY += 8;
 
-      const dosageGraphs = [vvImg, vamImg, rbvImg, stabilityImg].filter(Boolean) as string[];
+      const dosageGraphs = [gmbImg, sgImg, vvImg, vamImg, rbvImg, stabilityImg].filter(Boolean) as string[];
 
       const colWidth = 90;
       const gap = 10;
@@ -665,7 +777,6 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     <>
       {dosage?.confirmationCompressionData && (
         <>
-          {/* PATCH 1: Caixas dos gráficos aumentadas */}
           <Box
             sx={{
               position: 'fixed',
@@ -681,6 +792,30 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
               <ChartErrorBoundary>
                 <Box id={GRAPH_IDS.granulometric} sx={{ width: '750px', height: '480px', padding: '10px' }}>
                   <Graph data={granulometryGraphData} />
+                </Box>
+              </ChartErrorBoundary>
+            )}
+
+            {isValidChartData(graphics?.gmb) && (
+              <ChartErrorBoundary>
+                <Box id={GRAPH_IDS.gmb} sx={{ width: '550px', height: '380px', padding: '10px' }}>
+                  <MiniGraphics data={graphics.gmb} type={'gmb'} nameEixoY={t('asphalt.dosages.gmb') + '(g/cm³)'} />
+                </Box>
+              </ChartErrorBoundary>
+            )}
+
+            {isValidChartData(graphics?.sg) && (
+              <ChartErrorBoundary>
+                <Box id={GRAPH_IDS.sg} sx={{ width: '550px', height: '380px', padding: '10px' }}>
+                  <MiniGraphics
+                    data={graphics.sg}
+                    type={realMethod || 'GMM'}
+                    nameEixoY={
+                      realMethod === 'DMT'
+                        ? 'Massa específica máxima teórica (g/cm³)'
+                        : 'Massa específica máxima medida (g/cm³)'
+                    }
+                  />
                 </Box>
               </ChartErrorBoundary>
             )}
