@@ -51,14 +51,13 @@ class FWD_SERVICE {
   userId = '';
   store_actions!: FWDStoreActions;
 
-  // ⭐ info como PROPRIEDADE (igual IGG)
   info = {
     key: 'fwd',
     icon: FwdIcon,
     title: t('pm.fwd-register'),
     path: '/asphalt/essays/fwd',
     steps: 4,
-    backend_path: 'promedina/fwd/fwd-analysis',
+    backend_path: 'asphalt/fwd/fwd-analysis',
     standard: {
       name: 'DNER-PRO 011/79',
       link: '',
@@ -71,7 +70,6 @@ class FWD_SERVICE {
     ],
   };
 
-  // ⭐ handleNext como ARROW FUNCTION (igual IGG, evita bind)
   handleNext = async (step: number, data: unknown): Promise<void> => {
     try {
       switch (step) {
