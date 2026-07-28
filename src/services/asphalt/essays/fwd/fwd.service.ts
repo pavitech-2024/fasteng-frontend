@@ -57,7 +57,7 @@ class FWD_SERVICE {
     title: t('pm.fwd-register'),
     path: '/asphalt/essays/fwd',
     steps: 4,
-    backend_path: 'asphalt/fwd/fwd-analysis',
+    backend_path: 'FWD',
     standard: {
       name: 'DNER-PRO 011/79',
       link: '',
