@@ -59,7 +59,7 @@ const Login: NextPage = () => {
      * Function to check if the Rox API is running
      * If the API is not running, then set the roxIsRunning state to false
      */
-    const handleHealthCheck = async () => {
+    /*const handleHealthCheck = async () => {
       try {
         const result = await Api.get('/app/health-check');
         
@@ -78,7 +78,26 @@ const Login: NextPage = () => {
         console.error('❌ Health check failed:', error);
         setIsBackendRunning(false);
       }
-    };
+    };*/
+
+    const handleHealthCheck = async () => {
+  try {
+    const result = await Api.get('/app/health-check');
+    //const result = await Api.get('/app/health-check-teste'); /*Testar a falha por esse comentário, p/ saber se a tela de manutenção aparece corretamente.*/
+
+    if (result.data.status !== 'success') {
+      setRoxIsRunning(false);
+    }
+  } catch (error) {
+    console.error(error);
+
+    // Se não conseguir falar com o backend,
+    // exibe a tela de manutenção.
+    setRoxIsRunning(false);
+  }
+};
+
+
     handleHealthCheck();
   }, []);
 
