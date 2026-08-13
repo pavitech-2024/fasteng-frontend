@@ -31,7 +31,7 @@ export interface FWDAnalysis extends FWDAnalysisData {
   updatedAt: string;
 }
 
-const BASE_PATH = 'FWD';
+const BASE_PATH = 'fwd-analysis';
 
 const fwdAnalysisService = {
   createAnalysis: (analysisData: FWDAnalysisData) => Api.post(`${BASE_PATH}/save`, analysisData),
