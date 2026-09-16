@@ -1,374 +1,372 @@
+import NumericCell from '@/components/atoms/inputs/numeric-cell';
+import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import { Box, Button, Typography } from '@mui/material';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
-import CreateMaterialDosageTable from './tables/createMaterialDosageTable';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  GranulometryRow,
+  formatDecimal,
+  parseDecimal,
+  recalcFromPassant,
+  recalcFromRetained,
+  setPassantAt,
+  setRetainedAt,
+  validateGranulometry,
+} from '@/utils/granulometry-calc';
+import { Alert, Box, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import { useEffect, useMemo, useRef } from 'react';
 import { toast } from 'react-toastify';
-import GranulometryRow from './functionalComponents/granulometryTableRow';
+import CreateMaterialDosageTable from './tables/createMaterialDosageTable';
+
+const AGGREGATE_TYPES = ['coarseAggregate', 'fineAggregate', 'filler'];
+const BINDER_TYPES = ['asphaltBinder', 'CAP'];
+
+type Validation = ReturnType<typeof validateGranulometry>;
+
+/* -------------------------------------------------------------------------- */
+/* Tabela de um material                                                       */
+/* -------------------------------------------------------------------------- */
+
+interface MaterialGranulometryProps {
+  granulometry: any;
+  validation: Validation;
+  onMassChange: (raw: string) => void;
+  onCommitRows: (result: { rows: GranulometryRow[]; bottom: number }) => void;
+  onEditKind: (kind: 'retained' | 'passant') => void;
+  containerRef: (el: HTMLElement | null) => void;
+}
+
+const MaterialGranulometry = ({
+  granulometry,
+  validation,
+  onMassChange,
+  onCommitRows,
+  onEditKind,
+  containerRef,
+}: MaterialGranulometryProps) => {
+  const rows: GranulometryRow[] = granulometry.table_data ?? [];
+  const mass = granulometry.material_mass ?? 0;
+  const disabled = !(mass > 0);
+
+  const columns: GridColDef[] = useMemo(
+    () => [
+      {
+        field: 'sieve_label',
+        headerName: t('granulometry-asphalt.sieves'),
+        valueFormatter: ({ value }) => `${value}`,
+      },
+      {
+        field: 'passant',
+        headerName: t('granulometry-asphalt.passant'),
+        renderCell: ({ row }) => {
+          const index = rows.findIndex((r) => r.sieve_label === row.sieve_label);
+          if (index < 0) return null;
+
+          return (
+            <NumericCell
+              adornment="%"
+              value={rows[index].passant}
+              error={validation.invalidRows.includes(index)}
+              disabled={disabled}
+              onCommit={(value) => {
+                onEditKind('passant');
+                onCommitRows(setPassantAt(rows, mass, index, value));
+              }}
+            />
+          );
+        },
+      },
+      {
+        field: 'retained',
+        headerName: t('granulometry-asphalt.retained'),
+        renderCell: ({ row }) => {
+          const index = rows.findIndex((r) => r.sieve_label === row.sieve_label);
+          if (index < 0) return null;
+
+          return (
+            <NumericCell
+              adornment="g"
+              value={rows[index].retained}
+              error={validation.invalidRows.includes(index)}
+              disabled={disabled}
+              onCommit={(value) => {
+                onEditKind('retained');
+                onCommitRows(setRetainedAt(rows, mass, index, value));
+              }}
+            />
+          );
+        },
+      },
+    ],
+    [rows, mass, disabled, validation, onCommitRows, onEditKind]
+  );
+
+  const totalRetained = rows.reduce((sum, r) => sum + (r.retained || 0), 0);
+
+  const handleClearTable = () => {
+    if (rows.length === 0) return;
+    onEditKind('retained');
+    onCommitRows(recalcFromRetained(rows.map((r) => ({ ...r, retained: 0 })), mass));
+  };
+
+  return (
+    <Box sx={{ marginY: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }} ref={containerRef}>
+      <Typography variant="h5">
+        {granulometry.material.name} | {t('asphalt.materials.' + granulometry.material.type)}
+      </Typography>
+
+      <Box
+        sx={{
+          width: '100%',
+          display: 'grid',
+          gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
+          gap: '10px',
+        }}
+      >
+        <InputEndAdornment
+          id={`material_mass_${granulometry.material._id}`}
+          label={t('granulometry-asphalt.material_mass')}
+          value={granulometry.material_mass ?? ''}
+          onChange={(e) => onMassChange(e.target.value)}
+          adornment="g"
+          type="text"
+          inputProps={{ inputMode: 'decimal' }}
+          required
+        />
+      </Box>
+
+      {rows.length > 0 && (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+          <Button size="small" variant="outlined" onClick={handleClearTable} disabled={disabled}>
+            Zerar tabela
+          </Button>
+
+          <Typography variant="body2" sx={{ ml: 'auto' }}>
+            Retido total: {formatDecimal(totalRetained)} g de {formatDecimal(mass)} g
+          </Typography>
+        </Box>
+      )}
+
+      {validation.messages.length > 0 && rows.length > 0 && (
+        <Alert severity="warning">{validation.messages.join(' ')}</Alert>
+      )}
+
+      {rows.length > 0 && (
+        <DataGrid
+          sx={{ borderRadius: '10px' }}
+          density="compact"
+          showCellVerticalBorder
+          showColumnVerticalBorder
+          hideFooter
+          getRowId={(row) => row.sieve_label}
+          rows={rows}
+          columns={columns.map((column) => ({
+            ...column,
+            sortable: false,
+            disableColumnMenu: true,
+            align: 'center',
+            headerAlign: 'center',
+            minWidth: 150,
+            flex: 1,
+          }))}
+        />
+      )}
+
+      <Box
+        sx={{
+          width: '100%',
+          display: 'grid',
+          gridTemplateColumns: { mobile: '1fr', notebook: '1fr 1fr 1fr 1fr' },
+          gap: '10px',
+        }}
+      >
+        <InputEndAdornment
+          id={`bottom_${granulometry.material._id}`}
+          label={t('granulometry-asphalt.bottom')}
+          variant="filled"
+          value={formatDecimal(granulometry.bottom)}
+          adornment="g"
+          type="text"
+          readOnly
+          focused
+        />
+      </Box>
+    </Box>
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/* Step 2                                                                      */
+/* -------------------------------------------------------------------------- */
 
 const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const data = useSuperpaveStore((state) => state.granulometryEssayData);
   const setData = useSuperpaveStore((state) => state.setData);
-  const myRef = useRef<any>({});
 
-  const aggregatesRows = data.granulometrys?.filter(
-    ({ material }) => material.type !== 'asphaltBinder' && material.type !== 'CAP' && material.type !== 'other'
+  const myRef = useRef<any>({});
+  // Qual coluna foi editada por último, por material. Só decide o que preservar
+  // quando a massa muda: os gramas medidos ou a curva de passantes.
+  const lastEdited = useRef<Record<string, 'retained' | 'passant'>>({});
+
+  const granulometrys: any[] = data.granulometrys ?? [];
+
+  // Índices reais dentro de data.granulometrys. Nunca reindexar a lista filtrada:
+  // era daí que vinha o descasamento entre material_mass e table_data.
+  const aggregateIndexes = useMemo(
+    () =>
+      granulometrys
+        .map((g, i) => (AGGREGATE_TYPES.includes(g?.material?.type) ? i : -1))
+        .filter((i) => i >= 0),
+    [granulometrys]
   );
 
-  const [materialMassInputs, setMaterialMassInputs] = useState(aggregatesRows?.map((row) => row.material_mass || 0));
+  const validations = useMemo(() => {
+    const map: Record<number, Validation> = {};
+    aggregateIndexes.forEach((i) => {
+      const g = granulometrys[i];
+      map[i] = validateGranulometry(g.table_data ?? [], g.material_mass ?? 0, g.bottom ?? 0);
+    });
+    return map;
+  }, [granulometrys, aggregateIndexes]);
 
-  const initialRows = useMemo(() => {
-    if (!data.viscosity?.dataPoints) return [];
-    return data.viscosity.dataPoints.map((point) => ({
-      id: point.id,
-      temperature: point.temperature,
-      viscosity: point.viscosity,
-    }));
-  }, [data.viscosity?.dataPoints]);
+  /** Único ponto de escrita das granulometrias no store. */
+  const updateGranulometry = (index: number, patch: Record<string, any>) => {
+    const next = granulometrys.map((g, i) => (i === index ? { ...g, ...patch } : g));
+    setData({ step: 1, key: 'granulometrys', value: next });
+  };
 
-  const [binderInputs, setBinderInputs] = useState([]);
+  const commitRows = (index: number, result: { rows: GranulometryRow[]; bottom: number }) =>
+    updateGranulometry(index, { table_data: result.rows, bottom: result.bottom });
 
-  useEffect(() => {
-    if (data.viscosity?.dataPoints?.length) {
-      setBinderInputs(
-        data.viscosity.dataPoints.map((point) => ({
-          id: point.id,
-          viscosity: point.viscosity,
-        }))
-      );
+  const handleMassChange = (index: number, raw: string) => {
+    const newMass = parseDecimal(raw);
+    const granulometry = granulometrys[index];
+    const rows: GranulometryRow[] = granulometry.table_data ?? [];
+
+    if (rows.length === 0 || newMass === null) {
+      updateGranulometry(index, { material_mass: newMass ?? 0 });
+      return;
     }
-  }, [data.viscosity?.dataPoints]);
 
-  const binderRows =
-    data.viscosity?.dataPoints?.map((point) => {
-      const localInput = binderInputs?.find((input) => input.id === point.id);
-      return {
-        id: point.id,
-        temperature: point.temperature,
-        viscosity: localInput?.viscosity ?? point.viscosity,
-      };
-    }) || [];
+    const kind = lastEdited.current[granulometry.material._id] ?? 'retained';
+    const result = kind === 'retained' ? recalcFromRetained(rows, newMass) : recalcFromPassant(rows, newMass);
 
-  const aggregatesColumns: GridColDef[] = [
-    {
-      field: 'sieve_label',
-      headerName: t('granulometry-asphalt.sieves'),
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'passant',
-      headerName: t('granulometry-asphalt.passant'),
-      renderCell: ({ row }) => {
-        if (!aggregatesRows) return;
-        
-        // CORREÇÃO MÍNIMA: Encontrar o índice correto usando aggregatesRows
-        const rowIndex = aggregatesRows.findIndex(aggRow => 
-          aggRow.material?._id === row.material?._id
-        );
-        if (rowIndex === -1) return;
-        
-        const sieve_index = aggregatesRows[rowIndex]?.table_data.findIndex((r) => r.sieve_label === row.sieve_label);
-        const materialMass = data.granulometrys[rowIndex]?.material_mass;
-        const disabled = !materialMass || isNaN(materialMass) || Number(materialMass) <= 0;
-        return (
-          <InputEndAdornment
-            fullWidth
-            adornment="%"
-            type="number"
-            inputProps={{ min: 0 }}
-            disabled={disabled}
-            value={aggregatesRows[rowIndex]?.table_data[sieve_index]?.passant}
-            required
-            onChange={(e) => {
-              if (e.target.value === null) return;
-              const newRows = [...aggregatesRows];
-              const mass = data.granulometrys[rowIndex]?.material_mass;
-              const validMass = isNaN(mass) ? 0 : mass;
-              const input_passant = isNaN(Number(e.target.value)) ? 0 : Number(e.target.value);
+    // Uma escrita só: massa e tabela saem sempre coerentes entre si.
+    updateGranulometry(index, { material_mass: newMass, table_data: result.rows, bottom: result.bottom });
+  };
 
-              // Garante que o input nunca seja maior que o passante anterior (ou 100 na primeira linha)
-              let current_passant = input_passant;
-              if (sieve_index > 0) {
-                const previous_passant = newRows[rowIndex].table_data[sieve_index - 1]?.passant ?? 100;
-                if (current_passant > previous_passant) current_passant = previous_passant;
-              } else {
-                if (current_passant > 100) current_passant = 100;
-              }
+  /* ---------------------------------- CAP --------------------------------- */
 
-              // Atualiza a linha atual
-              const peneiras_anteriores = newRows[rowIndex]?.table_data.slice(0, sieve_index);
-              const accumulative_retained = peneiras_anteriores?.reduce((acc, peneira) => {
-                return acc + (peneira.retained || 0);
-              }, 0);
+  const binderRows = data.viscosity?.dataPoints ?? [];
 
-              const current_retained =
-                Math.round(
-                  100 * (validMass !== 0 ? ((100 - current_passant) / 100) * validMass - accumulative_retained : 0)
-                ) / 100;
+  const setBinderPoints = (dataPoints: any[]) =>
+    setData({ step: 1, key: 'viscosity', value: { ...data.viscosity, dataPoints } });
 
-              if (newRows[rowIndex]) {
-                newRows[rowIndex].table_data[sieve_index].passant = current_passant;
-                newRows[rowIndex].table_data[sieve_index].retained = current_retained;
-              }
+  const updateBinderPoint = (id: number, key: 'temperature' | 'viscosity', value: number | null) =>
+    setBinderPoints(binderRows.map((point) => (point.id === id ? { ...point, [key]: value } : point)));
 
-              // Atualiza as próximas linhas
-              for (let i = sieve_index + 1; i < newRows[rowIndex]?.table_data.length; i++) {
-                const peneiras_anteriores = newRows[rowIndex].table_data.slice(0, i);
-                const accumulative_retained = peneiras_anteriores.reduce((acc, peneira) => {
-                  return acc + (peneira.retained || 0);
-                }, 0);
+  const binderIsComplete = binderRows.every(
+    (point) => point.temperature !== null && point.temperature !== undefined && point.viscosity
+  );
 
-                const retained =
-                  Math.round(
-                    100 * (validMass !== 0 ? ((100 - current_passant) / 100) * validMass - accumulative_retained : 0)
-                  ) / 100;
+  const handleAdd = () => {
+    const nextId = binderRows.length > 0 ? Math.max(...binderRows.map((p) => p.id)) + 1 : 0;
+    setBinderPoints([...binderRows, { id: nextId, temperature: null, viscosity: null }]);
+  };
 
-                const passant =
-                  Math.round(100 * (validMass !== 0 ? (100 * (validMass - accumulative_retained)) / validMass : 0)) /
-                  100;
-
-                newRows[rowIndex].table_data[i].passant = passant > current_passant ? current_passant : passant;
-                newRows[rowIndex].table_data[i].retained = retained;
-              }
-
-              // Atualiza o valor de fundo (bottom)
-              const bottomValue = newRows[rowIndex]?.table_data.reduce((acc, peneira) => {
-                return acc + peneira.retained;
-              }, 0);
-
-              const bottom = Math.round(100 * (validMass !== 0 ? validMass - bottomValue : 0)) / 100;
-              newRows[rowIndex].bottom = bottom;
-
-              setData({ step: 1, key: 'granulometrys', value: newRows });
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: 'retained',
-      headerName: t('granulometry-asphalt.retained'),
-      renderCell: ({ row }) => {
-        if (!aggregatesRows) return;
-        
-        // CORREÇÃO MÍNIMA: Encontrar o índice correto usando aggregatesRows
-        const rowIndex = aggregatesRows.findIndex(aggRow => 
-          aggRow.material?._id === row.material?._id
-        );
-        if (rowIndex === -1) return;
-        
-        const sieve_index = aggregatesRows[rowIndex]?.table_data.findIndex((r) => r.sieve_label === row.sieve_label);
-        const materialMass = data.granulometrys[rowIndex]?.material_mass;
-        const disabled = !materialMass || isNaN(materialMass) || Number(materialMass) <= 0;
-        return (
-          <InputEndAdornment
-            fullWidth
-            adornment="g"
-            type="number"
-            inputProps={{ min: 0 }}
-            disabled={disabled} 
-            value={
-              isNaN(aggregatesRows[rowIndex]?.table_data[sieve_index]?.retained)
-                ? 'erro'
-                : aggregatesRows[rowIndex]?.table_data[sieve_index]?.retained
-            }
-            required
-            onChange={(e) => {
-              if (e.target.value === null) return;
-              const newRows = [...aggregatesRows];
-              const mass = data.granulometrys[rowIndex].material_mass;
-              const current_retained = Number(e.target.value);
-              const currentRows = sieve_index > 0 ? newRows.slice(0, sieve_index) : [];
-              const initial_retained = current_retained;
-              const current_accumulative_retained = currentRows.reduce(
-                (accumulator: number, current_value) => accumulator + current_value[sieve_index].retained,
-                initial_retained
-              );
-
-              const current_passant =
-                Math.round(100 * (mass !== 0 ? (100 * (mass - current_accumulative_retained)) / mass : 0)) / 100;
-              newRows[rowIndex].table_data[sieve_index].retained = current_retained;
-              newRows[rowIndex].table_data[sieve_index].passant = current_passant;
-              setData({ step: 1, key: 'retained', value: newRows });
-              setData({ step: 1, key: 'passant', value: newRows });
-
-              const nextRows = sieve_index > 0 ? newRows.slice(sieve_index) : [...aggregatesRows];
-              const new_current_accumulative_retained = current_accumulative_retained - current_retained;
-
-              nextRows?.map(function (item, index) {
-                const row = item;
-
-                if (index > 0) {
-                  const currentRows = nextRows.slice(0, index + 1);
-                  const initial_retained = new_current_accumulative_retained;
-                  const accumulative_retained = currentRows.reduce(
-                    (accumulator: number, current_value) => accumulator + current_value[sieve_index]?.retained,
-                    initial_retained
-                  );
-
-                  const passant =
-                    Math.round(100 * (mass !== 0 ? (100 * (mass - accumulative_retained)) / mass : 0)) / 100;
-
-                  newRows?.map((e) => {
-                    if (e[sieve_index].sieve_label === row[rowIndex].table_data[sieve_index].sieve_label) {
-                      e[sieve_index].passant = passant;
-                      e[sieve_index].retained = accumulative_retained;
-                    }
-                  });
-                }
-              });
-
-              setData({ step: 1, key: 'table_data', value: newRows });
-            }}
-          />
-        );
-      },
-    },
-  ];
+  const handleErase = () => {
+    if (binderRows.length <= 1) {
+      toast.error(t('saybolt-furol.error.minValue'));
+      return;
+    }
+    setBinderPoints(binderRows.slice(0, -1));
+  };
 
   const binderColumns: GridColDef[] = [
     {
       field: 'temperature',
       headerName: t('saybolt-furol.temperature'),
-      renderCell: ({ row }) => {
-        const { id } = row;
-        const index = binderRows.findIndex((r) => r.id === id);
-
-        return (
-          <InputEndAdornment
-            fullWidth
-            type="number"
-            value={row.temperature}
-            onChange={(e) => {
-              const newRows = [...binderRows];
-              if (index !== -1) {
-                newRows[index].temperature = Number(e.target.value);
-                setData({ step: 1, key: 'viscosity', value: { ...data.viscosity, dataPoints: newRows } });
-              }
-            }}
-            adornment={'°C'}
-          />
-        );
-      },
+      renderCell: ({ row }) => (
+        <NumericCell
+          adornment="°C"
+          value={row.temperature}
+          error={row.temperature === null || row.temperature === undefined}
+          onCommit={(value) => updateBinderPoint(row.id, 'temperature', value)}
+        />
+      ),
     },
     {
       field: 'viscosity',
       headerName: t('asphalt.essays.viscosityRotational.viscosity'),
-      renderCell: ({ row }) => {
-        const localViscosity = binderInputs?.find((i) => i.id === row.id)?.viscosity ?? '';
-
-        return (
-          <InputEndAdornment
-            type="number"
-            variant="standard"
-            value={localViscosity}
-            onChange={(e) => {
-              const value = Number(e.target.value);
-              setBinderInputs((prev) =>
-                prev?.map((input) => (input.id === row.id ? { ...input, viscosity: value } : input))
-              );
-            }}
-            onBlur={(e) => {
-              const value = Number(e.target.value);
-              const updatedDataPoints = data.viscosity.dataPoints?.map((dp) =>
-                dp.id === row.id ? { ...dp, viscosity: value } : dp
-              );
-              setData({
-                step: 1,
-                key: 'viscosity',
-                value: { ...data.viscosity, dataPoints: updatedDataPoints },
-              });
-            }}
-            adornment="Poise"
-            inputProps={{ min: 0 }}
-            fullWidth
-          />
-        );
-      },
+      renderCell: ({ row }) => (
+        <NumericCell
+          adornment="Poise"
+          value={row.viscosity}
+          error={!row.viscosity}
+          onCommit={(value) => updateBinderPoint(row.id, 'viscosity', value)}
+        />
+      ),
     },
   ];
 
+  const ExpansionToolbar = () => (
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
+      <Button sx={{ color: 'secondaryTons.red' }} onClick={handleErase}>
+        {t('erase')}
+      </Button>
+      <Button sx={{ color: 'secondaryTons.green' }} onClick={handleAdd}>
+        {t('add')}
+      </Button>
+    </Box>
+  );
+
+  /* ------------------------------ liberação ------------------------------- */
+
   useEffect(() => {
-    setNextDisabled(true);
-    const hasCoarseAggregate = data.materials?.some((material) => material.type === 'coarseAggregate');
-    const hasFineAggregate = data.materials?.some((material) => material.type === 'fineAggregate');
-    const hasBinder = data.materials?.some((material) => material.type === 'asphaltBinder' || material.type === 'CAP');
+    const hasCoarseAggregate = data.materials?.some((m) => m.type === 'coarseAggregate');
+    const hasFineAggregate = data.materials?.some((m) => m.type === 'fineAggregate');
+    const hasBinder = data.materials?.some((m) => BINDER_TYPES.includes(m.type));
 
-    if (hasCoarseAggregate && hasFineAggregate && hasBinder) setNextDisabled(false);
-  }, [data.materials]);
+    const tablesAreValid =
+      aggregateIndexes.length > 0 &&
+      aggregateIndexes.every((i) => (granulometrys[i].table_data?.length ?? 0) > 0 && validations[i]?.isValid);
 
-  const handleErase = () => {
-    try {
-      if (binderRows.length > 1) {
-        const prevBinderRows = { ...data.viscosity };
-        prevBinderRows.dataPoints.pop();
-        setData({ step: 1, key: 'viscosity', value: prevBinderRows });
-      } else throw t('saybolt-furol.error.minValue');
-    } catch (error) {
-      toast.error(error);
-    }
-  };
-
-  const handleAdd = () => {
-    const prevBinderRows = { ...data.viscosity };
-    prevBinderRows.dataPoints.push({
-      id: binderRows.length,
-      temperature: null,
-      viscosity: null,
-    });
-    setData({ step: 1, key: 'viscosity', value: prevBinderRows });
-    setNextDisabled(true);
-  };
-
-  const ExpansionToolbar = () => {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.5rem', flexWrap: 'wrap' }}>
-        <Button sx={{ color: 'secondaryTons.red' }} onClick={handleErase}>
-          {t('erase')}
-        </Button>
-        <Button sx={{ color: 'secondaryTons.green' }} onClick={handleAdd}>
-          {t('add')}
-        </Button>
-      </Box>
+    setNextDisabled(
+      !(hasCoarseAggregate && hasFineAggregate && hasBinder && tablesAreValid && binderIsComplete)
     );
-  };
+  }, [data.materials, aggregateIndexes, validations, granulometrys, binderIsComplete, setNextDisabled]);
 
-  const handleClickedMaterial = (row) => {
+  const handleClickedMaterial = (row: any) => {
     const targetRef = myRef.current[row.name];
     if (targetRef) targetRef.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <Box>
-      <CreateMaterialDosageTable
-        onRowClick={(row: any) => {
-          handleClickedMaterial(row);
-        }}
-      />
+      <CreateMaterialDosageTable onRowClick={(row: any) => handleClickedMaterial(row)} />
 
-      {aggregatesRows.length > 0 &&
-        data.materials?.length > 0 &&
-        aggregatesRows?.map((row, idx) => (
-          <GranulometryRow
-            key={idx}
-            idx={idx}
-            row={row}
-            aggregatesRows={aggregatesRows}
-            data={data}
-            materialMassInputs={materialMassInputs}
-            setMaterialMassInputs={setMaterialMassInputs}
-            setData={setData}
-            myRef={myRef}
-            t={t}
-            aggregatesColumns={aggregatesColumns}
+      {aggregateIndexes.map((index) => {
+        const granulometry = granulometrys[index];
+        return (
+          <MaterialGranulometry
+            key={granulometry.material._id ?? index}
+            granulometry={granulometry}
+            validation={validations[index]}
+            onMassChange={(raw) => handleMassChange(index, raw)}
+            onCommitRows={(result) => commitRows(index, result)}
+            onEditKind={(kind) => {
+              lastEdited.current[granulometry.material._id] = kind;
+            }}
+            containerRef={(el) => {
+              if (el) myRef.current[granulometry.material.name] = el;
+            }}
           />
-        ))}
+        );
+      })}
 
-      {data?.viscosity?.dataPoints?.length > 0 && initialRows?.length > 0 && binderColumns?.length > 0 && (
+      {binderRows.length > 0 && data.viscosity?.material && (
         <Box
           sx={{ marginY: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}
           ref={(el) => {
@@ -378,8 +376,13 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
           <Typography variant="h5">
             {data.viscosity.material.name} | {t('asphalt.materials.' + data.viscosity.material.type)}
           </Typography>
+
+          {!binderIsComplete && (
+            <Alert severity="warning">Preencha temperatura e viscosidade em todos os pontos do ligante.</Alert>
+          )}
+
           <DataGrid
-            sx={{ mt: '1rem', borderRadius: '10px' }}
+            sx={{ borderRadius: '10px' }}
             density="compact"
             showCellVerticalBorder
             showColumnVerticalBorder
