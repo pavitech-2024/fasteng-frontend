@@ -2,17 +2,46 @@ import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import Loading from '@/components/molecules/loading';
 import ModalBase from '@/components/molecules/modals/modal';
 import { EssayPageProps } from '@/components/templates/essay';
-import useAuth from '@/contexts/auth';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import { Box, Button, Typography } from '@mui/material';
 import { DataGrid, GridAlignment, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
+const CURVE_KEYS = ['lower', 'average', 'higher'] as const;
+type CurveKey = (typeof CURVE_KEYS)[number];
+
+/** Rótulo persistido nas linhas da tabela. Sempre sem acento — o mismatch
+ *  entre 'intermediaria' e 'intermediária' fazia os find() voltarem undefined. */
+const CURVE_LABEL: Record<CurveKey, string> = {
+  lower: 'inferior',
+  average: 'intermediaria',
+  higher: 'superior',
+};
+
+/** Rótulo exibido ao usuário (com acento). */
+const CURVE_LABEL_UI: Record<CurveKey, string> = {
+  lower: 'inferior',
+  average: 'intermediária',
+  higher: 'superior',
+};
+
+const LABEL_TO_CURVE: Record<string, CurveKey> = {
+  inferior: 'lower',
+  intermediaria: 'average',
+  superior: 'higher',
+};
+
+const DEFAULT_BINDER_SPECIFIC_MASS = 1.03;
+
+const isAggregate = (material) =>
+  Boolean(material?.type?.includes('Aggregate')) || Boolean(material?.type?.includes('filler'));
+
+const isBinder = (material) => material?.type === 'asphaltBinder' || material?.type === 'CAP';
+
 const Superpave_Step5_InitialBinder = ({
-  nextDisabled,
   setNextDisabled,
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
@@ -25,298 +54,338 @@ const Superpave_Step5_InitialBinder = ({
     setData,
   } = useSuperpaveStore();
 
+  /**
+   * Curvas realmente calculadas no step 4. Não confiar no chosenCurves salvo:
+   * se ele listar uma curva sem composição, o backend estoura com
+   * "Cannot read properties of undefined (reading 'percentsOfDosageWithBinder')".
+   */
+  const validCurves = useMemo<CurveKey[]>(
+    () =>
+      CURVE_KEYS.filter((curve) => {
+        const composition = granulometryCompositionData?.[`${curve}Composition`];
+        return Array.isArray(composition?.percentsOfMaterials) && composition.percentsOfMaterials.length > 0;
+      }),
+    [
+      granulometryCompositionData?.lowerComposition,
+      granulometryCompositionData?.averageComposition,
+      granulometryCompositionData?.higherComposition,
+    ]
+  );
+
   const [specificMassModalIsOpen, setSpecificMassModalIsOpen] = useState(true);
   const [newInitialBinderModalIsOpen, setNewInitialBinderModalIsOpen] = useState(false);
-  const [binderInput, setBinderInput] = useState(
-    granulometryCompositionData.chosenCurves.map((curve) => ({
-      curve,
-      value: 0,
-    }))
+  const [binderInput, setBinderInput] = useState<{ curve: CurveKey; value: number }[]>(() =>
+    validCurves.map((curve) => ({ curve, value: 0 }))
   );
 
   const [rows, setRows] = useState([]);
   const [estimatedPercentageRows, setEstimatedPercentageRows] = useState([]);
-  const compositions = ['inferior', 'intermediaria', 'superior'];
-  const [activateSecondFetch, setActivateSecondFetch] = useState(false);
+  const [materialsReady, setMaterialsReady] = useState(false);
   const [shouldRenderTable1, setShouldRenderTable1] = useState(false);
 
   const areAllEstimatedPercentagesFilled = () => {
     if (estimatedPercentageRows.length === 0) return false;
 
-    return estimatedPercentageRows.every((row) => {
-      return Object.entries(row).every(([key, value]) => {
+    return estimatedPercentageRows.every((row) =>
+      Object.entries(row).every(([key, value]) => {
         if (key === 'id' || key === 'granulometricComposition') return true;
 
         const numericValue = Number(value);
         return !isNaN(numericValue) && numericValue > 0;
-      });
-    });
+      })
+    );
   };
 
   useEffect(() => {
-    const isReady = areAllEstimatedPercentagesFilled();
-    console.log('EstimatedPercentageRows:', estimatedPercentageRows);
-    console.log('Is ready?', isReady);
-    setNextDisabled(!isReady);
+    setNextDisabled(!areAllEstimatedPercentagesFilled());
   }, [estimatedPercentageRows, setNextDisabled]);
 
   useEffect(() => {
-    if (newInitialBinderModalIsOpen && estimatedPercentageRows.length > 0) {
-      const initialValues = granulometryCompositionData.chosenCurves.map((curve) => {
-        const curveName = curve === 'lower' ? 'inferior' : curve === 'average' ? 'intermediaria' : 'superior';
-        const existingRow = estimatedPercentageRows.find((row) => row.granulometricComposition === curveName);
+    if (!newInitialBinderModalIsOpen || estimatedPercentageRows.length === 0) return;
+
+    setBinderInput(
+      validCurves.map((curve) => {
+        const existingRow = estimatedPercentageRows.find(
+          (row) => row.granulometricComposition === CURVE_LABEL[curve]
+        );
 
         return {
           curve,
           value: existingRow?.initialBinder ? Number(existingRow.initialBinder) : 0,
         };
-      });
+      })
+    );
+  }, [newInitialBinderModalIsOpen, estimatedPercentageRows, validCurves]);
 
-      setBinderInput(initialValues);
-    }
-  }, [newInitialBinderModalIsOpen, estimatedPercentageRows, granulometryCompositionData.chosenCurves]);
+  /* ------------------------- materiais (montagem) ------------------------- */
 
+  /**
+   * Monta a lista de materiais preservando _id e casando por nome — indexar por
+   * posição desalinhava quando data.materials já vinha filtrado, e o ligante
+   * acabava recebendo a massa de um agregado.
+   */
   useEffect(() => {
-    if (!activateSecondFetch) {
-      toast.promise(
-        async () => {
-          try {
-            const aggregateMaterials = granulometryEssayData.materials.map(({ _id, name, type }, index) => ({
-              name,
-              type,
-              realSpecificMass: data.materials[index]?.realSpecificMass ?? null,
-              apparentSpecificMass: data.materials[index]?.apparentSpecificMass ?? null,
-              absorption: data.materials[index]?.absorption ?? null,
-            }));
+    const essayMaterials = granulometryEssayData?.materials ?? [];
+    if (essayMaterials.length === 0) return;
 
-            setData({
-              step: 4,
-              value: {
-                ...data,
-                materials: aggregateMaterials,
-              },
-            });
+    const mergedMaterials = essayMaterials.map(({ _id, name, type }) => {
+      const saved = data.materials?.find((material) => material.name === name);
+      const binder = type === 'asphaltBinder' || type === 'CAP';
 
-            setActivateSecondFetch(true);
-          } catch (error) {
-            throw error;
-          }
-        },
-        {
-          pending: t('loading.materials.pending'),
-          success: t('loading.materials.success'),
-          error: t('erro no 1'),
-        }
-      );
-    }
+      return {
+        _id,
+        name,
+        type,
+        realSpecificMass: saved?.realSpecificMass ?? (binder ? DEFAULT_BINDER_SPECIFIC_MASS : null),
+        apparentSpecificMass: saved?.apparentSpecificMass ?? null,
+        absorption: saved?.absorption ?? null,
+      };
+    });
+
+    const binderMaterial = mergedMaterials.find(isBinder);
+
+    setData({
+      step: 4,
+      value: {
+        ...data,
+        materials: mergedMaterials,
+        binderSpecificMass:
+          data.binderSpecificMass ?? binderMaterial?.realSpecificMass ?? DEFAULT_BINDER_SPECIFIC_MASS,
+      },
+    });
+
+    setMaterialsReady(true);
   }, []);
 
+  /**
+   * Busca as massas específicas já ensaiadas e preenche só os campos vazios —
+   * nunca sobrescreve o que o usuário digitou.
+   */
   useEffect(() => {
-    const hasSomeNullValue = Object.values(rows).some((e) => e === null);
-    if (hasSomeNullValue) {
-      toast.promise(
-        async () => {
-          try {
-            const newMaterials = [];
-            const { data: resData, success } = await superpave.getFirstCompressionSpecificMasses(granulometryEssayData);
+    if (!materialsReady) return;
 
-            if (success && resData.specificMasses.length > 0) {
-              resData.specificMasses.forEach((e) => {
-                const obj = {
-                  name: e.generalData.material.name,
-                  realSpecificMass: e.results.bulk_specify_mass,
-                  apparentSpecificMass: e.results.apparent_specify_mass,
-                  absorption: e.results.absorption,
-                };
-                newMaterials.push(obj);
-              });
+    const needsFetch = (data.materials ?? []).some(
+      (material) =>
+        isAggregate(material) &&
+        [material.realSpecificMass, material.apparentSpecificMass, material.absorption].some(
+          (value) => value === null || value === undefined
+        )
+    );
 
-              let prevData = { ...data };
-              prevData = {
-                ...prevData,
-                materials: newMaterials,
-              };
+    if (!needsFetch) return;
 
-              setData({
-                step: 4,
-                value: prevData,
-              });
-            } else {
-              let count = 0;
-              data.materials.forEach((e) => {
-                const obj = {
-                  name: e.name,
-                  realSpecificMass: e.realSpecificMass,
-                  apparentSpecificMass: e.apparentSpecificMass,
-                  absorption: e.absorption,
-                };
-                newMaterials[count].push(obj);
-                count++;
-              });
+    (async () => {
+      try {
+        const response = await superpave.getFirstCompressionSpecificMasses(granulometryEssayData);
+        const specificMasses = response?.data?.specificMasses;
 
-              let prevData = { ...data };
-              prevData = {
-                ...prevData,
-                materials: newMaterials,
-              };
+        if (!response?.success || !Array.isArray(specificMasses) || specificMasses.length === 0) return;
 
-              setData({
-                step: 4,
-                value: prevData,
-              });
-            }
-          } catch (error) {
-            throw error;
-          }
-        },
-        {
-          pending: t('loading.materials.pending'),
-          success: t('loading.materials.success'),
-          error: t('erro no 2'),
-        }
-      );
-    }
-  }, [rows]);
+        const fetched = specificMasses.map((item) => ({
+          name: item?.generalData?.material?.name,
+          realSpecificMass: item?.results?.bulk_specify_mass ?? null,
+          apparentSpecificMass: item?.results?.apparent_specify_mass ?? null,
+          absorption: item?.results?.absorption ?? null,
+        }));
 
-  const generateMaterialInputs = (materials) => {
-    return materials?.map((material, index) => {
-      // Para agregados, manter os 3 campos, so o lignt q n tem
-      if (material?.type?.includes('Aggregate') || material?.type?.includes('filler')) {
-        return [
-          {
-            key: 'realSpecificMass',
-            label: t('asphalt.dosages.superpave.real-specific-mass'),
-            placeHolder: 'Massa específica real',
-            adornment: 'g/cm³',
-            value: material.realSpecificMass,
-            materialIndex: index + 1,
-            name: material.name,
-          },
-          {
-            key: 'apparentSpecificMass',
-            label: t('asphalt.dosages.superpave.apparent-specific-mass'),
-            placeHolder: 'Massa específica aparente',
-            adornment: 'g/cm³',
-            value: material.apparentSpecificMass,
-            materialIndex: index + 1,
-            name: material.name,
-          },
-          {
-            key: 'absorption',
-            label: t('asphalt.dosages.superpave.absorption'),
-            placeHolder: 'Absorção',
-            adornment: '%',
-            value: material.absorption,
-            materialIndex: index + 1,
-            name: material.name,
-          },
-        ];
+        const filledMaterials = (data.materials ?? []).map((material) => {
+          const match = fetched.find((item) => item.name === material.name);
+          if (!match) return material;
+
+          return {
+            ...material,
+            realSpecificMass: material.realSpecificMass ?? match.realSpecificMass,
+            apparentSpecificMass: material.apparentSpecificMass ?? match.apparentSpecificMass,
+            absorption: material.absorption ?? match.absorption,
+          };
+        });
+
+        setData({ step: 4, value: { ...data, materials: filledMaterials } });
+      } catch (error) {
+        console.error('[Superpave Step 5] Falha ao buscar massas específicas:', error);
+        // silencia: o usuário preenche à mão no modal
       }
-      return [];
-    });
+    })();
+  }, [materialsReady]);
+
+  useEffect(() => {
+    const materials = data.materials;
+    if (Array.isArray(materials) && materials.length > 0) {
+      setShouldRenderTable1(true);
+    }
+  }, [data.materials]);
+
+  /* ------------------------------ inputs modal ---------------------------- */
+
+  const generateMaterialInputs = (materials) =>
+    materials?.map((material, index) => [
+      {
+        key: 'realSpecificMass',
+        label: t('asphalt.dosages.superpave.real-specific-mass'),
+        placeHolder: 'Massa específica real',
+        adornment: 'g/cm³',
+        value: material.realSpecificMass ?? '',
+        materialIndex: index + 1,
+        name: material.name,
+      },
+      {
+        key: 'apparentSpecificMass',
+        label: t('asphalt.dosages.superpave.apparent-specific-mass'),
+        placeHolder: 'Massa específica aparente',
+        adornment: 'g/cm³',
+        value: material.apparentSpecificMass ?? '',
+        materialIndex: index + 1,
+        name: material.name,
+      },
+      {
+        key: 'absorption',
+        label: t('asphalt.dosages.superpave.absorption'),
+        placeHolder: 'Absorção',
+        adornment: '%',
+        value: material.absorption ?? '',
+        materialIndex: index + 1,
+        name: material.name,
+      },
+    ]);
+
+  const aggregateMaterialsData = data.materials?.filter((material) => isAggregate(material) && !isBinder(material));
+  const modalMaterialInputs = generateMaterialInputs(aggregateMaterialsData);
+  const binderMaterial = data.materials?.find(isBinder);
+
+  const updateMaterialField = (name: string, key: string, rawValue: string) => {
+    const value = rawValue.replace(',', '.');
+    const parsed = value === '' ? null : Number(value);
+
+    // map + spread: mutar o objeto dentro do array não dispara re-render e
+    // deixava o campo "travado" enquanto digitava.
+    const newMaterials = (data.materials ?? []).map((material) =>
+      material.name === name ? { ...material, [key]: parsed } : material
+    );
+
+    setData({ step: 4, key: 'materials', value: newMaterials });
   };
 
-  const modalMaterialInputs = generateMaterialInputs(
-    data.materials?.filter(
-      (material) =>
-        (material?.type?.includes('Aggregate') || material?.type?.includes('filler')) &&
-        // FILTRAR p fora so o ligant 
-        !material?.type?.includes('asphaltBinder') &&
-        !material?.type?.includes('CAP')
-    )
-  );
+  /* -------------------------------- cálculo -------------------------------- */
 
-const recalculatePercentagesWithNewBinder = (
-  percentsWithBinder: number[], // porcentagens que JÁ INCLUEM o ligante
-  currentBinderPercent: number, // teor de ligante atual
-  newBinderPercent: number      // novo teor de ligante desejado
-): number[] => {
-  
-  // 1. Primeiro, extrai apenas as porcentagens dos agregados (sem o ligante)
-  const aggregatePercents = percentsWithBinder.map(p => p); // cópia do array
-  
-  // 2. Calcula a soma atual dos agregados (deve ser 100 - binder%)
-  const currentAggregatesSum = aggregatePercents.reduce((sum, p) => sum + p, 0);
-  const expectedSum = 100 - currentBinderPercent;
-  
-  console.log('Debug recálculo:', {
-    percentsWithBinder,
-    currentBinderPercent,
-    currentAggregatesSum,
-    expectedSum,
-    difference: Math.abs(currentAggregatesSum - expectedSum)
-  });
-  
-  // Se a diferença for muito grande, algo está errado
-  if (Math.abs(currentAggregatesSum - expectedSum) > 0.1) {
-    console.warn('Soma dos agregados não corresponde a 100 - binder%');
-  }
-  
-  // 3. Calcula a nova soma desejada para agregados
-  const newAggregatesSum = 100 - newBinderPercent;
-  
-  // 4. Redistribui proporcionalmente
-  const newAggregatePercents = aggregatePercents.map(percentage => 
-    Number(((percentage / currentAggregatesSum) * newAggregatesSum).toFixed(2))
-  );
-  
-  console.log('Resultado:', {
-    novoBinder: newBinderPercent,
-    novosAgregados: newAggregatePercents,
-    somaTotal: newAggregatePercents.reduce((a, b) => a + b, 0) + newBinderPercent
-  });
-  
-  return newAggregatePercents;
-};
+  const recalculatePercentagesWithNewBinder = (
+    percentsWithBinder: number[],
+    currentBinderPercent: number,
+    newBinderPercent: number
+  ): number[] => {
+    if (!Array.isArray(percentsWithBinder) || percentsWithBinder.length === 0) return [];
+
+    const currentAggregatesSum = percentsWithBinder.reduce((sum, percent) => sum + (Number(percent) || 0), 0);
+    if (currentAggregatesSum <= 0) return percentsWithBinder;
+
+    const newAggregatesSum = 100 - newBinderPercent;
+
+    return percentsWithBinder.map((percentage) =>
+      Number((((Number(percentage) || 0) / currentAggregatesSum) * newAggregatesSum).toFixed(2))
+    );
+  };
+
+  const buildRowsFromCompositions = (compositionList) =>
+    (compositionList ?? []).map((composition, index) => {
+      const curve: CurveKey = (composition?.curve as CurveKey) ?? validCurves[index] ?? CURVE_KEYS[index];
+
+      const row: Record<string, string | number> = {
+        id: index,
+        granulometricComposition: CURVE_LABEL[curve] ?? CURVE_LABEL[CURVE_KEYS[index]],
+        initialBinder: composition?.pli?.toFixed(2) ?? '',
+      };
+
+      (composition?.percentsOfDosageWithBinder ?? []).forEach((percent, materialIndex) => {
+        row[`material_${materialIndex + 1}`] = percent?.toFixed(2) ?? '';
+      });
+
+      return row;
+    });
+
+  const validateBeforeCalculate = (): string | null => {
+    if (validCurves.length === 0) {
+      return 'Nenhuma curva granulométrica foi calculada. Volte ao passo anterior e calcule ao menos uma curva.';
+    }
+
+    const incomplete = (data.materials ?? [])
+      .filter(isAggregate)
+      .filter((material) =>
+        [material.realSpecificMass, material.apparentSpecificMass, material.absorption].some(
+          (value) => value === null || value === undefined || isNaN(Number(value))
+        )
+      );
+
+    if (incomplete.length > 0) {
+      return `Preencha todos os campos de: ${incomplete.map((material) => material.name).join(', ')}.`;
+    }
+
+    const binderMass = Number(binderMaterial?.realSpecificMass ?? data.binderSpecificMass);
+    if (!binderMass || isNaN(binderMass)) {
+      return 'Informe a massa específica do ligante.';
+    }
+
+    return null;
+  };
 
   const handleSubmitSpecificMasses = () => {
+    const problem = validateBeforeCalculate();
+    if (problem) {
+      toast.error(problem);
+      return;
+    }
+
     toast.promise(
       async () => {
         try {
           const response = await superpave.calculateStep5Data(
             generalData,
             granulometryEssayData,
-            granulometryCompositionData,
-            data
+            // chosenCurves saneado: só o que existe calculado chega no backend.
+            { ...granulometryCompositionData, chosenCurves: validCurves },
+            {
+              ...data,
+              binderSpecificMass: Number(binderMaterial?.realSpecificMass ?? data.binderSpecificMass),
+            }
           );
 
-        const updatedRows = response.granulometryComposition.map((composition, index) => ({
-  id: index,
-  granulometricComposition: compositions[index],
-  combinedGsb: composition.combinedGsb ? composition.combinedGsb.toFixed(3) : '', // 3 casas decimais
-  combinedGsa: composition.combinedGsa ? composition.combinedGsa.toFixed(3) : '', // 3 casas decimais
-  gse: composition.gse || composition.gse === 0 ? composition.gse.toFixed(3) : '', // 3 casas decimais
-}));
+          const compositionList = response?.granulometryComposition;
+
+          if (!Array.isArray(compositionList) || compositionList.length === 0) {
+            throw new Error('O cálculo não retornou composições granulométricas.');
+          }
+
+          const updatedRows = compositionList.map((composition, index) => {
+            const curve: CurveKey = (composition?.curve as CurveKey) ?? validCurves[index] ?? CURVE_KEYS[index];
+
+            return {
+              id: index,
+              granulometricComposition: CURVE_LABEL[curve] ?? CURVE_LABEL[CURVE_KEYS[index]],
+              combinedGsb: typeof composition?.combinedGsb === 'number' ? composition.combinedGsb.toFixed(3) : '',
+              combinedGsa: typeof composition?.combinedGsa === 'number' ? composition.combinedGsa.toFixed(3) : '',
+              gse: typeof composition?.gse === 'number' ? composition.gse.toFixed(3) : '',
+            };
+          });
 
           setRows(updatedRows);
 
-          const updatedData = {
-            ...data,
-            granulometryComposition: response.granulometryComposition,
-            turnNumber: response.turnNumber,
-          };
-
-          setData({ step: 4, value: updatedData });
-
-          const updatedPercentageRows = response.granulometryComposition.map((composition, index) => {
-            const row: Record<string, string | number> = {
-              id: index,
-              granulometricComposition: compositions[index],
-              initialBinder: composition.pli?.toFixed(2),
-            };
-
-            composition.percentsOfDosageWithBinder.forEach((percent, materialIndex) => {
-              row[`material_${materialIndex + 1}`] = percent?.toFixed(2);
-            });
-
-            return row;
+          setData({
+            step: 4,
+            value: {
+              ...data,
+              granulometryComposition: compositionList,
+              turnNumber: response?.turnNumber,
+            },
           });
 
-          setEstimatedPercentageRows(updatedPercentageRows);
+          setEstimatedPercentageRows(buildRowsFromCompositions(compositionList));
           setLoading(false);
           setSpecificMassModalIsOpen(false);
           setNewInitialBinderModalIsOpen(false);
         } catch (error) {
+          console.error('[Superpave Step 5] Falha ao calcular:', error, {
+            chosenCurves: validCurves,
+            materials: data.materials,
+            binderSpecificMass: data.binderSpecificMass,
+          });
           throw error;
         }
       },
@@ -327,6 +396,40 @@ const recalculatePercentagesWithNewBinder = (
       }
     );
   };
+
+  const handleInitialBinderSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const compositionList = data.granulometryComposition;
+    if (!Array.isArray(compositionList) || compositionList.length === 0) {
+      toast.error('Calcule as composições antes de alterar o teor de ligante.');
+      return;
+    }
+
+    const updatedGranulometryComposition = compositionList.map((composition, index) => {
+      const curve: CurveKey = (composition?.curve as CurveKey) ?? validCurves[index] ?? CURVE_KEYS[index];
+      const newBinderValue = binderInput.find((item) => item.curve === curve)?.value;
+
+      if (newBinderValue === undefined || newBinderValue === null || isNaN(newBinderValue)) return composition;
+
+      return {
+        ...composition,
+        curve,
+        pli: newBinderValue,
+        percentsOfDosageWithBinder: recalculatePercentagesWithNewBinder(
+          composition?.percentsOfDosageWithBinder,
+          composition?.pli,
+          newBinderValue
+        ),
+      };
+    });
+
+    setData({ step: 4, key: 'granulometryComposition', value: updatedGranulometryComposition });
+    setEstimatedPercentageRows(buildRowsFromCompositions(updatedGranulometryComposition));
+    setNewInitialBinderModalIsOpen(false);
+  };
+
+  /* -------------------------------- colunas -------------------------------- */
 
   const columns: GridColDef[] = [
     {
@@ -355,64 +458,44 @@ const recalculatePercentagesWithNewBinder = (
     },
   ];
 
-  const createEstimatedPercentageColumns = (): GridColDef[] => {
-    const baseColumns: GridColDef[] = [
-      {
-        field: 'granulometricComposition',
-        headerName: t('asphalt.dosages.superpave.granulometric-composition'),
-        valueFormatter: ({ value }) => `${value}`,
-        width: 200,
-      },
-      {
-        field: 'initialBinder',
-        headerName: t('asphalt.dosages.superpave.initial-binder'),
-        valueFormatter: ({ value }) => `${value}`,
-        width: 200,
-      },
-    ];
+  const essayAggregateMaterials = granulometryEssayData?.materials?.filter(isAggregate) ?? [];
 
-    const aggregateMaterials = granulometryEssayData.materials?.filter(
-      ({ type }) => type.includes('Aggregate') || type.includes('filler')
-    );
-
-    const materialColumns = aggregateMaterials?.map((material, index) => ({
+  const estimatedPercentageCols: GridColDef[] = [
+    {
+      field: 'granulometricComposition',
+      headerName: t('asphalt.dosages.superpave.granulometric-composition'),
+      valueFormatter: ({ value }) => `${value}`,
+      width: 200,
+    },
+    {
+      field: 'initialBinder',
+      headerName: t('asphalt.dosages.superpave.initial-binder'),
+      valueFormatter: ({ value }) => `${value}`,
+      width: 200,
+    },
+    ...essayAggregateMaterials.map((material, index) => ({
       field: `material_${index + 1}`,
       headerName: material.name,
       valueFormatter: ({ value }) => `${value}`,
       width: 100,
-    }));
+    })),
+  ];
 
-    return materialColumns ? [...baseColumns, ...materialColumns] : [];
-  };
-
-  const estimatedPercentageCols = createEstimatedPercentageColumns();
-
-  const createEstimatedPercentageGroupingModel = (): GridColumnGroupingModel => {
-    const baseColumnChildren = [{ field: 'granulometricComposition' }, { field: 'initialBinder' }];
-
-    const aggregateMaterials = granulometryEssayData.materials?.filter(({ type }) =>
-      ['Aggregate', 'Filler'].some((materialType) => type.includes(materialType))
-    );
-
-    const materialColumnChildren = aggregateMaterials?.map((_, index) => ({
-      field: `material_${index + 1}`,
-    }));
-
-    if (Array.isArray(materialColumnChildren) && materialColumnChildren.length > 0) {
-      return [
-        {
-          groupId: 'estimatedPercentage',
-          headerName: t('asphalt.dosages.superpave.materials-estimated-percentage'),
-          children: [...baseColumnChildren, ...materialColumnChildren],
-          headerAlign: 'center' as GridAlignment,
-        },
-      ];
-    } else {
-      return [];
-    }
-  };
-
-  const estimatedPercentageGroupings = createEstimatedPercentageGroupingModel();
+  const estimatedPercentageGroupings: GridColumnGroupingModel =
+    essayAggregateMaterials.length > 0
+      ? [
+          {
+            groupId: 'estimatedPercentage',
+            headerName: t('asphalt.dosages.superpave.materials-estimated-percentage'),
+            children: [
+              { field: 'granulometricComposition' },
+              { field: 'initialBinder' },
+              ...essayAggregateMaterials.map((_, index) => ({ field: `material_${index + 1}` })),
+            ],
+            headerAlign: 'center' as GridAlignment,
+          },
+        ]
+      : [];
 
   const compressionParamsCols: GridColDef[] = [
     {
@@ -444,10 +527,10 @@ const recalculatePercentagesWithNewBinder = (
   const compressionParamsRows = [
     {
       id: 0,
-      initialN: data.turnNumber?.initialN ? data.turnNumber.initialN : '',
-      maxN: data.turnNumber?.maxN,
-      projectN: data.turnNumber?.projectN,
-      tex: data.turnNumber?.tex !== '' ? data.turnNumber?.tex : generalData.trafficVolume,
+      initialN: data.turnNumber?.initialN ?? '',
+      maxN: data.turnNumber?.maxN ?? '',
+      projectN: data.turnNumber?.projectN ?? '',
+      tex: data.turnNumber?.tex ? data.turnNumber.tex : generalData?.trafficVolume,
     },
   ];
 
@@ -466,99 +549,6 @@ const recalculatePercentagesWithNewBinder = (
     }
   };
 
-  useEffect(() => {
-    if (data.materials && Object.values(data.materials).every((e) => e !== null)) {
-      setShouldRenderTable1(true);
-    }
-  }, [data.materials]);
-
-  const updateRowsWithInitialBinderValues = (initialBinderValues: { curve: string; value: number }[]) => {
-  console.log('Updating rows with:', initialBinderValues);
-
-  const newRowData = estimatedPercentageRows.map((row) => {
-    const curveName =
-      row.granulometricComposition === 'inferior'
-        ? 'lower'
-        : row.granulometricComposition === 'intermediaria'
-        ? 'average'
-        : 'higher';
-    
-    const initialBinderValue = initialBinderValues.find((obj) => obj.curve === curveName)?.value ?? 0;
-    
-    // Encontra a composição correspondente nos dados atualizados
-    const updatedComposition = data.granulometryComposition.find(
-      comp => comp.curve === curveName
-    );
-    
-    // Cria o novo objeto da linha
-    const newRow: Record<string, string | number> = {
-      id: row.id,
-      granulometricComposition: row.granulometricComposition,
-      initialBinder: initialBinderValue.toFixed(2),
-    };
-    
-    // Adiciona as novas porcentagens dos agregados
-    if (updatedComposition?.percentsOfDosageWithBinder) {
-      updatedComposition.percentsOfDosageWithBinder.forEach((percent, materialIndex) => {
-        newRow[`material_${materialIndex + 1}`] = percent?.toFixed(2);
-      });
-    }
-    
-    return newRow;
-  });
-
-  console.log('New row data:', newRowData);
-  setEstimatedPercentageRows(newRowData);
-};
-
-const handleInitialBinderSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  console.log('Submitting binder values:', binderInput);
-  
-  const updatedGranulometryComposition = data.granulometryComposition.map((composition) => {
-    const newBinderValue = binderInput.find(obj => obj.curve === composition.curve)?.value;
-    
-    if (!newBinderValue) return composition;
-    
-    // PASSA O TEOR ATUAL E O NOVO!
-    const newAggregatePercents = recalculatePercentagesWithNewBinder(
-      composition.percentsOfDosageWithBinder, // [36.47, 45.59, 9.12]
-      composition.pli, // 3.65 (teor atual)
-      newBinderValue   // 2.00 (novo teor)
-    );
-    
-    return {
-      ...composition,
-      pli: newBinderValue,
-      percentsOfDosageWithBinder: newAggregatePercents,
-    };
-  });
-  
-  setData({
-    step: 4,
-    key: 'granulometryComposition',
-    value: updatedGranulometryComposition,
-  });
-  
-  // Atualiza as linhas da tabela
-  const newRowData = updatedGranulometryComposition.map((composition, index) => {
-    const row: Record<string, string | number> = {
-      id: index,
-      granulometricComposition: compositions[index],
-      initialBinder: composition.pli?.toFixed(2),
-    };
-
-    composition.percentsOfDosageWithBinder.forEach((percent, materialIndex) => {
-      row[`material_${materialIndex + 1}`] = percent?.toFixed(2);
-    });
-
-    return row;
-  });
-  
-  setEstimatedPercentageRows(newRowData);
-  setNewInitialBinderModalIsOpen(false);
-};
-
   return (
     <>
       {loading ? (
@@ -573,7 +563,7 @@ const handleInitialBinderSubmit = (e: React.FormEvent<HTMLFormElement>) => {
             gap: '10px',
           }}
         >
-          {shouldRenderTable1 && (
+          {shouldRenderTable1 && rows.length > 0 && (
             <DataGrid
               hideFooter
               disableColumnMenu
@@ -585,7 +575,7 @@ const handleInitialBinderSubmit = (e: React.FormEvent<HTMLFormElement>) => {
             />
           )}
 
-          {estimatedPercentageRows.length > 0 && !Object.values(data.materials[0]).some((item) => item === null) && (
+          {estimatedPercentageRows.length > 0 && (
             <DataGrid
               hideFooter
               disableColumnMenu
@@ -606,6 +596,7 @@ const handleInitialBinderSubmit = (e: React.FormEvent<HTMLFormElement>) => {
           <Button
             variant="outlined"
             sx={{ width: 'fit-content', marginTop: '2rem' }}
+            disabled={estimatedPercentageRows.length === 0}
             onClick={() => setNewInitialBinderModalIsOpen(true)}
           >
             {t('asphalt.dosages.superpave.change-initial-binder')}
@@ -641,80 +632,51 @@ const handleInitialBinderSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         >
           <Box sx={{ display: 'flex', flexDirection: 'row', gap: '1rem', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', gap: '1rem', flexDirection: 'column', marginBottom: '2rem' }}>
-              {/* AGREGADOS - 3 CAMPOS CADA */}
-              {modalMaterialInputs?.map((materialInputs, idx) => {
-               
-                const aggregateMaterials = data.materials?.filter(
-                  (material) => material?.type?.includes('Aggregate') || material?.type?.includes('filler')
-                );
+              {modalMaterialInputs?.map((materialInputs, idx) => (
+                <Box key={aggregateMaterialsData?.[idx]?.name ?? idx}>
+                  <Typography component={'h3'} sx={{ marginTop: '2rem' }}>
+                    {aggregateMaterialsData?.[idx]?.name}
+                  </Typography>
 
-                return (
-                  <>
-                    <Typography component={'h3'} sx={{ marginTop: '2rem' }}>
-                      {aggregateMaterials[idx]?.name} {/* PEGAR APENAS DOS AGREGADOS */}
-                    </Typography>
+                  <Box sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                    {materialInputs?.map((input) => (
+                      <InputEndAdornment
+                        key={`${input.name}_${input.key}`}
+                        adornment={input.adornment}
+                        type="number"
+                        value={input.value}
+                        label={input.label}
+                        placeholder={input.placeHolder}
+                        fullWidth
+                        onChange={(e) => updateMaterialField(input.name, input.key, e.target.value)}
+                      />
+                    ))}
+                  </Box>
+                </Box>
+              ))}
 
-                    <Box key={idx} sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                      {materialInputs?.map((input) => (
-                        <InputEndAdornment
-                          key={`${input.materialIndex}_${input.key}`}
-                          adornment={input.adornment}
-                          type="number"
-                          value={input.value}
-                          label={input.label}
-                          placeholder={input.placeHolder}
-                          fullWidth
-                          onChange={(e) => {
-                            const materialIndex = data.materials.findIndex((i) => i.name === input.name);
-                            const newData = [...data.materials];
-                            newData[materialIndex][input.key] = e.target.value.replace(',', '.');
-
-                            setData({
-                              step: 4,
-                              key: `materials`,
-                              value: newData,
-                            });
-                          }}
-                        />
-                      ))}
-                    </Box>
-                  </>
-                );
-              })}
-
-              {/* LIGANTE - APENAS 1 CAMPO */}
               <Box>
                 <Typography component={'h3'} sx={{ marginTop: '2rem' }}>
-                  {
-                    data.materials?.find((material) => material.type === 'asphaltBinder' || material.type === 'CAP')
-                      ?.name
-                  }
+                  {binderMaterial?.name}
                 </Typography>
                 <InputEndAdornment
                   type="number"
                   adornment="g/cm³"
-                  value={
-                    data.materials?.find((material) => material.type === 'asphaltBinder' || material.type === 'CAP')
-                      ?.realSpecificMass !== 0 ||
-                    data.materials?.find((material) => material.type === 'asphaltBinder' || material.type === 'CAP')
-                      ?.realSpecificMass !== null
-                      ? data.materials?.find((material) => material.type === 'asphaltBinder' || material.type === 'CAP')
-                          ?.realSpecificMass
-                      : '1,03'
-                  }
-                  label="Massa especifica do ligante"
+                  value={binderMaterial?.realSpecificMass ?? DEFAULT_BINDER_SPECIFIC_MASS}
+                  label="Massa específica do ligante"
                   placeholder="Insira a massa específica do ligante"
                   fullWidth
                   onChange={(e) => {
-                    const materialIndex = data.materials?.findIndex(
-                      (i) => i.type === 'asphaltBinder' || i.type === 'CAP'
+                    const value = e.target.value.replace(',', '.');
+                    const parsed = value === '' ? null : Number(value);
+
+                    const newMaterials = (data.materials ?? []).map((material) =>
+                      isBinder(material) ? { ...material, realSpecificMass: parsed } : material
                     );
-                    const newData = { ...data };
-                    newData.materials[materialIndex].realSpecificMass = parseFloat(e.target.value.replace(',', '.'));
-                    newData.binderSpecificMass = parseFloat(e.target.value.replace(',', '.'));
+
                     setData({
                       step: 4,
-                      value: newData,
+                      value: { ...data, materials: newMaterials, binderSpecificMass: parsed },
                     });
                   }}
                 />
@@ -728,39 +690,31 @@ const handleInitialBinderSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         title={t('asphalt.dosages.superpave.insert-initial-binder')}
         leftButtonTitle={'Cancelar'}
         rightButtonTitle={'Confirmar'}
-        onCancel={() => {
-          setNewInitialBinderModalIsOpen(false);
-          setLoading(false);
-        }}
+        onCancel={() => setNewInitialBinderModalIsOpen(false)}
         open={newInitialBinderModalIsOpen}
         size={'small'}
         onSubmit={handleInitialBinderSubmit}
         oneButton={false}
       >
         <Box style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {granulometryCompositionData.chosenCurves.map((curve, idx) => {
-            const curveName = curve === 'lower' ? 'inferior' : curve === 'average' ? 'intermediária' : 'superior';
-            return (
-              <Box key={idx}>
-                <Typography>{'Curva' + ' ' + curveName}</Typography>
-                <InputEndAdornment
-                  adornment="%"
-                  value={binderInput?.find((obj) => obj.curve === curve)?.value || ''}
-                  placeholder={t('asphalt.dosages.superpave.initial_binder')}
-                  type="number"
-                  fullWidth
-                  onChange={(e) => {
-                    const prevData = [...binderInput];
-                    const index = prevData.findIndex((obj) => obj.curve === curve);
-                    if (index !== -1) {
-                      prevData[index].value = Number(e.target.value.replace(',', '.'));
-                      setBinderInput(prevData);
-                    }
-                  }}
-                />
-              </Box>
-            );
-          })}
+          {validCurves.map((curve) => (
+            <Box key={curve}>
+              <Typography>{`Curva ${CURVE_LABEL_UI[curve]}`}</Typography>
+              <InputEndAdornment
+                adornment="%"
+                value={binderInput?.find((item) => item.curve === curve)?.value ?? ''}
+                placeholder={t('asphalt.dosages.superpave.initial_binder')}
+                type="number"
+                fullWidth
+                onChange={(e) => {
+                  const parsed = Number(e.target.value.replace(',', '.'));
+                  setBinderInput((prev) =>
+                    prev.map((item) => (item.curve === curve ? { ...item, value: parsed } : item))
+                  );
+                }}
+              />
+            </Box>
+          ))}
         </Box>
       </ModalBase>
     </>

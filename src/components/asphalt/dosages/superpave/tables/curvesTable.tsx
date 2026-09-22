@@ -1,248 +1,222 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
-import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
-import { t } from 'i18next';
 import { StyledDataGrid } from '@/components/molecules/tables/styledDataGrid';
+import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
+import { formatDecimal, parseDecimal } from '@/utils/granulometry-calc';
+import { Box, Typography } from '@mui/material';
+import { t } from 'i18next';
+import React, { useEffect, useMemo, useState } from 'react';
+
+const CURVE_INDEX: Record<string, number> = {
+  lowerComposition: 0,
+  averageComposition: 1,
+  higherComposition: 2,
+};
 
 interface Props {
   materials: { name: string; _id: string }[];
   dnitBandsLetter: string;
-  tableInputs: Record<string, string>;
   tableName: string;
   tableData: any[];
-  onChangeInputsTables: (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    tableName: string,
-    index: number
-  ) => void;
+  /** @deprecated não é mais usado — o input escreve direto no store */
+  tableInputs?: Record<string, string>;
+  /** @deprecated não é mais usado — o input escreve direto no store */
+  onChangeInputsTables?: (...args: any[]) => void;
 }
 
-interface TableModel {
-  columnsHeaderTop: { header: string; type: string }[];
-  columnsHeader: string[];
-  columnsKeys: string[];
+/* -------------------------------------------------------------------------- */
+/* Input de porcentagem no cabeçalho                                           */
+/* -------------------------------------------------------------------------- */
+
+interface PercentHeaderInputProps {
+  value: number | null;
+  error: boolean;
+  onCommit: (value: number | null) => void;
 }
+
+/**
+ * Fica fora do CurvesTable de propósito: assim o React preserva a instância
+ * entre re-renders e o campo não perde o foco a cada tecla.
+ */
+const PercentHeaderInput = ({ value, error, onCommit }: PercentHeaderInputProps) => {
+  const [draft, setDraft] = useState<string>(value === null || value === undefined ? '' : String(value));
+  const [editing, setEditing] = useState(false);
+
+  // Enquanto o usuário digita, o store não manda no campo.
+  useEffect(() => {
+    if (!editing) setDraft(value === null || value === undefined ? '' : String(value));
+  }, [value, editing]);
+
+  const commit = () => {
+    setEditing(false);
+    onCommit(parseDecimal(draft));
+  };
+
+  return (
+    <InputEndAdornment
+      adornment="%"
+      type="text"
+      inputProps={{ inputMode: 'decimal' }}
+      value={draft}
+      error={error}
+      onFocus={() => setEditing(true)}
+      onChange={(e) => setDraft(e.target.value)}
+      onBlur={commit}
+      onKeyDown={(e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
+      }}
+    />
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/* Tabela da curva                                                             */
+/* -------------------------------------------------------------------------- */
 
 const CurvesTable: React.FC<Props> = ({ materials, dnitBandsLetter, tableName, tableData }) => {
   const { granulometryCompositionData: data, setData } = useSuperpaveStore();
 
-  const getMaterialIndex = () => {
-    if (tableName === 'lowerComposition') return 0;
-    if (tableName === 'averageComposition') return 1;
-    if (tableName === 'higherComposition') return 2;
+  const curveIndex = CURVE_INDEX[tableName] ?? 0;
+  const rowsSource: any[] = tableData ?? [];
+
+  // Nunca indexar percentageInputs direto: ele pode voltar vazio do backend.
+  const percentageInputs: Record<string, number | null> = data?.percentageInputs?.[curveIndex] ?? {};
+
+  const setPercentage = (field: string, value: number | null) => {
+    const current = Array.isArray(data?.percentageInputs) ? data.percentageInputs : [];
+    const next = [0, 1, 2].map((i) => current[i] ?? {});
+    next[curveIndex] = { ...next[curveIndex], [field]: value };
+    setData({ step: 3, key: 'percentageInputs', value: next });
   };
 
-  const materialIndex = getMaterialIndex();
+  const sum = Object.values(percentageInputs).reduce((acc, value) => acc + (Number(value) || 0), 0);
+  const hasAnyInput = Object.values(percentageInputs).some((value) => value !== null && value !== undefined);
+  const sumIsValid = Math.abs(sum - 100) <= 0.01;
 
-  const [table, setTable] = useState<TableModel>({
-    columnsHeaderTop: [{ header: 'Peneira', type: 'rowSpan' }],
-    columnsHeader: [],
-    columnsKeys: [],
+  const fieldsOf = (material: { _id: string }, index: number) => ({
+    totalPassant: `totalPassant_${material._id}_${index + 1}`,
+    material: `material_${material._id}_${index + 1}`,
+    group: `group_${material._id}_${index + 1}`,
   });
 
-  useEffect(() => {
-    const newTable = createObjectTableModel(materials, dnitBandsLetter);
-    setTable(newTable);
-  }, [materials, dnitBandsLetter]);
-
-  const createObjectTableModel = (selectedMaterials: { name: string }[], dnitBandsLetter: string): TableModel => {
-    const newTable: TableModel = {
-      columnsHeaderTop: [{ header: 'Peneira', type: 'rowSpan' }],
-      columnsHeader: [],
-      columnsKeys: ['peneira'],
-    };
-
-    selectedMaterials?.forEach((item, i) => {
-      newTable.columnsHeaderTop.push({ header: item?.name, type: 'colsSpan' });
-      newTable.columnsHeader.push('Total passante (%)');
-      newTable.columnsHeader.push('%');
-      newTable.columnsKeys.push('keyTotal' + i);
-      newTable.columnsKeys.push('key%' + i);
-    });
-
-    newTable.columnsHeaderTop.push({ header: t('asphalt.dosages.superpave.project'), type: 'rowSpan' });
-    newTable.columnsKeys.push('Projeto');
-    newTable.columnsHeaderTop.push({ header: t('asphalt.dosages.superpave.specification'), type: 'colsSpan' });
-    newTable.columnsHeader.push(`Faixa ${dnitBandsLetter}`);
-    newTable.columnsKeys.push('bandsCol1');
-    newTable.columnsKeys.push('bandsCol2');
-
-    return newTable;
-  };
-
-  const generateMaterialColumns = (data, materialIndex) => {
-    console.log("🚀 ~ generateMaterialColumns ~ data:", data)
-    const columns = materials
-      ?.map((material, index) => {
-        const fieldTotalPassant = `totalPassant_${material._id}_${index + 1}`;
-        const fieldMaterial = `material_${material._id}_${index + 1}`;
+  const columns = useMemo(
+    () => [
+      {
+        field: 'peneira',
+        headerName: t('asphalt.dosages.superpave.sieve'),
+        width: 140,
+        valueFormatter: ({ value }) => `${value}`,
+      },
+      ...(materials ?? []).flatMap((material, index) => {
+        const fields = fieldsOf(material, index);
 
         return [
           {
-            field: fieldTotalPassant,
+            field: fields.totalPassant,
             headerName: t('asphalt.dosages.superpave.total-passant'),
             width: 125,
             valueFormatter: ({ value }) => `${value}`,
           },
           {
-            field: fieldMaterial,
+            field: fields.material,
             headerName: '',
             width: 100,
             valueFormatter: ({ value }) => `${value}`,
             renderHeader: () => (
-              <InputEndAdornment
-                adornment="%"
-                value={data?.percentageInputs[materialIndex]?.[fieldMaterial] || ''}
-                onChange={(e) => {
-                  const prevData = [...data?.percentageInputs];
-                  const newData = { ...prevData[materialIndex], [fieldMaterial]: e.target.value };
-                  prevData[materialIndex] = newData;
-                  const updatedData = [...prevData];
-                  setData({ step: 3, key: 'percentageInputs', value: updatedData });
-                }}
+              <PercentHeaderInput
+                value={percentageInputs[fields.material] ?? null}
+                error={hasAnyInput && !sumIsValid}
+                onCommit={(value) => setPercentage(fields.material, value)}
               />
             ),
           },
         ];
-      })
-      .flat();
+      }),
+      {
+        field: 'project',
+        headerName: t('asphalt.dosages.superpave.project'),
+        valueFormatter: ({ value }) => `${value}`,
+        width: 70,
+      },
+      { field: 'band1', headerName: '', valueFormatter: ({ value }) => `${value}`, width: 70 },
+      { field: 'band2', headerName: '', valueFormatter: ({ value }) => `${value}`, width: 70 },
+    ],
+    [materials, percentageInputs, hasAnyInput, sumIsValid]
+  );
 
-    if (Array.isArray(columns)) {
-      return columns;
-    } else {
-      return [];
-    }
-  };
+  const rows = rowsSource.map((row, idx) => {
+    const materialCells = (materials ?? []).reduce((acc, material, index) => {
+      const fields = fieldsOf(material, index);
+      const percents = data?.[tableName]?.percentsOfMaterials;
 
-  const columns = [
-    {
-      field: 'peneira',
-      headerName: t('asphalt.dosages.superpave.sieve'),
-      width: 140,
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    ...generateMaterialColumns(data, materialIndex),
-    {
-      field: 'project',
-      headerName: t('asphalt.dosages.superpave.project'),
-      valueFormatter: ({ value }) => `${value}`,
-      width: 70,
-    },
-    {
-      field: 'band1',
-      headerName: '',
-      valueFormatter: ({ value }) => `${value}`,
-      width: 70,
-    },
-    {
-      field: 'band2',
-      headerName: '',
-      valueFormatter: ({ value }) => `${value}`,
-      width: 70,
-    },
-  ];
-
-  /**
-   * Generates material row data for a given index and table name.
-   *
-   * @param data - The data containing material percentage information.
-   * @param tableName - The name of the table being processed.
-   * @param idx - The index of the current row.
-   * @param row - The row data containing key values.
-   * @returns An object with formatted field values for each material.
-   */
-  const generateMaterialRows = (data, tableName, idx, row) => {
-    let rowsData = materials?.reduce((acc, material, index) => {
-      const fieldTotalPassant = `totalPassant_${material._id}_${index + 1}`;
-      const fieldMaterial = `material_${material._id}_${index + 1}`;
       return {
         ...acc,
-        [fieldTotalPassant]: row[`keyTotal${index}`],
-        [fieldMaterial]:
-          data[tableName]?.percentsOfMaterials !== null
-            ? data[tableName]?.percentsOfMaterials[index][idx]?.toFixed(2) ?? '---'
-            : '',
+        [fields.totalPassant]: row[`keyTotal${index}`] ?? '---',
+        [fields.material]: percents?.[index]?.[idx]?.toFixed(2) ?? '---',
       };
-    }, {});
+    }, {} as Record<string, string>);
 
-    if (rowsData) {
-      Object.entries(rowsData).forEach(([key, value], idx) => {
-        if (value === undefined) {
-          rowsData[key] = '---';
-        }
-      });
-    } else {
-      rowsData = {};
-    }
+    const sumOfPercents = data?.[tableName]?.sumOfPercents;
 
-    return rowsData;
-  };
-
-  const rows = tableData.map((e, idx) => {
-    const rowsData = generateMaterialRows(data, tableName, idx, e);
     return {
       id: idx,
-      peneira: e.peneira,
-      ...rowsData,
-      project: data[tableName]?.sumOfPercents?.length > 0 ? data[tableName]?.sumOfPercents[idx]?.toFixed(2) : '',
-      band1: e.bandsCol1,
-      band2: e.bandsCol2,
+      peneira: row.peneira,
+      ...materialCells,
+      project: sumOfPercents?.[idx]?.toFixed(2) ?? '',
+      band1: row.bandsCol1 ?? '',
+      band2: row.bandsCol2 ?? '',
     };
   });
 
-  const createMaterialGroupings = (materials) => {
-    const materialGroupings = materials?.map((material, index) => ({
-      groupId: `material_${material._id}_${index + 1}`,
-      headerName: material.name,
-      children: [
-        { field: `totalPassant_${material._id}_${index + 1}` },
-        { field: `material_${material._id}_${index + 1}` },
-      ],
-      headerAlign: 'center',
-    }));
-
-    if (materialGroupings) {
-      return materialGroupings;
-    } else {
-      return [];
-    }
-  };
-
   const groupings = [
-    ...createMaterialGroupings(materials),
+    ...(materials ?? []).map((material, index) => {
+      const fields = fieldsOf(material, index);
+      return {
+        groupId: fields.group,
+        headerName: material.name,
+        headerAlign: 'center' as const,
+        children: [{ field: fields.totalPassant }, { field: fields.material }],
+      };
+    }),
     {
       groupId: 'specification',
-      headerName: 'Especificação',
+      headerName: t('asphalt.dosages.superpave.specification'),
+      headerAlign: 'center' as const,
       children: [
         {
-          groupId: `Banda ${data?.bands?.letter}`,
-          headerAlign: 'center',
+          groupId: `Faixa ${dnitBandsLetter ?? data?.bands?.letter ?? ''}`,
+          headerAlign: 'center' as const,
           children: [{ field: 'band1' }, { field: 'band2' }],
         },
       ],
-      headerAlign: 'center',
     },
   ];
 
-  return table.columnsKeys.length > 0 ? (
-    <StyledDataGrid
-      rows={rows}
-      columns={columns}
-      hideFooter
-      disableColumnMenu
-      disableColumnFilter
-      experimentalFeatures={{ columnGrouping: true }}
-      columnGroupingModel={groupings}
-      sx={{
-        '& .MuiDataGrid-columnHeaders': {
-          fontSize: '0.800rem', // Tamanho da fonte dos cabeçalhos
-        },
-        '& .MuiDataGrid-cell': {
-          fontSize: '0.75rem', // Tamanho da fonte das células
-        },
-      }}
-    />
-  ) : null;
+  if (!materials?.length || rows.length === 0) return null;
+
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      <Typography
+        variant="body2"
+        sx={{ alignSelf: 'flex-end', color: hasAnyInput && !sumIsValid ? 'error.main' : 'text.secondary' }}
+      >
+        Soma das porcentagens: {formatDecimal(sum)}% de 100%
+      </Typography>
+
+      <StyledDataGrid
+        rows={rows}
+        columns={columns}
+        hideFooter
+        disableColumnMenu
+        disableColumnFilter
+        experimentalFeatures={{ columnGrouping: true }}
+        columnGroupingModel={groupings}
+        sx={{
+          '& .MuiDataGrid-columnHeaders': { fontSize: '0.800rem' },
+          '& .MuiDataGrid-cell': { fontSize: '0.75rem' },
+        }}
+      />
+    </Box>
+  );
 };
 
 export default CurvesTable;

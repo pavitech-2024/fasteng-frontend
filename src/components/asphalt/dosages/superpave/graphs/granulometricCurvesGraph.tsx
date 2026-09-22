@@ -1,4 +1,3 @@
-// components/Graph/index.js
 import React from 'react';
 import { Chart } from 'react-google-charts';
 
@@ -14,18 +13,21 @@ const GranulometricCurvesGraph = ({ data }) => {
         title: 'Curvas granulométricas',
         curveType: 'function',
         selectionMode: 'multiple',
+        // Sem isso o Charts costura as lacunas: os pontos de controle viram
+        // linha e a zona de restrição atravessa o gráfico inteiro.
+        interpolateNulls: false,
         hAxis: {
-          title: '(D/d)^0,45',
+          title: '(d/D)^0,45',
           titleTextStyle: { italic: false },
         },
-   chartArea: {
-  left: 60,
-  right: 40,
-  top: 40,
-  bottom: 60,
-  width: '80%',
-  height: '70%',
-},
+        chartArea: {
+          left: 60,
+          right: 40,
+          top: 40,
+          bottom: 60,
+          width: '80%',
+          height: '70%',
+        },
         vAxis: { title: 'Porcentagem passante (%)', titleTextStyle: { italic: false } },
         legend: { position: 'bottom', textStyle: { color: 'black', italic: false, fontSize: 12 } },
         trendlines: {
