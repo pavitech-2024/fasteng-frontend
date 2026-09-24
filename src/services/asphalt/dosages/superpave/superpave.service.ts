@@ -448,54 +448,89 @@ class Superpave_SERVICE implements IEssayService {
 
       const { data, success, error } = response.data;
 
-      if (success === false) throw error.name;
+      if (success === false) {
+        throw new Error(error?.name || error?.message || 'Não foi possível carregar as massas específicas.');
+      }
 
       return { data, success, error };
-    } catch (error) {}
-  };
-
-  calculateStep5Data = async (
-    step1Data: SuperpaveData['generalData'],
-    step2Data: SuperpaveData['granulometryEssayData'],
-    step3Data: SuperpaveData['granulometryCompositionData'],
-    step4Data: SuperpaveData['initialBinderData']
-  ): Promise<any> => {
-    try {
-      const { trafficVolume } = step1Data;
-      const { percentageInputs, chosenCurves, lowerComposition, averageComposition, higherComposition, nominalSize } =
-        step3Data;
-      const { materials, binderSpecificMass } = step4Data;
-      const materialsWithoutBinder = materials.filter(
-        (material) => material.type.includes('Aggregate') || material.type.includes('filler')
-      );
-      const hasNullValue = materialsWithoutBinder.some((obj) => Object.values(obj).some((value) => value === null));
-      if (hasNullValue) throw new Error('Algum valor não foi informado.');
-      let composition;
-
-      if (chosenCurves.includes('lower')) composition = lowerComposition;
-      if (chosenCurves.includes('average')) composition = averageComposition;
-      if (chosenCurves.includes('higher')) composition = higherComposition;
-
-      const response = await Api.post(`${this.info.backend_path}/calculate-step-5-data`, {
-        materials,
-        percentsOfDosage: percentageInputs,
-        specificMassesData: materials,
-        chosenCurves,
-        composition,
-        binderSpecificMass,
-        nominalSize,
-        trafficVolume,
-      });
-
-      const { data, success, error } = response.data;
-
-      if (success === false) throw error.name;
-
-      return data;
     } catch (error) {
+      console.error('[Superpave] Falha em step-5-specific-masses:', error);
       throw error;
     }
   };
+
+  calculateStep5Data = async (
+  step1Data: SuperpaveData['generalData'],
+  step2Data: SuperpaveData['granulometryEssayData'],
+  step3Data: SuperpaveData['granulometryCompositionData'],
+  step4Data: SuperpaveData['initialBinderData']
+): Promise<any> => {
+  try {
+    const { trafficVolume } = step1Data;
+    const { percentageInputs, chosenCurves, lowerComposition, averageComposition, higherComposition, nominalSize } =
+      step3Data;
+    const { materials, binderSpecificMass } = step4Data;
+
+    const materialsWithoutBinder = materials.filter(
+      (material) => material.type?.includes('Aggregate') || material.type?.includes('filler')
+    );
+
+    const hasNullValue = materialsWithoutBinder.some((obj) => Object.values(obj).some((value) => value === null));
+    if (hasNullValue) throw new Error('Algum valor não foi informado.');
+
+    if (binderSpecificMass === null || binderSpecificMass === undefined || Number.isNaN(binderSpecificMass)) {
+      throw new Error('Informe a massa específica do ligante.');
+    }
+
+    if (!Array.isArray(chosenCurves) || chosenCurves.length === 0) {
+      throw new Error('Nenhuma composição granulométrica válida foi selecionada.');
+    }
+
+    const rawCompositions = [lowerComposition, averageComposition, higherComposition];
+    const curveIndexes = { lower: 0, average: 1, higher: 2 };
+
+    const hasInvalidComposition = chosenCurves.some((curve) => {
+      const index = curveIndexes[curve];
+      return !rawCompositions[index] || !Array.isArray(rawCompositions[index].percentsOfMaterials);
+    });
+
+    if (hasInvalidComposition) {
+      throw new Error('A composição da curva selecionada não foi calculada.');
+    }
+
+    // O backend lê nominalSize.value. Dosagens salvas por versões antigas podem
+    // ter gravado só o número, e daí não dá para reconstruir controlPoints /
+    // restrictedZone — o step 6 quebraria sem mensagem clara.
+    if (!nominalSize || typeof nominalSize !== 'object' || (nominalSize as any).value === undefined) {
+      throw new Error(
+        'Tamanho nominal máximo inválido. Volte ao passo de composição granulométrica e recalcule a curva.'
+      );
+    }
+
+    const payload = {
+      materials,
+      percentsOfDosage: percentageInputs,
+      specificMassesData: materials,
+      chosenCurves,
+      nominalSize,
+      trafficVolume,
+    };
+
+    const response = await Api.post(`${this.info.backend_path}/calculate-step-5-data`, payload);
+
+    const { data, success, error } = response.data;
+
+    if (success === false) {
+      console.error('[Superpave] Resposta de erro do cálculo:', response.data);
+      throw new Error(error?.name || error?.message || 'Não foi possível calcular os materiais.');
+    }
+
+    return data;
+  } catch (error) {
+    console.error('[Superpave] Falha ao calcular step 5:', error);
+    throw error;
+  }
+};
 
   submitInitialBinder = async (
     data: SuperpaveData,
