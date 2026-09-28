@@ -29,6 +29,16 @@ const CURVE_LABEL_UI: Record<CurveKey, string> = {
 
 const DEFAULT_BINDER_SPECIFIC_MASS = 1.03;
 
+/** Nenhuma célula mostra "undefined": ou tem valor, ou diz o que falta fazer. */
+const PENDING_INPUT = 'Preencher';
+const PENDING_CALC = 'Calcular';
+
+const showValue = (value: unknown, pending = PENDING_CALC) => {
+  if (value === null || value === undefined || value === '') return pending;
+  if (typeof value === 'number' && Number.isNaN(value)) return pending;
+  return `${value}`;
+};
+
 type BinderMode = 'auto' | 'manual';
 
 const isAggregate = (material) =>
@@ -70,9 +80,7 @@ const Superpave_Step5_InitialBinder = ({
 
   const hasResults = Array.isArray(data.granulometryComposition) && data.granulometryComposition.length > 0;
 
-  // O passo abre pela escolha do teor. As massas específicas só são pedidas
-  // depois que o usuário decidiu como o teor inicial será definido.
-  const [binderChoiceModalIsOpen, setBinderChoiceModalIsOpen] = useState(!hasResults);
+  const [binderChoiceModalIsOpen, setBinderChoiceModalIsOpen] = useState(false);
   const [specificMassModalIsOpen, setSpecificMassModalIsOpen] = useState(false);
   const [newInitialBinderModalIsOpen, setNewInitialBinderModalIsOpen] = useState(false);
 
@@ -109,18 +117,16 @@ const Superpave_Step5_InitialBinder = ({
     setNextDisabled(!areAllEstimatedPercentagesFilled());
   }, [estimatedPercentageRows, setNextDisabled]);
 
-  // Ao reabrir o modal de alteração, parte dos valores que já estão na tabela.
+  // Ao abrir o modal de teor, parte dos valores que já estão na tabela.
   useEffect(() => {
-    if (!newInitialBinderModalIsOpen || estimatedPercentageRows.length === 0) return;
+    if (!newInitialBinderModalIsOpen) return;
 
     setBinderInput(
       validCurves.map((curve) => {
         const existingRow = estimatedPercentageRows.find((row) => row.granulometricComposition === CURVE_LABEL[curve]);
+        const current = Number(existingRow?.initialBinder);
 
-        return {
-          curve,
-          value: existingRow?.initialBinder ? Number(existingRow.initialBinder) : null,
-        };
+        return { curve, value: Number.isFinite(current) ? current : null };
       })
     );
   }, [newInitialBinderModalIsOpen, estimatedPercentageRows, validCurves]);
@@ -222,7 +228,7 @@ const Superpave_Step5_InitialBinder = ({
       {
         key: 'realSpecificMass',
         label: t('asphalt.dosages.superpave.real-specific-mass'),
-        placeHolder: 'Massa específica real',
+        placeHolder: 'Insira a massa específica real',
         adornment: 'g/cm³',
         value: material.realSpecificMass ?? '',
         materialIndex: index + 1,
@@ -231,7 +237,7 @@ const Superpave_Step5_InitialBinder = ({
       {
         key: 'apparentSpecificMass',
         label: t('asphalt.dosages.superpave.apparent-specific-mass'),
-        placeHolder: 'Massa específica aparente',
+        placeHolder: 'Insira a massa específica aparente',
         adornment: 'g/cm³',
         value: material.apparentSpecificMass ?? '',
         materialIndex: index + 1,
@@ -240,7 +246,7 @@ const Superpave_Step5_InitialBinder = ({
       {
         key: 'absorption',
         label: t('asphalt.dosages.superpave.absorption'),
-        placeHolder: 'Absorção',
+        placeHolder: 'Insira a absorção',
         adornment: '%',
         value: material.absorption ?? '',
         materialIndex: index + 1,
@@ -251,6 +257,14 @@ const Superpave_Step5_InitialBinder = ({
   const aggregateMaterialsData = data.materials?.filter((material) => isAggregate(material) && !isBinder(material));
   const modalMaterialInputs = generateMaterialInputs(aggregateMaterialsData);
   const binderMaterial = data.materials?.find(isBinder);
+
+  const missingSpecificMasses = (data.materials ?? [])
+    .filter(isAggregate)
+    .filter((material) =>
+      [material.realSpecificMass, material.apparentSpecificMass, material.absorption].some(
+        (value) => value === null || value === undefined || isNaN(Number(value))
+      )
+    );
 
   const updateMaterialField = (name: string, key: string, rawValue: string) => {
     const value = rawValue.replace(',', '.');
@@ -302,43 +316,64 @@ const Superpave_Step5_InitialBinder = ({
       };
     });
 
-  const buildSummaryRows = (compositionList) =>
-    (compositionList ?? []).map((composition, index) => {
+  const buildSummaryRows = (compositionList) => {
+    if (!Array.isArray(compositionList) || compositionList.length === 0) {
+      // Linhas-fantasma: a tabela aparece com as curvas e o que falta fazer,
+      // em vez de sumir da tela até existir cálculo.
+      return validCurves.map((curve, index) => ({
+        id: index,
+        granulometricComposition: CURVE_LABEL[curve],
+        combinedGsb: null,
+        combinedGsa: null,
+        gse: null,
+      }));
+    }
+
+    return compositionList.map((composition, index) => {
       const curve = curveOf(composition, index);
 
       return {
         id: index,
         granulometricComposition: CURVE_LABEL[curve] ?? CURVE_LABEL[CURVE_KEYS[index]],
-        combinedGsb: typeof composition?.combinedGsb === 'number' ? composition.combinedGsb.toFixed(3) : '',
-        combinedGsa: typeof composition?.combinedGsa === 'number' ? composition.combinedGsa.toFixed(3) : '',
-        gse: typeof composition?.gse === 'number' ? composition.gse.toFixed(3) : '',
+        combinedGsb: typeof composition?.combinedGsb === 'number' ? composition.combinedGsb.toFixed(3) : null,
+        combinedGsa: typeof composition?.combinedGsa === 'number' ? composition.combinedGsa.toFixed(3) : null,
+        gse: typeof composition?.gse === 'number' ? composition.gse.toFixed(3) : null,
       };
     });
+  };
 
-  const buildRowsFromCompositions = (compositionList) =>
-    (compositionList ?? []).map((composition, index) => {
+  const buildRowsFromCompositions = (compositionList) => {
+    if (!Array.isArray(compositionList) || compositionList.length === 0) {
+      return validCurves.map((curve, index) => ({
+        id: index,
+        granulometricComposition: CURVE_LABEL[curve],
+        initialBinder: null,
+      }));
+    }
+
+    return compositionList.map((composition, index) => {
       const curve = curveOf(composition, index);
 
-      const row: Record<string, string | number> = {
+      const row: Record<string, string | number | null> = {
         id: index,
         granulometricComposition: CURVE_LABEL[curve] ?? CURVE_LABEL[CURVE_KEYS[index]],
-        initialBinder: composition?.pli?.toFixed(2) ?? '',
+        initialBinder: typeof composition?.pli === 'number' ? composition.pli.toFixed(2) : null,
       };
 
       (composition?.percentsOfDosageWithBinder ?? []).forEach((percent, materialIndex) => {
-        row[`material_${materialIndex + 1}`] = percent?.toFixed(2) ?? '';
+        row[`material_${materialIndex + 1}`] = typeof percent === 'number' ? percent.toFixed(2) : null;
       });
 
       return row;
     });
+  };
 
-  // Restaura as tabelas ao voltar para o step com cálculo já salvo.
+  // Restaura as tabelas ao voltar para o step com cálculo já salvo, e monta as
+  // linhas-fantasma quando ainda não há nada calculado.
   useEffect(() => {
-    if (!hasResults || estimatedPercentageRows.length > 0) return;
-
     setRows(buildSummaryRows(data.granulometryComposition));
     setEstimatedPercentageRows(buildRowsFromCompositions(data.granulometryComposition));
-  }, [hasResults]);
+  }, [data.granulometryComposition, validCurves]);
 
   const validateManualBinder = (): string | null => {
     const problems = binderInput.filter(
@@ -353,6 +388,61 @@ const Superpave_Step5_InitialBinder = ({
     }
 
     return null;
+  };
+
+  const validateBeforeCalculate = (): string | null => {
+    if (validCurves.length === 0) {
+      return 'Nenhuma curva granulométrica foi calculada. Volte ao passo anterior e calcule ao menos uma curva.';
+    }
+
+    if (missingSpecificMasses.length > 0) {
+      return `Preencha todos os campos de: ${missingSpecificMasses.map((material) => material.name).join(', ')}.`;
+    }
+
+    const binderMass = Number(binderMaterial?.realSpecificMass ?? data.binderSpecificMass);
+    if (!binderMass || isNaN(binderMass)) {
+      return 'Informe a massa específica do ligante.';
+    }
+
+    return null;
+  };
+
+  /**
+   * Chamada única ao backend. Usada tanto no fluxo inicial quanto no modal de
+   * teor quando o usuário pede para estimar de novo.
+   */
+  const runCalculation = async (mode: BinderMode, values: { curve: CurveKey; value: number | null }[]) => {
+    const response = await superpave.calculateStep5Data(
+      generalData,
+      granulometryEssayData,
+      // chosenCurves saneado: só o que existe calculado chega no backend.
+      { ...granulometryCompositionData, chosenCurves: validCurves },
+      {
+        ...data,
+        binderSpecificMass: Number(binderMaterial?.realSpecificMass ?? data.binderSpecificMass),
+      }
+    );
+
+    const calculated = response?.granulometryComposition;
+
+    if (!Array.isArray(calculated) || calculated.length === 0) {
+      throw new Error('O cálculo não retornou composições granulométricas.');
+    }
+
+    // O backend sempre estima o teor; se o usuário escolheu informar,
+    // sobrescrevemos aqui e redistribuímos as porcentagens.
+    const compositionList = mode === 'manual' ? applyManualBinder(calculated, values) : calculated;
+
+    setData({
+      step: 4,
+      value: {
+        ...data,
+        granulometryComposition: compositionList,
+        turnNumber: response?.turnNumber,
+      },
+    });
+
+    return compositionList;
   };
 
   const handleBinderChoiceSubmit = (e?: any) => {
@@ -375,31 +465,6 @@ const Superpave_Step5_InitialBinder = ({
     setSpecificMassModalIsOpen(true);
   };
 
-  const validateBeforeCalculate = (): string | null => {
-    if (validCurves.length === 0) {
-      return 'Nenhuma curva granulométrica foi calculada. Volte ao passo anterior e calcule ao menos uma curva.';
-    }
-
-    const incomplete = (data.materials ?? [])
-      .filter(isAggregate)
-      .filter((material) =>
-        [material.realSpecificMass, material.apparentSpecificMass, material.absorption].some(
-          (value) => value === null || value === undefined || isNaN(Number(value))
-        )
-      );
-
-    if (incomplete.length > 0) {
-      return `Preencha todos os campos de: ${incomplete.map((material) => material.name).join(', ')}.`;
-    }
-
-    const binderMass = Number(binderMaterial?.realSpecificMass ?? data.binderSpecificMass);
-    if (!binderMass || isNaN(binderMass)) {
-      return 'Informe a massa específica do ligante.';
-    }
-
-    return null;
-  };
-
   const handleSubmitSpecificMasses = (e?: any) => {
     e?.preventDefault?.();
 
@@ -412,39 +477,7 @@ const Superpave_Step5_InitialBinder = ({
     toast.promise(
       async () => {
         try {
-          const response = await superpave.calculateStep5Data(
-            generalData,
-            granulometryEssayData,
-            // chosenCurves saneado: só o que existe calculado chega no backend.
-            { ...granulometryCompositionData, chosenCurves: validCurves },
-            {
-              ...data,
-              binderSpecificMass: Number(binderMaterial?.realSpecificMass ?? data.binderSpecificMass),
-            }
-          );
-
-          const calculated = response?.granulometryComposition;
-
-          if (!Array.isArray(calculated) || calculated.length === 0) {
-            throw new Error('O cálculo não retornou composições granulométricas.');
-          }
-
-          // O backend sempre estima o teor; se o usuário escolheu informar,
-          // sobrescrevemos aqui e redistribuímos as porcentagens.
-          const compositionList = binderMode === 'manual' ? applyManualBinder(calculated, binderInput) : calculated;
-
-          setRows(buildSummaryRows(compositionList));
-          setEstimatedPercentageRows(buildRowsFromCompositions(compositionList));
-
-          setData({
-            step: 4,
-            value: {
-              ...data,
-              granulometryComposition: compositionList,
-              turnNumber: response?.turnNumber,
-            },
-          });
-
+          await runCalculation(binderMode, binderInput);
           setSpecificMassModalIsOpen(false);
         } catch (error) {
           console.error('[Superpave Step 5] Falha ao calcular:', error, {
@@ -463,12 +496,34 @@ const Superpave_Step5_InitialBinder = ({
     );
   };
 
+  /** Modal de teor: aplica valores informados OU manda estimar de novo. */
   const handleInitialBinderSubmit = (e?: any) => {
     e?.preventDefault?.();
 
+    if (binderMode === 'auto') {
+      const problem = validateBeforeCalculate();
+      if (problem) {
+        toast.error(problem);
+        return;
+      }
+
+      toast.promise(
+        async () => {
+          await runCalculation('auto', binderInput);
+          setNewInitialBinderModalIsOpen(false);
+        },
+        {
+          pending: t('loading.materials.pending'),
+          success: t('loading.materials.success'),
+          error: t('loading.materials.error'),
+        }
+      );
+      return;
+    }
+
     const compositionList = data.granulometryComposition;
     if (!Array.isArray(compositionList) || compositionList.length === 0) {
-      toast.error('Calcule as composições antes de alterar o teor de ligante.');
+      toast.error('Calcule as composições antes de informar o teor manualmente.');
       return;
     }
 
@@ -479,11 +534,7 @@ const Superpave_Step5_InitialBinder = ({
     }
 
     const updated = applyManualBinder(compositionList, binderInput);
-
     setData({ step: 4, key: 'granulometryComposition', value: updated });
-    setRows(buildSummaryRows(updated));
-    setEstimatedPercentageRows(buildRowsFromCompositions(updated));
-    setBinderMode('manual');
     setNewInitialBinderModalIsOpen(false);
   };
 
@@ -493,25 +544,25 @@ const Superpave_Step5_InitialBinder = ({
     {
       field: 'granulometricComposition',
       headerName: t('asphalt.dosages.superpave.granulometric-composition'),
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => showValue(value, '—'),
       width: 200,
     },
     {
       field: 'combinedGsb',
       headerName: t('asphalt.dosages.superpave.combined-gsb'),
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => showValue(value),
       width: 200,
     },
     {
       field: 'combinedGsa',
       headerName: t('asphalt.dosages.superpave.combined-gsa'),
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => showValue(value),
       width: 200,
     },
     {
       field: 'gse',
       headerName: t('asphalt.dosages.superpave.gse'),
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => showValue(value),
       width: 200,
     },
   ];
@@ -522,19 +573,19 @@ const Superpave_Step5_InitialBinder = ({
     {
       field: 'granulometricComposition',
       headerName: t('asphalt.dosages.superpave.granulometric-composition'),
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => showValue(value, '—'),
       width: 200,
     },
     {
       field: 'initialBinder',
       headerName: t('asphalt.dosages.superpave.initial-binder'),
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => showValue(value),
       width: 200,
     },
     ...essayAggregateMaterials.map((material, index) => ({
       field: `material_${index + 1}`,
       headerName: material.name,
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => showValue(value),
       width: 100,
     })),
   ];
@@ -559,25 +610,25 @@ const Superpave_Step5_InitialBinder = ({
     {
       field: 'initialN',
       headerName: t('asphalt.dosages.superpave.initial-n'),
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => showValue(value),
       width: 200,
     },
     {
       field: 'projectN',
       headerName: t('asphalt.dosages.superpave.project-n'),
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => showValue(value),
       width: 200,
     },
     {
       field: 'maxN',
       headerName: t('asphalt.dosages.superpave.max-n'),
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => showValue(value),
       width: 200,
     },
     {
       field: 'tex',
       headerName: t('asphalt.dosages.superpave.traffic'),
-      valueFormatter: ({ value }) => `${value}`,
+      valueFormatter: ({ value }) => showValue(value, '—'),
       width: 200,
     },
   ];
@@ -585,10 +636,10 @@ const Superpave_Step5_InitialBinder = ({
   const compressionParamsRows = [
     {
       id: 0,
-      initialN: data.turnNumber?.initialN ?? '',
-      maxN: data.turnNumber?.maxN ?? '',
-      projectN: data.turnNumber?.projectN ?? '',
-      tex: data.turnNumber?.tex ? data.turnNumber.tex : generalData?.trafficVolume,
+      initialN: data.turnNumber?.initialN ?? null,
+      maxN: data.turnNumber?.maxN ?? null,
+      projectN: data.turnNumber?.projectN ?? null,
+      tex: data.turnNumber?.tex ?? generalData?.trafficVolume ?? null,
     },
   ];
 
@@ -601,7 +652,12 @@ const Superpave_Step5_InitialBinder = ({
     },
   ];
 
-  const hasTables = rows.length > 0 || estimatedPercentageRows.length > 0;
+  const estimatedBinderOf = (curve: CurveKey) => {
+    const composition = (data.granulometryComposition ?? []).find(
+      (item, index) => curveOf(item, index) === curve
+    );
+    return typeof composition?.pli === 'number' ? composition.pli.toFixed(2) : null;
+  };
 
   /* -------------------------------- render --------------------------------- */
 
@@ -615,27 +671,21 @@ const Superpave_Step5_InitialBinder = ({
           </Alert>
         )}
 
-        {/* Estado inicial: em vez de página em branco atrás do modal, um painel
-            explicando o passo e permitindo reabrir cada etapa. */}
-        {!hasTables && validCurves.length > 0 && (
-          <Paper
-            variant="outlined"
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '1rem',
-              padding: '3rem 2rem',
-              textAlign: 'center',
-            }}
-          >
+        {validCurves.length > 0 && !hasResults && (
+          <Paper variant="outlined" sx={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <Typography variant="h6">Teor de ligante inicial</Typography>
-            <Typography variant="body2" sx={{ maxWidth: '540px' }}>
-              Escolha como o teor de ligante inicial será definido e informe as massas específicas dos agregados. Com
-              isso, as porcentagens estimadas de cada material e os parâmetros de compactação são calculados.
+            <Typography variant="body2">
+              As tabelas abaixo ficam com os campos marcados como &quot;{PENDING_CALC}&quot; até que as massas
+              específicas sejam informadas e o cálculo rode.
             </Typography>
 
-            <Box sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+            {missingSpecificMasses.length > 0 && (
+              <Alert severity="info">
+                Faltam massas específicas de: {missingSpecificMasses.map((material) => material.name).join(', ')}.
+              </Alert>
+            )}
+
+            <Box sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
               <Button variant="contained" onClick={() => setBinderChoiceModalIsOpen(true)}>
                 Definir teor de ligante
               </Button>
@@ -676,34 +726,30 @@ const Superpave_Step5_InitialBinder = ({
           />
         )}
 
-        {hasTables && (
-          <>
-            <Box sx={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Button variant="outlined" onClick={() => setNewInitialBinderModalIsOpen(true)}>
-                {t('asphalt.dosages.superpave.change-initial-binder')}
-              </Button>
-              <Button variant="outlined" onClick={() => setSpecificMassModalIsOpen(true)}>
-                Revisar massas específicas
-              </Button>
-            </Box>
+        <Box sx={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Button variant="outlined" onClick={() => setNewInitialBinderModalIsOpen(true)}>
+            {t('asphalt.dosages.superpave.change-initial-binder')}
+          </Button>
+          <Button variant="outlined" onClick={() => setSpecificMassModalIsOpen(true)}>
+            {hasResults ? 'Revisar massas específicas' : 'Informar massas específicas'}
+          </Button>
+        </Box>
 
-            <DataGrid
-              hideFooter
-              disableColumnMenu
-              disableColumnFilter
-              experimentalFeatures={{ columnGrouping: true }}
-              columnGroupingModel={compressionParamsGroupings}
-              columns={compressionParamsCols.map((col) => ({
-                ...col,
-                flex: 1,
-                headerAlign: 'center',
-                align: 'center',
-              }))}
-              rows={compressionParamsRows}
-              sx={{ width: '100%' }}
-            />
-          </>
-        )}
+        <DataGrid
+          hideFooter
+          disableColumnMenu
+          disableColumnFilter
+          experimentalFeatures={{ columnGrouping: true }}
+          columnGroupingModel={compressionParamsGroupings}
+          columns={compressionParamsCols.map((col) => ({
+            ...col,
+            flex: 1,
+            headerAlign: 'center',
+            align: 'center',
+          }))}
+          rows={compressionParamsRows}
+          sx={{ width: '100%' }}
+        />
       </Box>
 
       {/* ------------------- 1) escolha do teor de ligante ------------------- */}
@@ -737,7 +783,7 @@ const Superpave_Step5_InitialBinder = ({
                       type="number"
                       fullWidth
                       value={binderInput.find((item) => item.curve === curve)?.value ?? ''}
-                      placeholder="Ex.: 4,50"
+                      placeholder="Insira o teor, ex.: 4,50"
                       onChange={(e) => {
                         const raw = e.target.value.replace(',', '.');
                         const parsed = raw === '' ? null : Number(raw);
@@ -767,7 +813,7 @@ const Superpave_Step5_InitialBinder = ({
         rightButtonTitle={'Confirmar'}
         onCancel={() => {
           setSpecificMassModalIsOpen(false);
-          if (!hasTables) setBinderChoiceModalIsOpen(true);
+          if (!hasResults) setBinderChoiceModalIsOpen(true);
         }}
         open={specificMassModalIsOpen}
         size={'medium'}
@@ -829,11 +875,11 @@ const Superpave_Step5_InitialBinder = ({
         </Box>
       </ModalBase>
 
-      {/* --------------- 3) alterar o teor depois do cálculo ---------------- */}
+      {/* --------------- 3) teor de ligante: estimar ou informar ------------- */}
       <ModalBase
         title={t('asphalt.dosages.superpave.insert-initial-binder')}
         leftButtonTitle={'Cancelar'}
-        rightButtonTitle={'Confirmar'}
+        rightButtonTitle={binderMode === 'auto' ? 'Calcular teor' : 'Confirmar'}
         onCancel={() => setNewInitialBinderModalIsOpen(false)}
         open={newInitialBinderModalIsOpen}
         size={'small'}
@@ -841,25 +887,43 @@ const Superpave_Step5_InitialBinder = ({
         oneButton={false}
       >
         <Box style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {validCurves.map((curve) => (
-            <Box key={curve}>
-              <Typography>{`Curva ${CURVE_LABEL_UI[curve]}`}</Typography>
-              <InputEndAdornment
-                adornment="%"
-                value={binderInput?.find((item) => item.curve === curve)?.value ?? ''}
-                placeholder={t('asphalt.dosages.superpave.initial_binder')}
-                type="number"
-                fullWidth
-                onChange={(e) => {
-                  const raw = e.target.value.replace(',', '.');
-                  const parsed = raw === '' ? null : Number(raw);
-                  setBinderInput((prev) =>
-                    prev.map((item) => (item.curve === curve ? { ...item, value: parsed } : item))
-                  );
-                }}
-              />
-            </Box>
-          ))}
+          <RadioGroup value={binderMode} onChange={(e) => setBinderMode(e.target.value as BinderMode)}>
+            <FormControlLabel value="auto" control={<Radio />} label="Calcular o teor pelo método Superpave" />
+            <FormControlLabel value="manual" control={<Radio />} label="Informar o teor manualmente" />
+          </RadioGroup>
+
+          <Divider />
+
+          {binderMode === 'auto' ? (
+            <Alert severity="info">
+              O teor de cada curva será estimado a partir das massas específicas informadas. Os valores atuais serão
+              substituídos.
+            </Alert>
+          ) : (
+            validCurves.map((curve) => {
+              const estimated = estimatedBinderOf(curve);
+
+              return (
+                <Box key={curve}>
+                  <Typography>{`Curva ${CURVE_LABEL_UI[curve]}`}</Typography>
+                  <InputEndAdornment
+                    adornment="%"
+                    value={binderInput?.find((item) => item.curve === curve)?.value ?? ''}
+                    placeholder={estimated ? `Estimado: ${estimated}%` : 'Insira o teor de ligante'}
+                    type="number"
+                    fullWidth
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(',', '.');
+                      const parsed = raw === '' ? null : Number(raw);
+                      setBinderInput((prev) =>
+                        prev.map((item) => (item.curve === curve ? { ...item, value: parsed } : item))
+                      );
+                    }}
+                  />
+                </Box>
+              );
+            })
+          )}
         </Box>
       </ModalBase>
     </>

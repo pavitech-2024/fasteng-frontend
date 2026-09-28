@@ -1,10 +1,13 @@
-import NumericCell from '@/components/atoms/inputs/numeric-cell';
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
+import NumericCell from '@/components/atoms/inputs/numeric-cell';
+import GranulometryCustomSeriesModal from '@/components/atoms/modals/GranulometryCustomSeriesModal';
 import { EssayPageProps } from '@/components/templates/essay';
+import { Sieve } from '@/interfaces/common';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
 import {
   GranulometryRow,
+  buildEmptyTable,
   formatDecimal,
   parseDecimal,
   recalcFromPassant,
@@ -16,7 +19,7 @@ import {
 import { Alert, Box, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import CreateMaterialDosageTable from './tables/createMaterialDosageTable';
 
@@ -210,17 +213,54 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
   // quando a massa muda: os gramas medidos ou a curva de passantes.
   const lastEdited = useRef<Record<string, 'retained' | 'passant'>>({});
 
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
   const granulometrys: any[] = data.granulometrys ?? [];
 
   // Índices reais dentro de data.granulometrys. Nunca reindexar a lista filtrada:
   // era daí que vinha o descasamento entre material_mass e table_data.
   const aggregateIndexes = useMemo(
-    () =>
-      granulometrys
-        .map((g, i) => (AGGREGATE_TYPES.includes(g?.material?.type) ? i : -1))
-        .filter((i) => i >= 0),
+    () => granulometrys.map((g, i) => (AGGREGATE_TYPES.includes(g?.material?.type) ? i : -1)).filter((i) => i >= 0),
     [granulometrys]
   );
+
+  /* ----------------------------- série de peneiras ------------------------ */
+
+  // Uma série só, personalizada, compartilhada por todos os agregados.
+  // O fallback lê a série do primeiro agregado para não perder dosagem antiga.
+  const sieveSeries: Sieve[] = data.sieve_series ?? granulometrys[aggregateIndexes[0]]?.sieve_series ?? [];
+  const hasSeries = sieveSeries.length > 0;
+
+  /**
+   * Aplica a série a TODOS os agregados de uma vez. Os gramas já digitados são
+   * preservados por peneira: quem continua na nova série mantém o valor, quem
+   * sai é descartado, quem entra começa zerado.
+   */
+  const applySeries = (sieves: Sieve[]) => {
+    if (sieves.length === 0) return;
+
+    const next = granulometrys.map((granulometry) => {
+      if (!AGGREGATE_TYPES.includes(granulometry?.material?.type)) return granulometry;
+
+      const previous = new Map<string, number>(
+        (granulometry.table_data ?? []).map((row: GranulometryRow) => [row.sieve_label, row.retained])
+      );
+
+      const table = buildEmptyTable(sieves).map((row) => ({
+        ...row,
+        retained: previous.get(row.sieve_label) ?? 0,
+      }));
+
+      const result = recalcFromRetained(table, granulometry.material_mass ?? 0);
+
+      return { ...granulometry, sieve_series: sieves, table_data: result.rows, bottom: result.bottom };
+    });
+
+    setData({ step: 1, key: 'granulometrys', value: next });
+    setData({ step: 1, key: 'sieve_series', value: sieves });
+  };
+
+  /* -------------------------------- validação ----------------------------- */
 
   const validations = useMemo(() => {
     const map: Record<number, Validation> = {};
@@ -334,9 +374,9 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
       aggregateIndexes.every((i) => (granulometrys[i].table_data?.length ?? 0) > 0 && validations[i]?.isValid);
 
     setNextDisabled(
-      !(hasCoarseAggregate && hasFineAggregate && hasBinder && tablesAreValid && binderIsComplete)
+      !(hasSeries && hasCoarseAggregate && hasFineAggregate && hasBinder && tablesAreValid && binderIsComplete)
     );
-  }, [data.materials, aggregateIndexes, validations, granulometrys, binderIsComplete, setNextDisabled]);
+  }, [data.materials, hasSeries, aggregateIndexes, validations, granulometrys, binderIsComplete, setNextDisabled]);
 
   const handleClickedMaterial = (row: any) => {
     const targetRef = myRef.current[row.name];
@@ -347,24 +387,43 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
     <Box>
       <CreateMaterialDosageTable onRowClick={(row: any) => handleClickedMaterial(row)} />
 
-      {aggregateIndexes.map((index) => {
-        const granulometry = granulometrys[index];
-        return (
-          <MaterialGranulometry
-            key={granulometry.material._id ?? index}
-            granulometry={granulometry}
-            validation={validations[index]}
-            onMassChange={(raw) => handleMassChange(index, raw)}
-            onCommitRows={(result) => commitRows(index, result)}
-            onEditKind={(kind) => {
-              lastEdited.current[granulometry.material._id] = kind;
-            }}
-            containerRef={(el) => {
-              if (el) myRef.current[granulometry.material.name] = el;
-            }}
-          />
-        );
-      })}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', mt: '20px' }}>
+        <Button variant="outlined" onClick={() => setModalIsOpen(true)}>
+          {hasSeries ? 'Editar peneiras' : 'Selecionar peneiras'}
+        </Button>
+
+        {hasSeries && (
+          <Typography variant="body2">
+            {sieveSeries.length} peneiras selecionadas, aplicadas a todos os agregados
+          </Typography>
+        )}
+      </Box>
+
+      {!hasSeries && (
+        <Alert severity="info" sx={{ mt: '12px' }}>
+          Selecione as peneiras do ensaio. A mesma série vale para todos os agregados desta dosagem.
+        </Alert>
+      )}
+
+      {hasSeries &&
+        aggregateIndexes.map((index) => {
+          const granulometry = granulometrys[index];
+          return (
+            <MaterialGranulometry
+              key={granulometry.material._id ?? index}
+              granulometry={granulometry}
+              validation={validations[index]}
+              onMassChange={(raw) => handleMassChange(index, raw)}
+              onCommitRows={(result) => commitRows(index, result)}
+              onEditKind={(kind) => {
+                lastEdited.current[granulometry.material._id] = kind;
+              }}
+              containerRef={(el) => {
+                if (el) myRef.current[granulometry.material.name] = el;
+              }}
+            />
+          );
+        })}
 
       {binderRows.length > 0 && data.viscosity?.material && (
         <Box
@@ -400,6 +459,12 @@ const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps &
           />
         </Box>
       )}
+
+      <GranulometryCustomSeriesModal
+        setCloseModal={(isClosed: boolean) => setModalIsOpen(isClosed)}
+        isOpen={modalIsOpen}
+        customSieveSeries={applySeries}
+      />
     </Box>
   );
 };
