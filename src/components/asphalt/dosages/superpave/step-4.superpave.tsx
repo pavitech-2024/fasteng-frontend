@@ -1,59 +1,42 @@
-import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import { AllSievesSuperpaveUpdatedAstm } from '@/interfaces/common';
 import Superpave_SERVICE from '@/services/asphalt/dosages/superpave/superpave.service';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
-import { Box, Button, Checkbox, FormControlLabel, TableContainer, Typography } from '@mui/material';
+import { Alert, Box, Button, Tab, Tabs, Typography } from '@mui/material';
 import { t } from 'i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
-import GranulometricCurvesGraph from './graphs/granulometricCurvesGraph';
+import GranulometricCurvesGraph, { CurveKey } from './graphs/granulometricCurvesGraph';
 import CurvesTable from './tables/curvesTable';
 
-const CURVE_INDEX = { lower: 0, average: 1, higher: 2 } as const;
-const CURVE_LABEL = { lower: 'inferior', average: 'média', higher: 'superior' } as const;
+const CURVES: CurveKey[] = ['lower', 'average', 'higher'];
 
-type CurveKey = keyof typeof CURVE_INDEX;
+const CURVE_META: Record<CurveKey, { index: number; composition: string; tab: string; label: string }> = {
+  lower: { index: 0, composition: 'lowerComposition', tab: 'Inferior', label: 'inferior' },
+  average: { index: 1, composition: 'averageComposition', tab: 'Intermediária', label: 'intermediária' },
+  higher: { index: 2, composition: 'higherComposition', tab: 'Superior', label: 'superior' },
+};
+
+const COMPARISON_TAB = 'comparison';
 
 const Superpave_Step4_GranulometryComposition = ({
   setNextDisabled,
   superpave,
 }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
-  const [loading] = useState<boolean>(false);
   const { granulometryCompositionData: data, granulometryEssayData, generalData, setData } = useSuperpaveStore();
 
-  const [lower, setLower] = useState(false);
-  const [average, setAverage] = useState(false);
-  const [higher, setHigher] = useState(false);
-
-  const peneiras = AllSievesSuperpaveUpdatedAstm.map((peneira) => ({ peneira: peneira.label }));
-
-  const arrayResponse = data?.percentsToList;
-  const bandsHigher = data?.bands?.higher ?? [];
-  const bandsLower = data?.bands?.lower ?? [];
+  const [activeTab, setActiveTab] = useState<string>('lower');
 
   const selectedMaterials = granulometryEssayData?.materials
     ?.filter((material) => material.type !== 'asphaltBinder' && material.type !== 'CAP')
     .map((material) => ({ name: material.name, _id: material._id }));
-
-  const checkBoxes = [
-    { key: 'lower' as CurveKey, label: t('asphalt.dosages.superpave.step-3.lower'), value: lower },
-    { key: 'average' as CurveKey, label: t('asphalt.dosages.superpave.step-3.average'), value: average },
-    { key: 'higher' as CurveKey, label: t('asphalt.dosages.superpave.step-3.higher'), value: higher },
-  ];
-
-  const toggleSelectedCurve = (key: CurveKey) => {
-    if (key === 'lower') setLower((prev) => !prev);
-    if (key === 'average') setAverage((prev) => !prev);
-    if (key === 'higher') setHigher((prev) => !prev);
-  };
 
   /* --------------------------- percentageInputs --------------------------- */
 
   /** Nunca indexar direto: a resposta do backend pode vir sem esse array. */
   const getPercentageInputs = (index: number): Record<string, number | null> => data?.percentageInputs?.[index] ?? {};
 
-  // Garante os três slots (inferior, média, superior) em qualquer cenário.
+  // Garante os três slots (inferior, intermediária, superior) em qualquer cenário.
   useEffect(() => {
     const current = data?.percentageInputs;
     if (!Array.isArray(current) || current.length < 3) {
@@ -62,24 +45,41 @@ const Superpave_Step4_GranulometryComposition = ({
     }
   }, [data?.percentageInputs]);
 
-  /* ------------------------------ chosenCurves ---------------------------- */
+  /* ------------------------------ estado das curvas ----------------------- */
 
   /**
-   * chosenCurves é o contrato com o step 5: ele itera essa lista esperando
-   * encontrar `<curva>Composition` calculada. Só entra aqui curva que realmente
-   * tem percentsOfMaterials — curva marcada no checkbox mas nunca calculada
-   * (ou limpa pelo "limpar tabela") derrubava o step 5 com
-   * "Cannot read properties of undefined (reading 'percentsOfDosageWithBinder')".
+   * chosenCurves é o contrato com o step 5, que itera essa lista esperando
+   * encontrar `<curva>Composition` calculada. Só entra curva que realmente tem
+   * percentsOfMaterials — curva aberta na aba mas nunca calculada (ou limpa)
+   * derrubava o step 5 lendo composição inexistente.
    */
-  const hasComposition = (source, curve: CurveKey) => {
-    const composition = source?.[`${curve}Composition`];
+  const hasComposition = (source: any, curve: CurveKey) => {
+    const composition = source?.[CURVE_META[curve].composition];
     return Array.isArray(composition?.percentsOfMaterials) && composition.percentsOfMaterials.length > 0;
   };
 
-  const buildChosenCurves = (source): CurveKey[] =>
-    (Object.keys(CURVE_INDEX) as CurveKey[]).filter((curve) => hasComposition(source, curve));
+  const buildChosenCurves = (source: any): CurveKey[] => CURVES.filter((curve) => hasComposition(source, curve));
 
-  /* -------------------------------- gráfico ------------------------------- */
+  const calculatedCurves = useMemo(() => buildChosenCurves(data), [data]);
+
+  const inputsAreValid = (curve: CurveKey) => {
+    const values = Object.values(getPercentageInputs(CURVE_META[curve].index));
+    if (values.length === 0) return false;
+    if (values.every((v) => v === null || v === undefined || Number(v) === 0)) return false;
+    const total = values.reduce((acc, v) => acc + (Number(v) || 0), 0);
+    return Math.abs(total - 100) <= 0.01;
+  };
+
+  // A aba comparativa só existe com duas curvas ou mais.
+  const showComparison = calculatedCurves.length >= 2;
+
+  useEffect(() => {
+    if (activeTab === COMPARISON_TAB && !showComparison) setActiveTab('lower');
+  }, [activeTab, showComparison]);
+
+  /* -------------------------------- tabelas ------------------------------- */
+
+  const peneiras = AllSievesSuperpaveUpdatedAstm.map((peneira) => ({ peneira: peneira.label }));
 
   const convertNumber = (value) => {
     let aux = value;
@@ -88,107 +88,38 @@ const Superpave_Step4_GranulometryComposition = ({
     return parseFloat(aux);
   };
 
-  const addProperHeaders = (points) => {
-    if (!points || points.length === 0) return points;
-
-    const labels = [
-      'Peneira',
-      'Pontos Inferior',
-      'Pontos Superior',
-      'Zona Inf',
-      'Zona Sup',
-      'Densidade',
-      'Faixa Superior',
-      'Faixa Inferior',
-      'Curva Lower',
-      'Curva Average',
-      'Curva Higher',
-    ];
-
-    // Tipo declarado coluna a coluna. Sem isso o Charts infere o tipo pela
-    // primeira linha de dados e quebra ("All series on a given axis must be of
-    // the same data type") quando uma curva ainda não calculada vem toda nula.
-    const headers = labels.map((label) => ({ label, type: 'number' }));
-
-    // null (e não NaN) porque o Charts trata null como lacuna: mantém os pontos
-    // de controle isolados em vez de tentar ligá-los.
-    const convertValue = (val) => {
-      if (val === null || val === undefined || val === '') return null;
-      const num = typeof val === 'number' ? val : Number(String(val).replace(',', '.'));
-      return Number.isFinite(num) ? num : null;
-    };
-
-    // O array cru já vem com as 11 colunas nesta ordem. Só ordenamos pelo
-    // diâmetro: sem isso o Charts liga os pontos na ordem do array e a curva
-    // sai serrilhada, com laços, diferente a cada recálculo.
-    const formattedData = [...points]
-      .sort((a, b) => Number(a[0]) - Number(b[0]))
-      .map((point) => labels.map((_, col) => convertValue(point[col])));
-
-    return [headers, ...formattedData];
-  };
-
-  // Restaura o gráfico ao voltar para o step, se já houver cálculo salvo.
-  useEffect(() => {
-    if (!(data?.pointsOfCurve?.length > 0 && data?.nominalSize && data?.bands)) return;
-
-    const curvesToRestore = buildChosenCurves(data);
-    if (curvesToRestore.length === 0) return;
-
-    superpave
-      .calculateGranulometryComposition(data, granulometryEssayData, generalData, curvesToRestore)
-      .then((response) => {
-        if (response?.pointsOfCurve) {
-          setData({ step: 3, key: 'pointsOfCurve', value: addProperHeaders(response.pointsOfCurve) });
-        }
-      })
-      .catch(() => {
-        // silencia: só não atualiza o gráfico
-      });
-  }, []);
-
-  const isRawData = data?.pointsOfCurve?.length > 0 && typeof data.pointsOfCurve[0][0] === 'number';
-  const graphData = isRawData ? addProperHeaders(data.pointsOfCurve) : data?.pointsOfCurve;
-
-  /* -------------------------------- tabelas ------------------------------- */
-
-  const validateNumber = (value) => {
-    const auxValue = convertNumber(value);
-    return !isNaN(auxValue) && typeof auxValue === 'number';
-  };
-
   const numberRepresentation = (value, digits = 2) => {
     const aux: any = convertNumber(value);
-    if (!validateNumber(aux)) return '';
+    if (isNaN(aux)) return '';
     return aux.toLocaleString('pt-BR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
   };
 
-  const setPercentsToListTotal = (peneiras: { peneira: string }[], percentsToList) => {
-    const tableData = Array.from({ length: percentsToList?.length ?? 0 }, () => []);
+  const tableData = useMemo(() => {
+    const percentsToList = data?.percentsToList;
+    const bandsHigher = data?.bands?.higher ?? [];
+    const bandsLower = data?.bands?.lower ?? [];
+
+    const perMaterial = Array.from({ length: percentsToList?.length ?? 0 }, () => [] as any[]);
 
     percentsToList?.forEach((item, i) => {
       item.forEach((value, j) => {
         if (value === null) return;
-        tableData[i][j] = {
+        perMaterial[i][j] = {
           ...peneiras[j],
-          ...(i > 0 ? tableData[i][j] : {}),
+          ...(i > 0 ? perMaterial[i][j] : {}),
           ['keyTotal' + i]: numberRepresentation(value[1]),
         };
       });
     });
 
-    return tableData;
-  };
+    const size = perMaterial[0]?.length ?? 0;
+    const merged = Array(size).fill({});
 
-  const setBandsHigherLower = (tableData, bandsHigher, bandsLower) => {
-    const arraySize = tableData[0]?.length ?? 0;
-    const arrayAux = Array(arraySize).fill({});
-
-    tableData.forEach((element) => {
+    perMaterial.forEach((element) => {
       element.forEach((item, index) => {
         const noBand = bandsLower?.[index] == null && bandsHigher?.[index] == null;
-        arrayAux[index] = {
-          ...arrayAux[index],
+        merged[index] = {
+          ...merged[index],
           ...item,
           bandsCol1: noBand ? '' : numberRepresentation(bandsHigher?.[index]),
           bandsCol2: noBand ? '' : numberRepresentation(bandsLower?.[index]),
@@ -196,34 +127,13 @@ const Superpave_Step4_GranulometryComposition = ({
       });
     });
 
-    return arrayAux;
-  };
+    return merged;
+  }, [data?.percentsToList, data?.bands]);
 
-  const tableData = setBandsHigherLower(setPercentsToListTotal(peneiras, arrayResponse), bandsHigher, bandsLower);
-
-  const tables = [
-    {
-      key: 'lower' as CurveKey,
-      name: 'lowerComposition',
-      isActive: lower,
-      title: t('asphalt.dosages.superpave.lower-curve'),
-    },
-    {
-      key: 'average' as CurveKey,
-      name: 'averageComposition',
-      isActive: average,
-      title: t('asphalt.dosages.superpave.average-curve'),
-    },
-    {
-      key: 'higher' as CurveKey,
-      name: 'higherComposition',
-      isActive: higher,
-      title: t('asphalt.dosages.superpave.higher-curve'),
-    },
-  ];
+  /* ------------------------------- ações ---------------------------------- */
 
   const clearTable = (curve: CurveKey) => {
-    const index = CURVE_INDEX[curve];
+    const { index, composition } = CURVE_META[curve];
     const currentInputs = getPercentageInputs(index);
 
     const newInputs: Record<string, number | null> = {};
@@ -239,43 +149,31 @@ const Superpave_Step4_GranulometryComposition = ({
       graphData: [],
       pointsOfCurve: [],
       percentageInputs,
-      [`${curve}Composition`]: { percentsOfMaterials: null, sumOfPercents: [] },
+      [composition]: { percentsOfMaterials: null, sumOfPercents: [] },
     };
 
-    // A curva limpa tem que sair do chosenCurves junto, senão o step 5
-    // continua tentando ler uma composição que não existe mais.
-    setData({
-      step: 3,
-      value: {
-        ...clearedData,
-        chosenCurves: buildChosenCurves(clearedData),
-      },
-    });
+    setData({ step: 3, value: { ...clearedData, chosenCurves: buildChosenCurves(clearedData) } });
   };
 
-  /* ------------------------------- cálculo -------------------------------- */
+  const calculate = (curve: CurveKey) => {
+    const values = Object.values(getPercentageInputs(CURVE_META[curve].index));
+    const label = CURVE_META[curve].label;
 
-  const calculate = (curves: CurveKey[]) => {
-    const problems: string[] = [];
-
-    curves.forEach((curve) => {
-      const values = Object.values(getPercentageInputs(CURVE_INDEX[curve]));
-
-      if (values.length === 0 || values.every((v) => v === null || v === undefined || Number(v) === 0)) {
-        problems.push(`Curva ${CURVE_LABEL[curve]}: preencha as porcentagens dos materiais.`);
-        return;
-      }
-
-      const total = values.reduce((acc, v) => acc + (Number(v) || 0), 0);
-      if (Math.abs(total - 100) > 0.01) {
-        problems.push(`Curva ${CURVE_LABEL[curve]}: a soma está em ${total.toFixed(2)}% e precisa fechar 100%.`);
-      }
-    });
-
-    if (problems.length > 0) {
-      toast.error(problems.join(' '));
+    if (values.length === 0 || values.every((v) => v === null || v === undefined || Number(v) === 0)) {
+      toast.error(`Curva ${label}: preencha as porcentagens dos materiais.`);
       return;
     }
+
+    const total = values.reduce((acc, v) => acc + (Number(v) || 0), 0);
+    if (Math.abs(total - 100) > 0.01) {
+      toast.error(`Curva ${label}: a soma está em ${total.toFixed(2)}% e precisa fechar 100%.`);
+      return;
+    }
+
+    // O backend remonta o pointsOfCurve inteiro e preenche com null toda curva
+    // fora do chosenCurves da requisição. As já calculadas vão junto, senão
+    // sumiriam do gráfico ao calcular esta.
+    const curvesToSend = Array.from(new Set([curve, ...calculatedCurves.filter(inputsAreValid)]));
 
     toast.promise(
       async () => {
@@ -283,7 +181,7 @@ const Superpave_Step4_GranulometryComposition = ({
           data,
           granulometryEssayData,
           generalData,
-          curves
+          curvesToSend
         );
 
         // O merge preserva o que o usuário digitou: a resposta não traz
@@ -292,19 +190,9 @@ const Superpave_Step4_GranulometryComposition = ({
           ...data,
           ...response,
           percentageInputs: response?.percentageInputs ?? data.percentageInputs,
-          pointsOfCurve: addProperHeaders(response.pointsOfCurve),
         };
 
-        // chosenCurves é derivado do que de fato existe calculado, e não
-        // sobrescrito pela resposta: calcular só a curva superior não pode
-        // apagar as curvas inferior/média já calculadas antes.
-        setData({
-          step: 3,
-          value: {
-            ...mergedData,
-            chosenCurves: buildChosenCurves(mergedData),
-          },
-        });
+        setData({ step: 3, value: { ...mergedData, chosenCurves: buildChosenCurves(mergedData) } });
       },
       {
         pending: t('loading.materials.pending'),
@@ -315,70 +203,97 @@ const Superpave_Step4_GranulometryComposition = ({
   };
 
   useEffect(() => {
-    setNextDisabled(!(data?.pointsOfCurve?.length > 0 && buildChosenCurves(data).length > 0));
-  }, [data?.pointsOfCurve, data?.lowerComposition, data?.averageComposition, data?.higherComposition, setNextDisabled]);
+    setNextDisabled(!(data?.pointsOfCurve?.length > 0 && calculatedCurves.length > 0));
+  }, [data?.pointsOfCurve, calculatedCurves, setNextDisabled]);
 
-  if (loading) return <Loading />;
+  /* ------------------------------- render --------------------------------- */
+
+  const renderCurvePanel = (curve: CurveKey) => {
+    const { composition, label } = CURVE_META[curve];
+    const isCalculated = calculatedCurves.includes(curve);
+
+    return (
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', mt: '1.5rem' }}>
+        <CurvesTable
+          materials={selectedMaterials}
+          dnitBandsLetter={data?.bands?.letter}
+          tableName={composition}
+          tableData={tableData}
+        />
+
+        <Box sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <Button onClick={() => calculate(curve)} variant="contained" sx={{ flex: 1, minWidth: '220px' }}>
+            {`Calcular curva ${label}`}
+          </Button>
+
+          <Button onClick={() => clearTable(curve)} variant="outlined">
+            {t('asphalt.dosages.superpave.clear-table')}
+          </Button>
+        </Box>
+
+        {isCalculated ? (
+          <GranulometricCurvesGraph
+            points={data.pointsOfCurve}
+            curves={[curve]}
+            title={`Curva granulométrica ${label}`}
+          />
+        ) : (
+          <Alert severity="info">
+            Preencha as porcentagens acima, fechando 100%, e calcule para ver o gráfico desta curva.
+          </Alert>
+        )}
+      </Box>
+    );
+  };
+
+  const renderComparisonPanel = () => (
+    <Box sx={{ mt: '1.5rem' }}>
+      <GranulometricCurvesGraph
+        points={data.pointsOfCurve}
+        curves={calculatedCurves}
+        title="Comparativo das curvas granulométricas"
+        height="500px"
+      />
+
+      <Typography variant="body2" sx={{ mt: '0.5rem' }}>
+        {calculatedCurves.map((curve) => CURVE_META[curve].tab).join(', ')} — calculadas.
+      </Typography>
+    </Box>
+  );
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-      <Box sx={{ display: 'flex', gap: '5rem', justifyContent: 'center' }}>
-        {checkBoxes.map((box) => (
-          <FormControlLabel
-            key={box.key}
-            control={<Checkbox checked={box.value} />}
-            onChange={() => toggleSelectedCurve(box.key)}
-            label={box.label}
-            sx={{ display: 'flex', width: 'fit-content' }}
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Tabs
+        value={activeTab}
+        onChange={(_, value) => setActiveTab(value)}
+        variant="scrollable"
+        scrollButtons="auto"
+        sx={{ borderBottom: 1, borderColor: 'divider' }}
+      >
+        {CURVES.map((curve) => (
+          <Tab
+            key={curve}
+            value={curve}
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                {CURVE_META[curve].tab}
+                {calculatedCurves.includes(curve) && (
+                  <Box
+                    component="span"
+                    sx={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: 'secondaryTons.green' }}
+                  />
+                )}
+              </Box>
+            }
           />
         ))}
-      </Box>
 
-      {tables.map((table) => {
-        if (!table.isActive) return null;
+        {showComparison && <Tab value={COMPARISON_TAB} label="Comparativo" />}
+      </Tabs>
 
-        // Cada tabela calcula só a própria curva. Se o backend exigir as três
-        // juntas, troque por: tables.filter((x) => x.isActive).map((x) => x.key)
-        const curvesToCalculate: CurveKey[] = [table.key];
-
-        return (
-          <TableContainer key={table.key}>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: '1rem',
-                marginBottom: '10px',
-                marginTop: '2rem',
-              }}
-            >
-              <Typography sx={{ textAlign: 'center', fontSize: '1.5rem' }}>{table.title}</Typography>
-
-              <Button onClick={() => clearTable(table.key)} variant="outlined">
-                {t('asphalt.dosages.superpave.clear-table')}
-              </Button>
-            </Box>
-
-            <CurvesTable
-              materials={selectedMaterials}
-              dnitBandsLetter={data?.bands?.letter}
-              tableName={table.name}
-              tableData={tableData}
-            />
-
-            <Button
-              onClick={() => calculate(curvesToCalculate)}
-              variant="outlined"
-              sx={{ width: '100%', marginTop: '2%' }}
-            >
-              {t(`asphalt.dosages.superpave.calculate-${table.key}-curve`)}
-            </Button>
-          </TableContainer>
-        );
-      })}
-
-      {data?.pointsOfCurve?.length > 0 && <GranulometricCurvesGraph data={graphData} />}
+      {/* Só o painel ativo é montado: três DataGrids e três gráficos ao mesmo
+          tempo deixavam o step pesado. */}
+      {activeTab === COMPARISON_TAB ? renderComparisonPanel() : renderCurvePanel(activeTab as CurveKey)}
     </Box>
   );
 };
