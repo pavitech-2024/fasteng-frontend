@@ -1,58 +1,72 @@
 import { NoDataFound } from '@/components/util/tables';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
-import { Box } from '@mui/material';
+import { Alert, Box } from '@mui/material';
 import { DataGrid, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
-import { useState } from 'react';
-import { toast } from 'react-toastify';
-import { t } from 'i18next';
+import { useMemo, useState } from 'react';
+
+const REQUIRED_ESSAYS: Record<string, { key: string; label: string }[]> = {
+  coarseAggregate: [
+    { key: 'granulometry', label: 'granulometria' },
+    { key: 'specificMass', label: 'massa específica' },
+  ],
+  fineAggregate: [
+    { key: 'granulometry', label: 'granulometria' },
+    { key: 'specificMass', label: 'massa específica' },
+  ],
+  filler: [
+    { key: 'granulometry', label: 'granulometria' },
+    { key: 'specificMass', label: 'massa específica' },
+  ],
+  CAP: [{ key: 'viscosityRotational', label: 'viscosidade rotacional' }],
+  asphaltBinder: [{ key: 'viscosityRotational', label: 'viscosidade rotacional' }],
+};
+
+const getRequiredEssayList = (materialType: string) => REQUIRED_ESSAYS[materialType] ?? [];
+
+const getMissingEssayText = (missingEssays: string[] = []) => {
+  if (!missingEssays.length) return 'Com ensaio';
+  if (missingEssays.length === 1) return `Falta ${missingEssays[0]}`;
+  return `Faltam ${missingEssays.join(', ')}`;
+};
+
+const getRowEssayStateClass = (row: { missingEssays?: string[] }) =>
+  (row.missingEssays?.length ?? 0) > 0 ? 'missing-essay-row' : 'has-essay-row';
 
 interface Step2Props {
   header?: string;
-  rows: { _id: string; name: string; type: string }[];
+  rows: Array<{ _id: string; name: string; type: string; missingEssays?: string[] }>;
   columns: GridColDef[];
 }
 
+export const getRequiredEssayLabels = (materialType: string): string[] =>
+  getRequiredEssayList(materialType).map(({ label }) => label);
+
+export const buildMissingEssaySummary = (
+  selectedRows: Array<{ _id: string; name: string; type: string; missingEssays?: string[] }>
+): string => {
+  const invalidRows = selectedRows.filter(({ missingEssays }) => (missingEssays ?? []).length > 0);
+
+  if (invalidRows.length === 0) return '';
+
+  return invalidRows
+    .map(({ name, missingEssays = [] }) => `• ${name}: ${missingEssays.map((essay) => essay).join(', ')}`)
+    .join('\n');
+};
+
 const Step2Table = ({ rows, columns, header }: Step2Props & { marshall: Marshall_SERVICE }) => {
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
-  const [currentToastId, setCurrentToastId] = useState<number | string | null>(null);
-  const { materialSelectionData, setData } = useMarshallStore();
+  const { setData } = useMarshallStore();
 
-  // Função para mostrar aviso quando seleciona material
-  const showTestWarning = (materialType: string, materialName: string) => {
-    // Fecha o toast anterior se existir
-    if (currentToastId) {
-      toast.dismiss(currentToastId);
-    }
-    
-    let missingTests = '';
-    
-    if (['coarseAggregate', 'fineAggregate', 'filler'].includes(materialType)) {
-      missingTests = '• Ensaio de granulometria\n• Ensaio de massa específica';
-    } else if (['CAP', 'asphaltBinder'].includes(materialType)) {
-      missingTests = '• Ensaio do ligante asfáltico';
-    }
-    
-    if (missingTests) {
-      const toastId = toast.warning(
-        `⚠️ ${materialName}\n` +
-        `Verifique se possui:\n${missingTests}\n` +
-        'Sem esses ensaios, serão usados valores padrão.',
-        {
-          autoClose: 7000,
-          position: 'top-right',
-          style: { 
-            whiteSpace: 'pre-line',
-            minWidth: '300px',
-            maxWidth: '400px'
-          },
-          toastId: `material-${materialName}`,
-        }
-      );
-      
-      setCurrentToastId(toastId);
-    }
-  };
+  const selectedRows = useMemo(
+    () =>
+      rowSelectionModel
+        .map((id) => rows.find((_, index) => index === id))
+        .filter((row): row is { _id: string; name: string; type: string; missingEssays?: string[] } => Boolean(row)),
+    [rowSelectionModel, rows]
+  );
+
+  const missingEssaySummary = buildMissingEssaySummary(selectedRows);
 
   return (
     <Box
@@ -65,31 +79,33 @@ const Step2Table = ({ rows, columns, header }: Step2Props & { marshall: Marshall
     >
       <h3>{header}</h3>
 
+      {missingEssaySummary && (
+        <Alert severity="warning" sx={{ mb: 1.5, textAlign: 'left' }}>
+          {missingEssaySummary}
+        </Alert>
+      )}
+
       <Box>
         <DataGrid
           sx={{
             borderRadius: '10px',
             height: 300,
+            '& .has-essay-row': {
+              backgroundColor: 'rgba(242, 145, 52, 0.08)',
+              '&:hover': {
+                backgroundColor: 'rgba(242, 145, 52, 0.12)',
+              },
+            },
+            '& .missing-essay-row': {
+              backgroundColor: 'rgba(255, 193, 7, 0.08)',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 193, 7, 0.12)',
+              },
+            },
           }}
-          onStateChange={() => {
-            // to do -> selecionar na tabela os materiais já selecionados que estão no store
-            // após a página ser recarregada
-          }}
+          getRowClassName={(params) => getRowEssayStateClass(params.row as { missingEssays?: string[] })}
           checkboxSelection
           onRowSelectionModelChange={(rowSelection) => {
-            // Verifica se são materiais NOVAMENTE selecionados
-            const newlySelected = rowSelection.filter(id => 
-              !rowSelectionModel.includes(id)
-            );
-            
-            // Para cada material novo selecionado, mostra aviso
-            newlySelected.forEach(index => {
-              const row = rows.find((_, i) => i === index);
-              if (row) {
-                showTestWarning(row.type, row.name);
-              }
-            });
-            
             if (rows.some((element) => element.type === 'CAP' || element.type === 'asphaltBinder')) {
               if (rowSelection.length > 2) {
                 rowSelection = [];
@@ -104,10 +120,13 @@ const Step2Table = ({ rows, columns, header }: Step2Props & { marshall: Marshall
             } else {
               const aggregates = [];
 
-              rowSelection.forEach((row, index) => {
+              rowSelection.forEach((rowIndex) => {
+                const row = rows[rowIndex];
+                if (!row) return;
+
                 aggregates.push({
-                  _id: rows[rowSelection[index]]._id,
-                  name: rows[rowSelection[index]].name,
+                  _id: row._id,
+                  name: row.name,
                 });
               });
 
@@ -117,20 +136,85 @@ const Step2Table = ({ rows, columns, header }: Step2Props & { marshall: Marshall
           }}
           rowSelectionModel={rowSelectionModel}
           disableColumnSelector
-          columns={columns.map((column) => ({
-            ...column,
-            disableColumnMenu: true,
-            sortable: false,
-            align: 'center',
-            headerAlign: 'center',
-            minWidth: 100,
-            flex: 1,
-          }))}
+          columns={columns.map((column) => {
+            if (column.field === 'name') {
+              return {
+                ...column,
+                renderCell: ({ row }) => {
+                  const missingEssayLabels = (row.missingEssays ?? []).map((essayKey: string) => {
+                    const definition = getRequiredEssayList(row.type).find((requiredEssay) => requiredEssay.key === essayKey);
+                    return definition?.label ?? essayKey;
+                  });
+                  const hasEssay = missingEssayLabels.length === 0;
+
+                  return (
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 1,
+                        width: '100%',
+                        minHeight: '100%',
+                      }}
+                    >
+                      <Box
+                        component="span"
+                        sx={{
+                          fontWeight: 700,
+                          color: hasEssay ? 'primary.main' : 'text.primary',
+                        }}
+                      >
+                        {row.name}
+                      </Box>
+
+                      <Box
+                        component="span"
+                        sx={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          borderRadius: '999px',
+                          backgroundColor: hasEssay ? 'rgba(242, 145, 52, 0.15)' : 'rgba(255, 193, 7, 0.15)',
+                          color: hasEssay ? 'primary.main' : '#8a6d3b',
+                          border: hasEssay ? '1px solid rgba(242, 145, 52, 0.4)' : '1px solid rgba(217, 164, 0, 0.4)',
+                          px: 1,
+                          py: 0.25,
+                          fontSize: '0.68rem',
+                          fontWeight: 700,
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {hasEssay ? 'Com ensaio' : getMissingEssayText(missingEssayLabels)}
+                      </Box>
+                    </Box>
+                  );
+                },
+                disableColumnMenu: true,
+                sortable: false,
+                align: 'center',
+                headerAlign: 'center',
+                minWidth: 100,
+                flex: 1,
+              };
+            }
+
+            return {
+              ...column,
+              disableColumnMenu: true,
+              sortable: false,
+              align: 'center',
+              headerAlign: 'center',
+              minWidth: 100,
+              flex: 1,
+            };
+          })}
           rows={
             rows !== null
               ? rows.map((row, index) => ({
                   ...row,
                   id: index,
+                  missingEssays: row.missingEssays ?? [],
                 }))
               : []
           }

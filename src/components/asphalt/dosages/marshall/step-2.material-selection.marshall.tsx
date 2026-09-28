@@ -2,6 +2,7 @@ import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import useAuth from '@/contexts/auth';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
+import materialsService from '@/services/asphalt/asphalt-materials.service';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { Box } from '@mui/material';
@@ -11,6 +12,23 @@ import { toast } from 'react-toastify';
 import MaterialSelectionTable from './tables/step-2-table';
 import { GridColDef } from '@mui/x-data-grid';
 
+const REQUIRED_ESSAYS: Record<string, { key: string; label: string }[]> = {
+  coarseAggregate: [
+    { key: 'granulometry', label: 'granulometria' },
+    { key: 'specificMass', label: 'massa específica' },
+  ],
+  fineAggregate: [
+    { key: 'granulometry', label: 'granulometria' },
+    { key: 'specificMass', label: 'massa específica' },
+  ],
+  filler: [
+    { key: 'granulometry', label: 'granulometria' },
+    { key: 'specificMass', label: 'massa específica' },
+  ],
+  CAP: [{ key: 'viscosityRotational', label: 'viscosidade rotacional' }],
+  asphaltBinder: [{ key: 'viscosityRotational', label: 'viscosidade rotacional' }],
+};
+
 const Marshall_Step2_MaterialSelection = ({
   nextDisabled,
   setNextDisabled,
@@ -18,6 +36,7 @@ const Marshall_Step2_MaterialSelection = ({
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
+  const [materialEssayMap, setMaterialEssayMap] = useState<Record<string, string[]>>({});
   const { materialSelectionData } = useMarshallStore();
 
   const { user } = useAuth();
@@ -26,36 +45,22 @@ const Marshall_Step2_MaterialSelection = ({
     toast.promise(
       async () => {
         try {
-          
           const response = await marshall.getmaterialsByUserId(user._id);
-          
-          
+
           let extractedMaterials: AsphaltMaterial[] = [];
 
-          // Função para verificar se é um AsphaltMaterial
           const isAsphaltMaterial = (obj: any): boolean => {
-            return obj && 
-                   typeof obj === 'object' &&
-                   obj._id && 
-                   obj.name && 
-                   obj.type && 
-                   obj.userId;
+            return obj && typeof obj === 'object' && obj._id && obj.name && obj.type && obj.userId;
           };
 
-          // CASO 1: Resposta já é um array de AsphaltMaterial (como no seu log)
           if (Array.isArray(response)) {
-            
             if (response.length > 0) {
-              // Verifica se o primeiro item é um AsphaltMaterial
               if (isAsphaltMaterial(response[0])) {
                 extractedMaterials = response as AsphaltMaterial[];
-              }
-              // Verifica se há uma propriedade aninhada (possivelmente .materials ou outra)
-              else if (response[0] && typeof response[0] === 'object') {
-                // Procura por qualquer propriedade que seja array
+              } else if (response[0] && typeof response[0] === 'object') {
                 const firstItem = response[0];
                 const objectKeys = Object.keys(firstItem);
-                
+
                 for (const key of objectKeys) {
                   const value = firstItem[key];
                   if (Array.isArray(value) && value.length > 0 && isAsphaltMaterial(value[0])) {
@@ -65,18 +70,12 @@ const Marshall_Step2_MaterialSelection = ({
                 }
               }
             }
-          }
-          // CASO 2: Resposta é um objeto
-          else if (response && typeof response === 'object') {
-            
-            // Verifica se é um único AsphaltMaterial
+          } else if (response && typeof response === 'object') {
             if (isAsphaltMaterial(response)) {
               extractedMaterials = [response as AsphaltMaterial];
-            }
-            // Procura por propriedades que contenham array de materiais
-            else {
+            } else {
               const objectKeys = Object.keys(response);
-              
+
               for (const key of objectKeys) {
                 const value = (response as any)[key];
                 if (Array.isArray(value) && value.length > 0 && isAsphaltMaterial(value[0])) {
@@ -87,21 +86,8 @@ const Marshall_Step2_MaterialSelection = ({
             }
           }
 
-          
-          // DEBUG: Mostrar a estrutura se estiver vazio
-          if (extractedMaterials.length === 0) {
-            console.warn('⚠ Nenhum material extraído. Estrutura da resposta:');
-            console.warn('Resposta:', response);
-            console.warn('Tipo:', typeof response);
-            
-            if (response && typeof response === 'object') {
-              console.warn('Chaves do objeto:', Object.keys(response));
-            }
-          }
-
           setMaterials(extractedMaterials);
           setLoading(false);
-            
         } catch (error) {
           console.error('💥 Erro ao buscar materiais:', error);
           setMaterials([]);
@@ -117,21 +103,57 @@ const Marshall_Step2_MaterialSelection = ({
     );
   }, [user._id, marshall]);
 
-  // Resto do seu código permanece igual...
+  useEffect(() => {
+    if (!materials.length) {
+      setMaterialEssayMap({});
+      return;
+    }
+
+    let isMounted = true;
+
+    Promise.all(
+      materials.map(async (material) => {
+        try {
+          const response = await materialsService.getMaterial(material._id);
+          const essays = Array.isArray(response?.data?.essays) ? response.data.essays : [];
+          const essayNames = essays.map((essay: { essayName?: string }) => essay.essayName).filter(Boolean);
+          return [material._id, essayNames] as const;
+        } catch (error) {
+          console.warn(`Não foi possível carregar ensaios do material ${material._id}:`, error);
+          return [material._id, []] as const;
+        }
+      })
+    )
+      .then((entries) => {
+        if (!isMounted) return;
+        setMaterialEssayMap(Object.fromEntries(entries));
+      })
+      .catch((error) => {
+        console.error('Erro ao montar estado dos ensaios dos materiais:', error);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [materials]);
+
+  const getMaterialMissingEssays = (material: AsphaltMaterial): string[] => {
+    const existingEssayNames = materialEssayMap[material._id] ?? [];
+    const requiredEssays = REQUIRED_ESSAYS[material.type] ?? [];
+
+    return requiredEssays
+      .filter(({ key }) => !existingEssayNames.includes(key))
+      .map(({ key }) => key);
+  };
+
   const aggregateRows = materials
-    .map(({ _id, name, type }) => ({
-      _id,
-      name,
-      type,
+    .map((material) => ({
+      _id: material._id,
+      name: material.name,
+      type: material.type,
+      missingEssays: getMaterialMissingEssays(material),
     }))
-    .filter(({ type }) => {
-      return (
-        type === 'coarseAggregate' ||
-        type === 'fineAggregate' ||
-        type === 'filler' ||
-        type === 'other'
-      );
-    });
+    .filter(({ type }) => ['coarseAggregate', 'fineAggregate', 'filler', 'other'].includes(type));
 
   const aggregateColumns: GridColDef[] = [
     {
@@ -147,16 +169,13 @@ const Marshall_Step2_MaterialSelection = ({
   ];
 
   const binderRows = materials
-    .map(({ _id, name, type }) => {
-      return {
-        _id,
-        name,
-        type,
-      };
-    })
-    .filter(({ type }) => {
-      return type === 'CAP' || type === 'asphaltBinder';
-    });
+    .map((material) => ({
+      _id: material._id,
+      name: material.name,
+      type: material.type,
+      missingEssays: getMaterialMissingEssays(material),
+    }))
+    .filter(({ type }) => ['CAP', 'asphaltBinder'].includes(type));
 
   const binderColumns: GridColDef[] = [
     {
