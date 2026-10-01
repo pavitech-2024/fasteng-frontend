@@ -20,6 +20,8 @@ totalDefeitos?: number;
 export interface IggGeneralData {
   name: string;
   description?: string;
+  operator?: string;
+  calculist?: string;
   road: string;
   section: string;
   subtrack?: string;

@@ -1,14 +1,14 @@
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import Igg_SERVICE from '@/services/asphalt/essays/igg/igg.service';
-import UseIggStore from '@/stores/asphalt/igg/igg.store';
+import {UseIggStore} from '@/stores/asphalt/igg/igg.store';
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import { useState } from 'react';
 
 const Igg_GeneralData = ({ nextDisabled, setNextDisabled, igg }: EssayPageProps & { igg: Igg_SERVICE }) => {
   const [loading] = useState<boolean>(false);
-  const { generalData, setData } = UseIggStore();
+  const { generalData, setData, setGeneralData } = UseIggStore();
 
   const inputs = [
     { label: t('asphalt.experimentName'), value: generalData.name, key: 'name', required: true },
@@ -60,7 +60,12 @@ const Igg_GeneralData = ({ nextDisabled, setNextDisabled, igg }: EssayPageProps 
                     label={input.label}
                     value={input.value}
                     required={input.required}
-                    onChange={(e) => setData({ step: 0, key: input.key, value: e.target.value })}
+                    onChange={(e) =>
+                      setGeneralData({
+                        ...generalData,
+                        [input.key]: e.target.value,
+                      })
+                    }
                   />
                 );
               }
@@ -73,7 +78,12 @@ const Igg_GeneralData = ({ nextDisabled, setNextDisabled, igg }: EssayPageProps 
             label={inputs[inputs.length - 1].label}
             value={inputs[inputs.length - 1].value}
             required={inputs[inputs.length - 1].required}
-            onChange={(e) => setData({ step: 0, key: inputs[inputs.length - 1].key, value: e.target.value })}
+            onChange={(e) =>
+              setGeneralData({
+                ...generalData,
+                [inputs[inputs.length - 1].key]: e.target.value,
+              })
+            }
           />
         </Box>
       )}
