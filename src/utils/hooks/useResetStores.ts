@@ -8,7 +8,7 @@ import useElongatedParticlesStore from '@/stores/asphalt/elongatedParticles/elon
 import useFlashPointStore from '@/stores/asphalt/flashPoint/flashPoint.store';
 import useFwdStore from '@/stores/asphalt/fwd/fwd.store';
 import useAsphaltGranulometryStore from '@/stores/asphalt/granulometry/asphalt-granulometry.store';
-import useIggStore from '@/stores/asphalt/igg/igg.store';
+import {UseIggStore} from '@/stores/asphalt/igg/igg.store';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import usePenetrationStore from '@/stores/asphalt/penetration/penetration.store';
 import useRtcdStore from '@/stores/asphalt/rtcd/rtcd.store';
@@ -64,7 +64,7 @@ const useResetStores = () => {
     useRtcdStore(),
     useFwdStore(),
     useDduiStore(),
-    useIggStore(),
+    UseIggStore(),
     useMarshallStore(),
     useSuperpaveStore(),
 
