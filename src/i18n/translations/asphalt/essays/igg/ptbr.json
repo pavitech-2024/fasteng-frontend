@@ -13,5 +13,19 @@
   "igg.step-3-description": "Faça o Upload de uma planilha contendo os dados, conforme a planilha modelo abaixo.",
   "igg.step-4-description": "Por favor, preencha os campos abaixo.",
   "igg.step-5-description": "Esses são os resultados do seu experimento. Lembre-se de salvar o experimento para poder acessá-lo mais tarde.",
-  "asphalt.essays.igg": "Índice de Gravidade Global"
+  "asphalt.essays.igg": "Índice de Gravidade Global",
+  
+  "pm.register": "Cadastrar nova amostra",
+  "pm.view": "Visualizar amostras cadastradas",
+  "pm.igg.works.register": "Caso você queira cadastrar uma nova análise IGG:",
+  "pm.igg.works.view": "Caso você queira visualizar análises IGG salvas:",
+  "pm.binderAsphaltConcrete.highway": "Rodovia",
+  "pm.general.data": "Dados Gerais",
+  "pm.stations.defects": "Estações e Defeitos",
+  "pm.register.resume": "Resumo",
+  "welcome.step.igg.register.1": "Clique em Cadastrar nova análise",
+  "welcome.step.igg.register.2": "Registre dados gerais do trecho",
+  "welcome.step.igg.register.3": "Registre estações e defeitos encontrados",
+  "welcome.step.igg.view.1": "Clique em Análises salvas",
+  "welcome.step.igg.view.2": "Visualize relatórios das análises realizadas"
 }

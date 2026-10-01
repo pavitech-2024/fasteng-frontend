@@ -1,14 +1,14 @@
 import Loading from '@/components/molecules/loading';
 import { EssayPageProps } from '@/components/templates/essay';
 import Igg_SERVICE from '@/services/asphalt/essays/igg/igg.service';
-import useIggStore from '@/stores/asphalt/igg/igg.store';
+import UseIggStore from '@/stores/asphalt/igg/igg.store';
 import { Box, TextField } from '@mui/material';
 import { t } from 'i18next';
 import { useState } from 'react';
 
 const Igg_GeneralData = ({ nextDisabled, setNextDisabled, igg }: EssayPageProps & { igg: Igg_SERVICE }) => {
   const [loading] = useState<boolean>(false);
-  const { generalData, setData } = useIggStore();
+  const { generalData, setData } = UseIggStore();
 
   const inputs = [
     { label: t('asphalt.experimentName'), value: generalData.name, key: 'name', required: true },
